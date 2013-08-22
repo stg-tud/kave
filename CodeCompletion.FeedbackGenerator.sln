@@ -3,15 +3,25 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CompletionEventBus", "CompletionEventBus\CompletionEventBus.csproj", "{8334C96E-E54B-4F60-8148-E5521FF6094D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TinyMessenger", "TinyMessenger\TinyMessenger.csproj", "{DE0CA005-3B06-4751-9429-9671E7916492}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TinyMessenger.Tests", "TinyMessenger.Tests\TinyMessenger.Tests.csproj", "{40D73D7C-262F-40C9-86F4-15DCB55B2946}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 2
+		SccNumberOfProjects = 4
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://kave.visualstudio.com/defaultcollection
 		SccLocalPath0 = .
 		SccProjectUniqueName1 = CompletionEventBus\\CompletionEventBus.csproj
 		SccProjectName1 = CompletionEventBus
 		SccLocalPath1 = CompletionEventBus
+		SccProjectUniqueName2 = TinyMessenger\\TinyMessenger.csproj
+		SccProjectName2 = TinyMessenger
+		SccLocalPath2 = TinyMessenger
+		SccProjectUniqueName3 = TinyMessenger.Tests\\TinyMessenger.Tests.csproj
+		SccProjectName3 = TinyMessenger.Tests
+		SccLocalPath3 = TinyMessenger.Tests
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -22,6 +32,14 @@ Global
 		{8334C96E-E54B-4F60-8148-E5521FF6094D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8334C96E-E54B-4F60-8148-E5521FF6094D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8334C96E-E54B-4F60-8148-E5521FF6094D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DE0CA005-3B06-4751-9429-9671E7916492}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DE0CA005-3B06-4751-9429-9671E7916492}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DE0CA005-3B06-4751-9429-9671E7916492}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DE0CA005-3B06-4751-9429-9671E7916492}.Release|Any CPU.Build.0 = Release|Any CPU
+		{40D73D7C-262F-40C9-86F4-15DCB55B2946}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{40D73D7C-262F-40C9-86F4-15DCB55B2946}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{40D73D7C-262F-40C9-86F4-15DCB55B2946}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{40D73D7C-262F-40C9-86F4-15DCB55B2946}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
