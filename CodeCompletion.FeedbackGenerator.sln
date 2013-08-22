@@ -7,9 +7,17 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TinyMessenger", "TinyMessen
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TinyMessenger.Tests", "TinyMessenger.Tests\TinyMessenger.Tests.csproj", "{40D73D7C-262F-40C9-86F4-15DCB55B2946}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeCompletion.Model", "..\CodeCompletion\CodeCompletion.Model\CodeCompletion.Model.csproj", "{236E2794-DE4D-4F94-AC87-2ABFD1059CE0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeCompletion.Model.Names", "..\CodeCompletion\CodeCompletion.Model.Names\CodeCompletion.Model.Names.csproj", "{31B0DE46-B783-4489-B1BD-63AE2E1A5DA1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CompletionEventSerializer", "CompletionEventSerializer\CompletionEventSerializer.csproj", "{A0246281-E784-4D60-B3F4-A55A57B8A914}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CompletionEventSerializer.Tests", "CompletionEventSerializer.Tests\CompletionEventSerializer.Tests.csproj", "{EA1CFCA8-35C4-4177-A970-D28C619E7130}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 4
+		SccNumberOfProjects = 8
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://kave.visualstudio.com/defaultcollection
 		SccLocalPath0 = .
@@ -22,6 +30,18 @@ Global
 		SccProjectUniqueName3 = TinyMessenger.Tests\\TinyMessenger.Tests.csproj
 		SccProjectName3 = TinyMessenger.Tests
 		SccLocalPath3 = TinyMessenger.Tests
+		SccProjectUniqueName4 = ..\\CodeCompletion\\CodeCompletion.Model\\CodeCompletion.Model.csproj
+		SccProjectName4 = ../CodeCompletion/CodeCompletion.Model
+		SccLocalPath4 = ..\\CodeCompletion\\CodeCompletion.Model
+		SccProjectUniqueName5 = ..\\CodeCompletion\\CodeCompletion.Model.Names\\CodeCompletion.Model.Names.csproj
+		SccProjectName5 = ../CodeCompletion/CodeCompletion.Model.Names
+		SccLocalPath5 = ..\\CodeCompletion\\CodeCompletion.Model.Names
+		SccProjectUniqueName6 = CompletionEventSerializer\\CompletionEventSerializer.csproj
+		SccProjectName6 = CompletionEventSerializer
+		SccLocalPath6 = CompletionEventSerializer
+		SccProjectUniqueName7 = CompletionEventSerializer.Tests\\CompletionEventSerializer.Tests.csproj
+		SccProjectName7 = CompletionEventSerializer.Tests
+		SccLocalPath7 = CompletionEventSerializer.Tests
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -40,6 +60,22 @@ Global
 		{40D73D7C-262F-40C9-86F4-15DCB55B2946}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{40D73D7C-262F-40C9-86F4-15DCB55B2946}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{40D73D7C-262F-40C9-86F4-15DCB55B2946}.Release|Any CPU.Build.0 = Release|Any CPU
+		{236E2794-DE4D-4F94-AC87-2ABFD1059CE0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{236E2794-DE4D-4F94-AC87-2ABFD1059CE0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{236E2794-DE4D-4F94-AC87-2ABFD1059CE0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{236E2794-DE4D-4F94-AC87-2ABFD1059CE0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{31B0DE46-B783-4489-B1BD-63AE2E1A5DA1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{31B0DE46-B783-4489-B1BD-63AE2E1A5DA1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{31B0DE46-B783-4489-B1BD-63AE2E1A5DA1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{31B0DE46-B783-4489-B1BD-63AE2E1A5DA1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A0246281-E784-4D60-B3F4-A55A57B8A914}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A0246281-E784-4D60-B3F4-A55A57B8A914}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A0246281-E784-4D60-B3F4-A55A57B8A914}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A0246281-E784-4D60-B3F4-A55A57B8A914}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EA1CFCA8-35C4-4177-A970-D28C619E7130}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EA1CFCA8-35C4-4177-A970-D28C619E7130}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EA1CFCA8-35C4-4177-A970-D28C619E7130}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EA1CFCA8-35C4-4177-A970-D28C619E7130}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
