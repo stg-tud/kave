@@ -7,15 +7,9 @@ using CodeCompletion.Model.CompletionEvent;
 
 namespace CompletionEventSerializer
 {
-    public class EventSerializer
+    public interface IEventSerializer
     {
-        public void Serialize(CompletionEvent completionEvent)
-        {
-            
-        }
-        public CompletionEvent Deserialize()
-        {
-            return null;
-        }
+        void Serialize(CompletionEvent completionEvent);
+        CompletionEvent Deserialize();
     }
 }
