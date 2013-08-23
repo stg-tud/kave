@@ -11,14 +11,6 @@ namespace CompletionEventSerializer.Tests
     [TestFixture]
     class ProtobufNetTest
     {
-        class Person 
-        {
-            public string Name { get; set; }
-            public int Age { get; set; }
-        }
-
-
-
         private const string Data = "Foobar";
         private const PrefixStyle Style = PrefixStyle.Fixed32;
 
@@ -36,20 +28,6 @@ namespace CompletionEventSerializer.Tests
                 readData = Serializer.DeserializeWithLengthPrefix<String>(stream, Style);
             }
             Assert.AreEqual(Data, readData);
-        }
-
-        [Test]
-        public void ShouldSerializeToXML()
-        {
-            using (var stream = new MemoryStream())
-            {
-                using (XmlWriter writer = new XmlTextWriter(stream, Encoding.UTF8))
-                {
-                    Serializer.Serialize(writer, new Person { Name = "Bla", Age = 10});
-                }    
-            }
-
-            
         }
     }
 }
