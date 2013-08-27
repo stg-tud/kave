@@ -1,29 +1,43 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.ComponentModel.Composition;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CodeCompletion.Model.CompletionEvent;
 using Newtonsoft.Json;
 
 namespace CompletionEventSerializer
 {
+    [Export, ExportMetadata("usage-mode", "debug")]
     public class EventJsonSerializer : IEventSerializer
     {
-        public void Serialize(CompletionEvent completionEvent, Stream target)
+        public void AppendTo(Stream targetStream, CompletionEvent completionEvent)
         {
-            var serialization = JsonConvert.SerializeObject(completionEvent, Formatting.Indented);
-            var streamWriter = new StreamWriter(target);
-            streamWriter.Write(serialization);
-            streamWriter.Flush();
+            completionEvent.ToJson().AppendTo(targetStream);
         }
 
-        public CompletionEvent Deserialize(Stream source)
+        public CompletionEvent ReadFrom(Stream source)
         {
             var streamReader = new StreamReader(source);
-            var serialization = streamReader.ReadToEnd();
-            return JsonConvert.DeserializeObject<CompletionEvent>(serialization);
+            var json = streamReader.ReadToEnd();
+            return json.To<CompletionEvent>();
+        }
+    }
+
+    internal static class JsonExtension
+    {
+        public static string ToJson<TMessage>(this TMessage message)
+        {
+            return JsonConvert.SerializeObject(message, Formatting.Indented);
+        }
+
+        public static TMessage To<TMessage>(this string json)
+        {
+            return JsonConvert.DeserializeObject<TMessage>(json);
+        }
+
+        public static void AppendTo(this string json, Stream target)
+        {
+            var streamWriter = new StreamWriter(target);
+            streamWriter.Write(json);
+            streamWriter.Flush();
         }
     }
 }

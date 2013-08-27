@@ -28,7 +28,7 @@ namespace CompletionEventSerializer.Tests
 
             using (var stream = new MemoryStream())
             {
-                _eventJsonSerializer.Serialize(completionEvent, stream);
+                _eventJsonSerializer.AppendTo(stream, completionEvent);
 
                 stream.Position = 0;
                 var reader = new StreamReader(stream);
@@ -48,9 +48,9 @@ namespace CompletionEventSerializer.Tests
 
             using (var stream = new MemoryStream())
             {
-                _eventJsonSerializer.Serialize(completionEvent, stream);
+                _eventJsonSerializer.AppendTo(stream, completionEvent);
                 stream.Position = 0;
-                var deserializedCompletionEvent = _eventJsonSerializer.Deserialize(stream);
+                var deserializedCompletionEvent = _eventJsonSerializer.ReadFrom(stream);
                 Assert.AreEqual(completionEvent, deserializedCompletionEvent);
             }
         }

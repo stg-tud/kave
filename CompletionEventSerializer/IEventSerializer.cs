@@ -5,7 +5,7 @@ namespace CompletionEventSerializer
 {
     public interface IEventSerializer
     {
-        void Serialize(CompletionEvent completionEvent, Stream target);
-        CompletionEvent Deserialize(Stream source);
+        void AppendTo(Stream targetStream, CompletionEvent completionEvent);
+        CompletionEvent ReadFrom(Stream source);
     }
 }
