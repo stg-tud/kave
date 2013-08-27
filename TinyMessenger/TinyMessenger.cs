@@ -393,7 +393,6 @@ namespace TinyMessenger
     /// <summary>
     /// Messenger hub responsible for taking subscriptions/publications and delivering of messages.
     /// </summary>
-    [Export(typeof(ITinyMessengerHub))]
     public sealed class TinyMessengerHub : ITinyMessengerHub
     {
         #region Private Types and Interfaces

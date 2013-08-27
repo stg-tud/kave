@@ -5,9 +5,9 @@ using TinyMessenger;
 namespace CompletionEventBus
 {
     [Export(typeof(IEventChannel))]
-    class TinyMessengerEventChannel : IEventChannel
+    public class TinyMessengerEventChannel : IEventChannel
     {
-        [Import] private TinyMessengerHub _hub;
+        private readonly ITinyMessengerHub _hub = new TinyMessengerHub();
 
         public void Publish<TEvent>(TEvent evt) where TEvent : class
         {
