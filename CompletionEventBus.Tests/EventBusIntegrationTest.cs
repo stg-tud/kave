@@ -2,6 +2,7 @@
 using System;
 using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
+using System.Threading;
 using NUnit.Framework;
 
 namespace CompletionEventBus.Tests
@@ -9,21 +10,21 @@ namespace CompletionEventBus.Tests
     [TestFixture]
     public class EventBusIntegrationTest
     {
-        [Import] private IEventChannel _eventChannel;
+        [Import] private IMessageChannel _messageChannel;
 
         [Test]
-        public void ShouldTransmitEvents()
+        public void ShouldTransmitMessages()
         {
-            var eventChannelAssembly = typeof (IEventChannel).Assembly;
-            var catalog = new AssemblyCatalog(eventChannelAssembly);
+            var messageChannelAssembly = typeof (IMessageChannel).Assembly;
+            var catalog = new AssemblyCatalog(messageChannelAssembly);
             var container = new CompositionContainer(catalog, CompositionOptions.DisableSilentRejection);
             container.SatisfyImportsOnce(this);
 
-            var received = false;
-            _eventChannel.Subscribe<object>(e => received = true);
-            _eventChannel.Publish(new Object());
-            
-            Assert.IsTrue(received);
+            var messageReceivedEvent = new ManualResetEvent(false);
+            _messageChannel.Subscribe<object>(e => messageReceivedEvent.Set());
+            _messageChannel.Publish(new Object());
+
+            Assert.IsTrue(messageReceivedEvent.WaitOne(50));
         }
     }
 }

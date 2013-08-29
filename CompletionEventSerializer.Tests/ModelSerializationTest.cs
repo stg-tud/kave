@@ -1,5 +1,6 @@
 ﻿using CodeCompletion.Model.Names.CSharp;
 using NUnit.Framework;
+using Newtonsoft.Json;
 using ProtoBuf;
 
 namespace CompletionEventSerializer.Tests
@@ -10,13 +11,12 @@ namespace CompletionEventSerializer.Tests
         [Test]
         public void ShouldSerializeName()
         {
-            TestSerialization(new Name("SomeName"));
+            TestSerialization(TypeName.Get("Foo.Bar", AssemblyName.Get("foo", "1.0.0.0")));
         }
 
         private static void TestSerialization(Name name)
         {
-            var deepClone = Serializer.DeepClone(name);
-            Assert.AreEqual(name, deepClone);
+            var serializeObject = JsonConvert.SerializeObject(name, new TypeNameJsonConverter());
         }
     }
 }

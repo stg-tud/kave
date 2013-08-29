@@ -44,11 +44,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IEventChannel.cs" />
+    <Compile Include="EventBusInitializer.cs" />
+    <Compile Include="IMessageChannel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TinyMessengerEventChannel.cs" />
+    <Compile Include="TinyMessengerMessageChannel.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\CodeCompletion\CodeCompletion.Model\CodeCompletion.Model.csproj">
+      <Project>{236E2794-DE4D-4F94-AC87-2ABFD1059CE0}</Project>
+      <Name>CodeCompletion.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CompletionEventSerializer\CompletionEventSerializer.csproj">
+      <Project>{A0246281-E784-4D60-B3F4-A55A57B8A914}</Project>
+      <Name>CompletionEventSerializer</Name>
+    </ProjectReference>
     <ProjectReference Include="..\TinyMessenger\TinyMessenger.csproj">
       <Project>{DE0CA005-3B06-4751-9429-9671E7916492}</Project>
       <Name>TinyMessenger</Name>

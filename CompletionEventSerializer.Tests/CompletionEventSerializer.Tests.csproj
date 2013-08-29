@@ -41,6 +41,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\CompletionEventSerializer\bin\Debug\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="nunit.core, Version=2.6.2.12296, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
       <Private>False</Private>
       <HintPath>..\packages\NUnitTestAdapter.0.96.0\lib\nunit.core.dll</HintPath>
@@ -80,7 +84,8 @@
     <Compile Include="ProtobufNetTest.cs" />
     <Compile Include="ModelSerializationTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="EventJsonSerializerTest.cs" />
+    <Compile Include="JsonSerializerTest.cs" />
+    <Compile Include="SerializationTestTarget.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\CodeCompletion\CodeCompletion.Model.Names\CodeCompletion.Model.Names.csproj">

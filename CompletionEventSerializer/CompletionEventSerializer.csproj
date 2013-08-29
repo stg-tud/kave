@@ -52,14 +52,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="EventJSONSerializer.cs" />
-    <Compile Include="IEventSerializer.cs" />
+    <Compile Include="JsonSerializer.cs" />
+    <Compile Include="ISerializer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\CodeCompletion\CodeCompletion.Model.Names\CodeCompletion.Model.Names.csproj">
+      <Project>{31B0DE46-B783-4489-B1BD-63AE2E1A5DA1}</Project>
+      <Name>CodeCompletion.Model.Names</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\CodeCompletion\CodeCompletion.Model\CodeCompletion.Model.csproj">
       <Project>{236E2794-DE4D-4F94-AC87-2ABFD1059CE0}</Project>
       <Name>CodeCompletion.Model</Name>

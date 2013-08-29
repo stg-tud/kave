@@ -55,7 +55,7 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
-    <Compile Include="TinyMessengerEventChannelTest.cs" />
+    <Compile Include="TinyMessengerMessageChannelTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="EventBusIntegrationTest.cs" />
   </ItemGroup>

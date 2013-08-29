@@ -783,7 +783,7 @@ namespace TinyMessenger
 
         private void PublishAsyncInternal<TMessage>(TMessage message, AsyncCallback callback) where TMessage : class, ITinyMessage
         {
-            Action publishAction = () => { PublishInternal<TMessage>(message); };
+            Action publishAction = () => PublishInternal<TMessage>(message);
 
             publishAction.BeginInvoke(callback, null);
         }
