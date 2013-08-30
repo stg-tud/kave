@@ -114,12 +114,4 @@ namespace CompletionEventSerializer.Tests
             }
         }
     }
-
-    static class TestExtensions
-    {
-        public static string AsString(this MemoryStream stream)
-        {
-            return Encoding.Default.GetString(stream.ToArray());
-        }
-    }
 }
