@@ -17,7 +17,7 @@ namespace CompletionEventBus.Tests
         {
             var messageChannelAssembly = typeof (IMessageChannel).Assembly;
             var catalog = new AssemblyCatalog(messageChannelAssembly);
-            var container = new CompositionContainer(catalog, CompositionOptions.DisableSilentRejection);
+            var container = new CompositionContainer(catalog);
             container.SatisfyImportsOnce(this);
 
             var messageReceivedEvent = new ManualResetEvent(false);
