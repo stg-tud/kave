@@ -16,11 +16,14 @@ namespace CompletionEventSerializer
             {
                 Converters =
                     {
+                        new NameJsonConverter(),
                         new AssemblyNameJsonConverter(),
                         new AssemblyVersionJsonConverter(),
                         new FieldNameJsonConverter(),
                         new MethodNameJsonConverter(),
                         new NamespaceNameJsonConverter(),
+                        new ParameterNameJsonConverter(),
+                        new PropertyNameJsonConverter(),
                         new TypeNameJsonConverter()
                     },
                 Formatting = Formatting.None
@@ -61,7 +64,9 @@ namespace CompletionEventSerializer
         }
     }
 
-    public abstract class NameToJsonConverter<TName> : JsonConverter where TName : IName
+    public abstract class NameToJsonConverter<TName, TIName> : JsonConverter
+        where TName : class, IName
+        where TIName : IName
     {
         private readonly ConvertJson _converter;
 
@@ -88,36 +93,51 @@ namespace CompletionEventSerializer
 
         public override bool CanConvert(Type objectType)
         {
-            return typeof(TName) == objectType;
+            return typeof(TName) == objectType || typeof(TIName) == objectType;
         }
     }
 
-    class AssemblyNameJsonConverter : NameToJsonConverter<AssemblyName>
+    class NameJsonConverter : NameToJsonConverter<Name, IName>
+    {
+        public NameJsonConverter() : base(Name.Get) {}
+    }
+
+    class AssemblyNameJsonConverter : NameToJsonConverter<AssemblyName, IAssemblyName>
     {
         public AssemblyNameJsonConverter() : base(AssemblyName.Get) {}
     }
 
-    class AssemblyVersionJsonConverter : NameToJsonConverter<AssemblyVersion>
+    class AssemblyVersionJsonConverter : NameToJsonConverter<AssemblyVersion, IAssemblyVersion>
     {
         public AssemblyVersionJsonConverter() : base(AssemblyVersion.Get) {}
     }
 
-    class FieldNameJsonConverter : NameToJsonConverter<FieldName>
+    class FieldNameJsonConverter : NameToJsonConverter<FieldName, IFieldName>
     {
         public FieldNameJsonConverter() : base(FieldName.Get) {}
     }
 
-    class MethodNameJsonConverter : NameToJsonConverter<MethodName>
+    class MethodNameJsonConverter : NameToJsonConverter<MethodName, IMemberName>
     {
         public MethodNameJsonConverter() : base(MethodName.Get) {}
     }
 
-    class NamespaceNameJsonConverter : NameToJsonConverter<NamespaceName>
+    class NamespaceNameJsonConverter : NameToJsonConverter<NamespaceName, INamespaceName>
     {
         public NamespaceNameJsonConverter() : base(NamespaceName.Get) {}
     }
 
-    class TypeNameJsonConverter : NameToJsonConverter<TypeName>
+    class ParameterNameJsonConverter : NameToJsonConverter<ParameterName, IParameterName>
+    {
+        public ParameterNameJsonConverter() : base(ParameterName.Get) {}
+    }
+
+    class PropertyNameJsonConverter : NameToJsonConverter<PropertyName, IPropertyName>
+    {
+        public PropertyNameJsonConverter() : base(PropertyName.Get) { }
+    }
+
+    class TypeNameJsonConverter : NameToJsonConverter<TypeName, ITypeName>
     {
         public TypeNameJsonConverter() : base(TypeName.Get) {}
     }

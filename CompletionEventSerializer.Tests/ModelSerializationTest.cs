@@ -1,5 +1,9 @@
-﻿using System.IO;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Text;
+using CodeCompletion.Model.CompletionEvent;
+using CodeCompletion.Model.Context;
 using CodeCompletion.Model.Names.CSharp;
 using NUnit.Framework;
 
@@ -19,37 +23,35 @@ namespace CompletionEventSerializer.Tests
         [Test]
         public void ShouldSerializeCompletionEvent()
         {
-            Assert.Fail();
-        }
+            var proposal1 = new Proposal
+            {
+                Name = MethodName.Get("[Declarator, Assmbly, Version=1.2.3.4] [ReturnType, Ass, Version=9.8.7.6].Method()"),
+                Relevance = 42
+            };
+            var proposal2 = new Proposal
+            {
+                Name = NamespaceName.Get("Foo.Bar"),
+                Relevance = -23
+            };
 
-        [Test]
-        public void ShouldSerializeProposal()
-        {
-            
-        }
+            var completionEvent = new CompletionEvent
+            {
+                IDESessionUUID = "0xDEADBEEF",
+                CompletionTimeStamp = new DateTime(),
+                ProposalCollection = new ProposalCollection(new List<Proposal> {proposal1, proposal2}),
+                Actions =
+                {
+                    { new DateTime(2012, 4, 12, 12, 23, 42), new ProposalAction(proposal1, ProposalAction.SubActionKind.Select)},
+                    { new DateTime(2012, 4, 12, 12, 23, 43), new ProposalAction(proposal2, ProposalAction.SubActionKind.Select)},
+                    { new DateTime(2012, 4, 12, 12, 23, 45), new ProposalAction(proposal1, ProposalAction.SubActionKind.Apply)},
+                },
+                Context = new Context
+                {
 
-        [Test]
-        public void ShouldSerializeProposalAction()
-        {
-            
-        }
+                }
+            };
 
-        [Test]
-        public void ShouldSerializeProposalCollection()
-        {
-            
-        }
-
-        [Test]
-        public void ShouldSerializeContext()
-        {
-            
-        }
-
-        [Test]
-        public void ShouldSerializeTyperHiarchy()
-        {
-            
+            Serialize(completionEvent, Assert.AreEqual);
         }
 
         [Test]
@@ -67,13 +69,13 @@ namespace CompletionEventSerializer.Tests
         [Test]
         public void ShouldSerializeFieldName()
         {
-            Serialize(FieldName.Get(""), Assert.AreSame);
+            Serialize(FieldName.Get("static [Declarator, B, Version=9.2.3.8] [Val, G, Version=5.4.6.3].Field"), Assert.AreSame);
         }
 
         [Test]
         public void ShouldSerializeMethodName()
         {
-            Serialize(MethodName.Get(""), Assert.AreSame);
+            Serialize(MethodName.Get("[Declarator, B, Version=9.2.3.8] [Val, G, Version=5.4.6.3].Method(out [Param, P, Version=8.1.7.2])"), Assert.AreSame);
         }
 
         [Test]
