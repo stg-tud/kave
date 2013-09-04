@@ -1,7 +1,5 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Text;
-using CodeCompletion.Model.CompletionEvent;
 using NUnit.Framework;
 using Assert = NUnit.Framework.Assert;
 

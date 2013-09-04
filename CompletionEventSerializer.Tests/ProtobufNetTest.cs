@@ -1,10 +1,7 @@
 ﻿using System;
 using System.IO;
-using System.Text;
-using System.Xml.Serialization;
 using NUnit.Framework;
 using ProtoBuf;
-using System.Xml;
 
 namespace CompletionEventSerializer.Tests
 {

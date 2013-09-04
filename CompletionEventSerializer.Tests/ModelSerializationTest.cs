@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using CodeCompletion.Model.CompletionEvent;
 using CodeCompletion.Model.Context;
+using CodeCompletion.Model.Names;
 using CodeCompletion.Model.Names.CSharp;
 using NUnit.Framework;
 
@@ -38,20 +39,30 @@ namespace CompletionEventSerializer.Tests
             {
                 IDESessionUUID = "0xDEADBEEF",
                 CompletionTimeStamp = new DateTime(),
+                Context = new Context
+                {
+                    EnclosingMethod = MethodName.Get("[Enclosing, Bssmbly, Version=4.2.3.1] [System.Void, mscore, Version=4.0.0.0].EncMeth()"),
+                    EnclosingMethodFirst = new HashSet<IMethodName>
+                    {
+                        MethodName.Get("[IFace1, Bssmbly, Version=4.2.3.1] [System.Void, mscore, Version=4.0.0.0].EncMeth()"),
+                        MethodName.Get("[IFace2, Bssmbly, Version=4.2.3.1] [System.Void, mscore, Version=4.0.0.0].EncMeth()")
+                    }
+                },
                 ProposalCollection = new ProposalCollection(new List<Proposal> {proposal1, proposal2}),
-                Actions =
+                Actions = new Dictionary<DateTime, ProposalAction>
                 {
                     { new DateTime(2012, 4, 12, 12, 23, 42), new ProposalAction(proposal1, ProposalAction.SubActionKind.Select)},
                     { new DateTime(2012, 4, 12, 12, 23, 43), new ProposalAction(proposal2, ProposalAction.SubActionKind.Select)},
                     { new DateTime(2012, 4, 12, 12, 23, 45), new ProposalAction(proposal1, ProposalAction.SubActionKind.Apply)},
-                },
-                Context = new Context
-                {
-
                 }
             };
 
-            Serialize(completionEvent, Assert.AreEqual);
+            var eventCopy = SerializeAndDeserialize(completionEvent);
+            Assert.AreEqual(completionEvent.IDESessionUUID, eventCopy.IDESessionUUID);
+            Assert.AreEqual(completionEvent.CompletionTimeStamp, eventCopy.CompletionTimeStamp);
+            Assert.AreEqual(completionEvent.Context, eventCopy.Context);
+            Assert.AreEqual(completionEvent.ProposalCollection, eventCopy.ProposalCollection);
+            Assert.AreEqual(completionEvent.Actions, eventCopy.Actions);
         }
 
         [Test]
@@ -94,9 +105,15 @@ namespace CompletionEventSerializer.Tests
 
         private void Serialize<TModel>(TModel model, Assertion assert)
         {
+            var modelCopy = SerializeAndDeserialize(model);
+            assert.Invoke(model, modelCopy);
+        }
+
+        private TModel SerializeAndDeserialize<TModel>(TModel model)
+        {
             var serialization = Serialize(model);
             var modelCopy = Deserialize<TModel>(serialization);
-            assert.Invoke(model, modelCopy);
+            return modelCopy;
         }
 
         private string Serialize<TModel>(TModel model)

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.ComponentModel.Composition;
 using System.IO;
+using System.Reflection;
 using System.Text;
 using CodeCompletion.Model.Names;
-using CodeCompletion.Model.Names.CSharp;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -16,17 +16,10 @@ namespace CompletionEventSerializer
             {
                 Converters =
                     {
-                        new NameJsonConverter(),
-                        new AssemblyNameJsonConverter(),
-                        new AssemblyVersionJsonConverter(),
-                        new FieldNameJsonConverter(),
-                        new MethodNameJsonConverter(),
-                        new NamespaceNameJsonConverter(),
-                        new ParameterNameJsonConverter(),
-                        new PropertyNameJsonConverter(),
-                        new TypeNameJsonConverter()
+                        new NameToJsonConverter()
                     },
-                Formatting = Formatting.None
+                Formatting = Formatting.None,
+                NullValueHandling = NullValueHandling.Ignore
             };
 
         public void AppendTo<TInstance>(Stream targetStream, TInstance instance)
@@ -64,83 +57,52 @@ namespace CompletionEventSerializer
         }
     }
 
-    public abstract class NameToJsonConverter<TName, TIName> : JsonConverter
-        where TName : class, IName
-        where TIName : IName
+    public class NameToJsonConverter : JsonConverter
     {
-        private readonly ConvertJson _converter;
-
-        protected delegate TName ConvertJson(string identifier);
-
-        protected NameToJsonConverter(ConvertJson converter)
-        {
-            _converter = converter;
-        }
+        private const string TypePropertyName = "type";
+        private const string IdentifierPropertyName = "identifier";
+        private const string NameQualifierPrefix = "CodeCompletion.Model.Names.";
 
         public override void WriteJson(JsonWriter writer, object value, Newtonsoft.Json.JsonSerializer serializer)
         {
             writer.WriteStartObject();
-            writer.WritePropertyName("identifier");
+            writer.WritePropertyName(TypePropertyName);
+            writer.WriteValue(AliasFor(value.GetType()));
+            writer.WritePropertyName(IdentifierPropertyName);
             writer.WriteValue(((IName) value).Identifier);
             writer.WriteEndObject();
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, Newtonsoft.Json.JsonSerializer serializer)
         {
-            var identifier = JObject.Load(reader).GetValue("identifier").ToString();
-            return _converter.Invoke(identifier);
+            var jName = JObject.Load(reader);
+            var typeAlias = jName.GetValue(TypePropertyName).ToString();
+            var type = TypeFrom(typeAlias);
+            var identifier = jName.GetValue(IdentifierPropertyName).ToString();
+            var factoryMethod = type.GetMethod("Get", BindingFlags.Static | BindingFlags.Public);
+            return factoryMethod.Invoke(null, new object[] {identifier});
         }
 
         public override bool CanConvert(Type objectType)
         {
-            return typeof(TName) == objectType || typeof(TIName) == objectType;
+            return typeof(IName).IsAssignableFrom(objectType);
+        }
+
+        public static string AliasFor(Type nameType)
+        {
+            return nameType.FullName.Substring(NameQualifierPrefix.Length);
+        }
+
+        public static Type TypeFrom(string alias)
+        {
+            var assemblyName = typeof (IName).Assembly.FullName;
+            var assemblyQualifiedTypeName = NameQualifierPrefix + alias + ", " + assemblyName;
+            var type = Type.GetType(assemblyQualifiedTypeName);
+            if (type == null)
+            {
+                throw new TypeLoadException("Could not load required type " + assemblyQualifiedTypeName);
+            }
+            return type;
         }
     }
-
-    class NameJsonConverter : NameToJsonConverter<Name, IName>
-    {
-        public NameJsonConverter() : base(Name.Get) {}
-    }
-
-    class AssemblyNameJsonConverter : NameToJsonConverter<AssemblyName, IAssemblyName>
-    {
-        public AssemblyNameJsonConverter() : base(AssemblyName.Get) {}
-    }
-
-    class AssemblyVersionJsonConverter : NameToJsonConverter<AssemblyVersion, IAssemblyVersion>
-    {
-        public AssemblyVersionJsonConverter() : base(AssemblyVersion.Get) {}
-    }
-
-    class FieldNameJsonConverter : NameToJsonConverter<FieldName, IFieldName>
-    {
-        public FieldNameJsonConverter() : base(FieldName.Get) {}
-    }
-
-    class MethodNameJsonConverter : NameToJsonConverter<MethodName, IMemberName>
-    {
-        public MethodNameJsonConverter() : base(MethodName.Get) {}
-    }
-
-    class NamespaceNameJsonConverter : NameToJsonConverter<NamespaceName, INamespaceName>
-    {
-        public NamespaceNameJsonConverter() : base(NamespaceName.Get) {}
-    }
-
-    class ParameterNameJsonConverter : NameToJsonConverter<ParameterName, IParameterName>
-    {
-        public ParameterNameJsonConverter() : base(ParameterName.Get) {}
-    }
-
-    class PropertyNameJsonConverter : NameToJsonConverter<PropertyName, IPropertyName>
-    {
-        public PropertyNameJsonConverter() : base(PropertyName.Get) { }
-    }
-
-    class TypeNameJsonConverter : NameToJsonConverter<TypeName, ITypeName>
-    {
-        public TypeNameJsonConverter() : base(TypeName.Get) {}
-    }
-
-
 }
