@@ -66,6 +66,12 @@ namespace CompletionEventSerializer.Tests
         }
 
         [Test]
+        public void ShouldSerializeName()
+        {
+            Serialize(Name.Get("Foobar! That's my Name."), Assert.AreSame);
+        }
+
+        [Test]
         public void ShouldSerializeAssemblyName()
         {
             Serialize(AssemblyName.Get("AssemblyName, Version=0.8.15.0"), Assert.AreSame);

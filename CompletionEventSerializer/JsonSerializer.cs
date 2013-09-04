@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.Composition;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 using CodeCompletion.Model.Names;
@@ -76,11 +77,21 @@ namespace CompletionEventSerializer
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, Newtonsoft.Json.JsonSerializer serializer)
         {
             var jName = JObject.Load(reader);
+            var factoryMethod = GetFactoryMethod(jName);
+            var identifier = jName.GetValue(IdentifierPropertyName).ToString();
+            return factoryMethod.Invoke(null, new object[] { identifier });
+        }
+
+        private static MethodInfo GetFactoryMethod(JObject jName)
+        {
             var typeAlias = jName.GetValue(TypePropertyName).ToString();
             var type = TypeFrom(typeAlias);
-            var identifier = jName.GetValue(IdentifierPropertyName).ToString();
-            var factoryMethod = type.GetMethod("Get", BindingFlags.Static | BindingFlags.Public);
-            return factoryMethod.Invoke(null, new object[] {identifier});
+            var factoryMethod = type.GetMethods(BindingFlags.Static | BindingFlags.Public).Where(m =>
+            {
+                var parameterInfos = m.GetParameters();
+                return parameterInfos.Count() == 1 && parameterInfos[0].ParameterType == typeof (string);
+            }).First();
+            return factoryMethod;
         }
 
         public override bool CanConvert(Type objectType)
