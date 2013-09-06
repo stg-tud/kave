@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using CodeCompletion.Model;
 using CodeCompletion.Model.CompletionEvent;
 using CodeCompletion.Model.Context;
 using CodeCompletion.Model.Names;
@@ -38,7 +39,8 @@ namespace CompletionEventSerializer.Tests
             var completionEvent = new CompletionEvent
             {
                 IDESessionUUID = "0xDEADBEEF",
-                CompletionTimeStamp = new DateTime(),
+                TriggeredAt = new DateTime(),
+                TriggeredBy = IDEEvent.Trigger.Automatic,
                 Context = new Context
                 {
                     EnclosingMethod = MethodName.Get("[Enclosing, Bssmbly, Version=4.2.3.1] [System.Void, mscore, Version=4.0.0.0].EncMeth()"),
@@ -49,20 +51,23 @@ namespace CompletionEventSerializer.Tests
                     }
                 },
                 ProposalCollection = new ProposalCollection(new List<Proposal> {proposal1, proposal2}),
-                Actions = new Dictionary<DateTime, ProposalAction>
+                Selections = new Dictionary<DateTime, Proposal>
                 {
-                    { new DateTime(2012, 4, 12, 12, 23, 42), new ProposalAction(proposal1, ProposalAction.SubActionKind.Select)},
-                    { new DateTime(2012, 4, 12, 12, 23, 43), new ProposalAction(proposal2, ProposalAction.SubActionKind.Select)},
-                    { new DateTime(2012, 4, 12, 12, 23, 45), new ProposalAction(proposal1, ProposalAction.SubActionKind.Apply)},
-                }
+                    { new DateTime(2012, 4, 12, 12, 23, 42), proposal1},
+                    { new DateTime(2012, 4, 12, 12, 23, 43), proposal2},
+                    { new DateTime(2012, 4, 12, 12, 23, 45),proposal1},
+                },
+                TerminatedBy = CompletionEvent.TerminationAction.Apply
             };
 
             var eventCopy = SerializeAndDeserialize(completionEvent);
             Assert.AreEqual(completionEvent.IDESessionUUID, eventCopy.IDESessionUUID);
-            Assert.AreEqual(completionEvent.CompletionTimeStamp, eventCopy.CompletionTimeStamp);
+            Assert.AreEqual(completionEvent.TriggeredAt, eventCopy.TriggeredAt);
+            Assert.AreEqual(completionEvent.TriggeredBy, eventCopy.TriggeredBy);
             Assert.AreEqual(completionEvent.Context, eventCopy.Context);
             Assert.AreEqual(completionEvent.ProposalCollection, eventCopy.ProposalCollection);
-            Assert.AreEqual(completionEvent.Actions, eventCopy.Actions);
+            CollectionAssert.AreEqual(completionEvent.Selections, eventCopy.Selections);
+            Assert.AreEqual(completionEvent.TerminatedBy, eventCopy.TerminatedBy);
         }
 
         [Test]
