@@ -36,10 +36,8 @@ namespace CompletionEventSerializer.Tests
                 Relevance = -23
             };
 
-            var completionEvent = new CompletionEvent
+            var completionEvent = new CompletionEvent("0xDEADBEEF")
             {
-                IDESessionUUID = "0xDEADBEEF",
-                TriggeredAt = new DateTime(),
                 TriggeredBy = IDEEvent.Trigger.Automatic,
                 Context = new Context
                 {
