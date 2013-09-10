@@ -49,14 +49,11 @@ namespace CompletionEventSerializer.Tests
                     }
                 },
                 ProposalCollection = new ProposalCollection(new List<Proposal> {proposal1, proposal2}),
-                Selections = new Dictionary<DateTime, Proposal>
-                {
-                    { new DateTime(2012, 4, 12, 12, 23, 42), proposal1},
-                    { new DateTime(2012, 4, 12, 12, 23, 43), proposal2},
-                    { new DateTime(2012, 4, 12, 12, 23, 45),proposal1},
-                },
                 TerminatedBy = CompletionEvent.TerminationAction.Apply
             };
+            completionEvent.AddSelection(new ProposalSelection(proposal1, "Foo."));
+            completionEvent.AddSelection(new ProposalSelection(proposal2, "Foo."));
+            completionEvent.AddSelection(new ProposalSelection(proposal1, "Foo."));
 
             var eventCopy = SerializeAndDeserialize(completionEvent);
             Assert.AreEqual(completionEvent.IDESessionUUID, eventCopy.IDESessionUUID);
