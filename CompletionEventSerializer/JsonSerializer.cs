@@ -13,7 +13,7 @@ namespace CompletionEventSerializer
     [Export("JSON", typeof(ISerializer))]
     public class JsonSerializer : ISerializer
     {
-        private static readonly JsonSerializerSettings Settings = new JsonSerializerSettings
+        public static readonly JsonSerializerSettings Settings = new JsonSerializerSettings
             {
                 Converters =
                     {

@@ -5,7 +5,7 @@ using CompletionEventSerializer;
 
 namespace CompletionEventBus
 {
-    class EventBusInitializer
+    public class EventBusInitializer
     {
         // TODO ensure this is getting called at "the beginning"...
         [ImportingConstructor]

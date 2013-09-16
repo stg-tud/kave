@@ -35,7 +35,7 @@ namespace CompletionEventSerializer.Tests
                 Relevance = -23
             };
 
-            var completionEvent = new CompletionEvent("0xDEADBEEF")
+            var completionEvent = new CompletionEvent
             {
                 TriggeredBy = IDEEvent.Trigger.Automatic,
                 Context = new Context
