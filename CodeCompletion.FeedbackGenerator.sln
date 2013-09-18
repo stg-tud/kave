@@ -28,9 +28,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeCompletion.Utils", "..\
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4082B7FC-EE0E-4329-904A-49455AFEC5B0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventGenerator.Commons", "EventGenerator.Commons\EventGenerator.Commons.csproj", "{68C1DF50-3A30-4449-B11D-B02F486CD3C8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventGenerator.VisualStudio10", "EventGenerator.VisualStudio10\EventGenerator.VisualStudio10.csproj", "{7B8BA4E9-6AAC-4348-8655-4A8004845BE5}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 10
+		SccNumberOfProjects = 12
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://kave.visualstudio.com/defaultcollection
 		SccLocalPath0 = .
@@ -61,6 +65,12 @@ Global
 		SccProjectUniqueName9 = ..\\CodeCompletion\\CodeCompletion.Utils\\CodeCompletion.Utils.csproj
 		SccProjectName9 = ../CodeCompletion/CodeCompletion.Utils
 		SccLocalPath9 = ..\\CodeCompletion\\CodeCompletion.Utils
+		SccProjectUniqueName10 = EventGenerator.Commons\\EventGenerator.Commons.csproj
+		SccProjectName10 = EventGenerator.Commons
+		SccLocalPath10 = EventGenerator.Commons
+		SccProjectUniqueName11 = EventGenerator.VisualStudio10\\EventGenerator.VisualStudio10.csproj
+		SccProjectName11 = EventGenerator.VisualStudio10
+		SccLocalPath11 = EventGenerator.VisualStudio10
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -103,6 +113,14 @@ Global
 		{4439FDE5-778A-4FAB-8BB0-7A4E23C45BDB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4439FDE5-778A-4FAB-8BB0-7A4E23C45BDB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4439FDE5-778A-4FAB-8BB0-7A4E23C45BDB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{68C1DF50-3A30-4449-B11D-B02F486CD3C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{68C1DF50-3A30-4449-B11D-B02F486CD3C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{68C1DF50-3A30-4449-B11D-B02F486CD3C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{68C1DF50-3A30-4449-B11D-B02F486CD3C8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7B8BA4E9-6AAC-4348-8655-4A8004845BE5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B8BA4E9-6AAC-4348-8655-4A8004845BE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B8BA4E9-6AAC-4348-8655-4A8004845BE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B8BA4E9-6AAC-4348-8655-4A8004845BE5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

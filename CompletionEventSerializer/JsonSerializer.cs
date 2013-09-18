@@ -99,12 +99,12 @@ namespace CompletionEventSerializer
             return typeof(IName).IsAssignableFrom(objectType);
         }
 
-        public static string AliasFor(Type nameType)
+        private static string AliasFor(Type nameType)
         {
             return nameType.FullName.Substring(NameQualifierPrefix.Length);
         }
 
-        public static Type TypeFrom(string alias)
+        private static Type TypeFrom(string alias)
         {
             var assemblyName = typeof (IName).Assembly.FullName;
             var assemblyQualifiedTypeName = NameQualifierPrefix + alias + ", " + assemblyName;
