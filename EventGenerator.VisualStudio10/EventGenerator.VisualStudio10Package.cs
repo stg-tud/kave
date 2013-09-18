@@ -2,8 +2,7 @@
 using System.Diagnostics;
 using System.Globalization;
 using System.Runtime.InteropServices;
-using EventGenerator.Commons;
-using KAVE.EventGenerator_VisualStudio10.Annotations;
+using JetBrains.Annotations;
 using KAVE.EventGenerator_VisualStudio10.Generators;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.ComponentModelHost;
@@ -29,6 +28,7 @@ namespace KAVE.EventGenerator_VisualStudio10
     [InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400)]
     [ProvideAutoLoad(VSConstants.UICONTEXT.NoSolution_string)]
     [Guid(GuidList.guidEventGenerator_VisualStudio10PkgString)]
+    // ReSharper disable once InconsistentNaming
     public sealed class EventGenerator_VisualStudio10Package : Package
     {
         /// <summary>

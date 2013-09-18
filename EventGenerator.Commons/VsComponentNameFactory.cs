@@ -31,5 +31,15 @@ namespace EventGenerator.Commons
         {
             return (from Document document in documents select GetNameOf(document));
         }
+
+        public static ProjectItemName GetNameOf(ProjectItem projectItem)
+        {
+            return projectItem == null ? null : ProjectItemName.Get(projectItem.Kind + " " + projectItem.Name);
+        }
+
+        public static ProjectName GetNameOf(Project project)
+        {
+            return project == null ? null : ProjectName.Get(project.Kind + " " + project.UniqueName);
+        }
     }
 }

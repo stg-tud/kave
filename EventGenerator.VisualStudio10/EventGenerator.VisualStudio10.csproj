@@ -122,6 +122,8 @@
     <Compile Include="Generators\DocumentEventGenerator.cs" />
     <Compile Include="Generators\FindEventGenerator.cs" />
     <Compile Include="Generators\IDEModeEventGenerator.cs" />
+    <Compile Include="Generators\SolutionEventGenerator.cs" />
+    <Compile Include="Generators\TaskListEventGenerator.cs" />
     <Compile Include="Generators\VisualStudioEventGenerator.cs" />
     <Compile Include="Generators\WindowEventGenerator.cs" />
     <Compile Include="Guids.cs" />
@@ -130,8 +132,9 @@
     <Compile Include="Model\DocumentEvent.cs" />
     <Compile Include="Model\FindEvent.cs" />
     <Compile Include="Model\IDEModeEvent.cs" />
+    <Compile Include="Model\SolutionEvent.cs" />
+    <Compile Include="Model\TaskListEvent.cs" />
     <Compile Include="Model\WindowEvent.cs" />
-    <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

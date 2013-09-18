@@ -3,6 +3,7 @@ using System;
 using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
 using System.Threading;
+using JetBrains.Annotations;
 using NUnit.Framework;
 
 namespace CompletionEventBus.Tests

@@ -3,6 +3,7 @@ using System.ComponentModel.Composition;
 using CodeCompletion.Model;
 using EnvDTE;
 using EventGenerator.Commons;
+using JetBrains.Annotations;
 using Microsoft.VisualStudio.Shell;
 
 namespace KAVE.EventGenerator_VisualStudio10.Generators

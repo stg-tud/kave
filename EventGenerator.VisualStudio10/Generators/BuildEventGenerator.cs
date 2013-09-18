@@ -1,8 +1,10 @@
 ﻿using System;
 using System.ComponentModel.Composition;
+using System.Diagnostics;
 using CodeCompletion.Utils.Assertion;
 using EnvDTE;
 using KAVE.EventGenerator_VisualStudio10.Model;
+using Microsoft.VisualStudio.Shell;
 
 namespace KAVE.EventGenerator_VisualStudio10.Generators
 {
