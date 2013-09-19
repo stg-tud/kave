@@ -41,5 +41,10 @@ namespace EventGenerator.Commons
         {
             return project == null ? null : ProjectName.Get(project.Kind + " " + project.UniqueName);
         }
+
+        public static CommandName GetNameOf(Command command)
+        {
+            return command == null ? null : CommandName.Get("{" + command.Guid + "}:" + command.ID + ":" + command.Name);
+        }
     }
 }

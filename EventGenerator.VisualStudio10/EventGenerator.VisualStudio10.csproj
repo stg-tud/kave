@@ -118,20 +118,27 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Generators\BuildEventGenerator.cs" />
+    <Compile Include="Generators\CommandBarEventGenerator.cs" />
+    <Compile Include="Generators\CommandEventGenerator.cs" />
     <Compile Include="Generators\DebuggerEventGenerator.cs" />
     <Compile Include="Generators\DocumentEventGenerator.cs" />
     <Compile Include="Generators\FindEventGenerator.cs" />
     <Compile Include="Generators\IDEModeEventGenerator.cs" />
+    <Compile Include="Generators\OutputWindowEventGenerator.cs" />
     <Compile Include="Generators\SolutionEventGenerator.cs" />
     <Compile Include="Generators\TaskListEventGenerator.cs" />
+    <Compile Include="Generators\TextEditorEventGenerator.cs" />
     <Compile Include="Generators\VisualStudioEventGenerator.cs" />
     <Compile Include="Generators\WindowEventGenerator.cs" />
     <Compile Include="Guids.cs" />
     <Compile Include="Model\BuildEvent.cs" />
+    <Compile Include="Model\CommandEvent.cs" />
     <Compile Include="Model\DebuggerEvent.cs" />
     <Compile Include="Model\DocumentEvent.cs" />
+    <Compile Include="Model\EditEvent.cs" />
     <Compile Include="Model\FindEvent.cs" />
     <Compile Include="Model\IDEModeEvent.cs" />
+    <Compile Include="Model\OutputWindowEvent.cs" />
     <Compile Include="Model\SolutionEvent.cs" />
     <Compile Include="Model\TaskListEvent.cs" />
     <Compile Include="Model\WindowEvent.cs" />

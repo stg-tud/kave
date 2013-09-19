@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.Composition;
+﻿using System.Collections.Generic;
+using System.ComponentModel.Composition;
 using CodeCompletion.Model.Names.VisualStudio;
 using EnvDTE;
 using EventGenerator.Commons;

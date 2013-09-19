@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.Composition;
+﻿using System.Collections.Generic;
+using System.ComponentModel.Composition;
 using EnvDTE;
 using KAVE.EventGenerator_VisualStudio10.Model;
 

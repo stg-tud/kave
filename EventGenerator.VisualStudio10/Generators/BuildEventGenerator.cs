@@ -1,41 +1,11 @@
 ﻿using System;
 using System.ComponentModel.Composition;
-using System.Diagnostics;
 using CodeCompletion.Utils.Assertion;
 using EnvDTE;
 using KAVE.EventGenerator_VisualStudio10.Model;
-using Microsoft.VisualStudio.Shell;
 
 namespace KAVE.EventGenerator_VisualStudio10.Generators
 {
-    [Export(typeof (VisualStudioEventGenerator))]
-    internal class OutputWindowEventGenerator : VisualStudioEventGenerator
-    {
-        private OutputWindowEvents _outputWindowEvents;
-
-        protected override void Initialize()
-        {
-            _outputWindowEvents = DTEEvents.OutputWindowEvents;
-            _outputWindowEvents.PaneAdded += OutputWindowEvents_PaneAdded;
-            _outputWindowEvents.PaneUpdated += _outputWindowEvents_PaneUpdated;
-            _outputWindowEvents.PaneClearing += _outputWindowEvents_PaneClearing;
-        }
-
-        void _outputWindowEvents_PaneUpdated(OutputWindowPane pPane)
-        {
-        }
-
-        void _outputWindowEvents_PaneClearing(OutputWindowPane pPane)
-        {
-            throw new NotImplementedException();
-        }
-
-        void OutputWindowEvents_PaneAdded(OutputWindowPane pPane)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
     [Export(typeof(VisualStudioEventGenerator))]
     internal class BuildEventGenerator : VisualStudioEventGenerator
     {
