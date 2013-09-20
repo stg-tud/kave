@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.Composition;
-using System.Diagnostics;
+﻿using System.ComponentModel.Composition;
 using EnvDTE;
 using KAVE.EventGenerator_VisualStudio10.Model;
 
@@ -20,6 +18,7 @@ namespace KAVE.EventGenerator_VisualStudio10.Generators
         void TextEditorEvents_LineChanged(TextPoint startPoint, TextPoint endPoint, int hint)
         {
             // TODO match up with commands that cause edits?
+            // TODO merge multiple events in small timespan
             var editEvent = Create<EditEvent>();
             editEvent.Line = startPoint.Line;
             editEvent.ChangeSize = endPoint.LineCharOffset - startPoint.LineCharOffset;

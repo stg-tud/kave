@@ -18,19 +18,10 @@ namespace KAVE.EventGenerator_VisualStudio10.Generators
             get { return (DTE) _serviceProvider.GetService(typeof (DTE)); }
         }
 
+        [NotNull]
         protected Events DTEEvents
         {
             get { return DTE.Events; }
-        }
-
-        /// <summary>
-        /// Sets <see cref="IDEEvent.FinishedAt"/> to the current time and publishes the event.
-        /// </summary>
-        protected void Fire(IDEEvent ideEvent)
-        {
-            ideEvent.FinishedAt = DateTime.Now;
-            // TODO actually send messages
-            // _messageChannel.Publish(ideEvent);
         }
 
         public void OnImportsSatisfied()

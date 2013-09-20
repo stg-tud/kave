@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.Composition;
+﻿using System.ComponentModel.Composition;
 using CodeCompletion.Model.Names.VisualStudio;
 using EnvDTE;
 using EventGenerator.Commons;
@@ -39,65 +38,65 @@ namespace KAVE.EventGenerator_VisualStudio10.Generators
             _selectionEvents.OnChange += _selectionEvents_OnChange;
         }
 
-        void _solutionItemsEvents_ItemAdded(ProjectItem projectItem)
+        private void _solutionItemsEvents_ItemAdded(ProjectItem projectItem)
         {
             Fire(SolutionEvent.SolutionAction.AddSolutionItem, VsComponentNameFactory.GetNameOf(projectItem));
         }
 
-        void _solutionItemsEvents_ItemRenamed(ProjectItem projectItem, string oldName)
+        private void _solutionItemsEvents_ItemRenamed(ProjectItem projectItem, string oldName)
         {
             Fire(SolutionEvent.SolutionAction.RenameSolutionItem, VsComponentNameFactory.GetNameOf(projectItem));
         }
 
-        void _solutionItemsEvents_ItemRemoved(ProjectItem projectItem)
+        private void _solutionItemsEvents_ItemRemoved(ProjectItem projectItem)
         {
             Fire(SolutionEvent.SolutionAction.RemoveSolutionItem, VsComponentNameFactory.GetNameOf(projectItem));
         }
 
-        void _solutionEvents_Opened()
+        private void _solutionEvents_Opened()
         {
             Fire(SolutionEvent.SolutionAction.OpenSolution, VsComponentNameFactory.GetNameOf(DTE.Solution));
         }
 
-        void _solutionEvents_ProjectAdded(Project project)
+        private void _solutionEvents_ProjectAdded(Project project)
         {
             Fire(SolutionEvent.SolutionAction.AddProject, VsComponentNameFactory.GetNameOf(project));
         }
 
-        void _projectItemsEvents_ItemAdded(ProjectItem projectItem)
+        private void _projectItemsEvents_ItemAdded(ProjectItem projectItem)
         {
             // TODO finish add events
             Fire(SolutionEvent.SolutionAction.AddProjectItem, VsComponentNameFactory.GetNameOf(projectItem));
         }
 
-        void _projectItemsEvents_ItemRenamed(ProjectItem projectItem, string oldName)
+        private void _projectItemsEvents_ItemRenamed(ProjectItem projectItem, string oldName)
         {
             // TODO finish rename events
             Fire(SolutionEvent.SolutionAction.RenameProjectItem, VsComponentNameFactory.GetNameOf(projectItem));
         }
 
-        void _projectItemsEvents_ItemRemoved(ProjectItem projectItem)
+        private void _projectItemsEvents_ItemRemoved(ProjectItem projectItem)
         {
             // TODO finish remove events
             Fire(SolutionEvent.SolutionAction.RemoveProjectItem, VsComponentNameFactory.GetNameOf(projectItem));
         }
 
-        void _solutionEvents_ProjectRenamed(Project project, string oldName)
+        private void _solutionEvents_ProjectRenamed(Project project, string oldName)
         {
             Fire(SolutionEvent.SolutionAction.RenameProject, VsComponentNameFactory.GetNameOf(project));
         }
 
-        void _solutionEvents_ProjectRemoved(Project project)
+        private void _solutionEvents_ProjectRemoved(Project project)
         {
             Fire(SolutionEvent.SolutionAction.RemoveProject, VsComponentNameFactory.GetNameOf(project));
         }
 
-        void _solutionEvents_Renamed(string oldName)
+        private void _solutionEvents_Renamed(string oldName)
         {
             Fire(SolutionEvent.SolutionAction.RenameSolution, VsComponentNameFactory.GetNameOf(DTE.Solution));
         }
 
-        void _solutionEvents_BeforeClosing()
+        private void _solutionEvents_BeforeClosing()
         {
             Fire(SolutionEvent.SolutionAction.CloseSolution, VsComponentNameFactory.GetNameOf(DTE.Solution));
         }
@@ -105,6 +104,9 @@ namespace KAVE.EventGenerator_VisualStudio10.Generators
         private void _selectionEvents_OnChange()
         {
             // TODO fire project item selection event?
+            // this method behaves strange... e.g., selection in solution explorer is recognized. Adding to that
+            // selection by ctrl+click is recognized. Any further additions to the selection, using ctrl+click, are
+            // not recognized.
         }
 
         private void Fire(SolutionEvent.SolutionAction action, IIDEComponentName target)
