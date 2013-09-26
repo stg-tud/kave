@@ -62,8 +62,7 @@ namespace EventGenerator.Commons
             return command == null ? null : GetNameOfCommand(command.Guid, command.ID, command.Name);
         }
 
-        [NotNull]
-        public static CommandName GetNameOfCommand([NotNull] string guid, int id, [CanBeNull] string name = null)
+        private static CommandName GetNameOfCommand(string guid, int id, string name)
         {
             Asserts.NotNull(guid, "guid");
             var identifier = guid + ":" + id;

@@ -37,7 +37,7 @@ namespace CompletionEventSerializer.Tests
 
             var completionEvent = new CompletionEvent
             {
-                TriggeredBy = IDEEvent.Trigger.Automatic,
+                TriggeredBy = IDEEvent.Trigger.Unknown,
                 Context = new Context
                 {
                     EnclosingMethod = MethodName.Get("[Enclosing, Bssmbly, Version=4.2.3.1] [System.Void, mscore, Version=4.0.0.0].EncMeth()"),

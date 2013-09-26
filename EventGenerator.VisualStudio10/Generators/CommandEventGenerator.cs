@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Diagnostics;
 using System.Linq;
+using System.Windows.Input;
 using CodeCompletion.Model;
-using CodeCompletion.Model.Names.VisualStudio;
 using CodeCompletion.Utils.Assertion;
 using EnvDTE;
 using EventGenerator.Commons;
@@ -13,14 +13,14 @@ using Microsoft.VisualStudio.CommandBars;
 
 namespace KAVE.EventGenerator_VisualStudio10.Generators
 {
-    [Export(typeof (VisualStudioEventGenerator))]
+    [Export(typeof(VisualStudioEventGenerator))]
     internal class CommandEventGenerator : VisualStudioEventGenerator
     {
         private CommandEvents _commandEvents;
         private IEnumerable<CommandBar> _commandBars;
         private IEnumerable<CommandBarControl> _commandBarsControls;
 
-        private CommandEvent _currentEvent;
+        private CommandEvent _commandBarCommandEvent;
         private Dictionary<string, CommandEvent> _eventQueue;
 
         private CommandBars CommandBars
@@ -30,7 +30,7 @@ namespace KAVE.EventGenerator_VisualStudio10.Generators
 
         private IEnumerable<CommandBarControl> CommandBarsLeafControls()
         {
-                return _commandBars.SelectMany(bar => CommandBarsLeafControls(bar.Controls));
+            return _commandBars.SelectMany(bar => CommandBarsLeafControls(bar.Controls));
         }
 
         private IEnumerable<CommandBarControl> CommandBarsLeafControls(CommandBarControls controls)
@@ -89,47 +89,56 @@ namespace KAVE.EventGenerator_VisualStudio10.Generators
 
         private void _commandBarEvents_Dropdown_Change(CommandBarComboBox comboBox)
         {
-            SetCurrentEventToCommandBarMouseInteractionEvent(comboBox);
+            SetCommandBarCommandEvent(comboBox);
         }
 
         private void _commandBarEvents_Button_Click(CommandBarButton button, ref bool cancelDefault)
         {
-            SetCurrentEventToCommandBarMouseInteractionEvent(button);
+            SetCommandBarCommandEvent(button);
         }
 
-        private void SetCurrentEventToCommandBarMouseInteractionEvent(CommandBarControl control)
+        private void SetCommandBarCommandEvent(CommandBarControl control)
         {
-            _currentEvent = Create<CommandEvent>();
-            _currentEvent.Source = VsComponentNameFactory.GetNameOf(control);
-            _currentEvent.TriggeredBy = IDEEvent.Trigger.Click;
+            _commandBarCommandEvent = Create<CommandEvent>();
+            _commandBarCommandEvent.Source = VsComponentNameFactory.GetNameOf(control);
+            _commandBarCommandEvent.TriggeredBy = IDEEvent.Trigger.Click;
         }
 
         void _commandEvents_BeforeExecute(string guid, int id, object customIn, object customOut, ref bool cancelDefault)
         {
-            if (_currentEvent == null)
+            var command = GetCommand(guid, id);
+            var commandEvent = _commandBarCommandEvent ?? Create<CommandEvent>();
+
+            // if event was not triggered by selecting a menu control
+            if (_commandBarCommandEvent == null)
             {
-                _currentEvent = Create<CommandEvent>();
-                // TODO this is not finegrained enough, I think, as it will map shortcuts to automatic as well
-                // maybe we can capture keyboard state to see wheather a modifier key is pressed?
-                _currentEvent.TriggeredBy = IDEEvent.Trigger.Automatic;
+                if (IsTriggeredByBinding(command))
+                {
+                    commandEvent.TriggeredBy = IDEEvent.Trigger.Shortcut;
+                }
             }
-            
-            _currentEvent.Command = GetCommandName(guid, id);
-            EnqueueEvent(_currentEvent);
-            _currentEvent = null;
+
+            commandEvent.Command = VsComponentNameFactory.GetNameOf(command);
+            EnqueueEvent(commandEvent);
+
+            _commandBarCommandEvent = null;
         }
 
-        private CommandName GetCommandName(string guid, int id)
+        private Command GetCommand(string guid, int id)
         {
             try
             {
-                var command = DTE.Commands.Item(guid, id);
-                return VsComponentNameFactory.GetNameOf(command);
+                return DTE.Commands.Item(guid, id);
             }
             catch (ArgumentException)
             {
-                return VsComponentNameFactory.GetNameOfCommand(guid, id);
+                return new UnknownCommand { DTE = DTE, Guid = guid, ID = id };
             }
+        }
+
+        private static bool IsTriggeredByBinding(Command command)
+        {
+            return Binding.CreateFrom(((object[]) command.Bindings).Cast<string>()).Any(b => b.IsPressed());
         }
 
         private void EnqueueEvent(CommandEvent evt)
@@ -158,6 +167,79 @@ namespace KAVE.EventGenerator_VisualStudio10.Generators
             _eventQueue.TryGetValue(commandKey, out evt);
             _eventQueue.Remove(commandKey);
             return evt;
+        }
+    }
+
+    internal class UnknownCommand : Command
+    {
+        public object AddControl(object owner, int position = 1)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Delete()
+        {
+            throw new NotImplementedException();
+        }
+
+        public string Name
+        {
+            get { return ""; }
+        }
+        public Commands Collection
+        {
+            get { return null; }
+        }
+        public DTE DTE { get; internal set; }
+        public string Guid { get; internal set; }
+        public int ID { get; internal set; }
+        public bool IsAvailable
+        {
+            get { return true; }
+        }
+        public object Bindings
+        {
+            get { return new string[0]; }
+            set { }
+        }
+        public string LocalizedName
+        {
+            get { return ""; }
+        }
+    }
+
+    internal class Binding
+    {
+        private readonly string _scope;
+        private readonly Key[][] _keyCombinations;
+
+        public static Binding CreateFrom(string bindingIdentifier)
+        {
+            var endOfScope = bindingIdentifier.IndexOf(':');
+            var scope = bindingIdentifier.Substring(0, endOfScope);
+            var keyConverter = new KeyConverter();
+            var keyBinding = bindingIdentifier.Substring(endOfScope + 2);
+            var keyBindingParts = keyBinding.Split(',').Select(s => s.Trim());
+            var keyCombinations = keyBindingParts.Select(s => s.Split('+').Select(keyConverter.ConvertFromString).Cast<Key>().ToArray()).ToArray();
+            Asserts.True(keyCombinations.Any(), "binding contains no key combination: " + bindingIdentifier);
+            Asserts.True(keyCombinations.Count() <= 2, "binding has more than two key combinations: " + bindingIdentifier);
+            return new Binding(scope, keyCombinations);
+        }
+
+        public static IEnumerable<Binding> CreateFrom(IEnumerable<string> bindingsIdentifiers)
+        {
+            return bindingsIdentifiers.Select(CreateFrom);
+        }
+
+        private Binding(string scope, Key[][] keyCombinations)
+        {
+            _scope = scope;
+            _keyCombinations = keyCombinations;
+        }
+
+        public bool IsPressed()
+        {
+            return _keyCombinations.Last().All(Keyboard.IsKeyDown);
         }
     }
 }
