@@ -13,5 +13,6 @@ namespace KAVE.EventGenerator_VisualStudio10.Model
         }
 
         public CommandName Command { get; internal set; }
+        public CommandBarControlName Source { get; internal set; }
     }
 }

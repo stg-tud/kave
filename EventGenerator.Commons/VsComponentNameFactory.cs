@@ -4,6 +4,7 @@ using CodeCompletion.Model.Names.VisualStudio;
 using CodeCompletion.Utils.Assertion;
 using EnvDTE;
 using JetBrains.Annotations;
+using Microsoft.VisualStudio.CommandBars;
 
 namespace EventGenerator.Commons
 {
@@ -65,12 +66,26 @@ namespace EventGenerator.Commons
         public static CommandName GetNameOfCommand([NotNull] string guid, int id, [CanBeNull] string name = null)
         {
             Asserts.NotNull(guid, "guid");
-            var identifier = "{" + guid + "}:" + id;
+            var identifier = guid + ":" + id;
             if (name != null)
             {
                 identifier += ":" + name;
             }
             return CommandName.Get(identifier);
+        }
+
+        [ContractAnnotation("notnull => notnull"), CanBeNull]
+        public static CommandBarControlName GetNameOf([CanBeNull] CommandBarControl control)
+        {
+            return control == null
+                ? null
+                : CommandBarControlName.Get(GetIdentifierOf(control.Parent) + CommandBarControlName.HierarchySeperator + control.Caption);
+        }
+
+        private static string GetIdentifierOf([NotNull] CommandBar bar)
+        {
+            var parent = bar.Parent as CommandBar;
+            return parent == null ? bar.Name : GetIdentifierOf(parent) + CommandBarControlName.HierarchySeperator + bar.Name;
         }
     }
 }
