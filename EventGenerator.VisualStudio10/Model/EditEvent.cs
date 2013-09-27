@@ -10,8 +10,8 @@ namespace KAVE.EventGenerator_VisualStudio10.Model
         {
         }
 
-        public int Line { get; internal set; }
+        public int NumberOfChangedLines { get; internal set; }
 
-        public int ChangeSize { get; internal set; }
+        public int NumberOfChangedCharacters { get; internal set; }
     }
 }

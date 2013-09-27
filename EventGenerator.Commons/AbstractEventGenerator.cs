@@ -24,8 +24,18 @@ namespace EventGenerator.Commons
                 ActiveDocument = VsComponentNameFactory.GetNameOf(DTEActiveDocument),
                 OpenWindows = VsComponentNameFactory.GetNamesOf(DTE.Windows),
                 OpenDocuments = VsComponentNameFactory.GetNamesOf(DTE.Documents),
-                OpenSolution = VsComponentNameFactory.GetNameOf(DTE.Solution)
+                OpenSolution = VsComponentNameFactory.GetNameOf(DTE.Solution),
+                TriggeredBy = CurrentTrigger,
             };
+        }
+
+        private static IDEEvent.Trigger CurrentTrigger
+        {
+            get
+            {
+                var leftMouseButtonPressed = Mouse.LeftButton == MouseButtonState.Pressed;
+                return leftMouseButtonPressed ? IDEEvent.Trigger.Click : IDEEvent.Trigger.Unknown;
+            }
         }
 
         private Window DTEActiveWindow

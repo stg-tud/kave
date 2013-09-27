@@ -65,19 +65,16 @@ namespace KAVE.EventGenerator_VisualStudio10.Generators
 
         private void _projectItemsEvents_ItemAdded(ProjectItem projectItem)
         {
-            // TODO finish add events
             Fire(SolutionEvent.SolutionAction.AddProjectItem, VsComponentNameFactory.GetNameOf(projectItem));
         }
 
         private void _projectItemsEvents_ItemRenamed(ProjectItem projectItem, string oldName)
         {
-            // TODO finish rename events
             Fire(SolutionEvent.SolutionAction.RenameProjectItem, VsComponentNameFactory.GetNameOf(projectItem));
         }
 
         private void _projectItemsEvents_ItemRemoved(ProjectItem projectItem)
         {
-            // TODO finish remove events
             Fire(SolutionEvent.SolutionAction.RemoveProjectItem, VsComponentNameFactory.GetNameOf(projectItem));
         }
 
