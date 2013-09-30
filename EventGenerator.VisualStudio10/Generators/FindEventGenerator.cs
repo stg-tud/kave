@@ -16,8 +16,6 @@ namespace KAVE.EventGenerator_VisualStudio10.Generators
             _findEvents.FindDone += _findEvents_FindDone;
         }
 
-        // TODO find and capture events that start a find
-
         private FindEvent _lastEvent;
 
         void _findEvents_FindDone(vsFindResult result, bool cancelled)

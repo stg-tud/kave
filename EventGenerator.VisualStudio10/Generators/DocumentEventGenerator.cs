@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.Composition;
+﻿using System.ComponentModel.Composition;
 using EnvDTE;
 using KAVE.EventGenerator_VisualStudio10.Model;
 
@@ -37,6 +36,7 @@ namespace KAVE.EventGenerator_VisualStudio10.Generators
         private void Fire(string documentName, DocumentEvent.DocumentAction action)
         {
             var documentEvent = Create<DocumentEvent>();
+            // TODO shorten document names to document relative names if they are longer
             documentEvent.DocumentName = documentName;
             documentEvent.Action = action;
             Fire(documentEvent);

@@ -4,6 +4,7 @@ using KAVE.EventGenerator_VisualStudio10.Model;
 
 namespace KAVE.EventGenerator_VisualStudio10.Generators
 {
+    // TODO remove this generator
     [Export(typeof(VisualStudioEventGenerator))]
     internal class IDEModeEventGenerator : VisualStudioEventGenerator
     {

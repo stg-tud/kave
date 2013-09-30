@@ -1,0 +1,93 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="KAVE.EventGenerator_VisualStudio10.Generators.BuildEventGenerator">
+    <Position X="1.25" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAFAACAIAQAAAAAAAAAAEAAEAAAAAAAAACAAAAA=</HashCode>
+      <FileName>Generators\BuildEventGenerator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="KAVE.EventGenerator_VisualStudio10.Generators.WindowEventGenerator">
+    <Position X="8" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAABCACQAAAAAAAAAAAAAEAQAAAAAAAEAAAAA=</HashCode>
+      <FileName>Generators\WindowEventGenerator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="KAVE.EventGenerator_VisualStudio10.Generators.CommandEventGenerator">
+    <Position X="14.75" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAAAEAAEAAAEAQAQBEgCAAAAgEACAAAAAIEAAAFAAAA=</HashCode>
+      <FileName>Generators\CommandEventGenerator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="KAVE.EventGenerator_VisualStudio10.Generators.DebuggerEventGenerator">
+    <Position X="10.25" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABEAAAAAACAIAQAAAAAAgAAACAAAAggkAAAAAAAAAAA=</HashCode>
+      <FileName>Generators\DebuggerEventGenerator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="KAVE.EventGenerator_VisualStudio10.Generators.DocumentEventGenerator">
+    <Position X="17" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAEAQAAAAIAAAAAAAAEgAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Generators\DocumentEventGenerator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="KAVE.EventGenerator_VisualStudio10.Generators.FindEventGenerator">
+    <Position X="21.5" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAgAAIASAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Generators\FindEventGenerator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="KAVE.EventGenerator_VisualStudio10.Generators.IDEModeEventGenerator">
+    <Position X="3.5" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAQAAAAAAAgAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Generators\IDEModeEventGenerator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="KAVE.EventGenerator_VisualStudio10.Generators.OutputWindowEventGenerator">
+    <Position X="12.5" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAACAQAAAABAAAAAgAAMAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Generators\OutputWindowEventGenerator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="KAVE.EventGenerator_VisualStudio10.Generators.SolutionEventGenerator">
+    <Position X="19.25" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAMBAAAAQAAMAAAAEAAgAwFAAAgAJAABAIgAAA=</HashCode>
+      <FileName>Generators\SolutionEventGenerator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="KAVE.EventGenerator_VisualStudio10.Generators.TaskListEventGenerator">
+    <Position X="23.75" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAgAAAAAAAQAAAAAAAAAAAAIFAABAAAAAAAAAAAA=</HashCode>
+      <FileName>Generators\TaskListEventGenerator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="KAVE.EventGenerator_VisualStudio10.Generators.TextEditorEventGenerator">
+    <Position X="5.75" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAQAQAAAAAAAAEAAAACAACAACgAAAgAAAA=</HashCode>
+      <FileName>Generators\TextEditorEventGenerator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="KAVE.EventGenerator_VisualStudio10.Generators.VisualStudioEventGenerator">
+    <Position X="11.75" Y="2.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAQBAAAAAAAAAAAAAAAAAAAIAAAABAAA=</HashCode>
+      <FileName>Generators\VisualStudioEventGenerator.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="1.272" />
+  </Class>
+  <Class Name="EventGenerator.Commons.AbstractEventGenerator">
+    <Position X="11.75" Y="0.5" Width="2" />
+    <TypeIdentifier />
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

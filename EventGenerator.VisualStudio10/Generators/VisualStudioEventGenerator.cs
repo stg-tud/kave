@@ -11,8 +11,7 @@ namespace KAVE.EventGenerator_VisualStudio10.Generators
     internal abstract class VisualStudioEventGenerator : AbstractEventGenerator, IPartImportsSatisfiedNotification
     {
         [Import] private SVsServiceProvider _serviceProvider;
-        //[Import] private IMessageChannel _messageChannel;
-
+        
         protected override DTE DTE
         {
             get { return (DTE) _serviceProvider.GetService(typeof (DTE)); }

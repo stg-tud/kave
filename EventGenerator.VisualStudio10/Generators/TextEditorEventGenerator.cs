@@ -8,6 +8,7 @@ namespace KAVE.EventGenerator_VisualStudio10.Generators
     [Export(typeof (VisualStudioEventGenerator))]
     internal class TextEditorEventGenerator : VisualStudioEventGenerator
     {
+        // TODO evaluate good threshold value
         private const int InactivityPeriodToCompleteEditAction = 1000;
 
         private TextEditorEvents _textEditorEvents;
@@ -29,8 +30,9 @@ namespace KAVE.EventGenerator_VisualStudio10.Generators
             lock (_eventLock)
             {
                 _currentEditEvent = _currentEditEvent ?? Create<EditEvent>();
-                _currentEditEvent.NumberOfChangedLines += 1;
-                _currentEditEvent.NumberOfChangedCharacters += endPoint.LineCharOffset - startPoint.LineCharOffset;
+                _currentEditEvent.NumberOfChanges += 1;
+                // TODO subtract whitespaces from change size
+                _currentEditEvent.SizeOfChanges += endPoint.LineCharOffset - startPoint.LineCharOffset;
             }
             _eventSendingTimer.Start();
         }
