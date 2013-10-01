@@ -22,12 +22,6 @@ namespace EventGenerator.Commons
             {
                 ActiveWindow = VsComponentNameFactory.GetNameOf(DTEActiveWindow),
                 ActiveDocument = VsComponentNameFactory.GetNameOf(DTEActiveDocument),
-                // TODO Save only on startup, then diff from window events
-                OpenWindows = VsComponentNameFactory.GetNamesOf(DTE.Windows),
-                // TODO delete open documents property, as it can be recalculated from the history
-                OpenDocuments = VsComponentNameFactory.GetNamesOf(DTE.Documents),
-                // TODO remove, since we always get Solution.Open
-                OpenSolution = VsComponentNameFactory.GetNameOf(DTE.Solution),
                 TriggeredBy = CurrentTrigger,
             };
         }

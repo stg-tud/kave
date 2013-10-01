@@ -30,8 +30,7 @@ namespace KAVE.EventGenerator_VisualStudio10.Generators
 
         void _taskListEvents_TaskNavigated(TaskItem taskItem, ref bool navigateHandled)
         {
-            // TODO remove this handles flag, since it is meant as an output
-            Fire(navigateHandled ? TaskListEvent.TaskListAction.NavigateTask : TaskListEvent.TaskListAction.FailToNavigateTask);
+            Fire(TaskListEvent.TaskListAction.NavigateTask);
         }
 
         void _taskListEvents_TaskRemoved(TaskItem taskItem)

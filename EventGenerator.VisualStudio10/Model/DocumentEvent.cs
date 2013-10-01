@@ -1,4 +1,5 @@
 ﻿using CodeCompletion.Model;
+using CodeCompletion.Model.Names.VisualStudio;
 
 namespace KAVE.EventGenerator_VisualStudio10.Model
 {
@@ -17,7 +18,7 @@ namespace KAVE.EventGenerator_VisualStudio10.Model
         {
         }
 
-        public string DocumentName { get; internal set; }
+        public DocumentName DocumentName { get; internal set; }
 
         public DocumentAction Action { get; internal set; }
     }

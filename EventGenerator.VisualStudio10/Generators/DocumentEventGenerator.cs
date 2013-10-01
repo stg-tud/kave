@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel.Composition;
+using CodeCompletion.Model.Names.VisualStudio;
 using EnvDTE;
+using EventGenerator.Commons;
 using KAVE.EventGenerator_VisualStudio10.Model;
 
 namespace KAVE.EventGenerator_VisualStudio10.Generators
@@ -19,25 +21,24 @@ namespace KAVE.EventGenerator_VisualStudio10.Generators
 
         void _documentEvents_DocumentOpened(Document document)
         {
-            Fire(document.FullName, DocumentEvent.DocumentAction.Opened);
+            Fire(document, DocumentEvent.DocumentAction.Opened);
         }
 
         void _documentEvents_DocumentSaved(Document document)
         {
-            Fire(document.FullName, DocumentEvent.DocumentAction.Saved);
+            Fire(document, DocumentEvent.DocumentAction.Saved);
             // TODO maybe safe (diff) groum?
         }
 
         void _documentEvents_DocumentClosing(Document document)
         {
-            Fire(document.FullName, DocumentEvent.DocumentAction.Closing);
+            Fire(document, DocumentEvent.DocumentAction.Closing);
         }
 
-        private void Fire(string documentName, DocumentEvent.DocumentAction action)
+        private void Fire(Document document, DocumentEvent.DocumentAction action)
         {
             var documentEvent = Create<DocumentEvent>();
-            // TODO shorten document names to document relative names if they are longer
-            documentEvent.DocumentName = documentName;
+            documentEvent.DocumentName = VsComponentNameFactory.GetNameOf(document);
             documentEvent.Action = action;
             Fire(documentEvent);
         }

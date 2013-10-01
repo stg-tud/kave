@@ -9,7 +9,7 @@ namespace KAVE.EventGenerator_VisualStudio10.Generators
     internal class TextEditorEventGenerator : VisualStudioEventGenerator
     {
         // TODO evaluate good threshold value
-        private const int InactivityPeriodToCompleteEditAction = 1000;
+        private const int InactivityPeriodToCompleteEditAction = 2000;
 
         private TextEditorEvents _textEditorEvents;
         private EditEvent _currentEditEvent;

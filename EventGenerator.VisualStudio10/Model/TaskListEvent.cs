@@ -2,7 +2,7 @@
 
 namespace KAVE.EventGenerator_VisualStudio10.Model
 {
-    class TaskListEvent : IDEEvent
+    internal class TaskListEvent : IDEEvent
     {
         public const string EventKind = "TaskList";
 
@@ -11,13 +11,10 @@ namespace KAVE.EventGenerator_VisualStudio10.Model
             AddTask,
             ModifyTask,
             NavigateTask,
-            FailToNavigateTask,
             RemoveTask
         }
 
-        public TaskListEvent() : base(EventKind)
-        {
-        }
+        public TaskListEvent() : base(EventKind) {}
 
         public TaskListAction Action { get; internal set; }
     }

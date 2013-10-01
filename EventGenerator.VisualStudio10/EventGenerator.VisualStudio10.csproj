@@ -124,7 +124,7 @@
     <Compile Include="Generators\DebuggerEventGenerator.cs" />
     <Compile Include="Generators\DocumentEventGenerator.cs" />
     <Compile Include="Generators\FindEventGenerator.cs" />
-    <Compile Include="Generators\IDEModeEventGenerator.cs" />
+    <Compile Include="Generators\IDEStartupStateEventGenerator.cs" />
     <Compile Include="Generators\OutputWindowEventGenerator.cs" />
     <Compile Include="Generators\SolutionEventGenerator.cs" />
     <Compile Include="Generators\TaskListEventGenerator.cs" />
@@ -138,7 +138,7 @@
     <Compile Include="Model\DocumentEvent.cs" />
     <Compile Include="Model\EditEvent.cs" />
     <Compile Include="Model\FindEvent.cs" />
-    <Compile Include="Model\IDEModeEvent.cs" />
+    <Compile Include="Model\IDEStateEvent.cs" />
     <Compile Include="Model\OutputWindowEvent.cs" />
     <Compile Include="Model\SolutionEvent.cs" />
     <Compile Include="Model\TaskListEvent.cs" />

@@ -2,7 +2,7 @@
 
 namespace KAVE.EventGenerator_VisualStudio10.Model
 {
-    class DebuggerEvent : IDEEvent
+    public class DebuggerEvent : IDEEvent
     {
         public const string EventKind = "Debugger";
 
@@ -15,9 +15,7 @@ namespace KAVE.EventGenerator_VisualStudio10.Model
             ExceptionNotHandled
         }
 
-        public DebuggerEvent() : base(EventKind)
-        {
-        }
+        public DebuggerEvent() : base(EventKind) {}
 
         public DebuggerMode Mode { get; internal set; }
         public string Reason { get; internal set; }
