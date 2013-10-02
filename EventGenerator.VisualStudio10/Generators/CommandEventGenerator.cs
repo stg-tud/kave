@@ -126,7 +126,6 @@ namespace KAVE.EventGenerator_VisualStudio10.Generators
             var commandEvent = TakeFromQueue(CommandKey(guid, id));
             Asserts.NotNull(commandEvent, "command finished that didn't start: " + guid + ":" + id);
             Fire(commandEvent);
-            Debug.WriteLine("FIRED " + commandEvent.Command + " TRIGGERED BY " + commandEvent.TriggeredBy + " (" + commandEvent.Source + ") #####################################");
         }
 
         private CommandEvent TakeFromQueue(string commandKey)

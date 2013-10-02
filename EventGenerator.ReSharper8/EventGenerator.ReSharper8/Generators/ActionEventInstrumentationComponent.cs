@@ -7,9 +7,9 @@ using JetBrains.DataFlow;
 namespace EventGenerator.ReSharper8.Generators
 {
     [ShellComponent]
-    internal class ActionEventHandlerRegistrationComponent
+    internal class ActionEventInstrumentationComponent
     {
-        public ActionEventHandlerRegistrationComponent(Lifetime lifetime, IActionManager actionManager, DTE dte)
+        public ActionEventInstrumentationComponent(Lifetime lifetime, IActionManager actionManager, DTE dte)
         {
             foreach (var updatableAction in actionManager.GetAllActions().OfType<IUpdatableAction>())
             {

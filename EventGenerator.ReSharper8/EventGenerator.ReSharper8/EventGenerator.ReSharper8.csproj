@@ -51,15 +51,22 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Generators\ActionEventHandlerRegistrationComponent.cs" />
+    <Compile Include="Generators\ActionEventInstrumentationComponent.cs" />
+    <Compile Include="Generators\BulbItemInstrumentationComponent.cs" />
     <Compile Include="Generators\EventGeneratingActionHandler.cs" />
-    <Compile Include="Model\ActionEvent.cs" />
+    <Compile Include="Generators\EventGeneratingBulbActionProxy.cs" />
+    <Compile Include="Model\BulbActionEvent.cs" />
+    <Compile Include="Model\Copy of ActionEvent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\CodeCompletion\CodeCompletion.Model\CodeCompletion.Model.csproj">
       <Project>{236E2794-DE4D-4F94-AC87-2ABFD1059CE0}</Project>
       <Name>CodeCompletion.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\CodeCompletion\CodeCompletion.Utils\CodeCompletion.Utils.csproj">
+      <Project>{4439FDE5-778A-4FAB-8BB0-7A4E23C45BDB}</Project>
+      <Name>CodeCompletion.Utils</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\EventGenerator.Commons\EventGenerator.Commons.csproj">
       <Project>{68C1DF50-3A30-4449-B11D-B02F486CD3C8}</Project>
