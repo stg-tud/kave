@@ -74,7 +74,7 @@ namespace EventGenerator.ReSharper8.Generators
         private static readonly MethodInfo MyExecutableProxiBulbActionSetter =
             typeof (IntentionAction.MyExecutableProxi).GetProperty("BulbAction").GetSetMethod(true);
 
-        private static readonly FieldInfo ExecutableItemActionGetter =
+        private static readonly FieldInfo ExecutableItemActionField =
             typeof (ExecutableItem).GetField("myAction", BindingFlags.Instance | BindingFlags.NonPublic);
 
         /// <summary>
@@ -89,10 +89,10 @@ namespace EventGenerator.ReSharper8.Generators
 
         public static void WrapBulbAction(this ExecutableItem executable, DTE dte)
         {
-            var originalAction = (Action) ExecutableItemActionGetter.GetValue(executable);
+            var originalAction = (Action) ExecutableItemActionField.GetValue(executable);
             var wrapper = new EventGeneratingActionWrapper(originalAction, dte);
             var newAction = (Action) (wrapper.Execute);
-            ExecutableItemActionGetter.SetValue(executable, newAction);
+            ExecutableItemActionField.SetValue(executable, newAction);
         }
     }
 
