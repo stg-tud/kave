@@ -47,6 +47,7 @@
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -57,6 +58,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AbstractEventGenerator.cs" />
+    <Compile Include="IDESession.cs" />
     <Compile Include="VsComponentNameFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -72,6 +74,10 @@
     <ProjectReference Include="..\..\CodeCompletion\CodeCompletion.Utils\CodeCompletion.Utils.csproj">
       <Project>{4439FDE5-778A-4FAB-8BB0-7A4E23C45BDB}</Project>
       <Name>CodeCompletion.Utils</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CompletionEventBus\CompletionEventBus.csproj">
+      <Project>{8334C96E-E54B-4F60-8148-E5521FF6094D}</Project>
+      <Name>CompletionEventBus</Name>
     </ProjectReference>
     <ProjectReference Include="..\CompletionEventSerializer\CompletionEventSerializer.csproj">
       <Project>{A0246281-E784-4D60-B3F4-A55A57B8A914}</Project>

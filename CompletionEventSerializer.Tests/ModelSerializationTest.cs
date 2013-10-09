@@ -37,6 +37,7 @@ namespace CompletionEventSerializer.Tests
 
             var completionEvent = new CompletionEvent
             {
+                IDESessionUUID = "0xDEADBEEF",
                 TriggeredBy = IDEEvent.Trigger.Unknown,
                 Context = new Context
                 {
