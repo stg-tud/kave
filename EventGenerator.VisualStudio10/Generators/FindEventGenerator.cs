@@ -9,7 +9,9 @@ namespace KAVE.EventGenerator_VisualStudio10.Generators
     {
         private FindEvents _findEvents;
 
-        protected override void Initialize()
+        public FindEventGenerator(DTE dte) : base(dte) {}
+
+        public override void Initialize()
         {
             _findEvents = DTEEvents.FindEvents;
 

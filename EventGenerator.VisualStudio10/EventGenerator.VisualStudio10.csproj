@@ -18,6 +18,7 @@
     <SccLocalPath>SAK</SccLocalPath>
     <SccAuxPath>SAK</SccAuxPath>
     <SccProvider>SAK</SccProvider>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -50,6 +51,12 @@
       <Private>false</Private>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.Shell.Immutable.10.0" />
+    <Reference Include="Ninject">
+      <HintPath>..\packages\Ninject.3.0.1.10\lib\net40\Ninject.dll</HintPath>
+    </Reference>
+    <Reference Include="Ninject.Extensions.Conventions">
+      <HintPath>..\packages\Ninject.Extensions.Conventions.3.0.0.11\lib\net40\Ninject.Extensions.Conventions.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
@@ -165,6 +172,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Generators.cd" />
+    <None Include="packages.config" />
     <None Include="source.extension.vsixmanifest">
       <SubType>Designer</SubType>
     </None>
@@ -185,6 +193,10 @@
       <Project>{4439FDE5-778A-4FAB-8BB0-7A4E23C45BDB}</Project>
       <Name>CodeCompletion.Utils</Name>
     </ProjectReference>
+    <ProjectReference Include="..\CompletionEventBus\CompletionEventBus.csproj">
+      <Project>{8334C96E-E54B-4F60-8148-E5521FF6094D}</Project>
+      <Name>CompletionEventBus</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CompletionEventSerializer\CompletionEventSerializer.csproj">
       <Project>{A0246281-E784-4D60-B3F4-A55A57B8A914}</Project>
       <Name>CompletionEventSerializer</Name>
@@ -193,12 +205,17 @@
       <Project>{68C1DF50-3A30-4449-B11D-B02F486CD3C8}</Project>
       <Name>EventGenerator.Commons</Name>
     </ProjectReference>
+    <ProjectReference Include="..\TinyMessenger\TinyMessenger.csproj">
+      <Project>{DE0CA005-3B06-4751-9429-9671E7916492}</Project>
+      <Name>TinyMessenger</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <UseCodebase>true</UseCodebase>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v10.0\VSSDK\Microsoft.VsSDK.targets" />
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

@@ -5,25 +5,26 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using CodeCompletion.Model.Names;
+using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace CompletionEventSerializer
 {
-    [Export("JSON", typeof(ISerializer))]
+    [Export("JSON", typeof (ISerializer))]
     public class JsonSerializer : ISerializer
     {
         public static readonly JsonSerializerSettings Settings = new JsonSerializerSettings
+        {
+            Converters =
             {
-                Converters =
-                    {
-                        new NameToJsonConverter()
-                    },
-                Formatting = Formatting.None,
-                NullValueHandling = NullValueHandling.Ignore
-            };
+                new NameToJsonConverter()
+            },
+            Formatting = Formatting.None,
+            NullValueHandling = NullValueHandling.Ignore
+        };
 
-        public void AppendTo<TInstance>(Stream targetStream, TInstance instance)
+        public void AppendTo<TInstance>([NotNull] Stream targetStream, [NotNull] TInstance instance)
         {
             var streamWriter = new StreamWriter(targetStream, new UTF8Encoding(false));
             var jsonWriter = new JsonTextWriter(streamWriter);
@@ -33,7 +34,19 @@ namespace CompletionEventSerializer
             streamWriter.Flush();
         }
 
-        public TInstance Read<TInstance>(Stream source)
+        [NotNull]
+        public string ToString<TInstance>([NotNull] TInstance instance)
+        {
+            using (var stream = new MemoryStream())
+            {
+                AppendTo(stream, instance);
+                stream.Position = 0;
+                return new StreamReader(stream).ReadToEnd();
+            }
+        }
+
+        [CanBeNull]
+        public TInstance Read<TInstance>([NotNull] Stream source)
         {
             var json = ReadLine(source);
             return JsonConvert.DeserializeObject<TInstance>(json, Settings);
@@ -74,29 +87,33 @@ namespace CompletionEventSerializer
             writer.WriteEndObject();
         }
 
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, Newtonsoft.Json.JsonSerializer serializer)
+        public override object ReadJson(JsonReader reader,
+            Type objectType,
+            object existingValue,
+            Newtonsoft.Json.JsonSerializer serializer)
         {
             var jName = JObject.Load(reader);
             var factoryMethod = GetFactoryMethod(jName);
             var identifier = jName.GetValue(IdentifierPropertyName).ToString();
-            return factoryMethod.Invoke(null, new object[] { identifier });
+            return factoryMethod.Invoke(null, new object[] {identifier});
         }
 
         private static MethodInfo GetFactoryMethod(JObject jName)
         {
             var typeAlias = jName.GetValue(TypePropertyName).ToString();
             var type = TypeFrom(typeAlias);
-            var factoryMethod = type.GetMethods(BindingFlags.Static | BindingFlags.Public).Where(m =>
-            {
-                var parameterInfos = m.GetParameters();
-                return parameterInfos.Count() == 1 && parameterInfos[0].ParameterType == typeof (string);
-            }).First();
+            var factoryMethod = type.GetMethods(BindingFlags.Static | BindingFlags.Public).Where(
+                m =>
+                {
+                    var parameterInfos = m.GetParameters();
+                    return parameterInfos.Count() == 1 && parameterInfos[0].ParameterType == typeof (string);
+                }).First();
             return factoryMethod;
         }
 
         public override bool CanConvert(Type objectType)
         {
-            return typeof(IName).IsAssignableFrom(objectType);
+            return typeof (IName).IsAssignableFrom(objectType);
         }
 
         private static string AliasFor(Type nameType)

@@ -23,12 +23,14 @@ namespace KAVE.EventGenerator_VisualStudio10.Generators
         private CommandEvent _preceedingCommandBarEvent;
         private Dictionary<string, CommandEvent> _eventQueue;
 
+        public CommandEventGenerator(DTE dte) : base(dte) {}
+
         private CommandBars CommandBars
         {
             get { return (CommandBars)DTE.CommandBars; }
         }
 
-        protected override void Initialize()
+        public override void Initialize()
         {
             _eventQueue = new Dictionary<string, CommandEvent>();
             InitCommandBarObservation();

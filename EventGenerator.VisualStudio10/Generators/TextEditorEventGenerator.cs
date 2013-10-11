@@ -17,7 +17,9 @@ namespace KAVE.EventGenerator_VisualStudio10.Generators
         private readonly Timer _eventSendingTimer = new Timer(InactivityPeriodToCompleteEditAction);
         private readonly object _eventLock = new object();
 
-        protected override void Initialize()
+        public TextEditorEventGenerator(DTE dte) : base(dte) {}
+
+        public override void Initialize()
         {
             _textEditorEvents = DTEEvents.TextEditorEvents;
             _textEditorEvents.LineChanged += TextEditorEvents_LineChanged;

@@ -13,12 +13,10 @@ namespace EventGenerator.ReSharper8.Generators
     internal class EventGeneratingActionHandler : AbstractEventGenerator, IActionHandler
     {
         private readonly IUpdatableAction _updatableAction;
-        private readonly DTE _dte;
 
-        public EventGeneratingActionHandler(IUpdatableAction updatableAction, DTE dte)
+        public EventGeneratingActionHandler(IUpdatableAction updatableAction, DTE dte) : base(dte)
         {
             _updatableAction = updatableAction;
-            _dte = dte;
         }
 
         public bool Update(IDataContext context, ActionPresentation presentation, DelegateUpdate nextUpdate)
@@ -34,11 +32,6 @@ namespace EventGenerator.ReSharper8.Generators
             Fire(actionEvent);
 
             nextExecute.Invoke();
-        }
-
-        protected override DTE DTE
-        {
-            get { return _dte; }
         }
     }
 }

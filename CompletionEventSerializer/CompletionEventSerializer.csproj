@@ -62,6 +62,10 @@
       <Project>{236E2794-DE4D-4F94-AC87-2ABFD1059CE0}</Project>
       <Name>CodeCompletion.Model</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\CodeCompletion\CodeCompletion.Utils\CodeCompletion.Utils.csproj">
+      <Project>{4439FDE5-778A-4FAB-8BB0-7A4E23C45BDB}</Project>
+      <Name>CodeCompletion.Utils</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

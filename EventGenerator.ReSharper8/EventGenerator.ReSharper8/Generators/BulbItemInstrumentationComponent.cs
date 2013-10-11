@@ -3,8 +3,6 @@ using System.Linq;
 using System.Reflection;
 using CodeCompletion.Utils.Assertion;
 using EnvDTE;
-using EventGenerator.Commons;
-using EventGenerator.ReSharper8.Model;
 using JetBrains.DataFlow;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Intentions.Bulbs;
@@ -95,30 +93,4 @@ namespace EventGenerator.ReSharper8.Generators
             ExecutableItemActionField.SetValue(executable, newAction);
         }
     }
-
-    internal class EventGeneratingActionWrapper : AbstractEventGenerator
-    {
-        private readonly Action _originalAction;
-        private readonly DTE _dte;
-
-        public EventGeneratingActionWrapper(Action originalAction, DTE dte)
-        {
-            _originalAction = originalAction;
-            _dte = dte;
-        }
-
-        protected override DTE DTE
-        {
-            get { return _dte; }
-        }
-
-        public void Execute()
-        {
-            var actionEvent = Create<BulbActionEvent>();
-            actionEvent.ActionId = _originalAction.Target.ToString();
-            _originalAction.Invoke();
-            Fire(actionEvent);
-        }
-    }
-
 }

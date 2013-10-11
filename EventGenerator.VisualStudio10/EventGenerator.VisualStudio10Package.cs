@@ -1,12 +1,23 @@
-﻿using System.ComponentModel.Composition;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
+using System.Linq;
 using System.Runtime.InteropServices;
+using CompletionEventBus;
 using JetBrains.Annotations;
 using KAVE.EventGenerator_VisualStudio10.Generators;
 using Microsoft.VisualStudio;
-using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.Shell;
+using Ninject;
+using Ninject.Activation;
+using Ninject.Activation.Providers;
+using Ninject.Components;
+using Ninject.Extensions.Conventions;
+using Ninject.Infrastructure;
+using Ninject.Modules;
+using Ninject.Planning.Bindings;
+using Ninject.Planning.Bindings.Resolvers;
 
 namespace KAVE.EventGenerator_VisualStudio10
 {
@@ -22,12 +33,12 @@ namespace KAVE.EventGenerator_VisualStudio10
     /// </summary>
     // This attribute tells the PkgDef creation utility (CreatePkgDef.exe) that this class is
     // a package.
-    [PackageRegistration(UseManagedResourcesOnly = true)]
+    [PackageRegistration(UseManagedResourcesOnly = true),
+     InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400),
+     ProvideAutoLoad(VSConstants.UICONTEXT.NoSolution_string), Guid(GuidList.guidEventGenerator_VisualStudio10PkgString)
+    ]
     // This attribute is used to register the informations needed to show the this package
     // in the Help/About dialog of Visual Studio.
-    [InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400)]
-    [ProvideAutoLoad(VSConstants.UICONTEXT.NoSolution_string)]
-    [Guid(GuidList.guidEventGenerator_VisualStudio10PkgString)]
     // ReSharper disable once InconsistentNaming
     public sealed class EventGenerator_VisualStudio10Package : Package
     {
@@ -43,11 +54,9 @@ namespace KAVE.EventGenerator_VisualStudio10
             Trace.WriteLine(string.Format(CultureInfo.CurrentCulture, "Entering constructor for: {0}", this));
         }
 
-        [ImportMany(typeof(VisualStudioEventGenerator)), UsedImplicitly]
-        private VisualStudioEventGenerator[] _eventGenerators;
-
         /////////////////////////////////////////////////////////////////////////////
         // Overriden Package Implementation
+
         #region Package Members
 
         /// <summary>
@@ -56,12 +65,81 @@ namespace KAVE.EventGenerator_VisualStudio10
         /// </summary>
         protected override void Initialize()
         {
-            Trace.WriteLine (string.Format(CultureInfo.CurrentCulture, "Entering Initialize() of: {0}", this));
+            Trace.WriteLine(string.Format(CultureInfo.CurrentCulture, "Entering Initialize() of: {0}", this));
             base.Initialize();
-            var componentModel = (IComponentModel) GetService(typeof(SComponentModel));
-            componentModel.DefaultCompositionService.SatisfyImportsOnce(this);
+            InjectWithIndividualCompositionContainer();
         }
-        #endregion
 
+        private void InjectWithIndividualCompositionContainer()
+        {
+            var kernel =
+                new StandardKernel(
+                    new NinjectSettings
+                    {
+                        InjectAttribute = typeof (CodeCompletion.Utils.InjectAttribute),
+                        AllowNullInjection = false
+                    });
+            kernel.Components.Add<IMissingBindingResolver, VsServiceResolver>();
+            kernel.Bind<IMessageChannel>().To<TinyMessengerMessageChannel>();
+            kernel.Load<VisualStudioEventGeneratorModule>();
+        }
+
+        private SVsServiceProvider GetVsServiceProvider()
+        {
+            return (SVsServiceProvider) GetService(typeof (SVsServiceProvider));
+        }
+
+        #endregion
+    }
+
+    internal class VisualStudioEventGeneratorModule : NinjectModule
+    {
+        [UsedImplicitly] private VisualStudioEventGenerator[] _visualStudioEventGenerators;
+
+        public override void Load()
+        {
+            Kernel.Bind(
+                x =>
+                    x.FromThisAssembly()
+                        .IncludingNonePublicTypes()
+                        .SelectAllClasses()
+                        .InheritedFrom<VisualStudioEventGenerator>()
+                        .BindBase()
+                        .Configure(
+                            b =>
+                                b.InSingletonScope()
+                                    .OnActivation(
+                                        (cxt, gen) => ((VisualStudioEventGenerator) gen).Initialize())));
+
+            // eagerly load all generators
+            _visualStudioEventGenerators = Kernel.GetAll<VisualStudioEventGenerator>().ToArray();
+        }
+    }
+
+    [UsedImplicitly]
+    internal class VsServiceResolver : NinjectComponent, IMissingBindingResolver
+    {
+        public IEnumerable<IBinding> Resolve(Multimap<Type, IBinding> bindings, IRequest request)
+        {
+            var requestedType = request.Service;
+            if (IsVsServiceInterface(requestedType))
+            {
+                return new[]
+                {
+                    new Binding(requestedType)
+                    {
+                        ProviderCallback =
+                            context => new ConstantProvider<object>(Package.GetGlobalService(requestedType))
+                    }
+                };
+            }
+            return Enumerable.Empty<IBinding>();
+        }
+
+        private static bool IsVsServiceInterface(Type requestedType)
+        {
+            return requestedType.IsInterface &&
+                   (requestedType.Name.StartsWith("S") || requestedType.Name.StartsWith("DTE"));
+        }
     }
 }

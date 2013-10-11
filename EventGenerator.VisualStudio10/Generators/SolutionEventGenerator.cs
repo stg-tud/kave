@@ -14,7 +14,9 @@ namespace KAVE.EventGenerator_VisualStudio10.Generators
         private ProjectItemsEvents _projectItemsEvents;
         private SelectionEvents _selectionEvents;
 
-        protected override void Initialize()
+        public SolutionEventGenerator(DTE dte) : base(dte) {}
+
+        public override void Initialize()
         {
             _solutionEvents = DTEEvents.SolutionEvents;
             _solutionEvents.Opened += _solutionEvents_Opened;

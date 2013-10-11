@@ -10,12 +10,10 @@ namespace EventGenerator.ReSharper8.Generators
     internal class EventGeneratingBulbActionProxy : AbstractEventGenerator, IBulbAction
     {
         private readonly IBulbAction _target;
-        private readonly DTE _dte;
 
-        public EventGeneratingBulbActionProxy(IBulbAction target, DTE dte)
+        public EventGeneratingBulbActionProxy(IBulbAction target, DTE dte) : base(dte)
         {
             _target = target;
-            _dte = dte;
         }
 
         public void Execute(ISolution solution, ITextControl textControl)
@@ -30,11 +28,6 @@ namespace EventGenerator.ReSharper8.Generators
         public string Text
         {
             get { return _target.Text; }
-        }
-
-        protected override DTE DTE
-        {
-            get { return _dte; }
         }
     }
 }

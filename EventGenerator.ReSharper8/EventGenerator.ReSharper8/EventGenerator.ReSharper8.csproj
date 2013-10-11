@@ -17,6 +17,7 @@
     <SccLocalPath>SAK</SccLocalPath>
     <SccAuxPath>SAK</SccAuxPath>
     <SccProvider>SAK</SccProvider>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -39,6 +40,12 @@
     <Reference Include="envdte, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
+    <Reference Include="Ninject">
+      <HintPath>..\..\packages\Ninject.3.0.1.10\lib\net40\Ninject.dll</HintPath>
+    </Reference>
+    <Reference Include="Ninject.Extensions.Conventions">
+      <HintPath>..\..\packages\Ninject.Extensions.Conventions.3.0.0.11\lib\net40\Ninject.Extensions.Conventions.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -54,6 +61,7 @@
     <Compile Include="Generators\ActionEventInstrumentationComponent.cs" />
     <Compile Include="Generators\BulbItemInstrumentationComponent.cs" />
     <Compile Include="Generators\EventGeneratingActionHandler.cs" />
+    <Compile Include="Generators\EventGeneratingActionWrapper.cs" />
     <Compile Include="Generators\EventGeneratingBulbActionProxy.cs" />
     <Compile Include="Model\BulbActionEvent.cs" />
     <Compile Include="Model\Copy of ActionEvent.cs" />
@@ -68,14 +76,26 @@
       <Project>{4439FDE5-778A-4FAB-8BB0-7A4E23C45BDB}</Project>
       <Name>CodeCompletion.Utils</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\CompletionEventBus\CompletionEventBus.csproj">
+      <Project>{8334C96E-E54B-4F60-8148-E5521FF6094D}</Project>
+      <Name>CompletionEventBus</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\CompletionEventSerializer\CompletionEventSerializer.csproj">
+      <Project>{A0246281-E784-4D60-B3F4-A55A57B8A914}</Project>
+      <Name>CompletionEventSerializer</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\EventGenerator.Commons\EventGenerator.Commons.csproj">
       <Project>{68C1DF50-3A30-4449-B11D-B02F486CD3C8}</Project>
       <Name>EventGenerator.Commons</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <PropertyGroup>
     <ReSharperSdkTargets Condition=" '$(ReSharperSdkTargets)' == '' ">$(MSBuildExtensionsPath)\JetBrains\ReSharper.SDK\v8.0</ReSharperSdkTargets>
   </PropertyGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(ReSharperSdkTargets)\Plugin.Targets" />
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
 </Project>

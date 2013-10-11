@@ -9,7 +9,9 @@ namespace KAVE.EventGenerator_VisualStudio10.Generators
     {
         private OutputWindowEvents _outputWindowEvents;
 
-        protected override void Initialize()
+        public OutputWindowEventGenerator(DTE dte) : base(dte) {}
+
+        public override void Initialize()
         {
             _outputWindowEvents = DTEEvents.OutputWindowEvents;
             _outputWindowEvents.PaneAdded += OutputWindowEvents_PaneAdded;

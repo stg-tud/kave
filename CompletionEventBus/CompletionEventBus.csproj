@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EventBusInitializer.cs" />
+    <Compile Include="EventLog.cs" />
     <Compile Include="IMessageChannel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TinyMessengerMessageChannel.cs" />
@@ -53,6 +54,10 @@
     <ProjectReference Include="..\..\CodeCompletion\CodeCompletion.Model\CodeCompletion.Model.csproj">
       <Project>{236E2794-DE4D-4F94-AC87-2ABFD1059CE0}</Project>
       <Name>CodeCompletion.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\CodeCompletion\CodeCompletion.Utils\CodeCompletion.Utils.csproj">
+      <Project>{4439FDE5-778A-4FAB-8BB0-7A4E23C45BDB}</Project>
+      <Name>CodeCompletion.Utils</Name>
     </ProjectReference>
     <ProjectReference Include="..\CompletionEventSerializer\CompletionEventSerializer.csproj">
       <Project>{A0246281-E784-4D60-B3F4-A55A57B8A914}</Project>

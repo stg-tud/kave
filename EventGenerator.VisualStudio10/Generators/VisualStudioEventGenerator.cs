@@ -1,21 +1,13 @@
-﻿using System;
-using System.ComponentModel.Composition;
-using CodeCompletion.Model;
+﻿using CodeCompletion.Utils;
 using EnvDTE;
 using EventGenerator.Commons;
 using JetBrains.Annotations;
-using Microsoft.VisualStudio.Shell;
 
 namespace KAVE.EventGenerator_VisualStudio10.Generators
 {
-    internal abstract class VisualStudioEventGenerator : AbstractEventGenerator, IPartImportsSatisfiedNotification
+    internal abstract class VisualStudioEventGenerator : AbstractEventGenerator
     {
-        [Import] private SVsServiceProvider _serviceProvider;
-        
-        protected override DTE DTE
-        {
-            get { return (DTE) _serviceProvider.GetService(typeof (DTE)); }
-        }
+        protected VisualStudioEventGenerator(DTE dte) : base(dte) {}
 
         [NotNull]
         protected Events DTEEvents
@@ -23,11 +15,6 @@ namespace KAVE.EventGenerator_VisualStudio10.Generators
             get { return DTE.Events; }
         }
 
-        public void OnImportsSatisfied()
-        {
-            Initialize();
-        }
-
-        protected abstract void Initialize();
+        public abstract void Initialize();
     }
 }

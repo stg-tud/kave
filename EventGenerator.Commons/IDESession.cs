@@ -6,8 +6,8 @@ namespace EventGenerator.Commons
 {
     public static class IDESession
     {
-        private const string UUIDGlobal = "KAVE.EventGenerator.SessionUUID";
-        private const string UUIDCreatedAtGlobal = "KAVE.EventGenerator.SessionUUID.CreatedAt";
+        private const string UUIDGlobal = "KAVE_EventGenerator_SessionUUID";
+        private const string UUIDCreatedAtGlobal = "KAVE_EventGenerator_SessionUUID_CreatedAt";
         private const string PastDate = "1987-06-20";
 
         public static string GetUUID(DTE dte)

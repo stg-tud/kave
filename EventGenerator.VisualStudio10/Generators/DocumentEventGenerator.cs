@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.Composition;
-using CodeCompletion.Model.Names.VisualStudio;
 using EnvDTE;
 using EventGenerator.Commons;
 using KAVE.EventGenerator_VisualStudio10.Model;
@@ -11,7 +10,9 @@ namespace KAVE.EventGenerator_VisualStudio10.Generators
     {
         private DocumentEvents _documentEvents;
 
-        protected override void Initialize()
+        public DocumentEventGenerator(DTE dte) : base(dte) {}
+
+        public override void Initialize()
         {
             _documentEvents = DTEEvents.DocumentEvents;
             _documentEvents.DocumentOpened += _documentEvents_DocumentOpened;

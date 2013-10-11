@@ -1,8 +1,10 @@
 ﻿using System;
+using System.ComponentModel.Composition;
 using System.Diagnostics;
-using System.IO;
 using System.Windows.Input;
 using CodeCompletion.Model;
+using CodeCompletion.Utils;
+using CompletionEventBus;
 using CompletionEventSerializer;
 using EnvDTE;
 using JetBrains.Annotations;
@@ -11,10 +13,19 @@ namespace EventGenerator.Commons
 {
     public abstract class AbstractEventGenerator
     {
-        //[Import] private IMessageChannel _messageChannel;
+        protected AbstractEventGenerator(DTE dte)
+        {
+            DTE = dte;
+        }
+
+        [Inject]
+        public IMessageChannel MessageChannel
+        {
+            get;
+            set; }
 
         [NotNull]
-        protected abstract DTE DTE { get; }
+        protected DTE DTE { get; private set; }
 
         protected TIDEEvent Create<TIDEEvent>() where TIDEEvent : IDEEvent, new()
         {
@@ -70,17 +81,17 @@ namespace EventGenerator.Commons
         /// </summary>
         protected void Fire<TEvent>([NotNull] TEvent ideEvent) where TEvent : IDEEvent
         {
+            ideEvent.IDESessionUUID = IDESession.GetUUID(DTE);
             ideEvent.FinishedAt = DateTime.Now;
-            // TODO actually send messages
-            // _messageChannel.Publish(ideEvent);
-            string eventSerialization;
-            using (var stream = new MemoryStream())
-            {
-                new JsonSerializer().AppendTo(stream, ideEvent);
-                stream.Position = 0;
-                eventSerialization = new StreamReader(stream).ReadToEnd();
-            }
-            Debug.WriteLine(eventSerialization);
+            // TODO find reason for System.NullReferenceException "somewhere" in Commons
+            MessageChannel.Publish(ideEvent);
+            WriteToDebugConsole(ideEvent);
+        }
+
+        [Conditional("DEBUG")]
+        private static void WriteToDebugConsole<TEvent>(TEvent ideEvent) where TEvent : IDEEvent
+        {
+            Debug.WriteLine(new JsonSerializer().ToString(ideEvent));
         }
     }
 }

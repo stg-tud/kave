@@ -6,14 +6,15 @@ using KAVE.EventGenerator_VisualStudio10.Model;
 
 namespace KAVE.EventGenerator_VisualStudio10.Generators
 {
-    [Export(typeof(VisualStudioEventGenerator))]
     internal class BuildEventGenerator : VisualStudioEventGenerator
     {
         private BuildEvents _buildEvents;
         private BuildEvent _currentEvent;
         private BuildTarget _currentTarget;
 
-        protected override void Initialize()
+        public BuildEventGenerator(DTE dte) : base(dte) {}
+
+        public override void Initialize()
         {
             _buildEvents = DTEEvents.BuildEvents;
             _buildEvents.OnBuildBegin += _buildEvents_OnBuildBegin;

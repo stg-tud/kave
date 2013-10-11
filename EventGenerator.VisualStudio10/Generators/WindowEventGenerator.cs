@@ -10,7 +10,9 @@ namespace KAVE.EventGenerator_VisualStudio10.Generators
     {
         private WindowEvents _windowEvents;
 
-        protected override void Initialize()
+        public WindowEventGenerator(DTE dte) : base(dte) {}
+
+        public override void Initialize()
         {
             _windowEvents = DTEEvents.WindowEvents;
             _windowEvents.WindowCreated += _windowEvents_WindowCreated;

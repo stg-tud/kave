@@ -9,7 +9,9 @@ namespace KAVE.EventGenerator_VisualStudio10.Generators
     {
         private TaskListEvents _taskListEvents;
 
-        protected override void Initialize()
+        public TaskListEventGenerator(DTE dte) : base(dte) {}
+
+        public override void Initialize()
         {
             _taskListEvents = DTEEvents.TaskListEvents;
             _taskListEvents.TaskAdded += _taskListEvents_TaskAdded;
