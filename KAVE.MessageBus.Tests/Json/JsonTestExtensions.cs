@@ -1,10 +1,15 @@
 ﻿using System.IO;
 using System.Text;
 
-namespace CompletionEventSerializer.Tests
+namespace KAVE.MessageBus.Tests.Json
 {
-    static class StreamTestExtensions
+    static class JsonTestExtensions
     {
+        public static byte[] AsBytes(this string str)
+        {
+            return Encoding.Default.GetBytes(str);
+        }
+
         public static string AsString(this MemoryStream stream)
         {
             return Encoding.Default.GetString(stream.ToArray());

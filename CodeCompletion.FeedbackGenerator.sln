@@ -1,8 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CompletionEventBus", "CompletionEventBus\CompletionEventBus.csproj", "{8334C96E-E54B-4F60-8148-E5521FF6094D}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TinyMessenger", "TinyMessenger\TinyMessenger.csproj", "{DE0CA005-3B06-4751-9429-9671E7916492}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TinyMessenger.Tests", "TinyMessenger.Tests\TinyMessenger.Tests.csproj", "{40D73D7C-262F-40C9-86F4-15DCB55B2946}"
@@ -11,20 +9,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeCompletion.Model", "..\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeCompletion.Model.Names", "..\CodeCompletion\CodeCompletion.Model.Names\CodeCompletion.Model.Names.csproj", "{31B0DE46-B783-4489-B1BD-63AE2E1A5DA1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CompletionEventSerializer", "CompletionEventSerializer\CompletionEventSerializer.csproj", "{A0246281-E784-4D60-B3F4-A55A57B8A914}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CompletionEventSerializer.Tests", "CompletionEventSerializer.Tests\CompletionEventSerializer.Tests.csproj", "{EA1CFCA8-35C4-4177-A970-D28C619E7130}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CompletionEventBus.Tests", "CompletionEventBus.Tests\CompletionEventBus.Tests.csproj", "{CD11668E-F2BF-4B25-BE06-FD4E3A8D36EF}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{1653AC61-ECF8-438C-A174-ADD2D5E776CD}"
 	ProjectSection(SolutionItems) = preProject
 		.nuget\NuGet.Config = .nuget\NuGet.Config
 		.nuget\NuGet.exe = .nuget\NuGet.exe
 		.nuget\NuGet.targets = .nuget\NuGet.targets
+		UnitTests.testsettings = UnitTests.testsettings
 	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeCompletion.Utils", "..\CodeCompletion\CodeCompletion.Utils\CodeCompletion.Utils.csproj", "{4439FDE5-778A-4FAB-8BB0-7A4E23C45BDB}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4082B7FC-EE0E-4329-904A-49455AFEC5B0}"
 EndProject
@@ -36,61 +27,52 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventGenerator.ReSharper8",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventGenerator.ReSharper8.Tests", "EventGenerator.ReSharper8\EventGenerator.ReSharper8.Tests\EventGenerator.ReSharper8.Tests.csproj", "{4979D8EC-B49B-4578-BDC3-D4015C493A98}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KAVE.MessageBus", "KAVE.MessageBus\KAVE.MessageBus.csproj", "{F1CF28AB-134E-4A95-9F9A-9EE808924975}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KAVE.MessageBus.Tests", "KAVE.MessageBus.Tests\KAVE.MessageBus.Tests.csproj", "{EA1CFCA8-35C4-4177-A970-D28C619E7130}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 14
+		SccNumberOfProjects = 11
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://kave.visualstudio.com/defaultcollection
 		SccLocalPath0 = .
-		SccProjectUniqueName1 = CompletionEventBus\\CompletionEventBus.csproj
-		SccProjectName1 = CompletionEventBus
-		SccLocalPath1 = CompletionEventBus
-		SccProjectUniqueName2 = TinyMessenger\\TinyMessenger.csproj
-		SccProjectName2 = TinyMessenger
-		SccLocalPath2 = TinyMessenger
-		SccProjectUniqueName3 = TinyMessenger.Tests\\TinyMessenger.Tests.csproj
-		SccProjectName3 = TinyMessenger.Tests
-		SccLocalPath3 = TinyMessenger.Tests
-		SccProjectUniqueName4 = ..\\CodeCompletion\\CodeCompletion.Model\\CodeCompletion.Model.csproj
-		SccProjectName4 = ../CodeCompletion/CodeCompletion.Model
-		SccLocalPath4 = ..\\CodeCompletion\\CodeCompletion.Model
-		SccProjectUniqueName5 = ..\\CodeCompletion\\CodeCompletion.Model.Names\\CodeCompletion.Model.Names.csproj
-		SccProjectName5 = ../CodeCompletion/CodeCompletion.Model.Names
-		SccLocalPath5 = ..\\CodeCompletion\\CodeCompletion.Model.Names
-		SccProjectUniqueName6 = CompletionEventSerializer\\CompletionEventSerializer.csproj
-		SccProjectName6 = CompletionEventSerializer
-		SccLocalPath6 = CompletionEventSerializer
-		SccProjectUniqueName7 = CompletionEventSerializer.Tests\\CompletionEventSerializer.Tests.csproj
-		SccProjectName7 = CompletionEventSerializer.Tests
-		SccLocalPath7 = CompletionEventSerializer.Tests
-		SccProjectUniqueName8 = CompletionEventBus.Tests\\CompletionEventBus.Tests.csproj
-		SccProjectName8 = CompletionEventBus.Tests
-		SccLocalPath8 = CompletionEventBus.Tests
-		SccProjectUniqueName9 = ..\\CodeCompletion\\CodeCompletion.Utils\\CodeCompletion.Utils.csproj
-		SccProjectName9 = ../CodeCompletion/CodeCompletion.Utils
-		SccLocalPath9 = ..\\CodeCompletion\\CodeCompletion.Utils
-		SccProjectUniqueName10 = EventGenerator.Commons\\EventGenerator.Commons.csproj
-		SccProjectName10 = EventGenerator.Commons
-		SccLocalPath10 = EventGenerator.Commons
-		SccProjectUniqueName11 = EventGenerator.VisualStudio10\\EventGenerator.VisualStudio10.csproj
-		SccProjectName11 = EventGenerator.VisualStudio10
-		SccLocalPath11 = EventGenerator.VisualStudio10
-		SccProjectUniqueName12 = EventGenerator.ReSharper8\\EventGenerator.ReSharper8\\EventGenerator.ReSharper8.csproj
-		SccProjectName12 = EventGenerator.ReSharper8/EventGenerator.ReSharper8
-		SccLocalPath12 = EventGenerator.ReSharper8\\EventGenerator.ReSharper8
-		SccProjectUniqueName13 = EventGenerator.ReSharper8\\EventGenerator.ReSharper8.Tests\\EventGenerator.ReSharper8.Tests.csproj
-		SccProjectName13 = EventGenerator.ReSharper8/EventGenerator.ReSharper8.Tests
-		SccLocalPath13 = EventGenerator.ReSharper8\\EventGenerator.ReSharper8.Tests
+		SccProjectUniqueName1 = TinyMessenger\\TinyMessenger.csproj
+		SccProjectName1 = TinyMessenger
+		SccLocalPath1 = TinyMessenger
+		SccProjectUniqueName2 = TinyMessenger.Tests\\TinyMessenger.Tests.csproj
+		SccProjectName2 = TinyMessenger.Tests
+		SccLocalPath2 = TinyMessenger.Tests
+		SccProjectUniqueName3 = ..\\CodeCompletion\\CodeCompletion.Model\\CodeCompletion.Model.csproj
+		SccProjectName3 = ../CodeCompletion/CodeCompletion.Model
+		SccLocalPath3 = ..\\CodeCompletion\\CodeCompletion.Model
+		SccProjectUniqueName4 = ..\\CodeCompletion\\CodeCompletion.Model.Names\\CodeCompletion.Model.Names.csproj
+		SccProjectName4 = ../CodeCompletion/CodeCompletion.Model.Names
+		SccLocalPath4 = ..\\CodeCompletion\\CodeCompletion.Model.Names
+		SccProjectUniqueName5 = EventGenerator.Commons\\EventGenerator.Commons.csproj
+		SccProjectName5 = EventGenerator.Commons
+		SccLocalPath5 = EventGenerator.Commons
+		SccProjectUniqueName6 = EventGenerator.VisualStudio10\\EventGenerator.VisualStudio10.csproj
+		SccProjectName6 = EventGenerator.VisualStudio10
+		SccLocalPath6 = EventGenerator.VisualStudio10
+		SccProjectUniqueName7 = EventGenerator.ReSharper8\\EventGenerator.ReSharper8\\EventGenerator.ReSharper8.csproj
+		SccProjectName7 = EventGenerator.ReSharper8/EventGenerator.ReSharper8
+		SccLocalPath7 = EventGenerator.ReSharper8\\EventGenerator.ReSharper8
+		SccProjectUniqueName8 = EventGenerator.ReSharper8\\EventGenerator.ReSharper8.Tests\\EventGenerator.ReSharper8.Tests.csproj
+		SccProjectName8 = EventGenerator.ReSharper8/EventGenerator.ReSharper8.Tests
+		SccLocalPath8 = EventGenerator.ReSharper8\\EventGenerator.ReSharper8.Tests
+		SccProjectUniqueName9 = KAVE.MessageBus\\KAVE.MessageBus.csproj
+		SccProjectName9 = KAVE.MessageBus
+		SccLocalPath9 = KAVE.MessageBus
+		SccProjectUniqueName10 = KAVE.MessageBus.Tests\\KAVE.MessageBus.Tests.csproj
+		SccProjectName10 = KAVE.MessageBus.Tests
+		SccLocalPath10 = KAVE.MessageBus.Tests
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{8334C96E-E54B-4F60-8148-E5521FF6094D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8334C96E-E54B-4F60-8148-E5521FF6094D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8334C96E-E54B-4F60-8148-E5521FF6094D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8334C96E-E54B-4F60-8148-E5521FF6094D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{DE0CA005-3B06-4751-9429-9671E7916492}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{DE0CA005-3B06-4751-9429-9671E7916492}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DE0CA005-3B06-4751-9429-9671E7916492}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -107,22 +89,6 @@ Global
 		{31B0DE46-B783-4489-B1BD-63AE2E1A5DA1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{31B0DE46-B783-4489-B1BD-63AE2E1A5DA1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{31B0DE46-B783-4489-B1BD-63AE2E1A5DA1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A0246281-E784-4D60-B3F4-A55A57B8A914}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A0246281-E784-4D60-B3F4-A55A57B8A914}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A0246281-E784-4D60-B3F4-A55A57B8A914}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A0246281-E784-4D60-B3F4-A55A57B8A914}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EA1CFCA8-35C4-4177-A970-D28C619E7130}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EA1CFCA8-35C4-4177-A970-D28C619E7130}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EA1CFCA8-35C4-4177-A970-D28C619E7130}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EA1CFCA8-35C4-4177-A970-D28C619E7130}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CD11668E-F2BF-4B25-BE06-FD4E3A8D36EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CD11668E-F2BF-4B25-BE06-FD4E3A8D36EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CD11668E-F2BF-4B25-BE06-FD4E3A8D36EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CD11668E-F2BF-4B25-BE06-FD4E3A8D36EF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4439FDE5-778A-4FAB-8BB0-7A4E23C45BDB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4439FDE5-778A-4FAB-8BB0-7A4E23C45BDB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4439FDE5-778A-4FAB-8BB0-7A4E23C45BDB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4439FDE5-778A-4FAB-8BB0-7A4E23C45BDB}.Release|Any CPU.Build.0 = Release|Any CPU
 		{68C1DF50-3A30-4449-B11D-B02F486CD3C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{68C1DF50-3A30-4449-B11D-B02F486CD3C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{68C1DF50-3A30-4449-B11D-B02F486CD3C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -139,6 +105,14 @@ Global
 		{4979D8EC-B49B-4578-BDC3-D4015C493A98}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4979D8EC-B49B-4578-BDC3-D4015C493A98}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4979D8EC-B49B-4578-BDC3-D4015C493A98}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F1CF28AB-134E-4A95-9F9A-9EE808924975}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F1CF28AB-134E-4A95-9F9A-9EE808924975}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F1CF28AB-134E-4A95-9F9A-9EE808924975}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F1CF28AB-134E-4A95-9F9A-9EE808924975}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EA1CFCA8-35C4-4177-A970-D28C619E7130}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EA1CFCA8-35C4-4177-A970-D28C619E7130}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EA1CFCA8-35C4-4177-A970-D28C619E7130}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EA1CFCA8-35C4-4177-A970-D28C619E7130}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

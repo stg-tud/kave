@@ -71,17 +71,9 @@
       <Project>{236E2794-DE4D-4F94-AC87-2ABFD1059CE0}</Project>
       <Name>CodeCompletion.Model</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\CodeCompletion\CodeCompletion.Utils\CodeCompletion.Utils.csproj">
-      <Project>{4439FDE5-778A-4FAB-8BB0-7A4E23C45BDB}</Project>
-      <Name>CodeCompletion.Utils</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\CompletionEventBus\CompletionEventBus.csproj">
-      <Project>{8334C96E-E54B-4F60-8148-E5521FF6094D}</Project>
-      <Name>CompletionEventBus</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\CompletionEventSerializer\CompletionEventSerializer.csproj">
-      <Project>{A0246281-E784-4D60-B3F4-A55A57B8A914}</Project>
-      <Name>CompletionEventSerializer</Name>
+    <ProjectReference Include="..\KAVE.MessageBus\KAVE.MessageBus.csproj">
+      <Project>{F1CF28AB-134E-4A95-9F9A-9EE808924975}</Project>
+      <Name>KAVE.MessageBus</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

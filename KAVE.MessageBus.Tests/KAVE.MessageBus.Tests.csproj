@@ -6,8 +6,8 @@
     <ProjectGuid>{EA1CFCA8-35C4-4177-A970-D28C619E7130}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CompletionEventSerializer.Tests</RootNamespace>
-    <AssemblyName>CompletionEventSerializer.Tests</AssemblyName>
+    <RootNamespace>KAVE.MessageBus.Tests</RootNamespace>
+    <AssemblyName>KAVE.MessageBus.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -64,9 +64,6 @@
       <HintPath>..\packages\NUnitTestAdapter.0.96.0\lib\NUnit.VisualStudio.TestAdapter.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="protobuf-net">
-      <HintPath>..\packages\protobuf-net.2.0.0.663\lib\net40\protobuf-net.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.XML" />
   </ItemGroup>
@@ -79,12 +76,12 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
-    <Compile Include="ProtobufNetTest.cs" />
-    <Compile Include="ModelSerializationTest.cs" />
+    <Compile Include="Json\JsonLogReaderTest.cs" />
+    <Compile Include="Json\ModelSerializationTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="JsonSerializerTest.cs" />
-    <Compile Include="SerializationTestTarget.cs" />
-    <Compile Include="StreamTestExtensions.cs" />
+    <Compile Include="Json\JsonLogWriterTest.cs" />
+    <Compile Include="Json\SerializationTestTarget.cs" />
+    <Compile Include="Json\JsonTestExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\CodeCompletion\CodeCompletion.Model.Names\CodeCompletion.Model.Names.csproj">
@@ -95,9 +92,9 @@
       <Project>{236e2794-de4d-4f94-ac87-2abfd1059ce0}</Project>
       <Name>CodeCompletion.Model</Name>
     </ProjectReference>
-    <ProjectReference Include="..\CompletionEventSerializer\CompletionEventSerializer.csproj">
-      <Project>{A0246281-E784-4D60-B3F4-A55A57B8A914}</Project>
-      <Name>CompletionEventSerializer</Name>
+    <ProjectReference Include="..\KAVE.MessageBus\KAVE.MessageBus.csproj">
+      <Project>{F1CF28AB-134E-4A95-9F9A-9EE808924975}</Project>
+      <Name>KAVE.MessageBus</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

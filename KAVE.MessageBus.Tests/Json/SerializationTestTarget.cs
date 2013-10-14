@@ -1,10 +1,10 @@
-﻿namespace CompletionEventSerializer.Tests
+﻿namespace KAVE.MessageBus.Tests.Json
 {
     class SerializationTestTarget
     {
         public string Id { get; set; }
 
-        protected bool Equals(SerializationTestTarget other)
+        private bool Equals(SerializationTestTarget other)
         {
             return string.Equals(Id, other.Id);
         }

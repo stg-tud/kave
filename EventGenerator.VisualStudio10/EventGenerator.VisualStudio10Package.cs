@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.InteropServices;
-using CompletionEventBus;
 using JetBrains.Annotations;
 using KAVE.EventGenerator_VisualStudio10.Generators;
 using Microsoft.VisualStudio;
@@ -80,13 +79,7 @@ namespace KAVE.EventGenerator_VisualStudio10
                         AllowNullInjection = false
                     });
             kernel.Components.Add<IMissingBindingResolver, VsServiceResolver>();
-            kernel.Bind<IMessageChannel>().To<TinyMessengerMessageChannel>();
             kernel.Load<VisualStudioEventGeneratorModule>();
-        }
-
-        private SVsServiceProvider GetVsServiceProvider()
-        {
-            return (SVsServiceProvider) GetService(typeof (SVsServiceProvider));
         }
 
         #endregion

@@ -1,13 +1,13 @@
 ﻿using System;
-using System.ComponentModel.Composition;
 using System.Diagnostics;
 using System.Windows.Input;
 using CodeCompletion.Model;
 using CodeCompletion.Utils;
-using CompletionEventBus;
-using CompletionEventSerializer;
+using CodeCompletion.Utils.Serialization;
 using EnvDTE;
 using JetBrains.Annotations;
+using KAVE.KAVE_MessageBus;
+using KAVE.KAVE_MessageBus.MessageBus;
 
 namespace EventGenerator.Commons
 {
@@ -19,7 +19,7 @@ namespace EventGenerator.Commons
         }
 
         [Inject]
-        public IMessageChannel MessageChannel
+        public SMessageBus MessageChannel
         {
             get;
             set; }
@@ -91,7 +91,7 @@ namespace EventGenerator.Commons
         [Conditional("DEBUG")]
         private static void WriteToDebugConsole<TEvent>(TEvent ideEvent) where TEvent : IDEEvent
         {
-            Debug.WriteLine(new JsonSerializer().ToString(ideEvent));
+            Debug.WriteLine(JsonExtension.ToString(ideEvent));
         }
     }
 }

@@ -1,26 +1,18 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using CodeCompletion.Model;
 using CodeCompletion.Model.CompletionEvent;
 using CodeCompletion.Model.Context;
 using CodeCompletion.Model.Names;
 using CodeCompletion.Model.Names.CSharp;
+using KAVE.KAVE_MessageBus.Json;
 using NUnit.Framework;
 
-namespace CompletionEventSerializer.Tests
+namespace KAVE.MessageBus.Tests.Json
 {
     [TestFixture]
     public class ModelSerializationTest
     {
-        private JsonSerializer _serializer;
-
-        [SetUp]
-        public void SetUpSerializer()
-        {
-            _serializer = new JsonSerializer();
-        }
-
         [Test]
         public void ShouldSerializeCompletionEvent()
         {
@@ -126,17 +118,18 @@ namespace CompletionEventSerializer.Tests
         {
             using (var stream = new MemoryStream())
             {
-                _serializer.AppendTo(stream, model);
+                var writer = new JsonLogWriter(stream);
+                writer.Write(model);
                 return stream.AsString();
             }
         }
 
         private TModel Deserialize<TModel>(string serialization)
         {
-            var input = Encoding.Default.GetBytes(serialization);
-            using (var stream = new MemoryStream(input))
+            using (var stream = new MemoryStream(serialization.AsBytes()))
             {
-                return _serializer.Read<TModel>(stream);
+                var reader = new JsonLogReader(stream);
+                return reader.Read<TModel>();
             }
         }
     }
