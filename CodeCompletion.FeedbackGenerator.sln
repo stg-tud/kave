@@ -31,9 +31,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KAVE.MessageBus", "KAVE.Mes
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KAVE.MessageBus.Tests", "KAVE.MessageBus.Tests\KAVE.MessageBus.Tests.csproj", "{EA1CFCA8-35C4-4177-A970-D28C619E7130}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KAVE.Utils", "..\CodeCompletion\CodeCompletion.Utils\KAVE.Utils.csproj", "{4439FDE5-778A-4FAB-8BB0-7A4E23C45BDB}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 11
+		SccNumberOfProjects = 12
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://kave.visualstudio.com/defaultcollection
 		SccLocalPath0 = .
@@ -67,6 +69,9 @@ Global
 		SccProjectUniqueName10 = KAVE.MessageBus.Tests\\KAVE.MessageBus.Tests.csproj
 		SccProjectName10 = KAVE.MessageBus.Tests
 		SccLocalPath10 = KAVE.MessageBus.Tests
+		SccProjectUniqueName11 = ..\\CodeCompletion\\CodeCompletion.Utils\\KAVE.Utils.csproj
+		SccProjectName11 = ../CodeCompletion/CodeCompletion.Utils
+		SccLocalPath11 = ..\\CodeCompletion\\CodeCompletion.Utils
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -113,6 +118,10 @@ Global
 		{EA1CFCA8-35C4-4177-A970-D28C619E7130}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EA1CFCA8-35C4-4177-A970-D28C619E7130}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EA1CFCA8-35C4-4177-A970-D28C619E7130}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4439FDE5-778A-4FAB-8BB0-7A4E23C45BDB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4439FDE5-778A-4FAB-8BB0-7A4E23C45BDB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4439FDE5-778A-4FAB-8BB0-7A4E23C45BDB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4439FDE5-778A-4FAB-8BB0-7A4E23C45BDB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

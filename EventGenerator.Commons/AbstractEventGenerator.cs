@@ -2,27 +2,22 @@
 using System.Diagnostics;
 using System.Windows.Input;
 using CodeCompletion.Model;
-using CodeCompletion.Utils;
 using CodeCompletion.Utils.Serialization;
 using EnvDTE;
 using JetBrains.Annotations;
-using KAVE.KAVE_MessageBus;
 using KAVE.KAVE_MessageBus.MessageBus;
 
 namespace EventGenerator.Commons
 {
     public abstract class AbstractEventGenerator
     {
-        protected AbstractEventGenerator(DTE dte)
+        private readonly SMessageBus _messageBus;
+
+        protected AbstractEventGenerator(DTE dte, SMessageBus messageBus)
         {
+            _messageBus = messageBus;
             DTE = dte;
         }
-
-        [Inject]
-        public SMessageBus MessageChannel
-        {
-            get;
-            set; }
 
         [NotNull]
         protected DTE DTE { get; private set; }
@@ -84,14 +79,14 @@ namespace EventGenerator.Commons
             ideEvent.IDESessionUUID = IDESession.GetUUID(DTE);
             ideEvent.FinishedAt = DateTime.Now;
             // TODO find reason for System.NullReferenceException "somewhere" in Commons
-            MessageChannel.Publish(ideEvent);
+            _messageBus.Publish(ideEvent);
             WriteToDebugConsole(ideEvent);
         }
 
         [Conditional("DEBUG")]
         private static void WriteToDebugConsole<TEvent>(TEvent ideEvent) where TEvent : IDEEvent
         {
-            Debug.WriteLine(JsonExtension.ToString(ideEvent));
+            Debug.WriteLine(ideEvent.ToJson());
         }
     }
 }
