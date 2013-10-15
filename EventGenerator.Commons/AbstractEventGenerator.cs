@@ -49,8 +49,10 @@ namespace EventGenerator.Commons
                 {
                     return DTE.ActiveWindow;
                 }
-                catch (Exception)
+                catch (NullReferenceException)
                 {
+                    // accessing the active window throws an NullReferenceException
+                    // if no windows have been opened yet
                     return null;
                 }
             }
@@ -58,17 +60,7 @@ namespace EventGenerator.Commons
 
         private Document DTEActiveDocument
         {
-            get
-            {
-                try
-                {
-                    return DTE.ActiveDocument;
-                }
-                catch (Exception)
-                {
-                    return null;
-                }
-            }
+            get { return DTE.ActiveDocument; }
         }
 
         /// <summary>
@@ -78,15 +70,14 @@ namespace EventGenerator.Commons
         {
             ideEvent.IDESessionUUID = IDESession.GetUUID(DTE);
             ideEvent.FinishedAt = DateTime.Now;
-            // TODO find reason for System.NullReferenceException "somewhere" in Commons
-            _messageBus.Publish(ideEvent);
+            _messageBus.Publish<IDEEvent>(ideEvent);
             WriteToDebugConsole(ideEvent);
         }
 
         [Conditional("DEBUG")]
         private static void WriteToDebugConsole<TEvent>(TEvent ideEvent) where TEvent : IDEEvent
         {
-            Debug.WriteLine(ideEvent.ToJson());
+            Debug.WriteLine(ideEvent.ToJson<IDEEvent>());
         }
     }
 }

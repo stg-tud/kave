@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using JetBrains.Annotations;
 using KAVE.EventGenerator_VisualStudio10.Generators;
+using KAVE.KAVE_MessageBus.MessageBus;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Ninject;
@@ -66,6 +67,7 @@ namespace KAVE.EventGenerator_VisualStudio10
         {
             Trace.WriteLine(string.Format(CultureInfo.CurrentCulture, "Entering Initialize() of: {0}", this));
             base.Initialize();
+            var service = GetService(typeof(SMessageBus));
             InjectWithIndividualCompositionContainer();
         }
 
@@ -122,7 +124,11 @@ namespace KAVE.EventGenerator_VisualStudio10
                     new Binding(requestedType)
                     {
                         ProviderCallback =
-                            context => new ConstantProvider<object>(Package.GetGlobalService(requestedType))
+                            context =>
+                            {
+                                var service = Package.GetGlobalService(requestedType);
+                                return new ConstantProvider<object>(service);
+                            }
                     }
                 };
             }

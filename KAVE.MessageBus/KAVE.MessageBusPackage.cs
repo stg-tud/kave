@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using CodeCompletion.Utils.Assertion;
 using KAVE.KAVE_MessageBus.Json;
 using KAVE.KAVE_MessageBus.MessageBus;
 using System.Runtime.InteropServices;
@@ -19,7 +20,7 @@ namespace KAVE.KAVE_MessageBus
     [PackageRegistration(UseManagedResourcesOnly = true)]
     [InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400)]
     [Guid(GuidList.guidKAVE_MessageBusPkgString)]
-    [ProvideAutoLoad(VSConstants.UICONTEXT.NoSolution_string)]
+    [ProvideService(typeof(SMessageBus))]
     // ReSharper disable once InconsistentNaming
     public sealed class KAVE_MessageBusPackage : Package
     {
@@ -46,7 +47,9 @@ namespace KAVE.KAVE_MessageBus
 
         protected override void Initialize()
         {
-            var messageChannel = (SMessageBus) GetService(typeof(SMessageBus));
+            base.Initialize();
+            var messageChannel = GetService(typeof(SMessageBus)) as SMessageBus;
+            Asserts.NotNull(messageChannel, "message bus unavailable");
 
             messageChannel.Subscribe<IDEEvent>(
                 ce =>
@@ -54,6 +57,8 @@ namespace KAVE.KAVE_MessageBus
                     lock (messageChannel)
                     {
                         var logPath = GetSessionEventLogFilePath(ce);
+                        EnsureLogDirectoryExists(logPath);
+                        Debug.WriteLine("Logging IDE Events to: '" + logPath + "'");
                         using (var logStream = new FileStream(logPath, FileMode.Append, FileAccess.Write))
                         {
 #if DEBUG
@@ -67,6 +72,13 @@ namespace KAVE.KAVE_MessageBus
                         }
                     }
                 });
+        }
+
+        private static void EnsureLogDirectoryExists(string logPath)
+        {
+            var logDir = Path.GetDirectoryName(logPath);
+            Asserts.NotNull(logDir, "could not determine log directly from path '{0}'", logPath);
+            Directory.CreateDirectory(logDir);
         }
 
         private static string GetSessionEventLogFilePath(IDEEvent evt)

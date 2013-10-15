@@ -29,13 +29,13 @@ namespace KAVE.KAVE_MessageBus.MessageBus
 
         private void Subscribe<TMessage>(Action<TMessage> action) where TMessage : class, ITinyMessage
         {
-            _hub.Subscribe(action, false);
+            _hub.Subscribe(action, true);
         }
 
         private void SubscribeWithFilter<TMessage>(Action<TMessage> action, Func<TMessage, bool> filter)
             where TMessage : class, ITinyMessage
         {
-            _hub.Subscribe(action, filter, false);
+            _hub.Subscribe(action, filter, true);
         }
     }
 }

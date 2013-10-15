@@ -1,9 +1,11 @@
-﻿using CodeCompletion.Model;
+﻿using System.Runtime.Serialization;
+using CodeCompletion.Model;
 using CodeCompletion.Model.Names.VisualStudio;
 
 namespace KAVE.EventGenerator_VisualStudio10.Model
 {
-    class SolutionEvent : IDEEvent
+    [DataContract]
+    public class SolutionEvent : IDEEvent
     {
         public const string EventKind = "Solution";
 
@@ -23,13 +25,12 @@ namespace KAVE.EventGenerator_VisualStudio10.Model
             RemoveProjectItem
         }
 
-        public SolutionEvent()
-            : base(EventKind)
-        {
-        }
+        public SolutionEvent() : base(EventKind) {}
 
+        [DataMember]
         public SolutionAction Action { get; internal set; }
 
+        [DataMember]
         public IIDEComponentName Target { get; internal set; }
     }
 }

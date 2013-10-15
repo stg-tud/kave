@@ -1,8 +1,10 @@
-﻿using CodeCompletion.Model;
+﻿using System.Runtime.Serialization;
+using CodeCompletion.Model;
 
 namespace KAVE.EventGenerator_VisualStudio10.Model
 {
-    internal class TaskListEvent : IDEEvent
+    [DataContract]
+    public class TaskListEvent : IDEEvent
     {
         public const string EventKind = "TaskList";
 
@@ -16,6 +18,7 @@ namespace KAVE.EventGenerator_VisualStudio10.Model
 
         public TaskListEvent() : base(EventKind) {}
 
+        [DataMember]
         public TaskListAction Action { get; internal set; }
     }
 }

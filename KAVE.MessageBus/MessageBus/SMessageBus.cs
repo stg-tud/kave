@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 
 namespace KAVE.KAVE_MessageBus.MessageBus
 {
+    [Guid("04A499BA-CE09-48AF-96D5-F32DEAF0754C")]
     // ReSharper disable once InconsistentNaming
     public interface SMessageBus
     {

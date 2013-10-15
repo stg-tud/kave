@@ -145,7 +145,7 @@
     <Compile Include="Model\DocumentEvent.cs" />
     <Compile Include="Model\EditEvent.cs" />
     <Compile Include="Model\FindEvent.cs" />
-    <Compile Include="Model\IDEStateEvent.cs" />
+    <Compile Include="Model\IDEStartupStateEvent.cs" />
     <Compile Include="Model\OutputWindowEvent.cs" />
     <Compile Include="Model\SolutionEvent.cs" />
     <Compile Include="Model\TaskListEvent.cs" />

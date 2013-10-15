@@ -13,7 +13,7 @@ namespace KAVE.EventGenerator_VisualStudio10.Generators
 
         public override void Initialize()
         {
-            var ideStateEvent = Create<IDEStateEvent>();
+            var ideStateEvent = Create<IDEStartupStateEvent>();
             ideStateEvent.OpenWindows = VsComponentNameFactory.GetNamesOf(DTE.Windows);
             ideStateEvent.OpenDocuments = VsComponentNameFactory.GetNamesOf(DTE.Documents);
             Fire(ideStateEvent);
