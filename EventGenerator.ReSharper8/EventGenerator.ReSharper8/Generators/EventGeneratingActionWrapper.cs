@@ -2,6 +2,7 @@
 using EnvDTE;
 using EventGenerator.Commons;
 using EventGenerator.ReSharper8.Model;
+using KAVE.KAVE_MessageBus.MessageBus;
 
 namespace EventGenerator.ReSharper8.Generators
 {
@@ -9,7 +10,8 @@ namespace EventGenerator.ReSharper8.Generators
     {
         private readonly Action _originalAction;
 
-        public EventGeneratingActionWrapper(Action originalAction, DTE dte) : base(dte)
+        public EventGeneratingActionWrapper(Action originalAction, DTE dte, SMessageBus messageBus)
+            : base(dte, messageBus)
         {
             _originalAction = originalAction;
         }

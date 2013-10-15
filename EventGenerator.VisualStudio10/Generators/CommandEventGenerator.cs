@@ -9,6 +9,7 @@ using CodeCompletion.Utils.IO;
 using EnvDTE;
 using EventGenerator.Commons;
 using KAVE.EventGenerator_VisualStudio10.Model;
+using KAVE.KAVE_MessageBus.MessageBus;
 using Microsoft.VisualStudio.CommandBars;
 
 namespace KAVE.EventGenerator_VisualStudio10.Generators
@@ -23,7 +24,7 @@ namespace KAVE.EventGenerator_VisualStudio10.Generators
         private CommandEvent _preceedingCommandBarEvent;
         private Dictionary<string, CommandEvent> _eventQueue;
 
-        public CommandEventGenerator(DTE dte) : base(dte) {}
+        public CommandEventGenerator(DTE dte, SMessageBus messageBus) : base(dte, messageBus) {}
 
         private CommandBars CommandBars
         {

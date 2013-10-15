@@ -3,6 +3,7 @@ using EventGenerator.Commons;
 using EventGenerator.ReSharper8.Model;
 using JetBrains.ActionManagement;
 using JetBrains.Application.DataContext;
+using KAVE.KAVE_MessageBus.MessageBus;
 
 namespace EventGenerator.ReSharper8.Generators
 {
@@ -14,7 +15,8 @@ namespace EventGenerator.ReSharper8.Generators
     {
         private readonly IUpdatableAction _updatableAction;
 
-        public EventGeneratingActionHandler(IUpdatableAction updatableAction, DTE dte) : base(dte)
+        public EventGeneratingActionHandler(IUpdatableAction updatableAction, DTE dte, SMessageBus messageBus)
+            : base(dte, messageBus)
         {
             _updatableAction = updatableAction;
         }

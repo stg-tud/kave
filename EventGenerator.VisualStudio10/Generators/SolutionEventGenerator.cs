@@ -3,6 +3,7 @@ using CodeCompletion.Model.Names.VisualStudio;
 using EnvDTE;
 using EventGenerator.Commons;
 using KAVE.EventGenerator_VisualStudio10.Model;
+using KAVE.KAVE_MessageBus.MessageBus;
 
 namespace KAVE.EventGenerator_VisualStudio10.Generators
 {
@@ -14,7 +15,7 @@ namespace KAVE.EventGenerator_VisualStudio10.Generators
         private ProjectItemsEvents _projectItemsEvents;
         private SelectionEvents _selectionEvents;
 
-        public SolutionEventGenerator(DTE dte) : base(dte) {}
+        public SolutionEventGenerator(DTE dte, SMessageBus messageBus) : base(dte, messageBus) {}
 
         public override void Initialize()
         {

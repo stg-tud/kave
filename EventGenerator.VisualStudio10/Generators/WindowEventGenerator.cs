@@ -2,6 +2,7 @@
 using EnvDTE;
 using EventGenerator.Commons;
 using KAVE.EventGenerator_VisualStudio10.Model;
+using KAVE.KAVE_MessageBus.MessageBus;
 
 namespace KAVE.EventGenerator_VisualStudio10.Generators
 {
@@ -10,7 +11,7 @@ namespace KAVE.EventGenerator_VisualStudio10.Generators
     {
         private WindowEvents _windowEvents;
 
-        public WindowEventGenerator(DTE dte) : base(dte) {}
+        public WindowEventGenerator(DTE dte, SMessageBus messageBus) : base(dte, messageBus) {}
 
         public override void Initialize()
         {

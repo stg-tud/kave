@@ -3,6 +3,7 @@ using System.ComponentModel.Composition;
 using CodeCompletion.Utils.Assertion;
 using EnvDTE;
 using KAVE.EventGenerator_VisualStudio10.Model;
+using KAVE.KAVE_MessageBus.MessageBus;
 
 namespace KAVE.EventGenerator_VisualStudio10.Generators
 {
@@ -12,7 +13,7 @@ namespace KAVE.EventGenerator_VisualStudio10.Generators
         private BuildEvent _currentEvent;
         private BuildTarget _currentTarget;
 
-        public BuildEventGenerator(DTE dte) : base(dte) {}
+        public BuildEventGenerator(DTE dte, SMessageBus messageBus) : base(dte, messageBus) {}
 
         public override void Initialize()
         {

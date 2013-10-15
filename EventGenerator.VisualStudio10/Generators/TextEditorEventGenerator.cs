@@ -2,6 +2,7 @@
 using System.Timers;
 using EnvDTE;
 using KAVE.EventGenerator_VisualStudio10.Model;
+using KAVE.KAVE_MessageBus.MessageBus;
 
 namespace KAVE.EventGenerator_VisualStudio10.Generators
 {
@@ -17,7 +18,7 @@ namespace KAVE.EventGenerator_VisualStudio10.Generators
         private readonly Timer _eventSendingTimer = new Timer(InactivityPeriodToCompleteEditAction);
         private readonly object _eventLock = new object();
 
-        public TextEditorEventGenerator(DTE dte) : base(dte) {}
+        public TextEditorEventGenerator(DTE dte, SMessageBus messageBus) : base(dte, messageBus) {}
 
         public override void Initialize()
         {

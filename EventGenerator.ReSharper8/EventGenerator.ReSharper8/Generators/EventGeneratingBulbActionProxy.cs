@@ -4,6 +4,7 @@ using EventGenerator.ReSharper8.Model;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Intentions.Extensibility;
 using JetBrains.TextControl;
+using KAVE.KAVE_MessageBus.MessageBus;
 
 namespace EventGenerator.ReSharper8.Generators
 {
@@ -11,7 +12,8 @@ namespace EventGenerator.ReSharper8.Generators
     {
         private readonly IBulbAction _target;
 
-        public EventGeneratingBulbActionProxy(IBulbAction target, DTE dte) : base(dte)
+        public EventGeneratingBulbActionProxy(IBulbAction target, DTE dte, SMessageBus messageBus)
+            : base(dte, messageBus)
         {
             _target = target;
         }

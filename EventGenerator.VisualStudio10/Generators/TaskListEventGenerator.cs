@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.Composition;
 using EnvDTE;
 using KAVE.EventGenerator_VisualStudio10.Model;
+using KAVE.KAVE_MessageBus.MessageBus;
 
 namespace KAVE.EventGenerator_VisualStudio10.Generators
 {
@@ -9,7 +10,7 @@ namespace KAVE.EventGenerator_VisualStudio10.Generators
     {
         private TaskListEvents _taskListEvents;
 
-        public TaskListEventGenerator(DTE dte) : base(dte) {}
+        public TaskListEventGenerator(DTE dte, SMessageBus messageBus) : base(dte, messageBus) {}
 
         public override void Initialize()
         {

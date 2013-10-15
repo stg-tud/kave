@@ -1,8 +1,7 @@
-﻿using System;
-using System.Linq;
-using System.Reflection;
+﻿using System.Linq;
 using CodeCompletion.Utils.Assertion;
 using EnvDTE;
+using EventGenerator.ReSharper8.Generators;
 using JetBrains.DataFlow;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Intentions.Bulbs;
@@ -10,17 +9,22 @@ using JetBrains.ReSharper.Intentions.Extensibility;
 using JetBrains.ReSharper.Psi;
 using JetBrains.TextControl;
 using JetBrains.UI.BulbMenu;
+using JetBrains.VsIntegration.Application;
+using KAVE.KAVE_MessageBus.MessageBus;
+using Microsoft.VisualStudio.OLE.Interop;
 
-namespace EventGenerator.ReSharper8.Generators
+namespace EventGenerator.ReSharper8
 {
     [SolutionComponent]
     public class BulbItemInstrumentationComponent : IBulbItemsProvider
     {
         private readonly DTE _dte;
+        private readonly SMessageBus _messageBus;
 
-        public BulbItemInstrumentationComponent(DTE dte)
+        public BulbItemInstrumentationComponent(IServiceProvider serviceProvider)
         {
-            _dte = dte;
+            _dte = serviceProvider.GetService<DTE, DTE>();
+            _messageBus = serviceProvider.GetService<SMessageBus, SMessageBus>();
         }
 
         public int Priority
@@ -51,46 +55,19 @@ namespace EventGenerator.ReSharper8.Generators
                 var proxy = executableItem as IntentionAction.MyExecutableProxi;
                 if (proxy != null)
                 {
-                    proxy.WrapBulbAction(_dte);
+                    proxy.WrapBulbAction(_dte, _messageBus);
                     continue;
                 }
 
                 var executable = executableItem as ExecutableItem;
                 if (executable != null)
                 {
-                    executable.WrapBulbAction(_dte);
+                    executable.WrapBulbAction(_dte, _messageBus);
                     continue;
                 }
 
                 Asserts.Fail("unexpected item type: {0}", executableItem.GetType().FullName);
             }
-        }
-    }
-
-    internal static class BulbItemInstrumentationExtensions
-    {
-        private static readonly MethodInfo MyExecutableProxiBulbActionSetter =
-            typeof (IntentionAction.MyExecutableProxi).GetProperty("BulbAction").GetSetMethod(true);
-
-        private static readonly FieldInfo ExecutableItemActionField =
-            typeof (ExecutableItem).GetField("myAction", BindingFlags.Instance | BindingFlags.NonPublic);
-
-        /// <summary>
-        /// Wraps the <see cref="IBulbAction"/> contained in the passed proxy in a <see cref="EventGeneratingBulbActionProxy"/>.
-        /// </summary>
-        public static void WrapBulbAction(this IntentionAction.MyExecutableProxi proxy, DTE dte)
-        {
-            var originalBulbAction = proxy.BulbAction;
-            var bulbActionWrapper = new EventGeneratingBulbActionProxy(originalBulbAction, dte);
-            MyExecutableProxiBulbActionSetter.Invoke(proxy, new object[] {bulbActionWrapper});
-        }
-
-        public static void WrapBulbAction(this ExecutableItem executable, DTE dte)
-        {
-            var originalAction = (Action) ExecutableItemActionField.GetValue(executable);
-            var wrapper = new EventGeneratingActionWrapper(originalAction, dte);
-            var newAction = (Action) (wrapper.Execute);
-            ExecutableItemActionField.SetValue(executable, newAction);
         }
     }
 }
