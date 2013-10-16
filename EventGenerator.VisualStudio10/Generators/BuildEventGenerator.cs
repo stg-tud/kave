@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel.Composition;
 using CodeCompletion.Utils.Assertion;
 using EnvDTE;
 using KAVE.EventGenerator_VisualStudio10.Model;

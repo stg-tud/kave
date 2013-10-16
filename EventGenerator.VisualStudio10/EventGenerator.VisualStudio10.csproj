@@ -207,10 +207,6 @@
       <Project>{F1CF28AB-134E-4A95-9F9A-9EE808924975}</Project>
       <Name>KAVE.MessageBus</Name>
     </ProjectReference>
-    <ProjectReference Include="..\TinyMessenger\TinyMessenger.csproj">
-      <Project>{DE0CA005-3B06-4751-9429-9671E7916492}</Project>
-      <Name>TinyMessenger</Name>
-    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <UseCodebase>true</UseCodebase>

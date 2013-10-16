@@ -6,7 +6,6 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using JetBrains.Annotations;
 using KAVE.EventGenerator_VisualStudio10.Generators;
-using KAVE.KAVE_MessageBus.MessageBus;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Ninject;
@@ -35,7 +34,7 @@ namespace KAVE.EventGenerator_VisualStudio10
     // a package.
     [PackageRegistration(UseManagedResourcesOnly = true),
      InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400),
-     ProvideAutoLoad(VSConstants.UICONTEXT.NoSolution_string), Guid(GuidList.guidEventGenerator_VisualStudio10PkgString)
+     ProvideAutoLoad(VSConstants.UICONTEXT.NoSolution_string), Guid(GuidList.GuidEventGeneratorVisualStudio10Pkg)
     ]
     // This attribute is used to register the informations needed to show the this package
     // in the Help/About dialog of Visual Studio.

@@ -1,10 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TinyMessenger", "TinyMessenger\TinyMessenger.csproj", "{DE0CA005-3B06-4751-9429-9671E7916492}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TinyMessenger.Tests", "TinyMessenger.Tests\TinyMessenger.Tests.csproj", "{40D73D7C-262F-40C9-86F4-15DCB55B2946}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeCompletion.Model", "..\CodeCompletion\CodeCompletion.Model\CodeCompletion.Model.csproj", "{236E2794-DE4D-4F94-AC87-2ABFD1059CE0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeCompletion.Model.Names", "..\CodeCompletion\CodeCompletion.Model.Names\CodeCompletion.Model.Names.csproj", "{31B0DE46-B783-4489-B1BD-63AE2E1A5DA1}"
@@ -35,57 +31,43 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KAVE.Utils", "..\CodeComple
 EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 12
+		SccNumberOfProjects = 10
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://kave.visualstudio.com/defaultcollection
 		SccLocalPath0 = .
-		SccProjectUniqueName1 = TinyMessenger\\TinyMessenger.csproj
-		SccProjectName1 = TinyMessenger
-		SccLocalPath1 = TinyMessenger
-		SccProjectUniqueName2 = TinyMessenger.Tests\\TinyMessenger.Tests.csproj
-		SccProjectName2 = TinyMessenger.Tests
-		SccLocalPath2 = TinyMessenger.Tests
-		SccProjectUniqueName3 = ..\\CodeCompletion\\CodeCompletion.Model\\CodeCompletion.Model.csproj
-		SccProjectName3 = ../CodeCompletion/CodeCompletion.Model
-		SccLocalPath3 = ..\\CodeCompletion\\CodeCompletion.Model
-		SccProjectUniqueName4 = ..\\CodeCompletion\\CodeCompletion.Model.Names\\CodeCompletion.Model.Names.csproj
-		SccProjectName4 = ../CodeCompletion/CodeCompletion.Model.Names
-		SccLocalPath4 = ..\\CodeCompletion\\CodeCompletion.Model.Names
-		SccProjectUniqueName5 = EventGenerator.Commons\\EventGenerator.Commons.csproj
-		SccProjectName5 = EventGenerator.Commons
-		SccLocalPath5 = EventGenerator.Commons
-		SccProjectUniqueName6 = EventGenerator.VisualStudio10\\EventGenerator.VisualStudio10.csproj
-		SccProjectName6 = EventGenerator.VisualStudio10
-		SccLocalPath6 = EventGenerator.VisualStudio10
-		SccProjectUniqueName7 = EventGenerator.ReSharper8\\EventGenerator.ReSharper8\\EventGenerator.ReSharper8.csproj
-		SccProjectName7 = EventGenerator.ReSharper8/EventGenerator.ReSharper8
-		SccLocalPath7 = EventGenerator.ReSharper8\\EventGenerator.ReSharper8
-		SccProjectUniqueName8 = EventGenerator.ReSharper8\\EventGenerator.ReSharper8.Tests\\EventGenerator.ReSharper8.Tests.csproj
-		SccProjectName8 = EventGenerator.ReSharper8/EventGenerator.ReSharper8.Tests
-		SccLocalPath8 = EventGenerator.ReSharper8\\EventGenerator.ReSharper8.Tests
-		SccProjectUniqueName9 = KAVE.MessageBus\\KAVE.MessageBus.csproj
-		SccProjectName9 = KAVE.MessageBus
-		SccLocalPath9 = KAVE.MessageBus
-		SccProjectUniqueName10 = KAVE.MessageBus.Tests\\KAVE.MessageBus.Tests.csproj
-		SccProjectName10 = KAVE.MessageBus.Tests
-		SccLocalPath10 = KAVE.MessageBus.Tests
-		SccProjectUniqueName11 = ..\\CodeCompletion\\CodeCompletion.Utils\\KAVE.Utils.csproj
-		SccProjectName11 = ../CodeCompletion/CodeCompletion.Utils
-		SccLocalPath11 = ..\\CodeCompletion\\CodeCompletion.Utils
+		SccProjectUniqueName1 = ..\\CodeCompletion\\CodeCompletion.Model\\CodeCompletion.Model.csproj
+		SccProjectName1 = ../CodeCompletion/CodeCompletion.Model
+		SccLocalPath1 = ..\\CodeCompletion\\CodeCompletion.Model
+		SccProjectUniqueName2 = ..\\CodeCompletion\\CodeCompletion.Model.Names\\CodeCompletion.Model.Names.csproj
+		SccProjectName2 = ../CodeCompletion/CodeCompletion.Model.Names
+		SccLocalPath2 = ..\\CodeCompletion\\CodeCompletion.Model.Names
+		SccProjectUniqueName3 = EventGenerator.Commons\\EventGenerator.Commons.csproj
+		SccProjectName3 = EventGenerator.Commons
+		SccLocalPath3 = EventGenerator.Commons
+		SccProjectUniqueName4 = EventGenerator.VisualStudio10\\EventGenerator.VisualStudio10.csproj
+		SccProjectName4 = EventGenerator.VisualStudio10
+		SccLocalPath4 = EventGenerator.VisualStudio10
+		SccProjectUniqueName5 = EventGenerator.ReSharper8\\EventGenerator.ReSharper8\\EventGenerator.ReSharper8.csproj
+		SccProjectName5 = EventGenerator.ReSharper8/EventGenerator.ReSharper8
+		SccLocalPath5 = EventGenerator.ReSharper8\\EventGenerator.ReSharper8
+		SccProjectUniqueName6 = EventGenerator.ReSharper8\\EventGenerator.ReSharper8.Tests\\EventGenerator.ReSharper8.Tests.csproj
+		SccProjectName6 = EventGenerator.ReSharper8/EventGenerator.ReSharper8.Tests
+		SccLocalPath6 = EventGenerator.ReSharper8\\EventGenerator.ReSharper8.Tests
+		SccProjectUniqueName7 = KAVE.MessageBus\\KAVE.MessageBus.csproj
+		SccProjectName7 = KAVE.MessageBus
+		SccLocalPath7 = KAVE.MessageBus
+		SccProjectUniqueName8 = KAVE.MessageBus.Tests\\KAVE.MessageBus.Tests.csproj
+		SccProjectName8 = KAVE.MessageBus.Tests
+		SccLocalPath8 = KAVE.MessageBus.Tests
+		SccProjectUniqueName9 = ..\\CodeCompletion\\CodeCompletion.Utils\\KAVE.Utils.csproj
+		SccProjectName9 = ../CodeCompletion/CodeCompletion.Utils
+		SccLocalPath9 = ..\\CodeCompletion\\CodeCompletion.Utils
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{DE0CA005-3B06-4751-9429-9671E7916492}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DE0CA005-3B06-4751-9429-9671E7916492}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DE0CA005-3B06-4751-9429-9671E7916492}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DE0CA005-3B06-4751-9429-9671E7916492}.Release|Any CPU.Build.0 = Release|Any CPU
-		{40D73D7C-262F-40C9-86F4-15DCB55B2946}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{40D73D7C-262F-40C9-86F4-15DCB55B2946}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{40D73D7C-262F-40C9-86F4-15DCB55B2946}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{40D73D7C-262F-40C9-86F4-15DCB55B2946}.Release|Any CPU.Build.0 = Release|Any CPU
 		{236E2794-DE4D-4F94-AC87-2ABFD1059CE0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{236E2794-DE4D-4F94-AC87-2ABFD1059CE0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{236E2794-DE4D-4F94-AC87-2ABFD1059CE0}.Release|Any CPU.ActiveCfg = Release|Any CPU

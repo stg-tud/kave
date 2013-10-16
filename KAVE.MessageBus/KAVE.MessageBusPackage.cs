@@ -18,7 +18,7 @@ namespace KAVE.KAVE_MessageBus
 {
     [PackageRegistration(UseManagedResourcesOnly = true),
      InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400),
-     Guid(GuidList.guidKAVE_MessageBusPkgString), ProvideService(typeof (SMessageBus))]
+     Guid(GuidList.GuidKaveMessageBusPkg), ProvideService(typeof (SMessageBus))]
     // ReSharper disable once InconsistentNaming
     public sealed class KAVE_MessageBusPackage : Package
     {
