@@ -14,7 +14,7 @@ using KAVE.KAVE_MessageBus.MessageBus;
 namespace EventGenerator.ReSharper8
 {
     [SolutionComponent]
-    public class BulbItemInstrumentationComponent : IBulbItemsProvider
+    internal class BulbItemInstrumentationComponent : IBulbItemsProvider
     {
         private readonly DTE _dte;
         private readonly SMessageBus _messageBus;

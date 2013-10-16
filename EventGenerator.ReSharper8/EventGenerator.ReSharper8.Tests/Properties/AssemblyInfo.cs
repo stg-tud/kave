@@ -20,7 +20,7 @@ public class TestEnvironmentAssembly : ReSharperTestEnvironmentAssembly
         // Test assembly
         yield return Assembly.GetExecutingAssembly();
 
-        yield return typeof (EventGenerator.ReSharper8.Model.ActionEvent).Assembly;
+        yield return typeof (EventGenerator.ReSharper8.BulbItemInstrumentationComponent).Assembly;
     }
 
     public override void SetUp()

@@ -1,4 +1,5 @@
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using JetBrains.ActionManagement;
 using JetBrains.Application.PluginSupport;
 
@@ -23,3 +24,5 @@ using JetBrains.Application.PluginSupport;
 [assembly: PluginTitle("EventGenerator.ReSharper8")]
 [assembly: PluginDescription("Generates IDEEvents from the interaction of developers with ReSharper 8 features.")]
 [assembly: PluginVendor("KAVE")]
+
+[assembly: InternalsVisibleTo("EventGenerator.ReSharper8.Tests")]
