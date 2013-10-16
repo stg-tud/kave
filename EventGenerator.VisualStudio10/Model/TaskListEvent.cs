@@ -1,13 +1,11 @@
 ﻿using System.Runtime.Serialization;
-using CodeCompletion.Model;
+using CodeCompletion.Model.Events;
 
 namespace KAVE.EventGenerator_VisualStudio10.Model
 {
     [DataContract]
     public class TaskListEvent : IDEEvent
     {
-        public const string EventKind = "TaskList";
-
         public enum TaskListAction
         {
             AddTask,
@@ -15,8 +13,6 @@ namespace KAVE.EventGenerator_VisualStudio10.Model
             NavigateTask,
             RemoveTask
         }
-
-        public TaskListEvent() : base(EventKind) {}
 
         [DataMember]
         public TaskListAction Action { get; internal set; }

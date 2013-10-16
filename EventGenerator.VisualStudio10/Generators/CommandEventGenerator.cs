@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
-using CodeCompletion.Model;
+using CodeCompletion.Model.Events;
 using CodeCompletion.Utils.Assertion;
 using CodeCompletion.Utils.IO;
 using EnvDTE;

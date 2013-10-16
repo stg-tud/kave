@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using CodeCompletion.Model;
 using CodeCompletion.Model.CompletionEvent;
 using CodeCompletion.Model.Context;
+using CodeCompletion.Model.Events;
 using CodeCompletion.Model.Names;
 using CodeCompletion.Model.Names.CSharp;
 using KAVE.KAVE_MessageBus.Json;

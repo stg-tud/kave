@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Runtime.Serialization.Formatters;
+using System.Text;
 using Newtonsoft.Json;
 
 namespace KAVE.KAVE_MessageBus.Json
@@ -12,7 +13,9 @@ namespace KAVE.KAVE_MessageBus.Json
                 new NameToJsonConverter()
             },
             Formatting = Formatting.None,
-            NullValueHandling = NullValueHandling.Ignore
+            NullValueHandling = NullValueHandling.Ignore,
+            TypeNameHandling = TypeNameHandling.Auto,
+            TypeNameAssemblyFormat = FormatterAssemblyStyle.Simple
         };
 
         internal static readonly Encoding Encoding = new UTF8Encoding(false);

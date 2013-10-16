@@ -1,13 +1,11 @@
 ﻿using System.Runtime.Serialization;
-using CodeCompletion.Model;
+using CodeCompletion.Model.Events;
 
 namespace KAVE.EventGenerator_VisualStudio10.Model
 {
     [DataContract]
     public class DebuggerEvent : IDEEvent
     {
-        public const string EventKind = "Debugger";
-
         public enum DebuggerMode
         {
             Design,
@@ -16,8 +14,6 @@ namespace KAVE.EventGenerator_VisualStudio10.Model
             ExceptionThrown,
             ExceptionNotHandled
         }
-
-        public DebuggerEvent() : base(EventKind) {}
 
         [DataMember]
         public DebuggerMode Mode { get; internal set; }

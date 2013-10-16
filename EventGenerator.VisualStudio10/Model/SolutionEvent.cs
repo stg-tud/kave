@@ -1,5 +1,5 @@
 ﻿using System.Runtime.Serialization;
-using CodeCompletion.Model;
+using CodeCompletion.Model.Events;
 using CodeCompletion.Model.Names.VisualStudio;
 
 namespace KAVE.EventGenerator_VisualStudio10.Model
@@ -7,8 +7,6 @@ namespace KAVE.EventGenerator_VisualStudio10.Model
     [DataContract]
     public class SolutionEvent : IDEEvent
     {
-        public const string EventKind = "Solution";
-
         public enum SolutionAction
         {
             OpenSolution,
@@ -24,8 +22,6 @@ namespace KAVE.EventGenerator_VisualStudio10.Model
             RenameProjectItem,
             RemoveProjectItem
         }
-
-        public SolutionEvent() : base(EventKind) {}
 
         [DataMember]
         public SolutionAction Action { get; internal set; }

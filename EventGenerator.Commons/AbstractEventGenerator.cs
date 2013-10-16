@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Windows.Input;
-using CodeCompletion.Model;
+using CodeCompletion.Model.Events;
 using CodeCompletion.Utils.Serialization;
 using EnvDTE;
 using JetBrains.Annotations;

@@ -1,16 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using CodeCompletion.Model;
+using CodeCompletion.Model.Events;
 
 namespace KAVE.EventGenerator_VisualStudio10.Model
 {
     [DataContract]
     public class BuildEvent : IDEEvent
     {
-        public const string EventKind = "Build";
-
-        public BuildEvent() : base(EventKind)
+        public BuildEvent()
         {
             Targets = new List<BuildTarget>();
         }

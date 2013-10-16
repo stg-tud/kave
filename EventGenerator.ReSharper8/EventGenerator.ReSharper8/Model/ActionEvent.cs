@@ -1,15 +1,11 @@
 ﻿using System.Runtime.Serialization;
-using CodeCompletion.Model;
+using CodeCompletion.Model.Events;
 
 namespace EventGenerator.ReSharper8.Model
 {
     [DataContract]
     public class ActionEvent : IDEEvent
     {
-        public const string EventKind = "ReSharper.Action";
-
-        public ActionEvent() : base(EventKind) {}
-
         [DataMember]
         public string ActionId { get; internal set; }
 

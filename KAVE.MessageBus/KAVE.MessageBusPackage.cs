@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Runtime.InteropServices;
-using CodeCompletion.Model;
+using CodeCompletion.Model.Events;
 using CodeCompletion.Utils.Assertion;
 using KAVE.KAVE_MessageBus.Json;
 using KAVE.KAVE_MessageBus.MessageBus;
@@ -26,6 +26,9 @@ namespace KAVE.KAVE_MessageBus
         private const string ProjectName = "KAVE";
         private static readonly string EventLogScopeName = typeof (KAVE_MessageBusPackage).Assembly.GetName().Name;
 
+        private SMessageBus _messageChannel;
+        private IDEEvent _lastEvent;
+
         public KAVE_MessageBusPackage()
         {
             Trace.WriteLine(string.Format(CultureInfo.CurrentCulture, "Entering constructor for: {0}", ToString()));
@@ -46,46 +49,23 @@ namespace KAVE.KAVE_MessageBus
         protected override void Initialize()
         {
             base.Initialize();
-            var messageChannel = GetService(typeof (SMessageBus)) as SMessageBus;
-            Asserts.NotNull(messageChannel, "message bus unavailable");
+            _messageChannel = GetService(typeof (SMessageBus)) as SMessageBus;
+            Asserts.NotNull(_messageChannel, "message bus unavailable");
+            _messageChannel.Subscribe<IDEEvent>(LogIDEEvent);
+        }
 
-            messageChannel.Subscribe<IDEEvent>(
-                ce =>
+        private void LogIDEEvent(IDEEvent ce)
+        {
+            lock (_messageChannel)
+            {
+                var logPath = GetSessionEventLogFilePath(ce);
+                EnsureLogDirectoryExists(logPath);
+                Debug.WriteLine("Logging IDE Events to: '" + logPath + "'");
+                using (var logWriter = NewLogWriter(logPath))
                 {
-                    lock (messageChannel)
-                    {
-                        var logPath = GetSessionEventLogFilePath(ce);
-                        EnsureLogDirectoryExists(logPath);
-                        Debug.WriteLine("Logging IDE Events to: '" + logPath + "'");
-                        using (var logWriter = NewLogWriter(logPath))
-                        {
-                            logWriter.Write(ce);
-                        }
-                    }
-                });
-        }
-
-        private static JsonLogWriter NewLogWriter(string logFilePath)
-        {
-            Stream logStream = new FileStream(logFilePath, FileMode.Append, FileAccess.Write);
-            try
-            {
-#if !DEBUG
-                logStream = new GZipStream(logStream, CompressionMode.Compress);
-#endif
-                return new JsonLogWriter(logStream);
+                    logWriter.Write(ce);
+                }
             }
-            finally
-            {
-                logStream.Close();
-            }
-        }
-
-        private static void EnsureLogDirectoryExists(string logPath)
-        {
-            var logDir = Path.GetDirectoryName(logPath);
-            Asserts.NotNull(logDir, "could not determine log directly from path '{0}'", logPath);
-            Directory.CreateDirectory(logDir);
         }
 
         private static string GetSessionEventLogFilePath(IDEEvent evt)
@@ -99,6 +79,30 @@ namespace KAVE.KAVE_MessageBus
             {
                 var appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
                 return Path.Combine(appDataPath, ProjectName, EventLogScopeName);
+            }
+        }
+
+        private static void EnsureLogDirectoryExists(string logPath)
+        {
+            var logDir = Path.GetDirectoryName(logPath);
+            Asserts.NotNull(logDir, "could not determine log directly from path '{0}'", logPath);
+            Directory.CreateDirectory(logDir);
+        }
+
+        private static JsonLogWriter NewLogWriter(string logFilePath)
+        {
+            Stream logStream = new FileStream(logFilePath, FileMode.Append, FileAccess.Write);
+            try
+            {
+#if !DEBUG
+                logStream = new GZipStream(logStream, CompressionMode.Compress);
+#endif
+                return new JsonLogWriter(logStream);
+            }
+            catch (Exception)
+            {
+                logStream.Close();
+                throw;
             }
         }
     }
