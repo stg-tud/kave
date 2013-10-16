@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.Composition;
+﻿using System;
+using System.ComponentModel.Composition;
 using System.Timers;
 using EnvDTE;
 using KAVE.EventGenerator_VisualStudio10.Model;
@@ -7,7 +8,7 @@ using KAVE.KAVE_MessageBus.MessageBus;
 namespace KAVE.EventGenerator_VisualStudio10.Generators
 {
     [Export(typeof (VisualStudioEventGenerator))]
-    internal class TextEditorEventGenerator : VisualStudioEventGenerator
+    internal class TextEditorEventGenerator : VisualStudioEventGenerator, IDisposable
     {
         // TODO evaluate good threshold value
         private const int InactivityPeriodToCompleteEditAction = 2000;
@@ -48,6 +49,11 @@ namespace KAVE.EventGenerator_VisualStudio10.Generators
                 Fire(_currentEditEvent);
                 _currentEditEvent = null;
             }
+        }
+
+        public void Dispose()
+        {
+            _eventSendingTimer.Close();
         }
     }
 }

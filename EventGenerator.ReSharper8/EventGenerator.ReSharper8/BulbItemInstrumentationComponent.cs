@@ -21,10 +21,10 @@ namespace EventGenerator.ReSharper8
         private readonly DTE _dte;
         private readonly SMessageBus _messageBus;
 
-        public BulbItemInstrumentationComponent(IServiceProvider serviceProvider)
+        public BulbItemInstrumentationComponent(RawVsServiceProvider serviceProvider)
         {
-            _dte = serviceProvider.GetService<DTE, DTE>();
-            _messageBus = serviceProvider.GetService<SMessageBus, SMessageBus>();
+            _dte = serviceProvider.Value.GetService<DTE, DTE>();
+            _messageBus = serviceProvider.Value.GetService<SMessageBus, SMessageBus>();
         }
 
         public int Priority

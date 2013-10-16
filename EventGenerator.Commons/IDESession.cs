@@ -10,6 +10,8 @@ namespace EventGenerator.Commons
         private const string UUIDCreatedAtGlobal = "KAVE_EventGenerator_SessionUUID_CreatedAt";
         private const string PastDate = "1987-06-20";
 
+        // TODO test whether this is working properly in a non-experimental instance
+        // in the experimental instance updates of the globals are not persisted reliably...
         public static string GetUUID(DTE dte)
         {
             var globals = dte.Globals;

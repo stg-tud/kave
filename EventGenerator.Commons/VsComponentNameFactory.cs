@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using CodeCompletion.Model.Names.VisualStudio;
 using CodeCompletion.Utils.Assertion;
@@ -55,11 +56,19 @@ namespace EventGenerator.Commons
             // its full name starts with the project's full name, which we abbreviate to the project's name.
             foreach (var project in solution.Projects.Cast<Project>())
             {
-                var projectPath = project.FullName;
-                if (projectPath.Any() && fullDocumentName.StartsWith(projectPath))
+                try
                 {
-                    var projectRelativeName = fullDocumentName.Substring(projectPath.Length);
-                    return string.Format("\\{0}{1}", project.Name, projectRelativeName);
+                    var projectPath = project.FullName;
+                    if (projectPath.Any() && fullDocumentName.StartsWith(projectPath))
+                    {
+                        var projectRelativeName = fullDocumentName.Substring(projectPath.Length);
+                        return string.Format("\\{0}{1}", project.Name, projectRelativeName);
+                    }
+                }
+                catch (NotImplementedException)
+                {
+                    // sometimes project.FullName throws this exception for reasons I don't understand (project is a
+                    // System._ComObject in these cases). We just ignore this here and continue trying.
                 }
             }
 

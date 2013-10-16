@@ -6,17 +6,16 @@ using JetBrains.Application;
 using JetBrains.DataFlow;
 using JetBrains.VsIntegration.Application;
 using KAVE.KAVE_MessageBus.MessageBus;
-using Microsoft.VisualStudio.OLE.Interop;
 
 namespace EventGenerator.ReSharper8
 {
     [ShellComponent]
     internal class ActionEventInstrumentationComponent
     {
-        public ActionEventInstrumentationComponent(Lifetime lifetime, IActionManager actionManager, IServiceProvider serviceProvider)
+        public ActionEventInstrumentationComponent(Lifetime lifetime, IActionManager actionManager, RawVsServiceProvider serviceProvider)
         {
-            var dte = serviceProvider.GetService<DTE, DTE>();
-            var messageBus = serviceProvider.GetService<SMessageBus, SMessageBus>();
+            var dte = serviceProvider.Value.GetService<DTE, DTE>();
+            var messageBus = serviceProvider.Value.GetService<SMessageBus, SMessageBus>();
 
             foreach (var updatableAction in actionManager.GetAllActions().OfType<IUpdatableAction>())
             {

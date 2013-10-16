@@ -1,14 +1,13 @@
 ﻿using System;
+using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.Runtime.InteropServices;
+using CodeCompletion.Model;
 using CodeCompletion.Utils.Assertion;
 using KAVE.KAVE_MessageBus.Json;
 using KAVE.KAVE_MessageBus.MessageBus;
-using System.Runtime.InteropServices;
-using System.ComponentModel.Design;
-using CodeCompletion.Model;
-using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 
 #if !DEBUG
@@ -17,10 +16,9 @@ using System.IO.Compression;
 
 namespace KAVE.KAVE_MessageBus
 {
-    [PackageRegistration(UseManagedResourcesOnly = true)]
-    [InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400)]
-    [Guid(GuidList.guidKAVE_MessageBusPkgString)]
-    [ProvideService(typeof(SMessageBus))]
+    [PackageRegistration(UseManagedResourcesOnly = true),
+     InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400),
+     Guid(GuidList.guidKAVE_MessageBusPkgString), ProvideService(typeof (SMessageBus))]
     // ReSharper disable once InconsistentNaming
     public sealed class KAVE_MessageBusPackage : Package
     {
@@ -33,12 +31,12 @@ namespace KAVE.KAVE_MessageBus
             Trace.WriteLine(string.Format(CultureInfo.CurrentCulture, "Entering constructor for: {0}", ToString()));
             var serviceContainer = this as IServiceContainer;
             var serviceCreatorCallback = new ServiceCreatorCallback(CreateMessageChannelService);
-            serviceContainer.AddService(typeof(SMessageBus), serviceCreatorCallback, true);
+            serviceContainer.AddService(typeof (SMessageBus), serviceCreatorCallback, true);
         }
 
         private object CreateMessageChannelService(IServiceContainer container, Type servicetype)
         {
-            if (typeof(SMessageBus) == servicetype)
+            if (typeof (SMessageBus) == servicetype)
             {
                 return new TinyMessengerMessageBus();
             }
@@ -48,7 +46,7 @@ namespace KAVE.KAVE_MessageBus
         protected override void Initialize()
         {
             base.Initialize();
-            var messageChannel = GetService(typeof(SMessageBus)) as SMessageBus;
+            var messageChannel = GetService(typeof (SMessageBus)) as SMessageBus;
             Asserts.NotNull(messageChannel, "message bus unavailable");
 
             messageChannel.Subscribe<IDEEvent>(
@@ -59,19 +57,28 @@ namespace KAVE.KAVE_MessageBus
                         var logPath = GetSessionEventLogFilePath(ce);
                         EnsureLogDirectoryExists(logPath);
                         Debug.WriteLine("Logging IDE Events to: '" + logPath + "'");
-                        using (var logStream = new FileStream(logPath, FileMode.Append, FileAccess.Write))
+                        using (var logWriter = NewLogWriter(logPath))
                         {
-#if DEBUG
-                            new JsonLogWriter(logStream).Write(ce);
-#else
-                            using (var compressedLogStream = new GZipStream(logStream, CompressionMode.Compress))
-                            {
-                                new JsonLogWriter(compressedLogStream).Write(ce);
-                            }
-#endif
+                            logWriter.Write(ce);
                         }
                     }
                 });
+        }
+
+        private static JsonLogWriter NewLogWriter(string logFilePath)
+        {
+            Stream logStream = new FileStream(logFilePath, FileMode.Append, FileAccess.Write);
+            try
+            {
+#if !DEBUG
+                logStream = new GZipStream(logStream, CompressionMode.Compress);
+#endif
+                return new JsonLogWriter(logStream);
+            }
+            finally
+            {
+                logStream.Close();
+            }
         }
 
         private static void EnsureLogDirectoryExists(string logPath)

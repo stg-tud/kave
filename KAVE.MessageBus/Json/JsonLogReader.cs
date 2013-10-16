@@ -1,14 +1,19 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using CodeCompletion.Utils.Assertion;
 using Newtonsoft.Json;
 
 namespace KAVE.KAVE_MessageBus.Json
 {
-    internal class JsonLogReader
+    /// <summary>
+    /// A reader for streams written by <see cref="JsonLogWriter"/>.
+    /// </summary>
+    internal class JsonLogReader : IDisposable
     {
         private readonly StreamReader _logStreamReader;
 
+        /// <param name="logStream">The reader takes ownership of the stream, i.e., the stream is closed when the reader is disposed.</param>
         public JsonLogReader(Stream logStream)
         {
             Asserts.NotNull(logStream, "log stream");
@@ -34,6 +39,11 @@ namespace KAVE.KAVE_MessageBus.Json
             {
                 yield return evt;
             }
+        }
+
+        public void Dispose()
+        {
+            _logStreamReader.Close();
         }
     }
 }

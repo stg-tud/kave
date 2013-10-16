@@ -67,21 +67,21 @@ namespace KAVE.EventGenerator_VisualStudio10
         {
             Trace.WriteLine(string.Format(CultureInfo.CurrentCulture, "Entering Initialize() of: {0}", this));
             base.Initialize();
-            var service = GetService(typeof(SMessageBus));
             InjectWithIndividualCompositionContainer();
         }
 
         private void InjectWithIndividualCompositionContainer()
         {
-            var kernel =
-                new StandardKernel(
+            using(var kernel = new StandardKernel(
                     new NinjectSettings
                     {
                         InjectAttribute = typeof (CodeCompletion.Utils.InjectAttribute),
                         AllowNullInjection = false
-                    });
-            kernel.Components.Add<IMissingBindingResolver, VsServiceResolver>();
-            kernel.Load<VisualStudioEventGeneratorModule>();
+                    }))
+            {
+                kernel.Components.Add<IMissingBindingResolver, VsServiceResolver>();
+                kernel.Load<VisualStudioEventGeneratorModule>();
+            }
         }
 
         #endregion
