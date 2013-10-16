@@ -1,6 +1,6 @@
-﻿using EnvDTE;
+﻿using CodeCompletion.Model.Events.ReSharper;
+using EnvDTE;
 using EventGenerator.Commons;
-using EventGenerator.ReSharper8.Model;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Intentions.Extensibility;
 using JetBrains.TextControl;

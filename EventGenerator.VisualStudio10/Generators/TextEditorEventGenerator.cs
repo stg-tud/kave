@@ -1,8 +1,8 @@
 ﻿using System;
 using System.ComponentModel.Composition;
 using System.Timers;
+using CodeCompletion.Model.Events.VisualStudio;
 using EnvDTE;
-using KAVE.EventGenerator_VisualStudio10.Model;
 using KAVE.KAVE_MessageBus.MessageBus;
 
 namespace KAVE.EventGenerator_VisualStudio10.Generators

@@ -60,8 +60,6 @@
     <Compile Include="Generators\EventGeneratingActionHandler.cs" />
     <Compile Include="Generators\EventGeneratingActionWrapper.cs" />
     <Compile Include="Generators\EventGeneratingBulbActionProxy.cs" />
-    <Compile Include="Model\BulbActionEvent.cs" />
-    <Compile Include="Model\ActionEvent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

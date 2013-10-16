@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
 using CodeCompletion.Model.Events;
+using CodeCompletion.Model.Events.VisualStudio;
 using CodeCompletion.Utils.Assertion;
 using CodeCompletion.Utils.IO;
 using EnvDTE;
 using EventGenerator.Commons;
-using KAVE.EventGenerator_VisualStudio10.Model;
 using KAVE.KAVE_MessageBus.MessageBus;
 using Microsoft.VisualStudio.CommandBars;
 

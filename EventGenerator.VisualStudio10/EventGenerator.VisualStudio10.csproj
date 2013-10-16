@@ -145,17 +145,6 @@
     <Compile Include="Generators\VisualStudioEventGenerator.cs" />
     <Compile Include="Generators\WindowEventGenerator.cs" />
     <Compile Include="Guids.cs" />
-    <Compile Include="Model\BuildEvent.cs" />
-    <Compile Include="Model\CommandEvent.cs" />
-    <Compile Include="Model\DebuggerEvent.cs" />
-    <Compile Include="Model\DocumentEvent.cs" />
-    <Compile Include="Model\EditEvent.cs" />
-    <Compile Include="Model\FindEvent.cs" />
-    <Compile Include="Model\IDEStartupStateEvent.cs" />
-    <Compile Include="Model\OutputWindowEvent.cs" />
-    <Compile Include="Model\SolutionEvent.cs" />
-    <Compile Include="Model\TaskListEvent.cs" />
-    <Compile Include="Model\WindowEvent.cs" />
     <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
