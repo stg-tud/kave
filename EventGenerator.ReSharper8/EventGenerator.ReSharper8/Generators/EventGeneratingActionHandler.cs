@@ -1,9 +1,9 @@
-using CodeCompletion.Model.Events.ReSharper;
 using EnvDTE;
 using EventGenerator.Commons;
 using JetBrains.ActionManagement;
 using JetBrains.Application.DataContext;
 using KAVE.KAVE_MessageBus.MessageBus;
+using KaVE.Model.Events.ReSharper;
 
 namespace EventGenerator.ReSharper8.Generators
 {

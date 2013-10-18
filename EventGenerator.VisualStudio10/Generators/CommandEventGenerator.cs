@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
-using CodeCompletion.Model.Events;
-using CodeCompletion.Model.Events.VisualStudio;
-using CodeCompletion.Utils.Assertion;
-using CodeCompletion.Utils.IO;
 using EnvDTE;
 using EventGenerator.Commons;
 using KAVE.KAVE_MessageBus.MessageBus;
+using KaVE.Model.Events;
+using KaVE.Model.Events.VisualStudio;
+using KaVE.Utils.Assertion;
+using KaVE.Utils.IO;
 using Microsoft.VisualStudio.CommandBars;
 
 namespace KAVE.EventGenerator_VisualStudio10.Generators

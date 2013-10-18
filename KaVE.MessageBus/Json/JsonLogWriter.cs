@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
-using CodeCompletion.Utils.Assertion;
 using JetBrains.Annotations;
+using KaVE.Utils.Assertion;
 using Newtonsoft.Json;
 
 namespace KAVE.KAVE_MessageBus.Json

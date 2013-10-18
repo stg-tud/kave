@@ -4,10 +4,10 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Runtime.InteropServices;
-using CodeCompletion.Model.Events;
-using CodeCompletion.Utils.Assertion;
 using KAVE.KAVE_MessageBus.Json;
 using KAVE.KAVE_MessageBus.MessageBus;
+using KaVE.Model.Events;
+using KaVE.Utils.Assertion;
 using Microsoft.VisualStudio.Shell;
 
 #if !DEBUG

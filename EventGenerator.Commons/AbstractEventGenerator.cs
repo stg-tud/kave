@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Windows.Input;
-using CodeCompletion.Model.Events;
-using CodeCompletion.Utils.Serialization;
 using EnvDTE;
 using JetBrains.Annotations;
 using KAVE.KAVE_MessageBus.MessageBus;
+using KaVE.Model.Events;
+using KaVE.Utils.Serialization;
 
 namespace EventGenerator.Commons
 {

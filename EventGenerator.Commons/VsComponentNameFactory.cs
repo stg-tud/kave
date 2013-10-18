@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using CodeCompletion.Model.Names.VisualStudio;
-using CodeCompletion.Utils.Assertion;
 using EnvDTE;
 using JetBrains.Annotations;
+using KaVE.Model.Names.VisualStudio;
+using KaVE.Utils.Assertion;
 using Microsoft.VisualStudio.CommandBars;
 
 namespace EventGenerator.Commons

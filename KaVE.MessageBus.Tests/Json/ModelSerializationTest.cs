@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using CodeCompletion.Model.CompletionEvent;
-using CodeCompletion.Model.Context;
-using CodeCompletion.Model.Events;
-using CodeCompletion.Model.Names;
-using CodeCompletion.Model.Names.CSharp;
 using KAVE.KAVE_MessageBus.Json;
+using KaVE.Model.Events;
+using KaVE.Model.Events.CompletionEvent;
+using KaVE.Model.Names;
+using KaVE.Model.Names.CSharp;
 using NUnit.Framework;
 
 namespace KAVE.MessageBus.Tests.Json

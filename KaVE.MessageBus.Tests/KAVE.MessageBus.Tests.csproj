@@ -84,11 +84,7 @@
     <Compile Include="Json\JsonTestExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\CodeCompletion\CodeCompletion.Model.Names\CodeCompletion.Model.Names.csproj">
-      <Project>{31B0DE46-B783-4489-B1BD-63AE2E1A5DA1}</Project>
-      <Name>CodeCompletion.Model.Names</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\CodeCompletion\CodeCompletion.Model\CodeCompletion.Model.csproj">
+    <ProjectReference Include="..\..\CodeCompletion\KaVE.Model\KaVE.Model.csproj">
       <Project>{236e2794-de4d-4f94-ac87-2abfd1059ce0}</Project>
       <Name>CodeCompletion.Model</Name>
     </ProjectReference>

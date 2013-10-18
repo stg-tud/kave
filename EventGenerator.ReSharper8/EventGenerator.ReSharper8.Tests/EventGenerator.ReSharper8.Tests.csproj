@@ -51,7 +51,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\CodeCompletion\CodeCompletion.Model\CodeCompletion.Model.csproj">
+    <ProjectReference Include="..\..\..\CodeCompletion\KaVE.Model\KaVE.Model.csproj">
       <Project>{236E2794-DE4D-4F94-AC87-2ABFD1059CE0}</Project>
       <Name>CodeCompletion.Model</Name>
     </ProjectReference>

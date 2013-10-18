@@ -1,8 +1,8 @@
 ﻿using System;
-using CodeCompletion.Model.Events.VisualStudio;
-using CodeCompletion.Utils.Assertion;
 using EnvDTE;
 using KAVE.KAVE_MessageBus.MessageBus;
+using KaVE.Model.Events.VisualStudio;
+using KaVE.Utils.Assertion;
 
 namespace KAVE.EventGenerator_VisualStudio10.Generators
 {

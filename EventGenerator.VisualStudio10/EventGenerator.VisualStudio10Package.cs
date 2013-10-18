@@ -74,7 +74,7 @@ namespace KAVE.EventGenerator_VisualStudio10
             using(var kernel = new StandardKernel(
                     new NinjectSettings
                     {
-                        InjectAttribute = typeof (CodeCompletion.Utils.InjectAttribute),
+                        InjectAttribute = typeof (KaVE.Utils.InjectAttribute),
                         AllowNullInjection = false
                     }))
             {

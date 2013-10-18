@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using CodeCompletion.Utils.Assertion;
 using EnvDTE;
 using JetBrains.DataFlow;
 using JetBrains.ProjectModel;
@@ -10,6 +9,7 @@ using JetBrains.TextControl;
 using JetBrains.UI.BulbMenu;
 using JetBrains.VsIntegration.Application;
 using KAVE.KAVE_MessageBus.MessageBus;
+using KaVE.Utils.Assertion;
 
 namespace EventGenerator.ReSharper8
 {

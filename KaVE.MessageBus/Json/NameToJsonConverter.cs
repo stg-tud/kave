@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
-using CodeCompletion.Model.Names;
-using CodeCompletion.Utils.Assertion;
+using KaVE.Model.Names;
+using KaVE.Utils.Assertion;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -12,7 +12,7 @@ namespace KAVE.KAVE_MessageBus.Json
     {
         private const string TypePropertyName = "type";
         private const string IdentifierPropertyName = "identifier";
-        private const string NameQualifierPrefix = "CodeCompletion.Model.Names.";
+        private const string NameQualifierPrefix = "KaVE.Model.Names.";
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {

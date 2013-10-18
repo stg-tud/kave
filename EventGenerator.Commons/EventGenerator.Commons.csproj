@@ -62,15 +62,11 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\CodeCompletion\CodeCompletion.Model.Names\CodeCompletion.Model.Names.csproj">
-      <Project>{31B0DE46-B783-4489-B1BD-63AE2E1A5DA1}</Project>
-      <Name>CodeCompletion.Model.Names</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\CodeCompletion\CodeCompletion.Model\CodeCompletion.Model.csproj">
+    <ProjectReference Include="..\..\CodeCompletion\KaVE.Model\KaVE.Model.csproj">
       <Project>{236E2794-DE4D-4F94-AC87-2ABFD1059CE0}</Project>
       <Name>CodeCompletion.Model</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\CodeCompletion\CodeCompletion.Utils\KAVE.Utils.csproj">
+    <ProjectReference Include="..\..\CodeCompletion\KaVE.Utils\KAVE.Utils.csproj">
       <Project>{4439FDE5-778A-4FAB-8BB0-7A4E23C45BDB}</Project>
       <Name>KAVE.Utils</Name>
     </ProjectReference>
