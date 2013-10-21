@@ -11,8 +11,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{1653AC
 		UnitTests.testsettings = UnitTests.testsettings
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4082B7FC-EE0E-4329-904A-49455AFEC5B0}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventGenerator.Commons", "EventGenerator.Commons\EventGenerator.Commons.csproj", "{68C1DF50-3A30-4449-B11D-B02F486CD3C8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventGenerator.VisualStudio10", "EventGenerator.VisualStudio10\EventGenerator.VisualStudio10.csproj", "{7B8BA4E9-6AAC-4348-8655-4A8004845BE5}"
