@@ -4,6 +4,7 @@ using System.Windows.Input;
 using EnvDTE;
 using EventGenerator.Commons;
 using JetBrains.Annotations;
+using KaVE.EventGenerator.VisualStudio10.Utils;
 using KaVE.MessageBus.MessageBus;
 using KaVE.Model.Events;
 using KaVE.Utils.Serialization;

@@ -2,7 +2,7 @@
 using System.Globalization;
 using EnvDTE;
 
-namespace EventGenerator.Commons
+namespace KaVE.EventGenerator.VisualStudio10.Utils
 {
     public static class IDESession
     {
@@ -21,12 +21,17 @@ namespace EventGenerator.Commons
                 globals.SetValue(UUIDCreatedAtGlobal, DateTime.Today.ToString(CultureInfo.InvariantCulture));
                 globals.SetValue(UUIDGlobal, Guid.NewGuid().ToString());
             }
-            return globals[UUIDGlobal];
+            return globals.Get(UUIDGlobal);
         }
 
         private static string GetValueOrDefault(this Globals globals, string globalName, string defaultValue)
         {
-            return globals.VariableExists[globalName] ? globals[globalName] : defaultValue;
+            return globals.VariableExists[globalName] ? globals.Get(globalName) : defaultValue;
+        }
+
+        private static string Get(this Globals globals, string globalName)
+        {
+            return globals[globalName] as string;
         }
 
         private static void SetValue(this Globals globals, string globalName, string value)
