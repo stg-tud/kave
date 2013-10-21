@@ -1,6 +1,6 @@
 ﻿using System;
 using System.IO;
-using JetBrains.Annotations;
+using KaVE.JetBrains.Annotations;
 using KaVE.Utils.Assertion;
 using Newtonsoft.Json;
 

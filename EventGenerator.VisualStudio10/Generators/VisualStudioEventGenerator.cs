@@ -1,5 +1,5 @@
 ﻿using EnvDTE;
-using JetBrains.Annotations;
+using KaVE.JetBrains.Annotations;
 using KaVE.MessageBus.MessageBus;
 
 namespace KaVE.EventGenerator.VisualStudio10.Generators

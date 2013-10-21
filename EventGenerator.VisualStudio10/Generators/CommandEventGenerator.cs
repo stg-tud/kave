@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using EnvDTE;
-using EventGenerator.Commons;
+using KaVE.EventGenerator.VisualStudio10.Utils;
 using KaVE.MessageBus.MessageBus;
 using KaVE.Model.Events;
 using KaVE.Model.Events.VisualStudio;

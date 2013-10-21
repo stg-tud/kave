@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using EnvDTE;
-using JetBrains.Annotations;
+using KaVE.JetBrains.Annotations;
 using KaVE.Model.Names.VisualStudio;
 using KaVE.Utils.Assertion;
 using Microsoft.VisualStudio.CommandBars;
 
-namespace EventGenerator.Commons
+namespace KaVE.EventGenerator.VisualStudio10.Utils
 {
     public static class VsComponentNameFactory
     {
