@@ -11,7 +11,7 @@ using JetBrains.VsIntegration.Application;
 using KaVE.MessageBus.MessageBus;
 using KaVE.Utils.Assertion;
 
-namespace EventGenerator.ReSharper8
+namespace KaVE.EventGenerator.ReSharper8
 {
     [SolutionComponent]
     internal class BulbItemInstrumentationComponent : IBulbItemsProvider

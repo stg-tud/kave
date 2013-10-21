@@ -1,12 +1,10 @@
-﻿using System.ComponentModel.Composition;
-using EnvDTE;
+﻿using EnvDTE;
 using EventGenerator.Commons;
 using KaVE.MessageBus.MessageBus;
 using KaVE.Model.Events.VisualStudio;
 
-namespace KaVE.EventGenerator_VisualStudio10.Generators
+namespace KaVE.EventGenerator.VisualStudio10.Generators
 {
-    [Export(typeof (VisualStudioEventGenerator))]
     internal class IDEStartupStateEventGenerator : VisualStudioEventGenerator
     {
         public IDEStartupStateEventGenerator(DTE dte, SMessageBus messageBus) : base(dte, messageBus) {}

@@ -11,8 +11,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{1653AC
 		UnitTests.testsettings = UnitTests.testsettings
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventGenerator.Commons", "EventGenerator.Commons\EventGenerator.Commons.csproj", "{68C1DF50-3A30-4449-B11D-B02F486CD3C8}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventGenerator.VisualStudio10", "EventGenerator.VisualStudio10\EventGenerator.VisualStudio10.csproj", "{7B8BA4E9-6AAC-4348-8655-4A8004845BE5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventGenerator.ReSharper8", "EventGenerator.ReSharper8\EventGenerator.ReSharper8\EventGenerator.ReSharper8.csproj", "{42CE1875-DF5B-4D9E-ADC4-47A96C06EF66}"
@@ -27,34 +25,31 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KAVE.Utils", "..\CodeComple
 EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 9
+		SccNumberOfProjects = 8
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://kave.visualstudio.com/defaultcollection
-		SccProjectUniqueName0 = EventGenerator.Commons\\EventGenerator.Commons.csproj
-		SccProjectName0 = EventGenerator.Commons
-		SccLocalPath0 = EventGenerator.Commons
-		SccProjectUniqueName1 = EventGenerator.VisualStudio10\\EventGenerator.VisualStudio10.csproj
-		SccProjectName1 = EventGenerator.VisualStudio10
-		SccLocalPath1 = EventGenerator.VisualStudio10
-		SccProjectUniqueName2 = EventGenerator.ReSharper8\\EventGenerator.ReSharper8\\EventGenerator.ReSharper8.csproj
-		SccProjectName2 = EventGenerator.ReSharper8/EventGenerator.ReSharper8
-		SccLocalPath2 = EventGenerator.ReSharper8\\EventGenerator.ReSharper8
-		SccProjectUniqueName3 = EventGenerator.ReSharper8\\EventGenerator.ReSharper8.Tests\\EventGenerator.ReSharper8.Tests.csproj
-		SccProjectName3 = EventGenerator.ReSharper8/EventGenerator.ReSharper8.Tests
-		SccLocalPath3 = EventGenerator.ReSharper8\\EventGenerator.ReSharper8.Tests
-		SccProjectUniqueName4 = KaVE.MessageBus\\KAVE.MessageBus.csproj
-		SccProjectName4 = KAVE.MessageBus
-		SccLocalPath4 = KAVE.MessageBus
-		SccProjectUniqueName5 = KaVE.MessageBus.Tests\\KAVE.MessageBus.Tests.csproj
-		SccProjectName5 = KAVE.MessageBus.Tests
-		SccLocalPath5 = KAVE.MessageBus.Tests
-		SccProjectUniqueName6 = ..\\CodeCompletion\\KaVE.Model\\KaVE.Model.csproj
-		SccProjectName6 = ../CodeCompletion/KaVE.Model
-		SccLocalPath6 = ..\\CodeCompletion\\KaVE.Model
-		SccProjectUniqueName7 = ..\\CodeCompletion\\KaVE.Utils\\KAVE.Utils.csproj
-		SccProjectName7 = ../CodeCompletion/KaVE.Utils
-		SccLocalPath7 = ..\\CodeCompletion\\KaVE.Utils
-		SccLocalPath8 = .
+		SccProjectUniqueName0 = EventGenerator.VisualStudio10\\EventGenerator.VisualStudio10.csproj
+		SccProjectName0 = EventGenerator.VisualStudio10
+		SccLocalPath0 = EventGenerator.VisualStudio10
+		SccProjectUniqueName1 = EventGenerator.ReSharper8\\EventGenerator.ReSharper8\\EventGenerator.ReSharper8.csproj
+		SccProjectName1 = EventGenerator.ReSharper8/EventGenerator.ReSharper8
+		SccLocalPath1 = EventGenerator.ReSharper8\\EventGenerator.ReSharper8
+		SccProjectUniqueName2 = EventGenerator.ReSharper8\\EventGenerator.ReSharper8.Tests\\EventGenerator.ReSharper8.Tests.csproj
+		SccProjectName2 = EventGenerator.ReSharper8/EventGenerator.ReSharper8.Tests
+		SccLocalPath2 = EventGenerator.ReSharper8\\EventGenerator.ReSharper8.Tests
+		SccProjectUniqueName3 = KaVE.MessageBus\\KAVE.MessageBus.csproj
+		SccProjectName3 = KAVE.MessageBus
+		SccLocalPath3 = KAVE.MessageBus
+		SccProjectUniqueName4 = KaVE.MessageBus.Tests\\KAVE.MessageBus.Tests.csproj
+		SccProjectName4 = KAVE.MessageBus.Tests
+		SccLocalPath4 = KAVE.MessageBus.Tests
+		SccProjectUniqueName5 = ..\\CodeCompletion\\KaVE.Model\\KaVE.Model.csproj
+		SccProjectName5 = ../CodeCompletion/KaVE.Model
+		SccLocalPath5 = ..\\CodeCompletion\\KaVE.Model
+		SccProjectUniqueName6 = ..\\CodeCompletion\\KaVE.Utils\\KAVE.Utils.csproj
+		SccProjectName6 = ../CodeCompletion/KaVE.Utils
+		SccLocalPath6 = ..\\CodeCompletion\\KaVE.Utils
+		SccLocalPath7 = .
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -65,10 +60,6 @@ Global
 		{236E2794-DE4D-4F94-AC87-2ABFD1059CE0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{236E2794-DE4D-4F94-AC87-2ABFD1059CE0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{236E2794-DE4D-4F94-AC87-2ABFD1059CE0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{68C1DF50-3A30-4449-B11D-B02F486CD3C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{68C1DF50-3A30-4449-B11D-B02F486CD3C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{68C1DF50-3A30-4449-B11D-B02F486CD3C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{68C1DF50-3A30-4449-B11D-B02F486CD3C8}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7B8BA4E9-6AAC-4348-8655-4A8004845BE5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7B8BA4E9-6AAC-4348-8655-4A8004845BE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7B8BA4E9-6AAC-4348-8655-4A8004845BE5}.Release|Any CPU.ActiveCfg = Release|Any CPU

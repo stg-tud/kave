@@ -1,13 +1,11 @@
-﻿using System.ComponentModel.Composition;
-using EnvDTE;
+﻿using EnvDTE;
 using EventGenerator.Commons;
 using KaVE.MessageBus.MessageBus;
 using KaVE.Model.Events.VisualStudio;
 using KaVE.Model.Names.VisualStudio;
 
-namespace KaVE.EventGenerator_VisualStudio10.Generators
+namespace KaVE.EventGenerator.VisualStudio10.Generators
 {
-    [Export(typeof (VisualStudioEventGenerator))]
     internal class SolutionEventGenerator : VisualStudioEventGenerator
     {
         private SolutionEvents _solutionEvents;

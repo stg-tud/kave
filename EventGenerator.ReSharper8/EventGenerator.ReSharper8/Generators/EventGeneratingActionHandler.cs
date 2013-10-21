@@ -1,11 +1,11 @@
 using EnvDTE;
-using EventGenerator.Commons;
 using JetBrains.ActionManagement;
 using JetBrains.Application.DataContext;
+using KaVE.EventGenerator.VisualStudio10.Generators;
 using KaVE.MessageBus.MessageBus;
 using KaVE.Model.Events.ReSharper;
 
-namespace EventGenerator.ReSharper8.Generators
+namespace KaVE.EventGenerator.ReSharper8.Generators
 {
     /// <summary>
     /// Fires an <see cref="ActionEvent"/> on execution of a ReSharper action. Passes handling of the action on the

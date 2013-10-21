@@ -2,12 +2,13 @@
 using System.Diagnostics;
 using System.Windows.Input;
 using EnvDTE;
+using EventGenerator.Commons;
 using JetBrains.Annotations;
 using KaVE.MessageBus.MessageBus;
 using KaVE.Model.Events;
 using KaVE.Utils.Serialization;
 
-namespace EventGenerator.Commons
+namespace KaVE.EventGenerator.VisualStudio10.Generators
 {
     public abstract class AbstractEventGenerator
     {

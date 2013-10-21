@@ -1,13 +1,11 @@
 ﻿using System;
-using System.ComponentModel.Composition;
 using System.Timers;
 using EnvDTE;
 using KaVE.MessageBus.MessageBus;
 using KaVE.Model.Events.VisualStudio;
 
-namespace KaVE.EventGenerator_VisualStudio10.Generators
+namespace KaVE.EventGenerator.VisualStudio10.Generators
 {
-    [Export(typeof (VisualStudioEventGenerator))]
     internal class TextEditorEventGenerator : VisualStudioEventGenerator, IDisposable
     {
         // TODO evaluate good threshold value

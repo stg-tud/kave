@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.Composition;
 using System.Linq;
 using EnvDTE;
 using EventGenerator.Commons;
@@ -11,9 +10,8 @@ using KaVE.Utils.Assertion;
 using KaVE.Utils.IO;
 using Microsoft.VisualStudio.CommandBars;
 
-namespace KaVE.EventGenerator_VisualStudio10.Generators
+namespace KaVE.EventGenerator.VisualStudio10.Generators
 {
-    [Export(typeof(VisualStudioEventGenerator))]
     internal class CommandEventGenerator : VisualStudioEventGenerator
     {
         private CommandEvents _commandEvents;

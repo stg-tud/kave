@@ -1,13 +1,13 @@
 ﻿using System.Linq;
 using EnvDTE;
-using EventGenerator.ReSharper8.Generators;
 using JetBrains.ActionManagement;
 using JetBrains.Application;
 using JetBrains.DataFlow;
 using JetBrains.VsIntegration.Application;
+using KaVE.EventGenerator.ReSharper8.Generators;
 using KaVE.MessageBus.MessageBus;
 
-namespace EventGenerator.ReSharper8
+namespace KaVE.EventGenerator.ReSharper8
 {
     [ShellComponent]
     internal class ActionEventInstrumentationComponent

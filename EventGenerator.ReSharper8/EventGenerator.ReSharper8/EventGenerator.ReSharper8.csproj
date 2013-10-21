@@ -8,7 +8,7 @@
     <ProjectGuid>{42CE1875-DF5B-4D9E-ADC4-47A96C06EF66}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>EventGenerator.ReSharper8</RootNamespace>
+    <RootNamespace>KaVE.EventGenerator.ReSharper8</RootNamespace>
     <AssemblyName>EventGenerator.ReSharper8</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -71,9 +71,9 @@
       <Project>{4439FDE5-778A-4FAB-8BB0-7A4E23C45BDB}</Project>
       <Name>KAVE.Utils</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\EventGenerator.Commons\EventGenerator.Commons.csproj">
-      <Project>{68C1DF50-3A30-4449-B11D-B02F486CD3C8}</Project>
-      <Name>EventGenerator.Commons</Name>
+    <ProjectReference Include="..\..\EventGenerator.VisualStudio10\EventGenerator.VisualStudio10.csproj">
+      <Project>{7B8BA4E9-6AAC-4348-8655-4A8004845BE5}</Project>
+      <Name>EventGenerator.VisualStudio10</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\KaVE.MessageBus\KaVE.MessageBus.csproj">
       <Project>{F1CF28AB-134E-4A95-9F9A-9EE808924975}</Project>

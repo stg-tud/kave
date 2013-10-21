@@ -1,12 +1,12 @@
 ﻿using EnvDTE;
-using EventGenerator.Commons;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Intentions.Extensibility;
 using JetBrains.TextControl;
+using KaVE.EventGenerator.VisualStudio10.Generators;
 using KaVE.MessageBus.MessageBus;
 using KaVE.Model.Events.ReSharper;
 
-namespace EventGenerator.ReSharper8.Generators
+namespace KaVE.EventGenerator.ReSharper8.Generators
 {
     internal class EventGeneratingBulbActionProxy : AbstractEventGenerator, IBulbAction
     {

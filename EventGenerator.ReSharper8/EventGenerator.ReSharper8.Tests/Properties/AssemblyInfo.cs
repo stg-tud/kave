@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using JetBrains.Application;
 using JetBrains.Threading;
+using KaVE.EventGenerator.ReSharper8;
 using NUnit.Framework;
 
 /// <summary>
@@ -20,7 +21,7 @@ public class TestEnvironmentAssembly : ReSharperTestEnvironmentAssembly
         // Test assembly
         yield return Assembly.GetExecutingAssembly();
 
-        yield return typeof (EventGenerator.ReSharper8.BulbItemInstrumentationComponent).Assembly;
+        yield return typeof (BulbItemInstrumentationComponent).Assembly;
     }
 
     public override void SetUp()
