@@ -1,0 +1,115 @@
+﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<s:String x:Key="/Default/CodeInspection/CodeAnnotations/DefaultNamespace/@EntryValue">KaVE.JetBrains.Annotations</s:String>
+	
+	<s:Boolean x:Key="/Default/CodeInspection/CodeAnnotations/NamespacesWithAnnotations/=KaVE_002EJetBrains_002EAnnotations/@EntryIndexedValue">True</s:Boolean>
+	
+	<s:String x:Key="/Default/CodeStyle/CodeCleanup/Profiles/=KaVE/@EntryIndexedValue">&lt;?xml version="1.0" encoding="utf-16"?&gt;&lt;Profile name="KaVE"&gt;&lt;CSUseAutoProperty&gt;True&lt;/CSUseAutoProperty&gt;&lt;CSMakeFieldReadonly&gt;True&lt;/CSMakeFieldReadonly&gt;&lt;CSOptimizeUsings&gt;&lt;OptimizeUsings&gt;True&lt;/OptimizeUsings&gt;&lt;EmbraceInRegion&gt;False&lt;/EmbraceInRegion&gt;&lt;RegionName&gt;&lt;/RegionName&gt;&lt;/CSOptimizeUsings&gt;&lt;CSReformatCode&gt;True&lt;/CSReformatCode&gt;&lt;XMLReformatCode&gt;True&lt;/XMLReformatCode&gt;&lt;CssReformatCode&gt;True&lt;/CssReformatCode&gt;&lt;/Profile&gt;</s:String>
+	<s:String x:Key="/Default/CodeStyle/CodeCleanup/RecentlyUsedProfile/@EntryValue">KAVE</s:String>
+	<s:String x:Key="/Default/CodeStyle/CodeCleanup/SilentCleanupProfile/@EntryValue">KaVE</s:String>
+	<s:String x:Key="/Default/CodeStyle/CodeFormatting/CSharpFormat/EMPTY_BLOCK_STYLE/@EntryValue">TOGETHER_SAME_LINE</s:String>
+	<s:String x:Key="/Default/CodeStyle/CodeFormatting/CSharpFormat/FORCE_ATTRIBUTE_STYLE/@EntryValue">JOIN</s:String>
+	<s:String x:Key="/Default/CodeStyle/CodeFormatting/CSharpFormat/FORCE_FIXED_BRACES_STYLE/@EntryValue">ALWAYS_ADD</s:String>
+	<s:String x:Key="/Default/CodeStyle/CodeFormatting/CSharpFormat/FORCE_FOR_BRACES_STYLE/@EntryValue">ALWAYS_ADD</s:String>
+	<s:String x:Key="/Default/CodeStyle/CodeFormatting/CSharpFormat/FORCE_FOREACH_BRACES_STYLE/@EntryValue">ALWAYS_ADD</s:String>
+	<s:String x:Key="/Default/CodeStyle/CodeFormatting/CSharpFormat/FORCE_IFELSE_BRACES_STYLE/@EntryValue">ALWAYS_ADD</s:String>
+	<s:String x:Key="/Default/CodeStyle/CodeFormatting/CSharpFormat/FORCE_USING_BRACES_STYLE/@EntryValue">ALWAYS_ADD</s:String>
+	<s:String x:Key="/Default/CodeStyle/CodeFormatting/CSharpFormat/FORCE_WHILE_BRACES_STYLE/@EntryValue">ALWAYS_ADD</s:String>
+	<s:Boolean x:Key="/Default/CodeStyle/CodeFormatting/CSharpFormat/INDENT_NESTED_FIXED_STMT/@EntryValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeStyle/CodeFormatting/CSharpFormat/INDENT_NESTED_USINGS_STMT/@EntryValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeStyle/CodeFormatting/CSharpFormat/STICK_COMMENT/@EntryValue">False</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeStyle/CodeFormatting/CSharpFormat/WRAP_AFTER_INVOCATION_LPAR/@EntryValue">True</s:Boolean>
+	<s:String x:Key="/Default/CodeStyle/CodeFormatting/CSharpFormat/WRAP_ARGUMENTS_STYLE/@EntryValue">CHOP_IF_LONG</s:String>
+	<s:String x:Key="/Default/CodeStyle/CodeFormatting/CSharpFormat/WRAP_ARRAY_INITIALIZER_STYLE/@EntryValue">CHOP_IF_LONG</s:String>
+	<s:String x:Key="/Default/CodeStyle/CodeFormatting/CSharpFormat/WRAP_PARAMETERS_STYLE/@EntryValue">CHOP_IF_LONG</s:String>
+	<s:Boolean x:Key="/Default/CodeStyle/Generate/=EqualityMembers/@KeyIndexDefined">True</s:Boolean>
+	<s:String x:Key="/Default/CodeStyle/Generate/=EqualityMembers/Options/=ChangeEquals/@EntryIndexedValue">Skip</s:String>
+	<s:String x:Key="/Default/CodeStyle/Generate/=EqualityMembers/Options/=ChangeGetHashCode/@EntryIndexedValue">Replace</s:String>
+	<s:String x:Key="/Default/CodeStyle/Generate/=EqualityMembers/Options/=EqualityOperators/@EntryIndexedValue">False</s:String>
+	<s:String x:Key="/Default/CodeStyle/Generate/=EqualityMembers/Options/=ImplementIEquatable/@EntryIndexedValue">False</s:String>
+	<s:Boolean x:Key="/Default/CodeStyle/IntroduceVariableUseVar/UseVarForIntroduceVariableRefactoring/@EntryValue">True</s:Boolean>
+	<s:String x:Key="/Default/CodeStyle/Naming/CSharpNaming/Abbreviations/=DAO/@EntryIndexedValue">DAO</s:String>
+	<s:String x:Key="/Default/CodeStyle/Naming/CSharpNaming/Abbreviations/=DTE/@EntryIndexedValue">DTE</s:String>
+	<s:String x:Key="/Default/CodeStyle/Naming/CSharpNaming/Abbreviations/=IDE/@EntryIndexedValue">IDE</s:String>
+	<s:String x:Key="/Default/CodeStyle/Naming/CSharpNaming/Abbreviations/=MS/@EntryIndexedValue">MS</s:String>
+	<s:String x:Key="/Default/CodeStyle/Naming/CSharpNaming/Abbreviations/=UUID/@EntryIndexedValue">UUID</s:String>
+	<s:String x:Key="/Default/CodeStyle/Naming/CSharpNaming/PredefinedNamingRules/=Interfaces/@EntryIndexedValue">&lt;Policy Inspect="True" Prefix="I" Suffix="" Style="AaBb"&gt;&lt;ExtraRule Prefix="S" Suffix="" Style="AaBb" /&gt;&lt;/Policy&gt;</s:String>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=A4EBEEF94F89C34780654D447ECC5659/@KeyIndexDefined">True</s:Boolean>
+	<s:String x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=A4EBEEF94F89C34780654D447ECC5659/Comment/@EntryValue">Asserting not null should be done using Asserts.NotNull</s:String>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=A4EBEEF94F89C34780654D447ECC5659/CustomPatternPlaceholder/=exception/@KeyIndexDefined">True</s:Boolean>
+	<s:String x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=A4EBEEF94F89C34780654D447ECC5659/CustomPatternPlaceholder/=exception/Properties/=ExactType/@EntryIndexedValue">False</s:String>
+	<s:String x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=A4EBEEF94F89C34780654D447ECC5659/CustomPatternPlaceholder/=exception/Properties/=Type/@EntryIndexedValue">System.Exception</s:String>
+	<s:String x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=A4EBEEF94F89C34780654D447ECC5659/CustomPatternPlaceholder/=exception/Type/@EntryValue">TypePlaceholder</s:String>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=A4EBEEF94F89C34780654D447ECC5659/CustomPatternPlaceholder/=expression/@KeyIndexDefined">True</s:Boolean>
+	<s:String x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=A4EBEEF94F89C34780654D447ECC5659/CustomPatternPlaceholder/=expression/Properties/=ExactType/@EntryIndexedValue">False</s:String>
+	<s:String x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=A4EBEEF94F89C34780654D447ECC5659/CustomPatternPlaceholder/=expression/Properties/=ExpressionType/@EntryIndexedValue"></s:String>
+	<s:String x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=A4EBEEF94F89C34780654D447ECC5659/CustomPatternPlaceholder/=expression/Type/@EntryValue">ExpressionPlaceholder</s:String>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=A4EBEEF94F89C34780654D447ECC5659/CustomPatternPlaceholder/=message/@KeyIndexDefined">True</s:Boolean>
+	<s:String x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=A4EBEEF94F89C34780654D447ECC5659/CustomPatternPlaceholder/=message/Properties/=Maximal/@EntryIndexedValue">1</s:String>
+	<s:String x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=A4EBEEF94F89C34780654D447ECC5659/CustomPatternPlaceholder/=message/Properties/=Minimal/@EntryIndexedValue">-1</s:String>
+	<s:String x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=A4EBEEF94F89C34780654D447ECC5659/CustomPatternPlaceholder/=message/Type/@EntryValue">ArgumentPlaceholder</s:String>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=A4EBEEF94F89C34780654D447ECC5659/IsReplacePattern/@EntryValue">True</s:Boolean>
+	<s:String x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=A4EBEEF94F89C34780654D447ECC5659/LanguageName/@EntryValue">CSHARP</s:String>
+	<s:String x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=A4EBEEF94F89C34780654D447ECC5659/ReplaceComment/@EntryValue">Use Asserts.Null method</s:String>
+	<s:String x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=A4EBEEF94F89C34780654D447ECC5659/ReplacePattern/@EntryValue">Asserts.Null($expression$, $message$);</s:String>
+	<s:String x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=A4EBEEF94F89C34780654D447ECC5659/SearchPattern/@EntryValue">if ($expression$ != null) throw new $exception$($message$);</s:String>
+	<s:String x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=A4EBEEF94F89C34780654D447ECC5659/Severity/@EntryValue">WARNING</s:String>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=B8CF325899441547825CC3F51C133476/@KeyIndexDefined">True</s:Boolean>
+	<s:String x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=B8CF325899441547825CC3F51C133476/Comment/@EntryValue">Asserting false should be done using Asserts.False</s:String>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=B8CF325899441547825CC3F51C133476/CustomPatternPlaceholder/=exception/@KeyIndexDefined">True</s:Boolean>
+	<s:String x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=B8CF325899441547825CC3F51C133476/CustomPatternPlaceholder/=exception/Properties/=ExactType/@EntryIndexedValue">False</s:String>
+	<s:String x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=B8CF325899441547825CC3F51C133476/CustomPatternPlaceholder/=exception/Properties/=Type/@EntryIndexedValue">System.Exception</s:String>
+	<s:String x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=B8CF325899441547825CC3F51C133476/CustomPatternPlaceholder/=exception/Type/@EntryValue">TypePlaceholder</s:String>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=B8CF325899441547825CC3F51C133476/CustomPatternPlaceholder/=expression/@KeyIndexDefined">True</s:Boolean>
+	<s:String x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=B8CF325899441547825CC3F51C133476/CustomPatternPlaceholder/=expression/Properties/=ExactType/@EntryIndexedValue">False</s:String>
+	<s:String x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=B8CF325899441547825CC3F51C133476/CustomPatternPlaceholder/=expression/Properties/=ExpressionType/@EntryIndexedValue"></s:String>
+	<s:String x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=B8CF325899441547825CC3F51C133476/CustomPatternPlaceholder/=expression/Type/@EntryValue">ExpressionPlaceholder</s:String>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=B8CF325899441547825CC3F51C133476/CustomPatternPlaceholder/=message/@KeyIndexDefined">True</s:Boolean>
+	<s:String x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=B8CF325899441547825CC3F51C133476/CustomPatternPlaceholder/=message/Properties/=Maximal/@EntryIndexedValue">1</s:String>
+	<s:String x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=B8CF325899441547825CC3F51C133476/CustomPatternPlaceholder/=message/Properties/=Minimal/@EntryIndexedValue">-1</s:String>
+	<s:String x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=B8CF325899441547825CC3F51C133476/CustomPatternPlaceholder/=message/Type/@EntryValue">ArgumentPlaceholder</s:String>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=B8CF325899441547825CC3F51C133476/IsReplacePattern/@EntryValue">True</s:Boolean>
+	<s:String x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=B8CF325899441547825CC3F51C133476/LanguageName/@EntryValue">CSHARP</s:String>
+	<s:String x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=B8CF325899441547825CC3F51C133476/ReplaceComment/@EntryValue">Use Asserts.False method</s:String>
+	<s:String x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=B8CF325899441547825CC3F51C133476/ReplacePattern/@EntryValue">Asserts.False($expression$, $message$);</s:String>
+	<s:String x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=B8CF325899441547825CC3F51C133476/SearchPattern/@EntryValue">if ($expression$) throw new $exception$($message$);</s:String>
+	<s:String x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=B8CF325899441547825CC3F51C133476/Severity/@EntryValue">WARNING</s:String>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=D33F41D54A478345B23A8F8C5FF8D395/@KeyIndexDefined">True</s:Boolean>
+	<s:String x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=D33F41D54A478345B23A8F8C5FF8D395/Comment/@EntryValue">Asserting null should be done using Asserts.Null</s:String>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=D33F41D54A478345B23A8F8C5FF8D395/CustomPatternPlaceholder/=exception/@KeyIndexDefined">True</s:Boolean>
+	<s:String x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=D33F41D54A478345B23A8F8C5FF8D395/CustomPatternPlaceholder/=exception/Properties/=ExactType/@EntryIndexedValue">False</s:String>
+	<s:String x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=D33F41D54A478345B23A8F8C5FF8D395/CustomPatternPlaceholder/=exception/Properties/=Type/@EntryIndexedValue">System.Exception</s:String>
+	<s:String x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=D33F41D54A478345B23A8F8C5FF8D395/CustomPatternPlaceholder/=exception/Type/@EntryValue">TypePlaceholder</s:String>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=D33F41D54A478345B23A8F8C5FF8D395/CustomPatternPlaceholder/=expression/@KeyIndexDefined">True</s:Boolean>
+	<s:String x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=D33F41D54A478345B23A8F8C5FF8D395/CustomPatternPlaceholder/=expression/Properties/=ExactType/@EntryIndexedValue">False</s:String>
+	<s:String x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=D33F41D54A478345B23A8F8C5FF8D395/CustomPatternPlaceholder/=expression/Properties/=ExpressionType/@EntryIndexedValue"></s:String>
+	<s:String x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=D33F41D54A478345B23A8F8C5FF8D395/CustomPatternPlaceholder/=expression/Type/@EntryValue">ExpressionPlaceholder</s:String>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=D33F41D54A478345B23A8F8C5FF8D395/CustomPatternPlaceholder/=message/@KeyIndexDefined">True</s:Boolean>
+	<s:String x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=D33F41D54A478345B23A8F8C5FF8D395/CustomPatternPlaceholder/=message/Properties/=Maximal/@EntryIndexedValue">1</s:String>
+	<s:String x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=D33F41D54A478345B23A8F8C5FF8D395/CustomPatternPlaceholder/=message/Properties/=Minimal/@EntryIndexedValue">-1</s:String>
+	<s:String x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=D33F41D54A478345B23A8F8C5FF8D395/CustomPatternPlaceholder/=message/Type/@EntryValue">ArgumentPlaceholder</s:String>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=D33F41D54A478345B23A8F8C5FF8D395/IsReplacePattern/@EntryValue">True</s:Boolean>
+	<s:String x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=D33F41D54A478345B23A8F8C5FF8D395/LanguageName/@EntryValue">CSHARP</s:String>
+	<s:String x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=D33F41D54A478345B23A8F8C5FF8D395/ReplaceComment/@EntryValue">Use Asserts.NotNull method</s:String>
+	<s:String x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=D33F41D54A478345B23A8F8C5FF8D395/ReplacePattern/@EntryValue">Asserts.NotNull($expression$, $message$);</s:String>
+	<s:String x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=D33F41D54A478345B23A8F8C5FF8D395/SearchPattern/@EntryValue">if ($expression$ == null) throw new $exception$($message$);</s:String>
+	<s:String x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=D33F41D54A478345B23A8F8C5FF8D395/Severity/@EntryValue">WARNING</s:String>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=E94FFFD68CC72B42909F1F398A5C7F3A/@KeyIndexDefined">True</s:Boolean>
+	<s:String x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=E94FFFD68CC72B42909F1F398A5C7F3A/Comment/@EntryValue">Asserting true should be done using Asserts.True</s:String>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=E94FFFD68CC72B42909F1F398A5C7F3A/CustomPatternPlaceholder/=exception/@KeyIndexDefined">True</s:Boolean>
+	<s:String x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=E94FFFD68CC72B42909F1F398A5C7F3A/CustomPatternPlaceholder/=exception/Properties/=ExactType/@EntryIndexedValue">False</s:String>
+	<s:String x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=E94FFFD68CC72B42909F1F398A5C7F3A/CustomPatternPlaceholder/=exception/Properties/=Type/@EntryIndexedValue">System.Exception</s:String>
+	<s:String x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=E94FFFD68CC72B42909F1F398A5C7F3A/CustomPatternPlaceholder/=exception/Type/@EntryValue">TypePlaceholder</s:String>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=E94FFFD68CC72B42909F1F398A5C7F3A/CustomPatternPlaceholder/=expression/@KeyIndexDefined">True</s:Boolean>
+	<s:String x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=E94FFFD68CC72B42909F1F398A5C7F3A/CustomPatternPlaceholder/=expression/Properties/=ExactType/@EntryIndexedValue">False</s:String>
+	<s:String x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=E94FFFD68CC72B42909F1F398A5C7F3A/CustomPatternPlaceholder/=expression/Properties/=ExpressionType/@EntryIndexedValue"></s:String>
+	<s:String x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=E94FFFD68CC72B42909F1F398A5C7F3A/CustomPatternPlaceholder/=expression/Type/@EntryValue">ExpressionPlaceholder</s:String>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=E94FFFD68CC72B42909F1F398A5C7F3A/CustomPatternPlaceholder/=message/@KeyIndexDefined">True</s:Boolean>
+	<s:String x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=E94FFFD68CC72B42909F1F398A5C7F3A/CustomPatternPlaceholder/=message/Properties/=Maximal/@EntryIndexedValue">1</s:String>
+	<s:String x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=E94FFFD68CC72B42909F1F398A5C7F3A/CustomPatternPlaceholder/=message/Properties/=Minimal/@EntryIndexedValue">-1</s:String>
+	<s:String x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=E94FFFD68CC72B42909F1F398A5C7F3A/CustomPatternPlaceholder/=message/Type/@EntryValue">ArgumentPlaceholder</s:String>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=E94FFFD68CC72B42909F1F398A5C7F3A/IsReplacePattern/@EntryValue">True</s:Boolean>
+	<s:String x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=E94FFFD68CC72B42909F1F398A5C7F3A/LanguageName/@EntryValue">CSHARP</s:String>
+	<s:String x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=E94FFFD68CC72B42909F1F398A5C7F3A/ReplaceComment/@EntryValue">Use Asserts.True method</s:String>
+	<s:String x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=E94FFFD68CC72B42909F1F398A5C7F3A/ReplacePattern/@EntryValue">Asserts.True($expression$, $message$);</s:String>
+	<s:String x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=E94FFFD68CC72B42909F1F398A5C7F3A/SearchPattern/@EntryValue">if (!$expression$) throw new $exception$($message$);</s:String>
+	<s:String x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=E94FFFD68CC72B42909F1F398A5C7F3A/Severity/@EntryValue">WARNING</s:String></wpf:ResourceDictionary>
