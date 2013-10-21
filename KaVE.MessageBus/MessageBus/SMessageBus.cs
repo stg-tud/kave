@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace KAVE.KAVE_MessageBus.MessageBus
+namespace KaVE.MessageBus.MessageBus
 {
     [Guid(GuidList.GuidKaveMessageBusService)]
     // ReSharper disable once InconsistentNaming

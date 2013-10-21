@@ -1,7 +1,7 @@
 ﻿using System;
 using EnvDTE;
 using EventGenerator.Commons;
-using KAVE.KAVE_MessageBus.MessageBus;
+using KaVE.MessageBus.MessageBus;
 using KaVE.Model.Events.ReSharper;
 
 namespace EventGenerator.ReSharper8.Generators

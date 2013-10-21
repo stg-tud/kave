@@ -2,7 +2,7 @@
 using System.Text;
 using Newtonsoft.Json;
 
-namespace KAVE.KAVE_MessageBus.Json
+namespace KaVE.MessageBus.Json
 {
     static class JsonLogSerialization
     {

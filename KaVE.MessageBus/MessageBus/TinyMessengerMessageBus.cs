@@ -1,7 +1,7 @@
 ﻿using System;
 using TinyMessenger;
 
-namespace KAVE.KAVE_MessageBus.MessageBus
+namespace KaVE.MessageBus.MessageBus
 {
     public class TinyMessengerMessageBus : SMessageBus
     {

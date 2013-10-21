@@ -1,7 +1,7 @@
 ﻿// Guids.cs
 // MUST match guids.h
 
-namespace KAVE.EventGenerator_VisualStudio10
+namespace KaVE.EventGenerator_VisualStudio10
 {
     static class GuidList
     {

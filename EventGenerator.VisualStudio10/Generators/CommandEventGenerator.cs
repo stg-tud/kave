@@ -4,14 +4,14 @@ using System.ComponentModel.Composition;
 using System.Linq;
 using EnvDTE;
 using EventGenerator.Commons;
-using KAVE.KAVE_MessageBus.MessageBus;
+using KaVE.MessageBus.MessageBus;
 using KaVE.Model.Events;
 using KaVE.Model.Events.VisualStudio;
 using KaVE.Utils.Assertion;
 using KaVE.Utils.IO;
 using Microsoft.VisualStudio.CommandBars;
 
-namespace KAVE.EventGenerator_VisualStudio10.Generators
+namespace KaVE.EventGenerator_VisualStudio10.Generators
 {
     [Export(typeof(VisualStudioEventGenerator))]
     internal class CommandEventGenerator : VisualStudioEventGenerator

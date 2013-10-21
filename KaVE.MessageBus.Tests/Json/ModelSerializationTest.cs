@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using KAVE.KAVE_MessageBus.Json;
+using KaVE.MessageBus.Json;
 using KaVE.Model.Events;
 using KaVE.Model.Events.CompletionEvent;
 using KaVE.Model.Names;
 using KaVE.Model.Names.CSharp;
 using NUnit.Framework;
 
-namespace KAVE.MessageBus.Tests.Json
+namespace KaVE.MessageBus.Tests.Json
 {
     [TestFixture]
     public class ModelSerializationTest

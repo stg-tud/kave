@@ -4,8 +4,8 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Runtime.InteropServices;
-using KAVE.KAVE_MessageBus.Json;
-using KAVE.KAVE_MessageBus.MessageBus;
+using KaVE.MessageBus.Json;
+using KaVE.MessageBus.MessageBus;
 using KaVE.Model.Events;
 using KaVE.Utils.Assertion;
 using Microsoft.VisualStudio.Shell;
@@ -14,7 +14,7 @@ using Microsoft.VisualStudio.Shell;
 using System.IO.Compression;
 #endif
 
-namespace KAVE.KAVE_MessageBus
+namespace KaVE.MessageBus
 {
     [PackageRegistration(UseManagedResourcesOnly = true),
      InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400),

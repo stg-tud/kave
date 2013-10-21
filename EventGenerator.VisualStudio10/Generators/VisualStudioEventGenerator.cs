@@ -1,9 +1,9 @@
 ﻿using EnvDTE;
 using EventGenerator.Commons;
 using JetBrains.Annotations;
-using KAVE.KAVE_MessageBus.MessageBus;
+using KaVE.MessageBus.MessageBus;
 
-namespace KAVE.EventGenerator_VisualStudio10.Generators
+namespace KaVE.EventGenerator_VisualStudio10.Generators
 {
     internal abstract class VisualStudioEventGenerator : AbstractEventGenerator
     {

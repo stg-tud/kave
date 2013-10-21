@@ -2,10 +2,10 @@
 using System.ComponentModel.Composition;
 using System.Timers;
 using EnvDTE;
-using KAVE.KAVE_MessageBus.MessageBus;
+using KaVE.MessageBus.MessageBus;
 using KaVE.Model.Events.VisualStudio;
 
-namespace KAVE.EventGenerator_VisualStudio10.Generators
+namespace KaVE.EventGenerator_VisualStudio10.Generators
 {
     [Export(typeof (VisualStudioEventGenerator))]
     internal class TextEditorEventGenerator : VisualStudioEventGenerator, IDisposable

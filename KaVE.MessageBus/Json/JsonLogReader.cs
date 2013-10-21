@@ -4,7 +4,7 @@ using System.IO;
 using KaVE.Utils.Assertion;
 using Newtonsoft.Json;
 
-namespace KAVE.KAVE_MessageBus.Json
+namespace KaVE.MessageBus.Json
 {
     /// <summary>
     /// A reader for streams written by <see cref="JsonLogWriter"/>.

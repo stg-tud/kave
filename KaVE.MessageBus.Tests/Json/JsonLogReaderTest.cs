@@ -1,9 +1,9 @@
 ﻿using System.IO;
 using System.Linq;
-using KAVE.KAVE_MessageBus.Json;
+using KaVE.MessageBus.Json;
 using NUnit.Framework;
 
-namespace KAVE.MessageBus.Tests.Json
+namespace KaVE.MessageBus.Tests.Json
 {
     [TestFixture]
     public class JsonLogReaderTest

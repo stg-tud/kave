@@ -1,7 +1,7 @@
 ﻿// Guids.cs
 // MUST match guids.h
 
-namespace KAVE.KAVE_MessageBus
+namespace KaVE.MessageBus
 {
     static class GuidList
     {

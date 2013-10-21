@@ -3,7 +3,7 @@ using EventGenerator.Commons;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Intentions.Extensibility;
 using JetBrains.TextControl;
-using KAVE.KAVE_MessageBus.MessageBus;
+using KaVE.MessageBus.MessageBus;
 using KaVE.Model.Events.ReSharper;
 
 namespace EventGenerator.ReSharper8.Generators

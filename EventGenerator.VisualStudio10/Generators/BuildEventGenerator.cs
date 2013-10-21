@@ -1,10 +1,10 @@
 ﻿using System;
 using EnvDTE;
-using KAVE.KAVE_MessageBus.MessageBus;
+using KaVE.MessageBus.MessageBus;
 using KaVE.Model.Events.VisualStudio;
 using KaVE.Utils.Assertion;
 
-namespace KAVE.EventGenerator_VisualStudio10.Generators
+namespace KaVE.EventGenerator_VisualStudio10.Generators
 {
     internal class BuildEventGenerator : VisualStudioEventGenerator
     {

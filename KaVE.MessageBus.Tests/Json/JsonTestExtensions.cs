@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Text;
 
-namespace KAVE.MessageBus.Tests.Json
+namespace KaVE.MessageBus.Tests.Json
 {
     static class JsonTestExtensions
     {

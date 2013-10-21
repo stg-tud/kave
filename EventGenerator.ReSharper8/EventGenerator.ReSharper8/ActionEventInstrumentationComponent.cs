@@ -5,7 +5,7 @@ using JetBrains.ActionManagement;
 using JetBrains.Application;
 using JetBrains.DataFlow;
 using JetBrains.VsIntegration.Application;
-using KAVE.KAVE_MessageBus.MessageBus;
+using KaVE.MessageBus.MessageBus;
 
 namespace EventGenerator.ReSharper8
 {

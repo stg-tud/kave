@@ -178,7 +178,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\CodeCompletion\KaVE.Model\KaVE.Model.csproj">
       <Project>{236E2794-DE4D-4F94-AC87-2ABFD1059CE0}</Project>
-      <Name>CodeCompletion.Model</Name>
+      <Name>KaVE.Model</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\CodeCompletion\KaVE.Utils\KAVE.Utils.csproj">
       <Project>{4439FDE5-778A-4FAB-8BB0-7A4E23C45BDB}</Project>
@@ -188,9 +188,9 @@
       <Project>{68C1DF50-3A30-4449-B11D-B02F486CD3C8}</Project>
       <Name>EventGenerator.Commons</Name>
     </ProjectReference>
-    <ProjectReference Include="..\KAVE.MessageBus\KAVE.MessageBus.csproj">
+    <ProjectReference Include="..\KaVE.MessageBus\KaVE.MessageBus.csproj">
       <Project>{F1CF28AB-134E-4A95-9F9A-9EE808924975}</Project>
-      <Name>KAVE.MessageBus</Name>
+      <Name>KaVE.MessageBus</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

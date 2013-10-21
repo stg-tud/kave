@@ -6,8 +6,8 @@
     <ProjectGuid>{EA1CFCA8-35C4-4177-A970-D28C619E7130}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>KAVE.MessageBus.Tests</RootNamespace>
-    <AssemblyName>KAVE.MessageBus.Tests</AssemblyName>
+    <RootNamespace>KaVE.MessageBus.Tests</RootNamespace>
+    <AssemblyName>KaVE.MessageBus.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -82,15 +82,16 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Json\SerializationTestTarget.cs" />
     <Compile Include="Json\JsonTestExtensions.cs" />
+    <Compile Include="MessageBus\TinyMessengerMessageChannelTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\CodeCompletion\KaVE.Model\KaVE.Model.csproj">
       <Project>{236e2794-de4d-4f94-ac87-2abfd1059ce0}</Project>
-      <Name>CodeCompletion.Model</Name>
+      <Name>KaVE.Model</Name>
     </ProjectReference>
-    <ProjectReference Include="..\KAVE.MessageBus\KAVE.MessageBus.csproj">
+    <ProjectReference Include="..\KaVE.MessageBus\KaVE.MessageBus.csproj">
       <Project>{F1CF28AB-134E-4A95-9F9A-9EE808924975}</Project>
-      <Name>KAVE.MessageBus</Name>
+      <Name>KaVE.MessageBus</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

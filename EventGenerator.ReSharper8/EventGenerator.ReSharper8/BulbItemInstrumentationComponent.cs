@@ -8,7 +8,7 @@ using JetBrains.ReSharper.Psi;
 using JetBrains.TextControl;
 using JetBrains.UI.BulbMenu;
 using JetBrains.VsIntegration.Application;
-using KAVE.KAVE_MessageBus.MessageBus;
+using KaVE.MessageBus.MessageBus;
 using KaVE.Utils.Assertion;
 
 namespace EventGenerator.ReSharper8

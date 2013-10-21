@@ -5,7 +5,7 @@ using System.Globalization;
 using System.Linq;
 using System.Runtime.InteropServices;
 using JetBrains.Annotations;
-using KAVE.EventGenerator_VisualStudio10.Generators;
+using KaVE.EventGenerator_VisualStudio10.Generators;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Ninject;
@@ -18,7 +18,7 @@ using Ninject.Modules;
 using Ninject.Planning.Bindings;
 using Ninject.Planning.Bindings.Resolvers;
 
-namespace KAVE.EventGenerator_VisualStudio10
+namespace KaVE.EventGenerator_VisualStudio10
 {
     /// <summary>
     /// This is the class that implements the package exposed by this assembly.

@@ -1,4 +1,4 @@
-﻿namespace KAVE.MessageBus.Tests.Json
+﻿namespace KaVE.MessageBus.Tests.Json
 {
     class SerializationTestTarget
     {

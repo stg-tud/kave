@@ -4,7 +4,7 @@ using JetBrains.Annotations;
 using KaVE.Utils.Assertion;
 using Newtonsoft.Json;
 
-namespace KAVE.KAVE_MessageBus.Json
+namespace KaVE.MessageBus.Json
 {
     /// <summary>
     /// Writes objects as Json to a stream. Every object is serialized and written as a single line, delimited by '\r\n'.

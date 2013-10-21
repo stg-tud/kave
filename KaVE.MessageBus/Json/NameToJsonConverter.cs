@@ -6,7 +6,7 @@ using KaVE.Utils.Assertion;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace KAVE.KAVE_MessageBus.Json
+namespace KaVE.MessageBus.Json
 {
     internal class NameToJsonConverter : JsonConverter
     {

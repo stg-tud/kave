@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace KAVE.EventGenerator_VisualStudio10 {
+namespace KaVE.EventGenerator_VisualStudio10 {
     /// <summary>
     ///   A strongly-typed resource class, for looking up localized strings, etc.
     /// </summary>

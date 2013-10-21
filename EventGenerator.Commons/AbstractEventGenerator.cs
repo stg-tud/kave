@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Windows.Input;
 using EnvDTE;
 using JetBrains.Annotations;
-using KAVE.KAVE_MessageBus.MessageBus;
+using KaVE.MessageBus.MessageBus;
 using KaVE.Model.Events;
 using KaVE.Utils.Serialization;
 
