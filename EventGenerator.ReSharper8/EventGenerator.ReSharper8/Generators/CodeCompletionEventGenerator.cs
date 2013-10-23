@@ -25,7 +25,7 @@ namespace KaVE.EventGenerator.ReSharper8.Generators
             return base.AddLookupItems(context, collector);
         }
 
-        private static void GetAssemblyQualifiedNameOfTypeProposal(ILookupItem lookupItem)
+        private static string GetAssemblyQualifiedNameOfTypeProposal(ILookupItem lookupItem)
         {
             var declaredElementLookupItem = lookupItem as DeclaredElementLookupItem;
             if (declaredElementLookupItem != null && declaredElementLookupItem.PreferredDeclaredElement != null)
@@ -35,8 +35,9 @@ namespace KaVE.EventGenerator.ReSharper8.Generators
                 if (classElement != null)
                 {
                     var fullName = classElement.GetClrName().FullName;
+                    // this is not working yet..
                     var type = Type.GetType(fullName);
-                    var assemblyQualifiedName = type.AssemblyQualifiedName;
+                    return type.AssemblyQualifiedName;
                 }
             }
         }
