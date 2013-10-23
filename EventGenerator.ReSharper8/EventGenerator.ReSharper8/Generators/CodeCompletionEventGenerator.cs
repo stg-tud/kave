@@ -21,8 +21,14 @@ namespace KaVE.EventGenerator.ReSharper8.Generators
         {
             var lookupItems = collector.Items;
             var lookupItem = lookupItems.First();
+            GetAssemblyQualifiedNameOfTypeProposal(lookupItem);
+            return base.AddLookupItems(context, collector);
+        }
+
+        private static void GetAssemblyQualifiedNameOfTypeProposal(ILookupItem lookupItem)
+        {
             var declaredElementLookupItem = lookupItem as DeclaredElementLookupItem;
-            if (declaredElementLookupItem != null)
+            if (declaredElementLookupItem != null && declaredElementLookupItem.PreferredDeclaredElement != null)
             {
                 var enclosingElement = declaredElementLookupItem.PreferredDeclaredElement.Element;
                 var classElement = enclosingElement as ITypeElement;
@@ -33,7 +39,6 @@ namespace KaVE.EventGenerator.ReSharper8.Generators
                     var assemblyQualifiedName = type.AssemblyQualifiedName;
                 }
             }
-            return base.AddLookupItems(context, collector);
         }
     }
 }
