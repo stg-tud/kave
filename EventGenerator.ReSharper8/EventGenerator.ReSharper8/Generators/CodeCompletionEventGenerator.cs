@@ -25,7 +25,7 @@ namespace KaVE.EventGenerator.ReSharper8.Generators
             if (declaredElementLookupItem != null)
             {
                 var enclosingElement = declaredElementLookupItem.PreferredDeclaredElement.Element;
-                var classElement = enclosingElement as ClassElement;
+                var classElement = enclosingElement as ITypeElement;
                 if (classElement != null)
                 {
                     var fullName = classElement.GetClrName().FullName;
