@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using EnvDTE;
 using KaVE.EventGenerator.VisualStudio10.Utils;
@@ -53,7 +54,7 @@ namespace KaVE.EventGenerator.VisualStudio10.Generators
                     box.Change += _commandBarEvents_Dropdown_Change;
                 }
 
-                Asserts.Not(button == null && box == null, "unknown type of control: " + control.GetType());
+                Asserts.Not(button == null && box == null, "unknown type of control: {0}", control.GetType());
             }
         }
 
@@ -83,6 +84,14 @@ namespace KaVE.EventGenerator.VisualStudio10.Generators
 
         void _commandEvents_BeforeExecute(string guid, int id, object customIn, object customOut, ref bool cancelDefault)
         {
+            var commandEvent = CreateCommandEvent(guid, id);
+            EnqueueEvent(commandEvent);
+
+            _preceedingCommandBarEvent = null;
+        }
+
+        private CommandEvent CreateCommandEvent(string guid, int id)
+        {
             var command = GetCommand(guid, id);
             var commandEvent = _preceedingCommandBarEvent ?? Create<CommandEvent>();
 
@@ -92,9 +101,7 @@ namespace KaVE.EventGenerator.VisualStudio10.Generators
             }
 
             commandEvent.Command = VsComponentNameFactory.GetNameOf(command);
-            EnqueueEvent(commandEvent);
-
-            _preceedingCommandBarEvent = null;
+            return commandEvent;
         }
 
         private Command GetCommand(string guid, int id)
@@ -112,7 +119,7 @@ namespace KaVE.EventGenerator.VisualStudio10.Generators
         private void EnqueueEvent(CommandEvent evt)
         {
             var commandKey = CommandKey(evt.Command.Guid, evt.Command.Id);
-            Asserts.Not(_eventQueue.ContainsKey(commandKey), "executing same event twice at a time: " + evt);
+            Asserts.Not(_eventQueue.ContainsKey(commandKey), "executing same event twice at a time: {0}", evt);
             _eventQueue.Add(commandKey, evt);
         }
 
@@ -124,7 +131,12 @@ namespace KaVE.EventGenerator.VisualStudio10.Generators
         void _commandEvents_AfterExecute(string guid, int id, object customIn, object customOut)
         {
             var commandEvent = TakeFromQueue(CommandKey(guid, id));
-            Asserts.NotNull(commandEvent, "command finished that didn't start: " + guid + ":" + id);
+            if (commandEvent == null && id == 107 && guid.Equals("{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}"))
+            {
+                // for some reason code-completion command is not started...
+                commandEvent = CreateCommandEvent(guid, id);
+            }
+            Asserts.NotNull(commandEvent, "command finished that didn't start: {0}:{1}", guid, id);
             Fire(commandEvent);
         }
 

@@ -57,6 +57,7 @@
     <Compile Include="ActionEventInstrumentationComponent.cs" />
     <Compile Include="BulbItemInstrumentationComponent.cs" />
     <Compile Include="BulbItemInstrumentationExtensions.cs" />
+    <Compile Include="Generators\CodeCompletionEventGenerator.cs" />
     <Compile Include="Generators\EventGeneratingActionHandler.cs" />
     <Compile Include="Generators\EventGeneratingActionWrapper.cs" />
     <Compile Include="Generators\EventGeneratingBulbActionProxy.cs" />
@@ -79,6 +80,9 @@
       <Project>{F1CF28AB-134E-4A95-9F9A-9EE808924975}</Project>
       <Name>KaVE.MessageBus</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Utils\" />
   </ItemGroup>
   <PropertyGroup>
     <ReSharperSdkTargets Condition=" '$(ReSharperSdkTargets)' == '' ">$(MSBuildExtensionsPath)\JetBrains\ReSharper.SDK\v8.0</ReSharperSdkTargets>
