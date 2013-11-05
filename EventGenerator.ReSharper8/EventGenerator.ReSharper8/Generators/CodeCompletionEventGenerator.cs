@@ -1,45 +1,106 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
-using JetBrains.ReSharper.Feature.Services.CSharp.CodeCompletion.Infrastructure;
+using EnvDTE;
 using JetBrains.ReSharper.Feature.Services.Lookup;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
-using JetBrains.ReSharper.Psi.Impl.reflection2.elements.Context;
+using JetBrains.Util;
+using KaVE.EventGenerator.ReSharper8.Utils;
+using KaVE.EventGenerator.VisualStudio10.Generators;
+using KaVE.MessageBus.MessageBus;
+using KaVE.Model.Events.CompletionEvent;
+using System.Collections.Generic;
 
 namespace KaVE.EventGenerator.ReSharper8.Generators
 {
     [Language(typeof(CSharpLanguage))]
-    public class CodeCompletionEventGenerator : CSharpItemsProviderBase<CSharpCodeCompletionContext>
+    public class CodeCompletionEventGenerator : AbstractEventGenerator
     {
-        protected override bool IsAvailable(CSharpCodeCompletionContext context)
+        private readonly ILookupWindowManager _lookupWindowManager;
+
+        private ILookup _currentLookup;
+
+        private CompletionEvent _currentEvent;
+
+        /// <summary>
+        /// Represents the token on which the completion is triggered
+        /// </summary>
+        private string _currentToken;
+
+        public CodeCompletionEventGenerator(ILookupWindowManager lookupWindowManager, DTE dte, SMessageBus messageBus) : base(dte, messageBus)
         {
-            var codeCompletionType = context.BasicContext.CodeCompletionType;
-            return true;
+            _lookupWindowManager = lookupWindowManager;
+            _lookupWindowManager.BeforeLookupWindowShown += HandleLookupWindowShownEvent;
         }
 
-        protected override bool AddLookupItems(CSharpCodeCompletionContext context, GroupedItemsCollector collector)
+        private void HandleLookupWindowShownEvent(Object sender, EventArgs e)
         {
-            var lookupItems = collector.Items;
-            var lookupItem = lookupItems.First();
-            GetAssemblyQualifiedNameOfTypeProposal(lookupItem);
-            return base.AddLookupItems(context, collector);
+            _currentLookup = _lookupWindowManager.CurrentLookup;
+            _currentLookup.BeforeShownItemsUpdated += HandleBeforeItemUpdateEvent;
+            _currentLookup.Closed += HandleCompletionCloseEvent;
+            _currentLookup.CurrentItemChanged += HandleCompletionChangedEvent;
+            _currentLookup.ItemCompleted += HandleCompletionFireEvent;
+            _currentLookup.Typing += HandleCompletionTypingEvent;
+
+            _currentToken = _currentLookup.Window.Lookup.Prefix;
+
+            CreateCurrentCompletionEvent();
         }
 
-        private static string GetAssemblyQualifiedNameOfTypeProposal(ILookupItem lookupItem)
+        private void CreateCurrentCompletionEvent()
         {
-            var declaredElementLookupItem = lookupItem as DeclaredElementLookupItem;
-            if (declaredElementLookupItem != null && declaredElementLookupItem.PreferredDeclaredElement != null)
-            {
-                var enclosingElement = declaredElementLookupItem.PreferredDeclaredElement.Element;
-                var classElement = enclosingElement as ITypeElement;
-                if (classElement != null)
-                {
-                    var fullName = classElement.GetClrName().FullName;
-                    // this is not working yet..
-                    var type = Type.GetType(fullName);
-                    return type.AssemblyQualifiedName;
-                }
-            }
+            _currentEvent = Create<CompletionEvent>();
+            _currentEvent.ProposalCollection = _currentLookup.Items.ToProposalCollection();
+            AddCurrentSelectionToEvent();
+        }
+
+        private void HandleCompletionCloseEvent(object sender, EventArgs e)
+        {
+            Debug.WriteLine("Close");
+
+            _currentEvent.TerminatedBy = CompletionEvent.TerminationAction.Cancel;
+            //SimpleLog.LogCompletionEvent(currentEvent);
+
+            // Cleanup
+            _currentLookup.ItemCompleted -= HandleCompletionFireEvent;
+            _currentLookup.CurrentItemChanged -= HandleCompletionChangedEvent;
+            _currentLookup.Typing -= HandleCompletionTypingEvent;
+            _currentLookup.BeforeShownItemsUpdated -= HandleBeforeItemUpdateEvent;
+        }
+
+        private void HandleBeforeItemUpdateEvent(object sender, IList<Pair<ILookupItem, MatchingResult>> items)
+        {
+            Debug.WriteLine("Completion Updated");
+            _currentEvent.ProposalCollection = items.Select(pair => pair.First).ToProposalCollection();
+            _currentToken = _currentLookup.Window.Lookup.Prefix;
+        }
+
+        private void HandleCompletionTypingEvent(object sender, EventArgs e)
+        {
+            Debug.WriteLine("Typing");
+        }
+
+        private void HandleCompletionChangedEvent(object sender, EventArgs eventArgs)
+        {
+            Debug.WriteLine("Completion Changed");
+            AddCurrentSelectionToEvent();
+        }
+
+        private void HandleCompletionFireEvent(object sender, ILookupItem lookupItem, Suffix suffix,
+            LookupItemInsertType lookupItemInsertType)
+        {
+            Debug.WriteLine("Fire");
+
+            _currentEvent.TerminatedBy = CompletionEvent.TerminationAction.Apply;
+            Fire(_currentEvent);
+            _currentEvent = null;
+        }
+
+        private void AddCurrentSelectionToEvent()
+        {
+            var selection = _lookupWindowManager.CurrentLookup.Selection.Item.ToProposal();
+            _currentEvent.AddSelection(new ProposalSelection(selection, _currentToken));
         }
     }
 }
