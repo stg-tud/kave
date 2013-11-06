@@ -6,11 +6,13 @@ using JetBrains.ReSharper.Feature.Services.Lookup;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.Util;
+using JetBrains.VsIntegration.Application;
 using KaVE.EventGenerator.ReSharper8.Utils;
 using KaVE.EventGenerator.VisualStudio10.Generators;
 using KaVE.MessageBus.MessageBus;
 using KaVE.Model.Events.CompletionEvent;
 using System.Collections.Generic;
+using KaVE.Utils.Assertion;
 
 namespace KaVE.EventGenerator.ReSharper8.Generators
 {
@@ -18,89 +20,89 @@ namespace KaVE.EventGenerator.ReSharper8.Generators
     public class CodeCompletionEventGenerator : AbstractEventGenerator
     {
         private readonly ILookupWindowManager _lookupWindowManager;
-
         private ILookup _currentLookup;
-
         private CompletionEvent _currentEvent;
 
-        /// <summary>
-        /// Represents the token on which the completion is triggered
-        /// </summary>
-        private string _currentToken;
-
-        public CodeCompletionEventGenerator(ILookupWindowManager lookupWindowManager, DTE dte, SMessageBus messageBus) : base(dte, messageBus)
+        public CodeCompletionEventGenerator(ILookupWindowManager lookupWindowManager, RawVsServiceProvider serviceProvider)
+            : base(serviceProvider.Value.GetService<DTE, DTE>(), serviceProvider.Value.GetService<SMessageBus, SMessageBus>())
         {
             _lookupWindowManager = lookupWindowManager;
-            _lookupWindowManager.BeforeLookupWindowShown += HandleLookupWindowShownEvent;
+            _lookupWindowManager.BeforeLookupWindowShown += OnBeforeLookupShown;
         }
 
-        private void HandleLookupWindowShownEvent(Object sender, EventArgs e)
+        private void OnBeforeLookupShown(Object sender, EventArgs e)
+        {
+            RegisterToCurrentLookup();
+            InitCurrentCompletionEvent();
+        }
+
+        private void RegisterToCurrentLookup()
         {
             _currentLookup = _lookupWindowManager.CurrentLookup;
-            _currentLookup.BeforeShownItemsUpdated += HandleBeforeItemUpdateEvent;
-            _currentLookup.Closed += HandleCompletionCloseEvent;
-            _currentLookup.CurrentItemChanged += HandleCompletionChangedEvent;
-            _currentLookup.ItemCompleted += HandleCompletionFireEvent;
-            _currentLookup.Typing += HandleCompletionTypingEvent;
-
-            _currentToken = _currentLookup.Window.Lookup.Prefix;
-
-            CreateCurrentCompletionEvent();
+            _currentLookup.BeforeShownItemsUpdated += OnBeforeLookupItemsShown;
+            _currentLookup.Closed += OnLookupClosed;
+            _currentLookup.CurrentItemChanged += OnCurrentLookupSelectionChanged;
+            _currentLookup.ItemCompleted += OnCompletionApplied;
+            _currentLookup.Typing += HandleTypingEvent;
         }
 
-        private void CreateCurrentCompletionEvent()
+        private void InitCurrentCompletionEvent()
         {
+            Asserts.Null(_currentEvent, "multiple events at a time");
             _currentEvent = Create<CompletionEvent>();
-            _currentEvent.ProposalCollection = _currentLookup.Items.ToProposalCollection();
             AddCurrentSelectionToEvent();
         }
 
-        private void HandleCompletionCloseEvent(object sender, EventArgs e)
+        private void OnBeforeLookupItemsShown(object sender, IList<Pair<ILookupItem, MatchingResult>> items)
         {
-            Debug.WriteLine("Close");
-
-            _currentEvent.TerminatedBy = CompletionEvent.TerminationAction.Cancel;
-            //SimpleLog.LogCompletionEvent(currentEvent);
-
-            // Cleanup
-            _currentLookup.ItemCompleted -= HandleCompletionFireEvent;
-            _currentLookup.CurrentItemChanged -= HandleCompletionChangedEvent;
-            _currentLookup.Typing -= HandleCompletionTypingEvent;
-            _currentLookup.BeforeShownItemsUpdated -= HandleBeforeItemUpdateEvent;
+            _currentEvent.ProposalCollection = items.Select(p => p.First).ToProposalCollection();
         }
 
-        private void HandleBeforeItemUpdateEvent(object sender, IList<Pair<ILookupItem, MatchingResult>> items)
-        {
-            Debug.WriteLine("Completion Updated");
-            _currentEvent.ProposalCollection = items.Select(pair => pair.First).ToProposalCollection();
-            _currentToken = _currentLookup.Window.Lookup.Prefix;
-        }
-
-        private void HandleCompletionTypingEvent(object sender, EventArgs e)
+        private void HandleTypingEvent(object sender, EventArgs e)
         {
             Debug.WriteLine("Typing");
         }
 
-        private void HandleCompletionChangedEvent(object sender, EventArgs eventArgs)
+        private void OnCurrentLookupSelectionChanged(object sender, EventArgs eventArgs)
         {
-            Debug.WriteLine("Completion Changed");
             AddCurrentSelectionToEvent();
-        }
-
-        private void HandleCompletionFireEvent(object sender, ILookupItem lookupItem, Suffix suffix,
-            LookupItemInsertType lookupItemInsertType)
-        {
-            Debug.WriteLine("Fire");
-
-            _currentEvent.TerminatedBy = CompletionEvent.TerminationAction.Apply;
-            Fire(_currentEvent);
-            _currentEvent = null;
         }
 
         private void AddCurrentSelectionToEvent()
         {
             var selection = _lookupWindowManager.CurrentLookup.Selection.Item.ToProposal();
-            _currentEvent.AddSelection(new ProposalSelection(selection, _currentToken));
+            var typedToken = _currentLookup.Window.Lookup.Prefix;
+            _currentEvent.AddSelection(new ProposalSelection(selection, typedToken));
+        }
+
+        private void OnLookupClosed(object sender, EventArgs e)
+        {
+            FireCurrentCompletionEvent(CompletionEvent.TerminationAction.Cancel);
+            UnregisterFromCurrentLookup();
+        }
+
+        private void OnCompletionApplied(object sender, ILookupItem lookupItem, Suffix suffix,
+            LookupItemInsertType lookupItemInsertType)
+        {
+            FireCurrentCompletionEvent(CompletionEvent.TerminationAction.Apply);
+            UnregisterFromCurrentLookup();
+        }
+
+        private void FireCurrentCompletionEvent(CompletionEvent.TerminationAction action)
+        {
+            _currentEvent.TerminatedBy = action;
+            Fire(_currentEvent);
+            _currentEvent = null;
+        }
+
+        private void UnregisterFromCurrentLookup()
+        {
+            _currentLookup.BeforeShownItemsUpdated -= OnBeforeLookupItemsShown;
+            _currentLookup.Closed -= OnLookupClosed;
+            _currentLookup.CurrentItemChanged -= OnCurrentLookupSelectionChanged;
+            _currentLookup.ItemCompleted -= OnCompletionApplied;
+            _currentLookup.Typing -= HandleTypingEvent;
+            _currentLookup = null;
         }
     }
 }
