@@ -1,6 +1,4 @@
 ﻿using JetBrains.ReSharper.Psi;
-using JetBrains.ReSharper.Psi.ExtensionsAPI.Caches2;
-using JetBrains.ReSharper.Psi.Resources;
 using Moq;
 using NUnit.Framework;
 using KaVE.EventGenerator.ReSharper8.Utils;

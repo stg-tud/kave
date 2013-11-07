@@ -8,8 +8,8 @@
     <ProjectGuid>{4979D8EC-B49B-4578-BDC3-D4015C493A98}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>KaVE.EventGenerator.ReSharper8.Tests</RootNamespace>
-    <AssemblyName>EventGenerator.ReSharper8.Tests</AssemblyName>
+    <RootNamespace>KaVE.EventGenerator.ReSharper8.IntegrationTests</RootNamespace>
+    <AssemblyName>EventGenerator.ReSharper8.IntegrationTests</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />

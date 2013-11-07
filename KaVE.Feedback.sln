@@ -14,7 +14,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventGenerator.VisualStudio
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventGenerator.ReSharper8", "EventGenerator.ReSharper8\EventGenerator.ReSharper8\EventGenerator.ReSharper8.csproj", "{42CE1875-DF5B-4D9E-ADC4-47A96C06EF66}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventGenerator.ReSharper8.Tests", "EventGenerator.ReSharper8\EventGenerator.ReSharper8.Tests\EventGenerator.ReSharper8.Tests.csproj", "{4979D8EC-B49B-4578-BDC3-D4015C493A98}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventGenerator.ReSharper8.IntegrationTests", "EventGenerator.ReSharper8\EventGenerator.ReSharper8.Tests\EventGenerator.ReSharper8.IntegrationTests.csproj", "{4979D8EC-B49B-4578-BDC3-D4015C493A98}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KaVE.MessageBus", "KaVE.MessageBus\KaVE.MessageBus.csproj", "{F1CF28AB-134E-4A95-9F9A-9EE808924975}"
 EndProject
@@ -34,21 +34,21 @@ Global
 		SccProjectUniqueName2 = EventGenerator.ReSharper8\\EventGenerator.ReSharper8\\EventGenerator.ReSharper8.csproj
 		SccProjectName2 = EventGenerator.ReSharper8/EventGenerator.ReSharper8
 		SccLocalPath2 = EventGenerator.ReSharper8\\EventGenerator.ReSharper8
-		SccProjectUniqueName3 = EventGenerator.ReSharper8\\EventGenerator.ReSharper8.Tests\\EventGenerator.ReSharper8.Tests.csproj
-		SccProjectName3 = EventGenerator.ReSharper8/EventGenerator.ReSharper8.Tests
-		SccLocalPath3 = EventGenerator.ReSharper8\\EventGenerator.ReSharper8.Tests
-		SccProjectUniqueName4 = KaVE.MessageBus\\KaVE.MessageBus.csproj
-		SccProjectName4 = KAVE.MessageBus
-		SccLocalPath4 = KAVE.MessageBus
-		SccProjectUniqueName5 = KaVE.MessageBus.Tests\\KaVE.MessageBus.Tests.csproj
-		SccProjectName5 = KAVE.MessageBus.Tests
-		SccLocalPath5 = KAVE.MessageBus.Tests
-		SccProjectUniqueName6 = ..\\CodeCompletion\\KaVE.Model\\KaVE.Model.csproj
-		SccProjectName6 = ../CodeCompletion/KaVE.Model
-		SccLocalPath6 = ..\\CodeCompletion\\KaVE.Model
-		SccProjectUniqueName7 = ..\\CodeCompletion\\KaVE.Utils\\KAVE.Utils.csproj
-		SccProjectName7 = ../CodeCompletion/KaVE.Utils
-		SccLocalPath7 = ..\\CodeCompletion\\KaVE.Utils
+		SccProjectUniqueName3 = KaVE.MessageBus\\KaVE.MessageBus.csproj
+		SccProjectName3 = KAVE.MessageBus
+		SccLocalPath3 = KAVE.MessageBus
+		SccProjectUniqueName4 = KaVE.MessageBus.Tests\\KaVE.MessageBus.Tests.csproj
+		SccProjectName4 = KAVE.MessageBus.Tests
+		SccLocalPath4 = KAVE.MessageBus.Tests
+		SccProjectUniqueName5 = ..\\CodeCompletion\\KaVE.Model\\KaVE.Model.csproj
+		SccProjectName5 = ../CodeCompletion/KaVE.Model
+		SccLocalPath5 = ..\\CodeCompletion\\KaVE.Model
+		SccProjectUniqueName6 = ..\\CodeCompletion\\KaVE.Utils\\KAVE.Utils.csproj
+		SccProjectName6 = ../CodeCompletion/KaVE.Utils
+		SccLocalPath6 = ..\\CodeCompletion\\KaVE.Utils
+		SccProjectUniqueName7 = EventGenerator.ReSharper8\\EventGenerator.ReSharper8.Tests\\EventGenerator.ReSharper8.IntegrationTests.csproj
+		SccProjectName7 = EventGenerator.ReSharper8/EventGenerator.ReSharper8.Tests
+		SccLocalPath7 = EventGenerator.ReSharper8\\EventGenerator.ReSharper8.Tests
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
