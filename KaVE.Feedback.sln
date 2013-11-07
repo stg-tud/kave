@@ -14,7 +14,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventGenerator.VisualStudio
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventGenerator.ReSharper8", "EventGenerator.ReSharper8\EventGenerator.ReSharper8\EventGenerator.ReSharper8.csproj", "{42CE1875-DF5B-4D9E-ADC4-47A96C06EF66}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventGenerator.ReSharper8.IntegrationTests", "EventGenerator.ReSharper8\EventGenerator.ReSharper8.Tests\EventGenerator.ReSharper8.IntegrationTests.csproj", "{4979D8EC-B49B-4578-BDC3-D4015C493A98}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventGenerator.ReSharper8.IntegrationTests", "EventGenerator.ReSharper8\EventGenerator.ReSharper8.IntegrationTests\EventGenerator.ReSharper8.IntegrationTests.csproj", "{4979D8EC-B49B-4578-BDC3-D4015C493A98}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KaVE.MessageBus", "KaVE.MessageBus\KaVE.MessageBus.csproj", "{F1CF28AB-134E-4A95-9F9A-9EE808924975}"
 EndProject
@@ -22,9 +22,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KaVE.MessageBus.Tests", "Ka
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KAVE.Utils", "..\CodeCompletion\KaVE.Utils\KAVE.Utils.csproj", "{4439FDE5-778A-4FAB-8BB0-7A4E23C45BDB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventGenerator.ReSharper8.Tests", "EventGenerator.ReSharper8\EventGenerator.ReSharper8.Tests\EventGenerator.ReSharper8.Tests.csproj", "{61231FF9-BF33-4210-89AA-6C9973FA00A0}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 8
+		SccNumberOfProjects = 9
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://kave.visualstudio.com/defaultcollection
 		SccLocalPath0 = .
@@ -46,9 +48,12 @@ Global
 		SccProjectUniqueName6 = ..\\CodeCompletion\\KaVE.Utils\\KAVE.Utils.csproj
 		SccProjectName6 = ../CodeCompletion/KaVE.Utils
 		SccLocalPath6 = ..\\CodeCompletion\\KaVE.Utils
-		SccProjectUniqueName7 = EventGenerator.ReSharper8\\EventGenerator.ReSharper8.Tests\\EventGenerator.ReSharper8.IntegrationTests.csproj
-		SccProjectName7 = EventGenerator.ReSharper8/EventGenerator.ReSharper8.Tests
-		SccLocalPath7 = EventGenerator.ReSharper8\\EventGenerator.ReSharper8.Tests
+		SccProjectUniqueName7 = EventGenerator.ReSharper8\\EventGenerator.ReSharper8.IntegrationTests\\EventGenerator.ReSharper8.IntegrationTests.csproj
+		SccProjectName7 = EventGenerator.ReSharper8/EventGenerator.ReSharper8.IntegrationTests
+		SccLocalPath7 = EventGenerator.ReSharper8\\EventGenerator.ReSharper8.IntegrationTests
+		SccProjectUniqueName8 = EventGenerator.ReSharper8\\EventGenerator.ReSharper8.Tests\\EventGenerator.ReSharper8.Tests.csproj
+		SccProjectName8 = EventGenerator.ReSharper8/EventGenerator.ReSharper8.Tests
+		SccLocalPath8 = EventGenerator.ReSharper8\\EventGenerator.ReSharper8.Tests
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -83,6 +88,10 @@ Global
 		{4439FDE5-778A-4FAB-8BB0-7A4E23C45BDB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4439FDE5-778A-4FAB-8BB0-7A4E23C45BDB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4439FDE5-778A-4FAB-8BB0-7A4E23C45BDB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{61231FF9-BF33-4210-89AA-6C9973FA00A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{61231FF9-BF33-4210-89AA-6C9973FA00A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{61231FF9-BF33-4210-89AA-6C9973FA00A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{61231FF9-BF33-4210-89AA-6C9973FA00A0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
