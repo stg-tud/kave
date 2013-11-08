@@ -5,7 +5,6 @@ using System.Text;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.DeclaredElements;
-using JetBrains.ReSharper.Psi.CSharp.Tree;
 using KaVE.JetBrains.Annotations;
 using KaVE.Model.Names;
 using KaVE.Model.Names.CSharp;
@@ -14,11 +13,10 @@ using KaVE.Utils.Assertion;
 
 namespace KaVE.EventGenerator.ReSharper8.Utils
 {
-    // TODO implement this with accompanying tests
     public static class ReSharperCSharpNameFactory
     {
         [NotNull]
-        public static IName GetName(this IDeclaredElement enclosingElement)
+        public static IName GetName([NotNull] this IDeclaredElement enclosingElement)
         {
             var namespaceProposal = enclosingElement as INamespace;
             if (namespaceProposal != null)
@@ -30,15 +28,10 @@ namespace KaVE.EventGenerator.ReSharper8.Utils
             {
                 return typeElement.GetName();
             }
-            var constructor = enclosingElement as IConstructor;
-            if (constructor != null)
+            var function = enclosingElement as IFunction;
+            if (function != null)
             {
-                return constructor.GetName();
-            }
-            var method = enclosingElement as IMethod;
-            if (method != null)
-            {
-                return method.GetName();
+                return function.GetName();
             }
             var parameter = enclosingElement as IParameter;
             if (parameter != null)
@@ -50,10 +43,10 @@ namespace KaVE.EventGenerator.ReSharper8.Utils
             {
                 return field.GetName();
             }
-            var variableDeclaration = enclosingElement as IVariableDeclaration;
-            if (variableDeclaration != null)
+            var variable = enclosingElement as ITypeOwner;
+            if (variable != null)
             {
-                return variableDeclaration.GetName();
+                return variable.GetName();
             }
             var alias = enclosingElement as IAlias;
             if (alias != null)
@@ -68,7 +61,7 @@ namespace KaVE.EventGenerator.ReSharper8.Utils
         }
 
         [NotNull]
-        public static ITypeName GetName(this ITypeElement typeElement)
+        private static ITypeName GetName(this ITypeElement typeElement)
         {
             // TODO add the type kind (struct, enum, class, ...) to the name information
             //var typeElementIdentifier = typeElement.toString();
@@ -78,26 +71,25 @@ namespace KaVE.EventGenerator.ReSharper8.Utils
         }
 
         [NotNull]
-        public static INamespaceName GetName(this INamespace ns)
+        private static INamespaceName GetName(this INamespace ns)
         {
             return NamespaceName.Get(ns.QualifiedName);
         }
 
         [NotNull]
-        public static IParameterName GetName(this IParameter parameter)
+        private static IParameterName GetName(this IParameter parameter)
         {
-            // TODO test parameter flags
             var identifier = new StringBuilder();
             identifier.AppendIf(parameter.IsParameterArray, ParameterName.VarArgsModifier);
-            identifier.AppendIf(parameter.IsValueVariable, ParameterName.OutputModifier);
+            identifier.AppendIf(parameter.Kind == ParameterKind.OUTPUT, ParameterName.OutputModifier);
             identifier.AppendIf(parameter.IsOptional, ParameterName.OptionalModifier);
-            //identifier.AppendIf(parameter., ParameterName.PassByReferenceModifier);
+            identifier.AppendIf(parameter.Kind == ParameterKind.REFERENCE, ParameterName.PassByReferenceModifier);
             identifier.AppendType(parameter.Type).Append(" ").Append(parameter.ShortName);
             return ParameterName.Get(identifier.ToString());
         }
 
         [NotNull]
-        public static IMethodName GetName(this IFunction method)
+        private static IMethodName GetName(this IFunction method)
         {
             var identifier = new StringBuilder();
             identifier.AppendIf(method.IsStatic, MemberName.StaticModifier);
@@ -107,13 +99,13 @@ namespace KaVE.EventGenerator.ReSharper8.Utils
         }
 
         [NotNull]
-        public static IEnumerable<IParameterName> GetNames(this IEnumerable<IParameter> parameters)
+        private static IEnumerable<IParameterName> GetNames(this IEnumerable<IParameter> parameters)
         {
             return parameters.Select(GetName);
         }
 
         [NotNull]
-        public static IFieldName GetName(this IField field)
+        private static IFieldName GetName(this IField field)
         {
             var identifier = new StringBuilder();
             identifier.AppendIf(field.IsStatic, MemberName.StaticModifier);
@@ -122,46 +114,113 @@ namespace KaVE.EventGenerator.ReSharper8.Utils
         }
 
         [NotNull]
-        public static LocalVariableName GetName(this IVariableDeclaration variable)
+        private static LocalVariableName GetName(this ITypeOwner variable)
         {
             var identifier = new StringBuilder();
-            identifier.AppendType(variable.Type).Append(' ').Append(variable.DeclaredName);
+            identifier.AppendType(variable.Type).Append(' ').Append(variable.ShortName);
             return LocalVariableName.Get(identifier.ToString());
         }
 
-        private static void Append(this StringBuilder identifier, IClrDeclaredElement member, IType valueType)
-        {
-            identifier.AppendType(valueType)
-                .Append(' ')
-                .AppendType(member.GetContainingType())
-                .Append('.')
-                .Append(member.ShortName);
-        }
-
         [NotNull]
-        public static IName GetName(this IAlias alias)
+        private static IName GetName(this IAlias alias)
         {
             return AliasName.Get(alias.ShortName);
         }
 
         [NotNull]
-        private static String GetAssemblyQualifiedName(this ITypeElement type)
+        public static ITypeName GetName(this IType type)
         {
-            return type.GetClrName().FullName + ", " + type.Module.Name;
+            var declaredType = type as IDeclaredType;
+            if (declaredType != null)
+            {
+                return declaredType.GetName();
+            }
+            var arrayType = type as IArrayType;
+            if (arrayType != null)
+            {
+                return arrayType.GetName();
+            }
+            var anonymousType = type as IAnonymousType;
+            if (anonymousType != null)
+            {
+                return anonymousType.GetName();
+            }
+            var multitype = type as IMultitype;
+            if (multitype != null)
+            {
+                return multitype.GetName();
+            }
+            var pointerType = type as IPointerType;
+            if (pointerType != null)
+            {
+                return pointerType.GetName();
+            }
+
+            Asserts.Fail("unknown IType case: {0}", type.GetType());
+            return null;
         }
 
         [NotNull]
-        private static StringBuilder AppendType(this StringBuilder identifier, IExpressionType type)
+        private static ITypeName GetName(this IDeclaredType type)
+        {
+            var assemblyId = type.Assembly != null ? type.Assembly.FullName : "<unspecified>";
+            return TypeName.Get(string.Format("{0}, {1}", type.GetFullName(), assemblyId));
+        }
+
+        [NotNull]
+        private static ITypeName GetName(this IArrayType arrayType)
+        {
+            var typeName = arrayType.ElementType.GetName();
+            // TODO insert array braces
+            return typeName;
+        }
+
+        [NotNull]
+        private static ITypeName GetName(this IAnonymousType type)
+        {
+            Asserts.Fail("cannot create name for anonymous type");
+            return null;
+        }
+
+        [NotNull]
+        private static ITypeName GetName(this IMultitype type)
+        {
+            Asserts.Fail("cannot create name for multitype");
+            return null;
+        }
+
+        [NotNull]
+        private static ITypeName GetName(this IPointerType type)
+        {
+            return type.ElementType.GetName();
+        }
+
+        private static string GetFullName(this IExpressionType type)
         {
             var longPresentableName = type.GetLongPresentableName(CSharpLanguage.Instance);
-            var fullTypeName = CSharpNameUtils.GetFullTypeNameFromTypeAlias(longPresentableName);
-            return identifier.Append('[').Append(fullTypeName).Append(", ").Append(type.Module.Name).Append(']');
+            return CSharpNameUtils.GetFullTypeNameFromTypeAlias(longPresentableName);
+        }
+
+        private static void Append(this StringBuilder identifier, IClrDeclaredElement member, IType valueType)
+        {
+            identifier.AppendType(valueType).Append(' ').AppendType(member.GetContainingType()).Append('.').Append(member.ShortName);
+        }
+
+        private static StringBuilder AppendType(this StringBuilder identifier, IType type)
+        {
+            return identifier.Append('[').Append(type.GetName().Identifier).Append(']');
         }
 
         [NotNull]
         private static StringBuilder AppendType(this StringBuilder identifier, ITypeElement type)
         {
             return identifier.Append('[').Append(type.GetAssemblyQualifiedName()).Append(']');
+        }
+
+        [NotNull]
+        private static String GetAssemblyQualifiedName(this ITypeElement type)
+        {
+            return string.Format("{0}, {1}", type.GetClrName().FullName, type.Module.Name);
         }
     }
 }

@@ -26,3 +26,4 @@ using JetBrains.Application.PluginSupport;
 [assembly: PluginVendor("KAVE")]
 
 [assembly: InternalsVisibleTo("EventGenerator.ReSharper8.Tests")]
+[assembly: InternalsVisibleTo("EventGenerator.ReSharper8.IntegrationTests")]

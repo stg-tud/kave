@@ -50,11 +50,13 @@ namespace KaVE.EventGenerator.ReSharper8.Generators
         {
             Asserts.Null(_currentEvent, "multiple events at a time");
             _currentEvent = Create<CompletionEvent>();
+            _currentEvent.ProposalCollection = _currentLookup.Items.ToProposalCollection();
             AddCurrentSelectionToEvent();
         }
 
         private void OnBeforeLookupItemsShown(object sender, IList<Pair<ILookupItem, MatchingResult>> items)
         {
+            // TODO is this required? the method is not always invoked...
             _currentEvent.ProposalCollection = items.Select(p => p.First).ToProposalCollection();
         }
 
