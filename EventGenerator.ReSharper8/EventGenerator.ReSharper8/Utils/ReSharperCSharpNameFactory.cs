@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.DeclaredElements;
@@ -220,7 +221,32 @@ namespace KaVE.EventGenerator.ReSharper8.Utils
         [NotNull]
         private static String GetAssemblyQualifiedName(this ITypeElement type)
         {
-            return string.Format("{0}, {1}", type.GetClrName().FullName, type.Module.Name);
+            var containingModule = type.Module.ContainingProjectModule;
+            Asserts.NotNull(containingModule, "module is null");
+            string assemblyName = null;
+            var containingProject = containingModule as ProjectImpl;
+            if (containingProject != null)
+            {
+                var outputAssembly = containingProject.OutputAssembly;
+                if (outputAssembly != null)
+                {
+                    assemblyName = outputAssembly.FullAssemblyName;
+                }
+                var outputAssemblyInfo = containingProject.OutputAssemblyInfo;
+                if (outputAssemblyInfo != null)
+                {
+                    assemblyName = outputAssemblyInfo.AssemblyNameInfo.FullName;
+                }
+                if (assemblyName == null)
+                {
+                    assemblyName = containingModule.Name;
+                }
+            }
+            else
+            {
+                assemblyName = containingModule.Presentation;
+            }
+            return string.Format("{0}, {1}", type.GetClrName().FullName, assemblyName);
         }
     }
 }

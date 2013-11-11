@@ -4,7 +4,7 @@ using JetBrains.Application.Components;
 using JetBrains.VsIntegration.Application;
 using KaVE.MessageBus.MessageBus;
 
-namespace KaVE.EventGenerator.ReSharper8
+namespace KaVE.EventGenerator.ReSharper8.VsIntegration
 {
     [ShellComponent(ProgramConfigurations.VS_ADDIN)]
     public class VsMessageBus : SMessageBus

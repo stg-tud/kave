@@ -61,7 +61,18 @@ namespace KaVE.EventGenerator.VisualStudio10.Generators
 
         private Document DTEActiveDocument
         {
-            get { return DTE.ActiveDocument; }
+            get
+            {
+                try
+                {
+                    return DTE.ActiveDocument;
+                }
+                catch (ArgumentException)
+                {
+                    // TODO do not ignore this
+                    return null;
+                }
+            }
         }
 
         /// <summary>

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using JetBrains.ReSharper.Feature.Services.CodeCompletion;
 using JetBrains.ReSharper.Feature.Services.Lookup;
 using KaVE.JetBrains.Annotations;
 using KaVE.Model.Events.CompletionEvent;
@@ -29,9 +30,9 @@ namespace KaVE.EventGenerator.ReSharper8.Utils
                 return declaredElementLookupItem.PreferredDeclaredElement.Element.GetName();
             }
 
-            var keywordLookupItem = lookupItem as IKeywordLookupItem;
-            if (keywordLookupItem != null)
+            if (lookupItem is IKeywordLookupItem || lookupItem is CombinedLookupItem)
             {
+                // TODO distinguish lookup-item types here?
                 return Name.Get(lookupItem.DisplayName);
             }
 

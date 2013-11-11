@@ -4,7 +4,7 @@ using JetBrains.Application;
 using JetBrains.DataStructures;
 using KaVE.MessageBus.MessageBus;
 
-namespace KaVE.EventGenerator.ReSharper8.IntegrationTests
+namespace KaVE.EventGenerator.ReSharper8.IntegrationTests.VsIntegrationMocks
 {
     [ShellComponent]
     class TestMessageBus : SMessageBus
