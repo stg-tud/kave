@@ -6,7 +6,6 @@ using JetBrains.ReSharper.Feature.Services.Lookup;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.Util;
-using JetBrains.VsIntegration.Application;
 using KaVE.EventGenerator.ReSharper8.Utils;
 using KaVE.EventGenerator.VisualStudio10.Generators;
 using KaVE.MessageBus.MessageBus;
@@ -23,8 +22,7 @@ namespace KaVE.EventGenerator.ReSharper8.Generators
         private ILookup _currentLookup;
         private CompletionEvent _currentEvent;
 
-        public CodeCompletionEventGenerator(ILookupWindowManager lookupWindowManager, RawVsServiceProvider serviceProvider)
-            : base(serviceProvider.Value.GetService<DTE, DTE>(), serviceProvider.Value.GetService<SMessageBus, SMessageBus>())
+        public CodeCompletionEventGenerator(ILookupWindowManager lookupWindowManager, DTE dte, SMessageBus messageBus) : base(dte, messageBus)
         {
             _lookupWindowManager = lookupWindowManager;
             _lookupWindowManager.BeforeLookupWindowShown += OnBeforeLookupShown;

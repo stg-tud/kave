@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using EnvDTE;
-using JetBrains.Application.Components;
 using JetBrains.DataFlow;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Intentions.Bulbs;
@@ -8,22 +7,21 @@ using JetBrains.ReSharper.Intentions.Extensibility;
 using JetBrains.ReSharper.Psi;
 using JetBrains.TextControl;
 using JetBrains.UI.BulbMenu;
-using JetBrains.VsIntegration.Application;
 using KaVE.MessageBus.MessageBus;
 using KaVE.Utils.Assertion;
 
 namespace KaVE.EventGenerator.ReSharper8
 {
-    [SolutionComponent(ProgramConfigurations.VS_ADDIN)]
+    [SolutionComponent]
     internal class BulbItemInstrumentationComponent : IBulbItemsProvider
     {
         private readonly DTE _dte;
         private readonly SMessageBus _messageBus;
 
-        public BulbItemInstrumentationComponent(RawVsServiceProvider serviceProvider)
+        public BulbItemInstrumentationComponent(DTE dte, SMessageBus messageBus)
         {
-            _dte = serviceProvider.Value.GetService<DTE, DTE>();
-            _messageBus = serviceProvider.Value.GetService<SMessageBus, SMessageBus>();
+            _dte = dte;
+            _messageBus = messageBus;
         }
 
         public int Priority
