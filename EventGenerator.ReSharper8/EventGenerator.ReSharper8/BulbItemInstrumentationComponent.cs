@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using EnvDTE;
 using JetBrains.DataFlow;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Intentions.Bulbs;
@@ -16,12 +15,12 @@ namespace KaVE.EventGenerator.ReSharper8
     [SolutionComponent]
     internal class BulbItemInstrumentationComponent : IBulbItemsProvider
     {
-        private readonly DTE _dte;
+        private readonly IVsDTE _dte;
         private readonly SMessageBus _messageBus;
 
         public BulbItemInstrumentationComponent(IVsDTE dte, SMessageBus messageBus)
         {
-            _dte = dte.DTE;
+            _dte = dte;
             _messageBus = messageBus;
         }
 

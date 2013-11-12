@@ -17,7 +17,7 @@ namespace KaVE.EventGenerator.ReSharper8
         {
             foreach (var updatableAction in actionManager.GetAllActions().OfType<IUpdatableAction>())
             {
-                updatableAction.AddHandler(lifetime, new EventGeneratingActionHandler(updatableAction, dte.DTE, messageBus));
+                updatableAction.AddHandler(lifetime, new EventGeneratingActionHandler(updatableAction, dte, messageBus));
             }
         }
     }

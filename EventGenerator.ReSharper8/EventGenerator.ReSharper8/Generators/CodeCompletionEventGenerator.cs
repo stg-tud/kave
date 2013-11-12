@@ -23,7 +23,7 @@ namespace KaVE.EventGenerator.ReSharper8.Generators
         private ILookup _currentLookup;
         private CompletionEvent _currentEvent;
 
-        public CodeCompletionEventGenerator(ILookupWindowManager lookupWindowManager, IVsDTE dte, SMessageBus messageBus) : base(dte.DTE, messageBus)
+        public CodeCompletionEventGenerator(ILookupWindowManager lookupWindowManager, IVsDTE dte, SMessageBus messageBus) : base(dte, messageBus)
         {
             _lookupWindowManager = lookupWindowManager;
             _lookupWindowManager.BeforeLookupWindowShown += OnBeforeLookupShown;
