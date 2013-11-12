@@ -63,7 +63,8 @@
     <Compile Include="Generators\EventGeneratingBulbActionProxy.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils\LookupItemUtils.cs" />
-    <Compile Include="Utils\ReSharperCSharpNameFactory.cs" />
+    <Compile Include="Utils\ReSharperDeclaredElementNameFactory.cs" />
+    <Compile Include="Utils\ReSharperTypeNameFactory.cs" />
     <Compile Include="VsIntegration\IVsDTE.cs" />
     <Compile Include="VsIntegration\VsDTE.cs" />
     <Compile Include="VsIntegration\VsMessageBus.cs" />
