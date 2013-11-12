@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.DeclaredElements;
 using JetBrains.ReSharper.Psi.ExtensionsAPI;
@@ -30,11 +31,27 @@ namespace KaVE.EventGenerator.ReSharper8.Tests.Utils
         }
 
         [Test]
-        public void ShouldGetNameForITypeElement()
+        public void ShouldGetNameForTypeElementInAssembly()
         {
-            var typeElement = ReSharperMockUtils.MockTypeElement("Full.Qualified.TypeName", "AssemblyName", "0.9.8.7");
+            var typeElement = ReSharperMockUtils.MockTypeElement("Full.Qualified.TypeName", ReSharperMockUtils.MockAssembly("AssemblyName", "0.9.8.7"));
 
             AssertNameIdentifier(typeElement, "Full.Qualified.TypeName, AssemblyName, Version=0.9.8.7");
+        }
+
+        [Test]
+        public void SouldGetQualifiedNameForTypeElementInProject()
+        {
+            var typeElement = ReSharperMockUtils.MockTypeElement("TypeName", ReSharperMockUtils.MockProject("Project", "1.0.0.0"));
+
+            AssertNameIdentifier(typeElement, "TypeName, Project, Version=1.0.0.0");
+        }
+
+        [Test]
+        public void SouldGetQualifiedNameForTypeElementInUncompilableProject()
+        {
+            var typeElement = ReSharperMockUtils.MockTypeElement("TypeName", ReSharperMockUtils.MockUncompilableProject("Project"));
+
+            AssertNameIdentifier(typeElement, "TypeName, Project");
         }
 
         [TestCase("param0", "ParameterType", "AnAssembly", "1.2.3.4", ParameterKind.VALUE, false, false, "[ParameterType, AnAssembly, Version=1.2.3.4] param0"),
