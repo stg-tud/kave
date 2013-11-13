@@ -37,9 +37,7 @@ namespace KaVE.EventGenerator.ReSharper8.Utils
         [NotNull]
         private static ITypeName GetName(this IArrayType arrayType)
         {
-            var typeName = arrayType.ElementType.GetName();
-            // TODO insert array braces
-            return typeName;
+            return arrayType.ElementType.GetName().DeriveArrayTypeName(arrayType.Rank);
         }
 
         [NotNull]

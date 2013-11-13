@@ -6,6 +6,7 @@ using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.DeclaredElements;
 using JetBrains.ReSharper.Psi.ExtensionsAPI;
+using JetBrains.Util.Special;
 using KaVE.JetBrains.Annotations;
 using KaVE.Model.Names;
 using KaVE.Model.Names.CSharp;
@@ -24,16 +25,17 @@ namespace KaVE.EventGenerator.ReSharper8.Utils
                 return Name.Get(SharedImplUtil.MISSING_DECLARATION_NAME);
             }
             return IfElementIs<INamespace>(element, GetName) ??
-                IfElementIs<ITypeElement>(element, GetName) ??
-                IfElementIs<IFunction>(element, GetName) ??
-                IfElementIs<IParameter>(element, GetName) ??
-                IfElementIs<IField>(element, GetName) ??
-                IfElementIs<ITypeOwner>(element, GetName) ??
-                IfElementIs<IAlias>(element, GetName) ??
-                Asserts.Fail<IName>("unknown kind of declared element: {0}", element.GetType());
+                   IfElementIs<ITypeElement>(element, GetName) ??
+                   IfElementIs<IFunction>(element, GetName) ??
+                   IfElementIs<IParameter>(element, GetName) ??
+                   IfElementIs<IField>(element, GetName) ??
+                   IfElementIs<ITypeOwner>(element, GetName) ??
+                   IfElementIs<IAlias>(element, GetName) ??
+                   Asserts.Fail<IName>("unknown kind of declared element: {0}", element.GetType());
         }
 
-        private static IName IfElementIs<TE>(IDeclaredElement element, Func<TE, IName> map) where TE : class, IDeclaredElement
+        private static IName IfElementIs<TE>(IDeclaredElement element, Func<TE, IName> map)
+            where TE : class, IDeclaredElement
         {
             var specificElement = element as TE;
             return specificElement != null ? map(specificElement) : null;
@@ -45,7 +47,6 @@ namespace KaVE.EventGenerator.ReSharper8.Utils
             // TODO add the type kind (struct, enum, class, ...) to the name information
             //var typeElementIdentifier = typeElement.toString();
             //var typeKind = typeElementIdentifier.SubString(1, typeElementIdentifier.IndexOf(':') - 1);
-            // TODO do we want assembly versions here? This information is not contained in the typeElement...
             return TypeName.Get(typeElement.GetAssemblyQualifiedName());
         }
 
@@ -127,30 +128,20 @@ namespace KaVE.EventGenerator.ReSharper8.Utils
         {
             var containingModule = type.Module.ContainingProjectModule;
             Asserts.NotNull(containingModule, "module is null");
-            string assemblyName = null;
-            var containingProject = containingModule as ProjectImpl;
+            var assemblyName = GetQualifiedAssemblyName(containingModule);
+            return string.Format("{0}, {1}", type.GetClrName().FullName, assemblyName);
+        }
+
+        private static string GetQualifiedAssemblyName(IModule containingModule)
+        {
+            var containingProject = containingModule as IProject;
             if (containingProject != null)
             {
-                var outputAssembly = containingProject.OutputAssembly;
-                if (outputAssembly != null)
-                {
-                    assemblyName = outputAssembly.FullAssemblyName;
-                }
-                var outputAssemblyInfo = containingProject.OutputAssemblyInfo;
-                if (outputAssemblyInfo != null)
-                {
-                    assemblyName = outputAssemblyInfo.AssemblyNameInfo.FullName;
-                }
-                if (assemblyName == null)
-                {
-                    assemblyName = containingModule.Name;
-                }
+                var outputAssemblyInfo = containingProject.GetOutputAssemblyInfo();
+                return outputAssemblyInfo.IfNotNull(a => a.AssemblyNameInfo.FullName).IfNull(() => containingModule.Name);
             }
-            else
-            {
-                assemblyName = containingModule.Presentation;
-            }
-            return string.Format("{0}, {1}", type.GetClrName().FullName, assemblyName);
+            // containingModule is IAssembly
+            return containingModule.Presentation;
         }
     }
 }

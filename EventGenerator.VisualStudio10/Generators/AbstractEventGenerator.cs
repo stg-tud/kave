@@ -69,7 +69,8 @@ namespace KaVE.EventGenerator.VisualStudio10.Generators
                 }
                 catch (ArgumentException)
                 {
-                    // TODO do not ignore this
+                    // accessing active document throws an ArgumentException, for
+                    // example, when the ActiveWindow is the properties page of a project
                     return null;
                 }
             }
