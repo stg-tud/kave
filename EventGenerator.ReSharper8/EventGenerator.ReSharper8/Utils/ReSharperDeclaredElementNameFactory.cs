@@ -128,17 +128,16 @@ namespace KaVE.EventGenerator.ReSharper8.Utils
         {
             var containingModule = type.Module.ContainingProjectModule;
             Asserts.NotNull(containingModule, "module is null");
-            var assemblyName = GetQualifiedAssemblyName(containingModule);
-            return string.Format("{0}, {1}", type.GetClrName().FullName, assemblyName);
+            return string.Format("{0}, {1}", type.GetClrName().FullName, containingModule.GetQualifiedName());
         }
 
-        private static string GetQualifiedAssemblyName(IModule containingModule)
+        private static string GetQualifiedName(this IModule containingModule)
         {
             var containingProject = containingModule as IProject;
             if (containingProject != null)
             {
-                var outputAssemblyInfo = containingProject.GetOutputAssemblyInfo();
-                return outputAssemblyInfo.IfNotNull(a => a.AssemblyNameInfo.FullName).IfNull(() => containingModule.Name);
+                var assemblyInfo = containingProject.GetOutputAssemblyInfo();
+                return assemblyInfo != null ? assemblyInfo.AssemblyNameInfo.FullName : containingModule.Name;
             }
             // containingModule is IAssembly
             return containingModule.Presentation;
