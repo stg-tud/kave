@@ -10,9 +10,10 @@ namespace KaVE.EventGenerator.ReSharper8.Tests.Utils
         [TestCase("System.String", "mscore", "4.0.0.0", "System.String, mscore, Version=4.0.0.0")]
         [TestCase("System.Nullable`1[[System.Int32]]", "mscore", "4.0.0.0", "System.Nullable`1[[System.Int32]], mscore, Version=4.0.0.0")]
         [TestCase("Some.Outer+Inner", "Assembly", "5.4.3.2", "Some.Outer+Inner, Assembly, Version=5.4.3.2")]
+        [TestCase("ValueType[,,]", "A", "9.8.7.6", "ValueType[,,], A, Version=9.8.7.6")]
         public void ShouldGetNameForIType(string typeFqn, string assemblyName, string assemblyVersion, string identifier)
         {
-            // TODO test how generic and array types really look like!
+            // TODO test how generic really look like!
             var type = ReSharperMockUtils.MockIType(typeFqn, assemblyName, assemblyVersion);
 
             AssertNameIdentifier(type, identifier);

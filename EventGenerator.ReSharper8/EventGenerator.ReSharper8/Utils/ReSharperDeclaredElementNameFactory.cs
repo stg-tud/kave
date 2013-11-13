@@ -42,7 +42,7 @@ namespace KaVE.EventGenerator.ReSharper8.Utils
         }
 
         [NotNull]
-        private static ITypeName GetName(this ITypeElement typeElement)
+        public static ITypeName GetName(this ITypeElement typeElement)
         {
             // TODO add the type kind (struct, enum, class, ...) to the name information
             //var typeElementIdentifier = typeElement.toString();

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Reflection;
 using JetBrains.Application;
 using JetBrains.Metadata.Utils;
 using JetBrains.ProjectModel;
@@ -10,7 +9,9 @@ using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.Modules;
 using JetBrains.Util;
+using KaVE.Model.Names.CSharp;
 using Moq;
+using AssemblyName = System.Reflection.AssemblyName;
 
 namespace KaVE.EventGenerator.ReSharper8.Tests.Utils
 {
@@ -19,6 +20,8 @@ namespace KaVE.EventGenerator.ReSharper8.Tests.Utils
         internal static IType MockIType(string fqnOrAlias, string assemblyName, string assemblyVersion)
         {
             var typeMock = new Mock<IDeclaredType>();
+            var fqn = CSharpNameUtils.GetFullTypeNameFromTypeAlias(fqnOrAlias);
+            typeMock.Setup(t => t.GetTypeElement()).Returns(MockTypeElement(fqn, assemblyName, assemblyVersion));
             typeMock.Setup(t => t.GetLongPresentableName(CSharpLanguage.Instance)).Returns(fqnOrAlias);
             typeMock.Setup(t => t.Assembly).Returns(MockAssemblyInfo(assemblyName, assemblyVersion));
             return typeMock.Object;

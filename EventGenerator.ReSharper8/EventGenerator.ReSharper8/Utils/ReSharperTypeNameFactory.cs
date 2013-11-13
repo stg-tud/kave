@@ -30,8 +30,7 @@ namespace KaVE.EventGenerator.ReSharper8.Utils
         [NotNull]
         private static ITypeName GetName(this IDeclaredType type)
         {
-            var assemblyId = type.Assembly != null ? type.Assembly.FullName : "<unspecified>";
-            return TypeName.Get(String.Format("{0}, {1}", type.GetFullName(), assemblyId));
+            return type.GetTypeElement().GetName();
         }
 
         [NotNull]
