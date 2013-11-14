@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Linq;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
+using JetBrains.ReSharper.Psi.Resolve;
+using JetBrains.Util;
 using KaVE.JetBrains.Annotations;
 using KaVE.Model.Names;
 using KaVE.Model.Names.CSharp;
@@ -30,7 +33,20 @@ namespace KaVE.EventGenerator.ReSharper8.Utils
         [NotNull]
         private static ITypeName GetName(this IDeclaredType type)
         {
-            return type.GetTypeElement().GetName();
+            var rawTypeName = type.GetTypeElement().GetName();
+            if (rawTypeName.IsUnknownType)
+            {
+                return rawTypeName;
+            }
+            var identifier = rawTypeName.FullName;
+            var substitution = type.GetSubstitution();
+            if (!substitution.IsIdOrEmpty())
+            {
+                var typeParameters = substitution.Domain.Select(tp => tp.ShortName + " -> " + substitution[tp].GetName());
+                identifier += "[[" + typeParameters.Join("],[") + "]]";
+            }
+            identifier += ", " + rawTypeName.Assembly;
+            return TypeName.Get(identifier);
         }
 
         [NotNull]

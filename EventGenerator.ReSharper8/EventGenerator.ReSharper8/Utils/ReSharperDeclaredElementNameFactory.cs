@@ -47,7 +47,7 @@ namespace KaVE.EventGenerator.ReSharper8.Utils
             // TODO add the type kind (struct, enum, class, ...) to the name information
             //var typeElementIdentifier = typeElement.toString();
             //var typeKind = typeElementIdentifier.SubString(1, typeElementIdentifier.IndexOf(':') - 1);
-            return TypeName.Get(typeElement.GetAssemblyQualifiedName());
+            return TypeName.Get((typeElement is ITypeParameter) ? typeElement.ShortName + " -> ?" : typeElement.GetAssemblyQualifiedName());
         }
 
         [NotNull]
