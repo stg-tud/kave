@@ -6,7 +6,7 @@ using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.DeclaredElements;
 using JetBrains.ReSharper.Psi.ExtensionsAPI;
-using JetBrains.Util.Special;
+using JetBrains.Util;
 using KaVE.JetBrains.Annotations;
 using KaVE.Model.Names;
 using KaVE.Model.Names.CSharp;
@@ -29,6 +29,8 @@ namespace KaVE.EventGenerator.ReSharper8.Utils
                    IfElementIs<IFunction>(element, GetName) ??
                    IfElementIs<IParameter>(element, GetName) ??
                    IfElementIs<IField>(element, GetName) ??
+                   IfElementIs<IProperty>(element, GetName) ??
+                   IfElementIs<IEvent>(element, GetName) ??
                    IfElementIs<ITypeOwner>(element, GetName) ??
                    IfElementIs<IAlias>(element, GetName) ??
                    Asserts.Fail<IName>("unknown kind of declared element: {0}", element.GetType());
@@ -72,25 +74,40 @@ namespace KaVE.EventGenerator.ReSharper8.Utils
         private static IMethodName GetName(this IFunction method)
         {
             var identifier = new StringBuilder();
-            identifier.AppendIf(method.IsStatic, MemberName.StaticModifier);
-            identifier.Append(method, method.ReturnType);
-            identifier.Append("(").Append(String.Join(", ", method.Parameters.GetNames())).Append(")");
+            identifier.Append(method.GetMemberIdentifier(method.ReturnType));
+            identifier.AppendParameters(method);
             return MethodName.Get(identifier.ToString());
-        }
-
-        [NotNull]
-        private static IEnumerable<IParameterName> GetNames(this IEnumerable<IParameter> parameters)
-        {
-            return parameters.Select(GetName);
         }
 
         [NotNull]
         private static IFieldName GetName(this IField field)
         {
+            return FieldName.Get(field.GetMemberIdentifier(field.Type));
+        }
+
+        [NotNull]
+        private static IEventName GetName(this IEvent evt)
+        {
+            return EventName.Get(evt.GetMemberIdentifier(evt.Type));
+        }
+
+        [NotNull]
+        private static IPropertyName GetName(this IProperty property)
+        {
             var identifier = new StringBuilder();
-            identifier.AppendIf(field.IsStatic, MemberName.StaticModifier);
-            identifier.Append(field, field.Type);
-            return FieldName.Get(identifier.ToString());
+            identifier.AppendIf(property.IsWritable, PropertyName.SetterModifier);
+            identifier.AppendIf(property.IsReadable, PropertyName.GetterModifier);
+            identifier.Append(property.GetMemberIdentifier(property.ReturnType));
+            identifier.AppendParameters(property);
+            return PropertyName.Get(identifier.ToString());
+        }
+
+        private static string GetMemberIdentifier(this ITypeMember member, IType valueType)
+        {
+            var identifier = new StringBuilder();
+            identifier.AppendIf(member.IsStatic, MemberName.StaticModifier);
+            identifier.Append(member, valueType);
+            return identifier.ToString();
         }
 
         [NotNull]
@@ -109,6 +126,7 @@ namespace KaVE.EventGenerator.ReSharper8.Utils
 
         private static void Append(this StringBuilder identifier, IClrDeclaredElement member, IType valueType)
         {
+            // TODO can we resolve type parameters of the containing type?
             identifier.AppendType(valueType).Append(' ').AppendType(member.GetContainingType()).Append('.').Append(member.ShortName);
         }
 
@@ -128,7 +146,18 @@ namespace KaVE.EventGenerator.ReSharper8.Utils
         {
             var containingModule = type.Module.ContainingProjectModule;
             Asserts.NotNull(containingModule, "module is null");
-            return string.Format("{0}, {1}", type.GetClrName().FullName, containingModule.GetQualifiedName());
+            if (type.TypeParameters.IsEmpty())
+            {
+                return string.Format("{0}, {1}", type.GetClrName().FullName, containingModule.GetQualifiedName());
+            }
+            else
+            {
+                return string.Format(
+                    "{0}[[{2}]], {1}",
+                    type.GetClrName().FullName,
+                    containingModule.GetQualifiedName(),
+                    type.TypeParameters.Select(tp => tp.GetName().Identifier).Join("],["));
+            }
         }
 
         private static string GetQualifiedName(this IModule containingModule)
@@ -141,6 +170,17 @@ namespace KaVE.EventGenerator.ReSharper8.Utils
             }
             // containingModule is IAssembly
             return containingModule.Presentation;
+        }
+
+        private static void AppendParameters(this StringBuilder identifier, IParametersOwner parametersOwner)
+        {
+            identifier.Append("(").Append(String.Join(", ", parametersOwner.Parameters.GetNames())).Append(")");
+        }
+
+        [NotNull]
+        private static IEnumerable<IParameterName> GetNames(this IEnumerable<IParameter> parameters)
+        {
+            return parameters.Select(GetName);
         }
     }
 }

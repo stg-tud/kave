@@ -9,8 +9,15 @@ namespace KaVE.EventGenerator.ReSharper8.IntegrationTests.VsIntegrationMocks
     [ShellComponent]
     class TestMessageBus : SMessageBus
     {
+        public static TestMessageBus Instance { get; private set; }
+
         private readonly IList<object> _messages = new List<object>();
         private readonly IDictionary<Type, object> _subscribers = new Dictionary<Type, object>();
+
+        public TestMessageBus()
+        {
+            Instance = this;
+        }
 
         public ImmutableArray<object> PublishedMessages
         {

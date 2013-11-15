@@ -39,6 +39,11 @@ namespace KaVE.EventGenerator.ReSharper8.Utils
                 return rawTypeName;
             }
             var identifier = rawTypeName.FullName;
+            var startOfTypeParameters = identifier.IndexOf("[[", System.StringComparison.Ordinal);
+            if (startOfTypeParameters >= 0)
+            {
+                identifier = identifier.Substring(0, startOfTypeParameters);
+            }
             var substitution = type.GetSubstitution();
             if (!substitution.IsIdOrEmpty())
             {
@@ -73,12 +78,6 @@ namespace KaVE.EventGenerator.ReSharper8.Utils
         private static ITypeName GetName(this IPointerType type)
         {
             return type.ElementType.GetName();
-        }
-
-        private static string GetFullName(this IExpressionType type)
-        {
-            var longPresentableName = type.GetLongPresentableName(CSharpLanguage.Instance);
-            return CSharpNameUtils.GetFullTypeNameFromTypeAlias(longPresentableName);
         }
     }
 }
