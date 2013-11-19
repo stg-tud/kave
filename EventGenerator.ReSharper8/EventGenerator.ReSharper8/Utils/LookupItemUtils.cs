@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using JetBrains.ReSharper.Feature.Services.CodeCompletion;
 using JetBrains.ReSharper.Feature.Services.CSharp.CodeCompletion;
 using JetBrains.ReSharper.Feature.Services.Lookup;
 using KaVE.JetBrains.Annotations;
@@ -26,35 +25,47 @@ namespace KaVE.EventGenerator.ReSharper8.Utils
 
         private static IName GetName([NotNull] this ILookupItem lookupItem)
         {
-            var declaredElementLookupItem = lookupItem as IDeclaredElementLookupItem;
-            if (declaredElementLookupItem != null && declaredElementLookupItem.PreferredDeclaredElement != null)
-            {
-                var constructorLookupItem = declaredElementLookupItem as ConstructorLookupItem;
-                return constructorLookupItem != null
-                    ? constructorLookupItem.GetName()
-                    : declaredElementLookupItem.PreferredDeclaredElement.Element.GetName();
-            }
+            return TryGetNameFromDeclaredElementLookupItem(lookupItem) ??
+                   TryGetNameFromWrappedLookupItem(lookupItem) ??
+                   TryGetNameFromKeywordOrTextualLookupItem(lookupItem) ??
+                   Asserts.Fail<IName>("unknown kind of lookup item: {0}", lookupItem.GetType());
+        }
 
+        private static IName TryGetNameFromWrappedLookupItem(ILookupItem lookupItem)
+        {
             var wrappedLookupItem = lookupItem as IWrappedLookupItem;
-            if (wrappedLookupItem != null)
-            {
-                // TODO find example of this case and decide whether or not to include wrapping information
-                // there are no implementations of this interface found by hierarchy inspection...
-                return wrappedLookupItem.Item.GetName();
-            }
+            // TODO find example of wrapped case and decide whether or not to include wrapping information
+            // there are no implementations of this interface found by hierarchy inspection...
+            return wrappedLookupItem != null ? wrappedLookupItem.Item.GetName() : null;
+        }
 
-            if (lookupItem is IKeywordLookupItem || lookupItem is ITextualLookupItem)
-            {
-                // TODO distinguish lookup-item types here?
-                return Name.Get(lookupItem.DisplayName);
-            }
+        private static IName TryGetNameFromKeywordOrTextualLookupItem(ILookupItem lookupItem)
+        {
+            // TODO distinguish lookup-item types here?
+            return (lookupItem is IKeywordLookupItem || lookupItem is ITextualLookupItem)
+                ? Name.Get(lookupItem.DisplayName)
+                : null;
+        }
 
-            return Asserts.Fail<IName>("unknown kind of lookup item: {0}", lookupItem.GetType());
+        private static IName TryGetNameFromDeclaredElementLookupItem(ILookupItem lookupItem)
+        {
+            var declaredElementLookupItem = lookupItem as IDeclaredElementLookupItem;
+            if (declaredElementLookupItem == null || declaredElementLookupItem.PreferredDeclaredElement == null)
+            {
+                return null;
+            }
+            // Only the lookup-item type tells whether this is a proposal for a constructor call or not.
+            // In fact, ConstructorLookupItem is derived from TypeLookupItem and the additional internface
+            // IConstructorLookupItem doesnot provide anything new. Hence, the special treatment.
+            var constructorLookupItem = declaredElementLookupItem as ConstructorLookupItem;
+            return constructorLookupItem != null
+                ? constructorLookupItem.GetName()
+                : declaredElementLookupItem.PreferredDeclaredElement.GetName();
         }
 
         private static IMethodName GetName(this ConstructorLookupItem constructor)
         {
-            var typeName = constructor.PreferredDeclaredElement.Element.GetName();
+            var typeName = constructor.PreferredDeclaredElement.GetName();
             var identifier = new StringBuilder();
             identifier.Append('[')
                 .Append(typeName.Identifier)

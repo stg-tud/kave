@@ -11,10 +11,7 @@ using NUnit.Framework;
 
 namespace KaVE.EventGenerator.ReSharper8.IntegrationTests.Generators
 {
-    [TestReferences(new string[] { "System.dll", "System.Core.dll" })]
-    [Category("Code Completion")]
-    [TestNetFramework4]
-    [TestFixture]
+    [Category("Code Completion"), TestNetFramework4, TestFixture]
     public class CodeCompletionEventGernatorTest : CodeCompletionTestBase
     {
         private ProposalCollection _lastProposalList;
@@ -26,16 +23,14 @@ namespace KaVE.EventGenerator.ReSharper8.IntegrationTests.Generators
 
         protected override string RelativeTestDataPath
         {
-            get
-            {
-                return "CodeCompletion\\ProposalNames";
-            }
+            get { return "CodeCompletion\\ProposalNames"; }
         }
 
         /// <summary>
         /// Intercepts the LookupItem list and captures as a proposal collection for later validation.
         /// </summary>
-        protected override IEnumerable<ILookupItem> GetItemsFromResult(ICodeCompletionResult result, JetHashSet<ILookupItem> best)
+        protected override IEnumerable<ILookupItem> GetItemsFromResult(ICodeCompletionResult result,
+            JetHashSet<ILookupItem> best)
         {
             var itemsFromResult = base.GetItemsFromResult(result, best).ToList();
             _lastProposalList = itemsFromResult.ToProposalCollection();
@@ -52,24 +47,32 @@ namespace KaVE.EventGenerator.ReSharper8.IntegrationTests.Generators
          TestCase("NamespaceProposals"),
          TestCase("NewInstanceProposals"),
          TestCase("NewArrayInstanceProposals"),
-         TestCase("UncompilableFileProposals")]
+         TestCase("ArrayTypeProposals"),
+         TestCase("UncompilableFileProposals"),
+         TestCase("MethodOverloadProposals"),
+         TestCase("ClassLevelProposals")]
+        // Test cases for keywords (e.g., private), templates (e.g., for), and
+        // combined proposals (e.g., return true) donnot seem possible, as such
+        // proposals are not made by the test environment's completion engine.
         public void TestCompletionListTranslation(string fileName)
         {
             DoOneTest(fileName);
-            DoCheckProposalNames(fileName);
+            DoCheckProposalNamesAgainstGoldFile(fileName);
         }
 
-        private void DoCheckProposalNames(string fileName)
+        private void DoCheckProposalNamesAgainstGoldFile(string fileName)
         {
             var actualProposalIdentifier = _lastProposalList.Proposals.Select(p => p.Name.Identifier);
-            using (var goldFile = new StreamReader(GetExpectedProposalIdentifierFile(fileName)))
+            using (var goldFile = new StreamReader(GetProposalNamesGoldFile(fileName)))
             {
                 using (var iter = actualProposalIdentifier.GetEnumerator())
                 {
                     string name;
+                    var lineNumber = 1;
                     while ((name = goldFile.ReadLine()) != null && iter.MoveNext())
                     {
-                        Assert.AreEqual(name, iter.Current);
+                        Assert.AreEqual(name, iter.Current, "difference in line {0}", lineNumber);
+                        lineNumber++;
                     }
                     Assert.IsNull(name, "missing item from gold file: {0}", name);
                     Assert.IsFalse(iter.MoveNext(), "unexpected item: {0}", iter.Current);
@@ -77,7 +80,7 @@ namespace KaVE.EventGenerator.ReSharper8.IntegrationTests.Generators
             }
         }
 
-        private string GetExpectedProposalIdentifierFile(string fileName)
+        private string GetProposalNamesGoldFile(string fileName)
         {
             return ExpandRelativePaths(new[] {fileName + ".cs.gold.names"}).First();
         }

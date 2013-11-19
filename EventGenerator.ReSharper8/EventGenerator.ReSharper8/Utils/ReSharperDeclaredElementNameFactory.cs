@@ -6,6 +6,7 @@ using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.DeclaredElements;
 using JetBrains.ReSharper.Psi.ExtensionsAPI;
+using JetBrains.ReSharper.Psi.Resolve;
 using JetBrains.Util;
 using KaVE.JetBrains.Annotations;
 using KaVE.Model.Names;
@@ -18,48 +19,76 @@ namespace KaVE.EventGenerator.ReSharper8.Utils
     public static class ReSharperDeclaredElementNameFactory
     {
         [NotNull]
-        public static IName GetName([NotNull] this IDeclaredElement element)
+        public static IName GetName([NotNull] this DeclaredElementInstance instance)
+        {
+            return instance.Element.GetName(instance.Substitution);
+        }
+
+        [NotNull]
+        public static IName GetName([NotNull] this IDeclaredElement element, [NotNull] ISubstitution substitution)
         {
             if (element.ShortName == SharedImplUtil.MISSING_DECLARATION_NAME)
             {
-                return Name.Get(SharedImplUtil.MISSING_DECLARATION_NAME);
+                return TypeName.Get(TypeName.UnknownTypeIdentifier);
             }
-            return IfElementIs<INamespace>(element, GetName) ??
-                   IfElementIs<ITypeElement>(element, GetName) ??
-                   IfElementIs<IFunction>(element, GetName) ??
-                   IfElementIs<IParameter>(element, GetName) ??
-                   IfElementIs<IField>(element, GetName) ??
-                   IfElementIs<IProperty>(element, GetName) ??
-                   IfElementIs<IEvent>(element, GetName) ??
-                   IfElementIs<ITypeOwner>(element, GetName) ??
-                   IfElementIs<IAlias>(element, GetName) ??
+            return IfElementIs<INamespace>(element, GetName, substitution) ??
+                   IfElementIs<ITypeParameter>(element, GetName, substitution) ??
+                   IfElementIs<ITypeElement>(element, GetName, substitution) ??
+                   IfElementIs<IFunction>(element, GetName, substitution) ??
+                   IfElementIs<IParameter>(element, GetName, substitution) ??
+                   IfElementIs<IField>(element, GetName, substitution) ??
+                   IfElementIs<IProperty>(element, GetName, substitution) ??
+                   IfElementIs<IEvent>(element, GetName, substitution) ??
+                   IfElementIs<ITypeOwner>(element, GetName, substitution) ??
+                   IfElementIs<IAlias>(element, GetName, substitution) ??
                    Asserts.Fail<IName>("unknown kind of declared element: {0}", element.GetType());
         }
 
-        private static IName IfElementIs<TE>(IDeclaredElement element, Func<TE, IName> map)
+        private static IName IfElementIs<TE>(IDeclaredElement element,
+            DeclaredElementToName<TE> map,
+            ISubstitution substitution)
             where TE : class, IDeclaredElement
         {
             var specificElement = element as TE;
-            return specificElement != null ? map(specificElement) : null;
+            return specificElement != null ? map(specificElement, substitution) : null;
         }
 
+        private delegate IName DeclaredElementToName<in TE>(TE element, ISubstitution substitution)
+            where TE : class, IDeclaredElement;
+
         [NotNull]
-        public static ITypeName GetName(this ITypeElement typeElement)
+        private static ITypeName GetName(this ITypeElement typeElement, ISubstitution substitution)
         {
-            // TODO add the type kind (struct, enum, class, ...) to the name information
+            // TODO add the type kind (struct, enum, class, ...) to the name information?
             //var typeElementIdentifier = typeElement.toString();
             //var typeKind = typeElementIdentifier.SubString(1, typeElementIdentifier.IndexOf(':') - 1);
-            return TypeName.Get((typeElement is ITypeParameter) ? typeElement.ShortName + " -> ?" : typeElement.GetAssemblyQualifiedName());
+            return TypeName.Get(typeElement.GetAssemblyQualifiedName(substitution));
         }
 
         [NotNull]
-        private static INamespaceName GetName(this INamespace ns)
+        private static ITypeName GetName(this ITypeParameter typeParameter, ISubstitution substitution)
+        {
+            return TypeParameterName.Get(
+                typeParameter.ShortName,
+                typeParameter.GetAssemblyQualifiedNameFromActualType(substitution));
+        }
+
+        private static string GetAssemblyQualifiedNameFromActualType(this ITypeParameter typeParameter,
+            ISubstitution substitution)
+        {
+            return substitution.Domain.Contains(typeParameter)
+                ? substitution[typeParameter].GetName().Identifier
+                : TypeName.UnknownTypeIdentifier;
+        }
+
+        [NotNull]
+        private static INamespaceName GetName(this INamespace ns, ISubstitution substitution)
         {
             return NamespaceName.Get(ns.QualifiedName);
         }
 
         [NotNull]
-        private static IParameterName GetName(this IParameter parameter)
+        private static IParameterName GetName(this IParameter parameter, ISubstitution substitution)
         {
             var identifier = new StringBuilder();
             identifier.AppendIf(parameter.IsParameterArray, ParameterName.VarArgsModifier);
@@ -71,47 +100,47 @@ namespace KaVE.EventGenerator.ReSharper8.Utils
         }
 
         [NotNull]
-        private static IMethodName GetName(this IFunction method)
+        private static IMethodName GetName(this IFunction method, ISubstitution substitution)
         {
             var identifier = new StringBuilder();
-            identifier.Append(method.GetMemberIdentifier(method.ReturnType));
-            identifier.AppendParameters(method);
+            identifier.Append(method.GetMemberIdentifier(substitution, method.ReturnType));
+            identifier.AppendParameters(method, substitution);
             return MethodName.Get(identifier.ToString());
         }
 
         [NotNull]
-        private static IFieldName GetName(this IField field)
+        private static IFieldName GetName(this IField field, ISubstitution substitution)
         {
-            return FieldName.Get(field.GetMemberIdentifier(field.Type));
+            return FieldName.Get(field.GetMemberIdentifier(substitution, field.Type));
         }
 
         [NotNull]
-        private static IEventName GetName(this IEvent evt)
+        private static IEventName GetName(this IEvent evt, ISubstitution substitution)
         {
-            return EventName.Get(evt.GetMemberIdentifier(evt.Type));
+            return EventName.Get(evt.GetMemberIdentifier(substitution, evt.Type));
         }
 
         [NotNull]
-        private static IPropertyName GetName(this IProperty property)
+        private static IPropertyName GetName(this IProperty property, ISubstitution substitution)
         {
             var identifier = new StringBuilder();
             identifier.AppendIf(property.IsWritable, PropertyName.SetterModifier);
             identifier.AppendIf(property.IsReadable, PropertyName.GetterModifier);
-            identifier.Append(property.GetMemberIdentifier(property.ReturnType));
-            identifier.AppendParameters(property);
+            identifier.Append(property.GetMemberIdentifier(substitution, property.ReturnType));
+            identifier.AppendParameters(property, substitution);
             return PropertyName.Get(identifier.ToString());
         }
 
-        private static string GetMemberIdentifier(this ITypeMember member, IType valueType)
+        private static string GetMemberIdentifier(this ITypeMember member, ISubstitution substitution, IType valueType)
         {
             var identifier = new StringBuilder();
             identifier.AppendIf(member.IsStatic, MemberName.StaticModifier);
-            identifier.Append(member, valueType);
+            identifier.Append(member, substitution, valueType);
             return identifier.ToString();
         }
 
         [NotNull]
-        private static LocalVariableName GetName(this ITypeOwner variable)
+        private static LocalVariableName GetName(this ITypeOwner variable, ISubstitution substitution)
         {
             var identifier = new StringBuilder();
             identifier.AppendType(variable.Type).Append(' ').Append(variable.ShortName);
@@ -119,15 +148,22 @@ namespace KaVE.EventGenerator.ReSharper8.Utils
         }
 
         [NotNull]
-        private static IName GetName(this IAlias alias)
+        private static IName GetName(this IAlias alias, ISubstitution substitution)
         {
             return AliasName.Get(alias.ShortName);
         }
 
-        private static void Append(this StringBuilder identifier, IClrDeclaredElement member, IType valueType)
+        private static void Append(this StringBuilder identifier,
+            IClrDeclaredElement member,
+            ISubstitution substitution,
+            IType valueType)
         {
             // TODO can we resolve type parameters of the containing type?
-            identifier.AppendType(valueType).Append(' ').AppendType(member.GetContainingType()).Append('.').Append(member.ShortName);
+            identifier.AppendType(valueType)
+                .Append(' ')
+                .AppendType(member.GetContainingType(), substitution)
+                .Append('.')
+                .Append(member.ShortName);
         }
 
         private static StringBuilder AppendType(this StringBuilder identifier, IType type)
@@ -136,27 +172,29 @@ namespace KaVE.EventGenerator.ReSharper8.Utils
         }
 
         [NotNull]
-        private static StringBuilder AppendType(this StringBuilder identifier, ITypeElement type)
+        private static StringBuilder AppendType(this StringBuilder identifier,
+            ITypeElement type,
+            ISubstitution substitution)
         {
-            return identifier.Append('[').Append(type.GetAssemblyQualifiedName()).Append(']');
+            return identifier.Append('[').Append(type.GetAssemblyQualifiedName(substitution)).Append(']');
         }
 
         [NotNull]
-        private static String GetAssemblyQualifiedName(this ITypeElement type)
+        private static String GetAssemblyQualifiedName(this ITypeElement type, ISubstitution substitution)
         {
             var containingModule = type.Module.ContainingProjectModule;
             Asserts.NotNull(containingModule, "module is null");
             if (type.TypeParameters.IsEmpty())
             {
-                return string.Format("{0}, {1}", type.GetClrName().FullName, containingModule.GetQualifiedName());
+                return String.Format("{0}, {1}", type.GetClrName().FullName, containingModule.GetQualifiedName());
             }
             else
             {
-                return string.Format(
+                return String.Format(
                     "{0}[[{2}]], {1}",
                     type.GetClrName().FullName,
                     containingModule.GetQualifiedName(),
-                    type.TypeParameters.Select(tp => tp.GetName().Identifier).Join("],["));
+                    type.TypeParameters.Select(tp => tp.GetName(substitution).Identifier).Join("],["));
             }
         }
 
@@ -172,15 +210,20 @@ namespace KaVE.EventGenerator.ReSharper8.Utils
             return containingModule.Presentation;
         }
 
-        private static void AppendParameters(this StringBuilder identifier, IParametersOwner parametersOwner)
+        private static void AppendParameters(this StringBuilder identifier,
+            IParametersOwner parametersOwner,
+            ISubstitution substitution)
         {
-            identifier.Append("(").Append(String.Join(", ", parametersOwner.Parameters.GetNames())).Append(")");
+            identifier.Append('(')
+                .Append(parametersOwner.Parameters.GetNames(substitution).Select(p => p.Identifier).Join(", "))
+                .Append(')');
         }
 
         [NotNull]
-        private static IEnumerable<IParameterName> GetNames(this IEnumerable<IParameter> parameters)
+        private static IEnumerable<IParameterName> GetNames(this IEnumerable<IParameter> parameters,
+            ISubstitution substitution)
         {
-            return parameters.Select(GetName);
+            return parameters.Select(param => param.GetName(substitution));
         }
     }
 }

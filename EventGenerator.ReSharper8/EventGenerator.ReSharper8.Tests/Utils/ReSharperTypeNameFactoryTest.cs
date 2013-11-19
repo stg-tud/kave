@@ -9,12 +9,15 @@ namespace KaVE.EventGenerator.ReSharper8.Tests.Utils
     [TestFixture]
     public class ReSharperTypeNameFactoryTest
     {
-        [TestCase("System.String", "mscore", "4.0.0.0", Result = "System.String, mscore, Version=4.0.0.0"),
-         TestCase("Some.Outer+Inner", "Assembly", "5.4.3.2", Result = "Some.Outer+Inner, Assembly, Version=5.4.3.2"),
-         TestCase("ValueType[,,]", "A", "9.8.7.6", Result = "ValueType[,,], A, Version=9.8.7.6")]
-        public string ShouldGetNameForIType(string typeFqn, string assemblyName, string assemblyVersion)
+        [TestCase("System.String", "mscore", "4.0.0.0", "System.String, mscore, Version=4.0.0.0"),
+         TestCase("Some.Outer+Inner", "Assembly", "5.4.3.2", "Some.Outer+Inner, Assembly, Version=5.4.3.2"),
+         TestCase("ValueType[,,]", "A", "9.8.7.6", "ValueType[,,], A, Version=9.8.7.6"),
+         TestCase("ValueType[][]", "B", "5.4.3.2", "ValueType[][], B, Version=5.4.3.2")]
+        public void ShouldGetNameForIType(string typeFqn, string assemblyName, string assemblyVersion, string identifier)
         {
-            return ReSharperMockUtils.MockIType(typeFqn, assemblyName, assemblyVersion).GetName().Identifier;
+            var type = ReSharperMockUtils.MockIType(typeFqn, assemblyName, assemblyVersion);
+
+            AssertNameIdentifier(type, identifier);
         }
 
         public struct GenericTypeCase

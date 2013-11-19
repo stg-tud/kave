@@ -47,7 +47,9 @@ namespace KaVE.EventGenerator.ReSharper8.Tests.Utils
         {
             var typeMock = new Mock<IDeclaredType>();
             var fqn = CSharpNameUtils.GetFullTypeNameFromTypeAlias(fqnOrAlias);
-            typeMock.Setup(t => t.GetTypeElement()).Returns(MockTypeElement(fqn, assemblyName, assemblyVersion));
+            var mockTypeElement = MockTypeElement(fqn, assemblyName, assemblyVersion);
+            mockTypeElement.TypeParameters.AddRange(substitution.Domain);
+            typeMock.Setup(t => t.GetTypeElement()).Returns(mockTypeElement);
             typeMock.Setup(t => t.GetLongPresentableName(CSharpLanguage.Instance)).Returns(fqnOrAlias);
             typeMock.Setup(t => t.Assembly).Returns(MockAssemblyInfo(assemblyName, assemblyVersion));
             var mockResolveResult = new Mock<IResolveResult>();
@@ -74,6 +76,7 @@ namespace KaVE.EventGenerator.ReSharper8.Tests.Utils
             var teMock = new Mock<ITypeElement>();
             teMock.Setup(te => te.GetClrName()).Returns(clrMock.Object);
             teMock.Setup(te => te.Module).Returns(MockPsiModule(module));
+            teMock.Setup(te => te.TypeParameters).Returns(new List<ITypeParameter>());
 
             return teMock.Object;
         }

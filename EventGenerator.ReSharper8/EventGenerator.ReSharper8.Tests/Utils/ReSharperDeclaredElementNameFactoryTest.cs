@@ -2,7 +2,9 @@
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.DeclaredElements;
 using JetBrains.ReSharper.Psi.ExtensionsAPI;
+using JetBrains.ReSharper.Psi.Resolve;
 using KaVE.EventGenerator.ReSharper8.Utils;
+using KaVE.Model.Names.CSharp;
 using Moq;
 using NUnit.Framework;
 
@@ -17,7 +19,7 @@ namespace KaVE.EventGenerator.ReSharper8.Tests.Utils
             var unknownElement = new Mock<IDeclaredElement>();
             unknownElement.Setup(e => e.ShortName).Returns(SharedImplUtil.MISSING_DECLARATION_NAME);
 
-            AssertNameIdentifier(unknownElement.Object, SharedImplUtil.MISSING_DECLARATION_NAME);
+            AssertNameIdentifier(unknownElement.Object, TypeName.UnknownTypeIdentifier);
         }
 
         [Test]
@@ -148,7 +150,7 @@ namespace KaVE.EventGenerator.ReSharper8.Tests.Utils
         private static void AssertNameIdentifier<TDeclaredElement>(TDeclaredElement declaredElement,
             string identifier) where TDeclaredElement : class, IDeclaredElement
         {
-            var name = declaredElement.GetName();
+            var name = declaredElement.GetName(EmptySubstitution.INSTANCE);
             Assert.AreEqual(identifier, name.Identifier);
         }
     }
