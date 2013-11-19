@@ -1,0 +1,10 @@
+﻿+ Equals
++ GetHashCode
++ GetType
++ MemberwiseClone
++ ToString
++ TriggerCompletionHerein
++ _complexList
++ _dictionary
++ _nullableInt
++ _simpleList

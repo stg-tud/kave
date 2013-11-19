@@ -1,0 +1,6 @@
+﻿[CodeExamples.CompletionProposals.ClassWithArgsConstructor, TestProject] [CodeExamples.CompletionProposals.ClassWithArgsConstructor, TestProject]..ctor()
+[CodeExamples.CompletionProposals.ClassWithExplicitNoArgsConstructor, TestProject] [CodeExamples.CompletionProposals.ClassWithExplicitNoArgsConstructor, TestProject]..ctor()
+[CodeExamples.CompletionProposals.ClassWithImplicitConstructor, TestProject] [CodeExamples.CompletionProposals.ClassWithImplicitConstructor, TestProject]..ctor()
+[CodeExamples.CompletionProposals.NewInstanceProposals, TestProject] [CodeExamples.CompletionProposals.NewInstanceProposals, TestProject]..ctor()
+[CodeExamples.CompletionProposals.Struct, TestProject] [CodeExamples.CompletionProposals.Struct, TestProject]..ctor()
+CodeExamples.CompletionProposals.GenericClass`1[[T -> T -> ?]], TestProject

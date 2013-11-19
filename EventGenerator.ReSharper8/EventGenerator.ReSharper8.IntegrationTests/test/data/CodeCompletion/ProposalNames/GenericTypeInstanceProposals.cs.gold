@@ -1,0 +1,17 @@
+﻿+ Add
++ Clear
++ Contains
++ ContainsKey
++ CopyTo
++ Count
++ Equals
++ GetEnumerator
++ GetHashCode
++ GetType
++ IsReadOnly
++ Keys
++ Remove
++ ToString
++ TryGetValue
++ Values
++ []

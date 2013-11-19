@@ -1,0 +1,3 @@
+﻿new NewArrayInstanceProposals[]
+new [] { }
+CodeExamples.CompletionProposals.NewArrayInstanceProposals, TestProject

@@ -1,0 +1,4 @@
+﻿static [System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089] [CodeExamples.CompletionProposals.StaticMemberProposals, TestProject].Constant
+CodeExamples.CompletionProposals.StaticMemberProposals+Nested, TestProject
+static [System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089] [CodeExamples.CompletionProposals.StaticMemberProposals, TestProject].StaticMethod()
+static [System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089] [CodeExamples.CompletionProposals.StaticMemberProposals, TestProject]._field
