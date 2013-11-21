@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using JetBrains.ReSharper.Feature.Services.Lookup;
@@ -8,12 +9,10 @@ using JetBrains.Util;
 using KaVE.EventGenerator.ReSharper8.MessageBus;
 using KaVE.EventGenerator.ReSharper8.Utils;
 using KaVE.EventGenerator.ReSharper8.VsIntegration;
-using KaVE.EventGenerator.VisualStudio10.Generators;
 using KaVE.Model.Events.CompletionEvent;
-using System.Collections.Generic;
 using KaVE.Utils.Assertion;
 
-namespace KaVE.EventGenerator.ReSharper8.Generators
+namespace KaVE.EventGenerator.ReSharper8.Generators.ReSharper
 {
     [Language(typeof(CSharpLanguage))]
     public class CodeCompletionEventGenerator : AbstractEventGenerator

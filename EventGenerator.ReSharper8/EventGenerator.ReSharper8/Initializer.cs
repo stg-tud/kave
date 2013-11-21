@@ -46,7 +46,7 @@ namespace KaVE.EventGenerator.ReSharper8
             return Path.Combine(EventLogsPath, evt.IDESessionUUID + LogFileExtension);
         }
 
-        private static string EventLogsPath
+        internal static string EventLogsPath
         {
             get
             {

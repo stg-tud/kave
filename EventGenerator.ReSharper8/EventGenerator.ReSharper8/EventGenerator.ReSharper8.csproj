@@ -40,6 +40,9 @@
     <Reference Include="envdte, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
+    <Reference Include="Microsoft.VisualStudio.CommandBars, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
     <Reference Include="Microsoft.VisualStudio.OLE.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Newtonsoft.Json.5.0.6\lib\net40\Newtonsoft.Json.dll</HintPath>
@@ -62,10 +65,22 @@
     <Compile Include="ActionEventInstrumentationComponent.cs" />
     <Compile Include="BulbItemInstrumentationComponent.cs" />
     <Compile Include="BulbItemInstrumentationExtensions.cs" />
-    <Compile Include="Generators\CodeCompletionEventGenerator.cs" />
-    <Compile Include="Generators\EventGeneratingActionHandler.cs" />
-    <Compile Include="Generators\EventGeneratingActionWrapper.cs" />
-    <Compile Include="Generators\EventGeneratingBulbActionProxy.cs" />
+    <Compile Include="Generators\ReSharper\CodeCompletionEventGenerator.cs" />
+    <Compile Include="Generators\ReSharper\EventGeneratingActionHandler.cs" />
+    <Compile Include="Generators\ReSharper\EventGeneratingActionWrapper.cs" />
+    <Compile Include="Generators\ReSharper\EventGeneratingBulbActionProxy.cs" />
+    <Compile Include="Generators\AbstractEventGenerator.cs" />
+    <Compile Include="Generators\VisualStudio\BuildEventGenerator.cs" />
+    <Compile Include="Generators\VisualStudio\CommandEventGenerator.cs" />
+    <Compile Include="Generators\VisualStudio\DebuggerEventGenerator.cs" />
+    <Compile Include="Generators\VisualStudio\DocumentEventGenerator.cs" />
+    <Compile Include="Generators\VisualStudio\FindEventGenerator.cs" />
+    <Compile Include="Generators\VisualStudio\IDEStartupStateEventGenerator.cs" />
+    <Compile Include="Generators\VisualStudio\OutputWindowEventGenerator.cs" />
+    <Compile Include="Generators\VisualStudio\SolutionEventGenerator.cs" />
+    <Compile Include="Generators\VisualStudio\TaskListEventGenerator.cs" />
+    <Compile Include="Generators\VisualStudio\TextEditorEventGenerator.cs" />
+    <Compile Include="Generators\VisualStudio\WindowEventGenerator.cs" />
     <Compile Include="Initializer.cs" />
     <Compile Include="MessageBus\IMessageBus.cs" />
     <Compile Include="MessageBus\TinyMessengerMessageBus.cs" />
@@ -77,7 +92,8 @@
     <Compile Include="SessionManager\Presentation\FeedbackWindowDescriptor.cs" />
     <Compile Include="SessionManager\Presentation\FeedbackWindowRegistrar.cs" />
     <Compile Include="SessionManager\SessionHolder.cs" />
-    <Compile Include="TinyMessenger.cs" />
+    <Compile Include="MessageBus\TinyMessenger.cs" />
+    <Compile Include="Utils\IDESession.cs" />
     <Compile Include="Utils\Json\JsonLogReader.cs" />
     <Compile Include="Utils\Json\JsonLogSerialization.cs" />
     <Compile Include="Utils\Json\JsonLogWriter.cs" />
@@ -85,6 +101,7 @@
     <Compile Include="Utils\LookupItemUtils.cs" />
     <Compile Include="Utils\ReSharperDeclaredElementNameFactory.cs" />
     <Compile Include="Utils\ReSharperTypeNameFactory.cs" />
+    <Compile Include="Utils\VsComponentNameFactory.cs" />
     <Compile Include="VsIntegration\IVsDTE.cs" />
     <Compile Include="VsIntegration\VsDTE.cs" />
   </ItemGroup>
@@ -96,10 +113,6 @@
     <ProjectReference Include="..\..\..\CodeCompletion\KaVE.Utils\KAVE.Utils.csproj">
       <Project>{4439FDE5-778A-4FAB-8BB0-7A4E23C45BDB}</Project>
       <Name>KAVE.Utils</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\EventGenerator.VisualStudio10\EventGenerator.VisualStudio10.csproj">
-      <Project>{7B8BA4E9-6AAC-4348-8655-4A8004845BE5}</Project>
-      <Name>EventGenerator.VisualStudio10</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

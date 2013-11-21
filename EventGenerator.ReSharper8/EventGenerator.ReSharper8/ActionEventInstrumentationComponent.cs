@@ -3,6 +3,7 @@ using JetBrains.ActionManagement;
 using JetBrains.Application;
 using JetBrains.DataFlow;
 using KaVE.EventGenerator.ReSharper8.Generators;
+using KaVE.EventGenerator.ReSharper8.Generators.ReSharper;
 using KaVE.EventGenerator.ReSharper8.MessageBus;
 using KaVE.EventGenerator.ReSharper8.VsIntegration;
 

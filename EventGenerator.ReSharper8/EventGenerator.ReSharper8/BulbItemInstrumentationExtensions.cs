@@ -4,6 +4,7 @@ using EnvDTE;
 using JetBrains.ReSharper.Intentions.Extensibility;
 using JetBrains.UI.BulbMenu;
 using KaVE.EventGenerator.ReSharper8.Generators;
+using KaVE.EventGenerator.ReSharper8.Generators.ReSharper;
 using KaVE.EventGenerator.ReSharper8.MessageBus;
 
 namespace KaVE.EventGenerator.ReSharper8
