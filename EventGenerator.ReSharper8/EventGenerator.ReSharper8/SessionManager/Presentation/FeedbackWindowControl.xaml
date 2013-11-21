@@ -1,0 +1,41 @@
+﻿<UserControl x:Class="KaVE.EventGenerator.ReSharper8.SessionManager.Presentation.FeedbackWindowControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="500" d:DesignWidth="300">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="300" />
+            <RowDefinition Height="195*" />
+        </Grid.RowDefinitions>
+        <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="152*" />
+            <ColumnDefinition Width="148*" />
+        </Grid.ColumnDefinitions>
+
+        <ListView Height="194" HorizontalAlignment="Left" Margin="12,49,0,0" Name="listView" VerticalAlignment="Top" Width="189" Grid.ColumnSpan="2" ItemsSource="{Binding SessionList}">
+            <ListView.View>
+                <GridView x:Name="grdTest">
+                    <GridViewColumn Header="Session" DisplayMemberBinding="{Binding Date}"  Width="100"/>
+                    <GridViewColumn Header="Dauer" DisplayMemberBinding="{Binding Time}"  Width="80" />
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <StackPanel Grid.Column="1" Name="stackPanel" Margin="45,49,0,57">
+            <Button Margin="10">Ansehen</Button>
+            <Button Margin="10">Entfernen</Button>
+            <Button Margin="10">Detailgrad</Button>
+            <Button Margin="10">Export</Button>
+            <Button Margin="10">Freigabe</Button>
+        </StackPanel>
+    </Grid>
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Visible" Background="White">
+            <StackPanel>
+                <TextBlock Text="{Binding ElementName=listView,Path=SelectedItem.Content}"></TextBlock>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

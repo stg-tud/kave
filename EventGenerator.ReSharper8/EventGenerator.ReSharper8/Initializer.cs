@@ -1,55 +1,29 @@
 ﻿using System;
-using System.ComponentModel.Design;
 using System.Diagnostics;
-using System.Globalization;
 using System.IO;
-using System.Runtime.InteropServices;
-using KaVE.MessageBus.Json;
-using KaVE.MessageBus.MessageBus;
-using KaVE.Model.Events;
-using KaVE.Utils.Assertion;
-using Microsoft.VisualStudio.Shell;
-
+using JetBrains.Application;
 #if !DEBUG
 using System.IO.Compression;
 #endif
+using KaVE.EventGenerator.ReSharper8.MessageBus;
+using KaVE.EventGenerator.ReSharper8.Utils.Json;
+using KaVE.Model.Events;
+using KaVE.Utils.Assertion;
 
-namespace KaVE.MessageBus
+namespace KaVE.EventGenerator.ReSharper8
 {
-    [PackageRegistration(UseManagedResourcesOnly = true),
-     InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400),
-     Guid(GuidList.GuidKaveMessageBusPkg), ProvideService(typeof (SMessageBus))]
-    // ReSharper disable once InconsistentNaming
-    public sealed class KAVE_MessageBusPackage : Package
+    [ShellComponent]
+    class Initializer
     {
         private const string LogFileExtension = ".log";
         private const string ProjectName = "KAVE";
-        private static readonly string EventLogScopeName = typeof (KAVE_MessageBusPackage).Assembly.GetName().Name;
+        private static readonly string EventLogScopeName = typeof (Initializer).Assembly.GetName().Name;
 
-        private SMessageBus _messageChannel;
+        private readonly IMessageBus _messageChannel;
 
-        public KAVE_MessageBusPackage()
+        public Initializer(IMessageBus messageBus)
         {
-            Trace.WriteLine(string.Format(CultureInfo.CurrentCulture, "Entering constructor for: {0}", ToString()));
-            var serviceContainer = this as IServiceContainer;
-            var serviceCreatorCallback = new ServiceCreatorCallback(CreateMessageChannelService);
-            serviceContainer.AddService(typeof (SMessageBus), serviceCreatorCallback, true);
-        }
-
-        private object CreateMessageChannelService(IServiceContainer container, Type servicetype)
-        {
-            if (typeof (SMessageBus) == servicetype)
-            {
-                return new TinyMessengerMessageBus();
-            }
-            return null;
-        }
-
-        protected override void Initialize()
-        {
-            base.Initialize();
-            _messageChannel = GetService(typeof (SMessageBus)) as SMessageBus;
-            Asserts.NotNull(_messageChannel, "message bus unavailable");
+            _messageChannel = messageBus;
             _messageChannel.Subscribe<IDEEvent>(LogIDEEvent);
         }
 
@@ -106,3 +80,4 @@ namespace KaVE.MessageBus
         }
     }
 }
+

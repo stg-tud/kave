@@ -6,8 +6,8 @@ using JetBrains.ReSharper.Intentions.Extensibility;
 using JetBrains.ReSharper.Psi;
 using JetBrains.TextControl;
 using JetBrains.UI.BulbMenu;
+using KaVE.EventGenerator.ReSharper8.MessageBus;
 using KaVE.EventGenerator.ReSharper8.VsIntegration;
-using KaVE.MessageBus.MessageBus;
 using KaVE.Utils.Assertion;
 
 namespace KaVE.EventGenerator.ReSharper8
@@ -16,9 +16,9 @@ namespace KaVE.EventGenerator.ReSharper8
     internal class BulbItemInstrumentationComponent : IBulbItemsProvider
     {
         private readonly IVsDTE _dte;
-        private readonly SMessageBus _messageBus;
+        private readonly IMessageBus _messageBus;
 
-        public BulbItemInstrumentationComponent(IVsDTE dte, SMessageBus messageBus)
+        public BulbItemInstrumentationComponent(IVsDTE dte, IMessageBus messageBus)
         {
             _dte = dte;
             _messageBus = messageBus;

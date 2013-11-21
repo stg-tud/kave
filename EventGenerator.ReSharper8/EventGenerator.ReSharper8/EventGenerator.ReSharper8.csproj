@@ -41,11 +41,16 @@
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.OLE.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Newtonsoft.Json.5.0.6\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
@@ -61,13 +66,27 @@
     <Compile Include="Generators\EventGeneratingActionHandler.cs" />
     <Compile Include="Generators\EventGeneratingActionWrapper.cs" />
     <Compile Include="Generators\EventGeneratingBulbActionProxy.cs" />
+    <Compile Include="Initializer.cs" />
+    <Compile Include="MessageBus\IMessageBus.cs" />
+    <Compile Include="MessageBus\TinyMessengerMessageBus.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SessionManager\Presentation\FeedbackWindowAction.cs" />
+    <Compile Include="SessionManager\Presentation\FeedbackWindowControl.xaml.cs">
+      <DependentUpon>FeedbackWindowControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SessionManager\Presentation\FeedbackWindowDescriptor.cs" />
+    <Compile Include="SessionManager\Presentation\FeedbackWindowRegistrar.cs" />
+    <Compile Include="SessionManager\SessionHolder.cs" />
+    <Compile Include="TinyMessenger.cs" />
+    <Compile Include="Utils\Json\JsonLogReader.cs" />
+    <Compile Include="Utils\Json\JsonLogSerialization.cs" />
+    <Compile Include="Utils\Json\JsonLogWriter.cs" />
+    <Compile Include="Utils\Json\NameToJsonConverter.cs" />
     <Compile Include="Utils\LookupItemUtils.cs" />
     <Compile Include="Utils\ReSharperDeclaredElementNameFactory.cs" />
     <Compile Include="Utils\ReSharperTypeNameFactory.cs" />
     <Compile Include="VsIntegration\IVsDTE.cs" />
     <Compile Include="VsIntegration\VsDTE.cs" />
-    <Compile Include="VsIntegration\VsMessageBus.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\CodeCompletion\KaVE.Model\KaVE.Model.csproj">
@@ -82,12 +101,19 @@
       <Project>{7B8BA4E9-6AAC-4348-8655-4A8004845BE5}</Project>
       <Name>EventGenerator.VisualStudio10</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\KaVE.MessageBus\KaVE.MessageBus.csproj">
-      <Project>{F1CF28AB-134E-4A95-9F9A-9EE808924975}</Project>
-      <Name>KaVE.MessageBus</Name>
-    </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Actions.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="SessionManager\Presentation\FeedbackWindowControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <PropertyGroup>
     <ReSharperSdkTargets Condition=" '$(ReSharperSdkTargets)' == '' ">$(MSBuildExtensionsPath)\JetBrains\ReSharper.SDK\v8.0</ReSharperSdkTargets>
   </PropertyGroup>

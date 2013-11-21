@@ -4,7 +4,7 @@ using EnvDTE;
 using JetBrains.ReSharper.Intentions.Extensibility;
 using JetBrains.UI.BulbMenu;
 using KaVE.EventGenerator.ReSharper8.Generators;
-using KaVE.MessageBus.MessageBus;
+using KaVE.EventGenerator.ReSharper8.MessageBus;
 
 namespace KaVE.EventGenerator.ReSharper8
 {
@@ -19,14 +19,14 @@ namespace KaVE.EventGenerator.ReSharper8
         /// <summary>
         /// Wraps the <see cref="IBulbAction"/> contained in the passed proxy in a <see cref="EventGeneratingBulbActionProxy"/>.
         /// </summary>
-        public static void WrapBulbAction(this IntentionAction.MyExecutableProxi proxy, DTE dte, SMessageBus messageBus)
+        public static void WrapBulbAction(this IntentionAction.MyExecutableProxi proxy, DTE dte, IMessageBus messageBus)
         {
             var originalBulbAction = proxy.BulbAction;
             var bulbActionWrapper = new EventGeneratingBulbActionProxy(originalBulbAction, dte, messageBus);
             MyExecutableProxiBulbActionSetter.Invoke(proxy, new object[] {bulbActionWrapper});
         }
 
-        public static void WrapBulbAction(this ExecutableItem executable, DTE dte, SMessageBus messageBus)
+        public static void WrapBulbAction(this ExecutableItem executable, DTE dte, IMessageBus messageBus)
         {
             var originalAction = (Action) ExecutableItemActionField.GetValue(executable);
             var wrapper = new EventGeneratingActionWrapper(originalAction, dte, messageBus);

@@ -1,7 +1,7 @@
 ﻿using System;
 using EnvDTE;
+using KaVE.EventGenerator.ReSharper8.MessageBus;
 using KaVE.EventGenerator.VisualStudio10.Generators;
-using KaVE.MessageBus.MessageBus;
 using KaVE.Model.Events.ReSharper;
 
 namespace KaVE.EventGenerator.ReSharper8.Generators
@@ -10,7 +10,7 @@ namespace KaVE.EventGenerator.ReSharper8.Generators
     {
         private readonly Action _originalAction;
 
-        public EventGeneratingActionWrapper(Action originalAction, DTE dte, SMessageBus messageBus)
+        public EventGeneratingActionWrapper(Action originalAction, DTE dte, IMessageBus messageBus)
             : base(dte, messageBus)
         {
             _originalAction = originalAction;
