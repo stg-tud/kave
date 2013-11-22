@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <actions>
   <insert group-id="ReSharper" position="last">
-    <action-group id="SessionManager" text="SessionManager">
-      <action id="SessionManager.ShowFeedbackWindow" text="Show Feedback Window"/>
+    <action-group id="EventGenerator.ReSharper8" text="SessionManager">
+      <action id="EventGenerator.ReSharper8.About" text="About SessionManager"/>
+      <action id="EventGenerator.ReSharper8.ShowFeedbackWindow" text="Show Feedback Window"/>
       <!-- to break up elements use <separator/> -->
     </action-group>
   </insert>

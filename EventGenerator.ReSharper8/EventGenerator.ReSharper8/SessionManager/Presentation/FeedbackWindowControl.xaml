@@ -4,37 +4,43 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
-             d:DesignHeight="500" d:DesignWidth="300">
+             d:DesignHeight="500" d:DesignWidth="622">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="300" />
             <RowDefinition Height="195*" />
         </Grid.RowDefinitions>
         <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="152*" />
-            <ColumnDefinition Width="148*" />
-        </Grid.ColumnDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="209*" />
+                <ColumnDefinition Width="232*" />
+                <ColumnDefinition Width="181*" />
+            </Grid.ColumnDefinitions>
 
-        <ListView Height="194" HorizontalAlignment="Left" Margin="12,49,0,0" Name="listView" VerticalAlignment="Top" Width="189" Grid.ColumnSpan="2" ItemsSource="{Binding SessionList}">
-            <ListView.View>
-                <GridView x:Name="grdTest">
-                    <GridViewColumn Header="Session" DisplayMemberBinding="{Binding Date}"  Width="100"/>
-                    <GridViewColumn Header="Dauer" DisplayMemberBinding="{Binding Time}"  Width="80" />
-                </GridView>
-            </ListView.View>
-        </ListView>
-        <StackPanel Grid.Column="1" Name="stackPanel" Margin="45,49,0,57">
-            <Button Margin="10">Ansehen</Button>
-            <Button Margin="10">Entfernen</Button>
-            <Button Margin="10">Detailgrad</Button>
-            <Button Margin="10">Export</Button>
-            <Button Margin="10">Freigabe</Button>
-        </StackPanel>
-    </Grid>
+            <ListView Height="194" HorizontalAlignment="Left" Margin="12,49,0,0" Name="listView" VerticalAlignment="Top" Width="189" ItemsSource="{Binding Sessions}">
+                <ListView.View>
+                    <GridView x:Name="grdTest">
+                        <GridViewColumn Header="Start" DisplayMemberBinding="{Binding Date}"  Width="100"/>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+            <ListView Grid.Column="1" Height="194" HorizontalAlignment="Left" Margin="12,49,0,0" Name="listView2" VerticalAlignment="Top" Width="209" ItemsSource="{Binding ElementName=listView,Path=SelectedItem.Events}">
+                <ListView.View>
+                    <GridView x:Name="grdTest2">
+                        <GridViewColumn Header="When" DisplayMemberBinding="{Binding StartTime}"  Width="100"/>
+                        <GridViewColumn Header="Trigger" DisplayMemberBinding="{Binding TriggeredBy}"  Width="100"/>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+            <StackPanel Grid.Column="2" Name="stackPanel" Margin="45,49,0,57">
+                <Button Margin="10">Entfernen</Button>
+                <Button Margin="10">Export</Button>
+                <Button Margin="10">Freigabe</Button>
+            </StackPanel>
+        </Grid>
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Visible" Background="White">
             <StackPanel>
-                <TextBlock Text="{Binding ElementName=listView,Path=SelectedItem.Content}"></TextBlock>
+                <TextBlock Text="{Binding ElementName=listView2,Path=SelectedItem.Content}"></TextBlock>
             </StackPanel>
         </ScrollViewer>
     </Grid>

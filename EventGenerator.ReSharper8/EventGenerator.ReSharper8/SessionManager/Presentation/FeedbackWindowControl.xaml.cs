@@ -1,5 +1,4 @@
 ﻿using System.Windows.Controls;
-using Microsoft.VisualStudio.Shell.Interop;
 
 namespace KaVE.EventGenerator.ReSharper8.SessionManager.Presentation
 {
@@ -8,10 +7,10 @@ namespace KaVE.EventGenerator.ReSharper8.SessionManager.Presentation
     /// </summary>
     public partial class FeedbackWindowControl : UserControl
     {
-        public FeedbackWindowControl(IVsUIShell shell)
+        public FeedbackWindowControl(SessionHolder holder)
         {
             InitializeComponent();
-            DataContext = SessionHolder.Instance;
+            DataContext = holder;
         }
     }
 }
