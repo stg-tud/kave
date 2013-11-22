@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
-             d:DesignHeight="500" d:DesignWidth="622">
+             d:DesignHeight="500" d:DesignWidth="622" Initialized="Initialize">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="300" />
@@ -20,15 +20,15 @@
             <ListView Height="194" HorizontalAlignment="Left" Margin="12,49,0,0" Name="listView" VerticalAlignment="Top" Width="189" ItemsSource="{Binding Sessions}">
                 <ListView.View>
                     <GridView x:Name="grdTest">
-                        <GridViewColumn Header="Start" DisplayMemberBinding="{Binding Date}"  Width="100"/>
+                        <GridViewColumn Header="Start" DisplayMemberBinding="{Binding Date}"  Width="189"/>
                     </GridView>
                 </ListView.View>
             </ListView>
-            <ListView Grid.Column="1" Height="194" HorizontalAlignment="Left" Margin="12,49,0,0" Name="listView2" VerticalAlignment="Top" Width="209" ItemsSource="{Binding ElementName=listView,Path=SelectedItem.Events}">
+            <ListView Grid.Column="1" Height="194" HorizontalAlignment="Left" Margin="12,49,0,0" Name="listView2" VerticalAlignment="Top" Width="200" ItemsSource="{Binding ElementName=listView,Path=SelectedItem.Events}">
                 <ListView.View>
                     <GridView x:Name="grdTest2">
-                        <GridViewColumn Header="When" DisplayMemberBinding="{Binding StartTime}"  Width="100"/>
-                        <GridViewColumn Header="Trigger" DisplayMemberBinding="{Binding TriggeredBy}"  Width="100"/>
+                        <GridViewColumn Header="When" DisplayMemberBinding="{Binding StartTime}"  Width="140"/>
+                        <GridViewColumn Header="Trigger" DisplayMemberBinding="{Binding TriggeredBy}"  Width="60"/>
                     </GridView>
                 </ListView.View>
             </ListView>

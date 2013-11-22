@@ -9,8 +9,14 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
     {
         public FeedbackWindowControl(SessionHolder holder)
         {
-            InitializeComponent();
             DataContext = holder;
+            InitializeComponent();
+        }
+
+        private void Initialize(object sender, System.EventArgs e)
+        {
+            // TODO somehow ensure that data is refreshed when window is opened
+            // ((SessionHolder) DataContext).RefreshSessions();
         }
     }
 }
