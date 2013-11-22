@@ -27,7 +27,7 @@ Global
 		SccProjectUniqueName1 = ..\\CodeCompletion\\KaVE.Model\\KaVE.Model.csproj
 		SccProjectName1 = ../CodeCompletion/KaVE.Model
 		SccLocalPath1 = ..\\CodeCompletion\\KaVE.Model
-		SccProjectUniqueName2 = ..\\CodeCompletion\\KaVE.Utils\\KAVE.Utils.csproj
+		SccProjectUniqueName2 = ..\\CodeCompletion\\KaVE.Utils\\KaVE.Utils.csproj
 		SccProjectName2 = ../CodeCompletion/KaVE.Utils
 		SccLocalPath2 = ..\\CodeCompletion\\KaVE.Utils
 		SccProjectUniqueName3 = KaVE.VsFeedbackGenerator\\KaVE.VsFeedbackGenerator\\KaVE.VsFeedbackGenerator.csproj
@@ -45,14 +45,14 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{236E2794-DE4D-4F94-AC87-2ABFD1059CE0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{236E2794-DE4D-4F94-AC87-2ABFD1059CE0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{236E2794-DE4D-4F94-AC87-2ABFD1059CE0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{236E2794-DE4D-4F94-AC87-2ABFD1059CE0}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4439FDE5-778A-4FAB-8BB0-7A4E23C45BDB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4439FDE5-778A-4FAB-8BB0-7A4E23C45BDB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4439FDE5-778A-4FAB-8BB0-7A4E23C45BDB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4439FDE5-778A-4FAB-8BB0-7A4E23C45BDB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{236E2794-DE4D-4F94-AC87-2ABFD1059CE0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{236E2794-DE4D-4F94-AC87-2ABFD1059CE0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{236E2794-DE4D-4F94-AC87-2ABFD1059CE0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{236E2794-DE4D-4F94-AC87-2ABFD1059CE0}.Release|Any CPU.Build.0 = Release|Any CPU
 		{42CE1875-DF5B-4D9E-ADC4-47A96C06EF66}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{42CE1875-DF5B-4D9E-ADC4-47A96C06EF66}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{42CE1875-DF5B-4D9E-ADC4-47A96C06EF66}.Release|Any CPU.ActiveCfg = Release|Any CPU
