@@ -2,20 +2,21 @@
 using System.Diagnostics;
 using System.IO;
 using JetBrains.Application;
-#if !DEBUG
-using System.IO.Compression;
-#endif
 using KaVE.EventGenerator.ReSharper8.MessageBus;
 using KaVE.EventGenerator.ReSharper8.Utils.Json;
 using KaVE.Model.Events;
 using KaVE.Utils.Assertion;
+
+#if !DEBUG
+using System.IO.Compression;
+#endif
 
 namespace KaVE.EventGenerator.ReSharper8
 {
     [ShellComponent]
     class Initializer
     {
-        private const string LogFileExtension = ".log";
+        internal const string LogFileExtension = ".log";
         private const string ProjectName = "KAVE";
         private static readonly string EventLogScopeName = typeof (Initializer).Assembly.GetName().Name;
 
@@ -43,10 +44,10 @@ namespace KaVE.EventGenerator.ReSharper8
 
         private static string GetSessionEventLogFilePath(IDEEvent evt)
         {
-            return Path.Combine(EventLogsPath, evt.IDESessionUUID + LogFileExtension);
+            return Path.Combine(EventLogsDirectory, evt.IDESessionUUID + LogFileExtension);
         }
 
-        internal static string EventLogsPath
+        internal static string EventLogsDirectory
         {
             get
             {
