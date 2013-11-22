@@ -1,9 +1,9 @@
 ﻿using System;
 using EnvDTE;
-using KaVE.EventGenerator.ReSharper8.MessageBus;
 using KaVE.Model.Events.ReSharper;
+using KaVE.VsFeedbackGenerator.MessageBus;
 
-namespace KaVE.EventGenerator.ReSharper8.Generators.ReSharper
+namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
 {
     internal class EventGeneratingActionWrapper : AbstractEventGenerator
     {

@@ -8,7 +8,6 @@ using JetBrains.ProjectModel.Model2.Assemblies.Interfaces;
 using JetBrains.ProjectModel.Properties;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
-using JetBrains.ReSharper.Psi.ExtensionsAPI.DeclaredElements;
 using JetBrains.ReSharper.Psi.Impl.Resolve;
 using JetBrains.ReSharper.Psi.Modules;
 using JetBrains.ReSharper.Psi.Resolve;
@@ -17,7 +16,7 @@ using KaVE.Model.Names.CSharp;
 using Moq;
 using AssemblyName = System.Reflection.AssemblyName;
 
-namespace KaVE.EventGenerator.ReSharper8.Tests.Utils
+namespace KaVE.VsFeedbackGenerator.Tests.Utils
 {
     static class ReSharperMockUtils
     {

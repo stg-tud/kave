@@ -1,4 +1,4 @@
-﻿namespace KaVE.EventGenerator.ReSharper8.Tests.Utils.Json
+﻿namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json
 {
     class SerializationTestTarget
     {

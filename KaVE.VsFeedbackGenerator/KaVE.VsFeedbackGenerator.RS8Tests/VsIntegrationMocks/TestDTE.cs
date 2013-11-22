@@ -1,9 +1,9 @@
 ﻿using System;
 using EnvDTE;
 using JetBrains.Application;
-using KaVE.EventGenerator.ReSharper8.VsIntegration;
+using KaVE.VsFeedbackGenerator.VsIntegration;
 
-namespace KaVE.EventGenerator.ReSharper8.IntegrationTests.VsIntegrationMocks
+namespace KaVE.VsFeedbackGenerator.RS8Tests.VsIntegrationMocks
 {
     [ShellComponent]
     public class TestDTE : IVsDTE

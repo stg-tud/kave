@@ -2,10 +2,10 @@
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Intentions.Extensibility;
 using JetBrains.TextControl;
-using KaVE.EventGenerator.ReSharper8.MessageBus;
 using KaVE.Model.Events.ReSharper;
+using KaVE.VsFeedbackGenerator.MessageBus;
 
-namespace KaVE.EventGenerator.ReSharper8.Generators.ReSharper
+namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
 {
     internal class EventGeneratingBulbActionProxy : AbstractEventGenerator, IBulbAction
     {

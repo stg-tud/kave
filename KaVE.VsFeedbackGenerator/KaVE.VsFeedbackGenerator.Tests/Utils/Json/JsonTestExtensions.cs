@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Text;
 
-namespace KaVE.EventGenerator.ReSharper8.Tests.Utils.Json
+namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json
 {
     static class JsonTestExtensions
     {

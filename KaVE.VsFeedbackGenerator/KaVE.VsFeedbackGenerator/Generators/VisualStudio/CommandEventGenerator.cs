@@ -4,15 +4,15 @@ using System.Linq;
 using EnvDTE;
 using JetBrains.Application;
 using JetBrains.Application.Components;
-using KaVE.EventGenerator.ReSharper8.MessageBus;
-using KaVE.EventGenerator.VisualStudio10.Utils;
 using KaVE.Model.Events;
 using KaVE.Model.Events.VisualStudio;
 using KaVE.Utils.Assertion;
 using KaVE.Utils.IO;
+using KaVE.VsFeedbackGenerator.MessageBus;
+using KaVE.VsFeedbackGenerator.Utils;
 using Microsoft.VisualStudio.CommandBars;
 
-namespace KaVE.EventGenerator.ReSharper8.Generators.VisualStudio
+namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
 {
     [ShellComponent(ProgramConfigurations.VS_ADDIN)]
     internal class CommandEventGenerator : AbstractEventGenerator

@@ -1,10 +1,10 @@
 ﻿using EnvDTE;
 using JetBrains.Application;
 using JetBrains.Application.Components;
-using KaVE.EventGenerator.ReSharper8.MessageBus;
 using KaVE.Model.Events.VisualStudio;
+using KaVE.VsFeedbackGenerator.MessageBus;
 
-namespace KaVE.EventGenerator.ReSharper8.Generators.VisualStudio
+namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
 {
     [ShellComponent(ProgramConfigurations.VS_ADDIN)]
     internal class TaskListEventGenerator : AbstractEventGenerator

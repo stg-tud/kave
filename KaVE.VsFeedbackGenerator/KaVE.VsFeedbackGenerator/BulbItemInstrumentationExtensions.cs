@@ -3,11 +3,10 @@ using System.Reflection;
 using EnvDTE;
 using JetBrains.ReSharper.Intentions.Extensibility;
 using JetBrains.UI.BulbMenu;
-using KaVE.EventGenerator.ReSharper8.Generators;
-using KaVE.EventGenerator.ReSharper8.Generators.ReSharper;
-using KaVE.EventGenerator.ReSharper8.MessageBus;
+using KaVE.VsFeedbackGenerator.Generators.ReSharper;
+using KaVE.VsFeedbackGenerator.MessageBus;
 
-namespace KaVE.EventGenerator.ReSharper8
+namespace KaVE.VsFeedbackGenerator
 {
     internal static class BulbItemInstrumentationExtensions
     {

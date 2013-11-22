@@ -2,7 +2,7 @@
 using JetBrains.Application;
 using TinyMessenger;
 
-namespace KaVE.EventGenerator.ReSharper8.MessageBus
+namespace KaVE.VsFeedbackGenerator.MessageBus
 {
     [ShellComponent]
     public class TinyMessengerMessageBus : IMessageBus

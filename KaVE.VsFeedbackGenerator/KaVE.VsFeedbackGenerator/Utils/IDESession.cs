@@ -2,7 +2,7 @@
 using System.Globalization;
 using EnvDTE;
 
-namespace KaVE.EventGenerator.VisualStudio10.Utils
+namespace KaVE.VsFeedbackGenerator.Utils
 {
     public static class IDESession
     {

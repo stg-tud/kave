@@ -5,11 +5,11 @@ using JetBrains.ReSharper.Feature.Services.CodeCompletion;
 using JetBrains.ReSharper.Feature.Services.Lookup;
 using JetBrains.ReSharper.Feature.Services.Tests.CSharp.FeatureServices.CodeCompletion;
 using JetBrains.ReSharper.TestFramework;
-using KaVE.EventGenerator.ReSharper8.Utils;
 using KaVE.Model.Events.CompletionEvent;
+using KaVE.VsFeedbackGenerator.Utils;
 using NUnit.Framework;
 
-namespace KaVE.EventGenerator.ReSharper8.IntegrationTests.Generators
+namespace KaVE.VsFeedbackGenerator.RS8Tests.Generators
 {
     [Category("Code Completion"), TestNetFramework4, TestFixture]
     public class CodeCompletionEventGernatorTest : CodeCompletionTestBase

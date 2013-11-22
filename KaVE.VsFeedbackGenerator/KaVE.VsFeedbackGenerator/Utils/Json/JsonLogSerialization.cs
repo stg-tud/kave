@@ -2,7 +2,7 @@
 using System.Text;
 using Newtonsoft.Json;
 
-namespace KaVE.EventGenerator.ReSharper8.Utils.Json
+namespace KaVE.VsFeedbackGenerator.Utils.Json
 {
     static class JsonLogSerialization
     {

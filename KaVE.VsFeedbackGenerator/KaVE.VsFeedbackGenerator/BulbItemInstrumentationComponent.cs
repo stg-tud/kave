@@ -6,11 +6,11 @@ using JetBrains.ReSharper.Intentions.Extensibility;
 using JetBrains.ReSharper.Psi;
 using JetBrains.TextControl;
 using JetBrains.UI.BulbMenu;
-using KaVE.EventGenerator.ReSharper8.MessageBus;
-using KaVE.EventGenerator.ReSharper8.VsIntegration;
 using KaVE.Utils.Assertion;
+using KaVE.VsFeedbackGenerator.MessageBus;
+using KaVE.VsFeedbackGenerator.VsIntegration;
 
-namespace KaVE.EventGenerator.ReSharper8
+namespace KaVE.VsFeedbackGenerator
 {
     [SolutionComponent]
     internal class BulbItemInstrumentationComponent : IBulbItemsProvider

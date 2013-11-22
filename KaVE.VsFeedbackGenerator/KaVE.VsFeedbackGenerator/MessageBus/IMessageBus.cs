@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace KaVE.EventGenerator.ReSharper8.MessageBus
+namespace KaVE.VsFeedbackGenerator.MessageBus
 {
     public interface IMessageBus
     {

@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using JetBrains.ReSharper.Psi;
-using KaVE.EventGenerator.ReSharper8.Utils;
+using KaVE.VsFeedbackGenerator.Utils;
 using NUnit.Framework;
 
-namespace KaVE.EventGenerator.ReSharper8.Tests.Utils
+namespace KaVE.VsFeedbackGenerator.Tests.Utils
 {
     [TestFixture]
     public class ReSharperTypeNameFactoryTest

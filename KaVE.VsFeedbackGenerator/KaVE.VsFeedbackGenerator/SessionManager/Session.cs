@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using KaVE.EventGenerator.ReSharper8.Utils.Json;
+using KaVE.EventGenerator.ReSharper8.SessionManager;
 using KaVE.Model.Events;
-
 #if !DEBUG
 using System.IO.Compression;
 #endif
+using KaVE.VsFeedbackGenerator.Utils.Json;
 
-namespace KaVE.EventGenerator.ReSharper8.SessionManager
+namespace KaVE.VsFeedbackGenerator.SessionManager
 {
     public class Session
     {

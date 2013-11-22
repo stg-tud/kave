@@ -3,7 +3,7 @@ using JetBrains.Application;
 using JetBrains.Application.Components;
 using JetBrains.VsIntegration.Application;
 
-namespace KaVE.EventGenerator.ReSharper8.VsIntegration
+namespace KaVE.VsFeedbackGenerator.VsIntegration
 {
     [ShellComponent(ProgramConfigurations.VS_ADDIN)]
     public class VsDTE : IVsDTE

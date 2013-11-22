@@ -1,6 +1,6 @@
 ﻿using EnvDTE;
 
-namespace KaVE.EventGenerator.ReSharper8.VsIntegration
+namespace KaVE.VsFeedbackGenerator.VsIntegration
 {
     public interface IVsDTE : DTE {}
 }

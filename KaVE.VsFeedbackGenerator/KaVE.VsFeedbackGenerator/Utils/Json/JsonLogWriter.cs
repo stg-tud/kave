@@ -4,7 +4,7 @@ using KaVE.JetBrains.Annotations;
 using KaVE.Utils.Assertion;
 using Newtonsoft.Json;
 
-namespace KaVE.EventGenerator.ReSharper8.Utils.Json
+namespace KaVE.VsFeedbackGenerator.Utils.Json
 {
     /// <summary>
     /// Writes objects as Json to a stream. Every object is serialized and written as a single line, delimited by '\r\n'.

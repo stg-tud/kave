@@ -6,13 +6,13 @@ using JetBrains.ReSharper.Feature.Services.Lookup;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.Util;
-using KaVE.EventGenerator.ReSharper8.MessageBus;
-using KaVE.EventGenerator.ReSharper8.Utils;
-using KaVE.EventGenerator.ReSharper8.VsIntegration;
 using KaVE.Model.Events.CompletionEvent;
 using KaVE.Utils.Assertion;
+using KaVE.VsFeedbackGenerator.MessageBus;
+using KaVE.VsFeedbackGenerator.Utils;
+using KaVE.VsFeedbackGenerator.VsIntegration;
 
-namespace KaVE.EventGenerator.ReSharper8.Generators.ReSharper
+namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
 {
     [Language(typeof(CSharpLanguage))]
     public class CodeCompletionEventGenerator : AbstractEventGenerator

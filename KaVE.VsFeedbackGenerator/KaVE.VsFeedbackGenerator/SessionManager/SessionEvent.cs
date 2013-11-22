@@ -1,9 +1,9 @@
 ﻿using System;
-using KaVE.EventGenerator.ReSharper8.Utils.Json;
 using KaVE.Model.Events;
+using KaVE.VsFeedbackGenerator.Utils.Json;
 using Newtonsoft.Json;
 
-namespace KaVE.EventGenerator.ReSharper8.SessionManager
+namespace KaVE.VsFeedbackGenerator.SessionManager
 {
     public class SessionEvent
     {

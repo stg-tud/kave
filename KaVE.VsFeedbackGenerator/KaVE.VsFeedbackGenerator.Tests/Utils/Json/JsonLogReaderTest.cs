@@ -1,9 +1,9 @@
 ﻿using System.IO;
 using System.Linq;
-using KaVE.EventGenerator.ReSharper8.Utils.Json;
+using KaVE.VsFeedbackGenerator.Utils.Json;
 using NUnit.Framework;
 
-namespace KaVE.EventGenerator.ReSharper8.Tests.Utils.Json
+namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json
 {
     [TestFixture]
     public class JsonLogReaderTest

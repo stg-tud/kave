@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace KaVE.EventGenerator.ReSharper8.SessionManager.Presentation
+namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
 {
     /// <summary>
     /// Interaktionslogik für FeedbackWindowControl.xaml

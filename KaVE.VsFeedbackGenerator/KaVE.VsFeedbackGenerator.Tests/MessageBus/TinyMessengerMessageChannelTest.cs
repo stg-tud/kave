@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Threading;
-using KaVE.EventGenerator.ReSharper8.MessageBus;
+using KaVE.VsFeedbackGenerator.MessageBus;
 using NUnit.Framework;
 
-namespace KaVE.EventGenerator.ReSharper8.Tests.MessageBus
+namespace KaVE.VsFeedbackGenerator.Tests.MessageBus
 {
     [TestFixture]
     public class TinyMessengerMessageChannelTest

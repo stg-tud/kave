@@ -14,7 +14,7 @@ using KaVE.Model.Names.CSharp;
 using KaVE.Utils;
 using KaVE.Utils.Assertion;
 
-namespace KaVE.EventGenerator.ReSharper8.Utils
+namespace KaVE.VsFeedbackGenerator.Utils
 {
     public static class ReSharperDeclaredElementNameFactory
     {

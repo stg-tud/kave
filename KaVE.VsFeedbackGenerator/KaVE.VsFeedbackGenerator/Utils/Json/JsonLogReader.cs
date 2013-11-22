@@ -4,7 +4,7 @@ using System.IO;
 using KaVE.Utils.Assertion;
 using Newtonsoft.Json;
 
-namespace KaVE.EventGenerator.ReSharper8.Utils.Json
+namespace KaVE.VsFeedbackGenerator.Utils.Json
 {
     /// <summary>
     /// A reader for streams written by <see cref="JsonLogWriter"/>.

@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using KaVE.EventGenerator.ReSharper8.Utils.Json;
 using KaVE.Model.Events;
 using KaVE.Model.Events.CompletionEvent;
 using KaVE.Model.Names;
 using KaVE.Model.Names.CSharp;
+using KaVE.VsFeedbackGenerator.Utils.Json;
 using NUnit.Framework;
 
-namespace KaVE.EventGenerator.ReSharper8.Tests.Utils.Json
+namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json
 {
     [TestFixture]
     public class ModelSerializationTest

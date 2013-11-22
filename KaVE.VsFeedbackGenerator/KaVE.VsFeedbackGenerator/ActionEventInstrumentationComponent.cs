@@ -2,11 +2,11 @@
 using JetBrains.ActionManagement;
 using JetBrains.Application;
 using JetBrains.DataFlow;
-using KaVE.EventGenerator.ReSharper8.Generators.ReSharper;
-using KaVE.EventGenerator.ReSharper8.MessageBus;
-using KaVE.EventGenerator.ReSharper8.VsIntegration;
+using KaVE.VsFeedbackGenerator.Generators.ReSharper;
+using KaVE.VsFeedbackGenerator.MessageBus;
+using KaVE.VsFeedbackGenerator.VsIntegration;
 
-namespace KaVE.EventGenerator.ReSharper8
+namespace KaVE.VsFeedbackGenerator
 {
     [ShellComponent]
     internal class ActionEventInstrumentationComponent

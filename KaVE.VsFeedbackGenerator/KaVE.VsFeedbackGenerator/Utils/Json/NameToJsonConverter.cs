@@ -6,7 +6,7 @@ using KaVE.Utils.Assertion;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace KaVE.EventGenerator.ReSharper8.Utils.Json
+namespace KaVE.VsFeedbackGenerator.Utils.Json
 {
     internal class NameToJsonConverter : JsonConverter
     {

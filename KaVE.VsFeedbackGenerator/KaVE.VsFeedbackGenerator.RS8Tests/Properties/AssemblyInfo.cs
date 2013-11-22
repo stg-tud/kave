@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using JetBrains.Application;
 using JetBrains.Threading;
-using KaVE.EventGenerator.ReSharper8;
+using KaVE.VsFeedbackGenerator;
 using NUnit.Framework;
 
 /// <summary>

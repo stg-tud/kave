@@ -3,12 +3,12 @@ using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.DeclaredElements;
 using JetBrains.ReSharper.Psi.ExtensionsAPI;
 using JetBrains.ReSharper.Psi.Resolve;
-using KaVE.EventGenerator.ReSharper8.Utils;
 using KaVE.Model.Names.CSharp;
+using KaVE.VsFeedbackGenerator.Utils;
 using Moq;
 using NUnit.Framework;
 
-namespace KaVE.EventGenerator.ReSharper8.Tests.Utils
+namespace KaVE.VsFeedbackGenerator.Tests.Utils
 {
     [TestFixture]
     public class ReSharperDeclaredElementNameFactoryTest

@@ -1,17 +1,16 @@
-﻿using System;
+﻿#if !DEBUG
+using System.IO.Compression;
+#endif
+using System;
 using System.Diagnostics;
 using System.IO;
 using JetBrains.Application;
-using KaVE.EventGenerator.ReSharper8.MessageBus;
-using KaVE.EventGenerator.ReSharper8.Utils.Json;
 using KaVE.Model.Events;
 using KaVE.Utils.Assertion;
+using KaVE.VsFeedbackGenerator.MessageBus;
+using KaVE.VsFeedbackGenerator.Utils.Json;
 
-#if !DEBUG
-using System.IO.Compression;
-#endif
-
-namespace KaVE.EventGenerator.ReSharper8
+namespace KaVE.VsFeedbackGenerator
 {
     [ShellComponent]
     class Initializer

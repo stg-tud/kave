@@ -1,8 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KaVE.Model", "..\CodeCompletion\KaVE.Model\KaVE.Model.csproj", "{236E2794-DE4D-4F94-AC87-2ABFD1059CE0}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{1653AC61-ECF8-438C-A174-ADD2D5E776CD}"
 	ProjectSection(SolutionItems) = preProject
 		.nuget\NuGet.Config = .nuget\NuGet.Config
@@ -10,7 +8,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{1653AC
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KAVE.Utils", "..\CodeCompletion\KaVE.Utils\KAVE.Utils.csproj", "{4439FDE5-778A-4FAB-8BB0-7A4E23C45BDB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KaVE.Utils", "..\CodeCompletion\KaVE.Utils\KaVE.Utils.csproj", "{4439FDE5-778A-4FAB-8BB0-7A4E23C45BDB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KaVE.Model", "..\CodeCompletion\KaVE.Model\KaVE.Model.csproj", "{236E2794-DE4D-4F94-AC87-2ABFD1059CE0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KaVE.VsFeedbackGenerator", "KaVE.VsFeedbackGenerator\KaVE.VsFeedbackGenerator\KaVE.VsFeedbackGenerator.csproj", "{42CE1875-DF5B-4D9E-ADC4-47A96C06EF66}"
 EndProject
