@@ -18,7 +18,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
         {
             if (Directory.Exists(Initializer.EventLogsDirectory))
             {
-                var logFiles = Directory.GetFiles(Initializer.EventLogsDirectory, "*." + Initializer.LogFileExtension);
+                var logFiles = Directory.GetFiles(Initializer.EventLogsDirectory, "*" + Initializer.LogFileExtension);
                 Sessions = logFiles.Select(logFileName => new Session(logFileName)).ToList();
             }
             else
