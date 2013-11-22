@@ -2,7 +2,6 @@
 using JetBrains.DataFlow;
 using JetBrains.UI.CrossFramework;
 using JetBrains.UI.ToolWindowManagement;
-using KaVE.EventGenerator.ReSharper8.SessionManager.Presentation;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
 {

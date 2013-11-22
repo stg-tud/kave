@@ -16,7 +16,7 @@ namespace KaVE.VsFeedbackGenerator
     class Initializer
     {
         internal const string LogFileExtension = ".log";
-        private const string ProjectName = "KAVE";
+        private const string ProjectName = "KaVE";
         private static readonly string EventLogScopeName = typeof (Initializer).Assembly.GetName().Name;
 
         private readonly IMessageBus _messageChannel;

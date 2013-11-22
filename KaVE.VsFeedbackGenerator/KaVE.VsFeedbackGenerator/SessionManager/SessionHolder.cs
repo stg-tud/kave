@@ -3,7 +3,6 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using JetBrains.Application;
-using KaVE.EventGenerator.ReSharper8.SessionManager;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager
 {
@@ -17,8 +16,15 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
 
         public void RefreshSessions()
         {
-            var logFiles = Directory.GetFiles(Initializer.EventLogsDirectory, "*." + Initializer.LogFileExtension);
-            Sessions = logFiles.Select(logFileName => new Session(logFileName)).ToList();
+            if (Directory.Exists(Initializer.EventLogsDirectory))
+            {
+                var logFiles = Directory.GetFiles(Initializer.EventLogsDirectory, "*." + Initializer.LogFileExtension);
+                Sessions = logFiles.Select(logFileName => new Session(logFileName)).ToList();
+            }
+            else
+            {
+                Sessions = new List<Session>();
+            }
             OnPropertyChanged("Sessions");
         }
 

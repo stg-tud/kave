@@ -1,9 +1,9 @@
 ﻿using JetBrains.ActionManagement;
 using JetBrains.UI.ToolWindowManagement;
 
-namespace KaVE.EventGenerator.ReSharper8.SessionManager.Presentation
+namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
 {
-    [ActionHandler("EventGenerator.ReSharper8.ShowFeedbackWindow")]
+    [ActionHandler("KaVE.VsFeedbackGenerator.SessionManager")]
     class FeedbackWindowAction : ActivateToolWindowActionHandler<FeedbackWindowDescriptor>
     {
 

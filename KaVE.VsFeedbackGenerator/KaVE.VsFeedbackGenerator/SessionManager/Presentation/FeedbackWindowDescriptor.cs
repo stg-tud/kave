@@ -2,7 +2,7 @@
 using JetBrains.ReSharper.Features.Finding.Resources;
 using JetBrains.UI.ToolWindowManagement;
 
-namespace KaVE.EventGenerator.ReSharper8.SessionManager.Presentation
+namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
 {
     [ToolWindowDescriptor(
         ProductNeutralId = "SessionManagerFeedbackWindow",
