@@ -76,10 +76,6 @@
       <Project>{236e2794-de4d-4f94-ac87-2abfd1059ce0}</Project>
       <Name>KaVE.Model</Name>
     </ProjectReference>
-    <ProjectReference Include="..\KaVE.MessageBus\KaVE.MessageBus.csproj">
-      <Project>{F1CF28AB-134E-4A95-9F9A-9EE808924975}</Project>
-      <Name>KaVE.MessageBus</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

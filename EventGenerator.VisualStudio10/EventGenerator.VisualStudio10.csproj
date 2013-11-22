@@ -42,6 +42,9 @@
     <Reference Include="Castle.Core">
       <HintPath>..\packages\Castle.Core.3.0.0.4001\lib\net40-client\Castle.Core.dll</HintPath>
     </Reference>
+    <Reference Include="JetBrains.Platform.ReSharper.Shell">
+      <HintPath>..\EventGenerator.ReSharper8\EventGenerator.ReSharper8.Tests\bin\Debug\JetBrains.Platform.ReSharper.Shell.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.VisualStudio.ComponentModelHost, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.VisualStudio.OLE.Interop" />
@@ -186,9 +189,9 @@
       <Project>{4439FDE5-778A-4FAB-8BB0-7A4E23C45BDB}</Project>
       <Name>KAVE.Utils</Name>
     </ProjectReference>
-    <ProjectReference Include="..\KaVE.MessageBus\KaVE.MessageBus.csproj">
-      <Project>{F1CF28AB-134E-4A95-9F9A-9EE808924975}</Project>
-      <Name>KaVE.MessageBus</Name>
+    <ProjectReference Include="..\EventGenerator.ReSharper8\EventGenerator.ReSharper8\EventGenerator.ReSharper8.csproj">
+      <Project>{42CE1875-DF5B-4D9E-ADC4-47A96C06EF66}</Project>
+      <Name>EventGenerator.ReSharper8</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
