@@ -10,7 +10,8 @@ using NUnit.Framework;
 /// </summary>
 [SetUpFixture]
 // ReSharper disable once CheckNamespace
-public class TestEnvironmentAssembly : ReSharperTestEnvironmentAssembly
+// ReSharper disable once InconsistentNaming
+public class KaVE_VsFeedbackGenerator_Rs8TestsAssembly : ReSharperTestEnvironmentAssembly
 {
     /// <summary>
     /// Gets the assemblies to load into test environment.

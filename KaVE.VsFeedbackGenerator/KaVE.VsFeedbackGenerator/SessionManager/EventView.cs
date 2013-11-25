@@ -1,15 +1,16 @@
 ﻿using System;
+using System.Text;
 using KaVE.Model.Events;
+using KaVE.Utils.Serialization;
 using KaVE.VsFeedbackGenerator.Utils.Json;
-using Newtonsoft.Json;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager
 {
-    public class SessionEvent
+    public class EventView
     {
         private readonly IDEEvent _evt;
 
-        public SessionEvent(IDEEvent evt)
+        public EventView(IDEEvent evt)
         {
             _evt = evt;
         }
@@ -34,7 +35,10 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
         {
             get
             {
-                return JsonConvert.SerializeObject(_evt, Formatting.Indented, new NameToJsonConverter());
+                var content = new StringBuilder();
+                content.Append(_evt.GetType().Name).Append(Environment.NewLine);
+                content.Append(_evt.ToJson(new NameToJsonConverter()).Replace("  ", "      "));
+                return content.ToString();
             }
         }
     }

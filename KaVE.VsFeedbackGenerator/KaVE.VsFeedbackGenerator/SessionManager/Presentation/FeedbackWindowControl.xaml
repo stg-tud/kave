@@ -2,46 +2,125 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:sessionManager="clr-namespace:KaVE.VsFeedbackGenerator.SessionManager"
              mc:Ignorable="d" 
-             d:DesignHeight="500" d:DesignWidth="622" Initialized="Initialize">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="300" />
-            <RowDefinition Height="195*" />
-        </Grid.RowDefinitions>
+             d:DesignHeight="300" d:DesignWidth="1000"
+             d:DataContext="{d:DesignInstance Type=sessionManager:FeedbackView, IsDesignTimeCreatable=true}">
+    <DockPanel>
+        <ToolBarTray IsLocked="True" DockPanel.Dock="Top" AllowDrop="False">
+            <ToolBar OverflowMode="Never" Loaded="ToolBar_Loaded">
+                <Button ToolTip="Aktualisieren" Click="RefreshButton_OnClick">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/KaVE.VsFeedbackGenerator;Component/Resources/refresh.png" />
+                    </StackPanel>
+                </Button>
+                <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"/>
+                <Button ToolTip="Exportieren">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/KaVE.VsFeedbackGenerator;Component/Resources/export.png" />
+                    </StackPanel>
+                </Button>
+                <Button ToolTip="Versenden">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/KaVE.VsFeedbackGenerator;Component/Resources/send.png" />
+                    </StackPanel>
+                </Button>
+                <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"/>
+                <Button ToolTip="Optionen">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/KaVE.VsFeedbackGenerator;Component/Resources/options.png" />
+                    </StackPanel>
+                </Button>
+                <Button ToolTip="Projektwebseite besuchen" Click="VisitHomepageButton_OnClick">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/KaVE.VsFeedbackGenerator;Component/Resources/website.png" />
+                    </StackPanel>
+                </Button>
+            </ToolBar>
+        </ToolBarTray>
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="209*" />
-                <ColumnDefinition Width="232*" />
-                <ColumnDefinition Width="181*" />
+                <ColumnDefinition Width="250"/>
+                <ColumnDefinition Width="250"/>
+                <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-
-            <ListView Height="194" HorizontalAlignment="Left" Margin="12,49,0,0" Name="listView" VerticalAlignment="Top" Width="189" ItemsSource="{Binding Sessions}">
-                <ListView.View>
-                    <GridView x:Name="grdTest">
-                        <GridViewColumn Header="Start" DisplayMemberBinding="{Binding Date}"  Width="189"/>
-                    </GridView>
-                </ListView.View>
-            </ListView>
-            <ListView Grid.Column="1" Height="194" HorizontalAlignment="Left" Margin="12,49,0,0" Name="listView2" VerticalAlignment="Top" Width="200" ItemsSource="{Binding ElementName=listView,Path=SelectedItem.Events}">
-                <ListView.View>
-                    <GridView x:Name="grdTest2">
-                        <GridViewColumn Header="When" DisplayMemberBinding="{Binding StartTime}"  Width="140"/>
-                        <GridViewColumn Header="Trigger" DisplayMemberBinding="{Binding TriggeredBy}"  Width="60"/>
-                    </GridView>
-                </ListView.View>
-            </ListView>
-            <StackPanel Grid.Column="2" Name="stackPanel" Margin="45,49,0,57">
-                <Button Margin="10">Entfernen</Button>
-                <Button Margin="10">Export</Button>
-                <Button Margin="10">Freigabe</Button>
-            </StackPanel>
+            <GroupBox Grid.Column="0" MinWidth="250" Header="Sessions">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <StackPanel Grid.Row="0">
+                        <ToolBarTray IsLocked="True">
+                            <ToolBar OverflowMode="Never" Loaded="ToolBar_Loaded">
+                                <Button ToolTip="Gewahlte Session(s) löschen">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Image Source="/KaVE.VsFeedbackGenerator;Component/Resources/delete.png" />
+                                    </StackPanel>
+                                </Button>
+                            </ToolBar>
+                        </ToolBarTray>
+                    </StackPanel>
+                    <ListView Grid.Row="1"
+                              Name="SessionListView"
+                              x:FieldModifier="private"
+                              ItemsSource="{Binding Sessions}"
+                              SelectionMode="Extended"
+                              SelectionChanged="SessionListView_OnSelectionChanged">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="Sessionbeginn"
+                                                DisplayMemberBinding="{Binding StartDate}"
+                                                Width="150"/>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </Grid>
+            </GroupBox>
+            <GroupBox Grid.Column="1" MinWidth="250" Header="Events">
+                <Grid DataContext="{Binding SingleSelectedSession}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <StackPanel Grid.Row="0" Orientation="Horizontal">
+                        <ToolBarTray IsLocked="True" AllowDrop="False">
+                            <ToolBar OverflowMode="Never" Loaded="ToolBar_Loaded">
+                                <Button ToolTip="Gewahlte Event(s) löschen">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Image Source="/KaVE.VsFeedbackGenerator;Component/Resources/delete.png" />
+                                    </StackPanel>
+                                </Button>
+                            </ToolBar>
+                        </ToolBarTray>
+                    </StackPanel>
+                    <ListView Grid.Row="1"
+                              Name="EventListView"
+                              x:FieldModifier="private"
+                              ItemsSource="{Binding Events}"
+                              SelectionMode="Extended"
+                              SelectionChanged="EventListView_OnSelectionChanged">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="Eventbeginn" 
+                                                DisplayMemberBinding="{Binding StartTime}"
+                                                Width="150"/>
+                                <GridViewColumn Header="Auslöser"
+                                                DisplayMemberBinding="{Binding TriggeredBy}"
+                                                Width="100" />
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </Grid>
+            </GroupBox>
+            <GroupBox Grid.Column="2" Header="Eventdaten">
+                <ScrollViewer VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Visible" Background="White">
+                    <StackPanel>
+                        <TextBlock Text="{Binding SingleSelectedSession.SingleSelectedEvent.Content}" />
+                    </StackPanel>
+                </ScrollViewer>
+            </GroupBox>
         </Grid>
-        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Visible" Background="White">
-            <StackPanel>
-                <TextBlock Text="{Binding ElementName=listView2,Path=SelectedItem.Content}"></TextBlock>
-            </StackPanel>
-        </ScrollViewer>
-    </Grid>
+    </DockPanel>
 </UserControl>

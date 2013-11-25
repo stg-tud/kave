@@ -25,7 +25,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json
             _writer.Write(instance);
             
             var serialization = _logStream.AsString();
-            Assert.AreEqual("{\"Id\":\"lalalaloooo\"}\r\n", serialization);
+            Assert.AreEqual("{\"$type\":\"KaVE.VsFeedbackGenerator.Tests.Utils.Json.SerializationTestTarget, KaVE.VsFeedbackGenerator.Tests\",\"Id\":\"lalalaloooo\"}\r\n", serialization);
         }
 
         [Test]
@@ -38,7 +38,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json
             _writer.Write(instance2);
 
             var serialization = _logStream.AsString();
-            Assert.AreEqual("{\"Id\":\"foo\"}\r\n{\"Id\":\"bar\"}\r\n", serialization);
+            Assert.AreEqual("{\"$type\":\"KaVE.VsFeedbackGenerator.Tests.Utils.Json.SerializationTestTarget, KaVE.VsFeedbackGenerator.Tests\",\"Id\":\"foo\"}\r\n{\"$type\":\"KaVE.VsFeedbackGenerator.Tests.Utils.Json.SerializationTestTarget, KaVE.VsFeedbackGenerator.Tests\",\"Id\":\"bar\"}\r\n", serialization);
         }
     }
 }
