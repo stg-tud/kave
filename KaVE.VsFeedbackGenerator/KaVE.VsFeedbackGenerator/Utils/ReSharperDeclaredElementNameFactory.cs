@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using JetBrains.Metadata.Utils;
 using JetBrains.ProjectModel;
+using JetBrains.ProjectModel.Model2.Assemblies.Interfaces;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.DeclaredElements;
 using JetBrains.ReSharper.Psi.ExtensionsAPI;
@@ -29,7 +31,7 @@ namespace KaVE.VsFeedbackGenerator.Utils
         {
             if (element.ShortName == SharedImplUtil.MISSING_DECLARATION_NAME)
             {
-                return TypeName.Get(TypeName.UnknownTypeIdentifier);
+                return Name.Get(SharedImplUtil.MISSING_DECLARATION_NAME);
             }
             return IfElementIs<INamespace>(element, GetName, substitution) ??
                    IfElementIs<ITypeParameter>(element, GetName, substitution) ??
@@ -158,7 +160,6 @@ namespace KaVE.VsFeedbackGenerator.Utils
             ISubstitution substitution,
             IType valueType)
         {
-            // TODO can we resolve type parameters of the containing type?
             identifier.AppendType(valueType)
                 .Append(' ')
                 .AppendType(member.GetContainingType(), substitution)
@@ -188,26 +189,45 @@ namespace KaVE.VsFeedbackGenerator.Utils
             {
                 return String.Format("{0}, {1}", type.GetClrName().FullName, containingModule.GetQualifiedName());
             }
-            else
-            {
-                return String.Format(
-                    "{0}[[{2}]], {1}",
-                    type.GetClrName().FullName,
-                    containingModule.GetQualifiedName(),
-                    type.TypeParameters.Select(tp => tp.GetName(substitution).Identifier).Join("],["));
-            }
+            return String.Format(
+                "{0}[[{2}]], {1}",
+                type.GetClrName().FullName,
+                containingModule.GetQualifiedName(),
+                type.TypeParameters.Select(tp => tp.GetName(substitution).Identifier).Join("],["));
         }
 
-        private static string GetQualifiedName(this IModule containingModule)
+        /// <summary>
+        /// Retrieves the module's assembly-qualified name (including the assembly name and version). If the module
+        /// is a project and that project is currently not compilable (and has not been compiled ever or since the
+        /// last clear) the returned name will only contain the project's name and not its version. According to
+        /// http://devnet.jetbrains.com/message/5503864#5503864 this is a restriction of ReSharper. Note that the
+        /// project's name may differ from the project's output-assembly name.
+        /// </summary>
+        [NotNull]
+        private static string GetQualifiedName([NotNull] this IModule module)
         {
-            var containingProject = containingModule as IProject;
+            AssemblyNameInfo assembly = null;
+            var containingProject = module as IProject;
             if (containingProject != null)
             {
                 var assemblyInfo = containingProject.GetOutputAssemblyInfo();
-                return assemblyInfo != null ? assemblyInfo.AssemblyNameInfo.FullName : containingModule.Name;
+                if (assemblyInfo != null)
+                {
+                    assembly = assemblyInfo.AssemblyNameInfo;
+                }
             }
-            // containingModule is IAssembly
-            return containingModule.Presentation;
+            var containingAssembly = module as IAssembly;
+            if (containingAssembly != null)
+            {
+                assembly = containingAssembly.AssemblyName;
+            }
+            return assembly != null ? assembly.NameAndVersion() : module.Name;
+        }
+
+        [NotNull]
+        private static string NameAndVersion([NotNull] this AssemblyNameInfo assemblyName)
+        {
+            return string.Format("{0}, Version={1}", assemblyName.Name, assemblyName.Version);
         }
 
         private static void AppendParameters(this StringBuilder identifier,

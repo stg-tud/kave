@@ -1,6 +1,7 @@
 ﻿using EnvDTE;
 using JetBrains.Application;
 using JetBrains.Application.Components;
+using JetBrains.ProjectModel;
 using KaVE.Model.Events.VisualStudio;
 using KaVE.Model.Names.VisualStudio;
 using KaVE.VsFeedbackGenerator.MessageBus;
@@ -8,7 +9,7 @@ using KaVE.VsFeedbackGenerator.Utils;
 
 namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
 {
-    [ShellComponent(ProgramConfigurations.VS_ADDIN)]
+    [SolutionComponent(ProgramConfigurations.VS_ADDIN)]
     internal class SolutionEventGenerator : AbstractEventGenerator
     {
         // ReSharper disable PrivateFieldCanBeConvertedToLocalVariable
@@ -20,8 +21,10 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
 
         public SolutionEventGenerator(DTE dte, IMessageBus messageBus) : base(dte, messageBus)
         {
+            // SolutionComponents are created after the solution is opened, i.e., after SolutionEvents.Opened is fired.
+            _solutionEvents_Opened();
+
             _solutionEvents = DTE.Events.SolutionEvents;
-            _solutionEvents.Opened += _solutionEvents_Opened;
             _solutionEvents.ProjectAdded += _solutionEvents_ProjectAdded;
             _solutionEvents.ProjectRenamed += _solutionEvents_ProjectRenamed;
             _solutionEvents.ProjectRemoved += _solutionEvents_ProjectRemoved;

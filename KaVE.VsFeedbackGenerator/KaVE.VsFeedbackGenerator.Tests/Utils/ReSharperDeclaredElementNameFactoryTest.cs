@@ -19,7 +19,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
             var unknownElement = new Mock<IDeclaredElement>();
             unknownElement.Setup(e => e.ShortName).Returns(SharedImplUtil.MISSING_DECLARATION_NAME);
 
-            AssertNameIdentifier(unknownElement.Object, TypeName.UnknownTypeIdentifier);
+            AssertNameIdentifier(unknownElement.Object, SharedImplUtil.MISSING_DECLARATION_NAME);
         }
 
         [Test]

@@ -28,7 +28,10 @@ namespace KaVE.VsFeedbackGenerator.Utils
         [NotNull]
         private static ITypeName GetName(this IDeclaredType type)
         {
-            return (ITypeName) type.GetTypeElement().GetName(type.GetSubstitution());
+            // TODO find out when type element can be null
+            var typeElement = type.GetTypeElement();
+            Asserts.NotNull(typeElement, "type element null");
+            return (ITypeName) typeElement.GetName(type.GetSubstitution());
         }
 
         [NotNull]

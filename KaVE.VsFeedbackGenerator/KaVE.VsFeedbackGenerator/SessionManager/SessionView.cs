@@ -32,7 +32,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             {
                 if (_sessionStartTime == default(DateTime))
                 {
-                    _sessionStartTime = Events.First().StartTime;
+                    _sessionStartTime = Events.First().StartDateTime;
                 }
                 return _sessionStartTime;
             }

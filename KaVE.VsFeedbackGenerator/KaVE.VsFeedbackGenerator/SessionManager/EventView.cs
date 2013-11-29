@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using KaVE.Model.Events;
 using KaVE.Utils.Serialization;
 using KaVE.VsFeedbackGenerator.Utils.Json;
+using Newtonsoft.Json;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager
 {
@@ -15,7 +17,15 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             _evt = evt;
         }
 
-        public DateTime StartTime
+        public string EventType
+        {
+            get
+            {
+                return _evt.GetType().Name;
+            }
+        }
+
+        public DateTime StartDateTime
         {
             get
             {
@@ -23,11 +33,11 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             }
         }
 
-        public string TriggeredBy
+        public string StartTime
         {
             get
             {
-                return _evt.TriggeredBy.ToString();
+                return StartDateTime.ToString("HH:mm:ss");
             }
         }
 

@@ -88,9 +88,9 @@ namespace KaVE.VsFeedbackGenerator.Generators
         }
 
         [Conditional("DEBUG")]
-        private static void WriteToDebugConsole<TEvent>(TEvent ideEvent) where TEvent : IDEEvent
+        private static void WriteToDebugConsole(IDEEvent ideEvent)
         {
-            Debug.WriteLine(ideEvent.ToJson<IDEEvent>());
+            //Debug.WriteLine(ideEvent.ToJson());
         }
     }
 }

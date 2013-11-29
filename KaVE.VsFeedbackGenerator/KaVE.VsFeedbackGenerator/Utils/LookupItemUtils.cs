@@ -31,22 +31,6 @@ namespace KaVE.VsFeedbackGenerator.Utils
                    Asserts.Fail<IName>("unknown kind of lookup item: {0}", lookupItem.GetType());
         }
 
-        private static IName TryGetNameFromWrappedLookupItem(ILookupItem lookupItem)
-        {
-            var wrappedLookupItem = lookupItem as IWrappedLookupItem;
-            // TODO find example of wrapped case and decide whether or not to include wrapping information
-            // there are no implementations of this interface found by hierarchy inspection...
-            return wrappedLookupItem != null ? wrappedLookupItem.Item.GetName() : null;
-        }
-
-        private static IName TryGetNameFromKeywordOrTextualLookupItem(ILookupItem lookupItem)
-        {
-            // TODO distinguish lookup-item types here?
-            return (lookupItem is IKeywordLookupItem || lookupItem is ITextualLookupItem)
-                ? Name.Get(lookupItem.DisplayName)
-                : null;
-        }
-
         private static IName TryGetNameFromDeclaredElementLookupItem(ILookupItem lookupItem)
         {
             var declaredElementLookupItem = lookupItem as IDeclaredElementLookupItem;
@@ -61,6 +45,22 @@ namespace KaVE.VsFeedbackGenerator.Utils
             return constructorLookupItem != null
                 ? constructorLookupItem.GetName()
                 : declaredElementLookupItem.PreferredDeclaredElement.GetName();
+        }
+
+        private static IName TryGetNameFromWrappedLookupItem(ILookupItem lookupItem)
+        {
+            var wrappedLookupItem = lookupItem as IWrappedLookupItem;
+            // TODO find example of wrapped case and decide whether or not to include wrapping information
+            // there are no implementations of this interface found by hierarchy inspection...
+            return wrappedLookupItem != null ? wrappedLookupItem.Item.GetName() : null;
+        }
+
+        private static IName TryGetNameFromKeywordOrTextualLookupItem(ILookupItem lookupItem)
+        {
+            // TODO implement specitic name subclasses?
+            return (lookupItem is IKeywordLookupItem || lookupItem is ITextualLookupItem)
+                ? Name.Get(lookupItem.GetType().FullName + " " + lookupItem.DisplayName)
+                : null;
         }
 
         private static IMethodName GetName(this ConstructorLookupItem constructor)

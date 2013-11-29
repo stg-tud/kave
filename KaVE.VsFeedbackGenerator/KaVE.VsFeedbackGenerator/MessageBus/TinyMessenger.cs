@@ -16,7 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-// ReSharper disable once CheckNamespace
+// ReSharper disable All
 namespace TinyMessenger
 {
     #region Message Types / Interfaces
@@ -775,7 +775,6 @@ namespace TinyMessenger
                 catch (Exception)
                 {
                     // Ignore any errors and carry on
-                    // TODO - add to a list of erroring subs and remove them?
                 }
             });
         }
@@ -790,3 +789,5 @@ namespace TinyMessenger
     }
     #endregion
 }
+
+// ReSharper restore All

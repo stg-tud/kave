@@ -30,6 +30,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json
             {
                 IDESessionUUID = "0xDEADBEEF",
                 TriggeredBy = IDEEvent.Trigger.Unknown,
+                Prefix = "Foo",
                 Context = new Context
                 {
                     EnclosingMethod = MethodName.Get("[Enclosing, Bssmbly, Version=4.2.3.1] [System.Void, mscore, Version=4.0.0.0].EncMeth()"),
@@ -42,9 +43,9 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json
                 ProposalCollection = new ProposalCollection(new List<Proposal> {proposal1, proposal2}),
                 TerminatedBy = CompletionEvent.TerminationAction.Apply
             };
-            completionEvent.AddSelection(new ProposalSelection(proposal1, "Foo."));
-            completionEvent.AddSelection(new ProposalSelection(proposal2, "Foo."));
-            completionEvent.AddSelection(new ProposalSelection(proposal1, "Foo."));
+            completionEvent.AddSelection(proposal1);
+            completionEvent.AddSelection(proposal2);
+            completionEvent.AddSelection(proposal1);
 
             var eventCopy = SerializeAndDeserialize(completionEvent);
             Assert.AreEqual(completionEvent.IDESessionUUID, eventCopy.IDESessionUUID);

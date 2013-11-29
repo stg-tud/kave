@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using NuGet;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
 {
@@ -19,6 +18,12 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
             InitializeComponent();
         }
 
+        private void FeedbackWindowControl_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            // TODO check if resfresh works
+            _feedbackView.RefreshSessions();
+        }
+
         /// <summary>
         /// Makes the overflow dropdown button invisible.
         /// </summary>
@@ -34,12 +39,6 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
             {
                 overflowGrid.Visibility = Visibility.Collapsed;
             }
-        }
-
-        private void Initialize(object sender, System.EventArgs e)
-        {
-            // TODO somehow ensure that data is refreshed when window is opened
-            // ((FeedbackView) DataContext).RefreshSessions();
         }
 
         private void SessionListView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -63,7 +62,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
         private void VisitHomepageButton_OnClick(object sender, RoutedEventArgs e)
         {
             // TODO insert correct url here
-            System.Diagnostics.Process.Start("http://KaVE.de");
+            System.Diagnostics.Process.Start("http://kave-project.de");
         }
     }
 }

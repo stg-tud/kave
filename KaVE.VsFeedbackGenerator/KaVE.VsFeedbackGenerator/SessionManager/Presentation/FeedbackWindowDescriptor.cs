@@ -10,7 +10,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
         Type = ToolWindowType.SingleInstance,
         VisibilityPersistenceScope = ToolWindowVisibilityPersistenceScope.Global,
         Icon = typeof (FeaturesFindingThemedIcons.SearchOptionsPage), // TODO Replace with own icon
-        InitialDocking = ToolWindowInitialDocking.Right // TODO make it dock!
+        InitialDocking = ToolWindowInitialDocking.Bottom // TODO make it dock!
         )]
     public class FeedbackWindowDescriptor : ToolWindowDescriptor
     {

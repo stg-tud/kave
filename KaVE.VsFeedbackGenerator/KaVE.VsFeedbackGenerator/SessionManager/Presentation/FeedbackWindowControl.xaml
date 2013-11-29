@@ -6,7 +6,8 @@
              xmlns:sessionManager="clr-namespace:KaVE.VsFeedbackGenerator.SessionManager"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="1000"
-             d:DataContext="{d:DesignInstance Type=sessionManager:FeedbackView, IsDesignTimeCreatable=true}">
+             d:DataContext="{d:DesignInstance Type=sessionManager:FeedbackView, IsDesignTimeCreatable=true}"
+             Loaded="FeedbackWindowControl_OnLoaded">
     <DockPanel>
         <ToolBarTray IsLocked="True" DockPanel.Dock="Top" AllowDrop="False">
             <ToolBar OverflowMode="Never" Loaded="ToolBar_Loaded">
@@ -103,11 +104,11 @@
                               SelectionChanged="EventListView_OnSelectionChanged">
                         <ListView.View>
                             <GridView>
-                                <GridViewColumn Header="Eventbeginn" 
+                                <GridViewColumn Header="Zeitpunkt" 
                                                 DisplayMemberBinding="{Binding StartTime}"
-                                                Width="150"/>
-                                <GridViewColumn Header="Auslöser"
-                                                DisplayMemberBinding="{Binding TriggeredBy}"
+                                                Width="80"/>
+                                <GridViewColumn Header="Typ"
+                                                DisplayMemberBinding="{Binding EventType}"
                                                 Width="100" />
                             </GridView>
                         </ListView.View>
