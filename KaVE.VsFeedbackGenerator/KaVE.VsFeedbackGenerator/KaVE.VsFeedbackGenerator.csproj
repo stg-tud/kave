@@ -8,8 +8,8 @@
     <ProjectGuid>{42CE1875-DF5B-4D9E-ADC4-47A96C06EF66}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>KaVE.EventGenerator.ReSharper8</RootNamespace>
-    <AssemblyName>EventGenerator.ReSharper8</AssemblyName>
+    <RootNamespace>KaVE.VsFeedbackGenerator</RootNamespace>
+    <AssemblyName>KaVE.VsFeedbackGenerator</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -44,7 +44,6 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.OLE.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-    <Reference Include="Microsoft.VisualStudio.Shell.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Newtonsoft.Json.5.0.6\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -63,6 +62,7 @@
     <Compile Include="BulbItemInstrumentationComponent.cs" />
     <Compile Include="BulbItemInstrumentationExtensions.cs" />
     <Compile Include="Generators\ReSharper\CodeCompletionEventGenerator.cs" />
+    <Compile Include="Generators\ReSharper\CodeCompletionEventHandler.cs" />
     <Compile Include="Generators\ReSharper\EventGeneratingActionHandler.cs" />
     <Compile Include="Generators\ReSharper\EventGeneratingActionWrapper.cs" />
     <Compile Include="Generators\ReSharper\EventGeneratingBulbActionProxy.cs" />
@@ -88,9 +88,9 @@
     </Compile>
     <Compile Include="SessionManager\Presentation\FeedbackWindowDescriptor.cs" />
     <Compile Include="SessionManager\Presentation\FeedbackWindowRegistrar.cs" />
-    <Compile Include="SessionManager\Session.cs" />
-    <Compile Include="SessionManager\SessionEvent.cs" />
-    <Compile Include="SessionManager\SessionHolder.cs" />
+    <Compile Include="SessionManager\SessionView.cs" />
+    <Compile Include="SessionManager\EventView.cs" />
+    <Compile Include="SessionManager\FeedbackView.cs" />
     <Compile Include="MessageBus\TinyMessenger.cs" />
     <Compile Include="Utils\IDESession.cs" />
     <Compile Include="Utils\Json\JsonLogReader.cs" />
@@ -109,13 +109,13 @@
       <Project>{236E2794-DE4D-4F94-AC87-2ABFD1059CE0}</Project>
       <Name>KaVE.Model</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\CodeCompletion\KaVE.Utils\KAVE.Utils.csproj">
+    <ProjectReference Include="..\..\..\CodeCompletion\KaVE.Utils\KaVE.Utils.csproj">
       <Project>{4439FDE5-778A-4FAB-8BB0-7A4E23C45BDB}</Project>
-      <Name>KAVE.Utils</Name>
+      <Name>KaVE.Utils</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Actions.xml" />
+    <EmbeddedResource Include="Actions.xml" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="SessionManager\Presentation\FeedbackWindowControl.xaml">
@@ -125,6 +125,26 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\refresh.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\options.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\export.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\delete.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\send.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\website.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
   <PropertyGroup>
     <ReSharperSdkTargets Condition=" '$(ReSharperSdkTargets)' == '' ">$(MSBuildExtensionsPath)\JetBrains\ReSharper.SDK\v8.0</ReSharperSdkTargets>

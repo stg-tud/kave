@@ -8,8 +8,8 @@
     <ProjectGuid>{4979D8EC-B49B-4578-BDC3-D4015C493A98}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>KaVE.EventGenerator.ReSharper8.IntegrationTests</RootNamespace>
-    <AssemblyName>EventGenerator.ReSharper8.IntegrationTests</AssemblyName>
+    <RootNamespace>KaVE.VsFeedbackGenerator.RS8Tests</RootNamespace>
+    <AssemblyName>KaVE.VsFeedbackGenerator.RS8Tests</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -40,23 +40,8 @@
     <Reference Include="envdte, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
-    <Reference Include="JetBrains.Platform.ReSharper.VisualStudio.Core">
-      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\JetBrains\ReSharper\v8.0\SDK\Bin\JetBrains.Platform.ReSharper.VisualStudio.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.VisualStudio.OLE.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-    <Reference Include="Moq, Version=4.1.1308.2321, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Moq.4.1.1308.2321\lib\net40\Moq.dll</HintPath>
-    </Reference>
-    <Reference Include="PresentationCore" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml" />
-    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Generators\CodeCompletionEventGernatorTest.cs" />
@@ -68,7 +53,7 @@
       <Project>{236E2794-DE4D-4F94-AC87-2ABFD1059CE0}</Project>
       <Name>KaVE.Model</Name>
     </ProjectReference>
-    <ProjectReference Include="..\EventGenerator.ReSharper8\EventGenerator.ReSharper8.csproj">
+    <ProjectReference Include="..\KaVE.VsFeedbackGenerator\KaVE.VsFeedbackGenerator.csproj">
       <Project>{42ce1875-df5b-4d9e-adc4-47a96c06ef66}</Project>
       <Name>EventGenerator.ReSharper8</Name>
     </ProjectReference>
