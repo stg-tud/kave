@@ -65,7 +65,7 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
         void _buildEvents_OnBuildDone(vsBuildScope scope, vsBuildAction action)
         {
             Asserts.NotNull(_currentEvent, "no build processing has been started");
-            Fire(_currentEvent);
+            FireNow(_currentEvent);
             _currentEvent = null;
         }
     }

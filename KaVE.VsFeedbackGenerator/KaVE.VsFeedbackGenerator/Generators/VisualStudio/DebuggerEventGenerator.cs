@@ -62,7 +62,7 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
         {
             if (_lastEvent != null)
             {
-                Fire(_lastEvent);
+                FireNow(_lastEvent);
                 _lastEvent = null;
             }
         }

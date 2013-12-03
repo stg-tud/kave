@@ -47,7 +47,7 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
             var windowEvent = Create<WindowEvent>();
             windowEvent.Window = VsComponentNameFactory.GetNameOf(window);
             windowEvent.Action = action;
-            Fire(windowEvent);
+            FireNow(windowEvent);
         }
     }
 }

@@ -23,7 +23,7 @@ namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
             bulbActionEvent.ActionId = _target.GetType().FullName;
             bulbActionEvent.ActionText = Text;
             _target.Execute(solution, textControl);
-            Fire(bulbActionEvent);
+            FireNow(bulbActionEvent);
         }
 
         public string Text

@@ -28,7 +28,7 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
             ideStateEvent.IDELifecyclePhase = phase;
             ideStateEvent.OpenWindows = VsComponentNameFactory.GetNamesOf(DTE.Windows);
             ideStateEvent.OpenDocuments = VsComponentNameFactory.GetNamesOf(DTE.Documents);
-            Fire(ideStateEvent);
+            FireNow(ideStateEvent);
         }
     }
 }

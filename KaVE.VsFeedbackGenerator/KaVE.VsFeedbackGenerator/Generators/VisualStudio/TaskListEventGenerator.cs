@@ -45,7 +45,7 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
         {
             var taskListEvent = Create<TaskListEvent>();
             taskListEvent.Action = action;
-            Fire(taskListEvent);
+            FireNow(taskListEvent);
         }
     }
 }

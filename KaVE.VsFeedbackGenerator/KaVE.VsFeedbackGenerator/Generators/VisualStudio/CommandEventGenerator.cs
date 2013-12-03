@@ -138,7 +138,7 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
                 commandEvent = CreateCommandEvent(guid, id);
             }
             Asserts.NotNull(commandEvent, "command finished that didn't start: {0}:{1}", guid, id);
-            Fire(commandEvent);
+            FireNow(commandEvent);
         }
 
         private CommandEvent TakeFromQueue(string commandKey)

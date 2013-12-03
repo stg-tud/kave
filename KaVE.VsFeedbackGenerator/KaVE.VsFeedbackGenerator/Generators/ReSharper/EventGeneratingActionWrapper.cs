@@ -20,7 +20,7 @@ namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
             var actionEvent = Create<BulbActionEvent>();
             actionEvent.ActionId = _originalAction.Target.ToString();
             _originalAction.Invoke();
-            Fire(actionEvent);
+            FireNow(actionEvent);
         }
     }
 }

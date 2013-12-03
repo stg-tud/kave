@@ -118,7 +118,7 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
             var solutionEvent = Create<SolutionEvent>();
             solutionEvent.Action = action;
             solutionEvent.Target = target;
-            Fire(solutionEvent);
+            FireNow(solutionEvent);
         }
     }
 }

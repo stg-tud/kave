@@ -46,7 +46,7 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
             _eventSendingTimer.Stop();
             lock (_eventLock)
             {
-                Fire(_currentEditEvent);
+                FireNow(_currentEditEvent);
                 _currentEditEvent = null;
             }
         }

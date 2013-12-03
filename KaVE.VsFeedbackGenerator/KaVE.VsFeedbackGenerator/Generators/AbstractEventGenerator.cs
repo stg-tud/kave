@@ -77,20 +77,29 @@ namespace KaVE.VsFeedbackGenerator.Generators
         }
 
         /// <summary>
-        /// Sets <see cref="IDEEvent.FinishedAt"/> to the current time and publishes the event.
+        /// Sets <see cref="IDEEvent.FinishedAt"/> to the current time and delegates to <see cref="Fire{TEvent}"/>.
         /// </summary>
-        protected void Fire<TEvent>([NotNull] TEvent ideEvent) where TEvent : IDEEvent
+        protected void FireNow<TEvent>([NotNull] TEvent @event) where TEvent : IDEEvent
         {
-            ideEvent.IDESessionUUID = IDESession.GetUUID(DTE);
-            ideEvent.FinishedAt = DateTime.Now;
-            _messageBus.Publish<IDEEvent>(ideEvent);
-            WriteToDebugConsole(ideEvent);
+            @event.FinishedAt = DateTime.Now;
+            Fire(@event);
+        }
+
+        /// <summary>
+        /// Sets <see cref="IDEEvent.IDESessionUUID"/> to <see cref="IDESession.GetUUID"/> and publishes the event to
+        /// the underlying message channel.
+        /// </summary>
+        protected void Fire<TEvent>([NotNull] TEvent @event) where TEvent : IDEEvent
+        {
+            @event.IDESessionUUID = IDESession.GetUUID(DTE);
+            _messageBus.Publish<IDEEvent>(@event);
+            WriteToDebugConsole(@event);
         }
 
         [Conditional("DEBUG")]
-        private static void WriteToDebugConsole(IDEEvent ideEvent)
+        private static void WriteToDebugConsole(IDEEvent @event)
         {
-            //Debug.WriteLine(ideEvent.ToJson());
+            Debug.WriteLine(@event.ToJson());
         }
     }
 }

@@ -28,7 +28,7 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
                 _lastEvent = Create<FindEvent>();
                 _lastEvent.Cancelled = cancelled;
             }
-            Fire(_lastEvent);
+            FireNow(_lastEvent);
             _lastEvent = null;
         }
     }

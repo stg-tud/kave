@@ -41,7 +41,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json
                     }
                 },
                 ProposalCollection = new ProposalCollection(new List<Proposal> {proposal1, proposal2}),
-                TerminatedBy = CompletionEvent.TerminationAction.Apply
+                TerminatedBy = CompletionEvent.TerminationState.Applied
             };
             completionEvent.AddSelection(proposal1);
             completionEvent.AddSelection(proposal2);
