@@ -77,11 +77,11 @@ namespace KaVE.VsFeedbackGenerator.Generators
         }
 
         /// <summary>
-        /// Sets <see cref="IDEEvent.FinishedAt"/> to the current time and delegates to <see cref="Fire{TEvent}"/>.
+        /// Sets <see cref="IDEEvent.TerminatedAt"/> to the current time and delegates to <see cref="Fire{TEvent}"/>.
         /// </summary>
         protected void FireNow<TEvent>([NotNull] TEvent @event) where TEvent : IDEEvent
         {
-            @event.FinishedAt = DateTime.Now;
+            @event.TerminatedAt = DateTime.Now;
             Fire(@event);
         }
 

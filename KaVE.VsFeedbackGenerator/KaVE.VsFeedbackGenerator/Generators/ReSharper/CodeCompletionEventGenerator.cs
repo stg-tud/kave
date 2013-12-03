@@ -40,4 +40,12 @@ namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
             var handler = new CodeCompletionEventHandler(_lookupWindowManager.CurrentLookup, _dte, _messageBus);
         }
     }
+
+    internal static class LookupExtensions
+    {
+        public static void AddLookupHandler(this ILookup lookup, IVsDTE dte, IMessageBus messageBus)
+        {
+            
+        }
+    }
 }

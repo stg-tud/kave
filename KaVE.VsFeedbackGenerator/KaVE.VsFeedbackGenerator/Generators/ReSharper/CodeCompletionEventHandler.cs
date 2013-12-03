@@ -124,7 +124,7 @@ namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
         {
             lock (_event)
             {
-                Asserts.Null(_event.FinishedAt, "event was terminated earlier");
+                Asserts.Null(_event.TerminatedAt, "event was terminated earlier");
                 _isApplied = true;
                 FireCurrentCompletionEvent(CompletionEvent.TerminationState.Applied, DateTime.Now);
             }
@@ -132,7 +132,7 @@ namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
 
         private void FireCurrentCompletionEvent(CompletionEvent.TerminationState state, DateTime finishedAt)
         {
-            _event.FinishedAt = finishedAt;
+            _event.TerminatedAt = finishedAt;
             _event.TerminatedBy = CompletionTerminationTrigger;
             _event.TerminatedAs = state;
             Asserts.That(_beforeShownCalled, "beforeShown not called");

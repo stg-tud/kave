@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using KaVE.Model.Events;
 using KaVE.Model.Events.CompletionEvent;
@@ -30,6 +31,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json
             {
                 IDESessionUUID = "0xDEADBEEF",
                 TriggeredBy = IDEEvent.Trigger.Unknown,
+                
                 Prefix = "Foo",
                 Context = new Context
                 {
@@ -41,7 +43,9 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json
                     }
                 },
                 ProposalCollection = new ProposalCollection(new List<Proposal> {proposal1, proposal2}),
-                TerminatedBy = CompletionEvent.TerminationState.Applied
+                TerminatedAt = new DateTime(2012, 2, 23, 18, 54, 59, 549),
+                TerminatedBy = IDEEvent.Trigger.Typing,
+                TerminatedAs = CompletionEvent.TerminationState.Applied
             };
             completionEvent.AddSelection(proposal1);
             completionEvent.AddSelection(proposal2);
