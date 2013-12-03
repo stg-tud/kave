@@ -94,7 +94,7 @@ namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
         private void OnLookupClosed(object sender, EventArgs e)
         {
             var terminatedAt = DateTime.Now;
-            Invoker.Later(() => OnCompletionCancelled(terminatedAt), 10000);
+            Invoke.Later(() => OnCompletionCancelled(terminatedAt), 10000);
             UnregisterFromCurrentLookup();
         }
 
