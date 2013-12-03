@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Timers;
 using JetBrains.DataFlow;
 using JetBrains.ReSharper.Feature.Services.Lookup;
 using JetBrains.Util;
@@ -105,7 +104,6 @@ namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
             {
                 if (!_isApplied)
                 {
-                    _isCancelled = true;
                     FireCurrentCompletionEvent(CompletionEvent.TerminationState.Cancelled, terminatedAt);
                 }
             }
