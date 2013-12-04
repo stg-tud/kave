@@ -1,8 +1,8 @@
-using EnvDTE;
 using JetBrains.ActionManagement;
 using JetBrains.Application.DataContext;
 using KaVE.Model.Events.ReSharper;
 using KaVE.VsFeedbackGenerator.MessageBus;
+using KaVE.VsFeedbackGenerator.VsIntegration;
 
 namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
 {
@@ -14,8 +14,8 @@ namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
     {
         private readonly IUpdatableAction _updatableAction;
 
-        public EventGeneratingActionHandler(IUpdatableAction updatableAction, DTE dte, IMessageBus messageBus)
-            : base(dte, messageBus)
+        public EventGeneratingActionHandler(IUpdatableAction updatableAction, IIDESession session, IMessageBus messageBus)
+            : base(session, messageBus)
         {
             _updatableAction = updatableAction;
         }

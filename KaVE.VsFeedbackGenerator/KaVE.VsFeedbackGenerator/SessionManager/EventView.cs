@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Text;
 using KaVE.Model.Events;
 using KaVE.Utils.Serialization;
 using KaVE.VsFeedbackGenerator.Utils.Json;
-using Newtonsoft.Json;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager
 {

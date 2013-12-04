@@ -1,11 +1,11 @@
 ﻿using EnvDTE;
-using JetBrains.Application;
 using JetBrains.Application.Components;
 using JetBrains.ProjectModel;
 using KaVE.Model.Events.VisualStudio;
 using KaVE.Model.Names.VisualStudio;
 using KaVE.VsFeedbackGenerator.MessageBus;
-using KaVE.VsFeedbackGenerator.Utils;
+using KaVE.VsFeedbackGenerator.Utils.Names;
+using KaVE.VsFeedbackGenerator.VsIntegration;
 
 namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
 {
@@ -19,7 +19,8 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
         private readonly SelectionEvents _selectionEvents;
         // ReSharper restore PrivateFieldCanBeConvertedToLocalVariable
 
-        public SolutionEventGenerator(DTE dte, IMessageBus messageBus) : base(dte, messageBus)
+        public SolutionEventGenerator(IIDESession session, IMessageBus messageBus)
+            : base(session, messageBus)
         {
             // SolutionComponents are created after the solution is opened, i.e., after SolutionEvents.Opened is fired.
             _solutionEvents_Opened();

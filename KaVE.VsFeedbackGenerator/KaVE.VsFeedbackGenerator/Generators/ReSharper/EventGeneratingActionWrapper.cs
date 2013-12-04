@@ -1,7 +1,7 @@
 ﻿using System;
-using EnvDTE;
 using KaVE.Model.Events.ReSharper;
 using KaVE.VsFeedbackGenerator.MessageBus;
+using KaVE.VsFeedbackGenerator.VsIntegration;
 
 namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
 {
@@ -9,8 +9,8 @@ namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
     {
         private readonly Action _originalAction;
 
-        public EventGeneratingActionWrapper(Action originalAction, DTE dte, IMessageBus messageBus)
-            : base(dte, messageBus)
+        public EventGeneratingActionWrapper(Action originalAction, IIDESession session, IMessageBus messageBus)
+            : base(session, messageBus)
         {
             _originalAction = originalAction;
         }

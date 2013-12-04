@@ -6,6 +6,7 @@ using JetBrains.ProjectModel;
 using JetBrains.ProjectModel.Impl;
 using JetBrains.ProjectModel.Model2.Assemblies.Interfaces;
 using JetBrains.ProjectModel.Properties;
+using JetBrains.ReSharper.Feature.Services.Lookup;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.Impl.Resolve;
@@ -20,6 +21,14 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
 {
     static class ReSharperMockUtils
     {
+        internal static ILookupItem MockLookupItem()
+        {
+            var lookupItem = new Mock<IDeclaredElementLookupItem>();
+            var declaredElementInstance = new DeclaredElementInstance(MockTypeElement("F", "A", "1.2.3.4"), new SubstitutionImpl());
+            lookupItem.Setup(i => i.PreferredDeclaredElement).Returns(declaredElementInstance);
+            return lookupItem.Object;
+        }
+
         internal static IType MockIType(string fqnOrAlias, string assemblyName, string assemblyVersion)
         {
             return MockIType(fqnOrAlias, EmptySubstitution.INSTANCE, assemblyName, assemblyVersion);

@@ -3,7 +3,8 @@ using JetBrains.Application;
 using JetBrains.Application.Components;
 using KaVE.Model.Events.VisualStudio;
 using KaVE.VsFeedbackGenerator.MessageBus;
-using KaVE.VsFeedbackGenerator.Utils;
+using KaVE.VsFeedbackGenerator.Utils.Names;
+using KaVE.VsFeedbackGenerator.VsIntegration;
 
 namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
 {
@@ -13,7 +14,8 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
         // ReSharper disable once PrivateFieldCanBeConvertedToLocalVariable
         private readonly WindowEvents _windowEvents;
 
-        public WindowEventGenerator(DTE dte, IMessageBus messageBus) : base(dte, messageBus)
+        public WindowEventGenerator(IIDESession session, IMessageBus messageBus)
+            : base(session, messageBus)
         {
             _windowEvents = DTE.Events.WindowEvents;
             _windowEvents.WindowCreated += _windowEvents_WindowCreated;

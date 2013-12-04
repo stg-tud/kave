@@ -4,24 +4,30 @@ using System.Windows.Input;
 using EnvDTE;
 using KaVE.JetBrains.Annotations;
 using KaVE.Model.Events;
+using KaVE.Utils;
 using KaVE.Utils.Serialization;
 using KaVE.VsFeedbackGenerator.MessageBus;
-using KaVE.VsFeedbackGenerator.Utils;
+using KaVE.VsFeedbackGenerator.Utils.Names;
+using KaVE.VsFeedbackGenerator.VsIntegration;
 
 namespace KaVE.VsFeedbackGenerator.Generators
 {
     public abstract class AbstractEventGenerator
     {
+        private readonly IIDESession _session;
         private readonly IMessageBus _messageBus;
 
-        protected AbstractEventGenerator(DTE dte, IMessageBus messageBus)
+        protected AbstractEventGenerator([NotNull] IIDESession session, [NotNull] IMessageBus messageBus)
         {
+            _session = session;
             _messageBus = messageBus;
-            DTE = dte;
         }
 
         [NotNull]
-        protected DTE DTE { get; private set; }
+        protected DTE DTE
+        {
+            get { return _session.DTE; }
+        }
 
         protected TIDEEvent Create<TIDEEvent>() where TIDEEvent : IDEEvent, new()
         {
@@ -37,7 +43,7 @@ namespace KaVE.VsFeedbackGenerator.Generators
         {
             get
             {
-                var leftMouseButtonPressed = Mouse.LeftButton == MouseButtonState.Pressed;
+                var leftMouseButtonPressed = Invoke.OnSTA(() => Mouse.LeftButton == MouseButtonState.Pressed);
                 return leftMouseButtonPressed ? IDEEvent.Trigger.Click : IDEEvent.Trigger.Unknown;
             }
         }
@@ -91,7 +97,7 @@ namespace KaVE.VsFeedbackGenerator.Generators
         /// </summary>
         protected void Fire<TEvent>([NotNull] TEvent @event) where TEvent : IDEEvent
         {
-            @event.IDESessionUUID = IDESession.GetUUID(DTE);
+            @event.IDESessionUUID = _session.UUID;
             _messageBus.Publish<IDEEvent>(@event);
             WriteToDebugConsole(@event);
         }

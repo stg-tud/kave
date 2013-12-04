@@ -1,9 +1,9 @@
 ﻿using EnvDTE;
-using JetBrains.Application;
 using JetBrains.Application.Components;
 using JetBrains.ProjectModel;
 using KaVE.Model.Events.VisualStudio;
 using KaVE.VsFeedbackGenerator.MessageBus;
+using KaVE.VsFeedbackGenerator.VsIntegration;
 
 namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
 {
@@ -13,7 +13,8 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
         // ReSharper disable once PrivateFieldCanBeConvertedToLocalVariable
         private readonly DebuggerEvents _debuggerEvents;
 
-        public DebuggerEventGenerator(DTE dte, IMessageBus messageBus) : base(dte, messageBus)
+        public DebuggerEventGenerator(IIDESession session, IMessageBus messageBus)
+            : base(session, messageBus)
         {
             _debuggerEvents = DTE.Events.DebuggerEvents;
             _debuggerEvents.OnEnterBreakMode += _debuggerEvents_OnEnterBreakMode;

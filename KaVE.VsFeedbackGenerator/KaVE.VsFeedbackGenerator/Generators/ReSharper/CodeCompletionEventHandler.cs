@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using JetBrains.DataFlow;
 using JetBrains.ReSharper.Feature.Services.Lookup;
-using JetBrains.Util;
 using KaVE.Model.Events;
 using KaVE.Model.Events.CompletionEvent;
 using KaVE.Utils;
@@ -21,50 +18,31 @@ namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
         private const Key EnterKey = Key.Enter;
         private const Key EscapeKey = Key.Escape;
 
-        private readonly ILookup _lookup;
-        private readonly IVsDTE _dte;
-        private readonly IMessageBus _messageBus;
-
         private readonly CompletionEvent _event;
         private bool _isApplied;
         private bool _beforeShownCalled;
 
-        public CodeCompletionEventHandler(ILookup lookup, IVsDTE dte, IMessageBus messageBus)
-            : base(dte, messageBus)
+        public CodeCompletionEventHandler(string lookupPrefix, IIDESession session, IMessageBus messageBus)
+            : base(session, messageBus)
         {
-            _lookup = lookup;
-            _dte = dte;
-            _messageBus = messageBus;
-            _event = CreateEvent(lookup);
+            _event = CreateEvent(lookupPrefix);
             _isApplied = false;
             _beforeShownCalled = false;
-            RegisterToLookupEvents();
         }
 
-        private CompletionEvent CreateEvent(ILookup lookup)
+        private CompletionEvent CreateEvent(string lookupPrefix)
         {
             var @event = Create<CompletionEvent>();
-            @event.ProposalCollection = lookup.Items.ToProposalCollection();
-            @event.Prefix = _lookup.Prefix;
+            @event.Prefix = lookupPrefix;
             return @event;
         }
 
-        private void RegisterToLookupEvents()
-        {
-            // registrations are done in the order the events occur in
-            _lookup.BeforeShownItemsUpdated += OnBeforeShownItemsUpdated;
-            _lookup.CurrentItemChanged += OnSelectionChanged;
-            _lookup.Typing += OnFiltering;
-            _lookup.Closed += OnLookupClosed;
-            _lookup.ItemCompleted += OnCompletionApplied;
-        }
-
-        private void OnBeforeShownItemsUpdated(object sender, IList<Pair<ILookupItem, MatchingResult>> items)
+        public void OnBeforeShownItemsUpdated(IEnumerable<ILookupItem> items)
         {
             // sometimes, the lookup is empty before this call
             // TODO test whether this is sometimes not called
             _beforeShownCalled = true;
-            _event.ProposalCollection = items.Select(p => p.First).ToProposalCollection();
+            _event.ProposalCollection = items.ToProposalCollection();
         }
 
         /// <summary>
@@ -72,16 +50,14 @@ namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
         /// change caused by filtering, and when an unselected item is clicked (which immediately applies the selected
         /// completion).
         /// </summary>
-        private void OnSelectionChanged(object sender, EventArgs eventArgs)
+        public void OnSelectionChanged(ILookupItem selectedItem)
         {
-            _event.AddSelection(_lookup.Selection.Item.ToProposal());
+            _event.AddSelection(selectedItem.ToProposal());
         }
 
-        private void OnFiltering(object sender, EventArgs<char> eventArgs)
+        public void OnFiltering()
         {
             FireCurrentCompletionEvent(CompletionEvent.TerminationState.Filtered, DateTime.Now);
-            new CodeCompletionEventHandler(_lookup, _dte, _messageBus);
-            UnregisterFromCurrentLookup();
         }
 
         /// <summary>
@@ -91,11 +67,10 @@ namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
         /// and schedule <see cref="OnCompletionCancelled"/>, which will fire the event if
         /// <see cref="OnCompletionApplied"/> has not been invoked in the meanwhile.
         /// </summary>
-        private void OnLookupClosed(object sender, EventArgs e)
+        public void OnLookupClosed()
         {
             var terminatedAt = DateTime.Now;
             Invoke.Later(() => OnCompletionCancelled(terminatedAt), 10000);
-            UnregisterFromCurrentLookup();
         }
 
         private void OnCompletionCancelled(DateTime terminatedAt)
@@ -109,18 +84,7 @@ namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
             }
         }
 
-        private void UnregisterFromCurrentLookup()
-        {
-            _lookup.BeforeShownItemsUpdated -= OnBeforeShownItemsUpdated;
-            _lookup.Closed -= OnLookupClosed;
-            _lookup.CurrentItemChanged -= OnSelectionChanged;
-            _lookup.ItemCompleted -= OnCompletionApplied;
-        }
-
-        private void OnCompletionApplied(object sender,
-            ILookupItem lookupItem,
-            Suffix suffix,
-            LookupItemInsertType lookupItemInsertType)
+        public void OnCompletionApplied()
         {
             lock (_event)
             {

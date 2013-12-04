@@ -1,11 +1,11 @@
 ﻿using System;
 using EnvDTE;
-using JetBrains.Application;
 using JetBrains.Application.Components;
 using JetBrains.ProjectModel;
 using KaVE.Model.Events.VisualStudio;
 using KaVE.Utils.Assertion;
 using KaVE.VsFeedbackGenerator.MessageBus;
+using KaVE.VsFeedbackGenerator.VsIntegration;
 
 namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
 {
@@ -17,7 +17,7 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
         private BuildEvent _currentEvent;
         private BuildTarget _currentTarget;
 
-        public BuildEventGenerator(DTE dte, IMessageBus messageBus) : base(dte, messageBus)
+        public BuildEventGenerator(IIDESession session, IMessageBus messageBus) : base(session, messageBus)
         {
             _buildEvents = DTE.Events.BuildEvents;
             _buildEvents.OnBuildBegin += _buildEvents_OnBuildBegin;

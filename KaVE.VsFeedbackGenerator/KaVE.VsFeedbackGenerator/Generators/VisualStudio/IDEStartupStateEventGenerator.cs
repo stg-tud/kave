@@ -1,18 +1,18 @@
 ﻿using System;
-using EnvDTE;
 using JetBrains.Application;
 using JetBrains.Application.Components;
-using JetBrains.DataFlow;
 using KaVE.Model.Events.VisualStudio;
 using KaVE.VsFeedbackGenerator.MessageBus;
-using KaVE.VsFeedbackGenerator.Utils;
+using KaVE.VsFeedbackGenerator.Utils.Names;
+using KaVE.VsFeedbackGenerator.VsIntegration;
 
 namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
 {
     [ShellComponent(ProgramConfigurations.VS_ADDIN)]
     internal class IDEStartupStateEventGenerator : AbstractEventGenerator, IDisposable
     {
-        public IDEStartupStateEventGenerator(DTE dte, IMessageBus messageBus) : base(dte, messageBus)
+        public IDEStartupStateEventGenerator(IIDESession session, IMessageBus messageBus)
+            : base(session, messageBus)
         {
             FireIDEStateEvent(IDEStateEvent.LifecyclePhase.Startup);
         }

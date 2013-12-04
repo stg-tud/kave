@@ -4,7 +4,7 @@ using KaVE.JetBrains.Annotations;
 using KaVE.Model.Names;
 using KaVE.Utils.Assertion;
 
-namespace KaVE.VsFeedbackGenerator.Utils
+namespace KaVE.VsFeedbackGenerator.Utils.Names
 {
     public static class ReSharperTypeNameFactory
     {

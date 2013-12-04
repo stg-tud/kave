@@ -3,6 +3,7 @@ using JetBrains.Application;
 using JetBrains.Application.Components;
 using KaVE.Model.Events.VisualStudio;
 using KaVE.VsFeedbackGenerator.MessageBus;
+using KaVE.VsFeedbackGenerator.VsIntegration;
 
 namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
 {
@@ -12,7 +13,8 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
         // ReSharper disable once PrivateFieldCanBeConvertedToLocalVariable
         private readonly FindEvents _findEvents;
 
-        public FindEventGenerator(DTE dte, IMessageBus messageBus) : base(dte, messageBus)
+        public FindEventGenerator(IIDESession session, IMessageBus messageBus)
+            : base(session, messageBus)
         {
             _findEvents = DTE.Events.FindEvents;
 

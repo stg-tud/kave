@@ -1,9 +1,9 @@
-﻿using EnvDTE;
-using JetBrains.ProjectModel;
+﻿using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Intentions.Extensibility;
 using JetBrains.TextControl;
 using KaVE.Model.Events.ReSharper;
 using KaVE.VsFeedbackGenerator.MessageBus;
+using KaVE.VsFeedbackGenerator.VsIntegration;
 
 namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
 {
@@ -11,8 +11,8 @@ namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
     {
         private readonly IBulbAction _target;
 
-        public EventGeneratingBulbActionProxy(IBulbAction target, DTE dte, IMessageBus messageBus)
-            : base(dte, messageBus)
+        public EventGeneratingBulbActionProxy(IBulbAction target, IIDESession session, IMessageBus messageBus)
+            : base(session, messageBus)
         {
             _target = target;
         }

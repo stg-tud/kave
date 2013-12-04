@@ -92,17 +92,17 @@
     <Compile Include="SessionManager\EventView.cs" />
     <Compile Include="SessionManager\FeedbackView.cs" />
     <Compile Include="MessageBus\TinyMessenger.cs" />
-    <Compile Include="Utils\IDESession.cs" />
+    <Compile Include="Utils\GlobalsExtensions.cs" />
     <Compile Include="Utils\Json\JsonLogReader.cs" />
     <Compile Include="Utils\Json\JsonLogSerialization.cs" />
     <Compile Include="Utils\Json\JsonLogWriter.cs" />
     <Compile Include="Utils\Json\NameToJsonConverter.cs" />
     <Compile Include="Utils\LookupItemUtils.cs" />
-    <Compile Include="Utils\ReSharperDeclaredElementNameFactory.cs" />
-    <Compile Include="Utils\ReSharperTypeNameFactory.cs" />
-    <Compile Include="Utils\VsComponentNameFactory.cs" />
-    <Compile Include="VsIntegration\IVsDTE.cs" />
-    <Compile Include="VsIntegration\VsDTE.cs" />
+    <Compile Include="Utils\Names\ReSharperDeclaredElementNameFactory.cs" />
+    <Compile Include="Utils\Names\ReSharperTypeNameFactory.cs" />
+    <Compile Include="Utils\Names\VsComponentNameFactory.cs" />
+    <Compile Include="VsIntegration\IDESession.cs" />
+    <Compile Include="VsIntegration\IIDESession.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\CodeCompletion\KaVE.Model\KaVE.Model.csproj">

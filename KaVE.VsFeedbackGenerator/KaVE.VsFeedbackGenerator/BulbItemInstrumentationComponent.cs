@@ -15,12 +15,12 @@ namespace KaVE.VsFeedbackGenerator
     [SolutionComponent]
     internal class BulbItemInstrumentationComponent : IBulbItemsProvider
     {
-        private readonly IVsDTE _dte;
+        private readonly IIDESession _session;
         private readonly IMessageBus _messageBus;
 
-        public BulbItemInstrumentationComponent(IVsDTE dte, IMessageBus messageBus)
+        public BulbItemInstrumentationComponent(IIDESession session, IMessageBus messageBus)
         {
-            _dte = dte;
+            _session = session;
             _messageBus = messageBus;
         }
 
@@ -52,14 +52,14 @@ namespace KaVE.VsFeedbackGenerator
                 var proxy = executableItem as IntentionAction.MyExecutableProxi;
                 if (proxy != null)
                 {
-                    proxy.WrapBulbAction(_dte, _messageBus);
+                    proxy.WrapBulbAction(_session, _messageBus);
                     continue;
                 }
 
                 var executable = executableItem as ExecutableItem;
                 if (executable != null)
                 {
-                    executable.WrapBulbAction(_dte, _messageBus);
+                    executable.WrapBulbAction(_session, _messageBus);
                     continue;
                 }
 

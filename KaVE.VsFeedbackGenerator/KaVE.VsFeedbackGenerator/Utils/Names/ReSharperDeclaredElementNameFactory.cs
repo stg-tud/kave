@@ -16,7 +16,7 @@ using KaVE.Model.Names.CSharp;
 using KaVE.Utils;
 using KaVE.Utils.Assertion;
 
-namespace KaVE.VsFeedbackGenerator.Utils
+namespace KaVE.VsFeedbackGenerator.Utils.Names
 {
     public static class ReSharperDeclaredElementNameFactory
     {
@@ -193,7 +193,7 @@ namespace KaVE.VsFeedbackGenerator.Utils
                 "{0}[[{2}]], {1}",
                 type.GetClrName().FullName,
                 containingModule.GetQualifiedName(),
-                type.TypeParameters.Select(tp => tp.GetName(substitution).Identifier).Join("],["));
+                type.TypeParameters.Select(tp => GetName((ITypeParameter) tp, substitution).Identifier).Join("],["));
         }
 
         /// <summary>

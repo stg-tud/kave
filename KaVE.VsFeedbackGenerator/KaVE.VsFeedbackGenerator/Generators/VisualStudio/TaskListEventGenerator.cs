@@ -3,6 +3,7 @@ using JetBrains.Application;
 using JetBrains.Application.Components;
 using KaVE.Model.Events.VisualStudio;
 using KaVE.VsFeedbackGenerator.MessageBus;
+using KaVE.VsFeedbackGenerator.VsIntegration;
 
 namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
 {
@@ -12,7 +13,8 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
         // ReSharper disable once PrivateFieldCanBeConvertedToLocalVariable
         private readonly TaskListEvents _taskListEvents;
 
-        public TaskListEventGenerator(DTE dte, IMessageBus messageBus) : base(dte, messageBus)
+        public TaskListEventGenerator(IIDESession session, IMessageBus messageBus)
+            : base(session, messageBus)
         {
             _taskListEvents = DTE.Events.TaskListEvents;
             _taskListEvents.TaskAdded += _taskListEvents_TaskAdded;

@@ -11,11 +11,11 @@ namespace KaVE.VsFeedbackGenerator
     [ShellComponent]
     internal class ActionEventInstrumentationComponent
     {
-        public ActionEventInstrumentationComponent(Lifetime lifetime, IActionManager actionManager, IVsDTE dte, IMessageBus messageBus)
+        public ActionEventInstrumentationComponent(Lifetime lifetime, IActionManager actionManager, IIDESession session, IMessageBus messageBus)
         {
             foreach (var updatableAction in actionManager.GetAllActions().OfType<IUpdatableAction>())
             {
-                updatableAction.AddHandler(lifetime, new EventGeneratingActionHandler(updatableAction, dte, messageBus));
+                updatableAction.AddHandler(lifetime, new EventGeneratingActionHandler(updatableAction, session, messageBus));
             }
         }
     }
