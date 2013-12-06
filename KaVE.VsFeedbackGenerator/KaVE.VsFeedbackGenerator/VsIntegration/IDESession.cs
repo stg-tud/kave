@@ -29,10 +29,12 @@ namespace KaVE.VsFeedbackGenerator.VsIntegration
                 // TODO test whether this is working properly in a non-experimental instance
                 // in the experimental instance updates of the globals are not persisted reliably...
                 var globals = _dte.Globals;
-                var createdAt = DateTime.Parse(globals.GetValueOrDefault(UUIDCreatedAtGlobal, PastDate));
+                var storedDateString = globals.GetValueOrDefault(UUIDCreatedAtGlobal, PastDate);
+                var createdAt = DateTime.Parse(storedDateString, CultureInfo.InvariantCulture);
                 if (createdAt < DateTime.Today)
                 {
-                    globals.SetValue(UUIDCreatedAtGlobal, DateTime.Today.ToString(CultureInfo.InvariantCulture));
+                    var dateString = DateTime.Today.ToString(CultureInfo.InvariantCulture);
+                    globals.SetValue(UUIDCreatedAtGlobal, dateString);
                     globals.SetValue(UUIDGlobal, Guid.NewGuid().ToString());
                 }
                 return globals.Get(UUIDGlobal);
