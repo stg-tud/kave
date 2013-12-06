@@ -15,14 +15,13 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
 
         public FeedbackWindowControl(FeedbackView holder)
         {
-            //InitializeComponent();
             _feedbackView = holder;
             DataContext = holder;
             InitializeComponent();
             
             // TODO: Maybe move to xaml
-            SessionListView.Items.SortDescriptions.Add(new SortDescription("StartDate", ListSortDirection.Ascending));
-            EventListView.Items.SortDescriptions.Add(new SortDescription("StartTime", ListSortDirection.Ascending));
+            SessionListView.Items.SortDescriptions.Add(new SortDescription("StartDate", ListSortDirection.Descending));
+            EventListView.Items.SortDescriptions.Add(new SortDescription("StartTime", ListSortDirection.Descending));
         }
 
         private void FeedbackWindowControl_OnLoaded(object sender, RoutedEventArgs e)
