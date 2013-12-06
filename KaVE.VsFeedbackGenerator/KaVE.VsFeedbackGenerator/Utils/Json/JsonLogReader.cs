@@ -9,7 +9,7 @@ namespace KaVE.VsFeedbackGenerator.Utils.Json
     /// <summary>
     /// A reader for streams written by <see cref="JsonLogWriter"/>.
     /// </summary>
-    internal class JsonLogReader : IDisposable
+    public class JsonLogReader : IDisposable
     {
         private readonly StreamReader _logStreamReader;
 

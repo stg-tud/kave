@@ -27,6 +27,7 @@
     <DefineConstants>JET_MODE_ASSERT;DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -35,15 +36,16 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <RegisterForComInterop>false</RegisterForComInterop>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="envdte, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.CommandBars, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
-    <Reference Include="Microsoft.VisualStudio.OLE.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Newtonsoft.Json.5.0.6\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -61,8 +63,9 @@
     <Compile Include="ActionEventInstrumentationComponent.cs" />
     <Compile Include="BulbItemInstrumentationComponent.cs" />
     <Compile Include="BulbItemInstrumentationExtensions.cs" />
-    <Compile Include="Generators\ReSharper\CodeCompletionEventGenerator.cs" />
+    <Compile Include="CodeCompletionLifecycleManager.cs" />
     <Compile Include="Generators\ReSharper\CodeCompletionEventHandler.cs" />
+    <Compile Include="Generators\ReSharper\CodeCompletionWTF.cs" />
     <Compile Include="Generators\ReSharper\EventGeneratingActionHandler.cs" />
     <Compile Include="Generators\ReSharper\EventGeneratingActionWrapper.cs" />
     <Compile Include="Generators\ReSharper\EventGeneratingBulbActionProxy.cs" />
@@ -98,6 +101,7 @@
     <Compile Include="SessionManager\FeedbackView.cs" />
     <Compile Include="MessageBus\TinyMessenger.cs" />
     <Compile Include="Utils\GlobalsExtensions.cs" />
+    <Compile Include="Utils\Json\JsonLogFileManager.cs" />
     <Compile Include="Utils\Json\JsonLogReader.cs" />
     <Compile Include="Utils\Json\JsonLogSerialization.cs" />
     <Compile Include="Utils\Json\JsonLogWriter.cs" />

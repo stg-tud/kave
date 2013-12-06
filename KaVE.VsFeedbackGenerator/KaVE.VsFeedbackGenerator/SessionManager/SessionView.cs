@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.IO;
 using System.Linq;
 using KaVE.Model.Events;
-#if !DEBUG
-using System.IO.Compression;
-#endif
 using KaVE.VsFeedbackGenerator.Utils.Json;
 using NuGet;
 
@@ -15,13 +11,15 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
     public class SessionView : INotifyPropertyChanged
     {
         private readonly string _logFileName;
+        private readonly JsonLogFileManager _logFileManager;
         private DateTime _sessionStartTime;
         private IList<EventView> _events; 
         private readonly IList<EventView> _selectedEvents;
 
-        public SessionView(string logFileName)
+        public SessionView(JsonLogFileManager logFileManager, string logFileName)
         {
             _logFileName = logFileName;
+            _logFileManager = logFileManager;
             _selectedEvents = new List<EventView>();
         }
 
@@ -45,27 +43,10 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
                 // TODO make this lazier again or else it might blow the memory...
                 if (_events == null)
                 {
-                    var logReader = NewLogReader(_logFileName);
+                    var logReader = _logFileManager.NewLogReader(_logFileName);
                     _events = logReader.GetEnumeration<IDEEvent>().Select(evt => new EventView(evt)).ToList();
                 }
                 return _events;
-            }
-        }
-
-        private static JsonLogReader NewLogReader(string logFilePath)
-        {
-            Stream logStream = new FileStream(logFilePath, FileMode.Open);
-            try
-            {
-#if !DEBUG
-                logStream = new GZipStream(logStream, CompressionMode.Decompress);
-#endif
-                return new JsonLogReader(logStream);
-            }
-            catch (Exception)
-            {
-                logStream.Close();
-                throw;
             }
         }
 
@@ -88,6 +69,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             }
         }
 
+        #region INotifyPropertyChanged implementation
         public event PropertyChangedEventHandler PropertyChanged;
 
         private void OnPropertyChanged(string propertyName)
@@ -97,5 +79,6 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
             }
         }
+        #endregion
     }
 }

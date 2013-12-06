@@ -9,7 +9,7 @@ namespace KaVE.VsFeedbackGenerator.Utils.Json
     /// <summary>
     /// Writes objects as Json to a stream. Every object is serialized and written as a single line, delimited by '\r\n'.
     /// </summary>
-    internal class JsonLogWriter : IDisposable
+    public class JsonLogWriter : IDisposable
     {
         private readonly StreamWriter _logStreamWriter;
         private readonly JsonSerializer _serializer;

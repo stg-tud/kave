@@ -14,7 +14,7 @@ namespace KaVE.VsFeedbackGenerator.Utils.Json
             },
             Formatting = Formatting.None,
             NullValueHandling = NullValueHandling.Ignore,
-            TypeNameHandling = TypeNameHandling.All,
+            TypeNameHandling = TypeNameHandling.Objects,
             TypeNameAssemblyFormat = FormatterAssemblyStyle.Simple
         };
 

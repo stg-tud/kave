@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using JetBrains.ReSharper.Feature.Services.Lookup;
+using KaVE.Model.Events;
 using KaVE.Model.Events.CompletionEvent;
 using KaVE.VsFeedbackGenerator.Generators.ReSharper;
 using KaVE.VsFeedbackGenerator.MessageBus;
@@ -14,36 +17,51 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.ReSharper
     [TestFixture]
     public class CodeCompletionEventHandlerTest
     {
-        private Mock<IIDESession> _mockSession;
+        private IIDESession _testSession;
         private Mock<IMessageBus> _mockMessageBus;
+        private IList<CompletionEvent> _publishedEvents;
 
         [SetUp]
         public void SetupMockEnvironment()
         {
-            _mockSession = new Mock<IIDESession>();
-            _mockSession.Setup(session => session.UUID).Returns("TestUUID");
+            _publishedEvents = new List<CompletionEvent>();
+            _testSession = new TestIDESession();
             _mockMessageBus = new Mock<IMessageBus>();
+            _mockMessageBus.Setup(bus => bus.Publish<IDEEvent>(It.IsAny<CompletionEvent>())).Callback(
+                (IDEEvent ideEvent) => _publishedEvents.Add(ideEvent as CompletionEvent));
         }
 
         [Test]
         public void ShouldHandleCodeCompletionWithApplication()
         {
-            var builder = new CodeCompletionEventHandler("", _mockSession.Object, _mockMessageBus.Object);
+            var handler = new CodeCompletionEventHandler(_testSession, _mockMessageBus.Object);
             var lookupItem = ReSharperMockUtils.MockLookupItem();
 
-            _mockMessageBus.Setup(bus => bus.Publish(It.IsAny<CompletionEvent>())).Callback(
-                (CompletionEvent ce) =>
-                {
-                    Assert.AreEqual(1, ce.ProposalCollection.Proposals.Count);
-                    CollectionAssert.Contains(ce.ProposalCollection.Proposals, lookupItem.ToProposal());
-                });
+            handler.OnOpened("");
+            handler.SetLookupItems(new List<ILookupItem> {lookupItem});
+            handler.OnSelectionChanged(lookupItem);
+            handler.OnApplication(DateTime.Now, lookupItem);
 
-            builder.OnBeforeShownItemsUpdated(new List<ILookupItem> { lookupItem });
-            builder.OnSelectionChanged(lookupItem);
-            builder.OnLookupClosed();
-            builder.OnCompletionApplied();
+            Assert.AreEqual(1, _publishedEvents.Count);
+            var ce = _publishedEvents.First();
+            CollectionAssert.Contains(ce.ProposalCollection.Proposals, lookupItem.ToProposal());
+            Assert.AreEqual(CompletionEvent.TerminationState.Applied, ce.TerminatedAs);
+        }
 
-            _mockMessageBus.Verify(bus => bus.Publish(It.IsAny<CompletionEvent>()), Times.Once);
+        [Test]
+        public void ShouldHandleCodeCompletionWithCancellation()
+        {
+            var handler = new CodeCompletionEventHandler(_testSession, _mockMessageBus.Object);
+            var lookupItem = ReSharperMockUtils.MockLookupItem();
+
+            handler.SetLookupItems(new List<ILookupItem> { lookupItem });
+            handler.OnSelectionChanged(lookupItem);
+            handler.OnCancellation(DateTime.Now);
+
+            Assert.AreEqual(1, _publishedEvents.Count);
+            var ce = _publishedEvents.First();
+            CollectionAssert.Contains(ce.ProposalCollection.Proposals, lookupItem.ToProposal());
+            Assert.AreEqual(CompletionEvent.TerminationState.Cancelled, ce.TerminatedAs);
         }
     }
 }

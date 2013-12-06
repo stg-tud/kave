@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using JetBrains.Annotations;
 using JetBrains.Application;
+using KaVE.VsFeedbackGenerator.Utils.Json;
 using NuGet;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager
@@ -11,11 +12,13 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
     [ShellComponent]
     public sealed class FeedbackView : INotifyPropertyChanged
     {
+        private readonly JsonLogFileManager _logFileManager;
         private readonly IList<SessionView> _sessions;
         private readonly IList<SessionView> _selectedSessions;
 
-        public FeedbackView()
+        public FeedbackView(JsonLogFileManager logFileManager)
         {
+            _logFileManager = logFileManager;
             _sessions = new List<SessionView>();
             _selectedSessions = new List<SessionView>();
             RefreshSessions();
@@ -23,11 +26,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
 
         public void RefreshSessions()
         {
-            if (Directory.Exists(Initializer.EventLogsDirectory))
-            {
-                var logFiles = Directory.GetFiles(Initializer.EventLogsDirectory, "*" + Initializer.LogFileExtension);
-                Sessions = logFiles.Select(logFileName => new SessionView(logFileName));
-            }
+            Sessions = _logFileManager.GetLogFileNames().Select(logFileName => new SessionView(_logFileManager, logFileName));
         }
 
         public IEnumerable<SessionView> Sessions
@@ -65,6 +64,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             }
         }
 
+        #region INotifyPropertyChanged implementation
         public event PropertyChangedEventHandler PropertyChanged;
 
         private void OnPropertyChanged(string propertyName)
@@ -74,5 +74,6 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
             }
         }
+        #endregion
     }
 }

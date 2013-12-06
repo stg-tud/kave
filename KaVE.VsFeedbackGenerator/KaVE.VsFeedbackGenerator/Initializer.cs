@@ -15,15 +15,13 @@ namespace KaVE.VsFeedbackGenerator
     [ShellComponent]
     class Initializer
     {
-        internal const string LogFileExtension = ".log";
-        private const string ProjectName = "KaVE";
-        private static readonly string EventLogScopeName = typeof (Initializer).Assembly.GetName().Name;
-
         private readonly IMessageBus _messageChannel;
+        private readonly JsonLogFileManager _logFileManager;
 
-        public Initializer(IMessageBus messageBus)
+        public Initializer(IMessageBus messageBus, JsonLogFileManager logFileManager)
         {
             _messageChannel = messageBus;
+            _logFileManager = logFileManager;
             _messageChannel.Subscribe<IDEEvent>(LogIDEEvent);
         }
 
@@ -31,51 +29,12 @@ namespace KaVE.VsFeedbackGenerator
         {
             lock (_messageChannel)
             {
-                var logPath = GetSessionEventLogFilePath(ce);
-                EnsureLogDirectoryExists(logPath);
-                Debug.WriteLine("Logging IDE Events to: '" + logPath + "'");
-                using (var logWriter = NewLogWriter(logPath))
+                var logFileName = _logFileManager.GetLogFileName(ce.IDESessionUUID);
+                Debug.WriteLine("Logging IDE Events to: '{0}'", (object) logFileName);
+                using (var logWriter = _logFileManager.NewLogWriter(logFileName))
                 {
                     logWriter.Write(ce);
                 }
-            }
-        }
-
-        private static string GetSessionEventLogFilePath(IDEEvent evt)
-        {
-            return Path.Combine(EventLogsDirectory, evt.IDESessionUUID + LogFileExtension);
-        }
-
-        internal static string EventLogsDirectory
-        {
-            get
-            {
-                var appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-                return Path.Combine(appDataPath, ProjectName, EventLogScopeName);
-            }
-        }
-
-        private static void EnsureLogDirectoryExists(string logPath)
-        {
-            var logDir = Path.GetDirectoryName(logPath);
-            Asserts.NotNull(logDir, "could not determine log directly from path '{0}'", logPath);
-            Directory.CreateDirectory(logDir);
-        }
-
-        private static JsonLogWriter NewLogWriter(string logFilePath)
-        {
-            Stream logStream = new FileStream(logFilePath, FileMode.Append, FileAccess.Write);
-            try
-            {
-#if !DEBUG
-                logStream = new GZipStream(logStream, CompressionMode.Compress);
-#endif
-                return new JsonLogWriter(logStream);
-            }
-            catch (Exception)
-            {
-                logStream.Close();
-                throw;
             }
         }
     }

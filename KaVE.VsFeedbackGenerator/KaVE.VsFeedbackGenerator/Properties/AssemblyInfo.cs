@@ -10,7 +10,7 @@ using JetBrains.Application.PluginSupport;
 [assembly: AssemblyDescription("Generates IDE events from the interaction of developers with VisualStudio and ReSharper 8 features.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("TU Darmstadt")]
-[assembly: AssemblyProduct("EventGenerator.ReSharper8")]
+[assembly: AssemblyProduct("KaVE.VsFeedbackGenerator")]
 [assembly: AssemblyCopyright("Copyright © TU Darmstadt, 2013")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

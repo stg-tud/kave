@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using JetBrains.ReSharper.Feature.Services.Lookup;
 using KaVE.Model.Events;
 using KaVE.Model.Events.CompletionEvent;
-using KaVE.Utils;
 using KaVE.Utils.Assertion;
 using KaVE.Utils.IO;
 using KaVE.VsFeedbackGenerator.MessageBus;
@@ -13,31 +12,64 @@ using Key = System.Windows.Input.Key;
 
 namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
 {
-    internal class CodeCompletionEventHandler : AbstractEventGenerator
+    internal interface ICodeCompletionLifecycleHandler
+    {
+        /// <summary>
+        /// Invoked when the code completion is opened.
+        /// </summary>
+        /// <param name="prefix">The prefix, the completion is triggered on.</param>
+        void OnOpened(string prefix);
+
+        void SetLookupItems(IEnumerable<ILookupItem> items);
+
+        /// <summary>
+        /// Invoked when the prefix changes (typing or deletion of a character), while the code completion is opened.
+        /// </summary>
+        /// <param name="newPrefix">The prefix after it was changed.</param>
+        void OnPrefixChanged(string newPrefix);
+
+        /// <summary>
+        /// Invoked for the initial selection, any manual selection changes (using the arrow keys), selection changes
+        /// caused by filtering, and when an unselected item is clicked (which immediately applies the selected
+        /// completion).
+        /// </summary>
+        void OnSelectionChanged(ILookupItem selectedItem);
+
+        /// <summary>
+        /// Invoked when the code completion is cancelled.
+        /// </summary>
+        /// <param name="timeOfCancellation">The cancellation time. May be in the past.</param>
+        void OnCancellation(DateTime timeOfCancellation);
+
+        /// <summary>
+        /// Invoked when the code completion is closed due to the application of an item.
+        /// </summary>
+        /// <param name="timeOfApplication">The application time. May be in the past.</param>
+        /// <param name="appliedItem">The item that is applied.</param>
+        void OnApplication(DateTime timeOfApplication, ILookupItem appliedItem);
+    }
+
+    internal class CodeCompletionEventHandler : AbstractEventGenerator, ICodeCompletionLifecycleHandler
     {
         private const Key EnterKey = Key.Enter;
         private const Key EscapeKey = Key.Escape;
 
-        private readonly CompletionEvent _event;
-        private bool _isApplied;
+        private CompletionEvent _event;
         private bool _beforeShownCalled;
 
-        public CodeCompletionEventHandler(string lookupPrefix, IIDESession session, IMessageBus messageBus)
+        public CodeCompletionEventHandler(IIDESession session, IMessageBus messageBus)
             : base(session, messageBus)
         {
-            _event = CreateEvent(lookupPrefix);
-            _isApplied = false;
             _beforeShownCalled = false;
         }
 
-        private CompletionEvent CreateEvent(string lookupPrefix)
+        public void OnOpened(string prefix)
         {
-            var @event = Create<CompletionEvent>();
-            @event.Prefix = lookupPrefix;
-            return @event;
+            _event = Create<CompletionEvent>();
+            _event.Prefix = prefix;
         }
 
-        public void OnBeforeShownItemsUpdated(IEnumerable<ILookupItem> items)
+        public void SetLookupItems(IEnumerable<ILookupItem> items)
         {
             // sometimes, the lookup is empty before this call
             // TODO test whether this is sometimes not called
@@ -45,65 +77,36 @@ namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
             _event.ProposalCollection = items.ToProposalCollection();
         }
 
-        /// <summary>
-        /// This is invoked for the initial selection, any manual selection change (using the arrow keys), selection
-        /// change caused by filtering, and when an unselected item is clicked (which immediately applies the selected
-        /// completion).
-        /// </summary>
         public void OnSelectionChanged(ILookupItem selectedItem)
         {
             _event.AddSelection(selectedItem.ToProposal());
         }
 
-        public void OnFiltering()
+        public void OnPrefixChanged(string newPrefix)
         {
-            FireCurrentCompletionEvent(CompletionEvent.TerminationState.Filtered, DateTime.Now);
+            FireCompletionEvent(CompletionEvent.TerminationState.Filtered, DateTime.Now);
         }
 
-        /// <summary>
-        /// This is invoked when code completion is terminated either by appying a proposal or by cancelation. In the
-        /// former case, it is invoked before <see cref="OnCompletionApplied"/>. However, unregistering from the lookup
-        /// here does not prevent the call to <see cref="OnCompletionApplied"/>. Therefore, we do all the cleanup here
-        /// and schedule <see cref="OnCompletionCancelled"/>, which will fire the event if
-        /// <see cref="OnCompletionApplied"/> has not been invoked in the meanwhile.
-        /// </summary>
-        public void OnLookupClosed()
+        public void OnCancellation(DateTime timeOfCancellation)
         {
-            var terminatedAt = DateTime.Now;
-            Invoke.Later(() => OnCompletionCancelled(terminatedAt), 10000);
+            FireCompletionEvent(CompletionEvent.TerminationState.Cancelled, timeOfCancellation);
         }
 
-        private void OnCompletionCancelled(DateTime terminatedAt)
+        public void OnApplication(DateTime timeOfApplication, ILookupItem appliedItem)
         {
-            lock (_event)
-            {
-                if (!_isApplied)
-                {
-                    FireCurrentCompletionEvent(CompletionEvent.TerminationState.Cancelled, terminatedAt);
-                }
-            }
+            FireCompletionEvent(CompletionEvent.TerminationState.Applied, timeOfApplication);
         }
 
-        public void OnCompletionApplied()
-        {
-            lock (_event)
-            {
-                Asserts.Null(_event.TerminatedAt, "event was terminated earlier");
-                _isApplied = true;
-                FireCurrentCompletionEvent(CompletionEvent.TerminationState.Applied, DateTime.Now);
-            }
-        }
-
-        private void FireCurrentCompletionEvent(CompletionEvent.TerminationState state, DateTime finishedAt)
+        private void FireCompletionEvent(CompletionEvent.TerminationState state, DateTime finishedAt)
         {
             _event.TerminatedAt = finishedAt;
-            _event.TerminatedBy = CompletionTerminationTrigger;
+            _event.TerminatedBy = CompletionTerminator;
             _event.TerminatedAs = state;
             Asserts.That(_beforeShownCalled, "beforeShown not called");
             Fire(_event);
         }
 
-        private static IDEEvent.Trigger CompletionTerminationTrigger
+        private static IDEEvent.Trigger CompletionTerminator
         {
             get
             {
