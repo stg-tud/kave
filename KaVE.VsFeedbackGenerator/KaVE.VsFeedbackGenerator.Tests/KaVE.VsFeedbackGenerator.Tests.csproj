@@ -87,6 +87,7 @@
     <Compile Include="Utils\Names\ReSharperDeclaredElementNameFactoryTest.cs" />
     <Compile Include="Utils\Names\ReSharperTypeNameFactoryTest.cs" />
     <Compile Include="Utils\ReSharperMockUtils.cs" />
+    <Compile Include="VsIntegration\IDESessionTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\CodeCompletion\KaVE.Model\KaVE.Model.csproj">
