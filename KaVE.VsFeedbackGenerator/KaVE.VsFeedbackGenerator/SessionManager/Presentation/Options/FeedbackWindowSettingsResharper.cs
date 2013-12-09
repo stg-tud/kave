@@ -7,28 +7,28 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation.Options
     internal class FeedbackWindowSettingsResharper : FeedbackGeneratorSettings
     {
         [SettingsEntry("True", "FeedbackGenerator Names")]
-        public bool FeedbackGeneratorNames
+        public bool? FeedbackGeneratorNames
         {
             get { return Names; }
             set { Names = value; }
         }
 
         [SettingsEntry("True", "FeedbackGenerator Duration")]
-        public bool FeedbackGeneratorDuration
+        public bool? FeedbackGeneratorDuration
         {
             get { return Duration; }
             set { Duration = value; }
         }
 
         [SettingsEntry("True", "FeedbackGenerator StartTime")]
-        public bool FeedbackGeneratorStartTime
+        public bool? FeedbackGeneratorStartTime
         {
             get { return StartTime; }
             set { StartTime = value; }
         }
 
         [SettingsEntry("True", "FeedbackGenerator SessioIDs")]
-        public bool FeedbackGeneratorSessionIDs
+        public bool? FeedbackGeneratorSessionIDs
         {
             get { return SessionIDs; }
             set { SessionIDs = value; }

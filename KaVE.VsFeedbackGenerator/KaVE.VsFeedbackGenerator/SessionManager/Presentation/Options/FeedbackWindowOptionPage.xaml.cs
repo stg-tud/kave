@@ -1,4 +1,6 @@
 ﻿using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
+using JetBrains.Application.Settings;
 using JetBrains.DataFlow;
 using JetBrains.ReSharper.Features.Common.Options;
 using JetBrains.ReSharper.Features.Finding.Resources;
@@ -15,10 +17,10 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation.Options
         public FeedbackWindowOptionPage(Lifetime lifetime, OptionsSettingsSmartContext ctx)
         {
             InitializeComponent();
-            /*ctx.SetBinding(lifetime, (FeedbackWindowSettingsResharper s) => s.FeedbackGeneratorNames, NamesCheckBox, CheckBox.IsCheckedProperty);
-            ctx.SetBinding(lifetime, (FeedbackWindowSettingsResharper s) => s.FeedbackGeneratorStartTime, StartTimeCheckBox, CheckBox.IsCheckedProperty);
-            ctx.SetBinding(lifetime, (FeedbackWindowSettingsResharper s) => s.FeedbackGeneratorDuration, DurationCheckBox, CheckBox.IsCheckedProperty);
-            ctx.SetBinding(lifetime, (FeedbackWindowSettingsResharper s) => s.FeedbackGeneratorSessionIDs, SessionIDCheckBox, CheckBox.IsCheckedProperty);*/
+            ctx.SetBinding(lifetime, (FeedbackWindowSettingsResharper s) => s.FeedbackGeneratorNames, NamesCheckBox, ToggleButton.IsCheckedProperty);
+            ctx.SetBinding(lifetime, (FeedbackWindowSettingsResharper s) => s.FeedbackGeneratorStartTime, StartTimeCheckBox, ToggleButton.IsCheckedProperty);
+            ctx.SetBinding(lifetime, (FeedbackWindowSettingsResharper s) => s.FeedbackGeneratorDuration, DurationCheckBox, ToggleButton.IsCheckedProperty);
+            ctx.SetBinding(lifetime, (FeedbackWindowSettingsResharper s) => s.FeedbackGeneratorSessionIDs, SessionIDCheckBox, ToggleButton.IsCheckedProperty);
         }
 
         public bool OnOk()
