@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using KaVE.Model.Events;
 using KaVE.Model.Events.CompletionEvent;
 using KaVE.Model.Names;
 using KaVE.Model.Names.CSharp;
+using KaVE.Utils.Assertion;
+using KaVE.VsFeedbackGenerator.Utils;
 using KaVE.VsFeedbackGenerator.Utils.Json;
 using NUnit.Framework;
+using AssemblyName = KaVE.Model.Names.CSharp.AssemblyName;
 
 namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json
 {
@@ -104,6 +108,20 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json
             Assert.AreEqual(IDEEvent.Trigger.Click, completionEvent.TerminatedBy);
             Assert.AreEqual(CompletionEvent.TerminationState.Cancelled, completionEvent.TerminatedAs);
 
+        }
+
+        /// <summary>
+        /// This type resolution succeeds here, but the very same resolution fails in
+        /// <see cref="TypeResolutionExceptionTest"/> when its parent project is run as a R# plugin.
+        /// </summary>
+        [Test]
+        public void TypeResolutionException()
+        {
+            const string assemblyName = "mscorlib";
+            const string typeName = "System.Collections.Generic.List`1[[KaVE.Model.Events.CompletionEvent.ProposalSelection, KaVE.Model]]";
+            Assembly assembly = Assembly.LoadWithPartialName(assemblyName);
+            Type type = assembly.GetType(typeName);
+            Assert.NotNull(type, "could not load {0} from assembly {1}.", typeName, assemblyName);
         }
 
         [Test]
