@@ -12,9 +12,9 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
         Icon = typeof (FeaturesFindingThemedIcons.SearchOptionsPage), // TODO Replace with own icon
         InitialDocking = ToolWindowInitialDocking.Bottom // TODO make it dock!
         )]
-    public class FeedbackWindowDescriptor : ToolWindowDescriptor
+    public class SessionManagerWindowDescriptor : ToolWindowDescriptor
     {
-        public FeedbackWindowDescriptor(IApplicationDescriptor applicationDescriptor)
+        public SessionManagerWindowDescriptor(IApplicationDescriptor applicationDescriptor)
             : base(applicationDescriptor) {}
     }
 }

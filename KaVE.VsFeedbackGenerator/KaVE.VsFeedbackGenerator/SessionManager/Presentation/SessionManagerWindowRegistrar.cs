@@ -6,11 +6,11 @@ using JetBrains.UI.ToolWindowManagement;
 namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
 {
     [ShellComponent]
-    internal class FeedbackWindowRegistrar
+    internal class SessionManagerWindowRegistrar
     {
-        public FeedbackWindowRegistrar(Lifetime lifetime,
+        public SessionManagerWindowRegistrar(Lifetime lifetime,
             ToolWindowManager toolWindowManager,
-            FeedbackWindowDescriptor descriptor,
+            SessionManagerWindowDescriptor descriptor,
             FeedbackView feedbackView)
         {
             var toolWindowClass = toolWindowManager.Classes[descriptor];
@@ -18,7 +18,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
                 lifetime,
                 lt =>
                 {
-                    var window = new FeedbackWindowControl(feedbackView);
+                    var window = new SessionManagerControl(feedbackView);
                     var control = new EitherControl(window);
                     return control.BindToLifetime(lt);
                 });

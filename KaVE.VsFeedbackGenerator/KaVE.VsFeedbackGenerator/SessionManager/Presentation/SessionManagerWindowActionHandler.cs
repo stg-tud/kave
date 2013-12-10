@@ -4,7 +4,7 @@ using JetBrains.UI.ToolWindowManagement;
 namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
 {
     [ActionHandler("KaVE.VsFeedbackGenerator.SessionManager")]
-    class FeedbackWindowAction : ActivateToolWindowActionHandler<FeedbackWindowDescriptor>
+    class SessionManagerWindowActionHandler : ActivateToolWindowActionHandler<SessionManagerWindowDescriptor>
     {
 
     }

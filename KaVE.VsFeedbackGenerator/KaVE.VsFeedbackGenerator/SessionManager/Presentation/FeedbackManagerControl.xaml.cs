@@ -2,18 +2,17 @@
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
 {
     /// <summary>
-    /// Interaktionslogik für FeedbackWindowControl.xaml
+    /// Interaktionslogik für SessionManagerControl.xaml
     /// </summary>
-    public partial class FeedbackWindowControl : UserControl
+    public partial class SessionManagerControl
     {
         private readonly FeedbackView _feedbackView;
 
-        public FeedbackWindowControl(FeedbackView holder)
+        public SessionManagerControl(FeedbackView holder)
         {
             _feedbackView = holder;
             DataContext = holder;
