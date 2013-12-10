@@ -26,6 +26,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
 
         public void RefreshSessions()
         {
+            // TODO fix refresh (breaks if log files are deleted)
             Sessions = _logFileManager.GetLogFileNames().Select(logFileName => new SessionView(_logFileManager, logFileName));
         }
 

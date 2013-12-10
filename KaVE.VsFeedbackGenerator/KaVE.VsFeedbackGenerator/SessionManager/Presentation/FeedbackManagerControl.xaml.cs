@@ -18,14 +18,13 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
             DataContext = holder;
             InitializeComponent();
             
-            // TODO: Maybe move to xaml
+            // TODO: Move this to XAML if someone should find out how to do this
             SessionListView.Items.SortDescriptions.Add(new SortDescription("StartDate", ListSortDirection.Descending));
             EventListView.Items.SortDescriptions.Add(new SortDescription("StartTime", ListSortDirection.Descending));
         }
 
         private void FeedbackWindowControl_OnLoaded(object sender, RoutedEventArgs e)
         {
-            // TODO check if resfresh works
             _feedbackView.RefreshSessions();
         }
 
