@@ -160,9 +160,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="SessionManager\Presentation\Options\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <ReSharperSdkTargets Condition=" '$(ReSharperSdkTargets)' == '' ">$(MSBuildExtensionsPath)\JetBrains\ReSharper.SDK\v8.0</ReSharperSdkTargets>
   </PropertyGroup>
