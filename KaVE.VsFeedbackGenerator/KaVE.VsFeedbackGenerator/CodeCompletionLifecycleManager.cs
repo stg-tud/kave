@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Windows.Forms;
 using JetBrains.ActionManagement;
 using JetBrains.Application.DataContext;
 using JetBrains.DataFlow;
@@ -14,21 +13,27 @@ using JetBrains.Util;
 using KaVE.JetBrains.Annotations;
 using KaVE.Model.Events;
 using KaVE.Utils;
-using KaVE.Utils.Assertion;
+using KaVE.Utils.IO;
 using KaVE.VsFeedbackGenerator.Generators.ReSharper;
 using KaVE.VsFeedbackGenerator.MessageBus;
 using KaVE.VsFeedbackGenerator.VsIntegration;
+using Key = System.Windows.Input.Key;
 
 namespace KaVE.VsFeedbackGenerator
 {
     internal static class LookupWindowManagerExtensions
     {
         private static readonly FieldInfo LookupWindowField =
-            typeof(LookupWindowManagerImpl).GetField("myCachedLookupWindow", BindingFlags.NonPublic | BindingFlags.Instance);
+            typeof (LookupWindowManagerImpl).GetField(
+                "myCachedLookupWindow",
+                BindingFlags.NonPublic | BindingFlags.Instance);
 
         // there's also a protected property ListBox
         private static readonly FieldInfo LookupListBox =
             typeof (LookupWindow).GetField("myListBox", BindingFlags.NonPublic | BindingFlags.Instance);
+
+        private static readonly FieldInfo LookupLifetime =
+            typeof (Lookup).GetField("myLifetime", BindingFlags.NonPublic | BindingFlags.Instance);
 
         public static CustomListBoxControl<LookupListItem> GetLookupListBox([NotNull] this ILookupWindowManager manager)
         {
@@ -51,39 +56,42 @@ namespace KaVE.VsFeedbackGenerator
         {
             return (CustomListBoxControl<LookupListItem>) LookupListBox.GetValue(lookupWindow);
         }
+
+        [NotNull]
+        public static Lifetime GetLifetime([NotNull] this ILookup lookup)
+        {
+            return (Lifetime) LookupLifetime.GetValue(lookup);
+        }
     }
 
-    [Language(typeof(CSharpLanguage))]
+    [Language(typeof (CSharpLanguage))]
     public class CodeCompletionLifecycleManager
     {
-        private static readonly FieldInfo LookupLifetime =
-            typeof(Lookup).GetField("myLifetime", BindingFlags.NonPublic | BindingFlags.Instance);
-
-        private enum LifecyclePhase
-        {
-            Unused,
-            Open,
-            Applied,
-            Cancelled
-        }
-
         private readonly ILookupWindowManager _lookupWindowManager;
         private readonly IActionManager _actionManager;
         private readonly ICodeCompletionLifecycleHandler _handler;
 
-        private LifecyclePhase _completionPhase;
         private ILookup _currentLookup;
+        private IDEEvent.Trigger? _terminationTrigger;
+        private readonly DelegateActionHandler _forceCompleteItemHandler;
+        private readonly DelegateActionHandler _completeEnterHandler;
+        private readonly DelegateActionHandler _completeTabHandler;
 
-        public CodeCompletionLifecycleManager(ILookupWindowManager lookupWindowManager, IActionManager actionManager, IIDESession session, IMessageBus messageBus)
+        public CodeCompletionLifecycleManager(ILookupWindowManager lookupWindowManager,
+            IActionManager actionManager,
+            IIDESession session,
+            IMessageBus messageBus)
         {
             _lookupWindowManager = lookupWindowManager;
             _actionManager = actionManager;
-            _completionPhase = LifecyclePhase.Unused;
             _handler = new CodeCompletionEventHandler(session, messageBus);
             _lookupWindowManager.BeforeLookupWindowShown += OnBeforeLookupShown;
             // Notes:
             // - AfterLookupWindowShown is fired immediately after the window pops up
             // - LookupWindowClosed and CurrentLookup.Closed are fired before CurrentLookup.ItemCompleted
+            _forceCompleteItemHandler = new DelegateActionHandler(() => _terminationTrigger = IDEEvent.Trigger.Typing);
+            _completeEnterHandler = new DelegateActionHandler(() => _terminationTrigger = IDEEvent.Trigger.Shortcut);
+            _completeTabHandler = new DelegateActionHandler(() => _terminationTrigger = IDEEvent.Trigger.Shortcut);
         }
 
         /// <summary>
@@ -91,8 +99,8 @@ namespace KaVE.VsFeedbackGenerator
         /// </summary>
         private void OnBeforeLookupShown(Object sender, EventArgs e)
         {
-            _completionPhase = LifecyclePhase.Open;
             _handler.OnOpened(_lookupWindowManager.CurrentLookup.Prefix);
+            _terminationTrigger = null;
             RegisterToLookupEvents();
         }
 
@@ -102,33 +110,20 @@ namespace KaVE.VsFeedbackGenerator
             _currentLookup.BeforeShownItemsUpdated += OnBeforeShownItemsUpdated;
             _currentLookup.CurrentItemChanged += OnCurrentItemChanged;
             _currentLookup.Closed += OnClosed;
-            //_currentLookup.ItemCompleted += OnItemCompleted;
+            _currentLookup.ItemCompleted += OnItemCompleted;
+
             var lookupListBox = _currentLookup.Window.GetLookupListBox();
             lookupListBox.Click += LookupListBox_OnClick;
-            //lookupListBox.VisibleChanged += lookupListBox_VisibleChanged;
-            // DO NOT FIRE
-            //lookupListBox.DataSourceChanged += LookupListBoxOnDataSourceChanged;
-            //lookupListBox.GotFocus += lookupListBox_GotFocus;
-            //lookupListBox.KeyDown += lookupListBox_KeyDown;
-            //lookupListBox.KeyUp += lookupListBox_KeyUp;
-            //lookupListBox.KeyPress += lookupListBox_KeyPress;
-            //_currentLookup.Window.Scrolled += Window_OnScrolled;
-            //lookupListBox.Scrolled += LookupListBox_OnScrolled;
-            //lookupListBox.Leave += LookupListBox_OnLeave;
-            //lookupListBox.LostFocus += LookupListBox_OnLostFocus;
-            //lookupListBox.TextChanged += LookupListBox_OnTextChanged;
 
-            var lifetime = (Lifetime)LookupLifetime.GetValue(_currentLookup);
-            _actionManager.GetExecutableAction("ForceCompleteItem").AddHandler(lifetime, new DelegateActionHandler(() => OnItemCompleted(IDEEvent.Trigger.Unknown)));
-            _actionManager.GetExecutableAction("TextControl.Enter").AddHandler(lifetime, new DelegateActionHandler(() => OnItemCompleted(IDEEvent.Trigger.Shortcut)));
-            _actionManager.GetExecutableAction("TextControl.Tab").AddHandler(lifetime, new DelegateActionHandler(() => OnItemCompleted(IDEEvent.Trigger.Shortcut)));
-            _actionManager.GetExecutableAction("TextControl.Click").AddHandler(lifetime, new DelegateActionHandler(() => OnItemCompleted(IDEEvent.Trigger.Click)));
+            var lifetime = _currentLookup.GetLifetime();
+            _actionManager.GetExecutableAction("ForceCompleteItem").AddHandler(lifetime, _forceCompleteItemHandler);
+            _actionManager.GetExecutableAction("TextControl.Enter").AddHandler(lifetime, _completeEnterHandler);
+            _actionManager.GetExecutableAction("TextControl.Tab").AddHandler(lifetime, _completeTabHandler);
         }
 
         private void LookupListBox_OnClick(object sender, EventArgs eventArgs)
         {
-            // sender is ILookupItem
-            //OnItemCompleted(IDEEvent.Trigger.Click);
+            _handler.SetTerminatedBy(IDEEvent.Trigger.Click);
         }
 
         /// <summary>
@@ -167,42 +162,49 @@ namespace KaVE.VsFeedbackGenerator
         /// </summary>
         private void OnClosed(object sender, EventArgs eventArgs)
         {
-            var terminatedAt = DateTime.Now;
-            Invoke.Later(() => OnCancellation(terminatedAt), 10000);
+            _handler.OnClosed();
 
+            if (Key.Escape.IsPressed())
+            {
+                _terminationTrigger = IDEEvent.Trigger.Shortcut;
+            }
+
+            var builder = _handler;
+            Invoke.Later(
+                () =>
+                {
+                    if (_terminationTrigger.HasValue)
+                    {
+                        builder.SetTerminatedBy(_terminationTrigger.Value);
+                    }
+                    builder.OnFinished();
+                },
+                10000);
+
+            UnregisterFromLookupEvents();
+        }
+
+        private void UnregisterFromLookupEvents()
+        {
             _currentLookup.BeforeShownItemsUpdated -= OnBeforeShownItemsUpdated;
             _currentLookup.CurrentItemChanged -= OnCurrentItemChanged;
             _currentLookup.Closed -= OnClosed;
+            _currentLookup.ItemCompleted -= OnItemCompleted;
+
+            var lookupListBox = _currentLookup.Window.GetLookupListBox();
+            lookupListBox.Click -= LookupListBox_OnClick;
+
+            _actionManager.GetExecutableAction("ForceCompleteItem").RemoveHandler(_forceCompleteItemHandler);
+            _actionManager.GetExecutableAction("TextControl.Enter").RemoveHandler(_completeEnterHandler);
+            _actionManager.GetExecutableAction("TextControl.Tab").RemoveHandler(_completeTabHandler);
         }
 
-        /// <summary>
-        /// Invoked delayed from <see cref="OnClosed"/>. When the <see cref="_completionPhase"/> is still
-        /// <see cref="LifecyclePhase.Open"/>, it assumes that the lookup was cancelled.
-        /// </summary>
-        /// <param name="cancellationTime"></param>
-        private void OnCancellation(DateTime cancellationTime)
+        private void OnItemCompleted(object sender,
+            ILookupItem lookupitem,
+            Suffix suffix,
+            LookupItemInsertType lookupiteminserttype)
         {
-            lock (_handler)
-            {
-                if (_completionPhase == LifecyclePhase.Open)
-                {
-                    _handler.OnCancellation(cancellationTime);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Invoked when the completion is terminated by application of an item. Invocation occurs after that of
-        /// <see cref="OnClosed"/>.
-        /// </summary>
-        private void OnItemCompleted(IDEEvent.Trigger trigger)
-        {
-            lock (_handler)
-            {
-                Asserts.Not(_completionPhase == LifecyclePhase.Cancelled, "event was cancelled earlier");
-                _completionPhase = LifecyclePhase.Applied;
-                _handler.OnApplication(DateTime.Now, _currentLookup.Selection.Item);
-            }
+            _handler.OnApplication(lookupitem);
         }
     }
 

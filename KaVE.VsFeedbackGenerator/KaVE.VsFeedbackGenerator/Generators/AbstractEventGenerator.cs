@@ -43,8 +43,9 @@ namespace KaVE.VsFeedbackGenerator.Generators
         {
             get
             {
-                var leftMouseButtonPressed = Invoke.OnSTA(() => Mouse.LeftButton == MouseButtonState.Pressed);
-                return leftMouseButtonPressed ? IDEEvent.Trigger.Click : IDEEvent.Trigger.Unknown;
+                // we cannot detect mouse click as a trigger, since
+                // mouse-up is what actually triggers the action
+                return IDEEvent.Trigger.Unknown;
             }
         }
 

@@ -4,11 +4,9 @@ using JetBrains.ReSharper.Feature.Services.Lookup;
 using KaVE.Model.Events;
 using KaVE.Model.Events.CompletionEvent;
 using KaVE.Utils.Assertion;
-using KaVE.Utils.IO;
 using KaVE.VsFeedbackGenerator.MessageBus;
 using KaVE.VsFeedbackGenerator.Utils;
 using KaVE.VsFeedbackGenerator.VsIntegration;
-using Key = System.Windows.Input.Key;
 
 namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
 {
@@ -36,31 +34,42 @@ namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
         void OnSelectionChanged(ILookupItem selectedItem);
 
         /// <summary>
-        /// Invoked when the code completion is cancelled.
+        /// Called when the completion is closed. This happens for every completion, regardless of whether is is
+        /// applied or cancelled. This is invoked before <see cref="OnApplication"/>.
         /// </summary>
-        /// <param name="timeOfCancellation">The cancellation time. May be in the past.</param>
-        void OnCancellation(DateTime timeOfCancellation);
+        void OnClosed();
 
         /// <summary>
         /// Invoked when the code completion is closed due to the application of an item.
         /// </summary>
-        /// <param name="timeOfApplication">The application time. May be in the past.</param>
         /// <param name="appliedItem">The item that is applied.</param>
-        void OnApplication(DateTime timeOfApplication, ILookupItem appliedItem);
+        void OnApplication(ILookupItem appliedItem);
+
+        /// <summary>
+        /// Maybe invoked with additional information about how the event was terminated. Invocation occurs after
+        /// <see cref="OnClosed"/> and <see cref="OnApplication"/>.
+        /// </summary>
+        /// <param name="trigger">The kind of trigger that terminated the event</param>
+        void SetTerminatedBy(IDEEvent.Trigger trigger);
+
+        /// <summary>
+        /// Returns the created event.
+        /// </summary>
+        /// <returns>The completion event constructed by this builder</returns>
+        void OnFinished();
     }
 
     internal class CodeCompletionEventHandler : AbstractEventGenerator, ICodeCompletionLifecycleHandler
     {
-        private const Key EnterKey = Key.Enter;
-        private const Key EscapeKey = Key.Escape;
-
         private CompletionEvent _event;
         private bool _beforeShownCalled;
+        private bool _terminated;
 
         public CodeCompletionEventHandler(IIDESession session, IMessageBus messageBus)
             : base(session, messageBus)
         {
             _beforeShownCalled = false;
+            _terminated = false;
         }
 
         public void OnOpened(string prefix)
@@ -84,36 +93,36 @@ namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
 
         public void OnPrefixChanged(string newPrefix)
         {
-            FireCompletionEvent(CompletionEvent.TerminationState.Filtered, DateTime.Now);
+            // TODO fix this
+            //FireCompletionEvent(CompletionEvent.TerminationState.Filtered, DateTime.Now);
         }
 
-        public void OnCancellation(DateTime timeOfCancellation)
+        public void OnClosed()
         {
-            FireCompletionEvent(CompletionEvent.TerminationState.Cancelled, timeOfCancellation);
+            _event.TerminatedAs = CompletionEvent.TerminationState.Cancelled;
+            _event.TerminatedAt = DateTime.Now;
+            _event.TerminatedBy = IDEEvent.Trigger.Unknown;
         }
 
-        public void OnApplication(DateTime timeOfApplication, ILookupItem appliedItem)
+        public void OnApplication(ILookupItem appliedItem)
         {
-            FireCompletionEvent(CompletionEvent.TerminationState.Applied, timeOfApplication);
+            _event.TerminatedAs = CompletionEvent.TerminationState.Applied;
+            _event.TerminatedBy = IDEEvent.Trigger.Typing;
+            _terminated = true;
         }
 
-        private void FireCompletionEvent(CompletionEvent.TerminationState state, DateTime finishedAt)
+        public void SetTerminatedBy(IDEEvent.Trigger trigger)
         {
-            _event.TerminatedAt = finishedAt;
-            _event.TerminatedBy = CompletionTerminator;
-            _event.TerminatedAs = state;
+            _event.TerminatedBy = trigger;
+        }
+
+        public void OnFinished()
+        {
             Asserts.That(_beforeShownCalled, "beforeShown not called");
+            Asserts.That(
+                _event.TerminatedAs == CompletionEvent.TerminationState.Cancelled || _terminated,
+                "event not terminated");
             Fire(_event);
-        }
-
-        private static IDEEvent.Trigger CompletionTerminator
-        {
-            get
-            {
-                return EnterKey.IsPressed() || EscapeKey.IsPressed()
-                    ? IDEEvent.Trigger.Typing
-                    : IDEEvent.Trigger.Click;
-            }
         }
     }
 }

@@ -40,7 +40,9 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.ReSharper
             handler.OnOpened("");
             handler.SetLookupItems(new List<ILookupItem> {lookupItem});
             handler.OnSelectionChanged(lookupItem);
-            handler.OnApplication(DateTime.Now, lookupItem);
+            handler.OnClosed();
+            handler.OnApplication(lookupItem);
+            handler.OnFinished();
 
             Assert.AreEqual(1, _publishedEvents.Count);
             var ce = _publishedEvents.First();
@@ -54,9 +56,11 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.ReSharper
             var handler = new CodeCompletionEventHandler(_testSession, _mockMessageBus.Object);
             var lookupItem = ReSharperMockUtils.MockLookupItem();
 
+            handler.OnOpened("");
             handler.SetLookupItems(new List<ILookupItem> { lookupItem });
             handler.OnSelectionChanged(lookupItem);
-            handler.OnCancellation(DateTime.Now);
+            handler.OnClosed();
+            handler.OnFinished();
 
             Assert.AreEqual(1, _publishedEvents.Count);
             var ce = _publishedEvents.First();
