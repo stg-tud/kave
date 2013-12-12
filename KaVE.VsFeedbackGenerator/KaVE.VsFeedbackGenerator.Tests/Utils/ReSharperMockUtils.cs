@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using JetBrains.Application;
 using JetBrains.Metadata.Utils;
 using JetBrains.ProjectModel;
@@ -21,10 +22,37 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
 {
     static class ReSharperMockUtils
     {
+        private static Random _random = new Random();
+
+        private static char GetRandomUpperCaseLetter()
+        {
+            var offset = _random.Next(0, 26);
+            return (char) ('A' + offset);
+        }
+
+        private static char GetRandomLowerCaseLetter()
+        {
+            var offset = _random.Next(0, 26);
+            return (char)('a' + offset);
+        }
+
+        private static string GetRandomName()
+        {
+            var lengthOfName = _random.Next(2, 6);
+            var name = GetRandomUpperCaseLetter().ToString(CultureInfo.InvariantCulture);
+            for (int i = 0; i < lengthOfName; i++)
+            {
+                name += GetRandomLowerCaseLetter();
+            }
+            return name;
+        }
+
         internal static ILookupItem MockLookupItem()
         {
             var lookupItem = new Mock<IDeclaredElementLookupItem>();
-            var declaredElementInstance = new DeclaredElementInstance(MockTypeElement("F", "A", "1.2.3.4"), new SubstitutionImpl());
+            var typeName = GetRandomName();
+            var assemblyName = GetRandomName();
+            var declaredElementInstance = new DeclaredElementInstance(MockTypeElement(typeName, assemblyName, "1.2.3.4"), new SubstitutionImpl());
             lookupItem.Setup(i => i.PreferredDeclaredElement).Returns(declaredElementInstance);
             return lookupItem.Object;
         }

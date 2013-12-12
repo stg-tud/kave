@@ -65,17 +65,18 @@ namespace KaVE.VsFeedbackGenerator
     }
 
     [Language(typeof (CSharpLanguage))]
-    public class CodeCompletionLifecycleManager
+    public class CodeCompletionLifecycleManager : IDisposable
     {
         private readonly ILookupWindowManager _lookupWindowManager;
         private readonly IActionManager _actionManager;
         private readonly ICodeCompletionLifecycleHandler _handler;
-
-        private ILookup _currentLookup;
-        private IDEEvent.Trigger? _terminationTrigger;
         private readonly DelegateActionHandler _forceCompleteItemHandler;
         private readonly DelegateActionHandler _completeEnterHandler;
         private readonly DelegateActionHandler _completeTabHandler;
+
+        private ILookup _currentLookup;
+        private IDEEvent.Trigger? _terminationTrigger;
+        private ScheduledAction _finishLifecycleAction = ScheduledAction.NoOp;
 
         public CodeCompletionLifecycleManager(ILookupWindowManager lookupWindowManager,
             IActionManager actionManager,
@@ -85,13 +86,11 @@ namespace KaVE.VsFeedbackGenerator
             _lookupWindowManager = lookupWindowManager;
             _actionManager = actionManager;
             _handler = new CodeCompletionEventHandler(session, messageBus);
-            _lookupWindowManager.BeforeLookupWindowShown += OnBeforeLookupShown;
-            // Notes:
-            // - AfterLookupWindowShown is fired immediately after the window pops up
-            // - LookupWindowClosed and CurrentLookup.Closed are fired before CurrentLookup.ItemCompleted
             _forceCompleteItemHandler = new DelegateActionHandler(() => _terminationTrigger = IDEEvent.Trigger.Typing);
             _completeEnterHandler = new DelegateActionHandler(() => _terminationTrigger = IDEEvent.Trigger.Shortcut);
             _completeTabHandler = new DelegateActionHandler(() => _terminationTrigger = IDEEvent.Trigger.Shortcut);
+
+            _lookupWindowManager.BeforeLookupWindowShown += OnBeforeLookupShown;
         }
 
         /// <summary>
@@ -99,6 +98,7 @@ namespace KaVE.VsFeedbackGenerator
         /// </summary>
         private void OnBeforeLookupShown(Object sender, EventArgs e)
         {
+            FinishLifecycle();
             _handler.OnOpened(_lookupWindowManager.CurrentLookup.Prefix);
             _terminationTrigger = null;
             RegisterToLookupEvents();
@@ -106,24 +106,26 @@ namespace KaVE.VsFeedbackGenerator
 
         private void RegisterToLookupEvents()
         {
+            // Event handlers are registered in order of the actual events's occurence
+
+            // _lookupWindowManager.AfterLookupWindowShown is fired immediately after the window pops up,
+            // i.e., after this method finished and before any other event is fired.
+
             _currentLookup = _lookupWindowManager.CurrentLookup;
             _currentLookup.BeforeShownItemsUpdated += OnBeforeShownItemsUpdated;
             _currentLookup.CurrentItemChanged += OnCurrentItemChanged;
-            _currentLookup.Closed += OnClosed;
-            _currentLookup.ItemCompleted += OnItemCompleted;
 
-            var lookupListBox = _currentLookup.Window.GetLookupListBox();
-            lookupListBox.Click += LookupListBox_OnClick;
-
+            // R# actions that lead to the completion being finished
             var lifetime = _currentLookup.GetLifetime();
             _actionManager.GetExecutableAction("ForceCompleteItem").AddHandler(lifetime, _forceCompleteItemHandler);
             _actionManager.GetExecutableAction("TextControl.Enter").AddHandler(lifetime, _completeEnterHandler);
             _actionManager.GetExecutableAction("TextControl.Tab").AddHandler(lifetime, _completeTabHandler);
-        }
+            var lookupListBox = _currentLookup.Window.GetLookupListBox();
+            lookupListBox.MouseDown += LookupListBox_OnMouseDown;
 
-        private void LookupListBox_OnClick(object sender, EventArgs eventArgs)
-        {
-            _handler.SetTerminatedBy(IDEEvent.Trigger.Click);
+            _currentLookup.Closed += OnClosed;
+            // _lookupWindowManager.LookupWindowClosed is fired here
+            _currentLookup.ItemCompleted += OnItemCompleted;
         }
 
         /// <summary>
@@ -142,6 +144,7 @@ namespace KaVE.VsFeedbackGenerator
         private void OnCurrentItemChanged(object sender, EventArgs eventArgs)
         {
             _handler.OnSelectionChanged(_lookupWindowManager.CurrentLookup.Selection.Item);
+            _terminationTrigger = null;
         }
 
         /// <summary>
@@ -152,6 +155,16 @@ namespace KaVE.VsFeedbackGenerator
         {
             // TODO test wheather this is actually called on delete!
             _handler.OnPrefixChanged(_lookupWindowManager.CurrentLookup.Prefix);
+            _terminationTrigger = null;
+        }
+
+        /// <summary>
+        /// MouseDown is fired before Closed, as opposed to Click. Therefore, we listen on MouseDown here and assume
+        /// that it will be followed by a MouseUp and, thereby, terminate the completion.
+        /// </summary>
+        private void LookupListBox_OnMouseDown(object sender, EventArgs eventArgs)
+        {
+            _terminationTrigger = IDEEvent.Trigger.Click;
         }
 
         /// <summary>
@@ -162,26 +175,30 @@ namespace KaVE.VsFeedbackGenerator
         /// </summary>
         private void OnClosed(object sender, EventArgs eventArgs)
         {
+            CaptureTerminationTrigger();
+
             _handler.OnClosed();
 
-            if (Key.Escape.IsPressed())
-            {
-                _terminationTrigger = IDEEvent.Trigger.Shortcut;
-            }
-
-            var builder = _handler;
-            Invoke.Later(
+            _finishLifecycleAction = Invoke.Later(
                 () =>
                 {
                     if (_terminationTrigger.HasValue)
                     {
-                        builder.SetTerminatedBy(_terminationTrigger.Value);
+                        _handler.SetTerminatedBy(_terminationTrigger.Value);
                     }
-                    builder.OnFinished();
+                    _handler.OnFinished();
                 },
                 10000);
 
             UnregisterFromLookupEvents();
+        }
+
+        private void CaptureTerminationTrigger()
+        {
+            if (Key.Escape.IsPressed())
+            {
+                _terminationTrigger = IDEEvent.Trigger.Shortcut;
+            }
         }
 
         private void UnregisterFromLookupEvents()
@@ -192,7 +209,7 @@ namespace KaVE.VsFeedbackGenerator
             _currentLookup.ItemCompleted -= OnItemCompleted;
 
             var lookupListBox = _currentLookup.Window.GetLookupListBox();
-            lookupListBox.Click -= LookupListBox_OnClick;
+            lookupListBox.MouseDown -= LookupListBox_OnMouseDown;
 
             _actionManager.GetExecutableAction("ForceCompleteItem").RemoveHandler(_forceCompleteItemHandler);
             _actionManager.GetExecutableAction("TextControl.Enter").RemoveHandler(_completeEnterHandler);
@@ -205,6 +222,16 @@ namespace KaVE.VsFeedbackGenerator
             LookupItemInsertType lookupiteminserttype)
         {
             _handler.OnApplication(lookupitem);
+        }
+
+        public void Dispose()
+        {
+            FinishLifecycle();
+        }
+
+        private void FinishLifecycle()
+        {
+            _finishLifecycleAction.RunNow();
         }
     }
 

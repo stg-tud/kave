@@ -80,7 +80,6 @@ namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
 
         public void SetLookupItems(IEnumerable<ILookupItem> items)
         {
-            // sometimes, the lookup is empty before this call
             // TODO test whether this is sometimes not called
             _beforeShownCalled = true;
             _event.ProposalCollection = items.ToProposalCollection();
