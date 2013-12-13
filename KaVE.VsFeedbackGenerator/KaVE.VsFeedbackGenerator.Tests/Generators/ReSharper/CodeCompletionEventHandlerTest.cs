@@ -84,6 +84,38 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.ReSharper
             Assert.AreEqual(CompletionEvent.TerminationState.Cancelled, ce.TerminatedAs);
         }
 
+        [Test]
+        public void ShouldFireEventOnFilter()
+        {
+            var handler = new CodeCompletionEventHandler(_testSession, _mockMessageBus.Object);
+            var lookupItems = MockLookupItemList(0);
+
+            handler.OnOpened("");
+            handler.SetLookupItems(lookupItems);
+            handler.OnPrefixChanged("a");
+
+            var ce = GetSinglePublishedCompletionEvent();
+            Assert.AreEqual(CompletionEvent.TerminationState.Filtered, ce.TerminatedAs);
+            Assert.AreEqual(IDEEvent.Trigger.Automatic, ce.TerminatedBy);
+        }
+
+        [Test]
+        public void ShouldCreateFollowupEventAfterFiltering()
+        {
+            var handler = new CodeCompletionEventHandler(_testSession, _mockMessageBus.Object);
+            var lookupItems = MockLookupItemList(0);
+
+            handler.OnOpened("");
+            handler.SetLookupItems(lookupItems);
+            handler.OnPrefixChanged("a");
+            handler.OnClosed();
+            handler.OnFinished();
+
+            var ce = GetLastPublishedCompletionEvent();
+            Assert.AreEqual(IDEEvent.Trigger.Automatic, ce.TriggeredBy);
+            Assert.AreEqual("a", ce.Prefix);
+        }
+
         private IList<ILookupItem> MockLookupItemList(int numberOfItems)
         {
             IList<ILookupItem> result = new List<ILookupItem>();
@@ -97,8 +129,13 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.ReSharper
         private CompletionEvent GetSinglePublishedCompletionEvent()
         {
             Assert.AreEqual(1, _publishedEvents.Count);
-            var @event = _publishedEvents.First();
-            Assert.IsInstanceOf(typeof(CompletionEvent), @event);
+            return GetLastPublishedCompletionEvent();
+        }
+
+        private CompletionEvent GetLastPublishedCompletionEvent()
+        {
+            var @event = _publishedEvents.Last();
+            Assert.IsInstanceOf(typeof (CompletionEvent), @event);
             return @event as CompletionEvent;
         }
     }

@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using JetBrains.ActionManagement;
+using JetBrains.Application;
 using JetBrains.Application.DataContext;
 using JetBrains.DataFlow;
 using JetBrains.ReSharper.Feature.Services.Lookup;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
+using JetBrains.TextControl;
 using JetBrains.UI.Controls;
 using JetBrains.Util;
 using KaVE.JetBrains.Annotations;
@@ -68,27 +71,26 @@ namespace KaVE.VsFeedbackGenerator
     public class CodeCompletionLifecycleManager : IDisposable
     {
         private readonly ILookupWindowManager _lookupWindowManager;
+        private readonly ITextControlManager _textControlManager;
         private readonly IActionManager _actionManager;
         private readonly ICodeCompletionLifecycleHandler _handler;
-        private readonly DelegateActionHandler _forceCompleteItemHandler;
-        private readonly DelegateActionHandler _completeEnterHandler;
-        private readonly DelegateActionHandler _completeTabHandler;
 
         private ILookup _currentLookup;
         private IDEEvent.Trigger? _terminationTrigger;
         private ScheduledAction _finishLifecycleAction = ScheduledAction.NoOp;
+        private string _initialPrefix;
+        private string _currentPrefix;
 
         public CodeCompletionLifecycleManager(ILookupWindowManager lookupWindowManager,
+            ITextControlManager textControlManager,
             IActionManager actionManager,
             IIDESession session,
             IMessageBus messageBus)
         {
             _lookupWindowManager = lookupWindowManager;
+            _textControlManager = textControlManager;
             _actionManager = actionManager;
             _handler = new CodeCompletionEventHandler(session, messageBus);
-            _forceCompleteItemHandler = new DelegateActionHandler(() => _terminationTrigger = IDEEvent.Trigger.Typing);
-            _completeEnterHandler = new DelegateActionHandler(() => _terminationTrigger = IDEEvent.Trigger.Shortcut);
-            _completeTabHandler = new DelegateActionHandler(() => _terminationTrigger = IDEEvent.Trigger.Shortcut);
 
             _lookupWindowManager.BeforeLookupWindowShown += OnBeforeLookupShown;
         }
@@ -99,27 +101,34 @@ namespace KaVE.VsFeedbackGenerator
         private void OnBeforeLookupShown(Object sender, EventArgs e)
         {
             FinishLifecycle();
-            _handler.OnOpened(_lookupWindowManager.CurrentLookup.Prefix);
+            _initialPrefix = _lookupWindowManager.CurrentLookup.Prefix;
+            _currentPrefix = _initialPrefix;
+            _handler.OnOpened(_initialPrefix);
             _terminationTrigger = null;
             RegisterToLookupEvents();
         }
 
         private void RegisterToLookupEvents()
         {
+            _currentLookup = _lookupWindowManager.CurrentLookup;
+            var lifetime = _currentLookup.GetLifetime();
+
             // Event handlers are registered in order of the actual events's occurence
 
             // _lookupWindowManager.AfterLookupWindowShown is fired immediately after the window pops up,
             // i.e., after this method finished and before any other event is fired.
-
-            _currentLookup = _lookupWindowManager.CurrentLookup;
             _currentLookup.BeforeShownItemsUpdated += OnBeforeShownItemsUpdated;
+
             _currentLookup.CurrentItemChanged += OnCurrentItemChanged;
+            _textControlManager.AddTypingHandler(lifetime, OnType, 50);
 
             // R# actions that lead to the completion being finished
-            var lifetime = _currentLookup.GetLifetime();
-            _actionManager.GetExecutableAction("ForceCompleteItem").AddHandler(lifetime, _forceCompleteItemHandler);
-            _actionManager.GetExecutableAction("TextControl.Enter").AddHandler(lifetime, _completeEnterHandler);
-            _actionManager.GetExecutableAction("TextControl.Tab").AddHandler(lifetime, _completeTabHandler);
+            _actionManager.GetExecutableAction("ForceCompleteItem").AddHandler(lifetime, new DelegateActionHandler(() => _terminationTrigger = IDEEvent.Trigger.Typing));
+            _actionManager.GetExecutableAction("TextControl.Enter").AddHandler(lifetime, new DelegateActionHandler(() => _terminationTrigger = IDEEvent.Trigger.Shortcut));
+            _actionManager.GetExecutableAction("TextControl.Tab").AddHandler(lifetime, new DelegateActionHandler(() => _terminationTrigger = IDEEvent.Trigger.Shortcut));
+            _actionManager.GetExecutableAction("TextControl.Backspace").AddHandler(lifetime, new DelegateActionHandler(CheckPrefixChange));
+            _actionManager.GetExecutableAction("TextControl.Left").AddHandler(lifetime, new DelegateActionHandler(CheckPrefixChange));
+            _actionManager.GetExecutableAction("TextControl.Right").AddHandler(lifetime, new DelegateActionHandler(CheckPrefixChange));
             var lookupListBox = _currentLookup.Window.GetLookupListBox();
             lookupListBox.MouseDown += LookupListBox_OnMouseDown;
 
@@ -148,13 +157,29 @@ namespace KaVE.VsFeedbackGenerator
         }
 
         /// <summary>
+        /// Invoked when a character is typed into the text control for which a completion is active.
+        /// </summary>
+        private void OnType(ITypingContext typingContext)
+        {
+            // make sure the lookup processes the input before we do.
+            typingContext.CallNext();
+
+            CheckPrefixChange();
+        }
+
+        /// <summary>
         /// Invoked when the typed prefix changes, either because another character is typed or because a character
         /// is deleted.
         /// </summary>
         private void CheckPrefixChange()
         {
-            // TODO test wheather this is actually called on delete!
-            _handler.OnPrefixChanged(_lookupWindowManager.CurrentLookup.Prefix);
+            var newPrefix = _currentLookup.Prefix;
+            if (_currentPrefix != newPrefix)
+            {
+                _currentPrefix = newPrefix;
+                _handler.OnPrefixChanged(newPrefix);
+                // TODO find a way to capture shown items
+            }
             _terminationTrigger = null;
         }
 
@@ -210,10 +235,6 @@ namespace KaVE.VsFeedbackGenerator
 
             var lookupListBox = _currentLookup.Window.GetLookupListBox();
             lookupListBox.MouseDown -= LookupListBox_OnMouseDown;
-
-            _actionManager.GetExecutableAction("ForceCompleteItem").RemoveHandler(_forceCompleteItemHandler);
-            _actionManager.GetExecutableAction("TextControl.Enter").RemoveHandler(_completeEnterHandler);
-            _actionManager.GetExecutableAction("TextControl.Tab").RemoveHandler(_completeTabHandler);
         }
 
         private void OnItemCompleted(object sender,
@@ -246,13 +267,13 @@ namespace KaVE.VsFeedbackGenerator
 
         public bool Update(IDataContext context, ActionPresentation presentation, DelegateUpdate nextUpdate)
         {
-            return true;
+            return nextUpdate();
         }
 
         public void Execute(IDataContext context, DelegateExecute nextExecute)
         {
-            _action();
             nextExecute();
+            _action();
         }
     }
 }

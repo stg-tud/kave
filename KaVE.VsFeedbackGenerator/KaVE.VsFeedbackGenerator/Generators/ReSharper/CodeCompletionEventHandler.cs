@@ -92,8 +92,14 @@ namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
 
         public void OnPrefixChanged(string newPrefix)
         {
-            // TODO fix this
-            //FireCompletionEvent(CompletionEvent.TerminationState.Filtered, DateTime.Now);
+            _event.TerminatedAs = CompletionEvent.TerminationState.Filtered;
+            _event.TerminatedAt = DateTime.Now;
+            _event.TerminatedBy = IDEEvent.Trigger.Automatic;
+            Fire(_event);
+
+            _event = Create<CompletionEvent>();
+            _event.Prefix = newPrefix;
+            _event.TriggeredBy = IDEEvent.Trigger.Automatic;
         }
 
         public void OnClosed()
