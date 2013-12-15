@@ -68,7 +68,7 @@
                               x:FieldModifier="private"
                               ItemsSource="{Binding Sessions}"
                               SelectionMode="Extended"
-                              SelectionChanged="SessionListView_OnSelectionChanged">
+                              SelectionChanged="SessionListView_OnSelectionChanged" >
                         <ListView.View>
                             <GridView>
                                 <GridViewColumn Header="Sessionbeginn"

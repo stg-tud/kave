@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
-using System.IO;
 using System.Linq;
 using JetBrains.Annotations;
 using JetBrains.Application;
@@ -13,20 +14,22 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
     public sealed class FeedbackView : INotifyPropertyChanged
     {
         private readonly JsonLogFileManager _logFileManager;
-        private readonly IList<SessionView> _sessions;
-        private readonly IList<SessionView> _selectedSessions;
+        private readonly ObservableCollection<SessionView> _sessions;
+        private readonly ObservableCollection<SessionView> _selectedSessions;
+
+        public SessionView SelectedSession { get; set; }
 
         public FeedbackView(JsonLogFileManager logFileManager)
         {
             _logFileManager = logFileManager;
-            _sessions = new List<SessionView>();
-            _selectedSessions = new List<SessionView>();
+            _sessions = new ObservableCollection<SessionView>();
+            _selectedSessions = new ObservableCollection<SessionView>();
+
             RefreshSessions();
         }
 
         public void RefreshSessions()
         {
-            // TODO fix refresh (breaks if log files are deleted)
             Sessions = _logFileManager.GetLogFileNames().Select(logFileName => new SessionView(_logFileManager, logFileName));
         }
 
@@ -41,7 +44,6 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             {
                 _sessions.Clear();
                 _sessions.AddRange(value);
-                OnPropertyChanged("Sessions");
             }
         }
 
