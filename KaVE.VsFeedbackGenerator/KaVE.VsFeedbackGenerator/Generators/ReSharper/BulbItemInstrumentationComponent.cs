@@ -10,7 +10,7 @@ using KaVE.Utils.Assertion;
 using KaVE.VsFeedbackGenerator.MessageBus;
 using KaVE.VsFeedbackGenerator.VsIntegration;
 
-namespace KaVE.VsFeedbackGenerator
+namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
 {
     [SolutionComponent]
     internal class BulbItemInstrumentationComponent : IBulbItemsProvider

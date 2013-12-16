@@ -2,11 +2,10 @@
 using JetBrains.ActionManagement;
 using JetBrains.Application;
 using JetBrains.DataFlow;
-using KaVE.VsFeedbackGenerator.Generators.ReSharper;
 using KaVE.VsFeedbackGenerator.MessageBus;
 using KaVE.VsFeedbackGenerator.VsIntegration;
 
-namespace KaVE.VsFeedbackGenerator
+namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
 {
     [ShellComponent]
     internal class ActionEventInstrumentationComponent

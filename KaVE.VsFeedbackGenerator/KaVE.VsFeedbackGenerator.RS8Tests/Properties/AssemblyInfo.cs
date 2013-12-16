@@ -22,7 +22,7 @@ public class KaVE_VsFeedbackGenerator_Rs8TestsAssembly : ReSharperTestEnvironmen
         // Test assembly
         yield return Assembly.GetExecutingAssembly();
 
-        yield return typeof (BulbItemInstrumentationComponent).Assembly;
+        yield return typeof (AboutAction).Assembly;
     }
 
     public override void SetUp()

@@ -2,11 +2,10 @@
 using System.Reflection;
 using JetBrains.ReSharper.Intentions.Extensibility;
 using JetBrains.UI.BulbMenu;
-using KaVE.VsFeedbackGenerator.Generators.ReSharper;
 using KaVE.VsFeedbackGenerator.MessageBus;
 using KaVE.VsFeedbackGenerator.VsIntegration;
 
-namespace KaVE.VsFeedbackGenerator
+namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
 {
     internal static class BulbItemInstrumentationExtensions
     {
