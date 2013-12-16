@@ -63,6 +63,8 @@
     <Compile Include="CodeCompletion\CodeCompletionLifecycleManager.cs" />
     <Compile Include="CodeCompletion\DelegateActionHandler.cs" />
     <Compile Include="CodeCompletion\LookupWindowManagerExtensions.cs" />
+    <Compile Include="Generators\EventLogger.cs" />
+    <Compile Include="Generators\IEventMergeStrategy.cs" />
     <Compile Include="Generators\ReSharper\ActionEventInstrumentationComponent.cs" />
     <Compile Include="Generators\ReSharper\BulbItemInstrumentationComponent.cs" />
     <Compile Include="Generators\ReSharper\BulbItemInstrumentationExtensions.cs" />
@@ -83,7 +85,6 @@
     <Compile Include="Generators\VisualStudio\TaskListEventGenerator.cs" />
     <Compile Include="Generators\VisualStudio\TextEditorEventGenerator.cs" />
     <Compile Include="Generators\VisualStudio\WindowEventGenerator.cs" />
-    <Compile Include="Initializer.cs" />
     <Compile Include="MessageBus\IMessageBus.cs" />
     <Compile Include="MessageBus\TinyMessengerMessageBus.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
