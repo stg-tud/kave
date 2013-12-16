@@ -111,6 +111,7 @@ namespace KaVE.VsFeedbackGenerator.CodeCompletion
                 var lookupItems = _lookupWindowManager.GetDisplayedLookupItems();
                 _handler.OnPrefixChanged(newPrefix, lookupItems);
                 _currentPrefix = newPrefix;
+                _currentSelection = null;
             }
             _terminationTrigger = null;
         }

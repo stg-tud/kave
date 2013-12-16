@@ -47,6 +47,16 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
             return name;
         }
 
+        public static IList<ILookupItem> MockLookupItemList(int numberOfItems)
+        {
+            IList<ILookupItem> result = new List<ILookupItem>();
+            for (var i = 0; i < numberOfItems; i++)
+            {
+                result.Add(MockLookupItem());
+            }
+            return result;
+        }
+
         internal static ILookupItem MockLookupItem()
         {
             var lookupItem = new Mock<IDeclaredElementLookupItem>();

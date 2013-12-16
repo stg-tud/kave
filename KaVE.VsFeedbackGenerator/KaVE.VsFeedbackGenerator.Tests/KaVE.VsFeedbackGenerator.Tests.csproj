@@ -74,6 +74,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Generators\Merging\CompletionEventMergingStrategyTest.cs" />
     <Compile Include="Generators\ReSharper\CodeCompletionEventHandlerTest.cs" />
     <Compile Include="Generators\TestIDESession.cs" />
     <Compile Include="MessageBus\TinyMessengerMessageChannelTest.cs" />

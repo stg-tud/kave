@@ -4,7 +4,7 @@ namespace KaVE.VsFeedbackGenerator.Generators
 {
     interface IEventMergeStrategy
     {
-        bool Mergable(IDEEvent event1, IDEEvent event2);
-        IDEEvent Merge(IDEEvent event1, IDEEvent event2);
+        bool Mergable(IDEEvent @event, IDEEvent subsequentEvent);
+        IDEEvent Merge(IDEEvent @event, IDEEvent subsequentEvent);
     }
 }
