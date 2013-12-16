@@ -1,19 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Reflection;
 using JetBrains.ActionManagement;
-using JetBrains.Application;
-using JetBrains.Application.DataContext;
-using JetBrains.DataFlow;
 using JetBrains.ReSharper.Feature.Services.Lookup;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
-using JetBrains.TextControl;
-using JetBrains.UI.Controls;
 using JetBrains.Util;
-using KaVE.JetBrains.Annotations;
 using KaVE.Model.Events;
 using KaVE.Utils;
 using KaVE.Utils.IO;
@@ -22,56 +14,12 @@ using KaVE.VsFeedbackGenerator.MessageBus;
 using KaVE.VsFeedbackGenerator.VsIntegration;
 using Key = System.Windows.Input.Key;
 
-namespace KaVE.VsFeedbackGenerator
+namespace KaVE.VsFeedbackGenerator.CodeCompletion
 {
-    internal static class LookupWindowManagerExtensions
-    {
-        private static readonly FieldInfo LookupWindowField =
-            typeof (LookupWindowManagerImpl).GetField(
-                "myCachedLookupWindow",
-                BindingFlags.NonPublic | BindingFlags.Instance);
-
-        // there's also a protected property ListBox
-        private static readonly FieldInfo LookupListBox =
-            typeof (LookupWindow).GetField("myListBox", BindingFlags.NonPublic | BindingFlags.Instance);
-
-        private static readonly FieldInfo LookupLifetime =
-            typeof (Lookup).GetField("myLifetime", BindingFlags.NonPublic | BindingFlags.Instance);
-
-        public static CustomListBoxControl<LookupListItem> GetLookupListBox([NotNull] this ILookupWindowManager manager)
-        {
-            var lookupWindow = manager.GetLookupWindow();
-            if (lookupWindow != null)
-            {
-                return lookupWindow.GetLookupListBox();
-            }
-            return null;
-        }
-
-        [CanBeNull]
-        private static ILookupWindow GetLookupWindow([NotNull] this ILookupWindowManager manager)
-        {
-            return (ILookupWindow) LookupWindowField.GetValue(manager);
-        }
-
-        [NotNull]
-        public static CustomListBoxControl<LookupListItem> GetLookupListBox([NotNull] this ILookupWindow lookupWindow)
-        {
-            return (CustomListBoxControl<LookupListItem>) LookupListBox.GetValue(lookupWindow);
-        }
-
-        [NotNull]
-        public static Lifetime GetLifetime([NotNull] this ILookup lookup)
-        {
-            return (Lifetime) LookupLifetime.GetValue(lookup);
-        }
-    }
-
     [Language(typeof (CSharpLanguage))]
     public class CodeCompletionLifecycleManager : IDisposable
     {
         private readonly ILookupWindowManager _lookupWindowManager;
-        private readonly ITextControlManager _textControlManager;
         private readonly IActionManager _actionManager;
         private readonly ICodeCompletionLifecycleHandler _handler;
 
@@ -80,15 +28,14 @@ namespace KaVE.VsFeedbackGenerator
         private ScheduledAction _finishLifecycleAction = ScheduledAction.NoOp;
         private string _initialPrefix;
         private string _currentPrefix;
+        private ILookupItem _currentSelection;
 
         public CodeCompletionLifecycleManager(ILookupWindowManager lookupWindowManager,
-            ITextControlManager textControlManager,
             IActionManager actionManager,
             IIDESession session,
             IMessageBus messageBus)
         {
             _lookupWindowManager = lookupWindowManager;
-            _textControlManager = textControlManager;
             _actionManager = actionManager;
             _handler = new CodeCompletionEventHandler(session, messageBus);
 
@@ -120,15 +67,14 @@ namespace KaVE.VsFeedbackGenerator
             _currentLookup.BeforeShownItemsUpdated += OnBeforeShownItemsUpdated;
 
             _currentLookup.CurrentItemChanged += OnCurrentItemChanged;
-            _textControlManager.AddTypingHandler(lifetime, OnType, 50);
 
             // R# actions that lead to the completion being finished
-            _actionManager.GetExecutableAction("ForceCompleteItem").AddHandler(lifetime, new DelegateActionHandler(() => _terminationTrigger = IDEEvent.Trigger.Typing));
-            _actionManager.GetExecutableAction("TextControl.Enter").AddHandler(lifetime, new DelegateActionHandler(() => _terminationTrigger = IDEEvent.Trigger.Shortcut));
-            _actionManager.GetExecutableAction("TextControl.Tab").AddHandler(lifetime, new DelegateActionHandler(() => _terminationTrigger = IDEEvent.Trigger.Shortcut));
-            _actionManager.GetExecutableAction("TextControl.Backspace").AddHandler(lifetime, new DelegateActionHandler(CheckPrefixChange));
-            _actionManager.GetExecutableAction("TextControl.Left").AddHandler(lifetime, new DelegateActionHandler(CheckPrefixChange));
-            _actionManager.GetExecutableAction("TextControl.Right").AddHandler(lifetime, new DelegateActionHandler(CheckPrefixChange));
+            _actionManager.GetExecutableAction("ForceCompleteItem")
+                .AddHandler(lifetime, new DelegateActionHandler(() => _terminationTrigger = IDEEvent.Trigger.Typing));
+            _actionManager.GetExecutableAction("TextControl.Enter")
+                .AddHandler(lifetime, new DelegateActionHandler(() => _terminationTrigger = IDEEvent.Trigger.Shortcut));
+            _actionManager.GetExecutableAction("TextControl.Tab")
+                .AddHandler(lifetime, new DelegateActionHandler(() => _terminationTrigger = IDEEvent.Trigger.Shortcut));
             var lookupListBox = _currentLookup.Window.GetLookupListBox();
             lookupListBox.MouseDown += LookupListBox_OnMouseDown;
 
@@ -152,40 +98,39 @@ namespace KaVE.VsFeedbackGenerator
         /// </summary>
         private void OnCurrentItemChanged(object sender, EventArgs eventArgs)
         {
-            _handler.OnSelectionChanged(_lookupWindowManager.CurrentLookup.Selection.Item);
+            MaybeHandlePrefixChange();
+            MaybeHandleSelectionChange();
             _terminationTrigger = null;
         }
 
-        /// <summary>
-        /// Invoked when a character is typed into the text control for which a completion is active.
-        /// </summary>
-        private void OnType(ITypingContext typingContext)
-        {
-            // make sure the lookup processes the input before we do.
-            typingContext.CallNext();
-
-            CheckPrefixChange();
-        }
-
-        /// <summary>
-        /// Invoked when the typed prefix changes, either because another character is typed or because a character
-        /// is deleted.
-        /// </summary>
-        private void CheckPrefixChange()
+        private void MaybeHandlePrefixChange()
         {
             var newPrefix = _currentLookup.Prefix;
             if (_currentPrefix != newPrefix)
             {
+                var lookupItems = _lookupWindowManager.GetDisplayedLookupItems();
+                _handler.OnPrefixChanged(newPrefix, lookupItems);
                 _currentPrefix = newPrefix;
-                _handler.OnPrefixChanged(newPrefix);
-                // TODO find a way to capture shown items
             }
             _terminationTrigger = null;
         }
 
+        private void MaybeHandleSelectionChange()
+        {
+            var selectedItem = _lookupWindowManager.CurrentLookup.Selection.Item;
+            if (_currentSelection != selectedItem)
+            {
+                _handler.OnSelectionChanged(selectedItem);
+                _currentSelection = selectedItem;
+            }
+        }
+
         /// <summary>
         /// MouseDown is fired before Closed, as opposed to Click. Therefore, we listen on MouseDown here and assume
-        /// that it will be followed by a MouseUp and, thereby, terminate the completion.
+        /// that it will be followed by a MouseUp and, thereby, terminate the completion. This assumption leads to the
+        /// following scenario where termination-trigger detection fails: When the mouse is pressed over the lookup,
+        /// moved to somewhere else, and released there, and before any other interaction with the lookup the same is
+        /// cancelled by something else than a click or the escape button (focus change or ?), the trigger says "Click".
         /// </summary>
         private void LookupListBox_OnMouseDown(object sender, EventArgs eventArgs)
         {
@@ -253,27 +198,6 @@ namespace KaVE.VsFeedbackGenerator
         private void FinishLifecycle()
         {
             _finishLifecycleAction.RunNow();
-        }
-    }
-
-    internal class DelegateActionHandler : IActionHandler
-    {
-        private readonly Action _action;
-
-        public DelegateActionHandler(Action action)
-        {
-            _action = action;
-        }
-
-        public bool Update(IDataContext context, ActionPresentation presentation, DelegateUpdate nextUpdate)
-        {
-            return nextUpdate();
-        }
-
-        public void Execute(IDataContext context, DelegateExecute nextExecute)
-        {
-            nextExecute();
-            _action();
         }
     }
 }

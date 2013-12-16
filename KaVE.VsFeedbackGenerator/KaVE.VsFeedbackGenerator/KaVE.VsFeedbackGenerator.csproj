@@ -63,7 +63,9 @@
     <Compile Include="ActionEventInstrumentationComponent.cs" />
     <Compile Include="BulbItemInstrumentationComponent.cs" />
     <Compile Include="BulbItemInstrumentationExtensions.cs" />
-    <Compile Include="CodeCompletionLifecycleManager.cs" />
+    <Compile Include="CodeCompletion\CodeCompletionLifecycleManager.cs" />
+    <Compile Include="CodeCompletion\DelegateActionHandler.cs" />
+    <Compile Include="CodeCompletion\LookupWindowManagerExtensions.cs" />
     <Compile Include="Generators\ReSharper\CodeCompletionEventHandler.cs" />
     <Compile Include="Generators\ReSharper\CodeCompletionWTF.cs" />
     <Compile Include="Generators\ReSharper\EventGeneratingActionHandler.cs" />

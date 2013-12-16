@@ -24,7 +24,8 @@ namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
         /// Invoked when the prefix changes (typing or deletion of a character), while the code completion is opened.
         /// </summary>
         /// <param name="newPrefix">The prefix after it was changed.</param>
-        void OnPrefixChanged(string newPrefix);
+        /// <param name="displayedLookupItems">The lookup items displayed after the change.</param>
+        void OnPrefixChanged(string newPrefix, IEnumerable<ILookupItem> displayedLookupItems);
 
         /// <summary>
         /// Invoked for the initial selection, any manual selection changes (using the arrow keys), selection changes
@@ -90,7 +91,7 @@ namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
             _event.AddSelection(selectedItem.ToProposal());
         }
 
-        public void OnPrefixChanged(string newPrefix)
+        public void OnPrefixChanged(string newPrefix, IEnumerable<ILookupItem> displayedLookupItems)
         {
             _event.TerminatedAs = CompletionEvent.TerminationState.Filtered;
             _event.TerminatedAt = DateTime.Now;
@@ -99,6 +100,7 @@ namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
 
             _event = Create<CompletionEvent>();
             _event.Prefix = newPrefix;
+            _event.ProposalCollection = displayedLookupItems.ToProposalCollection();
             _event.TriggeredBy = IDEEvent.Trigger.Automatic;
         }
 

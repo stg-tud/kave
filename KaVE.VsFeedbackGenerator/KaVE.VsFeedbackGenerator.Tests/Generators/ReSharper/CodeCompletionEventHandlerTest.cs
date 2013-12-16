@@ -92,7 +92,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.ReSharper
 
             handler.OnOpened("");
             handler.SetLookupItems(lookupItems);
-            handler.OnPrefixChanged("a");
+            handler.OnPrefixChanged("a", lookupItems);
 
             var ce = GetSinglePublishedCompletionEvent();
             Assert.AreEqual(CompletionEvent.TerminationState.Filtered, ce.TerminatedAs);
@@ -107,7 +107,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.ReSharper
 
             handler.OnOpened("");
             handler.SetLookupItems(lookupItems);
-            handler.OnPrefixChanged("a");
+            handler.OnPrefixChanged("a", lookupItems);
             handler.OnClosed();
             handler.OnFinished();
 
