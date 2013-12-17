@@ -113,7 +113,6 @@ namespace KaVE.VsFeedbackGenerator.CodeCompletion
                 _currentPrefix = newPrefix;
                 _currentSelection = null;
             }
-            _terminationTrigger = null;
         }
 
         private void MaybeHandleSelectionChange()
@@ -161,6 +160,12 @@ namespace KaVE.VsFeedbackGenerator.CodeCompletion
                 },
                 10000);
 
+            // TODO check whether this works!
+            if (_terminationTrigger.HasValue && _terminationTrigger.Value != IDEEvent.Trigger.Click)
+            {
+                FinishLifecycle();
+            }
+
             UnregisterFromLookupEvents();
         }
 
@@ -189,6 +194,8 @@ namespace KaVE.VsFeedbackGenerator.CodeCompletion
             LookupItemInsertType lookupiteminserttype)
         {
             _handler.OnApplication(lookupitem);
+            // TODO check whether this is ok!
+            FinishLifecycle();
         }
 
         public void Dispose()
