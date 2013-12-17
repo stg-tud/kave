@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using JetBrains.Annotations;
 using JetBrains.Application;
+using KaVE.Utils;
 using KaVE.VsFeedbackGenerator.Utils.Json;
 using NuGet;
 
@@ -14,37 +14,42 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
     public sealed class FeedbackView : INotifyPropertyChanged
     {
         private readonly JsonLogFileManager _logFileManager;
-        private readonly ObservableCollection<SessionView> _sessions;
-        private readonly ObservableCollection<SessionView> _selectedSessions;
-
-        public SessionView SelectedSession { get; set; }
+        private readonly IList<SessionView> _sessions;
+        private readonly IList<SessionView> _selectedSessions;
 
         public FeedbackView(JsonLogFileManager logFileManager)
         {
             _logFileManager = logFileManager;
             _sessions = new ObservableCollection<SessionView>();
-            _selectedSessions = new ObservableCollection<SessionView>();
+            _selectedSessions = new List<SessionView>();
 
             RefreshSessions();
         }
 
         public void RefreshSessions()
         {
-            Sessions = _logFileManager.GetLogFileNames().Select(logFileName => new SessionView(_logFileManager, logFileName));
+            Invoke.OnDispatcher(
+                () =>
+                {
+                    _sessions.Clear();
+                    _sessions.AddRange(
+                        _logFileManager.GetLogFileNames()
+                            .Select(logFileName => new SessionView(_logFileManager, logFileName)));
+                });
+            Released = false;
         }
+
+        public void Release()
+        {
+            Invoke.OnDispatcher(() => _sessions.Clear());
+            Released = true;
+        }
+
+        public bool Released { get; private set; }
 
         public IEnumerable<SessionView> Sessions
         {
-            get
-            {
-                return _sessions;
-            }
-
-            set
-            {
-                _sessions.Clear();
-                _sessions.AddRange(value);
-            }
+            get { return _sessions; }
         }
 
         public IEnumerable<SessionView> SelectedSessions
@@ -53,7 +58,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             {
                 _selectedSessions.Clear();
                 _selectedSessions.AddRange(value);
-                OnPropertyChanged("SelectedSessions");
+                // notify listeners about dependent property cange
                 OnPropertyChanged("SingleSelectedSession");
             }
         }
@@ -61,13 +66,11 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
         [CanBeNull]
         public SessionView SingleSelectedSession
         {
-            get
-            {
-                return _selectedSessions.Count == 1 ? _selectedSessions.First() : null;
-            }
+            get { return _selectedSessions.Count == 1 ? _selectedSessions.First() : null; }
         }
 
         #region INotifyPropertyChanged implementation
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         private void OnPropertyChanged(string propertyName)
@@ -77,6 +80,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
             }
         }
+
         #endregion
     }
 }

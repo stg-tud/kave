@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using KaVE.Utils;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
 {
@@ -11,9 +12,11 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
     public partial class SessionManagerControl
     {
         private readonly FeedbackView _feedbackView;
+        private ScheduledAction _releaseTimer;
 
         public SessionManagerControl(FeedbackView holder)
         {
+            _releaseTimer = ScheduledAction.NoOp;
             _feedbackView = holder;
             DataContext = holder;
             InitializeComponent();
@@ -25,13 +28,13 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
 
         private void FeedbackWindowControl_OnLoaded(object sender, RoutedEventArgs e)
         {
-            _feedbackView.RefreshSessions();
+            RefreshControl();
         }
 
         /// <summary>
         /// Makes the overflow dropdown button invisible.
         /// </summary>
-        private void ToolBar_Loaded(object sender, RoutedEventArgs e)
+        private void ToolBar_OnLoaded(object sender, RoutedEventArgs e)
         {
             var toolBar = sender as ToolBar;
             if (toolBar == null)
@@ -60,13 +63,41 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
 
         private void RefreshButton_OnClick(object sender, RoutedEventArgs e)
         {
-            _feedbackView.RefreshSessions();
+            RefreshControl();
         }
 
         private void VisitHomepageButton_OnClick(object sender, RoutedEventArgs e)
         {
             // TODO insert correct url here
             System.Diagnostics.Process.Start("http://kave-project.de");
+        }
+
+        private void SessionManagerControl_OnLostFocus(object sender, RoutedEventArgs e)
+        {
+            lock (_feedbackView)
+            {
+                // release view data after 5 minutes of inactivity
+                _releaseTimer = Invoke.Later(() => _feedbackView.Release(), 300000);
+            }
+        }
+
+        private void SessionManagerControl_OnGotFocus(object sender, RoutedEventArgs e)
+        {
+            lock (_feedbackView)
+            {
+                _releaseTimer.Cancel();
+                if (_feedbackView.Released)
+                {
+                    RefreshControl();
+                }
+            }
+        }
+
+        private void RefreshControl()
+        {
+            // TODO enable "loading" screen
+            _feedbackView.RefreshSessions();
+            // TODO disable "loading" screen
         }
     }
 }

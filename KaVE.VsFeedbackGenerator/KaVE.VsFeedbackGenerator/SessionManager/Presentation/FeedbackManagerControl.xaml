@@ -7,10 +7,12 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="1000"
              d:DataContext="{d:DesignInstance Type=sessionManager:FeedbackView, IsDesignTimeCreatable=true}"
-             Loaded="FeedbackWindowControl_OnLoaded">
+             Loaded="FeedbackWindowControl_OnLoaded"
+             GotKeyboardFocus="SessionManagerControl_OnGotFocus"
+             LostKeyboardFocus="SessionManagerControl_OnLostFocus">
     <DockPanel>
         <ToolBarTray IsLocked="True" DockPanel.Dock="Top" AllowDrop="False">
-            <ToolBar OverflowMode="Never" Loaded="ToolBar_Loaded">
+            <ToolBar OverflowMode="Never" Loaded="ToolBar_OnLoaded">
                 <Button ToolTip="Aktualisieren" Click="RefreshButton_OnClick">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="/KaVE.VsFeedbackGenerator;Component/Resources/refresh.png" />
@@ -54,7 +56,7 @@
                     </Grid.RowDefinitions>
                     <StackPanel Grid.Row="0">
                         <ToolBarTray IsLocked="True">
-                            <ToolBar OverflowMode="Never" Loaded="ToolBar_Loaded">
+                            <ToolBar OverflowMode="Never" Loaded="ToolBar_OnLoaded">
                                 <Button ToolTip="Gewahlte Session(s) löschen">
                                     <StackPanel Orientation="Horizontal">
                                         <Image Source="/KaVE.VsFeedbackGenerator;Component/Resources/delete.png" />
@@ -87,7 +89,7 @@
                     </Grid.RowDefinitions>
                     <StackPanel Grid.Row="0" Orientation="Horizontal">
                         <ToolBarTray IsLocked="True" AllowDrop="False">
-                            <ToolBar OverflowMode="Never" Loaded="ToolBar_Loaded">
+                            <ToolBar OverflowMode="Never" Loaded="ToolBar_OnLoaded">
                                 <Button ToolTip="Gewahlte Event(s) löschen">
                                     <StackPanel Orientation="Horizontal">
                                         <Image Source="/KaVE.VsFeedbackGenerator;Component/Resources/delete.png" />

@@ -10,29 +10,26 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
 {
     public class SessionView : INotifyPropertyChanged
     {
-        private readonly string _logFileName;
-        private readonly JsonLogFileManager _logFileManager;
-        private DateTime _sessionStartTime;
-        private IList<EventView> _events; 
+        private readonly IList<EventView> _events; 
         private readonly IList<EventView> _selectedEvents;
 
         public SessionView(JsonLogFileManager logFileManager, string logFileName)
         {
-            _logFileName = logFileName;
-            _logFileManager = logFileManager;
             _selectedEvents = new List<EventView>();
+            // loading eagerly because lazy approaches led to UI display bugs
+            // TODO if this should cause memory problems, we have to find a lazier solution...
+            using (var logReader = logFileManager.NewLogReader(logFileName))
+            {
+                _events = logReader.GetEnumeration<IDEEvent>().Select(evt => new EventView(evt)).ToList();
+            }
         }
 
         public DateTime StartDate
-        { 
+        {
             // TODO include date in log file name and extract it here
             get
             {
-                if (_sessionStartTime == default(DateTime))
-                {
-                    _sessionStartTime = Events.First().StartDateTime;
-                }
-                return _sessionStartTime;
+                return _events.First().StartDateTime;
             }
         }
 
@@ -40,12 +37,6 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
         {
             get
             {
-                // TODO make this lazier again or else it might blow the memory...
-                if (_events == null)
-                {
-                    var logReader = _logFileManager.NewLogReader(_logFileName);
-                    _events = logReader.GetEnumeration<IDEEvent>().Select(evt => new EventView(evt)).ToList();
-                }
                 return _events;
             }
         }
@@ -56,7 +47,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             {
                 _selectedEvents.Clear();
                 _selectedEvents.AddRange(value);
-                OnPropertyChanged("SelectedEvents");
+                // notify listeners about dependent property cange
                 OnPropertyChanged("SingleSelectedEvent");
             }
         }
