@@ -4,6 +4,9 @@ using JetBrains.Application.DataContext;
 
 namespace KaVE.VsFeedbackGenerator.CodeCompletion
 {
+    /// <summary>
+    /// An action handler that executes its own action before it invokes the delegate execution.
+    /// </summary>
     internal class DelegateActionHandler : IActionHandler
     {
         private readonly Action _action;
@@ -20,8 +23,8 @@ namespace KaVE.VsFeedbackGenerator.CodeCompletion
 
         public void Execute(IDataContext context, DelegateExecute nextExecute)
         {
-            nextExecute();
             _action();
+            nextExecute();
         }
     }
 }

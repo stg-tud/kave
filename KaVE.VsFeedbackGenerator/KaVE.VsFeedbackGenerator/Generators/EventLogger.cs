@@ -2,11 +2,11 @@
 using System.IO.Compression;
 #endif
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using JetBrains.Application;
 using KaVE.Model.Events;
 using KaVE.Model.Events.VisualStudio;
+using KaVE.VsFeedbackGenerator.Generators.Merging;
 using KaVE.VsFeedbackGenerator.MessageBus;
 using KaVE.VsFeedbackGenerator.Utils.Json;
 
@@ -15,7 +15,10 @@ namespace KaVE.VsFeedbackGenerator.Generators
     [ShellComponent]
     internal class EventLogger
     {
-        private static readonly IList<IEventMergeStrategy> MergeStrategies = new List<IEventMergeStrategy> {};
+        private static readonly IList<IEventMergeStrategy> MergeStrategies = new List<IEventMergeStrategy>
+        {
+            new CompletionEventMergingStrategy()
+        };
 
         private readonly IMessageBus _messageChannel;
         private readonly JsonLogFileManager _logFileManager;
@@ -58,7 +61,7 @@ namespace KaVE.VsFeedbackGenerator.Generators
             }
             else
             {
-                var merger = MergeStrategies.First(strategy => strategy.Mergable(_lastEvent, @event));
+                var merger = MergeStrategies.First(strategy => strategy.AreMergable(_lastEvent, @event));
                 if (merger != null)
                 {
                     _lastEvent = merger.Merge(_lastEvent, @event);
