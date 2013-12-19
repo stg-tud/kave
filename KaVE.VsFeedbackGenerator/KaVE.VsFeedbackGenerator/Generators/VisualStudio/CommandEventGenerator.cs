@@ -80,7 +80,7 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
         private void SetCommandBarCommandEvent(CommandBarControl control)
         {
             _preceedingCommandBarEvent = Create<CommandEvent>();
-            _preceedingCommandBarEvent.Source = VsComponentNameFactory.GetNameOf(control);
+            _preceedingCommandBarEvent.Source = VsComponentNameFactory.GetName(control);
             _preceedingCommandBarEvent.TriggeredBy = IDEEvent.Trigger.Click;
         }
 
@@ -102,7 +102,7 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
                 commandEvent.TriggeredBy = IDEEvent.Trigger.Shortcut;
             }
 
-            commandEvent.Command = VsComponentNameFactory.GetNameOf(command);
+            commandEvent.Command = VsComponentNameFactory.GetName(command);
             return commandEvent;
         }
 

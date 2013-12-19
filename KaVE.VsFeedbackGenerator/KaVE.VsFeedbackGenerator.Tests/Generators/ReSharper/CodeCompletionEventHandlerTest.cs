@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using JetBrains.ReSharper.Feature.Services.Lookup;
+using JetBrains.Util;
 using KaVE.Model.Events;
 using KaVE.Model.Events.CompletionEvent;
 using KaVE.VsFeedbackGenerator.Generators.ReSharper;
@@ -13,55 +15,47 @@ using NUnit.Framework;
 namespace KaVE.VsFeedbackGenerator.Tests.Generators.ReSharper
 {
     [TestFixture]
-    public class CodeCompletionEventHandlerTest
+    class CodeCompletionEventHandlerTest : EventGeneratorTestBase
     {
         private IIDESession _testSession;
-        private Mock<IMessageBus> _mockMessageBus;
-        private IList<IDEEvent> _publishedEvents;
+        private CodeCompletionEventHandler _generator;
 
         [SetUp]
         public void SetupMockEnvironment()
         {
-            _publishedEvents = new List<IDEEvent>();
             _testSession = new TestIDESession();
-            _mockMessageBus = new Mock<IMessageBus>();
-            _mockMessageBus.Setup(bus => bus.Publish(It.IsAny<IDEEvent>())).Callback(
-                (IDEEvent ideEvent) => _publishedEvents.Add(ideEvent));
+            _generator = new CodeCompletionEventHandler(_testSession, TestMessageBus);
         }
 
         [Test]
         public void ShouldHandleCodeCompletionWithApplication()
         {
-            var handler = new CodeCompletionEventHandler(_testSession, _mockMessageBus.Object);
             var lookupItems = ReSharperMockUtils.MockLookupItemList(3);
 
-            handler.OnOpened("");
-            handler.SetLookupItems(lookupItems);
-            handler.OnSelectionChanged(lookupItems[0]);
-            handler.OnClosed();
-            handler.OnApplication(lookupItems[0]);
-            handler.OnFinished();
+            _generator.HandleTriggered("");
+            _generator.HandleOpened(lookupItems);
+            _generator.HandleSelectionChanged(lookupItems[0]);
+            _generator.HandleClosed();
+            _generator.HandleApplied(IDEEvent.Trigger.Click, lookupItems[0]);
 
-            var ce = GetSinglePublishedCompletionEvent();
+            var ce = GetSinglePublishedEventAs<CompletionEvent>();
             Assert.AreEqual(CompletionEvent.TerminationState.Applied, ce.TerminatedAs);
         }
 
         [Test]
         public void ShouldAddSelectionChangesToCompletionEvent()
         {
-            var handler = new CodeCompletionEventHandler(_testSession, _mockMessageBus.Object);
             var lookupItems = ReSharperMockUtils.MockLookupItemList(5);
 
-            handler.OnOpened("");
-            handler.SetLookupItems(lookupItems);
-            handler.OnSelectionChanged(lookupItems[3]);
-            handler.OnSelectionChanged(lookupItems[2]);
-            handler.OnSelectionChanged(lookupItems[1]);
-            handler.OnClosed();
-            handler.OnApplication(lookupItems[1]);
-            handler.OnFinished();
+            _generator.HandleTriggered("");
+            _generator.HandleOpened(lookupItems);
+            _generator.HandleSelectionChanged(lookupItems[3]);
+            _generator.HandleSelectionChanged(lookupItems[2]);
+            _generator.HandleSelectionChanged(lookupItems[1]);
+            _generator.HandleClosed();
+            _generator.HandleApplied(IDEEvent.Trigger.Typing, lookupItems[1]);
 
-            var ce = GetSinglePublishedCompletionEvent();
+            var ce = GetSinglePublishedEventAs<CompletionEvent>();
             Assert.AreEqual(3, ce.Selections.Count);
             Assert.AreEqual(lookupItems[3].ToProposal(), ce.Selections[0].Proposal);
             Assert.AreEqual(lookupItems[2].ToProposal(), ce.Selections[1].Proposal);
@@ -71,29 +65,27 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.ReSharper
         [Test]
         public void ShouldHandleCodeCompletionWithCancellation()
         {
-            var handler = new CodeCompletionEventHandler(_testSession, _mockMessageBus.Object);
             var lookupItems = ReSharperMockUtils.MockLookupItemList(1);
 
-            handler.OnOpened("");
-            handler.SetLookupItems(lookupItems);
-            handler.OnClosed();
-            handler.OnFinished();
+            _generator.HandleTriggered("");
+            _generator.HandleOpened(lookupItems);
+            _generator.HandleClosed();
+            _generator.HandleCancelled(IDEEvent.Trigger.Shortcut);
 
-            var ce = GetSinglePublishedCompletionEvent();
+            var ce = GetSinglePublishedEventAs<CompletionEvent>();
             Assert.AreEqual(CompletionEvent.TerminationState.Cancelled, ce.TerminatedAs);
         }
 
         [Test]
         public void ShouldFireEventOnFilter()
         {
-            var handler = new CodeCompletionEventHandler(_testSession, _mockMessageBus.Object);
             var lookupItems = ReSharperMockUtils.MockLookupItemList(0);
 
-            handler.OnOpened("");
-            handler.SetLookupItems(lookupItems);
-            handler.OnPrefixChanged("a", lookupItems);
+            _generator.HandleTriggered("");
+            _generator.HandleOpened(lookupItems);
+            _generator.HandlePrefixChanged("a", lookupItems);
 
-            var ce = GetSinglePublishedCompletionEvent();
+            var ce = GetSinglePublishedEventAs<CompletionEvent>();
             Assert.AreEqual(CompletionEvent.TerminationState.Filtered, ce.TerminatedAs);
             Assert.AreEqual(IDEEvent.Trigger.Automatic, ce.TerminatedBy);
         }
@@ -101,31 +93,65 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.ReSharper
         [Test]
         public void ShouldCreateFollowupEventAfterFiltering()
         {
-            var handler = new CodeCompletionEventHandler(_testSession, _mockMessageBus.Object);
             var lookupItems = ReSharperMockUtils.MockLookupItemList(0);
 
-            handler.OnOpened("");
-            handler.SetLookupItems(lookupItems);
-            handler.OnPrefixChanged("a", lookupItems);
-            handler.OnClosed();
-            handler.OnFinished();
+            _generator.HandleTriggered("");
+            _generator.HandleOpened(lookupItems);
+            _generator.HandlePrefixChanged("a", lookupItems);
+            _generator.HandleClosed();
+            _generator.HandleCancelled(IDEEvent.Trigger.Click);
 
-            var ce = GetLastPublishedCompletionEvent();
+            var ce = GetLastPublishedEventAs<CompletionEvent>();
             Assert.AreEqual(IDEEvent.Trigger.Automatic, ce.TriggeredBy);
             Assert.AreEqual("a", ce.Prefix);
         }
 
-        private CompletionEvent GetSinglePublishedCompletionEvent()
+        [Test]
+        public void ShouldDuplicateLastSelectionToFollowupEventOnFiltering()
         {
-            Assert.AreEqual(1, _publishedEvents.Count);
-            return GetLastPublishedCompletionEvent();
+            var lookupItems = ReSharperMockUtils.MockLookupItemList(1);
+
+            _generator.HandleTriggered("");
+            _generator.HandleOpened(lookupItems);
+            _generator.HandleSelectionChanged(lookupItems[0]);
+            _generator.HandlePrefixChanged("a", lookupItems);
+            _generator.HandleClosed();
+            _generator.HandleCancelled(IDEEvent.Trigger.Click);
+
+            var ce = GetLastPublishedEventAs<CompletionEvent>();
+            Assert.AreEqual(1, ce.Selections.Count);
+            Assert.AreEqual(lookupItems[0].ToProposal(), ce.Selections[0].Proposal);
         }
 
-        private CompletionEvent GetLastPublishedCompletionEvent()
+        [Test]
+        public void ShouldNotDuplicateLastSelectionToFollowupEventOnFilteringIfLastSelectionWasFiltered()
         {
-            var @event = _publishedEvents.Last();
-            Assert.IsInstanceOf(typeof (CompletionEvent), @event);
-            return @event as CompletionEvent;
+            var lookupItems = ReSharperMockUtils.MockLookupItemList(1);
+
+            _generator.HandleTriggered("");
+            _generator.HandleOpened(lookupItems);
+            _generator.HandleSelectionChanged(lookupItems[0]);
+            _generator.HandlePrefixChanged("a", new List<ILookupItem>());
+            _generator.HandleClosed();
+            _generator.HandleCancelled(IDEEvent.Trigger.Click);
+
+            var ce = GetLastPublishedEventAs<CompletionEvent>();
+            Assert.IsTrue(ce.Selections.IsEmpty());
+        }
+
+        [Test]
+        public void ShouldNotAddSelectionToFollowupEventOnFilteringIfThereWasNoSelectionBefore()
+        {
+            var lookupItems = ReSharperMockUtils.MockLookupItemList(1);
+
+            _generator.HandleTriggered("");
+            _generator.HandleOpened(lookupItems);
+            _generator.HandlePrefixChanged("a", lookupItems);
+            _generator.HandleClosed();
+            _generator.HandleCancelled(IDEEvent.Trigger.Click);
+
+            var ce = GetLastPublishedEventAs<CompletionEvent>();
+            Assert.IsTrue(ce.Selections.IsEmpty());
         }
     }
 }

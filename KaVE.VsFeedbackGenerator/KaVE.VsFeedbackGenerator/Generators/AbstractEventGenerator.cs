@@ -33,8 +33,8 @@ namespace KaVE.VsFeedbackGenerator.Generators
         {
             return new TIDEEvent
             {
-                ActiveWindow = VsComponentNameFactory.GetNameOf(DTEActiveWindow),
-                ActiveDocument = VsComponentNameFactory.GetNameOf(DTEActiveDocument),
+                ActiveWindow = VsComponentNameFactory.GetName(DTEActiveWindow),
+                ActiveDocument = VsComponentNameFactory.GetName(DTEActiveDocument),
                 TriggeredBy = CurrentTrigger,
             };
         }

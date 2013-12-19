@@ -12,36 +12,36 @@ namespace KaVE.VsFeedbackGenerator.Utils.Names
     public static class VsComponentNameFactory
     {
         [ContractAnnotation("notnull => notnull"), CanBeNull]
-        public static WindowName GetNameOf([CanBeNull] Window window)
+        public static WindowName GetName([CanBeNull] this Window window)
         {
             return window == null ? null : WindowName.Get(window.Type + " " + window.Caption);
         }
 
         [ContractAnnotation("notnull => notnull"), CanBeNull]
-        public static SolutionName GetNameOf([CanBeNull] Solution solution)
+        public static SolutionName GetName([CanBeNull] this Solution solution)
         {
             return solution == null ? null : SolutionName.Get(solution.FullName);
         }
 
         [NotNull]
-        public static IList<WindowName> GetNamesOf([NotNull] Windows windows)
+        public static IList<WindowName> GetNamesOf([NotNull] this Windows windows)
         {
             Asserts.NotNull(windows, "windows");
-            return (from Window window in windows select GetNameOf(window)).ToList();
+            return (from Window window in windows select window.GetName()).ToList();
         }
 
         [ContractAnnotation("notnull => notnull"), CanBeNull]
-        public static DocumentName GetNameOf([CanBeNull] Document document)
+        public static DocumentName GetName([CanBeNull] this Document document)
         {
             if (document == null)
             {
                 return null;
             }
-            var documentName = GetSolutionRelativeName(document);
+            var documentName = document.GetSolutionRelativeName();
             return DocumentName.Get(document.Kind + " " + document.Language + " " + documentName);
         }
 
-        private static string GetSolutionRelativeName(Document document)
+        private static string GetSolutionRelativeName(this Document document)
         {
             var fullDocumentName = document.FullName;
             var solution = document.DTE.Solution;
@@ -84,31 +84,31 @@ namespace KaVE.VsFeedbackGenerator.Utils.Names
 
 
         [NotNull]
-        public static IList<DocumentName> GetNamesOf([NotNull] Documents documents)
+        public static IList<DocumentName> GetNamesOf([NotNull] this Documents documents)
         {
             Asserts.NotNull(documents, "documents");
-            return (from Document document in documents select GetNameOf(document)).ToList();
+            return (from Document document in documents select document.GetName()).ToList();
         }
 
         [ContractAnnotation("notnull => notnull"), CanBeNull]
-        public static ProjectItemName GetNameOf([CanBeNull] ProjectItem projectItem)
+        public static ProjectItemName GetName([CanBeNull] this ProjectItem projectItem)
         {
             return projectItem == null ? null : ProjectItemName.Get(projectItem.Kind + " " + projectItem.Name);
         }
 
         [ContractAnnotation("notnull => notnull"), CanBeNull]
-        public static ProjectName GetNameOf([CanBeNull] Project project)
+        public static ProjectName GetName([CanBeNull] this Project project)
         {
             return project == null ? null : ProjectName.Get(project.Kind + " " + project.UniqueName);
         }
 
         [ContractAnnotation("notnull => notnull"), CanBeNull]
-        public static CommandName GetNameOf([CanBeNull] Command command)
+        public static CommandName GetName([CanBeNull] this Command command)
         {
-            return command == null ? null : GetNameOfCommand(command.Guid, command.ID, command.Name);
+            return command == null ? null : GetCommandName(command.Guid, command.ID, command.Name);
         }
 
-        private static CommandName GetNameOfCommand(string guid, int id, string name)
+        private static CommandName GetCommandName(string guid, int id, string name)
         {
             Asserts.NotNull(guid, "guid");
             var identifier = guid + ":" + id;
@@ -120,20 +120,20 @@ namespace KaVE.VsFeedbackGenerator.Utils.Names
         }
 
         [ContractAnnotation("notnull => notnull"), CanBeNull]
-        public static CommandBarControlName GetNameOf([CanBeNull] CommandBarControl control)
+        public static CommandBarControlName GetName([CanBeNull] this CommandBarControl control)
         {
             return control == null
                 ? null
                 : CommandBarControlName.Get(
-                    GetIdentifierOf(control.Parent) + CommandBarControlName.HierarchySeperator + control.Caption);
+                    control.Parent.GetIdentifier() + CommandBarControlName.HierarchySeperator + control.Caption);
         }
 
-        private static string GetIdentifierOf([NotNull] CommandBar bar)
+        private static string GetIdentifier([NotNull] this CommandBar bar)
         {
             var parent = bar.Parent as CommandBar;
             return parent == null
                 ? bar.Name
-                : GetIdentifierOf(parent) + CommandBarControlName.HierarchySeperator + bar.Name;
+                : parent.GetIdentifier() + CommandBarControlName.HierarchySeperator + bar.Name;
         }
     }
 }

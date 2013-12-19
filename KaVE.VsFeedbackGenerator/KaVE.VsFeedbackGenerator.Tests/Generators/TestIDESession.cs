@@ -15,6 +15,11 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators
             _mockDTE.Setup(dte => dte.ActiveDocument).Returns((Document) null);
         }
 
+        public Mock<DTE> MockDTE
+        {
+            get { return _mockDTE; }
+        }
+
         public string UUID
         {
             get { return "TestIDESessionUUID"; }

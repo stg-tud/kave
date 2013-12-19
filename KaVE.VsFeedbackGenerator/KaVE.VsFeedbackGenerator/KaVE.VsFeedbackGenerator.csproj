@@ -62,7 +62,7 @@
     <Compile Include="AboutAction.cs" />
     <Compile Include="CodeCompletion\CodeCompletionLifecycleManager.cs" />
     <Compile Include="CodeCompletion\DelegateActionHandler.cs" />
-    <Compile Include="CodeCompletion\LookupWindowManagerExtensions.cs" />
+    <Compile Include="CodeCompletion\ExtendedLookupWindowManager.cs" />
     <Compile Include="Generators\EventLogger.cs" />
     <Compile Include="Generators\IEventMergeStrategy.cs" />
     <Compile Include="Generators\Merging\CompletionEventMergingStrategy.cs" />

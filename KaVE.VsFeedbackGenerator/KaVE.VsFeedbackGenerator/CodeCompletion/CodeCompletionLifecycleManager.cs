@@ -17,19 +17,18 @@ namespace KaVE.VsFeedbackGenerator.CodeCompletion
     [Language(typeof (CSharpLanguage))]
     public class CodeCompletionLifecycleManager : IDisposable
     {
-        private readonly ILookupWindowManager _lookupWindowManager;
+        private readonly IExtendedLookupWindowManager _lookupWindowManager;
         private readonly IActionManager _actionManager;
 
-        private ILookup _currentLookup;
+        private IExtendedLookup _currentLookup;
         private IDEEvent.Trigger? _terminationTrigger;
         private ScheduledAction _delayedCancelAction = ScheduledAction.NoOp;
         private string _initialPrefix;
         private string _currentPrefix;
         private ILookupItem _currentSelection;
 
-        public CodeCompletionLifecycleManager(ILookupWindowManager lookupWindowManager,
-            IActionManager actionManager,
-            IIDESession session)
+        public CodeCompletionLifecycleManager(IExtendedLookupWindowManager lookupWindowManager,
+            IActionManager actionManager)
         {
             _lookupWindowManager = lookupWindowManager;
             _actionManager = actionManager;
@@ -40,11 +39,12 @@ namespace KaVE.VsFeedbackGenerator.CodeCompletion
         private void OnBeforeLookupShown(Object sender, EventArgs e)
         {
             FinishLifecycle();
-            _initialPrefix = _lookupWindowManager.CurrentLookup.Prefix;
+
+            _currentLookup = _lookupWindowManager.CurrentLookup;
+            _initialPrefix = _currentLookup.Prefix;
             _currentPrefix = _initialPrefix;
             OnTriggered(_initialPrefix);
-            _terminationTrigger = null;
-            RegisterToLookupEvents();
+            RegisterToLookupEvents(_currentLookup);
         }
 
         /// <param name="inialPrefix">The prefix present when completion is triggered.</param>
@@ -55,18 +55,17 @@ namespace KaVE.VsFeedbackGenerator.CodeCompletion
         /// </summary>
         public event TriggeredHandler OnTriggered = delegate { };
 
-        private void RegisterToLookupEvents()
+        private void RegisterToLookupEvents(IExtendedLookup lookup)
         {
-            _currentLookup = _lookupWindowManager.CurrentLookup;
-            var lifetime = _currentLookup.GetLifetime();
+            var lifetime = lookup.Lifetime;
 
             // Event handlers are registered in order of the actual events's occurence
 
             // _lookupWindowManager.AfterLookupWindowShown is fired immediately after the window pops up,
             // i.e., after this method finished and before any other event is fired.
-            _currentLookup.BeforeShownItemsUpdated += OnBeforeShownItemsUpdated;
+            lookup.BeforeShownItemsUpdated += OnBeforeShownItemsUpdated;
 
-            _currentLookup.CurrentItemChanged += HandleCurrentItemChanged;
+            lookup.CurrentItemChanged += HandleCurrentItemChanged;
 
             // R# actions that lead to the completion being finished
             _actionManager.GetExecutableAction("ForceCompleteItem")
@@ -75,12 +74,11 @@ namespace KaVE.VsFeedbackGenerator.CodeCompletion
                 .AddHandler(lifetime, new DelegateActionHandler(() => _terminationTrigger = IDEEvent.Trigger.Shortcut));
             _actionManager.GetExecutableAction("TextControl.Tab")
                 .AddHandler(lifetime, new DelegateActionHandler(() => _terminationTrigger = IDEEvent.Trigger.Shortcut));
-            var lookupListBox = _currentLookup.Window.GetLookupListBox();
-            lookupListBox.MouseDown += HandleMouseDown;
+            lookup.MouseDown += HandleMouseDown;
 
-            _currentLookup.Closed += HandleClosed;
+            lookup.Closed += HandleClosed;
             // _lookupWindowManager.LookupWindowClosed is fired here
-            _currentLookup.ItemCompleted += HandleItemCompleted;
+            lookup.ItemCompleted += HandleItemCompleted;
         }
 
         /// <summary>
@@ -116,9 +114,9 @@ namespace KaVE.VsFeedbackGenerator.CodeCompletion
             var newPrefix = _currentLookup.Prefix;
             if (_currentPrefix != newPrefix)
             {
-                var lookupItems = _lookupWindowManager.GetDisplayedLookupItems();
+                var lookupItems = _currentLookup.DisplayedItems;
                 _currentPrefix = newPrefix;
-                _currentSelection = null;
+                // any previous termination trigger detection becomes invalid on filtering
                 _terminationTrigger = null;
 
                 OnPrefixChanged(newPrefix, lookupItems);
@@ -136,7 +134,7 @@ namespace KaVE.VsFeedbackGenerator.CodeCompletion
 
         private void MaybeHandleSelectionChange()
         {
-            var selectedItem = _lookupWindowManager.CurrentLookup.Selection.Item;
+            var selectedItem = _currentLookup.SelectedItem;
             if (_currentSelection != selectedItem)
             {
                 _currentSelection = selectedItem;
@@ -187,7 +185,6 @@ namespace KaVE.VsFeedbackGenerator.CodeCompletion
             {
                 _delayedCancelAction = Invoke.Later(OnCancel, 10000);
             }
-            UnregisterFromLookupEvents();
         }
 
         public delegate void ClosedHandler();
@@ -213,17 +210,6 @@ namespace KaVE.VsFeedbackGenerator.CodeCompletion
         /// Attention: This may be far later than the call to <see cref="OnClosed"/>.
         /// </summary>
         public event CancelledHandler OnCancelled = delegate { };
-
-        private void UnregisterFromLookupEvents()
-        {
-            _currentLookup.BeforeShownItemsUpdated -= OnBeforeShownItemsUpdated;
-            _currentLookup.CurrentItemChanged -= HandleCurrentItemChanged;
-            _currentLookup.Closed -= HandleClosed;
-            _currentLookup.ItemCompleted -= HandleItemCompleted;
-
-            var lookupListBox = _currentLookup.Window.GetLookupListBox();
-            lookupListBox.MouseDown -= HandleMouseDown;
-        }
 
         private void HandleItemCompleted(object sender,
             ILookupItem lookupitem,
@@ -251,6 +237,21 @@ namespace KaVE.VsFeedbackGenerator.CodeCompletion
         private void FinishLifecycle()
         {
             _delayedCancelAction.RunNow();
+            if (_currentLookup != null)
+            {
+                UnregisterFromLookupEvents(_currentLookup);
+                _currentLookup = null;
+            }
+            _terminationTrigger = null;
+        }
+
+        private void UnregisterFromLookupEvents(IExtendedLookup lookup)
+        {
+            lookup.BeforeShownItemsUpdated -= OnBeforeShownItemsUpdated;
+            lookup.CurrentItemChanged -= HandleCurrentItemChanged;
+            lookup.Closed -= HandleClosed;
+            lookup.ItemCompleted -= HandleItemCompleted;
+            lookup.MouseDown -= HandleMouseDown;
         }
     }
 }
