@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Linq;
-using System.Security.Cryptography;
 using KaVE.Model.Events;
 using KaVE.Model.Events.CompletionEvent;
 using KaVE.Model.Names.VisualStudio;
 using KaVE.VsFeedbackGenerator.Generators.Merging;
-using KaVE.VsFeedbackGenerator.Tests.Utils;
+using KaVE.VsFeedbackGenerator.Tests.Mocking;
 using KaVE.VsFeedbackGenerator.Utils;
 using NUnit.Framework;
 
@@ -26,7 +25,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.Merging
         [SetUp]
         public void SetUpSubsequentCompletionEvents()
         {
-            _proposalCollection = ReSharperMockUtils.MockLookupItemList(5).ToProposalCollection();
+            _proposalCollection = LookupItemsMockUtils.MockLookupItemList(5).ToProposalCollection();
             var now = DateTime.Now;
             var activeWindow = WindowName.Get("testWindow");
             var activeDocument = DocumentName.Get("testDocument");

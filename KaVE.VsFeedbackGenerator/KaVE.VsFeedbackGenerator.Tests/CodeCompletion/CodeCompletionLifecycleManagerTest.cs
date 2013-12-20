@@ -5,9 +5,12 @@ using System.Threading;
 using JetBrains.ActionManagement;
 using JetBrains.Application.DataContext;
 using JetBrains.ReSharper.Feature.Services.Lookup;
+using JetBrains.TextControl.Actions;
 using JetBrains.Util;
 using KaVE.Model.Events;
 using KaVE.VsFeedbackGenerator.CodeCompletion;
+using KaVE.VsFeedbackGenerator.Tests.Mocking;
+using KaVE.VsFeedbackGenerator.Tests.Mocking.Actions;
 using KaVE.VsFeedbackGenerator.Tests.Utils;
 using Moq;
 using NUnit.Framework;
@@ -17,8 +20,8 @@ namespace KaVE.VsFeedbackGenerator.Tests.CodeCompletion
     [TestFixture]
     internal class CodeCompletionLifecycleManagerTest
     {
-        private const string EnterActionId = "TextControl.Enter";
-        private const string TabActionId = "TextControl.Tab";
+        private const string EnterActionId = TextControlActions.ENTER_ACTION_ID;
+        private const string TabActionId = TextControlActions.TAB_ACTION_ID;
         private const string ForceCompleteActionId = "ForceCompleteItem";
 
         private Mock<IExtendedLookup> _mockLookup;
@@ -66,7 +69,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.CodeCompletion
         [Test]
         public void ShouldFireOpenedWhenLookupItemsBecomeAvailable()
         {
-            var expectedLookupItems = ReSharperMockUtils.MockLookupItemList(4);
+            var expectedLookupItems = LookupItemsMockUtils.MockLookupItemList(4);
             IEnumerable<ILookupItem> actualLookupItems = null;
             _manager.OnOpened += items => actualLookupItems = items;
 
@@ -79,7 +82,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.CodeCompletion
         [Test]
         public void ShouldFireSelectionChangedWhenCurrentItemChanges()
         {
-            var lookupItems = ReSharperMockUtils.MockLookupItemList(4);
+            var lookupItems = LookupItemsMockUtils.MockLookupItemList(4);
             IList<ILookupItem> actualSelectedItems = new List<ILookupItem>();
             _manager.OnSelectionChanged += actualSelectedItems.Add;
 
@@ -94,7 +97,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.CodeCompletion
         [Test]
         public void ShouldFireSelectionChangedMultipleTimesWhenCurrentItemChangesMultipleTimes()
         {
-            var lookupItems = ReSharperMockUtils.MockLookupItemList(4);
+            var lookupItems = LookupItemsMockUtils.MockLookupItemList(4);
             IList<ILookupItem> actualSelectedItems = new List<ILookupItem>();
             _manager.OnSelectionChanged += actualSelectedItems.Add;
 
@@ -111,7 +114,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.CodeCompletion
         [Test]
         public void ShouldNotFireSelectionChangedMultipleTimesWhenCurrentItemStaysTheSame()
         {
-            var lookupItems = ReSharperMockUtils.MockLookupItemList(4);
+            var lookupItems = LookupItemsMockUtils.MockLookupItemList(4);
             IList<ILookupItem> actualSelectedItems = new List<ILookupItem>();
             _manager.OnSelectionChanged += actualSelectedItems.Add;
 
@@ -124,9 +127,51 @@ namespace KaVE.VsFeedbackGenerator.Tests.CodeCompletion
         }
 
         [Test]
+        public void ShouldFirePrefixChangedIfPrefixChangedAndCurrentItemChangeIsRaised()
+        {
+            var lookupItems = LookupItemsMockUtils.MockLookupItemList(4);
+            string actualPrefix = null;
+            IEnumerable<ILookupItem> actualItems = null;
+            _manager.OnPrefixChanged += (prefix, items) =>
+            {
+                actualPrefix = prefix;
+                actualItems = items;
+            };
+
+            _mockLookup.Setup(l => l.Prefix).Returns(() => "set");
+            WhenBeforeLookupWindowShownIsRaised();
+            WhenBeforeShownItemsUpdatedIsRaised(lookupItems);
+            WhenCurrentItemChangedIsRaised(lookupItems[0]);
+            const string expectedPrefix = "setM";
+            _mockLookup.Setup(l => l.Prefix).Returns(() => expectedPrefix);
+            var expectedItems = lookupItems.Take(2).ToList();
+            _mockLookup.Setup(l => l.DisplayedItems).Returns(expectedItems);
+            WhenCurrentItemChangedIsRaised(lookupItems[0]);
+
+            Assert.AreEqual(expectedPrefix, actualPrefix);
+            CollectionAssert.AreEqual(expectedItems, actualItems);
+        }
+
+        [Test]
+        public void ShouldNotFirePrefixChangedIfPrefixDidNotChangedAndCurrentItemChangeIsRaised()
+        {
+            var lookupItems = LookupItemsMockUtils.MockLookupItemList(4);
+            var invokations = 0;
+            _manager.OnPrefixChanged += (prefix, items) => invokations++;
+
+            _mockLookup.Setup(l => l.Prefix).Returns(() => "set");
+            WhenBeforeLookupWindowShownIsRaised();
+            WhenBeforeShownItemsUpdatedIsRaised(lookupItems);
+            WhenCurrentItemChangedIsRaised(lookupItems[0]);
+            WhenCurrentItemChangedIsRaised(lookupItems[0]);
+
+            Assert.AreEqual(0, invokations);
+        }
+
+        [Test]
         public void ShouldFireClosedWhenLookupIsClosed()
         {
-            var lookupItems = ReSharperMockUtils.MockLookupItemList(4);
+            var lookupItems = LookupItemsMockUtils.MockLookupItemList(4);
             var invocations = 0;
             _manager.OnClosed += () => invocations++;
 
@@ -140,7 +185,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.CodeCompletion
         [Test]
         public void ShouldFireCancelledByUnknownTriggerAfterLookupIsClosedWhenItIsNotAppliedWithin10Seconds()
         {
-            var lookupItems = ReSharperMockUtils.MockLookupItemList(4);
+            var lookupItems = LookupItemsMockUtils.MockLookupItemList(4);
             var invocations = 0;
             var detectedTrigger = default (IDEEvent.Trigger);
             _manager.OnCancelled += trigger =>
@@ -162,7 +207,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.CodeCompletion
         [Test]
         public void ShouldFireAppliedWhenItemIsCompletedAfterClose_TriggerDefault()
         {
-            var lookupItems = ReSharperMockUtils.MockLookupItemList(4);
+            var lookupItems = LookupItemsMockUtils.MockLookupItemList(4);
             var invocations = 0;
             var detectedTrigger = default(IDEEvent.Trigger);
             ILookupItem actualAppliedItem = null;
@@ -186,7 +231,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.CodeCompletion
         [Test]
         public void ShouldFireAppliedWhenItemIsCompletedAfterClose_TriggerClick()
         {
-            var lookupItems = ReSharperMockUtils.MockLookupItemList(4);
+            var lookupItems = LookupItemsMockUtils.MockLookupItemList(4);
             var invocations = 0;
             var detectedTrigger = default(IDEEvent.Trigger);
             ILookupItem actualAppliedItem = null;
@@ -200,7 +245,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.CodeCompletion
             WhenBeforeLookupWindowShownIsRaised();
             WhenBeforeShownItemsUpdatedIsRaised(lookupItems);
             WhenClosedIsRaised();
-            _mockLookup.Raise(l => l.MouseDown += null, this, null);
+            WhenMouseDownIsRaised();
             WhenItemCompletedIsRaised(lookupItems[0]);
 
             Assert.AreEqual(1, invocations);
@@ -209,9 +254,9 @@ namespace KaVE.VsFeedbackGenerator.Tests.CodeCompletion
         }
 
         [Test]
-        public void ShouldFireAppliedWhenItemIsCompletedAfterClose_TriggerEnter()
+        public void ShouldFireAppliedWhenItemIsCompletedAfterClose_TriggerClickWithSelectionChange()
         {
-            var lookupItems = ReSharperMockUtils.MockLookupItemList(4);
+            var lookupItems = LookupItemsMockUtils.MockLookupItemList(4);
             var invocations = 0;
             var detectedTrigger = default(IDEEvent.Trigger);
             ILookupItem actualAppliedItem = null;
@@ -224,7 +269,33 @@ namespace KaVE.VsFeedbackGenerator.Tests.CodeCompletion
 
             WhenBeforeLookupWindowShownIsRaised();
             WhenBeforeShownItemsUpdatedIsRaised(lookupItems);
-            // TODO trigger enter action
+            WhenClosedIsRaised();
+            WhenMouseDownIsRaised();
+            WhenCurrentItemChangedIsRaised(lookupItems[1]);
+            WhenItemCompletedIsRaised(lookupItems[1]);
+
+            Assert.AreEqual(1, invocations);
+            Assert.AreEqual(IDEEvent.Trigger.Click, detectedTrigger);
+            Assert.AreEqual(lookupItems[1], actualAppliedItem);
+        }
+
+        [Test]
+        public void ShouldFireAppliedWhenItemIsCompletedAfterClose_TriggerEnter()
+        {
+            var lookupItems = LookupItemsMockUtils.MockLookupItemList(4);
+            var invocations = 0;
+            var detectedTrigger = default(IDEEvent.Trigger);
+            ILookupItem actualAppliedItem = null;
+            _manager.OnApplied += (trigger, item) =>
+            {
+                invocations++;
+                detectedTrigger = trigger;
+                actualAppliedItem = item;
+            };
+
+            WhenBeforeLookupWindowShownIsRaised();
+            WhenBeforeShownItemsUpdatedIsRaised(lookupItems);
+            WhenActionIsExecuted(EnterActionId);
             WhenClosedIsRaised();
             WhenItemCompletedIsRaised(lookupItems[0]);
 
@@ -236,7 +307,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.CodeCompletion
         [Test]
         public void ShouldFireAppliedWhenItemIsCompletedAfterClose_TriggerTab()
         {
-            var lookupItems = ReSharperMockUtils.MockLookupItemList(4);
+            var lookupItems = LookupItemsMockUtils.MockLookupItemList(4);
             var invocations = 0;
             var detectedTrigger = default(IDEEvent.Trigger);
             ILookupItem actualAppliedItem = null;
@@ -249,13 +320,18 @@ namespace KaVE.VsFeedbackGenerator.Tests.CodeCompletion
 
             WhenBeforeLookupWindowShownIsRaised();
             WhenBeforeShownItemsUpdatedIsRaised(lookupItems);
-            // TODO trigger tab action
+            WhenActionIsExecuted(TabActionId);
             WhenClosedIsRaised();
             WhenItemCompletedIsRaised(lookupItems[0]);
 
             Assert.AreEqual(1, invocations);
             Assert.AreEqual(IDEEvent.Trigger.Shortcut, detectedTrigger);
             Assert.AreEqual(lookupItems[0], actualAppliedItem);
+        }
+
+        private void WhenActionIsExecuted(string actionId)
+        {
+            _mockActionManager.Object.GetExecutableAction(actionId).Execute(new Mock<IDataContext>().Object);
         }
 
         private void WhenItemCompletedIsRaised(ILookupItem appliedItem)
@@ -266,6 +342,11 @@ namespace KaVE.VsFeedbackGenerator.Tests.CodeCompletion
         private void WhenClosedIsRaised()
         {
             _mockLookup.Raise(l => l.Closed += null, EventArgs.Empty);
+        }
+
+        private void WhenMouseDownIsRaised()
+        {
+            _mockLookup.Raise(l => l.MouseDown += null, this, null);
         }
 
         private void WhenCurrentItemChangedIsRaised(ILookupItem selectedItem)
@@ -285,15 +366,6 @@ namespace KaVE.VsFeedbackGenerator.Tests.CodeCompletion
         private void WhenBeforeLookupWindowShownIsRaised()
         {
             _mockLookupWindowManager.Raise(m => m.BeforeLookupWindowShown += null, EventArgs.Empty);
-        }
-    }
-
-    internal static class ActionManagerMockExtensions
-    {
-        public static void SetupExecutableAction(this Mock<IActionManager> manager, string actionId)
-        {
-            // TODO configure triggerable action mocks...
-            manager.Setup(m => m.GetExecutableAction(actionId)).Returns(new Mock<IExecutableAction>().Object);
         }
     }
 }

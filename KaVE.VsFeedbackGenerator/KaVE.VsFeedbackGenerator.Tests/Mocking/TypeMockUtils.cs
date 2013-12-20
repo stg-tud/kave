@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using JetBrains.Application;
 using JetBrains.Metadata.Utils;
 using JetBrains.ProjectModel;
 using JetBrains.ProjectModel.Impl;
 using JetBrains.ProjectModel.Model2.Assemblies.Interfaces;
 using JetBrains.ProjectModel.Properties;
-using JetBrains.ReSharper.Feature.Services.Lookup;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.Impl.Resolve;
@@ -16,63 +14,20 @@ using JetBrains.ReSharper.Psi.Resolve;
 using JetBrains.Util;
 using KaVE.Model.Names.CSharp;
 using Moq;
-using AssemblyName = System.Reflection.AssemblyName;
 
-namespace KaVE.VsFeedbackGenerator.Tests.Utils
+namespace KaVE.VsFeedbackGenerator.Tests.Mocking
 {
-    static class ReSharperMockUtils
+    internal static class TypeMockUtils
     {
-        private static Random _random = new Random();
-
-        private static char GetRandomUpperCaseLetter()
-        {
-            var offset = _random.Next(0, 26);
-            return (char) ('A' + offset);
-        }
-
-        private static char GetRandomLowerCaseLetter()
-        {
-            var offset = _random.Next(0, 26);
-            return (char)('a' + offset);
-        }
-
-        private static string GetRandomName()
-        {
-            var lengthOfName = _random.Next(2, 6);
-            var name = GetRandomUpperCaseLetter().ToString(CultureInfo.InvariantCulture);
-            for (int i = 0; i < lengthOfName; i++)
-            {
-                name += GetRandomLowerCaseLetter();
-            }
-            return name;
-        }
-
-        public static IList<ILookupItem> MockLookupItemList(int numberOfItems)
-        {
-            IList<ILookupItem> result = new List<ILookupItem>();
-            for (var i = 0; i < numberOfItems; i++)
-            {
-                result.Add(MockLookupItem());
-            }
-            return result;
-        }
-
-        internal static ILookupItem MockLookupItem()
-        {
-            var lookupItem = new Mock<IDeclaredElementLookupItem>();
-            var typeName = GetRandomName();
-            var assemblyName = GetRandomName();
-            var declaredElementInstance = new DeclaredElementInstance(MockTypeElement(typeName, assemblyName, "1.2.3.4"), new SubstitutionImpl());
-            lookupItem.Setup(i => i.PreferredDeclaredElement).Returns(declaredElementInstance);
-            return lookupItem.Object;
-        }
-
         internal static IType MockIType(string fqnOrAlias, string assemblyName, string assemblyVersion)
         {
             return MockIType(fqnOrAlias, EmptySubstitution.INSTANCE, assemblyName, assemblyVersion);
         }
 
-        public static IType MockIType(string fqnOrAlias, IEnumerable<KeyValuePair<string, IType>> typeParameters, string assemblyName, string assemblyVersion)
+        public static IType MockIType(string fqnOrAlias,
+            IEnumerable<KeyValuePair<string, IType>> typeParameters,
+            string assemblyName,
+            string assemblyVersion)
         {
             var parameters = new List<ITypeParameter>();
             var parameterSubstitutes = new List<IType>();
@@ -83,7 +38,11 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
                 parameters.Add(mockTypeParameter.Object);
                 parameterSubstitutes.Add(typeParameter.Value);
             }
-            return MockIType(fqnOrAlias, new SubstitutionImpl(parameters, parameterSubstitutes), assemblyName, assemblyVersion);
+            return MockIType(
+                fqnOrAlias,
+                new SubstitutionImpl(parameters, parameterSubstitutes),
+                assemblyName,
+                assemblyVersion);
         }
 
         private static IType MockIType(string fqnOrAlias,
@@ -97,7 +56,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
             mockTypeElement.TypeParameters.AddRange(substitution.Domain);
             typeMock.Setup(t => t.GetTypeElement()).Returns(mockTypeElement);
             typeMock.Setup(t => t.GetLongPresentableName(CSharpLanguage.Instance)).Returns(fqnOrAlias);
-            typeMock.Setup(t => t.Assembly).Returns(MockAssemblyInfo(assemblyName, assemblyVersion));
+            typeMock.Setup(t => t.Assembly).Returns(MockAssemblyNameInfo(assemblyName, assemblyVersion));
             var mockResolveResult = new Mock<IResolveResult>();
             mockResolveResult.Setup(rr => rr.Substitution).Returns(substitution);
             typeMock.Setup(t => t.Resolve()).Returns(mockResolveResult.Object);
@@ -127,12 +86,6 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
             return teMock.Object;
         }
 
-        private static AssemblyNameInfo MockAssemblyInfo(string name, string version)
-        {
-            var assembly = new AssemblyName { Name = name, Version = new Version(version) };
-            return new AssemblyNameInfo(assembly);
-        }
-
         private static IPsiModule MockPsiModule(IModule containingProjectModule)
         {
             var moduleMock = new Mock<IPsiModule>();
@@ -143,17 +96,21 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
         internal static IAssembly MockAssembly(string name, string version)
         {
             var mockAssembly = new Mock<IAssembly>();
-            mockAssembly.Setup(a => a.Presentation).Returns(string.Format("{0}, Version={1}", name, version));
-            mockAssembly.Setup(a => a.FullAssemblyName).Returns(string.Format("{0}, Version={1}", name, version));
+            mockAssembly.Setup(a => a.AssemblyName).Returns(MockAssemblyNameInfo(name, version));
             return mockAssembly.Object;
         }
 
         internal static IProject MockProject(string name, string version)
         {
             var mockProject = MockProjectImpl(name);
-            var mockAssemblyInfo = new OutputAssemblyInfo(Guid.NewGuid(), MockAssemblyInfo(name, version), null);
+            var mockAssemblyInfo = new OutputAssemblyInfo(Guid.NewGuid(), MockAssemblyNameInfo(name, version), null);
             mockProject.OutputAssemblyInfo = mockAssemblyInfo;
             return mockProject;
+        }
+
+        private static AssemblyNameInfo MockAssemblyNameInfo(string name, string version)
+        {
+            return new AssemblyNameInfo {Name = name, Version = new Version(version)};
         }
 
         internal static IProject MockUncompilableProject(string name)

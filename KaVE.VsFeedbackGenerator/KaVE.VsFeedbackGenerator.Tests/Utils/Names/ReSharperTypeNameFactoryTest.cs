@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using JetBrains.ReSharper.Psi;
+using KaVE.VsFeedbackGenerator.Tests.Mocking;
 using KaVE.VsFeedbackGenerator.Utils.Names;
 using NUnit.Framework;
 
@@ -15,7 +16,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Names
          TestCase("ValueType[][]", "B", "5.4.3.2", "ValueType[][], B, Version=5.4.3.2")]
         public void ShouldGetNameForIType(string typeFqn, string assemblyName, string assemblyVersion, string identifier)
         {
-            var type = ReSharperMockUtils.MockIType(typeFqn, assemblyName, assemblyVersion);
+            var type = TypeMockUtils.MockIType(typeFqn, assemblyName, assemblyVersion);
 
             AssertNameIdentifier(type, identifier);
         }
@@ -71,15 +72,15 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Names
         {
             new GenericTypeCase(
                 "System.Nullable`1",
-                new Dictionary<string, IType> {{"T", ReSharperMockUtils.MockIType("System.Int32", "mscore", "4.0.0.0")}},
+                new Dictionary<string, IType> {{"T", TypeMockUtils.MockIType("System.Int32", "mscore", "4.0.0.0")}},
                 "mscore",
                 "4.0.0.0",
                 "System.Nullable`1[[T -> System.Int32, mscore, Version=4.0.0.0]], mscore, Version=4.0.0.0"),
             new GenericTypeCase("System.Collections.IDictionary`2",
                 new Dictionary<string, IType>
                 {
-                    {"TKey", ReSharperMockUtils.MockIType("System.String", "mscore", "1.2.3.4")},
-                    {"TValue", ReSharperMockUtils.MockIType("System.Object", "mscore", "5.6.7.8")}
+                    {"TKey", TypeMockUtils.MockIType("System.String", "mscore", "1.2.3.4")},
+                    {"TValue", TypeMockUtils.MockIType("System.Object", "mscore", "5.6.7.8")}
                 },
                 "mscore",
                 "9.10.11.12",
@@ -89,7 +90,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Names
         [TestCaseSource("GenericTypeCases")]
         public void ShouldGetNameForGenericIType(GenericTypeCase gtc)
         {
-            var type = ReSharperMockUtils.MockIType(gtc.FullName, gtc.TypeParameters, gtc.AssemblyName, gtc.AssemblyVersion);
+            var type = TypeMockUtils.MockIType(gtc.FullName, gtc.TypeParameters, gtc.AssemblyName, gtc.AssemblyVersion);
 
             AssertNameIdentifier(type, gtc.ExpectedIdentifier);
         }

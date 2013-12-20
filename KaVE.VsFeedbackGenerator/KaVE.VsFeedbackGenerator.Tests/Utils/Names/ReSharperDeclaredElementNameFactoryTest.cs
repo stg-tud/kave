@@ -3,6 +3,7 @@ using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.DeclaredElements;
 using JetBrains.ReSharper.Psi.ExtensionsAPI;
 using JetBrains.ReSharper.Psi.Resolve;
+using KaVE.VsFeedbackGenerator.Tests.Mocking;
 using KaVE.VsFeedbackGenerator.Utils.Names;
 using Moq;
 using NUnit.Framework;
@@ -33,7 +34,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Names
         [Test]
         public void ShouldGetNameForTypeElementInAssembly()
         {
-            var typeElement = ReSharperMockUtils.MockTypeElement("Full.Qualified.TypeName", ReSharperMockUtils.MockAssembly("AssemblyName", "0.9.8.7"));
+            var typeElement = TypeMockUtils.MockTypeElement("Full.Qualified.TypeName", TypeMockUtils.MockAssembly("AssemblyName", "0.9.8.7"));
 
             AssertNameIdentifier(typeElement, "Full.Qualified.TypeName, AssemblyName, Version=0.9.8.7");
         }
@@ -41,7 +42,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Names
         [Test]
         public void SouldGetQualifiedNameForTypeElementInProject()
         {
-            var typeElement = ReSharperMockUtils.MockTypeElement("TypeName", ReSharperMockUtils.MockProject("Project", "1.0.0.0"));
+            var typeElement = TypeMockUtils.MockTypeElement("TypeName", TypeMockUtils.MockProject("Project", "1.0.0.0"));
 
             AssertNameIdentifier(typeElement, "TypeName, Project, Version=1.0.0.0");
         }
@@ -49,7 +50,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Names
         [Test]
         public void SouldGetQualifiedNameForTypeElementInUncompilableProject()
         {
-            var typeElement = ReSharperMockUtils.MockTypeElement("TypeName", ReSharperMockUtils.MockUncompilableProject("Project"));
+            var typeElement = TypeMockUtils.MockTypeElement("TypeName", TypeMockUtils.MockUncompilableProject("Project"));
 
             AssertNameIdentifier(typeElement, "TypeName, Project");
         }
@@ -71,7 +72,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Names
         {
             var paramMock = new Mock<IParameter>();
             paramMock.Setup(p => p.ShortName).Returns(parameterName);
-            paramMock.Setup(p => p.Type).Returns(ReSharperMockUtils.MockIType(typeName, assemblyName, assemblyVersion));
+            paramMock.Setup(p => p.Type).Returns(TypeMockUtils.MockIType(typeName, assemblyName, assemblyVersion));
             paramMock.Setup(p => p.Kind).Returns(pKind);
             paramMock.Setup(p => p.IsOptional).Returns(isOptional);
             paramMock.Setup(p => p.IsParameterArray).Returns(isParameterArray);
@@ -83,8 +84,8 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Names
         public void ShouldGetNameForIField()
         {
             var fieldMock = new Mock<IField>();
-            fieldMock.Setup(f => f.GetContainingType()).Returns(ReSharperMockUtils.MockTypeElement("DeclaringType", "DTA", "0.9.8.7"));
-            fieldMock.Setup(f => f.Type).Returns(ReSharperMockUtils.MockIType("ValueType", "VTA", "1.2.3.4"));
+            fieldMock.Setup(f => f.GetContainingType()).Returns(TypeMockUtils.MockTypeElement("DeclaringType", "DTA", "0.9.8.7"));
+            fieldMock.Setup(f => f.Type).Returns(TypeMockUtils.MockIType("ValueType", "VTA", "1.2.3.4"));
             fieldMock.Setup(f => f.ShortName).Returns("FieldName");
 
             AssertNameIdentifier(fieldMock.Object, "[ValueType, VTA, Version=1.2.3.4] [DeclaringType, DTA, Version=0.9.8.7].FieldName");
@@ -94,8 +95,8 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Names
         public void ShouldGetNameForStaticIField()
         {
             var fieldMock = new Mock<IField>();
-            fieldMock.Setup(f => f.GetContainingType()).Returns(ReSharperMockUtils.MockTypeElement("DeclaringType", "DTA", "0.9.8.7"));
-            fieldMock.Setup(f => f.Type).Returns(ReSharperMockUtils.MockIType("ValueType", "VTA", "1.2.3.4"));
+            fieldMock.Setup(f => f.GetContainingType()).Returns(TypeMockUtils.MockTypeElement("DeclaringType", "DTA", "0.9.8.7"));
+            fieldMock.Setup(f => f.Type).Returns(TypeMockUtils.MockIType("ValueType", "VTA", "1.2.3.4"));
             fieldMock.Setup(f => f.ShortName).Returns("FieldName");
             fieldMock.Setup(f => f.IsStatic).Returns(true);
 
@@ -106,8 +107,8 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Names
         public void ShouldGetNameForIFunction()
         {
             var functionMock = new Mock<IFunction>();
-            functionMock.Setup(f => f.GetContainingType()).Returns(ReSharperMockUtils.MockTypeElement("DeclaringType", "DTA", "0.9.8.7"));
-            functionMock.Setup(f => f.ReturnType).Returns(ReSharperMockUtils.MockIType("ReturnType", "RTA", "1.2.3.4"));
+            functionMock.Setup(f => f.GetContainingType()).Returns(TypeMockUtils.MockTypeElement("DeclaringType", "DTA", "0.9.8.7"));
+            functionMock.Setup(f => f.ReturnType).Returns(TypeMockUtils.MockIType("ReturnType", "RTA", "1.2.3.4"));
             functionMock.Setup(f => f.ShortName).Returns("MethodName");
             functionMock.Setup(f => f.Parameters).Returns(new List<IParameter>());
 
@@ -118,8 +119,8 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Names
         public void ShouldGetNameForStaticIFunction()
         {
             var functionMock = new Mock<IFunction>();
-            functionMock.Setup(f => f.GetContainingType()).Returns(ReSharperMockUtils.MockTypeElement("DeclaringType", "DTA", "0.9.8.7"));
-            functionMock.Setup(f => f.ReturnType).Returns(ReSharperMockUtils.MockIType("ReturnType", "RTA", "1.2.3.4"));
+            functionMock.Setup(f => f.GetContainingType()).Returns(TypeMockUtils.MockTypeElement("DeclaringType", "DTA", "0.9.8.7"));
+            functionMock.Setup(f => f.ReturnType).Returns(TypeMockUtils.MockIType("ReturnType", "RTA", "1.2.3.4"));
             functionMock.Setup(f => f.ShortName).Returns("MethodName");
             functionMock.Setup(f => f.Parameters).Returns(new List<IParameter>());
             functionMock.Setup(f => f.IsStatic).Returns(true);
@@ -132,7 +133,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Names
         {
             var mockVariable = new Mock<ITypeOwner>();
             mockVariable.Setup(v => v.ShortName).Returns("variable");
-            mockVariable.Setup(v => v.Type).Returns(ReSharperMockUtils.MockIType("Type", "Assembly", "1.2.3.4"));
+            mockVariable.Setup(v => v.Type).Returns(TypeMockUtils.MockIType("Type", "Assembly", "1.2.3.4"));
 
             AssertNameIdentifier(mockVariable.Object, "[Type, Assembly, Version=1.2.3.4] variable");
         }

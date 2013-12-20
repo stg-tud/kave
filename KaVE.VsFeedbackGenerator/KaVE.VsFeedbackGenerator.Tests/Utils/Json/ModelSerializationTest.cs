@@ -69,10 +69,6 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json
         public void ShouldDeserializeCompletionEvent()
         {
             const string jsonEvent = "{\"$type\":\"KaVE.Model.Events.CompletionEvent.CompletionEvent, KaVE.Model\"," +
-                "\"_selections\":{\"$type\":\"System.Collections.Generic.List`1[[KaVE.Model.Events.CompletionEvent.ProposalSelection, KaVE.Model]], mscorlib\"," +
-                    "\"$values\":[{\"$type\":\"KaVE.Model.Events.CompletionEvent.ProposalSelection, KaVE.Model\",\"SelectedAt\":\"2013-12-06T11:34:24.8101178+01:00\"," +
-                        "\"Proposal\":{\"$type\":\"KaVE.Model.Events.CompletionEvent.Proposal, KaVE.Model\",\"Name\":{\"type\":\"CSharp.MethodName\",\"identifier\":\"[System.IAsyncResult, mscorlib, Version=4.0.0.0] [System.IO.Stream, mscorlib, Version=4.0.0.0].BeginRead([System.Byte[], mscorlib, Version=4.0.0.0] buffer, [System.Int32, mscorlib, Version=4.0.0.0] offset, [System.Int32, mscorlib, Version=4.0.0.0] count, [System.AsyncCallback, mscorlib, Version=4.0.0.0] callback, [System.Object, mscorlib, Version=4.0.0.0] state)\"}}}" +
-                    "]}," +
                 "\"ProposalCollection\":{\"$type\":\"KaVE.Model.Events.CompletionEvent.ProposalCollection, KaVE.Model\"," +
                     "\"Proposals\":{\"$type\":\"System.Collections.Generic.List`1[[KaVE.Model.Events.CompletionEvent.Proposal, KaVE.Model]], mscorlib\"," +
                         "\"$values\":[" +
@@ -84,6 +80,10 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json
                             "{\"$type\":\"KaVE.Model.Events.CompletionEvent.Proposal, KaVE.Model\",\"Name\":{\"type\":\"CSharp.PropertyName\",\"identifier\":\"get [System.Boolean, mscorlib, Version=4.0.0.0] [System.IO.Stream, mscorlib, Version=4.0.0.0].CanWrite()\"}}," +
                             /* other proposals removed to reduce size of this string */
                         "]}}," +
+                "\"Selections\":{\"$type\":\"System.Collections.Generic.List`1[[KaVE.Model.Events.CompletionEvent.ProposalSelection, KaVE.Model]], mscorlib\"," +
+                    "\"$values\":[{\"$type\":\"KaVE.Model.Events.CompletionEvent.ProposalSelection, KaVE.Model\",\"SelectedAt\":\"2013-12-06T11:34:24.8101178+01:00\"," +
+                        "\"Proposal\":{\"$type\":\"KaVE.Model.Events.CompletionEvent.Proposal, KaVE.Model\",\"Name\":{\"type\":\"CSharp.MethodName\",\"identifier\":\"[System.IAsyncResult, mscorlib, Version=4.0.0.0] [System.IO.Stream, mscorlib, Version=4.0.0.0].BeginRead([System.Byte[], mscorlib, Version=4.0.0.0] buffer, [System.Int32, mscorlib, Version=4.0.0.0] offset, [System.Int32, mscorlib, Version=4.0.0.0] count, [System.AsyncCallback, mscorlib, Version=4.0.0.0] callback, [System.Object, mscorlib, Version=4.0.0.0] state)\"}}}" +
+                    "]}," +
                 "\"Prefix\":\"\"," +
                 "\"TerminatedBy\":1," +
                 "\"TerminatedAs\":1," +
@@ -107,21 +107,6 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json
             Assert.AreEqual(1, completionEvent.Selections.Count);
             Assert.AreEqual(IDEEvent.Trigger.Click, completionEvent.TerminatedBy);
             Assert.AreEqual(CompletionEvent.TerminationState.Cancelled, completionEvent.TerminatedAs);
-
-        }
-
-        /// <summary>
-        /// This type resolution succeeds here, but the very same resolution fails in
-        /// <see cref="TypeResolutionExceptionTest"/> when its parent project is run as a R# plugin.
-        /// </summary>
-        [Test]
-        public void TypeResolutionException()
-        {
-            const string assemblyName = "mscorlib";
-            const string typeName = "System.Collections.Generic.List`1[[KaVE.Model.Events.CompletionEvent.ProposalSelection, KaVE.Model]]";
-            Assembly assembly = Assembly.LoadWithPartialName(assemblyName);
-            Type type = assembly.GetType(typeName);
-            Assert.NotNull(type, "could not load {0} from assembly {1}.", typeName, assemblyName);
         }
 
         [Test]

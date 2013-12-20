@@ -5,11 +5,11 @@ using JetBrains.ActionManagement;
 using JetBrains.ReSharper.Feature.Services.Lookup;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
+using JetBrains.TextControl.Actions;
 using JetBrains.Util;
 using KaVE.Model.Events;
 using KaVE.Utils;
 using KaVE.Utils.IO;
-using KaVE.VsFeedbackGenerator.VsIntegration;
 using Key = System.Windows.Input.Key;
 
 namespace KaVE.VsFeedbackGenerator.CodeCompletion
@@ -70,9 +70,9 @@ namespace KaVE.VsFeedbackGenerator.CodeCompletion
             // R# actions that lead to the completion being finished
             _actionManager.GetExecutableAction("ForceCompleteItem")
                 .AddHandler(lifetime, new DelegateActionHandler(() => _terminationTrigger = IDEEvent.Trigger.Typing));
-            _actionManager.GetExecutableAction("TextControl.Enter")
+            _actionManager.GetExecutableAction(TextControlActions.ENTER_ACTION_ID)
                 .AddHandler(lifetime, new DelegateActionHandler(() => _terminationTrigger = IDEEvent.Trigger.Shortcut));
-            _actionManager.GetExecutableAction("TextControl.Tab")
+            _actionManager.GetExecutableAction(TextControlActions.TAB_ACTION_ID)
                 .AddHandler(lifetime, new DelegateActionHandler(() => _terminationTrigger = IDEEvent.Trigger.Shortcut));
             lookup.MouseDown += HandleMouseDown;
 
