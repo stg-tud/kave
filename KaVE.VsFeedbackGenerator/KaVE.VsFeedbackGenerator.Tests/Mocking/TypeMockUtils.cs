@@ -72,7 +72,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Mocking
         {
             if (fqn.Contains("[["))
             {
-                fqn = fqn.Substring(0, fqn.IndexOf("[[", System.StringComparison.Ordinal));
+                fqn = fqn.Substring(0, fqn.IndexOf("[[", StringComparison.Ordinal));
             }
 
             var clrMock = new Mock<IClrTypeName>();
