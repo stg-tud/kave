@@ -117,8 +117,47 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="EventDelete" xml:space="preserve">
+    <value>Gewählte Event(s) löschen</value>
+  </data>
+  <data name="EventDeleteConfirmPlural" xml:space="preserve">
+    <value>Sind Sie sicher, dass Sie die gewählten {0} Events löschen wollen?</value>
+  </data>
+  <data name="EventDeleteConfirmSingular" xml:space="preserve">
+    <value>Sind Sie sicher, dass Sie das gewählte Event löschen wollen?</value>
+  </data>
+  <data name="EventDeleteConfirmTitle" xml:space="preserve">
+    <value>Event(s) löschen</value>
+  </data>
+  <data name="EventDetails" xml:space="preserve">
+    <value>Eventdaten</value>
+  </data>
+  <data name="Events" xml:space="preserve">
+    <value>Events</value>
+  </data>
+  <data name="EventTime" xml:space="preserve">
+    <value>Startzeit</value>
+  </data>
+  <data name="EventType" xml:space="preserve">
+    <value>Art</value>
+  </data>
+  <data name="Export" xml:space="preserve">
+    <value>Feedback als ZIP-Archiv exportieren...</value>
+  </data>
+  <data name="Options" xml:space="preserve">
+    <value>Einstellungen...</value>
+  </data>
+  <data name="Refresh" xml:space="preserve">
+    <value>Feedback-Anzeige aktualisieren.</value>
+  </data>
+  <data name="Send" xml:space="preserve">
+    <value>Feedback versenden.</value>
+  </data>
   <data name="SessionDay" xml:space="preserve">
     <value>Tag der Session</value>
+  </data>
+  <data name="SessionDelete" xml:space="preserve">
+    <value>Gewählte Session(s) löschen</value>
   </data>
   <data name="SessionDeleteConfirmPlural" xml:space="preserve">
     <value>Sind Sie sicher, dass Sie die gewählten {0} Sessions löschen wollen?</value>
@@ -128,5 +167,11 @@
   </data>
   <data name="SessionDeleteConfirmTitle" xml:space="preserve">
     <value>Session(s) löschen</value>
+  </data>
+  <data name="Sessions" xml:space="preserve">
+    <value>Sessions</value>
+  </data>
+  <data name="VisitHomepage" xml:space="preserve">
+    <value>Die Projektwebseite besuchen...</value>
   </data>
 </root>

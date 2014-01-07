@@ -8,18 +8,18 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
 {
     public class EventView
     {
-        private readonly IDEEvent _evt;
-
         public EventView(IDEEvent evt)
         {
-            _evt = evt;
+            Event = evt;
         }
+
+        public IDEEvent Event { get; private set; }
 
         public string EventType
         {
             get
             {
-                return _evt.GetType().Name;
+                return Event.GetType().Name;
             }
         }
 
@@ -27,7 +27,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
         {
             get
             {
-                return _evt.TriggeredAt;
+                return Event.TriggeredAt;
             }
         }
 
@@ -44,8 +44,8 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             get
             {
                 var content = new StringBuilder();
-                content.Append(_evt.GetType().Name).Append(Environment.NewLine);
-                content.Append(_evt.ToJson(new NameToJsonConverter()).Replace("  ", "      "));
+                content.Append(Event.GetType().Name).Append(Environment.NewLine);
+                content.Append(Event.ToJson(new NameToJsonConverter()).Replace("  ", "      "));
                 return content.ToString();
             }
         }

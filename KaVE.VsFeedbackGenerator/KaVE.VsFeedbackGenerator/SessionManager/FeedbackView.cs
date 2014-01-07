@@ -109,11 +109,16 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
 
         private void DeleteSessions()
         {
-            foreach (var logFileName in _selectedSessions.Select(session => session.LogFileName))
+            for (var i = 0; i < _sessions.Count; i++)
             {
-                File.Delete(logFileName);
+                var session = _sessions[i];
+                if (_selectedSessions.Contains(session))
+                {
+                    _sessions.Remove(session);
+                    File.Delete(session.LogFileName);
+                    i--;
+                }
             }
-            RefreshSessions();
         }
 
         #endregion
