@@ -63,6 +63,11 @@
     <Compile Include="CodeCompletion\CodeCompletionLifecycleManager.cs" />
     <Compile Include="CodeCompletion\DelegateActionHandler.cs" />
     <Compile Include="CodeCompletion\ExtendedLookupWindowManager.cs" />
+    <Compile Include="Properties\General.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>General.resx</DependentUpon>
+    </Compile>
     <Compile Include="Generators\EventLogger.cs" />
     <Compile Include="Generators\IEventMergeStrategy.cs" />
     <Compile Include="Generators\Merging\CompletionEventMergingStrategy.cs" />
@@ -87,10 +92,10 @@
     <Compile Include="Generators\VisualStudio\WindowEventGenerator.cs" />
     <Compile Include="MessageBus\IMessageBus.cs" />
     <Compile Include="MessageBus\TinyMessengerMessageBus.cs" />
-    <Compile Include="SessionManager\Presentation\Messages.Designer.cs">
+    <Compile Include="Properties\SessionManager.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>Messages.resx</DependentUpon>
+      <DependentUpon>SessionManager.resx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SessionManager\FeedbackGeneratorSettings.cs" />
@@ -134,9 +139,13 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Actions.xml" />
-    <EmbeddedResource Include="SessionManager\Presentation\Messages.resx">
+    <EmbeddedResource Include="Properties\General.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>General.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\SessionManager.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Messages.Designer.cs</LastGenOutput>
+      <LastGenOutput>SessionManager.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>

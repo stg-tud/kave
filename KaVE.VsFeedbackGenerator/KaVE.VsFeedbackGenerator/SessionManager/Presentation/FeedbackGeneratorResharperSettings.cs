@@ -1,8 +1,8 @@
 ﻿using JetBrains.Application.Settings;
 
-namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation.Options
+namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
 {
-    [SettingsKey(typeof(EnvironmentSettings), "FeedbackWindow Settings")]
+    [SettingsKey(typeof (EnvironmentSettings), "FeedbackWindow Settings")]
     internal class FeedbackGeneratorResharperSettings : FeedbackGeneratorSettings
     {
         [SettingsEntry("True", "KaVE FeedbackGenerator Names")]

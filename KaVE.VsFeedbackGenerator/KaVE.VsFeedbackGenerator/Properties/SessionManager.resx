@@ -174,4 +174,19 @@
   <data name="VisitHomepage" xml:space="preserve">
     <value>Die Projektwebseite besuchen...</value>
   </data>
+  <data name="OptionsTitle" xml:space="preserve">
+    <value>KaVE-Feedback Einstellungen</value>
+  </data>
+  <data name="Option_TrackDuration" xml:space="preserve">
+    <value>Dauer von Events im Feedback erfassen.</value>
+  </data>
+  <data name="Option_TrackNames" xml:space="preserve">
+    <value>Methoden- und Variablennamen im Feedback erfassen.</value>
+  </data>
+  <data name="Option_TrackSession" xml:space="preserve">
+    <value>Zuordnung von Events zu Sessions im Feedback erfassen.</value>
+  </data>
+  <data name="Option_TrackStartTime" xml:space="preserve">
+    <value>Auslösezeitpunkt von Events im Feedback erfassen.</value>
+  </data>
 </root>

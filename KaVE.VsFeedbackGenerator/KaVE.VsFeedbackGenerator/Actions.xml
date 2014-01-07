@@ -2,8 +2,8 @@
 <actions>
   <insert group-id="ReSharper" position="last">
     <action-group id="KaVE.VsFeedbackGenerator" text="KaVE Feedback">
-      <action id="KaVE.VsFeedbackGenerator.About" text="About KaVE Feedback"/>
       <action id="KaVE.VsFeedbackGenerator.SessionManager" text="Session Manager"/>
+      <action id="KaVE.VsFeedbackGenerator.About" text="About KaVE Feedback"/>
       <!-- to break up elements use <separator/> -->
     </action-group>
   </insert>

@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation {
+namespace KaVE.VsFeedbackGenerator.Properties {
     using System;
     
     
@@ -22,14 +22,14 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public class Messages {
+    public class SessionManager {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal Messages() {
+        internal SessionManager() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("KaVE.VsFeedbackGenerator.SessionManager.Presentation.Messages", typeof(Messages).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("KaVE.VsFeedbackGenerator.Properties.SessionManager", typeof(SessionManager).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -142,11 +142,56 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Dauer von Events im Feedback erfassen..
+        /// </summary>
+        public static string Option_TrackDuration {
+            get {
+                return ResourceManager.GetString("Option_TrackDuration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Methoden- und Variablennamen im Feedback erfassen..
+        /// </summary>
+        public static string Option_TrackNames {
+            get {
+                return ResourceManager.GetString("Option_TrackNames", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zuordnung von Events zu Sessions im Feedback erfassen..
+        /// </summary>
+        public static string Option_TrackSession {
+            get {
+                return ResourceManager.GetString("Option_TrackSession", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Auslösezeitpunkt von Events im Feedback erfassen..
+        /// </summary>
+        public static string Option_TrackStartTime {
+            get {
+                return ResourceManager.GetString("Option_TrackStartTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Einstellungen....
         /// </summary>
         public static string Options {
             get {
                 return ResourceManager.GetString("Options", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to KaVE-Feedback Einstellungen.
+        /// </summary>
+        public static string OptionsTitle {
+            get {
+                return ResourceManager.GetString("OptionsTitle", resourceCulture);
             }
         }
         

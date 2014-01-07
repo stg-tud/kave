@@ -7,7 +7,7 @@
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="1000"
              d:DataContext="{d:DesignInstance Type=sessionManager:FeedbackView, IsDesignTimeCreatable=False}"
-             xmlns:const="clr-namespace:KaVE.VsFeedbackGenerator.SessionManager.Presentation"
+             xmlns:root="clr-namespace:KaVE.VsFeedbackGenerator"
              Loaded="FeedbackWindowControl_OnLoaded"
              GotKeyboardFocus="SessionManagerControl_OnGotFocus"
              LostKeyboardFocus="SessionManagerControl_OnLostFocus">
@@ -23,29 +23,29 @@
     <DockPanel>
         <ToolBarTray IsLocked="True" DockPanel.Dock="Top" AllowDrop="False">
             <ToolBar OverflowMode="Never" Loaded="ToolBar_OnLoaded">
-                <Button ToolTip="{x:Static const:Messages.Refresh}" Click="RefreshButton_OnClick">
+                <Button ToolTip="{x:Static root:Properties.SessionManager.Refresh}" Click="RefreshButton_OnClick">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="/KaVE.VsFeedbackGenerator;Component/Resources/refresh.png" />
                     </StackPanel>
                 </Button>
                 <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
-                <Button ToolTip="{x:Static const:Messages.Export}">
+                <Button ToolTip="{x:Static root:Properties.SessionManager.Export}">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="/KaVE.VsFeedbackGenerator;Component/Resources/export.png" />
                     </StackPanel>
                 </Button>
-                <Button ToolTip="{x:Static const:Messages.Send}">
+                <Button ToolTip="{x:Static root:Properties.SessionManager.Send}">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="/KaVE.VsFeedbackGenerator;Component/Resources/send.png" />
                     </StackPanel>
                 </Button>
                 <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
-                <Button ToolTip="{x:Static const:Messages.Options}">
+                <Button ToolTip="{x:Static root:Properties.SessionManager.Options}">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="/KaVE.VsFeedbackGenerator;Component/Resources/options.png" />
                     </StackPanel>
                 </Button>
-                <Button ToolTip="{x:Static const:Messages.VisitHomepage}" Click="VisitHomepageButton_OnClick">
+                <Button ToolTip="{x:Static root:Properties.SessionManager.VisitHomepage}" Click="VisitHomepageButton_OnClick">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="/KaVE.VsFeedbackGenerator;Component/Resources/website.png" />
                     </StackPanel>
@@ -58,7 +58,7 @@
                 <ColumnDefinition Width="250" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <GroupBox Grid.Column="0" MinWidth="250" Header="{x:Static const:Messages.Sessions}">
+            <GroupBox Grid.Column="0" MinWidth="250" Header="{x:Static root:Properties.SessionManager.Sessions}">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto" />
@@ -67,7 +67,7 @@
                     <StackPanel Grid.Row="0">
                         <ToolBarTray IsLocked="True">
                             <ToolBar OverflowMode="Never" Loaded="ToolBar_OnLoaded">
-                                <Button ToolTip="{x:Static const:Messages.SessionDelete}"
+                                <Button ToolTip="{x:Static root:Properties.SessionManager.SessionDelete}"
                                         Command="{Binding Path=DeleteSessionsCommand, FallbackValue={x:Null}}"
                                         Style="{StaticResource DefaultDisabledButton}">
                                     <StackPanel Orientation="Horizontal">
@@ -85,7 +85,7 @@
                               SelectionChanged="SessionListView_OnSelectionChanged">
                         <ListView.View>
                             <GridView>
-                                <GridViewColumn Header="{x:Static const:Messages.SessionDay}"
+                                <GridViewColumn Header="{x:Static root:Properties.SessionManager.SessionDay}"
                                                 DisplayMemberBinding="{Binding StartDate, StringFormat=\{0:dd.MM.yyyy\}}"
                                                 Width="150" />
                             </GridView>
@@ -93,7 +93,7 @@
                     </ListView>
                 </Grid>
             </GroupBox>
-            <GroupBox Grid.Column="1" MinWidth="250" Header="{x:Static const:Messages.Events}">
+            <GroupBox Grid.Column="1" MinWidth="250" Header="{x:Static root:Properties.SessionManager.Events}">
                 <Grid DataContext="{Binding SingleSelectedSession}">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto" />
@@ -102,7 +102,7 @@
                     <StackPanel Grid.Row="0" Orientation="Horizontal">
                         <ToolBarTray IsLocked="True" AllowDrop="False">
                             <ToolBar OverflowMode="Never" Loaded="ToolBar_OnLoaded">
-                                <Button ToolTip="{x:Static const:Messages.EventDelete}"
+                                <Button ToolTip="{x:Static root:Properties.SessionManager.EventDelete}"
                                         Style="{StaticResource DefaultDisabledButton}"
                                         Command="{Binding Path=DeleteEventsCommand, FallbackValue={x:Null}}">
                                     <StackPanel Orientation="Horizontal">
@@ -120,10 +120,10 @@
                               SelectionChanged="EventListView_OnSelectionChanged">
                         <ListView.View>
                             <GridView>
-                                <GridViewColumn Header="{x:Static const:Messages.EventTime}"
+                                <GridViewColumn Header="{x:Static root:Properties.SessionManager.EventTime}"
                                                 DisplayMemberBinding="{Binding StartTime}"
                                                 Width="80" />
-                                <GridViewColumn Header="{x:Static const:Messages.EventType}"
+                                <GridViewColumn Header="{x:Static root:Properties.SessionManager.EventType}"
                                                 DisplayMemberBinding="{Binding EventType}"
                                                 Width="100" />
                             </GridView>
@@ -131,7 +131,7 @@
                     </ListView>
                 </Grid>
             </GroupBox>
-            <GroupBox Grid.Column="2" Header="{x:Static const:Messages.EventDetails}">
+            <GroupBox Grid.Column="2" Header="{x:Static root:Properties.SessionManager.EventDetails}">
                 <ScrollViewer VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Visible"
                               Background="White">
                     <StackPanel>
