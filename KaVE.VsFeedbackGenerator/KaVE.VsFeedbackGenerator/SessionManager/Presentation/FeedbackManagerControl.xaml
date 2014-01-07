@@ -7,6 +7,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="1000"
              d:DataContext="{d:DesignInstance Type=sessionManager:FeedbackView, IsDesignTimeCreatable=true}"
+             xmlns:const="clr-namespace:KaVE.VsFeedbackGenerator.SessionManager.Presentation"
              Loaded="FeedbackWindowControl_OnLoaded"
              GotKeyboardFocus="SessionManagerControl_OnGotFocus"
              LostKeyboardFocus="SessionManagerControl_OnLostFocus">
@@ -57,7 +58,7 @@
                     <StackPanel Grid.Row="0">
                         <ToolBarTray IsLocked="True">
                             <ToolBar OverflowMode="Never" Loaded="ToolBar_OnLoaded">
-                                <Button ToolTip="Gewahlte Session(s) löschen">
+                                <Button ToolTip="Gewählte Session(s) löschen" Command="{Binding Path=DeleteSessionsCommand}">
                                     <StackPanel Orientation="Horizontal">
                                         <Image Source="/KaVE.VsFeedbackGenerator;Component/Resources/delete.png" />
                                     </StackPanel>
@@ -73,8 +74,8 @@
                               SelectionChanged="SessionListView_OnSelectionChanged" >
                         <ListView.View>
                             <GridView>
-                                <GridViewColumn Header="Sessionbeginn"
-                                                DisplayMemberBinding="{Binding StartDate}"
+                                <GridViewColumn Header="{x:Static const:Messages.SessionDay}"
+                                                DisplayMemberBinding="{Binding StartDate, StringFormat=\{0:dd.MM.yyyy\}}"
                                                 Width="150"/>
                             </GridView>
                         </ListView.View>

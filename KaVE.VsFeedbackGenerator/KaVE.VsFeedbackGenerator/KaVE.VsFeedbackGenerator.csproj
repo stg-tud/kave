@@ -87,6 +87,11 @@
     <Compile Include="Generators\VisualStudio\WindowEventGenerator.cs" />
     <Compile Include="MessageBus\IMessageBus.cs" />
     <Compile Include="MessageBus\TinyMessengerMessageBus.cs" />
+    <Compile Include="SessionManager\Presentation\Messages.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Messages.resx</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SessionManager\FeedbackGeneratorSettings.cs" />
     <Compile Include="SessionManager\Presentation\SessionManagerWindowActionHandler.cs" />
@@ -103,6 +108,7 @@
     <Compile Include="SessionManager\EventView.cs" />
     <Compile Include="SessionManager\FeedbackView.cs" />
     <Compile Include="MessageBus\TinyMessenger.cs" />
+    <Compile Include="Utils\ConfirmedCommand.cs" />
     <Compile Include="Utils\GlobalsExtensions.cs" />
     <Compile Include="Utils\Json\JsonLogFileManager.cs" />
     <Compile Include="Utils\Json\JsonLogReader.cs" />
@@ -128,6 +134,11 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Actions.xml" />
+    <EmbeddedResource Include="SessionManager\Presentation\Messages.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Messages.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Page Include="SessionManager\Presentation\FeedbackManagerControl.xaml">

@@ -10,11 +10,13 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
 {
     public class SessionView : INotifyPropertyChanged
     {
+        public string LogFileName { get; private set; }
         private readonly IList<EventView> _events; 
         private readonly IList<EventView> _selectedEvents;
 
         public SessionView(JsonLogFileManager logFileManager, string logFileName)
         {
+            LogFileName = logFileName;
             _selectedEvents = new List<EventView>();
             // loading eagerly because lazy approaches led to UI display bugs
             // TODO if this should cause memory problems, we have to find a lazier solution...
