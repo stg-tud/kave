@@ -4,16 +4,15 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using System.Windows.Input;
 using JetBrains;
 using JetBrains.Annotations;
 using JetBrains.Application;
 using JetBrains.UI.Extensions.Commands;
 using KaVE.Utils;
-using KaVE.VsFeedbackGenerator.SessionManager.Presentation;
 using KaVE.VsFeedbackGenerator.Utils;
 using KaVE.VsFeedbackGenerator.Utils.Json;
 using NuGet;
+using Messages = KaVE.VsFeedbackGenerator.Properties.SessionManager;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager
 {

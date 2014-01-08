@@ -7,10 +7,10 @@ using System.Linq;
 using JetBrains;
 using JetBrains.UI.Extensions.Commands;
 using KaVE.Model.Events;
-using KaVE.VsFeedbackGenerator.SessionManager.Presentation;
 using KaVE.VsFeedbackGenerator.Utils;
 using KaVE.VsFeedbackGenerator.Utils.Json;
 using NuGet;
+using Messages = KaVE.VsFeedbackGenerator.Properties.SessionManager;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager
 {
