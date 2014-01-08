@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Linq;
 using System.Text;
+using JetBrains.Util;
 using KaVE.Model.Events;
 using KaVE.Utils.Serialization;
 using KaVE.VsFeedbackGenerator.Utils.Json;
@@ -23,6 +25,14 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             }
         }
 
+        public string Trigger
+        {
+            get
+            {
+                return Event.TriggeredBy.ToString();
+            }
+        }
+
         public DateTime StartDateTime
         {
             get
@@ -31,11 +41,11 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             }
         }
 
-        public string StartTime
+        public double DurationInMilliseconds
         {
             get
             {
-                return StartDateTime.ToString("HH:mm:ss");
+                return Event.Duration.HasValue ? Event.Duration.Value.TotalMilliseconds : 0;
             }
         }
 
@@ -43,10 +53,13 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
         {
             get
             {
-                var content = new StringBuilder();
-                content.Append(Event.GetType().Name).Append(Environment.NewLine);
-                content.Append(Event.ToJson(new NameToJsonConverter()).Replace("  ", "      "));
-                return content.ToString();
+                // TODO test this logic!!!
+                var details = Event.ToJson(new NameToJsonConverter()).Replace("  ", "      ");
+                var detailLines = details.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                var numberOfRelevantDetailLines = detailLines.Length - 10;
+                var relevantDetailLines = new string[numberOfRelevantDetailLines];
+                Array.Copy(detailLines, 1, relevantDetailLines, 0, numberOfRelevantDetailLines);
+                return relevantDetailLines.Join(Environment.NewLine);
             }
         }
     }

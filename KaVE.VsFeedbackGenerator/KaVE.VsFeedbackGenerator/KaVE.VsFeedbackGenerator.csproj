@@ -124,6 +124,7 @@
     <Compile Include="Utils\Names\ReSharperDeclaredElementNameFactory.cs" />
     <Compile Include="Utils\Names\ReSharperTypeNameFactory.cs" />
     <Compile Include="Utils\Names\VsComponentNameFactory.cs" />
+    <Compile Include="Utils\ObjectToVisibilityConverter.cs" />
     <Compile Include="VsIntegration\IDESession.cs" />
     <Compile Include="VsIntegration\IIDESession.cs" />
   </ItemGroup>

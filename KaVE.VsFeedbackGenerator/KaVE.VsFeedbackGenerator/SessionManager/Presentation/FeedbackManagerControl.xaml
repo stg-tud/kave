@@ -8,10 +8,12 @@
              d:DesignHeight="300" d:DesignWidth="1000"
              d:DataContext="{d:DesignInstance Type=sessionManager:FeedbackView, IsDesignTimeCreatable=False}"
              xmlns:root="clr-namespace:KaVE.VsFeedbackGenerator"
+             xmlns:util="clr-namespace:KaVE.VsFeedbackGenerator.Utils"
              Loaded="FeedbackWindowControl_OnLoaded"
              GotKeyboardFocus="SessionManagerControl_OnGotFocus"
              LostKeyboardFocus="SessionManagerControl_OnLostFocus">
     <UserControl.Resources>
+        <util:ObjectToVisibilityConverter x:Key="ObjectToVisibilityConverter" />
         <Style TargetType="{x:Type Button}" x:Key="DefaultDisabledButton">
             <Style.Triggers>
                 <Trigger Property="Command" Value="{x:Null}">
@@ -22,33 +24,24 @@
     </UserControl.Resources>
     <DockPanel>
         <ToolBarTray IsLocked="True" DockPanel.Dock="Top" AllowDrop="False">
-            <ToolBar OverflowMode="Never" Loaded="ToolBar_OnLoaded">
+            <ToolBar OverflowMode="Never" Loaded="ToolBar_OnLoaded" Name="ToolBar">
                 <Button ToolTip="{x:Static root:Properties.SessionManager.Refresh}" Click="RefreshButton_OnClick">
-                    <StackPanel Orientation="Horizontal">
-                        <Image Source="/KaVE.VsFeedbackGenerator;Component/Resources/refresh.png" />
-                    </StackPanel>
+                    <Image Source="/KaVE.VsFeedbackGenerator;Component/Resources/refresh.png" />
                 </Button>
                 <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
                 <Button ToolTip="{x:Static root:Properties.SessionManager.Export}">
-                    <StackPanel Orientation="Horizontal">
-                        <Image Source="/KaVE.VsFeedbackGenerator;Component/Resources/export.png" />
-                    </StackPanel>
+                    <Image Source="/KaVE.VsFeedbackGenerator;Component/Resources/export.png" />
                 </Button>
                 <Button ToolTip="{x:Static root:Properties.SessionManager.Send}">
-                    <StackPanel Orientation="Horizontal">
-                        <Image Source="/KaVE.VsFeedbackGenerator;Component/Resources/send.png" />
-                    </StackPanel>
+                    <Image Source="/KaVE.VsFeedbackGenerator;Component/Resources/send.png" />
                 </Button>
                 <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
                 <Button ToolTip="{x:Static root:Properties.SessionManager.Options}">
-                    <StackPanel Orientation="Horizontal">
-                        <Image Source="/KaVE.VsFeedbackGenerator;Component/Resources/options.png" />
-                    </StackPanel>
+                    <Image Source="/KaVE.VsFeedbackGenerator;Component/Resources/options.png" />
                 </Button>
-                <Button ToolTip="{x:Static root:Properties.SessionManager.VisitHomepage}" Click="VisitHomepageButton_OnClick">
-                    <StackPanel Orientation="Horizontal">
-                        <Image Source="/KaVE.VsFeedbackGenerator;Component/Resources/website.png" />
-                    </StackPanel>
+                <Button ToolTip="{x:Static root:Properties.SessionManager.VisitHomepage}"
+                        Click="VisitHomepageButton_OnClick">
+                    <Image Source="/KaVE.VsFeedbackGenerator;Component/Resources/website.png" />
                 </Button>
             </ToolBar>
         </ToolBarTray>
@@ -64,18 +57,13 @@
                         <RowDefinition Height="auto" />
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
-                    <StackPanel Grid.Row="0">
-                        <ToolBarTray IsLocked="True">
-                            <ToolBar OverflowMode="Never" Loaded="ToolBar_OnLoaded">
-                                <Button ToolTip="{x:Static root:Properties.SessionManager.SessionDelete}"
-                                        Command="{Binding Path=DeleteSessionsCommand, FallbackValue={x:Null}}"
-                                        Style="{StaticResource DefaultDisabledButton}">
-                                    <StackPanel Orientation="Horizontal">
-                                        <Image Source="/KaVE.VsFeedbackGenerator;Component/Resources/delete.png" />
-                                    </StackPanel>
-                                </Button>
-                            </ToolBar>
-                        </ToolBarTray>
+                    <StackPanel Grid.Row="0" Orientation="Horizontal"
+                                Height="21" Margin="0, 3, 0, 3">
+                        <Button ToolTip="{x:Static root:Properties.SessionManager.SessionDelete}"
+                                Command="{Binding Path=DeleteSessionsCommand, FallbackValue={x:Null}}"
+                                Style="{StaticResource DefaultDisabledButton}">
+                            <Image Source="/KaVE.VsFeedbackGenerator;Component/Resources/delete.png" />
+                        </Button>
                     </StackPanel>
                     <ListView Grid.Row="1"
                               Name="SessionListView"
@@ -94,23 +82,19 @@
                 </Grid>
             </GroupBox>
             <GroupBox Grid.Column="1" MinWidth="250" Header="{x:Static root:Properties.SessionManager.Events}">
-                <Grid DataContext="{Binding SingleSelectedSession}">
+                <Grid DataContext="{Binding SingleSelectedSession, FallbackValue={x:Null}}"
+                      Visibility="{Binding Converter={StaticResource ObjectToVisibilityConverter}, Path=., FallbackValue=Collapsed}">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto" />
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
-                    <StackPanel Grid.Row="0" Orientation="Horizontal">
-                        <ToolBarTray IsLocked="True" AllowDrop="False">
-                            <ToolBar OverflowMode="Never" Loaded="ToolBar_OnLoaded">
-                                <Button ToolTip="{x:Static root:Properties.SessionManager.EventDelete}"
-                                        Style="{StaticResource DefaultDisabledButton}"
-                                        Command="{Binding Path=DeleteEventsCommand, FallbackValue={x:Null}}">
-                                    <StackPanel Orientation="Horizontal">
-                                        <Image Source="/KaVE.VsFeedbackGenerator;Component/Resources/delete.png" />
-                                    </StackPanel>
-                                </Button>
-                            </ToolBar>
-                        </ToolBarTray>
+                    <StackPanel Grid.Row="0" Orientation="Horizontal"
+                                Height="21" Margin="0, 3, 0, 3">
+                        <Button ToolTip="{x:Static root:Properties.SessionManager.EventDelete}"
+                                Style="{StaticResource DefaultDisabledButton}"
+                                Command="{Binding Path=DeleteEventsCommand, FallbackValue={x:Null}}">
+                            <Image Source="/KaVE.VsFeedbackGenerator;Component/Resources/delete.png" />
+                        </Button>
                     </StackPanel>
                     <ListView Grid.Row="1"
                               Name="EventListView"
@@ -121,7 +105,7 @@
                         <ListView.View>
                             <GridView>
                                 <GridViewColumn Header="{x:Static root:Properties.SessionManager.EventTime}"
-                                                DisplayMemberBinding="{Binding StartTime}"
+                                                DisplayMemberBinding="{Binding StartDateTime, StringFormat=\{0:HH\:mm tt\}}"
                                                 Width="80" />
                                 <GridViewColumn Header="{x:Static root:Properties.SessionManager.EventType}"
                                                 DisplayMemberBinding="{Binding EventType}"
@@ -132,12 +116,56 @@
                 </Grid>
             </GroupBox>
             <GroupBox Grid.Column="2" Header="{x:Static root:Properties.SessionManager.EventDetails}">
-                <ScrollViewer VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Visible"
-                              Background="White">
-                    <StackPanel>
-                        <TextBlock Text="{Binding SingleSelectedSession.SingleSelectedEvent.Content}" />
+                <Grid DataContext="{Binding SingleSelectedSession.SingleSelectedEvent, FallbackValue={x:Null}}"
+                      Visibility="{Binding Converter={StaticResource ObjectToVisibilityConverter}, Path=., FallbackValue=Collapsed}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <StackPanel Grid.Row="0">
+                        <StackPanel Orientation="Horizontal" Margin="10,10,0,1">
+                            <TextBlock Text="Auslöser: " Width="110" />
+                            <Border BorderThickness="1" BorderBrush="DimGray" Padding="0" CornerRadius="1">
+                                <TextBlock Text="{Binding Trigger}" Background="White" Padding="1" Width="100"
+                                           TextAlignment="Left" />
+                            </Border>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="10,0,0,1">
+                            <TextBlock Text="Dauer: " Width="110" />
+                            <Border BorderThickness="1" BorderBrush="DimGray" Padding="0" CornerRadius="1">
+                                <TextBlock Text="{Binding DurationInMilliseconds, StringFormat=\{0:F0\}}"
+                                           Background="White" Padding="1,1,2,1" MinWidth="100" TextAlignment="Right" />
+                            </Border>
+                            <TextBlock Text="ms" Margin="1,0,0,0" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="10,0,0,1">
+                            <TextBlock Text="Aktives Fenster: " Width="110" />
+                            <Border BorderThickness="1" BorderBrush="DimGray" Padding="0" CornerRadius="1">
+                                <TextBlock Text="{Binding Event.ActiveWindow.Caption}" Background="White" Padding="1"
+                                           MinWidth="300" TextAlignment="Left" />
+                            </Border>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="10,0,0,5">
+                            <TextBlock Text="Aktives Dokument: " Width="110" />
+                            <Border BorderThickness="1" BorderBrush="DimGray" Padding="0" CornerRadius="1">
+                                <TextBlock Text="{Binding Event.ActiveDocument.Identifier}" Background="White"
+                                           Padding="1"
+                                           MinWidth="300" TextAlignment="Left" />
+                            </Border>
+                        </StackPanel>
+                        <TextBlock Text="Details:" Margin="10,0,0,2" />
                     </StackPanel>
-                </ScrollViewer>
+
+                    <Border Grid.Row="1" BorderThickness="1" BorderBrush="DimGray" Padding="0" CornerRadius="1"
+                            Margin="10,0,0,0">
+                        <ScrollViewer VerticalScrollBarVisibility="Visible"
+                                      HorizontalScrollBarVisibility="Visible" Background="White">
+                            <StackPanel>
+                                <TextBlock Text="{Binding Content}" />
+                            </StackPanel>
+                        </ScrollViewer>
+                    </Border>
+                </Grid>
             </GroupBox>
         </Grid>
     </DockPanel>
