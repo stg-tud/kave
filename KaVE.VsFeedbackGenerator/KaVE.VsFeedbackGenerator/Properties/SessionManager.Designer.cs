@@ -61,6 +61,33 @@ namespace KaVE.VsFeedbackGenerator.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Aktives Dokument.
+        /// </summary>
+        public static string EventActiveDocument {
+            get {
+                return ResourceManager.GetString("EventActiveDocument", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Aktives Fenster.
+        /// </summary>
+        public static string EventActiveWindow {
+            get {
+                return ResourceManager.GetString("EventActiveWindow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Eventdaten.
+        /// </summary>
+        public static string EventData {
+            get {
+                return ResourceManager.GetString("EventData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Gewählte Event(s) löschen.
         /// </summary>
         public static string EventDelete {
@@ -97,11 +124,29 @@ namespace KaVE.VsFeedbackGenerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Eventdaten.
+        ///   Looks up a localized string similar to Details.
         /// </summary>
         public static string EventDetails {
             get {
                 return ResourceManager.GetString("EventDetails", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Dauer.
+        /// </summary>
+        public static string EventDuration {
+            get {
+                return ResourceManager.GetString("EventDuration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ms.
+        /// </summary>
+        public static string EventDurationUnit {
+            get {
+                return ResourceManager.GetString("EventDurationUnit", resourceCulture);
             }
         }
         
@@ -120,6 +165,15 @@ namespace KaVE.VsFeedbackGenerator.Properties {
         public static string EventTime {
             get {
                 return ResourceManager.GetString("EventTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Auslöser.
+        /// </summary>
+        public static string EventTrigger {
+            get {
+                return ResourceManager.GetString("EventTrigger", resourceCulture);
             }
         }
         
@@ -205,6 +259,15 @@ namespace KaVE.VsFeedbackGenerator.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Lade Feedback....
+        /// </summary>
+        public static string Refreshing {
+            get {
+                return ResourceManager.GetString("Refreshing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Feedback versenden..
         /// </summary>
         public static string Send {
@@ -259,7 +322,7 @@ namespace KaVE.VsFeedbackGenerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Sessions.
+        ///   Looks up a localized string similar to Tage.
         /// </summary>
         public static string Sessions {
             get {

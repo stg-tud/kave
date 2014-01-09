@@ -129,7 +129,7 @@
   <data name="EventDeleteConfirmTitle" xml:space="preserve">
     <value>Event(s) löschen</value>
   </data>
-  <data name="EventDetails" xml:space="preserve">
+  <data name="EventData" xml:space="preserve">
     <value>Eventdaten</value>
   </data>
   <data name="Events" xml:space="preserve">
@@ -169,7 +169,7 @@
     <value>Session(s) löschen</value>
   </data>
   <data name="Sessions" xml:space="preserve">
-    <value>Sessions</value>
+    <value>Tage</value>
   </data>
   <data name="VisitHomepage" xml:space="preserve">
     <value>Die Projektwebseite besuchen...</value>
@@ -188,5 +188,26 @@
   </data>
   <data name="Option_TrackStartTime" xml:space="preserve">
     <value>Auslösezeitpunkt von Events im Feedback erfassen.</value>
+  </data>
+  <data name="EventActiveDocument" xml:space="preserve">
+    <value>Aktives Dokument</value>
+  </data>
+  <data name="EventActiveWindow" xml:space="preserve">
+    <value>Aktives Fenster</value>
+  </data>
+  <data name="EventDetails" xml:space="preserve">
+    <value>Details</value>
+  </data>
+  <data name="EventDuration" xml:space="preserve">
+    <value>Dauer</value>
+  </data>
+  <data name="EventDurationUnit" xml:space="preserve">
+    <value>ms</value>
+  </data>
+  <data name="EventTrigger" xml:space="preserve">
+    <value>Auslöser</value>
+  </data>
+  <data name="Refreshing" xml:space="preserve">
+    <value>Lade Feedback...</value>
   </data>
 </root>

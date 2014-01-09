@@ -44,7 +44,8 @@
     </UserControl.Resources>
     <DockPanel>
         <ToolBarTray IsLocked="True" DockPanel.Dock="Top" AllowDrop="False">
-            <ToolBar OverflowMode="Never" Loaded="ToolBar_OnLoaded" IsEnabled="{Binding Refreshing, Converter={StaticResource InverseBoolConverter}}">
+            <ToolBar OverflowMode="Never" Loaded="ToolBar_OnLoaded"
+                     IsEnabled="{Binding Refreshing, Converter={StaticResource InverseBoolConverter}}">
                 <Button ToolTip="{x:Static root:Properties.SessionManager.Refresh}" Click="RefreshButton_OnClick">
                     <Image Source="/KaVE.VsFeedbackGenerator;Component/Resources/refresh.png" />
                 </Button>
@@ -67,15 +68,15 @@
         </ToolBarTray>
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="250" />
+                <ColumnDefinition Width="150" />
                 <ColumnDefinition Width="250" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             <!-- SESSION LIST -->
-            <GroupBox Grid.Column="0" MinWidth="250" Header="{x:Static root:Properties.SessionManager.Sessions}">
+            <GroupBox Grid.Column="0" MinWidth="150" Header="{x:Static root:Properties.SessionManager.Sessions}">
                 <Grid>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="Auto" />
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
                     <StackPanel Grid.Row="0" Orientation="Horizontal"
@@ -92,11 +93,14 @@
                               ItemsSource="{Binding Source={StaticResource SortedSessions}}"
                               SelectionMode="Extended"
                               SelectionChanged="SessionListView_OnSelectionChanged">
+                        <ListView.Resources>
+                            <Style TargetType="GridViewColumnHeader">
+                                <Setter Property="Visibility" Value="Collapsed" />
+                            </Style>
+                        </ListView.Resources>
                         <ListView.View>
                             <GridView>
-                                <GridViewColumn Header="{x:Static root:Properties.SessionManager.SessionDay}"
-                                                DisplayMemberBinding="{Binding StartDate, StringFormat=\{0:dd.MM.yyyy\}}"
-                                                Width="150" />
+                                <GridViewColumn DisplayMemberBinding="{Binding StartDate, StringFormat=\{0:dd.MM.yyyy\}}" />
                             </GridView>
                         </ListView.View>
                     </ListView>
@@ -107,7 +111,7 @@
                 <Grid DataContext="{Binding SingleSelectedSession, FallbackValue={x:Null}}"
                       Visibility="{Binding Converter={StaticResource ObjectToVisibilityConverter}, Path=., FallbackValue=Collapsed}">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="Auto" />
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
                     <StackPanel Grid.Row="0" Orientation="Horizontal"
@@ -138,56 +142,58 @@
                 </Grid>
             </GroupBox>
             <!-- EVENT INFORMATION -->
-            <GroupBox Grid.Column="2" Header="{x:Static root:Properties.SessionManager.EventDetails}">
+            <GroupBox Grid.Column="2" Header="{x:Static root:Properties.SessionManager.EventData}">
                 <Grid DataContext="{Binding SingleSelectedSession.SingleSelectedEvent, FallbackValue={x:Null}}"
                       Visibility="{Binding Converter={StaticResource ObjectToVisibilityConverter}, Path=., FallbackValue=Collapsed}">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
-                    <StackPanel Grid.Row="0">
-                        <StackPanel Orientation="Horizontal" Margin="10,10,0,1">
-                            <TextBlock Text="Auslöser: " Width="110" />
-                            <Border BorderThickness="1" BorderBrush="DimGray" Padding="0" CornerRadius="1">
-                                <TextBlock Text="{Binding Trigger}" Background="White" Padding="1" Width="100"
-                                           TextAlignment="Left" />
-                            </Border>
-                        </StackPanel>
-                        <StackPanel Orientation="Horizontal" Margin="10,0,0,1">
-                            <TextBlock Text="Dauer: " Width="110" />
-                            <Border BorderThickness="1" BorderBrush="DimGray" Padding="0" CornerRadius="1">
-                                <TextBlock Text="{Binding DurationInMilliseconds, StringFormat=\{0:F0\}}"
-                                           Background="White" Padding="1,1,2,1" MinWidth="100" TextAlignment="Right" />
-                            </Border>
-                            <TextBlock Text="ms" Margin="1,0,0,0" />
-                        </StackPanel>
-                        <StackPanel Orientation="Horizontal" Margin="10,0,0,1">
-                            <TextBlock Text="Aktives Fenster: " Width="110" />
-                            <Border BorderThickness="1" BorderBrush="DimGray" Padding="0" CornerRadius="1">
-                                <TextBlock Text="{Binding Event.ActiveWindow.Caption}" Background="White" Padding="1"
-                                           MinWidth="300" TextAlignment="Left" />
-                            </Border>
-                        </StackPanel>
-                        <StackPanel Orientation="Horizontal" Margin="10,0,0,5">
-                            <TextBlock Text="Aktives Dokument: " Width="110" />
-                            <Border BorderThickness="1" BorderBrush="DimGray" Padding="0" CornerRadius="1">
-                                <TextBlock Text="{Binding Event.ActiveDocument.Identifier}" Background="White"
-                                           Padding="1"
-                                           MinWidth="300" TextAlignment="Left" />
-                            </Border>
-                        </StackPanel>
-                        <TextBlock Text="Details:" Margin="10,0,0,2" />
+                    <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="10,10,0,1">
+                        <TextBlock Text="{x:Static root:Properties.SessionManager.EventTrigger}" Width="110" />
+                        <Border BorderThickness="1" BorderBrush="DimGray" Padding="0" CornerRadius="1">
+                            <TextBlock Text="{Binding Trigger}" Background="White" Padding="1" Width="100"
+                                       TextAlignment="Left" />
+                        </Border>
+                    </StackPanel>
+                    <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="10,0,0,1">
+                        <TextBlock Text="{x:Static root:Properties.SessionManager.EventDuration}" Width="110" />
+                        <Border BorderThickness="1" BorderBrush="DimGray" Padding="0" CornerRadius="1">
+                            <TextBlock Text="{Binding DurationInMilliseconds, StringFormat=\{0:F0\}}"
+                                       Background="White" Padding="1,1,2,1" MinWidth="100" TextAlignment="Right" />
+                        </Border>
+                        <TextBlock Text="{x:Static root:Properties.SessionManager.EventDurationUnit}" Margin="1,0,0,0" />
+                    </StackPanel>
+                    <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="10,0,0,1">
+                        <TextBlock Text="{x:Static root:Properties.SessionManager.EventActiveWindow}" Width="110" />
+                        <Border BorderThickness="1" BorderBrush="DimGray" Padding="0" CornerRadius="1">
+                            <TextBlock Text="{Binding Event.ActiveWindow.Caption}" Background="White" Padding="1"
+                                       MinWidth="300" TextAlignment="Left" />
+                        </Border>
+                    </StackPanel>
+                    <StackPanel Grid.Row="3" Orientation="Horizontal" Margin="10,0,0,5">
+                        <TextBlock Text="{x:Static root:Properties.SessionManager.EventActiveDocument}" Width="110" />
+                        <Border BorderThickness="1" BorderBrush="DimGray" Padding="0" CornerRadius="1">
+                            <TextBlock Text="{Binding Event.ActiveDocument.Identifier}" Background="White"
+                                       Padding="1"
+                                       MinWidth="300" TextAlignment="Left" />
+                        </Border>
                     </StackPanel>
                     <!-- DETAILS SCROLLBOX -->
-                    <Border Grid.Row="1" BorderThickness="1" BorderBrush="DimGray" Padding="0" CornerRadius="1"
-                            Margin="10,0,0,0">
-                        <ScrollViewer VerticalScrollBarVisibility="Visible"
-                                      HorizontalScrollBarVisibility="Visible" Background="White">
-                            <StackPanel>
-                                <TextBlock Text="{Binding Details}" />
-                            </StackPanel>
-                        </ScrollViewer>
-                    </Border>
+                    <GroupBox Grid.Row="4" Header="{x:Static root:Properties.SessionManager.EventDetails}">
+                        <Border BorderThickness="1" BorderBrush="DimGray" Padding="0" CornerRadius="1"
+                                Margin="0,3,0,0">
+                            <ScrollViewer VerticalScrollBarVisibility="Visible"
+                                          HorizontalScrollBarVisibility="Visible" Background="White">
+                                <StackPanel>
+                                    <TextBlock Text="{Binding Details}" />
+                                </StackPanel>
+                            </ScrollViewer>
+                        </Border>
+                    </GroupBox>
                 </Grid>
             </GroupBox>
             <!-- REFRESH OVERLAY -->
@@ -195,7 +201,9 @@
                     Visibility="{Binding Refreshing, Converter={StaticResource BoolToVisibilityConverter}}"
                     Grid.ColumnSpan="3"
                     Grid.Column="0">
-                <TextBlock Text="Lade Feedback..." HorizontalAlignment="Center" VerticalAlignment="Center"
+                <TextBlock Text="{x:Static root:Properties.SessionManager.Refreshing}"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
                            FontWeight="Bold" FontSize="24" />
             </Border>
         </Grid>
