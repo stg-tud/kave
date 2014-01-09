@@ -101,9 +101,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
 
         private void RefreshControl()
         {
-            // TODO enable "loading" screen
-            _feedbackView.RefreshSessions();
-            // TODO disable "loading" screen
+            _feedbackView.Refresh();
         }
     }
 }

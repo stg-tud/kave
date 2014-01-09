@@ -15,6 +15,8 @@
              LostKeyboardFocus="SessionManagerControl_OnLostFocus">
     <UserControl.Resources>
         <util:ObjectToVisibilityConverter x:Key="ObjectToVisibilityConverter" />
+        <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+        <util:InverseBoolConverter x:Key="InverseBoolConverter" />
         <Style TargetType="{x:Type Button}" x:Key="DefaultDisabledButton">
             <Style.Triggers>
                 <Trigger Property="Command" Value="{x:Null}">
@@ -22,20 +24,27 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
+        <Style TargetType="Image">
+            <Style.Triggers>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Opacity" Value="0.5" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
         <CollectionViewSource x:Key="SortedSessions" Source="{Binding Sessions}">
             <CollectionViewSource.SortDescriptions>
-                <scm:SortDescription PropertyName="StartDate" Direction="Descending"></scm:SortDescription>
+                <scm:SortDescription PropertyName="StartDate" Direction="Descending" />
             </CollectionViewSource.SortDescriptions>
         </CollectionViewSource>
         <CollectionViewSource x:Key="SortedEvents" Source="{Binding SingleSelectedSession.Events}">
             <CollectionViewSource.SortDescriptions>
-                <scm:SortDescription PropertyName="StartDateTime" Direction="Descending"></scm:SortDescription>
+                <scm:SortDescription PropertyName="StartDateTime" Direction="Descending" />
             </CollectionViewSource.SortDescriptions>
         </CollectionViewSource>
     </UserControl.Resources>
     <DockPanel>
         <ToolBarTray IsLocked="True" DockPanel.Dock="Top" AllowDrop="False">
-            <ToolBar OverflowMode="Never" Loaded="ToolBar_OnLoaded">
+            <ToolBar OverflowMode="Never" Loaded="ToolBar_OnLoaded" IsEnabled="{Binding Refreshing, Converter={StaticResource InverseBoolConverter}}">
                 <Button ToolTip="{x:Static root:Properties.SessionManager.Refresh}" Click="RefreshButton_OnClick">
                     <Image Source="/KaVE.VsFeedbackGenerator;Component/Resources/refresh.png" />
                 </Button>
@@ -62,6 +71,7 @@
                 <ColumnDefinition Width="250" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
+            <!-- SESSION LIST -->
             <GroupBox Grid.Column="0" MinWidth="250" Header="{x:Static root:Properties.SessionManager.Sessions}">
                 <Grid>
                     <Grid.RowDefinitions>
@@ -92,6 +102,7 @@
                     </ListView>
                 </Grid>
             </GroupBox>
+            <!-- EVENT LIST -->
             <GroupBox Grid.Column="1" MinWidth="250" Header="{x:Static root:Properties.SessionManager.Events}">
                 <Grid DataContext="{Binding SingleSelectedSession, FallbackValue={x:Null}}"
                       Visibility="{Binding Converter={StaticResource ObjectToVisibilityConverter}, Path=., FallbackValue=Collapsed}">
@@ -126,6 +137,7 @@
                     </ListView>
                 </Grid>
             </GroupBox>
+            <!-- EVENT INFORMATION -->
             <GroupBox Grid.Column="2" Header="{x:Static root:Properties.SessionManager.EventDetails}">
                 <Grid DataContext="{Binding SingleSelectedSession.SingleSelectedEvent, FallbackValue={x:Null}}"
                       Visibility="{Binding Converter={StaticResource ObjectToVisibilityConverter}, Path=., FallbackValue=Collapsed}">
@@ -166,7 +178,7 @@
                         </StackPanel>
                         <TextBlock Text="Details:" Margin="10,0,0,2" />
                     </StackPanel>
-
+                    <!-- DETAILS SCROLLBOX -->
                     <Border Grid.Row="1" BorderThickness="1" BorderBrush="DimGray" Padding="0" CornerRadius="1"
                             Margin="10,0,0,0">
                         <ScrollViewer VerticalScrollBarVisibility="Visible"
@@ -178,6 +190,14 @@
                     </Border>
                 </Grid>
             </GroupBox>
+            <!-- REFRESH OVERLAY -->
+            <Border Background="LightGray" Opacity=".7"
+                    Visibility="{Binding Refreshing, Converter={StaticResource BoolToVisibilityConverter}}"
+                    Grid.ColumnSpan="3"
+                    Grid.Column="0">
+                <TextBlock Text="Lade Feedback..." HorizontalAlignment="Center" VerticalAlignment="Center"
+                           FontWeight="Bold" FontSize="24" />
+            </Border>
         </Grid>
     </DockPanel>
 </UserControl>

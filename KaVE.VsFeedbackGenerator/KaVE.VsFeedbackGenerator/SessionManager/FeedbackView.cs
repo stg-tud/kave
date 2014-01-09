@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using JetBrains;
 using JetBrains.Annotations;
 using JetBrains.Application;
@@ -23,6 +24,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
         private readonly IList<SessionView> _sessions;
         private readonly IList<SessionView> _selectedSessions;
         private DelegateCommand _deleteSessionsCommand;
+        private bool _refreshing;
 
         public FeedbackView(JsonLogFileManager logFileManager)
         {
@@ -32,36 +34,52 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             Released = true;
         }
 
-        public void RefreshSessions()
+        public void Refresh()
         {
-            Invoke.OnDispatcherAsync(
+            Refreshing = true;
+            new Task(
                 () =>
                 {
                     Sessions =
                         _logFileManager.GetLogFileNames()
                             .Select(logFileName => new SessionView(_logFileManager, logFileName));
+                    Refreshing = false;
                     Released = false;
-                });
+                }
+                ).Start();
         }
 
         public void Release()
         {
-            Invoke.OnDispatcherAsync(
-                () =>
-                {
-                    _sessions.Clear();
-                    Released = true;
-                });
+            Sessions = null;
+            Released = true;
         }
 
         public bool Released { get; private set; }
+
+        public bool Refreshing
+        {
+            get { return _refreshing; }
+            private set
+            {
+                _refreshing = value;
+                OnPropertyChanged("Refreshing");
+            }
+        }
 
         public IEnumerable<SessionView> Sessions
         {
             private set
             {
-                _sessions.Clear();
-                _sessions.AddRange(value);
+                Invoke.OnDispatcher(
+                    () =>
+                    {
+                        _sessions.Clear();
+                        if (value != null)
+                        {
+                            _sessions.AddRange(value);
+                        }
+                    });
             }
             get { return _sessions; }
         }
@@ -84,7 +102,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             get { return _selectedSessions.Count == 1 ? _selectedSessions.First() : null; }
         }
 
-        #region Delete-Sessions Command implementation
+        #region DeleteSessionsCommand implementation
 
         public DelegateCommand DeleteSessionsCommand
         {

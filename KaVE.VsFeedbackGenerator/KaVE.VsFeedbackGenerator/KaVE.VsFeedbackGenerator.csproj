@@ -115,6 +115,7 @@
     <Compile Include="MessageBus\TinyMessenger.cs" />
     <Compile Include="Utils\ConfirmedCommand.cs" />
     <Compile Include="Utils\GlobalsExtensions.cs" />
+    <Compile Include="Utils\InverseBoolConverter.cs" />
     <Compile Include="Utils\Json\EnumToStringConverter.cs" />
     <Compile Include="Utils\Json\JsonLogFileManager.cs" />
     <Compile Include="Utils\Json\JsonLogReader.cs" />
