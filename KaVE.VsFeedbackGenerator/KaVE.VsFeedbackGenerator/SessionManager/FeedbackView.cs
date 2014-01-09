@@ -29,26 +29,29 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             _logFileManager = logFileManager;
             _sessions = new ObservableCollection<SessionView>();
             _selectedSessions = new List<SessionView>();
-
-            RefreshSessions();
+            Released = true;
         }
 
         public void RefreshSessions()
         {
-            Invoke.OnDispatcher(
+            Invoke.OnDispatcherAsync(
                 () =>
                 {
                     Sessions =
                         _logFileManager.GetLogFileNames()
                             .Select(logFileName => new SessionView(_logFileManager, logFileName));
+                    Released = false;
                 });
-            Released = false;
         }
 
         public void Release()
         {
-            Invoke.OnDispatcher(() => _sessions.Clear());
-            Released = true;
+            Invoke.OnDispatcherAsync(
+                () =>
+                {
+                    _sessions.Clear();
+                    Released = true;
+                });
         }
 
         public bool Released { get; private set; }

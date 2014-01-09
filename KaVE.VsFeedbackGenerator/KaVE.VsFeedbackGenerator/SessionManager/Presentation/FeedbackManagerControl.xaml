@@ -7,6 +7,7 @@
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="1000"
              d:DataContext="{d:DesignInstance Type=sessionManager:FeedbackView, IsDesignTimeCreatable=False}"
+             xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
              xmlns:root="clr-namespace:KaVE.VsFeedbackGenerator"
              xmlns:util="clr-namespace:KaVE.VsFeedbackGenerator.Utils"
              Loaded="FeedbackWindowControl_OnLoaded"
@@ -21,10 +22,20 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
+        <CollectionViewSource x:Key="SortedSessions" Source="{Binding Sessions}">
+            <CollectionViewSource.SortDescriptions>
+                <scm:SortDescription PropertyName="StartDate" Direction="Descending"></scm:SortDescription>
+            </CollectionViewSource.SortDescriptions>
+        </CollectionViewSource>
+        <CollectionViewSource x:Key="SortedEvents" Source="{Binding SingleSelectedSession.Events}">
+            <CollectionViewSource.SortDescriptions>
+                <scm:SortDescription PropertyName="StartDateTime" Direction="Descending"></scm:SortDescription>
+            </CollectionViewSource.SortDescriptions>
+        </CollectionViewSource>
     </UserControl.Resources>
     <DockPanel>
         <ToolBarTray IsLocked="True" DockPanel.Dock="Top" AllowDrop="False">
-            <ToolBar OverflowMode="Never" Loaded="ToolBar_OnLoaded" Name="ToolBar">
+            <ToolBar OverflowMode="Never" Loaded="ToolBar_OnLoaded">
                 <Button ToolTip="{x:Static root:Properties.SessionManager.Refresh}" Click="RefreshButton_OnClick">
                     <Image Source="/KaVE.VsFeedbackGenerator;Component/Resources/refresh.png" />
                 </Button>
@@ -68,7 +79,7 @@
                     <ListView Grid.Row="1"
                               Name="SessionListView"
                               x:FieldModifier="private"
-                              ItemsSource="{Binding Sessions}"
+                              ItemsSource="{Binding Source={StaticResource SortedSessions}}"
                               SelectionMode="Extended"
                               SelectionChanged="SessionListView_OnSelectionChanged">
                         <ListView.View>
@@ -99,14 +110,14 @@
                     <ListView Grid.Row="1"
                               Name="EventListView"
                               x:FieldModifier="private"
-                              ItemsSource="{Binding Events}"
+                              ItemsSource="{Binding Source={StaticResource SortedEvents}}"
                               SelectionMode="Extended"
                               SelectionChanged="EventListView_OnSelectionChanged">
                         <ListView.View>
                             <GridView>
                                 <GridViewColumn Header="{x:Static root:Properties.SessionManager.EventTime}"
-                                                DisplayMemberBinding="{Binding StartDateTime, StringFormat=\{0:HH\:mm tt\}}"
-                                                Width="80" />
+                                                DisplayMemberBinding="{Binding StartDateTime, StringFormat=\{0:HH\:mm\:ss tt\}}"
+                                                Width="100" />
                                 <GridViewColumn Header="{x:Static root:Properties.SessionManager.EventType}"
                                                 DisplayMemberBinding="{Binding EventType}"
                                                 Width="100" />

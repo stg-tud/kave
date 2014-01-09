@@ -24,7 +24,7 @@ namespace KaVE.VsFeedbackGenerator.Utils.Names
         }
 
         [NotNull]
-        public static IList<WindowName> GetNamesOf([NotNull] this Windows windows)
+        public static IList<WindowName> GetNames([NotNull] this Windows windows)
         {
             Asserts.NotNull(windows, "windows");
             return (from Window window in windows select window.GetName()).ToList();
@@ -84,7 +84,7 @@ namespace KaVE.VsFeedbackGenerator.Utils.Names
 
 
         [NotNull]
-        public static IList<DocumentName> GetNamesOf([NotNull] this Documents documents)
+        public static IList<DocumentName> GetNames([NotNull] this Documents documents)
         {
             Asserts.NotNull(documents, "documents");
             return (from Document document in documents select document.GetName()).ToList();

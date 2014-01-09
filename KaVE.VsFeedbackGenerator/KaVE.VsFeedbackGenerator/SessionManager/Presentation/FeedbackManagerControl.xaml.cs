@@ -20,10 +20,6 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
             _feedbackView = holder;
             DataContext = holder;
             InitializeComponent();
-            
-            // TODO: Move this to XAML if someone should find out how to do this
-            SessionListView.Items.SortDescriptions.Add(new SortDescription("StartDate", ListSortDirection.Descending));
-            EventListView.Items.SortDescriptions.Add(new SortDescription("StartTime", ListSortDirection.Descending));
         }
 
         private void FeedbackWindowControl_OnLoaded(object sender, RoutedEventArgs e)
@@ -48,11 +44,21 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
             }
         }
 
+        /// <summary>
+        /// Unfortunately, SelectedItems is not a bidirectional control property, hence, we cannot bind it to a
+        /// property of out view model to access the set of selected items. Therefore, we react on selection changes
+        /// here and update our model property manually.
+        /// </summary>
         private void SessionListView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             _feedbackView.SelectedSessions = SessionListView.SelectedItems.Cast<SessionView>();
         }
 
+        /// <summary>
+        /// Unfortunately, SelectedItems is not a bidirectional control property, hence, we cannot bind it to a
+        /// property of out view model to access the set of selected items. Therefore, we react on selection changes
+        /// here and update our model property manually.
+        /// </summary>
         private void EventListView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (_feedbackView.SingleSelectedSession != null)

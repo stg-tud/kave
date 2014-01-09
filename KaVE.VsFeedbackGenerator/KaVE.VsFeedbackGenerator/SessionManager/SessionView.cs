@@ -41,7 +41,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             // TODO include date in log file name and extract it here
             get
             {
-                return _events.First().StartDateTime;
+                return _events.First().StartDateTime.Date;
             }
         }
 
