@@ -161,7 +161,7 @@
                         <ScrollViewer VerticalScrollBarVisibility="Visible"
                                       HorizontalScrollBarVisibility="Visible" Background="White">
                             <StackPanel>
-                                <TextBlock Text="{Binding Content}" />
+                                <TextBlock Text="{Binding Details}" />
                             </StackPanel>
                         </ScrollViewer>
                     </Border>

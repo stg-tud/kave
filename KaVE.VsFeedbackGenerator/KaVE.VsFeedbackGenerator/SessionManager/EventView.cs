@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-using System.Text;
+using System.Reflection;
 using JetBrains.Util;
 using KaVE.Model.Events;
 using KaVE.Utils.Serialization;
@@ -10,6 +10,8 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
 {
     public class EventView
     {
+        private static readonly PropertyInfo[] IDEEventProperties = typeof (IDEEvent).GetProperties();
+
         public EventView(IDEEvent evt)
         {
             Event = evt;
@@ -19,48 +21,45 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
 
         public string EventType
         {
-            get
-            {
-                return Event.GetType().Name;
-            }
+            get { return Event.GetType().Name; }
         }
 
         public string Trigger
         {
-            get
-            {
-                return Event.TriggeredBy.ToString();
-            }
+            get { return Event.TriggeredBy.ToString(); }
         }
 
         public DateTime StartDateTime
         {
-            get
-            {
-                return Event.TriggeredAt;
-            }
+            get { return Event.TriggeredAt; }
         }
 
         public double DurationInMilliseconds
         {
-            get
-            {
-                return Event.Duration.HasValue ? Event.Duration.Value.TotalMilliseconds : 0;
-            }
+            get { return Event.Duration.HasValue ? Event.Duration.Value.TotalMilliseconds : 0; }
         }
 
-        public string Content
+        public string Details
         {
             get
             {
-                // TODO test this logic!!!
-                var details = Event.ToJson(new NameToJsonConverter()).Replace("  ", "      ");
-                var detailLines = details.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                var numberOfRelevantDetailLines = detailLines.Length - 10;
-                var relevantDetailLines = new string[numberOfRelevantDetailLines];
-                Array.Copy(detailLines, 1, relevantDetailLines, 0, numberOfRelevantDetailLines);
-                return relevantDetailLines.Join(Environment.NewLine);
+                var details = Event.ToJson(new NameToIdentifierConverter(), new EnumToStringConverter());
+                var detailLines = details.Split(
+                    Environment.NewLine.ToCharArray(),
+                    StringSplitOptions.RemoveEmptyEntries);
+                var specializedDetails = detailLines.Where(IsSpecializedEventInformation).Join(Environment.NewLine);
+                // remove opening "{\r\n" and closing ",\r\n}"
+                return specializedDetails.Substring(3, specializedDetails.Length - 7);
             }
+        }
+
+        /// <summary>
+        /// A line is considered to contain specialized information, if it does not contain the name of the property of
+        /// the <see cref="IDEEvent"/> type, like, for example, "  'IDESessionUUID': '0xDEADBEEF'" does.
+        /// </summary>
+        private static bool IsSpecializedEventInformation(string detailLine)
+        {
+            return IDEEventProperties.All(ideEventProperty => !detailLine.Contains(ideEventProperty.Name));
         }
     }
 }

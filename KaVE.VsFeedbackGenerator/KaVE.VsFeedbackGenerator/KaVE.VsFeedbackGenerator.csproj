@@ -115,10 +115,12 @@
     <Compile Include="MessageBus\TinyMessenger.cs" />
     <Compile Include="Utils\ConfirmedCommand.cs" />
     <Compile Include="Utils\GlobalsExtensions.cs" />
+    <Compile Include="Utils\Json\EnumToStringConverter.cs" />
     <Compile Include="Utils\Json\JsonLogFileManager.cs" />
     <Compile Include="Utils\Json\JsonLogReader.cs" />
     <Compile Include="Utils\Json\JsonLogSerialization.cs" />
     <Compile Include="Utils\Json\JsonLogWriter.cs" />
+    <Compile Include="Utils\Json\NameToIdentifierConverter.cs" />
     <Compile Include="Utils\Json\NameToJsonConverter.cs" />
     <Compile Include="Utils\LookupItemUtils.cs" />
     <Compile Include="Utils\Names\ReSharperDeclaredElementNameFactory.cs" />
