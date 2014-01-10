@@ -61,7 +61,7 @@ namespace KaVE.VsFeedbackGenerator.Generators
             }
             else
             {
-                var merger = MergeStrategies.First(strategy => strategy.AreMergable(_lastEvent, @event));
+                var merger = MergeStrategies.FirstOrDefault(strategy => strategy.AreMergable(_lastEvent, @event));
                 if (merger != null)
                 {
                     _lastEvent = merger.Merge(_lastEvent, @event);
