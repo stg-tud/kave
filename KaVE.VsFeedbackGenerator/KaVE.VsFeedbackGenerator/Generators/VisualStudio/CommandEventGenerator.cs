@@ -163,6 +163,9 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
             return IsDuplicatedByReSharper(@event) || IsAutomaticEvent(@event);
         }
 
+        /// <summary>
+        /// There exist ReSharper Actions for these commands, we don't need to track them twice.
+        /// </summary>
         private static bool IsDuplicatedByReSharper(CommandEvent @event)
         {
             return @event.Command.Identifier.Equals("{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:2:Edit.DeleteBackwards") ||
@@ -176,6 +179,10 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
                    @event.Command.Identifier.Equals("{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:107:Edit.CompleteWord");
         }
 
+        /// <summary>
+        /// These commands are automatically triggered after every keyboard input. Furthermore, some of them are
+        /// triggered at regular intervals.
+        /// </summary>
         private static bool IsAutomaticEvent(CommandEvent @event)
         {
             return @event.Command.Identifier.Equals("{5EFC7975-14BC-11CF-9B2B-00AA00573819}:1096:View.ObjectBrowsingScope") ||
