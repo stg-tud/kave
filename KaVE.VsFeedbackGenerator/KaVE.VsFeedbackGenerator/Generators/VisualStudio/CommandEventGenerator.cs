@@ -35,7 +35,7 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
 
         private CommandBars CommandBars
         {
-            get { return (CommandBars)DTE.CommandBars; }
+            get { return (CommandBars) DTE.CommandBars; }
         }
 
         private void InitCommandBarObservation()
@@ -80,11 +80,15 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
         private void SetCommandBarCommandEvent(CommandBarControl control)
         {
             _preceedingCommandBarEvent = Create<CommandEvent>();
-            _preceedingCommandBarEvent.Source = VsComponentNameFactory.GetName(control);
+            _preceedingCommandBarEvent.Source = control.GetName();
             _preceedingCommandBarEvent.TriggeredBy = IDEEvent.Trigger.Click;
         }
 
-        void _commandEvents_BeforeExecute(string guid, int id, object customIn, object customOut, ref bool cancelDefault)
+        private void _commandEvents_BeforeExecute(string guid,
+            int id,
+            object customIn,
+            object customOut,
+            ref bool cancelDefault)
         {
             var commandEvent = CreateCommandEvent(guid, id);
             EnqueueEvent(commandEvent);
@@ -102,7 +106,7 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
                 commandEvent.TriggeredBy = IDEEvent.Trigger.Shortcut;
             }
 
-            commandEvent.Command = VsComponentNameFactory.GetName(command);
+            commandEvent.Command = command.GetName();
             return commandEvent;
         }
 
@@ -114,7 +118,7 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
             }
             catch (ArgumentException)
             {
-                return new UnknownCommand { DTE = DTE, Guid = guid, ID = id };
+                return new UnknownCommand {DTE = DTE, Guid = guid, ID = id};
             }
         }
 
@@ -130,7 +134,7 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
             return guid + ":" + id;
         }
 
-        void _commandEvents_AfterExecute(string guid, int id, object customIn, object customOut)
+        private void _commandEvents_AfterExecute(string guid, int id, object customIn, object customOut)
         {
             var commandEvent = TakeFromQueue(CommandKey(guid, id));
             if (commandEvent == null && id == 107 && guid.Equals("{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}"))
@@ -139,6 +143,10 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
                 commandEvent = CreateCommandEvent(guid, id);
             }
             Asserts.NotNull(commandEvent, "command finished that didn't start: {0}:{1}", guid, id);
+            if (IsSuperfluousCommand(commandEvent))
+            {
+                return;
+            }
             FireNow(commandEvent);
         }
 
@@ -148,6 +156,36 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
             _eventQueue.TryGetValue(commandKey, out evt);
             _eventQueue.Remove(commandKey);
             return evt;
+        }
+
+        private static bool IsSuperfluousCommand(CommandEvent @event)
+        {
+            return IsDuplicatedByReSharper(@event) || IsAutomaticEvent(@event);
+        }
+
+        private static bool IsDuplicatedByReSharper(CommandEvent @event)
+        {
+            return @event.Command.Identifier.Equals("{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:2:Edit.DeleteBackwards") ||
+                   @event.Command.Identifier.Equals("{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:4:Edit.InsertTab") ||
+                   @event.Command.Identifier.Equals("{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:7:Edit.CharLeft") ||
+                   @event.Command.Identifier.Equals("{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:9:Edit.CharRight") ||
+                   @event.Command.Identifier.Equals("{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:11:Edit.LineUp") ||
+                   @event.Command.Identifier.Equals("{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:13:Edit.LineDown") ||
+                   @event.Command.Identifier.Equals("{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:27:Edit.PageUp") ||
+                   @event.Command.Identifier.Equals("{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:29:Edit.PageDown") ||
+                   @event.Command.Identifier.Equals("{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:107:Edit.CompleteWord");
+        }
+
+        private static bool IsAutomaticEvent(CommandEvent @event)
+        {
+            return @event.Command.Identifier.Equals("{5EFC7975-14BC-11CF-9B2B-00AA00573819}:1096:View.ObjectBrowsingScope") ||
+                   @event.Command.Identifier.Equals("{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:1627:") ||
+                   @event.Command.Identifier.Equals("{5EFC7975-14BC-11CF-9B2B-00AA00573819}:337:Edit.GoToFindCombo") ||
+                   @event.Command.Identifier.Equals(
+                       "{5EFC7975-14BC-11CF-9B2B-00AA00573819}:684:Build.SolutionConfigurations") ||
+                   @event.Command.Identifier.Equals("{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:1990:Build.SolutionPlatforms") ||
+                   @event.Command.Identifier.Equals("{5EFC7975-14BC-11CF-9B2B-00AA00573819}:1657:") ||
+                   @event.Command.Identifier.Equals("{5EFC7975-14BC-11CF-9B2B-00AA00573819}:1717:");
         }
     }
 
@@ -178,7 +216,7 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
 
         internal static bool HasPressedKeyBinding(this Command command)
         {
-            var bindings = ((object[])command.Bindings).Cast<string>();
+            var bindings = ((object[]) command.Bindings).Cast<string>();
             return KeyUtils.ParseBindings(bindings).Any(b => b.IsPressed());
         }
     }
@@ -202,22 +240,27 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
         {
             get { return ""; }
         }
+
         public Commands Collection
         {
             get { return null; }
         }
+
         public DTE DTE { get; internal set; }
         public string Guid { get; internal set; }
         public int ID { get; internal set; }
+
         public bool IsAvailable
         {
             get { return true; }
         }
+
         public object Bindings
         {
             get { return new string[0]; }
             set { }
         }
+
         public string LocalizedName
         {
             get { return ""; }
