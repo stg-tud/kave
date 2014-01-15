@@ -18,6 +18,15 @@ namespace KaVE.Utils
         }
 
         /// <summary>
+        /// Invokes the passed action asynchonuously. Returns immediately.
+        /// </summary>
+        /// <param name="action">The action to run.</param>
+        public static void Async(Action action)
+        {
+            action.BeginInvoke(null, null);
+        }
+
+        /// <summary>
         /// Runs an <see cref="Action"/> in a single-threaded apartment
         /// (STA). Waits for the action to finish. Rethrows any exception
         /// thrown by the action.

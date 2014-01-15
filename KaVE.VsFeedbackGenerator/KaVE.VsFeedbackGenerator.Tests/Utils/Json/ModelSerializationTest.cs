@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
 using KaVE.Model.Events;
 using KaVE.Model.Events.CompletionEvent;
 using KaVE.Model.Names;

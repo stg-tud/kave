@@ -4,7 +4,6 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using JetBrains;
 using JetBrains.Annotations;
 using JetBrains.Application;
@@ -37,7 +36,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
         public void Refresh()
         {
             Refreshing = true;
-            new Task(
+            Invoke.Async(
                 () =>
                 {
                     Sessions =
@@ -45,8 +44,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
                             .Select(logFileName => new SessionView(_logFileManager, logFileName));
                     Refreshing = false;
                     Released = false;
-                }
-                ).Start();
+                });
         }
 
         public void Release()
