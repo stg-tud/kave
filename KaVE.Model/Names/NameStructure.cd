@@ -1,0 +1,209 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
+  <Interface Name="CodeCompletion.Model.Names.IFieldName">
+    <Position X="17" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAA=</HashCode>
+      <FileName>IFieldName.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="ValueType" />
+    </ShowAsAssociation>
+  </Interface>
+  <Interface Name="CodeCompletion.Model.Names.IGenericName">
+    <Position X="9" Y="2.25" Width="2" />
+    <AssociationLine Name="TypeParameters" Type="CodeCompletion.Model.Names.ITypeName" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="9.312" Y="3.483" />
+        <Point X="9.312" Y="3.858" />
+        <Point X="8.438" Y="3.858" />
+        <Point X="8.438" Y="5" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAABAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>IGenericName.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="TypeParameters" />
+    </ShowAsCollectionAssociation>
+  </Interface>
+  <Interface Name="CodeCompletion.Model.Names.IMemberName">
+    <Position X="16.5" Y="2.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAQIAAAAAAAAAAAAAAgAAAA=</HashCode>
+      <FileName>IMemberName.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="CodeCompletion.Model.Names.IMethodName">
+    <Position X="15" Y="5" Width="1.75" />
+    <InheritanceLine Type="CodeCompletion.Model.Names.IGenericName" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="10" Y="3.482" />
+        <Point X="10" Y="4.635" />
+        <Point X="11.557" Y="4.635" Type="JumpStart" />
+        <Point X="11.724" Y="4.635" Type="JumpEnd" />
+        <Point X="15.547" Y="4.635" />
+        <Point X="15.547" Y="5" />
+      </Path>
+    </InheritanceLine>
+    <AssociationLine Name="ReturnType" Type="CodeCompletion.Model.Names.ITypeName" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="15.875" Y="6.362" />
+        <Point X="15.875" Y="7.687" />
+        <Point X="10.25" Y="7.687" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAIAAAAAEAAA=</HashCode>
+      <FileName>IMethodName.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="ReturnType" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="Parameters" />
+    </ShowAsCollectionAssociation>
+  </Interface>
+  <Interface Name="CodeCompletion.Model.Names.IName">
+    <Position X="10.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAA=</HashCode>
+      <FileName>IName.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="CodeCompletion.Model.Names.INamespaceName">
+    <Position X="5.25" Y="5" Width="2" />
+    <Compartments>
+      <Compartment Name="Properties" Collapsed="true" />
+    </Compartments>
+    <InheritanceLine Type="CodeCompletion.Model.Names.IName" ManuallyRouted="true">
+      <Path>
+        <Point X="11.5" Y="1.603" />
+        <Point X="11.5" Y="1.886" />
+        <Point X="6.25" Y="1.886" />
+        <Point X="6.25" Y="5" />
+      </Path>
+    </InheritanceLine>
+    <AssociationLine Name="ParentNamespace" Type="CodeCompletion.Model.Names.INamespaceName" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="5.25" Y="5.312" />
+        <Point X="4.875" Y="5.312" />
+        <Point X="4.875" Y="4.625" />
+        <Point X="5.812" Y="4.625" />
+        <Point X="5.812" Y="5" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-0.391" Y="0.383" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAQAAgACAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>INamespaceName.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="ParentNamespace" />
+    </ShowAsAssociation>
+  </Interface>
+  <Interface Name="CodeCompletion.Model.Names.IParameterName">
+    <Position X="11" Y="5" Width="1.5" />
+    <InheritanceLine Type="CodeCompletion.Model.Names.IName" ManuallyRouted="true" FixedToPoint="true">
+      <Path>
+        <Point X="11.5" Y="1.603" />
+        <Point X="11.5" Y="1.854" />
+        <Point X="11.64" Y="1.854" />
+        <Point X="11.64" Y="4.875" />
+        <Point X="11.625" Y="4.875" />
+        <Point X="11.625" Y="5" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAACEAEAQAAAAAAAAAIAAAAAAAEAA=</HashCode>
+      <FileName>IParameterName.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="CodeCompletion.Model.Names.IPropertyName">
+    <Position X="18.75" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAQAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAA=</HashCode>
+      <FileName>IPropertyName.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="CodeCompletion.Model.Names.ITypeName">
+    <Position X="8" Y="5" Width="2.25" />
+    <InheritanceLine Type="CodeCompletion.Model.Names.IGenericName" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="10" Y="3.482" />
+        <Point X="10" Y="4.615" />
+        <Point X="8.938" Y="4.615" />
+        <Point X="8.938" Y="5" />
+      </Path>
+    </InheritanceLine>
+    <AssociationLine Name="Namespace" Type="CodeCompletion.Model.Names.INamespaceName" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="8" Y="7.25" />
+        <Point X="6.875" Y="7.25" />
+        <Point X="6.875" Y="6.041" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="DeclaringType" Type="CodeCompletion.Model.Names.ITypeName" ManuallyRouted="true">
+      <Path>
+        <Point X="8.798" Y="8.925" />
+        <Point X="8.798" Y="9.475" />
+        <Point X="9.468" Y="9.475" />
+        <Point X="9.468" Y="8.925" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAABAAAAAAAAhIAAAAAAQAcAYIQAIICAACAAAAgAAAA=</HashCode>
+      <FileName>ITypeName.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Namespace" />
+      <Property Name="DeclaringType" />
+    </ShowAsAssociation>
+  </Interface>
+  <Interface Name="CodeCompletion.Model.Names.IAssemblyName">
+    <Position X="3" Y="5" Width="1.5" />
+    <InheritanceLine Type="CodeCompletion.Model.Names.IName" ManuallyRouted="true">
+      <Path>
+        <Point X="11.5" Y="1.603" />
+        <Point X="11.5" Y="1.854" />
+        <Point X="3.75" Y="1.854" />
+        <Point X="3.75" Y="5" />
+      </Path>
+    </InheritanceLine>
+    <AssociationLine Name="AssemblyVersion" Type="CodeCompletion.Model.Names.IAssemblyVersion" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="3" Y="5.562" />
+        <Point X="2.75" Y="5.562" />
+        <Point X="2.75" Y="6.377" />
+        <Point X="1.5" Y="6.377" />
+        <Point X="1.5" Y="6.127" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>EAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>IAssemblyName.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="AssemblyVersion" />
+    </ShowAsAssociation>
+  </Interface>
+  <Interface Name="CodeCompletion.Model.Names.IAssemblyVersion">
+    <Position X="1" Y="5" Width="1.5" />
+    <InheritanceLine Type="CodeCompletion.Model.Names.IName" ManuallyRouted="true">
+      <Path>
+        <Point X="11.5" Y="1.603" />
+        <Point X="11.5" Y="1.83" />
+        <Point X="1.75" Y="1.83" />
+        <Point X="1.75" Y="5" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>IAssemblyVersion.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
