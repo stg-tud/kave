@@ -1,6 +1,6 @@
-﻿System.IEquatable`1[[T -> T -> ?]], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+﻿System.IEquatable`1[[T -> T -> ?]], mscorlib, Version=4.0.0.0
 public override Equals(object) { ... }
-System.Collections.Generic.EqualityComparer`1[[T -> T -> ?]], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
-System.Collections.IEqualityComparer, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
-System.Collections.Generic.IEqualityComparer`1[[T -> T -> ?]], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
-System.Collections.IStructuralEquatable, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+System.Collections.Generic.EqualityComparer`1[[T -> T -> ?]], mscorlib, Version=4.0.0.0
+System.Collections.IEqualityComparer, mscorlib, Version=4.0.0.0
+System.Collections.Generic.IEqualityComparer`1[[T -> T -> ?]], mscorlib, Version=4.0.0.0
+System.Collections.IStructuralEquatable, mscorlib, Version=4.0.0.0
