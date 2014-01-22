@@ -79,6 +79,15 @@ namespace KaVE.VsFeedbackGenerator.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Kontext.
+        /// </summary>
+        public static string EventContext {
+            get {
+                return ResourceManager.GetString("EventContext", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Eventdaten.
         /// </summary>
         public static string EventData {

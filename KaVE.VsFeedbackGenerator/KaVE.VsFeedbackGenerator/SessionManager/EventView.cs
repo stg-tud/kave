@@ -3,6 +3,7 @@ using System.Linq;
 using System.Reflection;
 using JetBrains.Util;
 using KaVE.Model.Events;
+using KaVE.Model.Events.CompletionEvent;
 using KaVE.Utils.Serialization;
 using KaVE.VsFeedbackGenerator.Utils.Json;
 
@@ -37,6 +38,14 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
         public double DurationInMilliseconds
         {
             get { return Event.Duration.HasValue ? Event.Duration.Value.TotalMilliseconds : 0; }
+        }
+
+        public CompletionEvent AsCompletionEvent
+        {
+            get
+            {
+                return Event as CompletionEvent;
+            }
         }
 
         public string Details

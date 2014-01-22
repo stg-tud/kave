@@ -150,6 +150,7 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
                     <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="10,10,0,1">
@@ -182,8 +183,46 @@
                                        MinWidth="300" TextAlignment="Left" />
                         </Border>
                     </StackPanel>
+                    <!-- CONTEXT BOX -->
+                    <GroupBox Grid.Row="4" Header="{x:Static root:Properties.SessionManager.EventContext}"
+                              Visibility="{Binding Converter={StaticResource ObjectToVisibilityConverter}, Path=.AsCompletionEvent, FallbackValue=Collapsed}">
+                        <Border BorderThickness="1" BorderBrush="DimGray" Padding="0" CornerRadius="1"
+                                Margin="0,3,0,0">
+                            <RichTextBox Margin="0,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="Auto" Height="Auto"
+                                         IsReadOnly="True" FontFamily="Courier New" >
+                                <RichTextBox.Resources>
+                                    <Style TargetType="{x:Type Paragraph}">
+                                        <Setter Property="Margin" Value="0"/>
+                                    </Style>
+                                </RichTextBox.Resources>
+                                <FlowDocument>
+                                    <Paragraph>
+                                        <Bold>class</Bold> MyClass
+                                    </Paragraph>
+                                    <Paragraph>
+                                        <Bold>{</Bold>
+                                    </Paragraph>
+                                    <Paragraph>
+                                        <Bold Foreground="White">..</Bold><Bold>void</Bold> Method(Type arg)
+                                    </Paragraph>
+                                    <Paragraph>
+                                        <Bold Foreground="White">..</Bold><Bold>{</Bold>
+                                    </Paragraph>
+                                    <Paragraph>
+                                        <Bold Foreground="White">....</Bold><Italic>Completion</Italic>
+                                    </Paragraph>
+                                    <Paragraph>
+                                        <Bold Foreground="White">..</Bold><Bold>}</Bold>
+                                    </Paragraph>
+                                    <Paragraph>
+                                        <Bold>}</Bold>
+                                    </Paragraph>
+                                </FlowDocument>
+                            </RichTextBox>
+                        </Border>
+                    </GroupBox>
                     <!-- DETAILS SCROLLBOX -->
-                    <GroupBox Grid.Row="4" Header="{x:Static root:Properties.SessionManager.EventDetails}">
+                    <GroupBox Grid.Row="5" Header="{x:Static root:Properties.SessionManager.EventDetails}">
                         <Border BorderThickness="1" BorderBrush="DimGray" Padding="0" CornerRadius="1"
                                 Margin="0,3,0,0">
                             <ScrollViewer VerticalScrollBarVisibility="Visible"

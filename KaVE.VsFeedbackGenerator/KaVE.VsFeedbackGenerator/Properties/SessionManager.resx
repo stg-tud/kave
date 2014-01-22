@@ -210,4 +210,7 @@
   <data name="Refreshing" xml:space="preserve">
     <value>Lade Feedback...</value>
   </data>
+  <data name="EventContext" xml:space="preserve">
+    <value>Kontext</value>
+  </data>
 </root>
