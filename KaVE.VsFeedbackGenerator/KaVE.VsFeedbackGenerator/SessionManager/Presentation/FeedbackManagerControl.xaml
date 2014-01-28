@@ -10,6 +10,7 @@
              xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
              xmlns:root="clr-namespace:KaVE.VsFeedbackGenerator"
              xmlns:util="clr-namespace:KaVE.VsFeedbackGenerator.Utils"
+             xmlns:presentation="clr-namespace:KaVE.VsFeedbackGenerator.SessionManager.Presentation"
              Loaded="FeedbackWindowControl_OnLoaded"
              GotKeyboardFocus="SessionManagerControl_OnGotFocus"
              LostKeyboardFocus="SessionManagerControl_OnLostFocus">
@@ -188,8 +189,8 @@
                               Visibility="{Binding Converter={StaticResource ObjectToVisibilityConverter}, Path=.AsCompletionEvent, FallbackValue=Collapsed}">
                         <Border BorderThickness="1" BorderBrush="DimGray" Padding="0" CornerRadius="1"
                                 Margin="0,3,0,0">
-                            <RichTextBox Margin="0,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="Auto" Height="Auto"
-                                         IsReadOnly="True" FontFamily="Courier New" >
+                            <presentation:MyRichTextBox Margin="0,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="Auto" Height="Auto" IsReadOnly="True"
+                                         FontFamily="Courier New">
                                 <RichTextBox.Resources>
                                     <Style TargetType="{x:Type Paragraph}">
                                         <Setter Property="Margin" Value="0"/>
@@ -218,7 +219,7 @@
                                         <Bold>}</Bold>
                                     </Paragraph>
                                 </FlowDocument>
-                            </RichTextBox>
+                            </presentation:MyRichTextBox>
                         </Border>
                     </GroupBox>
                     <!-- DETAILS SCROLLBOX -->
