@@ -12,7 +12,7 @@ namespace KaVE.VsFeedbackGenerator.Utils
         public static FlowDocument ToFlowDocument(this Context context)
         {
             var doc = new FlowDocument();
-            if (context == null)
+            if (context == null || context.EnclosingClassHierarchy == null)
             {
                 doc.AddPara().Inlines.Add(new Italic(new Run("no context available")));
                 return doc;

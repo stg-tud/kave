@@ -40,20 +40,12 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             get { return Event.Duration.HasValue ? Event.Duration.Value.TotalMilliseconds : 0; }
         }
 
-        public CompletionEvent AsCompletionEvent
-        {
-            get { return Event as CompletionEvent; }
-        }
-
         public Context CompletionContext
         {
             get
             {
-                if (Event is CompletionEvent)
-                {
-                    return (Event as CompletionEvent).Context;
-                }
-                return null;
+                var completionEvent = Event as CompletionEvent;
+                return completionEvent == null ? null : completionEvent.Context;
             }
         }
 

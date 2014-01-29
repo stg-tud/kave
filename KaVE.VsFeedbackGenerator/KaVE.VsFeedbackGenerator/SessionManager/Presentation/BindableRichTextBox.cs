@@ -1,5 +1,4 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using KaVE.Model.Events.CompletionEvent;
 using KaVE.VsFeedbackGenerator.Utils;
@@ -18,14 +17,11 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
         public Context ContextDoc
         {
             get { return (Context) GetValue(ContextDocProperty); }
-            set
-            {
-                throw new Exception();SetValue(ContextDocProperty, value); }
+            set { SetValue(ContextDocProperty, value); }
         }
 
         private static void OnContextDocChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            throw new Exception();
             ((BindableRichTextBox) d).Document = ((Context) e.NewValue).ToFlowDocument();
         }
     }

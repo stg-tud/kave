@@ -187,44 +187,18 @@
                     </StackPanel>
                     <!-- CONTEXT BOX -->
                     <GroupBox Grid.Row="4" Header="{x:Static root:Properties.SessionManager.EventContext}"
-                              Visibility="{Binding Converter={StaticResource ObjectToVisibilityConverter}, Path=.AsCompletionEvent, FallbackValue=Collapsed}">
+                              DataContext="{Binding CompletionContext}"
+                              Visibility="{Binding Converter={StaticResource ObjectToVisibilityConverter}, Path=., FallbackValue=Collapsed}">
                         <Border BorderThickness="1" BorderBrush="DimGray" Padding="0" CornerRadius="1"
                                 Margin="0,3,0,0">
                             <presentation:BindableRichTextBox Margin="0,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
                                          Width="Auto" Height="Auto" IsReadOnly="True"
-                                         FontFamily="Courier New" ContextDoc="{Binding CompletionContext, Mode=OneWay}">
-                                <!-- ContextDoc="{Binding CompletionContext, Mode=OneWay}" -->
-                                <!--<presentation:BindableRichTextBox.ContextDoc>
-                                    <Binding Path="AsCompletionEvent.Context" />
-                                </presentation:BindableRichTextBox.ContextDoc>-->
+                                         FontFamily="Courier New" ContextDoc="{Binding .}">
                                 <RichTextBox.Resources>
                                     <Style TargetType="{x:Type Paragraph}">
                                         <Setter Property="Margin" Value="0" />
                                     </Style>
                                 </RichTextBox.Resources>
-                                <!--<FlowDocument>
-                                    <Paragraph>
-                                        <Bold>class</Bold> MyClass
-                                    </Paragraph>
-                                    <Paragraph>
-                                        <Bold>{</Bold>
-                                    </Paragraph>
-                                    <Paragraph>
-                                        <Bold Foreground="White">..</Bold><Bold>void</Bold> Method(Type arg)
-                                    </Paragraph>
-                                    <Paragraph>
-                                        <Bold Foreground="White">..</Bold><Bold>{</Bold>
-                                    </Paragraph>
-                                    <Paragraph>
-                                        <Bold Foreground="White">....</Bold><Italic>Completion</Italic>
-                                    </Paragraph>
-                                    <Paragraph>
-                                        <Bold Foreground="White">..</Bold><Bold>}</Bold>
-                                    </Paragraph>
-                                    <Paragraph>
-                                        <Bold>}</Bold>
-                                    </Paragraph>
-                                </FlowDocument>-->
                             </presentation:BindableRichTextBox>
                         </Border>
                     </GroupBox>
