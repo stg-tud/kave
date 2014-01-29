@@ -99,6 +99,12 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SessionManager\FeedbackGeneratorSettings.cs" />
+    <Compile Include="SessionManager\Presentation\BindableRichTextBox.cs" />
+    <Compile Include="SessionManager\Presentation\BoundableRichTextBox.xaml.cs">
+      <DependentUpon>BoundableRichTextBox.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SessionManager\Presentation\RichTextBoxExtension.cs" />
+    <Compile Include="SessionManager\Presentation\RichTextBoxProperties.cs" />
     <Compile Include="SessionManager\Presentation\SessionManagerWindowActionHandler.cs" />
     <Compile Include="SessionManager\Presentation\FeedbackManagerControl.xaml.cs">
       <DependentUpon>FeedbackManagerControl.xaml</DependentUpon>
@@ -114,6 +120,7 @@
     <Compile Include="SessionManager\FeedbackView.cs" />
     <Compile Include="MessageBus\TinyMessenger.cs" />
     <Compile Include="Utils\ConfirmedCommand.cs" />
+    <Compile Include="Utils\ContextExtensions.cs" />
     <Compile Include="Utils\GlobalsExtensions.cs" />
     <Compile Include="Utils\InverseBoolConverter.cs" />
     <Compile Include="Utils\Json\EnumToStringConverter.cs" />
@@ -128,6 +135,7 @@
     <Compile Include="Utils\Names\ReSharperTypeNameFactory.cs" />
     <Compile Include="Utils\Names\VsComponentNameFactory.cs" />
     <Compile Include="Utils\ObjectToVisibilityConverter.cs" />
+    <Compile Include="Utils\TypeNameExtensions.cs" />
     <Compile Include="VsIntegration\IDESession.cs" />
     <Compile Include="VsIntegration\IIDESession.cs" />
   </ItemGroup>
@@ -144,6 +152,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="SessionManager\Presentation\BoundableRichTextBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="SessionManager\Presentation\FeedbackManagerControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
