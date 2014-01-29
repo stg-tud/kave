@@ -42,9 +42,18 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
 
         public CompletionEvent AsCompletionEvent
         {
+            get { return Event as CompletionEvent; }
+        }
+
+        public Context CompletionContext
+        {
             get
             {
-                return Event as CompletionEvent;
+                if (Event is CompletionEvent)
+                {
+                    return (Event as CompletionEvent).Context;
+                }
+                return null;
             }
         }
 

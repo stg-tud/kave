@@ -14,6 +14,7 @@ namespace KaVE.VsFeedbackGenerator.Utils
             var doc = new FlowDocument();
             if (context == null)
             {
+                doc.AddPara().Inlines.Add(new Italic(new Run("no context available")));
                 return doc;
             }
             var elem = context.EnclosingClassHierarchy.Element;

@@ -190,9 +190,9 @@
                               Visibility="{Binding Converter={StaticResource ObjectToVisibilityConverter}, Path=.AsCompletionEvent, FallbackValue=Collapsed}">
                         <Border BorderThickness="1" BorderBrush="DimGray" Padding="0" CornerRadius="1"
                                 Margin="0,3,0,0">
-                            <RichTextBox Margin="0,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
+                            <presentation:BindableRichTextBox Margin="0,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
                                          Width="Auto" Height="Auto" IsReadOnly="True"
-                                         FontFamily="Courier New" >
+                                         FontFamily="Courier New" ContextDoc="{Binding CompletionContext, Mode=OneWay}">
                                 <!-- ContextDoc="{Binding CompletionContext, Mode=OneWay}" -->
                                 <!--<presentation:BindableRichTextBox.ContextDoc>
                                     <Binding Path="AsCompletionEvent.Context" />
@@ -225,7 +225,7 @@
                                         <Bold>}</Bold>
                                     </Paragraph>
                                 </FlowDocument>-->
-                            </RichTextBox>
+                            </presentation:BindableRichTextBox>
                         </Border>
                     </GroupBox>
                     <!-- DETAILS SCROLLBOX -->
