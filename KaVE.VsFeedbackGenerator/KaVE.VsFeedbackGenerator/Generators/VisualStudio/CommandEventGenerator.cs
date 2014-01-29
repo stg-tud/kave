@@ -192,7 +192,8 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
                        "{5EFC7975-14BC-11CF-9B2B-00AA00573819}:684:Build.SolutionConfigurations") ||
                    @event.Command.Identifier.Equals("{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:1990:Build.SolutionPlatforms") ||
                    @event.Command.Identifier.Equals("{5EFC7975-14BC-11CF-9B2B-00AA00573819}:1657:") ||
-                   @event.Command.Identifier.Equals("{5EFC7975-14BC-11CF-9B2B-00AA00573819}:1717:");
+                   @event.Command.Identifier.Equals("{5EFC7975-14BC-11CF-9B2B-00AA00573819}:1717:") ||
+                   @event.Command.Identifier.Equals("{CB26E292-901A-419C-B79D-49BD45C43929}:120:");
         }
     }
 
