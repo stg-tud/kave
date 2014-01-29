@@ -101,7 +101,8 @@
                         </ListView.Resources>
                         <ListView.View>
                             <GridView>
-                                <GridViewColumn DisplayMemberBinding="{Binding StartDate, StringFormat=\{0:dd.MM.yyyy\}}" />
+                                <GridViewColumn
+                                    DisplayMemberBinding="{Binding StartDate, StringFormat=\{0:dd.MM.yyyy\}}" />
                             </GridView>
                         </ListView.View>
                     </ListView>
@@ -189,14 +190,19 @@
                               Visibility="{Binding Converter={StaticResource ObjectToVisibilityConverter}, Path=.AsCompletionEvent, FallbackValue=Collapsed}">
                         <Border BorderThickness="1" BorderBrush="DimGray" Padding="0" CornerRadius="1"
                                 Margin="0,3,0,0">
-                            <presentation:MyRichTextBox Margin="0,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="Auto" Height="Auto" IsReadOnly="True"
-                                         FontFamily="Courier New">
+                            <RichTextBox Margin="0,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
+                                         Width="Auto" Height="Auto" IsReadOnly="True"
+                                         FontFamily="Courier New" >
+                                <!-- ContextDoc="{Binding CompletionContext, Mode=OneWay}" -->
+                                <!--<presentation:BindableRichTextBox.ContextDoc>
+                                    <Binding Path="AsCompletionEvent.Context" />
+                                </presentation:BindableRichTextBox.ContextDoc>-->
                                 <RichTextBox.Resources>
                                     <Style TargetType="{x:Type Paragraph}">
-                                        <Setter Property="Margin" Value="0"/>
+                                        <Setter Property="Margin" Value="0" />
                                     </Style>
                                 </RichTextBox.Resources>
-                                <FlowDocument>
+                                <!--<FlowDocument>
                                     <Paragraph>
                                         <Bold>class</Bold> MyClass
                                     </Paragraph>
@@ -218,8 +224,8 @@
                                     <Paragraph>
                                         <Bold>}</Bold>
                                     </Paragraph>
-                                </FlowDocument>
-                            </presentation:MyRichTextBox>
+                                </FlowDocument>-->
+                            </RichTextBox>
                         </Border>
                     </GroupBox>
                     <!-- DETAILS SCROLLBOX -->
