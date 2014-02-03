@@ -13,9 +13,6 @@
         <description>Some Description of what it does...</description>
         <releaseNotes>Release Information.</releaseNotes>
         <copyright>Copyright 2013</copyright>
-        <dependencies>
-            <dependency id="ReSharper" version="[8.0.1000, 9.0)" />
-        </dependencies>
     </metadata>
     <files>
         <file src="KaVE.VsFeedbackGenerator\bin\Debug\KaVE.Model.dll" target="ReSharper\vAny\plugins\KaVE.Model.dll" />
