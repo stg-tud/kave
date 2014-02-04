@@ -99,7 +99,7 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SessionManager\FeedbackGeneratorSettings.cs" />
-    <Compile Include="SessionManager\Presentation\BindableRichTextBox.cs" />
+    <Compile Include="SessionManager\Presentation\ContextVisualizationTextBlock.cs" />
     <Compile Include="SessionManager\Presentation\SessionManagerWindowActionHandler.cs" />
     <Compile Include="SessionManager\Presentation\FeedbackManagerControl.xaml.cs">
       <DependentUpon>FeedbackManagerControl.xaml</DependentUpon>
