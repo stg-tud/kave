@@ -190,16 +190,10 @@
                               DataContext="{Binding CompletionContext}"
                               Visibility="{Binding Converter={StaticResource ObjectToVisibilityConverter}, Path=., FallbackValue=Collapsed}">
                         <Border BorderThickness="1" BorderBrush="DimGray" Padding="0" CornerRadius="1"
-                                Margin="0,3,0,0">
-                            <presentation:BindableRichTextBox Margin="0,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
-                                         Width="Auto" Height="Auto" IsReadOnly="True"
-                                         FontFamily="Courier New" ContextDoc="{Binding .}">
-                                <RichTextBox.Resources>
-                                    <Style TargetType="{x:Type Paragraph}">
-                                        <Setter Property="Margin" Value="0" />
-                                    </Style>
-                                </RichTextBox.Resources>
-                            </presentation:BindableRichTextBox>
+                                Margin="0,3,0,0" Background="White">
+                            <presentation:ContextVisualizationTextBlock Margin="0,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
+                                         Width="Auto" Height="Auto" FontFamily="Courier New" Context="{Binding .}">
+                            </presentation:ContextVisualizationTextBlock>
                         </Border>
                     </GroupBox>
                     <!-- DETAILS SCROLLBOX -->

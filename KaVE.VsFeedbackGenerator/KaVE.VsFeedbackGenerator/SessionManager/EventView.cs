@@ -45,7 +45,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             get
             {
                 var completionEvent = Event as CompletionEvent;
-                return completionEvent == null ? null : completionEvent.Context;
+                return completionEvent == null ? new Context() : completionEvent.Context;
             }
         }
 
