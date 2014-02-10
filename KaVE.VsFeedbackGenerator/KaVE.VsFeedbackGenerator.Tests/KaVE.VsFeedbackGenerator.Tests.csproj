@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\..\packages\JetBrains.ReSharper.SDK.Tests.8.1.555\build\JetBrains.ReSharper.SDK.Tests.Props" Condition="Exists('..\..\packages\JetBrains.ReSharper.SDK.Tests.8.1.555\build\JetBrains.ReSharper.SDK.Tests.Props')" />
   <Import Project="..\..\packages\JetBrains.ReSharper.SDK.8.1.555\build\JetBrains.ReSharper.SDK.Props" Condition="Exists('..\..\packages\JetBrains.ReSharper.SDK.8.1.555\build\JetBrains.ReSharper.SDK.Props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -46,15 +47,12 @@
     <Reference Include="Moq">
       <HintPath>..\..\packages\Moq.4.1.1308.2321\lib\net40\Moq.dll</HintPath>
     </Reference>
-    <Reference Include="nunit.framework, Version=2.6.2.12296, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NUnit.2.6.2\lib\nunit.framework.dll</HintPath>
-    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml" />
+    <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CodeCompletion\CodeCompletionLifecycleManagerTest.cs" />
@@ -94,7 +92,7 @@
     </ProjectReference>
     <ProjectReference Include="..\KaVE.VsFeedbackGenerator\KaVE.VsFeedbackGenerator.csproj">
       <Project>{42CE1875-DF5B-4D9E-ADC4-47A96C06EF66}</Project>
-      <Name>EventGenerator.ReSharper8</Name>
+      <Name>KaVE.VsFeedbackGenerator</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

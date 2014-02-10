@@ -11,7 +11,6 @@ using KaVE.Model.Events;
 using KaVE.VsFeedbackGenerator.CodeCompletion;
 using KaVE.VsFeedbackGenerator.Tests.Mocking;
 using KaVE.VsFeedbackGenerator.Tests.Mocking.Actions;
-using KaVE.VsFeedbackGenerator.Tests.Utils;
 using Moq;
 using NUnit.Framework;
 
