@@ -42,15 +42,7 @@ namespace KaVE.VsFeedbackGenerator.Utils
                 }
                 if (elem.IsStructType)
                 {
-                    if (elem.IsNullableType)
-                    {
-                        return "nullable";
-                    }
-                    if (elem.IsSimpleType)
-                    {
-                        return "simple";
-                    }
-                    return "struct";
+                    return elem.IsNullableType ? "nullable" : (elem.IsSimpleType ? "simple" : "struct");
                 }
                 throw new ArgumentException(@"Given ITypeName claims to be a ValueType but does not match any subtype", "elem");
             }
