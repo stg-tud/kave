@@ -1,5 +1,5 @@
 ﻿System.IEquatable`1[[T -> T -> ?]], mscorlib, Version=4.0.0.0
-public override Equals(object) { ... }
+CombinedLookupItem:public override Equals(object) { ... }
 System.Collections.Generic.EqualityComparer`1[[T -> T -> ?]], mscorlib, Version=4.0.0.0
 System.Collections.IEqualityComparer, mscorlib, Version=4.0.0.0
 System.Collections.Generic.IEqualityComparer`1[[T -> T -> ?]], mscorlib, Version=4.0.0.0

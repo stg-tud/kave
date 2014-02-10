@@ -76,7 +76,7 @@ namespace KaVE.VsFeedbackGenerator.Utils
         {
             // TODO implement specific name subclasses?
             return (lookupItem is IKeywordLookupItem || lookupItem is ITextualLookupItem)
-                ? Name.Get(lookupItem.GetType().FullName + " " + lookupItem.DisplayName)
+                ? Name.Get(lookupItem.GetType().Name + ":" + lookupItem.DisplayName)
                 : null;
         }
 
