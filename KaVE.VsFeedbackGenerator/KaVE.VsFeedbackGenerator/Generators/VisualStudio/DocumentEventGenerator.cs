@@ -42,7 +42,7 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
         private void Fire(Document document, DocumentEvent.DocumentAction action)
         {
             var documentEvent = Create<DocumentEvent>();
-            documentEvent.DocumentName = VsComponentNameFactory.GetName(document);
+            documentEvent.DocumentName = document.GetName();
             documentEvent.Action = action;
             FireNow(documentEvent);
         }

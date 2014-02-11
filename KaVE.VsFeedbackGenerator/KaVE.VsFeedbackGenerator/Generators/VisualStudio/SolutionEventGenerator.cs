@@ -48,62 +48,62 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
 
         private void _solutionItemsEvents_ItemAdded(ProjectItem projectItem)
         {
-            Fire(SolutionEvent.SolutionAction.AddSolutionItem, VsComponentNameFactory.GetName(projectItem));
+            Fire(SolutionEvent.SolutionAction.AddSolutionItem, projectItem.GetName());
         }
 
         private void _solutionItemsEvents_ItemRenamed(ProjectItem projectItem, string oldName)
         {
-            Fire(SolutionEvent.SolutionAction.RenameSolutionItem, VsComponentNameFactory.GetName(projectItem));
+            Fire(SolutionEvent.SolutionAction.RenameSolutionItem, projectItem.GetName());
         }
 
         private void _solutionItemsEvents_ItemRemoved(ProjectItem projectItem)
         {
-            Fire(SolutionEvent.SolutionAction.RemoveSolutionItem, VsComponentNameFactory.GetName(projectItem));
+            Fire(SolutionEvent.SolutionAction.RemoveSolutionItem, projectItem.GetName());
         }
 
         private void _solutionEvents_Opened()
         {
-            Fire(SolutionEvent.SolutionAction.OpenSolution, VsComponentNameFactory.GetName(DTE.Solution));
+            Fire(SolutionEvent.SolutionAction.OpenSolution, DTE.Solution.GetName());
         }
 
         private void _solutionEvents_ProjectAdded(Project project)
         {
-            Fire(SolutionEvent.SolutionAction.AddProject, VsComponentNameFactory.GetName(project));
+            Fire(SolutionEvent.SolutionAction.AddProject, project.GetName());
         }
 
         private void _projectItemsEvents_ItemAdded(ProjectItem projectItem)
         {
-            Fire(SolutionEvent.SolutionAction.AddProjectItem, VsComponentNameFactory.GetName(projectItem));
+            Fire(SolutionEvent.SolutionAction.AddProjectItem, projectItem.GetName());
         }
 
         private void _projectItemsEvents_ItemRenamed(ProjectItem projectItem, string oldName)
         {
-            Fire(SolutionEvent.SolutionAction.RenameProjectItem, VsComponentNameFactory.GetName(projectItem));
+            Fire(SolutionEvent.SolutionAction.RenameProjectItem, projectItem.GetName());
         }
 
         private void _projectItemsEvents_ItemRemoved(ProjectItem projectItem)
         {
-            Fire(SolutionEvent.SolutionAction.RemoveProjectItem, VsComponentNameFactory.GetName(projectItem));
+            Fire(SolutionEvent.SolutionAction.RemoveProjectItem, projectItem.GetName());
         }
 
         private void _solutionEvents_ProjectRenamed(Project project, string oldName)
         {
-            Fire(SolutionEvent.SolutionAction.RenameProject, VsComponentNameFactory.GetName(project));
+            Fire(SolutionEvent.SolutionAction.RenameProject, project.GetName());
         }
 
         private void _solutionEvents_ProjectRemoved(Project project)
         {
-            Fire(SolutionEvent.SolutionAction.RemoveProject, VsComponentNameFactory.GetName(project));
+            Fire(SolutionEvent.SolutionAction.RemoveProject, project.GetName());
         }
 
         private void _solutionEvents_Renamed(string oldName)
         {
-            Fire(SolutionEvent.SolutionAction.RenameSolution, VsComponentNameFactory.GetName(DTE.Solution));
+            Fire(SolutionEvent.SolutionAction.RenameSolution, DTE.Solution.GetName());
         }
 
         private void _solutionEvents_BeforeClosing()
         {
-            Fire(SolutionEvent.SolutionAction.CloseSolution, VsComponentNameFactory.GetName(DTE.Solution));
+            Fire(SolutionEvent.SolutionAction.CloseSolution, DTE.Solution.GetName());
         }
 
         private void _selectionEvents_OnChange()

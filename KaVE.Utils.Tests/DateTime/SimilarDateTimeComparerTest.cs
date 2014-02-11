@@ -1,5 +1,4 @@
-﻿using KaVE.Utils.Assertion;
-using KaVE.Utils.DateTime;
+﻿using KaVE.Utils.DateTime;
 using NUnit.Framework;
 
 namespace KaVE.Utils.Tests.DateTime

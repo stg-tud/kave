@@ -1,5 +1,4 @@
 ﻿using System;
-using KaVE.Utils;
 using NUnit.Framework;
 
 namespace KaVE.Utils.Tests

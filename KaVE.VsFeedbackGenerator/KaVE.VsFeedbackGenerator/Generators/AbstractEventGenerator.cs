@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Windows.Input;
 using EnvDTE;
 using KaVE.JetBrains.Annotations;
 using KaVE.Model.Events;
-using KaVE.Utils;
 using KaVE.Utils.Serialization;
 using KaVE.VsFeedbackGenerator.MessageBus;
 using KaVE.VsFeedbackGenerator.Utils.Names;
@@ -33,8 +31,8 @@ namespace KaVE.VsFeedbackGenerator.Generators
         {
             return new TIDEEvent
             {
-                ActiveWindow = VsComponentNameFactory.GetName(DTEActiveWindow),
-                ActiveDocument = VsComponentNameFactory.GetName(DTEActiveDocument),
+                ActiveWindow = DTEActiveWindow.GetName(),
+                ActiveDocument = DTEActiveDocument.GetName(),
                 TriggeredBy = CurrentTrigger,
             };
         }
@@ -93,7 +91,7 @@ namespace KaVE.VsFeedbackGenerator.Generators
         }
 
         /// <summary>
-        /// Sets <see cref="IDEEvent.IDESessionUUID"/> to <see cref="IDESession.GetUUID"/> and publishes the event to
+        /// Sets <see cref="IDEEvent.IDESessionUUID"/> to <see cref="IDESession.UUID"/> and publishes the event to
         /// the underlying message channel.
         /// </summary>
         protected void Fire<TEvent>([NotNull] TEvent @event) where TEvent : IDEEvent

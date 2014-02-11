@@ -1,5 +1,3 @@
-using KaVE.Model.Names;
-
 namespace KaVE.Model.Groum.Test
 {
     class SomeClass

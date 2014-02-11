@@ -1,5 +1,4 @@
 ﻿using JetBrains.ActionManagement;
-using KaVE.VsFeedbackGenerator.Tests.CodeCompletion;
 
 namespace KaVE.VsFeedbackGenerator.Tests.Mocking.Actions
 {

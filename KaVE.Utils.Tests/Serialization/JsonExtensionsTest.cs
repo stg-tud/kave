@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using KaVE.Utils.Serialization;
-using Newtonsoft.Json;
+﻿using KaVE.Utils.Serialization;
 using Newtonsoft.Json.Converters;
 using NUnit.Framework;
 

@@ -5,8 +5,6 @@ using KaVE.Model.Events;
 using KaVE.Model.Events.CompletionEvent;
 using KaVE.Model.Names;
 using KaVE.Model.Names.CSharp;
-using KaVE.Utils.Assertion;
-using KaVE.VsFeedbackGenerator.Utils;
 using KaVE.VsFeedbackGenerator.Utils.Json;
 using NUnit.Framework;
 using AssemblyName = KaVE.Model.Names.CSharp.AssemblyName;
