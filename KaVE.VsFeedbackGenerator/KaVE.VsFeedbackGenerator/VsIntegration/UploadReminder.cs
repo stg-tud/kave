@@ -15,18 +15,15 @@ namespace KaVE.VsFeedbackGenerator.VsIntegration
     {
         [NotNull]
         private readonly IActionManager _actionManager;
-        [NotNull]
-        private readonly IDESession _session;
 
         private System.Threading.Timer _weeklyTimer;
         private readonly Lifetime _lifetime;
         private ITooltipManager _tooltipManager;
         private const string SessionManagerActionId = "KaVE.VsFeedbackGenerator.SessionManager";
 
-        public UploadReminder([NotNull] IActionManager manager, ITooltipManager tooltipManager, [NotNull] IDESession session, Lifetime lifetime)
+        public UploadReminder([NotNull] IActionManager manager, ITooltipManager tooltipManager, Lifetime lifetime)
         {
             _actionManager = manager;
-            _session = session;
             _tooltipManager = tooltipManager;
             _lifetime = lifetime;
             _weeklyTimer = CreateWeeklyTimer(TimeSpan.FromMinutes(new Random().Next(0, 60)));
