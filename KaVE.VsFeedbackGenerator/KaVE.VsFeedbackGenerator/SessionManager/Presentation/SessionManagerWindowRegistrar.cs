@@ -1,5 +1,4 @@
-﻿using System.Windows.Threading;
-using JetBrains.Application;
+﻿using JetBrains.Application;
 using JetBrains.DataFlow;
 using JetBrains.UI.CrossFramework;
 using JetBrains.UI.ToolWindowManagement;
@@ -9,15 +8,15 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
     [ShellComponent]
     internal class SessionManagerWindowRegistrar
     {
-        private readonly Dispatcher _windowDispatcher;
+        private readonly ToolWindowClass _toolWindowClass;
 
         public SessionManagerWindowRegistrar(Lifetime lifetime,
             ToolWindowManager toolWindowManager,
             SessionManagerWindowDescriptor descriptor,
             FeedbackView feedbackView)
         {
-            var toolWindowClass = toolWindowManager.Classes[descriptor];
-            toolWindowClass.RegisterEmptyContent(
+            _toolWindowClass = toolWindowManager.Classes[descriptor];
+            _toolWindowClass.RegisterEmptyContent(
                 lifetime,
                 lt =>
                 {
@@ -26,12 +25,11 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
                     return control.BindToLifetime(lt);
                 });
 
-            _windowDispatcher = Dispatcher.CurrentDispatcher;
         }
 
-        public Dispatcher WindowDispatcher
+        public ToolWindowClass ToolWindow
         {
-            get { return _windowDispatcher; }
+            get { return _toolWindowClass; }
         }
     }
 }
