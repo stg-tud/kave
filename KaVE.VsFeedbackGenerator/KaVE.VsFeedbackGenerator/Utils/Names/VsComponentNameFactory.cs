@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using EnvDTE;
 using KaVE.JetBrains.Annotations;
@@ -38,7 +38,7 @@ namespace KaVE.VsFeedbackGenerator.Utils.Names
                 return null;
             }
             var documentName = document.GetSolutionRelativeName();
-            return DocumentName.Get(document.Kind + " " + document.Language + " " + documentName);
+            return DocumentName.Get(document.Language + " " + documentName);
         }
 
         private static string GetSolutionRelativeName(this Document document)
@@ -46,40 +46,16 @@ namespace KaVE.VsFeedbackGenerator.Utils.Names
             var fullDocumentName = document.FullName;
             var solution = document.DTE.Solution;
 
-            // If no solution is opened, we cannot determine a relative name.
             if (solution == null)
             {
-                return fullDocumentName;
+                return Path.GetFileName(fullDocumentName);
             }
-
-            // If the file is inside a project (which may or may not be placed within the solution, on the filesystem)
-            // its full name starts with the project's full name, which we abbreviate to the project's name.
-            foreach (var project in solution.Projects.Cast<Project>())
-            {
-                try
-                {
-                    var projectPath = project.FullName;
-                    if (projectPath.Any() && fullDocumentName.StartsWith(projectPath))
-                    {
-                        var projectRelativeName = fullDocumentName.Substring(projectPath.Length);
-                        return string.Format("\\{0}{1}", project.Name, projectRelativeName);
-                    }
-                }
-                catch (NotImplementedException)
-                {
-                    // sometimes project.FullName throws this exception for reasons I don't understand (project is a
-                    // System._ComObject in these cases). We just ignore this here and continue trying.
-                }
-            }
-
-            // If the file is on solution level, its full name starts with the solution's full name (which is a prefix
-            // if the name of all projects placed inside the solution on the filesystem), which we remove.
-            var solutionPath = solution.FullName;
-            if (fullDocumentName.StartsWith(solutionPath))
+            var solutionPath = Path.GetDirectoryName(solution.FullName);
+            if (solutionPath != null && fullDocumentName.StartsWith(solutionPath))
             {
                 return fullDocumentName.Substring(solutionPath.Length);
             }
-            return fullDocumentName;
+            return Path.GetFileName(fullDocumentName);
         }
 
 
