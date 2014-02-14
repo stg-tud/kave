@@ -85,7 +85,7 @@
     <Compile Include="Generators\VisualStudio\DebuggerEventGenerator.cs" />
     <Compile Include="Generators\VisualStudio\DocumentEventGenerator.cs" />
     <Compile Include="Generators\VisualStudio\FindEventGenerator.cs" />
-    <Compile Include="Generators\VisualStudio\IDEStartupStateEventGenerator.cs" />
+    <Compile Include="Generators\VisualStudio\IDEStateEventGenerator.cs" />
     <Compile Include="Generators\VisualStudio\OutputWindowEventGenerator.cs" />
     <Compile Include="Generators\VisualStudio\SolutionEventGenerator.cs" />
     <Compile Include="Generators\VisualStudio\TaskListEventGenerator.cs" />

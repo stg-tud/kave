@@ -61,6 +61,7 @@ namespace KaVE.VsFeedbackGenerator.Generators
             }
             else
             {
+                // TODO are there any merging strategies? if not, this logic should be deleted!
                 var merger = MergeStrategies.FirstOrDefault(strategy => strategy.AreMergable(_lastEvent, @event));
                 if (merger != null)
                 {

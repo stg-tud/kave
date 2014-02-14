@@ -9,9 +9,9 @@ using KaVE.VsFeedbackGenerator.VsIntegration;
 namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
 {
     [ShellComponent(ProgramConfigurations.VS_ADDIN)]
-    internal class IDEStartupStateEventGenerator : AbstractEventGenerator, IDisposable
+    internal class IDEStateEventGenerator : AbstractEventGenerator, IDisposable
     {
-        public IDEStartupStateEventGenerator(IIDESession session, IMessageBus messageBus)
+        public IDEStateEventGenerator(IIDESession session, IMessageBus messageBus)
             : base(session, messageBus)
         {
             FireIDEStateEvent(IDEStateEvent.LifecyclePhase.Startup);
