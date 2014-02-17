@@ -8,6 +8,7 @@ namespace KaVE.CompletionTraceGenerator
     public class CompletionEventToTraceConverter
     {
         private readonly ILogWriter<CompletionTrace> _writer;
+        private CompletionTrace _trace;
 
         public CompletionEventToTraceConverter(ILogWriter<CompletionTrace> writer)
         {
@@ -16,7 +17,15 @@ namespace KaVE.CompletionTraceGenerator
 
         public void Process(CompletionEvent completionEvent)
         {
-            var trace = new CompletionTrace {DurationInMillis = ComputeDuration(completionEvent)};
+            if (_trace == null)
+            {
+                _trace = new CompletionTrace {DurationInMillis = ComputeDuration(completionEvent)};
+            }
+            else // event was triggered by a filtering
+            {
+                _trace.DurationInMillis += ComputeDuration(completionEvent);
+                _trace.AppendAction(CompletionAction.NewFilter(completionEvent.Prefix));
+            }
 
             if (completionEvent.Selections.Count > 1)
             {
@@ -25,40 +34,52 @@ namespace KaVE.CompletionTraceGenerator
 
                 foreach (var selection in completionEvent.Selections)
                 {
-                    var pos = completionEvent.ProposalCollection.Proposals.IndexOf(selection.Proposal);
+                    var newPos = completionEvent.ProposalCollection.Proposals.IndexOf(selection.Proposal);
+                    var stepSize = Math.Abs(oldPos - newPos);
 
-                    if (pos > oldPos)
+                    if (stepSize == 1)
                     {
-                        trace.AppendAction(CompletionAction.NewStep(Direction.Down));
+                        if (newPos > oldPos)
+                        {
+                            _trace.AppendAction(CompletionAction.NewStep(Direction.Down));
+                        }
+                        else
+                        {
+                            _trace.AppendAction(CompletionAction.NewStep(Direction.Up));
+                        }
+                    }
+                    else if (stepSize > 1)
+                    {
+                        _trace.AppendAction(CompletionAction.NewMouseGoto(newPos));
                     }
 
-                    if (pos < oldPos)
-                    {
-                        trace.AppendAction(CompletionAction.NewStep(Direction.Up));
-                    }
-
-                    oldPos = pos;
+                    oldPos = newPos;
                 }
             }
 
             switch (completionEvent.TerminatedAs)
             {
                 case CompletionEvent.TerminationState.Applied:
-                    trace.AppendAction(CompletionAction.NewApply());
+                    _trace.AppendAction(CompletionAction.NewApply());
+                    _writer.Write(_trace);
                     break;
                 case CompletionEvent.TerminationState.Cancelled:
-                    trace.AppendAction(CompletionAction.NewCancel());
+                    _trace.AppendAction(CompletionAction.NewCancel());
+                    _writer.Write(_trace);
+                    break;
+                case CompletionEvent.TerminationState.Filtered:
+                    // filter action is added only when the next event is processed, because only then we know the new prefix
                     break;
                 default:
                     throw new NotImplementedException();
             }
-            _writer.Write(trace);
         }
 
         private static int ComputeDuration(CompletionEvent completionEvent)
         {
-            return (completionEvent.TerminatedAt - completionEvent.TriggeredAt).GetValueOrDefault(TimeSpan.FromSeconds(0))
-                .Milliseconds;
+            return
+                (completionEvent.TerminatedAt - completionEvent.TriggeredAt).GetValueOrDefault(TimeSpan.FromSeconds(0))
+                    .Milliseconds;
         }
     }
 }
