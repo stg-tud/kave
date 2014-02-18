@@ -115,7 +115,9 @@
     <Compile Include="SessionManager\EventView.cs" />
     <Compile Include="SessionManager\FeedbackView.cs" />
     <Compile Include="MessageBus\TinyMessenger.cs" />
+    <Compile Include="SessionManager\UploadSettings.cs" />
     <Compile Include="Utils\ILogWriter.cs" />
+    <Compile Include="Utils\SettingsStore.cs" />
     <Compile Include="VsIntegration\UploadReminder.cs" />
     <Compile Include="Utils\ConfirmedCommand.cs" />
     <Compile Include="Utils\ContextExtensions.cs" />
