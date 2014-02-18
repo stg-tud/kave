@@ -8,6 +8,7 @@ using KaVE.VsFeedbackGenerator.Utils;
 
 namespace KaVE.VsFeedbackGenerator.VsIntegration
 {
+    // TODO migrate class to R# settings
     [ShellComponent(ProgramConfigurations.VS_ADDIN)]
     public class IDESession : IIDESession
     {
@@ -26,8 +27,6 @@ namespace KaVE.VsFeedbackGenerator.VsIntegration
         {
             get
             {
-                // TODO test whether this is working properly in a non-experimental instance
-                // in the experimental instance updates of the globals are not persisted reliably...
                 var globals = _dte.Globals;
                 var storedDateString = globals.GetValueOrDefault(UUIDCreatedAtGlobal, PastDate);
                 var createdAt = DateTime.Parse(storedDateString, CultureInfo.InvariantCulture);
