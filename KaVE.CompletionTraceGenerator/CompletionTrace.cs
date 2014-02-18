@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using KaVE.CompletionTraceGenerator.Model;
@@ -11,7 +12,7 @@ namespace KaVE.CompletionTraceGenerator
             Actions = new List<CompletionAction>();
         }
 
-        public int DurationInMillis { get; set; }
+        public long DurationInMillis { get; set; }
         public IList<CompletionAction> Actions { get; private set; }
 
         public void AppendAction(CompletionAction action)
@@ -29,7 +30,7 @@ namespace KaVE.CompletionTraceGenerator
             {
                 return true;
             }
-            if (obj.GetType() != this.GetType())
+            if (obj.GetType() != GetType())
             {
                 return false;
             }
@@ -45,7 +46,7 @@ namespace KaVE.CompletionTraceGenerator
         {
             unchecked
             {
-                return (DurationInMillis*397) ^ (Actions != null ? Actions.GetHashCode() : 0);
+                return (DurationInMillis.GetHashCode()*397) ^ (Actions != null ? Actions.GetHashCode() : 0);
             }
         }
 
