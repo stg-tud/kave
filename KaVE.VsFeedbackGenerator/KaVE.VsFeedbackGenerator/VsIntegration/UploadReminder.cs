@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Timers;
 using System.Globalization;
 using JetBrains.Application;
 using JetBrains.Threading;
@@ -13,7 +14,7 @@ namespace KaVE.VsFeedbackGenerator.VsIntegration
     [ShellComponent]
     public class UploadReminder
     {
-        private System.Threading.Timer _timer;
+        private Timer _timer;
         private readonly SettingsStore _settingsStore;
         private readonly SessionManagerWindowRegistrar _sessionWindow;
         private const string SessionManagerActionId = "KaVE.VsFeedbackGenerator.SessionManager";
@@ -31,15 +32,13 @@ namespace KaVE.VsFeedbackGenerator.VsIntegration
                 settingsStore.SetSettings(settings);
             }
 
-            _timer = CreateTimer(TimeSpan.FromMinutes(0.5), TimeSpan.FromSeconds(new Random().Next(0, 60)));
+            //Start timer every hour + offset
+            _timer = new Timer(1000*60*60 + new Random().Next(0, 60));
+            _timer.Elapsed += new ElapsedEventHandler(ExecuteOnceAnHour);
+            _timer.Enabled = true;
         }
 
-        private System.Threading.Timer CreateTimer(TimeSpan intervall, TimeSpan minuteOffset)
-        {
-            return new System.Threading.Timer(ExecuteOnceAnHour, null, intervall.Add(minuteOffset), TimeSpan.Zero);
-        }
-
-        private void ExecuteOnceAnHour(Object obj)
+        private void ExecuteOnceAnHour(Object obj, ElapsedEventArgs elapsedEventArgs)
         {
             var settings = _settingsStore.GetSettings<UploadSettings>();
             var lastUpdate = DateTime.Parse(settings.LastUploadTime);
@@ -58,8 +57,6 @@ namespace KaVE.VsFeedbackGenerator.VsIntegration
                 MessageBox.ShowExclamation("UPLOAD!!!!!!!!!!!!!!");
                 OpenSessionManager();
             }
-
-            _timer = CreateTimer(TimeSpan.FromMinutes(0.5), TimeSpan.FromSeconds(new Random().Next(0, 60)));
         }
 
         private void OpenSessionManager()
