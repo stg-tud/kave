@@ -1,6 +1,0 @@
-﻿+ ClassWithArgsConstructor()
-+ ClassWithExplicitNoArgsConstructor()
-+ ClassWithImplicitConstructor()
-+ NewInstanceProposals()
-+ Struct()
-GenericClass<>

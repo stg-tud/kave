@@ -1,4 +1,0 @@
-﻿[System.Object[][][], mscorlib, Version=4.0.0.0] [CodeExamples.CompletionProposals.ArrayTypeProposals, TestProject].myJaggedArray
-[System.Void, mscorlib, Version=4.0.0.0] [CodeExamples.CompletionProposals.ArrayTypeProposals, TestProject].myMethod([R[] -> ?] p)
-[System.Object[,,], mscorlib, Version=4.0.0.0] [CodeExamples.CompletionProposals.ArrayTypeProposals, TestProject].myMultidimensionalArray
-[System.String[], mscorlib, Version=4.0.0.0] [CodeExamples.CompletionProposals.ArrayTypeProposals, TestProject].myStringArray

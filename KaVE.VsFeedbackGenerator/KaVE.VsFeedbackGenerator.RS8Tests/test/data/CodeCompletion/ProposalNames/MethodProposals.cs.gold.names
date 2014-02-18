@@ -1,7 +1,0 @@
-﻿[System.Int32, mscorlib, Version=4.0.0.0] [CodeExamples.CompletionProposals.MethodProposals, TestProject].MyMethodWithAliasedReturnType()
-[System.Void, mscorlib, Version=4.0.0.0] [CodeExamples.CompletionProposals.MethodProposals, TestProject].MyMethodWithOptionalParameter(opt [System.Object, mscorlib, Version=4.0.0.0] obj)
-[System.Void, mscorlib, Version=4.0.0.0] [CodeExamples.CompletionProposals.MethodProposals, TestProject].MyMethodWithOutParameter(out [System.Boolean, mscorlib, Version=4.0.0.0] b)
-[System.Void, mscorlib, Version=4.0.0.0] [CodeExamples.CompletionProposals.MethodProposals, TestProject].MyMethodWithParamArray(params [System.Object[], mscorlib, Version=4.0.0.0] objs)
-[System.Void, mscorlib, Version=4.0.0.0] [CodeExamples.CompletionProposals.MethodProposals, TestProject].MyMethodWithParameter([System.Object, mscorlib, Version=4.0.0.0] param)
-[System.Void, mscorlib, Version=4.0.0.0] [CodeExamples.CompletionProposals.MethodProposals, TestProject].MyMethodWithRefParameter(ref [System.Int32, mscorlib, Version=4.0.0.0] i)
-[System.Object, mscorlib, Version=4.0.0.0] [CodeExamples.CompletionProposals.MethodProposals, TestProject].MyMethodWithReturnType()

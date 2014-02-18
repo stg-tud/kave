@@ -1,6 +1,0 @@
-﻿[System.Boolean, mscorlib, Version=4.0.0.0] [System.Object, mscorlib, Version=4.0.0.0].Equals([System.Object, mscorlib, Version=4.0.0.0] obj)
-[System.Int32, mscorlib, Version=4.0.0.0] [System.Object, mscorlib, Version=4.0.0.0].GetHashCode()
-[System.Type, mscorlib, Version=4.0.0.0] [System.Object, mscorlib, Version=4.0.0.0].GetType()
-[System.Object, mscorlib, Version=4.0.0.0] [System.Object, mscorlib, Version=4.0.0.0].MemberwiseClone()
-[System.Void, mscorlib, Version=4.0.0.0] [CodeExamples.CompletionProposals.UncompilableFileProposals, TestProject].Method()
-[System.String, mscorlib, Version=4.0.0.0] [System.Object, mscorlib, Version=4.0.0.0].ToString()

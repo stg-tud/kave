@@ -1,6 +1,0 @@
-﻿IEquatable<>
-+ public override Equals(object) { ... }
-EqualityComparer<> (in System.Collections.Generic)
-IEqualityComparer (in System.Collections)
-IEqualityComparer<> (in System.Collections.Generic)
-IStructuralEquatable (in System.Collections)

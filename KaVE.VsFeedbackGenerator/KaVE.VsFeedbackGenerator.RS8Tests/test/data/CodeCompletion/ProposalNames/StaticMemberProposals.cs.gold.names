@@ -1,4 +1,0 @@
-﻿static [System.String, mscorlib, Version=4.0.0.0] [CodeExamples.CompletionProposals.StaticMemberProposals, TestProject].Constant
-CodeExamples.CompletionProposals.StaticMemberProposals+Nested, TestProject
-static [System.Boolean, mscorlib, Version=4.0.0.0] [CodeExamples.CompletionProposals.StaticMemberProposals, TestProject].StaticMethod()
-static [System.String, mscorlib, Version=4.0.0.0] [CodeExamples.CompletionProposals.StaticMemberProposals, TestProject]._field
