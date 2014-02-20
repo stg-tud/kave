@@ -4,12 +4,9 @@ using NUnit.Framework;
 
 namespace KaVE.VsFeedbackGenerator.RS8Tests.Utils
 {
-    [Category("Code Completion"), TestNetFramework4, TestFixture]
+    [TestFixture]
     internal class LookupItemUtilsTest : KaVEBaseTest
     {
-        private const string ObjectId = "[System.Object, mscorlib, Version=4.0.0.0]";
-        private const string BooleanId = "[System.Boolean, mscorlib, Version=4.0.0.0]";
-
         private void ThenProposalCollectionContains(params string[] proposalNameIdentifiers)
         {
             foreach (var proposalNameIdentifier in proposalNameIdentifiers)
@@ -31,7 +28,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Utils
             WhenCodeCompletionIsInvokedInFile("ProofOfConcept");
 
             ThenProposalCollectionContains(
-                BooleanId + " " + ObjectId + ".Equals(" + ObjectId + " obj)",
+                "[System.Boolean, mscorlib, Version=4.0.0.0] [System.Object, mscorlib, Version=4.0.0.0].Equals([System.Object, mscorlib, Version=4.0.0.0] obj)",
                 "[System.Int32, mscorlib, Version=4.0.0.0] [System.Object, mscorlib, Version=4.0.0.0].GetHashCode()",
                 "[System.Type, mscorlib, Version=4.0.0.0] [System.Object, mscorlib, Version=4.0.0.0].GetType()",
                 "[System.Object, mscorlib, Version=4.0.0.0] [System.Object, mscorlib, Version=4.0.0.0].MemberwiseClone()",

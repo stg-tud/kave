@@ -1,19 +1,23 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using JetBrains.Application;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Feature.Services.CodeCompletion;
 using JetBrains.ReSharper.Feature.Services.Lookup;
 using JetBrains.ReSharper.Feature.Services.Tests.CSharp.FeatureServices.CodeCompletion;
 using JetBrains.ReSharper.Psi;
+using JetBrains.ReSharper.TestFramework;
 using JetBrains.TextControl;
 using KaVE.Model.Events.CompletionEvent;
 using KaVE.Utils.Assertion;
+using KaVE.VsFeedbackGenerator.RS8Tests.Analysis;
 using KaVE.VsFeedbackGenerator.Utils;
 using NUnit.Framework;
 
 namespace KaVE.VsFeedbackGenerator.RS8Tests
 {
+    [TestNetFramework4]
     internal abstract class KaVEBaseTest : CodeCompletionTestBase
     {
         private readonly List<CodeCompletionType> _myCodeCompletionTypes;
@@ -83,5 +87,10 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests
         }
 
         protected ProposalCollection ResultProposalCollection { get; private set; }
+
+        protected Context ResultContext
+        {
+            get { return Shell.Instance.GetComponent<TestAnalysisTrigger>().LastContext; }
+        }
     }
 }

@@ -11,7 +11,7 @@ namespace KaVE.Model.Events.CompletionEvent
         /// <summary>
         /// The type at this level in the type hierarchy.
         /// </summary>
-        ITypeName Element { get; }
+        ITypeName Element { get; set; }
 
         /// <summary>
         /// The direct superclass of the type at this level.
