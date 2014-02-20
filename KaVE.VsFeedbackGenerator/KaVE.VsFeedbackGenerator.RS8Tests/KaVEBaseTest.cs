@@ -12,11 +12,11 @@ using NUnit.Framework;
 
 namespace KaVE.VsFeedbackGenerator.RS8Tests
 {
-    abstract class CodeCompletionExtensionBaseTest : CodeCompletionTestBase
+    abstract class KaVEBaseTest : CodeCompletionTestBase
     {
         private readonly List<CodeCompletionType> _myCodeCompletionTypes;
 
-        protected CodeCompletionExtensionBaseTest()
+        protected KaVEBaseTest()
         {
             _myCodeCompletionTypes = new List<CodeCompletionType> {CodeCompletionType.BasicCompletion};
         }
