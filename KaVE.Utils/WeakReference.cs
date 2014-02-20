@@ -18,7 +18,7 @@ namespace KaVE.Utils
         }
         
         /// <summary>
-        /// Gets or sets the reference's target object.
+        /// Gets the reference's target object.
         /// </summary>
         public TRef Target
         {

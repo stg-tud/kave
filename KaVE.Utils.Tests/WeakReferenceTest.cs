@@ -6,14 +6,14 @@ namespace KaVE.Utils.Tests
     [TestFixture]
     class WeakReferenceTest
     {
-        private WeakReference<object> _refUnderTest;
+        private WeakReference<object> _uut;
         private object _strongReference;
 
         [SetUp]
         public void SetUpReference()
         {
             _strongReference = new object();
-            _refUnderTest = new WeakReference<object>(_strongReference);
+            _uut = new WeakReference<object>(_strongReference);
         }
 
         [Test]
@@ -21,8 +21,8 @@ namespace KaVE.Utils.Tests
         {
             GC.Collect();
             
-            Assert.IsTrue(_refUnderTest.IsAlive());
-            Assert.AreEqual(_strongReference, _refUnderTest.Target);
+            Assert.IsTrue(_uut.IsAlive());
+            Assert.AreEqual(_strongReference, _uut.Target);
         }
 
         [Test]
@@ -32,7 +32,17 @@ namespace KaVE.Utils.Tests
 
             GC.Collect();
 
-            Assert.IsFalse(_refUnderTest.IsAlive());
+            Assert.IsFalse(_uut.IsAlive());
+        }
+
+        [Test]
+        public void ShouldUpdateReferenceWhenSet()
+        {
+            var newStrongReference = new object();
+
+            _uut.Target = newStrongReference;
+
+            Assert.AreEqual(newStrongReference, _uut.Target);
         }
     }
 }
