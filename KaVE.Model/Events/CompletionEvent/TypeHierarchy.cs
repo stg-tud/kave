@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using KaVE.JetBrains.Annotations;
 using KaVE.Model.Names;
+using KaVE.Utils;
 using KaVE.Utils.Collections;
 
 namespace KaVE.Model.Events.CompletionEvent
@@ -20,26 +21,14 @@ namespace KaVE.Model.Events.CompletionEvent
         [NotNull]
         public ISet<ITypeHierarchy> Implements { get; set; }
 
+        public override bool Equals(object obj)
+        {
+            return this.Equals(obj, Equals);
+        }
+
         protected bool Equals(TypeHierarchy other)
         {
             return Comparer.Equals(Implements, other.Implements) && Equals(Extends, other.Extends) && Equals(Element, other.Element);
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-            if (obj.GetType() != GetType())
-            {
-                return false;
-            }
-            return Equals((TypeHierarchy) obj);
         }
 
         public override int GetHashCode()

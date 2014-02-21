@@ -60,6 +60,7 @@
     <Compile Include="Collections\SetEqualityComparerTest.cs" />
     <Compile Include="Collections\WeakReferenceDictionaryTest.cs" />
     <Compile Include="DateTime\SimilarDateTimeComparerTest.cs" />
+    <Compile Include="EqualityUtilsTest.cs" />
     <Compile Include="Events\EventHandlingTest.cs" />
     <Compile Include="IO\KeyUtilsTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
