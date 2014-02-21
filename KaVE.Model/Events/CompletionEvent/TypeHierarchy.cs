@@ -1,30 +1,17 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using KaVE.JetBrains.Annotations;
 using KaVE.Model.Names;
+using KaVE.Utils.Collections;
 
 namespace KaVE.Model.Events.CompletionEvent
 {
     public class TypeHierarchy : ITypeHierarchy
     {
-        private class HierarchyComparer : IEqualityComparer<ITypeHierarchy>
-        {
-            public bool Equals(ITypeHierarchy x, ITypeHierarchy y)
-            {
-                return x.Equals(y);
-            }
-
-            public int GetHashCode(ITypeHierarchy obj)
-            {
-                return obj.GetHashCode();
-            }
-        }
-
-        private static readonly HierarchyComparer Comparer = new HierarchyComparer();
+        private static readonly SetEqualityComparer<ITypeHierarchy> Comparer = new SetEqualityComparer<ITypeHierarchy>();
 
         public TypeHierarchy()
         {
-            Implements = new HashSet<ITypeHierarchy>(Comparer);
+            Implements = new HashSet<ITypeHierarchy>();
         }
 
         public ITypeName Element { get; set; }
@@ -35,10 +22,7 @@ namespace KaVE.Model.Events.CompletionEvent
 
         protected bool Equals(TypeHierarchy other)
         {
-            var setse = Implements.Count == other.Implements.Count && Implements.All(iface => other.Implements.Contains(iface));
-            var b = Equals(Extends, other.Extends);
-            var equals1 = Equals(Element, other.Element);
-            return setse && b && equals1;
+            return Comparer.Equals(Implements, other.Implements) && Equals(Extends, other.Extends) && Equals(Element, other.Element);
         }
 
         public override bool Equals(object obj)
@@ -62,7 +46,7 @@ namespace KaVE.Model.Events.CompletionEvent
         {
             unchecked
             {
-                var hashCode = (Implements.GetHashCode());
+                var hashCode = Comparer.GetHashCode(Implements);
                 hashCode = (hashCode*397) ^ (Extends != null ? Extends.GetHashCode() : 0);
                 hashCode = (hashCode*397) ^ (Element != null ? Element.GetHashCode() : 0);
                 return hashCode;

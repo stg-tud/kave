@@ -50,6 +50,7 @@
   <ItemGroup>
     <Compile Include="Assertion\AssertException.cs" />
     <Compile Include="Assertion\Asserts.cs" />
+    <Compile Include="Collections\SetEqualityComparer.cs" />
     <Compile Include="Collections\ThreadSafeDictionary.cs" />
     <Compile Include="Collections\WeakReferenceDictionary.cs" />
     <Compile Include="DateTime\SimilarDateTimeComparer.cs" />
