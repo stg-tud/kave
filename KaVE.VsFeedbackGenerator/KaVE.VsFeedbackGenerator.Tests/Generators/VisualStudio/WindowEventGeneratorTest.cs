@@ -78,7 +78,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.VisualStudio
             WhenTestWindowIsMoved();
             WaitFor(200);
             WhenTestWindowIsMoved();
-            WaitFor(200);
+            WaitFor(300);
 
             Assert.AreEqual(2, GetPublishedEvents().Count());
         }

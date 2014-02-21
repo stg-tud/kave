@@ -26,7 +26,7 @@ namespace KaVE.Model.Tests.Events.CompletionEvent
             {
                 Extends = new TypeHierarchy("System.Object, mscorlib, Version=4.0.0.0")
             };
-            _uut.Implements.Add(new TypeHierarchy("ISomeinterface, MyAssembly"));
+            clone.Implements.Add(new TypeHierarchy("ISomeinterface, MyAssembly"));
 
             Assert.AreEqual(_uut, clone);
             Assert.AreEqual(_uut.GetHashCode(), clone.GetHashCode());
