@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using KaVE.Model.Events.CompletionEvent;
 using KaVE.Model.Names.CSharp;
 using KaVE.VsFeedbackGenerator.SessionManager.Presentation;
@@ -129,10 +128,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
         {
             var context = new Context
             {
-                EnclosingClassHierarchy = new TypeHierarchy
-                {
-                    Implements = new HashSet<ITypeHierarchy>()
-                }
+                EnclosingClassHierarchy = new TypeHierarchy()
             };
 
             // hierarchy without Element is invalid
@@ -144,14 +140,9 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
         {
             var context = new Context
             {
-                EnclosingClassHierarchy = new TypeHierarchy
-                {
-                    Implements = new HashSet<ITypeHierarchy>
-                    {
-                        new TypeHierarchy()
-                    }
-                }
+                EnclosingClassHierarchy = new TypeHierarchy()
             };
+            context.EnclosingClassHierarchy.Implements.Add(new TypeHierarchy());
 
             // hierarchy without Element is invalid
             AssertConvertable(context, NoContext);
@@ -162,17 +153,9 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
         {
             var context = new Context
             {
-                EnclosingClassHierarchy = new TypeHierarchy
-                {
-                    Implements = new HashSet<ITypeHierarchy>
-                    {
-                        new TypeHierarchy
-                        {
-                            Element = TypeName.Get(ValidType())
-                        }
-                    }
-                }
+                EnclosingClassHierarchy = new TypeHierarchy()
             };
+            context.EnclosingClassHierarchy.Implements.Add(new TypeHierarchy {Element = TypeName.Get(ValidType())});
 
             // hierarchy without Element is invalid
             AssertConvertable(context, NoContext);
@@ -193,7 +176,13 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                 }
             };
 
-            var expected = String.Format("{2} Namespace.Class{0}{{{0}{3}{1}{0}}}", LineBreak, Completion, Class, Indent, Inherits);
+            var expected = String.Format(
+                "{2} Namespace.Class{0}{{{0}{3}{1}{0}}}",
+                LineBreak,
+                Completion,
+                Class,
+                Indent,
+                Inherits);
 
             AssertConvertable(context, expected);
         }
@@ -210,7 +199,13 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                 }
             };
 
-            var expected = String.Format("{2} Namespace.Class{0}{{{0}{3}{1}{0}}}", LineBreak, Completion, Class, Indent, Inherits);
+            var expected = String.Format(
+                "{2} Namespace.Class{0}{{{0}{3}{1}{0}}}",
+                LineBreak,
+                Completion,
+                Class,
+                Indent,
+                Inherits);
 
             AssertConvertable(context, expected);
         }
@@ -235,7 +230,8 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                 LineBreak,
                 Completion,
                 Class,
-                Indent, Inherits);
+                Indent,
+                Inherits);
 
             AssertConvertable(context, expected);
         }
@@ -248,11 +244,16 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                 EnclosingClassHierarchy = new TypeHierarchy
                 {
                     Element = TypeName.Get(ValidType()),
-                    Implements = new HashSet<ITypeHierarchy>()
                 }
             };
 
-            var expected = String.Format("{2} Namespace.Class{0}{{{0}{3}{1}{0}}}", LineBreak, Completion, Class, Indent, Inherits);
+            var expected = String.Format(
+                "{2} Namespace.Class{0}{{{0}{3}{1}{0}}}",
+                LineBreak,
+                Completion,
+                Class,
+                Indent,
+                Inherits);
 
             AssertConvertable(context, expected);
         }
@@ -265,14 +266,17 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                 EnclosingClassHierarchy = new TypeHierarchy
                 {
                     Element = TypeName.Get(ValidType()),
-                    Implements = new HashSet<ITypeHierarchy>
-                    {
-                        new TypeHierarchy()
-                    }
                 }
             };
+            context.EnclosingClassHierarchy.Implements.Add(new TypeHierarchy());
 
-            var expected = String.Format("{2} Namespace.Class{0}{{{0}{3}{1}{0}}}", LineBreak, Completion, Class, Indent, Inherits);
+            var expected = String.Format(
+                "{2} Namespace.Class{0}{{{0}{3}{1}{0}}}",
+                LineBreak,
+                Completion,
+                Class,
+                Indent,
+                Inherits);
 
             AssertConvertable(context, expected);
         }
@@ -285,22 +289,18 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                 EnclosingClassHierarchy = new TypeHierarchy
                 {
                     Element = TypeName.Get(ValidType()),
-                    Implements = new HashSet<ITypeHierarchy>
-                    {
-                        new TypeHierarchy
-                        {
-                            Element = TypeName.Get(ValidType("Interface"))
-                        }
-                    }
                 }
             };
+            context.EnclosingClassHierarchy.Implements.Add(
+                new TypeHierarchy {Element = TypeName.Get(ValidType("Interface"))});
 
             var expected = String.Format(
                 "{2} Namespace.Class{4}Namespace.Interface{0}{{{0}{3}{1}{0}}}",
                 LineBreak,
                 Completion,
                 Class,
-                Indent, Inherits);
+                Indent,
+                Inherits);
 
             AssertConvertable(context, expected);
         }
@@ -317,22 +317,18 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                     {
                         Element = TypeName.Get(ValidType("Super"))
                     },
-                    Implements = new HashSet<ITypeHierarchy>
-                    {
-                        new TypeHierarchy
-                        {
-                            Element = TypeName.Get(ValidType("Interface"))
-                        }
-                    }
                 }
             };
+            context.EnclosingClassHierarchy.Implements.Add(
+                new TypeHierarchy {Element = TypeName.Get(ValidType("Interface"))});
 
             var expected = String.Format(
                 "{2} Namespace.Class{4}Namespace.Super, Namespace.Interface{0}{{{0}{3}{1}{0}}}",
                 LineBreak,
                 Completion,
                 Class,
-                Indent, Inherits);
+                Indent,
+                Inherits);
 
             AssertConvertable(context, expected);
         }
@@ -349,19 +345,12 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                     {
                         Element = TypeName.Get(ValidType("Super"))
                     },
-                    Implements = new HashSet<ITypeHierarchy>
-                    {
-                        new TypeHierarchy
-                        {
-                            Element = TypeName.Get(ValidType("Interface1"))
-                        },
-                        new TypeHierarchy
-                        {
-                            Element = TypeName.Get(ValidType("Interface2"))
-                        }
-                    }
                 }
             };
+            context.EnclosingClassHierarchy.Implements.Add(
+                new TypeHierarchy {Element = TypeName.Get(ValidType("Interface1"))});
+            context.EnclosingClassHierarchy.Implements.Add(
+                new TypeHierarchy {Element = TypeName.Get(ValidType("Interface2"))});
 
             var expected =
                 String.Format(
@@ -369,7 +358,8 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                     LineBreak,
                     Completion,
                     Class,
-                    Indent, Inherits);
+                    Indent,
+                    Inherits);
 
             AssertConvertable(context, expected);
         }
@@ -396,7 +386,8 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                     LineBreak,
                     Completion,
                     Class,
-                    Indent, Inherits);
+                    Indent,
+                    Inherits);
 
             AssertConvertable(context, expected);
         }
@@ -420,7 +411,8 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                     LineBreak,
                     Completion,
                     Class,
-                    Indent, Inherits);
+                    Indent,
+                    Inherits);
 
             AssertConvertable(context, expected);
         }
@@ -446,7 +438,8 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                 LineBreak,
                 Completion,
                 Class,
-                Indent, Inherits);
+                Indent,
+                Inherits);
 
             AssertConvertable(context, expected);
         }
@@ -459,7 +452,6 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                 EnclosingClassHierarchy = new TypeHierarchy
                 {
                     Element = TypeName.Get(ValidType()),
-                    Implements = new HashSet<ITypeHierarchy>()
                 },
                 EnclosingMethod = MethodName.Get(ValidMethod)
             };
@@ -470,7 +462,8 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                     LineBreak,
                     Completion,
                     Class,
-                    Indent, Inherits);
+                    Indent,
+                    Inherits);
 
             AssertConvertable(context, expected);
         }
@@ -483,13 +476,10 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                 EnclosingClassHierarchy = new TypeHierarchy
                 {
                     Element = TypeName.Get(ValidType()),
-                    Implements = new HashSet<ITypeHierarchy>
-                    {
-                        new TypeHierarchy()
-                    }
                 },
                 EnclosingMethod = MethodName.Get(ValidMethod)
             };
+            context.EnclosingClassHierarchy.Implements.Add(new TypeHierarchy());
 
             var expected =
                 String.Format(
@@ -497,7 +487,8 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                     LineBreak,
                     Completion,
                     Class,
-                    Indent, Inherits);
+                    Indent,
+                    Inherits);
 
             AssertConvertable(context, expected);
         }
@@ -510,23 +501,22 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                 EnclosingClassHierarchy = new TypeHierarchy
                 {
                     Element = TypeName.Get(ValidType()),
-                    Implements = new HashSet<ITypeHierarchy>
-                    {
-                        new TypeHierarchy
-                        {
-                            Element = TypeName.Get(ValidType("Interface"))
-                        }
-                    }
                 },
                 EnclosingMethod = MethodName.Get(ValidMethod)
             };
+            context.EnclosingClassHierarchy.Implements.Add(
+                new TypeHierarchy
+                {
+                    Element = TypeName.Get(ValidType("Interface"))
+                });
 
             var expected = String.Format(
                 "{2} Namespace.Class{4}Namespace.Interface{0}{{{0}{3}Namespace.Return Method(Namespace.Argument argument){0}{3}{{{0}{3}{3}{1}{0}{3}}}{0}}}",
                 LineBreak,
                 Completion,
                 Class,
-                Indent, Inherits);
+                Indent,
+                Inherits);
 
             AssertConvertable(context, expected);
         }
@@ -543,23 +533,22 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                     {
                         Element = TypeName.Get(ValidType("Super"))
                     },
-                    Implements = new HashSet<ITypeHierarchy>
-                    {
-                        new TypeHierarchy
-                        {
-                            Element = TypeName.Get(ValidType("Interface"))
-                        }
-                    }
                 },
                 EnclosingMethod = MethodName.Get(ValidMethod)
             };
+            context.EnclosingClassHierarchy.Implements.Add(
+                new TypeHierarchy
+                {
+                    Element = TypeName.Get(ValidType("Interface"))
+                });
 
             var expected = String.Format(
                 "{2} Namespace.Class{4}Namespace.Super, Namespace.Interface{0}{{{0}{3}Namespace.Return Method(Namespace.Argument argument){0}{3}{{{0}{3}{3}{1}{0}{3}}}{0}}}",
                 LineBreak,
                 Completion,
                 Class,
-                Indent, Inherits);
+                Indent,
+                Inherits);
 
             AssertConvertable(context, expected);
         }
@@ -576,20 +565,19 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                     {
                         Element = TypeName.Get(ValidType("Super"))
                     },
-                    Implements = new HashSet<ITypeHierarchy>
-                    {
-                        new TypeHierarchy
-                        {
-                            Element = TypeName.Get(ValidType("Interface1"))
-                        },
-                        new TypeHierarchy
-                        {
-                            Element = TypeName.Get(ValidType("Interface2"))
-                        }
-                    }
                 },
                 EnclosingMethod = MethodName.Get(ValidMethod)
             };
+            context.EnclosingClassHierarchy.Implements.Add(
+                new TypeHierarchy
+                {
+                    Element = TypeName.Get(ValidType("Interface1"))
+                });
+            context.EnclosingClassHierarchy.Implements.Add(
+                new TypeHierarchy
+                {
+                    Element = TypeName.Get(ValidType("Interface2"))
+                });
 
             var expected =
                 String.Format(
@@ -597,7 +585,8 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                     LineBreak,
                     Completion,
                     Class,
-                    Indent, Inherits);
+                    Indent,
+                    Inherits);
 
             AssertConvertable(context, expected);
         }

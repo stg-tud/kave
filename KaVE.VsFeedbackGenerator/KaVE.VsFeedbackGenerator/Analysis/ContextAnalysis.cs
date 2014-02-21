@@ -1,6 +1,7 @@
 ﻿using JetBrains.ReSharper.Feature.Services.CSharp.CodeCompletion.Infrastructure;
+using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
-using JetBrains.ReSharper.Psi.Impl.reflection2.elements.Compiled;
+using JetBrains.ReSharper.Psi.Resolve;
 using JetBrains.ReSharper.Psi.Tree;
 using KaVE.Model.Events.CompletionEvent;
 using KaVE.Model.Names;
@@ -13,15 +14,53 @@ namespace KaVE.VsFeedbackGenerator.Analysis
         public Context Analyze(CSharpCodeCompletionContext rsContext)
         {
             var context = new Context();
+
             var methodDeclaration = FindEnclosing<IMethodDeclaration>(rsContext.NodeInFile);
-            var typeDeclaration = FindEnclosing<ITypeDeclaration>(rsContext.NodeInFile);
             var methodName = GetName(methodDeclaration);
             context.EnclosingMethod = methodName;
-            var typeName = GetName(typeDeclaration);
-            context.EnclosingClassHierarchy = new TypeHierarchy {Element = typeName};
 
+            var typeDeclaration = methodDeclaration.GetContainingTypeDeclaration();
+
+            context.EnclosingClassHierarchy = CreateTypeHierarchy(
+                typeDeclaration.DeclaredElement,
+                EmptySubstitution.INSTANCE);
             return context;
         }
+
+        private static TypeHierarchy CreateTypeHierarchy(ITypeElement type, ISubstitution substitution)
+        {
+            if (type == null || HasTypeSystemObject(type))
+            {
+                return null;
+            }
+            var typeName = type.GetName(substitution) as ITypeName;
+            var enclosingClassHierarchy = new TypeHierarchy {Element = typeName};
+
+            foreach (var superType in type.GetSuperTypes())
+            {
+                var resolvedSuperType = superType.Resolve().DeclaredElement;
+
+                var superTypeSubstitution = superType.GetSubstitution();
+
+                var aClass = resolvedSuperType as IClass;
+                if (aClass != null)
+                {
+                    enclosingClassHierarchy.Extends = CreateTypeHierarchy(aClass, superTypeSubstitution);
+                }
+                var anInterface = resolvedSuperType as IInterface;
+                if (anInterface != null)
+                {
+                    enclosingClassHierarchy.Implements.Add(CreateTypeHierarchy(anInterface, superTypeSubstitution));
+                }
+            }
+            return enclosingClassHierarchy;
+        }
+
+        private static bool HasTypeSystemObject(ITypeElement type)
+        {
+            return "System.Object".Equals(type.GetClrName().FullName);
+        }
+
 
         private ITypeName GetName(ITypeDeclaration typeDeclaration)
         {
@@ -37,7 +76,8 @@ namespace KaVE.VsFeedbackGenerator.Analysis
             return declaredElement.GetName(idSubstitution) as IMethodName;
         }
 
-        private static TIDeclaration FindEnclosing<TIDeclaration>(ITreeNode node) where TIDeclaration : class,IDeclaration
+        private static TIDeclaration FindEnclosing<TIDeclaration>(ITreeNode node)
+            where TIDeclaration : class, IDeclaration
         {
             if (node == null)
             {

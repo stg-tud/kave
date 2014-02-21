@@ -1,53 +1,32 @@
-﻿using System.Collections.Generic;
-using KaVE.Model.Events.CompletionEvent;
+﻿using KaVE.Model.Events.CompletionEvent;
 using KaVE.Model.Names.CSharp;
 using NUnit.Framework;
 
 namespace KaVE.Model.Tests.Events.CompletionEvent
 {
     [TestFixture]
-    class TypeHierarchyTest
+    internal class TypeHierarchyTest
     {
         private TypeHierarchy _uut;
 
         [SetUp]
         public void SetUpHierarchyUnderTest()
         {
-            _uut = new TypeHierarchy
+            _uut = new TypeHierarchy("MyType, MyAssembly")
             {
-                Element = TypeName.Get("MyType, MyAssembly"),
-                Extends = new TypeHierarchy
-                {
-                    Element = TypeName.Get("System.Object, mscorlib, Version=4.0.0.0")
-                },
-                Implements = new HashSet<ITypeHierarchy>
-                {
-                    new TypeHierarchy
-                    {
-                        Element = TypeName.Get("ISomeinterface, MyAssembly")
-                    }
-                }
+                Extends = new TypeHierarchy("System.Object, mscorlib, Version=4.0.0.0")
             };
+            _uut.Implements.Add(new TypeHierarchy("ISomeinterface, MyAssembly"));
         }
 
         [Test]
         public void ShouldEqualACloneOfItself()
         {
-            var clone = new TypeHierarchy
+            var clone = new TypeHierarchy("MyType, MyAssembly")
             {
-                Element = TypeName.Get("MyType, MyAssembly"),
-                Extends = new TypeHierarchy
-                {
-                    Element = TypeName.Get("System.Object, mscorlib, Version=4.0.0.0")
-                },
-                Implements = new HashSet<ITypeHierarchy>
-                {
-                    new TypeHierarchy
-                    {
-                        Element = TypeName.Get("ISomeinterface, MyAssembly")
-                    }
-                }
+                Extends = new TypeHierarchy("System.Object, mscorlib, Version=4.0.0.0")
             };
+            _uut.Implements.Add(new TypeHierarchy("ISomeinterface, MyAssembly"));
 
             Assert.AreEqual(_uut, clone);
             Assert.AreEqual(_uut.GetHashCode(), clone.GetHashCode());
@@ -56,13 +35,9 @@ namespace KaVE.Model.Tests.Events.CompletionEvent
         [Test]
         public void ShouldNotEqualOtherType()
         {
-            var other = new TypeHierarchy
+            var other = new TypeHierarchy("OtherType, MyAssembly")
             {
-                Element = TypeName.Get("OtherType, MyAssembly"),
-                Extends = new TypeHierarchy
-                {
-                    Element = TypeName.Get("System.Object, mscorlib, Version=4.0.0.0")
-                }
+                Extends = new TypeHierarchy("System.Object, mscorlib, Version=4.0.0.0")
             };
 
             Assert.AreNotEqual(_uut, other);

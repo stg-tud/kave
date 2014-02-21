@@ -1,6 +1,6 @@
 ﻿using JetBrains.Application;
-using JetBrains.ReSharper.Feature.Services.CodeCompletion;
 using JetBrains.ReSharper.Feature.Services.CSharp.CodeCompletion.Infrastructure;
+using JetBrains.ReSharper.Feature.Services.Lookup;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using KaVE.Model.Events.CompletionEvent;
@@ -13,7 +13,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
     {
         public Context LastContext { get; private set; }
 
-        protected override bool IsAvailable(CSharpCodeCompletionContext context)
+        protected override bool AddLookupItems(CSharpCodeCompletionContext context, GroupedItemsCollector collector)
         {
             LastContext = new ContextAnalysis().Analyze(context);
             return false;

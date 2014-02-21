@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using KaVE.JetBrains.Annotations;
 using KaVE.Model.Names;
+using KaVE.Model.Names.CSharp;
 using KaVE.Utils;
 using KaVE.Utils.Collections;
 
@@ -10,9 +12,15 @@ namespace KaVE.Model.Events.CompletionEvent
     {
         private static readonly SetEqualityComparer<ITypeHierarchy> Comparer = new SetEqualityComparer<ITypeHierarchy>();
 
+        [Obsolete("use alternative constructor")]
         public TypeHierarchy()
         {
             Implements = new HashSet<ITypeHierarchy>();
+        }
+
+        public TypeHierarchy(string elementQualifiedName) : this()
+        {
+            Element = TypeName.Get(elementQualifiedName);
         }
 
         public ITypeName Element { get; set; }
@@ -44,7 +52,7 @@ namespace KaVE.Model.Events.CompletionEvent
 
         public override string ToString()
         {
-            return string.Format("[Element: {0}, Extends: {1}, Implements: {2}]", Element, Extends, Implements);
+            return string.Format("[Element: {0}, Extends: {1}, Implements: [{2}]]", Element, Extends, string.Join(", ", Implements));
         }
     }
 }
