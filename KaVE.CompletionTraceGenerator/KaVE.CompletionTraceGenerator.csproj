@@ -38,7 +38,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>KaVE.CompletionTraceGenerator.IDEEventLogToCompletionTraceConverter</StartupObject>
+    <StartupObject>KaVE.CompletionTraceGenerator.EventLog2TraceConverter</StartupObject>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -55,7 +55,7 @@
     <Compile Include="Model\ActionType.cs" />
     <Compile Include="Model\CompletionAction.cs" />
     <Compile Include="Model\Direction.cs" />
-    <Compile Include="IDEEventLogToCompletionTraceConverter.cs" />
+    <Compile Include="EventLog2TraceConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
