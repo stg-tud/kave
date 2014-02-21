@@ -49,14 +49,10 @@ namespace KaVE.Model.Names.CSharp
         public static IParameterName GetName([NotNull] this ParameterInfo parameter)
         {
             var identifier = new StringBuilder();
-            identifier.AppendIf(parameter.IsParameterArray(), ParameterName.VarArgsModifier);
-            identifier.Append(" ");
-            identifier.AppendIf(parameter.IsOut, ParameterName.OutputModifier);
-            identifier.Append(" ");
-            identifier.AppendIf(parameter.IsOptional, ParameterName.OptionalModifier);
-            identifier.Append(" ");
-            identifier.AppendIf(parameter.ParameterType.IsByRef, ParameterName.PassByReferenceModifier);
-            identifier.Append(" ");
+            identifier.AppendIf(parameter.IsParameterArray(), ParameterName.VarArgsModifier + " ");
+            identifier.AppendIf(parameter.IsOut, ParameterName.OutputModifier + " ");
+            identifier.AppendIf(parameter.IsOptional, ParameterName.OptionalModifier + " ");
+            identifier.AppendIf(parameter.ParameterType.IsByRef, ParameterName.PassByReferenceModifier + " ");
             identifier.AppendType(parameter.ParameterType).Append(" ").Append(parameter.Name);
             return ParameterName.Get(identifier.ToString());
         }
@@ -70,8 +66,7 @@ namespace KaVE.Model.Names.CSharp
         public static IFieldName GetName([NotNull] this FieldInfo field)
         {
             var identifier = new StringBuilder();
-            identifier.AppendIf(field.IsStatic, MemberName.StaticModifier);
-            identifier.Append(" ");
+            identifier.AppendIf(field.IsStatic, MemberName.StaticModifier + " ");
             identifier.Append(field, field.FieldType);
             return FieldName.Get(identifier.ToString());
         }
@@ -84,12 +79,9 @@ namespace KaVE.Model.Names.CSharp
             var setterInfo = property.GetSetMethod();
             identifier.AppendIf(
                 getterInfo != null && getterInfo.IsStatic || setterInfo != null && setterInfo.IsStatic,
-                MemberName.StaticModifier);
-            identifier.Append(" ");
-            identifier.AppendIf(getterInfo != null, PropertyName.GetterModifier);
-            identifier.Append(" ");
-            identifier.AppendIf(setterInfo != null, PropertyName.SetterModifier);
-            identifier.Append(" ");
+                MemberName.StaticModifier + " ");
+            identifier.AppendIf(getterInfo != null, PropertyName.GetterModifier + " ");
+            identifier.AppendIf(setterInfo != null, PropertyName.SetterModifier + " ");
             identifier.Append(property, property.PropertyType);
             return PropertyName.Get(identifier.ToString());
         }
@@ -112,8 +104,7 @@ namespace KaVE.Model.Names.CSharp
         public static IEventName GetName([NotNull] this EventInfo evt)
         {
             var identifier = new StringBuilder();
-            identifier.AppendIf(evt.GetAddMethod(true).IsStatic, MemberName.StaticModifier);
-            identifier.Append(" ");
+            identifier.AppendIf(evt.GetAddMethod(true).IsStatic, MemberName.StaticModifier + " ");
             identifier.Append(evt, evt.EventHandlerType);
             return EventName.Get(identifier.ToString());
         }

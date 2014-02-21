@@ -93,14 +93,10 @@ namespace KaVE.VsFeedbackGenerator.Utils.Names
         private static IParameterName GetName(this IParameter parameter, ISubstitution substitution)
         {
             var identifier = new StringBuilder();
-            identifier.AppendIf(parameter.IsParameterArray, ParameterName.VarArgsModifier);
-            identifier.Append(" ");
-            identifier.AppendIf(parameter.Kind == ParameterKind.OUTPUT, ParameterName.OutputModifier);
-            identifier.Append(" ");
-            identifier.AppendIf(parameter.IsOptional, ParameterName.OptionalModifier);
-            identifier.Append(" ");
-            identifier.AppendIf(parameter.Kind == ParameterKind.REFERENCE, ParameterName.PassByReferenceModifier);
-            identifier.Append(" ");
+            identifier.AppendIf(parameter.IsParameterArray, ParameterName.VarArgsModifier + " ");
+            identifier.AppendIf(parameter.Kind == ParameterKind.OUTPUT, ParameterName.OutputModifier + " ");
+            identifier.AppendIf(parameter.IsOptional, ParameterName.OptionalModifier + " ");
+            identifier.AppendIf(parameter.Kind == ParameterKind.REFERENCE, ParameterName.PassByReferenceModifier + " ");
             identifier.AppendType(parameter.Type).Append(" ").Append(parameter.ShortName);
             return ParameterName.Get(identifier.ToString());
         }
@@ -130,10 +126,8 @@ namespace KaVE.VsFeedbackGenerator.Utils.Names
         private static IPropertyName GetName(this IProperty property, ISubstitution substitution)
         {
             var identifier = new StringBuilder();
-            identifier.AppendIf(property.IsWritable, PropertyName.SetterModifier);
-            identifier.Append(" ");
-            identifier.AppendIf(property.IsReadable, PropertyName.GetterModifier);
-            identifier.Append(" ");
+            identifier.AppendIf(property.IsWritable, PropertyName.SetterModifier + " ");
+            identifier.AppendIf(property.IsReadable, PropertyName.GetterModifier + " ");
             identifier.Append(property.GetMemberIdentifier(substitution, property.ReturnType));
             identifier.AppendParameters(property, substitution);
             return PropertyName.Get(identifier.ToString());
@@ -142,8 +136,7 @@ namespace KaVE.VsFeedbackGenerator.Utils.Names
         private static string GetMemberIdentifier(this ITypeMember member, ISubstitution substitution, IType valueType)
         {
             var identifier = new StringBuilder();
-            identifier.AppendIf(member.IsStatic, MemberName.StaticModifier);
-            identifier.Append(" ");
+            identifier.AppendIf(member.IsStatic, MemberName.StaticModifier + " ");
             identifier.Append(member, substitution, valueType);
             return identifier.ToString();
         }

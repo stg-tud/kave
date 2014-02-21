@@ -30,8 +30,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
             WhenCodeCompletionIsInvokedInFile("ProofOfConcept");
             var actual = ResultContext.EnclosingClassHierarchy;
 
-            var expected = new TypeHierarchy();
-            expected.Element = TypeName.Get("TestNamespace.TestClass, TestProject");
+            var expected = new TypeHierarchy {Element = TypeName.Get("TestNamespace.TestClass, TestProject")};
 
             Assert.AreEqual(expected, actual);
         }

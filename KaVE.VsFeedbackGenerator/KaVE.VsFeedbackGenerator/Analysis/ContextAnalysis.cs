@@ -18,8 +18,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis
             var methodName = GetName(methodDeclaration);
             context.EnclosingMethod = methodName;
             var typeName = GetName(typeDeclaration);
-            context.EnclosingClassHierarchy = new TypeHierarchy();
-            context.EnclosingClassHierarchy.Element = typeName;
+            context.EnclosingClassHierarchy = new TypeHierarchy {Element = typeName};
 
             return context;
         }
