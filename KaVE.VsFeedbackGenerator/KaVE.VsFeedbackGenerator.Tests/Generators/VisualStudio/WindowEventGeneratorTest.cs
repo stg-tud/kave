@@ -1,8 +1,6 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using EnvDTE;
 using KaVE.Model.Events.VisualStudio;
-using KaVE.Utils.DateTime;
 using KaVE.VsFeedbackGenerator.Generators.VisualStudio;
 using KaVE.VsFeedbackGenerator.Utils.Names;
 using Moq;
@@ -13,9 +11,10 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.VisualStudio
     [TestFixture]
     class WindowEventGeneratorTest : EventGeneratorTestBase
     {
-        private TestIDESession _testIDESession;
         private Mock<WindowEvents> _mockWindowEvents;
         private Window _testWindow;
+        // ReSharper disable once NotAccessedField.Local
+        private WindowEventGenerator _generator;
 
         [TestFixtureSetUp]
         public void SetUpTestWindow()
@@ -29,58 +28,63 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.VisualStudio
         [SetUp]
         public void SetUpIDESession()
         {
-            _mockWindowEvents = new Mock<WindowEvents>();
+            _mockWindowEvents = MockWindowEvents();
+            var mockEvents = MockEvents(_mockWindowEvents.Object);
+            var ideSession = MockIDESession(mockEvents.Object);
+            _generator = new WindowEventGenerator(ideSession, TestMessageBus);
+        }
+
+        private static Mock<WindowEvents> MockWindowEvents()
+        {
+            return new Mock<WindowEvents>();
+        }
+
+        private static Mock<Events> MockEvents(WindowEvents windowEvents)
+        {
             var mockEvents = new Mock<Events>();
             // ReSharper disable once UseIndexedProperty
-            mockEvents.Setup(events => events.get_WindowEvents(It.IsAny<Window>())).Returns(_mockWindowEvents.Object);
-            _testIDESession = new TestIDESession();
-            _testIDESession.MockDTE.Setup(dte => dte.Events).Returns(mockEvents.Object);
+            mockEvents.Setup(events => events.get_WindowEvents(It.IsAny<Window>())).Returns(windowEvents);
+            return mockEvents;
+        }
+
+        private static TestIDESession MockIDESession(Events events)
+        {
+            var ideSession = new TestIDESession();
+            ideSession.MockDTE.Setup(dte => dte.Events).Returns(events);
+            return ideSession;
         }
 
         [Test]
-        public void ShouldFireMoveEventWithing200MSAfterSingleMove()
+        public void ShouldFireMoveEventForMovedWindow()
         {
-            // ReSharper disable once UnusedVariable
-            var generator = new WindowEventGenerator(_testIDESession, TestMessageBus);
-
-            var eventTime = DateTime.Now;
             WhenTestWindowIsMoved();
-            WaitFor(200);
+            var windowEvent = WaitForNewEvent<WindowEvent>();
 
-            var windowEvent = GetSinglePublishedEventAs<WindowEvent>();
             Assert.AreEqual(_testWindow.GetName(), windowEvent.Window);
-            AssertAreEquals(eventTime, windowEvent.TerminatedAt.GetValueOrDefault(), 50);
+            Assert.AreEqual(WindowEvent.WindowAction.Move, windowEvent.Action);
         }
 
         [Test]
-        public void ShouldFireSingleMoveEventForMultipleMovesWithin150MS()
+        public void ShouldFireEventAbout150MSAfterMove()
         {
-            // ReSharper disable once UnusedVariable
-            var generator = new WindowEventGenerator(_testIDESession, TestMessageBus);
+            int actualWaitTime;
+            WhenTestWindowIsMoved();
+            WaitForNewEvent(out actualWaitTime);
+            
+            Assert.IsTrue(actualWaitTime >= 150);
+        }
 
+        [Test]
+        public void ShouldFireSingleEventForMultipleMovesWithin150MS()
+        {
             WhenTestWindowIsMoved();
             WaitFor(100);
-            var secondEventTime = DateTime.Now;
             WhenTestWindowIsMoved();
-            WaitFor(200);
-
-            var windowEvent = GetSinglePublishedEventAs<WindowEvent>();
-            Assert.That(secondEventTime <= windowEvent.TerminatedAt);
-            AssertAreEquals(secondEventTime, windowEvent.TerminatedAt.GetValueOrDefault(), 50);
-        }
-
-        [Test]
-        public void ShouldFireMultipleMoveEventsIfMoreThan150MSPassBetweenEvents()
-        {
-            // ReSharper disable once UnusedVariable
-            var generator = new WindowEventGenerator(_testIDESession, TestMessageBus);
-
+            WaitFor(50);
             WhenTestWindowIsMoved();
-            WaitFor(200);
-            WhenTestWindowIsMoved();
-            WaitFor(300);
+            WaitForNewEvent();
 
-            Assert.AreEqual(2, GetPublishedEvents().Count());
+            Assert.AreEqual(1, GetPublishedEvents().Count());
         }
 
         private void WhenTestWindowIsMoved()
@@ -91,11 +95,6 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.VisualStudio
         private static void WaitFor(uint milliseconds)
         {
             System.Threading.Thread.Sleep((int) milliseconds);
-        }
-
-        private static void AssertAreEquals(DateTime dt1, DateTime dt2, uint tollerance)
-        {
-            Assert.IsTrue(new SimilarDateTimeComparer(tollerance).Equal(dt1, dt2));
         }
     }
 }

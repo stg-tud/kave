@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using KaVE.JetBrains.Annotations;
 using KaVE.Model.Events;
 using KaVE.VsFeedbackGenerator.MessageBus;
@@ -8,26 +10,69 @@ using NUnit.Framework;
 
 namespace KaVE.VsFeedbackGenerator.Tests.Generators
 {
-    abstract class EventGeneratorTestBase
+    internal abstract class EventGeneratorTestBase
     {
         private Mock<IMessageBus> _mockMessageBus;
         private IList<IDEEvent> _publishedEvents;
 
+        private AutoResetEvent _eventReceptionLock;
+
+        [SetUp]
+        public void SetUpEventReception()
+        {
+            _publishedEvents = new List<IDEEvent>();
+            _eventReceptionLock = new AutoResetEvent(false);
+        }
+
         [SetUp]
         public void SetUpMessageBus()
         {
-            _publishedEvents = new List<IDEEvent>();
             _mockMessageBus = new Mock<IMessageBus>();
             _mockMessageBus.Setup(bus => bus.Publish(It.IsAny<IDEEvent>())).Callback(
-                (IDEEvent ideEvent) => _publishedEvents.Add(ideEvent));
+                (IDEEvent ideEvent) => ProcessEvent(ideEvent));
+        }
+
+        private void ProcessEvent(IDEEvent ideEvent)
+        {
+            lock (_publishedEvents)
+            {
+                _publishedEvents.Add(ideEvent);
+                _eventReceptionLock.Set();
+            }
+        }
+
+        protected TEvent WaitForNewEvent<TEvent>(out int actualWaitMillis, int timeout = 1000) where TEvent : IDEEvent
+        {
+            return (TEvent) WaitForNewEvent(out actualWaitMillis, timeout);
+        }
+
+        protected IDEEvent WaitForNewEvent(out int actualWaitMillis, int timeout = 1000)
+        {
+            var startTime = DateTime.Now;
+            var ideEvent = WaitForNewEvent(timeout);
+            var endTime = DateTime.Now;
+            actualWaitMillis = (int) Math.Ceiling((endTime - startTime).TotalMilliseconds);
+            return ideEvent;
+        }
+
+        protected TEvent WaitForNewEvent<TEvent>(int timeout = 1000) where TEvent : IDEEvent
+        {
+            return (TEvent) WaitForNewEvent(timeout);
+        }
+
+        protected IDEEvent WaitForNewEvent(int timeout = 1000)
+        {
+            if (_eventReceptionLock.WaitOne(timeout))
+            {
+                return _publishedEvents.Last();
+            }
+            Assert.Fail("no event within {0}ms", timeout);
+            return null;
         }
 
         protected IMessageBus TestMessageBus
         {
-            get
-            {
-                return _mockMessageBus.Object;
-            }
+            get { return _mockMessageBus.Object; }
         }
 
         [NotNull]
@@ -40,7 +85,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators
         protected TEvent GetLastPublishedEventAs<TEvent>() where TEvent : IDEEvent
         {
             var @event = _publishedEvents.Last();
-            Assert.IsInstanceOf(typeof(TEvent), @event);
+            Assert.IsInstanceOf(typeof (TEvent), @event);
             return (TEvent) @event;
         }
 
