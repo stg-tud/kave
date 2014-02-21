@@ -4,11 +4,11 @@ namespace KaVE.Utils
 {
     public static class StringBuilderUtils
     {
-        public static void AppendIf(this StringBuilder identifier, bool condition, string modifier)
+        public static void AppendIf(this StringBuilder identifier, bool condition, string stringToAppend)
         {
             if (condition)
             {
-                identifier.Append(modifier).Append(" ");
+                identifier.Append(stringToAppend);
             }
         }
     }

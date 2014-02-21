@@ -94,9 +94,13 @@ namespace KaVE.VsFeedbackGenerator.Utils.Names
         {
             var identifier = new StringBuilder();
             identifier.AppendIf(parameter.IsParameterArray, ParameterName.VarArgsModifier);
+            identifier.Append(" ");
             identifier.AppendIf(parameter.Kind == ParameterKind.OUTPUT, ParameterName.OutputModifier);
+            identifier.Append(" ");
             identifier.AppendIf(parameter.IsOptional, ParameterName.OptionalModifier);
+            identifier.Append(" ");
             identifier.AppendIf(parameter.Kind == ParameterKind.REFERENCE, ParameterName.PassByReferenceModifier);
+            identifier.Append(" ");
             identifier.AppendType(parameter.Type).Append(" ").Append(parameter.ShortName);
             return ParameterName.Get(identifier.ToString());
         }
@@ -127,7 +131,9 @@ namespace KaVE.VsFeedbackGenerator.Utils.Names
         {
             var identifier = new StringBuilder();
             identifier.AppendIf(property.IsWritable, PropertyName.SetterModifier);
+            identifier.Append(" ");
             identifier.AppendIf(property.IsReadable, PropertyName.GetterModifier);
+            identifier.Append(" ");
             identifier.Append(property.GetMemberIdentifier(substitution, property.ReturnType));
             identifier.AppendParameters(property, substitution);
             return PropertyName.Get(identifier.ToString());
@@ -137,6 +143,7 @@ namespace KaVE.VsFeedbackGenerator.Utils.Names
         {
             var identifier = new StringBuilder();
             identifier.AppendIf(member.IsStatic, MemberName.StaticModifier);
+            identifier.Append(" ");
             identifier.Append(member, substitution, valueType);
             return identifier.ToString();
         }

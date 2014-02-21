@@ -34,6 +34,7 @@ namespace KaVE.Model.Names.CSharp
         {
             var identifier = new StringBuilder();
             identifier.AppendIf(method.IsStatic, MemberName.StaticModifier);
+            identifier.Append(" ");
             identifier.Append(method, method.ReturnType);
             identifier.Append("(").Append(String.Join(", ", method.GetParameters().GetNames())).Append(")");
             return MethodName.Get(identifier.ToString());
@@ -49,16 +50,20 @@ namespace KaVE.Model.Names.CSharp
         {
             var identifier = new StringBuilder();
             identifier.AppendIf(parameter.IsParameterArray(), ParameterName.VarArgsModifier);
+            identifier.Append(" ");
             identifier.AppendIf(parameter.IsOut, ParameterName.OutputModifier);
+            identifier.Append(" ");
             identifier.AppendIf(parameter.IsOptional, ParameterName.OptionalModifier);
+            identifier.Append(" ");
             identifier.AppendIf(parameter.ParameterType.IsByRef, ParameterName.PassByReferenceModifier);
+            identifier.Append(" ");
             identifier.AppendType(parameter.ParameterType).Append(" ").Append(parameter.Name);
             return ParameterName.Get(identifier.ToString());
         }
 
         private static bool IsParameterArray(this ParameterInfo parameter)
         {
-            return Attribute.IsDefined(parameter, typeof(ParamArrayAttribute));
+            return Attribute.IsDefined(parameter, typeof (ParamArrayAttribute));
         }
 
         [NotNull]
@@ -66,6 +71,7 @@ namespace KaVE.Model.Names.CSharp
         {
             var identifier = new StringBuilder();
             identifier.AppendIf(field.IsStatic, MemberName.StaticModifier);
+            identifier.Append(" ");
             identifier.Append(field, field.FieldType);
             return FieldName.Get(identifier.ToString());
         }
@@ -76,16 +82,25 @@ namespace KaVE.Model.Names.CSharp
             var identifier = new StringBuilder();
             var getterInfo = property.GetGetMethod();
             var setterInfo = property.GetSetMethod();
-            identifier.AppendIf(getterInfo != null && getterInfo.IsStatic || setterInfo != null && setterInfo.IsStatic, MemberName.StaticModifier);
+            identifier.AppendIf(
+                getterInfo != null && getterInfo.IsStatic || setterInfo != null && setterInfo.IsStatic,
+                MemberName.StaticModifier);
+            identifier.Append(" ");
             identifier.AppendIf(getterInfo != null, PropertyName.GetterModifier);
+            identifier.Append(" ");
             identifier.AppendIf(setterInfo != null, PropertyName.SetterModifier);
+            identifier.Append(" ");
             identifier.Append(property, property.PropertyType);
             return PropertyName.Get(identifier.ToString());
         }
 
         private static void Append(this StringBuilder identifier, MemberInfo property, Type valueType)
         {
-            identifier.AppendType(valueType).Append(" ").AppendType(property.DeclaringType).Append(".").Append(property.Name);
+            identifier.AppendType(valueType)
+                .Append(" ")
+                .AppendType(property.DeclaringType)
+                .Append(".")
+                .Append(property.Name);
         }
 
         private static StringBuilder AppendType(this StringBuilder identifier, Type type)
@@ -98,6 +113,7 @@ namespace KaVE.Model.Names.CSharp
         {
             var identifier = new StringBuilder();
             identifier.AppendIf(evt.GetAddMethod(true).IsStatic, MemberName.StaticModifier);
+            identifier.Append(" ");
             identifier.Append(evt, evt.EventHandlerType);
             return EventName.Get(identifier.ToString());
         }
