@@ -47,14 +47,19 @@
         <ToolBarTray IsLocked="True" DockPanel.Dock="Top" AllowDrop="False">
             <ToolBar OverflowMode="Never" Loaded="ToolBar_OnLoaded"
                      IsEnabled="{Binding Refreshing, Converter={StaticResource InverseBoolConverter}}">
-                <Button ToolTip="{x:Static root:Properties.SessionManager.Refresh}" Click="RefreshButton_OnClick">
+                <Button ToolTip="{x:Static root:Properties.SessionManager.Refresh}"
+                        Click="RefreshButton_OnClick">
                     <Image Source="/KaVE.VsFeedbackGenerator;Component/Resources/refresh.png" />
                 </Button>
                 <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
-                <Button ToolTip="{x:Static root:Properties.SessionManager.Export}">
+                <Button ToolTip="{x:Static root:Properties.SessionManager.Export}"
+                        Command="{Binding Path=ExportSessionsCommand, FallbackValue={x:Null}}"
+                        Style="{StaticResource DefaultDisabledButton}">
                     <Image Source="/KaVE.VsFeedbackGenerator;Component/Resources/export.png" />
                 </Button>
-                <Button ToolTip="{x:Static root:Properties.SessionManager.Send}">
+                <Button ToolTip="{x:Static root:Properties.SessionManager.Send}"
+                        Command="{Binding Path=SendSessionsCommand, FallbackValue={x:Null}}"
+                        Style="{StaticResource DefaultDisabledButton}">
                     <Image Source="/KaVE.VsFeedbackGenerator;Component/Resources/send.png" />
                 </Button>
                 <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
@@ -191,9 +196,10 @@
                               Visibility="{Binding Converter={StaticResource ObjectToVisibilityConverter}, Path=., FallbackValue=Collapsed}">
                         <Border BorderThickness="1" BorderBrush="DimGray" Padding="0" CornerRadius="1"
                                 Margin="0,3,0,0" Background="White">
-                            <presentation:ContextVisualizationTextBlock Margin="0,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
-                                         Width="Auto" Height="Auto" FontFamily="Courier New" Context="{Binding .}">
-                            </presentation:ContextVisualizationTextBlock>
+                            <presentation:ContextVisualizationTextBlock Margin="0,0,0,0" HorizontalAlignment="Left"
+                                                                        VerticalAlignment="Top"
+                                                                        Width="Auto" Height="Auto"
+                                                                        FontFamily="Courier New" Context="{Binding .}" />
                         </Border>
                     </GroupBox>
                     <!-- DETAILS SCROLLBOX -->

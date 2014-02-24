@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using JetBrains.Application;
+using JetBrains.IDE.Resources;
 using KaVE.Utils.Assertion;
 
 #if !DEBUG
@@ -49,6 +51,7 @@ namespace KaVE.VsFeedbackGenerator.Utils.Json
         /// </summary>
         public string GetLogFileName(string sessionUUID)
         {
+            // TODO create abstraction. make KaVE-folder available outside the context of log-file-processing
             return Path.Combine(EventLogsPath, sessionUUID + LogFileExtension);
         }
 
@@ -99,6 +102,14 @@ namespace KaVE.VsFeedbackGenerator.Utils.Json
             {
                 logStream.Close();
                 throw;
+            }
+        }
+
+        public void DeleteLogsOlderThan(DateTime time)
+        {
+            foreach (var fileToDelete in GetLogFileNames().Where(file => File.GetLastWriteTime(file) < time))
+            {
+                File.Delete(fileToDelete);
             }
         }
     }
