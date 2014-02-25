@@ -11,6 +11,13 @@ namespace KaVE.Utils.Assertion
             That(obj != null, message, messageArgs);
         }
 
+        // TODO review
+        [ContractAnnotation("obj:null => halt")]
+        public static void NotNull([CanBeNull] object obj)
+        {
+            That(obj != null);
+        }
+
         [ContractAnnotation("obj:notnull => halt"), StringFormatMethod("message")]
         public static void Null([CanBeNull] object obj, [NotNull] string message, params object[] messageArgs)
         {
@@ -32,10 +39,27 @@ namespace KaVE.Utils.Assertion
             }
         }
 
+        // TODO review
+        [ContractAnnotation("condition:false => halt")]
+        public static void That(bool condition)
+        {
+            if (!condition)
+            {
+                Fail();
+            }
+        }
+
         [ContractAnnotation("=> halt"), StringFormatMethod("message")]
         public static void Fail(string message, params object[] messageArgs)
         {
             throw new AssertException(String.Format(message, messageArgs));
+        }
+
+        // TODO review
+        [ContractAnnotation("=> halt")]
+        public static void Fail()
+        {
+            throw new AssertException("unexpected condition");
         }
 
         [ContractAnnotation("=> halt"), StringFormatMethod("message")]

@@ -1,10 +1,13 @@
-﻿using JetBrains.ReSharper.Feature.Services.CSharp.CodeCompletion.Infrastructure;
+﻿using System.Linq;
+using JetBrains.ReSharper.Feature.Services.CSharp.CodeCompletion.Infrastructure;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Resolve;
 using JetBrains.ReSharper.Psi.Tree;
+using JetBrains.ReSharper.Psi.Util;
 using KaVE.Model.Events.CompletionEvent;
 using KaVE.Model.Names;
+using KaVE.Utils.Assertion;
 using KaVE.VsFeedbackGenerator.Utils.Names;
 
 namespace KaVE.VsFeedbackGenerator.Analysis
@@ -20,11 +23,51 @@ namespace KaVE.VsFeedbackGenerator.Analysis
             context.EnclosingMethod = methodName;
 
             var typeDeclaration = methodDeclaration.GetContainingTypeDeclaration();
+            context.EnclosingMethodSuper = FindMethodInSuperTypes(methodDeclaration.DeclaredElement, typeDeclaration.DeclaredElement);
 
             context.EnclosingClassHierarchy = CreateTypeHierarchy(
                 typeDeclaration.DeclaredElement,
                 EmptySubstitution.INSTANCE);
             return context;
+        }
+
+        private IMethodName FindMethodInSuperTypes(IMethod enclosingMethod,
+            ITypeElement typeDeclaration)
+        {
+            var encName = GetSimpleName(enclosingMethod);
+
+            foreach (var superType in typeDeclaration.GetSuperTypes())
+            {
+                var superTypeElement = superType.GetTypeElement();
+                Asserts.NotNull(superTypeElement);
+
+                foreach (var method in superTypeElement.Methods)
+                {
+                    var name = GetSimpleName(method);
+
+                    if (name.Equals(encName))
+                    {
+                        return (IMethodName)method.GetName(method.IdSubstitution);
+                    }
+                }
+
+                var superName = FindMethodInSuperTypes(enclosingMethod, superType.GetTypeElement());
+                if (superName != null)
+                {
+                    return superName;
+                }
+            }
+
+            return null;
+        }
+
+        // TODO discuss
+        private string GetSimpleName(IMethod method)
+        {
+            var name = method.ShortName;
+            var ps = string.Join(",", method.Parameters.Select(p => p.Type));
+            var ret = method.ReturnType;
+            return ret + " " + name + "(" + ps + ")";
         }
 
         private static TypeHierarchy CreateTypeHierarchy(ITypeElement type, ISubstitution substitution)
