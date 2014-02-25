@@ -14,10 +14,9 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
 
         // TODO move this region to a fixture class
 
-        private const string NoContext = ContextVisualizationTextBlock.NoContext;
-        private const string LineBreak = ContextVisualizationTextBlock.LineBreak;
-        private const string Indent = ContextVisualizationTextBlock.Indent;
-        private const string CompletionMarker = ContextVisualizationTextBlock.Completion;
+        private const string LineBreak = ContextVisualizationConverter.LineBreak;
+        private const string Indent = ContextVisualizationConverter.Indent;
+        private const string CompletionMarker = ContextVisualizationConverter.Completion;
         private const string Class = "<Bold>class</Bold>";
         private const string Inherits = "<Bold> : </Bold>";
 
@@ -40,8 +39,8 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
         [Test]
         public void ShouldHandleNullAsContext()
         {
-            var actual = ContextVisualizationTextBlock.ToXaml((Context) null);
-            Assert.AreEqual(NoContext, actual);
+            var actual = ContextVisualizationConverter.ToXaml((Context) null);
+            Assert.IsNull(actual);
         }
 
         [Test]
@@ -50,7 +49,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
             var context = new Context();
 
             // empty context does not offer any information and is therefore equivalent to no context
-            Assert.AreEqual(NoContext, ContextVisualizationTextBlock.ToXaml(context));
+            Assert.IsNull(ContextVisualizationConverter.ToXaml(context));
         }
 
         [Test]
@@ -62,7 +61,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
             };
 
             // context with only a method is invalid because method has to be defined inside some class
-            Assert.AreEqual(NoContext, ContextVisualizationTextBlock.ToXaml(context));
+            Assert.IsNull(ContextVisualizationConverter.ToXaml(context));
         }
 
         [Test]
@@ -75,7 +74,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
             };
 
             // empty hierarchy does not offer any information and is therefore equivalent to no context
-            Assert.AreEqual(NoContext, ContextVisualizationTextBlock.ToXaml(context));
+            Assert.IsNull(ContextVisualizationConverter.ToXaml(context));
         }
 
         [Test]
@@ -90,7 +89,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
             };
 
             // hierarchy without Element is invalid
-            Assert.AreEqual(NoContext, ContextVisualizationTextBlock.ToXaml(context));
+            Assert.IsNull(ContextVisualizationConverter.ToXaml(context));
         }
 
         [Test]
@@ -108,7 +107,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
             };
 
             // hierarchy without Element is invalid
-            Assert.AreEqual(NoContext, ContextVisualizationTextBlock.ToXaml(context));
+            Assert.IsNull(ContextVisualizationConverter.ToXaml(context));
         }
 
         [Test]
@@ -120,7 +119,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
             };
 
             // hierarchy without Element is invalid
-            Assert.AreEqual(NoContext, ContextVisualizationTextBlock.ToXaml(context));
+            Assert.IsNull(ContextVisualizationConverter.ToXaml(context));
         }
 
         [Test]
@@ -133,7 +132,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
             context.EnclosingClassHierarchy.Implements.Add(new TypeHierarchy());
 
             // hierarchy without Element is invalid
-            Assert.AreEqual(NoContext, ContextVisualizationTextBlock.ToXaml(context));
+            Assert.IsNull(ContextVisualizationConverter.ToXaml(context));
         }
 
         [Test]
@@ -146,7 +145,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
             context.EnclosingClassHierarchy.Implements.Add(new TypeHierarchy {Element = TypeName.Get(ValidType())});
 
             // hierarchy without Element is invalid
-            Assert.AreEqual(NoContext, ContextVisualizationTextBlock.ToXaml(context));
+            Assert.IsNull(ContextVisualizationConverter.ToXaml(context));
         }
 
         #endregion
@@ -173,7 +172,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                 Inherits);
 
             // TODO expectations umformulieren
-            expected = Bold("class") + " Namespace.Class\n\r" +
+            /*expected = Bold("class") + " Namespace.Class\n\r" +
                        "{\n\r" +
                        Indent + CompletionMarker + "\n\r" +
                        "}";
@@ -181,9 +180,9 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
             expected = @"class Namespace.Class
 {
   CompletionMarker
-}";
+}";*/
 
-            Assert.AreEqual(expected, ContextVisualizationTextBlock.ToXaml(context));
+            Assert.AreEqual(expected, ContextVisualizationConverter.ToXaml(context));
         }
 
         private static string Bold(string text)
@@ -211,7 +210,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                 Indent,
                 Inherits);
 
-            Assert.AreEqual(expected, ContextVisualizationTextBlock.ToXaml(context));
+            Assert.AreEqual(expected, ContextVisualizationConverter.ToXaml(context));
         }
 
         [Test]
@@ -237,7 +236,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                 Indent,
                 Inherits);
 
-            Assert.AreEqual(expected, ContextVisualizationTextBlock.ToXaml(context));
+            Assert.AreEqual(expected, ContextVisualizationConverter.ToXaml(context));
         }
 
         [Test]
@@ -259,7 +258,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                 Indent,
                 Inherits);
 
-            Assert.AreEqual(expected, ContextVisualizationTextBlock.ToXaml(context));
+            Assert.AreEqual(expected, ContextVisualizationConverter.ToXaml(context));
         }
 
         [Test]
@@ -282,7 +281,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                 Indent,
                 Inherits);
 
-            Assert.AreEqual(expected, ContextVisualizationTextBlock.ToXaml(context));
+            Assert.AreEqual(expected, ContextVisualizationConverter.ToXaml(context));
         }
 
         [Test]
@@ -306,7 +305,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                 Indent,
                 Inherits);
 
-            Assert.AreEqual(expected, ContextVisualizationTextBlock.ToXaml(context));
+            Assert.AreEqual(expected, ContextVisualizationConverter.ToXaml(context));
         }
 
         [Test]
@@ -334,7 +333,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                 Indent,
                 Inherits);
 
-            Assert.AreEqual(expected, ContextVisualizationTextBlock.ToXaml(context));
+            Assert.AreEqual(expected, ContextVisualizationConverter.ToXaml(context));
         }
 
         [Test]
@@ -365,7 +364,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                     Indent,
                     Inherits);
 
-            Assert.AreEqual(expected, ContextVisualizationTextBlock.ToXaml(context));
+            Assert.AreEqual(expected, ContextVisualizationConverter.ToXaml(context));
         }
 
         #endregion
@@ -393,7 +392,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                     Indent,
                     Inherits);
 
-            Assert.AreEqual(expected, ContextVisualizationTextBlock.ToXaml(context));
+            Assert.AreEqual(expected, ContextVisualizationConverter.ToXaml(context));
         }
 
         [Test]
@@ -418,7 +417,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                     Indent,
                     Inherits);
 
-            Assert.AreEqual(expected, ContextVisualizationTextBlock.ToXaml(context));
+            Assert.AreEqual(expected, ContextVisualizationConverter.ToXaml(context));
         }
 
         [Test]
@@ -445,7 +444,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                 Indent,
                 Inherits);
 
-            Assert.AreEqual(expected, ContextVisualizationTextBlock.ToXaml(context));
+            Assert.AreEqual(expected, ContextVisualizationConverter.ToXaml(context));
         }
 
         [Test]
@@ -469,7 +468,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                     Indent,
                     Inherits);
 
-            Assert.AreEqual(expected, ContextVisualizationTextBlock.ToXaml(context));
+            Assert.AreEqual(expected, ContextVisualizationConverter.ToXaml(context));
         }
 
         [Test]
@@ -494,7 +493,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                     Indent,
                     Inherits);
 
-            Assert.AreEqual(expected, ContextVisualizationTextBlock.ToXaml(context));
+            Assert.AreEqual(expected, ContextVisualizationConverter.ToXaml(context));
         }
 
         [Test]
@@ -522,7 +521,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                 Indent,
                 Inherits);
 
-            Assert.AreEqual(expected, ContextVisualizationTextBlock.ToXaml(context));
+            Assert.AreEqual(expected, ContextVisualizationConverter.ToXaml(context));
         }
 
         [Test]
@@ -554,7 +553,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                 Indent,
                 Inherits);
 
-            Assert.AreEqual(expected, ContextVisualizationTextBlock.ToXaml(context));
+            Assert.AreEqual(expected, ContextVisualizationConverter.ToXaml(context));
         }
 
         [Test]
@@ -592,7 +591,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                     Indent,
                     Inherits);
 
-            Assert.AreEqual(expected, ContextVisualizationTextBlock.ToXaml(context));
+            Assert.AreEqual(expected, ContextVisualizationConverter.ToXaml(context));
         }
 
         #endregion

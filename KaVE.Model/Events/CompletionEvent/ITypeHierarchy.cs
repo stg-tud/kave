@@ -24,6 +24,21 @@ namespace KaVE.Model.Events.CompletionEvent
         /// The interfaces directly implemented by the type at this level.
         /// </summary>
         [NotNull]
-        ISet<ITypeHierarchy> Implements { get; set; } 
+        ISet<ITypeHierarchy> Implements { get; set; }
+
+        /// <summary>
+        /// <returns>Wheather this type extends some superclass or implements any interfaces</returns>
+        /// </summary>
+        bool HasSupertypes { get; }
+
+        /// <summary>
+        /// <returns>Wheather this type extends some superclass</returns>
+        /// </summary>
+        bool HasSuperclass { get; }
+
+        /// <summary>
+        /// <returns>Wheather this type implements any interfaces</returns>
+        /// </summary>
+        bool IsImplementingInterfaces { get; }
     }
 }

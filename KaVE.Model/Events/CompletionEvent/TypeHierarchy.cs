@@ -54,5 +54,29 @@ namespace KaVE.Model.Events.CompletionEvent
         {
             return string.Format("[Element: {0}, Extends: {1}, Implements: [{2}]]", Element, Extends, string.Join(", ", Implements));
         }
+
+        public bool HasSupertypes
+        {
+            get
+            {
+                return HasSuperclass || IsImplementingInterfaces;
+            }
+        }
+
+        public bool HasSuperclass
+        {
+            get
+            {
+                return Extends != null;
+            }
+        }
+
+        public bool IsImplementingInterfaces
+        {
+            get
+            {
+                return Implements.Count > 0;
+            }
+        }
     }
 }
