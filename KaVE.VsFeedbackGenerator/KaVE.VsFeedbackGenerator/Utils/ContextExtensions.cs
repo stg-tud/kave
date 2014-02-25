@@ -21,7 +21,7 @@ namespace KaVE.VsFeedbackGenerator.Utils
             var superType = context.EnclosingClassHierarchy.Extends.Element;
             var interfaces = context.EnclosingClassHierarchy.Implements.Select(i => i.Element).AsIList();
             var classParagraph = doc.AddPara();
-            classParagraph.Inlines.Add(new Bold(new Run(elem.KindOfType())));
+            classParagraph.Inlines.Add(new Bold(new Run(elem.ToTypeCategory())));
             classParagraph.Inlines.Add(new Run(" " + elem.FullName));
             if (superType != null || interfaces.Any())
             {

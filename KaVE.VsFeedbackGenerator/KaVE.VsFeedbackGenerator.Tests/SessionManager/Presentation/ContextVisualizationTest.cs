@@ -6,15 +6,18 @@ using NUnit.Framework;
 
 namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
 {
+    // TODO make classname match tested class's name
     [TestFixture]
     internal class ContextVisualizationTest
     {
         #region AssertionHelper
 
+        // TODO move this region to a fixture class
+
         private const string NoContext = ContextVisualizationTextBlock.NoContext;
         private const string LineBreak = ContextVisualizationTextBlock.LineBreak;
         private const string Indent = ContextVisualizationTextBlock.Indent;
-        private const string Completion = ContextVisualizationTextBlock.Completion;
+        private const string CompletionMarker = ContextVisualizationTextBlock.Completion;
         private const string Class = "<Bold>class</Bold>";
         private const string Inherits = "<Bold> : </Bold>";
 
@@ -26,35 +29,19 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
             return string.Format("Namespace.{0}, Assembly, Version=1.0.0.0", type);
         }
 
-        private static ContextVisualizationTextBlock TextBlock
-        {
-            get { return new ContextVisualizationTextBlock(); }
-        }
-
-        private static void AssertConvertable(Context context, string expectedConvertion)
-        {
-            Assert.AreEqual(expectedConvertion, ContextVisualizationTextBlock.ToXamlRepresentation(context));
-            try
-            {
-                //TextBlock.Context = context;
-            }
-            catch (Exception e)
-            {
-                Assert.Fail(
-                    "Context with expected representation \"{0}\" wasn't accepted by ContextVisualizationTextBlock: {1}",
-                    expectedConvertion,
-                    e.Message);
-            }
-        }
-
         #endregion
+
+        // TODO move each region into a separate test class
+        // TODO kommentare in methodennamen ueberfuehren
+        // TODO alles was mehr als eine Konstante ist in actual/expected variablen schreiben vor dem assert
 
         #region NoContext
 
         [Test]
         public void ShouldHandleNullAsContext()
         {
-            AssertConvertable(null, NoContext);
+            var actual = ContextVisualizationTextBlock.ToXaml((Context) null);
+            Assert.AreEqual(NoContext, actual);
         }
 
         [Test]
@@ -63,7 +50,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
             var context = new Context();
 
             // empty context does not offer any information and is therefore equivalent to no context
-            AssertConvertable(context, NoContext);
+            Assert.AreEqual(NoContext, ContextVisualizationTextBlock.ToXaml(context));
         }
 
         [Test]
@@ -75,19 +62,20 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
             };
 
             // context with only a method is invalid because method has to be defined inside some class
-            AssertConvertable(context, NoContext);
+            Assert.AreEqual(NoContext, ContextVisualizationTextBlock.ToXaml(context));
         }
 
         [Test]
         public void ShouldHandleContextWithEmptyHierarchy()
         {
+            // TODO neuen konstruktor fuer type hierarchy benutzen
             var context = new Context
             {
                 EnclosingClassHierarchy = new TypeHierarchy()
             };
 
             // empty hierarchy does not offer any information and is therefore equivalent to no context
-            AssertConvertable(context, NoContext);
+            Assert.AreEqual(NoContext, ContextVisualizationTextBlock.ToXaml(context));
         }
 
         [Test]
@@ -102,7 +90,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
             };
 
             // hierarchy without Element is invalid
-            AssertConvertable(context, NoContext);
+            Assert.AreEqual(NoContext, ContextVisualizationTextBlock.ToXaml(context));
         }
 
         [Test]
@@ -120,7 +108,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
             };
 
             // hierarchy without Element is invalid
-            AssertConvertable(context, NoContext);
+            Assert.AreEqual(NoContext, ContextVisualizationTextBlock.ToXaml(context));
         }
 
         [Test]
@@ -132,7 +120,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
             };
 
             // hierarchy without Element is invalid
-            AssertConvertable(context, NoContext);
+            Assert.AreEqual(NoContext, ContextVisualizationTextBlock.ToXaml(context));
         }
 
         [Test]
@@ -145,7 +133,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
             context.EnclosingClassHierarchy.Implements.Add(new TypeHierarchy());
 
             // hierarchy without Element is invalid
-            AssertConvertable(context, NoContext);
+            Assert.AreEqual(NoContext, ContextVisualizationTextBlock.ToXaml(context));
         }
 
         [Test]
@@ -158,7 +146,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
             context.EnclosingClassHierarchy.Implements.Add(new TypeHierarchy {Element = TypeName.Get(ValidType())});
 
             // hierarchy without Element is invalid
-            AssertConvertable(context, NoContext);
+            Assert.AreEqual(NoContext, ContextVisualizationTextBlock.ToXaml(context));
         }
 
         #endregion
@@ -179,12 +167,28 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
             var expected = String.Format(
                 "{2} Namespace.Class{0}{{{0}{3}{1}{0}}}",
                 LineBreak,
-                Completion,
+                CompletionMarker,
                 Class,
                 Indent,
                 Inherits);
 
-            AssertConvertable(context, expected);
+            // TODO expectations umformulieren
+            expected = Bold("class") + " Namespace.Class\n\r" +
+                       "{\n\r" +
+                       Indent + CompletionMarker + "\n\r" +
+                       "}";
+
+            expected = @"class Namespace.Class
+{
+  CompletionMarker
+}";
+
+            Assert.AreEqual(expected, ContextVisualizationTextBlock.ToXaml(context));
+        }
+
+        private static string Bold(string text)
+        {
+            return "<Bold>" + text + "</Bold>";
         }
 
         [Test]
@@ -202,12 +206,12 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
             var expected = String.Format(
                 "{2} Namespace.Class{0}{{{0}{3}{1}{0}}}",
                 LineBreak,
-                Completion,
+                CompletionMarker,
                 Class,
                 Indent,
                 Inherits);
 
-            AssertConvertable(context, expected);
+            Assert.AreEqual(expected, ContextVisualizationTextBlock.ToXaml(context));
         }
 
         [Test]
@@ -228,12 +232,12 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
             var expected = String.Format(
                 "{2} Namespace.Class{4}Namespace.Super{0}{{{0}{3}{1}{0}}}",
                 LineBreak,
-                Completion,
+                CompletionMarker,
                 Class,
                 Indent,
                 Inherits);
 
-            AssertConvertable(context, expected);
+            Assert.AreEqual(expected, ContextVisualizationTextBlock.ToXaml(context));
         }
 
         [Test]
@@ -250,12 +254,12 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
             var expected = String.Format(
                 "{2} Namespace.Class{0}{{{0}{3}{1}{0}}}",
                 LineBreak,
-                Completion,
+                CompletionMarker,
                 Class,
                 Indent,
                 Inherits);
 
-            AssertConvertable(context, expected);
+            Assert.AreEqual(expected, ContextVisualizationTextBlock.ToXaml(context));
         }
 
         [Test]
@@ -273,12 +277,12 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
             var expected = String.Format(
                 "{2} Namespace.Class{0}{{{0}{3}{1}{0}}}",
                 LineBreak,
-                Completion,
+                CompletionMarker,
                 Class,
                 Indent,
                 Inherits);
 
-            AssertConvertable(context, expected);
+            Assert.AreEqual(expected, ContextVisualizationTextBlock.ToXaml(context));
         }
 
         [Test]
@@ -297,12 +301,12 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
             var expected = String.Format(
                 "{2} Namespace.Class{4}Namespace.Interface{0}{{{0}{3}{1}{0}}}",
                 LineBreak,
-                Completion,
+                CompletionMarker,
                 Class,
                 Indent,
                 Inherits);
 
-            AssertConvertable(context, expected);
+            Assert.AreEqual(expected, ContextVisualizationTextBlock.ToXaml(context));
         }
 
         [Test]
@@ -325,12 +329,12 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
             var expected = String.Format(
                 "{2} Namespace.Class{4}Namespace.Super, Namespace.Interface{0}{{{0}{3}{1}{0}}}",
                 LineBreak,
-                Completion,
+                CompletionMarker,
                 Class,
                 Indent,
                 Inherits);
 
-            AssertConvertable(context, expected);
+            Assert.AreEqual(expected, ContextVisualizationTextBlock.ToXaml(context));
         }
 
         [Test]
@@ -356,12 +360,12 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                 String.Format(
                     "{2} Namespace.Class{4}Namespace.Super, Namespace.Interface1, Namespace.Interface2{0}{{{0}{3}{1}{0}}}",
                     LineBreak,
-                    Completion,
+                    CompletionMarker,
                     Class,
                     Indent,
                     Inherits);
 
-            AssertConvertable(context, expected);
+            Assert.AreEqual(expected, ContextVisualizationTextBlock.ToXaml(context));
         }
 
         #endregion
@@ -384,12 +388,12 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                 String.Format(
                     "{2} Namespace.Class{0}{{{0}{3}Namespace.Return Method(Namespace.Argument argument){0}{3}{{{0}{3}{3}{1}{0}{3}}}{0}}}",
                     LineBreak,
-                    Completion,
+                    CompletionMarker,
                     Class,
                     Indent,
                     Inherits);
 
-            AssertConvertable(context, expected);
+            Assert.AreEqual(expected, ContextVisualizationTextBlock.ToXaml(context));
         }
 
         [Test]
@@ -409,12 +413,12 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                 String.Format(
                     "{2} Namespace.Class{0}{{{0}{3}Namespace.Return Method(Namespace.Argument argument){0}{3}{{{0}{3}{3}{1}{0}{3}}}{0}}}",
                     LineBreak,
-                    Completion,
+                    CompletionMarker,
                     Class,
                     Indent,
                     Inherits);
 
-            AssertConvertable(context, expected);
+            Assert.AreEqual(expected, ContextVisualizationTextBlock.ToXaml(context));
         }
 
         [Test]
@@ -436,12 +440,12 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
             var expected = String.Format(
                 "{2} Namespace.Class{4}Namespace.Super{0}{{{0}{3}Namespace.Return Method(Namespace.Argument argument){0}{3}{{{0}{3}{3}{1}{0}{3}}}{0}}}",
                 LineBreak,
-                Completion,
+                CompletionMarker,
                 Class,
                 Indent,
                 Inherits);
 
-            AssertConvertable(context, expected);
+            Assert.AreEqual(expected, ContextVisualizationTextBlock.ToXaml(context));
         }
 
         [Test]
@@ -460,12 +464,12 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                 String.Format(
                     "{2} Namespace.Class{0}{{{0}{3}Namespace.Return Method(Namespace.Argument argument){0}{3}{{{0}{3}{3}{1}{0}{3}}}{0}}}",
                     LineBreak,
-                    Completion,
+                    CompletionMarker,
                     Class,
                     Indent,
                     Inherits);
 
-            AssertConvertable(context, expected);
+            Assert.AreEqual(expected, ContextVisualizationTextBlock.ToXaml(context));
         }
 
         [Test]
@@ -485,12 +489,12 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                 String.Format(
                     "{2} Namespace.Class{0}{{{0}{3}Namespace.Return Method(Namespace.Argument argument){0}{3}{{{0}{3}{3}{1}{0}{3}}}{0}}}",
                     LineBreak,
-                    Completion,
+                    CompletionMarker,
                     Class,
                     Indent,
                     Inherits);
 
-            AssertConvertable(context, expected);
+            Assert.AreEqual(expected, ContextVisualizationTextBlock.ToXaml(context));
         }
 
         [Test]
@@ -513,12 +517,12 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
             var expected = String.Format(
                 "{2} Namespace.Class{4}Namespace.Interface{0}{{{0}{3}Namespace.Return Method(Namespace.Argument argument){0}{3}{{{0}{3}{3}{1}{0}{3}}}{0}}}",
                 LineBreak,
-                Completion,
+                CompletionMarker,
                 Class,
                 Indent,
                 Inherits);
 
-            AssertConvertable(context, expected);
+            Assert.AreEqual(expected, ContextVisualizationTextBlock.ToXaml(context));
         }
 
         [Test]
@@ -545,12 +549,12 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
             var expected = String.Format(
                 "{2} Namespace.Class{4}Namespace.Super, Namespace.Interface{0}{{{0}{3}Namespace.Return Method(Namespace.Argument argument){0}{3}{{{0}{3}{3}{1}{0}{3}}}{0}}}",
                 LineBreak,
-                Completion,
+                CompletionMarker,
                 Class,
                 Indent,
                 Inherits);
 
-            AssertConvertable(context, expected);
+            Assert.AreEqual(expected, ContextVisualizationTextBlock.ToXaml(context));
         }
 
         [Test]
@@ -583,12 +587,12 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                 String.Format(
                     "{2} Namespace.Class{4}Namespace.Super, Namespace.Interface1, Namespace.Interface2{0}{{{0}{3}Namespace.Return Method(Namespace.Argument argument){0}{3}{{{0}{3}{3}{1}{0}{3}}}{0}}}",
                     LineBreak,
-                    Completion,
+                    CompletionMarker,
                     Class,
                     Indent,
                     Inherits);
 
-            AssertConvertable(context, expected);
+            Assert.AreEqual(expected, ContextVisualizationTextBlock.ToXaml(context));
         }
 
         #endregion

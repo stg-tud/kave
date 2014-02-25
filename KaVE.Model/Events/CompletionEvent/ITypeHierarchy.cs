@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using KaVE.JetBrains.Annotations;
 using KaVE.Model.Names;
 
 namespace KaVE.Model.Events.CompletionEvent
@@ -11,6 +12,7 @@ namespace KaVE.Model.Events.CompletionEvent
         /// <summary>
         /// The type at this level in the type hierarchy.
         /// </summary>
+        [NotNull]
         ITypeName Element { get; set; }
 
         /// <summary>
@@ -21,6 +23,7 @@ namespace KaVE.Model.Events.CompletionEvent
         /// <summary>
         /// The interfaces directly implemented by the type at this level.
         /// </summary>
-        ISet<ITypeHierarchy> Implements { get; } 
+        [NotNull]
+        ISet<ITypeHierarchy> Implements { get; set; } 
     }
 }

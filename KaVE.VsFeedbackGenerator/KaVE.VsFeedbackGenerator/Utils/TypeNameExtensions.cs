@@ -1,4 +1,5 @@
 ﻿using System;
+using KaVE.JetBrains.Annotations;
 using KaVE.Model.Names;
 using KaVE.Model.Names.CSharp;
 using KaVE.Utils.Assertion;
@@ -7,9 +8,9 @@ namespace KaVE.VsFeedbackGenerator.Utils
 {
     internal static class TypeNameExtensions
     {
-        public static string KindOfType(this ITypeName elem)
+        // TODO testen oder raus
+        public static string ToTypeCategory([NotNull] this ITypeName elem)
         {
-            Asserts.NotNull(elem, "elem");
             if (elem.IsReferenceType)
             {
                 if (elem.IsClassType)
