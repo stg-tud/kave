@@ -49,6 +49,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Analysis\ContextAnalysisCalledMethodsTest.cs" />
     <Compile Include="Analysis\ContextAnalysisTest.cs" />
     <Compile Include="Analysis\TestAnalysisTrigger.cs" />
     <Compile Include="KaVEBaseTest.cs" />

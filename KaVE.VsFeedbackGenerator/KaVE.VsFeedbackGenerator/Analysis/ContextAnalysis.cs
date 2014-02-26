@@ -1,10 +1,10 @@
 ﻿using System.Linq;
+using System.Collections.Generic;
 using JetBrains.ReSharper.Feature.Services.CSharp.CodeCompletion.Infrastructure;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Resolve;
 using JetBrains.ReSharper.Psi.Tree;
-using JetBrains.ReSharper.Psi.Util;
 using KaVE.Model.Events.CompletionEvent;
 using KaVE.Model.Names;
 using KaVE.Utils.Assertion;
@@ -28,6 +28,9 @@ namespace KaVE.VsFeedbackGenerator.Analysis
             context.EnclosingClassHierarchy = CreateTypeHierarchy(
                 typeDeclaration.DeclaredElement,
                 EmptySubstitution.INSTANCE);
+
+            context.CalledMethods = FindAllCalledMethods(methodDeclaration);
+
             return context;
         }
 
@@ -70,14 +73,21 @@ namespace KaVE.VsFeedbackGenerator.Analysis
             return ret + " " + name + "(" + ps + ")";
         }
 
+        private ISet<IMethodName> FindAllCalledMethods(IMethodDeclaration methodDeclaration)
+        {
+            var methodNames = new HashSet<IMethodName>();
+            methodDeclaration.Body.Accept(new MethodInvocationCollector(), methodNames);
+            return methodNames;
+        }
+
         private static TypeHierarchy CreateTypeHierarchy(ITypeElement type, ISubstitution substitution)
         {
             if (type == null || HasTypeSystemObject(type))
             {
                 return null;
             }
-            var typeName = type.GetName(substitution) as ITypeName;
-            var enclosingClassHierarchy = new TypeHierarchy {Element = typeName};
+            var typeName = type.GetName(substitution);
+            var enclosingClassHierarchy = new TypeHierarchy(typeName.Identifier);
 
             foreach (var superType in type.GetSuperTypes())
             {

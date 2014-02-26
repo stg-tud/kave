@@ -85,6 +85,7 @@
   <ItemGroup>
     <Compile Include="AboutAction.cs" />
     <Compile Include="Analysis\ContextAnalysis.cs" />
+    <Compile Include="Analysis\MethodInvocationCollector.cs" />
     <Compile Include="CodeCompletion\CodeCompletionLifecycleManager.cs" />
     <Compile Include="CodeCompletion\DelegateActionHandler.cs" />
     <Compile Include="CodeCompletion\ExtendedLookupWindowManager.cs" />
