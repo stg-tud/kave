@@ -86,6 +86,10 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests
             ResultProposalCollection = GetItemsFromResult(codeCompletionResult, best).ToProposalCollection();
         }
 
+
+        // TODO review: add teardown that sets both fields to null
+        // TODO review: thrown exceptiosn should be rethrown in testing-thread
+
         protected ProposalCollection ResultProposalCollection { get; private set; }
 
         protected Context ResultContext

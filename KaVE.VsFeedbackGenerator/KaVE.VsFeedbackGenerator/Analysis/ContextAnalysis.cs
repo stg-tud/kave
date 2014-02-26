@@ -1,10 +1,11 @@
-﻿using System.Linq;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
 using JetBrains.ReSharper.Feature.Services.CSharp.CodeCompletion.Infrastructure;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Resolve;
 using JetBrains.ReSharper.Psi.Tree;
+using JetBrains.ReSharper.Psi.Util;
 using KaVE.JetBrains.Annotations;
 using KaVE.Model.Events.CompletionEvent;
 using KaVE.Model.Names;
@@ -24,7 +25,20 @@ namespace KaVE.VsFeedbackGenerator.Analysis
             context.EnclosingMethod = methodName;
 
             var typeDeclaration = methodDeclaration.GetContainingTypeDeclaration();
-            context.EnclosingMethodSuper = FindMethodInSuperTypes(methodDeclaration.DeclaredElement, typeDeclaration.DeclaredElement);
+            context.EnclosingMethodSuper = FindMethodInSuperTypes(
+                methodDeclaration.DeclaredElement,
+                typeDeclaration.DeclaredElement);
+            context.EnclosingMethodFirst = FindFirstMethodInSuperTypes(
+                methodDeclaration.DeclaredElement,
+                typeDeclaration.DeclaredElement);
+
+            if (context.EnclosingMethodFirst != null)
+            {
+                if (context.EnclosingMethodFirst.Equals(context.EnclosingMethodSuper))
+                {
+                    context.EnclosingMethodFirst = null;
+                }
+            }
 
             context.EnclosingClassHierarchy = CreateTypeHierarchy(
                 typeDeclaration.DeclaredElement,
@@ -33,6 +47,41 @@ namespace KaVE.VsFeedbackGenerator.Analysis
             context.CalledMethods = FindAllCalledMethods(methodDeclaration);
 
             return context;
+        }
+
+        private IMethodName FindFirstMethodInSuperTypes(IMethod enclosingMethod,
+            ITypeElement typeDeclaration)
+        {
+            // TODO implement GetSignature for MethodName
+            var encName = GetSimpleName(enclosingMethod);
+
+            foreach (var superType in typeDeclaration.GetSuperTypes())
+            {
+                var superTypeElement = superType.GetTypeElement();
+                Asserts.NotNull(superTypeElement);
+
+                var superName = FindFirstMethodInSuperTypes(enclosingMethod, superType.GetTypeElement());
+                if (superName != null)
+                {
+                    return superName;
+                }
+            }
+
+            foreach (var method in typeDeclaration.Methods)
+            {
+                var name = GetSimpleName(method);
+
+                if (name.Equals(encName))
+                {
+                    if (method.Equals(enclosingMethod))
+                    {
+                        return null;
+                    }
+                    return (IMethodName) method.GetName(method.IdSubstitution);
+                }
+            }
+
+            return null;
         }
 
         private IMethodName FindMethodInSuperTypes(IMethod enclosingMethod,
@@ -45,20 +94,26 @@ namespace KaVE.VsFeedbackGenerator.Analysis
                 var superTypeElement = superType.GetTypeElement();
                 Asserts.NotNull(superTypeElement);
 
-                foreach (var method in superTypeElement.Methods)
+                if (superType.IsClassType())
                 {
-                    var name = GetSimpleName(method);
-
-                    if (name.Equals(encName))
+                    foreach (var method in superTypeElement.Methods)
                     {
-                        return (IMethodName)method.GetName(method.IdSubstitution);
-                    }
-                }
+                        if (!method.IsAbstract)
+                        {
+                            var name = GetSimpleName(method);
 
-                var superName = FindMethodInSuperTypes(enclosingMethod, superType.GetTypeElement());
-                if (superName != null)
-                {
-                    return superName;
+                            if (name.Equals(encName))
+                            {
+                                return (IMethodName) method.GetName(method.IdSubstitution);
+                            }
+                        }
+                    }
+
+                    var superName = FindMethodInSuperTypes(enclosingMethod, superType.GetTypeElement());
+                    if (superName != null)
+                    {
+                        return superName;
+                    }
                 }
             }
 

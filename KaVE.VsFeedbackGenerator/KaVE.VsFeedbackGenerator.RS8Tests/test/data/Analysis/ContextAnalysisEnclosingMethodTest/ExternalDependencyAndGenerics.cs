@@ -4,7 +4,7 @@ namespace N
 {
     internal class C : List<string>
     {
-        public override string ToString()
+        public override void Add(string s)
         {
             {caret}
         }
