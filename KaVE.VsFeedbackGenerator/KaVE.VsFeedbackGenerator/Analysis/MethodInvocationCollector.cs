@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
-using JetBrains.ReSharper.Psi.Resolve;
 using JetBrains.ReSharper.Psi.Tree;
 using KaVE.Model.Names;
 using KaVE.VsFeedbackGenerator.Utils.Names;
@@ -14,8 +13,9 @@ namespace KaVE.VsFeedbackGenerator.Analysis
             var invocationRef = invocation.Reference;
             if (invocationRef != null)
             {
-                var declaredElement = invocationRef.Resolve().DeclaredElement;
-                context.Add((IMethodName) declaredElement.GetName(EmptySubstitution.INSTANCE));
+                var resolvedRef = invocationRef.Resolve();
+                var declaredElement = resolvedRef.DeclaredElement;
+                context.Add(declaredElement.GetName<IMethodName>(resolvedRef.Result.Substitution));
             }
             base.VisitInvocationExpression(invocation, context);
         }

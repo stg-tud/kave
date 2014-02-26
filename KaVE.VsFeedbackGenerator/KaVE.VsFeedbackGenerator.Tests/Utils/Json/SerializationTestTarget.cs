@@ -1,4 +1,6 @@
-﻿namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json
+﻿using KaVE.Utils;
+
+namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json
 {
     class SerializationTestTarget
     {
@@ -11,10 +13,7 @@
 
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != GetType()) return false;
-            return Equals((SerializationTestTarget) obj);
+            return this.Equals(obj, Equals);
         }
 
         public override int GetHashCode()

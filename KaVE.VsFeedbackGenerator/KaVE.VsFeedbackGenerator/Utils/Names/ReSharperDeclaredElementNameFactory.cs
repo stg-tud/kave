@@ -26,11 +26,31 @@ namespace KaVE.VsFeedbackGenerator.Utils.Names
             return instance.Element.GetName(instance.Substitution);
         }
 
+        [CanBeNull]
+        public static TName GetName<TName>([NotNull] this IClrDeclaredElement element) where TName : class, IName
+        {
+            return element.GetName() as TName;
+        }
+
+        [CanBeNull]
+        public static TName GetName<TName>([NotNull] this IDeclaredElement element, [NotNull] ISubstitution substitution)
+            where TName : class, IName
+        {
+            return element.GetName(substitution) as TName;
+        }
+
+        [NotNull]
+        public static IName GetName([NotNull] this IClrDeclaredElement element)
+        {
+            return element.GetName(element.IdSubstitution);
+        }
+
         [NotNull]
         public static IName GetName([NotNull] this IDeclaredElement element, [NotNull] ISubstitution substitution)
         {
             if (element.ShortName == SharedImplUtil.MISSING_DECLARATION_NAME)
             {
+                // TODO discuss whether this is a sensible return value
                 return Name.Get(SharedImplUtil.MISSING_DECLARATION_NAME);
             }
             return IfElementIs<INamespace>(element, GetName, substitution) ??

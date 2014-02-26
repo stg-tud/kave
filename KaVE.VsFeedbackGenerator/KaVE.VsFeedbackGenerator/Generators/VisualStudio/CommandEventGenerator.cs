@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using EnvDTE;
 using JetBrains.Application;
@@ -18,6 +19,31 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
     [ShellComponent(ProgramConfigurations.VS_ADDIN)]
     internal class CommandEventGenerator : AbstractEventGenerator
     {
+        private static readonly ICollection<string> EventsDuplicatedByReSharper = new Collection<string>
+        {
+            "{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:2:Edit.DeleteBackwards",
+            "{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:4:Edit.InsertTab",
+            "{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:7:Edit.CharLeft",
+            "{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:9:Edit.CharRight",
+            "{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:11:Edit.LineUp",
+            "{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:13:Edit.LineDown",
+            "{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:27:Edit.PageUp",
+            "{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:29:Edit.PageDown",
+            "{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:107:Edit.CompleteWord"
+        };
+
+        private static readonly ICollection<string> EventsFiredAutomatically = new Collection<string>
+        {
+            "{5EFC7975-14BC-11CF-9B2B-00AA00573819}:1096:View.ObjectBrowsingScope",
+            "{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:1627:",
+            "{5EFC7975-14BC-11CF-9B2B-00AA00573819}:337:Edit.GoToFindCombo",
+            "{5EFC7975-14BC-11CF-9B2B-00AA00573819}:684:Build.SolutionConfigurations",
+            "{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:1990:Build.SolutionPlatforms",
+            "{5EFC7975-14BC-11CF-9B2B-00AA00573819}:1657:",
+            "{5EFC7975-14BC-11CF-9B2B-00AA00573819}:1717:",
+            "{CB26E292-901A-419C-B79D-49BD45C43929}:120:"
+        };
+
         private CommandEvents _commandEvents;
         private IEnumerable<CommandBar> _commandBars;
         private IEnumerable<CommandBarControl> _commandBarsControls;
@@ -168,15 +194,7 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
         /// </summary>
         private static bool IsDuplicatedByReSharper(CommandEvent @event)
         {
-            return @event.Command.Identifier.Equals("{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:2:Edit.DeleteBackwards") ||
-                   @event.Command.Identifier.Equals("{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:4:Edit.InsertTab") ||
-                   @event.Command.Identifier.Equals("{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:7:Edit.CharLeft") ||
-                   @event.Command.Identifier.Equals("{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:9:Edit.CharRight") ||
-                   @event.Command.Identifier.Equals("{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:11:Edit.LineUp") ||
-                   @event.Command.Identifier.Equals("{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:13:Edit.LineDown") ||
-                   @event.Command.Identifier.Equals("{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:27:Edit.PageUp") ||
-                   @event.Command.Identifier.Equals("{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:29:Edit.PageDown") ||
-                   @event.Command.Identifier.Equals("{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:107:Edit.CompleteWord");
+            return EventsDuplicatedByReSharper.Contains(@event.Command.Identifier);
         }
 
         /// <summary>
@@ -185,15 +203,7 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
         /// </summary>
         private static bool IsAutomaticEvent(CommandEvent @event)
         {
-            return @event.Command.Identifier.Equals("{5EFC7975-14BC-11CF-9B2B-00AA00573819}:1096:View.ObjectBrowsingScope") ||
-                   @event.Command.Identifier.Equals("{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:1627:") ||
-                   @event.Command.Identifier.Equals("{5EFC7975-14BC-11CF-9B2B-00AA00573819}:337:Edit.GoToFindCombo") ||
-                   @event.Command.Identifier.Equals(
-                       "{5EFC7975-14BC-11CF-9B2B-00AA00573819}:684:Build.SolutionConfigurations") ||
-                   @event.Command.Identifier.Equals("{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:1990:Build.SolutionPlatforms") ||
-                   @event.Command.Identifier.Equals("{5EFC7975-14BC-11CF-9B2B-00AA00573819}:1657:") ||
-                   @event.Command.Identifier.Equals("{5EFC7975-14BC-11CF-9B2B-00AA00573819}:1717:") ||
-                   @event.Command.Identifier.Equals("{CB26E292-901A-419C-B79D-49BD45C43929}:120:");
+            return EventsFiredAutomatically.Contains(@event.Command.Identifier);
         }
     }
 

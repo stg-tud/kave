@@ -20,11 +20,6 @@ namespace KaVE.VsFeedbackGenerator.Analysis
             var context = new Context();
 
             var methodDeclaration = FindEnclosing<IMethodDeclaration>(rsContext.NodeInFile);
-            if (methodDeclaration == null)
-            {
-                return context;
-            }
-
             var methodName = GetName(methodDeclaration);
             context.EnclosingMethod = methodName;
 
@@ -82,7 +77,10 @@ namespace KaVE.VsFeedbackGenerator.Analysis
         private ISet<IMethodName> FindAllCalledMethods(IMethodDeclaration methodDeclaration)
         {
             var methodNames = new HashSet<IMethodName>();
-            methodDeclaration.Body.Accept(new MethodInvocationCollector(), methodNames);
+            if (methodDeclaration.Body != null)
+            {
+                methodDeclaration.Body.Accept(new MethodInvocationCollector(), methodNames);
+            }
             return methodNames;
         }
 
@@ -121,18 +119,10 @@ namespace KaVE.VsFeedbackGenerator.Analysis
         }
 
 
-        private ITypeName GetName(ITypeDeclaration typeDeclaration)
-        {
-            var declaredElement = typeDeclaration.DeclaredElement;
-            var idSubstitution = declaredElement.IdSubstitution;
-            return declaredElement.GetName(idSubstitution) as ITypeName;
-        }
-
         private static IMethodName GetName(IMethodDeclaration methodDeclaration)
         {
             var declaredElement = methodDeclaration.DeclaredElement;
-            var idSubstitution = declaredElement.IdSubstitution;
-            return declaredElement.GetName(idSubstitution) as IMethodName;
+            return declaredElement.GetName<IMethodName>();
         }
 
         [CanBeNull]
@@ -148,6 +138,4 @@ namespace KaVE.VsFeedbackGenerator.Analysis
             return methodDeclaration ?? FindEnclosing<TIDeclaration>(node.Parent);
         }
     }
-
-    internal static class ElementResolvingHelper {}
 }
