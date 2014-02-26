@@ -72,7 +72,8 @@
     <Compile Include="Mocking\LookupItemsMockUtils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SessionManager\EventViewTest.cs" />
-    <Compile Include="SessionManager\Presentation\ContextVisualizationTest.cs" />
+    <Compile Include="SessionManager\Presentation\ContextVisualizationConverterFixtures.cs" />
+    <Compile Include="SessionManager\Presentation\ContextVisualizationConverterTest.cs" />
     <Compile Include="Utils\DateTimeTest.cs" />
     <Compile Include="Utils\InverseBoolConverterTest.cs" />
     <Compile Include="Utils\Json\JsonLogReaderTest.cs" />

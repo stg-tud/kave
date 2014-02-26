@@ -18,11 +18,11 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
         internal const string CurlyBracketClose = "}";
         internal const string BoldStart = "<Bold>";
         internal const string BoldEnd = "</Bold>";
-        internal const string Completion = "<Italic Foreground=\"Blue\">@Completion</Italic>";
+        internal const string CompletionMarker = "<Italic Foreground=\"Blue\">@Completion</Italic>";
 
-        internal static string ToXaml([NotNull] this Context context)
+        internal static string ToXaml(this Context context)
         {
-            if (context.EnclosingClassHierarchy == null)
+            if (context == null || context.EnclosingClassHierarchy == null)
             {
                 return null;
             }
@@ -33,13 +33,13 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
             builder.AppendLine(0, CurlyBracketOpen);
             if (context.EnclosingMethod == null)
             {
-                builder.AppendLine(1, Completion);
+                builder.AppendLine(1, CompletionMarker);
             }
             else
             {
                 builder.AppendLine(1, b => b.AppendXamlMethodSignature(context.EnclosingMethod));
                 builder.AppendLine(1, CurlyBracketOpen);
-                builder.AppendLine(2, Completion);
+                builder.AppendLine(2, CompletionMarker);
                 builder.AppendLine(1, CurlyBracketClose);
             }
             builder.Append(CurlyBracketClose);
