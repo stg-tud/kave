@@ -26,6 +26,18 @@ namespace KaVE.Utils.Collections
         /// </summary>
         public int GetHashCode(ISet<TElement> obj)
         {
+            return obj.GetSetHashCode();
+        }
+    }
+
+    public static class SetEqualityUtils
+    {
+        /// <summary>
+        /// The code is the sum of the hashcodes of the set's elements, i.e.,
+        /// it is equal for sets containing equal elements.
+        /// </summary>
+        public static int GetSetHashCode<TElement>(this ISet<TElement> obj)
+        {
             return obj.Aggregate(0, (hc, next) => hc + next.GetHashCode());
         }
     }

@@ -5,6 +5,7 @@ using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Resolve;
 using JetBrains.ReSharper.Psi.Tree;
+using KaVE.JetBrains.Annotations;
 using KaVE.Model.Events.CompletionEvent;
 using KaVE.Model.Names;
 using KaVE.Utils.Assertion;
@@ -19,6 +20,11 @@ namespace KaVE.VsFeedbackGenerator.Analysis
             var context = new Context();
 
             var methodDeclaration = FindEnclosing<IMethodDeclaration>(rsContext.NodeInFile);
+            if (methodDeclaration == null)
+            {
+                return context;
+            }
+
             var methodName = GetName(methodDeclaration);
             context.EnclosingMethod = methodName;
 
@@ -129,6 +135,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis
             return declaredElement.GetName(idSubstitution) as IMethodName;
         }
 
+        [CanBeNull]
         private static TIDeclaration FindEnclosing<TIDeclaration>(ITreeNode node)
             where TIDeclaration : class, IDeclaration
         {
@@ -141,4 +148,6 @@ namespace KaVE.VsFeedbackGenerator.Analysis
             return methodDeclaration ?? FindEnclosing<TIDeclaration>(node.Parent);
         }
     }
+
+    internal static class ElementResolvingHelper {}
 }

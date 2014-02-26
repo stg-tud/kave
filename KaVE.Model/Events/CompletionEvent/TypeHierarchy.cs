@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using KaVE.JetBrains.Annotations;
 using KaVE.Model.Names;
 using KaVE.Model.Names.CSharp;
 using KaVE.Utils;
@@ -10,8 +9,6 @@ namespace KaVE.Model.Events.CompletionEvent
 {
     public class TypeHierarchy : ITypeHierarchy
     {
-        private static readonly SetEqualityComparer<ITypeHierarchy> Comparer = new SetEqualityComparer<ITypeHierarchy>();
-
         [Obsolete("use alternative constructor")]
         public TypeHierarchy()
         {
@@ -25,8 +22,6 @@ namespace KaVE.Model.Events.CompletionEvent
 
         public ITypeName Element { get; set; }
         public ITypeHierarchy Extends { get; set; }
-
-        [NotNull]
         public ISet<ITypeHierarchy> Implements { get; set; }
 
         public override bool Equals(object obj)
@@ -36,16 +31,16 @@ namespace KaVE.Model.Events.CompletionEvent
 
         protected bool Equals(TypeHierarchy other)
         {
-            return Comparer.Equals(Implements, other.Implements) && Equals(Extends, other.Extends) && Equals(Element, other.Element);
+            return Implements.SetEquals(other.Implements) && Equals(Extends, other.Extends) && Equals(Element, other.Element);
         }
 
         public override int GetHashCode()
         {
             unchecked
             {
-                var hashCode = Comparer.GetHashCode(Implements);
+                var hashCode = Implements.GetSetHashCode();
                 hashCode = (hashCode*397) ^ (Extends != null ? Extends.GetHashCode() : 0);
-                hashCode = (hashCode*397) ^ (Element != null ? Element.GetHashCode() : 0);
+                hashCode = (hashCode*397) ^ (Element.GetHashCode());
                 return hashCode;
             }
         }

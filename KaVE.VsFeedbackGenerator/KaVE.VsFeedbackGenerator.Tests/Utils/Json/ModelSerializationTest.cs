@@ -37,11 +37,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json
                 Context = new Context
                 {
                     EnclosingMethod = MethodName.Get("[Enclosing, Bssmbly, Version=4.2.3.1] [System.Void, mscore, Version=4.0.0.0].EncMeth()"),
-                    EnclosingMethodFirst = new HashSet<IMethodName>
-                    {
-                        MethodName.Get("[IFace1, Bssmbly, Version=4.2.3.1] [System.Void, mscore, Version=4.0.0.0].EncMeth()"),
-                        MethodName.Get("[IFace2, Bssmbly, Version=4.2.3.1] [System.Void, mscore, Version=4.0.0.0].EncMeth()")
-                    }
+                    EnclosingMethodFirst = MethodName.Get("[IFace1, Bssmbly, Version=4.2.3.1] [System.Void, mscore, Version=4.0.0.0].EncMeth()")
                 },
                 ProposalCollection = new ProposalCollection(new List<Proposal> {proposal1, proposal2}),
                 TerminatedAt = new DateTime(2012, 2, 23, 18, 54, 59, 549),

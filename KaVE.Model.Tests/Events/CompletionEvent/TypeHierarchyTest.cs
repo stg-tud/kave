@@ -1,5 +1,4 @@
 ﻿using KaVE.Model.Events.CompletionEvent;
-using KaVE.Model.Names.CSharp;
 using NUnit.Framework;
 
 namespace KaVE.Model.Tests.Events.CompletionEvent
