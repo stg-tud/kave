@@ -9,14 +9,9 @@ namespace KaVE.Model.Events.CompletionEvent
 {
     public class TypeHierarchy : ITypeHierarchy
     {
-        [Obsolete("use alternative constructor")]
-        public TypeHierarchy()
+        public TypeHierarchy(string elementQualifiedName)
         {
             Implements = new HashSet<ITypeHierarchy>();
-        }
-
-        public TypeHierarchy(string elementQualifiedName) : this()
-        {
             Element = TypeName.Get(elementQualifiedName);
         }
 

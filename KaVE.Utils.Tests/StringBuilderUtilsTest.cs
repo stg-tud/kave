@@ -1,6 +1,5 @@
 ﻿using System.Text;
 using NUnit.Framework;
-using KaVE.Utils;
 
 namespace KaVE.Utils.Tests
 {

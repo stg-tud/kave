@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using JetBrains.Application;
-using JetBrains.IDE.Resources;
 using KaVE.Utils.Assertion;
 
 #if !DEBUG

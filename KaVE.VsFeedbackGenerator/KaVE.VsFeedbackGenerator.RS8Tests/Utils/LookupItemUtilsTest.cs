@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using JetBrains.ReSharper.TestFramework;
 using NUnit.Framework;
 
 namespace KaVE.VsFeedbackGenerator.RS8Tests.Utils

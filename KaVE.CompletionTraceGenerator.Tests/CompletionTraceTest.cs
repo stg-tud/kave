@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using KaVE.CompletionTraceGenerator.Model;
+﻿using KaVE.CompletionTraceGenerator.Model;
 using NUnit.Framework;
 
 namespace KaVE.CompletionTraceGenerator.Tests

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using KaVE.Model.Events;
 using KaVE.Model.Events.CompletionEvent;
-using KaVE.Model.Names;
 using KaVE.Model.Names.CSharp;
 using KaVE.VsFeedbackGenerator.Utils.Json;
 using NUnit.Framework;

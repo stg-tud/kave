@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.Serialization;
+using KaVE.Utils;
 
 namespace KaVE.Model.Events.CompletionEvent
 {
@@ -29,10 +30,7 @@ namespace KaVE.Model.Events.CompletionEvent
 
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != GetType()) return false;
-            return Equals((ProposalSelection) obj);
+            return this.Equals(obj, Equals);
         }
 
         public override int GetHashCode()

@@ -11,7 +11,8 @@ namespace KaVE.CompletionTraceGenerator.Model
 
         protected bool Equals(CompletionAction other)
         {
-            return Type == other.Type && Direction == other.Direction && Index == other.Index && string.Equals(Token, other.Token);
+            return Type == other.Type && Direction == other.Direction && Index == other.Index &&
+                   string.Equals(Token, other.Token);
         }
 
         public override bool Equals(object obj)
@@ -24,7 +25,7 @@ namespace KaVE.CompletionTraceGenerator.Model
             {
                 return true;
             }
-            if (obj.GetType() != this.GetType())
+            if (obj.GetType() != GetType())
             {
                 return false;
             }
