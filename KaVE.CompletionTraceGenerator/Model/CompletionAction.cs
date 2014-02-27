@@ -1,3 +1,5 @@
+using KaVE.Utils;
+
 namespace KaVE.CompletionTraceGenerator.Model
 {
     public class CompletionAction
@@ -17,19 +19,7 @@ namespace KaVE.CompletionTraceGenerator.Model
 
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-            if (obj.GetType() != GetType())
-            {
-                return false;
-            }
-            return Equals((CompletionAction) obj);
+            return this.Equals(obj, Equals);
         }
 
         public override string ToString()

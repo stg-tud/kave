@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using KaVE.Model.Names;
 using KaVE.Model.Names.CSharp;
 using KaVE.Utils;
