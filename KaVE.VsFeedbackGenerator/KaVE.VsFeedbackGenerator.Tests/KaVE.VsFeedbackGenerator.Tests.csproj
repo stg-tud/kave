@@ -76,10 +76,12 @@
     <Compile Include="SessionManager\Presentation\ContextVisualizationConverterTest.cs" />
     <Compile Include="Utils\DateTimeTest.cs" />
     <Compile Include="Utils\InverseBoolConverterTest.cs" />
+    <Compile Include="Utils\Json\CompletionEventSerializationTest.cs" />
+    <Compile Include="Utils\Json\JsonAssert.cs" />
     <Compile Include="Utils\Json\JsonLogReaderTest.cs" />
     <Compile Include="Utils\Json\JsonLogWriterTest.cs" />
     <Compile Include="Utils\Json\JsonTestExtensions.cs" />
-    <Compile Include="Utils\Json\ModelSerializationTest.cs" />
+    <Compile Include="Utils\Json\NamesSerializationTest.cs" />
     <Compile Include="Utils\Json\SerializationTestTarget.cs" />
     <Compile Include="Utils\Names\ReSharperDeclaredElementNameFactoryTest.cs" />
     <Compile Include="Utils\Names\ReSharperTypeNameFactoryTest.cs" />
