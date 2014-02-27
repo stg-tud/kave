@@ -6,7 +6,7 @@ using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.Impl.Resolve;
 using Moq;
 
-namespace KaVE.VsFeedbackGenerator.Tests.Mocking
+namespace KaVE.VsFeedbackGenerator.Tests.TestFactories
 {
     static class LookupItemsMockUtils
     {

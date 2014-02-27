@@ -4,7 +4,7 @@ using JetBrains.Application.DataContext;
 using JetBrains.DataFlow;
 using JetBrains.Util.Logging;
 
-namespace KaVE.VsFeedbackGenerator.Tests.Mocking.Actions
+namespace KaVE.VsFeedbackGenerator.Tests.TestFactories.Actions
 {
     internal class MockExecutableAction : IExecutableAction
     {

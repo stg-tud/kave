@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using KaVE.JetBrains.Annotations;
 using KaVE.Model.Names;
 using KaVE.Utils;
 
@@ -18,12 +19,26 @@ namespace KaVE.Model.Events.CompletionEvent
         public IList<Proposal> Proposals { get; private set; }
 
         /// <summary>
+        /// For internal use only.
+        /// </summary>
+        [UsedImplicitly]
+        public ProposalCollection()
+        {
+            Proposals = new List<Proposal>();
+        }
+
+        /// <summary>
         /// Creates a collection from a list of proposals.
         /// </summary>
-        public ProposalCollection(IEnumerable<Proposal> proposals)
+        public ProposalCollection(IList<Proposal> proposals)
         {
-            Proposals = proposals.ToList();
+            Proposals = proposals;
         }
+
+        /// <summary>
+        /// Creates a collection from a sequence of proposals.
+        /// </summary>
+        public ProposalCollection(params Proposal[] proposals) : this(proposals.ToList()) {}
 
         /// <returns>The 0-based position of the given proposal in this collection.</returns>
         public int GetPosition(Proposal proposal)
@@ -67,7 +82,7 @@ namespace KaVE.Model.Events.CompletionEvent
 
         public override string ToString()
         {
-            return "[" + string.Join(",", Proposals) + "]";
+            return "[" + string.Join(", ", Proposals) + "]";
         }
     }
 }

@@ -13,7 +13,7 @@ namespace KaVE.Model.Events.CompletionEvent
         }
 
         [DataMember]
-        public DateTime SelectedAt { get; internal set; }
+        public DateTime SelectedAt { get; set; }
 
         [DataMember]
         public Proposal Proposal { get; private set; }

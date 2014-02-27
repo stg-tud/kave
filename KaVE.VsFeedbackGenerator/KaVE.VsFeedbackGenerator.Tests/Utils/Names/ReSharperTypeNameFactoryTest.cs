@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using JetBrains.ReSharper.Psi;
-using KaVE.VsFeedbackGenerator.Tests.Mocking;
+using KaVE.VsFeedbackGenerator.Tests.TestFactories;
 using KaVE.VsFeedbackGenerator.Utils.Names;
 using NUnit.Framework;
 

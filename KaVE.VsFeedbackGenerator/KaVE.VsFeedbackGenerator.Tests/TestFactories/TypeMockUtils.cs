@@ -15,7 +15,7 @@ using JetBrains.Util;
 using KaVE.Model.Names.CSharp;
 using Moq;
 
-namespace KaVE.VsFeedbackGenerator.Tests.Mocking
+namespace KaVE.VsFeedbackGenerator.Tests.TestFactories
 {
     internal static class TypeMockUtils
     {

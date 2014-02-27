@@ -60,8 +60,9 @@ namespace KaVE.Model.Events.CompletionEvent
             return Equals(EnclosingClassHierarchy, other.EnclosingClassHierarchy) &&
                    Equals(EnclosingMethod, other.EnclosingMethod) &&
                    Equals(EnclosingMethodSuper, other.EnclosingMethodSuper) &&
-                   EnclosingMethodFirst.Equals(other.EnclosingMethodFirst) &&
-                   Equals(EnclosingMethodGroum, other.EnclosingMethodGroum) && CalledMethods.SetEquals(other.CalledMethods);
+                   Equals(EnclosingMethodFirst, other.EnclosingMethodFirst) &&
+                   Equals(EnclosingMethodGroum, other.EnclosingMethodGroum) &&
+                   CalledMethods.SetEquals(other.CalledMethods);
         }
 
         public override bool Equals(object obj)
@@ -76,7 +77,7 @@ namespace KaVE.Model.Events.CompletionEvent
                 var hashCode = (EnclosingClassHierarchy != null ? EnclosingClassHierarchy.GetHashCode() : 0);
                 hashCode = (hashCode*397) ^ (EnclosingMethod != null ? EnclosingMethod.GetHashCode() : 0);
                 hashCode = (hashCode*397) ^ (EnclosingMethodSuper != null ? EnclosingMethodSuper.GetHashCode() : 0);
-                hashCode = (hashCode*397) ^ EnclosingMethodFirst.GetHashCode();
+                hashCode = (hashCode*397) ^ (EnclosingMethodFirst != null ? EnclosingMethodFirst.GetHashCode() : 0);
                 hashCode = (hashCode*397) ^ (EnclosingMethodGroum != null ? EnclosingMethodGroum.GetHashCode() : 0);
                 hashCode = (hashCode*397) ^ CalledMethods.GetSetHashCode();
                 return hashCode;

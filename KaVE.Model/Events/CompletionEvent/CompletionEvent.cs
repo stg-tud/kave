@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
+using KaVE.Utils;
 
 namespace KaVE.Model.Events.CompletionEvent
 {
@@ -79,14 +81,46 @@ namespace KaVE.Model.Events.CompletionEvent
         [DataMember]
         public TerminationState TerminatedAs { get; set; }
 
+        protected bool Equals(CompletionEvent other)
+        {
+            return base.Equals(other) && Equals(Context, other.Context) &&
+                   Equals(ProposalCollection, other.ProposalCollection) && string.Equals(Prefix, other.Prefix) &&
+                   Selections.SequenceEqual(other.Selections) && TerminatedBy == other.TerminatedBy &&
+                   TerminatedAs == other.TerminatedAs;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return this.Equals(obj, Equals);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                var hashCode = base.GetHashCode();
+                hashCode = (hashCode*397) ^ (Context != null ? Context.GetHashCode() : 0);
+                hashCode = (hashCode*397) ^ (ProposalCollection != null ? ProposalCollection.GetHashCode() : 0);
+                hashCode = (hashCode*397) ^ (Prefix != null ? Prefix.GetHashCode() : 0);
+                hashCode = (hashCode*397) ^ (Selections != null ? Selections.GetHashCode() : 0);
+                hashCode = (hashCode*397) ^ (int) TerminatedBy;
+                hashCode = (hashCode*397) ^ (int) TerminatedAs;
+                return hashCode;
+            }
+        }
+
         public override string ToString()
         {
-            return IDESessionUUID + "@" + TriggeredAt + " {\n" +
-                   "  Context : " + Context + "\n" +
-                   "  Proposals : " + ProposalCollection + "\n" +
-                   "  Actions : " + string.Join(",", Selections) + "\n" +
-                   "  TerminatedBy : " + TerminatedBy + "\n" +
-                   "}";
+            return
+                string.Format(
+                    "{0}, Context: {1}, ProposalCollection: {2}, Prefix: {3}, Selections: [{4}], TerminatedBy: {5}, TerminatedAs: {6}",
+                    base.ToString(),
+                    Context,
+                    ProposalCollection,
+                    Prefix,
+                    string.Join(", ", Selections),
+                    TerminatedBy,
+                    TerminatedAs);
         }
     }
 }

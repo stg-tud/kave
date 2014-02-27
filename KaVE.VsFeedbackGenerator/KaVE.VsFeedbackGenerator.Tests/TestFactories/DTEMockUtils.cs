@@ -2,7 +2,7 @@
 using KaVE.JetBrains.Annotations;
 using Moq;
 
-namespace KaVE.VsFeedbackGenerator.Tests.Mocking
+namespace KaVE.VsFeedbackGenerator.Tests.TestFactories
 {
     static class DTEMockUtils
     {

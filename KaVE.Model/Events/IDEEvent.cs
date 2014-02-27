@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 using KaVE.Model.Names.VisualStudio;
+using KaVE.Utils;
 
 namespace KaVE.Model.Events
 {
@@ -97,5 +98,45 @@ namespace KaVE.Model.Events
         /// </summary>
         [DataMember]
         public DocumentName ActiveDocument { get; set; }
+
+        protected bool Equals(IDEEvent other)
+        {
+            return string.Equals(IDESessionUUID, other.IDESessionUUID) && TriggeredAt.Equals(other.TriggeredAt) &&
+                   TriggeredBy == other.TriggeredBy && TerminatedAt.Equals(other.TerminatedAt) &&
+                   Equals(ActiveWindow, other.ActiveWindow) && Equals(ActiveDocument, other.ActiveDocument);
+        }
+
+        public override bool Equals(object obj)
+        {
+            return this.Equals(obj, Equals);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                var hashCode = (IDESessionUUID != null ? IDESessionUUID.GetHashCode() : 0);
+                hashCode = (hashCode*397) ^ TriggeredAt.GetHashCode();
+                hashCode = (hashCode*397) ^ (int) TriggeredBy;
+                hashCode = (hashCode*397) ^ TerminatedAt.GetHashCode();
+                hashCode = (hashCode*397) ^ (ActiveWindow != null ? ActiveWindow.GetHashCode() : 0);
+                hashCode = (hashCode*397) ^ (ActiveDocument != null ? ActiveDocument.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+
+        public override string ToString()
+        {
+            return
+                string.Format(
+                    "IDESessionUUID: {0}, TriggeredAt: {1}, TriggeredBy: {2}, TerminatedAt: {3}, Duration: {4}, ActiveWindow: {5}, ActiveDocument: {6}",
+                    IDESessionUUID,
+                    TriggeredAt,
+                    TriggeredBy,
+                    TerminatedAt,
+                    Duration,
+                    ActiveWindow,
+                    ActiveDocument);
+        }
     }
 }

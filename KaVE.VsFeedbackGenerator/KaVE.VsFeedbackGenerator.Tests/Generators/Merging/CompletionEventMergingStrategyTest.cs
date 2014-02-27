@@ -4,7 +4,7 @@ using KaVE.Model.Events;
 using KaVE.Model.Events.CompletionEvent;
 using KaVE.Model.Names.VisualStudio;
 using KaVE.VsFeedbackGenerator.Generators.Merging;
-using KaVE.VsFeedbackGenerator.Tests.Mocking;
+using KaVE.VsFeedbackGenerator.Tests.TestFactories;
 using KaVE.VsFeedbackGenerator.Utils;
 using NUnit.Framework;
 
@@ -51,7 +51,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.Merging
                 TriggeredAt = now.AddMilliseconds(200),
                 Prefix = "a",
                 Context = context,
-                ProposalCollection = new ProposalCollection(_proposalCollection.Proposals.Take(3)),
+                ProposalCollection = new ProposalCollection(_proposalCollection.Proposals.Take(3).ToList()),
                 TerminatedAt = now.AddMilliseconds(300),
                 TerminatedAs = CompletionEvent.TerminationState.Applied,
                 TerminatedBy = IDEEvent.Trigger.Shortcut,

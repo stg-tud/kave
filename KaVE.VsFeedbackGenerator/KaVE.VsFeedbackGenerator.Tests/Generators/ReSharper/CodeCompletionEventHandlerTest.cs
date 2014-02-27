@@ -4,7 +4,7 @@ using JetBrains.Util;
 using KaVE.Model.Events;
 using KaVE.Model.Events.CompletionEvent;
 using KaVE.VsFeedbackGenerator.Generators.ReSharper;
-using KaVE.VsFeedbackGenerator.Tests.Mocking;
+using KaVE.VsFeedbackGenerator.Tests.TestFactories;
 using KaVE.VsFeedbackGenerator.Utils;
 using KaVE.VsFeedbackGenerator.VsIntegration;
 using NUnit.Framework;

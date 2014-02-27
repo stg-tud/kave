@@ -1,6 +1,6 @@
 ﻿using EnvDTE;
 using KaVE.VsFeedbackGenerator.Tests.Assertion;
-using KaVE.VsFeedbackGenerator.Tests.Mocking;
+using KaVE.VsFeedbackGenerator.Tests.TestFactories;
 using KaVE.VsFeedbackGenerator.Utils.Names;
 using Moq;
 using NUnit.Framework;

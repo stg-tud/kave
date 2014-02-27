@@ -1,6 +1,6 @@
 ﻿using JetBrains.ActionManagement;
 
-namespace KaVE.VsFeedbackGenerator.Tests.Mocking.Actions
+namespace KaVE.VsFeedbackGenerator.Tests.TestFactories.Actions
 {
     internal class MockNextActionHandler
     {

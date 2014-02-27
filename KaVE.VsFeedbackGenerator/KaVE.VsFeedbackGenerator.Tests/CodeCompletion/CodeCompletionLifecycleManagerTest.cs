@@ -9,8 +9,8 @@ using JetBrains.TextControl.Actions;
 using JetBrains.Util;
 using KaVE.Model.Events;
 using KaVE.VsFeedbackGenerator.CodeCompletion;
-using KaVE.VsFeedbackGenerator.Tests.Mocking;
-using KaVE.VsFeedbackGenerator.Tests.Mocking.Actions;
+using KaVE.VsFeedbackGenerator.Tests.TestFactories;
+using KaVE.VsFeedbackGenerator.Tests.TestFactories.Actions;
 using Moq;
 using NUnit.Framework;
 

@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using KaVE.JetBrains.Annotations;
 using KaVE.Model.Names;
 using KaVE.Model.Names.CSharp;
 using KaVE.Utils;
@@ -8,9 +10,18 @@ namespace KaVE.Model.Events.CompletionEvent
 {
     public class TypeHierarchy : ITypeHierarchy
     {
-        public TypeHierarchy(string elementQualifiedName)
+        /// <summary>
+        /// For internal use only.
+        /// </summary>
+        [UsedImplicitly, Obsolete]
+        public TypeHierarchy()
         {
             Implements = new HashSet<ITypeHierarchy>();
+        }
+
+        // ReSharper disable once CSharpWarnings::CS0612
+        public TypeHierarchy(string elementQualifiedName) : this()
+        {
             Element = TypeName.Get(elementQualifiedName);
         }
 
