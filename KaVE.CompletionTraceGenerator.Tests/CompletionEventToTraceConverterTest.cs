@@ -136,7 +136,7 @@ namespace KaVE.CompletionTraceGenerator.Tests
             firstEvent.AddSelection(proposals[1]);
             firstEvent.TerminatedAs = CompletionEvent.TerminationState.Filtered;
             var secondEvent = CreateAnonymousCompletionEvent(23);
-            var filteredProposals = proposals.Take(4);
+            var filteredProposals = proposals.Take(4).ToList();
             secondEvent.TriggeredBy = IDEEvent.Trigger.Automatic;
             secondEvent.Prefix = "isE";
             secondEvent.ProposalCollection = new ProposalCollection(filteredProposals);
