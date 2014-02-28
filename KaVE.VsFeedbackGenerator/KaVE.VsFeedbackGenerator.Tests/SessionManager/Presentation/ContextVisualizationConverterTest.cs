@@ -28,7 +28,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
         [Test]
         public void ShouldHandleContextWithoutHierarchyLikeNoContext()
         {
-            var context = new Context {EnclosingMethod = MethodName.Get(Fix.GetMethod)};
+            var context = new Context {EnclosingMethodDeclaration = new MethodDeclaration(MethodName.Get(Fix.GetMethod))};
 
             var xaml = context.ToXaml();
             Assert.IsNull(xaml);
@@ -137,7 +137,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
             var context = new Context
             {
                 EnclosingClassHierarchy = new TypeHierarchy(Fix.CreateType()),
-                EnclosingMethod = MethodName.Get(Fix.GetMethod)
+                EnclosingMethodDeclaration = new MethodDeclaration(MethodName.Get(Fix.GetMethod))
             };
 
             var expected = string.Concat(
@@ -162,7 +162,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                 {
                     Extends = new TypeHierarchy(Fix.CreateType("Super"))
                 },
-                EnclosingMethod = MethodName.Get(Fix.GetMethod)
+                EnclosingMethodDeclaration = new MethodDeclaration(MethodName.Get(Fix.GetMethod))
             };
 
             var expected = string.Concat(
@@ -184,7 +184,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
             var context = new Context
             {
                 EnclosingClassHierarchy = new TypeHierarchy(Fix.CreateType()),
-                EnclosingMethod = MethodName.Get(Fix.GetMethod)
+                EnclosingMethodDeclaration = new MethodDeclaration(MethodName.Get(Fix.GetMethod))
             };
             context.EnclosingClassHierarchy.Implements.Add(new TypeHierarchy(Fix.CreateType("I")));
 
@@ -210,7 +210,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                 {
                     Extends = new TypeHierarchy(Fix.CreateType("Super"))
                 },
-                EnclosingMethod = MethodName.Get(Fix.GetMethod)
+                EnclosingMethodDeclaration = new MethodDeclaration(MethodName.Get(Fix.GetMethod))
             };
             context.EnclosingClassHierarchy.Implements.Add(new TypeHierarchy(Fix.CreateType("I")));
 
@@ -236,7 +236,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                 {
                     Extends = new TypeHierarchy(Fix.CreateType("Super"))
                 },
-                EnclosingMethod = MethodName.Get(Fix.GetMethod)
+                EnclosingMethodDeclaration = new MethodDeclaration(MethodName.Get(Fix.GetMethod))
             };
             context.EnclosingClassHierarchy.Implements.Add(new TypeHierarchy(Fix.CreateType("I1")));
             context.EnclosingClassHierarchy.Implements.Add(new TypeHierarchy(Fix.CreateType("I2")));

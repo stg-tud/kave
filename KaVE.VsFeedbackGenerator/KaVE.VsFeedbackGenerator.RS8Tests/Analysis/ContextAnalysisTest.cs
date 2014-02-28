@@ -20,7 +20,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
         {
             WhenCodeCompletionIsInvokedInFile("ProofOfConcept");
 
-            var actual = ResultContext.EnclosingMethod;
+            var actual = ResultContext.EnclosingMethodDeclaration.Element;
             var expected =
                 MethodName.Get("[System.Void, mscorlib, Version=4.0.0.0] [TestNamespace.TestClass, TestProject].Doit()");
             Assert.AreEqual(expected, actual);

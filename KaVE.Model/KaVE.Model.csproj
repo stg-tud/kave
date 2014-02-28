@@ -44,6 +44,7 @@
     <Reference Include="System.Runtime.Serialization" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Events\CompletionEvent\MethodDeclaration.cs" />
     <Compile Include="Events\CompletionEvent\ProposalSelection.cs" />
     <Compile Include="Events\CompletionEvent\Context.cs" />
     <Compile Include="Events\CompletionEvent\CompletionEvent.cs" />

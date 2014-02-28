@@ -22,21 +22,21 @@ namespace KaVE.VsFeedbackGenerator.Analysis
 
             var methodDeclaration = FindEnclosing<IMethodDeclaration>(rsContext.NodeInFile);
             var methodName = GetName(methodDeclaration);
-            context.EnclosingMethod = methodName;
+            context.EnclosingMethodDeclaration = new MethodDeclaration(methodName);
 
             var typeDeclaration = methodDeclaration.GetContainingTypeDeclaration();
-            context.EnclosingMethodSuper = FindMethodInSuperTypes(
+            context.EnclosingMethodDeclaration.Super = FindMethodInSuperTypes(
                 methodDeclaration.DeclaredElement,
                 typeDeclaration.DeclaredElement);
-            context.EnclosingMethodFirst = FindFirstMethodInSuperTypes(
+            context.EnclosingMethodDeclaration.First = FindFirstMethodInSuperTypes(
                 methodDeclaration.DeclaredElement,
                 typeDeclaration.DeclaredElement);
 
-            if (context.EnclosingMethodFirst != null)
+            if (context.EnclosingMethodDeclaration.First != null)
             {
-                if (context.EnclosingMethodFirst.Equals(context.EnclosingMethodSuper))
+                if (context.EnclosingMethodDeclaration.First.Equals(context.EnclosingMethodDeclaration.Super))
                 {
-                    context.EnclosingMethodFirst = null;
+                    context.EnclosingMethodDeclaration.First = null;
                 }
             }
 

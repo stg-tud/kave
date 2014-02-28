@@ -13,7 +13,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
         {
             WhenCodeCompletionIsInvokedInFile("SimpleHierarchy");
 
-            var actual = ResultContext.EnclosingMethod;
+            var actual = ResultContext.EnclosingMethodDeclaration.Element;
             var expected =
                 MethodName.Get(
                     "[System.Void, mscorlib, Version=4.0.0.0] [N.C6, TestProject].M([System.Int32, mscorlib, Version=4.0.0.0] i)");
@@ -25,7 +25,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
         {
             WhenCodeCompletionIsInvokedInFile("SimpleHierarchy");
 
-            var actual = ResultContext.EnclosingMethodSuper;
+            var actual = ResultContext.EnclosingMethodDeclaration.Super;
             var expected =
                 MethodName.Get(
                     "[System.Void, mscorlib, Version=4.0.0.0] [N.C4, TestProject].M([System.Int32, mscorlib, Version=4.0.0.0] i)");
@@ -37,7 +37,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
         {
             WhenCodeCompletionIsInvokedInFile("SimpleHierarchy");
 
-            var actual = ResultContext.EnclosingMethodFirst;
+            var actual = ResultContext.EnclosingMethodDeclaration.First;
             var expected =
                 MethodName.Get(
                     "[System.Void, mscorlib, Version=4.0.0.0] [N.I, TestProject].M([System.Int32, mscorlib, Version=4.0.0.0] i)");
@@ -49,7 +49,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
         {
             WhenCodeCompletionIsInvokedInFile("AbstractClassWithImpl");
 
-            var actual = ResultContext.EnclosingMethod;
+            var actual = ResultContext.EnclosingMethodDeclaration.Element;
             var expected = MethodName.Get(
                     "[System.Void, mscorlib, Version=4.0.0.0] [N.C2, TestProject].M([System.Int32, mscorlib, Version=4.0.0.0] i)"); ;
             Assert.AreEqual(expected, actual);
@@ -60,7 +60,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
         {
             WhenCodeCompletionIsInvokedInFile("AbstractClassWithImpl");
 
-            var actual = ResultContext.EnclosingMethodSuper;
+            var actual = ResultContext.EnclosingMethodDeclaration.Super;
             var expected = MethodName.Get(
                     "[System.Void, mscorlib, Version=4.0.0.0] [N.C1, TestProject].M([System.Int32, mscorlib, Version=4.0.0.0] i)"); ;
             Assert.AreEqual(expected, actual);
@@ -71,7 +71,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
         {
             WhenCodeCompletionIsInvokedInFile("AbstractClassWithImpl");
 
-            var actual = ResultContext.EnclosingMethodFirst;
+            var actual = ResultContext.EnclosingMethodDeclaration.First;
             var expected = MethodName.Get(
                     "[System.Void, mscorlib, Version=4.0.0.0] [N.I, TestProject].M([System.Int32, mscorlib, Version=4.0.0.0] i)"); ;
             Assert.AreEqual(expected, actual);
@@ -82,7 +82,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
         {
             WhenCodeCompletionIsInvokedInFile("CollisionIsResolvedByDeclarationOrder");
 
-            var actual = ResultContext.EnclosingMethod;
+            var actual = ResultContext.EnclosingMethodDeclaration.Element;
             var expected = MethodName.Get(
                    "[System.Void, mscorlib, Version=4.0.0.0] [N.C, TestProject].M([System.Int32, mscorlib, Version=4.0.0.0] i)"); ;
             Assert.AreEqual(expected, actual);
@@ -92,7 +92,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
         public void CollisionIsResolvedByDeclarationOrder_Super()
         {
             WhenCodeCompletionIsInvokedInFile("CollisionIsResolvedByDeclarationOrder");
-            Assert.Null(ResultContext.EnclosingMethodSuper);
+            Assert.Null(ResultContext.EnclosingMethodDeclaration.Super);
         }
 
         [Test]
@@ -100,7 +100,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
         {
             WhenCodeCompletionIsInvokedInFile("CollisionIsResolvedByDeclarationOrder");
 
-            var actual = ResultContext.EnclosingMethodFirst;
+            var actual = ResultContext.EnclosingMethodDeclaration.First;
             var expected = MethodName.Get(
                    "[System.Void, mscorlib, Version=4.0.0.0] [N.I2, TestProject].M([System.Int32, mscorlib, Version=4.0.0.0] i)"); ;
             Assert.AreEqual(expected, actual);
@@ -111,7 +111,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
         {
             WhenCodeCompletionIsInvokedInFile("DepthFirstSearchForFirstMethod");
 
-            var actual = ResultContext.EnclosingMethod;
+            var actual = ResultContext.EnclosingMethodDeclaration.Element;
             var expected = MethodName.Get(
                    "[System.Void, mscorlib, Version=4.0.0.0] [N.C2, TestProject].M([System.Int32, mscorlib, Version=4.0.0.0] i)"); ;
             Assert.AreEqual(expected, actual);
@@ -122,7 +122,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
         {
             WhenCodeCompletionIsInvokedInFile("DepthFirstSearchForFirstMethod");
 
-            var actual = ResultContext.EnclosingMethodSuper;
+            var actual = ResultContext.EnclosingMethodDeclaration.Super;
             var expected = MethodName.Get(
                    "[System.Void, mscorlib, Version=4.0.0.0] [N.C1, TestProject].M([System.Int32, mscorlib, Version=4.0.0.0] i)"); ;
             Assert.AreEqual(expected, actual);
@@ -133,7 +133,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
         {
             WhenCodeCompletionIsInvokedInFile("DepthFirstSearchForFirstMethod");
 
-            var actual = ResultContext.EnclosingMethodFirst;
+            var actual = ResultContext.EnclosingMethodDeclaration.First;
             var expected = MethodName.Get(
                    "[System.Void, mscorlib, Version=4.0.0.0] [N.I1, TestProject].M([System.Int32, mscorlib, Version=4.0.0.0] i)"); ;
             Assert.AreEqual(expected, actual);
@@ -144,7 +144,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
         {
             WhenCodeCompletionIsInvokedInFile("ExternalDependencyAndGenerics");
 
-            var actual = ResultContext.EnclosingMethod;
+            var actual = ResultContext.EnclosingMethodDeclaration.Element;
             var expected = MethodName.Get(
                   "[System.Void, mscorlib, Version=4.0.0.0] [N.C, TestProject].Add([System.String, mscorlib, Version=4.0.0.0] s)"); ;
             Assert.AreEqual(expected, actual);
@@ -155,7 +155,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
         {
             WhenCodeCompletionIsInvokedInFile("ExternalDependencyAndGenerics");
 
-            var actual = ResultContext.EnclosingMethodSuper;
+            var actual = ResultContext.EnclosingMethodDeclaration.Super;
             var expected = MethodName.Get(
                   "[System.Void, mscorlib, Version=4.0.0.0] [System.List, mscorlib, Version=4.0.0.0].Add([System.String, mscorlib, Version=4.0.0.0] s)"); ;
             Assert.AreEqual(expected, actual);
@@ -166,7 +166,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
         {
             WhenCodeCompletionIsInvokedInFile("ExternalDependencyAndGenerics");
 
-            var actual = ResultContext.EnclosingMethodFirst;
+            var actual = ResultContext.EnclosingMethodDeclaration.First;
             var expected = MethodName.Get(
                    "[System.Void, mscorlib, Version=4.0.0.0] [System.IList, mscorlib, Version=4.0.0.0].Add([System.String, mscorlib, Version=4.0.0.0] s)"); ;
             Assert.AreEqual(expected, actual);
@@ -177,7 +177,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
         {
             WhenCodeCompletionIsInvokedInFile("FirstDeclarationInAbstractClass");
 
-            var actual = ResultContext.EnclosingMethod;
+            var actual = ResultContext.EnclosingMethodDeclaration.Element;
             var expected = MethodName.Get(
                      "[System.Void, mscorlib, Version=4.0.0.0] [N.C2, TestProject].M([System.Int32, mscorlib, Version=4.0.0.0] i)"); ;
             Assert.AreEqual(expected, actual);
@@ -188,7 +188,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
         {
             WhenCodeCompletionIsInvokedInFile("FirstDeclarationInAbstractClass");
 
-            var actual = ResultContext.EnclosingMethodSuper;
+            var actual = ResultContext.EnclosingMethodDeclaration.Super;
             var expected = MethodName.Get(
                      "[System.Void, mscorlib, Version=4.0.0.0] [N.C1, TestProject].M([System.Int32, mscorlib, Version=4.0.0.0] i)"); ;
             Assert.AreEqual(expected, actual);
@@ -199,7 +199,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
         {
             WhenCodeCompletionIsInvokedInFile("FirstDeclarationInAbstractClass");
 
-            var actual = ResultContext.EnclosingMethodFirst;
+            var actual = ResultContext.EnclosingMethodDeclaration.First;
             var expected = MethodName.Get(
                      "[System.Void, mscorlib, Version=4.0.0.0] [N.A, TestProject].M([System.Int32, mscorlib, Version=4.0.0.0] i)"); ;
             Assert.AreEqual(expected, actual);
@@ -210,7 +210,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
         {
             WhenCodeCompletionIsInvokedInFile("FirstIsNotImplementedAtDeepestLevel");
 
-            var actual = ResultContext.EnclosingMethod;
+            var actual = ResultContext.EnclosingMethodDeclaration.Element;
             var expected = MethodName.Get(
                     "[System.Void, mscorlib, Version=4.0.0.0] [N.C3, TestProject].M([System.Int32, mscorlib, Version=4.0.0.0] i)"); ;
             Assert.AreEqual(expected, actual);
@@ -221,7 +221,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
         {
             WhenCodeCompletionIsInvokedInFile("FirstIsNotImplementedAtDeepestLevel");
 
-            var actual = ResultContext.EnclosingMethodSuper;
+            var actual = ResultContext.EnclosingMethodDeclaration.Super;
             var expected = MethodName.Get(
                     "[System.Void, mscorlib, Version=4.0.0.0] [N.C2, TestProject].M([System.Int32, mscorlib, Version=4.0.0.0] i)"); ;
             Assert.AreEqual(expected, actual);
@@ -232,7 +232,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
         {
             WhenCodeCompletionIsInvokedInFile("FirstIsNotImplementedAtDeepestLevel");
 
-            Assert.Null(ResultContext.EnclosingMethodFirst);
+            Assert.Null(ResultContext.EnclosingMethodDeclaration.First);
         }
 
         [Test]
@@ -240,7 +240,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
         {
             WhenCodeCompletionIsInvokedInFile("OnlyInterface");
 
-            var actual = ResultContext.EnclosingMethod;
+            var actual = ResultContext.EnclosingMethodDeclaration.Element;
             var expected = MethodName.Get(
                     "[System.Void, mscorlib, Version=4.0.0.0] [N.C1, TestProject].M([System.Int32, mscorlib, Version=4.0.0.0] i)"); ;
             Assert.AreEqual(expected, actual);
@@ -251,7 +251,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
         {
             WhenCodeCompletionIsInvokedInFile("OnlyInterface");
 
-            Assert.Null(ResultContext.EnclosingMethodSuper);
+            Assert.Null(ResultContext.EnclosingMethodDeclaration.Super);
         }
 
         [Test]
@@ -259,7 +259,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
         {
             WhenCodeCompletionIsInvokedInFile("OnlyInterface");
 
-            var actual = ResultContext.EnclosingMethodFirst;
+            var actual = ResultContext.EnclosingMethodDeclaration.First;
             var expected = MethodName.Get(
                     "[System.Void, mscorlib, Version=4.0.0.0] [N.I, TestProject].M([System.Int32, mscorlib, Version=4.0.0.0] i)"); ;
             Assert.AreEqual(expected, actual);
@@ -270,7 +270,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
         {
             WhenCodeCompletionIsInvokedInFile("OnlySuperclass");
 
-            var actual = ResultContext.EnclosingMethod;
+            var actual = ResultContext.EnclosingMethodDeclaration.Element;
             var expected = MethodName.Get(
                     "[System.Void, mscorlib, Version=4.0.0.0] [N.C2, TestProject].M([System.Int32, mscorlib, Version=4.0.0.0] i)"); ;
             Assert.AreEqual(expected, actual);
@@ -281,7 +281,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
         {
             WhenCodeCompletionIsInvokedInFile("OnlySuperclass");
 
-            var actual = ResultContext.EnclosingMethodSuper;
+            var actual = ResultContext.EnclosingMethodDeclaration.Super;
             var expected = MethodName.Get(
                     "[System.Void, mscorlib, Version=4.0.0.0] [N.C1, TestProject].M([System.Int32, mscorlib, Version=4.0.0.0] i)"); ;
             Assert.AreEqual(expected, actual);
@@ -291,8 +291,8 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
         public void OnlySuperclass_First()
         {
             WhenCodeCompletionIsInvokedInFile("OnlySuperclass");
-            
-            Assert.Null(ResultContext.EnclosingMethodFirst);
+
+            Assert.Null(ResultContext.EnclosingMethodDeclaration.First);
         }
 
         [Test]
@@ -300,7 +300,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
         {
             WhenCodeCompletionIsInvokedInFile("SuperMethod_AbstractDeclaration");
 
-            var actual = ResultContext.EnclosingMethod;
+            var actual = ResultContext.EnclosingMethodDeclaration.Element;
             var expected = MethodName.Get(
                     "[System.Void, mscorlib, Version=4.0.0.0] [N.C2, TestProject].M([System.Int32, mscorlib, Version=4.0.0.0] i)"); ;
             Assert.AreEqual(expected, actual);
@@ -311,7 +311,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
         {
             WhenCodeCompletionIsInvokedInFile("SuperMethod_AbstractDeclaration");
 
-            Assert.Null(ResultContext.EnclosingMethodSuper);
+            Assert.Null(ResultContext.EnclosingMethodDeclaration.Super);
         }
 
         [Test]
@@ -319,7 +319,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
         {
             WhenCodeCompletionIsInvokedInFile("SuperMethod_AbstractDeclaration");
 
-            var actual = ResultContext.EnclosingMethodFirst;
+            var actual = ResultContext.EnclosingMethodDeclaration.First;
             var expected = MethodName.Get(
                     "[System.Void, mscorlib, Version=4.0.0.0] [N.I, TestProject].M([System.Int32, mscorlib, Version=4.0.0.0] i)"); ;
             Assert.AreEqual(expected, actual);

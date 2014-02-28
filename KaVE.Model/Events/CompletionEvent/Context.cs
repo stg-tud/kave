@@ -16,6 +16,7 @@ namespace KaVE.Model.Events.CompletionEvent
         public Context()
         {
             CalledMethods = new HashSet<IMethodName>();
+            TypeShapeMethods = new HashSet<IMethodName>();
         }
 
         /// <summary>
@@ -24,22 +25,10 @@ namespace KaVE.Model.Events.CompletionEvent
         public ITypeHierarchy EnclosingClassHierarchy { get; set; }
 
         /// <summary>
-        /// The name of the method whose body is currently edited. <code>null</code> if completion is triggered
+        /// Information about the method whose body is currently edited. <code>null</code> if completion is triggered
         /// outside a method.
         /// </summary>
-        public IMethodName EnclosingMethod { get; set; }
-
-        /// <summary>
-        /// The implementation of the enclosing method that is referred to by calling
-        /// <code>super.'methodName'(...)</code>.
-        /// </summary>
-        public IMethodName EnclosingMethodSuper { get; set; }
-
-        /// <summary>
-        /// The declarations of the enclosing method, i.e., the method names specified in interfaces or the highest
-        /// parent class that the enclosing method is an implementation of.
-        /// </summary>
-        public IMethodName EnclosingMethodFirst { get; set; }
+        public MethodDeclaration EnclosingMethodDeclaration { get; set; }
 
         /// <summary>
         /// The GROUM derived from the current code in the enclosing method's body. This GROUM contains a completion
@@ -53,14 +42,16 @@ namespace KaVE.Model.Events.CompletionEvent
         [NotNull]
         public ISet<IMethodName> CalledMethods { get; set; }
 
-        // TODO add information about other methods, to include class path information?
+        /// <summary>
+        /// All Methods that are
+        /// </summary>
+        [NotNull]
+        public ISet<IMethodName> TypeShapeMethods { get; private set; }
 
         protected bool Equals(Context other)
         {
             return Equals(EnclosingClassHierarchy, other.EnclosingClassHierarchy) &&
-                   Equals(EnclosingMethod, other.EnclosingMethod) &&
-                   Equals(EnclosingMethodSuper, other.EnclosingMethodSuper) &&
-                   Equals(EnclosingMethodFirst, other.EnclosingMethodFirst) &&
+                   Equals(EnclosingMethodDeclaration, other.EnclosingMethodDeclaration) &&
                    Equals(EnclosingMethodGroum, other.EnclosingMethodGroum) &&
                    CalledMethods.SetEquals(other.CalledMethods);
         }
@@ -75,9 +66,7 @@ namespace KaVE.Model.Events.CompletionEvent
             unchecked
             {
                 var hashCode = (EnclosingClassHierarchy != null ? EnclosingClassHierarchy.GetHashCode() : 0);
-                hashCode = (hashCode*397) ^ (EnclosingMethod != null ? EnclosingMethod.GetHashCode() : 0);
-                hashCode = (hashCode*397) ^ (EnclosingMethodSuper != null ? EnclosingMethodSuper.GetHashCode() : 0);
-                hashCode = (hashCode*397) ^ (EnclosingMethodFirst != null ? EnclosingMethodFirst.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (EnclosingMethodDeclaration != null ? EnclosingMethodDeclaration.GetHashCode() : 0);
                 hashCode = (hashCode*397) ^ (EnclosingMethodGroum != null ? EnclosingMethodGroum.GetHashCode() : 0);
                 hashCode = (hashCode*397) ^ CalledMethods.GetSetHashCode();
                 return hashCode;
@@ -88,11 +77,9 @@ namespace KaVE.Model.Events.CompletionEvent
         {
             return
                 string.Format(
-                    "[EnclosingClassHierarchy: {0}, [EnclosingMethod: {1}, Super: {2}, First: {3}], EnclosingMethodGroum: {4}, CalledMethods: {5}]",
+                    "[EnclosingClassHierarchy: {0}, [EnclosingMethod: {1}], EnclosingMethodGroum: {2}, CalledMethods: {3}]",
                     EnclosingClassHierarchy,
-                    EnclosingMethod,
-                    EnclosingMethodSuper,
-                    EnclosingMethodFirst,
+                    EnclosingMethodDeclaration,
                     EnclosingMethodGroum,
                     CalledMethods);
         }

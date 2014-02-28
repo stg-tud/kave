@@ -22,9 +22,11 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.Model
             var context = new Context
             {
                 EnclosingClassHierarchy = GetAnonymousTypeHierarchy(),
-                EnclosingMethod = TestNameFactory.GetAnonymousMethodName(),
-                EnclosingMethodFirst = TestNameFactory.GetAnonymousMethodName(),
-                EnclosingMethodSuper = TestNameFactory.GetAnonymousMethodName(),
+                EnclosingMethodDeclaration = new MethodDeclaration(TestNameFactory.GetAnonymousMethodName())
+                {
+                    First = TestNameFactory.GetAnonymousMethodName(),
+                    Super = TestNameFactory.GetAnonymousMethodName(),
+                },
                 CalledMethods = new HashSet<IMethodName>
                 {
                     TestNameFactory.GetAnonymousMethodName(),

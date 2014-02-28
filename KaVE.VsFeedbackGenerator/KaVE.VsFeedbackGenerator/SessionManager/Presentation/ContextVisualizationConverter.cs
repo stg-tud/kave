@@ -31,13 +31,13 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
 
             builder.AppendLine(0, b => b.AppendHierarchy(context.EnclosingClassHierarchy));
             builder.AppendLine(0, CurlyBracketOpen);
-            if (context.EnclosingMethod == null)
+            if (context.EnclosingMethodDeclaration == null)
             {
                 builder.AppendLine(1, CompletionMarker);
             }
             else
             {
-                builder.AppendLine(1, b => b.AppendXamlMethodSignature(context.EnclosingMethod));
+                builder.AppendLine(1, b => b.AppendXamlMethodSignature(context.EnclosingMethodDeclaration.Element));
                 builder.AppendLine(1, CurlyBracketOpen);
                 builder.AppendLine(2, CompletionMarker);
                 builder.AppendLine(1, CurlyBracketClose);
