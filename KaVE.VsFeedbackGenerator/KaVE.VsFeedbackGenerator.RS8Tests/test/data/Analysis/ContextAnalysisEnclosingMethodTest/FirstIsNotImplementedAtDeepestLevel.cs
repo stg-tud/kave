@@ -1,16 +1,13 @@
 namespace N
 {
-    interface I
-    {
-        void M(int i);
-    }
+    class C1 { }
 
-    abstract class C1 : I
+    class C2 : C1
     {
         public virtual void M(int i) { }
     }
 
-    class C2 : C1
+    class C3 : C2
     {
         public override void M(int i)
         {
