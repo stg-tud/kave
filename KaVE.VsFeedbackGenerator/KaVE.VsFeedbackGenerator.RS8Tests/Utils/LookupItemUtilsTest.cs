@@ -81,11 +81,12 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Utils
         {
             WhenCodeCompletionIsInvokedInFile("GenericTypeProposals");
 
-            ThenProposalCollectionContains("[System.Void, mscorlib, Version=4.0.0.0] [CodeExamples.CompletionProposals.GenericTypeProposals`1[[T -> T -> ?]], TestProject].TriggerCompletionHerein([A -> ?] param)",
-                "[System.Collections.Generic.IList`1[[T -> CodeExamples.CompletionProposals.GenericTypeProposals`1[[T -> System.Collections.Generic.IList`1[[T -> System.String, mscorlib, Version=4.0.0.0]], mscorlib, Version=4.0.0.0]], TestProject]], mscorlib, Version=4.0.0.0] [CodeExamples.CompletionProposals.GenericTypeProposals`1[[T -> T -> ?]], TestProject]._complexList",
-                "[System.Collections.Generic.IDictionary`2[[TKey -> System.String, mscorlib, Version=4.0.0.0],[TValue -> System.Object, mscorlib, Version=4.0.0.0]], mscorlib, Version=4.0.0.0] [CodeExamples.CompletionProposals.GenericTypeProposals`1[[T -> T -> ?]], TestProject]._dictionary",
-                "[System.Nullable`1[[T -> System.Int32, mscorlib, Version=4.0.0.0]], mscorlib, Version=4.0.0.0] [CodeExamples.CompletionProposals.GenericTypeProposals`1[[T -> T -> ?]], TestProject]._nullableInt",
-                "[System.Collections.Generic.IList`1[[T -> System.String, mscorlib, Version=4.0.0.0]], mscorlib, Version=4.0.0.0] [CodeExamples.CompletionProposals.GenericTypeProposals`1[[T -> T -> ?]], TestProject]._simpleList");
+            ThenProposalCollectionContains("[System.Void, mscorlib, Version=4.0.0.0] [CodeExamples.CompletionProposals.GenericTypeProposals`1[[T -> T]], TestProject].TriggerCompletionHerein[[A -> A]]([A] param)",
+                "[System.Collections.Generic.IList`1[[T -> CodeExamples.CompletionProposals.GenericTypeProposals`1[[T -> System.Collections.Generic.IList`1[[T -> System.String, mscorlib, Version=4.0.0.0]], mscorlib, Version=4.0.0.0]], TestProject]], mscorlib, Version=4.0.0.0] [CodeExamples.CompletionProposals.GenericTypeProposals`1[[T -> T]], TestProject]._complexList",
+                "[System.Collections.Generic.IDictionary`2[[TKey -> System.String, mscorlib, Version=4.0.0.0],[TValue -> System.Object, mscorlib, Version=4.0.0.0]], mscorlib, Version=4.0.0.0] [CodeExamples.CompletionProposals.GenericTypeProposals`1[[T -> T]], TestProject]._dictionary",
+                "[System.Nullable`1[[T -> System.Int32, mscorlib, Version=4.0.0.0]], mscorlib, Version=4.0.0.0] [CodeExamples.CompletionProposals.GenericTypeProposals`1[[T -> T]], TestProject]._nullableInt",
+                "[System.Collections.Generic.IList`1[[T -> System.String, mscorlib, Version=4.0.0.0]], mscorlib, Version=4.0.0.0] [CodeExamples.CompletionProposals.GenericTypeProposals`1[[T -> T]], TestProject]._simpleList",
+                "[T] [CodeExamples.CompletionProposals.GenericTypeProposals`1[[T -> T]], TestProject].GetT()");
         }
 
         [Test]
@@ -93,19 +94,19 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Utils
         {
             WhenCodeCompletionIsInvokedInFile("GenericTypeInstanceProposals");
 
-            ThenProposalCollectionContains("[System.Void, mscorlib, Version=4.0.0.0] [System.Collections.Generic.IDictionary`2[[TKey -> System.String, mscorlib, Version=4.0.0.0],[TValue -> System.Object, mscorlib, Version=4.0.0.0]], mscorlib, Version=4.0.0.0].Add([TKey -> ?] key, [TValue -> ?] value)",
+            ThenProposalCollectionContains("[System.Void, mscorlib, Version=4.0.0.0] [System.Collections.Generic.IDictionary`2[[TKey -> System.String, mscorlib, Version=4.0.0.0],[TValue -> System.Object, mscorlib, Version=4.0.0.0]], mscorlib, Version=4.0.0.0].Add([TKey] key, [TValue] value)",
                 "[System.Void, mscorlib, Version=4.0.0.0] [System.Collections.Generic.ICollection`1[[T -> System.Collections.Generic.KeyValuePair`2[[TKey -> System.String, mscorlib, Version=4.0.0.0],[TValue -> System.Object, mscorlib, Version=4.0.0.0]], mscorlib, Version=4.0.0.0]], mscorlib, Version=4.0.0.0].Clear()",
-                "[System.Boolean, mscorlib, Version=4.0.0.0] [System.Collections.Generic.ICollection`1[[T -> System.Collections.Generic.KeyValuePair`2[[TKey -> System.String, mscorlib, Version=4.0.0.0],[TValue -> System.Object, mscorlib, Version=4.0.0.0]], mscorlib, Version=4.0.0.0]], mscorlib, Version=4.0.0.0].Contains([T -> ?] item)",
-                "[System.Boolean, mscorlib, Version=4.0.0.0] [System.Collections.Generic.IDictionary`2[[TKey -> System.String, mscorlib, Version=4.0.0.0],[TValue -> System.Object, mscorlib, Version=4.0.0.0]], mscorlib, Version=4.0.0.0].ContainsKey([TKey -> ?] key)",
-                "[System.Void, mscorlib, Version=4.0.0.0] [System.Collections.Generic.ICollection`1[[T -> System.Collections.Generic.KeyValuePair`2[[TKey -> System.String, mscorlib, Version=4.0.0.0],[TValue -> System.Object, mscorlib, Version=4.0.0.0]], mscorlib, Version=4.0.0.0]], mscorlib, Version=4.0.0.0].CopyTo([T[] -> ?] array, [System.Int32, mscorlib, Version=4.0.0.0] arrayIndex)",
+                "[System.Boolean, mscorlib, Version=4.0.0.0] [System.Collections.Generic.ICollection`1[[T -> System.Collections.Generic.KeyValuePair`2[[TKey -> System.String, mscorlib, Version=4.0.0.0],[TValue -> System.Object, mscorlib, Version=4.0.0.0]], mscorlib, Version=4.0.0.0]], mscorlib, Version=4.0.0.0].Contains([T] item)",
+                "[System.Boolean, mscorlib, Version=4.0.0.0] [System.Collections.Generic.IDictionary`2[[TKey -> System.String, mscorlib, Version=4.0.0.0],[TValue -> System.Object, mscorlib, Version=4.0.0.0]], mscorlib, Version=4.0.0.0].ContainsKey([TKey] key)",
+                "[System.Void, mscorlib, Version=4.0.0.0] [System.Collections.Generic.ICollection`1[[T -> System.Collections.Generic.KeyValuePair`2[[TKey -> System.String, mscorlib, Version=4.0.0.0],[TValue -> System.Object, mscorlib, Version=4.0.0.0]], mscorlib, Version=4.0.0.0]], mscorlib, Version=4.0.0.0].CopyTo([T[]] array, [System.Int32, mscorlib, Version=4.0.0.0] arrayIndex)",
                 "get [System.Int32, mscorlib, Version=4.0.0.0] [System.Collections.Generic.ICollection`1[[T -> System.Collections.Generic.KeyValuePair`2[[TKey -> System.String, mscorlib, Version=4.0.0.0],[TValue -> System.Object, mscorlib, Version=4.0.0.0]], mscorlib, Version=4.0.0.0]], mscorlib, Version=4.0.0.0].Count()",
-                "[System.Collections.Generic.IEnumerator`1[[T -> T -> ?]], mscorlib, Version=4.0.0.0] [System.Collections.Generic.IEnumerable`1[[T -> System.Collections.Generic.KeyValuePair`2[[TKey -> System.String, mscorlib, Version=4.0.0.0],[TValue -> System.Object, mscorlib, Version=4.0.0.0]], mscorlib, Version=4.0.0.0]], mscorlib, Version=4.0.0.0].GetEnumerator()",
+                "[System.Collections.Generic.IEnumerator`1[[T -> T]], mscorlib, Version=4.0.0.0] [System.Collections.Generic.IEnumerable`1[[T -> System.Collections.Generic.KeyValuePair`2[[TKey -> System.String, mscorlib, Version=4.0.0.0],[TValue -> System.Object, mscorlib, Version=4.0.0.0]], mscorlib, Version=4.0.0.0]], mscorlib, Version=4.0.0.0].GetEnumerator()",
                 "get [System.Boolean, mscorlib, Version=4.0.0.0] [System.Collections.Generic.ICollection`1[[T -> System.Collections.Generic.KeyValuePair`2[[TKey -> System.String, mscorlib, Version=4.0.0.0],[TValue -> System.Object, mscorlib, Version=4.0.0.0]], mscorlib, Version=4.0.0.0]], mscorlib, Version=4.0.0.0].IsReadOnly()",
-                "get [System.Collections.Generic.ICollection`1[[T -> TKey -> ?]], mscorlib, Version=4.0.0.0] [System.Collections.Generic.IDictionary`2[[TKey -> System.String, mscorlib, Version=4.0.0.0],[TValue -> System.Object, mscorlib, Version=4.0.0.0]], mscorlib, Version=4.0.0.0].Keys()",
-                "[System.Boolean, mscorlib, Version=4.0.0.0] [System.Collections.Generic.IDictionary`2[[TKey -> System.String, mscorlib, Version=4.0.0.0],[TValue -> System.Object, mscorlib, Version=4.0.0.0]], mscorlib, Version=4.0.0.0].Remove([TKey -> ?] key)",
-                "[System.Boolean, mscorlib, Version=4.0.0.0] [System.Collections.Generic.IDictionary`2[[TKey -> System.String, mscorlib, Version=4.0.0.0],[TValue -> System.Object, mscorlib, Version=4.0.0.0]], mscorlib, Version=4.0.0.0].TryGetValue([TKey -> ?] key, out [TValue -> ?] value)",
-                "get [System.Collections.Generic.ICollection`1[[T -> TValue -> ?]], mscorlib, Version=4.0.0.0] [System.Collections.Generic.IDictionary`2[[TKey -> System.String, mscorlib, Version=4.0.0.0],[TValue -> System.Object, mscorlib, Version=4.0.0.0]], mscorlib, Version=4.0.0.0].Values()",
-                "set get [TValue -> ?] [System.Collections.Generic.IDictionary`2[[TKey -> System.String, mscorlib, Version=4.0.0.0],[TValue -> System.Object, mscorlib, Version=4.0.0.0]], mscorlib, Version=4.0.0.0].Item([TKey -> ?] key)");
+                "get [System.Collections.Generic.ICollection`1[[T -> TKey]], mscorlib, Version=4.0.0.0] [System.Collections.Generic.IDictionary`2[[TKey -> System.String, mscorlib, Version=4.0.0.0],[TValue -> System.Object, mscorlib, Version=4.0.0.0]], mscorlib, Version=4.0.0.0].Keys()",
+                "[System.Boolean, mscorlib, Version=4.0.0.0] [System.Collections.Generic.IDictionary`2[[TKey -> System.String, mscorlib, Version=4.0.0.0],[TValue -> System.Object, mscorlib, Version=4.0.0.0]], mscorlib, Version=4.0.0.0].Remove([TKey] key)",
+                "[System.Boolean, mscorlib, Version=4.0.0.0] [System.Collections.Generic.IDictionary`2[[TKey -> System.String, mscorlib, Version=4.0.0.0],[TValue -> System.Object, mscorlib, Version=4.0.0.0]], mscorlib, Version=4.0.0.0].TryGetValue([TKey] key, out [TValue] value)",
+                "get [System.Collections.Generic.ICollection`1[[T -> TValue]], mscorlib, Version=4.0.0.0] [System.Collections.Generic.IDictionary`2[[TKey -> System.String, mscorlib, Version=4.0.0.0],[TValue -> System.Object, mscorlib, Version=4.0.0.0]], mscorlib, Version=4.0.0.0].Values()",
+                "set get [TValue] [System.Collections.Generic.IDictionary`2[[TKey -> System.String, mscorlib, Version=4.0.0.0],[TValue -> System.Object, mscorlib, Version=4.0.0.0]], mscorlib, Version=4.0.0.0].Item([TKey] key)");
         }
 
         [Test]
@@ -154,7 +155,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Utils
             WhenCodeCompletionIsInvokedInFile("ArrayTypeProposals");
 
             ThenProposalCollectionContains("[System.Object[][][], mscorlib, Version=4.0.0.0] [CodeExamples.CompletionProposals.ArrayTypeProposals, TestProject].myJaggedArray",
-                "[System.Void, mscorlib, Version=4.0.0.0] [CodeExamples.CompletionProposals.ArrayTypeProposals, TestProject].myMethod([R[] -> ?] p)",
+                "[System.Void, mscorlib, Version=4.0.0.0] [CodeExamples.CompletionProposals.ArrayTypeProposals, TestProject].myMethod[[R -> R]]([R[]] p)",
                 "[System.Object[,,], mscorlib, Version=4.0.0.0] [CodeExamples.CompletionProposals.ArrayTypeProposals, TestProject].myMultidimensionalArray",
                 "[System.String[], mscorlib, Version=4.0.0.0] [CodeExamples.CompletionProposals.ArrayTypeProposals, TestProject].myStringArray");
         }
@@ -183,12 +184,20 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Utils
         {
             WhenCodeCompletionIsInvokedInFile("ClassLevelProposals");
 
-            ThenProposalCollectionContains("System.IEquatable`1[[T -> T -> ?]], mscorlib, Version=4.0.0.0",
+            ThenProposalCollectionContains("System.IEquatable`1[[T -> T]], mscorlib, Version=4.0.0.0",
                 "CombinedLookupItem:public override Equals(object) { ... }",
-                "System.Collections.Generic.EqualityComparer`1[[T -> T -> ?]], mscorlib, Version=4.0.0.0",  
+                "System.Collections.Generic.EqualityComparer`1[[T -> T]], mscorlib, Version=4.0.0.0",  
                 "System.Collections.IEqualityComparer, mscorlib, Version=4.0.0.0",
-                "System.Collections.Generic.IEqualityComparer`1[[T -> T -> ?]], mscorlib, Version=4.0.0.0",
+                "System.Collections.Generic.IEqualityComparer`1[[T -> T]], mscorlib, Version=4.0.0.0",
                 "System.Collections.IStructuralEquatable, mscorlib, Version=4.0.0.0");
+        }
+
+        [Test]
+        public void ShouldTranslateMethodWithTypeParametersProposals()
+        {
+            WhenCodeCompletionIsInvokedInFile("MethodWithTypeParametersProposals");
+
+            ThenProposalCollectionContains("[System.Void, mscorlib, Version=4.0.0.0] [N.C, TestProject].M1[[T -> T]]([T] t)");
         }
 
         // Test cases for keywords (e.g., private), templates (e.g., for), and

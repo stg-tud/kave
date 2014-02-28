@@ -1,4 +1,5 @@
-﻿using JetBrains.Application;
+﻿using System;
+using JetBrains.Application;
 using JetBrains.ReSharper.Feature.Services.CSharp.CodeCompletion.Infrastructure;
 using JetBrains.ReSharper.Feature.Services.Lookup;
 using JetBrains.ReSharper.Psi;
@@ -12,10 +13,25 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
     public class TestAnalysisTrigger : CSharpItemsProviderBase<CSharpCodeCompletionContext>
     {
         public Context LastContext { get; private set; }
+        public Exception LastException { get; private set; }
+
+        public bool HasFailed
+        {
+            get { return LastException != null; }
+        }
 
         protected override bool AddLookupItems(CSharpCodeCompletionContext context, GroupedItemsCollector collector)
         {
-            LastContext = new ContextAnalysis().Analyze(context);
+            try
+            {
+                LastException = null;
+                LastContext = new ContextAnalysis().Analyze(context);
+            }
+            catch (Exception e)
+            {
+                LastException = e;
+                LastContext = null;
+            }
             return false;
         }
     }

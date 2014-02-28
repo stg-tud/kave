@@ -28,11 +28,19 @@ namespace KaVE.Model.Names.CSharp
         /// </summary>
         public static ITypeName Get(string typeParameterShortName, string actualTypeIdentifier)
         {
+            if (actualTypeIdentifier == TypeName.UnknownTypeIdentifier)
+            {
+                return Get(typeParameterShortName);
+            }
             return Get(typeParameterShortName + ParameterNameTypeSeparater + actualTypeIdentifier);
         }
 
         internal static bool IsTypeParameterIdentifier(string identifier)
         {
+            if (!identifier.Contains(","))
+            {
+                return true;
+            }
             // "T -> System.Void, mscorlib, ..." is a type parameter, because it contains the separator.
             // "System.Nullable`1[[T -> System.Int32, mscorlib, Version=4.0.0.0]], ..." is not, because
             // the separator is only in the type's parameter-type list, i.e., after the '`'.
@@ -166,7 +174,7 @@ namespace KaVE.Model.Names.CSharp
             get
             {
                 var endOfTypeParameterName = Identifier.IndexOf(' ');
-                return Identifier.Substring(0, endOfTypeParameterName);
+                return endOfTypeParameterName == -1 ? Identifier : Identifier.Substring(0, endOfTypeParameterName);
             }
         }
 

@@ -56,6 +56,7 @@ namespace KaVE.VsFeedbackGenerator.Utils.Names
             return IfElementIs<INamespace>(element, GetName, substitution) ??
                    IfElementIs<ITypeParameter>(element, GetName, substitution) ??
                    IfElementIs<ITypeElement>(element, GetName, substitution) ??
+                   IfElementIs<IMethod>(element, GetName, substitution) ??
                    IfElementIs<IFunction>(element, GetName, substitution) ??
                    IfElementIs<IParameter>(element, GetName, substitution) ??
                    IfElementIs<IField>(element, GetName, substitution) ??
@@ -88,7 +89,7 @@ namespace KaVE.VsFeedbackGenerator.Utils.Names
         }
 
         [NotNull]
-        private static ITypeName GetName(this ITypeParameter typeParameter, ISubstitution substitution)
+        private static IName GetName(this ITypeParameter typeParameter, ISubstitution substitution)
         {
             return TypeParameterName.Get(
                 typeParameter.ShortName,
@@ -119,6 +120,16 @@ namespace KaVE.VsFeedbackGenerator.Utils.Names
             identifier.AppendIf(parameter.Kind == ParameterKind.REFERENCE, ParameterName.PassByReferenceModifier + " ");
             identifier.AppendType(parameter.Type).Append(" ").Append(parameter.ShortName);
             return ParameterName.Get(identifier.ToString());
+        }
+
+        [NotNull]
+        private static IMethodName GetName(this IMethod method, ISubstitution substitution)
+        {
+            var identifier = new StringBuilder();
+            identifier.Append(method.GetMemberIdentifier(substitution, method.ReturnType));
+            identifier.Append(method.GetTypeParametersList(substitution));
+            identifier.AppendParameters(method, substitution);
+            return MethodName.Get(identifier.ToString());
         }
 
         [NotNull]
@@ -181,10 +192,10 @@ namespace KaVE.VsFeedbackGenerator.Utils.Names
             IType valueType)
         {
             identifier.AppendType(valueType)
-                .Append(' ')
-                .AppendType(member.GetContainingType(), substitution)
-                .Append('.')
-                .Append(member.ShortName);
+                      .Append(' ')
+                      .AppendType(member.GetContainingType(), substitution)
+                      .Append('.')
+                      .Append(member.ShortName);
         }
 
         private static StringBuilder AppendType(this StringBuilder identifier, IType type)
@@ -205,15 +216,21 @@ namespace KaVE.VsFeedbackGenerator.Utils.Names
         {
             var containingModule = type.Module.ContainingProjectModule;
             Asserts.NotNull(containingModule, "module is null");
-            if (type.TypeParameters.IsEmpty())
-            {
-                return String.Format("{0}, {1}", type.GetClrName().FullName, containingModule.GetQualifiedName());
-            }
             return String.Format(
-                "{0}[[{2}]], {1}",
+                "{0}{1}, {2}",
                 type.GetClrName().FullName,
-                containingModule.GetQualifiedName(),
-                type.TypeParameters.Select(tp => GetName((ITypeParameter) tp, substitution).Identifier).Join("],["));
+                type.GetTypeParametersList(substitution),
+                containingModule.GetQualifiedName());
+        }
+
+        private static String GetTypeParametersList(this ITypeParametersOwner typeParametersOwner,
+            ISubstitution substitution)
+        {
+            return typeParametersOwner.TypeParameters.IsEmpty()
+                ? ""
+                : "[[" +
+                  typeParametersOwner.TypeParameters.Select(tp => tp.GetName(substitution).Identifier).Join("],[") +
+                  "]]";
         }
 
         /// <summary>
@@ -255,8 +272,8 @@ namespace KaVE.VsFeedbackGenerator.Utils.Names
             ISubstitution substitution)
         {
             identifier.Append('(')
-                .Append(parametersOwner.Parameters.GetNames(substitution).Select(p => p.Identifier).Join(", "))
-                .Append(')');
+                      .Append(parametersOwner.Parameters.GetNames(substitution).Select(p => p.Identifier).Join(", "))
+                      .Append(')');
         }
 
         [NotNull]

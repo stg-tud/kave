@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using JetBrains.Application;
@@ -84,17 +85,29 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests
                 ((SelectionStrategyWithPreferences) codeCompletionResult.SelectionStrategy).GetAllPreferredItems(
                     codeCompletionResult.GetFilteredLookupItems()).ToHashSet();
             ResultProposalCollection = GetItemsFromResult(codeCompletionResult, best).ToProposalCollection();
+
+            if (TestAnalysisComponent.HasFailed)
+            {
+                throw new Exception("", TestAnalysisComponent.LastException);
+            }
         }
-
-
-        // TODO review: add teardown that sets both fields to null
-        // TODO review: thrown exceptiosn should be rethrown in testing-thread
 
         protected ProposalCollection ResultProposalCollection { get; private set; }
 
         protected Context ResultContext
         {
-            get { return Shell.Instance.GetComponent<TestAnalysisTrigger>().LastContext; }
+            get { return TestAnalysisComponent.LastContext; }
+        }
+
+        private static TestAnalysisTrigger TestAnalysisComponent
+        {
+            get { return Shell.Instance.GetComponent<TestAnalysisTrigger>(); }
+        }
+
+        [TearDown]
+        public void ClearResults()
+        {
+            ResultProposalCollection = null;
         }
     }
 }

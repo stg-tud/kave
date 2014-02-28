@@ -18,6 +18,8 @@ namespace CodeExamples.CompletionProposals
 
         private IDictionary<string, object> _dictionary;
 
+        private T GetT() { return null; }
+
         public void TriggerCompletionHerein<A>(A param) where A : new()
         {
             this.{caret}

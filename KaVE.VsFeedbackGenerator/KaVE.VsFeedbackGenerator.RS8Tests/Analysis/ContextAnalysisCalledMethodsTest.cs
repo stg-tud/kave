@@ -64,7 +64,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
         {
             WhenCodeCompletionIsInvokedInFile("MethodWithCallsAndGenerics");
 
-            var expected = MethodName.Get("[TI1 -> ?] [N.I1`1[[TI1 -> TM1 -> ?]], TestProject].Get()");
+            var expected = MethodName.Get("[TI1] [N.I`1[[TI1 -> TM1]], TestProject].Get()");
 
             CollectionAssert.Contains(ResultContext.CalledMethods, expected);
         }
@@ -74,27 +74,37 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
         {
             WhenCodeCompletionIsInvokedInFile("MethodWithCallsAndGenerics");
 
-            var expected = MethodName.Get("[TI1 -> ?] [N.I1`1[[TI1 -> System.String, mscorlib, Verion=4.0.0.0]], TestProject].Get()");
+            var expected = MethodName.Get("[TI1] [N.I`1[[TI1 -> System.String, mscorlib, Version=4.0.0.0]], TestProject].Get()");
 
             CollectionAssert.Contains(ResultContext.CalledMethods, expected);
         }
 
-        [Test(Description = "Marker: (2)"), Ignore]
+        [Test(Description = "Marker: (2)")]
         public void ShouldFindCallWithMethodLevelTypeParameter()
         {
             WhenCodeCompletionIsInvokedInFile("MethodWithCallsAndGenerics");
 
-            var expected = MethodName.Get("[TI2 -> ?] [N.I1`1[[TI1 -> TM1 -> ?]], TestProject].Get`1[[TI2 -> System.Int32, mscorlib, Version=4.0.0.0]]()");
+            var expected = MethodName.Get("[TI2] [N.I`1[[TI1 -> TM1]], TestProject].Get[[TI2 -> System.Int32, mscorlib, Version=4.0.0.0]]()");
 
             CollectionAssert.Contains(ResultContext.CalledMethods, expected);
         }
 
         [Test(Description = "Marker: (4)")]
-        public void ShouldFindCallOnConstraintTypeParameterInstance()
+        public void ShouldFindCallOnFreeTypeParameterInstance()
         {
             WhenCodeCompletionIsInvokedInFile("MethodWithCallsAndGenerics");
 
-            var expected = MethodName.Get("[System.Int32, mscorlib, Version=4.0.0.0] [TM2 -> System.Object, mscorlib, Version=4.0.0.0].GetHashCode()");
+            var expected = MethodName.Get("[System.Int32, mscorlib, Version=4.0.0.0] [System.Object, mscorlib, Version=4.0.0.0].GetHashCode()");
+
+            CollectionAssert.Contains(ResultContext.CalledMethods, expected);
+        }
+
+        [Test(Description = "Marker: (5)")]
+        public void ShouldFindCallOnTransitivlyConstraintTypeParameterInstance()
+        {
+            WhenCodeCompletionIsInvokedInFile("MethodWithCallsAndGenerics");
+
+            var expected = MethodName.Get("[B] [N.D`1[[B -> TM2]], TestProject].Get()");
 
             CollectionAssert.Contains(ResultContext.CalledMethods, expected);
         }
