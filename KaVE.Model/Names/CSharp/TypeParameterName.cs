@@ -17,7 +17,7 @@ namespace KaVE.Model.Names.CSharp
         /// instantiate type-parameter names.
         /// </summary>
         [UsedImplicitly]
-        public static new ITypeName Get(string identifier)
+        public new static ITypeName Get(string identifier)
         {
             return TypeName.Get(identifier);
         }
@@ -37,10 +37,25 @@ namespace KaVE.Model.Names.CSharp
 
         internal static bool IsTypeParameterIdentifier(string identifier)
         {
-            if (!identifier.Contains(","))
+            if (IsUnknownTypeIdentifier(identifier))
             {
-                return true;
+                return false;
             }
+            return IsFreeTypeParameterIdentifier(identifier) || IsBoundTypeParameterIdentifier(identifier);
+        }
+
+        private static bool IsUnknownTypeIdentifier(string identifier)
+        {
+            return identifier == TypeName.UnknownTypeIdentifier;
+        }
+
+        private static bool IsFreeTypeParameterIdentifier(string identifier)
+        {
+            return !identifier.Contains(",");
+        }
+
+        private static bool IsBoundTypeParameterIdentifier(string identifier)
+        {
             // "T -> System.Void, mscorlib, ..." is a type parameter, because it contains the separator.
             // "System.Nullable`1[[T -> System.Int32, mscorlib, Version=4.0.0.0]], ..." is not, because
             // the separator is only in the type's parameter-type list, i.e., after the '`'.
@@ -182,8 +197,12 @@ namespace KaVE.Model.Names.CSharp
         {
             get
             {
-                var startOfTypeName = TypeParameterShortName.Length + 4;
-                return TypeName.Get(Identifier.Substring(startOfTypeName));
+                var startOfTypeName = TypeParameterShortName.Length + ParameterNameTypeSeparater.Length;
+                return
+                    TypeName.Get(
+                        startOfTypeName >= Identifier.Length
+                            ? TypeName.UnknownTypeIdentifier
+                            : Identifier.Substring(startOfTypeName));
             }
         }
     }

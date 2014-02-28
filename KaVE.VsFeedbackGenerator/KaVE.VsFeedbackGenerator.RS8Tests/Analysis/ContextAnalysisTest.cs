@@ -85,7 +85,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
             WhenCodeCompletionIsInvokedInFile("GenericTypeHierarchy");
 
             var actual = ResultContext.EnclosingClassHierarchy.Element;
-            var expected = TypeName.Get("N.C`1[[T -> ?]], TestProject");
+            var expected = TypeName.Get("N.C`1[[T]], TestProject");
             Assert.AreEqual(expected, actual);
         }
 
