@@ -1,28 +1,31 @@
-﻿using KaVE.JetBrains.Annotations;
+﻿using System.Runtime.Serialization;
+using KaVE.JetBrains.Annotations;
 using KaVE.Model.Names;
-using KaVE.Model.Names.CSharp;
 using KaVE.Utils;
 
 namespace KaVE.Model.Events.CompletionEvent
 {
+    [DataContract]
     public class MethodDeclaration
     {
         /// <summary>
         ///     The name of a method.
         /// </summary>
-        [NotNull]
+        [NotNull, DataMember]
         public IMethodName Element { get; private set; }
 
         /// <summary>
         ///     The implementation of the enclosing method that is referred to by calling
         ///     <code>super.'methodName'(...)</code>.
         /// </summary>
+        [DataMember]
         public IMethodName Super { get; set; }
 
         /// <summary>
         ///     The declarations of the enclosing method, i.e., the method names specified in interfaces or the highest
         ///     parent class that the enclosing method is an implementation of.
         /// </summary>
+        [DataMember]
         public IMethodName First { get; set; }
 
         public MethodDeclaration(IMethodName methodName)

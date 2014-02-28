@@ -21,6 +21,8 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests
     [TestNetFramework4]
     internal abstract class KaVEBaseTest : CodeCompletionTestBase
     {
+        private const string Caret = "$";
+
         private readonly List<CodeCompletionType> _myCodeCompletionTypes;
 
         protected KaVEBaseTest()
@@ -54,6 +56,37 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests
         protected override bool ExecuteAction
         {
             get { return false; }
+        }
+
+        protected void CompleteInClass(string codeSnippet)
+        {
+            CompleteInFile(ClassWithBody(codeSnippet));
+        }
+
+        private static string ClassWithBody(string classbody)
+        {
+            return string.Format(@"
+                namespace N {{
+                    public class C {{
+                        {0}
+                    }}
+                }}", classbody);
+        }
+
+        protected void CompleteInFile(string fileContent)
+        {
+            fileContent = fileContent.Replace(Caret, "{caret}");
+
+            var file = GetTestDataFilePath2("adhoc_test_snippet").ChangeExtension("cs");
+            Directory.CreateDirectory(Path.GetDirectoryName(file.FullPath));
+            using (var stream = file.OpenStream(FileMode.Create))
+            {
+                using (var writer = new StreamWriter(stream))
+                {
+                    writer.Write(fileContent);
+                }
+            }
+            WhenCodeCompletionIsInvokedInFile("adhoc_test_snippet");
         }
 
         protected void WhenCodeCompletionIsInvokedInFile(string fileName)

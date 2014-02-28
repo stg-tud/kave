@@ -44,7 +44,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis
                 typeDeclaration.DeclaredElement,
                 EmptySubstitution.INSTANCE);
 
-            context.CalledMethods = FindAllCalledMethods(methodDeclaration);
+            context.CalledMethods = FindAllCalledMethods(methodDeclaration, context.EnclosingClassHierarchy.Element);
 
             return context;
         }
@@ -129,12 +129,12 @@ namespace KaVE.VsFeedbackGenerator.Analysis
             return ret + " " + name + "(" + ps + ")";
         }
 
-        private ISet<IMethodName> FindAllCalledMethods(IMethodDeclaration methodDeclaration)
+        private ISet<IMethodName> FindAllCalledMethods(IMethodDeclaration methodDeclaration, ITypeName enclosingType)
         {
             var methodNames = new HashSet<IMethodName>();
             if (methodDeclaration.Body != null)
             {
-                methodDeclaration.Body.Accept(new MethodInvocationCollector(), methodNames);
+                methodDeclaration.Body.Accept(new MethodInvocationCollector(enclosingType), methodNames);
             }
             return methodNames;
         }
