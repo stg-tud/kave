@@ -16,31 +16,36 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
     {
         private Timer _timer;
         private readonly SettingsStore _settingsStore;
-        private readonly SessionManagerWindowRegistrar _sessionWindow;
+        private readonly SessionManagerWindowRegistrar _sessionWindowRegistrar;
         private readonly TaskbarIcon _taskbarIcon;
         //TODO Global lookup
         private const string SessionManagerActionId = "KaVE.VsFeedbackGenerator.SessionManager";
 
-        public UploadReminder(SettingsStore settingsStore, NotifyTrayIcon notify)
+        public UploadReminder(SettingsStore settingsStore, NotifyTrayIcon notify, SessionManagerWindowRegistrar sessionWindowRegistrar)
         {
             _taskbarIcon = notify.NotifyIcon;
-
             _settingsStore = settingsStore;
-            _sessionWindow = Shell.Instance.GetComponent<SessionManagerWindowRegistrar>();
+            _sessionWindowRegistrar = sessionWindowRegistrar;
 
-            //Init today date for settings 
-            var settings = _settingsStore.GetSettings<UploadSettings>();
-            if (settings.LastUploadTime.IsEmpty())
-            {
-                settings.LastUploadTime = DateTime.Today.ToString(CultureInfo.InvariantCulture);
-                settingsStore.SetSettings(settings);
-            }
+            InitLastUpdateTime(settingsStore);
 
             //Start timer every hour + offset
             //_timer = new Timer(1000*60*60 + new Random().Next(0, 60));
             _timer = new Timer(1000 * 60 * 1);
             _timer.Elapsed += ExecuteOnceAnHour;
             _timer.Enabled = true;
+
+            //_taskbarIcon.ShowCustomBalloon(new BalloonNotification(_sessionWindowRegistrar, SessionManagerActionId, false), PopupAnimation.Slide, null); 
+        }
+
+        private void InitLastUpdateTime(SettingsStore settingsStore)
+        {
+            var settings = _settingsStore.GetSettings<UploadSettings>();
+            if (settings.LastUploadTime.IsEmpty())
+            {
+                settings.LastUploadTime = DateTime.Today.ToString(CultureInfo.InvariantCulture);
+                settingsStore.SetSettings(settings);
+            }
         }
 
         private void ExecuteOnceAnHour(Object obj, ElapsedEventArgs elapsedEventArgs)
@@ -50,12 +55,12 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             //Hard popup
             if (lastUpdate >= DateTime.Today.AddMonths(1))
             {
-                _taskbarIcon.ShowCustomBalloon(new BalloonNotification(_sessionWindow, SessionManagerActionId, false), PopupAnimation.Slide, null); 
+                _taskbarIcon.ShowCustomBalloon(new BalloonNotification(_sessionWindowRegistrar, SessionManagerActionId, false), PopupAnimation.Slide, null); 
             }
             //Soft popup, because date is older than a week
             else if (lastUpdate >= DateTime.Today.AddDays(7))
             {
-                _taskbarIcon.ShowCustomBalloon(new BalloonNotification(_sessionWindow, SessionManagerActionId, true), PopupAnimation.Slide, null); 
+                _taskbarIcon.ShowCustomBalloon(new BalloonNotification(_sessionWindowRegistrar, SessionManagerActionId, true), PopupAnimation.Slide, null); 
             }  
         }
     }
