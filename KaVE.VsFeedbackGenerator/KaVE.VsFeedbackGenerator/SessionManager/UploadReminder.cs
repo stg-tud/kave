@@ -1,15 +1,15 @@
 ﻿using System;
-using System.Timers;
 using System.Globalization;
+using System.Timers;
+using System.Windows.Controls.Primitives;
+using Hardcodet.Wpf.TaskbarNotification;
 using JetBrains.Application;
-using JetBrains.Threading;
 using JetBrains.Util;
-using KaVE.Utils;
-using KaVE.VsFeedbackGenerator.SessionManager;
 using KaVE.VsFeedbackGenerator.SessionManager.Presentation;
+using KaVE.VsFeedbackGenerator.TrayNotification;
 using KaVE.VsFeedbackGenerator.Utils;
 
-namespace KaVE.VsFeedbackGenerator.VsIntegration
+namespace KaVE.VsFeedbackGenerator.SessionManager
 {
     [ShellComponent]
     public class UploadReminder
@@ -17,10 +17,14 @@ namespace KaVE.VsFeedbackGenerator.VsIntegration
         private Timer _timer;
         private readonly SettingsStore _settingsStore;
         private readonly SessionManagerWindowRegistrar _sessionWindow;
+        private readonly TaskbarIcon _taskbarIcon;
+        //TODO Global lookup
         private const string SessionManagerActionId = "KaVE.VsFeedbackGenerator.SessionManager";
 
-        public UploadReminder(SettingsStore settingsStore)
+        public UploadReminder(SettingsStore settingsStore, NotifyTrayIcon notify)
         {
+            _taskbarIcon = notify.NotifyIcon;
+
             _settingsStore = settingsStore;
             _sessionWindow = Shell.Instance.GetComponent<SessionManagerWindowRegistrar>();
 
@@ -33,8 +37,9 @@ namespace KaVE.VsFeedbackGenerator.VsIntegration
             }
 
             //Start timer every hour + offset
-            _timer = new Timer(1000*60*60 + new Random().Next(0, 60));
-            _timer.Elapsed += new ElapsedEventHandler(ExecuteOnceAnHour);
+            //_timer = new Timer(1000*60*60 + new Random().Next(0, 60));
+            _timer = new Timer(1000 * 60 * 1);
+            _timer.Elapsed += ExecuteOnceAnHour;
             _timer.Enabled = true;
         }
 
@@ -42,29 +47,16 @@ namespace KaVE.VsFeedbackGenerator.VsIntegration
         {
             var settings = _settingsStore.GetSettings<UploadSettings>();
             var lastUpdate = DateTime.Parse(settings.LastUploadTime);
-            //Soft popup, because date is older than a week
-            if (lastUpdate > DateTime.Today.AddDays(7))
-            {
-                var result = MessageBox.ShowYesNoCancel("Upload it or die");
-                if (result == true)
-                {
-                    OpenSessionManager();
-                }
-            }
             //Hard popup
-            else if (lastUpdate > DateTime.Today.AddMonths(1))
+            if (lastUpdate >= DateTime.Today.AddMonths(1))
             {
-                MessageBox.ShowExclamation("UPLOAD!!!!!!!!!!!!!!");
-                OpenSessionManager();
+                _taskbarIcon.ShowCustomBalloon(new BalloonNotification(_sessionWindow, SessionManagerActionId, false), PopupAnimation.Slide, null); 
             }
+            //Soft popup, because date is older than a week
+            else if (lastUpdate >= DateTime.Today.AddDays(7))
+            {
+                _taskbarIcon.ShowCustomBalloon(new BalloonNotification(_sessionWindow, SessionManagerActionId, true), PopupAnimation.Slide, null); 
+            }  
         }
-
-        private void OpenSessionManager()
-        {
-            Invoke.OnDispatcherAsync(
-                    () => ReentrancyGuard.Current.Execute(SessionManagerActionId,
-                        () => _sessionWindow.ToolWindow.Show()));
-        }
-
     }
 }

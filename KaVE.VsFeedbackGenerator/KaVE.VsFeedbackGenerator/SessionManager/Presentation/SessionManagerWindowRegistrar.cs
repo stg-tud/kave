@@ -6,7 +6,7 @@ using JetBrains.UI.ToolWindowManagement;
 namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
 {
     [ShellComponent]
-    internal class SessionManagerWindowRegistrar
+    public class SessionManagerWindowRegistrar
     {
         private readonly ToolWindowClass _toolWindowClass;
 

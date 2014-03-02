@@ -43,6 +43,9 @@
     <Reference Include="envdte, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
+    <Reference Include="Hardcodet.Wpf.TaskbarNotification">
+      <HintPath>..\..\packages\Hardcodet.NotifyIcon.Wpf.1.0.5\lib\net40\Hardcodet.Wpf.TaskbarNotification.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.VisualStudio.CommandBars, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
@@ -53,6 +56,7 @@
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.IO">
       <HintPath>..\..\packages\Microsoft.Bcl.1.1.6\lib\net40\System.IO.dll</HintPath>
@@ -86,6 +90,10 @@
     <Compile Include="AboutAction.cs" />
     <Compile Include="Analysis\ContextAnalysis.cs" />
     <Compile Include="Analysis\MethodInvocationCollector.cs" />
+    <Compile Include="TrayNotification\NotifyTrayIcon.cs" />
+    <Compile Include="TrayNotification\SoftBalloonPopup.xaml.cs">
+      <DependentUpon>SoftBalloonPopup.xaml</DependentUpon>
+    </Compile>
     <Compile Include="CodeCompletion\CodeCompletionLifecycleManager.cs" />
     <Compile Include="CodeCompletion\DelegateActionHandler.cs" />
     <Compile Include="CodeCompletion\ExtendedLookupWindowManager.cs" />
@@ -118,6 +126,11 @@
     <Compile Include="Generators\VisualStudio\WindowEventGenerator.cs" />
     <Compile Include="MessageBus\IMessageBus.cs" />
     <Compile Include="MessageBus\TinyMessengerMessageBus.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Properties\SessionManager.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -145,7 +158,7 @@
     <Compile Include="SessionManager\UploadSettings.cs" />
     <Compile Include="Utils\ILogWriter.cs" />
     <Compile Include="Utils\SettingsStore.cs" />
-    <Compile Include="VsIntegration\UploadReminder.cs" />
+    <Compile Include="SessionManager\UploadReminder.cs" />
     <Compile Include="Utils\ConfirmedCommand.cs" />
     <Compile Include="Utils\GlobalsExtensions.cs" />
     <Compile Include="Utils\InverseBoolConverter.cs" />
@@ -171,6 +184,10 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>General.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\SessionManager.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>SessionManager.Designer.cs</LastGenOutput>
@@ -178,6 +195,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="TrayNotification\SoftBalloonPopup.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="SessionManager\Presentation\FeedbackManagerControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -219,6 +240,11 @@
       <Project>{4439FDE5-778A-4FAB-8BB0-7A4E23C45BDB}</Project>
       <Name>KaVE.Utils</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Bulb.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
