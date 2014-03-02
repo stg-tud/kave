@@ -2,13 +2,13 @@
     x:Class="KaVE.VsFeedbackGenerator.TrayNotification.BalloonNotification"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:tb="http://www.hardcodet.net/taskbar"
     Height="130"
     Width="283"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
     <UserControl.Resources>
+        <!-- Triggered from Code -->
         <Storyboard
             x:Key="FadeInAndOut">
             <DoubleAnimationUsingKeyFrames
@@ -30,16 +30,7 @@
             </DoubleAnimationUsingKeyFrames>
         </Storyboard>
     </UserControl.Resources>
-    <!--<UserControl.Triggers>
-        <EventTrigger
-            RoutedEvent="tb:TaskbarIcon.BalloonShowing"> 
-            <BeginStoryboard
-                Storyboard="{StaticResource FadeInAndOut}"
-                x:Name="FadeInAndOut_BeginStoryboard" />
-        </EventTrigger>
-    </UserControl.Triggers> -->
     <Grid x:Name="grid">
-
         <Border
             x:Name="border"
             CornerRadius="10,10,10,10"
@@ -52,7 +43,7 @@
                         Color="#FFEEEEEE"
                         Offset="1" />
                     <GradientStop
-                        Color="#FFFB6B42"
+                        Color="#F7FE2E"
                         Offset="0" />
                 </LinearGradientBrush>
             </Border.Background>

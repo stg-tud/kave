@@ -1,12 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Animation;
 using JetBrains.Threading;
 using KaVE.Utils;
 using KaVE.VsFeedbackGenerator.SessionManager.Presentation;
-using NuGet;
 
 namespace KaVE.VsFeedbackGenerator.TrayNotification
 {
@@ -26,13 +23,17 @@ namespace KaVE.VsFeedbackGenerator.TrayNotification
             
             if (fade)
             {
-                var storyboard = TryFindResource("FadeInAndOut") as Storyboard;
-                if (storyboard != null)
-                {
-                    storyboard.Begin();
-                }    
+                ActivateFadeOutAnimation();
             }
-            
+        }
+
+        private void ActivateFadeOutAnimation()
+        {
+            var storyboard = TryFindResource("FadeInAndOut") as Storyboard;
+            if (storyboard != null)
+            {
+                storyboard.Begin();
+            }
         }
 
         private void Upload_Button_OnClick(object sender, RoutedEventArgs e)
