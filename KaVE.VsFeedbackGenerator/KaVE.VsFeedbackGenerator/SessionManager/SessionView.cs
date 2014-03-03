@@ -79,6 +79,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             }
         }
 
+        // TODO remove these regions
         #region Delete-Events Command implementation
         public DelegateCommand DeleteEventsCommand
         {

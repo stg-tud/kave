@@ -61,6 +61,8 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
                 "[System.Int32, mscorlib, Version=4.0.0.0] [System.Object, mscorlib, Version=4.0.0.0].GetHashCode()");
         }
 
+
+        // TODO remove string formatter
         [StringFormatMethod("methodIdentifier")]
         private void AssertAnalysisDoesNotFindCallTo(string methodIdentifier, params object[] args)
         {

@@ -18,8 +18,6 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
         private readonly SettingsStore _settingsStore;
         private readonly SessionManagerWindowRegistrar _sessionWindowRegistrar;
         private readonly TaskbarIcon _taskbarIcon;
-        //TODO Global lookup
-        private const string SessionManagerActionId = "KaVE.VsFeedbackGenerator.SessionManager";
 
         public UploadReminder(SettingsStore settingsStore, NotifyTrayIcon notify, SessionManagerWindowRegistrar sessionWindowRegistrar)
         {
@@ -55,12 +53,12 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             //Hard popup
             if (lastUpdate >= DateTime.Today.AddMonths(1))
             {
-                _taskbarIcon.ShowCustomBalloon(new BalloonNotification(_sessionWindowRegistrar, SessionManagerActionId, false), PopupAnimation.Slide, null); 
+                _taskbarIcon.ShowCustomBalloon(new BalloonNotification(_sessionWindowRegistrar, SessionManagerWindowActionHandler.ActionId, false), PopupAnimation.Slide, null); 
             }
             //Soft popup, because date is older than a week
             else if (lastUpdate >= DateTime.Today.AddDays(7))
             {
-                _taskbarIcon.ShowCustomBalloon(new BalloonNotification(_sessionWindowRegistrar, SessionManagerActionId, true), PopupAnimation.Slide, null); 
+                _taskbarIcon.ShowCustomBalloon(new BalloonNotification(_sessionWindowRegistrar, SessionManagerWindowActionHandler.ActionId, true), PopupAnimation.Slide, null); 
             }  
         }
     }

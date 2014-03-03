@@ -196,6 +196,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
 
         #endregion
 
+        // TODO remove these regions...
         #region DeleteSessionsCommand implementation
 
         public DelegateCommand DeleteSessionsCommand
