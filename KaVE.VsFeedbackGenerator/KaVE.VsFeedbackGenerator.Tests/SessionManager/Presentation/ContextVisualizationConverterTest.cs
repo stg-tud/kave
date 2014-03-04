@@ -1,14 +1,17 @@
-﻿using KaVE.Model.Events.CompletionEvent;
+﻿using System.Collections.Generic;
+using System.Linq;
+using KaVE.Model.Events.CompletionEvent;
 using KaVE.Model.Names.CSharp;
 using KaVE.VsFeedbackGenerator.SessionManager.Presentation;
 using NUnit.Framework;
-using Fix = KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation.ContextVisualizationConverterFixtures;
 
 namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
 {
     [TestFixture]
     internal class ContextVisualizationConverterTest
     {
+        private const string CompletionMarker = "<Italic Foreground=\"Blue\">@Completion</Italic>";
+
         [Test]
         public void ShouldHandleNoContext()
         {
@@ -17,6 +20,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
         }
 
         [Test]
+        // TODO review: is it better to return a message that refers to an incomplete context?
         public void ShouldHandleEmptyContextLikeNoContext()
         {
             var context = new Context();
@@ -26,11 +30,12 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
         }
 
         [Test]
+        // TODO review: is it better to return a message that refers to an incomplete context?
         public void ShouldHandleContextWithoutHierarchyLikeNoContext()
         {
             var context = new Context
             {
-                EnclosingMethodDeclaration = new MethodDeclaration(MethodName.Get(Fix.GetMethod))
+                EnclosingMethodDeclaration = Create("N.Return", "N.Class", "Method", "N.Argument")
             };
 
             var xaml = context.ToXaml();
@@ -40,11 +45,11 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
         [Test]
         public void ShouldHandleMinimalContext()
         {
-            var context = new Context {EnclosingClassHierarchy = new TypeHierarchy(Fix.CreateType())};
+            var context = new Context {EnclosingClassHierarchy = CreateTypeHierarchy("N.Class")};
 
-            var expected = Fix.Bold("class") + @" N.Class
+            var expected = Bold("class") + @" N.Class
 {
-" + Fix.Indent + Fix.CompletionMarker + @"
+  " + CompletionMarker + @"
 }";
 
             var actual = context.ToXaml();
@@ -56,15 +61,15 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
         {
             var context = new Context
             {
-                EnclosingClassHierarchy = new TypeHierarchy(Fix.CreateType())
+                EnclosingClassHierarchy = new TypeHierarchy(CreateType("N.Class"))
                 {
-                    Extends = new TypeHierarchy(Fix.CreateType("Super"))
+                    Extends = CreateTypeHierarchy("N.Super")
                 }
             };
 
-            var expected = Fix.Bold("class") + @" N.Class" + Fix.Bold(" : ") + @"N.Super
+            var expected = Bold("class") + " N.Class" + Bold(" : ") + @"N.Super
 {
-" + Fix.Indent + Fix.CompletionMarker + @"
+  " + CompletionMarker + @"
 }";
 
             var actual = context.ToXaml();
@@ -74,12 +79,20 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
         [Test]
         public void ShouldHandleContextWithImplements()
         {
-            var context = new Context {EnclosingClassHierarchy = new TypeHierarchy(Fix.CreateType())};
-            context.EnclosingClassHierarchy.Implements.Add(new TypeHierarchy(Fix.CreateType("I")));
+            var context = new Context
+            {
+                EnclosingClassHierarchy = new TypeHierarchy(CreateType("N.Class"))
+                {
+                    Implements = new HashSet<ITypeHierarchy>
+                    {
+                        CreateTypeHierarchy("N.I")
+                    }
+                }
+            };
 
-            var expected = Fix.Bold("class") + @" N.Class" + Fix.Bold(" : ") + @"N.I
+            var expected = Bold("class") + " N.Class" + Bold(" : ") + @"N.I
 {
-" + Fix.Indent + Fix.CompletionMarker + @"
+  " + CompletionMarker + @"
 }";
 
             var actual = context.ToXaml();
@@ -91,16 +104,19 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
         {
             var context = new Context
             {
-                EnclosingClassHierarchy = new TypeHierarchy(Fix.CreateType())
+                EnclosingClassHierarchy = new TypeHierarchy(CreateType("N.Class"))
                 {
-                    Extends = new TypeHierarchy(Fix.CreateType("Super"))
+                    Extends = CreateTypeHierarchy("N.Super"),
+                    Implements = new HashSet<ITypeHierarchy>
+                    {
+                        CreateTypeHierarchy("N.I")
+                    }
                 }
             };
-            context.EnclosingClassHierarchy.Implements.Add(new TypeHierarchy(Fix.CreateType("I")));
 
-            var expected = Fix.Bold("class") + @" N.Class" + Fix.Bold(" : ") + @"N.Super, N.I
+            var expected = Bold("class") + " N.Class" + Bold(" : ") + @"N.Super, N.I
 {
-" + Fix.Indent + Fix.CompletionMarker + @"
+  " + CompletionMarker + @"
 }";
 
             var actual = context.ToXaml();
@@ -112,17 +128,20 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
         {
             var context = new Context
             {
-                EnclosingClassHierarchy = new TypeHierarchy(Fix.CreateType())
+                EnclosingClassHierarchy = new TypeHierarchy(CreateType("N.Class"))
                 {
-                    Extends = new TypeHierarchy(Fix.CreateType("Super"))
+                    Extends = CreateTypeHierarchy("N.Super"),
+                    Implements = new HashSet<ITypeHierarchy>
+                    {
+                        CreateTypeHierarchy("N.I1"),
+                        CreateTypeHierarchy("N.I2")
+                    }
                 }
             };
-            context.EnclosingClassHierarchy.Implements.Add(new TypeHierarchy(Fix.CreateType("I1")));
-            context.EnclosingClassHierarchy.Implements.Add(new TypeHierarchy(Fix.CreateType("I2")));
 
-            var expected = Fix.Bold("class") + @" N.Class" + Fix.Bold(" : ") + @"N.Super, N.I1, N.I2
+            var expected = Bold("class") + " N.Class" + Bold(" : ") + @"N.Super, N.I1, N.I2
 {
-" + Fix.Indent + Fix.CompletionMarker + @"
+  " + CompletionMarker + @"
 }";
 
             var actual = context.ToXaml();
@@ -130,20 +149,20 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
         }
 
         [Test]
-        public void ShouldHandleContextWithMethod()
+        public void ShouldHandleContextWithMethodAndNoParameters()
         {
             var context = new Context
             {
-                EnclosingClassHierarchy = new TypeHierarchy(Fix.CreateType()),
-                EnclosingMethodDeclaration = new MethodDeclaration(MethodName.Get(Fix.GetMethod))
+                EnclosingClassHierarchy = CreateTypeHierarchy("N.Class"),
+                EnclosingMethodDeclaration = Create("N.Return", "N.Class", "Method")
             };
 
-            var expected = Fix.Bold("class") + @" N.Class
+            var expected = Bold("class") + @" N.Class
 {
-" + Fix.Indent + @"N.Return Method(N.Argument argument)
-" + Fix.Indent + @"{
-" + Fix.Indent + Fix.Indent + Fix.CompletionMarker + @"
-" + Fix.Indent + @"}
+  N.Return Method()
+  {
+    " + CompletionMarker + @"
+  }
 }";
 
             var actual = context.ToXaml();
@@ -151,23 +170,20 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
         }
 
         [Test]
-        public void ShouldHandleContextWithExtendsAndMethod()
+        public void ShouldHandleContextWithMethodAndSingleParameter()
         {
             var context = new Context
             {
-                EnclosingClassHierarchy = new TypeHierarchy(Fix.CreateType())
-                {
-                    Extends = new TypeHierarchy(Fix.CreateType("Super"))
-                },
-                EnclosingMethodDeclaration = new MethodDeclaration(MethodName.Get(Fix.GetMethod))
+                EnclosingClassHierarchy = CreateTypeHierarchy("N.Class"),
+                EnclosingMethodDeclaration = Create("N.Return", "N.Class", "Method", "N.Argument")
             };
 
-            var expected = Fix.Bold("class") + @" N.Class" + Fix.Bold(" : ") + @"N.Super
+            var expected = Bold("class") + @" N.Class
 {
-" + Fix.Indent + @"N.Return Method(N.Argument argument)
-" + Fix.Indent + @"{
-" + Fix.Indent + Fix.Indent + Fix.CompletionMarker + @"
-" + Fix.Indent + @"}
+  N.Return Method(N.Argument arg0)
+  {
+    " + CompletionMarker + @"
+  }
 }";
 
             var actual = context.ToXaml();
@@ -175,76 +191,55 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
         }
 
         [Test]
-        public void ShouldHandleContextWithImplementsAndMethod()
+        public void ShouldHandleContextWithMethodAndMultipleMethodParameters()
         {
             var context = new Context
             {
-                EnclosingClassHierarchy = new TypeHierarchy(Fix.CreateType()),
-                EnclosingMethodDeclaration = new MethodDeclaration(MethodName.Get(Fix.GetMethod))
+                EnclosingClassHierarchy = CreateTypeHierarchy("N.Class"),
+                EnclosingMethodDeclaration = Create("N.Return", "N.Class", "Method", "N.Arg0", "N.Arg1", "N.Arg2")
             };
-            context.EnclosingClassHierarchy.Implements.Add(new TypeHierarchy(Fix.CreateType("I")));
 
-            var expected = Fix.Bold("class") + @" N.Class" + Fix.Bold(" : ") + @"N.I
+            var expected = Bold("class") + @" N.Class
 {
-" + Fix.Indent + @"N.Return Method(N.Argument argument)
-" + Fix.Indent + @"{
-" + Fix.Indent + Fix.Indent + Fix.CompletionMarker + @"
-" + Fix.Indent + @"}
+  N.Return Method(N.Arg0 arg0, N.Arg1 arg1, N.Arg2 arg2)
+  {
+    " + CompletionMarker + @"
+  }
 }";
 
             var actual = context.ToXaml();
             Assert.AreEqual(expected, actual);
         }
 
-        [Test]
-        public void ShouldHandleContextWithExtendsAndImplementsAndMethod()
+        private static MethodDeclaration Create(string returnTypeName,
+            string className,
+            string methodName,
+            params string[] argTypes)
         {
-            var context = new Context
-            {
-                EnclosingClassHierarchy = new TypeHierarchy(Fix.CreateType())
-                {
-                    Extends = new TypeHierarchy(Fix.CreateType("Super"))
-                },
-                EnclosingMethodDeclaration = new MethodDeclaration(MethodName.Get(Fix.GetMethod))
-            };
-            context.EnclosingClassHierarchy.Implements.Add(new TypeHierarchy(Fix.CreateType("I")));
-
-            var expected = Fix.Bold("class") + @" N.Class" + Fix.Bold(" : ") + @"N.Super, N.I
-{
-" + Fix.Indent + @"N.Return Method(N.Argument argument)
-" + Fix.Indent + @"{
-" + Fix.Indent + Fix.Indent + Fix.CompletionMarker + @"
-" + Fix.Indent + @"}
-}";
-
-            var actual = context.ToXaml();
-            Assert.AreEqual(expected, actual);
+            var argNo = 0;
+            var args = string.Join(", ", argTypes.Select(t => "[" + CreateType(t) + "] arg" + argNo++));
+            var methodSignature = string.Format(
+                "[{0}] [{1}].{2}({3})",
+                CreateType(returnTypeName),
+                CreateType(className),
+                methodName,
+                args);
+            return new MethodDeclaration(MethodName.Get(methodSignature));
         }
 
-        [Test]
-        public void ShouldHandleContextWithExtendsAndMultipleImplementsAndMethod()
+        private static TypeHierarchy CreateTypeHierarchy(string typename)
         {
-            var context = new Context
-            {
-                EnclosingClassHierarchy = new TypeHierarchy(Fix.CreateType())
-                {
-                    Extends = new TypeHierarchy(Fix.CreateType("Super"))
-                },
-                EnclosingMethodDeclaration = new MethodDeclaration(MethodName.Get(Fix.GetMethod))
-            };
-            context.EnclosingClassHierarchy.Implements.Add(new TypeHierarchy(Fix.CreateType("I1")));
-            context.EnclosingClassHierarchy.Implements.Add(new TypeHierarchy(Fix.CreateType("I2")));
+            return new TypeHierarchy(CreateType(typename));
+        }
 
-            var expected = Fix.Bold("class") + @" N.Class" + Fix.Bold(" : ") + @"N.Super, N.I1, N.I2
-{
-" + Fix.Indent + @"N.Return Method(N.Argument argument)
-" + Fix.Indent + @"{
-" + Fix.Indent + Fix.Indent + Fix.CompletionMarker + @"
-" + Fix.Indent + @"}
-}";
+        private static string CreateType(string type)
+        {
+            return string.Format("{0}, Assembly, Version=1.0.0.0", type);
+        }
 
-            var actual = context.ToXaml();
-            Assert.AreEqual(expected, actual);
+        private static string Bold(string el)
+        {
+            return "<Bold>" + el + "</Bold>";
         }
     }
 }

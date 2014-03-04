@@ -94,7 +94,6 @@
     <Compile Include="TestFactories\LookupItemsMockUtils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SessionManager\EventViewTest.cs" />
-    <Compile Include="SessionManager\Presentation\ContextVisualizationConverterFixtures.cs" />
     <Compile Include="SessionManager\Presentation\ContextVisualizationConverterTest.cs" />
     <Compile Include="TestFactories\TestNameFactory.cs" />
     <Compile Include="Utils\DateTimeTest.cs" />
