@@ -11,7 +11,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
 {
     internal static class ContextVisualizationConverter
     {
-        internal const string LineBreak = "<LineBreak />";
+        internal const string LineBreak = "\r\n";
         internal const string Indent = "  ";
         internal const string Space = " ";
         internal const string CurlyBracketOpen = "{";

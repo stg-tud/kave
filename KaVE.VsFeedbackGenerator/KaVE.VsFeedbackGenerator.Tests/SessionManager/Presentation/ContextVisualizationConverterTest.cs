@@ -28,7 +28,10 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
         [Test]
         public void ShouldHandleContextWithoutHierarchyLikeNoContext()
         {
-            var context = new Context {EnclosingMethodDeclaration = new MethodDeclaration(MethodName.Get(Fix.GetMethod))};
+            var context = new Context
+            {
+                EnclosingMethodDeclaration = new MethodDeclaration(MethodName.Get(Fix.GetMethod))
+            };
 
             var xaml = context.ToXaml();
             Assert.IsNull(xaml);
@@ -39,11 +42,10 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
         {
             var context = new Context {EnclosingClassHierarchy = new TypeHierarchy(Fix.CreateType())};
 
-            var expected = string.Concat(
-                Fix.Line(Fix.Class, " Namespace.Class"),
-                Fix.Line("{"),
-                Fix.Line(Fix.Indent, Fix.CompletionMarker),
-                "}");
+            var expected = Fix.Bold("class") + @" N.Class
+{
+" + Fix.Indent + Fix.CompletionMarker + @"
+}";
 
             var actual = context.ToXaml();
             Assert.AreEqual(expected, actual);
@@ -60,11 +62,10 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                 }
             };
 
-            var expected = string.Concat(
-                Fix.Line(Fix.Class, " Namespace.Class", Fix.Inherits, "Namespace.Super"),
-                Fix.Line("{"),
-                Fix.Line(Fix.Indent, Fix.CompletionMarker),
-                "}");
+            var expected = Fix.Bold("class") + @" N.Class" + Fix.Bold(" : ") + @"N.Super
+{
+" + Fix.Indent + Fix.CompletionMarker + @"
+}";
 
             var actual = context.ToXaml();
             Assert.AreEqual(expected, actual);
@@ -76,11 +77,10 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
             var context = new Context {EnclosingClassHierarchy = new TypeHierarchy(Fix.CreateType())};
             context.EnclosingClassHierarchy.Implements.Add(new TypeHierarchy(Fix.CreateType("I")));
 
-            var expected = string.Concat(
-                Fix.Line(Fix.Class, " Namespace.Class", Fix.Inherits, "Namespace.I"),
-                Fix.Line("{"),
-                Fix.Line(Fix.Indent, Fix.CompletionMarker),
-                "}");
+            var expected = Fix.Bold("class") + @" N.Class" + Fix.Bold(" : ") + @"N.I
+{
+" + Fix.Indent + Fix.CompletionMarker + @"
+}";
 
             var actual = context.ToXaml();
             Assert.AreEqual(expected, actual);
@@ -98,11 +98,10 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
             };
             context.EnclosingClassHierarchy.Implements.Add(new TypeHierarchy(Fix.CreateType("I")));
 
-            var expected = string.Concat(
-                Fix.Line(Fix.Class, " Namespace.Class", Fix.Inherits, "Namespace.Super, Namespace.I"),
-                Fix.Line("{"),
-                Fix.Line(Fix.Indent, Fix.CompletionMarker),
-                "}");
+            var expected = Fix.Bold("class") + @" N.Class" + Fix.Bold(" : ") + @"N.Super, N.I
+{
+" + Fix.Indent + Fix.CompletionMarker + @"
+}";
 
             var actual = context.ToXaml();
             Assert.AreEqual(expected, actual);
@@ -121,11 +120,10 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
             context.EnclosingClassHierarchy.Implements.Add(new TypeHierarchy(Fix.CreateType("I1")));
             context.EnclosingClassHierarchy.Implements.Add(new TypeHierarchy(Fix.CreateType("I2")));
 
-            var expected = string.Concat(
-                Fix.Line(Fix.Class, " Namespace.Class", Fix.Inherits, "Namespace.Super, Namespace.I1, Namespace.I2"),
-                Fix.Line("{"),
-                Fix.Line(Fix.Indent, Fix.CompletionMarker),
-                "}");
+            var expected = Fix.Bold("class") + @" N.Class" + Fix.Bold(" : ") + @"N.Super, N.I1, N.I2
+{
+" + Fix.Indent + Fix.CompletionMarker + @"
+}";
 
             var actual = context.ToXaml();
             Assert.AreEqual(expected, actual);
@@ -140,14 +138,13 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                 EnclosingMethodDeclaration = new MethodDeclaration(MethodName.Get(Fix.GetMethod))
             };
 
-            var expected = string.Concat(
-                Fix.Line(Fix.Class, " Namespace.Class"),
-                Fix.Line("{"),
-                Fix.Line(Fix.Indent, "Namespace.Return Method(Namespace.Argument argument)"),
-                Fix.Line(Fix.Indent, "{"),
-                Fix.Line(Fix.Indent, Fix.Indent, Fix.CompletionMarker),
-                Fix.Line(Fix.Indent, "}"),
-                "}");
+            var expected = Fix.Bold("class") + @" N.Class
+{
+" + Fix.Indent + @"N.Return Method(N.Argument argument)
+" + Fix.Indent + @"{
+" + Fix.Indent + Fix.Indent + Fix.CompletionMarker + @"
+" + Fix.Indent + @"}
+}";
 
             var actual = context.ToXaml();
             Assert.AreEqual(expected, actual);
@@ -165,14 +162,13 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                 EnclosingMethodDeclaration = new MethodDeclaration(MethodName.Get(Fix.GetMethod))
             };
 
-            var expected = string.Concat(
-                Fix.Line(Fix.Class, " Namespace.Class", Fix.Inherits, "Namespace.Super"),
-                Fix.Line("{"),
-                Fix.Line(Fix.Indent, "Namespace.Return Method(Namespace.Argument argument)"),
-                Fix.Line(Fix.Indent, "{"),
-                Fix.Line(Fix.Indent, Fix.Indent, Fix.CompletionMarker),
-                Fix.Line(Fix.Indent, "}"),
-                "}");
+            var expected = Fix.Bold("class") + @" N.Class" + Fix.Bold(" : ") + @"N.Super
+{
+" + Fix.Indent + @"N.Return Method(N.Argument argument)
+" + Fix.Indent + @"{
+" + Fix.Indent + Fix.Indent + Fix.CompletionMarker + @"
+" + Fix.Indent + @"}
+}";
 
             var actual = context.ToXaml();
             Assert.AreEqual(expected, actual);
@@ -188,14 +184,13 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
             };
             context.EnclosingClassHierarchy.Implements.Add(new TypeHierarchy(Fix.CreateType("I")));
 
-            var expected = string.Concat(
-                Fix.Line(Fix.Class, " Namespace.Class", Fix.Inherits, "Namespace.I"),
-                Fix.Line("{"),
-                Fix.Line(Fix.Indent, "Namespace.Return Method(Namespace.Argument argument)"),
-                Fix.Line(Fix.Indent, "{"),
-                Fix.Line(Fix.Indent, Fix.Indent, Fix.CompletionMarker),
-                Fix.Line(Fix.Indent, "}"),
-                "}");
+            var expected = Fix.Bold("class") + @" N.Class" + Fix.Bold(" : ") + @"N.I
+{
+" + Fix.Indent + @"N.Return Method(N.Argument argument)
+" + Fix.Indent + @"{
+" + Fix.Indent + Fix.Indent + Fix.CompletionMarker + @"
+" + Fix.Indent + @"}
+}";
 
             var actual = context.ToXaml();
             Assert.AreEqual(expected, actual);
@@ -214,14 +209,13 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
             };
             context.EnclosingClassHierarchy.Implements.Add(new TypeHierarchy(Fix.CreateType("I")));
 
-            var expected = string.Concat(
-                Fix.Line(Fix.Class, " Namespace.Class", Fix.Inherits, "Namespace.Super, Namespace.I"),
-                Fix.Line("{"),
-                Fix.Line(Fix.Indent, "Namespace.Return Method(Namespace.Argument argument)"),
-                Fix.Line(Fix.Indent, "{"),
-                Fix.Line(Fix.Indent, Fix.Indent, Fix.CompletionMarker),
-                Fix.Line(Fix.Indent, "}"),
-                "}");
+            var expected = Fix.Bold("class") + @" N.Class" + Fix.Bold(" : ") + @"N.Super, N.I
+{
+" + Fix.Indent + @"N.Return Method(N.Argument argument)
+" + Fix.Indent + @"{
+" + Fix.Indent + Fix.Indent + Fix.CompletionMarker + @"
+" + Fix.Indent + @"}
+}";
 
             var actual = context.ToXaml();
             Assert.AreEqual(expected, actual);
@@ -241,14 +235,13 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
             context.EnclosingClassHierarchy.Implements.Add(new TypeHierarchy(Fix.CreateType("I1")));
             context.EnclosingClassHierarchy.Implements.Add(new TypeHierarchy(Fix.CreateType("I2")));
 
-            var expected = string.Concat(
-                Fix.Line(Fix.Class, " Namespace.Class", Fix.Inherits, "Namespace.Super, Namespace.I1, Namespace.I2"),
-                Fix.Line("{"),
-                Fix.Line(Fix.Indent, "Namespace.Return Method(Namespace.Argument argument)"),
-                Fix.Line(Fix.Indent, "{"),
-                Fix.Line(Fix.Indent, Fix.Indent, Fix.CompletionMarker),
-                Fix.Line(Fix.Indent, "}"),
-                "}");
+            var expected = Fix.Bold("class") + @" N.Class" + Fix.Bold(" : ") + @"N.Super, N.I1, N.I2
+{
+" + Fix.Indent + @"N.Return Method(N.Argument argument)
+" + Fix.Indent + @"{
+" + Fix.Indent + Fix.Indent + Fix.CompletionMarker + @"
+" + Fix.Indent + @"}
+}";
 
             var actual = context.ToXaml();
             Assert.AreEqual(expected, actual);

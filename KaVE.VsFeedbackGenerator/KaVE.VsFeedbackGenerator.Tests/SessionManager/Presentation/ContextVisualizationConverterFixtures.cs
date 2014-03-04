@@ -13,16 +13,21 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
         internal const string Inherits = "<Bold> : </Bold>";
 
         internal const string GetMethod =
-            "[Namespace.Return, Assembly, Version=1.0.0.0] [Namespace.Class, Assembly, Version=1.0.0.0].Method([Namespace.Argument, Assembly, Version=1.0.0.0] argument)";
+            "[N.Return, Assembly, Version=1.0.0.0] [N.Class, Assembly, Version=1.0.0.0].Method([N.Argument, Assembly, Version=1.0.0.0] argument)";
 
         internal static string CreateType(string type = "Class")
         {
-            return string.Format("Namespace.{0}, Assembly, Version=1.0.0.0", type);
+            return string.Format("N.{0}, Assembly, Version=1.0.0.0", type);
         }
 
         internal static string Line(params string[] elems)
         {
             return elems.Aggregate(new StringBuilder(), (builder, s) => builder.Append(s)).Append(LineBreak).ToString();
+        }
+
+        internal static string Bold(string el)
+        {
+            return "<Bold>" + el + "</Bold>";
         }
     }
 }
