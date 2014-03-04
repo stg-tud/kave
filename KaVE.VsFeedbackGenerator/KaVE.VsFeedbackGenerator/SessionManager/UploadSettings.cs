@@ -1,11 +1,24 @@
-﻿using JetBrains.Application.Settings;
+﻿using System;
+using System.Globalization;
+using JetBrains.Application.Settings;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager
 {
     [SettingsKey(typeof(System.Reflection.Missing), "KaVE Upload Settings")]
     public class UploadSettings
     {
-        [SettingsEntry("2012-02-13", "Upload Time")]
+        [SettingsEntry("", "Notification Time")]
+        public string LastNotificationTime { get; set; }
+
+        [SettingsEntry("", "Upload Time")]
         public string LastUploadTime { get; set; }
+
+        public DateTime LastNotificationTimeAsDate
+        {
+            get
+            {
+                return DateTime.Parse(LastNotificationTime, CultureInfo.InvariantCulture);
+            }
+        }
     }
 }

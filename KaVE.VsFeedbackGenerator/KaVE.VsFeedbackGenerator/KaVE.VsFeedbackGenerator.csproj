@@ -174,7 +174,6 @@
     <Compile Include="Utils\Names\ReSharperTypeNameFactory.cs" />
     <Compile Include="Utils\Names\VsComponentNameFactory.cs" />
     <Compile Include="Utils\ObjectToVisibilityConverter.cs" />
-    <Compile Include="Utils\ScheduleTimer.cs" />
     <Compile Include="Utils\TypeNameExtensions.cs" />
     <Compile Include="VsIntegration\IDESession.cs" />
     <Compile Include="VsIntegration\IIDESession.cs" />
@@ -244,9 +243,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\Bulb.ico">
+    <Content Include="Resources\Bulb.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

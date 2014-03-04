@@ -21,7 +21,7 @@ namespace KaVE.Utils
         /// </summary>
         /// <param name="actionToSchedule">The action to schedule.</param>
         /// <param name="millisToDelay">The number of milliseconds to delay exection.</param>
-        public ScheduledAction(Action actionToSchedule, int millisToDelay)
+        public ScheduledAction(Action actionToSchedule, long millisToDelay)
         {
             _scheduledAction = (s, evtArgs) =>
             {

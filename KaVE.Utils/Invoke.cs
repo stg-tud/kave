@@ -12,9 +12,15 @@ namespace KaVE.Utils
         /// <param name="action">The action to run delayed.</param>
         /// <param name="delayInMillis">The delay in milliseconds.</param>
         /// <returns>The timer that was initiated.</returns>
-        public static ScheduledAction Later(Action action, int delayInMillis)
+        public static ScheduledAction Later(Action action, long delayInMillis)
         {
             return new ScheduledAction(action, delayInMillis);
+        }
+
+        public static ScheduledAction Later(Action action, System.DateTime dateToExecute)
+        {
+            var date = dateToExecute - System.DateTime.Now;
+            return new ScheduledAction(action, Math.Max((long)date.TotalMilliseconds, 0));
         }
 
         /// <summary>

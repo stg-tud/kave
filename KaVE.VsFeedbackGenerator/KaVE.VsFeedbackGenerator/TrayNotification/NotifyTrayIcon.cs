@@ -12,7 +12,8 @@ namespace KaVE.VsFeedbackGenerator.TrayNotification
 
         public NotifyTrayIcon()
         {
-            _notifyIcon = new TaskbarIcon { Icon = Resources.Bulb, Visibility = Visibility.Hidden};
+            _notifyIcon = new TaskbarIcon {Icon = Resources.Bulb, Visibility = Visibility.Hidden};
+            //Invoke.OnSTA(() => _notifyIcon = new TaskbarIcon {Icon = Resources.Bulb, Visibility = Visibility.Hidden});
         }
 
         public TaskbarIcon NotifyIcon

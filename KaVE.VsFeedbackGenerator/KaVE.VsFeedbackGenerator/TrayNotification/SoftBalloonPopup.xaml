@@ -37,13 +37,13 @@
             Margin="0,0,5,5">
             <Border.Background>
                 <LinearGradientBrush
-                    EndPoint="0.5,1"
-                    StartPoint="0.5,0">
+                    EndPoint="0.5,0"
+                    StartPoint="0.5,1">
                     <GradientStop
-                        Color="#FFEEEEEE"
+                        Color="#FFF9E7"
                         Offset="1" />
                     <GradientStop
-                        Color="#F7FE2E"
+                        Color="#FFE8A6"
                         Offset="0" />
                 </LinearGradientBrush>
             </Border.Background>
@@ -51,13 +51,25 @@
                 <DropShadowEffect />
             </Border.Effect>
         </Border>
+
+        <Image HorizontalAlignment="Right"
+               Margin="0,10,10,0"
+               VerticalAlignment="Top"
+               Width="16"
+               Height="16"
+               Source="/KaVE.VsFeedbackGenerator;Component/Resources/delete.png"
+               Stretch="Fill"
+               Opacity="1.0"
+               ToolTip="Close Balloon"
+               x:Name="imgClose"
+               MouseDown="ImgClose_MouseDown" />
         <TextBlock
             Margin="10,10,15,0"
             VerticalAlignment="Top"
             FontSize="14"
             FontWeight="Bold"
             TextWrapping="Wrap"
-            HorizontalAlignment="Center">
+            HorizontalAlignment="Left">
             <Run
                 Text="KaVE Feedback Upload Reminder"
                 Language="de-ch" />
@@ -70,6 +82,6 @@
             <Run Text="Bitte laden Sie ihr aktuelles Feedback hoch:" />
             <Button Name="Upload_Button" Click="Upload_Button_OnClick"> Hochladen</Button>
             <Button Name="View_Feedback_Button" Click="View_Feedback_Button_OnClick"> Feedback betrachten</Button>
-        </TextBlock> 
+        </TextBlock>
     </Grid>
 </UserControl>
