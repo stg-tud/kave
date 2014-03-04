@@ -16,7 +16,7 @@ namespace KaVE.Model.Events.CompletionEvent
         public Context()
         {
             CalledMethods = new HashSet<IMethodName>();
-            TypeShapeMethods = new HashSet<IMethodName>();
+            TypeShapeMethods = new HashSet<MethodDeclaration>();
         }
 
         /// <summary>
@@ -43,10 +43,10 @@ namespace KaVE.Model.Events.CompletionEvent
         public ISet<IMethodName> CalledMethods { get; set; }
 
         /// <summary>
-        /// All Methods that are
+        /// All Methods that are overridden in the class under edit (including information about the first and super declaration).
         /// </summary>
         [NotNull]
-        public ISet<IMethodName> TypeShapeMethods { get; private set; }
+        public ISet<MethodDeclaration> TypeShapeMethods { get; private set; }
 
         protected bool Equals(Context other)
         {

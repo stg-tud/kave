@@ -16,37 +16,105 @@ namespace KaVE.VsFeedbackGenerator.Analysis
 {
     internal class ContextAnalysis
     {
+        private ITreeNode _nodeInFile;
+        private Context _context;
+
+        private IMethodDeclaration _methodDeclaration;
+        private ITypeDeclaration _typeDeclaration;
+
+        // TODO review: this class *NEEDS* to be refactored!
+        // TODO discuss is lock necessary?
+        //lock (GetType()) {}
         public Context Analyze(CSharpCodeCompletionContext rsContext)
         {
-            var context = new Context();
+            _nodeInFile = rsContext.NodeInFile;
+            _context = new Context();
 
-            var methodDeclaration = FindEnclosing<IMethodDeclaration>(rsContext.NodeInFile);
-            var methodName = GetName(methodDeclaration);
-            context.EnclosingMethodDeclaration = new MethodDeclaration(methodName);
+            FindEnclMethodDeclaration();
+            FindEnclTypeDeclaration();
 
-            var typeDeclaration = methodDeclaration.GetContainingTypeDeclaration();
-            context.EnclosingMethodDeclaration.Super = FindMethodInSuperTypes(
-                methodDeclaration.DeclaredElement,
-                typeDeclaration.DeclaredElement);
-            context.EnclosingMethodDeclaration.First = FindFirstMethodInSuperTypes(
-                methodDeclaration.DeclaredElement,
-                typeDeclaration.DeclaredElement);
 
-            if (context.EnclosingMethodDeclaration.First != null)
+            if (_methodDeclaration != null)
             {
-                if (context.EnclosingMethodDeclaration.First.Equals(context.EnclosingMethodDeclaration.Super))
-                {
-                    context.EnclosingMethodDeclaration.First = null;
-                }
+                var methodName = GetName(_methodDeclaration);
+                _context.EnclosingMethodDeclaration = new MethodDeclaration(methodName);
+                CollectDeclarationInfo(
+                    _context.EnclosingMethodDeclaration,
+                    _methodDeclaration.DeclaredElement,
+                    _typeDeclaration.DeclaredElement);
             }
 
-            context.EnclosingClassHierarchy = CreateTypeHierarchy(
-                typeDeclaration.DeclaredElement,
-                EmptySubstitution.INSTANCE);
+            if (_typeDeclaration != null)
+            {
+                foreach (var m in FindImplementedMethodsInType())
+                {
+                    var name = m.GetName() as IMethodName;
+                    if (name != null)
+                    {
+                        var declaration = new MethodDeclaration(name);
+                        CollectDeclarationInfo(declaration, m, _typeDeclaration.DeclaredElement);
+                        _context.TypeShapeMethods.Add(declaration);
+                    }
+                }
 
-            context.CalledMethods = FindAllCalledMethods(methodDeclaration, context.EnclosingClassHierarchy.Element);
+                _context.EnclosingClassHierarchy = CreateTypeHierarchy(
+                    _typeDeclaration.DeclaredElement,
+                    EmptySubstitution.INSTANCE);
+            }
 
-            return context;
+            if (_methodDeclaration != null && _typeDeclaration != null)
+            {
+                _context.CalledMethods = FindAllCalledMethods(
+                    _methodDeclaration,
+                    _context.EnclosingClassHierarchy.Element);
+            }
+            return _context;
+        }
+
+        private IEnumerable<IMethod> FindImplementedMethodsInType()
+        {
+            if (_typeDeclaration != null && _typeDeclaration.DeclaredElement != null)
+            {
+                return _typeDeclaration.DeclaredElement.Methods;
+            }
+            return new HashSet<IMethod>();
+        }
+
+        private void FindEnclMethodDeclaration()
+        {
+            _methodDeclaration = FindEnclosing<IMethodDeclaration>(_nodeInFile);
+        }
+
+        private void FindEnclTypeDeclaration()
+        {
+            if (_methodDeclaration != null)
+            {
+                _typeDeclaration = _methodDeclaration.GetContainingTypeDeclaration();
+            }
+            else
+            {
+                _typeDeclaration = FindEnclosing<ITypeDeclaration>(_nodeInFile);
+            }
+        }
+
+        private void CollectDeclarationInfo(MethodDeclaration decl,
+            IMethod declaredElement,
+            ITypeElement typeElement)
+        {
+            decl.Super = FindMethodInSuperTypes(
+                declaredElement,
+                typeElement);
+            decl.First = FindFirstMethodInSuperTypes(
+                declaredElement,
+                typeElement);
+
+            if (decl.First != null)
+            {
+                if (decl.First.Equals(decl.Super))
+                {
+                    decl.First = null;
+                }
+            }
         }
 
         private IMethodName FindFirstMethodInSuperTypes(IMethod enclosingMethod,
@@ -60,10 +128,13 @@ namespace KaVE.VsFeedbackGenerator.Analysis
                 var superTypeElement = superType.GetTypeElement();
                 Asserts.NotNull(superTypeElement);
 
-                var superName = FindFirstMethodInSuperTypes(enclosingMethod, superType.GetTypeElement());
-                if (superName != null)
+                if (superType.IsInterfaceType() || enclosingMethod.IsOverride)
                 {
-                    return superName;
+                    var superName = FindFirstMethodInSuperTypes(enclosingMethod, superType.GetTypeElement());
+                    if (superName != null)
+                    {
+                        return superName;
+                    }
                 }
             }
 
@@ -87,6 +158,11 @@ namespace KaVE.VsFeedbackGenerator.Analysis
         private IMethodName FindMethodInSuperTypes(IMethod enclosingMethod,
             ITypeElement typeDeclaration)
         {
+            if (!enclosingMethod.IsOverride)
+            {
+                return null;
+            }
+
             var encName = GetSimpleName(enclosingMethod);
 
             foreach (var superType in typeDeclaration.GetSuperTypes())
