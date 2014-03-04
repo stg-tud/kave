@@ -27,7 +27,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             InitLastUploadTime();
             RegisterCallback();
 
-           // _taskbarIcon.ShowCustomBalloon(new BalloonNotification(_sessionWindowRegistrar, SessionManagerWindowActionHandler.ActionId, false), PopupAnimation.Slide, null);
+           //_taskbarIcon.ShowCustomBalloon(new BalloonNotification(_sessionWindowRegistrar, SessionManagerWindowActionHandler.ActionId, false), PopupAnimation.Slide, null);
         }
 
         private void RegisterCallback()

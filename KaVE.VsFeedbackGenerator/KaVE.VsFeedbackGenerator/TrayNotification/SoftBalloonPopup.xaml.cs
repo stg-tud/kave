@@ -1,17 +1,16 @@
 ﻿using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Animation;
-using JetBrains.Threading;
-using KaVE.Utils;
+using Hardcodet.Wpf.TaskbarNotification;
 using KaVE.VsFeedbackGenerator.SessionManager.Presentation;
+using KaVE.VsFeedbackGenerator.Utils;
 
 namespace KaVE.VsFeedbackGenerator.TrayNotification
 {
     /// <summary>
     /// Interaction logic for BalloonNotification.xaml
     /// </summary>
-    public partial class BalloonNotification : UserControl
+    public partial class BalloonNotification
     {
         private readonly SessionManagerWindowRegistrar _window;
         private readonly string _actionId;
@@ -37,22 +36,40 @@ namespace KaVE.VsFeedbackGenerator.TrayNotification
             }
         }
 
-        private void Upload_Button_OnClick(object sender, RoutedEventArgs e)
+        private void Wizard_Button_OnClick(object sender, RoutedEventArgs e)
         {
-            throw new System.NotImplementedException();
-        }
-
-        private void View_Feedback_Button_OnClick(object sender, RoutedEventArgs e)
-        {
-            Visibility = Visibility.Collapsed;
-            Invoke.OnDispatcherAsync(
+            //TODO: Implement me
+            CloseBalloon();
+            /*Invoke.OnDispatcherAsync(
                     () => ReentrancyGuard.Current.Execute(_actionId,
-                        () => _window.ToolWindow.Show()));
+                        () => _window.ToolWindow.Show()));*/
         }
 
         private void ImgClose_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            Visibility = Visibility.Collapsed;
+            //TODO: Check if HideDialogFlag is set
+            var dialog = new CustomWpfDialog("Wenn Sie abbrechen, werden auf ihrer Festplatte weiter Daten geschrieben",
+                "Wizard abbrechen?");
+            dialog.Show();
+            if (!dialog.Canceled)
+            {
+                if (dialog.DontShowAgain)
+                {
+                    HideDialogInFuture();
+                }
+                CloseBalloon();
+            }
+        }
+
+        private void HideDialogInFuture()
+        {
+            //TODO: Implement me
+        }
+
+        private void CloseBalloon()
+        {
+            var taskbarIcon = TaskbarIcon.GetParentTaskbarIcon(this);
+            taskbarIcon.CloseBalloon();
         }
     }
 }

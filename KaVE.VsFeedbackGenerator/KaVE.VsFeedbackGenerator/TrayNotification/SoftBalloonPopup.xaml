@@ -57,7 +57,7 @@
                VerticalAlignment="Top"
                Width="16"
                Height="16"
-               Source="/KaVE.VsFeedbackGenerator;Component/Resources/delete.png"
+               Source="/KaVE.VsFeedbackGenerator;Component/Resources/close.png"
                Stretch="Fill"
                Opacity="1.0"
                ToolTip="Close Balloon"
@@ -78,10 +78,9 @@
             Margin="10,38.62,10,0"
             VerticalAlignment="Top"
             TextWrapping="Wrap"
-            HorizontalAlignment="Center">
+            HorizontalAlignment="Left">
             <Run Text="Bitte laden Sie ihr aktuelles Feedback hoch:" />
-            <Button Name="Upload_Button" Click="Upload_Button_OnClick"> Hochladen</Button>
-            <Button Name="View_Feedback_Button" Click="View_Feedback_Button_OnClick"> Feedback betrachten</Button>
+            <Button Margin="100, 20, 0, 0" Click="Wizard_Button_OnClick">Wizard starten</Button>
         </TextBlock>
     </Grid>
 </UserControl>
