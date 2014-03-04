@@ -8,16 +8,39 @@ using KaVE.VsFeedbackGenerator.Utils.Names;
 
 namespace KaVE.VsFeedbackGenerator.Analysis
 {
-    class MethodInvocationCollector : TreeNodeVisitor<ISet<IMethodName>>
+    internal class MethodInvocationCollector : TreeNodeVisitor<MethodInvocationCollector.CollectionContext>
     {
         private readonly ITypeName _enclosingType;
 
-        public MethodInvocationCollector(ITypeName enclosingType)
+        internal class CollectionContext
+        {
+            internal CollectionContext()
+            {
+                CalledMethods = new HashSet<IMethodName>();
+                AnalyzedMethods = new HashSet<IMethodName>();
+            }
+
+            internal ISet<IMethodName> CalledMethods { get; private set; }
+            internal ISet<IMethodName> AnalyzedMethods { get; private set; }
+        }
+
+        private MethodInvocationCollector(ITypeName enclosingType)
         {
             _enclosingType = enclosingType;
         }
 
-        public override void VisitInvocationExpression(IInvocationExpression invocation, ISet<IMethodName> context)
+        public static ISet<IMethodName> FindCalledMethodsIn(IMethodDeclaration methodDeclaration,
+            ITypeName enclosingType)
+        {
+            var context = new CollectionContext();
+            if (methodDeclaration.Body != null)
+            {
+                methodDeclaration.Body.Accept(new MethodInvocationCollector(enclosingType), context);
+            }
+            return context.CalledMethods;
+        }
+
+        public override void VisitInvocationExpression(IInvocationExpression invocation, CollectionContext context)
         {
             var invocationRef = invocation.Reference;
             if (invocationRef != null)
@@ -28,12 +51,17 @@ namespace KaVE.VsFeedbackGenerator.Analysis
                 var methodName = method.GetName<IMethodName>(resolvedRef.Result.Substitution);
                 if (IsLocalHelper(methodName))
                 {
+                    if (context.AnalyzedMethods.Contains(methodName))
+                    {
+                        return;
+                    }
+                    context.AnalyzedMethods.Add(methodName);
                     var declaration = (IMethodDeclaration) method.GetDeclarations().First();
                     declaration.Body.Accept(this, context);
                 }
                 else
                 {
-                    context.Add(methodName);
+                    context.CalledMethods.Add(methodName);
                 }
             }
             base.VisitInvocationExpression(invocation, context);
@@ -44,7 +72,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis
             return _enclosingType == method.DeclaringType;
         }
 
-        public override void VisitNode(ITreeNode node, ISet<IMethodName> context)
+        public override void VisitNode(ITreeNode node, CollectionContext context)
         {
             foreach (var childNode in node.Children<ICSharpTreeNode>())
             {

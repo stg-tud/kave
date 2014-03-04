@@ -131,12 +131,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis
 
         private ISet<IMethodName> FindAllCalledMethods(IMethodDeclaration methodDeclaration, ITypeName enclosingType)
         {
-            var methodNames = new HashSet<IMethodName>();
-            if (methodDeclaration.Body != null)
-            {
-                methodDeclaration.Body.Accept(new MethodInvocationCollector(enclosingType), methodNames);
-            }
-            return methodNames;
+            return MethodInvocationCollector.FindCalledMethodsIn(methodDeclaration, enclosingType);
         }
 
         private static TypeHierarchy CreateTypeHierarchy(ITypeElement type, ISubstitution substitution)
