@@ -10,7 +10,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
     [TestFixture]
     internal class ContextVisualizationConverterTest
     {
-        private const string CompletionMarker = "<Italic Foreground=\"Blue\">@Completion</Italic>";
+        private const string CompletionMarker = "";//"<Italic Foreground=\"Blue\">@Completion</Italic>";
 
         [Test]
         public void ShouldHandleNoContext()
@@ -211,7 +211,44 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
             Assert.AreEqual(expected, actual);
         }
 
+        [Test]
+        public void ShouldIncludeAllCalledMethods()
+        {
+            var context = new Context
+            {
+                EnclosingClassHierarchy = CreateTypeHierarchy("N.Class"),
+                EnclosingMethodDeclaration = Create("N.Return", "N.Class", "Method"),
+            };
+            context.CalledMethods.Add(Call("N.R1", "N.T", "M1"));
+            context.CalledMethods.Add(Call("N.R2", "N.T", "M2", "N.Arg0"));
+            context.CalledMethods.Add(Call("N.R3", "N.T", "M3", "N.Arg0", "N.Arg1"));
+            context.CalledMethods.Add(Call("N.R1", "X.X", "Y"));
+
+            var expected = Bold("class") + @" N.Class
+{
+  N.Return Method()
+  {
+    T.M1();
+    T.M2(Arg0);
+    T.M3(Arg0, Arg1);
+    X.Y();
+    " + CompletionMarker + @"
+  }
+}";
+
+            var actual = context.ToXaml();
+            Assert.AreEqual(expected, actual);
+        }
+
         private static MethodDeclaration Create(string returnTypeName,
+            string className,
+            string methodName,
+            params string[] argTypes)
+        {
+           return new MethodDeclaration(Call(returnTypeName, className, methodName, argTypes));
+        }
+
+        private static MethodName Call(string returnTypeName,
             string className,
             string methodName,
             params string[] argTypes)
@@ -224,7 +261,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                 CreateType(className),
                 methodName,
                 args);
-            return new MethodDeclaration(MethodName.Get(methodSignature));
+            return MethodName.Get(methodSignature);
         }
 
         private static TypeHierarchy CreateTypeHierarchy(string typename)

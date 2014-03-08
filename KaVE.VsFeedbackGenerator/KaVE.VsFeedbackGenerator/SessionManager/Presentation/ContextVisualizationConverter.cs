@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Text;
 using JetBrains.Annotations;
+using JetBrains.Util;
 using KaVE.Model.Events.CompletionEvent;
 using KaVE.Model.Names;
 using KaVE.VsFeedbackGenerator.Utils;
@@ -17,7 +18,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
         private const string CurlyBracketClose = "}";
         private const string BoldStart = "<Bold>";
         private const string BoldEnd = "</Bold>";
-        private const string CompletionMarker = "<Italic Foreground=\"Blue\">@Completion</Italic>";
+        private const string CompletionMarker = "";//"<Italic Foreground=\"Blue\">@Completion</Italic>";
 
         public static string ToXaml(this Context context)
         {
@@ -38,6 +39,17 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
             {
                 builder.AppendXamlMethodSignatureLine(context.EnclosingMethodDeclaration.Element);
                 builder.AppendLine(1, CurlyBracketOpen);
+
+                context.CalledMethods.ForEach(m =>
+                {
+                    var l = m.DeclaringType.Name + "." + m.Name + "(";
+                    if (m.HasParameters)
+                    {
+                        l += string.Join(", ", m.Parameters.Select(p => p.ValueType.Name));
+                    }
+                    builder.AppendLine(2, l + ");");
+                });
+
                 builder.AppendLine(2, CompletionMarker);
                 builder.AppendLine(1, CurlyBracketClose);
             }
