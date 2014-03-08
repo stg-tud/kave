@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Application;
+using JetBrains.ReSharper.Feature.Services.CSharp.CodeCompletion.Infrastructure;
 using JetBrains.ReSharper.Feature.Services.Lookup;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using KaVE.Model.Events;
 using KaVE.Model.Events.CompletionEvent;
 using KaVE.Utils.Assertion;
+using KaVE.VsFeedbackGenerator.Analysis;
 using KaVE.VsFeedbackGenerator.CodeCompletion;
 using KaVE.VsFeedbackGenerator.MessageBus;
 using KaVE.VsFeedbackGenerator.Utils;
@@ -30,18 +33,47 @@ namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
         }
     }
 
-    [Language(typeof (CSharpLanguage))]
+    [ShellComponent, Language(typeof (CSharpLanguage))]
+    internal class CodeCompletionContextAnalysisTrigger : CSharpItemsProviderBase<CSharpCodeCompletionContext>
+    {
+        private readonly CodeCompletionEventHandler _handler;
+
+        public CodeCompletionContextAnalysisTrigger(CodeCompletionEventHandler handler)
+        {
+            _handler = handler;
+        }
+
+        protected override bool AddLookupItems(CSharpCodeCompletionContext context, GroupedItemsCollector collector)
+        {
+            try
+            {
+                var ctx = new ContextAnalysis().Analyze(context);
+                _handler.SetContext(ctx);
+            }
+            catch (Exception e) {}
+            return false;
+        }
+    }
+
+    [ShellComponent, Language(typeof (CSharpLanguage))]
     internal class CodeCompletionEventHandler : AbstractEventGenerator
     {
         private CompletionEvent _event;
         private bool _lookupItemsSet;
+        private Context _context;
 
         public CodeCompletionEventHandler(IIDESession session, IMessageBus messageBus)
             : base(session, messageBus) {}
 
+        public void SetContext(Context context)
+        {
+            _context = context;
+        }
+
         public void HandleTriggered(string prefix)
         {
             _event = Create<CompletionEvent>();
+            _event.Context = _context;
             _event.Prefix = prefix;
             _lookupItemsSet = false;
         }
@@ -67,6 +99,7 @@ namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
             Fire(_event);
 
             _event = Create<CompletionEvent>();
+            _event.Context = _context;
             _event.Prefix = newPrefix;
             _event.ProposalCollection = displayedLookupItems.ToProposalCollection();
             if (lastSelection != null && _event.ProposalCollection.Proposals.Contains(lastSelection.Proposal))
