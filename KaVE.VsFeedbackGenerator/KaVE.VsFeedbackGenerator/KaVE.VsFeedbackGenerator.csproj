@@ -90,6 +90,7 @@
     <Compile Include="AboutAction.cs" />
     <Compile Include="Analysis\ContextAnalysis.cs" />
     <Compile Include="Analysis\MethodInvocationCollector.cs" />
+    <Compile Include="Utils\CallbackManager.cs" />
     <Compile Include="Utils\CustomWpfDialog.xaml.cs">
       <DependentUpon>CustomWpfDialog.xaml</DependentUpon>
     </Compile>

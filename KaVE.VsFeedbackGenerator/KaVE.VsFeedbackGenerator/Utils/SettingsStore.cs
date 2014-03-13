@@ -1,16 +1,23 @@
 ﻿using JetBrains.Application;
 using JetBrains.Application.DataContext;
 using JetBrains.Application.Settings;
+using RSISettingsStore = JetBrains.Application.Settings.ISettingsStore;
 
 namespace KaVE.VsFeedbackGenerator.Utils
 {
-    [ShellComponent]
-    public class SettingsStore
+    public interface ISettingsStore
     {
-        private readonly ISettingsStore _settingsStore;
+        TSettingsInstance GetSettings<TSettingsInstance>();
+        void SetSettings<TSettingsType>(TSettingsType settingsInstance) where TSettingsType : class;
+    }
+
+    [ShellComponent]
+    public class SettingsStore : ISettingsStore
+    {
+        private readonly RSISettingsStore _settingsStore;
         private readonly DataContexts _dataContexts;
 
-        public SettingsStore(ISettingsStore settingsStore, DataContexts dataContexts)
+        public SettingsStore(RSISettingsStore settingsStore, DataContexts dataContexts)
         {
             _settingsStore = settingsStore;
             _dataContexts = dataContexts;

@@ -87,6 +87,9 @@
     <Compile Include="Generators\TestIDESession.cs" />
     <Compile Include="Generators\VisualStudio\WindowEventGeneratorTest.cs" />
     <Compile Include="MessageBus\TinyMessengerMessageChannelTest.cs" />
+    <Compile Include="SessionManager\CallbackManagerTest.cs" />
+    <Compile Include="SessionManager\UploadReminderTest.cs" />
+    <Compile Include="SessionManager\UploadSettingsTest.cs" />
     <Compile Include="TestFactories\Actions\ActionManagerMockExtensions.cs" />
     <Compile Include="TestFactories\Actions\MockExecutableAction.cs" />
     <Compile Include="TestFactories\Actions\MockNextActionHandler.cs" />
