@@ -213,4 +213,13 @@
   <data name="EventContext" xml:space="preserve">
     <value>Kontext</value>
   </data>
+  <data name="Exporting" xml:space="preserve">
+    <value>Exportiere/Versende Feedback...</value>
+  </data>
+  <data name="ExportFail" xml:space="preserve">
+    <value>Beim Exportieren/Versenden des Feedbacks ist ein Fehler aufgetreten!</value>
+  </data>
+  <data name="ExportSuccess" xml:space="preserve">
+    <value>Das Exportieren/Versenden des Feedbacks war erfolgreich</value>
+  </data>
 </root>
