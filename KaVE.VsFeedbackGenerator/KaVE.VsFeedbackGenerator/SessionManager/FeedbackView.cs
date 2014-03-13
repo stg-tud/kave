@@ -4,17 +4,16 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using System.Net.Http;
 using System.Windows.Forms;
 using JetBrains;
 using JetBrains.Annotations;
 using JetBrains.Application;
 using JetBrains.UI.Extensions.Commands;
+using KaVE.Model.Events;
 using KaVE.Utils;
 using KaVE.VsFeedbackGenerator.Utils;
 using KaVE.VsFeedbackGenerator.Utils.Json;
 using NuGet;
-using HttpClient = System.Net.Http.HttpClient;
 using Messages = KaVE.VsFeedbackGenerator.Properties.SessionManager;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager
@@ -48,7 +47,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
                     _lastRefresh = DateTime.Now;
                     Sessions =
                         _logFileManager.GetLogFileNames()
-                            .Select(logFileName => new SessionView(_logFileManager, logFileName));
+                                       .Select(logFileName => new SessionView(_logFileManager, logFileName));
                     Refreshing = false;
                     Released = false;
                 });
@@ -114,15 +113,13 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             get { return _selectedSessions.Count == 1 ? _selectedSessions.First() : null; }
         }
 
-        #region ExportSessionsCommands implementation
-
         public DelegateCommand ExportSessionsCommand
         {
             get
             {
                 return _exportSessionsCommand ??
                        (_exportSessionsCommand =
-                           new DelegateCommand(param => ExportSessions(), param => AnySessionsPresent));
+                           CreateWithExportPolicy(new FileExport<IDEEvent>()));
             }
         }
 
@@ -132,72 +129,38 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             {
                 return _sendSessionsCommand ??
                        (_sendSessionsCommand =
-                           new DelegateCommand(param => SendSessions(), param => AnySessionsPresent));
+                           CreateWithExportPolicy(new HttpExport<IDEEvent>()));
             }
         }
 
-        private void ExportSessions()
+        private DelegateCommand CreateWithExportPolicy(SessionExport<IDEEvent> policy)
         {
-            var saveFileDialog = new SaveFileDialog
-            {
-                Filter = "Log files (*.log)|*.log|All files (*.*)|*.*"
-            };
-            if (saveFileDialog.ShowDialog().Equals(DialogResult.Cancel))
-            {
-                return;
-            }
-            var destFileName = saveFileDialog.FileName; // checks??
-            var exportFileName = GenerateExportFile();
-            File.Copy(exportFileName, destFileName, true);
-            //_logFileManager.DeleteLogsOlderThan(_lastRefresh);
-        }
-
-        private void SendSessions()
-        {
-            var exportFileName = GenerateExportFile();
-            //Upload("http://kave.st.informatik.tu-darmstadt.de:667/upload", Path.GetFileName(exportFileName), File.ReadAllBytes(exportFileName));
-
-            // upload
-            // delete
-            //_logFileManager.DeleteLogsOlderThan(_lastRefresh);
-        }
-
-        private string GenerateExportFile()
-        {
-            var tmpFileName = Path.GetTempFileName();
-            using (var writer = _logFileManager.NewLogWriter(tmpFileName))
-            {
-                foreach (var e in _sessions.SelectMany(session => session.Events).Select(eventlist => eventlist.Event))
+            return ExportCommand.Create(
+                policy,
+                ExtractEventsForExport,
+                _logFileManager.NewLogWriter,
+                o => AnySessionsPresent,
+                res =>
                 {
-                    writer.Write(e);
-                }
-            }
-            return tmpFileName;
-        }
-
-        private Stream Upload(string actionUrl, string paramString, byte[] paramFileBytes)
-        {
-            HttpContent bytesContent = new ByteArrayContent(paramFileBytes);
-            using (var client = new HttpClient())
-            {
-                using (var formData = new MultipartFormDataContent())
-                {
-                    formData.Add(bytesContent, "file", paramString);
-                    var response = client.PostAsync(actionUrl, formData).Result;
-                    if (!response.IsSuccessStatusCode)
+                    if (res.Status == State.Ok)
                     {
-                        return null;
+                        _logFileManager.DeleteLogsOlderThan(_lastRefresh);
+                        // set LastUpload-Time for the Reminder-Thing
+                        MessageBox.Show(Messages.ExportSuccess);
+                        Refresh();
                     }
-                    MessageBox.Show(response.Content.ReadAsStringAsync().Result);
-                    return response.Content.ReadAsStreamAsync().Result;
-                }
-            }
+                    else
+                    {
+                        MessageBox.Show(
+                            Messages.ExportFail + (string.IsNullOrWhiteSpace(res.Message) ? "" : "\n" + res.Message));
+                    }
+                });
         }
 
-        #endregion
-
-        // TODO remove these regions...
-        #region DeleteSessionsCommand implementation
+        private IEnumerable<IDEEvent> ExtractEventsForExport()
+        {
+            return _sessions.SelectMany(session => session.Events.Select(events => events.Event));
+        }
 
         public DelegateCommand DeleteSessionsCommand
         {
@@ -235,8 +198,6 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
                 }
             }
         }
-
-        #endregion
 
         #region INotifyPropertyChanged implementation
 

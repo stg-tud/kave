@@ -304,6 +304,15 @@ namespace KaVE.VsFeedbackGenerator.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Log files (*.log)|*.log|All files (*.*)|*.*.
+        /// </summary>
+        public static string SaveFileDialogFilter {
+            get {
+                return ResourceManager.GetString("SaveFileDialogFilter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Feedback versenden..
         /// </summary>
         public static string Send {

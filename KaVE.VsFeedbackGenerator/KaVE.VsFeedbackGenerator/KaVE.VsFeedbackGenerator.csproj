@@ -157,9 +157,12 @@
     <Compile Include="SessionManager\EventView.cs" />
     <Compile Include="SessionManager\FeedbackView.cs" />
     <Compile Include="MessageBus\TinyMessenger.cs" />
+    <Compile Include="Utils\ExportCommand.cs" />
     <Compile Include="Utils\HttpPostFileTransfer.cs" />
     <Compile Include="SessionManager\UploadSettings.cs" />
     <Compile Include="Utils\ILogWriter.cs" />
+    <Compile Include="Utils\ExportResult.cs" />
+    <Compile Include="Utils\SessionExport.cs" />
     <Compile Include="Utils\SettingsStore.cs" />
     <Compile Include="SessionManager\UploadReminder.cs" />
     <Compile Include="Utils\ConfirmedCommand.cs" />

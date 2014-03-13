@@ -222,4 +222,7 @@
   <data name="ExportSuccess" xml:space="preserve">
     <value>Das Exportieren/Versenden des Feedbacks war erfolgreich</value>
   </data>
+  <data name="SaveFileDialogFilter" xml:space="preserve">
+    <value>Log files (*.log)|*.log|All files (*.*)|*.*</value>
+  </data>
 </root>
