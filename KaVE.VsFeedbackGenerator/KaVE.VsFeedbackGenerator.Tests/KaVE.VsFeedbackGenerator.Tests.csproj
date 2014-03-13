@@ -97,6 +97,7 @@
     <Compile Include="SessionManager\Presentation\ContextVisualizationConverterTest.cs" />
     <Compile Include="TestFactories\TestNameFactory.cs" />
     <Compile Include="Utils\DateTimeTest.cs" />
+    <Compile Include="Utils\HttpPostFileTransferTest.cs" />
     <Compile Include="Utils\InverseBoolConverterTest.cs" />
     <Compile Include="Utils\Json\Model\CompletionEventSerializationTest.cs" />
     <Compile Include="Utils\Json\JsonAssert.cs" />
