@@ -115,6 +115,7 @@
     <Compile Include="TestFactories\TypeMockUtils.cs" />
     <Compile Include="Utils\Names\VsComponentNameFactoryTest.cs" />
     <Compile Include="Utils\ObjectToVisibilityConverterTest.cs" />
+    <Compile Include="Utils\SessionExportTest.cs" />
     <Compile Include="VsIntegration\IDESessionTest.cs" />
   </ItemGroup>
   <ItemGroup>

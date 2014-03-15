@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Windows.Forms;
+using JetBrains.Util;
+using KaVE.JetBrains.Annotations;
 
 namespace KaVE.VsFeedbackGenerator.Utils
 {
     public abstract class SessionExport<T>
     {
-        protected string ExportToTemporaryFile(IList<T> events, Func<string, ILogWriter<T>> writer)
+        internal string ExportToTemporaryFile(IList<T> events, Func<string, ILogWriter<T>> writer)
         {
             var tempFileName = Path.GetTempFileName();
             using (var logWriter = writer(tempFileName))
@@ -25,18 +26,21 @@ namespace KaVE.VsFeedbackGenerator.Utils
 
     internal class FileExport<T> : SessionExport<T>
     {
+        private readonly Func<string> _saveFile;
+
+        public FileExport([NotNull] Func<string> saveFile)
+        {
+            _saveFile = saveFile;
+        }
+
         public override ExportResult<IList<T>> Export(IList<T> events, Func<string, ILogWriter<T>> writerFactory)
         {
-            var tempFile = ExportToTemporaryFile(events, writerFactory);
-            var saveFileDialog = new SaveFileDialog
+            var specifiedLocation = _saveFile();
+            if (specifiedLocation.IsNullOrEmpty())
             {
-                Filter = Properties.SessionManager.SaveFileDialogFilter
-            };
-            if (saveFileDialog.ShowDialog().Equals(DialogResult.Cancel))
-            {
-                return ExportResult<IList<T>>.Fail(events, "Dialog aborted");
+                return ExportResult<IList<T>>.Fail(events);
             }
-            var specifiedLocation = saveFileDialog.FileName; // check?
+            var tempFile = ExportToTemporaryFile(events, writerFactory);
             File.Copy(tempFile, specifiedLocation, true);
             return ExportResult<IList<T>>.Success(events);
         }
@@ -44,12 +48,18 @@ namespace KaVE.VsFeedbackGenerator.Utils
 
     internal class HttpExport<T> : SessionExport<T>
     {
-        public const string HostAddress = "http://kave.st.informatik.tu-darmstadt.de:667/upload";
+        private readonly string _hostAddress;
+
+        public HttpExport([NotNull] string hostAddress)
+        {
+            _hostAddress = hostAddress;
+        }
+
         public override ExportResult<IList<T>> Export(IList<T> events, Func<string, ILogWriter<T>> writerFactory)
         {
             var tempFile = ExportToTemporaryFile(events, writerFactory);
             // TODO: specify Filename/Extension (TransferFile accepts a parameter filename, but how should it look like? .log? .log.gz?)
-            var response = HttpPostFileTransfer.TransferFile<ExportResult<object>>(HostAddress, tempFile);
+            var response = HttpPostFileTransfer.TransferFile<ExportResult<object>>(_hostAddress, tempFile);
             if (response == null)
             {
                 return ExportResult<IList<T>>.Fail(events);

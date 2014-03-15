@@ -119,7 +119,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             {
                 return _exportSessionsCommand ??
                        (_exportSessionsCommand =
-                           CreateWithExportPolicy(new FileExport<IDEEvent>()));
+                           CreateWithExportPolicy(new FileExport<IDEEvent>(AskForExportLocation)));
             }
         }
 
@@ -129,7 +129,8 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             {
                 return _sendSessionsCommand ??
                        (_sendSessionsCommand =
-                           CreateWithExportPolicy(new HttpExport<IDEEvent>()));
+                           CreateWithExportPolicy(
+                               new HttpExport<IDEEvent>("http://kave.st.informatik.tu-darmstadt.de:667/upload")));
             }
         }
 
@@ -160,6 +161,19 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
         private IEnumerable<IDEEvent> ExtractEventsForExport()
         {
             return _sessions.SelectMany(session => session.Events.Select(events => events.Event));
+        }
+
+        private static string AskForExportLocation()
+        {
+            var saveFileDialog = new SaveFileDialog
+            {
+                Filter = Properties.SessionManager.SaveFileDialogFilter
+            };
+            if (saveFileDialog.ShowDialog().Equals(DialogResult.Cancel))
+            {
+                return null;
+            }
+            return saveFileDialog.FileName;
         }
 
         public DelegateCommand DeleteSessionsCommand
