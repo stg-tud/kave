@@ -35,7 +35,7 @@ namespace KaVE.Utils
                 }
             };
 
-            _timer = new Timer(millisToDelay);
+            _timer = millisToDelay == 0 ? new Timer(1) : new Timer(millisToDelay);
             _timer.Elapsed += _scheduledAction;
             _timer.Start();
         }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Threading;
 using KaVE.VsFeedbackGenerator.Utils;
 using NUnit.Framework;
@@ -32,6 +33,20 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
         }
 
         [Test]
+        public void ShouldInvokeCallbackAfterDatetimeNowImmediately()
+        {
+            _uut.RegisterCallback(TestCallback, DateTime.Now);
+            AssertCallbackInvocationInTime(0);
+        }
+
+        [TestCaseSource(typeof(CallbackManagerTest), "DateValuesData")]
+        public void ShouldInvokeCallbackAtDatetime(DateTime dateTimeToExecute, int timout)
+        {
+            _uut.RegisterCallback(TestCallback, dateTimeToExecute);
+            AssertCallbackInvocationInTime(timout);
+        }
+
+        [Test]
         public void ShouldNotInvokeMultipleTimes()
         {
             _uut.RegisterCallback(TestCallback, 1);
@@ -48,6 +63,13 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
             var differenceFromTimeout = Math.Abs(duration.TotalMilliseconds - timeoutInMilliseconds);
             Assert.IsTrue(isCallbackInvoked);
             Assert.IsTrue(differenceFromTimeout < AcceptedCallbackImprecisionInMilliseconds);
+        }
+
+        private static IEnumerable DateValuesData()
+        {
+            //TODO Ask sven
+            yield return new TestCaseData(DateTime.Now.AddMilliseconds(1000), 700);
+            yield return new TestCaseData(DateTime.Now.AddMilliseconds(100), 50);
         }
     }
 }

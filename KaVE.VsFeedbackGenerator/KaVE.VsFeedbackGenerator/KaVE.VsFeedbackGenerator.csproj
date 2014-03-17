@@ -90,6 +90,10 @@
     <Compile Include="AboutAction.cs" />
     <Compile Include="Analysis\ContextAnalysis.cs" />
     <Compile Include="Analysis\MethodInvocationCollector.cs" />
+    <Compile Include="TrayNotification\HardBalloonPopup.xaml.cs">
+      <DependentUpon>HardBalloonPopup.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="TrayNotification\WindowBase.cs" />
     <Compile Include="Utils\CallbackManager.cs" />
     <Compile Include="Utils\CustomWpfDialog.xaml.cs">
       <DependentUpon>CustomWpfDialog.xaml</DependentUpon>
@@ -202,6 +206,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="TrayNotification\HardBalloonPopup.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Utils\CustomWpfDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

@@ -14,6 +14,9 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
         [SettingsEntry(0, "Upload Time"), Obsolete]
         public long LastUploadTicks { get; set; }
 
+        [SettingsEntry(false, "Do Not Show Again Flag")]
+        public bool DoNotShowNotificationCloseDialogAgain { get; set; }
+
         public DateTime LastNotificationDate
         {
             get { return Parse(LastNotificationTicks); }

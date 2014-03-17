@@ -14,6 +14,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
         private Mock<ISettingsStore> _mockSettingsStore;
         private UploadSettings _uploadSettings;
         private Mock<NotifyTrayIcon> _mockTrayIcon;
+        private Mock<ICallbackManager> _mockCallbackManager;
 
         [SetUp]
         public void SetUp()
@@ -22,7 +23,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
             _uploadSettings = new UploadSettings();
             _mockSettingsStore.Setup(store => store.GetSettings<UploadSettings>()).Returns(_uploadSettings);
             _mockTrayIcon = new Mock<NotifyTrayIcon>();
-
+            _mockCallbackManager = new Mock<ICallbackManager>();
         }
 
         [Test]
@@ -37,22 +38,23 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
             AssertUploadSettings(newSettings);
         }
 
-        // TODO bitte fixen, Uli ;P
-        [Test, Ignore]
+        [Test]
         public void ShouldRegisterCallbackWith7DaysDelay()
         {
-            _uploadSettings.LastNotificationDate = DateTime.Now;
-            var mockCallbackManager = new Mock<CallbackManager>();
-
+            var now = DateTime.Now;
+            _uploadSettings.LastNotificationDate = now;
+            
             WhenUploadReminderIsInitialized();
 
-            mockCallbackManager.Verify(manager => manager.RegisterCallback(It.IsAny<Action>(), -1));
+            var inSevenDays = now.AddDays(7);
+
+            _mockCallbackManager.Verify(manager => manager.RegisterCallback(It.IsAny<Action>(), It.IsInRange(inSevenDays, inSevenDays.AddSeconds(5), Range.Inclusive)));
         }
 
         private void WhenUploadReminderIsInitialized()
         {
             // ReSharper disable once ObjectCreationAsStatement
-            new UploadReminder(_mockSettingsStore.Object, _mockTrayIcon.Object, null);
+            new UploadReminder(_mockSettingsStore.Object, _mockTrayIcon.Object, _mockCallbackManager.Object, null);
         }
 
 

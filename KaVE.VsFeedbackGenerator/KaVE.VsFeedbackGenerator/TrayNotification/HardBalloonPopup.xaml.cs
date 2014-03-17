@@ -1,35 +1,22 @@
 ﻿using System.Windows;
 using System.Windows.Input;
-using System.Windows.Media.Animation;
 using KaVE.VsFeedbackGenerator.SessionManager.Presentation;
 
 namespace KaVE.VsFeedbackGenerator.TrayNotification
 {
     /// <summary>
-    /// Interaction logic for HardBalloonPopup.xaml
+    /// Interaction logic for SoftBalloonPopup.xaml
     /// </summary>
-    public partial class SoftBalloonPopup : WindowBase
+    public partial class HardBalloonPopup : WindowBase
     { 
         private readonly SessionManagerWindowRegistrar _window;
         private readonly string _actionId;
-        
-        public SoftBalloonPopup(SessionManagerWindowRegistrar window, string actionId)
+
+        public HardBalloonPopup(SessionManagerWindowRegistrar window, string actionId)
         {
             InitializeComponent();
             _window = window;
             _actionId = actionId;
-
-            StartFadeInAndOutAnimation();
-        }
-
-        //TODO Move to xaml 
-        private void StartFadeInAndOutAnimation()
-        {
-            var storyboard = TryFindResource("FadeInAndOut") as Storyboard;
-            if (storyboard != null)
-            {
-                storyboard.Begin();
-            }
         }
 
         private void Wizard_Button_OnClick(object sender, RoutedEventArgs e)
