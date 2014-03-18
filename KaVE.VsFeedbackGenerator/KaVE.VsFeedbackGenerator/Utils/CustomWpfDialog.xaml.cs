@@ -7,7 +7,7 @@ namespace KaVE.VsFeedbackGenerator.Utils
         public CustomWpfDialog(string question, string title)
         {
             InitializeComponent();
-            txtQuestion.Text = question;
+            dialogText.Text = question;
             Title = title;
         }
 

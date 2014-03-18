@@ -3,16 +3,24 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     WindowStartupLocation="CenterScreen" 
     SizeToContent="WidthAndHeight"
-    MinWidth="300"
-    MinHeight="100"
+    MinWidth="400"
+    MinHeight="200"
     WindowStyle="SingleBorderWindow"
     ResizeMode="CanMinimize">
+    <Window.Resources>
+        <ResourceDictionary>
+            <BitmapImage x:Key="Icon" UriSource="/KaVE.VsFeedbackGenerator;Component/Resources/send.png"/>
+        </ResourceDictionary>
+    </Window.Resources>
     <StackPanel Margin="5">
-        <TextBlock Name="txtQuestion" Margin="5"/>
-        <StackPanel Orientation="Horizontal" Margin="5" HorizontalAlignment="Right">
-            <CheckBox Content="Don't show again" HorizontalAlignment="Left" Margin="10,10,0,0" Name="checkbox" VerticalAlignment="Top"/>
-            <Button Content="_OK" IsDefault="True" Margin="5" Name="btnOk" Click="btnOk_Click" />
-            <Button Content="_Cancel" IsCancel="True" Margin="5" Name="btnCancel" Click="btnCancel_Click" />
+        <StackPanel Orientation="Horizontal" Margin="5" HorizontalAlignment="Left">
+            <Image Name="TypeIcon" HorizontalAlignment="Left" VerticalAlignment="Center" Source="{StaticResource Icon}" Height="50" Width="50"/>
+            <TextBlock Name="dialogText" Margin="5"/>
         </StackPanel>
-    </StackPanel>
+        <CheckBox Content="Remember my choice and don't show this dialog" HorizontalAlignment="Left" Margin="10,10,10,30" Name="checkbox" VerticalAlignment="Top"/>
+        <StackPanel Orientation="Horizontal" Margin="5" HorizontalAlignment="Right">
+            <Button Content="Yes" IsDefault="True" Margin="5" MinWidth="93" Name="btnOk" Click="btnOk_Click" />
+            <Button Content="No" IsCancel="True" Margin="5"  MinWidth="93" Name="btnCancel" Click="btnCancel_Click" />
+        </StackPanel>
+    </StackPanel> 
 </Window>
