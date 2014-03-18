@@ -220,7 +220,7 @@
     <value>Beim Exportieren/Versenden des Feedbacks ist ein Fehler aufgetreten!</value>
   </data>
   <data name="ExportSuccess" xml:space="preserve">
-    <value>Das Exportieren/Versenden des Feedbacks war erfolgreich</value>
+    <value>Das Exportieren/Versenden von {0} Events war erfolgreich</value>
   </data>
   <data name="SaveFileDialogFilter" xml:space="preserve">
     <value>Log files (*.log)|*.log|All files (*.*)|*.*</value>

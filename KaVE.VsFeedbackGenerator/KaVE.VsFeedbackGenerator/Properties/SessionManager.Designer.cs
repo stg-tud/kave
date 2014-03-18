@@ -223,7 +223,7 @@ namespace KaVE.VsFeedbackGenerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Das Exportieren/Versenden des Feedbacks war erfolgreich.
+        ///   Looks up a localized string similar to Das Exportieren/Versenden von {0} Events war erfolgreich.
         /// </summary>
         public static string ExportSuccess {
             get {

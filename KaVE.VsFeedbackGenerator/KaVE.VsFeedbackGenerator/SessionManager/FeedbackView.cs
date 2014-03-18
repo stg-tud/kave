@@ -29,9 +29,11 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
         private DelegateCommand _sendSessionsCommand;
         private bool _refreshing;
         private DateTime _lastRefresh;
+        private readonly ISettingsStore _store;
 
-        public FeedbackView(JsonLogFileManager logFileManager)
+        public FeedbackView(JsonLogFileManager logFileManager, ISettingsStore store)
         {
+            _store = store;
             _logFileManager = logFileManager;
             _sessions = new ObservableCollection<SessionView>();
             _selectedSessions = new List<SessionView>();
@@ -146,8 +148,10 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
                     if (res.Status == State.Ok)
                     {
                         _logFileManager.DeleteLogsOlderThan(_lastRefresh);
-                        // set LastUpload-Time for the Reminder-Thing
-                        MessageBox.Show(Messages.ExportSuccess);
+                        var settings = _store.GetSettings<UploadSettings>();
+                        settings.LastUploadDate = DateTime.Now;
+                        _store.SetSettings(settings);
+                        MessageBox.Show(string.Format(Messages.ExportSuccess, res.Data.Count));
                         Refresh();
                     }
                     else
