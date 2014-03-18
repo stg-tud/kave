@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace KaVE.Utils.Tests.IO
+namespace KaVE.Utils.IO
 {
     public static class IoTestHelper
     {

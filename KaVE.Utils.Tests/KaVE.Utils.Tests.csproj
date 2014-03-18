@@ -62,7 +62,6 @@
     <Compile Include="DateTime\SimilarDateTimeComparerTest.cs" />
     <Compile Include="EqualityUtilsTest.cs" />
     <Compile Include="Events\EventHandlingTest.cs" />
-    <Compile Include="IO\IoTestHelper.cs" />
     <Compile Include="IO\KeyUtilsTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Serialization\JsonExtensionsTest.cs" />

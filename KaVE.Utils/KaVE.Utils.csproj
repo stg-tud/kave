@@ -57,6 +57,7 @@
     <Compile Include="EqualityUtils.cs" />
     <Compile Include="Injection.cs" />
     <Compile Include="Invoke.cs" />
+    <Compile Include="IO\IoTestHelper.cs" />
     <Compile Include="IO\KeyBinding.cs" />
     <Compile Include="IO\KeyUtils.cs" />
     <Compile Include="IO\MouseUtils.cs" />
