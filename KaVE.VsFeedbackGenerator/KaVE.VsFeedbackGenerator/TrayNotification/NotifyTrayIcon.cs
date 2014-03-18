@@ -11,10 +11,7 @@ namespace KaVE.VsFeedbackGenerator.TrayNotification
     {
         public NotifyTrayIcon()
         {
-            //TODO Fix me: brings tests to fail
-            NotifyIcon = null;
-            //InitTaskbarIcon();
-            //Invoke.OnSTA(InitTaskbarIcon);
+            Invoke.OnSTA(InitTaskbarIcon);
         }
 
         private void InitTaskbarIcon()

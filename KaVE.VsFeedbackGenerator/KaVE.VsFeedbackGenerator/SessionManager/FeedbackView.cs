@@ -75,7 +75,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
         {
             private set
             {
-                Invoke.OnDispatcher(
+                Invoke.OnSTA(
                     () =>
                     {
                         _sessions.Clear();

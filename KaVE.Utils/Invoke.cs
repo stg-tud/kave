@@ -63,6 +63,49 @@ namespace KaVE.Utils
         // ReSharper disable once InconsistentNaming
         public static TResult OnSTA<TResult>(Func<TResult> action)
         {
+            return IsSTAInitialized() ? OnExistingSTA(action) : OnNewSTA(action);
+        }
+
+        // ReSharper disable once InconsistentNaming
+        private static bool IsSTAInitialized()
+        {
+            return Application.Current != null;
+        }
+
+        // ReSharper disable once InconsistentNaming
+        private static TResult OnExistingSTA<TResult>(Func<TResult> actionAsFunc)
+        {
+            var dispatcher = Application.Current.Dispatcher;
+            if (dispatcher.CheckAccess())
+            {
+                return actionAsFunc.Invoke();
+            }
+
+            var result = default(TResult);
+            var exception = default(Exception);
+            dispatcher.Invoke(
+                new Action(
+                    delegate
+                    {
+                        try
+                        {
+                            result = actionAsFunc.Invoke();
+                        }
+                        catch (Exception e)
+                        {
+                            exception = e;
+                        }
+                    }));
+            if (exception != null)
+            {
+                throw new Exception("dispatched action threw exception", exception);
+            }
+            return result;
+        }
+
+        // ReSharper disable once InconsistentNaming
+        private static TResult OnNewSTA<TResult>(Func<TResult> action)
+        {
             var result = default(TResult);
             var exception = default(Exception);
             var thread = new Thread(
@@ -82,36 +125,9 @@ namespace KaVE.Utils
             thread.Join();
             if (exception != null)
             {
-                throw exception;
+                throw new Exception("dispatched action threw exception", exception);
             }
             return result;
-        }
-
-        /// <summary>
-        ///     Runs an <see cref="Action" /> in the dispatcher thread.
-        ///     Waits for the action to finish. Rethrows any exception
-        ///     thrown by the action.
-        /// </summary>
-        /// <param name="action">The action to run.</param>
-        public static void OnDispatcher(Action action)
-        {
-            var exception = default(Exception);
-            Application.Current.Dispatcher.Invoke(
-                (Action) (() =>
-                {
-                    try
-                    {
-                        action();
-                    }
-                    catch (Exception e)
-                    {
-                        exception = e;
-                    }
-                }));
-            if (exception != null)
-            {
-                throw exception;
-            }
         }
 
         /// <summary>
@@ -121,6 +137,7 @@ namespace KaVE.Utils
         /// <param name="action">The action to run.</param>
         public static void OnDispatcherAsync(Action action)
         {
+            // if this should fail (Application.Current == null), this should be solved like the synchronous case above
             Application.Current.Dispatcher.BeginInvoke(action);
         }
     }
