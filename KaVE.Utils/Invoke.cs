@@ -7,24 +7,28 @@ namespace KaVE.Utils
     public static class Invoke
     {
         /// <summary>
-        /// Invokes the passed action after some delay. Returns immediately.
+        ///     Invokes the passed action after some delay. Returns immediately.
         /// </summary>
         /// <param name="action">The action to run delayed.</param>
-        /// <param name="delayInMillis">The delay in milliseconds.</param>
-        /// <returns>The timer that was initiated.</returns>
+        /// <param name="delayInMillis">The delay in milliseconds. Expected to be greater than 0.</param>
         public static ScheduledAction Later(Action action, long delayInMillis)
         {
             return new ScheduledAction(action, delayInMillis);
         }
 
-        public static ScheduledAction Later(Action action, System.DateTime dateToExecute)
+        /// <summary>
+        ///     Invokes the passed action on the given date. When the date is in the past, the action is executed immediately.
+        /// </summary>
+        /// <param name="action">The action to run on the given date.</param>
+        /// <param name="executionDateTime">The date to execute the action on.</param>
+        public static ScheduledAction Later(Action action, System.DateTime executionDateTime)
         {
-            var date = dateToExecute - System.DateTime.Now;
-            return new ScheduledAction(action, Math.Max((long)date.TotalMilliseconds, 0));
+            var date = executionDateTime - System.DateTime.Now;
+            return new ScheduledAction(action, Math.Max((long) date.TotalMilliseconds, 1));
         }
 
         /// <summary>
-        /// Invokes the passed action asynchonuously. Returns immediately.
+        ///     Invokes the passed action asynchonuously. Returns immediately.
         /// </summary>
         /// <param name="action">The action to run.</param>
         public static void Async(Action action)
@@ -33,9 +37,9 @@ namespace KaVE.Utils
         }
 
         /// <summary>
-        /// Runs an <see cref="Action"/> in a single-threaded apartment
-        /// (STA). Waits for the action to finish. Rethrows any exception
-        /// thrown by the action.
+        ///     Runs an <see cref="Action" /> in a single-threaded apartment
+        ///     (STA). Waits for the action to finish. Rethrows any exception
+        ///     thrown by the action.
         /// </summary>
         /// <param name="action">The action to run.</param>
         // ReSharper disable once InconsistentNaming
@@ -50,9 +54,9 @@ namespace KaVE.Utils
         }
 
         /// <summary>
-        /// Runs a <see cref="Func{TResult}"/> in a single-threaded apartment
-        /// (STA). Waits for the execution to finish and returns its result.
-        /// Rethrows any exception thrown by the function.
+        ///     Runs a <see cref="Func{TResult}" /> in a single-threaded apartment
+        ///     (STA). Waits for the execution to finish and returns its result.
+        ///     Rethrows any exception thrown by the function.
         /// </summary>
         /// <param name="action">The function to run.</param>
         /// <returns>The function's result.</returns>
@@ -84,9 +88,9 @@ namespace KaVE.Utils
         }
 
         /// <summary>
-        /// Runs an <see cref="Action"/> in the dispatcher thread.
-        /// Waits for the action to finish. Rethrows any exception
-        /// thrown by the action.
+        ///     Runs an <see cref="Action" /> in the dispatcher thread.
+        ///     Waits for the action to finish. Rethrows any exception
+        ///     thrown by the action.
         /// </summary>
         /// <param name="action">The action to run.</param>
         public static void OnDispatcher(Action action)
@@ -111,8 +115,8 @@ namespace KaVE.Utils
         }
 
         /// <summary>
-        /// Runs an <see cref="Action"/> in the dispatcher thread.
-        /// Returns immediately.
+        ///     Runs an <see cref="Action" /> in the dispatcher thread.
+        ///     Returns immediately.
         /// </summary>
         /// <param name="action">The action to run.</param>
         public static void OnDispatcherAsync(Action action)

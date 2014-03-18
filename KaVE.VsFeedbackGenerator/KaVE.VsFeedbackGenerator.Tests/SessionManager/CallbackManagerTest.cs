@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Threading;
 using KaVE.VsFeedbackGenerator.Utils;
 using NUnit.Framework;
@@ -7,7 +6,7 @@ using NUnit.Framework;
 namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
 {
     [TestFixture]
-    class CallbackManagerTest
+    internal class CallbackManagerTest
     {
         private const int AcceptedCallbackImprecisionInMilliseconds = 50;
         private readonly AutoResetEvent _waitLock = new AutoResetEvent(false);
@@ -17,7 +16,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
         public void SetUp()
         {
             _waitLock.Reset();
-            _uut = new CallbackManager();            
+            _uut = new CallbackManager();
         }
 
         private void TestCallback()
@@ -39,11 +38,11 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
             AssertCallbackInvocationInTime(0);
         }
 
-        [TestCaseSource(typeof(CallbackManagerTest), "DateValuesData")]
-        public void ShouldInvokeCallbackAtDatetime(DateTime dateTimeToExecute, int timout)
+        [TestCase(100), TestCase(1000)]
+        public void ShouldInvokeCallbackAtDatetime(int delay)
         {
-            _uut.RegisterCallback(TestCallback, dateTimeToExecute);
-            AssertCallbackInvocationInTime(timout);
+            _uut.RegisterCallback(TestCallback, DateTime.Now.AddMilliseconds(delay));
+            AssertCallbackInvocationInTime(delay);
         }
 
         [Test]
@@ -58,18 +57,12 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
         private void AssertCallbackInvocationInTime(int timeoutInMilliseconds)
         {
             var startTime = DateTime.Now;
-            var isCallbackInvoked = _waitLock.WaitOne(timeoutInMilliseconds + 2 * AcceptedCallbackImprecisionInMilliseconds);
+            var isCallbackInvoked =
+                _waitLock.WaitOne(timeoutInMilliseconds + 2*AcceptedCallbackImprecisionInMilliseconds);
             var duration = DateTime.Now - startTime;
             var differenceFromTimeout = Math.Abs(duration.TotalMilliseconds - timeoutInMilliseconds);
             Assert.IsTrue(isCallbackInvoked);
             Assert.IsTrue(differenceFromTimeout < AcceptedCallbackImprecisionInMilliseconds);
-        }
-
-        private static IEnumerable DateValuesData()
-        {
-            //TODO Ask sven
-            yield return new TestCaseData(DateTime.Now.AddMilliseconds(1000), 700);
-            yield return new TestCaseData(DateTime.Now.AddMilliseconds(100), 50);
         }
     }
 }

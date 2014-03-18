@@ -20,7 +20,7 @@ namespace KaVE.Utils
         /// Creation schedules the given action for execution after the given number of milliseconds.
         /// </summary>
         /// <param name="actionToSchedule">The action to schedule.</param>
-        /// <param name="millisToDelay">The number of milliseconds to delay exection.</param>
+        /// <param name="millisToDelay">The number of milliseconds to delay exection. Expected to be greater than 0.</param>
         public ScheduledAction(Action actionToSchedule, long millisToDelay)
         {
             _scheduledAction = (s, evtArgs) =>
@@ -35,7 +35,7 @@ namespace KaVE.Utils
                 }
             };
 
-            _timer = millisToDelay == 0 ? new Timer(1) : new Timer(millisToDelay);
+            _timer = new Timer(millisToDelay);
             _timer.Elapsed += _scheduledAction;
             _timer.Start();
         }
