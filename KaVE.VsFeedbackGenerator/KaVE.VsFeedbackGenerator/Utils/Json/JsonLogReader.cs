@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using KaVE.Utils.Assertion;
 using Newtonsoft.Json;
@@ -9,7 +8,7 @@ namespace KaVE.VsFeedbackGenerator.Utils.Json
     /// <summary>
     /// A reader for streams written by <see cref="JsonLogWriter"/>.
     /// </summary>
-    public class JsonLogReader : IDisposable
+    public class JsonLogReader<TMessage> : ILogReader<TMessage>
     {
         private readonly StreamReader _logStreamReader;
 
@@ -21,7 +20,7 @@ namespace KaVE.VsFeedbackGenerator.Utils.Json
             _logStreamReader = new StreamReader(logStream, JsonLogSerialization.Encoding);
         }
 
-        public TMessage Read<TMessage>()
+        public TMessage ReadNext()
         {
             var json = _logStreamReader.ReadLine();
             return json == null
@@ -32,12 +31,12 @@ namespace KaVE.VsFeedbackGenerator.Utils.Json
         /// <summary>
         /// Returns an Enumarable that lazily reads all log entries from the underlying stream.
         /// </summary>
-        public IEnumerable<TEvent> GetEnumeration<TEvent>() where TEvent : class
+        public IEnumerable<TMessage> ReadAll()
         {
-            TEvent evt;
-            while ((evt = Read<TEvent>()) != null)
+            TMessage mess;
+            while ((mess = ReadNext()) != null)
             {
-                yield return evt;
+                yield return mess;
             }
         }
 

@@ -7,14 +7,14 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json
     [TestFixture]
     public class JsonLogWriterTest
     {
-        private JsonLogWriter _writer;
+        private JsonLogWriter<object> _writer;
         private MemoryStream _logStream;
 
         [SetUp]
         public void SetUpWriter()
         {
             _logStream = new MemoryStream();
-            _writer = new JsonLogWriter(_logStream);
+            _writer = new JsonLogWriter<object>(_logStream);
         }
 
         [Test]

@@ -20,7 +20,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json
         {
             using (var stream = new MemoryStream())
             {
-                var writer = new JsonLogWriter(stream);
+                var writer = new JsonLogWriter<object>(stream);
                 writer.Write(obj);
                 return stream.AsString();
             }
@@ -30,8 +30,8 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json
         {
             using (var stream = new MemoryStream(serialization.AsBytes()))
             {
-                var reader = new JsonLogReader(stream);
-                return reader.Read<TModel>();
+                var reader = new JsonLogReader<TModel>(stream);
+                return reader.ReadNext();
             }
         }
     }

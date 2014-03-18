@@ -40,7 +40,7 @@ namespace KaVE.CompletionTraceGenerator
 
         private IEnumerable<IDEEvent> ReadIDEEvents(string logFileName)
         {
-            return _logFileManager.NewLogReader(logFileName).GetEnumeration<IDEEvent>();
+            return _logFileManager.NewLogReader(logFileName).ReadAll<IDEEvent>();
         }
     }
 }

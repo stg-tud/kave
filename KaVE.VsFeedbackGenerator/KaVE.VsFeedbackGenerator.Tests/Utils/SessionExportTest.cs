@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using KaVE.Utils.IO;
 using KaVE.VsFeedbackGenerator.Utils;
 using KaVE.VsFeedbackGenerator.Utils.Json;
 using NUnit.Framework;
@@ -42,13 +43,21 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
 
         private static void AssertFileIsComplete(IList<string> expected, string location)
         {
-            var actual = FileManager.NewLogReader(location).GetEnumeration<string>();
+            var actual = FileManager.NewLogReader(location).ReadAll();
             Assert.AreEqual(expected, actual);
         }
 
-        private static JsonLogFileManager FileManager
+        private static ILogFileManager<string> FileManager
         {
-            get { return new JsonLogFileManager(); } // TODO: replace with Interface
+            get
+            {
+                return new LogFileManager<string>(
+                    IoTestHelper.GetTempDirectoryName(),
+                    new FormatWriter<string>(
+                        ".tmp",
+                        JsonLogIoProvider.UncompressedReader<string>,
+                        JsonLogIoProvider.UncompressedWriter<string>));
+            }
         }
 
         private static IList<string> RandomlyFilledList(int count)

@@ -6,7 +6,6 @@ using System.IO;
 using System.Linq;
 using JetBrains;
 using JetBrains.UI.Extensions.Commands;
-using KaVE.Model.Events;
 using KaVE.VsFeedbackGenerator.Utils;
 using KaVE.VsFeedbackGenerator.Utils.Json;
 using NuGet;
@@ -32,7 +31,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             // TODO if this should cause memory problems, we have to find a lazier solution...
             using (var logReader = logFileManager.NewLogReader(logFileName))
             {
-                Events = logReader.GetEnumeration<IDEEvent>().Select(evt => new EventView(evt));
+                Events = logReader.ReadAll().Select(evt => new EventView(evt));
             }
         }
 

@@ -58,7 +58,7 @@ namespace KaVE.VsFeedbackGenerator.Utils
         public override ExportResult<IList<T>> Export(IList<T> events, Func<string, ILogWriter<T>> writerFactory)
         {
             var tempFile = ExportToTemporaryFile(events, writerFactory);
-            // TODO: specify Filename/Extension (TransferFile accepts a parameter filename, but how should it look like? .log? .log.gz?)
+            // TODO: specify Filename/Extention (TransferFile accepts a parameter filename, but how should it look like? .log? .log.gz?)
             var response = HttpPostFileTransfer.TransferFile<ExportResult<object>>(_hostAddress, tempFile);
             if (response == null)
             {

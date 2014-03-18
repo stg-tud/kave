@@ -111,6 +111,8 @@
     <Compile Include="Utils\Json\Model\ContextSerializationTest.cs" />
     <Compile Include="Utils\Json\Model\NamesSerializationTest.cs" />
     <Compile Include="Utils\Json\SerializationTestTarget.cs" />
+    <Compile Include="Utils\LogFileManagerFixtures.cs" />
+    <Compile Include="Utils\LogFileManagerTest.cs" />
     <Compile Include="Utils\Names\ReSharperDeclaredElementNameFactoryTest.cs" />
     <Compile Include="Utils\Names\ReSharperTypeNameFactoryTest.cs" />
     <Compile Include="TestFactories\TypeMockUtils.cs" />

@@ -168,10 +168,17 @@
     <Compile Include="SessionManager\FeedbackView.cs" />
     <Compile Include="MessageBus\TinyMessenger.cs" />
     <Compile Include="Utils\ExportCommand.cs" />
+    <Compile Include="Utils\IFormatReader.cs" />
+    <Compile Include="Utils\IFormatWriter.cs" />
     <Compile Include="Utils\HttpPostFileTransfer.cs" />
     <Compile Include="SessionManager\UploadSettings.cs" />
+    <Compile Include="Utils\ILogFileManager.cs" />
+    <Compile Include="Utils\ILogReader.cs" />
     <Compile Include="Utils\ILogWriter.cs" />
     <Compile Include="Utils\ExportResult.cs" />
+    <Compile Include="Utils\Json\JsonLogFileManager.cs" />
+    <Compile Include="Utils\Json\JsonLogIoProvider.cs" />
+    <Compile Include="Utils\LogFileManager.cs" />
     <Compile Include="Utils\SessionExport.cs" />
     <Compile Include="Utils\SettingsStore.cs" />
     <Compile Include="SessionManager\UploadReminder.cs" />
@@ -179,7 +186,6 @@
     <Compile Include="Utils\GlobalsExtensions.cs" />
     <Compile Include="Utils\InverseBoolConverter.cs" />
     <Compile Include="Utils\Json\EnumToStringConverter.cs" />
-    <Compile Include="Utils\Json\JsonLogFileManager.cs" />
     <Compile Include="Utils\Json\JsonLogReader.cs" />
     <Compile Include="Utils\Json\JsonLogSerialization.cs" />
     <Compile Include="Utils\Json\JsonLogWriter.cs" />

@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.IO;
 using KaVE.Utils.Assertion;
 using Newtonsoft.Json;
@@ -8,7 +8,7 @@ namespace KaVE.VsFeedbackGenerator.Utils.Json
     /// <summary>
     /// Writes objects as Json to a stream. Every object is serialized and written as a single line, delimited by '\r\n'.
     /// </summary>
-    public class JsonLogWriter : IDisposable, ILogWriter<object>
+    public class JsonLogWriter<TMessage> : ILogWriter<TMessage>
     {
         private readonly StreamWriter _logStreamWriter;
         private readonly JsonSerializer _serializer;
@@ -22,13 +22,21 @@ namespace KaVE.VsFeedbackGenerator.Utils.Json
             _serializer = JsonSerializer.Create(JsonLogSerialization.Settings);
         }
 
-        public void Write(object message)
+        public void Write(TMessage message)
         {
             var jsonWriter = new JsonTextWriter(_logStreamWriter);
             _serializer.Serialize(jsonWriter, message);
             jsonWriter.Flush();
             _logStreamWriter.WriteLine();
             _logStreamWriter.Flush();
+        }
+
+        public void WriteRange(IEnumerable<TMessage> message)
+        {
+            foreach (var m in message)
+            {
+                Write(m);
+            }
         }
 
         public void Dispose()
