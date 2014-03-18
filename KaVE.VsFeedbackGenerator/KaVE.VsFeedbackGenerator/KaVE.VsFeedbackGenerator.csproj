@@ -90,13 +90,18 @@
     <Compile Include="AboutAction.cs" />
     <Compile Include="Analysis\ContextAnalysis.cs" />
     <Compile Include="Analysis\MethodInvocationCollector.cs" />
+    <Compile Include="Properties\NotificationAbortDialog.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>NotificationAbortDialog.resx</DependentUpon>
+    </Compile>
     <Compile Include="TrayNotification\HardBalloonPopup.xaml.cs">
       <DependentUpon>HardBalloonPopup.xaml</DependentUpon>
     </Compile>
     <Compile Include="TrayNotification\WindowBase.cs" />
     <Compile Include="Utils\CallbackManager.cs" />
-    <Compile Include="Utils\CustomWpfDialog.xaml.cs">
-      <DependentUpon>CustomWpfDialog.xaml</DependentUpon>
+    <Compile Include="TrayNotification\NotificationAbortDialog.xaml.cs">
+      <DependentUpon>NotificationAbortDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="TrayNotification\NotifyTrayIcon.cs" />
     <Compile Include="TrayNotification\SoftBalloonPopup.xaml.cs">
@@ -191,6 +196,10 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Actions.xml" />
+    <EmbeddedResource Include="Properties\NotificationAbortDialog.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>NotificationAbortDialog.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\General.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>General.Designer.cs</LastGenOutput>
@@ -210,7 +219,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Utils\CustomWpfDialog.xaml">
+    <Page Include="TrayNotification\NotificationAbortDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

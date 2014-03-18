@@ -24,19 +24,17 @@ namespace KaVE.VsFeedbackGenerator.TrayNotification
 
         private void ShowCloseDialog()
         {
-            var dialog = new CustomWpfDialog(
-                "Wenn Sie abbrechen, werden auf ihrer Festplatte weiter Daten geschrieben",
-                "Wizard abbrechen?");
-
+            var dialog = new NotificationAbortDialog();
             dialog.Show();
 
             if (!dialog.Canceled)
             {
                 HandleAbortAction(dialog);
             }
+            CloseBalloon();
         }
 
-        private void HandleAbortAction(CustomWpfDialog dialog)
+        private void HandleAbortAction(NotificationAbortDialog dialog)
         {
             if (dialog.DontShowAgain)
             {
