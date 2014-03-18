@@ -8,8 +8,8 @@ using NUnit.Framework;
 
 namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
 {
-    [TestFixture]
-    class UploadReminderTest
+    [TestFixture, RequiresSTA]
+    internal class UploadReminderTest
     {
         private Mock<ISettingsStore> _mockSettingsStore;
         private UploadSettings _uploadSettings;
@@ -31,7 +31,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
         {
             UploadSettings newSettings = null;
             _mockSettingsStore.Setup(store => store.SetSettings(It.IsAny<UploadSettings>()))
-                             .Callback<UploadSettings>(settings => newSettings = settings);
+                              .Callback<UploadSettings>(settings => newSettings = settings);
 
             WhenUploadReminderIsInitialized();
 
@@ -43,12 +43,16 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
         {
             var now = DateTime.Now;
             _uploadSettings.LastNotificationDate = now;
-            
+
             WhenUploadReminderIsInitialized();
 
             var inSevenDays = now.AddDays(7);
 
-            _mockCallbackManager.Verify(manager => manager.RegisterCallback(It.IsAny<Action>(), It.IsInRange(inSevenDays, inSevenDays.AddSeconds(5), Range.Inclusive)));
+            _mockCallbackManager.Verify(
+                manager =>
+                    manager.RegisterCallback(
+                        It.IsAny<Action>(),
+                        It.IsInRange(inSevenDays, inSevenDays.AddSeconds(5), Range.Inclusive)));
         }
 
         private void WhenUploadReminderIsInitialized()

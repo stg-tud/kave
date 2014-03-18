@@ -5,6 +5,8 @@ using JetBrains.Threading;
 using KaVE.VsFeedbackGenerator;
 using NUnit.Framework;
 
+[assembly: RequiresSTA]
+
 /// <summary>
 /// Test environment. Must be in the global namespace.
 /// </summary>

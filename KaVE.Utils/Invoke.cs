@@ -69,18 +69,14 @@ namespace KaVE.Utils
         // ReSharper disable once InconsistentNaming
         private static bool IsSTAInitialized()
         {
-            return Application.Current != null;
+            var application = Application.Current;
+            return application != null && application.Dispatcher.Thread.GetApartmentState() == ApartmentState.STA;
         }
 
         // ReSharper disable once InconsistentNaming
-        private static TResult OnExistingSTA<TResult>(Func<TResult> actionAsFunc)
+        private static TResult OnExistingSTA<TResult>(Func<TResult> action)
         {
             var dispatcher = Application.Current.Dispatcher;
-            if (dispatcher.CheckAccess())
-            {
-                return actionAsFunc.Invoke();
-            }
-
             var result = default(TResult);
             var exception = default(Exception);
             dispatcher.Invoke(
@@ -89,7 +85,7 @@ namespace KaVE.Utils
                     {
                         try
                         {
-                            result = actionAsFunc.Invoke();
+                            result = action.Invoke();
                         }
                         catch (Exception e)
                         {
