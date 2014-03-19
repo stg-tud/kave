@@ -21,7 +21,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
     [ShellComponent]
     public sealed class FeedbackView : INotifyPropertyChanged
     {
-        private readonly JsonLogFileManager _logFileManager;
+        private readonly ILogFileManager<IDEEvent> _logFileManager;
         private readonly IList<SessionView> _sessions;
         private readonly IList<SessionView> _selectedSessions;
         private DelegateCommand _deleteSessionsCommand;
@@ -31,7 +31,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
         private DateTime _lastRefresh;
         private readonly ISettingsStore _store;
 
-        public FeedbackView(JsonLogFileManager logFileManager, ISettingsStore store)
+        public FeedbackView(JsonIDEEventLogFileManager logFileManager, ISettingsStore store)
         {
             _store = store;
             _logFileManager = logFileManager;

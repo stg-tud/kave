@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using KaVE.VsFeedbackGenerator.Utils;
 using KaVE.VsFeedbackGenerator.Utils.Json;
 using NUnit.Framework;
 
@@ -7,7 +8,8 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json
     [TestFixture]
     public class JsonLogWriterTest
     {
-        private JsonLogWriter<object> _writer;
+        // TODO Writer is never disposed, potentially causes loss of information
+        private ILogWriter<object> _writer;
         private MemoryStream _logStream;
 
         [SetUp]

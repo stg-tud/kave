@@ -4,7 +4,7 @@ using KaVE.VsFeedbackGenerator.Utils.Json;
 
 namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json
 {
-    static class JsonTestExtensions
+    internal static class JsonTestExtensions
     {
         public static byte[] AsBytes(this string str)
         {
@@ -18,19 +18,19 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json
 
         public static string Serialize(this object obj)
         {
-            using (var stream = new MemoryStream())
+            var stream = new MemoryStream();
+            using (var writer = new JsonLogWriter<object>(stream))
             {
-                var writer = new JsonLogWriter<object>(stream);
                 writer.Write(obj);
-                return stream.AsString();
             }
+            return stream.AsString();
         }
 
         public static TModel Deserialize<TModel>(this string serialization)
         {
-            using (var stream = new MemoryStream(serialization.AsBytes()))
+            var stream = new MemoryStream(serialization.AsBytes());
+            using (var reader = new JsonLogReader<TModel>(stream))
             {
-                var reader = new JsonLogReader<TModel>(stream);
                 return reader.ReadNext();
             }
         }

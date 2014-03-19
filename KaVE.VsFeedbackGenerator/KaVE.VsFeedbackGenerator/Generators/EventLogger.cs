@@ -1,13 +1,11 @@
-﻿#if !DEBUG
-using System.IO.Compression;
-#endif
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Application;
 using KaVE.Model.Events;
 using KaVE.Model.Events.VisualStudio;
 using KaVE.VsFeedbackGenerator.Generators.Merging;
 using KaVE.VsFeedbackGenerator.MessageBus;
+using KaVE.VsFeedbackGenerator.Utils;
 using KaVE.VsFeedbackGenerator.Utils.Json;
 
 namespace KaVE.VsFeedbackGenerator.Generators
@@ -21,11 +19,11 @@ namespace KaVE.VsFeedbackGenerator.Generators
         };
 
         private readonly IMessageBus _messageChannel;
-        private readonly JsonLogFileManager _logFileManager;
+        private readonly ILogFileManager<IDEEvent> _logFileManager;
 
         private IDEEvent _lastEvent;
 
-        public EventLogger(IMessageBus messageBus, JsonLogFileManager logFileManager)
+        public EventLogger(IMessageBus messageBus, JsonIDEEventLogFileManager logFileManager)
         {
             _messageChannel = messageBus;
             _logFileManager = logFileManager;

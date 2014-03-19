@@ -5,7 +5,6 @@ using System.Linq;
 using System.Threading;
 using KaVE.JetBrains.Annotations;
 using KaVE.Model.Events;
-using KaVE.Model.Events.VisualStudio;
 using KaVE.Utils.IO;
 using KaVE.VsFeedbackGenerator.Utils;
 using KaVE.VsFeedbackGenerator.Utils.Json;
@@ -30,6 +29,38 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
                     IoTestHelper.GetTempDirectoryName(),
                     JsonLogIoProvider.CompressedJsonFormatWriter<Message>())
             };
+        }
+
+        [Test]
+        public void CompressedTest()
+        {
+            // to summarize the idea behind this test:
+            // the SessionManager does not work properly with the compressed format as default
+            // my best guess was, that some writers aren't disposed properly and therefore the stream looses some information (linebreaks)
+            // this test was written to emulate this situation but it seems to be impossible to write such a test
+            // where a writer is finalized (garbage collected) in such a way that i can reuse the logFile for further writes
+            var manager = new LogFileManager<Message>(
+                IoTestHelper.GetTempDirectoryName(),
+                JsonLogIoProvider.CompressedJsonFormatWriter<Message>());
+
+            var file = manager.GetLogFileName("Compressed");
+            for (var i = 0; i < 15; i ++)
+            {
+                Write(manager, file);
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+            }
+
+            //Assert.AreEqual(1, manager.NewLogReader(file).ReadAll().Count());
+            // ReSharper disable once ReturnValueOfPureMethodIsNotUsed
+            Assert.Throws<InvalidDataException>(() => manager.NewLogReader(file).ReadAll().Count());
+        }
+
+        private void Write(ILogFileManager<Message> manager, string file)
+        {
+            manager.NewLogWriter(file).Write(LogFileManagerFixtures.RandomMessage(2));
         }
 
         [Test]
@@ -61,20 +92,14 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
         [Test, Ignore]
         public void DefaultWriterWritesCompressed()
         {
-            var manager = new JsonLogFileManager();
-            var file = Path.GetTempFileName();
-            IDEEvent message = new SolutionEvent
+            var manager = new JsonLogFileManager<Message>();
+            var message = LogFileManagerFixtures.RandomMessage(8);
+            string file;
+            do
             {
-                Action = SolutionEvent.SolutionAction.OpenSolution,
-                ActiveDocument = null,
-                ActiveWindow = null,
-                IDESessionUUID = "Test_Session",
-                Target = null,
-                TerminatedAt = DateTime.Now.AddMilliseconds(200),
-                TriggeredAt = DateTime.Now.AddMilliseconds(-200),
-                TriggeredBy = IDEEvent.Trigger.Automatic
-            };
-            using (var writer = manager.Writer.First().NewWriter(file))
+                file = Path.Combine(Path.GetTempFileName(), new Random().Next() + manager.DefaultExtention);
+            } while (!File.Exists(file));
+            using (var writer = manager.NewLogWriter(file))
             {
                 writer.Write(message);
             }

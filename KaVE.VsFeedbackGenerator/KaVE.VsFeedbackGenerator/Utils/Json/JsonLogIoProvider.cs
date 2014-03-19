@@ -16,6 +16,16 @@ namespace KaVE.VsFeedbackGenerator.Utils.Json
             return new FormatWriter<TMessage>(".log.gz", CompressedReader<TMessage>, CompressedWriter<TMessage>);
         }
 
+        public static IFormatReader<TMessage> JsonFormatReader<TMessage>()
+        {
+            return new FormatReader<TMessage>(".log", UncompressedReader<TMessage>);
+        }
+
+        public static IFormatReader<TMessage> CompressedJsonFormatReader<TMessage>()
+        {
+            return new FormatReader<TMessage>(".log.gz", CompressedReader<TMessage>);
+        }
+
         internal static ILogWriter<TMessage> CompressedWriter<TMessage>(string logFileName)
         {
             Stream logStream = new FileStream(logFileName, FileMode.Append, FileAccess.Write);

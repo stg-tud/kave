@@ -5,8 +5,7 @@ using KaVE.Model.Events;
 
 namespace KaVE.VsFeedbackGenerator.Utils.Json
 {
-    [ShellComponent]
-    public class JsonLogFileManager : LogFileManager<IDEEvent>
+    internal static class JsonLogFileManagerLocation
     {
         /// <summary>
         ///     Usually something like "C:\Users\%USERNAME%\AppData\Roaming\"
@@ -15,17 +14,23 @@ namespace KaVE.VsFeedbackGenerator.Utils.Json
             Environment.SpecialFolder.ApplicationData);
 
         private const string ProjectName = "KaVE";
-        private static readonly string EventLogsScope = typeof (JsonLogFileManager).Assembly.GetName().Name;
+        private static readonly string EventLogsScope = typeof(JsonLogFileManagerLocation).Assembly.GetName().Name;
 
         /// <summary>
         ///     E.g., "C:\Users\%USERNAME%\AppData\Roaming\KaVE\KaVE.VsFeedbackGenerator\"
         /// </summary>
-        private static readonly string EventLogsPath = Path.Combine(AppDataPath, ProjectName, EventLogsScope);
+        internal static readonly string EventLogsPath = Path.Combine(AppDataPath, ProjectName, EventLogsScope);
+    }
 
+    [ShellComponent]
+    public class JsonIDEEventLogFileManager : JsonLogFileManager<IDEEvent> { }
+
+    public class JsonLogFileManager<TMessage> : LogFileManager<TMessage>
+    {
         public JsonLogFileManager()
             : base(
-                EventLogsPath,
-                JsonLogIoProvider.JsonFormatWriter<IDEEvent>(),
-                JsonLogIoProvider.CompressedJsonFormatWriter<IDEEvent>()) {}
+                JsonLogFileManagerLocation.EventLogsPath,
+                JsonLogIoProvider.JsonFormatWriter<TMessage>(),
+                JsonLogIoProvider.CompressedJsonFormatWriter<TMessage>()) { }
     }
 }

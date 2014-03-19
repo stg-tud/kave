@@ -49,15 +49,15 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
 
         private static ILogFileManager<string> FileManager
         {
-            get
-            {
-                return new LogFileManager<string>(
-                    IoTestHelper.GetTempDirectoryName(),
-                    new FormatWriter<string>(
-                        ".tmp",
-                        JsonLogIoProvider.UncompressedReader<string>,
-                        JsonLogIoProvider.UncompressedWriter<string>));
-            }
+            get { return new LogFileManager<string>(IoTestHelper.GetTempDirectoryName(), TmpFormatWriter()); }
+        }
+
+        private static IFormatWriter<string> TmpFormatWriter()
+        {
+            return new FormatWriter<string>(
+                ".tmp",
+                JsonLogIoProvider.UncompressedReader<string>,
+                JsonLogIoProvider.UncompressedWriter<string>);
         }
 
         private static IList<string> RandomlyFilledList(int count)

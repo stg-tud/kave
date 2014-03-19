@@ -9,6 +9,7 @@ namespace KaVE.CompletionTraceGenerator
 {
     public class CompletionEventToTraceConverter
     {
+        // TODO Writer is never disposed, potentially causes loss of information
         private readonly ILogWriter<CompletionTrace> _writer;
         private CompletionTrace _trace;
 

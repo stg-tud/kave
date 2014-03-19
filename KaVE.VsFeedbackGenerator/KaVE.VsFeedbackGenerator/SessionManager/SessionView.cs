@@ -6,8 +6,8 @@ using System.IO;
 using System.Linq;
 using JetBrains;
 using JetBrains.UI.Extensions.Commands;
+using KaVE.Model.Events;
 using KaVE.VsFeedbackGenerator.Utils;
-using KaVE.VsFeedbackGenerator.Utils.Json;
 using NuGet;
 using Messages = KaVE.VsFeedbackGenerator.Properties.SessionManager;
 
@@ -15,13 +15,13 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
 {
     public class SessionView : INotifyPropertyChanged
     {
-        private readonly JsonLogFileManager _logFileManager;
+        private readonly ILogFileManager<IDEEvent> _logFileManager;
         public string LogFileName { get; private set; }
         private readonly IList<EventView> _events; 
         private readonly IList<EventView> _selectedEvents;
         private DelegateCommand _deleteEventsCommand;
 
-        public SessionView(JsonLogFileManager logFileManager, string logFileName)
+        public SessionView(ILogFileManager<IDEEvent> logFileManager, string logFileName)
         {
             _logFileManager = logFileManager;
             LogFileName = logFileName;

@@ -2,6 +2,7 @@
 using System.Linq;
 using KaVE.Model.Events;
 using KaVE.Model.Events.CompletionEvent;
+using KaVE.VsFeedbackGenerator.Utils;
 using KaVE.VsFeedbackGenerator.Utils.Json;
 
 namespace KaVE.CompletionTraceGenerator
@@ -11,7 +12,7 @@ namespace KaVE.CompletionTraceGenerator
         private static readonly string[] InputFileNames = {@"C:\Users\Sven\test.log"};
         private const string OutputFileName = @"C:\Users\Sven\test.trace";
 
-        private readonly JsonLogFileManager _logFileManager;
+        private readonly ILogFileManager<IDEEvent> _logFileManager;
         private readonly CompletionEventToTraceConverter _toTraceConverter;
 
         public static void Main()
@@ -21,8 +22,10 @@ namespace KaVE.CompletionTraceGenerator
 
         private EventLog2TraceConverter()
         {
-            _logFileManager = new JsonLogFileManager();
-            _toTraceConverter = new CompletionEventToTraceConverter(_logFileManager.NewLogWriter(OutputFileName));
+            _logFileManager = new JsonLogFileManager<IDEEvent>();
+            _toTraceConverter =
+                new CompletionEventToTraceConverter(
+                    new JsonLogFileManager<CompletionTrace>().NewLogWriter(OutputFileName));
         }
 
         private void Run()
@@ -40,7 +43,10 @@ namespace KaVE.CompletionTraceGenerator
 
         private IEnumerable<IDEEvent> ReadIDEEvents(string logFileName)
         {
-            return _logFileManager.NewLogReader(logFileName).ReadAll<IDEEvent>();
+            using (var logReader = _logFileManager.NewLogReader(logFileName))
+            {
+                return logReader.ReadAll();
+            }
         }
     }
 }
