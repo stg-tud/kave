@@ -22,22 +22,22 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
 
         public static string ToXaml(this Context context)
         {
-            if (context == null || context.EnclosingClassHierarchy == null)
+            if (context == null || context.TypeShape.TypeHierarchy == null)
             {
                 return null;
             }
 
             var builder = new StringBuilder();
 
-            builder.AppendHierarchyLine(context.EnclosingClassHierarchy);
+            builder.AppendHierarchyLine(context.TypeShape.TypeHierarchy);
             builder.AppendLine(0, CurlyBracketOpen);
-            if (context.EnclosingMethodDeclaration == null)
+            if (context.EnclosingMethodHierarchy == null)
             {
                 builder.AppendLine(1, CompletionMarker);
             }
             else
             {
-                builder.AppendXamlMethodSignatureLine(context.EnclosingMethodDeclaration.Element);
+                builder.AppendXamlMethodSignatureLine(context.EnclosingMethodHierarchy.Element);
                 builder.AppendLine(1, CurlyBracketOpen);
 
                 context.CalledMethods.ForEach(m =>

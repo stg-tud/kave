@@ -6,7 +6,7 @@ using KaVE.Utils;
 namespace KaVE.Model.Events.CompletionEvent
 {
     [DataContract]
-    public class MethodDeclaration
+    public class MethodHierarchy
     {
         /// <summary>
         ///     The name of a method.
@@ -28,7 +28,7 @@ namespace KaVE.Model.Events.CompletionEvent
         [DataMember]
         public IMethodName First { get; set; }
 
-        public MethodDeclaration(IMethodName methodName)
+        public MethodHierarchy(IMethodName methodName)
         {
             Element = methodName;
         }
@@ -38,7 +38,7 @@ namespace KaVE.Model.Events.CompletionEvent
             return this.Equals(obj, Equals);
         }
 
-        protected bool Equals(MethodDeclaration other)
+        protected bool Equals(MethodHierarchy other)
         {
             return Element.Equals(other.Element) && Equals(Super, other.Super) && Equals(First, other.First);
         }

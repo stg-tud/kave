@@ -13,25 +13,25 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
         public void ImplementedMethodsAreCaptured()
         {
             CompleteInFile(@"
-namespace N
-{
-    interface I
-    {
-        void M();
-    }
+                namespace N
+                {
+                    interface I
+                    {
+                        void M();
+                    }
 
-    class C : I
-    {
-        public void M()
-        {
-            $
-        }
-    }
-}               
+                    class C : I
+                    {
+                        public void M()
+                        {
+                            $
+                        }
+                    }
+                }
             ");
 
-            var actual = ResultContext.TypeShapeMethods;
-            var expected = new HashSet<MethodDeclaration>
+            var actual = ResultContext.TypeShape.MethodHierarchies;
+            var expected = new HashSet<MethodHierarchy>
             {
                 Decl("N.C", null, "N.I"),
             };
@@ -43,25 +43,25 @@ namespace N
         public void OverriddendMethodsAreCaptured()
         {
             CompleteInFile(@"
-namespace N
-{
-    class C1
-    {
-        virtual void M() {}
-    }
+                namespace N
+                {
+                    class C1
+                    {
+                        virtual void M() {}
+                    }
 
-    class C2 : C1
-    {
-        override public void M()
-        {
-            $
-        }
-    }
-}               
+                    class C2 : C1
+                    {
+                        override public void M()
+                        {
+                            $
+                        }
+                    }
+                }               
             ");
 
-            var actual = ResultContext.TypeShapeMethods;
-            var expected = new HashSet<MethodDeclaration>
+            var actual = ResultContext.TypeShape.MethodHierarchies;
+            var expected = new HashSet<MethodHierarchy>
             {
                 Decl("N.C2", "N.C1", null)
             };
@@ -73,27 +73,27 @@ namespace N
         public void SuperImplementationsAreNotTakenIntoAccount()
         {
             CompleteInFile(@"
-namespace N
-{
-    class C1
-    {
-        virtual void M() {}
-    }
+                namespace N
+                {
+                    class C1
+                    {
+                        virtual void M() {}
+                    }
 
-    class C2 : C1
-    {
-        override void M() {}
-    }
+                    class C2 : C1
+                    {
+                        override void M() {}
+                    }
 
-    class C2 : C1
-    {
-        $
-    }
-}               
+                    class C2 : C1
+                    {
+                        $
+                    }
+                }               
             ");
 
-            var actual = ResultContext.TypeShapeMethods;
-            var expected = new HashSet<MethodDeclaration>();
+            var actual = ResultContext.TypeShape.MethodHierarchies;
+            var expected = new HashSet<MethodHierarchy>();
 
             CollectionAssert.AreEquivalent(expected, actual);
         }
@@ -102,28 +102,28 @@ namespace N
         public void MoreComplexHierarchy()
         {
             CompleteInFile(@"
-namespace N
-{
-    public interface I
-    {
-        void M();
-    }
+                namespace N
+                {
+                    public interface I
+                    {
+                        void M();
+                    }
 
-    public class S : I
-    {
-        public virtual void M() {}
-    }
+                    public class S : I
+                    {
+                        public virtual void M() {}
+                    }
 
-    public class C : S
-    {
-        public override void M() {}
-        $
-    }
-}
+                    public class C : S
+                    {
+                        public override void M() {}
+                        $
+                    }
+                }
             ");
 
-            var actual = ResultContext.TypeShapeMethods;
-            var expected = new HashSet<MethodDeclaration>
+            var actual = ResultContext.TypeShape.MethodHierarchies;
+            var expected = new HashSet<MethodHierarchy>
             {
                 Decl("N.C", "N.S", "N.I")
             };
@@ -135,23 +135,23 @@ namespace N
         public void NoStepDownIntoShadowedMethods()
         {
             CompleteInFile(@"
-namespace N
-{
-    public class S
-    {
-        public virtual void M() {}
-    }
+                namespace N
+                {
+                    public class S
+                    {
+                        public virtual void M() {}
+                    }
 
-    public class C : S
-    {
-        public new void M() {}
-        $
-    }
-}
+                    public class C : S
+                    {
+                        public new void M() {}
+                        $
+                    }
+                }
             ");
 
-            var actual = ResultContext.TypeShapeMethods;
-            var expected = new HashSet<MethodDeclaration>
+            var actual = ResultContext.TypeShape.MethodHierarchies;
+            var expected = new HashSet<MethodHierarchy>
             {
                 Decl("N.C", null, null)
             };
@@ -159,13 +159,13 @@ namespace N
             CollectionAssert.AreEquivalent(expected, actual);
         }
 
-        private static MethodDeclaration Decl(string encType, string superType, string firstType)
+        private static MethodHierarchy Decl(string encType, string superType, string firstType)
         {
             var elem = "[System.Void, mscorlib, Version=4.0.0.0] [" + encType + ", TestProject].M()";
             var super = "[System.Void, mscorlib, Version=4.0.0.0] [" + superType + ", TestProject].M()";
             var first = "[System.Void, mscorlib, Version=4.0.0.0] [" + firstType + ", TestProject].M()";
 
-            var decl = new MethodDeclaration(MethodName.Get(elem));
+            var decl = new MethodHierarchy(MethodName.Get(elem));
             if (!superType.IsEmpty())
             {
                 decl.Super = MethodName.Get(super);

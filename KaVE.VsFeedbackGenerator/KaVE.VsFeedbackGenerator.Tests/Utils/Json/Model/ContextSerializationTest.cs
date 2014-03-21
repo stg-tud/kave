@@ -7,7 +7,7 @@ using NUnit.Framework;
 namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.Model
 {
     [TestFixture]
-    class ContextSerializationTest
+    internal class ContextSerializationTest
     {
         [Test]
         public void ShouldSerializeEmptyContext()
@@ -21,12 +21,19 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.Model
         {
             var context = new Context
             {
-                EnclosingClassHierarchy = GetAnonymousTypeHierarchy(),
-                EnclosingMethodDeclaration = new MethodDeclaration(TestNameFactory.GetAnonymousMethodName())
+                TypeShape = new TypeShape
                 {
-                    First = TestNameFactory.GetAnonymousMethodName(),
-                    Super = TestNameFactory.GetAnonymousMethodName(),
+                    TypeHierarchy = GetAnonymousTypeHierarchy(),
+                    MethodHierarchies = new HashSet<MethodHierarchy>
+                    {
+                        new MethodHierarchy(TestNameFactory.GetAnonymousMethodName())
+                        {
+                            First = TestNameFactory.GetAnonymousMethodName(),
+                            Super = TestNameFactory.GetAnonymousMethodName(),
+                        }
+                    }
                 },
+                EnclosingMethod = TestNameFactory.GetAnonymousMethodName(),
                 CalledMethods = new HashSet<IMethodName>
                 {
                     TestNameFactory.GetAnonymousMethodName(),

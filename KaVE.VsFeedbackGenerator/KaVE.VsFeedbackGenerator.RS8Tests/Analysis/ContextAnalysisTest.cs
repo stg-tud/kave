@@ -20,7 +20,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
         {
             WhenCodeCompletionIsInvokedInFile("ProofOfConcept");
 
-            var actual = ResultContext.EnclosingMethodDeclaration.Element;
+            var actual = ResultContext.EnclosingMethodHierarchy.Element;
             var expected =
                 MethodName.Get("[System.Void, mscorlib, Version=4.0.0.0] [TestNamespace.TestClass, TestProject].Doit()");
             Assert.AreEqual(expected, actual);
@@ -30,14 +30,14 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
         public void ShouldNotContainObjectInTypeHierarchy()
         {
             WhenCodeCompletionIsInvokedInFile("ProofOfConcept");
-            Assert.IsNull(ResultContext.EnclosingClassHierarchy.Extends);
+            Assert.IsNull(ResultContext.TypeShape.TypeHierarchy.Extends);
         }
 
         [Test]
         public void ShouldRetrieveEnclosingType()
         {
             WhenCodeCompletionIsInvokedInFile("TypeHierarchy");
-            var actual = ResultContext.EnclosingClassHierarchy.Element;
+            var actual = ResultContext.TypeShape.TypeHierarchy.Element;
 
             var expected = TypeName.Get("TestNamespace.TestClass, TestProject");
 
@@ -48,7 +48,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
         public void ShouldRetrieveSuperType()
         {
             WhenCodeCompletionIsInvokedInFile("TypeHierarchy");
-            var actual = ResultContext.EnclosingClassHierarchy.Extends.Element;
+            var actual = ResultContext.TypeShape.TypeHierarchy.Extends.Element;
 
             var expected = TypeName.Get("TestNamespace.SuperClass, TestProject");
 
@@ -59,7 +59,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
         public void ShouldRetrieveImplementedInterfaces()
         {
             WhenCodeCompletionIsInvokedInFile("TypeHierarchy");
-            var actual = ResultContext.EnclosingClassHierarchy.Implements;
+            var actual = ResultContext.TypeShape.TypeHierarchy.Implements;
 
             var expected = new HashSet<ITypeHierarchy>
             {
@@ -74,7 +74,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
         {
             WhenCodeCompletionIsInvokedInFile("GenericTypeHierarchy");
 
-            var actual = ResultContext.EnclosingClassHierarchy.Extends.Element;
+            var actual = ResultContext.TypeShape.TypeHierarchy.Extends.Element;
             var expected = TypeName.Get("N.IC`1[[T -> System.Int32, mscorlib, Version=4.0.0.0]], TestProject");
             Assert.AreEqual(expected, actual);
         }
@@ -84,7 +84,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
         {
             WhenCodeCompletionIsInvokedInFile("GenericTypeHierarchy");
 
-            var actual = ResultContext.EnclosingClassHierarchy.Element;
+            var actual = ResultContext.TypeShape.TypeHierarchy.Element;
             var expected = TypeName.Get("N.C`1[[T]], TestProject");
             Assert.AreEqual(expected, actual);
         }
@@ -93,7 +93,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
         public void ShouldRetrieveLargeHierarchy()
         {
             WhenCodeCompletionIsInvokedInFile("LargeHierarchy");
-            var actual = ResultContext.EnclosingClassHierarchy;
+            var actual = ResultContext.TypeShape.TypeHierarchy;
             var expected = new TypeHierarchy("N.B, TestProject")
             {
                 Extends = new TypeHierarchy("N.A, TestProject")

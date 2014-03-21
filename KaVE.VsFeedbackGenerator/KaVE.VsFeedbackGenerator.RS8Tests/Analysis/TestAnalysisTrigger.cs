@@ -25,7 +25,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
             try
             {
                 LastException = null;
-                LastContext = new ContextAnalysis().Analyze(context);
+                LastContext = ContextAnalysis.Analyze(context);
             }
             catch (Exception e)
             {

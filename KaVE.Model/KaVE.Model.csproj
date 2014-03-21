@@ -44,7 +44,7 @@
     <Reference Include="System.Runtime.Serialization" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Events\CompletionEvent\MethodDeclaration.cs" />
+    <Compile Include="Events\CompletionEvent\MethodHierarchy.cs" />
     <Compile Include="Events\CompletionEvent\ProposalSelection.cs" />
     <Compile Include="Events\CompletionEvent\Context.cs" />
     <Compile Include="Events\CompletionEvent\CompletionEvent.cs" />
@@ -52,6 +52,7 @@
     <Compile Include="Events\CompletionEvent\Proposal.cs" />
     <Compile Include="Events\CompletionEvent\ProposalCollection.cs" />
     <Compile Include="Events\CompletionEvent\TypeHierarchy.cs" />
+    <Compile Include="Events\CompletionEvent\TypeShape.cs" />
     <Compile Include="Events\ReSharper\ActionEvent.cs" />
     <Compile Include="Events\ReSharper\BulbActionEvent.cs" />
     <Compile Include="Events\VisualStudio\BuildEvent.cs" />

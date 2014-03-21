@@ -47,10 +47,10 @@ namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
         {
             try
             {
-                var ctx = new ContextAnalysis().Analyze(context);
+                var ctx = ContextAnalysis.Analyze(context);
                 _handler.SetContext(ctx);
             }
-            catch (Exception e) {}
+            catch (Exception) {}
             return false;
         }
     }

@@ -11,7 +11,7 @@ namespace KaVE.Model.Events.CompletionEvent
     public class TypeHierarchy : ITypeHierarchy
     {
         /// <summary>
-        /// For internal use only.
+        ///     For internal use only.
         /// </summary>
         [UsedImplicitly, Obsolete]
         public TypeHierarchy()
@@ -36,7 +36,8 @@ namespace KaVE.Model.Events.CompletionEvent
 
         protected bool Equals(TypeHierarchy other)
         {
-            return Implements.SetEquals(other.Implements) && Equals(Extends, other.Extends) && Equals(Element, other.Element);
+            return Implements.SetEquals(other.Implements) && Equals(Extends, other.Extends) &&
+                   Equals(Element, other.Element);
         }
 
         public override int GetHashCode()
@@ -52,31 +53,26 @@ namespace KaVE.Model.Events.CompletionEvent
 
         public override string ToString()
         {
-            return string.Format("[Element: {0}, Extends: {1}, Implements: [{2}]]", Element, Extends, string.Join(", ", Implements));
+            return string.Format(
+                "[Element: {0}, Extends: {1}, Implements: [{2}]]",
+                Element,
+                Extends,
+                string.Join(", ", Implements));
         }
 
         public bool HasSupertypes
         {
-            get
-            {
-                return HasSuperclass || IsImplementingInterfaces;
-            }
+            get { return HasSuperclass || IsImplementingInterfaces; }
         }
 
         public bool HasSuperclass
         {
-            get
-            {
-                return Extends != null;
-            }
+            get { return Extends != null; }
         }
 
         public bool IsImplementingInterfaces
         {
-            get
-            {
-                return Implements.Count > 0;
-            }
+            get { return Implements.Count > 0; }
         }
     }
 }

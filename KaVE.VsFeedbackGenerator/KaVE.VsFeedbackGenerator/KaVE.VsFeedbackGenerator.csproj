@@ -103,8 +103,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AboutAction.cs" />
+    <Compile Include="Analysis\CalledMethodsAnalysis.cs" />
     <Compile Include="Analysis\ContextAnalysis.cs" />
-    <Compile Include="Analysis\MethodInvocationCollector.cs" />
+    <Compile Include="Analysis\TypeShapeAnalysis.cs" />
     <Compile Include="Properties\NotificationAbortDialog.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
