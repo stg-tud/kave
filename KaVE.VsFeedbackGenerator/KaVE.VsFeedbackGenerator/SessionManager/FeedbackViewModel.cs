@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
@@ -12,31 +11,34 @@ using JetBrains.UI.Extensions.Commands;
 using KaVE.Model.Events;
 using KaVE.Utils;
 using KaVE.VsFeedbackGenerator.Utils;
-using KaVE.VsFeedbackGenerator.Utils.Json;
+using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
 using NuGet;
 using Messages = KaVE.VsFeedbackGenerator.Properties.SessionManager;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager
 {
     [ShellComponent]
-    public sealed class FeedbackView : INotifyPropertyChanged
+    public sealed class FeedbackViewModel : ViewModelBase<FeedbackViewModel>
     {
         private readonly ILogFileManager<IDEEvent> _logFileManager;
         private readonly IList<SessionView> _sessions;
         private readonly IList<SessionView> _selectedSessions;
-        private DelegateCommand _deleteSessionsCommand;
         private DelegateCommand _exportSessionsCommand;
         private DelegateCommand _sendSessionsCommand;
         private bool _refreshing;
         private DateTime _lastRefresh;
         private readonly ISettingsStore _store;
 
-        public FeedbackView(JsonIDEEventLogFileManager logFileManager, ISettingsStore store)
+        private readonly InteractionRequest<Confirmation> _deleteSessionsConfirmationRequest; 
+
+        public FeedbackViewModel(ILogFileManager<IDEEvent> logFileManager, ISettingsStore store)
         {
             _store = store;
             _logFileManager = logFileManager;
             _sessions = new ObservableCollection<SessionView>();
             _selectedSessions = new List<SessionView>();
+            DeleteSessionsCommand = new DelegateCommand(OnDeleteSelectedSessions, CanDeleteSessions);
+            _deleteSessionsConfirmationRequest = new InteractionRequest<Confirmation>();
             Released = true;
         }
 
@@ -69,7 +71,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             private set
             {
                 _refreshing = value;
-                OnPropertyChanged("Refreshing");
+                OnPropertyChanged(vm => vm.Refreshing);
             }
         }
 
@@ -85,8 +87,8 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
                         {
                             _sessions.AddRange(value);
                         }
-                        _sendSessionsCommand.RaiseCanExecuteChanged();
-                        _exportSessionsCommand.RaiseCanExecuteChanged();
+                        SendSessionsCommand.RaiseCanExecuteChanged();
+                        ExportSessionsCommand.RaiseCanExecuteChanged();
                     });
             }
             get { return _sessions; }
@@ -103,9 +105,9 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             {
                 _selectedSessions.Clear();
                 _selectedSessions.AddRange(value);
-                // single selected session depends on selected sessions
-                OnPropertyChanged("SingleSelectedSession");
-                _deleteSessionsCommand.RaiseCanExecuteChanged();
+                // single selected session depends on selected session
+                OnPropertyChanged(vm => vm.SingleSelectedSession);
+                DeleteSessionsCommand.RaiseCanExecuteChanged();
             }
         }
 
@@ -180,55 +182,39 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             return saveFileDialog.FileName;
         }
 
-        public DelegateCommand DeleteSessionsCommand
-        {
-            get { return _deleteSessionsCommand ?? (_deleteSessionsCommand = CreateDeleteSessionsCommand()); }
-        }
-
-        private DelegateCommand CreateDeleteSessionsCommand()
-        {
-            Func<string> confirmationTitle = () => Messages.SessionDeleteConfirmTitle;
-            Func<string> confirmationText = () =>
-            {
-                var numberOfSessions = _selectedSessions.Count;
-                return numberOfSessions == 1
-                    ? Messages.SessionDeleteConfirmSingular
-                    : Messages.SessionDeleteConfirmPlural.FormatEx(numberOfSessions);
-            };
-            return ConfirmedCommand.Create(DeleteSessions, confirmationTitle, confirmationText, CanDeleteSessions);
-        }
+        public DelegateCommand DeleteSessionsCommand { get; private set; }
+        public IInteractionRequest DeleteSessionsConfirmationRequest { get { return _deleteSessionsConfirmationRequest; } }
 
         private bool CanDeleteSessions()
         {
             return _selectedSessions.Count > 0;
         }
 
-        private void DeleteSessions()
+        private void OnDeleteSelectedSessions()
         {
-            for (var i = 0; i < _sessions.Count; i++)
-            {
-                var session = _sessions[i];
-                if (_selectedSessions.Contains(session))
+            var numberOfSessions = _selectedSessions.Count;
+            _deleteSessionsConfirmationRequest.Raise(
+                new Confirmation
                 {
-                    _sessions.Remove(session);
-                    File.Delete(session.LogFileName);
-                    i--;
-                }
-            }
+                    Title = Messages.SessionDeleteConfirmTitle,
+                    Content = numberOfSessions == 1
+                    ? Messages.SessionDeleteConfirmSingular
+                    : Messages.SessionDeleteConfirmPlural.FormatEx(numberOfSessions)
+                }, DeleteSessions);
         }
 
-        #region INotifyPropertyChanged implementation
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        private void OnPropertyChanged(string propertyName)
+        private void DeleteSessions(Confirmation confirmation)
         {
-            if (PropertyChanged != null)
+            if (!confirmation.Confirmed)
             {
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+                return;
+            }
+
+            foreach (var selectedSession in _selectedSessions)
+            {
+                File.Delete(selectedSession.LogFileName);
+                _sessions.Remove(selectedSession);
             }
         }
-
-        #endregion
     }
 }

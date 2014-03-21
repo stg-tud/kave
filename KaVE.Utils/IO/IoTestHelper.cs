@@ -29,5 +29,14 @@ namespace KaVE.Utils.IO
             File.Create(file);
             return file;
         }
+
+        /// <summary>
+        /// Creates a uniquely named, zero bytes temporary file on disk and returns its full path.
+        /// </summary>
+        /// <exception cref="IOException">if the file cannot be created</exception>
+        public static string GetTempFileName()
+        {
+            return Path.GetTempFileName();
+        }
     }
 }

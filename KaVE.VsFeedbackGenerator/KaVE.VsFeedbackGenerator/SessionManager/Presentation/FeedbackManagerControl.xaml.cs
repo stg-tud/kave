@@ -10,13 +10,13 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
     /// </summary>
     public partial class SessionManagerControl
     {
-        private readonly FeedbackView _feedbackView;
+        private readonly FeedbackViewModel _feedbackViewModel;
         private ScheduledAction _releaseTimer;
 
-        public SessionManagerControl(FeedbackView holder)
+        public SessionManagerControl(FeedbackViewModel holder)
         {
             _releaseTimer = ScheduledAction.NoOp;
-            _feedbackView = holder;
+            _feedbackViewModel = holder;
             DataContext = holder;
             InitializeComponent();
         }
@@ -50,7 +50,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
         /// </summary>
         private void SessionListView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            _feedbackView.SelectedSessions = SessionListView.SelectedItems.Cast<SessionView>();
+            _feedbackViewModel.SelectedSessions = SessionListView.SelectedItems.Cast<SessionView>();
         }
 
         /// <summary>
@@ -60,9 +60,9 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
         /// </summary>
         private void EventListView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (_feedbackView.SingleSelectedSession != null)
+            if (_feedbackViewModel.SingleSelectedSession != null)
             {
-                _feedbackView.SingleSelectedSession.SelectedEvents = EventListView.SelectedItems.Cast<EventView>();
+                _feedbackViewModel.SingleSelectedSession.SelectedEvents = EventListView.SelectedItems.Cast<EventView>();
             }
         }
 
@@ -79,19 +79,19 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
 
         private void SessionManagerControl_OnLostFocus(object sender, RoutedEventArgs e)
         {
-            lock (_feedbackView)
+            lock (_feedbackViewModel)
             {
                 // release view data after 5 minutes of inactivity
-                _releaseTimer = Invoke.Later(() => _feedbackView.Release(), 300000);
+                _releaseTimer = Invoke.Later(() => _feedbackViewModel.Release(), 300000);
             }
         }
 
         private void SessionManagerControl_OnGotFocus(object sender, RoutedEventArgs e)
         {
-            lock (_feedbackView)
+            lock (_feedbackViewModel)
             {
                 _releaseTimer.Cancel();
-                if (_feedbackView.Released)
+                if (_feedbackViewModel.Released)
                 {
                     RefreshControl();
                 }
@@ -100,7 +100,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
 
         private void RefreshControl()
         {
-            _feedbackView.Refresh();
+            _feedbackViewModel.Refresh();
         }
     }
 }

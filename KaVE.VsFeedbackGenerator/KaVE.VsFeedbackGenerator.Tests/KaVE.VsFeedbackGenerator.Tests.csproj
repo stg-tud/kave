@@ -41,6 +41,18 @@
     <Reference Include="envdte, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
+    <Reference Include="Microsoft.Expression.Interactions">
+      <HintPath>..\..\packages\Prism.4.1.0.0\lib\NET40\Microsoft.Expression.Interactions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Prism">
+      <HintPath>..\..\packages\Prism.4.1.0.0\lib\NET40\Microsoft.Practices.Prism.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Prism.Interactivity">
+      <HintPath>..\..\packages\Prism.4.1.0.0\lib\NET40\Microsoft.Practices.Prism.Interactivity.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.ServiceLocation">
+      <HintPath>..\..\packages\CommonServiceLocator.1.0\lib\NET35\Microsoft.Practices.ServiceLocation.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.VisualStudio.CommandBars, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
@@ -74,6 +86,9 @@
       <HintPath>..\..\packages\Microsoft.Bcl.1.1.6\lib\net40\System.Threading.Tasks.dll</HintPath>
     </Reference>
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Windows.Interactivity">
+      <HintPath>..\..\packages\Prism.4.1.0.0\lib\NET40\System.Windows.Interactivity.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xaml" />
     <Reference Include="System.XML" />
     <Reference Include="WindowsBase" />
@@ -88,6 +103,7 @@
     <Compile Include="Generators\VisualStudio\WindowEventGeneratorTest.cs" />
     <Compile Include="MessageBus\TinyMessengerMessageChannelTest.cs" />
     <Compile Include="SessionManager\CallbackManagerTest.cs" />
+    <Compile Include="SessionManager\DeleteSessionCommandTest.cs" />
     <Compile Include="SessionManager\UploadReminderTest.cs" />
     <Compile Include="SessionManager\UploadSettingsTest.cs" />
     <Compile Include="TestFactories\Actions\ActionManagerMockExtensions.cs" />
@@ -136,6 +152,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup />

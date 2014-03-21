@@ -13,14 +13,14 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
         public SessionManagerWindowRegistrar(Lifetime lifetime,
             ToolWindowManager toolWindowManager,
             SessionManagerWindowDescriptor descriptor,
-            FeedbackView feedbackView)
+            FeedbackViewModel feedbackViewModel)
         {
             _toolWindowClass = toolWindowManager.Classes[descriptor];
             _toolWindowClass.RegisterEmptyContent(
                 lifetime,
                 lt =>
                 {
-                    var window = new SessionManagerControl(feedbackView);
+                    var window = new SessionManagerControl(feedbackViewModel);
                     var control = new EitherControl(window);
                     return control.BindToLifetime(lt);
                 });
