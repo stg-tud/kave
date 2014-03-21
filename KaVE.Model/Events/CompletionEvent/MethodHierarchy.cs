@@ -28,7 +28,7 @@ namespace KaVE.Model.Events.CompletionEvent
         [DataMember]
         public IMethodName First { get; set; }
 
-        public MethodHierarchy(IMethodName methodName)
+        public MethodHierarchy([NotNull] IMethodName methodName)
         {
             Element = methodName;
         }

@@ -32,8 +32,10 @@ namespace KaVE.Model.Events.CompletionEvent
         /// </summary>
         public IMethodName EnclosingMethod
         {
-            get { return EnclosingMethodHierarchy.Element; }
-            set { EnclosingMethodHierarchy = new MethodHierarchy(value); }
+            // ReSharper disable CSharpWarnings::CS0618
+            get { return EnclosingMethodHierarchy != null ? EnclosingMethodHierarchy.Element : null; }
+            set { EnclosingMethodHierarchy = value != null ? new MethodHierarchy(value) : null; }
+            // ReSharper restore CSharpWarnings::CS0618
         }
 
         /// <summary>
