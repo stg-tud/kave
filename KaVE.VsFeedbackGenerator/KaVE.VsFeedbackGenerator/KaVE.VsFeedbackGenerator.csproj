@@ -97,6 +97,11 @@
     <Compile Include="Interactivity\IInteractionRequest.cs" />
     <Compile Include="Interactivity\InteractionRequestedEventArgs.cs" />
     <Compile Include="Interactivity\Notification.cs" />
+    <Compile Include="Properties\PopupNotification.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PopupNotification.resx</DependentUpon>
+    </Compile>
     <Compile Include="Properties\NotificationAbortDialog.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -212,6 +217,10 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Actions.xml" />
+    <EmbeddedResource Include="Properties\PopupNotification.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>PopupNotification.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\NotificationAbortDialog.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>NotificationAbortDialog.Designer.cs</LastGenOutput>

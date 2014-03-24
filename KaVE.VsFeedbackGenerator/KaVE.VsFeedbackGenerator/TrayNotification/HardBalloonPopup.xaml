@@ -2,7 +2,8 @@
     x:Class="KaVE.VsFeedbackGenerator.TrayNotification.HardBalloonPopup"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:src="clr-namespace:KaVE.VsFeedbackGenerator.TrayNotification" 
+    xmlns:src="clr-namespace:KaVE.VsFeedbackGenerator.TrayNotification"
+    xmlns:root="clr-namespace:KaVE.VsFeedbackGenerator"
     Height="130"
     Width="283"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -50,16 +51,16 @@
             TextWrapping="Wrap"
             HorizontalAlignment="Left">
             <Run
-                Text="KaVE Feedback Upload Reminder"
-                Language="de-ch" />
+                Text="{x:Static root:Properties.PopupNotification.NotificationTitel}"
+             />
         </TextBlock>
         <TextBlock
             Margin="10,38.62,10,0"
             VerticalAlignment="Top"
             TextWrapping="Wrap"
             HorizontalAlignment="Left">
-            <Run Text="Bitte laden Sie ihr aktuelles Feedback hoch:" />
-            <Button Margin="100, 20, 0, 0" Click="Wizard_Button_OnClick">Wizard starten</Button>
+            <Run Text="{x:Static root:Properties.PopupNotification.InformationHardpopup}" />
+            <Button Margin="100, 20, 0, 0" Click="Wizard_Button_OnClick" Content="{x:Static root:Properties.PopupNotification.WizardButton}" />
         </TextBlock>
     </Grid>
 </src:WindowBase>
