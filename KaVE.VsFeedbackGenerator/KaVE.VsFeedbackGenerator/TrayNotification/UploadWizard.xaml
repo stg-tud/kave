@@ -23,8 +23,8 @@
         </Expander>
         <StackPanel Orientation="Horizontal" Margin="5" HorizontalAlignment="Right">
             <Image Name="TypeIcon" HorizontalAlignment="Left" VerticalAlignment="Center" Source="{StaticResource Icon}" Height="25" Width="25"/>
-            <Button Content="Bla" IsDefault="True" Margin="5" MinWidth="93" Name="BtnYes" Click="btnYes_Click" />
-            <Button Content="Bla" IsCancel="True" Margin="5"  MinWidth="93" Name="BtnNo" Click="btnNo_Click" />
+            <Button Content="Bla" IsDefault="True" Margin="5" MinWidth="93" Name="BtnYes"/>
+            <Button Content="Bla" IsCancel="True" Margin="5"  MinWidth="93" Name="BtnNo" />
         </StackPanel>
     </StackPanel>
 </Window>
