@@ -22,7 +22,7 @@ namespace KaVE.VsFeedbackGenerator.Properties {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class General {
+    public class General {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -36,7 +36,7 @@ namespace KaVE.VsFeedbackGenerator.Properties {
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("KaVE.VsFeedbackGenerator.Properties.General", typeof(General).Assembly);
@@ -51,7 +51,7 @@ namespace KaVE.VsFeedbackGenerator.Properties {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -66,7 +66,7 @@ namespace KaVE.VsFeedbackGenerator.Properties {
         ///
         ///.
         /// </summary>
-        internal static string About_Text {
+        public static string About_Text {
             get {
                 return ResourceManager.GetString("About_Text", resourceCulture);
             }
@@ -75,7 +75,7 @@ namespace KaVE.VsFeedbackGenerator.Properties {
         /// <summary>
         ///   Looks up a localized string similar to About KaVE Feedback.
         /// </summary>
-        internal static string About_Title {
+        public static string About_Title {
             get {
                 return ResourceManager.GetString("About_Title", resourceCulture);
             }
@@ -84,7 +84,7 @@ namespace KaVE.VsFeedbackGenerator.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Nein.
         /// </summary>
-        internal static string Confirmation_Cancel {
+        public static string Confirmation_Cancel {
             get {
                 return ResourceManager.GetString("Confirmation_Cancel", resourceCulture);
             }
@@ -93,7 +93,7 @@ namespace KaVE.VsFeedbackGenerator.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Ja.
         /// </summary>
-        internal static string Confirmation_OK {
+        public static string Confirmation_OK {
             get {
                 return ResourceManager.GetString("Confirmation_OK", resourceCulture);
             }

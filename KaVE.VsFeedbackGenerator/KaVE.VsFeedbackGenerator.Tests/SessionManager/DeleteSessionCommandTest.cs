@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using JetBrains;
 using KaVE.Model.Events;
 using KaVE.Utils.IO;
+using KaVE.VsFeedbackGenerator.Interactivity;
 using KaVE.VsFeedbackGenerator.SessionManager;
+using KaVE.VsFeedbackGenerator.Tests.Interactivity;
 using KaVE.VsFeedbackGenerator.Utils;
-using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
 using Moq;
 using NUnit.Framework;
 using Thread = System.Threading.Thread;
@@ -19,7 +20,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
     {
         private FeedbackViewModel _uut;
         private Mock<ILogFileManager<IDEEvent>> _mockLogFileManager;
-        private InteractionRequestTestHelper<Confirmation> _deleteSessionConfirmationRequestHelper;
+        private InteractionRequestTestHelper<Confirmation> _confirmationRequestHelper;
 
         [SetUp]
         public void SetUp()
@@ -29,8 +30,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
                                .Returns(new Mock<ILogReader<IDEEvent>>().Object);
 
             _uut = new FeedbackViewModel(_mockLogFileManager.Object, null);
-
-            _deleteSessionConfirmationRequestHelper = new InteractionRequestTestHelper<Confirmation>(_uut.DeleteSessionsConfirmationRequest);
+            _confirmationRequestHelper = _uut.ConfirmationRequest.NewTestHelper();
         }
 
         [Test]
@@ -46,7 +46,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
         [Test]
         public void ShouldBeEnabledIfASessionIsSelected()
         {
-            GivenSessionManagerDisplaysSessions("file1", "file2");
+            GivenViewModelRepresents("file1", "file2");
             GivenSelectionAt(0);
 
             var deletionEnabled = _uut.DeleteSessionsCommand.CanExecute(null);
@@ -57,38 +57,58 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
         [Test]
         public void ShouldAskForConfirmationIfDeleteIsPressed()
         {
-            GivenSessionManagerDisplaysSessions("file1");
+            GivenViewModelRepresents("file1");
             GivenSelectionAt(0);
 
             _uut.DeleteSessionsCommand.Execute(null);
 
-            Assert.IsTrue(_deleteSessionConfirmationRequestHelper.IsRequestRaised);
+            Assert.IsTrue(_confirmationRequestHelper.IsRequestRaised);
         }
 
-        // TODO write tests for other message (parts)
         [Test]
-        public void ShouldAskForConfirmation_CheckTitle()
+        public void ShouldAskForConfirmationForSingleSession()
         {
-            GivenSessionManagerDisplaysSessions("file1");
+            GivenViewModelRepresents("file1");
             GivenSelectionAt(0);
 
             _uut.DeleteSessionsCommand.Execute(null);
 
-            var expected = Messages.SessionDeleteConfirmTitle;
-            var actual = _deleteSessionConfirmationRequestHelper.Context.Title;
+            var expected = new Confirmation
+            {
+                Caption = Messages.SessionDeleteConfirmTitle,
+                Message = Messages.SessionDeleteConfirmSingular
+            };
+            var actual = _confirmationRequestHelper.Context;
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void ShouldAskForConfirmationForMultipleSession()
+        {
+            GivenViewModelRepresents("file1", "file2", "file3");
+            GivenSelectionAt(0,2);
+
+            _uut.DeleteSessionsCommand.Execute(null);
+
+            var expected = new Confirmation
+            {
+                Caption = Messages.SessionDeleteConfirmTitle,
+                Message = Messages.SessionDeleteConfirmPlural.FormatEx(2)
+            };
+            var actual = _confirmationRequestHelper.Context;
             Assert.AreEqual(expected, actual);
         }
 
         [Test]
         public void ShouldDoNothingIfConfirmationIsDenied()
         {
-            GivenSessionManagerDisplaysSessions("a.file");
+            GivenViewModelRepresents("a.file");
             GivenSelectionAt(0);
             var expected = _uut.Sessions.ToList();
 
             _uut.DeleteSessionsCommand.Execute(null);
-            _deleteSessionConfirmationRequestHelper.Context.Confirmed = false;
-            _deleteSessionConfirmationRequestHelper.Callback();
+            _confirmationRequestHelper.Context.Confirmed = false;
+            _confirmationRequestHelper.Callback();
 
             CollectionAssert.AreEqual(expected, _uut.Sessions);
         }
@@ -98,13 +118,13 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
         public void ShouldDeleteSelectedSessionIfConfirmationIsGiven()
         {
             var logFile1Name = IoTestHelper.GetTempFileName();
-            GivenSessionManagerDisplaysSessions(logFile1Name, "file2");
+            GivenViewModelRepresents(logFile1Name, "file2");
             GivenSelectionAt(0);
             var expected = _uut.Sessions.Skip(1).ToList();
 
             _uut.DeleteSessionsCommand.Execute(null);
-            _deleteSessionConfirmationRequestHelper.Context.Confirmed = true;
-            _deleteSessionConfirmationRequestHelper.Callback();
+            _confirmationRequestHelper.Context.Confirmed = true;
+            _confirmationRequestHelper.Callback();
 
             CollectionAssert.AreEqual(expected, _uut.Sessions);
             Assert.IsFalse(File.Exists(logFile1Name));
@@ -112,10 +132,10 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
 
         // TODO test that session remains in UI when log-file manager fails to delete
 
-        private void GivenSessionManagerDisplaysSessions(params string[] logFileNames)
+        private void GivenViewModelRepresents(params string[] logFileNames)
         {
             _mockLogFileManager.Setup(mgr => mgr.GetLogFileNames()).Returns(logFileNames);
-            RefreshViewAndWait();
+            RefreshViewModel();
         }
 
         private void GivenSelectionAt(params int[] indexes)
@@ -135,32 +155,13 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
             _uut.SelectedSessions = selectedSessions;
         }
 
-        private void RefreshViewAndWait()
+        private void RefreshViewModel()
         {
             _uut.Refresh();
             while (_uut.Refreshing)
             {
                 Thread.Sleep(5);
             }
-        }
-    }
-
-    public class InteractionRequestTestHelper<T> where T : Notification
-    {
-        public bool IsRequestRaised { get; private set; }
-        public string Title { get; private set; }
-        public T Context { get; private set; }
-        public Action Callback { get; private set; } 
-
-        public InteractionRequestTestHelper(IInteractionRequest request)
-        {
-            request.Raised += (s, e) =>
-            {
-                IsRequestRaised = true;
-                Title = e.Context.Title;
-                Context = (T) e.Context;
-                Callback = e.Callback;
-            };
         }
     }
 }

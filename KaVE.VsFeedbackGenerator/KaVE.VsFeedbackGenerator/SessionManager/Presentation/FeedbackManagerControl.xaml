@@ -4,14 +4,13 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:sessionManager="clr-namespace:KaVE.VsFeedbackGenerator.SessionManager"
-             mc:Ignorable="d"
-             d:DesignHeight="300" d:DesignWidth="1000"
-             d:DataContext="{d:DesignInstance Type=sessionManager:FeedbackViewModel, IsDesignTimeCreatable=False}"
              xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
              xmlns:root="clr-namespace:KaVE.VsFeedbackGenerator"
              xmlns:util="clr-namespace:KaVE.VsFeedbackGenerator.Utils"
              xmlns:presentation="clr-namespace:KaVE.VsFeedbackGenerator.SessionManager.Presentation"
-             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             mc:Ignorable="d"
+             d:DesignHeight="300" d:DesignWidth="1000"
+             d:DataContext="{d:DesignInstance Type=sessionManager:FeedbackViewModel, IsDesignTimeCreatable=False}"
              Loaded="FeedbackWindowControl_OnLoaded"
              GotKeyboardFocus="SessionManagerControl_OnGotFocus"
              LostKeyboardFocus="SessionManagerControl_OnLostFocus">
@@ -44,13 +43,6 @@
             </CollectionViewSource.SortDescriptions>
         </CollectionViewSource>
     </UserControl.Resources>
-    <i:Interaction.Triggers>
-        <i:EventTrigger EventName="Raised" SourceObject="{Binding DeleteSessionsConfirmationRequest}">
-            <i:EventTrigger.Actions>
-                <presentation:ConfirmationDialogAction />
-            </i:EventTrigger.Actions>
-        </i:EventTrigger>
-    </i:Interaction.Triggers>
     <DockPanel>
         <ToolBarTray IsLocked="True" DockPanel.Dock="Top" AllowDrop="False">
             <ToolBar OverflowMode="Never" Loaded="ToolBar_OnLoaded"

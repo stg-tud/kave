@@ -2,22 +2,25 @@
 using System.Windows;
 using System.Windows.Controls;
 using KaVE.Utils;
+using KaVE.VsFeedbackGenerator.Interactivity;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
 {
     /// <summary>
-    /// Interaktionslogik für SessionManagerControl.xaml
+    ///     Interaktionslogik für SessionManagerControl.xaml
     /// </summary>
     public partial class SessionManagerControl
     {
         private readonly FeedbackViewModel _feedbackViewModel;
         private ScheduledAction _releaseTimer;
 
-        public SessionManagerControl(FeedbackViewModel holder)
+        public SessionManagerControl(FeedbackViewModel feedbackViewModel)
         {
             _releaseTimer = ScheduledAction.NoOp;
-            _feedbackViewModel = holder;
-            DataContext = holder;
+            _feedbackViewModel = feedbackViewModel;
+            DataContext = feedbackViewModel;
+            _feedbackViewModel.ConfirmationRequest.Raised += new ConfirmationRequestHandler(this).Handle;
+
             InitializeComponent();
         }
 
@@ -27,7 +30,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
         }
 
         /// <summary>
-        /// Makes the overflow dropdown button invisible.
+        ///     Makes the overflow dropdown button invisible.
         /// </summary>
         private void ToolBar_OnLoaded(object sender, RoutedEventArgs e)
         {
@@ -44,9 +47,9 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
         }
 
         /// <summary>
-        /// Unfortunately, SelectedItems is not a bidirectional control property, hence, we cannot bind it to a
-        /// property of out view model to access the set of selected items. Therefore, we react on selection changes
-        /// here and update our model property manually.
+        ///     Unfortunately, SelectedItems is not a bidirectional control property, hence, we cannot bind it to a
+        ///     property of out view model to access the set of selected items. Therefore, we react on selection changes
+        ///     here and update our model property manually.
         /// </summary>
         private void SessionListView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -54,9 +57,9 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
         }
 
         /// <summary>
-        /// Unfortunately, SelectedItems is not a bidirectional control property, hence, we cannot bind it to a
-        /// property of out view model to access the set of selected items. Therefore, we react on selection changes
-        /// here and update our model property manually.
+        ///     Unfortunately, SelectedItems is not a bidirectional control property, hence, we cannot bind it to a
+        ///     property of out view model to access the set of selected items. Therefore, we react on selection changes
+        ///     here and update our model property manually.
         /// </summary>
         private void EventListView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {

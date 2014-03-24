@@ -47,18 +47,6 @@
     <Reference Include="Hardcodet.Wpf.TaskbarNotification">
       <HintPath>..\..\packages\Hardcodet.NotifyIcon.Wpf.1.0.5\lib\net40\Hardcodet.Wpf.TaskbarNotification.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Expression.Interactions">
-      <HintPath>..\..\packages\Prism.4.1.0.0\lib\NET40\Microsoft.Expression.Interactions.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Practices.Prism">
-      <HintPath>..\..\packages\Prism.4.1.0.0\lib\NET40\Microsoft.Practices.Prism.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Practices.Prism.Interactivity">
-      <HintPath>..\..\packages\Prism.4.1.0.0\lib\NET40\Microsoft.Practices.Prism.Interactivity.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Practices.ServiceLocation">
-      <HintPath>..\..\packages\CommonServiceLocator.1.0\lib\NET35\Microsoft.Practices.ServiceLocation.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.VisualStudio.CommandBars, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
@@ -95,9 +83,6 @@
     <Reference Include="System.Threading.Tasks">
       <HintPath>..\..\packages\Microsoft.Bcl.1.1.6\lib\net40\System.Threading.Tasks.dll</HintPath>
     </Reference>
-    <Reference Include="System.Windows.Interactivity">
-      <HintPath>..\..\packages\Prism.4.1.0.0\lib\NET40\System.Windows.Interactivity.dll</HintPath>
-    </Reference>
     <Reference Include="System.Xaml" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
@@ -108,12 +93,17 @@
     <Compile Include="Analysis\CalledMethodsAnalysis.cs" />
     <Compile Include="Analysis\ContextAnalysis.cs" />
     <Compile Include="Analysis\TypeShapeAnalysis.cs" />
+    <Compile Include="Interactivity\Confirmation.cs" />
+    <Compile Include="Interactivity\IInteractionRequest.cs" />
+    <Compile Include="Interactivity\InteractionRequestedEventArgs.cs" />
+    <Compile Include="Interactivity\Notification.cs" />
     <Compile Include="Properties\NotificationAbortDialog.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>NotificationAbortDialog.resx</DependentUpon>
     </Compile>
-    <Compile Include="SessionManager\Presentation\ConformationWindowAction.cs" />
+    <Compile Include="Interactivity\InteractionRequest.cs" />
+    <Compile Include="Interactivity\ConfirmationRequestHandler.cs" />
     <Compile Include="SessionManager\ViewModelBase.cs" />
     <Compile Include="TrayNotification\HardBalloonPopup.xaml.cs">
       <DependentUpon>HardBalloonPopup.xaml</DependentUpon>
@@ -227,7 +217,7 @@
       <LastGenOutput>NotificationAbortDialog.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\General.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>General.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -241,10 +231,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="SessionManager\Presentation\ConfirmationDialog.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="TrayNotification\HardBalloonPopup.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

@@ -10,8 +10,8 @@ using JetBrains.Application;
 using JetBrains.UI.Extensions.Commands;
 using KaVE.Model.Events;
 using KaVE.Utils;
+using KaVE.VsFeedbackGenerator.Interactivity;
 using KaVE.VsFeedbackGenerator.Utils;
-using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
 using NuGet;
 using Messages = KaVE.VsFeedbackGenerator.Properties.SessionManager;
 
@@ -29,7 +29,8 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
         private DateTime _lastRefresh;
         private readonly ISettingsStore _store;
 
-        private readonly InteractionRequest<Confirmation> _deleteSessionsConfirmationRequest; 
+        private readonly InteractionRequest<Confirmation> _confirmationRequest;
+        public IInteractionRequest<Confirmation> ConfirmationRequest { get { return _confirmationRequest; } }
 
         public FeedbackViewModel(ILogFileManager<IDEEvent> logFileManager, ISettingsStore store)
         {
@@ -38,7 +39,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             _sessions = new ObservableCollection<SessionView>();
             _selectedSessions = new List<SessionView>();
             DeleteSessionsCommand = new DelegateCommand(OnDeleteSelectedSessions, CanDeleteSessions);
-            _deleteSessionsConfirmationRequest = new InteractionRequest<Confirmation>();
+            _confirmationRequest = new InteractionRequest<Confirmation>();
             Released = true;
         }
 
@@ -183,7 +184,6 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
         }
 
         public DelegateCommand DeleteSessionsCommand { get; private set; }
-        public IInteractionRequest DeleteSessionsConfirmationRequest { get { return _deleteSessionsConfirmationRequest; } }
 
         private bool CanDeleteSessions()
         {
@@ -193,11 +193,11 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
         private void OnDeleteSelectedSessions()
         {
             var numberOfSessions = _selectedSessions.Count;
-            _deleteSessionsConfirmationRequest.Raise(
+            _confirmationRequest.Raise(
                 new Confirmation
                 {
-                    Title = Messages.SessionDeleteConfirmTitle,
-                    Content = numberOfSessions == 1
+                    Caption = Messages.SessionDeleteConfirmTitle,
+                    Message = numberOfSessions == 1
                     ? Messages.SessionDeleteConfirmSingular
                     : Messages.SessionDeleteConfirmPlural.FormatEx(numberOfSessions)
                 }, DeleteSessions);
@@ -210,6 +210,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
                 return;
             }
 
+            // TODO fix concurrent modification!
             foreach (var selectedSession in _selectedSessions)
             {
                 File.Delete(selectedSession.LogFileName);
