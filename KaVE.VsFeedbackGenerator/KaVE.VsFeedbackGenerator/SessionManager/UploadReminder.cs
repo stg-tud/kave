@@ -75,7 +75,6 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
 
         private static bool OneWeekWithoutUpload(UploadSettings settings)
         {
-            var time = settings.LastUploadDate;
             return settings.LastUploadDate.AddDays(7) < DateTime.Now;
         }
     }
