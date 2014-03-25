@@ -4,24 +4,22 @@ using KaVE.Utils;
 
 namespace KaVE.VsFeedbackGenerator.Utils
 {
-    public interface ICallbackManager
-    {
-        void RegisterCallback(Action callBack, int delay);
-        void RegisterCallback(Action executeOnceAWeek, DateTime nextNotificationTime);
-    }
-
-
     [ShellComponent]
-    public class CallbackManager : ICallbackManager
-    {
-        public void RegisterCallback(Action callback, int delay)
+    public class CallbackManager
+    {     
+        public virtual void RegisterCallback(Action callback, int delayInMillisecond)
         {
-            Invoke.Later(callback, delay);
+            Invoke.Later(callback, delayInMillisecond);
         }
 
-        public void RegisterCallback(Action callback, DateTime datetime)
+        public virtual void RegisterCallback(Action callback, DateTime timeForCallbackInvocation)
         {
-            Invoke.Later(callback, datetime);
+            RegisterCallback(callback, timeForCallbackInvocation, () => {});
+        }
+
+        public virtual void RegisterCallback(Action callback, DateTime timeForCallbackInvocation, Action finishedAction)
+        {
+            Invoke.Later(callback, timeForCallbackInvocation, finishedAction);
         }
     }
 }

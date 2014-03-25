@@ -306,6 +306,7 @@
     <Content Include="Resources\Bulb.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Resources\question.png" />
     <Resource Include="Resources\close.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>

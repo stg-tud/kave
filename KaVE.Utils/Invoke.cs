@@ -27,6 +27,12 @@ namespace KaVE.Utils
             return new ScheduledAction(action, Math.Max((long) date.TotalMilliseconds, 1));
         }
 
+        public static ScheduledAction Later(Action action, System.DateTime executionDateTime, Action finishedAction)
+        {
+            var date = executionDateTime - System.DateTime.Now;
+            return new ScheduledAction(action, Math.Max((long)date.TotalMilliseconds, 1), finishedAction);
+        }
+
         /// <summary>
         ///     Invokes the passed action asynchonuously. Returns immediately.
         /// </summary>

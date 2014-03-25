@@ -7,7 +7,7 @@ namespace KaVE.VsFeedbackGenerator.TrayNotification
     /// <summary>
     /// Interaction logic for SoftBalloonPopup.xaml
     /// </summary>
-    public partial class HardBalloonPopup : WindowBase
+    public partial class HardBalloonPopup
     { 
         private readonly SessionManagerWindowRegistrar _window;
         private readonly string _actionId;

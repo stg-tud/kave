@@ -1,4 +1,6 @@
 ﻿using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using Hardcodet.Wpf.TaskbarNotification;
 using JetBrains.Application;
 using KaVE.Utils;
@@ -7,7 +9,7 @@ using KaVE.VsFeedbackGenerator.Properties;
 namespace KaVE.VsFeedbackGenerator.TrayNotification
 {
     [ShellComponent]
-    public class NotifyTrayIcon
+    public class NotifyTrayIcon 
     {
         public NotifyTrayIcon()
         {
@@ -20,5 +22,10 @@ namespace KaVE.VsFeedbackGenerator.TrayNotification
         }
 
         public TaskbarIcon NotifyIcon { get; private set; }
+        
+        public virtual void ShowCustomNotification(UserControl control, PopupAnimation animation, int? timeout)
+        {
+            NotifyIcon.ShowCustomBalloon(control, animation, timeout);
+        }
     }
 }

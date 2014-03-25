@@ -46,6 +46,16 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
         }
 
         [Test]
+        public void ShouldInvokeFinishActionAfterCallback()
+        {
+            const int delay = 100;
+            _uut.RegisterCallback(TestCallback, DateTime.Now.AddMilliseconds(delay), TestCallback);
+            AssertCallbackInvocationInTime(delay);
+            _waitLock.Reset();
+            AssertCallbackInvocationInTime(0);
+        }
+
+        [Test]
         public void ShouldNotInvokeMultipleTimes()
         {
             _uut.RegisterCallback(TestCallback, 1);

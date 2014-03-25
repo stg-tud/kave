@@ -16,12 +16,21 @@ namespace KaVE.Utils
         private readonly ElapsedEventHandler _scheduledAction;
         private readonly Timer _timer;
 
+
+        //TODO: Discuss Commenting Strategy 
+        //TODO: Make finishAction as default parameter
+        public ScheduledAction(Action actionToSchedule, long millisToDelay)
+            : this(actionToSchedule, millisToDelay, () => { })
+        {
+        }
+
         /// <summary>
         /// Creation schedules the given action for execution after the given number of milliseconds.
         /// </summary>
         /// <param name="actionToSchedule">The action to schedule.</param>
         /// <param name="millisToDelay">The number of milliseconds to delay exection. Expected to be greater than 0.</param>
-        public ScheduledAction(Action actionToSchedule, long millisToDelay)
+        /// <param name="finishedAction">Action that is called after scheduled action is invoked.</param>
+        public ScheduledAction(Action actionToSchedule, long millisToDelay, Action finishedAction)
         {
             _scheduledAction = (s, evtArgs) =>
             {
@@ -31,6 +40,7 @@ namespace KaVE.Utils
                     {
                         _timer.Stop();
                         actionToSchedule.Invoke();
+                        finishedAction.Invoke();
                     }
                 }
             };

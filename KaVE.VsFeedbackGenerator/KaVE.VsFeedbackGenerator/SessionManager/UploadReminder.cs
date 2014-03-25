@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Windows.Controls.Primitives;
-using Hardcodet.Wpf.TaskbarNotification;
 using JetBrains.Application;
 using KaVE.VsFeedbackGenerator.SessionManager.Presentation;
 using KaVE.VsFeedbackGenerator.TrayNotification;
@@ -13,12 +12,12 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
     {
         private readonly ISettingsStore _settingsStore;
         private readonly SessionManagerWindowRegistrar _sessionWindowRegistrar;
-        private readonly TaskbarIcon _taskbarIcon;
-        private readonly ICallbackManager _callbackManager;
+        private readonly NotifyTrayIcon _taskbarIcon;
+        private readonly CallbackManager _callbackManager;
 
-        public UploadReminder(ISettingsStore settingsStore, NotifyTrayIcon notify, ICallbackManager callbackManager, SessionManagerWindowRegistrar sessionWindowRegistrar)
+        public UploadReminder(ISettingsStore settingsStore, NotifyTrayIcon notify, CallbackManager callbackManager, SessionManagerWindowRegistrar sessionWindowRegistrar)
         {
-            _taskbarIcon = notify.NotifyIcon;
+            _taskbarIcon = notify;
             _settingsStore = settingsStore;
             _callbackManager = callbackManager;
             _sessionWindowRegistrar = sessionWindowRegistrar;
@@ -32,8 +31,8 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
         private void RegisterCallback()
         {
             var settings = _settingsStore.GetSettings<UploadSettings>();
-            var nextNotificationTime = settings.LastNotificationDate.AddDays(7);
-            _callbackManager.RegisterCallback(ExecuteOnceAWeek, nextNotificationTime);
+            var nextNotificationTime = settings.LastNotificationDate.AddDays(1);
+            _callbackManager.RegisterCallback(ShowNotificationAndUpdateSettings, nextNotificationTime, RegisterCallback);
         }
 
         private void InitLastUploadTime()
@@ -47,13 +46,13 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             _settingsStore.SetSettings(settings);
         }
 
-        private void ExecuteOnceAWeek()
+        private void ShowNotificationAndUpdateSettings()
         {
             var settings = _settingsStore.GetSettings<UploadSettings>();
 
-            if (FourWeeksReachedWithoutAnUpload(settings))
+            if (OneWeekWithoutUpload(settings))
             {
-                _taskbarIcon.ShowCustomBalloon(
+                _taskbarIcon.ShowCustomNotification(
                     new HardBalloonPopup(
                         _sessionWindowRegistrar,
                         SessionManagerWindowActionHandler.ActionId),
@@ -62,7 +61,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             }
             else
             {
-                _taskbarIcon.ShowCustomBalloon(
+                _taskbarIcon.ShowCustomNotification(
                     new SoftBalloonPopup(
                         _sessionWindowRegistrar,
                         SessionManagerWindowActionHandler.ActionId),
@@ -72,12 +71,12 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
 
             settings.LastNotificationDate = DateTime.Now;
             _settingsStore.SetSettings(settings);
-            RegisterCallback();
         }
 
-        private static bool FourWeeksReachedWithoutAnUpload(UploadSettings settings)
+        private static bool OneWeekWithoutUpload(UploadSettings settings)
         {
-            return settings.LastNotificationDate.AddDays(28) >= DateTime.Now;
+            var time = settings.LastUploadDate;
+            return settings.LastUploadDate.AddDays(7) < DateTime.Now;
         }
     }
 }
