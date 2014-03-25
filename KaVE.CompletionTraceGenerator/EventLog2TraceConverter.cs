@@ -22,10 +22,10 @@ namespace KaVE.CompletionTraceGenerator
 
         private EventLog2TraceConverter()
         {
-            _logFileManager = new JsonLogFileManager<IDEEvent>();
+            _logFileManager = new JsonLogFileManager<IDEEvent>("");
             _toTraceConverter =
                 new CompletionEventToTraceConverter(
-                    new JsonLogFileManager<CompletionTrace>().NewLogWriter(OutputFileName));
+                    new JsonLogFileManager<CompletionTrace>("").NewLogWriter(OutputFileName));
         }
 
         private void Run()

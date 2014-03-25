@@ -8,7 +8,7 @@ namespace KaVE.VsFeedbackGenerator.Utils
 {
     public static class ExportCommand
     {
-        public static DelegateCommand Create([NotNull] SessionExport<IDEEvent> export,
+        public static DelegateCommand Create([NotNull] ISessionExport export,
             [NotNull] Func<IEnumerable<IDEEvent>> generator,
             [NotNull] Func<string, ILogWriter<IDEEvent>> writer,
             Predicate<object> canExecute = null,

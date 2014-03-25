@@ -23,14 +23,26 @@ namespace KaVE.VsFeedbackGenerator.Utils.Json
     }
 
     [ShellComponent]
-    public class JsonIDEEventLogFileManager : JsonLogFileManager<IDEEvent> { }
+    public class JsonIDEEventLogFileManager : JsonLogFileManager<IDEEvent>
+    {
+        public JsonIDEEventLogFileManager() : base(JsonLogFileManagerLocation.EventLogsPath) { }
+    }
 
     public class JsonLogFileManager<TMessage> : LogFileManager<TMessage>
     {
-        public JsonLogFileManager()
+        public JsonLogFileManager(string baseLocation)
             : base(
-                JsonLogFileManagerLocation.EventLogsPath,
-                JsonLogIoProvider.JsonFormatWriter<TMessage>(),
-                JsonLogIoProvider.CompressedJsonFormatWriter<TMessage>()) { }
+                baseLocation,
+                new ZipStreamTransformer()) { }
+
+        protected override ILogWriter<TMessage> NewLogWriter(Stream logStream)
+        {
+            return new JsonLogWriter<TMessage>(logStream);
+        }
+
+        protected override ILogReader<TMessage> NewLogReader(Stream logStream)
+        {
+            return new JsonLogReader<TMessage>(logStream);
+        }
     }
 }

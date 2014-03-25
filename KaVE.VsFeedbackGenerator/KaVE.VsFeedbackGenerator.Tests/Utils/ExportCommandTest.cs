@@ -15,7 +15,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
         {
             var canExecute = new Predicate<object>(o => canExecuteOrNot);
             var uut = ExportCommand.Create(
-                new Mock<SessionExport<IDEEvent>>().Object,
+                new Mock<ISessionExport>().Object,
                 new Mock<Func<IEnumerable<IDEEvent>>>().Object,
                 new Mock<Func<string, ILogWriter<IDEEvent>>>().Object,
                 canExecute);
@@ -26,7 +26,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
         public void CommandInterpredsNoCanExecuteProperly()
         {
             var uut = ExportCommand.Create(
-                new Mock<SessionExport<IDEEvent>>().Object,
+                new Mock<ISessionExport>().Object,
                 new Mock<Func<IEnumerable<IDEEvent>>>().Object,
                 new Mock<Func<string, ILogWriter<IDEEvent>>>().Object);
             Assert.IsTrue(uut.CanExecute(null));
@@ -35,7 +35,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
         [Test]
         public void CommandTest()
         {
-            var exportPolicy = new Mock<SessionExport<IDEEvent>>();
+            var exportPolicy = new Mock<ISessionExport>();
             var writerFactory = new Mock<Func<string, ILogWriter<IDEEvent>>>();
             var expectedResult = new Mock<ExportResult<IList<IDEEvent>>>();
             var list = new List<IDEEvent>();
@@ -46,7 +46,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
             var listGenerator = new Func<IEnumerable<IDEEvent>>(() => list);
             var resultIsCorrectAssertion = new Action<ExportResult<IList<IDEEvent>>>(r => Assert.AreEqual(expectedResult.Object, r));
 
-            exportPolicy.Setup(e => e.Export(list, writerFactory.Object)).Returns(expectedResult.Object);
+            exportPolicy.Setup(e => e.Export<IDEEvent>(list, writerFactory.Object)).Returns(expectedResult.Object);
 
             var uut = ExportCommand.Create(
                 exportPolicy.Object,

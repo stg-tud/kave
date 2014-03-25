@@ -113,6 +113,7 @@
     <Compile Include="Utils\ExportCommandTest.cs" />
     <Compile Include="Utils\HttpPostFileTransferTest.cs" />
     <Compile Include="Utils\InverseBoolConverterTest.cs" />
+    <Compile Include="Utils\Json\JsonLogFileManagerTest.cs" />
     <Compile Include="Utils\Json\Model\CompletionEventSerializationTest.cs" />
     <Compile Include="Utils\Json\JsonAssert.cs" />
     <Compile Include="Utils\Json\JsonLogReaderTest.cs" />

@@ -30,7 +30,11 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
         private readonly ISettingsStore _store;
 
         private readonly InteractionRequest<Confirmation> _confirmationRequest;
-        public IInteractionRequest<Confirmation> ConfirmationRequest { get { return _confirmationRequest; } }
+
+        public IInteractionRequest<Confirmation> ConfirmationRequest
+        {
+            get { return _confirmationRequest; }
+        }
 
         public FeedbackViewModel(ILogFileManager<IDEEvent> logFileManager, ISettingsStore store)
         {
@@ -124,7 +128,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             {
                 return _exportSessionsCommand ??
                        (_exportSessionsCommand =
-                           CreateWithExportPolicy(new FileExport<IDEEvent>(AskForExportLocation)));
+                           CreateWithExportPolicy(new SessionExport(new FilePublisher(AskForExportLocation))));
             }
         }
 
@@ -135,11 +139,12 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
                 return _sendSessionsCommand ??
                        (_sendSessionsCommand =
                            CreateWithExportPolicy(
-                               new HttpExport<IDEEvent>("http://kave.st.informatik.tu-darmstadt.de:667/upload")));
+                               new SessionExport(
+                                   new HttpPublisher("http://kave.st.informatik.tu-darmstadt.de:667/upload"))));
             }
         }
 
-        private DelegateCommand CreateWithExportPolicy(SessionExport<IDEEvent> policy)
+        private DelegateCommand CreateWithExportPolicy(SessionExport policy)
         {
             return ExportCommand.Create(
                 policy,
@@ -198,9 +203,10 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
                 {
                     Caption = Messages.SessionDeleteConfirmTitle,
                     Message = numberOfSessions == 1
-                    ? Messages.SessionDeleteConfirmSingular
-                    : Messages.SessionDeleteConfirmPlural.FormatEx(numberOfSessions)
-                }, DeleteSessions);
+                        ? Messages.SessionDeleteConfirmSingular
+                        : Messages.SessionDeleteConfirmPlural.FormatEx(numberOfSessions)
+                },
+                DeleteSessions);
         }
 
         private void DeleteSessions(Confirmation confirmation)

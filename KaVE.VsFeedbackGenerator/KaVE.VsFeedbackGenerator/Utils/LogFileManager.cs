@@ -7,36 +7,28 @@ using KaVE.Utils.Assertion;
 
 namespace KaVE.VsFeedbackGenerator.Utils
 {
-    public class LogFileManager<TMessage> : ILogFileManager<TMessage>
+    public abstract class LogFileManager<TMessage> : ILogFileManager<TMessage>
     {
-        public LogFileManager([NotNull] string location,
-            IFormatWriter<TMessage> mainWriter,
-            params IFormatReader<TMessage>[] otherFormats)
+        public LogFileManager([NotNull] string baseLocation,
+            IStreamTransformer transformer)
         {
-            var all = new List<IFormatReader<TMessage>>
-            {
-                mainWriter
-            };
-            all.AddRange(otherFormats);
-            Reader = all;
-            Writer = all.OfType<IFormatWriter<TMessage>>();
-            BaseLocation = location;
+            Transformer = transformer;
+            BaseLocation = baseLocation;
         }
 
-        public IEnumerable<IFormatWriter<TMessage>> Writer { get; private set; }
-        public IEnumerable<IFormatReader<TMessage>> Reader { get; private set; }
+        public IStreamTransformer Transformer { get; private set; }
 
         public string BaseLocation { get; private set; }
 
-        public string DefaultExtention
+        public string DefaultExtension
         {
-            get { return Writer.First().Extention; }
+            get { return ".log" + Transformer.Extention; }
         }
 
         public IEnumerable<string> GetLogFileNames()
         {
             return Directory.Exists(BaseLocation)
-                ? Reader.SelectMany(r => Directory.GetFiles(BaseLocation, "*" + r.Extention))
+                ? Directory.GetFiles(BaseLocation, "*" + Transformer.Extention)
                 : new string[0];
         }
 
@@ -50,16 +42,22 @@ namespace KaVE.VsFeedbackGenerator.Utils
         public ILogWriter<TMessage> NewLogWriter(string logFileName)
         {
             EnsureParentDirectoryExists(logFileName);
-            var writer = Writer.First(w => logFileName.EndsWith(w.Extention));
-            return writer.NewWriter(logFileName);
+            Asserts.That(logFileName.EndsWith(Transformer.Extention));
+            Stream logStream = new FileStream(logFileName, FileMode.Append, FileAccess.Write);
+            return NewLogWriter(Transformer.TransformStreamForWrite(logStream));
         }
+
+        protected abstract ILogWriter<TMessage> NewLogWriter(Stream logStream);
 
         public ILogReader<TMessage> NewLogReader(string logFileName)
         {
             Asserts.That(File.Exists(logFileName), "log file '{0}' doesn't exist", logFileName);
-            var reader = Reader.First(w => logFileName.EndsWith(w.Extention));
-            return reader.NewReader(logFileName);
+            Asserts.That(logFileName.EndsWith(Transformer.Extention));
+            Stream logStream = new FileStream(logFileName, FileMode.Open);
+            return NewLogReader(Transformer.TransformStreamForRead(logStream));
         }
+
+        protected abstract ILogReader<TMessage> NewLogReader(Stream logStream);
 
         public void DeleteLogsOlderThan(DateTime time)
         {
@@ -71,7 +69,12 @@ namespace KaVE.VsFeedbackGenerator.Utils
 
         public string GetLogFileName(string filename, string extension = null)
         {
-            return Path.Combine(BaseLocation, filename + (extension ?? DefaultExtention));
+            return Path.Combine(BaseLocation, filename + (extension ?? DefaultExtension));
+        }
+
+        public override string ToString()
+        {
+            return "LogFileManager[" + BaseLocation + "," + DefaultExtension + "]";
         }
     }
 }

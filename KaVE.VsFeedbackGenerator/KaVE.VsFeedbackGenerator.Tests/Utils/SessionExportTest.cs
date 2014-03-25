@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using KaVE.Utils.IO;
 using KaVE.VsFeedbackGenerator.Utils;
-using KaVE.VsFeedbackGenerator.Utils.Json;
+using Moq;
 using NUnit.Framework;
 
 namespace KaVE.VsFeedbackGenerator.Tests.Utils
@@ -12,52 +11,53 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
     [TestFixture]
     internal class SessionExportTest
     {
+        private Mock<ILogWriter<string>> _writer;
+
+        [SetUp]
+        public void SetUp()
+        {
+            _writer = new Mock<ILogWriter<string>>();
+        }
+
         [Test]
         public void TemporaryExportContainsGivenList()
         {
-            var uut = new TempExport<string>();
-            var expected = RandomlyFilledList(25);
-            var tempLocation = uut.ExportToTemporaryFile(expected, FileManager.NewLogWriter);
-            AssertFileIsComplete(expected, tempLocation);
+            var uut = new SessionExport(new Mock<ISessionPublisher>().Object);
+            var expected = RandomlyFilledList(5);
+            var actual = new List<string>();
+            _writer.Setup(w => w.Write(It.IsAny<string>())).Callback<string>(actual.Add);
+            uut.ExportToTemporaryFile(expected, location => _writer.Object);
+
+            Assert.AreEqual(expected, actual);
         }
 
         [Test]
         public void FileExportContainsGivenList()
         {
+            const string content = "some text to test the file-copy";
+            var sourceLocation = Path.GetTempFileName();
+            using (var writer = new StreamWriter(new FileStream(sourceLocation, FileMode.Create, FileAccess.Write)))
+            {
+                writer.Write(content);
+            }
             var targetLocation = Path.GetTempFileName();
-            var uut = new FileExport<string>(() => targetLocation);
-            var expected = RandomlyFilledList(25);
-            var response = uut.Export(expected, FileManager.NewLogWriter);
-            Assert.AreEqual(State.Ok, response.Status);
-            AssertFileIsComplete(expected, targetLocation);
+            var uut = new FilePublisher(() => targetLocation);
+            uut.Publish(sourceLocation);
+            string actual;
+            using (var reader = new StreamReader(new FileStream(targetLocation, FileMode.Open)))
+            {
+                actual = reader.ReadToEnd();
+            }
+
+            Assert.AreEqual(content, actual);
         }
 
         [Test]
         public void FileExportInterruptsWithInvalidFileName()
         {
-            var uut = new FileExport<string>(() => null);
-            var list = RandomlyFilledList(25);
-            var response = uut.Export(list, FileManager.NewLogWriter);
+            var uut = new FilePublisher(() => null);
+            var response = uut.Publish(Path.GetTempFileName());
             Assert.AreEqual(State.Fail, response.Status);
-        }
-
-        private static void AssertFileIsComplete(IList<string> expected, string location)
-        {
-            var actual = FileManager.NewLogReader(location).ReadAll();
-            Assert.AreEqual(expected, actual);
-        }
-
-        private static ILogFileManager<string> FileManager
-        {
-            get { return new LogFileManager<string>(IoTestHelper.GetTempDirectoryName(), TmpFormatWriter()); }
-        }
-
-        private static IFormatWriter<string> TmpFormatWriter()
-        {
-            return new FormatWriter<string>(
-                ".tmp",
-                JsonLogIoProvider.UncompressedReader<string>,
-                JsonLogIoProvider.UncompressedWriter<string>);
         }
 
         private static IList<string> RandomlyFilledList(int count)

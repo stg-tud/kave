@@ -31,7 +31,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             // TODO if this should cause memory problems, we have to find a lazier solution...
             using (var logReader = logFileManager.NewLogReader(logFileName))
             {
-                Events = logReader.ReadAll().Select(evt => new EventView(evt));
+                Events = logReader.ReadAll().Select(evt => new EventView(evt)).ToList();
             }
         }
 

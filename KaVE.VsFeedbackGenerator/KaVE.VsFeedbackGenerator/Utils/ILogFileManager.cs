@@ -12,6 +12,6 @@ namespace KaVE.VsFeedbackGenerator.Utils
         string GetLogFileName(string filename, string extension = null);
 
         string BaseLocation { get; }
-        string DefaultExtention { get; }
+        string DefaultExtension { get; }
     }
 }
