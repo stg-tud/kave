@@ -21,6 +21,12 @@ namespace KaVE.VsFeedbackGenerator.Utils.Names
     public static class ReSharperDeclaredElementNameFactory
     {
         [NotNull]
+        public static TName GetName<TName>([NotNull] this DeclaredElementInstance instance) where TName : class, IName
+        {
+            return (TName) instance.GetName();
+        }
+
+        [NotNull]
         public static IName GetName([NotNull] this DeclaredElementInstance instance)
         {
             return instance.Element.GetName(instance.Substitution);

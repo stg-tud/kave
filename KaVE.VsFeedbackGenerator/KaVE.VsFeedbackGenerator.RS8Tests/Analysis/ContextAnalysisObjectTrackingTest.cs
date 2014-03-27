@@ -1,5 +1,4 @@
-﻿using KaVE.JetBrains.Annotations;
-using KaVE.Model.Names.CSharp;
+﻿using KaVE.Model.Names.CSharp;
 using NUnit.Framework;
 
 namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
@@ -17,6 +16,23 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
                 }
         
                 private void M2(object o) {
+                    o.GetHashCode();
+                }");
+
+            AssertAnalysisFindsCallTo(
+                "[System.Int32, mscorlib, Version=4.0.0.0] [System.Object, mscorlib, Version=4.0.0.0].GetHashCode()");
+        }
+
+        [Test]
+        public void ShouldFindCallInInternalHelper()
+        {
+            CompleteInClass(@"
+                public void M1(object o) {
+                    this.M2(o);
+                    $
+                }
+        
+                internal void M2(object o) {
                     o.GetHashCode();
                 }");
 
@@ -61,22 +77,89 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
                 "[System.Int32, mscorlib, Version=4.0.0.0] [System.Object, mscorlib, Version=4.0.0.0].GetHashCode()");
         }
 
+        [Test]
+        public void ShouldFindCallToHelperFromOtherClass()
+        {
+            CompleteInFile(@"
+                public class HelperClass
+                {
+                    public void M() {}
+                }
+                
+                public class C
+                {
+                    public void E(HelperClass h)
+                    {
+                        h.M();
+                        $
+                    }
+                }");
 
-        // TODO remove string formatter
-        [StringFormatMethod("methodIdentifier")]
-        private void AssertAnalysisDoesNotFindCallTo(string methodIdentifier, params object[] args)
+            AssertAnalysisFindsCallTo("[System.Void, mscorlib, Version=4.0.0.0] [HelperClass, TestProject].M()");
+        }
+
+        [Test]
+        public void ShouldFindCallToMethodDeclaredBySupertype()
+        {
+            CompleteInFile(@"
+                public interface I
+                {
+                    void M();
+                }
+
+                public class C : I
+                {
+                    public override void M() {}
+
+                    public void E()
+                    {
+                        M();
+                        $
+                    }
+                }");
+
+            AssertAnalysisFindsCallTo("[System.Void, mscorlib, Version=4.0.0.0] [C, TestProject].M()");
+        }
+
+        [Test]
+        public void ShouldNotFindCallInMethodDeclaredBySupertype()
+        {
+            CompleteInFile(@"
+                public interface I
+                {
+                    void M();
+                }
+
+                public class C : I
+                {
+                    public override void M()
+                    {
+                        this.GetHashCode();
+                    }
+
+                    public void E()
+                    {
+                        M();
+                        $
+                    }
+                }");
+
+            AssertAnalysisDoesNotFindCallTo(
+                "[System.Int32, mscorlib, Version=4.0.0.0] [System.Object, mscorlib, Version=4.0.0.0].GetHashCode()");
+        }
+
+        private void AssertAnalysisDoesNotFindCallTo(string methodIdentifier)
         {
             CollectionAssert.DoesNotContain(
                 ResultContext.CalledMethods,
-                MethodName.Get(string.Format(methodIdentifier, args)));
+                MethodName.Get(methodIdentifier));
         }
 
-        [StringFormatMethod("methodIdentifier")]
-        private void AssertAnalysisFindsCallTo(string methodIdentifier, params object[] args)
+        private void AssertAnalysisFindsCallTo(string methodIdentifier)
         {
             CollectionAssert.Contains(
                 ResultContext.CalledMethods,
-                MethodName.Get(string.Format(methodIdentifier, args)));
+                MethodName.Get(methodIdentifier));
         }
     }
 }

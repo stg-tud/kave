@@ -3,7 +3,6 @@ using System.Linq;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Resolve;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
-using JetBrains.ReSharper.Psi.Resolve;
 using JetBrains.ReSharper.Psi.Tree;
 using KaVE.Model.Names;
 using KaVE.VsFeedbackGenerator.Utils.Names;
@@ -62,14 +61,15 @@ namespace KaVE.VsFeedbackGenerator.Analysis
                 var invocationRef = invocation.Reference;
                 if (invocationRef != null)
                 {
-                    AnalyzeReference(context, invocationRef);
+                    AnalyzeInvocationReference(context, invocationRef);
                 }
             }
 
-            private void AnalyzeReference(CollectionContext context, ICSharpInvocationReference invocationRef)
+            private void AnalyzeInvocationReference(CollectionContext context, ICSharpInvocationReference invocationRef)
             {
-                var methodName = GetName<IMethodName>(invocationRef);
-                if (IsLocalHelper(methodName))
+                var method = ResolveMethod(invocationRef);
+                var methodName = method.GetName<IMethodName>();
+                if (IsLocalHelper(methodName) && !method.Element.IsOverride)
                 {
                     if (context.AnalyzedMethods.Contains(methodName))
                     {
@@ -90,13 +90,11 @@ namespace KaVE.VsFeedbackGenerator.Analysis
                 return _enclosingType == method.DeclaringType;
             }
 
-            // TODO move this to name factory
-            private static TName GetName<TName>(IReference invocationRef) where TName : class, IName
+            private static DeclaredElementInstance<IMethod> ResolveMethod(ICSharpInvocationReference invocationRef)
             {
                 var resolvedRef = invocationRef.Resolve();
-                var declaredElement = resolvedRef.DeclaredElement;
-                var substitution = resolvedRef.Result.Substitution;
-                return declaredElement.GetName<TName>(substitution);
+                var declaredElement = resolvedRef.DeclaredElement as IMethod;
+                return new DeclaredElementInstance<IMethod>(declaredElement, resolvedRef.Result.Substitution);
             }
 
             // TODO test overload scenario (multiple declarations)
