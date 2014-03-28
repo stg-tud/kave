@@ -5,6 +5,7 @@ using JetBrains.ReSharper.Psi.CSharp.Resolve;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
 using KaVE.Model.Names;
+using KaVE.Utils.Assertion;
 using KaVE.VsFeedbackGenerator.Utils.Names;
 
 namespace KaVE.VsFeedbackGenerator.Analysis
@@ -71,12 +72,12 @@ namespace KaVE.VsFeedbackGenerator.Analysis
                 var methodName = method.GetName<IMethodName>();
                 if (IsLocalHelper(methodName) && !method.Element.IsOverride)
                 {
-                    if (context.AnalyzedMethods.Contains(methodName))
+                    if (context.AnalyzedMethods.Contains(methodName) || method.Element.IsAbstract)
                     {
                         return;
                     }
                     context.AnalyzedMethods.Add(methodName);
-                    var declaration = GetDeclaration(invocationRef);
+                    var declaration = GetDeclaration(method.Element);
                     declaration.Body.Accept(this, context);
                 }
                 else
@@ -98,11 +99,11 @@ namespace KaVE.VsFeedbackGenerator.Analysis
             }
 
             // TODO test overload scenario (multiple declarations)
-            private static IMethodDeclaration GetDeclaration(ICSharpInvocationReference invocationRef)
+            private static IMethodDeclaration GetDeclaration(IMethod method)
             {
-                var resolvedRef = invocationRef.Resolve();
-                var method = (IMethod) resolvedRef.DeclaredElement;
-                var declaration = (IMethodDeclaration) method.GetDeclarations().First();
+                var declarations = method.GetDeclarations();
+                Asserts.That(declarations.Count <= 1, "more than one declaration for invoked method");
+                var declaration = (IMethodDeclaration) declarations.First();
                 return declaration;
             }
         }
