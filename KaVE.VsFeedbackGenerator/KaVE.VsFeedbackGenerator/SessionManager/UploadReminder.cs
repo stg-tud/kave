@@ -12,17 +12,17 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
     {
         private readonly ISettingsStore _settingsStore;
         private readonly SessionManagerWindowRegistrar _sessionWindowRegistrar;
-        private readonly NotifyTrayIcon _taskbarIcon;
-        private readonly CallbackManager _callbackManager;
+        private readonly INotifyTrayIcon _taskbarIcon;
+        private readonly ICallbackManager _callbackManager;
 
-        public UploadReminder(ISettingsStore settingsStore, NotifyTrayIcon notify, CallbackManager callbackManager, SessionManagerWindowRegistrar sessionWindowRegistrar)
+        public UploadReminder(ISettingsStore settingsStore, INotifyTrayIcon notify, ICallbackManager callbackManager, SessionManagerWindowRegistrar sessionWindowRegistrar)
         {
             _taskbarIcon = notify;
             _settingsStore = settingsStore;
             _callbackManager = callbackManager;
             _sessionWindowRegistrar = sessionWindowRegistrar;
             
-            InitLastUploadTime();
+            EnsureUploadSettingsInitialized();
             RegisterCallback();
 
            //_taskbarIcon.ShowCustomBalloon(new HardBalloonPopup(_sessionWindowRegistrar, SessionManagerWindowActionHandler.ActionId), PopupAnimation.Slide, null);
@@ -35,7 +35,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             _callbackManager.RegisterCallback(ShowNotificationAndUpdateSettings, nextNotificationTime, RegisterCallback);
         }
 
-        private void InitLastUploadTime()
+        private void EnsureUploadSettingsInitialized()
         {
             var settings = _settingsStore.GetSettings<UploadSettings>();
             if (settings.IsInitialized())

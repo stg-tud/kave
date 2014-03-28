@@ -10,14 +10,12 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
     {
         private const int AcceptedCallbackImprecisionInMilliseconds = 50;
         private readonly AutoResetEvent _testCallbackLock = new AutoResetEvent(false);
-        private readonly AutoResetEvent _finishActionLock = new AutoResetEvent(false);
         private CallbackManager _uut;
 
         [SetUp]
         public void SetUp()
         {
             _testCallbackLock.Reset();
-            _finishActionLock.Reset();
             _uut = new CallbackManager();
         }
 
@@ -26,12 +24,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
             _testCallbackLock.Set();
         }
 
-        private void FinishAction()
-        {
-            _finishActionLock.Set();
-        }
-
-        [TestCase(1), TestCase(1000)]
+        [TestCase(1), TestCase(100)]
         public void ShouldInvokeCallbackAfterDelay(int delay)
         {
             _uut.RegisterCallback(TestCallback, delay);
@@ -41,25 +34,23 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
         [Test]
         public void ShouldInvokeCallbackAfterDatetimeNowImmediately()
         {
-            _uut.RegisterCallback(TestCallback, DateTime.Now);
+            _uut.RegisterCallback(TestCallback, DateTime.Now, () => { });
             AssertCallbackInvocationInTime(0, _testCallbackLock);
         }
 
-        [TestCase(100), TestCase(1000)]
+        [TestCase(1), TestCase(100)]
         public void ShouldInvokeCallbackAtDatetime(int delay)
         {
-            _uut.RegisterCallback(TestCallback, DateTime.Now.AddMilliseconds(delay));
+            _uut.RegisterCallback(TestCallback, DateTime.Now.AddMilliseconds(delay), () => {});
             AssertCallbackInvocationInTime(delay, _testCallbackLock);
         }
-
 
         [Test]
         public void ShouldInvokeFinishActionAfterCallback()
         {
-            const int delay = 100;
-            _uut.RegisterCallback(TestCallback, DateTime.Now.AddMilliseconds(delay), FinishAction);
-            AssertCallbackInvocationInTime(delay, _testCallbackLock);
-            AssertCallbackInvocationInTime(0, _finishActionLock);
+            var finishActionLock = new AutoResetEvent(false);
+            _uut.RegisterCallback(TestCallback, DateTime.Now, () => finishActionLock.Set());
+            Assert.IsTrue(finishActionLock.WaitOne(1000));
         }
 
         [Test]

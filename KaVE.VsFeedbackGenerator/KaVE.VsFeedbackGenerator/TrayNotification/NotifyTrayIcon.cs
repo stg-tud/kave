@@ -8,8 +8,13 @@ using KaVE.VsFeedbackGenerator.Properties;
 
 namespace KaVE.VsFeedbackGenerator.TrayNotification
 {
+    public interface INotifyTrayIcon
+    {
+        void ShowCustomNotification(UserControl control, PopupAnimation animation, int? timeout);
+    }
+
     [ShellComponent]
-    public class NotifyTrayIcon 
+    public class NotifyTrayIcon : INotifyTrayIcon
     {
         public NotifyTrayIcon()
         {
@@ -21,8 +26,8 @@ namespace KaVE.VsFeedbackGenerator.TrayNotification
             NotifyIcon = new TaskbarIcon {Icon = Resources.Bulb, Visibility = Visibility.Hidden};
         }
 
-        public TaskbarIcon NotifyIcon { get; private set; }
-        
+        private TaskbarIcon NotifyIcon { get; set; }
+
         public void ShowCustomNotification(UserControl control, PopupAnimation animation, int? timeout)
         {
             NotifyIcon.ShowCustomBalloon(control, animation, timeout);
