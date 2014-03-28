@@ -1,14 +1,14 @@
 namespace KaVE.Model.Groum
 {
-    public class SequentialGroum : IGroum
+    public class SequentialGroum : GroumBase
     {
-        public SequentialGroum(IGroum firstGroum, IGroum secondGroum)
+        public SequentialGroum(GroumBase firstGroum, GroumBase secondGroum)
         {
             FirstGroum = firstGroum;
             SecondGroum = secondGroum;
         }
 
-        public IGroum FirstGroum { get; private set; }
-        public IGroum SecondGroum { get; private set; }
+        public GroumBase FirstGroum { get; private set; }
+        public GroumBase SecondGroum { get; private set; }
     }
 }

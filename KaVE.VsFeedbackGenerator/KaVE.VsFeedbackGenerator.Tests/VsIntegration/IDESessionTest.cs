@@ -49,12 +49,12 @@ namespace KaVE.VsFeedbackGenerator.Tests.VsIntegration
             _globals["KAVE_EventGenerator_SessionUUID_CreatedAt"] = null;
 
             var ideSession = new IDESession(_dte);
-            var actualSessionID = ideSession.UUID;
+            var actualSessionId = ideSession.UUID;
 
             Assert.AreEqual(TodayDateString, _globals["KAVE_EventGenerator_SessionUUID_CreatedAt"]);
             var storedSessionUUID = _globals["KAVE_EventGenerator_SessionUUID"];
             Assert.NotNull(storedSessionUUID);
-            Assert.AreEqual(storedSessionUUID, actualSessionID);
+            Assert.AreEqual(storedSessionUUID, actualSessionId);
         }
 
         [Test]
@@ -65,11 +65,11 @@ namespace KaVE.VsFeedbackGenerator.Tests.VsIntegration
             _globals["KAVE_EventGenerator_SessionUUID"] = "OutdatedUUID";
 
             var ideSession = new IDESession(_dte);
-            var actualSessionID = ideSession.UUID;
+            var actualSessionId = ideSession.UUID;
 
             Assert.AreEqual(TodayDateString, _globals["KAVE_EventGenerator_SessionUUID_CreatedAt"]);
-            Assert.NotNull(actualSessionID);
-            Assert.AreNotEqual("OutdatedUUID", actualSessionID);
+            Assert.NotNull(actualSessionId);
+            Assert.AreNotEqual("OutdatedUUID", actualSessionId);
         }
 
         [Test]
@@ -79,7 +79,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.VsIntegration
 
             var ideSession = new IDESession(_dte);
             // ReSharper disable once UnusedVariable
-            var actualSessionID = ideSession.UUID;
+            var actualSessionId = ideSession.UUID;
 
             Assert.IsTrue(_globals.get_VariablePersists("KAVE_EventGenerator_SessionUUID_CreatedAt"));
             Assert.IsTrue(_globals.get_VariablePersists("KAVE_EventGenerator_SessionUUID"));
@@ -92,9 +92,9 @@ namespace KaVE.VsFeedbackGenerator.Tests.VsIntegration
             _globals["KAVE_EventGenerator_SessionUUID"] = "MyTestUUID";
 
             var ideSession = new IDESession(_dte);
-            var actualSessionID = ideSession.UUID;
+            var actualSessionId = ideSession.UUID;
 
-            Assert.AreEqual("MyTestUUID", actualSessionID);
+            Assert.AreEqual("MyTestUUID", actualSessionId);
         }
     }
 }

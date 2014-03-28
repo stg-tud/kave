@@ -1,8 +1,8 @@
 namespace KaVE.Model.Groum
 {
-    public class ForGroum : IGroum
+    public class ForGroum : GroumBase
     {
-        public ForGroum(IGroum initializerGroum, IGroum conditionGroum, IGroum bodyGroum, IGroum updaterGroum)
+        public ForGroum(GroumBase initializerGroum, GroumBase conditionGroum, GroumBase bodyGroum, GroumBase updaterGroum)
         {
             InitializerGroum = initializerGroum;
             ConditionGroum = conditionGroum;
@@ -10,9 +10,9 @@ namespace KaVE.Model.Groum
             UpdaterGroum = updaterGroum;
         }
 
-        public IGroum InitializerGroum { get; private set; }
-        public IGroum ConditionGroum { get; private set; }
-        public IGroum BodyGroum { get; private set; }
-        public IGroum UpdaterGroum { get; private set; }
+        public GroumBase InitializerGroum { get; private set; }
+        public GroumBase ConditionGroum { get; private set; }
+        public GroumBase BodyGroum { get; private set; }
+        public GroumBase UpdaterGroum { get; private set; }
     }
 }

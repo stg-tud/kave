@@ -20,7 +20,9 @@ namespace KaVE.Model.Groum.Test
 
     internal class GroumTests
     {
+#pragma warning disable 649
         private SomeClass _mySomeClass;
+#pragma warning restore 649
 
         public void Case0()
         {
@@ -91,6 +93,7 @@ namespace KaVE.Model.Groum.Test
             me2.Execute(); 
         }
 
+        // ReSharper disable once NotAccessedField.Local
         private SomeClass _o;
 
         public void Case5()
@@ -102,8 +105,11 @@ namespace KaVE.Model.Groum.Test
         // Variables without outgoing edges are ignored.
         public void Case6()
         {
+            // ReSharper disable once UnusedVariable
             var s = new SomeClass();
+#pragma warning disable 168
             SomeClass o;
+#pragma warning restore 168
         }
     }
 }

@@ -72,7 +72,7 @@
     <Compile Include="Groum\ForeachGroum.cs" />
     <Compile Include="Groum\ForGroum.cs" />
     <Compile Include="Groum\IfElseGroum.cs" />
-    <Compile Include="Groum\IGroum.cs" />
+    <Compile Include="Groum\GroumBase.cs" />
     <Compile Include="Groum\Instance.cs" />
     <Compile Include="Groum\LockGorum.cs" />
     <Compile Include="Groum\ParallelGroum.cs" />

@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 namespace KaVE.VsFeedbackGenerator.Utils.Json
 {
     /// <summary>
-    /// A reader for streams written by <see cref="JsonLogWriter"/>.
+    /// A reader for streams written by <see cref="JsonLogWriter{TMessage}"/>.
     /// </summary>
     public class JsonLogReader<TMessage> : ILogReader<TMessage>
     {

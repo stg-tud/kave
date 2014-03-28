@@ -1,14 +1,14 @@
 namespace KaVE.Model.Groum
 {
-    public class ForeachGroum : IGroum
+    public class ForeachGroum : GroumBase
     {
-        public ForeachGroum(IGroum iterable, IGroum body)
+        public ForeachGroum(GroumBase iterable, GroumBase body)
         {
             IterableGroum = iterable;
             BodyGroum = body;
         }
 
-        public IGroum IterableGroum { get; private set; }
-        public IGroum BodyGroum { get; private set; }
+        public GroumBase IterableGroum { get; private set; }
+        public GroumBase BodyGroum { get; private set; }
     }
 }

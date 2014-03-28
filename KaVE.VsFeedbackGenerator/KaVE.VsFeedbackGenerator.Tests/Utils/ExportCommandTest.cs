@@ -46,7 +46,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
             var listGenerator = new Func<IEnumerable<IDEEvent>>(() => list);
             var resultIsCorrectAssertion = new Action<ExportResult<IList<IDEEvent>>>(r => Assert.AreEqual(expectedResult.Object, r));
 
-            exportPolicy.Setup(e => e.Export<IDEEvent>(list, writerFactory.Object)).Returns(expectedResult.Object);
+            exportPolicy.Setup(e => e.Export(list, writerFactory.Object)).Returns(expectedResult.Object);
 
             var uut = ExportCommand.Create(
                 exportPolicy.Object,

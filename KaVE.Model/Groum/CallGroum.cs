@@ -3,7 +3,7 @@ using KaVE.Model.Names;
 
 namespace KaVE.Model.Groum
 {
-    public class CallGroum : IGroum
+    public class CallGroum : GroumBase
     {
         public CallGroum(IMethodName calledMethod)
         {

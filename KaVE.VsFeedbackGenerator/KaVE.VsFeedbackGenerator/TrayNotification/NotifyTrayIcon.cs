@@ -23,7 +23,7 @@ namespace KaVE.VsFeedbackGenerator.TrayNotification
 
         public TaskbarIcon NotifyIcon { get; private set; }
         
-        public virtual void ShowCustomNotification(UserControl control, PopupAnimation animation, int? timeout)
+        public void ShowCustomNotification(UserControl control, PopupAnimation animation, int? timeout)
         {
             NotifyIcon.ShowCustomBalloon(control, animation, timeout);
         }

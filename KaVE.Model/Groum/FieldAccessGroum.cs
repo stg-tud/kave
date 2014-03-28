@@ -2,7 +2,7 @@ using KaVE.Model.Names;
 
 namespace KaVE.Model.Groum
 {
-    public class FieldAccessGroum : IGroum
+    public class FieldAccessGroum : GroumBase
     {
         public FieldAccessGroum(IFieldName accessedField)
         {

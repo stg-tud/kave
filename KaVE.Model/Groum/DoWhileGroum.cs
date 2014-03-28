@@ -1,14 +1,14 @@
 namespace KaVE.Model.Groum
 {
-    public class DoWhileGroum : IGroum
+    public class DoWhileGroum : GroumBase
     {
-        public DoWhileGroum(IGroum bodyGroum, IGroum conditionGroum)
+        public DoWhileGroum(GroumBase bodyGroum, GroumBase conditionGroum)
         {
             BodyGroum = bodyGroum;
             ConditionGroum = conditionGroum;
         }
 
-        public IGroum BodyGroum { get; private set; }
-        public IGroum ConditionGroum { get; private set; }
+        public GroumBase BodyGroum { get; private set; }
+        public GroumBase ConditionGroum { get; private set; }
     }
 }

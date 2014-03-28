@@ -1,6 +1,6 @@
 namespace KaVE.Model.Groum
 {
-    public class ReferenceGroum : IGroum
+    public class ReferenceGroum : GroumBase
     {
         public ReferenceGroum(string identifier)
         {

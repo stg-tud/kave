@@ -19,6 +19,7 @@ using NUnit.Framework;
 namespace KaVE.VsFeedbackGenerator.RS8Tests
 {
     [TestNetFramework4]
+    // ReSharper disable once InconsistentNaming
     internal abstract class KaVEBaseTest : CodeCompletionTestBase
     {
         private const string Caret = "$";

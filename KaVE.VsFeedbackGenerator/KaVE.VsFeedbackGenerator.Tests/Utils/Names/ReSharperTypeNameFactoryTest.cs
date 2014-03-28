@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using JetBrains.ReSharper.Psi;
 using KaVE.VsFeedbackGenerator.Tests.TestFactories;
 using KaVE.VsFeedbackGenerator.Utils.Names;
@@ -21,78 +20,37 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Names
             AssertNameIdentifier(type, identifier);
         }
 
-        public struct GenericTypeCase
+        [Test]
+        public void ShouldGetNameForITypeWithOneTypeParameter()
         {
-            private readonly string _fullName;
-            private readonly IDictionary<string, IType> _typeParameters;
-            private readonly string _assemblyName;
-            private readonly string _assemblyVersion;
-            private readonly string _expectedIdentifier;
+            var type = TypeMockUtils.MockIType(
+                "System.Nullable`1",
+                new Dictionary<string, IType>
+                {
+                    {"T", TypeMockUtils.MockIType("System.Int32", "mscore", "4.0.0.0")}
+                },
+                "mscore",
+                "4.0.0.0");
 
-            public GenericTypeCase(string fullName,
-                IDictionary<string, IType> typeParameters,
-                string assemblyName,
-                string assemblyVersion,
-                string identifier)
-            {
-                _fullName = fullName;
-                _typeParameters = typeParameters;
-                _assemblyName = assemblyName;
-                _assemblyVersion = assemblyVersion;
-                _expectedIdentifier = identifier;
-            }
-
-            public string FullName
-            {
-                get { return _fullName; }
-            }
-
-            public IEnumerable<KeyValuePair<string, IType>> TypeParameters
-            {
-                get { return _typeParameters.AsEnumerable(); }
-            }
-
-            public string AssemblyName
-            {
-                get { return _assemblyName; }
-            }
-
-            public string AssemblyVersion
-            {
-                get { return _assemblyVersion; }
-            }
-
-            public string ExpectedIdentifier
-            {
-                get { return _expectedIdentifier; }
-            }
+            AssertNameIdentifier(type, "System.Nullable`1[[T -> System.Int32, mscore, 4.0.0.0]], mscore, 4.0.0.0");
         }
 
-        private static readonly GenericTypeCase[] GenericTypeCases =
+        [Test]
+        public void ShouldGetNameForITypeWithTwoTypeParameters()
         {
-            new GenericTypeCase(
-                "System.Nullable`1",
-                new Dictionary<string, IType> {{"T", TypeMockUtils.MockIType("System.Int32", "mscore", "4.0.0.0")}},
-                "mscore",
-                "4.0.0.0",
-                "System.Nullable`1[[T -> System.Int32, mscore, 4.0.0.0]], mscore, 4.0.0.0"),
-            new GenericTypeCase("System.Collections.IDictionary`2",
+            var type = TypeMockUtils.MockIType(
+                "System.Collections.IDictionary`2",
                 new Dictionary<string, IType>
                 {
                     {"TKey", TypeMockUtils.MockIType("System.String", "mscore", "1.2.3.4")},
                     {"TValue", TypeMockUtils.MockIType("System.Object", "mscore", "5.6.7.8")}
                 },
                 "mscore",
-                "9.10.11.12",
-                "System.Collections.IDictionary`2[[TKey -> System.String, mscore, 1.2.3.4],[TValue -> System.Object, mscore, 5.6.7.8]], mscore, 9.10.11.12")
-        };
+                "9.10.11.12");
 
-        [TestCaseSource("GenericTypeCases")]
-        public void ShouldGetNameForGenericIType(GenericTypeCase gtc)
-        {
-            var type = TypeMockUtils.MockIType(gtc.FullName, gtc.TypeParameters, gtc.AssemblyName, gtc.AssemblyVersion);
-
-            AssertNameIdentifier(type, gtc.ExpectedIdentifier);
+            AssertNameIdentifier(
+                type,
+                "System.Collections.IDictionary`2[[TKey -> System.String, mscore, 1.2.3.4],[TValue -> System.Object, mscore, 5.6.7.8]], mscore, 9.10.11.12");
         }
 
         private static void AssertNameIdentifier(IType type, string identifier)

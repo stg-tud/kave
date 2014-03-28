@@ -1,6 +1,6 @@
 namespace KaVE.Model.Groum
 {
-    public class IfElseGroum : IGroum
+    public class IfElseGroum : GroumBase
     {
         public static IfElseGroum Create()
         {

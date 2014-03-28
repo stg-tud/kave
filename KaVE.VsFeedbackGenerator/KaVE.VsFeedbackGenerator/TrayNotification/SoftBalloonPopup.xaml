@@ -8,14 +8,13 @@
     Width="283"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:tb="http://www.hardcodet.net/taskbar"
     mc:Ignorable="d">
     <UserControl.Resources>
         <Storyboard
             x:Key="FadeInAndOut">
             <DoubleAnimationUsingKeyFrames
                 BeginTime="00:00:00"
-                Storyboard.TargetName="grid"
+                Storyboard.TargetName="Grid"
                 Storyboard.TargetProperty="(UIElement.Opacity)">
                 <SplineDoubleKeyFrame
                     KeyTime="00:00:00"
@@ -40,9 +39,9 @@
             />
         </EventTrigger>
     </Window.Triggers> --> 
-    <Grid x:Name="grid">
+    <Grid x:Name="Grid">
         <Border
-            x:Name="border"
+            x:Name="Border"
             CornerRadius="10,10,10,10"
             Margin="0,0,5,5">
             <Border.Background>
@@ -71,7 +70,7 @@
                Stretch="Fill"
                Opacity="1.0"
                ToolTip="Close Balloon"
-               x:Name="imgClose"
+               x:Name="ImgClose"
                MouseDown="ImgClose_MouseDown" />
         <TextBlock
             Margin="10,10,15,0"

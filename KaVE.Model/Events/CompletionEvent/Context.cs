@@ -42,7 +42,7 @@ namespace KaVE.Model.Events.CompletionEvent
         ///     The GROUM derived from the current code in the enclosing method's body. This GROUM contains a completion
         ///     groum node that denotes the position code completion is triggered at.
         /// </summary>
-        public IGroum EnclosingMethodGroum { get; set; }
+        public Groum.GroumBase EnclosingMethodGroum { get; set; }
 
         /// <summary>
         ///     Methods called in the EnclosingMethod. This is redundant information also contained in the EnclosingMethodGroum.

@@ -1,12 +1,12 @@
 namespace KaVE.Model.Groum
 {
-    public class ParallelGroum : IGroum
+    public class ParallelGroum : GroumBase
     {
-        public ParallelGroum(params IGroum[] subGroums)
+        public ParallelGroum(params GroumBase[] subGroums)
         {
             SubGroums = subGroums;
         }
 
-        public IGroum[] SubGroums { get; private set; }
+        public GroumBase[] SubGroums { get; private set; }
     }
 }

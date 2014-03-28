@@ -2,9 +2,9 @@
 {
     class UnknownGroum
     {
-        IGroum Target { get; set; }
+        GroumBase Target { get; set; }
 
         // encodes expected type
-        IGroum ReturnInstance { get; set; }
+        GroumBase ReturnInstance { get; set; }
     }
 }
