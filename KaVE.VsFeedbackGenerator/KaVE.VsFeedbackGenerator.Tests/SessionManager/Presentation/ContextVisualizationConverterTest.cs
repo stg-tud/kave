@@ -294,7 +294,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
 
         private static string CreateType(string type)
         {
-            return string.Format("{0}, Assembly, Version=1.0.0.0", type);
+            return string.Format("{0}, Assembly, 1.0.0.0", type);
         }
 
         private static string Bold(string el)

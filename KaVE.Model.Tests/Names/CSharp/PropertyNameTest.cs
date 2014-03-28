@@ -9,8 +9,8 @@ namespace KaVE.Model.Tests.Names.CSharp
         [Test]
         public void ShouldBeSimpleProperty()
         {
-            const string valueTypeIdentifier = "A, B, Version=1.0.0.0";
-            const string declaringTypeIdentifier = "C, D, Version=0.9.8.7";
+            const string valueTypeIdentifier = "A, B, 1.0.0.0";
+            const string declaringTypeIdentifier = "C, D, 0.9.8.7";
             var propertyName = PropertyName.Get("[" + valueTypeIdentifier + "] [" + declaringTypeIdentifier + "].Property");
 
             Assert.AreEqual("Property", propertyName.Name);
@@ -22,7 +22,7 @@ namespace KaVE.Model.Tests.Names.CSharp
         [Test]
         public void ShoudBePropertyWithGetter()
         {
-            var propertyName = PropertyName.Get("get [Z, Y, Version=0.5.6.1] [X, W, Version=0.3.4.2].Prop");
+            var propertyName = PropertyName.Get("get [Z, Y, 0.5.6.1] [X, W, 0.3.4.2].Prop");
 
             Assert.IsTrue(propertyName.HasGetter);
         }
@@ -30,7 +30,7 @@ namespace KaVE.Model.Tests.Names.CSharp
         [Test]
         public void ShoudBePropertyWithSetter()
         {
-            var propertyName = PropertyName.Get("set [Z, Y, Version=0.5.6.1] [X, W, Version=0.3.4.2].Prop");
+            var propertyName = PropertyName.Get("set [Z, Y, 0.5.6.1] [X, W, 0.3.4.2].Prop");
 
             Assert.IsTrue(propertyName.HasSetter);
         }
@@ -38,7 +38,7 @@ namespace KaVE.Model.Tests.Names.CSharp
         [Test]
         public void ShouldBeStaticProperty()
         {
-            var propertyName = PropertyName.Get("static [A, B, Version=1.2.3.4] [C, D, Version=5.6.7.8].E");
+            var propertyName = PropertyName.Get("static [A, B, 1.2.3.4] [C, D, 5.6.7.8].E");
 
             Assert.IsTrue(propertyName.IsStatic);
         }

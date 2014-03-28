@@ -57,7 +57,7 @@ namespace KaVE.Model.Names.CSharp
         private static bool IsBoundTypeParameterIdentifier(string identifier)
         {
             // "T -> System.Void, mscorlib, ..." is a type parameter, because it contains the separator.
-            // "System.Nullable`1[[T -> System.Int32, mscorlib, Version=4.0.0.0]], ..." is not, because
+            // "System.Nullable`1[[T -> System.Int32, mscorlib, 4.0.0.0]], ..." is not, because
             // the separator is only in the type's parameter-type list, i.e., after the '`'.
             var indexOfMapping = identifier.IndexOf(ParameterNameTypeSeparater, StringComparison.Ordinal);
             var endOfTypeName = identifier.IndexOf('`');

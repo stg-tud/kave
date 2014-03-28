@@ -25,7 +25,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
             var actual = FindEnclosingMethodHierarchy(ResultContext).Element;
             var expected =
                 MethodName.Get(
-                    "[System.Void, mscorlib, Version=4.0.0.0] [N.C6, TestProject].M([System.Int32, mscorlib, Version=4.0.0.0] i)");
+                    "[System.Void, mscorlib, 4.0.0.0] [N.C6, TestProject].M([System.Int32, mscorlib, 4.0.0.0] i)");
             Assert.AreEqual(expected, actual);
         }
 
@@ -37,7 +37,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
             var actual = FindEnclosingMethodHierarchy(ResultContext).Super;
             var expected =
                 MethodName.Get(
-                    "[System.Void, mscorlib, Version=4.0.0.0] [N.C4, TestProject].M([System.Int32, mscorlib, Version=4.0.0.0] i)");
+                    "[System.Void, mscorlib, 4.0.0.0] [N.C4, TestProject].M([System.Int32, mscorlib, 4.0.0.0] i)");
             Assert.AreEqual(expected, actual);
         }
 
@@ -49,7 +49,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
             var actual = FindEnclosingMethodHierarchy(ResultContext).First;
             var expected =
                 MethodName.Get(
-                    "[System.Void, mscorlib, Version=4.0.0.0] [N.I, TestProject].M([System.Int32, mscorlib, Version=4.0.0.0] i)");
+                    "[System.Void, mscorlib, 4.0.0.0] [N.I, TestProject].M([System.Int32, mscorlib, 4.0.0.0] i)");
             Assert.AreEqual(expected, actual);
         }
 
@@ -60,7 +60,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
 
             var actual = FindEnclosingMethodHierarchy(ResultContext).Element;
             var expected = MethodName.Get(
-                "[System.Void, mscorlib, Version=4.0.0.0] [N.C2, TestProject].M([System.Int32, mscorlib, Version=4.0.0.0] i)");
+                "[System.Void, mscorlib, 4.0.0.0] [N.C2, TestProject].M([System.Int32, mscorlib, 4.0.0.0] i)");
             Assert.AreEqual(expected, actual);
         }
 
@@ -71,7 +71,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
 
             var actual = FindEnclosingMethodHierarchy(ResultContext).Super;
             var expected = MethodName.Get(
-                "[System.Void, mscorlib, Version=4.0.0.0] [N.C1, TestProject].M([System.Int32, mscorlib, Version=4.0.0.0] i)");
+                "[System.Void, mscorlib, 4.0.0.0] [N.C1, TestProject].M([System.Int32, mscorlib, 4.0.0.0] i)");
             Assert.AreEqual(expected, actual);
         }
 
@@ -82,7 +82,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
 
             var actual = FindEnclosingMethodHierarchy(ResultContext).First;
             var expected = MethodName.Get(
-                "[System.Void, mscorlib, Version=4.0.0.0] [N.I, TestProject].M([System.Int32, mscorlib, Version=4.0.0.0] i)");
+                "[System.Void, mscorlib, 4.0.0.0] [N.I, TestProject].M([System.Int32, mscorlib, 4.0.0.0] i)");
             Assert.AreEqual(expected, actual);
         }
 
@@ -93,7 +93,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
 
             var actual = FindEnclosingMethodHierarchy(ResultContext).Element;
             var expected = MethodName.Get(
-                "[System.Void, mscorlib, Version=4.0.0.0] [N.C, TestProject].M([System.Int32, mscorlib, Version=4.0.0.0] i)");
+                "[System.Void, mscorlib, 4.0.0.0] [N.C, TestProject].M([System.Int32, mscorlib, 4.0.0.0] i)");
             Assert.AreEqual(expected, actual);
         }
 
@@ -111,7 +111,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
 
             var actual = FindEnclosingMethodHierarchy(ResultContext).First;
             var expected = MethodName.Get(
-                "[System.Void, mscorlib, Version=4.0.0.0] [N.I2, TestProject].M([System.Int32, mscorlib, Version=4.0.0.0] i)");
+                "[System.Void, mscorlib, 4.0.0.0] [N.I2, TestProject].M([System.Int32, mscorlib, 4.0.0.0] i)");
             Assert.AreEqual(expected, actual);
         }
 
@@ -122,7 +122,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
 
             var actual = FindEnclosingMethodHierarchy(ResultContext).Element;
             var expected = MethodName.Get(
-                "[System.Void, mscorlib, Version=4.0.0.0] [N.C2, TestProject].M([System.Int32, mscorlib, Version=4.0.0.0] i)");
+                "[System.Void, mscorlib, 4.0.0.0] [N.C2, TestProject].M([System.Int32, mscorlib, 4.0.0.0] i)");
             Assert.AreEqual(expected, actual);
         }
 
@@ -133,7 +133,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
 
             var actual = FindEnclosingMethodHierarchy(ResultContext).Super;
             var expected = MethodName.Get(
-                "[System.Void, mscorlib, Version=4.0.0.0] [N.C1, TestProject].M([System.Int32, mscorlib, Version=4.0.0.0] i)");
+                "[System.Void, mscorlib, 4.0.0.0] [N.C1, TestProject].M([System.Int32, mscorlib, 4.0.0.0] i)");
             Assert.AreEqual(expected, actual);
         }
 
@@ -144,7 +144,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
 
             var actual = FindEnclosingMethodHierarchy(ResultContext).First;
             var expected = MethodName.Get(
-                "[System.Void, mscorlib, Version=4.0.0.0] [N.I1, TestProject].M([System.Int32, mscorlib, Version=4.0.0.0] i)");
+                "[System.Void, mscorlib, 4.0.0.0] [N.I1, TestProject].M([System.Int32, mscorlib, 4.0.0.0] i)");
             Assert.AreEqual(expected, actual);
         }
 
@@ -155,7 +155,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
 
             var actual = FindEnclosingMethodHierarchy(ResultContext).Element;
             var expected = MethodName.Get(
-                "[System.Void, mscorlib, Version=4.0.0.0] [N.C, TestProject].Add([System.String, mscorlib, Version=4.0.0.0] s)");
+                "[System.Void, mscorlib, 4.0.0.0] [N.C, TestProject].Add([System.String, mscorlib, 4.0.0.0] s)");
             Assert.AreEqual(expected, actual);
         }
 
@@ -166,7 +166,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
 
             var actual = FindEnclosingMethodHierarchy(ResultContext).Super;
             var expected = MethodName.Get(
-                "[System.Void, mscorlib, Version=4.0.0.0] [System.List, mscorlib, Version=4.0.0.0].Add([System.String, mscorlib, Version=4.0.0.0] s)");
+                "[System.Void, mscorlib, 4.0.0.0] [System.List, mscorlib, 4.0.0.0].Add([System.String, mscorlib, 4.0.0.0] s)");
             Assert.AreEqual(expected, actual);
         }
 
@@ -177,7 +177,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
 
             var actual = FindEnclosingMethodHierarchy(ResultContext).First;
             var expected = MethodName.Get(
-                "[System.Void, mscorlib, Version=4.0.0.0] [System.IList, mscorlib, Version=4.0.0.0].Add([System.String, mscorlib, Version=4.0.0.0] s)");
+                "[System.Void, mscorlib, 4.0.0.0] [System.IList, mscorlib, 4.0.0.0].Add([System.String, mscorlib, 4.0.0.0] s)");
             Assert.AreEqual(expected, actual);
         }
 
@@ -188,7 +188,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
 
             var actual = FindEnclosingMethodHierarchy(ResultContext).Element;
             var expected = MethodName.Get(
-                "[System.Void, mscorlib, Version=4.0.0.0] [N.C2, TestProject].M([System.Int32, mscorlib, Version=4.0.0.0] i)");
+                "[System.Void, mscorlib, 4.0.0.0] [N.C2, TestProject].M([System.Int32, mscorlib, 4.0.0.0] i)");
             Assert.AreEqual(expected, actual);
         }
 
@@ -199,7 +199,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
 
             var actual = FindEnclosingMethodHierarchy(ResultContext).Super;
             var expected = MethodName.Get(
-                "[System.Void, mscorlib, Version=4.0.0.0] [N.C1, TestProject].M([System.Int32, mscorlib, Version=4.0.0.0] i)");
+                "[System.Void, mscorlib, 4.0.0.0] [N.C1, TestProject].M([System.Int32, mscorlib, 4.0.0.0] i)");
             Assert.AreEqual(expected, actual);
         }
 
@@ -210,7 +210,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
 
             var actual = FindEnclosingMethodHierarchy(ResultContext).First;
             var expected = MethodName.Get(
-                "[System.Void, mscorlib, Version=4.0.0.0] [N.A, TestProject].M([System.Int32, mscorlib, Version=4.0.0.0] i)");
+                "[System.Void, mscorlib, 4.0.0.0] [N.A, TestProject].M([System.Int32, mscorlib, 4.0.0.0] i)");
             Assert.AreEqual(expected, actual);
         }
 
@@ -221,7 +221,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
 
             var actual = FindEnclosingMethodHierarchy(ResultContext).Element;
             var expected = MethodName.Get(
-                "[System.Void, mscorlib, Version=4.0.0.0] [N.C3, TestProject].M([System.Int32, mscorlib, Version=4.0.0.0] i)");
+                "[System.Void, mscorlib, 4.0.0.0] [N.C3, TestProject].M([System.Int32, mscorlib, 4.0.0.0] i)");
             Assert.AreEqual(expected, actual);
         }
 
@@ -232,7 +232,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
 
             var actual = FindEnclosingMethodHierarchy(ResultContext).Super;
             var expected = MethodName.Get(
-                "[System.Void, mscorlib, Version=4.0.0.0] [N.C2, TestProject].M([System.Int32, mscorlib, Version=4.0.0.0] i)");
+                "[System.Void, mscorlib, 4.0.0.0] [N.C2, TestProject].M([System.Int32, mscorlib, 4.0.0.0] i)");
             Assert.AreEqual(expected, actual);
         }
 
@@ -251,7 +251,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
 
             var actual = FindEnclosingMethodHierarchy(ResultContext).Element;
             var expected = MethodName.Get(
-                "[System.Void, mscorlib, Version=4.0.0.0] [N.C1, TestProject].M([System.Int32, mscorlib, Version=4.0.0.0] i)");
+                "[System.Void, mscorlib, 4.0.0.0] [N.C1, TestProject].M([System.Int32, mscorlib, 4.0.0.0] i)");
             Assert.AreEqual(expected, actual);
         }
 
@@ -270,7 +270,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
 
             var actual = FindEnclosingMethodHierarchy(ResultContext).First;
             var expected = MethodName.Get(
-                "[System.Void, mscorlib, Version=4.0.0.0] [N.I, TestProject].M([System.Int32, mscorlib, Version=4.0.0.0] i)");
+                "[System.Void, mscorlib, 4.0.0.0] [N.I, TestProject].M([System.Int32, mscorlib, 4.0.0.0] i)");
             Assert.AreEqual(expected, actual);
         }
 
@@ -281,7 +281,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
 
             var actual = FindEnclosingMethodHierarchy(ResultContext).Element;
             var expected = MethodName.Get(
-                "[System.Void, mscorlib, Version=4.0.0.0] [N.C2, TestProject].M([System.Int32, mscorlib, Version=4.0.0.0] i)");
+                "[System.Void, mscorlib, 4.0.0.0] [N.C2, TestProject].M([System.Int32, mscorlib, 4.0.0.0] i)");
             Assert.AreEqual(expected, actual);
         }
 
@@ -292,7 +292,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
 
             var actual = FindEnclosingMethodHierarchy(ResultContext).Super;
             var expected = MethodName.Get(
-                "[System.Void, mscorlib, Version=4.0.0.0] [N.C1, TestProject].M([System.Int32, mscorlib, Version=4.0.0.0] i)");
+                "[System.Void, mscorlib, 4.0.0.0] [N.C1, TestProject].M([System.Int32, mscorlib, 4.0.0.0] i)");
             Assert.AreEqual(expected, actual);
         }
 
@@ -311,7 +311,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
 
             var actual = FindEnclosingMethodHierarchy(ResultContext).Element;
             var expected = MethodName.Get(
-                "[System.Void, mscorlib, Version=4.0.0.0] [N.C2, TestProject].M([System.Int32, mscorlib, Version=4.0.0.0] i)");
+                "[System.Void, mscorlib, 4.0.0.0] [N.C2, TestProject].M([System.Int32, mscorlib, 4.0.0.0] i)");
             Assert.AreEqual(expected, actual);
         }
 
@@ -330,7 +330,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
 
             var actual = FindEnclosingMethodHierarchy(ResultContext).First;
             var expected = MethodName.Get(
-                "[System.Void, mscorlib, Version=4.0.0.0] [N.I, TestProject].M([System.Int32, mscorlib, Version=4.0.0.0] i)");
+                "[System.Void, mscorlib, 4.0.0.0] [N.I, TestProject].M([System.Int32, mscorlib, 4.0.0.0] i)");
             Assert.AreEqual(expected, actual);
         }
     }

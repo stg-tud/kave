@@ -270,7 +270,7 @@ namespace KaVE.VsFeedbackGenerator.Utils.Names
         [NotNull]
         private static string NameAndVersion([NotNull] this AssemblyNameInfo assemblyName)
         {
-            return string.Format("{0}, Version={1}", assemblyName.Name, assemblyName.Version);
+            return string.Format("{0}, {1}", assemblyName.Name, assemblyName.Version);
         }
 
         private static void AppendParameters(this StringBuilder identifier,

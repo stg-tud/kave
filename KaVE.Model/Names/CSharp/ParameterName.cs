@@ -15,11 +15,11 @@ namespace KaVE.Model.Names.CSharp
         /// Parameter names follow the scheme <code>'modifiers' ['parameter type name'] 'parameter name'</code>.
         /// Examples of parameter names are:
         /// <list type="bullet">
-        ///     <item><description><code>[System.Int32, mscore, Version=4.0.0.0] size</code></description></item>
-        ///     <item><description><code>out [System.Int32, mscore, Version=4.0.0.0] outputParameter</code></description></item>
-        ///     <item><description><code>params [System.Int32, mscore, Version=4.0.0.0] varArgsParamter</code></description></item>
-        ///     <item><description><code>ref [System.Int32, mscore, Version=4.0.0.0] referenceParameter</code></description></item>
-        ///     <item><description><code>opt [System.Int32, mscore, Version=4.0.0.0] optionalParameter</code> (i.e., parameter with default value)</description></item>
+        ///     <item><description><code>[System.Int32, mscore, 4.0.0.0] size</code></description></item>
+        ///     <item><description><code>out [System.Int32, mscore, 4.0.0.0] outputParameter</code></description></item>
+        ///     <item><description><code>params [System.Int32, mscore, 4.0.0.0] varArgsParamter</code></description></item>
+        ///     <item><description><code>ref [System.Int32, mscore, 4.0.0.0] referenceParameter</code></description></item>
+        ///     <item><description><code>opt [System.Int32, mscore, 4.0.0.0] optionalParameter</code> (i.e., parameter with default value)</description></item>
         /// </list>
         /// </summary>
         public new static ParameterName Get(string identifier)

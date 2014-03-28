@@ -6,7 +6,7 @@ namespace KaVE.Model.Tests.Names.CSharp
     [TestFixture]
     class TypeNameTest
     {
-        private const string TestAssemblyIdentifier = "a, Version=1.0.0.0";
+        private const string TestAssemblyIdentifier = "a, 1.0.0.0";
 
         [Test]
         public void ShouldBeSimpleTypeVoid()
@@ -76,8 +76,8 @@ namespace KaVE.Model.Tests.Names.CSharp
         [Test]
         public void ShouldHaveTypeParameters()
         {
-            const string stringIdentifier = "S -> System.String, mscore, Version=4.0.0.0";
-            const string intIdentifier = "I -> System.Int32, mscore, Version=4.0.0.0";
+            const string stringIdentifier = "S -> System.String, mscore, 4.0.0.0";
+            const string intIdentifier = "I -> System.Int32, mscore, 4.0.0.0";
 
             var parameterizedTypeName = TypeName.Get("pack.age.MyType`2[[" + stringIdentifier + "],[" + intIdentifier + "]], " + TestAssemblyIdentifier);
 
@@ -94,7 +94,7 @@ namespace KaVE.Model.Tests.Names.CSharp
         [Test]
         public void ShouldHaveUninstantiatedTypeParameters()
         {
-            var typeName = TypeName.Get("OuterType`1+InnerType, Assembly, Version=1.2.3.4");
+            var typeName = TypeName.Get("OuterType`1+InnerType, Assembly, 1.2.3.4");
 
             Assert.IsTrue(typeName.IsGenericType);
             Assert.IsFalse(typeName.HasTypeParameters);
@@ -125,7 +125,7 @@ namespace KaVE.Model.Tests.Names.CSharp
         [Test]
         public void ShouldBeParameterizedArrayType()
         {
-            var typeName = TypeName.Get("a.Foo`1[][[T -> int, mscore, Version=1.0.0.0]]");
+            var typeName = TypeName.Get("a.Foo`1[][[T -> int, mscore, 1.0.0.0]]");
 
             Assert.IsTrue(typeName.IsArrayType);
             Assert.IsTrue(typeName.IsGenericType);
@@ -154,7 +154,7 @@ namespace KaVE.Model.Tests.Names.CSharp
         [Test]
         public void ShouldBeNestedTypeInParameterizedType()
         {
-            const string paramIdentifier = "T -> p.OP, A, Version=1.0.0.0";
+            const string paramIdentifier = "T -> p.OP, A, 1.0.0.0";
 
             var nestedTypeName = TypeName.Get("p.O`1+I[["+ paramIdentifier + "]], " + TestAssemblyIdentifier);
 
@@ -173,9 +173,9 @@ namespace KaVE.Model.Tests.Names.CSharp
         [Test]
         public void ShouldBeNestedParameterizedTypeInParameterizedType()
         {
-            const string p1Identifier = "A -> OP, Z, Version=1.0.0.0";
-            const string p2Identifier = "B -> IP1, A, Version=1.0.0.0";
-            const string p3Identifier = "C -> IP2, B, Version=5.1.0.9";
+            const string p1Identifier = "A -> OP, Z, 1.0.0.0";
+            const string p2Identifier = "B -> IP1, A, 1.0.0.0";
+            const string p3Identifier = "C -> IP2, B, 5.1.0.9";
 
             var nestedTypeName = TypeName.Get("p.O`1+I`2[[" + p1Identifier + "],[" + p2Identifier + "],[" + p3Identifier + "]], " + TestAssemblyIdentifier);
 
@@ -196,8 +196,8 @@ namespace KaVE.Model.Tests.Names.CSharp
         [Test]
         public void ShouldBeParameterizedTypeWithParameterizedTypeParameter()
         {
-            const string paramParamIdentifier = "T -> yan.PTPT, Z, Version=1.0.0.0";
-            const string paramIdentifier = "on.PT`1[[" + paramParamIdentifier + "]], Y, Version=1.0.0.0";
+            const string paramParamIdentifier = "T -> yan.PTPT, Z, 1.0.0.0";
+            const string paramIdentifier = "on.PT`1[[" + paramParamIdentifier + "]], Y, 1.0.0.0";
 
             var typeName = TypeName.Get("n.OT`1[[" + paramIdentifier + "]], " + TestAssemblyIdentifier);
 
@@ -214,15 +214,15 @@ namespace KaVE.Model.Tests.Names.CSharp
         [Test]
         public void ShouldBeDeeplyNestedTypeWithLotsOfTypeParameters()
         {
-            var typeName = TypeName.Get("p.O`1+M`1+I`1[[T -> p.P1, A, Version=1.0.0.0],[U -> p.P2, A, Version=1.0.0.0],[V -> p.P3, A, Version=1.0.0.0]], " + TestAssemblyIdentifier);
+            var typeName = TypeName.Get("p.O`1+M`1+I`1[[T -> p.P1, A, 1.0.0.0],[U -> p.P2, A, 1.0.0.0],[V -> p.P3, A, 1.0.0.0]], " + TestAssemblyIdentifier);
 
-            Assert.AreEqual("p.O`1+M`1[[T -> p.P1, A, Version=1.0.0.0],[U -> p.P2, A, Version=1.0.0.0]], " + TestAssemblyIdentifier, typeName.DeclaringType.Identifier);
+            Assert.AreEqual("p.O`1+M`1[[T -> p.P1, A, 1.0.0.0],[U -> p.P2, A, 1.0.0.0]], " + TestAssemblyIdentifier, typeName.DeclaringType.Identifier);
         }
 
         [Test]
         public void ShouldParseFullDescriptorWithAdditionInfo()
         {
-            const string assemblyIdentifier = "Assembly, Version=0.100.90.666666, PublicKeyToken=DEADBEEF";
+            const string assemblyIdentifier = "Assembly, 0.100.90.666666, PublicKeyToken=DEADBEEF";
 
             var typeName = TypeName.Get("an.other.ValueType, " + assemblyIdentifier);
 
@@ -259,23 +259,23 @@ namespace KaVE.Model.Tests.Names.CSharp
         [Test]
         public void ShouldCreateArrayTypeNameFromTypeName()
         {
-            var arrayTypeName = TypeName.Get("SomeType, Assembly, Version=1.2.3.4").DeriveArrayTypeName(2);
+            var arrayTypeName = TypeName.Get("SomeType, Assembly, 1.2.3.4").DeriveArrayTypeName(2);
 
-            Assert.AreEqual("SomeType[,], Assembly, Version=1.2.3.4", arrayTypeName.Identifier);
+            Assert.AreEqual("SomeType[,], Assembly, 1.2.3.4", arrayTypeName.Identifier);
         }
 
         [Test]
         public void ShouldCreateArrayTypeNameFromGenericTypeName()
         {
-            var arrayTypeName = TypeName.Get("SomeGenericType`1[[T -> System.Int32, mscore, Version=5.6.7.8]], A, Version=9.10.11.12").DeriveArrayTypeName(1);
+            var arrayTypeName = TypeName.Get("SomeGenericType`1[[T -> System.Int32, mscore, 5.6.7.8]], A, 9.10.11.12").DeriveArrayTypeName(1);
 
-            Assert.AreEqual("SomeGenericType`1[][[T -> System.Int32, mscore, Version=5.6.7.8]], A, Version=9.10.11.12", arrayTypeName.Identifier);
+            Assert.AreEqual("SomeGenericType`1[][[T -> System.Int32, mscore, 5.6.7.8]], A, 9.10.11.12", arrayTypeName.Identifier);
         }
 
         [Test]
         public void ShouldBeTypeParameter()
         {
-            var typeParameter = TypeName.Get("TR -> System.Int32, mscorelib, Version=.4.0.0.0");
+            var typeParameter = TypeName.Get("TR -> System.Int32, mscorelib, .4.0.0.0");
 
             Assert.IsTrue(typeParameter.IsTypeParameter);
             Assert.AreEqual("TR", typeParameter.TypeParameterShortName);
@@ -294,10 +294,10 @@ namespace KaVE.Model.Tests.Names.CSharp
         [Test]
         public void ShouldBeNotTypeParameter()
         {
-            var genericType = TypeName.Get("SomeType`1[[T -> Foo, Bar, Version=1.2.3.4]]");
+            var genericType = TypeName.Get("SomeType`1[[T -> Foo, Bar, 1.2.3.4]]");
 
             Assert.IsFalse(genericType.IsTypeParameter);
-            Assert.AreEqual("SomeType`1[[T -> Foo, Bar, Version=1.2.3.4]]", genericType.FullName);
+            Assert.AreEqual("SomeType`1[[T -> Foo, Bar, 1.2.3.4]]", genericType.FullName);
         }
     }
 }

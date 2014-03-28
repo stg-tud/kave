@@ -27,7 +27,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.TestFactories
         {
             return
                 TypeName.Get(
-                    string.Format("SomeType{0}, SomeAssembly{1}, Version=9.8.7.6", NextCounter(), NextCounter()));
+                    string.Format("SomeType{0}, SomeAssembly{1}, 9.8.7.6", NextCounter(), NextCounter()));
         }
 
         public static INamespaceName GetAnonymousNamespace()

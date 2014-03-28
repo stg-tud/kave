@@ -9,10 +9,10 @@ namespace KaVE.Model.Tests.Names.CSharp
         [Test]
         public void ShouldBeSimpleMethod()
         {
-            var methodName = MethodName.Get("[System.Void, mscore, Version=4.0.0.0] [T, P, Version=1.2.3.4].MethodName()");
+            var methodName = MethodName.Get("[System.Void, mscore, 4.0.0.0] [T, P, 1.2.3.4].MethodName()");
 
-            Assert.AreEqual("T, P, Version=1.2.3.4", methodName.DeclaringType.Identifier);
-            Assert.AreEqual("System.Void, mscore, Version=4.0.0.0", methodName.ReturnType.Identifier);
+            Assert.AreEqual("T, P, 1.2.3.4", methodName.DeclaringType.Identifier);
+            Assert.AreEqual("System.Void, mscore, 4.0.0.0", methodName.ReturnType.Identifier);
             Assert.AreEqual("MethodName", methodName.Name);
             Assert.IsFalse(methodName.HasTypeParameters);
             Assert.IsEmpty(methodName.TypeParameters);
@@ -25,9 +25,9 @@ namespace KaVE.Model.Tests.Names.CSharp
         [Test]
         public void ShouldBeMethodWithOneParameter()
         {
-            const string declaringTypeIdentifier = "A, B, Version=9.9.9.9";
-            const string returnTypeIdentifier = "R, C, Version=7.6.5.4";
-            const string parameterIdentifier = "[P, D, Version=3.4.3.2] n";
+            const string declaringTypeIdentifier = "A, B, 9.9.9.9";
+            const string returnTypeIdentifier = "R, C, 7.6.5.4";
+            const string parameterIdentifier = "[P, D, 3.4.3.2] n";
 
             var methodName = MethodName.Get("[" + returnTypeIdentifier + "] [" + declaringTypeIdentifier + "].M(" + parameterIdentifier + ")");
 
@@ -42,11 +42,11 @@ namespace KaVE.Model.Tests.Names.CSharp
         [Test]
         public void ShouldBeMethodWithMultipleParameters()
         {
-            const string declaringTypeIdentifier = "A, B, Version=9.9.9.9";
-            const string returnTypeIdentifier = "R, C, Version=7.6.5.4";
-            const string param1Identifier = "[P, D, Version=3.4.3.2] n";
-            const string param2Identifier = "[Q, E, Version=9.1.8.2] o";
-            const string param3Identifier = "[R, F, Version=6.5.7.4] p";
+            const string declaringTypeIdentifier = "A, B, 9.9.9.9";
+            const string returnTypeIdentifier = "R, C, 7.6.5.4";
+            const string param1Identifier = "[P, D, 3.4.3.2] n";
+            const string param2Identifier = "[Q, E, 9.1.8.2] o";
+            const string param3Identifier = "[R, F, 6.5.7.4] p";
 
             var methodName = MethodName.Get("[" + returnTypeIdentifier + "] [" + declaringTypeIdentifier + "].DoIt(" + param1Identifier + ", " + param2Identifier + ", " + param3Identifier + ")");
 
@@ -63,7 +63,7 @@ namespace KaVE.Model.Tests.Names.CSharp
         [Test]
         public void ShouldBeConstructor()
         {
-            var methodName = MethodName.Get("[MyType, A, Version=0.0.0.1] [MyType, A, Version=0.0.0.1]..ctor()");
+            var methodName = MethodName.Get("[MyType, A, 0.0.0.1] [MyType, A, 0.0.0.1]..ctor()");
 
             Assert.IsTrue(methodName.IsConstructor);
         }
@@ -71,7 +71,7 @@ namespace KaVE.Model.Tests.Names.CSharp
         [Test]
         public void ShouldBeStaticMethod()
         {
-            var methodName = MethodName.Get("static [I, A, Version=1.0.2.0] [K, K, Version=0.1.0.2].m()");
+            var methodName = MethodName.Get("static [I, A, 1.0.2.0] [K, K, 0.1.0.2].m()");
 
             Assert.IsTrue(methodName.IsStatic);
         }

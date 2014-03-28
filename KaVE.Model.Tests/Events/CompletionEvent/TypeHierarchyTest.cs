@@ -13,7 +13,7 @@ namespace KaVE.Model.Tests.Events.CompletionEvent
         {
             _uut = new TypeHierarchy("MyType, MyAssembly")
             {
-                Extends = new TypeHierarchy("System.Object, mscorlib, Version=4.0.0.0")
+                Extends = new TypeHierarchy("System.Object, mscorlib, 4.0.0.0")
             };
             _uut.Implements.Add(new TypeHierarchy("ISomeinterface, MyAssembly"));
         }
@@ -23,7 +23,7 @@ namespace KaVE.Model.Tests.Events.CompletionEvent
         {
             var clone = new TypeHierarchy("MyType, MyAssembly")
             {
-                Extends = new TypeHierarchy("System.Object, mscorlib, Version=4.0.0.0")
+                Extends = new TypeHierarchy("System.Object, mscorlib, 4.0.0.0")
             };
             clone.Implements.Add(new TypeHierarchy("ISomeinterface, MyAssembly"));
 
@@ -36,7 +36,7 @@ namespace KaVE.Model.Tests.Events.CompletionEvent
         {
             var other = new TypeHierarchy("OtherType, MyAssembly")
             {
-                Extends = new TypeHierarchy("System.Object, mscorlib, Version=4.0.0.0")
+                Extends = new TypeHierarchy("System.Object, mscorlib, 4.0.0.0")
             };
 
             Assert.AreNotEqual(_uut, other);

@@ -11,7 +11,7 @@ namespace KaVE.Model.Names.CSharp
         /// Event names follow the scheme <code>'modifiers' ['event-handler-type name'] ['declaring-type name'].'name'</code>.
         /// Examples of type names are:
         /// <list type="bullet">
-        ///     <item><description><code>[ChangeEventHandler, IO, Version=1.2.3.4] [TextBox, GUI, Version=5.6.7.8].Changed</code></description></item>
+        ///     <item><description><code>[ChangeEventHandler, IO, 1.2.3.4] [TextBox, GUI, 5.6.7.8].Changed</code></description></item>
         /// </list>
         /// </summary>
         public new static EventName Get(string identifier)

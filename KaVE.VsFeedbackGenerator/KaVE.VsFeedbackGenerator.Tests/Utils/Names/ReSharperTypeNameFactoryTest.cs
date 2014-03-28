@@ -10,10 +10,10 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Names
     [TestFixture]
     public class ReSharperTypeNameFactoryTest
     {
-        [TestCase("System.String", "mscore", "4.0.0.0", "System.String, mscore, Version=4.0.0.0"),
-         TestCase("Some.Outer+Inner", "Assembly", "5.4.3.2", "Some.Outer+Inner, Assembly, Version=5.4.3.2"),
-         TestCase("ValueType[,,]", "A", "9.8.7.6", "ValueType[,,], A, Version=9.8.7.6"),
-         TestCase("ValueType[][]", "B", "5.4.3.2", "ValueType[][], B, Version=5.4.3.2")]
+        [TestCase("System.String", "mscore", "4.0.0.0", "System.String, mscore, 4.0.0.0"),
+         TestCase("Some.Outer+Inner", "Assembly", "5.4.3.2", "Some.Outer+Inner, Assembly, 5.4.3.2"),
+         TestCase("ValueType[,,]", "A", "9.8.7.6", "ValueType[,,], A, 9.8.7.6"),
+         TestCase("ValueType[][]", "B", "5.4.3.2", "ValueType[][], B, 5.4.3.2")]
         public void ShouldGetNameForIType(string typeFqn, string assemblyName, string assemblyVersion, string identifier)
         {
             var type = TypeMockUtils.MockIType(typeFqn, assemblyName, assemblyVersion);
@@ -75,7 +75,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Names
                 new Dictionary<string, IType> {{"T", TypeMockUtils.MockIType("System.Int32", "mscore", "4.0.0.0")}},
                 "mscore",
                 "4.0.0.0",
-                "System.Nullable`1[[T -> System.Int32, mscore, Version=4.0.0.0]], mscore, Version=4.0.0.0"),
+                "System.Nullable`1[[T -> System.Int32, mscore, 4.0.0.0]], mscore, 4.0.0.0"),
             new GenericTypeCase("System.Collections.IDictionary`2",
                 new Dictionary<string, IType>
                 {
@@ -84,7 +84,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Names
                 },
                 "mscore",
                 "9.10.11.12",
-                "System.Collections.IDictionary`2[[TKey -> System.String, mscore, Version=1.2.3.4],[TValue -> System.Object, mscore, Version=5.6.7.8]], mscore, Version=9.10.11.12")
+                "System.Collections.IDictionary`2[[TKey -> System.String, mscore, 1.2.3.4],[TValue -> System.Object, mscore, 5.6.7.8]], mscore, 9.10.11.12")
         };
 
         [TestCaseSource("GenericTypeCases")]

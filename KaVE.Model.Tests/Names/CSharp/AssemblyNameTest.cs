@@ -9,7 +9,7 @@ namespace KaVE.Model.Tests.Names.CSharp
         [Test]
         public void ShouldBeMSCorLibAssembly()
         {
-            const string identifier = "mscorlib, Version=4.0.0.0";
+            const string identifier = "mscorlib, 4.0.0.0";
             var mscoreAssembly = AssemblyName.Get(identifier);
 
             Assert.AreEqual("mscorlib", mscoreAssembly.Name);

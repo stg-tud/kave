@@ -12,10 +12,10 @@ namespace KaVE.Model.Names.CSharp
         /// Method type names follow the scheme <code>'modifiers' ['return type name'] ['declaring type name'].'method name'('parameter names')</code>.
         /// Examples of valid method names are:
         /// <list type="bullet">
-        ///     <item><description><code>[System.Void, mscore, Version=4.0.0.0] [DeclaringType, AssemblyName, Version=1.2.3.4].MethodName()</code></description></item>
-        ///     <item><description><code>static [System.String, mscore, Version=4.0.0.0] [MyType, MyAssembly, Version=1.0.0.0].StaticMethod()</code></description></item>
-        ///     <item><description><code>[System.String, mscore, Version=4.0.0.0] [MyType, MyAssembly, Version=1.0.0.0].AMethod(opt [System.Int32, mscore, Version=4.0.0.0] length)</code></description></item>
-        ///     <item><description><code>[System.String, mscore, Version=4.0.0.0] [System.String, mscore, Version=4.0.0.0]..ctor()</code> (Constructor)</description></item>
+        ///     <item><description><code>[System.Void, mscore, 4.0.0.0] [DeclaringType, AssemblyName, 1.2.3.4].MethodName()</code></description></item>
+        ///     <item><description><code>static [System.String, mscore, 4.0.0.0] [MyType, MyAssembly, 1.0.0.0].StaticMethod()</code></description></item>
+        ///     <item><description><code>[System.String, mscore, 4.0.0.0] [MyType, MyAssembly, 1.0.0.0].AMethod(opt [System.Int32, mscore, 4.0.0.0] length)</code></description></item>
+        ///     <item><description><code>[System.String, mscore, 4.0.0.0] [System.String, mscore, 4.0.0.0]..ctor()</code> (Constructor)</description></item>
         /// </list>
         /// </summary>
         public new static MethodName Get(string identifier)

@@ -16,7 +16,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.Model
         [Test]
         public void ShouldSerializeAssemblyName()
         {
-            var name = AssemblyName.Get("AssemblyName, Version=0.8.15.0");
+            var name = AssemblyName.Get("AssemblyName, 0.8.15.0");
             JsonAssert.SerializationPreservesReferenceIdentity(name);
         }
 
@@ -30,7 +30,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.Model
         [Test]
         public void ShouldSerializeFieldName()
         {
-            var name = FieldName.Get("static [Declarator, B, Version=9.2.3.8] [Val, G, Version=5.4.6.3].Field");
+            var name = FieldName.Get("static [Declarator, B, 9.2.3.8] [Val, G, 5.4.6.3].Field");
             JsonAssert.SerializationPreservesReferenceIdentity(name);
         }
 
@@ -39,7 +39,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.Model
         {
             var name =
                 MethodName.Get(
-                    "[Declarator, B, Version=9.2.3.8] [Val, G, Version=5.4.6.3].Method(out [Param, P, Version=8.1.7.2])");
+                    "[Declarator, B, 9.2.3.8] [Val, G, 5.4.6.3].Method(out [Param, P, 8.1.7.2])");
             JsonAssert.SerializationPreservesReferenceIdentity(name);
         }
 
@@ -53,7 +53,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.Model
         [Test]
         public void ShouldSerializeTypeName()
         {
-            var name = TypeName.Get("Foo.Bar, foo, Version=1.0.0.0");
+            var name = TypeName.Get("Foo.Bar, foo, 1.0.0.0");
             JsonAssert.SerializationPreservesReferenceIdentity(name);
         }
     }

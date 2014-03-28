@@ -54,15 +54,15 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.Model
                                      "\"ProposalCollection\":{\"$type\":\"KaVE.Model.Events.CompletionEvent.ProposalCollection, KaVE.Model\"," +
                                      "\"Proposals\":{\"$type\":\"System.Collections.Generic.List`1[[KaVE.Model.Events.CompletionEvent.Proposal, KaVE.Model]], mscorlib\"," +
                                      "\"$values\":[" +
-                                     "{\"$type\":\"KaVE.Model.Events.CompletionEvent.Proposal, KaVE.Model\",\"Name\":{\"type\":\"CSharp.PropertyName\",\"identifier\":\"get [System.Boolean, mscorlib, Version=4.0.0.0] [System.IO.Stream, mscorlib, Version=4.0.0.0].CanRead()\"}}," +
-                                     "{\"$type\":\"KaVE.Model.Events.CompletionEvent.Proposal, KaVE.Model\",\"Name\":{\"type\":\"CSharp.PropertyName\",\"identifier\":\"get [System.Boolean, mscorlib, Version=4.0.0.0] [System.IO.Stream, mscorlib, Version=4.0.0.0].CanSeek()\"}}," +
-                                     "{\"$type\":\"KaVE.Model.Events.CompletionEvent.Proposal, KaVE.Model\",\"Name\":{\"type\":\"CSharp.PropertyName\",\"identifier\":\"get [System.Boolean, mscorlib, Version=4.0.0.0] [System.IO.Stream, mscorlib, Version=4.0.0.0].CanTimeout()\"}}," +
-                                     "{\"$type\":\"KaVE.Model.Events.CompletionEvent.Proposal, KaVE.Model\",\"Name\":{\"type\":\"CSharp.PropertyName\",\"identifier\":\"get [System.Boolean, mscorlib, Version=4.0.0.0] [System.IO.Stream, mscorlib, Version=4.0.0.0].CanWrite()\"}}," +
+                                     "{\"$type\":\"KaVE.Model.Events.CompletionEvent.Proposal, KaVE.Model\",\"Name\":{\"type\":\"CSharp.PropertyName\",\"identifier\":\"get [System.Boolean, mscorlib, 4.0.0.0] [System.IO.Stream, mscorlib, 4.0.0.0].CanRead()\"}}," +
+                                     "{\"$type\":\"KaVE.Model.Events.CompletionEvent.Proposal, KaVE.Model\",\"Name\":{\"type\":\"CSharp.PropertyName\",\"identifier\":\"get [System.Boolean, mscorlib, 4.0.0.0] [System.IO.Stream, mscorlib, 4.0.0.0].CanSeek()\"}}," +
+                                     "{\"$type\":\"KaVE.Model.Events.CompletionEvent.Proposal, KaVE.Model\",\"Name\":{\"type\":\"CSharp.PropertyName\",\"identifier\":\"get [System.Boolean, mscorlib, 4.0.0.0] [System.IO.Stream, mscorlib, 4.0.0.0].CanTimeout()\"}}," +
+                                     "{\"$type\":\"KaVE.Model.Events.CompletionEvent.Proposal, KaVE.Model\",\"Name\":{\"type\":\"CSharp.PropertyName\",\"identifier\":\"get [System.Boolean, mscorlib, 4.0.0.0] [System.IO.Stream, mscorlib, 4.0.0.0].CanWrite()\"}}," +
                                      /* other proposals removed to reduce size of this string */
                                      "]}}," +
                                      "\"Selections\":{\"$type\":\"System.Collections.Generic.List`1[[KaVE.Model.Events.CompletionEvent.ProposalSelection, KaVE.Model]], mscorlib\"," +
                                      "\"$values\":[{\"$type\":\"KaVE.Model.Events.CompletionEvent.ProposalSelection, KaVE.Model\",\"SelectedAt\":\"2013-12-06T11:34:24\"," +
-                                     "\"Proposal\":{\"$type\":\"KaVE.Model.Events.CompletionEvent.Proposal, KaVE.Model\",\"Name\":{\"type\":\"CSharp.PropertyName\",\"identifier\":\"get [System.Boolean, mscorlib, Version=4.0.0.0] [System.IO.Stream, mscorlib, Version=4.0.0.0].CanRead()\"}}}" +
+                                     "\"Proposal\":{\"$type\":\"KaVE.Model.Events.CompletionEvent.Proposal, KaVE.Model\",\"Name\":{\"type\":\"CSharp.PropertyName\",\"identifier\":\"get [System.Boolean, mscorlib, 4.0.0.0] [System.IO.Stream, mscorlib, 4.0.0.0].CanRead()\"}}}" +
                                      "]}," +
                                      "\"Prefix\":\"\"," +
                                      "\"TerminatedBy\":1," +
@@ -77,18 +77,18 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.Model
             var actual = jsonEvent.Deserialize<CompletionEvent>();
 
             var initialySelectedProposal = CreatePropertyProposal(
-                "get [System.Boolean, mscorlib, Version=4.0.0.0] [System.IO.Stream, mscorlib, Version=4.0.0.0].CanRead()");
+                "get [System.Boolean, mscorlib, 4.0.0.0] [System.IO.Stream, mscorlib, 4.0.0.0].CanRead()");
             var expected = new CompletionEvent
             {
                 ProposalCollection =
                     new ProposalCollection(
                         initialySelectedProposal,
                         CreatePropertyProposal(
-                            "get [System.Boolean, mscorlib, Version=4.0.0.0] [System.IO.Stream, mscorlib, Version=4.0.0.0].CanSeek()"),
+                            "get [System.Boolean, mscorlib, 4.0.0.0] [System.IO.Stream, mscorlib, 4.0.0.0].CanSeek()"),
                         CreatePropertyProposal(
-                            "get [System.Boolean, mscorlib, Version=4.0.0.0] [System.IO.Stream, mscorlib, Version=4.0.0.0].CanTimeout()"),
+                            "get [System.Boolean, mscorlib, 4.0.0.0] [System.IO.Stream, mscorlib, 4.0.0.0].CanTimeout()"),
                         CreatePropertyProposal(
-                            "get [System.Boolean, mscorlib, Version=4.0.0.0] [System.IO.Stream, mscorlib, Version=4.0.0.0].CanWrite()")),
+                            "get [System.Boolean, mscorlib, 4.0.0.0] [System.IO.Stream, mscorlib, 4.0.0.0].CanWrite()")),
                 Selections =
                     new List<ProposalSelection>
                     {

@@ -22,7 +22,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
 
             var actual = ResultContext.EnclosingMethodHierarchy.Element;
             var expected =
-                MethodName.Get("[System.Void, mscorlib, Version=4.0.0.0] [TestNamespace.TestClass, TestProject].Doit()");
+                MethodName.Get("[System.Void, mscorlib, 4.0.0.0] [TestNamespace.TestClass, TestProject].Doit()");
             Assert.AreEqual(expected, actual);
         }
 
@@ -75,7 +75,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
             WhenCodeCompletionIsInvokedInFile("GenericTypeHierarchy");
 
             var actual = ResultContext.TypeShape.TypeHierarchy.Extends.Element;
-            var expected = TypeName.Get("N.IC`1[[T -> System.Int32, mscorlib, Version=4.0.0.0]], TestProject");
+            var expected = TypeName.Get("N.IC`1[[T -> System.Int32, mscorlib, 4.0.0.0]], TestProject");
             Assert.AreEqual(expected, actual);
         }
 
@@ -111,7 +111,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
                 },
                 Implements = new HashSet<ITypeHierarchy>
                 {
-                    new TypeHierarchy("N.IB`1[[TB -> System.Int32, mscorlib, Version=4.0.0.0]], TestProject"),
+                    new TypeHierarchy("N.IB`1[[TB -> System.Int32, mscorlib, 4.0.0.0]], TestProject"),
                     new TypeHierarchy("N.IC, TestProject")
                 }
             };

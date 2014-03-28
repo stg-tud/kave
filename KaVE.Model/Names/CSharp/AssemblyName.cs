@@ -9,10 +9,10 @@ namespace KaVE.Model.Names.CSharp
         private static readonly WeakNameCache<AssemblyName> Registry = WeakNameCache<AssemblyName>.Get(id => new AssemblyName(id));
 
         /// <summary>
-        /// Assembly names follow the scheme <code>'assembly name'[, Version='assembly version']</code>.
+        /// Assembly names follow the scheme <code>'assembly name'[, 'assembly version']</code>.
         /// Example assembly names are:
         /// <list type="bullet">
-        ///     <item><description><code>CodeCompletion.Model.Names, Version=1.0.0.0</code></description></item>
+        ///     <item><description><code>CodeCompletion.Model.Names, 1.0.0.0</code></description></item>
         ///     <item><description><code>CodeCompletion.Model.Names</code></description></item>
         /// </list>
         /// Only the assembly name and version information are mandatory. Note, however, that object identity is only guarateed for exact identifier matches.
@@ -28,23 +28,16 @@ namespace KaVE.Model.Names.CSharp
         {
             get
             {
-                if (Fragments.Length <= 1)
-                {
-                    return null;
-                }
-                var version = Fragments[1].Split('=')[1];
-                return CSharp.AssemblyVersion.Get(version);
+                var fragments = GetFragments();
+                return fragments.Length <= 1 ? null : CSharp.AssemblyVersion.Get(fragments[1]);
             }
         }
 
-        public string Name { get { return Fragments[0]; } }
+        public string Name { get { return GetFragments()[0]; } }
 
-        private String[] Fragments
+        private String[] GetFragments()
         {
-            get
-            {
                 return Identifier.Split(',').Select(f => f.Trim()).ToArray();
-            }
         }
     }
 }

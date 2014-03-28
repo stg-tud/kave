@@ -161,9 +161,9 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
 
         private static MethodHierarchy Decl(string encType, string superType, string firstType)
         {
-            var elem = "[System.Void, mscorlib, Version=4.0.0.0] [" + encType + ", TestProject].M()";
-            var super = "[System.Void, mscorlib, Version=4.0.0.0] [" + superType + ", TestProject].M()";
-            var first = "[System.Void, mscorlib, Version=4.0.0.0] [" + firstType + ", TestProject].M()";
+            var elem = "[System.Void, mscorlib, 4.0.0.0] [" + encType + ", TestProject].M()";
+            var super = "[System.Void, mscorlib, 4.0.0.0] [" + superType + ", TestProject].M()";
+            var first = "[System.Void, mscorlib, 4.0.0.0] [" + firstType + ", TestProject].M()";
 
             var decl = new MethodHierarchy(MethodName.Get(elem));
             if (!superType.IsEmpty())

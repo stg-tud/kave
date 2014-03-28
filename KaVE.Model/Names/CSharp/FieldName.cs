@@ -11,8 +11,8 @@ namespace KaVE.Model.Names.CSharp
         /// Field names follow the scheme <code>'modifiers' ['value type name'] ['declaring type name'].'field name'</code>.
         /// Examples of field names are:
         /// <list type="buller">
-        ///     <item><description><code>[System.Int32, mscore, Version=4.0.0.0] [Collections.IList, mscore, Version=4.0.0.0]._count</code></description></item>
-        ///     <item><description><code>static [System.Int32, mscore, Version=4.0.0.0] [MyClass, MyAssembly, Version=1.2.3.4].Constant</code></description></item>
+        ///     <item><description><code>[System.Int32, mscore, 4.0.0.0] [Collections.IList, mscore, 4.0.0.0]._count</code></description></item>
+        ///     <item><description><code>static [System.Int32, mscore, 4.0.0.0] [MyClass, MyAssembly, 1.2.3.4].Constant</code></description></item>
         /// </list>
         /// </summary>
         public new static FieldName Get(string identifier)

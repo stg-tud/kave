@@ -24,13 +24,13 @@ namespace KaVE.Model.Names.CSharp
         /// Type names follow the scheme <code>'fully-qualified type name''generic type parameters', 'assembly identifier'</code>.
         /// Examples of type names are:
         /// <list type="bullet">
-        ///     <item><description><code>System.Int32, mscore, Version=4.0.0.0</code></description></item>
-        ///     <item><description><code>System.Nullable`1[[T -> System.Int32, mscore, Version=4.0.0.0]], mscore, Version=4.0.0.0</code></description></item>
-        ///     <item><description><code>System.Collections.Dictionary`2[[TKey -> System.Int32, mscore, Version=4.0.0.0],[TValue -> System.String, mscore, Version=4.0.0.0]], mscore, Version=4.0.0.0</code></description></item>
-        ///     <item><description><code>Namespace.OuterType+InnerType, Assembly, Version=1.2.3.4</code></description></item>
-        ///     <item><description><code>enum EnumType, Assembly, Version=1.2.3.4</code></description></item>
-        ///     <item><description><code>interface InterfaceType, Assembly, Version=1.2.3.4</code></description></item>
-        ///     <item><description><code>struct StructType, Assembly, Version=1.2.3.4</code></description></item>
+        ///     <item><description><code>System.Int32, mscore, 4.0.0.0</code></description></item>
+        ///     <item><description><code>System.Nullable`1[[T -> System.Int32, mscore, 4.0.0.0]], mscore, 4.0.0.0</code></description></item>
+        ///     <item><description><code>System.Collections.Dictionary`2[[TKey -> System.Int32, mscore, 4.0.0.0],[TValue -> System.String, mscore, 4.0.0.0]], mscore, 4.0.0.0</code></description></item>
+        ///     <item><description><code>Namespace.OuterType+InnerType, Assembly, 1.2.3.4</code></description></item>
+        ///     <item><description><code>enum EnumType, Assembly, 1.2.3.4</code></description></item>
+        ///     <item><description><code>interface InterfaceType, Assembly, 1.2.3.4</code></description></item>
+        ///     <item><description><code>struct StructType, Assembly, 1.2.3.4</code></description></item>
         /// </list>
         /// parameter-type names follow the scheme <code>'short-name' -> 'actual-type identifier'</code>, with actual-type identifier being
         /// either the identifier of a type name, as declared above, or another parameter-type name.

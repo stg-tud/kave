@@ -36,7 +36,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Names
         {
             var typeElement = TypeMockUtils.MockTypeElement("Full.Qualified.TypeName", TypeMockUtils.MockAssembly("AssemblyName", "0.9.8.7"));
 
-            AssertNameIdentifier(typeElement, "Full.Qualified.TypeName, AssemblyName, Version=0.9.8.7");
+            AssertNameIdentifier(typeElement, "Full.Qualified.TypeName, AssemblyName, 0.9.8.7");
         }
 
         [Test]
@@ -44,7 +44,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Names
         {
             var typeElement = TypeMockUtils.MockTypeElement("TypeName", TypeMockUtils.MockProject("Project", "1.0.0.0"));
 
-            AssertNameIdentifier(typeElement, "TypeName, Project, Version=1.0.0.0");
+            AssertNameIdentifier(typeElement, "TypeName, Project, 1.0.0.0");
         }
 
         [Test]
@@ -55,12 +55,12 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Names
             AssertNameIdentifier(typeElement, "TypeName, Project");
         }
 
-        [TestCase("param0", "ParameterType", "AnAssembly", "1.2.3.4", ParameterKind.VALUE, false, false, "[ParameterType, AnAssembly, Version=1.2.3.4] param0"),
-         TestCase("length", "int", "mscore", "4.0.0.0", ParameterKind.VALUE, false, false, "[System.Int32, mscore, Version=4.0.0.0] length"),
-         TestCase("str", "string", "mscore", "4.0.0.0", ParameterKind.VALUE, false, false, "[System.String, mscore, Version=4.0.0.0] str"),
-         TestCase("optional", "bool", "mscore", "4.0.0.0", ParameterKind.VALUE, true, false, "opt [System.Boolean, mscore, Version=4.0.0.0] optional"),
-         TestCase("output", "Type", "Assembly", "0.1.9.2", ParameterKind.OUTPUT, false, false, "out [Type, Assembly, Version=0.1.9.2] output"),
-         TestCase("reference", "long", "mscore", "4.0.0.0", ParameterKind.REFERENCE, false, false, "ref [System.Int64, mscore, Version=4.0.0.0] reference")]
+        [TestCase("param0", "ParameterType", "AnAssembly", "1.2.3.4", ParameterKind.VALUE, false, false, "[ParameterType, AnAssembly, 1.2.3.4] param0"),
+         TestCase("length", "int", "mscore", "4.0.0.0", ParameterKind.VALUE, false, false, "[System.Int32, mscore, 4.0.0.0] length"),
+         TestCase("str", "string", "mscore", "4.0.0.0", ParameterKind.VALUE, false, false, "[System.String, mscore, 4.0.0.0] str"),
+         TestCase("optional", "bool", "mscore", "4.0.0.0", ParameterKind.VALUE, true, false, "opt [System.Boolean, mscore, 4.0.0.0] optional"),
+         TestCase("output", "Type", "Assembly", "0.1.9.2", ParameterKind.OUTPUT, false, false, "out [Type, Assembly, 0.1.9.2] output"),
+         TestCase("reference", "long", "mscore", "4.0.0.0", ParameterKind.REFERENCE, false, false, "ref [System.Int64, mscore, 4.0.0.0] reference")]
         public void ShouldGetNameForIParameter(string parameterName,
             string typeName,
             string assemblyName,
@@ -88,7 +88,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Names
             fieldMock.Setup(f => f.Type).Returns(TypeMockUtils.MockIType("ValueType", "VTA", "1.2.3.4"));
             fieldMock.Setup(f => f.ShortName).Returns("FieldName");
 
-            AssertNameIdentifier(fieldMock.Object, "[ValueType, VTA, Version=1.2.3.4] [DeclaringType, DTA, Version=0.9.8.7].FieldName");
+            AssertNameIdentifier(fieldMock.Object, "[ValueType, VTA, 1.2.3.4] [DeclaringType, DTA, 0.9.8.7].FieldName");
         }
 
         [Test]
@@ -100,7 +100,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Names
             fieldMock.Setup(f => f.ShortName).Returns("FieldName");
             fieldMock.Setup(f => f.IsStatic).Returns(true);
 
-            AssertNameIdentifier(fieldMock.Object, "static [ValueType, VTA, Version=1.2.3.4] [DeclaringType, DTA, Version=0.9.8.7].FieldName");
+            AssertNameIdentifier(fieldMock.Object, "static [ValueType, VTA, 1.2.3.4] [DeclaringType, DTA, 0.9.8.7].FieldName");
         }
 
         [Test]
@@ -112,7 +112,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Names
             functionMock.Setup(f => f.ShortName).Returns("MethodName");
             functionMock.Setup(f => f.Parameters).Returns(new List<IParameter>());
 
-            AssertNameIdentifier(functionMock.Object, "[ReturnType, RTA, Version=1.2.3.4] [DeclaringType, DTA, Version=0.9.8.7].MethodName()");
+            AssertNameIdentifier(functionMock.Object, "[ReturnType, RTA, 1.2.3.4] [DeclaringType, DTA, 0.9.8.7].MethodName()");
         }
 
         [Test]
@@ -125,7 +125,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Names
             functionMock.Setup(f => f.Parameters).Returns(new List<IParameter>());
             functionMock.Setup(f => f.IsStatic).Returns(true);
 
-            AssertNameIdentifier(functionMock.Object, "static [ReturnType, RTA, Version=1.2.3.4] [DeclaringType, DTA, Version=0.9.8.7].MethodName()");
+            AssertNameIdentifier(functionMock.Object, "static [ReturnType, RTA, 1.2.3.4] [DeclaringType, DTA, 0.9.8.7].MethodName()");
         }
 
         [Test]
@@ -135,7 +135,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Names
             mockVariable.Setup(v => v.ShortName).Returns("variable");
             mockVariable.Setup(v => v.Type).Returns(TypeMockUtils.MockIType("Type", "Assembly", "1.2.3.4"));
 
-            AssertNameIdentifier(mockVariable.Object, "[Type, Assembly, Version=1.2.3.4] variable");
+            AssertNameIdentifier(mockVariable.Object, "[Type, Assembly, 1.2.3.4] variable");
         }
 
         [Test]

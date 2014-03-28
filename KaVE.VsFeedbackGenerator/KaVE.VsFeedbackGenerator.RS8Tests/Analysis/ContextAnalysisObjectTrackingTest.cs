@@ -21,7 +21,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
                 }");
 
             AssertAnalysisFindsCallsTo(
-                "[System.Int32, mscorlib, Version=4.0.0.0] [System.Object, mscorlib, Version=4.0.0.0].GetHashCode()");
+                "[System.Int32, mscorlib, 4.0.0.0] [System.Object, mscorlib, 4.0.0.0].GetHashCode()");
         }
 
         [Test]
@@ -38,7 +38,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
                 }");
 
             AssertAnalysisFindsCallsTo(
-                "[System.Int32, mscorlib, Version=4.0.0.0] [System.Object, mscorlib, Version=4.0.0.0].GetHashCode()");
+                "[System.Int32, mscorlib, 4.0.0.0] [System.Object, mscorlib, 4.0.0.0].GetHashCode()");
         }
 
         [Test]
@@ -57,7 +57,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
                 }");
 
             AssertAnalysisDoesNotFindCallTo(
-                "[System.Void, mscorlib, Version=4.0.0.0] [C, TestProject].M2([System.Object, mscorlib, Version=4.0.0.0] o)");
+                "[System.Void, mscorlib, 4.0.0.0] [C, TestProject].M2([System.Object, mscorlib, 4.0.0.0] o)");
         }
 
         [Test]
@@ -75,7 +75,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
                 }");
 
             AssertAnalysisFindsCallsTo(
-                "[System.Int32, mscorlib, Version=4.0.0.0] [System.Object, mscorlib, Version=4.0.0.0].GetHashCode()");
+                "[System.Int32, mscorlib, 4.0.0.0] [System.Object, mscorlib, 4.0.0.0].GetHashCode()");
         }
 
         [Test]
@@ -96,7 +96,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
                     }
                 }");
 
-            AssertAnalysisFindsCallsTo("[System.Void, mscorlib, Version=4.0.0.0] [HelperClass, TestProject].M()");
+            AssertAnalysisFindsCallsTo("[System.Void, mscorlib, 4.0.0.0] [HelperClass, TestProject].M()");
         }
 
         [Test]
@@ -119,7 +119,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
                     }
                 }");
 
-            AssertAnalysisFindsCallsTo("[System.Void, mscorlib, Version=4.0.0.0] [C, TestProject].M()");
+            AssertAnalysisFindsCallsTo("[System.Void, mscorlib, 4.0.0.0] [C, TestProject].M()");
         }
 
         [Test]
@@ -146,7 +146,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
                 }");
 
             AssertAnalysisDoesNotFindCallTo(
-                "[System.Int32, mscorlib, Version=4.0.0.0] [System.Object, mscorlib, Version=4.0.0.0].GetHashCode()");
+                "[System.Int32, mscorlib, 4.0.0.0] [System.Object, mscorlib, 4.0.0.0].GetHashCode()");
         }
 
         [Test]
@@ -164,7 +164,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
                     }
                 }");
 
-            AssertAnalysisDoesNotFindCallTo("[System.Void, mscorlib, Version=4.0.0.0] [A, TestProject].M()");
+            AssertAnalysisDoesNotFindCallTo("[System.Void, mscorlib, 4.0.0.0] [A, TestProject].M()");
         }
 
         private void AssertAnalysisDoesNotFindCallTo(string methodIdentifier)
