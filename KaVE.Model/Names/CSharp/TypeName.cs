@@ -21,19 +21,49 @@ namespace KaVE.Model.Names.CSharp
 
 
         /// <summary>
-        /// Type names follow the scheme <code>'fully-qualified type name''generic type parameters', 'assembly identifier'</code>.
-        /// Examples of type names are:
-        /// <list type="bullet">
-        ///     <item><description><code>System.Int32, mscore, 4.0.0.0</code></description></item>
-        ///     <item><description><code>System.Nullable`1[[T -> System.Int32, mscore, 4.0.0.0]], mscore, 4.0.0.0</code></description></item>
-        ///     <item><description><code>System.Collections.Dictionary`2[[TKey -> System.Int32, mscore, 4.0.0.0],[TValue -> System.String, mscore, 4.0.0.0]], mscore, 4.0.0.0</code></description></item>
-        ///     <item><description><code>Namespace.OuterType+InnerType, Assembly, 1.2.3.4</code></description></item>
-        ///     <item><description><code>enum EnumType, Assembly, 1.2.3.4</code></description></item>
-        ///     <item><description><code>interface InterfaceType, Assembly, 1.2.3.4</code></description></item>
-        ///     <item><description><code>struct StructType, Assembly, 1.2.3.4</code></description></item>
-        /// </list>
-        /// parameter-type names follow the scheme <code>'short-name' -> 'actual-type identifier'</code>, with actual-type identifier being
-        /// either the identifier of a type name, as declared above, or another parameter-type name.
+        ///     Type names follow the scheme
+        ///     <code>'fully-qualified type name''generic type parameters', 'assembly identifier'</code>.
+        ///     Examples of type names are:
+        ///     <list type="bullet">
+        ///         <item>
+        ///             <description>
+        ///                 <code>System.Int32, mscore, 4.0.0.0</code>
+        ///             </description>
+        ///         </item>
+        ///         <item>
+        ///             <description>
+        ///                 <code>System.Nullable`1[[T -> System.Int32, mscore, 4.0.0.0]], mscore, 4.0.0.0</code>
+        ///             </description>
+        ///         </item>
+        ///         <item>
+        ///             <description>
+        ///                 <code>System.Collections.Dictionary`2[[TKey -> System.Int32, mscore, 4.0.0.0],[TValue -> System.String, mscore, 4.0.0.0]], mscore, 4.0.0.0</code>
+        ///             </description>
+        ///         </item>
+        ///         <item>
+        ///             <description>
+        ///                 <code>Namespace.OuterType+InnerType, Assembly, 1.2.3.4</code>
+        ///             </description>
+        ///         </item>
+        ///         <item>
+        ///             <description>
+        ///                 <code>enum EnumType, Assembly, 1.2.3.4</code>
+        ///             </description>
+        ///         </item>
+        ///         <item>
+        ///             <description>
+        ///                 <code>interface InterfaceType, Assembly, 1.2.3.4</code>
+        ///             </description>
+        ///         </item>
+        ///         <item>
+        ///             <description>
+        ///                 <code>struct StructType, Assembly, 1.2.3.4</code>
+        ///             </description>
+        ///         </item>
+        ///     </list>
+        ///     parameter-type names follow the scheme <code>'short-name' -> 'actual-type identifier'</code>, with actual-type
+        ///     identifier being
+        ///     either the identifier of a type name, as declared above, or another parameter-type name.
         /// </summary>
         public new static ITypeName Get(string identifier)
         {
@@ -148,44 +178,7 @@ namespace KaVE.Model.Names.CSharp
 
         public IList<ITypeName> TypeParameters
         {
-            get
-            {
-                var parameters = new List<ITypeName>();
-                var fullName = FullName;
-                var indexOfParameterList = fullName.IndexOf('[');
-                if (indexOfParameterList > -1)
-                {
-                    var braces = 0;
-                    var startIndex = indexOfParameterList + 1;
-                    var endIndex = startIndex;
-                    while (endIndex < fullName.Length)
-                    {
-                        var c = fullName[endIndex];
-
-                        if (c == '[')
-                        {
-                            braces++;
-                        }
-                        else if (c == ']')
-                        {
-                            braces--;
-
-                            if (braces == 0)
-                            {
-                                var indexAfterOpeningBrace = startIndex + 1;
-                                var lengthToBeforeClosingBrace = endIndex - startIndex - 1;
-                                var descriptor = fullName.Substring(indexAfterOpeningBrace, lengthToBeforeClosingBrace);
-                                var parameterTypeName = Get(descriptor);
-                                parameters.Add(parameterTypeName);
-                                startIndex = fullName.IndexOf('[', endIndex);
-                            }
-                        }
-
-                        endIndex++;
-                    }
-                }
-                return parameters;
-            }
+            get { return HasTypeParameters ? FullName.ParseTypeParameters() : new List<ITypeName>(); }
         }
 
         public bool IsGenericType

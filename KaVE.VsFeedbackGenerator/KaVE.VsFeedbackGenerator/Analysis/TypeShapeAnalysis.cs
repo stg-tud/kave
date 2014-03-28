@@ -69,7 +69,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis
         private IMethodName FindFirstMethodInSuperTypes(IMethod enclosingMethod,
             ITypeElement typeDeclaration)
         {
-            // TODO implement GetSignature for MethodName
+            // TODO use MethodName.Signature
             var encName = GetSimpleName(enclosingMethod);
 
             foreach (var superType in typeDeclaration.GetSuperTypes())

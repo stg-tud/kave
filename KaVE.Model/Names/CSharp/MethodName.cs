@@ -6,17 +6,36 @@ namespace KaVE.Model.Names.CSharp
 {
     public class MethodName : MemberName, IMethodName
     {
-        private static readonly WeakNameCache<MethodName> Registry = WeakNameCache<MethodName>.Get(id => new MethodName(id));
+        private static readonly WeakNameCache<MethodName> Registry =
+            WeakNameCache<MethodName>.Get(id => new MethodName(id));
 
         /// <summary>
-        /// Method type names follow the scheme <code>'modifiers' ['return type name'] ['declaring type name'].'method name'('parameter names')</code>.
-        /// Examples of valid method names are:
-        /// <list type="bullet">
-        ///     <item><description><code>[System.Void, mscore, 4.0.0.0] [DeclaringType, AssemblyName, 1.2.3.4].MethodName()</code></description></item>
-        ///     <item><description><code>static [System.String, mscore, 4.0.0.0] [MyType, MyAssembly, 1.0.0.0].StaticMethod()</code></description></item>
-        ///     <item><description><code>[System.String, mscore, 4.0.0.0] [MyType, MyAssembly, 1.0.0.0].AMethod(opt [System.Int32, mscore, 4.0.0.0] length)</code></description></item>
-        ///     <item><description><code>[System.String, mscore, 4.0.0.0] [System.String, mscore, 4.0.0.0]..ctor()</code> (Constructor)</description></item>
-        /// </list>
+        ///     Method type names follow the scheme
+        ///     <code>'modifiers' ['return type name'] ['declaring type name'].'method name'('parameter names')</code>.
+        ///     Examples of valid method names are:
+        ///     <list type="bullet">
+        ///         <item>
+        ///             <description>
+        ///                 <code>[System.Void, mscore, 4.0.0.0] [DeclaringType, AssemblyName, 1.2.3.4].MethodName()</code>
+        ///             </description>
+        ///         </item>
+        ///         <item>
+        ///             <description>
+        ///                 <code>static [System.String, mscore, 4.0.0.0] [MyType, MyAssembly, 1.0.0.0].StaticMethod()</code>
+        ///             </description>
+        ///         </item>
+        ///         <item>
+        ///             <description>
+        ///                 <code>[System.String, mscore, 4.0.0.0] [MyType, MyAssembly, 1.0.0.0].AMethod(opt [System.Int32, mscore, 4.0.0.0] length)</code>
+        ///             </description>
+        ///         </item>
+        ///         <item>
+        ///             <description>
+        ///                 <code>[System.String, mscore, 4.0.0.0] [System.String, mscore, 4.0.0.0]..ctor()</code>
+        ///                 (Constructor)
+        ///             </description>
+        ///         </item>
+        ///     </list>
         /// </summary>
         public new static MethodName Get(string identifier)
         {
@@ -24,16 +43,25 @@ namespace KaVE.Model.Names.CSharp
         }
 
         private MethodName(string identifier)
-            : base(identifier)
-        {
-        }
+            : base(identifier) {}
 
         public override string Name
         {
             get
             {
+                var fullName = FullName;
+                var startOfTypeParameters = fullName.IndexOf("[[", StringComparison.Ordinal);
+                return startOfTypeParameters > -1 ? fullName.Substring(0, startOfTypeParameters) : FullName;
+            }
+        }
+
+        private string FullName
+        {
+            get
+            {
                 var endIndexOfMethodName = Identifier.IndexOf('(');
-                var startIndexOfMethodName = Identifier.LastIndexOf("].", endIndexOfMethodName, StringComparison.Ordinal) + 2;
+                var startIndexOfMethodName =
+                    Identifier.LastIndexOf("].", endIndexOfMethodName, StringComparison.Ordinal) + 2;
                 var lengthOfMethodName = endIndexOfMethodName - startIndexOfMethodName;
                 return Identifier.Substring(startIndexOfMethodName, lengthOfMethodName);
             }
@@ -41,17 +69,17 @@ namespace KaVE.Model.Names.CSharp
 
         public IList<ITypeName> TypeParameters
         {
-            get
-            {
-                return new List<ITypeName>();
-            }
+            get { return HasTypeParameters ? Signature.ParseTypeParameters() : new List<ITypeName>(); }
         }
 
-        public bool HasTypeParameters { get { return false; } }
+        public bool HasTypeParameters
+        {
+            get { return FullName.Contains("[["); }
+        }
 
         public bool IsGenericType
         {
-            get { return false; }
+            get { return HasTypeParameters; }
         }
 
         public IList<IParameterName> Parameters
@@ -65,11 +93,18 @@ namespace KaVE.Model.Names.CSharp
                     var endOfParameterList = Identifier.IndexOf(')');
                     do
                     {
-                        var endOfParameterType = Identifier.IndexOf("] ", startOfParameterIdentifier, StringComparison.Ordinal);
+                        var endOfParameterType = Identifier.IndexOf(
+                            "] ",
+                            startOfParameterIdentifier,
+                            StringComparison.Ordinal);
                         var endOfParameterIdentifier = Identifier.IndexOf(',', endOfParameterType);
-                        if (endOfParameterIdentifier < 0) endOfParameterIdentifier = endOfParameterList;
+                        if (endOfParameterIdentifier < 0)
+                        {
+                            endOfParameterIdentifier = endOfParameterList;
+                        }
                         var lengthOfParameterIdentifier = endOfParameterIdentifier - startOfParameterIdentifier;
-                        var identifier = Identifier.Substring(startOfParameterIdentifier, lengthOfParameterIdentifier).Trim();
+                        var identifier =
+                            Identifier.Substring(startOfParameterIdentifier, lengthOfParameterIdentifier).Trim();
                         parameters.Add(ParameterName.Get(identifier));
                         startOfParameterIdentifier = endOfParameterIdentifier + 1;
                     } while (startOfParameterIdentifier < endOfParameterList);
@@ -78,21 +113,27 @@ namespace KaVE.Model.Names.CSharp
             }
         }
 
-        public bool HasParameters { get { return !Identifier.Contains("()"); } }
+        public bool HasParameters
+        {
+            get { return !Identifier.Contains("()"); }
+        }
 
         public bool IsConstructor
         {
-            get
-            {
-                return Name.Equals(".ctor");
-            }
+            get { return Name.Equals(".ctor"); }
         }
 
         public ITypeName ReturnType
         {
+            get { return ValueType; }
+        }
+
+        public string Signature
+        {
             get
             {
-                return ValueType;
+                var startOfSignature = Identifier.IndexOf("].", StringComparison.Ordinal) + 2;
+                return Identifier.Substring(startOfSignature);
             }
         }
     }
