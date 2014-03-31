@@ -4,23 +4,30 @@ using System.Windows;
 
 namespace KaVE.Utils
 {
+    // TODO write tests for this class (some tests exists transitively through the CallbackManager; these should be moved!)
     public static class Invoke
     {
         /// <summary>
         ///     Invokes the passed action after some delay. Returns immediately.
         /// </summary>
         /// <param name="action">The action to run delayed.</param>
-        /// <param name="delayInMillis">The delay in milliseconds. Expected to be greater than 0.</param>
+        /// <param name="delayInMillis">The delay in milliseconds. For values smaller than 0 the action is scheduled immediately.</param>
         public static ScheduledAction Later(Action action, long delayInMillis)
         {
-            return new ScheduledAction(action, delayInMillis);
+            return Later(action, delayInMillis, () => { });
+        }
+
+        public static ScheduledAction Later(Action action, long delayInMillis, Action finishedAction)
+        {
+            delayInMillis = Math.Max(delayInMillis, 1);
+            return new ScheduledAction(action, delayInMillis, finishedAction);
         }
 
         /// <summary>
         ///     Invokes the passed action on the given date. When the date is in the past, the action is executed immediately.
         /// </summary>
         /// <param name="action">The action to run on the given date.</param>
-        /// <param name="executionDateTime">The date to execute the action on.</param>
+        /// <param name="executionDateTime">The date to execute the action on. For dates older than DateTime.Now the action is scheduled immediately.</param>
         public static ScheduledAction Later(Action action, System.DateTime executionDateTime)
         {
             var date = executionDateTime - System.DateTime.Now;
@@ -30,7 +37,7 @@ namespace KaVE.Utils
         public static ScheduledAction Later(Action action, System.DateTime executionDateTime, Action finishedAction)
         {
             var date = executionDateTime - System.DateTime.Now;
-            return new ScheduledAction(action, Math.Max((long)date.TotalMilliseconds, 1), finishedAction);
+            return new ScheduledAction(action, Math.Max((long) date.TotalMilliseconds, 1), finishedAction);
         }
 
         /// <summary>
