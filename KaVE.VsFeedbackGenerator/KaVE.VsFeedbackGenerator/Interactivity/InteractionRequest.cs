@@ -16,5 +16,10 @@ namespace KaVE.VsFeedbackGenerator.Interactivity
                     Callback = () => callback(notification)
                 });
         }
+
+        public void Delegate(InteractionRequestedEventArgs<TNotification> args)
+        {
+            Raised(this, args);
+        }
     }
 }

@@ -53,7 +53,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
         /// </summary>
         private void SessionListView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            _feedbackViewModel.SelectedSessions = SessionListView.SelectedItems.Cast<SessionView>();
+            _feedbackViewModel.SelectedSessions = SessionListView.SelectedItems.Cast<SessionViewModel>();
         }
 
         /// <summary>

@@ -95,6 +95,7 @@
     <Compile Include="Generators\VisualStudio\WindowEventGeneratorTest.cs" />
     <Compile Include="Interactivity\InteractionRequestTest.cs" />
     <Compile Include="MessageBus\TinyMessengerMessageChannelTest.cs" />
+    <Compile Include="SessionManager\DeleteCompletionEventCommandTest.cs" />
     <Compile Include="SessionManager\DeleteSessionCommandTest.cs" />
     <Compile Include="Interactivity\InteractionRequestTestHelper.cs" />
     <Compile Include="SessionManager\UploadReminderTest.cs" />

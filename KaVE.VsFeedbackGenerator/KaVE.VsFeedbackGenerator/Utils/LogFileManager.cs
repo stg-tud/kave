@@ -9,7 +9,7 @@ namespace KaVE.VsFeedbackGenerator.Utils
 {
     public abstract class LogFileManager<TMessage> : ILogFileManager<TMessage>
     {
-        public LogFileManager([NotNull] string baseLocation,
+        protected LogFileManager([NotNull] string baseLocation,
             IStreamTransformer transformer)
         {
             Transformer = transformer;
@@ -59,12 +59,17 @@ namespace KaVE.VsFeedbackGenerator.Utils
 
         protected abstract ILogReader<TMessage> NewLogReader(Stream logStream);
 
+        public void DeleteLogs(params string[] logFileNames)
+        {
+            foreach (var logFileName in logFileNames)
+            {
+                File.Delete(logFileName);
+            }
+        }
+
         public void DeleteLogsOlderThan(DateTime time)
         {
-            foreach (var file in GetLogFileNames().Where(log => File.GetLastWriteTime(log) < time))
-            {
-                File.Delete(file);
-            }
+            DeleteLogs(GetLogFileNames().Where(log => File.GetLastWriteTime(log) < time).ToArray());
         }
 
         public string GetLogFileName(string filename, string extension = null)

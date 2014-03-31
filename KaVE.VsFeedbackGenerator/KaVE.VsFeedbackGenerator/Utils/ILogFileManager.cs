@@ -8,6 +8,7 @@ namespace KaVE.VsFeedbackGenerator.Utils
         IEnumerable<string> GetLogFileNames();
         ILogWriter<TMessage> NewLogWriter(string logFileName);
         ILogReader<TMessage> NewLogReader(string logFileName);
+        void DeleteLogs(params string[] logFileNames);
         void DeleteLogsOlderThan(DateTime time);
         string GetLogFileName(string filename, string extension = null);
 

@@ -14,7 +14,9 @@ namespace KaVE.VsFeedbackGenerator.Interactivity
         public void Handle(object sender, InteractionRequestedEventArgs<Confirmation> args)
         {
             var confirmation = args.Notification;
-            var answer = MessageBox.Show(_window, confirmation.Message, confirmation.Caption, MessageBoxButton.YesNo);
+            var answer = _window == null
+                ? MessageBox.Show(confirmation.Message, confirmation.Caption, MessageBoxButton.YesNo)
+                : MessageBox.Show(_window, confirmation.Message, confirmation.Caption, MessageBoxButton.YesNo);
             confirmation.Confirmed = answer == MessageBoxResult.Yes;
             args.Callback();
         }

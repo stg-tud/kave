@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using JetBrains;
@@ -21,8 +20,8 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
     public sealed class FeedbackViewModel : ViewModelBase<FeedbackViewModel>
     {
         private readonly ILogFileManager<IDEEvent> _logFileManager;
-        private readonly IList<SessionView> _sessions;
-        private readonly IList<SessionView> _selectedSessions;
+        private readonly IList<SessionViewModel> _sessions;
+        private readonly IList<SessionViewModel> _selectedSessions;
         private DelegateCommand _exportSessionsCommand;
         private DelegateCommand _sendSessionsCommand;
         private bool _refreshing;
@@ -40,8 +39,8 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
         {
             _store = store;
             _logFileManager = logFileManager;
-            _sessions = new ObservableCollection<SessionView>();
-            _selectedSessions = new List<SessionView>();
+            _sessions = new ObservableCollection<SessionViewModel>();
+            _selectedSessions = new List<SessionViewModel>();
             DeleteSessionsCommand = new DelegateCommand(OnDeleteSelectedSessions, CanDeleteSessions);
             _confirmationRequest = new InteractionRequest<Confirmation>();
             Released = true;
@@ -55,8 +54,13 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
                 {
                     _lastRefresh = DateTime.Now;
                     Sessions =
-                        _logFileManager.GetLogFileNames()
-                                       .Select(logFileName => new SessionView(_logFileManager, logFileName));
+                        _logFileManager.GetLogFileNames().Select(
+                            logFileName =>
+                            {
+                                var vm = new SessionViewModel(_logFileManager, logFileName);
+                                vm.ConfirmationRequest.Raised += (sender, args) => _confirmationRequest.Delegate(args);
+                                return vm;
+                            });
                     Refreshing = false;
                     Released = false;
                 });
@@ -80,7 +84,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             }
         }
 
-        public IEnumerable<SessionView> Sessions
+        public IEnumerable<SessionViewModel> Sessions
         {
             private set
             {
@@ -104,7 +108,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             get { return _sessions.Count > 0; }
         }
 
-        public IEnumerable<SessionView> SelectedSessions
+        public IEnumerable<SessionViewModel> SelectedSessions
         {
             set
             {
@@ -117,7 +121,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
         }
 
         [CanBeNull]
-        public SessionView SingleSelectedSession
+        public SessionViewModel SingleSelectedSession
         {
             get { return _selectedSessions.Count == 1 ? _selectedSessions.First() : null; }
         }
@@ -216,11 +220,20 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
                 return;
             }
 
-            // TODO fix concurrent modification!
-            foreach (var selectedSession in _selectedSessions)
+            // Changing _sessions implicitly changes _selectedSessions, what leads to a concurrent modification, if we change _session in the loop.
+            // Therefore we collect what has been successfully deleted and update the UI afterwards.
+            var deletedSessions = new List<SessionViewModel>();
+            try
             {
-                File.Delete(selectedSession.LogFileName);
-                _sessions.Remove(selectedSession);
+                foreach (var selectedSession in _selectedSessions)
+                {
+                    _logFileManager.DeleteLogs(selectedSession.LogFileName);
+                    deletedSessions.Add(selectedSession);
+                }
+            }
+            finally
+            {
+                _sessions.RemoveAll(deletedSessions.Contains);
             }
         }
     }

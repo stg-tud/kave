@@ -1,38 +1,43 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using JetBrains;
 using JetBrains.UI.Extensions.Commands;
 using KaVE.Model.Events;
+using KaVE.VsFeedbackGenerator.Interactivity;
 using KaVE.VsFeedbackGenerator.Utils;
+using KaVE.VsFeedbackGenerator.Utils.Json;
 using NuGet;
 using Messages = KaVE.VsFeedbackGenerator.Properties.SessionManager;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager
 {
-    public class SessionView : INotifyPropertyChanged
+    public class SessionViewModel : ViewModelBase<SessionViewModel>
     {
         private readonly ILogFileManager<IDEEvent> _logFileManager;
         public string LogFileName { get; private set; }
-        private readonly IList<EventView> _events; 
-        private readonly IList<EventView> _selectedEvents;
-        private DelegateCommand _deleteEventsCommand;
+        private readonly IList<EventView> _events = new ObservableCollection<EventView>();
+        private readonly IList<EventView> _selectedEvents = new List<EventView>();
+        private readonly InteractionRequest<Confirmation> _confirmationRequest = new InteractionRequest<Confirmation>();
 
-        public SessionView(ILogFileManager<IDEEvent> logFileManager, string logFileName)
+        public SessionViewModel(ILogFileManager<IDEEvent> logFileManager, string logFileName)
         {
             _logFileManager = logFileManager;
             LogFileName = logFileName;
-            _events = new ObservableCollection<EventView>();
-            _selectedEvents = new List<EventView>();
+            DeleteEventsCommand = new DelegateCommand(OnDeleteSelectedEvents, CanDeleteEvents);
             // loading eagerly because lazy approaches led to UI display bugs
             // TODO if this should cause memory problems, we have to find a lazier solution...
             using (var logReader = logFileManager.NewLogReader(logFileName))
             {
                 Events = logReader.ReadAll().Select(evt => new EventView(evt)).ToList();
             }
+        }
+
+        public IInteractionRequest<Confirmation> ConfirmationRequest
+        {
+            get { return _confirmationRequest; }
         }
 
         public DateTime StartDate
@@ -65,8 +70,8 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
                 _selectedEvents.Clear();
                 _selectedEvents.AddRange(value);
                 // notify listeners about dependent property cange
-                OnPropertyChanged("SingleSelectedEvent");
-                _deleteEventsCommand.RaiseCanExecuteChanged();
+                OnPropertyChanged(vm => vm.SingleSelectedEvent);
+                DeleteEventsCommand.RaiseCanExecuteChanged();
             }
         }
 
@@ -78,24 +83,20 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             }
         }
 
-        // TODO remove these regions
-        #region Delete-Events Command implementation
-        public DelegateCommand DeleteEventsCommand
-        {
-            get { return _deleteEventsCommand ?? (_deleteEventsCommand = CreateDeleteEventsCommand()); }
-        }
+        public DelegateCommand DeleteEventsCommand { get; private set; }
 
-        private DelegateCommand CreateDeleteEventsCommand()
+        private void OnDeleteSelectedEvents()
         {
-            Func<string> confirmationTitle = () => Messages.EventDeleteConfirmTitle;
-            Func<string> confirmationText = () =>
-            {
-                var numberOfSessions = _selectedEvents.Count;
-                return numberOfSessions == 1
-                    ? Messages.EventDeleteConfirmSingular
-                    : Messages.EventDeleteConfirmPlural.FormatEx(numberOfSessions);
-            };
-            return ConfirmedCommand.Create(DeleteEvents, confirmationTitle, confirmationText, CanDeleteEvents);
+            var numberOfEvents = _selectedEvents.Count;
+            _confirmationRequest.Raise(
+                new Confirmation
+                {
+                    Caption = Messages.EventDeleteConfirmTitle,
+                    Message = numberOfEvents == 1
+                        ? Messages.EventDeleteConfirmSingular
+                        : Messages.EventDeleteConfirmPlural.FormatEx(numberOfEvents)
+                },
+                DeleteEvents);
         }
 
         private bool CanDeleteEvents()
@@ -103,10 +104,16 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             return _selectedEvents.Count > 0;
         }
 
-        private void DeleteEvents()
+        private void DeleteEvents(Confirmation confirmation)
         {
+            if (!confirmation.Confirmed)
+            {
+                return;
+            }
+
+            // TODO This logic should be moved out of here, but where to?
             var tempFileName = Path.GetTempFileName();
-            using (var logWriter = _logFileManager.NewLogWriter(tempFileName))
+            using (var logWriter = new JsonLogWriter<IDEEvent>(new FileStream(tempFileName, FileMode.Append, FileAccess.Write)))
             {
                 for (var i = 0; i < _events.Count; i++)
                 {
@@ -125,18 +132,5 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             File.Delete(LogFileName);
             File.Move(tempFileName, LogFileName);
         }
-        #endregion
-
-        #region INotifyPropertyChanged implementation
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        private void OnPropertyChanged(string propertyName)
-        {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-            }
-        }
-        #endregion
     }
 }

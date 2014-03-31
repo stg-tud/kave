@@ -1,22 +1,21 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using JetBrains;
 using KaVE.Model.Events;
-using KaVE.Utils.IO;
 using KaVE.VsFeedbackGenerator.Interactivity;
 using KaVE.VsFeedbackGenerator.SessionManager;
 using KaVE.VsFeedbackGenerator.Tests.Interactivity;
 using KaVE.VsFeedbackGenerator.Utils;
 using Moq;
 using NUnit.Framework;
-using Thread = System.Threading.Thread;
 using Messages = KaVE.VsFeedbackGenerator.Properties.SessionManager;
 
 namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
 {
     [TestFixture]
-    class DeleteSessionCommandTest
+    internal class DeleteSessionCommandTest
     {
         private FeedbackViewModel _uut;
         private Mock<ILogFileManager<IDEEvent>> _mockLogFileManager;
@@ -36,7 +35,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
         [Test]
         public void ShouldBeDisabledIfNoSessionIsSelected()
         {
-            _uut.SelectedSessions = new List<SessionView>();
+            _uut.SelectedSessions = new List<SessionViewModel>();
 
             var deletionEnabled = _uut.DeleteSessionsCommand.CanExecute(null);
 
@@ -46,8 +45,8 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
         [Test]
         public void ShouldBeEnabledIfASessionIsSelected()
         {
-            GivenViewModelRepresents("file1", "file2");
-            GivenSelectionAt(0);
+            GivenViewModelRepresents("file1");
+            GivenSessionsAreSelected("file1");
 
             var deletionEnabled = _uut.DeleteSessionsCommand.CanExecute(null);
 
@@ -58,7 +57,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
         public void ShouldAskForConfirmationIfDeleteIsPressed()
         {
             GivenViewModelRepresents("file1");
-            GivenSelectionAt(0);
+            GivenSessionsAreSelected("file1");
 
             _uut.DeleteSessionsCommand.Execute(null);
 
@@ -69,7 +68,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
         public void ShouldAskForConfirmationForSingleSession()
         {
             GivenViewModelRepresents("file1");
-            GivenSelectionAt(0);
+            GivenSessionsAreSelected("file1");
 
             _uut.DeleteSessionsCommand.Execute(null);
 
@@ -86,7 +85,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
         public void ShouldAskForConfirmationForMultipleSession()
         {
             GivenViewModelRepresents("file1", "file2", "file3");
-            GivenSelectionAt(0,2);
+            GivenSessionsAreSelected("file1", "file3");
 
             _uut.DeleteSessionsCommand.Execute(null);
 
@@ -103,7 +102,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
         public void ShouldDoNothingIfConfirmationIsDenied()
         {
             GivenViewModelRepresents("a.file");
-            GivenSelectionAt(0);
+            GivenSessionsAreSelected("a.file");
             var expected = _uut.Sessions.ToList();
 
             _uut.DeleteSessionsCommand.Execute(null);
@@ -113,24 +112,35 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
             CollectionAssert.AreEqual(expected, _uut.Sessions);
         }
 
-        // TODO encapsulate file deletion in the log file manager and only check for call on the mock here
         [Test]
         public void ShouldDeleteSelectedSessionIfConfirmationIsGiven()
         {
-            var logFile1Name = IoTestHelper.GetTempFileName();
-            GivenViewModelRepresents(logFile1Name, "file2");
-            GivenSelectionAt(0);
-            var expected = _uut.Sessions.Skip(1).ToList();
+            GivenViewModelRepresents("file1", "file2");
+            GivenSessionsAreSelected("file1");
+            var expected = _uut.Sessions.Where(s => s.LogFileName != "file1").ToList();
 
             _uut.DeleteSessionsCommand.Execute(null);
             _confirmationRequestHelper.Context.Confirmed = true;
             _confirmationRequestHelper.Callback();
 
             CollectionAssert.AreEqual(expected, _uut.Sessions);
-            Assert.IsFalse(File.Exists(logFile1Name));
+            _mockLogFileManager.Verify(mgr => mgr.DeleteLogs("file1"));
         }
 
-        // TODO test that session remains in UI when log-file manager fails to delete
+        [Test]
+        public void ShouldNotRemoveSessionFromViewModelWhenDeletionOfFileFails()
+        {
+            _mockLogFileManager.Setup(mgr => mgr.DeleteLogs(It.IsAny<string[]>())).Throws<Exception>();
+            GivenViewModelRepresents("afile");
+            GivenSessionsAreSelected("afile");
+
+            _uut.DeleteSessionsCommand.Execute(null);
+            _confirmationRequestHelper.Context.Confirmed = true;
+            // ReSharper disable once EmptyGeneralCatchClause
+            try {_confirmationRequestHelper.Callback();} catch {}
+
+            Assert.AreEqual("afile", _uut.Sessions.First().LogFileName);
+        }
 
         private void GivenViewModelRepresents(params string[] logFileNames)
         {
@@ -138,21 +148,9 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
             RefreshViewModel();
         }
 
-        private void GivenSelectionAt(params int[] indexes)
+        private void GivenSessionsAreSelected(params string[] logFileNames)
         {
-            var enumerator = _uut.Sessions.GetEnumerator();
-            var i = 0;
-            var selectedSessions = new List<SessionView>();
-            while (enumerator.MoveNext())
-            {
-                if (indexes.Contains(i))
-                {
-                    selectedSessions.Add(enumerator.Current);
-                }
-                i++;
-            }
-
-            _uut.SelectedSessions = selectedSessions;
+            _uut.SelectedSessions = _uut.Sessions.Where(s => logFileNames.Contains(s.LogFileName));
         }
 
         private void RefreshViewModel()
