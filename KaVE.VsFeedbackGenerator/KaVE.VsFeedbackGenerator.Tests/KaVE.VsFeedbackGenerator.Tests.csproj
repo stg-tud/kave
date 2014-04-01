@@ -111,6 +111,7 @@
     <Compile Include="TestFactories\TestNameFactory.cs" />
     <Compile Include="Utils\DateTimeTest.cs" />
     <Compile Include="Utils\ExportCommandTest.cs" />
+    <Compile Include="Utils\GZipStreamTest.cs" />
     <Compile Include="Utils\HttpPostFileTransferTest.cs" />
     <Compile Include="Utils\InverseBoolConverterTest.cs" />
     <Compile Include="Utils\Json\JsonLogFileManagerTest.cs" />

@@ -33,7 +33,7 @@ namespace KaVE.VsFeedbackGenerator.Utils.Json
         public JsonLogFileManager(string baseLocation)
             : base(
                 baseLocation,
-                new ZipStreamTransformer()) { }
+                new StreamTransformer()) { }
 
         protected override ILogWriter<TMessage> NewLogWriter(Stream logStream)
         {

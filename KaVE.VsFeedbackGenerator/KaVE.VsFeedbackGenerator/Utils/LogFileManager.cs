@@ -28,7 +28,7 @@ namespace KaVE.VsFeedbackGenerator.Utils
         public IEnumerable<string> GetLogFileNames()
         {
             return Directory.Exists(BaseLocation)
-                ? Directory.GetFiles(BaseLocation, "*" + Transformer.Extention)
+                ? Directory.GetFiles(BaseLocation, "*" + DefaultExtension)
                 : new string[0];
         }
 

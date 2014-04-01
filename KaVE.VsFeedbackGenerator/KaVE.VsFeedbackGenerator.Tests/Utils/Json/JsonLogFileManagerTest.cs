@@ -15,7 +15,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json
             return new JsonLogFileManager<string>(baseLocation);
         }
 
-        [Test]
+        [Test, Ignore("we currently don't write compressed logs, because we cannot")]
         public void DefaultJsonLogFileManagerWritesCompressed()
         {
             const string message = "test-string";
@@ -36,7 +36,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json
             Assert.AreEqual(expected, actual);
         }
 
-        [Test]
+        [Test, Ignore("we currently don't write compressed logs, because we cannot")]
         public void ShouldHaveCorrectExtension()
         {
             Assert.AreEqual(".log.gz", Uut.DefaultExtension);

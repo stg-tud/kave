@@ -81,7 +81,31 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
                 actual = reader.ReadAll().ToList();
             }
 
-            Assert.AreEqual(expected, actual);
+            CollectionAssert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void ShouldReadLogWrittenByMultipleWriters()
+        {
+            var expected = new[] {"message1", "message2"};
+            var logFileName = Uut.GetLogFileName("LogWrittenByMultipleWriters");
+
+            using (var writer = Uut.NewLogWriter(logFileName))
+            {
+                writer.Write(expected[0]);
+            }
+            using (var writer = Uut.NewLogWriter(logFileName))
+            {
+                writer.Write(expected[1]);
+            }
+
+            IEnumerable<string> actual;
+            using (var reader = Uut.NewLogReader(logFileName))
+            {
+                actual = reader.ReadAll().ToList();
+            }
+
+            CollectionAssert.AreEqual(expected, actual);
         }
 
         [Test]
@@ -107,7 +131,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
                 preservedFile2
             };
 
-            Assert.AreEqual(expected, actual);
+            CollectionAssert.AreEqual(expected, actual);
         }
     }
 }
