@@ -4,7 +4,7 @@ using NUnit.Framework;
 namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
 {
     [TestFixture]
-    internal class ContextAnalysisTargetTypeTest : KaVEBaseTest
+    internal class ContextAnalysisCompletionTargetTest : KaVEBaseTest
     {
         [Test]
         public void ShouldBeTypeOfReference()
