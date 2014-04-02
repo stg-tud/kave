@@ -8,6 +8,7 @@ using JetBrains.ReSharper.Feature.Services.CodeCompletion;
 using JetBrains.ReSharper.Feature.Services.Lookup;
 using JetBrains.ReSharper.Feature.Services.Tests.CSharp.FeatureServices.CodeCompletion;
 using JetBrains.ReSharper.Psi;
+using JetBrains.ReSharper.Psi.Impl.reflection2.elements.Compiled;
 using JetBrains.ReSharper.TestFramework;
 using JetBrains.TextControl;
 using KaVE.Model.Events.CompletionEvent;
@@ -59,19 +60,22 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests
             get { return false; }
         }
 
-        protected void CompleteInClass(string codeSnippet)
+        protected void CompleteInMethod(string methodBody)
         {
-            CompleteInFile(ClassWithBody(codeSnippet));
+            CompleteInClass(string.Format(@"
+                public void M() {{
+                    {0}
+                }}", methodBody));
         }
 
-        private static string ClassWithBody(string classbody)
+        protected void CompleteInClass(string classBody)
         {
-            return string.Format(@"
+            CompleteInFile(string.Format(@"
                 namespace N {{
                     public class C {{
                         {0}
                     }}
-                }}", classbody);
+                }}", classBody));
         }
 
         protected void CompleteInFile(string fileContent)

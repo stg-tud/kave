@@ -5,6 +5,7 @@ using NUnit.Framework;
 
 namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
 {
+    // TODO check if any of these tests are still relevant and either move or remove them
     [TestFixture]
     internal class ContextAnalysisTest : KaVEBaseTest
     {

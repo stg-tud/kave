@@ -52,6 +52,12 @@ namespace KaVE.Model.Events.CompletionEvent
 
         public TypeShape TypeShape { get; set; }
 
+        /// <summary>
+        ///     The type of the reference completion was triggered on or <code>null</code>, if completion was triggered without an
+        ///     (explicit) reference.
+        /// </summary>
+        public IName TriggerTarget { get; set; }
+
 
         public override bool Equals(object obj)
         {

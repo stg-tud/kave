@@ -77,6 +77,7 @@
     <Compile Include="Analysis\ContextAnalysisCalledMethodsTest.cs" />
     <Compile Include="Analysis\ContextAnalysisEnclosingMethodTest.cs" />
     <Compile Include="Analysis\ContextAnalysisObjectTrackingTest.cs" />
+    <Compile Include="Analysis\ContextAnalysisTargetTypeTest.cs" />
     <Compile Include="Analysis\ContextAnalysisTest.cs" />
     <Compile Include="Analysis\ContextAnalysisTypeShapeTest.cs" />
     <Compile Include="Analysis\TestAnalysisTrigger.cs" />
