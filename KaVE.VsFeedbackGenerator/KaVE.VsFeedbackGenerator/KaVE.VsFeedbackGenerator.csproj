@@ -94,6 +94,7 @@
     <Compile Include="Analysis\CompletionTargetAnalysis.cs" />
     <Compile Include="Analysis\ContextAnalysis.cs" />
     <Compile Include="Analysis\TypeShapeAnalysis.cs" />
+    <Compile Include="Generators\ErrorEventGenerator.cs" />
     <Compile Include="Interactivity\Confirmation.cs" />
     <Compile Include="Interactivity\IInteractionRequest.cs" />
     <Compile Include="Interactivity\InteractionRequestedEventArgs.cs" />
