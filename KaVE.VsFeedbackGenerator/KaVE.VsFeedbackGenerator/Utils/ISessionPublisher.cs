@@ -7,26 +7,26 @@ namespace KaVE.VsFeedbackGenerator.Utils
 {
     public interface ISessionPublisher
     {
-        ExportResult<object> Publish(string filename);
+        ExportResult<object> Publish(string tmpFilename);
     }
 
     public class FilePublisher : ISessionPublisher
     {
-        private readonly Func<string> _saveFile;
+        private readonly Func<string> _requestFileLocation;
 
-        public FilePublisher([NotNull] Func<string> saveFile)
+        public FilePublisher([NotNull] Func<string> requestFileLocation)
         {
-            _saveFile = saveFile;
+            _requestFileLocation = requestFileLocation;
         }
 
-        public ExportResult<object> Publish(string filename)
+        public ExportResult<object> Publish(string tmpFilename)
         {
-            var specifiedLocation = _saveFile();
-            if (specifiedLocation.IsNullOrEmpty())
+            var targetLocation = _requestFileLocation();
+            if (targetLocation.IsNullOrEmpty())
             {
                 return ExportResult<object>.Fail();
             }
-            File.Copy(filename, specifiedLocation, true);
+            File.Copy(tmpFilename, targetLocation, true);
             return ExportResult<object>.Success();
         }
     }
@@ -40,14 +40,20 @@ namespace KaVE.VsFeedbackGenerator.Utils
             _hostAddress = hostAddress;
         }
 
-        public ExportResult<object> Publish(string filename)
+        public ExportResult<object> Publish(string tmpFilename)
         {
-            var response = HttpPostFileTransfer.TransferFile<ExportResult<object>>(_hostAddress, filename);
-            if (response == null)
+            try
             {
-                return ExportResult<object>.Fail();
+                var response = HttpPostFileTransfer.TransferFile<ExportResult<object>>(_hostAddress, tmpFilename);
+                if (response != null)
+                {
+                    return response;
+                }
             }
-            return response;
+                // ReSharper disable once EmptyGeneralCatchClause
+            catch {}
+
+            return ExportResult<object>.Fail();
         }
     }
 }

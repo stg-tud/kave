@@ -19,6 +19,8 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
     [ShellComponent]
     public sealed class FeedbackViewModel : ViewModelBase<FeedbackViewModel>
     {
+        private const string ServerUrl = "http://kave.st.informatik.tu-darmstadt.de:667/upload";
+
         private readonly ILogFileManager<IDEEvent> _logFileManager;
         private readonly IList<SessionViewModel> _sessions;
         private readonly IList<SessionViewModel> _selectedSessions;
@@ -144,14 +146,14 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
                        (_sendSessionsCommand =
                            CreateWithExportPolicy(
                                new SessionExport(
-                                   new HttpPublisher("http://kave.st.informatik.tu-darmstadt.de:667/upload"))));
+                                   new HttpPublisher(ServerUrl))));
             }
         }
 
-        private DelegateCommand CreateWithExportPolicy(SessionExport policy)
+        private DelegateCommand CreateWithExportPolicy(ISessionExport exportStrategy)
         {
             return ExportCommand.Create(
-                policy,
+                exportStrategy,
                 ExtractEventsForExport,
                 _logFileManager.NewLogWriter,
                 o => AnySessionsPresent,
@@ -160,9 +162,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
                     if (res.Status == State.Ok)
                     {
                         _logFileManager.DeleteLogsOlderThan(_lastRefresh);
-                        var settings = _store.GetSettings<UploadSettings>();
-                        settings.LastUploadDate = DateTime.Now;
-                        _store.SetSettings(settings);
+                        UpdateLastUploadDate();
                         MessageBox.Show(string.Format(Messages.ExportSuccess, res.Data.Count));
                         Refresh();
                     }
@@ -172,6 +172,13 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
                             Messages.ExportFail + (string.IsNullOrWhiteSpace(res.Message) ? "" : "\n" + res.Message));
                     }
                 });
+        }
+
+        private void UpdateLastUploadDate()
+        {
+            var settings = _store.GetSettings<UploadSettings>();
+            settings.LastUploadDate = DateTime.Now;
+            _store.SetSettings(settings);
         }
 
         private IEnumerable<IDEEvent> ExtractEventsForExport()

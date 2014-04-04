@@ -11,13 +11,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
     [TestFixture]
     internal class SessionExportTest
     {
-        private Mock<ILogWriter<string>> _writer;
-
-        [SetUp]
-        public void SetUp()
-        {
-            _writer = new Mock<ILogWriter<string>>();
-        }
+        private ILogWriter<string> _writer;
 
         [Test]
         public void TemporaryExportContainsGivenList()
@@ -25,10 +19,17 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
             var uut = new SessionExport(new Mock<ISessionPublisher>().Object);
             var expected = RandomlyFilledList(5);
             var actual = new List<string>();
-            _writer.Setup(w => w.Write(It.IsAny<string>())).Callback<string>(actual.Add);
-            uut.ExportToTemporaryFile(expected, location => _writer.Object);
+            _writer = MockWriter(actual);
+            uut.ExportToTemporaryFile(expected, location => _writer);
 
             Assert.AreEqual(expected, actual);
+        }
+
+        private static ILogWriter<string> MockWriter(List<string> actual)
+        {
+            var writer = new Mock<ILogWriter<string>>();
+            writer.Setup(w => w.WriteAll(It.IsAny<IEnumerable<string>>())).Callback<IEnumerable<string>>(actual.AddRange);
+            return writer.Object;
         }
 
         [Test]
