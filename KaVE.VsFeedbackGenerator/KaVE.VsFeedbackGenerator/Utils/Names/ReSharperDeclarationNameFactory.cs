@@ -7,6 +7,7 @@ namespace KaVE.VsFeedbackGenerator.Utils.Names
 {
     public static class ReSharperDeclarationNameFactory
     {
+        [CanBeNull]
         public static IMethodName GetName([NotNull] this IMethodDeclaration methodDeclaration)
         {
             var declaredElement = methodDeclaration.DeclaredElement;

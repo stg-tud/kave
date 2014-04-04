@@ -7,8 +7,10 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
     [TestFixture]
     internal class ContextAnalysisObjectTrackingTest : KaVEBaseTest
     {
-        [Test]
-        public void ShouldFindCallInPrivateHelper()
+        private static readonly string[] Visibilities = {"public", "protected", "internal", "private"};
+
+        [TestCaseSource("Visibilities")]
+        public void ShouldFindCallInLocalMethod(string helperVisibility)
         {
             CompleteInClass(@"
                 public void M1(object o) {
@@ -16,7 +18,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
                     $
                 }
         
-                private void M2(object o) {
+                " + helperVisibility + @" void M2(object o) {
                     o.GetHashCode();
                 }");
 
@@ -24,25 +26,8 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
                 "[System.Int32, mscorlib, 4.0.0.0] [System.Object, mscorlib, 4.0.0.0].GetHashCode()");
         }
 
-        [Test]
-        public void ShouldFindCallInInternalHelper()
-        {
-            CompleteInClass(@"
-                public void M1(object o) {
-                    this.M2(o);
-                    $
-                }
-        
-                internal void M2(object o) {
-                    o.GetHashCode();
-                }");
-
-            AssertAnalysisFindsCallsTo(
-                "[System.Int32, mscorlib, 4.0.0.0] [System.Object, mscorlib, 4.0.0.0].GetHashCode()");
-        }
-
-        [Test]
-        public void ShouldNotFindCallToPrivateHelper()
+        [TestCaseSource("Visibilities")]
+        public void ShouldNotFindCallToLocalMethod(string helperVisibility)
         {
             CompleteInFile(@"
                 class C {
@@ -51,9 +36,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
                         $
                     }
         
-                    private void M2(object o) {
-                        o.GetHashCode();
-                    }
+                    " + helperVisibility + @" void M2(object o) {}
                 }");
 
             AssertAnalysisDoesNotFindCallTo(
@@ -61,25 +44,75 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
         }
 
         [Test]
-        public void ShouldFindCallInPublicLocalHelper()
+        public void ShouldFindCallToMethodDeclaredBySupertype()
         {
-            CompleteInClass(@"
-                public void M1(object o)
+            CompleteInFile(@"
+                public interface I
                 {
-                    this.M2(o);
-                    $
+                    void M(object o);
                 }
 
-                public void M2(object o) {
-                    o.GetHashCode();
+                public class C : I
+                {
+                    public override void M(object o) {}
+
+                    public void E(object o)
+                    {
+                        M(o);
+                        $
+                    }
                 }");
 
-            AssertAnalysisFindsCallsTo(
+            AssertAnalysisFindsCallsTo("[System.Void, mscorlib, 4.0.0.0] [I, TestProject].M([System.Object, mscorlib, 4.0.0.0] o)");
+        }
+
+        [Test]
+        public void ShouldNotFindCallInMethodDeclaredBySupertype()
+        {
+            CompleteInFile(@"
+                public interface I
+                {
+                    void M(object o);
+                }
+
+                public class C : I
+                {
+                    public override void M(object o)
+                    {
+                        o.GetHashCode();
+                    }
+
+                    public void E(object o)
+                    {
+                        M(o);
+                        $
+                    }
+                }");
+
+            AssertAnalysisDoesNotFindCallTo(
                 "[System.Int32, mscorlib, 4.0.0.0] [System.Object, mscorlib, 4.0.0.0].GetHashCode()");
         }
 
         [Test]
-        public void ShouldFindCallToHelperFromOtherClass()
+        public void ShouldIgnoreCallToAbstractLocalMethod()
+        {
+            CompleteInFile(@"
+                abstract class A
+                {
+                    public abstract void M(object o);
+
+                    public void E(object o)
+                    {
+                        M(o);
+                        $
+                    }
+                }");
+
+            AssertAnalysisDoesNotFindCallTo("[System.Void, mscorlib, 4.0.0.0] [A, TestProject].M([System.Object, mscorlib, 4.0.0.0] o)");
+        }
+
+        [Test]
+        public void ShouldFindCallToMethodFromOtherClass()
         {
             CompleteInFile(@"
                 public class HelperClass
@@ -100,7 +133,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
         }
 
         [Test]
-        public void ShouldFindCallToMethodDeclaredBySupertype()
+        public void ShouldFindCallToMethodFromOtherClassByItsFirstDeclaration()
         {
             CompleteInFile(@"
                 public interface I
@@ -108,63 +141,21 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
                     void M();
                 }
 
-                public class C : I
+                public class HelperClass : I
                 {
                     public override void M() {}
-
-                    public void E()
-                    {
-                        M();
-                        $
-                    }
-                }");
-
-            AssertAnalysisFindsCallsTo("[System.Void, mscorlib, 4.0.0.0] [C, TestProject].M()");
-        }
-
-        [Test]
-        public void ShouldNotFindCallInMethodDeclaredBySupertype()
-        {
-            CompleteInFile(@"
-                public interface I
-                {
-                    void M();
                 }
-
-                public class C : I
+                
+                public class C
                 {
-                    public override void M()
+                    public void E(HelperClass h)
                     {
-                        this.GetHashCode();
-                    }
-
-                    public void E()
-                    {
-                        M();
+                        h.M();
                         $
                     }
                 }");
 
-            AssertAnalysisDoesNotFindCallTo(
-                "[System.Int32, mscorlib, 4.0.0.0] [System.Object, mscorlib, 4.0.0.0].GetHashCode()");
-        }
-
-        [Test]
-        public void ShouldIgnoreCallToAbstractLocalMethod()
-        {
-            CompleteInFile(@"
-                abstract class A
-                {
-                    public abstract void M();
-
-                    public void E()
-                    {
-                        M();
-                        $
-                    }
-                }");
-
-            AssertAnalysisDoesNotFindCallTo("[System.Void, mscorlib, 4.0.0.0] [A, TestProject].M()");
+            AssertAnalysisFindsCallsTo("[System.Void, mscorlib, 4.0.0.0] [I, TestProject].M()");
         }
 
         private void AssertAnalysisDoesNotFindCallTo(string methodIdentifier)

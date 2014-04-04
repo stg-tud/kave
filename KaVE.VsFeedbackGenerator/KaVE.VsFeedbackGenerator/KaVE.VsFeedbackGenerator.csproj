@@ -93,6 +93,7 @@
     <Compile Include="Analysis\CalledMethodsAnalysis.cs" />
     <Compile Include="Analysis\CompletionTargetAnalysis.cs" />
     <Compile Include="Analysis\ContextAnalysis.cs" />
+    <Compile Include="Analysis\TypeHierarchyAnalysisUtils.cs" />
     <Compile Include="Analysis\TypeShapeAnalysis.cs" />
     <Compile Include="Generators\ErrorEventGenerator.cs" />
     <Compile Include="Interactivity\Confirmation.cs" />

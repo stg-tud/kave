@@ -79,18 +79,27 @@ namespace KaVE.VsFeedbackGenerator.Analysis
                 var methodName = method.GetName<IMethodName>();
                 if (IsLocalHelper(methodName) && !method.Element.IsOverride)
                 {
-                    if (context.AnalyzedMethods.Contains(methodName) || method.Element.IsAbstract)
-                    {
-                        return;
-                    }
-                    context.AnalyzedMethods.Add(methodName);
-                    var declaration = GetDeclaration(method.Element);
-                    declaration.Body.Accept(this, context);
+                    TrackCallsInMethod(context, methodName, method);
                 }
                 else
                 {
+                    if (method.Element.IsOverride)
+                    {
+                        methodName = method.Element.FindFirstMethodInSuperTypes();
+                    }
                     context.CalledMethods.Add(methodName);
                 }
+            }
+
+            private void TrackCallsInMethod(CollectionContext context, IMethodName methodName, DeclaredElementInstance<IMethod> method)
+            {
+                if (context.AnalyzedMethods.Contains(methodName) || method.Element.IsAbstract)
+                {
+                    return;
+                }
+                context.AnalyzedMethods.Add(methodName);
+                var declaration = GetDeclaration(method.Element);
+                declaration.Body.Accept(this, context);
             }
 
             private bool IsLocalHelper(IMemberName method)
@@ -126,8 +135,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis
             {
                 var declarations = method.GetDeclarations();
                 Asserts.That(declarations.Count <= 1, "more than one declaration for invoked method");
-                var declaration = (IMethodDeclaration) declarations.First();
-                return declaration;
+                return (IMethodDeclaration) declarations.First();
             }
         }
     }
