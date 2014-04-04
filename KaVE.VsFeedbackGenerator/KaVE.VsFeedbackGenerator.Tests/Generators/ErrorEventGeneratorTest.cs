@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 using KaVE.Model.Events;
 using KaVE.VsFeedbackGenerator.Generators;
 using Moq;
@@ -93,6 +94,36 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators
             {
                 TriggeredBy = IDEEvent.Trigger.Automatic,
                 StackTrace = new[] { "G" },
+            };
+
+            AssertSimilarity(expected, actual);
+        }
+
+        [Test]
+        public void ContentDoesNotContainNewLines()
+        {
+            _sut.Log("A\r\nB");
+
+            var actual = WaitForNewEvent<ErrorEvent>();
+            var expected = new ErrorEvent
+            {
+                TriggeredBy = IDEEvent.Trigger.Automatic,
+                Content = "A<br />B"
+            };
+
+            AssertSimilarity(expected, actual);
+        }
+
+        [Test]
+        public void ContentDoesNotContainUnixLikeNewLines()
+        {
+            _sut.Log("A\nB");
+
+            var actual = WaitForNewEvent<ErrorEvent>();
+            var expected = new ErrorEvent
+            {
+                TriggeredBy = IDEEvent.Trigger.Automatic,
+                Content = "A<br />B"
             };
 
             AssertSimilarity(expected, actual);

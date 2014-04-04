@@ -20,11 +20,16 @@ namespace KaVE.VsFeedbackGenerator.Generators
         {
             var e = Create<ErrorEvent>();
             e.TriggeredBy = IDEEvent.Trigger.Automatic;
-            e.Content = content;
+            
+            if (content != null)
+            {
+                // TODO does it make sense to move this to the ErrorEvent class?
+                e.Content = content.Replace("\r\n", "<br />").Replace("\n", "<br />");
+            }
 
             if (exception != null)
             {
-                var lines = exception.ToString().Split(new[] {"\r\n"}, StringSplitOptions.None);
+                var lines = exception.ToString().Split(new[] {"\r\n", "\n"}, StringSplitOptions.None);
                 e.StackTrace = lines
                     .Select(line => line.Trim())
                     .Where(line => line.Length > 0)
