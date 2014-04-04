@@ -17,23 +17,20 @@ namespace KaVE.VsFeedbackGenerator.Utils
             _publisher = publisher;
         }
 
+        public ExportResult<IList<T>> Export<T>(IList<T> events, Func<string, ILogWriter<T>> writerFactory)
+        {
+            var filename = ExportToTemporaryFile(events, writerFactory);
+            return ExportResult<IList<T>>.CloneWithData(_publisher.Publish(filename), events);
+        }
+
         internal string ExportToTemporaryFile<T>(IList<T> events, Func<string, ILogWriter<T>> writer)
         {
             var tempFileName = Path.GetTempFileName();
             using (var logWriter = writer(tempFileName))
             {
-                foreach (var e in events)
-                {
-                    logWriter.Write(e);
-                }
+                logWriter.WriteAll(events);
             }
             return tempFileName;
-        }
-
-        public ExportResult<IList<T>> Export<T>(IList<T> events, Func<string, ILogWriter<T>> writerFactory)
-        {
-            var filename = ExportToTemporaryFile(events, writerFactory);
-            return ExportResult<IList<T>>.CloneWithData(_publisher.Publish(filename), events);
         }
     }
 }

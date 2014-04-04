@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using KaVE.Utils.Assertion;
 using Newtonsoft.Json;
 
@@ -30,6 +31,21 @@ namespace KaVE.VsFeedbackGenerator.Utils.Json
             _logStreamWriter.Flush();
         }
 
+        public void WriteAll(IEnumerable<TMessage> messages)
+        {
+            var jsonWriter = new JsonTextWriter(_logStreamWriter);
+
+            foreach (var message in messages)
+            {
+                _serializer.Serialize(jsonWriter, message);
+                _logStreamWriter.WriteLine();
+            }
+
+            jsonWriter.Flush();
+            _logStreamWriter.Flush();
+        }
+
+         
         public void Dispose()
         {
             _logStreamWriter.Flush();

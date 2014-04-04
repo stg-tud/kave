@@ -47,5 +47,17 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json
             var serialization = _logStream.AsString();
             Assert.AreEqual("{\"$type\":\"KaVE.VsFeedbackGenerator.Tests.Utils.Json.SerializationTestTarget, KaVE.VsFeedbackGenerator.Tests\",\"Id\":\"foo\"}\r\n{\"$type\":\"KaVE.VsFeedbackGenerator.Tests.Utils.Json.SerializationTestTarget, KaVE.VsFeedbackGenerator.Tests\",\"Id\":\"bar\"}\r\n", serialization);
         }
+
+        [Test]
+        public void ShouldSerializeMultipleInstancesIfProvidedAtOnce()
+        {
+            var instance1 = new SerializationTestTarget { Id = "foo" };
+            var instance2 = new SerializationTestTarget { Id = "bar" };
+
+            _writer.WriteAll(new[] { instance1, instance2 });
+
+            var serialization = _logStream.AsString();
+            Assert.AreEqual("{\"$type\":\"KaVE.VsFeedbackGenerator.Tests.Utils.Json.SerializationTestTarget, KaVE.VsFeedbackGenerator.Tests\",\"Id\":\"foo\"}\r\n{\"$type\":\"KaVE.VsFeedbackGenerator.Tests.Utils.Json.SerializationTestTarget, KaVE.VsFeedbackGenerator.Tests\",\"Id\":\"bar\"}\r\n", serialization);
+        }
     }
 }
