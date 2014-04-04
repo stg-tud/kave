@@ -119,10 +119,17 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests
                     _myCodeCompletionTypes[_myCodeCompletionTypes.Count - 1]);
 
             var codeCompletionResult = intellisenseManager.GetCompletionResult(parameters, textControl);
-            var best =
-                ((SelectionStrategyWithPreferences) codeCompletionResult.SelectionStrategy).GetAllPreferredItems(
-                    codeCompletionResult.GetFilteredLookupItems()).ToHashSet();
-            ResultProposalCollection = GetItemsFromResult(codeCompletionResult, best).ToProposalCollection();
+            if (codeCompletionResult != null)
+            {
+                var best =
+                    ((SelectionStrategyWithPreferences) codeCompletionResult.SelectionStrategy).GetAllPreferredItems(
+                        codeCompletionResult.GetFilteredLookupItems()).ToHashSet();
+                ResultProposalCollection = GetItemsFromResult(codeCompletionResult, best).ToProposalCollection();
+            }
+            else
+            {
+                ResultProposalCollection = new ProposalCollection();
+            }
 
             if (TestAnalysisComponent.HasFailed)
             {

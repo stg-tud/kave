@@ -198,6 +198,7 @@
     <Compile Include="Utils\ExportResult.cs" />
     <Compile Include="Utils\Json\JsonLogFileManager.cs" />
     <Compile Include="Utils\LogFileManager.cs" />
+    <Compile Include="Utils\Names\ReSharperDeclarationNameFactory.cs" />
     <Compile Include="Utils\SessionExport.cs" />
     <Compile Include="Utils\SettingsStore.cs" />
     <Compile Include="SessionManager\UploadReminder.cs" />

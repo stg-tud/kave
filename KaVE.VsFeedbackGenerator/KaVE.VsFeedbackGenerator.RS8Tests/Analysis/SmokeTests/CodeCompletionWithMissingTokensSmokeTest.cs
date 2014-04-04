@@ -5,7 +5,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SmokeTests
     [TestFixture]
     internal class CodeCompletionWithMissingTokensSmokeTest : KaVEBaseTest
     {
-        [Test, Ignore]
+        [Test]
         public void MissingClassBodyOpeningBrace()
         {
             CompleteInFile(@"
@@ -34,7 +34,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SmokeTests
             ");
         }
 
-        [Test, Ignore]
+        [Test]
         public void DuplicatedClassBodyClosingBrace()
         {
             CompleteInFile(@"
@@ -69,7 +69,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SmokeTests
             ");
         }
 
-        [Test, Ignore]
+        [Test]
         public void MissingDeclarationName()
         {
             CompleteInMethod(@"
@@ -77,7 +77,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SmokeTests
             ");
         }
 
-        [Test, Ignore]
+        [Test]
         public void MissingDeclarationType()
         {
             CompleteInMethod(@"

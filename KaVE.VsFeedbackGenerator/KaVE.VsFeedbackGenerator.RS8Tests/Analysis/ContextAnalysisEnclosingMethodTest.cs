@@ -333,5 +333,20 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
                 "[System.Void, mscorlib, 4.0.0.0] [N.I, TestProject].M([System.Int32, mscorlib, 4.0.0.0] i)");
             Assert.AreEqual(expected, actual);
         }
+
+        [Test]
+        public void IncompleteParameterDeclaration()
+        {
+            CompleteInFile(@"
+                class C
+                {
+                    public void M(int i, )
+                    {
+                        $
+                    }
+                }");
+            var actual = ResultContext.EnclosingMethod.Identifier;
+            Assert.AreEqual("[System.Void, mscorlib, 4.0.0.0] [C, TestProject].M([System.Int32, mscorlib, 4.0.0.0] i, [?] ???)", actual);
+        }
     }
 }

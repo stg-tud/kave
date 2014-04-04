@@ -21,7 +21,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis
             var typeShape = new TypeShape();
             foreach (var m in FindImplementedMethodsInType())
             {
-                var name = m.GetName() as IMethodName;
+                var name = m.GetName<IMethodName>();
                 if (name != null)
                 {
                     var declaration = new MethodHierarchy(name);
@@ -145,7 +145,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis
             return null;
         }
 
-        private string GetSimpleName(IMethod method)
+        private static string GetSimpleName(IMethod method)
         {
             var name = method.ShortName;
             var ps = string.Join(",", method.Parameters.Select(p => p.Type));

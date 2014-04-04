@@ -7,6 +7,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
     [TestFixture]
     internal class ContextAnalysisCalledMethodsTest : KaVEBaseTest
     {
+        // TODO inline test files in tests
         [Test]
         public void ShouldFindNoCalls()
         {
@@ -106,6 +107,40 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
 
             var expected = MethodName.Get("[B] [N.D`1[[B -> TM2]], TestProject].Get()");
 
+            CollectionAssert.Contains(ResultContext.CalledMethods, expected);
+        }
+
+        [Test]
+        public void ShouldResolveAmbiguousCall()
+        {
+            CompleteInMethod(@"
+                this.Equals();
+                $
+            ");
+
+            // TODO this currently defaults to the first candidate, should we capture all candidates instead?
+            AssertCalledMethodsContain("[System.Boolean, mscorlib, 4.0.0.0] [System.Object, mscorlib, 4.0.0.0].Equals([System.Object, mscorlib, 4.0.0.0] obj)");
+        }
+
+        [Test, Ignore]
+        public void ShouldResolveUnresolvableCall()
+        {
+            CompleteInFile(@"
+                class C
+                {
+                    public void M()
+                    {
+                        this.Unknown();
+                        $
+                    }
+                }");
+
+            AssertCalledMethodsContain("[?] [C, TestProject].Unknown()");
+        }
+
+        private void AssertCalledMethodsContain(string methodIdentifier)
+        {
+            var expected = MethodName.Get(methodIdentifier);
             CollectionAssert.Contains(ResultContext.CalledMethods, expected);
         }
     }

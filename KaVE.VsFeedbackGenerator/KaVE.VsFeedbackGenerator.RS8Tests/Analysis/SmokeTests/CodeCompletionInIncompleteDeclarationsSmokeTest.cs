@@ -125,7 +125,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SmokeTests
             ");
         }
 
-        [Test, Ignore]
+        [Test]
         public void MethodDeclarationParameterNew()
         {
             CompleteInClass(@"
@@ -133,7 +133,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SmokeTests
             ");
         }
 
-        [Test, Ignore]
+        [Test]
         public void MethodDeclarationAfterSignature()
         {
             CompleteInClass(@"

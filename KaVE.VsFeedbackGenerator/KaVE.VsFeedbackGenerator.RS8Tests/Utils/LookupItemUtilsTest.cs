@@ -21,6 +21,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Utils
                 proposalNameIdentifier);
         }
 
+        // TODO inline test files
         [Test]
         public void ShouldTranslateProposals()
         {
@@ -198,6 +199,16 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Utils
             WhenCodeCompletionIsInvokedInFile("MethodWithTypeParametersProposals");
 
             ThenProposalCollectionContains("[System.Void, mscorlib, 4.0.0.0] [N.C, TestProject].M1[[T -> T]]([T] t)");
+        }
+
+        [Test]
+        public void ShouldTranlateUnresolvableFieldReference()
+        {
+            CompleteInMethod(@"
+                v = $
+            ");
+
+            ThenProposalCollectionContains("[?] [?].v");
         }
 
         // Test cases for keywords (e.g., private), templates (e.g., for), and

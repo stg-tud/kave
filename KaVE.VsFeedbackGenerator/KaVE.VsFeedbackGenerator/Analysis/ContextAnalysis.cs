@@ -3,7 +3,6 @@ using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
 using KaVE.JetBrains.Annotations;
 using KaVE.Model.Events.CompletionEvent;
-using KaVE.Model.Names;
 using KaVE.VsFeedbackGenerator.Utils.Names;
 
 namespace KaVE.VsFeedbackGenerator.Analysis
@@ -36,7 +35,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis
                 var methodDeclaration = FindEnclosing<IMethodDeclaration>(_nodeInFile);
                 if (methodDeclaration != null)
                 {
-                    _context.EnclosingMethod = GetName(methodDeclaration);
+                    _context.EnclosingMethod = methodDeclaration.GetName();
 
                     _context.CalledMethods = _calledMethodsAnalysis.Analyze(
                         methodDeclaration,
@@ -60,14 +59,6 @@ namespace KaVE.VsFeedbackGenerator.Analysis
                 node = node.Parent;
             }
             return null;
-        }
-
-
-        // TODO move this to a generic helper in the name factory
-        private static IMethodName GetName(IMethodDeclaration methodDeclaration)
-        {
-            var declaredElement = methodDeclaration.DeclaredElement;
-            return declaredElement.GetName<IMethodName>();
         }
     }
 }

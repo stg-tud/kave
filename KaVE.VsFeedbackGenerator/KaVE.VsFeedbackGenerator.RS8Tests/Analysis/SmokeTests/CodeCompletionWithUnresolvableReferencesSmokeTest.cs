@@ -14,15 +14,15 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SmokeTests
         }
 
         [Test]
-        public void UnknownMember()
+        public void MemberAccessOnUnknownMember()
         {
             CompleteInMethod(@"
                 this.Foo.$
             ");
         }
 
-        [Test, Ignore]
-        public void UnknownReturnType()
+        [Test]
+        public void MemberAccessOnUnknownReturnType()
         {
             CompleteInClass(@"
                 private Bar M() { return null; }
@@ -35,7 +35,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SmokeTests
         }
 
         [Test]
-        public void UnkownNamespace()
+        public void MemberAccessOnUnkownNamespace()
         {
             CompleteInMethod(@"
                 System.Unkown.$
@@ -43,7 +43,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SmokeTests
         }
 
         [Test]
-        public void InaccessibleMember()
+        public void CallToInaccessibleMethod()
         {
             CompleteInFile(@"
                 class C
@@ -59,6 +59,15 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SmokeTests
                         $
                     }
                 }");
+        }
+
+        [Test, Ignore]
+        public void CallToUnresolvableMethod()
+        {
+            CompleteInMethod(@"
+                Unknown();
+                $
+            ");
         }
     }
 }

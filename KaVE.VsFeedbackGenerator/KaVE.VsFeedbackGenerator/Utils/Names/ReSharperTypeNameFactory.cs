@@ -2,6 +2,7 @@
 using JetBrains.ReSharper.Psi;
 using KaVE.JetBrains.Annotations;
 using KaVE.Model.Names;
+using KaVE.Model.Names.CSharp;
 using KaVE.Utils.Assertion;
 
 namespace KaVE.VsFeedbackGenerator.Utils.Names
@@ -28,10 +29,13 @@ namespace KaVE.VsFeedbackGenerator.Utils.Names
         [NotNull]
         private static ITypeName GetName(this IDeclaredType type)
         {
-            // TODO find out when type element can be null
             var typeElement = type.GetTypeElement();
-            Asserts.NotNull(typeElement, "type element null");
-            return (ITypeName) typeElement.GetName(type.GetSubstitution());
+            // typeElement can be null, for example when resolving the second
+            // parameter type in the incomplete method declaration
+            // > public void M(int i, )
+            return typeElement == null
+                ? TypeName.Get(TypeName.UnknownTypeIdentifier)
+                : (ITypeName) typeElement.GetName(type.GetSubstitution());
         }
 
         [NotNull]

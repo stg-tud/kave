@@ -220,6 +220,10 @@ namespace KaVE.VsFeedbackGenerator.Utils.Names
         [NotNull]
         private static String GetAssemblyQualifiedName(this ITypeElement type, ISubstitution substitution)
         {
+            if (type == null)
+            {
+                return TypeName.UnknownTypeIdentifier;
+            }
             var containingModule = type.Module.ContainingProjectModule;
             Asserts.NotNull(containingModule, "module is null");
             return String.Format(

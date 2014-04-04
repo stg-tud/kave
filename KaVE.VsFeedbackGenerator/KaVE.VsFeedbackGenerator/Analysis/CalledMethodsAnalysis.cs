@@ -3,10 +3,12 @@ using System.Linq;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Resolve;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
+using JetBrains.ReSharper.Psi.Resolve;
 using JetBrains.ReSharper.Psi.Tree;
 using KaVE.Model.Names;
 using KaVE.Utils.Assertion;
 using KaVE.VsFeedbackGenerator.Utils.Names;
+using NuGet;
 
 namespace KaVE.VsFeedbackGenerator.Analysis
 {
@@ -93,12 +95,27 @@ namespace KaVE.VsFeedbackGenerator.Analysis
 
             private static DeclaredElementInstance<IMethod> ResolveMethod(ICSharpInvocationReference invocationRef)
             {
-                var resolvedRef = invocationRef.Resolve();
-                var declaredElement = resolvedRef.DeclaredElement as IMethod;
-                return new DeclaredElementInstance<IMethod>(declaredElement, resolvedRef.Result.Substitution);
+                var resolvedRef = invocationRef.Resolve().Result;
+                IMethod declaration = null;
+                ISubstitution substitution = null;
+                if (resolvedRef.DeclaredElement != null)
+                {
+                    declaration = (IMethod) resolvedRef.DeclaredElement;
+                    substitution = resolvedRef.Substitution;
+                }
+                else if (!resolvedRef.Candidates.IsEmpty())
+                {
+                    declaration = (IMethod) resolvedRef.Candidates.First();
+                    substitution = resolvedRef.CandidateSubstitutions.First();
+                }
+
+                if (declaration != null)
+                {
+                    return new DeclaredElementInstance<IMethod>(declaration, substitution);
+                }
+                return Asserts.Fail<DeclaredElementInstance<IMethod>>("unresolvable method");
             }
 
-            // TODO test overload scenario (multiple declarations)
             private static IMethodDeclaration GetDeclaration(IMethod method)
             {
                 var declarations = method.GetDeclarations();
