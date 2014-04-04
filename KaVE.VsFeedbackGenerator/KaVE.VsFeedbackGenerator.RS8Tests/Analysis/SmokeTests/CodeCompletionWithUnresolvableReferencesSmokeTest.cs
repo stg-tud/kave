@@ -61,7 +61,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SmokeTests
                 }");
         }
 
-        [Test, Ignore]
+        [Test]
         public void CallToUnresolvableMethod()
         {
             CompleteInMethod(@"

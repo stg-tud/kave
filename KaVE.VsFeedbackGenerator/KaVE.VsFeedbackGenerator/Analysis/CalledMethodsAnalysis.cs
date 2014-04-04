@@ -71,6 +71,11 @@ namespace KaVE.VsFeedbackGenerator.Analysis
             private void AnalyzeInvocationReference(CollectionContext context, ICSharpInvocationReference invocationRef)
             {
                 var method = ResolveMethod(invocationRef);
+                if (method == null)
+                {
+                    return;
+                }
+
                 var methodName = method.GetName<IMethodName>();
                 if (IsLocalHelper(methodName) && !method.Element.IsOverride)
                 {
@@ -105,6 +110,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis
                 }
                 else if (!resolvedRef.Candidates.IsEmpty())
                 {
+                    // TODO reconsider this, maybe switch to "invocations" as analysis result, where an invocation can have zero, one, or more methods as its target
                     declaration = (IMethod) resolvedRef.Candidates.First();
                     substitution = resolvedRef.CandidateSubstitutions.First();
                 }
@@ -113,7 +119,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis
                 {
                     return new DeclaredElementInstance<IMethod>(declaration, substitution);
                 }
-                return Asserts.Fail<DeclaredElementInstance<IMethod>>("unresolvable method");
+                return null;
             }
 
             private static IMethodDeclaration GetDeclaration(IMethod method)

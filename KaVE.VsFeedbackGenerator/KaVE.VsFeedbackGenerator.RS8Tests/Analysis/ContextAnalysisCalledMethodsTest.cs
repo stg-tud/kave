@@ -118,11 +118,10 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
                 $
             ");
 
-            // TODO this currently defaults to the first candidate, should we capture all candidates instead?
             AssertCalledMethodsContain("[System.Boolean, mscorlib, 4.0.0.0] [System.Object, mscorlib, 4.0.0.0].Equals([System.Object, mscorlib, 4.0.0.0] obj)");
         }
 
-        [Test, Ignore]
+        [Test]
         public void ShouldResolveUnresolvableCall()
         {
             CompleteInFile(@"
@@ -135,7 +134,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
                     }
                 }");
 
-            AssertCalledMethodsContain("[?] [C, TestProject].Unknown()");
+            CollectionAssert.IsEmpty(ResultContext.CalledMethods);
         }
 
         private void AssertCalledMethodsContain(string methodIdentifier)
