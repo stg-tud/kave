@@ -1,8 +1,11 @@
 ﻿using System.IO;
 using System.Linq;
 using KaVE.JetBrains.Annotations;
+using KaVE.VsFeedbackGenerator.Generators;
 using KaVE.VsFeedbackGenerator.Utils;
 using KaVE.VsFeedbackGenerator.Utils.Json;
+using Moq;
+using Newtonsoft.Json;
 using NUnit.Framework;
 
 namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json
@@ -10,6 +13,15 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json
     [TestFixture]
     public class JsonLogReaderTest
     {
+        private Mock<ILogger> _mockErrorEventGenerator;
+
+        [SetUp]
+        public void SetUpRegistry()
+        {
+            _mockErrorEventGenerator = new Mock<ILogger>();
+            Registry.RegisterComponent(_mockErrorEventGenerator.Object);
+        }
+
         [Test]
         public void ShouldDeserializeInstance()
         {
@@ -120,6 +132,23 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json
             }
 
             Assert.AreEqual(2, instances.Length);
+        }
+
+        [Test]
+        public void ShouldFireErrorEventWhenIgnoringLine()
+        {
+            using (var reader = CreateReader("broken line"))
+            {
+                reader.ReadNext();
+            }
+
+            _mockErrorEventGenerator.Verify(g => g.Log(It.IsAny<JsonReaderException>(), "broken line"));
+        }
+
+        [TearDown]
+        public void CleanUpRegistry()
+        {
+            Registry.Clear();
         }
 
         [NotNull]

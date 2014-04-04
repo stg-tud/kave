@@ -1,12 +1,21 @@
 ﻿using System;
 using System.Linq;
+using JetBrains.Application;
 using KaVE.Model.Events;
 using KaVE.VsFeedbackGenerator.MessageBus;
 using KaVE.VsFeedbackGenerator.VsIntegration;
 
 namespace KaVE.VsFeedbackGenerator.Generators
 {
-    internal class ErrorEventGenerator : AbstractEventGenerator
+    public interface ILogger
+    {
+        void Log(Exception exception, string content);
+        void Log(Exception exception);
+        void Log(string content);
+    }
+
+    [ShellComponent]
+    public class ErrorEventGenerator : AbstractEventGenerator, ILogger
     {
         private readonly IMessageBus _messageBus;
 

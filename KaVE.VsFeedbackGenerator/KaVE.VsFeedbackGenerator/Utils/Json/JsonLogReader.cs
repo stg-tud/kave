@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using KaVE.Utils.Assertion;
+using KaVE.VsFeedbackGenerator.Generators;
 using Newtonsoft.Json;
 
 namespace KaVE.VsFeedbackGenerator.Utils.Json
@@ -34,8 +35,9 @@ namespace KaVE.VsFeedbackGenerator.Utils.Json
             {
                 return JsonConvert.DeserializeObject<TMessage>(json, JsonLogSerialization.Settings);
             }
-            catch (JsonReaderException)
+            catch (JsonReaderException jre)
             {
+                Registry.GetComponent<ILogger>().Log(jre, json);
                 // supressing broken lines
                 return ReadNext();
             }
