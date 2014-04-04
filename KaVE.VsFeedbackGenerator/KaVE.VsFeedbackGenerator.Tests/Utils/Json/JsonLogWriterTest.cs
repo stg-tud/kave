@@ -8,7 +8,6 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json
     [TestFixture]
     public class JsonLogWriterTest
     {
-        // TODO Writer is never disposed, potentially causes loss of information
         private ILogWriter<object> _writer;
         private MemoryStream _logStream;
 
@@ -17,6 +16,12 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json
         {
             _logStream = new MemoryStream();
             _writer = new JsonLogWriter<object>(_logStream);
+        }
+
+        [TearDown]
+        public void CleanUp()
+        {
+            _writer.Dispose();
         }
 
         [Test]

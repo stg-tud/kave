@@ -25,7 +25,20 @@ namespace KaVE.VsFeedbackGenerator.Utils.Json
             var json = _logStreamReader.ReadLine();
             return json == null
                 ? default(TMessage)
-                : JsonConvert.DeserializeObject<TMessage>(json, JsonLogSerialization.Settings);
+                : Deserialize(json);
+        }
+
+        private TMessage Deserialize(string json)
+        {
+            try
+            {
+                return JsonConvert.DeserializeObject<TMessage>(json, JsonLogSerialization.Settings);
+            }
+            catch (JsonReaderException)
+            {
+                // supressing broken lines
+                return ReadNext();
+            }
         }
 
         /// <summary>

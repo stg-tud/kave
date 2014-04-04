@@ -88,6 +88,40 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json
             Assert.AreEqual("2", instances[2].Id);
         }
 
+        [Test]
+        public void ShouldSkipOverBrokeLines()
+        {
+            SerializationTestTarget[] instances;
+            using (var reader = CreateReader("{\"Id\":\"0\"}\r\nI'am a broken line\r\n{\"Id\":\"2\"}"))
+            {
+                instances = reader.ReadAll().ToArray();
+            }
+
+            Assert.AreEqual("0", instances[0].Id);
+            Assert.AreEqual("2", instances[1].Id);
+        }
+
+        [Test]
+        public void ShouldReadNothingFromBrokenFile()
+        {
+            using (var reader = CreateReader("Broken Content\r\nMore broken stuff\r\nAll broken"))
+            {
+                Assert.IsNull(reader.ReadNext());
+            }
+        }
+
+        [Test]
+        public void ShouldAllowUnixLikeLinebreaks()
+        {
+            SerializationTestTarget[] instances;
+            using (var reader = CreateReader("{\"Id\":\"0\"}\n{\"Id\":\"1\"}"))
+            {
+                instances = reader.ReadAll().ToArray();
+            }
+
+            Assert.AreEqual(2, instances.Length);
+        }
+
         [NotNull]
         private static ILogReader<SerializationTestTarget> CreateReader(string input)
         {
