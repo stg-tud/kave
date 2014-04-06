@@ -14,7 +14,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
     {
         private Mock<ISettingsStore> _mockSettingsStore;
         private UploadSettings _uploadSettings;
-        private Mock<INotifyTrayIcon> _mockTrayIcon;
+        private Mock<NotifyTrayIcon> _mockTrayIcon;
         private Mock<ICallbackManager> _mockCallbackManager;
 
         [SetUp]
@@ -23,7 +23,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
             _mockSettingsStore = new Mock<ISettingsStore>();
             _uploadSettings = new UploadSettings();
             _mockSettingsStore.Setup(store => store.GetSettings<UploadSettings>()).Returns(_uploadSettings);
-            _mockTrayIcon = new Mock<INotifyTrayIcon>();
+            _mockTrayIcon = new Mock<NotifyTrayIcon>();
             _mockCallbackManager = new Mock<ICallbackManager>();
         }
 
