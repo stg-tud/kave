@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Controls.Primitives;
 using JetBrains.Application;
+using KaVE.Utils;
 using KaVE.VsFeedbackGenerator.SessionManager.Presentation;
 using KaVE.VsFeedbackGenerator.TrayNotification;
 using KaVE.VsFeedbackGenerator.Utils;
@@ -12,20 +13,18 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
     {
         private readonly ISettingsStore _settingsStore;
         private readonly SessionManagerWindowRegistrar _sessionWindowRegistrar;
-        private readonly INotifyTrayIcon _taskbarIcon;
+        private readonly NotifyTrayIcon _taskbarIcon;
         private readonly ICallbackManager _callbackManager;
 
-        public UploadReminder(ISettingsStore settingsStore, INotifyTrayIcon notify, ICallbackManager callbackManager, SessionManagerWindowRegistrar sessionWindowRegistrar)
+        public UploadReminder(ISettingsStore settingsStore, NotifyTrayIcon notify, ICallbackManager callbackManager, SessionManagerWindowRegistrar sessionWindowRegistrar)
         {
             _taskbarIcon = notify;
             _settingsStore = settingsStore;
             _callbackManager = callbackManager;
             _sessionWindowRegistrar = sessionWindowRegistrar;
-            
-            EnsureUploadSettingsInitialized();
-            RegisterCallback();
 
-           //_taskbarIcon.ShowCustomBalloon(new HardBalloonPopup(_sessionWindowRegistrar, SessionManagerWindowActionHandler.ActionId), PopupAnimation.Slide, null);
+            EnsureUploadSettingsInitialized();
+            RegisterCallback();       
         }
 
         private void RegisterCallback()
@@ -52,21 +51,23 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
 
             if (OneWeekWithoutUpload(settings))
             {
-                _taskbarIcon.ShowCustomNotification(
-                    new HardBalloonPopup(
-                        _sessionWindowRegistrar,
-                        SessionManagerWindowActionHandler.ActionId),
-                        PopupAnimation.Slide,
-                        null);
+                Invoke.OnSTA(
+                   () => _taskbarIcon.ShowCustomNotification(
+                       new HardBalloonPopup(
+                           _sessionWindowRegistrar,
+                           SessionManagerWindowActionHandler.ActionId),
+                       PopupAnimation.Slide,
+                       null));
             }
             else
             {
-                _taskbarIcon.ShowCustomNotification(
-                    new SoftBalloonPopup(
-                        _sessionWindowRegistrar,
-                        SessionManagerWindowActionHandler.ActionId),
-                        PopupAnimation.Slide,
-                        null);
+                Invoke.OnSTA(
+                   () => _taskbarIcon.ShowCustomNotification(
+                       new SoftBalloonPopup(
+                           _sessionWindowRegistrar,
+                           SessionManagerWindowActionHandler.ActionId), 
+                       PopupAnimation.Slide,
+                       null));
             }
 
             settings.LastNotificationDate = DateTime.Now;
