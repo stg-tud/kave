@@ -128,7 +128,6 @@
     <Compile Include="Utils\WeakNameCache.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Events\CompletionEvent\CompletionEventStructure.cd" />
     <None Include="Names\NameStructure.cd" />
   </ItemGroup>
   <ItemGroup>

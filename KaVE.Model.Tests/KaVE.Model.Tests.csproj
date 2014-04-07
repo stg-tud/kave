@@ -45,6 +45,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Events\CompletionEvent\CompletionEventTestFactory.cs" />
     <Compile Include="Events\CompletionEvent\TypeHierarchyTest.cs" />
     <Compile Include="Names\CSharp\AssemblyNameTest.cs" />
     <Compile Include="Names\CSharp\AssemblyVersionTest.cs" />

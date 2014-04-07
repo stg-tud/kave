@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using KaVE.JetBrains.Annotations;
 using KaVE.Model.Names;
 using KaVE.Utils;
@@ -11,11 +12,13 @@ namespace KaVE.Model.Events.CompletionEvent
     /// presented to the code-completion user in the code-completion
     /// dropdown.
     /// </summary>
+    [DataContract]
     public class ProposalCollection
     {
         /// <summary>
         /// The proposals contained in this collection.
         /// </summary>
+        [DataMember]
         public IList<Proposal> Proposals { get; private set; }
 
         /// <summary>

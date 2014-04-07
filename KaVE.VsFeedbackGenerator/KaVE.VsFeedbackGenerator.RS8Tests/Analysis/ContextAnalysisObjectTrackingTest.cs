@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using KaVE.JetBrains.Annotations;
 using KaVE.Model.Names.CSharp;
 using NUnit.Framework;
 
@@ -7,6 +8,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
     [TestFixture]
     internal class ContextAnalysisObjectTrackingTest : KaVEBaseTest
     {
+        [UsedImplicitly]
         private static readonly string[] Visibilities = {"public", "protected", "internal", "private"};
 
         [TestCaseSource("Visibilities")]

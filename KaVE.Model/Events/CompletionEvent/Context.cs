@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using KaVE.JetBrains.Annotations;
 using KaVE.Model.Groum;
 using KaVE.Model.Names;
@@ -11,6 +12,7 @@ namespace KaVE.Model.Events.CompletionEvent
     ///     The context of a code-completion event, i.e., a description of the code environment in which the completion
     ///     is triggered.
     /// </summary>
+    [DataContract]
     public class Context
     {
         public Context()
@@ -30,6 +32,7 @@ namespace KaVE.Model.Events.CompletionEvent
         ///     Information about the method whose body is currently edited. <code>null</code> if completion is triggered
         ///     outside a method.
         /// </summary>
+        [DataMember]
         public IMethodName EnclosingMethod
         {
             // ReSharper disable CSharpWarnings::CS0618
@@ -47,15 +50,17 @@ namespace KaVE.Model.Events.CompletionEvent
         /// <summary>
         ///     Methods called in the EnclosingMethod. This is redundant information also contained in the EnclosingMethodGroum.
         /// </summary>
-        [NotNull]
+        [NotNull, DataMember]
         public ISet<IMethodName> CalledMethods { get; set; }
 
+        [DataMember]
         public TypeShape TypeShape { get; set; }
 
         /// <summary>
         ///     The type of the reference completion was triggered on or <code>null</code>, if completion was triggered without an
         ///     (explicit) reference.
         /// </summary>
+        [DataMember]
         public IName TriggerTarget { get; set; }
 
 
@@ -89,6 +94,7 @@ namespace KaVE.Model.Events.CompletionEvent
 
         public override string ToString()
         {
+            // ReSharper disable CSharpWarnings::CS0618
             return
                 string.Format(
                     "[EnclosingMethodHierarchy: {0}, EnclosingMethodGroum: {1}, CalledMethods: [{2}], TypeShape: {3}]",
@@ -96,6 +102,7 @@ namespace KaVE.Model.Events.CompletionEvent
                     EnclosingMethodGroum,
                     string.Join(", ", CalledMethods),
                     TypeShape);
+            // ReSharper restore CSharpWarnings::CS0618
         }
     }
 }

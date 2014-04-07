@@ -89,6 +89,10 @@
       <Project>{9A656780-6292-4CE3-BA13-D6CBB797AABA}</Project>
       <Name>KaVE.CompletionTraceGenerator</Name>
     </ProjectReference>
+    <ProjectReference Include="..\KaVE.Model.Tests\KaVE.Model.Tests.csproj">
+      <Project>{5EADDF98-328D-4E54-8819-C0611A942B6F}</Project>
+      <Name>KaVE.Model.Tests</Name>
+    </ProjectReference>
     <ProjectReference Include="..\KaVE.Model\KaVE.Model.csproj">
       <Project>{236E2794-DE4D-4F94-AC87-2ABFD1059CE0}</Project>
       <Name>KaVE.Model</Name>

@@ -1,10 +1,12 @@
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using KaVE.JetBrains.Annotations;
 using KaVE.Utils;
 using KaVE.Utils.Collections;
 
 namespace KaVE.Model.Events.CompletionEvent
 {
+    [DataContract]
     public class TypeShape
     {
         public TypeShape()
@@ -15,13 +17,14 @@ namespace KaVE.Model.Events.CompletionEvent
         /// <summary>
         ///     A description of the enclosing class, including its parent class and implemented interfaces.
         /// </summary>
+        [DataMember]
         public ITypeHierarchy TypeHierarchy { get; set; }
 
         /// <summary>
         ///     All Methods that are overridden in the class under edit (including information about the first and super
         ///     declaration).
         /// </summary>
-        [NotNull]
+        [NotNull, DataMember]
         public ISet<MethodHierarchy> MethodHierarchies { get; set; }
 
         protected bool Equals(TypeShape other)

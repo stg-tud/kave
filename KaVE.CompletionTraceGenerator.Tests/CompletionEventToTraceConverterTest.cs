@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using KaVE.CompletionTraceGenerator.Model;
 using KaVE.Model.Events;
 using KaVE.Model.Events.CompletionEvent;
-using KaVE.Model.Names.CSharp;
 using KaVE.VsFeedbackGenerator.Utils;
 using Moq;
 using NUnit.Framework;
+using TestFactory = KaVE.Model.Tests.Events.CompletionEvent.CompletionEventTestFactory;
 
 namespace KaVE.CompletionTraceGenerator.Tests
 {
@@ -28,7 +26,7 @@ namespace KaVE.CompletionTraceGenerator.Tests
         [Test]
         public void ShouldCreateTraceFromAppliedCompletion()
         {
-            var @event = CreateAnonymousCompletionEvent(5234);
+            var @event = TestFactory.CreateAnonymousCompletionEvent(5234);
             @event.TerminatedAs = CompletionEvent.TerminationState.Applied;
 
             var expected = new CompletionTrace {DurationInMillis = 5234};
@@ -42,7 +40,7 @@ namespace KaVE.CompletionTraceGenerator.Tests
         [Test]
         public void ShouldCreateTraceFromCancelledCompletion()
         {
-            var @event = CreateAnonymousCompletionEvent(398);
+            var @event = TestFactory.CreateAnonymousCompletionEvent(398);
             @event.TerminatedAs = CompletionEvent.TerminationState.Cancelled;
 
             var expected = new CompletionTrace {DurationInMillis = 398};
@@ -56,9 +54,9 @@ namespace KaVE.CompletionTraceGenerator.Tests
         [Test]
         public void ShouldCreateTraceFromCompletionWithTwoStepActions()
         {
-            var @event = CreateAnonymousCompletionEvent(698);
+            var @event = TestFactory.CreateAnonymousCompletionEvent(698);
             @event.TerminatedAs = CompletionEvent.TerminationState.Applied;
-            var proposals = CreateAnonymousProposals(3);
+            var proposals = TestFactory.CreateAnonymousProposals(3);
             @event.ProposalCollection = new ProposalCollection(proposals);
             @event.AddSelection(proposals[0]);
             @event.AddSelection(proposals[1]);
@@ -79,9 +77,9 @@ namespace KaVE.CompletionTraceGenerator.Tests
         [Test]
         public void ShouldCreateTraceWithMouseGotoFromCompletionWithJump()
         {
-            var @event = CreateAnonymousCompletionEvent(34);
+            var @event = TestFactory.CreateAnonymousCompletionEvent(34);
             @event.TerminatedAs = CompletionEvent.TerminationState.Applied;
-            var proposals = CreateAnonymousProposals(10);
+            var proposals = TestFactory.CreateAnonymousProposals(10);
             @event.ProposalCollection = new ProposalCollection(proposals);
             @event.AddSelection(proposals[0]);
             @event.AddSelection(proposals[9]);
@@ -98,7 +96,7 @@ namespace KaVE.CompletionTraceGenerator.Tests
         [Test]
         public void ShouldNotCreateTraceFromIncompleteCompletionWithFiltering()
         {
-            var @event = CreateAnonymousCompletionEvent(66);
+            var @event = TestFactory.CreateAnonymousCompletionEvent(66);
             @event.TerminatedAs = CompletionEvent.TerminationState.Filtered;
 
             _sut.Process(@event);
@@ -109,9 +107,9 @@ namespace KaVE.CompletionTraceGenerator.Tests
         [Test]
         public void ShouldCreateTraceFromCompletionWithFiltering()
         {
-            var firstEvent = CreateAnonymousCompletionEvent(33);
+            var firstEvent = TestFactory.CreateAnonymousCompletionEvent(33);
             firstEvent.TerminatedAs = CompletionEvent.TerminationState.Filtered;
-            var secondEvent = CreateAnonymousCompletionEvent(42);
+            var secondEvent = TestFactory.CreateAnonymousCompletionEvent(42);
             secondEvent.TriggeredBy = IDEEvent.Trigger.Automatic;
             secondEvent.TerminatedAs = CompletionEvent.TerminationState.Cancelled;
             secondEvent.Prefix = "Get";
@@ -129,13 +127,13 @@ namespace KaVE.CompletionTraceGenerator.Tests
         [Test]
         public void ShouldCreateTraceFromCompletionWithSteppingBeforeAndAfterFiltering()
         {
-            var firstEvent = CreateAnonymousCompletionEvent(12);
-            var proposals = CreateAnonymousProposals(6);
+            var firstEvent = TestFactory.CreateAnonymousCompletionEvent(12);
+            var proposals = TestFactory.CreateAnonymousProposals(6);
             firstEvent.ProposalCollection = new ProposalCollection(proposals);
             firstEvent.AddSelection(proposals[0]);
             firstEvent.AddSelection(proposals[1]);
             firstEvent.TerminatedAs = CompletionEvent.TerminationState.Filtered;
-            var secondEvent = CreateAnonymousCompletionEvent(23);
+            var secondEvent = TestFactory.CreateAnonymousCompletionEvent(23);
             var filteredProposals = proposals.Take(4).ToList();
             secondEvent.TriggeredBy = IDEEvent.Trigger.Automatic;
             secondEvent.Prefix = "isE";
@@ -159,18 +157,18 @@ namespace KaVE.CompletionTraceGenerator.Tests
         [Test]
         public void ShouldCreateAsManyTracesAsTerminatedCompletionsAreProcessed()
         {
-            var event1 = CreateAnonymousCompletionEvent(55);
+            var event1 = TestFactory.CreateAnonymousCompletionEvent(55);
             event1.TerminatedAs = CompletionEvent.TerminationState.Applied;
-            var event2 = CreateAnonymousCompletionEvent(42);
+            var event2 = TestFactory.CreateAnonymousCompletionEvent(42);
             event2.TerminatedAs = CompletionEvent.TerminationState.Applied;
-            var event3 = CreateAnonymousCompletionEvent(23);
+            var event3 = TestFactory.CreateAnonymousCompletionEvent(23);
             event3.TerminatedAs = CompletionEvent.TerminationState.Cancelled;
-            var event4 = CreateAnonymousCompletionEvent(666);
+            var event4 = TestFactory.CreateAnonymousCompletionEvent(666);
             event4.TerminatedAs = CompletionEvent.TerminationState.Filtered;
-            var event5 = CreateAnonymousCompletionEvent(99);
+            var event5 = TestFactory.CreateAnonymousCompletionEvent(99);
             event5.TriggeredBy = IDEEvent.Trigger.Automatic;
             event5.TerminatedAs = CompletionEvent.TerminationState.Applied;
-            var event6 = CreateAnonymousCompletionEvent(69);
+            var event6 = TestFactory.CreateAnonymousCompletionEvent(69);
             event6.TerminatedAs = CompletionEvent.TerminationState.Cancelled;
 
             _sut.Process(event1);
@@ -186,9 +184,9 @@ namespace KaVE.CompletionTraceGenerator.Tests
         [Test]
         public void ShouldIgnoreInconsistentCompletions()
         {
-            var firstEvent = CreateAnonymousCompletionEvent(33);
+            var firstEvent = TestFactory.CreateAnonymousCompletionEvent(33);
             firstEvent.TerminatedAs = CompletionEvent.TerminationState.Filtered;
-            var secondEvent = CreateAnonymousCompletionEvent(42);
+            var secondEvent = TestFactory.CreateAnonymousCompletionEvent(42);
             secondEvent.TriggeredBy = IDEEvent.Trigger.Click;
             secondEvent.TerminatedAs = CompletionEvent.TerminationState.Applied;
 
@@ -199,32 +197,6 @@ namespace KaVE.CompletionTraceGenerator.Tests
             _sut.Process(secondEvent);
 
             _writerMock.Verify(writer => writer.Write(expected));
-        }
-
-        private static CompletionEvent CreateAnonymousCompletionEvent(int duration)
-        {
-            var now = DateTime.Now;
-            return new CompletionEvent
-            {
-                TriggeredAt = now,
-                TriggeredBy = IDEEvent.Trigger.Shortcut,
-                TerminatedAt = now.AddTicks(duration * TimeSpan.TicksPerMillisecond)
-            };
-        }
-
-        private static IList<Proposal> CreateAnonymousProposals(uint numberOfProposals)
-        {
-            var proposals = new List<Proposal>();
-            for (var i = 0; i < numberOfProposals; i++)
-            {
-                proposals.Add(CreateAnonymousProposal());
-            }
-            return proposals;
-        }
-
-        private static Proposal CreateAnonymousProposal()
-        {
-            return new Proposal {Name = Name.Get(Guid.NewGuid().ToString())};
         }
     }
 }

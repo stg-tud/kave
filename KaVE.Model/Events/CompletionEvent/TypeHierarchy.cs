@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using KaVE.JetBrains.Annotations;
 using KaVE.Model.Names;
 using KaVE.Model.Names.CSharp;
@@ -8,6 +9,7 @@ using KaVE.Utils.Collections;
 
 namespace KaVE.Model.Events.CompletionEvent
 {
+    [DataContract]
     public class TypeHierarchy : ITypeHierarchy
     {
         /// <summary>
@@ -25,8 +27,13 @@ namespace KaVE.Model.Events.CompletionEvent
             Element = TypeName.Get(elementQualifiedName);
         }
 
+        [DataMember]
         public ITypeName Element { get; set; }
+
+        [DataMember]
         public ITypeHierarchy Extends { get; set; }
+
+        [DataMember]
         public ISet<ITypeHierarchy> Implements { get; set; }
 
         public override bool Equals(object obj)

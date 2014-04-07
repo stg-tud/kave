@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Runtime.InteropServices;
 using KaVE.Model.Events;
 using KaVE.VsFeedbackGenerator.Generators;
 using Moq;

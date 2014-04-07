@@ -40,6 +40,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.Model
                     TestNameFactory.GetAnonymousMethodName(),
                     TestNameFactory.GetAnonymousMethodName()
                 },
+                TriggerTarget = TestNameFactory.GetAnonymousTypeName()
             };
             JsonAssert.SerializationPreservesData(context);
         }
