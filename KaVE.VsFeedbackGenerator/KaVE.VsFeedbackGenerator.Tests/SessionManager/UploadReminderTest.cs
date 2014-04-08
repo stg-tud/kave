@@ -83,7 +83,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
 
             WhenUploadReminderIsInitialized();
 
-            var expected = typeof(SoftBalloonPopup);
+            var expected = typeof (SoftBalloonPopup);
             AssertNotificationType(futureNotificationControl(), expected);
         }
 
@@ -96,17 +96,40 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
 
             WhenUploadReminderIsInitialized();
 
-            var expected = typeof(HardBalloonPopup);
+            var expected = typeof (HardBalloonPopup);
             AssertNotificationType(futureNotificationControl(), expected);
         }
 
         // TODO add testcase that ensures re-scheduling of notification (to check that finishedAction is set correctly)
 
+        [Test]
+        public void ShouldRegisterFinishedActionToReScheduleNotification()
+        {
+            Action reScheduleAction = null;
+            var actual = new DateTime();
+            _mockCallbackManager.Setup(
+                mgr => mgr.RegisterCallback(It.IsAny<Action>(), It.IsAny<DateTime>(), It.IsAny<Action>()))
+                                .Callback<Action, DateTime, Action>(
+                                    (callback, nextDateTimeToInvoke, finish) =>
+                                    {
+                                        actual = nextDateTimeToInvoke;
+                                        reScheduleAction = finish;
+                                    });
+
+
+            WhenUploadReminderIsInitialized();
+            reScheduleAction();
+
+            var expected = _uploadSettings.LastNotificationDate.AddDays(1);
+            Assert.AreEqual(expected, actual);
+        }
+
+
         private void GivenCallbackManagerInvokesCallbackImmediately()
         {
             _mockCallbackManager.Setup(
                 mgr => mgr.RegisterCallback(It.IsAny<Action>(), It.IsAny<DateTime>(), It.IsAny<Action>()))
-                                .Callback<Action, DateTime, Action>((callback, date, finish) => callback.Invoke());
+                                .Callback<Action, DateTime, Action>((callback, date, finish) => callback());
         }
 
         private void GivenDaysPassedSinceLastNotification(int value)
