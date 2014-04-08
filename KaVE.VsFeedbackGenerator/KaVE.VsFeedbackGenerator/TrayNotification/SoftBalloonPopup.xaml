@@ -1,4 +1,4 @@
-﻿<src:WindowBase
+﻿<src:BalloonPopupBase
     x:Class="KaVE.VsFeedbackGenerator.TrayNotification.SoftBalloonPopup"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -10,6 +10,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
     <UserControl.Resources>
+        <!-- ReSharper disable once Xaml.RedundantResource -->
         <Storyboard
             x:Key="FadeInAndOut">
             <DoubleAnimationUsingKeyFrames
@@ -31,14 +32,6 @@
             </DoubleAnimationUsingKeyFrames>
         </Storyboard>
     </UserControl.Resources>
-    <!--<Window.Triggers>
-        <EventTrigger
-            RoutedEvent="tb:TaskbarIcon.BalloonShowing">
-            <BeginStoryboard
-                Storyboard="{StaticResource FadeInAndOut}"
-            />
-        </EventTrigger>
-    </Window.Triggers> --> 
     <Grid x:Name="Grid">
         <Border
             x:Name="Border"
@@ -92,4 +85,4 @@
             <Button Margin="100, 20, 0, 0" Click="Wizard_Button_OnClick" Content="{x:Static root:Properties.PopupNotification.WizardButton}" />
         </TextBlock>
     </Grid>
-</src:WindowBase>
+</src:BalloonPopupBase>

@@ -110,24 +110,24 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>PopupNotification.resx</DependentUpon>
     </Compile>
-    <Compile Include="Properties\NotificationAbortDialog.Designer.cs">
+    <Compile Include="Properties\PopupAbortConfirmationDialog.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>NotificationAbortDialog.resx</DependentUpon>
+      <DependentUpon>PopupAbortConfirmationDialog.resx</DependentUpon>
     </Compile>
     <Compile Include="Interactivity\InteractionRequest.cs" />
     <Compile Include="Interactivity\ConfirmationRequestHandler.cs" />
     <Compile Include="SessionManager\ViewModelBase.cs" />
+    <Compile Include="TrayNotification\BalloonPopupBase.cs" />
     <Compile Include="TrayNotification\HardBalloonPopup.xaml.cs">
       <DependentUpon>HardBalloonPopup.xaml</DependentUpon>
     </Compile>
     <Compile Include="TrayNotification\UploadWizard.xaml.cs">
       <DependentUpon>UploadWizard.xaml</DependentUpon>
     </Compile>
-    <Compile Include="TrayNotification\WindowBase.cs" />
     <Compile Include="Utils\CallbackManager.cs" />
-    <Compile Include="TrayNotification\NotificationAbortDialog.xaml.cs">
-      <DependentUpon>NotificationAbortDialog.xaml</DependentUpon>
+    <Compile Include="TrayNotification\PopupAbortConfirmationDialog.xaml.cs">
+      <DependentUpon>PopupAbortConfirmationDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="TrayNotification\NotifyTrayIcon.cs" />
     <Compile Include="TrayNotification\SoftBalloonPopup.xaml.cs">
@@ -232,9 +232,9 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>PopupNotification.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Properties\NotificationAbortDialog.resx">
+    <EmbeddedResource Include="Properties\PopupAbortConfirmationDialog.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>NotificationAbortDialog.Designer.cs</LastGenOutput>
+      <LastGenOutput>PopupAbortConfirmationDialog.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\General.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
@@ -255,7 +255,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="TrayNotification\NotificationAbortDialog.xaml">
+    <Page Include="TrayNotification\PopupAbortConfirmationDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

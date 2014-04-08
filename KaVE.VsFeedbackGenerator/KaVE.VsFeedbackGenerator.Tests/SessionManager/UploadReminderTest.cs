@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
 using KaVE.VsFeedbackGenerator.SessionManager;
 using KaVE.VsFeedbackGenerator.TrayNotification;
 using KaVE.VsFeedbackGenerator.Utils;
@@ -43,9 +41,8 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
         [Test]
         public void ShouldNotInitializeSettingsIfAlreadyInitialized()
         {
-            var originalDate = DateTime.Now.AddSeconds(-10);
-            _uploadSettings.LastNotificationDate = originalDate;
-            _uploadSettings.LastUploadDate = originalDate;
+            GivenDaysPassedSinceLastNotification(10);
+            GivenDaysPassedSinceLastUpload(10);
 
             UploadSettings newSettings = null;
             _mockSettingsStore.Setup(store => store.SetSettings(It.IsAny<UploadSettings>()))
@@ -59,12 +56,10 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
         [Test]
         public void ShouldRegisterCallbackWithOneDayDelay()
         {
-            var now = DateTime.Now;
-            _uploadSettings.LastNotificationDate = now;
+            var inOneDay = DateTime.Now.AddDays(1);
+            GivenDaysPassedSinceLastNotification(0);
 
             WhenUploadReminderIsInitialized();
-
-            var inOneDay = now.AddDays(1);
 
             _mockCallbackManager.Verify(
                 manager =>
@@ -75,37 +70,60 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
         }
 
         [Test]
-        public void ShouldOpenSoftNotificationWhenNotAWeekElapsed()
+        public void ShouldOpenSoftNotificationAfterOneDayWithoutNotificationOrUpload()
         {
             GivenCallbackManagerInvokesCallbackImmediately();
             GivenDaysPassedSinceLastNotification(1);
-            var futureNotificationControl = GivenFutureNotificationControl();
+            GivenDaysPassedSinceLastUpload(1);
 
             WhenUploadReminderIsInitialized();
 
-            var expected = typeof (SoftBalloonPopup);
-            AssertNotificationType(futureNotificationControl(), expected);
+            _mockTrayIcon.Verify(ti => ti.ShowSoftBalloonPopup());
         }
 
         [Test]
-        public void ShouldOpenHardNotificationAfterAWeek()
+        public void ShouldOpenHardNotificationAfterOneWeekWithoutUpload()
         {
             GivenCallbackManagerInvokesCallbackImmediately();
-            GivenDaysPassedSinceLastNotification(7);
-            var futureNotificationControl = GivenFutureNotificationControl();
+            GivenDaysPassedSinceLastNotification(1);
+            GivenDaysPassedSinceLastUpload(7);
 
             WhenUploadReminderIsInitialized();
 
-            var expected = typeof (HardBalloonPopup);
-            AssertNotificationType(futureNotificationControl(), expected);
+            _mockTrayIcon.Verify(ti => ti.ShowHardBalloonPopup());
         }
 
-        // TODO add testcase that ensures re-scheduling of notification (to check that finishedAction is set correctly)
+        [Test]
+        public void ShouldNotOpenNotificationIfUploadedToday()
+        {
+            GivenCallbackManagerInvokesCallbackImmediately();
+            GivenDaysPassedSinceLastNotification(1);
+            GivenDaysPassedSinceLastUpload(0);
+            
+            WhenUploadReminderIsInitialized();
+
+            _mockTrayIcon.Verify(ti => ti.ShowSoftBalloonPopup(), Times.Never);
+            _mockTrayIcon.Verify(ti => ti.ShowHardBalloonPopup(), Times.Never);
+        }
+
+        [Test]
+        public void ShouldNotUpdateLastNotificationDateIfNoNotificationDueToRecentUpload()
+        {
+            GivenCallbackManagerInvokesCallbackImmediately();
+            GivenDaysPassedSinceLastNotification(1);
+            GivenDaysPassedSinceLastUpload(0);
+            var expected = _uploadSettings.LastNotificationDate;
+
+            WhenUploadReminderIsInitialized();
+
+            var actual = _uploadSettings.LastNotificationDate;
+            Assert.AreEqual(expected, actual);
+        }
 
         [Test]
         public void ShouldRegisterFinishedActionToReScheduleNotification()
         {
-            Action reScheduleAction = null;
+            Action rescheduleAction = null;
             var actual = new DateTime();
             _mockCallbackManager.Setup(
                 mgr => mgr.RegisterCallback(It.IsAny<Action>(), It.IsAny<DateTime>(), It.IsAny<Action>()))
@@ -113,12 +131,11 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
                                     (callback, nextDateTimeToInvoke, finish) =>
                                     {
                                         actual = nextDateTimeToInvoke;
-                                        reScheduleAction = finish;
+                                        rescheduleAction = finish;
                                     });
 
-
             WhenUploadReminderIsInitialized();
-            reScheduleAction();
+            rescheduleAction();
 
             var expected = _uploadSettings.LastNotificationDate.AddDays(1);
             Assert.AreEqual(expected, actual);
@@ -132,33 +149,20 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
                                 .Callback<Action, DateTime, Action>((callback, date, finish) => callback());
         }
 
-        private void GivenDaysPassedSinceLastNotification(int value)
+        private void GivenDaysPassedSinceLastNotification(int days)
         {
-            var yesterday = DateTime.Now.AddDays(-value);
-            _uploadSettings.LastUploadDate = yesterday;
-            _uploadSettings.LastNotificationDate = yesterday;
+            _uploadSettings.LastNotificationDate = DateTime.Now.AddDays(-days);
         }
 
-        private Func<UserControl> GivenFutureNotificationControl()
+        private void GivenDaysPassedSinceLastUpload(int days)
         {
-            UserControl actual = null;
-            _mockTrayIcon.Setup(
-                notification =>
-                    notification.ShowCustomNotification(It.IsAny<UserControl>(), PopupAnimation.Slide, null))
-                         .Callback<UserControl, PopupAnimation, int?>((control, animation, time) => actual = control);
-            return () => actual;
+            _uploadSettings.LastUploadDate = DateTime.Now.AddDays(-days);
         }
 
         private void WhenUploadReminderIsInitialized()
         {
             // ReSharper disable once ObjectCreationAsStatement
-            new UploadReminder(_mockSettingsStore.Object, _mockTrayIcon.Object, _mockCallbackManager.Object, null);
-        }
-
-        private static void AssertNotificationType(UserControl actual, Type expected)
-        {
-            Assert.NotNull(actual);
-            Assert.IsInstanceOf(expected, actual);
+            new UploadReminder(_mockSettingsStore.Object, _mockTrayIcon.Object, _mockCallbackManager.Object);
         }
     }
 }

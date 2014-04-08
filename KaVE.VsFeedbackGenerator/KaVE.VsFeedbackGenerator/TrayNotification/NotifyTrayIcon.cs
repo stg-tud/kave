@@ -1,5 +1,5 @@
-﻿using System.Windows;
-using System.Windows.Controls;
+﻿using System;
+using System.Windows;
 using System.Windows.Controls.Primitives;
 using Hardcodet.Wpf.TaskbarNotification;
 using JetBrains.Application;
@@ -23,10 +23,23 @@ namespace KaVE.VsFeedbackGenerator.TrayNotification
 
         private TaskbarIcon NotifyIcon { get; set; }
 
-        //TODO: Invoke.OnStA should be here see Upload Reminder
-        public virtual void ShowCustomNotification(UserControl control, PopupAnimation animation, int? timeout)
+        public virtual void ShowSoftBalloonPopup()
         {
-            NotifyIcon.ShowCustomBalloon(control, animation, timeout);
+            ShowBalloonPopup(() => new SoftBalloonPopup());
+        }
+
+        public virtual void ShowHardBalloonPopup()
+        {
+            ShowBalloonPopup(() => new HardBalloonPopup());
+        }
+
+        private void ShowBalloonPopup(Func<BalloonPopupBase> popupFactory)
+        {
+            Invoke.OnSTA(
+                () => NotifyIcon.ShowCustomBalloon(
+                    popupFactory(),
+                    PopupAnimation.Slide,
+                    null));
         }
     }
 }

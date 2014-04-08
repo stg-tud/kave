@@ -2,9 +2,9 @@
 
 namespace KaVE.VsFeedbackGenerator.TrayNotification
 {
-    public partial class NotificationAbortDialog
+    public partial class PopupAbortConfirmationDialog
     {
-        public NotificationAbortDialog()
+        public PopupAbortConfirmationDialog()
         {
             InitializeComponent();
         }
@@ -14,19 +14,20 @@ namespace KaVE.VsFeedbackGenerator.TrayNotification
             get { return Checkbox.IsChecked == true;  }
         }
 
-        public bool Canceled
+        public bool Confirmed
         {
             get { return DialogResult == true; }
         }
 
         private void btnYes_Click(object sender, RoutedEventArgs e)
         {
+            DialogResult = true;
             Close();
         }
 
         private void btnNo_Click(object sender, RoutedEventArgs e)
         {
-            DialogResult = true;
+            DialogResult = false;
             Close();
         }
     }

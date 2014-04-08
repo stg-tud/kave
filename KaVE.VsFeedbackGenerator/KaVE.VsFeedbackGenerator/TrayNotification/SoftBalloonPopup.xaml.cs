@@ -1,23 +1,17 @@
 ﻿using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media.Animation;
-using KaVE.VsFeedbackGenerator.SessionManager.Presentation;
 
 namespace KaVE.VsFeedbackGenerator.TrayNotification
 {
     /// <summary>
-    /// Interaction logic for HardBalloonPopup.xaml
+    /// Interaction logic for SoftBalloonPopup.xaml
     /// </summary>
     public partial class SoftBalloonPopup
-    { 
-        private readonly SessionManagerWindowRegistrar _window;
-        private readonly string _actionId;
-        
-        public SoftBalloonPopup(SessionManagerWindowRegistrar window, string actionId)
+    {
+        public SoftBalloonPopup()
         {
             InitializeComponent();
-            _window = window;
-            _actionId = actionId;
 
             StartFadeInAndOutAnimation();
         }
@@ -34,15 +28,12 @@ namespace KaVE.VsFeedbackGenerator.TrayNotification
 
         private void Wizard_Button_OnClick(object sender, RoutedEventArgs e)
         {
-            //TODO: Implement me
-            /*Invoke.OnDispatcherAsync(
-                    () => ReentrancyGuard.Current.Execute(_actionId,
-                        () => _window.ToolWindow.Show()));*/
+            OpenUploadWizard();
         }
 
         private void ImgClose_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            CreateCloseDialog();
+            ClosePopup();
         }
     }
 }
