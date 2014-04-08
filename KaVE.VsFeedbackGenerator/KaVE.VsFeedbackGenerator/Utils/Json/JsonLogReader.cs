@@ -9,7 +9,7 @@ namespace KaVE.VsFeedbackGenerator.Utils.Json
     /// <summary>
     /// A reader for streams written by <see cref="JsonLogWriter{TMessage}"/>.
     /// </summary>
-    public class JsonLogReader<TMessage> : ILogReader<TMessage>
+    public class JsonLogReader<TMessage> : ILogReader<TMessage> where TMessage : class
     {
         private readonly StreamReader _logStreamReader;
 
@@ -37,7 +37,7 @@ namespace KaVE.VsFeedbackGenerator.Utils.Json
             }
             catch (JsonReaderException jre)
             {
-                Registry.GetComponent<ILogger>().Log(jre, json);
+                Registry.GetComponent<ILogger>().Error(jre, json);
                 // supressing broken lines
                 return ReadNext();
             }

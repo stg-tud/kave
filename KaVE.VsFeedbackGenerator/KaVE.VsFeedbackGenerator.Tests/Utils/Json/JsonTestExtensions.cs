@@ -26,7 +26,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json
             return stream.AsString();
         }
 
-        public static TModel Deserialize<TModel>(this string serialization)
+        public static TModel Deserialize<TModel>(this string serialization) where TModel : class
         {
             var stream = new MemoryStream(serialization.AsBytes());
             using (var reader = new JsonLogReader<TModel>(stream))

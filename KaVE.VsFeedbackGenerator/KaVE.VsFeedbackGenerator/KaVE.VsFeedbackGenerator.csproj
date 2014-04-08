@@ -99,7 +99,8 @@
     <Compile Include="Analysis\ContextAnalysis.cs" />
     <Compile Include="Analysis\TypeHierarchyAnalysisUtils.cs" />
     <Compile Include="Analysis\TypeShapeAnalysis.cs" />
-    <Compile Include="Generators\ErrorEventGenerator.cs" />
+    <Compile Include="Generators\ILogger.cs" />
+    <Compile Include="Generators\LogEventGenerator.cs" />
     <Compile Include="Interactivity\Confirmation.cs" />
     <Compile Include="Interactivity\IInteractionRequest.cs" />
     <Compile Include="Interactivity\InteractionRequestedEventArgs.cs" />

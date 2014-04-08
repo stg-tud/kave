@@ -13,13 +13,13 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json
     [TestFixture]
     public class JsonLogReaderTest
     {
-        private Mock<ILogger> _mockErrorEventGenerator;
+        private Mock<ILogger> _mockLogger;
 
         [SetUp]
         public void SetUpRegistry()
         {
-            _mockErrorEventGenerator = new Mock<ILogger>();
-            Registry.RegisterComponent(_mockErrorEventGenerator.Object);
+            _mockLogger = new Mock<ILogger>();
+            Registry.RegisterComponent(_mockLogger.Object);
         }
 
         [Test]
@@ -142,7 +142,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json
                 reader.ReadNext();
             }
 
-            _mockErrorEventGenerator.Verify(g => g.Log(It.IsAny<JsonReaderException>(), "broken line"));
+            _mockLogger.Verify(g => g.Error(It.IsAny<JsonReaderException>(), "broken line"));
         }
 
         [TearDown]

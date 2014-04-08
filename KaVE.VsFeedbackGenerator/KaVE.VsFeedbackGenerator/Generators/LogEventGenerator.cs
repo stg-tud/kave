@@ -7,33 +7,35 @@ using KaVE.VsFeedbackGenerator.VsIntegration;
 
 namespace KaVE.VsFeedbackGenerator.Generators
 {
-    public interface ILogger
-    {
-        void Log(Exception exception, string content);
-        void Log(Exception exception);
-        void Log(string content);
-    }
-
     [ShellComponent]
-    public class ErrorEventGenerator : AbstractEventGenerator, ILogger
+    public class LogEventGenerator : AbstractEventGenerator, ILogger
     {
         private readonly IMessageBus _messageBus;
 
-        public ErrorEventGenerator(IIDESession session, IMessageBus messageBus)
+        public LogEventGenerator(IIDESession session, IMessageBus messageBus)
             : base(session, messageBus)
         {
             _messageBus = messageBus;
         }
 
-        public virtual void Log(Exception exception, string content)
+        public void Error(Exception exception)
+        {
+            Error(exception, null);
+        }
+
+        public void Error(string content)
+        {
+            Error(null, content);
+        }
+
+        public virtual void Error(Exception exception, string content)
         {
             var e = Create<ErrorEvent>();
-            e.TriggeredBy = IDEEvent.Trigger.Automatic;
             
             if (content != null)
             {
                 // TODO does it make sense to move this to the ErrorEvent class?
-                e.Content = content.Replace("\r\n", "<br />").Replace("\n", "<br />");
+                e.Content = ReplaceNewLineByBr(content);
             }
 
             if (exception != null)
@@ -48,14 +50,16 @@ namespace KaVE.VsFeedbackGenerator.Generators
             _messageBus.Publish(e);
         }
 
-        public void Log(Exception exception)
+        public void Info(string info)
         {
-            Log(exception, null);
+            var e = Create<InfoEvent>();
+            e.Info = ReplaceNewLineByBr(info);
+            _messageBus.Publish(e);
         }
 
-        public void Log(string content)
+        private static string ReplaceNewLineByBr(string text)
         {
-            Log(null, content);
+            return text.Replace("\r\n", "<br />").Replace("\n", "<br />");
         }
     }
 }

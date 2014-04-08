@@ -3,6 +3,7 @@ using JetBrains.Application;
 
 namespace KaVE.VsFeedbackGenerator.Utils
 {
+    // TODO document intended usage
     public static class Registry
     {
         private static readonly IDictionary<object, object> ComponentDictionary = new Dictionary<object, object>();

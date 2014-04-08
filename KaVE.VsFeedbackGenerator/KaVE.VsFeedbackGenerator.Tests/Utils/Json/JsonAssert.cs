@@ -6,26 +6,26 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json
     {
         private delegate void Assertion(object expected, object actual);
 
-        public static void SerializationPreservesReferenceIdentity<T>(T obj)
+        public static void SerializationPreservesReferenceIdentity<T>(T obj) where T : class
         {
             SerializationPreserves(obj, Assert.AreSame);
         }
 
-        public static void SerializationPreservesData<T>(T obj)
+        public static void SerializationPreservesData<T>(T obj) where T : class
         {
             SerializationPreserves(obj, Assert.AreEqual);
         }
 
-        private static void SerializationPreserves<T>(T original, Assertion assertion)
+        private static void SerializationPreserves<T>(T original, Assertion assertion) where T : class
         {
             var clone = SerializeAndDeserialize(original);
             assertion.Invoke(original, clone);
         }
 
-        private static TModel SerializeAndDeserialize<TModel>(TModel model)
+        private static T SerializeAndDeserialize<T>(T model) where T : class
         {
             var serialization = model.Serialize();
-            var modelCopy = serialization.Deserialize<TModel>();
+            var modelCopy = serialization.Deserialize<T>();
             return modelCopy;
         }
     }

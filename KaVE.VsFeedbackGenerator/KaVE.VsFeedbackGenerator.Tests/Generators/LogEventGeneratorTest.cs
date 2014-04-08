@@ -7,26 +7,25 @@ using NUnit.Framework;
 namespace KaVE.VsFeedbackGenerator.Tests.Generators
 {
     [TestFixture]
-    internal class ErrorEventGeneratorTest : EventGeneratorTestBase
+    internal class LogEventGeneratorTest : EventGeneratorTestBase
     {
-        private ErrorEventGenerator _sut;
+        private LogEventGenerator _sut;
 
         [SetUp]
         public void SetUp()
         {
-            _sut = new ErrorEventGenerator(new TestIDESession(), TestMessageBus);
+            _sut = new LogEventGenerator(new TestIDESession(), TestMessageBus);
         }
 
         [Test]
         public void ExceptionIsTransformedAndPublished()
         {
             var e = CreateException("A", "B");
-            _sut.Log(e, "some custom payload");
+            _sut.Error(e, "some custom payload");
 
             var actual = WaitForNewEvent<ErrorEvent>();
             var expected = new ErrorEvent
             {
-                TriggeredBy = IDEEvent.Trigger.Automatic,
                 StackTrace = new[] {"A", "B"},
                 Content = "some custom payload"
             };
@@ -38,12 +37,11 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators
         public void EmptyLinesAreRemoved()
         {
             var e = CreateException("C", "", "D");
-            _sut.Log(e, "t2");
+            _sut.Error(e, "t2");
 
             var actual = WaitForNewEvent<ErrorEvent>();
             var expected = new ErrorEvent
             {
-                TriggeredBy = IDEEvent.Trigger.Automatic,
                 StackTrace = new[] { "C", "D" },
                 Content = "t2"
             };
@@ -55,12 +53,11 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators
         public void LinesAreTrimmed()
         {
             var e = CreateException(" E", " ", " F");
-            _sut.Log(e, "t3");
+            _sut.Error(e, "t3");
 
             var actual = WaitForNewEvent<ErrorEvent>();
             var expected = new ErrorEvent
             {
-                TriggeredBy = IDEEvent.Trigger.Automatic,
                 StackTrace = new[] { "E", "F" },
                 Content = "t3"
             };
@@ -71,12 +68,11 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators
         [Test]
         public void LogErrorWithoutException()
         {
-            _sut.Log("error");
+            _sut.Error("error");
 
             var actual = WaitForNewEvent<ErrorEvent>();
             var expected = new ErrorEvent
             {
-                TriggeredBy = IDEEvent.Trigger.Automatic,
                 Content = "error"
             };
 
@@ -86,12 +82,11 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators
         [Test]
         public void LogErrorWithoutContent()
         {
-            _sut.Log(CreateException("G"));
+            _sut.Error(CreateException("G"));
 
             var actual = WaitForNewEvent<ErrorEvent>();
             var expected = new ErrorEvent
             {
-                TriggeredBy = IDEEvent.Trigger.Automatic,
                 StackTrace = new[] { "G" },
             };
 
@@ -101,12 +96,11 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators
         [Test]
         public void ContentDoesNotContainNewLines()
         {
-            _sut.Log("A\r\nB");
+            _sut.Error("A\r\nB");
 
             var actual = WaitForNewEvent<ErrorEvent>();
             var expected = new ErrorEvent
             {
-                TriggeredBy = IDEEvent.Trigger.Automatic,
                 Content = "A<br />B"
             };
 
@@ -116,13 +110,40 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators
         [Test]
         public void ContentDoesNotContainUnixLikeNewLines()
         {
-            _sut.Log("A\nB");
+            _sut.Error("A\nB");
 
             var actual = WaitForNewEvent<ErrorEvent>();
             var expected = new ErrorEvent
             {
-                TriggeredBy = IDEEvent.Trigger.Automatic,
                 Content = "A<br />B"
+            };
+
+            AssertSimilarity(expected, actual);
+        }
+
+        [Test]
+        public void LogInfo()
+        {
+            _sut.Info("test");
+
+            var actual = WaitForNewEvent<InfoEvent>();
+            var expected = new InfoEvent
+            {
+                Info = "test"
+            };
+
+            AssertSimilarity(expected, actual);
+        }
+
+        [Test]
+        public void LogInfoDoesNotContainNewLines()
+        {
+            _sut.Info("A\r\nB");
+
+            var actual = WaitForNewEvent<InfoEvent>();
+            var expected = new InfoEvent
+            {
+                Info = "A<br />B"
             };
 
             AssertSimilarity(expected, actual);
@@ -143,6 +164,12 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators
             Assert.AreEqual(expected.TriggeredBy, actual.TriggeredBy);
             Assert.AreEqual(expected.Content, actual.Content);
             Assert.AreEqual(expected.StackTrace, actual.StackTrace);
+        }
+
+        private static void AssertSimilarity(InfoEvent expected, InfoEvent actual)
+        {
+            Assert.AreEqual(expected.TriggeredBy, actual.TriggeredBy);
+            Assert.AreEqual(expected.Info, actual.Info);
         }
     }
 }

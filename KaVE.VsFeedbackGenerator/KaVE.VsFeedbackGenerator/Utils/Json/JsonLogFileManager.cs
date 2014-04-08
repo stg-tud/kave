@@ -28,7 +28,7 @@ namespace KaVE.VsFeedbackGenerator.Utils.Json
         public JsonIDEEventLogFileManager() : base(JsonLogFileManagerLocation.EventLogsPath) { }
     }
 
-    public class JsonLogFileManager<TMessage> : LogFileManager<TMessage>
+    public class JsonLogFileManager<TMessage> : LogFileManager<TMessage> where TMessage : class
     {
         public JsonLogFileManager(string baseLocation)
             : base(
