@@ -11,23 +11,20 @@ namespace KaVE.VsFeedbackGenerator.TrayNotification
 
         public bool DontShowAgain
         {
-            get { return Checkbox.IsChecked == true;  }
+            get { return DontShowAgainCheckbox.IsChecked == true; }
         }
 
-        public bool Confirmed
-        {
-            get { return DialogResult == true; }
-        }
+        public bool Confirmed { get; private set; }
 
-        private void btnYes_Click(object sender, RoutedEventArgs e)
+        private void OnClickConfirm(object sender, RoutedEventArgs e)
         {
-            DialogResult = true;
+            Confirmed = true;
             Close();
         }
 
-        private void btnNo_Click(object sender, RoutedEventArgs e)
+        private void OnClickCancel(object sender, RoutedEventArgs e)
         {
-            DialogResult = false;
+            Confirmed = false;
             Close();
         }
     }
