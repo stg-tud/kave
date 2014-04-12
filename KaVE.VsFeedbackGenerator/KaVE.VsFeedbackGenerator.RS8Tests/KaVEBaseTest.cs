@@ -80,6 +80,13 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests
 
         protected void CompleteInFile(string fileContent)
         {
+            fileContent = @"
+                using System;
+                using System.Collections.Generic;
+                using System.IO;
+                
+                " + fileContent;
+
             fileContent = fileContent.Replace(Caret, "{caret}");
 
             var file = GetTestDataFilePath2("adhoc_test_snippet").ChangeExtension("cs");

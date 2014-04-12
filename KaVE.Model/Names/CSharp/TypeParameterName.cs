@@ -171,6 +171,7 @@ namespace KaVE.Model.Names.CSharp
             get { return TypeParameterType.IsArrayType; }
         }
 
+        // TODO test this method
         public ITypeName DeriveArrayTypeName(int rank)
         {
             Asserts.That(rank > 0, "rank smaller than 1");

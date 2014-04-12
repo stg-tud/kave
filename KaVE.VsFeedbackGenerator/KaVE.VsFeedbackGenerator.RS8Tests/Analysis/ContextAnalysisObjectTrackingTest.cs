@@ -65,7 +65,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
                     }
                 }");
 
-            AssertAnalysisFindsCallsTo("[System.Void, mscorlib, 4.0.0.0] [I, TestProject].M([System.Object, mscorlib, 4.0.0.0] o)");
+            AssertAnalysisFindsCallsTo("[System.Void, mscorlib, 4.0.0.0] [i:I, TestProject].M([System.Object, mscorlib, 4.0.0.0] o)");
         }
 
         [Test]
@@ -157,7 +157,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
                     }
                 }");
 
-            AssertAnalysisFindsCallsTo("[System.Void, mscorlib, 4.0.0.0] [I, TestProject].M()");
+            AssertAnalysisFindsCallsTo("[System.Void, mscorlib, 4.0.0.0] [i:I, TestProject].M()");
         }
 
         private void AssertAnalysisDoesNotFindCallTo(string methodIdentifier)

@@ -14,7 +14,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
                 list.$
             ");
 
-            var expected = TypeName.Get("System.Collections.IList, mscorlib, 4.0.0.0");
+            var expected = TypeName.Get("i:System.Collections.IList, mscorlib, 4.0.0.0");
             var actual = ResultContext.TriggerTarget;
             Assert.AreEqual(expected, actual);
         }
@@ -27,7 +27,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
                 list.Add$
             ");
 
-            var expected = TypeName.Get("System.Collections.IList, mscorlib, 4.0.0.0");
+            var expected = TypeName.Get("i:System.Collections.IList, mscorlib, 4.0.0.0");
             var actual = ResultContext.TriggerTarget;
             Assert.AreEqual(expected, actual);
         }
@@ -107,7 +107,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
             ");
 
             var actual = ResultContext.TriggerTarget;
-            var expected = TypeName.Get("System.Collections.IList, mscorlib, 4.0.0.0");
+            var expected = TypeName.Get("i:System.Collections.IList, mscorlib, 4.0.0.0");
             Assert.AreEqual(expected, actual);
         }
 
@@ -120,7 +120,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
             ");
 
             var actual = ResultContext.TriggerTarget;
-            var expected = TypeName.Get("System.Collections.IList, mscorlib, 4.0.0.0");
+            var expected = TypeName.Get("i:System.Collections.IList, mscorlib, 4.0.0.0");
             Assert.AreEqual(expected, actual);
         }
 
@@ -136,7 +136,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
                 }");
 
             var actual = ResultContext.TriggerTarget;
-            var expected = TypeName.Get("System.Collections.IList, mscorlib, 4.0.0.0");
+            var expected = TypeName.Get("i:System.Collections.IList, mscorlib, 4.0.0.0");
             Assert.AreEqual(expected, actual);
         }
 

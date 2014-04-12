@@ -59,43 +59,73 @@ namespace KaVE.VsFeedbackGenerator.Utils.Names
                 // TODO discuss whether this is a sensible return value
                 return Name.Get(SharedImplUtil.MISSING_DECLARATION_NAME);
             }
-            return IfElementIs<INamespace>(element, GetName, substitution) ??
-                   IfElementIs<ITypeParameter>(element, GetName, substitution) ??
-                   IfElementIs<ITypeElement>(element, GetName, substitution) ??
-                   IfElementIs<IMethod>(element, GetName, substitution) ??
-                   IfElementIs<IFunction>(element, GetName, substitution) ??
-                   IfElementIs<IParameter>(element, GetName, substitution) ??
-                   IfElementIs<IField>(element, GetName, substitution) ??
-                   IfElementIs<IProperty>(element, GetName, substitution) ??
-                   IfElementIs<IEvent>(element, GetName, substitution) ??
-                   IfElementIs<ITypeOwner>(element, GetName, substitution) ??
-                   IfElementIs<IAlias>(element, GetName, substitution) ??
+            return IfElementIs<INamespaceName, INamespace>(element, GetName, substitution) ??
+                   IfElementIs<ITypeName, ITypeParameter>(element, GetName, substitution) ??
+                   IfElementIs<ITypeName, ITypeElement>(element, GetName, substitution) ??
+                   IfElementIs<IMethodName, IFunction>(element, GetName, substitution) ??
+                   IfElementIs<IParameterName, IParameter>(element, GetName, substitution) ??
+                   IfElementIs<IFieldName, IField>(element, GetName, substitution) ??
+                   IfElementIs<IPropertyName, IProperty>(element, GetName, substitution) ??
+                   IfElementIs<IEventName, IEvent>(element, GetName, substitution) ??
+                   IfElementIs<IName, ITypeOwner>(element, GetName, substitution) ??
+                   IfElementIs<IName, IAlias>(element, GetName, substitution) ??
                    Asserts.Fail<IName>("unknown kind of declared element: {0}", element.GetType());
         }
 
-        private static IName IfElementIs<TE>(IDeclaredElement element,
-            DeclaredElementToName<TE> map,
+        private static TN IfElementIs<TN, TE>(IDeclaredElement element,
+            DeclaredElementToName<TN, TE> map,
             ISubstitution substitution)
             where TE : class, IDeclaredElement
+            where TN : class, IName
         {
             var specificElement = element as TE;
             return specificElement != null ? map(specificElement, substitution) : null;
         }
 
-        private delegate IName DeclaredElementToName<in TE>(TE element, ISubstitution substitution)
-            where TE : class, IDeclaredElement;
+        private delegate TN DeclaredElementToName<out TN, in TE>(TE element, ISubstitution substitution)
+            where TE : class, IDeclaredElement
+            where TN : class, IName;
 
         [NotNull]
         private static ITypeName GetName(this ITypeElement typeElement, ISubstitution substitution)
         {
-            // TODO add the type kind (struct, enum, class, ...) to the name information?
-            //var typeElementIdentifier = typeElement.toString();
-            //var typeKind = typeElementIdentifier.SubString(1, typeElementIdentifier.IndexOf(':') - 1);
-            return TypeName.Get(typeElement.GetAssemblyQualifiedName(substitution));
+            return IfElementIs<ITypeName, IDelegate>(typeElement, GetName, substitution) ??
+                   IfElementIs<ITypeName, IEnum>(typeElement, GetName, substitution) ??
+                   IfElementIs<ITypeName, IInterface>(typeElement, GetName, substitution) ??
+                   IfElementIs<ITypeName, IStruct>(typeElement, GetName, substitution) ??
+                   TypeName.Get(typeElement.GetAssemblyQualifiedName(substitution));
         }
 
         [NotNull]
-        private static IName GetName(this ITypeParameter typeParameter, ISubstitution substitution)
+        private static ITypeName GetName(this IDelegate delegateElement, ISubstitution substitution)
+        {
+            return TypeName.Get("d:" + delegateElement.GetAssemblyQualifiedName(substitution));
+        }
+
+        [NotNull]
+        private static ITypeName GetName(this IEnum enumElement, ISubstitution substitution)
+        {
+            return TypeName.Get("e:" + enumElement.GetAssemblyQualifiedName(substitution));
+        }
+
+        [NotNull]
+        private static ITypeName GetName(this IInterface interfaceElement, ISubstitution substitution)
+        {
+            return TypeName.Get("i:" + interfaceElement.GetAssemblyQualifiedName(substitution));
+        }
+
+        [NotNull]
+        private static ITypeName GetName(this IStruct structElement, ISubstitution substitution)
+        {
+            var structName = structElement.GetAssemblyQualifiedName(substitution);
+            var typeNameCandidate = TypeName.Get(structName);
+            // predefined structs are recognized as such without flagging them
+            var isPredefinedStruct = typeNameCandidate.IsStructType;
+            return isPredefinedStruct ? typeNameCandidate : TypeName.Get("s:" + structName);
+        }
+
+        [NotNull]
+        private static ITypeName GetName(this ITypeParameter typeParameter, ISubstitution substitution)
         {
             return TypeParameterName.Get(
                 typeParameter.ShortName,
@@ -129,21 +159,16 @@ namespace KaVE.VsFeedbackGenerator.Utils.Names
         }
 
         [NotNull]
-        private static IMethodName GetName(this IMethod method, ISubstitution substitution)
+        private static IMethodName GetName(this IFunction function, ISubstitution substitution)
         {
             var identifier = new StringBuilder();
-            identifier.Append(method.GetMemberIdentifier(substitution, method.ReturnType));
-            identifier.Append(method.GetTypeParametersList(substitution));
-            identifier.AppendParameters(method, substitution);
-            return MethodName.Get(identifier.ToString());
-        }
-
-        [NotNull]
-        private static IMethodName GetName(this IFunction method, ISubstitution substitution)
-        {
-            var identifier = new StringBuilder();
-            identifier.Append(method.GetMemberIdentifier(substitution, method.ReturnType));
-            identifier.AppendParameters(method, substitution);
+            identifier.Append(function.GetMemberIdentifier(substitution, function.ReturnType));
+            var functionWithTypeParameters = function as ITypeParametersOwner;
+            if (functionWithTypeParameters != null)
+            {
+                identifier.Append(functionWithTypeParameters.GetTypeParametersList(substitution));
+            }
+            identifier.AppendParameters(function, substitution);
             return MethodName.Get(identifier.ToString());
         }
 
@@ -174,7 +199,7 @@ namespace KaVE.VsFeedbackGenerator.Utils.Names
         {
             var identifier = new StringBuilder();
             identifier.AppendIf(member.IsStatic, MemberName.StaticModifier + " ");
-            identifier.Append(member, substitution, valueType);
+            identifier.AppendMemberBase(member, substitution, valueType);
             return identifier.ToString();
         }
 
@@ -192,7 +217,7 @@ namespace KaVE.VsFeedbackGenerator.Utils.Names
             return AliasName.Get(alias.ShortName);
         }
 
-        private static void Append(this StringBuilder identifier,
+        private static void AppendMemberBase(this StringBuilder identifier,
             IClrDeclaredElement member,
             ISubstitution substitution,
             IType valueType)
@@ -214,7 +239,7 @@ namespace KaVE.VsFeedbackGenerator.Utils.Names
             ITypeElement type,
             ISubstitution substitution)
         {
-            return identifier.Append('[').Append(type.GetAssemblyQualifiedName(substitution)).Append(']');
+            return identifier.Append('[').Append(type.GetName(substitution).Identifier).Append(']');
         }
 
         [NotNull]

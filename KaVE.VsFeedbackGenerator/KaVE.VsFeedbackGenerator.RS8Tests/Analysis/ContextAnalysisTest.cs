@@ -64,7 +64,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
 
             var expected = new HashSet<ITypeHierarchy>
             {
-                new TypeHierarchy("TestNamespace.AnInterface, TestProject")
+                new TypeHierarchy("i:TestNamespace.AnInterface, TestProject")
             };
 
             Assert.AreEqual(expected, actual);
@@ -101,19 +101,19 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
                 {
                     Implements = new HashSet<ITypeHierarchy>
                     {
-                        new TypeHierarchy("N.IA, TestProject")
+                        new TypeHierarchy("i:N.IA, TestProject")
                         {
                             Implements = new HashSet<ITypeHierarchy>
                             {
-                                new TypeHierarchy("N.I0, TestProject")
+                                new TypeHierarchy("i:N.I0, TestProject")
                             }
                         }
                     }
                 },
                 Implements = new HashSet<ITypeHierarchy>
                 {
-                    new TypeHierarchy("N.IB`1[[TB -> System.Int32, mscorlib, 4.0.0.0]], TestProject"),
-                    new TypeHierarchy("N.IC, TestProject")
+                    new TypeHierarchy("i:N.IB`1[[TB -> System.Int32, mscorlib, 4.0.0.0]], TestProject"),
+                    new TypeHierarchy("i:N.IC, TestProject")
                 }
             };
             Assert.AreEqual(expected, actual);

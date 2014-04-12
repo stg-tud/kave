@@ -1,5 +1,6 @@
 ﻿using System;
 using JetBrains.ReSharper.Psi;
+using JetBrains.ReSharper.Psi.Util;
 using KaVE.JetBrains.Annotations;
 using KaVE.Model.Names;
 using KaVE.Model.Names.CSharp;

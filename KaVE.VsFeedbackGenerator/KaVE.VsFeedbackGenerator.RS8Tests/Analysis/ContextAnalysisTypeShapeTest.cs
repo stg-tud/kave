@@ -33,7 +33,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
             var actual = ResultContext.TypeShape.MethodHierarchies;
             var expected = new HashSet<MethodHierarchy>
             {
-                Decl("N.C", null, "N.I"),
+                Decl("N.C", null, "i:N.I"),
             };
 
             CollectionAssert.AreEquivalent(expected, actual);
@@ -125,7 +125,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
             var actual = ResultContext.TypeShape.MethodHierarchies;
             var expected = new HashSet<MethodHierarchy>
             {
-                Decl("N.C", "N.S", "N.I")
+                Decl("N.C", "N.S", "i:N.I")
             };
 
             CollectionAssert.AreEquivalent(expected, actual);

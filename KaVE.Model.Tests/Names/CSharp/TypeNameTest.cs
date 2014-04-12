@@ -4,73 +4,318 @@ using NUnit.Framework;
 namespace KaVE.Model.Tests.Names.CSharp
 {
     [TestFixture]
-    class TypeNameTest
+    internal class TypeNameTest
     {
         private const string TestAssemblyIdentifier = "a, 1.0.0.0";
 
         [Test]
-        public void ShouldBeSimpleTypeVoid()
+        public void ShouldBeVoidType()
         {
-            const string identifier = "System.Void, " + TestAssemblyIdentifier;
+            var uut = TypeName.Get("System.Void, mscorlib, 4.0.0.0");
 
-            var voidTypeName = TypeName.Get(identifier);
-
-            Assert.AreEqual(identifier, voidTypeName.Identifier);
-            Assert.IsTrue(voidTypeName.IsVoidType);
-            Assert.IsTrue(voidTypeName.IsValueType);
-            Assert.IsFalse(voidTypeName.IsReferenceType);
+            Assert.IsTrue(uut.IsVoidType);
         }
 
-        [Test]
-        public void ShouldBeValueTypeInt()
+        [TestCase("System.Boolean, mscorlib, 4.0.0.0"),
+         TestCase("T -> System.Int32, mscorlib, 4.0.0.0")]
+        public void ShouldNotBeVoidType(string identifier)
         {
-            const string identifier = "System.Int32, " + TestAssemblyIdentifier;
+            var uut = TypeName.Get(identifier);
 
-            var intTypeName = TypeName.Get(identifier);
-
-            Assert.AreEqual(identifier, intTypeName.Identifier);
-            Assert.IsTrue(intTypeName.IsValueType);
-            Assert.IsTrue(intTypeName.IsStructType);
-            Assert.IsFalse(intTypeName.IsNullableType);
-            Assert.IsFalse(intTypeName.IsReferenceType);
+            Assert.IsFalse(uut.IsVoidType);
         }
 
-        [Test]
-        public void ShouldBeNullableType()
+        [TestCase("System.Boolean, mscorlib, 4.0.0.0"),
+         TestCase("System.Decimal, mscorlib, 4.0.0.0"),
+         TestCase("System.SByte, mscorlib, 4.0.0.0"),
+         TestCase("System.Byte, mscorlib, 4.0.0.0"),
+         TestCase("System.Int16, mscorlib, 4.0.0.0"),
+         TestCase("System.UInt16, mscorlib, 4.0.0.0"),
+         TestCase("System.Int32, mscorlib, 4.0.0.0"),
+         TestCase("System.UInt32, mscorlib, 4.0.0.0"),
+         TestCase("System.Int64, mscorlib, 4.0.0.0"),
+         TestCase("System.UInt64, mscorlib, 4.0.0.0"),
+         TestCase("System.Char, mscorlib, 4.0.0.0"),
+         TestCase("System.Single, mscorlib, 4.0.0.0"),
+         TestCase("System.Double, mscorlib, 4.0.0.0"),
+         TestCase("T -> System.Int32, mscorlib, 4.0.0.0")]
+        public void ShouldBeSimpleType(string identifer)
         {
-            const string identifier = "System.Nullable`1[[T -> System.UInt64]], " + TestAssemblyIdentifier;
+            var uut = TypeName.Get(identifer);
 
+            Assert.IsTrue(uut.IsSimpleType);
+        }
+
+        [TestCase("System.Void, mscorlib, 4.0.0.0"),
+         TestCase("My.Custom.Type, A, 1.2.3.4"),
+         TestCase("?")]
+        public void ShouldNotBeSimpleType(string identifier)
+        {
+            var uut = TypeName.Get(identifier);
+
+            Assert.IsFalse(uut.IsSimpleType);
+        }
+
+        [TestCase("System.Nullable`1[[T -> System.UInt64, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0"),
+         TestCase("T -> System.Nullable`1[[T -> System.UInt64, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0")]
+        public void ShouldBeNullableType(string identifier)
+        {
             var nullableTypeName = TypeName.Get(identifier);
 
-            Assert.AreEqual(identifier, nullableTypeName.Identifier);
             Assert.IsTrue(nullableTypeName.IsNullableType);
-            Assert.IsTrue(nullableTypeName.IsStructType);
-            Assert.IsTrue(nullableTypeName.IsValueType);
-            Assert.IsFalse(nullableTypeName.IsReferenceType);
+        }
+
+        [TestCase("System.UInt64, mscorlib, 4.0.0.0"),
+         TestCase("A.Type, B, 5.6.7.8"),
+         TestCase("?")]
+        public void ShouldNotBeNullableType(string identifier)
+        {
+            var uut = TypeName.Get(identifier);
+
+            Assert.IsFalse(uut.IsNullableType);
+        }
+
+
+        [TestCase("System.Void, mscorlib, 4.0.0.0"),
+         TestCase("System.Int32, mscorlib, 4.0.0.0"),
+         TestCase("System.Nullable`1[[T -> System.Int32, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0"),
+         TestCase("s:My.Struct, A, 1.0.0.0")]
+        public void ShouldBeStructType(string identifier)
+        {
+            var uut = TypeName.Get(identifier);
+
+            Assert.IsTrue(uut.IsStructType);
+        }
+
+        [TestCase("My.Type, C, 9.0.1.2"),
+         TestCase("?")]
+        public void ShouldNotBeStructType(string identifier)
+        {
+            var uut = TypeName.Get(identifier);
+
+            Assert.IsFalse(uut.IsStructType);
         }
 
         [Test]
-        public void ObjectShouldBeClassType()
+        public void ShouldBeEnumType()
         {
-            const string identifier = "System.Object, " + TestAssemblyIdentifier;
+            var uut = TypeName.Get("e:My.EnumType, E, 3.9.5.6");
 
-            var objectTypeName = TypeName.Get(identifier);
-
-            Assert.AreEqual(identifier, objectTypeName.Identifier);
-            Assert.IsTrue(objectTypeName.IsReferenceType);
-            Assert.IsTrue(objectTypeName.IsClassType);
+            Assert.IsTrue(uut.IsEnumType);
         }
 
         [Test]
-        public void ShouldBeAReferenceType()
+        public void ShouldNotBeEnumType()
         {
-            var referenceType = TypeName.Get("my.namespace.TypeName, " + TestAssemblyIdentifier);
+            var uut = TypeName.Get("Non.Enum.Type, E, 7.9.3.5");
 
-            Assert.AreEqual("my.namespace", referenceType.Namespace.Identifier);
-            Assert.AreEqual("TypeName", referenceType.Name);
-            Assert.IsTrue(referenceType.IsReferenceType);
-            Assert.IsFalse(referenceType.IsValueType);
-            Assert.AreEqual(TestAssemblyIdentifier, referenceType.Assembly.Identifier);
+            Assert.IsFalse(uut.IsEnumType);
+        }
+
+        [TestCase("System.Int32, mscorlib, 4.0.0.0"),
+         TestCase("s:My.Struct, A, 1.0.0.0"),
+         TestCase("System.Void, mscorlib, 4.0.0.0"),
+         TestCase("e:My.Enumtype, A, 3.4.5.6"),
+         TestCase("T -> System.Boolean, mscorlib, 4.0.0.0")]
+        public void ShouldBeValueType(string identifier)
+        {
+            var uut = TypeName.Get(identifier);
+
+            Assert.IsTrue(uut.IsValueType);
+        }
+
+        [TestCase("A.ReferenceType, G, 7.8.9.0"),
+         TestCase("?")]
+        public void ShouldNotBeValueType(string identifier)
+        {
+            var uut = TypeName.Get(identifier);
+
+            Assert.IsFalse(uut.IsValueType);
+        }
+
+        [TestCase("i:Some.Interface, I, 6.5.4.3"),
+         TestCase("TI -> i:MyInterface, Is, 3.8.67.0")]
+        public void ShouldBeInterfaceType(string identifier)
+        {
+            var uut = TypeName.Get(identifier);
+
+            Assert.IsTrue(uut.IsInterfaceType);
+        }
+
+        [Test]
+        public void ShouldNotBeInterfaceType()
+        {
+            var uut = TypeName.Get("Some.Class, C, 3.2.1.0");
+
+            Assert.IsFalse(uut.IsInterfaceType);
+        }
+
+        [TestCase("ValueType[,,], As, 9.8.7.6"),
+         TestCase("ValueType[], As, 5.4.3.2"),
+         TestCase("a.Foo`1[][[T -> int, mscore, 1.0.0.0]]"),
+         TestCase("T -> A[], A, 1.2.3.4")]
+        public void ShouldBeArrayType(string identifier)
+        {
+            var arrayTypeName = TypeName.Get(identifier);
+
+            Assert.IsTrue(arrayTypeName.IsArrayType);
+        }
+
+        [Test]
+        public void ShouldHaveArrayBracesInName()
+        {
+            var uut = TypeName.Get("ValueType[,,], As, 9.8.7.6");
+
+            Assert.AreEqual("ValueType[,,]", uut.Name);
+        }
+
+        [Test]
+        public void ShouldNotBeArrayType()
+        {
+            var uut = TypeName.Get("ValueType, As, 2.5.1.6");
+
+            Assert.IsFalse(uut.IsArrayType);
+        }
+
+        [Test]
+        public void ShouldBeDelegateType()
+        {
+            var uut = TypeName.Get("d:My.Delegate.Type, D, 1.4.7.0");
+
+            Assert.IsTrue(uut.IsDelegateType);
+        }
+
+        [Test]
+        public void ShouldNotBeDelegateType()
+        {
+            var uut = TypeName.Get("My.NonDelegate.Type, ND, 6.6.6.6");
+
+            Assert.IsFalse(uut.IsDelegateType);
+        }
+
+        [TestCase(""),
+         TestCase("?"),
+         TestCase("T -> ?"),
+         TestCase("TP")]
+        public void ShouldBeUnknownType(string identifier)
+        {
+            var uut = TypeName.Get(identifier);
+
+            Assert.IsTrue(uut.IsUnknownType);
+        }
+
+        [Test]
+        public void ShouldNotBeUnknownType()
+        {
+            var uut = TypeName.Get("Some.Known.Type, A, 1.2.3.4");
+
+            Assert.IsFalse(uut.IsUnknownType);
+        }
+
+        [TestCase("System.Object, mscorlib, 4.0.0.0"),
+         TestCase("Some.Class, K, 0.9.8.7"),
+         TestCase("T -> Another.Class, F, 4.7.55.6")]
+        public void ShouldBeClassType(string identifier)
+        {
+            var uut = TypeName.Get(identifier);
+
+            Assert.IsTrue(uut.IsClassType);
+        }
+
+        [TestCase("System.Boolean, mscorlib, 4.0.0.0"),
+         TestCase("i:My.TerfaceType, Is, 2.4.6.3"),
+         TestCase("Foo[], A, 5.3.6.7"),
+         TestCase("?"),
+         TestCase("d:A.DelegateType, Ds, 6.8.5.4")]
+        public void ShouldNotBeClassType(string identifier)
+        {
+            var uut = TypeName.Get(identifier);
+
+            Assert.IsFalse(uut.IsClassType);
+        }
+
+        [TestCase("My.Namespace.TypeName, A, 3.5.7.9"),
+         TestCase("i:My.Nterface, I, 5.3.7.1"),
+         TestCase("Vt[], A, 5.2.7.8"),
+         TestCase("d:My.Delegate, D, 5.4.3.7")]
+        public void ShouldBeReferenceType(string identifier)
+        {
+            var uut = TypeName.Get(identifier);
+
+            Assert.IsTrue(uut.IsReferenceType);
+        }
+
+        [TestCase("System.Int64, mscorlib, 4.0.0.0"),
+         TestCase("?")]
+        public void ShouldNotBeReferenceType(string identifier)
+        {
+            var uut = TypeName.Get(identifier);
+
+            Assert.IsFalse(uut.IsReferenceType);
+        }
+
+        [TestCase("System.UInt16, mscorlib, 4.0.0.0", "System.UInt16"),
+         TestCase("e:Full.Enum.Type, E, 1.2.3.4", "Full.Enum.Type"),
+         TestCase("System.Nullable`1[[System.Int32, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0", "System.Nullable`1[[System.Int32, mscorlib, 4.0.0.0]]"),
+         TestCase("T -> Some.Arbitrary.Type, Assembly, 5.6.4.7", "Some.Arbitrary.Type"),
+         TestCase("Outer.Type+InnerType, As, 1.2.3.4", "Outer.Type+InnerType"),
+         TestCase("?", "?")]
+        public void ShouldDetermineFullName(string identifier, string expectedFullName)
+        {
+            var uut = TypeName.Get(identifier);
+
+            Assert.AreEqual(expectedFullName, uut.FullName);
+        }
+
+        [TestCase("System.UInt16, mscorlib, 4.0.0.0", "UInt16"),
+         TestCase("e:Full.Enum.Type, E, 1.2.3.4", "Type"),
+         TestCase("System.Nullable`1[[System.Int32, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0", "Nullable`1"),
+         TestCase("T -> Some.Arbitrary.Type, Assembly, 5.6.4.7", "Type"),
+         TestCase("Outer.Type+InnerType, As, 1.2.3.4", "InnerType"),
+         TestCase("?", "?")]
+        public void ShouldDetermineName(string identifier, string expectedName)
+        {
+            var uut = TypeName.Get(identifier);
+
+            Assert.AreEqual(expectedName, uut.Name);
+        }
+
+        [TestCase("System.UInt16, mscorlib, 4.0.0.0", "System"),
+         TestCase("e:Full.Enum.Type, E, 1.2.3.4", "Full.Enum"),
+         TestCase("System.Nullable`1[[System.Int32, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0", "System"),
+         TestCase("T -> Some.Arbitrary.Type, Assembly, 5.6.4.7", "Some.Arbitrary"),
+         TestCase("Outer.Type+InnerType, As, 1.2.3.4", "Outer.Type")]
+        public void ShouldDetermineNamspace(string identifier, string expectedNamespace)
+        {
+            var uut = TypeName.Get(identifier);
+
+            Assert.AreEqual(expectedNamespace, uut.Namespace.Identifier);
+        }
+
+        [Test]
+        public void UnknownTypeShouldNotHaveNamespace()
+        {
+            var uut = TypeName.Get("?");
+
+            Assert.IsNull(uut.Namespace);
+        }
+
+        [TestCase("System.Object, mscorlib, 4.0.0.0", "mscorlib, 4.0.0.0"),
+         TestCase("i:Some.Interface, I, 1.2.3.4", "I, 1.2.3.4"),
+         TestCase("T -> Type.Parameter, A, 1.2.3.4", "A, 1.2.3.4")]
+        public void ShouldDetermineAssembly(string identifier, string expectedAssemblyIdentifier)
+        {
+            var uut = TypeName.Get(identifier);
+
+            Assert.AreEqual(expectedAssemblyIdentifier, uut.Assembly.Identifier);
+        }
+
+        [Test]
+        public void UnknownTypeShouldNotHaveAssembly()
+        {
+            var uut = TypeName.Get("?");
+
+            Assert.IsNull(uut.Assembly);
         }
 
         [Test]
@@ -79,7 +324,9 @@ namespace KaVE.Model.Tests.Names.CSharp
             const string stringIdentifier = "S -> System.String, mscore, 4.0.0.0";
             const string intIdentifier = "I -> System.Int32, mscore, 4.0.0.0";
 
-            var parameterizedTypeName = TypeName.Get("pack.age.MyType`2[[" + stringIdentifier + "],[" + intIdentifier + "]], " + TestAssemblyIdentifier);
+            var parameterizedTypeName =
+                TypeName.Get(
+                    "pack.age.MyType`2[[" + stringIdentifier + "],[" + intIdentifier + "]], " + TestAssemblyIdentifier);
 
             Assert.AreEqual(TestAssemblyIdentifier, parameterizedTypeName.Assembly.Identifier);
             Assert.AreEqual("MyType`2", parameterizedTypeName.Name);
@@ -103,36 +350,6 @@ namespace KaVE.Model.Tests.Names.CSharp
         }
 
         [Test]
-        public void ShouldBeArrayType()
-        {
-            var arrayTypeName = TypeName.Get("ValueType[,,], " + TestAssemblyIdentifier);
-
-            Assert.IsTrue(arrayTypeName.IsArrayType);
-            Assert.IsTrue(arrayTypeName.IsReferenceType);
-            Assert.IsFalse(arrayTypeName.IsGenericType);
-            Assert.IsFalse(arrayTypeName.HasTypeParameters);
-            Assert.AreEqual("ValueType[,,]", arrayTypeName.Name);
-        }
-
-        [Test]
-        public void ShouldBeMultidimensionalArrayType()
-        {
-            var arrayTypeName = TypeName.Get("ValueType[], " + TestAssemblyIdentifier);
-
-            Assert.IsTrue(arrayTypeName.IsArrayType);
-        }
-
-        [Test]
-        public void ShouldBeParameterizedArrayType()
-        {
-            var typeName = TypeName.Get("a.Foo`1[][[T -> int, mscore, 1.0.0.0]]");
-
-            Assert.IsTrue(typeName.IsArrayType);
-            Assert.IsTrue(typeName.IsGenericType);
-            Assert.IsTrue(typeName.HasTypeParameters);
-        }
-
-        [Test]
         public void ShouldBeTopLevelType()
         {
             var typeName = TypeName.Get("this.is.a.top.level.ValueType, " + TestAssemblyIdentifier);
@@ -148,7 +365,6 @@ namespace KaVE.Model.Tests.Names.CSharp
 
             Assert.IsTrue(nestedTypeName.IsNestedType);
             Assert.AreEqual("a.p.T, " + TestAssemblyIdentifier, nestedTypeName.DeclaringType.Identifier);
-            Assert.AreEqual("a.p.T", nestedTypeName.Namespace.Identifier);
         }
 
         [Test]
@@ -156,7 +372,7 @@ namespace KaVE.Model.Tests.Names.CSharp
         {
             const string paramIdentifier = "T -> p.OP, A, 1.0.0.0";
 
-            var nestedTypeName = TypeName.Get("p.O`1+I[["+ paramIdentifier + "]], " + TestAssemblyIdentifier);
+            var nestedTypeName = TypeName.Get("p.O`1+I[[" + paramIdentifier + "]], " + TestAssemblyIdentifier);
 
             Assert.IsTrue(nestedTypeName.IsNestedType);
             Assert.IsTrue(nestedTypeName.HasTypeParameters);
@@ -177,7 +393,10 @@ namespace KaVE.Model.Tests.Names.CSharp
             const string p2Identifier = "B -> IP1, A, 1.0.0.0";
             const string p3Identifier = "C -> IP2, B, 5.1.0.9";
 
-            var nestedTypeName = TypeName.Get("p.O`1+I`2[[" + p1Identifier + "],[" + p2Identifier + "],[" + p3Identifier + "]], " + TestAssemblyIdentifier);
+            var nestedTypeName =
+                TypeName.Get(
+                    "p.O`1+I`2[[" + p1Identifier + "],[" + p2Identifier + "],[" + p3Identifier + "]], " +
+                    TestAssemblyIdentifier);
 
             Assert.IsTrue(nestedTypeName.IsNestedType);
             Assert.IsTrue(nestedTypeName.HasTypeParameters);
@@ -185,7 +404,6 @@ namespace KaVE.Model.Tests.Names.CSharp
             Assert.AreEqual(p1Identifier, nestedTypeName.TypeParameters[0].Identifier);
             Assert.AreEqual(p2Identifier, nestedTypeName.TypeParameters[1].Identifier);
             Assert.AreEqual(p3Identifier, nestedTypeName.TypeParameters[2].Identifier);
-            Assert.AreEqual("p.O`1", nestedTypeName.Namespace.Identifier);
 
             var declaringType = nestedTypeName.DeclaringType;
             Assert.IsTrue(declaringType.HasTypeParameters);
@@ -214,46 +432,14 @@ namespace KaVE.Model.Tests.Names.CSharp
         [Test]
         public void ShouldBeDeeplyNestedTypeWithLotsOfTypeParameters()
         {
-            var typeName = TypeName.Get("p.O`1+M`1+I`1[[T -> p.P1, A, 1.0.0.0],[U -> p.P2, A, 1.0.0.0],[V -> p.P3, A, 1.0.0.0]], " + TestAssemblyIdentifier);
+            var typeName =
+                TypeName.Get(
+                    "p.O`1+M`1+I`1[[T -> p.P1, A, 1.0.0.0],[U -> p.P2, A, 1.0.0.0],[V -> p.P3, A, 1.0.0.0]], " +
+                    TestAssemblyIdentifier);
 
-            Assert.AreEqual("p.O`1+M`1[[T -> p.P1, A, 1.0.0.0],[U -> p.P2, A, 1.0.0.0]], " + TestAssemblyIdentifier, typeName.DeclaringType.Identifier);
-        }
-
-        [Test]
-        public void ShouldParseFullDescriptorWithAdditionInfo()
-        {
-            const string assemblyIdentifier = "Assembly, 0.100.90.666666, PublicKeyToken=DEADBEEF";
-
-            var typeName = TypeName.Get("an.other.ValueType, " + assemblyIdentifier);
-
-            Assert.AreEqual(assemblyIdentifier, typeName.Assembly.Identifier);
-            Assert.AreEqual("an.other", typeName.Namespace.Identifier);
-            Assert.AreEqual("ValueType", typeName.Name);
-        }
-
-        [Test]
-        public void ShouldParseUnknownType()
-        {
-            var typeName = TypeName.Get("");
-
-            Assert.AreEqual("?", typeName.Identifier);
-            Assert.AreEqual("?", typeName.FullName);
-            Assert.IsNull(typeName.Namespace);
-            Assert.IsNull(typeName.Assembly);
-            Assert.IsTrue(typeName.IsUnknownType);
-            Assert.IsFalse(typeName.IsArrayType);
-            Assert.IsFalse(typeName.IsClassType);
-            Assert.IsFalse(typeName.IsDelegateType);
-            Assert.IsFalse(typeName.IsEnumType);
-            Assert.IsFalse(typeName.IsGenericType);
-            Assert.IsFalse(typeName.IsInterfaceType);
-            Assert.IsFalse(typeName.IsNestedType);
-            Assert.IsFalse(typeName.IsNullableType);
-            Assert.IsFalse(typeName.IsReferenceType);
-            Assert.IsFalse(typeName.IsSimpleType);
-            Assert.IsFalse(typeName.IsStructType);
-            Assert.IsFalse(typeName.IsValueType);
-            Assert.IsFalse(typeName.IsVoidType);
+            Assert.AreEqual(
+                "p.O`1+M`1[[T -> p.P1, A, 1.0.0.0],[U -> p.P2, A, 1.0.0.0]], " + TestAssemblyIdentifier,
+                typeName.DeclaringType.Identifier);
         }
 
         [Test]
@@ -267,37 +453,58 @@ namespace KaVE.Model.Tests.Names.CSharp
         [Test]
         public void ShouldCreateArrayTypeNameFromGenericTypeName()
         {
-            var arrayTypeName = TypeName.Get("SomeGenericType`1[[T -> System.Int32, mscore, 5.6.7.8]], A, 9.10.11.12").DeriveArrayTypeName(1);
+            var arrayTypeName =
+                TypeName.Get("SomeGenericType`1[[T -> System.Int32, mscore, 5.6.7.8]], A, 9.10.11.12")
+                        .DeriveArrayTypeName(1);
 
-            Assert.AreEqual("SomeGenericType`1[][[T -> System.Int32, mscore, 5.6.7.8]], A, 9.10.11.12", arrayTypeName.Identifier);
+            Assert.AreEqual(
+                "SomeGenericType`1[][[T -> System.Int32, mscore, 5.6.7.8]], A, 9.10.11.12",
+                arrayTypeName.Identifier);
+        }
+
+        [TestCase("TR -> System.Int32, mscorelib, 4.0.0.0"),
+         TestCase("R -> ?"),
+         TestCase("TParam")]
+        public void ShouldBeTypeParameter(string identifier)
+        {
+            var uut = TypeName.Get(identifier);
+
+            Assert.IsTrue(uut.IsTypeParameter);
+        }
+
+        [TestCase("TR -> System.Int32, mscorelib, 4.0.0.0", "TR"),
+         TestCase("R -> ?", "R"),
+         TestCase("TParam", "TParam")]
+        public void ShouldExtractTypeParameterShortName(string identifier, string expectedShortName)
+        {
+            var uut = TypeName.Get(identifier);
+
+            Assert.AreEqual(expectedShortName, uut.TypeParameterShortName);
         }
 
         [Test]
-        public void ShouldBeTypeParameter()
+        public void ShouldNotHaveTypeParameterShortName()
         {
-            var typeParameter = TypeName.Get("TR -> System.Int32, mscorelib, .4.0.0.0");
+            var uut = TypeName.Get("Non.Parameter.Type, As, 1.2.3.4");
 
-            Assert.IsTrue(typeParameter.IsTypeParameter);
-            Assert.AreEqual("TR", typeParameter.TypeParameterShortName);
-            Assert.AreEqual("System.Int32", typeParameter.FullName);
+            Assert.IsNull(uut.TypeParameterShortName);
         }
 
         [Test]
-        public void ShouldBeTypeParameterWithUnkownTargetType()
+        public void ShouldNotHaveTypeParameterType()
         {
-            var typeParameter = TypeName.Get("R -> ?");
+            var uut = TypeName.Get("Non.Parameter.Type, As, 1.2.3.4");
 
-            Assert.IsTrue(typeParameter.IsTypeParameter);
-            Assert.IsTrue(typeParameter.IsUnknownType);
+            Assert.IsNull(uut.TypeParameterType);
         }
 
-        [Test]
-        public void ShouldBeNotTypeParameter()
+        [TestCase("SomeType`1[[T -> Foo, Bar, 1.2.3.4]], A, 1.2.3.4"),
+         TestCase("System.Object, mscorlib, 4.0.0.0")]
+        public void ShouldBeNotTypeParameter(string identifier)
         {
-            var genericType = TypeName.Get("SomeType`1[[T -> Foo, Bar, 1.2.3.4]]");
+            var genericType = TypeName.Get(identifier);
 
             Assert.IsFalse(genericType.IsTypeParameter);
-            Assert.AreEqual("SomeType`1[[T -> Foo, Bar, 1.2.3.4]]", genericType.FullName);
         }
     }
 }

@@ -21,182 +21,686 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Utils
                 proposalNameIdentifier);
         }
 
-        // TODO inline test files
         [Test]
-        public void ShouldTranslateProposals()
+        public void ShouldTranslateMethodParameterProposal()
         {
-            WhenCodeCompletionIsInvokedInFile("ProofOfConcept");
+            CompleteInClass(@"
+                public void M(int param)
+                {
+                    par$
+                }");
+
+            ThenProposalCollectionContains("[System.Int32, mscorlib, 4.0.0.0] param");
+        }
+
+        [Test]
+        public void ShouldTranslateLocalVariableProposal()
+        {
+            CompleteInMethod(@"
+                var loc = ""test"";
+                loc$
+            ");
+
+            ThenProposalCollectionContains("[System.String, mscorlib, 4.0.0.0] loc");
+        }
+
+        [Test]
+        public void ShouldTranslateLoopCounterProposal()
+        {
+            CompleteInMethod(@"
+                for (var counter = 0; counter < 10; counter++)
+                {
+                    count$
+                }");
+
+            ThenProposalCollectionContains("[System.Int32, mscorlib, 4.0.0.0] counter");
+        }
+
+        [Test]
+        public void ShouldTranslateCatchExceptionProposal()
+        {
+            CompleteInMethod(@"
+                try
+                {
+                    throw new Exception();
+                }
+                catch(Exception exception)
+                {
+                    exc$
+                }");
+
+            ThenProposalCollectionContains("[System.Exception, mscorlib, 4.0.0.0] exception");
+        }
+
+        [Test]
+        public void ShouldTranslateUsingVariableProposal()
+        {
+            CompleteInMethod(@"
+                using (var usingVar = new MemoryStream())
+                {
+                    usi$
+                }");
+
+            ThenProposalCollectionContains("[System.IO.MemoryStream, mscorlib, 4.0.0.0] usingVar");
+        }
+
+        [Test]
+        public void ShouldTranslateFieldProposals()
+        {
+            CompleteInFile(@"
+                class C
+                {
+                    Object field;
+
+                    void M()
+                    {
+                        field$
+                    }
+                }");
 
             ThenProposalCollectionContains(
-                "[System.Boolean, mscorlib, 4.0.0.0] [System.Object, mscorlib, 4.0.0.0].Equals([System.Object, mscorlib, 4.0.0.0] obj)",
-                "[System.Int32, mscorlib, 4.0.0.0] [System.Object, mscorlib, 4.0.0.0].GetHashCode()",
-                "[System.Type, mscorlib, 4.0.0.0] [System.Object, mscorlib, 4.0.0.0].GetType()",
-                "[System.Object, mscorlib, 4.0.0.0] [System.Object, mscorlib, 4.0.0.0].MemberwiseClone()",
-                "[System.Void, mscorlib, 4.0.0.0] [TestTargets.SomeClass, TestProject].Method()",
-                "[System.String, mscorlib, 4.0.0.0] [System.Object, mscorlib, 4.0.0.0].ToString()");
+                "[System.Object, mscorlib, 4.0.0.0] [C, TestProject].field");
         }
 
         [Test]
-        public void ShouldTranslateVariableProposals()
+        public void ShouldTranslateMethodProposal()
         {
-            WhenCodeCompletionIsInvokedInFile("VariableProposals");
+            CompleteInFile(@"
+                class C
+                {
+                    public void M()
+                    {
+                        this.$
+                    }
+                }");
 
             ThenProposalCollectionContains(
-                "[System.Exception, mscorlib, 4.0.0.0] var_Exception",
-                "[System.Object, mscorlib, 4.0.0.0] [CodeExamples.CompletionProposals.VariableProposals, TestProject].var_Field",
-                "[System.Int32, mscorlib, 4.0.0.0] var_Index",
-                "[System.Int32, mscorlib, 4.0.0.0] var_Param",
-                "[System.String, mscorlib, 4.0.0.0] var_Str",
-                "[System.IO.MemoryStream, mscorlib, 4.0.0.0] var_Using");
+                "[System.Void, mscorlib, 4.0.0.0] [C, TestProject].M()");
         }
 
         [Test]
-        public void ShouldTranslateMethodProposals()
+        public void ShouldTranslateMethodWithReturnTypeProposal()
         {
-            WhenCodeCompletionIsInvokedInFile("MethodProposals");
+            CompleteInFile(@"
+                class C
+                {
+                    public Object M()
+                    {
+                        this.$
+                    }
+                }");
 
             ThenProposalCollectionContains(
-                "[System.Int32, mscorlib, 4.0.0.0] [CodeExamples.CompletionProposals.MethodProposals, TestProject].MyMethodWithAliasedReturnType()",
-                "[System.Void, mscorlib, 4.0.0.0] [CodeExamples.CompletionProposals.MethodProposals, TestProject].MyMethodWithOptionalParameter(opt [System.Object, mscorlib, 4.0.0.0] obj)",
-                "[System.Void, mscorlib, 4.0.0.0] [CodeExamples.CompletionProposals.MethodProposals, TestProject].MyMethodWithOutParameter(out [System.Boolean, mscorlib, 4.0.0.0] b)",
-                "[System.Void, mscorlib, 4.0.0.0] [CodeExamples.CompletionProposals.MethodProposals, TestProject].MyMethodWithParamArray(params [System.Object[], mscorlib, 4.0.0.0] objs)",
-                "[System.Void, mscorlib, 4.0.0.0] [CodeExamples.CompletionProposals.MethodProposals, TestProject].MyMethodWithParameter([System.Object, mscorlib, 4.0.0.0] param)",
-                "[System.Void, mscorlib, 4.0.0.0] [CodeExamples.CompletionProposals.MethodProposals, TestProject].MyMethodWithRefParameter(ref [System.Int32, mscorlib, 4.0.0.0] i)",
-                "[System.Object, mscorlib, 4.0.0.0] [CodeExamples.CompletionProposals.MethodProposals, TestProject].MyMethodWithReturnType()");
+                "[System.Object, mscorlib, 4.0.0.0] [C, TestProject].M()");
         }
 
         [Test]
-        public void ShouldTranslateMemberProposalsOfAllKinds()
+        public void ShouldTranslateMethodWithAliasedReturnTypeProposal()
         {
-            WhenCodeCompletionIsInvokedInFile("MemberKindProposals");
+            CompleteInFile(@"
+                class C
+                {
+                    public int M()
+                    {
+                        this.$
+                    }
+                }");
 
-            ThenProposalCollectionContains("[CodeExamples.CompletionProposals.MemberKindProposals+Delegate, TestProject] [CodeExamples.CompletionProposals.MemberKindProposals, TestProject].Event",
-                "[System.Void, mscorlib, 4.0.0.0] [CodeExamples.CompletionProposals.MemberKindProposals, TestProject].Method([System.Object, mscorlib, 4.0.0.0] param)",
-                "set get [System.Int32, mscorlib, 4.0.0.0] [CodeExamples.CompletionProposals.MemberKindProposals, TestProject].Property()",
-                "get [System.Object, mscorlib, 4.0.0.0] [CodeExamples.CompletionProposals.MemberKindProposals, TestProject].Item([System.Int32, mscorlib, 4.0.0.0] i)",
-                "[System.String, mscorlib, 4.0.0.0] [CodeExamples.CompletionProposals.MemberKindProposals, TestProject]._field");
+            ThenProposalCollectionContains(
+                "[System.Int32, mscorlib, 4.0.0.0] [C, TestProject].M()");
         }
 
         [Test]
-        public void ShouldTranslateGenericTypeProposals()
+        public void ShouldTranslateMethodWithParameterProposal()
         {
-            WhenCodeCompletionIsInvokedInFile("GenericTypeProposals");
+            CompleteInFile(@"
+                class C
+                {
+                    public void M(Object p)
+                    {
+                        this.$
+                    }
+                }");
 
-            ThenProposalCollectionContains("[System.Void, mscorlib, 4.0.0.0] [CodeExamples.CompletionProposals.GenericTypeProposals`1[[T -> T]], TestProject].TriggerCompletionHerein[[A -> A]]([A] param)",
-                "[System.Collections.Generic.IList`1[[T -> CodeExamples.CompletionProposals.GenericTypeProposals`1[[T -> System.Collections.Generic.IList`1[[T -> System.String, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0]], TestProject]], mscorlib, 4.0.0.0] [CodeExamples.CompletionProposals.GenericTypeProposals`1[[T -> T]], TestProject]._complexList",
-                "[System.Collections.Generic.IDictionary`2[[TKey -> System.String, mscorlib, 4.0.0.0],[TValue -> System.Object, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0] [CodeExamples.CompletionProposals.GenericTypeProposals`1[[T -> T]], TestProject]._dictionary",
-                "[System.Nullable`1[[T -> System.Int32, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0] [CodeExamples.CompletionProposals.GenericTypeProposals`1[[T -> T]], TestProject]._nullableInt",
-                "[System.Collections.Generic.IList`1[[T -> System.String, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0] [CodeExamples.CompletionProposals.GenericTypeProposals`1[[T -> T]], TestProject]._simpleList",
-                "[T] [CodeExamples.CompletionProposals.GenericTypeProposals`1[[T -> T]], TestProject].GetT()");
+            ThenProposalCollectionContains(
+                "[System.Void, mscorlib, 4.0.0.0] [C, TestProject].M([System.Object, mscorlib, 4.0.0.0] p)");
+        }
+
+        [Test]
+        public void ShouldTranslateMethodWithRefParameterProposal()
+        {
+            CompleteInFile(@"
+                class C
+                {
+                    public void M(ref int i)
+                    {
+                        this.$
+                    }
+                }");
+
+            ThenProposalCollectionContains(
+                "[System.Void, mscorlib, 4.0.0.0] [C, TestProject].M(ref [System.Int32, mscorlib, 4.0.0.0] i)");
+        }
+
+        [Test]
+        public void ShouldTranslateMethodWithOutParameterProposal()
+        {
+            CompleteInFile(@"
+                class C
+                {
+                    public void M(out bool b)
+                    {
+                        this.$
+                    }
+                }");
+
+            ThenProposalCollectionContains(
+                "[System.Void, mscorlib, 4.0.0.0] [C, TestProject].M(out [System.Boolean, mscorlib, 4.0.0.0] b)");
+        }
+
+        [Test]
+        public void ShouldTranslateMethodVarArgsParameterProposal()
+        {
+            CompleteInFile(@"
+                class C
+                {
+                    public void M(params Object[] objs)
+                    {
+                        this.$
+                    }
+                }");
+
+            ThenProposalCollectionContains(
+                "[System.Void, mscorlib, 4.0.0.0] [C, TestProject].M(params [System.Object[], mscorlib, 4.0.0.0] objs)");
+        }
+
+        [Test]
+        public void ShouldTranslateMethodWithOptionalProposals()
+        {
+            CompleteInFile(@"
+                class C
+                {
+                    public void M(Object obj = null)
+                    {
+                        this.$
+                    }
+                }");
+
+            ThenProposalCollectionContains(
+                "[System.Void, mscorlib, 4.0.0.0] [C, TestProject].M(opt [System.Object, mscorlib, 4.0.0.0] obj)");
+        }
+
+        [Test]
+        public void ShouldTranslateEventProposal()
+        {
+            CompleteInFile(@"
+                public class C
+                {
+                    public delegate void Delegate(object obj);
+                    public event Delegate Event;
+
+                    public void M()
+                    {
+                        this.$
+                    }
+                }");
+
+            ThenProposalCollectionContains("[d:C+Delegate, TestProject] [C, TestProject].Event");
+        }
+
+        [Test]
+        public void ShouldTranslatePropertyWithGetterAndSetterProposal()
+        {
+            CompleteInFile(@"
+                public class C
+                {
+                    public int Property { get; set; }
+
+                    public void M()
+                    {
+                        this.$
+                    }
+                }");
+
+            ThenProposalCollectionContains(
+                "set get [System.Int32, mscorlib, 4.0.0.0] [C, TestProject].Property()");
+        }
+
+        [Test]
+        public void ShouldTranslatePropertyWithGetterProposal()
+        {
+            CompleteInFile(@"
+                public class C
+                {
+                    public int Property { get { return 0; } }
+
+                    public void M()
+                    {
+                        this.$
+                    }
+                }");
+
+            ThenProposalCollectionContains(
+                "get [System.Int32, mscorlib, 4.0.0.0] [C, TestProject].Property()");
+        }
+
+        [Test]
+        public void ShouldTranslatePropertyWithSetterProposal()
+        {
+            CompleteInFile(@"
+                public class C
+                {
+                    public int Property { set {} }
+
+                    public void M()
+                    {
+                        this.$
+                    }
+                }");
+
+            ThenProposalCollectionContains(
+                "set [System.Int32, mscorlib, 4.0.0.0] [C, TestProject].Property()");
+        }
+
+        [Test]
+        public void ShouldTranslateIndexerProposal()
+        {
+            CompleteInFile(@"
+                public class C
+                {
+                    public object this[int i]
+                    {
+                        get { return this; }
+                    }
+
+                    public void M()
+                    {
+                        this.$
+                    }
+                }");
+
+            ThenProposalCollectionContains(
+                "get [System.Object, mscorlib, 4.0.0.0] [C, TestProject].Item([System.Int32, mscorlib, 4.0.0.0] i)");
+        }
+
+        [Test]
+        public void ShouldTranslateMethodWithOwnTypeParameter()
+        {
+            CompleteInFile(@"
+                class C
+                {
+                    public void M<T>(T p)
+                    {
+                        this.$
+                    }
+                }");
+
+            ThenProposalCollectionContains("[System.Void, mscorlib, 4.0.0.0] [C, TestProject].M[[T -> T]]([T] p)");
+        }
+
+        [Test]
+        public void ShouldTranslateTypeWithNestedTypeParameters()
+        {
+            CompleteInFile(@"
+                class C<T>
+                {
+                    void M(IList<C<IList<string>>> l)
+                    {
+                        l$
+                    }
+                }");
+
+            ThenProposalCollectionContains(
+                "[i:System.Collections.Generic.IList`1[[T -> C`1[[T -> i:System.Collections.Generic.IList`1[[T -> System.String, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0]], TestProject]], mscorlib, 4.0.0.0] l");
+        }
+
+        [Test]
+        public void ShouldTranslateTypeWithMultipleTypeParameters()
+        {
+            CompleteInMethod(@"
+                IDictionary<string, object> d;
+                d$
+            ");
+
+            ThenProposalCollectionContains(
+                "[i:System.Collections.Generic.IDictionary`2[[TKey -> System.String, mscorlib, 4.0.0.0],[TValue -> System.Object, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0] d");
+        }
+
+        [Test]
+        public void ShouldTranslateNullableTypeAlias()
+        {
+            CompleteInClass(@"
+                void M(int? i)
+                {
+                    i$
+                }");
+
+            ThenProposalCollectionContains(
+                "[System.Nullable`1[[T -> System.Int32, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0] i");
+        }
+
+        [Test]
+        public void ShouldTranslateGenericType()
+        {
+            CompleteInMethod(@"
+                IList<string> l;
+                l$
+            ");
+
+            ThenProposalCollectionContains("[i:System.Collections.Generic.IList`1[[T -> System.String, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0] l");
+        }
+
+        [Test]
+        public void ShouldTranslateMethodWithTypeParameterFromEnclosingType()
+        {
+            CompleteInFile(@"
+                class C<T>
+                {
+                    private T GetT()
+                    {
+                        this.$
+                    }
+                }");
+
+            ThenProposalCollectionContains(
+                "[T] [C`1[[T -> T]], TestProject].GetT()");
         }
 
         [Test]
         public void ShouldTranslateProposalWithInstantiatedTypeParameters()
         {
-            WhenCodeCompletionIsInvokedInFile("GenericTypeInstanceProposals");
+            CompleteInMethod(@"
+                IDictionary<string, object> dict;
+                dict.$
+            ");
 
-            ThenProposalCollectionContains("[System.Void, mscorlib, 4.0.0.0] [System.Collections.Generic.IDictionary`2[[TKey -> System.String, mscorlib, 4.0.0.0],[TValue -> System.Object, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0].Add([TKey] key, [TValue] value)",
-                "[System.Void, mscorlib, 4.0.0.0] [System.Collections.Generic.ICollection`1[[T -> System.Collections.Generic.KeyValuePair`2[[TKey -> System.String, mscorlib, 4.0.0.0],[TValue -> System.Object, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0].Clear()",
-                "[System.Boolean, mscorlib, 4.0.0.0] [System.Collections.Generic.ICollection`1[[T -> System.Collections.Generic.KeyValuePair`2[[TKey -> System.String, mscorlib, 4.0.0.0],[TValue -> System.Object, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0].Contains([T] item)",
-                "[System.Boolean, mscorlib, 4.0.0.0] [System.Collections.Generic.IDictionary`2[[TKey -> System.String, mscorlib, 4.0.0.0],[TValue -> System.Object, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0].ContainsKey([TKey] key)",
-                "[System.Void, mscorlib, 4.0.0.0] [System.Collections.Generic.ICollection`1[[T -> System.Collections.Generic.KeyValuePair`2[[TKey -> System.String, mscorlib, 4.0.0.0],[TValue -> System.Object, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0].CopyTo([T[]] array, [System.Int32, mscorlib, 4.0.0.0] arrayIndex)",
-                "get [System.Int32, mscorlib, 4.0.0.0] [System.Collections.Generic.ICollection`1[[T -> System.Collections.Generic.KeyValuePair`2[[TKey -> System.String, mscorlib, 4.0.0.0],[TValue -> System.Object, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0].Count()",
-                "[System.Collections.Generic.IEnumerator`1[[T -> T]], mscorlib, 4.0.0.0] [System.Collections.Generic.IEnumerable`1[[T -> System.Collections.Generic.KeyValuePair`2[[TKey -> System.String, mscorlib, 4.0.0.0],[TValue -> System.Object, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0].GetEnumerator()",
-                "get [System.Boolean, mscorlib, 4.0.0.0] [System.Collections.Generic.ICollection`1[[T -> System.Collections.Generic.KeyValuePair`2[[TKey -> System.String, mscorlib, 4.0.0.0],[TValue -> System.Object, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0].IsReadOnly()",
-                "get [System.Collections.Generic.ICollection`1[[T -> TKey]], mscorlib, 4.0.0.0] [System.Collections.Generic.IDictionary`2[[TKey -> System.String, mscorlib, 4.0.0.0],[TValue -> System.Object, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0].Keys()",
-                "[System.Boolean, mscorlib, 4.0.0.0] [System.Collections.Generic.IDictionary`2[[TKey -> System.String, mscorlib, 4.0.0.0],[TValue -> System.Object, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0].Remove([TKey] key)",
-                "[System.Boolean, mscorlib, 4.0.0.0] [System.Collections.Generic.IDictionary`2[[TKey -> System.String, mscorlib, 4.0.0.0],[TValue -> System.Object, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0].TryGetValue([TKey] key, out [TValue] value)",
-                "get [System.Collections.Generic.ICollection`1[[T -> TValue]], mscorlib, 4.0.0.0] [System.Collections.Generic.IDictionary`2[[TKey -> System.String, mscorlib, 4.0.0.0],[TValue -> System.Object, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0].Values()",
-                "set get [TValue] [System.Collections.Generic.IDictionary`2[[TKey -> System.String, mscorlib, 4.0.0.0],[TValue -> System.Object, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0].Item([TKey] key)");
+            ThenProposalCollectionContains(
+                "[System.Void, mscorlib, 4.0.0.0] [i:System.Collections.Generic.IDictionary`2[[TKey -> System.String, mscorlib, 4.0.0.0],[TValue -> System.Object, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0].Add([TKey] key, [TValue] value)",
+                "get [System.Int32, mscorlib, 4.0.0.0] [i:System.Collections.Generic.ICollection`1[[T -> s:System.Collections.Generic.KeyValuePair`2[[TKey -> System.String, mscorlib, 4.0.0.0],[TValue -> System.Object, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0].Count()",
+                "get [i:System.Collections.Generic.ICollection`1[[T -> TKey]], mscorlib, 4.0.0.0] [i:System.Collections.Generic.IDictionary`2[[TKey -> System.String, mscorlib, 4.0.0.0],[TValue -> System.Object, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0].Keys()",
+                "get [i:System.Collections.Generic.ICollection`1[[T -> TValue]], mscorlib, 4.0.0.0] [i:System.Collections.Generic.IDictionary`2[[TKey -> System.String, mscorlib, 4.0.0.0],[TValue -> System.Object, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0].Values()",
+                "set get [TValue] [i:System.Collections.Generic.IDictionary`2[[TKey -> System.String, mscorlib, 4.0.0.0],[TValue -> System.Object, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0].Item([TKey] key)");
         }
 
         [Test]
-        public void ShouldTranslateStaticMembers()
+        public void ShouldTranslateStaticConstantProposal()
         {
-            WhenCodeCompletionIsInvokedInFile("StaticMemberProposals");
+            CompleteInFile(@"
+                public class C
+                {
+                    public const string Constant = ""constant"";
 
-            ThenProposalCollectionContains("static [System.String, mscorlib, 4.0.0.0] [CodeExamples.CompletionProposals.StaticMemberProposals, TestProject].Constant",
-                "CodeExamples.CompletionProposals.StaticMemberProposals+Nested, TestProject",
-                "static [System.Boolean, mscorlib, 4.0.0.0] [CodeExamples.CompletionProposals.StaticMemberProposals, TestProject].StaticMethod()",
-                "static [System.String, mscorlib, 4.0.0.0] [CodeExamples.CompletionProposals.StaticMemberProposals, TestProject]._field");
+                    public void M()
+                    {
+                        C.$
+                    }
+                }");
+
+            ThenProposalCollectionContains("static [System.String, mscorlib, 4.0.0.0] [C, TestProject].Constant");
+        }
+
+        [Test]
+        public void ShouldTranslateNestedTypeProposal()
+        {
+            CompleteInFile(@"
+                public class C
+                {
+                    public class N { }
+
+                    public void M()
+                    {
+                        C.$
+                    }
+                }");
+
+            ThenProposalCollectionContains("C+N, TestProject");
+        }
+
+        [Test]
+        public void ShouldTranslateStaticMethodProposal()
+        {
+            CompleteInFile(@"
+                public class C
+                {
+                    public static bool M()
+                    {
+                        C.$
+                    }
+                }");
+
+            ThenProposalCollectionContains("static [System.Boolean, mscorlib, 4.0.0.0] [C, TestProject].M()");
+        }
+
+        [Test]
+        public void ShouldTranslateStaticFieldProposal()
+        {
+            CompleteInFile(@"
+                public class C
+                {
+                    static string _field;
+
+                    public static bool M()
+                    {
+                        C.$
+                    }
+                }");
+
+            ThenProposalCollectionContains("static [System.String, mscorlib, 4.0.0.0] [C, TestProject]._field");
         }
 
         [Test]
         public void ShouldTranslateNamespaceProposals()
         {
-            WhenCodeCompletionIsInvokedInFile("NamespaceProposals");
+            CompleteInFile(@"
+                namespace N
+                {
+                    public class C
+                    {
+                        public void M()
+                        {
+                            N.$
+                        }
+                    }
 
-            ThenProposalCollectionContains("CodeExamples.CompletionProposals.SubNamespace");
+                    namespace M
+                    {
+                    }
+                }");
+
+            ThenProposalCollectionContains("N.M");
         }
 
         [Test]
-        public void ShouldTranslateNewInstanceProposals()
+        public void ShouldTranslateConstructorWithoutArgsProposal()
         {
-            WhenCodeCompletionIsInvokedInFile("NewInstanceProposals");
+            CompleteInFile(@"
+                public class C
+                {
+                    public C() {}
 
-            ThenProposalCollectionContains("[CodeExamples.CompletionProposals.ClassWithArgsConstructor, TestProject] [CodeExamples.CompletionProposals.ClassWithArgsConstructor, TestProject]..ctor()",
-                "[CodeExamples.CompletionProposals.ClassWithExplicitNoArgsConstructor, TestProject] [CodeExamples.CompletionProposals.ClassWithExplicitNoArgsConstructor, TestProject]..ctor()",
-                "[CodeExamples.CompletionProposals.ClassWithImplicitConstructor, TestProject] [CodeExamples.CompletionProposals.ClassWithImplicitConstructor, TestProject]..ctor()",
-                "[CodeExamples.CompletionProposals.NewInstanceProposals, TestProject] [CodeExamples.CompletionProposals.NewInstanceProposals, TestProject]..ctor()",
-                "[CodeExamples.CompletionProposals.Struct, TestProject] [CodeExamples.CompletionProposals.Struct, TestProject]..ctor()");
+                    public void M()
+                    {
+                        new C$
+                    }
+                }");
+
+            ThenProposalCollectionContains("[C, TestProject] [C, TestProject]..ctor()");
+        }
+
+        [Test]
+        public void ShouldTranslateConstructorWithArgsProposal()
+        {
+            CompleteInFile(@"
+                public class C
+                {
+                    public C(object o) {}
+
+                    public void M()
+                    {
+                        new C$
+                    }
+                }");
+
+            ThenProposalCollectionContains("[C, TestProject] [C, TestProject]..ctor()");
+        }
+
+        [Test]
+        public void ShouldTranslateImplicitConstructorProposal()
+        {
+            CompleteInFile(@"
+                public class C
+                {
+                    public void M()
+                    {
+                        new C$
+                    }
+                }");
+
+            ThenProposalCollectionContains("[C, TestProject] [C, TestProject]..ctor()");
+        }
+
+        [Test]
+        public void ShouldTranslateConstructorOfGenericTypeProposal1()
+        {
+            CompleteInFile(@"
+                public class MyTestClass<T>
+                {
+                    public void M()
+                    {
+                        new MyTestC$
+                    }
+                }");
+
+            // completion proposes the generic type instead of the constructor in this case
+            ThenProposalCollectionContains("MyTestClass`1[[T -> T]], TestProject");
+        }
+
+        [Test]
+        public void ShouldTranslateConstructorOfGenericTypeProposal2()
+        {
+            CompleteInFile(@"
+                public class MyTestClass<T>
+                {
+                    public void M()
+                    {
+                        new MyTestClass<int>$
+                    }
+                }");
+
+            // completion proposes the generic type instead of the constructor in this case
+            ThenProposalCollectionContains("MyTestClass`1[[T -> T]], TestProject");
+        }
+
+        [Test]
+        public void ShouldTranslateStructConstructorProposal()
+        {
+            CompleteInFile(@"
+                public class C
+                {
+                    public void M()
+                    {
+                        new SomeS$
+                    }
+                }
+
+                public struct SomeStruct
+                {
+                    public SomeStruct() {}
+                }
+            ");
+
+            ThenProposalCollectionContains(
+                "[s:SomeStruct, TestProject] [s:SomeStruct, TestProject]..ctor()");
         }
 
         [Test]
         public void ShouldTranslateNewArrayInstanceProposals()
         {
-            WhenCodeCompletionIsInvokedInFile("NewArrayInstanceProposals");
+            CompleteInFile(@"
+                public class C
+                {
+                    public void M()
+                    {
+                        C[] props = new$
+                    }
+                }");
 
-            ThenProposalCollectionContains("CombinedLookupItem:new NewArrayInstanceProposals[]",
+            ThenProposalCollectionContains(
+                "CombinedLookupItem:new C[]",
                 "CombinedLookupItem:new [] { }");
         }
 
         [Test]
         public void ShouldTranslateArrayTypeProposals()
         {
-            WhenCodeCompletionIsInvokedInFile("ArrayTypeProposals");
+            CompleteInFile(@"
+                public class C
+                {
+                    private string[] myStringArray;
+                    private object[,,] myMultidimensionalArray;
+                    private object[][][] myJaggedArray;
 
-            ThenProposalCollectionContains("[System.Object[][][], mscorlib, 4.0.0.0] [CodeExamples.CompletionProposals.ArrayTypeProposals, TestProject].myJaggedArray",
-                "[System.Void, mscorlib, 4.0.0.0] [CodeExamples.CompletionProposals.ArrayTypeProposals, TestProject].myMethod[[R -> R]]([R[]] p)",
-                "[System.Object[,,], mscorlib, 4.0.0.0] [CodeExamples.CompletionProposals.ArrayTypeProposals, TestProject].myMultidimensionalArray",
-                "[System.String[], mscorlib, 4.0.0.0] [CodeExamples.CompletionProposals.ArrayTypeProposals, TestProject].myStringArray");
-        }
+                    private void myMethod<R>(R[] p) {}
 
-        [Test]
-        public void ShouldTranslateProposalsFromUncompilableFile()
-        {
-            WhenCodeCompletionIsInvokedInFile("UncompilableFileProposals");
+                    public void TriggerCompletionHerein()
+                    {
+                        this.my$
+                    }
+                }");
 
-            ThenProposalCollectionContains("[System.Void, mscorlib, 4.0.0.0] [CodeExamples.CompletionProposals.UncompilableFileProposals, TestProject].Method()");
+            ThenProposalCollectionContains(
+                "[System.Object[][][], mscorlib, 4.0.0.0] [C, TestProject].myJaggedArray",
+                "[System.Void, mscorlib, 4.0.0.0] [C, TestProject].myMethod[[R -> R]]([R[]] p)",
+                "[System.Object[,,], mscorlib, 4.0.0.0] [C, TestProject].myMultidimensionalArray",
+                "[System.String[], mscorlib, 4.0.0.0] [C, TestProject].myStringArray");
         }
 
         [Test]
         public void ShouldTranslateProposalsForOverloadedMethod()
         {
-            WhenCodeCompletionIsInvokedInFile("MethodOverloadProposals");
+            CompleteInFile(@"
+                public class C
+                {
+                    public void M()
+                    {
+                        this.MyMeth$
+                    }
+
+                    private void MyMethod(int i) { }
+                    private void MyMethod() {}
+                    private void MyMethod(string s) {}
+                }");
 
             // Actually, for overloaded methods only one proposal shows up in the completion list, which is
             // by default showing the "first" overloading. When it is selected, one can cycle through the
             // overloads.
-            ThenProposalCollectionContains("[System.Void, mscorlib, 4.0.0.0] [CodeExamples.CompletionProposals.MethodOverloadProposals, TestProject].MyMethod([System.Int32, mscorlib, 4.0.0.0] i)");
+            ThenProposalCollectionContains(
+                "[System.Void, mscorlib, 4.0.0.0] [C, TestProject].MyMethod([System.Int32, mscorlib, 4.0.0.0] i)");
         }
 
         [Test]
-        public void ShouldTranslateClassLevelProposals()
+        public void ShouldTranslateOverrideProposals()
         {
-            WhenCodeCompletionIsInvokedInFile("ClassLevelProposals");
+            CompleteInClass(@"
+                Equa$
+            ");
 
-            ThenProposalCollectionContains("System.IEquatable`1[[T -> T]], mscorlib, 4.0.0.0",
-                "CombinedLookupItem:public override Equals(object) { ... }",
-                "System.Collections.Generic.EqualityComparer`1[[T -> T]], mscorlib, 4.0.0.0",  
-                "System.Collections.IEqualityComparer, mscorlib, 4.0.0.0",
-                "System.Collections.Generic.IEqualityComparer`1[[T -> T]], mscorlib, 4.0.0.0",
-                "System.Collections.IStructuralEquatable, mscorlib, 4.0.0.0");
+            ThenProposalCollectionContains("CombinedLookupItem:public override Equals(object) { ... }");
         }
 
         [Test]
         public void ShouldTranslateMethodWithTypeParametersProposals()
         {
-            WhenCodeCompletionIsInvokedInFile("MethodWithTypeParametersProposals");
+            CompleteInFile(@"namespace N
+                {
+                    class C
+                    {
+                        public void M1<T>(T t)
+                        {
+                            $
+                        }
+                    }
+                }");
 
             ThenProposalCollectionContains("[System.Void, mscorlib, 4.0.0.0] [N.C, TestProject].M1[[T -> T]]([T] t)");
         }
@@ -209,6 +713,83 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Utils
             ");
 
             ThenProposalCollectionContains("[?] [?].v");
+        }
+
+        [Test]
+        public void ShouldFlagEnumTypesAsSuch()
+        {
+            CompleteInFile(@"
+                enum MyEnum
+                {
+                    EnumValue
+                }
+                
+                class C
+                {
+                    void M()
+                    {
+                        MyEnum.$
+                    }
+                }");
+
+            ThenProposalCollectionContains("static [e:MyEnum, TestProject] [e:MyEnum, TestProject].EnumValue");
+        }
+
+        [Test]
+        public void ShouldFlagInterfaceTypesAsSuch()
+        {
+            CompleteInFile(@"
+                interface MyInterface
+                {
+                    public void M();
+                }
+                
+                class C
+                {
+                    void M(MyInterface i)
+                    {
+                        i.$
+                    }
+                }");
+
+            ThenProposalCollectionContains("[System.Void, mscorlib, 4.0.0.0] [i:MyInterface, TestProject].M()");
+        }
+
+        [Test]
+        public void ShouldFlagCustomStructAsSuch()
+        {
+            CompleteInFile(@"
+                struct MyStruct
+                {
+                    public int i;
+                }
+                
+                class C
+                {
+                    void M(MyStruct s)
+                    {
+                        s.$
+                    }
+                }");
+
+            ThenProposalCollectionContains("[System.Int32, mscorlib, 4.0.0.0] [s:MyStruct, TestProject].i");
+        }
+
+        [Test]
+        public void ShouldFlagDelegateAsSuch()
+        {
+            CompleteInFile(@"
+                class C
+                {
+                    delegate void D(int i);
+                    
+                    void M(D d)
+                    {
+                        d.$
+                    }
+                }");
+
+            ThenProposalCollectionContains("[System.Void, mscorlib, 4.0.0.0] [d:C+D, TestProject].Invoke([System.Int32, mscorlib, 4.0.0.0] i)");
         }
 
         // Test cases for keywords (e.g., private), templates (e.g., for), and

@@ -80,13 +80,7 @@ namespace KaVE.Model.Names.CSharp
             return Get(fullName + ", " + assemblyName);
         }
 
-        private TypeName(string identifier, bool isStruct = false, bool isEnum = false, bool isInterface = false)
-            : base(identifier)
-        {
-            IsCustomStruct = isStruct;
-            IsEnumType = isEnum;
-            IsInterfaceType = isInterface;
-        }
+        private TypeName(string identifier) : base(identifier) {}
 
         public bool IsUnknownType
         {
@@ -98,7 +92,13 @@ namespace KaVE.Model.Names.CSharp
             get
             {
                 var length = EndOfTypeName - StartOfTypeName;
-                return Identifier.Substring(StartOfTypeName, length);
+                var fullName = Identifier.Substring(StartOfTypeName, length);
+                var indexOfColon = fullName.IndexOf(":", StringComparison.Ordinal);
+                if (indexOfColon > -1)
+                {
+                    fullName = fullName.Substring(indexOfColon + 1);
+                }
+                return fullName;
             }
         }
 
@@ -146,8 +146,8 @@ namespace KaVE.Model.Names.CSharp
                 {
                     return null;
                 }
-                var endOfTypeIdentifier = FullName.Length;
-                var assemblyIdentifier = Identifier.Substring(endOfTypeIdentifier).Trim(new[] {' ', ','});
+                var endOfTypeName = EndOfTypeName;
+                var assemblyIdentifier = Identifier.Substring(endOfTypeName).Trim(new[] {' ', ','});
                 return AssemblyName.Get(assemblyIdentifier);
             }
         }
@@ -171,6 +171,11 @@ namespace KaVE.Model.Names.CSharp
             get
             {
                 var rawFullName = RawFullName;
+                var endOfOutTypeName = rawFullName.LastIndexOf('+');
+                if (endOfOutTypeName > -1)
+                {
+                    rawFullName = rawFullName.Substring(endOfOutTypeName + 1);
+                }
                 var startIndexOfSimpleName = rawFullName.LastIndexOf('.');
                 return rawFullName.Substring(startIndexOfSimpleName + 1);
             }
@@ -239,10 +244,10 @@ namespace KaVE.Model.Names.CSharp
 
         public bool IsStructType
         {
-            get { return IsCustomStruct || IsSimpleType || IsNullableType; }
+            get { return IsCustomStruct || IsSimpleType || IsNullableType || IsVoidType; }
         }
 
-        private bool IsCustomStruct { get; set; }
+        private bool IsCustomStruct { get { return Identifier.StartsWith("s:"); } }
 
         public bool IsSimpleType
         {
@@ -285,7 +290,7 @@ namespace KaVE.Model.Names.CSharp
             }
         }
 
-        public bool IsEnumType { get; private set; }
+        public bool IsEnumType { get { return Identifier.StartsWith("e:"); } }
 
         public bool IsNullableType
         {
@@ -302,7 +307,7 @@ namespace KaVE.Model.Names.CSharp
             get { return !IsValueType && !IsInterfaceType && !IsArrayType && !IsDelegateType && !IsUnknownType; }
         }
 
-        public bool IsInterfaceType { get; private set; }
+        public bool IsInterfaceType { get { return Identifier.StartsWith("i:"); } }
 
         public bool IsArrayType
         {
@@ -319,7 +324,7 @@ namespace KaVE.Model.Names.CSharp
 
         public bool IsDelegateType
         {
-            get { return false; }
+            get { return Identifier.StartsWith("d:"); }
         }
 
         public bool IsNestedType

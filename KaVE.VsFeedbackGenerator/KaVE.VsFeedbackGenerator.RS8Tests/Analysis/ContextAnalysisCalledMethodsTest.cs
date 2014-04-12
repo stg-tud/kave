@@ -22,7 +22,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
             WhenCodeCompletionIsInvokedInFile("MethodWithCalls");
 
             var expected = MethodName.Get(
-                "[System.Void, mscorlib, 4.0.0.0] [N.I1, TestProject].Do([System.Int32, mscorlib, 4.0.0.0] i)");
+                "[System.Void, mscorlib, 4.0.0.0] [i:N.I1, TestProject].Do([System.Int32, mscorlib, 4.0.0.0] i)");
 
             CollectionAssert.Contains(ResultContext.CalledMethods, expected);
         }
@@ -33,7 +33,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
             WhenCodeCompletionIsInvokedInFile("MethodWithCalls");
 
             var expected = MethodName.Get(
-                "[System.Boolean, mscorlib, 4.0.0.0] [N.I1, TestProject].Is()");
+                "[System.Boolean, mscorlib, 4.0.0.0] [i:N.I1, TestProject].Is()");
 
             CollectionAssert.Contains(ResultContext.CalledMethods, expected);
         }
@@ -44,7 +44,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
             WhenCodeCompletionIsInvokedInFile("MethodWithCalls");
 
             var expected = MethodName.Get(
-                "[N.C1, TestProject] [N.I1, TestProject].GetC()");
+                "[N.C1, TestProject] [i:N.I1, TestProject].GetC()");
 
             CollectionAssert.Contains(ResultContext.CalledMethods, expected);
         }
@@ -65,7 +65,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
         {
             WhenCodeCompletionIsInvokedInFile("MethodWithCallsAndGenerics");
 
-            var expected = MethodName.Get("[TI1] [N.I`1[[TI1 -> TM1]], TestProject].Get()");
+            var expected = MethodName.Get("[TI1] [i:N.I`1[[TI1 -> TM1]], TestProject].Get()");
 
             CollectionAssert.Contains(ResultContext.CalledMethods, expected);
         }
@@ -75,7 +75,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
         {
             WhenCodeCompletionIsInvokedInFile("MethodWithCallsAndGenerics");
 
-            var expected = MethodName.Get("[TI1] [N.I`1[[TI1 -> System.String, mscorlib, 4.0.0.0]], TestProject].Get()");
+            var expected = MethodName.Get("[TI1] [i:N.I`1[[TI1 -> System.String, mscorlib, 4.0.0.0]], TestProject].Get()");
 
             CollectionAssert.Contains(ResultContext.CalledMethods, expected);
         }
@@ -85,7 +85,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
         {
             WhenCodeCompletionIsInvokedInFile("MethodWithCallsAndGenerics");
 
-            var expected = MethodName.Get("[TI2] [N.I`1[[TI1 -> TM1]], TestProject].Get[[TI2 -> System.Int32, mscorlib, 4.0.0.0]]()");
+            var expected = MethodName.Get("[TI2] [i:N.I`1[[TI1 -> TM1]], TestProject].Get[[TI2 -> System.Int32, mscorlib, 4.0.0.0]]()");
 
             CollectionAssert.Contains(ResultContext.CalledMethods, expected);
         }
