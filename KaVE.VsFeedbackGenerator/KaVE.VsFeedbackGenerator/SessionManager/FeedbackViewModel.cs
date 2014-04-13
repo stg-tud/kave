@@ -16,8 +16,16 @@ using Messages = KaVE.VsFeedbackGenerator.Properties.SessionManager;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager
 {
+    public interface IFeedbackViewModelDialog
+    {
+        bool AreAnyEventsPresent { get; }
+        IList<IDEEvent> ExtractEventsForExport();
+        void ShowExportSucceededMessage(int count);
+        void ShowExportFailedMessage(string message);
+    }
+
     [ShellComponent]
-    public sealed class FeedbackViewModel : ViewModelBase<FeedbackViewModel>
+    public sealed class FeedbackViewModel : ViewModelBase<FeedbackViewModel>, IFeedbackViewModelDialog
     {
         private const string ServerUrl = "http://kave.st.informatik.tu-darmstadt.de:667/upload";
 
@@ -105,9 +113,9 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             get { return _sessions; }
         }
 
-        public bool AnySessionsPresent
+        public bool AreAnyEventsPresent
         {
-            get { return _sessions.Count > 0; }
+            get { return _sessions.Any(s => s.Events.Any()); }
         }
 
         public IEnumerable<SessionViewModel> SelectedSessions
@@ -134,7 +142,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             {
                 return _exportSessionsCommand ??
                        (_exportSessionsCommand =
-                           CreateWithExportPolicy(new SessionExport(new FilePublisher(AskForExportLocation))));
+                           CreateExportCommandWithPublisher(new FilePublisher(AskForExportLocation)));
             }
         }
 
@@ -144,34 +152,30 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             {
                 return _sendSessionsCommand ??
                        (_sendSessionsCommand =
-                           CreateWithExportPolicy(
-                               new SessionExport(
-                                   new HttpPublisher(ServerUrl))));
+                           CreateExportCommandWithPublisher(new HttpPublisher(ServerUrl)));
             }
         }
 
-        private DelegateCommand CreateWithExportPolicy(ISessionExport exportStrategy)
+        private DelegateCommand CreateExportCommandWithPublisher(ISessionPublisher publishStrategy)
         {
             return ExportCommand.Create(
-                exportStrategy,
-                ExtractEventsForExport,
+                new SessionExport(publishStrategy),
                 _logFileManager.NewLogWriter,
-                o => AnySessionsPresent,
-                res =>
-                {
-                    if (res.Status == State.Ok)
-                    {
-                        _logFileManager.DeleteLogsOlderThan(_lastRefresh);
-                        UpdateLastUploadDate();
-                        MessageBox.Show(string.Format(Messages.ExportSuccess, res.Data.Count));
-                        Refresh();
-                    }
-                    else
-                    {
-                        MessageBox.Show(
-                            Messages.ExportFail + (string.IsNullOrWhiteSpace(res.Message) ? "" : "\n" + res.Message));
-                    }
-                });
+                this);
+        }
+
+        public void ShowExportSucceededMessage(int numberOfExportedEvents)
+        {
+            _logFileManager.DeleteLogsOlderThan(_lastRefresh);
+            UpdateLastUploadDate();
+            MessageBox.Show(string.Format(Messages.ExportSuccess, numberOfExportedEvents));
+            Refresh();
+        }
+
+        public void ShowExportFailedMessage(string message)
+        {
+            MessageBox.Show(
+                Messages.ExportFail + (string.IsNullOrWhiteSpace(message) ? "" : "\n" + message));
         }
 
         private void UpdateLastUploadDate()
@@ -181,16 +185,18 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             _store.SetSettings(settings);
         }
 
-        private IEnumerable<IDEEvent> ExtractEventsForExport()
+        public IList<IDEEvent> ExtractEventsForExport()
         {
-            return _sessions.SelectMany(session => session.Events.Select(events => events.Event));
+            return _sessions.SelectMany(session => session.Events.Select(events => events.Event)).ToList();
         }
 
         private static string AskForExportLocation()
         {
             var saveFileDialog = new SaveFileDialog
             {
-                Filter = Properties.SessionManager.SaveFileDialogFilter
+                // TODO Filter an komprimiertes Schreiben anpassen
+                Filter = Properties.SessionManager.SaveFileDialogFilter,
+                AddExtension = true
             };
             if (saveFileDialog.ShowDialog().Equals(DialogResult.Cancel))
             {

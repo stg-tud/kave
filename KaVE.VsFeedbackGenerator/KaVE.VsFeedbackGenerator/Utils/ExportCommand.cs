@@ -1,28 +1,32 @@
 ﻿using System;
-using System.Collections.Generic;
 using JetBrains.Annotations;
 using JetBrains.UI.Extensions.Commands;
 using KaVE.Model.Events;
+using KaVE.Utils.Assertion;
+using KaVE.VsFeedbackGenerator.SessionManager;
 
 namespace KaVE.VsFeedbackGenerator.Utils
 {
     public static class ExportCommand
     {
         public static DelegateCommand Create([NotNull] ISessionExport export,
-            [NotNull] Func<IEnumerable<IDEEvent>> generator,
             [NotNull] Func<string, ILogWriter<IDEEvent>> writer,
-            Predicate<object> canExecute = null,
-            Action<ExportResult<IList<IDEEvent>>> resultHandler = null)
+            [NotNull] IFeedbackViewModelDialog model)
         {
             Action<object> execute = o =>
             {
-                var result = export.Export(new List<IDEEvent>(generator()), writer);
-                if (resultHandler != null)
+                try
                 {
-                    resultHandler(result);
+                    var eventsToExport = model.ExtractEventsForExport();
+                    export.Export(eventsToExport, writer);
+                    model.ShowExportSucceededMessage(eventsToExport.Count);
+                }
+                catch (AssertException e)
+                {
+                    model.ShowExportFailedMessage(e.Message);
                 }
             };
-            return new DelegateCommand(execute, canExecute);
+            return new DelegateCommand(execute, o => model.AreAnyEventsPresent);
         }
     }
 }

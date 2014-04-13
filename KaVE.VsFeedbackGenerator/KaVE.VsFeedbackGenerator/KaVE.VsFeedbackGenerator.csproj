@@ -194,6 +194,7 @@
     <Compile Include="SessionManager\FeedbackViewModel.cs" />
     <Compile Include="MessageBus\TinyMessenger.cs" />
     <Compile Include="Utils\ExportCommand.cs" />
+    <Compile Include="Utils\IoHelper.cs" />
     <Compile Include="Utils\ISessionPublisher.cs" />
     <Compile Include="Utils\IStreamTransformer.cs" />
     <Compile Include="Utils\HttpPostFileTransfer.cs" />

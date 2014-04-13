@@ -121,6 +121,7 @@
     <Compile Include="Utils\GZipStreamTest.cs" />
     <Compile Include="Utils\HttpPostFileTransferTest.cs" />
     <Compile Include="Utils\InverseBoolConverterTest.cs" />
+    <Compile Include="Utils\ISessionPublisherTest.cs" />
     <Compile Include="Utils\Json\JsonLogFileManagerTest.cs" />
     <Compile Include="Utils\Json\Model\CompletionEventSerializationTest.cs" />
     <Compile Include="Utils\Json\JsonAssert.cs" />

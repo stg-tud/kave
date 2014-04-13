@@ -1,6 +1,8 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Net.Http;
 using KaVE.JetBrains.Annotations;
+using KaVE.Utils.Assertion;
 using KaVE.VsFeedbackGenerator.Utils.Json;
 using Newtonsoft.Json;
 
@@ -8,27 +10,42 @@ namespace KaVE.VsFeedbackGenerator.Utils
 {
     internal static class HttpPostFileTransfer
     {
-        public static TResponse TransferFile<TResponse>([NotNull] string targetUrl, [NotNull] string file, string name = null)
+        public static void TransferFile([NotNull] string targetUrl, [NotNull] string file, string name = null)
         {
-            if (!File.Exists(file))
-            {
-                return default(TResponse);
-            }
-            return TransferContent<TResponse>(targetUrl, CreateHttpContent(file, name));
+            Asserts.That(File.Exists(file), "Angegebene Datei existiert nicht");
+
+            TransferContent(targetUrl, CreateHttpContent(file, name));
         }
 
-        public static TResponse TransferContent<TResponse>([NotNull] string targetUrl, [NotNull] HttpContent content)
+        public static void TransferContent([NotNull] string targetUrl, [NotNull] HttpContent content)
         {
             using (var client = new HttpClient())
             {
-                var response = client.PostAsync(targetUrl, content).Result;
-                if (!response.IsSuccessStatusCode)
+                client.Timeout = new TimeSpan(0, 0, 5);
+                HttpResponseMessage response = null;
+                try
                 {
-                    return default(TResponse);
+                    response = client.PostAsync(targetUrl, content).Result;
                 }
-                var serializedResponse = response.Content.ReadAsStringAsync().Result;
-                return JsonConvert.DeserializeObject<TResponse>(serializedResponse, JsonLogSerialization.Settings);
+                catch (Exception)
+                {
+                    Asserts.Fail("Server nicht erreichbar");
+                }
+                Asserts.That(!response.IsSuccessStatusCode, "Server Request fehlgeschlagen");
+
+                var json = response.Content.ReadAsStringAsync().Result;
+                var res = Deserialize(json);
+                Asserts.NotNull(res, "Inkompatible Antwort des Server");
+                Asserts.That(res.Status == State.Ok, res.Message);
             }
+        }
+
+        private static ExportResult<object> Deserialize(string json)
+        {
+            var res = JsonConvert.DeserializeObject<ExportResult<object>>(
+                json,
+                JsonLogSerialization.Settings);
+            return res;
         }
 
         public static HttpContent CreateHttpContent([NotNull] string file, string name = null)
