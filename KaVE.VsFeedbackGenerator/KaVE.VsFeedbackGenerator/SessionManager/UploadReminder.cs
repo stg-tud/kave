@@ -25,8 +25,29 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
         private void RegisterCallback()
         {
             var settings = _settingsStore.GetSettings<UploadSettings>();
+
             var nextNotificationTime = settings.LastNotificationDate.AddDays(1);
+            if (!TimeIsBetween(nextNotificationTime, new TimeSpan(10, 0, 0), new TimeSpan(16, 0, 0)))
+            {
+                nextNotificationTime = ShiftTimeBetween10And16Hour(nextNotificationTime);
+            }
+
             _callbackManager.RegisterCallback(ShowNotificationAndUpdateSettings, nextNotificationTime, RegisterCallback);
+        }
+
+        private static DateTime ShiftTimeBetween10And16Hour(DateTime nextNotificationTime)
+        {
+            var rand = new Random();
+            return new DateTime(nextNotificationTime.Year, nextNotificationTime.Month, nextNotificationTime.Day, rand.Next(10, 16), rand.Next(0, 60), 0);
+        }
+
+        //TODO: Maybe create extension method?!
+        private static bool TimeIsBetween(DateTime datetime, TimeSpan start, TimeSpan end)
+        {
+            var now = datetime.TimeOfDay;
+            if (start < end)
+                return start <= now && now <= end;
+            return !(end < now && now < start);
         }
 
         private void EnsureUploadSettingsInitialized()

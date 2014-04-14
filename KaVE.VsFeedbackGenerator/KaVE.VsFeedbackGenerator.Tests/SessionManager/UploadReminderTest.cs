@@ -1,4 +1,5 @@
 ﻿using System;
+using JetBrains.Extension;
 using KaVE.VsFeedbackGenerator.SessionManager;
 using KaVE.VsFeedbackGenerator.TrayNotification;
 using KaVE.VsFeedbackGenerator.Utils;
@@ -57,15 +58,16 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
         public void ShouldRegisterCallbackWithOneDayDelay()
         {
             var inOneDay = DateTime.Now.AddDays(1);
+            var expected = CreateDateTimeRangeFromDateTime(inOneDay);
+            
             GivenDaysPassedSinceLastNotification(0);
-
             WhenUploadReminderIsInitialized();
 
             _mockCallbackManager.Verify(
                 manager =>
                     manager.RegisterCallback(
                         It.IsAny<Action>(),
-                        It.IsInRange(inOneDay, inOneDay.AddSeconds(5), Range.Inclusive),
+                        It.IsInRange(expected.Item1, expected.Item2, Range.Inclusive),
                         It.IsAny<Action>()));
         }
 
@@ -137,8 +139,10 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
             WhenUploadReminderIsInitialized();
             rescheduleAction();
 
-            var expected = _uploadSettings.LastNotificationDate.AddDays(1);
-            Assert.AreEqual(expected, actual);
+            var dayAfterLastNotification = _uploadSettings.LastNotificationDate.AddDays(1);
+            var expected = CreateDateTimeRangeFromDateTime(dayAfterLastNotification);
+
+            Assert.True(DateIsBetween(actual, expected.Item1, expected.Item2));
         }
 
 
@@ -157,6 +161,19 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
         private void GivenDaysPassedSinceLastUpload(int days)
         {
             _uploadSettings.LastUploadDate = DateTime.Now.AddDays(-days);
+        }
+
+        //TODO: Rename >.>
+        private static Tuple<DateTime, DateTime> CreateDateTimeRangeFromDateTime(DateTime datetime)
+        {
+            var minDatetime = new DateTime(datetime.Year, datetime.Month, datetime.Day, 10, 0, 0);
+            var maxDatetime = new DateTime(datetime.Year, datetime.Month, datetime.Day, 16, 0, 0);
+            return new Tuple<DateTime, DateTime>(minDatetime, maxDatetime);
+        }
+
+        private static bool DateIsBetween(DateTime datetime, DateTime start, DateTime end)
+        {
+            return datetime >= start && datetime < end;
         }
 
         private void WhenUploadReminderIsInitialized()
