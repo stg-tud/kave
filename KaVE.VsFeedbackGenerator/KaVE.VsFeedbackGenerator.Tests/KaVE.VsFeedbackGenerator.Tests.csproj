@@ -19,6 +19,7 @@
     <SccAuxPath>SAK</SccAuxPath>
     <SccProvider>SAK</SccProvider>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -117,11 +118,12 @@
     <Compile Include="SessionManager\Presentation\ContextVisualizationConverterTest.cs" />
     <Compile Include="TestFactories\TestNameFactory.cs" />
     <Compile Include="Utils\DateTimeTest.cs" />
-    <Compile Include="Utils\ExportCommandTest.cs" />
+    <Compile Include="Utils\ExportCommandFactoryTest.cs" />
     <Compile Include="Utils\GZipStreamTest.cs" />
-    <Compile Include="Utils\HttpPostFileTransferTest.cs" />
+    <Compile Include="Utils\HttpPublisherTest.cs" />
     <Compile Include="Utils\InverseBoolConverterTest.cs" />
-    <Compile Include="Utils\ISessionPublisherTest.cs" />
+    <Compile Include="Utils\IoUtilsTest.cs" />
+    <Compile Include="Utils\FilePublisherTest.cs" />
     <Compile Include="Utils\Json\JsonLogFileManagerTest.cs" />
     <Compile Include="Utils\Json\Model\CompletionEventSerializationTest.cs" />
     <Compile Include="Utils\Json\JsonAssert.cs" />
@@ -144,7 +146,7 @@
     <Compile Include="TestFactories\TypeMockUtils.cs" />
     <Compile Include="Utils\Names\VsComponentNameFactoryTest.cs" />
     <Compile Include="Utils\ObjectToVisibilityConverterTest.cs" />
-    <Compile Include="Utils\SessionExportTest.cs" />
+    <Compile Include="Utils\StringUtilsTest.cs" />
     <Compile Include="VsIntegration\IDESessionTest.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -19,6 +19,7 @@
     <SccAuxPath>SAK</SccAuxPath>
     <SccProvider>SAK</SccProvider>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -193,21 +194,20 @@
     <Compile Include="SessionManager\EventView.cs" />
     <Compile Include="SessionManager\FeedbackViewModel.cs" />
     <Compile Include="MessageBus\TinyMessenger.cs" />
-    <Compile Include="Utils\ExportCommand.cs" />
-    <Compile Include="Utils\IoHelper.cs" />
-    <Compile Include="Utils\ISessionPublisher.cs" />
+    <Compile Include="Utils\ExportCommandFactory.cs" />
+    <Compile Include="Utils\FilePublisher.cs" />
+    <Compile Include="Utils\HttpPublisher.cs" />
+    <Compile Include="Utils\IoUtils.cs" />
+    <Compile Include="Utils\IPublisher.cs" />
     <Compile Include="Utils\IStreamTransformer.cs" />
-    <Compile Include="Utils\HttpPostFileTransfer.cs" />
     <Compile Include="SessionManager\UploadSettings.cs" />
     <Compile Include="Utils\ILogFileManager.cs" />
     <Compile Include="Utils\ILogReader.cs" />
     <Compile Include="Utils\ILogWriter.cs" />
-    <Compile Include="Utils\ExportResult.cs" />
     <Compile Include="Utils\Json\JsonLogFileManager.cs" />
     <Compile Include="Utils\LogFileManager.cs" />
     <Compile Include="Utils\Names\ReSharperDeclarationNameFactory.cs" />
     <Compile Include="Utils\Registry.cs" />
-    <Compile Include="Utils\SessionExport.cs" />
     <Compile Include="Utils\SettingsStore.cs" />
     <Compile Include="SessionManager\UploadReminder.cs" />
     <Compile Include="Utils\GlobalsExtensions.cs" />
@@ -223,6 +223,7 @@
     <Compile Include="Utils\Names\ReSharperTypeNameFactory.cs" />
     <Compile Include="Utils\Names\VsComponentNameFactory.cs" />
     <Compile Include="Utils\ObjectToVisibilityConverter.cs" />
+    <Compile Include="Utils\StringUtils.cs" />
     <Compile Include="Utils\TypeNameExtensions.cs" />
     <Compile Include="VsIntegration\IDESession.cs" />
     <Compile Include="VsIntegration\IIDESession.cs" />

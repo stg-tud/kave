@@ -27,7 +27,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
     [ShellComponent]
     public sealed class FeedbackViewModel : ViewModelBase<FeedbackViewModel>, IFeedbackViewModelDialog
     {
-        private const string ServerUrl = "http://kave.st.informatik.tu-darmstadt.de:667/upload";
+        private readonly Uri _serverUrl = new Uri("http://kave.st.informatik.tu-darmstadt.de:667/upload");
 
         private readonly ILogFileManager<IDEEvent> _logFileManager;
         private readonly IList<SessionViewModel> _sessions;
@@ -39,6 +39,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
         private readonly ISettingsStore _store;
 
         private readonly InteractionRequest<Confirmation> _confirmationRequest;
+        private ExportCommandFactory _exportCommandFactory;
 
         public IInteractionRequest<Confirmation> ConfirmationRequest
         {
@@ -53,6 +54,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             _selectedSessions = new List<SessionViewModel>();
             DeleteSessionsCommand = new DelegateCommand(OnDeleteSelectedSessions, CanDeleteSessions);
             _confirmationRequest = new InteractionRequest<Confirmation>();
+            _exportCommandFactory = new ExportCommandFactory(_logFileManager, this);
             Released = true;
         }
 
@@ -142,7 +144,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             {
                 return _exportSessionsCommand ??
                        (_exportSessionsCommand =
-                           CreateExportCommandWithPublisher(new FilePublisher(AskForExportLocation)));
+                           _exportCommandFactory.Create(new FilePublisher(AskForExportLocation)));
             }
         }
 
@@ -152,16 +154,8 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             {
                 return _sendSessionsCommand ??
                        (_sendSessionsCommand =
-                           CreateExportCommandWithPublisher(new HttpPublisher(ServerUrl)));
+                           _exportCommandFactory.Create(new HttpPublisher(_serverUrl)));
             }
-        }
-
-        private DelegateCommand CreateExportCommandWithPublisher(ISessionPublisher publishStrategy)
-        {
-            return ExportCommand.Create(
-                new SessionExport(publishStrategy),
-                _logFileManager.NewLogWriter,
-                this);
         }
 
         public void ShowExportSucceededMessage(int numberOfExportedEvents)

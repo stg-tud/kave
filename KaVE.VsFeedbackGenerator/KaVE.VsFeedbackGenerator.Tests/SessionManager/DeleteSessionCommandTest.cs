@@ -24,7 +24,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
         [SetUp]
         public void SetUp()
         {
-            Registry.RegisterComponent(new Mock<IIoHelper>().Object);
+            Registry.RegisterComponent(new Mock<IIoUtils>().Object);
             _mockLogFileManager = new Mock<ILogFileManager<IDEEvent>>();
             _mockLogFileManager.Setup(mgr => mgr.NewLogReader(It.IsAny<string>()))
                                .Returns(new Mock<ILogReader<IDEEvent>>().Object);

@@ -9,12 +9,12 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
     [TestFixture]
     internal class FilePublisherTest
     {
-        private Mock<IIoHelper> _ioMock;
+        private Mock<IIoUtils> _ioMock;
 
         [SetUp]
         public void SetUp()
         {
-            _ioMock = new Mock<IIoHelper>();
+            _ioMock = new Mock<IIoUtils>();
             Registry.RegisterComponent(_ioMock.Object);
         }
 
@@ -27,7 +27,8 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
             var sourceLocation = Path.GetTempFileName();
             var targetLocation = Path.GetTempFileName();
             WriteSourceFile(content, sourceLocation);
-            _ioMock.Setup(m => m.CopyFile(It.IsAny<string>(), It.IsAny<string>())).Callback<string, string>(new IoHelper().CopyFile);
+            _ioMock.Setup(m => m.CopyFile(It.IsAny<string>(), It.IsAny<string>()))
+                   .Callback<string, string>(new IoUtils().CopyFile);
 
             var uut = new FilePublisher(() => targetLocation);
             uut.Publish(sourceLocation);
@@ -85,57 +86,6 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
         public void ShouldThrowExceptionOnEmptyArgument()
         {
             var uut = new FilePublisher(() => "");
-            uut.Publish(Path.GetTempFileName());
-        }
-
-        [TearDown]
-        public void CleanUpRegistry()
-        {
-            Registry.Clear();
-        }
-    }
-
-    [TestFixture]
-    internal class HttpPublisherTest
-    {
-        private Mock<IIoHelper> _ioMock;
-
-        [SetUp]
-        public void SetUp()
-        {
-            _ioMock = new Mock<IIoHelper>();
-            Registry.RegisterComponent(_ioMock.Object);
-        }
-
-        [Test, ExpectedException(typeof (AssertException), ExpectedMessage = "Quelldatei existiert nicht")]
-        public void ShouldThrowExceptionOnNonexistingSourceFile()
-        {
-            var uut = new HttpPublisher("some url");
-            uut.Publish("some illegal location");
-        }
-
-        [Test]
-        public void ShouldInvokeTransfer()
-        {
-            var srcLoc = Path.GetTempFileName();
-            var url = "this is a valid url";
-            _ioMock.Setup(m => m.TransferViaHttpPost(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()));
-
-            var uut = new HttpPublisher(url);
-            uut.Publish(srcLoc);
-
-            Registry.Clear();
-            _ioMock.Verify(m => m.TransferViaHttpPost(url, srcLoc, null));
-        }
-
-        // TODO move this test to HttpPostFileTransferTest?
-        [Test, ExpectedException(typeof (AssertException), ExpectedMessage = "Server nicht erreichbar")]
-        public void ShouldThrowExceptionOnUnreachableServer()
-        {
-            _ioMock.Setup(m => m.TransferViaHttpPost(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
-                   .Callback<string, string, string>(new IoHelper().TransferViaHttpPost);
-
-            var uut = new HttpPublisher("http://asdf:12345");
             uut.Publish(Path.GetTempFileName());
         }
 
