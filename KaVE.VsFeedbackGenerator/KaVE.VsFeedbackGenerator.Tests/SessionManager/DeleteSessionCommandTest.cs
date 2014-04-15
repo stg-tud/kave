@@ -24,12 +24,19 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
         [SetUp]
         public void SetUp()
         {
+            Registry.RegisterComponent(new Mock<IIoHelper>().Object);
             _mockLogFileManager = new Mock<ILogFileManager<IDEEvent>>();
             _mockLogFileManager.Setup(mgr => mgr.NewLogReader(It.IsAny<string>()))
                                .Returns(new Mock<ILogReader<IDEEvent>>().Object);
 
             _uut = new FeedbackViewModel(_mockLogFileManager.Object, null);
             _confirmationRequestHelper = _uut.ConfirmationRequest.NewTestHelper();
+        }
+
+        [TearDown]
+        public void ClearRegistry()
+        {
+            Registry.Clear();
         }
 
         [Test]
