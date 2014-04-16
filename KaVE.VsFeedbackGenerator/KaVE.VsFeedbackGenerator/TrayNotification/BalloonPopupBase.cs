@@ -7,7 +7,8 @@ namespace KaVE.VsFeedbackGenerator.TrayNotification
     {
         protected void OpenUploadWizard()
         {
-            // TODO open wizard
+            var wizard = new UploadWizard();
+            wizard.ShowDialog();
         }
 
         protected void ClosePopup()

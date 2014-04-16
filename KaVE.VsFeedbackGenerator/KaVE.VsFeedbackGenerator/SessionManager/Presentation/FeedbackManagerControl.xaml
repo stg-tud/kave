@@ -58,7 +58,8 @@
                     <Image Source="/KaVE.VsFeedbackGenerator;Component/Resources/export.png" />
                 </Button>
                 <Button ToolTip="{x:Static root:Properties.SessionManager.Send}"
-                        Command="{Binding Path=SendSessionsCommand, FallbackValue={x:Null}}"
+                        Command="{Binding Path=SendSessionsCommand, FallbackValue={x:Null}}" 
+                        Click="OpenUploadWizard_OnClick"
                         Style="{StaticResource DefaultDisabledButton}">
                     <Image Source="/KaVE.VsFeedbackGenerator;Component/Resources/send.png" />
                 </Button>

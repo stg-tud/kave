@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using KaVE.Utils;
 using KaVE.VsFeedbackGenerator.Interactivity;
+using KaVE.VsFeedbackGenerator.TrayNotification;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
 {
@@ -72,6 +73,13 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
         private void RefreshButton_OnClick(object sender, RoutedEventArgs e)
         {
             RefreshControl();
+        }
+
+
+        private void OpenUploadWizard_OnClick(object sender, RoutedEventArgs e)
+        {
+            var wizard = new UploadWizard();
+            wizard.ShowDialog();
         }
 
         private void VisitHomepageButton_OnClick(object sender, RoutedEventArgs e)
