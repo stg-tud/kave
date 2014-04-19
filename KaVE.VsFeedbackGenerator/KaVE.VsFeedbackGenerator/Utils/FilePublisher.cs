@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using JetBrains.Util;
 using KaVE.JetBrains.Annotations;
 using KaVE.Utils.Assertion;
@@ -20,7 +19,7 @@ namespace KaVE.VsFeedbackGenerator.Utils
         public void Publish(string srcFilename)
         {
             var targetLocation = _requestFileLocation();
-            Asserts.That(File.Exists(srcFilename), "Quelldatei existiert nicht");
+            Asserts.That(_ioUtils.FileExists(srcFilename), "Quelldatei existiert nicht");
             Asserts.NotNull(targetLocation, "Kein Ziel angegeben");
             Asserts.That(!targetLocation.IsEmpty(), "Invalides Ziel angegeben");
 
@@ -30,7 +29,7 @@ namespace KaVE.VsFeedbackGenerator.Utils
             }
             catch (Exception e)
             {
-                Asserts.Fail("File Export failed: {0}", e.Message);
+                Asserts.Fail("Datei-Export fehlgeschlagen: {0}", e.Message);
             }
         }
     }

@@ -24,7 +24,7 @@ namespace KaVE.VsFeedbackGenerator.Utils
     {
         public HttpResponseMessage TransferByHttp(HttpContent content, Uri targetUri, int timeoutInSeconds)
         {
-            Asserts.That(targetUri.Scheme == Uri.UriSchemeHttp);
+            Asserts.That(targetUri.Scheme == Uri.UriSchemeHttp, "Http-Upload erwartet Http-Adresse");
 
             using (var client = new HttpClient())
             {

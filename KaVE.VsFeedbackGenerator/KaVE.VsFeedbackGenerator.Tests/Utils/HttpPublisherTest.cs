@@ -12,8 +12,8 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
     [TestFixture]
     internal class HttpPublisherTest
     {
-        private const string ExistingFile = "abitrary existing file";
-        private const string FileContent = "abitrary file content";
+        private const string ExistingFile = "arbitrary existing file";
+        private const string FileContent = "arbitrary file content";
 
         private static readonly Uri ValidUri = new Uri("http://server");
 
@@ -70,22 +70,58 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
             Assert.AreEqual(FileContent, actual);
         }
 
-        [Test, Ignore]
-        public void ShouldFailIfMessageIsNull()
+        private const string TransferFailMessage = "Transfer war nicht möglich";
+
+        [Test, ExpectedException(typeof (AssertException), ExpectedMessage = TransferFailMessage)]
+        public void ShouldFailIfTransferFails()
         {
-            throw new NotImplementedException();
+            _ioUtilsMock.Setup(io => io.TransferByHttp(It.IsAny<HttpContent>(), ValidUri, It.IsAny<int>()))
+                        .Throws(new AssertException(TransferFailMessage));
+            _uut.Publish(ExistingFile);
         }
 
-        [Test, Ignore]
+        [Test,
+         ExpectedException(typeof (AssertException),
+             ExpectedMessage = "Antwort des Servers enthält keine verwertbaren Informationen")]
+        public void ShouldFailIfMessageIsEmpty()
+        {
+            var resp = new HttpResponseMessage
+            {
+                Content = new StringContent("")
+            };
+            SetupResponse(resp);
+
+            _uut.Publish(ExistingFile);
+        }
+
+        private const string NotParsableServerResponse = "Not Json-parsable";
+
+        [Test,
+         ExpectedException(typeof (AssertException),
+             ExpectedMessage =
+                 "Antwort des Servers entspricht nicht dem erwarteten Format: " + NotParsableServerResponse)]
         public void ShouldFailIfMessageCannotBeParsed()
         {
-            throw new NotImplementedException();
+            var resp = new HttpResponseMessage
+            {
+                Content = new StringContent(NotParsableServerResponse)
+            };
+            SetupResponse(resp);
+
+            _uut.Publish(ExistingFile);
         }
 
-        [Test, Ignore]
+        private const string ServerResponseMessageOnFailure = "Datei kann nicht gelesen werden";
+
+        [Test,
+         ExpectedException(typeof (AssertException),
+             ExpectedMessage = "Server meldet eine fehlerhafte Anfrage: " + ServerResponseMessageOnFailure)]
         public void ShouldFailIfStateIsNotOk()
         {
-            throw new NotImplementedException();
+            var resp = CreateResponse(false, ServerResponseMessageOnFailure);
+            SetupResponse(resp);
+
+            _uut.Publish(ExistingFile);
         }
 
         private void SetupResponse(HttpResponseMessage resp)
@@ -97,14 +133,16 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
         private static HttpResponseMessage CreateResponse(bool isSuccessful, string message = null)
         {
             string state = isSuccessful ? "Ok" : "Fail";
-            string amessage = "";
+            string responseMessage = "";
             if (message != null)
             {
-                amessage = "\"Message\": \"" + message + "\"";
+                responseMessage = ",\"Message\": \"" + message + "\"";
             }
 
-            var resp = new HttpResponseMessage();
-            resp.Content = new StringContent("{\"State\": \"" + state + "\"" + amessage + "}");
+            var resp = new HttpResponseMessage
+            {
+                Content = new StringContent("{\"Status\": \"" + state + "\"" + responseMessage + "}")
+            };
             return resp;
         }
 

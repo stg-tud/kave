@@ -1,6 +1,9 @@
 ﻿using System;
 using System.IO;
+using System.Net.Http;
+using KaVE.Utils.Assertion;
 using KaVE.VsFeedbackGenerator.Utils;
+using Moq;
 using NUnit.Framework;
 
 namespace KaVE.VsFeedbackGenerator.Tests.Utils
@@ -16,14 +19,18 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
             _sut = new IoUtils();
         }
 
-        [Test, Ignore]
-        public void TransferByHttpNotImplementedYet()
+        [Test, ExpectedException(typeof (AssertException), ExpectedMessage = "Http-Upload erwartet Http-Adresse")]
+        public void ShouldFailOnDifferentScheme()
         {
-            throw new NotImplementedException();
+            _sut.TransferByHttp(new Mock<HttpContent>().Object, new Uri("ftp://www.google.de"), 5);
         }
+
+        // TODO review
+        //[Test, Ignore]
+        //public void TransferByHttpNotImplementedYet()
         //[Test, ExpectedException(typeof (AssertException), ExpectedMessage = "Server nicht erreichbar")]
         //public void ShouldThrowExceptionOnUnreachableServer()
-        
+
         [Test]
         public void ShouldReturnExistingTempFileName()
         {

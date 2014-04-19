@@ -23,33 +23,26 @@ namespace KaVE.VsFeedbackGenerator.Utils
         {
             Asserts.That(_ioUtils.FileExists(srcFilename), "Quelldatei existiert nicht");
 
-            string json = null;
-            try
-            {
-                var content = CreateMultipartContent(srcFilename, "tmp.log");
-                var response = _ioUtils.TransferByHttp(content, _hostAddress);
-                json = response.Content.ReadAsStringAsync().Result;
-            }
-            catch (Exception e)
-            {
-                Asserts.Fail(e.Message);
-            }
+            var content = CreateMultipartContent(srcFilename, "tmp.log");
+            var response = _ioUtils.TransferByHttp(content, _hostAddress);
+            var json = response.Content.ReadAsStringAsync().Result;
 
-            Asserts.NotNull(json, "asd");
-            Asserts.Not(json.IsEmpty(), "asd");
+            const string noInfo = "Antwort des Servers enthält keine verwertbaren Informationen";
+            Asserts.NotNull(json, noInfo);
+            Asserts.Not(json.IsEmpty(), noInfo);
 
             ExportResult<object> res = null;
             try
             {
                 res = Deserialize(json);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                Asserts.Fail(e.Message);
+                Asserts.Fail("Antwort des Servers entspricht nicht dem erwarteten Format: {0}", json);
             }
 
             Asserts.NotNull(res, "Inkompatible Antwort des Server");
-            Asserts.That(res.Status == State.Ok, res.Message);
+            Asserts.That(res.Status == State.Ok, "Server meldet eine fehlerhafte Anfrage: {0}", res.Message);
         }
 
         private HttpContent CreateMultipartContent([NotNull] string file, [NotNull] string name)

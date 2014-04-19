@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using KaVE.Utils.Assertion;
 using KaVE.VsFeedbackGenerator.Utils;
 using Moq;
@@ -10,11 +11,14 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
     internal class FilePublisherTest
     {
         private Mock<IIoUtils> _ioMock;
+        private const string SrcLoc = "existing source file";
+        private const string TrgLoc = "existing target file";
 
         [SetUp]
         public void SetUp()
         {
             _ioMock = new Mock<IIoUtils>();
+            _ioMock.Setup(io => io.FileExists(SrcLoc)).Returns(true);
             Registry.RegisterComponent(_ioMock.Object);
         }
 
@@ -27,6 +31,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
             var sourceLocation = Path.GetTempFileName();
             var targetLocation = Path.GetTempFileName();
             WriteSourceFile(content, sourceLocation);
+            _ioMock.Setup(io => io.FileExists(It.IsAny<string>())).Returns<string>(new IoUtils().FileExists);
             _ioMock.Setup(m => m.CopyFile(It.IsAny<string>(), It.IsAny<string>()))
                    .Callback<string, string>(new IoUtils().CopyFile);
 
@@ -57,21 +62,16 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
         [Test]
         public void ShouldInvokeCopy()
         {
-            var srcLoc = Path.GetTempFileName();
-            var trgLoc = Path.GetTempFileName();
-            _ioMock.Setup(m => m.CopyFile(It.IsAny<string>(), It.IsAny<string>()));
+            var uut = new FilePublisher(() => TrgLoc);
+            uut.Publish(SrcLoc);
 
-            var uut = new FilePublisher(() => trgLoc);
-            uut.Publish(srcLoc);
-
-            Registry.Clear();
-            _ioMock.Verify(m => m.CopyFile(srcLoc, trgLoc));
+            _ioMock.Verify(m => m.CopyFile(SrcLoc, TrgLoc));
         }
 
         [Test, ExpectedException(typeof (AssertException), ExpectedMessage = "Quelldatei existiert nicht")]
         public void ShouldThrowExceptionOnNonexistingSourceFile()
         {
-            var uut = new FilePublisher(Path.GetTempFileName);
+            var uut = new FilePublisher(() => TrgLoc);
             uut.Publish("some illegal location");
         }
 
@@ -79,14 +79,26 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
         public void ShouldThrowExceptionOnNullArgument()
         {
             var uut = new FilePublisher(() => null);
-            uut.Publish(Path.GetTempFileName());
+            uut.Publish(SrcLoc);
         }
 
         [Test, ExpectedException(typeof (AssertException), ExpectedMessage = "Invalides Ziel angegeben")]
         public void ShouldThrowExceptionOnEmptyArgument()
         {
             var uut = new FilePublisher(() => "");
-            uut.Publish(Path.GetTempFileName());
+            uut.Publish(SrcLoc);
+        }
+
+        private const string CopyFailureMessage = "Datei-Zugriff verweigert";
+
+        [Test,
+         ExpectedException(typeof (AssertException),
+             ExpectedMessage = "Datei-Export fehlgeschlagen: " + CopyFailureMessage)]
+        public void ShouldThrowExceptionIfCopyFails()
+        {
+            _ioMock.Setup(io => io.CopyFile(SrcLoc, TrgLoc)).Throws(new Exception(CopyFailureMessage));
+            var uut = new FilePublisher(() => TrgLoc);
+            uut.Publish(SrcLoc);
         }
 
         [TearDown]
