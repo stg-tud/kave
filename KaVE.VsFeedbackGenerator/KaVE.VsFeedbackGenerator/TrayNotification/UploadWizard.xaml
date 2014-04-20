@@ -22,16 +22,17 @@
         </Label>
         <Expander Header="Anonymisierungsoptionen">
             <StackPanel Margin="10,4,0,0">
-                <CheckBox Margin="4" Content="Namen entfernen" />
-                <CheckBox Margin="4" Content="Zeiten entfernen" />
-                <CheckBox Margin="4" Content="Dauer entfernen" />
+                <CheckBox Name="NamesCheckBox" Checked="CheckBoxChanged" Unchecked="CheckBoxChanged"  Margin="4" Content="Methoden- und Variablennamen im Feedback erfassen." />
+                <CheckBox Name="StartTimeCheckBox" Margin="4" Content="Auslösezeitpunkt von Events im Feedback erfassen." />
+                <CheckBox Name="DurationCheckBox" Margin="4" Content="Dauer von Events im Feedback erfassen." />
+                <CheckBox Name="SessionUUIDCheckBox" Margin="4" Content="Zuordnung von Events zu Sessions im Feedback erfassen." />
             </StackPanel>
         </Expander>
         <StackPanel Orientation="Horizontal" Margin="5" HorizontalAlignment="Right">
             <Image Name="TypeIcon" HorizontalAlignment="Left" VerticalAlignment="Center" Source="{StaticResource Icon}" Height="25" Width="25"/>
             <TextBlock>           
                 <!-- TODO Open Sessionmanager -->
-                <Hyperlink>
+                <Hyperlink Click="On_Review_Click">
                     Feedback einsehen
                 </Hyperlink>
             </TextBlock>
