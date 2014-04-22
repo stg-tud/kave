@@ -225,4 +225,10 @@
   <data name="SaveFileDialogFilter" xml:space="preserve">
     <value>Log files (*.log)|*.log|All files (*.*)|*.*</value>
   </data>
+  <data name="DesignView" xml:space="preserve">
+    <value>Design-View</value>
+  </data>
+  <data name="RawView" xml:space="preserve">
+    <value>Raw-View</value>
+  </data>
 </root>

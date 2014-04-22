@@ -61,6 +61,15 @@ namespace KaVE.VsFeedbackGenerator.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Design-View.
+        /// </summary>
+        public static string DesignView {
+            get {
+                return ResourceManager.GetString("DesignView", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Aktives Dokument.
         /// </summary>
         public static string EventActiveDocument {
@@ -282,6 +291,15 @@ namespace KaVE.VsFeedbackGenerator.Properties {
         public static string OptionsTitle {
             get {
                 return ResourceManager.GetString("OptionsTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Raw-View.
+        /// </summary>
+        public static string RawView {
+            get {
+                return ResourceManager.GetString("RawView", resourceCulture);
             }
         }
         

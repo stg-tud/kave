@@ -118,6 +118,7 @@
     </Compile>
     <Compile Include="Interactivity\InteractionRequest.cs" />
     <Compile Include="Interactivity\ConfirmationRequestHandler.cs" />
+    <Compile Include="SessionManager\Presentation\RawViewTextBlock.cs" />
     <Compile Include="SessionManager\ViewModelBase.cs" />
     <Compile Include="TrayNotification\BalloonPopupBase.cs" />
     <Compile Include="TrayNotification\HardBalloonPopup.xaml.cs">

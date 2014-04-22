@@ -18,7 +18,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
         private const string CurlyBracketClose = "}";
         private const string BoldStart = "<Bold>";
         private const string BoldEnd = "</Bold>";
-        private const string CompletionMarker = "";//"<Italic Foreground=\"Blue\">@Completion</Italic>";
+        private const string CompletionMarker = ""; //"<Italic Foreground=\"Blue\">@Completion</Italic>";
 
         public static string ToXaml(this Context context)
         {
@@ -31,24 +31,25 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
 
             builder.AppendHierarchyLine(context.TypeShape.TypeHierarchy);
             builder.AppendLine(0, CurlyBracketOpen);
-            if (context.EnclosingMethodHierarchy == null)
+            if (context.EnclosingMethod == null)
             {
                 builder.AppendLine(1, CompletionMarker);
             }
             else
             {
-                builder.AppendXamlMethodSignatureLine(context.EnclosingMethodHierarchy.Element);
+                builder.AppendXamlMethodSignatureLine(context.EnclosingMethod);
                 builder.AppendLine(1, CurlyBracketOpen);
 
-                context.CalledMethods.ForEach(m =>
-                {
-                    var l = m.DeclaringType.Name + "." + m.Name + "(";
-                    if (m.HasParameters)
+                context.CalledMethods.ForEach(
+                    m =>
                     {
-                        l += string.Join(", ", m.Parameters.Select(p => p.ValueType.Name));
-                    }
-                    builder.AppendLine(2, l + ");");
-                });
+                        var l = m.DeclaringType.Name + "." + m.Name + "(";
+                        if (m.HasParameters)
+                        {
+                            l += string.Join(", ", m.Parameters.Select(p => p.ValueType.Name));
+                        }
+                        builder.AppendLine(2, l + ");");
+                    });
 
                 builder.AppendLine(2, CompletionMarker);
                 builder.AppendLine(1, CurlyBracketClose);
