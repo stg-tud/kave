@@ -1,6 +1,7 @@
 ﻿using System.Windows.Controls;
 using Hardcodet.Wpf.TaskbarNotification;
-using JetBrains.Application;
+using KaVE.VsFeedbackGenerator.SessionManager;
+using KaVE.VsFeedbackGenerator.Utils;
 
 namespace KaVE.VsFeedbackGenerator.TrayNotification
 {
@@ -9,7 +10,7 @@ namespace KaVE.VsFeedbackGenerator.TrayNotification
         protected void OpenUploadWizard()
         {
             ClosePopup();
-            var wizard = new UploadWizard();
+            var wizard = new UploadWizard(Registry.GetComponent<FeedbackViewModel>());
             wizard.ShowDialog();
         }
 

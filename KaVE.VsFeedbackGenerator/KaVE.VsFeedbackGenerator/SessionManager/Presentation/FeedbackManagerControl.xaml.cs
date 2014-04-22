@@ -78,7 +78,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
 
         private void OpenUploadWizard_OnClick(object sender, RoutedEventArgs e)
         {
-            var wizard = new UploadWizard();
+            var wizard = new UploadWizard(_feedbackViewModel);
             wizard.ShowDialog();
         }
 

@@ -39,7 +39,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
         private readonly ISettingsStore _store;
 
         private readonly InteractionRequest<Confirmation> _confirmationRequest;
-        private ExportCommandFactory _exportCommandFactory;
+        private readonly ExportCommandFactory _exportCommandFactory;
 
         public IInteractionRequest<Confirmation> ConfirmationRequest
         {
