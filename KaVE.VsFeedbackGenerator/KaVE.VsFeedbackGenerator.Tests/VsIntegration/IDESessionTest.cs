@@ -12,6 +12,8 @@ namespace KaVE.VsFeedbackGenerator.Tests.VsIntegration
     [TestFixture]
     public class IDESessionTest
     {
+        private const string SessionUuidCreatedAt = "KAVE_EventGenerator_SessionUUID_CreatedAt";
+        private const string SessionUuid = "KAVE_EventGenerator_SessionUUID";
         private DTE _dte;
         private Globals _globals;
         private static readonly string TodayDateString = DateTime.Today.ToString(CultureInfo.InvariantCulture);
@@ -20,8 +22,8 @@ namespace KaVE.VsFeedbackGenerator.Tests.VsIntegration
         public void MockEnvironment()
         {
             var mockGlobals = new Mock<Globals>();
-            SetupGlobal(mockGlobals, "KAVE_EventGenerator_SessionUUID_CreatedAt");
-            SetupGlobal(mockGlobals, "KAVE_EventGenerator_SessionUUID");
+            SetupGlobal(mockGlobals, SessionUuidCreatedAt);
+            SetupGlobal(mockGlobals, SessionUuid);
             _globals = mockGlobals.Object;
 
             var mockDTE = new Mock<DTE>();
@@ -46,13 +48,13 @@ namespace KaVE.VsFeedbackGenerator.Tests.VsIntegration
         [Test]
         public void ShouldCreateNewSessionUUIDAndStoreItForTodayIfNoneExisted()
         {
-            _globals["KAVE_EventGenerator_SessionUUID_CreatedAt"] = null;
+            _globals[SessionUuidCreatedAt] = null;
 
             var ideSession = new IDESession(_dte);
             var actualSessionId = ideSession.UUID;
 
-            Assert.AreEqual(TodayDateString, _globals["KAVE_EventGenerator_SessionUUID_CreatedAt"]);
-            var storedSessionUUID = _globals["KAVE_EventGenerator_SessionUUID"];
+            Assert.AreEqual(TodayDateString, _globals[SessionUuidCreatedAt]);
+            var storedSessionUUID = _globals[SessionUuid];
             Assert.NotNull(storedSessionUUID);
             Assert.AreEqual(storedSessionUUID, actualSessionId);
         }
@@ -61,35 +63,54 @@ namespace KaVE.VsFeedbackGenerator.Tests.VsIntegration
         public void ShouldCreateNewSessionUUIDAndStoreItForTodayIfStoredOneWasGeneratedInThePast()
         {
             var yesterdayDateString = DateTime.Today.AddDays(-1).ToString(CultureInfo.InvariantCulture);
-            _globals["KAVE_EventGenerator_SessionUUID_CreatedAt"] = yesterdayDateString;
-            _globals["KAVE_EventGenerator_SessionUUID"] = "OutdatedUUID";
+            _globals[SessionUuidCreatedAt] = yesterdayDateString;
+            _globals[SessionUuid] = "OutdatedUUID";
 
             var ideSession = new IDESession(_dte);
             var actualSessionId = ideSession.UUID;
 
-            Assert.AreEqual(TodayDateString, _globals["KAVE_EventGenerator_SessionUUID_CreatedAt"]);
+            Assert.AreEqual(TodayDateString, _globals[SessionUuidCreatedAt]);
+            var storedSessionUUID = _globals[SessionUuid];
             Assert.NotNull(actualSessionId);
             Assert.AreNotEqual("OutdatedUUID", actualSessionId);
+            Assert.AreEqual(storedSessionUUID, actualSessionId);
+        }
+
+        [Test]
+        public void ShouldCreateNewSessionUUIDAndStoreItForTodayIfStoredOneWasGeneratedOnFutureDate()
+        {
+            var tomorrowDateString = DateTime.Today.AddDays(1).ToString(CultureInfo.InvariantCulture);
+            _globals[SessionUuidCreatedAt] = tomorrowDateString;
+            _globals[SessionUuid] = "TemporaryUUID";
+
+            var ideSession = new IDESession(_dte);
+            var actualSessionId = ideSession.UUID;
+
+            Assert.AreEqual(TodayDateString, _globals[SessionUuidCreatedAt]);
+            var storedSessionUUID = _globals[SessionUuid];
+            Assert.NotNull(actualSessionId);
+            Assert.AreNotEqual("TemporaryUUID", actualSessionId);
+            Assert.AreEqual(storedSessionUUID, actualSessionId);
         }
 
         [Test]
         public void ShouldMakeUUIDAndCreationDatePropertyPersistent()
         {
-            _globals["KAVE_EventGenerator_SessionUUID_CreatedAt"] = null;
+            _globals[SessionUuidCreatedAt] = null;
 
             var ideSession = new IDESession(_dte);
             // ReSharper disable once UnusedVariable
             var actualSessionId = ideSession.UUID;
 
-            Assert.IsTrue(_globals.get_VariablePersists("KAVE_EventGenerator_SessionUUID_CreatedAt"));
-            Assert.IsTrue(_globals.get_VariablePersists("KAVE_EventGenerator_SessionUUID"));
+            Assert.IsTrue(_globals.get_VariablePersists(SessionUuidCreatedAt));
+            Assert.IsTrue(_globals.get_VariablePersists(SessionUuid));
         }
 
         [Test]
         public void ShouldReturnExistingSessionUUIDIfItWasGeneratedToday()
         {
-            _globals["KAVE_EventGenerator_SessionUUID_CreatedAt"] = TodayDateString;
-            _globals["KAVE_EventGenerator_SessionUUID"] = "MyTestUUID";
+            _globals[SessionUuidCreatedAt] = TodayDateString;
+            _globals[SessionUuid] = "MyTestUUID";
 
             var ideSession = new IDESession(_dte);
             var actualSessionId = ideSession.UUID;

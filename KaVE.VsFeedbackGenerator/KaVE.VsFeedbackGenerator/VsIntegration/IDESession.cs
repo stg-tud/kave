@@ -30,7 +30,7 @@ namespace KaVE.VsFeedbackGenerator.VsIntegration
                 var globals = _dte.Globals;
                 var storedDateString = globals.GetValueOrDefault(UUIDCreatedAtGlobal, PastDate);
                 var createdAt = DateTime.Parse(storedDateString, CultureInfo.InvariantCulture);
-                if (createdAt < DateTime.Today)
+                if (createdAt != DateTime.Today)
                 {
                     var dateString = DateTime.Today.ToString(CultureInfo.InvariantCulture);
                     globals.SetValue(UUIDCreatedAtGlobal, dateString);
