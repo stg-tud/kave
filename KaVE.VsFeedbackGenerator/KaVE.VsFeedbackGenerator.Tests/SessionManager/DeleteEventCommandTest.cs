@@ -25,7 +25,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
         [SetUp]
         public void SetUp()
         {
-            _displayedEvents = new List<IDEEvent> { new ActionEvent(), new BuildEvent(), new BulbActionEvent() };
+            _displayedEvents = new List<IDEEvent> {new ActionEvent(), new BuildEvent(), new BulbActionEvent()};
 
             var mockLogReader = new Mock<ILogReader<IDEEvent>>();
             mockLogReader.Setup(reader => reader.ReadAll()).Returns(_displayedEvents);
@@ -40,7 +40,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
         [Test]
         public void ShouldBeDisabledIfNoEventIsSelected()
         {
-            GivenEventsAreSelected(/* none */);
+            GivenEventsAreSelected( /* none */);
 
             var deletionEnabled = _uut.DeleteEventsCommand.CanExecute(null);
 
@@ -120,7 +120,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
             _confirmationRequestHelper.Context.Confirmed = true;
             _confirmationRequestHelper.Callback();
 
-            _mockLog.Verify(log => log.RemoveRange(new List<IDEEvent>{_displayedEvents[1]}));
+            _mockLog.Verify(log => log.RemoveRange(new[] {_displayedEvents[1]}));
             Assert.AreEqual(2, _uut.Events.Count());
         }
 

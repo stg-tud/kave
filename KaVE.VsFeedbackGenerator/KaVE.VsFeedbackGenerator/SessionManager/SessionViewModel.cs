@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
 using System.Linq;
 using JetBrains;
 using JetBrains.UI.Extensions.Commands;
 using JetBrains.Util;
 using KaVE.Model.Events;
 using KaVE.VsFeedbackGenerator.Interactivity;
-using KaVE.VsFeedbackGenerator.Utils.Json;
 using KaVE.VsFeedbackGenerator.Utils.Logging;
 using NuGet;
 using Messages = KaVE.VsFeedbackGenerator.Properties.SessionManager;

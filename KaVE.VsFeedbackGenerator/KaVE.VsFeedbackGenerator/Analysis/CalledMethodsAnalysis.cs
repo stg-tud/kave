@@ -77,11 +77,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis
                 }
 
                 var methodName = method.GetName<IMethodName>();
-                if (IsLocalHelper(methodName) && !method.Element.IsOverride)
-                {
-                    TrackCallsInMethod(context, methodName, method);
-                }
-                else
+                if (IsEntryPoint(methodName, method))
                 {
                     if (method.Element.IsOverride)
                     {
@@ -89,6 +85,20 @@ namespace KaVE.VsFeedbackGenerator.Analysis
                     }
                     context.CalledMethods.Add(methodName);
                 }
+                else
+                {
+                    TrackCallsInMethod(context, methodName, method);
+                }
+            }
+
+            private bool IsEntryPoint(IMethodName methodName, DeclaredElementInstance<IMethod> method)
+            {
+                return !IsLocalHelper(methodName) || method.Element.IsOverride || method.Element.IsAbstract;
+            }
+
+            private bool IsLocalHelper(IMemberName method)
+            {
+                return _enclosingType == method.DeclaringType;
             }
 
             private void TrackCallsInMethod(CollectionContext context, IMethodName methodName, DeclaredElementInstance<IMethod> method)
@@ -100,11 +110,6 @@ namespace KaVE.VsFeedbackGenerator.Analysis
                 context.AnalyzedMethods.Add(methodName);
                 var declaration = GetDeclaration(method.Element);
                 declaration.Body.Accept(this, context);
-            }
-
-            private bool IsLocalHelper(IMemberName method)
-            {
-                return _enclosingType == method.DeclaringType;
             }
 
             private static DeclaredElementInstance<IMethod> ResolveMethod(ICSharpInvocationReference invocationRef)

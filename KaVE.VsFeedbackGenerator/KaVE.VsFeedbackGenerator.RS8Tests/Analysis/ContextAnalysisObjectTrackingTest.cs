@@ -45,6 +45,20 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
                 "[System.Void, mscorlib, 4.0.0.0] [C, TestProject].M2([System.Object, mscorlib, 4.0.0.0] o)");
         }
 
+        [Test, Ignore("currently we cannot detect this from the analysis result")]
+        public void ShouldIncludeHelpersMultipleTimes()
+        {
+            CompleteInClass(@"
+                public override void M1(object o) { H(o); }
+                public override void M2(object o) { H(o); }
+                
+                private void H(object o)
+                {
+                    o.GetHashCode();
+                }");
+            Assert.Fail();
+        }
+
         [Test]
         public void ShouldFindCallToMethodDeclaredBySupertype()
         {
@@ -96,7 +110,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
         }
 
         [Test]
-        public void ShouldIgnoreCallToAbstractLocalMethod()
+        public void ShouldFindCallToAbstractLocalMethod()
         {
             CompleteInFile(@"
                 abstract class A
@@ -110,7 +124,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
                     }
                 }");
 
-            AssertAnalysisDoesNotFindCallTo("[System.Void, mscorlib, 4.0.0.0] [A, TestProject].M([System.Object, mscorlib, 4.0.0.0] o)");
+            AssertAnalysisFindsCallsTo("[System.Void, mscorlib, 4.0.0.0] [A, TestProject].M([System.Object, mscorlib, 4.0.0.0] o)");
         }
 
         [Test]
