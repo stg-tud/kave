@@ -200,13 +200,13 @@
     <Compile Include="Utils\HttpPublisher.cs" />
     <Compile Include="Utils\IoUtils.cs" />
     <Compile Include="Utils\IPublisher.cs" />
-    <Compile Include="Utils\IStreamTransformer.cs" />
     <Compile Include="SessionManager\UploadSettings.cs" />
-    <Compile Include="Utils\ILogFileManager.cs" />
-    <Compile Include="Utils\ILogReader.cs" />
-    <Compile Include="Utils\ILogWriter.cs" />
+    <Compile Include="Utils\Logging\ILogManager.cs" />
+    <Compile Include="Utils\Logging\ILogReader.cs" />
+    <Compile Include="Utils\Logging\ILogWriter.cs" />
     <Compile Include="Utils\Json\JsonLogFileManager.cs" />
-    <Compile Include="Utils\LogFileManager.cs" />
+    <Compile Include="Utils\Logging\LogFile.cs" />
+    <Compile Include="Utils\Logging\LogFileManager.cs" />
     <Compile Include="Utils\Names\ReSharperDeclarationNameFactory.cs" />
     <Compile Include="Utils\Registry.cs" />
     <Compile Include="Utils\SettingsStore.cs" />
@@ -322,6 +322,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

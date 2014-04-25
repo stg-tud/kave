@@ -2,10 +2,12 @@
 using System.IO;
 using JetBrains.Application;
 using KaVE.Model.Events;
+using KaVE.VsFeedbackGenerator.Utils.Logging;
 
 namespace KaVE.VsFeedbackGenerator.Utils.Json
 {
-    internal static class JsonLogFileManagerLocation
+    [ShellComponent]
+    public class IDEEventLogFileManager : LogFileManager<IDEEvent>
     {
         /// <summary>
         ///     Usually something like "C:\Users\%USERNAME%\AppData\Roaming\"
@@ -14,35 +16,13 @@ namespace KaVE.VsFeedbackGenerator.Utils.Json
             Environment.SpecialFolder.ApplicationData);
 
         private const string ProjectName = "KaVE";
-        private static readonly string EventLogsScope = typeof(JsonLogFileManagerLocation).Assembly.GetName().Name;
+        private static readonly string EventLogsScope = typeof(IDEEventLogFileManager).Assembly.GetName().Name;
 
         /// <summary>
         ///     E.g., "C:\Users\%USERNAME%\AppData\Roaming\KaVE\KaVE.VsFeedbackGenerator\"
         /// </summary>
-        internal static readonly string EventLogsPath = Path.Combine(AppDataPath, ProjectName, EventLogsScope);
-    }
+        private static readonly string EventLogsPath = Path.Combine(AppDataPath, ProjectName, EventLogsScope);
 
-    [ShellComponent]
-    public class JsonIDEEventLogFileManager : JsonLogFileManager<IDEEvent>
-    {
-        public JsonIDEEventLogFileManager() : base(JsonLogFileManagerLocation.EventLogsPath) { }
-    }
-
-    public class JsonLogFileManager<TMessage> : LogFileManager<TMessage> where TMessage : class
-    {
-        public JsonLogFileManager(string baseLocation)
-            : base(
-                baseLocation,
-                new StreamTransformer()) { }
-
-        protected override ILogWriter<TMessage> NewLogWriter(Stream logStream)
-        {
-            return new JsonLogWriter<TMessage>(logStream);
-        }
-
-        protected override ILogReader<TMessage> NewLogReader(Stream logStream)
-        {
-            return new JsonLogReader<TMessage>(logStream);
-        }
+        public IDEEventLogFileManager() : base(EventLogsPath) { }
     }
 }

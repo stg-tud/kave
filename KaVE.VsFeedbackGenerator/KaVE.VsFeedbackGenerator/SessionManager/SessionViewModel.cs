@@ -5,10 +5,11 @@ using System.IO;
 using System.Linq;
 using JetBrains;
 using JetBrains.UI.Extensions.Commands;
+using JetBrains.Util;
 using KaVE.Model.Events;
 using KaVE.VsFeedbackGenerator.Interactivity;
-using KaVE.VsFeedbackGenerator.Utils;
 using KaVE.VsFeedbackGenerator.Utils.Json;
+using KaVE.VsFeedbackGenerator.Utils.Logging;
 using NuGet;
 using Messages = KaVE.VsFeedbackGenerator.Properties.SessionManager;
 
@@ -16,20 +17,18 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
 {
     public class SessionViewModel : ViewModelBase<SessionViewModel>
     {
-        private readonly ILogFileManager<IDEEvent> _logFileManager;
-        public string LogFileName { get; private set; }
+        public ILog<IDEEvent> Log { get; private set; }
         private readonly IList<EventView> _events = new ObservableCollection<EventView>();
         private readonly IList<EventView> _selectedEvents = new List<EventView>();
         private readonly InteractionRequest<Confirmation> _confirmationRequest = new InteractionRequest<Confirmation>();
 
-        public SessionViewModel(ILogFileManager<IDEEvent> logFileManager, string logFileName)
+        public SessionViewModel(ILog<IDEEvent> log)
         {
-            _logFileManager = logFileManager;
-            LogFileName = logFileName;
+            Log = log;
             DeleteEventsCommand = new DelegateCommand(OnDeleteSelectedEvents, CanDeleteEvents);
             // loading eagerly because lazy approaches led to UI display bugs
             // TODO if this should cause memory problems, we have to find a lazier solution...
-            using (var logReader = logFileManager.NewLogReader(logFileName))
+            using (var logReader = log.NewLogReader())
             {
                 Events = logReader.ReadAll().Select(evt => new EventView(evt)).ToList();
             }
@@ -42,10 +41,9 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
 
         public DateTime StartDate
         {
-            // TODO include date in log file name and extract it here
             get
             {
-                return _events.First().StartDateTime.Date;
+                return Log.Date;
             }
         }
 
@@ -54,7 +52,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             set
             {
                 _events.Clear();
-                _events.AddRange(value);
+                CollectionExtensions.AddRange(_events, value);
             }
 
             get
@@ -68,7 +66,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             set
             {
                 _selectedEvents.Clear();
-                _selectedEvents.AddRange(value);
+                CollectionExtensions.AddRange(_selectedEvents, value);
                 // notify listeners about dependent property cange
                 OnPropertyChanged(vm => vm.SingleSelectedEvent);
                 DeleteEventsCommand.RaiseCanExecuteChanged();
@@ -111,26 +109,13 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
                 return;
             }
 
-            // TODO This logic should be moved out of here, but where to?
-            var tempFileName = Path.GetTempFileName();
-            using (var logWriter = new JsonLogWriter<IDEEvent>(new FileStream(tempFileName, FileMode.Append, FileAccess.Write)))
-            {
-                for (var i = 0; i < _events.Count; i++)
-                {
-                    var @event = _events[i];
-                    if (_selectedEvents.Contains(@event))
-                    {
-                        _events.RemoveAt(i);
-                        i--;
-                    }
-                    else
-                    {
-                        logWriter.Write(@event.Event);
-                    }
-                }
-            }
-            File.Delete(LogFileName);
-            File.Move(tempFileName, LogFileName);
+            Log.RemoveRange(_selectedEvents.Select(evm => evm.Event));
+            _events.RemoveRange(_selectedEvents);
+        }
+
+        public override string ToString()
+        {
+            return "[SessionViewModel: " + Log + "]";
         }
     }
 }

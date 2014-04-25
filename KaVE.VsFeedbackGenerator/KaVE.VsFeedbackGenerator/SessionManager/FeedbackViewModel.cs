@@ -11,6 +11,7 @@ using KaVE.Model.Events;
 using KaVE.Utils;
 using KaVE.VsFeedbackGenerator.Interactivity;
 using KaVE.VsFeedbackGenerator.Utils;
+using KaVE.VsFeedbackGenerator.Utils.Logging;
 using NuGet;
 using Messages = KaVE.VsFeedbackGenerator.Properties.SessionManager;
 
@@ -29,7 +30,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
     {
         private readonly Uri _serverUrl = new Uri("http://kave.st.informatik.tu-darmstadt.de:667/upload");
 
-        private readonly ILogFileManager<IDEEvent> _logFileManager;
+        private readonly ILogManager<IDEEvent> _logManager;
         private readonly IList<SessionViewModel> _sessions;
         private readonly IList<SessionViewModel> _selectedSessions;
         private DelegateCommand _exportSessionsCommand;
@@ -46,15 +47,15 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             get { return _confirmationRequest; }
         }
 
-        public FeedbackViewModel(ILogFileManager<IDEEvent> logFileManager, ISettingsStore store)
+        public FeedbackViewModel(ILogManager<IDEEvent> logManager, ISettingsStore store)
         {
             _store = store;
-            _logFileManager = logFileManager;
+            _logManager = logManager;
             _sessions = new ObservableCollection<SessionViewModel>();
             _selectedSessions = new List<SessionViewModel>();
             DeleteSessionsCommand = new DelegateCommand(OnDeleteSelectedSessions, CanDeleteSessions);
             _confirmationRequest = new InteractionRequest<Confirmation>();
-            _exportCommandFactory = new ExportCommandFactory(_logFileManager, this);
+            _exportCommandFactory = new ExportCommandFactory(this);
             Released = true;
         }
 
@@ -66,10 +67,10 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
                 {
                     _lastRefresh = DateTime.Now;
                     Sessions =
-                        _logFileManager.GetLogFileNames().Select(
-                            logFileName =>
+                        _logManager.GetLogs().Select(
+                            log =>
                             {
-                                var vm = new SessionViewModel(_logFileManager, logFileName);
+                                var vm = new SessionViewModel(log);
                                 vm.ConfirmationRequest.Raised += (sender, args) => _confirmationRequest.Delegate(args);
                                 return vm;
                             });
@@ -160,7 +161,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
 
         public void ShowExportSucceededMessage(int numberOfExportedEvents)
         {
-            _logFileManager.DeleteLogsOlderThan(_lastRefresh);
+            _logManager.DeleteLogsOlderThan(_lastRefresh);
             UpdateLastUploadDate();
             MessageBox.Show(string.Format(Messages.ExportSuccess, numberOfExportedEvents));
             Refresh();
@@ -234,7 +235,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             {
                 foreach (var selectedSession in _selectedSessions)
                 {
-                    _logFileManager.DeleteLogs(selectedSession.LogFileName);
+                    selectedSession.Log.Delete();
                     deletedSessions.Add(selectedSession);
                 }
             }

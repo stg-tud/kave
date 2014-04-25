@@ -103,7 +103,7 @@
     <Compile Include="Generators\VisualStudio\WindowEventGeneratorTest.cs" />
     <Compile Include="Interactivity\InteractionRequestTest.cs" />
     <Compile Include="MessageBus\TinyMessengerMessageChannelTest.cs" />
-    <Compile Include="SessionManager\DeleteCompletionEventCommandTest.cs" />
+    <Compile Include="SessionManager\DeleteEventCommandTest.cs" />
     <Compile Include="SessionManager\DeleteSessionCommandTest.cs" />
     <Compile Include="Interactivity\InteractionRequestTestHelper.cs" />
     <Compile Include="SessionManager\UploadReminderTest.cs" />
@@ -124,7 +124,6 @@
     <Compile Include="Utils\InverseBoolConverterTest.cs" />
     <Compile Include="Utils\IoUtilsTest.cs" />
     <Compile Include="Utils\FilePublisherTest.cs" />
-    <Compile Include="Utils\Json\JsonLogFileManagerTest.cs" />
     <Compile Include="Utils\Json\Model\CompletionEventSerializationTest.cs" />
     <Compile Include="Utils\Json\JsonAssert.cs" />
     <Compile Include="Utils\Json\JsonLogReaderTest.cs" />
@@ -139,8 +138,8 @@
     <Compile Include="Utils\Json\Model\TypeHierarchySerializationTest.cs" />
     <Compile Include="Utils\Json\Model\TypeShapeSerializationTest.cs" />
     <Compile Include="Utils\Json\SerializationTestTarget.cs" />
-    <Compile Include="Utils\LogFileManagerFixtures.cs" />
-    <Compile Include="Utils\LogFileManagerTest.cs" />
+    <Compile Include="Utils\Logging\LogFileManagerTest.cs" />
+    <Compile Include="Utils\Logging\LogFileTest.cs" />
     <Compile Include="Utils\Names\ReSharperDeclaredElementNameFactoryTest.cs" />
     <Compile Include="Utils\Names\ReSharperTypeNameFactoryTest.cs" />
     <Compile Include="TestFactories\TypeMockUtils.cs" />

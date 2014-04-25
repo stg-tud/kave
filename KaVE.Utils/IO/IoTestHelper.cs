@@ -7,6 +7,9 @@ namespace KaVE.Utils.IO
     {
         private static readonly Random Random = new Random();
 
+        /// <summary>
+        /// Creates a new directory in the system's temporary-files directory and returns its full path.
+        /// </summary>
         public static string GetTempDirectoryName()
         {
             var temp = Path.GetTempPath();
@@ -17,17 +20,6 @@ namespace KaVE.Utils.IO
             } while (Directory.Exists(dir));
             Directory.CreateDirectory(dir);
             return dir;
-        }
-
-        public static string GetTempFileName(string dir)
-        {
-            string file;
-            do
-            {
-                file = Path.Combine(dir, "file-" + Random.Next());
-            } while (File.Exists(file));
-            File.Create(file);
-            return file;
         }
 
         /// <summary>

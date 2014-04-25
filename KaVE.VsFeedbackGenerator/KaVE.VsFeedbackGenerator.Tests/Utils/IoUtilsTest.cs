@@ -2,6 +2,7 @@
 using System.IO;
 using System.Net.Http;
 using KaVE.Utils.Assertion;
+using KaVE.Utils.IO;
 using KaVE.VsFeedbackGenerator.Utils;
 using Moq;
 using NUnit.Framework;
@@ -47,6 +48,38 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
         }
 
         [Test]
+        public void ShouldCreateDirectory()
+        {
+            var directory = Path.Combine(Path.GetTempPath(), "MyTestTempDir");
+
+            _sut.CreateDirectory(directory);
+
+            Assert.IsTrue(Directory.Exists(directory));
+        }
+
+        [Test]
+        public void ShouldDeleteDirectory()
+        {
+            var directory = GetNonExistentTempFileName();
+            Directory.CreateDirectory(directory);
+            File.Create(Path.Combine(directory, "file.ext")).Close();
+
+            _sut.DeleteDirectoryWithContent(directory);
+
+            Assert.IsFalse(Directory.Exists(directory));
+        }
+
+        [Test]
+        public void ShouldCreateFile()
+        {
+            var path = GetNonExistentTempFileName();
+
+            _sut.CreateFile(path);
+
+            Assert.IsTrue(File.Exists(path));
+        }
+
+        [Test]
         public void ShouldDetectIfFileExists()
         {
             var fileName = Path.GetTempFileName();
@@ -73,13 +106,60 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
         }
 
         [Test]
-        public void ShouldReadcontentsOfFile()
+        public void ShouldReadContentsOfFile()
         {
             var a = Path.GetTempFileName();
             const string expected = "blubb";
             File.WriteAllText(a, expected);
             var actual = _sut.ReadFile(a);
             Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void ShouldDeleteFile()
+        {
+            var filePath = Path.GetTempFileName();
+            _sut.DeleteFile(filePath);
+            Assert.IsFalse(File.Exists(filePath));
+        }
+
+        [Test]
+        public void ShouldOpenFileForRead()
+        {
+            var file = IoTestHelper.GetTempFileName();
+
+            var stream = _sut.OpenFile(file, FileMode.Open, FileAccess.Read);
+
+            Assert.IsTrue(stream.CanRead);
+            stream.Close();
+        }
+
+        [Test]
+        public void ShouldOpenFileForWrite()
+        {
+            var file = IoTestHelper.GetTempFileName();
+
+            var stream = _sut.OpenFile(file, FileMode.Open, FileAccess.Write);
+
+            Assert.IsTrue(stream.CanWrite);
+            stream.Close();
+        }
+
+        [Test]
+        public void ShouldMoveFile()
+        {
+            var source = IoTestHelper.GetTempFileName();
+            var target = GetNonExistentTempFileName();
+
+            _sut.MoveFile(source, target);
+
+            Assert.IsTrue(File.Exists(target));
+            Assert.IsFalse(File.Exists(source));
+        }
+
+        private string GetNonExistentTempFileName()
+        {
+            return Path.Combine(IoTestHelper.GetTempDirectoryName(), "ArbitraryFileName" + DateTime.Now.Ticks);
         }
     }
 }

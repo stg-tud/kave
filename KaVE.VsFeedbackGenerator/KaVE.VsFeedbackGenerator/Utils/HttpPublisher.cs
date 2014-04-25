@@ -19,6 +19,7 @@ namespace KaVE.VsFeedbackGenerator.Utils
             _ioUtils = Registry.GetComponent<IIoUtils>();
         }
 
+        // TODO Messages -> Resource Files
         public void Publish(string srcFilename)
         {
             Asserts.That(_ioUtils.FileExists(srcFilename), "Quelldatei existiert nicht");

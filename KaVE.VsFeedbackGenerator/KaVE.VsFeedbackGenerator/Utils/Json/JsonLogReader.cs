@@ -2,6 +2,7 @@
 using System.IO;
 using KaVE.Utils.Assertion;
 using KaVE.VsFeedbackGenerator.Generators;
+using KaVE.VsFeedbackGenerator.Utils.Logging;
 using Newtonsoft.Json;
 
 namespace KaVE.VsFeedbackGenerator.Utils.Json

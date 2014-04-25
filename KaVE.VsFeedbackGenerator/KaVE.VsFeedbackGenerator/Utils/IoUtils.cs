@@ -13,10 +13,17 @@ namespace KaVE.VsFeedbackGenerator.Utils
             [NotNull] Uri targetUri,
             int timeoutInSeconds = 5);
 
+        void CreateFile(string path);
         void CopyFile(string src, string trg);
         string GetTempFileName();
         bool FileExists(string fileName);
+        Stream OpenFile(string file, FileMode mode, FileAccess access);
         string ReadFile(string fileName);
+        void MoveFile(string source, string target);
+        void DeleteFile(string fileName);
+
+        void CreateDirectory(string path);
+        void DeleteDirectoryWithContent(string path);
     }
 
     [ShellComponent]
@@ -40,9 +47,7 @@ namespace KaVE.VsFeedbackGenerator.Utils
                     Asserts.Fail("Server nicht erreichbar");
                 }
             }
-
-            // TODO review with Sven
-            throw new AssertException("unreachable code");
+            return Asserts.Fail<HttpResponseMessage>("unreachable code");
         }
 
         public void CopyFile(string src, string trg)
@@ -63,6 +68,36 @@ namespace KaVE.VsFeedbackGenerator.Utils
         public string ReadFile(string fileName)
         {
             return File.ReadAllText(fileName);
+        }
+
+        public void DeleteFile(string fileName)
+        {
+            File.Delete(fileName);
+        }
+
+        public void DeleteDirectoryWithContent(string path)
+        {
+            Directory.Delete(path, true);
+        }
+
+        public Stream OpenFile(string file, FileMode mode, FileAccess access)
+        {
+            return new FileStream(file, mode, access);
+        }
+
+        public void MoveFile(string source, string target)
+        {
+            File.Move(source, target);
+        }
+
+        public void CreateDirectory(string path)
+        {
+            Directory.CreateDirectory(path);
+        }
+
+        public void CreateFile(string path)
+        {
+            File.Create(path).Close();
         }
     }
 }

@@ -1,21 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using JetBrains.UI.Extensions.Commands;
 using KaVE.Model.Events;
 using KaVE.Utils.Assertion;
 using KaVE.VsFeedbackGenerator.SessionManager;
+using KaVE.VsFeedbackGenerator.Utils.Json;
 
 namespace KaVE.VsFeedbackGenerator.Utils
 {
     public class ExportCommandFactory
     {
-        private readonly ILogFileManager<IDEEvent> _logFileManager;
         private readonly IFeedbackViewModelDialog _feedbackViewModelDialog;
         private readonly IIoUtils _ioUtils = Registry.GetComponent<IIoUtils>();
 
-        public ExportCommandFactory(ILogFileManager<IDEEvent> logFileManager, IFeedbackViewModelDialog feedbackViewModelDialog)
+        public ExportCommandFactory(IFeedbackViewModelDialog feedbackViewModelDialog)
         {
-            _logFileManager = logFileManager;
             _feedbackViewModelDialog = feedbackViewModelDialog;
         }
 
@@ -29,7 +29,7 @@ namespace KaVE.VsFeedbackGenerator.Utils
                     Export(events, publisher);
                     _feedbackViewModelDialog.ShowExportSucceededMessage(events.Count);
                 }
-                catch (AssertException e)
+                catch (Exception e)
                 {
                     _feedbackViewModelDialog.ShowExportFailedMessage(e.Message);
                 }
@@ -41,9 +41,12 @@ namespace KaVE.VsFeedbackGenerator.Utils
         private void Export(IEnumerable<IDEEvent> events, IPublisher publisher)
         {
             var tempFileName = _ioUtils.GetTempFileName();
-            using (var logWriter = _logFileManager.NewLogWriter(tempFileName))
+            using (var stream = _ioUtils.OpenFile(tempFileName, FileMode.Open, FileAccess.Write))
             {
-                logWriter.WriteAll(events);
+                using (var logWriter = new JsonLogWriter<IDEEvent>(stream))
+                {
+                    logWriter.WriteAll(events);
+                }
             }
             publisher.Publish(tempFileName);
         }

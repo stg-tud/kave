@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using KaVE.Model.Events;
 using KaVE.Model.Events.CompletionEvent;
-using KaVE.VsFeedbackGenerator.Utils;
 using KaVE.VsFeedbackGenerator.Utils.Json;
+using KaVE.VsFeedbackGenerator.Utils.Logging;
 
 namespace KaVE.CompletionTraceGenerator
 {
@@ -12,27 +13,23 @@ namespace KaVE.CompletionTraceGenerator
         private static readonly string[] InputFileNames = {@"C:\Users\Sven\test.log"};
         private const string OutputFileName = @"C:\Users\Sven\test.trace";
 
-        private readonly ILogFileManager<IDEEvent> _logFileManager;
-        private readonly CompletionEventToTraceConverter _toTraceConverter;
-
         public static void Main()
         {
             new EventLog2TraceConverter().Run();
         }
 
-        private EventLog2TraceConverter()
-        {
-            _logFileManager = new JsonLogFileManager<IDEEvent>("");
-            _toTraceConverter =
-                new CompletionEventToTraceConverter(
-                    new JsonLogFileManager<CompletionTrace>("").NewLogWriter(OutputFileName));
-        }
-
         private void Run()
         {
-            foreach (var completionEvent in InputCompletionEvents)
+            using (var outputStream = new FileStream(OutputFileName, FileMode.Open, FileAccess.Write))
             {
-                _toTraceConverter.Process(completionEvent);
+                using (var writer = new JsonLogWriter<CompletionTrace>(outputStream))
+                {
+                    var converter = new CompletionEventToTraceConverter(writer);
+                    foreach (var completionEvent in InputCompletionEvents)
+                    {
+                        converter.Process(completionEvent);
+                    }
+                }
             }
         }
 
@@ -43,9 +40,12 @@ namespace KaVE.CompletionTraceGenerator
 
         private IEnumerable<IDEEvent> ReadIDEEvents(string logFileName)
         {
-            using (var logReader = _logFileManager.NewLogReader(logFileName))
+            using (var stream = new FileStream(logFileName, FileMode.Open, FileAccess.Read))
             {
-                return logReader.ReadAll();
+                using (var logReader = new JsonLogReader<IDEEvent>(stream))
+                {
+                    return logReader.ReadAll().ToList();
+                }
             }
         }
     }

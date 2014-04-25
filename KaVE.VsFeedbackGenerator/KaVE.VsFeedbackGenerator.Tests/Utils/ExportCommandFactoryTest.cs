@@ -1,9 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using JetBrains.UI.Extensions.Commands;
 using KaVE.Model.Events;
 using KaVE.Utils.Assertion;
 using KaVE.VsFeedbackGenerator.SessionManager;
 using KaVE.VsFeedbackGenerator.Utils;
+using KaVE.VsFeedbackGenerator.Utils.Json;
 using Moq;
 using NUnit.Framework;
 
@@ -15,28 +18,26 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
         private const string ArbitraryFileName = "xyz";
         private const string ArbitrayExceptionMessage = "custom message";
 
-        private Mock<ILogFileManager<IDEEvent>> _logFileManagerMock;
-        private Mock<ILogWriter<IDEEvent>> _logWriterMock;
         private Mock<IFeedbackViewModelDialog> _feedbackViewModelDialog;
         private Mock<IPublisher> _publisherMock;
 
         private ExportCommandFactory _factory;
         private Mock<IIoUtils> _ioHelperMock;
+        private MemoryStream _tmpExportFileStream;
 
         [SetUp]
         public void SetUp()
         {
-            _logFileManagerMock = new Mock<ILogFileManager<IDEEvent>>();
-            _logWriterMock = new Mock<ILogWriter<IDEEvent>>();
             _feedbackViewModelDialog = new Mock<IFeedbackViewModelDialog>();
             _publisherMock = new Mock<IPublisher>();
 
+            _tmpExportFileStream = new MemoryStream();
             _ioHelperMock = new Mock<IIoUtils>();
+            _ioHelperMock.Setup(iou => iou.OpenFile(It.IsAny<string>(), FileMode.Open, FileAccess.Write))
+                         .Returns(_tmpExportFileStream);
             Registry.RegisterComponent(_ioHelperMock.Object);
 
-            _logFileManagerMock.Setup(m => m.NewLogWriter(It.IsAny<string>())).Returns(_logWriterMock.Object);
-
-            _factory = new ExportCommandFactory(_logFileManagerMock.Object, _feedbackViewModelDialog.Object);
+            _factory = new ExportCommandFactory(_feedbackViewModelDialog.Object);
         }
 
         [TearDown]
@@ -58,7 +59,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
         }
 
         [Test]
-        public void ShouldInvokeWriter()
+        public void ShouldWriteEventsToTempFile()
         {
             var events = CreateAnonymousEvents(25);
             _feedbackViewModelDialog.Setup(d => d.ExtractEventsForExport()).Returns(events);
@@ -68,7 +69,21 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
             var uut = CreateSut();
             uut.Execute(null);
 
-            _logWriterMock.Verify(w => w.WriteAll(events));
+            JsonLogAssert_StreamContainsEntries(_tmpExportFileStream, events);
+        }
+
+        private static void JsonLogAssert_StreamContainsEntries(MemoryStream stream, IEnumerable<IDEEvent> expected)
+        {
+            JsonLogAssert_StreamContainsEntries((Stream)new MemoryStream(stream.ToArray()), expected);
+        }
+
+        private static void JsonLogAssert_StreamContainsEntries(Stream stream, IEnumerable<IDEEvent> expected)
+        {
+            using (var reader = new JsonLogReader<IDEEvent>(stream))
+            {
+                var actual = reader.ReadAll();
+                CollectionAssert.AreEqual(expected, actual);
+            }
         }
 
         [Test]
@@ -83,20 +98,6 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
             uut.Execute(null);
 
             _publisherMock.Verify(p => p.Publish(ArbitraryFileName));
-        }
-
-        [Test]
-        public void ShouldInvokeFileManager()
-        {
-            var events = CreateAnonymousEvents(25);
-            _feedbackViewModelDialog.Setup(d => d.ExtractEventsForExport()).Returns(events);
-
-            _ioHelperMock.Setup(io => io.GetTempFileName()).Returns(ArbitraryFileName);
-
-            var uut = CreateSut();
-            uut.Execute(null);
-
-            _logFileManagerMock.Verify(p => p.NewLogWriter(ArbitraryFileName));
         }
 
         [Test]
@@ -132,7 +133,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
             var events = CreateAnonymousEvents(5);
             _feedbackViewModelDialog.Setup(d => d.ExtractEventsForExport()).Returns(events);
 
-            SetupFailingLogWriterMock(ArbitrayExceptionMessage);
+            SetupFailingIO(ArbitrayExceptionMessage);
 
             var uut = CreateSut();
             uut.Execute(null);
@@ -146,9 +147,10 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
                           .Throws(new AssertException(failMessage));
         }
 
-        private void SetupFailingLogWriterMock(string failMessage)
+        private void SetupFailingIO(string failMessage)
         {
-            _logWriterMock.Setup(w => w.WriteAll(It.IsAny<IList<IDEEvent>>())).Throws(new AssertException(failMessage));
+            _ioHelperMock.Setup(iou => iou.OpenFile(It.IsAny<string>(), FileMode.Open, FileAccess.Write))
+                         .Throws(new Exception(failMessage));
         }
 
         private static List<IDEEvent> CreateAnonymousEvents(int num)
@@ -156,9 +158,11 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
             var list = new List<IDEEvent>();
             for (var i = 0; i < num; i ++)
             {
-                list.Add(new Mock<IDEEvent>().Object);
+                list.Add(new TestIDEEvent());
             }
             return list;
         }
+
+        private class TestIDEEvent : IDEEvent {}
     }
 }

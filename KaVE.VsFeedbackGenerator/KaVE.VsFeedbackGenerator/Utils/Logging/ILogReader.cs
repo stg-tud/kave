@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using KaVE.JetBrains.Annotations;
 
-namespace KaVE.VsFeedbackGenerator.Utils
+namespace KaVE.VsFeedbackGenerator.Utils.Logging
 {
     public interface ILogReader<out TMessage> : IDisposable
     {

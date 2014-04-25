@@ -5,8 +5,8 @@ using KaVE.Model.Events;
 using KaVE.Model.Events.VisualStudio;
 using KaVE.VsFeedbackGenerator.Generators.Merging;
 using KaVE.VsFeedbackGenerator.MessageBus;
-using KaVE.VsFeedbackGenerator.Utils;
 using KaVE.VsFeedbackGenerator.Utils.Json;
+using KaVE.VsFeedbackGenerator.Utils.Logging;
 
 namespace KaVE.VsFeedbackGenerator.Generators
 {
@@ -19,14 +19,14 @@ namespace KaVE.VsFeedbackGenerator.Generators
         };
 
         private readonly IMessageBus _messageChannel;
-        private readonly ILogFileManager<IDEEvent> _logFileManager;
+        private readonly ILogManager<IDEEvent> _logManager;
 
         private IDEEvent _lastEvent;
 
-        public EventLogger(IMessageBus messageBus, JsonIDEEventLogFileManager logFileManager)
+        public EventLogger(IMessageBus messageBus, IDEEventLogFileManager logManager)
         {
             _messageChannel = messageBus;
-            _logFileManager = logFileManager;
+            _logManager = logManager;
             _messageChannel.Subscribe<IDEEvent>(ProcessEvent);
         }
 
@@ -77,8 +77,8 @@ namespace KaVE.VsFeedbackGenerator.Generators
             {
                 return;
             }
-            var logFileName = _logFileManager.GetLogFileName(@event.IDESessionUUID);
-            using (var logWriter = _logFileManager.NewLogWriter(logFileName))
+            var log = _logManager.TodaysLog;
+            using (var logWriter = log.NewLogWriter())
             {
                 logWriter.Write(@event);
             }

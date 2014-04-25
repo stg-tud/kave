@@ -8,6 +8,7 @@ using KaVE.VsFeedbackGenerator.Interactivity;
 using KaVE.VsFeedbackGenerator.SessionManager;
 using KaVE.VsFeedbackGenerator.Tests.Interactivity;
 using KaVE.VsFeedbackGenerator.Utils;
+using KaVE.VsFeedbackGenerator.Utils.Logging;
 using Moq;
 using NUnit.Framework;
 using Messages = KaVE.VsFeedbackGenerator.Properties.SessionManager;
@@ -18,19 +19,36 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
     internal class DeleteSessionCommandTest
     {
         private FeedbackViewModel _uut;
-        private Mock<ILogFileManager<IDEEvent>> _mockLogFileManager;
+        private IList<Mock<ILog<IDEEvent>>> _mockLogs;
+        private Mock<ILogManager<IDEEvent>> _mockLogFileManager;
         private InteractionRequestTestHelper<Confirmation> _confirmationRequestHelper;
+        private IList<SessionViewModel> _sessionViewModels;
 
         [SetUp]
         public void SetUp()
         {
             Registry.RegisterComponent(new Mock<IIoUtils>().Object);
-            _mockLogFileManager = new Mock<ILogFileManager<IDEEvent>>();
-            _mockLogFileManager.Setup(mgr => mgr.NewLogReader(It.IsAny<string>()))
-                               .Returns(new Mock<ILogReader<IDEEvent>>().Object);
+
+            var mockLog1 = new Mock<ILog<IDEEvent>>();
+            mockLog1.Setup(log => log.NewLogReader()).Returns(new Mock<ILogReader<IDEEvent>>().Object);
+            var mockLog2 = new Mock<ILog<IDEEvent>>();
+            mockLog2.Setup(log => log.NewLogReader()).Returns(new Mock<ILogReader<IDEEvent>>().Object);
+            var mockLog3 = new Mock<ILog<IDEEvent>>();
+            mockLog3.Setup(log => log.NewLogReader()).Returns(new Mock<ILogReader<IDEEvent>>().Object);
+            _mockLogs = new List<Mock<ILog<IDEEvent>>> {mockLog1, mockLog2, mockLog3};
+
+            _mockLogFileManager = new Mock<ILogManager<IDEEvent>>();
+            _mockLogFileManager.Setup(mgr => mgr.GetLogs()).Returns(_mockLogs.Select(m => m.Object));
 
             _uut = new FeedbackViewModel(_mockLogFileManager.Object, null);
+            _uut.Refresh();
+            while (_uut.Refreshing)
+            {
+                Thread.Sleep(5);
+            }
+
             _confirmationRequestHelper = _uut.ConfirmationRequest.NewTestHelper();
+            _sessionViewModels = _uut.Sessions.ToList();
         }
 
         [TearDown]
@@ -52,8 +70,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
         [Test]
         public void ShouldBeEnabledIfASessionIsSelected()
         {
-            GivenViewModelRepresents("file1");
-            GivenSessionsAreSelected("file1");
+            GivenSessionsAreSelected(_sessionViewModels[0]);
 
             var deletionEnabled = _uut.DeleteSessionsCommand.CanExecute(null);
 
@@ -63,8 +80,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
         [Test]
         public void ShouldAskForConfirmationIfDeleteIsPressed()
         {
-            GivenViewModelRepresents("file1");
-            GivenSessionsAreSelected("file1");
+            GivenSessionsAreSelected(_sessionViewModels[0]);
 
             _uut.DeleteSessionsCommand.Execute(null);
 
@@ -74,8 +90,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
         [Test]
         public void ShouldAskForConfirmationForSingleSession()
         {
-            GivenViewModelRepresents("file1");
-            GivenSessionsAreSelected("file1");
+            GivenSessionsAreSelected(_sessionViewModels[0]);
 
             _uut.DeleteSessionsCommand.Execute(null);
 
@@ -91,8 +106,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
         [Test]
         public void ShouldAskForConfirmationForMultipleSession()
         {
-            GivenViewModelRepresents("file1", "file2", "file3");
-            GivenSessionsAreSelected("file1", "file3");
+            GivenSessionsAreSelected(_sessionViewModels[0], _sessionViewModels[2]);
 
             _uut.DeleteSessionsCommand.Execute(null);
 
@@ -108,8 +122,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
         [Test]
         public void ShouldDoNothingIfConfirmationIsDenied()
         {
-            GivenViewModelRepresents("a.file");
-            GivenSessionsAreSelected("a.file");
+            GivenSessionsAreSelected(_sessionViewModels[0]);
             var expected = _uut.Sessions.ToList();
 
             _uut.DeleteSessionsCommand.Execute(null);
@@ -122,51 +135,39 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
         [Test]
         public void ShouldDeleteSelectedSessionIfConfirmationIsGiven()
         {
-            GivenViewModelRepresents("file1", "file2");
-            GivenSessionsAreSelected("file1");
-            var expected = _uut.Sessions.Where(s => s.LogFileName != "file1").ToList();
+            GivenSessionsAreSelected(_sessionViewModels[1]);
 
             _uut.DeleteSessionsCommand.Execute(null);
             _confirmationRequestHelper.Context.Confirmed = true;
             _confirmationRequestHelper.Callback();
 
+            var expected = new List<SessionViewModel> {_sessionViewModels[0], _sessionViewModels[2]};
             CollectionAssert.AreEqual(expected, _uut.Sessions);
-            _mockLogFileManager.Verify(mgr => mgr.DeleteLogs("file1"));
+            _mockLogs[1].Verify(log => log.Delete());
         }
 
         [Test]
         public void ShouldNotRemoveSessionFromViewModelWhenDeletionOfFileFails()
         {
-            _mockLogFileManager.Setup(mgr => mgr.DeleteLogs(It.IsAny<string[]>())).Throws<Exception>();
-            GivenViewModelRepresents("afile");
-            GivenSessionsAreSelected("afile");
+            _mockLogs[0].Setup(log => log.Delete()).Throws<Exception>();
+            GivenSessionsAreSelected(_sessionViewModels[0]);
+            var selectedSession = _uut.Sessions.First();
 
             _uut.DeleteSessionsCommand.Execute(null);
             _confirmationRequestHelper.Context.Confirmed = true;
             // ReSharper disable once EmptyGeneralCatchClause
-            try {_confirmationRequestHelper.Callback();} catch {}
-
-            Assert.AreEqual("afile", _uut.Sessions.First().LogFileName);
-        }
-
-        private void GivenViewModelRepresents(params string[] logFileNames)
-        {
-            _mockLogFileManager.Setup(mgr => mgr.GetLogFileNames()).Returns(logFileNames);
-            RefreshViewModel();
-        }
-
-        private void GivenSessionsAreSelected(params string[] logFileNames)
-        {
-            _uut.SelectedSessions = _uut.Sessions.Where(s => logFileNames.Contains(s.LogFileName));
-        }
-
-        private void RefreshViewModel()
-        {
-            _uut.Refresh();
-            while (_uut.Refreshing)
+            try
             {
-                Thread.Sleep(5);
+                _confirmationRequestHelper.Callback();
             }
+            catch {}
+
+            Assert.AreEqual(selectedSession, _uut.Sessions.First());
+        }
+
+        private void GivenSessionsAreSelected(params SessionViewModel[] sessions)
+        {
+            _uut.SelectedSessions = sessions;
         }
     }
 }

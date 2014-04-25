@@ -7,7 +7,7 @@ using KaVE.Model.Events.VisualStudio;
 using KaVE.VsFeedbackGenerator.Interactivity;
 using KaVE.VsFeedbackGenerator.SessionManager;
 using KaVE.VsFeedbackGenerator.Tests.Interactivity;
-using KaVE.VsFeedbackGenerator.Utils;
+using KaVE.VsFeedbackGenerator.Utils.Logging;
 using Moq;
 using NUnit.Framework;
 using Messages = KaVE.VsFeedbackGenerator.Properties.SessionManager;
@@ -15,12 +15,10 @@ using Messages = KaVE.VsFeedbackGenerator.Properties.SessionManager;
 namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
 {
     [TestFixture]
-    internal class DeleteCompletionEventCommandTest
+    internal class DeleteEventCommandTest
     {
-        private const string TestLogFileName = "testLogFileName";
-
         private SessionViewModel _uut;
-        private Mock<ILogFileManager<IDEEvent>> _mockLogFileManager;
+        private Mock<ILog<IDEEvent>> _mockLog;
         private InteractionRequestTestHelper<Confirmation> _confirmationRequestHelper;
         private List<IDEEvent> _displayedEvents;
 
@@ -29,14 +27,13 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
         {
             _displayedEvents = new List<IDEEvent> { new ActionEvent(), new BuildEvent(), new BulbActionEvent() };
 
-            var mockReader = new Mock<ILogReader<IDEEvent>>();
-            mockReader.Setup(r => r.ReadAll()).Returns(_displayedEvents);
+            var mockLogReader = new Mock<ILogReader<IDEEvent>>();
+            mockLogReader.Setup(reader => reader.ReadAll()).Returns(_displayedEvents);
 
-            _mockLogFileManager = new Mock<ILogFileManager<IDEEvent>>();
-            _mockLogFileManager.Setup(mgr => mgr.NewLogReader(TestLogFileName))
-                               .Returns(mockReader.Object);
+            _mockLog = new Mock<ILog<IDEEvent>>();
+            _mockLog.Setup(log => log.NewLogReader()).Returns(mockLogReader.Object);
 
-            _uut = new SessionViewModel(_mockLogFileManager.Object, TestLogFileName);
+            _uut = new SessionViewModel(_mockLog.Object);
             _confirmationRequestHelper = _uut.ConfirmationRequest.NewTestHelper();
         }
 
@@ -114,22 +111,16 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
             Assert.AreEqual(3, _uut.Events.Count());
         }
 
-        [Test, Ignore("Test fails, because the command does writes to a tmp file, which is not managed by the log file manager and we can, therefore, not capture this here. A refactoring is planned for the manager. This test should be adjusted an reenabled afterwards")]
+        [Test]
         public void ShouldRemoveEventFromLogAndViewModelWhenConfirmationIsGiven()
         {
-            var remainingEvents = new List<IDEEvent>();
-            var mockWriter = new Mock<ILogWriter<IDEEvent>>();
-            mockWriter.Setup(w => w.Write(It.IsAny<IDEEvent>())).Callback((IDEEvent e) => remainingEvents.Add(e));
-            _mockLogFileManager.Setup(mgr => mgr.NewLogWriter(It.IsAny<string>())).Returns(mockWriter.Object);
             GivenEventsAreSelected(_displayedEvents[1]);
 
             _uut.DeleteEventsCommand.Execute(null);
             _confirmationRequestHelper.Context.Confirmed = true;
             _confirmationRequestHelper.Callback();
 
-            Assert.AreEqual(2, remainingEvents.Count);
-            CollectionAssert.Contains(remainingEvents, _displayedEvents[0]);
-            CollectionAssert.Contains(remainingEvents, _displayedEvents[2]);
+            _mockLog.Verify(log => log.RemoveRange(new List<IDEEvent>{_displayedEvents[1]}));
             Assert.AreEqual(2, _uut.Events.Count());
         }
 
