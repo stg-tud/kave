@@ -77,7 +77,7 @@ namespace KaVE.VsFeedbackGenerator.Generators
             {
                 return;
             }
-            var log = _logManager.TodaysLog;
+            var log = _logManager.CurrentLog;
             using (var logWriter = log.NewLogWriter())
             {
                 logWriter.Write(@event);

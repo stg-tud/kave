@@ -34,7 +34,7 @@ namespace KaVE.VsFeedbackGenerator.Utils.Logging
             GetLogs().Where(log => log.Date < time).ForEach(log => log.Delete());
         }
 
-        public ILog<TLogEntry> TodaysLog
+        public ILog<TLogEntry> CurrentLog
         {
             get
             {

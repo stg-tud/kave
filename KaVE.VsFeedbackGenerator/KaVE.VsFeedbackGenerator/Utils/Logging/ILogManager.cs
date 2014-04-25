@@ -17,7 +17,7 @@ namespace KaVE.VsFeedbackGenerator.Utils.Logging
     {
         string BaseLocation { get; }
         IEnumerable<ILog<TLogEntry>> GetLogs();
-        ILog<TLogEntry> TodaysLog { get; }
+        ILog<TLogEntry> CurrentLog { get; }
         void DeleteLogsOlderThan(DateTime time);
 
     }

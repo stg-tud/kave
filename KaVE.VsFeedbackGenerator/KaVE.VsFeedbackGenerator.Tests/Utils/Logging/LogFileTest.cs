@@ -16,6 +16,9 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Logging
     {
         private Mock<IIoUtils> _mockIoUtils;
         private const string TestLogFilePath = @"C:\My\Log\Dir\Log_2014-03-21";
+        private static readonly DateTime TestLogFileDate = new DateTime(2014, 3, 21);
+
+        private LogFile<string> _uut;
 
         [SetUp]
         public void SetUp()
@@ -23,7 +26,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Logging
             _mockIoUtils = new Mock<IIoUtils>();
             Registry.RegisterComponent(_mockIoUtils.Object);
 
-            Uut = new LogFile<string>(TestLogFilePath);
+            _uut = new LogFile<string>(TestLogFilePath);
         }
 
         [TearDown]
@@ -32,26 +35,22 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Logging
             Registry.Clear();
         }
 
-        protected LogFile<string> Uut { get; private set; }
-
         [Test]
         public void ShouldRememberLogPath()
         {
-            Assert.AreEqual(TestLogFilePath, Uut.Path);
+            Assert.AreEqual(TestLogFilePath, _uut.Path);
         }
 
         [Test]
         public void ShouldIdentifyLogDateFromPath()
         {
-            var expected = new DateTime(2014, 3, 21);
-            var actual = Uut.Date;
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(TestLogFileDate, _uut.Date);
         }
 
         [Test]
         public void ShouldDeleteLogFile()
         {
-            Uut.Delete();
+            _uut.Delete();
 
             _mockIoUtils.Verify(iou => iou.DeleteFile(TestLogFilePath));
         }
@@ -66,11 +65,17 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Logging
             _mockIoUtils.Setup(iou => iou.OpenFile(It.IsAny<string>(), It.IsAny<FileMode>(), FileAccess.Write))
                         .Returns(outputStream);
 
-            Uut.RemoveRange(new [] { "Line 1", "Line 3"});
+            _uut.RemoveRange(new [] { "Line 1", "Line 3"});
 
             Assert.AreEqual("\"Line 2\"\r\n", outputStream.AsString());
             _mockIoUtils.Verify(iou => iou.DeleteFile(TestLogFilePath));
             _mockIoUtils.Verify(iou => iou.MoveFile(It.IsAny<string>(), TestLogFilePath));
+        }
+
+        [Test, Ignore("Introduce a LogEntryWrapper with a timestamp to have the notion of time available")]
+        public void ShouldRemoveOldEntries()
+        {
+            // _uut.RemoveOldThan(TestLogFileDate.AddMinutes(-10));
         }
 
         [Test]
@@ -87,7 +92,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Logging
                 "And yet another log message!"
             };
 
-            using (var writer = Uut.NewLogWriter())
+            using (var writer = _uut.NewLogWriter())
             {
                 writer.Write(expected[0]);
                 writer.Write(expected[1]);
@@ -98,7 +103,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Logging
                         .Returns(new MemoryStream(targetStream.ToArray()));
 
             IEnumerable<string> actual;
-            using (var reader = Uut.NewLogReader())
+            using (var reader = _uut.NewLogReader())
             {
                 actual = reader.ReadAll().ToList();
             }
@@ -115,7 +120,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Logging
 
             var expected = new[] { "message1", "message2" };
 
-            using (var writer = Uut.NewLogWriter())
+            using (var writer = _uut.NewLogWriter())
             {
                 writer.Write(expected[0]);
 
@@ -127,7 +132,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Logging
             _mockIoUtils.Setup(iou => iou.OpenFile(TestLogFilePath, It.IsAny<FileMode>(), FileAccess.Write))
                         .Returns(targetStream);
 
-            using (var writer = Uut.NewLogWriter())
+            using (var writer = _uut.NewLogWriter())
             {
                 writer.Write(expected[1]);
             }
@@ -136,7 +141,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Logging
                         .Returns(new MemoryStream(targetStream.ToArray()));
 
             IEnumerable<string> actual;
-            using (var reader = Uut.NewLogReader())
+            using (var reader = _uut.NewLogReader())
             {
                 actual = reader.ReadAll().ToList();
             }
