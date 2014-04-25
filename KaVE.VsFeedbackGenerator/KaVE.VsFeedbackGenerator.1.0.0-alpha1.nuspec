@@ -14,13 +14,13 @@
         <releaseNotes>Release Information.</releaseNotes>
         <copyright>Copyright 2013</copyright>
         <dependencies>
-            <dependency id="ReSharper" version="[8.2, 9.0)" />
+            <dependency id="ReSharper" version="[8.0.1000, 9.0)" />
         </dependencies>
     </metadata>
     <files>
         <file src="KaVE.VsFeedbackGenerator\bin\Debug\KaVE.Model.dll" target="ReSharper\vAny\plugins\KaVE.Model.dll" />
         <file src="KaVE.VsFeedbackGenerator\bin\Debug\KaVE.Utils.dll" target="ReSharper\vAny\plugins\KaVE.Utils.dll" />
-        <file src="KaVE.VsFeedbackGenerator\bin\Debug\KaVE.VsFeedbackGenerator.dll" target="ReSharper\v8.2\plugins\KaVE.VsFeedbackGenerator.RS82.dll" />
+        <file src="KaVE.VsFeedbackGenerator\bin\Debug\KaVE.VsFeedbackGenerator.dll" target="ReSharper\vAny\plugins\KaVE.VsFeedbackGenerator.dll" />
         <file src="KaVE.VsFeedbackGenerator\bin\Debug\Newtonsoft.Json.dll" target="ReSharper\vAny\plugins\Newtonsoft.Json.dll" />
         <file src="KaVE.VsFeedbackGenerator\bin\Debug\Hardcodet.Wpf.TaskbarNotification.dll" target="ReSharper\vAny\plugins\Hardcodet.Wpf.TaskbarNotification.dll" />
     </files>
