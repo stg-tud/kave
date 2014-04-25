@@ -1,5 +1,5 @@
 ﻿using KaVE.Model.Events.CompletionEvent;
-using KaVE.Model.Tests.Events.CompletionEvent;
+using KaVE.TestUtils.Model.Events.CompletionEvent;
 using NUnit.Framework;
 
 namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.Model

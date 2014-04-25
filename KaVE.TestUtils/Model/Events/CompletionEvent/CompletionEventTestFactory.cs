@@ -4,14 +4,14 @@ using KaVE.Model.Events;
 using KaVE.Model.Events.CompletionEvent;
 using KaVE.Model.Names.CSharp;
 
-namespace KaVE.Model.Tests.Events.CompletionEvent
+namespace KaVE.TestUtils.Model.Events.CompletionEvent
 {
     public static class CompletionEventTestFactory
     {
-        public static Model.Events.CompletionEvent.CompletionEvent CreateAnonymousCompletionEvent(int duration)
+        public static KaVE.Model.Events.CompletionEvent.CompletionEvent CreateAnonymousCompletionEvent(int duration)
         {
             var now = DateTime.Now;
-            return new Model.Events.CompletionEvent.CompletionEvent
+            return new KaVE.Model.Events.CompletionEvent.CompletionEvent
             {
                 TriggeredAt = now,
                 TriggeredBy = IDEEvent.Trigger.Shortcut,
