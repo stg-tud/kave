@@ -4,6 +4,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:properties="clr-namespace:KaVE.VsFeedbackGenerator.Properties"
+        xmlns:root="clr-namespace:KaVE.VsFeedbackGenerator"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
         SizeToContent="WidthAndHeight"
@@ -12,7 +13,7 @@
         WindowStyle="SingleBorderWindow"
         ResizeMode="CanMinimize"
         DataContext="{Binding RelativeSource={RelativeSource Self}}"
-        Title="Export Wizard">
+        Title="{x:Static root:Properties.UploadWizard.window_title}">
     <Window.Resources>
         <ResourceDictionary>
             <BitmapImage x:Key="Icon" UriSource="/KaVE.VsFeedbackGenerator;Component/Resources/question.png" />
@@ -27,36 +28,35 @@
     </Window.Resources>
     <StackPanel Margin="5">
         <Label>
-            <TextBlock Name="DialogText" Text="Erläuterung Upload:..." Margin="5" />
+            <TextBlock Name="DialogText" Text="{x:Static root:Properties.UploadWizard.description}" Margin="5" />
         </Label>
-        <Expander Header="Anonymisierungsoptionen">
+        <Expander Header="{x:Static root:Properties.UploadWizard.checkbox_group_name}">
             <StackPanel Margin="10,4,0,0">
                 <CheckBox Name="NamesCheckBox" Checked="CheckBoxChanged" Unchecked="CheckBoxChanged" Margin="4"
-                          Content="Methoden- und Variablennamen im Feedback erfassen." />
+                          Content="{x:Static root:Properties.UploadWizard.name_checkbox}" />
                 <CheckBox Name="StartTimeCheckBox" Margin="4"
-                          Content="Auslösezeitpunkt von Events im Feedback erfassen." />
-                <CheckBox Name="DurationCheckBox" Margin="4" Content="Dauer von Events im Feedback erfassen." />
+                          Content="{x:Static root:Properties.UploadWizard.startTime_checkbox}" />
+                <CheckBox Name="DurationCheckBox" Margin="4" Content="{x:Static root:Properties.UploadWizard.duration_checkbox}" />
                 <CheckBox Name="SessionUUIDCheckBox" Margin="4"
-                          Content="Zuordnung von Events zu Sessions im Feedback erfassen." />
+                          Content="{x:Static root:Properties.UploadWizard.sessionId_checkbox}" />
             </StackPanel>
         </Expander>
         <StackPanel Orientation="Horizontal" Margin="5" HorizontalAlignment="Right">
             <Image Name="TypeIcon" HorizontalAlignment="Left" VerticalAlignment="Center" Source="{StaticResource Icon}"
                    Height="25" Width="25" />
             <TextBlock>
-                <!-- TODO Open Sessionmanager -->
-                <Hyperlink Click="On_Review_Click">
-                    Feedback einsehen
+                <Hyperlink Click="On_Review_Click"> 
+                    <TextBlock Text="{x:Static root:Properties.UploadWizard.review_link}"/>
                 </Hyperlink>
             </TextBlock>
             <!-- TODO perhaps: include the old pics (in comments) in the button's Content -->
             <Button ToolTip="{x:Static properties:SessionManager.Export}" Margin="5" MinWidth="93"
-                    Content="Zip Export..."
+                    Content="{x:Static root:Properties.UploadWizard.export_zip_button}"
                     Command="{Binding Path=FeedbackViewModel.ExportSessionsCommand}" Name="Export"
                     Style="{StaticResource DefaultDisabledButton}">
                 <!--<Image Source="/KaVE.VsFeedbackGenerator;Component/Resources/export.png" />-->
             </Button>
-            <Button ToolTip="{x:Static properties:SessionManager.Send}" Margin="5" MinWidth="93" Content="Direktupload"
+            <Button ToolTip="{x:Static properties:SessionManager.Send}" Margin="5" MinWidth="93" Content="{x:Static root:Properties.UploadWizard.export_upload_button}"
                     Command="{Binding Path=FeedbackViewModel.SendSessionsCommand}" Name="Send"
                     Style="{StaticResource DefaultDisabledButton}">
                 <!--<Image Source="/KaVE.VsFeedbackGenerator;Component/Resources/send.png" /> -->

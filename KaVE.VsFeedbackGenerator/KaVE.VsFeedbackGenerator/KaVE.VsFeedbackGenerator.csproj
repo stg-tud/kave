@@ -127,6 +127,11 @@
     <Compile Include="TrayNotification\UploadWizard.xaml.cs">
       <DependentUpon>UploadWizard.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Properties\UploadWizard.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>UploadWizard.resx</DependentUpon>
+    </Compile>
     <Compile Include="Utils\CallbackManager.cs" />
     <Compile Include="TrayNotification\PopupAbortConfirmationDialog.xaml.cs">
       <DependentUpon>PopupAbortConfirmationDialog.xaml</DependentUpon>
@@ -251,6 +256,10 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>SessionManager.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\UploadWizard.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>UploadWizard.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
