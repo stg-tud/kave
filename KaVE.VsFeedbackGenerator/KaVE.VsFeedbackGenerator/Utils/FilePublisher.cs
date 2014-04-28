@@ -2,6 +2,7 @@ using System;
 using JetBrains.Util;
 using KaVE.JetBrains.Annotations;
 using KaVE.Utils.Assertion;
+using Messages = KaVE.VsFeedbackGenerator.Properties.SessionManager;
 
 namespace KaVE.VsFeedbackGenerator.Utils
 {
@@ -28,8 +29,7 @@ namespace KaVE.VsFeedbackGenerator.Utils
             }
             catch (Exception e)
             {
-                // TODO @Dennis: Move strings to resource file
-                Asserts.Fail("Datei-Export fehlgeschlagen: {0}", e.Message);
+                Asserts.Fail(Messages.PublishingFileFailed, e.Message);
             }
         }
     }

@@ -231,4 +231,19 @@
   <data name="RawView" xml:space="preserve">
     <value>Raw-View</value>
   </data>
+  <data name="PublishingFileFailed" xml:space="preserve">
+    <value>Datei-Export fehlgeschlagen: {0}</value>
+  </data>
+  <data name="ServerResponseEmpty" xml:space="preserve">
+    <value>Antwort des Servers enthält keine verwertbaren Informationen</value>
+  </data>
+  <data name="ServerResponseIncompatible" xml:space="preserve">
+    <value>Inkompatible Antwort des Server</value>
+  </data>
+  <data name="ServerResponseIncorrentFormat" xml:space="preserve">
+    <value>Antwort des Servers entspricht nicht dem erwarteten Format: {0}</value>
+  </data>
+  <data name="ServerResponseRequestFailure" xml:space="preserve">
+    <value>Server meldet eine fehlerhafte Anfrage: {0}</value>
+  </data>
 </root>

@@ -4,6 +4,7 @@ using JetBrains.Util;
 using KaVE.JetBrains.Annotations;
 using KaVE.Utils.Assertion;
 using Newtonsoft.Json;
+using Messages = KaVE.VsFeedbackGenerator.Properties.SessionManager;
 
 namespace KaVE.VsFeedbackGenerator.Utils
 {
@@ -18,7 +19,6 @@ namespace KaVE.VsFeedbackGenerator.Utils
             _ioUtils = Registry.GetComponent<IIoUtils>();
         }
 
-        // TODO @Dennis: Messages -> Resource Files
         public void Publish(string srcFilename)
         {
             Asserts.That(_ioUtils.FileExists(srcFilename));
@@ -27,7 +27,7 @@ namespace KaVE.VsFeedbackGenerator.Utils
             var response = _ioUtils.TransferByHttp(content, _hostAddress);
             var json = response.Content.ReadAsStringAsync().Result;
 
-            Asserts.Not(json.IsNullOrEmpty(), "Antwort des Servers enthält keine verwertbaren Informationen");
+            Asserts.Not(json.IsNullOrEmpty(), Messages.ServerResponseEmpty);
 
             ExportResult<object> res = null;
             try
@@ -36,11 +36,11 @@ namespace KaVE.VsFeedbackGenerator.Utils
             }
             catch (Exception)
             {
-                Asserts.Fail("Antwort des Servers entspricht nicht dem erwarteten Format: {0}", json);
+                Asserts.Fail(Messages.ServerResponseIncorrentFormat, json);
             }
 
-            Asserts.NotNull(res, "Inkompatible Antwort des Server");
-            Asserts.That(res.Status == State.Ok, "Server meldet eine fehlerhafte Anfrage: {0}", res.Message);
+            Asserts.NotNull(res, Messages.ServerResponseIncompatible);
+            Asserts.That(res.Status == State.Ok, Messages.ServerResponseRequestFailure, res.Message);
         }
 
         private HttpContent CreateMultipartContent([NotNull] string file, [NotNull] string name)
