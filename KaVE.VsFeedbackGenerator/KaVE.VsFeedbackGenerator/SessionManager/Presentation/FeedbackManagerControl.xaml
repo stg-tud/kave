@@ -203,16 +203,16 @@
                             </StackPanel>
                             <!-- CONTEXT BOX -->
                             <GroupBox Grid.Row="4" Header="{x:Static root:Properties.SessionManager.EventContext}"
-                                      DataContext="{Binding CompletionContext}"
+                                      DataContext="{Binding XamlContextRepresentation}"
                                       Visibility="{Binding Converter={StaticResource ObjectToVisibilityConverter}, Path=., FallbackValue=Collapsed}">
                                 <Border BorderThickness="1" BorderBrush="DimGray" Padding="0" CornerRadius="1"
                                         Margin="0,3,0,0" Background="White">
-                                    <presentation:ContextVisualizationTextBlock Margin="0,0,0,0"
+                                    <presentation:XamlBindableRichTextBox Margin="0,0,0,0"
                                                                                 HorizontalAlignment="Left"
                                                                                 VerticalAlignment="Top"
                                                                                 Width="Auto" Height="Auto"
                                                                                 FontFamily="Courier New"
-                                                                                Context="{Binding .}" />
+                                                                                Xaml="{Binding .}" />
                                 </Border>
                             </GroupBox>
                             <!-- DETAILS SCROLLBOX -->
@@ -229,10 +229,12 @@
                             </GroupBox>
                         </Grid>
                     </TabItem>
-                    <TabItem Header="{x:Static root:Properties.SessionManager.RawView}">
-                        <presentation:RawViewTextBlock
-                            Event="{Binding SingleSelectedSession.SingleSelectedEvent.Event, FallbackValue={x:Null}}"
-                            Visibility="{Binding Converter={StaticResource ObjectToVisibilityConverter}, Path=SingleSelectedSession.SingleSelectedEvent, FallbackValue=Collapsed}" />
+                    <TabItem Header="{x:Static root:Properties.SessionManager.RawView}"
+                             DataContext="{Binding SingleSelectedSession.SingleSelectedEvent.XamlRawRepresentation, FallbackValue={x:Null}}">
+                        <presentation:XamlBindableRichTextBox
+                            Xaml="{Binding ., FallbackValue={x:Null}}"
+                            Visibility="{Binding Converter={StaticResource ObjectToVisibilityConverter}, Path=., FallbackValue=Collapsed}"
+                            VerticalScrollBarVisibility="Auto"/>
                     </TabItem>
                 </TabControl>
             </GroupBox>

@@ -5,7 +5,9 @@ using JetBrains.Util;
 using KaVE.Model.Events;
 using KaVE.Model.Events.CompletionEvent;
 using KaVE.Utils.Serialization;
+using KaVE.VsFeedbackGenerator.SessionManager.Presentation;
 using KaVE.VsFeedbackGenerator.Utils.Json;
+using Newtonsoft.Json;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager
 {
@@ -47,6 +49,16 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
                 var completionEvent = Event as CompletionEvent;
                 return completionEvent == null ? null : completionEvent.Context;
             }
+        }
+
+        public string XamlContextRepresentation
+        {
+            get { return CompletionContext == null ? null : CompletionContext.ToXaml(); }
+        }
+
+        public string XamlRawRepresentation
+        {
+            get { return JsonConvert.SerializeObject(Event, Formatting.Indented).Replace("  ", "    "); }
         }
 
         public string Details
