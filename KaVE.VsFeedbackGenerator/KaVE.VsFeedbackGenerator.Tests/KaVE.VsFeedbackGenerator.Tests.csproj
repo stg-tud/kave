@@ -106,6 +106,7 @@
     <Compile Include="SessionManager\DeleteEventCommandTest.cs" />
     <Compile Include="SessionManager\DeleteSessionCommandTest.cs" />
     <Compile Include="Interactivity\InteractionRequestTestHelper.cs" />
+    <Compile Include="SessionManager\Presentation\RawViewConverterTest.cs" />
     <Compile Include="SessionManager\UploadReminderTest.cs" />
     <Compile Include="SessionManager\UploadSettingsTest.cs" />
     <Compile Include="TestFactories\Actions\ActionManagerMockExtensions.cs" />

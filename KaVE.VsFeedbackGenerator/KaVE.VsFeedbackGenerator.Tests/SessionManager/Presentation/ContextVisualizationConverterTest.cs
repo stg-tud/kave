@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using KaVE.Model.Events.CompletionEvent;
+using KaVE.Model.Names;
 using KaVE.Model.Names.CSharp;
 using KaVE.VsFeedbackGenerator.SessionManager.Presentation;
 using NUnit.Framework;
@@ -35,7 +36,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
         {
             var context = new Context
             {
-                EnclosingMethodHierarchy = Create("N.Return", "N.Class", "Method", "N.Argument")
+                EnclosingMethod = Call("N.Return", "N.Class", "Method", new[] {"N.Argument"})
             };
 
             var xaml = context.ToXaml();
@@ -168,7 +169,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                 {
                     TypeHierarchy = CreateTypeHierarchy("N.Class")
                 },
-                EnclosingMethodHierarchy = Create("N.Return", "N.Class", "Method")
+                EnclosingMethod = Call("N.Return", "N.Class", "Method")
             };
 
             var expected = Bold("class") + @" N.Class
@@ -192,7 +193,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                 {
                     TypeHierarchy = CreateTypeHierarchy("N.Class")
                 },
-                EnclosingMethodHierarchy = Create("N.Return", "N.Class", "Method", "N.Argument")
+                EnclosingMethod = Call("N.Return", "N.Class", "Method", new[] {"N.Argument"})
             };
 
             var expected = Bold("class") + @" N.Class
@@ -216,7 +217,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                 {
                     TypeHierarchy = CreateTypeHierarchy("N.Class")
                 },
-                EnclosingMethodHierarchy = Create("N.Return", "N.Class", "Method", "N.Arg0", "N.Arg1", "N.Arg2")
+                EnclosingMethod = Call("N.Return", "N.Class", "Method", new[] {"N.Arg0", "N.Arg1", "N.Arg2"})
             };
 
             var expected = Bold("class") + @" N.Class
@@ -240,7 +241,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                 {
                     TypeHierarchy = CreateTypeHierarchy("N.Class")
                 },
-                EnclosingMethodHierarchy = Create("N.Return", "N.Class", "Method"),
+                EnclosingMethod = Call("N.Return", "N.Class", "Method"),
             };
             context.CalledMethods.Add(Call("N.R1", "N.T", "M1"));
             context.CalledMethods.Add(Call("N.R2", "N.T", "M2", "N.Arg0"));
@@ -263,15 +264,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
             Assert.AreEqual(expected, actual);
         }
 
-        private static MethodHierarchy Create(string returnTypeName,
-            string className,
-            string methodName,
-            params string[] argTypes)
-        {
-            return new MethodHierarchy(Call(returnTypeName, className, methodName, argTypes));
-        }
-
-        private static MethodName Call(string returnTypeName,
+        private static IMethodName Call(string returnTypeName,
             string className,
             string methodName,
             params string[] argTypes)

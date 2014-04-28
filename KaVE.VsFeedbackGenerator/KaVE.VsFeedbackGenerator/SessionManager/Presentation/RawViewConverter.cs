@@ -24,13 +24,13 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
             return JsonConvert.SerializeObject(ideEvent, Formatting.Indented).Replace("  ", "    ");
         }
 
-        private static string AdjustIndent([NotNull] string xaml)
+        internal static string AdjustIndent([NotNull] string xaml)
         {
             var regex = new Regex("\n *");
             return regex.Replace(xaml, match => match.Value + match.Value.Substring(1));
         }
 
-        private static string Highlight([NotNull] string xaml)
+        internal static string Highlight([NotNull] string xaml)
         {
             return Regex.Replace(
                 xaml,
