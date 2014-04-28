@@ -146,6 +146,7 @@
     <Compile Include="Utils\Names\VsComponentNameFactoryTest.cs" />
     <Compile Include="Utils\ObjectToVisibilityConverterTest.cs" />
     <Compile Include="Utils\StringUtilsTest.cs" />
+    <Compile Include="Utils\TestDateUtils.cs" />
     <Compile Include="VsIntegration\IDESessionTest.cs" />
   </ItemGroup>
   <ItemGroup>

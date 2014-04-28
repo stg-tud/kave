@@ -1,10 +1,10 @@
 ﻿using System;
-using JetBrains.Extension;
 using KaVE.VsFeedbackGenerator.SessionManager;
 using KaVE.VsFeedbackGenerator.TrayNotification;
 using KaVE.VsFeedbackGenerator.Utils;
 using Moq;
 using NUnit.Framework;
+using TestDateUtils = KaVE.VsFeedbackGenerator.Tests.Utils.TestDateUtils;
 
 namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
 {
@@ -16,68 +16,91 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
         private Mock<NotifyTrayIcon> _mockTrayIcon;
         private Mock<ICallbackManager> _mockCallbackManager;
 
+        private DateTime _registeredInvocationDate;
+        private Action _registeredRescheduleAction;
+
+        private TestDateUtils _dateUtils;
+        private UploadSettings _newUploadSettings;
+
         [SetUp]
         public void SetUp()
         {
-            _mockSettingsStore = new Mock<ISettingsStore>();
             _uploadSettings = new UploadSettings();
+            _uploadSettings.Initialize();
+
+            _mockSettingsStore = new Mock<ISettingsStore>();
             _mockSettingsStore.Setup(store => store.GetSettings<UploadSettings>()).Returns(_uploadSettings);
+            _mockSettingsStore.Setup(store => store.SetSettings(It.IsAny<UploadSettings>()))
+                  .Callback<UploadSettings>(settings => _newUploadSettings = settings);
+
             _mockTrayIcon = new Mock<NotifyTrayIcon>();
+
+            _dateUtils = new TestDateUtils();
+
             _mockCallbackManager = new Mock<ICallbackManager>();
+            _mockCallbackManager.Setup(
+                mgr => mgr.RegisterCallback(It.IsAny<Action>(), It.IsAny<DateTime>(), It.IsAny<Action>()))
+                                .Callback<Action, DateTime, Action>(
+                                    (callback, nextDateTimeToInvoke, finish) =>
+                                    {
+                                        _registeredInvocationDate = nextDateTimeToInvoke;
+                                        _registeredRescheduleAction = finish;
+                                    });
+        }
+
+        private void MockStoreToReturnUninitializedSettings()
+        {
+            _mockSettingsStore.Setup(store => store.GetSettings<UploadSettings>()).Returns(new UploadSettings());
+        }
+
+        private static DateTime CreateDateWithDayAndHour(int day, int hour)
+        {
+            var relativeDate = new DateTime(1970, 1, day, hour, 1, 0);
+            return relativeDate;
+        }
+
+        public void SetNow(DateTime date)
+        {
+            _dateUtils.Now = date;
+        }
+
+        private void WhenUploadReminderIsInitialized()
+        {
+            // ReSharper disable once ObjectCreationAsStatement
+            new UploadReminder(_mockSettingsStore.Object, _mockTrayIcon.Object, _mockCallbackManager.Object, _dateUtils);
         }
 
         [Test]
         public void ShouldInitializeSettingsIfNotInitialized()
         {
-            UploadSettings newSettings = null;
-            _mockSettingsStore.Setup(store => store.SetSettings(It.IsAny<UploadSettings>()))
-                              .Callback<UploadSettings>(settings => newSettings = settings);
+            MockStoreToReturnUninitializedSettings();
 
             WhenUploadReminderIsInitialized();
 
-            Assert.IsTrue(newSettings.IsInitialized());
-            _mockSettingsStore.Verify(ss => ss.SetSettings(newSettings));
+            Assert.IsTrue(_newUploadSettings.IsInitialized());
+            _mockSettingsStore.Verify(ss => ss.SetSettings(_newUploadSettings));
         }
 
         [Test]
         public void ShouldNotInitializeSettingsIfAlreadyInitialized()
         {
-            GivenDaysPassedSinceLastNotification(10);
-            GivenDaysPassedSinceLastUpload(10);
-
-            UploadSettings newSettings = null;
-            _mockSettingsStore.Setup(store => store.SetSettings(It.IsAny<UploadSettings>()))
-                              .Callback<UploadSettings>(settings => newSettings = settings);
+            _dateUtils.Now = CreateDateWithDayAndHour(1, 0);
+            _uploadSettings.LastNotificationDate = CreateDateWithDayAndHour(11, 0);
+            _uploadSettings.LastUploadDate = CreateDateWithDayAndHour(11, 0);
 
             WhenUploadReminderIsInitialized();
 
-            _mockSettingsStore.Verify(ss => ss.SetSettings(newSettings), Times.Never);
-        }
-
-        [Test]
-        public void ShouldRegisterCallbackWithOneDayDelay()
-        {
-            var inOneDay = DateTime.Now.AddDays(1);
-            var expected = CreateDateTimeRangeFromDateTime(inOneDay);
-            
-            GivenDaysPassedSinceLastNotification(0);
-            WhenUploadReminderIsInitialized();
-
-            _mockCallbackManager.Verify(
-                manager =>
-                    manager.RegisterCallback(
-                        It.IsAny<Action>(),
-                        It.IsInRange(expected.Item1, expected.Item2, Range.Inclusive),
-                        It.IsAny<Action>()));
+            _mockSettingsStore.Verify(ss => ss.SetSettings(_newUploadSettings), Times.Never);
         }
 
         [Test]
         public void ShouldOpenSoftNotificationAfterOneDayWithoutNotificationOrUpload()
         {
-            GivenCallbackManagerInvokesCallbackImmediately();
-            GivenDaysPassedSinceLastNotification(1);
-            GivenDaysPassedSinceLastUpload(1);
+            _uploadSettings.LastNotificationDate = CreateDateWithDayAndHour(1, 12);
+            _uploadSettings.LastUploadDate = CreateDateWithDayAndHour(1, 12);
+            SetNow(CreateDateWithDayAndHour(2, 14));
 
+            GivenCallbackManagerInvokesCallbackImmediately();
             WhenUploadReminderIsInitialized();
 
             _mockTrayIcon.Verify(ti => ti.ShowSoftBalloonPopup());
@@ -86,10 +109,11 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
         [Test]
         public void ShouldOpenHardNotificationAfterOneWeekWithoutUpload()
         {
-            GivenCallbackManagerInvokesCallbackImmediately();
-            GivenDaysPassedSinceLastNotification(1);
-            GivenDaysPassedSinceLastUpload(7);
+            _uploadSettings.LastNotificationDate = CreateDateWithDayAndHour(7, 12);
+            _uploadSettings.LastUploadDate = CreateDateWithDayAndHour(1, 12);
+            SetNow(CreateDateWithDayAndHour(8, 14));
 
+            GivenCallbackManagerInvokesCallbackImmediately();
             WhenUploadReminderIsInitialized();
 
             _mockTrayIcon.Verify(ti => ti.ShowHardBalloonPopup());
@@ -98,10 +122,11 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
         [Test]
         public void ShouldNotOpenNotificationIfUploadedToday()
         {
+            _uploadSettings.LastNotificationDate = CreateDateWithDayAndHour(1, 12);
+            _uploadSettings.LastUploadDate = CreateDateWithDayAndHour(2, 12);
+            SetNow(CreateDateWithDayAndHour(2, 14));
+
             GivenCallbackManagerInvokesCallbackImmediately();
-            GivenDaysPassedSinceLastNotification(1);
-            GivenDaysPassedSinceLastUpload(0);
-            
             WhenUploadReminderIsInitialized();
 
             _mockTrayIcon.Verify(ti => ti.ShowSoftBalloonPopup(), Times.Never);
@@ -111,11 +136,13 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
         [Test]
         public void ShouldNotUpdateLastNotificationDateIfNoNotificationDueToRecentUpload()
         {
-            GivenCallbackManagerInvokesCallbackImmediately();
-            GivenDaysPassedSinceLastNotification(1);
-            GivenDaysPassedSinceLastUpload(0);
+            _uploadSettings.LastNotificationDate = CreateDateWithDayAndHour(1, 12);
+            _uploadSettings.LastUploadDate = CreateDateWithDayAndHour(2, 12);
+            SetNow(CreateDateWithDayAndHour(2, 14));
+
             var expected = _uploadSettings.LastNotificationDate;
 
+            GivenCallbackManagerInvokesCallbackImmediately();
             WhenUploadReminderIsInitialized();
 
             var actual = _uploadSettings.LastNotificationDate;
@@ -125,61 +152,96 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
         [Test]
         public void ShouldRegisterFinishedActionToReScheduleNotification()
         {
-            Action rescheduleAction = null;
-            var actual = new DateTime();
-            _mockCallbackManager.Setup(
-                mgr => mgr.RegisterCallback(It.IsAny<Action>(), It.IsAny<DateTime>(), It.IsAny<Action>()))
-                                .Callback<Action, DateTime, Action>(
-                                    (callback, nextDateTimeToInvoke, finish) =>
-                                    {
-                                        actual = nextDateTimeToInvoke;
-                                        rescheduleAction = finish;
-                                    });
+            var yesterdayOutsideWorkingHours = CreateDateWithDayAndHour(1, 0);
+            _uploadSettings.LastNotificationDate = yesterdayOutsideWorkingHours;
 
             WhenUploadReminderIsInitialized();
-            rescheduleAction();
+            _registeredRescheduleAction();
 
-            var dayAfterLastNotification = _uploadSettings.LastNotificationDate.AddDays(1);
-            var expected = CreateDateTimeRangeFromDateTime(dayAfterLastNotification);
+            var actual = _registeredInvocationDate;
+            var expectedMin = CreateDateWithDayAndHour(2, 10);
+            var expectedMax = CreateDateWithDayAndHour(2, 16);
 
-            Assert.True(DateIsBetween(actual, expected.Item1, expected.Item2));
+            AssertDateBetween(expectedMin, expectedMax, actual);
         }
 
+        [Test]
+        // TODO @Uli: think about nice name
+        public void ShouldRegisterCorrectTime_asdaldkja()
+        {
+            _uploadSettings.LastNotificationDate = CreateDateWithDayAndHour(1, 12);
+            SetNow(CreateDateWithDayAndHour(2, 8));
+
+            WhenUploadReminderIsInitialized();
+
+            var actual = _registeredInvocationDate;
+            var expectedMin = CreateDateWithDayAndHour(2, 10);
+            var expectedMax = CreateDateWithDayAndHour(2, 16);
+
+            AssertDateBetween(expectedMin, expectedMax, actual);
+        }
+
+        [Test]
+        // TODO @Uli: think about nice name
+        public void ShouldRegisterCorrectTime_asdaldkjaasd()
+        {
+            _uploadSettings.LastNotificationDate = CreateDateWithDayAndHour(1, 12);
+            SetNow(CreateDateWithDayAndHour(2, 14));
+
+            WhenUploadReminderIsInitialized();
+
+            var actual = _registeredInvocationDate;
+            var expectedMin = CreateDateWithDayAndHour(2, 14);
+            var expectedMax = CreateDateWithDayAndHour(2, 16);
+
+            AssertDateBetween(expectedMin, expectedMax, actual);
+        }
+
+        [Test]
+        // TODO @Uli: think about nice name
+        public void ShouldRegisterCorrectTime_asdaldkjafrgasd()
+        {
+            _uploadSettings.LastNotificationDate = CreateDateWithDayAndHour(1, 12);
+            SetNow(CreateDateWithDayAndHour(2, 17));
+
+            WhenUploadReminderIsInitialized();
+
+            var actual = _registeredInvocationDate;
+            var expectedMin = CreateDateWithDayAndHour(3, 10);
+            var expectedMax = CreateDateWithDayAndHour(3, 16);
+
+            AssertDateBetween(expectedMin, expectedMax, actual);
+        }
+
+        // TODO @Uli: think about additional tests for notification date / upload date combinations
+
+        [Test]
+        public void FinishActionShouldReschedule()
+        {
+            _uploadSettings.LastNotificationDate = CreateDateWithDayAndHour(1, 12);
+            SetNow(CreateDateWithDayAndHour(2, 8));
+
+            WhenUploadReminderIsInitialized();
+            _registeredRescheduleAction();
+
+            var actual = _registeredInvocationDate;
+            var expectedMin = CreateDateWithDayAndHour(2, 10);
+            var expectedMax = CreateDateWithDayAndHour(2, 16);
+
+            AssertDateBetween(expectedMin, expectedMax, actual);
+        }
+
+        private static void AssertDateBetween(DateTime expectedMin, DateTime expectedMax, DateTime actual)
+        {
+            var isInRange = actual >= expectedMin && actual <= expectedMax;
+            Assert.True(isInRange);
+        }
 
         private void GivenCallbackManagerInvokesCallbackImmediately()
         {
             _mockCallbackManager.Setup(
                 mgr => mgr.RegisterCallback(It.IsAny<Action>(), It.IsAny<DateTime>(), It.IsAny<Action>()))
                                 .Callback<Action, DateTime, Action>((callback, date, finish) => callback());
-        }
-
-        private void GivenDaysPassedSinceLastNotification(int days)
-        {
-            _uploadSettings.LastNotificationDate = DateTime.Now.AddDays(-days);
-        }
-
-        private void GivenDaysPassedSinceLastUpload(int days)
-        {
-            _uploadSettings.LastUploadDate = DateTime.Now.AddDays(-days);
-        }
-
-        //TODO: Rename >.>
-        private static Tuple<DateTime, DateTime> CreateDateTimeRangeFromDateTime(DateTime datetime)
-        {
-            var minDatetime = new DateTime(datetime.Year, datetime.Month, datetime.Day, 10, 0, 0);
-            var maxDatetime = new DateTime(datetime.Year, datetime.Month, datetime.Day, 16, 0, 0);
-            return new Tuple<DateTime, DateTime>(minDatetime, maxDatetime);
-        }
-
-        private static bool DateIsBetween(DateTime datetime, DateTime start, DateTime end)
-        {
-            return datetime >= start && datetime < end;
-        }
-
-        private void WhenUploadReminderIsInitialized()
-        {
-            // ReSharper disable once ObjectCreationAsStatement
-            new UploadReminder(_mockSettingsStore.Object, _mockTrayIcon.Object, _mockCallbackManager.Object);
         }
     }
 }
