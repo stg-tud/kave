@@ -7,7 +7,6 @@ using KaVE.Model.Events.CompletionEvent;
 using KaVE.Utils.Serialization;
 using KaVE.VsFeedbackGenerator.SessionManager.Presentation;
 using KaVE.VsFeedbackGenerator.Utils.Json;
-using Newtonsoft.Json;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager
 {
@@ -58,7 +57,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
 
         public string XamlRawRepresentation
         {
-            get { return JsonConvert.SerializeObject(Event, Formatting.Indented).Replace("  ", "    "); }
+            get { return Event.ToXaml(); }
         }
 
         public string Details
