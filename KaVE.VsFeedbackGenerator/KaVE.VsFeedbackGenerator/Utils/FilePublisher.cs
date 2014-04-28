@@ -18,17 +18,17 @@ namespace KaVE.VsFeedbackGenerator.Utils
 
         public void Publish(string srcFilename)
         {
-            var targetLocation = _requestFileLocation();
-            Asserts.That(_ioUtils.FileExists(srcFilename), "Quelldatei existiert nicht");
-            Asserts.NotNull(targetLocation, "Kein Ziel angegeben");
-            Asserts.That(!targetLocation.IsEmpty(), "Invalides Ziel angegeben");
+            var targetFilename = _requestFileLocation();
+            Asserts.That(_ioUtils.FileExists(srcFilename));
+            Asserts.Not(targetFilename.IsNullOrEmpty());
 
             try
             {
-                _ioUtils.CopyFile(srcFilename, targetLocation);
+                _ioUtils.CopyFile(srcFilename, targetFilename);
             }
             catch (Exception e)
             {
+                // TODO @Dennis: Move strings to resource file
                 Asserts.Fail("Datei-Export fehlgeschlagen: {0}", e.Message);
             }
         }

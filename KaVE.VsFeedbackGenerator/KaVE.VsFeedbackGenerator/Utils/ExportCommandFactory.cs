@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using JetBrains.UI.Extensions.Commands;
 using KaVE.Model.Events;
-using KaVE.Utils.Assertion;
 using KaVE.VsFeedbackGenerator.SessionManager;
 using KaVE.VsFeedbackGenerator.Utils.Json;
 

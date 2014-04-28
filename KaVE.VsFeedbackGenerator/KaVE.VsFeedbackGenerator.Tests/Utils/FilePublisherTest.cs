@@ -68,21 +68,21 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
             _ioMock.Verify(m => m.CopyFile(SrcLoc, TrgLoc));
         }
 
-        [Test, ExpectedException(typeof (AssertException), ExpectedMessage = "Quelldatei existiert nicht")]
+        [Test, ExpectedException(typeof (AssertException))]
         public void ShouldThrowExceptionOnNonexistingSourceFile()
         {
             var uut = new FilePublisher(() => TrgLoc);
             uut.Publish("some illegal location");
         }
 
-        [Test, ExpectedException(typeof (AssertException), ExpectedMessage = "Kein Ziel angegeben")]
+        [Test, ExpectedException(typeof(AssertException))]
         public void ShouldThrowExceptionOnNullArgument()
         {
             var uut = new FilePublisher(() => null);
             uut.Publish(SrcLoc);
         }
 
-        [Test, ExpectedException(typeof (AssertException), ExpectedMessage = "Invalides Ziel angegeben")]
+        [Test, ExpectedException(typeof (AssertException))]
         public void ShouldThrowExceptionOnEmptyArgument()
         {
             var uut = new FilePublisher(() => "");

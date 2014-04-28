@@ -1,6 +1,5 @@
 ﻿using System.Windows;
 using System.Windows.Controls.Primitives;
-using KaVE.JetBrains.Annotations;
 using KaVE.Utils.Assertion;
 using KaVE.VsFeedbackGenerator.SessionManager;
 using KaVE.VsFeedbackGenerator.SessionManager.Presentation;
@@ -40,35 +39,35 @@ namespace KaVE.VsFeedbackGenerator.TrayNotification
             sessionManagerRegistrar.ToolWindow.Show();
         }
 
-        private void CheckBoxChanged(object sender, RoutedEventArgs e)
+        private void RemoveNamesOptionChanged(object sender, RoutedEventArgs args)
         {
-            var checkbox = ((ToggleButton) sender);
-            StoreCheckboxState(checkbox);
+            StoreCheckboxState((ToggleButton) sender, (settings, value) => settings.FeedbackGeneratorNames = value);
         }
 
-        private static void StoreCheckboxState([CanBeNull] ToggleButton checkbox)
+        private void RemoveDateTimesOptionChanged(object sender, RoutedEventArgs args)
+        {
+            StoreCheckboxState((ToggleButton)sender, (settings, value) => settings.FeedbackGeneratorStartTime = value);
+        }
+
+        private void RemoveDurationsOptionChanged(object sender, RoutedEventArgs args)
+        {
+            StoreCheckboxState((ToggleButton)sender, (settings, value) => settings.FeedbackGeneratorDuration = value);
+        }
+
+        private void RemoveSessionUUIDOptionChanged(object sender, RoutedEventArgs args)
+        {
+            StoreCheckboxState((ToggleButton)sender, (settings, value) => settings.FeedbackGeneratorSessionIDs = value);
+        }
+
+        private delegate void PropertySetter(FeedbackGeneratorResharperSettings settings, bool? value);
+
+        private static void StoreCheckboxState(ToggleButton checkbox, PropertySetter setter)
         {
             Asserts.NotNull(checkbox);
 
             var settingsStore = Registry.GetComponent<ISettingsStore>();
             var settings = settingsStore.GetSettings<FeedbackGeneratorResharperSettings>();
-
-            //TODO: String switching sucks because it depends on the xaml name
-            switch (checkbox.Name)
-            {
-                case "NamesCheckBox":
-                    settings.FeedbackGeneratorNames = checkbox.IsChecked;
-                    break;
-                case "DurationCheckBox":
-                    settings.FeedbackGeneratorDuration = checkbox.IsChecked;
-                    break;
-                case "SessionUUIDCheckBox":
-                    settings.FeedbackGeneratorSessionIDs = checkbox.IsChecked;
-                    break;
-                case "StartTimeCheckBox":
-                    settings.FeedbackGeneratorStartTime = checkbox.IsChecked;
-                    break;
-            }
+            setter(settings, checkbox.IsChecked);
             settingsStore.SetSettings(settings);
         }
     }

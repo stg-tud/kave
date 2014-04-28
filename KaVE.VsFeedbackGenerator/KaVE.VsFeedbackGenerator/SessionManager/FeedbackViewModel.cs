@@ -10,6 +10,7 @@ using JetBrains.UI.Extensions.Commands;
 using KaVE.Model.Events;
 using KaVE.Utils;
 using KaVE.VsFeedbackGenerator.Interactivity;
+using KaVE.VsFeedbackGenerator.TrayNotification;
 using KaVE.VsFeedbackGenerator.Utils;
 using KaVE.VsFeedbackGenerator.Utils.Logging;
 using NuGet;
@@ -137,6 +138,12 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
         public SessionViewModel SingleSelectedSession
         {
             get { return _selectedSessions.Count == 1 ? _selectedSessions.First() : null; }
+        }
+
+        public void DoExport()
+        {
+            var wizard = new UploadWizard(this);
+            wizard.ShowDialog();
         }
 
         public DelegateCommand ExportSessionsCommand

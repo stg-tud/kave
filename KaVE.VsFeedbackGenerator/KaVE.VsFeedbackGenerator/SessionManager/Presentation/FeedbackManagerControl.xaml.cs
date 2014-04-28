@@ -3,7 +3,6 @@ using System.Windows;
 using System.Windows.Controls;
 using KaVE.Utils;
 using KaVE.VsFeedbackGenerator.Interactivity;
-using KaVE.VsFeedbackGenerator.TrayNotification;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
 {
@@ -78,14 +77,12 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
 
         private void OpenUploadWizard_OnClick(object sender, RoutedEventArgs e)
         {
-            var wizard = new UploadWizard(_feedbackViewModel);
-            wizard.ShowDialog();
+            _feedbackViewModel.DoExport();
         }
 
         private void VisitHomepageButton_OnClick(object sender, RoutedEventArgs e)
         {
-            // TODO insert correct url here
-            System.Diagnostics.Process.Start("http://kave-project.de");
+            System.Diagnostics.Process.Start("http://kave.cc");
         }
 
         private void SessionManagerControl_OnLostFocus(object sender, RoutedEventArgs e)

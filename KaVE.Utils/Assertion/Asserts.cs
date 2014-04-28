@@ -30,6 +30,12 @@ namespace KaVE.Utils.Assertion
             That(!condition, message, messageArgs);
         }
 
+        [ContractAnnotation("condition:true => halt")]
+        public static void Not(bool condition)
+        {
+            That(!condition);
+        }
+
         [ContractAnnotation("condition:false => halt"), StringFormatMethod("message")]
         public static void That(bool condition, [NotNull] string message, params object[] messageArgs)
         {

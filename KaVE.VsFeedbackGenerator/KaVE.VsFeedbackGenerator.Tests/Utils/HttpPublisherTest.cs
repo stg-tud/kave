@@ -36,7 +36,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
             Registry.Clear();
         }
 
-        [Test, ExpectedException(typeof (AssertException), ExpectedMessage = "Quelldatei existiert nicht")]
+        [Test, ExpectedException(typeof (AssertException))]
         public void ShouldThrowExceptionOnNonexistingSourceFile()
         {
             _uut.Publish("some illegal path");

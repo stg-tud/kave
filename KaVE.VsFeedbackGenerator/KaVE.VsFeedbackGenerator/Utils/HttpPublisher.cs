@@ -1,10 +1,9 @@
 using System;
 using System.Net.Http;
+using JetBrains.Util;
 using KaVE.JetBrains.Annotations;
 using KaVE.Utils.Assertion;
-using KaVE.VsFeedbackGenerator.Utils.Json;
 using Newtonsoft.Json;
-using NuGet;
 
 namespace KaVE.VsFeedbackGenerator.Utils
 {
@@ -19,18 +18,16 @@ namespace KaVE.VsFeedbackGenerator.Utils
             _ioUtils = Registry.GetComponent<IIoUtils>();
         }
 
-        // TODO Messages -> Resource Files
+        // TODO @Dennis: Messages -> Resource Files
         public void Publish(string srcFilename)
         {
-            Asserts.That(_ioUtils.FileExists(srcFilename), "Quelldatei existiert nicht");
+            Asserts.That(_ioUtils.FileExists(srcFilename));
 
             var content = CreateMultipartContent(srcFilename, "tmp.log");
             var response = _ioUtils.TransferByHttp(content, _hostAddress);
             var json = response.Content.ReadAsStringAsync().Result;
 
-            const string noInfo = "Antwort des Servers enthält keine verwertbaren Informationen";
-            Asserts.NotNull(json, noInfo);
-            Asserts.Not(json.IsEmpty(), noInfo);
+            Asserts.Not(json.IsNullOrEmpty(), "Antwort des Servers enthält keine verwertbaren Informationen");
 
             ExportResult<object> res = null;
             try
@@ -49,18 +46,15 @@ namespace KaVE.VsFeedbackGenerator.Utils
         private HttpContent CreateMultipartContent([NotNull] string file, [NotNull] string name)
         {
             var content = _ioUtils.ReadFile(file);
-            var formData = new MultipartFormDataContent
+            return new MultipartFormDataContent
             {
                 {new ByteArrayContent(content.GetBytes()), "file", name}
             };
-            return formData;
         }
 
         private static ExportResult<object> Deserialize(string json)
         {
-            return JsonConvert.DeserializeObject<ExportResult<object>>(
-                json,
-                JsonLogSerialization.Settings);
+            return JsonConvert.DeserializeObject<ExportResult<object>>(json);
         }
 
         internal enum State
