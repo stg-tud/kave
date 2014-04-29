@@ -295,6 +295,15 @@ namespace KaVE.VsFeedbackGenerator.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Datei-Export fehlgeschlagen: {0}.
+        /// </summary>
+        public static string PublishingFileFailed {
+            get {
+                return ResourceManager.GetString("PublishingFileFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to JSON.
         /// </summary>
         public static string RawView {
@@ -336,6 +345,42 @@ namespace KaVE.VsFeedbackGenerator.Properties {
         public static string Send {
             get {
                 return ResourceManager.GetString("Send", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Antwort des Servers enthält keine verwertbaren Informationen.
+        /// </summary>
+        public static string ServerResponseEmpty {
+            get {
+                return ResourceManager.GetString("ServerResponseEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Inkompatible Antwort des Server.
+        /// </summary>
+        public static string ServerResponseIncompatible {
+            get {
+                return ResourceManager.GetString("ServerResponseIncompatible", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Antwort des Servers entspricht nicht dem erwarteten Format: {0}.
+        /// </summary>
+        public static string ServerResponseIncorrentFormat {
+            get {
+                return ResourceManager.GetString("ServerResponseIncorrentFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Server meldet eine fehlerhafte Anfrage: {0}.
+        /// </summary>
+        public static string ServerResponseRequestFailure {
+            get {
+                return ResourceManager.GetString("ServerResponseRequestFailure", resourceCulture);
             }
         }
         
