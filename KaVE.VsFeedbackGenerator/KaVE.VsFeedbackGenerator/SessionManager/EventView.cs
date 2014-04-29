@@ -50,16 +50,19 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             }
         }
 
+        // TODO @Dennis: Warum handled die eine toXaml()-Method den null-case und die andere nicht?
         public string XamlContextRepresentation
         {
             get { return CompletionContext == null ? null : CompletionContext.ToXaml(); }
         }
 
+        // TODO @Dennis: Der View aktualisiert sich nicht für ActionEvents (evlt. auch nocht andere), da bleibt bei mir einfach der Inhalt des zuletzt ausgewählten Events in der TextBox stehen...
         public string XamlRawRepresentation
         {
             get { return Event.ToXaml(); }
         }
 
+        // TODO @Sven: Extract to dedicated converter
         public string Details
         {
             get
