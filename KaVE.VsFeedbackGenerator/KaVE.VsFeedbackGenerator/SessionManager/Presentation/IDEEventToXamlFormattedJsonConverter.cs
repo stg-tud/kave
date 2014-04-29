@@ -1,39 +1,31 @@
 ﻿using System.Text.RegularExpressions;
 using KaVE.JetBrains.Annotations;
 using KaVE.Model.Events;
-using Newtonsoft.Json;
+using KaVE.Utils.Serialization;
+using KaVE.VsFeedbackGenerator.Utils.Json;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
 {
-    // TODO @Dennis: IDEEventToXamlFormattedJsonConverter?
-    public static class RawViewConverter
+    public static class IDEEventToXamlFormattedJsonConverter
     {
         private const string BoldFontTag = "Bold";
         private const string NormalFontTag = "Span";
-        // TODO @Dennis: ToXamlFormattedJson?
-        public static string ToXaml(this IDEEvent ideEvent)
+        public static string ToXamlFormattedJson(this IDEEvent ideEvent)
         {
             if (ideEvent == null)
             {
                 return null;
             }
-            var rawversion = ToJson(ideEvent);
-            var correctlyIndendet = AdjustIndent(rawversion);
-            var highlighted = Highlight(correctlyIndendet);
+            var rawVersion = ToJson(ideEvent);
+            var highlighted = Highlight(rawVersion);
             return highlighted;
         }
 
         private static string ToJson([NotNull] IDEEvent ideEvent)
         {
-            // TODO @Dennis: Guck dir mal an was der DetailsView beim Umwandeln in Json so macht, da sind Converter die hier fehlen und das ist nicht getestet
-            return JsonConvert.SerializeObject(ideEvent, Formatting.Indented).Replace("  ", "    ");
-        }
-
-        internal static string AdjustIndent([NotNull] string xaml)
-        {
-            // TODO @Dennis: Denk mal darüber nach was das Replace in der Method obendrüber macht und schmeiss dann die Methode hier raus...
             var regex = new Regex("\n *");
-            return regex.Replace(xaml, match => match.Value + match.Value.Substring(1));
+            var json = ideEvent.ToJson(new NameToIdentifierConverter(), new EnumToStringConverter());
+            return regex.Replace(json, match => match.Value + match.Value.Substring(1));
         }
 
         internal static string Highlight([NotNull] string xaml)

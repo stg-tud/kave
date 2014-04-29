@@ -34,7 +34,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
         {
             var xaml = (string)e.NewValue;
             var generatedDataTemplate =
-                (DataTemplate)XamlReader.Parse(DataTemplateBegin + xaml + DataTemplateEnd);
+                (DataTemplate)XamlReader.Parse(DataTemplateBegin + xaml.Replace("&", "") + DataTemplateEnd);
             var generatedTextBlock = (TextBlock)generatedDataTemplate.LoadContent();
 
             var richTextBox = (XamlBindableRichTextBox)d;
