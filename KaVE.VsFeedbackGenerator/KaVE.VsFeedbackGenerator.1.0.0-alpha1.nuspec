@@ -6,22 +6,27 @@
         <title>KaVE Feedback Generator</title>
         <authors>Sebastian Proksch,Sven Amann,Uli Fahrer,Dennis Albrecht</authors>
         <owners>Technische Universitaet Darmstadt</owners>
-        <licenseUrl>http://kave-project.org/license.txt</licenseUrl>
-        <projectUrl>http://kave-project.org/</projectUrl>
-        <iconUrl>http://kave-project.org/icon.png</iconUrl>
+        <licenseUrl>http://kave.cc/license.txt</licenseUrl>
+        <projectUrl>http://kave.cc/</projectUrl>
+        <iconUrl>http://kave.cc/icon.png</iconUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
-        <description>Some Description of what it does...</description>
+        <description>Observes how you use Visual Studio and creates usage feedback.</description>
         <releaseNotes>Release Information.</releaseNotes>
         <copyright>Copyright 2013</copyright>
         <dependencies>
-            <dependency id="ReSharper" version="[8.0.1000, 9.0)" />
+            <dependency id="ReSharper" version="[8.2, 8.3)" />
         </dependencies>
     </metadata>
     <files>
-        <file src="KaVE.VsFeedbackGenerator\bin\Debug\KaVE.Model.dll" target="ReSharper\vAny\plugins\KaVE.Model.dll" />
-        <file src="KaVE.VsFeedbackGenerator\bin\Debug\KaVE.Utils.dll" target="ReSharper\vAny\plugins\KaVE.Utils.dll" />
-        <file src="KaVE.VsFeedbackGenerator\bin\Debug\KaVE.VsFeedbackGenerator.dll" target="ReSharper\vAny\plugins\KaVE.VsFeedbackGenerator.dll" />
-        <file src="KaVE.VsFeedbackGenerator\bin\Debug\Newtonsoft.Json.dll" target="ReSharper\vAny\plugins\Newtonsoft.Json.dll" />
-        <file src="KaVE.VsFeedbackGenerator\bin\Debug\Hardcodet.Wpf.TaskbarNotification.dll" target="ReSharper\vAny\plugins\Hardcodet.Wpf.TaskbarNotification.dll" />
+		<!-- WARNING: We cannot have shared DLLs in vAny. All required DLLs need to be in v8.x in order for the plugin to load correctly. -->
+		
+		<!-- Plugin for ReSharper 8.2 -->
+			<!-- KaVE Assemblies -->
+				<file src="KaVE.VsFeedbackGenerator\bin\Debug\KaVE.Model.dll" target="ReSharper\v8.2\plugins\KaVE.Model.dll" />
+				<file src="KaVE.VsFeedbackGenerator\bin\Debug\KaVE.Utils.dll" target="ReSharper\v8.2\plugins\KaVE.Utils.dll" />
+				<file src="KaVE.VsFeedbackGenerator\bin\Debug\KaVE.VsFeedbackGenerator.dll" target="ReSharper\v8.2\plugins\KaVE.VsFeedbackGenerator.dll" />
+			<!-- 3rd-Party Dependencies -->
+				<file src="KaVE.VsFeedbackGenerator\bin\Debug\Newtonsoft.Json.dll" target="ReSharper\v8.2\plugins\Newtonsoft.Json.dll" />
+				<file src="KaVE.VsFeedbackGenerator\bin\Debug\Hardcodet.Wpf.TaskbarNotification.dll" target="ReSharper\v8.2\plugins\Hardcodet.Wpf.TaskbarNotification.dll" />
     </files>
 </package>

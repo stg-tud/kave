@@ -9,7 +9,8 @@
              xmlns:util="clr-namespace:KaVE.VsFeedbackGenerator.Utils"
              xmlns:presentation="clr-namespace:KaVE.VsFeedbackGenerator.SessionManager.Presentation"
              mc:Ignorable="d"
-             d:DesignHeight="300" d:DesignWidth="1000"
+             d:DesignHeight="450" d:DesignWidth="1000"
+             MinHeight="450" MinWidth="1000"
              d:DataContext="{d:DesignInstance Type=sessionManager:FeedbackViewModel, IsDesignTimeCreatable=False}"
              Loaded="FeedbackWindowControl_OnLoaded"
              GotKeyboardFocus="SessionManagerControl_OnGotFocus"
@@ -54,8 +55,7 @@
                 <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
                 <Button ToolTip="{x:Static root:Properties.SessionManager.Export}"
                         Click="OpenUploadWizard_OnClick">
-                    <!-- TODO new Pic?-->
-                    <Image Source="/KaVE.VsFeedbackGenerator;Component/Resources/export.png" />
+                    <Image Source="/KaVE.VsFeedbackGenerator;Component/Resources/send.png" />
                 </Button>
                 <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
                 <Button ToolTip="{x:Static root:Properties.SessionManager.Options}">
@@ -145,7 +145,7 @@
             </GroupBox>
             <!-- EVENT INFORMATION -->
             <GroupBox Grid.Column="2" Header="{x:Static root:Properties.SessionManager.EventData}">
-                <TabControl TabStripPlacement="Right" Margin="0, 0, 0, 0">
+                <TabControl TabStripPlacement="Bottom" Margin="0, 0, 0, 0">
                     <TabItem Header="{x:Static root:Properties.SessionManager.DesignView}"
                              DataContext="{Binding SingleSelectedSession.SingleSelectedEvent, FallbackValue={x:Null}}">
                         <Grid

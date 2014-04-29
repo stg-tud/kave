@@ -142,7 +142,7 @@
     <value>Art</value>
   </data>
   <data name="Export" xml:space="preserve">
-    <value>Feedback als ZIP-Archiv exportieren...</value>
+    <value>Export-Wizard starten...</value>
   </data>
   <data name="Options" xml:space="preserve">
     <value>Einstellungen...</value>
@@ -226,10 +226,10 @@
     <value>Log files (*.log)|*.log|All files (*.*)|*.*</value>
   </data>
   <data name="DesignView" xml:space="preserve">
-    <value>Design-View</value>
+    <value>Design</value>
   </data>
   <data name="RawView" xml:space="preserve">
-    <value>Raw-View</value>
+    <value>JSON</value>
   </data>
   <data name="PublishingFileFailed" xml:space="preserve">
     <value>Datei-Export fehlgeschlagen: {0}</value>
