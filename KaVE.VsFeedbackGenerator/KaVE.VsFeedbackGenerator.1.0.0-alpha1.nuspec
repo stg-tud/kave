@@ -6,13 +6,13 @@
         <title>KaVE Feedback Generator</title>
         <authors>Sebastian Proksch,Sven Amann,Uli Fahrer,Dennis Albrecht</authors>
         <owners>Technische Universitaet Darmstadt</owners>
-        <licenseUrl>http://kave.cc/license.txt</licenseUrl>
+        <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0.txt</licenseUrl>
         <projectUrl>http://kave.cc/</projectUrl>
         <iconUrl>http://kave.cc/icon.png</iconUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>Observes how you use Visual Studio and creates usage feedback.</description>
-        <releaseNotes>Release Information.</releaseNotes>
-        <copyright>Copyright 2013</copyright>
+        <releaseNotes></releaseNotes>
+        <copyright>Copyright 2013, 2014</copyright>
         <dependencies>
             <dependency id="ReSharper" version="[8.2, 8.3)" />
         </dependencies>
