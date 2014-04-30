@@ -23,7 +23,15 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
 
         public string EventType
         {
-            get { return Event.GetType().Name; }
+            get
+            {
+                var eventTypeName = Event.GetType().Name;
+                if (eventTypeName.EndsWith("Event"))
+                {
+                    eventTypeName = eventTypeName.Remove(eventTypeName.Length - 5);
+                }
+                return eventTypeName;
+            }
         }
 
         public string Trigger

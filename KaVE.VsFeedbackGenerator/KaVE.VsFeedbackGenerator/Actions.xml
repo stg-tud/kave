@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <actions>
   <insert group-id="ReSharper" position="last">
-    <action-group id="KaVE.VsFeedbackGenerator" text="KaVE Feedback">
-      <action id="KaVE.VsFeedbackGenerator.SessionManager" text="Session Manager">
+    <action-group id="KaVE.VsFeedbackGenerator" text="KaVE">
+      <action id="KaVE.VsFeedbackGenerator.SessionManager" text="Feedback Manager">
         <shortcut>Shift+Control+Alt+S</shortcut>
         <vs-shortcut>Shift+Control+Alt+S</vs-shortcut>
       </action>
-      <action id="KaVE.VsFeedbackGenerator.About" text="About KaVE Feedback"/>
+      <action id="KaVE.VsFeedbackGenerator.About" text="About KaVE"/>
       <!-- to break up elements use <separator/> -->
     </action-group>
   </insert>
