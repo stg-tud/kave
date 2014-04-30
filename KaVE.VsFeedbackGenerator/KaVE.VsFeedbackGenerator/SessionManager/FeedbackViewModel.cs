@@ -142,8 +142,16 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
 
         public void DoExport()
         {
-            var wizard = new UploadWizard(this);
+            var wizard = new UploadWizard();
             wizard.ShowDialog();
+
+            if (wizard.IsZipExport)
+            {
+                //TODO: Cant find ZipExport and Upload Events
+            }
+            else if(wizard.IsUploadExport)
+            {
+            }
         }
 
         public DelegateCommand ExportSessionsCommand

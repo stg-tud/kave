@@ -17,13 +17,6 @@
     <Window.Resources>
         <ResourceDictionary>
             <BitmapImage x:Key="Icon" UriSource="/KaVE.VsFeedbackGenerator;Component/Resources/question.png" />
-            <Style TargetType="{x:Type Button}" x:Key="DefaultDisabledButton">
-                <Style.Triggers>
-                    <Trigger Property="Command" Value="{x:Null}">
-                        <Setter Property="IsEnabled" Value="False" />
-                    </Trigger>
-                </Style.Triggers>
-            </Style>
         </ResourceDictionary>
     </Window.Resources>
     <StackPanel Margin="5">
@@ -53,14 +46,16 @@
             <!-- TODO perhaps: include the old pics (in comments) in the button's Content -->
             <Button ToolTip="{x:Static properties:SessionManager.Export}" Margin="5" MinWidth="93"
                     Content="{x:Static root:Properties.UploadWizard.export_zip_button}"
-                    Command="{Binding Path=FeedbackViewModel.ExportSessionsCommand}" Name="Export"
-                    Style="{StaticResource DefaultDisabledButton}">
+                    Click="ZipButtonClicked"
+                    Name="Export"
+                    >
                 <!--<Image Source="/KaVE.VsFeedbackGenerator;Component/Resources/export.png" />-->
             </Button>
             <Button ToolTip="{x:Static properties:SessionManager.Send}" Margin="5" MinWidth="93"
                     Content="{x:Static root:Properties.UploadWizard.export_upload_button}"
-                    Command="{Binding Path=FeedbackViewModel.SendSessionsCommand}" Name="Send"
-                    Style="{StaticResource DefaultDisabledButton}">
+                    Click="UploadButtonClicked"
+                    Name="Send"
+                    >
                 <!--<Image Source="/KaVE.VsFeedbackGenerator;Component/Resources/send.png" /> -->
             </Button>
         </StackPanel>

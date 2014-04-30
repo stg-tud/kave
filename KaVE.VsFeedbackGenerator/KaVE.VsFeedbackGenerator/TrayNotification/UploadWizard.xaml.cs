@@ -1,7 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls.Primitives;
 using KaVE.Utils.Assertion;
-using KaVE.VsFeedbackGenerator.SessionManager;
 using KaVE.VsFeedbackGenerator.SessionManager.Presentation;
 using KaVE.VsFeedbackGenerator.Utils;
 
@@ -12,15 +11,20 @@ namespace KaVE.VsFeedbackGenerator.TrayNotification
     /// </summary>
     public partial class UploadWizard
     {
-        public UploadWizard(FeedbackViewModel feedbackViewModel)
+        public bool IsZipExport { get; set; }
+        public bool IsUploadExport { get; set; }
+
+
+        public UploadWizard()
         {
-            FeedbackViewModel = feedbackViewModel;
             InitializeComponent();
+
+            IsZipExport = false;
+            IsUploadExport = false;
+
             //TODO: Find someway to solve this issue with the procedure made in FeedbackGeneratorOptionPage.xaml.cs
             LoadCheckboxState();
         }
-
-        public FeedbackViewModel FeedbackViewModel { get; private set; }
 
         private void LoadCheckboxState()
         {
@@ -69,6 +73,16 @@ namespace KaVE.VsFeedbackGenerator.TrayNotification
             var settings = settingsStore.GetSettings<FeedbackGeneratorResharperSettings>();
             setter(settings, checkbox.IsChecked);
             settingsStore.SetSettings(settings);
+        }
+
+        private void UploadButtonClicked(object sender, RoutedEventArgs e)
+        {
+            IsUploadExport = true;
+        }
+
+        private void ZipButtonClicked(object sender, RoutedEventArgs e)
+        {
+            IsZipExport = true;
         }
     }
 }

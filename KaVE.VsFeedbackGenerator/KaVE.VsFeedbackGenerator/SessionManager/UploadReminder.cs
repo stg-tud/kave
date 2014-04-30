@@ -56,14 +56,13 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
 
         private static DateTime CreateRandomDateInWorkingHoursOfDayAfter(DateTime baseDate)
         {
-            // TODO @Uli: Was ist mit Überlauf (wie zB baseDate=30.04.2014, nächster Tag muss 01.05.2014 sein und nicht 31.04.2014)?
             var newDate = new DateTime(
                 baseDate.Year,
                 baseDate.Month,
-                baseDate.Day + 1,
+                baseDate.Day,
                 RandomGenerator.Next(WorkTimeStart, WorkTimeEnd),
                 RandomGenerator.Next(0, 60),
-                0);
+                0).AddDays(1);
             return newDate;
         }
 

@@ -166,8 +166,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
         }
 
         [Test]
-        // TODO @Uli: think about nice name
-        public void ShouldRegisterCorrectTime_asdaldkja()
+        public void ShouldRegisterCorrectTime_LastNotificationOnThePreviousDayAndCurrentTimeIsBeforeWorkingHour()
         {
             _uploadSettings.LastNotificationDate = CreateDateWithDayAndHour(1, 12);
             SetNow(CreateDateWithDayAndHour(2, 8));
@@ -182,8 +181,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
         }
 
         [Test]
-        // TODO @Uli: think about nice name
-        public void ShouldRegisterCorrectTime_asdaldkjaasd()
+        public void ShouldRegisterCorrectTime_LastNotificationOnThePreviousDayAndCurrentTimeIsInWorkingHour()
         {
             _uploadSettings.LastNotificationDate = CreateDateWithDayAndHour(1, 12);
             SetNow(CreateDateWithDayAndHour(2, 14));
@@ -198,8 +196,22 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
         }
 
         [Test]
-        // TODO @Uli: think about nice name
-        public void ShouldRegisterCorrectTime_asdaldkjafrgasd()
+        public void ShouldRegisterCorrectTime_LastNotificationOnThePreviousDayOutSideWorkingHourAndCurrentTimeIsInWorkingHour()
+        {
+            _uploadSettings.LastNotificationDate = CreateDateWithDayAndHour(1, 18);
+            SetNow(CreateDateWithDayAndHour(2, 13));
+
+            WhenUploadReminderIsInitialized();
+
+            var actual = _registeredInvocationDate;
+            var expectedMin = CreateDateWithDayAndHour(2, 10);
+            var expectedMax = CreateDateWithDayAndHour(2, 16);
+
+            AssertDateBetween(expectedMin, expectedMax, actual);
+        }
+
+        [Test]
+        public void ShouldRegisterCorrectTime_LastNotificationOnThePreviousDayAndCurrentTimeIsAfterWorkingHour()
         {
             _uploadSettings.LastNotificationDate = CreateDateWithDayAndHour(1, 12);
             SetNow(CreateDateWithDayAndHour(2, 17));
@@ -212,6 +224,8 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
 
             AssertDateBetween(expectedMin, expectedMax, actual);
         }
+
+
 
         // TODO @Uli: think about additional tests for notification date / upload date combinations
 
