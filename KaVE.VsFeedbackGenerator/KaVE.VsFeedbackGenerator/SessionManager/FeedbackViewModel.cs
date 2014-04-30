@@ -9,11 +9,13 @@ using JetBrains.Application;
 using JetBrains.UI.Extensions.Commands;
 using KaVE.Model.Events;
 using KaVE.Utils;
+using KaVE.VsFeedbackGenerator.Generators;
 using KaVE.VsFeedbackGenerator.Interactivity;
 using KaVE.VsFeedbackGenerator.TrayNotification;
 using KaVE.VsFeedbackGenerator.Utils;
 using KaVE.VsFeedbackGenerator.Utils.Logging;
 using NuGet;
+
 using Messages = KaVE.VsFeedbackGenerator.Properties.SessionManager;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager
@@ -67,17 +69,31 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
                 () =>
                 {
                     _lastRefresh = DateTime.Now;
-                    Sessions =
-                        _logManager.GetLogs().Select(
-                            log =>
-                            {
-                                var vm = new SessionViewModel(log);
-                                vm.ConfirmationRequest.Raised += (sender, args) => _confirmationRequest.Delegate(args);
-                                return vm;
-                            });
+                    DoRefresh();
                     Refreshing = false;
                     Released = false;
                 });
+        }
+
+        private void DoRefresh()
+        {
+            try
+            {
+                Sessions =
+                    _logManager.GetLogs().Select(
+                        log =>
+                        {
+                            var vm = new SessionViewModel(log);
+                            vm.ConfirmationRequest.Raised +=
+                                (sender, args) => _confirmationRequest.Delegate(args);
+                            return vm;
+                        });
+            }
+            catch (Exception e)
+            {
+                var logEventGenerator = Registry.GetComponent<Generators.ILogger>();
+                logEventGenerator.Error(e);
+            }
         }
 
         public void Release()
