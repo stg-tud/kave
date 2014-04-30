@@ -1,6 +1,6 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Controls.Primitives;
-using KaVE.Utils.Assertion;
 using KaVE.VsFeedbackGenerator.SessionManager.Presentation;
 using KaVE.VsFeedbackGenerator.Utils;
 
@@ -31,10 +31,37 @@ namespace KaVE.VsFeedbackGenerator.TrayNotification
             var settingsStore = Registry.GetComponent<ISettingsStore>();
             var settings = settingsStore.GetSettings<FeedbackGeneratorResharperSettings>();
 
-            NamesCheckBox.IsChecked = settings.FeedbackGeneratorNames;
-            DurationCheckBox.IsChecked = settings.FeedbackGeneratorDuration;
-            SessionUUIDCheckBox.IsChecked = settings.FeedbackGeneratorSessionIDs;
-            StartTimeCheckBox.IsChecked = settings.FeedbackGeneratorStartTime;
+            BindCheckbox(NamesCheckBox, settings.FeedbackGeneratorNames, (s, v) => s.FeedbackGeneratorNames = v);
+            BindCheckbox(DurationCheckBox, settings.FeedbackGeneratorNames, (s, v) => s.FeedbackGeneratorDuration = v);
+            BindCheckbox(SessionUUIDCheckBox, settings.FeedbackGeneratorNames, (s, v) => s.FeedbackGeneratorSessionIDs = v);
+            BindCheckbox(StartTimeCheckBox, settings.FeedbackGeneratorNames, (s, v) => s.FeedbackGeneratorStartTime = v);
+        }
+
+        private static void BindCheckbox(ToggleButton button, bool? value, Action<FeedbackGeneratorResharperSettings, bool?> setter)
+        {
+            button.IsChecked = value;
+            var binding = new Binding(setter);
+            button.Checked += binding.OnCheckedChanged;
+            button.Unchecked += binding.OnCheckedChanged;
+        }
+
+        private class Binding
+        {
+            private readonly Action<FeedbackGeneratorResharperSettings, bool?> _setter;
+
+            public Binding(Action<FeedbackGeneratorResharperSettings, bool?> setter)
+            {
+                _setter = setter;
+            }
+
+            public void OnCheckedChanged(object sender, RoutedEventArgs routedEventArgs)
+            {
+                var toogleButton = (ToggleButton) sender;
+                var settingsStore = Registry.GetComponent<ISettingsStore>();
+                var settings = settingsStore.GetSettings<FeedbackGeneratorResharperSettings>();
+                _setter(settings, toogleButton.IsChecked);
+                settingsStore.SetSettings(settings);
+            }
         }
 
         private void On_Review_Click(object sender, RoutedEventArgs e)
@@ -42,38 +69,6 @@ namespace KaVE.VsFeedbackGenerator.TrayNotification
             var sessionManagerRegistrar = Registry.GetComponent<SessionManagerWindowRegistrar>();
             // TODO @Uli open SessionManager here
             //ReentrancyGuard.Current.Execute("", () => sessionManagerRegistrar.ToolWindow.Show());
-        }
-
-        private void RemoveNamesOptionChanged(object sender, RoutedEventArgs args)
-        {
-            StoreCheckboxState((ToggleButton) sender, (settings, value) => settings.FeedbackGeneratorNames = value);
-        }
-
-        private void RemoveDateTimesOptionChanged(object sender, RoutedEventArgs args)
-        {
-            StoreCheckboxState((ToggleButton)sender, (settings, value) => settings.FeedbackGeneratorStartTime = value);
-        }
-
-        private void RemoveDurationsOptionChanged(object sender, RoutedEventArgs args)
-        {
-            StoreCheckboxState((ToggleButton)sender, (settings, value) => settings.FeedbackGeneratorDuration = value);
-        }
-
-        private void RemoveSessionUUIDOptionChanged(object sender, RoutedEventArgs args)
-        {
-            StoreCheckboxState((ToggleButton)sender, (settings, value) => settings.FeedbackGeneratorSessionIDs = value);
-        }
-
-        private delegate void PropertySetter(FeedbackGeneratorResharperSettings settings, bool? value);
-
-        private static void StoreCheckboxState(ToggleButton checkbox, PropertySetter setter)
-        {
-            Asserts.NotNull(checkbox);
-
-            var settingsStore = Registry.GetComponent<ISettingsStore>();
-            var settings = settingsStore.GetSettings<FeedbackGeneratorResharperSettings>();
-            setter(settings, checkbox.IsChecked);
-            settingsStore.SetSettings(settings);
         }
 
         private void UploadButtonClicked(object sender, RoutedEventArgs e)

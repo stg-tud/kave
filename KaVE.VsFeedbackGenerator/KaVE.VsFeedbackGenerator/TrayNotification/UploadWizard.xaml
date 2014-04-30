@@ -25,13 +25,13 @@
         </Label>
         <Expander Header="{x:Static root:Properties.UploadWizard.checkbox_group_name}">
             <StackPanel Margin="10,4,0,0">
-                <CheckBox Name="NamesCheckBox" Checked="RemoveNamesOptionChanged" Unchecked="RemoveNamesOptionChanged" Margin="4"
+                <CheckBox Name="NamesCheckBox" Margin="4"
                           Content="{x:Static root:Properties.UploadWizard.name_checkbox}" />
-                <CheckBox Name="StartTimeCheckBox" Checked="RemoveDateTimesOptionChanged" Unchecked="RemoveDateTimesOptionChanged" Margin="4"
+                <CheckBox Name="StartTimeCheckBox" Margin="4"
                           Content="{x:Static root:Properties.UploadWizard.startTime_checkbox}" />
-                <CheckBox Name="DurationCheckBox" Checked="RemoveDurationsOptionChanged" Unchecked="RemoveDurationsOptionChanged" Margin="4"
+                <CheckBox Name="DurationCheckBox" Margin="4"
                           Content="{x:Static root:Properties.UploadWizard.duration_checkbox}" />
-                <CheckBox Name="SessionUUIDCheckBox" Checked="RemoveSessionUUIDOptionChanged" Unchecked="RemoveSessionUUIDOptionChanged" Margin="4"
+                <CheckBox Name="SessionUUIDCheckBox" Margin="4"
                           Content="{x:Static root:Properties.UploadWizard.sessionId_checkbox}" />
             </StackPanel>
         </Expander>
