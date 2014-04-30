@@ -55,7 +55,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
 
         private static DateTime CreateDateWithDayAndHour(int day, int hour)
         {
-            var relativeDate = new DateTime(1970, 1, day, hour, 1, 0);
+            var relativeDate = new DateTime(1970, 1, day, hour, 0, 0);
             return relativeDate;
         }
 
@@ -120,6 +120,25 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
         }
 
         [Test]
+        public void ShouldOpenHardNotificationInWorkingHoursOnTheNextDayIfWorkingHoursAreAlreadyOver()
+        {
+            _uploadSettings.LastNotificationDate = CreateDateWithDayAndHour(9, 12);
+            _uploadSettings.LastUploadDate = CreateDateWithDayAndHour(1, 12);
+            SetNow(CreateDateWithDayAndHour(10, 18));
+
+            GivenCallbackManagerInvokesCallbackImmediately();
+            WhenUploadReminderIsInitialized();
+
+            var actual = _registeredInvocationDate;
+            var expectedMin = CreateDateWithDayAndHour(11, 10);
+            var expectedMax = CreateDateWithDayAndHour(11, 16);
+
+            _mockTrayIcon.Verify(ti => ti.ShowHardBalloonPopup());
+
+            AssertDateBetween(expectedMin, expectedMax, actual);
+        }
+
+        [Test]
         public void ShouldNotOpenNotificationIfUploadedToday()
         {
             _uploadSettings.LastNotificationDate = CreateDateWithDayAndHour(1, 12);
@@ -166,7 +185,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
         }
 
         [Test]
-        public void ShouldRegisterCorrectTime_LastNotificationOnThePreviousDayAndCurrentTimeIsBeforeWorkingHour()
+        public void ShouldRegisterCorrectTime_LastNotificationOnThePreviousDayAndCurrentTimeIsBeforeWorkingHours()
         {
             _uploadSettings.LastNotificationDate = CreateDateWithDayAndHour(1, 12);
             SetNow(CreateDateWithDayAndHour(2, 8));
@@ -181,7 +200,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
         }
 
         [Test]
-        public void ShouldRegisterCorrectTime_LastNotificationOnThePreviousDayAndCurrentTimeIsInWorkingHour()
+        public void ShouldRegisterCorrectTime_LastNotificationOnThePreviousDayAndCurrentTimeIsInWorkingHours()
         {
             _uploadSettings.LastNotificationDate = CreateDateWithDayAndHour(1, 12);
             SetNow(CreateDateWithDayAndHour(2, 14));
@@ -196,7 +215,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
         }
 
         [Test]
-        public void ShouldRegisterCorrectTime_LastNotificationOnThePreviousDayOutSideWorkingHourAndCurrentTimeIsInWorkingHour()
+        public void ShouldRegisterCorrectTime_LastNotificationOnThePreviousDayOutSideWorkingHourAndCurrentTimeIsInWorkingHours()
         {
             _uploadSettings.LastNotificationDate = CreateDateWithDayAndHour(1, 18);
             SetNow(CreateDateWithDayAndHour(2, 13));
@@ -211,7 +230,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
         }
 
         [Test]
-        public void ShouldRegisterCorrectTime_LastNotificationOnThePreviousDayAndCurrentTimeIsAfterWorkingHour()
+        public void ShouldRegisterCorrectTime_LastNotificationOnThePreviousDayAndCurrentTimeIsAfterWorkingHours()
         {
             _uploadSettings.LastNotificationDate = CreateDateWithDayAndHour(1, 12);
             SetNow(CreateDateWithDayAndHour(2, 17));
@@ -224,10 +243,6 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
 
             AssertDateBetween(expectedMin, expectedMax, actual);
         }
-
-
-
-        // TODO @Uli: think about additional tests for notification date / upload date combinations
 
         [Test]
         public void FinishActionShouldReschedule()
@@ -255,7 +270,13 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
         {
             _mockCallbackManager.Setup(
                 mgr => mgr.RegisterCallback(It.IsAny<Action>(), It.IsAny<DateTime>(), It.IsAny<Action>()))
-                                .Callback<Action, DateTime, Action>((callback, date, finish) => callback());
+                                .Callback<Action, DateTime, Action>(
+                                    (callback, date, finish) =>
+                                    {
+                                        _registeredInvocationDate = date;
+                                        _registeredRescheduleAction = finish;
+                                        callback();
+                                    });
         }
     }
 }
