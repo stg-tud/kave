@@ -1,4 +1,8 @@
-﻿using KaVE.VsFeedbackGenerator.SessionManager.Presentation;
+﻿using System;
+using KaVE.Model.Events;
+using KaVE.Model.Names.VisualStudio;
+using KaVE.VsFeedbackGenerator.SessionManager.Presentation;
+using Moq;
 using NUnit.Framework;
 
 namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
@@ -70,6 +74,25 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                 "<Bold Foreground=\"Blue\">\"number-key\":</Bold> <Span Foreground=\"Darkgreen\">42</Span>}";
 
             var actual = IDEEventToXamlFormattedJsonConverter.Highlight(origin);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void ShouldFormatIDEEvent()
+        {
+            var mock = new Mock<IDEEvent>();
+            var now = new DateTime(2014, 5, 1);
+            var ideEvent = mock.Object;
+            ideEvent.ActiveDocument = DocumentName.Get("Doc.cs");
+            ideEvent.TriggeredAt = now;
+            ideEvent.TriggeredBy = IDEEvent.Trigger.Automatic;
+            const string expected = @"{
+    <Bold Foreground=""Blue"">""TriggeredAt"":</Bold> <Span Foreground=""Blue"">""2014-05-01T00:00:00""</Span>,
+    <Bold Foreground=""Blue"">""TriggeredBy"":</Bold> <Span Foreground=""Blue"">""Automatic""</Span>,
+    <Bold Foreground=""Blue"">""ActiveDocument"":</Bold> <Span Foreground=""Blue"">""Doc.cs""</Span>
+}";
+
+            var actual = ideEvent.ToXamlFormattedJson();
             Assert.AreEqual(expected, actual);
         }
     }

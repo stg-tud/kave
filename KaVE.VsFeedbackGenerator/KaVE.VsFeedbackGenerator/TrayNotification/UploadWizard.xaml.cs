@@ -40,7 +40,8 @@ namespace KaVE.VsFeedbackGenerator.TrayNotification
         private void On_Review_Click(object sender, RoutedEventArgs e)
         {
             var sessionManagerRegistrar = Registry.GetComponent<SessionManagerWindowRegistrar>();
-            sessionManagerRegistrar.ToolWindow.Show();
+            // TODO @Uli open SessionManager here
+            //ReentrancyGuard.Current.Execute("", () => sessionManagerRegistrar.ToolWindow.Show());
         }
 
         private void RemoveNamesOptionChanged(object sender, RoutedEventArgs args)
@@ -78,11 +79,13 @@ namespace KaVE.VsFeedbackGenerator.TrayNotification
         private void UploadButtonClicked(object sender, RoutedEventArgs e)
         {
             IsUploadExport = true;
+            Close();
         }
 
         private void ZipButtonClicked(object sender, RoutedEventArgs e)
         {
             IsZipExport = true;
+            Close();
         }
     }
 }

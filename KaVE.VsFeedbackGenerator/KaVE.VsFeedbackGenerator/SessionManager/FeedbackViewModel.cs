@@ -155,6 +155,8 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             }
         }
 
+        // TODO Rename Commands?
+        // TODO Function instead of Command?
         private DelegateCommand ExportSessionsCommand
         {
             get
