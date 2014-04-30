@@ -11,8 +11,8 @@ namespace KaVE.VsFeedbackGenerator.TrayNotification
     /// </summary>
     public partial class UploadWizard
     {
-        public bool IsZipExport { get; set; }
-        public bool IsUploadExport { get; set; }
+        public bool IsZipExport { get; private set; }
+        public bool IsUploadExport { get; private set; }
 
 
         public UploadWizard()

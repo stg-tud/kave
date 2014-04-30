@@ -147,14 +147,15 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
 
             if (wizard.IsZipExport)
             {
-                //TODO: Cant find ZipExport and Upload Events
+                ExportSessionsCommand.Execute(null);
             }
             else if(wizard.IsUploadExport)
             {
+                SendSessionsCommand.Execute(null);
             }
         }
 
-        public DelegateCommand ExportSessionsCommand
+        private DelegateCommand ExportSessionsCommand
         {
             get
             {
@@ -164,7 +165,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             }
         }
 
-        public DelegateCommand SendSessionsCommand
+        private DelegateCommand SendSessionsCommand
         {
             get
             {
