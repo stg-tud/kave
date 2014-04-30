@@ -233,6 +233,7 @@
     <Compile Include="Utils\ObjectToVisibilityConverter.cs" />
     <Compile Include="Utils\StringUtils.cs" />
     <Compile Include="Utils\TypeNameExtensions.cs" />
+    <Compile Include="Utils\XamlFormattingUtil.cs" />
     <Compile Include="VsIntegration\IDESession.cs" />
     <Compile Include="VsIntegration\IIDESession.cs" />
   </ItemGroup>

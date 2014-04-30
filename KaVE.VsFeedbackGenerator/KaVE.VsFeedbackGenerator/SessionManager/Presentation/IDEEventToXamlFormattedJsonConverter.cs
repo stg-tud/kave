@@ -3,13 +3,12 @@ using KaVE.JetBrains.Annotations;
 using KaVE.Model.Events;
 using KaVE.Utils.Serialization;
 using KaVE.VsFeedbackGenerator.Utils.Json;
+using Util = KaVE.VsFeedbackGenerator.Utils.XamlFormattingUtil;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
 {
     public static class IDEEventToXamlFormattedJsonConverter
     {
-        private const string BoldFontTag = "Bold";
-        private const string NormalFontTag = "Span";
         public static string ToXamlFormattedJson(this IDEEvent ideEvent)
         {
             if (ideEvent == null)
@@ -38,28 +37,44 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
 
         private static string CreateReplacement(string match)
         {
-            string tag, color;
             if (IsStringConstant(match))
             {
-                tag = IsPropertyKey(match) ? BoldFontTag : NormalFontTag;
-                color = "Blue";
+                return IsPropertyKey(match) ? FormatPropertyKey(match) : FormatStringConstant(match);
             }
-            else if (IsBooleanConstant(match))
+            if (IsBooleanConstant(match))
             {
-                tag = BoldFontTag;
-                color = "Darkred";
+                return FormatBooleanConstant(match);
             }
-            else if (IsNullConstant(match))
+            if (IsNullConstant(match))
             {
-                tag = BoldFontTag;
-                color = "Black";
+                return FormatNullConstant(match);
             }
-            else
-            {
-                tag = NormalFontTag;
-                color = "Darkgreen";
-            }
-            return "<" + tag + " Foreground=\"" + color + "\">" + match + "</" + tag + ">";
+            return FormatNumberConstant(match);
+        }
+
+        private static string FormatStringConstant(string match)
+        {
+            return Util.Colored(match, "Blue");
+        }
+
+        private static string FormatPropertyKey(string match)
+        {
+            return Util.Bold(match, "Blue");
+        }
+
+        private static string FormatBooleanConstant(string match)
+        {
+            return Util.Bold(match, "Darkred");
+        }
+
+        private static string FormatNullConstant(string match)
+        {
+            return Util.Bold(match);
+        }
+
+        private static string FormatNumberConstant(string match)
+        {
+            return Util.Colored(match, "Darkgreen");
         }
 
         private static bool IsStringConstant(string match)

@@ -32,12 +32,13 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
 
         private static void OnXamlChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var xaml = (string)e.NewValue;
+            var xaml = (string) e.NewValue;
+            var escaped = xaml.Replace("&", "&amp;");
             var generatedDataTemplate =
-                (DataTemplate)XamlReader.Parse(DataTemplateBegin + xaml.Replace("&", "&amp;") + DataTemplateEnd);
-            var generatedTextBlock = (TextBlock)generatedDataTemplate.LoadContent();
+                (DataTemplate) XamlReader.Parse(DataTemplateBegin + escaped + DataTemplateEnd);
+            var generatedTextBlock = (TextBlock) generatedDataTemplate.LoadContent();
 
-            var richTextBox = (XamlBindableRichTextBox)d;
+            var richTextBox = (XamlBindableRichTextBox) d;
             var document = new FlowDocument();
             var para = new Paragraph();
             para.Inlines.AddRange(generatedTextBlock.Inlines.ToList());

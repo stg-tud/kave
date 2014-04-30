@@ -6,6 +6,7 @@ using JetBrains.Util;
 using KaVE.Model.Events.CompletionEvent;
 using KaVE.Model.Names;
 using KaVE.VsFeedbackGenerator.Utils;
+using Util = KaVE.VsFeedbackGenerator.Utils.XamlFormattingUtil;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
 {
@@ -16,8 +17,6 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
         private const string Space = " ";
         private const string CurlyBracketOpen = "{";
         private const string CurlyBracketClose = "}";
-        private const string BoldStart = "<Bold>";
-        private const string BoldEnd = "</Bold>";
         private const string CompletionMarker = ""; //"<Italic Foreground=\"Blue\">@Completion</Italic>";
 
         public static string ToXaml(this Context context)
@@ -81,16 +80,14 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
 
         private static void AppendHierarchyElement([NotNull] this StringBuilder builder, [NotNull] ITypeName typeName)
         {
-            builder.Append(BoldStart)
-                   .Append(typeName.ToTypeCategory())
-                   .Append(BoldEnd)
+            builder.Append(Util.Bold(typeName.ToTypeCategory()))
                    .Append(Space)
                    .Append(typeName.FullName);
         }
 
         private static void AppendSupertypes([NotNull] this StringBuilder builder, [NotNull] ITypeHierarchy hierarchy)
         {
-            builder.Append(BoldStart).Append(" : ").Append(BoldEnd);
+            builder.Append(Util.Bold(" : "));
             var supertypes = new List<ITypeHierarchy>();
             if (hierarchy.HasSuperclass)
             {

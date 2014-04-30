@@ -10,13 +10,11 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
     [TestFixture]
     internal class IDEEventToXamlFormattedJsonConverterTest
     {
-        // TODO @Dennis: Mir fehlt ein Test der mal ein IDEEvent umwandelt. Der letzte Test wäre ein guter Kandidat hierfür.
-
         [Test]
         public void ShouldHighlightNull()
         {
             const string origin = "null";
-            const string expected = "<Bold Foreground=\"Black\">null</Bold>";
+            const string expected = "<Bold>null</Bold>";
 
             var actual = IDEEventToXamlFormattedJsonConverter.Highlight(origin);
             Assert.AreEqual(expected, actual);
@@ -69,7 +67,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                 "{\"string-key\": \"string value\", \"null-key\": null, \"bool-key\": true, \"number-key\": 42}";
             const string expected =
                 "{<Bold Foreground=\"Blue\">\"string-key\":</Bold> <Span Foreground=\"Blue\">\"string value\"</Span>, " +
-                "<Bold Foreground=\"Blue\">\"null-key\":</Bold> <Bold Foreground=\"Black\">null</Bold>, " +
+                "<Bold Foreground=\"Blue\">\"null-key\":</Bold> <Bold>null</Bold>, " +
                 "<Bold Foreground=\"Blue\">\"bool-key\":</Bold> <Bold Foreground=\"Darkred\">true</Bold>, " +
                 "<Bold Foreground=\"Blue\">\"number-key\":</Bold> <Span Foreground=\"Darkgreen\">42</Span>}";
 
