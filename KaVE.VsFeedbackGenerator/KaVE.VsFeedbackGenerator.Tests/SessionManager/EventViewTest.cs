@@ -11,48 +11,16 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
     internal class EventViewTest
     {
         [Test]
-        public void ShouldIncludeOnlySpecializedEventFieldsInDetails()
+        public void ShouldDisplayFormattedEventDetails()
         {
-            var @event = new CommandEvent
-            {
-                IDESessionUUID = "TestSessionUUID",
-                TriggeredAt = new DateTime(2014, 1, 9, 10, 8, 0),
-                TriggeredBy = IDEEvent.Trigger.Unknown,
-                ActiveWindow = WindowName.Get("TestWindow"),
-                ActiveDocument = DocumentName.Get("C:\\test.doc"),
-                Command = CommandName.Get("test.command"),
-                TerminatedAt = new DateTime(2014, 1, 9, 10, 22, 0),
-            };
+            var @event = new CommandEvent {Command = CommandName.Get("test.command")};
+            const string expected =
+                "    <Bold Foreground=\"Blue\">\"Command\":</Bold> <Span Foreground=\"Blue\">\"test.command\"</Span>";
 
-            var eventView = new EventView(@event);
-            var actualDetails = eventView.Details;
+            var view = new EventView(@event);
+            var actual = view.Details;
 
-            Assert.AreEqual(
-                "  \"Command\": \"test.command\"",
-                actualDetails);
-        }
-
-
-        [Test]
-        public void ShouldReturnCorrectDetailsIfSomeGeneralEventInformationAreNotSet()
-        {
-            var @event = new WindowEvent
-            {
-                IDESessionUUID = "TestSessionUUID",
-                TriggeredAt = new DateTime(2014, 1, 9, 10, 8, 0),
-                TriggeredBy = IDEEvent.Trigger.Unknown,
-                ActiveWindow = WindowName.Get("TestWindow"),
-                Window = WindowName.Get("TestWindow"),
-                Action = WindowEvent.WindowAction.Close,
-            };
-
-            var eventView = new EventView(@event);
-            var actualDetails = eventView.Details;
-
-            Assert.AreEqual(
-                "  \"Window\": \"TestWindow\",\r\n" +
-                "  \"Action\": \"Close\"",
-                actualDetails);
+            Assert.AreEqual(expected, actual);
         }
     }
 }
