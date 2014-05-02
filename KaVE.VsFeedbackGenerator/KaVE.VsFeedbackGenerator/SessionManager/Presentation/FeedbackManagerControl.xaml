@@ -10,8 +10,7 @@
              xmlns:presentation="clr-namespace:KaVE.VsFeedbackGenerator.SessionManager.Presentation"
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="1000"
-             MinWidth="1500"
-             Height="400" Width="1000"
+             MinWidth="1000"
              d:DataContext="{d:DesignInstance Type=sessionManager:FeedbackViewModel, IsDesignTimeCreatable=False}"
              Loaded="FeedbackWindowControl_OnLoaded"
              GotKeyboardFocus="SessionManagerControl_OnGotFocus"
@@ -70,12 +69,12 @@
         </ToolBarTray>
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="150" />
+                <ColumnDefinition Width="100" />
                 <ColumnDefinition Width="250" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             <!-- SESSION LIST -->
-            <GroupBox Grid.Column="0" MinWidth="150" Header="{x:Static root:Properties.SessionManager.Sessions}">
+            <GroupBox Grid.Column="0" MinWidth="100" Header="{x:Static root:Properties.SessionManager.Sessions}">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
@@ -110,9 +109,10 @@
                 </Grid>
             </GroupBox>
             <!-- EVENT LIST -->
-            <GroupBox Grid.Column="1" MinWidth="250" Header="{x:Static root:Properties.SessionManager.Events}">
-                <Grid DataContext="{Binding SingleSelectedSession, FallbackValue={x:Null}}"
+            <GroupBox Grid.Column="1" MinWidth="250" Header="{x:Static root:Properties.SessionManager.Events}"
+                      DataContext="{Binding SingleSelectedSession, FallbackValue={x:Null}}"
                       Visibility="{Binding Converter={StaticResource ObjectToVisibilityConverter}, Path=., FallbackValue=Collapsed}">
+                <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="*" />
@@ -145,12 +145,12 @@
                 </Grid>
             </GroupBox>
             <!-- EVENT INFORMATION -->
-            <GroupBox Grid.Column="2" Header="{x:Static root:Properties.SessionManager.EventData}">
+            <GroupBox Grid.Column="2" Header="{x:Static root:Properties.SessionManager.EventData}"
+                      DataContext="{Binding SingleSelectedSession.SingleSelectedEvent, FallbackValue={x:Null}}"
+                      Visibility="{Binding Converter={StaticResource ObjectToVisibilityConverter}, Path=., FallbackValue=Collapsed}">
                 <TabControl TabStripPlacement="Bottom" Margin="0, 0, 0, 0">
-                    <TabItem Header="{x:Static root:Properties.SessionManager.DesignView}"
-                             DataContext="{Binding SingleSelectedSession.SingleSelectedEvent, FallbackValue={x:Null}}">
-                        <Grid
-                            Visibility="{Binding Converter={StaticResource ObjectToVisibilityConverter}, Path=., FallbackValue=Collapsed}">
+                    <TabItem Header="{x:Static root:Properties.SessionManager.DesignView}">
+                        <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
@@ -200,37 +200,23 @@
                                       Visibility="{Binding Converter={StaticResource ObjectToVisibilityConverter}, Path=., FallbackValue=Collapsed}">
                                 <Border BorderThickness="1" BorderBrush="DimGray" Padding="0" CornerRadius="1"
                                         Margin="0,3,0,0" Background="White">
-                                    <presentation:XamlBindableRichTextBox Margin="0,0,0,0"
-                                                                          HorizontalAlignment="Left"
-                                                                          VerticalAlignment="Top"
-                                                                          Width="Auto" Height="Auto"
-                                                                          FontFamily="Courier New"
-                                                                          Xaml="{Binding .}" />
+                                    <presentation:XamlBindableRichTextBox Xaml="{Binding .}" FontFamily="Courier New"
+                                                                          VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" />
                                 </Border>
                             </GroupBox>
                             <!-- DETAILS SCROLLBOX -->
                             <GroupBox Grid.Row="5" Header="{x:Static root:Properties.SessionManager.EventDetails}">
                                 <Border BorderThickness="1" BorderBrush="DimGray" Padding="0" CornerRadius="1"
-                                        Margin="0,3,0,0">
-                                    <ScrollViewer VerticalScrollBarVisibility="Visible"
-                                                  HorizontalScrollBarVisibility="Visible" Background="White">
-                                        <presentation:XamlBindableRichTextBox Margin="0,0,0,0"
-                                                                              HorizontalAlignment="Left"
-                                                                              VerticalAlignment="Top"
-                                                                              Width="Auto" Height="Auto"
-                                                                              FontFamily="Courier New"
-                                                                              Xaml="{Binding Details}" />
-                                    </ScrollViewer>
+                                        Margin="0,3,0,0" Background="White">
+                                    <presentation:XamlBindableRichTextBox Xaml="{Binding Details}" FontFamily="Courier New"
+                                                                          VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" />
                                 </Border>
                             </GroupBox>
                         </Grid>
                     </TabItem>
-                    <TabItem Header="{x:Static root:Properties.SessionManager.RawView}"
-                             DataContext="{Binding SingleSelectedSession.SingleSelectedEvent.XamlRawRepresentation, FallbackValue={x:Null}}">
-                        <presentation:XamlBindableRichTextBox
-                            Xaml="{Binding ., FallbackValue={x:Null}}"
-                            Visibility="{Binding Converter={StaticResource ObjectToVisibilityConverter}, Path=., FallbackValue=Collapsed}"
-                            VerticalScrollBarVisibility="Auto" />
+                    <TabItem Header="{x:Static root:Properties.SessionManager.RawView}">
+                        <presentation:XamlBindableRichTextBox Xaml="{Binding XamlRawRepresentation}" FontFamily="Courier New"
+                                                                          VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" />
                     </TabItem>
                 </TabControl>
             </GroupBox>
