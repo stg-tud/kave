@@ -106,7 +106,8 @@
     <Compile Include="SessionManager\DeleteEventCommandTest.cs" />
     <Compile Include="SessionManager\DeleteSessionCommandTest.cs" />
     <Compile Include="Interactivity\InteractionRequestTestHelper.cs" />
-    <Compile Include="SessionManager\Presentation\IDEEventToXamlFormattedJsonConverterTest.cs" />
+    <Compile Include="SessionManager\Presentation\IDEEventDetailsToJsonConverterTest.cs" />
+    <Compile Include="SessionManager\Presentation\JsonSyntaxHighlighterTest.cs" />
     <Compile Include="SessionManager\UploadReminderTest.cs" />
     <Compile Include="SessionManager\UploadSettingsTest.cs" />
     <Compile Include="TestFactories\Actions\ActionManagerMockExtensions.cs" />
@@ -125,11 +126,12 @@
     <Compile Include="Utils\InverseBoolConverterTest.cs" />
     <Compile Include="Utils\IoUtilsTest.cs" />
     <Compile Include="Utils\FilePublisherTest.cs" />
+    <Compile Include="Utils\Json\JsonSerializationTest.cs" />
     <Compile Include="Utils\Json\Model\CompletionEventSerializationTest.cs" />
     <Compile Include="Utils\Json\JsonAssert.cs" />
     <Compile Include="Utils\Json\JsonLogReaderTest.cs" />
     <Compile Include="Utils\Json\JsonLogWriterTest.cs" />
-    <Compile Include="Utils\Json\JsonTestExtensions.cs" />
+    <Compile Include="Utils\Json\MemoryStreamUtils.cs" />
     <Compile Include="Utils\Json\Model\ContextSerializationTest.cs" />
     <Compile Include="Utils\Json\Model\MethodHierarchySerializationTest.cs" />
     <Compile Include="Utils\Json\Model\NamesSerializationTest.cs" />

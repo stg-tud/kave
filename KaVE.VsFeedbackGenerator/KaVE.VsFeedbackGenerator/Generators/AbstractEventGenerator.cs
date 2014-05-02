@@ -3,10 +3,11 @@ using System.Diagnostics;
 using EnvDTE;
 using KaVE.JetBrains.Annotations;
 using KaVE.Model.Events;
-using KaVE.Utils.Serialization;
 using KaVE.VsFeedbackGenerator.MessageBus;
+using KaVE.VsFeedbackGenerator.Utils.Json;
 using KaVE.VsFeedbackGenerator.Utils.Names;
 using KaVE.VsFeedbackGenerator.VsIntegration;
+using Newtonsoft.Json;
 
 namespace KaVE.VsFeedbackGenerator.Generators
 {
@@ -104,7 +105,7 @@ namespace KaVE.VsFeedbackGenerator.Generators
         [Conditional("DEBUG")]
         private static void WriteToDebugConsole(IDEEvent @event)
         {
-            Debug.WriteLine(@event.ToJson());
+            Debug.WriteLine(@event.ToFormattedJson());
         }
     }
 }

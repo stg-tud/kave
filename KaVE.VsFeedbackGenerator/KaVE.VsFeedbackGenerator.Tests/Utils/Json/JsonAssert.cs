@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using KaVE.VsFeedbackGenerator.Utils.Json;
+using NUnit.Framework;
 
 namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json
 {
@@ -24,8 +25,8 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json
 
         private static T SerializeAndDeserialize<T>(T model) where T : class
         {
-            var serialization = model.Serialize();
-            var modelCopy = serialization.Deserialize<T>();
+            var json = model.ToCompactJson();
+            var modelCopy = json.ParseJsonTo<T>();
             return modelCopy;
         }
     }

@@ -201,11 +201,11 @@
                                 <Border BorderThickness="1" BorderBrush="DimGray" Padding="0" CornerRadius="1"
                                         Margin="0,3,0,0" Background="White">
                                     <presentation:XamlBindableRichTextBox Margin="0,0,0,0"
-                                                                                HorizontalAlignment="Left"
-                                                                                VerticalAlignment="Top"
-                                                                                Width="Auto" Height="Auto"
-                                                                                FontFamily="Courier New"
-                                                                                Xaml="{Binding .}" />
+                                                                          HorizontalAlignment="Left"
+                                                                          VerticalAlignment="Top"
+                                                                          Width="Auto" Height="Auto"
+                                                                          FontFamily="Courier New"
+                                                                          Xaml="{Binding .}" />
                                 </Border>
                             </GroupBox>
                             <!-- DETAILS SCROLLBOX -->
@@ -214,9 +214,12 @@
                                         Margin="0,3,0,0">
                                     <ScrollViewer VerticalScrollBarVisibility="Visible"
                                                   HorizontalScrollBarVisibility="Visible" Background="White">
-                                        <StackPanel>
-                                            <TextBlock Text="{Binding Details}" />
-                                        </StackPanel>
+                                        <presentation:XamlBindableRichTextBox Margin="0,0,0,0"
+                                                                              HorizontalAlignment="Left"
+                                                                              VerticalAlignment="Top"
+                                                                              Width="Auto" Height="Auto"
+                                                                              FontFamily="Courier New"
+                                                                              Xaml="{Binding Details}" />
                                     </ScrollViewer>
                                 </Border>
                             </GroupBox>
@@ -227,7 +230,7 @@
                         <presentation:XamlBindableRichTextBox
                             Xaml="{Binding ., FallbackValue={x:Null}}"
                             Visibility="{Binding Converter={StaticResource ObjectToVisibilityConverter}, Path=., FallbackValue=Collapsed}"
-                            VerticalScrollBarVisibility="Auto"/>
+                            VerticalScrollBarVisibility="Auto" />
                     </TabItem>
                 </TabControl>
             </GroupBox>

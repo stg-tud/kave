@@ -9,7 +9,6 @@ using JetBrains.Application;
 using JetBrains.UI.Extensions.Commands;
 using KaVE.Model.Events;
 using KaVE.Utils;
-using KaVE.VsFeedbackGenerator.Generators;
 using KaVE.VsFeedbackGenerator.Interactivity;
 using KaVE.VsFeedbackGenerator.TrayNotification;
 using KaVE.VsFeedbackGenerator.Utils;

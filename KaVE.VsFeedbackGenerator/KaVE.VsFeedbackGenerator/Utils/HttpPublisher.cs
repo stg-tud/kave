@@ -48,7 +48,7 @@ namespace KaVE.VsFeedbackGenerator.Utils
             var content = _ioUtils.ReadFile(file);
             return new MultipartFormDataContent
             {
-                {new ByteArrayContent(content.GetBytes()), "file", name}
+                {new ByteArrayContent(content.AsBytes()), "file", name}
             };
         }
 

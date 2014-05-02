@@ -6,7 +6,6 @@ using KaVE.VsFeedbackGenerator.Tests.Utils.Json;
 using KaVE.VsFeedbackGenerator.Utils;
 using KaVE.VsFeedbackGenerator.Utils.Logging;
 using Moq;
-using NuGet;
 using NUnit.Framework;
 
 namespace KaVE.VsFeedbackGenerator.Tests.Utils.Logging

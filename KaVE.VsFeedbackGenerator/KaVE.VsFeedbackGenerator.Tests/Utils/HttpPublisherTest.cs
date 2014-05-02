@@ -162,7 +162,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
             Assert.AreEqual("file", byteArrayContent.Headers.ContentDisposition.Name);
             Assert.AreEqual("tmp.log", byteArrayContent.Headers.ContentDisposition.FileName);
 
-            return byteArrayContent.ReadAsByteArrayAsync().Result.GetString();
+            return byteArrayContent.ReadAsByteArrayAsync().Result.AsString();
         }
     }
 }

@@ -65,7 +65,6 @@
     <Compile Include="Properties\JetBrainsAnnotations.cs" />
     <Compile Include="Reflection\TypeExtensions.cs" />
     <Compile Include="ScheduledAction.cs" />
-    <Compile Include="Serialization\JsonExtensions.cs" />
     <Compile Include="StringBuilderUtils.cs" />
     <Compile Include="WeakReference.cs" />
   </ItemGroup>

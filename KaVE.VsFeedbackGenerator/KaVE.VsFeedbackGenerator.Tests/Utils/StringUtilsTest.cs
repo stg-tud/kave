@@ -10,7 +10,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
         public void SimpleRoundTrip()
         {
             const string expected = "asd";
-            var actual = expected.GetBytes().GetString();
+            var actual = expected.AsBytes().AsString();
             Assert.AreEqual(expected, actual);
         }
     }

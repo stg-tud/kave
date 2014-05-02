@@ -155,7 +155,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json
         [NotNull]
         private static ILogReader<SerializationTestTarget> CreateReader(string input)
         {
-            return new JsonLogReader<SerializationTestTarget>(new MemoryStream(input.AsBytes()));
+            return new JsonLogReader<SerializationTestTarget>(input.AsStream());
         }
     }
 }

@@ -1,33 +1,13 @@
 ﻿using System.Text.RegularExpressions;
 using KaVE.JetBrains.Annotations;
-using KaVE.Model.Events;
-using KaVE.Utils.Serialization;
-using KaVE.VsFeedbackGenerator.Utils.Json;
 using Util = KaVE.VsFeedbackGenerator.Utils.XamlFormattingUtil;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
 {
-    public static class IDEEventToXamlFormattedJsonConverter
+    public static class JsonSyntaxHighlighter
     {
-        public static string ToXamlFormattedJson(this IDEEvent ideEvent)
-        {
-            if (ideEvent == null)
-            {
-                return null;
-            }
-            var rawVersion = ToJson(ideEvent);
-            var highlighted = Highlight(rawVersion);
-            return highlighted;
-        }
-
-        private static string ToJson([NotNull] IDEEvent ideEvent)
-        {
-            var regex = new Regex("\n *");
-            var json = ideEvent.ToJson(new NameToIdentifierConverter(), new EnumToStringConverter());
-            return regex.Replace(json, match => match.Value + match.Value.Substring(1));
-        }
-
-        internal static string Highlight([NotNull] string xaml)
+        [NotNull]
+        internal static string AddJsonSyntaxHighlightingWithXaml([NotNull] this string xaml)
         {
             return Regex.Replace(
                 xaml,

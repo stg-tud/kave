@@ -5,6 +5,7 @@ using KaVE.Model.Events.CompletionEvent;
 using KaVE.Model.Names.CSharp;
 using KaVE.Model.Names.VisualStudio;
 using KaVE.VsFeedbackGenerator.Tests.TestFactories;
+using KaVE.VsFeedbackGenerator.Utils.Json;
 using NUnit.Framework;
 
 namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.Model
@@ -74,7 +75,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.Model
                                      "\"ActiveWindow\":{\"type\":\"VisualStudio.WindowName\",\"identifier\":\"vsWindowTypeDocument Initializer.cs\"}," +
                                      "\"ActiveDocument\":{\"type\":\"VisualStudio.DocumentName\",\"identifier\":\"\\\\CodeCompletion.FeedbackGenerator\\\\KaVE.VsFeedbackGenerator\\\\KaVE.VsFeedbackGenerator\\\\Initializer.cs\"}}";
 
-            var actual = jsonEvent.Deserialize<CompletionEvent>();
+            var actual = jsonEvent.ParseJsonTo<CompletionEvent>();
 
             var initialySelectedProposal = CreatePropertyProposal(
                 "get [System.Boolean, mscorlib, 4.0.0.0] [System.IO.Stream, mscorlib, 4.0.0.0].CanRead()");
@@ -115,7 +116,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.Model
 
         private Proposal CreatePropertyProposal(string identifier)
         {
-            return new Proposal { Name = PropertyName.Get(identifier) };
+            return new Proposal {Name = PropertyName.Get(identifier)};
         }
     }
 }

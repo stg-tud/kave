@@ -118,7 +118,8 @@
     </Compile>
     <Compile Include="Interactivity\InteractionRequest.cs" />
     <Compile Include="Interactivity\ConfirmationRequestHandler.cs" />
-    <Compile Include="SessionManager\Presentation\IDEEventToXamlFormattedJsonConverter.cs" />
+    <Compile Include="SessionManager\Presentation\IDEEventDetailsToJsonConverter.cs" />
+    <Compile Include="SessionManager\Presentation\JsonSyntaxHighlighter.cs" />
     <Compile Include="SessionManager\ViewModelBase.cs" />
     <Compile Include="TrayNotification\BalloonPopupBase.cs" />
     <Compile Include="TrayNotification\HardBalloonPopup.xaml.cs">
@@ -221,7 +222,7 @@
     <Compile Include="Utils\InverseBoolConverter.cs" />
     <Compile Include="Utils\Json\EnumToStringConverter.cs" />
     <Compile Include="Utils\Json\JsonLogReader.cs" />
-    <Compile Include="Utils\Json\JsonLogSerialization.cs" />
+    <Compile Include="Utils\Json\JsonSerialization.cs" />
     <Compile Include="Utils\Json\JsonLogWriter.cs" />
     <Compile Include="Utils\Json\NameToIdentifierConverter.cs" />
     <Compile Include="Utils\Json\NameToJsonConverter.cs" />
