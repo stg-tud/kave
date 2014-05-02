@@ -77,7 +77,7 @@ namespace KaVE.Model.Names.CSharp
             get { return FullName.Contains("[["); }
         }
 
-        public bool IsGenericType
+        public bool IsGenericEntity
         {
             get { return HasTypeParameters; }
         }

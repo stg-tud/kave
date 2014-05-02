@@ -34,7 +34,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.Model
                 Prefix = "Foo",
                 Context = new Context
                 {
-                    EnclosingMethodHierarchy = new MethodHierarchy(TestNameFactory.GetAnonymousMethodName())
+                    EnclosingMethod = TestNameFactory.GetAnonymousMethodName()
                 },
                 ProposalCollection = new ProposalCollection(new List<Proposal> {proposal1, proposal2}),
                 TerminatedAt = new DateTime(2012, 2, 23, 18, 54, 59, 549),

@@ -7,9 +7,8 @@ using KaVE.VsFeedbackGenerator.Utils.Logging;
 
 namespace KaVE.CompletionTraceGenerator
 {
-    public class CompletionEventToTraceConverter
+    public class CompletionEventToTraceConverter : IDisposable
     {
-        // TODO Writer is never disposed, potentially causes loss of information
         private readonly ILogWriter<CompletionTrace> _writer;
         private CompletionTrace _trace;
 
@@ -56,9 +55,14 @@ namespace KaVE.CompletionTraceGenerator
             }
             return _trace;
         }
+
+        public void Dispose()
+        {
+            _writer.Dispose();
+        }
     }
 
-    static class CompletionEventToTraceConverterUtils
+    internal static class CompletionEventToTraceConverterUtils
     {
         internal static bool IsContinuationAfterFiltering(this CompletionEvent completionEvent)
         {
@@ -68,10 +72,11 @@ namespace KaVE.CompletionTraceGenerator
         internal static long ComputeDuration(this CompletionEvent completionEvent)
         {
             var duration = completionEvent.Duration.GetValueOrDefault(TimeSpan.FromSeconds(0));
-            return (long)Math.Ceiling(duration.TotalMilliseconds);
+            return (long) Math.Ceiling(duration.TotalMilliseconds);
         }
 
-        internal static void AppendSelectionChangeActions([NotNull] this CompletionTrace trace, CompletionEvent completionEvent)
+        internal static void AppendSelectionChangeActions([NotNull] this CompletionTrace trace,
+            CompletionEvent completionEvent)
         {
             if (!completionEvent.HasSelections())
             {

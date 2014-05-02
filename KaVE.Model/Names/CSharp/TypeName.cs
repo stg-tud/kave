@@ -186,7 +186,7 @@ namespace KaVE.Model.Names.CSharp
             get { return HasTypeParameters ? FullName.ParseTypeParameters() : new List<ITypeName>(); }
         }
 
-        public bool IsGenericType
+        public bool IsGenericEntity
         {
             get { return Identifier.IndexOf('`') > 0; }
         }

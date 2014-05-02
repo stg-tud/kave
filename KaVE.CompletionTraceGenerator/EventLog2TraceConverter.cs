@@ -23,10 +23,12 @@ namespace KaVE.CompletionTraceGenerator
             {
                 using (var writer = new JsonLogWriter<CompletionTrace>(outputStream))
                 {
-                    var converter = new CompletionEventToTraceConverter(writer);
-                    foreach (var completionEvent in InputCompletionEvents)
+                    using (var converter = new CompletionEventToTraceConverter(writer))
                     {
-                        converter.Process(completionEvent);
+                        foreach (var completionEvent in InputCompletionEvents)
+                        {
+                            converter.Process(completionEvent);
+                        }
                     }
                 }
             }

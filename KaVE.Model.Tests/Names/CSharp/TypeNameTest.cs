@@ -330,7 +330,7 @@ namespace KaVE.Model.Tests.Names.CSharp
 
             Assert.AreEqual(TestAssemblyIdentifier, parameterizedTypeName.Assembly.Identifier);
             Assert.AreEqual("MyType`2", parameterizedTypeName.Name);
-            Assert.IsTrue(parameterizedTypeName.IsGenericType);
+            Assert.IsTrue(parameterizedTypeName.IsGenericEntity);
             Assert.IsTrue(parameterizedTypeName.HasTypeParameters);
             Assert.IsFalse(parameterizedTypeName.IsArrayType);
             Assert.AreEqual(2, parameterizedTypeName.TypeParameters.Count);
@@ -343,7 +343,7 @@ namespace KaVE.Model.Tests.Names.CSharp
         {
             var typeName = TypeName.Get("OuterType`1+InnerType, Assembly, 1.2.3.4");
 
-            Assert.IsTrue(typeName.IsGenericType);
+            Assert.IsTrue(typeName.IsGenericEntity);
             Assert.IsFalse(typeName.HasTypeParameters);
             Assert.AreEqual("OuterType`1+InnerType", typeName.FullName);
             Assert.AreEqual("OuterType`1", typeName.DeclaringType.FullName);

@@ -24,22 +24,19 @@ namespace KaVE.Model.Events.CompletionEvent
         ///     Information about the method whose body is currently edited. <code>null</code> if completion is triggered
         ///     outside a method.
         /// </summary>
-        // TODO replace hierarchy by method name, since hierarchy is contained in typeShape. remember to regenerate equals+hashcode
         [Obsolete("use EnclosingMethod instead")]
-        public MethodHierarchy EnclosingMethodHierarchy { get; set; }
+        public MethodHierarchy EnclosingMethodHierarchy
+        {
+            get { throw new NotImplementedException(); }
+            set { EnclosingMethod = value != null ? value.Element : null; }
+        }
 
         /// <summary>
         ///     Information about the method whose body is currently edited. <code>null</code> if completion is triggered
         ///     outside a method.
         /// </summary>
         [DataMember]
-        public IMethodName EnclosingMethod
-        {
-            // ReSharper disable CSharpWarnings::CS0618
-            get { return EnclosingMethodHierarchy != null ? EnclosingMethodHierarchy.Element : null; }
-            set { EnclosingMethodHierarchy = value != null ? new MethodHierarchy(value) : null; }
-            // ReSharper restore CSharpWarnings::CS0618
-        }
+        public IMethodName EnclosingMethod { get; set; }
 
         /// <summary>
         ///     The GROUM derived from the current code in the enclosing method's body. This GROUM contains a completion
@@ -71,38 +68,32 @@ namespace KaVE.Model.Events.CompletionEvent
 
         protected bool Equals(Context other)
         {
-            // ReSharper disable CSharpWarnings::CS0618
-            return Equals(EnclosingMethodHierarchy, other.EnclosingMethodHierarchy) &&
+            return Equals(EnclosingMethod, other.EnclosingMethod) &&
                    Equals(EnclosingMethodGroum, other.EnclosingMethodGroum) &&
                    CalledMethods.SetEquals(other.CalledMethods) && Equals(TypeShape, other.TypeShape);
-            // ReSharper restore CSharpWarnings::CS0618
         }
 
         public override int GetHashCode()
         {
             unchecked
             {
-                // ReSharper disable CSharpWarnings::CS0618
-                var hashCode = (EnclosingMethodHierarchy != null ? EnclosingMethodHierarchy.GetHashCode() : 0);
+                var hashCode = (EnclosingMethod != null ? EnclosingMethod.GetHashCode() : 0);
                 hashCode = (hashCode*397) ^ (EnclosingMethodGroum != null ? EnclosingMethodGroum.GetHashCode() : 0);
                 hashCode = (hashCode*397) ^ CalledMethods.GetHashCode();
                 hashCode = (hashCode*397) ^ (TypeShape != null ? TypeShape.GetHashCode() : 0);
                 return hashCode;
-                // ReSharper restore CSharpWarnings::CS0618
             }
         }
 
         public override string ToString()
         {
-            // ReSharper disable CSharpWarnings::CS0618
             return
                 string.Format(
-                    "[EnclosingMethodHierarchy: {0}, EnclosingMethodGroum: {1}, CalledMethods: [{2}], TypeShape: {3}]",
-                    EnclosingMethodHierarchy,
+                    "[EnclosingMethod: {0}, EnclosingMethodGroum: {1}, CalledMethods: [{2}], TypeShape: {3}]",
+                    EnclosingMethod,
                     EnclosingMethodGroum,
                     string.Join(", ", CalledMethods),
                     TypeShape);
-            // ReSharper restore CSharpWarnings::CS0618
         }
     }
 }

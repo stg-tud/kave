@@ -66,9 +66,9 @@ namespace KaVE.Model.Names.CSharp
 
         internal TypeParameterName(string identifier) : base(identifier) {}
 
-        public bool IsGenericType
+        public bool IsGenericEntity
         {
-            get { return TypeParameterType.IsGenericType; }
+            get { return TypeParameterType.IsGenericEntity; }
         }
 
         public bool HasTypeParameters

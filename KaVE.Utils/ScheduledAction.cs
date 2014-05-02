@@ -17,8 +17,11 @@ namespace KaVE.Utils
         private readonly Timer _timer;
 
 
-        //TODO: Discuss Commenting Strategy 
-        //TODO: Make finishAction as default parameter
+        /// <summary>
+        /// Creation schedules the given action for execution after the given number of milliseconds.
+        /// </summary>
+        /// <param name="actionToSchedule">The action to schedule.</param>
+        /// <param name="millisToDelay">The number of milliseconds to delay exection. Expected to be greater than 0.</param>
         public ScheduledAction(Action actionToSchedule, long millisToDelay)
             : this(actionToSchedule, millisToDelay, () => { })
         {
