@@ -38,11 +38,7 @@ namespace KaVE.VsFeedbackGenerator.Utils.Json
 
         private static string GetIdentifier(JObject jName)
         {
-            var idToken = jName.GetValue(IdentifierPropertyName);
-            if (idToken == null)
-            {
-                idToken = jName.GetValue(OldIdentifierPropertyName);
-            }
+            var idToken = jName.GetValue(IdentifierPropertyName) ?? jName.GetValue(OldIdentifierPropertyName);
             return idToken.ToString();
         }
 

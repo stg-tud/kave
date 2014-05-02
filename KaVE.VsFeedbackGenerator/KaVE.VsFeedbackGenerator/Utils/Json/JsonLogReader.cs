@@ -37,7 +37,7 @@ namespace KaVE.VsFeedbackGenerator.Utils.Json
         {
             try
             {
-                return JsonSerialization.ParseJsonTo<TMessage>(json);
+                return json.ParseJsonTo<TMessage>();
             }
             catch (JsonReaderException jre)
             {

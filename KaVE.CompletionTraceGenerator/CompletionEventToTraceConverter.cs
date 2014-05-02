@@ -3,7 +3,6 @@ using KaVE.CompletionTraceGenerator.Model;
 using KaVE.JetBrains.Annotations;
 using KaVE.Model.Events;
 using KaVE.Model.Events.CompletionEvent;
-using KaVE.VsFeedbackGenerator.Utils;
 using KaVE.VsFeedbackGenerator.Utils.Logging;
 
 namespace KaVE.CompletionTraceGenerator

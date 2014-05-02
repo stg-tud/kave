@@ -1,5 +1,4 @@
-﻿using System.IO;
-using System.Linq;
+﻿using System.Linq;
 using KaVE.JetBrains.Annotations;
 using KaVE.VsFeedbackGenerator.Generators;
 using KaVE.VsFeedbackGenerator.Utils;

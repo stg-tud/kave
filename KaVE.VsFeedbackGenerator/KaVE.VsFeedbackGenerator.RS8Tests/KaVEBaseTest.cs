@@ -8,7 +8,6 @@ using JetBrains.ReSharper.Feature.Services.CodeCompletion;
 using JetBrains.ReSharper.Feature.Services.Lookup;
 using JetBrains.ReSharper.Feature.Services.Tests.CSharp.FeatureServices.CodeCompletion;
 using JetBrains.ReSharper.Psi;
-using JetBrains.ReSharper.Psi.Impl.reflection2.elements.Compiled;
 using JetBrains.ReSharper.TestFramework;
 using JetBrains.TextControl;
 using KaVE.Model.Events.CompletionEvent;

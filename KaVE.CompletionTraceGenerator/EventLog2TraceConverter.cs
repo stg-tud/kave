@@ -4,7 +4,6 @@ using System.Linq;
 using KaVE.Model.Events;
 using KaVE.Model.Events.CompletionEvent;
 using KaVE.VsFeedbackGenerator.Utils.Json;
-using KaVE.VsFeedbackGenerator.Utils.Logging;
 
 namespace KaVE.CompletionTraceGenerator
 {

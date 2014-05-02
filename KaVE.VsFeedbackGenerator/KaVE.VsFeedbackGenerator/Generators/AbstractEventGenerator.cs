@@ -7,7 +7,6 @@ using KaVE.VsFeedbackGenerator.MessageBus;
 using KaVE.VsFeedbackGenerator.Utils.Json;
 using KaVE.VsFeedbackGenerator.Utils.Names;
 using KaVE.VsFeedbackGenerator.VsIntegration;
-using Newtonsoft.Json;
 
 namespace KaVE.VsFeedbackGenerator.Generators
 {

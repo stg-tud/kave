@@ -1,6 +1,4 @@
-﻿using System;
-using KaVE.Model.Events;
-using KaVE.Model.Events.VisualStudio;
+﻿using KaVE.Model.Events.VisualStudio;
 using KaVE.Model.Names.VisualStudio;
 using KaVE.VsFeedbackGenerator.SessionManager;
 using NUnit.Framework;
