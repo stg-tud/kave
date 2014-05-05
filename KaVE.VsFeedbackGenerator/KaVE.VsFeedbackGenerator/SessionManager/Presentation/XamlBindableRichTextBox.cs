@@ -33,6 +33,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
         private static void OnXamlChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var xaml = (string) e.NewValue;
+            // TODO @Dennis: check for other special chars and move this to the xaml converter, since it should produce valid Xaml!
             var escaped = xaml.Replace("&", "&amp;");
             var generatedDataTemplate =
                 (DataTemplate) XamlReader.Parse(DataTemplateBegin + escaped + DataTemplateEnd);
