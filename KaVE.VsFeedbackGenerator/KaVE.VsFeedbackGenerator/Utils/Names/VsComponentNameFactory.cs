@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using EnvDTE;
+using JetBrains.Util;
 using KaVE.JetBrains.Annotations;
 using KaVE.Model.Names.VisualStudio;
 using KaVE.Utils.Assertion;
@@ -46,7 +47,7 @@ namespace KaVE.VsFeedbackGenerator.Utils.Names
             var fullDocumentName = document.FullName;
             var solution = document.DTE.Solution;
 
-            if (solution == null)
+            if (solution == null || solution.FullName.IsEmpty())
             {
                 return Path.GetFileName(fullDocumentName);
             }
