@@ -8,15 +8,13 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
     [ShellComponent]
     public class SessionManagerWindowRegistrar
     {
-        private readonly ToolWindowClass _toolWindowClass;
-
         public SessionManagerWindowRegistrar(Lifetime lifetime,
             ToolWindowManager toolWindowManager,
             SessionManagerWindowDescriptor descriptor,
             FeedbackViewModel feedbackViewModel)
         {
-            _toolWindowClass = toolWindowManager.Classes[descriptor];
-            _toolWindowClass.RegisterEmptyContent(
+            var toolWindowClass = toolWindowManager.Classes[descriptor];
+            toolWindowClass.RegisterEmptyContent(
                 lifetime,
                 lt =>
                 {
@@ -25,11 +23,6 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
                     return control.BindToLifetime(lt);
                 });
 
-        }
-
-        public ToolWindowClass ToolWindow
-        {
-            get { return _toolWindowClass; }
         }
     }
 }
