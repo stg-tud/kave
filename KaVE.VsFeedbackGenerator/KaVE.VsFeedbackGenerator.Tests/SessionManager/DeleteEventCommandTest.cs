@@ -124,6 +124,19 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
             Assert.AreEqual(2, _uut.Events.Count());
         }
 
+        [Test]
+        public void ShouldRemoveMultipleEventsFromLogAndViewModelWhenConformationIsGiven()
+        {
+            GivenEventsAreSelected(_displayedEvents[0], _displayedEvents[2]);
+
+            _uut.DeleteEventsCommand.Execute(null);
+            _confirmationRequestHelper.Context.Confirmed = true;
+            _confirmationRequestHelper.Callback();
+
+            _mockLog.Verify(log => log.RemoveRange(new[] { _displayedEvents[0], _displayedEvents[2] }));
+            Assert.AreEqual(1, _uut.Events.Count());
+        }
+
         private void GivenEventsAreSelected(params IDEEvent[] events)
         {
             _uut.SelectedEvents = _uut.Events.Where(ev => events.Contains(ev.Event));

@@ -141,9 +141,24 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
             _confirmationRequestHelper.Context.Confirmed = true;
             _confirmationRequestHelper.Callback();
 
-            var expected = new List<SessionViewModel> {_sessionViewModels[0], _sessionViewModels[2]};
+            var expected = new[] {_sessionViewModels[0], _sessionViewModels[2]};
             CollectionAssert.AreEqual(expected, _uut.Sessions);
             _mockLogs[1].Verify(log => log.Delete());
+        }
+
+        [Test]
+        public void ShouldDeleteMultipleSelectedSessionsIfConfirmationIsGiven()
+        {
+            GivenSessionsAreSelected(_sessionViewModels[0], _sessionViewModels[2]);
+
+            _uut.DeleteSessionsCommand.Execute(null);
+            _confirmationRequestHelper.Context.Confirmed = true;
+            _confirmationRequestHelper.Callback();
+
+            var expected = new[] {_sessionViewModels[1]};
+            CollectionAssert.AreEqual(expected, _uut.Sessions);
+            _mockLogs[0].Verify(log => log.Delete());
+            _mockLogs[2].Verify(log => log.Delete());
         }
 
         [Test]
