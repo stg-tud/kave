@@ -4,6 +4,7 @@ using System.Net.Http;
 using JetBrains.Application;
 using KaVE.JetBrains.Annotations;
 using KaVE.Utils.Assertion;
+using Messages = KaVE.VsFeedbackGenerator.Properties.SessionManager;
 
 namespace KaVE.VsFeedbackGenerator.Utils
 {
@@ -31,23 +32,24 @@ namespace KaVE.VsFeedbackGenerator.Utils
     {
         public HttpResponseMessage TransferByHttp(HttpContent content, Uri targetUri, int timeoutInSeconds)
         {
-            Asserts.That(targetUri.Scheme == Uri.UriSchemeHttp, "Http-Upload erwartet Http-Adresse");
+            Asserts.That(targetUri.Scheme == Uri.UriSchemeHttp, Messages.ServerRequestWrongScheme);
 
             using (var client = new HttpClient())
             {
                 client.Timeout = new TimeSpan(0, 0, timeoutInSeconds);
+                HttpResponseMessage response;
                 try
                 {
-                    var response = client.PostAsync(targetUri, content).Result;
-                    Asserts.That(!response.IsSuccessStatusCode, "Server Request fehlgeschlagen");
-                    return response;
+                    response = client.PostAsync(targetUri, content).Result;
                 }
                 catch (Exception)
                 {
-                    Asserts.Fail("Server nicht erreichbar");
+                    response = null;
+                    Asserts.Fail(Messages.ServerRequestNotAvailable);
                 }
+                Asserts.That(response.IsSuccessStatusCode, Messages.ServerResponseFailure);
+                return response;
             }
-            return Asserts.Fail<HttpResponseMessage>("unreachable code");
         }
 
         public void CopyFile(string src, string trg)

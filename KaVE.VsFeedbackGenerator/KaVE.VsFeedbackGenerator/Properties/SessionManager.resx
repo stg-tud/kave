@@ -246,4 +246,13 @@
   <data name="ServerResponseRequestFailure" xml:space="preserve">
     <value>Server meldet eine fehlerhafte Anfrage: {0}</value>
   </data>
+  <data name="ServerRequestNotAvailable" xml:space="preserve">
+    <value>Server nicht erreichbar</value>
+  </data>
+  <data name="ServerRequestWrongScheme" xml:space="preserve">
+    <value>Http-Upload erwartet Http-Adresse</value>
+  </data>
+  <data name="ServerResponseFailure" xml:space="preserve">
+    <value>Server Request fehlgeschlagen</value>
+  </data>
 </root>
