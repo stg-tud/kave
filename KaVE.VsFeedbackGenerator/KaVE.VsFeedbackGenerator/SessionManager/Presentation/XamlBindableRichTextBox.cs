@@ -1,8 +1,10 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Markup;
+using KaVE.VsFeedbackGenerator.Utils;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
 {
@@ -32,18 +34,30 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
 
         private static void OnXamlChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var xaml = (string) e.NewValue;
-            // TODO @Dennis: check for other special chars and move this to the xaml converter, since it should produce valid Xaml!
-            var escaped = xaml.Replace("&", "&amp;");
-            var generatedDataTemplate =
-                (DataTemplate) XamlReader.Parse(DataTemplateBegin + escaped + DataTemplateEnd);
-            var generatedTextBlock = (TextBlock) generatedDataTemplate.LoadContent();
-
             var richTextBox = (XamlBindableRichTextBox) d;
             var document = new FlowDocument();
-            var para = new Paragraph();
-            para.Inlines.AddRange(generatedTextBlock.Inlines.ToList());
-            document.Blocks.Add(para);
+
+            var xaml = (string) e.NewValue;
+            if (xaml != null)
+            {
+                DataTemplate generatedDataTemplate;
+                try
+                {
+                    generatedDataTemplate =
+                        (DataTemplate) XamlReader.Parse(DataTemplateBegin + xaml + DataTemplateEnd);
+                }
+                catch (Exception exception)
+                {
+                    var logEventGenerator = Registry.GetComponent<Generators.ILogger>();
+                    logEventGenerator.Error(exception, "Parsing Xaml in XamlBindableRichTextBox");
+                    throw;
+                }
+                var generatedTextBlock = (TextBlock) generatedDataTemplate.LoadContent();
+
+                var para = new Paragraph();
+                para.Inlines.AddRange(generatedTextBlock.Inlines.ToList());
+                document.Blocks.Add(para);
+            }
             richTextBox.Document = document;
         }
     }

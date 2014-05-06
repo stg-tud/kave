@@ -7,12 +7,18 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
     public static class JsonSyntaxHighlighter
     {
         [NotNull]
-        internal static string AddJsonSyntaxHighlightingWithXaml([NotNull] this string xaml)
+        internal static string AddJsonSyntaxHighlightingWithXaml([NotNull] this string json)
         {
             return Regex.Replace(
-                xaml,
+                json.EscapeXamlCharacters(),
                 @"(""(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\""])*""(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)",
                 match => CreateReplacement(match.Value));
+        }
+
+        private static string EscapeXamlCharacters(this string raw)
+        {
+            // the order of the replacements are importent, so be careful while reordering the existing or adding new replacements
+            return raw.Replace("&", "&amp;").Replace("<", "&lt;").Replace(">", "&gt;");
         }
 
         private static string CreateReplacement(string match)
