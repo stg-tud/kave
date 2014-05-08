@@ -39,7 +39,7 @@ namespace KaVE.VsFeedbackGenerator.Utils.Json
             {
                 return json.ParseJsonTo<TMessage>();
             }
-            catch (JsonReaderException jre)
+            catch (JsonException jre)
             {
                 Registry.GetComponent<ILogger>().Error(jre, json);
                 // supressing broken lines
