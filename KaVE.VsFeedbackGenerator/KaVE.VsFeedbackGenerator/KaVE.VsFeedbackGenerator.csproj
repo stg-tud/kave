@@ -294,6 +294,9 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\KaVE.VsFeedbackGenerator.licenseheader">
+      <Link>KaVE.VsFeedbackGenerator.licenseheader</Link>
+    </None>
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
