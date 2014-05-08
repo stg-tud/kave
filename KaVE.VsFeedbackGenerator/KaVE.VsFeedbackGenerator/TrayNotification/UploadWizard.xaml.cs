@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls.Primitives;
+using JetBrains.ActionManagement;
+using JetBrains.DataFlow;
+using JetBrains.Threading;
+using KaVE.Utils;
 using KaVE.VsFeedbackGenerator.SessionManager.Presentation;
 using KaVE.VsFeedbackGenerator.Utils;
 
@@ -66,9 +70,9 @@ namespace KaVE.VsFeedbackGenerator.TrayNotification
 
         private void On_Review_Click(object sender, RoutedEventArgs e)
         {
-            var sessionManagerRegistrar = Registry.GetComponent<SessionManagerWindowRegistrar>();
-            // TODO @Uli open SessionManager here
-            //ReentrancyGuard.Current.Execute("", () => sessionManagerRegistrar.ToolWindow.Show());
+            var actionManager = Registry.GetComponent<IActionManager>();
+            var threading = Registry.GetComponent<IThreading>();
+            actionManager.ExecuteActionGuarded("KaVE.VsFeedbackGenerator.SessionManager", threading, "AgentAction");
         }
 
         private void UploadButtonClicked(object sender, RoutedEventArgs e)

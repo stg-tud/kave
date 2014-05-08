@@ -57,7 +57,8 @@
                     <Image Source="/KaVE.VsFeedbackGenerator;Component/Resources/send.png" />
                 </Button>
                 <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
-                <Button ToolTip="{x:Static root:Properties.SessionManager.Options}">
+                <Button ToolTip="{x:Static root:Properties.SessionManager.Options}"
+                        Click="OpenOptionPage_OnClick">
                     <Image Source="/KaVE.VsFeedbackGenerator;Component/Resources/options.png" />
                 </Button>
                 <Button ToolTip="{x:Static root:Properties.SessionManager.VisitHomepage}"

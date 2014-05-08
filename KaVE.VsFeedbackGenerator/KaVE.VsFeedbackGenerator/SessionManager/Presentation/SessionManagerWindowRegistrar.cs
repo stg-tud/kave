@@ -30,7 +30,6 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
                     var control = new EitherControl(window);
                     return control.BindToLifetime(lt);
                 });
-
         }
     }
 }

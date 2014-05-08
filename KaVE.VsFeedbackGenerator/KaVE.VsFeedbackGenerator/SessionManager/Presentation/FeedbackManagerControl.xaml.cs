@@ -1,8 +1,12 @@
 ﻿using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using JetBrains.ActionManagement;
+using JetBrains.DataFlow;
+using JetBrains.Threading;
 using KaVE.Utils;
 using KaVE.VsFeedbackGenerator.Interactivity;
+using KaVE.VsFeedbackGenerator.Utils;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
 {
@@ -83,6 +87,13 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
         private void VisitHomepageButton_OnClick(object sender, RoutedEventArgs e)
         {
             System.Diagnostics.Process.Start("http://kave.cc");
+        }
+
+        private void OpenOptionPage_OnClick(object sender, RoutedEventArgs e)
+        {
+            var actionManager = Registry.GetComponent<IActionManager>();
+            var threading = Registry.GetComponent<IThreading>();
+            actionManager.ExecuteActionGuarded("ShowOptions", threading, "AgentAction");
         }
 
         private void SessionManagerControl_OnLostFocus(object sender, RoutedEventArgs e)

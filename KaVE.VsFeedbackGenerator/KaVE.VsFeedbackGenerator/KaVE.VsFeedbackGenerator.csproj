@@ -135,6 +135,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>UploadWizard.resx</DependentUpon>
     </Compile>
+    <Compile Include="Utils\ActionManagerExtensions.cs" />
     <Compile Include="Utils\CallbackManager.cs" />
     <Compile Include="TrayNotification\PopupAbortConfirmationDialog.xaml.cs">
       <DependentUpon>PopupAbortConfirmationDialog.xaml</DependentUpon>

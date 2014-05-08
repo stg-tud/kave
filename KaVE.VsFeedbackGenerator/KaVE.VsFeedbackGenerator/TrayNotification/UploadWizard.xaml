@@ -20,9 +20,7 @@
         </ResourceDictionary>
     </Window.Resources>
     <StackPanel Margin="5">
-        <Label>
-            <TextBlock Name="DialogText" Text="{x:Static root:Properties.UploadWizard.description}" Margin="5" />
-        </Label>
+        <TextBlock Name="DialogText" Text="{x:Static root:Properties.UploadWizard.description}" />
         <Expander Header="{x:Static root:Properties.SessionManager.Options_Export_Title}">
             <StackPanel Margin="10,4,0,0">
                 <CheckBox Name="NamesCheckBox" Margin="4"
@@ -35,29 +33,35 @@
                           Content="{x:Static root:Properties.SessionManager.Options_Export_RemoveSessionIDs}" />
             </StackPanel>
         </Expander>
-        <StackPanel Orientation="Horizontal" Margin="5" HorizontalAlignment="Right">
-            <Image Name="TypeIcon" HorizontalAlignment="Left" VerticalAlignment="Center" Source="{StaticResource Icon}"
+        <Grid HorizontalAlignment="Stretch">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Image Grid.Column="0" Name="TypeIcon" HorizontalAlignment="Left" VerticalAlignment="Center" Source="{StaticResource Icon}"
                    Height="25" Width="25" />
-            <TextBlock>
-                <Hyperlink Click="On_Review_Click"> 
-                    <TextBlock Text="{x:Static root:Properties.UploadWizard.review_link}"/>
-                </Hyperlink>
-            </TextBlock>
-            <!-- TODO perhaps: include the old pics (in comments) in the button's Content -->
-            <Button ToolTip="{x:Static properties:SessionManager.Export}" Margin="5" MinWidth="93"
-                    Content="{x:Static root:Properties.UploadWizard.export_zip_button}"
-                    Click="ZipButtonClicked"
-                    Name="Export"
-                    >
-                <!--<Image Source="/KaVE.VsFeedbackGenerator;Component/Resources/export.png" />-->
-            </Button>
-            <Button ToolTip="{x:Static properties:SessionManager.Send}" Margin="5" MinWidth="93"
-                    Content="{x:Static root:Properties.UploadWizard.export_upload_button}"
-                    Click="UploadButtonClicked"
-                    Name="Send"
-                    >
-                <!--<Image Source="/KaVE.VsFeedbackGenerator;Component/Resources/send.png" /> -->
-            </Button>
-        </StackPanel>
+            <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                <TextBlock VerticalAlignment="Center">
+                    <Hyperlink Click="On_Review_Click"> 
+                        <TextBlock Text="{x:Static root:Properties.UploadWizard.review_link}"/>
+                    </Hyperlink>
+                </TextBlock>
+                <!-- TODO perhaps: include the old pics (in comments) in the button's Content -->
+                <Button ToolTip="{x:Static properties:SessionManager.Export}" Margin="5" MinWidth="93"
+                        Content="{x:Static root:Properties.UploadWizard.export_zip_button}"
+                        Click="ZipButtonClicked"
+                        Name="Export"
+                        >
+                    <!--<Image Source="/KaVE.VsFeedbackGenerator;Component/Resources/export.png" />-->
+                </Button>
+                <Button ToolTip="{x:Static properties:SessionManager.Send}" Margin="5" MinWidth="93"
+                        Content="{x:Static root:Properties.UploadWizard.export_upload_button}"
+                        Click="UploadButtonClicked"
+                        Name="Send"
+                        >
+                    <!--<Image Source="/KaVE.VsFeedbackGenerator;Component/Resources/send.png" /> -->
+                </Button>
+            </StackPanel>
+        </Grid>
     </StackPanel>
 </Window>
