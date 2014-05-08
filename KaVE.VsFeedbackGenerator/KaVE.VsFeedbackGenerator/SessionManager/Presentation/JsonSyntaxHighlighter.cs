@@ -9,8 +9,9 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
         [NotNull]
         internal static string AddJsonSyntaxHighlightingWithXaml([NotNull] this string json)
         {
+            var escapedJson = json.EscapeXamlCharacters();
             return Regex.Replace(
-                json.EscapeXamlCharacters(),
+                escapedJson,
                 @"(""(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\""])*""(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)",
                 match => CreateReplacement(match.Value));
         }
@@ -18,7 +19,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
         private static string EscapeXamlCharacters(this string raw)
         {
             // the order of the replacements are importent, so be careful while reordering the existing or adding new replacements
-            return raw.Replace("&", "&amp;").Replace("<", "&lt;").Replace(">", "&gt;");
+            return raw.Replace("&", "&amp;").Replace("<", "&lt;").Replace(">", "&gt;").Replace("\"", "&quot;").Replace("'", "&apos;");
         }
 
         private static string CreateReplacement(string match)
@@ -40,27 +41,27 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
 
         private static string FormatStringConstant(string match)
         {
-            return Util.Colored(match, "Blue");
+            return match;
         }
 
         private static string FormatPropertyKey(string match)
         {
-            return Util.Bold(match, "Blue");
+            return Util.Bold(match);
         }
 
         private static string FormatBooleanConstant(string match)
         {
-            return Util.Bold(match, "Darkred");
+            return match;
         }
 
         private static string FormatNullConstant(string match)
         {
-            return Util.Bold(match);
+            return match;
         }
 
         private static string FormatNumberConstant(string match)
         {
-            return Util.Colored(match, "Darkgreen");
+            return match;
         }
 
         private static bool IsStringConstant(string match)
