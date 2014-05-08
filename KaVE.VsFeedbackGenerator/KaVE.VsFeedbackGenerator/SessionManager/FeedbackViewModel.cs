@@ -261,8 +261,10 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
                 return;
             }
 
-            // Changing _sessions implicitly changes _selectedSessions, what leads to a concurrent modification, if we change _session in the loop.
-            // Therefore we collect what has been successfully deleted and update the UI afterwards.
+            // Changing _sessions implicitly changes _selectedSessions, what
+            // leads to concurrent modification problems, if we change _session
+            // in the loop. Therefore, we collect what has been successfully
+            // deleted and update the UI afterwards.
             var deletedSessions = new List<SessionViewModel>();
             try
             {

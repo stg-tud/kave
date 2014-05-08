@@ -107,8 +107,13 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
                 return;
             }
 
-            Log.RemoveRange(_selectedEvents.Select(evm => evm.Event));
-            _events.RemoveRange(_selectedEvents);
+            // Changing _events implicitly changes _selectedEvents, what
+            // leads to concurrent modification problems, since RemoveRange()
+            // loops over the selection. Therefore, we copy the selection.
+            // TODO this can lead to events being shown in the UI that don't exist in the log file! Somehow force refresh on error?
+            var selection = new List<EventView>(_selectedEvents);
+            Log.RemoveRange(selection.Select(evm => evm.Event));
+            _events.RemoveRange(selection);
         }
 
         public override string ToString()
