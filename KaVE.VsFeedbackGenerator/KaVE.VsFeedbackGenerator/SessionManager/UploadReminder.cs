@@ -31,6 +31,17 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             RegisterCallback();
         }
 
+        private void EnsureUploadSettingsInitialized()
+        {
+            var settings = _settingsStore.GetSettings<UploadSettings>();
+            if (settings.IsInitialized())
+            {
+                return;
+            }
+            settings.Initialize();
+            _settingsStore.SetSettings(settings);
+        }
+
         private void RegisterCallback()
         {
             var nextNotificationTime = CalculateNextNotificationTime();
@@ -64,17 +75,6 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
                 RandomGenerator.Next(0, 60),
                 0).AddDays(1);
             return newDate;
-        }
-
-        private void EnsureUploadSettingsInitialized()
-        {
-            var settings = _settingsStore.GetSettings<UploadSettings>();
-            if (settings.IsInitialized())
-            {
-                return;
-            }
-            settings.Initialize();
-            _settingsStore.SetSettings(settings);
         }
 
         private void ShowNotificationAndUpdateSettings()

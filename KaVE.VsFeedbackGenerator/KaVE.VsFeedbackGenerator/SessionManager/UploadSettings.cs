@@ -24,7 +24,6 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             return !hasUninitializedField;
         }
 
-        // TODO discuss if this could be moved to contructor
         public void Initialize()
         {
             var now = DateTime.Now;
