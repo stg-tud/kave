@@ -128,6 +128,9 @@
     <Compile Include="Utils\WeakNameCache.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\KaVE.VsFeedbackGenerator\KaVE.VsFeedbackGenerator.licenseheader">
+      <Link>KaVE.VsFeedbackGenerator.licenseheader</Link>
+    </None>
     <None Include="Names\NameStructure.cd" />
   </ItemGroup>
   <ItemGroup>
