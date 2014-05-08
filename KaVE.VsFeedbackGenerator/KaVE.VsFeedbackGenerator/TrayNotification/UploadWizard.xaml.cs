@@ -29,15 +29,15 @@ namespace KaVE.VsFeedbackGenerator.TrayNotification
         private void LoadCheckboxState()
         {
             var settingsStore = Registry.GetComponent<ISettingsStore>();
-            var settings = settingsStore.GetSettings<FeedbackGeneratorResharperSettings>();
+            var settings = settingsStore.GetSettings<ExportSettings>();
 
-            BindCheckbox(NamesCheckBox, settings.FeedbackGeneratorNames, (s, v) => s.FeedbackGeneratorNames = v);
-            BindCheckbox(DurationCheckBox, settings.FeedbackGeneratorNames, (s, v) => s.FeedbackGeneratorDuration = v);
-            BindCheckbox(SessionUUIDCheckBox, settings.FeedbackGeneratorNames, (s, v) => s.FeedbackGeneratorSessionIDs = v);
-            BindCheckbox(StartTimeCheckBox, settings.FeedbackGeneratorNames, (s, v) => s.FeedbackGeneratorStartTime = v);
+            BindCheckbox(NamesCheckBox, settings.RemoveCodeNames, (s, v) => s.RemoveCodeNames = v);
+            BindCheckbox(DurationCheckBox, settings.RemoveDurations, (s, v) => s.RemoveDurations = v);
+            BindCheckbox(SessionUUIDCheckBox, settings.RemoveSessionIDs, (s, v) => s.RemoveSessionIDs = v);
+            BindCheckbox(StartTimeCheckBox, settings.RemoveStartTimes, (s, v) => s.RemoveStartTimes = v);
         }
 
-        private static void BindCheckbox(ToggleButton button, bool? value, Action<FeedbackGeneratorResharperSettings, bool?> setter)
+        private static void BindCheckbox(ToggleButton button, bool value, Action<ExportSettings, bool> setter)
         {
             button.IsChecked = value;
             var binding = new Binding(setter);
@@ -47,9 +47,9 @@ namespace KaVE.VsFeedbackGenerator.TrayNotification
 
         private class Binding
         {
-            private readonly Action<FeedbackGeneratorResharperSettings, bool?> _setter;
+            private readonly Action<ExportSettings, bool> _setter;
 
-            public Binding(Action<FeedbackGeneratorResharperSettings, bool?> setter)
+            public Binding(Action<ExportSettings, bool> setter)
             {
                 _setter = setter;
             }
@@ -58,8 +58,8 @@ namespace KaVE.VsFeedbackGenerator.TrayNotification
             {
                 var toogleButton = (ToggleButton) sender;
                 var settingsStore = Registry.GetComponent<ISettingsStore>();
-                var settings = settingsStore.GetSettings<FeedbackGeneratorResharperSettings>();
-                _setter(settings, toogleButton.IsChecked);
+                var settings = settingsStore.GetSettings<ExportSettings>();
+                _setter(settings, toogleButton.IsChecked.GetValueOrDefault(false));
                 settingsStore.SetSettings(settings);
             }
         }

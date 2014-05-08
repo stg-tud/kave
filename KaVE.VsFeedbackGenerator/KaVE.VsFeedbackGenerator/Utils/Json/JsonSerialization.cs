@@ -91,7 +91,6 @@ namespace KaVE.VsFeedbackGenerator.Utils.Json
         /// <remarks>
         /// Uses the same serialization settings as <see cref="ToCompactJson"/>.
         /// </remarks>
-        [CanBeNull]
         internal static T ParseJsonTo<T>([NotNull] this string json)
         {
             return JsonConvert.DeserializeObject<T>(json, CreateSerializationSettings());

@@ -56,7 +56,7 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
         void _buildEvents_OnBuildProjConfigDone(string project, string projectConfig, string platform, string solutionConfig, bool success)
         {
             Asserts.NotNull(_currentTarget, "no build-target processing has been started.");
-            _currentTarget.FinishedAt = DateTime.Now;
+            _currentTarget.Duration = DateTime.Now - _currentTarget.StartedAt;
             _currentTarget.Successful = success;
             _currentEvent.Targets.Add(_currentTarget);
             _currentTarget = null;

@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Events\CompletionEvent\TypeHierarchyTest.cs" />
+    <Compile Include="Events\IDEEventTest.cs" />
     <Compile Include="Names\CSharp\AssemblyNameTest.cs" />
     <Compile Include="Names\CSharp\AssemblyVersionTest.cs" />
     <Compile Include="Names\CSharp\CSharpNameFromInfoFactoryTest.cs" />

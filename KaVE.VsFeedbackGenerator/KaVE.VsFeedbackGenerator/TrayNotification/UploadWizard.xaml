@@ -23,16 +23,16 @@
         <Label>
             <TextBlock Name="DialogText" Text="{x:Static root:Properties.UploadWizard.description}" Margin="5" />
         </Label>
-        <Expander Header="{x:Static root:Properties.UploadWizard.checkbox_group_name}">
+        <Expander Header="{x:Static root:Properties.SessionManager.Options_Export_Title}">
             <StackPanel Margin="10,4,0,0">
                 <CheckBox Name="NamesCheckBox" Margin="4"
-                          Content="{x:Static root:Properties.UploadWizard.name_checkbox}" />
+                          Content="{x:Static root:Properties.SessionManager.Options_Export_RemoveCodeNames}" />
                 <CheckBox Name="StartTimeCheckBox" Margin="4"
-                          Content="{x:Static root:Properties.UploadWizard.startTime_checkbox}" />
+                          Content="{x:Static root:Properties.SessionManager.Options_Export_RemoveStartTimes}" />
                 <CheckBox Name="DurationCheckBox" Margin="4"
-                          Content="{x:Static root:Properties.UploadWizard.duration_checkbox}" />
+                          Content="{x:Static root:Properties.SessionManager.Options_Export_RemoveDurations}" />
                 <CheckBox Name="SessionUUIDCheckBox" Margin="4"
-                          Content="{x:Static root:Properties.UploadWizard.sessionId_checkbox}" />
+                          Content="{x:Static root:Properties.SessionManager.Options_Export_RemoveSessionIDs}" />
             </StackPanel>
         </Expander>
         <StackPanel Orientation="Horizontal" Margin="5" HorizontalAlignment="Right">

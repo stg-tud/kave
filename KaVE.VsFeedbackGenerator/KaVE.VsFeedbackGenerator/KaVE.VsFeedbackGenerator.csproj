@@ -118,6 +118,8 @@
     </Compile>
     <Compile Include="Interactivity\InteractionRequest.cs" />
     <Compile Include="Interactivity\ConfirmationRequestHandler.cs" />
+    <Compile Include="SessionManager\FeedbackSettings.cs" />
+    <Compile Include="SessionManager\KaVESettings.cs" />
     <Compile Include="SessionManager\Presentation\IDEEventDetailsToJsonConverter.cs" />
     <Compile Include="SessionManager\Presentation\JsonSyntaxHighlighter.cs" />
     <Compile Include="SessionManager\ViewModelBase.cs" />
@@ -183,7 +185,6 @@
       <DependentUpon>SessionManager.resx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SessionManager\FeedbackGeneratorSettings.cs" />
     <Compile Include="SessionManager\Presentation\ContextVisualizationConverter.cs" />
     <Compile Include="SessionManager\Presentation\XamlBindableRichTextBox.cs" />
     <Compile Include="SessionManager\Presentation\SessionManagerWindowActionHandler.cs" />
@@ -195,7 +196,7 @@
     <Compile Include="SessionManager\Presentation\FeedbackGeneratorOptionPage.xaml.cs">
       <DependentUpon>FeedbackGeneratorOptionPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SessionManager\Presentation\FeedbackGeneratorResharperSettings.cs" />
+    <Compile Include="SessionManager\Presentation\ExportSettings.cs" />
     <Compile Include="SessionManager\SessionViewModel.cs" />
     <Compile Include="SessionManager\EventView.cs" />
     <Compile Include="SessionManager\FeedbackViewModel.cs" />

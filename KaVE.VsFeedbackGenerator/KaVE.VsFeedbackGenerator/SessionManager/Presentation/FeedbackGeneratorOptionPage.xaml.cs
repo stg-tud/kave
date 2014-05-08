@@ -1,4 +1,6 @@
-﻿using System.Windows.Controls.Primitives;
+﻿using System;
+using System.Linq.Expressions;
+using System.Windows.Controls.Primitives;
 using JetBrains.Application.Settings;
 using JetBrains.DataFlow;
 using JetBrains.ReSharper.Features.Common.Options;
@@ -8,7 +10,7 @@ using JetBrains.UI.Options;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
 {
-    [OptionsPage(PID, "FeedbackGeneratorOptions", typeof (FeaturesFindingThemedIcons.SearchOptionsPage),
+    [OptionsPage(PID, "KaVE Feedback", typeof (FeaturesFindingThemedIcons.SearchOptionsPage),
         ParentId = ToolsPage.PID)]
     public partial class FeedbackGeneratorOptionPage : IOptionsPage
     {
@@ -17,26 +19,18 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
         public FeedbackGeneratorOptionPage(Lifetime lifetime, OptionsSettingsSmartContext ctx)
         {
             InitializeComponent();
-            ctx.SetBinding(
-                lifetime,
-                (FeedbackGeneratorResharperSettings s) => s.FeedbackGeneratorNames,
-                NamesCheckBox,
-                ToggleButton.IsCheckedProperty);
-            ctx.SetBinding(
-                lifetime,
-                (FeedbackGeneratorResharperSettings s) => s.FeedbackGeneratorStartTime,
-                StartTimeCheckBox,
-                ToggleButton.IsCheckedProperty);
-            ctx.SetBinding(
-                lifetime,
-                (FeedbackGeneratorResharperSettings s) => s.FeedbackGeneratorDuration,
-                DurationCheckBox,
-                ToggleButton.IsCheckedProperty);
-            ctx.SetBinding(
-                lifetime,
-                (FeedbackGeneratorResharperSettings s) => s.FeedbackGeneratorSessionIDs,
-                SessionUUIDCheckBox,
-                ToggleButton.IsCheckedProperty);
+            SetToggleButtonBinding(ctx, lifetime, s => (bool?) s.RemoveCodeNames, RemoveCodeNamesCheckBox);
+            SetToggleButtonBinding(ctx, lifetime, s => (bool?) s.RemoveStartTimes, RemoveStartTimesCheckBox);
+            SetToggleButtonBinding(ctx, lifetime, s => (bool?) s.RemoveDurations, RemoveDurationsCheckBox);
+            SetToggleButtonBinding(ctx, lifetime, s => (bool?) s.RemoveSessionIDs, RemoveSessionUUIDCheckBox);
+        }
+
+        private static void SetToggleButtonBinding(IContextBoundSettingsStore ctx,
+            Lifetime lifetime,
+            Expression<Func<ExportSettings, bool?>> settingProperty,
+            ToggleButton toggleButton)
+        {
+            ctx.SetBinding(lifetime, settingProperty, toggleButton, ToggleButton.IsCheckedProperty);
         }
 
         public bool OnOk()

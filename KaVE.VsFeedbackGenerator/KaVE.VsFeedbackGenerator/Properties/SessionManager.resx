@@ -174,20 +174,20 @@
   <data name="VisitHomepage" xml:space="preserve">
     <value>Die Projektwebseite besuchen...</value>
   </data>
-  <data name="OptionsTitle" xml:space="preserve">
-    <value>KaVE-Feedback Einstellungen</value>
+  <data name="Options_Title" xml:space="preserve">
+    <value>KaVE Feedback</value>
   </data>
-  <data name="Option_TrackDuration" xml:space="preserve">
-    <value>Dauer von Events im Feedback erfassen.</value>
+  <data name="Options_Export_RemoveDurations" xml:space="preserve">
+    <value>Dauer von Events entfernen</value>
   </data>
-  <data name="Option_TrackNames" xml:space="preserve">
-    <value>Methoden- und Variablennamen im Feedback erfassen.</value>
+  <data name="Options_Export_RemoveCodeNames" xml:space="preserve">
+    <value>Projektzugehörige Code-Bezeichner aus Events entfernen</value>
   </data>
-  <data name="Option_TrackSession" xml:space="preserve">
-    <value>Zuordnung von Events zu Sessions im Feedback erfassen.</value>
+  <data name="Options_Export_RemoveSessionIDs" xml:space="preserve">
+    <value>Sessionzuordnung aus Events entfernen</value>
   </data>
-  <data name="Option_TrackStartTime" xml:space="preserve">
-    <value>Auslösezeitpunkt von Events im Feedback erfassen.</value>
+  <data name="Options_Export_RemoveStartTimes" xml:space="preserve">
+    <value>Startzeit von Events entfernen</value>
   </data>
   <data name="EventActiveDocument" xml:space="preserve">
     <value>Aktives Dokument</value>
@@ -254,5 +254,11 @@
   </data>
   <data name="ServerResponseFailure" xml:space="preserve">
     <value>Server Request fehlgeschlagen</value>
+  </data>
+  <data name="Options_Export_Disclaimer" xml:space="preserve">
+    <value>Die Exportoptionen bestimmen, welche Feedback-Details Ihren Rechner beim Export verlassen. Lokal wird das Feedback immer vollständig aufgenommen, um Ihnen die Einsicht zu erleichtern. Wenn Sie die Wirkung der Exportoptionen prüfen wollen, exportieren Sie einfach in ein ZIP-Archiv zum manuellen Hochladen. Diese Archive enthalten alle exportierten Informationen im Klartext.</value>
+  </data>
+  <data name="Options_Export_Title" xml:space="preserve">
+    <value>Exportoptionen</value>
   </data>
 </root>

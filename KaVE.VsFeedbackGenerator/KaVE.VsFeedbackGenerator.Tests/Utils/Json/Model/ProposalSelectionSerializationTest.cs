@@ -13,7 +13,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.Model
         {
             var uut = new ProposalSelection(CompletionEventTestFactory.CreateAnonymousProposal())
             {
-                SelectedAt = DateTime.Now
+                SelectedAfter = TimeSpan.FromMinutes(23)
             };
 
             JsonAssert.SerializationPreservesData(uut);

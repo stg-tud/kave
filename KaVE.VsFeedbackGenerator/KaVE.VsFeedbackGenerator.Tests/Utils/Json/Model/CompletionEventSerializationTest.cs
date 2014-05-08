@@ -95,7 +95,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.Model
                     {
                         new ProposalSelection(initialySelectedProposal)
                         {
-                            SelectedAt = new DateTime(2013, 12, 6, 11, 34, 24)
+                            SelectedAfter = TimeSpan.FromSeconds(0)
                         }
                     },
                 Prefix = "",

@@ -7,20 +7,23 @@
              d:DesignHeight="300" d:DesignWidth="300"
              xmlns:root="clr-namespace:KaVE.VsFeedbackGenerator">
     <Grid>
-        <GroupBox Header="{x:Static root:Properties.SessionManager.OptionsTitle}">
+        <GroupBox Header="{x:Static root:Properties.SessionManager.Options_Export_Title}">
             <StackPanel>
-                <CheckBox Name="NamesCheckBox" Content="{x:Static root:Properties.SessionManager.Option_TrackNames}"
-                          IsChecked="True" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="10,6,0,0"
-                          x:FieldModifier="private" />
-                <CheckBox Name="StartTimeCheckBox"
-                          Content="{x:Static root:Properties.SessionManager.Option_TrackStartTime}" IsChecked="True"
+                <TextBlock Text="{x:Static root:Properties.SessionManager.Options_Export_Disclaimer}" TextWrapping="Wrap"/>
+                <CheckBox Name="RemoveCodeNamesCheckBox"
+                          Content="{x:Static root:Properties.SessionManager.Options_Export_RemoveCodeNames}"
                           VerticalAlignment="Top" HorizontalAlignment="Left" Margin="10,6,0,0"
                           x:FieldModifier="private" />
-                <CheckBox Name="DurationCheckBox" Content="{x:Static root:Properties.SessionManager.Option_TrackDuration}"
-                          IsChecked="True" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="10,6,0,0"
+                <CheckBox Name="RemoveStartTimesCheckBox"
+                          Content="{x:Static root:Properties.SessionManager.Options_Export_RemoveStartTimes}"
+                          VerticalAlignment="Top" HorizontalAlignment="Left" Margin="10,6,0,0"
                           x:FieldModifier="private" />
-                <CheckBox Name="SessionUUIDCheckBox"
-                          Content="{x:Static root:Properties.SessionManager.Option_TrackSession}" IsChecked="True"
+                <CheckBox Name="RemoveDurationsCheckBox"
+                          Content="{x:Static root:Properties.SessionManager.Options_Export_RemoveDurations}"
+                          VerticalAlignment="Top" HorizontalAlignment="Left" Margin="10,6,0,0"
+                          x:FieldModifier="private" />
+                <CheckBox Name="RemoveSessionUUIDCheckBox"
+                          Content="{x:Static root:Properties.SessionManager.Options_Export_RemoveSessionIDs}"
                           VerticalAlignment="Top" HorizontalAlignment="Left" Margin="10,6,0,0"
                           x:FieldModifier="private" />
             </StackPanel>

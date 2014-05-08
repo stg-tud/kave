@@ -22,14 +22,22 @@ namespace KaVE.Model.Events.VisualStudio
         public IList<BuildTarget> Targets { get; private set; }
     }
 
+    [DataContract]
     public class BuildTarget
     {
+        [DataMember]
         public string Project { get; set; }
+        [DataMember]
         public string ProjectConfiguration { get; set; }
+        [DataMember]
         public string Platform { get; set; }
+        [DataMember]
         public string SolutionConfiguration { get; set; }
-        public DateTime StartedAt { get; set; }
-        public DateTime FinishedAt { get; set; }
+        [DataMember]
+        public DateTime? StartedAt { get; set; }
+        [DataMember]
+        public TimeSpan? Duration { get; set; }
+        [DataMember]
         public bool Successful { get; set; }
     }
 }

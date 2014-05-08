@@ -66,7 +66,8 @@ namespace KaVE.Model.Events.CompletionEvent
 
         public void AddSelection(Proposal proposal)
         {
-            Selections.Add(new ProposalSelection(proposal) {SelectedAt = DateTime.Now});
+            var selectedAfter = DateTime.Now - TriggeredAt;
+            Selections.Add(new ProposalSelection(proposal) {SelectedAfter = selectedAfter});
         }
 
         /// <summary>

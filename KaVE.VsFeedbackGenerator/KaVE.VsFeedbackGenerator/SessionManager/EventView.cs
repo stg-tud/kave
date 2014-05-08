@@ -33,7 +33,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             get { return Event.TriggeredBy.ToString(); }
         }
 
-        public DateTime StartDateTime
+        public DateTime? StartDateTime
         {
             get { return Event.TriggeredAt; }
         }
