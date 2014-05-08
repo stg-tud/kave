@@ -21,7 +21,7 @@ namespace KaVE.VsFeedbackGenerator.Utils
         {
             var targetFilename = _requestFileLocation();
             Asserts.That(_ioUtils.FileExists(srcFilename));
-            Asserts.Not(targetFilename.IsNullOrEmpty());
+            Asserts.Not(targetFilename.IsNullOrEmpty(), Messages.NoFileGiven);
 
             try
             {
