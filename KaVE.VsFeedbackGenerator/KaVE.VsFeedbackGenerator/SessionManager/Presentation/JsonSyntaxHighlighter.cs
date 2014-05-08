@@ -19,7 +19,8 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
         private static string EscapeXamlCharacters(this string raw)
         {
             // the order of the replacements are importent, so be careful while reordering the existing or adding new replacements
-            return raw.Replace("&", "&amp;").Replace("<", "&lt;").Replace(">", "&gt;").Replace("\"", "&quot;").Replace("'", "&apos;");
+            // We don't replace \" and ' because both characters work well with Xaml
+            return raw.Replace("&", "&amp;").Replace("<", "&lt;").Replace(">", "&gt;");
         }
 
         private static string CreateReplacement(string match)

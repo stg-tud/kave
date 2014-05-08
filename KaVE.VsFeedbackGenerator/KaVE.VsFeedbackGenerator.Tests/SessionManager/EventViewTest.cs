@@ -13,7 +13,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
         {
             var @event = new CommandEvent {Command = CommandName.Get("test.command")};
             const string expected =
-                "    <Bold Foreground=\"Blue\">\"Command\":</Bold> <Span Foreground=\"Blue\">\"test.command\"</Span>";
+                "    <Bold>\"Command\":</Bold> \"test.command\"";
 
             var view = new EventView(@event);
             var actual = view.Details;

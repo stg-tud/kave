@@ -10,7 +10,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
         public void ShouldHighlightNull()
         {
             const string origin = "null";
-            const string expected = "<Bold>null</Bold>";
+            const string expected = origin;
 
             var actual = origin.AddJsonSyntaxHighlightingWithXaml();
             Assert.AreEqual(expected, actual);
@@ -19,7 +19,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
         [TestCase("true"), TestCase("false")]
         public void ShouldHighlightBooleans(string origin)
         {
-            var expected = "<Bold Foreground=\"Darkred\">" + origin + "</Bold>";
+            var expected = origin;
 
             var actual = origin.AddJsonSyntaxHighlightingWithXaml();
             Assert.AreEqual(expected, actual);
@@ -28,7 +28,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
         [TestCase("0"), TestCase("17"), TestCase("-42"), TestCase("2.3"), TestCase("-3.14")]
         public void ShouldHighlightNumbers(string origin)
         {
-            var expected = "<Span Foreground=\"Darkgreen\">" + origin + "</Span>";
+            var expected = origin;
 
             var actual = origin.AddJsonSyntaxHighlightingWithXaml();
             Assert.AreEqual(expected, actual);
@@ -38,7 +38,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
         public void ShouldHighlightStrings()
         {
             const string origin = "\"Hello World!\"";
-            const string expected = "<Span Foreground=\"Blue\">\"Hello World!\"</Span>";
+            const string expected = origin;
 
             var actual = origin.AddJsonSyntaxHighlightingWithXaml();
             Assert.AreEqual(expected, actual);
@@ -50,7 +50,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
             const string origin =
                 "\"That's a key because it's surrounded by double-quotes and is followed by a colon\":";
             const string expected =
-                "<Bold Foreground=\"Blue\">\"That's a key because it's surrounded by double-quotes and is followed by a colon\":</Bold>";
+                "<Bold>\"That's a key because it's surrounded by double-quotes and is followed by a colon\":</Bold>";
 
             var actual = origin.AddJsonSyntaxHighlightingWithXaml();
             Assert.AreEqual(expected, actual);
@@ -62,10 +62,10 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
             const string origin =
                 "{\"string-key\": \"string value\", \"null-key\": null, \"bool-key\": true, \"number-key\": 42}";
             const string expected =
-                "{<Bold Foreground=\"Blue\">\"string-key\":</Bold> <Span Foreground=\"Blue\">\"string value\"</Span>, " +
-                "<Bold Foreground=\"Blue\">\"null-key\":</Bold> <Bold>null</Bold>, " +
-                "<Bold Foreground=\"Blue\">\"bool-key\":</Bold> <Bold Foreground=\"Darkred\">true</Bold>, " +
-                "<Bold Foreground=\"Blue\">\"number-key\":</Bold> <Span Foreground=\"Darkgreen\">42</Span>}";
+                "{<Bold>\"string-key\":</Bold> \"string value\", " +
+                "<Bold>\"null-key\":</Bold> null, " +
+                "<Bold>\"bool-key\":</Bold> true, " +
+                "<Bold>\"number-key\":</Bold> 42}";
 
             var actual = origin.AddJsonSyntaxHighlightingWithXaml();
             Assert.AreEqual(expected, actual);
