@@ -2,7 +2,8 @@
 
 namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
 {
-    [SettingsKey(typeof (FeedbackSettings), "FeedbackWindow Settings")]
+    [SettingsKey(typeof (FeedbackSettings), "Kave Feedback-Export Settings")]
+    // WARNING: Do not change classname, as it is used to identify settings
     internal class ExportSettings
     {
         [SettingsEntry(false, "KaVE FeedbackGeneration RemoveCodeNames")]

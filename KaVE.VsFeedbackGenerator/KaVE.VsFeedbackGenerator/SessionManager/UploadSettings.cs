@@ -4,6 +4,7 @@ using JetBrains.Application.Settings;
 namespace KaVE.VsFeedbackGenerator.SessionManager
 {
     [SettingsKey(typeof(FeedbackSettings), "KaVE Feeback-Upload Settings")]
+    // WARNING: Do not change classname, as it is used to identify settings
     public class UploadSettings
     {
         private const string DateTimeMinValue = "01/01/0001 00:00:00";
