@@ -62,7 +62,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.Model
                                      /* other proposals removed to reduce size of this string */
                                      "]}}," +
                                      "\"Selections\":{\"$type\":\"System.Collections.Generic.List`1[[KaVE.Model.Events.CompletionEvent.ProposalSelection, KaVE.Model]], mscorlib\"," +
-                                     "\"$values\":[{\"$type\":\"KaVE.Model.Events.CompletionEvent.ProposalSelection, KaVE.Model\",\"SelectedAt\":\"2013-12-06T11:34:24\"," +
+                                     "\"$values\":[{\"$type\":\"KaVE.Model.Events.CompletionEvent.ProposalSelection, KaVE.Model\",\"SelectedAfter\":\"00:00:00\"," +
                                      "\"Proposal\":{\"$type\":\"KaVE.Model.Events.CompletionEvent.Proposal, KaVE.Model\",\"Name\":{\"type\":\"CSharp.PropertyName\",\"identifier\":\"get [System.Boolean, mscorlib, 4.0.0.0] [System.IO.Stream, mscorlib, 4.0.0.0].CanRead()\"}}}" +
                                      "]}," +
                                      "\"Prefix\":\"\"," +
@@ -71,7 +71,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.Model
                                      "\"IDESessionUUID\":\"57d18e20-952f-4583-88b3-3aadc1db48b1\"," +
                                      "\"TriggeredAt\":\"2013-12-06T11:34:24\"," +
                                      "\"TriggeredBy\":0," +
-                                     "\"TerminatedAt\":\"2013-12-06T11:34:26\"," +
+                                     "\"Duration\":\"00:00:02\"," +
                                      "\"ActiveWindow\":{\"type\":\"VisualStudio.WindowName\",\"identifier\":\"vsWindowTypeDocument Initializer.cs\"}," +
                                      "\"ActiveDocument\":{\"type\":\"VisualStudio.DocumentName\",\"identifier\":\"\\\\CodeCompletion.FeedbackGenerator\\\\KaVE.VsFeedbackGenerator\\\\KaVE.VsFeedbackGenerator\\\\Initializer.cs\"}}";
 
@@ -103,7 +103,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.Model
                 TerminatedAs = CompletionEvent.TerminationState.Cancelled,
                 IDESessionUUID = "57d18e20-952f-4583-88b3-3aadc1db48b1",
                 TriggeredAt = new DateTime(2013, 12, 6, 11, 34, 24),
-                TerminatedAt = new DateTime(2013, 12, 6, 11, 34, 26),
+                Duration = TimeSpan.FromSeconds(2),
                 TriggeredBy = IDEEvent.Trigger.Unknown,
                 ActiveWindow = WindowName.Get("vsWindowTypeDocument Initializer.cs"),
                 ActiveDocument =
