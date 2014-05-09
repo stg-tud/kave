@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 using System;
-using KaVE.Model.Events;
 using KaVE.TestUtils.Model.Events;
 using NUnit.Framework;
 

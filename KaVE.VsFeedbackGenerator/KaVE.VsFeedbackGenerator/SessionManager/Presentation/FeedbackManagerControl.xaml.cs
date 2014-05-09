@@ -17,7 +17,6 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using JetBrains.ActionManagement;
-using JetBrains.DataFlow;
 using JetBrains.Threading;
 using KaVE.Utils;
 using KaVE.VsFeedbackGenerator.Interactivity;

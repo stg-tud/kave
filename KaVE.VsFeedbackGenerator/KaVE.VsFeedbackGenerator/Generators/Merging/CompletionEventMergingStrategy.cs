@@ -19,17 +19,18 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using KaVE.Model.Events;
 using KaVE.Model.Events.CompletionEvent;
 
 namespace KaVE.VsFeedbackGenerator.Generators.Merging
 {
     /// <summary>
-    /// Merges intermediate filtering events with the subsequent completion event. An intermediate filtering event, is
-    /// a completion event that was triggered automatically (due to a filtering), recorded no interactions of the user,
-    /// and was terminated by another filtering. Such event are fired, when multiple characters are typed directly
-    /// after oneanother. For example, if the user types 'get', three events are fired for 'g', 'e', and 't'. The
-    /// strategy merges them down to one event.
+    ///     Merges intermediate filtering events with the subsequent completion event. An intermediate filtering event, is
+    ///     a completion event that was triggered automatically (due to a filtering), recorded no interactions of the user,
+    ///     and was terminated by another filtering. Such event are fired, when multiple characters are typed directly
+    ///     after oneanother. For example, if the user types 'get', three events are fired for 'g', 'e', and 't'. The
+    ///     strategy merges them down to one event.
     /// </summary>
     /// TODO strategy currently erases information: when the user types something and then deletes (part of) it, only the final prefix is kept.
     internal class CompletionEventMergingStrategy : IEventMergeStrategy
@@ -51,7 +52,7 @@ namespace KaVE.VsFeedbackGenerator.Generators.Merging
         private static bool IsMergable(CompletionEvent @event)
         {
             var eventIsIntermediateFilterEvent = (@event.TriggeredBy == IDEEvent.Trigger.Automatic) &&
-                    (@event.TerminatedAs == CompletionEvent.TerminationState.Filtered);
+                                                 (@event.TerminatedAs == CompletionEvent.TerminationState.Filtered);
             // If there is no selection, we know that there was no interaction. If there is one selection, it may be
             // the previous selection or an initial selection (if there was no selection before). We cannot distinguish
             // this here. However, since we never merge the initial event (triggeredBy != Automatic), we know whether
@@ -86,17 +87,16 @@ namespace KaVE.VsFeedbackGenerator.Generators.Merging
             };
         }
 
-        private static IList<ProposalSelection> GetRebasedSelections(CompletionEvent evt2, DateTime? oldBaseTime, DateTime? newBaseTime)
+        private static IList<ProposalSelection> GetRebasedSelections(CompletionEvent evt2,
+            DateTime? oldBaseTime,
+            DateTime? newBaseTime)
         {
             var rebaseOffset = newBaseTime - oldBaseTime;
-            var selections = new List<ProposalSelection>();
-            foreach (var selection in evt2.Selections)
-            {
-                var rebasedSelection = new ProposalSelection(selection.Proposal);
-                rebasedSelection.SelectedAfter = selection.SelectedAfter + rebaseOffset;
-                selections.Add(rebasedSelection);
-            }
-            return selections;
+            return evt2.Selections.Select(
+                selection => new ProposalSelection(selection.Proposal)
+                {
+                    SelectedAfter = selection.SelectedAfter + rebaseOffset
+                }).ToList();
         }
     }
 }

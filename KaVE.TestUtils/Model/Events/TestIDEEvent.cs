@@ -17,13 +17,16 @@
  *    - Sven Amann
  */
 
+using System.Runtime.Serialization;
 using KaVE.Model.Events;
 using KaVE.Utils;
 
 namespace KaVE.TestUtils.Model.Events
 {
+    [DataContract]
     public class TestIDEEvent : IDEEvent
     {
+        [DataMember]
         public string TestProperty { get; set; }
 
         protected bool Equals(TestIDEEvent other)
