@@ -63,18 +63,18 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             get { return Event.Duration.HasValue ? Event.Duration.Value.TotalMilliseconds : 0; }
         }
 
-        public Context CompletionContext
+        public string XamlContextRepresentation
+        {
+            get { return CompletionContext.ToXaml(); }
+        }
+
+        private Context CompletionContext
         {
             get
             {
                 var completionEvent = Event as CompletionEvent;
                 return completionEvent == null ? null : completionEvent.Context;
             }
-        }
-
-        public string XamlContextRepresentation
-        {
-            get { return CompletionContext.ToXaml(); }
         }
 
         public string XamlRawRepresentation
