@@ -72,7 +72,6 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             get { return CompletionContext.ToXaml(); }
         }
 
-        // TODO @Dennis: Der View aktualisiert sich nicht für ActionEvents (evlt. auch nocht andere), da bleibt bei mir einfach der Inhalt des zuletzt ausgewählten Events in der TextBox stehen...
         public string XamlRawRepresentation
         {
             get { return Event.ToFormattedJson().AddJsonSyntaxHighlightingWithXaml(); }

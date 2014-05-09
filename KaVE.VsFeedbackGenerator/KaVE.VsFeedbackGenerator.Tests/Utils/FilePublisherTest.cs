@@ -37,43 +37,6 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
             Registry.RegisterComponent(_ioMock.Object);
         }
 
-        // TODO jetzt überflüssig, da die Registry genutzt wird?
-        [Test]
-        public void ShouldPublishFile()
-        {
-            const string content = "some text to test the file-copy";
-
-            var sourceLocation = Path.GetTempFileName();
-            var targetLocation = Path.GetTempFileName();
-            WriteSourceFile(content, sourceLocation);
-            _ioMock.Setup(io => io.FileExists(It.IsAny<string>())).Returns<string>(new IoUtils().FileExists);
-            _ioMock.Setup(m => m.CopyFile(It.IsAny<string>(), It.IsAny<string>()))
-                   .Callback<string, string>(new IoUtils().CopyFile);
-
-            var uut = new FilePublisher(() => targetLocation);
-            uut.Publish(sourceLocation);
-
-            var actual = ReadPublishedFile(targetLocation);
-
-            Assert.AreEqual(content, actual);
-        }
-
-        private static void WriteSourceFile(string content, string location)
-        {
-            using (var writer = new StreamWriter(new FileStream(location, FileMode.Create, FileAccess.Write)))
-            {
-                writer.Write(content);
-            }
-        }
-
-        private static string ReadPublishedFile(string location)
-        {
-            using (var reader = new StreamReader(new FileStream(location, FileMode.Open)))
-            {
-                return reader.ReadToEnd();
-            }
-        }
-
         [Test]
         public void ShouldInvokeCopy()
         {

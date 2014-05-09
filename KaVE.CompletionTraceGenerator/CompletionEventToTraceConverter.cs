@@ -38,7 +38,6 @@ namespace KaVE.CompletionTraceGenerator
             trace.DurationInMillis += completionEvent.ComputeDuration();
             trace.AppendSelectionChangeActions(completionEvent);
 
-            // TODO how to extract this into separate methods with only one responsibility?
             switch (completionEvent.TerminatedAs)
             {
                 case CompletionEvent.TerminationState.Applied:

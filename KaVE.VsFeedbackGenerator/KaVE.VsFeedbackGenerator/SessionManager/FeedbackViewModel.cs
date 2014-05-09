@@ -237,7 +237,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
         {
             var saveFileDialog = new SaveFileDialog
             {
-                // TODO Filter an komprimiertes Schreiben anpassen
+                // TODO @Dennis: Filter an komprimiertes Schreiben anpassen
                 Filter = Properties.SessionManager.SaveFileDialogFilter,
                 AddExtension = true
             };

@@ -33,23 +33,22 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
             : base(session, messageBus)
         {
             _documentEvents = DTE.Events.DocumentEvents;
-            _documentEvents.DocumentOpened += _documentEvents_DocumentOpened;
-            _documentEvents.DocumentSaved += _documentEvents_DocumentSaved;
-            _documentEvents.DocumentClosing += _documentEvents_DocumentClosing;
+            _documentEvents.DocumentOpened += HandleDocumentOpened;
+            _documentEvents.DocumentSaved += HandleDocumentSaved;
+            _documentEvents.DocumentClosing += HandleDocumentClosing;
         }
 
-        void _documentEvents_DocumentOpened(Document document)
+        private void HandleDocumentOpened(Document document)
         {
             Fire(document, DocumentEvent.DocumentAction.Opened);
         }
 
-        void _documentEvents_DocumentSaved(Document document)
+        private void HandleDocumentSaved(Document document)
         {
             Fire(document, DocumentEvent.DocumentAction.Saved);
-            // TODO maybe safe (diff) groum?
         }
 
-        void _documentEvents_DocumentClosing(Document document)
+        private void HandleDocumentClosing(Document document)
         {
             Fire(document, DocumentEvent.DocumentAction.Closing);
         }

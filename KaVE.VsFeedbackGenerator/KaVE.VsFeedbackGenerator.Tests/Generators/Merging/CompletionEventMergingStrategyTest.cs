@@ -18,6 +18,7 @@ using System.Linq;
 using KaVE.Model.Events;
 using KaVE.Model.Events.CompletionEvent;
 using KaVE.Model.Names.VisualStudio;
+using KaVE.TestUtils.Model.Events.CompletionEvent;
 using KaVE.VsFeedbackGenerator.Generators.Merging;
 using KaVE.VsFeedbackGenerator.Tests.TestFactories;
 using KaVE.VsFeedbackGenerator.Utils;
@@ -80,13 +81,9 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.Merging
         }
 
         [Test]
-        public void ShouldMergeTwoSubsequentAutomaticFilterEventsWithoutInteractions()
+        public void ShouldMergeIfEarlierEventIsTriggeredAutomaticallyAndTerminatedByFiltering()
         {
-            _event.TriggeredBy = IDEEvent.Trigger.Automatic;
-            _event.TerminatedAs = CompletionEvent.TerminationState.Filtered;
-            _event.TerminatedBy = IDEEvent.Trigger.Automatic;
-
-            _subsequentEvent.TriggeredBy = IDEEvent.Trigger.Automatic;
+            GivenEventsMeetMergeConditions();
 
             Assert.IsTrue(_strategy.AreMergable(_event, _subsequentEvent));
         }
@@ -100,11 +97,8 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.Merging
         [TestCase(IDEEvent.Trigger.Click)]
         public void ShouldNotMergeIfEarlierEventIsTriggeredByShortcut(IDEEvent.Trigger earlierEventTrigger)
         {
+            GivenEventsMeetMergeConditions();
             _event.TriggeredBy = earlierEventTrigger;
-            _event.TerminatedAs = CompletionEvent.TerminationState.Filtered;
-            _event.TerminatedBy = IDEEvent.Trigger.Automatic;
-
-            _subsequentEvent.TriggeredBy = IDEEvent.Trigger.Automatic;
 
             Assert.IsFalse(_strategy.AreMergable(_event, _subsequentEvent));
         }
@@ -112,12 +106,8 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.Merging
         [Test]
         public void ShouldMergeIfEarlierEventContainsOnlyInitialSelection()
         {
-            _event.TriggeredBy = IDEEvent.Trigger.Automatic;
+            GivenEventsMeetMergeConditions();
             _event.AddSelection(_proposalCollection.Proposals[4]);
-            _event.TerminatedAs = CompletionEvent.TerminationState.Filtered;
-            _event.TerminatedBy = IDEEvent.Trigger.Automatic;
-
-            _subsequentEvent.TriggeredBy = IDEEvent.Trigger.Automatic;
 
             Assert.IsTrue(_strategy.AreMergable(_event, _subsequentEvent));
         }
@@ -125,13 +115,9 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.Merging
         [Test]
         public void ShouldNotMergeIfEarlierEventContainsMultipleSelections()
         {
-            _event.TriggeredBy = IDEEvent.Trigger.Automatic;
+            GivenEventsMeetMergeConditions();
             _event.AddSelection(_proposalCollection.Proposals[4]);
             _event.AddSelection(_proposalCollection.Proposals[3]);
-            _event.TerminatedAs = CompletionEvent.TerminationState.Filtered;
-            _event.TerminatedBy = IDEEvent.Trigger.Automatic;
-
-            _subsequentEvent.TriggeredBy = IDEEvent.Trigger.Automatic;
 
             Assert.IsFalse(_strategy.AreMergable(_event, _subsequentEvent));
         }
@@ -139,11 +125,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.Merging
         [Test]
         public void ShouldMergeDespiteSubsequentEventContainingMultipleInteractions()
         {
-            _event.TriggeredBy = IDEEvent.Trigger.Automatic;
-            _event.TerminatedAs = CompletionEvent.TerminationState.Filtered;
-            _event.TerminatedBy = IDEEvent.Trigger.Automatic;
-
-            _subsequentEvent.TriggeredBy = IDEEvent.Trigger.Automatic;
+            GivenEventsMeetMergeConditions();
             _subsequentEvent.AddSelection(_proposalCollection.Proposals[0]);
             _subsequentEvent.AddSelection(_proposalCollection.Proposals[1]);
 
@@ -154,6 +136,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.Merging
         [TestCase(CompletionEvent.TerminationState.Cancelled)]
         public void ShouldNotMergeIfEarlierEventWasntTerminatedByFiltering(CompletionEvent.TerminationState earlierEventTerminatedAs)
         {
+            GivenEventsMeetMergeConditions();
             _event.TerminatedAs = earlierEventTerminatedAs;
 
             Assert.IsFalse(_strategy.AreMergable(_event, _subsequentEvent));
@@ -162,9 +145,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.Merging
         [Test]
         public void ShouldTakeInitialPropertiesFromEarlierAndTerminationPropertiesFromSubsequentEventOnMerge()
         {
-            _event.TriggeredBy = IDEEvent.Trigger.Automatic;
-            _event.TerminatedAs = CompletionEvent.TerminationState.Filtered;
-            _event.TerminatedBy = IDEEvent.Trigger.Automatic;
+            GivenEventsMeetMergeConditions();
 
             _subsequentEvent.AddSelection(_proposalCollection.Proposals[1]);
 
@@ -183,10 +164,32 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.Merging
             // has to be taken from subsequent event
             Assert.AreEqual(_subsequentEvent.Prefix, mergedCompletionEvent.Prefix);
             Assert.AreEqual(_subsequentEvent.ProposalCollection, mergedCompletionEvent.ProposalCollection);
-            Assert.AreEqual(_subsequentEvent.Selections, mergedCompletionEvent.Selections);
             Assert.AreEqual(_subsequentEvent.TerminatedAs, mergedCompletionEvent.TerminatedAs);
             Assert.AreEqual(_subsequentEvent.TerminatedAt, mergedCompletionEvent.TerminatedAt);
             Assert.AreEqual(_subsequentEvent.TerminatedBy, mergedCompletionEvent.TerminatedBy);
+            // Selections is recomputed, see ShouldRebaseSelectionOffsetsOnMerge
+        }
+
+        [Test]
+        public void ShouldRebaseSelectionOffsetsOnMerge()
+        {
+            GivenEventsMeetMergeConditions();
+            _event.TriggeredAt = DateTime.Now;
+
+            _subsequentEvent.TriggeredAt = _event.TriggeredAt.Value.AddSeconds(4);
+            _subsequentEvent.Selections.Add(new ProposalSelection(CompletionEventTestFactory.CreateAnonymousProposal()) { SelectedAfter = TimeSpan.FromSeconds(3)});
+            _subsequentEvent.Selections.Add(new ProposalSelection(CompletionEventTestFactory.CreateAnonymousProposal()) { SelectedAfter = TimeSpan.FromSeconds(6)});
+
+            var mergedEvent = (CompletionEvent) _strategy.Merge(_event, _subsequentEvent);
+
+            Assert.AreEqual(TimeSpan.FromSeconds(7), mergedEvent.Selections[0].SelectedAfter);
+            Assert.AreEqual(TimeSpan.FromSeconds(10), mergedEvent.Selections[1].SelectedAfter);
+        }
+
+        private void GivenEventsMeetMergeConditions()
+        {
+            _event.TriggeredBy = IDEEvent.Trigger.Automatic;
+            _event.TerminatedAs = CompletionEvent.TerminationState.Filtered;
         }
     }
 }

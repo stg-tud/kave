@@ -13,6 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+using System;
+using System.Collections.Generic;
 using KaVE.Model.Events;
 using KaVE.Model.Events.CompletionEvent;
 
@@ -73,11 +76,24 @@ namespace KaVE.VsFeedbackGenerator.Generators.Merging
                 // properties that need be taken from later event
                 Prefix = evt2.Prefix,
                 ProposalCollection = evt2.ProposalCollection,
-                Selections = evt2.Selections,
+                Selections = GetRebasedSelections(evt2, evt1.TriggeredAt, evt2.TriggeredAt),
                 TerminatedAs = evt2.TerminatedAs,
                 TerminatedAt = evt2.TerminatedAt,
                 TerminatedBy = evt2.TerminatedBy,
             };
+        }
+
+        private static IList<ProposalSelection> GetRebasedSelections(CompletionEvent evt2, DateTime? oldBaseTime, DateTime? newBaseTime)
+        {
+            var rebaseOffset = newBaseTime - oldBaseTime;
+            var selections = new List<ProposalSelection>();
+            foreach (var selection in evt2.Selections)
+            {
+                var rebasedSelection = new ProposalSelection(selection.Proposal);
+                rebasedSelection.SelectedAfter = selection.SelectedAfter + rebaseOffset;
+                selections.Add(rebasedSelection);
+            }
+            return selections;
         }
     }
 }
