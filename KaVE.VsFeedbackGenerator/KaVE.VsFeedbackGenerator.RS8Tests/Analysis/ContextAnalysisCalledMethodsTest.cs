@@ -152,6 +152,34 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
             CollectionAssert.IsEmpty(ResultContext.CalledMethods);
         }
 
+        [Test]
+        public void ShouldFindChainedCalls()
+        {
+            CompleteInMethod(@"
+                object o;
+                o.ToString().GetHashCode();
+                $
+            ");
+
+            AssertCalledMethodsContain("[System.String, mscorlib, 4.0.0.0] [System.Object, mscorlib, 4.0.0.0].ToString()");
+            AssertCalledMethodsContain("[System.Int32, mscorlib, 4.0.0.0] [System.Object, mscorlib, 4.0.0.0].GetHashCode()");
+        }
+
+        [Test]
+        public void ShouldFindCallsAtParameterPosition()
+        {
+            CompleteInClass(@"
+                public void M(string s) {}
+                
+                public void E(object o)
+                {
+                    M(o.ToString());
+                    $
+                }");
+
+            AssertCalledMethodsContain("[System.String, mscorlib, 4.0.0.0] [System.Object, mscorlib, 4.0.0.0].ToString()");
+        }
+
         private void AssertCalledMethodsContain(string methodIdentifier)
         {
             var expected = MethodName.Get(methodIdentifier);

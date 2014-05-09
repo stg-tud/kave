@@ -29,7 +29,8 @@ namespace KaVE.Utils.Tests.Reflection
         // ReSharper disable once UnusedAutoPropertyAccessor.Local
         private int MyTestProperty { get; set; }
 
-        [NotNull] public string AttributedMember;
+        [NotNull, UsedImplicitly]
+        public string AttributedMember;
 
         [Test]
         public void ShouldGetPropertyName()

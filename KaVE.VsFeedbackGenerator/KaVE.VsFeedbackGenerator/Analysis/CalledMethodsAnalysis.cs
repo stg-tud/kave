@@ -64,7 +64,6 @@ namespace KaVE.VsFeedbackGenerator.Analysis
 
             public override void VisitInvocationExpression(IInvocationExpression invocation, CollectionContext context)
             {
-                // TODO test calls nested as call parameters
                 VisitSubexpressions(invocation, context);
                 AnalyzeInvocation(invocation, context);
             }
