@@ -199,7 +199,7 @@
     </Compile>
     <Compile Include="SessionManager\Presentation\ExportSettings.cs" />
     <Compile Include="SessionManager\SessionViewModel.cs" />
-    <Compile Include="SessionManager\EventView.cs" />
+    <Compile Include="SessionManager\EventViewModel.cs" />
     <Compile Include="SessionManager\FeedbackViewModel.cs" />
     <Compile Include="MessageBus\TinyMessenger.cs" />
     <Compile Include="Utils\DateUtils.cs" />

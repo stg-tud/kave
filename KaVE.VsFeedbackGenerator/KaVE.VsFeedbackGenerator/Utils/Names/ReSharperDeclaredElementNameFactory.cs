@@ -12,7 +12,11 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sven Amann
  */
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -71,7 +75,7 @@ namespace KaVE.VsFeedbackGenerator.Utils.Names
         {
             if (element.ShortName == SharedImplUtil.MISSING_DECLARATION_NAME)
             {
-                // TODO discuss whether this is a sensible return value
+                // TODO @Seb: is this a sensible return value?
                 return Name.Get(SharedImplUtil.MISSING_DECLARATION_NAME);
             }
             return IfElementIs<INamespaceName, INamespace>(element, GetName, substitution) ??

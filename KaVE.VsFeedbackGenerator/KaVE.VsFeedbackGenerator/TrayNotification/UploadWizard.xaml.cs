@@ -12,14 +12,16 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Uli Fahrer
  */
+
 using System;
 using System.Windows;
 using System.Windows.Controls.Primitives;
 using JetBrains.ActionManagement;
-using JetBrains.DataFlow;
 using JetBrains.Threading;
-using KaVE.Utils;
 using KaVE.VsFeedbackGenerator.SessionManager.Presentation;
 using KaVE.VsFeedbackGenerator.Utils;
 
@@ -41,7 +43,7 @@ namespace KaVE.VsFeedbackGenerator.TrayNotification
             IsZipExport = false;
             IsUploadExport = false;
 
-            //TODO: Find someway to solve this issue with the procedure made in FeedbackGeneratorOptionPage.xaml.cs
+            // TODO @Uli: Find someway to solve this issue with the procedure made in FeedbackGeneratorOptionPage.xaml.cs
             LoadCheckboxState();
         }
 

@@ -12,7 +12,11 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Dennis Albrecht
  */
+
 using System;
 using KaVE.JetBrains.Annotations;
 using KaVE.Model.Names;
@@ -22,7 +26,7 @@ namespace KaVE.VsFeedbackGenerator.Utils
 {
     internal static class TypeNameExtensions
     {
-        // TODO testen oder raus
+        // TODO @Dennis: testen oder raus
         public static string ToTypeCategory([NotNull] this ITypeName elem)
         {
             if (elem.IsReferenceType)
@@ -63,7 +67,7 @@ namespace KaVE.VsFeedbackGenerator.Utils
             }
             if (elem.IsUnknownType)
             {
-                // TODO this is not a type category, but a type identifier
+                // TODO @Dennis: this is not a type category, but a type identifier
                 return TypeName.UnknownTypeIdentifier;
             }
             throw new ArgumentException(@"Given ITypeName does not match any type", "elem");

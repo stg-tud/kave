@@ -12,7 +12,11 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Uli Fahrer
  */
+
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media.Animation;
@@ -31,7 +35,7 @@ namespace KaVE.VsFeedbackGenerator.TrayNotification
             StartFadeInAndOutAnimation();
         }
 
-        //TODO Move to xaml 
+        // TODO @Uli: Move to xaml 
         private void StartFadeInAndOutAnimation()
         {
             var storyboard = TryFindResource("FadeInAndOut") as Storyboard;

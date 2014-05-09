@@ -12,7 +12,12 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sven Amann
+ *    - Dennis Albrecht
  */
+
 using System;
 using KaVE.Model.Events;
 using KaVE.Model.Events.CompletionEvent;
@@ -21,9 +26,9 @@ using KaVE.VsFeedbackGenerator.Utils.Json;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager
 {
-    public class EventView
+    public class EventViewModel : ViewModelBase<EventViewModel>
     {
-        public EventView(IDEEvent evt)
+        public EventViewModel(IDEEvent evt)
         {
             Event = evt;
         }

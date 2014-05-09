@@ -12,7 +12,11 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sven Amann
  */
+
 using JetBrains.ActionManagement;
 using Moq;
 
@@ -22,7 +26,6 @@ namespace KaVE.VsFeedbackGenerator.Tests.TestFactories.Actions
     {
         public static void SetupExecutableAction(this Mock<IActionManager> manager, string actionId)
         {
-            // TODO configure triggerable action mocks...
             manager.Setup(m => m.GetExecutableAction(actionId)).Returns(new MockExecutableAction(actionId));
         }
     }

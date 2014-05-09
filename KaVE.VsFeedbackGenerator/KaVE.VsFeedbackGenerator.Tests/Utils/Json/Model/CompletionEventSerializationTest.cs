@@ -12,7 +12,11 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sven Amann
  */
+
 using System;
 using System.Collections.Generic;
 using KaVE.Model.Events;
@@ -42,9 +46,11 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.Model
                 Relevance = -23
             };
 
+            var triggeredAt = new DateTime(2012, 2, 23, 18, 54, 59, 549);
             var completionEvent = new CompletionEvent
             {
                 IDESessionUUID = "0xDEADBEEF",
+                TriggeredAt = triggeredAt,
                 TriggeredBy = IDEEvent.Trigger.Unknown,
                 Prefix = "Foo",
                 Context = new Context
@@ -52,7 +58,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.Model
                     EnclosingMethod = TestNameFactory.GetAnonymousMethodName()
                 },
                 ProposalCollection = new ProposalCollection(new List<Proposal> {proposal1, proposal2}),
-                TerminatedAt = new DateTime(2012, 2, 23, 18, 54, 59, 549),
+                TerminatedAt = triggeredAt.AddSeconds(5),
                 TerminatedBy = IDEEvent.Trigger.Typing,
                 TerminatedAs = CompletionEvent.TerminationState.Applied
             };

@@ -16,6 +16,7 @@
 using System;
 using KaVE.Model.Events;
 using KaVE.Model.Names.VisualStudio;
+using KaVE.TestUtils.Model.Events;
 using KaVE.VsFeedbackGenerator.Utils.Json;
 using NUnit.Framework;
 
@@ -27,7 +28,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.Model
         [Test]
         public void ShouldSerializeAllFieldsOfEvent()
         {
-            var ideEvent = new InfoEvent()
+            var ideEvent = new TestIDEEvent
             {
                 IDESessionUUID = "0xDEADBEEF",
                 ActiveDocument = DocumentName.Get("Random"),
@@ -48,19 +49,19 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.Model
             var duration = TimeSpan.FromSeconds(5);
             var eventJson = string.Format("{{\"TriggeredAt\":\"2014-05-05T12:00:02.069000+02:00\",\"Duration\":\"00:00:05\"}}");
 
-            var ideEvent = eventJson.ParseJsonTo<InfoEvent>();
+            var actual = eventJson.ParseJsonTo<TestIDEEvent>();
 
-            Assert.AreEqual(duration, ideEvent.Duration);
-            Assert.AreEqual(triggeredAt, ideEvent.TriggeredAt);
-            Assert.AreEqual(terminatedAt, ideEvent.TerminatedAt);
+            Assert.AreEqual(duration, actual.Duration);
+            Assert.AreEqual(triggeredAt, actual.TriggeredAt);
+            Assert.AreEqual(terminatedAt, actual.TerminatedAt);
         }
 
         [Test, Ignore("see todo comment in IDEEvent constructor")]
         public void ShouldNotHaveStartTimeWhenNotSerialized()
         {
-            var infoEvent = "{}".ParseJsonTo<InfoEvent>();
+            var actual = "{}".ParseJsonTo<TestIDEEvent>();
 
-            Assert.IsNull(infoEvent.TriggeredAt);
+            Assert.IsNull(actual.TriggeredAt);
         }
     }
 }

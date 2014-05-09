@@ -12,7 +12,11 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sven Amann
  */
+
 using System;
 using System.Runtime.Serialization;
 using KaVE.Model.Names.VisualStudio;
@@ -55,15 +59,6 @@ namespace KaVE.Model.Events
             ///     The event has been implicitly triggered by some other event or an action.
             /// </summary>
             Automatic,
-        }
-
-        /// <summary>
-        ///     Creates and IDE event, setting the <see cref="TriggeredAt" /> property to the current time.
-        /// </summary>
-        protected IDEEvent()
-        {
-            // TODO @Sven: Remove this initialization! Since TriggeredAt can be null after anonymizing, we cannot affort to set it to a default, since this will not be overwritten
-            TriggeredAt = DateTime.Now;
         }
 
         /// <summary>

@@ -17,17 +17,25 @@
  *    - Sven Amann
  */
 
-using System.Runtime.Serialization;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using KaVE.Model.Events;
 
-namespace KaVE.Model.Events.ReSharper
+namespace KaVE.TestUtils.Model.Events
 {
-    [DataContract]
-    public class BulbActionEvent : IDEEvent
+    public static class IDEEventTestFactory
     {
-        [DataMember]
-        public string ActionId { get; set; }
+        private static readonly Random Random = new Random();
 
-        [DataMember]
-        public string ActionText { get; set; }
+        public static List<IDEEvent> CreateAnonymousEvents(int num)
+        {
+            var list = new List<IDEEvent>();
+            for (var i = 0; i < num; i ++)
+            {
+                list.Add(new TestIDEEvent {TestProperty = Random.Next().ToString(CultureInfo.InvariantCulture)});
+            }
+            return list;
+        }
     }
 }

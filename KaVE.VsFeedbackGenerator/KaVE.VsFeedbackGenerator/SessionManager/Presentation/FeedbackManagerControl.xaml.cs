@@ -84,7 +84,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
         {
             if (_feedbackViewModel.SingleSelectedSession != null)
             {
-                _feedbackViewModel.SingleSelectedSession.SelectedEvents = EventListView.SelectedItems.Cast<EventView>();
+                _feedbackViewModel.SingleSelectedSession.SelectedEvents = EventListView.SelectedItems.Cast<EventViewModel>();
             }
         }
 

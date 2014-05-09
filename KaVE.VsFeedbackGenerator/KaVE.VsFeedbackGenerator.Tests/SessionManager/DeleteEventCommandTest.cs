@@ -17,8 +17,7 @@ using System.Collections.Generic;
 using System.Linq;
 using JetBrains;
 using KaVE.Model.Events;
-using KaVE.Model.Events.ReSharper;
-using KaVE.Model.Events.VisualStudio;
+using KaVE.TestUtils.Model.Events;
 using KaVE.VsFeedbackGenerator.Interactivity;
 using KaVE.VsFeedbackGenerator.SessionManager;
 using KaVE.VsFeedbackGenerator.Tests.Interactivity;
@@ -40,7 +39,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
         [SetUp]
         public void SetUp()
         {
-            _displayedEvents = new List<IDEEvent> {new ActionEvent(), new BuildEvent(), new BulbActionEvent()};
+            _displayedEvents = IDEEventTestFactory.CreateAnonymousEvents(3);
 
             var mockLogReader = new Mock<ILogReader<IDEEvent>>();
             mockLogReader.Setup(reader => reader.ReadAll()).Returns(_displayedEvents);

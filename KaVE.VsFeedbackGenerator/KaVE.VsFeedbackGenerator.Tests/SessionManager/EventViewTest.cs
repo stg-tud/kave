@@ -30,7 +30,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
             const string expected =
                 "    <Bold>\"Command\":</Bold> \"test.command\"";
 
-            var view = new EventView(@event);
+            var view = new EventViewModel(@event);
             var actual = view.Details;
 
             Assert.AreEqual(expected, actual);

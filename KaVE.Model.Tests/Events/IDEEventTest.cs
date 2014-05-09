@@ -15,6 +15,7 @@
  */
 using System;
 using KaVE.Model.Events;
+using KaVE.TestUtils.Model.Events;
 using NUnit.Framework;
 
 namespace KaVE.Model.Tests.Events
@@ -27,13 +28,13 @@ namespace KaVE.Model.Tests.Events
         {
             var expected = TimeSpan.FromSeconds(1);
             var now = DateTime.Now;
-            var infoEvent = new InfoEvent
+            var ideEvent = new TestIDEEvent
             {
                 TriggeredAt = now,
                 TerminatedAt = now.AddSeconds(1)
             };
 
-            Assert.AreEqual(expected, infoEvent.Duration);
+            Assert.AreEqual(expected, ideEvent.Duration);
         }
 
         [Test]
@@ -41,37 +42,37 @@ namespace KaVE.Model.Tests.Events
         {
             var now = DateTime.Now;
             var expected = now.AddSeconds(3);
-            var infoEvent = new InfoEvent
+            var ideEvent = new TestIDEEvent
             {
                 TriggeredAt = now,
                 Duration = TimeSpan.FromSeconds(3)
             };
 
-            Assert.AreEqual(expected, infoEvent.TerminatedAt);
+            Assert.AreEqual(expected, ideEvent.TerminatedAt);
         }
 
         [Test]
         public void ShouldHaveNoEndTimeWithoutDuration()
         {
-            var infoEvent = new InfoEvent
+            var ideEvent = new TestIDEEvent
             {
                 TriggeredAt = DateTime.Now,
                 Duration = null
             };
 
-            Assert.IsNull(infoEvent.TerminatedAt);
+            Assert.IsNull(ideEvent.TerminatedAt);
         }
 
         [Test]
         public void ShouldHaveNoEndTimeWithoutStartTime()
         {
-            var infoEvent = new InfoEvent
+            var ideEvent = new TestIDEEvent
             {
                 TriggeredAt = null,
                 Duration = TimeSpan.FromMinutes(9)
             };
 
-            Assert.IsNull(infoEvent.TerminatedAt);
+            Assert.IsNull(ideEvent.TerminatedAt);
         }
     }
 }

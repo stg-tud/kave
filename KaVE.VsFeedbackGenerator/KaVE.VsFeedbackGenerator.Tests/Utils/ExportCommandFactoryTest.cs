@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using System.IO;
 using JetBrains.UI.Extensions.Commands;
 using KaVE.Model.Events;
+using KaVE.TestUtils.Model.Events;
 using KaVE.Utils.Assertion;
 using KaVE.VsFeedbackGenerator.SessionManager;
 using KaVE.VsFeedbackGenerator.Utils;
@@ -76,7 +77,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
         [Test]
         public void ShouldWriteEventsToTempFile()
         {
-            var events = CreateAnonymousEvents(25);
+            var events = IDEEventTestFactory.CreateAnonymousEvents(25);
             _feedbackViewModelDialog.Setup(d => d.ExtractEventsForExport()).Returns(events);
 
             _ioHelperMock.Setup(io => io.GetTempFileName()).Returns(ArbitraryFileName);
@@ -104,7 +105,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
         [Test]
         public void ShouldInvokePublisher()
         {
-            var events = CreateAnonymousEvents(25);
+            var events = IDEEventTestFactory.CreateAnonymousEvents(25);
             _feedbackViewModelDialog.Setup(d => d.ExtractEventsForExport()).Returns(events);
 
             _ioHelperMock.Setup(io => io.GetTempFileName()).Returns(ArbitraryFileName);
@@ -119,7 +120,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
         public void ShouldShowDialogOnSuccess()
         {
             const int eventCount = 25;
-            var events = CreateAnonymousEvents(eventCount);
+            var events = IDEEventTestFactory.CreateAnonymousEvents(eventCount);
             _feedbackViewModelDialog.Setup(d => d.ExtractEventsForExport()).Returns(events);
 
             var uut = CreateSut();
@@ -131,7 +132,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
         [Test]
         public void ShouldShowDialogOnPublishingFailure()
         {
-            var events = CreateAnonymousEvents(5);
+            var events = IDEEventTestFactory.CreateAnonymousEvents(5);
             _feedbackViewModelDialog.Setup(d => d.ExtractEventsForExport()).Returns(events);
 
             SetupFailingPublisherMock(ArbitrayExceptionMessage);
@@ -145,7 +146,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
         [Test]
         public void ShouldShowDialogOnLogWritingFailure()
         {
-            var events = CreateAnonymousEvents(5);
+            var events = IDEEventTestFactory.CreateAnonymousEvents(5);
             _feedbackViewModelDialog.Setup(d => d.ExtractEventsForExport()).Returns(events);
 
             SetupFailingIO(ArbitrayExceptionMessage);
@@ -167,17 +168,5 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
             _ioHelperMock.Setup(iou => iou.OpenFile(It.IsAny<string>(), FileMode.Open, FileAccess.Write))
                          .Throws(new Exception(failMessage));
         }
-
-        private static List<IDEEvent> CreateAnonymousEvents(int num)
-        {
-            var list = new List<IDEEvent>();
-            for (var i = 0; i < num; i ++)
-            {
-                list.Add(new TestIDEEvent());
-            }
-            return list;
-        }
-
-        private class TestIDEEvent : IDEEvent {}
     }
 }

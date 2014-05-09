@@ -49,6 +49,7 @@ namespace KaVE.VsFeedbackGenerator.Generators
                 ActiveWindow = DTEActiveWindow.GetName(),
                 ActiveDocument = DTEActiveDocument.GetName(),
                 TriggeredBy = CurrentTrigger,
+                TriggeredAt = DateTime.Now
             };
         }
 

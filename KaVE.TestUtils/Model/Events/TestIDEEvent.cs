@@ -17,17 +17,31 @@
  *    - Sven Amann
  */
 
-using System.Runtime.Serialization;
+using KaVE.Model.Events;
+using KaVE.Utils;
 
-namespace KaVE.Model.Events.ReSharper
+namespace KaVE.TestUtils.Model.Events
 {
-    [DataContract]
-    public class BulbActionEvent : IDEEvent
+    public class TestIDEEvent : IDEEvent
     {
-        [DataMember]
-        public string ActionId { get; set; }
+        public string TestProperty { get; set; }
 
-        [DataMember]
-        public string ActionText { get; set; }
+        protected bool Equals(TestIDEEvent other)
+        {
+            return base.Equals(other) && string.Equals(TestProperty, other.TestProperty);
+        }
+
+        public override bool Equals(object obj)
+        {
+            return this.Equals(obj, Equals);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return (base.GetHashCode()*397) ^ (TestProperty != null ? TestProperty.GetHashCode() : 0);
+            }
+        }
     }
 }

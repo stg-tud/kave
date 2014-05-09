@@ -12,7 +12,11 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sven Amann
  */
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -31,8 +35,8 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
     public class SessionViewModel : ViewModelBase<SessionViewModel>
     {
         public ILog<IDEEvent> Log { get; private set; }
-        private readonly IList<EventView> _events = new ObservableCollection<EventView>();
-        private readonly IList<EventView> _selectedEvents = new List<EventView>();
+        private readonly IList<EventViewModel> _events = new ObservableCollection<EventViewModel>();
+        private readonly IList<EventViewModel> _selectedEvents = new List<EventViewModel>();
         private readonly InteractionRequest<Confirmation> _confirmationRequest = new InteractionRequest<Confirmation>();
 
         public SessionViewModel(ILog<IDEEvent> log)
@@ -40,10 +44,9 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             Log = log;
             DeleteEventsCommand = new DelegateCommand(OnDeleteSelectedEvents, CanDeleteEvents);
             // loading eagerly because lazy approaches led to UI display bugs
-            // TODO if this should cause memory problems, we have to find a lazier solution...
             using (var logReader = log.NewLogReader())
             {
-                Events = logReader.ReadAll().Select(evt => new EventView(evt)).ToList();
+                Events = logReader.ReadAll().Select(evt => new EventViewModel(evt)).ToList();
             }
         }
 
@@ -60,7 +63,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             }
         }
 
-        public IEnumerable<EventView> Events
+        public IEnumerable<EventViewModel> Events
         {
             set
             {
@@ -74,7 +77,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             }
         }
 
-        public IEnumerable<EventView> SelectedEvents
+        public IEnumerable<EventViewModel> SelectedEvents
         {
             set
             {
@@ -86,7 +89,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             }
         }
 
-        public EventView SingleSelectedEvent
+        public EventViewModel SingleSelectedEvent
         {
             get
             {
@@ -126,7 +129,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             // leads to concurrent modification problems, since RemoveRange()
             // loops over the selection. Therefore, we copy the selection.
             // TODO this can lead to events being shown in the UI that don't exist in the log file! Somehow force refresh on error?
-            var selection = new List<EventView>(_selectedEvents);
+            var selection = new List<EventViewModel>(_selectedEvents);
             Log.RemoveRange(selection.Select(evm => evm.Event));
             _events.RemoveRange(selection);
         }
