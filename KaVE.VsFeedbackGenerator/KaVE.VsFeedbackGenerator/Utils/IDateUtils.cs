@@ -1,4 +1,6 @@
-﻿/*
+﻿using System;
+
+/*
  * Copyright 2014 Technische Universität Darmstadt
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,6 +19,7 @@ namespace KaVE.VsFeedbackGenerator.Utils
 {
     public interface IDateUtils
     {
-        System.DateTime Now { get; }
+        DateTime Now { get; }
+        DateTime Today { get; }
     }
 }

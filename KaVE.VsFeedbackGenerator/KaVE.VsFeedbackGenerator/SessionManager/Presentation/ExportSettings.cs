@@ -12,7 +12,12 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Uli Fahrer
+ *    - Sven Amann
  */
+
 using JetBrains.Application.Settings;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
@@ -22,15 +27,15 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
     internal class ExportSettings
     {
         [SettingsEntry(false, "KaVE FeedbackGeneration RemoveCodeNames")]
-        public bool RemoveCodeNames { get; set; }
+        public bool RemoveCodeNames;
 
         [SettingsEntry(false, "KaVE FeedbackGenerator RemoveDurations")]
-        public bool RemoveDurations { get; set; }
+        public bool RemoveDurations;
 
         [SettingsEntry(false, "KaVE FeedbackGenerator RemoveStartTimes")]
-        public bool RemoveStartTimes { get; set; }
+        public bool RemoveStartTimes;
 
         [SettingsEntry(false, "KaVE FeedbackGenerator RemoveSessionIDs")]
-        public bool RemoveSessionIDs { get; set; }
+        public bool RemoveSessionIDs;
     }
 }

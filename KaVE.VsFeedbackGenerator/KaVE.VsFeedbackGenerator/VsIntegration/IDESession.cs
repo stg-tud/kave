@@ -12,9 +12,12 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sven Amann
  */
+
 using System;
-using System.Globalization;
 using EnvDTE;
 using JetBrains.Application;
 using JetBrains.Application.Components;
@@ -23,35 +26,31 @@ using KaVE.VsFeedbackGenerator.Utils;
 
 namespace KaVE.VsFeedbackGenerator.VsIntegration
 {
-    // TODO migrate class to R# settings
     [ShellComponent(ProgramConfigurations.VS_ADDIN)]
     public class IDESession : IIDESession
     {
-        private const string UUIDGlobal = "KAVE_EventGenerator_SessionUUID";
-        private const string UUIDCreatedAtGlobal = "KAVE_EventGenerator_SessionUUID_CreatedAt";
-        private const string PastDate = "1987-06-20";
-
         private readonly DTE _dte;
+        private readonly ISettingsStore _settingsStore;
 
-        public IDESession([NotNull] DTE dte)
+        public IDESession([NotNull] DTE dte, ISettingsStore settingsStore)
         {
             _dte = dte;
+            _settingsStore = settingsStore;
         }
 
         public string UUID
         {
             get
             {
-                var globals = _dte.Globals;
-                var storedDateString = globals.GetValueOrDefault(UUIDCreatedAtGlobal, PastDate);
-                var createdAt = DateTime.Parse(storedDateString, CultureInfo.InvariantCulture);
-                if (createdAt != DateTime.Today)
+                var settings = _settingsStore.GetSettings<IDESessionSettings>();
+                var dateUtils = Registry.GetComponent<IDateUtils>();
+                if (settings.SessionUUIDCreationDate != dateUtils.Today)
                 {
-                    var dateString = DateTime.Today.ToString(CultureInfo.InvariantCulture);
-                    globals.SetValue(UUIDCreatedAtGlobal, dateString);
-                    globals.SetValue(UUIDGlobal, Guid.NewGuid().ToString());
+                    settings.SessionUUID = Guid.NewGuid().ToString();
+                    settings.SessionUUIDCreationDate = dateUtils.Today;
+                    _settingsStore.SetSettings(settings);
                 }
-                return globals.Get(UUIDGlobal);
+                return settings.SessionUUID;
             }
         }
 

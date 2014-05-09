@@ -119,7 +119,7 @@
     <Compile Include="Interactivity\InteractionRequest.cs" />
     <Compile Include="Interactivity\ConfirmationRequestHandler.cs" />
     <Compile Include="SessionManager\FeedbackSettings.cs" />
-    <Compile Include="SessionManager\KaVESettings.cs" />
+    <Compile Include="KaVESettings.cs" />
     <Compile Include="SessionManager\Presentation\IDEEventDetailsToJsonConverter.cs" />
     <Compile Include="SessionManager\Presentation\JsonSyntaxHighlighter.cs" />
     <Compile Include="SessionManager\ViewModelBase.cs" />
@@ -238,6 +238,7 @@
     <Compile Include="Utils\XamlFormattingUtil.cs" />
     <Compile Include="VsIntegration\IDESession.cs" />
     <Compile Include="VsIntegration\IIDESession.cs" />
+    <Compile Include="VsIntegration\IDESessionSettings.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Actions.xml" />

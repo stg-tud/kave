@@ -12,7 +12,12 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sven Amann
  */
+
+using KaVE.JetBrains.Annotations;
 using KaVE.Utils.Reflection;
 using NUnit.Framework;
 
@@ -23,6 +28,8 @@ namespace KaVE.Utils.Tests.Reflection
     {
         // ReSharper disable once UnusedAutoPropertyAccessor.Local
         private int MyTestProperty { get; set; }
+
+        [NotNull] public string AttributedMember;
 
         [Test]
         public void ShouldGetPropertyName()
@@ -46,6 +53,15 @@ namespace KaVE.Utils.Tests.Reflection
         public void ShouldFailToGet()
         {
             TypeExtensions<TypeExceptionsTest>.GetPropertyName(o => o.Equals(null));
+        }
+
+        [Test]
+        public void ShouldGetAttributedMember()
+        {
+            var expected = new[] {typeof (TypeExceptionsTest).GetField("AttributedMember")};
+            var actual = typeof(TypeExceptionsTest).GetMembersWithCustomAttributeNoInherit<NotNullAttribute>();
+
+            Assert.AreEqual(expected, actual);
         }
     }
 }

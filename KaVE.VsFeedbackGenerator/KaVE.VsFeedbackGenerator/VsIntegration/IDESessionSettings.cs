@@ -1,5 +1,4 @@
-﻿using System;
-/*
+﻿/*
  * Copyright 2014 Technische Universität Darmstadt
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,22 +12,22 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sven Amann
  */
-using JetBrains.Application;
+using System;
+using JetBrains.Application.Settings;
 
-namespace KaVE.VsFeedbackGenerator.Utils
+namespace KaVE.VsFeedbackGenerator.VsIntegration
 {
-    [ShellComponent]
-    public class DateUtils : IDateUtils
+    [SettingsKey(typeof(KaVESettings), "Settings of the current IDE session")]
+    class IDESessionSettings
     {
-        public DateTime Now
-        {
-            get { return DateTime.Now; }
-        }
+        [SettingsEntry("0001-01-01T00:00:00", "The generation time of the current session id.")]
+        public DateTime SessionUUIDCreationDate;
 
-        public DateTime Today
-        {
-            get { return DateTime.Today; }
-        }
+        [SettingsEntry(null, "The current session id.")]
+        public string SessionUUID;
     }
 }

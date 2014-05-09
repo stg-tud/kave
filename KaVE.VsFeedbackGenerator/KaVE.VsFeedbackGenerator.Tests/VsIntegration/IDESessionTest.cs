@@ -12,64 +12,57 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sven Amann
  */
+
 using System;
-using System.Globalization;
 using EnvDTE;
+using KaVE.VsFeedbackGenerator.Utils;
 using KaVE.VsFeedbackGenerator.VsIntegration;
 using Moq;
 using NUnit.Framework;
-
-// ReSharper disable UseIndexedProperty
 
 namespace KaVE.VsFeedbackGenerator.Tests.VsIntegration
 {
     [TestFixture]
     public class IDESessionTest
     {
-        private const string SessionUuidCreatedAt = "KAVE_EventGenerator_SessionUUID_CreatedAt";
-        private const string SessionUuid = "KAVE_EventGenerator_SessionUUID";
-        private DTE _dte;
-        private Globals _globals;
-        private static readonly string TodayDateString = DateTime.Today.ToString(CultureInfo.InvariantCulture);
+        private Mock<ISettingsStore> _mockSettingsStore;
+        private IDESessionSettings _settings;
+        private IDESession _uut;
 
         [SetUp]
         public void MockEnvironment()
         {
-            var mockGlobals = new Mock<Globals>();
-            SetupGlobal(mockGlobals, SessionUuidCreatedAt);
-            SetupGlobal(mockGlobals, SessionUuid);
-            _globals = mockGlobals.Object;
+            Registry.RegisterComponent<IDateUtils>(new DateUtils());
 
-            var mockDTE = new Mock<DTE>();
-            mockDTE.Setup(dte => dte.Globals).Returns(_globals);
-            _dte = mockDTE.Object;
+            _settings = new IDESessionSettings();
+
+            _mockSettingsStore = new Mock<ISettingsStore>();
+            _mockSettingsStore.Setup(store => store.GetSettings<IDESessionSettings>()).Returns(_settings);
+
+            var dte = new Mock<DTE>().Object;
+
+            _uut = new IDESession(dte, _mockSettingsStore.Object);
         }
 
-        private static void SetupGlobal(Mock<Globals> mockGlobals, string index)
+        [TearDown]
+        public void TearDown()
         {
-            string value = null;
-            mockGlobals.Setup(g => g.get_VariableExists(index)).Returns(() => value != null);
-            mockGlobals.SetupSet(g => g[index] = It.IsAny<string>())
-                .Callback<string, object>((idx, val) => value = (string) val);
-            mockGlobals.SetupGet(g => g[index]).Returns(() => value);
-            var persistent = false;
-            mockGlobals.Setup(g => g.set_VariablePersists(index, It.IsAny<bool>()))
-                .Callback<string, bool>((idx, persists) => persistent = persists);
-            mockGlobals.Setup(g => g.get_VariablePersists(index)).Returns(() => persistent);
+            Registry.Clear();
         }
-
 
         [Test]
         public void ShouldCreateNewSessionUUIDAndStoreItForTodayIfNoneExisted()
         {
-            _globals[SessionUuidCreatedAt] = null;
+            _settings.SessionUUID = null;
 
-            var ideSession = new IDESession(_dte);
-            var actualSessionId = ideSession.UUID;
+            var actualSessionId = _uut.UUID;
 
-            Assert.AreEqual(TodayDateString, _globals[SessionUuidCreatedAt]);
-            var storedSessionUUID = _globals[SessionUuid];
+            _mockSettingsStore.Verify(store => store.SetSettings(_settings));
+            var storedSessionUUID = _settings.SessionUUID;
             Assert.NotNull(storedSessionUUID);
             Assert.AreEqual(storedSessionUUID, actualSessionId);
         }
@@ -77,62 +70,43 @@ namespace KaVE.VsFeedbackGenerator.Tests.VsIntegration
         [Test]
         public void ShouldCreateNewSessionUUIDAndStoreItForTodayIfStoredOneWasGeneratedInThePast()
         {
-            var yesterdayDateString = DateTime.Today.AddDays(-1).ToString(CultureInfo.InvariantCulture);
-            _globals[SessionUuidCreatedAt] = yesterdayDateString;
-            _globals[SessionUuid] = "OutdatedUUID";
+            _settings.SessionUUID = "OutdatedID";
+            _settings.SessionUUIDCreationDate = DateTime.Today.AddDays(-1);
 
-            var ideSession = new IDESession(_dte);
-            var actualSessionId = ideSession.UUID;
+            var actualSessionId = _uut.UUID;
 
-            Assert.AreEqual(TodayDateString, _globals[SessionUuidCreatedAt]);
-            var storedSessionUUID = _globals[SessionUuid];
+            _mockSettingsStore.Verify(store => store.SetSettings(_settings));
+            var storedSessionUUID = _settings.SessionUUID;
             Assert.NotNull(actualSessionId);
-            Assert.AreNotEqual("OutdatedUUID", actualSessionId);
+            Assert.AreNotEqual("OutdatedID", actualSessionId);
             Assert.AreEqual(storedSessionUUID, actualSessionId);
         }
 
         [Test]
         public void ShouldCreateNewSessionUUIDAndStoreItForTodayIfStoredOneWasGeneratedOnFutureDate()
         {
-            var tomorrowDateString = DateTime.Today.AddDays(1).ToString(CultureInfo.InvariantCulture);
-            _globals[SessionUuidCreatedAt] = tomorrowDateString;
-            _globals[SessionUuid] = "TemporaryUUID";
+            _settings.SessionUUID = "FutureID";
+            _settings.SessionUUIDCreationDate = DateTime.Today.AddDays(-1);
 
-            var ideSession = new IDESession(_dte);
-            var actualSessionId = ideSession.UUID;
+            var actualSessionId = _uut.UUID;
 
-            Assert.AreEqual(TodayDateString, _globals[SessionUuidCreatedAt]);
-            var storedSessionUUID = _globals[SessionUuid];
+            _mockSettingsStore.Verify(store => store.SetSettings(_settings));
+            var storedSessionUUID = _settings.SessionUUID;
             Assert.NotNull(actualSessionId);
-            Assert.AreNotEqual("TemporaryUUID", actualSessionId);
+            Assert.AreNotEqual("FutureID", actualSessionId);
             Assert.AreEqual(storedSessionUUID, actualSessionId);
-        }
-
-        [Test]
-        public void ShouldMakeUUIDAndCreationDatePropertyPersistent()
-        {
-            _globals[SessionUuidCreatedAt] = null;
-
-            var ideSession = new IDESession(_dte);
-            // ReSharper disable once UnusedVariable
-            var actualSessionId = ideSession.UUID;
-
-            Assert.IsTrue(_globals.get_VariablePersists(SessionUuidCreatedAt));
-            Assert.IsTrue(_globals.get_VariablePersists(SessionUuid));
         }
 
         [Test]
         public void ShouldReturnExistingSessionUUIDIfItWasGeneratedToday()
         {
-            _globals[SessionUuidCreatedAt] = TodayDateString;
-            _globals[SessionUuid] = "MyTestUUID";
+            _settings.SessionUUID = "CurrentID";
+            _settings.SessionUUIDCreationDate = DateTime.Today;
 
-            var ideSession = new IDESession(_dte);
-            var actualSessionId = ideSession.UUID;
+            var actualSessionId = _uut.UUID;
 
-            Assert.AreEqual("MyTestUUID", actualSessionId);
+            _mockSettingsStore.Verify(store => store.SetSettings(It.IsAny<IDESessionSettings>()), Times.Never);
+            Assert.AreEqual("CurrentID", actualSessionId);
         }
     }
 }
-
-// ReSharper restore UseIndexedProperty

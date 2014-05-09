@@ -12,9 +12,16 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sven Amann
  */
+
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 
 namespace KaVE.Utils.Reflection
 {
@@ -36,6 +43,15 @@ namespace KaVE.Utils.Reflection
                 string.Format(
                     "Invalid expression type: Expected ExpressionType.MemberAccess, Found {0}",
                     expression.Body.NodeType));
+        }
+    }
+
+    public static class TypeExceptions
+    {
+        public static IEnumerable<MemberInfo> GetMembersWithCustomAttributeNoInherit<TAttribute>(this Type self)
+        {
+            var members = self.GetMembers();
+            return members.Where(member => member.GetCustomAttributes(typeof(TAttribute), false).Any());
         }
     }
 }
