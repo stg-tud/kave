@@ -12,9 +12,14 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Uli Fahrer
  */
+
 using System;
 using System.Linq.Expressions;
+using System.Windows;
 using System.Windows.Controls.Primitives;
 using JetBrains.Application.Settings;
 using JetBrains.DataFlow;
@@ -22,6 +27,7 @@ using JetBrains.ReSharper.Features.Common.Options;
 using JetBrains.ReSharper.Features.Finding.Resources;
 using JetBrains.UI.CrossFramework;
 using JetBrains.UI.Options;
+using KaVE.VsFeedbackGenerator.Utils;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
 {
@@ -46,6 +52,12 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
             ToggleButton toggleButton)
         {
             ctx.SetBinding(lifetime, settingProperty, toggleButton, ToggleButton.IsCheckedProperty);
+        }
+
+        private void RestoreSettings_OnClick(object sender, RoutedEventArgs e)
+        {
+            var restore = Registry.GetComponent<SettingsRestore>();
+            restore.RestoreDefaultSettings();
         }
 
         public bool OnOk()

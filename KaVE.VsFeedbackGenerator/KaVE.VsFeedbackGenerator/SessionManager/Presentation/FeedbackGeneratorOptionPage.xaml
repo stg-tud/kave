@@ -41,6 +41,7 @@ limitations under the License.
                           Content="{x:Static root:Properties.SessionManager.Options_Export_RemoveSessionIDs}"
                           VerticalAlignment="Top" HorizontalAlignment="Left" Margin="10,6,0,0"
                           x:FieldModifier="private" />
+                <Button Margin="10" Width="100" Click="RestoreSettings_OnClick">Reset Settings</Button>
             </StackPanel>
         </GroupBox>
     </Grid>

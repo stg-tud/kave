@@ -29,7 +29,7 @@ namespace KaVE.VsFeedbackGenerator.Utils.Logging
         public LogFileManager([NotNull] string baseLocation)
         {
             BaseLocation = baseLocation;
-            Directory.CreateDirectory(BaseLocation);
+            CreateLogFileDirectory();
         }
 
         public string BaseLocation { get; private set; }
@@ -37,6 +37,11 @@ namespace KaVE.VsFeedbackGenerator.Utils.Logging
         public IEnumerable<ILog<TLogEntry>> GetLogs()
         {
             return Directory.GetFiles(BaseLocation, LogDirectoryPrefix + "*").Select(CreateLogFile);
+        }
+
+        private void CreateLogFileDirectory()
+        {
+            Directory.CreateDirectory(BaseLocation);
         }
 
         private static LogFile<TLogEntry> CreateLogFile(string logDirectoryPath)
@@ -47,6 +52,12 @@ namespace KaVE.VsFeedbackGenerator.Utils.Logging
         public void DeleteLogsOlderThan(DateTime time)
         {
             GetLogs().Where(log => log.Date < time).ForEach(log => log.Delete());
+        }
+
+        public virtual void DeleteLogFileDirectory()
+        {
+            Directory.Delete(BaseLocation, true);
+            CreateLogFileDirectory();
         }
 
         public ILog<TLogEntry> CurrentLog

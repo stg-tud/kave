@@ -43,7 +43,6 @@ namespace KaVE.VsFeedbackGenerator.TrayNotification
             IsZipExport = false;
             IsUploadExport = false;
 
-            // TODO @Uli: Find someway to solve this issue with the procedure made in FeedbackGeneratorOptionPage.xaml.cs
             LoadCheckboxState();
         }
 

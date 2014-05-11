@@ -33,6 +33,7 @@ namespace KaVE.VsFeedbackGenerator.Utils
         void CopyFile(string src, string trg);
         string GetTempFileName();
         bool FileExists(string fileName);
+        bool DirectoryExists(string path);
         Stream OpenFile(string file, FileMode mode, FileAccess access);
         string ReadFile(string fileName);
         void MoveFile(string source, string target);
@@ -80,6 +81,11 @@ namespace KaVE.VsFeedbackGenerator.Utils
         public bool FileExists(string fileName)
         {
             return File.Exists(fileName);
+        }
+
+        public bool DirectoryExists(string path)
+        {
+            return Directory.Exists(path);
         }
 
         public string ReadFile(string fileName)

@@ -34,6 +34,6 @@ namespace KaVE.VsFeedbackGenerator.Utils.Logging
         IEnumerable<ILog<TLogEntry>> GetLogs();
         ILog<TLogEntry> CurrentLog { get; }
         void DeleteLogsOlderThan(DateTime time);
-
+        void DeleteLogFileDirectory();
     }
 }

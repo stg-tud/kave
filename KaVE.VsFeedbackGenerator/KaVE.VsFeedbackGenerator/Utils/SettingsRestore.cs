@@ -17,29 +17,33 @@
  *    - Uli Fahrer
  */
 
-using System;
 using JetBrains.Application;
-using KaVE.Utils;
+using KaVE.VsFeedbackGenerator.SessionManager;
+using KaVE.VsFeedbackGenerator.SessionManager.Presentation;
+using KaVE.VsFeedbackGenerator.Utils.Json;
+using KaVE.VsFeedbackGenerator.VsIntegration;
 
 namespace KaVE.VsFeedbackGenerator.Utils
 {
-    public interface ICallbackManager
-    {
-        void RegisterCallback(Action callback, int delayInMillisecond);
-        void RegisterCallback(Action callback, DateTime timeForCallbackInvocation, Action finishedAction);
-    }
-
     [ShellComponent]
-    public class CallbackManager : ICallbackManager
+    class SettingsRestore
     {
-        public void RegisterCallback(Action callback, int delayInMillisecond)
+        private readonly ISettingsStore _settings;
+        private readonly IDEEventLogFileManager _logManager;
+
+        public SettingsRestore(ISettingsStore settings, IDEEventLogFileManager logManager)
         {
-            Invoke.Later(callback, delayInMillisecond);
+            _settings = settings;
+            _logManager = logManager;
         }
 
-        public void RegisterCallback(Action callback, DateTime timeForCallbackInvocation, Action finishedAction)
+        public void RestoreDefaultSettings()
         {
-            Invoke.Later(callback, timeForCallbackInvocation, finishedAction);
-        }
+           _settings.ResetSettings<UploadSettings>();
+           _settings.ResetSettings<ExportSettings>();
+           _settings.ResetSettings<IDESessionSettings>();
+
+           _logManager.DeleteLogFileDirectory();
+        } 
     }
 }

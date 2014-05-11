@@ -27,7 +27,7 @@ namespace KaVE.VsFeedbackGenerator.VsIntegration
         [SettingsEntry("0001-01-01T00:00:00", "The generation time of the current session id.")]
         public DateTime SessionUUIDCreationDate;
 
-        [SettingsEntry(null, "The current session id.")]
+        [SettingsEntry("", "The current session id.")]
         public string SessionUUID;
     }
 }
