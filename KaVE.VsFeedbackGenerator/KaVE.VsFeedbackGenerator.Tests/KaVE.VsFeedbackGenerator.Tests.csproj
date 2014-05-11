@@ -149,6 +149,7 @@
     <Compile Include="TestFactories\TypeMockUtils.cs" />
     <Compile Include="Utils\Names\VsComponentNameFactoryTest.cs" />
     <Compile Include="Utils\ObjectToVisibilityConverterTest.cs" />
+    <Compile Include="Utils\SettingsRestoreTest.cs" />
     <Compile Include="Utils\SettingsStoreTest.cs" />
     <Compile Include="Utils\StringUtilsTest.cs" />
     <Compile Include="Utils\TestDateUtils.cs" />

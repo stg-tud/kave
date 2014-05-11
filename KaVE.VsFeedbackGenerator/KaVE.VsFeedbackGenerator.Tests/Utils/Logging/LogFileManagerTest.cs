@@ -113,8 +113,8 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Logging
 
             _uut.DeleteLogFileDirectory();
 
-            var actual = Directory.Exists(_uut.BaseLocation);
-            Assert.IsFalse(actual);
+            var actual = !Directory.EnumerateFiles(_uut.BaseLocation).Any();
+            Assert.IsTrue(actual);
         }
 
         private void GivenLogExists(DateTime logDate)

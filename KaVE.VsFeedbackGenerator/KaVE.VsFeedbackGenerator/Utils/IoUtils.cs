@@ -15,6 +15,7 @@
  */
 using System;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
 using JetBrains.Application;
 using KaVE.JetBrains.Annotations;
@@ -86,6 +87,11 @@ namespace KaVE.VsFeedbackGenerator.Utils
         public bool DirectoryExists(string path)
         {
             return Directory.Exists(path);
+        }
+
+        public bool IsDirectoryEmpty(string path)
+        {
+            return !Directory.EnumerateFiles(path).Any();
         }
 
         public string ReadFile(string fileName)

@@ -218,6 +218,7 @@
     <Compile Include="Utils\Logging\LogFileManager.cs" />
     <Compile Include="Utils\Names\ReSharperDeclarationNameFactory.cs" />
     <Compile Include="Utils\Registry.cs" />
+    <Compile Include="Utils\SettingsRestore.cs" />
     <Compile Include="Utils\SettingsStore.cs" />
     <Compile Include="SessionManager\UploadReminder.cs" />
     <Compile Include="Utils\InverseBoolConverter.cs" />
