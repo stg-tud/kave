@@ -71,5 +71,37 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.Model
             var name = TypeName.Get("Foo.Bar, foo, 1.0.0.0");
             JsonAssert.SerializationPreservesReferenceIdentity(name);
         }
+
+        [Test]
+        public void ShouldSerializeNameToStringContainingTypeAndIdentifier()
+        {
+            var name = TypeName.Get("My.Custom.Type, AnAssembly, 1.5.2.4");
+            const string expected = "\"CSharp.TypeName:My.Custom.Type, AnAssembly, 1.5.2.4\"";
+            JsonAssert.SerializesTo(name, expected);
+        }
+
+        [Test]
+        public void ShouldDeserializeNameFromFormat1()
+        {
+            const string json = "{\"type\":\"CSharp.AssemblyName\",\"identifier\":\"MyAssembly, 1.2.3.4\"}";
+            var expected = AssemblyName.Get("MyAssembly, 1.2.3.4");
+            JsonAssert.DeserializesTo(json, expected);
+        }
+
+        [Test]
+        public void ShouldDeserializeNameFromFormat2()
+        {
+            const string json = "{\"type\":\"CSharp.AssemblyName\",\"id\":\"MyAssembly, 1.2.3.4\"}";
+            var expected = AssemblyName.Get("MyAssembly, 1.2.3.4");
+            JsonAssert.DeserializesTo(json, expected);
+        }
+
+        [Test]
+        public void ShouldDeserializeNameFromFormat3()
+        {
+            const string json = "\"CSharp.AssemblyName:MyAssembly, 1.2.3.4\"";
+            var expected = AssemblyName.Get("MyAssembly, 1.2.3.4");
+            JsonAssert.DeserializesTo(json, expected);
+        }
     }
 }

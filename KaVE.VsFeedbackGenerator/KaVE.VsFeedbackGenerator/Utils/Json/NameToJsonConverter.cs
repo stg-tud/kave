@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 using System;
 using System.Linq;
 using System.Reflection;
@@ -29,15 +30,13 @@ namespace KaVE.VsFeedbackGenerator.Utils.Json
         private const string IdentifierPropertyName = "id";
         private const string OldIdentifierPropertyName = "identifier";
         private const string NameQualifierPrefix = "KaVE.Model.Names.";
+        private const char PropertySeparator = ':';
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            writer.WriteStartObject();
-            writer.WritePropertyName(TypePropertyName);
-            writer.WriteValue(AliasFor(value.GetType()));
-            writer.WritePropertyName(IdentifierPropertyName);
-            writer.WriteValue(((IName) value).Identifier);
-            writer.WriteEndObject();
+            var typeAlias = AliasFor(value.GetType());
+            var identifier = ((IName) value).Identifier;
+            writer.WriteValue(typeAlias + PropertySeparator + identifier);
         }
 
         public override object ReadJson(JsonReader reader,
@@ -45,10 +44,20 @@ namespace KaVE.VsFeedbackGenerator.Utils.Json
             object existingValue,
             JsonSerializer serializer)
         {
-            var jName = JObject.Load(reader);
+            var jName = GetJObject(reader);
             var factoryMethod = GetFactoryMethod(jName);
             var identifier = GetIdentifier(jName);
             return factoryMethod.Invoke(null, new object[] {identifier});
+        }
+
+        private static JObject GetJObject(JsonReader reader)
+        {
+            if (reader.TokenType == JsonToken.String)
+            {
+                var data = ((string) reader.Value).Split(PropertySeparator);
+                return new JObject {{TypePropertyName, data[0]}, {IdentifierPropertyName, data[1]}};
+            }
+            return JObject.Load(reader);
         }
 
         private static string GetIdentifier(JObject jName)

@@ -44,5 +44,17 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json
             var modelCopy = json.ParseJsonTo<T>();
             return modelCopy;
         }
+
+        public static void SerializesTo<T>(T instance, string expected)
+        {
+            var actual = instance.ToCompactJson();
+            Assert.AreEqual(expected, actual);
+        }
+
+        public static void DeserializesTo<T>(string json, T expected)
+        {
+            var actual = json.ParseJsonTo<T>();
+            Assert.AreEqual(expected, actual);
+        }
     }
 }

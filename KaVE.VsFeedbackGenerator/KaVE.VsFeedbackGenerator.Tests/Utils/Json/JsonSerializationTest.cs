@@ -33,8 +33,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json
             object o = null;
             const string expected = "null";
             // ReSharper disable once ExpressionIsAlwaysNull
-            var actual = o.ToCompactJson();
-            Assert.AreEqual(expected, actual);
+            JsonAssert.SerializesTo(o, expected);
         }
 
         [Test]
@@ -42,8 +41,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json
         {
             var target = new SerializationTestTarget {Id = "42"};
             const string expected = "{\"$type\":\"" + TestTargetTypeName + "\",\"Id\":\"42\"}";
-            var actual = target.ToCompactJson();
-            Assert.AreEqual(expected, actual);
+            JsonAssert.SerializesTo(target, expected);
         }
 
         [Test]
@@ -51,8 +49,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json
         {
             const string json = "{\"$type\":\"" + TestTargetTypeName + "\",\"Id\":\"23\"}";
             var expected = new SerializationTestTarget {Id = "23"};
-            var actual = json.ParseJsonTo<SerializationTestTarget>();
-            Assert.AreEqual(expected, actual);
+            JsonAssert.DeserializesTo(json, expected);
         }
 
         [Test]
@@ -60,8 +57,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json
         {
             const string json = "{\"$type\":\"" + TestTargetTypeName + "\",\"Id\":\"HalliGalli\"}";
             var expected = new SerializationTestTarget {Id = "HalliGalli"};
-            var actual = json.ParseJsonTo<object>();
-            Assert.AreEqual(expected, actual);
+            JsonAssert.DeserializesTo(json, expected);
         }
 
         [Test]
@@ -69,35 +65,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json
         {
             var target = new SerializationTestTarget {Id = null};
             const string expected = "{\"$type\":\"" + TestTargetTypeName + "\"}";
-            var actual = target.ToCompactJson();
-            Assert.AreEqual(expected, actual);
-        }
-
-        [Test]
-        public void ShouldSerializeNameToTypeAndIdentifier()
-        {
-            var name = TypeName.Get("My.Custom.Type, AnAssembly, 1.5.2.4");
-            const string expected = "{\"type\":\"CSharp.TypeName\",\"id\":\"My.Custom.Type, AnAssembly, 1.5.2.4\"}";
-            var actual = name.ToCompactJson();
-            Assert.AreEqual(expected, actual);
-        }
-
-        [Test]
-        public void ShouldDeserializeNameFromNewFormat()
-        {
-            const string json = "{\"type\":\"CSharp.AssemblyName\",\"id\":\"MyAssembly, 1.2.3.4\"}";
-            var expected = AssemblyName.Get("MyAssembly, 1.2.3.4");
-            var actual = json.ParseJsonTo<IName>();
-            Assert.AreSame(expected, actual);
-        }
-
-        [Test]
-        public void ShouldDeserializeNameFromOldFormat()
-        {
-            const string json = "{\"type\":\"CSharp.AssemblyName\",\"identifier\":\"MyAssembly, 1.2.3.4\"}";
-            var expected = AssemblyName.Get("MyAssembly, 1.2.3.4");
-            var actual = json.ParseJsonTo<IName>();
-            Assert.AreSame(expected, actual);
+            JsonAssert.SerializesTo(target, expected);
         }
 
         [Test]
@@ -105,8 +73,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json
         {
             const Formatting target = Formatting.None;
             const string expected = "0";
-            var actual = target.ToCompactJson();
-            Assert.AreEqual(expected, actual);
+            JsonAssert.SerializesTo(target, expected);
         }
 
         [Test]
