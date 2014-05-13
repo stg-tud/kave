@@ -12,8 +12,15 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Dennis Albrecht
+ *    - Sebastian Proksch
+ *    - Sven Amann
  */
+
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -30,18 +37,24 @@ namespace KaVE.VsFeedbackGenerator.Utils
             [NotNull] Uri targetUri,
             int timeoutInSeconds = 5);
 
+        string GetTempFileName();
+        string GetTempFileName(string extension);
         void CreateFile(string path);
         void CopyFile(string src, string trg);
-        string GetTempFileName();
-        bool FileExists(string fileName);
-        bool DirectoryExists(string path);
-        Stream OpenFile(string file, FileMode mode, FileAccess access);
-        string ReadFile(string fileName);
         void MoveFile(string source, string target);
+        bool FileExists(string fileName);
         void DeleteFile(string fileName);
 
+        Stream OpenFile(string file, FileMode mode, FileAccess access);
+        string ReadFile(string fileName);
+
+        string GetTempDirectoryName();
         void CreateDirectory(string path);
+        bool DirectoryExists(string path);
         void DeleteDirectoryWithContent(string path);
+
+        string Combine(params string[] paths);
+        IEnumerable<string> EnumerateFiles(string path);
     }
 
     [ShellComponent]
@@ -77,6 +90,42 @@ namespace KaVE.VsFeedbackGenerator.Utils
         public string GetTempFileName()
         {
             return Path.GetTempFileName();
+        }
+
+        public string GetTempFileName(string extension)
+        {
+            var random = new Random();
+            var temp = Path.GetTempPath();
+            string file;
+            do
+            {
+                file = Path.Combine(temp, "file-" + random.Next() + "." + extension);
+            } while (File.Exists(file));
+            CreateFile(file);
+            return file;
+        }
+
+        public string GetTempDirectoryName()
+        {
+            var random = new Random();
+            var temp = Path.GetTempPath();
+            string dir;
+            do
+            {
+                dir = Path.Combine(temp, "dir-" + random.Next());
+            } while (Directory.Exists(dir));
+            Directory.CreateDirectory(dir);
+            return dir;
+        }
+
+        public string Combine(params string[] paths)
+        {
+            return Path.Combine(paths);
+        }
+
+        public IEnumerable<string> EnumerateFiles(string path)
+        {
+            return Directory.EnumerateFiles(path);
         }
 
         public bool FileExists(string fileName)

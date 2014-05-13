@@ -20,8 +20,11 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
+using JetBrains.Util;
 using KaVE.Utils.Assertion;
 using KaVE.Utils.IO;
 using KaVE.VsFeedbackGenerator.Utils;
@@ -33,6 +36,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
     [TestFixture]
     internal class IoUtilsTest
     {
+        private const string Extension = "ext";
         private IoUtils _sut;
 
         [SetUp]
@@ -61,11 +65,57 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
         }
 
         [Test]
+        public void ShouldReturnExistingTempFileNameWithExtension()
+        {
+            var fileName = _sut.GetTempFileName(Extension);
+            Assert.True(File.Exists(fileName));
+        }
+
+        [Test]
         public void ShouldNotReturnTempFileNameTwice()
         {
             var a = _sut.GetTempFileName();
             var b = _sut.GetTempFileName();
             Assert.AreNotEqual(a, b);
+        }
+
+        [Test]
+        public void ShouldNotReturnTempFileNameWithExtensionTwice()
+        {
+            var a = _sut.GetTempFileName(Extension);
+            var b = _sut.GetTempFileName(Extension);
+            Assert.AreNotEqual(a, b);
+        }
+
+        [Test]
+        public void ShouldReturnTempFileNameWithExtension()
+        {
+            var fileName = _sut.GetTempFileName(Extension);
+            Assert.AreEqual("." +Extension, Path.GetExtension(fileName));
+        }
+
+        [Test]
+        public void ShouldReturnExistingTempDirectory()
+        {
+            var dir = _sut.GetTempDirectoryName();
+
+            Assert.IsTrue(Directory.Exists(dir));
+        }
+
+        [Test]
+        public void ShouldNotReturnTempDirectoryTwice()
+        {
+            var a = _sut.GetTempDirectoryName();
+            var b = _sut.GetTempDirectoryName();
+            Assert.AreNotEqual(a, b);
+        }
+
+        [Test]
+        public void ShouldReturnDirectoryRootedInTempFolder()
+        {
+            var dir = _sut.GetTempDirectoryName();
+
+            Assert.AreEqual(Path.GetTempPath(), Directory.GetParent(dir) + "\\");
         }
 
         [Test]
@@ -176,6 +226,27 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
 
             Assert.IsTrue(File.Exists(target));
             Assert.IsFalse(File.Exists(source));
+        }
+
+        [Test]
+        public void ShouldCombineElements()
+        {
+            var origin = new List<string> {"1st", "2nd","3rd"};
+            var expected = origin[0] + Path.DirectorySeparatorChar + origin[1] + Path.DirectorySeparatorChar + origin[2];
+
+            var actual = _sut.Combine(origin[0], origin[1], origin[2]);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void ShouldFindAllFiles()
+        {
+            var dir = IoTestHelper.GetTempDirectoryName();
+            var expected = new List<string> {"ABC", "DEF", "XYZ"};
+            expected.ForEach(f => { using (File.Create(Path.Combine(dir, f))) {} });
+            
+            var actual = _sut.EnumerateFiles(dir).Select(f => Path.GetFileName(f));
+            Assert.AreEqual(expected, actual);
         }
 
         private string GetNonExistentTempFileName()
