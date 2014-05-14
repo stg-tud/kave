@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 using KaVE.Model.Names.CSharp;
+using KaVE.VsFeedbackGenerator.Utils.Json;
 using NUnit.Framework;
 
 namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.Model
@@ -102,6 +103,15 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.Model
             const string json = "\"CSharp.AssemblyName:MyAssembly, 1.2.3.4\"";
             var expected = AssemblyName.Get("MyAssembly, 1.2.3.4");
             JsonAssert.DeserializesTo(json, expected);
+        }
+
+        [Test]
+        public void ShouldSerializeNameToStringContainingTypeAndIdentifierWhenFormatting()
+        {
+            var name = TypeName.Get("My.Custom.Type, AnAssembly, 1.5.2.4");
+            const string expected = "\"CSharp.TypeName:My.Custom.Type, AnAssembly, 1.5.2.4\"";
+            var actual = name.ToFormattedJson();
+            Assert.AreEqual(expected, actual);
         }
     }
 }

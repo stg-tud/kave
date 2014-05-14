@@ -100,18 +100,6 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json
         }
 
         [Test]
-        public void ShouldSerializeNameToTypeAndIdentifierWhenFormatting()
-        {
-            var name = TypeName.Get("My.Custom.Type, AnAssembly, 1.5.2.4");
-            const string expected = "{\r\n" +
-                                    "    \"type\": \"CSharp.TypeName\",\r\n" +
-                                    "    \"id\": \"My.Custom.Type, AnAssembly, 1.5.2.4\"\r\n" +
-                                    "}";
-            var actual = name.ToFormattedJson();
-            Assert.AreEqual(expected, actual);
-        }
-
-        [Test]
         public void ShouldSerializeEnumByPrimitiveValueWhenFormatting()
         {
             const Formatting target = Formatting.None;
