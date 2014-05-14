@@ -14,15 +14,21 @@
  * limitations under the License.
  */
 using System;
+using KaVE.Utils.Assertion;
 
 namespace KaVE.VsFeedbackGenerator.Interactivity
 {
     internal class InteractionRequest<TNotification> : IInteractionRequest<TNotification> where TNotification : Notification
     {
-        public event EventHandler<InteractionRequestedEventArgs<TNotification>> Raised = delegate { };
+        public event EventHandler<InteractionRequestedEventArgs<TNotification>> Raised = null;
 
+        public void Raise(TNotification notification)
+        {
+            Raise(notification, n => { });
+        }
         public void Raise(TNotification notification, Action<TNotification> callback)
         {
+            Asserts.NotNull(Raised, "there is no handler registered for this interaction request");
             Raised(
                 this,
                 new InteractionRequestedEventArgs<TNotification>

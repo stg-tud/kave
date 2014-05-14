@@ -22,19 +22,27 @@ using System.Windows;
 using System.Windows.Controls.Primitives;
 using JetBrains.ActionManagement;
 using JetBrains.Threading;
+using KaVE.VsFeedbackGenerator.Interactivity;
 using KaVE.VsFeedbackGenerator.SessionManager.Presentation;
 using KaVE.VsFeedbackGenerator.Utils;
 
 namespace KaVE.VsFeedbackGenerator.TrayNotification
 {
-    /// <summary>
-    ///     Interaction logic for UploadWizard.xaml
-    /// </summary>
     public partial class UploadWizard
     {
+        public class UploadOptions : Notification
+        {
+            public enum ExportType
+            {
+                ZipFile, HttpUpload
+            }
+
+            public ExportType? Type;
+        }
+
         public bool IsZipExport { get; private set; }
         public bool IsUploadExport { get; private set; }
-
+        public UploadOptions.ExportType? ResultType { get; private set; }
 
         public UploadWizard()
         {
@@ -93,13 +101,13 @@ namespace KaVE.VsFeedbackGenerator.TrayNotification
 
         private void UploadButtonClicked(object sender, RoutedEventArgs e)
         {
-            IsUploadExport = true;
+            ResultType = UploadOptions.ExportType.HttpUpload;
             Close();
         }
 
         private void ZipButtonClicked(object sender, RoutedEventArgs e)
         {
-            IsZipExport = true;
+            ResultType = UploadOptions.ExportType.ZipFile;
             Close();
         }
     }

@@ -56,7 +56,7 @@ namespace KaVE.Utils
         }
 
         /// <summary>
-        ///     Invokes the passed action asynchonuously. Returns immediately.
+        ///     Invokes the passed action asynchronuously. Returns immediately.
         /// </summary>
         /// <param name="action">The action to run.</param>
         public static void Async(Action action)

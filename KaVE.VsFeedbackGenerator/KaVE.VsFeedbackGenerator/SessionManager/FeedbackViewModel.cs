@@ -34,7 +34,6 @@ using KaVE.VsFeedbackGenerator.TrayNotification;
 using KaVE.VsFeedbackGenerator.Utils;
 using KaVE.VsFeedbackGenerator.Utils.Logging;
 using NuGet;
-
 using Messages = KaVE.VsFeedbackGenerator.Properties.SessionManager;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager
@@ -55,29 +54,44 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
         private readonly ILogManager<IDEEvent> _logManager;
         private readonly IList<SessionViewModel> _sessions;
         private readonly IList<SessionViewModel> _selectedSessions;
-        private DelegateCommand _exportSessionsCommand;
-        private DelegateCommand _sendSessionsCommand;
+        private DelegateCommand _exportCommand;
+        private DelegateCommand _deleteCommand;
         private bool _refreshing;
         private DateTime _lastRefresh;
         private readonly ISettingsStore _store;
+        private readonly IExporter _exporter;
 
         private readonly InteractionRequest<Confirmation> _confirmationRequest;
-        private readonly ExportCommandFactory _exportCommandFactory;
 
         public IInteractionRequest<Confirmation> ConfirmationRequest
         {
             get { return _confirmationRequest; }
         }
 
-        public FeedbackViewModel(ILogManager<IDEEvent> logManager, ISettingsStore store)
+        private readonly InteractionRequest<UploadWizard.UploadOptions> _uploadOptionsRequest;
+
+        public IInteractionRequest<UploadWizard.UploadOptions> UploadOptionsRequest
+        {
+            get { return _uploadOptionsRequest; }
+        }
+
+        private readonly InteractionRequest<Notification> _notificationRequest;
+
+        public IInteractionRequest<Notification> NotificationRequest
+        {
+            get { return _notificationRequest; }
+        }
+
+        public FeedbackViewModel(ILogManager<IDEEvent> logManager, ISettingsStore store, IExporter exporter)
         {
             _store = store;
+            _exporter = exporter;
             _logManager = logManager;
             _sessions = new ObservableCollection<SessionViewModel>();
             _selectedSessions = new List<SessionViewModel>();
-            DeleteSessionsCommand = new DelegateCommand(OnDeleteSelectedSessions, CanDeleteSessions);
             _confirmationRequest = new InteractionRequest<Confirmation>();
-            _exportCommandFactory = new ExportCommandFactory(this);
+            _uploadOptionsRequest = new InteractionRequest<UploadWizard.UploadOptions>();
+            _notificationRequest = new InteractionRequest<Notification>();
             Released = true;
         }
 
@@ -145,8 +159,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
                         {
                             _sessions.AddRange(value);
                         }
-                        SendSessionsCommand.RaiseCanExecuteChanged();
-                        ExportSessionsCommand.RaiseCanExecuteChanged();
+                        ExportCommand.RaiseCanExecuteChanged();
                     });
             }
             get { return _sessions; }
@@ -175,55 +188,67 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             get { return _selectedSessions.Count == 1 ? _selectedSessions.First() : null; }
         }
 
-        public void DoExport()
-        {
-            var wizard = new UploadWizard();
-            wizard.ShowDialog();
-
-            if (wizard.IsZipExport)
-            {
-                ExportSessionsCommand.Execute(null);
-            }
-            else if(wizard.IsUploadExport)
-            {
-                SendSessionsCommand.Execute(null);
-            }
-        }
-
-        // TODO Rename Commands?
-        // TODO Function instead of Command?
-        private DelegateCommand ExportSessionsCommand
+        public DelegateCommand ExportCommand
         {
             get
             {
-                return _exportSessionsCommand ??
-                       (_exportSessionsCommand =
-                           _exportCommandFactory.Create(new FilePublisher(AskForExportLocation)));
+                // TODO @Sven: make AreAnyEventsPresent a method after code review with Dennis finished
+                return _exportCommand ?? (_exportCommand = new DelegateCommand(OnExport, () => AreAnyEventsPresent));
             }
         }
 
-        private DelegateCommand SendSessionsCommand
+        public void OnExport()
         {
-            get
+            _uploadOptionsRequest.Raise(new UploadWizard.UploadOptions(), Export);
+        }
+
+        private void Export(UploadWizard.UploadOptions options)
+        {
+            if (options.Type.HasValue)
             {
-                return _sendSessionsCommand ??
-                       (_sendSessionsCommand =
-                           _exportCommandFactory.Create(new HttpPublisher(_serverUrl)));
+                try
+                {
+                    var eventsForExport = ExtractEventsForExport();
+
+                    if (options.Type == UploadWizard.UploadOptions.ExportType.ZipFile)
+                    {
+                        _exporter.Export(eventsForExport, new FilePublisher(AskForExportLocation));
+                    }
+                    else
+                    {
+                        _exporter.Export(eventsForExport, new HttpPublisher(_serverUrl));
+                    }
+
+                    _logManager.DeleteLogsOlderThan(_lastRefresh);
+                    UpdateLastUploadDate();
+                    ShowExportSucceededMessage(eventsForExport.Count);
+                }
+                catch (Exception e)
+                {
+                    ShowExportFailedMessage(e.Message);
+                }
+                Refresh();
             }
         }
 
         public void ShowExportSucceededMessage(int numberOfExportedEvents)
         {
-            _logManager.DeleteLogsOlderThan(_lastRefresh);
-            UpdateLastUploadDate();
-            MessageBox.Show(string.Format(Messages.ExportSuccess, numberOfExportedEvents));
-            Refresh();
+            // TODO: Captions fehlen
+            _notificationRequest.Raise(
+                new Notification
+                {
+                    Message = string.Format(Messages.ExportSuccess, numberOfExportedEvents)
+                });
         }
 
         public void ShowExportFailedMessage(string message)
         {
-            MessageBox.Show(
-                Messages.ExportFail + (string.IsNullOrWhiteSpace(message) ? "" : "\n" + message));
+            // TODO: Captions fehlen
+            _notificationRequest.Raise(
+                new Notification
+                {
+                    Message = Messages.ExportFail + (string.IsNullOrWhiteSpace(message) ? "" : ":\n" + message)
+                });
         }
 
         private void UpdateLastUploadDate()
@@ -253,7 +278,14 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             return saveFileDialog.FileName;
         }
 
-        public DelegateCommand DeleteSessionsCommand { get; private set; }
+        public DelegateCommand DeleteSessionsCommand
+        {
+            get
+            {
+                return _deleteCommand ??
+                       (_deleteCommand = new DelegateCommand(OnDeleteSelectedSessions, CanDeleteSessions));
+            }
+        }
 
         private bool CanDeleteSessions()
         {

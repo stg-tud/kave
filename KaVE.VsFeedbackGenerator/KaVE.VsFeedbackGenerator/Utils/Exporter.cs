@@ -12,48 +12,32 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sebastian Proksch
+ *    - Sven Amann
+ *    - Dennis Albrecht
  */
-using System;
+
 using System.Collections.Generic;
 using System.IO;
-using JetBrains.UI.Extensions.Commands;
+using JetBrains.Application;
 using KaVE.Model.Events;
-using KaVE.VsFeedbackGenerator.SessionManager;
 using KaVE.VsFeedbackGenerator.Utils.Json;
 
 namespace KaVE.VsFeedbackGenerator.Utils
 {
-    [Obsolete("Deprecated in favor of 'Exporter' class")]
-    public class ExportCommandFactory
+    public interface IExporter
     {
-        private readonly IFeedbackViewModelDialog _feedbackViewModelDialog;
+        void Export(IEnumerable<IDEEvent> events, IPublisher publisher);
+    }
+
+    [ShellComponent]
+    internal class Exporter : IExporter
+    {
         private readonly IIoUtils _ioUtils = Registry.GetComponent<IIoUtils>();
 
-        public ExportCommandFactory(IFeedbackViewModelDialog feedbackViewModelDialog)
-        {
-            _feedbackViewModelDialog = feedbackViewModelDialog;
-        }
-
-        public DelegateCommand Create(IPublisher publisher)
-        {
-            Action<object> action = o =>
-            {
-                try
-                {
-                    var events = _feedbackViewModelDialog.ExtractEventsForExport();
-                    Export(events, publisher);
-                    _feedbackViewModelDialog.ShowExportSucceededMessage(events.Count);
-                }
-                catch (Exception e)
-                {
-                    _feedbackViewModelDialog.ShowExportFailedMessage(e.Message);
-                }
-            };
-            return new DelegateCommand(action, o => _feedbackViewModelDialog.AreAnyEventsPresent);
-        }
-
-
-        private void Export(IEnumerable<IDEEvent> events, IPublisher publisher)
+        public void Export(IEnumerable<IDEEvent> events, IPublisher publisher)
         {
             var tempFileName = _ioUtils.GetTempFileName();
             using (var stream = _ioUtils.OpenFile(tempFileName, FileMode.Open, FileAccess.Write))

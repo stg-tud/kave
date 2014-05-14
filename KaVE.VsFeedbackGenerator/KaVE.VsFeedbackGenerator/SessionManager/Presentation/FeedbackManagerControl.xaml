@@ -67,8 +67,7 @@ limitations under the License.
                     <Image Source="/KaVE.VsFeedbackGenerator;Component/Resources/refresh.png" />
                 </Button>
                 <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
-                <Button ToolTip="{x:Static root:Properties.SessionManager.Export}"
-                        Click="OpenUploadWizard_OnClick">
+                <Button ToolTip="{x:Static root:Properties.SessionManager.Export}" Command="{Binding Path=ExportCommand}">
                     <Image Source="/KaVE.VsFeedbackGenerator;Component/Resources/send.png" />
                 </Button>
                 <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />

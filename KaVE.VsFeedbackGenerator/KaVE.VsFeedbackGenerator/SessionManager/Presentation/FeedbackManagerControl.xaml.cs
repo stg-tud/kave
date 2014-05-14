@@ -13,6 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+using System;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -20,6 +22,7 @@ using JetBrains.ActionManagement;
 using JetBrains.Threading;
 using KaVE.Utils;
 using KaVE.VsFeedbackGenerator.Interactivity;
+using KaVE.VsFeedbackGenerator.TrayNotification;
 using KaVE.VsFeedbackGenerator.Utils;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
@@ -37,9 +40,25 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
             _releaseTimer = ScheduledAction.NoOp;
             _feedbackViewModel = feedbackViewModel;
             DataContext = feedbackViewModel;
+
             _feedbackViewModel.ConfirmationRequest.Raised += new ConfirmationRequestHandler(this).Handle;
+            _feedbackViewModel.NotificationRequest.Raised += (sender, args) => ShowNotification(args.Notification);
+            _feedbackViewModel.UploadOptionsRequest.Raised += UploadOptionsRequestOnRaised;
 
             InitializeComponent();
+        }
+
+        private static void ShowNotification(Notification notification)
+        {
+            MessageBox.Show(notification.Message, notification.Caption, MessageBoxButton.OK);
+        }
+
+        private void UploadOptionsRequestOnRaised(object sender, InteractionRequestedEventArgs<UploadWizard.UploadOptions> args)
+        {
+            var uploadWizard = new UploadWizard();
+            uploadWizard.ShowDialog();
+            args.Notification.Type = uploadWizard.ResultType;
+            args.Callback();
         }
 
         private void FeedbackWindowControl_OnLoaded(object sender, RoutedEventArgs e)
@@ -83,19 +102,14 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
         {
             if (_feedbackViewModel.SingleSelectedSession != null)
             {
-                _feedbackViewModel.SingleSelectedSession.SelectedEvents = EventListView.SelectedItems.Cast<EventViewModel>();
+                _feedbackViewModel.SingleSelectedSession.SelectedEvents =
+                    EventListView.SelectedItems.Cast<EventViewModel>();
             }
         }
 
         private void RefreshButton_OnClick(object sender, RoutedEventArgs e)
         {
             RefreshControl();
-        }
-
-
-        private void OpenUploadWizard_OnClick(object sender, RoutedEventArgs e)
-        {
-            _feedbackViewModel.DoExport();
         }
 
         private void VisitHomepageButton_OnClick(object sender, RoutedEventArgs e)

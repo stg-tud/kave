@@ -35,7 +35,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Interactivity
             var raised = false;
             _uut.Raised += (sender, args) => raised = true;
 
-            _uut.Raise(new Notification(), n => { });
+            _uut.Raise(new Notification());
 
             Assert.IsTrue(raised);
         }
@@ -47,7 +47,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Interactivity
             _uut.Raised += (sender, args) => actualContext = args.Notification;
             var expectedContext = new Notification();
 
-            _uut.Raise(expectedContext, n => { });
+            _uut.Raise(expectedContext);
 
             Assert.AreSame(expectedContext, actualContext);
         }
