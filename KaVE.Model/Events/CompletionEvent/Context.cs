@@ -33,6 +33,7 @@ namespace KaVE.Model.Events.CompletionEvent
         public Context()
         {
             CalledMethods = new HashSet<IMethodName>();
+            EntryPointsToCalledMethods = new Dictionary<IMethodName, ISet<IMethodName>>();
         }
 
         /// <summary>
@@ -60,9 +61,17 @@ namespace KaVE.Model.Events.CompletionEvent
         public GroumBase EnclosingMethodGroum { get; set; }
 
         /// <summary>
-        ///     Methods called in the EnclosingMethod. This is redundant information also contained in the EnclosingMethodGroum.
+        /// Maps from entry points to the methods called in the call-graph below the respective entry point.
         /// </summary>
         [NotNull, DataMember]
+        public IDictionary<IMethodName, ISet<IMethodName>> EntryPointsToCalledMethods;
+
+        public ICollection<IMethodName> EntryPoints
+        {
+            get { return EntryPointsToCalledMethods.Keys; }
+        }
+
+        // TODO @Sven: remove this property
         public ISet<IMethodName> CalledMethods { get; set; }
 
         [DataMember]
@@ -74,7 +83,6 @@ namespace KaVE.Model.Events.CompletionEvent
         /// </summary>
         [DataMember]
         public IName TriggerTarget { get; set; }
-
 
         public override bool Equals(object obj)
         {

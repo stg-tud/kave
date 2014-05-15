@@ -13,10 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Runtime.Serialization.Formatters;
 using KaVE.Model.Events.CompletionEvent;
 using KaVE.Model.Names;
 using KaVE.VsFeedbackGenerator.Tests.TestFactories;
+using KaVE.VsFeedbackGenerator.Utils.Json;
+using Newtonsoft.Json;
 using NUnit.Framework;
 
 namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.Model
@@ -49,15 +54,43 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.Model
                     }
                 },
                 EnclosingMethod = TestNameFactory.GetAnonymousMethodName(),
-                CalledMethods = new HashSet<IMethodName>
+                EntryPointsToCalledMethods = new Dictionary<IMethodName, ISet<IMethodName>>
                 {
-                    TestNameFactory.GetAnonymousMethodName(),
-                    TestNameFactory.GetAnonymousMethodName(),
-                    TestNameFactory.GetAnonymousMethodName()
+                    {
+                        TestNameFactory.GetAnonymousMethodName(), new HashSet<IMethodName>
+                        {
+                            TestNameFactory.GetAnonymousMethodName(),
+                            TestNameFactory.GetAnonymousMethodName(),
+                            TestNameFactory.GetAnonymousMethodName()
+                        }
+                    },
+                    {
+                        TestNameFactory.GetAnonymousMethodName(), new HashSet<IMethodName>
+                        {
+                            TestNameFactory.GetAnonymousMethodName()
+                        }
+                    }
                 },
                 TriggerTarget = TestNameFactory.GetAnonymousTypeName()
             };
             JsonAssert.SerializationPreservesData(context);
+        }
+
+        [Test, Ignore]
+        public void ShouldSerializeDictionary()
+        {
+            var value = new Dictionary<string, ISet<string>>
+            {
+                {"foo", new HashSet<string>{"bar"}}
+            };
+            var settings = new JsonSerializerSettings
+            {
+                TypeNameHandling = TypeNameHandling.Objects,
+                TypeNameAssemblyFormat = FormatterAssemblyStyle.Full
+            };
+            var json = value.ToCompactJson();
+            var value2 = JsonConvert.DeserializeObject<IDictionary<string, ISet<string>>>(json, settings);
+            Assert.AreEqual(value, value2);
         }
 
         private static TypeHierarchy GetAnonymousTypeHierarchy()

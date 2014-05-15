@@ -81,6 +81,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Analysis\EntryPointDetectionTest.cs" />
     <Compile Include="Analysis\SmokeTests\CodeCompletionInIncompleteDeclarationsSmokeTest.cs" />
     <Compile Include="Analysis\ContextAnalysisCalledMethodsTest.cs" />
     <Compile Include="Analysis\ContextAnalysisEnclosingMethodTest.cs" />

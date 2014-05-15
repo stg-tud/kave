@@ -115,6 +115,7 @@
     <Compile Include="Names\IParameterName.cs" />
     <Compile Include="Names\IPropertyName.cs" />
     <Compile Include="Names\ITypeName.cs" />
+    <Compile Include="Names\NameToStringConverter.cs" />
     <Compile Include="Names\ReSharper\LiveTemplateName.cs" />
     <Compile Include="Names\VisualStudio\CommandBarControlName.cs" />
     <Compile Include="Names\VisualStudio\CommandName.cs" />

@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Runtime.Serialization.Formatters;
@@ -43,6 +44,10 @@ namespace KaVE.VsFeedbackGenerator.Utils.Json
             if (assemblyName.StartsWith("KaVE.Model"))
             {
                 return typeof (IName).Assembly;
+            }
+            if (assemblyName == "System")
+            {
+                return typeof (ISet<>).Assembly;
             }
             return null;
         }
@@ -108,7 +113,8 @@ namespace KaVE.VsFeedbackGenerator.Utils.Json
         /// </remarks>
         internal static T ParseJsonTo<T>([NotNull] this string json)
         {
-            return JsonConvert.DeserializeObject<T>(json, CreateSerializationSettings());
+            var settings = CreateSerializationSettings();
+            return JsonConvert.DeserializeObject<T>(json, settings);
         }
 
         /// <summary>

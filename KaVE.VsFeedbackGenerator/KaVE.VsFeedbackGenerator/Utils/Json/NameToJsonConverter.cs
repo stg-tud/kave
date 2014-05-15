@@ -12,13 +12,14 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sven Amann
  */
 
 using System;
-using System.Linq;
-using System.Reflection;
+using System.ComponentModel;
 using KaVE.Model.Names;
-using KaVE.Utils.Assertion;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -29,14 +30,13 @@ namespace KaVE.VsFeedbackGenerator.Utils.Json
         private const string TypePropertyName = "type";
         private const string IdentifierPropertyName = "id";
         private const string OldIdentifierPropertyName = "identifier";
-        private const string NameQualifierPrefix = "KaVE.Model.Names.";
         private const char PropertySeparator = ':';
+
+        private readonly TypeConverter _converter = TypeDescriptor.GetConverter(typeof (IName));
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            var typeAlias = AliasFor(value.GetType());
-            var identifier = ((IName) value).Identifier;
-            writer.WriteValue(typeAlias + PropertySeparator + identifier);
+            writer.WriteValue(_converter.ConvertToString(value));
         }
 
         public override object ReadJson(JsonReader reader,
@@ -44,20 +44,30 @@ namespace KaVE.VsFeedbackGenerator.Utils.Json
             object existingValue,
             JsonSerializer serializer)
         {
-            var jName = GetJObject(reader);
-            var factoryMethod = GetFactoryMethod(jName);
-            var identifier = GetIdentifier(jName);
-            return factoryMethod.Invoke(null, new object[] {identifier});
+            var serialization = ReadSerializationFrom(reader);
+            return _converter.ConvertFromString(serialization);
         }
 
-        private static JObject GetJObject(JsonReader reader)
+        private static string ReadSerializationFrom(JsonReader reader)
         {
             if (reader.TokenType == JsonToken.String)
             {
-                var data = ((string) reader.Value).Split(PropertySeparator);
-                return new JObject {{TypePropertyName, data[0]}, {IdentifierPropertyName, data[1]}};
+                return (string) reader.Value;
             }
-            return JObject.Load(reader);
+            return ReadLegacyFormatFrom(reader);
+        }
+
+        private static string ReadLegacyFormatFrom(JsonReader reader)
+        {
+            var jObject = JObject.Load(reader);
+            var type = GetType(jObject);
+            var identifier = GetIdentifier(jObject);
+            return type + PropertySeparator + identifier;
+        }
+
+        private static string GetType(JObject jObject)
+        {
+            return jObject.GetValue(TypePropertyName).ToString();
         }
 
         private static string GetIdentifier(JObject jName)
@@ -66,36 +76,9 @@ namespace KaVE.VsFeedbackGenerator.Utils.Json
             return idToken.ToString();
         }
 
-        private static MethodInfo GetFactoryMethod(JObject jName)
-        {
-            var typeAlias = jName.GetValue(TypePropertyName).ToString();
-            var type = TypeFrom(typeAlias);
-            var factoryMethod = type.GetMethods(BindingFlags.Static | BindingFlags.Public).Where(
-                m =>
-                {
-                    var parameterInfos = m.GetParameters();
-                    return parameterInfos.Count() == 1 && parameterInfos[0].ParameterType == typeof (string);
-                }).First();
-            return factoryMethod;
-        }
-
         public override bool CanConvert(Type objectType)
         {
             return typeof (IName).IsAssignableFrom(objectType);
-        }
-
-        private static string AliasFor(Type nameType)
-        {
-            return nameType.FullName.Substring(NameQualifierPrefix.Length);
-        }
-
-        private static Type TypeFrom(string alias)
-        {
-            var assemblyName = typeof (IName).Assembly.FullName;
-            var assemblyQualifiedTypeName = NameQualifierPrefix + alias + ", " + assemblyName;
-            var type = Type.GetType(assemblyQualifiedTypeName);
-            Asserts.NotNull(type, "Could not load required type " + assemblyQualifiedTypeName);
-            return type;
         }
     }
 }
