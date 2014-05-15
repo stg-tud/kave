@@ -184,6 +184,29 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
             AssertCalledMethodsContain("[System.String, mscorlib, 4.0.0.0] [System.Object, mscorlib, 4.0.0.0].ToString()");
         }
 
+        [Test]
+        public void ShouldFindCallToInterfaceImplementationInSameClass()
+        {
+            CompleteInFile(@"
+                interface I
+                {
+                    void EP();
+                }
+
+                class C : I
+                {
+                    public void EP() { }
+
+                    public void M()
+                    {
+                        EP();
+                        $
+                    }
+                }");
+
+            AssertCalledMethodsContain("[System.Void, mscorlib, 4.0.0.0] [C, TestProject].EP()");
+        }
+
         private void AssertCalledMethodsContain(string methodIdentifier)
         {
             var expected = MethodName.Get(methodIdentifier);

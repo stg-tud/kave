@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 using KaVE.Model.Events.CompletionEvent;
-using KaVE.VsFeedbackGenerator.Tests.TestFactories;
+using KaVE.TestUtils.Model.Names;
 using NUnit.Framework;
 
 namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.Model

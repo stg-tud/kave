@@ -21,12 +21,16 @@ using System;
 using System.Linq.Expressions;
 using System.Windows;
 using System.Windows.Controls.Primitives;
+using System.Windows.Media;
+using JetBrains.ActionManagement;
 using JetBrains.Application.Settings;
 using JetBrains.DataFlow;
 using JetBrains.ReSharper.Features.Common.Options;
 using JetBrains.ReSharper.Features.Finding.Resources;
+using JetBrains.Threading;
 using JetBrains.UI.CrossFramework;
 using JetBrains.UI.Options;
+using KaVE.Utils.Assertion;
 using KaVE.VsFeedbackGenerator.Utils;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
@@ -35,10 +39,12 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
         ParentId = ToolsPage.PID)]
     public partial class FeedbackGeneratorOptionPage : IOptionsPage
     {
+        private readonly IActionManager _actionManager;
         private const string PID = "FeedbackGenerator.OptionPage";
 
-        public FeedbackGeneratorOptionPage(Lifetime lifetime, OptionsSettingsSmartContext ctx)
+        public FeedbackGeneratorOptionPage(Lifetime lifetime, OptionsSettingsSmartContext ctx, IActionManager actionManager)
         {
+            _actionManager = actionManager;
             InitializeComponent();
             SetToggleButtonBinding(ctx, lifetime, s => (bool?) s.RemoveCodeNames, RemoveCodeNamesCheckBox);
             SetToggleButtonBinding(ctx, lifetime, s => (bool?) s.RemoveStartTimes, RemoveStartTimesCheckBox);
@@ -56,8 +62,10 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
 
         private void RestoreSettings_OnClick(object sender, RoutedEventArgs e)
         {
-            var restore = Registry.GetComponent<SettingsRestore>();
-            restore.RestoreDefaultSettings();
+            _actionManager.ExecuteActionGuarded(SettingsCleaner.ActionId, "reset-all");
+            var window = Window.GetWindow(this);
+            Asserts.NotNull(window, "option page has no option window");
+            window.Close();
         }
 
         public bool OnOk()

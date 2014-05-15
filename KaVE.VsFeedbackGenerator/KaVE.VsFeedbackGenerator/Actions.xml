@@ -23,7 +23,7 @@ limitations under the License.
         <vs-shortcut>Shift+Control+Alt+S</vs-shortcut>
       </action>
       <action id="KaVE.VsFeedbackGenerator.About" text="About KaVE"/>
-      <!-- to break up elements use <separator/> -->
     </action-group>
   </insert>
+  <action id="KaVE.VsFeedbackGenerator.ResetAll" text="Reset all Settings"/>
 </actions>

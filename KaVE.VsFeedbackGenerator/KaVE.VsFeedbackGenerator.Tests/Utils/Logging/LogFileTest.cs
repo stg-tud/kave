@@ -62,6 +62,18 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Logging
         }
 
         [Test]
+        public void ShouldCreateLogDirectoryIfNotExists()
+        {
+            var inputStream = "".AsStream();
+            _mockIoUtils.Setup(iou => iou.OpenFile(TestLogFilePath, It.IsAny<FileMode>(), FileAccess.Write))
+                        .Returns(inputStream);
+
+            _uut.NewLogWriter();
+
+            _mockIoUtils.Verify(iou => iou.CreateDirectory(@"C:\My\Log\Dir"));
+        }
+
+        [Test]
         public void ShouldDeleteLogFile()
         {
             _uut.Delete();

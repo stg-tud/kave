@@ -12,13 +12,17 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sven Amann
  */
+
 using KaVE.Model.Names;
 using KaVE.Model.Names.CSharp;
 
-namespace KaVE.VsFeedbackGenerator.Tests.TestFactories
+namespace KaVE.TestUtils.Model.Names
 {
-    internal static class TestNameFactory
+    public static class TestNameFactory
     {
         private static int _counter;
 

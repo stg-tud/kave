@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 using JetBrains.ReSharper.Feature.Services.CSharp.CodeCompletion.Infrastructure;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
@@ -30,6 +31,9 @@ namespace KaVE.VsFeedbackGenerator.Analysis
         private readonly TypeShapeAnalysis _typeShapeAnalysis = new TypeShapeAnalysis();
         private readonly CalledMethodsAnalysis _calledMethodsAnalysis = new CalledMethodsAnalysis();
         private readonly CompletionTargetAnalysis _completionTargetAnalysis = new CompletionTargetAnalysis();
+
+        private readonly CalledMethodsForEntryPointsAnalysis _calledMethodsForEntryPointsAnalysis =
+            new CalledMethodsForEntryPointsAnalysis();
 
         public static Context Analyze(CSharpCodeCompletionContext rsContext)
         {
@@ -52,9 +56,12 @@ namespace KaVE.VsFeedbackGenerator.Analysis
                 {
                     _context.EnclosingMethod = methodDeclaration.GetName();
 
+                    _context.EntryPointsToCalledMethods = _calledMethodsForEntryPointsAnalysis.Analyze(
+                        typeDeclaration,
+                        _context.TypeShape);
                     _context.CalledMethods = _calledMethodsAnalysis.Analyze(
                         methodDeclaration,
-                        _context.TypeShape.TypeHierarchy.Element);
+                        _context.TypeShape).CalledMethods;
                 }
             }
             return _context;

@@ -56,6 +56,7 @@ namespace KaVE.VsFeedbackGenerator.Utils.Logging
 
         public ILogWriter<TLogEntry> NewLogWriter()
         {
+            _ioUtils.CreateDirectory(Directory.GetParent(Path).FullName);
             var logStream = _ioUtils.OpenFile(Path, FileMode.Append, FileAccess.Write);
             return new JsonLogWriter<TLogEntry>(logStream);
         }

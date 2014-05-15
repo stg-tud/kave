@@ -57,7 +57,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.VsIntegration
         [Test]
         public void ShouldCreateNewSessionUUIDAndStoreItForTodayIfNoneExisted()
         {
-            _settings.SessionUUID = null;
+            _settings.SessionUUID = "";
 
             var actualSessionId = _uut.UUID;
 

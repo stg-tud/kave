@@ -31,7 +31,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Logging
         [SetUp]
         public void SetUp()
         {
-            //TODO: from Uli: Dead code? IoUtil is never used 
+            // TODO refactor this tests to use an IoUtils mock
             Registry.RegisterComponent<IIoUtils>(new IoUtils());
             _uut = new LogFileManager<string>(IoTestHelper.GetTempDirectoryName());
         }
@@ -69,7 +69,6 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Logging
         [Test]
         public void ShouldIgnoreNonLogDirectory()
         {
-            //TODO from Uli: Use IoUtil methods for Directory create?
             Directory.CreateDirectory(Path.Combine(_uut.BaseLocation, "NonLog"));
 
             Assert.AreEqual(0, _uut.GetLogs().Count());
@@ -113,8 +112,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Logging
 
             _uut.DeleteLogFileDirectory();
 
-            var actual = !Directory.EnumerateFiles(_uut.BaseLocation).Any();
-            Assert.IsTrue(actual);
+            Assert.False(Directory.Exists(_uut.BaseLocation));
         }
 
         private void GivenLogExists(DateTime logDate)

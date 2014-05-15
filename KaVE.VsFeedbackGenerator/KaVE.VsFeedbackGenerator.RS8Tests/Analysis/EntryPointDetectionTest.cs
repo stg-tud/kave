@@ -26,7 +26,69 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
     class EntryPointDetectionTest : KaVEBaseTest
     {
         [Test]
-        public void ShouldUserSinglePublicMethodAsEntryPoint()
+        public void ShouldUseInterfaceImplementationAsEntryPoint()
+        {
+            CompleteInFile(@"
+                interface I
+                {
+                    void EP();
+                }
+
+                class C : I
+                {
+                    public void EP()
+                    {
+                        $
+                    }
+                }");
+
+            AssertIsEntryPoint("[System.Void, mscorlib, 4.0.0.0] [C, TestProject].EP()");
+        }
+
+        [Test]
+        public void ShouldUseOverrideAsEntryPoint()
+        {
+            CompleteInFile(@"
+                abstract class A
+                {
+                    public abstract void EP();
+                }
+
+                class C : A
+                {
+                    public override void EP()
+                    {
+                        $
+                    }
+                }");
+
+            AssertIsEntryPoint("[System.Void, mscorlib, 4.0.0.0] [C, TestProject].EP()");
+        }
+
+        [Test]
+        public void ShouldNotUseAbstractImplementationAsEntryPoint()
+        {
+            CompleteInFile(@"
+                interface I
+                {
+                    void EP();
+                }
+
+                abstract class C : I
+                {
+                    public abstract void EP();
+
+                    public void M()
+                    {
+                        $
+                    }
+                }");
+
+            AssertIsNotEntryPoint("[System.Void, mscorlib, 4.0.0.0] [C, TestProject].EP()");
+        }
+
+        [Test]
+        public void ShouldUseMethodAsEntryPointIfItIsNotCalledFromOtherMethod()
         {
             CompleteInFile(@"
                 class C
@@ -38,7 +100,85 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
                 }
             ");
 
-            CollectionAssert.Contains(ResultContext.EntryPoints, MethodName.Get("[System.Void, mscorlib, 4.0.0.0] [C, TestProject].EP()"));
+            AssertIsEntryPoint("[System.Void, mscorlib, 4.0.0.0] [C, TestProject].EP()");
+        }
+
+        [Test]
+        public void ShouldNotUseMethodAsEntryPointIfItIsCalledFromOtherEntryPoint()
+        {
+            CompleteInFile(@"
+                interface I
+                {
+                    void EP();
+                }
+
+                class C : I
+                {
+                    public void EP()
+                    {
+                        M();
+                    }
+
+                    public void M()
+                    {
+                        $
+                    }
+                }");
+
+            AssertIsNotEntryPoint("[System.Void, mscorlib, 4.0.0.0] [C, TestProject].M()");
+        }
+
+        [Test]
+        public void ShouldNotUseMethodAsEntryPointIfItIsCalledFromOtherMethod()
+        {
+            CompleteInFile(@"
+                class C
+                {
+                    public void M()
+                    {
+                        $
+                    }
+
+                    public void EP()
+                    {
+                        M();
+                    }
+                }");
+
+            AssertIsNotEntryPoint("[System.Void, mscorlib, 4.0.0.0] [C, TestProject].M()");
+        }
+
+        [Test]
+        public void ShouldUseImplementationAsEntryPointEvenIfItIsCalledFromOtherMethod()
+        {
+            CompleteInFile(@"
+                interface I
+                {
+                    void EP();
+                }
+
+                class C : I
+                {
+                    public void EP() { }
+
+                    public void M()
+                    {
+                        EP();
+                        $
+                    }
+                }");
+
+            AssertIsEntryPoint("[System.Void, mscorlib, 4.0.0.0] [C, TestProject].EP()");
+        }
+
+        private void AssertIsEntryPoint(string systemVoidMscorlibCTestprojectEp)
+        {
+            CollectionAssert.Contains(ResultContext.EntryPoints, MethodName.Get(systemVoidMscorlibCTestprojectEp));
+        }
+
+        private void AssertIsNotEntryPoint(string systemVoidMscorlibCTestprojectEp)
+        {
+            CollectionAssert.DoesNotContain(ResultContext.EntryPoints, MethodName.Get(systemVoidMscorlibCTestprojectEp));
         }
     }
 }

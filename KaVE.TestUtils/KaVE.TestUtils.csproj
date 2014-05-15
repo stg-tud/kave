@@ -48,6 +48,7 @@
     <Compile Include="Model\Events\CompletionEvent\CompletionEventTestFactory.cs" />
     <Compile Include="Model\Events\IDEEventTestFactory.cs" />
     <Compile Include="Model\Events\TestIDEEvent.cs" />
+    <Compile Include="Model\Names\TestNameFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

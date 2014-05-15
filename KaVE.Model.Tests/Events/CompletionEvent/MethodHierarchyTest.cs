@@ -12,32 +12,38 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sven Amann
  */
-using System.Collections.Generic;
+
 using KaVE.Model.Events.CompletionEvent;
 using KaVE.TestUtils.Model.Names;
 using NUnit.Framework;
 
-namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.Model
+namespace KaVE.Model.Tests.Events.CompletionEvent
 {
     [TestFixture]
-    internal class TypeShapeSerializationTest
+    class MethodHierarchyTest
     {
         [Test]
-        public void ShouldSerializeTypeShape()
+        public void ShouldBeOverrideOrImplementationWhenFirstIsSet()
         {
-            var uut = new TypeShape
+            var uut = new MethodHierarchy(TestNameFactory.GetAnonymousMethodName())
             {
-                MethodHierarchies =
-                    new HashSet<MethodHierarchy> {GetAnonymousMethodHierarchy(), GetAnonymousMethodHierarchy()},
-                TypeHierarchy = new TypeHierarchy("TestClass")
+                First = TestNameFactory.GetAnonymousMethodName()
             };
-            JsonAssert.SerializationPreservesData(uut);
+            Assert.IsTrue(uut.IsOverrideOrImplementation);
         }
 
-        private static MethodHierarchy GetAnonymousMethodHierarchy()
+        [Test]
+        public void ShouldNotBeOverrideOrImplementationWhenFirstIsNotSet()
         {
-            return new MethodHierarchy(TestNameFactory.GetAnonymousMethodName());
+            var uut = new MethodHierarchy(TestNameFactory.GetAnonymousMethodName())
+            {
+                First = null
+            };
+            Assert.IsFalse(uut.IsOverrideOrImplementation);
         }
     }
 }

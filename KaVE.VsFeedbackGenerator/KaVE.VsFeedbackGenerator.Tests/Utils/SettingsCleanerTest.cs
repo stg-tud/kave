@@ -17,10 +17,12 @@
  *    - Uli Fahrer
  */
 
+using JetBrains.Application.DataContext;
+using KaVE.Model.Events;
 using KaVE.VsFeedbackGenerator.SessionManager;
 using KaVE.VsFeedbackGenerator.SessionManager.Presentation;
 using KaVE.VsFeedbackGenerator.Utils;
-using KaVE.VsFeedbackGenerator.Utils.Json;
+using KaVE.VsFeedbackGenerator.Utils.Logging;
 using KaVE.VsFeedbackGenerator.VsIntegration;
 using Moq;
 using NUnit.Framework;
@@ -28,25 +30,33 @@ using NUnit.Framework;
 namespace KaVE.VsFeedbackGenerator.Tests.Utils
 {
     [TestFixture]
-    class SettingsRestoreTest
+    class SettingsCleanerTest
     {
-        private SettingsRestore _uut;
+        private SettingsCleaner _uut;
         private Mock<ISettingsStore> _mockSettingsStore;
-        private Mock<IDEEventLogFileManager> _mockLogFileManager;
+        private Mock<ILogManager<IDEEvent>> _mockLogFileManager;
 
         [SetUp]
         public void SetUp()
         {
             _mockSettingsStore = new Mock<ISettingsStore>();
-            _mockLogFileManager = new Mock<IDEEventLogFileManager>();
+            _mockLogFileManager = new Mock<ILogManager<IDEEvent>>();
+            Registry.RegisterComponent(_mockSettingsStore.Object);
+            Registry.RegisterComponent(_mockLogFileManager.Object);
 
-            _uut = new SettingsRestore(_mockSettingsStore.Object, _mockLogFileManager.Object);
+            _uut = new SettingsCleaner();
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            Registry.Clear();
         }
 
         [Test]
         public void SettingsWillBeRestoredToDefaultValue()
         {
-            _uut.RestoreDefaultSettings();
+            _uut.Execute(new Mock<IDataContext>().Object, null);
 
             _mockSettingsStore.Verify(s => s.ResetSettings<UploadSettings>());
             _mockSettingsStore.Verify(s => s.ResetSettings<ExportSettings>());

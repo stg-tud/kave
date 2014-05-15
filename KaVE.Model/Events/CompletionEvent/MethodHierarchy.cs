@@ -12,7 +12,12 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sebastian Proksch
+ *    - Sven Amann
  */
+
 using System.Runtime.Serialization;
 using KaVE.JetBrains.Annotations;
 using KaVE.Model.Names;
@@ -42,6 +47,15 @@ namespace KaVE.Model.Events.CompletionEvent
         /// </summary>
         [DataMember]
         public IMethodName First { get; set; }
+
+        /// <summary>
+        ///     Wheather or not this is a hierarchy of a method that overrides or implements a declaration from further up in the
+        ///     type hierarchy.
+        /// </summary>
+        public bool IsOverrideOrImplementation
+        {
+            get { return First != null; }
+        }
 
         public MethodHierarchy([NotNull] IMethodName methodName)
         {

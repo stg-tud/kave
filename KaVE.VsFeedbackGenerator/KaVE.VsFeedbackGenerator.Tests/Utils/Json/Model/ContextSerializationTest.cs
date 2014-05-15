@@ -12,14 +12,16 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sven Amann
  */
 
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Runtime.Serialization.Formatters;
 using KaVE.Model.Events.CompletionEvent;
 using KaVE.Model.Names;
-using KaVE.VsFeedbackGenerator.Tests.TestFactories;
+using KaVE.TestUtils.Model.Names;
 using KaVE.VsFeedbackGenerator.Utils.Json;
 using Newtonsoft.Json;
 using NUnit.Framework;

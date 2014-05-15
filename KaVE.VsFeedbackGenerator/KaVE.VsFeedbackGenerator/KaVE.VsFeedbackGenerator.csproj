@@ -91,11 +91,13 @@
     <Reference Include="System.Xaml" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AboutAction.cs" />
     <Compile Include="Analysis\CalledMethodsAnalysis.cs" />
+    <Compile Include="Analysis\CalledMethodsForEntryPointsAnalysis.cs" />
     <Compile Include="Analysis\CompletionTargetAnalysis.cs" />
     <Compile Include="Analysis\ContextAnalysis.cs" />
     <Compile Include="Analysis\TypeHierarchyAnalysisUtils.cs" />
@@ -219,7 +221,7 @@
     <Compile Include="Utils\Logging\LogFileManager.cs" />
     <Compile Include="Utils\Names\ReSharperDeclarationNameFactory.cs" />
     <Compile Include="Utils\Registry.cs" />
-    <Compile Include="Utils\SettingsRestore.cs" />
+    <Compile Include="Utils\SettingsCleaner.cs" />
     <Compile Include="Utils\SettingsStore.cs" />
     <Compile Include="SessionManager\UploadReminder.cs" />
     <Compile Include="Utils\InverseBoolConverter.cs" />
@@ -242,7 +244,9 @@
     <Compile Include="VsIntegration\IDESessionSettings.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Actions.xml" />
+    <EmbeddedResource Include="Actions.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\PopupNotification.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>PopupNotification.Designer.cs</LastGenOutput>

@@ -24,6 +24,7 @@ using JetBrains.ReSharper.Psi.CSharp.Resolve;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Resolve;
 using JetBrains.ReSharper.Psi.Tree;
+using KaVE.Model.Events.CompletionEvent;
 using KaVE.Model.Names;
 using KaVE.Utils.Assertion;
 using KaVE.VsFeedbackGenerator.Utils.Names;
@@ -33,17 +34,17 @@ namespace KaVE.VsFeedbackGenerator.Analysis
 {
     internal class CalledMethodsAnalysis
     {
-        public ISet<IMethodName> Analyze(IMethodDeclaration methodDeclaration, ITypeName enclosingType)
+        public CollectionContext Analyze(IMethodDeclaration methodDeclaration, TypeShape typeShape)
         {
             var context = new CollectionContext();
             if (methodDeclaration.Body != null)
             {
-                methodDeclaration.Body.Accept(new MethodInvocationCollector(enclosingType), context);
+                methodDeclaration.Body.Accept(new MethodInvocationCollector(typeShape), context);
             }
-            return context.CalledMethods;
+            return context;
         }
 
-        private class CollectionContext
+        internal class CollectionContext
         {
             public readonly ISet<IMethodName> CalledMethods = new HashSet<IMethodName>();
             public readonly ISet<IMethodName> AnalyzedMethods = new HashSet<IMethodName>();
@@ -51,11 +52,11 @@ namespace KaVE.VsFeedbackGenerator.Analysis
 
         private class MethodInvocationCollector : TreeNodeVisitor<CollectionContext>
         {
-            private readonly ITypeName _enclosingType;
+            private readonly TypeShape _typeShape;
 
-            public MethodInvocationCollector(ITypeName enclosingType)
+            public MethodInvocationCollector(TypeShape typeShape)
             {
-                _enclosingType = enclosingType;
+                _typeShape = typeShape;
             }
 
             public override void VisitNode(ITreeNode node, CollectionContext context)
@@ -111,12 +112,17 @@ namespace KaVE.VsFeedbackGenerator.Analysis
 
             private bool IsEntryPoint(IMethodName methodName, DeclaredElementInstance<IMethod> method)
             {
-                return !IsLocalHelper(methodName) || method.Element.IsOverride || method.Element.IsAbstract;
+                return !IsLocalHelper(methodName) || IsOverrideOrImplementation(methodName) || method.Element.IsAbstract;
+            }
+
+            private bool IsOverrideOrImplementation(IMethodName methodName)
+            {
+                return _typeShape.MethodHierarchies.Any(mh => mh.Element == methodName && mh.IsOverrideOrImplementation);
             }
 
             private bool IsLocalHelper(IMemberName method)
             {
-                return _enclosingType == method.DeclaringType;
+                return _typeShape.TypeHierarchy.Element == method.DeclaringType;
             }
 
             private void TrackCallsInMethod(CollectionContext context, IMethodName methodName, DeclaredElementInstance<IMethod> method)

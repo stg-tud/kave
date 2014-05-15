@@ -12,14 +12,16 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Uli Fahrer
+ *    - Sven Amann
  */
 
-using System;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using JetBrains.ActionManagement;
-using JetBrains.Threading;
 using KaVE.Utils;
 using KaVE.VsFeedbackGenerator.Interactivity;
 using KaVE.VsFeedbackGenerator.TrayNotification;
@@ -33,12 +35,16 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
     public partial class SessionManagerControl
     {
         private readonly FeedbackViewModel _feedbackViewModel;
+        private readonly IActionManager _actionManager;
+        private readonly ISettingsStore _settingsStore;
         private ScheduledAction _releaseTimer;
 
-        public SessionManagerControl(FeedbackViewModel feedbackViewModel)
+        public SessionManagerControl(FeedbackViewModel feedbackViewModel, IActionManager actionManager, ISettingsStore settingsStore)
         {
             _releaseTimer = ScheduledAction.NoOp;
             _feedbackViewModel = feedbackViewModel;
+            _actionManager = actionManager;
+            _settingsStore = settingsStore;
             DataContext = feedbackViewModel;
 
             _feedbackViewModel.ConfirmationRequest.Raised += new ConfirmationRequestHandler(this).Handle;
@@ -55,7 +61,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
 
         private void UploadOptionsRequestOnRaised(object sender, InteractionRequestedEventArgs<UploadWizard.UploadOptions> args)
         {
-            var uploadWizard = new UploadWizard();
+            var uploadWizard = new UploadWizard(_actionManager, _settingsStore);
             uploadWizard.ShowDialog();
             args.Notification.Type = uploadWizard.ResultType;
             args.Callback();
@@ -119,9 +125,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
 
         private void OpenOptionPage_OnClick(object sender, RoutedEventArgs e)
         {
-            var actionManager = Registry.GetComponent<IActionManager>();
-            var threading = Registry.GetComponent<IThreading>();
-            actionManager.ExecuteActionGuarded("ShowOptions", threading, "AgentAction");
+            _actionManager.ExecuteActionGuarded("ShowOptions", "AgentAction");
         }
 
         private void SessionManagerControl_OnLostFocus(object sender, RoutedEventArgs e)

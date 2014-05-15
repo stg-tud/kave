@@ -25,8 +25,9 @@ namespace KaVE.VsFeedbackGenerator.Utils
 {
     public static class ActionManagerExtensions
     {
-        public static void ExecuteActionGuarded(this IActionManager actionManager, string actionId, IThreading threading, string executeName)
+        public static void ExecuteActionGuarded(this IActionManager actionManager, string actionId, string executeName)
         {
+            var threading = Registry.GetComponent<IThreading>();
             var action = actionManager.GetExecutableAction(actionId);
             if (action != null)
             {

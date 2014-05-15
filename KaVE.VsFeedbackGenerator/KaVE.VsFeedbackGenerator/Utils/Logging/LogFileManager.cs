@@ -12,7 +12,12 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sven Amann
+ *    - Uli Fahrer
  */
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -24,12 +29,13 @@ namespace KaVE.VsFeedbackGenerator.Utils.Logging
 {
     public class LogFileManager<TLogEntry> : ILogManager<TLogEntry> where TLogEntry : class
     {
+        private readonly IIoUtils _ioUtils;
         internal const string LogDirectoryPrefix = "Log_";
 
         public LogFileManager([NotNull] string baseLocation)
         {
             BaseLocation = baseLocation;
-            CreateLogFileDirectory();
+            _ioUtils = Registry.GetComponent<IIoUtils>();
         }
 
         public string BaseLocation { get; private set; }
@@ -37,11 +43,6 @@ namespace KaVE.VsFeedbackGenerator.Utils.Logging
         public IEnumerable<ILog<TLogEntry>> GetLogs()
         {
             return Directory.GetFiles(BaseLocation, LogDirectoryPrefix + "*").Select(CreateLogFile);
-        }
-
-        private void CreateLogFileDirectory()
-        {
-            Directory.CreateDirectory(BaseLocation);
         }
 
         private static LogFile<TLogEntry> CreateLogFile(string logDirectoryPath)
@@ -54,10 +55,9 @@ namespace KaVE.VsFeedbackGenerator.Utils.Logging
             GetLogs().Where(log => log.Date < time).ForEach(log => log.Delete());
         }
 
-        public virtual void DeleteLogFileDirectory()
+        public void DeleteLogFileDirectory()
         {
-            Directory.Delete(BaseLocation, true);
-            CreateLogFileDirectory();
+            _ioUtils.DeleteDirectoryWithContent(BaseLocation);
         }
 
         public ILog<TLogEntry> CurrentLog

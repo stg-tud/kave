@@ -23,7 +23,7 @@ using KaVE.Model.Events;
 using KaVE.Model.Events.CompletionEvent;
 using KaVE.Model.Names.CSharp;
 using KaVE.Model.Names.VisualStudio;
-using KaVE.VsFeedbackGenerator.Tests.TestFactories;
+using KaVE.TestUtils.Model.Names;
 using KaVE.VsFeedbackGenerator.Utils.Json;
 using NUnit.Framework;
 

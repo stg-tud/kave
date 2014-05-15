@@ -45,6 +45,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Events\CompletionEvent\MethodHierarchyTest.cs" />
     <Compile Include="Events\CompletionEvent\TypeHierarchyTest.cs" />
     <Compile Include="Events\IDEEventTest.cs" />
     <Compile Include="Names\CSharp\AssemblyNameTest.cs" />

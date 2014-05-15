@@ -21,7 +21,6 @@ using System;
 using System.Windows;
 using System.Windows.Controls.Primitives;
 using JetBrains.ActionManagement;
-using JetBrains.Threading;
 using KaVE.VsFeedbackGenerator.Interactivity;
 using KaVE.VsFeedbackGenerator.SessionManager.Presentation;
 using KaVE.VsFeedbackGenerator.Utils;
@@ -30,6 +29,9 @@ namespace KaVE.VsFeedbackGenerator.TrayNotification
 {
     public partial class UploadWizard
     {
+        private readonly IActionManager _actionManager;
+        private readonly ISettingsStore _settingsStore;
+
         public class UploadOptions : Notification
         {
             public enum ExportType
@@ -44,8 +46,10 @@ namespace KaVE.VsFeedbackGenerator.TrayNotification
         public bool IsUploadExport { get; private set; }
         public UploadOptions.ExportType? ResultType { get; private set; }
 
-        public UploadWizard()
+        public UploadWizard(IActionManager actionManager, ISettingsStore settingsStore)
         {
+            _actionManager = actionManager;
+            _settingsStore = settingsStore;
             InitializeComponent();
 
             IsZipExport = false;
@@ -56,8 +60,7 @@ namespace KaVE.VsFeedbackGenerator.TrayNotification
 
         private void LoadCheckboxState()
         {
-            var settingsStore = Registry.GetComponent<ISettingsStore>();
-            var settings = settingsStore.GetSettings<ExportSettings>();
+            var settings = _settingsStore.GetSettings<ExportSettings>();
 
             BindCheckbox(NamesCheckBox, settings.RemoveCodeNames, (s, v) => s.RemoveCodeNames = v);
             BindCheckbox(DurationCheckBox, settings.RemoveDurations, (s, v) => s.RemoveDurations = v);
@@ -94,9 +97,7 @@ namespace KaVE.VsFeedbackGenerator.TrayNotification
 
         private void On_Review_Click(object sender, RoutedEventArgs e)
         {
-            var actionManager = Registry.GetComponent<IActionManager>();
-            var threading = Registry.GetComponent<IThreading>();
-            actionManager.ExecuteActionGuarded("KaVE.VsFeedbackGenerator.SessionManager", threading, "AgentAction");
+            _actionManager.ExecuteActionGuarded("KaVE.VsFeedbackGenerator.SessionManager",  "AgentAction");
         }
 
         private void UploadButtonClicked(object sender, RoutedEventArgs e)

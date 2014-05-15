@@ -38,7 +38,7 @@ namespace KaVE.VsFeedbackGenerator.Generators
 
         private IDEEvent _lastEvent;
 
-        public EventLogger(IMessageBus messageBus, IDEEventLogFileManager logManager)
+        public EventLogger(IMessageBus messageBus, ILogManager<IDEEvent> logManager)
         {
             _messageChannel = messageBus;
             _logManager = logManager;

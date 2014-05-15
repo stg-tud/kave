@@ -12,12 +12,17 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sven Amann
  */
+
 using System.Linq;
 using JetBrains.ActionManagement;
 using JetBrains.Application;
 using JetBrains.DataFlow;
 using KaVE.VsFeedbackGenerator.MessageBus;
+using KaVE.VsFeedbackGenerator.Utils;
 using KaVE.VsFeedbackGenerator.VsIntegration;
 
 namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
@@ -25,11 +30,22 @@ namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
     [ShellComponent]
     internal class ActionEventInstrumentationComponent
     {
-        public ActionEventInstrumentationComponent(Lifetime lifetime, IActionManager actionManager, IIDESession session, IMessageBus messageBus)
+        public ActionEventInstrumentationComponent(Lifetime lifetime,
+            IActionManager actionManager,
+            IIDESession session,
+            IMessageBus messageBus)
         {
             foreach (var updatableAction in actionManager.GetAllActions().OfType<IUpdatableAction>())
             {
-                updatableAction.AddHandler(lifetime, new EventGeneratingActionHandler(updatableAction, session, messageBus));
+                // We cannot reset settings if an event is logged when executing this action,
+                // because deleting the log file and writing the event create a conflict.
+                if (updatableAction.Id == SettingsCleaner.ActionId)
+                {
+                    continue;
+                }
+                updatableAction.AddHandler(
+                    lifetime,
+                    new EventGeneratingActionHandler(updatableAction, session, messageBus));
             }
         }
     }

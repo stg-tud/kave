@@ -119,7 +119,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SessionManager\EventViewTest.cs" />
     <Compile Include="SessionManager\Presentation\ContextVisualizationConverterTest.cs" />
-    <Compile Include="TestFactories\TestNameFactory.cs" />
     <Compile Include="Utils\DateTimeTest.cs" />
     <Compile Include="Utils\ExporterTest.cs" />
     <Compile Include="Utils\GZipStreamTest.cs" />
@@ -150,7 +149,7 @@
     <Compile Include="TestFactories\TypeMockUtils.cs" />
     <Compile Include="Utils\Names\VsComponentNameFactoryTest.cs" />
     <Compile Include="Utils\ObjectToVisibilityConverterTest.cs" />
-    <Compile Include="Utils\SettingsRestoreTest.cs" />
+    <Compile Include="Utils\SettingsCleanerTest.cs" />
     <Compile Include="Utils\SettingsStoreTest.cs" />
     <Compile Include="Utils\StringUtilsTest.cs" />
     <Compile Include="Utils\TestDateUtils.cs" />
