@@ -169,7 +169,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
             Assert.IsNotNull(byteArrayContent);
 
             Assert.AreEqual("file", byteArrayContent.Headers.ContentDisposition.Name);
-            Assert.AreEqual("tmp.log", byteArrayContent.Headers.ContentDisposition.FileName);
+            Assert.AreEqual("tmp.zip", byteArrayContent.Headers.ContentDisposition.FileName);
 
             return byteArrayContent.ReadAsByteArrayAsync().Result.AsString();
         }
