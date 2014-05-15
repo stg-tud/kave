@@ -12,8 +12,14 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Dennis Albrecht
+ *    - Sebastian Proksch
  */
+
 using System;
+using System.IO;
 using KaVE.Utils.Assertion;
 using KaVE.VsFeedbackGenerator.Utils;
 using Moq;
@@ -25,57 +31,48 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
     internal class FilePublisherTest
     {
         private Mock<IIoUtils> _ioMock;
-        private const string SrcLoc = "existing source file";
-        private const string TrgLoc = "existing target file";
+        private const string SomeTargetLocation = "existing target file";
+        private MemoryStream _stream;
 
         [SetUp]
         public void SetUp()
         {
             _ioMock = new Mock<IIoUtils>();
-            _ioMock.Setup(io => io.FileExists(SrcLoc)).Returns(true);
             Registry.RegisterComponent(_ioMock.Object);
+            _stream = new MemoryStream();
         }
 
         [Test]
         public void ShouldInvokeCopy()
         {
-            var uut = new FilePublisher(() => TrgLoc);
-            uut.Publish(SrcLoc);
+            var uut = new FilePublisher(() => SomeTargetLocation);
+            uut.Publish(_stream);
 
-            _ioMock.Verify(m => m.CopyFile(SrcLoc, TrgLoc));
+            _ioMock.Verify(m => m.WriteAllByte(It.IsAny<byte[]>(), SomeTargetLocation));
         }
 
         [Test, ExpectedException(typeof (AssertException))]
-        public void ShouldThrowExceptionOnNonexistingSourceFile()
-        {
-            var uut = new FilePublisher(() => TrgLoc);
-            uut.Publish("some illegal location");
-        }
-
-        [Test, ExpectedException(typeof(AssertException))]
         public void ShouldThrowExceptionOnNullArgument()
         {
             var uut = new FilePublisher(() => null);
-            uut.Publish(SrcLoc);
+            uut.Publish(_stream);
         }
 
         [Test, ExpectedException(typeof (AssertException))]
         public void ShouldThrowExceptionOnEmptyArgument()
         {
             var uut = new FilePublisher(() => "");
-            uut.Publish(SrcLoc);
+            uut.Publish(_stream);
         }
 
-        private const string CopyFailureMessage = "Datei-Zugriff verweigert";
+        private const string CopyFailureMessage = "Datei-Export fehlgeschlagen: XYZ";
 
-        [Test,
-         ExpectedException(typeof (AssertException),
-             ExpectedMessage = "Datei-Export fehlgeschlagen: " + CopyFailureMessage)]
+        [Test, ExpectedException(typeof (AssertException), ExpectedMessage = CopyFailureMessage)]
         public void ShouldThrowExceptionIfCopyFails()
         {
-            _ioMock.Setup(io => io.CopyFile(SrcLoc, TrgLoc)).Throws(new Exception(CopyFailureMessage));
-            var uut = new FilePublisher(() => TrgLoc);
-            uut.Publish(SrcLoc);
+            _ioMock.Setup(io => io.WriteAllByte(It.IsAny<byte[]>(), SomeTargetLocation)).Throws(new Exception("XYZ"));
+            var uut = new FilePublisher(() => SomeTargetLocation);
+            uut.Publish(_stream);
         }
 
         [TearDown]

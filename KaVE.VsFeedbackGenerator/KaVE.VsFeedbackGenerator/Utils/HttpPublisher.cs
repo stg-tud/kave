@@ -12,8 +12,14 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Dennis Albrecht
+ *    - Sebastian Proksch
  */
+
 using System;
+using System.IO;
 using System.Net.Http;
 using JetBrains.Util;
 using KaVE.JetBrains.Annotations;
@@ -34,11 +40,10 @@ namespace KaVE.VsFeedbackGenerator.Utils
             _ioUtils = Registry.GetComponent<IIoUtils>();
         }
 
-        public void Publish(string srcFilename)
+        public void Publish(MemoryStream stream)
         {
-            Asserts.That(_ioUtils.FileExists(srcFilename));
-
-            var content = CreateMultipartContent(srcFilename, "tmp.log");
+            Asserts.That(stream.CanRead);
+            var content = CreateMultipartContent(stream, "tmp.zip");
             var response = _ioUtils.TransferByHttp(content, _hostAddress);
             var json = response.Content.ReadAsStringAsync().Result;
 
@@ -58,12 +63,11 @@ namespace KaVE.VsFeedbackGenerator.Utils
             Asserts.That(res.Status == State.Ok, Messages.ServerResponseRequestFailure, res.Message);
         }
 
-        private HttpContent CreateMultipartContent([NotNull] string file, [NotNull] string name)
+        private HttpContent CreateMultipartContent([NotNull] MemoryStream stream, [NotNull] string name)
         {
-            var content = _ioUtils.ReadFile(file);
             return new MultipartFormDataContent
             {
-                {new ByteArrayContent(content.AsBytes()), "file", name}
+                {new ByteArrayContent(stream.ToArray()), "file", name}
             };
         }
 

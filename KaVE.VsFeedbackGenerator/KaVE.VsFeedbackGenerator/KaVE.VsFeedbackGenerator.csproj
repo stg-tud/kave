@@ -205,7 +205,6 @@
     <Compile Include="SessionManager\FeedbackViewModel.cs" />
     <Compile Include="MessageBus\TinyMessenger.cs" />
     <Compile Include="Utils\DateUtils.cs" />
-    <Compile Include="Utils\ExportCommandFactory.cs" />
     <Compile Include="Utils\Exporter.cs" />
     <Compile Include="Utils\FilePublisher.cs" />
     <Compile Include="Utils\HttpPublisher.cs" />

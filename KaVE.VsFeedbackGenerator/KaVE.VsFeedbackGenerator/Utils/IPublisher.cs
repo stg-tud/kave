@@ -12,11 +12,18 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Dennis Albrecht
+ *    - Sebastian Proksch
  */
+
+using System.IO;
+
 namespace KaVE.VsFeedbackGenerator.Utils
 {
     public interface IPublisher
     {
-        void Publish(string srcFilename);
+        void Publish(MemoryStream stream);
     }
 }

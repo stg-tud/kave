@@ -9,6 +9,9 @@
 //------------------------------------------------------------------------------
 
 namespace KaVE.VsFeedbackGenerator.Properties {
+    using System;
+    
+    
     /// <summary>
     ///   A strongly-typed resource class, for looking up localized strings, etc.
     /// </summary>
@@ -355,7 +358,7 @@ namespace KaVE.VsFeedbackGenerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Log files (*.log)|*.log|All files (*.*)|*.*.
+        ///   Looks up a localized string similar to Zip files (*.zip)|*.zip|All files (*.*)|*.*.
         /// </summary>
         public static string SaveFileDialogFilter {
             get {

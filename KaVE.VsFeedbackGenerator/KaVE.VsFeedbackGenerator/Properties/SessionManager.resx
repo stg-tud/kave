@@ -223,7 +223,7 @@
     <value>Das Exportieren/Versenden von {0} Events war erfolgreich</value>
   </data>
   <data name="SaveFileDialogFilter" xml:space="preserve">
-    <value>Log files (*.log)|*.log|All files (*.*)|*.*</value>
+    <value>Zip files (*.zip)|*.zip|All files (*.*)|*.*</value>
   </data>
   <data name="DesignView" xml:space="preserve">
     <value>Design</value>

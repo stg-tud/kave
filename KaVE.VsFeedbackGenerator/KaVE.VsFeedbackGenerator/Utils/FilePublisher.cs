@@ -12,8 +12,14 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Dennis Albrecht
+ *    - Sebastian Proksch
  */
+
 using System;
+using System.IO;
 using JetBrains.Util;
 using KaVE.JetBrains.Annotations;
 using KaVE.Utils.Assertion;
@@ -32,15 +38,14 @@ namespace KaVE.VsFeedbackGenerator.Utils
             _ioUtils = Registry.GetComponent<IIoUtils>();
         }
 
-        public void Publish(string srcFilename)
+        public void Publish(MemoryStream stream)
         {
-            var targetFilename = _requestFileLocation();
-            Asserts.That(_ioUtils.FileExists(srcFilename));
-            Asserts.Not(targetFilename.IsNullOrEmpty(), Messages.NoFileGiven);
+            var filename = _requestFileLocation();
+            Asserts.Not(filename.IsNullOrEmpty(), Messages.NoFileGiven);
 
             try
             {
-                _ioUtils.CopyFile(srcFilename, targetFilename);
+                _ioUtils.WriteAllByte(stream.ToArray(), filename);
             }
             catch (Exception e)
             {

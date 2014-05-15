@@ -21,6 +21,7 @@
 
 using System.Collections.Generic;
 using System.IO;
+using Ionic.Zip;
 using JetBrains.Application;
 using KaVE.Model.Events;
 using KaVE.VsFeedbackGenerator.Utils.Json;
@@ -35,19 +36,29 @@ namespace KaVE.VsFeedbackGenerator.Utils
     [ShellComponent]
     internal class Exporter : IExporter
     {
-        private readonly IIoUtils _ioUtils = Registry.GetComponent<IIoUtils>();
-
         public void Export(IEnumerable<IDEEvent> events, IPublisher publisher)
         {
-            var tempFileName = _ioUtils.GetTempFileName();
-            using (var stream = _ioUtils.OpenFile(tempFileName, FileMode.Open, FileAccess.Write))
+            using (var stream = new MemoryStream())
             {
-                using (var logWriter = new JsonLogWriter<IDEEvent>(stream))
-                {
-                    logWriter.WriteAll(events);
-                }
+                CreateZipFile(events, stream);
+
+                publisher.Publish(stream);
             }
-            publisher.Publish(tempFileName);
+        }
+
+        private static void CreateZipFile(IEnumerable<IDEEvent> events, Stream stream)
+        {
+            using (var zipFile = new ZipFile())
+            {
+                int i = 0;
+                foreach (var e in events)
+                {
+                    var fileName = (i++) + "-" + e.GetType().Name + ".json";
+                    var json = e.ToFormattedJson();
+                    zipFile.AddEntry(fileName, json);
+                }
+                zipFile.Save(stream);
+            }
         }
     }
 }

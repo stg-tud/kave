@@ -12,8 +12,14 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Dennis Albrecht
+ *    - Sebastian Proksch
  */
+
 using System;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using KaVE.JetBrains.Annotations;
@@ -27,8 +33,8 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
     [TestFixture]
     internal class HttpPublisherTest
     {
-        private const string ExistingFile = "arbitrary existing file";
         private const string FileContent = "arbitrary file content";
+        private MemoryStream _stream;
 
         private static readonly Uri ValidUri = new Uri("http://server");
 
@@ -39,10 +45,9 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
         public void SetUp()
         {
             _ioUtilsMock = new Mock<IIoUtils>();
-            _ioUtilsMock.Setup(io => io.FileExists(ExistingFile)).Returns(true);
-            _ioUtilsMock.Setup(io => io.ReadFile(ExistingFile)).Returns(FileContent);
             Registry.RegisterComponent(_ioUtilsMock.Object);
             _uut = new HttpPublisher(ValidUri);
+            _stream = new MemoryStream();
         }
 
         [TearDown]
@@ -51,20 +56,14 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
             Registry.Clear();
         }
 
-        [Test, ExpectedException(typeof (AssertException))]
-        public void ShouldThrowExceptionOnNonexistingSourceFile()
-        {
-            _uut.Publish("some illegal path");
-        }
-
         [Test]
         public void ShouldInvokeTransferToCorrectUri()
         {
             var resp = CreateResponse(true);
             SetupResponse(resp);
 
-            _uut.Publish(ExistingFile);
-            _ioUtilsMock.Verify(m => m.TransferByHttp(It.IsAny<HttpContent>(), ValidUri, It.IsAny<int>()));
+            _uut.Publish(_stream);
+            _ioUtilsMock.Verify(io => io.TransferByHttp(It.IsAny<HttpContent>(), ValidUri, It.IsAny<int>()));
         }
 
         [Test]
@@ -79,7 +78,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
                     return CreateResponse(true);
                 });
 
-            _uut.Publish(ExistingFile);
+            _uut.Publish(new MemoryStream(FileContent.AsBytes()));
 
             var actual = ReadFirstContent(lastUploadedContent);
             Assert.AreEqual(FileContent, actual);
@@ -92,7 +91,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
         {
             _ioUtilsMock.Setup(io => io.TransferByHttp(It.IsAny<HttpContent>(), ValidUri, It.IsAny<int>()))
                         .Throws(new AssertException(TransferFailMessage));
-            _uut.Publish(ExistingFile);
+            _uut.Publish(_stream);
         }
 
         [Test,
@@ -106,37 +105,32 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
             };
             SetupResponse(resp);
 
-            _uut.Publish(ExistingFile);
+            _uut.Publish(_stream);
         }
-
-        private const string NotParsableServerResponse = "Not Json-parsable";
 
         [Test,
          ExpectedException(typeof (AssertException),
-             ExpectedMessage =
-                 "Antwort des Servers entspricht nicht dem erwarteten Format: " + NotParsableServerResponse)]
+             ExpectedMessage = "Antwort des Servers entspricht nicht dem erwarteten Format: XYZ")]
         public void ShouldFailIfMessageCannotBeParsed()
         {
             var resp = new HttpResponseMessage
             {
-                Content = new StringContent(NotParsableServerResponse)
+                Content = new StringContent("XYZ")
             };
             SetupResponse(resp);
 
-            _uut.Publish(ExistingFile);
+            _uut.Publish(_stream);
         }
-
-        private const string ServerResponseMessageOnFailure = "Datei kann nicht gelesen werden";
 
         [Test,
          ExpectedException(typeof (AssertException),
-             ExpectedMessage = "Server meldet eine fehlerhafte Anfrage: " + ServerResponseMessageOnFailure)]
+             ExpectedMessage = "Server meldet eine fehlerhafte Anfrage: XYZ")]
         public void ShouldFailIfStateIsNotOk()
         {
-            var resp = CreateResponse(false, ServerResponseMessageOnFailure);
+            var resp = CreateResponse(false, "XYZ");
             SetupResponse(resp);
 
-            _uut.Publish(ExistingFile);
+            _uut.Publish(_stream);
         }
 
         private void SetupResponse(HttpResponseMessage resp)
@@ -147,8 +141,8 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
 
         private static HttpResponseMessage CreateResponse(bool isSuccessful, string message = null)
         {
-            string state = isSuccessful ? "Ok" : "Fail";
-            string responseMessage = "";
+            var state = isSuccessful ? "Ok" : "Fail";
+            var responseMessage = "";
             if (message != null)
             {
                 responseMessage = ",\"Message\": \"" + message + "\"";

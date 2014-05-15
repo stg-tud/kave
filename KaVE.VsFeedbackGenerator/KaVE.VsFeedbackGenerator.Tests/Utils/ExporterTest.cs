@@ -15,13 +15,19 @@
  * 
  * Contributors:
  *    - Dennis Albrecht
+ *    - Sebastian Proksch
  */
 
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using Ionic.Zip;
 using KaVE.Model.Events;
+using KaVE.Model.Events.VisualStudio;
 using KaVE.TestUtils.Model.Events;
 using KaVE.Utils.Assertion;
+using KaVE.VsFeedbackGenerator.Tests.Utils.Json;
 using KaVE.VsFeedbackGenerator.Utils;
 using KaVE.VsFeedbackGenerator.Utils.Json;
 using Moq;
@@ -32,31 +38,22 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
     [TestFixture]
     internal class ExporterTest
     {
-        private const string ArbitraryFileName = "file";
-        private Mock<IIoUtils> _ioUtilsMock;
         private Mock<IPublisher> _publisherMock;
         private Exporter _sut;
-        private MemoryStream _memoryStream;
+        private MemoryStream _lastPublishedStream;
 
         [SetUp]
         public void SetUp()
         {
-            _ioUtilsMock = new Mock<IIoUtils>();
-            _ioUtilsMock.Setup(io => io.GetTempFileName()).Returns(ArbitraryFileName);
-            _memoryStream = new MemoryStream();
-            _ioUtilsMock.Setup(io => io.OpenFile(ArbitraryFileName, FileMode.Open, FileAccess.Write)).Returns(_memoryStream);
-            Registry.RegisterComponent(_ioUtilsMock.Object);
             _publisherMock = new Mock<IPublisher>();
+            _publisherMock.Setup(p => p.Publish(It.IsAny<MemoryStream>())).Callback<MemoryStream>(
+                stream => { _lastPublishedStream = new MemoryStream(stream.ToArray()); });
+
             _sut = new Exporter();
         }
 
-        [TearDown]
-        public void TearDown()
-        {
-            Registry.Clear();
-        }
-
-        [Test, Ignore("multiple enumerations on (lazy) enumerable"), ExpectedException(typeof(AssertException), ExpectedMessage = "no events")]
+        [Test, Ignore("multiple enumerations on (lazy) enumerable"),
+         ExpectedException(typeof (AssertException), ExpectedMessage = "no events")]
         public void ShouldFailWithNoEvents()
         {
             _sut.Export(new List<IDEEvent>(), _publisherMock.Object);
@@ -66,33 +63,93 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
         public void ShouldInvokePublisher()
         {
             var events = IDEEventTestFactory.CreateAnonymousEvents(25);
-
             _sut.Export(events, _publisherMock.Object);
-
-            _publisherMock.Verify(p => p.Publish(ArbitraryFileName));
+            _publisherMock.Verify(p => p.Publish(It.IsAny<MemoryStream>()));
         }
 
         [Test]
-        public void ShouldWriteEventsToTempFile()
+        public void ShouldCreateOneFilePerEvent()
         {
             var events = IDEEventTestFactory.CreateAnonymousEvents(25);
-
             _sut.Export(events, _publisherMock.Object);
-
-            JsonLogAssert_StreamContainsEntries(_memoryStream, events);
+            var zipFile = GetZipFileFromExport();
+            Assert.AreEqual(25, zipFile.Entries.Count);
         }
 
-        private static void JsonLogAssert_StreamContainsEntries(MemoryStream stream, IEnumerable<IDEEvent> expected)
+        [Test]
+        public void ShouldPersistAllProvidedEvents()
         {
-            JsonLogAssert_StreamContainsEntries((Stream)new MemoryStream(stream.ToArray()), expected);
+            var expecteds = IDEEventTestFactory.CreateAnonymousEvents(25);
+            _sut.Export(expecteds, _publisherMock.Object);
+            var zipFile = GetZipFileFromExport();
+
+            var actuals = zipFile.Entries.Select(ExtractIDEEvent);
+
+            CollectionAssert.AreEquivalent(expecteds, actuals);
         }
 
-        private static void JsonLogAssert_StreamContainsEntries(Stream stream, IEnumerable<IDEEvent> expected)
+        [Test]
+        public void ShouldIncludeEventTypeInFileName()
         {
-            using (var reader = new JsonLogReader<IDEEvent>(stream))
+            var expected = new WindowEvent();
+            _sut.Export(new List<IDEEvent> {expected}, _publisherMock.Object);
+
+            var zipFile = GetZipFileFromExport();
+            var entry = zipFile["0-WindowEvent.json"];
+            Assert.NotNull(entry);
+
+            var actual = ExtractIDEEvent(entry);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test, Ignore("manual test that the server receives valid file - RealLifeExample part 1")]
+        public void ShouldUploadValidZipToServer()
+        {
+            Registry.RegisterComponent(new IoUtils() as IIoUtils);
+            _sut.Export(
+                EventsForRealLifeExample,
+                new HttpPublisher(new Uri("http://kave.st.informatik.tu-darmstadt.de:667/upload")));
+            Registry.Clear();
+        }
+
+        [Test, Ignore("manual test that the server received valid file - RealLifeExample part 2")]
+        public void ShouldCompareUploadedFile()
+        {
+            var zipFile = new ZipFile(@"C:\compare.zip");
+            var actual = zipFile.Entries.Select(ExtractIDEEvent);
+            CollectionAssert.AreEquivalent(EventsForRealLifeExample, actual);
+        }
+
+        private IEnumerable<IDEEvent> EventsForRealLifeExample
+        {
+            get
             {
-                var actual = reader.ReadAll();
-                CollectionAssert.AreEqual(expected, actual);
+                return new List<IDEEvent>
+                {
+                    new WindowEvent {TriggeredAt = new DateTime(2014, 1, 1)},
+                    new WindowEvent {TriggeredAt = new DateTime(2014, 1, 2)}
+                };
+            }
+        }
+
+        private ZipFile GetZipFileFromExport()
+        {
+            var tempFileName = Path.GetTempFileName();
+            using (var fileStream = File.Open(tempFileName, FileMode.Create))
+            {
+                _lastPublishedStream.CopyTo(fileStream);
+            }
+            var zipFile = new ZipFile(tempFileName);
+            return zipFile;
+        }
+
+        private static IDEEvent ExtractIDEEvent(ZipEntry entry)
+        {
+            using (var out2 = new MemoryStream())
+            {
+                entry.Extract(out2);
+                var json = out2.AsString();
+                return json.ParseJsonTo<IDEEvent>();
             }
         }
     }
