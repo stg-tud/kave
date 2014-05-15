@@ -17,8 +17,8 @@
  *    - Sven Amann
  */
 
+using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
@@ -66,6 +66,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis
                 typeDeclaration.MemberDeclarations.OfType<IMethodDeclaration>()
                                .Where(md => !md.IsAbstract)
                                .Select(md => new EntryPoint {Declaration = md, Name = md.GetName()})
+                               .Where(nmd => nmd.Name != null)
                                .ToList();
         }
 
@@ -82,11 +83,20 @@ namespace KaVE.VsFeedbackGenerator.Analysis
         private IEnumerable<KeyValuePair<IMethodName, ISet<IMethodName>>> Analyze(IEnumerable<EntryPoint> entryPoints,
             ISet<IMethodName> allAnalyzedMethods)
         {
-            var result = new Collection<KeyValuePair<IMethodName, ISet<IMethodName>>>();
+            var result = new Dictionary<IMethodName, ISet<IMethodName>>();
             foreach (var entryPoint in entryPoints)
             {
                 var partialResult = Analyze(entryPoint, allAnalyzedMethods);
-                result.Add(new KeyValuePair<IMethodName, ISet<IMethodName>>(entryPoint.Name, partialResult));
+                try
+                {
+                    result.Add(entryPoint.Name, partialResult);
+                }
+                catch (ArgumentException)
+                {
+                    // this happens in case of duplicated methods in a class,
+                    // the only thing we can do here is to skip the second
+                    // method, because only one entry per key is possible.
+                }
             }
             return result;
         }
