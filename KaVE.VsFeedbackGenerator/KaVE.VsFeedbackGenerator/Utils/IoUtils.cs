@@ -46,6 +46,7 @@ namespace KaVE.VsFeedbackGenerator.Utils
         void DeleteFile(string fileName);
 
         Stream OpenFile(string file, FileMode mode, FileAccess access);
+        void WriteAllByte(byte[] bytes, string fileName);
         string ReadFile(string fileName);
 
         string GetTempDirectoryName();
@@ -141,6 +142,11 @@ namespace KaVE.VsFeedbackGenerator.Utils
         public bool IsDirectoryEmpty(string path)
         {
             return !Directory.EnumerateFiles(path).Any();
+        }
+
+        public void WriteAllByte(byte[] bytes, string fileName)
+        {
+            File.WriteAllBytes(fileName, bytes);
         }
 
         public string ReadFile(string fileName)

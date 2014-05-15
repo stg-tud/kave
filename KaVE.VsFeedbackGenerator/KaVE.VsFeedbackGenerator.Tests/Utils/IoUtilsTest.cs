@@ -24,7 +24,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
-using JetBrains.Util;
+using System.Text;
 using KaVE.Utils.Assertion;
 using KaVE.Utils.IO;
 using KaVE.VsFeedbackGenerator.Utils;
@@ -245,7 +245,19 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
             var expected = new List<string> {"ABC", "DEF", "XYZ"};
             expected.ForEach(f => { using (File.Create(Path.Combine(dir, f))) {} });
             
-            var actual = _sut.EnumerateFiles(dir).Select(f => Path.GetFileName(f));
+            var actual = _sut.EnumerateFiles(dir).Select(Path.GetFileName);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void ShouldWriteBytes()
+        {
+            var file = Path.GetTempFileName();
+            var expected = "String";
+            var asBytes = expected.AsBytes();
+            _sut.WriteAllByte(asBytes, file);
+
+            var actual = File.ReadAllText(file, Encoding.Unicode);
             Assert.AreEqual(expected, actual);
         }
 
