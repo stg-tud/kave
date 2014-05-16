@@ -12,8 +12,13 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sven Amann
  */
+
 using System;
+using System.Collections.Generic;
 using NUnit.Framework;
 
 namespace KaVE.Utils.Tests
@@ -73,6 +78,85 @@ namespace KaVE.Utils.Tests
             {
                 Value = value;
             }
+        }
+
+        [Test]
+        public void ShouldDeclareTwoDictionariesOfSetsEqualByContent()
+        {
+            var dict1 = new Dictionary<string, ISet<string>>
+            {
+                {"foo", new HashSet<string>{"bar", "ups"}}
+            };
+            var dict2 = new Dictionary<string, ISet<string>>
+            {
+                {"foo", new HashSet<string>{"bar", "ups"}}
+            };
+
+            Assert.IsTrue(dict1.DeepEquals(dict2));
+        }
+
+        [Test]
+        public void ShouldDeclareTwoDictionariesOfSetsEqualByContentIndependentOfOrder()
+        {
+            var dict1 = new Dictionary<string, ISet<string>>
+            {
+                {"bli", new HashSet<string>{"bla", "blub"}},
+                {"foo", new HashSet<string>{"bar", "ups"}}
+            };
+            var dict2 = new Dictionary<string, ISet<string>>
+            {
+                {"foo", new HashSet<string>{"bar", "ups"}},
+                {"bli", new HashSet<string>{"bla", "blub"}}
+            };
+
+            Assert.IsTrue(dict1.DeepEquals(dict2));
+        }
+
+        [Test]
+        public void ShouldDeclareTwoDictionariesOfSetsUnequalIfSetsDiffer()
+        {
+            var dict1 = new Dictionary<string, ISet<string>>
+            {
+                {"foo", new HashSet<string>{"bar", "ups"}}
+            };
+            var dict2 = new Dictionary<string, ISet<string>>
+            {
+                {"foo", new HashSet<string>{"bar"}}
+            };
+
+            Assert.IsFalse(dict1.DeepEquals(dict2));
+        }
+
+        [Test]
+        public void ShouldDeclareTwoDictionariesOfSetsUnequalIfMoreKeys()
+        {
+            var dict1 = new Dictionary<string, ISet<string>>
+            {
+                {"foo", new HashSet<string>{"bar", "ups"}}
+            };
+            var dict2 = new Dictionary<string, ISet<string>>
+            {
+                {"foo", new HashSet<string>{"bar", "ups"}},
+                {"bli", new HashSet<string>{"bla", "blub"}}
+            };
+
+            Assert.IsFalse(dict1.DeepEquals(dict2));
+        }
+
+        [Test]
+        public void ShouldDeclareTwoDictionariesOfSetsUnequalIfLessKeys()
+        {
+            var dict1 = new Dictionary<string, ISet<string>>
+            {
+                {"foo", new HashSet<string>{"bar", "ups"}},
+                {"bli", new HashSet<string>{"bla", "blub"}}
+            };
+            var dict2 = new Dictionary<string, ISet<string>>
+            {
+                {"foo", new HashSet<string>{"bar"}}
+            };
+
+            Assert.IsFalse(dict1.DeepEquals(dict2));
         }
     }
 }

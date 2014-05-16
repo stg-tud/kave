@@ -78,23 +78,6 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.Model
             JsonAssert.SerializationPreservesData(context);
         }
 
-        [Test, Ignore]
-        public void ShouldSerializeDictionary()
-        {
-            var value = new Dictionary<string, ISet<string>>
-            {
-                {"foo", new HashSet<string>{"bar"}}
-            };
-            var settings = new JsonSerializerSettings
-            {
-                TypeNameHandling = TypeNameHandling.Objects,
-                TypeNameAssemblyFormat = FormatterAssemblyStyle.Full
-            };
-            var json = value.ToCompactJson();
-            var value2 = JsonConvert.DeserializeObject<IDictionary<string, ISet<string>>>(json, settings);
-            Assert.AreEqual(value, value2);
-        }
-
         private static TypeHierarchy GetAnonymousTypeHierarchy()
         {
             return new TypeHierarchy(TestNameFactory.GetAnonymousTypeName().Identifier);

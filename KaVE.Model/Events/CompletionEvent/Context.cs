@@ -16,7 +16,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
+using System.Text;
 using KaVE.JetBrains.Annotations;
 using KaVE.Model.Groum;
 using KaVE.Model.Names;
@@ -88,7 +90,7 @@ namespace KaVE.Model.Events.CompletionEvent
 
         protected bool Equals(Context other)
         {
-            return EntryPointsToCalledMethods.Equals(other.EntryPointsToCalledMethods) &&
+            return EntryPointsToCalledMethods.DeepEquals(other.EntryPointsToCalledMethods) &&
                    Equals(EnclosingMethod, other.EnclosingMethod) &&
                    Equals(EnclosingMethodGroum, other.EnclosingMethodGroum) && Equals(TypeShape, other.TypeShape) &&
                    Equals(TriggerTarget, other.TriggerTarget);
@@ -111,10 +113,24 @@ namespace KaVE.Model.Events.CompletionEvent
         {
             return
                 string.Format(
-                    "[EnclosingMethod: {0}, EnclosingMethodGroum: {1}, CalledMethods: [<omitted>], TypeShape: {2}]",
+                    "[EnclosingMethod: {0}, EnclosingMethodGroum: {1}, EntryPoints: [{2}], TypeShape: {3}]",
                     EnclosingMethod,
                     EnclosingMethodGroum,
+                    ToString(EntryPointsToCalledMethods),
                     TypeShape);
+        }
+
+        private string ToString(IEnumerable<KeyValuePair<IMethodName, ISet<IMethodName>>> dictionary)
+        {
+            var builder = new StringBuilder();
+            foreach (var keyValuePair in dictionary)
+            {
+                builder.Append(keyValuePair.Key);
+                builder.Append(":{");
+                builder.Append(string.Join(",", keyValuePair.Value));
+                builder.Append("},");
+            }
+            return builder.ToString();
         }
     }
 }

@@ -12,8 +12,13 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sven Amann
  */
+
 using System;
+using System.Collections.Generic;
 using KaVE.JetBrains.Annotations;
 
 namespace KaVE.Utils
@@ -35,6 +40,26 @@ namespace KaVE.Utils
                 return false;
             }
             return equalsIfSameType((T) other);
+        }
+
+        public static bool DeepEquals<TKey, TDValue>([NotNull] this IDictionary<TKey, ISet<TDValue>> self, IDictionary<TKey, ISet<TDValue>> other)
+        {
+            if (self.Count != other.Count)
+            {
+                return false;
+            }
+            foreach (var keyValuePair in self)
+            {
+                if (!other.ContainsKey(keyValuePair.Key))
+                {
+                    return false;
+                }
+                if (!other[keyValuePair.Key].SetEquals(keyValuePair.Value))
+                {
+                    return false;
+                }
+            }
+            return true;
         }
     }
 }
