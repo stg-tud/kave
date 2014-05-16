@@ -51,26 +51,36 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
             }
             else
             {
-                builder.AppendXamlMethodSignatureLine(context.EnclosingMethod);
-                builder.AppendLine(1, CurlyBracketOpen);
-
-                context.CalledMethods.ForEach(
-                    m =>
-                    {
-                        var l = m.DeclaringType.Name + "." + m.Name + "(";
-                        if (m.HasParameters)
-                        {
-                            l += string.Join(", ", m.Parameters.Select(p => p.ValueType.Name));
-                        }
-                        builder.AppendLine(2, l + ");");
-                    });
-
-                builder.AppendLine(2, CompletionMarker);
-                builder.AppendLine(1, CurlyBracketClose);
+                builder.AppendMethod(context.EnclosingMethod, new HashSet<IMethodName>());
             }
+
+            foreach (var entryPoint in context.EntryPointsToCalledMethods)
+            {
+                builder.AppendMethod(entryPoint.Key, entryPoint.Value);
+            }
+
             builder.Append(CurlyBracketClose);
 
             return builder.ToString();
+        }
+
+        private static void AppendMethod(this StringBuilder builder, IMethodName method, IEnumerable<IMethodName> calledMethods)
+        {
+            builder.AppendXamlMethodSignatureLine(method);
+            builder.AppendLine(1, CurlyBracketOpen);
+
+            foreach (var calledMethod in calledMethods)
+            {
+                var l = calledMethod.DeclaringType.Name + "." + calledMethod.Name + "(";
+                if (calledMethod.HasParameters)
+                {
+                    l += string.Join(", ", calledMethod.Parameters.Select(p => p.ValueType.Name));
+                }
+                builder.AppendLine(2, l + ");");
+            }
+
+            builder.AppendLine(2, CompletionMarker);
+            builder.AppendLine(1, CurlyBracketClose);
         }
 
         private static void AppendLine([NotNull] this StringBuilder builder, int indentDepth, string elem)

@@ -17,14 +17,12 @@
  *    - Sven Amann
  */
 
-using JetBrains.Util;
-using KaVE.Model.Names.CSharp;
 using NUnit.Framework;
 
 namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
 {
     [TestFixture]
-    internal class ContextAnalysisCalledMethodsTest : KaVEBaseTest
+    internal class ContextAnalysisCalledMethodsTest : CalledMethodsTestBase
     {
         [Test]
         public void ShouldFindNoCalls()
@@ -32,8 +30,8 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
             CompleteInMethod(@"
                 $
             ");
-            
-            Assert.IsTrue(ResultContext.CalledMethods.IsEmpty());
+
+            AssertNoCallsDetected();
         }
 
         [Test]
@@ -54,10 +52,8 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
                     }
                 }");
 
-            var expected = MethodName.Get(
+            AssertCallDetected(
                 "[System.Void, mscorlib, 4.0.0.0] [i:I, TestProject].Do([System.Int32, mscorlib, 4.0.0.0] i)");
-
-            CollectionAssert.Contains(ResultContext.CalledMethods, expected);
         }
 
         [Test]
@@ -80,10 +76,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
                     }
                 }");
 
-            var expected = MethodName.Get(
-                "[System.Boolean, mscorlib, 4.0.0.0] [i:I, TestProject].Is()");
-
-            CollectionAssert.Contains(ResultContext.CalledMethods, expected);
+            AssertCallDetected("[System.Boolean, mscorlib, 4.0.0.0] [i:I, TestProject].Is()");
         }
 
         [Test]
@@ -108,10 +101,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
                     }
                 }");
 
-            var expected = MethodName.Get(
-                "[C, TestProject] [i:I, TestProject].GetC()");
-
-            CollectionAssert.Contains(ResultContext.CalledMethods, expected);
+            AssertCallDetected("[C, TestProject] [i:I, TestProject].GetC()");
         }
 
         [Test]
@@ -134,10 +124,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
                     }
                 }");
 
-            var expected = MethodName.Get(
-                "[System.Int32, mscorlib, 4.0.0.0] [i:I, TestProject].Get()");
-
-            CollectionAssert.Contains(ResultContext.CalledMethods, expected);
+            AssertCallDetected("[System.Int32, mscorlib, 4.0.0.0] [i:I, TestProject].Get()");
         }
 
         [Test]
@@ -159,9 +146,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
                     }
                 }");
 
-            var expected = MethodName.Get("[TI1] [i:I`1[[TI1 -> TM1]], TestProject].Get()");
-
-            CollectionAssert.Contains(ResultContext.CalledMethods, expected);
+            AssertCallDetected("[TI1] [i:I`1[[TI1 -> TM1]], TestProject].Get()");
         }
 
         [Test]
@@ -183,9 +168,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
                     }
                 }");
 
-            var expected = MethodName.Get("[TI1] [i:I`1[[TI1 -> System.String, mscorlib, 4.0.0.0]], TestProject].Get()");
-
-            CollectionAssert.Contains(ResultContext.CalledMethods, expected);
+            AssertCallDetected("[TI1] [i:I`1[[TI1 -> System.String, mscorlib, 4.0.0.0]], TestProject].Get()");
         }
 
         [Test]
@@ -207,9 +190,8 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
                     }
                 }");
 
-            var expected = MethodName.Get("[TI2] [i:I`1[[TI1 -> TM1]], TestProject].Get[[TI2 -> System.Int32, mscorlib, 4.0.0.0]]()");
-
-            CollectionAssert.Contains(ResultContext.CalledMethods, expected);
+            AssertCallDetected(
+                "[TI2] [i:I`1[[TI1 -> TM1]], TestProject].Get[[TI2 -> System.Int32, mscorlib, 4.0.0.0]]()");
         }
 
         [Test]
@@ -222,9 +204,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
                     $
                 }");
 
-            var expected = MethodName.Get("[System.Int32, mscorlib, 4.0.0.0] [System.Object, mscorlib, 4.0.0.0].GetHashCode()");
-
-            CollectionAssert.Contains(ResultContext.CalledMethods, expected);
+            AssertCallDetected("[System.Int32, mscorlib, 4.0.0.0] [System.Object, mscorlib, 4.0.0.0].GetHashCode()");
         }
 
         [Test(Description = "Marker: (5)")]
@@ -250,9 +230,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
                     }
                 }");
 
-            var expected = MethodName.Get("[B] [D`1[[B -> TM2]], TestProject].Get()");
-
-            CollectionAssert.Contains(ResultContext.CalledMethods, expected);
+            AssertCallDetected("[B] [D`1[[B -> TM2]], TestProject].Get()");
         }
 
         [Test]
@@ -263,7 +241,8 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
                 $
             ");
 
-            AssertCalledMethodsContain("[System.Boolean, mscorlib, 4.0.0.0] [System.Object, mscorlib, 4.0.0.0].Equals([System.Object, mscorlib, 4.0.0.0] obj)");
+            AssertCallDetected(
+                "[System.Boolean, mscorlib, 4.0.0.0] [System.Object, mscorlib, 4.0.0.0].Equals([System.Object, mscorlib, 4.0.0.0] obj)");
         }
 
         [Test]
@@ -279,7 +258,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
                     }
                 }");
 
-            CollectionAssert.IsEmpty(ResultContext.CalledMethods);
+            AssertNoCallsDetected();
         }
 
         [Test]
@@ -291,8 +270,8 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
                 $
             ");
 
-            AssertCalledMethodsContain("[System.String, mscorlib, 4.0.0.0] [System.Object, mscorlib, 4.0.0.0].ToString()");
-            AssertCalledMethodsContain("[System.Int32, mscorlib, 4.0.0.0] [System.Object, mscorlib, 4.0.0.0].GetHashCode()");
+            AssertCallDetected("[System.String, mscorlib, 4.0.0.0] [System.Object, mscorlib, 4.0.0.0].ToString()");
+            AssertCallDetected("[System.Int32, mscorlib, 4.0.0.0] [System.Object, mscorlib, 4.0.0.0].GetHashCode()");
         }
 
         [Test]
@@ -307,7 +286,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
                     $
                 }");
 
-            AssertCalledMethodsContain("[System.String, mscorlib, 4.0.0.0] [System.Object, mscorlib, 4.0.0.0].ToString()");
+            AssertCallDetected("[System.String, mscorlib, 4.0.0.0] [System.Object, mscorlib, 4.0.0.0].ToString()");
         }
 
         [Test]
@@ -330,13 +309,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
                     }
                 }");
 
-            AssertCalledMethodsContain("[System.Void, mscorlib, 4.0.0.0] [C, TestProject].EP()");
-        }
-
-        private void AssertCalledMethodsContain(string methodIdentifier)
-        {
-            var expected = MethodName.Get(methodIdentifier);
-            CollectionAssert.Contains(ResultContext.CalledMethods, expected);
+            AssertCallDetected("M", "[System.Void, mscorlib, 4.0.0.0] [C, TestProject].EP()");
         }
     }
 }

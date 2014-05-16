@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
@@ -32,7 +33,6 @@ namespace KaVE.Model.Events.CompletionEvent
     {
         public Context()
         {
-            CalledMethods = new HashSet<IMethodName>();
             EntryPointsToCalledMethods = new Dictionary<IMethodName, ISet<IMethodName>>();
         }
 
@@ -61,18 +61,15 @@ namespace KaVE.Model.Events.CompletionEvent
         public GroumBase EnclosingMethodGroum { get; set; }
 
         /// <summary>
-        /// Maps from entry points to the methods called in the call-graph below the respective entry point.
+        ///     Maps from entry points to the methods called in the call-graph below the respective entry point.
         /// </summary>
         [NotNull, DataMember]
-        public IDictionary<IMethodName, ISet<IMethodName>> EntryPointsToCalledMethods;
+        public IDictionary<IMethodName, ISet<IMethodName>> EntryPointsToCalledMethods { get; set; }
 
         public ICollection<IMethodName> EntryPoints
         {
             get { return EntryPointsToCalledMethods.Keys; }
         }
-
-        // TODO @Sven: remove this property
-        public ISet<IMethodName> CalledMethods { get; set; }
 
         [DataMember]
         public TypeShape TypeShape { get; set; }
@@ -91,19 +88,21 @@ namespace KaVE.Model.Events.CompletionEvent
 
         protected bool Equals(Context other)
         {
-            return Equals(EnclosingMethod, other.EnclosingMethod) &&
-                   Equals(EnclosingMethodGroum, other.EnclosingMethodGroum) &&
-                   CalledMethods.SetEquals(other.CalledMethods) && Equals(TypeShape, other.TypeShape);
+            return EntryPointsToCalledMethods.Equals(other.EntryPointsToCalledMethods) &&
+                   Equals(EnclosingMethod, other.EnclosingMethod) &&
+                   Equals(EnclosingMethodGroum, other.EnclosingMethodGroum) && Equals(TypeShape, other.TypeShape) &&
+                   Equals(TriggerTarget, other.TriggerTarget);
         }
 
         public override int GetHashCode()
         {
             unchecked
             {
-                var hashCode = (EnclosingMethod != null ? EnclosingMethod.GetHashCode() : 0);
+                var hashCode = EntryPointsToCalledMethods.GetHashCode();
+                hashCode = (hashCode*397) ^ (EnclosingMethod != null ? EnclosingMethod.GetHashCode() : 0);
                 hashCode = (hashCode*397) ^ (EnclosingMethodGroum != null ? EnclosingMethodGroum.GetHashCode() : 0);
-                hashCode = (hashCode*397) ^ CalledMethods.GetHashCode();
                 hashCode = (hashCode*397) ^ (TypeShape != null ? TypeShape.GetHashCode() : 0);
+                hashCode = (hashCode*397) ^ (TriggerTarget != null ? TriggerTarget.GetHashCode() : 0);
                 return hashCode;
             }
         }
@@ -112,10 +111,9 @@ namespace KaVE.Model.Events.CompletionEvent
         {
             return
                 string.Format(
-                    "[EnclosingMethod: {0}, EnclosingMethodGroum: {1}, CalledMethods: [{2}], TypeShape: {3}]",
+                    "[EnclosingMethod: {0}, EnclosingMethodGroum: {1}, CalledMethods: [<omitted>], TypeShape: {2}]",
                     EnclosingMethod,
                     EnclosingMethodGroum,
-                    string.Join(", ", CalledMethods),
                     TypeShape);
         }
     }

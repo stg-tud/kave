@@ -12,16 +12,18 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sven Amann
  */
-using System.Linq;
+
 using KaVE.JetBrains.Annotations;
-using KaVE.Model.Names.CSharp;
 using NUnit.Framework;
 
 namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
 {
     [TestFixture]
-    internal class ContextAnalysisObjectTrackingTest : KaVEBaseTest
+    internal class ContextAnalysisObjectTrackingTest : CalledMethodsTestBase
     {
         [UsedImplicitly]
         private static readonly string[] Visibilities = {"public", "protected", "internal", "private"};
@@ -39,8 +41,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
                     o.GetHashCode();
                 }");
 
-            AssertAnalysisFindsCallsTo(
-                "[System.Int32, mscorlib, 4.0.0.0] [System.Object, mscorlib, 4.0.0.0].GetHashCode()");
+            AssertCallDetected("[System.Int32, mscorlib, 4.0.0.0] [System.Object, mscorlib, 4.0.0.0].GetHashCode()");
         }
 
         [TestCaseSource("Visibilities")]
@@ -56,7 +57,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
                     " + helperVisibility + @" void M2(object o) {}
                 }");
 
-            AssertAnalysisDoesNotFindCallTo(
+            AssertNoCallDetected(
                 "[System.Void, mscorlib, 4.0.0.0] [C, TestProject].M2([System.Object, mscorlib, 4.0.0.0] o)");
         }
 
@@ -94,7 +95,9 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
                     }
                 }");
 
-            AssertAnalysisFindsCallsTo("[System.Void, mscorlib, 4.0.0.0] [i:I, TestProject].M([System.Object, mscorlib, 4.0.0.0] o)");
+            AssertCallDetected(
+                "E",
+                "[System.Void, mscorlib, 4.0.0.0] [i:I, TestProject].M([System.Object, mscorlib, 4.0.0.0] o)");
         }
 
         [Test]
@@ -120,7 +123,8 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
                     }
                 }");
 
-            AssertAnalysisDoesNotFindCallTo(
+            AssertNoCallDetected(
+                "E",
                 "[System.Int32, mscorlib, 4.0.0.0] [System.Object, mscorlib, 4.0.0.0].GetHashCode()");
         }
 
@@ -139,7 +143,8 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
                     }
                 }");
 
-            AssertAnalysisFindsCallsTo("[System.Void, mscorlib, 4.0.0.0] [A, TestProject].M([System.Object, mscorlib, 4.0.0.0] o)");
+            AssertCallDetected(
+                "[System.Void, mscorlib, 4.0.0.0] [A, TestProject].M([System.Object, mscorlib, 4.0.0.0] o)");
         }
 
         [Test]
@@ -160,7 +165,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
                     }
                 }");
 
-            AssertAnalysisFindsCallsTo("[System.Void, mscorlib, 4.0.0.0] [HelperClass, TestProject].M()");
+            AssertCallDetected("[System.Void, mscorlib, 4.0.0.0] [HelperClass, TestProject].M()");
         }
 
         [Test]
@@ -186,21 +191,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
                     }
                 }");
 
-            AssertAnalysisFindsCallsTo("[System.Void, mscorlib, 4.0.0.0] [i:I, TestProject].M()");
-        }
-
-        private void AssertAnalysisDoesNotFindCallTo(string methodIdentifier)
-        {
-            CollectionAssert.DoesNotContain(
-                ResultContext.CalledMethods,
-                MethodName.Get(methodIdentifier));
-        }
-
-        private void AssertAnalysisFindsCallsTo(params string[] methodIdentifiers)
-        {
-            var actual = ResultContext.CalledMethods;
-            var expected = methodIdentifiers.Select(MethodName.Get);
-            CollectionAssert.AreEquivalent(expected, actual);
+            AssertCallDetected("[System.Void, mscorlib, 4.0.0.0] [i:I, TestProject].M()");
         }
     }
 }

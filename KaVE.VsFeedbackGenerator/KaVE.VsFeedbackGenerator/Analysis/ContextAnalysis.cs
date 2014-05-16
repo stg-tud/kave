@@ -12,6 +12,10 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sebastian Proksch
+ *    - Sven Amann
  */
 
 using JetBrains.ReSharper.Feature.Services.CSharp.CodeCompletion.Infrastructure;
@@ -59,9 +63,6 @@ namespace KaVE.VsFeedbackGenerator.Analysis
                     _context.EntryPointsToCalledMethods = _calledMethodsForEntryPointsAnalysis.Analyze(
                         typeDeclaration,
                         _context.TypeShape);
-                    _context.CalledMethods = _calledMethodsAnalysis.Analyze(
-                        methodDeclaration,
-                        _context.TypeShape).CalledMethods;
                 }
             }
             return _context;
