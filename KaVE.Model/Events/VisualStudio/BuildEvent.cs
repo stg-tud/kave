@@ -34,7 +34,7 @@ namespace KaVE.Model.Events.VisualStudio
         public string Action { get; set; }
 
         [DataMember]
-        public IList<BuildTarget> Targets { get; private set; }
+        public IList<BuildTarget> Targets { get; set; }
     }
 
     [DataContract]

@@ -120,6 +120,7 @@
     </Compile>
     <Compile Include="Interactivity\InteractionRequest.cs" />
     <Compile Include="Interactivity\ConfirmationRequestHandler.cs" />
+    <Compile Include="SessionManager\DataExportAnonymizer.cs" />
     <Compile Include="SessionManager\FeedbackSettings.cs" />
     <Compile Include="KaVESettings.cs" />
     <Compile Include="SessionManager\Presentation\IDEEventDetailsToJsonConverter.cs" />
