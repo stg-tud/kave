@@ -15,6 +15,7 @@
  * 
  * Contributors:
  *    - Sven Amann
+ *    - Sebastian Proksch
  */
 
 using System;
@@ -24,7 +25,7 @@ using NUnit.Framework;
 namespace KaVE.Utils.Tests
 {
     [TestFixture]
-    class EqualityUtilsTest
+    internal class EqualityUtilsTest
     {
         [Test]
         public void ShouldDeclareSameInstanceEqual()
@@ -81,15 +82,71 @@ namespace KaVE.Utils.Tests
         }
 
         [Test]
+        public void DictionaryWithValues_TwoEmtpyDictionaries()
+        {
+            var a = new Dictionary<string, int>();
+            var b = new Dictionary<string, int>();
+            Assert.IsTrue(EqualityUtils.Equals(a, b));
+        }
+
+        [Test]
+        public void DictionaryWithValues_TwoNonEmtpyDictionaries()
+        {
+            var a = new Dictionary<string, int> {{"a", 1}};
+            var b = new Dictionary<string, int> {{"a", 1}};
+            Assert.IsTrue(EqualityUtils.Equals(a, b));
+        }
+
+        [Test]
+        public void DictionaryWithValues_NonEmtpyDictionaryA()
+        {
+            var a = new Dictionary<string, int> {{"a", 1}};
+            var b = new Dictionary<string, int>();
+            Assert.IsFalse(EqualityUtils.Equals(a, b));
+        }
+
+        [Test]
+        public void DictionaryWithValues_NonEmtpyDictionaryB()
+        {
+            var a = new Dictionary<string, int>();
+            var b = new Dictionary<string, int> {{"a", 1}};
+            Assert.IsFalse(EqualityUtils.Equals(a, b));
+        }
+
+        [Test]
+        public void DictionaryWithValues_NonEmptyOverlappingDictionaries()
+        {
+            var a = new Dictionary<string, int> {{"a", 1}, {"x", 2}};
+            var b = new Dictionary<string, int> {{"a", 1}, {"y", 2}};
+            Assert.IsFalse(EqualityUtils.Equals(a, b));
+        }
+
+        [Test]
+        public void DictionaryWithValues_NonEmptyNonOverlappingDictionaries()
+        {
+            var a = new Dictionary<string, int> {{"a", 1}};
+            var b = new Dictionary<string, int> {{"b", 1}};
+            Assert.IsFalse(EqualityUtils.Equals(a, b));
+        }
+
+        [Test]
+        public void DictionaryWithValues_SameKeysDiffValues()
+        {
+            var a = new Dictionary<string, int> {{"a", 1}};
+            var b = new Dictionary<string, int> {{"a", 2}};
+            Assert.IsFalse(EqualityUtils.Equals(a, b));
+        }
+
+        [Test]
         public void ShouldDeclareTwoDictionariesOfSetsEqualByContent()
         {
             var dict1 = new Dictionary<string, ISet<string>>
             {
-                {"foo", new HashSet<string>{"bar", "ups"}}
+                {"foo", new HashSet<string> {"bar", "ups"}}
             };
             var dict2 = new Dictionary<string, ISet<string>>
             {
-                {"foo", new HashSet<string>{"bar", "ups"}}
+                {"foo", new HashSet<string> {"bar", "ups"}}
             };
 
             Assert.IsTrue(dict1.DeepEquals(dict2));
@@ -100,13 +157,13 @@ namespace KaVE.Utils.Tests
         {
             var dict1 = new Dictionary<string, ISet<string>>
             {
-                {"bli", new HashSet<string>{"bla", "blub"}},
-                {"foo", new HashSet<string>{"bar", "ups"}}
+                {"bli", new HashSet<string> {"bla", "blub"}},
+                {"foo", new HashSet<string> {"bar", "ups"}}
             };
             var dict2 = new Dictionary<string, ISet<string>>
             {
-                {"foo", new HashSet<string>{"bar", "ups"}},
-                {"bli", new HashSet<string>{"bla", "blub"}}
+                {"foo", new HashSet<string> {"bar", "ups"}},
+                {"bli", new HashSet<string> {"bla", "blub"}}
             };
 
             Assert.IsTrue(dict1.DeepEquals(dict2));
@@ -117,11 +174,11 @@ namespace KaVE.Utils.Tests
         {
             var dict1 = new Dictionary<string, ISet<string>>
             {
-                {"foo", new HashSet<string>{"bar", "ups"}}
+                {"foo", new HashSet<string> {"bar", "ups"}}
             };
             var dict2 = new Dictionary<string, ISet<string>>
             {
-                {"foo", new HashSet<string>{"bar"}}
+                {"foo", new HashSet<string> {"bar"}}
             };
 
             Assert.IsFalse(dict1.DeepEquals(dict2));
@@ -132,12 +189,12 @@ namespace KaVE.Utils.Tests
         {
             var dict1 = new Dictionary<string, ISet<string>>
             {
-                {"foo", new HashSet<string>{"bar", "ups"}}
+                {"foo", new HashSet<string> {"bar", "ups"}}
             };
             var dict2 = new Dictionary<string, ISet<string>>
             {
-                {"foo", new HashSet<string>{"bar", "ups"}},
-                {"bli", new HashSet<string>{"bla", "blub"}}
+                {"foo", new HashSet<string> {"bar", "ups"}},
+                {"bli", new HashSet<string> {"bla", "blub"}}
             };
 
             Assert.IsFalse(dict1.DeepEquals(dict2));
@@ -148,12 +205,12 @@ namespace KaVE.Utils.Tests
         {
             var dict1 = new Dictionary<string, ISet<string>>
             {
-                {"foo", new HashSet<string>{"bar", "ups"}},
-                {"bli", new HashSet<string>{"bla", "blub"}}
+                {"foo", new HashSet<string> {"bar", "ups"}},
+                {"bli", new HashSet<string> {"bla", "blub"}}
             };
             var dict2 = new Dictionary<string, ISet<string>>
             {
-                {"foo", new HashSet<string>{"bar"}}
+                {"foo", new HashSet<string> {"bar"}}
             };
 
             Assert.IsFalse(dict1.DeepEquals(dict2));

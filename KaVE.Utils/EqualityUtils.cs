@@ -19,6 +19,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using KaVE.JetBrains.Annotations;
 
 namespace KaVE.Utils
@@ -40,6 +41,11 @@ namespace KaVE.Utils
                 return false;
             }
             return equalsIfSameType((T) other);
+        }
+
+        public static bool Equals<TKey, TValue>([NotNull] this IDictionary<TKey, TValue> self, IDictionary<TKey, TValue> other)
+        {
+            return self.Count == other.Count && !self.Except(other).Any();
         }
 
         public static bool DeepEquals<TKey, TDValue>([NotNull] this IDictionary<TKey, ISet<TDValue>> self, IDictionary<TKey, ISet<TDValue>> other)
