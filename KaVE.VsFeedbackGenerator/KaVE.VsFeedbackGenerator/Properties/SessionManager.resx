@@ -264,4 +264,7 @@
   <data name="NoFileGiven" xml:space="preserve">
     <value>Keine Datei angegeben</value>
   </data>
+  <data name="Option_SettingsCleaner_Dialog" xml:space="preserve">
+    <value>Sind Sie sicher die Anwendung zurückzusetzen?</value>
+  </data>
 </root>
