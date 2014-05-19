@@ -78,6 +78,13 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.Model
         }
 
         [Test]
+        public void ShouldSerializeInterfaceName()
+        {
+            var name = TypeName.Get("i:IMyInterface, Assembly, 1.2.3.4");
+            JsonAssert.SerializationPreservesReferenceIdentity(name);
+        }
+
+        [Test]
         public void ShouldSerializeNameToStringContainingTypeAndIdentifier()
         {
             var name = TypeName.Get("My.Custom.Type, AnAssembly, 1.5.2.4");

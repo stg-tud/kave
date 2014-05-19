@@ -16,6 +16,7 @@
  * Contributors:
  *    - Sven Amann
  */
+
 using System;
 using System.ComponentModel;
 using System.Globalization;
@@ -26,7 +27,7 @@ using KaVE.Utils.Assertion;
 
 namespace KaVE.Model.Names
 {
-    class NameToStringConverter : TypeConverter
+    internal class NameToStringConverter : TypeConverter
     {
         private const string NameQualifierPrefix = "KaVE.Model.Names.";
         private const char Separator = ':';
@@ -36,10 +37,13 @@ namespace KaVE.Model.Names
             return sourceType == typeof (string) || base.CanConvertFrom(context, sourceType);
         }
 
-        public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
+        public override object ConvertTo(ITypeDescriptorContext context,
+            CultureInfo culture,
+            object value,
+            Type destinationType)
         {
             var name = value as Name;
-            if (name != null && destinationType == typeof(string))
+            if (name != null && destinationType == typeof (string))
             {
                 return AliasFor(value.GetType()) + Separator + name.Identifier;
             }
@@ -56,7 +60,7 @@ namespace KaVE.Model.Names
             var serialization = value as string;
             if (serialization != null)
             {
-                var data = serialization.Split(Separator);
+                var data = serialization.Split(new[] {Separator}, 2);
                 var type = TypeFrom(data[0]);
                 var factoryMethod = GetFactoryMethod(type);
                 return factoryMethod.Invoke(null, new object[] {data[1]});
@@ -66,7 +70,7 @@ namespace KaVE.Model.Names
 
         private static Type TypeFrom(string alias)
         {
-            var assemblyName = typeof(IName).Assembly.FullName;
+            var assemblyName = typeof (IName).Assembly.FullName;
             var assemblyQualifiedTypeName = NameQualifierPrefix + alias + ", " + assemblyName;
             var type = Type.GetType(assemblyQualifiedTypeName);
             Asserts.NotNull(type, "Could not load required type " + assemblyQualifiedTypeName);
@@ -79,7 +83,7 @@ namespace KaVE.Model.Names
                 m =>
                 {
                     var parameterInfos = m.GetParameters();
-                    return parameterInfos.Count() == 1 && parameterInfos[0].ParameterType == typeof(string);
+                    return parameterInfos.Count() == 1 && parameterInfos[0].ParameterType == typeof (string);
                 }).First();
             return factoryMethod;
         }
