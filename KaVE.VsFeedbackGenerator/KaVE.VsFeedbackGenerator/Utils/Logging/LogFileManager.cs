@@ -24,10 +24,11 @@ using System.IO;
 using System.Linq;
 using JetBrains.Util;
 using KaVE.JetBrains.Annotations;
+using KaVE.Model.Events;
 
 namespace KaVE.VsFeedbackGenerator.Utils.Logging
 {
-    public class LogFileManager<TLogEntry> : ILogManager<TLogEntry> where TLogEntry : class
+    public class LogFileManager<TLogEntry> : ILogManager<TLogEntry> where TLogEntry : IDEEvent
     {
         private readonly IIoUtils _ioUtils;
         internal const string LogDirectoryPrefix = "Log_";

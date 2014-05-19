@@ -12,13 +12,18 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sven Amann
  */
+
 using System;
 using System.Collections.Generic;
+using KaVE.Model.Events;
 
 namespace KaVE.VsFeedbackGenerator.Utils.Logging
 {
-    public interface ILog<TLogEntry> where TLogEntry : class
+    public interface ILog<TLogEntry> where TLogEntry : IDEEvent
     {
         DateTime Date { get; }
         ILogReader<TLogEntry> NewLogReader();
@@ -28,7 +33,7 @@ namespace KaVE.VsFeedbackGenerator.Utils.Logging
         void Delete();
     }
 
-    public interface ILogManager<TLogEntry> where TLogEntry : class
+    public interface ILogManager<TLogEntry> where TLogEntry : IDEEvent
     {
         string BaseLocation { get; }
         IEnumerable<ILog<TLogEntry>> GetLogs();

@@ -12,10 +12,15 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sven Amann
  */
+
 using System;
 using System.IO;
 using System.Linq;
+using KaVE.TestUtils.Model.Events;
 using KaVE.Utils.IO;
 using KaVE.VsFeedbackGenerator.Utils;
 using KaVE.VsFeedbackGenerator.Utils.Logging;
@@ -26,14 +31,14 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Logging
     [TestFixture]
     internal class LogFileManagerTest
     {
-        private LogFileManager<string> _uut;
+        private LogFileManager<TestIDEEvent> _uut;
 
         [SetUp]
         public void SetUp()
         {
             // TODO refactor this tests to use an IoUtils mock
             Registry.RegisterComponent<IIoUtils>(new IoUtils());
-            _uut = new LogFileManager<string>(IoTestHelper.GetTempDirectoryName());
+            _uut = new LogFileManager<TestIDEEvent>(IoTestHelper.GetTempDirectoryName());
         }
 
         [TearDown]
@@ -85,7 +90,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Logging
         [Test]
         public void ShouldReturnTodaysLog()
         {
-            var todaysLog = (LogFile<string>) _uut.CurrentLog;
+            var todaysLog = (LogFile<TestIDEEvent>) _uut.CurrentLog;
 
             Assert.AreEqual(DateTime.Today, todaysLog.Date);
             Assert.AreEqual(_uut.BaseLocation, Path.GetDirectoryName(todaysLog.Path));

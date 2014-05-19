@@ -12,19 +12,24 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sven Amann
  */
+
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using JetBrains.Util;
+using KaVE.Model.Events;
 using KaVE.Utils;
 using KaVE.Utils.Assertion;
 using KaVE.VsFeedbackGenerator.Utils.Json;
 
 namespace KaVE.VsFeedbackGenerator.Utils.Logging
 {
-    public class LogFile<TLogEntry> : ILog<TLogEntry> where TLogEntry : class
+    public class LogFile<TLogEntry> : ILog<TLogEntry> where TLogEntry : IDEEvent
     {
         private readonly IIoUtils _ioUtils;
 
