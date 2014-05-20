@@ -55,6 +55,7 @@
     <Compile Include="Collections\WeakReferenceDictionary.cs" />
     <Compile Include="DateTime\SimilarDateTimeComparer.cs" />
     <Compile Include="EqualityUtils.cs" />
+    <Compile Include="HashCodeUtils.cs" />
     <Compile Include="Injection.cs" />
     <Compile Include="Invoke.cs" />
     <Compile Include="IO\IoTestHelper.cs" />
