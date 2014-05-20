@@ -258,7 +258,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                     TypeHierarchy = CreateTypeHierarchy("N.Class")
                 },
                 EnclosingMethod = Method("N.Return", "N.Class", "Method1"),
-                EntryPointsToCalledMethods = new Dictionary<IMethodName, ISet<IMethodName>>
+                EntryPointToCalledMethods = new Dictionary<IMethodName, ISet<IMethodName>>
                 {
                     {
                         Method("M.Return", "N.Class", "Method2"), new HashSet<IMethodName>

@@ -30,7 +30,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
         protected void AssertNoCallsDetected()
         {
             var entryPoint = FindSingleEntryPoint();
-            CollectionAssert.IsEmpty(ResultContext.EntryPointsToCalledMethods[entryPoint]);
+            CollectionAssert.IsEmpty(ResultContext.EntryPointToCalledMethods[entryPoint]);
         }
 
         protected void AssertCallDetected(string methodIdentifier)
@@ -47,7 +47,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
 
         private void AssertCallDetected(IMethodName entryPoint, string calledMethodIdentifier)
         {
-            var calledMethods = ResultContext.EntryPointsToCalledMethods[entryPoint];
+            var calledMethods = ResultContext.EntryPointToCalledMethods[entryPoint];
             var unexpectedMethod = MethodName.Get(calledMethodIdentifier);
             CollectionAssert.Contains(calledMethods, unexpectedMethod);
         }
@@ -80,7 +80,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
 
         private void AssertNoCallDetected(IMethodName entryPoint, string calledMethodIdentifier)
         {
-            var calledMethods = ResultContext.EntryPointsToCalledMethods[entryPoint];
+            var calledMethods = ResultContext.EntryPointToCalledMethods[entryPoint];
             var unexpectedMethod = MethodName.Get(calledMethodIdentifier);
             CollectionAssert.DoesNotContain(calledMethods, unexpectedMethod);
         }

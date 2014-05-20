@@ -12,6 +12,10 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sven Amann
+ *    - Sebastian Proksch
  */
 
 using System;
@@ -19,7 +23,6 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Text;
 using KaVE.JetBrains.Annotations;
-using KaVE.Model.Groum;
 using KaVE.Model.Names;
 using KaVE.Utils;
 
@@ -34,7 +37,8 @@ namespace KaVE.Model.Events.CompletionEvent
     {
         public Context()
         {
-            EntryPointsToCalledMethods = new Dictionary<IMethodName, ISet<IMethodName>>();
+            EntryPointToCalledMethods = new Dictionary<IMethodName, ISet<IMethodName>>();
+            EntryPointToGroum = new Dictionary<IMethodName, Groums.Groum>();
         }
 
         /// <summary>
@@ -56,20 +60,19 @@ namespace KaVE.Model.Events.CompletionEvent
         public IMethodName EnclosingMethod { get; set; }
 
         /// <summary>
-        ///     The GROUM derived from the current code in the enclosing method's body. This GROUM contains a completion
-        ///     groum node that denotes the position code completion is triggered at.
+        ///     Maps from entry points to the derived GROUM of those methods.
         /// </summary>
-        public GroumBase EnclosingMethodGroum { get; set; }
+        public IDictionary<IMethodName, Groums.Groum> EntryPointToGroum { get; set; }
 
         /// <summary>
         ///     Maps from entry points to the methods called in the call-graph below the respective entry point.
         /// </summary>
         [NotNull, DataMember]
-        public IDictionary<IMethodName, ISet<IMethodName>> EntryPointsToCalledMethods { get; set; }
+        public IDictionary<IMethodName, ISet<IMethodName>> EntryPointToCalledMethods { get; set; }
 
         public ICollection<IMethodName> EntryPoints
         {
-            get { return EntryPointsToCalledMethods.Keys; }
+            get { return EntryPointToCalledMethods.Keys; }
         }
 
         [DataMember]
@@ -89,9 +92,10 @@ namespace KaVE.Model.Events.CompletionEvent
 
         protected bool Equals(Context other)
         {
-            return EntryPointsToCalledMethods.DeepEquals(other.EntryPointsToCalledMethods) &&
+            return EntryPointToCalledMethods.DeepEquals(other.EntryPointToCalledMethods) &&
                    Equals(EnclosingMethod, other.EnclosingMethod) &&
-                   Equals(EnclosingMethodGroum, other.EnclosingMethodGroum) && Equals(TypeShape, other.TypeShape) &&
+                   EqualityUtils.Equals(EntryPointToGroum, other.EntryPointToGroum) &&
+                   Equals(TypeShape, other.TypeShape) &&
                    Equals(TriggerTarget, other.TriggerTarget);
         }
 
@@ -99,11 +103,12 @@ namespace KaVE.Model.Events.CompletionEvent
         {
             unchecked
             {
-                var hashCode = EntryPointsToCalledMethods.GetHashCode();
+                var hashCode = 397;
                 hashCode = (hashCode*397) ^ (EnclosingMethod != null ? EnclosingMethod.GetHashCode() : 0);
-                hashCode = (hashCode*397) ^ (EnclosingMethodGroum != null ? EnclosingMethodGroum.GetHashCode() : 0);
                 hashCode = (hashCode*397) ^ (TypeShape != null ? TypeShape.GetHashCode() : 0);
-                hashCode = (hashCode*397) ^ (TriggerTarget != null ? TriggerTarget.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (TriggerTarget != null ? TriggerTarget.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ HashCodeUtils.For(191, EntryPointToCalledMethods);
+                hashCode = (hashCode * 397) ^ HashCodeUtils.For(193, EntryPointToGroum);
                 return hashCode;
             }
         }
@@ -112,10 +117,10 @@ namespace KaVE.Model.Events.CompletionEvent
         {
             return
                 string.Format(
-                    "[EnclosingMethod: {0}, EnclosingMethodGroum: {1}, EntryPoints: [{2}], TypeShape: {3}]",
+                    "[EnclosingMethod: {0}, Groums: {1}, CalledMethods: [{2}], TypeShape: {3}]",
                     EnclosingMethod,
-                    EnclosingMethodGroum,
-                    ToString(EntryPointsToCalledMethods),
+                    ToString(EntryPointToGroum),
+                    ToString(EntryPointToCalledMethods),
                     TypeShape);
         }
 
@@ -128,6 +133,18 @@ namespace KaVE.Model.Events.CompletionEvent
                 builder.Append(":{");
                 builder.Append(string.Join(",", keyValuePair.Value));
                 builder.Append("},");
+            }
+            return builder.ToString();
+        }
+
+        private string ToString(IEnumerable<KeyValuePair<IMethodName, Groums.Groum>> dictionary)
+        {
+            var builder = new StringBuilder();
+            foreach (var keyValuePair in dictionary)
+            {
+                builder.Append(keyValuePair.Key);
+                builder.Append(":");
+                builder.Append(keyValuePair.Value);
             }
             return builder.ToString();
         }

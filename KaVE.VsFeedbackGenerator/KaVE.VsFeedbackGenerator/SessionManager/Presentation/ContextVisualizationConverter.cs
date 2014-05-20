@@ -53,7 +53,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
                 builder.AppendMethod(context.EnclosingMethod, new HashSet<IMethodName>());
             }
 
-            foreach (var entryPoint in context.EntryPointsToCalledMethods)
+            foreach (var entryPoint in context.EntryPointToCalledMethods)
             {
                 builder.AppendMethod(entryPoint.Key, entryPoint.Value);
             }

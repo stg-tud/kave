@@ -67,6 +67,7 @@
     <Compile Include="Events\VisualStudio\OutputWindowEvent.cs" />
     <Compile Include="Events\VisualStudio\SolutionEvent.cs" />
     <Compile Include="Events\VisualStudio\WindowEvent.cs" />
+    <Compile Include="Groums\Groum.cs" />
     <Compile Include="Groum\CallGroum.cs" />
     <Compile Include="Groum\DoWhileGroum.cs" />
     <Compile Include="Groum\FieldAccessGroum.cs" />

@@ -60,7 +60,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis
                 {
                     _context.EnclosingMethod = methodDeclaration.GetName();
 
-                    _context.EntryPointsToCalledMethods = _calledMethodsForEntryPointsAnalysis.Analyze(
+                    _context.EntryPointToCalledMethods = _calledMethodsForEntryPointsAnalysis.Analyze(
                         typeDeclaration,
                         _context.TypeShape);
                 }

@@ -53,7 +53,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.Model
                     }
                 },
                 EnclosingMethod = TestNameFactory.GetAnonymousMethodName(),
-                EntryPointsToCalledMethods = new Dictionary<IMethodName, ISet<IMethodName>>
+                EntryPointToCalledMethods = new Dictionary<IMethodName, ISet<IMethodName>>
                 {
                     {
                         TestNameFactory.GetAnonymousMethodName(), new HashSet<IMethodName>
