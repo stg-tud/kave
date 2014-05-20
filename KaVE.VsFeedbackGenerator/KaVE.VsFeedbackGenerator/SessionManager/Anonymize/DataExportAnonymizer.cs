@@ -19,25 +19,24 @@
 
 using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.Security.Cryptography;
-using System.Text;
 using JetBrains.Application;
-using JetBrains.Util;
 using KaVE.Model.Events;
 using KaVE.Model.Events.VisualStudio;
 using KaVE.VsFeedbackGenerator.SessionManager.Presentation;
 using KaVE.VsFeedbackGenerator.Utils;
 using KaVE.VsFeedbackGenerator.Utils.Json;
 
-namespace KaVE.VsFeedbackGenerator.SessionManager
+namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
 {
     [ShellComponent]
     public class DataExportAnonymizer
     {
         private static readonly IDictionary<Type, object> Anonymizer = new Dictionary<Type, object>
         {
-            {typeof (BuildEvent), new BuildEventAnonymizer()}
+            {typeof (BuildEvent), new BuildEventAnonymizer()},
+            {typeof (SolutionEvent), new SolutionEventAnonymizer()},
+            {typeof (DocumentEvent), new DocumentEventAnonymizer()},
+            {typeof(WindowEvent), new WindowEventAnonymizer()}
         };
 
         private readonly ISettingsStore _settingsStore;
@@ -47,7 +46,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             _settingsStore = settingsStore;
         }
 
-        private IDEEventAnonymizer<TEvent> GetAnonymizerFor<TEvent>() where TEvent : IDEEvent
+        private static IDEEventAnonymizer<TEvent> GetAnonymizerFor<TEvent>() where TEvent : IDEEvent
         {
             if (Anonymizer.ContainsKey(typeof (TEvent)))
             {
@@ -78,59 +77,6 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
                 anonymizer.AnonymizeCodeNames(clone);
             }
             return clone;
-        }
-    }
-
-    internal class IDEEventAnonymizer<TEvent> where TEvent : IDEEvent
-    {
-        protected string CreateHash(string value)
-        {
-            var tmpSource = value.AsBytes();
-            var hash = new MD5CryptoServiceProvider().ComputeHash(tmpSource);
-            return Convert.ToBase64String(hash);
-        }
-
-        public virtual void AnonymizeSessionUUID(TEvent ideEvent)
-        {
-            ideEvent.IDESessionUUID = null;
-        }
-
-        public virtual void AnonymizeStartTimes(TEvent ideEvent)
-        {
-            ideEvent.TriggeredAt = null;
-        }
-
-        public virtual void AnonymizeDurations(TEvent ideEvent)
-        {
-            ideEvent.Duration = null;
-        }
-
-        public virtual void AnonymizeCodeNames(TEvent ideEvent) {}
-    }
-
-    internal class BuildEventAnonymizer : IDEEventAnonymizer<BuildEvent>
-    {
-        public override void AnonymizeStartTimes(BuildEvent ideEvent)
-        {
-            ForEachTargetDo(ideEvent, target => target.StartedAt = null);
-            base.AnonymizeStartTimes(ideEvent);
-        }
-
-        public override void AnonymizeDurations(BuildEvent ideEvent)
-        {
-            ForEachTargetDo(ideEvent, target => target.Duration = null);
-            base.AnonymizeDurations(ideEvent);
-        }
-
-        public override void AnonymizeCodeNames(BuildEvent ideEvent)
-        {
-            ForEachTargetDo(ideEvent, target => target.Project = CreateHash(target.Project));
-            base.AnonymizeCodeNames(ideEvent);
-        }
-
-        private static void ForEachTargetDo(BuildEvent buildEvent, Action<BuildTarget> modify)
-        {
-            buildEvent.Targets.ForEach(modify);
         }
     }
 }

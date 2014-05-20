@@ -17,10 +17,9 @@
  *    - Sebastian Proksch
  *    - Sven Amann
  */
-using System;
+
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using JetBrains;
 using KaVE.Model.Events;

@@ -60,6 +60,10 @@
     <Compile Include="Names\CSharp\ParameterNameTest.cs" />
     <Compile Include="Names\CSharp\PropertyNameTest.cs" />
     <Compile Include="Names\CSharp\TypeNameTest.cs" />
+    <Compile Include="Names\VisualStudio\DocumentNameTest.cs" />
+    <Compile Include="Names\VisualStudio\ProjectItemNameTest.cs" />
+    <Compile Include="Names\VisualStudio\ProjectNameTest.cs" />
+    <Compile Include="Names\VisualStudio\WindowNameTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -22,10 +22,10 @@ using JetBrains.Util;
 using KaVE.Model.Events.VisualStudio;
 using NUnit.Framework;
 
-namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
+namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
 {
     [TestFixture]
-    class BuildEventAnonymizationTest : IDEEventAnonymizerTestBase<BuildEvent>
+    class BuildEventAnonymizerTest : IDEEventAnonymizerTestBase<BuildEvent>
     {
         private const string TestTargetProjectName = "ProjectName";
         private const string TestTargetProjectNameHash = "0Wc0SWJ1Vy6bpzAFL2QHMg==";
@@ -89,12 +89,22 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
             AssertForEachTargetThat(actual, target => Assert.AreEqual(TestTargetProjectNameHash, target.Project));
         }
 
-        protected override void AssertThatPropertiesThatAreNotTouchedByAnonymizationAreUnchanged(BuildEvent target, BuildEvent actual)
+        protected override void AssertThatPropertiesThatAreNotTouchedByAnonymizationAreUnchanged(BuildEvent original, BuildEvent anonymized)
         {
-            Assert.AreEqual(target.Scope, actual.Scope);
-            Assert.AreEqual(target.Action, actual.Action);
-            Assert.AreEqual(target.Targets.Count, actual.Targets.Count);
-            // TODO @Sven: assert properties of the targets
+            Assert.AreEqual(original.Scope, anonymized.Scope);
+            Assert.AreEqual(original.Action, anonymized.Action);
+            Assert.AreEqual(original.Targets.Count, anonymized.Targets.Count);
+            AssertThatPropertiesThatAreNotTouchedByAnonymizationAreUnchanged(original.Targets[0], anonymized.Targets[0]);
+            AssertThatPropertiesThatAreNotTouchedByAnonymizationAreUnchanged(original.Targets[1], anonymized.Targets[1]);
+            AssertThatPropertiesThatAreNotTouchedByAnonymizationAreUnchanged(original.Targets[2], anonymized.Targets[2]);
+        }
+
+        private static void AssertThatPropertiesThatAreNotTouchedByAnonymizationAreUnchanged(BuildTarget original, BuildTarget anonymized)
+        {
+            Assert.AreEqual(original.Platform, anonymized.Platform);
+            Assert.AreEqual(original.ProjectConfiguration, anonymized.ProjectConfiguration);
+            Assert.AreEqual(original.SolutionConfiguration, anonymized.SolutionConfiguration);
+            Assert.AreEqual(original.Successful, anonymized.Successful);
         }
 
         private static void AssertForEachTargetThat(BuildEvent buildEvent, Action<BuildTarget> assertion)

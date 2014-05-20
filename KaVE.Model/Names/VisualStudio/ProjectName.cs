@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 using KaVE.Model.Names.CSharp;
 using KaVE.Model.Utils;
 
@@ -28,9 +29,16 @@ namespace KaVE.Model.Names.VisualStudio
             return Registry.GetOrCreate(identifier);
         }
 
-        private ProjectName(string identifier)
-            : base(identifier)
+        private ProjectName(string identifier) : base(identifier) {}
+
+        public string Type
         {
+            get { return Identifier.Split(new[] {' '}, 2)[0]; }
+        }
+
+        public string Name
+        {
+            get { return Identifier.Split(new[] {' '}, 2)[1]; }
         }
     }
 }

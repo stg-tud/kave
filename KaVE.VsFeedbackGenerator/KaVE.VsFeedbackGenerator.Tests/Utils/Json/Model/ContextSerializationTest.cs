@@ -18,12 +18,9 @@
  */
 
 using System.Collections.Generic;
-using System.Runtime.Serialization.Formatters;
 using KaVE.Model.Events.CompletionEvent;
 using KaVE.Model.Names;
 using KaVE.TestUtils.Model.Names;
-using KaVE.VsFeedbackGenerator.Utils.Json;
-using Newtonsoft.Json;
 using NUnit.Framework;
 
 namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.Model

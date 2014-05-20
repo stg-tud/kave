@@ -17,32 +17,25 @@
  *    - Sven Amann
  */
 
-using KaVE.Model.Names.CSharp;
-using KaVE.Model.Utils;
+using KaVE.TestUtils.Model.Events;
+using NUnit.Framework;
 
-namespace KaVE.Model.Names.VisualStudio
+namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
 {
-    public class DocumentName : Name, IIDEComponentName
+    [TestFixture]
+    class IDEEventAnonymizerTest : IDEEventAnonymizerTestBase<TestIDEEvent>
     {
-        private static readonly WeakNameCache<DocumentName> Registry =
-            WeakNameCache<DocumentName>.Get(id => new DocumentName(id));
-
-        public new static DocumentName Get(string identifier)
+        protected override TestIDEEvent CreateEventWithAllAnonymizablePropertiesSet()
         {
-            return Registry.GetOrCreate(identifier);
+            return new TestIDEEvent
+            {
+                TestProperty = "TestValue"
+            };
         }
 
-        private DocumentName(string identifier) : base(identifier) {}
-
-
-        public string Language
+        protected override void AssertThatPropertiesThatAreNotTouchedByAnonymizationAreUnchanged(TestIDEEvent original, TestIDEEvent anonymized)
         {
-            get { return Identifier.Split(new[] {' '}, 2)[0]; }
-        }
-
-        public string FileName
-        {
-            get { return Identifier.Split(new[] {' '}, 2)[1]; }
+            Assert.AreEqual(original.TestProperty, anonymized.TestProperty);
         }
     }
 }

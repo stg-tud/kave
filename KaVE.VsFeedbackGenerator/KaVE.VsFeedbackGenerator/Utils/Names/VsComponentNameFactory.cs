@@ -30,13 +30,24 @@ namespace KaVE.VsFeedbackGenerator.Utils.Names
         [ContractAnnotation("notnull => notnull"), CanBeNull]
         public static WindowName GetName([CanBeNull] this Window window)
         {
-            return window == null ? null : WindowName.Get(window.Type + " " + window.Caption);
+            return window == null ? null : GetWindowName(window.Type.ToString(), window.Caption);
+        }
+
+        [NotNull]
+        public static WindowName GetWindowName([NotNull] string vsWindowType, [NotNull] string caption)
+        {
+            return WindowName.Get(vsWindowType + " " + caption);
         }
 
         [ContractAnnotation("notnull => notnull"), CanBeNull]
         public static SolutionName GetName([CanBeNull] this Solution solution)
         {
-            return solution == null ? null : SolutionName.Get(solution.FullName);
+            return solution == null ? null : GetSolutionName(solution.FullName);
+        }
+
+        public static SolutionName GetSolutionName(string fullName)
+        {
+            return SolutionName.Get(fullName);
         }
 
         [NotNull]
@@ -54,7 +65,14 @@ namespace KaVE.VsFeedbackGenerator.Utils.Names
                 return null;
             }
             var documentName = document.GetSolutionRelativeName();
-            return DocumentName.Get(document.Language + " " + documentName);
+            var language = document.Language;
+            return GetDocumentName(language, documentName);
+        }
+
+        [NotNull]
+        public static DocumentName GetDocumentName([NotNull] string language, [NotNull] string fileName)
+        {
+            return DocumentName.Get(language + " " + fileName);
         }
 
         private static string GetSolutionRelativeName(this Document document)
@@ -85,13 +103,23 @@ namespace KaVE.VsFeedbackGenerator.Utils.Names
         [ContractAnnotation("notnull => notnull"), CanBeNull]
         public static ProjectItemName GetName([CanBeNull] this ProjectItem projectItem)
         {
-            return projectItem == null ? null : ProjectItemName.Get(projectItem.Kind + " " + projectItem.Name);
+            return projectItem == null ? null : GetProjectItemName(projectItem.Kind, projectItem.Name);
+        }
+
+        public static ProjectItemName GetProjectItemName(string kind, string name)
+        {
+            return ProjectItemName.Get(kind + " " + name);
         }
 
         [ContractAnnotation("notnull => notnull"), CanBeNull]
         public static ProjectName GetName([CanBeNull] this Project project)
         {
-            return project == null ? null : ProjectName.Get(project.Kind + " " + project.UniqueName);
+            return project == null ? null : GetProjectName(project.Kind, project.UniqueName);
+        }
+
+        public static ProjectName GetProjectName(string kind, string uniqueName)
+        {
+            return ProjectName.Get(kind + " " + uniqueName);
         }
 
         [ContractAnnotation("notnull => notnull"), CanBeNull]

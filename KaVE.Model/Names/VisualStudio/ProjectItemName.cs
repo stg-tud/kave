@@ -12,7 +12,11 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sven Amann
  */
+
 using KaVE.Model.Names.CSharp;
 using KaVE.Model.Utils;
 
@@ -28,8 +32,16 @@ namespace KaVE.Model.Names.VisualStudio
             return Registry.GetOrCreate(identifier);
         }
 
-        private ProjectItemName(string identifier) : base(identifier)
+        private ProjectItemName(string identifier) : base(identifier) {}
+
+        public string Type
         {
+            get { return Identifier.Split(new[] {' '}, 2)[0]; }
+        }
+
+        public string Name
+        {
+            get { return Identifier.Split(new[] {' '}, 2)[1]; }
         }
     }
 }

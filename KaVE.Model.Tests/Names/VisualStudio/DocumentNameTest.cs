@@ -12,26 +12,33 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sven Amann
  */
-using System.Runtime.Serialization;
-using KaVE.Model.Names.VisualStudio;
 
-namespace KaVE.Model.Events.VisualStudio
+using KaVE.Model.Names.VisualStudio;
+using NUnit.Framework;
+
+namespace KaVE.Model.Tests.Names.VisualStudio
 {
-    [DataContract]
-    public class DocumentEvent : IDEEvent
+    [TestFixture]
+    class DocumentNameTest
     {
-        public enum DocumentAction
+        [Test]
+        public void ShouldParseLanguage()
         {
-            Opened,
-            Saved,
-            Closing
+            var uut = DocumentName.Get("CSharp C:\\File.cs");
+
+            Assert.AreEqual("CSharp", uut.Language);
         }
 
-        [DataMember]
-        public DocumentName Document { get; set; }
+        [Test]
+        public void ShouldParseFileName()
+        {
+            var uut = DocumentName.Get("Language C:\\File.ext");
 
-        [DataMember]
-        public DocumentAction Action { get; set; }
+            Assert.AreEqual("C:\\File.ext", uut.FileName);
+        }
     }
 }

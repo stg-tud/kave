@@ -14,25 +14,25 @@
  * limitations under the License.
  * 
  * Contributors:
- *    - 
+ *    - Sven Amann
  */
 
 using System;
 using KaVE.Model.Events;
-using KaVE.TestUtils.Model.Names;
-using KaVE.VsFeedbackGenerator.SessionManager;
+using KaVE.Model.Names.VisualStudio;
+using KaVE.VsFeedbackGenerator.SessionManager.Anonymize;
 using KaVE.VsFeedbackGenerator.SessionManager.Presentation;
 using KaVE.VsFeedbackGenerator.Utils;
 using Moq;
 using NUnit.Framework;
 
-namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
+namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
 {
     internal abstract class IDEEventAnonymizerTestBase<TEvent> where TEvent : IDEEvent
     {
         private DataExportAnonymizer _uut;
         protected ExportSettings ExportSettings { get; private set; }
-        protected TEvent Target { get; private set; }
+        protected TEvent OriginalEvent { get; private set; }
 
         [SetUp]
         public void SetUp()
@@ -44,13 +44,13 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
 
             _uut = new DataExportAnonymizer(mockSettingsStore.Object);
 
-            Target = CreateEventWithAllAnonymizablePropertiesSet();
-            Target.IDESessionUUID = "0xDEADBEEF";
-            Target.TriggeredAt = DateTime.Now;
-            Target.Duration = TimeSpan.FromSeconds(23);
-            Target.ActiveDocument = VsComponentNameTestFactory.CreateAnonymousDocumentName();
-            Target.ActiveWindow = VsComponentNameTestFactory.CreateAnonymousWindowName();
-            Target.TriggeredBy = IDEEvent.Trigger.Click;
+            OriginalEvent = CreateEventWithAllAnonymizablePropertiesSet();
+            OriginalEvent.IDESessionUUID = "0xDEADBEEF";
+            OriginalEvent.TriggeredAt = DateTime.Now;
+            OriginalEvent.Duration = TimeSpan.FromSeconds(23);
+            OriginalEvent.ActiveDocument = DocumentName.Get("CSharp \\P1\\Class1.cs");
+            OriginalEvent.ActiveWindow = WindowName.Get("vsWindowTypeDocument Class1.cs");
+            OriginalEvent.TriggeredBy = IDEEvent.Trigger.Click;
         }
 
         /// <summary>
@@ -63,7 +63,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
         {
             var actual = WhenEventIsAnonymized();
 
-            Assert.AreEqual(Target, actual);
+            Assert.AreEqual(OriginalEvent, actual);
         }
 
         [Test]
@@ -71,12 +71,12 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
         {
             var actual = WhenEventIsAnonymized();
 
-            Assert.AreNotSame(Target, actual);
+            Assert.AreNotSame(OriginalEvent, actual);
         }
 
         protected TEvent WhenEventIsAnonymized()
         {
-            return _uut.Anonymize(Target);
+            return _uut.Anonymize(OriginalEvent);
         }
 
         [Test]
@@ -110,6 +110,59 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
         }
 
         [Test]
+        public void ShouldRemovePathFromActiveDocumentNameWhenRemoveNamesIsSet()
+        {
+            ExportSettings.RemoveCodeNames = true;
+
+            var actual = WhenEventIsAnonymized();
+
+            Assert.AreEqual("CSharp V95bjWgLii851OlpGj2Btw==", actual.ActiveDocument.Identifier);
+        }
+
+        [Test]
+        public void ShouldNotFailWhenActiveDocumentIsNullAndRemoveNamesIsSet()
+        {
+            OriginalEvent.ActiveDocument = null;
+            ExportSettings.RemoveCodeNames = true;
+
+            var actual = WhenEventIsAnonymized();
+
+            Assert.IsNull(actual.ActiveDocument);
+        }
+
+        [Test]
+        public void ShouldRemovePathFromActiveWindowNameWhenRemoveNamesIsSet()
+        {
+            ExportSettings.RemoveCodeNames = true;
+
+            var actual = WhenEventIsAnonymized();
+
+            Assert.AreEqual("vsWindowTypeDocument srcJ/SmXbxiIkauvY52nqA==", actual.ActiveWindow.Identifier);
+        }
+
+        [Test]
+        public void ShouldNotChangeActiveWindowNameWhenRemoveNamesIsSetButWindowNameContainsNoPath()
+        {
+            OriginalEvent.ActiveWindow = WindowName.Get("vsWindowTypeToolWindow Start Page");
+            ExportSettings.RemoveCodeNames = true;
+
+            var actual = WhenEventIsAnonymized();
+
+            Assert.AreEqual("vsWindowTypeToolWindow Start Page", actual.ActiveWindow.Identifier);
+        }
+
+        [Test]
+        public void ShouldNotFailWhenActiveWindowIsNullAndRemoveNamesIsSet()
+        {
+            OriginalEvent.ActiveWindow = null;
+            ExportSettings.RemoveCodeNames = true;
+
+            var actual = WhenEventIsAnonymized();
+
+            Assert.IsNull(actual.ActiveWindow);
+        }
+
+        [Test]
         public void ShouldNotTouchFieldsThatDontNeedToBeAnonymized()
         {
             ExportSettings.RemoveStartTimes = true;
@@ -119,13 +172,11 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
 
             var actual = WhenEventIsAnonymized();
 
-            Assert.AreEqual(Target.ActiveDocument, actual.ActiveDocument);
-            Assert.AreEqual(Target.ActiveWindow, actual.ActiveWindow);
-            Assert.AreEqual(Target.TriggeredBy, actual.TriggeredBy);
-            AssertThatPropertiesThatAreNotTouchedByAnonymizationAreUnchanged(Target, actual);
+            Assert.AreEqual(OriginalEvent.TriggeredBy, actual.TriggeredBy);
+            AssertThatPropertiesThatAreNotTouchedByAnonymizationAreUnchanged(OriginalEvent, actual);
         }
 
-        protected abstract void AssertThatPropertiesThatAreNotTouchedByAnonymizationAreUnchanged(TEvent target,
-            TEvent actual);
+        protected abstract void AssertThatPropertiesThatAreNotTouchedByAnonymizationAreUnchanged(TEvent original,
+            TEvent anonymized);
     }
 }

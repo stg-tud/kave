@@ -1,5 +1,5 @@
-﻿/*
- * Copyright 2014 Technische Universität Darmstadt
+/*
+ * Copyright 2014 Technische Universit�t Darmstadt
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,26 +12,33 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - 
  */
-using System.Runtime.Serialization;
-using KaVE.Model.Names.VisualStudio;
 
-namespace KaVE.Model.Events.VisualStudio
+using KaVE.Model.Names.VisualStudio;
+using NUnit.Framework;
+
+namespace KaVE.Model.Tests.Names.VisualStudio
 {
-    [DataContract]
-    public class DocumentEvent : IDEEvent
+    [TestFixture]
+    class ProjectItemNameTest
     {
-        public enum DocumentAction
+        [Test]
+        public void ShouldParseType()
         {
-            Opened,
-            Saved,
-            Closing
+            var uut = ProjectItemName.Get("File C:\\Project\\File.txt");
+
+            Assert.AreEqual("File", uut.Type);
         }
 
-        [DataMember]
-        public DocumentName Document { get; set; }
+        [Test]
+        public void ShouldParseName()
+        {
+            var uut = ProjectItemName.Get("File C:\\Project\\File.txt");
 
-        [DataMember]
-        public DocumentAction Action { get; set; }
+            Assert.AreEqual("C:\\Project\\File.txt", uut.Name);
+        }
     }
 }

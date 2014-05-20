@@ -120,7 +120,13 @@
     </Compile>
     <Compile Include="Interactivity\InteractionRequest.cs" />
     <Compile Include="Interactivity\ConfirmationRequestHandler.cs" />
-    <Compile Include="SessionManager\DataExportAnonymizer.cs" />
+    <Compile Include="SessionManager\Anonymize\BuildEventAnonymizer.cs" />
+    <Compile Include="SessionManager\Anonymize\DataExportAnonymizer.cs" />
+    <Compile Include="SessionManager\Anonymize\DocumentEventAnonymizer.cs" />
+    <Compile Include="SessionManager\Anonymize\IDEEventAnonymizer.cs" />
+    <Compile Include="SessionManager\Anonymize\NameAnonymizationUtils.cs" />
+    <Compile Include="SessionManager\Anonymize\SolutionEventAnonymizer.cs" />
+    <Compile Include="SessionManager\Anonymize\WindowEventAnonymizer.cs" />
     <Compile Include="SessionManager\FeedbackSettings.cs" />
     <Compile Include="KaVESettings.cs" />
     <Compile Include="SessionManager\Presentation\IDEEventDetailsToJsonConverter.cs" />

@@ -12,26 +12,37 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sven Amann
  */
-using System.Runtime.Serialization;
-using KaVE.Model.Names.VisualStudio;
 
-namespace KaVE.Model.Events.VisualStudio
+using KaVE.Model.Names.VisualStudio;
+using NUnit.Framework;
+
+namespace KaVE.Model.Tests.Names.VisualStudio
 {
-    [DataContract]
-    public class DocumentEvent : IDEEvent
+    [TestFixture]
+    class WindowNameTest
     {
-        public enum DocumentAction
+        private WindowName _uut;
+
+        [SetUp]
+        public void SetUp()
         {
-            Opened,
-            Saved,
-            Closing
+            _uut = WindowName.Get("windowType Window Caption");
         }
 
-        [DataMember]
-        public DocumentName Document { get; set; }
+        [Test]
+        public void ShouldParseType()
+        {
+            Assert.AreEqual("windowType", _uut.Type);
+        }
 
-        [DataMember]
-        public DocumentAction Action { get; set; }
+        [Test]
+        public void ShouldParseCaption()
+        {
+            Assert.AreEqual("Window Caption", _uut.Caption);
+        }
     }
 }

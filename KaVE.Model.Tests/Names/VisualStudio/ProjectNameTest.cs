@@ -17,25 +17,28 @@
  *    - Sven Amann
  */
 
-using KaVE.TestUtils.Model.Events;
+using KaVE.Model.Names.VisualStudio;
 using NUnit.Framework;
 
-namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
+namespace KaVE.Model.Tests.Names.VisualStudio
 {
     [TestFixture]
-    class IDEEventAnonymizationTest : IDEEventAnonymizerTestBase<TestIDEEvent>
+    class ProjectNameTest
     {
-        protected override TestIDEEvent CreateEventWithAllAnonymizablePropertiesSet()
+        [Test]
+        public void ShouldParseType()
         {
-            return new TestIDEEvent
-            {
-                TestProperty = "TestValue"
-            };
+            var uut = ProjectName.Get("ProjectType C:\\Project.csproj");
+
+            Assert.AreEqual("ProjectType", uut.Type);
         }
 
-        protected override void AssertThatPropertiesThatAreNotTouchedByAnonymizationAreUnchanged(TestIDEEvent target, TestIDEEvent actual)
+        [Test]
+        public void ShouldParseName()
         {
-            Assert.AreEqual(target.TestProperty, actual.TestProperty);
+            var uut = ProjectName.Get("ProjectType C:\\Project.csproj");
+
+            Assert.AreEqual("C:\\Project.csproj", uut.Name);
         }
     }
 }
