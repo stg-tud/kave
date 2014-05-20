@@ -17,15 +17,15 @@
  *    - 
  */
 
-using KaVE.Model.Events.VisualStudio;
+using KaVE.Model.Events;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
 {
-    internal class DocumentEventAnonymizer : IDEEventAnonymizer<DocumentEvent>
+    internal class InfoEventAnonymizer : IDEEventAnonymizer<InfoEvent>
     {
-        public override void AnonymizeCodeNames(DocumentEvent ideEvent)
+        public override void AnonymizeCodeNames(InfoEvent ideEvent)
         {
-            ideEvent.Document = ideEvent.Document.ToAnonymousName();
+            ideEvent.Info = null;
             base.AnonymizeCodeNames(ideEvent);
         }
     }

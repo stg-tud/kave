@@ -14,18 +14,18 @@
  * limitations under the License.
  * 
  * Contributors:
- *    - 
+ *    - Sven Amann
  */
 
-using KaVE.Model.Events.VisualStudio;
+using KaVE.Model.Events;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
 {
-    internal class DocumentEventAnonymizer : IDEEventAnonymizer<DocumentEvent>
+    internal class ErrorEventAnonymizer : IDEEventAnonymizer<ErrorEvent>
     {
-        public override void AnonymizeCodeNames(DocumentEvent ideEvent)
+        public override void AnonymizeCodeNames(ErrorEvent ideEvent)
         {
-            ideEvent.Document = ideEvent.Document.ToAnonymousName();
+            ideEvent.Content = null;
             base.AnonymizeCodeNames(ideEvent);
         }
     }

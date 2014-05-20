@@ -124,8 +124,10 @@
     <Compile Include="SessionManager\Anonymize\BuildEventAnonymizer.cs" />
     <Compile Include="SessionManager\Anonymize\DataExportAnonymizer.cs" />
     <Compile Include="SessionManager\Anonymize\DocumentEventAnonymizer.cs" />
+    <Compile Include="SessionManager\Anonymize\ErrorEventAnonymizer.cs" />
     <Compile Include="SessionManager\Anonymize\IDEEventAnonymizer.cs" />
-    <Compile Include="SessionManager\Anonymize\NameAnonymizationUtils.cs" />
+    <Compile Include="SessionManager\Anonymize\InfoEventAnonymizer.cs" />
+    <Compile Include="SessionManager\Anonymize\AnonymousNameUtils.cs" />
     <Compile Include="SessionManager\Anonymize\SolutionEventAnonymizer.cs" />
     <Compile Include="SessionManager\Anonymize\WindowEventAnonymizer.cs" />
     <Compile Include="SessionManager\FeedbackSettings.cs" />

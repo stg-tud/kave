@@ -139,7 +139,7 @@ namespace KaVE.Model.Names.CSharp
             }
         }
 
-        private string RawFullName
+        public string RawFullName
         {
             get
             {

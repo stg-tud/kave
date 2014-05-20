@@ -59,7 +59,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
         protected abstract TEvent CreateEventWithAllAnonymizablePropertiesSet();
 
         [Test]
-        public void ShouldNotTouchEventIfNotOptionsAreSet()
+        public void ShouldNotTouchEventIfNoOptionsAreSet()
         {
             var actual = WhenEventIsAnonymized();
 

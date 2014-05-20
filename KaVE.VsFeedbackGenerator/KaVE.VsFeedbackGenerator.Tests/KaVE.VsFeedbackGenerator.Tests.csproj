@@ -103,8 +103,13 @@
     <Compile Include="Generators\VisualStudio\WindowEventGeneratorTest.cs" />
     <Compile Include="Interactivity\InteractionRequestTest.cs" />
     <Compile Include="MessageBus\TinyMessengerMessageChannelTest.cs" />
+    <Compile Include="SessionManager\Anonymize\AnonymousNameUtilsTest.cs" />
     <Compile Include="SessionManager\Anonymize\BuildEventAnonymizerTest.cs" />
+    <Compile Include="SessionManager\Anonymize\CompletionEventAnonymizerTest.cs" />
     <Compile Include="SessionManager\Anonymize\DocumentEventAnonymizerTest.cs" />
+    <Compile Include="SessionManager\Anonymize\ErrorEventAnonymizerTest.cs" />
+    <Compile Include="SessionManager\Anonymize\IDEStateEventAnonymizerTest.cs" />
+    <Compile Include="SessionManager\Anonymize\InfoEventAnonymizerTest.cs" />
     <Compile Include="SessionManager\Anonymize\SolutionEventAnonymizerTest.cs" />
     <Compile Include="SessionManager\Anonymize\WindowEventAnonymizerTest.cs" />
     <Compile Include="SessionManager\DeleteEventCommandTest.cs" />

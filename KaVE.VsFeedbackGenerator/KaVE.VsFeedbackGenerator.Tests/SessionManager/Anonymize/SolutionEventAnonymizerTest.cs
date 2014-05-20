@@ -32,14 +32,14 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
             return new SolutionEvent
             {
                 Action = SolutionEvent.SolutionAction.OpenSolution,
-                Target = VsComponentNameFactory.GetSolutionName("C:\\Solution.sln")
+                Target = SolutionName.Get("C:\\Solution.sln")
             };
         }
 
         [Test]
         public void ShouldRemovePathFromTargetSolutionIfRemoveNamesIsSet()
         {
-            OriginalEvent.Target = VsComponentNameFactory.GetSolutionName("C:\\Solution.sln");
+            OriginalEvent.Target = SolutionName.Get("C:\\Solution.sln");
             ExportSettings.RemoveCodeNames = true;
 
             var actual = WhenEventIsAnonymized();
@@ -50,7 +50,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
         [Test]
         public void ShouldRemovePathFromTargetProjectIfRemoveNamesIsSet()
         {
-            OriginalEvent.Target = VsComponentNameFactory.GetProjectName("Folder", "C:\\A\\B\\C");
+            OriginalEvent.Target = ProjectName.Get("Folder C:\\A\\B\\C");
             ExportSettings.RemoveCodeNames = true;
 
             var actual = WhenEventIsAnonymized();
@@ -61,7 +61,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
         [Test]
         public void ShouldRemovePathFromTargetProjectItemIfRemoveNamesIsSet()
         {
-            OriginalEvent.Target = VsComponentNameFactory.GetProjectItemName("CSharp", "C:\\A\\B\\Class.cs");
+            OriginalEvent.Target = ProjectItemName.Get("CSharp C:\\A\\B\\Class.cs");
             ExportSettings.RemoveCodeNames = true;
 
             var actual = WhenEventIsAnonymized();
@@ -70,7 +70,8 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
         }
 
 
-        protected override void AssertThatPropertiesThatAreNotTouchedByAnonymizationAreUnchanged(SolutionEvent original, SolutionEvent anonymized)
+        protected override void AssertThatPropertiesThatAreNotTouchedByAnonymizationAreUnchanged(SolutionEvent original,
+            SolutionEvent anonymized)
         {
             Assert.AreEqual(original.Action, anonymized.Action);
         }

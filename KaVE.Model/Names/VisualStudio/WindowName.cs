@@ -17,6 +17,7 @@
  *    - Sven Amann
  */
 
+using KaVE.JetBrains.Annotations;
 using KaVE.Model.Names.CSharp;
 using KaVE.Model.Utils;
 
@@ -24,24 +25,20 @@ namespace KaVE.Model.Names.VisualStudio
 {
     public class WindowName : Name, IIDEComponentName
     {
-        private static readonly WeakNameCache<WindowName> Registry = WeakNameCache<WindowName>.Get(id => new WindowName(id));
+        private static readonly WeakNameCache<WindowName> Registry =
+            WeakNameCache<WindowName>.Get(id => new WindowName(id));
 
+        [NotNull]
         public new static WindowName Get(string identifier)
         {
             return Registry.GetOrCreate(identifier);
         }
 
-        private WindowName(string identifier)
-            : base(identifier)
-        {
-        }
+        private WindowName(string identifier) : base(identifier) {}
 
         public string Type
         {
-            get
-            {
-                return Identifier.Substring(0, Identifier.IndexOf(' '));
-            }
+            get { return Identifier.Substring(0, Identifier.IndexOf(' ')); }
         }
 
         public string Caption

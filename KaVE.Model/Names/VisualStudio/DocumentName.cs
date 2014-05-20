@@ -17,6 +17,7 @@
  *    - Sven Amann
  */
 
+using KaVE.JetBrains.Annotations;
 using KaVE.Model.Names.CSharp;
 using KaVE.Model.Utils;
 
@@ -27,6 +28,7 @@ namespace KaVE.Model.Names.VisualStudio
         private static readonly WeakNameCache<DocumentName> Registry =
             WeakNameCache<DocumentName>.Get(id => new DocumentName(id));
 
+        [NotNull]
         public new static DocumentName Get(string identifier)
         {
             return Registry.GetOrCreate(identifier);

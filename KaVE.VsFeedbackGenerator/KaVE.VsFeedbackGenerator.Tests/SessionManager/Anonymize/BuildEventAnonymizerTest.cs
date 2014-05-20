@@ -25,8 +25,10 @@ using NUnit.Framework;
 namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
 {
     [TestFixture]
-    class BuildEventAnonymizerTest : IDEEventAnonymizerTestBase<BuildEvent>
+    internal class BuildEventAnonymizerTest : IDEEventAnonymizerTestBase<BuildEvent>
     {
+        private TimeSpan _testBuildTargetDuration;
+        private DateTime _testBuildTargetStartTime;
         private const string TestTargetProjectName = "ProjectName";
         private const string TestTargetProjectNameHash = "0Wc0SWJ1Vy6bpzAFL2QHMg==";
 
@@ -47,10 +49,12 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
 
         protected BuildTarget CreateBuildTarget()
         {
+            _testBuildTargetStartTime = DateTime.Now;
+            _testBuildTargetDuration = TimeSpan.FromMinutes(42);
             return new BuildTarget
             {
-                StartedAt = DateTime.Now,
-                Duration = TimeSpan.FromMinutes(42),
+                StartedAt = _testBuildTargetStartTime,
+                Duration = _testBuildTargetDuration,
                 Platform = "x86",
                 Project = TestTargetProjectName,
                 ProjectConfiguration = "Debug",
@@ -66,7 +70,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
 
             var actual = WhenEventIsAnonymized();
 
-            AssertForEachTargetThat(actual, target => Assert.IsNull(target.StartedAt));
+            actual.Targets.ForEach(target => Assert.IsNull(target.StartedAt));
         }
 
         [Test]
@@ -76,7 +80,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
 
             var actual = WhenEventIsAnonymized();
 
-            AssertForEachTargetThat(actual, target => Assert.IsNull(target.Duration));
+            actual.Targets.ForEach(target => Assert.IsNull(target.Duration));
         }
 
         [Test]
@@ -86,10 +90,11 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
 
             var actual = WhenEventIsAnonymized();
 
-            AssertForEachTargetThat(actual, target => Assert.AreEqual(TestTargetProjectNameHash, target.Project));
+            actual.Targets.ForEach(target => Assert.AreEqual(TestTargetProjectNameHash, target.Project));
         }
 
-        protected override void AssertThatPropertiesThatAreNotTouchedByAnonymizationAreUnchanged(BuildEvent original, BuildEvent anonymized)
+        protected override void AssertThatPropertiesThatAreNotTouchedByAnonymizationAreUnchanged(BuildEvent original,
+            BuildEvent anonymized)
         {
             Assert.AreEqual(original.Scope, anonymized.Scope);
             Assert.AreEqual(original.Action, anonymized.Action);
@@ -99,17 +104,13 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
             AssertThatPropertiesThatAreNotTouchedByAnonymizationAreUnchanged(original.Targets[2], anonymized.Targets[2]);
         }
 
-        private static void AssertThatPropertiesThatAreNotTouchedByAnonymizationAreUnchanged(BuildTarget original, BuildTarget anonymized)
+        private static void AssertThatPropertiesThatAreNotTouchedByAnonymizationAreUnchanged(BuildTarget original,
+            BuildTarget anonymized)
         {
             Assert.AreEqual(original.Platform, anonymized.Platform);
             Assert.AreEqual(original.ProjectConfiguration, anonymized.ProjectConfiguration);
             Assert.AreEqual(original.SolutionConfiguration, anonymized.SolutionConfiguration);
             Assert.AreEqual(original.Successful, anonymized.Successful);
-        }
-
-        private static void AssertForEachTargetThat(BuildEvent buildEvent, Action<BuildTarget> assertion)
-        {
-            buildEvent.Targets.ForEach(assertion);
         }
     }
 }

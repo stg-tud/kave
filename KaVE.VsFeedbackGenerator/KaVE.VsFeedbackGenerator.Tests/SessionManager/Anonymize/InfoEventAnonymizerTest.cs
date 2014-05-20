@@ -1,5 +1,5 @@
-﻿/*
- * Copyright 2014 Technische Universität Darmstadt
+/*
+ * Copyright 2014 Technische Universit�t Darmstadt
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,29 +14,36 @@
  * limitations under the License.
  * 
  * Contributors:
- *    - Sven Amann
+ *    - 
  */
 
-using KaVE.TestUtils.Model.Events;
+using KaVE.Model.Events;
 using NUnit.Framework;
 
 namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
 {
     [TestFixture]
-    internal class IDEEventAnonymizerTest : IDEEventAnonymizerTestBase<TestIDEEvent>
+    internal class InfoEventAnonymizerTest : IDEEventAnonymizerTestBase<InfoEvent>
     {
-        protected override TestIDEEvent CreateEventWithAllAnonymizablePropertiesSet()
+        protected override InfoEvent CreateEventWithAllAnonymizablePropertiesSet()
         {
-            return new TestIDEEvent
+            return new InfoEvent
             {
-                TestProperty = "TestValue"
+                Info = "Some potentially private payload"
             };
         }
 
-        protected override void AssertThatPropertiesThatAreNotTouchedByAnonymizationAreUnchanged(TestIDEEvent original,
-            TestIDEEvent anonymized)
+        [Test]
+        public void ShouldRemoveInfoWhenRemoveNamesIsSet()
         {
-            Assert.AreEqual(original.TestProperty, anonymized.TestProperty);
+            ExportSettings.RemoveCodeNames = true;
+
+            var actual = WhenEventIsAnonymized();
+
+            Assert.IsNull(actual.Info);
         }
+
+        protected override void AssertThatPropertiesThatAreNotTouchedByAnonymizationAreUnchanged(InfoEvent original,
+            InfoEvent anonymized) {}
     }
 }

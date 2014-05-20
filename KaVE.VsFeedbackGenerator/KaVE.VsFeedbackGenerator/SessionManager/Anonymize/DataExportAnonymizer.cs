@@ -19,6 +19,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using JetBrains.Application;
 using KaVE.Model.Events;
 using KaVE.Model.Events.VisualStudio;
@@ -36,7 +37,10 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
             {typeof (BuildEvent), new BuildEventAnonymizer()},
             {typeof (SolutionEvent), new SolutionEventAnonymizer()},
             {typeof (DocumentEvent), new DocumentEventAnonymizer()},
-            {typeof(WindowEvent), new WindowEventAnonymizer()}
+            {typeof (WindowEvent), new WindowEventAnonymizer()},
+            {typeof (ErrorEvent), new ErrorEventAnonymizer()},
+            {typeof (InfoEvent), new InfoEventAnonymizer()},
+            {typeof (IDEStateEvent), new IDEStateEventAnonymizer()},
         };
 
         private readonly ISettingsStore _settingsStore;
@@ -77,6 +81,16 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
                 anonymizer.AnonymizeCodeNames(clone);
             }
             return clone;
+        }
+    }
+
+    internal class IDEStateEventAnonymizer : IDEEventAnonymizer<IDEStateEvent>
+    {
+        public override void AnonymizeCodeNames(IDEStateEvent ideEvent)
+        {
+            ideEvent.OpenDocuments = ideEvent.OpenDocuments.Select(doc => doc.ToAnonymousName()).ToList();
+            ideEvent.OpenWindows = ideEvent.OpenWindows.Select(doc => doc.ToAnonymousName()).ToList();
+            base.AnonymizeCodeNames(ideEvent);
         }
     }
 }
