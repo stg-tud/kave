@@ -18,7 +18,6 @@
  *    - Sebastian Proksch
  */
 
-using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Text;
@@ -39,17 +38,6 @@ namespace KaVE.Model.Events.CompletionEvent
         {
             EntryPointToCalledMethods = new Dictionary<IMethodName, ISet<IMethodName>>();
             EntryPointToGroum = new Dictionary<IMethodName, Groums.Groum>();
-        }
-
-        /// <summary>
-        ///     Information about the method whose body is currently edited. <code>null</code> if completion is triggered
-        ///     outside a method.
-        /// </summary>
-        [Obsolete("use EnclosingMethod instead")]
-        public MethodHierarchy EnclosingMethodHierarchy
-        {
-            get { throw new NotImplementedException(); }
-            set { EnclosingMethod = value != null ? value.Element : null; }
         }
 
         /// <summary>
