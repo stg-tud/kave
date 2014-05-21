@@ -31,6 +31,7 @@ namespace KaVE.Model.Names
     {
         private const string NameQualifierPrefix = "KaVE.Model.Names.";
         private const char Separator = ':';
+        private const BindingFlags GetMethodBindingFlags = BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
 
         public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
         {
@@ -79,13 +80,17 @@ namespace KaVE.Model.Names
 
         private static MethodInfo GetFactoryMethod(Type type)
         {
-            var factoryMethod = type.GetMethods(BindingFlags.Static | BindingFlags.Public).Where(
-                m =>
-                {
-                    var parameterInfos = m.GetParameters();
-                    return parameterInfos.Count() == 1 && parameterInfos[0].ParameterType == typeof (string);
-                }).First();
-            return factoryMethod;
+            return type.GetMethods(GetMethodBindingFlags).Where(IsGetMethod).First();
+        }
+
+        private static bool IsGetMethod(MethodInfo method)
+        {
+            if (!method.Name.Equals("Get"))
+            {
+                return false;
+            }
+            var parameterInfos = method.GetParameters();
+            return parameterInfos.Count() == 1 && parameterInfos[0].ParameterType == typeof (string);
         }
     }
 }

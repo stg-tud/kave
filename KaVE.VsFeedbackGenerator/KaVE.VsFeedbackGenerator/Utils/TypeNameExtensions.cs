@@ -68,7 +68,7 @@ namespace KaVE.VsFeedbackGenerator.Utils
             if (elem.IsUnknownType)
             {
                 // TODO @Dennis: this is not a type category, but a type identifier
-                return TypeName.UnknownTypeIdentifier;
+                return UnknownTypeName.Identifier;
             }
             throw new ArgumentException(@"Given ITypeName does not match any type", "elem");
         }

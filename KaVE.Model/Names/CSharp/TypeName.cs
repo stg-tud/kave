@@ -12,7 +12,11 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sven Amann
  */
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,15 +27,42 @@ namespace KaVE.Model.Names.CSharp
 {
     public class TypeName : Name, ITypeName
     {
-        public const string UnknownTypeIdentifier = "?";
-
         private static readonly WeakNameCache<ITypeName> Registry = WeakNameCache<ITypeName>.Get(CreateTypeName);
 
         private static ITypeName CreateTypeName(string identifier)
         {
-            return TypeParameterName.IsTypeParameterIdentifier(identifier)
-                ? (ITypeName) new TypeParameterName(identifier)
-                : new TypeName(identifier);
+            // checked first, because it's a special case
+            if (UnknownTypeName.IsUnknownTypeIdentifier(identifier))
+            {
+                return new UnknownTypeName(identifier);
+            }
+            // checked second, since type parameters can have any kind of type
+            if (TypeParameterName.IsTypeParameterIdentifier(identifier))
+            {
+                return new TypeParameterName(identifier);
+            }
+            // checked third, since the array's value type can have any kind of type
+            if (ArrayTypeName.IsArrayTypeIdentifier(identifier))
+            {
+                return new ArrayTypeName(identifier);
+            }
+            if (InterfaceTypeName.IsInterfaceTypeIdentifier(identifier))
+            {
+                return new InterfaceTypeName(identifier);
+            }
+            if (StructTypeName.IsStructTypeIdentifier(identifier))
+            {
+                return new StructTypeName(identifier);
+            }
+            if (EnumTypeName.IsEnumTypeIdentifier(identifier))
+            {
+                return new EnumTypeName(identifier);
+            }
+            if (DelegateTypeName.IsDelegateTypeIdentifier(identifier))
+            {
+                return new DelegateTypeName(identifier);
+            }
+            return new TypeName(identifier);
         }
 
 
@@ -77,104 +108,86 @@ namespace KaVE.Model.Names.CSharp
         ///         </item>
         ///     </list>
         ///     parameter-type names follow the scheme <code>'short-name' -> 'actual-type identifier'</code>, with actual-type
-        ///     identifier being
-        ///     either the identifier of a type name, as declared above, or another parameter-type name.
+        ///     identifier being either the identifier of a type name, as declared above, or another parameter-type name.
         /// </summary>
         public new static ITypeName Get(string identifier)
         {
             if (identifier == String.Empty)
             {
-                identifier = UnknownTypeIdentifier;
+                identifier = UnknownTypeName.Identifier;
             }
 
             return Registry.GetOrCreate(identifier);
         }
 
-        private static ITypeName Get(string fullName, AssemblyName assemblyName)
-        {
-            return Get(fullName + ", " + assemblyName);
-        }
+        protected TypeName(string identifier) : base(identifier) {}
 
-        private TypeName(string identifier) : base(identifier) {}
-
-        public bool IsUnknownType
+        public virtual bool IsUnknownType
         {
-            get { return Identifier.EndsWith(UnknownTypeIdentifier); }
+            get { return false; }
         }
 
         public string FullName
         {
-            get
+            get { return GetFullName(Identifier); }
+        }
+
+        private static string GetFullName(string identifier)
+        {
+            var length = GetLengthOfTypeName(identifier);
+            var fullName = identifier.Substring(0, length);
+            var indexOfColon = fullName.IndexOf(":", StringComparison.Ordinal);
+            if (indexOfColon > -1)
             {
-                var length = EndOfTypeName - StartOfTypeName;
-                var fullName = Identifier.Substring(StartOfTypeName, length);
-                var indexOfColon = fullName.IndexOf(":", StringComparison.Ordinal);
-                if (indexOfColon > -1)
-                {
-                    fullName = fullName.Substring(indexOfColon + 1);
-                }
-                return fullName;
+                fullName = fullName.Substring(indexOfColon + 1);
             }
+            return fullName;
         }
 
-        private int StartOfTypeName
+        private static int GetLengthOfTypeName(string identifier)
         {
-            get { return IsTypeParameter ? Identifier.IndexOf(">", StringComparison.Ordinal) + 2 : 0; }
-        }
-
-        private int EndOfTypeName
-        {
-            get
+            if (UnknownTypeName.IsUnknownTypeIdentifier(identifier))
             {
-                var length = Identifier.LastIndexOf(']') + 1;
-                if (length == 0)
-                {
-                    length = Identifier.IndexOf(',');
-                    if (length == -1)
-                    {
-                        length = Identifier.Length;
-                    }
-                }
+                return UnknownTypeName.Identifier.Length;
+            }
+            var length = identifier.LastIndexOf(']') + 1;
+            if (length > 0)
+            {
                 return length;
             }
+            return identifier.IndexOf(',');
         }
 
         public string RawFullName
         {
-            get
-            {
-                var fullName = FullName;
-                var indexOfGenericList = fullName.IndexOf("[[", StringComparison.Ordinal);
-                if (indexOfGenericList < 0)
-                {
-                    indexOfGenericList = fullName.IndexOf(", ", StringComparison.Ordinal);
-                }
-                return indexOfGenericList < 0 ? fullName : fullName.Substring(0, indexOfGenericList);
-            }
+            get { return GetRawFullName(Identifier); }
         }
 
-        public IAssemblyName Assembly
+        protected internal static string GetRawFullName(string identifier)
+        {
+            var fullName = GetFullName(identifier);
+            var indexOfGenericList = fullName.IndexOf("[[", StringComparison.Ordinal);
+            if (indexOfGenericList < 0)
+            {
+                indexOfGenericList = fullName.IndexOf(", ", StringComparison.Ordinal);
+            }
+            return indexOfGenericList < 0 ? fullName : fullName.Substring(0, indexOfGenericList);
+        }
+
+        public virtual IAssemblyName Assembly
         {
             get
             {
-                if (IsUnknownType)
-                {
-                    return null;
-                }
-                var endOfTypeName = EndOfTypeName;
+                var endOfTypeName = GetLengthOfTypeName(Identifier);
                 var assemblyIdentifier = Identifier.Substring(endOfTypeName).Trim(new[] {' ', ','});
                 return AssemblyName.Get(assemblyIdentifier);
             }
         }
 
-        public INamespaceName Namespace
+        public virtual INamespaceName Namespace
         {
             get
             {
-                if (IsUnknownType)
-                {
-                    return null;
-                }
                 var id = RawFullName;
                 var endIndexOfNamespaceIdentifier = IsNestedType ? id.LastIndexOf('+') : id.LastIndexOf('.');
                 return NamespaceName.Get(id.Substring(0, endIndexOfNamespaceIdentifier));
@@ -243,13 +256,13 @@ namespace KaVE.Model.Names.CSharp
                     var outerTypeParameters = TypeParameters.Take(numberOfParameters).ToList();
                     declaringTypeName += "[[" + String.Join("],[", outerTypeParameters.Select(t => t.Identifier)) + "]]";
                 }
-                return Get(declaringTypeName, (AssemblyName) Assembly);
+                return Get(declaringTypeName + ", " + Assembly);
             }
         }
 
-        public bool IsVoidType
+        public virtual bool IsVoidType
         {
-            get { return Identifier.StartsWith("System.Void"); }
+            get { return false; }
         }
 
         public bool IsValueType
@@ -257,59 +270,24 @@ namespace KaVE.Model.Names.CSharp
             get { return IsStructType || IsEnumType || IsVoidType; }
         }
 
-        public bool IsStructType
+        public virtual bool IsStructType
         {
-            get { return IsCustomStruct || IsSimpleType || IsNullableType || IsVoidType; }
+            get { return false; }
         }
 
-        private bool IsCustomStruct { get { return Identifier.StartsWith("s:"); } }
-
-        public bool IsSimpleType
+        public virtual bool IsSimpleType
         {
-            get { return IsNumericType() || Identifier.StartsWith("System.Boolean"); }
+            get { return false; }
         }
 
-        private bool IsNumericType()
+        public virtual bool IsEnumType
         {
-            return IsIntegralType() || IsFloatingPointType() || Identifier.StartsWith("System.Decimal");
+            get { return false; }
         }
 
-        private bool IsIntegralType()
+        public virtual bool IsNullableType
         {
-            switch (RawFullName)
-            {
-                case "System.SByte":
-                case "System.Byte":
-                case "System.Int16":
-                case "System.UInt16":
-                case "System.Int32":
-                case "System.UInt32":
-                case "System.Int64":
-                case "System.UInt64":
-                case "System.Char":
-                    return true;
-                default:
-                    return false;
-            }
-        }
-
-        private bool IsFloatingPointType()
-        {
-            switch (RawFullName)
-            {
-                case "System.Single":
-                case "System.Double":
-                    return true;
-                default:
-                    return false;
-            }
-        }
-
-        public bool IsEnumType { get { return Identifier.StartsWith("e:"); } }
-
-        public bool IsNullableType
-        {
-            get { return Identifier.StartsWith("System.Nullable"); }
+            get { return false; }
         }
 
         public bool IsReferenceType
@@ -322,11 +300,14 @@ namespace KaVE.Model.Names.CSharp
             get { return !IsValueType && !IsInterfaceType && !IsArrayType && !IsDelegateType && !IsUnknownType; }
         }
 
-        public bool IsInterfaceType { get { return Identifier.StartsWith("i:"); } }
-
-        public bool IsArrayType
+        public virtual bool IsInterfaceType
         {
-            get { return RawFullName.Contains("["); }
+            get { return false; }
+        }
+
+        public virtual bool IsArrayType
+        {
+            get { return false; }
         }
 
         public ITypeName DeriveArrayTypeName(int rank)
@@ -337,9 +318,9 @@ namespace KaVE.Model.Names.CSharp
             return Get(string.Format("{0}[{1}]{2}", rawFullName, new string(',', rank - 1), suffix));
         }
 
-        public bool IsDelegateType
+        public virtual bool IsDelegateType
         {
-            get { return Identifier.StartsWith("d:"); }
+            get { return false; }
         }
 
         public bool IsNestedType

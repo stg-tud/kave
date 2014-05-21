@@ -12,7 +12,11 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sven Amann
  */
+
 using KaVE.Model.Names.CSharp;
 using NUnit.Framework;
 
@@ -168,12 +172,37 @@ namespace KaVE.Model.Tests.Names.CSharp
         [TestCase("ValueType[,,], As, 9.8.7.6"),
          TestCase("ValueType[], As, 5.4.3.2"),
          TestCase("a.Foo`1[][[T -> int, mscore, 1.0.0.0]]"),
-         TestCase("T -> A[], A, 1.2.3.4")]
+         TestCase("T -> A[], A, 1.2.3.4"),
+         TestCase("System.Int32[], mscorlib, 4.0.0.0")]
         public void ShouldBeArrayType(string identifier)
         {
             var arrayTypeName = TypeName.Get(identifier);
 
             Assert.IsTrue(arrayTypeName.IsArrayType);
+        }
+
+        [Test]
+        public void ArrayOfNullablesShouldNotBeNullable()
+        {
+            var actual = TypeName.Get("System.Nullable`1[][[System.Int32, mscorlib, 1.2.3.4]], mscorlib, 1.2.3.4");
+
+            Assert.IsFalse(actual.IsNullableType);
+        }
+
+        [Test]
+        public void ArrayOfSimpleTypesShouldNotBeSimpleType()
+        {
+            var actual = TypeName.Get("System.Int64[], mscorlib, 1.2.3.4");
+
+            Assert.IsFalse(actual.IsSimpleType);
+        }
+
+        [Test]
+        public void ArrayOfCustomStructsShouldNotBeStruct()
+        {
+            var actual = TypeName.Get("s:My.Custom.Struct[], A, 1.2.3.4");
+
+            Assert.IsFalse(actual.IsStructType);
         }
 
         [Test]

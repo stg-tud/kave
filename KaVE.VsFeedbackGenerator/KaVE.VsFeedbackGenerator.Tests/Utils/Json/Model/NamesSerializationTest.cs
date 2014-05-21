@@ -78,9 +78,51 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.Model
         }
 
         [Test]
-        public void ShouldSerializeInterfaceName()
+        public void ShouldSerializeTypeParameterName()
+        {
+            var name = TypeName.Get("T -> Foo.Bar, foo, 1.0.0.0");
+            JsonAssert.SerializationPreservesReferenceIdentity(name);
+        }
+
+        [Test]
+        public void ShouldSerializeInterfaceTypeName()
         {
             var name = TypeName.Get("i:IMyInterface, Assembly, 1.2.3.4");
+            JsonAssert.SerializationPreservesReferenceIdentity(name);
+        }
+
+        [Test]
+        public void ShouldSerializeEnumTypeName()
+        {
+            var name = TypeName.Get("e:MyEnum, Assembly, 1.2.3.4");
+            JsonAssert.SerializationPreservesReferenceIdentity(name);
+        }
+
+        [Test]
+        public void ShouldSerializeStructTypeName()
+        {
+            var name = TypeName.Get("s:MyStruct, Assembly, 1.2.3.4");
+            JsonAssert.SerializationPreservesReferenceIdentity(name);
+        }
+
+        [Test]
+        public void ShouldSerializeDelegateTypeName()
+        {
+            var name = TypeName.Get("d:MyDelegate, Assembly, 1.2.3.4");
+            JsonAssert.SerializationPreservesReferenceIdentity(name);
+        }
+
+        [Test]
+        public void ShouldSerializeUnknownTypeName()
+        {
+            var name = TypeName.Get(UnknownTypeName.Identifier);
+            JsonAssert.SerializationPreservesReferenceIdentity(name);
+        }
+
+        [Test]
+        public void ShouldSerializeArrayTypeName()
+        {
+            var name = TypeName.Get("ValueType[], Assembly, 1.2.3.4");
             JsonAssert.SerializationPreservesReferenceIdentity(name);
         }
 

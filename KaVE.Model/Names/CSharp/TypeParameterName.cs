@@ -47,7 +47,7 @@ namespace KaVE.Model.Names.CSharp
         /// </summary>
         public static ITypeName Get(string typeParameterShortName, string actualTypeIdentifier)
         {
-            if (actualTypeIdentifier == TypeName.UnknownTypeIdentifier)
+            if (UnknownTypeName.IsUnknownTypeIdentifier(actualTypeIdentifier))
             {
                 return Get(typeParameterShortName);
             }
@@ -56,16 +56,11 @@ namespace KaVE.Model.Names.CSharp
 
         internal static bool IsTypeParameterIdentifier(string identifier)
         {
-            if (IsUnknownTypeIdentifier(identifier))
+            if (UnknownTypeName.IsUnknownTypeIdentifier(identifier))
             {
                 return false;
             }
             return IsFreeTypeParameterIdentifier(identifier) || IsBoundTypeParameterIdentifier(identifier);
-        }
-
-        private static bool IsUnknownTypeIdentifier(string identifier)
-        {
-            return identifier == TypeName.UnknownTypeIdentifier;
         }
 
         private static bool IsFreeTypeParameterIdentifier(string identifier)
@@ -221,7 +216,7 @@ namespace KaVE.Model.Names.CSharp
                 return
                     TypeName.Get(
                         startOfTypeName >= Identifier.Length
-                            ? TypeName.UnknownTypeIdentifier
+                            ? UnknownTypeName.Identifier
                             : Identifier.Substring(startOfTypeName));
             }
         }

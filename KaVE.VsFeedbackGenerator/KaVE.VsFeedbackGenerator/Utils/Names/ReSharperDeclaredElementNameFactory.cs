@@ -156,7 +156,7 @@ namespace KaVE.VsFeedbackGenerator.Utils.Names
         {
             return substitution.Domain.Contains(typeParameter)
                 ? substitution[typeParameter].GetName().Identifier
-                : TypeName.UnknownTypeIdentifier;
+                : UnknownTypeName.Identifier;
         }
 
         [NotNull]
@@ -266,7 +266,7 @@ namespace KaVE.VsFeedbackGenerator.Utils.Names
         {
             if (type == null)
             {
-                return TypeName.UnknownTypeIdentifier;
+                return UnknownTypeName.Identifier;
             }
             var containingModule = type.Module.ContainingProjectModule;
             Asserts.NotNull(containingModule, "module is null");
