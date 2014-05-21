@@ -12,6 +12,9 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Dennis Albrecht
  */
 
 using System.Collections.Generic;
@@ -27,7 +30,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
     [TestFixture]
     internal class ContextVisualizationConverterTest
     {
-        private const string CompletionMarker = ""; //"<Italic Foreground=\"Blue\">@Completion</Italic>";
+        private const string CompletionMarker = "<Italic Foreground=\"Blue\">$</Italic>";
 
         [Test]
         public void ShouldHandleNoContext()
@@ -64,9 +67,12 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
         {
             var context = new Context {TypeShape = new TypeShape {TypeHierarchy = CreateTypeHierarchy("N.Class")}};
 
-            var expected = Bold("class") + @" N.Class
+            var expected = Bold("namespace") + @" N
 {
-  " + CompletionMarker + @"
+  " + Bold("class") + @" Class
+  {
+    " + CompletionMarker + @"
+  }
 }";
 
             var actual = context.ToXaml();
@@ -86,9 +92,12 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                     }
             };
 
-            var expected = Bold("class") + " N.Class" + Bold(" : ") + @"N.Super
+            var expected = Bold("namespace") + @" N
 {
-  " + CompletionMarker + @"
+  " + Bold("class") + @" Class " + Bold(":") + @" Super
+  {
+    " + CompletionMarker + @"
+  }
 }";
 
             var actual = context.ToXaml();
@@ -112,9 +121,12 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                 }
             };
 
-            var expected = Bold("class") + " N.Class" + Bold(" : ") + @"N.I
+            var expected = Bold("namespace") + @" N
 {
-  " + CompletionMarker + @"
+  " + Bold("class") + @" Class " + Bold(":") + @" I
+  {
+    " + CompletionMarker + @"
+  }
 }";
 
             var actual = context.ToXaml();
@@ -139,9 +151,12 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                 }
             };
 
-            var expected = Bold("class") + " N.Class" + Bold(" : ") + @"N.Super, N.I
+            var expected = Bold("namespace") + @" N
 {
-  " + CompletionMarker + @"
+  " + Bold("class") + @" Class " + Bold(":") + @" Super, I
+  {
+    " + CompletionMarker + @"
+  }
 }";
 
             var actual = context.ToXaml();
@@ -167,9 +182,12 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                 }
             };
 
-            var expected = Bold("class") + " N.Class" + Bold(" : ") + @"N.Super, N.I1, N.I2
+            var expected = Bold("namespace") + @" N
 {
-  " + CompletionMarker + @"
+  " + Bold("class") + @" Class " + Bold(":") + @" Super, I1, I2
+  {
+    " + CompletionMarker + @"
+  }
 }";
 
             var actual = context.ToXaml();
@@ -188,11 +206,14 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                 EnclosingMethod = Method("N.Return", "N.Class", "Method")
             };
 
-            var expected = Bold("class") + @" N.Class
+            var expected = Bold("namespace") + @" N
 {
-  N.Return Method()
+  " + Bold("class") + @" Class
   {
-    " + CompletionMarker + @"
+    Return Method()
+    {
+      " + CompletionMarker + @"
+    }
   }
 }";
 
@@ -212,11 +233,14 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                 EnclosingMethod = Method("N.Return", "N.Class", "Method", new[] {"N.Argument"})
             };
 
-            var expected = Bold("class") + @" N.Class
+            var expected = Bold("namespace") + @" N
 {
-  N.Return Method(N.Argument arg0)
+  " + Bold("class") + @" Class
   {
-    " + CompletionMarker + @"
+    Return Method(Argument arg0)
+    {
+      " + CompletionMarker + @"
+    }
   }
 }";
 
@@ -236,11 +260,14 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                 EnclosingMethod = Method("N.Return", "N.Class", "Method", new[] {"N.Arg0", "N.Arg1", "N.Arg2"})
             };
 
-            var expected = Bold("class") + @" N.Class
+            var expected = Bold("namespace") + @" N
 {
-  N.Return Method(N.Arg0 arg0, N.Arg1 arg1, N.Arg2 arg2)
+  " + Bold("class") + @" Class
   {
-    " + CompletionMarker + @"
+    Return Method(Arg0 arg0, Arg1 arg1, Arg2 arg2)
+    {
+      " + CompletionMarker + @"
+    }
   }
 }";
 
@@ -249,7 +276,34 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
         }
 
         [Test]
-        public void ShouldIncludeAllCalledMethods()
+        public void ShouldHandleCompletionInsideOfConstructor()
+        {
+            var context = new Context
+            {
+                TypeShape = new TypeShape
+                {
+                    TypeHierarchy = CreateTypeHierarchy("N.Class")
+                },
+                EnclosingMethod = Method("N.Class", "N.Class", ".ctor")
+            };
+
+            var expected = Bold("namespace") + @" N
+{
+  " + Bold("class") + @" Class
+  {
+    Class()
+    {
+      " + CompletionMarker + @"
+    }
+  }
+}";
+
+            var actual = context.ToXaml();
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void ShouldIncludeAllCalledMethodsInArbitraryMethod()
         {
             var context = new Context
             {
@@ -261,30 +315,212 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                 EntryPointToCalledMethods = new Dictionary<IMethodName, ISet<IMethodName>>
                 {
                     {
-                        Method("M.Return", "N.Class", "Method2"), new HashSet<IMethodName>
+                        Method("N.Return", "N.Class", "Method2"), new HashSet<IMethodName>
                         {
                             Method("N.R1", "N.T", "M1"),
                             Method("N.R2", "N.T", "M2", "N.Arg0"),
-                            Method("N.R3", "N.T", "M3", "N.Arg0", "N.Arg1"),
-                            Method("N.R1", "X.X", "Y")
+                            Method("N.R3", "N.T", "M3", "N.Arg0", "N.Arg1")
                         }
                     }
                 }
             };
 
-            var expected = Bold("class") + @" N.Class
+            var expected = Bold("namespace") + @" N
 {
-  N.Return Method1()
+  " + Bold("class") + @" Class
   {
-    
+    Return Method1()
+    {
+      " + CompletionMarker + @"
+    }
+    Return Method2()
+    {
+      T.M1();
+      T.M2(Arg0);
+      T.M3(Arg0, Arg1);
+    }
   }
-  M.Return Method2()
+}";
+
+            var actual = context.ToXaml();
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void ShouldHandleCalledConstructor()
+        {
+            var context = new Context
+            {
+                TypeShape = new TypeShape
+                {
+                    TypeHierarchy = CreateTypeHierarchy("N.Class")
+                },
+                EnclosingMethod = Method("N.Return", "N.Class", "Method"),
+                EntryPointToCalledMethods = new Dictionary<IMethodName, ISet<IMethodName>>
+                {
+                    {
+                        Method("N.Return", "N.Class", "Method"), new HashSet<IMethodName>
+                        {
+                            Method("N.T", "N.T", ".ctor", "N.Arg0")
+                        }
+                    }
+                }
+            };
+
+            var expected = Bold("namespace") + @" N
+{
+  " + Bold("class") + @" Class
   {
-    T.M1();
-    T.M2(Arg0);
-    T.M3(Arg0, Arg1);
-    X.Y();
-    " + CompletionMarker + @"
+    Return Method()
+    {
+      new T(Arg0);
+      " + CompletionMarker + @"
+    }
+  }
+}";
+
+            var actual = context.ToXaml();
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void ShouldIncludeAllCalledMethodsInEnclosingMethod()
+        {
+            var context = new Context
+            {
+                TypeShape = new TypeShape
+                {
+                    TypeHierarchy = CreateTypeHierarchy("N.Class")
+                },
+                EnclosingMethod = Method("N.Return", "N.Class", "Method"),
+                EntryPointToCalledMethods = new Dictionary<IMethodName, ISet<IMethodName>>
+                {
+                    {
+                        Method("N.Return", "N.Class", "Method"), new HashSet<IMethodName>
+                        {
+                            Method("N.R1", "N.T", "M1"),
+                            Method("N.R2", "N.T", "M2", "N.Arg0"),
+                            Method("N.R3", "N.T", "M3", "N.Arg0", "N.Arg1")
+                        }
+                    }
+                }
+            };
+
+            var expected = Bold("namespace") + @" N
+{
+  " + Bold("class") + @" Class
+  {
+    Return Method()
+    {
+      T.M1();
+      T.M2(Arg0);
+      T.M3(Arg0, Arg1);
+      " + CompletionMarker + @"
+    }
+  }
+}";
+
+            var actual = context.ToXaml();
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void ShouldHandleTriggerTarget()
+        {
+            var context = new Context
+            {
+                TypeShape = new TypeShape {TypeHierarchy = CreateTypeHierarchy("N.Class")},
+                TriggerTarget = Name.Get("Target")
+            };
+
+            var expected = Bold("namespace") + @" N
+{
+  " + Bold("class") + @" Class
+  {
+    Target." + CompletionMarker + @"
+  }
+}";
+
+            var actual = context.ToXaml();
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void ShouldIncludeAllUsings()
+        {
+            var context = new Context
+            {
+                TypeShape = new TypeShape
+                {
+                    TypeHierarchy = new TypeHierarchy(CreateType("N.Class"))
+                    {
+                        Extends = CreateTypeHierarchy("NsS.Super"),
+                        Implements = new HashSet<ITypeHierarchy>
+                        {
+                            CreateTypeHierarchy("NsI1.I1"),
+                            CreateTypeHierarchy("NsI2.I2")
+                        }
+                    }
+                },
+                // TODO can DeclaringType differ?
+                EnclosingMethod =
+                    Method("NsR1.Return1", "N.Class", "Method1", new[] {"NsA0.Arg0", "NsA1.Arg1", "NsA2.Arg2"}),
+                EntryPointToCalledMethods = new Dictionary<IMethodName, ISet<IMethodName>>
+                {
+                    {
+                        Method("NsR1.Return1", "N.Class", "Method1", new[] {"NsA0.Arg0", "NsA1.Arg1", "NsA2.Arg2"}),
+                        new HashSet<IMethodName>
+                        {
+                            Method("NsR2.R2", "NsT1.T1", "M1"),
+                            Method("NsR3.R3", "NsT2.T2", "M2", "NsA3.Arg3"),
+                            Method("NsR4.R4", "NsT3.T3", "M3", "NsA4.Arg4", "NsA5.Arg5")
+                        }
+                    },
+                    {
+                        Method("NsR6.Return2", "N.Class", "Method2", new[] {"NsA6.Arg6"}), new HashSet<IMethodName>
+                        {
+                            Method("NsR5.R5", "NsT4.T4", "M", "NsA7.Arg7"),
+                        }
+                    }
+                }
+            };
+
+            var expected = Bold("using") + @" NsA0
+" + Bold("using") + @" NsA1
+" + Bold("using") + @" NsA2
+" + Bold("using") + @" NsA3
+" + Bold("using") + @" NsA4
+" + Bold("using") + @" NsA5
+" + Bold("using") + @" NsA6
+" + Bold("using") + @" NsA7
+" + Bold("using") + @" NsI1
+" + Bold("using") + @" NsI2
+" + Bold("using") + @" NsR1
+" + Bold("using") + @" NsR2
+" + Bold("using") + @" NsR3
+" + Bold("using") + @" NsR4
+" + Bold("using") + @" NsR5
+" + Bold("using") + @" NsR6
+" + Bold("using") + @" NsS
+" + Bold("using") + @" NsT1
+" + Bold("using") + @" NsT2
+" + Bold("using") + @" NsT3
+" + Bold("using") + @" NsT4
+" + Bold("namespace") + @" N
+{
+  " + Bold("class") + @" Class " + Bold(":") + @" Super, I1, I2
+  {
+    Return1 Method1(Arg0 arg0, Arg1 arg1, Arg2 arg2)
+    {
+      T1.M1();
+      T2.M2(Arg3);
+      T3.M3(Arg4, Arg5);
+      " + CompletionMarker + @"
+    }
+    Return2 Method2(Arg6 arg0)
+    {
+      T4.M(Arg7);
+    }
   }
 }";
 
