@@ -18,6 +18,7 @@
  */
 
 using System;
+using JetBrains.Util;
 using KaVE.Model.Events.CompletionEvent;
 using KaVE.Model.Names.CSharp;
 using NUnit.Framework;
@@ -35,32 +36,32 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
                 ProposalCollection = new ProposalCollection(
                     new[]
                     {
-                        new Proposal {Name = AliasName.Get("global")},
-                        new Proposal {Name = AssemblyName.Get("TestAssembly, 1.2.3.4")},
-                        new Proposal {Name = EventName.Get("")},
-                        new Proposal {Name = FieldName.Get("")},
-                        new Proposal {Name = LocalVariableName.Get("")},
-                        new Proposal {Name = MethodName.Get("")},
-                        new Proposal {Name = Name.Get("")},
-                        new Proposal {Name = NamespaceName.Get("")},
-                        new Proposal {Name = ParameterName.Get("")},
-                        new Proposal {Name = PropertyName.Get("")},
-                        new Proposal {Name = TypeName.Get("")},
-                        new Proposal {Name = TypeName.Get("")}
+                        new Proposal {Name = TypeName.Get("MyType, EnclosingProject")},
+                        new Proposal {Name = TypeName.Get("OtherType, Assembly, 1.2.3.4")}
                     }),
                 Selections = new[]
                 {
-                    new ProposalSelection(new Proposal {Name = MethodName.Get("")})
+                    new ProposalSelection(new Proposal {Name = TypeName.Get("MyType, EnclosingProject")})
                     {
                         SelectedAfter = TimeSpan.FromSeconds(0)
                     },
-                    new ProposalSelection(new Proposal {Name = MethodName.Get("")})
+                    new ProposalSelection(new Proposal {Name = TypeName.Get("OtherType, Assembly, 1.2.3.4")})
                     {
                         SelectedAfter = TimeSpan.FromSeconds(2)
                     }
                 },
                 Context = new Context()
             };
+        }
+
+        [Test]
+        public void ShouldRemoveSelectionOffsetWhenRemoveDurationsIsSet()
+        {
+            ExportSettings.RemoveDurations = true;
+
+            var actual = WhenEventIsAnonymized();
+
+            actual.Selections.ForEach(selection => Assert.IsNull(selection.SelectedAfter));
         }
 
         protected override void AssertThatPropertiesThatAreNotTouchedByAnonymizationAreUnchanged(
