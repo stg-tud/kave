@@ -31,6 +31,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
     internal class ContextVisualizationConverterTest
     {
         private const string CompletionMarker = "<Italic Foreground=\"Blue\">$</Italic>";
+        private const string SomeOtherNamespace = "ecapseman";
 
         [Test]
         public void ShouldHandleNoContext()
@@ -40,7 +41,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
         }
 
         [Test, Ignore]
-        // TODO review: is it better to return a message that refers to an incomplete context?
+        // TODO @Seb review: is it better to return a message that refers to an incomplete context?
         public void ShouldHandleEmptyContextLikeNoContext()
         {
             var context = new Context();
@@ -50,12 +51,12 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
         }
 
         [Test, Ignore]
-        // TODO review: is it better to return a message that refers to an incomplete context?
+        // TODO @Seb review: is it better to return a message that refers to an incomplete context?
         public void ShouldHandleContextWithoutHierarchyLikeNoContext()
         {
             var context = new Context
             {
-                EnclosingMethod = Method("N.Return", "N.Class", "Method", new[] {"N.Argument"})
+                EnclosingMethod = Method("N.Return", "N.Class", "Method", "N.Argument")
             };
 
             var xaml = context.ToXaml();
@@ -80,7 +81,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
         }
 
         [Test]
-        public void ShouldHandleContextWithExtends()
+        public void ShouldHandleTypeWithExtends()
         {
             var context = new Context
             {
@@ -92,20 +93,12 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                     }
             };
 
-            var expected = Bold("namespace") + @" N
-{
-  " + Bold("class") + @" Class " + Bold(":") + @" Super
-  {
-    " + CompletionMarker + @"
-  }
-}";
-
             var actual = context.ToXaml();
-            Assert.AreEqual(expected, actual);
+            AssertContainsOnce(actual, Bold("class") + " Class " + Bold(":") + " Super");
         }
 
         [Test]
-        public void ShouldHandleContextWithImplements()
+        public void ShouldHandleTypeWithImplements()
         {
             var context = new Context
             {
@@ -121,20 +114,12 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                 }
             };
 
-            var expected = Bold("namespace") + @" N
-{
-  " + Bold("class") + @" Class " + Bold(":") + @" I
-  {
-    " + CompletionMarker + @"
-  }
-}";
-
             var actual = context.ToXaml();
-            Assert.AreEqual(expected, actual);
+            AssertContainsOnce(actual, Bold("class") + " Class " + Bold(":") + " I");
         }
 
         [Test]
-        public void ShouldHandleContextWithExtendsAndImplements()
+        public void ShouldHandleTypetWithExtendsAndImplements()
         {
             var context = new Context
             {
@@ -151,20 +136,12 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                 }
             };
 
-            var expected = Bold("namespace") + @" N
-{
-  " + Bold("class") + @" Class " + Bold(":") + @" Super, I
-  {
-    " + CompletionMarker + @"
-  }
-}";
-
             var actual = context.ToXaml();
-            Assert.AreEqual(expected, actual);
+            AssertContainsOnce(actual, Bold("class") + " Class " + Bold(":") + " Super, I");
         }
 
         [Test]
-        public void ShouldHandleContextWithExtendsAndMultipleImplements()
+        public void ShouldHandleTypeWithExtendsAndMultipleImplements()
         {
             var context = new Context
             {
@@ -182,20 +159,12 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                 }
             };
 
-            var expected = Bold("namespace") + @" N
-{
-  " + Bold("class") + @" Class " + Bold(":") + @" Super, I1, I2
-  {
-    " + CompletionMarker + @"
-  }
-}";
-
             var actual = context.ToXaml();
-            Assert.AreEqual(expected, actual);
+            AssertContainsOnce(actual, Bold("class") + " Class " + Bold(":") + " Super, I1, I2");
         }
 
         [Test]
-        public void ShouldHandleContextWithMethodAndNoParameters()
+        public void ShouldHandleContextWithEnclosingMethod()
         {
             var context = new Context
             {
@@ -206,23 +175,20 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                 EnclosingMethod = Method("N.Return", "N.Class", "Method")
             };
 
-            var expected = Bold("namespace") + @" N
-{
-  " + Bold("class") + @" Class
+            var expected = Bold("class") + @" Class
   {
     Return Method()
     {
       " + CompletionMarker + @"
     }
-  }
-}";
+  }";
 
             var actual = context.ToXaml();
-            Assert.AreEqual(expected, actual);
+            AssertContainsOnce(actual, expected);
         }
 
         [Test]
-        public void ShouldHandleContextWithMethodAndSingleParameter()
+        public void ShouldHandleEnclosingMethodWithSingleParameters()
         {
             var context = new Context
             {
@@ -230,26 +196,15 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                 {
                     TypeHierarchy = CreateTypeHierarchy("N.Class")
                 },
-                EnclosingMethod = Method("N.Return", "N.Class", "Method", new[] {"N.Argument"})
+                EnclosingMethod = Method("N.Return", "N.Class", "Method", "N.Argument")
             };
 
-            var expected = Bold("namespace") + @" N
-{
-  " + Bold("class") + @" Class
-  {
-    Return Method(Argument arg0)
-    {
-      " + CompletionMarker + @"
-    }
-  }
-}";
-
             var actual = context.ToXaml();
-            Assert.AreEqual(expected, actual);
+            AssertContainsOnce(actual, "Return Method(Argument arg0)");
         }
 
         [Test]
-        public void ShouldHandleContextWithMethodAndMultipleMethodParameters()
+        public void ShouldHandleEnclosingMethodWithMultipleParameters()
         {
             var context = new Context
             {
@@ -257,53 +212,28 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                 {
                     TypeHierarchy = CreateTypeHierarchy("N.Class")
                 },
-                EnclosingMethod = Method("N.Return", "N.Class", "Method", new[] {"N.Arg0", "N.Arg1", "N.Arg2"})
+                EnclosingMethod = Method("N.Return", "N.Class", "Method", "N.Arg0", "N.Arg1", "N.Arg2")
             };
 
-            var expected = Bold("namespace") + @" N
-{
-  " + Bold("class") + @" Class
-  {
-    Return Method(Arg0 arg0, Arg1 arg1, Arg2 arg2)
-    {
-      " + CompletionMarker + @"
-    }
-  }
-}";
-
             var actual = context.ToXaml();
-            Assert.AreEqual(expected, actual);
+            AssertContainsOnce(actual, "Return Method(Arg0 arg0, Arg1 arg1, Arg2 arg2)");
         }
 
         [Test]
-        public void ShouldHandleCompletionInsideOfConstructor()
+        public void ShouldHandleTriggerTarget()
         {
             var context = new Context
             {
-                TypeShape = new TypeShape
-                {
-                    TypeHierarchy = CreateTypeHierarchy("N.Class")
-                },
-                EnclosingMethod = Method("N.Class", "N.Class", ".ctor")
+                TypeShape = new TypeShape {TypeHierarchy = CreateTypeHierarchy("N.Class")},
+                TriggerTarget = Name.Get("Target")
             };
 
-            var expected = Bold("namespace") + @" N
-{
-  " + Bold("class") + @" Class
-  {
-    Class()
-    {
-      " + CompletionMarker + @"
-    }
-  }
-}";
-
             var actual = context.ToXaml();
-            Assert.AreEqual(expected, actual);
+            AssertContainsOnce(actual, "[Target]." + CompletionMarker);
         }
 
         [Test]
-        public void ShouldIncludeAllCalledMethodsInArbitraryMethod()
+        public void ShouldIncludeAllEntryPoints()
         {
             var context = new Context
             {
@@ -311,11 +241,63 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                 {
                     TypeHierarchy = CreateTypeHierarchy("N.Class")
                 },
-                EnclosingMethod = Method("N.Return", "N.Class", "Method1"),
                 EntryPointToCalledMethods = new Dictionary<IMethodName, ISet<IMethodName>>
                 {
                     {
-                        Method("N.Return", "N.Class", "Method2"), new HashSet<IMethodName>
+                        Method("N.Return", "N.Class", "Method1"), new HashSet<IMethodName>()
+                    },
+                    {
+                        Method("N.Return", "N.Class", "Method2"), new HashSet<IMethodName>()
+                    }
+                }
+            };
+
+            const string expected = @"Return Method1()
+    {
+    }
+    Return Method2()
+    {
+    }";
+
+            var actual = context.ToXaml();
+            AssertContainsOnce(actual, expected);
+        }
+
+        [Test]
+        public void ShouldHandleConstructorAsEntryPoint()
+        {
+            var context = new Context
+            {
+                TypeShape = new TypeShape
+                {
+                    TypeHierarchy = CreateTypeHierarchy("N.Class")
+                },
+                EntryPointToCalledMethods = new Dictionary<IMethodName, ISet<IMethodName>>
+                {
+                    {
+                        Method("N.T", "N.T", ".ctor", "N.Arg"), new HashSet<IMethodName>()
+                    }
+                }
+            };
+
+            var actual = context.ToXaml();
+            AssertContainsOnce(actual, "T(Arg arg0)");
+            StringAssert.DoesNotContain("T .ctor(Arg arg0)", actual);
+        }
+
+        [Test]
+        public void ShouldIncludeAllCalledMethodsInEntryPoint()
+        {
+            var context = new Context
+            {
+                TypeShape = new TypeShape
+                {
+                    TypeHierarchy = CreateTypeHierarchy("N.Class")
+                },
+                EntryPointToCalledMethods = new Dictionary<IMethodName, ISet<IMethodName>>
+                {
+                    {
+                        Method("N.Return", "N.Class", "Method"), new HashSet<IMethodName>
                         {
                             Method("N.R1", "N.T", "M1"),
                             Method("N.R2", "N.T", "M2", "N.Arg0"),
@@ -325,62 +307,15 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                 }
             };
 
-            var expected = Bold("namespace") + @" N
-{
-  " + Bold("class") + @" Class
-  {
-    Return Method1()
-    {
-      " + CompletionMarker + @"
-    }
-    Return Method2()
+            const string expected = @"Return Method()
     {
       T.M1();
       T.M2(Arg0);
       T.M3(Arg0, Arg1);
-    }
-  }
-}";
+    }";
 
             var actual = context.ToXaml();
-            Assert.AreEqual(expected, actual);
-        }
-
-        [Test]
-        public void ShouldHandleCalledConstructor()
-        {
-            var context = new Context
-            {
-                TypeShape = new TypeShape
-                {
-                    TypeHierarchy = CreateTypeHierarchy("N.Class")
-                },
-                EnclosingMethod = Method("N.Return", "N.Class", "Method"),
-                EntryPointToCalledMethods = new Dictionary<IMethodName, ISet<IMethodName>>
-                {
-                    {
-                        Method("N.Return", "N.Class", "Method"), new HashSet<IMethodName>
-                        {
-                            Method("N.T", "N.T", ".ctor", "N.Arg0")
-                        }
-                    }
-                }
-            };
-
-            var expected = Bold("namespace") + @" N
-{
-  " + Bold("class") + @" Class
-  {
-    Return Method()
-    {
-      new T(Arg0);
-      " + CompletionMarker + @"
-    }
-  }
-}";
-
-            var actual = context.ToXaml();
-            Assert.AreEqual(expected, actual);
+            AssertContainsOnce(actual, expected);
         }
 
         [Test]
@@ -406,47 +341,46 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                 }
             };
 
-            var expected = Bold("namespace") + @" N
-{
-  " + Bold("class") + @" Class
-  {
-    Return Method()
+            const string expected = @"Return Method()
     {
       T.M1();
       T.M2(Arg0);
       T.M3(Arg0, Arg1);
+
       " + CompletionMarker + @"
-    }
-  }
-}";
+    }";
 
             var actual = context.ToXaml();
-            Assert.AreEqual(expected, actual);
+            AssertContainsOnce(actual, expected);
         }
 
         [Test]
-        public void ShouldHandleTriggerTarget()
+        public void ShouldHandleCalledConstructor()
         {
             var context = new Context
             {
-                TypeShape = new TypeShape {TypeHierarchy = CreateTypeHierarchy("N.Class")},
-                TriggerTarget = Name.Get("Target")
+                TypeShape = new TypeShape
+                {
+                    TypeHierarchy = CreateTypeHierarchy("N.Class")
+                },
+                EntryPointToCalledMethods = new Dictionary<IMethodName, ISet<IMethodName>>
+                {
+                    {
+                        Method("N.Return", "N.Class", "Method"), new HashSet<IMethodName>
+                        {
+                            Method("N.T", "N.T", ".ctor", "N.Arg")
+                        }
+                    }
+                }
             };
 
-            var expected = Bold("namespace") + @" N
-{
-  " + Bold("class") + @" Class
-  {
-    Target." + CompletionMarker + @"
-  }
-}";
-
             var actual = context.ToXaml();
-            Assert.AreEqual(expected, actual);
+            AssertContainsOnce(actual, "new T(Arg)");
+            StringAssert.DoesNotContain("T..ctor(Arg)", actual);
         }
 
         [Test]
-        public void ShouldIncludeAllUsings()
+        public void ShouldIncludeUsingForSuperclass()
         {
             var context = new Context
             {
@@ -454,78 +388,198 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                 {
                     TypeHierarchy = new TypeHierarchy(CreateType("N.Class"))
                     {
-                        Extends = CreateTypeHierarchy("NsS.Super"),
-                        Implements = new HashSet<ITypeHierarchy>
-                        {
-                            CreateTypeHierarchy("NsI1.I1"),
-                            CreateTypeHierarchy("NsI2.I2")
-                        }
+                        Extends = CreateTypeHierarchy(SomeOtherNamespace, "Super")
                     }
+                }
+            };
+
+            var actual = context.ToXaml();
+            AssertContainsUsing(actual, context.TypeShape.TypeHierarchy.Extends.Element);
+        }
+
+        [Test]
+        public void ShouldIncludeUsingForInterface()
+        {
+            var context = new Context
+            {
+                TypeShape = new TypeShape
+                {
+                    TypeHierarchy = new TypeHierarchy(CreateType("N.Class"))
+                    {
+                        Implements = new HashSet<ITypeHierarchy> {CreateTypeHierarchy(SomeOtherNamespace, "Inter")}
+                    }
+                }
+            };
+
+            var actual = context.ToXaml();
+            AssertContainsUsing(actual, context.TypeShape.TypeHierarchy.Implements.First().Element);
+        }
+
+        [Test]
+        public void ShouldIncludeUsingForEnclosingMethodParameter()
+        {
+            var context = new Context
+            {
+                TypeShape = new TypeShape
+                {
+                    TypeHierarchy = new TypeHierarchy(CreateType("N.Class"))
                 },
-                // TODO can DeclaringType differ?
-                EnclosingMethod =
-                    Method("NsR1.Return1", "N.Class", "Method1", new[] {"NsA0.Arg0", "NsA1.Arg1", "NsA2.Arg2"}),
+                EnclosingMethod = Method("N.Ret", "N.Ty", "Method", SomeOtherNamespace + ".Arg")
+            };
+
+            var actual = context.ToXaml();
+            AssertContainsUsing(actual, context.EnclosingMethod.Parameters[0].ValueType);
+        }
+
+        [Test]
+        public void ShouldIncludeUsingForEnclosingMethodReturnType()
+        {
+            var context = new Context
+            {
+                TypeShape = new TypeShape
+                {
+                    TypeHierarchy = new TypeHierarchy(CreateType("N.Class"))
+                },
+                EnclosingMethod = Method(SomeOtherNamespace + ".Ret", "N.Ty", "Method")
+            };
+
+            var actual = context.ToXaml();
+            AssertContainsUsing(actual, context.EnclosingMethod.ReturnType);
+        }
+
+        [Test]
+        public void ShouldIncludeUsingForEntryPointParameter()
+        {
+            var context = new Context
+            {
+                TypeShape = new TypeShape
+                {
+                    TypeHierarchy = new TypeHierarchy(CreateType("N.Class"))
+                },
+                EntryPointToCalledMethods = new Dictionary<IMethodName, ISet<IMethodName>>
+                {
+                    {Method("N.Ret", "N.Ty", "Method", SomeOtherNamespace + ".Arg"), new HashSet<IMethodName>()}
+                }
+            };
+
+            var actual = context.ToXaml();
+            AssertContainsUsing(actual, context.EntryPoints.First().Parameters[0].ValueType);
+        }
+
+        [Test]
+        public void ShouldIncludeUsingForEntryPointReturnType()
+        {
+            var context = new Context
+            {
+                TypeShape = new TypeShape
+                {
+                    TypeHierarchy = new TypeHierarchy(CreateType("N.Class"))
+                },
+                EntryPointToCalledMethods = new Dictionary<IMethodName, ISet<IMethodName>>
+                {
+                    {Method(SomeOtherNamespace + ".Ret", "N.Ty", "Method"), new HashSet<IMethodName>()}
+                }
+            };
+
+            var actual = context.ToXaml();
+            AssertContainsUsing(actual, context.EntryPoints.First().ReturnType);
+        }
+
+        [Test]
+        public void ShouldIncludeUsingForCalledMethodParameter()
+        {
+            var context = new Context
+            {
+                TypeShape = new TypeShape
+                {
+                    TypeHierarchy = new TypeHierarchy(CreateType("N.Class"))
+                },
                 EntryPointToCalledMethods = new Dictionary<IMethodName, ISet<IMethodName>>
                 {
                     {
-                        Method("NsR1.Return1", "N.Class", "Method1", new[] {"NsA0.Arg0", "NsA1.Arg1", "NsA2.Arg2"}),
-                        new HashSet<IMethodName>
+                        Method("N.Ret", "N.Ty", "Method"), new HashSet<IMethodName>
                         {
-                            Method("NsR2.R2", "NsT1.T1", "M1"),
-                            Method("NsR3.R3", "NsT2.T2", "M2", "NsA3.Arg3"),
-                            Method("NsR4.R4", "NsT3.T3", "M3", "NsA4.Arg4", "NsA5.Arg5")
-                        }
-                    },
-                    {
-                        Method("NsR6.Return2", "N.Class", "Method2", new[] {"NsA6.Arg6"}), new HashSet<IMethodName>
-                        {
-                            Method("NsR5.R5", "NsT4.T4", "M", "NsA7.Arg7"),
+                            Method("N.Ret", "N.Ty", "Called", SomeOtherNamespace + ".Arg")
                         }
                     }
                 }
             };
 
-            var expected = Bold("using") + @" NsA0
-" + Bold("using") + @" NsA1
-" + Bold("using") + @" NsA2
-" + Bold("using") + @" NsA3
-" + Bold("using") + @" NsA4
-" + Bold("using") + @" NsA5
-" + Bold("using") + @" NsA6
-" + Bold("using") + @" NsA7
-" + Bold("using") + @" NsI1
-" + Bold("using") + @" NsI2
-" + Bold("using") + @" NsR1
-" + Bold("using") + @" NsR2
-" + Bold("using") + @" NsR3
-" + Bold("using") + @" NsR4
-" + Bold("using") + @" NsR5
-" + Bold("using") + @" NsR6
-" + Bold("using") + @" NsS
-" + Bold("using") + @" NsT1
-" + Bold("using") + @" NsT2
-" + Bold("using") + @" NsT3
-" + Bold("using") + @" NsT4
-" + Bold("namespace") + @" N
-{
-  " + Bold("class") + @" Class " + Bold(":") + @" Super, I1, I2
-  {
-    Return1 Method1(Arg0 arg0, Arg1 arg1, Arg2 arg2)
-    {
-      T1.M1();
-      T2.M2(Arg3);
-      T3.M3(Arg4, Arg5);
-      " + CompletionMarker + @"
-    }
-    Return2 Method2(Arg6 arg0)
-    {
-      T4.M(Arg7);
-    }
-  }
-}";
+            var actual = context.ToXaml();
+            AssertContainsUsing(actual, GetFirstCalledMethodFromFirstEntryPoint(context).Parameters[0].ValueType);
+        }
+
+        [Test]
+        public void ShouldIncludeUsingForCalledMethodDeclaringType()
+        {
+            var context = new Context
+            {
+                TypeShape = new TypeShape
+                {
+                    TypeHierarchy = new TypeHierarchy(CreateType("N.Class"))
+                },
+                EntryPointToCalledMethods = new Dictionary<IMethodName, ISet<IMethodName>>
+                {
+                    {
+                        Method("N.Ret", "N.Ty", "Method"), new HashSet<IMethodName>
+                        {
+                            Method("N.Ret", SomeOtherNamespace + ".Type", "Called")
+                        }
+                    }
+                }
+            };
 
             var actual = context.ToXaml();
-            Assert.AreEqual(expected, actual);
+            AssertContainsUsing(actual, GetFirstCalledMethodFromFirstEntryPoint(context).DeclaringType);
+        }
+
+        [Test]
+        public void ShouldNotIncludeUsingForCalledMethodReturnType()
+        {
+            var context = new Context
+            {
+                TypeShape = new TypeShape
+                {
+                    TypeHierarchy = new TypeHierarchy(CreateType("N.Class"))
+                },
+                EntryPointToCalledMethods = new Dictionary<IMethodName, ISet<IMethodName>>
+                {
+                    {
+                        Method("N.Ret", "N.Ty", "Method"), new HashSet<IMethodName>
+                        {
+                            Method(SomeOtherNamespace + ".Ret", "N.Type", "Called")
+                        }
+                    }
+                }
+            };
+
+            var actual = context.ToXaml();
+            StringAssert.DoesNotContain("using", actual);
+            var typeName = GetFirstCalledMethodFromFirstEntryPoint(context).ReturnType;
+            StringAssert.DoesNotContain(typeName.Namespace + "." + typeName.Name, actual);
+        }
+
+        private static void AssertContainsUsing(string actual, ITypeName typeName)
+        {
+            var usingDeclaration = Bold("using") + " " + typeName.Namespace + ";";
+            StringAssert.StartsWith(usingDeclaration + "\r\n\r\n" + Bold("namespace"), actual);
+            AssertContainsOnce(actual, usingDeclaration);
+            StringAssert.DoesNotContain(typeName.Namespace + "." + typeName.Name, actual);
+        }
+
+        private static void AssertContainsOnce(string actual, string pattern)
+        {
+            StringAssert.Contains(pattern, actual);
+            var index = actual.IndexOf(pattern, System.StringComparison.Ordinal);
+            Assert.AreEqual(
+                -1,
+                actual.IndexOf(pattern, index + 1, System.StringComparison.Ordinal),
+                "Found second occurrence");
+        }
+
+        private static IMethodName GetFirstCalledMethodFromFirstEntryPoint(Context context)
+        {
+            return context.EntryPointToCalledMethods.First().Value.First();
         }
 
         private static IMethodName Method(string returnTypeName,
@@ -544,9 +598,14 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
             return MethodName.Get(methodSignature);
         }
 
-        private static TypeHierarchy CreateTypeHierarchy(string typename)
+        private static TypeHierarchy CreateTypeHierarchy(string namespaceName, string typeName)
         {
-            return new TypeHierarchy(CreateType(typename));
+            return CreateTypeHierarchy(namespaceName + "." + typeName);
+        }
+
+        private static TypeHierarchy CreateTypeHierarchy(string typeName)
+        {
+            return new TypeHierarchy(CreateType(typeName));
         }
 
         private static string CreateType(string type)

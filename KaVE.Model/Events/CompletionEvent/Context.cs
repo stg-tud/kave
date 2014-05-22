@@ -70,7 +70,6 @@ namespace KaVE.Model.Events.CompletionEvent
         ///     The type of the reference completion was triggered on or <code>null</code>, if completion was triggered without an
         ///     (explicit) reference.
         /// </summary>
-        // TODO Shouldn't this (at the moment) be ITypeName?
         [DataMember]
         public IName TriggerTarget { get; set; }
 

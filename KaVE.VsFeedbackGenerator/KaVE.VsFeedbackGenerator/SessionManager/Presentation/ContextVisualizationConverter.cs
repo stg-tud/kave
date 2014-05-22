@@ -17,6 +17,7 @@
  *    - Dennis Albrecht
  */
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -47,20 +48,130 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
 
             var builder = new StringBuilder();
             var mainNameSpace = context.TypeShape.TypeHierarchy.Element.Namespace;
-            var enclosingMethod = context.EnclosingMethod;
 
-            context.GetNamespaces().ForEach(
-                ns =>
-                {
-                    if (ns != null && !ns.Equals(mainNameSpace))
-                    {
-                        builder.AppendUsingLine(ns);
-                    }
-                });
+            builder.AppendUsings(context, mainNameSpace);
             builder.AppendLine(0, Util.Bold("namespace"), Space, mainNameSpace.Name);
             builder.AppendLine(0, CurlyBracketOpen);
             builder.AppendTypeDeclarationLine(1, context.TypeShape.TypeHierarchy);
             builder.AppendLine(1, CurlyBracketOpen);
+            builder.AppendTypeBody(context);
+            builder.AppendLine(1, CurlyBracketClose);
+            builder.Append(CurlyBracketClose);
+            return builder.ToString();
+        }
+
+        private static void AppendLine([NotNull] this StringBuilder builder, int indent, params string[] elems)
+        {
+            builder.Append(indent, elems);
+            builder.Append(LineBreak);
+        }
+
+        private static void Append([NotNull] this StringBuilder builder, int indent, params string[] elems)
+        {
+            for (var i = 0; i < indent; i++)
+            {
+                builder.Append(Indent);
+            }
+            elems.ForEach(e => builder.Append(e));
+        }
+
+        private static void AppendUsings(this StringBuilder builder, Context context, INamespaceName mainNameSpace)
+        {
+            var namespaces = context.GetNamespaces().Where(n => n != mainNameSpace).ToList();
+            namespaces.ForEach(builder.AppendUsingLine);
+            if (namespaces.Any())
+            {
+                builder.AppendLine();
+            }
+        }
+
+        private static void AppendUsingLine(this StringBuilder builder, INamespaceName usedNamespace)
+        {
+            builder.AppendLine(0, Util.Bold("using"), Space, usedNamespace.Identifier, ";");
+        }
+
+        private static IEnumerable<INamespaceName> GetNamespaces(this Context context)
+        {
+            var usings =
+                new SortedSet<INamespaceName>(
+                    new global::JetBrains.Comparer<INamespaceName>(
+                        (ns1, ns2) => String.CompareOrdinal(ns1.Identifier, ns2.Identifier)));
+            usings.AddNamespacesFromSupertypes(context.TypeShape.TypeHierarchy);
+            if (context.EnclosingMethod != null)
+            {
+                usings.AddNamespacesOfMethod(context.EnclosingMethod);
+            }
+            usings.AddNamespacesOfEntryPoints(context.EntryPointToCalledMethods);
+            return usings;
+        }
+
+        private static void AddNamespacesFromSupertypes(this SortedSet<INamespaceName> usings,
+            ITypeHierarchy typeHierarchy)
+        {
+            if (typeHierarchy.HasSuperclass)
+            {
+                usings.AddNamespaceOf(typeHierarchy.Extends.Element);
+            }
+            typeHierarchy.Implements.ForEach(i => usings.AddNamespaceOf(i.Element));
+        }
+
+        private static void AddNamespacesOfMethod(this SortedSet<INamespaceName> usings, IMethodName method)
+        {
+            method.Parameters.ForEach(p => usings.AddNamespaceOf(p.ValueType));
+            usings.AddNamespaceOf(method.ReturnType);
+        }
+
+        private static void AddNamespacesOfEntryPoints(this SortedSet<INamespaceName> usings,
+            IDictionary<IMethodName, ISet<IMethodName>> entryPointsToCalledMethods)
+        {
+            entryPointsToCalledMethods.Keys.ForEach(
+                ep =>
+                {
+                    usings.AddNamespacesOfMethod(ep);
+                    entryPointsToCalledMethods[ep].ForEach(
+                        c =>
+                        {
+                            usings.AddNamespaceOf(c.DeclaringType);
+                            c.Parameters.ForEach(p => usings.AddNamespaceOf(p.ValueType));
+                        });
+                });
+        }
+
+        private static void AddNamespaceOf(this ISet<INamespaceName> usings, ITypeName type)
+        {
+            if (!type.IsUnknownType && !type.Namespace.IsGlobalNamespace)
+            {
+                usings.Add(type.Namespace);
+            }
+        }
+
+        private static void AppendTypeDeclarationLine(this StringBuilder builder, int indent, ITypeHierarchy hierarchy)
+        {
+            builder.Append(indent, Util.Bold(hierarchy.Element.ToTypeCategory()), Space, hierarchy.Element.Name);
+            if (hierarchy.HasSupertypes)
+            {
+                builder.AppendSupertypes(hierarchy);
+            }
+            builder.AppendLine();
+        }
+
+        private static void AppendSupertypes(this StringBuilder builder, ITypeHierarchy hierarchy)
+        {
+            builder.Append(Space);
+            builder.Append(Util.Bold(":"));
+            builder.Append(Space);
+            var supertypes = new List<ITypeHierarchy>();
+            if (hierarchy.HasSuperclass)
+            {
+                supertypes.Add(hierarchy.Extends);
+            }
+            supertypes.AddRange(hierarchy.Implements);
+            builder.Append(string.Join(", ", supertypes.Select(t => t.Element.Name)));
+        }
+
+        private static void AppendTypeBody(this StringBuilder builder, Context context)
+        {
+            var enclosingMethod = context.EnclosingMethod;
             if (enclosingMethod == null)
             {
                 builder.AppendCompletionMarkerLine(2, context.TriggerTarget);
@@ -82,106 +193,19 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
                         builder.AppendMethod(2, entryPoint, context.EntryPointToCalledMethods[entryPoint]);
                     }
                 });
-            builder.AppendLine(1, CurlyBracketClose);
-            builder.Append(CurlyBracketClose);
-            return builder.ToString();
         }
 
-        private static IEnumerable<INamespaceName> GetNamespaces(this Context context)
-        {
-            var usings =
-                new SortedSet<INamespaceName>(
-                    new global::JetBrains.Comparer<INamespaceName>(
-                        (ns1, ns2) =>
-                            (ns1 == null)
-                                ? -1
-                                : (ns2 == null) ? 1 : System.String.CompareOrdinal(ns1.Identifier, ns2.Identifier)));
-            if (context.TypeShape.TypeHierarchy.HasSuperclass)
-            {
-                Add(usings, context.TypeShape.TypeHierarchy.Extends.Element.Namespace);
-            }
-            context.TypeShape.TypeHierarchy.Implements.ForEach(i => Add(usings, i.Element.Namespace));
-            if (context.EnclosingMethod != null)
-            {
-                context.EnclosingMethod.Parameters.ForEach(p => Add(usings, p.ValueType.Namespace));
-                Add(usings, context.EnclosingMethod.ReturnType.Namespace);
-            }
-            context.EntryPoints.ForEach(
-                ep =>
-                {
-                    ep.Parameters.ForEach(p => Add(usings, p.ValueType.Namespace));
-                    Add(usings, ep.ReturnType.Namespace);
-                    context.EntryPointToCalledMethods[ep].ForEach(
-                        c =>
-                        {
-                            Add(usings, c.DeclaringType.Namespace);
-                            c.Parameters.ForEach(p => Add(usings, p.ValueType.Namespace));
-                            Add(usings, c.ReturnType.Namespace);
-                        });
-                });
-            return usings;
-        }
-
-        private static void Add(SortedSet<INamespaceName> usings, INamespaceName item)
-        {
-            usings.Add(item);
-        }
-
-        private static IEnumerable<IMethodName> GetCalledMethods(this Context context, IMethodName method)
+        private static ICollection<IMethodName> GetCalledMethods(this Context context, IMethodName method)
         {
             return context.EntryPoints.Contains(method)
                 ? context.EntryPointToCalledMethods[method]
                 : new HashSet<IMethodName>();
         }
 
-        private static void AppendLine([NotNull] this StringBuilder builder, int indentDepth, params string[] elems)
-        {
-            AppendLine(builder, indentDepth, elems as IEnumerable<string>);
-        }
-
-        private static void AppendLine([NotNull] this StringBuilder builder, int indentDepth, IEnumerable<string> elems)
-        {
-            for (var i = 0; i < indentDepth; i++)
-            {
-                builder.Append(Indent);
-            }
-            elems.ForEach(e => builder.Append(e));
-            builder.Append(LineBreak);
-        }
-
-        private static void AppendUsingLine(this StringBuilder builder, INamespaceName usedNamespace)
-        {
-            builder.AppendLine(0, Util.Bold("using"), Space, usedNamespace.Identifier);
-        }
-
-        private static void AppendTypeDeclarationLine(this StringBuilder builder, int indent, ITypeHierarchy hierarchy)
-        {
-            var elems = new List<string> {Util.Bold(hierarchy.Element.ToTypeCategory()), Space, hierarchy.Element.Name};
-            if (hierarchy.HasSupertypes)
-            {
-                elems.AddSupertypes(hierarchy);
-            }
-            builder.AppendLine(indent, elems);
-        }
-
-        private static void AddSupertypes(this ICollection<string> elems, ITypeHierarchy hierarchy)
-        {
-            elems.Add(Space);
-            elems.Add(Util.Bold(":"));
-            elems.Add(Space);
-            var supertypes = new List<ITypeHierarchy>();
-            if (hierarchy.HasSuperclass)
-            {
-                supertypes.Add(hierarchy.Extends);
-            }
-            supertypes.AddRange(hierarchy.Implements);
-            elems.Add(string.Join(", ", supertypes.Select(t => t.Element.Name)));
-        }
-
         private static void AppendMethod(this StringBuilder builder,
             int indent,
             IMethodName method,
-            IEnumerable<IMethodName> calledMethods,
+            ICollection<IMethodName> calledMethods,
             bool isEnclosingMethod = false,
             IName triggerTarget = null)
         {
@@ -190,6 +214,10 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
             calledMethods.ForEach(m => builder.AppendCalledMethodLine(indent + 1, m));
             if (isEnclosingMethod)
             {
+                if (calledMethods.Any())
+                {
+                    builder.AppendLine();
+                }
                 builder.AppendCompletionMarkerLine(indent + 1, triggerTarget);
             }
             builder.AppendLine(indent, CurlyBracketClose);
@@ -197,34 +225,39 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
 
         private static void AppendMethodDeclarationLine(this StringBuilder builder, int indent, IMethodName method)
         {
-            var elems = (method.IsConstructor)
-                ? new List<string> {method.DeclaringType.Name}
-                : new List<string> {method.ReturnType.Name, Space, method.Name};
-            elems.AddParameterList(method);
-            builder.AppendLine(indent, elems);
-        }
-
-        private static void AddParameterList(this ICollection<string> elems, IMethodName method)
-        {
-            elems.Add("(");
-            elems.Add(string.Join(", ", method.Parameters.Select(p => p.ValueType.Name + Space + p.Name)));
-            elems.Add(")");
+            if (method.IsConstructor)
+            {
+                builder.Append(indent, method.DeclaringType.Name);
+            }
+            else
+            {
+                builder.Append(indent, method.ReturnType.Name, Space, method.Name);
+            }
+            builder.AppendParameterList(method, p => p.ValueType.Name + Space + p.Name);
+            builder.AppendLine();
         }
 
         private static void AppendCalledMethodLine(this StringBuilder builder, int indent, IMethodName method)
         {
-            var elems = (method.IsConstructor)
-                ? new List<string> {"new", Space, method.DeclaringType.Name}
-                : new List<string> {method.DeclaringType.Name, ".", method.Name};
-            elems.AddArgumentList(method);
-            builder.AppendLine(indent, elems);
+            if (method.IsConstructor)
+            {
+                builder.Append(indent, "new", Space, method.DeclaringType.Name);
+            }
+            else
+            {
+                builder.Append(indent, method.DeclaringType.Name, ".", method.Name);
+            }
+            builder.AppendParameterList(method, p => p.ValueType.Name);
+            builder.AppendLine(";");
         }
 
-        private static void AddArgumentList(this ICollection<string> elems, IMethodName method)
+        private static void AppendParameterList(this StringBuilder builder,
+            IMethodName method,
+            Func<IParameterName, string> parameterToString)
         {
-            elems.Add("(");
-            elems.Add(string.Join(", ", method.Parameters.Select(p => p.ValueType.Name)));
-            elems.Add(");");
+            builder.Append("(");
+            builder.Append(string.Join(", ", method.Parameters.Select(parameterToString)));
+            builder.Append(")");
         }
 
         private static void AppendCompletionMarkerLine(this StringBuilder builder, int indent, IName triggerTarget)
@@ -235,7 +268,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
             }
             else
             {
-                builder.AppendLine(indent, triggerTarget.Identifier, ".", CompletionMarker);
+                builder.AppendLine(indent, "[", triggerTarget.Identifier, "].", CompletionMarker);
             }
         }
     }
