@@ -58,7 +58,7 @@ namespace KaVE.Model.Events.CompletionEvent
 
         public override string ToString()
         {
-            return string.Format("Proposal: {0} ({1})", Name, Relevance);
+            return string.Format("Proposal: {0}, Relevance: {1}", Name, Relevance);
         }
     }
 }

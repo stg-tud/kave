@@ -122,10 +122,12 @@
     <Compile Include="Interactivity\InteractionRequest.cs" />
     <Compile Include="Interactivity\ConfirmationRequestHandler.cs" />
     <Compile Include="SessionManager\Anonymize\BuildEventAnonymizer.cs" />
+    <Compile Include="SessionManager\Anonymize\CompletionEventAnonymizer.cs" />
     <Compile Include="SessionManager\Anonymize\DataExportAnonymizer.cs" />
     <Compile Include="SessionManager\Anonymize\DocumentEventAnonymizer.cs" />
     <Compile Include="SessionManager\Anonymize\ErrorEventAnonymizer.cs" />
     <Compile Include="SessionManager\Anonymize\IDEEventAnonymizer.cs" />
+    <Compile Include="SessionManager\Anonymize\IDEStateEventAnonymizer.cs" />
     <Compile Include="SessionManager\Anonymize\InfoEventAnonymizer.cs" />
     <Compile Include="SessionManager\Anonymize\AnonymousNameUtils.cs" />
     <Compile Include="SessionManager\Anonymize\SolutionEventAnonymizer.cs" />

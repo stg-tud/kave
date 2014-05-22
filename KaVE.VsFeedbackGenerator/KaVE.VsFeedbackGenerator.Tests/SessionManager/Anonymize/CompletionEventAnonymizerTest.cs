@@ -64,6 +64,45 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
             actual.Selections.ForEach(selection => Assert.IsNull(selection.SelectedAfter));
         }
 
+        [Test]
+        public void ShouldAnonymizeProposalNamesWhenRemoveNamesIsSet()
+        {
+            ExportSettings.RemoveCodeNames = true;
+            var expected = new[]
+            {
+                new Proposal {Name = TypeName.Get("Q+vTVCo/g8yayGGoDdH7BA==, qfFVtSOtve+XEFJXWTbfXw==")},
+                new Proposal {Name = TypeName.Get("OtherType, Assembly, 1.2.3.4")}
+            };
+
+            var actual = WhenEventIsAnonymized();
+
+            CollectionAssert.AreEqual(expected, actual.ProposalCollection.Proposals);
+        }
+
+        [Test]
+        public void ShouldAnonymizeProposalNamesInSelectionsWhenRemoveNamesIsSet()
+        {
+            ExportSettings.RemoveCodeNames = true;
+            var expected = new[]
+            {
+                new ProposalSelection(
+                    new Proposal {Name = TypeName.Get("Q+vTVCo/g8yayGGoDdH7BA==, qfFVtSOtve+XEFJXWTbfXw==")})
+                {
+                    SelectedAfter = TimeSpan.FromSeconds(0)
+                },
+                new ProposalSelection(new Proposal {Name = TypeName.Get("OtherType, Assembly, 1.2.3.4")})
+                {
+                    SelectedAfter = TimeSpan.FromSeconds(2)
+                }
+            };
+
+            var actual = WhenEventIsAnonymized();
+
+            CollectionAssert.AreEqual(expected, actual.Selections);
+        }
+
+        // TODO @Sven: Write Context anonymization tests
+
         protected override void AssertThatPropertiesThatAreNotTouchedByAnonymizationAreUnchanged(
             CompletionEvent original,
             CompletionEvent anonymized)
