@@ -190,7 +190,9 @@ namespace KaVE.Model.Names.CSharp
             {
                 var id = RawFullName;
                 var endIndexOfNamespaceIdentifier = IsNestedType ? id.LastIndexOf('+') : id.LastIndexOf('.');
-                return NamespaceName.Get(id.Substring(0, endIndexOfNamespaceIdentifier));
+                return endIndexOfNamespaceIdentifier < 0
+                    ? NamespaceName.GlobalNamespace
+                    : NamespaceName.Get(id.Substring(0, endIndexOfNamespaceIdentifier));
             }
         }
 

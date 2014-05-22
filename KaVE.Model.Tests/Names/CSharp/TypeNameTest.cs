@@ -28,6 +28,14 @@ namespace KaVE.Model.Tests.Names.CSharp
         private const string TestAssemblyIdentifier = "a, 1.0.0.0";
 
         [Test]
+        public void ShouldGetNamespaceFromTypeInGlobalNamespace()
+        {
+            var uut = TypeName.Get("MyType, Assembly, 1.2.3.4");
+
+            Assert.AreEqual(NamespaceName.GlobalNamespace, uut.Namespace);
+        }
+
+        [Test]
         public void ShouldBeVoidType()
         {
             var uut = TypeName.Get("System.Void, mscorlib, 4.0.0.0");
