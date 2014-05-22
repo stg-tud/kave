@@ -15,6 +15,7 @@
  * 
  * Contributors:
  *    - Sven Amann
+ *    - Uli Fahrer
  */
 
 using System;
@@ -73,6 +74,16 @@ namespace KaVE.VsFeedbackGenerator.Utils.Logging
 
         public void RemoveRange(IEnumerable<TLogEntry> entries)
         {
+            RemoveEntries(ideEvent => !entries.Contains(ideEvent));
+        }
+
+        public void RemoveEntriesOlderThan(DateTime time)
+        {
+            RemoveEntries(ideEvent => ideEvent.TriggeredAt > time);
+        }
+
+        private void RemoveEntries(Func<IDEEvent, bool> condition)
+        {
             var tempFileName = _ioUtils.GetTempFileName();
             using (var stream = _ioUtils.OpenFile(tempFileName, FileMode.Append, FileAccess.Write))
             {
@@ -83,7 +94,7 @@ namespace KaVE.VsFeedbackGenerator.Utils.Logging
                         reader.ReadAll().ForEach(
                             entry =>
                             {
-                                if (!entries.Contains(entry))
+                                if (condition(entry))
                                 {
                                     writer.Write(entry);
                                 }
@@ -91,6 +102,7 @@ namespace KaVE.VsFeedbackGenerator.Utils.Logging
                     }
                 }
             }
+
             _ioUtils.DeleteFile(Path);
             _ioUtils.MoveFile(tempFileName, Path);
         }

@@ -30,7 +30,9 @@ namespace KaVE.VsFeedbackGenerator.Utils.Logging
         ILogWriter<TLogEntry> NewLogWriter();
         void Remove(TLogEntry entry);
         void RemoveRange(IEnumerable<TLogEntry> entries);
+        void RemoveEntriesOlderThan(DateTime time);
         void Delete();
+        
     }
 
     public interface ILogManager<TLogEntry> where TLogEntry : IDEEvent

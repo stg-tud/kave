@@ -15,6 +15,7 @@
  * 
  * Contributors:
  *    - Sven Amann
+ *    - Uli Fahrer
  */
 
 using System;
@@ -37,12 +38,24 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Logging
         private const string TestLogFilePath = @"C:\My\Log\Dir\Log_2014-03-21";
         private static readonly DateTime TestLogFileDate = new DateTime(2014, 3, 21);
 
+        private MemoryStream _inputStream;
+        private MemoryStream _outputStream;
+
         private LogFile<TestIDEEvent> _uut;
 
         [SetUp]
         public void SetUp()
         {
             _mockIoUtils = new Mock<IIoUtils>();
+
+            _mockIoUtils.Setup(iou => iou.OpenFile(TestLogFilePath, It.IsAny<FileMode>(), FileAccess.Read))
+                        .Returns(() => _inputStream);
+            
+            _outputStream = new MemoryStream();
+            
+            _mockIoUtils.Setup(iou => iou.OpenFile(It.IsAny<string>(), It.IsAny<FileMode>(), FileAccess.Write))
+                        .Returns(_outputStream);
+
             Registry.RegisterComponent(_mockIoUtils.Object);
 
             _uut = new LogFile<TestIDEEvent>(TestLogFilePath);
@@ -52,6 +65,16 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Logging
         public void CleanUp()
         {
             Registry.Clear();
+        }
+
+        private void SetInputStream(string stream)
+        {
+            _inputStream = stream.AsStream();
+        }
+
+        private MemoryStream GetOutputStream()
+        {
+            return _outputStream;
         }
 
         [Test]
@@ -69,9 +92,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Logging
         [Test]
         public void ShouldCreateLogDirectoryIfNotExists()
         {
-            var inputStream = "".AsStream();
-            _mockIoUtils.Setup(iou => iou.OpenFile(TestLogFilePath, It.IsAny<FileMode>(), FileAccess.Write))
-                        .Returns(inputStream);
+            SetInputStream("");
 
             _uut.NewLogWriter();
 
@@ -89,39 +110,51 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Logging
         [Test]
         public void ShouldRemoveEntries()
         {
-            var inputStream = "{\"TestProperty\":\"1\"}\r\n{\"TestProperty\":\"2\"}\r\n{\"TestProperty\":\"3\"}\r\n".AsStream();
-            _mockIoUtils.Setup(iou => iou.OpenFile(TestLogFilePath, It.IsAny<FileMode>(), FileAccess.Read))
-                        .Returns(inputStream);
-            var outputStream = new MemoryStream();
-            _mockIoUtils.Setup(iou => iou.OpenFile(It.IsAny<string>(), It.IsAny<FileMode>(), FileAccess.Write))
-                        .Returns(outputStream);
+            SetInputStream("{\"TestProperty\":\"1\"}\r\n{\"TestProperty\":\"2\"}\r\n{\"TestProperty\":\"3\"}\r\n");
 
             _uut.RemoveRange(new [] { new TestIDEEvent{TestProperty = "1"}, new TestIDEEvent{TestProperty = "3"}});
 
+            AssertContainsOnlyGivenEvent("\"TestProperty\":\"2\"", GetOutputStream());
+
+            VerifyOldLogDeletedAndNewLogFileCreatedAsReplacement();
+        }
+
+        [Test]
+        public void ShouldRemoveOldEntries()
+        {
+            SetInputStream("{\"TriggeredAt\":\"2014-03-10T13:58:16.0843423+02:00\"}\r\n{\"TriggeredAt\":\"2014-03-10T13:58:16.0843423+02:00\"}\r\n{\"TriggeredAt\":\"2014-05-01T13:58:16.0843423+02:00\"}\r\n");
+
+            _uut.RemoveEntriesOlderThan(TestLogFileDate.AddMinutes(-10));
+
+            AssertContainsOnlyGivenEvent("\"TriggeredAt\":\"2014-05-01T13:58:16.0843423+02:00\"", GetOutputStream());
+
+            VerifyOldLogDeletedAndNewLogFileCreatedAsReplacement();
+        }
+
+        private static void AssertContainsOnlyGivenEvent(string line, MemoryStream outputStream)
+        {
             // new log contains exactly one line and that line corresponds to the 2nd line in the original log
             var newLogContent = outputStream.AsString();
-            var newLogLines = newLogContent.Split(new[]{'\r','\n'}, StringSplitOptions.RemoveEmptyEntries);
+            var newLogLines = newLogContent.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
             Assert.AreEqual(1, newLogLines.Length);
-            StringAssert.Contains("\"TestProperty\":\"2\"", newLogLines[0]);
+            StringAssert.Contains(line, newLogLines[0]);
+        }
+
+        private void VerifyOldLogDeletedAndNewLogFileCreatedAsReplacement()
+        {
             // the old log file was deleted
             _mockIoUtils.Verify(iou => iou.DeleteFile(TestLogFilePath));
             // the new log file was moved to the path of the old one
             _mockIoUtils.Verify(iou => iou.MoveFile(It.IsAny<string>(), TestLogFilePath));
         }
 
-        [Test, Ignore("Introduce a LogEntryWrapper with a timestamp to have the notion of time available")]
-        public void ShouldRemoveOldEntries()
-        {
-            // _uut.RemoveOldThan(TestLogFileDate.AddMinutes(-10));
-        }
-
         [Test]
         public void ShouldCreateCompatibleReaderAndWriter()
         {
-            var targetStream = new MemoryStream();
+            _inputStream = new MemoryStream();
             _mockIoUtils.Setup(iou => iou.OpenFile(TestLogFilePath, It.IsAny<FileMode>(), FileAccess.Write))
-                        .Returns(targetStream);
-
+                        .Returns(_inputStream);
+            
             var expected = new List<TestIDEEvent>
             {
                 new TestIDEEvent{TestProperty = "A 1st log message."},
@@ -137,7 +170,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Logging
             }
 
             _mockIoUtils.Setup(iou => iou.OpenFile(TestLogFilePath, It.IsAny<FileMode>(), FileAccess.Read))
-                        .Returns(new MemoryStream(targetStream.ToArray()));
+                        .Returns(new MemoryStream(_inputStream.ToArray()));
 
             IEnumerable<TestIDEEvent> actual;
             using (var reader = _uut.NewLogReader())
@@ -151,9 +184,9 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Logging
         [Test]
         public void ShouldReadLogWrittenByMultipleWriters()
         {
-            var targetStream = new MemoryStream();
+            _inputStream = new MemoryStream();
             _mockIoUtils.Setup(iou => iou.OpenFile(TestLogFilePath, It.IsAny<FileMode>(), FileAccess.Write))
-                        .Returns(targetStream);
+                        .Returns(_inputStream);
 
             var expected = new[] { new TestIDEEvent{TestProperty = "message1"}, new TestIDEEvent{TestProperty = "message2"} };
 
@@ -161,13 +194,13 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Logging
             {
                 writer.Write(expected[0]);
 
-                var buffer = targetStream.ToArray();
-                targetStream = new MemoryStream();
-                targetStream.Write(buffer, 0, buffer.Length);
+                var buffer = _inputStream.ToArray();
+                _inputStream = new MemoryStream();
+                _inputStream.Write(buffer, 0, buffer.Length);
             }
 
             _mockIoUtils.Setup(iou => iou.OpenFile(TestLogFilePath, It.IsAny<FileMode>(), FileAccess.Write))
-                        .Returns(targetStream);
+                        .Returns(_inputStream);
 
             using (var writer = _uut.NewLogWriter())
             {
@@ -175,7 +208,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Logging
             }
 
             _mockIoUtils.Setup(iou => iou.OpenFile(TestLogFilePath, It.IsAny<FileMode>(), FileAccess.Read))
-                        .Returns(new MemoryStream(targetStream.ToArray()));
+                        .Returns(new MemoryStream(_inputStream.ToArray()));
 
             IEnumerable<TestIDEEvent> actual;
             using (var reader = _uut.NewLogReader())
@@ -185,6 +218,5 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Logging
 
             CollectionAssert.AreEqual(expected, actual);
         }
-
     }
 }

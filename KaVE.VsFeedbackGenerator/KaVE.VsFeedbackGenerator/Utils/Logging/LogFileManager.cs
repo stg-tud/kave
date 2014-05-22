@@ -22,7 +22,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using JetBrains.Util;
 using KaVE.JetBrains.Annotations;
 using KaVE.Model.Events;
 
@@ -53,7 +52,17 @@ namespace KaVE.VsFeedbackGenerator.Utils.Logging
 
         public void DeleteLogsOlderThan(DateTime time)
         {
-            GetLogs().Where(log => log.Date < time).ForEach(log => log.Delete());
+            foreach (var log in GetLogs())
+            {
+                if (log.Date < time)
+                {
+                    log.Delete();
+                }
+                else
+                {
+                    log.RemoveEntriesOlderThan(time);
+                }
+            }
         }
 
         public void DeleteLogFileDirectory()
