@@ -22,7 +22,6 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using JetBrains.Annotations;
-using JetBrains.Util;
 using KaVE.Model.Names;
 using KaVE.Model.Names.CSharp;
 using KaVE.Model.Names.VisualStudio;
@@ -35,16 +34,16 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
 {
     internal static class AnonymousNameUtils
     {
-        [JetBrains.Annotations.NotNull]
-        public static string ToHash([JetBrains.Annotations.NotNull] this string value)
+        [NotNull]
+        public static string ToHash([NotNull] this string value)
         {
             var tmpSource = value.AsBytes();
             var hash = new MD5CryptoServiceProvider().ComputeHash(tmpSource);
             return Convert.ToBase64String(hash);
         }
 
-        [ContractAnnotation("notnull => notnull")]
-        public static IName ToAnonymousName<TName>(this TName name) where TName : class, IName
+        [NotNull]
+        public static IName ToAnonymousName<TName>([NotNull] this TName name) where TName : class, IName
         {
             return ToAnonymousName<DocumentName>(name, ToAnonymousName) ??
                    ToAnonymousName<WindowName>(name, ToAnonymousName) ??
@@ -59,6 +58,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
                    ToAnonymousName<IPropertyName>(name, ToAnonymousName) ??
                    ToAnonymousName<IEventName>(name, ToAnonymousName) ??
                    ToAnonymousName<IParameterName>(name, ToAnonymousName) ??
+                   ToAnonymousName<IMethodName>(name, ToAnonymousName) ??
                    ToAnonymousName<Name>(name, ToAnonymousName) ??
                    Asserts.Fail<IName>("unhandled name type");
         }
@@ -70,19 +70,37 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
             return concreteName != null ? anonymizer(concreteName) : null;
         }
 
+        private static IMethodName ToAnonymousName(IMethodName method)
+        {
+            var identifier = new StringBuilder();
+            identifier.AppendAnonymousMemberName(method, method.ReturnType);
+            identifier.AppendTypeParameters(method);
+            identifier.Append("(");
+            identifier.Append(string.Join(", ", method.Parameters.Select(p => p.ToAnonymousName())));
+            identifier.Append(")");
+            return MethodName.Get(identifier.ToString());
+        }
+
         private static IParameterName ToAnonymousName(IParameterName parameter)
         {
             var identifier = new StringBuilder();
             identifier.AppendIf(parameter.IsParameterArray, ParameterName.VarArgsModifier + " ");
             identifier.AppendIf(parameter.IsOutput, ParameterName.OutputModifier + " ");
             identifier.AppendIf(parameter.IsOptional, ParameterName.OptionalModifier + " ");
-            var isNonReferenceTypePassedByReference = parameter.IsPassedByReference && !parameter.ValueType.IsReferenceType;
-            identifier.AppendIf(isNonReferenceTypePassedByReference, ParameterName.PassByReferenceModifier + " ");
-            identifier.Append("[");
-            identifier.Append(parameter.ValueType.ToAnonymousName());
-            identifier.Append("] ");
+            identifier.AppendIf(parameter.HasPassByReferenceModifier(), ParameterName.PassByReferenceModifier + " ");
+            identifier.AppendAnonymousTypeName(parameter.ValueType).Append(' ');
             identifier.Append(parameter.Name.ToHash());
             return ParameterName.Get(identifier.ToString());
+        }
+
+        private static bool HasPassByReferenceModifier(this IParameterName parameter)
+        {
+            return parameter.IsPassedByReference && !parameter.ValueType.IsReferenceType;
+        }
+
+        private static StringBuilder AppendAnonymousTypeName(this StringBuilder identifier, ITypeName type)
+        {
+            return identifier.Append('[').Append(type.ToAnonymousName()).Append(']');
         }
 
         private static IEventName ToAnonymousName(IEventName @event)
@@ -108,20 +126,22 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
             return FieldName.Get(identifier.ToString());
         }
 
-        private static void AppendAnonymousMemberName(this StringBuilder identifier, IMemberName member, ITypeName valueType)
+        private static void AppendAnonymousMemberName(this StringBuilder identifier,
+            IMemberName member,
+            ITypeName valueType)
         {
             identifier.AppendIf(member.IsStatic, MemberName.StaticModifier + " ");
-            identifier.Append('[');
-            identifier.Append(valueType.ToAnonymousName());
-            identifier.Append("] [");
-            identifier.Append(member.DeclaringType.ToAnonymousName());
-            identifier.Append("].");
+            identifier.AppendAnonymousTypeName(valueType).Append(' ');
+            identifier.AppendAnonymousTypeName(member.DeclaringType).Append('.');
             identifier.Append(member.DeclaringType.IsDeclaredInEnclosingProject() ? member.Name.ToHash() : member.Name);
         }
 
         private static LocalVariableName ToAnonymousName(LocalVariableName variable)
         {
-            return LocalVariableName.Get("[" + variable.ValueType.ToAnonymousName() + "] " + variable.Name.ToHash());
+            var identifier = new StringBuilder();
+            identifier.AppendAnonymousTypeName(variable.ValueType).Append(' ');
+            identifier.Append(variable.Name.ToHash());
+            return LocalVariableName.Get(identifier.ToString());
         }
 
         private static Name ToAnonymousName(Name name)
@@ -131,31 +151,63 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
 
         private static ITypeName ToAnonymousName(ITypeName type)
         {
-            return ToAnonymousName<TypeName>(type, ToAnonymousName) ??
+            return ToAnonymousName<UnknownTypeName>(type, ToAnonymousName) ??
+                   ToAnonymousName<TypeName>(type, ToAnonymousName) ??
                    ToAnonymousName<TypeParameterName>(type, ToAnonymousName) ??
                    Asserts.Fail<ITypeName>("unknown type implementation");
         }
+
+        private static UnknownTypeName ToAnonymousName(UnknownTypeName type)
+        {
+            return type;
+        }
+
         private static TypeName ToAnonymousName(TypeName type)
         {
             var identifier = new StringBuilder();
+            identifier.AppendTypeKindPrefix(type);
+            identifier.Append(type.IsDeclaredInEnclosingProject() ? type.AnonymizedRawFullName() : type.RawFullName);
+            identifier.AppendTypeParameters(type).Append(", ");
+            identifier.Append(type.Assembly.ToAnonymousName());
+            return (TypeName) TypeName.Get(identifier.ToString());
+        }
 
-            if (type.IsDeclaredInEnclosingProject())
+        private static void AppendTypeKindPrefix(this StringBuilder identifier, TypeName type)
+        {
+            var prefix = type.Identifier.Substring(0, 2);
+            if (prefix.EndsWith(":"))
             {
-                identifier.Append(type.RawFullName.ToHash());
+                identifier.Append(prefix);
             }
-            else
+        }
+
+        private static string AnonymizedRawFullName(this TypeName type)
+        {
+            // We want to keep the number of type parameters and/or array braces.
+            // Examples of raw names in the three cases we, therefore, handle are:
+            // * TypeName`1
+            // * TypeName[]
+            // * TypeName`2[,]
+            var rawFullName = type.RawFullName;
+            var indexOfDelimiter = rawFullName.IndexOfAny(new[] {'`', '['});
+            if (indexOfDelimiter > -1)
             {
-                identifier.Append(type.RawFullName);
+                return rawFullName.Substring(0, indexOfDelimiter).ToHash() +
+                       rawFullName.Substring(indexOfDelimiter);
             }
+            return rawFullName.ToHash();
+        }
+
+        private static StringBuilder AppendTypeParameters(this StringBuilder identifier, IGenericName type)
+        {
             if (type.HasTypeParameters)
             {
                 identifier.Append("[[");
-                identifier.Append(string.Join("],[", type.TypeParameters.Select(typeParameter => typeParameter.ToAnonymousName())));
+                identifier.Append(
+                    string.Join("],[", type.TypeParameters.Select(typeParameter => typeParameter.ToAnonymousName())));
                 identifier.Append("]]");
             }
-            identifier.Append(", ");
-            identifier.Append(type.Assembly.ToAnonymousName());
-            return (TypeName)TypeName.Get(identifier.ToString());
+            return identifier;
         }
 
         private static TypeParameterName ToAnonymousName(TypeParameterName typeParameter)
@@ -186,7 +238,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
         }
 
         [ContractAnnotation("notnull => notnull")]
-        public static DocumentName ToAnonymousName([JetBrains.Annotations.CanBeNull] this DocumentName document)
+        public static DocumentName ToAnonymousName([CanBeNull] this DocumentName document)
         {
             return document == null
                 ? null
@@ -194,7 +246,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
         }
 
         [ContractAnnotation("notnull => notnull")]
-        public static ProjectItemName ToAnonymousName([JetBrains.Annotations.CanBeNull] this ProjectItemName projectItem)
+        public static ProjectItemName ToAnonymousName([CanBeNull] this ProjectItemName projectItem)
         {
             return projectItem == null
                 ? null
@@ -202,7 +254,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
         }
 
         [ContractAnnotation("notnull => notnull")]
-        public static ProjectName ToAnonymousName([JetBrains.Annotations.CanBeNull] this ProjectName project)
+        public static ProjectName ToAnonymousName([CanBeNull] this ProjectName project)
         {
             return project == null
                 ? null
@@ -210,7 +262,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
         }
 
         [ContractAnnotation("notnull => notnull")]
-        public static SolutionName ToAnonymousName([JetBrains.Annotations.CanBeNull] this SolutionName solution)
+        public static SolutionName ToAnonymousName([CanBeNull] this SolutionName solution)
         {
             return solution == null
                 ? null
@@ -218,7 +270,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
         }
 
         [ContractAnnotation("notnull => notnull")]
-        public static WindowName ToAnonymousName([JetBrains.Annotations.CanBeNull] this WindowName window)
+        public static WindowName ToAnonymousName([CanBeNull] this WindowName window)
         {
             return window == null
                 ? null
