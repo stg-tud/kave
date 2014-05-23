@@ -32,7 +32,7 @@ namespace KaVE.Model.Events.CompletionEvent
         ///     The name of a method.
         /// </summary>
         [NotNull, DataMember]
-        public IMethodName Element { get; private set; }
+        public IMethodName Element { get; set; }
 
         /// <summary>
         ///     The implementation of the enclosing method that is referred to by calling

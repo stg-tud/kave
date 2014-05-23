@@ -18,9 +18,13 @@
  */
 
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using JetBrains.Util;
 using KaVE.Model.Events.CompletionEvent;
+using KaVE.Model.Names;
 using KaVE.Model.Names.CSharp;
+using KaVE.VsFeedbackGenerator.SessionManager.Anonymize;
 using NUnit.Framework;
 
 namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
@@ -50,7 +54,36 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
                         SelectedAfter = TimeSpan.FromSeconds(2)
                     }
                 },
-                Context = new Context()
+                Context = new Context
+                {
+                    EnclosingMethod = MethodName.Get("[R, A, 1.2.3.4] [D, P].M()"),
+                    TriggerTarget = TypeName.Get("T, P"),
+                    TypeShape = new TypeShape
+                    {
+                        TypeHierarchy = new TypeHierarchy("C, P")
+                        {
+                            Extends = new TypeHierarchy("S, P"),
+                            Implements = new HashSet<ITypeHierarchy>
+                            {
+                                new TypeHierarchy("I1, P"),
+                                new TypeHierarchy("I2, P")
+                            }
+                        },
+                        MethodHierarchies = new HashSet<MethodHierarchy>
+                        {
+                            new MethodHierarchy(MethodName.Get("[R, A, 1.2.3.4] [D, P].N()"))
+                            {
+                                Super = MethodName.Get("[R, A, 1.2.3.4] [S, P].N()"),
+                                First = MethodName.Get("[R, A, 1.2.3.4] [I1, P].N()")
+                            },
+                            new MethodHierarchy(MethodName.Get("[R, A, 4.3.2.1] [D, P].L()"))
+                        }
+                    },
+                    EntryPointToCalledMethods = new Dictionary<IMethodName, ISet<IMethodName>>
+                    {
+                        {MethodName.Get("[R, A, 1.2.3.4] [D, P].M()"), new HashSet<IMethodName>{MethodName.Get("[R, A, 1.2.3.4] [D, P].N()")}}
+                    }
+                }
             };
         }
 
@@ -101,7 +134,84 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
             CollectionAssert.AreEqual(expected, actual.Selections);
         }
 
-        // TODO @Sven: Write Context anonymization tests
+        [Test]
+        public void ShouldAnonymizeContextEnclosingMethodIfRemoveNamesIsSet()
+        {
+            ExportSettings.RemoveCodeNames = true;
+            var expected = MethodName.Get("[R, A, 1.2.3.4] [BTxSgd7rLC1KLBfBSU59+w==, aUaDMpYpDqsiSh5nQjiWFw==].lNSAgClcjc9lDeUkXybdNQ==()");
+
+            var actual = WhenEventIsAnonymized();
+
+            Assert.AreEqual(expected, actual.Context.EnclosingMethod);
+        }
+
+        [Test]
+        public void ShouldAnonymizeContextTriggerTarget()
+        {
+            ExportSettings.RemoveCodeNames = true;
+            var expected = TypeName.Get("TM6pgLI0nE5n0EEgAKIIFw==, aUaDMpYpDqsiSh5nQjiWFw==");
+
+            var actual = WhenEventIsAnonymized();
+
+            Assert.AreEqual(expected, actual.Context.TriggerTarget);
+        }
+
+        [Test]
+        public void ShouldAnonymizeContextTypeShape()
+        {
+            ExportSettings.RemoveCodeNames = true;
+            var expected = new TypeShape
+            {
+                TypeHierarchy = new TypeHierarchy("3Rx860ySZTppa3kHpN1N8Q==, aUaDMpYpDqsiSh5nQjiWFw==")
+                {
+                    Extends = new TypeHierarchy("bwrIwYfO24Nam6NzYDvaPw==, aUaDMpYpDqsiSh5nQjiWFw=="),
+                    Implements = new HashSet<ITypeHierarchy>
+                            {
+                                new TypeHierarchy("eGEyMBjXL4zPn7I6S8mfDw==, aUaDMpYpDqsiSh5nQjiWFw=="),
+                                new TypeHierarchy("L/ae+p4+hxBsaXczpcEyIQ==, aUaDMpYpDqsiSh5nQjiWFw==")
+                            }
+                },
+                MethodHierarchies = new HashSet<MethodHierarchy>
+                        {
+                            new MethodHierarchy(MethodName.Get("[R, A, 1.2.3.4] [BTxSgd7rLC1KLBfBSU59+w==, aUaDMpYpDqsiSh5nQjiWFw==].FrZejHdXesK4GmGTziBKog==()"))
+                            {
+                                Super = MethodName.Get("[R, A, 1.2.3.4] [bwrIwYfO24Nam6NzYDvaPw==, aUaDMpYpDqsiSh5nQjiWFw==].FrZejHdXesK4GmGTziBKog==()"),
+                                First = MethodName.Get("[R, A, 1.2.3.4] [eGEyMBjXL4zPn7I6S8mfDw==, aUaDMpYpDqsiSh5nQjiWFw==].FrZejHdXesK4GmGTziBKog==()")
+                            },
+                            new MethodHierarchy(MethodName.Get("[R, A, 4.3.2.1] [BTxSgd7rLC1KLBfBSU59+w==, aUaDMpYpDqsiSh5nQjiWFw==].teEFVPLjq1yy/faHQwbDSg==()"))
+                        }
+            };
+
+            var actual = WhenEventIsAnonymized();
+
+            Assert.AreEqual(expected, actual.Context.TypeShape);
+        }
+
+        [Test]
+        public void ShouldAnonymizeEntryPointsAndCalledMethods()
+        {
+            ExportSettings.RemoveCodeNames = true;
+            var expected = new Dictionary<IMethodName, ISet<IMethodName>>
+            {
+                {
+                    MethodName.Get("[R, A, 1.2.3.4] [BTxSgd7rLC1KLBfBSU59+w==, aUaDMpYpDqsiSh5nQjiWFw==].lNSAgClcjc9lDeUkXybdNQ==()"),
+                    new HashSet<IMethodName> {MethodName.Get("[R, A, 1.2.3.4] [BTxSgd7rLC1KLBfBSU59+w==, aUaDMpYpDqsiSh5nQjiWFw==].FrZejHdXesK4GmGTziBKog==()")}
+                }
+            };
+
+            var actual = WhenEventIsAnonymized();
+
+            AssertAreEquivalent(expected, actual.Context.EntryPointToCalledMethods);
+        }
+
+        // TODO @Seb: Add tests for entryPointToGroum when groum implementation is done
+
+        private static void AssertAreEquivalent(IDictionary<IMethodName, ISet<IMethodName>> expected,
+            IDictionary<IMethodName, ISet<IMethodName>> actual)
+        {
+            CollectionAssert.AreEqual(expected.Keys, actual.Keys);
+            expected.Keys.ForEach(key => CollectionAssert.AreEquivalent(expected[key], actual[key], "Called methods for entry point " + key));
+        }
 
         protected override void AssertThatPropertiesThatAreNotTouchedByAnonymizationAreUnchanged(
             CompletionEvent original,

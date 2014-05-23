@@ -43,31 +43,31 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
         }
 
         [NotNull]
-        public static IName ToAnonymousName<TName>([NotNull] this TName name) where TName : class, IName
+        public static TName ToAnonymousName<TName>([NotNull] this TName name) where TName : class, IName
         {
-            return ToAnonymousName<DocumentName>(name, ToAnonymousName) ??
-                   ToAnonymousName<WindowName>(name, ToAnonymousName) ??
-                   ToAnonymousName<SolutionName>(name, ToAnonymousName) ??
-                   ToAnonymousName<ProjectName>(name, ToAnonymousName) ??
-                   ToAnonymousName<ProjectItemName>(name, ToAnonymousName) ??
-                   ToAnonymousName<AliasName>(name, ToAnonymousName) ??
-                   ToAnonymousName<IAssemblyName>(name, ToAnonymousName) ??
-                   ToAnonymousName<ITypeName>(name, ToAnonymousName) ??
-                   ToAnonymousName<LocalVariableName>(name, ToAnonymousName) ??
-                   ToAnonymousName<IFieldName>(name, ToAnonymousName) ??
-                   ToAnonymousName<IPropertyName>(name, ToAnonymousName) ??
-                   ToAnonymousName<IEventName>(name, ToAnonymousName) ??
-                   ToAnonymousName<IParameterName>(name, ToAnonymousName) ??
-                   ToAnonymousName<IMethodName>(name, ToAnonymousName) ??
-                   ToAnonymousName<Name>(name, ToAnonymousName) ??
-                   Asserts.Fail<IName>("unhandled name type");
+            return ToAnonymousName<DocumentName, TName>(name, ToAnonymousName) ??
+                   ToAnonymousName<WindowName, TName>(name, ToAnonymousName) ??
+                   ToAnonymousName<SolutionName, TName>(name, ToAnonymousName) ??
+                   ToAnonymousName<ProjectName, TName>(name, ToAnonymousName) ??
+                   ToAnonymousName<ProjectItemName, TName>(name, ToAnonymousName) ??
+                   ToAnonymousName<AliasName, TName>(name, ToAnonymousName) ??
+                   ToAnonymousName<IAssemblyName, TName>(name, ToAnonymousName) ??
+                   ToAnonymousName<ITypeName, TName>(name, ToAnonymousName) ??
+                   ToAnonymousName<LocalVariableName, TName>(name, ToAnonymousName) ??
+                   ToAnonymousName<IFieldName, TName>(name, ToAnonymousName) ??
+                   ToAnonymousName<IPropertyName, TName>(name, ToAnonymousName) ??
+                   ToAnonymousName<IEventName, TName>(name, ToAnonymousName) ??
+                   ToAnonymousName<IParameterName, TName>(name, ToAnonymousName) ??
+                   ToAnonymousName<IMethodName, TName>(name, ToAnonymousName) ??
+                   ToAnonymousName<IName, TName>(name, ToAnonymousName) ??
+                   Asserts.Fail<TName>("unhandled name type");
         }
 
-        private static TName ToAnonymousName<TName>(IName name, Func<TName, TName> anonymizer)
-            where TName : class, IName
+        private static TR ToAnonymousName<TName, TR>(TR name, Func<TName, TName> anonymizer)
+            where TName : class, IName where TR : class, IName
         {
             var concreteName = name as TName;
-            return concreteName != null ? anonymizer(concreteName) : null;
+            return (concreteName != null ? anonymizer(concreteName) : null) as TR;
         }
 
         private static IMethodName ToAnonymousName(IMethodName method)
@@ -144,16 +144,16 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
             return LocalVariableName.Get(identifier.ToString());
         }
 
-        private static Name ToAnonymousName(Name name)
+        private static IName ToAnonymousName(IName name)
         {
             return Name.Get(name.Identifier.ToHash());
         }
 
         private static ITypeName ToAnonymousName(ITypeName type)
         {
-            return ToAnonymousName<UnknownTypeName>(type, ToAnonymousName) ??
-                   ToAnonymousName<TypeName>(type, ToAnonymousName) ??
-                   ToAnonymousName<TypeParameterName>(type, ToAnonymousName) ??
+            return ToAnonymousName<UnknownTypeName, ITypeName>(type, ToAnonymousName) ??
+                   ToAnonymousName<TypeName, ITypeName>(type, ToAnonymousName) ??
+                   ToAnonymousName<TypeParameterName, ITypeName>(type, ToAnonymousName) ??
                    Asserts.Fail<ITypeName>("unknown type implementation");
         }
 
