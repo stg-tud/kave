@@ -14,12 +14,11 @@
  * limitations under the License.
  * 
  * Contributors:
- *    - 
+ *    - Sven Amann
  */
 
 using System.Linq;
 using KaVE.Model.Events.VisualStudio;
-using KaVE.Model.Names.VisualStudio;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
 {
@@ -27,7 +26,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
     {
         public override void AnonymizeCodeNames(IDEStateEvent ideEvent)
         {
-            ideEvent.OpenDocuments = ideEvent.OpenDocuments.Select(doc => AnonymousNameUtils.ToAnonymousName((DocumentName) doc)).ToList();
+            ideEvent.OpenDocuments = ideEvent.OpenDocuments.Select(doc => doc.ToAnonymousName()).ToList();
             ideEvent.OpenWindows = ideEvent.OpenWindows.Select(doc => doc.ToAnonymousName()).ToList();
             base.AnonymizeCodeNames(ideEvent);
         }

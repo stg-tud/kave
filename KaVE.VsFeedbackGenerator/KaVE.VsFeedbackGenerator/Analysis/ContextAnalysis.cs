@@ -33,7 +33,6 @@ namespace KaVE.VsFeedbackGenerator.Analysis
         private Context _context;
 
         private readonly TypeShapeAnalysis _typeShapeAnalysis = new TypeShapeAnalysis();
-        private readonly CalledMethodsAnalysis _calledMethodsAnalysis = new CalledMethodsAnalysis();
         private readonly CompletionTargetAnalysis _completionTargetAnalysis = new CompletionTargetAnalysis();
 
         private readonly CalledMethodsForEntryPointsAnalysis _calledMethodsForEntryPointsAnalysis =

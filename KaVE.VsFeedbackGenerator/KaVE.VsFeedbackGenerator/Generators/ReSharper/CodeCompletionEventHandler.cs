@@ -52,10 +52,12 @@ namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
     internal class CodeCompletionContextAnalysisTrigger : CSharpItemsProviderBase<CSharpCodeCompletionContext>
     {
         private readonly CodeCompletionEventHandler _handler;
+        private readonly ILogger _logger;
 
-        public CodeCompletionContextAnalysisTrigger(CodeCompletionEventHandler handler)
+        public CodeCompletionContextAnalysisTrigger(CodeCompletionEventHandler handler, ILogger logger)
         {
             _handler = handler;
+            _logger = logger;
         }
 
         protected override bool AddLookupItems(CSharpCodeCompletionContext context, GroupedItemsCollector collector)
@@ -65,7 +67,10 @@ namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
                 var ctx = ContextAnalysis.Analyze(context);
                 _handler.SetContext(ctx);
             }
-            catch (Exception) {}
+            catch (Exception e)
+            {
+                _logger.Error(e);
+            }
             return false;
         }
     }

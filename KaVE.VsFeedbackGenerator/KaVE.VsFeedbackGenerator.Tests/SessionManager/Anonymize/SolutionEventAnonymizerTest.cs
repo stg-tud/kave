@@ -19,7 +19,6 @@
 
 using KaVE.Model.Events.VisualStudio;
 using KaVE.Model.Names.VisualStudio;
-using KaVE.VsFeedbackGenerator.Utils.Names;
 using NUnit.Framework;
 
 namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize

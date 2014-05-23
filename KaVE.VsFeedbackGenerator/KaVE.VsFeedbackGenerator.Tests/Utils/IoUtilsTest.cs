@@ -253,7 +253,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
         public void ShouldWriteBytes()
         {
             var file = Path.GetTempFileName();
-            var expected = "String";
+            const string expected = "String";
             var asBytes = expected.AsBytes();
             _sut.WriteAllByte(asBytes, file);
 

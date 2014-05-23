@@ -42,8 +42,6 @@ namespace KaVE.VsFeedbackGenerator.TrayNotification
             public ExportType? Type;
         }
 
-        public bool IsZipExport { get; private set; }
-        public bool IsUploadExport { get; private set; }
         public UploadOptions.ExportType? ResultType { get; private set; }
 
         public UploadWizard(IActionManager actionManager, ISettingsStore settingsStore)
@@ -51,9 +49,6 @@ namespace KaVE.VsFeedbackGenerator.TrayNotification
             _actionManager = actionManager;
             _settingsStore = settingsStore;
             InitializeComponent();
-
-            IsZipExport = false;
-            IsUploadExport = false;
 
             LoadCheckboxState();
         }

@@ -23,7 +23,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
 {
     internal class IDEEventAnonymizer<TEvent> where TEvent : IDEEvent
     {
-        public virtual void AnonymizeSessionUUID(TEvent ideEvent)
+        public void AnonymizeSessionUUID(TEvent ideEvent)
         {
             ideEvent.IDESessionUUID = null;
         }

@@ -165,20 +165,15 @@ namespace KaVE.Model.Tests.Events.CompletionEvent
                     "(opt [System.Int32, mscore, 4.0.0.0] length)");
         }
 
-        private Model.Groums.Groum G(int s)
+        private static Model.Groums.Groum G(int s)
         {
             return new Model.Groums.Groum {Name = s};
         }
 
-
-        private TypeShape TS(string type)
+        // ReSharper disable once InconsistentNaming
+        private static TypeShape TS(string type)
         {
             return new TypeShape {TypeHierarchy = new TypeHierarchy(type)};
-        }
-
-        private ITypeName T(string type)
-        {
-            return TypeName.Get("interface " + type + ", Assembly, 1.2.3.4");
         }
     }
 }

@@ -163,7 +163,7 @@ namespace KaVE.Model.Names.CSharp
             get { return GetRawFullName(Identifier); }
         }
 
-        protected internal static string GetRawFullName(string identifier)
+        protected static string GetRawFullName(string identifier)
         {
             var fullName = GetFullName(identifier);
             var indexOfGenericList = fullName.IndexOf("[[", StringComparison.Ordinal);

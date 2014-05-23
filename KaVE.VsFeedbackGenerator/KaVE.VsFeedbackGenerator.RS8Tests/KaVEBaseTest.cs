@@ -104,7 +104,9 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests
             fileContent = fileContent.Replace(Caret, "{caret}");
 
             var file = GetTestDataFilePath2("adhoc_test_snippet").ChangeExtension("cs");
-            Directory.CreateDirectory(Path.GetDirectoryName(file.FullPath));
+            var parentPath = Path.GetDirectoryName(file.FullPath);
+            Asserts.NotNull(parentPath, "impossible, since file is alway an absolute path");
+            Directory.CreateDirectory(parentPath);
             using (var stream = file.OpenStream(FileMode.Create))
             {
                 using (var writer = new StreamWriter(stream))

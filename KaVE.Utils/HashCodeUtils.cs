@@ -22,7 +22,7 @@ using System.Linq;
 
 namespace KaVE.Utils
 {
-    public class HashCodeUtils
+    public static class HashCodeUtils
     {
         public static int For<T1, T2>(int seed, IDictionary<T1, IEnumerable<T2>> d)
         {

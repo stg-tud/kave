@@ -25,7 +25,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
     {
         public override void AnonymizeCodeNames(SolutionEvent ideEvent)
         {
-            ideEvent.Target = (IIDEComponentName) ideEvent.Target.ToAnonymousName();
+            ideEvent.Target = ideEvent.Target.ToAnonymousName();
             base.AnonymizeCodeNames(ideEvent);
         }
     }

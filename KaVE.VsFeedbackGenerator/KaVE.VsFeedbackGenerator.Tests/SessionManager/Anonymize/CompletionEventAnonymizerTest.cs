@@ -19,12 +19,10 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using JetBrains.Util;
 using KaVE.Model.Events.CompletionEvent;
 using KaVE.Model.Names;
 using KaVE.Model.Names.CSharp;
-using KaVE.VsFeedbackGenerator.SessionManager.Anonymize;
 using NUnit.Framework;
 
 namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize

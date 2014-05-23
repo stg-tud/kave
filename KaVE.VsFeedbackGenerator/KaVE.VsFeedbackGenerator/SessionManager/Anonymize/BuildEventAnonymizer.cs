@@ -14,7 +14,7 @@
  * limitations under the License.
  * 
  * Contributors:
- *    - 
+ *    - Sven Amann
  */
 
 using System;
@@ -39,7 +39,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
 
         public override void AnonymizeCodeNames(BuildEvent ideEvent)
         {
-            ForEachTargetDo(ideEvent, target => target.Project = (string) target.Project.ToHash());
+            ForEachTargetDo(ideEvent, target => target.Project = target.Project.ToHash());
             base.AnonymizeCodeNames(ideEvent);
         }
 

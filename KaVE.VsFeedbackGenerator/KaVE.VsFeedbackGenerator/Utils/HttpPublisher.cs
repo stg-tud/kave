@@ -63,7 +63,7 @@ namespace KaVE.VsFeedbackGenerator.Utils
             Asserts.That(res.Status == State.Ok, Messages.ServerResponseRequestFailure, res.Message);
         }
 
-        private HttpContent CreateMultipartContent([NotNull] MemoryStream stream, [NotNull] string name)
+        private static HttpContent CreateMultipartContent([NotNull] MemoryStream stream, [NotNull] string name)
         {
             return new MultipartFormDataContent
             {
@@ -82,10 +82,15 @@ namespace KaVE.VsFeedbackGenerator.Utils
             Fail
         }
 
-        internal class ExportResult<T>
+        private class ExportResult<T>
         {
+            [UsedImplicitly]
             public State Status;
+
+            [UsedImplicitly]
             public string Message;
+
+            [UsedImplicitly]
             public T Data;
         }
     }

@@ -37,6 +37,7 @@ using KaVE.Utils.Assertion;
 
 namespace KaVE.VsFeedbackGenerator.Utils.Names
 {
+    // TODO @Sven: See if we can make the factory methods return the correct type with non-null guarantee, to safe casts in clients
     public static class ReSharperDeclaredElementNameFactory
     {
         [NotNull]
@@ -288,11 +289,11 @@ namespace KaVE.VsFeedbackGenerator.Utils.Names
         }
 
         /// <summary>
-        /// Retrieves the module's assembly-qualified name (including the assembly name and version). If the module
-        /// is a project and that project is currently not compilable (and has not been compiled ever or since the
-        /// last clear) the returned name will only contain the project's name and not its version. According to
-        /// http://devnet.jetbrains.com/message/5503864#5503864 this is a restriction of ReSharper. Note that the
-        /// project's name may differ from the project's output-assembly name.
+        ///     Retrieves the module's assembly-qualified name (including the assembly name and version). If the module
+        ///     is a project and that project is currently not compilable (and has not been compiled ever or since the
+        ///     last clear) the returned name will only contain the project's name and not its version. According to
+        ///     http://devnet.jetbrains.com/message/5503864#5503864 this is a restriction of ReSharper. Note that the
+        ///     project's name may differ from the project's output-assembly name.
         /// </summary>
         [NotNull]
         private static string GetQualifiedName([NotNull] this IModule module)
