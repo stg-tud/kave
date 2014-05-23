@@ -32,16 +32,15 @@ using KaVE.VsFeedbackGenerator.Utils;
 using KaVE.VsFeedbackGenerator.Utils.Logging;
 using Moq;
 using NUnit.Framework;
-using Messages = KaVE.VsFeedbackGenerator.Properties.SessionManager;
 
-namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
+namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModel
 {
     [TestFixture]
     class ExportCommandTest
     {
         private Mock<ILogManager<IDEEvent>> _mockLogFileManager;
         private List<Mock<ILog<IDEEvent>>> _mockLogs;
-        private FeedbackViewModel _uut;
+        private VsFeedbackGenerator.SessionManager.FeedbackViewModel _uut;
         private InteractionRequestTestHelper<UploadWizard.UploadOptions> _requestHelper;
         private Mock<IExporter> _mockExporter;
         private Mock<ISettingsStore> _mockSettingStore;
@@ -68,7 +67,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
             _mockSettingStore = new Mock<ISettingsStore>();
             _mockSettingStore.Setup(store => store.GetSettings<UploadSettings>()).Returns(new UploadSettings());
 
-            _uut = new FeedbackViewModel(_mockLogFileManager.Object, _mockSettingStore.Object, _mockExporter.Object);
+            _uut = new VsFeedbackGenerator.SessionManager.FeedbackViewModel(_mockLogFileManager.Object, _mockSettingStore.Object, _mockExporter.Object);
             _uut.Refresh();
             while (_uut.Refreshing)
             {
@@ -130,7 +129,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
             var actual = _notificationHelper.Context;
             // TODO @Sven: extend setup to include some events that are exported here
             // TODO @Seb: help sven with above task
-            var expected = new Notification { Message = Messages.ExportSuccess.FormatEx(0) };
+            var expected = new Notification { Message = Properties.SessionManager.ExportSuccess.FormatEx(0) };
             Assert.AreEqual(expected, actual);
         }
 
@@ -154,7 +153,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
             _requestHelper.Context.Type = UploadWizard.UploadOptions.ExportType.HttpUpload;
             _requestHelper.Callback();
             var actual = _notificationHelper.Context;
-            var expected = new Notification { Message = Messages.ExportFail + ":\nTEST" };
+            var expected = new Notification { Message = Properties.SessionManager.ExportFail + ":\nTEST" };
             Assert.AreEqual(expected, actual);
         }
 

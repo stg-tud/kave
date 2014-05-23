@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,14 +27,13 @@ using KaVE.VsFeedbackGenerator.Utils;
 using KaVE.VsFeedbackGenerator.Utils.Logging;
 using Moq;
 using NUnit.Framework;
-using Messages = KaVE.VsFeedbackGenerator.Properties.SessionManager;
 
-namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
+namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModel
 {
     [TestFixture]
     internal class DeleteSessionCommandTest
     {
-        private FeedbackViewModel _uut;
+        private VsFeedbackGenerator.SessionManager.FeedbackViewModel _uut;
         private IList<Mock<ILog<IDEEvent>>> _mockLogs;
         private Mock<ILogManager<IDEEvent>> _mockLogFileManager;
         private InteractionRequestTestHelper<Confirmation> _confirmationRequestHelper;
@@ -55,7 +55,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
             _mockLogFileManager = new Mock<ILogManager<IDEEvent>>();
             _mockLogFileManager.Setup(mgr => mgr.GetLogs()).Returns(_mockLogs.Select(m => m.Object));
 
-            _uut = new FeedbackViewModel(_mockLogFileManager.Object, null, null);
+            _uut = new VsFeedbackGenerator.SessionManager.FeedbackViewModel(_mockLogFileManager.Object, null, null);
             _uut.Refresh();
             while (_uut.Refreshing)
             {
@@ -111,8 +111,8 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
 
             var expected = new Confirmation
             {
-                Caption = Messages.SessionDeleteConfirmTitle,
-                Message = Messages.SessionDeleteConfirmSingular
+                Caption = Properties.SessionManager.SessionDeleteConfirmTitle,
+                Message = Properties.SessionManager.SessionDeleteConfirmSingular
             };
             var actual = _confirmationRequestHelper.Context;
             Assert.AreEqual(expected, actual);
@@ -127,8 +127,8 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
 
             var expected = new Confirmation
             {
-                Caption = Messages.SessionDeleteConfirmTitle,
-                Message = Messages.SessionDeleteConfirmPlural.FormatEx(2)
+                Caption = Properties.SessionManager.SessionDeleteConfirmTitle,
+                Message = Properties.SessionManager.SessionDeleteConfirmPlural.FormatEx(2)
             };
             var actual = _confirmationRequestHelper.Context;
             Assert.AreEqual(expected, actual);

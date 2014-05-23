@@ -21,9 +21,12 @@
 
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Ionic.Zip;
 using JetBrains.Application;
 using KaVE.Model.Events;
+using KaVE.Utils.Assertion;
+using KaVE.VsFeedbackGenerator.SessionManager.Anonymize;
 using KaVE.VsFeedbackGenerator.Utils.Json;
 
 namespace KaVE.VsFeedbackGenerator.Utils
@@ -36,12 +39,26 @@ namespace KaVE.VsFeedbackGenerator.Utils
     [ShellComponent]
     internal class Exporter : IExporter
     {
+        private readonly IDataExportAnonymizer _anonymizer;
+
+        public Exporter(IDataExportAnonymizer anonymizer)
+        {
+            _anonymizer = anonymizer;
+        }
+
         public void Export(IEnumerable<IDEEvent> events, IPublisher publisher)
         {
             using (var stream = new MemoryStream())
             {
-                CreateZipFile(events, stream);
-
+                var empty = true;
+                var anonymousEvents = events.Select(
+                    ideEvent =>
+                    {
+                        empty = false;
+                        return _anonymizer.Anonymize(ideEvent);
+                    });
+                CreateZipFile(anonymousEvents, stream);
+                Asserts.Not(empty, "no events");
                 publisher.Publish(stream);
             }
         }
@@ -50,7 +67,7 @@ namespace KaVE.VsFeedbackGenerator.Utils
         {
             using (var zipFile = new ZipFile())
             {
-                int i = 0;
+                var i = 0;
                 foreach (var e in events)
                 {
                     var fileName = (i++) + "-" + e.GetType().Name + ".json";

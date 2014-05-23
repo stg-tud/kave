@@ -29,8 +29,12 @@ using KaVE.VsFeedbackGenerator.Utils.Json;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
 {
+    public interface IDataExportAnonymizer {
+        TEvent Anonymize<TEvent>(TEvent ideEvent) where TEvent : IDEEvent;
+    }
+
     [ShellComponent]
-    public class DataExportAnonymizer
+    public class DataExportAnonymizer : IDataExportAnonymizer
     {
         private static readonly IDictionary<Type, object> Anonymizer = new Dictionary<Type, object>
         {

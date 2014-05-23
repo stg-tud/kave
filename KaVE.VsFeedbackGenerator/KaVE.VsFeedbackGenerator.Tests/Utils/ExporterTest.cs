@@ -27,6 +27,7 @@ using KaVE.Model.Events;
 using KaVE.Model.Events.VisualStudio;
 using KaVE.TestUtils.Model.Events;
 using KaVE.Utils.Assertion;
+using KaVE.VsFeedbackGenerator.SessionManager.Anonymize;
 using KaVE.VsFeedbackGenerator.Tests.Utils.Json;
 using KaVE.VsFeedbackGenerator.Utils;
 using KaVE.VsFeedbackGenerator.Utils.Json;
@@ -38,9 +39,16 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
     [TestFixture]
     internal class ExporterTest
     {
+        private readonly IEnumerable<IDEEvent> _eventsForRealLifeExample = new List<IDEEvent>
+        {
+            new WindowEvent {TriggeredAt = new DateTime(2014, 1, 1)},
+            new WindowEvent {TriggeredAt = new DateTime(2014, 1, 2)}
+        };
+
         private Mock<IPublisher> _publisherMock;
         private Exporter _sut;
         private MemoryStream _lastPublishedStream;
+        private Mock<IDataExportAnonymizer> _anonymizerMock;
 
         [SetUp]
         public void SetUp()
@@ -49,14 +57,28 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
             _publisherMock.Setup(p => p.Publish(It.IsAny<MemoryStream>())).Callback<MemoryStream>(
                 stream => { _lastPublishedStream = new MemoryStream(stream.ToArray()); });
 
-            _sut = new Exporter();
+            _anonymizerMock = new Mock<IDataExportAnonymizer>();
+            _anonymizerMock.Setup(a => a.Anonymize(It.IsAny<IDEEvent>())).Returns<IDEEvent>(ideEvent => ideEvent);
+
+            _sut = new Exporter(_anonymizerMock.Object);
         }
 
-        [Test, Ignore("multiple enumerations on (lazy) enumerable"),
-         ExpectedException(typeof (AssertException), ExpectedMessage = "no events")]
+        [Test, ExpectedException(typeof (AssertException), ExpectedMessage = "no events")]
         public void ShouldFailWithNoEvents()
         {
             _sut.Export(new List<IDEEvent>(), _publisherMock.Object);
+        }
+
+        [Test]
+        public void ShouldFailWithNoEventsBeforePublishing()
+        {
+            try
+            {
+                _sut.Export(new IDEEvent[0], _publisherMock.Object);
+            }
+            catch (AssertException) {}
+
+            _publisherMock.Verify(p => p.Publish(It.IsAny<MemoryStream>()), Times.Never);
         }
 
         [Test]
@@ -80,34 +102,60 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
         public void ShouldPersistAllProvidedEvents()
         {
             var expecteds = IDEEventTestFactory.CreateAnonymousEvents(25);
-            _sut.Export(expecteds, _publisherMock.Object);
-            var zipFile = GetZipFileFromExport();
 
-            var actuals = zipFile.Entries.Select(ExtractIDEEvent);
+            _sut.Export(expecteds, _publisherMock.Object);
+            var actuals = GetExportedEvents();
 
             CollectionAssert.AreEquivalent(expecteds, actuals);
         }
 
         [Test]
-        public void ShouldIncludeEventTypeInFileName()
+        public void ShouldCreateFileNamesFromEventIndexAndType()
         {
-            var expected = new WindowEvent();
-            _sut.Export(new List<IDEEvent> {expected}, _publisherMock.Object);
+            var events = new IDEEvent[] {new EditEvent(), new ErrorEvent(), new WindowEvent()};
+            var expected = new[] {"0-EditEvent.json", "1-ErrorEvent.json", "2-WindowEvent.json"};
+
+            _sut.Export(events, _publisherMock.Object);
 
             var zipFile = GetZipFileFromExport();
-            var entry = zipFile["0-WindowEvent.json"];
-            Assert.NotNull(entry);
-
-            var actual = ExtractIDEEvent(entry);
+            var actual = zipFile.EntryFileNames;
             Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void ShouldInvokeAnonymizerOnEveryEvent()
+        {
+            var expected = IDEEventTestFactory.CreateAnonymousEvents(13);
+            var actual = new List<IDEEvent>();
+            _anonymizerMock.Setup(a => a.Anonymize(It.IsAny<IDEEvent>()))
+                           .Callback<IDEEvent>(actual.Add)
+                           .Returns<IDEEvent>(ideEvent => ideEvent);
+
+            _sut.Export(expected, _publisherMock.Object);
+
+            CollectionAssert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void ShouldCreateZipFromAnonymizedEvents()
+        {
+            var original = IDEEventTestFactory.CreateAnonymousEvents(3);
+            var anonymousEvent = new TestIDEEvent {TestProperty = "It's me!"};
+            _anonymizerMock.Setup(a => a.Anonymize(It.IsAny<IDEEvent>())).Returns(anonymousEvent);
+            var expected = new[] {anonymousEvent, anonymousEvent, anonymousEvent};
+
+            _sut.Export(original, _publisherMock.Object);
+
+            var actual = GetExportedEvents();
+            CollectionAssert.AreEqual(expected, actual);
         }
 
         [Test, Ignore("manual test that the server receives valid file - RealLifeExample part 1")]
         public void ShouldUploadValidZipToServer()
         {
-            Registry.RegisterComponent(new IoUtils() as IIoUtils);
+            Registry.RegisterComponent<IIoUtils>(new IoUtils());
             _sut.Export(
-                EventsForRealLifeExample,
+                _eventsForRealLifeExample,
                 new HttpPublisher(new Uri("http://kave.st.informatik.tu-darmstadt.de:667/upload")));
             Registry.Clear();
         }
@@ -117,19 +165,13 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
         {
             var zipFile = new ZipFile(@"C:\compare.zip");
             var actual = zipFile.Entries.Select(ExtractIDEEvent);
-            CollectionAssert.AreEquivalent(EventsForRealLifeExample, actual);
+            CollectionAssert.AreEquivalent(_eventsForRealLifeExample, actual);
         }
 
-        private IEnumerable<IDEEvent> EventsForRealLifeExample
+        private IEnumerable<IDEEvent> GetExportedEvents()
         {
-            get
-            {
-                return new List<IDEEvent>
-                {
-                    new WindowEvent {TriggeredAt = new DateTime(2014, 1, 1)},
-                    new WindowEvent {TriggeredAt = new DateTime(2014, 1, 2)}
-                };
-            }
+            var zipFile = GetZipFileFromExport();
+            return zipFile.Entries.Select(ExtractIDEEvent);
         }
 
         private ZipFile GetZipFileFromExport()
@@ -139,8 +181,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
             {
                 _lastPublishedStream.CopyTo(fileStream);
             }
-            var zipFile = new ZipFile(tempFileName);
-            return zipFile;
+            return new ZipFile(tempFileName);
         }
 
         private static IDEEvent ExtractIDEEvent(ZipEntry entry)
