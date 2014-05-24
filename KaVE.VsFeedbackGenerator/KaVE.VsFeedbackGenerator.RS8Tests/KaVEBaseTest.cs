@@ -12,7 +12,12 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sven Amann
+ *    - Sebastian Proksch
  */
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -26,6 +31,7 @@ using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.TestFramework;
 using JetBrains.TextControl;
 using KaVE.Model.Events.CompletionEvent;
+using KaVE.Model.Names;
 using KaVE.Utils.Assertion;
 using KaVE.VsFeedbackGenerator.RS8Tests.Analysis;
 using KaVE.VsFeedbackGenerator.Utils;
@@ -134,7 +140,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests
             Assert.IsNotNull(projectFile, "projectFile == null");
             var service =
                 Solution.GetComponent<ILanguageManager>()
-                    .TryGetService<CodeCompletionModifierProvider>(psiSourceFile.PrimaryPsiLanguage);
+                        .TryGetService<CodeCompletionModifierProvider>(psiSourceFile.PrimaryPsiLanguage);
             var parameters = service != null
                 ? service.GetModifier(_myCodeCompletionTypes)
                 : CodeCompletionModifierProvider.GetModifierBasic(
@@ -165,6 +171,11 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests
         protected Context ResultContext
         {
             get { return TestAnalysisComponent.LastContext; }
+        }
+
+        protected IEnumerable<IMethodName> AnalyzedEntryPoints
+        {
+            get { return TestAnalysisComponent.LastEntryPoints; }
         }
 
         private static TestAnalysisTrigger TestAnalysisComponent

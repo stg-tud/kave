@@ -96,11 +96,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AboutAction.cs" />
-    <Compile Include="Analysis\CalledMethodsAnalysis.cs" />
     <Compile Include="Analysis\CalledMethodsForEntryPointsAnalysis.cs" />
     <Compile Include="Analysis\CompletionTargetAnalysis.cs" />
     <Compile Include="Analysis\ContextAnalysis.cs" />
+    <Compile Include="Analysis\MethodRef.cs" />
     <Compile Include="Analysis\EntryPointSelector.cs" />
+    <Compile Include="Analysis\InvocationCollector.cs" />
+    <Compile Include="Analysis\ReSharperUtils.cs" />
     <Compile Include="Analysis\TypeHierarchyAnalysisUtils.cs" />
     <Compile Include="Analysis\TypeShapeAnalysis.cs" />
     <Compile Include="Generators\ILogger.cs" />

@@ -15,6 +15,7 @@
  * 
  * Contributors:
  *    - Sven Amann
+ *    - Sebastian Proksch
  */
 
 using KaVE.JetBrains.Annotations;
@@ -62,6 +63,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
         }
 
         [Test, Ignore("currently we cannot detect this from the analysis result")]
+        // TODO Review: discuss the issue
         public void ShouldIncludeHelpersMultipleTimes()
         {
             CompleteInClass(@"
@@ -95,9 +97,36 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
                     }
                 }");
 
+            // TODO Review: discuss intuition behind this and next test
             AssertCallDetected(
                 "E",
                 "[System.Void, mscorlib, 4.0.0.0] [i:I, TestProject].M([System.Object, mscorlib, 4.0.0.0] o)");
+        }
+
+        [Test]
+        public void ShouldFindCallToMethodDeclaredBySupertype_2()
+        {
+            CompleteInFile(@"
+                public class C1
+                {
+                    public virtual void M(object o) {}
+                }
+
+                public class C2 : C1
+                {
+                    public override void M(object o) {}
+
+                    public void E(object o)
+                    {
+                        base.M(o);
+                        $
+                    }
+                }");
+
+            // TODO Review: discuss intuition behind this and previous test
+            AssertCallDetected(
+                "E",
+                "[System.Void, mscorlib, 4.0.0.0] [C1, TestProject].M([System.Object, mscorlib, 4.0.0.0] o)");
         }
 
         [Test]

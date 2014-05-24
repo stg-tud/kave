@@ -82,7 +82,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Analysis\CalledMethodsTestBase.cs" />
-    <Compile Include="Analysis\EntryPointDetectionTest.cs" />
+    <Compile Include="Analysis\EntryPointSelectorTest.cs" />
+    <Compile Include="Analysis\MethodRefTest.cs" />
     <Compile Include="Analysis\SmokeTests\CodeCompletionInIncompleteDeclarationsSmokeTest.cs" />
     <Compile Include="Analysis\ContextAnalysisCalledMethodsTest.cs" />
     <Compile Include="Analysis\ContextAnalysisEnclosingMethodTest.cs" />

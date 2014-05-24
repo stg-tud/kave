@@ -15,6 +15,7 @@
  * 
  * Contributors:
  *    - Sven Amann
+ *    - Sebastian Proksch
  */
 
 using System.Linq;
@@ -26,7 +27,6 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
 {
     internal class CalledMethodsTestBase : KaVEBaseTest
     {
-
         protected void AssertNoCallsDetected()
         {
             var entryPoint = FindSingleEntryPoint();
@@ -37,6 +37,12 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
         {
             var singleEntryPoint = FindSingleEntryPoint();
             AssertCallDetected(singleEntryPoint, methodIdentifier);
+        }
+
+        protected void AssertNumberOfCalls(string entryPointDescriptor, int num)
+        {
+            var entryPoint = FindEntryPoint(entryPointDescriptor);
+            Assert.AreEqual(ResultContext.EntryPointToCalledMethods[entryPoint].Count, num);
         }
 
         protected void AssertCallDetected(string entryPointDescriptor, string calledMethodIndentifier)

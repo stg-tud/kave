@@ -15,6 +15,7 @@
  * 
  * Contributors:
  *    - Sven Amann
+ *    - Sebastian Proksch
  */
 
 using NUnit.Framework;
@@ -45,7 +46,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
 
                 class C
                 {
-                    void M(I i)
+                    public void M(I i)
                     {
                         i.Do(1);
                         $
@@ -67,7 +68,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
 
                 class C
                 {
-                    void M(I i)
+                    public void M(I i)
                     {
                         if (i.Is())
                         {
@@ -91,7 +92,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
 
                 class C
                 {
-                    void M(I i)
+                    public void M(I i)
                     {
                         if (i.Is())
                         {
@@ -116,7 +117,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
 
                     class C
                     {
-                        void M(I i)
+                        public void M(I i)
                         {
                             i.Do(i.Get());
                             $
@@ -139,7 +140,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
 
                 class C
                 {
-                    void M<TM1>(I<TM1> i1)
+                    public void M<TM1>(I<TM1> i1)
                     {
                         i1.Get();
                         $
@@ -160,7 +161,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
 
                 class C
                 {
-                    void M()
+                    public void M()
                     {
                         I<string> i2 = null;
                         i2.Get();
@@ -183,7 +184,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
 
                 class C
                 {
-                    void M<TM1>(I<TM1> i1)
+                    public void M<TM1>(I<TM1> i1)
                     {
                         i1.Get<int>();
                         $
@@ -198,7 +199,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
         public void ShouldFindCallOnFreeTypeParameterInstance()
         {
             CompleteInClass(@"
-                void M<TM2>(TM2 p)
+                public void M<TM2>(TM2 p)
                 {
                     p.GetHashCode();
                     $
@@ -223,7 +224,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
 
                 class C
                 {
-                    void M<TM1, TM2>(D<TM2> d) where TM2 : I<object>
+                    public void M<TM1, TM2>(D<TM2> d) where TM2 : I<object>
                     {
                         d.Get();
                         $
@@ -270,8 +271,11 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
                 $
             ");
 
-            AssertCallDetected("[System.String, mscorlib, 4.0.0.0] [System.Object, mscorlib, 4.0.0.0].ToString()");
-            AssertCallDetected("[System.Int32, mscorlib, 4.0.0.0] [System.Object, mscorlib, 4.0.0.0].GetHashCode()");
+            AssertNumberOfCalls("M", 2);
+            AssertCallDetected("M", "[System.String, mscorlib, 4.0.0.0] [System.Object, mscorlib, 4.0.0.0].ToString()");
+            AssertCallDetected(
+                "M",
+                "[System.Int32, mscorlib, 4.0.0.0] [System.Object, mscorlib, 4.0.0.0].GetHashCode()");
         }
 
         [Test]
@@ -309,7 +313,9 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
                     }
                 }");
 
-            AssertCallDetected("M", "[System.Void, mscorlib, 4.0.0.0] [C, TestProject].EP()");
+
+            // TODO Review: discuss this
+            AssertCallDetected("M", "[System.Void, mscorlib, 4.0.0.0] [i:I, TestProject].EP()");
         }
     }
 }

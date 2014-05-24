@@ -52,6 +52,7 @@ namespace KaVE.Model.Events.CompletionEvent
         ///     Wheather or not this is a hierarchy of a method that overrides or implements a declaration from further up in the
         ///     type hierarchy.
         /// </summary>
+        // TODO review: think about renaming "isDeclaredInParentHierarchy"?
         public bool IsOverrideOrImplementation
         {
             get { return First != null; }

@@ -54,21 +54,20 @@ namespace KaVE.VsFeedbackGenerator.Analysis
                 _context.TypeShape = _typeShapeAnalysis.Analyze(typeDeclaration);
                 _context.TriggerTarget = _completionTargetAnalysis.Analyze(_nodeInFile);
 
+                var entryPoints = new EntryPointSelector(typeDeclaration, _context.TypeShape).GetEntrypoints();
+                _context.EntryPointToCalledMethods = _calledMethodsForEntryPointsAnalysis.Analyze(entryPoints);
+
                 var methodDeclaration = FindEnclosing<IMethodDeclaration>(_nodeInFile);
                 if (methodDeclaration != null)
                 {
                     _context.EnclosingMethod = methodDeclaration.GetName();
-
-                    _context.EntryPointToCalledMethods = _calledMethodsForEntryPointsAnalysis.Analyze(
-                        typeDeclaration,
-                        _context.TypeShape);
                 }
             }
             return _context;
         }
 
         [CanBeNull]
-        private static TIDeclaration FindEnclosing<TIDeclaration>(ITreeNode node)
+        public static TIDeclaration FindEnclosing<TIDeclaration>(ITreeNode node)
             where TIDeclaration : class, IDeclaration
         {
             while (node != null)

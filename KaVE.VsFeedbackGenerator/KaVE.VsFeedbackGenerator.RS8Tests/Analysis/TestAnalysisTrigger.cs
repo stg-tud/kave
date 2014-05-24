@@ -12,14 +12,23 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sebastian Proksch
+ *    - Sven Amann
  */
+
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using JetBrains.Application;
 using JetBrains.ReSharper.Feature.Services.CSharp.CodeCompletion.Infrastructure;
 using JetBrains.ReSharper.Feature.Services.Lookup;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
+using JetBrains.ReSharper.Psi.Tree;
 using KaVE.Model.Events.CompletionEvent;
+using KaVE.Model.Names;
 using KaVE.VsFeedbackGenerator.Analysis;
 
 namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
@@ -27,6 +36,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
     [ShellComponent, Language(typeof (CSharpLanguage))]
     public class TestAnalysisTrigger : CSharpItemsProviderBase<CSharpCodeCompletionContext>
     {
+        public IEnumerable<IMethodName> LastEntryPoints { get; set; }
         public Context LastContext { get; private set; }
         public Exception LastException { get; private set; }
 
@@ -41,6 +51,14 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
             {
                 LastException = null;
                 LastContext = ContextAnalysis.Analyze(context);
+
+                var typeDeclaration = ContextAnalysis.FindEnclosing<ITypeDeclaration>(context.NodeInFile);
+                if (typeDeclaration != null)
+                {
+                    var typeShape = new TypeShapeAnalysis().Analyze(typeDeclaration);
+                    LastEntryPoints =
+                        new EntryPointSelector(typeDeclaration, typeShape).GetEntrypoints().Select(ep => ep.Name);
+                }
             }
             catch (Exception e)
             {

@@ -15,97 +15,89 @@
  * 
  * Contributors:
  *    - Sven Amann
+ *    - Sebastian Proksch
  */
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using JetBrains.ReSharper.Psi.CSharp.Tree;
-using JetBrains.ReSharper.Psi.Tree;
-using KaVE.Model.Events.CompletionEvent;
 using KaVE.Model.Names;
-using KaVE.VsFeedbackGenerator.Utils.Names;
+using KaVE.Utils.Collections;
 using NuGet;
 
 namespace KaVE.VsFeedbackGenerator.Analysis
 {
     internal class CalledMethodsForEntryPointsAnalysis
     {
-        private class EntryPoint
-        {
-            public IMethodName Name;
-            public IMethodDeclaration Declaration;
-        }
+        private ISet<MethodRef> _entryPoints;
 
-        private readonly CalledMethodsAnalysis _calledMethodsAnalysis = new CalledMethodsAnalysis();
-        private TypeShape _typeShape;
-
-        public IDictionary<IMethodName, ISet<IMethodName>> Analyze(ITypeDeclaration typeDeclaration, TypeShape typeShape)
+        public IDictionary<IMethodName, ISet<IMethodName>> Analyze(ISet<MethodRef> entryPoints)
         {
-            _typeShape = typeShape;
+            _entryPoints = entryPoints;
             var result = new Dictionary<IMethodName, ISet<IMethodName>>();
-            var entryPointCandidates = GetEntryPointCandidates(typeDeclaration);
-            var definiteEntryPoints = GetDefiniteEntryPoints(entryPointCandidates);
 
-            var transitivelyAnalyzedMethods = new HashSet<IMethodName>();
-            result.AddRange(Analyze(definiteEntryPoints, transitivelyAnalyzedMethods));
-
-            entryPointCandidates.RemoveAll(definiteEntryPoints.Contains);
-            entryPointCandidates.RemoveAll(epc => transitivelyAnalyzedMethods.Contains(epc.Name));
-            transitivelyAnalyzedMethods.Clear();
-
-            result.AddRange(Analyze(entryPointCandidates, transitivelyAnalyzedMethods));
-            result.RemoveAll(kvp => transitivelyAnalyzedMethods.Contains(kvp.Key));
-
-            return result;
-        }
-
-        private static List<EntryPoint> GetEntryPointCandidates(ITypeDeclaration typeDeclaration)
-        {
-            return
-                typeDeclaration.MemberDeclarations.OfType<IMethodDeclaration>()
-                               .Where(md => !md.IsAbstract)
-                               .Select(md => new EntryPoint {Declaration = md, Name = md.GetName()})
-                               .Where(nmd => nmd.Name != null)
-                               .ToList();
-        }
-
-        private List<EntryPoint> GetDefiniteEntryPoints(IEnumerable<EntryPoint> candidates)
-        {
-            return candidates.Where(nmd => IsOverrideOrImplementation(nmd.Name)).ToList();
-        }
-
-        private bool IsOverrideOrImplementation(IMethodName methodName)
-        {
-            return _typeShape.MethodHierarchies.Any(mh => mh.Element == methodName && mh.IsOverrideOrImplementation);
-        }
-
-        private IEnumerable<KeyValuePair<IMethodName, ISet<IMethodName>>> Analyze(IEnumerable<EntryPoint> entryPoints,
-            ISet<IMethodName> allAnalyzedMethods)
-        {
-            var result = new Dictionary<IMethodName, ISet<IMethodName>>();
-            foreach (var entryPoint in entryPoints)
+            foreach (var ep in _entryPoints)
             {
-                var partialResult = Analyze(entryPoint, allAnalyzedMethods);
+                var called = Sets.NewHashSet<IMethodName>();
+                var analyzed = Sets.NewHashSet<IMethodName>();
+                analyzed.AddRange(_entryPoints.Select(e => e.Name));
+
+                Analyze(ep, called, analyzed);
                 try
                 {
-                    result.Add(entryPoint.Name, partialResult);
+                    result.Add(ep.Name, called);
                 }
                 catch (ArgumentException)
                 {
-                    // this happens in case of duplicated methods in a class,
-                    // the only thing we can do here is to skip the second
-                    // method, because only one entry per key is possible.
+                    // in case of duplicate method declaration
                 }
             }
+
             return result;
         }
 
-        private ISet<IMethodName> Analyze(EntryPoint entryPoint, ISet<IMethodName> allAnalyzedMethods)
+        private void Analyze(MethodRef ep, ISet<IMethodName> called, ISet<IMethodName> analyzed)
         {
-            var collectionContext = _calledMethodsAnalysis.Analyze(entryPoint.Declaration, _typeShape);
-            allAnalyzedMethods.AddRange(collectionContext.AnalyzedMethods);
-            return collectionContext.CalledMethods;
+            analyzed.Add(ep.Name);
+
+            var calls = ReSharperUtils.GetMethodRefsIn(ep);
+            foreach (var c in calls)
+            {
+                if (c.IsAssemblyReference)
+                {
+                    AddCall(c, called);
+                }
+                else
+                {
+                    var isSameType = ep.Name.DeclaringType == c.Name.DeclaringType;
+                    var isAbstract = c.Declaration.IsAbstract;
+                    var isLocalAbstract = isSameType && isAbstract;
+
+                    if (IsEntrypoint(c) || isLocalAbstract || !isSameType)
+                    {
+                        AddCall(c, called);
+                    }
+                    else
+                    {
+                        var isNotAnalyedSoFar = !analyzed.Contains(c.Name);
+                        if (isNotAnalyedSoFar)
+                        {
+                            Analyze(c, called, analyzed);
+                        }
+                    }
+                }
+            }
+        }
+
+        private void AddCall(MethodRef methodRef, ISet<IMethodName> called)
+        {
+            var firstDecl = methodRef.GetFirstDeclaration();
+            called.Add(firstDecl);
+        }
+
+        private bool IsEntrypoint(MethodRef c)
+        {
+            return _entryPoints.Select(e => e.Name).Contains(c.Name);
         }
     }
 }
