@@ -41,6 +41,11 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Logging
         public void SetUp()
         {
             _baseDirectory = IoTestHelper.GetTempDirectoryName();
+            _ioUtilMock = new Mock<IIoUtils>();
+
+            _ioUtilMock.Setup(io => io.OpenFile(It.IsAny<string>(), It.IsAny<FileMode>(), It.IsAny<FileAccess>()))
+                       .Returns(new MemoryStream());
+
             GivenLogsExist();
             WhenLogFileManagerIsInitialized();
         }
@@ -55,7 +60,6 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Logging
         public void ShouldFindNoLogFilesInEmptyDirectory()
         {
             GivenLogsExist();
-
             WhenLogFileManagerIsInitialized();
 
             Assert.AreEqual(0, _uut.GetLogs().Count());
@@ -65,7 +69,6 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Logging
         public void ShouldFindSingleLog()
         {
             GivenLogsExist(DateTime.Today);
-
             WhenLogFileManagerIsInitialized();
 
             Assert.AreEqual(1, _uut.GetLogs().Count());
@@ -111,9 +114,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Logging
             Assert.AreEqual(_uut.BaseLocation, Path.GetDirectoryName(todaysLog.Path));
         }
 
-        //TODO: Test with today for .date case
-
-        [Test, Ignore("TODO Mock JSONLogWriter")]
+        [Test, Ignore("The stream is for the second logfile disposed?!")]
         public void ShouldDeleteOldLogEntries()
         {
             GivenLogsExist(new DateTime(2014, 03, 21), new DateTime(2014, 03, 29));
@@ -140,6 +141,17 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Logging
         }
 
         [Test]
+        public void ShouldNotDeleteTodayLog()
+        {
+            GivenLogsExist(DateTime.Today);
+            WhenLogFileManagerIsInitialized();
+
+            _uut.DeleteLogsOlderThan(DateTime.Today);
+
+            Assert.AreEqual(1, _uut.GetLogs().Count());
+        }
+
+        [Test]
         public void ShouldDeleteLogFileDirectory()
         {
             GivenLogsExist(DateTime.Today);
@@ -157,7 +169,6 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Logging
 
         private void GivenLogsExist(params DateTime[] dates)
         {
-            _ioUtilMock = new Mock<IIoUtils>();
             _ioUtilMock.Setup(io => io.GetFiles(_baseDirectory, It.IsAny<string>()))
                        .Returns(
                            dates.Select(
