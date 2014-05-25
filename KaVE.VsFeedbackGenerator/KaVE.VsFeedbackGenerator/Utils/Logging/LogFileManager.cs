@@ -42,7 +42,7 @@ namespace KaVE.VsFeedbackGenerator.Utils.Logging
 
         public IEnumerable<ILog<TLogEntry>> GetLogs()
         {
-            return Directory.GetFiles(BaseLocation, LogDirectoryPrefix + "*").Select(CreateLogFile);
+            return _ioUtils.GetFiles(BaseLocation, LogDirectoryPrefix + "*").Select(CreateLogFile);
         }
 
         private static LogFile<TLogEntry> CreateLogFile(string logDirectoryPath)
@@ -54,7 +54,7 @@ namespace KaVE.VsFeedbackGenerator.Utils.Logging
         {
             foreach (var log in GetLogs())
             {
-                if (log.Date < time)
+                if (log.Date < time.Date)
                 {
                     log.Delete();
                 }

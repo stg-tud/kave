@@ -17,6 +17,7 @@
  *    - Dennis Albrecht
  *    - Sebastian Proksch
  *    - Sven Amann
+ *    - Uli Fahrer
  */
 
 using System;
@@ -39,6 +40,7 @@ namespace KaVE.VsFeedbackGenerator.Utils
 
         string GetTempFileName();
         string GetTempFileName(string extension);
+        string[] GetFiles(string path, string searchPattern);
         void CreateFile(string path);
         void CopyFile(string src, string trg);
         void MoveFile(string source, string target);
@@ -182,6 +184,11 @@ namespace KaVE.VsFeedbackGenerator.Utils
         public void CreateFile(string path)
         {
             File.Create(path).Close();
+        }
+
+        public string[] GetFiles(string path, string searchPattern)
+        {
+            return Directory.GetFiles(path, searchPattern);
         }
     }
 }
