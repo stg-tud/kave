@@ -22,7 +22,7 @@ using KaVE.VsFeedbackGenerator.Utils.Json;
 using Newtonsoft.Json;
 using NUnit.Framework;
 
-namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json
+namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.JsonSerializationSuite
 {
     [TestFixture]
     internal class JsonSerializationTest

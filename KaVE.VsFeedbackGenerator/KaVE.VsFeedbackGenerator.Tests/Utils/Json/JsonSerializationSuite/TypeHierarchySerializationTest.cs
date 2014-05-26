@@ -12,21 +12,31 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sven Amann
  */
+
+using System.Collections.Generic;
 using KaVE.Model.Events.CompletionEvent;
-using KaVE.TestUtils.Model.Events.CompletionEvent;
 using NUnit.Framework;
 
-namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.Model
+namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.JsonSerializationSuite
 {
     [TestFixture]
-    class ProposalCollectionSerializationTest
+    class TypeHierarchySerializationTest
     {
         [Test]
-        public void ShouldSerializationProposalCollection()
+        public void ShouldSerializeTypeHierarchy()
         {
-            var uut = new ProposalCollection(CompletionEventTestFactory.CreateAnonymousProposals(3));
-
+            var uut = new TypeHierarchy("Test.Class")
+            {
+                Extends = new TypeHierarchy("Another.Test.Class"),
+                Implements = new HashSet<ITypeHierarchy>
+                {
+                    new TypeHierarchy("Some.Interface")
+                }
+            };
             JsonAssert.SerializationPreservesData(uut);
         }
     }

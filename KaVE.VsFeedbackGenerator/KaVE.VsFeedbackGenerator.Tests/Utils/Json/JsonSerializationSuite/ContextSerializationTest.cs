@@ -23,7 +23,7 @@ using KaVE.Model.Names;
 using KaVE.TestUtils.Model.Names;
 using NUnit.Framework;
 
-namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.Model
+namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.JsonSerializationSuite
 {
     [TestFixture]
     internal class ContextSerializationTest

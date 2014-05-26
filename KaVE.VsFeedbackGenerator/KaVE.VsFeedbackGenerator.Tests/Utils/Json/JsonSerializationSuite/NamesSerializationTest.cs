@@ -21,7 +21,7 @@ using KaVE.Model.Names.CSharp;
 using KaVE.VsFeedbackGenerator.Utils.Json;
 using NUnit.Framework;
 
-namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.Model
+namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.JsonSerializationSuite
 {
     [TestFixture]
     public class NamesSerializationTest

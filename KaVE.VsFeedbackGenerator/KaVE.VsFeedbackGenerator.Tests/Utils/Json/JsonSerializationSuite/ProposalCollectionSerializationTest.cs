@@ -12,24 +12,25 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sven Amann
  */
+
 using KaVE.Model.Events.CompletionEvent;
-using KaVE.TestUtils.Model.Names;
+using KaVE.TestUtils.Model.Events.CompletionEvent;
 using NUnit.Framework;
 
-namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.Model
+namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.JsonSerializationSuite
 {
     [TestFixture]
-    class MethodHierarchySerializationTest
+    class ProposalCollectionSerializationTest
     {
         [Test]
-        public void ShouldSerializeMethodHierarchy()
+        public void ShouldSerializationProposalCollection()
         {
-            var uut = new MethodHierarchy(TestNameFactory.GetAnonymousMethodName())
-            {
-                First = TestNameFactory.GetAnonymousMethodName(),
-                Super = TestNameFactory.GetAnonymousMethodName()
-            };
+            var uut = new ProposalCollection(CompletionEventTestFactory.CreateAnonymousProposals(3));
+
             JsonAssert.SerializationPreservesData(uut);
         }
     }

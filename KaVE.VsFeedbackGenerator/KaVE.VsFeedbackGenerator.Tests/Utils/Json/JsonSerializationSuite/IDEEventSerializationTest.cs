@@ -12,7 +12,11 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sven Amann
  */
+
 using System;
 using KaVE.Model.Events;
 using KaVE.Model.Names.VisualStudio;
@@ -20,7 +24,7 @@ using KaVE.TestUtils.Model.Events;
 using KaVE.VsFeedbackGenerator.Utils.Json;
 using NUnit.Framework;
 
-namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.Model
+namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.JsonSerializationSuite
 {
     [TestFixture]
     class IDEEventSerializationTest

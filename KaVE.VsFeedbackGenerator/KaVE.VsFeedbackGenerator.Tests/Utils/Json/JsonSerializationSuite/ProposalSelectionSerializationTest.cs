@@ -12,32 +12,30 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sven Amann
  */
-using System.Collections.Generic;
+
+using System;
 using KaVE.Model.Events.CompletionEvent;
-using KaVE.TestUtils.Model.Names;
+using KaVE.TestUtils.Model.Events.CompletionEvent;
 using NUnit.Framework;
 
-namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.Model
+namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.JsonSerializationSuite
 {
     [TestFixture]
-    internal class TypeShapeSerializationTest
+    class ProposalSelectionSerializationTest
     {
         [Test]
-        public void ShouldSerializeTypeShape()
+        public void ShouldSerializeProposalSelection()
         {
-            var uut = new TypeShape
+            var uut = new ProposalSelection(CompletionEventTestFactory.CreateAnonymousProposal())
             {
-                MethodHierarchies =
-                    new HashSet<MethodHierarchy> {GetAnonymousMethodHierarchy(), GetAnonymousMethodHierarchy()},
-                TypeHierarchy = new TypeHierarchy("TestClass")
+                SelectedAfter = TimeSpan.FromMinutes(23)
             };
-            JsonAssert.SerializationPreservesData(uut);
-        }
 
-        private static MethodHierarchy GetAnonymousMethodHierarchy()
-        {
-            return new MethodHierarchy(TestNameFactory.GetAnonymousMethodName());
+            JsonAssert.SerializationPreservesData(uut);
         }
     }
 }

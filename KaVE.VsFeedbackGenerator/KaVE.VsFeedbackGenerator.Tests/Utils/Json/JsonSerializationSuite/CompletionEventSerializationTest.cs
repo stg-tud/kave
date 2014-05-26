@@ -27,7 +27,7 @@ using KaVE.TestUtils.Model.Names;
 using KaVE.VsFeedbackGenerator.Utils.Json;
 using NUnit.Framework;
 
-namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.Model
+namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.JsonSerializationSuite
 {
     [TestFixture]
     internal class CompletionEventSerializationTest
