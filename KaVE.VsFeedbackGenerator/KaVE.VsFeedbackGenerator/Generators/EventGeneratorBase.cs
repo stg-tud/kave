@@ -12,7 +12,11 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sven Amann
  */
+
 using System;
 using System.Diagnostics;
 using EnvDTE;
@@ -25,12 +29,12 @@ using KaVE.VsFeedbackGenerator.VsIntegration;
 
 namespace KaVE.VsFeedbackGenerator.Generators
 {
-    public abstract class AbstractEventGenerator
+    public abstract class EventGeneratorBase
     {
         private readonly IIDESession _session;
         private readonly IMessageBus _messageBus;
 
-        protected AbstractEventGenerator([NotNull] IIDESession session, [NotNull] IMessageBus messageBus)
+        protected EventGeneratorBase([NotNull] IIDESession session, [NotNull] IMessageBus messageBus)
         {
             _session = session;
             _messageBus = messageBus;

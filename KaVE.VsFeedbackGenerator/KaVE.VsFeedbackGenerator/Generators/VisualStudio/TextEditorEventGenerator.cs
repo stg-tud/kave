@@ -29,7 +29,7 @@ using KaVE.VsFeedbackGenerator.VsIntegration;
 namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
 {
     [ShellComponent(ProgramConfigurations.VS_ADDIN)]
-    internal class TextEditorEventGenerator : AbstractEventGenerator, IDisposable
+    internal class TextEditorEventGenerator : EventGeneratorBase, IDisposable
     {
         // TODO evaluate good threshold value
         private const int InactivityPeriodToCompleteEditAction = 2000;

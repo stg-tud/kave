@@ -12,7 +12,11 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sven Amann
  */
+
 using System.Linq;
 using EnvDTE;
 using KaVE.Model.Events.VisualStudio;
@@ -24,12 +28,10 @@ using NUnit.Framework;
 namespace KaVE.VsFeedbackGenerator.Tests.Generators.VisualStudio
 {
     [TestFixture]
-    class WindowEventGeneratorTest : EventGeneratorTestBase
+    class WindowEventGeneratorTest : VisualStudioEventGeneratorTestBase
     {
         private Mock<WindowEvents> _mockWindowEvents;
         private Window _testWindow;
-        // ReSharper disable once NotAccessedField.Local
-        private WindowEventGenerator _generator;
 
         [TestFixtureSetUp]
         public void SetUpTestWindow()
@@ -40,33 +42,18 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.VisualStudio
             _testWindow = mockWindow.Object;
         }
 
-        [SetUp]
-        public void SetUpIDESession()
+        protected override void MockEvents(Mock<Events> mockEvents)
         {
-            _mockWindowEvents = MockWindowEvents();
-            var mockEvents = MockEvents(_mockWindowEvents.Object);
-            var ideSession = MockIDESession(mockEvents.Object);
-            _generator = new WindowEventGenerator(ideSession, TestMessageBus);
-        }
-
-        private static Mock<WindowEvents> MockWindowEvents()
-        {
-            return new Mock<WindowEvents>();
-        }
-
-        private static Mock<Events> MockEvents(WindowEvents windowEvents)
-        {
-            var mockEvents = new Mock<Events>();
+            _mockWindowEvents = new Mock<WindowEvents>();
             // ReSharper disable once UseIndexedProperty
-            mockEvents.Setup(events => events.get_WindowEvents(It.IsAny<Window>())).Returns(windowEvents);
-            return mockEvents;
+            mockEvents.Setup(events => events.get_WindowEvents(It.IsAny<Window>())).Returns(_mockWindowEvents.Object);
         }
 
-        private static TestIDESession MockIDESession(Events events)
+        [SetUp]
+        public void SetUp()
         {
-            var ideSession = new TestIDESession();
-            ideSession.MockDTE.Setup(dte => dte.Events).Returns(events);
-            return ideSession;
+            // ReSharper disable once ObjectCreationAsStatement
+            new WindowEventGenerator(TestIDESession, TestMessageBus);
         }
 
         [Test]

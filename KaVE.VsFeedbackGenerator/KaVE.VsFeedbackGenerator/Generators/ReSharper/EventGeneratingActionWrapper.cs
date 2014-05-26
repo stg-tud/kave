@@ -20,7 +20,7 @@ using KaVE.VsFeedbackGenerator.VsIntegration;
 
 namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
 {
-    internal class EventGeneratingActionWrapper : AbstractEventGenerator
+    internal class EventGeneratingActionWrapper : EventGeneratorBase
     {
         private readonly Action _originalAction;
 

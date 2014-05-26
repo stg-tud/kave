@@ -12,7 +12,11 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sven Amann
  */
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,21 +31,18 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators
 {
     internal abstract class EventGeneratorTestBase
     {
-        private Mock<IMessageBus> _mockMessageBus;
         private IList<IDEEvent> _publishedEvents;
-
         private AutoResetEvent _eventReceptionLock;
+        private Mock<IMessageBus> _mockMessageBus;
+        protected TestIDESession TestIDESession;
 
         [SetUp]
         public void SetUpEventReception()
         {
+            TestIDESession = new TestIDESession();
+
             _publishedEvents = new List<IDEEvent>();
             _eventReceptionLock = new AutoResetEvent(false);
-        }
-
-        [SetUp]
-        public void SetUpMessageBus()
-        {
             _mockMessageBus = new Mock<IMessageBus>();
             _mockMessageBus.Setup(bus => bus.Publish(It.IsAny<IDEEvent>())).Callback(
                 (IDEEvent ideEvent) => ProcessEvent(ideEvent));
@@ -54,6 +55,11 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators
                 _publishedEvents.Add(ideEvent);
                 _eventReceptionLock.Set();
             }
+        }
+
+        protected IMessageBus TestMessageBus
+        {
+            get { return _mockMessageBus.Object; }
         }
 
         protected TEvent WaitForNewEvent<TEvent>(out int actualWaitMillis, int timeout = 1000) where TEvent : IDEEvent
@@ -83,11 +89,6 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators
             }
             Assert.Fail("no event within {0}ms", timeout);
             return null;
-        }
-
-        protected IMessageBus TestMessageBus
-        {
-            get { return _mockMessageBus.Object; }
         }
 
         [NotNull]

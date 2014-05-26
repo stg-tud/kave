@@ -178,7 +178,7 @@
     <Compile Include="Generators\ReSharper\EventGeneratingActionHandler.cs" />
     <Compile Include="Generators\ReSharper\EventGeneratingActionWrapper.cs" />
     <Compile Include="Generators\ReSharper\EventGeneratingBulbActionProxy.cs" />
-    <Compile Include="Generators\AbstractEventGenerator.cs" />
+    <Compile Include="Generators\EventGeneratorBase.cs" />
     <Compile Include="Generators\VisualStudio\BuildEventGenerator.cs" />
     <Compile Include="Generators\VisualStudio\CommandEventGenerator.cs" />
     <Compile Include="Generators\VisualStudio\DebuggerEventGenerator.cs" />

@@ -27,7 +27,7 @@ using KaVE.VsFeedbackGenerator.VsIntegration;
 namespace KaVE.VsFeedbackGenerator.Generators
 {
     [ShellComponent]
-    public class LogEventGenerator : AbstractEventGenerator, ILogger
+    public class LogEventGenerator : EventGeneratorBase, ILogger
     {
         private readonly IMessageBus _messageBus;
 

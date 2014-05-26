@@ -29,7 +29,7 @@ namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
     /// Fires an <see cref="ActionEvent"/> on execution of a ReSharper action. Passes handling of the action on the
     /// the default handler.
     /// </summary>
-    internal class EventGeneratingActionHandler : AbstractEventGenerator, IActionHandler
+    internal class EventGeneratingActionHandler : EventGeneratorBase, IActionHandler
     {
         private readonly IUpdatableAction _updatableAction;
 

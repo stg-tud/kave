@@ -22,7 +22,7 @@ using KaVE.VsFeedbackGenerator.VsIntegration;
 
 namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
 {
-    internal class EventGeneratingBulbActionProxy : AbstractEventGenerator, IBulbAction
+    internal class EventGeneratingBulbActionProxy : EventGeneratorBase, IBulbAction
     {
         private readonly IBulbAction _target;
 

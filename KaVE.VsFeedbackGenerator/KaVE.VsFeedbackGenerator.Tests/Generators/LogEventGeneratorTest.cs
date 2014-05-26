@@ -12,7 +12,11 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sebastian Proksch
  */
+
 using System;
 using KaVE.Model.Events;
 using KaVE.VsFeedbackGenerator.Generators;
@@ -24,19 +28,19 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators
     [TestFixture]
     internal class LogEventGeneratorTest : EventGeneratorTestBase
     {
-        private LogEventGenerator _sut;
+        private LogEventGenerator _uut;
 
         [SetUp]
-        public void SetUp()
+        protected void SetUp()
         {
-            _sut = new LogEventGenerator(new TestIDESession(), TestMessageBus);
+            _uut = new LogEventGenerator(TestIDESession, TestMessageBus);
         }
 
         [Test]
         public void ExceptionIsTransformedAndPublished()
         {
             var e = CreateException("A", "B");
-            _sut.Error(e, "some custom payload");
+            _uut.Error(e, "some custom payload");
 
             var actual = WaitForNewEvent<ErrorEvent>();
             var expected = new ErrorEvent
@@ -52,7 +56,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators
         public void EmptyLinesAreRemoved()
         {
             var e = CreateException("C", "", "D");
-            _sut.Error(e, "t2");
+            _uut.Error(e, "t2");
 
             var actual = WaitForNewEvent<ErrorEvent>();
             var expected = new ErrorEvent
@@ -68,7 +72,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators
         public void LinesAreTrimmed()
         {
             var e = CreateException(" E", " ", " F");
-            _sut.Error(e, "t3");
+            _uut.Error(e, "t3");
 
             var actual = WaitForNewEvent<ErrorEvent>();
             var expected = new ErrorEvent
@@ -83,7 +87,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators
         [Test]
         public void LogErrorWithoutException()
         {
-            _sut.Error("error");
+            _uut.Error("error");
 
             var actual = WaitForNewEvent<ErrorEvent>();
             var expected = new ErrorEvent
@@ -97,7 +101,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators
         [Test]
         public void LogErrorWithoutContent()
         {
-            _sut.Error(CreateException("G"));
+            _uut.Error(CreateException("G"));
 
             var actual = WaitForNewEvent<ErrorEvent>();
             var expected = new ErrorEvent
@@ -111,7 +115,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators
         [Test]
         public void ContentDoesNotContainNewLines()
         {
-            _sut.Error("A\r\nB");
+            _uut.Error("A\r\nB");
 
             var actual = WaitForNewEvent<ErrorEvent>();
             var expected = new ErrorEvent
@@ -125,7 +129,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators
         [Test]
         public void ContentDoesNotContainUnixLikeNewLines()
         {
-            _sut.Error("A\nB");
+            _uut.Error("A\nB");
 
             var actual = WaitForNewEvent<ErrorEvent>();
             var expected = new ErrorEvent
@@ -139,7 +143,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators
         [Test]
         public void LogInfo()
         {
-            _sut.Info("test");
+            _uut.Info("test");
 
             var actual = WaitForNewEvent<InfoEvent>();
             var expected = new InfoEvent
@@ -153,7 +157,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators
         [Test]
         public void LogInfoDoesNotContainNewLines()
         {
-            _sut.Info("A\r\nB");
+            _uut.Info("A\r\nB");
 
             var actual = WaitForNewEvent<InfoEvent>();
             var expected = new InfoEvent

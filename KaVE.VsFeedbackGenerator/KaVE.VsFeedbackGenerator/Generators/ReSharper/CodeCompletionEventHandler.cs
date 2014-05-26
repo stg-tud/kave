@@ -76,7 +76,7 @@ namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
     }
 
     [ShellComponent, Language(typeof (CSharpLanguage))]
-    internal class CodeCompletionEventHandler : AbstractEventGenerator
+    internal class CodeCompletionEventHandler : EventGeneratorBase
     {
         private CompletionEvent _event;
         private bool _lookupItemsSet;

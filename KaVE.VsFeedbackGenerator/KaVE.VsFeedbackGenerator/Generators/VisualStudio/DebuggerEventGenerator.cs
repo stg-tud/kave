@@ -23,7 +23,7 @@ using KaVE.VsFeedbackGenerator.VsIntegration;
 namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
 {
     [SolutionComponent(ProgramConfigurations.VS_ADDIN)]
-    internal class DebuggerEventGenerator : AbstractEventGenerator
+    internal class DebuggerEventGenerator : EventGeneratorBase
     {
         // ReSharper disable once PrivateFieldCanBeConvertedToLocalVariable
         private readonly DebuggerEvents _debuggerEvents;

@@ -32,7 +32,7 @@ using Microsoft.VisualStudio.CommandBars;
 namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
 {
     [ShellComponent(ProgramConfigurations.VS_ADDIN)]
-    internal class CommandEventGenerator : AbstractEventGenerator
+    internal class CommandEventGenerator : EventGeneratorBase
     {
         private static readonly ICollection<string> EventsDuplicatedByReSharper = new Collection<string>
         {

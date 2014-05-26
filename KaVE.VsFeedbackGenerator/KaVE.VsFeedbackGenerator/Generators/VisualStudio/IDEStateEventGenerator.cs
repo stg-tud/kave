@@ -24,7 +24,7 @@ using KaVE.VsFeedbackGenerator.VsIntegration;
 namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
 {
     [ShellComponent(ProgramConfigurations.VS_ADDIN)]
-    internal class IDEStateEventGenerator : AbstractEventGenerator, IDisposable
+    internal class IDEStateEventGenerator : EventGeneratorBase, IDisposable
     {
         public IDEStateEventGenerator(IIDESession session, IMessageBus messageBus)
             : base(session, messageBus)

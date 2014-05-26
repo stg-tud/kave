@@ -100,6 +100,8 @@
     <Compile Include="Generators\Merging\CompletionEventMergingStrategyTest.cs" />
     <Compile Include="Generators\ReSharper\CodeCompletionEventHandlerTest.cs" />
     <Compile Include="Generators\TestIDESession.cs" />
+    <Compile Include="Generators\VisualStudio\CommandEventGeneratorTest.cs" />
+    <Compile Include="Generators\VisualStudio\VisualStudioEventGeneratorTestBase.cs" />
     <Compile Include="Generators\VisualStudio\WindowEventGeneratorTest.cs" />
     <Compile Include="Interactivity\InteractionRequestTest.cs" />
     <Compile Include="MessageBus\TinyMessengerMessageChannelTest.cs" />
