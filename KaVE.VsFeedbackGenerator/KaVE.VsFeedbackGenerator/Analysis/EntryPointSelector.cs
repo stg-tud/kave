@@ -77,12 +77,10 @@ namespace KaVE.VsFeedbackGenerator.Analysis
         {
             var unfiltered = _typeDeclaration.MemberDeclarations.OfType<IMethodDeclaration>();
             var nonAbstract = unfiltered.Where(md => !md.IsAbstract);
-            // TODO @Seb: in which cases does this condition occur?
+            // sometimes, e.g. in incomplete code snippets, the body of a method is not yet set
             var onlyValid = nonAbstract.Where(md => md.Body != null);
             var filtered = onlyValid.Where(IsNotPrivateOrInternal);
-            // TODO @Seb: is the filtering redundant?
-            var mapped = filtered.Select(CreateRef)
-                                 .Where(md => md.Name != null && md.Declaration != null);
+            var mapped = filtered.Select(CreateRef);
             return mapped.ToList();
         }
 
@@ -114,14 +112,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis
 
         private void AnalyzeTransitiveCallsIn(MethodRef ep)
         {
-            // TODO @seb: still necessary?
-            var methodElem = ep.Declaration.DeclaredElement;
-            if (methodElem == null)
-            {
-                return;
-            }
-
-            if (IsDeclaredBy(methodElem, _typeElem))
+            if (IsDeclaredBy(ep.Method, _typeElem))
             {
                 ReallyAnalyzeTransitiveCallsIn(ep);
             }

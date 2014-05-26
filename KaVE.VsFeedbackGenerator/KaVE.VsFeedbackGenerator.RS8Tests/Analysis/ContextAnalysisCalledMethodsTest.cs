@@ -313,8 +313,6 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
                     }
                 }");
 
-
-            // TODO Review: discuss this
             AssertCallDetected("M", "[System.Void, mscorlib, 4.0.0.0] [i:I, TestProject].EP()");
         }
     }

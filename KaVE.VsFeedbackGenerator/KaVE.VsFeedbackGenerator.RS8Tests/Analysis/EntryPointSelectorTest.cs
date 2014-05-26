@@ -350,7 +350,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
             AssertNumberOfEntryPoints(0);
         }
 
-        public void AssertEntryPoints(params string[] entryPointNames)
+        private void AssertEntryPoints(params string[] entryPointNames)
         {
             AssertNumberOfEntryPoints(entryPointNames.Length);
 

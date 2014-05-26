@@ -55,15 +55,15 @@ namespace KaVE.VsFeedbackGenerator.Analysis
             };
         }
 
-        protected bool Equals(MethodRef other)
-        {
-            return Equals(Name, other.Name) && Equals(Declaration, other.Declaration) && Equals(Method, other.Method) &&
-                   (IsAssemblyReference == other.IsAssemblyReference);
-        }
-
         public override bool Equals(object obj)
         {
             return this.Equals(obj, Equals);
+        }
+
+        private bool Equals(MethodRef other)
+        {
+            return Equals(Name, other.Name) && Equals(Declaration, other.Declaration) && Equals(Method, other.Method) &&
+                   (IsAssemblyReference == other.IsAssemblyReference);
         }
 
         public override int GetHashCode()

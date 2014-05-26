@@ -36,7 +36,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
     [ShellComponent, Language(typeof (CSharpLanguage))]
     public class TestAnalysisTrigger : CSharpItemsProviderBase<CSharpCodeCompletionContext>
     {
-        public IEnumerable<IMethodName> LastEntryPoints { get; set; }
+        public IEnumerable<IMethodName> LastEntryPoints { get; private set; }
         public Context LastContext { get; private set; }
         public Exception LastException { get; private set; }
 

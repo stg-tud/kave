@@ -62,9 +62,8 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
                 "[System.Void, mscorlib, 4.0.0.0] [C, TestProject].M2([System.Object, mscorlib, 4.0.0.0] o)");
         }
 
-        [Test, Ignore("currently we cannot detect this from the analysis result")]
-        // TODO Review: discuss the issue
-        public void ShouldIncludeHelpersMultipleTimes()
+        [Test]
+       public void ShouldIncludeHelpersMultipleTimes()
         {
             CompleteInClass(@"
                 public override void M1(object o) { H(o); }
@@ -73,8 +72,18 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
                 private void H(object o)
                 {
                     o.GetHashCode();
+                    $
                 }");
-            Assert.Fail();
+
+            AssertNumberOfCalls("M1", 1);
+            AssertCallDetected(
+                "M1",
+                "[System.Int32, mscorlib, 4.0.0.0] [System.Object, mscorlib, 4.0.0.0].GetHashCode()");
+
+            AssertNumberOfCalls("M2", 1);
+            AssertCallDetected(
+                "M2",
+                "[System.Int32, mscorlib, 4.0.0.0] [System.Object, mscorlib, 4.0.0.0].GetHashCode()");
         }
 
         [Test]
@@ -97,7 +106,6 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
                     }
                 }");
 
-            // TODO Review: discuss intuition behind this and next test
             AssertCallDetected(
                 "E",
                 "[System.Void, mscorlib, 4.0.0.0] [i:I, TestProject].M([System.Object, mscorlib, 4.0.0.0] o)");
@@ -123,7 +131,6 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
                     }
                 }");
 
-            // TODO Review: discuss intuition behind this and previous test
             AssertCallDetected(
                 "E",
                 "[System.Void, mscorlib, 4.0.0.0] [C1, TestProject].M([System.Object, mscorlib, 4.0.0.0] o)");

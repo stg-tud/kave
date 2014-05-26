@@ -42,14 +42,14 @@ namespace KaVE.Utils.Collections
 
     public class KaVEHashSet<T> : HashSet<T>
     {
-        public const int Seed = 1367;
+        private const int Seed = 1367;
 
         public override bool Equals(object obj)
         {
             return this.Equals(obj, Equals);
         }
 
-        public bool Equals(ISet<T> other)
+        private bool Equals(ISet<T> other)
         {
             return GetHashCode() == other.GetHashCode();
         }
