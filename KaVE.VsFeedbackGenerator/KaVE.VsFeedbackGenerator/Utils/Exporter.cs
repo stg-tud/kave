@@ -50,15 +50,8 @@ namespace KaVE.VsFeedbackGenerator.Utils
         {
             using (var stream = new MemoryStream())
             {
-                var empty = true;
-                var anonymousEvents = events.Select(
-                    ideEvent =>
-                    {
-                        empty = false;
-                        return _anonymizer.Anonymize(ideEvent);
-                    });
+                var anonymousEvents = events.Select(_anonymizer.Anonymize);
                 CreateZipFile(anonymousEvents, stream);
-                Asserts.Not(empty, "no events");
                 publisher.Publish(stream);
             }
         }
@@ -74,6 +67,7 @@ namespace KaVE.VsFeedbackGenerator.Utils
                     var json = e.ToFormattedJson();
                     zipFile.AddEntry(fileName, json);
                 }
+                Asserts.That(i > 0, "no events");
                 zipFile.Save(stream);
             }
         }

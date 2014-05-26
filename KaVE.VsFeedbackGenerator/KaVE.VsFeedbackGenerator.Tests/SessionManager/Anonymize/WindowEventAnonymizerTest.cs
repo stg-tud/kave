@@ -14,7 +14,7 @@
  * limitations under the License.
  * 
  * Contributors:
- *    - 
+ *    - Sven Amann
  */
 
 using KaVE.Model.Events.VisualStudio;
@@ -37,7 +37,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
         [Test]
         public void ShouldAnonymizeWindowNameIfRemoveNamesIsSetAndCaptionContainsFileName()
         {
-            OriginalEvent.Window = VsComponentNameFactory.GetWindowName("vsSomeWindowType", "C:\\Contains\\File.Name");
+            OriginalEvent.Window = VsComponentNameFactory.GetWindowName("vsSomeWindowType", "\\Contains\\File.Name");
             ExportSettings.RemoveCodeNames = true;
 
             var actual = WhenEventIsAnonymized();

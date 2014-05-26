@@ -96,7 +96,7 @@ namespace KaVE.Utils.Tests.Collections
         {
             var a = Sets.NewHashSet(1, 2);
             var b = Sets.NewHashSet(2, 1);
-            Assert.AreEqual(a, b);
+            CollectionAssert.AreEquivalent(a, b);
         }
     }
 }

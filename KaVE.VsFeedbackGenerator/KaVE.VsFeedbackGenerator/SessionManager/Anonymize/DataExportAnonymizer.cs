@@ -55,15 +55,6 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
             _settingsStore = settingsStore;
         }
 
-        private static IDEEventAnonymizer<TEvent> GetAnonymizerFor<TEvent>() where TEvent : IDEEvent
-        {
-            if (Anonymizer.ContainsKey(typeof (TEvent)))
-            {
-                return (IDEEventAnonymizer<TEvent>) Anonymizer[typeof (TEvent)];
-            }
-            return new IDEEventAnonymizer<TEvent>();
-        }
-
         public TEvent Anonymize<TEvent>(TEvent ideEvent) where TEvent : IDEEvent
         {
             var clone = ideEvent.ToCompactJson().ParseJsonTo<TEvent>();
@@ -86,6 +77,15 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
                 anonymizer.AnonymizeCodeNames(clone);
             }
             return clone;
+        }
+
+        private static IDEEventAnonymizer<TEvent> GetAnonymizerFor<TEvent>() where TEvent : IDEEvent
+        {
+            if (Anonymizer.ContainsKey(typeof(TEvent)))
+            {
+                return (IDEEventAnonymizer<TEvent>)Anonymizer[typeof(TEvent)];
+            }
+            return new IDEEventAnonymizer<TEvent>();
         }
     }
 }

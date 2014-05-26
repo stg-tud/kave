@@ -74,11 +74,6 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
             Assert.AreNotSame(OriginalEvent, actual);
         }
 
-        protected TEvent WhenEventIsAnonymized()
-        {
-            return _uut.Anonymize(OriginalEvent);
-        }
-
         [Test]
         public void ShouldRemoveStartTimeWhenRespectiveOptionIsSet()
         {
@@ -178,5 +173,10 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
 
         protected abstract void AssertThatPropertiesThatAreNotTouchedByAnonymizationAreUnchanged(TEvent original,
             TEvent anonymized);
+
+        protected TEvent WhenEventIsAnonymized()
+        {
+            return _uut.Anonymize(OriginalEvent);
+        }
     }
 }
