@@ -60,7 +60,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis
         {
             analyzed.Add(ep.Name);
 
-            var calls = ReSharperUtils.GetMethodRefsIn(ep);
+            var calls = ReSharperUtils.FindMethodsInvokedIn(ep);
             foreach (var c in calls)
             {
                 if (c.IsAssemblyReference)
@@ -69,18 +69,18 @@ namespace KaVE.VsFeedbackGenerator.Analysis
                 }
                 else
                 {
-                    var isSameType = ep.Name.DeclaringType == c.Name.DeclaringType;
+                    var isLocal = ep.Name.DeclaringType == c.Name.DeclaringType;
                     var isAbstract = c.Declaration.IsAbstract;
-                    var isLocalAbstract = isSameType && isAbstract;
+                    var isLocalAbstract = isLocal && isAbstract;
 
-                    if (IsEntrypoint(c) || isLocalAbstract || !isSameType)
+                    if (IsEntrypoint(c) || isLocalAbstract || !isLocal)
                     {
                         AddCall(c, called);
                     }
                     else
                     {
-                        var isNotAnalyedSoFar = !analyzed.Contains(c.Name);
-                        if (isNotAnalyedSoFar)
+                        var isNotAnalyed = !analyzed.Contains(c.Name);
+                        if (isNotAnalyed)
                         {
                             Analyze(c, called, analyzed);
                         }
@@ -89,7 +89,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis
             }
         }
 
-        private void AddCall(MethodRef methodRef, ISet<IMethodName> called)
+        private static void AddCall(MethodRef methodRef, ISet<IMethodName> called)
         {
             var firstDecl = methodRef.GetFirstDeclaration();
             called.Add(firstDecl);

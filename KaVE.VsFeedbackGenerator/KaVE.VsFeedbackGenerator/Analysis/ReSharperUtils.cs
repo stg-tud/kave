@@ -69,7 +69,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis
             return (IMethodDeclaration) declarations.First();
         }
 
-        public static IEnumerable<MethodRef> GetMethodRefsIn(MethodRef ep)
+        public static IEnumerable<MethodRef> FindMethodsInvokedIn(MethodRef ep)
         {
             var eps = new HashSet<MethodRef>();
             var declarationHasBody = !ep.Declaration.IsAbstract;

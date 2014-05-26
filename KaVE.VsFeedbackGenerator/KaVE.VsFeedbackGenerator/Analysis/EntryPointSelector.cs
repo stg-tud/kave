@@ -36,8 +36,8 @@ namespace KaVE.VsFeedbackGenerator.Analysis
         private readonly TypeShape _typeShape;
         private readonly ITypeElement _typeElem;
 
+        private IList<MethodRef> _entryPoints;
         private IList<MethodRef> _analyzed;
-        private IList<MethodRef> _covered;
 
 
         public EntryPointSelector(ITypeDeclaration typeDeclaration, TypeShape typeShape)
@@ -47,7 +47,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis
             _typeElem = typeDeclaration.DeclaredElement;
         }
 
-        public ISet<MethodRef> GetEntrypoints()
+        public ISet<MethodRef> GetEntryPoints()
         {
             if (_typeElem == null)
             {
@@ -55,24 +55,21 @@ namespace KaVE.VsFeedbackGenerator.Analysis
             }
 
             var entryPointCandidates = GetEntryPointCandidates();
-            _analyzed = GetDefiniteEntryPoints(entryPointCandidates);
-            _covered = new List<MethodRef>();
+            _entryPoints = GetDefiniteEntryPoints(entryPointCandidates);
+            _analyzed = new List<MethodRef>();
 
-            foreach (var ep in _analyzed)
+            foreach (var ep in _entryPoints)
             {
-                AddTransitiveCalls(ep);
+                AnalyzeTransitiveCallsIn(ep);
             }
 
-            foreach (var ep in entryPointCandidates)
+            foreach (var ep in entryPointCandidates.Where(IsNotAnalyzed))
             {
-                if (IsNotCovered(ep))
-                {
-                    _analyzed.Add(ep);
-                    AddTransitiveCalls(ep);
-                }
+                _entryPoints.Add(ep);
+                AnalyzeTransitiveCallsIn(ep);
             }
 
-            var eps = new HashSet<MethodRef>(_analyzed);
+            var eps = new HashSet<MethodRef>(_entryPoints);
             return eps;
         }
 
@@ -80,14 +77,16 @@ namespace KaVE.VsFeedbackGenerator.Analysis
         {
             var unfiltered = _typeDeclaration.MemberDeclarations.OfType<IMethodDeclaration>();
             var nonAbstract = unfiltered.Where(md => !md.IsAbstract);
-            var onlyValid = nonAbstract.Where(md => md.Body != null); // WTF (invalid code?)
+            // TODO @Seb: in which cases does this condition occur?
+            var onlyValid = nonAbstract.Where(md => md.Body != null);
             var filtered = onlyValid.Where(IsNotPrivateOrInternal);
+            // TODO @Seb: is the filtering redundant?
             var mapped = filtered.Select(CreateRef)
                                  .Where(md => md.Name != null && md.Declaration != null);
             return mapped.ToList();
         }
 
-        private MethodRef CreateRef(IMethodDeclaration md)
+        private static MethodRef CreateRef(IMethodDeclaration md)
         {
             return MethodRef.CreateLocalReference(md.GetName(), md.DeclaredElement, md);
         }
@@ -113,52 +112,53 @@ namespace KaVE.VsFeedbackGenerator.Analysis
             return _typeShape.MethodHierarchies.Any(mh => mh.Element == methodName && mh.IsOverrideOrImplementation);
         }
 
-        private void AddTransitiveCalls(MethodRef ep)
+        private void AnalyzeTransitiveCallsIn(MethodRef ep)
         {
+            // TODO @seb: still necessary?
             var methodElem = ep.Declaration.DeclaredElement;
             if (methodElem == null)
             {
                 return;
             }
 
-            if (HasSameType(_typeElem, methodElem))
+            if (IsDeclaredBy(methodElem, _typeElem))
             {
-                ReallyAddTransitiveCalls(ep);
+                ReallyAnalyzeTransitiveCallsIn(ep);
             }
         }
 
-        private void ReallyAddTransitiveCalls(MethodRef ep)
+        private void ReallyAnalyzeTransitiveCallsIn(MethodRef ep)
         {
-            _covered.Add(ep);
+            _analyzed.Add(ep);
 
-            foreach (var ep2 in ReSharperUtils.GetMethodRefsIn(ep))
+            foreach (var method in ReSharperUtils.FindMethodsInvokedIn(ep))
             {
-                if (IsNotCovered(ep2) && !ep2.IsAssemblyReference)
+                if (IsNotAnalyzed(method) && !method.IsAssemblyReference)
                 {
-                    AddTransitiveCalls(ep2);
+                    AnalyzeTransitiveCallsIn(method);
                 }
                 else
                 {
-                    var isSimpleRecursion = ep2.Equals(ep);
-                    if (WasTreatedAsEntrypoint(ep2) && !IsDefiniteEntryPoint(ep2.Name) && !isSimpleRecursion)
+                    var isSimpleRecursion = method.Equals(ep);
+                    if (IsEntryPoint(method) && !IsDefiniteEntryPoint(method.Name) && !isSimpleRecursion)
                     {
-                        _analyzed.Remove(ep2);
+                        _entryPoints.Remove(method);
                     }
                 }
             }
         }
 
-        private bool WasTreatedAsEntrypoint(MethodRef ep)
+        private bool IsEntryPoint(MethodRef ep)
         {
-            return _analyzed.Contains(ep);
+            return _entryPoints.Contains(ep);
         }
 
-        private bool IsNotCovered(MethodRef ep2)
+        private bool IsNotAnalyzed(MethodRef ep2)
         {
-            return !_covered.Contains(ep2);
+            return !_analyzed.Contains(ep2);
         }
 
-        private static bool HasSameType(ITypeElement typeElem, IMethod declaredElement)
+        private static bool IsDeclaredBy(IMethod declaredElement, ITypeElement typeElem)
         {
             return typeElem.Equals(declaredElement.GetContainingType());
         }

@@ -57,7 +57,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
                 {
                     var typeShape = new TypeShapeAnalysis().Analyze(typeDeclaration);
                     LastEntryPoints =
-                        new EntryPointSelector(typeDeclaration, typeShape).GetEntrypoints().Select(ep => ep.Name);
+                        new EntryPointSelector(typeDeclaration, typeShape).GetEntryPoints().Select(ep => ep.Name);
                 }
             }
             catch (Exception e)

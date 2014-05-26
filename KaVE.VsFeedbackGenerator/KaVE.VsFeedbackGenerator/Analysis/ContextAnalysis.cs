@@ -54,7 +54,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis
                 _context.TypeShape = _typeShapeAnalysis.Analyze(typeDeclaration);
                 _context.TriggerTarget = _completionTargetAnalysis.Analyze(_nodeInFile);
 
-                var entryPoints = new EntryPointSelector(typeDeclaration, _context.TypeShape).GetEntrypoints();
+                var entryPoints = new EntryPointSelector(typeDeclaration, _context.TypeShape).GetEntryPoints();
                 _context.EntryPointToCalledMethods = _calledMethodsForEntryPointsAnalysis.Analyze(entryPoints);
 
                 var methodDeclaration = FindEnclosing<IMethodDeclaration>(_nodeInFile);
