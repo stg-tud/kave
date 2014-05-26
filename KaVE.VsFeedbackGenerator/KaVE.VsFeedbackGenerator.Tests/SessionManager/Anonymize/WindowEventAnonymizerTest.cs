@@ -42,7 +42,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
 
             var actual = WhenEventIsAnonymized();
 
-            Assert.AreEqual("vsSomeWindowType aVxPI+qHR+QO3bMv+Ker6w==", actual.Window.Identifier);
+            Assert.AreEqual("vsSomeWindowType H8aplQQfP3av08An9vt0KQ==", actual.Window.Identifier);
         }
 
         [Test]

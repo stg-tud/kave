@@ -43,7 +43,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
 
             var actual = WhenEventIsAnonymized();
 
-            Assert.AreEqual(SolutionName.Get("H/MB2iBprhCn9SyXdxnVNQ=="), actual.Target);
+            Assert.AreEqual(SolutionName.Get("IIjG4xFiAr-N5Azsooms7Q=="), actual.Target);
         }
 
         [Test]
@@ -54,7 +54,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
 
             var actual = WhenEventIsAnonymized();
 
-            Assert.AreEqual(ProjectName.Get("Folder IklTG/YtPBAhWOIrB65I1Q=="), actual.Target);
+            Assert.AreEqual(ProjectName.Get("Folder PzkZVbprHnmonKxi9BX_dg=="), actual.Target);
         }
 
         [Test]
@@ -65,7 +65,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
 
             var actual = WhenEventIsAnonymized();
 
-            Assert.AreEqual(ProjectItemName.Get("CSharp nmTd/+pgymTyNZrw5bGrpg=="), actual.Target);
+            Assert.AreEqual(ProjectItemName.Get("CSharp YcTmIkbaoyTmRIAE4DoySg=="), actual.Target);
         }
 
 

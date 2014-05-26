@@ -101,7 +101,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
             ExportSettings.RemoveCodeNames = true;
             var expected = new[]
             {
-                new Proposal {Name = TypeName.Get("Q+vTVCo/g8yayGGoDdH7BA==, qfFVtSOtve+XEFJXWTbfXw==")},
+                new Proposal {Name = TypeName.Get("Q-vTVCo_g8yayGGoDdH7BA==, qfFVtSOtve-XEFJXWTbfXw==")},
                 new Proposal {Name = TypeName.Get("OtherType, Assembly, 1.2.3.4")}
             };
 
@@ -117,7 +117,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
             var expected = new[]
             {
                 new ProposalSelection(
-                    new Proposal {Name = TypeName.Get("Q+vTVCo/g8yayGGoDdH7BA==, qfFVtSOtve+XEFJXWTbfXw==")})
+                    new Proposal {Name = TypeName.Get("Q-vTVCo_g8yayGGoDdH7BA==, qfFVtSOtve-XEFJXWTbfXw==")})
                 {
                     SelectedAfter = TimeSpan.FromSeconds(0)
                 },
@@ -136,7 +136,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
         public void ShouldAnonymizeContextEnclosingMethodIfRemoveNamesIsSet()
         {
             ExportSettings.RemoveCodeNames = true;
-            var expected = MethodName.Get("[R, A, 1.2.3.4] [BTxSgd7rLC1KLBfBSU59+w==, aUaDMpYpDqsiSh5nQjiWFw==].lNSAgClcjc9lDeUkXybdNQ==()");
+            var expected = MethodName.Get("[R, A, 1.2.3.4] [BTxSgd7rLC1KLBfBSU59-w==, aUaDMpYpDqsiSh5nQjiWFw==].lNSAgClcjc9lDeUkXybdNQ==()");
 
             var actual = WhenEventIsAnonymized();
 
@@ -166,17 +166,17 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
                     Implements = new HashSet<ITypeHierarchy>
                             {
                                 new TypeHierarchy("eGEyMBjXL4zPn7I6S8mfDw==, aUaDMpYpDqsiSh5nQjiWFw=="),
-                                new TypeHierarchy("L/ae+p4+hxBsaXczpcEyIQ==, aUaDMpYpDqsiSh5nQjiWFw==")
+                                new TypeHierarchy("L_ae-p4-hxBsaXczpcEyIQ==, aUaDMpYpDqsiSh5nQjiWFw==")
                             }
                 },
                 MethodHierarchies = new HashSet<MethodHierarchy>
                         {
-                            new MethodHierarchy(MethodName.Get("[R, A, 1.2.3.4] [BTxSgd7rLC1KLBfBSU59+w==, aUaDMpYpDqsiSh5nQjiWFw==].FrZejHdXesK4GmGTziBKog==()"))
+                            new MethodHierarchy(MethodName.Get("[R, A, 1.2.3.4] [BTxSgd7rLC1KLBfBSU59-w==, aUaDMpYpDqsiSh5nQjiWFw==].FrZejHdXesK4GmGTziBKog==()"))
                             {
                                 Super = MethodName.Get("[R, A, 1.2.3.4] [bwrIwYfO24Nam6NzYDvaPw==, aUaDMpYpDqsiSh5nQjiWFw==].FrZejHdXesK4GmGTziBKog==()"),
                                 First = MethodName.Get("[R, A, 1.2.3.4] [eGEyMBjXL4zPn7I6S8mfDw==, aUaDMpYpDqsiSh5nQjiWFw==].FrZejHdXesK4GmGTziBKog==()")
                             },
-                            new MethodHierarchy(MethodName.Get("[R, A, 4.3.2.1] [BTxSgd7rLC1KLBfBSU59+w==, aUaDMpYpDqsiSh5nQjiWFw==].teEFVPLjq1yy/faHQwbDSg==()"))
+                            new MethodHierarchy(MethodName.Get("[R, A, 4.3.2.1] [BTxSgd7rLC1KLBfBSU59-w==, aUaDMpYpDqsiSh5nQjiWFw==].teEFVPLjq1yy_faHQwbDSg==()"))
                         }
             };
 
@@ -192,8 +192,8 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
             var expected = new Dictionary<IMethodName, ISet<IMethodName>>
             {
                 {
-                    MethodName.Get("[R, A, 1.2.3.4] [BTxSgd7rLC1KLBfBSU59+w==, aUaDMpYpDqsiSh5nQjiWFw==].lNSAgClcjc9lDeUkXybdNQ==()"),
-                    new HashSet<IMethodName> {MethodName.Get("[R, A, 1.2.3.4] [BTxSgd7rLC1KLBfBSU59+w==, aUaDMpYpDqsiSh5nQjiWFw==].FrZejHdXesK4GmGTziBKog==()")}
+                    MethodName.Get("[R, A, 1.2.3.4] [BTxSgd7rLC1KLBfBSU59-w==, aUaDMpYpDqsiSh5nQjiWFw==].lNSAgClcjc9lDeUkXybdNQ==()"),
+                    new HashSet<IMethodName> {MethodName.Get("[R, A, 1.2.3.4] [BTxSgd7rLC1KLBfBSU59-w==, aUaDMpYpDqsiSh5nQjiWFw==].FrZejHdXesK4GmGTziBKog==()")}
                 }
             };
 

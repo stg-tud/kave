@@ -67,7 +67,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
 
             Assert.AreEqual("vsWinType Solution Explorer", actual.OpenWindows[0].Identifier);
             Assert.AreEqual("vsToolWindow Unit Test Sessions", actual.OpenWindows[1].Identifier);
-            Assert.AreEqual("vsEditor f2l2zVnq9lX05A/CO1ntrQ==", actual.OpenWindows[2].Identifier);
+            Assert.AreEqual("vsEditor f2l2zVnq9lX05A_CO1ntrQ==", actual.OpenWindows[2].Identifier);
         }
 
         protected override void AssertThatPropertiesThatAreNotTouchedByAnonymizationAreUnchanged(IDEStateEvent original,

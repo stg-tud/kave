@@ -41,7 +41,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
 
             var actual = WhenEventIsAnonymized();
 
-            Assert.AreEqual("CSharp 8N6R62epS9uMMPQ7P4+rNA==", actual.Document.Identifier);
+            Assert.AreEqual("CSharp 8N6R62epS9uMMPQ7P4-rNA==", actual.Document.Identifier);
         }
 
         protected override void AssertThatPropertiesThatAreNotTouchedByAnonymizationAreUnchanged(DocumentEvent original,

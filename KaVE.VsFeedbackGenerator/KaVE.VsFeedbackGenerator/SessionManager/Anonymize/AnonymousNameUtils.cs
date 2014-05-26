@@ -39,7 +39,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
         {
             var tmpSource = value.AsBytes();
             var hash = new MD5CryptoServiceProvider().ComputeHash(tmpSource);
-            return Convert.ToBase64String(hash);
+            return Convert.ToBase64String(hash).Replace('+', '-').Replace('/', '_');
         }
 
         [NotNull]

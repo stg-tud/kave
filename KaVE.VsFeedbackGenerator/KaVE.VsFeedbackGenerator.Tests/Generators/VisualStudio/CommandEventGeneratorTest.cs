@@ -17,6 +17,7 @@
  *    - Sven Amann
  */
 
+using System.Collections.Generic;
 using EnvDTE;
 using KaVE.VsFeedbackGenerator.Generators.VisualStudio;
 using Microsoft.VisualStudio.CommandBars;
@@ -41,6 +42,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.VisualStudio
         public void SetUp()
         {
             var mockCommandBars = new Mock<CommandBars>();
+            mockCommandBars.Setup(cb => cb.GetEnumerator()).Returns(new List<CommandBar>().GetEnumerator());
             TestIDESession.MockDTE.Setup(dte => dte.CommandBars).Returns(mockCommandBars.Object);
             // ReSharper disable once ObjectCreationAsStatement
             new CommandEventGenerator(TestIDESession, TestMessageBus);
