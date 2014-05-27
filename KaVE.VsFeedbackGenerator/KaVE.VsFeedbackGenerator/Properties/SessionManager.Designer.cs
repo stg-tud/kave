@@ -322,6 +322,15 @@ namespace KaVE.VsFeedbackGenerator.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Upload URL.
+        /// </summary>
+        public static string Options_Export_UploadUrl {
+            get {
+                return ResourceManager.GetString("Options_Export_UploadUrl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to KaVE Feedback.
         /// </summary>
         public static string Options_Title {

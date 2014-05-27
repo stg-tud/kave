@@ -20,6 +20,7 @@
 using System;
 using System.Linq.Expressions;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using JetBrains.ActionManagement;
 using JetBrains.Application.Settings;
@@ -50,6 +51,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
             SetToggleButtonBinding(ctx, lifetime, s => (bool?) s.RemoveStartTimes, RemoveStartTimesCheckBox);
             SetToggleButtonBinding(ctx, lifetime, s => (bool?) s.RemoveDurations, RemoveDurationsCheckBox);
             SetToggleButtonBinding(ctx, lifetime, s => (bool?) s.RemoveSessionIDs, RemoveSessionUUIDCheckBox);
+            ctx.SetBinding(lifetime, (ExportSettings s) => s.UploadUrl, UploadUrlTextBox, TextBox.TextProperty);
         }
 
         private static void SetToggleButtonBinding(IContextBoundSettingsStore ctx,

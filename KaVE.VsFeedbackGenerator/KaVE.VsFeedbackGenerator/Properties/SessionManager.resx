@@ -267,4 +267,7 @@
   <data name="Option_SettingsCleaner_Dialog" xml:space="preserve">
     <value>Sind Sie sicher, dass Sie die Einstellungen zurücksetzen und das lokal gesammelte Feedback löschen wollen?</value>
   </data>
+  <data name="Options_Export_UploadUrl" xml:space="preserve">
+    <value>Upload URL</value>
+  </data>
 </root>

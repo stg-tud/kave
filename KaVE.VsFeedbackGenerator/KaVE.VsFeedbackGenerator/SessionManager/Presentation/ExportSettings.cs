@@ -16,6 +16,7 @@
  * Contributors:
  *    - Uli Fahrer
  *    - Sven Amann
+ *    - Sebastian Proksch
  */
 
 using JetBrains.Application.Settings;
@@ -37,5 +38,8 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
 
         [SettingsEntry(false, "KaVE FeedbackGenerator RemoveSessionIDs")]
         public bool RemoveSessionIDs;
+
+        [SettingsEntry("http://kave.st.informatik.tu-darmstadt.de:667/load", "KaVE FeedbackGenerator UploadUrl")]
+        public string UploadUrl;
     }
 }

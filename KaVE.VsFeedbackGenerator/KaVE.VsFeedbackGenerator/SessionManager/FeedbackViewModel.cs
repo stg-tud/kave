@@ -16,6 +16,7 @@
  * Contributors:
  *    - Sven Amann
  *    - Dennis Albrecht
+ *    - Sebastian Proksch
  */
 
 using System;
@@ -30,6 +31,7 @@ using JetBrains.UI.Extensions.Commands;
 using KaVE.Model.Events;
 using KaVE.Utils;
 using KaVE.VsFeedbackGenerator.Interactivity;
+using KaVE.VsFeedbackGenerator.SessionManager.Presentation;
 using KaVE.VsFeedbackGenerator.TrayNotification;
 using KaVE.VsFeedbackGenerator.Utils;
 using KaVE.VsFeedbackGenerator.Utils.Logging;
@@ -49,8 +51,6 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
     [ShellComponent]
     public sealed class FeedbackViewModel : ViewModelBase<FeedbackViewModel>, IFeedbackViewModelDialog
     {
-        private readonly Uri _serverUrl = new Uri("http://kave.st.informatik.tu-darmstadt.de:667/upload");
-
         private readonly ILogManager<IDEEvent> _logManager;
         private readonly IList<SessionViewModel> _sessions;
         private readonly IList<SessionViewModel> _selectedSessions;
@@ -58,7 +58,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
         private DelegateCommand _deleteCommand;
         private bool _refreshing;
         private DateTime _lastRefresh;
-        private readonly ISettingsStore _store;
+        private readonly ISettingsStore _settingsStore;
         private readonly IExporter _exporter;
 
         private readonly InteractionRequest<Confirmation> _confirmationRequest;
@@ -82,9 +82,9 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             get { return _notificationRequest; }
         }
 
-        public FeedbackViewModel(ILogManager<IDEEvent> logManager, ISettingsStore store, IExporter exporter)
+        public FeedbackViewModel(ILogManager<IDEEvent> logManager, ISettingsStore settingsStore, IExporter exporter)
         {
-            _store = store;
+            _settingsStore = settingsStore;
             _exporter = exporter;
             _logManager = logManager;
             _sessions = new ObservableCollection<SessionViewModel>();
@@ -216,7 +216,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
                     }
                     else
                     {
-                        _exporter.Export(eventsForExport, new HttpPublisher(_serverUrl));
+                        _exporter.Export(eventsForExport, new HttpPublisher(GetUploadUrl()));
                     }
 
                     _logManager.DeleteLogsOlderThan(_lastRefresh);
@@ -229,6 +229,12 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
                 }
                 Refresh();
             }
+        }
+
+        private Uri GetUploadUrl()
+        {
+            var exportSettings = _settingsStore.GetSettings<ExportSettings>();
+            return new Uri(exportSettings.UploadUrl);
         }
 
         public void ShowExportSucceededMessage(int numberOfExportedEvents)
@@ -253,9 +259,9 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
 
         private void UpdateLastUploadDate()
         {
-            var settings = _store.GetSettings<UploadSettings>();
+            var settings = _settingsStore.GetSettings<UploadSettings>();
             settings.LastUploadDate = DateTime.Now;
-            _store.SetSettings(settings);
+            _settingsStore.SetSettings(settings);
         }
 
         public IList<IDEEvent> ExtractEventsForExport()
