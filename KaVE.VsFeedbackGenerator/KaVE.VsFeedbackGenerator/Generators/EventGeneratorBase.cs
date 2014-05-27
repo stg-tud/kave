@@ -23,6 +23,7 @@ using EnvDTE;
 using KaVE.JetBrains.Annotations;
 using KaVE.Model.Events;
 using KaVE.VsFeedbackGenerator.MessageBus;
+using KaVE.VsFeedbackGenerator.Utils;
 using KaVE.VsFeedbackGenerator.Utils.Json;
 using KaVE.VsFeedbackGenerator.Utils.Names;
 using KaVE.VsFeedbackGenerator.VsIntegration;
@@ -33,11 +34,13 @@ namespace KaVE.VsFeedbackGenerator.Generators
     {
         private readonly IIDESession _session;
         private readonly IMessageBus _messageBus;
+        private IDateUtils _dateUtils;
 
         protected EventGeneratorBase([NotNull] IIDESession session, [NotNull] IMessageBus messageBus)
         {
             _session = session;
             _messageBus = messageBus;
+            _dateUtils = Registry.GetComponent<IDateUtils>();
         }
 
         [NotNull]
@@ -53,7 +56,7 @@ namespace KaVE.VsFeedbackGenerator.Generators
                 ActiveWindow = DTEActiveWindow.GetName(),
                 ActiveDocument = DTEActiveDocument.GetName(),
                 TriggeredBy = CurrentTrigger,
-                TriggeredAt = DateTime.Now
+                TriggeredAt = _dateUtils.Now
             };
         }
 
@@ -106,7 +109,7 @@ namespace KaVE.VsFeedbackGenerator.Generators
         /// </summary>
         protected void FireNow<TEvent>([NotNull] TEvent @event) where TEvent : IDEEvent
         {
-            @event.TerminatedAt = DateTime.Now;
+            @event.TerminatedAt = _dateUtils.Now;
             Fire(@event);
         }
 

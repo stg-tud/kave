@@ -50,7 +50,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.ReSharper
             _generator.HandleClosed();
             _generator.HandleApplied(IDEEvent.Trigger.Click, lookupItems[0]);
 
-            var ce = GetSinglePublishedEventAs<CompletionEvent>();
+            var ce = GetSinglePublished<CompletionEvent>();
             Assert.AreEqual(CompletionEvent.TerminationState.Applied, ce.TerminatedAs);
         }
 
@@ -67,7 +67,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.ReSharper
             _generator.HandleClosed();
             _generator.HandleApplied(IDEEvent.Trigger.Typing, lookupItems[1]);
 
-            var ce = GetSinglePublishedEventAs<CompletionEvent>();
+            var ce = GetSinglePublished<CompletionEvent>();
             Assert.AreEqual(3, ce.Selections.Count);
             Assert.AreEqual(lookupItems[3].ToProposal(), ce.Selections[0].Proposal);
             Assert.AreEqual(lookupItems[2].ToProposal(), ce.Selections[1].Proposal);
@@ -84,7 +84,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.ReSharper
             _generator.HandleClosed();
             _generator.HandleCancelled(IDEEvent.Trigger.Shortcut);
 
-            var ce = GetSinglePublishedEventAs<CompletionEvent>();
+            var ce = GetSinglePublished<CompletionEvent>();
             Assert.AreEqual(CompletionEvent.TerminationState.Cancelled, ce.TerminatedAs);
         }
 
@@ -97,7 +97,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.ReSharper
             _generator.HandleOpened(lookupItems);
             _generator.HandlePrefixChanged("a", lookupItems);
 
-            var ce = GetSinglePublishedEventAs<CompletionEvent>();
+            var ce = GetSinglePublished<CompletionEvent>();
             Assert.AreEqual(CompletionEvent.TerminationState.Filtered, ce.TerminatedAs);
             Assert.AreEqual(IDEEvent.Trigger.Automatic, ce.TerminatedBy);
         }

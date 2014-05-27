@@ -91,6 +91,11 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators
             return null;
         }
 
+        protected void AssertNoEvent()
+        {
+            CollectionAssert.IsEmpty(_publishedEvents);
+        }
+
         [NotNull]
         protected IEnumerable<IDEEvent> GetPublishedEvents()
         {
@@ -106,7 +111,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators
         }
 
         [NotNull]
-        protected TEvent GetSinglePublishedEventAs<TEvent>() where TEvent : IDEEvent
+        protected TEvent GetSinglePublished<TEvent>() where TEvent : IDEEvent
         {
             Assert.AreEqual(1, _publishedEvents.Count);
             return GetLastPublishedEventAs<TEvent>();

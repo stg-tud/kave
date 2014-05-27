@@ -56,7 +56,10 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
             "{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:1990:Build.SolutionPlatforms",
             "{5EFC7975-14BC-11CF-9B2B-00AA00573819}:1657:",
             "{5EFC7975-14BC-11CF-9B2B-00AA00573819}:1717:",
-            "{CB26E292-901A-419C-B79D-49BD45C43929}:120:"
+            "{CB26E292-901A-419C-B79D-49BD45C43929}:120:",
+            "{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:4820:",
+            "{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:6155:",
+            "{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:4800:"
         };
 
         private CommandEvents _commandEvents;
@@ -104,8 +107,8 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
         private void InitCommandObservation()
         {
             _commandEvents = DTE.Events.CommandEvents;
-            _commandEvents.BeforeExecute += _commandEvents_BeforeExecute;
-            _commandEvents.AfterExecute += _commandEvents_AfterExecute;
+            _commandEvents.BeforeExecute += HandleCommandStarts;
+            _commandEvents.AfterExecute += HangleCommandEnded;
         }
 
         private void _commandBarEvents_Dropdown_Change(CommandBarComboBox comboBox)
@@ -125,7 +128,7 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
             _preceedingCommandBarEvent.TriggeredBy = IDEEvent.Trigger.Click;
         }
 
-        private void _commandEvents_BeforeExecute(string guid,
+        private void HandleCommandStarts(string guid,
             int id,
             object customIn,
             object customOut,
@@ -175,7 +178,7 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
             return guid + ":" + id;
         }
 
-        private void _commandEvents_AfterExecute(string guid, int id, object customIn, object customOut)
+        private void HangleCommandEnded(string guid, int id, object customIn, object customOut)
         {
             var commandEvent = TakeFromQueue(CommandKey(guid, id));
             if (commandEvent == null && id == 107 && guid.Equals("{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}"))
@@ -183,7 +186,7 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
                 // for some reason code-completion command is not started...
                 commandEvent = CreateCommandEvent(guid, id);
             }
-            Asserts.NotNull(commandEvent, "command finished that didn't start: {0}:{1}", guid, id);
+            Asserts.NotNull(commandEvent, "command finished that didn't start: {0}", GetCommand(guid, id).GetName());
             if (IsSuperfluousCommand(commandEvent))
             {
                 return;
@@ -209,7 +212,12 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
         /// </summary>
         private static bool IsDuplicatedByReSharper(CommandEvent @event)
         {
-            return EventsDuplicatedByReSharper.Contains(@event.Command.Identifier);
+            return EventsDuplicatedByReSharper.Contains(@event.Command.Identifier) || IsReSharperActionEquivalent(@event);
+        }
+
+        private static bool IsReSharperActionEquivalent(CommandEvent @event)
+        {
+            return @event.Command.Name.Contains("ReSharper_");
         }
 
         /// <summary>
