@@ -26,8 +26,6 @@ using KaVE.Model.Events.VisualStudio;
 using KaVE.Model.Names.VisualStudio;
 using KaVE.Utils.Assertion;
 using KaVE.VsFeedbackGenerator.Generators.VisualStudio;
-using KaVE.VsFeedbackGenerator.Tests.Utils;
-using KaVE.VsFeedbackGenerator.Utils;
 using Microsoft.VisualStudio.CommandBars;
 using Moq;
 using NUnit.Framework;
@@ -39,7 +37,6 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.VisualStudio
     {
         private Mock<CommandEvents> _mockCommandEvents;
         private Mock<Commands> _mockCommands;
-        private TestDateUtils _dateUtils;
 
         protected override void MockEvents(Mock<Events> mockEvents)
         {
@@ -52,17 +49,10 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.VisualStudio
         [SetUp]
         public void SetUp()
         {
-            SetUpDateTime();
             SetUpCommandBars();
             SetUpCommands();
             // ReSharper disable once ObjectCreationAsStatement
             new CommandEventGenerator(TestIDESession, TestMessageBus);
-        }
-
-        private void SetUpDateTime()
-        {
-            _dateUtils = new TestDateUtils();
-            Registry.RegisterComponent<IDateUtils>(_dateUtils);
         }
 
         private void SetUpCommandBars()
@@ -77,12 +67,6 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.VisualStudio
         {
             _mockCommands = new Mock<Commands>();
             TestIDESession.MockDTE.Setup(dte => dte.Commands).Returns(_mockCommands.Object);
-        }
-
-        [TearDown]
-        public void TearDown()
-        {
-            Registry.Clear();
         }
 
         [Test]
@@ -214,7 +198,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.VisualStudio
         private DateTime GivenNowIs(DateTime time)
         {
             var triggeredAt = time;
-            _dateUtils.Now = triggeredAt;
+            TestDateUtils.Now = triggeredAt;
             return triggeredAt;
         }
 

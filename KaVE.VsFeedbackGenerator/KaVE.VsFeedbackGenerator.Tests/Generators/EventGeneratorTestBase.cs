@@ -24,6 +24,8 @@ using System.Threading;
 using KaVE.JetBrains.Annotations;
 using KaVE.Model.Events;
 using KaVE.VsFeedbackGenerator.MessageBus;
+using KaVE.VsFeedbackGenerator.Tests.Utils;
+using KaVE.VsFeedbackGenerator.Utils;
 using Moq;
 using NUnit.Framework;
 
@@ -35,17 +37,26 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators
         private AutoResetEvent _eventReceptionLock;
         private Mock<IMessageBus> _mockMessageBus;
         protected TestIDESession TestIDESession;
+        protected TestDateUtils TestDateUtils { get; private set; }
 
         [SetUp]
         public void SetUpEventReception()
         {
             TestIDESession = new TestIDESession();
+            TestDateUtils = new TestDateUtils();
+            Registry.RegisterComponent<IDateUtils>(TestDateUtils);
 
             _publishedEvents = new List<IDEEvent>();
             _eventReceptionLock = new AutoResetEvent(false);
             _mockMessageBus = new Mock<IMessageBus>();
             _mockMessageBus.Setup(bus => bus.Publish(It.IsAny<IDEEvent>())).Callback(
                 (IDEEvent ideEvent) => ProcessEvent(ideEvent));
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            Registry.Clear();
         }
 
         private void ProcessEvent(IDEEvent ideEvent)
