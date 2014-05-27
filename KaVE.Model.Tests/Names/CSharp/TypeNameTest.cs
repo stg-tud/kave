@@ -336,8 +336,9 @@ namespace KaVE.Model.Tests.Names.CSharp
          TestCase("e:Full.Enum.Type, E, 1.2.3.4", "Full.Enum"),
          TestCase("System.Nullable`1[[System.Int32, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0", "System"),
          TestCase("T -> Some.Arbitrary.Type, Assembly, 5.6.4.7", "Some.Arbitrary"),
-         TestCase("Outer.Type+InnerType, As, 1.2.3.4", "Outer.Type")]
-        public void ShouldDetermineNamspace(string identifier, string expectedNamespace)
+         TestCase("Outer.Type+InnerType, As, 1.2.3.4", "Outer"),
+         TestCase("GlobalType, A, 5.6.7.4", NamespaceName.GlobaleNamespaceIdentifier)]
+        public void ShouldDetermineNamespace(string identifier, string expectedNamespace)
         {
             var uut = TypeName.Get(identifier);
 
@@ -410,13 +411,17 @@ namespace KaVE.Model.Tests.Names.CSharp
             Assert.IsNull(typeName.DeclaringType);
         }
 
-        [Test]
-        public void ShouldBeNestedType()
+        [TestCase("a.p.T+N", "a.p.T"),
+         TestCase("N.O+M+I", "N.O+M")]
+        public void ShouldBeNestedType(string nestedTypeFullName, string expectedDeclaringTypeFullName)
         {
-            var nestedTypeName = TypeName.Get("a.p.T+N, " + TestAssemblyIdentifier);
+            var expected = TypeName.Get(expectedDeclaringTypeFullName + ", " + TestAssemblyIdentifier);
+
+            var nestedTypeName = TypeName.Get(nestedTypeFullName + ", " + TestAssemblyIdentifier);
+            var actual = nestedTypeName.DeclaringType;
 
             Assert.IsTrue(nestedTypeName.IsNestedType);
-            Assert.AreEqual("a.p.T, " + TestAssemblyIdentifier, nestedTypeName.DeclaringType.Identifier);
+            Assert.AreEqual(expected, actual);
         }
 
         [Test]

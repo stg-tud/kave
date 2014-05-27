@@ -126,10 +126,38 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
         }
 
         [Test]
+        public void ShouldKeepUnknownTypeName()
+        {
+            var original = TypeName.Get(UnknownTypeName.Identifier);
+
+            AssertAnonymizedEquals(original, original);
+        }
+
+        [Test]
         public void ShouldAnonymizeTypeNameIfFromEnclosingProject()
         {
             var original = TypeName.Get("SomeType, MyProject");
             var expected = TypeName.Get("5TEfRdZBhGQY3JybERVp-w==, zRLpydQJBMrk8DCiP3BwEQ==");
+
+            AssertAnonymizedEquals(original, expected);
+        }
+
+        [Test]
+        public void ShouldKeepNestedTypeMarkersWhenAnonymizingTypeName()
+        {
+            var original = TypeName.Get("Outer+Intermediate+Inner, MyProject");
+            var expected =
+                TypeName.Get(
+                    "vWJW7HmayjJvbX16XC9VnQ==+471REvNW-WCCyW7mDRT4EA==+YDcvejSpfAK3U9T4L-U5Ng==, zRLpydQJBMrk8DCiP3BwEQ==");
+
+            AssertAnonymizedEquals(original, expected);
+        }
+
+        [Test]
+        public void ShouldKeepNamespaceToTypeSeparatorWhenAnonymizingTypeName()
+        {
+            var original = TypeName.Get("My.Namespace.MyType, MyProject");
+            var expected = TypeName.Get("L5-7Qmufwl5lDD-ks5-QzQ==.T3GwyBT-NeFSuHH-NHnMzQ==, zRLpydQJBMrk8DCiP3BwEQ==");
 
             AssertAnonymizedEquals(original, expected);
         }
@@ -179,11 +207,10 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
         public void ShouldAnonymizeParameterizedTypeIfDefinedInEnclosingProject()
         {
             var original =
-                TypeName.Get(
-                    "My.Type.From.Enclosing.Project`1[[T -> System.Int32, mscorlib, 4.0.0.0]], EnclosingProject");
+                TypeName.Get("MyTypeFromEnclosingProject`1[[T -> System.Int32, mscorlib, 4.0.0.0]], EnclosingProject");
             var expected =
                 TypeName.Get(
-                    "hSdRbDTUE-MVDAZNyp1JPA==`1[[T -> System.Int32, mscorlib, 4.0.0.0]], qfFVtSOtve-XEFJXWTbfXw==");
+                    "yqUUbRFTqfCBIMxMRH-qDA==`1[[T -> System.Int32, mscorlib, 4.0.0.0]], qfFVtSOtve-XEFJXWTbfXw==");
 
             AssertAnonymizedEquals(original, expected);
         }
@@ -192,7 +219,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
         public void ShouldAnonymizeInterfaceTypeNameFromEnclosingProject()
         {
             var original = TypeName.Get("i:My.Interface, EnclosingProject");
-            var expected = TypeName.Get("i:JMNIjDNlUMcvS3jIBiv92A==, qfFVtSOtve-XEFJXWTbfXw==");
+            var expected = TypeName.Get("i:S7JFQ1Qpzr6dQZksNAcR7A==.6e_eXMoTYXtpcGd2wrWE-A==, qfFVtSOtve-XEFJXWTbfXw==");
 
             AssertAnonymizedEquals(original, expected);
         }
@@ -201,7 +228,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
         public void ShouldAnonymizeEnumTypeNameFromEnclosingProject()
         {
             var original = TypeName.Get("e:My.Enum, EnclosingProject");
-            var expected = TypeName.Get("e:utmjvvhfwBy4QRxSSCLdgg==, qfFVtSOtve-XEFJXWTbfXw==");
+            var expected = TypeName.Get("e:S7JFQ1Qpzr6dQZksNAcR7A==.klRY89gvVPCkpyaQ3MurVQ==, qfFVtSOtve-XEFJXWTbfXw==");
 
             AssertAnonymizedEquals(original, expected);
         }
@@ -210,7 +237,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
         public void ShouldAnonymizeDelegateTypeNameFromEnclosingProject()
         {
             var original = TypeName.Get("d:My.Delegate, EnclosingProject");
-            var expected = TypeName.Get("d:gF64uiNPyHEJyxc80hGG0Q==, qfFVtSOtve-XEFJXWTbfXw==");
+            var expected = TypeName.Get("d:S7JFQ1Qpzr6dQZksNAcR7A==.ssIB3MfpFeOROPNn2-P9xg==, qfFVtSOtve-XEFJXWTbfXw==");
 
             AssertAnonymizedEquals(original, expected);
         }
@@ -219,24 +246,16 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
         public void ShouldAnonymizeCustomStructTypeNameFromEnclosingProject()
         {
             var original = TypeName.Get("s:My.Struct, EnclosingProject");
-            var expected = TypeName.Get("s:i5JSd32ybqeI1timnhqzhA==, qfFVtSOtve-XEFJXWTbfXw==");
+            var expected = TypeName.Get("s:S7JFQ1Qpzr6dQZksNAcR7A==.Csl4y2WI7aP5CjXqBQ8QRQ==, qfFVtSOtve-XEFJXWTbfXw==");
 
             AssertAnonymizedEquals(original, expected);
         }
 
         [Test]
-        public void ShouldKeepUnknownTypeName()
-        {
-            var original = TypeName.Get(UnknownTypeName.Identifier);
-
-            AssertAnonymizedEquals(original, original);
-        }
-
-        [Test]
         public void ShouldAnonymizeValueTypeOfArrayTypeIfDeclaredInEnclosingProject()
         {
-            var original = TypeName.Get("Some.Type[], EnclosingProject");
-            var expected = TypeName.Get("oUSDWUhQMfo7U8DZGMiBgg==[], qfFVtSOtve-XEFJXWTbfXw==");
+            var original = TypeName.Get("SomeType[], EnclosingProject");
+            var expected = TypeName.Get("5TEfRdZBhGQY3JybERVp-w==[], qfFVtSOtve-XEFJXWTbfXw==");
 
             AssertAnonymizedEquals(original, expected);
         }

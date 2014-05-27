@@ -22,6 +22,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using JetBrains.Annotations;
+using JetBrains.Util;
 using KaVE.Model.Names;
 using KaVE.Model.Names.CSharp;
 using KaVE.Model.Names.VisualStudio;
@@ -59,6 +60,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
                    ToAnonymousName<IEventName, TName>(name, ToAnonymousName) ??
                    ToAnonymousName<IParameterName, TName>(name, ToAnonymousName) ??
                    ToAnonymousName<IMethodName, TName>(name, ToAnonymousName) ??
+                   ToAnonymousName<INamespaceName, TName>(name, ToAnonymousName) ??
                    ToAnonymousName<IName, TName>(name, ToAnonymousName) ??
                    Asserts.Fail<TName>("unhandled name type");
         }
@@ -68,6 +70,11 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
         {
             var concreteName = name as TName;
             return (concreteName != null ? anonymizer(concreteName) : null) as TR;
+        }
+
+        private static INamespaceName ToAnonymousName(INamespaceName @namespace)
+        {
+            return NamespaceName.Get(@namespace.Identifier.ToHash());
         }
 
         private static IMethodName ToAnonymousName(IMethodName method)
@@ -183,19 +190,37 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
 
         private static string AnonymizedRawFullName(this TypeName type)
         {
-            // We want to keep the number of type parameters and/or array braces.
-            // Examples of raw names in the three cases we, therefore, handle are:
-            // * TypeName`1
-            // * TypeName[]
+            // We want to keep the number of type parameters (`1), array braces ([]), nesting markers (+), and the
+            // separation between the namespace and the class name. Examples of raw names in the cases we,
+            // therefore, handle are:
+            // * Namespace.TypeName`1
+            // * OuterType+InnerType[]
             // * TypeName`2[,]
+            var @namespace = type.Namespace;
             var rawFullName = type.RawFullName;
+            rawFullName = rawFullName.Substring(@namespace.Identifier.Length);
+            var baseName = rawFullName;
+            var suffix = "";
             var indexOfDelimiter = rawFullName.IndexOfAny(new[] {'`', '['});
             if (indexOfDelimiter > -1)
             {
-                return rawFullName.Substring(0, indexOfDelimiter).ToHash() +
-                       rawFullName.Substring(indexOfDelimiter);
+                suffix = rawFullName.Substring(indexOfDelimiter);
+                baseName = rawFullName.Substring(0, indexOfDelimiter);
             }
-            return rawFullName.ToHash();
+            var baseNameParts = baseName.Split('+');
+            if (baseNameParts.Length > 0)
+            {
+                baseName = baseNameParts.Select(ToHash).Join("+");
+            }
+            else
+            {
+                baseName = baseName.ToHash();
+            }
+            if (@namespace.IsGlobalNamespace)
+            {
+                return baseName + suffix;
+            }
+            return @namespace.ToAnonymousName() + "." + baseName + suffix;
         }
 
         private static StringBuilder AppendTypeParameters(this StringBuilder identifier, IGenericName type)

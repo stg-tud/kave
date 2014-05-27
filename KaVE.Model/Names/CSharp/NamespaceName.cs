@@ -12,14 +12,18 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sven Amann
  */
+
 using KaVE.Model.Utils;
 
 namespace KaVE.Model.Names.CSharp
 {
     public class NamespaceName : Name, INamespaceName
     {
-        private const string GlobaleNamespaceIdentifier = "";
+        public const string GlobaleNamespaceIdentifier = "";
 
         private static readonly WeakNameCache<NamespaceName> Registry = WeakNameCache<NamespaceName>.Get(id => new NamespaceName(id));
 

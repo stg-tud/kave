@@ -189,7 +189,7 @@ namespace KaVE.Model.Names.CSharp
             get
             {
                 var id = RawFullName;
-                var endIndexOfNamespaceIdentifier = IsNestedType ? id.LastIndexOf('+') : id.LastIndexOf('.');
+                var endIndexOfNamespaceIdentifier = id.LastIndexOf('.');
                 return endIndexOfNamespaceIdentifier < 0
                     ? NamespaceName.GlobalNamespace
                     : NamespaceName.Get(id.Substring(0, endIndexOfNamespaceIdentifier));
@@ -236,8 +236,8 @@ namespace KaVE.Model.Names.CSharp
                 }
 
                 var fullName = FullName;
-                var indexOf = fullName.LastIndexOf('+');
-                var declaringTypeName = fullName.Substring(0, indexOf);
+                var endOfDeclaringTypeName = fullName.LastIndexOf('+');
+                var declaringTypeName = fullName.Substring(0, endOfDeclaringTypeName);
                 if (declaringTypeName.IndexOf('`') > -1 && HasTypeParameters)
                 {
                     var startIndex = 0;
