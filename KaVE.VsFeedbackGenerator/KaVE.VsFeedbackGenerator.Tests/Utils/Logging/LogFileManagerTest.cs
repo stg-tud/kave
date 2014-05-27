@@ -44,7 +44,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Logging
             _ioUtilMock = new Mock<IIoUtils>();
 
             _ioUtilMock.Setup(io => io.OpenFile(It.IsAny<string>(), It.IsAny<FileMode>(), It.IsAny<FileAccess>()))
-                       .Returns(new MemoryStream());
+                       .Returns(() => new MemoryStream());
 
             GivenLogsExist();
             WhenLogFileManagerIsInitialized();
@@ -114,7 +114,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Logging
             Assert.AreEqual(_uut.BaseLocation, Path.GetDirectoryName(todaysLog.Path));
         }
 
-        [Test, Ignore("The stream is for the second logfile disposed?!")]
+        [Test]
         public void ShouldDeleteOldLogEntries()
         {
             GivenLogsExist(new DateTime(2014, 03, 21), new DateTime(2014, 03, 29));
