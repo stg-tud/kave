@@ -26,6 +26,7 @@ using KaVE.Model.Events;
 using KaVE.Utils.Assertion;
 using KaVE.VsFeedbackGenerator.Interactivity;
 using KaVE.VsFeedbackGenerator.SessionManager;
+using KaVE.VsFeedbackGenerator.SessionManager.Presentation;
 using KaVE.VsFeedbackGenerator.Tests.Interactivity;
 using KaVE.VsFeedbackGenerator.TrayNotification;
 using KaVE.VsFeedbackGenerator.Utils;
@@ -66,6 +67,8 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModel
 
             _mockSettingStore = new Mock<ISettingsStore>();
             _mockSettingStore.Setup(store => store.GetSettings<UploadSettings>()).Returns(new UploadSettings());
+            var exportSettings = new ExportSettings {UploadUrl = "http://foo.bar"};
+            _mockSettingStore.Setup(store => store.GetSettings<ExportSettings>()).Returns(exportSettings);
 
             _uut = new VsFeedbackGenerator.SessionManager.FeedbackViewModel(_mockLogFileManager.Object, _mockSettingStore.Object, _mockExporter.Object);
             _uut.Refresh();
@@ -166,6 +169,9 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModel
             _mockExporter.Verify(exporter => exporter.Export(It.IsAny<IEnumerable<IDEEvent>>(), It.IsAny<IPublisher>()), Times.Never);
             Assert.IsFalse(_notificationHelper.IsRequestRaised);
         }
+
+        // TODO Write test that checks update of UploadSettings.LastUploadDate
+        // TODO Write test that checks usage of ExportSettings.UploadUrl
 
     }
 }
