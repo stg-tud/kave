@@ -265,6 +265,6 @@
     <value>Keine Datei angegeben</value>
   </data>
   <data name="Option_SettingsCleaner_Dialog" xml:space="preserve">
-    <value>Sind Sie sicher die Anwendung zurückzusetzen?</value>
+    <value>Sind Sie sicher, dass Sie die Einstellungen zurücksetzen und das lokal gesammelte Feedback löschen wollen?</value>
   </data>
 </root>
