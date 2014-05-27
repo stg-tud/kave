@@ -176,7 +176,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
 
         protected TEvent WhenEventIsAnonymized()
         {
-            return _uut.Anonymize(OriginalEvent);
+            return (TEvent) _uut.Anonymize(OriginalEvent);
         }
     }
 }

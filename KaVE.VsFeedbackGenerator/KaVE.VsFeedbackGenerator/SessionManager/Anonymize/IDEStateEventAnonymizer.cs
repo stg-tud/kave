@@ -18,16 +18,18 @@
  */
 
 using System.Linq;
+using KaVE.Model.Events;
 using KaVE.Model.Events.VisualStudio;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
 {
-    internal class IDEStateEventAnonymizer : IDEEventAnonymizer<IDEStateEvent>
+    internal class IDEStateEventAnonymizer : IDEEventAnonymizer
     {
-        public override void AnonymizeCodeNames(IDEStateEvent ideEvent)
+        public override void AnonymizeCodeNames(IDEEvent ideEvent)
         {
-            ideEvent.OpenDocuments = ideEvent.OpenDocuments.Select(doc => doc.ToAnonymousName()).ToList();
-            ideEvent.OpenWindows = ideEvent.OpenWindows.Select(doc => doc.ToAnonymousName()).ToList();
+            var ideStateEvent = (IDEStateEvent) ideEvent;
+            ideStateEvent.OpenDocuments = ideStateEvent.OpenDocuments.Select(doc => doc.ToAnonymousName()).ToList();
+            ideStateEvent.OpenWindows = ideStateEvent.OpenWindows.Select(doc => doc.ToAnonymousName()).ToList();
             base.AnonymizeCodeNames(ideEvent);
         }
     }

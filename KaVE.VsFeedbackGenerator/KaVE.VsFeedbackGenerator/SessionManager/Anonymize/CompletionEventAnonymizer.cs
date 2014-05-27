@@ -20,21 +20,24 @@
 using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Util;
+using KaVE.Model.Events;
 using KaVE.Model.Events.CompletionEvent;
 using KaVE.Model.Names;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
 {
-    internal class CompletionEventAnonymizer : IDEEventAnonymizer<CompletionEvent>
+    internal class CompletionEventAnonymizer : IDEEventAnonymizer
     {
-        public override void AnonymizeDurations(CompletionEvent ideEvent)
+        public override void AnonymizeDurations(IDEEvent ideEvent)
         {
-            ideEvent.Selections.ForEach(selection => selection.SelectedAfter = null);
+            var completionEvent = (CompletionEvent) ideEvent;
+            completionEvent.Selections.ForEach(selection => selection.SelectedAfter = null);
             base.AnonymizeDurations(ideEvent);
         }
 
-        public override void AnonymizeCodeNames(CompletionEvent completionEvent)
+        public override void AnonymizeCodeNames(IDEEvent ideEvent)
         {
+            var completionEvent = (CompletionEvent) ideEvent;
             completionEvent.ProposalCollection.Proposals.ForEach(AnonymizeCodeNames);
             completionEvent.Selections.ForEach(AnonymizeCodeNames);
             AnonymizeCodeNames(completionEvent.Context);

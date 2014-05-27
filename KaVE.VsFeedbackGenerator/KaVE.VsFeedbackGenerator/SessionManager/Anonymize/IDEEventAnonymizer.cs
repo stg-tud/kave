@@ -21,24 +21,24 @@ using KaVE.Model.Events;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
 {
-    internal class IDEEventAnonymizer<TEvent> where TEvent : IDEEvent
+    internal class IDEEventAnonymizer
     {
-        public void AnonymizeSessionUUID(TEvent ideEvent)
+        public void AnonymizeSessionUUID(IDEEvent ideEvent)
         {
             ideEvent.IDESessionUUID = null;
         }
 
-        public virtual void AnonymizeStartTimes(TEvent ideEvent)
+        public virtual void AnonymizeStartTimes(IDEEvent ideEvent)
         {
             ideEvent.TriggeredAt = null;
         }
 
-        public virtual void AnonymizeDurations(TEvent ideEvent)
+        public virtual void AnonymizeDurations(IDEEvent ideEvent)
         {
             ideEvent.Duration = null;
         }
 
-        public virtual void AnonymizeCodeNames(TEvent ideEvent)
+        public virtual void AnonymizeCodeNames(IDEEvent ideEvent)
         {
             ideEvent.ActiveDocument = ideEvent.ActiveDocument.ToAnonymousName();
             ideEvent.ActiveWindow = ideEvent.ActiveWindow.ToAnonymousName();

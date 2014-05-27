@@ -34,7 +34,7 @@ namespace KaVE.VsFeedbackGenerator.Generators
     {
         private readonly IIDESession _session;
         private readonly IMessageBus _messageBus;
-        private IDateUtils _dateUtils;
+        private readonly IDateUtils _dateUtils;
 
         protected EventGeneratorBase([NotNull] IIDESession session, [NotNull] IMessageBus messageBus)
         {

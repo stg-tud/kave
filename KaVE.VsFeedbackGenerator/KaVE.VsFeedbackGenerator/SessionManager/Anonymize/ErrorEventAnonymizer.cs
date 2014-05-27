@@ -21,11 +21,12 @@ using KaVE.Model.Events;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
 {
-    internal class ErrorEventAnonymizer : IDEEventAnonymizer<ErrorEvent>
+    internal class ErrorEventAnonymizer : IDEEventAnonymizer
     {
-        public override void AnonymizeCodeNames(ErrorEvent ideEvent)
+        public override void AnonymizeCodeNames(IDEEvent ideEvent)
         {
-            ideEvent.Content = null;
+            var errorEvent = (ErrorEvent) ideEvent;
+            errorEvent.Content = null;
             base.AnonymizeCodeNames(ideEvent);
         }
     }

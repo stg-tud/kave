@@ -19,27 +19,31 @@
 
 using System;
 using JetBrains.Util;
+using KaVE.Model.Events;
 using KaVE.Model.Events.VisualStudio;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
 {
-    internal class BuildEventAnonymizer : IDEEventAnonymizer<BuildEvent>
+    internal class BuildEventAnonymizer : IDEEventAnonymizer
     {
-        public override void AnonymizeStartTimes(BuildEvent ideEvent)
+        public override void AnonymizeStartTimes(IDEEvent ideEvent)
         {
-            ForEachTargetDo(ideEvent, target => target.StartedAt = null);
+            var buildEvent = (BuildEvent) ideEvent;
+            ForEachTargetDo(buildEvent, target => target.StartedAt = null);
             base.AnonymizeStartTimes(ideEvent);
         }
 
-        public override void AnonymizeDurations(BuildEvent ideEvent)
+        public override void AnonymizeDurations(IDEEvent ideEvent)
         {
-            ForEachTargetDo(ideEvent, target => target.Duration = null);
+            var buildEvent = (BuildEvent) ideEvent;
+            ForEachTargetDo(buildEvent, target => target.Duration = null);
             base.AnonymizeDurations(ideEvent);
         }
 
-        public override void AnonymizeCodeNames(BuildEvent ideEvent)
+        public override void AnonymizeCodeNames(IDEEvent ideEvent)
         {
-            ForEachTargetDo(ideEvent, target => target.Project = target.Project.ToHash());
+            var buildEvent = (BuildEvent) ideEvent;
+            ForEachTargetDo(buildEvent, target => target.Project = target.Project.ToHash());
             base.AnonymizeCodeNames(ideEvent);
         }
 

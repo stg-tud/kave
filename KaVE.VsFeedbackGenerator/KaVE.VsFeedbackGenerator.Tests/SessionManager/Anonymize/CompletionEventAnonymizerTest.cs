@@ -39,7 +39,8 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
                     new[]
                     {
                         new Proposal {Name = TypeName.Get("MyType, EnclosingProject")},
-                        new Proposal {Name = TypeName.Get("OtherType, Assembly, 1.2.3.4")}
+                        new Proposal {Name = TypeName.Get("OtherType, Assembly, 1.2.3.4")},
+                        new Proposal {Name = NamespaceName.Get("Some.Namepsace")}
                     }),
                 Selections = new[]
                 {
@@ -102,7 +103,8 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
             var expected = new[]
             {
                 new Proposal {Name = TypeName.Get("Q-vTVCo_g8yayGGoDdH7BA==, qfFVtSOtve-XEFJXWTbfXw==")},
-                new Proposal {Name = TypeName.Get("OtherType, Assembly, 1.2.3.4")}
+                new Proposal {Name = TypeName.Get("OtherType, Assembly, 1.2.3.4")},
+                new Proposal {Name = NamespaceName.Get("A_SHMh611J-1vRjtIJDirA==")}
             };
 
             var actual = WhenEventIsAnonymized();

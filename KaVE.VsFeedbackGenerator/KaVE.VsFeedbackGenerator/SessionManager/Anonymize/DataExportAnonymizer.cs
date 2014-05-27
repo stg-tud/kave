@@ -29,14 +29,16 @@ using KaVE.VsFeedbackGenerator.Utils.Json;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
 {
-    public interface IDataExportAnonymizer {
-        TEvent Anonymize<TEvent>(TEvent ideEvent) where TEvent : IDEEvent;
+    public interface IDataExportAnonymizer
+    {
+        IDEEvent Anonymize(IDEEvent ideEvent);
     }
 
     [ShellComponent]
     public class DataExportAnonymizer : IDataExportAnonymizer
     {
-        private static readonly IDictionary<Type, object> Anonymizer = new Dictionary<Type, object>
+        private static readonly IDictionary<Type, IDEEventAnonymizer> Anonymizer = new Dictionary
+            <Type, IDEEventAnonymizer>
         {
             {typeof (BuildEvent), new BuildEventAnonymizer()},
             {typeof (SolutionEvent), new SolutionEventAnonymizer()},
@@ -55,11 +57,11 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
             _settingsStore = settingsStore;
         }
 
-        public TEvent Anonymize<TEvent>(TEvent ideEvent) where TEvent : IDEEvent
+        public IDEEvent Anonymize(IDEEvent ideEvent)
         {
-            var clone = ideEvent.ToCompactJson().ParseJsonTo<TEvent>();
+            var clone = ideEvent.ToCompactJson().ParseJsonTo<IDEEvent>();
             var settings = _settingsStore.GetSettings<ExportSettings>();
-            var anonymizer = GetAnonymizerFor<TEvent>();
+            var anonymizer = GetAnonymizerFor(ideEvent.GetType());
             if (settings.RemoveSessionIDs)
             {
                 anonymizer.AnonymizeSessionUUID(clone);
@@ -79,13 +81,9 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
             return clone;
         }
 
-        private static IDEEventAnonymizer<TEvent> GetAnonymizerFor<TEvent>() where TEvent : IDEEvent
+        private static IDEEventAnonymizer GetAnonymizerFor(Type eventType)
         {
-            if (Anonymizer.ContainsKey(typeof(TEvent)))
-            {
-                return (IDEEventAnonymizer<TEvent>)Anonymizer[typeof(TEvent)];
-            }
-            return new IDEEventAnonymizer<TEvent>();
+            return Anonymizer.ContainsKey(eventType) ? Anonymizer[eventType] : new IDEEventAnonymizer();
         }
     }
 }

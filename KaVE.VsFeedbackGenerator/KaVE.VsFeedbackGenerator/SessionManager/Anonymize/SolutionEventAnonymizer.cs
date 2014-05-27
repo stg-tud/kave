@@ -16,16 +16,18 @@
  * Contributors:
  *    - Sven Amann
  */
+
+using KaVE.Model.Events;
 using KaVE.Model.Events.VisualStudio;
-using KaVE.Model.Names.VisualStudio;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
 {
-    internal class SolutionEventAnonymizer : IDEEventAnonymizer<SolutionEvent>
+    internal class SolutionEventAnonymizer : IDEEventAnonymizer
     {
-        public override void AnonymizeCodeNames(SolutionEvent ideEvent)
+        public override void AnonymizeCodeNames(IDEEvent ideEvent)
         {
-            ideEvent.Target = ideEvent.Target.ToAnonymousName();
+            var solutionEvent = (SolutionEvent) ideEvent;
+            solutionEvent.Target = solutionEvent.Target.ToAnonymousName();
             base.AnonymizeCodeNames(ideEvent);
         }
     }
