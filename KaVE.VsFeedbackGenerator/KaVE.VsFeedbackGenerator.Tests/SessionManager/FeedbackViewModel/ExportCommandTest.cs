@@ -18,8 +18,11 @@
  *    - Sven Amann
  */
 
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Threading;
 using JetBrains;
 using KaVE.Model.Events;
@@ -28,6 +31,7 @@ using KaVE.VsFeedbackGenerator.Interactivity;
 using KaVE.VsFeedbackGenerator.SessionManager;
 using KaVE.VsFeedbackGenerator.SessionManager.Presentation;
 using KaVE.VsFeedbackGenerator.Tests.Interactivity;
+using KaVE.VsFeedbackGenerator.Tests.Utils;
 using KaVE.VsFeedbackGenerator.TrayNotification;
 using KaVE.VsFeedbackGenerator.Utils;
 using KaVE.VsFeedbackGenerator.Utils.Logging;
@@ -37,8 +41,9 @@ using NUnit.Framework;
 namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModel
 {
     [TestFixture]
-    class ExportCommandTest
+    internal class ExportCommandTest
     {
+        private const string TestUploadUrl = "http://foo.bar";
         private Mock<ILogManager<IDEEvent>> _mockLogFileManager;
         private List<Mock<ILog<IDEEvent>>> _mockLogs;
         private VsFeedbackGenerator.SessionManager.FeedbackViewModel _uut;
@@ -46,11 +51,14 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModel
         private Mock<IExporter> _mockExporter;
         private Mock<ISettingsStore> _mockSettingStore;
         private InteractionRequestTestHelper<Notification> _notificationHelper;
+        private TestDateUtils _testDateUtils;
+        private Mock<IIoUtils> _mockIoUtils;
 
         [SetUp]
         public void SetUp()
         {
-            Registry.RegisterComponent(new Mock<IIoUtils>().Object);
+            _mockIoUtils = new Mock<IIoUtils>();
+            Registry.RegisterComponent(_mockIoUtils.Object);
 
             _mockExporter = new Mock<IExporter>();
 
@@ -60,17 +68,22 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModel
             mockLog2.Setup(log => log.NewLogReader()).Returns(new Mock<ILogReader<IDEEvent>>().Object);
             var mockLog3 = new Mock<ILog<IDEEvent>>();
             mockLog3.Setup(log => log.NewLogReader()).Returns(new Mock<ILogReader<IDEEvent>>().Object);
-            _mockLogs = new List<Mock<ILog<IDEEvent>>> { mockLog1, mockLog2, mockLog3 };
+            _mockLogs = new List<Mock<ILog<IDEEvent>>> {mockLog1, mockLog2, mockLog3};
 
             _mockLogFileManager = new Mock<ILogManager<IDEEvent>>();
             _mockLogFileManager.Setup(mgr => mgr.GetLogs()).Returns(_mockLogs.Select(m => m.Object));
 
             _mockSettingStore = new Mock<ISettingsStore>();
             _mockSettingStore.Setup(store => store.GetSettings<UploadSettings>()).Returns(new UploadSettings());
-            var exportSettings = new ExportSettings {UploadUrl = "http://foo.bar"};
-            _mockSettingStore.Setup(store => store.GetSettings<ExportSettings>()).Returns(exportSettings);
+            _mockSettingStore.Setup(store => store.GetSettings<ExportSettings>())
+                             .Returns(new ExportSettings {UploadUrl = TestUploadUrl});
 
-            _uut = new VsFeedbackGenerator.SessionManager.FeedbackViewModel(_mockLogFileManager.Object, _mockSettingStore.Object, _mockExporter.Object);
+            _testDateUtils = new TestDateUtils();
+            _uut = new VsFeedbackGenerator.SessionManager.FeedbackViewModel(
+                _mockLogFileManager.Object,
+                _mockExporter.Object,
+                _mockSettingStore.Object,
+                _testDateUtils);
             _uut.Refresh();
             while (_uut.Refreshing)
             {
@@ -97,42 +110,62 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModel
         [Test]
         public void SelectingZipExportInvokesZipExport()
         {
-            _uut.ExportCommand.Execute(null);
-            _requestHelper.Context.Type = UploadWizard.UploadOptions.ExportType.ZipFile;
-            _requestHelper.Callback();
+            WhenExportIsExecuted(UploadWizard.UploadOptions.ExportType.ZipFile);
 
-            _mockExporter.Verify(exporter => exporter.Export(It.IsAny<IEnumerable<IDEEvent>>(), It.IsAny<FilePublisher>()));
+            _mockExporter.Verify(
+                exporter => exporter.Export(It.IsAny<IEnumerable<IDEEvent>>(), It.IsAny<FilePublisher>()));
         }
 
         [Test]
-        public void SelectingZipExportInvokesHttpExport()
+        public void SelectingHttpExportInvokesHttpExport()
         {
-            _uut.ExportCommand.Execute(null);
-            _requestHelper.Context.Type = UploadWizard.UploadOptions.ExportType.HttpUpload;
-            _requestHelper.Callback();
+            WhenExportIsExecuted(UploadWizard.UploadOptions.ExportType.HttpUpload);
 
-            _mockExporter.Verify(exporter => exporter.Export(It.IsAny<IEnumerable<IDEEvent>>(), It.IsAny<HttpPublisher>()));
+            _mockExporter.Verify(
+                exporter => exporter.Export(It.IsAny<IEnumerable<IDEEvent>>(), It.IsAny<HttpPublisher>()));
+        }
+
+        [Test]
+        public void ShouldUseUploadUrlFromSettingsForUpload()
+        {
+            HttpPublisher httpPublisher = null;
+            _mockExporter.Setup(
+                exporter => exporter.Export(It.IsAny<IEnumerable<IDEEvent>>(), It.IsAny<HttpPublisher>()))
+                         .Callback<IEnumerable<IDEEvent>, IPublisher>(
+                             (evts, publisher) => httpPublisher = (HttpPublisher) publisher);
+
+            WhenExportIsExecuted(UploadWizard.UploadOptions.ExportType.HttpUpload);
+            try
+            {
+                // Sadly there's currently no clean way to find out what Url is passed to the publisher. Therefore, we
+                // invoke the publisher and rely on that it calls IIoUtils.TransferByHttp and then fails because the
+                // utils return null.
+                httpPublisher.Publish(new MemoryStream());
+            }
+            catch (NullReferenceException) {}
+
+            _mockIoUtils.Verify(ioUtils => ioUtils.TransferByHttp(It.IsAny<HttpContent>(), new Uri(TestUploadUrl), 5));
         }
 
         [Test]
         public void SuccessfulExportCreatesNotification()
         {
-            _uut.ExportCommand.Execute(null);
-            _requestHelper.Context.Type = UploadWizard.UploadOptions.ExportType.HttpUpload;
-            _requestHelper.Callback();
+            WhenExportIsExecuted();
             Assert.IsTrue(_notificationHelper.IsRequestRaised);
         }
 
         [Test]
         public void SuccessfulExportNotificationHasCorrectMessage()
         {
-            _uut.ExportCommand.Execute(null);
-            _requestHelper.Context.Type = UploadWizard.UploadOptions.ExportType.HttpUpload;
-            _requestHelper.Callback();
+            WhenExportIsExecuted();
             var actual = _notificationHelper.Context;
             // TODO @Sven: extend setup to include some events that are exported here
             // TODO @Seb: help sven with above task
-            var expected = new Notification { Message = Properties.SessionManager.ExportSuccess.FormatEx(0) };
+            var expected = new Notification
+            {
+                Caption = Properties.UploadWizard.window_title,
+                Message = Properties.SessionManager.ExportSuccess.FormatEx(0)
+            };
             Assert.AreEqual(expected, actual);
         }
 
@@ -141,9 +174,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModel
         {
             _mockExporter.Setup(e => e.Export(It.IsAny<IEnumerable<IDEEvent>>(), It.IsAny<IPublisher>()))
                          .Throws(new AssertException("TEST"));
-            _uut.ExportCommand.Execute(null);
-            _requestHelper.Context.Type = UploadWizard.UploadOptions.ExportType.HttpUpload;
-            _requestHelper.Callback();
+            WhenExportIsExecuted();
             Assert.IsTrue(_notificationHelper.IsRequestRaised);
         }
 
@@ -152,26 +183,51 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModel
         {
             _mockExporter.Setup(e => e.Export(It.IsAny<IEnumerable<IDEEvent>>(), It.IsAny<IPublisher>()))
                          .Throws(new AssertException("TEST"));
-            _uut.ExportCommand.Execute(null);
-            _requestHelper.Context.Type = UploadWizard.UploadOptions.ExportType.HttpUpload;
-            _requestHelper.Callback();
+            WhenExportIsExecuted();
             var actual = _notificationHelper.Context;
-            var expected = new Notification { Message = Properties.SessionManager.ExportFail + ":\nTEST" };
+            var expected = new Notification
+            {
+                Caption = Properties.UploadWizard.window_title,
+                Message = Properties.SessionManager.ExportFail + ":\nTEST"
+            };
             Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void SuccessfulExportUpdatesLastUploadDate()
+        {
+            _testDateUtils.Now = DateTime.Now;
+            UploadSettings uploadSettings = null;
+            _mockSettingStore.Setup(store => store.SetSettings(It.IsAny<UploadSettings>()))
+                             .Callback<UploadSettings>(settings => uploadSettings = settings);
+
+            WhenExportIsExecuted();
+
+            Assert.AreEqual(_testDateUtils.Now, uploadSettings.LastUploadDate);
         }
 
         [Test]
         public void NotSelectingAnyExportMethodShouldResultInNoAction()
         {
-            _uut.ExportCommand.Execute(null);
-            _requestHelper.Callback();
+            WhenExportIsExecuted(null);
 
-            _mockExporter.Verify(exporter => exporter.Export(It.IsAny<IEnumerable<IDEEvent>>(), It.IsAny<IPublisher>()), Times.Never);
+            _mockExporter.Verify(
+                exporter => exporter.Export(It.IsAny<IEnumerable<IDEEvent>>(), It.IsAny<IPublisher>()),
+                Times.Never);
             Assert.IsFalse(_notificationHelper.IsRequestRaised);
         }
 
-        // TODO Write test that checks update of UploadSettings.LastUploadDate
-        // TODO Write test that checks usage of ExportSettings.UploadUrl
+        private void WhenExportIsExecuted()
+        {
+            // ReSharper disable once IntroduceOptionalParameters.Local
+            WhenExportIsExecuted(UploadWizard.UploadOptions.ExportType.HttpUpload);
+        }
 
+        private void WhenExportIsExecuted(UploadWizard.UploadOptions.ExportType? exportType)
+        {
+            _uut.ExportCommand.Execute(null);
+            _requestHelper.Context.Type = exportType;
+            _requestHelper.Callback();
+        }
     }
 }

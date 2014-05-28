@@ -58,7 +58,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModel
             _mockLogFileManager = new Mock<ILogManager<IDEEvent>>();
             _mockLogFileManager.Setup(mgr => mgr.GetLogs()).Returns(_mockLogs.Select(m => m.Object));
 
-            _uut = new VsFeedbackGenerator.SessionManager.FeedbackViewModel(_mockLogFileManager.Object, null, null);
+            _uut = new VsFeedbackGenerator.SessionManager.FeedbackViewModel(_mockLogFileManager.Object, null, null, new DateUtils());
             _uut.Refresh();
             while (_uut.Refreshing)
             {

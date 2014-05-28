@@ -59,6 +59,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
         private bool _refreshing;
         private DateTime _lastRefresh;
         private readonly ISettingsStore _settingsStore;
+        private readonly IDateUtils _dateUtils;
         private readonly IExporter _exporter;
 
         private readonly InteractionRequest<Confirmation> _confirmationRequest;
@@ -82,9 +83,10 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             get { return _notificationRequest; }
         }
 
-        public FeedbackViewModel(ILogManager<IDEEvent> logManager, ISettingsStore settingsStore, IExporter exporter)
+        public FeedbackViewModel(ILogManager<IDEEvent> logManager, IExporter exporter, ISettingsStore settingsStore, IDateUtils dateUtils)
         {
             _settingsStore = settingsStore;
+            _dateUtils = dateUtils;
             _exporter = exporter;
             _logManager = logManager;
             _sessions = new ObservableCollection<SessionViewModel>();
@@ -239,20 +241,20 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
 
         public void ShowExportSucceededMessage(int numberOfExportedEvents)
         {
-            // TODO: Captions fehlen
             _notificationRequest.Raise(
                 new Notification
                 {
+                    Caption = Properties.UploadWizard.window_title,
                     Message = string.Format(Messages.ExportSuccess, numberOfExportedEvents)
                 });
         }
 
         public void ShowExportFailedMessage(string message)
         {
-            // TODO: Captions fehlen
             _notificationRequest.Raise(
                 new Notification
                 {
+                    Caption = Properties.UploadWizard.window_title,
                     Message = Messages.ExportFail + (string.IsNullOrWhiteSpace(message) ? "" : ":\n" + message)
                 });
         }
@@ -260,7 +262,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
         private void UpdateLastUploadDate()
         {
             var settings = _settingsStore.GetSettings<UploadSettings>();
-            settings.LastUploadDate = DateTime.Now;
+            settings.LastUploadDate = _dateUtils.Now;
             _settingsStore.SetSettings(settings);
         }
 
@@ -273,7 +275,6 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
         {
             var saveFileDialog = new SaveFileDialog
             {
-                // TODO @Dennis: Filter an komprimiertes Schreiben anpassen
                 Filter = Properties.SessionManager.SaveFileDialogFilter,
                 AddExtension = true
             };
