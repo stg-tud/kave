@@ -92,6 +92,7 @@ namespace KaVE.VsFeedbackGenerator.TrayNotification
 
         private void On_Review_Click(object sender, RoutedEventArgs e)
         {
+            Close();
             _actionManager.ExecuteActionGuarded("KaVE.VsFeedbackGenerator.SessionManager",  "AgentAction");
         }
 

@@ -53,7 +53,7 @@ limitations under the License.
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Image Grid.Column="0" Name="TypeIcon" HorizontalAlignment="Left" VerticalAlignment="Center" Source="{StaticResource Icon}"
+            <Image Grid.Column="0" Name="TypeIcon" Visibility="Hidden" HorizontalAlignment="Left" VerticalAlignment="Center" Source="{StaticResource Icon}"
                    Height="25" Width="25" />
             <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
                 <TextBlock VerticalAlignment="Center">
