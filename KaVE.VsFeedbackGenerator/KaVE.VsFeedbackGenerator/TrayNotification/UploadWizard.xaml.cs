@@ -93,7 +93,7 @@ namespace KaVE.VsFeedbackGenerator.TrayNotification
         private void On_Review_Click(object sender, RoutedEventArgs e)
         {
             Close();
-            _actionManager.ExecuteActionGuarded("KaVE.VsFeedbackGenerator.SessionManager",  "AgentAction");
+            _actionManager.ExecuteActionGuarded(SessionManagerWindowActionHandler.ActionId,  "AgentAction");
         }
 
         private void UploadButtonClicked(object sender, RoutedEventArgs e)
