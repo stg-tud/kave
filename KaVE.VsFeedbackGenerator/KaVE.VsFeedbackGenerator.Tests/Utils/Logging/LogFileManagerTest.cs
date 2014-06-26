@@ -88,21 +88,11 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Logging
         }
 
         [Test]
-        public void ShouldIgnoreNonLogDirectory()
+        public void ShouldCreateLogsFromFilesWhoseNamesFollowTheLogFileNamePattern()
         {
-            //TODO
-            Directory.CreateDirectory(Path.Combine(_uut.BaseLocation, "NonLog"));
+            _uut.GetLogs();
 
-            Assert.AreEqual(0, _uut.GetLogs().Count());
-        }
-
-        [Test]
-        public void ShouldIgnoreNonLogFile()
-        {
-            //TODO
-            File.Create(Path.Combine(_uut.BaseLocation, "NonLog"));
-
-            Assert.AreEqual(0, _uut.GetLogs().Count());
+            _ioUtilMock.Verify(iou => iou.GetFiles(_baseDirectory, "Log_*"));
         }
 
         [Test]
@@ -143,11 +133,17 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Logging
         [Test]
         public void ShouldNotDeleteTodayLog()
         {
-            GivenLogsExist(DateTime.Today);
+            var today = new DateTime(2014, 06,26);
+            GivenLogsExist(today);
             WhenLogFileManagerIsInitialized();
 
-            _uut.DeleteLogsOlderThan(DateTime.Today);
+            _uut.DeleteLogsOlderThan(today);
 
+            const string logFileName = "Log_2014-06-26";
+            var logFilePath = Path.Combine(_baseDirectory, logFileName);
+            _ioUtilMock.Verify(iou => iou.OpenFile(logFilePath, FileMode.OpenOrCreate, FileAccess.Read));
+            _ioUtilMock.Verify(iou => iou.DeleteFile(logFilePath));
+            _ioUtilMock.Verify(iou => iou.MoveFile(It.IsAny<string>(), logFilePath));
             Assert.AreEqual(1, _uut.GetLogs().Count());
         }
 
@@ -183,11 +179,6 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Logging
         {
             return GetLogPath(path, date, "Log_");
         }
-
-        /*private string GetInvalidLogPath(string path, DateTime date)
-        {
-            return GetLogPath(path, date, "NonLog_");
-        }*/
 
         private static string GetLogPath(string path, DateTime date, string logPrefix)
         {

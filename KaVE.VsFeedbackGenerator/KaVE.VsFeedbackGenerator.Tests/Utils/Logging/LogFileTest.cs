@@ -115,20 +115,18 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Logging
             _uut.RemoveRange(new [] { new TestIDEEvent{TestProperty = "1"}, new TestIDEEvent{TestProperty = "3"}});
 
             AssertContainsOnlyGivenEvent("\"TestProperty\":\"2\"", GetOutputStream());
-
-            VerifyOldLogDeletedAndNewLogFileCreatedAsReplacement();
+            AssertThatOldLogWasReplacedWithUpdateLog();
         }
 
         [Test]
         public void ShouldRemoveOldEntries()
         {
-            SetInputStream("{\"TriggeredAt\":\"2014-03-10T13:58:16.0843423+02:00\"}\r\n{\"TriggeredAt\":\"2014-03-10T13:58:16.0843423+02:00\"}\r\n{\"TriggeredAt\":\"2014-05-01T13:58:16.0843423+02:00\"}\r\n");
+            SetInputStream("{\"TriggeredAt\":\"2014-03-10T14:00:00\"}\r\n{\"TriggeredAt\":\"2014-03-10T16:00:00\"}\r\n{\"TriggeredAt\":\"2014-03-10T13:00:00\"}\r\n");
 
-            _uut.RemoveEntriesOlderThan(TestLogFileDate.AddMinutes(-10));
+            _uut.RemoveEntriesOlderThan(new DateTime(2014, 3, 10, 15, 0, 0));
 
-            AssertContainsOnlyGivenEvent("\"TriggeredAt\":\"2014-05-01T13:58:16.0843423+02:00\"", GetOutputStream());
-
-            VerifyOldLogDeletedAndNewLogFileCreatedAsReplacement();
+            AssertContainsOnlyGivenEvent("\"TriggeredAt\":\"2014-03-10T16:00:00\"", GetOutputStream());
+            AssertThatOldLogWasReplacedWithUpdateLog();
         }
 
         private static void AssertContainsOnlyGivenEvent(string line, MemoryStream outputStream)
@@ -140,7 +138,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Logging
             StringAssert.Contains(line, newLogLines[0]);
         }
 
-        private void VerifyOldLogDeletedAndNewLogFileCreatedAsReplacement()
+        private void AssertThatOldLogWasReplacedWithUpdateLog()
         {
             // the old log file was deleted
             _mockIoUtils.Verify(iou => iou.DeleteFile(TestLogFilePath));

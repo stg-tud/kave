@@ -67,11 +67,6 @@ namespace KaVE.VsFeedbackGenerator.Utils.Logging
             return new JsonLogWriter<TLogEntry>(logStream);
         }
 
-        public void Remove(TLogEntry entry)
-        {
-            RemoveRange(new List<TLogEntry> {entry});
-        }
-
         public void RemoveRange(IEnumerable<TLogEntry> entries)
         {
             RemoveEntries(ideEvent => !entries.Contains(ideEvent));

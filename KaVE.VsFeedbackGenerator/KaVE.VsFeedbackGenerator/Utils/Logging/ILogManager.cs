@@ -28,7 +28,6 @@ namespace KaVE.VsFeedbackGenerator.Utils.Logging
         DateTime Date { get; }
         ILogReader<TLogEntry> NewLogReader();
         ILogWriter<TLogEntry> NewLogWriter();
-        void Remove(TLogEntry entry);
         void RemoveRange(IEnumerable<TLogEntry> entries);
         void RemoveEntriesOlderThan(DateTime time);
         void Delete();
