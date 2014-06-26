@@ -18,6 +18,7 @@
  *    - Sven Amann
  */
 
+using System;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -116,6 +117,17 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
         private void RefreshButton_OnClick(object sender, RoutedEventArgs e)
         {
             RefreshControl();
+        }
+
+        private void VisitUploadPageButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            var settingsStore = Registry.GetComponent<ISettingsStore>();
+            var export = settingsStore.GetSettings<ExportSettings>();
+
+            var idx = export.UploadUrl.LastIndexOf('/');
+            var url = export.UploadUrl.Substring(0, idx);
+
+            System.Diagnostics.Process.Start(url);
         }
 
         private void VisitHomepageButton_OnClick(object sender, RoutedEventArgs e)

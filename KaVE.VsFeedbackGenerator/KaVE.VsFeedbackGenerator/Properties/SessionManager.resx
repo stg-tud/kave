@@ -270,4 +270,7 @@
   <data name="Options_Export_UploadUrl" xml:space="preserve">
     <value>Upload URL</value>
   </data>
+  <data name="VisitUploadPage" xml:space="preserve">
+    <value>Die Seite zum manuellen hochladen von Feedback besuchen</value>
+  </data>
 </root>

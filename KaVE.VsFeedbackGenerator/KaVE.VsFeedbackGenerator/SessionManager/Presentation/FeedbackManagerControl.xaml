@@ -70,6 +70,10 @@ limitations under the License.
                 <Button ToolTip="{x:Static root:Properties.SessionManager.Export}" Command="{Binding Path=ExportCommand}">
                     <Image Source="/KaVE.VsFeedbackGenerator;Component/Resources/send.png" />
                 </Button>
+                <Button ToolTip="{x:Static root:Properties.SessionManager.VisitUploadPage}"
+                        Click="VisitUploadPageButton_OnClick">
+                    <Image Source="/KaVE.VsFeedbackGenerator;Component/Resources/arrow.png" />
+                </Button>
                 <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
                 <Button ToolTip="{x:Static root:Properties.SessionManager.Options}"
                         Click="OpenOptionPage_OnClick">
