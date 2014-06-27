@@ -56,6 +56,10 @@
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="smilenet, Version=1.1.4431.20499, Culture=neutral">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\smilenet.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
@@ -105,6 +109,7 @@
     <Compile Include="Analysis\ReSharperUtils.cs" />
     <Compile Include="Analysis\TypeHierarchyAnalysisUtils.cs" />
     <Compile Include="Analysis\TypeShapeAnalysis.cs" />
+    <Compile Include="CodeCompletion\ExemplaryProposalProvider.cs" />
     <Compile Include="Generators\ILogger.cs" />
     <Compile Include="Generators\LogEventGenerator.cs" />
     <Compile Include="Interactivity\Confirmation.cs" />
