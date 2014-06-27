@@ -26,7 +26,7 @@ using Smile;
 
 namespace KaVE.VsFeedbackGenerator.Tests.CodeCompletion
 {
-    [TestFixture]
+    [TestFixture, Ignore]
     internal class SmileTest
     {
         private static readonly IIoUtils IoUtils = new IoUtils();
@@ -46,9 +46,9 @@ namespace KaVE.VsFeedbackGenerator.Tests.CodeCompletion
             net.DeleteOutcome("Forecast", 0);
             net.DeleteOutcome("Forecast", 0);
             net.AddArc("Success", "Forecast");
-            double[] aSuccessDef = { 0.2, 0.8 };
+            double[] aSuccessDef = {0.2, 0.8};
             net.SetNodeDefinition("Success", aSuccessDef);
-            double[] aForecastDef = { 0.4, 0.4, 0.2, 0.1, 0.3, 0.6 };
+            double[] aForecastDef = {0.4, 0.4, 0.2, 0.1, 0.3, 0.6};
             net.SetNodeDefinition("Forecast", aForecastDef);
             // Changing the nodes' spacial and visual attributes:
             net.SetNodePosition("Success", 20, 20, 80, 30);
@@ -69,8 +69,12 @@ namespace KaVE.VsFeedbackGenerator.Tests.CodeCompletion
             var aForecastOutcomeIds = net.GetOutcomeIds("Forecast");
             int outcomeIndex;
             for (outcomeIndex = 0; outcomeIndex < aForecastOutcomeIds.Length; outcomeIndex++)
+            {
                 if ("Moderate".Equals(aForecastOutcomeIds[outcomeIndex]))
+                {
                     break;
+                }
+            }
             var aValues = net.GetNodeValue("Forecast");
             var pForecastIsModerate = aValues[outcomeIndex];
 
@@ -80,8 +84,12 @@ namespace KaVE.VsFeedbackGenerator.Tests.CodeCompletion
             // Getting the index of the "Failure" outcome:
             var aSuccessOutcomeIds = net.GetOutcomeIds("Success");
             for (outcomeIndex = 0; outcomeIndex < aSuccessOutcomeIds.Length; outcomeIndex++)
+            {
                 if ("Failure".Equals(aSuccessOutcomeIds[outcomeIndex]))
+                {
                     break;
+                }
+            }
 
 
             // Getting the value of the probability:
@@ -95,8 +103,12 @@ namespace KaVE.VsFeedbackGenerator.Tests.CodeCompletion
             // Getting the index of the "Failure" outcome:
             aSuccessOutcomeIds = net.GetOutcomeIds("Success");
             for (outcomeIndex = 0; outcomeIndex < aSuccessOutcomeIds.Length; outcomeIndex++)
+            {
                 if ("Failure".Equals(aSuccessOutcomeIds[outcomeIndex]))
+                {
                     break;
+                }
+            }
 
             // Getting the value of the probability:
             aValues = net.GetNodeValue("Success");
@@ -116,7 +128,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.CodeCompletion
             net.AddNode(Network.NodeType.Table, "Gain");
             net.AddArc("Invest", "Gain");
             net.AddArc("Success", "Gain");
-            double[] aGainDef = { 10000, -5000, 500, 500 };
+            double[] aGainDef = {10000, -5000, 500, 500};
             net.SetNodeDefinition("Gain", aGainDef);
             net.WriteFile(GetFilePath("tutorial_3.xdsl"));
         }
@@ -182,10 +194,10 @@ namespace KaVE.VsFeedbackGenerator.Tests.CodeCompletion
             net.AddArc("Proposal", "Execute");
             net.AddArc("Proposal", "Finish");
 
-            net.SetNodeDefinition("Proposal", new[] { 0.333, 0.334, 0.333 });
-            net.SetNodeDefinition("Init", new[] { 0.7, 0.3, 0.1, 0.9, 0.2, 0.8 });
-            net.SetNodeDefinition("Execute", new[] { 0.8, 0.2, 0.5, 0.5, 0.1, 0.9 });
-            net.SetNodeDefinition("Finish", new[] { 0.8, 0.2, 0.9, 0.1, 1, 0.0 });
+            net.SetNodeDefinition("Proposal", new[] {0.333, 0.334, 0.333});
+            net.SetNodeDefinition("Init", new[] {0.7, 0.3, 0.1, 0.9, 0.2, 0.8});
+            net.SetNodeDefinition("Execute", new[] {0.8, 0.2, 0.5, 0.5, 0.1, 0.9});
+            net.SetNodeDefinition("Finish", new[] {0.8, 0.2, 0.9, 0.1, 1, 0.0});
 
             net.UpdateBeliefs();
             Console.WriteLine(@"Without Evidences: " + FormatArray(net.GetNodeValue("Proposal")));
@@ -202,13 +214,15 @@ namespace KaVE.VsFeedbackGenerator.Tests.CodeCompletion
             net.SetEvidence("Execute", execute);
             net.SetEvidence("Finish", finish);
             net.UpdateBeliefs();
-            Console.WriteLine(@"Init:" + init[0] + @" Execute:" + execute[0] + @" Finish:" + finish[0] + @" Proposal: " + FormatArray(net.GetNodeValue("Proposal")));
+            Console.WriteLine(
+                @"Init:" + init[0] + @" Execute:" + execute[0] + @" Finish:" + finish[0] + @" Proposal: " +
+                FormatArray(net.GetNodeValue("Proposal")));
             net.ClearAllEvidence();
         }
 
         private string FormatArray(double[] array)
         {
-            return string.Join(", ", array.Select((d) => d.ToString()));
+            return string.Join(", ", array.Select(d => d.ToString()));
         }
 
         private string GetFilePath(string fileName)
