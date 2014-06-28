@@ -20,10 +20,15 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Feature.Services.CSharp.CodeCompletion.Infrastructure;
 using JetBrains.ReSharper.Feature.Services.Lookup;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
+using JetBrains.TextControl;
+using JetBrains.UI.Icons;
+using JetBrains.UI.RichText;
+using JetBrains.Util;
 using KaVE.Model.Events.CompletionEvent;
 using KaVE.Model.Names;
 using KaVE.VsFeedbackGenerator.Analysis;
@@ -37,46 +42,41 @@ namespace KaVE.VsFeedbackGenerator.CodeCompletion
         private const string ExpectedType = "MyButton";
         private static readonly string[] ExpectedMethods = {"Init", "Execute", "Finish"};
 
+        private static readonly IEqualityComparer<double> EqComp =
+            new global::JetBrains.EqualityComparer<double>((d1, d2) => Math.Abs(d1 - d2) < 0.01, d => (int) d);
+
         private readonly Dictionary<CSharpCodeCompletionContext, Context> _contexts =
             new Dictionary<CSharpCodeCompletionContext, Context>();
 
-        private Network proposalNetwork;
+        private Network _proposalNetwork;
+        private static readonly string[] Ranks = {"1st", "2nd", "3rd"};
+
+        internal static Network CreateProposalNetwork(string[] methodNames)
+        {
+            var network = new Network();
+            network.AddNode(Network.NodeType.Cpt, "Proposal");
+            network.SetOutcomeId("Proposal", 0, methodNames[0]);
+            network.SetOutcomeId("Proposal", 1, methodNames[1]);
+            network.AddOutcome("Proposal", methodNames[2]);
+
+            for (var i = 0; i < 3; i ++)
+            {
+                network.AddNode(Network.NodeType.Cpt, methodNames[i]);
+                network.SetOutcomeId(methodNames[i], 0, "False");
+                network.SetOutcomeId(methodNames[i], 1, "True");
+                network.AddArc("Proposal", methodNames[i]);
+            }
+
+            network.SetNodeDefinition("Proposal", new[] {0.333, 0.334, 0.333});
+            network.SetNodeDefinition(methodNames[0], new[] {0.7, 0.3, 0.1, 0.9, 0.2, 0.8});
+            network.SetNodeDefinition(methodNames[1], new[] {0.8, 0.2, 0.5, 0.5, 0.1, 0.9});
+            network.SetNodeDefinition(methodNames[2], new[] {0.8, 0.2, 0.9, 0.1, 1.0, 0.0});
+            return network;
+        }
 
         protected Network ProposalNetwork
         {
-            get
-            {
-                if (proposalNetwork == null)
-                {
-                    proposalNetwork = new Network();
-                    proposalNetwork.AddNode(Network.NodeType.Cpt, "Proposal");
-                    proposalNetwork.SetOutcomeId("Proposal", 0, ExpectedMethods[0]);
-                    proposalNetwork.SetOutcomeId("Proposal", 1, ExpectedMethods[1]);
-                    proposalNetwork.AddOutcome("Proposal", ExpectedMethods[2]);
-
-                    proposalNetwork.AddNode(Network.NodeType.Cpt, ExpectedMethods[0]);
-                    proposalNetwork.SetOutcomeId(ExpectedMethods[0], 0, "False");
-                    proposalNetwork.SetOutcomeId(ExpectedMethods[0], 1, "True");
-
-                    proposalNetwork.AddNode(Network.NodeType.Cpt, ExpectedMethods[1]);
-                    proposalNetwork.SetOutcomeId(ExpectedMethods[1], 0, "False");
-                    proposalNetwork.SetOutcomeId(ExpectedMethods[1], 1, "True");
-
-                    proposalNetwork.AddNode(Network.NodeType.Cpt, ExpectedMethods[2]);
-                    proposalNetwork.SetOutcomeId(ExpectedMethods[2], 0, "False");
-                    proposalNetwork.SetOutcomeId(ExpectedMethods[2], 1, "True");
-
-                    proposalNetwork.AddArc("Proposal", ExpectedMethods[0]);
-                    proposalNetwork.AddArc("Proposal", ExpectedMethods[1]);
-                    proposalNetwork.AddArc("Proposal", ExpectedMethods[2]);
-
-                    proposalNetwork.SetNodeDefinition("Proposal", new[] {0.333, 0.334, 0.333});
-                    proposalNetwork.SetNodeDefinition(ExpectedMethods[0], new[] {0.7, 0.3, 0.1, 0.9, 0.2, 0.8});
-                    proposalNetwork.SetNodeDefinition(ExpectedMethods[1], new[] {0.8, 0.2, 0.5, 0.5, 0.1, 0.9});
-                    proposalNetwork.SetNodeDefinition(ExpectedMethods[2], new[] {0.8, 0.2, 0.9, 0.1, 1.0, 0.0});
-                }
-                return proposalNetwork;
-            }
+            get { return _proposalNetwork ?? (_proposalNetwork = CreateProposalNetwork(ExpectedMethods)); }
         }
 
         protected override bool IsAvailable(CSharpCodeCompletionContext context)
@@ -90,7 +90,7 @@ namespace KaVE.VsFeedbackGenerator.CodeCompletion
             }
             catch (Exception)
             {
-                return false;
+                return base.IsAvailable(context);
             }
         }
 
@@ -99,7 +99,8 @@ namespace KaVE.VsFeedbackGenerator.CodeCompletion
             var ctx = _contexts[context]; // cached to not call Analysis too often
             _contexts.Remove(context);
             var filtered =
-                ctx.EntryPointToCalledMethods[ctx.EnclosingMethod].Where(m => m.DeclaringType.Name == ExpectedType).ToList();
+                ctx.EntryPointToCalledMethods[ctx.EnclosingMethod].Where(m => m.DeclaringType.Name == ExpectedType)
+                                                                  .ToList();
             var network = ProposalNetwork;
             for (var i = 0; i < 3; i ++)
             {
@@ -108,13 +109,129 @@ namespace KaVE.VsFeedbackGenerator.CodeCompletion
                 network.SetEvidence(method, present ? "True" : "False");
             }
             network.UpdateBeliefs();
+            var values = network.GetNodeValue("Proposal");
+            values.Sort((d1, d2) => (int) ((d2 - d1)*10000));
             for (var i = 0; i < 3; i ++)
             {
+                var method = ExpectedMethods[i];
                 var value = network.GetNodeValue("Proposal")[i];
-                collector.AddToTop(context.LookupItemsFactory.CreateTextLookupItem(value + " " + ExpectedMethods[i]));
+                var rank = Ranks[values.IndexOf(value, EqComp)];
+                collector.AddToTop(
+                    new LookupItemWrapper(
+                        context.LookupItemsFactory.CreateTextLookupItem(method + "()"),
+                        rank,
+                        " " + ((int) (value*10000))/100.0 + "%"));
             }
             network.ClearAllEvidence();
             return base.AddLookupItems(context, collector);
         }
+    }
+
+    internal class LookupItemWrapper : IWrappedLookupItem
+    {
+        private readonly ILookupItem _wrappedItem;
+        private readonly string _prefix;
+        private readonly RichText _postfix;
+
+        public LookupItemWrapper(ILookupItem wrappedItem, string prefix, RichText postfix)
+        {
+            _wrappedItem = wrappedItem;
+            _prefix = prefix;
+            _postfix = postfix;
+        }
+
+        public bool AcceptIfOnlyMatched(LookupItemAcceptanceContext itemAcceptanceContext)
+        {
+            return _wrappedItem.AcceptIfOnlyMatched(itemAcceptanceContext);
+        }
+
+        public MatchingResult Match(string prefix, ITextControl textControl)
+        {
+            return _wrappedItem.Match(prefix, textControl);
+        }
+
+        public void Accept(ITextControl textControl,
+            TextRange nameRange,
+            LookupItemInsertType lookupItemInsertType,
+            Suffix suffix,
+            ISolution solution,
+            bool keepCaretStill)
+        {
+            _wrappedItem.Accept(textControl, nameRange, lookupItemInsertType, suffix, solution, keepCaretStill);
+        }
+
+        public TextRange GetVisualReplaceRange(ITextControl textControl, TextRange nameRange)
+        {
+            return _wrappedItem.GetVisualReplaceRange(textControl, nameRange);
+        }
+
+        public bool Shrink()
+        {
+            return _wrappedItem.Shrink();
+        }
+
+        public void Unshrink()
+        {
+            _wrappedItem.Unshrink();
+        }
+
+        public IconId Image
+        {
+            get { return _wrappedItem.Image; }
+        }
+
+        public RichText DisplayName
+        {
+            get { return _wrappedItem.DisplayName + _postfix; }
+        }
+
+        public RichText DisplayTypeName
+        {
+            get { return _wrappedItem.DisplayTypeName; }
+        }
+
+        public bool CanShrink
+        {
+            get { return _wrappedItem.CanShrink; }
+        }
+
+        public string OrderingString
+        {
+            get { return _prefix + (_wrappedItem.OrderingString ?? DisplayName.ToString()); }
+        }
+
+        public int Multiplier
+        {
+            get { return _wrappedItem.Multiplier; }
+            set { _wrappedItem.Multiplier = value; }
+        }
+
+        public bool IsDynamic
+        {
+            get { return _wrappedItem.IsDynamic; }
+        }
+
+        public bool IgnoreSoftOnSpace
+        {
+            get { return _wrappedItem.IgnoreSoftOnSpace; }
+            set { _wrappedItem.IgnoreSoftOnSpace = value; }
+        }
+
+        public string Identity
+        {
+            get { return _wrappedItem.Identity; }
+        }
+
+        public ILookupItem Item
+        {
+            get { return _wrappedItem; }
+        }
+    }
+
+    internal class MyButton
+    {
+        public void Init() {}
+        public void Execute() {}
+        public void Finish() {}
     }
 }

@@ -18,8 +18,11 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
+using KaVE.VsFeedbackGenerator.CodeCompletion;
 using KaVE.VsFeedbackGenerator.Utils;
 using NUnit.Framework;
 using Smile;
@@ -172,32 +175,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.CodeCompletion
         [Test]
         public void ProposalExample()
         {
-            var net = new Network();
-            net.AddNode(Network.NodeType.Cpt, "Proposal");
-            net.SetOutcomeId("Proposal", 0, "Init");
-            net.SetOutcomeId("Proposal", 1, "Execute");
-            net.AddOutcome("Proposal", "Finish");
-
-            net.AddNode(Network.NodeType.Cpt, "Init");
-            net.SetOutcomeId("Init", 0, "False");
-            net.SetOutcomeId("Init", 1, "True");
-
-            net.AddNode(Network.NodeType.Cpt, "Execute");
-            net.SetOutcomeId("Execute", 0, "False");
-            net.SetOutcomeId("Execute", 1, "True");
-
-            net.AddNode(Network.NodeType.Cpt, "Finish");
-            net.SetOutcomeId("Finish", 0, "False");
-            net.SetOutcomeId("Finish", 1, "True");
-
-            net.AddArc("Proposal", "Init");
-            net.AddArc("Proposal", "Execute");
-            net.AddArc("Proposal", "Finish");
-
-            net.SetNodeDefinition("Proposal", new[] {0.333, 0.334, 0.333});
-            net.SetNodeDefinition("Init", new[] {0.7, 0.3, 0.1, 0.9, 0.2, 0.8});
-            net.SetNodeDefinition("Execute", new[] {0.8, 0.2, 0.5, 0.5, 0.1, 0.9});
-            net.SetNodeDefinition("Finish", new[] {0.8, 0.2, 0.9, 0.1, 1, 0.0});
+            var net = ExemplaryProposalProvider.CreateProposalNetwork(new[] {"Init", "Execute", "Finish"});
 
             net.UpdateBeliefs();
             Console.WriteLine(@"Without Evidences: " + FormatArray(net.GetNodeValue("Proposal")));
@@ -220,9 +198,9 @@ namespace KaVE.VsFeedbackGenerator.Tests.CodeCompletion
             net.ClearAllEvidence();
         }
 
-        private string FormatArray(double[] array)
+        private string FormatArray(IEnumerable<double> array)
         {
-            return string.Join(", ", array.Select(d => d.ToString()));
+            return string.Join(", ", array.Select(d => d.ToString(CultureInfo.InvariantCulture)));
         }
 
         private string GetFilePath(string fileName)
