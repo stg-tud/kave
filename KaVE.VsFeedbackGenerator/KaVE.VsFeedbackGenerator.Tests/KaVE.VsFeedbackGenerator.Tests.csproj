@@ -57,9 +57,9 @@
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-    <Reference Include="smilenet, Version=1.1.4431.20499, Culture=neutral">
+    <Reference Include="smileNet, Version=1.1.4431.20499, Culture=neutral">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\smilenet.dll</HintPath>
+      <HintPath>..\..\smileNet.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
