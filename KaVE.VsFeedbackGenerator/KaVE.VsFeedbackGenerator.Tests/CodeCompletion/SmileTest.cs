@@ -29,7 +29,7 @@ using Smile;
 
 namespace KaVE.VsFeedbackGenerator.Tests.CodeCompletion
 {
-    [TestFixture, Ignore]
+    [TestFixture]
     internal class SmileTest
     {
         private static readonly IIoUtils IoUtils = new IoUtils();
