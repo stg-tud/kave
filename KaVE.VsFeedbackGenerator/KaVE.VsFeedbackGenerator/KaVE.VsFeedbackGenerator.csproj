@@ -109,7 +109,10 @@
     <Compile Include="Analysis\ReSharperUtils.cs" />
     <Compile Include="Analysis\TypeHierarchyAnalysisUtils.cs" />
     <Compile Include="Analysis\TypeShapeAnalysis.cs" />
-    <Compile Include="CodeCompletion\ExemplaryProposalProvider.cs" />
+    <Compile Include="CodeCompletion\ExemplaryProposalNetworkProvider.cs" />
+    <Compile Include="CodeCompletion\IProposalNetworkProvider.cs" />
+    <Compile Include="CodeCompletion\ProposalLookupItem.cs" />
+    <Compile Include="CodeCompletion\ProposalProvider.cs" />
     <Compile Include="Generators\ILogger.cs" />
     <Compile Include="Generators\LogEventGenerator.cs" />
     <Compile Include="Interactivity\Confirmation.cs" />
