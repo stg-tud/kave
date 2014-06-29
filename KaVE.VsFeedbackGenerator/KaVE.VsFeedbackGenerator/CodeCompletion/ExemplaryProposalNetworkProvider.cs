@@ -33,7 +33,7 @@ namespace KaVE.VsFeedbackGenerator.CodeCompletion
             get { return _exemplaryNetwork ?? (_exemplaryNetwork = InitializeNetwork()); }
         }
 
-        private static Network InitializeNetwork()
+        internal static Network InitializeNetwork()
         {
             var methodNames = new[] {"Init", "Execute", "Finish"};
             var network = new Network();

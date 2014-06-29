@@ -175,7 +175,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.CodeCompletion
         [Test]
         public void ProposalExample()
         {
-            var net = ExemplaryProposalProvider.CreateProposalNetwork(new[] {"Init", "Execute", "Finish"});
+            var net = ExemplaryProposalNetworkProvider.InitializeNetwork();
 
             net.UpdateBeliefs();
             Console.WriteLine(@"Without Evidences: " + FormatArray(net.GetNodeValue("Proposal")));
