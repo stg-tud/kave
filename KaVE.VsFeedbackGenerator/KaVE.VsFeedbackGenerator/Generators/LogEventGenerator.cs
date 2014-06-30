@@ -22,6 +22,7 @@ using System.Linq;
 using JetBrains.Application;
 using KaVE.Model.Events;
 using KaVE.VsFeedbackGenerator.MessageBus;
+using KaVE.VsFeedbackGenerator.Utils;
 using KaVE.VsFeedbackGenerator.VsIntegration;
 
 namespace KaVE.VsFeedbackGenerator.Generators
@@ -30,11 +31,13 @@ namespace KaVE.VsFeedbackGenerator.Generators
     public class LogEventGenerator : EventGeneratorBase, ILogger
     {
         private readonly IMessageBus _messageBus;
+        private readonly IDateUtils _dateUtils;
 
         public LogEventGenerator(IIDESession session, IMessageBus messageBus)
             : base(session, messageBus)
         {
             _messageBus = messageBus;
+            _dateUtils = Registry.GetComponent<IDateUtils>();
         }
 
         public void Error(Exception exception)
@@ -49,7 +52,13 @@ namespace KaVE.VsFeedbackGenerator.Generators
 
         public virtual void Error(Exception exception, string content)
         {
-            var e = Create<ErrorEvent>();
+            // Do not use Create<ErrorEvent>() here, because retrieving the
+            // active window/document might freeze the UI, depending on the
+            // current error state.
+            var e = new ErrorEvent
+            {
+                TriggeredAt = _dateUtils.Now
+            };
             
             if (content != null)
             {
