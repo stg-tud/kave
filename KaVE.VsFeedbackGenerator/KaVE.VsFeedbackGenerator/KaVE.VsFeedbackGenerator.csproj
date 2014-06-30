@@ -193,7 +193,6 @@
     <Compile Include="Generators\VisualStudio\DocumentEventGenerator.cs" />
     <Compile Include="Generators\VisualStudio\FindEventGenerator.cs" />
     <Compile Include="Generators\VisualStudio\IDEStateEventGenerator.cs" />
-    <Compile Include="Generators\VisualStudio\OutputWindowEventGenerator.cs" />
     <Compile Include="Generators\VisualStudio\SolutionEventGenerator.cs" />
     <Compile Include="Generators\VisualStudio\TextEditorEventGenerator.cs" />
     <Compile Include="Generators\VisualStudio\WindowEventGenerator.cs" />
