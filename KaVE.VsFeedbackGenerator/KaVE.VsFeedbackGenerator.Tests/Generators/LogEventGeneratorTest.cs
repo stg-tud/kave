@@ -42,7 +42,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators
             var e = CreateException("A", "B");
             _uut.Error(e, "some custom payload");
 
-            var actual = WaitForNewEvent<ErrorEvent>();
+            var actual = GetSinglePublished<ErrorEvent>();
             var expected = new ErrorEvent
             {
                 StackTrace = new[] {"A", "B"},
@@ -58,7 +58,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators
             var e = CreateException("C", "", "D");
             _uut.Error(e, "t2");
 
-            var actual = WaitForNewEvent<ErrorEvent>();
+            var actual = GetSinglePublished<ErrorEvent>();
             var expected = new ErrorEvent
             {
                 StackTrace = new[] { "C", "D" },
@@ -74,7 +74,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators
             var e = CreateException(" E", " ", " F");
             _uut.Error(e, "t3");
 
-            var actual = WaitForNewEvent<ErrorEvent>();
+            var actual = GetSinglePublished<ErrorEvent>();
             var expected = new ErrorEvent
             {
                 StackTrace = new[] { "E", "F" },
@@ -89,7 +89,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators
         {
             _uut.Error("error");
 
-            var actual = WaitForNewEvent<ErrorEvent>();
+            var actual = GetSinglePublished<ErrorEvent>();
             var expected = new ErrorEvent
             {
                 Content = "error"
@@ -103,7 +103,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators
         {
             _uut.Error(CreateException("G"));
 
-            var actual = WaitForNewEvent<ErrorEvent>();
+            var actual = GetSinglePublished<ErrorEvent>();
             var expected = new ErrorEvent
             {
                 StackTrace = new[] { "G" },
@@ -117,7 +117,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators
         {
             _uut.Error("A\r\nB");
 
-            var actual = WaitForNewEvent<ErrorEvent>();
+            var actual = GetSinglePublished<ErrorEvent>();
             var expected = new ErrorEvent
             {
                 Content = "A<br />B"
@@ -131,7 +131,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators
         {
             _uut.Error("A\nB");
 
-            var actual = WaitForNewEvent<ErrorEvent>();
+            var actual = GetSinglePublished<ErrorEvent>();
             var expected = new ErrorEvent
             {
                 Content = "A<br />B"
@@ -145,7 +145,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators
         {
             _uut.Info("test");
 
-            var actual = WaitForNewEvent<InfoEvent>();
+            var actual = GetSinglePublished<InfoEvent>();
             var expected = new InfoEvent
             {
                 Info = "test"
@@ -159,7 +159,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators
         {
             _uut.Info("A\r\nB");
 
-            var actual = WaitForNewEvent<InfoEvent>();
+            var actual = GetSinglePublished<InfoEvent>();
             var expected = new InfoEvent
             {
                 Info = "A<br />B"

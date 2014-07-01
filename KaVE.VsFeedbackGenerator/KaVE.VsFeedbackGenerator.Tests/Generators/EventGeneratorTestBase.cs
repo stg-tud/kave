@@ -17,7 +17,6 @@
  *    - Sven Amann
  */
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -73,35 +72,6 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators
             get { return _mockMessageBus.Object; }
         }
 
-        protected TEvent WaitForNewEvent<TEvent>(out int actualWaitMillis, int timeout = 1000) where TEvent : IDEEvent
-        {
-            return (TEvent) WaitForNewEvent(out actualWaitMillis, timeout);
-        }
-
-        protected IDEEvent WaitForNewEvent(out int actualWaitMillis, int timeout = 1000)
-        {
-            var startTime = DateTime.Now;
-            var ideEvent = WaitForNewEvent(timeout);
-            var endTime = DateTime.Now;
-            actualWaitMillis = (int) Math.Ceiling((endTime - startTime).TotalMilliseconds);
-            return ideEvent;
-        }
-
-        protected TEvent WaitForNewEvent<TEvent>(int timeout = 1000) where TEvent : IDEEvent
-        {
-            return (TEvent) WaitForNewEvent(timeout);
-        }
-
-        protected IDEEvent WaitForNewEvent(int timeout = 1000)
-        {
-            if (_eventReceptionLock.WaitOne(timeout))
-            {
-                return _publishedEvents.Last();
-            }
-            Assert.Fail("no event within {0}ms", timeout);
-            return null;
-        }
-
         protected void AssertNoEvent()
         {
             CollectionAssert.IsEmpty(_publishedEvents);
@@ -114,7 +84,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators
         }
 
         [NotNull]
-        protected TEvent GetLastPublishedEventAs<TEvent>() where TEvent : IDEEvent
+        protected TEvent GetLastPublished<TEvent>() where TEvent : IDEEvent
         {
             var @event = _publishedEvents.Last();
             Assert.IsInstanceOf(typeof (TEvent), @event);
@@ -124,8 +94,13 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators
         [NotNull]
         protected TEvent GetSinglePublished<TEvent>() where TEvent : IDEEvent
         {
-            Assert.AreEqual(1, _publishedEvents.Count);
-            return GetLastPublishedEventAs<TEvent>();
+            Assert.AreEqual(1, _publishedEvents.Count, "expected single published event, found multiple");
+            return GetLastPublished<TEvent>();
+        }
+
+        protected void DropAllEvents()
+        {
+            _publishedEvents.Clear();
         }
     }
 }

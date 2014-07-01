@@ -113,7 +113,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.ReSharper
             _generator.HandleClosed();
             _generator.HandleCancelled(IDEEvent.Trigger.Click);
 
-            var ce = GetLastPublishedEventAs<CompletionEvent>();
+            var ce = GetLastPublished<CompletionEvent>();
             Assert.AreEqual(IDEEvent.Trigger.Automatic, ce.TriggeredBy);
             Assert.AreEqual("a", ce.Prefix);
         }
@@ -130,7 +130,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.ReSharper
             _generator.HandleClosed();
             _generator.HandleCancelled(IDEEvent.Trigger.Click);
 
-            var ce = GetLastPublishedEventAs<CompletionEvent>();
+            var ce = GetLastPublished<CompletionEvent>();
             Assert.AreEqual(1, ce.Selections.Count);
             Assert.AreEqual(lookupItems[0].ToProposal(), ce.Selections[0].Proposal);
         }
@@ -147,7 +147,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.ReSharper
             _generator.HandleClosed();
             _generator.HandleCancelled(IDEEvent.Trigger.Click);
 
-            var ce = GetLastPublishedEventAs<CompletionEvent>();
+            var ce = GetLastPublished<CompletionEvent>();
             Assert.IsTrue(ce.Selections.IsEmpty());
         }
 
@@ -162,7 +162,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.ReSharper
             _generator.HandleClosed();
             _generator.HandleCancelled(IDEEvent.Trigger.Click);
 
-            var ce = GetLastPublishedEventAs<CompletionEvent>();
+            var ce = GetLastPublished<CompletionEvent>();
             Assert.IsTrue(ce.Selections.IsEmpty());
         }
     }

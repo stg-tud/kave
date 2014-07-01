@@ -17,11 +17,13 @@
  *    - Sven Amann
  */
 
-using System.Linq;
+using System;
 using EnvDTE;
 using KaVE.Model.Events.VisualStudio;
 using KaVE.Model.Names.VisualStudio;
+using KaVE.Utils;
 using KaVE.VsFeedbackGenerator.Generators.VisualStudio;
+using KaVE.VsFeedbackGenerator.Utils;
 using KaVE.VsFeedbackGenerator.Utils.Names;
 using Moq;
 using NUnit.Framework;
@@ -29,12 +31,15 @@ using NUnit.Framework;
 namespace KaVE.VsFeedbackGenerator.Tests.Generators.VisualStudio
 {
     [TestFixture]
-    class WindowEventGeneratorTest : VisualStudioEventGeneratorTestBase
+    internal class WindowEventGeneratorTest : VisualStudioEventGeneratorTestBase
     {
+        private const int ExpectedMoveTimeout = 150;
+
         private Mock<WindowEvents> _mockWindowEvents;
         private Window _testWindow;
         private WindowName _testWindowName;
         private WindowEvent _expected;
+        private Action _lastScheduledMoveEvent;
 
         [TestFixtureSetUp]
         public void SetUpTestWindow()
@@ -42,6 +47,10 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.VisualStudio
             var mockWindow = new Mock<Window>();
             mockWindow.Setup(window => window.Type).Returns(vsWindowType.vsWindowTypeWatch);
             mockWindow.Setup(window => window.Caption).Returns("TestCaption");
+            mockWindow.SetupProperty(window => window.Top);
+            mockWindow.SetupProperty(window => window.Left);
+            mockWindow.SetupProperty(window => window.Width);
+            mockWindow.SetupProperty(window => window.Height);
             _testWindow = mockWindow.Object;
             _testWindowName = _testWindow.GetName();
         }
@@ -56,8 +65,14 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.VisualStudio
         [SetUp]
         public void SetUp()
         {
+            _lastScheduledMoveEvent = null;
+            var mockCallbackManager = new Mock<ICallbackManager>();
+            mockCallbackManager.Setup(cm => cm.RegisterCallback(It.IsAny<Action>(), ExpectedMoveTimeout))
+                               .Callback<Action, int>((a, i) => _lastScheduledMoveEvent = a)
+                               .Returns(ScheduledAction.NoOp);
+
             // ReSharper disable once ObjectCreationAsStatement
-            new WindowEventGenerator(TestIDESession, TestMessageBus);
+            new WindowEventGenerator(TestIDESession, TestMessageBus, mockCallbackManager.Object);
 
             _expected = new WindowEvent
             {
@@ -73,10 +88,9 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.VisualStudio
         {
             _expected.Action = WindowEvent.WindowAction.Create;
 
-            _mockWindowEvents.Raise(we => we.WindowCreated += null, _testWindow);
+            WhenWindowIsCreated(_testWindow);
 
-            var actual = GetSinglePublished<WindowEvent>();
-            Assert.AreEqual(_expected, actual);
+            AssertSinglePublishedWindowEventMeetsExpectations();
         }
 
         [Test]
@@ -84,43 +98,96 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.VisualStudio
         {
             _expected.Action = WindowEvent.WindowAction.Activate;
 
-            _mockWindowEvents.Raise(we => we.WindowActivated += null, _testWindow, null);
+            WhenWindowIsActivated(_testWindow);
 
-            var actual = GetSinglePublished<WindowEvent>();
-            Assert.AreEqual(_expected, actual);
+            AssertSinglePublishedWindowEventMeetsExpectations();
         }
 
         [Test]
-        public void ShouldFireMoveEventForMovedWindow()
+        public void ShouldNotFireMoveForPreviouslyUnknownWindow()
         {
-            WhenTestWindowIsMoved();
-            var windowEvent = WaitForNewEvent<WindowEvent>();
+            WhenWindowIsMoved(_testWindow, downwards: 66, leftwards: 0, addHeight: 0, addWidth: 0);
 
-            Assert.AreEqual(_testWindowName, windowEvent.Window);
-            Assert.AreEqual(WindowEvent.WindowAction.Move, windowEvent.Action);
+            Assert.IsNull(_lastScheduledMoveEvent);
+        }
+
+        [TestCase(0, 10, 0, 0),
+         TestCase(10, 0, 0, 0),
+         TestCase(5, 8, 0, 0),
+         TestCase(0, 0, 10, 0),
+         TestCase(0, 0, 0, 10),
+         TestCase(0, 0, 6, 9)]
+        public void ShouldNotFireMoveIfWindowIsMovedByLessThan10Pixels(int downwards,
+            int leftwards,
+            int addHeight,
+            int addWidth)
+        {
+            GivenWindowIsKnown(_testWindow);
+
+            WhenWindowIsMoved(
+                _testWindow,
+                downwards: downwards,
+                leftwards: leftwards,
+                addHeight: addHeight,
+                addWidth: addWidth);
+
+            Assert.IsNull(_lastScheduledMoveEvent);
         }
 
         [Test]
-        public void ShouldFireEventAbout150MSAfterMove()
+        public void ShouldScheduleMoveForPreviouslyCreatedWindow()
         {
-            int actualWaitTime;
-            WhenTestWindowIsMoved();
-            WaitForNewEvent(out actualWaitTime);
-            
-            Assert.IsTrue(actualWaitTime >= 150);
+            WhenWindowIsCreated(_testWindow);
+            WhenWindowIsMoved(_testWindow, downwards: 0, leftwards: 42, addHeight: 0, addWidth: 0);
+
+            Assert.IsNotNull(_lastScheduledMoveEvent);
         }
 
         [Test]
-        public void ShouldFireSingleEventForMultipleMovesWithin150MS()
+        public void ShouldScheduleMoveForPreviouslyActivatedWindow()
         {
-            WhenTestWindowIsMoved();
-            WaitFor(100);
-            WhenTestWindowIsMoved();
-            WaitFor(50);
-            WhenTestWindowIsMoved();
-            WaitForNewEvent();
+            WhenWindowIsActivated(_testWindow);
+            WhenWindowIsMoved(_testWindow, downwards: 15, leftwards: 23, addHeight: 0, addWidth: 0);
 
-            Assert.AreEqual(1, GetPublishedEvents().Count());
+            Assert.IsNotNull(_lastScheduledMoveEvent);
+        }
+
+        [TestCase(123, 654, 0, 0),
+         TestCase(2, 3, 66, 0)]
+        public void ShouldFireMoveEventForMovedWindow(int downwards,
+            int leftwards,
+            int addHeight,
+            int addWidth)
+        {
+            _expected.Action = WindowEvent.WindowAction.Move;
+            GivenWindowIsKnown(_testWindow);
+
+            WhenWindowIsMoved(
+                _testWindow,
+                downwards: downwards,
+                leftwards: leftwards,
+                addHeight: addHeight,
+                addWidth: addWidth);
+            _lastScheduledMoveEvent();
+
+            AssertSinglePublishedWindowEventMeetsExpectations();
+        }
+
+        [Test]
+        public void ShouldFireMoveEventWithCorrectDuration()
+        {
+            _expected.Action = WindowEvent.WindowAction.Move;
+            _expected.TriggeredAt = new DateTime(2014, 7, 1, 16, 32, 10);
+            _expected.Duration = TimeSpan.FromSeconds(3);
+            GivenWindowIsKnown(_testWindow);
+
+            TestDateUtils.Now = _expected.TriggeredAt.GetValueOrDefault();
+            WhenWindowIsMoved(_testWindow, downwards: 25, leftwards: 0, addHeight: 0, addWidth: 0);
+            TestDateUtils.Now = _expected.TerminatedAt.GetValueOrDefault();
+            WhenWindowIsMoved(_testWindow, downwards: 32, leftwards: 0, addHeight: 0, addWidth: 0);
+            _lastScheduledMoveEvent();
+
+            AssertSinglePublishedWindowEventMeetsExpectations();
         }
 
         [Test]
@@ -130,18 +197,44 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.VisualStudio
 
             _mockWindowEvents.Raise(we => we.WindowClosing += null, _testWindow);
 
+            AssertSinglePublishedWindowEventMeetsExpectations();
+        }
+
+        private void GivenWindowIsKnown(Window testWindow)
+        {
+            WhenWindowIsCreated(testWindow);
+            DropAllEvents();
+        }
+
+        private void WhenWindowIsCreated(Window testWindow)
+        {
+            _mockWindowEvents.Raise(we => we.WindowCreated += null, testWindow);
+        }
+
+        private void WhenWindowIsActivated(Window testWindow)
+        {
+            _mockWindowEvents.Raise(we => we.WindowActivated += null, testWindow, null);
+        }
+
+        private void WhenWindowIsMoved(Window window, int leftwards, int downwards, int addWidth, int addHeight)
+        {
+            window.Top += downwards;
+            window.Left += leftwards;
+            window.Width += addWidth;
+            window.Height += addHeight;
+            _mockWindowEvents.Raise(
+                we => we.WindowMoved += null,
+                window,
+                window.Top,
+                window.Left,
+                window.Width,
+                window.Height);
+        }
+
+        private void AssertSinglePublishedWindowEventMeetsExpectations()
+        {
             var actual = GetSinglePublished<WindowEvent>();
             Assert.AreEqual(_expected, actual);
-        }
-
-        private void WhenTestWindowIsMoved()
-        {
-            _mockWindowEvents.Raise(we => we.WindowMoved += null, _testWindow, 0, 0, 0, 0);
-        }
-
-        private static void WaitFor(uint milliseconds)
-        {
-            System.Threading.Thread.Sleep((int) milliseconds);
         }
     }
 }
