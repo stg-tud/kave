@@ -23,52 +23,48 @@ using System.Windows.Data;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
 {
-    public partial class SortableListView: ListView
+    public partial class SortableListView
     {
-        private GridViewColumnHeader lastHeaderClicked = null;
-        private ListSortDirection lastDirection = ListSortDirection.Ascending;
+        private GridViewColumnHeader _lastHeaderClicked = null;
+        private ListSortDirection _lastDirection = ListSortDirection.Ascending;
 
         public void GridViewColumnHeaderClicked(GridViewColumnHeader clickedHeader)
         {
-            ListSortDirection direction;
-
-            if (clickedHeader != null)
+            if (clickedHeader == null)
             {
-                if (clickedHeader.Role != GridViewColumnHeaderRole.Padding)
-                {
-                    if (clickedHeader != lastHeaderClicked)
-                    {
-                        direction = ListSortDirection.Ascending;
-                    }
-                    else
-                    {
-                        if (lastDirection == ListSortDirection.Ascending)
-                        {
-                            direction = ListSortDirection.Descending;
-                        }
-                        else
-                        {
-                            direction = ListSortDirection.Ascending;
-                        }
-                    }
-
-                    string sortString = ((Binding)clickedHeader.Column.DisplayMemberBinding).Path.Path;
-
-                    Sort(sortString, direction);
-
-                    lastHeaderClicked = clickedHeader;
-                    lastDirection = direction;
-                }
+                return;
             }
+
+            if (clickedHeader.Role == GridViewColumnHeaderRole.Padding)
+            {
+                return;
+            }
+
+            ListSortDirection direction;
+            if (!Equals(clickedHeader, _lastHeaderClicked))
+            {
+                direction = ListSortDirection.Ascending;
+            }
+            else
+            {
+                direction = _lastDirection == ListSortDirection.Ascending ? ListSortDirection.Descending : ListSortDirection.Ascending;
+            }
+
+            var sortString = ((Binding)clickedHeader.Column.DisplayMemberBinding).Path.Path;
+
+            Sort(sortString, direction);
+
+            _lastHeaderClicked = clickedHeader;
+            _lastDirection = direction;
         }
 
         private void Sort(string sortBy, ListSortDirection direction)
         {
-            var dataView = CollectionViewSource.GetDefaultView(this.ItemsSource ?? this.Items);
+            var dataView = CollectionViewSource.GetDefaultView(ItemsSource ?? Items);
 
             dataView.SortDescriptions.Clear();
-            var sD = new SortDescription(sortBy, direction);
-            dataView.SortDescriptions.Add(sD);
+            var sort = new SortDescription(sortBy, direction);
+            dataView.SortDescriptions.Add(sort);
             dataView.Refresh();
         }
     }
