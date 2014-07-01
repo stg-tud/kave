@@ -136,7 +136,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.VisualStudio
         {
             var command = GetCommand("{g-u-i-d}", 5, "command");
             GivenCommandIsDefined(command);
-            
+
             WhenCommandExecutes(command);
 
             var actual = GetSinglePublished<CommandEvent>();
@@ -154,7 +154,9 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.VisualStudio
          TestCase("{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}", 4820, null),
          TestCase("{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}", 6155, null),
          TestCase("{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}", 4800, null)]
-        public void ShouldNotFireEventsForCommandsThatAreAutomaticallyTriggeredByVs(string commandGuid, int commandId, string commandName)
+        public void ShouldNotFireEventsForCommandsThatAreAutomaticallyTriggeredByVs(string commandGuid,
+            int commandId,
+            string commandName)
         {
             var command = GetCommand(commandGuid, commandId, commandName);
             GivenCommandIsDefined(command);
@@ -175,10 +177,24 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.VisualStudio
             AssertNoEvent();
         }
 
-        [Test]
-        public void ShouldNotFireEventForCommandDuplicatedByAReSharperAction()
+        [TestCase("{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}", 02, "Edit.DeleteBackwards"),
+         TestCase("{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}", 03, "Edit.BreakLine"),
+         TestCase("{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}", 04, "Edit.InsertTab"),
+         TestCase("{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}", 07, "Edit.CharLeft"),
+         TestCase("{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}", 08, "Edit.CharLeftExtend"),
+         TestCase("{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}", 09, "Edit.CharRight"),
+         TestCase("{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}", 10, "Edit.CharRightExtend"),
+         TestCase("{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}", 11, "Edit.LineUp"),
+         TestCase("{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}", 12, "Edit.LineUpExtend"),
+         TestCase("{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}", 13, "Edit.LineDown"),
+         TestCase("{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}", 14, "Edit.LineDownExtend"),
+         TestCase("{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}", 27, "Edit.PageUp"),
+         TestCase("{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}", 29, "Edit.PageDown"),
+         TestCase("{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}", 107, "Edit.CompleteWord"),
+         TestCase("{5EFC7975-14BC-11CF-9B2B-00AA00573819}", 627, "Window.CloseAllDocuments")]
+        public void ShouldNotFireEventForCommandDuplicatedByAReSharperAction(string guid, int id, string name)
         {
-            var command = GetCommand("{5EFC7975-14BC-11CF-9B2B-00AA00573819}", 627, "Window.CloseAllDocuments");
+            var command = GetCommand(guid, id, name);
             GivenCommandIsDefined(command);
 
             WhenCommandExecutes(command);
@@ -186,7 +202,9 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.VisualStudio
             AssertNoEvent();
         }
 
-        [Test, ExpectedException(typeof(AssertException), ExpectedMessage = "command finished that didn't start: {some-guid}:456:command-name")]
+        [Test,
+         ExpectedException(typeof (AssertException),
+             ExpectedMessage = "command finished that didn't start: {some-guid}:456:command-name")]
         public void ShouldFailIfCommandEndsWithoutHavingStarted()
         {
             var command = GetCommand("{some-guid}", 456, "command-name");

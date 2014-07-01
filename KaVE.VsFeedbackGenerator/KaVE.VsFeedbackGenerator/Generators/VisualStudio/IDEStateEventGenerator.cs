@@ -12,10 +12,14 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sven Amann
  */
-using System;
+
 using JetBrains.Application;
 using JetBrains.Application.Components;
+using JetBrains.DataFlow;
 using KaVE.Model.Events.VisualStudio;
 using KaVE.VsFeedbackGenerator.MessageBus;
 using KaVE.VsFeedbackGenerator.Utils.Names;
@@ -24,17 +28,13 @@ using KaVE.VsFeedbackGenerator.VsIntegration;
 namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
 {
     [ShellComponent(ProgramConfigurations.VS_ADDIN)]
-    internal class IDEStateEventGenerator : EventGeneratorBase, IDisposable
+    internal class IDEStateEventGenerator : EventGeneratorBase
     {
-        public IDEStateEventGenerator(IIDESession session, IMessageBus messageBus)
+        public IDEStateEventGenerator(IIDESession session, IMessageBus messageBus, Lifetime lifetime)
             : base(session, messageBus)
         {
             FireIDEStateEvent(IDEStateEvent.LifecyclePhase.Startup);
-        }
-
-        public void Dispose()
-        {
-            FireIDEStateEvent(IDEStateEvent.LifecyclePhase.Shutdown);
+            lifetime.AddAction(() => FireIDEStateEvent(IDEStateEvent.LifecyclePhase.Shutdown));
         }
 
         private void FireIDEStateEvent(IDEStateEvent.LifecyclePhase phase)

@@ -57,7 +57,7 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
                 _currentEditEvent = _currentEditEvent ?? Create<EditEvent>();
                 _currentEditEvent.NumberOfChanges += 1;
                 // TODO subtract whitespaces from change size
-                _currentEditEvent.SizeOfChanges += endPoint.LineCharOffset - startPoint.LineCharOffset;
+                _currentEditEvent.SizeOfChanges += endPoint.AbsoluteCharOffset - startPoint.AbsoluteCharOffset;
             }
             _eventSendingTimer.Start();
         }

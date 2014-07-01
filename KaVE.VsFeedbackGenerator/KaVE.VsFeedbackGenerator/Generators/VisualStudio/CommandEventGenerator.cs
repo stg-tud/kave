@@ -41,11 +41,16 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
         private static readonly ICollection<string> EventsDuplicatedByReSharper = new Collection<string>
         {
             "{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:2:Edit.DeleteBackwards",
+            "{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:3:Edit.BreakLine",
             "{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:4:Edit.InsertTab",
             "{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:7:Edit.CharLeft",
+            "{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:8:Edit.CharLeftExtend",
             "{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:9:Edit.CharRight",
+            "{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:10:Edit.CharRightExtend",
             "{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:11:Edit.LineUp",
+            "{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:12:Edit.LineUpExtend",
             "{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:13:Edit.LineDown",
+            "{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:14:Edit.LineDownExtend",
             "{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:27:Edit.PageUp",
             "{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:29:Edit.PageDown",
             "{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:107:Edit.CompleteWord",
@@ -213,11 +218,12 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
         }
 
         /// <summary>
-        /// There exist ReSharper Actions for these commands, we don't need to track them twice.
+        ///     There exist ReSharper Actions for these commands, we don't need to track them twice.
         /// </summary>
         private static bool IsDuplicatedByReSharper(CommandEvent @event)
         {
-            return EventsDuplicatedByReSharper.Contains(@event.Command.Identifier) || IsReSharperActionEquivalent(@event);
+            return EventsDuplicatedByReSharper.Contains(@event.Command.Identifier) ||
+                   IsReSharperActionEquivalent(@event);
         }
 
         private static bool IsReSharperActionEquivalent(CommandEvent @event)
@@ -226,8 +232,8 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
         }
 
         /// <summary>
-        /// These commands are automatically triggered after every keyboard input. Furthermore, some of them are
-        /// triggered at regular intervals.
+        ///     These commands are automatically triggered after every keyboard input. Furthermore, some of them are
+        ///     triggered at regular intervals.
         /// </summary>
         private static bool IsAutomaticEvent(CommandEvent @event)
         {
@@ -268,7 +274,7 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
     }
 
     /// <summary>
-    /// Internal dummy used to represent commands that are not known to the DTE.
+    ///     Internal dummy used to represent commands that are not known to the DTE.
     /// </summary>
     internal class UnknownCommand : Command
     {
