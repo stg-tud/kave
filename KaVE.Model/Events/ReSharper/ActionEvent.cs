@@ -26,8 +26,5 @@ namespace KaVE.Model.Events.ReSharper
     {
         [DataMember]
         public string ActionId { get; set; }
-
-        [DataMember]
-        public string ActionText { get; set; }
     }
 }

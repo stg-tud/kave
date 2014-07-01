@@ -20,6 +20,7 @@
 using System;
 using KaVE.Model.Events;
 using KaVE.Model.Events.ReSharper;
+using KaVE.Model.Events.VisualStudio;
 using KaVE.Model.Names.VisualStudio;
 using KaVE.VsFeedbackGenerator.SessionManager.Presentation;
 using NUnit.Framework;
@@ -32,9 +33,9 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
         [Test]
         public void ShouldConvertActionEventDetailsToXaml()
         {
-            var actionEvent = new ActionEvent {ActionId = "MyActionId", ActionText = "My &Action"};
-            const string expected = "    \"ActionId\": \"MyActionId\"\r\n" +
-                                    "    \"ActionText\": \"My &Action\"";
+            var actionEvent = new WindowEvent{Window = WindowName.Get("MyWindow"), Action = WindowEvent.WindowAction.Create};
+            const string expected = "    \"Window\": \"MyWindow\"\r\n" +
+                                    "    \"Action\": \"Create\"";
             var actual = actionEvent.GetDetailsAsJson();
             Assert.AreEqual(expected, actual);
         }

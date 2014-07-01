@@ -48,7 +48,6 @@ namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
         {
             var actionEvent = Create<ActionEvent>();
             actionEvent.ActionId = _updatableAction.Id;
-            actionEvent.ActionText = _updatableAction.Presentation.Text;
             FireNow(actionEvent);
 
             nextExecute.Invoke();
