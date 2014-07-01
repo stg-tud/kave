@@ -106,24 +106,22 @@ limitations under the License.
                             <Image Source="/KaVE.VsFeedbackGenerator;Component/Resources/delete.png" />
                         </Button>
                     </StackPanel>
-                    <ListView Grid.Row="1"
-                              Name="SessionListView"
+                    <presentation:SortableListView Grid.Row="1"
+                              x:Name="SessionListView"
                               x:FieldModifier="private"
                               ItemsSource="{Binding Source={StaticResource SortedSessions}}"
                               SelectionMode="Extended"
-                              SelectionChanged="SessionListView_OnSelectionChanged">
-                        <ListView.Resources>
-                            <Style TargetType="GridViewColumnHeader">
-                                <Setter Property="Visibility" Value="Collapsed" />
-                            </Style>
-                            </ListView.Resources>
-                        <ListView.View>
+                              SelectionChanged="SessionListView_OnSelectionChanged"
+                              GridViewColumnHeader.Click="SortableListViewColumnHeaderClicked">
+                        <presentation:SortableListView.View>
                             <GridView>
                                 <GridViewColumn
-                                    DisplayMemberBinding="{Binding StartDate, StringFormat=\{0:dd.MM.yyyy\}}" />
+                                    DisplayMemberBinding="{Binding StartDate, StringFormat=\{0:dd.MM.yyyy\}}" 
+                                    Header="{x:Static root:Properties.SessionManager.Sessions}"
+                                    Width="100"/>
                             </GridView>
-                        </ListView.View>
-                    </ListView>
+                        </presentation:SortableListView.View>
+                    </presentation:SortableListView>
                 </Grid>
             </GroupBox>
             <!-- EVENT LIST -->
@@ -161,23 +159,7 @@ limitations under the License.
                             </GridView>
                         </presentation:SortableListView.View>
                     </presentation:SortableListView>
-                    <!--<ListView Grid.Row="1"
-                              Name="EventListView"
-                              x:FieldModifier="private"
-                              ItemsSource="{Binding Source={StaticResource SortedEvents}}"
-                              SelectionMode="Extended"
-                              SelectionChanged="EventListView_OnSelectionChanged">
-                        <ListView.View>
-                            <GridView>
-                                <GridViewColumn Header="{x:Static root:Properties.SessionManager.EventTime}"
-                                                DisplayMemberBinding="{Binding StartDateTime, StringFormat=\{0:HH\:mm\:ss tt\}}"
-                                                Width="80" />
-                                <GridViewColumn Header="{x:Static root:Properties.SessionManager.EventType}"
-                                                DisplayMemberBinding="{Binding EventType}"
-                                                Width="100" />
-                            </GridView>
-                        </ListView.View>
-                    </ListView> -->
+
                 </Grid>
             </GroupBox>
             <!-- EVENT INFORMATION -->
