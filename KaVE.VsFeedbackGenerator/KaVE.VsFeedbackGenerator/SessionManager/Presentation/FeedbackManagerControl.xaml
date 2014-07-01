@@ -147,18 +147,19 @@ limitations under the License.
                                                    x:Name="EventListView"
                                                    x:FieldModifier="private"
                                                    ItemsSource="{Binding Source={StaticResource SortedEvents}}"
-                                                   SelectionChanged="EventListView_OnSelectionChanged">
+                                                   SelectionChanged="EventListView_OnSelectionChanged"
+                                                   GridViewColumnHeader.Click="SortableListViewColumnHeaderClicked">
                         <presentation:SortableListView.View>
                             <GridView>
                                 <GridViewColumn Header="{x:Static root:Properties.SessionManager.EventTime}"
                                                 DisplayMemberBinding="{Binding StartDateTime, StringFormat=\{0:HH\:mm\:ss tt\}}"
-                                                Width="80" />
+                                                Width="80"/>
+                                
                                 <GridViewColumn Header="{x:Static root:Properties.SessionManager.EventType}"
                                                 DisplayMemberBinding="{Binding EventType}"
                                                 Width="100" />
                             </GridView>
                         </presentation:SortableListView.View>
-
                     </presentation:SortableListView>
                     <!--<ListView Grid.Row="1"
                               Name="EventListView"
