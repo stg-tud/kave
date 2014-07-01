@@ -19,7 +19,6 @@ using EnvDTE;
 using JetBrains.Application;
 using JetBrains.Application.Components;
 using KaVE.Model.Events.VisualStudio;
-using KaVE.Model.Names.VisualStudio;
 using KaVE.Utils;
 using KaVE.Utils.Collections;
 using KaVE.VsFeedbackGenerator.MessageBus;
@@ -34,64 +33,68 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
         // ReSharper disable once PrivateFieldCanBeConvertedToLocalVariable
         private readonly WindowEvents _windowEvents;
 
-        private readonly IDictionary<WindowName, WindowEvent> _delayedMoveEvents;
-        private readonly IDictionary<WindowName, ScheduledAction> _delayedMoveEventFireActions;
+        private readonly IDictionary<Window, WindowEvent> _delayedMoveEvents;
+        private readonly IDictionary<Window, ScheduledAction> _delayedMoveEventFireActions;
 
         public WindowEventGenerator(IIDESession session, IMessageBus messageBus)
             : base(session, messageBus)
         {
-            _delayedMoveEvents = new Dictionary<WindowName, WindowEvent>();
-            _delayedMoveEventFireActions = new ThreadSafeDictionary<WindowName, ScheduledAction>(name => ScheduledAction.NoOp);
+            _delayedMoveEvents = new Dictionary<Window, WindowEvent>();
+            _delayedMoveEventFireActions = new ThreadSafeDictionary<Window, ScheduledAction>(name => ScheduledAction.NoOp);
 
             _windowEvents = DTE.Events.WindowEvents;
-            _windowEvents.WindowCreated += _windowEvents_WindowCreated;
-            _windowEvents.WindowActivated += _windowEvents_WindowActivated;
-            _windowEvents.WindowMoved += _windowEvents_WindowMoved;
-            _windowEvents.WindowClosing += _windowEvents_WindowClosing;
+            _windowEvents.WindowCreated += OnWindowCreated;
+            _windowEvents.WindowActivated += OnWindowActivated;
+            _windowEvents.WindowMoved += OnWindowMoved;
+            _windowEvents.WindowClosing += OnWindowClosed;
         }
 
-        private void _windowEvents_WindowClosing(Window window)
+        private void OnWindowCreated(Window window)
         {
-            Fire(window, WindowEvent.WindowAction.Close);
+            Fire(window, WindowEvent.WindowAction.Create);
         }
 
-        private void _windowEvents_WindowMoved(Window window, int top, int left, int width, int height)
+        private void OnWindowActivated(Window window, Window lostFocus)
         {
-            var moveEvent = CreateWindowEvent(window, WindowEvent.WindowAction.Move);
-            moveEvent.TerminatedAt = DateTime.Now;
-
-            _delayedMoveEventFireActions[moveEvent.Window].Cancel();
-            lock (_delayedMoveEvents)
-            {
-                if (_delayedMoveEvents.ContainsKey(moveEvent.Window))
-                {
-                    _delayedMoveEvents[moveEvent.Window].TerminatedAt = moveEvent.TerminatedAt;
-                }
-                else
-                {
-                    _delayedMoveEvents[moveEvent.Window] = moveEvent;
-                }
-                _delayedMoveEventFireActions[moveEvent.Window] = Invoke.Later(
-                    () =>
-                    {
-                        _delayedMoveEventFireActions.Remove(moveEvent.Window);
-                        Fire(_delayedMoveEvents[moveEvent.Window]);
-                        _delayedMoveEvents.Remove(moveEvent.Window);
-                    },
-                    150);
-            }
-        }
-
-        private void _windowEvents_WindowActivated(Window gotFocus, Window lostFocus)
-        {
-            Fire(gotFocus, WindowEvent.WindowAction.Activate);
+            Fire(window, WindowEvent.WindowAction.Activate);
             // We don't fire lostFocus events, since we track the active window in every event and know that the
             // previously active window looses the focus whenever some other window gains it.
         }
 
-        private void _windowEvents_WindowCreated(Window window)
+        private void OnWindowMoved(Window window, int top, int left, int width, int height)
         {
-            Fire(window, WindowEvent.WindowAction.Create);
+            var moveEvent = CreateWindowEvent(window, WindowEvent.WindowAction.Move);
+            moveEvent.TerminatedAt = DateTime.Now;
+
+            _delayedMoveEventFireActions[window].Cancel();
+            lock (_delayedMoveEvents)
+            {
+                if (_delayedMoveEvents.ContainsKey(window))
+                {
+                    _delayedMoveEvents[window].TerminatedAt = moveEvent.TerminatedAt;
+                }
+                else
+                {
+                    _delayedMoveEvents[window] = moveEvent;
+                }
+                _delayedMoveEventFireActions[window] = Invoke.Later(
+                    () => FireDelayedMoveEvent(window),
+                    150);
+            }
+        }
+
+        private void FireDelayedMoveEvent(Window window)
+        {
+            lock (_delayedMoveEvents)
+            {
+                Fire(_delayedMoveEvents[window]);
+                _delayedMoveEvents.Remove(window);
+            }
+        }
+
+        private void OnWindowClosed(Window window)
+        {
+            Fire(window, WindowEvent.WindowAction.Close);
         }
 
         private void Fire(Window window, WindowEvent.WindowAction action)

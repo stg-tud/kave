@@ -48,7 +48,8 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
             "{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:13:Edit.LineDown",
             "{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:27:Edit.PageUp",
             "{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:29:Edit.PageDown",
-            "{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:107:Edit.CompleteWord"
+            "{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:107:Edit.CompleteWord",
+            "{5EFC7975-14BC-11CF-9B2B-00AA00573819}:627:Window.CloseAllDocuments"
         };
 
         private static readonly ICollection<string> EventsFiredAutomatically = new Collection<string>

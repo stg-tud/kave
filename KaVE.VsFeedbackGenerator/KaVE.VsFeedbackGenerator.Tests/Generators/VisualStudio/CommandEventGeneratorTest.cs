@@ -175,6 +175,17 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.VisualStudio
             AssertNoEvent();
         }
 
+        [Test]
+        public void ShouldNotFireEventForCommandDuplicatedByAReSharperAction()
+        {
+            var command = GetCommand("{5EFC7975-14BC-11CF-9B2B-00AA00573819}", 627, "Window.CloseAllDocuments");
+            GivenCommandIsDefined(command);
+
+            WhenCommandExecutes(command);
+
+            AssertNoEvent();
+        }
+
         [Test, ExpectedException(typeof(AssertException), ExpectedMessage = "command finished that didn't start: {some-guid}:456:command-name")]
         public void ShouldFailIfCommandEndsWithoutHavingStarted()
         {

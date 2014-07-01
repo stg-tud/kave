@@ -20,6 +20,7 @@
 using System.Linq;
 using EnvDTE;
 using KaVE.Model.Events.VisualStudio;
+using KaVE.Model.Names.VisualStudio;
 using KaVE.VsFeedbackGenerator.Generators.VisualStudio;
 using KaVE.VsFeedbackGenerator.Utils.Names;
 using Moq;
@@ -32,6 +33,8 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.VisualStudio
     {
         private Mock<WindowEvents> _mockWindowEvents;
         private Window _testWindow;
+        private WindowName _testWindowName;
+        private WindowEvent _expected;
 
         [TestFixtureSetUp]
         public void SetUpTestWindow()
@@ -40,6 +43,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.VisualStudio
             mockWindow.Setup(window => window.Type).Returns(vsWindowType.vsWindowTypeWatch);
             mockWindow.Setup(window => window.Caption).Returns("TestCaption");
             _testWindow = mockWindow.Object;
+            _testWindowName = _testWindow.GetName();
         }
 
         protected override void MockEvents(Mock<Events> mockEvents)
@@ -54,6 +58,36 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.VisualStudio
         {
             // ReSharper disable once ObjectCreationAsStatement
             new WindowEventGenerator(TestIDESession, TestMessageBus);
+
+            _expected = new WindowEvent
+            {
+                IDESessionUUID = TestIDESession.UUID,
+                Window = _testWindowName,
+                TriggeredAt = TestDateUtils.Now,
+                TerminatedAt = TestDateUtils.Now
+            };
+        }
+
+        [Test]
+        public void ShouldFireWindowCreationEvent()
+        {
+            _expected.Action = WindowEvent.WindowAction.Create;
+
+            _mockWindowEvents.Raise(we => we.WindowCreated += null, _testWindow);
+
+            var actual = GetSinglePublished<WindowEvent>();
+            Assert.AreEqual(_expected, actual);
+        }
+
+        [Test]
+        public void ShouldFireWindowActivationEvent()
+        {
+            _expected.Action = WindowEvent.WindowAction.Activate;
+
+            _mockWindowEvents.Raise(we => we.WindowActivated += null, _testWindow, null);
+
+            var actual = GetSinglePublished<WindowEvent>();
+            Assert.AreEqual(_expected, actual);
         }
 
         [Test]
@@ -62,7 +96,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.VisualStudio
             WhenTestWindowIsMoved();
             var windowEvent = WaitForNewEvent<WindowEvent>();
 
-            Assert.AreEqual(_testWindow.GetName(), windowEvent.Window);
+            Assert.AreEqual(_testWindowName, windowEvent.Window);
             Assert.AreEqual(WindowEvent.WindowAction.Move, windowEvent.Action);
         }
 
@@ -87,6 +121,17 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.VisualStudio
             WaitForNewEvent();
 
             Assert.AreEqual(1, GetPublishedEvents().Count());
+        }
+
+        [Test]
+        public void ShouldFireWindowClosingEvent()
+        {
+            _expected.Action = WindowEvent.WindowAction.Close;
+
+            _mockWindowEvents.Raise(we => we.WindowClosing += null, _testWindow);
+
+            var actual = GetSinglePublished<WindowEvent>();
+            Assert.AreEqual(_expected, actual);
         }
 
         private void WhenTestWindowIsMoved()
