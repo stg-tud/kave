@@ -111,12 +111,12 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.VisualStudio
             Assert.IsNull(_lastScheduledMoveEvent);
         }
 
-        [TestCase(0, 10, 0, 0),
-         TestCase(10, 0, 0, 0),
-         TestCase(5, 8, 0, 0),
-         TestCase(0, 0, 10, 0),
-         TestCase(0, 0, 0, 10),
-         TestCase(0, 0, 6, 9)]
+        [TestCase(0, 23, 0, 0),
+         TestCase(14, 0, 0, 0),
+         TestCase(5, 19, 0, 0),
+         TestCase(0, 0, 25, 0),
+         TestCase(0, 0, 0, 17),
+         TestCase(0, 0, 9, 25)]
         public void ShouldNotFireMoveIfWindowIsMovedByLessThan10Pixels(int downwards,
             int leftwards,
             int addHeight,
@@ -147,7 +147,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.VisualStudio
         public void ShouldScheduleMoveForPreviouslyActivatedWindow()
         {
             WhenWindowIsActivated(_testWindow);
-            WhenWindowIsMoved(_testWindow, downwards: 15, leftwards: 23, addHeight: 0, addWidth: 0);
+            WhenWindowIsMoved(_testWindow, downwards: 15, leftwards: 26, addHeight: 0, addWidth: 0);
 
             Assert.IsNotNull(_lastScheduledMoveEvent);
         }
@@ -182,7 +182,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.VisualStudio
             GivenWindowIsKnown(_testWindow);
 
             TestDateUtils.Now = _expected.TriggeredAt.GetValueOrDefault();
-            WhenWindowIsMoved(_testWindow, downwards: 25, leftwards: 0, addHeight: 0, addWidth: 0);
+            WhenWindowIsMoved(_testWindow, downwards: 27, leftwards: 0, addHeight: 0, addWidth: 0);
             TestDateUtils.Now = _expected.TerminatedAt.GetValueOrDefault();
             WhenWindowIsMoved(_testWindow, downwards: 32, leftwards: 0, addHeight: 0, addWidth: 0);
             _lastScheduledMoveEvent();

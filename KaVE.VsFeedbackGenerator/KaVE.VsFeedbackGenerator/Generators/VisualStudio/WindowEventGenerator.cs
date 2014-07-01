@@ -35,7 +35,7 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
     [ShellComponent(ProgramConfigurations.VS_ADDIN)]
     internal class WindowEventGenerator : EventGeneratorBase
     {
-        private const int SignificantMoveLowerBound = 10;
+        private const int SignificantMoveLowerBound = 25;
         private const int WindowMoveTimeout = 150;
 
         private class WindowDescriptor
