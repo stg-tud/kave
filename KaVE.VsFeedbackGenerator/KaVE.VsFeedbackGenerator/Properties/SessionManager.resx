@@ -220,7 +220,7 @@
     <value>Beim Exportieren/Versenden des Feedbacks ist ein Fehler aufgetreten!</value>
   </data>
   <data name="ExportSuccess" xml:space="preserve">
-    <value>Das Exportieren/Versenden von {0} Events war erfolgreich</value>
+    <value>Das Exportieren/Versenden von {0} Events war erfolgreich. Zum Hochladen des Feedbacks besuchen Sie bitte die folgende Seite: {1}</value>
   </data>
   <data name="SaveFileDialogFilter" xml:space="preserve">
     <value>Zip files (*.zip)|*.zip|All files (*.*)|*.*</value>

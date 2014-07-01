@@ -241,11 +241,15 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
 
         public void ShowExportSucceededMessage(int numberOfExportedEvents)
         {
+            var export = _settingsStore.GetSettings<ExportSettings>();
+            var idx = export.UploadUrl.LastIndexOf('/');
+            var url = export.UploadUrl.Substring(0, idx);
+            
             _notificationRequest.Raise(
                 new Notification
                 {
                     Caption = Properties.UploadWizard.window_title,
-                    Message = string.Format(Messages.ExportSuccess, numberOfExportedEvents)
+                    Message = string.Format(Messages.ExportSuccess, numberOfExportedEvents, url)
                 });
         }
 

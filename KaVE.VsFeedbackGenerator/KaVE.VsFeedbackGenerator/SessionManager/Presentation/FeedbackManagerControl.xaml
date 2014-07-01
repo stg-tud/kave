@@ -116,7 +116,7 @@ limitations under the License.
                             <Style TargetType="GridViewColumnHeader">
                                 <Setter Property="Visibility" Value="Collapsed" />
                             </Style>
-                        </ListView.Resources>
+                            </ListView.Resources>
                         <ListView.View>
                             <GridView>
                                 <GridViewColumn
@@ -143,7 +143,24 @@ limitations under the License.
                             <Image Source="/KaVE.VsFeedbackGenerator;Component/Resources/delete.png" />
                         </Button>
                     </StackPanel>
-                    <ListView Grid.Row="1"
+                    <presentation:SortableListView Grid.Row="1" 
+                                                   x:Name="EventListView"
+                                                   x:FieldModifier="private"
+                                                   ItemsSource="{Binding Source={StaticResource SortedEvents}}"
+                                                   SelectionChanged="EventListView_OnSelectionChanged">
+                        <presentation:SortableListView.View>
+                            <GridView>
+                                <GridViewColumn Header="{x:Static root:Properties.SessionManager.EventTime}"
+                                                DisplayMemberBinding="{Binding StartDateTime, StringFormat=\{0:HH\:mm\:ss tt\}}"
+                                                Width="80" />
+                                <GridViewColumn Header="{x:Static root:Properties.SessionManager.EventType}"
+                                                DisplayMemberBinding="{Binding EventType}"
+                                                Width="100" />
+                            </GridView>
+                        </presentation:SortableListView.View>
+
+                    </presentation:SortableListView>
+                    <!--<ListView Grid.Row="1"
                               Name="EventListView"
                               x:FieldModifier="private"
                               ItemsSource="{Binding Source={StaticResource SortedEvents}}"
@@ -159,7 +176,7 @@ limitations under the License.
                                                 Width="100" />
                             </GridView>
                         </ListView.View>
-                    </ListView>
+                    </ListView> -->
                 </Grid>
             </GroupBox>
             <!-- EVENT INFORMATION -->
