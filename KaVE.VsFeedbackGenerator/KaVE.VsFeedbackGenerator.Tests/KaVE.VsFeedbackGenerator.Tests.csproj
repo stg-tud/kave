@@ -129,6 +129,7 @@
     <Compile Include="SessionManager\Anonymize\IDEEventAnonymizerTestBase.cs" />
     <Compile Include="SessionManager\Presentation\IDEEventDetailsToJsonConverterTest.cs" />
     <Compile Include="SessionManager\Presentation\JsonSyntaxHighlighterTest.cs" />
+    <Compile Include="SessionManager\Presentation\XamlBindableRichTextBoxTest.cs" />
     <Compile Include="SessionManager\UploadReminderTest.cs" />
     <Compile Include="SessionManager\UploadSettingsTest.cs" />
     <Compile Include="TestFactories\Actions\ActionManagerMockExtensions.cs" />

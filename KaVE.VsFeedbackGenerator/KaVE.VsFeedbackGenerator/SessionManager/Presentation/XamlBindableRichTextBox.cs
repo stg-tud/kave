@@ -13,8 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 using System;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -29,6 +31,8 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
             "<DataTemplate xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\"><TextBlock xml:space=\"preserve\">";
 
         private const string DataTemplateEnd = "</TextBlock></DataTemplate>";
+
+        private static readonly Regex NodeRegex = new Regex("<.*?>", RegexOptions.Compiled);
 
         public XamlBindableRichTextBox()
         {
@@ -55,25 +59,53 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
             var xaml = (string) e.NewValue;
             if (xaml != null)
             {
-                DataTemplate generatedDataTemplate;
-                try
+                if (ContainsTooManyNodesForDisplay(xaml))
                 {
-                    generatedDataTemplate =
-                        (DataTemplate) XamlReader.Parse(DataTemplateBegin + xaml + DataTemplateEnd);
+                    xaml = StripNodes(xaml);
                 }
-                catch (Exception exception)
-                {
-                    var logEventGenerator = Registry.GetComponent<Generators.ILogger>();
-                    logEventGenerator.Error(exception, "Parsing Xaml in XamlBindableRichTextBox");
-                    throw;
-                }
-                var generatedTextBlock = (TextBlock) generatedDataTemplate.LoadContent();
 
-                var para = new Paragraph();
-                para.Inlines.AddRange(generatedTextBlock.Inlines.ToList());
+                var para = CreateParagraphFromXaml(xaml);
                 document.Blocks.Add(para);
             }
             richTextBox.Document = document;
+        }
+
+        private static bool ContainsTooManyNodesForDisplay(string xaml)
+        {
+            var tags = 0;
+            foreach (var c in xaml.Where(c => c == '<'))
+            {
+                tags++;
+                if (tags > (65533*2))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public static string StripNodes(string xaml)
+        {
+            return NodeRegex.Replace(xaml, string.Empty);
+        }
+
+        private static Paragraph CreateParagraphFromXaml(string xaml)
+        {
+            try
+            {
+                var template = (DataTemplate)XamlReader.Parse(DataTemplateBegin + xaml + DataTemplateEnd);
+                var textBlock = (TextBlock)template.LoadContent();
+
+                var par = new Paragraph();
+                par.Inlines.AddRange(textBlock.Inlines.ToList());
+                return par;
+            }
+            catch (Exception exception)
+            {
+                var logEventGenerator = Registry.GetComponent<Generators.ILogger>();
+                logEventGenerator.Error(exception, "Parsing Xaml in XamlBindableRichTextBox");
+                throw;
+            }
         }
     }
 }
