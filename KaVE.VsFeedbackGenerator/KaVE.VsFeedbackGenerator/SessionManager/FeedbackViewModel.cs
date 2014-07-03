@@ -30,7 +30,6 @@ using JetBrains.Annotations;
 using JetBrains.Application;
 using JetBrains.UI.Extensions.Commands;
 using KaVE.Model.Events;
-using KaVE.Utils;
 using KaVE.VsFeedbackGenerator.Interactivity;
 using KaVE.VsFeedbackGenerator.SessionManager.Presentation;
 using KaVE.VsFeedbackGenerator.TrayNotification;
@@ -49,7 +48,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
         private readonly IList<SessionViewModel> _selectedSessions;
         private DelegateCommand _exportCommand;
         private DelegateCommand _deleteCommand;
-        private bool _refreshing;
+        private bool _isBusy;
         private DateTime _lastRefresh;
         private readonly ISettingsStore _settingsStore;
         private readonly IDateUtils _dateUtils;
@@ -101,9 +100,12 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             _refreshWorker.RunWorkerCompleted += OnRefreshCompleted;
         }
 
+        /// <summary>
+        ///     Reloads the contents of the model from the underlying log manager. Must be called from STA!
+        /// </summary>
         public void Refresh()
         {
-            Refreshing = true;
+            SetBusy(Properties.SessionManager.Refreshing);
             _refreshWorker.RunWorkerAsync();
         }
 
@@ -133,45 +135,42 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             {
                 Sessions = (IEnumerable<SessionViewModel>) runWorkerCompletedEventArgs.Result;
             }
-            Refreshing = false;
+            IsBusy = false;
         }
 
-        public void Release()
+        private void SetBusy(string reason)
         {
-            Sessions = null;
+            BusyMessage = reason;
+            IsBusy = true;
         }
 
-        public bool Refreshing
+        /// <summary>
+        /// Indicates that the view is busy performing some background task. No calls should be issued on the model if this is true.
+        /// </summary>
+        public bool IsBusy
         {
-            get { return _refreshing; }
+            get { return _isBusy; }
             private set
             {
-                _refreshing = value;
-                OnPropertyChanged(vm => vm.Refreshing);
+                _isBusy = value;
+                OnPropertyChanged(vm => vm.IsBusy);
             }
         }
+
+        public string BusyMessage { get; private set; }
 
         public IEnumerable<SessionViewModel> Sessions
         {
             private set
             {
-                Invoke.OnSTA(
-                    () =>
-                    {
-                        _sessions.Clear();
-                        if (value != null)
-                        {
-                            _sessions.AddRange(value);
-                        }
-                        ExportCommand.RaiseCanExecuteChanged();
-                    });
+                _sessions.Clear();
+                if (value != null)
+                {
+                    _sessions.AddRange(value);
+                }
+                ExportCommand.RaiseCanExecuteChanged();
             }
             get { return _sessions; }
-        }
-
-        public bool AreAnyEventsPresent
-        {
-            get { return _sessions.Any(s => s.Events.Any()); }
         }
 
         public IEnumerable<SessionViewModel> SelectedSessions
@@ -194,20 +193,17 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
 
         public DelegateCommand ExportCommand
         {
-            get
-            {
-                // TODO @Sven: make AreAnyEventsPresent a method after code review with Dennis finished
-                return _exportCommand ?? (_exportCommand = new DelegateCommand(OnExport, () => AreAnyEventsPresent));
-            }
+            get { return _exportCommand ?? (_exportCommand = new DelegateCommand(OnExport, AreAnyEventsPresent)); }
         }
 
-        public void OnExport()
+        private void OnExport()
         {
             _uploadOptionsRequest.Raise(new UploadWizard.UploadOptions(), Export);
         }
 
         private void Export(UploadWizard.UploadOptions options)
         {
+            SetBusy("Exporting...");
             if (options.Type.HasValue)
             {
                 try
@@ -233,43 +229,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
                 }
                 Refresh();
             }
-        }
-
-        private Uri GetUploadUrl()
-        {
-            var exportSettings = _settingsStore.GetSettings<ExportSettings>();
-            return new Uri(exportSettings.UploadUrl);
-        }
-
-        public void ShowExportSucceededMessage(int numberOfExportedEvents)
-        {
-            var export = _settingsStore.GetSettings<ExportSettings>();
-            var idx = export.UploadUrl.LastIndexOf('/');
-            var url = export.UploadUrl.Substring(0, idx);
-
-            _notificationRequest.Raise(
-                new Notification
-                {
-                    Caption = Properties.UploadWizard.window_title,
-                    Message = string.Format(Messages.ExportSuccess, numberOfExportedEvents, url)
-                });
-        }
-
-        public void ShowExportFailedMessage(string message)
-        {
-            _notificationRequest.Raise(
-                new Notification
-                {
-                    Caption = Properties.UploadWizard.window_title,
-                    Message = Messages.ExportFail + (string.IsNullOrWhiteSpace(message) ? "" : ":\n" + message)
-                });
-        }
-
-        private void UpdateLastUploadDate()
-        {
-            var settings = _settingsStore.GetSettings<UploadSettings>();
-            settings.LastUploadDate = _dateUtils.Now;
-            _settingsStore.SetSettings(settings);
+            IsBusy = false;
         }
 
         public IList<IDEEvent> ExtractEventsForExport()
@@ -289,6 +249,47 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
                 return null;
             }
             return saveFileDialog.FileName;
+        }
+
+        private Uri GetUploadUrl()
+        {
+            var exportSettings = _settingsStore.GetSettings<ExportSettings>();
+            return new Uri(exportSettings.UploadUrl);
+        }
+
+        private void UpdateLastUploadDate()
+        {
+            var settings = _settingsStore.GetSettings<UploadSettings>();
+            settings.LastUploadDate = _dateUtils.Now;
+            _settingsStore.SetSettings(settings);
+        }
+
+        public void ShowExportSucceededMessage(int numberOfExportedEvents)
+        {
+            var export = _settingsStore.GetSettings<ExportSettings>();
+            var idx = export.UploadUrl.LastIndexOf('/');
+            var url = export.UploadUrl.Substring(0, idx);
+            RaiseNotificationRequest(string.Format(Messages.ExportSuccess, numberOfExportedEvents, url));
+        }
+
+        public void ShowExportFailedMessage(string message)
+        {
+            RaiseNotificationRequest(Messages.ExportFail + (string.IsNullOrWhiteSpace(message) ? "" : ":\n" + message));
+        }
+
+        private void RaiseNotificationRequest(string s)
+        {
+            _notificationRequest.Raise(
+                new Notification
+                {
+                    Caption = Properties.UploadWizard.window_title,
+                    Message = s
+                });
+        }
+
+        private bool AreAnyEventsPresent()
+        {
+            return _sessions.Any(s => s.Events.Any());
         }
 
         public DelegateCommand DeleteSessionsCommand

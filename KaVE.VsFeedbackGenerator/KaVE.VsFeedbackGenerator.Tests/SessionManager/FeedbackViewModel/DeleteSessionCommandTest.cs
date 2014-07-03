@@ -60,7 +60,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModel
 
             _uut = new VsFeedbackGenerator.SessionManager.FeedbackViewModel(_mockLogFileManager.Object, null, null, new DateUtils());
             _uut.Refresh();
-            while (_uut.Refreshing)
+            while (_uut.IsBusy)
             {
                 Thread.Sleep(5);
             }

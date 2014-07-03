@@ -87,7 +87,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModel
                 _mockSettingStore.Object,
                 _testDateUtils);
             _uut.Refresh();
-            while (_uut.Refreshing)
+            while (_uut.IsBusy)
             {
                 Thread.Sleep(5);
             }

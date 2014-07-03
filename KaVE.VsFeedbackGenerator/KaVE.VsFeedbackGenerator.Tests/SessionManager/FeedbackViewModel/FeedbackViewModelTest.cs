@@ -62,6 +62,14 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModel
         }
 
         [Test]
+        public void ShouldSetRefreshBusyMessage()
+        {
+            _uut.Refresh();
+
+            Assert.AreEqual(Properties.SessionManager.Refreshing, _uut.BusyMessage);
+        }
+
+        [Test]
         public void ShouldGetAllLogsFromLogManagerOnRefresh()
         {
             _uut.Refresh();
@@ -111,7 +119,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModel
 
         private void WaitForRefreshToFinish()
         {
-            AsyncTestHelper.WaitForCondition(() => !_uut.Refreshing);
+            AsyncTestHelper.WaitForCondition(() => !_uut.IsBusy);
         }
     }
 }

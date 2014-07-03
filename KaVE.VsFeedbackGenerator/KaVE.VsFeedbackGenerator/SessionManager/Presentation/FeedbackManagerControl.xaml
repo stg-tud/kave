@@ -59,7 +59,7 @@ limitations under the License.
     <DockPanel>
         <ToolBarTray IsLocked="True" DockPanel.Dock="Top" AllowDrop="False">
             <ToolBar OverflowMode="Never" Loaded="ToolBar_OnLoaded"
-                     IsEnabled="{Binding Refreshing, Converter={StaticResource InverseBoolConverter}}">
+                     IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}">
                 <Button ToolTip="{x:Static root:Properties.SessionManager.Refresh}"
                         Click="RefreshButton_OnClick">
                     <Image Source="/KaVE.VsFeedbackGenerator;Component/Resources/refresh.png" />
@@ -250,10 +250,10 @@ limitations under the License.
             </GroupBox>
             <!-- REFRESH OVERLAY -->
             <Border Background="LightGray" Opacity=".7"
-                    Visibility="{Binding Refreshing, Converter={StaticResource BoolToVisibilityConverter}}"
+                    Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibilityConverter}}"
                     Grid.ColumnSpan="3"
                     Grid.Column="0">
-                <TextBlock Text="{x:Static root:Properties.SessionManager.Refreshing}"
+                <TextBlock Text="{Binding BusyMessage}"
                            HorizontalAlignment="Center"
                            VerticalAlignment="Center"
                            FontWeight="Bold" FontSize="24" />

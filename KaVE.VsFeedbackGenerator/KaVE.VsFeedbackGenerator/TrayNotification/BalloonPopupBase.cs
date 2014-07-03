@@ -29,7 +29,7 @@ namespace KaVE.VsFeedbackGenerator.TrayNotification
         protected void OpenUploadWizard()
         {
             ClosePopup();
-            Registry.GetComponent<FeedbackViewModel>().OnExport();
+            Registry.GetComponent<FeedbackViewModel>().ExportCommand.Execute(null);
         }
 
         protected void ClosePopup()
