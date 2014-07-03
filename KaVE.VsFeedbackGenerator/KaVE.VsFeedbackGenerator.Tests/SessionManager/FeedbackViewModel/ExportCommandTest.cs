@@ -43,7 +43,9 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModel
     [TestFixture]
     internal class ExportCommandTest
     {
-        private const string TestUploadUrl = "http://foo.bar";
+        private const string TestAutoUploadUrl = "http://foo.bar/upload";
+        private const string TestManualUploadUrl = "http://foo.bar";
+
         private Mock<ILogManager<IDEEvent>> _mockLogFileManager;
         private List<Mock<ILog<IDEEvent>>> _mockLogs;
         private VsFeedbackGenerator.SessionManager.FeedbackViewModel _uut;
@@ -76,7 +78,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModel
             _mockSettingStore = new Mock<ISettingsStore>();
             _mockSettingStore.Setup(store => store.GetSettings<UploadSettings>()).Returns(new UploadSettings());
             _mockSettingStore.Setup(store => store.GetSettings<ExportSettings>())
-                             .Returns(new ExportSettings {UploadUrl = TestUploadUrl});
+                             .Returns(new ExportSettings {UploadUrl = TestAutoUploadUrl});
 
             _testDateUtils = new TestDateUtils();
             _uut = new VsFeedbackGenerator.SessionManager.FeedbackViewModel(
@@ -144,7 +146,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModel
             }
             catch (NullReferenceException) {}
 
-            _mockIoUtils.Verify(ioUtils => ioUtils.TransferByHttp(It.IsAny<HttpContent>(), new Uri(TestUploadUrl), 5));
+            _mockIoUtils.Verify(ioUtils => ioUtils.TransferByHttp(It.IsAny<HttpContent>(), new Uri(TestAutoUploadUrl), 5));
         }
 
         [Test]
@@ -154,18 +156,17 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModel
             Assert.IsTrue(_notificationHelper.IsRequestRaised);
         }
 
-        [Test, Ignore]
+        [Test]
         public void SuccessfulExportNotificationHasCorrectMessage()
         {
             WhenExportIsExecuted();
-            //TODO: the actual is wrong "http:/" but export wizard shows correct message...
             var actual = _notificationHelper.Context;
             // TODO @Sven: extend setup to include some events that are exported here
             // TODO @Seb: help sven with above task
             var expected = new Notification
             {
                 Caption = Properties.UploadWizard.window_title,
-                Message = Properties.SessionManager.ExportSuccess.FormatEx(0, TestUploadUrl)
+                Message = Properties.SessionManager.ExportSuccess.FormatEx(0, TestManualUploadUrl)
             };
             Assert.AreEqual(expected, actual);
         }
