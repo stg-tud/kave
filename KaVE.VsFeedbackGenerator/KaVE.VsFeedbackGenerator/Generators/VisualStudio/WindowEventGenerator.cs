@@ -94,11 +94,11 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
                 // ignore the current event, but remember the window for subsequent move events.
                 RememberWindow(window);
             }
-            else if (IsMovedSignificantly(window) || IsResizedSignificantly(window))
+            else if (IsMovedSignificantly(window))
             {
-                // Insignificant moves or resizings are frequently caused by rerendering. To avoid bloating the
-                // event stream, we only handle significant moves and resizings here. Most real moves or resizes
-                // start with a number of insignificant events, followed by a number of significant ones.
+                // Insignificant moves are frequently caused by rerendering. To avoid bloating the event stream, we
+                // only handle significant moves here. Most real moves start with a number of insignificant events,
+                // followed by a number of significant ones.
                 UpdateAndScheduleEvent(window);
                 RememberWindow(window);
             }
@@ -125,20 +125,15 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
             };
         }
 
-        private bool IsResizedSignificantly(Window window)
+        private bool IsMovedSignificantly(Window window)
         {
             var knownWindow = _knownWindows[window];
             var diffHeight = Math.Abs(knownWindow.Height - window.Height);
             var diffWidth = Math.Abs(knownWindow.Width - window.Width);
-            return diffHeight > SignificantMoveLowerBound || diffWidth > SignificantMoveLowerBound;
-        }
-
-        private bool IsMovedSignificantly(Window window)
-        {
-            var knownWindow = _knownWindows[window];
             var downwards = Math.Abs(knownWindow.Top - window.Top);
             var leftwards = Math.Abs(knownWindow.Left - window.Left);
-            return downwards > SignificantMoveLowerBound || leftwards > SignificantMoveLowerBound;
+            return downwards > SignificantMoveLowerBound || leftwards > SignificantMoveLowerBound ||
+                   diffHeight > SignificantMoveLowerBound || diffWidth > SignificantMoveLowerBound;
         }
 
         private void UpdateAndScheduleEvent(Window window)
