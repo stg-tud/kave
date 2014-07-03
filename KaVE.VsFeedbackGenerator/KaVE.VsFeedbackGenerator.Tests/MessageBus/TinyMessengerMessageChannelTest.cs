@@ -129,7 +129,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.MessageBus
         private void PublishToChannelUnderTest<TMessage>(TMessage message) where TMessage : class
         {
             _channelUnderTest.Publish(message);
-            _messageReceivedEvent.WaitOne(50);
+            _messageReceivedEvent.WaitOne(200);
             _messageReceivedEvent.Reset();
         }
     }
