@@ -18,12 +18,10 @@
  *    - Sven Amann
  */
 
-using System;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using JetBrains.ActionManagement;
-using KaVE.Utils;
 using KaVE.VsFeedbackGenerator.Interactivity;
 using KaVE.VsFeedbackGenerator.TrayNotification;
 using KaVE.VsFeedbackGenerator.Utils;
@@ -38,11 +36,9 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
         private readonly FeedbackViewModel _feedbackViewModel;
         private readonly IActionManager _actionManager;
         private readonly ISettingsStore _settingsStore;
-        private ScheduledAction _releaseTimer;
 
         public SessionManagerControl(FeedbackViewModel feedbackViewModel, IActionManager actionManager, ISettingsStore settingsStore)
         {
-            _releaseTimer = ScheduledAction.NoOp;
             _feedbackViewModel = feedbackViewModel;
             _actionManager = actionManager;
             _settingsStore = settingsStore;
@@ -143,27 +139,6 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
         private void OpenOptionPage_OnClick(object sender, RoutedEventArgs e)
         {
             _actionManager.ExecuteActionGuarded("ShowOptions", "AgentAction");
-        }
-
-        private void SessionManagerControl_OnLostFocus(object sender, RoutedEventArgs e)
-        {
-            lock (_feedbackViewModel)
-            {
-                // release view data after 5 minutes of inactivity
-                _releaseTimer = Invoke.Later(() => _feedbackViewModel.Release(), 300000);
-            }
-        }
-
-        private void SessionManagerControl_OnGotFocus(object sender, RoutedEventArgs e)
-        {
-            lock (_feedbackViewModel)
-            {
-                _releaseTimer.Cancel();
-                if (_feedbackViewModel.Released)
-                {
-                    RefreshControl();
-                }
-            }
         }
 
         private void RefreshControl()

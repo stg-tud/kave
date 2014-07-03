@@ -26,9 +26,7 @@ limitations under the License.
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="1000"
              d:DataContext="{d:DesignInstance Type=sessionManager:FeedbackViewModel, IsDesignTimeCreatable=False}"
-             Loaded="FeedbackWindowControl_OnLoaded"
-             GotKeyboardFocus="SessionManagerControl_OnGotFocus"
-             LostKeyboardFocus="SessionManagerControl_OnLostFocus">
+             Loaded="FeedbackWindowControl_OnLoaded">
     <UserControl.Resources>
         <util:ObjectToVisibilityConverter x:Key="ObjectToVisibilityConverter" />
         <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />

@@ -22,6 +22,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows.Forms;
 using JetBrains;
@@ -40,16 +41,8 @@ using Messages = KaVE.VsFeedbackGenerator.Properties.SessionManager;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager
 {
-    public interface IFeedbackViewModelDialog
-    {
-        bool AreAnyEventsPresent { get; }
-        IList<IDEEvent> ExtractEventsForExport();
-        void ShowExportSucceededMessage(int count);
-        void ShowExportFailedMessage(string message);
-    }
-
     [ShellComponent]
-    public sealed class FeedbackViewModel : ViewModelBase<FeedbackViewModel>, IFeedbackViewModelDialog
+    public sealed class FeedbackViewModel : ViewModelBase<FeedbackViewModel>
     {
         private readonly ILogManager<IDEEvent> _logManager;
         private readonly IList<SessionViewModel> _sessions;
@@ -77,13 +70,17 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
         }
 
         private readonly InteractionRequest<Notification> _notificationRequest;
+        private BackgroundWorker _refreshWorker;
 
         public IInteractionRequest<Notification> NotificationRequest
         {
             get { return _notificationRequest; }
         }
 
-        public FeedbackViewModel(ILogManager<IDEEvent> logManager, IExporter exporter, ISettingsStore settingsStore, IDateUtils dateUtils)
+        public FeedbackViewModel(ILogManager<IDEEvent> logManager,
+            IExporter exporter,
+            ISettingsStore settingsStore,
+            IDateUtils dateUtils)
         {
             _settingsStore = settingsStore;
             _dateUtils = dateUtils;
@@ -94,50 +91,55 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             _confirmationRequest = new InteractionRequest<Confirmation>();
             _uploadOptionsRequest = new InteractionRequest<UploadWizard.UploadOptions>();
             _notificationRequest = new InteractionRequest<Notification>();
-            Released = true;
+            SetupRefresh();
+        }
+
+        private void SetupRefresh()
+        {
+            _refreshWorker = new BackgroundWorker {WorkerSupportsCancellation = false};
+            _refreshWorker.DoWork += OnDoRefresh;
+            _refreshWorker.RunWorkerCompleted += OnRefreshCompleted;
         }
 
         public void Refresh()
         {
             Refreshing = true;
-            Invoke.Async(
-                () =>
-                {
-                    _lastRefresh = DateTime.Now;
-                    DoRefresh();
-                    Refreshing = false;
-                    Released = false;
-                });
+            _refreshWorker.RunWorkerAsync();
         }
 
-        private void DoRefresh()
+        private void OnDoRefresh(object worker, DoWorkEventArgs doWorkEventArgs)
         {
-            try
-            {
-                Sessions =
-                    _logManager.GetLogs().Select(
-                        log =>
-                        {
-                            var vm = new SessionViewModel(log);
-                            vm.ConfirmationRequest.Raised +=
-                                (sender, args) => _confirmationRequest.Delegate(args);
-                            return vm;
-                        });
-            }
-            catch (Exception e)
+            _lastRefresh = DateTime.Now;
+            doWorkEventArgs.Result =
+                _logManager.GetLogs().Select(
+                    log =>
+                    {
+                        var vm = new SessionViewModel(log);
+                        vm.ConfirmationRequest.Raised +=
+                            (sender, args) => _confirmationRequest.Delegate(args);
+                        return vm;
+                    });
+        }
+
+        private void OnRefreshCompleted(object sender, RunWorkerCompletedEventArgs runWorkerCompletedEventArgs)
+        {
+            if (runWorkerCompletedEventArgs.Error != null)
             {
                 var logEventGenerator = Registry.GetComponent<Generators.ILogger>();
-                logEventGenerator.Error(e);
+                logEventGenerator.Error(runWorkerCompletedEventArgs.Error);
+                Sessions = null;
             }
+            else
+            {
+                Sessions = (IEnumerable<SessionViewModel>) runWorkerCompletedEventArgs.Result;
+            }
+            Refreshing = false;
         }
 
         public void Release()
         {
             Sessions = null;
-            Released = true;
         }
-
-        public bool Released { get; private set; }
 
         public bool Refreshing
         {
@@ -244,7 +246,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             var export = _settingsStore.GetSettings<ExportSettings>();
             var idx = export.UploadUrl.LastIndexOf('/');
             var url = export.UploadUrl.Substring(0, idx);
-            
+
             _notificationRequest.Raise(
                 new Notification
                 {
