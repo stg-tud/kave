@@ -1,0 +1,70 @@
+* {
+	font-family: Arial;	
+}
+
+body{
+	background: grey;
+}
+
+button {
+	padding: 3px 7px 4px 7px;
+	font-size: 0.9em;
+}
+
+noscript {
+	color: red;
+}
+
+p.warning {
+	color: red;
+	font-weight: bold;
+}
+
+#container {
+	width: 900px;
+	margin: 0 auto;
+	padding: 30px;
+	background: white;
+	border: 1px solid black;
+	border-radius: 10px;
+	-moz-border-radius: 10px;
+}
+
+#tasks, #end {
+	display: none;
+}
+
+#intro .error {
+	color: red;
+	display: none;
+}
+
+#countdown {
+	font-weight: bold;
+	font-size: 4em;
+	position: fixed;
+	top: 0px;
+	right: 10px;
+	
+}
+
+.countdown-immediate {
+	color: #FF0000;
+}
+
+.countdown-urgent {
+	color: #FF8000;
+}
+
+.countdown-moderate {
+	color: #FFBF00;
+}
+
+.countdown-normal {
+	color: black;
+}
+
+.syntaxhighlighter { 
+	overflow-y: hidden !important; 
+	overflow-x: auto !important; 
+}
