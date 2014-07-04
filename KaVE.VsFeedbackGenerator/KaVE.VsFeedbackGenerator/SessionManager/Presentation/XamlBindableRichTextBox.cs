@@ -73,6 +73,8 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
         private static bool ContainsTooManyNodesForDisplay(string xaml)
         {
             var tags = 0;
+            // explicit foreach to keep lazyness
+            // ReSharper disable once UnusedVariable
             foreach (var c in xaml.Where(c => c == '<'))
             {
                 tags++;

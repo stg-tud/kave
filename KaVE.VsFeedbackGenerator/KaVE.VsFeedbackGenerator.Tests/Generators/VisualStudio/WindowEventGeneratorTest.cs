@@ -33,8 +33,6 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.VisualStudio
     [TestFixture]
     internal class WindowEventGeneratorTest : VisualStudioEventGeneratorTestBase
     {
-        private const int ExpectedMoveTimeout = 150;
-
         private Mock<WindowEvents> _mockWindowEvents;
         private Window _testWindow;
         private WindowName _testWindowName;
@@ -67,7 +65,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.VisualStudio
         {
             _lastScheduledMoveEvent = null;
             var mockCallbackManager = new Mock<ICallbackManager>();
-            mockCallbackManager.Setup(cm => cm.RegisterCallback(It.IsAny<Action>(), ExpectedMoveTimeout))
+            mockCallbackManager.Setup(cm => cm.RegisterCallback(It.IsAny<Action>(), It.IsAny<int>()))
                                .Callback<Action, int>((a, i) => _lastScheduledMoveEvent = a)
                                .Returns(ScheduledAction.NoOp);
 
@@ -117,7 +115,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.VisualStudio
          TestCase(0, 0, 25, 0),
          TestCase(0, 0, 0, 17),
          TestCase(0, 0, 9, 25)]
-        public void ShouldNotFireMoveIfWindowIsMovedByLessThan10Pixels(int downwards,
+        public void ShouldNotFireMoveIfWindowIsMovedByLessThan25Pixels(int downwards,
             int leftwards,
             int addHeight,
             int addWidth)

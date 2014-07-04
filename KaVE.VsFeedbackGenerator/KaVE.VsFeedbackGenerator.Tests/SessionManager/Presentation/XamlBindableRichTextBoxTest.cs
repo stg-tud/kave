@@ -20,7 +20,6 @@
 using System;
 using System.Text;
 using System.Windows.Documents;
-using System.Windows.Markup;
 using KaVE.JetBrains.Annotations;
 using KaVE.Utils;
 using KaVE.VsFeedbackGenerator.Generators;

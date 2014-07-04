@@ -1,5 +1,5 @@
-/*
- * Copyright 2014 Technische Universit�t Darmstadt
+﻿/*
+ * Copyright 2014 Technische Universität Darmstadt
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,8 +15,10 @@
  * 
  * Contributors:
  *    - Dennis Albrecht
+ *    - Sebastian Proksch
  */
 
+using System.Drawing;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Feature.Services.Lookup;
 using JetBrains.TextControl;
@@ -26,33 +28,54 @@ using JetBrains.Util;
 
 namespace KaVE.VsFeedbackGenerator.CodeCompletion
 {
-    internal class ProposalLookupItem : IWrappedLookupItem
+    internal class LookupItemWrapper : IWrappedLookupItem
     {
         private readonly ILookupItem _wrappedItem;
-        private readonly string _prefix;
-        private readonly RichText _postfix;
 
-        public ProposalLookupItem(ILookupItem wrappedItem, string prefix, RichText postfix)
+        private readonly string _name;
+        private readonly int _probability;
+
+        public LookupItemWrapper(ILookupItem wrappedItem, string name, int probability)
         {
             _wrappedItem = wrappedItem;
-            _prefix = prefix;
-            _postfix = postfix;
-        }
-
-        public ILookupItem Item
-        {
-            get { return _wrappedItem; }
+            _name = name;
+            _probability = probability;
         }
 
         public RichText DisplayName
         {
-            get { return _wrappedItem.DisplayName + _postfix; }
+            get
+            {
+                // strangely, this assignment is necessary to prevent resharper from getting stuck
+                // ReSharper disable once RedundantAssignment
+                var name = _wrappedItem.DisplayName;
+
+                var nameStyle = new TextStyle {FontStyle = FontStyle.Bold};
+                name = new RichText(_name, nameStyle);
+                var probStyle = new TextStyle {ForegroundColor = Color.Gray};
+                var prob = new RichText(" (" + _probability + "%)", probStyle);
+                var all = name.Append(prob);
+                return all;
+            }
         }
 
         public string OrderingString
         {
-            get { return _prefix + (_wrappedItem.OrderingString ?? DisplayName.ToString()); }
+            get
+            {
+                var reverse = 100 - _probability;
+                if (reverse < 10)
+                {
+                    return "AAA00" + reverse;
+                }
+                if (reverse < 100)
+                {
+                    return "AAA0" + reverse;
+                }
+                return "AAA" + reverse;
+            }
         }
+
 
         public bool AcceptIfOnlyMatched(LookupItemAcceptanceContext itemAcceptanceContext)
         {
@@ -124,6 +147,11 @@ namespace KaVE.VsFeedbackGenerator.CodeCompletion
         public string Identity
         {
             get { return _wrappedItem.Identity; }
+        }
+
+        public ILookupItem Item
+        {
+            get { return _wrappedItem; }
         }
     }
 }

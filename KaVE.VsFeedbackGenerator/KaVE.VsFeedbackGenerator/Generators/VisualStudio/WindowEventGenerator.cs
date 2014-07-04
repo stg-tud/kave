@@ -35,8 +35,8 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
     [ShellComponent(ProgramConfigurations.VS_ADDIN)]
     internal class WindowEventGenerator : EventGeneratorBase
     {
-        private const int SignificantMoveLowerBound = 25;
-        private const int WindowMoveTimeout = 150;
+        private const int SignificantMoveDistanceLowerBound = 25;
+        private const int WindowMoveTimeout = 200;
 
         private class WindowDescriptor
         {
@@ -132,8 +132,8 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
             var diffWidth = Math.Abs(knownWindow.Width - window.Width);
             var downwards = Math.Abs(knownWindow.Top - window.Top);
             var leftwards = Math.Abs(knownWindow.Left - window.Left);
-            return downwards > SignificantMoveLowerBound || leftwards > SignificantMoveLowerBound ||
-                   diffHeight > SignificantMoveLowerBound || diffWidth > SignificantMoveLowerBound;
+            return downwards > SignificantMoveDistanceLowerBound || leftwards > SignificantMoveDistanceLowerBound ||
+                   diffHeight > SignificantMoveDistanceLowerBound || diffWidth > SignificantMoveDistanceLowerBound;
         }
 
         private void UpdateAndScheduleEvent(Window window)

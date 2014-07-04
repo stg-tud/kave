@@ -101,7 +101,7 @@
   <ItemGroup>
     <Compile Include="Assertion\NameAssert.cs" />
     <Compile Include="CodeCompletion\CodeCompletionLifecycleManagerTest.cs" />
-    <Compile Include="CodeCompletion\SmileTest.cs" />
+    <Compile Include="CodeCompletion\ExampleNetworkTest.cs" />
     <Compile Include="Generators\LogEventGeneratorTest.cs" />
     <Compile Include="Generators\EventGeneratorTestBase.cs" />
     <Compile Include="Generators\Merging\CompletionEventMergingStrategyTest.cs" />
