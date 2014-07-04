@@ -28,7 +28,7 @@ using KaVE.VsFeedbackGenerator.Analysis;
 
 namespace KaVE.VsFeedbackGenerator.CodeCompletion
 {
-    [Language(typeof (CSharpLanguage))]
+    //[Language(typeof (CSharpLanguage))]
     public class ExemplaryProposalProvider : CSharpItemsProviderBasic
     {
         private const string ExpectedType = "MyButton";

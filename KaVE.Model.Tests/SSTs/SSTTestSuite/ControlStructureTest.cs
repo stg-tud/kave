@@ -21,7 +21,7 @@ using NUnit.Framework;
 
 namespace KaVE.Model.Tests.SSTs.SSTTestSuite
 {
-    [TestFixture]
+    [TestFixture, Ignore]
     internal class ControlStructureTest : AbstractSSTTest
     {
         [Test]
