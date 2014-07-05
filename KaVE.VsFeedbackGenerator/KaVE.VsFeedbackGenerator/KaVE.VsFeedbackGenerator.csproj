@@ -56,9 +56,8 @@
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-    <Reference Include="smileNet, Version=1.1.4431.20499, Culture=neutral">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\smileNet.dll</HintPath>
+    <Reference Include="smileNet">
+      <HintPath>.\smileNet.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -363,6 +362,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="smileNet.dll" />
     <Resource Include="Resources\arrow.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>

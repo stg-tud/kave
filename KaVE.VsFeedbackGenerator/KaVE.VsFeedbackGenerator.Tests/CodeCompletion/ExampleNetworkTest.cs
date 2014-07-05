@@ -23,7 +23,7 @@ using NUnit.Framework;
 
 namespace KaVE.VsFeedbackGenerator.Tests.CodeCompletion
 {
-    [TestFixture, Ignore]
+    [TestFixture]
     internal class ExampleNetworkTest
     {
         private ExampleNetwork _sut;
