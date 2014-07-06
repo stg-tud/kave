@@ -18,6 +18,7 @@
  */
 
 using System.ComponentModel;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 
@@ -25,7 +26,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
 {
     public partial class SortableListView
     {
-        private GridViewColumnHeader _lastHeaderClicked = null;
+        private GridViewColumnHeader _lastHeaderClicked;
         private ListSortDirection _lastDirection = ListSortDirection.Ascending;
 
         public void GridViewColumnHeaderClicked(GridViewColumnHeader clickedHeader)
@@ -40,22 +41,49 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
                 return;
             }
 
+            var direction = LastDirection(clickedHeader); 
+            var sortString = ((Binding) clickedHeader.Column.DisplayMemberBinding).Path.Path;
+
+            Sort(sortString, direction);
+            ShowSortArrow(direction, clickedHeader);
+
+            _lastHeaderClicked = clickedHeader;
+            _lastDirection = direction;
+        }
+
+        private ListSortDirection LastDirection(GridViewColumnHeader headerClicked)
+        {
             ListSortDirection direction;
-            if (!Equals(clickedHeader, _lastHeaderClicked))
+            if (!Equals(headerClicked, _lastHeaderClicked))
             {
                 direction = ListSortDirection.Ascending;
             }
             else
             {
-                direction = _lastDirection == ListSortDirection.Ascending ? ListSortDirection.Descending : ListSortDirection.Ascending;
+                direction = _lastDirection == ListSortDirection.Ascending
+                    ? ListSortDirection.Descending
+                    : ListSortDirection.Ascending;
+            }
+            return direction;
+        }
+
+        private void ShowSortArrow(ListSortDirection direction, GridViewColumnHeader headerClicked)
+        {
+            var gridView = (GridView) View;
+            if (direction == ListSortDirection.Ascending)
+            {
+                gridView.ColumnHeaderTemplate = FindResource("HeaderTemplateArrowUp") as DataTemplate;
+            }
+            else
+            {
+                gridView.ColumnHeaderTemplate = FindResource("HeaderTemplateArrowDown") as DataTemplate;
             }
 
-            var sortString = ((Binding)clickedHeader.Column.DisplayMemberBinding).Path.Path;
-
-            Sort(sortString, direction);
-
-            _lastHeaderClicked = clickedHeader;
-            _lastDirection = direction;
+            // Remove arrow from previously sorted header
+            if (_lastHeaderClicked != null && !Equals(_lastHeaderClicked, headerClicked))
+            {
+                _lastHeaderClicked.Column.HeaderTemplate = null;
+            }
         }
 
         private void Sort(string sortBy, ListSortDirection direction)
