@@ -45,7 +45,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
             _sut = new IoUtils();
         }
 
-        [Test, ExpectedException(typeof (AssertException), ExpectedMessage = "Http-Upload erwartet Http-Adresse")]
+        [Test, ExpectedException(typeof(AssertException), ExpectedMessage = "Http-Upload erwartet Http- oder Https-Adresse")]
         public void ShouldFailOnDifferentScheme()
         {
             _sut.TransferByHttp(new Mock<HttpContent>().Object, new Uri("ftp://www.google.de"), 5);
