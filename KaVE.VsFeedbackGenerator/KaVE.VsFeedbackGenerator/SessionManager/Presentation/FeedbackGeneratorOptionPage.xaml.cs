@@ -32,7 +32,7 @@ using JetBrains.UI.Options;
 using KaVE.Utils.Assertion;
 using KaVE.VsFeedbackGenerator.Utils;
 using MessageBox = JetBrains.Util.MessageBox;
-using Ressource = KaVE.VsFeedbackGenerator.Properties; 
+using Ressource = KaVE.VsFeedbackGenerator.Properties;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
 {
@@ -43,7 +43,9 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
         private readonly IActionManager _actionManager;
         private const string PID = "FeedbackGenerator.OptionPage";
 
-        public FeedbackGeneratorOptionPage(Lifetime lifetime, OptionsSettingsSmartContext ctx, IActionManager actionManager)
+        public FeedbackGeneratorOptionPage(Lifetime lifetime,
+            OptionsSettingsSmartContext ctx,
+            IActionManager actionManager)
         {
             _actionManager = actionManager;
             InitializeComponent();
@@ -52,6 +54,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
             SetToggleButtonBinding(ctx, lifetime, s => (bool?) s.RemoveDurations, RemoveDurationsCheckBox);
             SetToggleButtonBinding(ctx, lifetime, s => (bool?) s.RemoveSessionIDs, RemoveSessionUUIDCheckBox);
             ctx.SetBinding(lifetime, (ExportSettings s) => s.UploadUrl, UploadUrlTextBox, TextBox.TextProperty);
+            ctx.SetBinding(lifetime, (ExportSettings s) => s.WebAccessPraefix, WebPraefixTextBox, TextBox.TextProperty);
         }
 
         private static void SetToggleButtonBinding(IContextBoundSettingsStore ctx,
@@ -64,11 +67,10 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
 
         private void RestoreSettings_OnClick(object sender, RoutedEventArgs e)
         {
-
             var message = Ressource.SessionManager.ResourceManager.GetString("Option_SettingsCleaner_Dialog");
             var result = MessageBox.ShowYesNo(message);
 
-            if(result)
+            if (result)
             {
                 _actionManager.ExecuteActionGuarded(SettingsCleaner.ActionId, "reset-all");
                 CloseWindow();

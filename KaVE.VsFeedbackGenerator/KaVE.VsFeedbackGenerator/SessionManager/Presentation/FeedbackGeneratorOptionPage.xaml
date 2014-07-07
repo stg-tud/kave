@@ -50,11 +50,21 @@ Contributors:
                           x:FieldModifier="private" />
                 <Grid Margin="5,15,10,0">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="100"/>
+                        <ColumnDefinition Width="125"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                     <Label Grid.Column="0" Content="{x:Static root:Properties.SessionManager.Options_Export_UploadUrl}" Margin="0,0,0,0" />
                     <TextBox Grid.Column="1" Name="UploadUrlTextBox"
+                             VerticalAlignment="Top" HorizontalAlignment="Stretch" Margin="10,0,0,0"
+                             x:FieldModifier="private" />
+                </Grid>
+                <Grid Margin="5,15,10,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="125"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Label Grid.Column="0" Content="{x:Static root:Properties.SessionManager.Options_Export_WebAccessPraefix}" Margin="0,0,0,0" />
+                    <TextBox Grid.Column="1" Name="WebPraefixTextBox"
                              VerticalAlignment="Top" HorizontalAlignment="Stretch" Margin="10,0,0,0"
                              x:FieldModifier="private" />
                 </Grid>

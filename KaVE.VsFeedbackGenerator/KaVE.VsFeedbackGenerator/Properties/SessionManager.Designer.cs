@@ -331,6 +331,15 @@ namespace KaVE.VsFeedbackGenerator.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Präfix für Web-Zugriff.
+        /// </summary>
+        public static string Options_Export_WebAccessPraefix {
+            get {
+                return ResourceManager.GetString("Options_Export_WebAccessPraefix", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to KaVE Feedback.
         /// </summary>
         public static string Options_Title {

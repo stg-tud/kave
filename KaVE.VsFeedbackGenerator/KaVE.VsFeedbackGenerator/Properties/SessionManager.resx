@@ -273,4 +273,7 @@
   <data name="VisitUploadPage" xml:space="preserve">
     <value>Die Seite zum manuellen hochladen von Feedback besuchen</value>
   </data>
+  <data name="Options_Export_WebAccessPraefix" xml:space="preserve">
+    <value>Präfix für Web-Zugriff</value>
+  </data>
 </root>

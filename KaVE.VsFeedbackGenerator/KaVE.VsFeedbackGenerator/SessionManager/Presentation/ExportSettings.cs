@@ -41,5 +41,8 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
 
         [SettingsEntry("http://kave.st.informatik.tu-darmstadt.de:667/upload", "KaVE FeedbackGenerator UploadUrl")]
         public string UploadUrl;
+
+        [SettingsEntry("", "KaVE FeedbackGenerator WebAccessPraefix")]
+        public string WebAccessPraefix;
     }
 }

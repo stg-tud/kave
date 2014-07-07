@@ -37,7 +37,9 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
         private readonly IActionManager _actionManager;
         private readonly ISettingsStore _settingsStore;
 
-        public SessionManagerControl(FeedbackViewModel feedbackViewModel, IActionManager actionManager, ISettingsStore settingsStore)
+        public SessionManagerControl(FeedbackViewModel feedbackViewModel,
+            IActionManager actionManager,
+            ISettingsStore settingsStore)
         {
             _feedbackViewModel = feedbackViewModel;
             _actionManager = actionManager;
@@ -56,7 +58,8 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
             MessageBox.Show(notification.Message, notification.Caption, MessageBoxButton.OK);
         }
 
-        private void UploadOptionsRequestOnRaised(object sender, InteractionRequestedEventArgs<UploadWizard.UploadOptions> args)
+        private void UploadOptionsRequestOnRaised(object sender,
+            InteractionRequestedEventArgs<UploadWizard.UploadOptions> args)
         {
             var uploadWizard = new UploadWizard(_actionManager, _settingsStore);
             uploadWizard.ShowDialog();
@@ -112,7 +115,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
 
         private void SortableListViewColumnHeaderClicked(object sender, RoutedEventArgs e)
         {
-            ((SortableListView)sender).GridViewColumnHeaderClicked(e.OriginalSource as GridViewColumnHeader);
+            ((SortableListView) sender).GridViewColumnHeaderClicked(e.OriginalSource as GridViewColumnHeader);
         }
 
         private void RefreshButton_OnClick(object sender, RoutedEventArgs e)
@@ -133,7 +136,8 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
 
         private void VisitHomepageButton_OnClick(object sender, RoutedEventArgs e)
         {
-            System.Diagnostics.Process.Start("http://kave.cc");
+            System.Diagnostics.Process.Start(
+                _settingsStore.GetSettings<ExportSettings>().WebAccessPraefix + "http://kave.cc");
         }
 
         private void OpenOptionPage_OnClick(object sender, RoutedEventArgs e)
