@@ -250,7 +250,7 @@
     <value>Server nicht erreichbar</value>
   </data>
   <data name="ServerRequestWrongScheme" xml:space="preserve">
-    <value>Http-Upload erwartet Http-Adresse</value>
+    <value>Http-Upload erwartet Http- oder Https-Adresse</value>
   </data>
   <data name="ServerResponseFailure" xml:space="preserve">
     <value>Server Request fehlgeschlagen</value>

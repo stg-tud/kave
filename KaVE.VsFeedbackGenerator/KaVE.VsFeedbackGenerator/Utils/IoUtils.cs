@@ -65,7 +65,7 @@ namespace KaVE.VsFeedbackGenerator.Utils
     {
         public HttpResponseMessage TransferByHttp(HttpContent content, Uri targetUri, int timeoutInSeconds)
         {
-            Asserts.That(targetUri.Scheme == Uri.UriSchemeHttp, Messages.ServerRequestWrongScheme);
+            Asserts.That(targetUri.Scheme == Uri.UriSchemeHttp || targetUri.Scheme == Uri.UriSchemeHttps, Messages.ServerRequestWrongScheme);
 
             using (var client = new HttpClient())
             {
