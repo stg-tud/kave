@@ -22,6 +22,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Application;
+using JetBrains.Metadata.Utils.PE.Directories;
 using JetBrains.ReSharper.Feature.Services.CSharp.CodeCompletion.Infrastructure;
 using JetBrains.ReSharper.Feature.Services.Lookup;
 using JetBrains.ReSharper.Psi;
@@ -29,6 +30,7 @@ using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.Tree;
 using KaVE.Model.Events.CompletionEvent;
 using KaVE.Model.Names;
+using KaVE.Model.SSTs;
 using KaVE.VsFeedbackGenerator.Analysis;
 
 namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
@@ -38,6 +40,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
     {
         public IEnumerable<IMethodName> LastEntryPoints { get; private set; }
         public Context LastContext { get; private set; }
+        public SST LastSST { get; private set; }
         public Exception LastException { get; private set; }
 
         public bool HasFailed
@@ -56,14 +59,16 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
                 if (typeDeclaration != null)
                 {
                     var typeShape = new TypeShapeAnalysis().Analyze(typeDeclaration);
-                    LastEntryPoints =
-                        new EntryPointSelector(typeDeclaration, typeShape).GetEntryPoints().Select(ep => ep.Name);
+                    var entryPoints = new EntryPointSelector(typeDeclaration, typeShape).GetEntryPoints();
+                    LastSST = SSTAnalysis.Analyze(context, typeDeclaration, entryPoints);
+                    LastEntryPoints = entryPoints.Select(ep => ep.Name);
                 }
             }
             catch (Exception e)
             {
                 LastException = e;
                 LastContext = null;
+                LastSST = null;
             }
             return false;
         }

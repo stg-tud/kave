@@ -17,11 +17,11 @@
  *    - Sebastian Proksch
  */
 
-using KaVE.Model.Names.CSharp;
 using KaVE.Model.SSTs;
 using NUnit.Framework;
+using Fix = KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite.SSTAnalysisFixture;
 
-namespace KaVE.Model.Tests.SSTs.SSTTestSuite
+namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 {
     [TestFixture, Ignore]
     internal class SingleAssignmentTest : AbstractSSTTest
@@ -29,20 +29,15 @@ namespace KaVE.Model.Tests.SSTs.SSTTestSuite
         [Test]
         public void TriggeredInMethod()
         {
-            Analyze(@"
+            CompleteInClass(@"
                 public void A()
                 {
                     var i;
                 }
             ");
 
-            var mA = NewMethodDeclaration("A");
-            mA.Body.Add(
-                new VariableDeclaration
-                {
-                    Identifier = "i",
-                    Type = TypeName.Get("System.Int32, mscore, 4.0.0.0")
-                });
+            var mA = NewMethodDeclaration("A", Fix.Void);
+            mA.Body.Add(new VariableDeclaration("i", Fix.Int));
 
             AssertEntryPoints(mA);
         }
@@ -50,20 +45,15 @@ namespace KaVE.Model.Tests.SSTs.SSTTestSuite
         [Test]
         public void TriggeredInMethoasdd()
         {
-            Analyze(@"
+            CompleteInClass(@"
                 public void A()
                 {
                     var i = 5;
                 }
             ");
 
-            var mA = NewMethodDeclaration("A");
-            mA.Body.Add(
-                new VariableDeclaration
-                {
-                    Identifier = "i",
-                    Type = TypeName.Get("System.Int32, mscore, 4.0.0.0")
-                });
+            var mA = NewMethodDeclaration("A", Fix.Void);
+            mA.Body.Add(new VariableDeclaration("i", Fix.Int));
 
             mA.Body.Add(
                 new Assignment
@@ -79,8 +69,7 @@ namespace KaVE.Model.Tests.SSTs.SSTTestSuite
         [Test]
         public void TriggeredInMethoaasdsdd()
         {
-            AnalyzeMulti(@"
-                using System;
+            CompleteInFile(@"
                 namespace N {
                     public class C1 {
                         public Object m(Object o) {

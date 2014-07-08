@@ -20,39 +20,45 @@
 using System;
 using System.Collections.Generic;
 using KaVE.Model.Names;
+using KaVE.Utils;
 
 namespace KaVE.Model.SSTs
 {
-    // ReSharper disable once InconsistentNaming
     public class SST
     {
+        private readonly ISet<MethodDeclaration> _methods = new HashSet<MethodDeclaration>();
+        private readonly ISet<MethodDeclaration> _eps = new HashSet<MethodDeclaration>();
+
         public void SetTriggerPoint(MethodDeclaration md)
         {
             //var i = 1 + 2;
             //var b = Console.Read();
             Console.Write("");
             Add((FieldDeclaration) null);
-            throw new NotImplementedException();
         }
 
         public void Add(MethodDeclaration md)
         {
-            throw new NotImplementedException();
-        }
-
-        public void Add(FieldDeclaration fd)
-        {
-            throw new NotImplementedException();
+            _methods.Add(md);
         }
 
         public void AddEntrypoint(MethodDeclaration mA)
         {
-            throw new NotImplementedException();
+            _eps.Add(mA);
         }
 
-        public void Add(TypeTrigger md)
+        public void Add(FieldDeclaration fd) {}
+
+        public void Add(TypeTrigger md) {}
+
+        public ISet<MethodDeclaration> GetEntrypoints()
         {
-            throw new NotImplementedException();
+            return _eps;
+        }
+
+        public ISet<MethodDeclaration> GetNonEntrypoints()
+        {
+            return _methods;
         }
     }
 
@@ -73,8 +79,33 @@ namespace KaVE.Model.SSTs
     public class VariableDeclaration : Expression
     {
         // var a = 1 --> var a; a = 1
-        public string Identifier;
-        public ITypeName Type;
+        public readonly string Identifier;
+        public readonly ITypeName Type;
+
+        public VariableDeclaration(string identifier, ITypeName type)
+        {
+            Identifier = identifier;
+            Type = type;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return this.Equals(obj, Equals);
+        }
+
+        protected bool Equals(VariableDeclaration other)
+        {
+            return string.Equals(Identifier, other.Identifier) && Equals(Type, other.Type);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return ((Identifier != null ? Identifier.GetHashCode() : 0)*397) ^
+                       (Type != null ? Type.GetHashCode() : 0);
+            }
+        }
     }
 
     public class PropertyDeclaration : Expression
@@ -88,12 +119,6 @@ namespace KaVE.Model.SSTs
 
         public List<Expression> GetExpressions = new List<Expression>();
         public List<Expression> SetExpressions = new List<Expression>();
-    }
-
-    public class MethodDeclaration : Expression
-    {
-        public IMethodName Name;
-        public List<Expression> Body = new List<Expression>();
     }
 
     public class LambdaDeclaration : Expression

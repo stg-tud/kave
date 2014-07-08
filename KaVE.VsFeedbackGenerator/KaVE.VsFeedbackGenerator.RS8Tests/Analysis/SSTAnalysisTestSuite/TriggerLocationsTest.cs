@@ -20,8 +20,9 @@
 using System;
 using KaVE.Model.SSTs;
 using NUnit.Framework;
+using Fix = KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite.SSTAnalysisFixture;
 
-namespace KaVE.Model.Tests.SSTs.SSTTestSuite
+namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 {
     [TestFixture, Ignore]
     internal class TriggerLocationsTest : AbstractSSTTest
@@ -29,13 +30,13 @@ namespace KaVE.Model.Tests.SSTs.SSTTestSuite
         [Test]
         public void TriggeredOutsideMethod()
         {
-            WhenTriggeredIn(@"
+            CompleteInClass(@"
                 public void A() {}
                 $
             ");
 
             var sst = new SST();
-            sst.AddEntrypoint(NewMethodDeclaration("A"));
+            sst.AddEntrypoint(NewMethodDeclaration("A", Fix.Void));
 
             AssertResult(sst);
         }
@@ -43,13 +44,13 @@ namespace KaVE.Model.Tests.SSTs.SSTTestSuite
         [Test]
         public void TriggeredOutsideMethod_WithToken()
         {
-            WhenTriggeredIn(@"
+            CompleteInClass(@"
                 public void A() {}
                 B$
             ");
 
             var sst = new SST();
-            sst.AddEntrypoint(NewMethodDeclaration("A"));
+            sst.AddEntrypoint(NewMethodDeclaration("A", Fix.Void));
 
             sst.Add(new TypeTrigger {Token = "B"});
 
@@ -59,7 +60,7 @@ namespace KaVE.Model.Tests.SSTs.SSTTestSuite
         [Test, ExpectedException(typeof (NotSupportedException))]
         public void TriggeredInMethodDeclaration()
         {
-            WhenTriggeredIn(@"
+            CompleteInClass(@"
                 public void$ A() {}
             ");
         }
@@ -67,7 +68,7 @@ namespace KaVE.Model.Tests.SSTs.SSTTestSuite
         [Test, ExpectedException(typeof (NotSupportedException))]
         public void TriggeredInParameterList()
         {
-            WhenTriggeredIn(@"
+            CompleteInClass(@"
                 public void A($) {}
             ");
         }
@@ -75,7 +76,7 @@ namespace KaVE.Model.Tests.SSTs.SSTTestSuite
         [Test]
         public void TriggeredInMethod()
         {
-            WhenTriggeredIn(@"
+            CompleteInClass(@"
                 public void A()
                 {
                     $
@@ -84,7 +85,7 @@ namespace KaVE.Model.Tests.SSTs.SSTTestSuite
 
             var trigger = new TypeTrigger();
 
-            var mA = NewMethodDeclaration("A");
+            var mA = NewMethodDeclaration("A", Fix.Void);
             mA.Body.Add(trigger);
 
             var sst = new SST();
@@ -96,7 +97,7 @@ namespace KaVE.Model.Tests.SSTs.SSTTestSuite
         [Test]
         public void TriggeredInMethod_WithToken()
         {
-            WhenTriggeredIn(@"
+            CompleteInClass(@"
                 public void A()
                 {
                     a.b$
@@ -105,7 +106,7 @@ namespace KaVE.Model.Tests.SSTs.SSTTestSuite
 
             var trigger = new MethodTrigger {Token = "a.b"};
 
-            var mA = NewMethodDeclaration("A");
+            var mA = NewMethodDeclaration("A", Fix.Void);
             mA.Body.Add(trigger);
 
             var sst = new SST();

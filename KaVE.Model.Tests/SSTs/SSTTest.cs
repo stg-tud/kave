@@ -19,9 +19,12 @@
 
 using NUnit.Framework;
 
-namespace KaVE.Model.Tests.SSTs.SSTTestSuite
+namespace KaVE.Model.Tests.SSTs
 {
-    [TestFixture, Ignore]
-    // ReSharper disable once InconsistentNaming
-    internal class SSTTest : AbstractSSTTest {}
+    [TestFixture]
+    internal class SSTTest
+    {
+        [Test]
+        public void Asd() {}
+    }
 }

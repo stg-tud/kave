@@ -21,8 +21,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using KaVE.Model.Collections;
 using KaVE.Model.Names;
-using KaVE.Utils.Collections;
 using NuGet;
 
 namespace KaVE.VsFeedbackGenerator.Analysis

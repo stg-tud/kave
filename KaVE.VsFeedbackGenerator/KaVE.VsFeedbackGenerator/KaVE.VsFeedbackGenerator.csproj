@@ -106,6 +106,7 @@
     <Compile Include="Analysis\EntryPointSelector.cs" />
     <Compile Include="Analysis\InvocationCollector.cs" />
     <Compile Include="Analysis\ReSharperUtils.cs" />
+    <Compile Include="Analysis\SSTAnalysis.cs" />
     <Compile Include="Analysis\TypeHierarchyAnalysisUtils.cs" />
     <Compile Include="Analysis\TypeShapeAnalysis.cs" />
     <Compile Include="CodeCompletion\LookupItemWrapper.cs" />

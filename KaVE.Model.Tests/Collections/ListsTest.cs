@@ -14,48 +14,48 @@
  * limitations under the License.
  * 
  * Contributors:
- *    - Sebastian Proksch
+ *    - 
  */
 
 using System.Collections.Generic;
-using KaVE.Utils.Collections;
+using KaVE.Model.Collections;
 using NUnit.Framework;
 
-namespace KaVE.Utils.Tests.Collections
+namespace KaVE.Model.Tests.Collections
 {
     [TestFixture]
-    internal class SetsTest
+    internal class ListsTest
     {
         [Test]
-        public void NewHashSetReturnsHashSet()
+        public void NewListReturnsList()
         {
-            var s = Sets.NewHashSet<string>();
-            Assert.IsTrue(s is HashSet<string>);
+            var s = Lists.NewList<string>();
+            Assert.IsTrue(s is List<string>);
         }
 
         [Test]
-        public void NewHashSetCanBeCreatedWithParams()
+        public void NewListCanBeCreatedWithParams()
         {
-            var s = Sets.NewHashSet(1, 2);
+            var s = Lists.NewList(1, 2);
             Assert.IsTrue(s.Count == 2);
             Assert.IsTrue(s.Contains(1));
             Assert.IsTrue(s.Contains(2));
         }
 
         [Test]
-        public void TwoEmptySets()
+        public void TwoEmptyLists()
         {
-            var a = Sets.NewHashSet<string>();
-            var b = Sets.NewHashSet<string>();
+            var a = Lists.NewList<string>();
+            var b = Lists.NewList<string>();
             Assert.AreEqual(a, b);
             Assert.IsTrue(a.GetHashCode() == b.GetHashCode());
         }
 
         [Test]
-        public void TwoEmptySets2()
+        public void TwoEmptyLists2()
         {
-            var a = Sets.NewHashSet<int>();
-            var b = Sets.NewHashSet<string>();
+            var a = Lists.NewList<int>();
+            var b = Lists.NewList<string>();
             // ReSharper disable once SuspiciousTypeConversion.Global
             Assert.IsFalse(a.Equals(b));
             Assert.IsTrue(a.GetHashCode() != b.GetHashCode());
@@ -64,39 +64,46 @@ namespace KaVE.Utils.Tests.Collections
         [Test]
         public void TwoNonEmptySets_Equal()
         {
-            var a = Sets.NewHashSet(1);
-            var b = Sets.NewHashSet(1);
+            var a = Lists.NewList(1);
+            var b = Lists.NewList(1);
             Assert.AreEqual(a, b);
             Assert.IsTrue(a.GetHashCode() == b.GetHashCode());
         }
 
         [Test]
-        public void TwoNonEmptySets_Equal2()
+        public void TwoNonEmptySets_OrderIsImportant()
         {
-            var a = Sets.NewHashSet(1, 2);
-            var b = Sets.NewHashSet(2, 1);
-            Assert.IsTrue(a.Equals(b));
-            Assert.IsTrue(a.GetHashCode() == b.GetHashCode());
+            var a = Lists.NewList(1, 2);
+            var b = Lists.NewList(2, 1);
+            Assert.IsFalse(a.Equals(b));
+            Assert.IsFalse(a.GetHashCode() == b.GetHashCode());
         }
 
         [Test]
         public void TwoNonEmptySets_Diff()
         {
-            var a = Sets.NewHashSet<int>();
+            var a = Lists.NewList<int>();
             a.Add(1);
-            var b = Sets.NewHashSet<int>();
+            var b = Lists.NewList<int>();
             b.Add(2);
             Assert.AreNotEqual(a, b);
             Assert.IsFalse(a.GetHashCode() == b.GetHashCode());
         }
 
-
-        [Test, Ignore]
+        [Test]
         public void TakeCareWhenAssertingEqualityWithNUnit()
         {
-            var a = Sets.NewHashSet(1, 2);
-            var b = Sets.NewHashSet(2, 1);
-            CollectionAssert.AreEquivalent(a, b);
+            var a = Lists.NewList(1, 2);
+            var b = Lists.NewList(1, 2);
+            CollectionAssert.AreEqual(a, b);
+        }
+
+        [Test]
+        public void TakeCareWhenAssertingInequalityWithNUnit()
+        {
+            var a = Lists.NewList(1, 2);
+            var b = Lists.NewList(2, 1);
+            CollectionAssert.AreNotEqual(a, b);
         }
     }
 }

@@ -32,6 +32,7 @@ using JetBrains.ReSharper.TestFramework;
 using JetBrains.TextControl;
 using KaVE.Model.Events.CompletionEvent;
 using KaVE.Model.Names;
+using KaVE.Model.SSTs;
 using KaVE.Utils.Assertion;
 using KaVE.VsFeedbackGenerator.RS8Tests.Analysis;
 using KaVE.VsFeedbackGenerator.Utils;
@@ -171,6 +172,11 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests
         protected Context ResultContext
         {
             get { return TestAnalysisComponent.LastContext; }
+        }
+
+        protected SST ResultSST
+        {
+            get { return TestAnalysisComponent.LastSST; }
         }
 
         protected IEnumerable<IMethodName> AnalyzedEntryPoints

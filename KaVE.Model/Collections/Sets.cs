@@ -14,13 +14,14 @@
  * limitations under the License.
  * 
  * Contributors:
- *    - Sebastian Proksch
+ *    - 
  */
 
 using System.Collections.Generic;
 using System.Linq;
+using KaVE.Utils;
 
-namespace KaVE.Utils.Collections
+namespace KaVE.Model.Collections
 {
     public class Sets
     {

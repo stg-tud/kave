@@ -19,7 +19,7 @@
 
 using NUnit.Framework;
 
-namespace KaVE.Model.Tests.SSTs.SSTTestSuite
+namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 {
     [TestFixture, Ignore]
     internal class ControlStructureTest : AbstractSSTTest

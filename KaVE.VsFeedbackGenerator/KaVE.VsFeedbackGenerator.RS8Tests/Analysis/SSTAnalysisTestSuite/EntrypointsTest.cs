@@ -18,21 +18,22 @@
  */
 
 using NUnit.Framework;
+using Fix = KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite.SSTAnalysisFixture;
 
-namespace KaVE.Model.Tests.SSTs.SSTTestSuite
+namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 {
-    [TestFixture, Ignore]
+    [TestFixture]
     internal class EntrypointsTest : AbstractSSTTest
     {
         [Test]
         public void Aaaaaa()
         {
-            Analyze(@"
+            CompleteInClass(@"$
                 private void PrivateA() {}
                 public void PublicA() {}
             ");
 
-            var mA = NewMethodDeclaration("PublicA");
+            var mA = NewMethodDeclaration("PublicA", Fix.Void);
 
             AssertEntryPoints(mA);
         }
@@ -40,12 +41,12 @@ namespace KaVE.Model.Tests.SSTs.SSTTestSuite
         [Test]
         public void Bbbbbbb()
         {
-            Analyze(@"
+            CompleteInClass(@"$
                 private void PrivateA() {}
                 public void PublicA() {}
             ");
 
-            var mA = NewMethodDeclaration("PublicA");
+            var mA = NewMethodDeclaration("PublicA", Fix.Void);
 
             AssertEntryPoints(mA);
         }
@@ -53,18 +54,18 @@ namespace KaVE.Model.Tests.SSTs.SSTTestSuite
         [Test]
         public void Cccccc()
         {
-            Analyze(@"
+            CompleteInClass(@"$
                 public void A() { B();}
                 public void B() {}
                 public void C() {}
             ");
 
-            var mA = NewMethodDeclaration("A");
-            var mB = NewMethodDeclaration("B"); // ...
-            var mC = NewMethodDeclaration("C");
+            var mA = NewMethodDeclaration("A", Fix.Void);
+            var mB = NewMethodDeclaration("B", Fix.Void); // ...
+            var mC = NewMethodDeclaration("C", Fix.Void);
 
             AssertEntryPoints(mA, mC);
-            AssertMethodDeclaration(mB);
+            AssertMethodDeclarations(mB);
         }
 
         // ... adapt tests from EntryPointSelectorTest
