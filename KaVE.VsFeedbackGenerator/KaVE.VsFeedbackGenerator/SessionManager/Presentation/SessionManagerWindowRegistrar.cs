@@ -17,6 +17,7 @@
  *    - Uli Fahrer
  */
 
+using System;
 using JetBrains.ActionManagement;
 using JetBrains.Application;
 using JetBrains.DataFlow;
@@ -24,6 +25,7 @@ using JetBrains.UI.CrossFramework;
 using JetBrains.UI.ToolWindowManagement;
 using KaVE.JetBrains.Annotations;
 using KaVE.VsFeedbackGenerator.Utils;
+using KaVE.VsFeedbackGenerator.VsIntegration;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
 {
@@ -41,7 +43,8 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
             SessionManagerWindowDescriptor descriptor,
             FeedbackViewModel feedbackViewModel,
             IActionManager actionManager,
-            ISettingsStore settingsStore)
+            ISettingsStore settingsStore,
+            IDateUtils dateUtils)
         {
             // objects are kept in fields to prevent garbage collection
             _lifetime = lifetime;
@@ -50,9 +53,11 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
                 lifetime,
                 lt =>
                 {
-                    var window = new SessionManagerControl(feedbackViewModel, actionManager, settingsStore);
-                    var control = new EitherControl(window);
-                    return control.BindToLifetime(lt);
+                    var visibilitySignal = _toolWindowClass.Visible.Change;
+                    var control = new SessionManagerControl(feedbackViewModel, actionManager, dateUtils, settingsStore);
+                    visibilitySignal.Advise(lt, control.OnVisibilityChanged);
+                    var wrapper = new EitherControl(control);
+                    return wrapper.BindToLifetime(lt);
                 });
         }
     }

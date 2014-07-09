@@ -19,20 +19,18 @@
  *    - Sebastian Proksch
  */
 
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using System.Windows.Forms;
 using JetBrains;
+using JetBrains.ActionManagement;
 using JetBrains.Annotations;
 using JetBrains.Application;
 using JetBrains.UI.Extensions.Commands;
 using KaVE.Model.Events;
+using KaVE.VsFeedbackGenerator.Export;
 using KaVE.VsFeedbackGenerator.Interactivity;
-using KaVE.VsFeedbackGenerator.SessionManager.Presentation;
-using KaVE.VsFeedbackGenerator.TrayNotification;
 using KaVE.VsFeedbackGenerator.Utils;
 using KaVE.VsFeedbackGenerator.Utils.Logging;
 using NuGet;
@@ -44,15 +42,13 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
     public sealed class FeedbackViewModel : ViewModelBase<FeedbackViewModel>
     {
         private readonly ILogManager<IDEEvent> _logManager;
+        private readonly IActionManager _actionManager;
         private readonly IList<SessionViewModel> _sessions;
         private readonly IList<SessionViewModel> _selectedSessions;
+        private BackgroundWorker _refreshWorker;
+
         private DelegateCommand _exportCommand;
         private DelegateCommand _deleteCommand;
-        private bool _isBusy;
-        private DateTime _lastRefresh;
-        private readonly ISettingsStore _settingsStore;
-        private readonly IDateUtils _dateUtils;
-        private readonly IExporter _exporter;
 
         private readonly InteractionRequest<Confirmation> _confirmationRequest;
 
@@ -61,35 +57,13 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             get { return _confirmationRequest; }
         }
 
-        private readonly InteractionRequest<UploadWizard.UploadOptions> _uploadOptionsRequest;
-
-        public IInteractionRequest<UploadWizard.UploadOptions> UploadOptionsRequest
+        public FeedbackViewModel(ILogManager<IDEEvent> logManager, IActionManager actionManager)
         {
-            get { return _uploadOptionsRequest; }
-        }
-
-        private readonly InteractionRequest<Notification> _notificationRequest;
-        private BackgroundWorker _refreshWorker;
-
-        public IInteractionRequest<Notification> NotificationRequest
-        {
-            get { return _notificationRequest; }
-        }
-
-        public FeedbackViewModel(ILogManager<IDEEvent> logManager,
-            IExporter exporter,
-            ISettingsStore settingsStore,
-            IDateUtils dateUtils)
-        {
-            _settingsStore = settingsStore;
-            _dateUtils = dateUtils;
-            _exporter = exporter;
             _logManager = logManager;
+            _actionManager = actionManager;
             _sessions = new ObservableCollection<SessionViewModel>();
             _selectedSessions = new List<SessionViewModel>();
             _confirmationRequest = new InteractionRequest<Confirmation>();
-            _uploadOptionsRequest = new InteractionRequest<UploadWizard.UploadOptions>();
-            _notificationRequest = new InteractionRequest<Notification>();
             SetupRefresh();
         }
 
@@ -109,10 +83,9 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             _refreshWorker.RunWorkerAsync();
         }
 
-        private void OnDoRefresh(object worker, DoWorkEventArgs doWorkEventArgs)
+        private void OnDoRefresh(object worker, DoWorkEventArgs workArgs)
         {
-            _lastRefresh = DateTime.Now;
-            doWorkEventArgs.Result =
+            workArgs.Result =
                 _logManager.GetLogs().Select(
                     log =>
                     {
@@ -135,29 +108,8 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             {
                 Sessions = (IEnumerable<SessionViewModel>) runWorkerCompletedEventArgs.Result;
             }
-            IsBusy = false;
+            SetIdle();
         }
-
-        private void SetBusy(string reason)
-        {
-            BusyMessage = reason;
-            IsBusy = true;
-        }
-
-        /// <summary>
-        /// Indicates that the view is busy performing some background task. No calls should be issued on the model if this is true.
-        /// </summary>
-        public bool IsBusy
-        {
-            get { return _isBusy; }
-            private set
-            {
-                _isBusy = value;
-                OnPropertyChanged(vm => vm.IsBusy);
-            }
-        }
-
-        public string BusyMessage { get; private set; }
 
         public IEnumerable<SessionViewModel> Sessions
         {
@@ -198,93 +150,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
 
         private void OnExport()
         {
-            _uploadOptionsRequest.Raise(new UploadWizard.UploadOptions(), Export);
-        }
-
-        private void Export(UploadWizard.UploadOptions options)
-        {
-            SetBusy("Exporting...");
-            if (options.Type.HasValue)
-            {
-                try
-                {
-                    var eventsForExport = ExtractEventsForExport();
-
-                    if (options.Type == UploadWizard.UploadOptions.ExportType.ZipFile)
-                    {
-                        _exporter.Export(eventsForExport, new FilePublisher(AskForExportLocation));
-                    }
-                    else
-                    {
-                        _exporter.Export(eventsForExport, new HttpPublisher(GetUploadUrl()));
-                    }
-
-                    _logManager.DeleteLogsOlderThan(_lastRefresh);
-                    UpdateLastUploadDate();
-                    ShowExportSucceededMessage(eventsForExport.Count);
-                }
-                catch (Exception e)
-                {
-                    ShowExportFailedMessage(e.Message);
-                }
-                Refresh();
-            }
-            IsBusy = false;
-        }
-
-        public IList<IDEEvent> ExtractEventsForExport()
-        {
-            return _sessions.SelectMany(session => session.Events.Select(events => events.Event)).ToList();
-        }
-
-        private static string AskForExportLocation()
-        {
-            var saveFileDialog = new SaveFileDialog
-            {
-                Filter = Properties.SessionManager.SaveFileDialogFilter,
-                AddExtension = true
-            };
-            if (saveFileDialog.ShowDialog().Equals(DialogResult.Cancel))
-            {
-                return null;
-            }
-            return saveFileDialog.FileName;
-        }
-
-        private Uri GetUploadUrl()
-        {
-            var exportSettings = _settingsStore.GetSettings<ExportSettings>();
-            return new Uri(exportSettings.UploadUrl);
-        }
-
-        private void UpdateLastUploadDate()
-        {
-            var settings = _settingsStore.GetSettings<UploadSettings>();
-            settings.LastUploadDate = _dateUtils.Now;
-            _settingsStore.SetSettings(settings);
-        }
-
-        public void ShowExportSucceededMessage(int numberOfExportedEvents)
-        {
-            var export = _settingsStore.GetSettings<ExportSettings>();
-            var idx = export.UploadUrl.LastIndexOf('/');
-            var url = export.UploadUrl.Substring(0, idx);
-            RaiseNotificationRequest(string.Format(Messages.ExportSuccess, numberOfExportedEvents, url));
-        }
-
-        public void ShowExportFailedMessage(string message)
-        {
-            RaiseNotificationRequest(Messages.ExportFail + (string.IsNullOrWhiteSpace(message) ? "" : ":\n" + message));
-        }
-
-        private void RaiseNotificationRequest(string s)
-        {
-            _notificationRequest.Raise(
-                new Notification
-                {
-                    Caption = Properties.UploadWizard.window_title,
-                    Message = s
-                });
+            UploadWizardActionHandler.Execute(_actionManager);
         }
 
         private bool AreAnyEventsPresent()

@@ -18,12 +18,13 @@
  *    - Sven Amann
  */
 
+using System;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using JetBrains.ActionManagement;
+using JetBrains.DataFlow;
 using KaVE.VsFeedbackGenerator.Interactivity;
-using KaVE.VsFeedbackGenerator.TrayNotification;
 using KaVE.VsFeedbackGenerator.Utils;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
@@ -35,41 +36,56 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
     {
         private readonly FeedbackViewModel _feedbackViewModel;
         private readonly IActionManager _actionManager;
+        private readonly IDateUtils _dateUtils;
         private readonly ISettingsStore _settingsStore;
 
         public SessionManagerControl(FeedbackViewModel feedbackViewModel,
             IActionManager actionManager,
+            IDateUtils dateUtils,
             ISettingsStore settingsStore)
         {
-            _feedbackViewModel = feedbackViewModel;
-            _actionManager = actionManager;
-            _settingsStore = settingsStore;
             DataContext = feedbackViewModel;
-
+            _feedbackViewModel = feedbackViewModel;
             _feedbackViewModel.ConfirmationRequest.Raised += new ConfirmationRequestHandler(this).Handle;
-            _feedbackViewModel.NotificationRequest.Raised += (sender, args) => ShowNotification(args.Notification);
-            _feedbackViewModel.UploadOptionsRequest.Raised += UploadOptionsRequestOnRaised;
+
+            _actionManager = actionManager;
+            _dateUtils = dateUtils;
+            _settingsStore = settingsStore;
 
             InitializeComponent();
         }
 
-        private static void ShowNotification(Notification notification)
+        public void OnVisibilityChanged(PropertyChangedEventArgs<bool> e)
         {
-            MessageBox.Show(notification.Message, notification.Caption, MessageBoxButton.OK);
+            var wasVisible = e.HasOld && e.Old;
+            var isVisible = e.HasNew && e.New;
+            if (!wasVisible && isVisible)
+            {
+                RefreshControl();
+            }
+            else if (wasVisible && !isVisible)
+            {
+                SetLastReviewDate(null);
+            }
         }
 
-        private void UploadOptionsRequestOnRaised(object sender,
-            InteractionRequestedEventArgs<UploadWizard.UploadOptions> args)
-        {
-            var uploadWizard = new UploadWizard(_actionManager, _settingsStore);
-            uploadWizard.ShowDialog();
-            args.Notification.Type = uploadWizard.ResultType;
-            args.Callback();
-        }
-
-        private void FeedbackWindowControl_OnLoaded(object sender, RoutedEventArgs e)
+        private void RefreshButton_OnClick(object sender, RoutedEventArgs e)
         {
             RefreshControl();
+        }
+
+        private void RefreshControl()
+        {
+            if (!_feedbackViewModel.IsBusy)
+            {
+                SetLastReviewDate(_dateUtils.Now);
+                _feedbackViewModel.Refresh();
+            }
+        }
+
+        private void SetLastReviewDate(DateTime? lastReviewDate)
+        {
+            _settingsStore.UpdateSettings<ExportSettings>(settings => settings.LastReviewDate = lastReviewDate);
         }
 
         /// <summary>
@@ -118,11 +134,6 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
             ((SortableListView) sender).GridViewColumnHeaderClicked(e.OriginalSource as GridViewColumnHeader);
         }
 
-        private void RefreshButton_OnClick(object sender, RoutedEventArgs e)
-        {
-            RefreshControl();
-        }
-
         private void VisitUploadPageButton_OnClick(object sender, RoutedEventArgs e)
         {
             var settingsStore = Registry.GetComponent<ISettingsStore>();
@@ -143,11 +154,6 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
         private void OpenOptionPage_OnClick(object sender, RoutedEventArgs e)
         {
             _actionManager.ExecuteActionGuarded("ShowOptions", "AgentAction");
-        }
-
-        private void RefreshControl()
-        {
-            _feedbackViewModel.Refresh();
         }
     }
 }

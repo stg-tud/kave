@@ -21,12 +21,15 @@ using KaVE.Utils.Reflection;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager
 {
-    public abstract class ViewModelBase<T> : INotifyPropertyChanged
+    public abstract class ViewModelBase<T> : INotifyPropertyChanged where T : ViewModelBase<T>
     {
         private readonly IDictionary<object, string> _propertyNameDictionary =
             new Dictionary<object, string>();
 
         public event PropertyChangedEventHandler PropertyChanged = delegate { };
+
+        private bool _isBusy;
+        private string _busyMessage;
 
         private void OnPropertyChanged(string propertyName)
         {
@@ -42,6 +45,41 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             }
 
             OnPropertyChanged(_propertyNameDictionary[expression]);
+        }
+
+        protected void SetBusy(string reason)
+        {
+            BusyMessage = reason;
+            IsBusy = true;
+        }
+
+        protected void SetIdle()
+        {
+            IsBusy = false;
+        }
+
+        /// <summary>
+        ///     Indicates that the view is busy performing some background task. No calls should be issued on the model if this is
+        ///     true.
+        /// </summary>
+        public bool IsBusy
+        {
+            get { return _isBusy; }
+            private set
+            {
+                _isBusy = value;
+                OnPropertyChanged(vm => vm.IsBusy);
+            }
+        }
+
+        public string BusyMessage
+        {
+            get { return _busyMessage; }
+            private set
+            {
+                _busyMessage = value;
+                OnPropertyChanged(vm => vm.BusyMessage);
+            }
         }
     }
 }

@@ -19,7 +19,8 @@
 
 using System.Windows.Controls;
 using Hardcodet.Wpf.TaskbarNotification;
-using KaVE.VsFeedbackGenerator.SessionManager;
+using JetBrains.ActionManagement;
+using KaVE.VsFeedbackGenerator.Export;
 using KaVE.VsFeedbackGenerator.Utils;
 
 namespace KaVE.VsFeedbackGenerator.TrayNotification
@@ -29,7 +30,8 @@ namespace KaVE.VsFeedbackGenerator.TrayNotification
         protected void OpenUploadWizard()
         {
             ClosePopup();
-            Registry.GetComponent<FeedbackViewModel>().ExportCommand.Execute(null);
+            var actionManager = Registry.GetComponent<IActionManager>();
+            UploadWizardActionHandler.Execute(actionManager);
         }
 
         protected void ClosePopup()

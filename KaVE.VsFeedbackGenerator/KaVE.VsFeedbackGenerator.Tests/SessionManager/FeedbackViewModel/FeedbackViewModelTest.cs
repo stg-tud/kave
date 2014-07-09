@@ -18,11 +18,13 @@
  */
 
 using System.Linq;
+using JetBrains.ActionManagement;
+using JetBrains.Threading;
 using KaVE.Model.Events;
 using KaVE.TestUtils;
 using KaVE.Utils.Assertion;
+using KaVE.VsFeedbackGenerator.Export;
 using KaVE.VsFeedbackGenerator.Generators;
-using KaVE.VsFeedbackGenerator.Tests.Utils;
 using KaVE.VsFeedbackGenerator.Utils;
 using KaVE.VsFeedbackGenerator.Utils.Logging;
 using Moq;
@@ -34,8 +36,8 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModel
     internal class FeedbackViewModelTest
     {
         private Mock<ILogManager<IDEEvent>> _mockLogManager;
-        private TestDateUtils _dateUtils;
         private Mock<ILogger> _mockLogger;
+        private Mock<IActionManager> _mockActionManager;
 
         private VsFeedbackGenerator.SessionManager.FeedbackViewModel _uut;
 
@@ -46,13 +48,14 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModel
             Registry.RegisterComponent(_mockLogger.Object);
 
             _mockLogManager = new Mock<ILogManager<IDEEvent>>();
-            _dateUtils = new TestDateUtils();
+
+            var mockThreading = new Mock<IThreading>();
+            _mockActionManager = new Mock<IActionManager>();
+            Registry.RegisterComponent(mockThreading.Object);
 
             _uut = new VsFeedbackGenerator.SessionManager.FeedbackViewModel(
                 _mockLogManager.Object,
-                null,
-                null,
-                _dateUtils);
+                _mockActionManager.Object);
         }
 
         [TearDown]
@@ -108,6 +111,15 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModel
 
             Assert.IsFalse(_uut.Sessions.Any());
             _mockLogger.Verify(l => l.Error(exception));
+        }
+
+        [Test]
+        public void ShouldInvokeExportWizardOnExport()
+        {
+            _uut.ExportCommand.Execute(null);
+
+            // I couldn't find a better way to assert invocation. If you know/find one, let me know! (Sven)
+            _mockActionManager.Verify(am => am.GetExecutableAction(UploadWizardActionHandler.ActionId));
         }
 
         private static ILog<IDEEvent> MockLog()

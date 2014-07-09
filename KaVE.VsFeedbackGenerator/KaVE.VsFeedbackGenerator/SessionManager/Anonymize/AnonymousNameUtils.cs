@@ -62,7 +62,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
                    ToAnonymousName<IMethodName, TName>(name, ToAnonymousName) ??
                    ToAnonymousName<INamespaceName, TName>(name, ToAnonymousName) ??
                    ToAnonymousName<IName, TName>(name, ToAnonymousName) ??
-                   Asserts.Fail<TName>("unhandled name type");
+                   Asserts.Fail<TName>("unhandled name type: {0}", name.GetType());
         }
 
         private static TR ToAnonymousName<TName, TR>(TR name, Func<TName, TName> anonymizer)

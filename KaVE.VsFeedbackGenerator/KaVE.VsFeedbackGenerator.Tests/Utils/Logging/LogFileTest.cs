@@ -37,6 +37,9 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Logging
         private Mock<IIoUtils> _mockIoUtils;
         private const string TestLogFilePath = @"C:\My\Log\Dir\Log_2014-03-21";
         private static readonly DateTime TestLogFileDate = new DateTime(2014, 3, 21);
+        private const string TestConcurrentAccessExceptionMessage =
+            "The process cannot access the file '" + TestLogFilePath +
+            "' because it is being used by another process.";
 
         private MemoryStream _inputStream;
         private MemoryStream _outputStream;
@@ -127,6 +130,33 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Logging
 
             AssertContainsOnlyGivenEvent("\"TriggeredAt\":\"2014-03-10T16:00:00\"", GetOutputStream());
             AssertThatOldLogWasReplacedWithUpdateLog();
+        }
+
+        [Test]
+        public void ShouldRetryCreatingReaderOnConcurrentAccessException()
+        {
+            var numberOfCalls = 0;
+            _mockIoUtils.Setup(iou => iou.OpenFile(TestLogFilePath, It.IsAny<FileMode>(), FileAccess.Read)).Callback<string, FileMode, FileAccess>(
+                (path, fileMode, fileAccess) =>
+                {
+                    numberOfCalls++;
+                    if (numberOfCalls < 3)
+                    {
+                        throw new IOException(TestConcurrentAccessExceptionMessage);
+                    }
+                }).Returns(new MemoryStream());
+
+            _uut.NewLogReader();
+
+            Assert.AreEqual(3, numberOfCalls);
+        }
+
+        [Test, Timeout(2000), ExpectedException(typeof(IOException), ExpectedMessage = TestConcurrentAccessExceptionMessage)]
+        public void ShouldFailOnConcurrentAccessExceptionEventually()
+        {
+            _mockIoUtils.Setup(iou => iou.OpenFile(TestLogFilePath, It.IsAny<FileMode>(), FileAccess.Read)).Throws(new IOException(TestConcurrentAccessExceptionMessage));
+
+            _uut.NewLogReader();
         }
 
         private static void AssertContainsOnlyGivenEvent(string line, MemoryStream outputStream)

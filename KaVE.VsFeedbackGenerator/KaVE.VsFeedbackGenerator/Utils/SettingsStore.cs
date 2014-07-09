@@ -33,6 +33,7 @@ namespace KaVE.VsFeedbackGenerator.Utils
     {
         TSettingsType GetSettings<TSettingsType>() where TSettingsType : class, new();
         void SetSettings<TSettingsType>(TSettingsType settingsInstance) where TSettingsType : class, new();
+        void UpdateSettings<TSettingsType>(Action<TSettingsType> update) where TSettingsType : class, new();
         void ResetSettings<TSettingsType>() where TSettingsType : class, new();
     }
 
@@ -67,6 +68,13 @@ namespace KaVE.VsFeedbackGenerator.Utils
         public void SetSettings<TSettingsType>(TSettingsType settingsInstance) where TSettingsType : class, new()
         {
             ContextStore.SetKey(settingsInstance, _optimization);
+        }
+
+        public void UpdateSettings<TSettingsType>(Action<TSettingsType> update) where TSettingsType : class, new()
+        {
+            var settings = GetSettings<TSettingsType>();
+            update(settings);
+            SetSettings(settings);
         }
 
         public void ResetSettings<TSettingsType>() where TSettingsType : class, new()

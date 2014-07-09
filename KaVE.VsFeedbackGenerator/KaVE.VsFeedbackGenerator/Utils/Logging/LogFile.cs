@@ -22,6 +22,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using JetBrains.Util;
 using KaVE.Model.Events;
 using KaVE.Utils;
@@ -56,8 +57,47 @@ namespace KaVE.VsFeedbackGenerator.Utils.Logging
 
         public ILogReader<TLogEntry> NewLogReader()
         {
-            var logStream = _ioUtils.OpenFile(Path, FileMode.OpenOrCreate, FileAccess.Read);
+            var logStream = TryOpenLogFile();
             return new JsonLogReader<TLogEntry>(logStream);
+        }
+
+        // TODO @Sven: pull reader/writer handling into logfile and solve this by synchronization?
+        private Stream TryOpenLogFile()
+        {
+            Stream result = null;
+            Exception exception = null;
+            for (var retries = 3; retries > 0 && result == null; retries--)
+            {
+                try
+                {
+                    result = _ioUtils.OpenFile(Path, FileMode.OpenOrCreate, FileAccess.Read);
+                    exception = null;
+                }
+                catch (IOException e)
+                {
+                    if (IsConcurrentAccessException(e))
+                    {
+                        exception = e;
+                        Thread.Sleep(100);
+                        continue;
+                    }
+                    throw;
+                }
+            }
+            if (exception != null)
+            {
+                throw new IOException(exception.Message, exception);
+            }
+
+            return result;
+        }
+
+        private bool IsConcurrentAccessException(IOException e)
+        {
+            return e.Message.Equals(
+                string.Format(
+                    "The process cannot access the file '{0}' because it is being used by another process.",
+                    Path));
         }
 
         public ILogWriter<TLogEntry> NewLogWriter()
@@ -69,15 +109,15 @@ namespace KaVE.VsFeedbackGenerator.Utils.Logging
 
         public void RemoveRange(IEnumerable<TLogEntry> entries)
         {
-            RemoveEntries(ideEvent => !entries.Contains(ideEvent));
+            RemoveEntries(entries.Contains);
         }
 
         public void RemoveEntriesOlderThan(DateTime time)
         {
-            RemoveEntries(ideEvent => ideEvent.TriggeredAt > time);
+            RemoveEntries(ideEvent => ideEvent.TriggeredAt <= time);
         }
 
-        private void RemoveEntries(Func<IDEEvent, bool> condition)
+        private void RemoveEntries(Func<IDEEvent, bool> removeCondition)
         {
             var tempFileName = _ioUtils.GetTempFileName();
             using (var stream = _ioUtils.OpenFile(tempFileName, FileMode.Append, FileAccess.Write))
@@ -89,7 +129,7 @@ namespace KaVE.VsFeedbackGenerator.Utils.Logging
                         reader.ReadAll().ForEach(
                             entry =>
                             {
-                                if (condition(entry))
+                                if (!removeCondition(entry))
                                 {
                                     writer.Write(entry);
                                 }

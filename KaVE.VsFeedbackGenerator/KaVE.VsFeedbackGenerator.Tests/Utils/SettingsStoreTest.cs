@@ -21,6 +21,7 @@
 using System;
 using JetBrains.Application.Settings;
 using KaVE.VsFeedbackGenerator.Utils;
+using Moq;
 using NUnit.Framework;
 
 namespace KaVE.VsFeedbackGenerator.Tests.Utils

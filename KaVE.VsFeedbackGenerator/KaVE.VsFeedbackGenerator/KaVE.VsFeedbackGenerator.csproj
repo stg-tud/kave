@@ -96,6 +96,9 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="WindowsBase" />
+    <Reference Include="WpfAnimatedGif">
+      <HintPath>..\..\packages\WpfAnimatedGif.1.4.4\lib\net\WpfAnimatedGif.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AboutAction.cs" />
@@ -118,6 +121,7 @@
     <Compile Include="Interactivity\IInteractionRequest.cs" />
     <Compile Include="Interactivity\InteractionRequestedEventArgs.cs" />
     <Compile Include="Interactivity\Notification.cs" />
+    <Compile Include="Interactivity\NotificationRequestHandler.cs" />
     <Compile Include="Properties\PopupNotification.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -153,14 +157,16 @@
     <Compile Include="TrayNotification\HardBalloonPopup.xaml.cs">
       <DependentUpon>HardBalloonPopup.xaml</DependentUpon>
     </Compile>
-    <Compile Include="TrayNotification\UploadWizard.xaml.cs">
-      <DependentUpon>UploadWizard.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Properties\UploadWizard.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>UploadWizard.resx</DependentUpon>
     </Compile>
+    <Compile Include="Export\UploadWizard.xaml.cs">
+      <DependentUpon>UploadWizard.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Export\UploadWizardActionHandler.cs" />
+    <Compile Include="Export\UploadWizardViewModel.cs" />
     <Compile Include="Utils\ActionManagerExtensions.cs" />
     <Compile Include="Utils\CallbackManager.cs" />
     <Compile Include="TrayNotification\PopupAbortConfirmationDialog.xaml.cs">
@@ -261,6 +267,7 @@
     <Compile Include="Utils\StringUtils.cs" />
     <Compile Include="Utils\TypeNameExtensions.cs" />
     <Compile Include="Utils\XamlFormattingUtil.cs" />
+    <Compile Include="VsIntegration\AssemblyResolver.cs" />
     <Compile Include="VsIntegration\IDESession.cs" />
     <Compile Include="VsIntegration\IIDESession.cs" />
     <Compile Include="VsIntegration\IDESessionSettings.cs" />
@@ -320,9 +327,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="TrayNotification\UploadWizard.xaml">
-      <SubType>Designer</SubType>
+    <Page Include="Export\UploadWizard.xaml">
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
   <ItemGroup>
@@ -363,6 +370,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Resources\loading.gif">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
     <Content Include="smileNet.dll" />
     <Resource Include="Resources\arrow.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

@@ -120,7 +120,6 @@
     <Compile Include="SessionManager\DeleteEventCommandTest.cs" />
     <Compile Include="SessionManager\FeedbackViewModel\DeleteSessionCommandTest.cs" />
     <Compile Include="Interactivity\InteractionRequestTestHelper.cs" />
-    <Compile Include="SessionManager\FeedbackViewModel\ExportCommandTest.cs" />
     <Compile Include="SessionManager\Anonymize\IDEEventAnonymizerTest.cs" />
     <Compile Include="SessionManager\Anonymize\IDEEventAnonymizerTestBase.cs" />
     <Compile Include="SessionManager\FeedbackViewModel\FeedbackViewModelTest.cs" />
@@ -137,6 +136,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SessionManager\EventViewTest.cs" />
     <Compile Include="SessionManager\Presentation\ContextVisualizationConverterTest.cs" />
+    <Compile Include="Export\UploadWizardViewModelTest.cs" />
     <Compile Include="Utils\DateTimeTest.cs" />
     <Compile Include="Utils\ExporterTest.cs" />
     <Compile Include="Utils\GZipStreamTest.cs" />

@@ -14,7 +14,6 @@
  * limitations under the License.
  * 
  * Contributors:
- *    - Sebastian Proksch
  *    - Sven Amann
  */
 
@@ -23,44 +22,50 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
-using System.Threading;
 using JetBrains;
 using KaVE.Model.Events;
+using KaVE.TestUtils;
+using KaVE.TestUtils.Model.Events;
 using KaVE.Utils.Assertion;
+using KaVE.VsFeedbackGenerator.Export;
+using KaVE.VsFeedbackGenerator.Generators;
 using KaVE.VsFeedbackGenerator.Interactivity;
 using KaVE.VsFeedbackGenerator.SessionManager;
 using KaVE.VsFeedbackGenerator.SessionManager.Presentation;
 using KaVE.VsFeedbackGenerator.Tests.Interactivity;
 using KaVE.VsFeedbackGenerator.Tests.Utils;
-using KaVE.VsFeedbackGenerator.TrayNotification;
 using KaVE.VsFeedbackGenerator.Utils;
 using KaVE.VsFeedbackGenerator.Utils.Logging;
 using Moq;
 using NUnit.Framework;
 
-namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModel
+namespace KaVE.VsFeedbackGenerator.Tests.Export
 {
     [TestFixture]
-    internal class ExportCommandTest
+    internal class UploadWizardViewModelTest
     {
         private const string TestAutoUploadUrl = "http://foo.bar/upload";
         private const string TestManualUploadUrl = "http://foo.bar";
 
         private Mock<ILogManager<IDEEvent>> _mockLogFileManager;
         private List<Mock<ILog<IDEEvent>>> _mockLogs;
-        private VsFeedbackGenerator.SessionManager.FeedbackViewModel _uut;
-        private InteractionRequestTestHelper<UploadWizard.UploadOptions> _requestHelper;
+        private UploadWizardViewModel _uut;
         private Mock<IExporter> _mockExporter;
         private Mock<ISettingsStore> _mockSettingStore;
         private InteractionRequestTestHelper<Notification> _notificationHelper;
         private TestDateUtils _testDateUtils;
         private Mock<IIoUtils> _mockIoUtils;
+        private Mock<ILogger> _mockLogger;
+        private ExportSettings _exportSettings;
 
         [SetUp]
         public void SetUp()
         {
             _mockIoUtils = new Mock<IIoUtils>();
             Registry.RegisterComponent(_mockIoUtils.Object);
+
+            _mockLogger = new Mock<ILogger>();
+            Registry.RegisterComponent(_mockLogger.Object);
 
             _mockExporter = new Mock<IExporter>();
 
@@ -77,22 +82,18 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModel
 
             _mockSettingStore = new Mock<ISettingsStore>();
             _mockSettingStore.Setup(store => store.GetSettings<UploadSettings>()).Returns(new UploadSettings());
-            _mockSettingStore.Setup(store => store.GetSettings<ExportSettings>())
-                             .Returns(new ExportSettings {UploadUrl = TestAutoUploadUrl});
+            _exportSettings = new ExportSettings {UploadUrl = TestAutoUploadUrl};
+            _mockSettingStore.Setup(store => store.GetSettings<ExportSettings>()).Returns(_exportSettings);
+            _mockSettingStore.Setup(store => store.UpdateSettings(It.IsAny<Action<ExportSettings>>()))
+                             .Callback<Action<ExportSettings>>(update => update(_exportSettings));
 
             _testDateUtils = new TestDateUtils();
-            _uut = new VsFeedbackGenerator.SessionManager.FeedbackViewModel(
-                _mockLogFileManager.Object,
+            _uut = new UploadWizardViewModel(
                 _mockExporter.Object,
+                _mockLogFileManager.Object,
                 _mockSettingStore.Object,
                 _testDateUtils);
-            _uut.Refresh();
-            while (_uut.IsBusy)
-            {
-                Thread.Sleep(5);
-            }
 
-            _requestHelper = _uut.UploadOptionsRequest.NewTestHelper();
             _notificationHelper = _uut.NotificationRequest.NewTestHelper();
         }
 
@@ -102,17 +103,86 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModel
             Registry.Clear();
         }
 
-        [Test]
-        public void ExecutingTheCommandRaisesInteractionRequest()
+        [TestCase(true), TestCase(false)]
+        public void ShouldGetExportSettingRemoveCodeNames(bool expected)
         {
-            _uut.ExportCommand.Execute(null);
-            Assert.IsTrue(_requestHelper.IsRequestRaised);
+            _exportSettings.RemoveCodeNames = expected;
+
+            var actual = _uut.RemoveCodeNames;
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestCase(true), TestCase(false)]
+        public void ShouldSetExportSettingsRemoveCodeNames(bool expected)
+        {
+            _uut.RemoveCodeNames = expected;
+
+            _mockSettingStore.Verify(ss => ss.UpdateSettings(It.IsAny<Action<ExportSettings>>()));
+            Assert.AreEqual(expected, _exportSettings.RemoveCodeNames);
+        }
+
+        [TestCase(true), TestCase(false)]
+        public void ShouldGetExportSettingRemoveDurations(bool expected)
+        {
+            _exportSettings.RemoveDurations = expected;
+
+            var actual = _uut.RemoveDurations;
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestCase(true), TestCase(false)]
+        public void ShouldSetExportSettingsRemoveDurations(bool expected)
+        {
+            _uut.RemoveDurations = expected;
+
+            _mockSettingStore.Verify(ss => ss.UpdateSettings(It.IsAny<Action<ExportSettings>>()));
+            Assert.AreEqual(expected, _exportSettings.RemoveDurations);
+        }
+
+        [TestCase(true), TestCase(false)]
+        public void ShouldGetExportSettingRemoveSessionIDs(bool expected)
+        {
+            _exportSettings.RemoveSessionIDs = expected;
+
+            var actual = _uut.RemoveSessionIDs;
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestCase(true), TestCase(false)]
+        public void ShouldSetExportSettingsRemoveSessionIDs(bool expected)
+        {
+            _uut.RemoveSessionIDs = expected;
+
+            _mockSettingStore.Verify(ss => ss.UpdateSettings(It.IsAny<Action<ExportSettings>>()));
+            Assert.AreEqual(expected, _exportSettings.RemoveSessionIDs);
+        }
+
+        [TestCase(true), TestCase(false)]
+        public void ShouldGetExportSettingRemoveStarTimes(bool expected)
+        {
+            _exportSettings.RemoveStartTimes = expected;
+
+            var actual = _uut.RemoveStartTimes;
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestCase(true), TestCase(false)]
+        public void ShouldSetExportSettingsRemoveStartTimes(bool expected)
+        {
+            _uut.RemoveStartTimes = expected;
+
+            _mockSettingStore.Verify(ss => ss.UpdateSettings(It.IsAny<Action<ExportSettings>>()));
+            Assert.AreEqual(expected, _exportSettings.RemoveStartTimes);
         }
 
         [Test]
         public void SelectingZipExportInvokesZipExport()
         {
-            WhenExportIsExecuted(UploadWizard.UploadOptions.ExportType.ZipFile);
+            WhenExportIsExecuted(UploadWizard.ExportType.ZipFile);
 
             _mockExporter.Verify(
                 exporter => exporter.Export(It.IsAny<IEnumerable<IDEEvent>>(), It.IsAny<FilePublisher>()));
@@ -121,7 +191,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModel
         [Test]
         public void SelectingHttpExportInvokesHttpExport()
         {
-            WhenExportIsExecuted(UploadWizard.UploadOptions.ExportType.HttpUpload);
+            WhenExportIsExecuted(UploadWizard.ExportType.HttpUpload);
 
             _mockExporter.Verify(
                 exporter => exporter.Export(It.IsAny<IEnumerable<IDEEvent>>(), It.IsAny<HttpPublisher>()));
@@ -136,23 +206,25 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModel
                          .Callback<IEnumerable<IDEEvent>, IPublisher>(
                              (evts, publisher) => httpPublisher = (HttpPublisher) publisher);
 
-            WhenExportIsExecuted(UploadWizard.UploadOptions.ExportType.HttpUpload);
+            WhenExportIsExecuted(UploadWizard.ExportType.HttpUpload);
             try
             {
-                // Sadly there's currently no clean way to find out what Url is passed to the publisher. Therefore, we
+                // There's currently no clean way to find out what Url is passed to the publisher. Therefore, we
                 // invoke the publisher and rely on that it calls IIoUtils.TransferByHttp and then fails because the
                 // utils return null.
                 httpPublisher.Publish(new MemoryStream());
             }
             catch (NullReferenceException) {}
 
-            _mockIoUtils.Verify(ioUtils => ioUtils.TransferByHttp(It.IsAny<HttpContent>(), new Uri(TestAutoUploadUrl), 5));
+            _mockIoUtils.Verify(
+                ioUtils => ioUtils.TransferByHttp(It.IsAny<HttpContent>(), new Uri(TestAutoUploadUrl), 5));
         }
 
         [Test]
         public void SuccessfulExportCreatesNotification()
         {
             WhenExportIsExecuted();
+
             Assert.IsTrue(_notificationHelper.IsRequestRaised);
         }
 
@@ -160,6 +232,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModel
         public void SuccessfulExportNotificationHasCorrectMessage()
         {
             WhenExportIsExecuted();
+
             var actual = _notificationHelper.Context;
             // TODO @Sven: extend setup to include some events that are exported here
             // TODO @Seb: help sven with above task
@@ -176,7 +249,9 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModel
         {
             _mockExporter.Setup(e => e.Export(It.IsAny<IEnumerable<IDEEvent>>(), It.IsAny<IPublisher>()))
                          .Throws(new AssertException("TEST"));
+
             WhenExportIsExecuted();
+
             Assert.IsTrue(_notificationHelper.IsRequestRaised);
         }
 
@@ -185,7 +260,9 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModel
         {
             _mockExporter.Setup(e => e.Export(It.IsAny<IEnumerable<IDEEvent>>(), It.IsAny<IPublisher>()))
                          .Throws(new AssertException("TEST"));
+
             WhenExportIsExecuted();
+
             var actual = _notificationHelper.Context;
             var expected = new Notification
             {
@@ -193,6 +270,18 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModel
                 Message = Properties.SessionManager.ExportFail + ":\nTEST"
             };
             Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void FailingExportLogsError()
+        {
+            var exception = new AssertException("TEST");
+            _mockExporter.Setup(e => e.Export(It.IsAny<IEnumerable<IDEEvent>>(), It.IsAny<IPublisher>()))
+                         .Throws(exception);
+
+            WhenExportIsExecuted();
+
+            _mockLogger.Verify(l => l.Error(exception, "export failed"));
         }
 
         [Test]
@@ -209,27 +298,63 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModel
         }
 
         [Test]
-        public void NotSelectingAnyExportMethodShouldResultInNoAction()
+        public void ShouldExportOnlyEventsOlderThanLastReviewDate()
         {
-            WhenExportIsExecuted(null);
+            var lastReviewDate = new DateTime(2014, 7, 2);
+            _exportSettings.LastReviewDate = lastReviewDate;
+            var logContent = new[]
+            {
+                new TestIDEEvent {TriggeredAt = new DateTime(2014, 7, 1)},
+                new TestIDEEvent {TriggeredAt = new DateTime(2014, 7, 3)}
+            };
+            _mockLogs[0].Setup(log => log.NewLogReader().ReadAll()).Returns(logContent);
+            var expectedExport = new[] { logContent[0] };
+            IEnumerable<IDEEvent> actualExport = null;
+            _mockExporter.Setup(e => e.Export(It.IsAny<IEnumerable<IDEEvent>>(), It.IsAny<IPublisher>()))
+                         .Callback<IEnumerable<IDEEvent>, IPublisher>((export, p) => actualExport = export);
 
-            _mockExporter.Verify(
-                exporter => exporter.Export(It.IsAny<IEnumerable<IDEEvent>>(), It.IsAny<IPublisher>()),
-                Times.Never);
-            Assert.IsFalse(_notificationHelper.IsRequestRaised);
+            WhenExportIsExecuted();
+
+            Assert.AreEqual(expectedExport, actualExport);
+            _mockLogFileManager.Verify(lm => lm.DeleteLogsOlderThan(lastReviewDate));
+        }
+
+        [Test]
+        public void ShouldExportEverythingIfLastReviewDateIsNotSet()
+        {
+            _exportSettings.LastReviewDate = null;
+            _testDateUtils.Now = new DateTime(2014, 7, 3);
+            var logContent = new[]
+            {
+                new TestIDEEvent {TriggeredAt = new DateTime(2014, 7, 1)},
+                new TestIDEEvent {TriggeredAt = _testDateUtils.Now}
+            };
+            _mockLogs[0].Setup(log => log.NewLogReader().ReadAll()).Returns(logContent);
+            IEnumerable<IDEEvent> actualExport = null;
+            _mockExporter.Setup(e => e.Export(It.IsAny<IEnumerable<IDEEvent>>(), It.IsAny<IPublisher>()))
+                         .Callback<IEnumerable<IDEEvent>, IPublisher>((export, p) => actualExport = export);
+
+            WhenExportIsExecuted();
+
+            Assert.AreEqual(logContent, actualExport);
+            _mockLogFileManager.Verify(lm => lm.DeleteLogsOlderThan(_testDateUtils.Now));
         }
 
         private void WhenExportIsExecuted()
         {
             // ReSharper disable once IntroduceOptionalParameters.Local
-            WhenExportIsExecuted(UploadWizard.UploadOptions.ExportType.HttpUpload);
+            WhenExportIsExecuted(UploadWizard.ExportType.HttpUpload);
         }
 
-        private void WhenExportIsExecuted(UploadWizard.UploadOptions.ExportType? exportType)
+        private void WaitUntilViewModelIsIdle()
         {
-            _uut.ExportCommand.Execute(null);
-            _requestHelper.Context.Type = exportType;
-            _requestHelper.Callback();
+            AsyncTestHelper.WaitForCondition(() => !_uut.IsBusy);
+        }
+
+        private void WhenExportIsExecuted(UploadWizard.ExportType exportType)
+        {
+            _uut.Export(exportType);
+            WaitUntilViewModelIsIdle();
         }
     }
 }

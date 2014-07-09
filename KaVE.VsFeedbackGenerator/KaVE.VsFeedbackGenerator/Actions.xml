@@ -14,14 +14,20 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
+
+Contributors:
+   - Sven Amann
+   - Uli Fahrer
 -->
+
 <actions>
   <insert group-id="ReSharper" position="last">
     <action-group id="KaVE.VsFeedbackGenerator" text="KaVE">
       <action id="KaVE.VsFeedbackGenerator.SessionManager" text="Feedback Manager">
-        <shortcut>Shift+Control+Alt+S</shortcut>
-        <vs-shortcut>Shift+Control+Alt+S</vs-shortcut>
+        <shortcut>Shift+Control+Alt+M</shortcut>
+        <vs-shortcut>Shift+Control+Alt+M</vs-shortcut>
       </action>
+      <action id="KaVE.VsFeedbackGenerator.UploadWizard" text="Feedback exportieren..."/>
       <action id="KaVE.VsFeedbackGenerator.About" text="About KaVE"/>
     </action-group>
   </insert>

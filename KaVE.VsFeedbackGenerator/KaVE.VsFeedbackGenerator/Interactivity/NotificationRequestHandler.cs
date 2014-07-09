@@ -21,23 +21,26 @@ using System.Windows;
 
 namespace KaVE.VsFeedbackGenerator.Interactivity
 {
-    public class ConfirmationRequestHandler
+    public class NotificationRequestHandler
     {
         private readonly Window _window;
 
-        public ConfirmationRequestHandler(DependencyObject parent)
+        public NotificationRequestHandler(DependencyObject parent)
         {
             _window = Window.GetWindow(parent);
         }
 
-        public void Handle(object sender, InteractionRequestedEventArgs<Confirmation> args)
+        public void Handle(object sender, InteractionRequestedEventArgs<Notification> args)
         {
-            var confirmation = args.Notification;
-            var answer = _window == null
-                ? MessageBox.Show(confirmation.Message, confirmation.Caption, MessageBoxButton.YesNo)
-                : MessageBox.Show(_window, confirmation.Message, confirmation.Caption, MessageBoxButton.YesNo);
-            confirmation.Confirmed = answer == MessageBoxResult.Yes;
-            args.Callback();
+            var notification = args.Notification;
+            if (_window == null)
+            {
+                MessageBox.Show(notification.Message, notification.Caption, MessageBoxButton.OK);
+            }
+            else
+            {
+                MessageBox.Show(_window, notification.Message, notification.Caption, MessageBoxButton.OK);
+            }
         }
     }
 }

@@ -19,6 +19,7 @@
  *    - Sebastian Proksch
  */
 
+using System;
 using JetBrains.Application.Settings;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
@@ -27,6 +28,8 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
     // WARNING: Do not change classname, as it is used to identify settings
     internal class ExportSettings
     {
+        private const string DateTimeMinValue = "0001-01-01T00:00:00";
+
         [SettingsEntry(false, "KaVE FeedbackGeneration RemoveCodeNames")]
         public bool RemoveCodeNames;
 
@@ -44,5 +47,20 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
 
         [SettingsEntry("", "KaVE FeedbackGenerator WebAccessPraefix")]
         public string WebAccessPraefix;
+
+        /// <summary>
+        /// Internal use only! Use LastReviewDate instead.
+        /// </summary>
+        [SettingsEntry(DateTimeMinValue, "Internal representation of the review date. Do not use this directly.")]
+        public DateTime LastReviewDateInternal;
+
+        /// <summary>
+        /// The last-review date or null, if the session manager (review tool) is currently closed.
+        /// </summary>
+        public DateTime? LastReviewDate
+        {
+            get { return LastReviewDateInternal == default(DateTime) ? (DateTime?) null : LastReviewDateInternal; }
+            set { LastReviewDateInternal = value.GetValueOrDefault(); }
+        }
     }
 }

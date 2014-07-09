@@ -9,6 +9,9 @@
 //------------------------------------------------------------------------------
 
 namespace KaVE.VsFeedbackGenerator.Properties {
+    using System;
+    
+    
     /// <summary>
     ///   A strongly-typed resource class, for looking up localized strings, etc.
     /// </summary>
@@ -58,11 +61,29 @@ namespace KaVE.VsFeedbackGenerator.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Der Export wird im Hintergrund fortgührt..
+        /// </summary>
+        public static string ContinueInBackground {
+            get {
+                return ResourceManager.GetString("ContinueInBackground", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Erläuterung Upload:....
         /// </summary>
         public static string description {
             get {
                 return ResourceManager.GetString("description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Exportiere....
+        /// </summary>
+        public static string Export_BusyMessage {
+            get {
+                return ResourceManager.GetString("Export_BusyMessage", resourceCulture);
             }
         }
         
@@ -85,6 +106,15 @@ namespace KaVE.VsFeedbackGenerator.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Es gibt nichts zu exportieren..
+        /// </summary>
+        public static string NothingToExport {
+            get {
+                return ResourceManager.GetString("NothingToExport", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Feedback einsehen.
         /// </summary>
         public static string review_link {
@@ -94,7 +124,7 @@ namespace KaVE.VsFeedbackGenerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Export Wizard.
+        ///   Looks up a localized string similar to Export-Wizard.
         /// </summary>
         public static string window_title {
             get {

@@ -117,8 +117,14 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="ContinueInBackground" xml:space="preserve">
+    <value>Der Export wird im Hintergrund fortgührt.</value>
+  </data>
   <data name="description" xml:space="preserve">
     <value>Erläuterung Upload:...</value>
+  </data>
+  <data name="Export_BusyMessage" xml:space="preserve">
+    <value>Exportiere...</value>
   </data>
   <data name="export_upload_button" xml:space="preserve">
     <value>Direktupload</value>
@@ -126,10 +132,13 @@
   <data name="export_zip_button" xml:space="preserve">
     <value>ZIP-Export...</value>
   </data>
+  <data name="NothingToExport" xml:space="preserve">
+    <value>Es gibt nichts zu exportieren.</value>
+  </data>
   <data name="review_link" xml:space="preserve">
     <value>Feedback einsehen</value>
   </data>
   <data name="window_title" xml:space="preserve">
-    <value>Export Wizard</value>
+    <value>Export-Wizard</value>
   </data>
 </root>
