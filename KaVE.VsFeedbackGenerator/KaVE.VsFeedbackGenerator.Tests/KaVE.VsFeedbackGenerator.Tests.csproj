@@ -110,6 +110,7 @@
     <Compile Include="MessageBus\TinyMessengerMessageChannelTest.cs" />
     <Compile Include="SessionManager\Anonymize\AnonymousNameUtilsTest.cs" />
     <Compile Include="SessionManager\Anonymize\BuildEventAnonymizerTest.cs" />
+    <Compile Include="SessionManager\Anonymize\CommandEventAnonymizerTest.cs" />
     <Compile Include="SessionManager\Anonymize\CompletionEventAnonymizerTest.cs" />
     <Compile Include="SessionManager\Anonymize\DocumentEventAnonymizerTest.cs" />
     <Compile Include="SessionManager\Anonymize\ErrorEventAnonymizerTest.cs" />

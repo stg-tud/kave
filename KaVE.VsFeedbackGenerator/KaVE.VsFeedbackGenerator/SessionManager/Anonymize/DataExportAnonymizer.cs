@@ -47,7 +47,8 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
             {typeof (ErrorEvent), new ErrorEventAnonymizer()},
             {typeof (InfoEvent), new InfoEventAnonymizer()},
             {typeof (IDEStateEvent), new IDEStateEventAnonymizer()},
-            {typeof (CompletionEvent), new CompletionEventAnonymizer()}
+            {typeof (CompletionEvent), new CompletionEventAnonymizer()},
+            {typeof (CommandEvent), new CommandEventAnonymizer()}
         };
 
         private readonly ISettingsStore _settingsStore;
