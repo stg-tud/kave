@@ -44,19 +44,19 @@ Contributors:
     </Window.Resources>
     <Grid>
         <StackPanel Margin="5" Grid.Column="0">
-            <TextBlock Name="DialogText" Text="{x:Static root:Properties.UploadWizard.description}" />
+            <TextBlock Text="{x:Static root:Properties.UploadWizard.description}" />
             <Expander Header="{x:Static root:Properties.SessionManager.Options_Export_Title}">
                 <StackPanel Margin="10,4,0,0">
-                    <CheckBox Name="NamesCheckBox" Margin="4"
+                    <CheckBox Margin="4"
                               Content="{x:Static root:Properties.SessionManager.Options_Export_RemoveCodeNames}"
                               IsChecked="{Binding RemoveCodeNames}"/>
-                    <CheckBox Name="StartTimeCheckBox" Margin="4"
+                    <CheckBox Margin="4"
                               Content="{x:Static root:Properties.SessionManager.Options_Export_RemoveStartTimes}"
                               IsChecked="{Binding RemoveStartTimes}" />
-                    <CheckBox Name="DurationCheckBox" Margin="4"
+                    <CheckBox Margin="4"
                               Content="{x:Static root:Properties.SessionManager.Options_Export_RemoveDurations}"
                               IsChecked="{Binding RemoveDurations}" />
-                    <CheckBox Name="SessionUUIDCheckBox" Margin="4"
+                    <CheckBox Margin="4"
                               Content="{x:Static root:Properties.SessionManager.Options_Export_RemoveSessionIDs}"
                               IsChecked="{Binding RemoveSessionIDs}" />
                 </StackPanel>
@@ -66,7 +66,7 @@ Contributors:
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <Image Grid.Column="0" Name="TypeIcon" Visibility="Hidden" HorizontalAlignment="Left"
+                <Image Grid.Column="0" Visibility="Hidden" HorizontalAlignment="Left"
                        VerticalAlignment="Center" Source="{StaticResource Icon}"
                        Height="25" Width="25" />
                 <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
@@ -78,14 +78,12 @@ Contributors:
                     <!-- TODO perhaps: include the old pics (in comments) in the button's Content -->
                     <Button ToolTip="{x:Static properties:SessionManager.Export}" Margin="5" MinWidth="93"
                             Content="{x:Static root:Properties.UploadWizard.export_zip_button}"
-                            Click="ZipButtonClicked"
-                            Name="Export">
+                            Click="ZipButtonClicked">
                         <!--<Image Source="/KaVE.VsFeedbackGenerator;Component/Resources/export.png" />-->
                     </Button>
                     <Button ToolTip="{x:Static properties:SessionManager.Send}" Margin="5" MinWidth="93"
                             Content="{x:Static root:Properties.UploadWizard.export_upload_button}"
-                            Click="UploadButtonClicked"
-                            Name="Send">
+                            Click="UploadButtonClicked">
                         <!--<Image Source="/KaVE.VsFeedbackGenerator;Component/Resources/send.png" /> -->
                     </Button>
                 </StackPanel>

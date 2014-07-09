@@ -17,7 +17,6 @@
  *    - Uli Fahrer
  */
 
-using System;
 using JetBrains.ActionManagement;
 using JetBrains.Application;
 using JetBrains.DataFlow;
@@ -25,7 +24,6 @@ using JetBrains.UI.CrossFramework;
 using JetBrains.UI.ToolWindowManagement;
 using KaVE.JetBrains.Annotations;
 using KaVE.VsFeedbackGenerator.Utils;
-using KaVE.VsFeedbackGenerator.VsIntegration;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
 {

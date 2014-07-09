@@ -25,7 +25,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
 {
     [ToolWindowDescriptor(
         ProductNeutralId = "SessionManagerFeedbackWindow",
-        Text = WindowTitle,
+        Text = "Feedback Manager",
         Type = ToolWindowType.SingleInstance,
         VisibilityPersistenceScope = ToolWindowVisibilityPersistenceScope.Global,
         Icon = typeof (FeaturesFindingThemedIcons.SearchOptionsPage), // TODO Replace with own icon
@@ -35,8 +35,6 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
         )]
     public class SessionManagerWindowDescriptor : ToolWindowDescriptor
     {
-        public const string WindowTitle = "Feedback Manager";
-
         public SessionManagerWindowDescriptor(IApplicationDescriptor applicationDescriptor)
             : base(applicationDescriptor) {}
     }
