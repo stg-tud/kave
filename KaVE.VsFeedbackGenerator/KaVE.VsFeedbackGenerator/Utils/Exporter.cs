@@ -67,7 +67,7 @@ namespace KaVE.VsFeedbackGenerator.Utils
                     var json = e.ToFormattedJson();
                     zipFile.AddEntry(fileName, json);
                 }
-                Asserts.That(i > 0, "no events");
+                Asserts.That(i > 0, "There are no events to export");
                 zipFile.Save(stream);
             }
         }

@@ -63,7 +63,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
             _sut = new Exporter(_anonymizerMock.Object);
         }
 
-        [Test, ExpectedException(typeof (AssertException), ExpectedMessage = "no events")]
+        [Test, ExpectedException(typeof (AssertException), ExpectedMessage = "There are no events to export")]
         public void ShouldFailWithNoEvents()
         {
             _sut.Export(new List<IDEEvent>(), _publisherMock.Object);

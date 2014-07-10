@@ -65,7 +65,9 @@ namespace KaVE.VsFeedbackGenerator.Utils
     {
         public HttpResponseMessage TransferByHttp(HttpContent content, Uri targetUri, int timeoutInSeconds)
         {
-            Asserts.That(targetUri.Scheme == Uri.UriSchemeHttp || targetUri.Scheme == Uri.UriSchemeHttps, Messages.ServerRequestWrongScheme);
+            Asserts.That(
+                targetUri.Scheme == Uri.UriSchemeHttp || targetUri.Scheme == Uri.UriSchemeHttps,
+                Messages.ServerRequestWrongScheme);
 
             using (var client = new HttpClient())
             {
@@ -75,12 +77,12 @@ namespace KaVE.VsFeedbackGenerator.Utils
                 {
                     response = client.PostAsync(targetUri, content).Result;
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
                     response = null;
-                    Asserts.Fail(Messages.ServerRequestNotAvailable);
+                    Asserts.Fail(Messages.ServerRequestNotAvailable, e.Message);
                 }
-                Asserts.That(response.IsSuccessStatusCode, Messages.ServerResponseFailure);
+                Asserts.That(response.IsSuccessStatusCode, Messages.ServerResponseFailure, response.StatusCode);
                 return response;
             }
         }

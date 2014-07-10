@@ -367,7 +367,7 @@ namespace KaVE.VsFeedbackGenerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Feedback-Anzeige aktualisieren..
+        ///   Looks up a localized string similar to Feedback-Anzeige aktualisieren.
         /// </summary>
         public static string Refresh {
             get {
@@ -394,7 +394,7 @@ namespace KaVE.VsFeedbackGenerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Feedback versenden..
+        ///   Looks up a localized string similar to Feedback versenden.
         /// </summary>
         public static string Send {
             get {
@@ -403,7 +403,7 @@ namespace KaVE.VsFeedbackGenerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Server nicht erreichbar.
+        ///   Looks up a localized string similar to Server nicht erreichbar {0}.
         /// </summary>
         public static string ServerRequestNotAvailable {
             get {
@@ -430,7 +430,7 @@ namespace KaVE.VsFeedbackGenerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Server Request fehlgeschlagen.
+        ///   Looks up a localized string similar to Server Request fehlgeschlagen! Fehlercode: {0}.
         /// </summary>
         public static string ServerResponseFailure {
             get {
