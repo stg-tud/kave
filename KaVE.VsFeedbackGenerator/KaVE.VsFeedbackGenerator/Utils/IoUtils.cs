@@ -65,9 +65,10 @@ namespace KaVE.VsFeedbackGenerator.Utils
     {
         public HttpResponseMessage TransferByHttp(HttpContent content, Uri targetUri, int timeoutInSeconds)
         {
-            Asserts.That(
-                targetUri.Scheme == Uri.UriSchemeHttp || targetUri.Scheme == Uri.UriSchemeHttps,
-                Messages.ServerRequestWrongScheme);
+            // TODO move error-handling of wrong scheme to OptionPage
+            var isHttp = targetUri.Scheme == Uri.UriSchemeHttp;
+            var isHttps = targetUri.Scheme == Uri.UriSchemeHttps;
+            Asserts.That(isHttp || isHttps, Messages.ServerRequestWrongScheme);
 
             using (var client = new HttpClient())
             {
@@ -77,12 +78,12 @@ namespace KaVE.VsFeedbackGenerator.Utils
                 {
                     response = client.PostAsync(targetUri, content).Result;
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     response = null;
-                    Asserts.Fail(Messages.ServerRequestNotAvailable, e.Message);
+                    Asserts.Fail(Messages.ServerRequestNotAvailable, targetUri);
                 }
-                Asserts.That(response.IsSuccessStatusCode, Messages.ServerResponseFailure, response.StatusCode);
+                Asserts.That(response.IsSuccessStatusCode, Messages.ServerResponseFailure, targetUri, response.StatusCode);
                 return response;
             }
         }

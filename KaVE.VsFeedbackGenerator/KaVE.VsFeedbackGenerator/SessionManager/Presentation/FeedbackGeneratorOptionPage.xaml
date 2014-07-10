@@ -17,6 +17,7 @@ Contributors:
    - Uli Fahrer
    - Sven Amann
    - Sebastian Proksch
+   - Dennis Albrecht
 -->
 
 <UserControl x:Class="KaVE.VsFeedbackGenerator.SessionManager.Presentation.FeedbackGeneratorOptionPage"
@@ -49,22 +50,24 @@ Contributors:
                           VerticalAlignment="Top" HorizontalAlignment="Left" Margin="25,6,0,0"
                           x:FieldModifier="private" />
                 <Grid Margin="5,15,10,0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                    </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="125"/>
-                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="125" />
+                        <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
-                    <Label Grid.Column="0" Content="{x:Static root:Properties.SessionManager.Options_Export_UploadUrl}" Margin="0,0,0,0" />
-                    <TextBox Grid.Column="1" Name="UploadUrlTextBox"
+                    <Label Grid.Column="0" Grid.Row="0"
+                           Content="{x:Static root:Properties.SessionManager.Options_Export_UploadUrl}"
+                           Margin="0,0,0,0" />
+                    <TextBox Grid.Column="1" Grid.Row="0" Name="UploadUrlTextBox"
                              VerticalAlignment="Top" HorizontalAlignment="Stretch" Margin="10,0,0,0"
                              x:FieldModifier="private" />
-                </Grid>
-                <Grid Margin="5,15,10,0">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="125"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <Label Grid.Column="0" Content="{x:Static root:Properties.SessionManager.Options_Export_WebAccessPraefix}" Margin="0,0,0,0" />
-                    <TextBox Grid.Column="1" Name="WebPraefixTextBox"
+                    <Label Grid.Column="0" Grid.Row="1"
+                           Content="{x:Static root:Properties.SessionManager.Options_Export_WebAccessPraefix}"
+                           Margin="0,0,0,0" />
+                    <TextBox Grid.Column="1" Grid.Row="1" Name="WebPraefixTextBox"
                              VerticalAlignment="Top" HorizontalAlignment="Stretch" Margin="10,0,0,0"
                              x:FieldModifier="private" />
                 </Grid>

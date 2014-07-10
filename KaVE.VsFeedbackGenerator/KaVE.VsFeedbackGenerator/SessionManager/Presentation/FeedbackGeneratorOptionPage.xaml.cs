@@ -54,7 +54,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
             SetToggleButtonBinding(ctx, lifetime, s => (bool?) s.RemoveDurations, RemoveDurationsCheckBox);
             SetToggleButtonBinding(ctx, lifetime, s => (bool?) s.RemoveSessionIDs, RemoveSessionUUIDCheckBox);
             ctx.SetBinding(lifetime, (ExportSettings s) => s.UploadUrl, UploadUrlTextBox, TextBox.TextProperty);
-            ctx.SetBinding(lifetime, (ExportSettings s) => s.WebAccessPraefix, WebPraefixTextBox, TextBox.TextProperty);
+            ctx.SetBinding(lifetime, (ExportSettings s) => s.WebAccessPrefix, WebPraefixTextBox, TextBox.TextProperty);
         }
 
         private static void SetToggleButtonBinding(IContextBoundSettingsStore ctx,

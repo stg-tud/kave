@@ -403,7 +403,7 @@ namespace KaVE.VsFeedbackGenerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Server nicht erreichbar {0}.
+        ///   Looks up a localized string similar to Der Server ist nicht erreichbar (&quot;{0}&quot;).
         /// </summary>
         public static string ServerRequestNotAvailable {
             get {
@@ -430,7 +430,7 @@ namespace KaVE.VsFeedbackGenerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Server Request fehlgeschlagen! Fehlercode: {0}.
+        ///   Looks up a localized string similar to Fehler bei der Anfrage an den Server &quot;{0}&quot;: {1}.
         /// </summary>
         public static string ServerResponseFailure {
             get {

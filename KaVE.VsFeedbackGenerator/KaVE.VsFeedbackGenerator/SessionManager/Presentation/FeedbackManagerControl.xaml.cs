@@ -147,8 +147,8 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
 
         private void VisitHomepageButton_OnClick(object sender, RoutedEventArgs e)
         {
-            System.Diagnostics.Process.Start(
-                _settingsStore.GetSettings<ExportSettings>().WebAccessPraefix + "http://kave.cc");
+            var prefix = _settingsStore.GetSettings<ExportSettings>().WebAccessPrefix;
+            System.Diagnostics.Process.Start(prefix + "http://kave.cc");
         }
 
         private void OpenOptionPage_OnClick(object sender, RoutedEventArgs e)

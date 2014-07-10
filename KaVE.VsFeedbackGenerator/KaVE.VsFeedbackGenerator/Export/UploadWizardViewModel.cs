@@ -174,10 +174,8 @@ namespace KaVE.VsFeedbackGenerator.Export
         private void ShowExportSucceededMessage(int numberOfExportedEvents)
         {
             var export = _settingsStore.GetSettings<ExportSettings>();
-            var idx = export.UploadUrl.LastIndexOf('/');
-            var url = export.UploadUrl.Substring(0, idx);
             RaiseNotificationRequest(
-                string.Format(Properties.SessionManager.ExportSuccess, numberOfExportedEvents, url));
+                string.Format(Properties.SessionManager.ExportSuccess, numberOfExportedEvents, export.UploadUrl));
         }
 
         private void ShowExportFailedMessage(string message)

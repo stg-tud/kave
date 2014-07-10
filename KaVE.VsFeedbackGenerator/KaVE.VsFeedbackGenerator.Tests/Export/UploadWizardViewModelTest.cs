@@ -44,8 +44,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Export
     [TestFixture]
     internal class UploadWizardViewModelTest
     {
-        private const string TestAutoUploadUrl = "http://foo.bar/upload";
-        private const string TestManualUploadUrl = "http://foo.bar";
+        private const string TestUploadUrl = "http://foo.bar/";
 
         private Mock<ILogManager<IDEEvent>> _mockLogFileManager;
         private List<Mock<ILog<IDEEvent>>> _mockLogs;
@@ -82,7 +81,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Export
 
             _mockSettingStore = new Mock<ISettingsStore>();
             _mockSettingStore.Setup(store => store.GetSettings<UploadSettings>()).Returns(new UploadSettings());
-            _exportSettings = new ExportSettings {UploadUrl = TestAutoUploadUrl};
+            _exportSettings = new ExportSettings {UploadUrl = TestUploadUrl};
             _mockSettingStore.Setup(store => store.GetSettings<ExportSettings>()).Returns(_exportSettings);
             _mockSettingStore.Setup(store => store.UpdateSettings(It.IsAny<Action<ExportSettings>>()))
                              .Callback<Action<ExportSettings>>(update => update(_exportSettings));
@@ -217,7 +216,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Export
             catch (NullReferenceException) {}
 
             _mockIoUtils.Verify(
-                ioUtils => ioUtils.TransferByHttp(It.IsAny<HttpContent>(), new Uri(TestAutoUploadUrl), 5));
+                ioUtils => ioUtils.TransferByHttp(It.IsAny<HttpContent>(), new Uri(TestUploadUrl), 5));
         }
 
         [Test]
@@ -239,7 +238,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Export
             var expected = new Notification
             {
                 Caption = Properties.UploadWizard.window_title,
-                Message = Properties.SessionManager.ExportSuccess.FormatEx(0, TestManualUploadUrl)
+                Message = Properties.SessionManager.ExportSuccess.FormatEx(0, TestUploadUrl)
             };
             Assert.AreEqual(expected, actual);
         }
