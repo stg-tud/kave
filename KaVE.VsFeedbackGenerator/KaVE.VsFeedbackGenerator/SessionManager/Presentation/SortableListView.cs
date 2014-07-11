@@ -15,26 +15,20 @@
  * 
  * Contributors:
  *    - Uli Fahrer
+ *    - Sven Amann
  */
 
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Markup;
-using System.Windows.Media;
-using JetBrains.ReSharper.Psi.ExtensionsAPI.Caches2;
-using JetBrains.Util;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
 {
-    public partial class SortableListView
+    public class SortableListView : ListView
     {
-        private IList<GridViewColumnHeader> _currentHeaders;
         private GridViewColumnHeader _lastClickedHeader;
         private ListSortDirection _lastDirection = ListSortDirection.Ascending;
 
@@ -69,7 +63,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
             }
         }
 
-        public void SortByClickedHeader(GridViewColumnHeader clickedHeader)
+        private void SortByClickedHeader(GridViewColumnHeader clickedHeader)
         {
             var columnName = GetColumnName(clickedHeader);
             var direction = LastDirection(clickedHeader);

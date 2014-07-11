@@ -150,9 +150,7 @@
     <Compile Include="KaVESettings.cs" />
     <Compile Include="SessionManager\Presentation\IDEEventDetailsToJsonConverter.cs" />
     <Compile Include="SessionManager\Presentation\JsonSyntaxHighlighter.cs" />
-    <Compile Include="SessionManager\Presentation\SortableListView.xaml.cs">
-      <DependentUpon>SortableListView.xaml</DependentUpon>
-    </Compile>
+    <Compile Include="SessionManager\Presentation\SortableListView.cs" />
     <Compile Include="SessionManager\ViewModelBase.cs" />
     <Compile Include="TrayNotification\BalloonPopupBase.cs" />
     <Compile Include="TrayNotification\HardBalloonPopup.xaml.cs">
@@ -304,10 +302,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="SessionManager\Presentation\SortableListView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="TrayNotification\HardBalloonPopup.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
