@@ -23,15 +23,31 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using JetBrains.ActionManagement;
+using JetBrains.Application;
 using JetBrains.DataFlow;
 using KaVE.VsFeedbackGenerator.Interactivity;
 using KaVE.VsFeedbackGenerator.Utils;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
 {
-    /// <summary>
-    ///     Interaktionslogik für SessionManagerControl.xaml
-    /// </summary>
+    [ShellComponent]
+    public class SessionManagerInitializer
+    {
+        public SessionManagerInitializer(ISettingsStore settingsStore)
+        {
+            EnsureLastReviewDateReset(settingsStore);
+        }
+
+        /// <summary>
+        ///     If the IDE crashed, the date might not be reset and we end in an inconsistent state. We prevent this by resetting
+        ///     on startup.
+        /// </summary>
+        private static void EnsureLastReviewDateReset(ISettingsStore settingsStore)
+        {
+            settingsStore.UpdateSettings<ExportSettings>(settings => settings.LastReviewDate = null);
+        }
+    }
+
     public partial class SessionManagerControl
     {
         private readonly FeedbackViewModel _feedbackViewModel;
