@@ -60,21 +60,6 @@ Contributors:
                 <scm:SortDescription PropertyName="StartDateTime" Direction="Descending" />
             </CollectionViewSource.SortDescriptions>
         </CollectionViewSource>
-
-        <DataTemplate x:Key="HeaderTemplateArrowUp">
-            <DockPanel LastChildFill="True" Width="{Binding ActualWidth, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type GridViewColumnHeader}}}">
-                <Path x:Name="arrowUp" StrokeThickness="1" Fill="Gray" Data="M 5,10 L 15,10 L 10,5 L 5,10" DockPanel.Dock="Right" Width="20" HorizontalAlignment="Right" Margin="5,0,5,0" SnapsToDevicePixels="True"/>
-                <TextBlock Text="{Binding }" />
-            </DockPanel>
-        </DataTemplate>
-
-        <DataTemplate x:Key="HeaderTemplateArrowDown">
-            <DockPanel LastChildFill="True" Width="{Binding ActualWidth, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type GridViewColumnHeader}}}">
-                <Path x:Name="arrowDown" StrokeThickness="1" Fill="Gray"  Data="M 5,5 L 10,10 L 15,5 L 5,5" DockPanel.Dock="Right" Width="20" HorizontalAlignment="Right" Margin="5,0,5,0" SnapsToDevicePixels="True"/>
-                <TextBlock Text="{Binding }" />
-            </DockPanel>
-        </DataTemplate>
-
     </UserControl.Resources>
     <DockPanel>
         <ToolBarTray IsLocked="True" DockPanel.Dock="Top" AllowDrop="False">
@@ -125,18 +110,17 @@ Contributors:
                         </Button>
                     </StackPanel>
                     <presentation:SortableListView Grid.Row="1"
-                              x:Name="SessionListView"
-                              x:FieldModifier="private"
-                              ItemsSource="{Binding Source={StaticResource SortedSessions}}"
-                              SelectionMode="Extended"
-                              SelectionChanged="SessionListView_OnSelectionChanged"
-                              GridViewColumnHeader.Click="SortableListViewColumnHeaderClicked">
+												   x:Name="SessionListView"
+                            					   x:FieldModifier="private"
+                            					   ItemsSource="{Binding Source={StaticResource SortedSessions}}"
+                            					   SelectionMode="Extended"
+                            					   SelectionChanged="SessionListView_OnSelectionChanged">
                         <presentation:SortableListView.View>
                             <GridView>
                                 <GridViewColumn
                                     DisplayMemberBinding="{Binding StartDate, StringFormat=\{0:dd.MM.yyyy\}}" 
                                     Header="{x:Static root:Properties.SessionManager.Sessions}"
-                                    Width="100"/>
+                                    Width="80"/>
                             </GridView>
                         </presentation:SortableListView.View>
                     </presentation:SortableListView>
@@ -163,8 +147,8 @@ Contributors:
                                                    x:Name="EventListView"
                                                    x:FieldModifier="private"
                                                    ItemsSource="{Binding Source={StaticResource SortedEvents}}"
-                                                   SelectionChanged="EventListView_OnSelectionChanged"
-                                                   GridViewColumnHeader.Click="SortableListViewColumnHeaderClicked">
+                                                   SelectionMode="Extended"
+                                                   SelectionChanged="EventListView_OnSelectionChanged">
                         <presentation:SortableListView.View>
                             <GridView>
                                 <GridViewColumn Header="{x:Static root:Properties.SessionManager.EventTime}"

@@ -60,7 +60,7 @@ namespace KaVE.VsFeedbackGenerator.Export
             _dateUtils = dateUtils;
             _notificationRequest = new InteractionRequest<Notification>();
             _exportWorker = new BackgroundWorker {WorkerSupportsCancellation = false};
-            _exportWorker.DoWork += OnDoExport;
+            _exportWorker.DoWork += OnExport;
             _exportWorker.RunWorkerCompleted += OnExportCompleted;
         }
 
@@ -101,7 +101,7 @@ namespace KaVE.VsFeedbackGenerator.Export
             _exportWorker.RunWorkerAsync(exportType);
         }
 
-        private void OnDoExport(object worker, DoWorkEventArgs e)
+        private void OnExport(object worker, DoWorkEventArgs e)
         {
             var exportType = (UploadWizard.ExportType) e.Argument;
             var events = ExtractEventsForExport();

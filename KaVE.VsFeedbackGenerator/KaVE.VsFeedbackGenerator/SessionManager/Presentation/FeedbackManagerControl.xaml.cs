@@ -129,11 +129,6 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
             }
         }
 
-        private void SortableListViewColumnHeaderClicked(object sender, RoutedEventArgs e)
-        {
-            ((SortableListView) sender).GridViewColumnHeaderClicked(e.OriginalSource as GridViewColumnHeader);
-        }
-
         private void VisitUploadPageButton_OnClick(object sender, RoutedEventArgs e)
         {
             var settingsStore = Registry.GetComponent<ISettingsStore>();

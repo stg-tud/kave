@@ -69,8 +69,9 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
 
         private void SetupRefresh()
         {
+            // TODO Maybe introduce an specific worker that capsules the boilerplate?
             _refreshWorker = new BackgroundWorker {WorkerSupportsCancellation = false};
-            _refreshWorker.DoWork += OnDoRefresh;
+            _refreshWorker.DoWork += OnRefresh;
             _refreshWorker.RunWorkerCompleted += OnRefreshCompleted;
         }
 
@@ -83,7 +84,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             _refreshWorker.RunWorkerAsync();
         }
 
-        private void OnDoRefresh(object worker, DoWorkEventArgs workArgs)
+        private void OnRefresh(object worker, DoWorkEventArgs workArgs)
         {
             workArgs.Result =
                 _logManager.GetLogs().Select(

@@ -17,81 +17,104 @@
  *    - Uli Fahrer
  */
 
+using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Data;
+using System.Windows.Markup;
+using System.Windows.Media;
+using JetBrains.ReSharper.Psi.ExtensionsAPI.Caches2;
+using JetBrains.Util;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
 {
     public partial class SortableListView
     {
-        private GridViewColumnHeader _lastHeaderClicked;
+        private IList<GridViewColumnHeader> _currentHeaders;
+        private GridViewColumnHeader _lastClickedHeader;
         private ListSortDirection _lastDirection = ListSortDirection.Ascending;
 
-        public void GridViewColumnHeaderClicked(GridViewColumnHeader clickedHeader)
+        private const string ArrowUpPathData = "M 5,10 L 15,10 L 10,5 L 5,10";
+        private const string ArrowDownPathData = "M 5,5 L 10,10 L 15,5 L 5,5";
+
+        private const string ArrowHeaderDataTemplateRaw =
+            "<DataTemplate xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\" xmlns:x=\"http://schemas.microsoft.com/winfx/2006/xaml\">" +
+            "<DockPanel LastChildFill=\"True\" Width=\"{{Binding ActualWidth, RelativeSource={{RelativeSource FindAncestor, AncestorType={{x:Type GridViewColumnHeader}}}}}}\">" +
+            "    <Path StrokeThickness=\"1\" Fill=\"Gray\" Data=\"{0}\" DockPanel.Dock=\"Right\" Width=\"20\" HorizontalAlignment=\"Right\" Margin=\"5,0,5,0\" SnapsToDevicePixels=\"True\"/>" +
+            "    <TextBlock Text=\"{{Binding }}\" TextAlignment=\"Center\" />" +
+            "</DockPanel>" +
+            "</DataTemplate>";
+
+        private static readonly DataTemplate ArrowUpHeaderTemplate =
+            (DataTemplate) XamlReader.Parse(string.Format(ArrowHeaderDataTemplateRaw, ArrowUpPathData));
+
+        private static readonly DataTemplate ArrowDownHeaderTemplate =
+            (DataTemplate) XamlReader.Parse(string.Format(ArrowHeaderDataTemplateRaw, ArrowDownPathData));
+
+        public SortableListView()
         {
-            if (clickedHeader == null)
+            AddHandler(ButtonBase.ClickEvent, new RoutedEventHandler(OnGridViewColumnHeaderClicked));
+        }
+
+        private void OnGridViewColumnHeaderClicked(object sender, RoutedEventArgs e)
+        {
+            var clickedHeader = e.OriginalSource as GridViewColumnHeader;
+            if (clickedHeader != null && clickedHeader.Role != GridViewColumnHeaderRole.Padding)
             {
-                return;
+                SortByClickedHeader(clickedHeader);
             }
+        }
 
-            if (clickedHeader.Role == GridViewColumnHeaderRole.Padding)
-            {
-                return;
-            }
+        public void SortByClickedHeader(GridViewColumnHeader clickedHeader)
+        {
+            var columnName = GetColumnName(clickedHeader);
+            var direction = LastDirection(clickedHeader);
 
-            var direction = LastDirection(clickedHeader); 
-            var sortString = ((Binding) clickedHeader.Column.DisplayMemberBinding).Path.Path;
+            SortBy(columnName, direction);
+            ShowSortArrow(clickedHeader, direction);
 
-            Sort(sortString, direction);
-            ShowSortArrow(direction, clickedHeader);
-
-            _lastHeaderClicked = clickedHeader;
+            _lastClickedHeader = clickedHeader;
             _lastDirection = direction;
         }
 
-        private ListSortDirection LastDirection(GridViewColumnHeader headerClicked)
+        private static string GetColumnName(GridViewColumnHeader header)
         {
-            ListSortDirection direction;
-            if (!Equals(headerClicked, _lastHeaderClicked))
-            {
-                direction = ListSortDirection.Ascending;
-            }
-            else
-            {
-                direction = _lastDirection == ListSortDirection.Ascending
-                    ? ListSortDirection.Descending
-                    : ListSortDirection.Ascending;
-            }
-            return direction;
+            return ((Binding) header.Column.DisplayMemberBinding).Path.Path;
         }
 
-        private void ShowSortArrow(ListSortDirection direction, GridViewColumnHeader headerClicked)
+        private ListSortDirection LastDirection(GridViewColumnHeader clickedHeader)
         {
-            var gridView = (GridView) View;
-            if (direction == ListSortDirection.Ascending)
+            if (!clickedHeader.Equals(_lastClickedHeader))
             {
-                gridView.ColumnHeaderTemplate = FindResource("HeaderTemplateArrowUp") as DataTemplate;
+                return ListSortDirection.Ascending;
             }
-            else
-            {
-                gridView.ColumnHeaderTemplate = FindResource("HeaderTemplateArrowDown") as DataTemplate;
-            }
+            return _lastDirection == ListSortDirection.Ascending
+                ? ListSortDirection.Descending
+                : ListSortDirection.Ascending;
+        }
+
+        private void ShowSortArrow(GridViewColumnHeader clickedHeader, ListSortDirection direction)
+        {
+            clickedHeader.Column.HeaderTemplate = direction == ListSortDirection.Ascending
+                ? ArrowUpHeaderTemplate
+                : ArrowDownHeaderTemplate;
 
             // Remove arrow from previously sorted header
-            if (_lastHeaderClicked != null && !Equals(_lastHeaderClicked, headerClicked))
+            if (_lastClickedHeader != null && !clickedHeader.Equals(_lastClickedHeader))
             {
-                _lastHeaderClicked.Column.HeaderTemplate = null;
+                _lastClickedHeader.Column.HeaderTemplate = null;
             }
         }
 
-        private void Sort(string sortBy, ListSortDirection direction)
+        private void SortBy(string columnName, ListSortDirection direction)
         {
             var dataView = CollectionViewSource.GetDefaultView(ItemsSource ?? Items);
-
             dataView.SortDescriptions.Clear();
-            var sort = new SortDescription(sortBy, direction);
+            var sort = new SortDescription(columnName, direction);
             dataView.SortDescriptions.Add(sort);
             dataView.Refresh();
         }
