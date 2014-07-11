@@ -23,7 +23,9 @@ using JetBrains.DataFlow;
 using JetBrains.UI.CrossFramework;
 using JetBrains.UI.ToolWindowManagement;
 using KaVE.JetBrains.Annotations;
+using KaVE.Model.Events;
 using KaVE.VsFeedbackGenerator.Utils;
+using KaVE.VsFeedbackGenerator.Utils.Logging;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
 {
@@ -39,8 +41,8 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
         public SessionManagerWindowRegistrar(Lifetime lifetime,
             ToolWindowManager toolWindowManager,
             SessionManagerWindowDescriptor descriptor,
-            FeedbackViewModel feedbackViewModel,
             IActionManager actionManager,
+            ILogManager<IDEEvent> logManager,
             ISettingsStore settingsStore,
             IDateUtils dateUtils)
         {
@@ -52,7 +54,11 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
                 lt =>
                 {
                     var visibilitySignal = _toolWindowClass.Visible.Change;
-                    var control = new SessionManagerControl(feedbackViewModel, actionManager, dateUtils, settingsStore);
+                    var control = new SessionManagerControl(
+                        new FeedbackViewModel(logManager, actionManager),
+                        actionManager,
+                        dateUtils,
+                        settingsStore);
                     visibilitySignal.Advise(lt, control.OnVisibilityChanged);
                     var wrapper = new EitherControl(control);
                     return wrapper.BindToLifetime(lt);

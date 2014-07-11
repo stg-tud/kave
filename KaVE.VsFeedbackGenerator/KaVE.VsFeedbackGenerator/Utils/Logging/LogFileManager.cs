@@ -32,6 +32,8 @@ namespace KaVE.VsFeedbackGenerator.Utils.Logging
         private readonly IIoUtils _ioUtils;
         internal const string LogDirectoryPrefix = "Log_";
 
+        public event EventHandler LogsChanged = delegate {  };
+
         public LogFileManager([NotNull] string baseLocation)
         {
             BaseLocation = baseLocation;
@@ -63,6 +65,7 @@ namespace KaVE.VsFeedbackGenerator.Utils.Logging
                     log.RemoveEntriesOlderThan(time);
                 }
             }
+            LogsChanged.Invoke(this, new EventArgs());
         }
 
         public void DeleteLogFileDirectory()

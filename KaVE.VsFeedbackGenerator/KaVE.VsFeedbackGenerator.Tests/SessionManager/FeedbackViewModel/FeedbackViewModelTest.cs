@@ -17,6 +17,7 @@
  *    - Sven Amann
  */
 
+using System;
 using System.Linq;
 using JetBrains.ActionManagement;
 using JetBrains.Threading;
@@ -120,6 +121,16 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModel
 
             // I couldn't find a better way to assert invocation. If you know/find one, let me know! (Sven)
             _mockActionManager.Verify(am => am.GetExecutableAction(UploadWizardActionHandler.ActionId));
+        }
+
+        [Test]
+        public void ShouldRefreshOnLogManagerLogsChangedEvent()
+        {
+            _mockLogManager.Raise(lm => lm.LogsChanged += null, _mockLogManager.Object, new EventArgs());
+
+            WaitForRefreshToFinish();
+
+            _mockLogManager.Verify(lm => lm.GetLogs());
         }
 
         private static ILog<IDEEvent> MockLog()

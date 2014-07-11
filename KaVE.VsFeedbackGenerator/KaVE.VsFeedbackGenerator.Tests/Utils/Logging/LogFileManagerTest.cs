@@ -148,6 +148,17 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Logging
         }
 
         [Test]
+        public void ShouldFireChangedEventOnDeletion()
+        {
+            var logsChanged = false;
+            _uut.LogsChanged += (sender, args) => { logsChanged = true; };
+
+            _uut.DeleteLogsOlderThan(DateTime.Now);
+
+            Assert.IsTrue(logsChanged);
+        }
+
+        [Test]
         public void ShouldDeleteLogFileDirectory()
         {
             GivenLogsExist(DateTime.Today);

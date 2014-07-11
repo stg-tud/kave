@@ -36,6 +36,8 @@ namespace KaVE.VsFeedbackGenerator.Utils.Logging
 
     public interface ILogManager<TLogEntry> where TLogEntry : IDEEvent
     {
+        event EventHandler LogsChanged;
+
         string BaseLocation { get; }
         IEnumerable<ILog<TLogEntry>> GetLogs();
         ILog<TLogEntry> CurrentLog { get; }

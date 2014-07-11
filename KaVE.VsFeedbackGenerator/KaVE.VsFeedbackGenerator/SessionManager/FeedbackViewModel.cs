@@ -19,6 +19,7 @@
  *    - Sebastian Proksch
  */
 
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -29,6 +30,7 @@ using JetBrains.Annotations;
 using JetBrains.Application;
 using JetBrains.UI.Extensions.Commands;
 using KaVE.Model.Events;
+using KaVE.Utils;
 using KaVE.VsFeedbackGenerator.Export;
 using KaVE.VsFeedbackGenerator.Interactivity;
 using KaVE.VsFeedbackGenerator.Utils;
@@ -38,7 +40,6 @@ using Messages = KaVE.VsFeedbackGenerator.Properties.SessionManager;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager
 {
-    [ShellComponent]
     public sealed class FeedbackViewModel : ViewModelBase<FeedbackViewModel>
     {
         private readonly ILogManager<IDEEvent> _logManager;
@@ -64,6 +65,8 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             _sessions = new ObservableCollection<SessionViewModel>();
             _selectedSessions = new List<SessionViewModel>();
             _confirmationRequest = new InteractionRequest<Confirmation>();
+
+            _logManager.LogsChanged += delegate { Invoke.OnSTA(Refresh); };
             SetupRefresh();
         }
 
