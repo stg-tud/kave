@@ -55,6 +55,7 @@
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>4.11</version>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
@@ -95,11 +96,13 @@
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-all</artifactId>
 			<version>1.9.5</version>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.seleniumhq.selenium</groupId>
 			<artifactId>selenium-java</artifactId>
 			<version>2.39.0</version>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.sun.jersey.contribs</groupId>
@@ -116,6 +119,7 @@
 			<groupId>org.seleniumhq.webdriver</groupId>
 			<artifactId>webdriver-firefox</artifactId>
 			<version>0.9.7376</version>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 	<properties>

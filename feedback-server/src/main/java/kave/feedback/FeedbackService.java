@@ -1,3 +1,10 @@
+/**
+ * Copyright (c) 2010, 2011 Darmstadt University of Technology.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ */
 package kave.feedback;
 
 import java.io.File;
@@ -25,31 +32,27 @@ import com.sun.jersey.multipart.FormDataParam;
 
 @Path("/")
 public class FeedbackService {
-	private File root;
+	private File dataFolder;
 
 	@Inject
-	public FeedbackService(File root) throws IOException {
-		this.root = root;
+	public FeedbackService(File dataFolder) throws IOException {
+		this.dataFolder = dataFolder;
 		enforceOutputDirectory();
 	}
 
 	private void enforceOutputDirectory() throws IOException {
-		if (!getOutputFolder().exists()) {
-			FileUtils.forceMkdir(getOutputFolder());
+		if (!dataFolder.exists()) {
+			FileUtils.forceMkdir(dataFolder);
 		}
 	}
 
-	private File getOutputFolder() {
-		return new File(root, "data");
-	}
-
 	@GET
-	public Viewable index() {
+	@Produces(MediaType.TEXT_HTML + "; charset=utf-8")
+    public Viewable index() {
 		return new Viewable("/index.jsp");
 	}
 
 	@POST
-	@Path("upload")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Result<Void> upload(@FormDataParam("file") InputStream fileInputStream,
@@ -66,9 +69,8 @@ public class FeedbackService {
 	}
 
 	private File getFreshOutputFile(String fileExtension) {
-		File outputFolder = getOutputFolder();
 		int lastExistingFileIndex = 0;
-		for (String fileName : outputFolder.list()) {
+		for (String fileName : dataFolder.list()) {
 			try {
 				String baseName = FilenameUtils.getBaseName(fileName);
 				int currentFileIndex = Integer.parseInt(baseName);
@@ -80,7 +82,7 @@ public class FeedbackService {
 				// our number schema
 			}
 		}
-		return new File(outputFolder, String.format("%05d",
+		return new File(dataFolder, String.format("%05d",
 				(lastExistingFileIndex + 1)) + "." + fileExtension);
 	}
 

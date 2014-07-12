@@ -6,7 +6,6 @@ import kave.feedback.FeedbackService;
 
 import org.codehaus.jackson.jaxrs.JacksonJsonProvider;
 import org.codehaus.jackson.map.ObjectMapper;
-import org.eclipse.jetty.servlet.DefaultServlet;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -30,16 +29,10 @@ public class GuiceConfig extends GuiceServletContextListener {
             }
 
             private void setupServer() {
-                bind(DefaultServlet.class).asEagerSingleton();
-                bind(GuiceContainer.class).asEagerSingleton();
-
-                // jackson
                 ObjectMapper mapper = new ObjectMapper();
                 bind(JacksonJsonProvider.class).toInstance(new JacksonJsonProvider(mapper));
-                
-                bind(File.class).toInstance(new File("data"));
 
-                serve("/*").with(DefaultServlet.class);
+                bind(File.class).toInstance(new File("data"));
 
                 Map<String, String> params = new HashMap<String, String>();
                 params.put(ServletContainer.JSP_TEMPLATES_BASE_PATH, "WEB-INF/jsp");

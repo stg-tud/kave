@@ -36,7 +36,7 @@ require([], function() {
 		data.append("file", file)
 		
 		$.ajax({
-			url: "upload",
+			url: "./",
 			type: "POST",
 			data: data,
 			cache: false,

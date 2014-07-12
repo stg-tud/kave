@@ -1,0 +1,43 @@
+body {
+	background: lightgray;
+	font-family: Arial;
+	padding: 30px
+}
+
+form {
+	margin: 0;
+	padding: 0;
+}
+
+#content {
+	background:white;
+	width: 600px;
+	padding: 20px;
+	border: 1px solid grey;	
+	-moz-border-radius: 15px;
+	border-radius: 15px;
+}
+
+h1 {
+	margin: 0 0 10px 0;
+	padding: 0;
+}
+
+#file {
+	margin-bottom: 10px;
+}
+
+#confirm {
+	float: left;
+}
+
+#hint {
+	float:left;
+	padding-left: 3px;
+	width: 95%;
+}
+
+#submit-upload {
+	clear: left;
+	margin-top: 20px;
+}
