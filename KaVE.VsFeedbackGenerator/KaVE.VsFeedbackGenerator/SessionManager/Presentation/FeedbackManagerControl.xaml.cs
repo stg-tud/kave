@@ -67,6 +67,8 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
             _feedbackViewModel = feedbackViewModel;
             _feedbackViewModel.ConfirmationRequest.Raised += new ConfirmationRequestHandler(this).Handle;
             _feedbackViewModel.PropertyChanged += OnReloading;
+            _feedbackViewModel.SelectedSessionAfterRefresh += (o, model) => { SessionListView.SelectedItem = model; };
+            _feedbackViewModel.SelectedEventAfterRefresh += (o, model) => { EventListView.SelectedItem = model; };
 
             _actionManager = actionManager;
             _dateUtils = dateUtils;

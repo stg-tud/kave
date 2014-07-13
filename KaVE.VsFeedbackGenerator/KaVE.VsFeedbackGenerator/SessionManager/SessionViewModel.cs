@@ -87,6 +87,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
                 OnPropertyChanged(vm => vm.SingleSelectedEvent);
                 DeleteEventsCommand.RaiseCanExecuteChanged();
             }
+            get { return _selectedEvents; }
         }
 
         public EventViewModel SingleSelectedEvent

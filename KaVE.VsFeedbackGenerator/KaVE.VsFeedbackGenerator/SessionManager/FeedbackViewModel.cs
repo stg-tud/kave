@@ -27,7 +27,6 @@ using System.Linq;
 using JetBrains;
 using JetBrains.ActionManagement;
 using JetBrains.Annotations;
-using JetBrains.Application;
 using JetBrains.UI.Extensions.Commands;
 using KaVE.Model.Events;
 using KaVE.Utils;
@@ -52,6 +51,9 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
         private DelegateCommand _deleteCommand;
 
         private readonly InteractionRequest<Confirmation> _confirmationRequest;
+
+        public event Action<object, SessionViewModel> SelectedSessionAfterRefresh;
+        public event Action<object, EventViewModel> SelectedEventAfterRefresh;
 
         public IInteractionRequest<Confirmation> ConfirmationRequest
         {
@@ -110,7 +112,25 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             }
             else
             {
+                var selectedSessions = _selectedSessions.Select(s => s.StartDate).ToList();
+                var selectedEvents = SingleSelectedSession == null
+                    ? null
+                    : SingleSelectedSession.SelectedEvents.Select(e => e.Event).ToList();
                 Sessions = (IEnumerable<SessionViewModel>) runWorkerCompletedEventArgs.Result;
+                var newlySelectedSessions = Sessions.Where(s => selectedSessions.Contains(s.StartDate)).ToList();
+                if (newlySelectedSessions.Count() == 1)
+                {
+                    var selectedSession = newlySelectedSessions.First();
+                    SelectedSessionAfterRefresh(this, selectedSession);
+                    if (selectedEvents != null)
+                    {
+                        var newlySelectedEvents = selectedSession.Events.Where(e => selectedEvents.Contains(e.Event)).ToList();
+                        if (newlySelectedEvents.Count() == 1)
+                        {
+                            SelectedEventAfterRefresh(this, newlySelectedEvents.First());
+                        }
+                    }
+                }
             }
             SetIdle();
         }
@@ -139,6 +159,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
                 OnPropertyChanged(vm => vm.SingleSelectedSession);
                 DeleteSessionsCommand.RaiseCanExecuteChanged();
             }
+            get { return _selectedSessions; }
         }
 
         [CanBeNull]
