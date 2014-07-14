@@ -15,17 +15,22 @@
  * 
  * Contributors:
  *    - Sven Amann
+ *    - Dennis Albrecht
  */
 
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using JetBrains.ActionManagement;
 using JetBrains.Threading;
 using KaVE.Model.Events;
 using KaVE.TestUtils;
+using KaVE.TestUtils.Model.Events;
 using KaVE.Utils.Assertion;
 using KaVE.VsFeedbackGenerator.Export;
 using KaVE.VsFeedbackGenerator.Generators;
+using KaVE.VsFeedbackGenerator.SessionManager;
 using KaVE.VsFeedbackGenerator.Utils;
 using KaVE.VsFeedbackGenerator.Utils.Logging;
 using Moq;
@@ -133,10 +138,194 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModel
             _mockLogManager.Verify(lm => lm.GetLogs());
         }
 
+        [Test]
+        public void ShouldInvokeSelectedSessionEventIfOneSessionWasSelectedPreviously()
+        {
+            var somePointInTime = DateTime.Now;
+            var selectedSessionEventWasCalled = false;
+            var sessions = new List<ILog<IDEEvent>>
+            {
+                MockLog(somePointInTime),
+                MockLog(somePointInTime.AddDays(1)),
+                MockLog(somePointInTime.AddDays(2)),
+                MockLog(somePointInTime.AddDays(3))
+            };
+            InitializeFeedbackViewModelWithSessions(sessions);
+            _uut.SelectedSessions = new List<SessionViewModel> {new SessionViewModel(sessions[0])};
+            _uut.SelectedSessionAfterRefresh += (o, model) => { selectedSessionEventWasCalled = true; };
+            RefreshFeedbackViewModelWithSessions(sessions);
+            Assert.IsTrue(selectedSessionEventWasCalled);
+        }
+
+        [Test]
+        public void ShouldNotInvokeSelectedSessionEventIfNoSessionsWereSelectedPreviously()
+        {
+            var somePointInTime = DateTime.Now;
+            var selectedSessionEventWasCalled = false;
+            var sessions = new List<ILog<IDEEvent>>
+            {
+                MockLog(somePointInTime),
+                MockLog(somePointInTime.AddDays(1)),
+                MockLog(somePointInTime.AddDays(2)),
+                MockLog(somePointInTime.AddDays(3))
+            };
+            InitializeFeedbackViewModelWithSessions(sessions);
+            _uut.SelectedSessions = new List<SessionViewModel>();
+            _uut.SelectedSessionAfterRefresh += (o, model) => { selectedSessionEventWasCalled = true; };
+            RefreshFeedbackViewModelWithSessions(sessions);
+            Assert.IsFalse(selectedSessionEventWasCalled);
+        }
+
+        [Test]
+        public void ShouldNotInvokeSelectedSessionEventIfMultipleSessionsWereSelectedPreviously()
+        {
+            var somePointInTime = DateTime.Now;
+            var selectedSessionEventWasCalled = false;
+            var sessions = new List<ILog<IDEEvent>>
+            {
+                MockLog(somePointInTime),
+                MockLog(somePointInTime.AddDays(1)),
+                MockLog(somePointInTime.AddDays(2)),
+                MockLog(somePointInTime.AddDays(3))
+            };
+            InitializeFeedbackViewModelWithSessions(sessions);
+            _uut.SelectedSessions = new List<SessionViewModel>
+            {
+                new SessionViewModel(sessions[0]),
+                new SessionViewModel(sessions[1])
+            };
+            _uut.SelectedSessionAfterRefresh += (o, model) => { selectedSessionEventWasCalled = true; };
+            RefreshFeedbackViewModelWithSessions(sessions);
+            Assert.IsFalse(selectedSessionEventWasCalled);
+        }
+
+        [Test]
+        public void ShouldInvokeSelectedEventEventIfOneEventWasSelectedPreviously()
+        {
+            var somePointInTime = DateTime.Now;
+            var selectedEventEventWasCalled = false;
+            var events = new List<IDEEvent>
+            {
+                new TestIDEEvent {TestProperty = "Event 1"},
+                new TestIDEEvent {TestProperty = "Event 2"},
+                new TestIDEEvent {TestProperty = "Event 3"}
+            };
+            var sessions = new List<ILog<IDEEvent>>
+            {
+                MockLog(somePointInTime, events),
+                MockLog(somePointInTime.AddDays(1)),
+                MockLog(somePointInTime.AddDays(2)),
+                MockLog(somePointInTime.AddDays(3))
+            };
+            InitializeFeedbackViewModelWithSessions(sessions);
+            _uut.SelectedSessions = new List<SessionViewModel> {new SessionViewModel(sessions[0])};
+            Debug.Assert(_uut.SingleSelectedSession != null, "_uut.SingleSelectedSession != null");
+            _uut.SingleSelectedSession.SelectedEvents = new List<EventViewModel>
+            {
+                new EventViewModel(events[0])
+            };
+            _uut.SelectedSessionAfterRefresh += (o, model) => { };
+            _uut.SelectedEventAfterRefresh += (o, model) => { selectedEventEventWasCalled = true; };
+            RefreshFeedbackViewModelWithSessions(sessions);
+            Assert.IsTrue(selectedEventEventWasCalled);
+        }
+
+        [Test]
+        public void ShouldNotInvokeSelectedEventEventIfNoEventsWereSelectedPreviously()
+        {
+            var somePointInTime = DateTime.Now;
+            var selectedEventEventWasCalled = false;
+            var events = new List<IDEEvent>
+            {
+                new TestIDEEvent {TestProperty = "Event 1"},
+                new TestIDEEvent {TestProperty = "Event 2"},
+                new TestIDEEvent {TestProperty = "Event 3"}
+            };
+            var sessions = new List<ILog<IDEEvent>>
+            {
+                MockLog(somePointInTime, events),
+                MockLog(somePointInTime.AddDays(1)),
+                MockLog(somePointInTime.AddDays(2)),
+                MockLog(somePointInTime.AddDays(3))
+            };
+            InitializeFeedbackViewModelWithSessions(sessions);
+            _uut.SelectedSessions = new List<SessionViewModel> { new SessionViewModel(sessions[0]) };
+            Debug.Assert(_uut.SingleSelectedSession != null, "_uut.SingleSelectedSession != null");
+            _uut.SingleSelectedSession.SelectedEvents = new List<EventViewModel>();
+            _uut.SelectedSessionAfterRefresh += (o, model) => { };
+            _uut.SelectedEventAfterRefresh += (o, model) => { selectedEventEventWasCalled = true; };
+            RefreshFeedbackViewModelWithSessions(sessions);
+            Assert.IsFalse(selectedEventEventWasCalled);
+        }
+
+        [Test]
+        public void ShouldNotInvokeSelectedEventEventIfMultipleEventsWereSelectedPreviously()
+        {
+            var somePointInTime = DateTime.Now;
+            var selectedEventEventWasCalled = false;
+            var events = new List<IDEEvent>
+            {
+                new TestIDEEvent {TestProperty = "Event 1"},
+                new TestIDEEvent {TestProperty = "Event 2"},
+                new TestIDEEvent {TestProperty = "Event 3"}
+            };
+            var sessions = new List<ILog<IDEEvent>>
+            {
+                MockLog(somePointInTime, events),
+                MockLog(somePointInTime.AddDays(1)),
+                MockLog(somePointInTime.AddDays(2)),
+                MockLog(somePointInTime.AddDays(3))
+            };
+            InitializeFeedbackViewModelWithSessions(sessions);
+            _uut.SelectedSessions = new List<SessionViewModel> { new SessionViewModel(sessions[0]) };
+            Debug.Assert(_uut.SingleSelectedSession != null, "_uut.SingleSelectedSession != null");
+            _uut.SingleSelectedSession.SelectedEvents = new List<EventViewModel>
+            {
+                new EventViewModel(events[0]),
+                new EventViewModel(events[1])
+            };
+            _uut.SelectedSessionAfterRefresh += (o, model) => { };
+            _uut.SelectedEventAfterRefresh += (o, model) => { selectedEventEventWasCalled = true; };
+            RefreshFeedbackViewModelWithSessions(sessions);
+            Assert.IsFalse(selectedEventEventWasCalled);
+        }
+
+        private void InitializeFeedbackViewModelWithSessions(IEnumerable<ILog<IDEEvent>> sessions)
+        {
+            _mockLogManager.Setup(m => m.GetLogs()).Returns(sessions);
+            _uut.Refresh();
+            WaitForRefreshToFinish();
+        }
+
+        private void RefreshFeedbackViewModelWithSessions(IEnumerable<ILog<IDEEvent>> sessions)
+        {
+            _mockLogManager.Setup(m => m.GetLogs()).Returns(sessions);
+            _uut.Refresh();
+            WaitForRefreshToFinish();
+        }
+
         private static ILog<IDEEvent> MockLog()
         {
             var log = new Mock<ILog<IDEEvent>>();
             log.Setup(l => l.NewLogReader()).Returns(new Mock<ILogReader<IDEEvent>>().Object);
+            return log.Object;
+        }
+
+        private static ILog<IDEEvent> MockLog(DateTime startTime)
+        {
+            var log = new Mock<ILog<IDEEvent>>();
+            log.Setup(l => l.NewLogReader()).Returns(new Mock<ILogReader<IDEEvent>>().Object);
+            log.Setup(l => l.Date).Returns(startTime);
+            return log.Object;
+        }
+
+        private static ILog<IDEEvent> MockLog(DateTime startTime, IEnumerable<IDEEvent> events)
+        {
+            var log = new Mock<ILog<IDEEvent>>();
+            var reader = new Mock<ILogReader<IDEEvent>>();
+            reader.Setup(r => r.ReadAll()).Returns(events);
+            log.Setup(l => l.NewLogReader()).Returns(reader.Object);
+            log.Setup(l => l.Date).Returns(startTime);
             return log.Object;
         }
 
