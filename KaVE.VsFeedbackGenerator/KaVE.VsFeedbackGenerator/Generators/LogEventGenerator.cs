@@ -52,14 +52,8 @@ namespace KaVE.VsFeedbackGenerator.Generators
 
         public virtual void Error(Exception exception, string content)
         {
-            // Do not use Create<ErrorEvent>() here, because retrieving the
-            // active window/document might freeze the UI, depending on the
-            // current error state.
-            var e = new ErrorEvent
-            {
-                TriggeredAt = _dateUtils.Now
-            };
-            
+            var e = CreateErrorEvent();
+
             if (content != null)
             {
                 // TODO does it make sense to move this to the ErrorEvent class?
@@ -75,7 +69,32 @@ namespace KaVE.VsFeedbackGenerator.Generators
                     .ToArray();
             }
 
-            _messageBus.Publish(e);
+            Fire(e);
+        }
+
+        private ErrorEvent CreateErrorEvent()
+        {
+            // Do not use Create<ErrorEvent>() here, because retrieving the
+            // active window/document might freeze the UI, depending on the
+            // current error state.
+            var e = new ErrorEvent
+            {
+                TriggeredAt = _dateUtils.Now
+            };
+            return e;
+        }
+
+        private void Fire(ErrorEvent e)
+        {
+            // ReSharper disable once EmptyGeneralCatchClause
+            try
+            {
+                _messageBus.Publish(e);
+            }
+            catch
+            {
+                // if logging an error fails here, there's nothing we can do.
+            }
         }
 
         public void Info(string info)

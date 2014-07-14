@@ -168,6 +168,14 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators
             AssertSimilarity(expected, actual);
         }
 
+        [Test]
+        public void ShouldNotFailWhenMessageBusFails()
+        {
+            MockTestMessageBus.Setup(mb => mb.Publish(It.IsAny<IDEEvent>())).Throws(new Exception("TestException"));
+
+            _uut.Error(new Exception("LoggedException"), "comment");
+        }
+
         private static Exception CreateException(params string[] stackTraceParts)
         {
             var toStringOutput = string.Join("\r\n", stackTraceParts);

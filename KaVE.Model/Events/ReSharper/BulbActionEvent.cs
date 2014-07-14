@@ -18,6 +18,7 @@
  */
 
 using System.Runtime.Serialization;
+using KaVE.Utils;
 
 namespace KaVE.Model.Events.ReSharper
 {
@@ -29,5 +30,31 @@ namespace KaVE.Model.Events.ReSharper
 
         [DataMember]
         public string ActionText { get; set; }
+
+        protected bool Equals(BulbActionEvent other)
+        {
+            return base.Equals(other) && string.Equals(ActionId, other.ActionId) && string.Equals(ActionText, other.ActionText);
+        }
+
+        public override bool Equals(object obj)
+        {
+            return this.Equals(obj, Equals);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                var hashCode = base.GetHashCode();
+                hashCode = (hashCode*397) ^ (ActionId != null ? ActionId.GetHashCode() : 0);
+                hashCode = (hashCode*397) ^ (ActionText != null ? ActionText.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+
+        public override string ToString()
+        {
+            return string.Format("{0}, ActionId: {1}, ActionText: {2}", base.ToString(), ActionId, ActionText);
+        }
     }
 }

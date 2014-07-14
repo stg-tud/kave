@@ -12,12 +12,18 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sven Amann
  */
+
+using System;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Intentions.Extensibility;
 using JetBrains.TextControl;
 using KaVE.Model.Events.ReSharper;
 using KaVE.VsFeedbackGenerator.MessageBus;
+using KaVE.VsFeedbackGenerator.Utils;
 using KaVE.VsFeedbackGenerator.VsIntegration;
 
 namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
@@ -34,16 +40,35 @@ namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
 
         public void Execute(ISolution solution, ITextControl textControl)
         {
+            var bulbActionEvent = CreateBulbActionEvent();
+            _target.Execute(solution, textControl);
+            FireActionEventNow(bulbActionEvent);
+        }
+
+        private BulbActionEvent CreateBulbActionEvent()
+        {
             var bulbActionEvent = Create<BulbActionEvent>();
             bulbActionEvent.ActionId = _target.GetType().FullName;
             bulbActionEvent.ActionText = Text;
-            _target.Execute(solution, textControl);
-            FireNow(bulbActionEvent);
+            return bulbActionEvent;
         }
 
         public string Text
         {
             get { return _target.Text; }
+        }
+
+        private void FireActionEventNow(BulbActionEvent bulbActionEvent)
+        {
+            try
+            {
+                FireNow(bulbActionEvent);
+            }
+            catch (Exception e)
+            {
+                e = new Exception("generating bulb-action event failed", e);
+                Registry.GetComponent<ILogger>().Error(e);
+            }
         }
     }
 }

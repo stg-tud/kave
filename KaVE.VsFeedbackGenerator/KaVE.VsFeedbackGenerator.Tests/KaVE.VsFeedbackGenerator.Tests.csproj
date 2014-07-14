@@ -102,6 +102,9 @@
     <Compile Include="Generators\EventGeneratorTestBase.cs" />
     <Compile Include="Generators\Merging\CompletionEventMergingStrategyTest.cs" />
     <Compile Include="Generators\ReSharper\CodeCompletionEventHandlerTest.cs" />
+    <Compile Include="Generators\ReSharper\EventGeneratingActionWrapperTest.cs" />
+    <Compile Include="Generators\ReSharper\EventGeneratingBulbActionProxyTest.cs" />
+    <Compile Include="Generators\ReSharper\EventGeneratingActionHandlerTest.cs" />
     <Compile Include="Generators\TestIDESession.cs" />
     <Compile Include="Generators\VisualStudio\CommandEventGeneratorTest.cs" />
     <Compile Include="Generators\VisualStudio\VisualStudioEventGeneratorTestBase.cs" />

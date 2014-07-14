@@ -22,6 +22,7 @@ using System.Linq;
 using System.Threading;
 using KaVE.JetBrains.Annotations;
 using KaVE.Model.Events;
+using KaVE.VsFeedbackGenerator.Generators;
 using KaVE.VsFeedbackGenerator.MessageBus;
 using KaVE.VsFeedbackGenerator.Tests.Utils;
 using KaVE.VsFeedbackGenerator.Utils;
@@ -34,21 +35,23 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators
     {
         private IList<IDEEvent> _publishedEvents;
         private AutoResetEvent _eventReceptionLock;
-        private Mock<IMessageBus> _mockMessageBus;
-        protected TestIDESession TestIDESession;
+        protected TestIDESession TestIDESession { get; private set; }
         protected TestDateUtils TestDateUtils { get; private set; }
-
+        protected Mock<ILogger> MockLogger { get; private set; }
+        
         [SetUp]
         public void SetUpEventReception()
         {
             TestIDESession = new TestIDESession();
             TestDateUtils = new TestDateUtils();
             Registry.RegisterComponent<IDateUtils>(TestDateUtils);
+            MockLogger = new Mock<ILogger>();
+            Registry.RegisterComponent(MockLogger.Object);
 
             _publishedEvents = new List<IDEEvent>();
             _eventReceptionLock = new AutoResetEvent(false);
-            _mockMessageBus = new Mock<IMessageBus>();
-            _mockMessageBus.Setup(bus => bus.Publish(It.IsAny<IDEEvent>())).Callback(
+            MockTestMessageBus = new Mock<IMessageBus>();
+            MockTestMessageBus.Setup(bus => bus.Publish(It.IsAny<IDEEvent>())).Callback(
                 (IDEEvent ideEvent) => ProcessEvent(ideEvent));
         }
 
@@ -67,9 +70,11 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators
             }
         }
 
+        protected Mock<IMessageBus> MockTestMessageBus { get; private set; }
+
         protected IMessageBus TestMessageBus
         {
-            get { return _mockMessageBus.Object; }
+            get { return MockTestMessageBus.Object; }
         }
 
         protected void AssertNoEvent()
