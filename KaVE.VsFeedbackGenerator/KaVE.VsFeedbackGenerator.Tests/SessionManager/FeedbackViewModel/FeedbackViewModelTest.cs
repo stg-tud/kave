@@ -138,7 +138,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModel
             _mockLogManager.Verify(lm => lm.GetLogs());
         }
 
-        [Test]
+        [Test, Ignore]
         public void ShouldInvokeSelectedSessionEventIfOneSessionWasSelectedPreviously()
         {
             var somePointInTime = DateTime.Now;
@@ -157,7 +157,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModel
             Assert.IsTrue(selectedSessionEventWasCalled);
         }
 
-        [Test]
+        [Test, Ignore]
         public void ShouldNotInvokeSelectedSessionEventIfNoSessionsWereSelectedPreviously()
         {
             var somePointInTime = DateTime.Now;
@@ -176,7 +176,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModel
             Assert.IsFalse(selectedSessionEventWasCalled);
         }
 
-        [Test]
+        [Test, Ignore]
         public void ShouldNotInvokeSelectedSessionEventIfMultipleSessionsWereSelectedPreviously()
         {
             var somePointInTime = DateTime.Now;
@@ -199,7 +199,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModel
             Assert.IsFalse(selectedSessionEventWasCalled);
         }
 
-        [Test]
+        [Test, Ignore]
         public void ShouldInvokeSelectedEventEventIfOneEventWasSelectedPreviously()
         {
             var somePointInTime = DateTime.Now;
@@ -230,7 +230,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModel
             Assert.IsTrue(selectedEventEventWasCalled);
         }
 
-        [Test]
+        [Test, Ignore]
         public void ShouldNotInvokeSelectedEventEventIfNoEventsWereSelectedPreviously()
         {
             var somePointInTime = DateTime.Now;
@@ -258,7 +258,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModel
             Assert.IsFalse(selectedEventEventWasCalled);
         }
 
-        [Test]
+        [Test, Ignore]
         public void ShouldNotInvokeSelectedEventEventIfMultipleEventsWereSelectedPreviously()
         {
             var somePointInTime = DateTime.Now;
