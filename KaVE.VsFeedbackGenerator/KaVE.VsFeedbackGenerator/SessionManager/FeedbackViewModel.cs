@@ -25,12 +25,10 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using JetBrains;
-using JetBrains.ActionManagement;
 using JetBrains.Annotations;
 using JetBrains.UI.Extensions.Commands;
 using KaVE.Model.Events;
 using KaVE.Utils;
-using KaVE.VsFeedbackGenerator.Export;
 using KaVE.VsFeedbackGenerator.Interactivity;
 using KaVE.VsFeedbackGenerator.Utils;
 using KaVE.VsFeedbackGenerator.Utils.Logging;
@@ -42,12 +40,10 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
     public sealed class FeedbackViewModel : ViewModelBase<FeedbackViewModel>
     {
         private readonly ILogManager<IDEEvent> _logManager;
-        private readonly IActionManager _actionManager;
         private readonly IList<SessionViewModel> _sessions;
         private readonly IList<SessionViewModel> _selectedSessions;
         private BackgroundWorker _refreshWorker;
 
-        private DelegateCommand _exportCommand;
         private DelegateCommand _deleteCommand;
 
         private readonly InteractionRequest<Confirmation> _confirmationRequest;
@@ -60,10 +56,9 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             get { return _confirmationRequest; }
         }
 
-        public FeedbackViewModel(ILogManager<IDEEvent> logManager, IActionManager actionManager)
+        public FeedbackViewModel(ILogManager<IDEEvent> logManager)
         {
             _logManager = logManager;
-            _actionManager = actionManager;
             _sessions = new ObservableCollection<SessionViewModel>();
             _selectedSessions = new List<SessionViewModel>();
             _confirmationRequest = new InteractionRequest<Confirmation>();
@@ -124,7 +119,8 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
                     SelectedSessionAfterRefresh(this, selectedSession);
                     if (selectedEvents != null)
                     {
-                        var newlySelectedEvents = selectedSession.Events.Where(e => selectedEvents.Contains(e.Event)).ToList();
+                        var newlySelectedEvents =
+                            selectedSession.Events.Where(e => selectedEvents.Contains(e.Event)).ToList();
                         if (newlySelectedEvents.Count() == 1)
                         {
                             SelectedEventAfterRefresh(this, newlySelectedEvents.First());
@@ -144,7 +140,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
                 {
                     _sessions.AddRange(value);
                 }
-                ExportCommand.RaiseCanExecuteChanged();
+                RaisePropertyChanged(self => self.AreAnyEventsPresent);
             }
             get { return _sessions; }
         }
@@ -156,7 +152,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
                 _selectedSessions.Clear();
                 _selectedSessions.AddRange(value);
                 // single selected session depends on selected session
-                OnPropertyChanged(vm => vm.SingleSelectedSession);
+                RaisePropertyChanged(vm => vm.SingleSelectedSession);
                 DeleteSessionsCommand.RaiseCanExecuteChanged();
             }
             get { return _selectedSessions; }
@@ -168,19 +164,9 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             get { return _selectedSessions.Count == 1 ? _selectedSessions.First() : null; }
         }
 
-        public DelegateCommand ExportCommand
+        public bool AreAnyEventsPresent
         {
-            get { return _exportCommand ?? (_exportCommand = new DelegateCommand(OnExport, AreAnyEventsPresent)); }
-        }
-
-        private void OnExport()
-        {
-            UploadWizardActionHandler.Execute(_actionManager);
-        }
-
-        private bool AreAnyEventsPresent()
-        {
-            return _sessions.Any(s => s.Events.Any());
+            get { return _sessions.Any(s => s.Events.Any()); }
         }
 
         public DelegateCommand DeleteSessionsCommand
@@ -234,6 +220,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             finally
             {
                 _sessions.RemoveAll(deletedSessions.Contains);
+                RaisePropertyChanged(self => self.AreAnyEventsPresent);
             }
         }
     }

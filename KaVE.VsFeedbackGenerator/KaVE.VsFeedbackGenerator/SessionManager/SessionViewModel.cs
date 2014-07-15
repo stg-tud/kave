@@ -84,7 +84,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
                 _selectedEvents.Clear();
                 CollectionExtensions.AddRange(_selectedEvents, value);
                 // notify listeners about dependent property cange
-                OnPropertyChanged(vm => vm.SingleSelectedEvent);
+                RaisePropertyChanged(vm => vm.SingleSelectedEvent);
                 DeleteEventsCommand.RaiseCanExecuteChanged();
             }
             get { return _selectedEvents; }

@@ -19,7 +19,6 @@
  */
 
 using System;
-using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -27,6 +26,7 @@ using JetBrains.ActionManagement;
 using JetBrains.Application;
 using JetBrains.DataFlow;
 using KaVE.Utils.Reflection;
+using KaVE.VsFeedbackGenerator.Export;
 using KaVE.VsFeedbackGenerator.Interactivity;
 using KaVE.VsFeedbackGenerator.Utils;
 
@@ -56,7 +56,6 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
         private readonly IActionManager _actionManager;
         private readonly IDateUtils _dateUtils;
         private readonly ISettingsStore _settingsStore;
-        private static readonly string IsBusyPropertyName = TypeExtensions<FeedbackViewModel>.GetPropertyName(m => m.IsBusy);
 
         public SessionManagerControl(FeedbackViewModel feedbackViewModel,
             IActionManager actionManager,
@@ -66,7 +65,15 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
             DataContext = feedbackViewModel;
             _feedbackViewModel = feedbackViewModel;
             _feedbackViewModel.ConfirmationRequest.Raised += new ConfirmationRequestHandler(this).Handle;
-            _feedbackViewModel.PropertyChanged += OnReloading;
+            _feedbackViewModel.OnPropertyChanged(
+                self => self.IsBusy,
+                isBusy =>
+                {
+                    if (isBusy)
+                    {
+                        SetLastReviewDate(_dateUtils.Now);
+                    }
+                });
             _feedbackViewModel.SelectedSessionAfterRefresh += (o, model) => { SessionListView.SelectedItem = model; };
             _feedbackViewModel.SelectedEventAfterRefresh += (o, model) => { EventListView.SelectedItem = model; };
 
@@ -101,14 +108,6 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
             if (!_feedbackViewModel.IsBusy)
             {
                 _feedbackViewModel.Refresh();
-            }
-        }
-
-        private void OnReloading(object sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName.Equals(IsBusyPropertyName) && _feedbackViewModel.IsBusy)
-            {
-                SetLastReviewDate(_dateUtils.Now);
             }
         }
 
@@ -156,6 +155,11 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
                 _feedbackViewModel.SingleSelectedSession.SelectedEvents =
                     EventListView.SelectedItems.Cast<EventViewModel>();
             }
+        }
+
+        public void Export_OnClick(object sender, RoutedEventArgs e)
+        {
+            UploadWizardActionHandler.Execute(_actionManager);
         }
 
         private void VisitUploadPageButton_OnClick(object sender, RoutedEventArgs e)

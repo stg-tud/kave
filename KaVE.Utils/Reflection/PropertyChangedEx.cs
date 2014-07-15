@@ -1,5 +1,5 @@
-﻿/*
- * Copyright 2014 Technische Universität Darmstadt
+/*
+ * Copyright 2014 Technische Universit�t Darmstadt
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,19 +16,23 @@
  * Contributors:
  *    - Sven Amann
  */
-
 using System;
-using Moq;
+using System.ComponentModel;
+using System.Linq.Expressions;
 
-namespace KaVE.TestUtils
+namespace KaVE.Utils.Reflection
 {
-    public static class ItIsException
+    public static class PropertyChangedEx
     {
-        public static Exception With(string message, Exception innerException)
+        public static void OnPropertyChanged<T, TProperty>(this T self, Expression<Func<T, TProperty>> expression, Action<TProperty> handler) where T : INotifyPropertyChanged
         {
-            return Match.Create(
-                (Predicate<Exception>)(
-                    exception => message.Equals(exception.Message) && Equals(innerException, exception.InnerException)));
+            self.PropertyChanged += (sender, args) =>
+            {
+                if (args.PropertyName.Equals(TypeExtensions<T>.GetPropertyName(expression)))
+                {
+                    handler(expression.Compile()(self));
+                }
+            };
         }
     }
 }

@@ -20,15 +20,16 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
-using JetBrains.ActionManagement;
 using JetBrains.Threading;
 using KaVE.Model.Events;
 using KaVE.TestUtils;
 using KaVE.TestUtils.Model.Events;
+using KaVE.Utils;
 using KaVE.Utils.Assertion;
-using KaVE.VsFeedbackGenerator.Export;
+using KaVE.Utils.Reflection;
 using KaVE.VsFeedbackGenerator.Generators;
 using KaVE.VsFeedbackGenerator.SessionManager;
 using KaVE.VsFeedbackGenerator.Utils;
@@ -43,7 +44,6 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModel
     {
         private Mock<ILogManager<IDEEvent>> _mockLogManager;
         private Mock<ILogger> _mockLogger;
-        private Mock<IActionManager> _mockActionManager;
 
         private VsFeedbackGenerator.SessionManager.FeedbackViewModel _uut;
 
@@ -56,12 +56,10 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModel
             _mockLogManager = new Mock<ILogManager<IDEEvent>>();
 
             var mockThreading = new Mock<IThreading>();
-            _mockActionManager = new Mock<IActionManager>();
             Registry.RegisterComponent(mockThreading.Object);
 
             _uut = new VsFeedbackGenerator.SessionManager.FeedbackViewModel(
-                _mockLogManager.Object,
-                _mockActionManager.Object);
+                _mockLogManager.Object);
         }
 
         [TearDown]
@@ -107,6 +105,18 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModel
         }
 
         [Test]
+        public void ShouldFireHasEventsPropertyChangedAfterRefresh()
+        {
+            var hasEventsChanged = false;
+            _uut.OnPropertyChanged(self => self.AreAnyEventsPresent, newVal => hasEventsChanged = true);
+
+            _uut.Refresh();
+            WaitForRefreshToFinish();
+
+            Assert.IsTrue(hasEventsChanged);
+        }
+
+        [Test]
         public void ShouldDisplayNothingAndLogErrorWhenRefreshFails()
         {
             var exception = new AssertException("test exception");
@@ -120,15 +130,6 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModel
         }
 
         [Test]
-        public void ShouldInvokeExportWizardOnExport()
-        {
-            _uut.ExportCommand.Execute(null);
-
-            // I couldn't find a better way to assert invocation. If you know/find one, let me know! (Sven)
-            _mockActionManager.Verify(am => am.GetExecutableAction(UploadWizardActionHandler.ActionId));
-        }
-
-        [Test]
         public void ShouldRefreshOnLogManagerLogsChangedEvent()
         {
             _mockLogManager.Raise(lm => lm.LogsChanged += null, _mockLogManager.Object, new EventArgs());
@@ -138,7 +139,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModel
             _mockLogManager.Verify(lm => lm.GetLogs());
         }
 
-        [Test, Ignore]
+        [Test]
         public void ShouldInvokeSelectedSessionEventIfOneSessionWasSelectedPreviously()
         {
             var somePointInTime = DateTime.Now;
@@ -150,14 +151,14 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModel
                 MockLog(somePointInTime.AddDays(2)),
                 MockLog(somePointInTime.AddDays(3))
             };
-            InitializeFeedbackViewModelWithSessions(sessions);
+            RefreshFeedbackViewModelWithSessions(sessions);
             _uut.SelectedSessions = new List<SessionViewModel> {new SessionViewModel(sessions[0])};
             _uut.SelectedSessionAfterRefresh += (o, model) => { selectedSessionEventWasCalled = true; };
             RefreshFeedbackViewModelWithSessions(sessions);
             Assert.IsTrue(selectedSessionEventWasCalled);
         }
 
-        [Test, Ignore]
+        [Test]
         public void ShouldNotInvokeSelectedSessionEventIfNoSessionsWereSelectedPreviously()
         {
             var somePointInTime = DateTime.Now;
@@ -169,14 +170,14 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModel
                 MockLog(somePointInTime.AddDays(2)),
                 MockLog(somePointInTime.AddDays(3))
             };
-            InitializeFeedbackViewModelWithSessions(sessions);
+            RefreshFeedbackViewModelWithSessions(sessions);
             _uut.SelectedSessions = new List<SessionViewModel>();
             _uut.SelectedSessionAfterRefresh += (o, model) => { selectedSessionEventWasCalled = true; };
             RefreshFeedbackViewModelWithSessions(sessions);
             Assert.IsFalse(selectedSessionEventWasCalled);
         }
 
-        [Test, Ignore]
+        [Test]
         public void ShouldNotInvokeSelectedSessionEventIfMultipleSessionsWereSelectedPreviously()
         {
             var somePointInTime = DateTime.Now;
@@ -188,7 +189,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModel
                 MockLog(somePointInTime.AddDays(2)),
                 MockLog(somePointInTime.AddDays(3))
             };
-            InitializeFeedbackViewModelWithSessions(sessions);
+            RefreshFeedbackViewModelWithSessions(sessions);
             _uut.SelectedSessions = new List<SessionViewModel>
             {
                 new SessionViewModel(sessions[0]),
@@ -199,7 +200,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModel
             Assert.IsFalse(selectedSessionEventWasCalled);
         }
 
-        [Test, Ignore]
+        [Test]
         public void ShouldInvokeSelectedEventEventIfOneEventWasSelectedPreviously()
         {
             var somePointInTime = DateTime.Now;
@@ -217,7 +218,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModel
                 MockLog(somePointInTime.AddDays(2)),
                 MockLog(somePointInTime.AddDays(3))
             };
-            InitializeFeedbackViewModelWithSessions(sessions);
+            RefreshFeedbackViewModelWithSessions(sessions);
             _uut.SelectedSessions = new List<SessionViewModel> {new SessionViewModel(sessions[0])};
             Debug.Assert(_uut.SingleSelectedSession != null, "_uut.SingleSelectedSession != null");
             _uut.SingleSelectedSession.SelectedEvents = new List<EventViewModel>
@@ -230,7 +231,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModel
             Assert.IsTrue(selectedEventEventWasCalled);
         }
 
-        [Test, Ignore]
+        [Test]
         public void ShouldNotInvokeSelectedEventEventIfNoEventsWereSelectedPreviously()
         {
             var somePointInTime = DateTime.Now;
@@ -248,8 +249,8 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModel
                 MockLog(somePointInTime.AddDays(2)),
                 MockLog(somePointInTime.AddDays(3))
             };
-            InitializeFeedbackViewModelWithSessions(sessions);
-            _uut.SelectedSessions = new List<SessionViewModel> { new SessionViewModel(sessions[0]) };
+            RefreshFeedbackViewModelWithSessions(sessions);
+            _uut.SelectedSessions = new List<SessionViewModel> {new SessionViewModel(sessions[0])};
             Debug.Assert(_uut.SingleSelectedSession != null, "_uut.SingleSelectedSession != null");
             _uut.SingleSelectedSession.SelectedEvents = new List<EventViewModel>();
             _uut.SelectedSessionAfterRefresh += (o, model) => { };
@@ -258,7 +259,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModel
             Assert.IsFalse(selectedEventEventWasCalled);
         }
 
-        [Test, Ignore]
+        [Test]
         public void ShouldNotInvokeSelectedEventEventIfMultipleEventsWereSelectedPreviously()
         {
             var somePointInTime = DateTime.Now;
@@ -276,8 +277,8 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModel
                 MockLog(somePointInTime.AddDays(2)),
                 MockLog(somePointInTime.AddDays(3))
             };
-            InitializeFeedbackViewModelWithSessions(sessions);
-            _uut.SelectedSessions = new List<SessionViewModel> { new SessionViewModel(sessions[0]) };
+            RefreshFeedbackViewModelWithSessions(sessions);
+            _uut.SelectedSessions = new List<SessionViewModel> {new SessionViewModel(sessions[0])};
             Debug.Assert(_uut.SingleSelectedSession != null, "_uut.SingleSelectedSession != null");
             _uut.SingleSelectedSession.SelectedEvents = new List<EventViewModel>
             {
@@ -290,17 +291,10 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModel
             Assert.IsFalse(selectedEventEventWasCalled);
         }
 
-        private void InitializeFeedbackViewModelWithSessions(IEnumerable<ILog<IDEEvent>> sessions)
-        {
-            _mockLogManager.Setup(m => m.GetLogs()).Returns(sessions);
-            _uut.Refresh();
-            WaitForRefreshToFinish();
-        }
-
         private void RefreshFeedbackViewModelWithSessions(IEnumerable<ILog<IDEEvent>> sessions)
         {
             _mockLogManager.Setup(m => m.GetLogs()).Returns(sessions);
-            _uut.Refresh();
+            Invoke.OnSTA(() => _uut.Refresh());
             WaitForRefreshToFinish();
         }
 

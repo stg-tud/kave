@@ -31,12 +31,12 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
         private bool _isBusy;
         private string _busyMessage;
 
-        private void OnPropertyChanged(string propertyName)
+        private void RaisePropertyChanged(string propertyName)
         {
             PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        protected void OnPropertyChanged<TProperty>(Expression<Func<T, TProperty>> expression)
+        protected void RaisePropertyChanged<TProperty>(Expression<Func<T, TProperty>> expression)
         {
             if (!_propertyNameDictionary.ContainsKey(expression))
             {
@@ -44,7 +44,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
                 _propertyNameDictionary.Add(expression, propertyName);
             }
 
-            OnPropertyChanged(_propertyNameDictionary[expression]);
+            RaisePropertyChanged(_propertyNameDictionary[expression]);
         }
 
         protected void SetBusy(string reason)
@@ -68,7 +68,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             private set
             {
                 _isBusy = value;
-                OnPropertyChanged(vm => vm.IsBusy);
+                RaisePropertyChanged(vm => vm.IsBusy);
             }
         }
 
@@ -78,7 +78,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             private set
             {
                 _busyMessage = value;
-                OnPropertyChanged(vm => vm.BusyMessage);
+                RaisePropertyChanged(vm => vm.BusyMessage);
             }
         }
     }

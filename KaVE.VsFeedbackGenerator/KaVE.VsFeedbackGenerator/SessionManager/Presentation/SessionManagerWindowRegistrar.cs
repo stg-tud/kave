@@ -55,7 +55,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
                 {
                     var visibilitySignal = _toolWindowClass.Visible.Change;
                     var control = new SessionManagerControl(
-                        new FeedbackViewModel(logManager, actionManager),
+                        new FeedbackViewModel(logManager),
                         actionManager,
                         dateUtils,
                         settingsStore);

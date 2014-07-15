@@ -70,7 +70,9 @@ Contributors:
                     <Image Source="/KaVE.VsFeedbackGenerator;Component/Resources/refresh.png" />
                 </Button>
                 <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
-                <Button ToolTip="{x:Static root:Properties.SessionManager.Export}" Command="{Binding Path=ExportCommand}">
+                <Button ToolTip="{x:Static root:Properties.SessionManager.Export}"
+						Click="Export_OnClick"
+						IsEnabled="{Binding Path=AreAnyEventsPresent}">
                     <Image Source="/KaVE.VsFeedbackGenerator;Component/Resources/send.png" />
                 </Button>
                 <Button ToolTip="{x:Static root:Properties.SessionManager.VisitUploadPage}"

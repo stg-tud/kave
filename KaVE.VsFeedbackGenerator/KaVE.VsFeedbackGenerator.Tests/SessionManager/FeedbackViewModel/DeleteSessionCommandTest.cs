@@ -23,6 +23,7 @@ using System.Linq;
 using System.Threading;
 using JetBrains;
 using KaVE.Model.Events;
+using KaVE.Utils.Reflection;
 using KaVE.VsFeedbackGenerator.Interactivity;
 using KaVE.VsFeedbackGenerator.SessionManager;
 using KaVE.VsFeedbackGenerator.Tests.Interactivity;
@@ -58,7 +59,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModel
             _mockLogFileManager = new Mock<ILogManager<IDEEvent>>();
             _mockLogFileManager.Setup(mgr => mgr.GetLogs()).Returns(_mockLogs.Select(m => m.Object));
 
-            _uut = new VsFeedbackGenerator.SessionManager.FeedbackViewModel(_mockLogFileManager.Object, null);
+            _uut = new VsFeedbackGenerator.SessionManager.FeedbackViewModel(_mockLogFileManager.Object);
             _uut.Refresh();
             while (_uut.IsBusy)
             {
@@ -196,6 +197,20 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModel
             catch {}
 
             Assert.AreEqual(selectedSession, _uut.Sessions.First());
+        }
+
+        [Test]
+        public void ShouldRaiseHasEventsChangedAfterDelete()
+        {
+            GivenSessionsAreSelected(_sessionViewModels[0]);
+            var hasEventsChanged = false;
+            _uut.OnPropertyChanged(self => self.AreAnyEventsPresent, v => hasEventsChanged = true);
+
+            _uut.DeleteSessionsCommand.Execute(null);
+            _confirmationRequestHelper.Context.Confirmed = true;
+            _confirmationRequestHelper.Callback();
+
+            Assert.IsTrue(hasEventsChanged);
         }
 
         private void GivenSessionsAreSelected(params SessionViewModel[] sessions)
