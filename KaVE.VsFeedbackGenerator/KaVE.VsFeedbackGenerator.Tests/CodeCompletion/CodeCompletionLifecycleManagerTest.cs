@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -54,6 +55,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.CodeCompletion
         private void SetUpLookup()
         {
             _mockLookup = new Mock<IExtendedLookup>();
+            _mockLookup.Setup(l => l.DisplayedItems).Returns(LookupItemsMockUtils.MockLookupItemList(3));
             _mockLookupWindowManager = new Mock<IExtendedLookupWindowManager>();
             _mockLookupWindowManager.Setup(m => m.CurrentLookup).Returns(_mockLookup.Object);
         }
@@ -73,19 +75,25 @@ namespace KaVE.VsFeedbackGenerator.Tests.CodeCompletion
             const string expectedPrefix = "testPrefix";
             _mockLookup.Setup(l => l.Prefix).Returns(() => expectedPrefix);
             string actualPrefix = null;
-            _manager.OnTriggered += prefix => actualPrefix = prefix;
+            IEnumerable<ILookupItem> actualItems = null;
+            _manager.OnTriggered += (prefix, items) =>
+            {
+                actualPrefix = prefix;
+                actualItems = items;
+            };
 
             WhenBeforeLookupWindowShownIsRaised();
 
             Assert.AreEqual(expectedPrefix, actualPrefix);
+            CollectionAssert.AreEqual(_mockLookup.Object.DisplayedItems, actualItems);
         }
 
         [Test]
-        public void ShouldFireOpenedWhenLookupItemsBecomeAvailable()
+        public void ShouldFireDisplayedItemsUpdatedWhenLookupItemsBecomeAvailable()
         {
             var expectedLookupItems = LookupItemsMockUtils.MockLookupItemList(4);
             IEnumerable<ILookupItem> actualLookupItems = null;
-            _manager.OnOpened += items => actualLookupItems = items;
+            _manager.DisplayedItemsUpdated += items => actualLookupItems = items;
 
             WhenBeforeLookupWindowShownIsRaised();
             WhenBeforeShownItemsUpdatedIsRaised(expectedLookupItems);
@@ -373,7 +381,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.CodeCompletion
         {
             var eventArg =
                 expectedlookupItems.Select(item => new Pair<ILookupItem, MatchingResult>(item, new MatchingResult()))
-                    .AsIList();
+                                   .AsIList();
             _mockLookup.Raise(l => l.BeforeShownItemsUpdated += null, this, eventArg);
         }
 

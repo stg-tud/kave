@@ -58,12 +58,12 @@ namespace KaVE.VsFeedbackGenerator.CodeCompletion
             _currentLookup = _lookupWindowManager.CurrentLookup;
             _initialPrefix = _currentLookup.Prefix;
             _currentPrefix = _initialPrefix;
-            OnTriggered(_initialPrefix);
+            OnTriggered(_initialPrefix, _currentLookup.DisplayedItems);
             RegisterToLookupEvents(_currentLookup);
         }
 
         /// <param name="inialPrefix">The prefix present when completion is triggered.</param>
-        public delegate void TriggeredHandler(string inialPrefix);
+        public delegate void TriggeredHandler(string inialPrefix, IEnumerable<ILookupItem> displayedItems);
 
         /// <summary>
         /// Fired when the code completion is about to be opened.
@@ -74,12 +74,9 @@ namespace KaVE.VsFeedbackGenerator.CodeCompletion
         {
             var lifetime = lookup.Lifetime;
 
-            // Event handlers are registered in order of the actual events's occurence
+            // Event handlers are registered in order of the actual events's occurence.
 
-            // _lookupWindowManager.AfterLookupWindowShown is fired immediately after the window pops up,
-            // i.e., after this method finished and before any other event is fired.
             lookup.BeforeShownItemsUpdated += OnBeforeShownItemsUpdated;
-
             lookup.CurrentItemChanged += HandleCurrentItemChanged;
 
             // R# actions that lead to the completion being finished
@@ -92,26 +89,24 @@ namespace KaVE.VsFeedbackGenerator.CodeCompletion
             lookup.MouseDown += HandleMouseDown;
 
             lookup.Closed += HandleClosed;
-            // _lookupWindowManager.LookupWindowClosed is fired here
             lookup.ItemCompleted += HandleItemCompleted;
         }
 
         /// <summary>
-        /// Invoked when the lookup items are computed, before they are shown.
+        /// Invoked when new lookup items have been computed, before they are shown.
         /// </summary>
         private void OnBeforeShownItemsUpdated(object sender, IList<Pair<ILookupItem, MatchingResult>> items)
         {
-            OnOpened(items.Select(pair => pair.First));
+            DisplayedItemsUpdated(items.Select(pair => pair.First));
         }
 
-        /// <param name="displayedItems">The items initially displayed.</param>
-        public delegate void OpenedHandler(IEnumerable<ILookupItem> displayedItems);
+        /// <param name="displayedItems">The items displayed from now on.</param>
+        public delegate void DisplayedItemsUpdatedHandler(IEnumerable<ILookupItem> displayedItems);
 
         /// <summary>
-        /// Fired when the completion opened. This may sometimes not occur, when the completion is closed more quickly
-        /// than the lookup items can be calculated.
+        /// Fired after new items have been computed and are now added to the lookup.
         /// </summary>
-        public event OpenedHandler OnOpened = delegate {};
+        public event DisplayedItemsUpdatedHandler DisplayedItemsUpdated = delegate {};
 
         /// <summary>
         /// Invoked when the selection changes, either by pressing the arrow keys, or as a result of filtering, or

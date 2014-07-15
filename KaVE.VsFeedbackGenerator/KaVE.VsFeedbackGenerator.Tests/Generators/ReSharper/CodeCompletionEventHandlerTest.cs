@@ -12,7 +12,11 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sven Amann
  */
+
 using System.Collections.Generic;
 using JetBrains.ReSharper.Feature.Services.Lookup;
 using JetBrains.Util;
@@ -44,8 +48,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.ReSharper
         {
             var lookupItems = LookupItemsMockUtils.MockLookupItemList(3);
 
-            _generator.HandleTriggered("");
-            _generator.HandleOpened(lookupItems);
+            _generator.HandleTriggered("", lookupItems);
             _generator.HandleSelectionChanged(lookupItems[0]);
             _generator.HandleClosed();
             _generator.HandleApplied(IDEEvent.Trigger.Click, lookupItems[0]);
@@ -59,8 +62,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.ReSharper
         {
             var lookupItems = LookupItemsMockUtils.MockLookupItemList(5);
 
-            _generator.HandleTriggered("");
-            _generator.HandleOpened(lookupItems);
+            _generator.HandleTriggered("", lookupItems);
             _generator.HandleSelectionChanged(lookupItems[3]);
             _generator.HandleSelectionChanged(lookupItems[2]);
             _generator.HandleSelectionChanged(lookupItems[1]);
@@ -79,8 +81,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.ReSharper
         {
             var lookupItems = LookupItemsMockUtils.MockLookupItemList(1);
 
-            _generator.HandleTriggered("");
-            _generator.HandleOpened(lookupItems);
+            _generator.HandleTriggered("", lookupItems);
             _generator.HandleClosed();
             _generator.HandleCancelled(IDEEvent.Trigger.Shortcut);
 
@@ -93,8 +94,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.ReSharper
         {
             var lookupItems = LookupItemsMockUtils.MockLookupItemList(0);
 
-            _generator.HandleTriggered("");
-            _generator.HandleOpened(lookupItems);
+            _generator.HandleTriggered("", lookupItems);
             _generator.HandlePrefixChanged("a", lookupItems);
 
             var ce = GetSinglePublished<CompletionEvent>();
@@ -107,8 +107,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.ReSharper
         {
             var lookupItems = LookupItemsMockUtils.MockLookupItemList(0);
 
-            _generator.HandleTriggered("");
-            _generator.HandleOpened(lookupItems);
+            _generator.HandleTriggered("", lookupItems);
             _generator.HandlePrefixChanged("a", lookupItems);
             _generator.HandleClosed();
             _generator.HandleCancelled(IDEEvent.Trigger.Click);
@@ -123,8 +122,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.ReSharper
         {
             var lookupItems = LookupItemsMockUtils.MockLookupItemList(1);
 
-            _generator.HandleTriggered("");
-            _generator.HandleOpened(lookupItems);
+            _generator.HandleTriggered("", lookupItems);
             _generator.HandleSelectionChanged(lookupItems[0]);
             _generator.HandlePrefixChanged("a", lookupItems);
             _generator.HandleClosed();
@@ -140,8 +138,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.ReSharper
         {
             var lookupItems = LookupItemsMockUtils.MockLookupItemList(1);
 
-            _generator.HandleTriggered("");
-            _generator.HandleOpened(lookupItems);
+            _generator.HandleTriggered("", lookupItems);
             _generator.HandleSelectionChanged(lookupItems[0]);
             _generator.HandlePrefixChanged("a", new List<ILookupItem>());
             _generator.HandleClosed();
@@ -156,14 +153,28 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.ReSharper
         {
             var lookupItems = LookupItemsMockUtils.MockLookupItemList(1);
 
-            _generator.HandleTriggered("");
-            _generator.HandleOpened(lookupItems);
+            _generator.HandleTriggered("", lookupItems);
             _generator.HandlePrefixChanged("a", lookupItems);
             _generator.HandleClosed();
             _generator.HandleCancelled(IDEEvent.Trigger.Click);
 
             var ce = GetLastPublished<CompletionEvent>();
             Assert.IsTrue(ce.Selections.IsEmpty());
+        }
+
+        [Test]
+        public void ShouldOverrideProposalCollectionIfDisplayedItemsAreUpdated()
+        {
+            var lookupItems = LookupItemsMockUtils.MockLookupItemList(4);
+            var expected = lookupItems.ToProposalCollection();
+
+            _generator.HandleTriggered("", LookupItemsMockUtils.MockLookupItemList(1));
+            _generator.HandleDisplayedItemsChanged(lookupItems);
+            _generator.HandleClosed();
+            _generator.HandleCancelled(IDEEvent.Trigger.Click);
+
+            var ce = GetLastPublished<CompletionEvent>();
+            Assert.AreEqual(expected, ce.ProposalCollection);
         }
     }
 }

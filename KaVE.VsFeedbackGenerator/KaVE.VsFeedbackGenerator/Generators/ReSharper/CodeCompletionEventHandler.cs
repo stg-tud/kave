@@ -12,7 +12,12 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sven Amann
+ *    - Sebastian Proksch
  */
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,7 +28,6 @@ using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using KaVE.Model.Events;
 using KaVE.Model.Events.CompletionEvent;
-using KaVE.Utils.Assertion;
 using KaVE.VsFeedbackGenerator.Analysis;
 using KaVE.VsFeedbackGenerator.CodeCompletion;
 using KaVE.VsFeedbackGenerator.MessageBus;
@@ -39,7 +43,7 @@ namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
             CodeCompletionEventHandler handler)
         {
             manager.OnTriggered += handler.HandleTriggered;
-            manager.OnOpened += handler.HandleOpened;
+            manager.DisplayedItemsUpdated += handler.HandleDisplayedItemsChanged;
             manager.OnSelectionChanged += handler.HandleSelectionChanged;
             manager.OnPrefixChanged += handler.HandlePrefixChanged;
             manager.OnClosed += handler.HandleClosed;
@@ -79,7 +83,6 @@ namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
     internal class CodeCompletionEventHandler : EventGeneratorBase
     {
         private CompletionEvent _event;
-        private bool _lookupItemsSet;
         private Context _context;
 
         public CodeCompletionEventHandler(IIDESession session, IMessageBus messageBus)
@@ -90,19 +93,17 @@ namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
             _context = context;
         }
 
-        public void HandleTriggered(string prefix)
+        public void HandleTriggered(string prefix, IEnumerable<ILookupItem> displayedItems)
         {
             _event = Create<CompletionEvent>();
             _event.Context = _context;
             _event.Prefix = prefix;
-            _lookupItemsSet = false;
+            HandleDisplayedItemsChanged(displayedItems);
         }
 
-        public void HandleOpened(IEnumerable<ILookupItem> items)
+        public void HandleDisplayedItemsChanged(IEnumerable<ILookupItem> displayedItems)
         {
-            // TODO test whether this is sometimes not called
-            _lookupItemsSet = true;
-            _event.ProposalCollection = items.ToProposalCollection();
+            _event.ProposalCollection = displayedItems.ToProposalCollection();
         }
 
         public void HandleSelectionChanged(ILookupItem selectedItem)
@@ -136,7 +137,6 @@ namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
 
         public void HandleApplied(IDEEvent.Trigger trigger, ILookupItem appliedItem)
         {
-            Asserts.That(_lookupItemsSet, "beforeShown not called");
             _event.TerminatedAs = CompletionEvent.TerminationState.Applied;
             _event.TerminatedBy = trigger;
             Fire(_event);
@@ -144,7 +144,6 @@ namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
 
         public void HandleCancelled(IDEEvent.Trigger trigger)
         {
-            Asserts.That(_lookupItemsSet, "beforeShown not called");
             _event.TerminatedAs = CompletionEvent.TerminationState.Cancelled;
             _event.TerminatedBy = trigger;
             Fire(_event);
