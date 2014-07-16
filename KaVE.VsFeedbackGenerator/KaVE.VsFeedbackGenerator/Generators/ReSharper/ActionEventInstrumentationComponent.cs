@@ -33,7 +33,8 @@ namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
         public ActionEventInstrumentationComponent(Lifetime lifetime,
             IActionManager actionManager,
             IIDESession session,
-            IMessageBus messageBus)
+            IMessageBus messageBus,
+            IDateUtils dateUtils)
         {
             foreach (var updatableAction in actionManager.GetAllActions().OfType<IUpdatableAction>())
             {
@@ -45,7 +46,7 @@ namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
                 }
                 updatableAction.AddHandler(
                     lifetime,
-                    new EventGeneratingActionHandler(updatableAction, session, messageBus));
+                    new EventGeneratingActionHandler(updatableAction, session, messageBus, dateUtils));
             }
         }
     }

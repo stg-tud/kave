@@ -85,8 +85,8 @@ namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
         private CompletionEvent _event;
         private Context _context;
 
-        public CodeCompletionEventHandler(IIDESession session, IMessageBus messageBus)
-            : base(session, messageBus) {}
+        public CodeCompletionEventHandler(IIDESession session, IMessageBus messageBus, IDateUtils dateUtils)
+            : base(session, messageBus, dateUtils) {}
 
         public void SetContext(Context context)
         {

@@ -32,8 +32,11 @@ namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
     {
         private readonly IBulbAction _target;
 
-        public EventGeneratingBulbActionProxy(IBulbAction target, IIDESession session, IMessageBus messageBus)
-            : base(session, messageBus)
+        public EventGeneratingBulbActionProxy(IBulbAction target,
+            IIDESession session,
+            IMessageBus messageBus,
+            IDateUtils dateUtils)
+            : base(session, messageBus, dateUtils)
         {
             _target = target;
         }

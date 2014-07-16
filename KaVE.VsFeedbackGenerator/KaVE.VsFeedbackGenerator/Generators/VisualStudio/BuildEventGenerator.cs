@@ -12,7 +12,11 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sven Amann
  */
+
 using System;
 using EnvDTE;
 using JetBrains.Application.Components;
@@ -20,6 +24,7 @@ using JetBrains.ProjectModel;
 using KaVE.Model.Events.VisualStudio;
 using KaVE.Utils.Assertion;
 using KaVE.VsFeedbackGenerator.MessageBus;
+using KaVE.VsFeedbackGenerator.Utils;
 using KaVE.VsFeedbackGenerator.VsIntegration;
 
 namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
@@ -32,7 +37,8 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
         private BuildEvent _currentEvent;
         private BuildTarget _currentTarget;
 
-        public BuildEventGenerator(IIDESession session, IMessageBus messageBus) : base(session, messageBus)
+        public BuildEventGenerator(IIDESession session, IMessageBus messageBus, IDateUtils dateUtils)
+            : base(session, messageBus, dateUtils)
         {
             _buildEvents = DTE.Events.BuildEvents;
             _buildEvents.OnBuildBegin += _buildEvents_OnBuildBegin;
@@ -42,9 +48,9 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
         }
 
         /// <summary>
-        /// Invoked when a user starts a build (clean, rebuild, ...) of a solution, project, or batch build.
+        ///     Invoked when a user starts a build (clean, rebuild, ...) of a solution, project, or batch build.
         /// </summary>
-        void _buildEvents_OnBuildBegin(vsBuildScope scope, vsBuildAction action)
+        private void _buildEvents_OnBuildBegin(vsBuildScope scope, vsBuildAction action)
         {
             Asserts.Null(_currentEvent, "another build is running.");
             _currentEvent = Create<BuildEvent>();
@@ -53,9 +59,12 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
         }
 
         /// <summary>
-        /// Called for each combination of project and configuration that is part of the build.
+        ///     Called for each combination of project and configuration that is part of the build.
         /// </summary>
-        void _buildEvents_OnBuildProjConfigBegin(string project, string projectConfig, string platform, string solutionConfig)
+        private void _buildEvents_OnBuildProjConfigBegin(string project,
+            string projectConfig,
+            string platform,
+            string solutionConfig)
         {
             Asserts.Null(_currentTarget, "another build target is currently being processed.");
             _currentTarget = new BuildTarget
@@ -68,7 +77,11 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
             };
         }
 
-        void _buildEvents_OnBuildProjConfigDone(string project, string projectConfig, string platform, string solutionConfig, bool success)
+        private void _buildEvents_OnBuildProjConfigDone(string project,
+            string projectConfig,
+            string platform,
+            string solutionConfig,
+            bool success)
         {
             Asserts.NotNull(_currentTarget, "no build-target processing has been started.");
             _currentTarget.Duration = DateTime.Now - _currentTarget.StartedAt;
@@ -77,7 +90,7 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
             _currentTarget = null;
         }
 
-        void _buildEvents_OnBuildDone(vsBuildScope scope, vsBuildAction action)
+        private void _buildEvents_OnBuildDone(vsBuildScope scope, vsBuildAction action)
         {
             Asserts.NotNull(_currentEvent, "no build processing has been started");
             FireNow(_currentEvent);

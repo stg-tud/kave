@@ -12,12 +12,17 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sven Amann
  */
+
 using EnvDTE;
 using JetBrains.Application;
 using JetBrains.Application.Components;
 using KaVE.Model.Events.VisualStudio;
 using KaVE.VsFeedbackGenerator.MessageBus;
+using KaVE.VsFeedbackGenerator.Utils;
 using KaVE.VsFeedbackGenerator.Utils.Names;
 using KaVE.VsFeedbackGenerator.VsIntegration;
 
@@ -29,8 +34,8 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
         // ReSharper disable once PrivateFieldCanBeConvertedToLocalVariable
         private readonly DocumentEvents _documentEvents;
 
-        public DocumentEventGenerator(IIDESession session, IMessageBus messageBus)
-            : base(session, messageBus)
+        public DocumentEventGenerator(IIDESession session, IMessageBus messageBus, IDateUtils dateUtils)
+            : base(session, messageBus, dateUtils)
         {
             _documentEvents = DTE.Events.DocumentEvents;
             _documentEvents.DocumentOpened += HandleDocumentOpened;

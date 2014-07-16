@@ -36,11 +36,13 @@ namespace KaVE.VsFeedbackGenerator.Generators
         private readonly IMessageBus _messageBus;
         private readonly IDateUtils _dateUtils;
 
-        protected EventGeneratorBase([NotNull] IIDESession session, [NotNull] IMessageBus messageBus)
+        protected EventGeneratorBase([NotNull] IIDESession session,
+            [NotNull] IMessageBus messageBus,
+            [NotNull] IDateUtils dateUtils)
         {
             _session = session;
             _messageBus = messageBus;
-            _dateUtils = Registry.GetComponent<IDateUtils>();
+            _dateUtils = dateUtils;
         }
 
         [NotNull]
@@ -105,7 +107,7 @@ namespace KaVE.VsFeedbackGenerator.Generators
         }
 
         /// <summary>
-        /// Sets <see cref="IDEEvent.TerminatedAt"/> to the current time and delegates to <see cref="Fire{TEvent}"/>.
+        ///     Sets <see cref="IDEEvent.TerminatedAt" /> to the current time and delegates to <see cref="Fire{TEvent}" />.
         /// </summary>
         protected void FireNow<TEvent>([NotNull] TEvent @event) where TEvent : IDEEvent
         {
@@ -114,8 +116,8 @@ namespace KaVE.VsFeedbackGenerator.Generators
         }
 
         /// <summary>
-        /// Sets <see cref="IDEEvent.IDESessionUUID"/> to <see cref="IDESession.UUID"/> and publishes the event to
-        /// the underlying message channel.
+        ///     Sets <see cref="IDEEvent.IDESessionUUID" /> to <see cref="IDESession.UUID" /> and publishes the event to
+        ///     the underlying message channel.
         /// </summary>
         protected void Fire<TEvent>([NotNull] TEvent @event) where TEvent : IDEEvent
         {

@@ -12,7 +12,11 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sven Amann
  */
+
 using System.Linq;
 using JetBrains.DataFlow;
 using JetBrains.ProjectModel;
@@ -23,6 +27,7 @@ using JetBrains.TextControl;
 using JetBrains.UI.BulbMenu;
 using KaVE.Utils.Assertion;
 using KaVE.VsFeedbackGenerator.MessageBus;
+using KaVE.VsFeedbackGenerator.Utils;
 using KaVE.VsFeedbackGenerator.VsIntegration;
 
 namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
@@ -32,11 +37,13 @@ namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
     {
         private readonly IIDESession _session;
         private readonly IMessageBus _messageBus;
+        private readonly IDateUtils _dateUtils;
 
-        public BulbItemInstrumentationComponent(IIDESession session, IMessageBus messageBus)
+        public BulbItemInstrumentationComponent(IIDESession session, IMessageBus messageBus, IDateUtils dateUtils)
         {
             _session = session;
             _messageBus = messageBus;
+            _dateUtils = dateUtils;
         }
 
         public int Priority
@@ -67,14 +74,14 @@ namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
                 var proxy = executableItem as IntentionAction.MyExecutableProxi;
                 if (proxy != null)
                 {
-                    proxy.WrapBulbAction(_session, _messageBus);
+                    proxy.WrapBulbAction(_session, _messageBus, _dateUtils);
                     continue;
                 }
 
                 var executable = executableItem as ExecutableItem;
                 if (executable != null)
                 {
-                    executable.WrapBulbAction(_session, _messageBus);
+                    executable.WrapBulbAction(_session, _messageBus, _dateUtils);
                     continue;
                 }
 

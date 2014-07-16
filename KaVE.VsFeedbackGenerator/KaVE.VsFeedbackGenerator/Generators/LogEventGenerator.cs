@@ -30,14 +30,12 @@ namespace KaVE.VsFeedbackGenerator.Generators
     [ShellComponent]
     public class LogEventGenerator : EventGeneratorBase, ILogger
     {
-        private readonly IMessageBus _messageBus;
         private readonly IDateUtils _dateUtils;
 
-        public LogEventGenerator(IIDESession session, IMessageBus messageBus)
-            : base(session, messageBus)
+        public LogEventGenerator(IIDESession session, IMessageBus messageBus, IDateUtils dateUtils)
+            : base(session, messageBus, dateUtils)
         {
-            _messageBus = messageBus;
-            _dateUtils = Registry.GetComponent<IDateUtils>();
+            _dateUtils = dateUtils;
         }
 
         public void Error(Exception exception)
@@ -69,7 +67,7 @@ namespace KaVE.VsFeedbackGenerator.Generators
                     .ToArray();
             }
 
-            Fire(e);
+            FireNow(e);
         }
 
         private ErrorEvent CreateErrorEvent()
@@ -84,12 +82,12 @@ namespace KaVE.VsFeedbackGenerator.Generators
             return e;
         }
 
-        private void Fire(ErrorEvent e)
+        private void FireNow(ErrorEvent e)
         {
             // ReSharper disable once EmptyGeneralCatchClause
             try
             {
-                _messageBus.Publish(e);
+                FireNow<ErrorEvent>(e);
             }
             catch
             {
@@ -101,7 +99,7 @@ namespace KaVE.VsFeedbackGenerator.Generators
         {
             var e = Create<InfoEvent>();
             e.Info = ReplaceNewLineByBr(info);
-            _messageBus.Publish(e);
+            FireNow(e);
         }
 
         private static string ReplaceNewLineByBr(string text)

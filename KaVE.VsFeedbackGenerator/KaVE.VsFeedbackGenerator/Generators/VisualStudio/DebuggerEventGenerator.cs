@@ -12,12 +12,17 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sven Amann
  */
+
 using EnvDTE;
 using JetBrains.Application.Components;
 using JetBrains.ProjectModel;
 using KaVE.Model.Events.VisualStudio;
 using KaVE.VsFeedbackGenerator.MessageBus;
+using KaVE.VsFeedbackGenerator.Utils;
 using KaVE.VsFeedbackGenerator.VsIntegration;
 
 namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
@@ -28,8 +33,8 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
         // ReSharper disable once PrivateFieldCanBeConvertedToLocalVariable
         private readonly DebuggerEvents _debuggerEvents;
 
-        public DebuggerEventGenerator(IIDESession session, IMessageBus messageBus)
-            : base(session, messageBus)
+        public DebuggerEventGenerator(IIDESession session, IMessageBus messageBus, IDateUtils dateUtils)
+            : base(session, messageBus, dateUtils)
         {
             _debuggerEvents = DTE.Events.DebuggerEvents;
             _debuggerEvents.OnEnterBreakMode += _debuggerEvents_OnEnterBreakMode;

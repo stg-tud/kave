@@ -25,7 +25,6 @@ using KaVE.Model.Events.CompletionEvent;
 using KaVE.VsFeedbackGenerator.Generators.ReSharper;
 using KaVE.VsFeedbackGenerator.Tests.TestFactories;
 using KaVE.VsFeedbackGenerator.Utils;
-using KaVE.VsFeedbackGenerator.VsIntegration;
 using NUnit.Framework;
 
 namespace KaVE.VsFeedbackGenerator.Tests.Generators.ReSharper
@@ -33,14 +32,12 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.ReSharper
     [TestFixture]
     class CodeCompletionEventHandlerTest : EventGeneratorTestBase
     {
-        private IIDESession _testSession;
         private CodeCompletionEventHandler _generator;
 
         [SetUp]
         public void SetupMockEnvironment()
         {
-            _testSession = new TestIDESession();
-            _generator = new CodeCompletionEventHandler(_testSession, TestMessageBus);
+            _generator = new CodeCompletionEventHandler(TestIDESession, TestMessageBus, TestDateUtils);
         }
 
         [Test]

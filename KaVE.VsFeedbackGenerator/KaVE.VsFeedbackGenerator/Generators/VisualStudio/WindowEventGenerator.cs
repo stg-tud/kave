@@ -55,15 +55,15 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
         // ReSharper disable once PrivateFieldCanBeConvertedToLocalVariable
         private readonly WindowEvents _windowEvents;
 
-        public WindowEventGenerator(IIDESession session, IMessageBus messageBus, ICallbackManager callbackManager)
-            : base(session, messageBus)
+        public WindowEventGenerator(IIDESession session, IMessageBus messageBus, ICallbackManager callbackManager, IDateUtils dateUtils)
+            : base(session, messageBus, dateUtils)
         {
             _callbackManager = callbackManager;
             _knownWindows = new Dictionary<Window, WindowDescriptor>();
             _delayedMoveEvents = new Dictionary<Window, WindowEvent>();
             _delayedMoveEventFireActions =
                 new ThreadSafeDictionary<Window, ScheduledAction>(name => ScheduledAction.NoOp);
-            _dateUtils = Registry.GetComponent<IDateUtils>();
+            _dateUtils = dateUtils;
 
             _windowEvents = DTE.Events.WindowEvents;
             _windowEvents.WindowCreated += OnWindowCreated;

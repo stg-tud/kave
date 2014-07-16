@@ -29,6 +29,7 @@ using KaVE.Model.Events.VisualStudio;
 using KaVE.Utils.Assertion;
 using KaVE.Utils.IO;
 using KaVE.VsFeedbackGenerator.MessageBus;
+using KaVE.VsFeedbackGenerator.Utils;
 using KaVE.VsFeedbackGenerator.Utils.Names;
 using KaVE.VsFeedbackGenerator.VsIntegration;
 using Microsoft.VisualStudio.CommandBars;
@@ -79,8 +80,8 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
         private CommandEvent _preceedingCommandBarEvent;
         private readonly Dictionary<string, CommandEvent> _eventQueue;
 
-        public CommandEventGenerator(IIDESession session, IMessageBus messageBus)
-            : base(session, messageBus)
+        public CommandEventGenerator(IIDESession session, IMessageBus messageBus, IDateUtils dateUtils)
+            : base(session, messageBus, dateUtils)
         {
             _eventQueue = new Dictionary<string, CommandEvent>();
             InitCommandBarObservation();

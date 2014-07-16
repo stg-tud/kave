@@ -22,6 +22,7 @@ using JetBrains.Application.Components;
 using JetBrains.DataFlow;
 using KaVE.Model.Events.VisualStudio;
 using KaVE.VsFeedbackGenerator.MessageBus;
+using KaVE.VsFeedbackGenerator.Utils;
 using KaVE.VsFeedbackGenerator.Utils.Names;
 using KaVE.VsFeedbackGenerator.VsIntegration;
 
@@ -30,8 +31,8 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
     [ShellComponent(ProgramConfigurations.VS_ADDIN)]
     internal class IDEStateEventGenerator : EventGeneratorBase
     {
-        public IDEStateEventGenerator(IIDESession session, IMessageBus messageBus, Lifetime lifetime)
-            : base(session, messageBus)
+        public IDEStateEventGenerator(IIDESession session, IMessageBus messageBus, Lifetime lifetime, IDateUtils dateUtils)
+            : base(session, messageBus, dateUtils)
         {
             FireIDEStateEvent(IDEStateEvent.LifecyclePhase.Startup);
             lifetime.AddAction(() => FireIDEStateEvent(IDEStateEvent.LifecyclePhase.Shutdown));

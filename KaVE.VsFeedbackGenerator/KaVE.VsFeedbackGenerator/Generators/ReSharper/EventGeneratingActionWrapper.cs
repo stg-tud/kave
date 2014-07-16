@@ -29,8 +29,11 @@ namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
     {
         private readonly Action _originalAction;
 
-        public EventGeneratingActionWrapper(Action originalAction, IIDESession session, IMessageBus messageBus)
-            : base(session, messageBus)
+        public EventGeneratingActionWrapper(Action originalAction,
+            IIDESession session,
+            IMessageBus messageBus,
+            IDateUtils dateUtils)
+            : base(session, messageBus, dateUtils)
         {
             _originalAction = originalAction;
         }

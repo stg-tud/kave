@@ -52,7 +52,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.VisualStudio
             SetUpCommandBars();
             SetUpCommands();
             // ReSharper disable once ObjectCreationAsStatement
-            new CommandEventGenerator(TestIDESession, TestMessageBus);
+            new CommandEventGenerator(TestIDESession, TestMessageBus, TestDateUtils);
         }
 
         private void SetUpCommandBars()

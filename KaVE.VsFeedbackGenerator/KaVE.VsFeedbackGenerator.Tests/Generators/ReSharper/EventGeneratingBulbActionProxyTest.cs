@@ -44,7 +44,11 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.ReSharper
         {
             _mockTestAction = new Mock<IBulbAction>();
             _mockTestAction.Setup(a => a.Text).Returns(TestActionText);
-            _uut = new EventGeneratingBulbActionProxy(_mockTestAction.Object, TestIDESession, TestMessageBus);
+            _uut = new EventGeneratingBulbActionProxy(
+                _mockTestAction.Object,
+                TestIDESession,
+                TestMessageBus,
+                TestDateUtils);
             _testSolution = new Mock<ISolution>().Object;
             _testTextControl = new Mock<ITextControl>().Object;
         }

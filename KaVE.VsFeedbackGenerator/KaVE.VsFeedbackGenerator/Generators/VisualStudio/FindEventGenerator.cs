@@ -12,12 +12,17 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sven Amann
  */
+
 using EnvDTE;
 using JetBrains.Application;
 using JetBrains.Application.Components;
 using KaVE.Model.Events.VisualStudio;
 using KaVE.VsFeedbackGenerator.MessageBus;
+using KaVE.VsFeedbackGenerator.Utils;
 using KaVE.VsFeedbackGenerator.VsIntegration;
 
 namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
@@ -28,8 +33,8 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
         // ReSharper disable once PrivateFieldCanBeConvertedToLocalVariable
         private readonly FindEvents _findEvents;
 
-        public FindEventGenerator(IIDESession session, IMessageBus messageBus)
-            : base(session, messageBus)
+        public FindEventGenerator(IIDESession session, IMessageBus messageBus, IDateUtils dateUtils)
+            : base(session, messageBus, dateUtils)
         {
             _findEvents = DTE.Events.FindEvents;
 
@@ -38,7 +43,7 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
 
         private FindEvent _lastEvent;
 
-        void _findEvents_FindDone(vsFindResult result, bool cancelled)
+        private void _findEvents_FindDone(vsFindResult result, bool cancelled)
         {
             if (_lastEvent == null)
             {

@@ -12,12 +12,17 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sven Amann
  */
+
 using System;
 using System.Reflection;
 using JetBrains.ReSharper.Intentions.Extensibility;
 using JetBrains.UI.BulbMenu;
 using KaVE.VsFeedbackGenerator.MessageBus;
+using KaVE.VsFeedbackGenerator.Utils;
 using KaVE.VsFeedbackGenerator.VsIntegration;
 
 namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
@@ -31,19 +36,30 @@ namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
             typeof (ExecutableItem).GetField("myAction", BindingFlags.Instance | BindingFlags.NonPublic);
 
         /// <summary>
-        /// Wraps the <see cref="IBulbAction"/> contained in the passed proxy in a <see cref="EventGeneratingBulbActionProxy"/>.
+        ///     Wraps the <see cref="IBulbAction" /> contained in the passed proxy in a
+        ///     <see cref="EventGeneratingBulbActionProxy" />.
         /// </summary>
-        public static void WrapBulbAction(this IntentionAction.MyExecutableProxi proxy, IIDESession session, IMessageBus messageBus)
+        public static void WrapBulbAction(this IntentionAction.MyExecutableProxi proxy,
+            IIDESession session,
+            IMessageBus messageBus,
+            IDateUtils dateUtils)
         {
             var originalBulbAction = proxy.BulbAction;
-            var bulbActionWrapper = new EventGeneratingBulbActionProxy(originalBulbAction, session, messageBus);
+            var bulbActionWrapper = new EventGeneratingBulbActionProxy(
+                originalBulbAction,
+                session,
+                messageBus,
+                dateUtils);
             MyExecutableProxiBulbActionSetter.Invoke(proxy, new object[] {bulbActionWrapper});
         }
 
-        public static void WrapBulbAction(this ExecutableItem executable, IIDESession session, IMessageBus messageBus)
+        public static void WrapBulbAction(this ExecutableItem executable,
+            IIDESession session,
+            IMessageBus messageBus,
+            IDateUtils dateUtils)
         {
             var originalAction = (Action) ExecutableItemActionField.GetValue(executable);
-            var wrapper = new EventGeneratingActionWrapper(originalAction, session, messageBus);
+            var wrapper = new EventGeneratingActionWrapper(originalAction, session, messageBus, dateUtils);
             var newAction = (Action) (wrapper.Execute);
             ExecutableItemActionField.SetValue(executable, newAction);
         }

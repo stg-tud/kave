@@ -37,8 +37,8 @@ namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
 
         public EventGeneratingActionHandler(IUpdatableAction updatableAction,
             IIDESession session,
-            IMessageBus messageBus)
-            : base(session, messageBus)
+            IMessageBus messageBus, IDateUtils dateUtils)
+            : base(session, messageBus, dateUtils)
         {
             _updatableAction = updatableAction;
         }

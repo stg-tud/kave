@@ -12,7 +12,12 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sven Amann
  */
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Application;
@@ -37,11 +42,12 @@ namespace KaVE.VsFeedbackGenerator.Generators
 
         private IDEEvent _lastEvent;
 
-        public EventLogger(IMessageBus messageBus, ILogManager<IDEEvent> logManager)
+        public EventLogger(IMessageBus messageBus, ILogManager<IDEEvent> logManager, ILogger logger)
         {
             _messageChannel = messageBus;
             _logManager = logManager;
             _messageChannel.Subscribe<IDEEvent>(ProcessEvent);
+            logger.Error(new Exception());
         }
 
         private void ProcessEvent(IDEEvent @event)
