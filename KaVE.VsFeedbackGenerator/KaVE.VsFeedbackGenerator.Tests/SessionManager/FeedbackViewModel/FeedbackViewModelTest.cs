@@ -20,13 +20,11 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using JetBrains.Threading;
 using KaVE.Model.Events;
 using KaVE.TestUtils;
 using KaVE.TestUtils.Model.Events;
-using KaVE.Utils;
 using KaVE.Utils.Assertion;
 using KaVE.Utils.Reflection;
 using KaVE.VsFeedbackGenerator.Generators;
