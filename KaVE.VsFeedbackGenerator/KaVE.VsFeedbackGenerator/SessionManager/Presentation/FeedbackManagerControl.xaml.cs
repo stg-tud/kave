@@ -74,8 +74,22 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
                         SetLastReviewDate(_dateUtils.Now);
                     }
                 });
-            _feedbackViewModel.SessionSelection += (o, model) => { SessionListView.SelectedItem = model; };
-            _feedbackViewModel.EventSelection += (o, model) => { EventListView.SelectedItem = model; };
+            _feedbackViewModel.SessionSelection += (o, models) =>
+            {
+                var selectedSessions = SessionListView.SelectedItems;
+                foreach (var session in models)
+                {
+                    selectedSessions.Add(session);
+                }
+            };
+            _feedbackViewModel.EventSelection += (o, models) =>
+            {
+                var selectedEvents = EventListView.SelectedItems;
+                foreach (var session in models)
+                {
+                    selectedEvents.Add(session);
+                }
+            };
 
             _actionManager = actionManager;
             _dateUtils = dateUtils;

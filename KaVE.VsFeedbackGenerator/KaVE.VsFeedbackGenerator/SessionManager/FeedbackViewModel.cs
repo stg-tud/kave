@@ -48,11 +48,11 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
 
         private readonly InteractionRequest<Confirmation> _confirmationRequest;
 
-        public delegate void SessionSelectionHandler(object sender, SessionViewModel model);
+        public delegate void SessionSelectionHandler(object sender, List<SessionViewModel> model);
 
         public event SessionSelectionHandler SessionSelection = delegate { };
 
-        public delegate void EventSelectionHandler(object sender, EventViewModel model);
+        public delegate void EventSelectionHandler(object sender, List<EventViewModel> model);
 
         public event EventSelectionHandler EventSelection = delegate { };
 
@@ -125,21 +125,22 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
 
         private void HandleSuccessfulRefresh(IEnumerable<SessionViewModel> sessions)
         {
-            var oldSelectedSessions = _selectedSessions.Select(s => s.StartDate).ToList();
+            var oldSelectedSessions = _selectedSessions.Select(s => s.Log).ToList();
             var oldSelectedEvents = CollectSelectedEvents();
 
             Sessions =  sessions;
 
-            var newSelectedSessions = Sessions.Where(s => oldSelectedSessions.Contains(s.StartDate)).ToList();
-            if (newSelectedSessions.Count() == 1)
+            var newSelectedSessions = Sessions.Where(s => oldSelectedSessions.Contains(s.Log)).ToList();
+            if (newSelectedSessions.Any())
             {
-                var selectedSession = newSelectedSessions.First();
-                SessionSelection(this, selectedSession);
-                var newSelectedEvents =
-                    selectedSession.Events.Where(e => oldSelectedEvents.Contains(e.Event)).ToList();
-                if (newSelectedEvents.Count() == 1)
+                SessionSelection(this, newSelectedSessions);
+                if (SingleSelectedSession != null)
                 {
-                    EventSelection(this, newSelectedEvents.First());
+                    var newSelectedEvents = SingleSelectedSession.Events.Where(e => oldSelectedEvents.Contains(e.Event)).ToList();
+                    if (newSelectedEvents.Any())
+                    {
+                        EventSelection(this, newSelectedEvents);
+                    }
                 }
             }
         }

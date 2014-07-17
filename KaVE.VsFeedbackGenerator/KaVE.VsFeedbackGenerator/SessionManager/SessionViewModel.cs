@@ -25,6 +25,7 @@ using JetBrains;
 using JetBrains.UI.Extensions.Commands;
 using JetBrains.Util;
 using KaVE.Model.Events;
+using KaVE.Utils;
 using KaVE.VsFeedbackGenerator.Interactivity;
 using KaVE.VsFeedbackGenerator.Utils.Logging;
 using NuGet;
@@ -133,6 +134,21 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             var selection = new List<EventViewModel>(_selectedEvents);
             Log.RemoveRange(selection.Select(evm => evm.Event));
             _events.RemoveRange(selection);
+        }
+
+        protected bool Equals(SessionViewModel other)
+        {
+            return string.Equals(Log, other.Log);
+        }
+
+        public override bool Equals(object obj)
+        {
+            return this.Equals(obj, Equals);
+        }
+
+        public override int GetHashCode()
+        {
+            return Log.GetHashCode();
         }
 
         public override string ToString()

@@ -21,6 +21,7 @@
 using System;
 using KaVE.Model.Events;
 using KaVE.Model.Events.CompletionEvent;
+using KaVE.Utils;
 using KaVE.VsFeedbackGenerator.SessionManager.Presentation;
 using KaVE.VsFeedbackGenerator.Utils.Json;
 
@@ -85,6 +86,21 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
         public string Details
         {
             get { return Event.GetDetailsAsJson().AddJsonSyntaxHighlightingWithXaml(); }
+        }
+
+        protected bool Equals(EventViewModel other)
+        {
+            return string.Equals(Event, other.Event);
+        }
+
+        public override bool Equals(object obj)
+        {
+            return this.Equals(obj, Equals);
+        }
+
+        public override int GetHashCode()
+        {
+            return Event.GetHashCode();
         }
     }
 }
