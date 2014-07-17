@@ -25,7 +25,7 @@ using NUnit.Framework;
 
 namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
 {
-    internal class CalledMethodsTestBase : KaVEBaseTest
+    internal class CalledMethodsTestBase : BaseTest
     {
         protected void AssertNoCallsDetected()
         {

@@ -42,13 +42,13 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests
 {
     [TestNetFramework4]
     // ReSharper disable once InconsistentNaming
-    internal abstract class KaVEBaseTest : CodeCompletionTestBase
+    internal abstract class BaseTest : CodeCompletionTestBase
     {
         private const string Caret = "$";
 
         private readonly List<CodeCompletionType> _myCodeCompletionTypes;
 
-        protected KaVEBaseTest()
+        protected BaseTest()
         {
             _myCodeCompletionTypes = new List<CodeCompletionType> {CodeCompletionType.BasicCompletion};
         }
@@ -57,10 +57,10 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests
         {
             get
             {
-                var defaultNamespace = typeof (KaVEBaseTest).Namespace;
+                var defaultNamespace = typeof (BaseTest).Namespace;
                 var concreteNamespace = GetType().FullName;
 
-                Asserts.NotNull(defaultNamespace, "KaVEBaseTest somehow moved to global namespace?!");
+                Asserts.NotNull(defaultNamespace, "BaseTest somehow moved to global namespace?!");
 
                 string basePath;
                 if (concreteNamespace.StartsWith(defaultNamespace))

@@ -22,7 +22,7 @@ using NUnit.Framework;
 namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 {
     [TestFixture, Ignore]
-    internal class ControlStructureTest : AbstractSSTTest
+    internal class ControlStructureTest : BaseSSTTest
     {
         [Test]
         public void IfBlock() {}

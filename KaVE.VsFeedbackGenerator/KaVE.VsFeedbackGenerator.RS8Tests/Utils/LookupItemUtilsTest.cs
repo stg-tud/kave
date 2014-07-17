@@ -19,7 +19,7 @@ using NUnit.Framework;
 namespace KaVE.VsFeedbackGenerator.RS8Tests.Utils
 {
     [TestFixture]
-    internal class LookupItemUtilsTest : KaVEBaseTest
+    internal class LookupItemUtilsTest : BaseTest
     {
         private void ThenProposalCollectionContains(params string[] proposalNameIdentifiers)
         {

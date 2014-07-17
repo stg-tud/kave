@@ -18,7 +18,7 @@ using NUnit.Framework;
 namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SmokeTests
 {
     [TestFixture]
-    internal class CodeCompletionWithMissingTokensSmokeTest : KaVEBaseTest
+    internal class CodeCompletionWithMissingTokensSmokeTest : BaseTest
     {
         [Test]
         public void MissingClassBodyOpeningBrace()

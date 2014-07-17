@@ -22,7 +22,7 @@ using NUnit.Framework;
 namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
 {
     [TestFixture]
-    internal class ContextAnalysisTypeShapeTest : KaVEBaseTest
+    internal class ContextAnalysisTypeShapeTest : BaseTest
     {
         [Test]
         public void ImplementedMethodsAreCaptured()

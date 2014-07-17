@@ -24,7 +24,7 @@ using Fix = KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite.SSTA
 namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 {
     [TestFixture, Ignore]
-    internal class SingleAssignmentTest : AbstractSSTTest
+    internal class SingleAssignmentTest : BaseSSTTest
     {
         [Test]
         public void TriggeredInMethod()
@@ -36,7 +36,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
                 }
             ");
 
-            var mA = NewMethodDeclaration("A", Fix.Void);
+            var mA = NewMethodDeclaration(Fix.Void, "A");
             mA.Body.Add(new VariableDeclaration("i", Fix.Int));
 
             AssertEntryPoints(mA);
@@ -52,7 +52,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
                 }
             ");
 
-            var mA = NewMethodDeclaration("A", Fix.Void);
+            var mA = NewMethodDeclaration(Fix.Void, "A");
             mA.Body.Add(new VariableDeclaration("i", Fix.Int));
 
             mA.Body.Add(

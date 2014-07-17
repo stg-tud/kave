@@ -22,7 +22,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
 {
     // TODO split this into enclosingMethod and methodHierarchy tests
     [TestFixture]
-    internal class ContextAnalysisEnclosingMethodTest : KaVEBaseTest
+    internal class ContextAnalysisEnclosingMethodTest : BaseTest
     {
         private static MethodHierarchy FindEnclosingMethodHierarchy(Context context)
         {

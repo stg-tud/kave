@@ -25,7 +25,7 @@ using Fix = KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite.SSTA
 namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 {
     [TestFixture, Ignore]
-    internal class TriggerLocationsTest : AbstractSSTTest
+    internal class TriggerLocationsTest : BaseSSTTest
     {
         [Test]
         public void TriggeredOutsideMethod()
@@ -36,7 +36,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             ");
 
             var sst = new SST();
-            sst.AddEntrypoint(NewMethodDeclaration("A", Fix.Void));
+            sst.AddEntrypoint(NewMethodDeclaration(Fix.Void, "A"));
 
             AssertResult(sst);
         }
@@ -50,7 +50,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             ");
 
             var sst = new SST();
-            sst.AddEntrypoint(NewMethodDeclaration("A", Fix.Void));
+            sst.AddEntrypoint(NewMethodDeclaration(Fix.Void, "A"));
 
             sst.Add(new TypeTrigger {Token = "B"});
 
@@ -85,7 +85,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 
             var trigger = new TypeTrigger();
 
-            var mA = NewMethodDeclaration("A", Fix.Void);
+            var mA = NewMethodDeclaration(Fix.Void, "A");
             mA.Body.Add(trigger);
 
             var sst = new SST();
@@ -106,7 +106,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 
             var trigger = new MethodTrigger {Token = "a.b"};
 
-            var mA = NewMethodDeclaration("A", Fix.Void);
+            var mA = NewMethodDeclaration(Fix.Void, "A");
             mA.Body.Add(trigger);
 
             var sst = new SST();

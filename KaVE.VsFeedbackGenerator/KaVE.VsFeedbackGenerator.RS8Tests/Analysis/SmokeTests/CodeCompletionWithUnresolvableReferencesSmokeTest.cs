@@ -18,7 +18,7 @@ using NUnit.Framework;
 namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SmokeTests
 {
     [TestFixture]
-    internal class CodeCompletionWithUnresolvableReferencesSmokeTest : KaVEBaseTest
+    internal class CodeCompletionWithUnresolvableReferencesSmokeTest : BaseTest
     {
         [Test]
         public void MemberAccessOnUnkownType()

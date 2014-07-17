@@ -17,8 +17,6 @@
  *    - Sebastian Proksch
  */
 
-using System.Collections.Generic;
-using JetBrains.Util;
 using KaVE.Model.Names;
 using KaVE.Model.Names.CSharp;
 using KaVE.Model.SSTs;
@@ -26,9 +24,9 @@ using NUnit.Framework;
 
 namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 {
-    internal abstract class AbstractSSTTest : KaVEBaseTest
+    internal abstract class BaseSSTTest : BaseTest
     {
-        internal MethodDeclaration NewMethodDeclaration(string simpleName, ITypeName returnType)
+        internal MethodDeclaration NewMethodDeclaration(ITypeName returnType, string simpleName)
         {
             const string package = "N.C, TestProject";
             var identifier = string.Format("[{0}] [{1}].{2}()", returnType, package, simpleName);
@@ -45,7 +43,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 
         internal void AssertEntryPoints(params MethodDeclaration[] expectedDecls)
         {
-            ISet<MethodDeclaration> eps = ResultSST.GetEntrypoints();
+            var eps = ResultSST.GetEntrypoints();
             Assert.AreEqual(expectedDecls.Length, eps.Count);
 
             foreach (var expectedDecl in expectedDecls)
@@ -53,10 +51,10 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
                 Assert.IsTrue(eps.Contains(expectedDecl));
             }
         }
-        
+
         internal void AssertMethodDeclarations(params MethodDeclaration[] expectedDecls)
         {
-            ISet<MethodDeclaration> neps = ResultSST.GetNonEntrypoints();
+            var neps = ResultSST.GetNonEntrypoints();
             Assert.AreEqual(expectedDecls.Length, neps.Count);
 
             foreach (var expectedDecl in expectedDecls)

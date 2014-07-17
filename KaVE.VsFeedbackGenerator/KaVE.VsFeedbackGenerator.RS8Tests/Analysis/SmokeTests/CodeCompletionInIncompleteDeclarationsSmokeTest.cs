@@ -18,7 +18,7 @@ using NUnit.Framework;
 namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SmokeTests
 {
     [TestFixture]
-    internal class CodeCompletionInIncompleteDeclarationsSmokeTest : KaVEBaseTest
+    internal class CodeCompletionInIncompleteDeclarationsSmokeTest : BaseTest
     {
         [Test]
         public void NamespaceDeclarationKeyword()

@@ -23,7 +23,7 @@ using Fix = KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite.SSTA
 namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 {
     [TestFixture]
-    internal class EntrypointsTest : AbstractSSTTest
+    internal class EntrypointsTest : BaseSSTTest
     {
         [Test]
         public void Aaaaaa()
@@ -33,7 +33,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
                 public void PublicA() {}
             ");
 
-            var mA = NewMethodDeclaration("PublicA", Fix.Void);
+            var mA = NewMethodDeclaration(Fix.Void, "PublicA");
 
             AssertEntryPoints(mA);
         }
@@ -46,7 +46,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
                 public void PublicA() {}
             ");
 
-            var mA = NewMethodDeclaration("PublicA", Fix.Void);
+            var mA = NewMethodDeclaration(Fix.Void, "PublicA");
 
             AssertEntryPoints(mA);
         }
@@ -60,14 +60,14 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
                 public void C() {}
             ");
 
-            var mA = NewMethodDeclaration("A", Fix.Void);
-            var mB = NewMethodDeclaration("B", Fix.Void); // ...
-            var mC = NewMethodDeclaration("C", Fix.Void);
+            var mA = NewMethodDeclaration(Fix.Void, "A");
+            var mB = NewMethodDeclaration(Fix.Void, "B"); // ...
+            var mC = NewMethodDeclaration(Fix.Void, "C");
 
             AssertEntryPoints(mA, mC);
             AssertMethodDeclarations(mB);
         }
 
-        // ... adapt tests from EntryPointSelectorTest
+        // TODO ... adapt tests from EntryPointSelectorTest
     }
 }

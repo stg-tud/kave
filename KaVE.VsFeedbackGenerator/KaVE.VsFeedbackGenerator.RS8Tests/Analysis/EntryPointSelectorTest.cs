@@ -25,7 +25,7 @@ using NUnit.Framework;
 namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
 {
     [TestFixture]
-    internal class EntryPointSelectorTest : KaVEBaseTest
+    internal class EntryPointSelectorTest : BaseTest
     {
         [Test]
         public void ShouldUseInterfaceImplementationAsEntryPoint()
