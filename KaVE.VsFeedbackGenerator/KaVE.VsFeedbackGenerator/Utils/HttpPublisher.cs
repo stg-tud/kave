@@ -49,7 +49,7 @@ namespace KaVE.VsFeedbackGenerator.Utils
 
             Asserts.Not(json.IsNullOrEmpty(), Messages.ServerResponseEmpty);
 
-            ExportResult<object> res = null;
+            ExportResult res = null;
             try
             {
                 res = Deserialize(json);
@@ -71,9 +71,9 @@ namespace KaVE.VsFeedbackGenerator.Utils
             };
         }
 
-        private static ExportResult<object> Deserialize(string json)
+        private static ExportResult Deserialize(string json)
         {
-            return JsonConvert.DeserializeObject<ExportResult<object>>(json);
+            return JsonConvert.DeserializeObject<ExportResult>(json);
         }
 
         internal enum State
@@ -82,16 +82,13 @@ namespace KaVE.VsFeedbackGenerator.Utils
             Fail
         }
 
-        private class ExportResult<T>
+        private class ExportResult
         {
             [UsedImplicitly]
             public State Status;
 
             [UsedImplicitly]
             public string Message;
-
-            [UsedImplicitly]
-            public T Data;
         }
     }
 }
