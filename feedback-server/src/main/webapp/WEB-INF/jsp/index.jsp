@@ -14,7 +14,7 @@
 	<div id="content">
 		<h1>Hochladen des Feedbacks</h1>
 
-		<p>Bitte w&auml;hlen Sie die Feedback Datei aus, die Sie aus dem
+		<p>Bitte w&auml;hlen Sie die Feedback-Datei aus, die Sie aus dem
 			Feedback-Manager exportiert haben und best&auml;tigen Sie,
 			dass Sie den Datenschutzhinweis gelesen haben.</p>
 

@@ -13,7 +13,6 @@ package kave;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import kave.Result;
 import kave.Result.State;
 
 import org.junit.Test;
@@ -24,69 +23,56 @@ public class ResultTest {
 
     @Test
     public void equalsAndHashCode() {
-        Result<Void> a = new Result<Void>();
-        Result<Void> b = new Result<Void>();
+        Result a = new Result();
+        Result b = new Result();
         assertEquals(a, b);
         assertTrue(a.hashCode() == b.hashCode());
     }
 
     @Test
-    public void ok() {
-        Result<Void> actual = Result.ok();
-        Result<Void> expected = new Result<Void>();
-        expected.status = State.OK;
-        expected.message = null;
-        expected.data = null;
-        assertEquals(expected, actual);
-    }
-
-    @Test
     public void ok_2() {
-        Result<String> actual = Result.ok(SOME_STRING);
-        Result<String> expected = new Result<String>();
+        Result actual = Result.ok();
+        Result expected = new Result();
         expected.status = State.OK;
         expected.message = null;
-        expected.data = SOME_STRING;
         assertEquals(expected, actual);
     }
 
     @Test
     public void fail() {
-        Result<String> actual = Result.fail(SOME_STRING);
-        Result<String> expected = new Result<String>();
+        Result actual = Result.fail(SOME_STRING);
+        Result expected = new Result();
         expected.status = State.FAIL;
         expected.message = SOME_STRING;
-        expected.data = null;
         assertEquals(expected, actual);
     }
 
     @Test
     public void fail_2() {
-        Result<String> actual = Result.fail(mockThrowable());
-        Result<String> expected = new Result<String>();
+        Result actual = Result.fail(mockThrowable());
+        Result expected = new Result();
         expected.status = State.FAIL;
         expected.message = getFailString();
-        expected.data = null;
         assertEquals(expected, actual);
     }
 
     @Test
     public void argumentIsNull() {
         Object o = null;
-        Result<Void> actual = Result.fail("", o);
+        Result actual = Result.fail("", o);
         assertEquals("", actual.message);
     }
 
     @Test
     public void argumentIsEmptyArray() {
         Object[] o = new Object[0];
-        Result<Void> actual = Result.fail("", o);
+        Result actual = Result.fail("", o);
         assertEquals("", actual.message);
     }
 
     @Test
     public void stringIsFormatted() {
-        Result<Void> actual = Result.fail("a %s", "b");
+        Result actual = Result.fail("a %s", "b");
         assertEquals("a b", actual.message);
     }
 

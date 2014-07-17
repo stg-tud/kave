@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010, 2011 Darmstadt University of Technology.
+ * Copyright (c) 2011-2014 Darmstadt University of Technology.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,32 +16,24 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
-public class Result<T> {
+public class Result {
 
     public State status;
     public String message;
-    public T data;
 
-    public static <T> Result<T> fail(String message, Object... args) {
-        Result<T> res = new Result<T>();
+    public static Result fail(String message, Object... args) {
+        Result res = new Result();
         res.status = State.FAIL;
         res.message = format(message, args);
         return res;
     }
 
-    public static <T> Result<T> fail(Throwable t) {
+    public static Result fail(Throwable t) {
     	return fail(ExceptionUtils.getStackTrace(t).replaceAll("\n", "<br />\n"));
     }
 
-    public static <T> Result<T> ok(T data) {
-        Result<T> res = new Result<T>();
-        res.status = State.OK;
-        res.data = data;
-        return res;
-    }
-
-    public static Result<Void> ok() {
-        Result<Void> res = new Result<Void>();
+    public static Result ok() {
+        Result res = new Result();
         res.status = State.OK;
         return res;
     }

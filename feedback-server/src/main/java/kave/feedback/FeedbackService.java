@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010, 2011 Darmstadt University of Technology.
+ * Copyright (c) 2011-2014 Darmstadt University of Technology.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -32,58 +32,57 @@ import com.sun.jersey.multipart.FormDataParam;
 
 @Path("/")
 public class FeedbackService {
-	private File dataFolder;
+    private File dataFolder;
 
-	@Inject
-	public FeedbackService(File dataFolder) throws IOException {
-		this.dataFolder = dataFolder;
-		enforceOutputDirectory();
-	}
+    @Inject
+    public FeedbackService(File dataFolder) throws IOException {
+        this.dataFolder = dataFolder;
+        enforceOutputDirectory();
+    }
 
-	private void enforceOutputDirectory() throws IOException {
-		if (!dataFolder.exists()) {
-			FileUtils.forceMkdir(dataFolder);
-		}
-	}
+    private void enforceOutputDirectory() throws IOException {
+        if (!dataFolder.exists()) {
+            FileUtils.forceMkdir(dataFolder);
+        }
+    }
 
-	@GET
-	@Produces(MediaType.TEXT_HTML + "; charset=utf-8")
+    @GET
+    @Produces(MediaType.TEXT_HTML + "; charset=utf-8")
     public Viewable index() {
-		return new Viewable("/index.jsp");
-	}
+        return new Viewable("/index.jsp");
+    }
 
-	@POST
-	@Consumes(MediaType.MULTIPART_FORM_DATA)
-	@Produces(MediaType.APPLICATION_JSON)
-	public Result<Void> upload(@FormDataParam("file") InputStream fileInputStream,
-			@FormDataParam("file") FormDataContentDisposition contentDisposition) {
-		try {
-			String fileName = contentDisposition.getFileName();
-			String extension = FilenameUtils.getExtension(fileName);
-			File freshOutputFile = getFreshOutputFile(extension);
-			IOUtils.copy(fileInputStream, new FileOutputStream(freshOutputFile));
-			return Result.ok();
-		} catch (Exception e) {
-			return Result.fail(e);
-		}
-	}
+    @POST
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Result upload(@FormDataParam("file") InputStream fileInputStream,
+            @FormDataParam("file") FormDataContentDisposition contentDisposition) {
+        try {
+            String fileName = contentDisposition.getFileName();
+            String extension = FilenameUtils.getExtension(fileName);
+            File freshOutputFile = getFreshOutputFile(extension);
+            IOUtils.copy(fileInputStream, new FileOutputStream(freshOutputFile));
+            return Result.ok();
+        } catch (Exception e) {
+            return Result.fail(e);
+        }
+    }
 
-	private File getFreshOutputFile(String fileExtension) {
-		int lastExistingFileIndex = 0;
-		for (String fileName : dataFolder.list()) {
-			try {
-				String baseName = FilenameUtils.getBaseName(fileName);
-				int currentFileIndex = Integer.parseInt(baseName);
-				if (currentFileIndex > lastExistingFileIndex) {
-					lastExistingFileIndex = currentFileIndex;
-				}
-			} catch (NumberFormatException nfe) {
-				// just ignore the file, because there will be no collision with
-				// our number schema
-			}
-		}
-		return new File(dataFolder, String.format("%05d",
-				(lastExistingFileIndex + 1)) + "." + fileExtension);
-	}
+    private File getFreshOutputFile(String fileExtension) {
+        int lastExistingFileIndex = 0;
+        for (String fileName : dataFolder.list()) {
+            try {
+                String baseName = FilenameUtils.getBaseName(fileName);
+                int currentFileIndex = Integer.parseInt(baseName);
+                if (currentFileIndex > lastExistingFileIndex) {
+                    lastExistingFileIndex = currentFileIndex;
+                }
+            } catch (NumberFormatException nfe) {
+                // just ignore the file, because there will be no collision with
+                // our number schema
+            }
+        }
+        return new File(dataFolder, String.format("%05d", (lastExistingFileIndex + 1)) + "." + fileExtension);
+    }
 
 }
