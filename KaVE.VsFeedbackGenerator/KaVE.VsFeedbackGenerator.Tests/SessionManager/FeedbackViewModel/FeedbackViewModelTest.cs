@@ -139,174 +139,80 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModel
         [Test]
         public void ShouldNotInvokeSessionSelectionEventIfNoSessionsWereSelectedPreviously()
         {
-            var somePointInTime = DateTime.Now;
-            var sessions = new List<ILog<IDEEvent>>
-            {
-                MockLog(somePointInTime),
-                MockLog(somePointInTime.AddDays(1)),
-                MockLog(somePointInTime.AddDays(2)),
-                MockLog(somePointInTime.AddDays(3))
-            };
-            var selectedSessions = new List<SessionViewModel>();
-            IList<SessionViewModel> sessionSelection = null;
+            var sessions = MockLogs(4);
+            var expectedSelection = new List<SessionViewModel>();
+            IList<SessionViewModel> actualSelection = null;
 
             RefreshFeedbackViewModelWithSessions(sessions);
-            _uut.SelectedSessions = selectedSessions;
-            _uut.SessionSelection += (o, models) => { sessionSelection = models; };
+            _uut.SelectedSessions = expectedSelection;
+            _uut.SessionSelection += (o, models) => { actualSelection = models; };
             RefreshFeedbackViewModelWithSessions(sessions);
 
-            Assert.IsNull(sessionSelection);
+            Assert.IsNull(actualSelection);
         }
 
-        [Test]
-        public void ShouldInvokeSessionSelectionEventIfOneSessionWasSelectedPreviously()
+        [TestCase(1), TestCase(2)]
+        public void ShouldInvokeSessionSelectionEventIfSessionsWereSelectedPreviously(int numberOfSelections)
         {
-            var somePointInTime = DateTime.Now;
-            var sessions = new List<ILog<IDEEvent>>
-            {
-                MockLog(somePointInTime),
-                MockLog(somePointInTime.AddDays(1)),
-                MockLog(somePointInTime.AddDays(2)),
-                MockLog(somePointInTime.AddDays(3))
-            };
-            var selectedSessions = new List<SessionViewModel>
-            {
-                new SessionViewModel(sessions[0])
-            };
-            IList<SessionViewModel> sessionSelection = null;
+            var sessions = MockLogs(4);
+            var expectedSelection = sessions.Take(numberOfSelections).Select(s => new SessionViewModel(s)).ToList();
+            IList<SessionViewModel> actualSelection = null;
 
             RefreshFeedbackViewModelWithSessions(sessions);
-            _uut.SelectedSessions = selectedSessions;
-            _uut.SessionSelection += (o, models) => { sessionSelection = models; };
+            _uut.SelectedSessions = expectedSelection;
+            _uut.SessionSelection += (o, models) => { actualSelection = models; };
             RefreshFeedbackViewModelWithSessions(sessions);
 
-            CollectionAssert.AreEquivalent(selectedSessions, sessionSelection);
-        }
-
-        [Test]
-        public void ShouldInvokeSessionSelectionEventIfMultipleSessionsWereSelectedPreviously()
-        {
-            var somePointInTime = DateTime.Now;
-            var sessions = new List<ILog<IDEEvent>>
-            {
-                MockLog(somePointInTime),
-                MockLog(somePointInTime.AddDays(1)),
-                MockLog(somePointInTime.AddDays(2)),
-                MockLog(somePointInTime.AddDays(3))
-            };
-            var selectedSessions = new List<SessionViewModel>
-            {
-                new SessionViewModel(sessions[0]),
-                new SessionViewModel(sessions[1])
-            };
-            IList<SessionViewModel> sessionSelection = null;
-
-            RefreshFeedbackViewModelWithSessions(sessions);
-            _uut.SelectedSessions = selectedSessions;
-            _uut.SessionSelection += (o, models) => { sessionSelection = models; };
-            RefreshFeedbackViewModelWithSessions(sessions);
-
-            CollectionAssert.AreEquivalent(selectedSessions, sessionSelection);
+            CollectionAssert.AreEquivalent(expectedSelection, actualSelection);
         }
 
         [Test]
         public void ShouldNotInvokeEventSelectionEventIfNoEventsWereSelectedPreviously()
         {
-            var somePointInTime = DateTime.Now;
-            var events = new List<IDEEvent>
-            {
-                new TestIDEEvent {TestProperty = "Event 1"},
-                new TestIDEEvent {TestProperty = "Event 2"},
-                new TestIDEEvent {TestProperty = "Event 3"}
-            };
-            var sessions = new List<ILog<IDEEvent>>
-            {
-                MockLog(somePointInTime, events),
-                MockLog(somePointInTime.AddDays(1)),
-                MockLog(somePointInTime.AddDays(2)),
-                MockLog(somePointInTime.AddDays(3))
-            };
-            var selectedSession = new List<SessionViewModel> { new SessionViewModel(sessions[0]) };
-            var selectedEvents = new List<EventViewModel>();
-            IList<EventViewModel> eventSelection = null;
+            var sessions = MockLogs(4, 3);
+            var expectedSelection = new List<EventViewModel>();
+            IList<EventViewModel> actualSelection = null;
 
             RefreshFeedbackViewModelWithSessions(sessions);
-            _uut.SelectedSessions = selectedSession;
+            _uut.SelectedSessions = new [] {new SessionViewModel(sessions[0])};
             // ReSharper disable once PossibleNullReferenceException
-            _uut.SingleSelectedSession.SelectedEvents = selectedEvents;
-            _uut.EventSelection += (o, models) => { eventSelection = models; };
+            _uut.SingleSelectedSession.SelectedEvents = expectedSelection;
+            _uut.EventSelection += (o, models) => { actualSelection = models; };
             RefreshFeedbackViewModelWithSessions(sessions);
 
-            Assert.IsNull(eventSelection);
+            Assert.IsNull(actualSelection);
         }
 
-        [Test]
-        public void ShouldInvokeEventSelectionEventIfOneEventWasSelectedPreviously()
+        [TestCase(1), TestCase(2)]
+        public void ShouldInvokeEventSelectionEventIfEventsWereSelectedPreviously(int numberOfSelection)
         {
-            var somePointInTime = DateTime.Now;
-            var events = new List<IDEEvent>
-            {
-                new TestIDEEvent {TestProperty = "Event 1"},
-                new TestIDEEvent {TestProperty = "Event 2"},
-                new TestIDEEvent {TestProperty = "Event 3"}
-            };
-            var sessions = new List<ILog<IDEEvent>>
-            {
-                MockLog(somePointInTime, events),
-                MockLog(somePointInTime.AddDays(1)),
-                MockLog(somePointInTime.AddDays(2)),
-                MockLog(somePointInTime.AddDays(3))
-            };
-            var selectedSession = new List<SessionViewModel> { new SessionViewModel(sessions[0]) };
-            var selectedEvents = new List<EventViewModel>
-            {
-                new EventViewModel(events[0])
-            };
-            IList<EventViewModel> eventSelection = null;
+            var sessions = MockLogs(4, 3);
+            var selectedSession = new SessionViewModel(sessions[0]);
+            var expectedSelection = selectedSession.Events.Take(numberOfSelection).ToList();
+            IList<EventViewModel> actualSelection = null;
 
             RefreshFeedbackViewModelWithSessions(sessions);
-            _uut.SelectedSessions = selectedSession;
+            _uut.SelectedSessions = new [] {selectedSession};
             // ReSharper disable once PossibleNullReferenceException
-            _uut.SingleSelectedSession.SelectedEvents = selectedEvents;
-            _uut.EventSelection += (o, models) => { eventSelection = models; };
+            _uut.SingleSelectedSession.SelectedEvents = expectedSelection;
+            _uut.EventSelection += (o, models) => { actualSelection = models; };
             RefreshFeedbackViewModelWithSessions(sessions);
 
-            CollectionAssert.AreEquivalent(selectedEvents, eventSelection);
+            CollectionAssert.AreEquivalent(expectedSelection, actualSelection);
         }
 
-        [Test]
-        public void ShouldInvokeEventSelectionEventIfMultipleEventsWereSelectedPreviously()
+        private static List<ILog<IDEEvent>> MockLogs(int numberOfLogs, int numberOfEventsPerLog = 0)
         {
             var somePointInTime = DateTime.Now;
-            var events = new List<IDEEvent>
-            {
-                new TestIDEEvent {TestProperty = "Event 1"},
-                new TestIDEEvent {TestProperty = "Event 2"},
-                new TestIDEEvent {TestProperty = "Event 3"}
-            };
-            var sessions = new List<ILog<IDEEvent>>
-            {
-                MockLog(somePointInTime, events),
-                MockLog(somePointInTime.AddDays(1)),
-                MockLog(somePointInTime.AddDays(2)),
-                MockLog(somePointInTime.AddDays(3))
-            };
-            var selectedSession = new List<SessionViewModel> { new SessionViewModel(sessions[0]) };
-            var selectedEvents = new List<EventViewModel>
-            {
-                new EventViewModel(events[0]),
-                new EventViewModel(events[1])
-            };
-            IList<EventViewModel> eventSelection = null;
+            return
+                Enumerable.Range(0, numberOfLogs)
+                          .Select(i => MockLog(somePointInTime.AddDays(i), MockEvents(i + "_", numberOfEventsPerLog)))
+                          .ToList();
+        }
 
-            RefreshFeedbackViewModelWithSessions(sessions);
-            _uut.SelectedSessions = selectedSession;
-            // ReSharper disable once PossibleNullReferenceException
-            _uut.SingleSelectedSession.SelectedEvents = selectedEvents;
-            _uut.EventSelection += (o, models) => { eventSelection = models; };
-            RefreshFeedbackViewModelWithSessions(sessions);
-
-            CollectionAssert.AreEquivalent(selectedEvents, eventSelection);
+        private static IEnumerable<IDEEvent> MockEvents(string prefix, int number)
+        {
+            return Enumerable.Range(0, number).Select(i => (IDEEvent) new TestIDEEvent {TestProperty = prefix + i});
         }
 
         private void RefreshFeedbackViewModelWithSessions(IEnumerable<ILog<IDEEvent>> sessions)
@@ -320,14 +226,6 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModel
         {
             var log = new Mock<ILog<IDEEvent>>();
             log.Setup(l => l.NewLogReader()).Returns(new Mock<ILogReader<IDEEvent>>().Object);
-            return log.Object;
-        }
-
-        private static ILog<IDEEvent> MockLog(DateTime startTime)
-        {
-            var log = new Mock<ILog<IDEEvent>>();
-            log.Setup(l => l.NewLogReader()).Returns(new Mock<ILogReader<IDEEvent>>().Object);
-            log.Setup(l => l.Date).Returns(startTime);
             return log.Object;
         }
 

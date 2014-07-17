@@ -19,6 +19,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -74,28 +75,23 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
                         SetLastReviewDate(_dateUtils.Now);
                     }
                 });
-            _feedbackViewModel.SessionSelection += (o, models) =>
-            {
-                var selectedSessions = SessionListView.SelectedItems;
-                foreach (var session in models)
-                {
-                    selectedSessions.Add(session);
-                }
-            };
-            _feedbackViewModel.EventSelection += (o, models) =>
-            {
-                var selectedEvents = EventListView.SelectedItems;
-                foreach (var session in models)
-                {
-                    selectedEvents.Add(session);
-                }
-            };
+            _feedbackViewModel.SessionSelection += (o, sessions) => SetSelection(SessionListView, sessions);
+            _feedbackViewModel.EventSelection += (o, events) => SetSelection(EventListView, events);
 
             _actionManager = actionManager;
             _dateUtils = dateUtils;
             _settingsStore = settingsStore;
 
             InitializeComponent();
+        }
+
+        private static void SetSelection(ListBox view, IEnumerable<object> elements)
+        {
+            var selection = view.SelectedItems;
+            foreach (var element in elements)
+            {
+                selection.Add(element);
+            }
         }
 
         public void OnVisibilityChanged(PropertyChangedEventArgs<bool> e)
