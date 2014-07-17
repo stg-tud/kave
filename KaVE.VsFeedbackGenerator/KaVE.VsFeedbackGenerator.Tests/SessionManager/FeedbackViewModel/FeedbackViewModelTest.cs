@@ -20,7 +20,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using JetBrains.Threading;
@@ -153,7 +152,8 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModel
             };
             RefreshFeedbackViewModelWithSessions(sessions);
             _uut.SelectedSessions = new List<SessionViewModel> {new SessionViewModel(sessions[0])};
-            _uut.SelectedSessionAfterRefresh += (o, model) => { selectedSessionEventWasCalled = true; };
+            // TODO @Dennis: Testen ob richtiges viewmodel kommt
+            _uut.SessionSelection += (o, model) => { selectedSessionEventWasCalled = true; };
             RefreshFeedbackViewModelWithSessions(sessions);
             Assert.IsTrue(selectedSessionEventWasCalled);
         }
@@ -172,7 +172,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModel
             };
             RefreshFeedbackViewModelWithSessions(sessions);
             _uut.SelectedSessions = new List<SessionViewModel>();
-            _uut.SelectedSessionAfterRefresh += (o, model) => { selectedSessionEventWasCalled = true; };
+            _uut.SessionSelection += (o, model) => { selectedSessionEventWasCalled = true; };
             RefreshFeedbackViewModelWithSessions(sessions);
             Assert.IsFalse(selectedSessionEventWasCalled);
         }
@@ -195,8 +195,9 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModel
                 new SessionViewModel(sessions[0]),
                 new SessionViewModel(sessions[1])
             };
-            _uut.SelectedSessionAfterRefresh += (o, model) => { selectedSessionEventWasCalled = true; };
+            _uut.SessionSelection += (o, model) => { selectedSessionEventWasCalled = true; };
             RefreshFeedbackViewModelWithSessions(sessions);
+            // TODO @Dennis: implement for multiselect (Add ;))
             Assert.IsFalse(selectedSessionEventWasCalled);
         }
 
@@ -220,13 +221,13 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModel
             };
             RefreshFeedbackViewModelWithSessions(sessions);
             _uut.SelectedSessions = new List<SessionViewModel> {new SessionViewModel(sessions[0])};
-            Debug.Assert(_uut.SingleSelectedSession != null, "_uut.SingleSelectedSession != null");
+            // ReSharper disable once PossibleNullReferenceException
             _uut.SingleSelectedSession.SelectedEvents = new List<EventViewModel>
             {
                 new EventViewModel(events[0])
             };
-            _uut.SelectedSessionAfterRefresh += (o, model) => { };
-            _uut.SelectedEventAfterRefresh += (o, model) => { selectedEventEventWasCalled = true; };
+            // TODO @Dennis: check correct Event
+            _uut.EventSelection += (o, model) => { selectedEventEventWasCalled = true; };
             RefreshFeedbackViewModelWithSessions(sessions);
             Assert.IsTrue(selectedEventEventWasCalled);
         }
@@ -251,10 +252,10 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModel
             };
             RefreshFeedbackViewModelWithSessions(sessions);
             _uut.SelectedSessions = new List<SessionViewModel> {new SessionViewModel(sessions[0])};
-            Debug.Assert(_uut.SingleSelectedSession != null, "_uut.SingleSelectedSession != null");
+            // ReSharper disable once PossibleNullReferenceException
             _uut.SingleSelectedSession.SelectedEvents = new List<EventViewModel>();
-            _uut.SelectedSessionAfterRefresh += (o, model) => { };
-            _uut.SelectedEventAfterRefresh += (o, model) => { selectedEventEventWasCalled = true; };
+            _uut.SessionSelection += (o, model) => { };
+            _uut.EventSelection += (o, model) => { selectedEventEventWasCalled = true; };
             RefreshFeedbackViewModelWithSessions(sessions);
             Assert.IsFalse(selectedEventEventWasCalled);
         }
@@ -279,14 +280,14 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModel
             };
             RefreshFeedbackViewModelWithSessions(sessions);
             _uut.SelectedSessions = new List<SessionViewModel> {new SessionViewModel(sessions[0])};
-            Debug.Assert(_uut.SingleSelectedSession != null, "_uut.SingleSelectedSession != null");
+            // ReSharper disable once PossibleNullReferenceException
             _uut.SingleSelectedSession.SelectedEvents = new List<EventViewModel>
             {
                 new EventViewModel(events[0]),
                 new EventViewModel(events[1])
             };
-            _uut.SelectedSessionAfterRefresh += (o, model) => { };
-            _uut.SelectedEventAfterRefresh += (o, model) => { selectedEventEventWasCalled = true; };
+            _uut.SessionSelection += (o, model) => { };
+            _uut.EventSelection += (o, model) => { selectedEventEventWasCalled = true; };
             RefreshFeedbackViewModelWithSessions(sessions);
             Assert.IsFalse(selectedEventEventWasCalled);
         }
@@ -294,7 +295,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModel
         private void RefreshFeedbackViewModelWithSessions(IEnumerable<ILog<IDEEvent>> sessions)
         {
             _mockLogManager.Setup(m => m.GetLogs()).Returns(sessions);
-            Invoke.OnSTA(() => _uut.Refresh());
+            _uut.Refresh();
             WaitForRefreshToFinish();
         }
 

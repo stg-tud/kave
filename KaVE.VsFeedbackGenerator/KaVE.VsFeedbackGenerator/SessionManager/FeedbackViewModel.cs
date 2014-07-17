@@ -48,8 +48,13 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
 
         private readonly InteractionRequest<Confirmation> _confirmationRequest;
 
-        public event Action<object, SessionViewModel> SelectedSessionAfterRefresh;
-        public event Action<object, EventViewModel> SelectedEventAfterRefresh;
+        public delegate void SessionSelectionHandler(object sender, SessionViewModel model);
+
+        public event SessionSelectionHandler SessionSelection = delegate { };
+
+        public delegate void EventSelectionHandler(object sender, EventViewModel model);
+
+        public event EventSelectionHandler EventSelection = delegate { };
 
         public IInteractionRequest<Confirmation> ConfirmationRequest
         {
@@ -97,38 +102,55 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
                     });
         }
 
-        private void OnRefreshCompleted(object sender, RunWorkerCompletedEventArgs runWorkerCompletedEventArgs)
+        private void OnRefreshCompleted(object sender, RunWorkerCompletedEventArgs args)
         {
-            if (runWorkerCompletedEventArgs.Error != null)
+            if (args.Error != null)
             {
-                var logEventGenerator = Registry.GetComponent<Generators.ILogger>();
-                logEventGenerator.Error(runWorkerCompletedEventArgs.Error);
-                Sessions = null;
+                HandleRefreshError(args.Error);
             }
             else
             {
-                var selectedSessions = _selectedSessions.Select(s => s.StartDate).ToList();
-                var selectedEvents = SingleSelectedSession == null
-                    ? null
-                    : SingleSelectedSession.SelectedEvents.Select(e => e.Event).ToList();
-                Sessions = (IEnumerable<SessionViewModel>) runWorkerCompletedEventArgs.Result;
-                var newlySelectedSessions = Sessions.Where(s => selectedSessions.Contains(s.StartDate)).ToList();
-                if (newlySelectedSessions.Count() == 1)
-                {
-                    var selectedSession = newlySelectedSessions.First();
-                    SelectedSessionAfterRefresh(this, selectedSession);
-                    if (selectedEvents != null)
-                    {
-                        var newlySelectedEvents =
-                            selectedSession.Events.Where(e => selectedEvents.Contains(e.Event)).ToList();
-                        if (newlySelectedEvents.Count() == 1)
-                        {
-                            SelectedEventAfterRefresh(this, newlySelectedEvents.First());
-                        }
-                    }
-                }
+                var sessions = (IEnumerable<SessionViewModel>) args.Result;
+                HandleSuccessfulRefresh(sessions);
             }
             SetIdle();
+        }
+
+        private void HandleRefreshError(Exception error)
+        {
+            var logEventGenerator = Registry.GetComponent<Generators.ILogger>();
+            logEventGenerator.Error(error);
+            Sessions = null;
+        }
+
+        private void HandleSuccessfulRefresh(IEnumerable<SessionViewModel> sessions)
+        {
+            var oldSelectedSessions = _selectedSessions.Select(s => s.StartDate).ToList();
+            var oldSelectedEvents = CollectSelectedEvents();
+
+            Sessions =  sessions;
+
+            var newSelectedSessions = Sessions.Where(s => oldSelectedSessions.Contains(s.StartDate)).ToList();
+            if (newSelectedSessions.Count() == 1)
+            {
+                var selectedSession = newSelectedSessions.First();
+                SessionSelection(this, selectedSession);
+                var newSelectedEvents =
+                    selectedSession.Events.Where(e => oldSelectedEvents.Contains(e.Event)).ToList();
+                if (newSelectedEvents.Count() == 1)
+                {
+                    EventSelection(this, newSelectedEvents.First());
+                }
+            }
+        }
+
+        private List<IDEEvent> CollectSelectedEvents()
+        {
+            if (SingleSelectedSession == null)
+            {
+                return new List<IDEEvent>();
+            }
+            return SingleSelectedSession.SelectedEvents.Select(e => e.Event).ToList();
         }
 
         public IEnumerable<SessionViewModel> Sessions
