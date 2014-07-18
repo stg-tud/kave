@@ -34,7 +34,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis
             ITypeDeclaration typeDeclaration,
             ISet<MethodRef> entryPoints)
         {
-            var sst = new SST();
+            var sst = new SST(null);
 
 
             var epNames = new HashSet<IMethodName>();
@@ -55,11 +55,11 @@ namespace KaVE.VsFeedbackGenerator.Analysis
                 if (d.DeclaredElement != null)
                 {
                     var dElem = d.DeclaredElement;
-                    var dName = d.DeclaredElement.GetName<IMethodName>();
+                    var dName = dElem.GetName<IMethodName>();
 
                     if (dName != null && !epNames.Contains(dName))
                     {
-                        var decl = new MethodDeclaration()
+                        var decl = new MethodDeclaration
                         {
                             Name = dName
                         };

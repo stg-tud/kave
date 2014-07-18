@@ -24,8 +24,8 @@ using Fix = KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite.SSTA
 
 namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 {
-    [TestFixture, Ignore]
-    internal class TriggerLocationsTest : BaseSSTTest
+    [Ignore]
+    internal class TriggerLocationsTest : BaseSSTAnalysisTest
     {
         [Test]
         public void TriggeredOutsideMethod()
@@ -35,7 +35,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
                 $
             ");
 
-            var sst = new SST();
+            var sst = NewSST();
             sst.AddEntrypoint(NewMethodDeclaration(Fix.Void, "A"));
 
             AssertResult(sst);
@@ -49,7 +49,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
                 B$
             ");
 
-            var sst = new SST();
+            var sst = NewSST();
             sst.AddEntrypoint(NewMethodDeclaration(Fix.Void, "A"));
 
             sst.Add(new TypeTrigger {Token = "B"});
@@ -88,7 +88,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             var mA = NewMethodDeclaration(Fix.Void, "A");
             mA.Body.Add(trigger);
 
-            var sst = new SST();
+            var sst = NewSST();
             sst.AddEntrypoint(mA);
 
             AssertResult(sst);
@@ -109,10 +109,21 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             var mA = NewMethodDeclaration(Fix.Void, "A");
             mA.Body.Add(trigger);
 
-            var sst = new SST();
+            var sst = NewSST();
             sst.AddEntrypoint(mA);
 
             AssertResult(sst);
+        }
+
+        [Test, ExpectedException(typeof (NotSupportedException))]
+        public void TriggeredInInterface()
+        {
+            CompleteInFile(@"
+                public interface I {
+                    public void A();
+                    $
+                }
+            ");
         }
     }
 }

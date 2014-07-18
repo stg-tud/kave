@@ -23,78 +23,132 @@ using Fix = KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite.SSTA
 
 namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 {
-    [TestFixture, Ignore]
-    internal class SingleAssignmentTest : BaseSSTTest
+    [Ignore]
+    internal class SingleAssignmentTest : BaseSSTAnalysisTest
     {
         [Test]
-        public void TriggeredInMethod()
+        public void InlineIfElse()
         {
             CompleteInClass(@"
                 public void A()
                 {
-                    var i;
+                    var i = true ? 1 : 2;
+                    $
                 }
             ");
 
             var mA = NewMethodDeclaration(Fix.Void, "A");
+            var ifElse = new IfElse();
+
             mA.Body.Add(new VariableDeclaration("i", Fix.Int));
+            mA.Body.Add(ifElse);
+            ifElse.Condition = new ConstantExpression();
+            ifElse.IfExpressions.Add(new Assignment("i", new ConstantExpression()));
+            ifElse.ElseExpressions.Add(new Assignment("i", new ConstantExpression()));
 
             AssertEntryPoints(mA);
         }
 
         [Test]
-        public void TriggeredInMethoasdd()
-        {
-            CompleteInClass(@"
-                public void A()
-                {
-                    var i = 5;
-                }
-            ");
-
-            var mA = NewMethodDeclaration(Fix.Void, "A");
-            mA.Body.Add(new VariableDeclaration("i", Fix.Int));
-
-            mA.Body.Add(
-                new Assignment
-                {
-                    Identifier = "i",
-                    Value = new ConstantExpression()
-                });
-
-            AssertEntryPoints(mA);
-        }
-
-
-        [Test]
-        public void TriggeredInMethoaasdsdd()
+        public void Invocation_SimpleComposition()
         {
             CompleteInFile(@"
                 namespace N {
-                    public class C1 {
-                        public Object m(Object o) {
-                            return null;
+                    public class C {
+                        public int get() {
+                            return 1;
                         }
                     }
-
                     public class Test {
-                        public void ep(Object o)
-                        {
-                            var c = new C1();
-                            var a = c.m(o);
+                        public void A(C c) {
+                            var i = 1 + c.get();
                             $
                         }
                     }
-                }
             ");
 
-            /*
-             var c = new C1();
-             var a = c.m(o);
-             --> assignment(a, (invocation, "C.m", c, [o]))
-             */
+            var mA = NewMethodDeclaration(Fix.Void, "A");
 
-            /*
+            mA.Body.Add(new VariableDeclaration("i", Fix.Int));
+            mA.Body.Add(new VariableDeclaration("v0", Fix.Int));
+            mA.Body.Add(new Assignment("v0", new Invocation("c", Fix.GetMethodName("C.get"))));
+            mA.Body.Add(new Assignment("i", new ComposedExpression {Variables = new[] {"v0"}}));
+
+            AssertEntryPoints(mA);
+        }
+
+        [Test]
+        public void Invocation_RealComposition()
+        {
+            CompleteInFile(@"
+                namespace N {
+                    public class C {
+                        public int get() {
+                            return 1;
+                        }
+                    }
+                    public class Test {
+                        public void A(C c1, C c2) {
+                            var i = c1.get() + c2.get() + 1;
+                            $
+                        }
+                    }
+            ");
+
+            var mA = NewMethodDeclaration(Fix.Void, "A");
+
+            mA.Body.Add(new VariableDeclaration("i", Fix.Int));
+            mA.Body.Add(new VariableDeclaration("v0", Fix.Int));
+            mA.Body.Add(new Assignment("v0", new Invocation("c1", Fix.GetMethodName("C.get"))));
+            mA.Body.Add(new VariableDeclaration("v0", Fix.Int));
+            mA.Body.Add(new Assignment("v1", new Invocation("c2", Fix.GetMethodName("C.get"))));
+            mA.Body.Add(new Assignment("i", new ComposedExpression {Variables = new[] {"v0", "v1"}}));
+
+            AssertEntryPoints(mA);
+        }
+
+        [Test]
+        public void Invocation_NestedComposition()
+        {
+            CompleteInFile(@"
+                namespace N {
+                    public class C {
+                        public int plus(int in) {
+                            return in + 1;
+                        }
+                    }
+                    public class Test {
+                        public void A(C c1, C c2) {
+                            var i = c1.plus(c2.plus(1));
+                            $
+                        }
+                    }
+            ");
+
+            var mA = NewMethodDeclaration(Fix.Void, "A");
+
+            mA.Body.Add(new VariableDeclaration("i", Fix.Int));
+            mA.Body.Add(new VariableDeclaration("v0", Fix.Int));
+            mA.Body.Add(new Assignment("v0", new ConstantExpression()));
+            mA.Body.Add(new VariableDeclaration("v1", Fix.Int));
+            mA.Body.Add(new Assignment("v1", new Invocation("c2", Fix.GetMethodName("C.plus"), "v0")));
+            mA.Body.Add(new VariableDeclaration("v2", Fix.Int));
+            mA.Body.Add(new Assignment("v2", new Invocation("c1", Fix.GetMethodName("C.plus"), "v1")));
+            mA.Body.Add(new Assignment("i", new ComposedExpression {Variables = new[] {"v0", "v1", "v2"}}));
+            // or do we prefer: 
+            // mA.Body.Add(new Assignment("i", new ComposedExpression { Variables = new[] { "c1, c2" } }));
+            // ??
+
+            AssertEntryPoints(mA);
+        }
+
+        /*
+         var c = new C1();
+         var a = c.m(o);
+         --> assignment(a, (invocation, "C.m", c, [o]))
+         */
+
+        /*
              var c = new C1();
              var a = c.m1(o) + C.m2();
              -->
@@ -104,7 +158,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
              var a = v1 + v2; -> assignment(a, cplxOp(v1, v2))
              */
 
-            /*
+        /*
              var c = new C1();
              var a = c.m1(o) + j + 1;
              -->
@@ -114,7 +168,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
              var a = v1 + j + 1; -> assignment(a, cplxOp(v1, j))
              */
 
-            /*
+        /*
              * var v = true ? 1 : 2;
              * -->
              * var v;
@@ -122,7 +176,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
              *   v = 1;
              * else
              *   v = 2
-             */
-        }
+             *
+         */
     }
 }

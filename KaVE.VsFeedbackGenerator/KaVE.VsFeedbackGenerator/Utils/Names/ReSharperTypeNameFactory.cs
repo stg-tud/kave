@@ -49,7 +49,7 @@ namespace KaVE.VsFeedbackGenerator.Utils.Names
             // parameter type in the incomplete method declaration
             // > public void M(int i, )
             return typeElement == null
-                ? TypeName.Get(UnknownTypeName.Identifier)
+                ? UnknownTypeName.Instance
                 : (ITypeName) typeElement.GetName(type.GetSubstitution());
         }
 

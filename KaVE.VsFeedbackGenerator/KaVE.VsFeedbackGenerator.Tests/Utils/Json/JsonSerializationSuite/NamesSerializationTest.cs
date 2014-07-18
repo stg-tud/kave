@@ -115,7 +115,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.JsonSerializationSuite
         [Test]
         public void ShouldSerializeUnknownTypeName()
         {
-            var name = TypeName.Get(UnknownTypeName.Identifier);
+            var name = UnknownTypeName.Instance;
             JsonAssert.SerializationPreservesReferenceIdentity(name);
         }
 

@@ -128,7 +128,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
         [Test]
         public void ShouldKeepUnknownTypeName()
         {
-            var original = TypeName.Get(UnknownTypeName.Identifier);
+            var original = UnknownTypeName.Instance;
 
             AssertAnonymizedEquals(original, original);
         }

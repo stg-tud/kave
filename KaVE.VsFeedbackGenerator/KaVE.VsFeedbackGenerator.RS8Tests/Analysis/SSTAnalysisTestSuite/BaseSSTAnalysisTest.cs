@@ -24,8 +24,13 @@ using NUnit.Framework;
 
 namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 {
-    internal abstract class BaseSSTTest : BaseTest
+    internal abstract class BaseSSTAnalysisTest : BaseTest
     {
+        internal SST NewSST()
+        {
+            return new SST(null);
+        }
+
         internal MethodDeclaration NewMethodDeclaration(ITypeName returnType, string simpleName)
         {
             const string package = "N.C, TestProject";

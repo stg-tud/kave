@@ -19,15 +19,28 @@
 
 using System;
 using System.Collections.Generic;
+using KaVE.Model.Collections;
 using KaVE.Model.Names;
+using KaVE.Model.Names.CSharp;
 using KaVE.Utils;
 
 namespace KaVE.Model.SSTs
 {
     public class SST
     {
-        private readonly ISet<MethodDeclaration> _methods = new HashSet<MethodDeclaration>();
-        private readonly ISet<MethodDeclaration> _eps = new HashSet<MethodDeclaration>();
+        private ITypeName _td;
+
+        private readonly ISet<FieldDeclaration> _fields = Sets.NewHashSet<FieldDeclaration>();
+        private readonly ISet<PropertyDeclaration> _properties = Sets.NewHashSet<PropertyDeclaration>();
+        private readonly ISet<MethodDeclaration> _methods = Sets.NewHashSet<MethodDeclaration>();
+        private readonly ISet<MethodDeclaration> _eps = Sets.NewHashSet<MethodDeclaration>();
+        private readonly ISet<EventDeclaration> _events = Sets.NewHashSet<EventDeclaration>();
+        private readonly ISet<DelegateDeclaration> _delegates = Sets.NewHashSet<DelegateDeclaration>();
+
+        public SST(ITypeName td)
+        {
+            _td = td;
+        }
 
         public void SetTriggerPoint(MethodDeclaration md)
         {
@@ -47,7 +60,10 @@ namespace KaVE.Model.SSTs
             _eps.Add(mA);
         }
 
-        public void Add(FieldDeclaration fd) {}
+        public void Add(FieldDeclaration fd)
+        {
+            _fields.Add(fd);
+        }
 
         public void Add(TypeTrigger md) {}
 
@@ -60,6 +76,21 @@ namespace KaVE.Model.SSTs
         {
             return _methods;
         }
+
+        public void Add(PropertyDeclaration pd)
+        {
+            _properties.Add(pd);
+        }
+
+        public void Add(DelegateDeclaration dd)
+        {
+            _delegates.Add(dd);
+        }
+
+        public void Add(EventDeclaration ed)
+        {
+            _events.Add(ed);
+        }
     }
 
 
@@ -68,13 +99,55 @@ namespace KaVE.Model.SSTs
 
     public class FieldDeclaration : Expression
     {
-        public IFieldName Name;
+        public string Name;
+        public ITypeName Type;
+
+        public FieldDeclaration(string s, ITypeName typeName)
+        {
+            Name = s;
+            Type = typeName;
+        }
 
         public string Identifier
         {
-            get { return Name.Identifier; }
+            get { return Name; }
         }
     }
+
+    public class TypeDeclaration : Expression
+    {
+        public ITypeName Type { get; set; }
+
+        public TypeDeclaration(ITypeName type)
+        {
+            Type = type;
+        }
+    }
+
+    public class DelegateDeclaration : Expression
+    {
+        public string Name { get; set; }
+        public MethodName MethodName { get; set; }
+
+        public DelegateDeclaration(string name, MethodName methodName)
+        {
+            Name = name;
+            MethodName = methodName;
+        }
+    }
+
+    public class EventDeclaration : Expression
+    {
+        public string Identifier { get; set; }
+        public ITypeName Type { get; set; }
+
+        public EventDeclaration(string identifier, ITypeName type)
+        {
+            Identifier = identifier;
+            Type = type;
+        }
+    }
+
 
     public class VariableDeclaration : Expression
     {
@@ -110,15 +183,17 @@ namespace KaVE.Model.SSTs
 
     public class PropertyDeclaration : Expression
     {
-        public IPropertyName Name;
-
-        public string Identifier
-        {
-            get { return Name.Identifier; }
-        }
+        public string Name { get; set; }
+        public ITypeName Type { get; set; }
 
         public List<Expression> GetExpressions = new List<Expression>();
         public List<Expression> SetExpressions = new List<Expression>();
+
+        public PropertyDeclaration(string s, ITypeName typeName)
+        {
+            Name = s;
+            Type = typeName;
+        }
     }
 
     public class LambdaDeclaration : Expression
@@ -136,6 +211,12 @@ namespace KaVE.Model.SSTs
     {
         public string Identifier;
         public Expression Value;
+
+        public Assignment(string identifier, Expression expr)
+        {
+            Identifier = identifier;
+            Value = expr;
+        }
     }
 
     public class Invocation : Expression
@@ -143,6 +224,13 @@ namespace KaVE.Model.SSTs
         public string Identifier;
         public IMethodName Name;
         public string[] Parameters;
+
+        public Invocation(string id, IMethodName name, params string[] parameters)
+        {
+            Identifier = id;
+            Name = name;
+            Parameters = parameters;
+        }
     }
 
     public class ConstantExpression : Expression {}

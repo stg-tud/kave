@@ -114,7 +114,7 @@ namespace KaVE.Model.Names.CSharp
         {
             if (identifier == String.Empty)
             {
-                identifier = UnknownTypeName.Identifier;
+                return UnknownTypeName.Instance;
             }
 
             return Registry.GetOrCreate(identifier);
@@ -148,7 +148,7 @@ namespace KaVE.Model.Names.CSharp
         {
             if (UnknownTypeName.IsUnknownTypeIdentifier(identifier))
             {
-                return UnknownTypeName.Identifier.Length;
+                return identifier.Length;
             }
             var length = identifier.LastIndexOf(']') + 1;
             if (length > 0)

@@ -22,39 +22,32 @@ using Fix = KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite.SSTA
 
 namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 {
-    internal class EntrypointsTest : BaseSSTAnalysisTest
+    [Ignore]
+    internal class IncompleteCodeTest : BaseSSTAnalysisTest
     {
         [Test]
-        public void PrivateIsInlined()
+        public void EmptyIfCondition()
         {
             CompleteInClass(@"$
-                private void PrivateA() {}
-                public void PublicA() {}
+                public void A() {
+                    if()
+                    {
+                        int i;
+                    }
+                    else
+                    {
+                        string s;
+                        $
+                    }
+                }
             ");
 
-            var mA = NewMethodDeclaration(Fix.Void, "PublicA");
+            var mA = NewMethodDeclaration(Fix.Void, "A");
 
             AssertEntryPoints(mA);
         }
 
         [Test]
-        public void EPsAndNonEPsAreDistinguished()
-        {
-            CompleteInClass(@"$
-                public void A() { B();}
-                public void B() {}
-                public void C() {}
-            ");
-
-            var mA = NewMethodDeclaration(Fix.Void, "A");
-            var mB = NewMethodDeclaration(Fix.Void, "B"); // ...
-            //mB.Body.Add(new Invocation("this", Fix.GetMethodName("A.B")));
-            var mC = NewMethodDeclaration(Fix.Void, "C");
-
-            AssertEntryPoints(mA, mC);
-            AssertMethodDeclarations(mB);
-        }
-
-        // TODO @Seb: adapt remaining tests from EntryPointSelectorTest
+        public void EmptyWhileCondition() {}
     }
 }

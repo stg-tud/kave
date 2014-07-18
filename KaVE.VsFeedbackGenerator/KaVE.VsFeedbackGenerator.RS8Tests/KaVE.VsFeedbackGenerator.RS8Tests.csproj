@@ -94,9 +94,14 @@
     <Compile Include="Analysis\SmokeTests\CodeCompletionWithIncompleteReferenceSmokeTest.cs" />
     <Compile Include="Analysis\SmokeTests\CodeCompletionWithMissingTokensSmokeTest.cs" />
     <Compile Include="Analysis\SmokeTests\CodeCompletionWithUnresolvableReferencesSmokeTest.cs" />
-    <Compile Include="Analysis\SSTAnalysisTestSuite\BaseSSTTest.cs" />
+    <Compile Include="Analysis\SSTAnalysisTestSuite\AssignmentTest.cs" />
+    <Compile Include="Analysis\SSTAnalysisTestSuite\BaseSSTAnalysisTest.cs" />
     <Compile Include="Analysis\SSTAnalysisTestSuite\ControlStructureTest.cs" />
+    <Compile Include="Analysis\SSTAnalysisTestSuite\DeclarationTest.cs" />
     <Compile Include="Analysis\SSTAnalysisTestSuite\EntrypointsTest.cs" />
+    <Compile Include="Analysis\SSTAnalysisTestSuite\IncompleteCodeTest.cs" />
+    <Compile Include="Analysis\SSTAnalysisTestSuite\InvocationTest.cs" />
+    <Compile Include="Analysis\SSTAnalysisTestSuite\MemberDeclaration.cs" />
     <Compile Include="Analysis\SSTAnalysisTestSuite\SingleAssignmentTest.cs" />
     <Compile Include="Analysis\SSTAnalysisTestSuite\SSTAnalysisFixture.cs" />
     <Compile Include="Analysis\SSTAnalysisTestSuite\TriggerLocationsTest.cs" />

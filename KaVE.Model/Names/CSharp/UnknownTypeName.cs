@@ -23,7 +23,13 @@ namespace KaVE.Model.Names.CSharp
 {
     public class UnknownTypeName : TypeName
     {
+        
         public new const string Identifier = "?";
+
+        public static ITypeName Instance
+        {
+            get { return TypeName.Get(Identifier); }
+        }
 
         internal static bool IsUnknownTypeIdentifier(string identifier)
         {
@@ -36,7 +42,7 @@ namespace KaVE.Model.Names.CSharp
             return TypeName.Get(identifier);
         }
 
-        internal UnknownTypeName(string identifier) : base(identifier) { }
+        internal UnknownTypeName(string identifier) : base(identifier) {}
 
         public override bool IsUnknownType
         {

@@ -27,13 +27,13 @@ namespace KaVE.Model.Names.CSharp
     public class TypeParameterName : Name, ITypeName
     {
         /// <summary>
-        /// The separator between the parameter type's short name and its type.
+        ///     The separator between the parameter type's short name and its type.
         /// </summary>
         private const string ParameterNameTypeSeparater = " -> ";
 
         /// <summary>
-        /// Constructor for reflective recreation of names. See <see cref="Get(string,string)"/> for details on how to
-        /// instantiate type-parameter names.
+        ///     Constructor for reflective recreation of names. See <see cref="Get(string,string)" /> for details on how to
+        ///     instantiate type-parameter names.
         /// </summary>
         [UsedImplicitly]
         public new static ITypeName Get(string identifier)
@@ -42,8 +42,8 @@ namespace KaVE.Model.Names.CSharp
         }
 
         /// <summary>
-        /// Gets the <see cref="ITypeName"/> for the identifer
-        /// <code>'short name' -&gt; 'actual-type identifier'</code>.
+        ///     Gets the <see cref="ITypeName" /> for the identifer
+        ///     <code>'short name' -&gt; 'actual-type identifier'</code>.
         /// </summary>
         public static ITypeName Get(string typeParameterShortName, string actualTypeIdentifier)
         {
@@ -213,11 +213,9 @@ namespace KaVE.Model.Names.CSharp
             get
             {
                 var startOfTypeName = TypeParameterShortName.Length + ParameterNameTypeSeparater.Length;
-                return
-                    TypeName.Get(
-                        startOfTypeName >= Identifier.Length
-                            ? UnknownTypeName.Identifier
-                            : Identifier.Substring(startOfTypeName));
+                return startOfTypeName >= Identifier.Length
+                    ? UnknownTypeName.Instance
+                    : TypeName.Get(Identifier.Substring(startOfTypeName));
             }
         }
     }
