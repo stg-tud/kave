@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="Collections\Lists.cs" />
     <Compile Include="Collections\Sets.cs" />
+    <Compile Include="Events\CommandEvent.cs" />
     <Compile Include="Events\CompletionEvent\MethodHierarchy.cs" />
     <Compile Include="Events\CompletionEvent\ProposalSelection.cs" />
     <Compile Include="Events\CompletionEvent\Context.cs" />
@@ -57,8 +58,6 @@
     <Compile Include="Events\CompletionEvent\TypeShape.cs" />
     <Compile Include="Events\ErrorEvent.cs" />
     <Compile Include="Events\InfoEvent.cs" />
-    <Compile Include="Events\ReSharper\ActionEvent.cs" />
-    <Compile Include="Events\ReSharper\BulbActionEvent.cs" />
     <Compile Include="Events\VisualStudio\BuildEvent.cs" />
     <Compile Include="Events\VisualStudio\CommandEvent.cs" />
     <Compile Include="Events\VisualStudio\DebuggerEvent.cs" />

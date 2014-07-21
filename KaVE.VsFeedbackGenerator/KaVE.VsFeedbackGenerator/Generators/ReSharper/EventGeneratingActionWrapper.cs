@@ -18,14 +18,13 @@
  */
 
 using System;
-using KaVE.Model.Events.ReSharper;
 using KaVE.VsFeedbackGenerator.MessageBus;
 using KaVE.VsFeedbackGenerator.Utils;
 using KaVE.VsFeedbackGenerator.VsIntegration;
 
 namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
 {
-    internal class EventGeneratingActionWrapper : EventGeneratorBase
+    internal class EventGeneratingActionWrapper : CommandEventGeneratorBase
     {
         private readonly Action _originalAction;
 
@@ -38,31 +37,14 @@ namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
             _originalAction = originalAction;
         }
 
-        public void Execute()
+        protected override void InvokeOriginalCommand()
         {
-            var actionEvent = CreateActionEvent();
             _originalAction.Invoke();
-            FireActionEventNow(actionEvent);
         }
 
-        private BulbActionEvent CreateActionEvent()
+        protected override string GetCommandId()
         {
-            var actionEvent = Create<BulbActionEvent>();
-            actionEvent.ActionId = _originalAction.Target.ToString();
-            return actionEvent;
-        }
-
-        private void FireActionEventNow(BulbActionEvent actionEvent)
-        {
-            try
-            {
-                FireNow(actionEvent);
-            }
-            catch (Exception e)
-            {
-                e = new Exception("generating action event failed", e);
-                Registry.GetComponent<ILogger>().Error(e);
-            }
+            return _originalAction.Target.ToString();
         }
     }
 }

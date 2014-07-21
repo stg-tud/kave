@@ -17,23 +17,17 @@
  *    - Sven Amann
  */
 
-using System.Runtime.Serialization;
 using KaVE.Utils;
 
-namespace KaVE.Model.Events.ReSharper
+namespace KaVE.Model.Events
 {
-    [DataContract]
-    public class BulbActionEvent : IDEEvent
+    public class CommandEvent : IDEEvent
     {
-        [DataMember]
-        public string ActionId { get; set; }
+        public string CommandId { get; set; }
 
-        [DataMember]
-        public string ActionText { get; set; }
-
-        protected bool Equals(BulbActionEvent other)
+        protected bool Equals(CommandEvent other)
         {
-            return base.Equals(other) && string.Equals(ActionId, other.ActionId) && string.Equals(ActionText, other.ActionText);
+            return base.Equals(other) && string.Equals(CommandId, other.CommandId);
         }
 
         public override bool Equals(object obj)
@@ -45,16 +39,13 @@ namespace KaVE.Model.Events.ReSharper
         {
             unchecked
             {
-                var hashCode = base.GetHashCode();
-                hashCode = (hashCode*397) ^ (ActionId != null ? ActionId.GetHashCode() : 0);
-                hashCode = (hashCode*397) ^ (ActionText != null ? ActionText.GetHashCode() : 0);
-                return hashCode;
+                return (base.GetHashCode()*397) ^ (CommandId != null ? CommandId.GetHashCode() : 0);
             }
         }
 
         public override string ToString()
         {
-            return string.Format("{0}, ActionId: {1}, ActionText: {2}", base.ToString(), ActionId, ActionText);
+            return string.Format("{0}, CommandId: {1}", base.ToString(), CommandId);
         }
     }
 }

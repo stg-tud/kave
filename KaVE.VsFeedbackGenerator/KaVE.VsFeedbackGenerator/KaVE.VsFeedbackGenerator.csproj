@@ -117,6 +117,7 @@
     <Compile Include="CodeCompletion\ExemplaryProposalProvider.cs" />
     <Compile Include="Generators\ILogger.cs" />
     <Compile Include="Generators\LogEventGenerator.cs" />
+    <Compile Include="Generators\ReSharper\CommandEventGeneratorBase.cs" />
     <Compile Include="Interactivity\Confirmation.cs" />
     <Compile Include="Interactivity\IInteractionRequest.cs" />
     <Compile Include="Interactivity\InteractionRequestedEventArgs.cs" />

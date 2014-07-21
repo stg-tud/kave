@@ -33,6 +33,7 @@ using KaVE.VsFeedbackGenerator.Utils;
 using KaVE.VsFeedbackGenerator.Utils.Names;
 using KaVE.VsFeedbackGenerator.VsIntegration;
 using Microsoft.VisualStudio.CommandBars;
+using CommandEvent = KaVE.Model.Events.VisualStudio.CommandEvent;
 
 namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
 {

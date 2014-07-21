@@ -22,7 +22,6 @@ using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Intentions.Extensibility;
 using JetBrains.TextControl;
 using KaVE.Model.Events;
-using KaVE.Model.Events.ReSharper;
 using KaVE.TestUtils;
 using KaVE.VsFeedbackGenerator.Generators.ReSharper;
 using Moq;
@@ -33,7 +32,6 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.ReSharper
     [TestFixture]
     internal class EventGeneratingBulbActionProxyTest : EventGeneratorTestBase
     {
-        private const string TestActionText = "TestActionText";
         private Mock<IBulbAction> _mockTestAction;
         private EventGeneratingBulbActionProxy _uut;
         private ISolution _testSolution;
@@ -43,7 +41,6 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.ReSharper
         public void SetUp()
         {
             _mockTestAction = new Mock<IBulbAction>();
-            _mockTestAction.Setup(a => a.Text).Returns(TestActionText);
             _uut = new EventGeneratingBulbActionProxy(
                 _mockTestAction.Object,
                 TestIDESession,
@@ -58,15 +55,14 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.ReSharper
         {
             _uut.Execute(_testSolution, _testTextControl);
 
-            var expected = new BulbActionEvent
+            var expected = new CommandEvent
             {
                 IDESessionUUID = TestIDESession.UUID,
-                ActionId = "Castle.Proxies.IBulbActionProxy",
-                ActionText = TestActionText,
+                CommandId = "Castle.Proxies.IBulbActionProxy",
                 TriggeredAt = TestDateUtils.Now,
                 Duration = TimeSpan.FromSeconds(0)
             };
-            var actual = GetSinglePublished<BulbActionEvent>();
+            var actual = GetSinglePublished<CommandEvent>();
             Assert.AreEqual(expected, actual);
         }
 
@@ -96,7 +92,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.ReSharper
 
             _uut.Execute(_testSolution, _testTextControl);
 
-            MockLogger.Verify(logger => logger.Error(ItIsException.With("generating bulb-action event failed", cause)));
+            MockLogger.Verify(logger => logger.Error(ItIsException.With("generating command event failed", cause)));
         }
     }
 }

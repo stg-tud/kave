@@ -18,7 +18,7 @@
  */
 
 using KaVE.Model.Events;
-using KaVE.Model.Events.VisualStudio;
+using CommandEvent = KaVE.Model.Events.VisualStudio.CommandEvent;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
 {

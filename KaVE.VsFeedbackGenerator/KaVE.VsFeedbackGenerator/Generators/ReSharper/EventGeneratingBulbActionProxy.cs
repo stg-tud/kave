@@ -17,19 +17,24 @@
  *    - Sven Amann
  */
 
-using System;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Intentions.Extensibility;
 using JetBrains.TextControl;
-using KaVE.Model.Events.ReSharper;
 using KaVE.VsFeedbackGenerator.MessageBus;
 using KaVE.VsFeedbackGenerator.Utils;
 using KaVE.VsFeedbackGenerator.VsIntegration;
 
 namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
 {
-    internal class EventGeneratingBulbActionProxy : EventGeneratorBase, IBulbAction
+    internal class EventGeneratingBulbActionProxy :
+        CommandEventGeneratorBase<EventGeneratingBulbActionProxy.BulbActionContext>, IBulbAction
     {
+        internal class BulbActionContext
+        {
+            public ISolution Solution { get; set; }
+            public ITextControl TextControl { get; set; }
+        }
+
         private readonly IBulbAction _target;
 
         public EventGeneratingBulbActionProxy(IBulbAction target,
@@ -43,17 +48,7 @@ namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
 
         public void Execute(ISolution solution, ITextControl textControl)
         {
-            var bulbActionEvent = CreateBulbActionEvent();
-            _target.Execute(solution, textControl);
-            FireActionEventNow(bulbActionEvent);
-        }
-
-        private BulbActionEvent CreateBulbActionEvent()
-        {
-            var bulbActionEvent = Create<BulbActionEvent>();
-            bulbActionEvent.ActionId = _target.GetType().FullName;
-            bulbActionEvent.ActionText = Text;
-            return bulbActionEvent;
+            Execute(new BulbActionContext {Solution = solution, TextControl = textControl});
         }
 
         public string Text
@@ -61,17 +56,14 @@ namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
             get { return _target.Text; }
         }
 
-        private void FireActionEventNow(BulbActionEvent bulbActionEvent)
+        protected override string GetCommandId()
         {
-            try
-            {
-                FireNow(bulbActionEvent);
-            }
-            catch (Exception e)
-            {
-                e = new Exception("generating bulb-action event failed", e);
-                Registry.GetComponent<ILogger>().Error(e);
-            }
+            return _target.GetType().FullName;
+        }
+
+        protected override void InvokeOriginalCommand(BulbActionContext context)
+        {
+            _target.Execute(context.Solution, context.TextControl);
         }
     }
 }

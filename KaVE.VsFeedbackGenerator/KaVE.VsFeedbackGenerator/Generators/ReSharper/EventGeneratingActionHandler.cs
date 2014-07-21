@@ -20,7 +20,7 @@
 using System;
 using JetBrains.ActionManagement;
 using JetBrains.Application.DataContext;
-using KaVE.Model.Events.ReSharper;
+using KaVE.Model.Events;
 using KaVE.VsFeedbackGenerator.MessageBus;
 using KaVE.VsFeedbackGenerator.Utils;
 using KaVE.VsFeedbackGenerator.VsIntegration;
@@ -28,10 +28,10 @@ using KaVE.VsFeedbackGenerator.VsIntegration;
 namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
 {
     /// <summary>
-    ///     Fires an <see cref="ActionEvent" /> on execution of a ReSharper action. Passes handling of the action on the
+    ///     Fires an <see cref="CommandEvent" /> on execution of a ReSharper action. Passes handling of the action on the
     ///     the default handler.
     /// </summary>
-    internal class EventGeneratingActionHandler : EventGeneratorBase, IActionHandler
+    internal class EventGeneratingActionHandler : CommandEventGeneratorBase<DelegateExecute>, IActionHandler
     {
         private readonly IUpdatableAction _updatableAction;
 
@@ -50,23 +50,17 @@ namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
 
         public void Execute(IDataContext context, DelegateExecute nextExecute)
         {
-            FireActionEvent();
-            nextExecute.Invoke();
+            Execute(nextExecute);
         }
 
-        private void FireActionEvent()
+        protected override string GetCommandId()
         {
-            try
-            {
-                var actionEvent = Create<ActionEvent>();
-                actionEvent.ActionId = _updatableAction.Id;
-                FireNow(actionEvent);
-            }
-            catch (Exception e)
-            {
-                e = new Exception("generating action event failed", e);
-                Registry.GetComponent<ILogger>().Error(e);
-            }
+            return _updatableAction.Id;
+        }
+
+        protected override void InvokeOriginalCommand(DelegateExecute nextExecute)
+        {
+            nextExecute.Invoke();
         }
     }
 }

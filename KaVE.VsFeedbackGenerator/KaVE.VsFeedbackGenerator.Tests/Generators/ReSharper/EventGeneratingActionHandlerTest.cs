@@ -21,7 +21,6 @@ using System;
 using JetBrains.ActionManagement;
 using JetBrains.Application.DataContext;
 using KaVE.Model.Events;
-using KaVE.Model.Events.ReSharper;
 using KaVE.TestUtils;
 using KaVE.VsFeedbackGenerator.Generators.ReSharper;
 using Moq;
@@ -63,14 +62,14 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.ReSharper
         {
             _uut.Execute(_testDataContext, () => { });
 
-            var expected = new ActionEvent
+            var expected = new CommandEvent
             {
                 IDESessionUUID = TestIDESession.UUID,
-                ActionId = TestActionId,
+                CommandId = TestActionId,
                 TriggeredAt = TestDateUtils.Now,
                 Duration = TimeSpan.FromSeconds(0)
             };
-            var actual = GetSinglePublished<ActionEvent>();
+            var actual = GetSinglePublished<CommandEvent>();
             Assert.AreEqual(expected, actual);
         }
 
@@ -102,7 +101,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.ReSharper
 
             _uut.Execute(_testDataContext, () => { });
 
-            MockLogger.Verify(l => l.Error(ItIsException.With("generating action event failed", exception)));
+            MockLogger.Verify(l => l.Error(ItIsException.With("generating command event failed", exception)));
         }
     }
 }

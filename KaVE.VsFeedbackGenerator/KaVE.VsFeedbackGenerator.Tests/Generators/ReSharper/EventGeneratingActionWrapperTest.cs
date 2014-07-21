@@ -19,7 +19,6 @@
 
 using System;
 using KaVE.Model.Events;
-using KaVE.Model.Events.ReSharper;
 using KaVE.TestUtils;
 using KaVE.VsFeedbackGenerator.Generators.ReSharper;
 using Moq;
@@ -47,14 +46,14 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.ReSharper
         {
             _uut.Execute();
 
-            var expected = new BulbActionEvent
+            var expected = new CommandEvent
             {
                 IDESessionUUID = TestIDESession.UUID,
-                ActionId = "KaVE.VsFeedbackGenerator.Tests.Generators.ReSharper.EventGeneratingActionWrapperTest",
+                CommandId = "KaVE.VsFeedbackGenerator.Tests.Generators.ReSharper.EventGeneratingActionWrapperTest",
                 TriggeredAt = TestDateUtils.Now,
                 Duration = TimeSpan.FromSeconds(0)
             };
-            var actual = GetSinglePublished<BulbActionEvent>();
+            var actual = GetSinglePublished<CommandEvent>();
             Assert.AreEqual(expected, actual);
         }
 
@@ -84,7 +83,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.ReSharper
 
             _uut.Execute();
 
-            MockLogger.Verify(logger => logger.Error(ItIsException.With("generating action event failed", cause)));
+            MockLogger.Verify(logger => logger.Error(ItIsException.With("generating command event failed", cause)));
         }
     }
 }

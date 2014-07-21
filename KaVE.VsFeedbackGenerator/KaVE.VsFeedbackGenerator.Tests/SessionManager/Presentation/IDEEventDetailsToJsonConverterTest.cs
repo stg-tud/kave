@@ -19,11 +19,11 @@
 
 using System;
 using KaVE.Model.Events;
-using KaVE.Model.Events.ReSharper;
 using KaVE.Model.Events.VisualStudio;
 using KaVE.Model.Names.VisualStudio;
 using KaVE.VsFeedbackGenerator.SessionManager.Presentation;
 using NUnit.Framework;
+using CommandEvent = KaVE.Model.Events.CommandEvent;
 
 namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
 {
@@ -43,7 +43,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
         [Test]
         public void ShouldNotIncludeIDEEventPropertiesInDetails()
         {
-            var actionEvent = new ActionEvent
+            var actionEvent = new CommandEvent
             {
                 ActiveDocument = DocumentName.Get("Doc"),
                 ActiveWindow = WindowName.Get("Window"),
