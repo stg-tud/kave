@@ -85,12 +85,12 @@ public class FeedbackServiceTest {
     }
 
     @Test
-    public void uploadShouldPreserveFileExtension() throws IOException {
+    public void uploadMustNotPreserveFileExtension() throws IOException {
         File fileToUpload = givenARandomFile("name.some4random-ext");
 
         whenFileIsUploaded(fileToUpload);
 
-        thenOutputDirectoryContainsFile("00001.some4random-ext", fileToUpload);
+        thenOutputDirectoryContainsFile("00001.zip", fileToUpload);
     }
 
     @Test
@@ -112,7 +112,7 @@ public class FeedbackServiceTest {
 
         whenFileIsUploaded(fileToUpload);
 
-        thenOutputDirectoryContainsFile("00024.foo", fileToUpload);
+        thenOutputDirectoryContainsFile("00024.zip", fileToUpload);
     }
 
     @Test
