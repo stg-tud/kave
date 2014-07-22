@@ -1,8 +1,6 @@
 using System.Collections.Generic;
-using System.Linq;
 using KaVE.Model.Names;
 using KaVE.Utils;
-using KaVE.Utils.Collections;
 using Lists = KaVE.Model.Collections.Lists;
 
 namespace KaVE.Model.SSTs

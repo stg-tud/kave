@@ -17,7 +17,6 @@
  *    - Sven Amann
  */
 
-using System;
 using JetBrains.ActionManagement;
 using JetBrains.Application.DataContext;
 using KaVE.Model.Events;

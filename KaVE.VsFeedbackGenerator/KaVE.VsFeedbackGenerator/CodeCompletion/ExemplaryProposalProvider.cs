@@ -14,14 +14,13 @@
  * limitations under the License.
  * 
  * Contributors:
- *    - 
+ *    - Dennis Albrecht
+ *    - Sebastian Proksch
  */
 using System;
 using System.Linq;
 using JetBrains.ReSharper.Feature.Services.CSharp.CodeCompletion.Infrastructure;
 using JetBrains.ReSharper.Feature.Services.Lookup;
-using JetBrains.ReSharper.Psi;
-using JetBrains.ReSharper.Psi.CSharp;
 using KaVE.Model.Events.CompletionEvent;
 using KaVE.Model.Names;
 using KaVE.VsFeedbackGenerator.Analysis;

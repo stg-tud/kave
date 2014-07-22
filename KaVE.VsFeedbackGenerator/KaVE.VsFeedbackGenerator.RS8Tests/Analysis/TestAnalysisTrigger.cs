@@ -22,7 +22,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Application;
-using JetBrains.Metadata.Utils.PE.Directories;
 using JetBrains.ReSharper.Feature.Services.CSharp.CodeCompletion.Infrastructure;
 using JetBrains.ReSharper.Feature.Services.Lookup;
 using JetBrains.ReSharper.Psi;

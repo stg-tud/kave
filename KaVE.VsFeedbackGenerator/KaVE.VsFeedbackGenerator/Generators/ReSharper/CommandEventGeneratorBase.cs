@@ -46,7 +46,7 @@ namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
         protected CommandEventGeneratorBase(IIDESession session, IMessageBus messageBus, IDateUtils dateUtils)
             : base(session, messageBus, dateUtils) {}
 
-        public void Execute(TC context)
+        protected void Execute(TC context)
         {
             var actionEvent = CreateActionEvent();
             InvokeOriginalCommand(context);

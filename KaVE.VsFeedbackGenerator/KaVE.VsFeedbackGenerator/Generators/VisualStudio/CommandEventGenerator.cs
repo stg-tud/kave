@@ -25,7 +25,6 @@ using EnvDTE;
 using JetBrains.Application;
 using JetBrains.Application.Components;
 using KaVE.Model.Events;
-using KaVE.Model.Events.VisualStudio;
 using KaVE.Utils.Assertion;
 using KaVE.Utils.IO;
 using KaVE.VsFeedbackGenerator.MessageBus;
