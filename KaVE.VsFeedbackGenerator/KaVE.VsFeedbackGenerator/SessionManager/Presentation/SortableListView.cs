@@ -67,19 +67,13 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
 
         private void SortByClickedHeader(GridViewColumnHeader clickedHeader)
         {
-            var bindingName = GetColumnBindingPathName(clickedHeader);
             var direction = LastDirection(clickedHeader);
 
-            SortBy(bindingName, direction);
+            SortBy(clickedHeader.Column, direction);
             ShowSortArrow(clickedHeader, direction);
 
             _lastClickedHeader = clickedHeader;
             _lastDirection = direction;
-        }
-
-        private static string GetColumnBindingPathName(GridViewColumnHeader header)
-        {
-            return ((Binding) header.Column.DisplayMemberBinding).Path.Path;
         }
 
         private ListSortDirection LastDirection(GridViewColumnHeader clickedHeader)
@@ -93,6 +87,30 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
                 : ListSortDirection.Ascending;
         }
 
+        private void SortBy(GridViewColumn column, ListSortDirection direction)
+        {
+            var primaryCriteria = GetBindingName(column);
+
+            var secondaryColumn = ((GridView) View).Columns.FirstOrDefault(col => !col.Equals(column));
+            var secondaryCriteria = secondaryColumn != null ? GetBindingName(secondaryColumn) : null;
+
+            SortBy(primaryCriteria, secondaryCriteria, direction);
+        }
+
+        private static string GetBindingName(GridViewColumn column)
+        {
+            return ((Binding)column.DisplayMemberBinding).Path.Path;
+        }
+
+        private void SortBy(string primaryCriteria, string secondaryCriteria, ListSortDirection direction)
+        {
+            var dataView = CollectionViewSource.GetDefaultView(ItemsSource ?? Items);
+            dataView.SortDescriptions.Clear();
+            dataView.SortDescriptions.Add(new SortDescription(primaryCriteria, direction));
+            dataView.SortDescriptions.Add(new SortDescription(secondaryCriteria, direction));
+            dataView.Refresh();
+        }
+
         private void ShowSortArrow(GridViewColumnHeader clickedHeader, ListSortDirection direction)
         {
             clickedHeader.Column.HeaderTemplate = direction == ListSortDirection.Ascending
@@ -104,20 +122,6 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
             {
                 _lastClickedHeader.Column.HeaderTemplate = null;
             }
-        }
-
-        private void SortBy(string bindingName, ListSortDirection direction)
-        {
-            var dataView = CollectionViewSource.GetDefaultView(ItemsSource ?? Items);
-            dataView.SortDescriptions.Clear();
-
-            var firstNotPrimaryColumnBindingName =
-                ((GridView) View).Columns.Select(c => ((Binding)c.DisplayMemberBinding).Path.Path)
-                                      .FirstOrDefault(path => !Equals(path, bindingName));
-
-            dataView.SortDescriptions.Add(new SortDescription(bindingName, direction));
-            dataView.SortDescriptions.Add(new SortDescription(firstNotPrimaryColumnBindingName, direction));
-            dataView.Refresh();
         }
     }
 }
