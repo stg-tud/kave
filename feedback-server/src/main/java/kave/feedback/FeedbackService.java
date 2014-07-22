@@ -57,15 +57,20 @@ public class FeedbackService {
     @Produces(MediaType.APPLICATION_JSON)
     public Result upload(@FormDataParam("file") InputStream fileInputStream,
             @FormDataParam("file") FormDataContentDisposition contentDisposition) {
-        try {
+        FileOutputStream outputStream = null;
+    	try {
             String fileName = contentDisposition.getFileName();
             String extension = FilenameUtils.getExtension(fileName);
             File freshOutputFile = getFreshOutputFile(extension);
-            IOUtils.copy(fileInputStream, new FileOutputStream(freshOutputFile));
+            outputStream = new FileOutputStream(freshOutputFile);
+            IOUtils.copy(fileInputStream, outputStream);
             return Result.ok();
         } catch (Exception e) {
             return Result.fail(e);
         }
+    	finally {
+    		IOUtils.closeQuietly(outputStream);
+    	}
     }
 
     private File getFreshOutputFile(String fileExtension) {
