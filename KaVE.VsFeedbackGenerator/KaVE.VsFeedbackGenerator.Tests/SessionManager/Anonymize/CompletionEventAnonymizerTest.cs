@@ -146,6 +146,17 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
         }
 
         [Test]
+        public void ShouldNotFailWhenEnclosingMethodIsNullAndRemoveNamesIsSet()
+        {
+            OriginalEvent.Context.EnclosingMethod = null;
+            ExportSettings.RemoveCodeNames = true;
+
+            var actual = WhenEventIsAnonymized();
+
+            Assert.IsNull(actual.Context.EnclosingMethod);
+        }
+
+        [Test]
         public void ShouldAnonymizeContextTriggerTarget()
         {
             ExportSettings.RemoveCodeNames = true;
