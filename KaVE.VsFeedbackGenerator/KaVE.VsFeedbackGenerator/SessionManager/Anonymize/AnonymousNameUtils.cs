@@ -249,7 +249,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
 
         private static bool IsDeclaredInEnclosingProject(this ITypeName type)
         {
-            return type.Assembly.IsEnclosingProject();
+            return type.IsUnknownType || type.Assembly.IsEnclosingProject();
         }
 
         private static bool IsEnclosingProject(this IAssemblyName assembly)

@@ -80,7 +80,10 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
                     },
                     EntryPointToCalledMethods = new Dictionary<IMethodName, ISet<IMethodName>>
                     {
-                        {MethodName.Get("[R, A, 1.2.3.4] [D, P].M()"), new HashSet<IMethodName>{MethodName.Get("[R, A, 1.2.3.4] [D, P].N()")}}
+                        {
+                            MethodName.Get("[R, A, 1.2.3.4] [D, P].M()"),
+                            new HashSet<IMethodName> {MethodName.Get("[R, A, 1.2.3.4] [D, P].N()")}
+                        }
                     }
                 }
             };
@@ -105,6 +108,26 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
                 new Proposal {Name = TypeName.Get("Q-vTVCo_g8yayGGoDdH7BA==, qfFVtSOtve-XEFJXWTbfXw==")},
                 new Proposal {Name = TypeName.Get("OtherType, Assembly, 1.2.3.4")},
                 new Proposal {Name = NamespaceName.Get("A_SHMh611J-1vRjtIJDirA==")}
+            };
+
+            var actual = WhenEventIsAnonymized();
+
+            CollectionAssert.AreEqual(expected, actual.ProposalCollection.Proposals);
+        }
+
+        [Test]
+        public void ShouldNotFailWhenProposalIsOfUnknownTypeAndRemoveNamesIsSet()
+        {
+            OriginalEvent.ProposalCollection = new ProposalCollection(
+                new Proposal {Name = TypeName.Get("[?]")},
+                new Proposal {Name = FieldName.Get("[?] [?].field")},
+                new Proposal {Name = MethodName.Get("[?] [?].method([?] arg)")});
+            ExportSettings.RemoveCodeNames = true;
+            var expected = new[]
+            {
+                new Proposal {Name = TypeName.Get("[?]")},
+                new Proposal {Name = FieldName.Get("[?] [?].uH-HUtyKzOVVTdxGpUvTRg==")},
+                new Proposal {Name = MethodName.Get("[?] [?].S2MqM0cJGKIdPyRb46oevg==([?] cjjZM6DVkmp283JnWfyH_A==)")}
             };
 
             var actual = WhenEventIsAnonymized();
@@ -138,7 +161,9 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
         public void ShouldAnonymizeContextEnclosingMethodIfRemoveNamesIsSet()
         {
             ExportSettings.RemoveCodeNames = true;
-            var expected = MethodName.Get("[R, A, 1.2.3.4] [BTxSgd7rLC1KLBfBSU59-w==, aUaDMpYpDqsiSh5nQjiWFw==].lNSAgClcjc9lDeUkXybdNQ==()");
+            var expected =
+                MethodName.Get(
+                    "[R, A, 1.2.3.4] [BTxSgd7rLC1KLBfBSU59-w==, aUaDMpYpDqsiSh5nQjiWFw==].lNSAgClcjc9lDeUkXybdNQ==()");
 
             var actual = WhenEventIsAnonymized();
 
@@ -177,20 +202,28 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
                 {
                     Extends = new TypeHierarchy("bwrIwYfO24Nam6NzYDvaPw==, aUaDMpYpDqsiSh5nQjiWFw=="),
                     Implements = new HashSet<ITypeHierarchy>
-                            {
-                                new TypeHierarchy("eGEyMBjXL4zPn7I6S8mfDw==, aUaDMpYpDqsiSh5nQjiWFw=="),
-                                new TypeHierarchy("L_ae-p4-hxBsaXczpcEyIQ==, aUaDMpYpDqsiSh5nQjiWFw==")
-                            }
+                    {
+                        new TypeHierarchy("eGEyMBjXL4zPn7I6S8mfDw==, aUaDMpYpDqsiSh5nQjiWFw=="),
+                        new TypeHierarchy("L_ae-p4-hxBsaXczpcEyIQ==, aUaDMpYpDqsiSh5nQjiWFw==")
+                    }
                 },
                 MethodHierarchies = new HashSet<MethodHierarchy>
-                        {
-                            new MethodHierarchy(MethodName.Get("[R, A, 1.2.3.4] [BTxSgd7rLC1KLBfBSU59-w==, aUaDMpYpDqsiSh5nQjiWFw==].FrZejHdXesK4GmGTziBKog==()"))
-                            {
-                                Super = MethodName.Get("[R, A, 1.2.3.4] [bwrIwYfO24Nam6NzYDvaPw==, aUaDMpYpDqsiSh5nQjiWFw==].FrZejHdXesK4GmGTziBKog==()"),
-                                First = MethodName.Get("[R, A, 1.2.3.4] [eGEyMBjXL4zPn7I6S8mfDw==, aUaDMpYpDqsiSh5nQjiWFw==].FrZejHdXesK4GmGTziBKog==()")
-                            },
-                            new MethodHierarchy(MethodName.Get("[R, A, 4.3.2.1] [BTxSgd7rLC1KLBfBSU59-w==, aUaDMpYpDqsiSh5nQjiWFw==].teEFVPLjq1yy_faHQwbDSg==()"))
-                        }
+                {
+                    new MethodHierarchy(
+                        MethodName.Get(
+                            "[R, A, 1.2.3.4] [BTxSgd7rLC1KLBfBSU59-w==, aUaDMpYpDqsiSh5nQjiWFw==].FrZejHdXesK4GmGTziBKog==()"))
+                    {
+                        Super =
+                            MethodName.Get(
+                                "[R, A, 1.2.3.4] [bwrIwYfO24Nam6NzYDvaPw==, aUaDMpYpDqsiSh5nQjiWFw==].FrZejHdXesK4GmGTziBKog==()"),
+                        First =
+                            MethodName.Get(
+                                "[R, A, 1.2.3.4] [eGEyMBjXL4zPn7I6S8mfDw==, aUaDMpYpDqsiSh5nQjiWFw==].FrZejHdXesK4GmGTziBKog==()")
+                    },
+                    new MethodHierarchy(
+                        MethodName.Get(
+                            "[R, A, 4.3.2.1] [BTxSgd7rLC1KLBfBSU59-w==, aUaDMpYpDqsiSh5nQjiWFw==].teEFVPLjq1yy_faHQwbDSg==()"))
+                }
             };
 
             var actual = WhenEventIsAnonymized();
@@ -205,8 +238,13 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
             var expected = new Dictionary<IMethodName, ISet<IMethodName>>
             {
                 {
-                    MethodName.Get("[R, A, 1.2.3.4] [BTxSgd7rLC1KLBfBSU59-w==, aUaDMpYpDqsiSh5nQjiWFw==].lNSAgClcjc9lDeUkXybdNQ==()"),
-                    new HashSet<IMethodName> {MethodName.Get("[R, A, 1.2.3.4] [BTxSgd7rLC1KLBfBSU59-w==, aUaDMpYpDqsiSh5nQjiWFw==].FrZejHdXesK4GmGTziBKog==()")}
+                    MethodName.Get(
+                        "[R, A, 1.2.3.4] [BTxSgd7rLC1KLBfBSU59-w==, aUaDMpYpDqsiSh5nQjiWFw==].lNSAgClcjc9lDeUkXybdNQ==()"),
+                    new HashSet<IMethodName>
+                    {
+                        MethodName.Get(
+                            "[R, A, 1.2.3.4] [BTxSgd7rLC1KLBfBSU59-w==, aUaDMpYpDqsiSh5nQjiWFw==].FrZejHdXesK4GmGTziBKog==()")
+                    }
                 }
             };
 
@@ -221,7 +259,9 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
             IDictionary<IMethodName, ISet<IMethodName>> actual)
         {
             CollectionAssert.AreEqual(expected.Keys, actual.Keys);
-            expected.Keys.ForEach(key => CollectionAssert.AreEquivalent(expected[key], actual[key], "Called methods for entry point " + key));
+            expected.Keys.ForEach(
+                key =>
+                    CollectionAssert.AreEquivalent(expected[key], actual[key], "Called methods for entry point " + key));
         }
 
         protected override void AssertThatPropertiesThatAreNotTouchedByAnonymizationAreUnchanged(
