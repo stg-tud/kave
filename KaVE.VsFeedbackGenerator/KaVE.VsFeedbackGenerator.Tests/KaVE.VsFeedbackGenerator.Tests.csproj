@@ -113,7 +113,6 @@
     <Compile Include="MessageBus\TinyMessengerMessageChannelTest.cs" />
     <Compile Include="SessionManager\Anonymize\AnonymousNameUtilsTest.cs" />
     <Compile Include="SessionManager\Anonymize\BuildEventAnonymizerTest.cs" />
-    <Compile Include="SessionManager\Anonymize\CommandEventAnonymizerTest.cs" />
     <Compile Include="SessionManager\Anonymize\CompletionEventAnonymizerTest.cs" />
     <Compile Include="SessionManager\Anonymize\DocumentEventAnonymizerTest.cs" />
     <Compile Include="SessionManager\Anonymize\ErrorEventAnonymizerTest.cs" />
@@ -203,9 +202,7 @@
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Utils\Json\Model\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

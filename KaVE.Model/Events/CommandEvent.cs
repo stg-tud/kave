@@ -17,12 +17,15 @@
  *    - Sven Amann
  */
 
+using System.Runtime.Serialization;
 using KaVE.Utils;
 
 namespace KaVE.Model.Events
 {
+    [DataContract]
     public class CommandEvent : IDEEvent
     {
+        [DataMember]
         public string CommandId { get; set; }
 
         protected bool Equals(CommandEvent other)

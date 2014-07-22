@@ -59,7 +59,6 @@
     <Compile Include="Events\ErrorEvent.cs" />
     <Compile Include="Events\InfoEvent.cs" />
     <Compile Include="Events\VisualStudio\BuildEvent.cs" />
-    <Compile Include="Events\VisualStudio\CommandEvent.cs" />
     <Compile Include="Events\VisualStudio\DebuggerEvent.cs" />
     <Compile Include="Events\VisualStudio\DocumentEvent.cs" />
     <Compile Include="Events\VisualStudio\EditEvent.cs" />

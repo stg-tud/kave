@@ -24,6 +24,7 @@ using System.Linq;
 using EnvDTE;
 using JetBrains.Application;
 using JetBrains.Application.Components;
+using JetBrains.Util;
 using KaVE.Model.Events;
 using KaVE.Utils.Assertion;
 using KaVE.Utils.IO;
@@ -32,7 +33,6 @@ using KaVE.VsFeedbackGenerator.Utils;
 using KaVE.VsFeedbackGenerator.Utils.Names;
 using KaVE.VsFeedbackGenerator.VsIntegration;
 using Microsoft.VisualStudio.CommandBars;
-using CommandEvent = KaVE.Model.Events.VisualStudio.CommandEvent;
 
 namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
 {
@@ -119,23 +119,22 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
         {
             _commandEvents = DTE.Events.CommandEvents;
             _commandEvents.BeforeExecute += HandleCommandStarts;
-            _commandEvents.AfterExecute += HangleCommandEnded;
+            _commandEvents.AfterExecute += HandleCommandEnded;
         }
 
         private void _commandBarEvents_Dropdown_Change(CommandBarComboBox comboBox)
         {
-            SetCommandBarCommandEvent(comboBox);
+            CreateCommandBarCommandEvent();
         }
 
         private void _commandBarEvents_Button_Click(CommandBarButton button, ref bool cancelDefault)
         {
-            SetCommandBarCommandEvent(button);
+            CreateCommandBarCommandEvent();
         }
 
-        private void SetCommandBarCommandEvent(CommandBarControl control)
+        private void CreateCommandBarCommandEvent()
         {
             _preceedingCommandBarEvent = Create<CommandEvent>();
-            _preceedingCommandBarEvent.Source = control.GetName();
             _preceedingCommandBarEvent.TriggeredBy = IDEEvent.Trigger.Click;
         }
 
@@ -146,7 +145,7 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
             ref bool cancelDefault)
         {
             var commandEvent = CreateCommandEvent(guid, id);
-            EnqueueEvent(commandEvent);
+            EnqueueEvent(guid, id, commandEvent);
 
             _preceedingCommandBarEvent = null;
         }
@@ -161,7 +160,7 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
                 commandEvent.TriggeredBy = IDEEvent.Trigger.Shortcut;
             }
 
-            commandEvent.Command = command.GetName();
+            commandEvent.CommandId = GetCommandId(command);
             return commandEvent;
         }
 
@@ -177,9 +176,15 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
             }
         }
 
-        private void EnqueueEvent(CommandEvent evt)
+        private static string GetCommandId(Command command)
         {
-            var commandKey = CommandKey(evt.Command.Guid, evt.Command.Id);
+            var commandName = command.GetName();
+            return commandName != null ? commandName.Identifier : null;
+        }
+
+        private void EnqueueEvent(string guid, int id, CommandEvent evt)
+        {
+            var commandKey = CommandKey(guid, id);
             Asserts.Not(_eventQueue.ContainsKey(commandKey), "executing same event twice at a time: {0}", evt);
             _eventQueue.Add(commandKey, evt);
         }
@@ -189,9 +194,9 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
             return guid + ":" + id;
         }
 
-        private void HangleCommandEnded(string guid, int id, object customIn, object customOut)
+        private void HandleCommandEnded(string guid, int id, object customIn, object customOut)
         {
-            var commandEvent = TakeFromQueue(CommandKey(guid, id));
+            var commandEvent = TakeFromQueue(guid, id);
             if (commandEvent == null && id == 107 && guid.Equals("{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}"))
             {
                 // for some reason code-completion command is not started...
@@ -205,8 +210,9 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
             FireNow(commandEvent);
         }
 
-        private CommandEvent TakeFromQueue(string commandKey)
+        private CommandEvent TakeFromQueue(string guid, int id)
         {
+            var commandKey = CommandKey(guid, id);
             CommandEvent evt;
             _eventQueue.TryGetValue(commandKey, out evt);
             _eventQueue.Remove(commandKey);
@@ -223,13 +229,13 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
         /// </summary>
         private static bool IsDuplicatedByReSharper(CommandEvent @event)
         {
-            return EventsDuplicatedByReSharper.Contains(@event.Command.Identifier) ||
+            return EventsDuplicatedByReSharper.Contains(@event.CommandId) ||
                    IsReSharperActionEquivalent(@event);
         }
 
         private static bool IsReSharperActionEquivalent(CommandEvent @event)
         {
-            return @event.Command.Name.Contains("ReSharper_");
+            return @event.CommandId.Contains("ReSharper_");
         }
 
         /// <summary>
@@ -238,7 +244,7 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
         /// </summary>
         private static bool IsAutomaticEvent(CommandEvent @event)
         {
-            return EventsFiredAutomatically.Contains(@event.Command.Identifier);
+            return EventsFiredAutomatically.Contains(@event.CommandId);
         }
     }
 
@@ -257,7 +263,7 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
                 var popup = commandBarControl as CommandBarPopup;
                 if (popup != null)
                 {
-                    leafs = new HashSet<CommandBarControl>(leafs.Union(GetLeafControls(popup.Controls)));
+                    leafs.AddRange(GetLeafControls(popup.Controls));
                 }
                 else
                 {

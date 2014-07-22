@@ -26,7 +26,6 @@ using KaVE.Model.Events.VisualStudio;
 using KaVE.VsFeedbackGenerator.SessionManager.Presentation;
 using KaVE.VsFeedbackGenerator.Utils;
 using KaVE.VsFeedbackGenerator.Utils.Json;
-using CommandEvent = KaVE.Model.Events.VisualStudio.CommandEvent;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
 {
@@ -48,8 +47,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
             {typeof (ErrorEvent), new ErrorEventAnonymizer()},
             {typeof (InfoEvent), new InfoEventAnonymizer()},
             {typeof (IDEStateEvent), new IDEStateEventAnonymizer()},
-            {typeof (CompletionEvent), new CompletionEventAnonymizer()},
-            {typeof (CommandEvent), new CommandEventAnonymizer()}
+            {typeof (CompletionEvent), new CompletionEventAnonymizer()}
         };
 
         private readonly ISettingsStore _settingsStore;

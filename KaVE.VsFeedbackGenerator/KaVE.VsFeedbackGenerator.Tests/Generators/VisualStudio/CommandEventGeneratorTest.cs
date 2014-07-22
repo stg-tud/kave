@@ -19,13 +19,11 @@
 
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using EnvDTE;
 using KaVE.Model.Events;
 using KaVE.Model.Names.VisualStudio;
 using KaVE.Utils.Assertion;
 using KaVE.VsFeedbackGenerator.Generators.VisualStudio;
-using CommandEvent = KaVE.Model.Events.VisualStudio.CommandEvent;
 using Microsoft.VisualStudio.CommandBars;
 using Moq;
 using NUnit.Framework;
@@ -37,6 +35,8 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.VisualStudio
     {
         private Mock<CommandEvents> _mockCommandEvents;
         private Mock<Commands> _mockCommands;
+        private Mock<CommandBarButton> _mockCommandBarButton;
+        private Mock<CommandBarComboBox> _mockCommandBarComboBox;
 
         protected override void MockEvents(Mock<Events> mockEvents)
         {
@@ -57,10 +57,27 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.VisualStudio
 
         private void SetUpCommandBars()
         {
+            _mockCommandBarButton = new Mock<CommandBarButton>();
+            _mockCommandBarComboBox = new Mock<CommandBarComboBox>();
+            var mockCommandBarPopup = new Mock<CommandBarPopup>();
+            var subControls = MockControls(_mockCommandBarComboBox.Object);
+            mockCommandBarPopup.Setup(popup => popup.Controls).Returns(subControls);
+
+            var mockCommandBar = new Mock<CommandBar>();
+            var mainControls = MockControls(_mockCommandBarButton.Object, mockCommandBarPopup.Object);
+            mockCommandBar.Setup(bar => bar.Controls).Returns(mainControls);
+            IEnumerable bars = new[] {mockCommandBar.Object};
+
             var mockCommandBars = new Mock<CommandBars>().As<_CommandBars>().As<IEnumerable>();
-            IEnumerable bars = new List<CommandBar>();
             mockCommandBars.Setup(cb => cb.GetEnumerator()).Returns(bars.GetEnumerator);
             TestIDESession.MockDTE.Setup(dte => dte.CommandBars).Returns(mockCommandBars.Object);
+        }
+
+        private static CommandBarControls MockControls(params CommandBarControl[] controls)
+        {
+            var mockControls = new Mock<CommandBarControls>();
+            mockControls.Setup(c => c.GetEnumerator()).Returns(controls.GetEnumerator);
+            return mockControls.Object;
         }
 
         private void SetUpCommands()
@@ -100,7 +117,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.VisualStudio
             WhenCommandExecutes(command);
 
             var actual = GetSinglePublished<CommandEvent>();
-            Assert.AreEqual(command, actual.Command);
+            Assert.AreEqual(command.Identifier, actual.CommandId);
         }
 
         [Test]
@@ -222,6 +239,42 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.VisualStudio
             WhenCommandEnds(completionCommand);
 
             Assert.IsNotNull(GetSinglePublished<CommandEvent>());
+        }
+
+        [Test]
+        public void ShouldSetTriggerToClickedIfCommandBarButtonIsClickedBeforeCommandExecutes()
+        {
+            var command = GetCommand("{test}", 1, "test");
+            GivenCommandIsDefined(command);
+
+            WhenCommandBarButtonIsClicked();
+            WhenCommandExecutes(command);
+
+            var actual = GetSinglePublished<CommandEvent>();
+            Assert.AreEqual(IDEEvent.Trigger.Click, actual.TriggeredBy);
+        }
+
+        [Test]
+        public void ShouldSetTriggerToClickedIfCommandBarComboBoxIsChangedBeforeCommandExecutes()
+        {
+            var command = GetCommand("{test}", 42, "foo");
+            GivenCommandIsDefined(command);
+
+            WhenCommandBarComboBoxIsChanged();
+            WhenCommandExecutes(command);
+
+            var actual = GetSinglePublished<CommandEvent>();
+            Assert.AreEqual(IDEEvent.Trigger.Click, actual.TriggeredBy);
+        }
+
+        private void WhenCommandBarComboBoxIsChanged()
+        {
+            _mockCommandBarComboBox.Raise(comboBox => comboBox.Change += null, _mockCommandBarComboBox.Object);
+        }
+
+        private void WhenCommandBarButtonIsClicked()
+        {
+            _mockCommandBarButton.Raise(button => button.Click += null, _mockCommandBarButton.Object, false);
         }
 
         private DateTime GivenNowIs(DateTime time)

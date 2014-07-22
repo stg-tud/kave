@@ -12,9 +12,12 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sven Amann
  */
-using KaVE.Model.Events.VisualStudio;
-using KaVE.Model.Names.VisualStudio;
+
+using KaVE.Model.Events;
 using KaVE.VsFeedbackGenerator.SessionManager;
 using NUnit.Framework;
 
@@ -26,9 +29,9 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
         [Test]
         public void ShouldDisplayFormattedEventDetails()
         {
-            var @event = new CommandEvent {Command = CommandName.Get("test.command")};
+            var @event = new CommandEvent {CommandId = "test.command"};
             const string expected =
-                "    <Bold>\"Command\":</Bold> \"test.command\"";
+                "    <Bold>\"CommandId\":</Bold> \"test.command\"";
 
             var view = new EventViewModel(@event);
             var actual = view.Details;
