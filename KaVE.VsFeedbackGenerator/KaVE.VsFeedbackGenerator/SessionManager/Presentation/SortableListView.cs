@@ -19,6 +19,7 @@
  */
 
 using System.ComponentModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -57,6 +58,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
         private void OnGridViewColumnHeaderClicked(object sender, RoutedEventArgs e)
         {
             var clickedHeader = e.OriginalSource as GridViewColumnHeader;
+
             if (clickedHeader != null && clickedHeader.Role != GridViewColumnHeaderRole.Padding)
             {
                 SortByClickedHeader(clickedHeader);
@@ -65,17 +67,17 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
 
         private void SortByClickedHeader(GridViewColumnHeader clickedHeader)
         {
-            var columnName = GetColumnName(clickedHeader);
+            var bindingName = GetColumnBindingPathName(clickedHeader);
             var direction = LastDirection(clickedHeader);
 
-            SortBy(columnName, direction);
+            SortBy(bindingName, direction);
             ShowSortArrow(clickedHeader, direction);
 
             _lastClickedHeader = clickedHeader;
             _lastDirection = direction;
         }
 
-        private static string GetColumnName(GridViewColumnHeader header)
+        private static string GetColumnBindingPathName(GridViewColumnHeader header)
         {
             return ((Binding) header.Column.DisplayMemberBinding).Path.Path;
         }
@@ -104,12 +106,17 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
             }
         }
 
-        private void SortBy(string columnName, ListSortDirection direction)
+        private void SortBy(string bindingName, ListSortDirection direction)
         {
             var dataView = CollectionViewSource.GetDefaultView(ItemsSource ?? Items);
             dataView.SortDescriptions.Clear();
-            var sort = new SortDescription(columnName, direction);
-            dataView.SortDescriptions.Add(sort);
+
+            var firstNotPrimaryColumnBindingName =
+                ((GridView) View).Columns.Select(c => ((Binding)c.DisplayMemberBinding).Path.Path)
+                                      .FirstOrDefault(path => !Equals(path, bindingName));
+
+            dataView.SortDescriptions.Add(new SortDescription(bindingName, direction));
+            dataView.SortDescriptions.Add(new SortDescription(firstNotPrimaryColumnBindingName, direction));
             dataView.Refresh();
         }
     }
