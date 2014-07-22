@@ -5,7 +5,7 @@ body {
 }
 
 form {
-	margin: 0;
+	margin: 0 0 40px 0;
 	padding: 0;
 }
 
@@ -16,6 +16,11 @@ form {
 	border: 1px solid grey;	
 	-moz-border-radius: 15px;
 	border-radius: 15px;
+}
+
+#header {
+	display: block;
+	margin-bottom: 10px;
 }
 
 h1 {
@@ -35,9 +40,27 @@ h1 {
 	float:left;
 	padding-left: 3px;
 	width: 95%;
+	fint-size:80%;
 }
 
 #submit-upload {
 	clear: left;
 	margin-top: 20px;
+}
+
+#footer {
+	margin:10px 0px 0px 0px;
+	height:23pt;
+	font-size:80%;
+}
+
+#footer dt {
+	float:left;
+	width:35%;
+}
+
+#footer dd {
+	float:left;
+	width:55%;
+	margin:0;
 }

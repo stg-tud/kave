@@ -36,7 +36,7 @@ public class GuiceConfig extends GuiceServletContextListener {
 
                 Map<String, String> params = new HashMap<String, String>();
                 params.put(ServletContainer.JSP_TEMPLATES_BASE_PATH, "WEB-INF/jsp");
-                filterRegex("/((?!css|js).)*").through(GuiceContainer.class, params);
+                filterRegex("/((?!css|js|images).)*").through(GuiceContainer.class, params);
             }
         });
     }

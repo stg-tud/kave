@@ -9,28 +9,48 @@
 <link rel="stylesheet" type="text/css" href="css/feedback.css" />
 </head>
 <body>
-	<noscript>WARNUNG: Der Upload ben&ouml;tigt JavaScript.</noscript>
+	<noscript>
+		<b>WARNUNG:</b> Der Upload ben&ouml;tigt JavaScript.
+	</noscript>
 
 	<div id="content">
+		<div id="header">
+			<a href="http://kave.cc" title="KaVE-Projekt-Webseite"> <img
+				alt="KaVE-Projekt" src="images/kave_logo_with_title.png" />
+			</a>
+		</div>
 		<h1>Hochladen des Feedbacks</h1>
 
-		<p>Bitte w&auml;hlen Sie die Feedback-Datei aus, die Sie aus dem
-			Feedback-Manager exportiert haben und best&auml;tigen Sie,
-			dass Sie den Datenschutzhinweis gelesen haben.</p>
+		<p>Diese Seite dient zum Hochladen von Benutzungsfeedback, das mit
+			dem &ldquo;KaVE Feedback Generator&rdquo; erzeugt und exportiert
+			wurde. Bitte w&auml;hlen Sie eine Feedback-Exportdatei aus,
+			best&auml;tigen Sie, dass Sie den Datenschutzhinweis gelesen haben
+			und klicken Sie auf &ldquo;Hochladen&rdquo;.</p>
 
 		<form id="file-upload-form" enctype="multipart/form-data">
-			<input type="file" id="file" name="file" /><br />
-			<input type="checkbox" id="confirm" />
+			<input type="file" id="file" name="file" /><br /> <input
+				type="checkbox" id="confirm" />
 			<div id="hint">
-				Mir ist bewusst, dass mein Feedback durch das Best&auml;tigen des
-				"Hochladen"-Knopfs auf dem Server hinterlegt wird. Die Daten haben
-				keinerlei Personenbezug, daher habe ich danach keinen Zugriff mehr
-				auf die Daten.<br />
-				<br /> Das eingereichte Feedback kann nicht zu mir zur&uuml;ckverfolgt
-				werden.
+				Mir ist bewusst, dass mein Feedback nach dem Klick auf "Hochladen"
+				auf dem Server hinterlegt wird. Das Feedback hat keinerlei
+				Personenbezug, weshalb auch ich anschlieﬂend nicht mehr darauf
+				zugreifen kann.<br />
+				<br />Das eingereichte Feedback kann nicht zu mir
+				zur&uuml;ckverfolgt werden.
 			</div>
 			<button id="submit-upload" disabled="disabled">Hochladen</button>
 		</form>
+		<hr />
+		<dl id="footer">
+			<dt>Ansprechpartner bei DATEV:</dt>
+			<dd>
+				<a href="mailto:fischer@datev.de">Andreas Fischer</a>
+			</dd>
+			<dt>Informationen zum KaVE-Projekt:</dt>
+			<dd>
+				<a href="http://kave.cc" title="KaVE-Projekt-Webseite">kave.cc</a>
+			</dd>
+		</dl>
 	</div>
 </body>
 </html>
