@@ -227,7 +227,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Export
             Assert.IsTrue(_notificationHelper.IsRequestRaised);
         }
 
-        [Test, Ignore]
+        [Test]
         public void SuccessfulExportNotificationHasCorrectMessage()
         {
             WhenExportIsExecuted();
@@ -238,7 +238,8 @@ namespace KaVE.VsFeedbackGenerator.Tests.Export
             var expected = new Notification
             {
                 Caption = Properties.UploadWizard.window_title,
-                Message = Properties.SessionManager.ExportSuccess.FormatEx(0, TestUploadUrl)
+                Message = Properties.SessionManager.ExportSuccess.FormatEx(0),
+                Link = TestUploadUrl
             };
             Assert.AreEqual(expected, actual);
         }
@@ -254,7 +255,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Export
             Assert.IsTrue(_notificationHelper.IsRequestRaised);
         }
 
-        [Test, Ignore]
+        [Test]
         public void FailingExportNotificationHasCorrectMessage()
         {
             _mockExporter.Setup(e => e.Export(It.IsAny<IEnumerable<IDEEvent>>(), It.IsAny<IPublisher>()))
@@ -266,7 +267,8 @@ namespace KaVE.VsFeedbackGenerator.Tests.Export
             var expected = new Notification
             {
                 Caption = Properties.UploadWizard.window_title,
-                Message = Properties.SessionManager.ExportFail + ":\nTEST"
+                Message = Properties.SessionManager.ExportFail + ":\nTEST",
+                Link = ""
             };
             Assert.AreEqual(expected, actual);
         }
