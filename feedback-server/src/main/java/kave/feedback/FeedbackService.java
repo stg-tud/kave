@@ -60,8 +60,7 @@ public class FeedbackService {
         FileOutputStream outputStream = null;
     	try {
             String fileName = contentDisposition.getFileName();
-            String extension = FilenameUtils.getExtension(fileName);
-            File freshOutputFile = getFreshOutputFile(extension);
+            File freshOutputFile = getNextOutputFile();
             outputStream = new FileOutputStream(freshOutputFile);
             IOUtils.copy(fileInputStream, outputStream);
             return Result.ok();
@@ -73,7 +72,7 @@ public class FeedbackService {
     	}
     }
 
-    private File getFreshOutputFile(String fileExtension) {
+    private synchronized File getNextOutputFile() throws IOException {
         int lastExistingFileIndex = 0;
         for (String fileName : dataFolder.list()) {
             try {
@@ -87,7 +86,13 @@ public class FeedbackService {
                 // our number schema
             }
         }
-        return new File(dataFolder, String.format("%05d", (lastExistingFileIndex + 1)) + "." + fileExtension);
+        File newFile = new File(dataFolder, String.format("%05d", (lastExistingFileIndex + 1)) + ".zip");
+
+        // ensure the file is a newly created file 
+        if (! newFile.createNewFile()) {
+        	throw new IOException("cannot create new file " + newFile.getName());
+        }
+        return newFile;
     }
 
 }
