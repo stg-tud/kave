@@ -12,8 +12,14 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sven Amann
+ *    - Uli Fahrer
  */
+
 using KaVE.Utils;
+using MsgBox;
 
 namespace KaVE.VsFeedbackGenerator.Interactivity
 {
@@ -21,10 +27,13 @@ namespace KaVE.VsFeedbackGenerator.Interactivity
     {
         public string Caption { get; set; }
         public string Message { get; set; }
+        public string Link { get; set; }
+        public MsgBoxImage Image { get; set; }
 
         protected bool Equals(Notification other)
         {
-            return string.Equals(Message, other.Message) && string.Equals(Caption, other.Caption);
+            return string.Equals(Message, other.Message) && string.Equals(Caption, other.Caption) &&
+                   string.Equals(Link, other.Link);
         }
 
         public override bool Equals(object obj)
@@ -37,13 +46,14 @@ namespace KaVE.VsFeedbackGenerator.Interactivity
             unchecked
             {
                 return ((Message != null ? Message.GetHashCode() : 0)*397) ^
-                       (Caption != null ? Caption.GetHashCode() : 0);
+                       ((Caption != null ? Caption.GetHashCode() : 0) +
+                        (Link != null ? Link.GetHashCode() : 0)*17);
             }
         }
 
         public override string ToString()
         {
-            return string.Format("[Caption: {0}, Message: {1}]", Caption, Message);
+            return string.Format("[Caption: {0}, Message: {1}, Link {2}]", Caption, Message, Link);
         }
     }
 }

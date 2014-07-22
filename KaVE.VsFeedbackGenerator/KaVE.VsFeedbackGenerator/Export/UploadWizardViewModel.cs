@@ -30,6 +30,7 @@ using KaVE.VsFeedbackGenerator.SessionManager;
 using KaVE.VsFeedbackGenerator.SessionManager.Presentation;
 using KaVE.VsFeedbackGenerator.Utils;
 using KaVE.VsFeedbackGenerator.Utils.Logging;
+using MsgBox;
 
 namespace KaVE.VsFeedbackGenerator.Export
 {
@@ -175,22 +176,26 @@ namespace KaVE.VsFeedbackGenerator.Export
         {
             var export = _settingsStore.GetSettings<ExportSettings>();
             RaiseNotificationRequest(
-                string.Format(Properties.SessionManager.ExportSuccess, numberOfExportedEvents, export.UploadUrl));
+                string.Format(Properties.SessionManager.ExportSuccess, numberOfExportedEvents),
+                export.UploadUrl, MsgBoxImage.OK);
         }
 
         private void ShowExportFailedMessage(string message)
         {
             RaiseNotificationRequest(
-                Properties.SessionManager.ExportFail + (string.IsNullOrWhiteSpace(message) ? "" : ":\n" + message));
+                Properties.SessionManager.ExportFail + (string.IsNullOrWhiteSpace(message) ? "" : ":\n" + message),
+                img: MsgBoxImage.Error);
         }
 
-        private void RaiseNotificationRequest(string s)
+        private void RaiseNotificationRequest(string text, string url = "", MsgBoxImage img = MsgBoxImage.Default)
         {
             _notificationRequest.Raise(
                 new Notification
                 {
                     Caption = Properties.UploadWizard.window_title,
-                    Message = s
+                    Message = text,
+                    Link = url,
+                    Image = img
                 });
         }
     }

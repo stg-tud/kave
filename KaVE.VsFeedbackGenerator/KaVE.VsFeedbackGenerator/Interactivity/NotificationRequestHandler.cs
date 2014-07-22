@@ -15,9 +15,11 @@
  * 
  * Contributors:
  *    - Sven Amann
+ *    - Uli Fahrer
  */
 
 using System.Windows;
+using MsgBox;
 
 namespace KaVE.VsFeedbackGenerator.Interactivity
 {
@@ -33,13 +35,30 @@ namespace KaVE.VsFeedbackGenerator.Interactivity
         public void Handle(object sender, InteractionRequestedEventArgs<Notification> args)
         {
             var notification = args.Notification;
+
             if (_window == null)
             {
-                MessageBox.Show(notification.Message, notification.Caption, MessageBoxButton.OK);
+                Msg.Show(
+                    notification.Message,
+                    notification.Caption,
+                    MsgBoxButtons.OK,
+                    notification.Image,
+                    MsgBoxResult.OK,
+                    notification.Link,
+                    notification.Link,
+                    showCopyMessage: true);
             }
             else
             {
-                MessageBox.Show(_window, notification.Message, notification.Caption, MessageBoxButton.OK);
+                Msg.Show(
+                    _window,
+                    notification.Message,
+                    notification.Caption,
+                    MsgBoxResult.OK,
+                    true,
+                    image: notification.Image,
+                    helpLink: notification.Link,
+                    showCopyMessage: true);
             }
         }
     }
