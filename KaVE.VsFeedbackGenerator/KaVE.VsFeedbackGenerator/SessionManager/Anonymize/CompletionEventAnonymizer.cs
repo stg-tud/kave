@@ -60,7 +60,10 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
             {
                 context.EnclosingMethod = context.EnclosingMethod.ToAnonymousName();
             }
-            context.TriggerTarget = context.TriggerTarget.ToAnonymousName();
+            if (context.TriggerTarget != null)
+            {
+                context.TriggerTarget = context.TriggerTarget.ToAnonymousName();
+            }
             AnonymizeCodeNames(context.TypeShape.TypeHierarchy);
             context.TypeShape.MethodHierarchies.ForEach(AnonymizeCodeNames);
             AnonymizeCodeNames(context.EntryPointToCalledMethods);

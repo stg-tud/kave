@@ -97,6 +97,9 @@ namespace KaVE.VsFeedbackGenerator.Utils.Logging
             return e.Message.Equals(
                 string.Format(
                     "The process cannot access the file '{0}' because it is being used by another process.",
+                    Path)) || e.Message.Equals(
+                string.Format(
+                    "Der Prozess kann nicht auf die Datei '{0}' zugreifen, da sie von einem anderen Prozess verwendet wird.",
                     Path));
         }
 
