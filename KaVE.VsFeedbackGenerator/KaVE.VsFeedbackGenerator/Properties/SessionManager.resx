@@ -276,4 +276,10 @@
   <data name="Options_Export_WebAccessPraefix" xml:space="preserve">
     <value>Präfix für Web-Zugriff</value>
   </data>
+  <data name="DetailsForSingleSelectedEvent" xml:space="preserve">
+    <value>Selektiere Event für mehr Details</value>
+  </data>
+  <data name="DetailsForSingleSelectedSession" xml:space="preserve">
+    <value>Selektiere Session für mehr Details</value>
+  </data>
 </root>

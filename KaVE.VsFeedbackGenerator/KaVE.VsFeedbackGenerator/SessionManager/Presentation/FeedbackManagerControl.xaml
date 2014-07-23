@@ -34,6 +34,7 @@ Contributors:
              d:DataContext="{d:DesignInstance Type=sessionManager:FeedbackViewModel, IsDesignTimeCreatable=False}">
     <UserControl.Resources>
         <util:ObjectToVisibilityConverter x:Key="ObjectToVisibilityConverter" />
+        <util:InverseObjectToVisibilityConverter x:Key="InverseObjectToVisibilityConverter" />
         <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
         <util:InverseBoolConverter x:Key="InverseBoolConverter" />
         <Style TargetType="{x:Type Button}" x:Key="DefaultDisabledButton">
@@ -254,19 +255,41 @@ Contributors:
                     </TabItem>
                 </TabControl>
             </GroupBox>
+            <!-- NO SINGLE SELECTED EVENT OVERLAY -->
+            <Border Background="LightGray"
+                    DataContext="{Binding SingleSelectedSession.SingleSelectedEvent, FallbackValue={x:Null}}"
+                    Visibility="{Binding ., Converter={StaticResource InverseObjectToVisibilityConverter}}"
+                    Grid.Column="2">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center"
+                        VerticalAlignment="Center" Width="Auto">
+                    <TextBlock Text="{x:Static root:Properties.SessionManager.DetailsForSingleSelectedEvent}"
+                       FontWeight="Bold" FontSize="24" />
+                </StackPanel>
+            </Border>
+            <!-- NO SINGLE SELECTED SESSION OVERLAY -->
+            <Border Background="LightGray"
+                    Visibility="{Binding SingleSelectedSession, Converter={StaticResource InverseObjectToVisibilityConverter}}"
+                    Grid.ColumnSpan="2"
+                    Grid.Column="1">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center"
+                        VerticalAlignment="Center" Width="Auto">
+                    <TextBlock Text="{x:Static root:Properties.SessionManager.DetailsForSingleSelectedSession}"
+                       FontWeight="Bold" FontSize="24" />
+                </StackPanel>
+            </Border>
             <!-- REFRESH OVERLAY -->
             <Border Background="LightGray" Opacity=".7"
                     Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibilityConverter}}"
                     Grid.ColumnSpan="3"
                     Grid.Column="0">
-				<StackPanel Orientation="Horizontal" HorizontalAlignment="Center"
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center"
                         VerticalAlignment="Center" Width="Auto">
-					<Image gif:ImageBehavior.RepeatBehavior="Forever"
+                    <Image gif:ImageBehavior.RepeatBehavior="Forever"
                        gif:ImageBehavior.AnimatedSource="/KaVE.VsFeedbackGenerator;component/Resources/loading.gif"
                        Width="24" Height="24" Margin="0 0 10 0" />
-					<TextBlock Text="{Binding BusyMessage}"
+                    <TextBlock Text="{Binding BusyMessage}"
                        FontWeight="Bold" FontSize="24" />
-				</StackPanel>
+                </StackPanel>
             </Border>
         </Grid>
     </DockPanel>
