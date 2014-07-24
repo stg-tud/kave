@@ -140,7 +140,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
             identifier.AppendIf(member.IsStatic, MemberName.StaticModifier + " ");
             identifier.AppendAnonymousTypeName(valueType).Append(' ');
             identifier.AppendAnonymousTypeName(member.DeclaringType).Append('.');
-            identifier.Append(member.DeclaringType.IsDeclaredInEnclosingProject() ? member.Name.ToHash() : member.Name);
+            identifier.Append(member.DeclaringType.IsDeclaredInEnclosingProjectOrUnknown() ? member.Name.ToHash() : member.Name);
         }
 
         private static LocalVariableName ToAnonymousName(LocalVariableName variable)
@@ -173,7 +173,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
         {
             var identifier = new StringBuilder();
             identifier.AppendTypeKindPrefix(type);
-            identifier.Append(type.IsDeclaredInEnclosingProject() ? type.AnonymizedRawFullName() : type.RawFullName);
+            identifier.Append(type.IsDeclaredInEnclosingProjectOrUnknown() ? type.AnonymizedRawFullName() : type.RawFullName);
             identifier.AppendTypeParameters(type).Append(", ");
             identifier.Append(type.Assembly.ToAnonymousName());
             return (TypeName) TypeName.Get(identifier.ToString());
@@ -247,7 +247,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
             return assembly.IsEnclosingProject() ? AssemblyName.Get(assembly.Identifier.ToHash()) : assembly;
         }
 
-        private static bool IsDeclaredInEnclosingProject(this ITypeName type)
+        private static bool IsDeclaredInEnclosingProjectOrUnknown(this ITypeName type)
         {
             return type.IsUnknownType || type.Assembly.IsEnclosingProject();
         }

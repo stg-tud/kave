@@ -115,17 +115,18 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
             CollectionAssert.AreEqual(expected, actual.ProposalCollection.Proposals);
         }
 
+        // TODO @Dennis: move test to AnonymousNameUtilsTest
         [Test]
         public void ShouldNotFailWhenProposalIsOfUnknownTypeAndRemoveNamesIsSet()
         {
             OriginalEvent.ProposalCollection = new ProposalCollection(
-                new Proposal {Name = TypeName.Get("[?]")},
+                new Proposal {Name = UnknownTypeName.Instance},
                 new Proposal {Name = FieldName.Get("[?] [?].field")},
                 new Proposal {Name = MethodName.Get("[?] [?].method([?] arg)")});
             ExportSettings.RemoveCodeNames = true;
             var expected = new[]
             {
-                new Proposal {Name = TypeName.Get("[?]")},
+                new Proposal {Name = UnknownTypeName.Instance},
                 new Proposal {Name = FieldName.Get("[?] [?].uH-HUtyKzOVVTdxGpUvTRg==")},
                 new Proposal {Name = MethodName.Get("[?] [?].S2MqM0cJGKIdPyRb46oevg==([?] cjjZM6DVkmp283JnWfyH_A==)")}
             };
