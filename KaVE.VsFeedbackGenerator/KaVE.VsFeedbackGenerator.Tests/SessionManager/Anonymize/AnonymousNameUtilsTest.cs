@@ -15,6 +15,7 @@
  * 
  * Contributors:
  *    - Sven Amann
+ *    - Dennis Albrecht
  */
 
 using KaVE.JetBrains.Annotations;
@@ -131,6 +132,23 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
             var original = UnknownTypeName.Instance;
 
             AssertAnonymizedEquals(original, original);
+        }
+
+        [Test]
+        public void ShouldAnonymizeFieldNameIfDeclaringTypeIsUnknown()
+        {
+            var original = FieldName.Get("[?] [?].field");
+            var expected = FieldName.Get("[?] [?].uH-HUtyKzOVVTdxGpUvTRg==");
+
+            AssertAnonymizedEquals(original, expected);
+        }
+
+        public void ShouldAnonymizeMethodMembersIfDeclaringTypeIsUnknown()
+        {
+            var original = MethodName.Get("[?] [?].method([?] arg)");
+            var expected = MethodName.Get("[?] [?].S2MqM0cJGKIdPyRb46oevg==([?] cjjZM6DVkmp283JnWfyH_A==)");
+
+            AssertAnonymizedEquals(original, expected);
         }
 
         [Test]

@@ -15,6 +15,7 @@
  * 
  * Contributors:
  *    - Sven Amann
+ *    - Dennis Albrecht
  */
 
 using System;
@@ -108,27 +109,6 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
                 new Proposal {Name = TypeName.Get("Q-vTVCo_g8yayGGoDdH7BA==, qfFVtSOtve-XEFJXWTbfXw==")},
                 new Proposal {Name = TypeName.Get("OtherType, Assembly, 1.2.3.4")},
                 new Proposal {Name = NamespaceName.Get("A_SHMh611J-1vRjtIJDirA==")}
-            };
-
-            var actual = WhenEventIsAnonymized();
-
-            CollectionAssert.AreEqual(expected, actual.ProposalCollection.Proposals);
-        }
-
-        // TODO @Dennis: move test to AnonymousNameUtilsTest
-        [Test]
-        public void ShouldNotFailWhenProposalIsOfUnknownTypeAndRemoveNamesIsSet()
-        {
-            OriginalEvent.ProposalCollection = new ProposalCollection(
-                new Proposal {Name = UnknownTypeName.Instance},
-                new Proposal {Name = FieldName.Get("[?] [?].field")},
-                new Proposal {Name = MethodName.Get("[?] [?].method([?] arg)")});
-            ExportSettings.RemoveCodeNames = true;
-            var expected = new[]
-            {
-                new Proposal {Name = UnknownTypeName.Instance},
-                new Proposal {Name = FieldName.Get("[?] [?].uH-HUtyKzOVVTdxGpUvTRg==")},
-                new Proposal {Name = MethodName.Get("[?] [?].S2MqM0cJGKIdPyRb46oevg==([?] cjjZM6DVkmp283JnWfyH_A==)")}
             };
 
             var actual = WhenEventIsAnonymized();
