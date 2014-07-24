@@ -143,6 +143,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
             AssertAnonymizedEquals(original, expected);
         }
 
+        [Test]
         public void ShouldAnonymizeMethodMembersIfDeclaringTypeIsUnknown()
         {
             var original = MethodName.Get("[?] [?].method([?] arg)");
