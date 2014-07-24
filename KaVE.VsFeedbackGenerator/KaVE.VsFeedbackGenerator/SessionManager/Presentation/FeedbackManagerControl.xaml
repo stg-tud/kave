@@ -28,7 +28,7 @@ Contributors:
              xmlns:root="clr-namespace:KaVE.VsFeedbackGenerator"
              xmlns:util="clr-namespace:KaVE.VsFeedbackGenerator.Utils"
              xmlns:presentation="clr-namespace:KaVE.VsFeedbackGenerator.SessionManager.Presentation"
-			 xmlns:gif="http://wpfanimatedgif.codeplex.com"
+             xmlns:gif="http://wpfanimatedgif.codeplex.com"
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="1000"
              d:DataContext="{d:DesignInstance Type=sessionManager:FeedbackViewModel, IsDesignTimeCreatable=False}">
@@ -72,8 +72,8 @@ Contributors:
                 </Button>
                 <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
                 <Button ToolTip="{x:Static root:Properties.SessionManager.Export}"
-						Click="Export_OnClick"
-						IsEnabled="{Binding Path=AreAnyEventsPresent}">
+                        Click="Export_OnClick"
+                        IsEnabled="{Binding Path=AreAnyEventsPresent}">
                     <Image Source="/KaVE.VsFeedbackGenerator;Component/Resources/send.png" />
                 </Button>
                 <Button ToolTip="{x:Static root:Properties.SessionManager.VisitUploadPage}"
@@ -113,17 +113,17 @@ Contributors:
                         </Button>
                     </StackPanel>
                     <presentation:SortableListView Grid.Row="1"
-												   x:Name="SessionListView"
-                            					   x:FieldModifier="private"
-                            					   ItemsSource="{Binding Source={StaticResource SortedSessions}}"
-                            					   SelectionMode="Extended"
-                            					   SelectionChanged="SessionListView_OnSelectionChanged">
+                                                   x:Name="SessionListView"
+                                                   x:FieldModifier="private"
+                                                   ItemsSource="{Binding Source={StaticResource SortedSessions}}"
+                                                   SelectionMode="Extended"
+                                                   SelectionChanged="SessionListView_OnSelectionChanged">
                         <presentation:SortableListView.View>
                             <GridView>
                                 <GridViewColumn
-                                    DisplayMemberBinding="{Binding StartDate, StringFormat=\{0:dd.MM.yyyy\}}" 
+                                    DisplayMemberBinding="{Binding StartDate, StringFormat=\{0:dd.MM.yyyy\}}"
                                     Header="{x:Static root:Properties.SessionManager.Sessions}"
-                                    Width="80"/>
+                                    Width="80" />
                             </GridView>
                         </presentation:SortableListView.View>
                     </presentation:SortableListView>
@@ -131,164 +131,168 @@ Contributors:
             </GroupBox>
             <!-- EVENT LIST -->
             <GroupBox Grid.Column="1" MinWidth="220" Header="{x:Static root:Properties.SessionManager.Events}"
-                      DataContext="{Binding SingleSelectedSession, FallbackValue={x:Null}}"
-                      Visibility="{Binding Converter={StaticResource ObjectToVisibilityConverter}, Path=., FallbackValue=Collapsed}">
+                      DataContext="{Binding SingleSelectedSession, FallbackValue={x:Null}}">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
                     <StackPanel Grid.Row="0" Orientation="Horizontal"
-                                Height="21" Margin="0, 3, 0, 3">
+                                Height="21" Margin="0, 3, 0, 3"
+                                Visibility="{Binding Converter={StaticResource ObjectToVisibilityConverter}, Path=., FallbackValue=Collapsed}">
                         <Button ToolTip="{x:Static root:Properties.SessionManager.EventDelete}"
                                 Style="{StaticResource DefaultDisabledButton}"
                                 Command="{Binding Path=DeleteEventsCommand, FallbackValue={x:Null}}">
                             <Image Source="/KaVE.VsFeedbackGenerator;Component/Resources/delete.png" />
                         </Button>
                     </StackPanel>
-                    <presentation:SortableListView Grid.Row="1" 
+                    <presentation:SortableListView Grid.Row="1"
                                                    x:Name="EventListView"
                                                    x:FieldModifier="private"
                                                    ItemsSource="{Binding Source={StaticResource SortedEvents}}"
                                                    SelectionMode="Extended"
-                                                   SelectionChanged="EventListView_OnSelectionChanged">
+                                                   SelectionChanged="EventListView_OnSelectionChanged"
+                                                   Visibility="{Binding Converter={StaticResource ObjectToVisibilityConverter}, Path=., FallbackValue=Collapsed}">
                         <presentation:SortableListView.View>
                             <GridView>
                                 <GridViewColumn Header="{x:Static root:Properties.SessionManager.EventTime}"
                                                 DisplayMemberBinding="{Binding StartDateTime, StringFormat=\{0:HH\:mm\:ss tt\}}"
-                                                Width="80"/>
-                                
+                                                Width="80" />
                                 <GridViewColumn Header="{x:Static root:Properties.SessionManager.EventType}"
                                                 DisplayMemberBinding="{Binding EventType}"
                                                 Width="100" />
                             </GridView>
                         </presentation:SortableListView.View>
                     </presentation:SortableListView>
-
+                    <!-- NO SINGLE SELECTED SESSION OVERLAY -->
+                    <Border Visibility="{Binding ., Converter={StaticResource InverseObjectToVisibilityConverter}}"
+                            Grid.Row="0" Grid.RowSpan="2" Width="Auto" Height="Auto"
+                            HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBlock Text="{x:Static root:Properties.SessionManager.DetailsForSingleSelectedSession}"
+                                   TextWrapping="Wrap" />
+                    </Border>
                 </Grid>
             </GroupBox>
             <!-- EVENT INFORMATION -->
             <GroupBox Grid.Column="2" Header="{x:Static root:Properties.SessionManager.EventData}"
-                      DataContext="{Binding SingleSelectedSession.SingleSelectedEvent, FallbackValue={x:Null}}"
-                      Visibility="{Binding Converter={StaticResource ObjectToVisibilityConverter}, Path=., FallbackValue=Collapsed}">
-                <TabControl TabStripPlacement="Bottom" Margin="0, 0, 0, 0">
-                    <TabItem Header="{x:Static root:Properties.SessionManager.DesignView}">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="*" />
-                            </Grid.RowDefinitions>
-                            <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="10,10,0,1">
-                                <TextBlock Text="{x:Static root:Properties.SessionManager.EventTrigger}" Width="110" />
-                                <Border BorderThickness="1" BorderBrush="DimGray" Padding="0" CornerRadius="1">
-                                    <TextBlock Text="{Binding Trigger}" Background="White" Padding="1" Width="100"
-                                               TextAlignment="Left" />
-                                </Border>
-                            </StackPanel>
-                            <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="10,0,0,1">
-                                <TextBlock Text="{x:Static root:Properties.SessionManager.EventDuration}" Width="110" />
-                                <Border BorderThickness="1" BorderBrush="DimGray" Padding="0" CornerRadius="1">
-                                    <TextBlock Text="{Binding DurationInMilliseconds, StringFormat=\{0:F0\}}"
-                                               Background="White" Padding="1,1,2,1" MinWidth="100"
-                                               TextAlignment="Right" />
-                                </Border>
-                                <TextBlock Text="{x:Static root:Properties.SessionManager.EventDurationUnit}"
-                                           Margin="1,0,0,0" />
-                            </StackPanel>
-                            <Grid Grid.Row="2" Margin="10,0,5,1">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="110"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-                                <TextBlock Grid.Column="0" Text="{x:Static root:Properties.SessionManager.EventActiveWindow}" />
-                                <Border Grid.Column="1" BorderThickness="1" BorderBrush="DimGray" Padding="0" CornerRadius="1">
-                                    <TextBlock Text="{Binding Event.ActiveWindow.Caption}" Background="White"
-                                               Padding="1" VerticalAlignment="Stretch" TextAlignment="Left" />
-                                </Border>
+                      DataContext="{Binding SingleSelectedSession.SingleSelectedEvent, FallbackValue={x:Null}}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <TabControl Grid.Row="0" TabStripPlacement="Bottom" Margin="0, 0, 0, 0"
+                                Visibility="{Binding Converter={StaticResource ObjectToVisibilityConverter}, Path=., FallbackValue=Collapsed}">
+                        <TabItem Header="{x:Static root:Properties.SessionManager.DesignView}">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="10,10,0,1">
+                                    <TextBlock Text="{x:Static root:Properties.SessionManager.EventTrigger}"
+                                               Width="110" />
+                                    <Border BorderThickness="1" BorderBrush="DimGray" Padding="0" CornerRadius="1">
+                                        <TextBlock Text="{Binding Trigger}" Background="White" Padding="1" Width="100"
+                                                   TextAlignment="Left" />
+                                    </Border>
+                                </StackPanel>
+                                <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="10,0,0,1">
+                                    <TextBlock Text="{x:Static root:Properties.SessionManager.EventDuration}"
+                                               Width="110" />
+                                    <Border BorderThickness="1" BorderBrush="DimGray" Padding="0" CornerRadius="1">
+                                        <TextBlock Text="{Binding DurationInMilliseconds, StringFormat=\{0:F0\}}"
+                                                   Background="White" Padding="1,1,2,1" MinWidth="100"
+                                                   TextAlignment="Right" />
+                                    </Border>
+                                    <TextBlock Text="{x:Static root:Properties.SessionManager.EventDurationUnit}"
+                                               Margin="1,0,0,0" />
+                                </StackPanel>
+                                <Grid Grid.Row="2" Margin="10,0,5,1">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="110" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0"
+                                               Text="{x:Static root:Properties.SessionManager.EventActiveWindow}" />
+                                    <Border Grid.Column="1" BorderThickness="1" BorderBrush="DimGray" Padding="0"
+                                            CornerRadius="1">
+                                        <TextBlock Text="{Binding Event.ActiveWindow.Caption}" Background="White"
+                                                   Padding="1" VerticalAlignment="Stretch" TextAlignment="Left" />
+                                    </Border>
+                                </Grid>
+                                <Grid Grid.Row="3" Margin="10,0,5,5">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="110" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0"
+                                               Text="{x:Static root:Properties.SessionManager.EventActiveDocument}" />
+                                    <Border Grid.Column="1" BorderThickness="1" BorderBrush="DimGray" Padding="0"
+                                            CornerRadius="1">
+                                        <TextBlock Text="{Binding Event.ActiveDocument.Identifier}" Background="White"
+                                                   Padding="1" VerticalAlignment="Stretch" TextAlignment="Left" />
+                                    </Border>
+                                </Grid>
+                                <!-- CONTEXT BOX -->
+                                <GroupBox Grid.Row="4" MaxHeight="150"
+                                          Header="{x:Static root:Properties.SessionManager.EventContext}"
+                                          DataContext="{Binding XamlContextRepresentation}"
+                                          Visibility="{Binding Converter={StaticResource ObjectToVisibilityConverter}, Path=., FallbackValue=Collapsed}">
+                                    <Border BorderThickness="1" BorderBrush="DimGray" Padding="0" CornerRadius="1"
+                                            Margin="0,3,0,0" Background="White">
+                                        <presentation:XamlBindableRichTextBox Xaml="{Binding .}"
+                                                                              HorizontalAlignment="Stretch"
+                                                                              VerticalAlignment="Stretch"
+                                                                              VerticalScrollBarVisibility="Auto"
+                                                                              HorizontalScrollBarVisibility="Auto" />
+                                    </Border>
+                                </GroupBox>
+                                <!-- DETAILS SCROLLBOX -->
+                                <GroupBox Grid.Row="5" Header="{x:Static root:Properties.SessionManager.EventDetails}">
+                                    <Border BorderThickness="1" BorderBrush="DimGray" Padding="0" CornerRadius="1"
+                                            Margin="0,3,0,0" Background="White">
+                                        <presentation:XamlBindableRichTextBox Xaml="{Binding Details}"
+                                                                              HorizontalAlignment="Stretch"
+                                                                              VerticalAlignment="Stretch"
+                                                                              VerticalScrollBarVisibility="Auto"
+                                                                              HorizontalScrollBarVisibility="Auto" />
+                                    </Border>
+                                </GroupBox>
                             </Grid>
-                            <Grid Grid.Row="3" Margin="10,0,5,5">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="110"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-                                <TextBlock Grid.Column="0" Text="{x:Static root:Properties.SessionManager.EventActiveDocument}" />
-                                <Border Grid.Column="1" BorderThickness="1" BorderBrush="DimGray" Padding="0" CornerRadius="1">
-                                    <TextBlock Text="{Binding Event.ActiveDocument.Identifier}" Background="White"
-                                               Padding="1" VerticalAlignment="Stretch" TextAlignment="Left" />
-                                </Border>
-                            </Grid>
-                            <!-- CONTEXT BOX -->
-                            <GroupBox Grid.Row="4" MaxHeight="150" Header="{x:Static root:Properties.SessionManager.EventContext}"
-                                      DataContext="{Binding XamlContextRepresentation}"
-                                      Visibility="{Binding Converter={StaticResource ObjectToVisibilityConverter}, Path=., FallbackValue=Collapsed}">
-                                <Border BorderThickness="1" BorderBrush="DimGray" Padding="0" CornerRadius="1"
-                                        Margin="0,3,0,0" Background="White">
-                                    <presentation:XamlBindableRichTextBox Xaml="{Binding .}"
-                                                                          HorizontalAlignment="Stretch"
-                                                                          VerticalAlignment="Stretch"
-                                                                          VerticalScrollBarVisibility="Auto"
-                                                                          HorizontalScrollBarVisibility="Auto" />
-                                </Border>
-                            </GroupBox>
-                            <!-- DETAILS SCROLLBOX -->
-                            <GroupBox Grid.Row="5" Header="{x:Static root:Properties.SessionManager.EventDetails}">
-                                <Border BorderThickness="1" BorderBrush="DimGray" Padding="0" CornerRadius="1"
-                                        Margin="0,3,0,0" Background="White">
-                                    <presentation:XamlBindableRichTextBox Xaml="{Binding Details}"
-                                                                          HorizontalAlignment="Stretch"
-                                                                          VerticalAlignment="Stretch"
-                                                                          VerticalScrollBarVisibility="Auto"
-                                                                          HorizontalScrollBarVisibility="Auto" />
-                                </Border>
-                            </GroupBox>
-                        </Grid>
-                    </TabItem>
-                    <TabItem Header="{x:Static root:Properties.SessionManager.RawView}">
-                        <presentation:XamlBindableRichTextBox Xaml="{Binding XamlRawRepresentation}"
-                                                              HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-                                                              VerticalScrollBarVisibility="Auto"
-                                                              HorizontalScrollBarVisibility="Auto" />
-                    </TabItem>
-                </TabControl>
+                        </TabItem>
+                        <TabItem Header="{x:Static root:Properties.SessionManager.RawView}">
+                            <presentation:XamlBindableRichTextBox Xaml="{Binding XamlRawRepresentation}"
+                                                                  HorizontalAlignment="Stretch"
+                                                                  VerticalAlignment="Stretch"
+                                                                  VerticalScrollBarVisibility="Auto"
+                                                                  HorizontalScrollBarVisibility="Auto" />
+                        </TabItem>
+                    </TabControl>
+                    <!-- NO SINGLE SELECTED EVENT OVERLAY -->
+                    <Border Visibility="{Binding ., Converter={StaticResource InverseObjectToVisibilityConverter}}"
+                            Grid.Row="0" Width="Auto" Height="Auto"
+                            HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBlock Text="{x:Static root:Properties.SessionManager.DetailsForSingleSelectedEvent}"
+                                   TextWrapping="Wrap" />
+                    </Border>
+                </Grid>
             </GroupBox>
-            <!-- NO SINGLE SELECTED EVENT OVERLAY -->
-            <Border Background="LightGray"
-                    DataContext="{Binding SingleSelectedSession.SingleSelectedEvent, FallbackValue={x:Null}}"
-                    Visibility="{Binding ., Converter={StaticResource InverseObjectToVisibilityConverter}}"
-                    Grid.Column="2">
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center"
-                        VerticalAlignment="Center" Width="Auto">
-                    <TextBlock Text="{x:Static root:Properties.SessionManager.DetailsForSingleSelectedEvent}"
-                       FontWeight="Bold" FontSize="24" />
-                </StackPanel>
-            </Border>
-            <!-- NO SINGLE SELECTED SESSION OVERLAY -->
-            <Border Background="LightGray"
-                    Visibility="{Binding SingleSelectedSession, Converter={StaticResource InverseObjectToVisibilityConverter}}"
-                    Grid.ColumnSpan="2"
-                    Grid.Column="1">
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center"
-                        VerticalAlignment="Center" Width="Auto">
-                    <TextBlock Text="{x:Static root:Properties.SessionManager.DetailsForSingleSelectedSession}"
-                       FontWeight="Bold" FontSize="24" />
-                </StackPanel>
-            </Border>
             <!-- REFRESH OVERLAY -->
             <Border Background="LightGray" Opacity=".7"
                     Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibilityConverter}}"
                     Grid.ColumnSpan="3"
                     Grid.Column="0">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center"
-                        VerticalAlignment="Center" Width="Auto">
+                            VerticalAlignment="Center" Width="Auto">
                     <Image gif:ImageBehavior.RepeatBehavior="Forever"
-                       gif:ImageBehavior.AnimatedSource="/KaVE.VsFeedbackGenerator;component/Resources/loading.gif"
-                       Width="24" Height="24" Margin="0 0 10 0" />
+                           gif:ImageBehavior.AnimatedSource="/KaVE.VsFeedbackGenerator;component/Resources/loading.gif"
+                           Width="24" Height="24" Margin="0 0 10 0" />
                     <TextBlock Text="{Binding BusyMessage}"
-                       FontWeight="Bold" FontSize="24" />
+                               FontWeight="Bold" FontSize="24" />
                 </StackPanel>
             </Border>
         </Grid>
