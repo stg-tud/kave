@@ -1,9 +1,17 @@
 /**
- * Copyright (c) 2010, 2011 Darmstadt University of Technology.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright 2014 Technische Universität Darmstadt
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package kave.feedback;
 import static kave.feedback.TestHelper.*;
@@ -28,9 +36,11 @@ import static org.openqa.selenium.support.ui.ExpectedConditions.*;
 
 public class FeedbackServiceSeleniumTest {
 	
-	private static final By GrowlNoticeLocator = By.className("growl-notice");
-	private static final By GrowlErrorLocator = By.className("growl-error");
-	private static File OutputDirectory = new File("data");
+	private static final By growlNoticeLocator = By.className("growl-notice");
+	private static final By growlErrorLocator = By.className("growl-error");
+	
+    private static File dataDir = new File("data");
+    private static File tmpDir = new File("tmp");
 	
 	@Rule
 	public TemporaryFolder tempFolder = new TemporaryFolder();
@@ -38,10 +48,13 @@ public class FeedbackServiceSeleniumTest {
 	private boolean isJavascriptEnabled = true;
 	private FirefoxDriver driver;
 	private FirefoxProfile profile;
+    private FeedbackServiceFixture fix;
 	
 	@Before @After
 	public void clearOutputDirectory() throws IOException {
-		FileUtils.deleteDirectory(OutputDirectory);
+	    fix = new FeedbackServiceFixture(tempFolder.getRoot());
+        FileUtils.deleteDirectory(dataDir);
+        FileUtils.deleteDirectory(tmpDir);
 	}
 	
 	@After
@@ -58,19 +71,32 @@ public class FeedbackServiceSeleniumTest {
 		WebElement submitButton = driver.findElementByXPath("//button");
 		assertFalse(submitButton.isEnabled());
 	}
-	
-	@Test
+    
+    @Test
     public void shouldSucceedIfInputIsCorrect() throws IOException {
-		givenPageIsLoaded();
-		
-    	File fileToUpload = createRandomFile(tempFolder, "my-test-file.zip");
-    	
-    	whenFileIsSelected(fileToUpload);
-		whenConfirmationIsSelected();
-		whenFormIsSubmitted();
-		
-		thenResponseIs(GrowlNoticeLocator, "Die Datei wurde erfolgreich hochgeladen.");
-		assertDirectoryContainsFile(OutputDirectory, "00001.zip", fileToUpload);
+        givenPageIsLoaded();
+        
+        File fileToUpload = fix.getZipFile();
+        
+        whenFileIsSelected(fileToUpload);
+        whenConfirmationIsSelected();
+        whenFormIsSubmitted();
+        
+        thenResponseIs(growlNoticeLocator, "Die Datei wurde erfolgreich hochgeladen.");
+        FeedbackServiceTest.assertDirectoryContainsFile(dataDir, "0.zip", fileToUpload);
+    }
+    
+    @Test
+    public void shouldFailIfInputIsNotAZip() throws IOException {
+        givenPageIsLoaded();
+        
+        File fileToUpload = fix.getRandomFile();
+        
+        whenFileIsSelected(fileToUpload);
+        whenConfirmationIsSelected();
+        whenFormIsSubmitted();
+        
+        thenResponseIs(growlErrorLocator, FeedbackService.NO_ZIP_FILE);
     }
 	
 	@Test
@@ -82,7 +108,7 @@ public class FeedbackServiceSeleniumTest {
     	whenFileIsSelected(fileToUpload);
 		whenFormIsSubmitted();
 		
-		thenResponseIs(GrowlErrorLocator, "Bitte stimmen Sie der Einverständniserklärung zu, bevor Sie die Datei hochladen.");
+		thenResponseIs(growlErrorLocator, "Bitte stimmen Sie der Einverständniserklärung zu, bevor Sie die Datei hochladen.");
 	}
 	
 	@Test
@@ -91,7 +117,7 @@ public class FeedbackServiceSeleniumTest {
 		
 		whenFormIsSubmitted();
 		
-		thenResponseIs(GrowlErrorLocator, "Bitte stimmen Sie der Einverständniserklärung zu, bevor Sie die Datei hochladen.");
+		thenResponseIs(growlErrorLocator, "Bitte stimmen Sie der Einverständniserklärung zu, bevor Sie die Datei hochladen.");
 	}
 	
 	@Test
@@ -101,7 +127,7 @@ public class FeedbackServiceSeleniumTest {
 		whenConfirmationIsSelected();
 		whenFormIsSubmitted();
 		
-		thenResponseIs(GrowlErrorLocator, "Es wurde keine Datei zum Hochladen ausgewählt. Bitte wählen Sie eine Datei.");
+		thenResponseIs(growlErrorLocator, "Es wurde keine Datei zum Hochladen ausgewählt. Bitte wählen Sie eine Datei.");
 	}
 
 	private void givenPageIsLoaded() {

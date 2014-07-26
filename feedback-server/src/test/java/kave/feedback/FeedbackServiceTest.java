@@ -1,50 +1,116 @@
 /**
- * Copyright (c) 2010, 2011 Darmstadt University of Technology.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright 2014 Technische Universität Darmstadt
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package kave.feedback;
 
-import static kave.feedback.TestHelper.assertDirectoryContainsFile;
-import static kave.feedback.TestHelper.createRandomFile;
+import static kave.feedback.FeedbackService.INVALID_UPLOAD;
+import static kave.feedback.FeedbackService.NO_SINGLE_UPLOAD;
+import static kave.feedback.FeedbackService.NO_ZIP_FILE;
+import static kave.feedback.FeedbackService.UPLOAD_FAILED;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 
 import kave.Result;
+import kave.UniqueFileCreator;
+import kave.UploadChecker;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
-
-import com.sun.jersey.core.header.FormDataContentDisposition;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
 public class FeedbackServiceTest {
+
     @Rule
     public TemporaryFolder temporaryFolder = new TemporaryFolder();
-    public File feedbackOutputDirectory;
 
+    private File dataDir;
+    private File tmpDir;
+
+    private boolean isUploadValid;
+    private UploadChecker checker;
+
+    private FeedbackServiceFixture fix;
     private FeedbackService sut;
+
+    private UniqueFileCreator tmpUfc;
+    private UniqueFileCreator dataUfc;
 
     @Before
     public void setup() throws IOException {
-        File tempRootFolder = temporaryFolder.newFolder();
-        feedbackOutputDirectory = new File(tempRootFolder, "data");
-        sut = new FeedbackService(feedbackOutputDirectory);
+        fix = new FeedbackServiceFixture(temporaryFolder.getRoot());
+
+        dataDir = fix.getDataFolder();
+        tmpDir = fix.getTempFolder();
+
+        // upload checker
+        isUploadValid = true;
+        checker = mock(UploadChecker.class);
+        when(checker.isValidUpload(any(File.class))).thenAnswer(new Answer<Boolean>() {
+            @Override
+            public Boolean answer(InvocationOnMock invocation) throws Throwable {
+                return isUploadValid;
+            }
+        });
+
+        tmpUfc = mockFileCreator(tmpDir);
+        dataUfc = mockFileCreator(dataDir);
+
+        sut = new FeedbackService(dataDir, tmpDir, checker, tmpUfc, dataUfc);
+    }
+
+    private UniqueFileCreator mockFileCreator(File base) throws IOException {
+        final int[] fileNum = new int[] { 10 };
+        UniqueFileCreator ufc = mock(UniqueFileCreator.class);
+        when(ufc.createNextUniqueFile()).thenAnswer(new Answer<File>() {
+            @Override
+            public File answer(InvocationOnMock invocation) throws Throwable {
+                String fileName = (fileNum[0]++) + ".zip";
+                return new File(dataDir, fileName);
+            }
+        });
+        return ufc;
+    }
+
+    @Test
+    public void itsNotAnIssueIfFoldersArePreExisting() throws IOException {
+        dataDir.mkdir();
+        File d = new File(dataDir, "d.txt");
+        d.createNewFile();
+
+        tmpDir.mkdir();
+        File t = new File(dataDir, "t.txt");
+        t.createNewFile();
+        
+        sut = new FeedbackService(dataDir, tmpDir, checker, tmpUfc, dataUfc);
+        
+        assertTrue(d.exists());
+        assertTrue(t.exists());
     }
 
     @Test
@@ -53,110 +119,64 @@ public class FeedbackServiceTest {
     }
 
     @Test
-    public void uploadOfExistingFileShouldSucceedAndReturnTrue() throws IOException {
-        File fileToUpload = givenARandomFile("test.ext");
+    public void uploadingMultipleFilesFails() throws FileNotFoundException {
+        Result actual = sut.upload(fix.createMultiFileUpload());
+        Result expected = Result.fail(NO_SINGLE_UPLOAD);
+        assertEquals(expected, actual);
+    }
 
-        Result expectedResult = Result.ok();
-        Result actualResult = whenFileIsUploaded(fileToUpload);
+    @Test
+    public void uploadingNonZipFilesFails() throws FileNotFoundException {
+        Result actual = sut.upload(fix.createRandomFileUpload());
+        Result expected = Result.fail(NO_ZIP_FILE);
+        assertEquals(expected, actual);
+    }
 
-        assertEquals(expectedResult, actualResult);
+    @Test
+    public void failingValidationCreateError() throws FileNotFoundException {
+        isUploadValid = false;
+        Result actual = sut.upload(fix.createZipFileUpload());
+        Result expected = Result.fail(INVALID_UPLOAD);
+        assertEquals(expected, actual);
+
+        assertDirectoryDoesNotContainFile(tmpDir, "10.zip");
+    }
+
+    @Test
+    public void happyPathForUpload() throws IOException {
+        Result actual = sut.upload(fix.createZipFileUpload());
+        Result expected = Result.ok();
+        assertEquals(expected, actual);
+        
+        verify(checker).isValidUpload(any(File.class));
+        verify(tmpUfc).createNextUniqueFile();
+        verify(dataUfc).createNextUniqueFile();
+    }
+
+    @Test
+    public void uploadCreatesCorrectFile() throws IOException {
+        sut.upload(fix.createZipFileUpload());
+        assertDirectoryContainsFile(dataDir, "10.zip", fix.getZipFile());
+        assertDirectoryDoesNotContainFile(tmpDir, "10.zip");
     }
 
     @Test
     public void uploadWithCorruptedStreamShouldFail() throws IOException {
-        InputStream inputStream = mock(InputStream.class);
-        IOException ioException = new IOException("exception cause");
-        when(inputStream.read(any(byte[].class))).thenThrow(ioException);
-
-        Result expected = Result.fail(ioException);
-        Result actual = sut.upload(inputStream, mockContentDisposition("irrelevant.name"));
-
-        assertEquals(expected.status, actual.status);
-        assertTrue(actual.message.startsWith("java.io.IOException: exception cause"));
-    }
-
-    @Test
-    public void uploadShouldStoreFileInOutputDirectory() throws IOException {
-        File fileToUpload = givenARandomFile("testupload.zip");
-
-        whenFileIsUploaded(fileToUpload);
-
-        thenOutputDirectoryContainsFile("00001.zip", fileToUpload);
-    }
-
-    @Test
-    public void uploadMustNotPreserveFileExtension() throws IOException {
-        File fileToUpload = givenARandomFile("name.some4random-ext");
-
-        whenFileIsUploaded(fileToUpload);
-
-        thenOutputDirectoryContainsFile("00001.zip", fileToUpload);
-    }
-
-    @Test
-    public void uploadShouldPreserveExistingFilesInOutputDirectory() throws IOException {
-        File existingFile = givenARandomFileInTheOutputDirectory("00001.zip");
-        File fileToUpload = givenARandomFile("new.zip");
-
-        whenFileIsUploaded(fileToUpload);
-
-        thenOutputDirectoryContainsFile("00001.zip", existingFile);
-        thenOutputDirectoryContainsFile("00002.zip", fileToUpload);
-    }
-
-    @Test
-    public void uploadShouldAssignHighestNumberToNewFiles() throws IOException {
-        givenARandomFileInTheOutputDirectory("00005.ext");
-        givenARandomFileInTheOutputDirectory("00023.zip");
-        File fileToUpload = givenARandomFile("blablub.foo");
-
-        whenFileIsUploaded(fileToUpload);
-
-        thenOutputDirectoryContainsFile("00024.zip", fileToUpload);
-    }
-
-    @Test
-    public void uploadShouldNotFailWhenOuputDirectoryContainsGarbage() throws IOException {
-        File fileToUpload = givenARandomFile("data.zip");
-        givenARandomFileInTheOutputDirectory("garbage.zip");
-
-        Result expected = Result.ok();
-        Result actual = whenFileIsUploaded(fileToUpload);
-
+        Result actual = sut.upload(fix.createFailingUpload());
+        Result expected = Result.fail(UPLOAD_FAILED);
         assertEquals(expected, actual);
     }
 
-    private File givenARandomFileInTheOutputDirectory(String fileName) throws IOException {
-        File randomFile = givenARandomFile(fileName);
-        File randomFileInOutputDirectory = new File(feedbackOutputDirectory, fileName);
-        FileUtils.copyFile(randomFile, randomFileInOutputDirectory);
-        return randomFileInOutputDirectory;
+    public static void assertDirectoryContainsFile(File directory, final String expectedFileName,
+            File expectedFileContent) throws IOException {
+        File actualFile = new File(directory, expectedFileName);
+        assertTrue(actualFile.exists());
+        long expectedFileHash = FileUtils.checksumCRC32(expectedFileContent);
+        long actualFileHash = FileUtils.checksumCRC32(actualFile);
+        assertEquals(expectedFileHash, actualFileHash);
     }
 
-    private File givenARandomFile(String fileName) throws IOException {
-        return createRandomFile(temporaryFolder, fileName);
-    }
-
-    private Result whenFileIsUploaded(File fileToUpload) throws FileNotFoundException {
-        String fileName = fileToUpload.getName();
-        FormDataContentDisposition contentDisposition = mockContentDisposition(fileName);
-        InputStream fileInputStream = null;
-        try {
-            fileInputStream = new FileInputStream(fileToUpload);
-            return sut.upload(fileInputStream, contentDisposition);
-        } finally {
-            IOUtils.closeQuietly(fileInputStream);
-        }
-    }
-
-    private FormDataContentDisposition mockContentDisposition(String fileName) {
-        FormDataContentDisposition contentDisposition = mock(FormDataContentDisposition.class);
-        when(contentDisposition.getFileName()).thenReturn(fileName);
-        return contentDisposition;
-    }
-
-    private void thenOutputDirectoryContainsFile(final String expectedFileName, File expectedFileContent)
-            throws IOException {
-        assertDirectoryContainsFile(feedbackOutputDirectory, expectedFileName, expectedFileContent);
+    private static void assertDirectoryDoesNotContainFile(File dir, String fileName) {
+        assertFalse(new File(dir, fileName).exists());
     }
 }
