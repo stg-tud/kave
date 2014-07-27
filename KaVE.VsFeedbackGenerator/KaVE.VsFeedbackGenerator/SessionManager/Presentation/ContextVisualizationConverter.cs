@@ -25,6 +25,7 @@ using JetBrains.Annotations;
 using JetBrains.Util;
 using KaVE.Model.Events.CompletionEvent;
 using KaVE.Model.Names;
+using KaVE.Utils.Assertion;
 using KaVE.VsFeedbackGenerator.Utils;
 using Util = KaVE.VsFeedbackGenerator.Utils.XamlFormattingUtil;
 
@@ -37,6 +38,8 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
         private const string Space = " ";
         private const string CurlyBracketOpen = "{";
         private const string CurlyBracketClose = "}";
+        private const string GreaterThan = "&gt;";
+        private const string LessThan = "&lt;";
         private const string CompletionMarker = "<Italic Foreground=\"Blue\">$</Italic>";
 
         public static string ToXaml(this Context context)
@@ -147,7 +150,11 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
 
         private static void AppendTypeDeclarationLine(this StringBuilder builder, int indent, ITypeHierarchy hierarchy)
         {
-            builder.Append(indent, Util.Bold(hierarchy.Element.ToTypeCategory()), Space, hierarchy.Element.Name);
+            builder.Append(
+                indent,
+                Util.Bold(hierarchy.Element.ToTypeCategory()),
+                Space,
+                FormatTypeName(hierarchy.Element));
             if (hierarchy.HasSupertypes)
             {
                 builder.AppendSupertypes(hierarchy);
@@ -166,7 +173,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
                 supertypes.Add(hierarchy.Extends);
             }
             supertypes.AddRange(hierarchy.Implements);
-            builder.Append(string.Join(", ", supertypes.Select(t => t.Element.Name)));
+            builder.Append(string.Join(", ", supertypes.Select(t => FormatTypeName(t.Element))));
         }
 
         private static void AppendTypeBody(this StringBuilder builder, Context context)
@@ -227,13 +234,13 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
         {
             if (method.IsConstructor)
             {
-                builder.Append(indent, method.DeclaringType.Name);
+                builder.Append(indent, FormatTypeName(method.DeclaringType));
             }
             else
             {
-                builder.Append(indent, method.ReturnType.Name, Space, method.Name);
+                builder.Append(indent, FormatTypeName(method.ReturnType), Space, method.Name);
             }
-            builder.AppendParameterList(method, p => p.ValueType.Name + Space + p.Name);
+            builder.AppendParameterList(method, p => FormatTypeName(p.ValueType) + Space + p.Name);
             builder.AppendLine();
         }
 
@@ -241,13 +248,13 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
         {
             if (method.IsConstructor)
             {
-                builder.Append(indent, "new", Space, method.DeclaringType.Name);
+                builder.Append(indent, "new", Space, FormatTypeName(method.DeclaringType));
             }
             else
             {
-                builder.Append(indent, method.DeclaringType.Name, ".", method.Name);
+                builder.Append(indent, FormatTypeName(method.DeclaringType), ".", method.Name);
             }
-            builder.AppendParameterList(method, p => p.ValueType.Name);
+            builder.AppendParameterList(method, p => FormatTypeName(p.ValueType));
             builder.AppendLine(";");
         }
 
@@ -270,6 +277,32 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
             {
                 builder.AppendLine(indent, "[", triggerTarget.Identifier, "].", CompletionMarker);
             }
+        }
+
+        private static string FormatTypeName(ITypeName typeName)
+        {
+            if (typeName.HasTypeParameters)
+            {
+                return string.Format(
+                    "{0}{1}{2}{3}",
+                    typeName.Name,
+                    LessThan,
+                    FormatTypeParameters(typeName.TypeParameters),
+                    GreaterThan);
+            }
+            return typeName.Name;
+        }
+
+        private static string FormatTypeParameters(IEnumerable<ITypeName> typeParameters)
+        {
+            return string.Join(
+                ", ",
+                typeParameters.Select(
+                    t =>
+                    {
+                        Asserts.That(t.IsTypeParameter, "Given TypeName isn't a TypeParameter");
+                        return t.TypeParameterShortName;
+                    }));
         }
     }
 }

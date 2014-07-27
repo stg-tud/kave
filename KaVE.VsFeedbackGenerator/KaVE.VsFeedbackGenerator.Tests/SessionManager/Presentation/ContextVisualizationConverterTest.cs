@@ -32,6 +32,8 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
     {
         private const string CompletionMarker = "<Italic Foreground=\"Blue\">$</Italic>";
         private const string SomeOtherNamespace = "ecapseman";
+        private const string SomeGenericType = "NGeneric.Generic`1[[T -> TT]]";
+        private const string GenericTypeRepresentation = "Generic`1&lt;T&gt;";
 
         [Test]
         public void ShouldHandleNoContext()
@@ -380,6 +382,219 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
         }
 
         [Test]
+        public void ShouldHandleGenericDeclaringType()
+        {
+            var context = new Context
+            {
+                TypeShape = new TypeShape {TypeHierarchy = new TypeHierarchy(CreateType(SomeGenericType))}
+            };
+
+            AssertContainsGenericTypeRepresentation(context);
+        }
+
+        [Test]
+        public void ShouldHandleGenericSuperType()
+        {
+            var context = new Context
+            {
+                TypeShape =
+                    new TypeShape
+                    {
+                        TypeHierarchy =
+                            new TypeHierarchy(CreateType("N.Class")) {Extends = CreateTypeHierarchy(SomeGenericType)}
+                    }
+            };
+
+            AssertContainsGenericTypeRepresentation(context);
+        }
+
+        [Test]
+        public void ShouldHandleGenericInterfaceType()
+        {
+            var context = new Context
+            {
+                TypeShape =
+                    new TypeShape
+                    {
+                        TypeHierarchy =
+                            new TypeHierarchy(CreateType("N.Class"))
+                            {
+                                Implements = new HashSet<ITypeHierarchy>
+                                {
+                                    CreateTypeHierarchy(SomeGenericType)
+                                }
+                            }
+                    }
+            };
+
+            AssertContainsGenericTypeRepresentation(context);
+        }
+
+        [Test]
+        public void ShouldHandleGenericEnclosingMethodsReturnType()
+        {
+            var context = new Context
+            {
+                TypeShape = new TypeShape {TypeHierarchy = new TypeHierarchy(CreateType("N.Class"))},
+                EnclosingMethod = Method(SomeGenericType, "N.Ty", "Method", "N.Arg")
+            };
+
+            AssertContainsGenericTypeRepresentation(context);
+        }
+
+        [Test]
+        public void ShouldHandleGenericEnclosingMethodsArgumentType()
+        {
+            var context = new Context
+            {
+                TypeShape = new TypeShape {TypeHierarchy = new TypeHierarchy(CreateType("N.Class"))},
+                EnclosingMethod = Method("N.Ret", "N.Ty", "Method", SomeGenericType)
+            };
+
+            AssertContainsGenericTypeRepresentation(context);
+        }
+
+        [Test]
+        public void ShouldHandleGenericEntryPointsReturnType()
+        {
+            var context = new Context
+            {
+                TypeShape = new TypeShape {TypeHierarchy = new TypeHierarchy(CreateType("N.Class"))},
+                EntryPointToCalledMethods =
+                    new Dictionary<IMethodName, ISet<IMethodName>>
+                    {
+                        {Method(SomeGenericType, "N.Ty", "Method", "N.Arg"), new HashSet<IMethodName>()}
+                    }
+            };
+
+            AssertContainsGenericTypeRepresentation(context);
+        }
+
+        [Test]
+        public void ShouldHandleGenericEntryPointsArgumentType()
+        {
+            var context = new Context
+            {
+                TypeShape = new TypeShape {TypeHierarchy = new TypeHierarchy(CreateType("N.Class"))},
+                EntryPointToCalledMethods =
+                    new Dictionary<IMethodName, ISet<IMethodName>>
+                    {
+                        {Method("N.Ret", "N.Ty", "Method", SomeGenericType), new HashSet<IMethodName>()}
+                    }
+            };
+
+            AssertContainsGenericTypeRepresentation(context);
+        }
+
+        [Test]
+        public void ShouldHandleGenericConstructorEntryPointsDeclaringType()
+        {
+            var context = new Context
+            {
+                TypeShape = new TypeShape {TypeHierarchy = new TypeHierarchy(CreateType("N.Class"))},
+                EntryPointToCalledMethods =
+                    new Dictionary<IMethodName, ISet<IMethodName>>
+                    {
+                        {Method(SomeGenericType, SomeGenericType, ".ctor", "N.Arg"), new HashSet<IMethodName>()}
+                    }
+            };
+
+            AssertContainsGenericTypeRepresentation(context);
+        }
+
+        [Test]
+        public void ShouldHandleGenericConstructorEntryPointsArgumentType()
+        {
+            var context = new Context
+            {
+                TypeShape = new TypeShape {TypeHierarchy = new TypeHierarchy(CreateType("N.Class"))},
+                EntryPointToCalledMethods =
+                    new Dictionary<IMethodName, ISet<IMethodName>>
+                    {
+                        {Method("N.Ret", "N.Ty", ".ctor", SomeGenericType), new HashSet<IMethodName>()}
+                    }
+            };
+
+            AssertContainsGenericTypeRepresentation(context);
+        }
+
+        [Test]
+        public void ShouldHandleGenericCalledMethodsDeclaringType()
+        {
+            var context = new Context
+            {
+                TypeShape = new TypeShape {TypeHierarchy = new TypeHierarchy(CreateType("N.Class"))},
+                EntryPointToCalledMethods =
+                    new Dictionary<IMethodName, ISet<IMethodName>>
+                    {
+                        {
+                            Method("N.Ret", "N.Ty", "Method", "N.Arg"),
+                            new HashSet<IMethodName> {Method("N.Ret1", SomeGenericType, "Method1", "N.Arg1")}
+                        }
+                    }
+            };
+
+            AssertContainsGenericTypeRepresentation(context);
+        }
+
+        [Test]
+        public void ShouldHandleGenericCalledMethodsArgumentType()
+        {
+            var context = new Context
+            {
+                TypeShape = new TypeShape {TypeHierarchy = new TypeHierarchy(CreateType("N.Class"))},
+                EntryPointToCalledMethods =
+                    new Dictionary<IMethodName, ISet<IMethodName>>
+                    {
+                        {
+                            Method("N.Ret", "N.Ty", "Method", "N.Arg"),
+                            new HashSet<IMethodName> {Method("N.Ret1", "N.Ty1", "Method1", SomeGenericType)}
+                        }
+                    }
+            };
+
+            AssertContainsGenericTypeRepresentation(context);
+        }
+
+        [Test]
+        public void ShouldHandleGenericCalledConstructorsDeclaringType()
+        {
+            var context = new Context
+            {
+                TypeShape = new TypeShape {TypeHierarchy = new TypeHierarchy(CreateType("N.Class"))},
+                EntryPointToCalledMethods =
+                    new Dictionary<IMethodName, ISet<IMethodName>>
+                    {
+                        {
+                            Method("N.Ret", "N.Ty", "Method", "N.Arg"),
+                            new HashSet<IMethodName> {Method(SomeGenericType, SomeGenericType, ".ctor", "N.Arg1")}
+                        }
+                    }
+            };
+
+            AssertContainsGenericTypeRepresentation(context);
+        }
+
+        [Test]
+        public void ShouldHandleGenericCalledConstructorsArgumentType()
+        {
+            var context = new Context
+            {
+                TypeShape = new TypeShape {TypeHierarchy = new TypeHierarchy(CreateType("N.Class"))},
+                EntryPointToCalledMethods =
+                    new Dictionary<IMethodName, ISet<IMethodName>>
+                    {
+                        {
+                            Method("N.Ret", "N.Ty", "Method", "N.Arg"),
+                            new HashSet<IMethodName> {Method("N.Ret1", "N.Ty1", ".ctor", SomeGenericType)}
+                        }
+                    }
+            };
+
+            AssertContainsGenericTypeRepresentation(context);
+        }
+
+        [Test]
         public void ShouldIncludeUsingForSuperclass()
         {
             var context = new Context
@@ -575,6 +790,12 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                 -1,
                 actual.IndexOf(pattern, index + 1, System.StringComparison.Ordinal),
                 "Found second occurrence");
+        }
+
+        private static void AssertContainsGenericTypeRepresentation(Context context)
+        {
+            var actual = context.ToXaml();
+            AssertContainsOnce(actual, GenericTypeRepresentation);
         }
 
         private static IMethodName GetFirstCalledMethodFromFirstEntryPoint(Context context)
