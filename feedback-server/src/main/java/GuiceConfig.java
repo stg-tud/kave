@@ -21,9 +21,9 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import kave.FeedbackService;
 import kave.UniqueFileCreator;
-import kave.UploadChecker;
-import kave.feedback.FeedbackService;
+import kave.UploadCleanser;
 
 import org.codehaus.jackson.jaxrs.JacksonJsonProvider;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -56,7 +56,7 @@ public class GuiceConfig extends GuiceServletContextListener {
                 ObjectMapper mapper = new ObjectMapper();
                 bind(JacksonJsonProvider.class).toInstance(new JacksonJsonProvider(mapper));
 
-                bind(UploadChecker.class).in(Scopes.SINGLETON);
+                bind(UploadCleanser.class).in(Scopes.SINGLETON);
 
                 Map<String, String> params = new HashMap<String, String>();
                 params.put(ServletContainer.JSP_TEMPLATES_BASE_PATH, "WEB-INF/jsp");
@@ -64,8 +64,8 @@ public class GuiceConfig extends GuiceServletContextListener {
             }
 
             @Provides
-            public FeedbackService provideFeedbackService(UploadChecker checker) throws IOException {
-                return new FeedbackService(dataDir, tmpDir, checker, tmpUfc, dataUfc);
+            public FeedbackService provideFeedbackService(UploadCleanser cleanser) throws IOException {
+                return new FeedbackService(dataDir, tmpDir, cleanser, tmpUfc, dataUfc);
             }
         });
     }

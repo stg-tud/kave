@@ -2,5 +2,5 @@ eclipse.preferences.version=1
 encoding//src/main/java=UTF-8
 encoding//src/main/webapp/js/index.js=UTF-8
 encoding//src/test/java=UTF-8
-encoding//src/test/java/kave/feedback/FeedbackServiceSeleniumTest.java=UTF-8
+encoding//src/test/java/kave/FeedbackServiceSeleniumTest.java=UTF-8
 encoding/<project>=UTF-8

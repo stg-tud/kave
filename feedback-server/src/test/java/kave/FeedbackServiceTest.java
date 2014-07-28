@@ -13,12 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package kave.feedback;
+package kave;
 
-import static kave.feedback.FeedbackService.INVALID_UPLOAD;
-import static kave.feedback.FeedbackService.NO_SINGLE_UPLOAD;
-import static kave.feedback.FeedbackService.NO_ZIP_FILE;
-import static kave.feedback.FeedbackService.UPLOAD_FAILED;
+import static kave.FeedbackService.NO_SINGLE_UPLOAD;
+import static kave.FeedbackService.NO_ZIP_FILE;
+import static kave.FeedbackService.UPLOAD_FAILED;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -31,10 +30,6 @@ import static org.mockito.Mockito.when;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-
-import kave.Result;
-import kave.UniqueFileCreator;
-import kave.UploadChecker;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.Before;
@@ -53,7 +48,7 @@ public class FeedbackServiceTest {
     private File tmpDir;
 
     private boolean isUploadValid;
-    private UploadChecker checker;
+    private UploadCleanser checker;
 
     private FeedbackServiceFixture fix;
     private FeedbackService sut;
@@ -70,11 +65,15 @@ public class FeedbackServiceTest {
 
         // upload checker
         isUploadValid = true;
-        checker = mock(UploadChecker.class);
-        when(checker.isValidUpload(any(File.class))).thenAnswer(new Answer<Boolean>() {
+        checker = mock(UploadCleanser.class);
+        when(checker.purify(any(File.class))).thenAnswer(new Answer<File>() {
             @Override
-            public Boolean answer(InvocationOnMock invocation) throws Throwable {
-                return isUploadValid;
+            public File answer(InvocationOnMock invocation) throws Throwable {
+                if (isUploadValid) {
+                    return (File) invocation.getArguments()[0];
+                } else {
+                    throw new KaVEException("möp!");
+                }
             }
         });
 
@@ -106,9 +105,9 @@ public class FeedbackServiceTest {
         tmpDir.mkdir();
         File t = new File(dataDir, "t.txt");
         t.createNewFile();
-        
+
         sut = new FeedbackService(dataDir, tmpDir, checker, tmpUfc, dataUfc);
-        
+
         assertTrue(d.exists());
         assertTrue(t.exists());
     }
@@ -136,7 +135,7 @@ public class FeedbackServiceTest {
     public void failingValidationCreateError() throws FileNotFoundException {
         isUploadValid = false;
         Result actual = sut.upload(fix.createZipFileUpload());
-        Result expected = Result.fail(INVALID_UPLOAD);
+        Result expected = Result.fail(UPLOAD_FAILED);
         assertEquals(expected, actual);
 
         assertDirectoryDoesNotContainFile(tmpDir, "10.zip");
@@ -147,8 +146,8 @@ public class FeedbackServiceTest {
         Result actual = sut.upload(fix.createZipFileUpload());
         Result expected = Result.ok();
         assertEquals(expected, actual);
-        
-        verify(checker).isValidUpload(any(File.class));
+
+        verify(checker).purify(any(File.class));
         verify(tmpUfc).createNextUniqueFile();
         verify(dataUfc).createNextUniqueFile();
     }

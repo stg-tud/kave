@@ -18,14 +18,18 @@
  */
 package kave;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
+
+import java.io.File;
 
 import org.junit.Test;
 
-public class UploadCheckerTest {
+public class UploadCleanserTest {
     @Test
-    public void isAlwaysTrue() {
-        UploadChecker sut = new UploadChecker();
-        assertTrue(sut.isValidUpload(null));
+    public void doesReturnTheInput() {
+        UploadCleanser sut = new UploadCleanser();
+        File in = new File("QWERTY");
+        File out = sut.purify(in);
+        assertEquals(in, out);
     }
 }

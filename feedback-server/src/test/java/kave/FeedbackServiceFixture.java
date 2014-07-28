@@ -16,9 +16,9 @@
  * Contributors:
  *    - Sebastian Proksch
  */
-package kave.feedback;
+package kave;
 
-import static kave.feedback.FeedbackService.APPLICATION_ZIP;
+import static kave.FeedbackService.APPLICATION_ZIP;
 import static org.apache.commons.io.FileUtils.writeByteArrayToFile;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;

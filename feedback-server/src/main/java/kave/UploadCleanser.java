@@ -20,8 +20,8 @@ package kave;
 
 import java.io.File;
 
-public class UploadChecker {
-    public boolean isValidUpload(File f) {
-        return true;
+public class UploadCleanser {
+    public File purify(File in) {
+        return in;
     }
 }

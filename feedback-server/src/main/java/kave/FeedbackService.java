@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package kave.feedback;
+package kave;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -25,10 +25,6 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-
-import kave.Result;
-import kave.UniqueFileCreator;
-import kave.UploadChecker;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -45,21 +41,20 @@ public class FeedbackService {
     public static final MediaType APPLICATION_ZIP = new MediaType("application", "zip");
     public static final String NO_SINGLE_UPLOAD = "NO_SINGLE_UPLOAD";
     public static final String NO_ZIP_FILE = "NO_ZIP_FILE";
-    public static final String INVALID_UPLOAD = "INVALID_UPLOAD";
     public static final String UPLOAD_FAILED = "UPLOAD_FAILED";
 
     private final File dataFolder;
     private final File tmpFolder;
-    private final UploadChecker checker;
+    private final UploadCleanser cleanser;
     private final UniqueFileCreator tmpufc;
     private final UniqueFileCreator dataUfc;
 
     @Inject
-    public FeedbackService(File dataFolder, File tmpFolder, UploadChecker checker, UniqueFileCreator tmpufc,
+    public FeedbackService(File dataFolder, File tmpFolder, UploadCleanser cleanser, UniqueFileCreator tmpufc,
             UniqueFileCreator dataUfc) throws IOException {
         this.dataFolder = dataFolder;
         this.tmpFolder = tmpFolder;
-        this.checker = checker;
+        this.cleanser = cleanser;
         this.tmpufc = tmpufc;
         this.dataUfc = dataUfc;
         enforceFolders();
@@ -92,13 +87,9 @@ public class FeedbackService {
             }
 
             File tmpFile = storeTmp(data);
+            File purifiedFile = cleanser.purify(tmpFile);
 
-            if (!checker.isValidUpload(tmpFile)) {
-                tmpFile.delete();
-                return Result.fail(INVALID_UPLOAD);
-            }
-
-            moveToData(tmpFile);
+            moveToData(purifiedFile);
 
             return Result.ok();
         } catch (Exception e) {
@@ -110,7 +101,7 @@ public class FeedbackService {
         int numParts = data.getBodyParts().size();
         return numParts == 1;
     }
-    
+
     private boolean isZipUpload(MultiPart data) {
         BodyPart bp = data.getBodyParts().get(0);
         return APPLICATION_ZIP.equals(bp.getMediaType());
