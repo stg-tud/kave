@@ -75,9 +75,10 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
         private void SetupRefresh()
         {
             // TODO Maybe introduce an specific worker that capsules the boilerplate?
-            _refreshWorker = new BackgroundWorker {WorkerSupportsCancellation = false};
+            _refreshWorker = new BackgroundWorker {WorkerSupportsCancellation = false, WorkerReportsProgress = true};
             _refreshWorker.DoWork += OnRefresh;
             _refreshWorker.RunWorkerCompleted += OnRefreshCompleted;
+            _refreshWorker.ProgressChanged += OnRefreshProgress;
         }
 
         /// <summary>
@@ -85,21 +86,35 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
         /// </summary>
         public void Refresh()
         {
-            SetBusy(Properties.SessionManager.Refreshing);
-            _refreshWorker.RunWorkerAsync();
+            if (!_refreshWorker.IsBusy)
+            {
+                SetBusy(Properties.SessionManager.Refreshing);
+                _refreshWorker.RunWorkerAsync();
+            }
         }
 
         private void OnRefresh(object worker, DoWorkEventArgs workArgs)
         {
+            var bgWorker = (BackgroundWorker) worker;
+            var progressPerFile = 100/_logManager.GetLogs().Count();
+            var progress = 0;
             workArgs.Result =
                 _logManager.GetLogs().Select(
                     log =>
                     {
+                        bgWorker.ReportProgress(progress);
                         var vm = new SessionViewModel(log);
                         vm.ConfirmationRequest.Raised +=
                             (sender, args) => _confirmationRequest.Delegate(args);
+                        progress += progressPerFile;
                         return vm;
-                    });
+                    }).ToList();
+            bgWorker.ReportProgress(100);
+        }
+
+        private void OnRefreshProgress(object sender, ProgressChangedEventArgs e)
+        {
+            SetBusy(Properties.SessionManager.Refreshing + " " + e.ProgressPercentage + "%");
         }
 
         private void OnRefreshCompleted(object sender, RunWorkerCompletedEventArgs args)

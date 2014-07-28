@@ -115,10 +115,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
 
         private void RefreshControl()
         {
-            if (!_feedbackViewModel.IsBusy)
-            {
-                _feedbackViewModel.Refresh();
-            }
+            _feedbackViewModel.Refresh();
         }
 
         private void SetLastReviewDate(DateTime? lastReviewDate)
