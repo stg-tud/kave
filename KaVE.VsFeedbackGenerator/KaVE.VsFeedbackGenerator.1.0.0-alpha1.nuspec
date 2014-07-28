@@ -29,5 +29,8 @@
 				<file src="KaVE.VsFeedbackGenerator\bin\Debug\Newtonsoft.Json.dll" target="ReSharper\v8.2\plugins\Newtonsoft.Json.dll" />
 				<file src="KaVE.VsFeedbackGenerator\bin\Debug\Hardcodet.Wpf.TaskbarNotification.dll" target="ReSharper\v8.2\plugins\Hardcodet.Wpf.TaskbarNotification.dll" />
 				<file src="KaVE.VsFeedbackGenerator\bin\Debug\WpfAnimatedGif.dll" target="ReSharper\v8.2\plugins\WpfAnimatedGif.dll" />
+        <file src="KaVE.VsFeedbackGenerator\MsgBox.dll" target="ReSharper\v8.2\plugins\MsgBox.dll" />
+        <file src="KaVE.VsFeedbackGenerator\UserNotification.dll" target="ReSharper\v8.2\plugins\UserNotification.dll" />
+        <file src="KaVE.VsFeedbackGenerator\smileNet.dll" target="ReSharper\v8.2\plugins\smileNet.dll" />
     </files>
 </package>

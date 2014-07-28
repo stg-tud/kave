@@ -375,7 +375,6 @@
     <Resource Include="Resources\loading.gif">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
-    <Content Include="smileNet.dll" />
     <Resource Include="Resources\arrow.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
