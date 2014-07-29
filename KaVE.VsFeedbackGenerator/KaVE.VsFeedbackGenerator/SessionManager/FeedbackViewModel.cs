@@ -42,7 +42,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
         private readonly ILogManager<IDEEvent> _logManager;
         private readonly IList<SessionViewModel> _sessions;
         private readonly IList<SessionViewModel> _selectedSessions;
-        private BackgroundWorker _refreshWorker;
+        private BackgroundWorker<IList<SessionViewModel>> _refreshWorker;
 
         private DelegateCommand _deleteCommand;
 
@@ -75,9 +75,10 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
         private void SetupRefresh()
         {
             // TODO Maybe introduce an specific worker that capsules the boilerplate?
-            _refreshWorker = new BackgroundWorker {WorkerSupportsCancellation = false, WorkerReportsProgress = true};
+            _refreshWorker = new BackgroundWorker<IList<SessionViewModel>> {WorkerReportsProgress = true};
             _refreshWorker.DoWork += OnRefresh;
-            _refreshWorker.RunWorkerCompleted += OnRefreshCompleted;
+            _refreshWorker.WorkCompleted += OnRefreshCompleted;
+            _refreshWorker.WorkFailed += OnRefreshFailed;
             _refreshWorker.ProgressChanged += OnRefreshProgress;
         }
 
@@ -93,53 +94,42 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             }
         }
 
-        private void OnRefresh(object worker, DoWorkEventArgs workArgs)
+        private IList<SessionViewModel> OnRefresh(BackgroundWorker worker)
         {
-            var bgWorker = (BackgroundWorker) worker;
             var logs = _logManager.GetLogs().ToList();
-            if (logs.Any())
-            {
-                var progressPerFile = 100/logs.Count;
-                var progress = 0;
-                workArgs.Result =
-                    logs.Select(
-                        log =>
-                        {
-                            bgWorker.ReportProgress(progress);
-                            var vm = new SessionViewModel(log);
-                            vm.ConfirmationRequest.Raised +=
-                                (sender, args) => _confirmationRequest.Delegate(args);
-                            progress += progressPerFile;
-                            return vm;
-                        }).ToList();
-            }
-            bgWorker.ReportProgress(100);
+            var progressPerFile = logs.IsEmpty() ? 0 : 100/logs.Count;
+            var progress = 0;
+            worker.ReportProgress(progress);
+            return
+                logs.Select(
+                    log =>
+                    {
+                        var vm = new SessionViewModel(log);
+                        vm.ConfirmationRequest.Raised +=
+                            (sender, args) => _confirmationRequest.Delegate(args);
+                        progress += progressPerFile;
+                        worker.ReportProgress(progress);
+                        return vm;
+                    }).ToList();
         }
 
-        private void OnRefreshProgress(object sender, ProgressChangedEventArgs e)
+        private void OnRefreshProgress(int percentageProgressed)
         {
-            BusyMessage = Properties.SessionManager.Refreshing + " " + e.ProgressPercentage + "%";
+            BusyMessage = Properties.SessionManager.Refreshing + " " + percentageProgressed + "%";
         }
 
-        private void OnRefreshCompleted(object sender, RunWorkerCompletedEventArgs args)
+        private void OnRefreshCompleted(IList<SessionViewModel> result)
         {
-            if (args.Error != null)
-            {
-                HandleRefreshError(args.Error);
-            }
-            else
-            {
-                var sessions = (IEnumerable<SessionViewModel>) args.Result;
-                HandleSuccessfulRefresh(sessions);
-            }
+            HandleSuccessfulRefresh(result);
             SetIdle();
         }
 
-        private void HandleRefreshError(Exception error)
+        private void OnRefreshFailed(Exception e)
         {
             var logEventGenerator = Registry.GetComponent<Generators.ILogger>();
-            logEventGenerator.Error(error);
+            logEventGenerator.Error(e);
             Sessions = null;
+            SetIdle();
         }
 
         private void HandleSuccessfulRefresh(IEnumerable<SessionViewModel> sessions)

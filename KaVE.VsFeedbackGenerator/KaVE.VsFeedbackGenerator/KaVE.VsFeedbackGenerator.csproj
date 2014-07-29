@@ -173,6 +173,7 @@
     <Compile Include="Export\UploadWizardActionHandler.cs" />
     <Compile Include="Export\UploadWizardViewModel.cs" />
     <Compile Include="Utils\ActionManagerExtensions.cs" />
+    <Compile Include="Utils\BackgroundWorker.cs" />
     <Compile Include="Utils\CallbackManager.cs" />
     <Compile Include="TrayNotification\PopupAbortConfirmationDialog.xaml.cs">
       <DependentUpon>PopupAbortConfirmationDialog.xaml</DependentUpon>
