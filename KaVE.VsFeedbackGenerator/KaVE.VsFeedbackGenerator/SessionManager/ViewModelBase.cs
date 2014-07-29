@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq.Expressions;
 using KaVE.Utils.Reflection;
@@ -23,9 +22,6 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
 {
     public abstract class ViewModelBase<T> : INotifyPropertyChanged where T : ViewModelBase<T>
     {
-        private readonly IDictionary<object, string> _propertyNameDictionary =
-            new Dictionary<object, string>();
-
         public event PropertyChangedEventHandler PropertyChanged = delegate { };
 
         private bool _isBusy;
@@ -38,13 +34,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
 
         protected void RaisePropertyChanged<TProperty>(Expression<Func<T, TProperty>> expression)
         {
-            if (!_propertyNameDictionary.ContainsKey(expression))
-            {
-                var propertyName = TypeExtensions<T>.GetPropertyName(expression);
-                _propertyNameDictionary.Add(expression, propertyName);
-            }
-
-            RaisePropertyChanged(_propertyNameDictionary[expression]);
+            RaisePropertyChanged(TypeExtensions<T>.GetPropertyName(expression));
         }
 
         protected void SetBusy(string reason)
@@ -75,7 +65,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
         public string BusyMessage
         {
             get { return _busyMessage; }
-            private set
+            set
             {
                 _busyMessage = value;
                 RaisePropertyChanged(vm => vm.BusyMessage);

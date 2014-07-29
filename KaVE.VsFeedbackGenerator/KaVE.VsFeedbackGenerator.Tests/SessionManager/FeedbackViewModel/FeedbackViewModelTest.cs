@@ -70,14 +70,13 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModel
         {
             _uut.Refresh();
 
-            Assert.AreEqual(Properties.SessionManager.Refreshing, _uut.BusyMessage);
+            Assert.IsTrue(_uut.BusyMessage.StartsWith(Properties.SessionManager.Refreshing));
         }
 
         [Test]
         public void ShouldGetAllLogsFromLogManagerOnRefresh()
         {
-            _uut.Refresh();
-            WaitForRefreshToFinish();
+            RefreshFeedbackViewModel();
 
             _mockLogManager.Verify(lm => lm.GetLogs());
         }
@@ -92,8 +91,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModel
             };
             _mockLogManager.Setup(lm => lm.GetLogs()).Returns(logs);
 
-            _uut.Refresh();
-            WaitForRefreshToFinish();
+            RefreshFeedbackViewModel();
 
             var actuals = _uut.Sessions.ToList();
             Assert.AreEqual(2, actuals.Count);
@@ -107,8 +105,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModel
             var hasEventsChanged = false;
             _uut.OnPropertyChanged(self => self.AreAnyEventsPresent, newVal => hasEventsChanged = true);
 
-            _uut.Refresh();
-            WaitForRefreshToFinish();
+            RefreshFeedbackViewModel();
 
             Assert.IsTrue(hasEventsChanged);
         }
@@ -119,8 +116,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModel
             var exception = new AssertException("test exception");
             _mockLogManager.Setup(lm => lm.GetLogs()).Throws(exception);
 
-            _uut.Refresh();
-            WaitForRefreshToFinish();
+            RefreshFeedbackViewModel();
 
             Assert.IsFalse(_uut.Sessions.Any());
             _mockLogger.Verify(l => l.Error(exception));
@@ -218,6 +214,11 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModel
         private void RefreshFeedbackViewModelWithSessions(IEnumerable<ILog<IDEEvent>> sessions)
         {
             _mockLogManager.Setup(m => m.GetLogs()).Returns(sessions);
+            RefreshFeedbackViewModel();
+        }
+
+        private void RefreshFeedbackViewModel()
+        {
             _uut.Refresh();
             WaitForRefreshToFinish();
         }

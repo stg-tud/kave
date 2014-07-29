@@ -96,25 +96,29 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
         private void OnRefresh(object worker, DoWorkEventArgs workArgs)
         {
             var bgWorker = (BackgroundWorker) worker;
-            var progressPerFile = 100/_logManager.GetLogs().Count();
-            var progress = 0;
-            workArgs.Result =
-                _logManager.GetLogs().Select(
-                    log =>
-                    {
-                        bgWorker.ReportProgress(progress);
-                        var vm = new SessionViewModel(log);
-                        vm.ConfirmationRequest.Raised +=
-                            (sender, args) => _confirmationRequest.Delegate(args);
-                        progress += progressPerFile;
-                        return vm;
-                    }).ToList();
+            var logs = _logManager.GetLogs().ToList();
+            if (logs.Any())
+            {
+                var progressPerFile = 100/logs.Count;
+                var progress = 0;
+                workArgs.Result =
+                    logs.Select(
+                        log =>
+                        {
+                            bgWorker.ReportProgress(progress);
+                            var vm = new SessionViewModel(log);
+                            vm.ConfirmationRequest.Raised +=
+                                (sender, args) => _confirmationRequest.Delegate(args);
+                            progress += progressPerFile;
+                            return vm;
+                        }).ToList();
+            }
             bgWorker.ReportProgress(100);
         }
 
         private void OnRefreshProgress(object sender, ProgressChangedEventArgs e)
         {
-            SetBusy(Properties.SessionManager.Refreshing + " " + e.ProgressPercentage + "%");
+            BusyMessage = Properties.SessionManager.Refreshing + " " + e.ProgressPercentage + "%";
         }
 
         private void OnRefreshCompleted(object sender, RunWorkerCompletedEventArgs args)
@@ -143,7 +147,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             var oldSelectedSessions = _selectedSessions.Select(s => s.Log).ToList();
             var oldSelectedEvents = CollectSelectedEvents();
 
-            Sessions =  sessions;
+            Sessions = sessions;
 
             var newSelectedSessions = Sessions.Where(s => oldSelectedSessions.Contains(s.Log)).ToList();
             if (newSelectedSessions.Any())
@@ -151,7 +155,8 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
                 SessionSelection(this, newSelectedSessions);
                 if (SingleSelectedSession != null)
                 {
-                    var newSelectedEvents = SingleSelectedSession.Events.Where(e => oldSelectedEvents.Contains(e.Event)).ToList();
+                    var newSelectedEvents =
+                        SingleSelectedSession.Events.Where(e => oldSelectedEvents.Contains(e.Event)).ToList();
                     if (newSelectedEvents.Any())
                     {
                         EventSelection(this, newSelectedEvents);
