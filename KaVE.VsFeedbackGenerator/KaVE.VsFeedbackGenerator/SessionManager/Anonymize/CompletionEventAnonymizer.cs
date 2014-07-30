@@ -23,6 +23,7 @@ using JetBrains.Util;
 using KaVE.Model.Events;
 using KaVE.Model.Events.CompletionEvent;
 using KaVE.Model.Names;
+using KaVE.Utils.Assertion;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
 {
@@ -56,14 +57,8 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
 
         private static void AnonymizeCodeNames(Context context)
         {
-            if (context.EnclosingMethod != null)
-            {
-                context.EnclosingMethod = context.EnclosingMethod.ToAnonymousName();
-            }
-            if (context.TriggerTarget != null)
-            {
-                context.TriggerTarget = context.TriggerTarget.ToAnonymousName();
-            }
+            context.EnclosingMethod = context.EnclosingMethod.ToAnonymousName();
+            context.TriggerTarget = context.TriggerTarget.ToAnonymousName();
             AnonymizeCodeNames(context.TypeShape.TypeHierarchy);
             context.TypeShape.MethodHierarchies.ForEach(AnonymizeCodeNames);
             AnonymizeCodeNames(context.EntryPointToCalledMethods);
@@ -98,6 +93,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
             foreach (var entryPointToCalledMethod in entryPointToCalledMethods)
             {
                 var entryPoint = entryPointToCalledMethod.Key.ToAnonymousName();
+                Asserts.NotNull(entryPoint, "dictionary key cannot be null");
                 var calledMethods = ToAnonymousNames(entryPointToCalledMethod.Value);
                 anonymizedEntryPoints[entryPoint] = calledMethods;
             }

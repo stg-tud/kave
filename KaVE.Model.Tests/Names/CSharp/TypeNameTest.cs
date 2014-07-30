@@ -350,7 +350,7 @@ namespace KaVE.Model.Tests.Names.CSharp
         {
             var uut = TypeName.Get("?");
 
-            Assert.IsNull(uut.Namespace);
+            Assert.AreSame(NamespaceName.UnknownName, uut.Namespace);
         }
 
         [TestCase("System.Object, mscorlib, 4.0.0.0", "mscorlib, 4.0.0.0"),
@@ -364,11 +364,11 @@ namespace KaVE.Model.Tests.Names.CSharp
         }
 
         [Test]
-        public void UnknownTypeShouldNotHaveAssembly()
+        public void UnknownTypeShouldHaveUnknownAssembly()
         {
             var uut = TypeName.Get("?");
 
-            Assert.IsNull(uut.Assembly);
+            Assert.AreSame(AssemblyName.UnknownName, uut.Assembly);
         }
 
         [Test]

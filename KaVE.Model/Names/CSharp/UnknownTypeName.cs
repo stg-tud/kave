@@ -23,7 +23,6 @@ namespace KaVE.Model.Names.CSharp
 {
     public class UnknownTypeName : TypeName
     {
-        
         public new const string Identifier = "?";
 
         public static ITypeName Instance
@@ -51,12 +50,12 @@ namespace KaVE.Model.Names.CSharp
 
         public override IAssemblyName Assembly
         {
-            get { return null; }
+            get { return AssemblyName.UnknownName; }
         }
 
         public override INamespaceName Namespace
         {
-            get { return null; }
+            get { return NamespaceName.UnknownName; }
         }
     }
 }

@@ -12,7 +12,11 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sven Amann
  */
+
 using KaVE.Model.Names.CSharp;
 using NUnit.Framework;
 
@@ -29,6 +33,14 @@ namespace KaVE.Model.Tests.Names.CSharp
             Assert.AreEqual("ChangedEventHandler", eventName.HandlerType.FullName);
             Assert.AreEqual("TextBox", eventName.DeclaringType.FullName);
             Assert.AreEqual("Changed", eventName.Name);
+        }
+
+        [Test]
+        public void ShouldBeUnknownEvent()
+        {
+            Assert.AreSame(TypeName.UnknownName, EventName.UnknownName.HandlerType);
+            Assert.AreSame(TypeName.UnknownName, EventName.UnknownName.DeclaringType);
+            Assert.AreEqual("???", EventName.UnknownName.Name);
         }
     }
 }

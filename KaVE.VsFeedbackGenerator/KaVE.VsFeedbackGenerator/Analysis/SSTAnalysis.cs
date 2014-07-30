@@ -57,7 +57,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis
                     var dElem = d.DeclaredElement;
                     var dName = dElem.GetName<IMethodName>();
 
-                    if (dName != null && !epNames.Contains(dName))
+                    if (!epNames.Contains(dName))
                     {
                         var decl = new MethodDeclaration
                         {

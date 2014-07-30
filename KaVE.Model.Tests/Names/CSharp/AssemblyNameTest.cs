@@ -12,7 +12,11 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sven Amann
  */
+
 using KaVE.Model.Names.CSharp;
 using NUnit.Framework;
 
@@ -39,8 +43,17 @@ namespace KaVE.Model.Tests.Names.CSharp
             var assemblyName = AssemblyName.Get(identifier);
 
             Assert.AreEqual("assembly", assemblyName.Name);
-            Assert.IsNull(assemblyName.AssemblyVersion);
+            Assert.AreSame(AssemblyVersion.UnknownName, assemblyName.AssemblyVersion);
             Assert.AreEqual(identifier, assemblyName.Identifier);
+        }
+
+        [Test]
+        public void ShouldHaveUnknownVersionIfUnknown()
+        {
+            var uut = AssemblyName.UnknownName;
+
+            Assert.AreEqual("???", uut.Name);
+            Assert.AreSame(AssemblyVersion.UnknownName, uut.AssemblyVersion);
         }
     }
 }

@@ -12,7 +12,11 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sebastian Proksch
  */
+
 using System.Collections.Generic;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.Resolve;
@@ -35,11 +39,8 @@ namespace KaVE.VsFeedbackGenerator.Analysis
             foreach (var m in FindImplementedMethodsInType())
             {
                 var name = m.GetName<IMethodName>();
-                if (name != null)
-                {
-                    var declaration = m.CollectDeclarationInfo(name);
-                    typeShape.MethodHierarchies.Add(declaration);
-                }
+                var declaration = m.CollectDeclarationInfo(name);
+                typeShape.MethodHierarchies.Add(declaration);
             }
 
             typeShape.TypeHierarchy = CreateTypeHierarchy(
@@ -58,7 +59,6 @@ namespace KaVE.VsFeedbackGenerator.Analysis
             return new HashSet<IMethod>();
         }
 
-        
 
         private static TypeHierarchy CreateTypeHierarchy(ITypeElement type, ISubstitution substitution)
         {

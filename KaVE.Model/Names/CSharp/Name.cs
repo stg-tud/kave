@@ -12,7 +12,11 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sven Amann
  */
+
 using System.Runtime.Serialization;
 using KaVE.Utils.Collections;
 
@@ -21,7 +25,15 @@ namespace KaVE.Model.Names.CSharp
     [DataContract]
     public class Name : IName
     {
-        private static readonly WeakReferenceDictionary<string, Name> NameRegistry = new WeakReferenceDictionary<string, Name>();
+        protected const string UnknownNameIdentifier = "???";
+
+        private static readonly WeakReferenceDictionary<string, Name> NameRegistry =
+            new WeakReferenceDictionary<string, Name>();
+
+        public static IName UnknownName
+        {
+            get { return Get(UnknownNameIdentifier); }
+        }
 
         public static Name Get(string identifier)
         {
@@ -32,7 +44,7 @@ namespace KaVE.Model.Names.CSharp
             return NameRegistry[identifier];
         }
 
-        [DataMember(Order=1)]
+        [DataMember(Order = 1)]
         public string Identifier { get; private set; }
 
         protected Name(string identifier)

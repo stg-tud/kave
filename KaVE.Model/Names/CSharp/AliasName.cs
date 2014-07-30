@@ -12,22 +12,31 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sven Amann
  */
+
 using KaVE.Model.Utils;
 
 namespace KaVE.Model.Names.CSharp
 {
     /// <summary>
-    /// Aliases are defined by using statements, like "using alias = Some.Reference;". A special case is the alias
-    /// "global" that represents the global namespace by convention.
+    ///     Aliases are defined by using statements, like "using alias = Some.Reference;". A special case is the alias
+    ///     "global" that represents the global namespace by convention.
     /// </summary>
     public class AliasName : Name
     {
         private static readonly WeakNameCache<AliasName> Registry = WeakNameCache<AliasName>.Get(
             id => new AliasName(id));
 
+        public new static AliasName UnknownName
+        {
+            get { return Get(UnknownNameIdentifier); }
+        }
+
         /// <summary>
-        /// Alias names are valid C# identifiers that are not keywords, plus the special alias 'global'.
+        ///     Alias names are valid C# identifiers that are not keywords, plus the special alias 'global'.
         /// </summary>
         public new static AliasName Get(string identifier)
         {

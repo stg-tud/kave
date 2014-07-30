@@ -12,13 +12,21 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sven Amann
  */
+
+using KaVE.JetBrains.Annotations;
+
 namespace KaVE.Model.Names
 {
     public interface IAssemblyName : IName
     {
+        [NotNull]
         IAssemblyVersion AssemblyVersion { get; }
 
+        [NotNull]
         string Name { get; }
     }
 }

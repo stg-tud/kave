@@ -12,7 +12,11 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sven Amann
  */
+
 using KaVE.Model.Utils;
 
 namespace KaVE.Model.Names.CSharp
@@ -22,12 +26,21 @@ namespace KaVE.Model.Names.CSharp
         private static readonly WeakNameCache<EventName> Registry = WeakNameCache<EventName>.Get(
             id => new EventName(id));
 
+        public new static IEventName UnknownName
+        {
+            get { return Get("[?] [?].???"); }
+        }
+
         /// <summary>
-        /// Event names follow the scheme <code>'modifiers' ['event-handler-type name'] ['declaring-type name'].'name'</code>.
-        /// Examples of type names are:
-        /// <list type="bullet">
-        ///     <item><description><code>[ChangeEventHandler, IO, 1.2.3.4] [TextBox, GUI, 5.6.7.8].Changed</code></description></item>
-        /// </list>
+        ///     Event names follow the scheme <code>'modifiers' ['event-handler-type name'] ['declaring-type name'].'name'</code>.
+        ///     Examples of type names are:
+        ///     <list type="bullet">
+        ///         <item>
+        ///             <description>
+        ///                 <code>[ChangeEventHandler, IO, 1.2.3.4] [TextBox, GUI, 5.6.7.8].Changed</code>
+        ///             </description>
+        ///         </item>
+        ///     </list>
         /// </summary>
         public new static EventName Get(string identifier)
         {

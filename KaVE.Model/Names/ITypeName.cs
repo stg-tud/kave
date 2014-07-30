@@ -12,7 +12,13 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sven Amann
  */
+
+using KaVE.JetBrains.Annotations;
+
 namespace KaVE.Model.Names
 {
     /// <summary>
@@ -24,12 +30,14 @@ namespace KaVE.Model.Names
         /// <summary>
         /// The name of the bundle (e.g., assembly) this type is declared in.
         /// </summary>
+        [NotNull]
         IAssemblyName Assembly { get; }
 
         /// <summary>
         /// A full-qualified identifier of the namespace
         /// containing the type.
         /// </summary>
+        [NotNull]
         INamespaceName Namespace { get; }
 
         /// <summary>
@@ -38,8 +46,10 @@ namespace KaVE.Model.Names
         /// </summary>
         ITypeName DeclaringType { get; }
 
+        [NotNull]
         string FullName { get; }
 
+        [NotNull]
         string Name { get; }
 
         bool IsUnknownType { get; }

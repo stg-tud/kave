@@ -12,7 +12,11 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sven Amann
  */
+
 using KaVE.Model.Names.CSharp;
 using NUnit.Framework;
 
@@ -183,6 +187,15 @@ namespace KaVE.Model.Tests.Names.CSharp
             var methodName = MethodName.Get("static [I, A, 1.0.2.0] [K, K, 0.1.0.2].m()");
 
             Assert.IsTrue(methodName.IsStatic);
+        }
+
+        [Test]
+        public void ShouldBeUnknownMethod()
+        {
+            Assert.AreSame(TypeName.UnknownName, MethodName.UnknownName.ReturnType);
+            Assert.AreSame(TypeName.UnknownName, MethodName.UnknownName.DeclaringType);
+            Assert.AreEqual("???", MethodName.UnknownName.Name);
+            Assert.IsFalse(MethodName.UnknownName.HasParameters);
         }
     }
 }

@@ -83,11 +83,6 @@ namespace KaVE.VsFeedbackGenerator.Utils
             ProgressChanged(e.ProgressPercentage);
         }
 
-        public void ReportProgress(int percentageProgressed)
-        {
-            _backgroundWorker.ReportProgress(percentageProgressed);
-        }
-
         public void RunWorkerAsync()
         {
             _backgroundWorker.RunWorkerAsync();

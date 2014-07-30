@@ -12,7 +12,11 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sven Amann
  */
+
 using KaVE.Model.Utils;
 
 namespace KaVE.Model.Names.CSharp
@@ -24,6 +28,11 @@ namespace KaVE.Model.Names.CSharp
 
         private static readonly WeakNameCache<PropertyName> Registry =
             WeakNameCache<PropertyName>.Get(id => new PropertyName(id));
+
+        public new static PropertyName UnknownName
+        {
+            get { return Get("[?] [?].???"); }
+        }
 
         /// <summary>
         /// Property names follow the scheme <code>'modifiers' ['value type name'] ['declaring type name'].'property name'</code>.

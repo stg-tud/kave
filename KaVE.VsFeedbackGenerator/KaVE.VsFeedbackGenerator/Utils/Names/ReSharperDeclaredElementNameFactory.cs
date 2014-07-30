@@ -37,7 +37,6 @@ using KaVE.Utils.Assertion;
 
 namespace KaVE.VsFeedbackGenerator.Utils.Names
 {
-    // TODO @Sven: See if we can make the factory methods return the correct type with non-null guarantee, to safe casts in clients
     public static class ReSharperDeclaredElementNameFactory
     {
         [NotNull]
@@ -52,17 +51,17 @@ namespace KaVE.VsFeedbackGenerator.Utils.Names
             return instance.Element.GetName(instance.Substitution);
         }
 
-        [CanBeNull]
+        [NotNull]
         public static TName GetName<TName>([NotNull] this IClrDeclaredElement element) where TName : class, IName
         {
-            return element.GetName() as TName;
+            return (TName) element.GetName();
         }
 
-        [CanBeNull]
+        [NotNull]
         public static TName GetName<TName>([NotNull] this IDeclaredElement element, [NotNull] ISubstitution substitution)
             where TName : class, IName
         {
-            return element.GetName(substitution) as TName;
+            return (TName) element.GetName(substitution);
         }
 
         [NotNull]
@@ -74,32 +73,38 @@ namespace KaVE.VsFeedbackGenerator.Utils.Names
         [NotNull]
         public static IName GetName([NotNull] this IDeclaredElement element, [NotNull] ISubstitution substitution)
         {
-            if (element.ShortName == SharedImplUtil.MISSING_DECLARATION_NAME)
-            {
-                // TODO @Seb: is this a sensible return value?
-                return Name.Get(SharedImplUtil.MISSING_DECLARATION_NAME);
-            }
-            return IfElementIs<INamespaceName, INamespace>(element, GetName, substitution) ??
-                   IfElementIs<ITypeName, ITypeParameter>(element, GetName, substitution) ??
-                   IfElementIs<ITypeName, ITypeElement>(element, GetName, substitution) ??
-                   IfElementIs<IMethodName, IFunction>(element, GetName, substitution) ??
-                   IfElementIs<IParameterName, IParameter>(element, GetName, substitution) ??
-                   IfElementIs<IFieldName, IField>(element, GetName, substitution) ??
-                   IfElementIs<IPropertyName, IProperty>(element, GetName, substitution) ??
-                   IfElementIs<IEventName, IEvent>(element, GetName, substitution) ??
-                   IfElementIs<IName, ITypeOwner>(element, GetName, substitution) ??
-                   IfElementIs<IName, IAlias>(element, GetName, substitution) ??
+            return IfElementIs<INamespaceName, INamespace>(element, GetName, substitution, NamespaceName.UnknownName) ??
+                   IfElementIs<ITypeName, ITypeParameter>(element, GetName, substitution, TypeName.UnknownName) ??
+                   IfElementIs<ITypeName, ITypeElement>(element, GetName, substitution, TypeName.UnknownName) ??
+                   IfElementIs<IMethodName, IFunction>(element, GetName, substitution, MethodName.UnknownName) ??
+                   IfElementIs<IParameterName, IParameter>(element, GetName, substitution, ParameterName.UnknownName) ??
+                   IfElementIs<IFieldName, IField>(element, GetName, substitution, FieldName.UnknownName) ??
+                   IfElementIs<IPropertyName, IProperty>(element, GetName, substitution, PropertyName.UnknownName) ??
+                   IfElementIs<IEventName, IEvent>(element, GetName, substitution, EventName.UnknownName) ??
+                   IfElementIs<IName, ITypeOwner>(element, GetName, substitution, LocalVariableName.UnknownName) ??
+                   IfElementIs<IName, IAlias>(element, GetName, substitution, AliasName.UnknownName) ??
+                   IfElementIs<IName, IDeclaredElement>(element, (e, s) => null, substitution, Name.UnknownName) ??
                    Asserts.Fail<IName>("unknown kind of declared element: {0}", element.GetType());
+        }
+
+        private static bool IsMissingDeclaration(IDeclaredElement element)
+        {
+            return element.ShortName == SharedImplUtil.MISSING_DECLARATION_NAME;
         }
 
         private static TN IfElementIs<TN, TE>(IDeclaredElement element,
             DeclaredElementToName<TN, TE> map,
-            ISubstitution substitution)
+            ISubstitution substitution,
+            TN unknownName)
             where TE : class, IDeclaredElement
             where TN : class, IName
         {
             var specificElement = element as TE;
-            return specificElement != null ? map(specificElement, substitution) : null;
+            if (specificElement == null)
+            {
+                return null;
+            }
+            return IsMissingDeclaration(specificElement) ? unknownName : map(specificElement, substitution);
         }
 
         private delegate TN DeclaredElementToName<out TN, in TE>(TE element, ISubstitution substitution)
@@ -109,11 +114,19 @@ namespace KaVE.VsFeedbackGenerator.Utils.Names
         [NotNull]
         private static ITypeName GetName(this ITypeElement typeElement, ISubstitution substitution)
         {
-            return IfElementIs<ITypeName, IDelegate>(typeElement, GetName, substitution) ??
-                   IfElementIs<ITypeName, IEnum>(typeElement, GetName, substitution) ??
-                   IfElementIs<ITypeName, IInterface>(typeElement, GetName, substitution) ??
-                   IfElementIs<ITypeName, IStruct>(typeElement, GetName, substitution) ??
+            return IfElementIs<IDelegate>(typeElement, GetName, substitution) ??
+                   IfElementIs<IEnum>(typeElement, GetName, substitution) ??
+                   IfElementIs<IInterface>(typeElement, GetName, substitution) ??
+                   IfElementIs<IStruct>(typeElement, GetName, substitution) ??
                    TypeName.Get(typeElement.GetAssemblyQualifiedName(substitution));
+        }
+
+        private static ITypeName IfElementIs<TE>(ITypeElement typeElement,
+            DeclaredElementToName<ITypeName, TE> map,
+            ISubstitution substitution)
+            where TE : class, IDeclaredElement
+        {
+            return IfElementIs(typeElement, map, substitution, TypeName.UnknownName);
         }
 
         [NotNull]

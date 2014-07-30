@@ -28,6 +28,8 @@ namespace KaVE.Model.Names.CSharp
         private static readonly WeakNameCache<MethodName> Registry =
             WeakNameCache<MethodName>.Get(id => new MethodName(id));
 
+        public static new IMethodName UnknownName {get { return Get("[?] [?].???()"); }}
+
         /// <summary>
         ///     Method type names follow the scheme
         ///     <code>'modifiers' ['return type name'] ['declaring type name'].'method name'('parameter names')</code>.

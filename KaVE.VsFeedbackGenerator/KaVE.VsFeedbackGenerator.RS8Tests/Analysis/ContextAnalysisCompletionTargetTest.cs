@@ -22,27 +22,27 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
     internal class ContextAnalysisCompletionTargetTest : BaseTest
     {
         [Test]
-        public void ShouldBeTypeOfReference()
+        public void ShouldBeReference()
         {
             CompleteInMethod(@"
                 System.Collections.IList list;
                 list.$
             ");
 
-            var expected = TypeName.Get("i:System.Collections.IList, mscorlib, 4.0.0.0");
+            var expected = LocalVariableName.Get("[i:System.Collections.IList, mscorlib, 4.0.0.0] list");
             var actual = ResultContext.TriggerTarget;
             Assert.AreEqual(expected, actual);
         }
 
         [Test]
-        public void ShouldBeTypeOfReferenceWhenPrefixIsTyped()
+        public void ShouldBeReferenceWhenPrefixIsTyped()
         {
             CompleteInMethod(@"
                 System.Collections.IList list;
                 list.Add$
             ");
 
-            var expected = TypeName.Get("i:System.Collections.IList, mscorlib, 4.0.0.0");
+            var expected = LocalVariableName.Get("[i:System.Collections.IList, mscorlib, 4.0.0.0] list");
             var actual = ResultContext.TriggerTarget;
             Assert.AreEqual(expected, actual);
         }
@@ -168,23 +168,26 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
         }
 
         [Test]
-        public void ShouldBeFieldValueType()
+        public void ShouldBeField()
         {
-            CompleteInClass(@"
-                private string Field;
-                
-                public void M()
+            CompleteInFile(@"
+                class C
                 {
-                    Field.$
+                    private string Field;
+                
+                    public void M()
+                    {
+                        Field.$
+                    }
                 }");
 
             var actual = ResultContext.TriggerTarget;
-            var expected = TypeName.Get("System.String, mscorlib, 4.0.0.0");
+            var expected = FieldName.Get("[System.String, mscorlib, 4.0.0.0] [C, TestProject].Field");
             Assert.AreEqual(expected, actual);
         }
 
         [Test]
-        public void ShouldBeConstType()
+        public void ShouldBeConstLocalVariable()
         {
             CompleteInMethod(@"
                 const string Const;
@@ -192,7 +195,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
             ");
 
             var actual = ResultContext.TriggerTarget;
-            var expected = TypeName.Get("System.String, mscorlib, 4.0.0.0");
+            var expected = LocalVariableName.Get("[System.String, mscorlib, 4.0.0.0] Const");
             Assert.AreEqual(expected, actual);
         }
 
@@ -218,7 +221,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
             ");
 
             var actual = ResultContext.TriggerTarget;
-            var expected = TypeName.Get("System.Object, mscorlib, 4.0.0.0");
+            var expected = LocalVariableName.Get("[System.Object, mscorlib, 4.0.0.0] o");
             Assert.AreEqual(expected, actual);
         }
 
@@ -232,7 +235,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
             ");
 
             var actual = ResultContext.TriggerTarget;
-            var expected = TypeName.Get("System.Object, mscorlib, 4.0.0.0");
+            var expected = LocalVariableName.Get("[System.Object, mscorlib, 4.0.0.0] o");
             Assert.AreEqual(expected, actual);
         }
 
@@ -258,6 +261,20 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
 
             var actual = ResultContext.TriggerTarget;
             var expected = TypeName.Get("System.Object, mscorlib, 4.0.0.0");
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void ShouldBeParameter()
+        {
+            CompleteInClass(@"
+                void M(object param)
+                {
+                    param.$
+                }");
+
+            var expected = ParameterName.Get("[System.Object, mscorlib, 4.0.0.0] param");
+            var actual = ResultContext.TriggerTarget;
             Assert.AreEqual(expected, actual);
         }
     }

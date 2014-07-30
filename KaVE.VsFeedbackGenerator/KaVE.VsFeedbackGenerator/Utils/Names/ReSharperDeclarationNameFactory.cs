@@ -12,7 +12,11 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sven Amann
  */
+
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using KaVE.JetBrains.Annotations;
 using KaVE.Model.Names;
@@ -22,7 +26,7 @@ namespace KaVE.VsFeedbackGenerator.Utils.Names
 {
     public static class ReSharperDeclarationNameFactory
     {
-        [CanBeNull]
+        [NotNull]
         public static IMethodName GetName([NotNull] this IMethodDeclaration methodDeclaration)
         {
             var declaredElement = methodDeclaration.DeclaredElement;

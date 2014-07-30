@@ -12,7 +12,11 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sven Amann
  */
+
 using KaVE.Model.Utils;
 
 namespace KaVE.Model.Names.CSharp
@@ -24,18 +28,45 @@ namespace KaVE.Model.Names.CSharp
         public const string VarArgsModifier = "params";
         public const string OptionalModifier = "opt";
 
-        private static readonly WeakNameCache<ParameterName> Registry = WeakNameCache<ParameterName>.Get(id => new ParameterName(id));
+        private static readonly WeakNameCache<ParameterName> Registry =
+            WeakNameCache<ParameterName>.Get(id => new ParameterName(id));
+
+        public static new IParameterName UnknownName
+        {
+            get { return Get("[?] ???"); }
+        }
 
         /// <summary>
-        /// Parameter names follow the scheme <code>'modifiers' ['parameter type name'] 'parameter name'</code>.
-        /// Examples of parameter names are:
-        /// <list type="bullet">
-        ///     <item><description><code>[System.Int32, mscore, 4.0.0.0] size</code></description></item>
-        ///     <item><description><code>out [System.Int32, mscore, 4.0.0.0] outputParameter</code></description></item>
-        ///     <item><description><code>params [System.Int32, mscore, 4.0.0.0] varArgsParamter</code></description></item>
-        ///     <item><description><code>ref [System.Int32, mscore, 4.0.0.0] referenceParameter</code></description></item>
-        ///     <item><description><code>opt [System.Int32, mscore, 4.0.0.0] optionalParameter</code> (i.e., parameter with default value)</description></item>
-        /// </list>
+        ///     Parameter names follow the scheme <code>'modifiers' ['parameter type name'] 'parameter name'</code>.
+        ///     Examples of parameter names are:
+        ///     <list type="bullet">
+        ///         <item>
+        ///             <description>
+        ///                 <code>[System.Int32, mscore, 4.0.0.0] size</code>
+        ///             </description>
+        ///         </item>
+        ///         <item>
+        ///             <description>
+        ///                 <code>out [System.Int32, mscore, 4.0.0.0] outputParameter</code>
+        ///             </description>
+        ///         </item>
+        ///         <item>
+        ///             <description>
+        ///                 <code>params [System.Int32, mscore, 4.0.0.0] varArgsParamter</code>
+        ///             </description>
+        ///         </item>
+        ///         <item>
+        ///             <description>
+        ///                 <code>ref [System.Int32, mscore, 4.0.0.0] referenceParameter</code>
+        ///             </description>
+        ///         </item>
+        ///         <item>
+        ///             <description>
+        ///                 <code>opt [System.Int32, mscore, 4.0.0.0] optionalParameter</code> (i.e., parameter with
+        ///                 default value)
+        ///             </description>
+        ///         </item>
+        ///     </list>
         /// </summary>
         public new static ParameterName Get(string identifier)
         {
@@ -43,9 +74,7 @@ namespace KaVE.Model.Names.CSharp
         }
 
         private ParameterName(string identifier)
-            : base(identifier)
-        {
-        }
+            : base(identifier) {}
 
         public ITypeName ValueType
         {

@@ -43,9 +43,10 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
             return Convert.ToBase64String(hash).Replace('+', '-').Replace('/', '_');
         }
 
-        [NotNull]
-        public static TName ToAnonymousName<TName>([NotNull] this TName name) where TName : class, IName
+        [ContractAnnotation("notnull => notnull")]
+        public static TName ToAnonymousName<TName>(this TName name) where TName : class, IName
         {
+            if (name == null) return null;
             return ToAnonymousName<DocumentName, TName>(name, ToAnonymousName) ??
                    ToAnonymousName<WindowName, TName>(name, ToAnonymousName) ??
                    ToAnonymousName<SolutionName, TName>(name, ToAnonymousName) ??
@@ -254,7 +255,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
 
         private static bool IsEnclosingProject(this IAssemblyName assembly)
         {
-            return assembly.AssemblyVersion == null;
+            return assembly.AssemblyVersion == AssemblyVersion.UnknownName;
         }
 
         private static AliasName ToAnonymousName(AliasName alias)

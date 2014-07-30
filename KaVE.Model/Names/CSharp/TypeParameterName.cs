@@ -199,6 +199,7 @@ namespace KaVE.Model.Names.CSharp
             get { return true; }
         }
 
+        [NotNull]
         public string TypeParameterShortName
         {
             get
@@ -208,6 +209,7 @@ namespace KaVE.Model.Names.CSharp
             }
         }
 
+        [NotNull]
         public ITypeName TypeParameterType
         {
             get

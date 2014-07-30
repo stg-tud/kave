@@ -12,14 +12,18 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sven Amann
  */
+
 using KaVE.Model.Names.CSharp;
 using NUnit.Framework;
 
 namespace KaVE.Model.Tests.Names.CSharp
 {
     [TestFixture]
-    class AssemblyVersionTest
+    internal class AssemblyVersionTest
     {
         [Test]
         public void ShouldEqualsSameVersion()
@@ -29,6 +33,17 @@ namespace KaVE.Model.Tests.Names.CSharp
 
             Assert.AreEqual(v1, v2);
             Assert.IsTrue(v1 == v2);
+        }
+
+        [Test]
+        public void ShouldParseVersion()
+        {
+            var uut = AssemblyVersion.Get("4.6.3.5");
+
+            Assert.AreEqual(4, uut.Major);
+            Assert.AreEqual(6, uut.Minor);
+            Assert.AreEqual(3, uut.Build);
+            Assert.AreEqual(5, uut.Revision);
         }
 
         [Test]
@@ -51,6 +66,17 @@ namespace KaVE.Model.Tests.Names.CSharp
             Assert.IsTrue(AssemblyVersion.Get("4.13.0.0") > assemblyVersion);
             Assert.IsTrue(AssemblyVersion.Get("4.3.1337.69") > assemblyVersion);
             Assert.IsTrue(AssemblyVersion.Get("4.3.2.666") > assemblyVersion);
+        }
+
+        [Test]
+        public void ShouldBeUnknown()
+        {
+            var uut = AssemblyVersion.UnknownName;
+
+            Assert.AreEqual(-1, uut.Major);
+            Assert.AreEqual(-1, uut.Minor);
+            Assert.AreEqual(-1, uut.Build);
+            Assert.AreEqual(-1, uut.Revision);
         }
     }
 }

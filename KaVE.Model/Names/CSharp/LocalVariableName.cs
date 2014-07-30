@@ -12,24 +12,34 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sven Amann
  */
+
 using KaVE.Model.Utils;
 
 namespace KaVE.Model.Names.CSharp
 {
     public class LocalVariableName : Name
     {
-        private static readonly WeakNameCache<LocalVariableName> Registry = WeakNameCache<LocalVariableName>.Get(id => new LocalVariableName(id));
+        private static readonly WeakNameCache<LocalVariableName> Registry =
+            WeakNameCache<LocalVariableName>.Get(id => new LocalVariableName(id));
+
+        public new static LocalVariableName UnknownName
+        {
+            get { return Get("[?] ???"); }
+        }
 
         /// <summary>
-        /// Local variable names have the form '[value-type-identifier] variable-name'.
+        ///     Local variable names have the form '[value-type-identifier] variable-name'.
         /// </summary>
         public new static LocalVariableName Get(string identifier)
         {
             return Registry.GetOrCreate(identifier);
         }
 
-        private LocalVariableName(string identifier) : base(identifier) { }
+        private LocalVariableName(string identifier) : base(identifier) {}
 
         public string Name
         {

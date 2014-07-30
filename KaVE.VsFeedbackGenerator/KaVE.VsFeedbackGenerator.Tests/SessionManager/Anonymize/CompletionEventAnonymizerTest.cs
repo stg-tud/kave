@@ -247,6 +247,19 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
 
         // TODO @Seb: Add tests for entryPointToGroum when groum implementation is done
 
+        [Test]
+        public void ShouldNotFailIfPropertiesAreNotSet()
+        {
+            ExportSettings.RemoveCodeNames = true;
+            ExportSettings.RemoveDurations = true;
+            ExportSettings.RemoveStartTimes = true;
+
+            OriginalEvent.Context.TriggerTarget = null;
+            OriginalEvent.Context.EnclosingMethod = null;
+
+            WhenEventIsAnonymized();
+        }
+
         private static void AssertAreEquivalent(IDictionary<IMethodName, ISet<IMethodName>> expected,
             IDictionary<IMethodName, ISet<IMethodName>> actual)
         {

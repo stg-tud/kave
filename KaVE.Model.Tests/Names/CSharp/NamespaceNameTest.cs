@@ -12,7 +12,11 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sven Amann
  */
+
 using KaVE.Model.Names;
 using KaVE.Model.Names.CSharp;
 using NUnit.Framework;
@@ -70,6 +74,15 @@ namespace KaVE.Model.Tests.Names.CSharp
         public void ShouldHaveGlobalNamespaceAsGrandParent()
         {
             Assert.AreEqual(NamespaceName.GlobalNamespace, _testNamespaceParentName.ParentNamespace);
+        }
+
+        [Test]
+        public void ShouldBeUnknownNamespace()
+        {
+            var uut = NamespaceName.UnknownName;
+
+            Assert.AreEqual("???", uut.Identifier);
+            Assert.AreSame(NamespaceName.GlobalNamespace, uut.ParentNamespace);
         }
     }
 }

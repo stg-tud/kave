@@ -29,6 +29,11 @@ namespace KaVE.Model.Names.CSharp
 
         public static readonly INamespaceName GlobalNamespace = Get(GlobaleNamespaceIdentifier);
 
+        public new static INamespaceName UnknownName
+        {
+            get { return Get(UnknownNameIdentifier); }
+        }
+
         /// <summary>
         /// Namespace names follow the scheme <code>'parent namespace name'.'namespace name'</code>. An exception is the global namespace, which has the empty string as its identfier.
         /// Examples of namespace names are:

@@ -12,7 +12,11 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sven Amann
  */
+
 using KaVE.Model.Names.CSharp;
 using NUnit.Framework;
 
@@ -55,6 +59,14 @@ namespace KaVE.Model.Tests.Names.CSharp
             Assert.IsTrue(fieldName.ValueType.HasTypeParameters);
             Assert.AreEqual(declaringTypeIdentifier, fieldName.DeclaringType.Identifier);
             Assert.IsTrue(fieldName.DeclaringType.HasTypeParameters);
+        }
+
+        [Test]
+        public void ShouldBeUnknownField()
+        {
+            Assert.AreSame(TypeName.UnknownName, FieldName.UnknownName.ValueType);
+            Assert.AreSame(TypeName.UnknownName, FieldName.UnknownName.DeclaringType);
+            Assert.AreEqual("???", FieldName.UnknownName.Name);
         }
     }
 }

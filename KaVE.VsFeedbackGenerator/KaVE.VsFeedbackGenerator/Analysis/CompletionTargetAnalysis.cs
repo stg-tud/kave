@@ -12,7 +12,12 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sven Amann
  */
+
+using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Resolve;
 using JetBrains.ReSharper.Psi.Tree;
@@ -93,7 +98,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis
                 }
                 else
                 {
-                    Result = GetExpressionType(referenceExpressionParam) ?? GetName(referenceExpressionParam.Reference);
+                    Result = GetName(referenceExpressionParam.Reference);
                 }
             }
 
@@ -104,17 +109,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis
 
             public override void VisitCSharpExpression(ICSharpExpression cSharpExpressionParam)
             {
-                Result = GetExpressionType(cSharpExpressionParam);
-            }
-
-            private ITypeName GetExpressionType(ICSharpExpression cSharpExpressionParam)
-            {
-                var type = cSharpExpressionParam.Type();
-                if (!type.IsUnknown)
-                {
-                    return type.GetName();
-                }
-                return null;
+                Result = cSharpExpressionParam.Type().GetName();
             }
         }
     }

@@ -29,6 +29,11 @@ namespace KaVE.Model.Names.CSharp
     {
         private static readonly WeakNameCache<ITypeName> Registry = WeakNameCache<ITypeName>.Get(CreateTypeName);
 
+        public new static ITypeName UnknownName
+        {
+            get { return UnknownTypeName.Instance; }
+        }
+
         private static ITypeName CreateTypeName(string identifier)
         {
             // checked first, because it's a special case

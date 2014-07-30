@@ -12,12 +12,20 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sven Amann
  */
+
 using System;
 
 namespace KaVE.Model.Names
 {
     public interface IAssemblyVersion : IName, IComparable<IAssemblyVersion>
     {
+        int Major { get; }
+        int Minor { get; }
+        int Build { get; }
+        int Revision { get; }
     }
 }
