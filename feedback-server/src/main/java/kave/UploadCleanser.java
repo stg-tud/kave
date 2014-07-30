@@ -20,6 +20,7 @@ package kave;
 
 import java.io.Closeable;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -37,52 +38,68 @@ import org.codehaus.jackson.map.ObjectMapper;
 public class UploadCleanser {
 
     private UniqueFileCreator ufc;
+    private ObjectMapper mapper;
 
     public UploadCleanser(UniqueFileCreator ufc) {
         this.ufc = ufc;
+        mapper = new ObjectMapper();
+        mapper.configure(JsonGenerator.Feature.AUTO_CLOSE_TARGET, false);
     }
 
     public File purify(File in) throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(JsonGenerator.Feature.AUTO_CLOSE_TARGET, false);
-        
         File out = ufc.createNextUniqueFile();
-        int num = 0;
-
         ZipFile zfin = null;
-        ZipOutputStream zfout = null;
 
         try {
             zfin = new ZipFile(in);
+            cloneTo(zfin, out);
+        } finally {
+            closeQuietly(zfin);
+        }
+
+        return out;
+    }
+
+    private void cloneTo(ZipFile zfin, File out) throws FileNotFoundException, IOException {
+        ZipOutputStream zfout = null;
+        try {
+            int num = 0;
             zfout = new ZipOutputStream(new FileOutputStream(out));
 
             Enumeration<? extends ZipEntry> entries = zfin.entries();
             while (entries.hasMoreElements()) {
                 ZipEntry entry = entries.nextElement();
-                String nextFileName = (num++) + ".json";
+                Map<String, Object> content = readEntry(zfin, entry);
 
-                InputStream zein = null;
-                try {
-                    zein = zfin.getInputStream(entry);
-                    @SuppressWarnings("unchecked")
-                    Map<String, Object> content = mapper.readValue(zein, Map.class);
-
-                    zfout.putNextEntry(new ZipEntry(nextFileName));
-                    mapper.writeValue(zfout, content);
-                    zfout.closeEntry();
-                } catch (JsonParseException jpe) {
-                    // just ignore file
-                } finally {
-                    IOUtils.closeQuietly(zein);
+                if (content != null) {
+                    String fileName = (num++) + ".json";
+                    putEntry(content, zfout, fileName);
                 }
-
             }
         } finally {
-            closeQuietly(zfin);
             IOUtils.closeQuietly(zfout);
         }
+    }
 
-        return out;
+    @SuppressWarnings("unchecked")
+    private Map<String, Object> readEntry(ZipFile zfin, ZipEntry entry) throws IOException {
+        InputStream zein = null;
+        Map<String, Object> content = null;
+        try {
+            zein = zfin.getInputStream(entry);
+            content = mapper.readValue(zein, Map.class);
+        } catch (JsonParseException jpe) {
+            // just ignore file
+        } finally {
+            IOUtils.closeQuietly(zein);
+        }
+        return content;
+    }
+
+    private void putEntry(Map<String, Object> content, ZipOutputStream zfout, String fileName) throws IOException {
+        zfout.putNextEntry(new ZipEntry(fileName));
+        mapper.writeValue(zfout, content);
+        zfout.closeEntry();
     }
 
     private static void closeQuietly(Closeable c) {
