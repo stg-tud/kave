@@ -194,12 +194,12 @@ public class UploadCleanserTest {
         assertEquals(expectedContent, actualContent);
     }
 
-    private Map<String, String> readZipFile(File f) {
+    public static Map<String, String> readZipFile(File f) {
         Map<String, String> fileContent = Maps.newLinkedHashMap();
         ZipFile zipFile = null;
         InputStream entryStream = null;
         try {
-            zipFile = new java.util.zip.ZipFile(actualOut);
+            zipFile = new ZipFile(f);
             Enumeration<? extends ZipEntry> entries = zipFile.entries();
             while (entries.hasMoreElements()) {
                 ZipEntry ze = entries.nextElement();

@@ -86,7 +86,13 @@ public class FeedbackServiceSeleniumTest {
         whenFormIsSubmitted();
 
         thenResponseIs(growlNoticeLocator, "Die Datei wurde erfolgreich hochgeladen.");
-        FeedbackServiceTest.assertDirectoryContainsFile(dataDir, "0.zip", fileToUpload);
+        String fileName = findUploadedFileName();
+        FeedbackServiceTest.assertDirectoryContainsZipFile(dataDir, fileName, fileToUpload);
+    }
+
+    private String findUploadedFileName() {
+        String[] files = dataDir.list();
+        return files[0];
     }
 
     @Test

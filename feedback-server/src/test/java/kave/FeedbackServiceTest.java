@@ -30,6 +30,7 @@ import static org.mockito.Mockito.when;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.Before;
@@ -155,7 +156,7 @@ public class FeedbackServiceTest {
     @Test
     public void uploadCreatesCorrectFile() throws IOException {
         sut.upload(fix.createZipFileUpload());
-        assertDirectoryContainsFile(dataDir, "10.zip", fix.getZipFile());
+        assertDirectoryContainsZipFile(dataDir, "10.zip", fix.getZipFile());
         assertDirectoryDoesNotContainFile(tmpDir, "10.zip");
     }
 
@@ -166,13 +167,14 @@ public class FeedbackServiceTest {
         assertEquals(expected, actual);
     }
 
-    public static void assertDirectoryContainsFile(File directory, final String expectedFileName,
+    public static void assertDirectoryContainsZipFile(File directory, final String expectedFileName,
             File expectedFileContent) throws IOException {
         File actualFile = new File(directory, expectedFileName);
         assertTrue(actualFile.exists());
-        long expectedFileHash = FileUtils.checksumCRC32(expectedFileContent);
-        long actualFileHash = FileUtils.checksumCRC32(actualFile);
-        assertEquals(expectedFileHash, actualFileHash);
+        
+        Map<String, String> expecteds = UploadCleanserTest.readZipFile(expectedFileContent);
+        Map<String, String> actuals = UploadCleanserTest.readZipFile(actualFile);
+        assertEquals(expecteds, actuals);
     }
 
     private static void assertDirectoryDoesNotContainFile(File dir, String fileName) {

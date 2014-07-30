@@ -28,6 +28,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Random;
 import java.util.zip.ZipEntry;
@@ -64,10 +65,9 @@ public class FeedbackServiceFixture {
 
     private void writeZipFile(File f) throws ZipException, IOException {
         ZipOutputStream out = new ZipOutputStream(new FileOutputStream(f));
-        out.putNextEntry(new ZipEntry("a.json"));
+        out.putNextEntry(new ZipEntry("0.json"));
 
-        byte[] data = createRandomByteArray();
-        out.write(data, 0, data.length);
+        out.write("{\"asd\":4}".getBytes(Charset.forName("UTF-8")));
         out.closeEntry();
 
         out.close();
