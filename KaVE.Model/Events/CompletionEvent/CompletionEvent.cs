@@ -21,6 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
+using KaVE.JetBrains.Annotations;
 using KaVE.Utils;
 
 namespace KaVE.Model.Events.CompletionEvent
@@ -52,6 +53,7 @@ namespace KaVE.Model.Events.CompletionEvent
         public CompletionEvent()
         {
             Selections = new List<ProposalSelection>();
+            ProposalCollection = new ProposalCollection();
         }
 
         /// <summary>
@@ -64,7 +66,7 @@ namespace KaVE.Model.Events.CompletionEvent
         /// <summary>
         /// The completion proposals shown to the user.
         /// </summary>
-        [DataMember]
+        [DataMember, NotNull]
         public ProposalCollection ProposalCollection { get; set; }
 
         /// <summary>
@@ -80,10 +82,10 @@ namespace KaVE.Model.Events.CompletionEvent
         /// 
         /// Add selections by <see cref="AddSelection"/>.
         /// </summary>
-        [DataMember]
+        [DataMember, NotNull]
         public IList<ProposalSelection> Selections { get; set; }
 
-        public void AddSelection(Proposal proposal)
+        public void AddSelection([NotNull] Proposal proposal)
         {
             var selectedAfter = DateTime.Now - TriggeredAt;
             Selections.Add(new ProposalSelection(proposal) {SelectedAfter = selectedAfter});
@@ -120,9 +122,9 @@ namespace KaVE.Model.Events.CompletionEvent
             {
                 var hashCode = base.GetHashCode();
                 hashCode = (hashCode*397) ^ (Context != null ? Context.GetHashCode() : 0);
-                hashCode = (hashCode*397) ^ (ProposalCollection != null ? ProposalCollection.GetHashCode() : 0);
+                hashCode = (hashCode*397) ^ ProposalCollection.GetHashCode();
                 hashCode = (hashCode*397) ^ (Prefix != null ? Prefix.GetHashCode() : 0);
-                hashCode = (hashCode*397) ^ (Selections != null ? Selections.GetHashCode() : 0);
+                hashCode = (hashCode*397) ^ Selections.GetHashCode();
                 hashCode = (hashCode*397) ^ (int) TerminatedBy;
                 hashCode = (hashCode*397) ^ (int) TerminatedAs;
                 return hashCode;

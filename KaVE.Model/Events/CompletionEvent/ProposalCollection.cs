@@ -12,7 +12,11 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sven Amann
  */
+
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -33,7 +37,7 @@ namespace KaVE.Model.Events.CompletionEvent
         /// <summary>
         /// The proposals contained in this collection.
         /// </summary>
-        [DataMember]
+        [DataMember, NotNull]
         public IList<Proposal> Proposals { get; private set; }
 
         /// <summary>
@@ -48,7 +52,7 @@ namespace KaVE.Model.Events.CompletionEvent
         /// <summary>
         /// Creates a collection from a list of proposals.
         /// </summary>
-        public ProposalCollection(IList<Proposal> proposals)
+        public ProposalCollection([NotNull] IList<Proposal> proposals)
         {
             Proposals = proposals;
         }

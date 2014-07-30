@@ -12,7 +12,11 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sven Amann
  */
+
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -32,14 +36,17 @@ namespace KaVE.VsFeedbackGenerator.Utils
 {
     public static class LookupItemUtils
     {
+        [NotNull]
         public static ProposalCollection ToProposalCollection([NotNull] this IEnumerable<ILookupItem> items)
         {
             return new ProposalCollection(items.Select(ToProposal).ToList());
         }
 
+        [NotNull]
         public static Proposal ToProposal([CanBeNull] this ILookupItem lookupItem)
         {
-            return lookupItem == null ? null : new Proposal {Name = lookupItem.GetName()};
+            var name = lookupItem == null ? Name.UnknownName : lookupItem.GetName();
+            return new Proposal {Name = name};
         }
 
         private static IName GetName([NotNull] this ILookupItem lookupItem)
