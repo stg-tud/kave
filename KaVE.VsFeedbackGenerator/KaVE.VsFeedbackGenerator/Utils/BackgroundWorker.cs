@@ -22,17 +22,42 @@ using System.ComponentModel;
 
 namespace KaVE.VsFeedbackGenerator.Utils
 {
-    public class BackgroundWorker<TResult>
+    public class BackgroundWorker<TResult> : BackgroundWorkerBase<object, TResult>
     {
-        private readonly BackgroundWorker _backgroundWorker;
-
         public delegate TResult DoWorkEventHandler(BackgroundWorker worker);
 
         public event DoWorkEventHandler DoWork = delegate { return default(TResult); };
 
+        public void RunWorkerAsync()
+        {
+            InternalWorker.RunWorkerAsync();
+        }
+
+        protected override TResult DoWorkHandler(BackgroundWorker worker, object argument)
+        {
+            return DoWork(worker);
+        }
+    }
+
+    public class BackgroundWorker<TArgument, TResult> : BackgroundWorkerBase<TArgument, TResult>
+    {
+        public delegate TResult DoWorkEventHandler(BackgroundWorker worker, TArgument argument);
+
+        public event DoWorkEventHandler DoWork = delegate { return default(TResult); };
+
+        protected override TResult DoWorkHandler(BackgroundWorker worker, TArgument argument)
+        {
+            return DoWork(worker, argument);
+        }
+    }
+
+    public abstract class BackgroundWorkerBase<TArgument, TResult>
+    {
+        protected readonly BackgroundWorker InternalWorker;
+
         public delegate void WorkCompletedEventHandler(TResult result);
 
-        public event WorkCompletedEventHandler WorkCompleted = delegate { }; 
+        public event WorkCompletedEventHandler WorkCompleted = delegate { };
 
         public delegate void WorkFailedEventHandler(Exception exception);
 
@@ -40,31 +65,33 @@ namespace KaVE.VsFeedbackGenerator.Utils
 
         public delegate void ProgressChangedEventHandler(int percentageProgressed);
 
-        public event ProgressChangedEventHandler ProgressChanged = delegate { }; 
+        public event ProgressChangedEventHandler ProgressChanged = delegate { };
 
-        public BackgroundWorker()
+        public BackgroundWorkerBase()
         {
-            _backgroundWorker = new BackgroundWorker{WorkerSupportsCancellation = false};
-            _backgroundWorker.DoWork += DoWorkHandler;
-            _backgroundWorker.RunWorkerCompleted += WorkCompletedHandler;
-            _backgroundWorker.ProgressChanged += ProgressChangedHandler;
+            InternalWorker = new BackgroundWorker {WorkerSupportsCancellation = false};
+            InternalWorker.DoWork += DoWorkHandler;
+            InternalWorker.RunWorkerCompleted += WorkCompletedHandler;
+            InternalWorker.ProgressChanged += ProgressChangedHandler;
         }
 
         public bool WorkerReportsProgress
         {
-            get { return _backgroundWorker.WorkerReportsProgress; }
-            set { _backgroundWorker.WorkerReportsProgress = value; }
+            get { return InternalWorker.WorkerReportsProgress; }
+            set { InternalWorker.WorkerReportsProgress = value; }
         }
 
         public bool IsBusy
         {
-            get { return _backgroundWorker.IsBusy; }
+            get { return InternalWorker.IsBusy; }
         }
 
         private void DoWorkHandler(object sender, DoWorkEventArgs e)
         {
-            e.Result = DoWork(_backgroundWorker);
+            e.Result = DoWorkHandler(InternalWorker, (TArgument) e.Argument);
         }
+
+        protected abstract TResult DoWorkHandler(BackgroundWorker worker, TArgument argument);
 
         private void WorkCompletedHandler(object sender, RunWorkerCompletedEventArgs e)
         {
@@ -74,7 +101,7 @@ namespace KaVE.VsFeedbackGenerator.Utils
             }
             else
             {
-                WorkCompleted((TResult)e.Result);
+                WorkCompleted((TResult) e.Result);
             }
         }
 
@@ -83,9 +110,9 @@ namespace KaVE.VsFeedbackGenerator.Utils
             ProgressChanged(e.ProgressPercentage);
         }
 
-        public void RunWorkerAsync()
+        public void RunWorkerAsync(TArgument argument)
         {
-            _backgroundWorker.RunWorkerAsync();
+            InternalWorker.RunWorkerAsync(argument);
         }
     }
 }

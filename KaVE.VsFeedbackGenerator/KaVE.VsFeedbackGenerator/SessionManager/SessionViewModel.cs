@@ -43,7 +43,6 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
         public SessionViewModel(ILog<IDEEvent> log)
         {
             Log = log;
-            DeleteEventsCommand = new DelegateCommand(OnDeleteSelectedEvents, CanDeleteEvents);
             // loading eagerly because lazy approaches led to UI display bugs
             using (var logReader = log.NewLogReader())
             {
@@ -58,10 +57,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
 
         public DateTime StartDate
         {
-            get
-            {
-                return Log.Date;
-            }
+            get { return Log.Date; }
         }
 
         public IEnumerable<EventViewModel> Events
@@ -72,10 +68,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
                 CollectionExtensions.AddRange(_events, value);
             }
 
-            get
-            {
-                return _events;
-            }
+            get { return _events; }
         }
 
         public IEnumerable<EventViewModel> SelectedEvents
@@ -93,13 +86,20 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
 
         public EventViewModel SingleSelectedEvent
         {
-            get
-            {
-                return _selectedEvents.Count == 1 ? _selectedEvents.First() : null;
-            }
+            get { return _selectedEvents.Count == 1 ? _selectedEvents.First() : null; }
         }
 
-        public DelegateCommand DeleteEventsCommand { get; private set; }
+        private DelegateCommand _deleteEventsCommand;
+
+        public DelegateCommand DeleteEventsCommand
+        {
+            get
+            {
+                return
+                    _deleteEventsCommand ??
+                    (_deleteEventsCommand = new DelegateCommand(OnDeleteSelectedEvents, CanDeleteEvents));
+            }
+        }
 
         private void OnDeleteSelectedEvents()
         {
