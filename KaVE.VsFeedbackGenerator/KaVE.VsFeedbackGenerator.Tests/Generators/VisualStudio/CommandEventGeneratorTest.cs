@@ -242,6 +242,15 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.VisualStudio
         }
 
         [Test]
+        public void ShouldNotFailIfReSharperCorrespondentCommandEndsWithoutStarting()
+        {
+            var command = GetCommand("{E272D1BE-8216-4919-AFA3-EEB57FAB3537}", 42, "ReSharper_KaVE_VsFeedbackGenerator_SessionManager");
+            GivenCommandIsDefined(command);
+
+            WhenCommandEnds(command);
+        }
+
+        [Test]
         public void ShouldSetTriggerToClickedIfCommandBarButtonIsClickedBeforeCommandExecutes()
         {
             var command = GetCommand("{test}", 1, "test");

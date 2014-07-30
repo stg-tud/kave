@@ -25,6 +25,7 @@ using EnvDTE;
 using JetBrains.Application;
 using JetBrains.Application.Components;
 using JetBrains.Util;
+using KaVE.JetBrains.Annotations;
 using KaVE.Model.Events;
 using KaVE.Utils.Assertion;
 using KaVE.Utils.IO;
@@ -145,7 +146,7 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
             ref bool cancelDefault)
         {
             var commandEvent = CreateCommandEvent(guid, id);
-            EnqueueEvent(guid, id, commandEvent);
+            EnqueueEvent(commandEvent);
 
             _preceedingCommandBarEvent = null;
         }
@@ -154,13 +155,11 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
         {
             var command = GetCommand(guid, id);
             var commandEvent = _preceedingCommandBarEvent ?? Create<CommandEvent>();
-
             if (_preceedingCommandBarEvent == null && command.HasPressedKeyBinding())
             {
                 commandEvent.TriggeredBy = IDEEvent.Trigger.Shortcut;
             }
-
-            commandEvent.CommandId = GetCommandId(command);
+            commandEvent.CommandId = command.GetId();
             return commandEvent;
         }
 
@@ -176,75 +175,69 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
             }
         }
 
-        private static string GetCommandId(Command command)
+        private void EnqueueEvent(CommandEvent evt)
         {
-            var commandName = command.GetName();
-            return commandName != null ? commandName.Identifier : null;
-        }
-
-        private void EnqueueEvent(string guid, int id, CommandEvent evt)
-        {
-            var commandKey = CommandKey(guid, id);
-            Asserts.Not(_eventQueue.ContainsKey(commandKey), "executing same event twice at a time: {0}", evt);
-            _eventQueue.Add(commandKey, evt);
-        }
-
-        private static string CommandKey(string guid, int id)
-        {
-            return guid + ":" + id;
+            Asserts.Not(_eventQueue.ContainsKey(evt.CommandId), "executing same event twice at a time: {0}", evt);
+            _eventQueue.Add(evt.CommandId, evt);
         }
 
         private void HandleCommandEnded(string guid, int id, object customIn, object customOut)
         {
-            var commandEvent = TakeFromQueue(guid, id);
-            if (commandEvent == null && id == 107 && guid.Equals("{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}"))
+            var commandId = GetCommand(guid, id).GetId();
+            if (IsSuperfluousCommand(commandId))
+            {
+                return;
+            }
+            var commandEvent = TakeFromQueue(commandId);
+            if (commandEvent == null && IsBasicCompletionCommand(commandId))
             {
                 // for some reason code-completion command is not started...
                 commandEvent = CreateCommandEvent(guid, id);
             }
-            Asserts.NotNull(commandEvent, "command finished that didn't start: {0}", GetCommand(guid, id).GetName());
-            if (IsSuperfluousCommand(commandEvent))
-            {
-                return;
-            }
+            Asserts.NotNull(commandEvent, "command finished that didn't start: {0}", commandId);
             FireNow(commandEvent);
         }
 
-        private CommandEvent TakeFromQueue(string guid, int id)
+        private static bool IsBasicCompletionCommand(string commandId)
         {
-            var commandKey = CommandKey(guid, id);
+            return commandId.Equals("{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:107:BasicCompletion");
+        }
+
+        private CommandEvent TakeFromQueue(string commandId)
+        {
+            var commandKey = commandId;
             CommandEvent evt;
             _eventQueue.TryGetValue(commandKey, out evt);
             _eventQueue.Remove(commandKey);
             return evt;
         }
 
-        private static bool IsSuperfluousCommand(CommandEvent @event)
+        private static bool IsSuperfluousCommand(string commandId)
         {
-            return IsDuplicatedByReSharper(@event) || IsAutomaticEvent(@event);
+            return IsDuplicatedByReSharper(commandId) || IsAutomaticEvent(commandId);
         }
 
         /// <summary>
         ///     There exist ReSharper Actions for these commands, we don't need to track them twice.
         /// </summary>
-        private static bool IsDuplicatedByReSharper(CommandEvent @event)
+        private static bool IsDuplicatedByReSharper(string commandId)
         {
-            return EventsDuplicatedByReSharper.Contains(@event.CommandId) ||
-                   IsReSharperActionEquivalent(@event);
+            return EventsDuplicatedByReSharper.Contains(commandId) ||
+                   IsReSharperActionEquivalent(commandId);
         }
 
-        private static bool IsReSharperActionEquivalent(CommandEvent @event)
+        private static bool IsReSharperActionEquivalent(string commandId)
         {
-            return @event.CommandId.Contains("ReSharper_");
+            return commandId.Contains("ReSharper_");
         }
 
         /// <summary>
         ///     These commands are automatically triggered after every keyboard input. Furthermore, some of them are
         ///     triggered at regular intervals.
         /// </summary>
-        private static bool IsAutomaticEvent(CommandEvent @event)
+        private static bool IsAutomaticEvent(string commandId)
         {
-            return EventsFiredAutomatically.Contains(@event.CommandId);
+            return EventsFiredAutomatically.Contains(commandId);
         }
     }
 
@@ -277,6 +270,11 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
         {
             var bindings = ((object[]) command.Bindings).Cast<string>();
             return KeyUtils.ParseBindings(bindings).Any(b => b.IsPressed());
+        }
+
+        internal static string GetId([NotNull] this Command command)
+        {
+            return command.GetName().Identifier;
         }
     }
 
