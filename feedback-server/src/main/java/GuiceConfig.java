@@ -55,11 +55,14 @@ public class GuiceConfig extends GuiceServletContextListener {
                 ObjectMapper mapper = new ObjectMapper();
                 bind(JacksonJsonProvider.class).toInstance(new JacksonJsonProvider(mapper));
 
-                bind(UploadCleanser.class).toInstance(new UploadCleanser(tmpUfc));
-
                 Map<String, String> params = new HashMap<String, String>();
                 params.put(ServletContainer.JSP_TEMPLATES_BASE_PATH, "WEB-INF/jsp");
                 filterRegex("/((?!css|js|images).)*").through(GuiceContainer.class, params);
+            }
+
+            @Provides
+            public UploadCleanser provideUploadCleanser() {
+                return new UploadCleanser(tmpUfc);
             }
 
             @Provides
