@@ -30,6 +30,7 @@ import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
 import org.apache.commons.io.IOUtils;
+import org.codehaus.jackson.JsonGenerator;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.ObjectMapper;
 
@@ -43,6 +44,8 @@ public class UploadCleanser {
 
     public File purify(File in) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(JsonGenerator.Feature.AUTO_CLOSE_TARGET, false);
+        
         File out = ufc.createNextUniqueFile();
         int num = 0;
 
@@ -76,7 +79,7 @@ public class UploadCleanser {
             }
         } finally {
             closeQuietly(zfin);
-            zfout.close();
+            IOUtils.closeQuietly(zfout);
         }
 
         return out;

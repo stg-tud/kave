@@ -31,7 +31,6 @@ import org.codehaus.jackson.map.ObjectMapper;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Provides;
-import com.google.inject.Scopes;
 import com.google.inject.servlet.GuiceServletContextListener;
 import com.sun.jersey.guice.JerseyServletModule;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
@@ -56,7 +55,7 @@ public class GuiceConfig extends GuiceServletContextListener {
                 ObjectMapper mapper = new ObjectMapper();
                 bind(JacksonJsonProvider.class).toInstance(new JacksonJsonProvider(mapper));
 
-                bind(UploadCleanser.class).in(Scopes.SINGLETON);
+                bind(UploadCleanser.class).toInstance(new UploadCleanser(tmpUfc));
 
                 Map<String, String> params = new HashMap<String, String>();
                 params.put(ServletContainer.JSP_TEMPLATES_BASE_PATH, "WEB-INF/jsp");
