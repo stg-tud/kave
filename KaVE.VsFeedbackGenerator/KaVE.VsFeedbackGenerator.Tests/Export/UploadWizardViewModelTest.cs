@@ -52,6 +52,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Export
         private Mock<IExporter> _mockExporter;
         private Mock<ISettingsStore> _mockSettingStore;
         private InteractionRequestTestHelper<Notification> _notificationHelper;
+        private InteractionRequestTestHelper<LinkNotification> _linkNotificationHelper;
         private TestDateUtils _testDateUtils;
         private Mock<IIoUtils> _mockIoUtils;
         private Mock<ILogger> _mockLogger;
@@ -94,6 +95,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Export
                 _testDateUtils);
 
             _notificationHelper = _uut.NotificationRequest.NewTestHelper();
+            _linkNotificationHelper = _uut.LinkNotificationRequest.NewTestHelper();
         }
 
         [TearDown]
@@ -224,7 +226,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Export
         {
             WhenExportIsExecuted();
 
-            Assert.IsTrue(_notificationHelper.IsRequestRaised);
+            Assert.IsTrue(_linkNotificationHelper.IsRequestRaised);
         }
 
         [Test]
@@ -232,10 +234,10 @@ namespace KaVE.VsFeedbackGenerator.Tests.Export
         {
             WhenExportIsExecuted();
 
-            var actual = _notificationHelper.Context;
+            var actual = _linkNotificationHelper.Context;
             // TODO @Sven: extend setup to include some events that are exported here
             // TODO @Seb: help sven with above task
-            var expected = new Notification
+            var expected = new LinkNotification()
             {
                 Caption = Properties.UploadWizard.window_title,
                 Message = Properties.SessionManager.ExportSuccess.FormatEx(0),
@@ -268,7 +270,6 @@ namespace KaVE.VsFeedbackGenerator.Tests.Export
             {
                 Caption = Properties.UploadWizard.window_title,
                 Message = Properties.SessionManager.ExportFail + ":\nTEST",
-                Link = ""
             };
             Assert.AreEqual(expected, actual);
         }

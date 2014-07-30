@@ -48,6 +48,8 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
 
             EnsureUploadSettingsInitialized();
             RegisterCallback();
+
+            _taskbarIcon.ShowHardBalloonPopup();
         }
 
         private void EnsureUploadSettingsInitialized()

@@ -44,6 +44,7 @@ namespace KaVE.VsFeedbackGenerator.Export
             _uploadWizardViewModel = uploadWizardViewModel;
             _uploadWizardViewModel.PropertyChanged += OnViewModelPropertyChanged;
             _uploadWizardViewModel.NotificationRequest.Raised += new NotificationRequestHandler(this).Handle;
+            _uploadWizardViewModel.LinkNotificationRequest.Raised += new LinkNotificationRequestHandler(this).Handle;
 
             InitializeComponent();
         }

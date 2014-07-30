@@ -15,6 +15,7 @@
  * 
  * Contributors:
  *    - Sven Amann
+ *    - Uli Fahrer
  */
 
 using System;
@@ -30,7 +31,6 @@ using KaVE.VsFeedbackGenerator.SessionManager;
 using KaVE.VsFeedbackGenerator.SessionManager.Presentation;
 using KaVE.VsFeedbackGenerator.Utils;
 using KaVE.VsFeedbackGenerator.Utils.Logging;
-using MsgBox;
 
 namespace KaVE.VsFeedbackGenerator.Export
 {
@@ -44,10 +44,17 @@ namespace KaVE.VsFeedbackGenerator.Export
         private DateTime _exportEndDate;
 
         private readonly InteractionRequest<Notification> _notificationRequest;
+        private readonly InteractionRequest<LinkNotification> _linkNotificationRequest; 
 
+        //TODO: Property & private field? Why no auto generated fields with property?
         public IInteractionRequest<Notification> NotificationRequest
         {
             get { return _notificationRequest; }
+        }
+
+        public IInteractionRequest<LinkNotification> LinkNotificationRequest
+        {
+            get { return _linkNotificationRequest; }
         }
 
         public UploadWizardViewModel(IExporter exporter,
@@ -60,6 +67,7 @@ namespace KaVE.VsFeedbackGenerator.Export
             _settingsStore = settingsStore;
             _dateUtils = dateUtils;
             _notificationRequest = new InteractionRequest<Notification>();
+            _linkNotificationRequest = new InteractionRequest<LinkNotification>();
             _exportWorker = new BackgroundWorker {WorkerSupportsCancellation = false};
             _exportWorker.DoWork += OnExport;
             _exportWorker.RunWorkerCompleted += OnExportCompleted;
@@ -175,27 +183,36 @@ namespace KaVE.VsFeedbackGenerator.Export
         private void ShowExportSucceededMessage(int numberOfExportedEvents)
         {
             var export = _settingsStore.GetSettings<ExportSettings>();
-            RaiseNotificationRequest(
+            RaiseLinkNotificationRequest(
                 string.Format(Properties.SessionManager.ExportSuccess, numberOfExportedEvents),
-                export.UploadUrl, MsgBoxImage.OK);
+                export.UploadUrl);
         }
 
         private void ShowExportFailedMessage(string message)
         {
             RaiseNotificationRequest(
-                Properties.SessionManager.ExportFail + (string.IsNullOrWhiteSpace(message) ? "" : ":\n" + message),
-                img: MsgBoxImage.Error);
+                Properties.SessionManager.ExportFail + (string.IsNullOrWhiteSpace(message) ? "" : ":\n" + message));
         }
 
-        private void RaiseNotificationRequest(string text, string url = "", MsgBoxImage img = MsgBoxImage.Default)
+
+        private void RaiseNotificationRequest(string text)
         {
             _notificationRequest.Raise(
                 new Notification
                 {
                     Caption = Properties.UploadWizard.window_title,
                     Message = text,
+                });
+        }
+
+        private void RaiseLinkNotificationRequest(string text, string url)
+        {
+            _linkNotificationRequest.Raise(
+                new LinkNotification
+                {
+                    Caption = Properties.UploadWizard.window_title,
+                    Message = text,
                     Link = url,
-                    Image = img
                 });
         }
     }

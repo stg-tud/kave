@@ -127,6 +127,8 @@
     <Compile Include="Interactivity\Confirmation.cs" />
     <Compile Include="Interactivity\IInteractionRequest.cs" />
     <Compile Include="Interactivity\InteractionRequestedEventArgs.cs" />
+    <Compile Include="Interactivity\LinkNotification.cs" />
+    <Compile Include="Interactivity\LinkNotificationRequestHandler.cs" />
     <Compile Include="Interactivity\Notification.cs" />
     <Compile Include="Interactivity\NotificationRequestHandler.cs" />
     <Compile Include="Properties\PopupNotification.Designer.cs">

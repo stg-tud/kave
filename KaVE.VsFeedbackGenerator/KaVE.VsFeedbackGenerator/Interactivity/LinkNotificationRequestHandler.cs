@@ -1,5 +1,5 @@
-/*
- * Copyright 2014 Technische Universit�t Darmstadt
+﻿/*
+ * Copyright 2014 Technische Universität Darmstadt
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,6 @@
  * limitations under the License.
  * 
  * Contributors:
- *    - Sven Amann
  *    - Uli Fahrer
  */
 
@@ -23,16 +22,16 @@ using MsgBox;
 
 namespace KaVE.VsFeedbackGenerator.Interactivity
 {
-    public class NotificationRequestHandler
+    class LinkNotificationRequestHandler
     {
         private readonly Window _window;
 
-        public NotificationRequestHandler(DependencyObject parent)
+        public LinkNotificationRequestHandler(DependencyObject parent)
         {
             _window = Window.GetWindow(parent);
         }
 
-        public void Handle(object sender, InteractionRequestedEventArgs<Notification> args)
+        public void Handle(object sender, InteractionRequestedEventArgs<LinkNotification> args)
         {
             var notification = args.Notification;
 
@@ -43,7 +42,9 @@ namespace KaVE.VsFeedbackGenerator.Interactivity
                     notification.Caption,
                     MsgBoxButtons.OK,
                     MsgBoxImage.Default,
-                    MsgBoxResult.OK);
+                    MsgBoxResult.OK,
+                    notification.Link,
+                    notification.Link);
             }
             else
             {
@@ -53,9 +54,8 @@ namespace KaVE.VsFeedbackGenerator.Interactivity
                     notification.Caption,
                     MsgBoxResult.OK,
                     true,
-                    MsgBoxButtons.OK,
-                    MsgBoxImage.Default,
-                    MsgBoxResult.OK);
+                    image: MsgBoxImage.Default,
+                    helpLink: notification.Link);
             }
         }
     }

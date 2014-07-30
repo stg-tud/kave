@@ -1,5 +1,5 @@
-/*
- * Copyright 2014 Technische Universit�t Darmstadt
+﻿/*
+ * Copyright 2014 Technische Universität Darmstadt
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,41 +14,34 @@
  * limitations under the License.
  * 
  * Contributors:
- *    - Sven Amann
  *    - Uli Fahrer
  */
 
-using KaVE.Utils;
-
 namespace KaVE.VsFeedbackGenerator.Interactivity
 {
-    public class Notification
+    public class LinkNotification : Notification
     {
-        public string Caption { get; set; }
-        public string Message { get; set; }
+        public string Link { get; set; }
 
-        protected bool Equals(Notification other)
+        protected bool Equals(LinkNotification other)
         {
-            return string.Equals(Message, other.Message) && string.Equals(Caption, other.Caption);
-        }
-
-        public override bool Equals(object obj)
-        {
-            return this.Equals(obj, Equals);
+            return string.Equals(Message, other.Message) && string.Equals(Caption, other.Caption) &&
+                   string.Equals(Link, other.Link);
         }
 
         public override int GetHashCode()
         {
             unchecked
             {
-                return ((Message != null ? Message.GetHashCode() : 0)*397) ^
-                       (Caption != null ? Caption.GetHashCode() : 0);
+                return ((Message != null ? Message.GetHashCode() : 0) * 397) ^
+                       ((Caption != null ? Caption.GetHashCode() : 0) +
+                        (Link != null ? Link.GetHashCode() : 0) * 17);
             }
         }
 
         public override string ToString()
         {
-            return string.Format("[Caption: {0}, Message: {1}, Link: {2}]", Caption, Message);
+            return string.Format("[Caption: {0}, Message: {1}, Link: {2}]", Caption, Message, Link); 
         }
     }
 }

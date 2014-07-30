@@ -26,15 +26,16 @@ namespace KaVE.VsFeedbackGenerator.Utils
 {
     public static class ActionManagerExtensions
     {
-        public static void ExecuteActionGuarded(this IActionManager actionManager, string actionId, string executeName, IDataContext dataContext = null)
+        public static bool ExecuteActionGuarded(this IActionManager actionManager, string actionId, string executeName, IDataContext dataContext = null)
         {
             var threading = Registry.GetComponent<IThreading>();
             var action = actionManager.GetExecutableAction(actionId);
             if (action != null)
             {
-                threading.ReentrancyGuard.ExecuteOrQueue(EternalLifetime.Instance, executeName,
+                return threading.ReentrancyGuard.ExecuteOrQueue(EternalLifetime.Instance, executeName,
                     () => actionManager.ExecuteActionIfAvailable(action, dataContext));
             }
+            return false;
         }
     }
 }

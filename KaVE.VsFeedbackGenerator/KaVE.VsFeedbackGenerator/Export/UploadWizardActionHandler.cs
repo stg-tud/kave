@@ -41,7 +41,8 @@ namespace KaVE.VsFeedbackGenerator.Export
 
         public static void Execute(IActionManager actionManager)
         {
-            actionManager.ExecuteActionGuarded(ActionId, "KaVE.Feedback.Export");
+            var queued = actionManager.ExecuteActionGuarded(ActionId, "KaVE.Feedback.Export");
+            var p = 1;
         }
 
         public UploadWizardActionHandler()
