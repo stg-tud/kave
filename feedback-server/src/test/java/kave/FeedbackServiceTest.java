@@ -32,7 +32,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Map;
 
-import org.apache.commons.io.FileUtils;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -171,7 +170,7 @@ public class FeedbackServiceTest {
             File expectedFileContent) throws IOException {
         File actualFile = new File(directory, expectedFileName);
         assertTrue(actualFile.exists());
-        
+
         Map<String, String> expecteds = UploadCleanserTest.readZipFile(expectedFileContent);
         Map<String, String> actuals = UploadCleanserTest.readZipFile(actualFile);
         assertEquals(expecteds, actuals);

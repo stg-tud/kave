@@ -39,9 +39,9 @@ import com.sun.jersey.multipart.MultiPart;
 public class FeedbackService {
 
     public static final MediaType APPLICATION_ZIP = new MediaType("application", "zip");
-    public static final String NO_SINGLE_UPLOAD = "NO_SINGLE_UPLOAD";
-    public static final String NO_ZIP_FILE = "NO_ZIP_FILE";
-    public static final String UPLOAD_FAILED = "UPLOAD_FAILED";
+    public static final String NO_SINGLE_UPLOAD = "Es muss eine einzelne Datei ausgewählt werden!";
+    public static final String NO_ZIP_FILE = "Die hochgeladene Datei ist kein Zip!";
+    public static final String UPLOAD_FAILED = "Der Upload ist fehlgeschlagen!";
 
     private final File dataFolder;
     private final File tmpFolder;
