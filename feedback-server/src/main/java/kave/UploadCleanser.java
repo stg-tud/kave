@@ -32,7 +32,6 @@ import java.util.zip.ZipOutputStream;
 
 import org.apache.commons.io.IOUtils;
 import org.codehaus.jackson.JsonGenerator;
-import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.ObjectMapper;
 
 public class UploadCleanser {
@@ -88,7 +87,7 @@ public class UploadCleanser {
         try {
             zein = zfin.getInputStream(entry);
             content = mapper.readValue(zein, Map.class);
-        } catch (JsonParseException jpe) {
+        } catch (Exception e) {
             // just ignore file
         } finally {
             IOUtils.closeQuietly(zein);

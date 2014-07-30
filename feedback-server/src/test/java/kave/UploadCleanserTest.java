@@ -134,6 +134,15 @@ public class UploadCleanserTest {
     }
 
     @Test
+    public void emptyFilesAreIgnored() {
+        givenAFile().with("0.json", "");
+
+        purify();
+
+        assertNumberOfFiles(0);
+    }
+
+    @Test
     public void existingnumberingIsIgnored() {
         givenAFile().with("1.json", json(0)).with("0.json", json(1));
 
@@ -156,6 +165,17 @@ public class UploadCleanserTest {
         assertContents("1.json", json(1));
         assertContents("2.json", json(2));
         assertContents("3.json", json(3));
+    }
+
+    @Test
+    public void unparsableFilesAreFiltered() {
+        givenAFile().with("0.json", json(0)).with("1.txt", new byte[] { 13, 14, 19, 120 }).with("2.json", json(2));
+
+        purify();
+
+        assertNumberOfFiles(2);
+        assertContents("0.json", json(0));
+        assertContents("1.json", json(2));
     }
 
     private static String json(int num) {
