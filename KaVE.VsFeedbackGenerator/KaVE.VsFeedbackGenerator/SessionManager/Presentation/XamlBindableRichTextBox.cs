@@ -21,7 +21,9 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Markup;
+using System.Windows.Threading;
 using KaVE.VsFeedbackGenerator.Utils;
+using Msg = KaVE.VsFeedbackGenerator.Properties.XamlBindableRichTextBox;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
 {
@@ -54,36 +56,39 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
         private static void OnXamlChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var richTextBox = (XamlBindableRichTextBox) d;
-            var document = new FlowDocument();
-
-            var xaml = (string) e.NewValue;
-            if (xaml != null)
-            {
-                if (ContainsTooManyNodesForDisplay(xaml))
+            richTextBox.Document = new FlowDocument(new Paragraph(new Run(Msg.Loading)));
+            // defer parsing Xaml till after loading message is displayed
+            richTextBox.Dispatcher.BeginInvoke(
+                (Action) (() =>
                 {
-                    xaml = StripNodes(xaml);
-                }
-
-                var para = CreateParagraphFromXaml(xaml);
-                document.Blocks.Add(para);
-            }
-            richTextBox.Document = document;
+                    var xaml = (string) e.NewValue;
+                    Paragraph par;
+                    if (xaml != null)
+                    {
+                        if (ContainsTooManyNodesForDisplay(xaml))
+                        {
+                            xaml = StripNodes(xaml);
+                            par = new Paragraph(new Run(xaml));
+                        }
+                        else
+                        {
+                            par = CreateParagraphFromXaml(xaml);
+                        }
+                    }
+                    else
+                    {
+                        par = new Paragraph();
+                    }
+                    richTextBox.Document = new FlowDocument(par);
+                }), DispatcherPriority.Loaded);
         }
 
         private static bool ContainsTooManyNodesForDisplay(string xaml)
         {
-            var tags = 0;
-            // explicit foreach to keep lazyness
-            // ReSharper disable once UnusedVariable
-            foreach (var c in xaml.Where(c => c == '<'))
-            {
-                tags++;
-                if (tags > (65533*2))
-                {
-                    return true;
-                }
-            }
-            return false;
+            // Parsing more than 500 tags takes too long. Assuming one tag per
+            // line and 80 characters per line (on average), a xaml with more
+            // than 500 * 80 = 40000 characters takes too long.
+            return xaml.Length > 40000;
         }
 
         public static string StripNodes(string xaml)
@@ -95,8 +100,8 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
         {
             try
             {
-                var template = (DataTemplate)XamlReader.Parse(DataTemplateBegin + xaml + DataTemplateEnd);
-                var textBlock = (TextBlock)template.LoadContent();
+                var template = (DataTemplate) XamlReader.Parse(DataTemplateBegin + xaml + DataTemplateEnd);
+                var textBlock = (TextBlock) template.LoadContent();
 
                 var par = new Paragraph();
                 par.Inlines.AddRange(textBlock.Inlines.ToList());

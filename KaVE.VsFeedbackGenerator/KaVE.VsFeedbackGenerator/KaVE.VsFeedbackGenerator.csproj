@@ -131,6 +131,11 @@
     <Compile Include="Interactivity\LinkNotificationRequestHandler.cs" />
     <Compile Include="Interactivity\Notification.cs" />
     <Compile Include="Interactivity\NotificationRequestHandler.cs" />
+    <Compile Include="Properties\XamlBindableRichTextBox.Designer.cs">
+      <DependentUpon>XamlBindableRichTextBox.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
     <Compile Include="Properties\PopupNotification.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -284,6 +289,10 @@
   <ItemGroup>
     <EmbeddedResource Include="Actions.xml">
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\XamlBindableRichTextBox.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>XamlBindableRichTextBox.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\PopupNotification.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>

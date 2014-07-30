@@ -20,6 +20,7 @@
 using System;
 using System.Text;
 using System.Windows.Documents;
+using System.Windows.Threading;
 using KaVE.JetBrains.Annotations;
 using KaVE.Utils;
 using KaVE.VsFeedbackGenerator.Generators;
@@ -102,6 +103,9 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                 () =>
                 {
                     var uut = new XamlBindableRichTextBox {Xaml = xaml};
+
+                    // wait for asynchronous task on dispatcher to finish
+                    uut.Dispatcher.Invoke(new Action(() => { }), DispatcherPriority.Input);
 
                     var paragraph = uut.Document.Blocks.FirstBlock as Paragraph;
                     Assert.NotNull(paragraph);

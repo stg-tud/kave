@@ -67,7 +67,7 @@ namespace KaVE.VsFeedbackGenerator.Utils
 
         public event ProgressChangedEventHandler ProgressChanged = delegate { };
 
-        public BackgroundWorkerBase()
+        protected BackgroundWorkerBase()
         {
             InternalWorker = new BackgroundWorker {WorkerSupportsCancellation = false};
             InternalWorker.DoWork += DoWorkHandler;
