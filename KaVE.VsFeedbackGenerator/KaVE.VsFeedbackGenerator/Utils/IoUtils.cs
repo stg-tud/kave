@@ -65,7 +65,6 @@ namespace KaVE.VsFeedbackGenerator.Utils
     {
         public HttpResponseMessage TransferByHttp(HttpContent content, Uri targetUri, int timeoutInSeconds)
         {
-            // TODO move error-handling of wrong scheme to OptionPage
             var isHttp = targetUri.Scheme == Uri.UriSchemeHttp;
             var isHttps = targetUri.Scheme == Uri.UriSchemeHttps;
             Asserts.That(isHttp || isHttps, Messages.ServerRequestWrongScheme);

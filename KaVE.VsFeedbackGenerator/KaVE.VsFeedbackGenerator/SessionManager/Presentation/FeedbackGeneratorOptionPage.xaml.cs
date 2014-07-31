@@ -85,12 +85,6 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
             window.Close();
         }
 
-        private bool ValidateUploadUri()
-        {
-            Uri uri;
-            return Uri.TryCreate(UploadUrlTextBox.Text, UriKind.Absolute, out uri);
-        }
-
         public bool OnOk()
         {
             var valid = ValidateUploadUri();
@@ -99,6 +93,17 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
                 UploadUrlTextBox.Background =  Brushes.Pink;
             }
             return valid;
+        }
+
+        private bool ValidateUploadUri()
+        {
+            Uri uri;
+            return Uri.TryCreate(UploadUrlTextBox.Text, UriKind.Absolute, out uri) && HasSupportedScheme(uri);
+        }
+
+        private static bool HasSupportedScheme(Uri uri)
+        {
+            return (uri.Scheme == Uri.UriSchemeHttp || uri.Scheme == Uri.UriSchemeHttps);
         }
 
         public bool ValidatePage()
