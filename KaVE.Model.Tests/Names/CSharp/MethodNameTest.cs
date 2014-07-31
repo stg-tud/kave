@@ -17,6 +17,8 @@
  *    - Sven Amann
  */
 
+using System.Collections.Generic;
+using KaVE.Model.Names;
 using KaVE.Model.Names.CSharp;
 using NUnit.Framework;
 
@@ -196,6 +198,17 @@ namespace KaVE.Model.Tests.Names.CSharp
             Assert.AreSame(TypeName.UnknownName, MethodName.UnknownName.DeclaringType);
             Assert.AreEqual("???", MethodName.UnknownName.Name);
             Assert.IsFalse(MethodName.UnknownName.HasParameters);
+        }
+
+        [Test]
+        public void ShouldRecognizeTypeParameter()
+        {
+            var method =
+                MethodName.Get(
+                    "[T, A, 1.0.0.0] [T, A, 1.0.0.0].Method[[TT -> TT]]([IList`1[[T -> System.Int64, mscore, 4.0.0.0]], Assembly, 1.0.0.0] arg0)");
+
+            var expected = new List<ITypeName> {TypeName.Get("TT -> TT")};
+            Assert.AreEqual(expected, method.TypeParameters);
         }
     }
 }
