@@ -17,9 +17,10 @@
  *    - Sven Amann
  */
 
+using System.Linq;
 using EnvDTE;
+using JetBrains.Application;
 using JetBrains.Application.Components;
-using JetBrains.ProjectModel;
 using KaVE.Model.Events.VisualStudio;
 using KaVE.Model.Names.VisualStudio;
 using KaVE.VsFeedbackGenerator.MessageBus;
@@ -29,9 +30,19 @@ using KaVE.VsFeedbackGenerator.VsIntegration;
 
 namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
 {
-    [SolutionComponent(ProgramConfigurations.VS_ADDIN)]
+    [ShellComponent(ProgramConfigurations.VS_ADDIN)]
     internal class SolutionEventGenerator : EventGeneratorBase
     {
+        private static readonly string[] ManagedProjectUniqueNames = {"<MiscFiles>"};
+
+        private static readonly string[] ManagedProjectItemNames =
+        {
+            "NuGet.Config",
+            "NuGet.exe",
+            "NuGet.targets",
+            "packages.config"
+        };
+
         // ReSharper disable PrivateFieldCanBeConvertedToLocalVariable
         private readonly SolutionEvents _solutionEvents;
         private readonly ProjectItemsEvents _solutionItemsEvents;
@@ -42,10 +53,8 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
         public SolutionEventGenerator(IIDESession session, IMessageBus messageBus, IDateUtils dateUtils)
             : base(session, messageBus, dateUtils)
         {
-            // SolutionComponents are created after the solution is opened, i.e., after SolutionEvents.Opened is fired.
-            _solutionEvents_Opened();
-
             _solutionEvents = DTE.Events.SolutionEvents;
+            _solutionEvents.Opened += _solutionEvents_Opened;
             _solutionEvents.ProjectAdded += _solutionEvents_ProjectAdded;
             _solutionEvents.ProjectRenamed += _solutionEvents_ProjectRenamed;
             _solutionEvents.ProjectRemoved += _solutionEvents_ProjectRemoved;
@@ -68,7 +77,10 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
 
         private void _solutionItemsEvents_ItemAdded(ProjectItem projectItem)
         {
-            Fire(SolutionEvent.SolutionAction.AddSolutionItem, projectItem.GetName());
+            if (IsNotManaged(projectItem))
+            {
+                Fire(SolutionEvent.SolutionAction.AddSolutionItem, projectItem.GetName());
+            }
         }
 
         private void _solutionItemsEvents_ItemRenamed(ProjectItem projectItem, string oldName)
@@ -88,7 +100,10 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
 
         private void _solutionEvents_ProjectAdded(Project project)
         {
-            Fire(SolutionEvent.SolutionAction.AddProject, project.GetName());
+            if (IsNotManaged(project))
+            {
+                Fire(SolutionEvent.SolutionAction.AddProject, project.GetName());
+            }
         }
 
         private void _projectItemsEvents_ItemAdded(ProjectItem projectItem)
@@ -113,7 +128,10 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
 
         private void _solutionEvents_ProjectRemoved(Project project)
         {
-            Fire(SolutionEvent.SolutionAction.RemoveProject, project.GetName());
+            if (IsNotManaged(project))
+            {
+                Fire(SolutionEvent.SolutionAction.RemoveProject, project.GetName());
+            }
         }
 
         private void _solutionEvents_Renamed(string oldName)
@@ -132,6 +150,16 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
             // this method behaves strange... e.g., selection in solution explorer is recognized. Adding to that
             // selection by ctrl+click is recognized. Any further additions to the selection, using ctrl+click, are
             // not recognized.
+        }
+
+        private bool IsNotManaged(ProjectItem item)
+        {
+            return !ManagedProjectItemNames.Contains(item.Name);
+        }
+
+        private bool IsNotManaged(Project project)
+        {
+            return !ManagedProjectUniqueNames.Contains(project.UniqueName);
         }
 
         private void Fire(SolutionEvent.SolutionAction action, IIDEComponentName target)

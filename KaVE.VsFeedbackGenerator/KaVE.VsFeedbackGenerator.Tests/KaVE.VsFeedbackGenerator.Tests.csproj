@@ -107,6 +107,7 @@
     <Compile Include="Generators\ReSharper\EventGeneratingActionHandlerTest.cs" />
     <Compile Include="Generators\TestIDESession.cs" />
     <Compile Include="Generators\VisualStudio\CommandEventGeneratorTest.cs" />
+    <Compile Include="Generators\VisualStudio\SolutionEventGeneratorTest.cs" />
     <Compile Include="Generators\VisualStudio\VisualStudioEventGeneratorTestBase.cs" />
     <Compile Include="Generators\VisualStudio\WindowEventGeneratorTest.cs" />
     <Compile Include="Interactivity\InteractionRequestTest.cs" />

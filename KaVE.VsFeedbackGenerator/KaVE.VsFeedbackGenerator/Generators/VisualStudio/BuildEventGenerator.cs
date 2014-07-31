@@ -19,8 +19,8 @@
 
 using System;
 using EnvDTE;
+using JetBrains.Application;
 using JetBrains.Application.Components;
-using JetBrains.ProjectModel;
 using KaVE.Model.Events.VisualStudio;
 using KaVE.Utils.Assertion;
 using KaVE.VsFeedbackGenerator.MessageBus;
@@ -29,7 +29,7 @@ using KaVE.VsFeedbackGenerator.VsIntegration;
 
 namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
 {
-    [SolutionComponent(ProgramConfigurations.VS_ADDIN)]
+    [ShellComponent(ProgramConfigurations.VS_ADDIN)]
     internal class BuildEventGenerator : EventGeneratorBase
     {
         // ReSharper disable once PrivateFieldCanBeConvertedToLocalVariable

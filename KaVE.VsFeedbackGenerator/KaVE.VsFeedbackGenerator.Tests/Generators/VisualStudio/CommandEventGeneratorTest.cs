@@ -19,7 +19,6 @@
 
 using System;
 using System.Collections;
-using System.Security.Cryptography;
 using EnvDTE;
 using KaVE.Model.Events;
 using KaVE.Model.Names.VisualStudio;
