@@ -9,6 +9,9 @@
 //------------------------------------------------------------------------------
 
 namespace KaVE.VsFeedbackGenerator.Properties {
+    using System;
+    
+    
     /// <summary>
     ///   A strongly-typed resource class, for looking up localized strings, etc.
     /// </summary>
@@ -99,6 +102,33 @@ namespace KaVE.VsFeedbackGenerator.Properties {
         public static string export_zip_button {
             get {
                 return ResourceManager.GetString("export_zip_button", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Beim Exportieren/Versenden des Feedbacks ist ein Fehler aufgetreten!.
+        /// </summary>
+        public static string ExportFail {
+            get {
+                return ResourceManager.GetString("ExportFail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Das Exportieren/Versenden von {0} Events war erfolgreich..
+        /// </summary>
+        public static string ExportSuccess {
+            get {
+                return ResourceManager.GetString("ExportSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zum Hochladen des Feedbacks besuchen Sie bitte die folgende Seite:.
+        /// </summary>
+        public static string ExportSuccessLinkDescription {
+            get {
+                return ResourceManager.GetString("ExportSuccessLinkDescription", resourceCulture);
             }
         }
         

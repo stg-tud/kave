@@ -94,8 +94,8 @@ namespace KaVE.VsFeedbackGenerator.Tests.Export
                 _mockSettingStore.Object,
                 _testDateUtils);
 
-            _notificationHelper = _uut.NotificationRequest.NewTestHelper();
-            _linkNotificationHelper = _uut.LinkNotificationRequest.NewTestHelper();
+            _notificationHelper = _uut.ErrorNotificationRequest.NewTestHelper();
+            _linkNotificationHelper = _uut.SuccessNotificationRequest.NewTestHelper();
         }
 
         [TearDown]
@@ -237,10 +237,11 @@ namespace KaVE.VsFeedbackGenerator.Tests.Export
             var actual = _linkNotificationHelper.Context;
             // TODO @Sven: extend setup to include some events that are exported here
             // TODO @Seb: help sven with above task
-            var expected = new LinkNotification()
+            var expected = new LinkNotification
             {
                 Caption = Properties.UploadWizard.window_title,
-                Message = Properties.SessionManager.ExportSuccess.FormatEx(0),
+                Message = Properties.UploadWizard.ExportSuccess.FormatEx(0),
+                LinkDescription = Properties.UploadWizard.ExportSuccessLinkDescription,
                 Link = TestUploadUrl
             };
             Assert.AreEqual(expected, actual);
@@ -269,7 +270,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Export
             var expected = new Notification
             {
                 Caption = Properties.UploadWizard.window_title,
-                Message = Properties.SessionManager.ExportFail + ":\nTEST",
+                Message = Properties.UploadWizard.ExportFail + ":\nTEST",
             };
             Assert.AreEqual(expected, actual);
         }
@@ -310,7 +311,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Export
                 new TestIDEEvent {TriggeredAt = new DateTime(2014, 7, 3)}
             };
             _mockLogs[0].Setup(log => log.NewLogReader().ReadAll()).Returns(logContent);
-            var expectedExport = new[] { logContent[0] };
+            var expectedExport = new[] {logContent[0]};
             IEnumerable<IDEEvent> actualExport = null;
             _mockExporter.Setup(e => e.Export(It.IsAny<IEnumerable<IDEEvent>>(), It.IsAny<IPublisher>()))
                          .Callback<IEnumerable<IDEEvent>, IPublisher>((export, p) => actualExport = export);

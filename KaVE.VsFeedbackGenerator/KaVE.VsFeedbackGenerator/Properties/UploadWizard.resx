@@ -141,4 +141,13 @@
   <data name="window_title" xml:space="preserve">
     <value>Export-Wizard</value>
   </data>
+  <data name="ExportFail" xml:space="preserve">
+    <value>Beim Exportieren/Versenden des Feedbacks ist ein Fehler aufgetreten!</value>
+  </data>
+  <data name="ExportSuccess" xml:space="preserve">
+    <value>Das Exportieren/Versenden von {0} Events war erfolgreich.</value>
+  </data>
+  <data name="ExportSuccessLinkDescription" xml:space="preserve">
+    <value>Zum Hochladen des Feedbacks besuchen Sie bitte die folgende Seite:</value>
+  </data>
 </root>

@@ -22,7 +22,7 @@ using MsgBox;
 
 namespace KaVE.VsFeedbackGenerator.Interactivity
 {
-    class LinkNotificationRequestHandler
+    internal class LinkNotificationRequestHandler
     {
         private readonly Window _window;
 
@@ -44,7 +44,7 @@ namespace KaVE.VsFeedbackGenerator.Interactivity
                     MsgBoxImage.Default,
                     MsgBoxResult.OK,
                     notification.Link,
-                    notification.Link);
+                    helpLinkLabel:notification.LinkDescription);
             }
             else
             {
@@ -55,7 +55,8 @@ namespace KaVE.VsFeedbackGenerator.Interactivity
                     MsgBoxResult.OK,
                     true,
                     image: MsgBoxImage.Default,
-                    helpLink: notification.Link);
+                    helpLink: notification.Link,
+                    helpLinkLabel:notification.LinkDescription);
             }
         }
     }

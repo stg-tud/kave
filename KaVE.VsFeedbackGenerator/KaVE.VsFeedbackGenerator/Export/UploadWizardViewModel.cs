@@ -43,18 +43,17 @@ namespace KaVE.VsFeedbackGenerator.Export
         private readonly BackgroundWorker _exportWorker;
         private DateTime _exportEndDate;
 
-        private readonly InteractionRequest<Notification> _notificationRequest;
-        private readonly InteractionRequest<LinkNotification> _linkNotificationRequest; 
+        private readonly InteractionRequest<Notification> _errorNotificationRequest;
+        private readonly InteractionRequest<LinkNotification> _successNotificationRequest; 
 
-        //TODO: Property & private field? Why no auto generated fields with property?
-        public IInteractionRequest<Notification> NotificationRequest
+        public IInteractionRequest<Notification> ErrorNotificationRequest
         {
-            get { return _notificationRequest; }
+            get { return _errorNotificationRequest; }
         }
 
-        public IInteractionRequest<LinkNotification> LinkNotificationRequest
+        public IInteractionRequest<LinkNotification> SuccessNotificationRequest
         {
-            get { return _linkNotificationRequest; }
+            get { return _successNotificationRequest; }
         }
 
         public UploadWizardViewModel(IExporter exporter,
@@ -66,8 +65,8 @@ namespace KaVE.VsFeedbackGenerator.Export
             _logManager = logManager;
             _settingsStore = settingsStore;
             _dateUtils = dateUtils;
-            _notificationRequest = new InteractionRequest<Notification>();
-            _linkNotificationRequest = new InteractionRequest<LinkNotification>();
+            _errorNotificationRequest = new InteractionRequest<Notification>();
+            _successNotificationRequest = new InteractionRequest<LinkNotification>();
             _exportWorker = new BackgroundWorker {WorkerSupportsCancellation = false};
             _exportWorker.DoWork += OnExport;
             _exportWorker.RunWorkerCompleted += OnExportCompleted;
@@ -184,20 +183,20 @@ namespace KaVE.VsFeedbackGenerator.Export
         {
             var export = _settingsStore.GetSettings<ExportSettings>();
             RaiseLinkNotificationRequest(
-                string.Format(Properties.SessionManager.ExportSuccess, numberOfExportedEvents),
+                string.Format(Properties.UploadWizard.ExportSuccess, numberOfExportedEvents),
                 export.UploadUrl);
         }
 
         private void ShowExportFailedMessage(string message)
         {
             RaiseNotificationRequest(
-                Properties.SessionManager.ExportFail + (string.IsNullOrWhiteSpace(message) ? "" : ":\n" + message));
+                Properties.UploadWizard.ExportFail + (string.IsNullOrWhiteSpace(message) ? "" : ":\n" + message));
         }
 
 
         private void RaiseNotificationRequest(string text)
         {
-            _notificationRequest.Raise(
+            _errorNotificationRequest.Raise(
                 new Notification
                 {
                     Caption = Properties.UploadWizard.window_title,
@@ -207,11 +206,12 @@ namespace KaVE.VsFeedbackGenerator.Export
 
         private void RaiseLinkNotificationRequest(string text, string url)
         {
-            _linkNotificationRequest.Raise(
+            _successNotificationRequest.Raise(
                 new LinkNotification
                 {
                     Caption = Properties.UploadWizard.window_title,
                     Message = text,
+                    LinkDescription =  Properties.UploadWizard.ExportSuccessLinkDescription,
                     Link = url,
                 });
         }

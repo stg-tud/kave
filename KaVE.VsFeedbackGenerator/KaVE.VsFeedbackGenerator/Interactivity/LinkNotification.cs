@@ -22,26 +22,27 @@ namespace KaVE.VsFeedbackGenerator.Interactivity
     public class LinkNotification : Notification
     {
         public string Link { get; set; }
+        public string LinkDescription { get; set; }
 
         protected bool Equals(LinkNotification other)
         {
-            return string.Equals(Message, other.Message) && string.Equals(Caption, other.Caption) &&
-                   string.Equals(Link, other.Link);
+            return base.Equals(other) && string.Equals(Link, other.Link) && string.Equals(LinkDescription, other.LinkDescription);
         }
 
         public override int GetHashCode()
         {
             unchecked
             {
-                return ((Message != null ? Message.GetHashCode() : 0) * 397) ^
-                       ((Caption != null ? Caption.GetHashCode() : 0) +
-                        (Link != null ? Link.GetHashCode() : 0) * 17);
+                var hashCode = base.GetHashCode();
+                hashCode = (hashCode*397) ^ (Link != null ? Link.GetHashCode() : 0);
+                hashCode = (hashCode*397) ^ (LinkDescription != null ? LinkDescription.GetHashCode() : 0);
+                return hashCode;
             }
         }
 
         public override string ToString()
         {
-            return string.Format("[Caption: {0}, Message: {1}, Link: {2}]", Caption, Message, Link); 
+            return string.Format("{0}, Link: {1}, LinkDescription: {2}", base.ToString(), Link, LinkDescription);
         }
     }
 }

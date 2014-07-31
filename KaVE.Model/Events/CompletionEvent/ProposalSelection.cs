@@ -12,9 +12,14 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sven Amann
  */
+
 using System;
 using System.Runtime.Serialization;
+using KaVE.JetBrains.Annotations;
 using KaVE.Utils;
 
 namespace KaVE.Model.Events.CompletionEvent
@@ -22,7 +27,7 @@ namespace KaVE.Model.Events.CompletionEvent
     [DataContract]
     public class ProposalSelection
     {
-        public ProposalSelection(Proposal proposal)
+        public ProposalSelection([NotNull] Proposal proposal)
         {
             Proposal = proposal;
         }
@@ -30,7 +35,7 @@ namespace KaVE.Model.Events.CompletionEvent
         [DataMember]
         public TimeSpan? SelectedAfter { get; set; }
 
-        [DataMember]
+        [DataMember, NotNull]
         public Proposal Proposal { get; private set; }
 
         public override string ToString()
