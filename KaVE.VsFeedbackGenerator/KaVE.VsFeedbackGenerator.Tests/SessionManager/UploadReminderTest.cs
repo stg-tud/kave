@@ -18,9 +18,11 @@
  */
 
 using System;
+using KaVE.Model.Events;
 using KaVE.VsFeedbackGenerator.SessionManager;
 using KaVE.VsFeedbackGenerator.TrayNotification;
 using KaVE.VsFeedbackGenerator.Utils;
+using KaVE.VsFeedbackGenerator.Utils.Logging;
 using Moq;
 using NUnit.Framework;
 using TestDateUtils = KaVE.VsFeedbackGenerator.Tests.Utils.TestDateUtils;
@@ -34,6 +36,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
         private UploadSettings _uploadSettings;
         private Mock<NotifyTrayIcon> _mockTrayIcon;
         private Mock<ICallbackManager> _mockCallbackManager;
+        private Mock<ILogManager<IDEEvent>> _mockLogManager; 
 
         private DateTime _registeredInvocationDate;
         private Action _registeredRescheduleAction;
@@ -52,7 +55,8 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
             _mockSettingsStore.Setup(store => store.SetSettings(It.IsAny<UploadSettings>()))
                   .Callback<UploadSettings>(settings => _newUploadSettings = settings);
 
-            _mockTrayIcon = new Mock<NotifyTrayIcon>();
+            _mockLogManager = new Mock<ILogManager<IDEEvent>>();
+            _mockTrayIcon = new Mock<NotifyTrayIcon>(_mockLogManager.Object);
 
             _dateUtils = new TestDateUtils();
 
