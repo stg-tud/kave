@@ -73,7 +73,7 @@ limitations under the License.
             VerticalAlignment="Top"
             TextWrapping="Wrap"
             HorizontalAlignment="Left">
-            <Run Text="{x:Static root:Properties.PopupNotification.InformationHardpopup}" />
+            <Run Name="Message"/>
             <Button Margin="100, 20, 0, 0" Click="Wizard_Button_OnClick" Content="{x:Static root:Properties.PopupNotification.WizardButton}" />
         </TextBlock>
     </Grid>

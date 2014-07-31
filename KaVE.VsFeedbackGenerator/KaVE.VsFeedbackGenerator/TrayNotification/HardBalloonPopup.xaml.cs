@@ -19,6 +19,9 @@
 
 using System.Windows;
 using System.Windows.Input;
+using JetBrains;
+using KaVE.Model.Events;
+using KaVE.VsFeedbackGenerator.Utils.Logging;
 
 namespace KaVE.VsFeedbackGenerator.TrayNotification
 {
@@ -27,9 +30,11 @@ namespace KaVE.VsFeedbackGenerator.TrayNotification
     /// </summary>
     public partial class HardBalloonPopup
     {
-        public HardBalloonPopup()
+        public HardBalloonPopup(ILogManager<IDEEvent> logManager)
         {
             InitializeComponent();
+            var size = logManager.GetAccumulatedLogFileSize();
+            Message.Text = Properties.PopupNotification.InformationHardpopup.FormatEx(size);
         }
 
         private void Wizard_Button_OnClick(object sender, RoutedEventArgs e)

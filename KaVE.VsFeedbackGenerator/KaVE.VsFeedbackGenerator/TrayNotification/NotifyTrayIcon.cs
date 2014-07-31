@@ -22,16 +22,21 @@ using System.Windows;
 using System.Windows.Controls.Primitives;
 using Hardcodet.Wpf.TaskbarNotification;
 using JetBrains.Application;
+using KaVE.Model.Events;
 using KaVE.Utils;
 using KaVE.VsFeedbackGenerator.Properties;
+using KaVE.VsFeedbackGenerator.Utils.Logging;
 
 namespace KaVE.VsFeedbackGenerator.TrayNotification
 {
     [ShellComponent]
     public class NotifyTrayIcon
     {
-        public NotifyTrayIcon()
+        private readonly ILogManager<IDEEvent> _logManager;
+
+        public NotifyTrayIcon(ILogManager<IDEEvent> logManager)
         {
+            _logManager = logManager;
             Invoke.OnSTA(InitTaskbarIcon);
         }
 
@@ -49,7 +54,7 @@ namespace KaVE.VsFeedbackGenerator.TrayNotification
 
         public virtual void ShowHardBalloonPopup()
         {
-            ShowBalloonPopup(() => new HardBalloonPopup());
+            ShowBalloonPopup(() => new HardBalloonPopup(_logManager));
         }
 
         private void ShowBalloonPopup(Func<BalloonPopupBase> popupFactory)

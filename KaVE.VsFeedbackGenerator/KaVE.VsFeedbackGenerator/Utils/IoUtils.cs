@@ -41,6 +41,7 @@ namespace KaVE.VsFeedbackGenerator.Utils
         string GetTempFileName();
         string GetTempFileName(string extension);
         string[] GetFiles(string path, string searchPattern);
+        long GetFileSize(string fileName);
         void CreateFile(string path);
         void CopyFile(string src, string trg);
         void MoveFile(string source, string target);
@@ -121,6 +122,12 @@ namespace KaVE.VsFeedbackGenerator.Utils
             } while (Directory.Exists(dir));
             Directory.CreateDirectory(dir);
             return dir;
+        }
+
+        public long GetFileSize(string fileName)
+        {
+            var fileInfo = new FileInfo(fileName);
+            return fileInfo.Length;
         }
 
         public string Combine(params string[] paths)

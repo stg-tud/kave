@@ -52,6 +52,12 @@ namespace KaVE.VsFeedbackGenerator.Utils.Logging
             return new LogFile<TLogEntry>(logDirectoryPath);
         }
 
+        public double GetAccumulatedLogFileSize()
+        {
+            var sum = GetLogs().Select(log => log.GetFileSize()).Sum();
+            return Math.Round(sum, 2);
+        }
+
         public void DeleteLogsOlderThan(DateTime time)
         {
             foreach (var log in GetLogs())
