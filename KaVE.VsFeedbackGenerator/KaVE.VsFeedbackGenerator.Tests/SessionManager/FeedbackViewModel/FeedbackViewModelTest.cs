@@ -22,17 +22,18 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Threading;
+using JetBrains.Util;
 using KaVE.Model.Events;
 using KaVE.TestUtils;
 using KaVE.TestUtils.Model.Events;
 using KaVE.Utils.Assertion;
 using KaVE.Utils.Reflection;
-using KaVE.VsFeedbackGenerator.Generators;
 using KaVE.VsFeedbackGenerator.SessionManager;
 using KaVE.VsFeedbackGenerator.Utils;
 using KaVE.VsFeedbackGenerator.Utils.Logging;
 using Moq;
 using NUnit.Framework;
+using ILogger = KaVE.VsFeedbackGenerator.Generators.ILogger;
 
 namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModel
 {
@@ -118,8 +119,8 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModel
 
             RefreshFeedbackViewModel();
 
-            Assert.IsFalse(_uut.Sessions.Any());
-            _mockLogger.Verify(l => l.Error(exception));
+            Assert.IsTrue(_uut.Sessions.IsEmpty());
+            _mockLogger.Verify(l => l.Error(ItIsException.With("refresh failed", exception)));
         }
 
         [Test]
