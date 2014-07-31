@@ -389,7 +389,8 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                 TypeShape = new TypeShape {TypeHierarchy = new TypeHierarchy(CreateType(SomeGenericType))}
             };
 
-            AssertContainsGenericTypeRepresentation(context);
+            var actual = context.ToXaml();
+            AssertContainsOnce(actual, GenericTypeRepresentation);
         }
 
         [Test]
@@ -405,7 +406,8 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                     }
             };
 
-            AssertContainsGenericTypeRepresentation(context);
+            var actual = context.ToXaml();
+            AssertContainsOnce(actual, GenericTypeRepresentation);
         }
 
         [Test]
@@ -427,7 +429,8 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                     }
             };
 
-            AssertContainsGenericTypeRepresentation(context);
+            var actual = context.ToXaml();
+            AssertContainsOnce(actual, GenericTypeRepresentation);
         }
 
         [Test]
@@ -439,7 +442,8 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                 EnclosingMethod = Method(SomeGenericType, "N.Ty", "Method", "N.Arg")
             };
 
-            AssertContainsGenericTypeRepresentation(context);
+            var actual = context.ToXaml();
+            AssertContainsOnce(actual, GenericTypeRepresentation);
         }
 
         [Test]
@@ -451,7 +455,8 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                 EnclosingMethod = Method("N.Ret", "N.Ty", "Method", SomeGenericType)
             };
 
-            AssertContainsGenericTypeRepresentation(context);
+            var actual = context.ToXaml();
+            AssertContainsOnce(actual, GenericTypeRepresentation);
         }
 
         [Test]
@@ -467,7 +472,8 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                     }
             };
 
-            AssertContainsGenericTypeRepresentation(context);
+            var actual = context.ToXaml();
+            AssertContainsOnce(actual, GenericTypeRepresentation);
         }
 
         [Test]
@@ -483,7 +489,8 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                     }
             };
 
-            AssertContainsGenericTypeRepresentation(context);
+            var actual = context.ToXaml();
+            AssertContainsOnce(actual, GenericTypeRepresentation);
         }
 
         [Test]
@@ -499,7 +506,8 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                     }
             };
 
-            AssertContainsGenericTypeRepresentation(context);
+            var actual = context.ToXaml();
+            AssertContainsOnce(actual, GenericTypeRepresentation);
         }
 
         [Test]
@@ -515,7 +523,8 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                     }
             };
 
-            AssertContainsGenericTypeRepresentation(context);
+            var actual = context.ToXaml();
+            AssertContainsOnce(actual, GenericTypeRepresentation);
         }
 
         [Test]
@@ -534,7 +543,8 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                     }
             };
 
-            AssertContainsGenericTypeRepresentation(context);
+            var actual = context.ToXaml();
+            AssertContainsOnce(actual, GenericTypeRepresentation);
         }
 
         [Test]
@@ -553,7 +563,8 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                     }
             };
 
-            AssertContainsGenericTypeRepresentation(context);
+            var actual = context.ToXaml();
+            AssertContainsOnce(actual, GenericTypeRepresentation);
         }
 
         [Test]
@@ -572,7 +583,8 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                     }
             };
 
-            AssertContainsGenericTypeRepresentation(context);
+            var actual = context.ToXaml();
+            AssertContainsOnce(actual, GenericTypeRepresentation);
         }
 
         [Test]
@@ -591,7 +603,111 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                     }
             };
 
-            AssertContainsGenericTypeRepresentation(context);
+            var actual = context.ToXaml();
+            AssertContainsOnce(actual, GenericTypeRepresentation);
+        }
+
+        [Test]
+        public void ShouldHandleGenericEnclosingMethod()
+        {
+            var context = new Context
+            {
+                TypeShape = new TypeShape {TypeHierarchy = new TypeHierarchy(CreateType("N.Class"))},
+                EnclosingMethod = Method("N.Ret", "N.Class", "Method[[T -> TT]]", "N.Arg")
+            };
+
+            const string expected = "Method&lt;T&gt;";
+
+            var actual = context.ToXaml();
+            AssertContainsOnce(actual, expected);
+        }
+
+        [Test]
+        public void ShouldHandleGenericEntryPoint()
+        {
+            var context = new Context
+            {
+                TypeShape = new TypeShape {TypeHierarchy = new TypeHierarchy(CreateType("N.Class"))},
+                EntryPointToCalledMethods =
+                    new Dictionary<IMethodName, ISet<IMethodName>>
+                    {
+                        {
+                            Method("N.Ret", "N.Class", "Method[[T -> TT]]", "N.Arg"),
+                            new HashSet<IMethodName> {Method("N.Ret1", "N.Ty1", ".ctor", "N.Param")}
+                        }
+                    }
+            };
+
+            const string expected = "Method&lt;T&gt;";
+
+            var actual = context.ToXaml();
+            AssertContainsOnce(actual, expected);
+        }
+
+        [Test]
+        public void ShouldHandleGenericCalledMethod()
+        {
+            var context = new Context
+            {
+                TypeShape = new TypeShape {TypeHierarchy = new TypeHierarchy(CreateType("N.Class"))},
+                EntryPointToCalledMethods =
+                    new Dictionary<IMethodName, ISet<IMethodName>>
+                    {
+                        {
+                            Method("N.Ret", "N.Class", "Method", "N.Arg"),
+                            new HashSet<IMethodName> {Method("N.Ret1", "N.Ty1", "Method[[T -> TT]]", "N.Param")}
+                        }
+                    }
+            };
+
+            const string expected = ".Method&lt;T&gt;";
+
+            var actual = context.ToXaml();
+            AssertContainsOnce(actual, expected);
+        }
+
+        [Test]
+        public void ShouldHandleGenericEntryPointWithUnboundParameter()
+        {
+            var context = new Context
+            {
+                TypeShape = new TypeShape { TypeHierarchy = new TypeHierarchy(CreateType("N.Class")) },
+                EntryPointToCalledMethods =
+                    new Dictionary<IMethodName, ISet<IMethodName>>
+                    {
+                        {
+                            MethodName.Get("[N.Ret, A, 1.0.0.0] [N.Class, A, 1.0.0.0].Method[[T -> T]]([T] arg0)"),
+                            new HashSet<IMethodName>()
+                        }
+                    }
+            };
+
+            const string expected = "Ret Method&lt;T&gt;(T arg0)";
+
+            var actual = context.ToXaml();
+            AssertContainsOnce(actual, expected);
+        }
+
+        [Test]
+        public void ShouldHandleGenericEntryPointWithUnboundReturnType()
+        {
+            var context = new Context
+            {
+                TypeShape = new TypeShape {TypeHierarchy = new TypeHierarchy(CreateType("N.Class"))},
+                EntryPointToCalledMethods =
+                    new Dictionary<IMethodName, ISet<IMethodName>>
+                    {
+                        {
+                            MethodName.Get("[T] [N.Class, A, 1.0.0.0].Method[[T -> T]]([N.Arg, A, 1.0.0.0] arg0)"),
+                            new HashSet<IMethodName>()
+                        }
+                    }
+            };
+
+            const string expected = "T Method&lt;T&gt;(Arg arg0)";
+
+            var actual = context.ToXaml();
+            AssertContainsOnce(actual, expected);
         }
 
         [Test]
@@ -794,12 +910,6 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                 -1,
                 actual.IndexOf(pattern, index + 1, System.StringComparison.Ordinal),
                 "Found second occurrence");
-        }
-
-        private static void AssertContainsGenericTypeRepresentation(Context context)
-        {
-            var actual = context.ToXaml();
-            AssertContainsOnce(actual, GenericTypeRepresentation);
         }
 
         private static IMethodName GetFirstCalledMethodFromFirstEntryPoint(Context context)

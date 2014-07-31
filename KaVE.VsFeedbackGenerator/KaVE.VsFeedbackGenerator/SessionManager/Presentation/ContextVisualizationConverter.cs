@@ -238,7 +238,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
             }
             else
             {
-                builder.Append(indent, FormatTypeName(method.ReturnType), Space, method.Name);
+                builder.Append(indent, FormatTypeName(method.ReturnType), Space, FormatMethodName(method));
             }
             builder.AppendParameterList(method, p => FormatTypeName(p.ValueType) + Space + p.Name);
             builder.AppendLine();
@@ -252,7 +252,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
             }
             else
             {
-                builder.Append(indent, FormatTypeName(method.DeclaringType), ".", method.Name);
+                builder.Append(indent, FormatTypeName(method.DeclaringType), ".", FormatMethodName(method));
             }
             builder.AppendParameterList(method, p => FormatTypeName(p.ValueType));
             builder.AppendLine(";");
@@ -290,7 +290,25 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
                     FormatTypeParameters(typeName.TypeParameters),
                     GreaterThan);
             }
+            if (typeName.IsTypeParameter)
+            {
+                return typeName.TypeParameterShortName;
+            }
             return typeName.Name;
+        }
+
+        private static string FormatMethodName(IMethodName methodName)
+        {
+            if (methodName.HasTypeParameters)
+            {
+                return string.Format(
+                    "{0}{1}{2}{3}",
+                    methodName.Name,
+                    LessThan,
+                    FormatTypeParameters(methodName.TypeParameters),
+                    GreaterThan);
+            }
+            return methodName.Name;
         }
 
         private static string FormatTypeParameters(IEnumerable<ITypeName> typeParameters)
