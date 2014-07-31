@@ -693,7 +693,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
         {
             var context = new Context
             {
-                TypeShape = new TypeShape {TypeHierarchy = new TypeHierarchy(CreateType("N.Class"))},
+                TypeShape = new TypeShape { TypeHierarchy = new TypeHierarchy(CreateType("N.Class")) },
                 EntryPointToCalledMethods =
                     new Dictionary<IMethodName, ISet<IMethodName>>
                     {
@@ -705,6 +705,50 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
             };
 
             const string expected = "T Method&lt;T&gt;(Arg arg0)";
+
+            var actual = context.ToXaml();
+            AssertContainsOnce(actual, expected);
+        }
+
+        [Test]
+        public void ShouldHandleGenericEntryPointWithUnboundCollectionParameter()
+        {
+            var context = new Context
+            {
+                TypeShape = new TypeShape { TypeHierarchy = new TypeHierarchy(CreateType("N.Class")) },
+                EntryPointToCalledMethods =
+                    new Dictionary<IMethodName, ISet<IMethodName>>
+                    {
+                        {
+                            MethodName.Get("[N.Ret, A, 1.0.0.0] [N.Class, A, 1.0.0.0].Method[[T -> T]]([List`1[[T -> T]], A, 1.0.0.0] arg0)"),
+                            new HashSet<IMethodName>()
+                        }
+                    }
+            };
+
+            const string expected = "Ret Method&lt;T&gt;(List`1&lt;T&gt; arg0)";
+
+            var actual = context.ToXaml();
+            AssertContainsOnce(actual, expected);
+        }
+
+        [Test]
+        public void ShouldHandleGenericEntryPointWithUnboundCollectionReturnType()
+        {
+            var context = new Context
+            {
+                TypeShape = new TypeShape { TypeHierarchy = new TypeHierarchy(CreateType("N.Class")) },
+                EntryPointToCalledMethods =
+                    new Dictionary<IMethodName, ISet<IMethodName>>
+                    {
+                        {
+                            MethodName.Get("[List`1[[T -> T]], A, 1.0.0.0] [N.Class, A, 1.0.0.0].Method[[T -> T]]([N.Arg, A, 1.0.0.0] arg0)"),
+                            new HashSet<IMethodName>()
+                        }
+                    }
+            };
+
+            const string expected = "List`1&lt;T&gt; Method&lt;T&gt;(Arg arg0)";
 
             var actual = context.ToXaml();
             AssertContainsOnce(actual, expected);
