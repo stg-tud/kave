@@ -29,6 +29,10 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
 {
     public class EventViewModel : ViewModelBase<EventViewModel>
     {
+        private string _xamlContext;
+        private string _xamlDetails;
+        private string _xamlRaw;
+
         public EventViewModel(IDEEvent evt)
         {
             Event = evt;
@@ -66,26 +70,35 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
 
         public string XamlContextRepresentation
         {
-            get { return CompletionContext.ToXaml(); }
+            get { return _xamlContext ?? (_xamlContext = GetContextAsXaml()); }
         }
 
-        private Context CompletionContext
+        private string GetContextAsXaml()
+        {
+            var completionEvent = Event as CompletionEvent;
+            return completionEvent == null ? null : completionEvent.Context.ToXaml();
+        }
+
+        public string Details
         {
             get
             {
-                var completionEvent = Event as CompletionEvent;
-                return completionEvent == null ? null : completionEvent.Context;
+                return _xamlDetails ?? (_xamlDetails = AddSyntaxHighlightingIfNotTooLong(Event.GetDetailsAsJson()));
             }
         }
 
         public string XamlRawRepresentation
         {
-            get { return Event.ToFormattedJson().AddJsonSyntaxHighlightingWithXaml(); }
+            get { return _xamlRaw ?? (_xamlRaw = AddSyntaxHighlightingIfNotTooLong(Event.ToFormattedJson())); }
         }
 
-        public string Details
+        /// <summary>
+        /// Adds syntax highlighting (Xaml formatting) to the json, if the json ist not too long.
+        /// This condition is because formatting very long strings takes ages.
+        /// </summary>
+        private static string AddSyntaxHighlightingIfNotTooLong(string json)
         {
-            get { return Event.GetDetailsAsJson().AddJsonSyntaxHighlightingWithXaml(); }
+            return json.Length > 50000 ? json : json.AddJsonSyntaxHighlightingWithXaml();
         }
 
         protected bool Equals(EventViewModel other)

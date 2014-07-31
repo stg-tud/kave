@@ -67,7 +67,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
                     {
                         if (ContainsTooManyNodesForDisplay(xaml))
                         {
-                            xaml = StripNodes(xaml);
+                            xaml = RemoveXamlFormatting(xaml);
                             par = new Paragraph(new Run(xaml));
                         }
                         else
@@ -91,9 +91,9 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
             return xaml.Length > 40000;
         }
 
-        public static string StripNodes(string xaml)
+        public static string RemoveXamlFormatting(string xaml)
         {
-            return NodeRegex.Replace(xaml, string.Empty);
+            return NodeRegex.Replace(xaml, string.Empty).Replace("&lt;", "<").Replace("&gt;", ">").Replace("&amp;", "&");
         }
 
         private static Paragraph CreateParagraphFromXaml(string xaml)

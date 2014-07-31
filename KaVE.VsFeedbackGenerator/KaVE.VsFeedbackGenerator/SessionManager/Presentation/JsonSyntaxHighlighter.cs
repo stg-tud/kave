@@ -12,7 +12,11 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Dennis Albrecht
  */
+
 using System.Text.RegularExpressions;
 using KaVE.JetBrains.Annotations;
 using Util = KaVE.VsFeedbackGenerator.Utils.XamlFormattingUtil;
