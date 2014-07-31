@@ -90,7 +90,7 @@ namespace KaVE.Model.Names.CSharp
 
         public IList<ITypeName> TypeParameters
         {
-            get { return HasTypeParameters ? Signature.ParseTypeParameters() : new List<ITypeName>(); }
+            get { return HasTypeParameters ? FullName.ParseTypeParameters() : new List<ITypeName>(); }
         }
 
         public bool HasTypeParameters

@@ -143,12 +143,21 @@ namespace KaVE.Model.Tests.Names.CSharp
         }
 
         [Test]
-        public void ShouldNotConfuseGenericParameterTypesWithTypeParameters()
+        public void ShouldNotConfuseGenericParameterTypesWithTypeParameters1()
         {
             var methodName = MethodName.Get("[R, R, 1.2.3.4] [D, D, 5.6.7.8].M([F`1[[T -> G, G, 5.3.2.1]]] p)");
 
             Assert.IsFalse(methodName.HasTypeParameters);
             Assert.AreEqual(0, methodName.TypeParameters.Count);
+        }
+
+        [Test]
+        public void ShouldNotConfuseGenericParameterTypesWithTypeParameters2()
+        {
+            var method = MethodName.Get("[T, A, 1.0.0.0] [T, A, 1.0.0.0].M[[T]]([F`1[[U]], A, 1.0.0.0] p)");
+
+            var expected = new List<ITypeName> { TypeName.Get("T") };
+            Assert.AreEqual(expected, method.TypeParameters);
         }
 
         [Test]
@@ -198,17 +207,6 @@ namespace KaVE.Model.Tests.Names.CSharp
             Assert.AreSame(TypeName.UnknownName, MethodName.UnknownName.DeclaringType);
             Assert.AreEqual("???", MethodName.UnknownName.Name);
             Assert.IsFalse(MethodName.UnknownName.HasParameters);
-        }
-
-        [Test]
-        public void ShouldRecognizeTypeParameter()
-        {
-            var method =
-                MethodName.Get(
-                    "[T, A, 1.0.0.0] [T, A, 1.0.0.0].Method[[TT -> TT]]([IList`1[[T -> System.Int64, mscore, 4.0.0.0]], Assembly, 1.0.0.0] arg0)");
-
-            var expected = new List<ITypeName> {TypeName.Get("TT -> TT")};
-            Assert.AreEqual(expected, method.TypeParameters);
         }
     }
 }
