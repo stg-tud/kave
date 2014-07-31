@@ -21,6 +21,7 @@ using System.Linq;
 using JetBrains.ActionManagement;
 using JetBrains.Application;
 using JetBrains.DataFlow;
+using KaVE.VsFeedbackGenerator.Export;
 using KaVE.VsFeedbackGenerator.MessageBus;
 using KaVE.VsFeedbackGenerator.Utils;
 using KaVE.VsFeedbackGenerator.VsIntegration;
@@ -36,18 +37,17 @@ namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
             IMessageBus messageBus,
             IDateUtils dateUtils)
         {
-            foreach (var updatableAction in actionManager.GetAllActions().OfType<IUpdatableAction>())
-            {
-                // We cannot reset settings if an event is logged when executing this action,
-                // because deleting the log file and writing the event create a conflict.
-                if (updatableAction.Id == SettingsCleaner.ActionId)
-                {
-                    continue;
-                }
+            foreach (var updatableAction in actionManager.GetAllActions().OfType<IUpdatableAction>().Where(IsNoPrivateAction)) {
                 updatableAction.AddHandler(
                     lifetime,
                     new EventGeneratingActionHandler(updatableAction, session, messageBus, dateUtils));
             }
+        }
+
+        private static bool IsNoPrivateAction(IUpdatableAction updatableAction)
+        {
+            var id = updatableAction.Id;
+            return id != SettingsCleaner.ActionId && id != UploadWizardActionHandler.ActionId;
         }
     }
 }
