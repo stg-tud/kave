@@ -58,7 +58,7 @@ namespace KaVE.Model.Events.CompletionEvent
             unchecked
             {
                 var hashCode = SelectedAfter.GetHashCode();
-                hashCode = (hashCode*397) ^ (Proposal != null ? Proposal.GetHashCode() : 0);
+                hashCode = (hashCode*397) ^ Proposal.GetHashCode();
                 return hashCode;
             }
         }

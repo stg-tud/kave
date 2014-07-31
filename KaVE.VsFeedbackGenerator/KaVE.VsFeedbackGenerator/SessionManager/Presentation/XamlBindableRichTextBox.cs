@@ -91,7 +91,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
             return xaml.Length > 40000;
         }
 
-        public static string RemoveXamlFormatting(string xaml)
+        private static string RemoveXamlFormatting(string xaml)
         {
             return NodeRegex.Replace(xaml, string.Empty).Replace("&lt;", "<").Replace("&gt;", ">").Replace("&amp;", "&");
         }
