@@ -12,13 +12,17 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sven Amann
  */
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using KaVE.Utils.Assertion;
 using KaVE.VsFeedbackGenerator.Generators;
 using KaVE.VsFeedbackGenerator.Utils.Logging;
-using Newtonsoft.Json;
 
 namespace KaVE.VsFeedbackGenerator.Utils.Json
 {
@@ -54,7 +58,7 @@ namespace KaVE.VsFeedbackGenerator.Utils.Json
             {
                 return json.ParseJsonTo<TMessage>();
             }
-            catch (JsonException jre)
+            catch (Exception jre)
             {
                 Registry.GetComponent<ILogger>().Error(jre, json);
                 // supressing broken lines

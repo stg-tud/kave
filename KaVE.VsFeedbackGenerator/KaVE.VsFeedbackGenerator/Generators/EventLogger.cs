@@ -47,7 +47,6 @@ namespace KaVE.VsFeedbackGenerator.Generators
             _messageChannel = messageBus;
             _logManager = logManager;
             _messageChannel.Subscribe<IDEEvent>(ProcessEvent);
-            logger.Error(new Exception());
         }
 
         private void ProcessEvent(IDEEvent @event)

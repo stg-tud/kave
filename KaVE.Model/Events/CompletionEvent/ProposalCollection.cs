@@ -89,7 +89,7 @@ namespace KaVE.Model.Events.CompletionEvent
 
         protected bool Equals(ProposalCollection other)
         {
-            return Proposals != null && Proposals.SequenceEqual(other.Proposals);
+            return Proposals.SequenceEqual(other.Proposals);
         }
 
         public override bool Equals(object obj)
@@ -99,7 +99,7 @@ namespace KaVE.Model.Events.CompletionEvent
 
         public override int GetHashCode()
         {
-            return (Proposals != null ? Proposals.GetHashCode() : 0);
+            return Proposals.GetHashCode();
         }
 
         public override string ToString()

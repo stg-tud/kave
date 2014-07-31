@@ -184,11 +184,12 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
         private void HandleCommandEnded(string guid, int id, object customIn, object customOut)
         {
             var commandId = GetCommand(guid, id).GetId();
+            // we need to take events from the queue here or enqueuing the next will fail!
+            var commandEvent = TryTakeFromQueue(commandId);
             if (IsSuperfluousCommand(commandId))
             {
                 return;
             }
-            var commandEvent = TakeFromQueue(commandId);
             if (commandEvent == null && IsBasicCompletionCommand(commandId))
             {
                 // for some reason code-completion command is not started...
@@ -203,7 +204,7 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
             return commandId.Equals("{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:107:BasicCompletion");
         }
 
-        private CommandEvent TakeFromQueue(string commandId)
+        private CommandEvent TryTakeFromQueue(string commandId)
         {
             var commandKey = commandId;
             CommandEvent evt;

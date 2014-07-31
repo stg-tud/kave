@@ -19,6 +19,7 @@
 
 using System;
 using System.Collections;
+using System.Security.Cryptography;
 using EnvDTE;
 using KaVE.Model.Events;
 using KaVE.Model.Names.VisualStudio;
@@ -181,6 +182,16 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.VisualStudio
             WhenCommandExecutes(command);
 
             AssertNoEvent();
+        }
+
+        [Test(Description = "BUGFIX: Superfluous events weren't removed from queue, which caused 'executing same event twice at a time' exception")]
+        public void ShouldNotFailIfSuperfluousEventIsFiredTwice()
+        {
+            var command = GetCommand("{5EFC7975-14BC-11CF-9B2B-00AA00573819}", 337, "Edit.GoToFindCombo");
+            GivenCommandIsDefined(command);
+
+            WhenCommandExecutes(command);
+            WhenCommandExecutes(command);
         }
 
         [Test]

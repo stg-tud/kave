@@ -127,7 +127,8 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
         private void OnRefreshFailed(Exception e)
         {
             var logEventGenerator = Registry.GetComponent<Generators.ILogger>();
-            logEventGenerator.Error(e);
+            logEventGenerator.Error(new Exception("refresh failed", e));
+            // TODO send error notification event to inform user!
             Sessions = null;
             SetIdle();
         }

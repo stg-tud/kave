@@ -73,7 +73,7 @@ namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
             }
             catch (Exception e)
             {
-                _logger.Error(e);
+                _logger.Error(new Exception("context analysis failed", e));
             }
             return false;
         }
