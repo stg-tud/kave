@@ -24,7 +24,7 @@ using NUnit.Framework;
 namespace KaVE.Utils.Tests.Reflection
 {
     [TestFixture]
-    internal class TypeExceptionsTest
+    internal class TypeExtensionsTest
     {
         // ReSharper disable once UnusedAutoPropertyAccessor.Local
         private int MyTestProperty { get; set; }
@@ -35,7 +35,7 @@ namespace KaVE.Utils.Tests.Reflection
         [Test]
         public void ShouldGetPropertyName()
         {
-            var actual = TypeExtensions<TypeExceptionsTest>.GetPropertyName(o => o.MyTestProperty);
+            var actual = TypeExtensions<TypeExtensionsTest>.GetPropertyName(o => o.MyTestProperty);
 
             Assert.AreEqual("MyTestProperty", actual);
         }
@@ -43,24 +43,33 @@ namespace KaVE.Utils.Tests.Reflection
         [Test(Description = "In some cases an implicit cast to object is introduced; this is tested explicitly here.")]
         public void ShouldGetPropertyWithCast()
         {
-            var actual = TypeExtensions<TypeExceptionsTest>.GetPropertyName(o => (object) o.MyTestProperty);
+            var actual = TypeExtensions<TypeExtensionsTest>.GetPropertyName(o => (object) o.MyTestProperty);
 
             Assert.AreEqual("MyTestProperty", actual);
         }
 
         [Test,
-         ExpectedException(ExpectedMessage = "Invalid expression type: Expected ExpressionType.MemberAccess, Found Call"
+         ExpectedException(ExpectedMessage = "Invalid expression type: Expected ExpressionType.MemberAccess, found ExpressionType.Call"
              )]
-        public void ShouldFailToGet()
+        public void ShouldFailToGetPropertyNameFromMethod()
         {
-            TypeExtensions<TypeExceptionsTest>.GetPropertyName(o => o.Equals(null));
+            TypeExtensions<TypeExtensionsTest>.GetPropertyName(o => o.Equals(null));
         }
 
         [Test]
         public void ShouldGetAttributedMember()
         {
-            var expected = new[] {typeof (TypeExceptionsTest).GetField("AttributedMember")};
-            var actual = typeof(TypeExceptionsTest).GetMembersWithCustomAttributeNoInherit<NotNullAttribute>();
+            var expected = new[] {typeof (TypeExtensionsTest).GetField("AttributedMember")};
+            var actual = typeof(TypeExtensionsTest).GetMembersWithCustomAttributeNoInherit<NotNullAttribute>();
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void ShouldGetMethodName()
+        {
+            const string expected = "ShouldGetMethodName";
+            var actual = TypeExtensions<TypeExtensionsTest>.GetMethodName(o => o.ShouldGetMethodName());
 
             Assert.AreEqual(expected, actual);
         }

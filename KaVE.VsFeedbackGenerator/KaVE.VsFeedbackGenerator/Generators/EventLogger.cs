@@ -17,12 +17,12 @@
  *    - Sven Amann
  */
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Application;
 using KaVE.Model.Events;
 using KaVE.Model.Events.VisualStudio;
+using KaVE.Utils.Reflection;
 using KaVE.VsFeedbackGenerator.Generators.Merging;
 using KaVE.VsFeedbackGenerator.MessageBus;
 using KaVE.VsFeedbackGenerator.Utils.Logging;
@@ -32,6 +32,9 @@ namespace KaVE.VsFeedbackGenerator.Generators
     [ShellComponent]
     internal class EventLogger
     {
+        internal static readonly string ProcessMethodName =
+            TypeExtensions<EventLogger>.GetMethodName(l => l.ProcessEvent(null));
+
         private static readonly IList<IEventMergeStrategy> MergeStrategies = new List<IEventMergeStrategy>
         {
             new CompletionEventMergingStrategy()
@@ -42,7 +45,7 @@ namespace KaVE.VsFeedbackGenerator.Generators
 
         private IDEEvent _lastEvent;
 
-        public EventLogger(IMessageBus messageBus, ILogManager<IDEEvent> logManager, ILogger logger)
+        public EventLogger(IMessageBus messageBus, ILogManager<IDEEvent> logManager)
         {
             _messageChannel = messageBus;
             _logManager = logManager;

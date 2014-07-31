@@ -17,6 +17,7 @@
  *    - Sven Amann
  */
 
+using System.Reflection;
 using JetBrains.Application;
 using JetBrains.Application.Components;
 using JetBrains.DataFlow;
@@ -31,20 +32,43 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
     [ShellComponent(ProgramConfigurations.VS_ADDIN)]
     internal class IDEStateEventGenerator : EventGeneratorBase
     {
-        public IDEStateEventGenerator(IIDESession session, IMessageBus messageBus, Lifetime lifetime, IDateUtils dateUtils)
+        private readonly EventLogger _logger;
+
+        public IDEStateEventGenerator(IIDESession session,
+            IMessageBus messageBus,
+            Lifetime lifetime,
+            IDateUtils dateUtils,
+            EventLogger logger)
             : base(session, messageBus, dateUtils)
         {
+            _logger = logger;
             FireIDEStateEvent(IDEStateEvent.LifecyclePhase.Startup);
-            lifetime.AddAction(() => FireIDEStateEvent(IDEStateEvent.LifecyclePhase.Shutdown));
+            lifetime.AddAction(FireShutdownEvent);
+        }
+
+        private void FireShutdownEvent()
+        {
+            // Sven: I found no way to ensure that the message bus is still
+            // running and the logger attachted to it, when we reach this point.
+            var ideStateEvent = CreateIDEStateEvent(IDEStateEvent.LifecyclePhase.Shutdown);
+            var process = typeof (EventLogger).GetMethod(
+                EventLogger.ProcessMethodName,
+                BindingFlags.Instance | BindingFlags.NonPublic);
+            process.Invoke(_logger, new object[] {ideStateEvent});
         }
 
         private void FireIDEStateEvent(IDEStateEvent.LifecyclePhase phase)
+        {
+            FireNow(CreateIDEStateEvent(phase));
+        }
+
+        private IDEStateEvent CreateIDEStateEvent(IDEStateEvent.LifecyclePhase phase)
         {
             var ideStateEvent = Create<IDEStateEvent>();
             ideStateEvent.IDELifecyclePhase = phase;
             ideStateEvent.OpenWindows = DTE.Windows.GetNames();
             ideStateEvent.OpenDocuments = DTE.Documents.GetNames();
-            FireNow(ideStateEvent);
+            return ideStateEvent;
         }
     }
 }

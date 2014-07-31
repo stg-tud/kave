@@ -39,10 +39,25 @@ namespace KaVE.Utils.Reflection
                 return ((MemberExpression) ((UnaryExpression) expression.Body).Operand).Member.Name;
             }
 
+            return ThrowInvalidExpression(ExpressionType.MemberAccess, expression.Body.NodeType);
+        }
+
+        private static string ThrowInvalidExpression(ExpressionType expectedType, ExpressionType actualType)
+        {
             throw new Exception(
                 string.Format(
-                    "Invalid expression type: Expected ExpressionType.MemberAccess, Found {0}",
-                    expression.Body.NodeType));
+                    "Invalid expression type: Expected ExpressionType.{0}, found ExpressionType.{1}",
+                    expectedType, actualType));
+        }
+
+        public static string GetMethodName(Expression<Action<T>> expression)
+        {
+            if (expression.Body.NodeType == ExpressionType.Call)
+            {
+                return ((MethodCallExpression) expression.Body).Method.Name;
+            }
+
+            return ThrowInvalidExpression(ExpressionType.Call, expression.Body.NodeType);
         }
     }
 
