@@ -22,6 +22,7 @@ using System.Linq.Expressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Media;
 using JetBrains.ActionManagement;
 using JetBrains.Application.Settings;
 using JetBrains.DataFlow;
@@ -84,9 +85,20 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
             window.Close();
         }
 
+        private bool ValidateUploadUri()
+        {
+            Uri uri;
+            return Uri.TryCreate(UploadUrlTextBox.Text, UriKind.Absolute, out uri);
+        }
+
         public bool OnOk()
         {
-            return true;
+            var valid = ValidateUploadUri();
+            if (!valid)
+            {
+                UploadUrlTextBox.Background =  Brushes.Pink;
+            }
+            return valid;
         }
 
         public bool ValidatePage()
