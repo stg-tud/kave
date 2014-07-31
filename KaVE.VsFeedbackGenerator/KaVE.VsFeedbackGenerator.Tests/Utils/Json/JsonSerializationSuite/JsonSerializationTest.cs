@@ -17,7 +17,9 @@
  *    - Sven Amann
  */
 
+using System.Collections.Generic;
 using KaVE.Model.Names.CSharp;
+using KaVE.Model.Query;
 using KaVE.VsFeedbackGenerator.Utils.Json;
 using Newtonsoft.Json;
 using NUnit.Framework;
@@ -138,6 +140,53 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.JsonSerializationSuite
             const string expected = "\"Indented\"";
             var actual = target.ToPrettyPrintJson();
             Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void ShouldProduceTypelessSerialization()
+        {
+            var query = new Query
+            {
+                sites =
+                    new List<CallSite>
+                    {
+                        new CallSite
+                        {
+                            kind = CallSiteKind.PARAM_CALL_SITE,
+                            call =
+                                new CoReMethodName {Name = "Lcc/recommenders/CallSite.param(Lcc/recommenders/Param;)V"},
+                            argumentIndex = 23
+                        },
+                        new CallSite
+                        {
+                            kind = CallSiteKind.RECEIVER_CALL_SITE,
+                            call =
+                                new CoReMethodName
+                                {
+                                    Name = "Lcc/recommenders/CallSite.receive(Lcc/recommenders/Receiver;)V"
+                                },
+                            argumentIndex = 0
+                        }
+                    },
+                definition =
+                    new DefinitionSite
+                    {
+                        kind = DefinitionKind.THIS,
+                        type = new CoReTypeName {Name = "Lcc/recommender/Definition"},
+                        method = new CoReMethodName {Name = "Lcc/receiver/Definer.define(Lcc/receiver/Scheme;)B"},
+                        field = new CoReFieldName {Name = "Lcc/recommender/Field.field;Lcc/recommender/Type"},
+                        arg = 42
+                    },
+                methodCtx = new CoReMethodName {Name = "Lcc/recommenders/Receiver.equals(Lcc/recommenders/Argument;)Z"},
+                classCtx = new CoReTypeName {Name = "Lcc/recommenders/Context"},
+                type = new CoReTypeName {Name = "Lcc/recommenders/usages/Query"}
+            };
+
+            const string compare =
+                @"{""sites"":[{""kind"":""PARAM_CALL_SITE"",""call"":""Lcc/recommenders/CallSite.param(Lcc/recommenders/Param;)V"",""argumentIndex"":23},{""kind"":""RECEIVER_CALL_SITE"",""call"":""Lcc/recommenders/CallSite.receive(Lcc/recommenders/Receiver;)V"",""argumentIndex"":0}],""definition"":{""kind"":""THIS"",""type"":""Lcc/recommender/Definition"",""method"":""Lcc/receiver/Definer.define(Lcc/receiver/Scheme;)B"",""field"":""Lcc/recommender/Field.field;Lcc/recommender/Type"",""arg"":42},""methodCtx"":""Lcc/recommenders/Receiver.equals(Lcc/recommenders/Argument;)Z"",""classCtx"":""Lcc/recommenders/Context"",""type"":""Lcc/recommenders/usages/Query""}";
+
+            var actual = query.ToTypelessJson();
+            Assert.AreEqual(compare, actual);
         }
     }
 }
