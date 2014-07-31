@@ -182,9 +182,6 @@
     <Compile Include="Utils\ActionManagerExtensions.cs" />
     <Compile Include="Utils\BackgroundWorker.cs" />
     <Compile Include="Utils\CallbackManager.cs" />
-    <Compile Include="TrayNotification\PopupAbortConfirmationDialog.xaml.cs">
-      <DependentUpon>PopupAbortConfirmationDialog.xaml</DependentUpon>
-    </Compile>
     <Compile Include="TrayNotification\NotifyTrayIcon.cs" />
     <Compile Include="TrayNotification\SoftBalloonPopup.xaml.cs">
       <DependentUpon>SoftBalloonPopup.xaml</DependentUpon>
@@ -324,10 +321,6 @@
     <Page Include="TrayNotification\HardBalloonPopup.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </Page>
-    <Page Include="TrayNotification\PopupAbortConfirmationDialog.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="TrayNotification\SoftBalloonPopup.xaml">
       <SubType>Designer</SubType>
