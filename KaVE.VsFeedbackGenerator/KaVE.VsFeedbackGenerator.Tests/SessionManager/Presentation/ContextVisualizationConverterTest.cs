@@ -46,7 +46,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
         // TODO @Seb review: is it better to return a message that refers to an incomplete context?
         public void ShouldHandleEmptyContextLikeNoContext()
         {
-            var context = new Context();
+            var context = Context.Empty;
 
             var xaml = context.ToXaml();
             Assert.IsNull(xaml);
@@ -643,7 +643,9 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
             };
 
             var actual = context.ToXaml();
-            AssertContainsUsing(actual, context.EnclosingMethod.Parameters[0].ValueType);
+            var enclosingMethod = context.EnclosingMethod;
+            Assert.NotNull(enclosingMethod);
+            AssertContainsUsing(actual, enclosingMethod.Parameters[0].ValueType);
         }
 
         [Test]
@@ -659,7 +661,9 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
             };
 
             var actual = context.ToXaml();
-            AssertContainsUsing(actual, context.EnclosingMethod.ReturnType);
+            var enclosingMethod = context.EnclosingMethod;
+            Assert.NotNull(enclosingMethod);
+            AssertContainsUsing(actual, enclosingMethod.ReturnType);
         }
 
         [Test]

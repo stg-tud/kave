@@ -360,7 +360,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
                         $
                     }
                 }");
-            var actual = ResultContext.EnclosingMethod.Identifier;
+            var actual = FindEnclosingMethodHierarchy(ResultContext).Element.Identifier;
             Assert.AreEqual("[System.Void, mscorlib, 4.0.0.0] [C, TestProject].M([System.Int32, mscorlib, 4.0.0.0] i, [?] ???)", actual);
         }
     }

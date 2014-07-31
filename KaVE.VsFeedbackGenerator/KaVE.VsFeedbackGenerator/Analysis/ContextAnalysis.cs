@@ -18,52 +18,69 @@
  *    - Sven Amann
  */
 
+using System;
 using JetBrains.ReSharper.Feature.Services.CSharp.CodeCompletion.Infrastructure;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
 using KaVE.JetBrains.Annotations;
 using KaVE.Model.Events.CompletionEvent;
+using KaVE.VsFeedbackGenerator.Generators;
 using KaVE.VsFeedbackGenerator.Utils.Names;
 
 namespace KaVE.VsFeedbackGenerator.Analysis
 {
     internal class ContextAnalysis
     {
-        private ITreeNode _nodeInFile;
-        private Context _context;
-
+        private readonly ILogger _logger;
         private readonly TypeShapeAnalysis _typeShapeAnalysis = new TypeShapeAnalysis();
         private readonly CompletionTargetAnalysis _completionTargetAnalysis = new CompletionTargetAnalysis();
 
         private readonly CalledMethodsForEntryPointsAnalysis _calledMethodsForEntryPointsAnalysis =
             new CalledMethodsForEntryPointsAnalysis();
 
-        public static Context Analyze(CSharpCodeCompletionContext rsContext)
+        private ContextAnalysis(ILogger logger)
         {
-            return new ContextAnalysis().AnalyzeInternal(rsContext);
+            _logger = logger;
+        }
+
+        public static Context Analyze(CSharpCodeCompletionContext rsContext, ILogger logger)
+        {
+            return new ContextAnalysis(logger).AnalyzeInternal(rsContext);
         }
 
         private Context AnalyzeInternal(CSharpCodeCompletionContext rsContext)
         {
-            _nodeInFile = rsContext.NodeInFile;
-            _context = new Context();
+            var context = Context.Empty;
 
-            var typeDeclaration = FindEnclosing<ITypeDeclaration>(_nodeInFile);
+            try
+            {
+                AnalyzeInternal(rsContext.NodeInFile, context);
+            }
+            catch (Exception e)
+            {
+                _logger.Error(new Exception("analysis failed", e));
+            }
+
+            return context;
+        }
+
+        private void AnalyzeInternal(ITreeNode nodeInFile, Context context)
+        {
+            var typeDeclaration = FindEnclosing<ITypeDeclaration>(nodeInFile);
             if (typeDeclaration != null)
             {
-                _context.TypeShape = _typeShapeAnalysis.Analyze(typeDeclaration);
-                _context.TriggerTarget = _completionTargetAnalysis.Analyze(_nodeInFile);
+                context.TypeShape = _typeShapeAnalysis.Analyze(typeDeclaration);
+                context.TriggerTarget = _completionTargetAnalysis.Analyze(nodeInFile);
 
-                var entryPoints = new EntryPointSelector(typeDeclaration, _context.TypeShape).GetEntryPoints();
-                _context.EntryPointToCalledMethods = _calledMethodsForEntryPointsAnalysis.Analyze(entryPoints);
+                var entryPoints = new EntryPointSelector(typeDeclaration, context.TypeShape).GetEntryPoints();
+                context.EntryPointToCalledMethods = _calledMethodsForEntryPointsAnalysis.Analyze(entryPoints);
 
-                var methodDeclaration = FindEnclosing<IMethodDeclaration>(_nodeInFile);
+                var methodDeclaration = FindEnclosing<IMethodDeclaration>(nodeInFile);
                 if (methodDeclaration != null)
                 {
-                    _context.EnclosingMethod = methodDeclaration.GetName();
+                    context.EnclosingMethod = methodDeclaration.GetName();
                 }
             }
-            return _context;
         }
 
         [CanBeNull]

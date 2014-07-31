@@ -44,7 +44,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
 
         public static string ToXaml(this Context context)
         {
-            if (context == null || context.TypeShape == null || context.TypeShape.TypeHierarchy == null)
+            if (context == null || context.TypeShape.TypeHierarchy == null)
             {
                 return null;
             }

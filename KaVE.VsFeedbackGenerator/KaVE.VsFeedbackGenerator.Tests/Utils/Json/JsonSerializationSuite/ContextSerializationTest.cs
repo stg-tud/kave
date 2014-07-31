@@ -31,7 +31,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.JsonSerializationSuite
         [Test]
         public void ShouldSerializeEmptyContext()
         {
-            var context = new Context();
+            var context = Context.Empty;
             JsonAssert.SerializationPreservesData(context);
         }
 

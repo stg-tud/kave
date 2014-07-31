@@ -49,7 +49,6 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.Merging
             var now = DateTime.Now;
             var activeWindow = WindowName.Get("testWindow");
             var activeDocument = DocumentName.Get("testDocument");
-            var context = new Context();
 
             _event = new CompletionEvent
             {
@@ -58,7 +57,6 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.Merging
                 ActiveDocument = activeDocument,
                 TriggeredAt = now,
                 Prefix = "",
-                Context = context,
                 ProposalCollection = _proposalCollection,
                 TerminatedAt = now.AddMilliseconds(100),
             };
@@ -70,7 +68,6 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.Merging
                 ActiveDocument = activeDocument,
                 TriggeredAt = now.AddMilliseconds(200),
                 Prefix = "a",
-                Context = context,
                 ProposalCollection = new ProposalCollection(_proposalCollection.Proposals.Take(3).ToList()),
                 TerminatedAt = now.AddMilliseconds(300),
                 TerminatedAs = CompletionEvent.TerminationState.Applied,

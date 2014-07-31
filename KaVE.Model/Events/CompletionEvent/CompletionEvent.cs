@@ -54,13 +54,15 @@ namespace KaVE.Model.Events.CompletionEvent
         {
             Selections = new List<ProposalSelection>();
             ProposalCollection = new ProposalCollection();
+            Context = Context.Empty;
+            Prefix = "";
         }
 
         /// <summary>
         /// The context in which the completion takes place. These information
         /// is what is used as the query to the intelligent code completion.
         /// </summary>
-        [DataMember]
+        [DataMember, NotNull]
         public Context Context { get; set; }
 
         /// <summary>
@@ -72,7 +74,7 @@ namespace KaVE.Model.Events.CompletionEvent
         /// <summary>
         /// The typed prefix that is used to filter the proposal list.
         /// </summary>
-        [DataMember]
+        [DataMember, NotNull]
         public string Prefix { get; set; }
 
         /// <summary>
@@ -121,9 +123,9 @@ namespace KaVE.Model.Events.CompletionEvent
             unchecked
             {
                 var hashCode = base.GetHashCode();
-                hashCode = (hashCode*397) ^ (Context != null ? Context.GetHashCode() : 0);
+                hashCode = (hashCode*397) ^ Context.GetHashCode();
                 hashCode = (hashCode*397) ^ ProposalCollection.GetHashCode();
-                hashCode = (hashCode*397) ^ (Prefix != null ? Prefix.GetHashCode() : 0);
+                hashCode = (hashCode*397) ^ Prefix.GetHashCode();
                 hashCode = (hashCode*397) ^ Selections.GetHashCode();
                 hashCode = (hashCode*397) ^ (int) TerminatedBy;
                 hashCode = (hashCode*397) ^ (int) TerminatedAs;

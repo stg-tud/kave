@@ -31,6 +31,8 @@ using KaVE.Model.Events.CompletionEvent;
 using KaVE.Model.Names;
 using KaVE.Model.SSTs;
 using KaVE.VsFeedbackGenerator.Analysis;
+using KaVE.VsFeedbackGenerator.Generators;
+using Moq;
 
 namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
 {
@@ -40,7 +42,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
         public IEnumerable<IMethodName> LastEntryPoints { get; private set; }
         public Context LastContext { get; private set; }
         public SST LastSST { get; private set; }
-        public Exception LastException { get; private set; }
+        public Tuple<Exception, string> LastException { get; private set; }
 
         public bool HasFailed
         {
@@ -49,27 +51,35 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
 
         protected override bool AddLookupItems(CSharpCodeCompletionContext context, GroupedItemsCollector collector)
         {
-            try
-            {
-                LastException = null;
-                LastContext = ContextAnalysis.Analyze(context);
+            LastException = null;
+            LastContext = ContextAnalysis.Analyze(context, MockLogger());
 
-                var typeDeclaration = ContextAnalysis.FindEnclosing<ITypeDeclaration>(context.NodeInFile);
-                if (typeDeclaration != null)
-                {
-                    var typeShape = new TypeShapeAnalysis().Analyze(typeDeclaration);
-                    var entryPoints = new EntryPointSelector(typeDeclaration, typeShape).GetEntryPoints();
-                    LastSST = SSTAnalysis.Analyze(context, typeDeclaration, entryPoints);
-                    LastEntryPoints = entryPoints.Select(ep => ep.Name);
-                }
-            }
-            catch (Exception e)
+            var typeDeclaration = ContextAnalysis.FindEnclosing<ITypeDeclaration>(context.NodeInFile);
+            if (typeDeclaration != null)
             {
-                LastException = e;
-                LastContext = null;
-                LastSST = null;
+                var typeShape = new TypeShapeAnalysis().Analyze(typeDeclaration);
+                var entryPoints = new EntryPointSelector(typeDeclaration, typeShape).GetEntryPoints();
+                LastSST = SSTAnalysis.Analyze(context, typeDeclaration, entryPoints);
+                LastEntryPoints = entryPoints.Select(ep => ep.Name);
             }
             return false;
+        }
+
+        private ILogger MockLogger()
+        {
+            var mockLogger = new Mock<ILogger>();
+            mockLogger.Setup(logger => logger.Error(It.IsAny<Exception>()))
+                      .Callback<Exception>(e => LastException = NewException(e, ""));
+            mockLogger.Setup(logger => logger.Error(It.IsAny<Exception>(), It.IsAny<string>()))
+                      .Callback<Exception, string>((e, msg) => LastException = NewException(e, msg));
+            mockLogger.Setup(logger => logger.Error(It.IsAny<string>()))
+                      .Callback<string>(msg => LastException = NewException(null, msg));
+            return mockLogger.Object;
+        }
+
+        private static Tuple<Exception, string> NewException(Exception exception, string msg)
+        {
+            return new Tuple<Exception, string>(exception, msg);
         }
     }
 }

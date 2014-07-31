@@ -66,15 +66,8 @@ namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
 
         protected override bool AddLookupItems(CSharpCodeCompletionContext context, GroupedItemsCollector collector)
         {
-            try
-            {
-                var ctx = ContextAnalysis.Analyze(context);
-                _handler.SetContext(ctx);
-            }
-            catch (Exception e)
-            {
-                _logger.Error(new Exception("context analysis failed", e));
-            }
+            var ctx = ContextAnalysis.Analyze(context, _logger);
+            _handler.SetContext(ctx);
             return false;
         }
     }
@@ -86,7 +79,10 @@ namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
         private Context _context;
 
         public CodeCompletionEventHandler(IIDESession session, IMessageBus messageBus, IDateUtils dateUtils)
-            : base(session, messageBus, dateUtils) {}
+            : base(session, messageBus, dateUtils)
+        {
+            _context = Context.Empty;
+        }
 
         public void SetContext(Context context)
         {

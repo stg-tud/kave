@@ -163,7 +163,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests
 
             if (TestAnalysisComponent.HasFailed)
             {
-                throw new Exception("", TestAnalysisComponent.LastException);
+                throw new Exception(TestAnalysisComponent.LastException.Item2, TestAnalysisComponent.LastException.Item1);
             }
         }
 

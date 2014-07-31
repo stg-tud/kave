@@ -17,6 +17,7 @@
  *    - Dennis Albrecht
  *    - Sebastian Proksch
  */
+
 using System;
 using System.Linq;
 using JetBrains.ReSharper.Feature.Services.CSharp.CodeCompletion.Infrastructure;
@@ -24,6 +25,7 @@ using JetBrains.ReSharper.Feature.Services.Lookup;
 using KaVE.Model.Events.CompletionEvent;
 using KaVE.Model.Names;
 using KaVE.VsFeedbackGenerator.Analysis;
+using KaVE.VsFeedbackGenerator.Generators;
 
 namespace KaVE.VsFeedbackGenerator.CodeCompletion
 {
@@ -34,19 +36,18 @@ namespace KaVE.VsFeedbackGenerator.CodeCompletion
 
         private readonly ExampleNetwork _network = new ExampleNetwork();
         private Context _context;
+        private readonly ILogger _logger;
+
+        public ExemplaryProposalProvider(ILogger logger)
+        {
+            _logger = logger;
+        }
 
         protected override bool IsAvailable(CSharpCodeCompletionContext context)
         {
-            try
-            {
-                _context = ContextAnalysis.Analyze(context);
-                var typeName = _context.TriggerTarget as ITypeName;
-                return typeName != null && typeName.Name == ExpectedType;
-            }
-            catch (Exception)
-            {
-                return base.IsAvailable(context);
-            }
+            _context = ContextAnalysis.Analyze(context, _logger);
+            var typeName = _context.TriggerTarget as ITypeName;
+            return typeName != null && typeName.Name == ExpectedType;
         }
 
         protected override bool AddLookupItems(CSharpCodeCompletionContext context, GroupedItemsCollector collector)
