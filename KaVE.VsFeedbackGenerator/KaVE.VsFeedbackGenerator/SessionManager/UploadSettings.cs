@@ -29,9 +29,6 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
     {
         private const string DateTimeMinValue = "0001-01-01T00:00:00";
 
-        [SettingsEntry(false, "Wheather or not to show a confirmation dialog when closing the upload-reminder popup.")]
-        public bool DoNotShowNotificationCloseDialogAgain;
-
         [SettingsEntry(DateTimeMinValue, "Timestamp of the last time the upload-reminder popup was shown to the user.")]
         public DateTime LastNotificationDate;
 
