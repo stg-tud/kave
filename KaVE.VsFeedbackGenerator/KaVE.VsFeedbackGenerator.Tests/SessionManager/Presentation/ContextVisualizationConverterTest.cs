@@ -33,7 +33,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
         private const string CompletionMarker = "<Italic Foreground=\"Blue\">$</Italic>";
         private const string SomeOtherNamespace = "ecapseman";
         private const string SomeGenericType = "NGeneric.Generic`1[[T -> TT]]";
-        private const string GenericTypeRepresentation = "Generic`1&lt;T&gt;";
+        private static readonly string GenericTypeRepresentation = Escape("Generic`1<T>");
 
         [Test]
         public void ShouldHandleNoContext()
@@ -616,7 +616,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                 EnclosingMethod = Method("N.Ret", "N.Class", "Method[[T -> TT]]", "N.Arg")
             };
 
-            const string expected = "Method&lt;T&gt;";
+            var expected = Escape("Method<T>");
 
             var actual = context.ToXaml();
             AssertContainsOnce(actual, expected);
@@ -633,12 +633,12 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                     {
                         {
                             Method("N.Ret", "N.Class", "Method[[T -> TT]]", "N.Arg"),
-                            new HashSet<IMethodName> {Method("N.Ret1", "N.Ty1", ".ctor", "N.Param")}
+                            new HashSet<IMethodName>()
                         }
                     }
             };
 
-            const string expected = "Method&lt;T&gt;";
+            var expected = Escape("Method<T>");
 
             var actual = context.ToXaml();
             AssertContainsOnce(actual, expected);
@@ -660,7 +660,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                     }
             };
 
-            const string expected = ".Method&lt;T&gt;";
+            var expected = Escape(".Method<T>");
 
             var actual = context.ToXaml();
             AssertContainsOnce(actual, expected);
@@ -682,7 +682,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                     }
             };
 
-            const string expected = "Ret Method&lt;T&gt;(T arg0)";
+            var expected = Escape("Ret Method<T>(T arg0)");
 
             var actual = context.ToXaml();
             AssertContainsOnce(actual, expected);
@@ -704,7 +704,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                     }
             };
 
-            const string expected = "T Method&lt;T&gt;(Arg arg0)";
+            var expected = Escape("T Method<T>(Arg arg0)");
 
             var actual = context.ToXaml();
             AssertContainsOnce(actual, expected);
@@ -726,7 +726,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                     }
             };
 
-            const string expected = "Ret Method&lt;T&gt;(List`1&lt;T&gt; arg0)";
+            var expected = Escape("Ret Method<T>(List`1<T> arg0)");
 
             var actual = context.ToXaml();
             AssertContainsOnce(actual, expected);
@@ -748,7 +748,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                     }
             };
 
-            const string expected = "List`1&lt;T&gt; Method&lt;T&gt;(Arg arg0)";
+            var expected = Escape("List`1<T> Method<T>(Arg arg0)");
 
             var actual = context.ToXaml();
             AssertContainsOnce(actual, expected);
@@ -936,6 +936,11 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
             StringAssert.DoesNotContain("using", actual);
             var typeName = GetFirstCalledMethodFromFirstEntryPoint(context).ReturnType;
             StringAssert.DoesNotContain(typeName.Namespace + "." + typeName.Name, actual);
+        }
+
+        private static string Escape(string xml)
+        {
+            return xml.Replace("<", "&lt;").Replace(">", "&gt;");
         }
 
         private static void AssertContainsUsing(string actual, ITypeName typeName)
