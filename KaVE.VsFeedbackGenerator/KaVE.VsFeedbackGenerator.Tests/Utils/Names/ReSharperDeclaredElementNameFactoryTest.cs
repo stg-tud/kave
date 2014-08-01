@@ -18,9 +18,11 @@
  */
 
 using System.Collections.Generic;
+using System.Linq;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.DeclaredElements;
 using JetBrains.ReSharper.Psi.ExtensionsAPI;
+using JetBrains.ReSharper.Psi.Impl.Resolve;
 using JetBrains.ReSharper.Psi.Resolve;
 using KaVE.Model.Names;
 using KaVE.Model.Names.CSharp;
@@ -135,7 +137,9 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Names
             fieldMock.Setup(f => f.Type).Returns(TypeMockUtils.MockIType("ValueType", "VTA", "1.2.3.4"));
             fieldMock.Setup(f => f.ShortName).Returns("FieldName");
 
-            AssertName(fieldMock.Object, FieldName.Get("[ValueType, VTA, 1.2.3.4] [DeclaringType, DTA, 0.9.8.7].FieldName"));
+            AssertName(
+                fieldMock.Object,
+                FieldName.Get("[ValueType, VTA, 1.2.3.4] [DeclaringType, DTA, 0.9.8.7].FieldName"));
         }
 
         [Test]
@@ -164,14 +168,16 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Names
         {
             var propertyMock = new Mock<IProperty>();
             propertyMock.Setup(p => p.GetContainingType())
-                     .Returns(TypeMockUtils.MockTypeElement("DeclaringType", "DTA", "0.9.8.7"));
+                        .Returns(TypeMockUtils.MockTypeElement("DeclaringType", "DTA", "0.9.8.7"));
             propertyMock.Setup(p => p.ReturnType).Returns(TypeMockUtils.MockIType("ValueType", "VTA", "1.2.3.4"));
             propertyMock.Setup(p => p.ShortName).Returns("PropertyName");
             propertyMock.Setup(p => p.IsReadable).Returns(true);
             propertyMock.Setup(p => p.IsWritable).Returns(true);
             propertyMock.Setup(p => p.Parameters).Returns(new List<IParameter>());
 
-            AssertName(propertyMock.Object, PropertyName.Get("set get [ValueType, VTA, 1.2.3.4] [DeclaringType, DTA, 0.9.8.7].PropertyName()"));
+            AssertName(
+                propertyMock.Object,
+                PropertyName.Get("set get [ValueType, VTA, 1.2.3.4] [DeclaringType, DTA, 0.9.8.7].PropertyName()"));
         }
 
         [Test]
@@ -194,6 +200,27 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Names
                 functionMock.Object,
                 MethodName.Get("[ReturnType, RTA, 1.2.3.4] [DeclaringType, DTA, 0.9.8.7].MethodName()"));
         }
+
+        // TODO @Sven: Write tests for function with parameters
+
+        [Test]
+        public void ShouldGetNameForIMethodWithTypeParameters()
+        {
+            var method = new Mock<IMethod>();
+            method.Setup(m => m.GetContainingType())
+                  .Returns(TypeMockUtils.MockTypeElement("DeclaringType", "DTA", "0.9.8.7"));
+            method.Setup(m => m.ReturnType).Returns(TypeMockUtils.MockIType("ReturnType", "RTA", "1.2.3.4"));
+            method.Setup(m => m.ShortName).Returns("MethodName");
+            method.Setup(m => m.Parameters).Returns(new List<IParameter>());
+
+            method.Setup(m => m.TypeParameters).Returns(new[] {MockTypeParameter("T"), MockTypeParameter("U")});
+
+            AssertName(
+                method.Object,
+                MethodName.Get("[ReturnType, RTA, 1.2.3.4] [DeclaringType, DTA, 0.9.8.7].MethodName`2[[T],[U]]()"));
+        }
+
+        // TODO @Sven: Write tests for type parameters
 
         [Test]
         public void ShouldGetNameForStaticIFunction()
@@ -242,7 +269,9 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Names
             mockEvent.Setup(p => p.Type).Returns(TypeMockUtils.MockIType("HandlerType", "HTA", "1.2.3.4"));
             mockEvent.Setup(p => p.ShortName).Returns("EventName");
 
-            AssertName(mockEvent.Object, EventName.Get("[HandlerType, HTA, 1.2.3.4] [DeclaringType, DTA, 0.9.8.7].EventName"));
+            AssertName(
+                mockEvent.Object,
+                EventName.Get("[HandlerType, HTA, 1.2.3.4] [DeclaringType, DTA, 0.9.8.7].EventName"));
         }
 
         [Test]
@@ -266,7 +295,8 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Names
             AssertUnknownName<IAlias>(AliasName.UnknownName);
         }
 
-        private static void AssertUnknownName<TDeclaredElement>(IName unknownName) where TDeclaredElement : class, IDeclaredElement
+        private static void AssertUnknownName<TDeclaredElement>(IName unknownName)
+            where TDeclaredElement : class, IDeclaredElement
         {
             var unknownElement = new Mock<TDeclaredElement>();
             unknownElement.Setup(e => e.ShortName).Returns(SharedImplUtil.MISSING_DECLARATION_NAME);
@@ -277,8 +307,30 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Names
         private static void AssertName<TDeclaredElement, TName>(TDeclaredElement declaredElement, TName expected)
             where TDeclaredElement : class, IDeclaredElement where TName : IName
         {
-            var actual = declaredElement.GetName(EmptySubstitution.INSTANCE);
+            AssertName(declaredElement, expected, EmptySubstitution.INSTANCE);
+        }
+
+        private static void AssertName<TDeclaredElement, TName>(TDeclaredElement declaredElement,
+            TName expected,
+            ISubstitution substitution) where TDeclaredElement : class, IDeclaredElement where TName : IName
+        {
+            var actual = declaredElement.GetName(substitution);
             Assert.AreSame(expected, actual);
+        }
+
+        private static ITypeParameter MockTypeParameter(string value)
+        {
+            var mockTypeParameter = new Mock<ITypeParameter>();
+            mockTypeParameter.Setup(tp => tp.ShortName).Returns(value);
+
+            var typeParameter = mockTypeParameter.Object;
+            return typeParameter;
+        }
+
+        // ReSharper disable once UnusedMember.Local
+        private static ISubstitution MockSubstitution(IDictionary<ITypeParameter, IType> substitution)
+        {
+            return new SubstitutionImpl(substitution.Keys.ToList(), substitution.Values.ToList());
         }
     }
 }

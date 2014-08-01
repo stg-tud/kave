@@ -71,7 +71,7 @@ namespace KaVE.Model.Names.CSharp
             get
             {
                 var fullName = FullName;
-                var startOfTypeParameters = fullName.IndexOf("[[", StringComparison.Ordinal);
+                var startOfTypeParameters = fullName.LastIndexOf('`');
                 return startOfTypeParameters > -1 ? fullName.Substring(0, startOfTypeParameters) : FullName;
             }
         }

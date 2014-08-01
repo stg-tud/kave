@@ -211,6 +211,11 @@ namespace KaVE.Model.Names.CSharp
                 {
                     rawFullName = rawFullName.Substring(endOfOutTypeName + 1);
                 }
+                var endOfTypeName = rawFullName.LastIndexOf('`');
+                if (endOfTypeName > -1)
+                {
+                    rawFullName = rawFullName.Substring(0, endOfTypeName);
+                }
                 var startIndexOfSimpleName = rawFullName.LastIndexOf('.');
                 return rawFullName.Substring(startIndexOfSimpleName + 1);
             }

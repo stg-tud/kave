@@ -321,7 +321,7 @@ namespace KaVE.Model.Tests.Names.CSharp
 
         [TestCase("System.UInt16, mscorlib, 4.0.0.0", "UInt16"),
          TestCase("e:Full.Enum.Type, E, 1.2.3.4", "Type"),
-         TestCase("System.Nullable`1[[System.Int32, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0", "Nullable`1"),
+         TestCase("System.Nullable`1[[System.Int32, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0", "Nullable"),
          TestCase("T -> Some.Arbitrary.Type, Assembly, 5.6.4.7", "Type"),
          TestCase("Outer.Type+InnerType, As, 1.2.3.4", "InnerType"),
          TestCase("?", "?")]
@@ -382,7 +382,7 @@ namespace KaVE.Model.Tests.Names.CSharp
                     "pack.age.MyType`2[[" + stringIdentifier + "],[" + intIdentifier + "]], " + TestAssemblyIdentifier);
 
             Assert.AreEqual(TestAssemblyIdentifier, parameterizedTypeName.Assembly.Identifier);
-            Assert.AreEqual("MyType`2", parameterizedTypeName.Name);
+            Assert.AreEqual("MyType", parameterizedTypeName.Name);
             Assert.IsTrue(parameterizedTypeName.IsGenericEntity);
             Assert.IsTrue(parameterizedTypeName.HasTypeParameters);
             Assert.IsFalse(parameterizedTypeName.IsArrayType);

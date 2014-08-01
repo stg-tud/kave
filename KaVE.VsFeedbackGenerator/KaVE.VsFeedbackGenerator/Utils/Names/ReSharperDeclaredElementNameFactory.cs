@@ -196,10 +196,11 @@ namespace KaVE.VsFeedbackGenerator.Utils.Names
         {
             var identifier = new StringBuilder();
             identifier.Append(function.GetMemberIdentifier(substitution, function.ReturnType));
-            var functionWithTypeParameters = function as ITypeParametersOwner;
-            if (functionWithTypeParameters != null)
+            var typeParametersOwner = function as ITypeParametersOwner;
+            if (typeParametersOwner != null && typeParametersOwner.TypeParameters.Any())
             {
-                identifier.Append(functionWithTypeParameters.GetTypeParametersList(substitution));
+                identifier.Append('`').Append(typeParametersOwner.TypeParameters.Count);
+                identifier.Append(typeParametersOwner.GetTypeParametersList(substitution));
             }
             identifier.AppendParameters(function, substitution);
             return MethodName.Get(identifier.ToString());

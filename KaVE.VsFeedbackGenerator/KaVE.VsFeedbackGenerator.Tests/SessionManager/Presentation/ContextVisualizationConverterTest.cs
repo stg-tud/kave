@@ -33,7 +33,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
         private const string CompletionMarker = "<Italic Foreground=\"Blue\">$</Italic>";
         private const string SomeOtherNamespace = "ecapseman";
         private const string SomeGenericType = "NGeneric.Generic`1[[T -> TT]]";
-        private static readonly string GenericTypeRepresentation = Escape("Generic`1<T>");
+        private static readonly string GenericTypeRepresentation = Escape("Generic<T>");
 
         [Test]
         public void ShouldHandleNoContext()
@@ -613,7 +613,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
             var context = new Context
             {
                 TypeShape = new TypeShape {TypeHierarchy = new TypeHierarchy(CreateType("N.Class"))},
-                EnclosingMethod = Method("N.Ret", "N.Class", "Method[[T -> TT]]", "N.Arg")
+                EnclosingMethod = Method("N.Ret", "N.Class", "Method`1[[T -> TT]]", "N.Arg")
             };
 
             var expected = Escape("Method<T>");
@@ -632,7 +632,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                     new Dictionary<IMethodName, ISet<IMethodName>>
                     {
                         {
-                            Method("N.Ret", "N.Class", "Method[[T -> TT]]", "N.Arg"),
+                            Method("N.Ret", "N.Class", "Method`1[[T -> TT]]", "N.Arg"),
                             new HashSet<IMethodName>()
                         }
                     }
@@ -655,7 +655,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                     {
                         {
                             Method("N.Ret", "N.Class", "Method", "N.Arg"),
-                            new HashSet<IMethodName> {Method("N.Ret1", "N.Ty1", "Method[[T -> TT]]", "N.Param")}
+                            new HashSet<IMethodName> {Method("N.Ret1", "N.Ty1", "Method`1[[T -> TT]]", "N.Param")}
                         }
                     }
             };
@@ -676,7 +676,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                     new Dictionary<IMethodName, ISet<IMethodName>>
                     {
                         {
-                            MethodName.Get("[N.Ret, A, 1.0.0.0] [N.Class, A, 1.0.0.0].Method[[T -> T]]([T] arg0)"),
+                            MethodName.Get("[N.Ret, A, 1.0.0.0] [N.Class, A, 1.0.0.0].Method`1[[T -> T]]([T] arg0)"),
                             new HashSet<IMethodName>()
                         }
                     }
@@ -698,7 +698,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                     new Dictionary<IMethodName, ISet<IMethodName>>
                     {
                         {
-                            MethodName.Get("[T] [N.Class, A, 1.0.0.0].Method[[T -> T]]([N.Arg, A, 1.0.0.0] arg0)"),
+                            MethodName.Get("[T] [N.Class, A, 1.0.0.0].Method`1[[T -> T]]([N.Arg, A, 1.0.0.0] arg0)"),
                             new HashSet<IMethodName>()
                         }
                     }
@@ -720,13 +720,13 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                     new Dictionary<IMethodName, ISet<IMethodName>>
                     {
                         {
-                            MethodName.Get("[N.Ret, A, 1.0.0.0] [N.Class, A, 1.0.0.0].Method[[T -> T]]([List`1[[T -> T]], A, 1.0.0.0] arg0)"),
+                            MethodName.Get("[N.Ret, A, 1.0.0.0] [N.Class, A, 1.0.0.0].Method`1[[T -> T]]([List`1[[T -> T]], A, 1.0.0.0] arg0)"),
                             new HashSet<IMethodName>()
                         }
                     }
             };
 
-            var expected = Escape("Ret Method<T>(List`1<T> arg0)");
+            var expected = Escape("Ret Method<T>(List<T> arg0)");
 
             var actual = context.ToXaml();
             AssertContainsOnce(actual, expected);
@@ -742,13 +742,13 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                     new Dictionary<IMethodName, ISet<IMethodName>>
                     {
                         {
-                            MethodName.Get("[List`1[[T -> T]], A, 1.0.0.0] [N.Class, A, 1.0.0.0].Method[[T -> T]]([N.Arg, A, 1.0.0.0] arg0)"),
+                            MethodName.Get("[List`1[[T -> T]], A, 1.0.0.0] [N.Class, A, 1.0.0.0].Method`1[[T -> T]]([N.Arg, A, 1.0.0.0] arg0)"),
                             new HashSet<IMethodName>()
                         }
                     }
             };
 
-            var expected = Escape("List`1<T> Method<T>(Arg arg0)");
+            var expected = Escape("List<T> Method<T>(Arg arg0)");
 
             var actual = context.ToXaml();
             AssertContainsOnce(actual, expected);

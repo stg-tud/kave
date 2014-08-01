@@ -488,10 +488,10 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
         public void ShouldAnonymizeMethodTypeParametersIfDeclaredInEnclosingProject()
         {
             var original = MethodName.Get(
-                "[RT, A, 1.2.3.4] [DT, A, 1.2.3.4].M[[T -> Foo, EP],[E -> Bar, A, 1.2.3.4]]()");
+                "[RT, A, 1.2.3.4] [DT, A, 1.2.3.4].M`2[[T -> Foo, EP],[E -> Bar, A, 1.2.3.4]]()");
             var expected =
                 MethodName.Get(
-                    "[RT, A, 1.2.3.4] [DT, A, 1.2.3.4].M[[T -> sl_wrZDQnTlQkOiin_TGPA==, vW8RYxLbF7t21szDOJMe_w==],[E -> Bar, A, 1.2.3.4]]()");
+                    "[RT, A, 1.2.3.4] [DT, A, 1.2.3.4].M`2[[T -> sl_wrZDQnTlQkOiin_TGPA==, vW8RYxLbF7t21szDOJMe_w==],[E -> Bar, A, 1.2.3.4]]()");
 
             AssertAnonymizedEquals(original, expected);
         }

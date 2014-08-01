@@ -82,6 +82,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
         {
             var identifier = new StringBuilder();
             identifier.AppendAnonymousMemberName(method, method.ReturnType);
+            identifier.AppendIf(method.HasTypeParameters, "`" + method.TypeParameters.Count);
             identifier.AppendTypeParameters(method);
             identifier.Append("(");
             identifier.Append(string.Join(", ", method.Parameters.Select(p => p.ToAnonymousName())));

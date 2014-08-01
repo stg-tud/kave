@@ -119,7 +119,7 @@ namespace KaVE.Model.Tests.Names.CSharp
         [Test]
         public void ShouldHaveTypeParameter()
         {
-            var methodName = MethodName.Get("[Value, A, 0.0.0.1] [Declarator, A, 0.0.0.1].Method[[T]]()");
+            var methodName = MethodName.Get("[Value, A, 0.0.0.1] [Declarator, A, 0.0.0.1].Method`1[[T]]()");
 
             Assert.IsTrue(methodName.HasTypeParameters);
         }
@@ -127,7 +127,7 @@ namespace KaVE.Model.Tests.Names.CSharp
         [Test]
         public void ShouldHaveTwoUnboundTypeParameters()
         {
-            var methodName = MethodName.Get("[T] [D, D, 4.5.6.7].M[[T],[O]]([0] p)");
+            var methodName = MethodName.Get("[T] [D, D, 4.5.6.7].M`2[[T],[O]]([0] p)");
 
             var expected = new[] {TypeName.Get("T"), TypeName.Get("O")};
             Assert.AreEqual(expected, methodName.TypeParameters);
@@ -136,7 +136,7 @@ namespace KaVE.Model.Tests.Names.CSharp
         [Test]
         public void ShouldHaveBoundTypeParameter()
         {
-            var methodName = MethodName.Get("[A] [D, D, 1.2.3.4].M[[A -> System.Int32, mscorlib, 4.0.0.0]]()");
+            var methodName = MethodName.Get("[A] [D, D, 1.2.3.4].M`1[[A -> System.Int32, mscorlib, 4.0.0.0]]()");
 
             var expected = new[] {TypeName.Get("A -> System.Int32, mscorlib, 4.0.0.0")};
             Assert.AreEqual(expected, methodName.TypeParameters);
@@ -154,7 +154,7 @@ namespace KaVE.Model.Tests.Names.CSharp
         [Test]
         public void ShouldNotConfuseGenericParameterTypesWithTypeParameters2()
         {
-            var method = MethodName.Get("[T, A, 1.0.0.0] [T, A, 1.0.0.0].M[[T]]([F`1[[U]], A, 1.0.0.0] p)");
+            var method = MethodName.Get("[T, A, 1.0.0.0] [T, A, 1.0.0.0].M`1[[T]]([F`1[[U]], A, 1.0.0.0] p)");
 
             var expected = new List<ITypeName> { TypeName.Get("T") };
             Assert.AreEqual(expected, method.TypeParameters);
@@ -163,7 +163,7 @@ namespace KaVE.Model.Tests.Names.CSharp
         [Test]
         public void ShouldExcludeTypeParametersFromName()
         {
-            var methodName = MethodName.Get("[R] [D, D, 9.8.7.6].M[[T]]()");
+            var methodName = MethodName.Get("[R] [D, D, 9.8.7.6].M`1[[T]]()");
 
             Assert.AreEqual("M", methodName.Name);
         }
