@@ -52,10 +52,9 @@ namespace KaVE.VsFeedbackGenerator.Utils.Logging
             return new LogFile<TLogEntry>(logDirectoryPath);
         }
 
-        public double GetAccumulatedLogFileSize()
+        public double GetTotalLogsSizeInMB()
         {
-            var sum = GetLogs().Select(log => log.GetFileSize()).Sum();
-            return Math.Round(sum, 2);
+            return GetLogs().Select(log => log.GetSizeInMB()).Sum();
         }
 
         public void DeleteLogsOlderThan(DateTime time)
@@ -74,7 +73,7 @@ namespace KaVE.VsFeedbackGenerator.Utils.Logging
             LogsChanged.Invoke(this, new EventArgs());
         }
 
-        public void DeleteLogFileDirectory()
+        public void DeleteAllLogs()
         {
             _ioUtils.DeleteDirectoryWithContent(BaseLocation);
         }

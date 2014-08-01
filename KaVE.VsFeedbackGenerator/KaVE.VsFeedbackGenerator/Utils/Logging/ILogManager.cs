@@ -28,7 +28,7 @@ namespace KaVE.VsFeedbackGenerator.Utils.Logging
         DateTime Date { get; }
         ILogReader<TLogEntry> NewLogReader();
         ILogWriter<TLogEntry> NewLogWriter();
-        double GetFileSize();
+        double GetSizeInMB();
         void RemoveRange(IEnumerable<TLogEntry> entries);
         void RemoveEntriesOlderThan(DateTime time);
         void Delete();
@@ -43,7 +43,7 @@ namespace KaVE.VsFeedbackGenerator.Utils.Logging
         IEnumerable<ILog<TLogEntry>> GetLogs();
         ILog<TLogEntry> CurrentLog { get; }
         void DeleteLogsOlderThan(DateTime time);
-        void DeleteLogFileDirectory();
-        double GetAccumulatedLogFileSize();
+        void DeleteAllLogs();
+        double GetTotalLogsSizeInMB();
     }
 }

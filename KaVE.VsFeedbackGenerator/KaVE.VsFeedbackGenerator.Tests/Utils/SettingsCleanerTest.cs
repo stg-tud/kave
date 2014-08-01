@@ -62,7 +62,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
             _mockSettingsStore.Verify(s => s.ResetSettings<ExportSettings>());
             _mockSettingsStore.Verify(s => s.ResetSettings<IDESessionSettings>());
 
-            _mockLogFileManager.Verify(s => s.DeleteLogFileDirectory());
+            _mockLogFileManager.Verify(s => s.DeleteAllLogs());
         }            
     }
 }

@@ -36,7 +36,6 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
         private UploadSettings _uploadSettings;
         private Mock<NotifyTrayIcon> _mockTrayIcon;
         private Mock<ICallbackManager> _mockCallbackManager;
-        private Mock<ILogManager<IDEEvent>> _mockLogManager; 
 
         private DateTime _registeredInvocationDate;
         private Action _registeredRescheduleAction;
@@ -55,8 +54,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
             _mockSettingsStore.Setup(store => store.SetSettings(It.IsAny<UploadSettings>()))
                   .Callback<UploadSettings>(settings => _newUploadSettings = settings);
 
-            _mockLogManager = new Mock<ILogManager<IDEEvent>>();
-            _mockTrayIcon = new Mock<NotifyTrayIcon>(_mockLogManager.Object);
+            _mockTrayIcon = new Mock<NotifyTrayIcon>(new Mock<ILogManager<IDEEvent>>().Object);
 
             _dateUtils = new TestDateUtils();
 

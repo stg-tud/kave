@@ -57,7 +57,7 @@ namespace KaVE.VsFeedbackGenerator.Utils
             _settings.ResetSettings<ExportSettings>();
             _settings.ResetSettings<IDESessionSettings>();
 
-            _logManager.DeleteLogFileDirectory();
+            _logManager.DeleteAllLogs();
         }
     }
 }

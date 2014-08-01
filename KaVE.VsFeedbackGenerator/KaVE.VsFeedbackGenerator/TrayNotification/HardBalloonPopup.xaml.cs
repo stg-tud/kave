@@ -33,7 +33,12 @@ namespace KaVE.VsFeedbackGenerator.TrayNotification
         public HardBalloonPopup(ILogManager<IDEEvent> logManager)
         {
             InitializeComponent();
-            var size = logManager.GetAccumulatedLogFileSize();
+            SetPopupMessage(logManager);
+        }
+
+        private void SetPopupMessage(ILogManager<IDEEvent> logManager)
+        {
+            var size = logManager.GetTotalLogsSizeInMB();
             Message.Text = Properties.PopupNotification.InformationHardpopup.FormatEx(size);
         }
 

@@ -118,15 +118,15 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="InformationHardpopup" xml:space="preserve">
-    <value>Bitte laden Sie ihr Feedback hoch. Das Feedback beansprucht aktuell {0} MB auf Ihrer Festplatte.</value>
+    <value>Bitte laden Sie ihr Feedback hoch. Das Feedback beansprucht aktuell {0:0.#} MB auf Ihrer Festplatte.</value>
   </data>
   <data name="InformationSoftpopup" xml:space="preserve">
     <value>Bitte laden Sie ihr Feedback hoch:</value>
   </data>
   <data name="NotificationTitel" xml:space="preserve">
-    <value>Upload Reminder Notification</value>
+    <value>Export-Erinnerung</value>
   </data>
   <data name="WizardButton" xml:space="preserve">
-    <value>Wizard starten</value>
+    <value>Wizard starten...</value>
   </data>
 </root>

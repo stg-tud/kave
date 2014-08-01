@@ -164,7 +164,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Logging
             GivenLogsExist(DateTime.Today);
             WhenLogFileManagerIsInitialized();
 
-            _uut.DeleteLogFileDirectory();
+            _uut.DeleteAllLogs();
 
             _ioUtilMock.Verify(io => io.DeleteDirectoryWithContent(_uut.BaseLocation));
         }
