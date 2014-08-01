@@ -153,18 +153,13 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.JsonSerializationSuite
                         new CallSite
                         {
                             kind = CallSiteKind.PARAM_CALL_SITE,
-                            call =
-                                new CoReMethodName {Name = "Lcc/recommenders/CallSite.param(Lcc/recommenders/Param;)V"},
+                            call = new CoReMethodName("Lcc/recommenders/CallSite.param(Lcc/recommenders/Param;)V"),
                             argumentIndex = 23
                         },
                         new CallSite
                         {
                             kind = CallSiteKind.RECEIVER_CALL_SITE,
-                            call =
-                                new CoReMethodName
-                                {
-                                    Name = "Lcc/recommenders/CallSite.receive(Lcc/recommenders/Receiver;)V"
-                                },
+                            call = new CoReMethodName("Lcc/recommenders/CallSite.receive(Lcc/recommenders/Receiver;)V"),
                             argumentIndex = 0
                         }
                     },
@@ -172,14 +167,14 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.JsonSerializationSuite
                     new DefinitionSite
                     {
                         kind = DefinitionKind.THIS,
-                        type = new CoReTypeName {Name = "Lcc/recommender/Definition"},
-                        method = new CoReMethodName {Name = "Lcc/receiver/Definer.define(Lcc/receiver/Scheme;)B"},
-                        field = new CoReFieldName {Name = "Lcc/recommender/Field.field;Lcc/recommender/Type"},
+                        type = new CoReTypeName("Lcc/recommender/Definition"),
+                        method = new CoReMethodName("Lcc/receiver/Definer.define(Lcc/receiver/Scheme;)B"),
+                        field = new CoReFieldName("Lcc/recommender/Field.field;Lcc/recommender/Type"),
                         arg = 42
                     },
-                methodCtx = new CoReMethodName {Name = "Lcc/recommenders/Receiver.equals(Lcc/recommenders/Argument;)Z"},
-                classCtx = new CoReTypeName {Name = "Lcc/recommenders/Context"},
-                type = new CoReTypeName {Name = "Lcc/recommenders/usages/Query"}
+                methodCtx = new CoReMethodName("Lcc/recommenders/Receiver.equals(Lcc/recommenders/Argument;)Z"),
+                classCtx = new CoReTypeName("Lcc/recommenders/Context"),
+                type = new CoReTypeName("Lcc/recommenders/usages/Query")
             };
 
             const string compare =

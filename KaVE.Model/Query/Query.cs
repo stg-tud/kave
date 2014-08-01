@@ -68,12 +68,23 @@ namespace KaVE.Model.Query
 
     public abstract class CoReName
     {
-        public string Name { get; set; }
+        public CoReName(string name)
+        {
+            Name = name;
+        }
+
+        public string Name { get; private set; }
     }
 
-    public class CoReTypeName : CoReName {}
+    public class CoReTypeName : CoReName {
+        public CoReTypeName(string name) : base(name) {}
+    }
 
-    public class CoReMethodName : CoReName {}
+    public class CoReMethodName : CoReName {
+        public CoReMethodName(string name) : base(name) {}
+    }
 
-    public class CoReFieldName : CoReName {}
+    public class CoReFieldName : CoReName {
+        public CoReFieldName(string name) : base(name) {}
+    }
 }

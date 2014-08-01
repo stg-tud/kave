@@ -153,8 +153,6 @@ namespace KaVE.VsFeedbackGenerator.Utils.Json
         [NotNull]
         internal static string ToTypelessJson([CanBeNull] this object instance)
         {
-            var serializer = JsonSerializer.Create(TypelessSettings);
-            //serializer.
             return SerializeWithCustomIndentationDepth(instance, TypelessSettings);
         }
 
