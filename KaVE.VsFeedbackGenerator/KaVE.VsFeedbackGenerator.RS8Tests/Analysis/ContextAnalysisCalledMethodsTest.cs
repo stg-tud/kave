@@ -192,7 +192,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
                 }");
 
             AssertCallDetected(
-                "[TI2] [i:I`1[[TI1 -> TM1]], TestProject].Get[[TI2 -> System.Int32, mscorlib, 4.0.0.0]]()");
+                "[TI2] [i:I`1[[TI1 -> TM1]], TestProject].Get`1[[TI2 -> System.Int32, mscorlib, 4.0.0.0]]()");
         }
 
         [Test]

@@ -17,6 +17,7 @@
  *    - Sven Amann
  */
 
+using System.Collections.Generic;
 using System.Linq;
 using JetBrains.ActionManagement;
 using JetBrains.Application;
@@ -37,11 +38,16 @@ namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
             IMessageBus messageBus,
             IDateUtils dateUtils)
         {
-            foreach (var updatableAction in actionManager.GetAllActions().OfType<IUpdatableAction>().Where(IsNoPrivateAction)) {
-                updatableAction.AddHandler(
-                    lifetime,
-                    new EventGeneratingActionHandler(updatableAction, session, messageBus, dateUtils));
+            foreach (var action in GetInstrumentableActions(actionManager))
+            {
+                var handler = new EventGeneratingActionHandler(action, session, messageBus, dateUtils);
+                action.AddHandler(lifetime, handler);
             }
+        }
+
+        private static IEnumerable<IUpdatableAction> GetInstrumentableActions(IActionManager actionManager)
+        {
+            return actionManager.GetAllActions().OfType<IUpdatableAction>().Where(IsNoPrivateAction);
         }
 
         private static bool IsNoPrivateAction(IUpdatableAction updatableAction)

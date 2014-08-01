@@ -354,7 +354,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Utils
                     }
                 }");
 
-            ThenProposalCollectionContains("[System.Void, mscorlib, 4.0.0.0] [C, TestProject].M[[T -> T]]([T] p)");
+            ThenProposalCollectionContains("[System.Void, mscorlib, 4.0.0.0] [C, TestProject].M`1[[T -> T]]([T] p)");
         }
 
         [Test]
@@ -669,7 +669,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Utils
 
             ThenProposalCollectionContains(
                 "[System.Object[][][], mscorlib, 4.0.0.0] [C, TestProject].myJaggedArray",
-                "[System.Void, mscorlib, 4.0.0.0] [C, TestProject].myMethod[[R -> R]]([R[]] p)",
+                "[System.Void, mscorlib, 4.0.0.0] [C, TestProject].myMethod`1[[R -> R]]([R[]] p)",
                 "[System.Object[,,], mscorlib, 4.0.0.0] [C, TestProject].myMultidimensionalArray",
                 "[System.String[], mscorlib, 4.0.0.0] [C, TestProject].myStringArray");
         }
@@ -721,7 +721,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Utils
                     }
                 }");
 
-            ThenProposalCollectionContains("[System.Void, mscorlib, 4.0.0.0] [N.C, TestProject].M1[[T -> T]]([T] t)");
+            ThenProposalCollectionContains("[System.Void, mscorlib, 4.0.0.0] [N.C, TestProject].M1`1[[T -> T]]([T] t)");
         }
 
         [Test]
