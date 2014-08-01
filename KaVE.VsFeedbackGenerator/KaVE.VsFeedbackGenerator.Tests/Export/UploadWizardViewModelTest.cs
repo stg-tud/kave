@@ -78,7 +78,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Export
             _mockLogs = new List<Mock<ILog<IDEEvent>>> {mockLog1, mockLog2, mockLog3};
 
             _mockLogFileManager = new Mock<ILogManager<IDEEvent>>();
-            _mockLogFileManager.Setup(mgr => mgr.GetLogs()).Returns(_mockLogs.Select(m => m.Object));
+            _mockLogFileManager.Setup(mgr => mgr.Logs).Returns(_mockLogs.Select(m => m.Object));
 
             _mockSettingStore = new Mock<ISettingsStore>();
             _mockSettingStore.Setup(store => store.GetSettings<UploadSettings>()).Returns(new UploadSettings());

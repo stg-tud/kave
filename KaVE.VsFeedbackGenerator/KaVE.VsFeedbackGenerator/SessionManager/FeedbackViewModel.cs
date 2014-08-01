@@ -96,7 +96,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
 
         private IList<SessionViewModel> OnRefresh(BackgroundWorker worker)
         {
-            var logs = _logManager.GetLogs().ToList();
+            var logs = _logManager.Logs.ToList();
             var progressPerFile = logs.IsEmpty() ? 0 : 100/logs.Count;
             var progress = 0;
             worker.ReportProgress(progress);

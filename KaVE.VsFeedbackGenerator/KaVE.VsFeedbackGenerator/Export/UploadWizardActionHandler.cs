@@ -74,7 +74,7 @@ namespace KaVE.VsFeedbackGenerator.Export
 
         private bool HasContentToExport()
         {
-            var logs = _logManager.GetLogs().ToList();
+            var logs = _logManager.Logs.ToList();
             var noLogs = EnumerableExtensions.IsEmpty(logs);
             var singleEmptyLog = logs.Count == 1 && IsEmpty(logs[0]);
             return !noLogs && !singleEmptyLog;

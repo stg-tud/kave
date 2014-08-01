@@ -26,13 +26,13 @@ namespace KaVE.VsFeedbackGenerator.Utils.Logging
     public interface ILog<TLogEntry> where TLogEntry : IDEEvent
     {
         DateTime Date { get; }
+        double SizeInMB { get; }
+
         ILogReader<TLogEntry> NewLogReader();
         ILogWriter<TLogEntry> NewLogWriter();
-        double GetSizeInMB();
         void RemoveRange(IEnumerable<TLogEntry> entries);
         void RemoveEntriesOlderThan(DateTime time);
         void Delete();
-        
     }
 
     public interface ILogManager<TLogEntry> where TLogEntry : IDEEvent
@@ -40,10 +40,11 @@ namespace KaVE.VsFeedbackGenerator.Utils.Logging
         event EventHandler LogsChanged;
 
         string BaseLocation { get; }
-        IEnumerable<ILog<TLogEntry>> GetLogs();
+        IEnumerable<ILog<TLogEntry>> Logs { get; }
         ILog<TLogEntry> CurrentLog { get; }
+        double TotalLogsSizeInMB { get; }
+
         void DeleteLogsOlderThan(DateTime time);
         void DeleteAllLogs();
-        double GetTotalLogsSizeInMB();
     }
 }

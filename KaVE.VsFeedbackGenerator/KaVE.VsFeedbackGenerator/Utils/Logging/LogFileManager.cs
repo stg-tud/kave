@@ -42,9 +42,9 @@ namespace KaVE.VsFeedbackGenerator.Utils.Logging
 
         public string BaseLocation { get; private set; }
 
-        public IEnumerable<ILog<TLogEntry>> GetLogs()
+        public IEnumerable<ILog<TLogEntry>> Logs
         {
-            return _ioUtils.GetFiles(BaseLocation, LogDirectoryPrefix + "*").Select(CreateLogFile);
+            get { return _ioUtils.GetFiles(BaseLocation, LogDirectoryPrefix + "*").Select(CreateLogFile); }
         }
 
         private static LogFile<TLogEntry> CreateLogFile(string logDirectoryPath)
@@ -52,14 +52,14 @@ namespace KaVE.VsFeedbackGenerator.Utils.Logging
             return new LogFile<TLogEntry>(logDirectoryPath);
         }
 
-        public double GetTotalLogsSizeInMB()
+        public double TotalLogsSizeInMB
         {
-            return GetLogs().Select(log => log.GetSizeInMB()).Sum();
+            get { return Logs.Select(log => log.SizeInMB).Sum(); }
         }
 
         public void DeleteLogsOlderThan(DateTime time)
         {
-            foreach (var log in GetLogs())
+            foreach (var log in Logs)
             {
                 if (log.Date < time.Date)
                 {

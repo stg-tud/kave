@@ -79,7 +79,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModel
         {
             RefreshFeedbackViewModel();
 
-            _mockLogManager.Verify(lm => lm.GetLogs());
+            _mockLogManager.Verify(lm => lm.Logs);
         }
 
         [Test]
@@ -90,7 +90,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModel
                 MockLog(),
                 MockLog()
             };
-            _mockLogManager.Setup(lm => lm.GetLogs()).Returns(logs);
+            _mockLogManager.Setup(lm => lm.Logs).Returns(logs);
 
             RefreshFeedbackViewModel();
 
@@ -115,7 +115,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModel
         public void ShouldDisplayNothingAndLogErrorWhenRefreshFails()
         {
             var exception = new AssertException("test exception");
-            _mockLogManager.Setup(lm => lm.GetLogs()).Throws(exception);
+            _mockLogManager.Setup(lm => lm.Logs).Throws(exception);
 
             RefreshFeedbackViewModel();
 
@@ -130,7 +130,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModel
 
             WaitForRefreshToFinish();
 
-            _mockLogManager.Verify(lm => lm.GetLogs());
+            _mockLogManager.Verify(lm => lm.Logs);
         }
 
         [Test]
@@ -214,7 +214,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModel
 
         private void RefreshFeedbackViewModelWithSessions(IEnumerable<ILog<IDEEvent>> sessions)
         {
-            _mockLogManager.Setup(m => m.GetLogs()).Returns(sessions);
+            _mockLogManager.Setup(m => m.Logs).Returns(sessions);
             RefreshFeedbackViewModel();
         }
 

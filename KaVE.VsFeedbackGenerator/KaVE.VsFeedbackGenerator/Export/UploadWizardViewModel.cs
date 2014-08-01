@@ -130,7 +130,7 @@ namespace KaVE.VsFeedbackGenerator.Export
         private IList<IDEEvent> ExtractEventsForExport()
         {
             var events = new List<IDEEvent>();
-            foreach (var log in _logManager.GetLogs())
+            foreach (var log in _logManager.Logs)
             {
                 using (var reader = log.NewLogReader())
                 {

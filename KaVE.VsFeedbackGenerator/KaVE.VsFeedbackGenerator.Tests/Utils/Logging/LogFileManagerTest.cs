@@ -62,7 +62,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Logging
             GivenLogsExist();
             WhenLogFileManagerIsInitialized();
 
-            Assert.AreEqual(0, _uut.GetLogs().Count());
+            Assert.AreEqual(0, _uut.Logs.Count());
         }
 
         [Test]
@@ -71,7 +71,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Logging
             GivenLogsExist(DateTime.Today);
             WhenLogFileManagerIsInitialized();
 
-            Assert.AreEqual(1, _uut.GetLogs().Count());
+            Assert.AreEqual(1, _uut.Logs.Count());
         }
 
         [Test]
@@ -84,13 +84,14 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Logging
 
             WhenLogFileManagerIsInitialized();
 
-            Assert.AreEqual(3, _uut.GetLogs().Count());
+            Assert.AreEqual(3, _uut.Logs.Count());
         }
 
         [Test]
         public void ShouldCreateLogsFromFilesWhoseNamesFollowTheLogFileNamePattern()
         {
-            _uut.GetLogs();
+            // ReSharper disable once UnusedVariable
+            var logs = _uut.Logs;
 
             _ioUtilMock.Verify(iou => iou.GetFiles(_baseDirectory, "Log_*"));
         }
@@ -144,7 +145,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Logging
             _ioUtilMock.Verify(iou => iou.OpenFile(logFilePath, FileMode.OpenOrCreate, FileAccess.Read));
             _ioUtilMock.Verify(iou => iou.DeleteFile(logFilePath));
             _ioUtilMock.Verify(iou => iou.MoveFile(It.IsAny<string>(), logFilePath));
-            Assert.AreEqual(1, _uut.GetLogs().Count());
+            Assert.AreEqual(1, _uut.Logs.Count());
         }
 
         [Test]

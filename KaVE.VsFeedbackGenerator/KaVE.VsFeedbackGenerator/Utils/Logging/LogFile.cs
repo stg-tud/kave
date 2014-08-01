@@ -110,9 +110,9 @@ namespace KaVE.VsFeedbackGenerator.Utils.Logging
             return new JsonLogWriter<TLogEntry>(logStream);
         }
 
-        public double GetSizeInMB()
+        public double SizeInMB
         {
-            return (_ioUtils.GetFileSize(Path) / 1024f) / 1024f;
+            get { return (_ioUtils.GetFileSize(Path)/1024f)/1024f; }
         }
 
         public void RemoveRange(IEnumerable<TLogEntry> entries)
