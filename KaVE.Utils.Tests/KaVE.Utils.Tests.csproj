@@ -66,6 +66,7 @@
     <Compile Include="HashCodeUtilsTest.cs" />
     <Compile Include="InvokeTest.cs" />
     <Compile Include="IO\KeyUtilsTest.cs" />
+    <Compile Include="JsonUtilsTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Reflection\TypeExtensionsTest.cs" />
     <Compile Include="StringBuilderUtilsTest.cs" />

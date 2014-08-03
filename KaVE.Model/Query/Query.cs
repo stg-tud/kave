@@ -24,11 +24,11 @@ namespace KaVE.Model.Query
     // ReSharper disable InconsistentNaming
     public class Query
     {
-        public IList<CallSite> sites { get; set; }
-        public DefinitionSite definition { get; set; }
-        public CoReMethodName methodCtx { get; set; }
-        public CoReTypeName classCtx { get; set; }
         public CoReTypeName type { get; set; }
+        public DefinitionSite definition { get; set; }
+        public CoReTypeName classCtx { get; set; }
+        public CoReMethodName methodCtx { get; set; }
+        public IList<CallSite> sites { get; set; }
     }
 
     public class DefinitionSite
@@ -68,7 +68,7 @@ namespace KaVE.Model.Query
 
     public abstract class CoReName
     {
-        public CoReName(string name)
+        protected CoReName(string name)
         {
             Name = name;
         }
