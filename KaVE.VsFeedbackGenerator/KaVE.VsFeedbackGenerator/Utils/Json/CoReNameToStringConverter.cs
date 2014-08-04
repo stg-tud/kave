@@ -18,7 +18,7 @@
  */
 
 using System;
-using KaVE.Model.Query;
+using KaVE.Model.ObjectUsage;
 using Newtonsoft.Json;
 
 namespace KaVE.VsFeedbackGenerator.Utils.Json

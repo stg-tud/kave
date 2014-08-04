@@ -18,8 +18,9 @@
  */
 
 using System.Collections.Generic;
+using JetBrains.Util;
 using KaVE.Model.Names.CSharp;
-using KaVE.Model.Query;
+using KaVE.Model.ObjectUsage;
 using KaVE.Utils;
 using KaVE.VsFeedbackGenerator.Utils.Json;
 using Newtonsoft.Json;
@@ -159,24 +160,24 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.JsonSerializationSuite
                         method = new CoReMethodName("Lcc/receiver/Definer.define(Lcc/receiver/Scheme;)B"),
                         field = new CoReFieldName("Lcc/recommender/Field.field;Lcc/recommender/Type"),
                         arg = 42
-                    },
-                sites =
-                    new List<CallSite>
-                    {
-                        new CallSite
-                        {
-                            kind = CallSiteKind.PARAM_CALL_SITE,
-                            call = new CoReMethodName("Lcc/recommenders/CallSite.param(Lcc/recommenders/Param;)V"),
-                            argumentIndex = 23
-                        },
-                        new CallSite
-                        {
-                            kind = CallSiteKind.RECEIVER_CALL_SITE,
-                            call = new CoReMethodName("Lcc/recommenders/CallSite.receive(Lcc/recommenders/Receiver;)V"),
-                            argumentIndex = 0
-                        }
                     }
             };
+            query.sites.AddRange(
+                new List<CallSite>
+                {
+                    new CallSite
+                    {
+                        kind = CallSiteKind.PARAM_CALL_SITE,
+                        call = new CoReMethodName("Lcc/recommenders/CallSite.param(Lcc/recommenders/Param;)V"),
+                        argumentIndex = 23
+                    },
+                    new CallSite
+                    {
+                        kind = CallSiteKind.RECEIVER_CALL_SITE,
+                        call = new CoReMethodName("Lcc/recommenders/CallSite.receive(Lcc/recommenders/Receiver;)V"),
+                        argumentIndex = 0
+                    }
+                });
 
             const string compare =
                 @"{""sites"":[{""kind"":""PARAM_CALL_SITE"",""call"":""Lcc/recommenders/CallSite.param(Lcc/recommenders/Param;)V"",""argumentIndex"":23},{""kind"":""RECEIVER_CALL_SITE"",""call"":""Lcc/recommenders/CallSite.receive(Lcc/recommenders/Receiver;)V"",""argumentIndex"":0}],""definition"":{""kind"":""THIS"",""type"":""Lcc/recommender/Definition"",""method"":""Lcc/receiver/Definer.define(Lcc/receiver/Scheme;)B"",""field"":""Lcc/recommender/Field.field;Lcc/recommender/Type"",""arg"":42},""methodCtx"":""Lcc/recommenders/Receiver.equals(Lcc/recommenders/Argument;)Z"",""classCtx"":""Lcc/recommenders/Context"",""type"":""Lcc/recommenders/usages/Query""}";
