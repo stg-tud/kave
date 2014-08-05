@@ -29,42 +29,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KaVE.TestUtils", "KaVE.TestUtils\KaVE.TestUtils.csproj", "{126607DB-1F9F-4E2C-A39E-7B707874EAFC}"
 EndProject
 Global
-	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 11
-		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccTeamFoundationServer = https://kave.visualstudio.com/defaultcollection
-		SccLocalPath0 = .
-		SccProjectUniqueName1 = KaVE.Utils\\KaVE.Utils.csproj
-		SccProjectName1 = KaVE.Utils
-		SccLocalPath1 = KaVE.Utils
-		SccProjectUniqueName2 = KaVE.VsFeedbackGenerator\\KaVE.VsFeedbackGenerator\\KaVE.VsFeedbackGenerator.csproj
-		SccProjectName2 = KaVE.VsFeedbackGenerator/KaVE.VsFeedbackGenerator
-		SccLocalPath2 = KaVE.VsFeedbackGenerator\\KaVE.VsFeedbackGenerator
-		SccProjectUniqueName3 = KaVE.VsFeedbackGenerator\\KaVE.VsFeedbackGenerator.Tests\\KaVE.VsFeedbackGenerator.Tests.csproj
-		SccProjectName3 = KaVE.VsFeedbackGenerator/KaVE.VsFeedbackGenerator.Tests
-		SccLocalPath3 = KaVE.VsFeedbackGenerator\\KaVE.VsFeedbackGenerator.Tests
-		SccProjectUniqueName4 = KaVE.VsFeedbackGenerator\\KaVE.VsFeedbackGenerator.RS8Tests\\KaVE.VsFeedbackGenerator.RS8Tests.csproj
-		SccProjectName4 = KaVE.VsFeedbackGenerator/KaVE.VsFeedbackGenerator.RS8Tests
-		SccLocalPath4 = KaVE.VsFeedbackGenerator\\KaVE.VsFeedbackGenerator.RS8Tests
-		SccProjectUniqueName5 = KaVE.Utils.Tests\\KaVE.Utils.Tests.csproj
-		SccProjectName5 = KaVE.Utils.Tests
-		SccLocalPath5 = KaVE.Utils.Tests
-		SccProjectUniqueName6 = KaVE.Model.Tests\\KaVE.Model.Tests.csproj
-		SccProjectName6 = KaVE.Model.Tests
-		SccLocalPath6 = KaVE.Model.Tests
-		SccProjectUniqueName7 = KaVE.Model\\KaVE.Model.csproj
-		SccProjectName7 = KaVE.Model
-		SccLocalPath7 = KaVE.Model
-		SccProjectUniqueName8 = KaVE.CompletionTraceGenerator\\KaVE.CompletionTraceGenerator.csproj
-		SccProjectName8 = KaVE.CompletionTraceGenerator
-		SccLocalPath8 = KaVE.CompletionTraceGenerator
-		SccProjectUniqueName9 = KaVE.CompletionTraceGenerator.Tests\\KaVE.CompletionTraceGenerator.Tests.csproj
-		SccProjectName9 = KaVE.CompletionTraceGenerator.Tests
-		SccLocalPath9 = KaVE.CompletionTraceGenerator.Tests
-		SccProjectUniqueName10 = KaVE.TestUtils\\KaVE.TestUtils.csproj
-		SccProjectName10 = KaVE.TestUtils
-		SccLocalPath10 = KaVE.TestUtils
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Debug|Mixed Platforms = Debug|Mixed Platforms
