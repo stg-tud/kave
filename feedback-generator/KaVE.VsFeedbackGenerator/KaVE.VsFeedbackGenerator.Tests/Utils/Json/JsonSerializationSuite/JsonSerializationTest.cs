@@ -180,7 +180,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.JsonSerializationSuite
                 });
 
             const string compare =
-                @"{""sites"":[{""kind"":""PARAM_CALL_SITE"",""call"":""Lcc/recommenders/CallSite.param(Lcc/recommenders/Param;)V"",""argumentIndex"":23},{""kind"":""RECEIVER_CALL_SITE"",""call"":""Lcc/recommenders/CallSite.receive(Lcc/recommenders/Receiver;)V"",""argumentIndex"":0}],""definition"":{""kind"":""THIS"",""type"":""Lcc/recommender/Definition"",""method"":""Lcc/receiver/Definer.define(Lcc/receiver/Scheme;)B"",""field"":""Lcc/recommender/Field.field;Lcc/recommender/Type"",""arg"":42},""methodCtx"":""Lcc/recommenders/Receiver.equals(Lcc/recommenders/Argument;)Z"",""classCtx"":""Lcc/recommenders/Context"",""type"":""Lcc/recommenders/usages/Query""}";
+                @"{""sites"":[{""kind"":""PARAM_CALL_SITE"",""call"":""Lcc/recommenders/CallSite.param(Lcc/recommenders/Param;)Lcc/recommenders/Return;"",""argumentIndex"":23},{""kind"":""RECEIVER_CALL_SITE"",""call"":""Lcc/recommenders/CallSite.receive(Lcc/recommenders/Receiver;)Lcc/recommenders/Return;"",""argumentIndex"":0}],""definition"":{""kind"":""THIS"",""type"":""Lcc/recommender/Definition"",""method"":""Lcc/receiver/Definer.define(Lcc/receiver/Scheme;)Lcc/recommenders/Pattern;"",""field"":""Lcc/recommender/Field.field;Lcc/recommender/Type"",""arg"":42},""methodCtx"":""Lcc/recommenders/Receiver.equals(Lcc/recommenders/Argument;)Lcc/recommenders/Return;"",""classCtx"":""Lcc/recommenders/Context"",""type"":""Lcc/recommenders/usages/Query""}";
 
             var actual = query.ToTypelessJson();
 
