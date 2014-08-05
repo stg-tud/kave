@@ -17,6 +17,7 @@
  *    - Sebastian Proksch
  */
 
+using KaVE.Model.Names;
 using KaVE.Model.Names.CSharp;
 using KaVE.Model.SSTs;
 using NUnit.Framework;
@@ -39,6 +40,24 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             ");
             var mA = NewMethodDeclaration(Fix.Void, "A");
             mA.Body.Add(new Invocation("s", MethodName.Get("string.getHashCode")));
+
+            AssertEntryPoints(mA);
+        }
+
+        [Test]
+        public void ExternalSimpleWithConstant()
+        {
+            CompleteInClass(@"
+                public void A(string s)
+                {
+                    s.Equals(""SomeString"");
+                    $
+                }
+            ");
+            var mA = NewMethodDeclaration(Fix.Void, "A");
+            mA.Body.Add(new VariableDeclaration("v0", Fix.String));
+            mA.Body.Add(new Assignment("v0", new ConstantExpression()));
+            mA.Body.Add(new Invocation("s", MethodName.Get("string.getHashCode"), "v0"));
 
             AssertEntryPoints(mA);
         }
@@ -120,6 +139,30 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 
             var mA = NewMethodDeclaration(Fix.Void, "A");
             mA.Body.Add(new Invocation("this", MethodName.Get("I.B")));
+
+            var mB = NewMethodDeclaration(Fix.Void, "B");
+
+            AssertEntryPoints(mA, mB);
+        }
+
+        [Test]
+        public void StaticInvocation()
+        {
+            CompleteInFile(@"
+                public class C {
+                    public void A()
+                    {
+                        Console.Write(0);
+                        $
+                    }
+                }
+            ");
+
+            var mA = NewMethodDeclaration(Fix.Void, "A");
+
+            mA.Body.Add(new VariableDeclaration("v0", Fix.Int));
+            mA.Body.Add(new Assignment("v0", new ConstantExpression()));
+            mA.Body.Add(new Invocation(MethodName.Get("Console.Write"), "v0"));
 
             var mB = NewMethodDeclaration(Fix.Void, "B");
 

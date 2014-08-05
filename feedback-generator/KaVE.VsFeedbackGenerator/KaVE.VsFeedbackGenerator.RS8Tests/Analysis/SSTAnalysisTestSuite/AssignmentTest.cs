@@ -80,5 +80,9 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 
             AssertEntryPoints(mA);
         }
+
+        // constant array init: var a = new[] {1,2,3}; -> ConstantExpression
+        // composed array init: var a = new[] {1,b,3}; -> ComposedExpression
+        // array init with Calls: var a = new[] {1,b.m(),3}; -> Assignment(v0, Invocation);ComposedExpression(v0)
     }
 }

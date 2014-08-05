@@ -23,6 +23,7 @@ using KaVE.Model.Collections;
 using KaVE.Model.Names;
 using KaVE.Model.Names.CSharp;
 using KaVE.Utils;
+using KaVE.Utils.Assertion;
 
 namespace KaVE.Model.SSTs
 {
@@ -225,8 +226,17 @@ namespace KaVE.Model.SSTs
         public IMethodName Name;
         public string[] Parameters;
 
+        public Invocation(IMethodName name, params string[] parameters)
+        {
+            Asserts.That(name.IsStatic);
+            Identifier = "";
+            Name = name;
+            Parameters = parameters;
+        }
+
         public Invocation(string id, IMethodName name, params string[] parameters)
         {
+            Asserts.Not(name.IsStatic);
             Identifier = id;
             Name = name;
             Parameters = parameters;
@@ -243,6 +253,11 @@ namespace KaVE.Model.SSTs
     public class ThrowStatement : Expression
     {
         public ITypeName Exception;
+
+        public ThrowStatement(ITypeName exception)
+        {
+            Exception = exception;
+        }
     }
 
 
@@ -257,27 +272,86 @@ namespace KaVE.Model.SSTs
     }
 
 
+    public class ReturnStatement : Expression
+    {
+        public Expression Value { get; private set; }
+
+        public ReturnStatement(Expression value)
+        {
+            Value = value;
+        }
+    }
+
     public class IfElse : Expression
     {
-        public Expression Condition;
+        public Expression Condition { get; set; }
         public List<Expression> IfExpressions = new List<Expression>();
         public List<Expression> ElseExpressions = new List<Expression>();
+
+        public IfElse(Expression condition)
+        {
+            Condition = condition;
+        }
     }
 
     public class WhileLoop : Expression
     {
-        public Expression Condition;
+        public Expression Condition { get; private set; }
         public List<Expression> Expressions = new List<Expression>();
+
+        public WhileLoop(Expression condition)
+        {
+            Condition = condition;
+        }
     }
 
-    public class ForLoop : Expression {}
-
-    public class ForEachLoop : Expression {}
-
-    public class TryCatch : Expression
+    public class ForLoop : Expression
     {
-        public List<Expression> TryBlock = new List<Expression>();
+        public List<Expression> Init = new List<Expression>();
+        public List<Expression> While = new List<Expression>();
+        public List<Expression> Stepping = new List<Expression>();
+        public List<Expression> Body = new List<Expression>();
+    }
+
+    public class ForEachLoop : Expression
+    {
+        public VariableDeclaration Decl { get; set; }
+        public Expression Values;
+        public List<Expression> Body;
+
+        public ForEachLoop(string identifier, ITypeName typeName) : this(new VariableDeclaration(identifier, typeName)) { }
+
+        public ForEachLoop(VariableDeclaration decl)
+        {
+            Decl = decl;
+        }
+    }
+
+    public class UsingBlock : Expression
+    {
+        public string Identifier { get; set; }
+        public Expression Init { get; set; }
+        public List<Expression> Body = new List<Expression>();
+
+        public UsingBlock(string identifier, Expression init)
+        {
+            Identifier = identifier;
+            Init = init;
+        }
+    }
+
+    public class TryBlock : Expression
+    {
+        public List<Expression> Body { get; set; }
         public Dictionary<ITypeName, List<Expression>> CatchBlocks = new Dictionary<ITypeName, List<Expression>>();
+        public List<Expression> Finally { get; set; }
+
+        public new List<Expression> AddCatch(ITypeName get)
+        {
+            var l = new List<Expression>();
+            CatchBlocks.Add(get, l);
+            return l;
+        }
     }
 
     // ... whatever is missing (lock, using, etc..)
