@@ -151,13 +151,13 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.JsonSerializationSuite
             {
                 type = new CoReTypeName("Lcc/recommenders/usages/Query"),
                 classCtx = new CoReTypeName("Lcc/recommenders/Context"),
-                methodCtx = new CoReMethodName("Lcc/recommenders/Receiver.equals(Lcc/recommenders/Argument;)Z"),
+                methodCtx = new CoReMethodName("Lcc/recommenders/Receiver.equals(Lcc/recommenders/Argument;)Lcc/recommenders/Return;"),
                 definition =
                     new DefinitionSite
                     {
                         kind = DefinitionKind.THIS,
                         type = new CoReTypeName("Lcc/recommender/Definition"),
-                        method = new CoReMethodName("Lcc/receiver/Definer.define(Lcc/receiver/Scheme;)B"),
+                        method = new CoReMethodName("Lcc/recommenders/Definer.define(Lcc/recommenders/Scheme;)Lcc/recommenders/Pattern;"),
                         field = new CoReFieldName("Lcc/recommender/Field.field;Lcc/recommender/Type"),
                         arg = 42
                     }
@@ -168,13 +168,13 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.JsonSerializationSuite
                     new CallSite
                     {
                         kind = CallSiteKind.PARAM_CALL_SITE,
-                        call = new CoReMethodName("Lcc/recommenders/CallSite.param(Lcc/recommenders/Param;)V"),
+                        call = new CoReMethodName("Lcc/recommenders/CallSite.param(Lcc/recommenders/Param;)Lcc/recommenders/Return;"),
                         argumentIndex = 23
                     },
                     new CallSite
                     {
                         kind = CallSiteKind.RECEIVER_CALL_SITE,
-                        call = new CoReMethodName("Lcc/recommenders/CallSite.receive(Lcc/recommenders/Receiver;)V"),
+                        call = new CoReMethodName("Lcc/recommenders/CallSite.receive(Lcc/recommenders/Receiver;)Lcc/recommenders/Return;"),
                         argumentIndex = 0
                     }
                 });
