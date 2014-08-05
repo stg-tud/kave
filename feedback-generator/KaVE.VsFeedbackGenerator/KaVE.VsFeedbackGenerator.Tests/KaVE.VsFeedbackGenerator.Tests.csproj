@@ -1,0 +1,223 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\..\packages\JetBrains.ReSharper.SDK.Tests.8.2.1158\build\JetBrains.ReSharper.SDK.Tests.Props" Condition="Exists('..\..\packages\JetBrains.ReSharper.SDK.Tests.8.2.1158\build\JetBrains.ReSharper.SDK.Tests.Props')" />
+  <Import Project="..\..\packages\JetBrains.ReSharper.SDK.8.2.1158\build\JetBrains.ReSharper.SDK.Props" Condition="Exists('..\..\packages\JetBrains.ReSharper.SDK.8.2.1158\build\JetBrains.ReSharper.SDK.Props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{61231FF9-BF33-4210-89AA-6C9973FA00A0}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>KaVE.VsFeedbackGenerator.Tests</RootNamespace>
+    <AssemblyName>KaVE.VsFeedbackGenerator.Tests</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="envdte, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Hardcodet.Wpf.TaskbarNotification, Version=1.0.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Hardcodet.NotifyIcon.Wpf.1.0.5\lib\net40\Hardcodet.Wpf.TaskbarNotification.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.CommandBars, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Moq, Version=4.2.1402.2112, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Moq.4.2.1402.2112\lib\net40\Moq.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Newtonsoft.Json.6.0.3\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.IO, Version=2.6.9.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.Bcl.1.1.9\lib\net40\System.IO.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http, Version=2.2.22.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.Net.Http.2.2.22\lib\net40\System.Net.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.Extensions, Version=2.2.22.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.Net.Http.2.2.22\lib\net40\System.Net.Http.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.Primitives, Version=2.2.22.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.Net.Http.2.2.22\lib\net40\System.Net.Http.Primitives.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest, Version=2.2.22.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.Net.Http.2.2.22\lib\net40\System.Net.Http.WebRequest.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime, Version=2.6.9.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.Bcl.1.1.9\lib\net40\System.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading.Tasks, Version=2.6.9.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.Bcl.1.1.9\lib\net40\System.Threading.Tasks.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.XML" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Assertion\NameAssert.cs" />
+    <Compile Include="CodeCompletion\CodeCompletionLifecycleManagerTest.cs" />
+    <Compile Include="CodeCompletion\ExampleNetworkTest.cs" />
+    <Compile Include="Generators\LogEventGeneratorTest.cs" />
+    <Compile Include="Generators\EventGeneratorTestBase.cs" />
+    <Compile Include="Generators\Merging\CompletionEventMergingStrategyTest.cs" />
+    <Compile Include="Generators\ReSharper\CodeCompletionEventHandlerTest.cs" />
+    <Compile Include="Generators\ReSharper\EventGeneratingActionWrapperTest.cs" />
+    <Compile Include="Generators\ReSharper\EventGeneratingBulbActionProxyTest.cs" />
+    <Compile Include="Generators\ReSharper\EventGeneratingActionHandlerTest.cs" />
+    <Compile Include="Generators\TestIDESession.cs" />
+    <Compile Include="Generators\VisualStudio\CommandEventGeneratorTest.cs" />
+    <Compile Include="Generators\VisualStudio\SolutionEventGeneratorTest.cs" />
+    <Compile Include="Generators\VisualStudio\VisualStudioEventGeneratorTestBase.cs" />
+    <Compile Include="Generators\VisualStudio\WindowEventGeneratorTest.cs" />
+    <Compile Include="Interactivity\InteractionRequestTest.cs" />
+    <Compile Include="MessageBus\TinyMessengerMessageChannelTest.cs" />
+    <Compile Include="SessionManager\Anonymize\AnonymousNameUtilsTest.cs" />
+    <Compile Include="SessionManager\Anonymize\BuildEventAnonymizerTest.cs" />
+    <Compile Include="SessionManager\Anonymize\CompletionEventAnonymizerTest.cs" />
+    <Compile Include="SessionManager\Anonymize\DocumentEventAnonymizerTest.cs" />
+    <Compile Include="SessionManager\Anonymize\ErrorEventAnonymizerTest.cs" />
+    <Compile Include="SessionManager\Anonymize\IDEStateEventAnonymizerTest.cs" />
+    <Compile Include="SessionManager\Anonymize\InfoEventAnonymizerTest.cs" />
+    <Compile Include="SessionManager\Anonymize\SolutionEventAnonymizerTest.cs" />
+    <Compile Include="SessionManager\Anonymize\WindowEventAnonymizerTest.cs" />
+    <Compile Include="SessionManager\DeleteEventCommandTest.cs" />
+    <Compile Include="SessionManager\FeedbackViewModel\DeleteSessionCommandTest.cs" />
+    <Compile Include="Interactivity\InteractionRequestTestHelper.cs" />
+    <Compile Include="SessionManager\Anonymize\IDEEventAnonymizerTest.cs" />
+    <Compile Include="SessionManager\Anonymize\IDEEventAnonymizerTestBase.cs" />
+    <Compile Include="SessionManager\FeedbackViewModel\FeedbackViewModelTest.cs" />
+    <Compile Include="SessionManager\Presentation\IDEEventDetailsToJsonConverterTest.cs" />
+    <Compile Include="SessionManager\Presentation\JsonSyntaxHighlighterTest.cs" />
+    <Compile Include="SessionManager\Presentation\XamlBindableRichTextBoxTest.cs" />
+    <Compile Include="SessionManager\UploadReminderTest.cs" />
+    <Compile Include="SessionManager\UploadSettingsTest.cs" />
+    <Compile Include="TestFactories\Actions\ActionManagerMockExtensions.cs" />
+    <Compile Include="TestFactories\Actions\MockExecutableAction.cs" />
+    <Compile Include="TestFactories\Actions\MockNextActionHandler.cs" />
+    <Compile Include="TestFactories\DTEMockUtils.cs" />
+    <Compile Include="TestFactories\LookupItemsMockUtils.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SessionManager\EventViewTest.cs" />
+    <Compile Include="SessionManager\Presentation\ContextVisualizationConverterTest.cs" />
+    <Compile Include="Export\UploadWizardViewModelTest.cs" />
+    <Compile Include="Utils\DateTimeTest.cs" />
+    <Compile Include="Utils\ExporterTest.cs" />
+    <Compile Include="Utils\GZipStreamTest.cs" />
+    <Compile Include="Utils\HttpPublisherTest.cs" />
+    <Compile Include="Utils\InverseBoolConverterTest.cs" />
+    <Compile Include="Utils\IoUtilsTest.cs" />
+    <Compile Include="Utils\FilePublisherTest.cs" />
+    <Compile Include="Utils\Json\JsonSerializationSuite\JsonSerializationTest.cs" />
+    <Compile Include="Utils\Json\JsonSerializationSuite\CompletionEventSerializationTest.cs" />
+    <Compile Include="Utils\Json\JsonSerializationSuite\JsonAssert.cs" />
+    <Compile Include="Utils\Json\JsonLogReaderTest.cs" />
+    <Compile Include="Utils\Json\JsonLogWriterTest.cs" />
+    <Compile Include="Utils\Json\MemoryStreamUtils.cs" />
+    <Compile Include="Utils\Json\JsonSerializationSuite\ContextSerializationTest.cs" />
+    <Compile Include="Utils\Json\JsonSerializationSuite\IDEEventSerializationTest.cs" />
+    <Compile Include="Utils\Json\JsonSerializationSuite\MethodHierarchySerializationTest.cs" />
+    <Compile Include="Utils\Json\JsonSerializationSuite\NamesSerializationTest.cs" />
+    <Compile Include="Utils\Json\JsonSerializationSuite\ProposalCollectionSerializationTest.cs" />
+    <Compile Include="Utils\Json\JsonSerializationSuite\ProposalSelectionSerializationTest.cs" />
+    <Compile Include="Utils\Json\JsonSerializationSuite\ProposalSerializationTest.cs" />
+    <Compile Include="Utils\Json\JsonSerializationSuite\TypeHierarchySerializationTest.cs" />
+    <Compile Include="Utils\Json\JsonSerializationSuite\TypeShapeSerializationTest.cs" />
+    <Compile Include="Utils\Json\SerializationTestTarget.cs" />
+    <Compile Include="Utils\Logging\LogFileManagerTest.cs" />
+    <Compile Include="Utils\Logging\LogFileTest.cs" />
+    <Compile Include="Utils\Names\ReSharperDeclaredElementNameFactoryTest.cs" />
+    <Compile Include="Utils\Names\ReSharperTypeNameFactoryTest.cs" />
+    <Compile Include="TestFactories\TypeMockUtils.cs" />
+    <Compile Include="Utils\Names\VsComponentNameFactoryTest.cs" />
+    <Compile Include="Utils\ObjectToVisibilityConverterTest.cs" />
+    <Compile Include="Utils\SettingsCleanerTest.cs" />
+    <Compile Include="Utils\SettingsStoreTest.cs" />
+    <Compile Include="Utils\StringUtilsTest.cs" />
+    <Compile Include="Utils\TestDateUtils.cs" />
+    <Compile Include="Utils\XamlFormattingUtilTest.cs" />
+    <Compile Include="VsIntegration\IDESessionTest.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\KaVE.Model\KaVE.Model.csproj">
+      <Project>{236E2794-DE4D-4F94-AC87-2ABFD1059CE0}</Project>
+      <Name>KaVE.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\KaVE.TestUtils\KaVE.TestUtils.csproj">
+      <Project>{126607DB-1F9F-4E2C-A39E-7B707874EAFC}</Project>
+      <Name>KaVE.TestUtils</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\KaVE.Utils\KaVE.Utils.csproj">
+      <Project>{4439FDE5-778A-4FAB-8BB0-7A4E23C45BDB}</Project>
+      <Name>KaVE.Utils</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\KaVE.VsFeedbackGenerator\KaVE.VsFeedbackGenerator.csproj">
+      <Project>{42CE1875-DF5B-4D9E-ADC4-47A96C06EF66}</Project>
+      <Name>KaVE.VsFeedbackGenerator</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\KaVE.VsFeedbackGenerator.licenseheader">
+      <Link>KaVE.VsFeedbackGenerator.licenseheader</Link>
+    </None>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\..\packages\JetBrains.ReSharper.SDK.8.2.1158\build\JetBrains.ReSharper.SDK.Props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\JetBrains.ReSharper.SDK.8.2.1158\build\JetBrains.ReSharper.SDK.Props'))" />
+    <Error Condition="!Exists('..\..\packages\JetBrains.ReSharper.SDK.8.2.1158\build\JetBrains.ReSharper.SDK.Targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\JetBrains.ReSharper.SDK.8.2.1158\build\JetBrains.ReSharper.SDK.Targets'))" />
+    <Error Condition="!Exists('..\..\packages\JetBrains.ReSharper.SDK.Tests.8.2.1158\build\JetBrains.ReSharper.SDK.Tests.Props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\JetBrains.ReSharper.SDK.Tests.8.2.1158\build\JetBrains.ReSharper.SDK.Tests.Props'))" />
+  </Target>
+  <Import Project="..\..\packages\JetBrains.ReSharper.SDK.8.2.1158\build\JetBrains.ReSharper.SDK.Targets" Condition="Exists('..\..\packages\JetBrains.ReSharper.SDK.8.2.1158\build\JetBrains.ReSharper.SDK.Targets')" />
+  <Import Project="..\..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets" Condition="Exists('..\..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" />
+  <Target Name="EnsureBclBuildImported" BeforeTargets="BeforeBuild" Condition="'$(BclBuildImported)' == ''">
+    <Error Condition="!Exists('..\..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" Text="This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=317567." HelpKeyword="BCLBUILD2001" />
+    <Error Condition="Exists('..\..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" Text="The build restored NuGet packages. Build the project again to include these packages in the build. For more information, see http://go.microsoft.com/fwlink/?LinkID=317568." HelpKeyword="BCLBUILD2002" />
+  </Target>
+</Project>

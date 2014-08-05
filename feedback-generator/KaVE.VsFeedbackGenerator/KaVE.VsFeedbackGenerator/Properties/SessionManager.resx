@@ -1,0 +1,276 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="EventDelete" xml:space="preserve">
+    <value>Gewählte Event(s) löschen</value>
+  </data>
+  <data name="EventDeleteConfirmPlural" xml:space="preserve">
+    <value>Sind Sie sicher, dass Sie die gewählten {0} Events löschen wollen?</value>
+  </data>
+  <data name="EventDeleteConfirmSingular" xml:space="preserve">
+    <value>Sind Sie sicher, dass Sie das gewählte Event löschen wollen?</value>
+  </data>
+  <data name="EventDeleteConfirmTitle" xml:space="preserve">
+    <value>Event(s) löschen</value>
+  </data>
+  <data name="EventData" xml:space="preserve">
+    <value>Eventdaten</value>
+  </data>
+  <data name="Events" xml:space="preserve">
+    <value>Events</value>
+  </data>
+  <data name="EventTime" xml:space="preserve">
+    <value>Startzeit</value>
+  </data>
+  <data name="EventType" xml:space="preserve">
+    <value>Art</value>
+  </data>
+  <data name="Export" xml:space="preserve">
+    <value>Export-Wizard starten...</value>
+  </data>
+  <data name="Options" xml:space="preserve">
+    <value>Einstellungen...</value>
+  </data>
+  <data name="Refresh" xml:space="preserve">
+    <value>Feedback-Anzeige aktualisieren</value>
+  </data>
+  <data name="Send" xml:space="preserve">
+    <value>Feedback versenden</value>
+  </data>
+  <data name="SessionDay" xml:space="preserve">
+    <value>Tag der Session</value>
+  </data>
+  <data name="SessionDelete" xml:space="preserve">
+    <value>Gewählte Session(s) löschen</value>
+  </data>
+  <data name="SessionDeleteConfirmPlural" xml:space="preserve">
+    <value>Sind Sie sicher, dass Sie die gewählten {0} Sessions löschen wollen?</value>
+  </data>
+  <data name="SessionDeleteConfirmSingular" xml:space="preserve">
+    <value>Sind Sie sicher, dass Sie die gewählte Session löschen wollen?</value>
+  </data>
+  <data name="SessionDeleteConfirmTitle" xml:space="preserve">
+    <value>Session(s) löschen</value>
+  </data>
+  <data name="Sessions" xml:space="preserve">
+    <value>Tage</value>
+  </data>
+  <data name="VisitHomepage" xml:space="preserve">
+    <value>Die Projektwebseite besuchen...</value>
+  </data>
+  <data name="Options_Title" xml:space="preserve">
+    <value>KaVE Feedback</value>
+  </data>
+  <data name="Options_Export_RemoveDurations" xml:space="preserve">
+    <value>Dauer von Events entfernen</value>
+  </data>
+  <data name="Options_Export_RemoveCodeNames" xml:space="preserve">
+    <value>Projektzugehörige Code-Bezeichner aus Events entfernen</value>
+  </data>
+  <data name="Options_Export_RemoveSessionIDs" xml:space="preserve">
+    <value>Sessionzuordnung aus Events entfernen</value>
+  </data>
+  <data name="Options_Export_RemoveStartTimes" xml:space="preserve">
+    <value>Startzeit von Events entfernen</value>
+  </data>
+  <data name="EventActiveDocument" xml:space="preserve">
+    <value>Aktives Dokument</value>
+  </data>
+  <data name="EventActiveWindow" xml:space="preserve">
+    <value>Aktives Fenster</value>
+  </data>
+  <data name="EventDetails" xml:space="preserve">
+    <value>Details</value>
+  </data>
+  <data name="EventDuration" xml:space="preserve">
+    <value>Dauer</value>
+  </data>
+  <data name="EventDurationUnit" xml:space="preserve">
+    <value>ms</value>
+  </data>
+  <data name="EventTrigger" xml:space="preserve">
+    <value>Auslöser</value>
+  </data>
+  <data name="Refreshing" xml:space="preserve">
+    <value>Lade Feedback...</value>
+  </data>
+  <data name="EventContext" xml:space="preserve">
+    <value>Kontext</value>
+  </data>
+  <data name="SaveFileDialogFilter" xml:space="preserve">
+    <value>Zip files (*.zip)|*.zip|All files (*.*)|*.*</value>
+  </data>
+  <data name="DesignView" xml:space="preserve">
+    <value>Design</value>
+  </data>
+  <data name="RawView" xml:space="preserve">
+    <value>JSON</value>
+  </data>
+  <data name="PublishingFileFailed" xml:space="preserve">
+    <value>Datei-Export fehlgeschlagen: {0}</value>
+  </data>
+  <data name="ServerResponseEmpty" xml:space="preserve">
+    <value>Antwort des Servers enthält keine verwertbaren Informationen</value>
+  </data>
+  <data name="ServerResponseIncompatible" xml:space="preserve">
+    <value>Inkompatible Antwort des Server</value>
+  </data>
+  <data name="ServerResponseIncorrentFormat" xml:space="preserve">
+    <value>Antwort des Servers entspricht nicht dem erwarteten Format: {0}</value>
+  </data>
+  <data name="ServerResponseRequestFailure" xml:space="preserve">
+    <value>Server meldet eine fehlerhafte Anfrage: {0}</value>
+  </data>
+  <data name="ServerRequestNotAvailable" xml:space="preserve">
+    <value>Der Server ist nicht erreichbar ("{0}")</value>
+  </data>
+  <data name="ServerRequestWrongScheme" xml:space="preserve">
+    <value>Http-Upload erwartet Http- oder Https-Adresse</value>
+  </data>
+  <data name="ServerResponseFailure" xml:space="preserve">
+    <value>Fehler bei der Anfrage an den Server "{0}": {1}</value>
+  </data>
+  <data name="Options_Export_Disclaimer" xml:space="preserve">
+    <value>Die Exportoptionen bestimmen, welche Feedback-Details Ihren Rechner beim Export verlassen. Lokal wird das Feedback immer vollständig aufgenommen, um Ihnen die Einsicht zu erleichtern. Wenn Sie die Wirkung der Exportoptionen prüfen wollen, exportieren Sie einfach in ein ZIP-Archiv zum manuellen Hochladen. Diese Archive enthalten alle exportierten Informationen im Klartext.</value>
+  </data>
+  <data name="Options_Export_Title" xml:space="preserve">
+    <value>Exportoptionen</value>
+  </data>
+  <data name="NoFileGiven" xml:space="preserve">
+    <value>Keine Datei angegeben</value>
+  </data>
+  <data name="Option_SettingsCleaner_Dialog" xml:space="preserve">
+    <value>Sind Sie sicher, dass Sie die Einstellungen zurücksetzen und das lokal gesammelte Feedback löschen wollen?</value>
+  </data>
+  <data name="Options_Export_UploadUrl" xml:space="preserve">
+    <value>Upload URL</value>
+  </data>
+  <data name="VisitUploadPage" xml:space="preserve">
+    <value>Die Seite zum manuellen hochladen von Feedback besuchen</value>
+  </data>
+  <data name="Options_Export_WebAccessPraefix" xml:space="preserve">
+    <value>Präfix für Web-Zugriff</value>
+  </data>
+  <data name="DetailsForSingleSelectedEvent" xml:space="preserve">
+    <value>Selektiere Event für mehr Details</value>
+  </data>
+  <data name="DetailsForSingleSelectedSession" xml:space="preserve">
+    <value>Selektiere Session für mehr Details</value>
+  </data>
+</root>

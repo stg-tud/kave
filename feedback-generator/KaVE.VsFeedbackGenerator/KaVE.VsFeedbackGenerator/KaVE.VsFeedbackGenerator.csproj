@@ -1,0 +1,411 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\..\packages\JetBrains.ReSharper.SDK.8.2.1158\build\JetBrains.ReSharper.SDK.Props" Condition="Exists('..\..\packages\JetBrains.ReSharper.SDK.8.2.1158\build\JetBrains.ReSharper.SDK.Props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{42CE1875-DF5B-4D9E-ADC4-47A96C06EF66}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>KaVE.VsFeedbackGenerator</RootNamespace>
+    <AssemblyName>KaVE.VsFeedbackGenerator</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>JET_MODE_ASSERT;DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <RegisterForComInterop>false</RegisterForComInterop>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="envdte, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Hardcodet.Wpf.TaskbarNotification">
+      <HintPath>..\..\packages\Hardcodet.NotifyIcon.Wpf.1.0.5\lib\net40\Hardcodet.Wpf.TaskbarNotification.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.CommandBars, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="MsgBox">
+      <HintPath>.\MsgBox.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Newtonsoft.Json.6.0.3\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="smileNet">
+      <HintPath>.\smileNet.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.IO, Version=2.6.9.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.Bcl.1.1.9\lib\net40\System.IO.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http, Version=2.2.22.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.Net.Http.2.2.22\lib\net40\System.Net.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.Extensions, Version=2.2.22.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.Net.Http.2.2.22\lib\net40\System.Net.Http.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.Primitives, Version=2.2.22.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.Net.Http.2.2.22\lib\net40\System.Net.Http.Primitives.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest, Version=2.2.22.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.Net.Http.2.2.22\lib\net40\System.Net.Http.WebRequest.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime, Version=2.6.9.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.Bcl.1.1.9\lib\net40\System.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading.Tasks, Version=2.6.9.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.Bcl.1.1.9\lib\net40\System.Threading.Tasks.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="UserNotification">
+      <HintPath>.\UserNotification.dll</HintPath>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="WpfAnimatedGif">
+      <HintPath>..\..\packages\WpfAnimatedGif.1.4.4\lib\net\WpfAnimatedGif.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AboutAction.cs" />
+    <Compile Include="Analysis\CalledMethodsForEntryPointsAnalysis.cs" />
+    <Compile Include="Analysis\CompletionTargetAnalysis.cs" />
+    <Compile Include="Analysis\ContextAnalysis.cs" />
+    <Compile Include="Analysis\MethodRef.cs" />
+    <Compile Include="Analysis\EntryPointSelector.cs" />
+    <Compile Include="Analysis\InvocationCollector.cs" />
+    <Compile Include="Analysis\ReSharperUtils.cs" />
+    <Compile Include="Analysis\SSTAnalysis.cs" />
+    <Compile Include="Analysis\TypeHierarchyAnalysisUtils.cs" />
+    <Compile Include="Analysis\TypeShapeAnalysis.cs" />
+    <Compile Include="CodeCompletion\LookupItemWrapper.cs" />
+    <Compile Include="CodeCompletion\ExampleNetwork.cs" />
+    <Compile Include="CodeCompletion\ExemplaryProposalProvider.cs" />
+    <Compile Include="Generators\ILogger.cs" />
+    <Compile Include="Generators\LogEventGenerator.cs" />
+    <Compile Include="Generators\ReSharper\CommandEventGeneratorBase.cs" />
+    <Compile Include="Interactivity\Confirmation.cs" />
+    <Compile Include="Interactivity\IInteractionRequest.cs" />
+    <Compile Include="Interactivity\InteractionRequestedEventArgs.cs" />
+    <Compile Include="Interactivity\LinkNotification.cs" />
+    <Compile Include="Interactivity\LinkNotificationRequestHandler.cs" />
+    <Compile Include="Interactivity\Notification.cs" />
+    <Compile Include="Interactivity\NotificationRequestHandler.cs" />
+    <Compile Include="Properties\XamlBindableRichTextBox.Designer.cs">
+      <DependentUpon>XamlBindableRichTextBox.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Properties\PopupNotification.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PopupNotification.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\PopupAbortConfirmationDialog.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PopupAbortConfirmationDialog.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Interactivity\InteractionRequest.cs" />
+    <Compile Include="Interactivity\ConfirmationRequestHandler.cs" />
+    <Compile Include="SessionManager\Anonymize\BuildEventAnonymizer.cs" />
+    <Compile Include="SessionManager\Anonymize\CompletionEventAnonymizer.cs" />
+    <Compile Include="SessionManager\Anonymize\DataExportAnonymizer.cs" />
+    <Compile Include="SessionManager\Anonymize\DocumentEventAnonymizer.cs" />
+    <Compile Include="SessionManager\Anonymize\ErrorEventAnonymizer.cs" />
+    <Compile Include="SessionManager\Anonymize\IDEEventAnonymizer.cs" />
+    <Compile Include="SessionManager\Anonymize\IDEStateEventAnonymizer.cs" />
+    <Compile Include="SessionManager\Anonymize\InfoEventAnonymizer.cs" />
+    <Compile Include="SessionManager\Anonymize\AnonymousNameUtils.cs" />
+    <Compile Include="SessionManager\Anonymize\SolutionEventAnonymizer.cs" />
+    <Compile Include="SessionManager\Anonymize\WindowEventAnonymizer.cs" />
+    <Compile Include="SessionManager\FeedbackSettings.cs" />
+    <Compile Include="KaVESettings.cs" />
+    <Compile Include="SessionManager\Presentation\IDEEventDetailsToJsonConverter.cs" />
+    <Compile Include="SessionManager\Presentation\JsonSyntaxHighlighter.cs" />
+    <Compile Include="SessionManager\Presentation\SortableListView.cs" />
+    <Compile Include="SessionManager\ViewModelBase.cs" />
+    <Compile Include="TrayNotification\BalloonPopupBase.cs" />
+    <Compile Include="TrayNotification\HardBalloonPopup.xaml.cs">
+      <DependentUpon>HardBalloonPopup.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\UploadWizard.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>UploadWizard.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Export\UploadWizard.xaml.cs">
+      <DependentUpon>UploadWizard.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Export\UploadWizardActionHandler.cs" />
+    <Compile Include="Export\UploadWizardViewModel.cs" />
+    <Compile Include="Utils\ActionManagerExtensions.cs" />
+    <Compile Include="Utils\BackgroundWorker.cs" />
+    <Compile Include="Utils\CallbackManager.cs" />
+    <Compile Include="TrayNotification\NotifyTrayIcon.cs" />
+    <Compile Include="TrayNotification\SoftBalloonPopup.xaml.cs">
+      <DependentUpon>SoftBalloonPopup.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CodeCompletion\CodeCompletionLifecycleManager.cs" />
+    <Compile Include="CodeCompletion\DelegateActionHandler.cs" />
+    <Compile Include="CodeCompletion\ExtendedLookupWindowManager.cs" />
+    <Compile Include="Properties\General.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>General.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Generators\EventLogger.cs" />
+    <Compile Include="Generators\IEventMergeStrategy.cs" />
+    <Compile Include="Generators\Merging\CompletionEventMergingStrategy.cs" />
+    <Compile Include="Generators\ReSharper\ActionEventInstrumentationComponent.cs" />
+    <Compile Include="Generators\ReSharper\BulbItemInstrumentationComponent.cs" />
+    <Compile Include="Generators\ReSharper\BulbItemInstrumentationExtensions.cs" />
+    <Compile Include="Generators\ReSharper\CodeCompletionEventHandler.cs" />
+    <Compile Include="Generators\ReSharper\EventGeneratingActionHandler.cs" />
+    <Compile Include="Generators\ReSharper\EventGeneratingActionWrapper.cs" />
+    <Compile Include="Generators\ReSharper\EventGeneratingBulbActionProxy.cs" />
+    <Compile Include="Generators\EventGeneratorBase.cs" />
+    <Compile Include="Generators\VisualStudio\BuildEventGenerator.cs" />
+    <Compile Include="Generators\VisualStudio\CommandEventGenerator.cs" />
+    <Compile Include="Generators\VisualStudio\DebuggerEventGenerator.cs" />
+    <Compile Include="Generators\VisualStudio\DocumentEventGenerator.cs" />
+    <Compile Include="Generators\VisualStudio\FindEventGenerator.cs" />
+    <Compile Include="Generators\VisualStudio\IDEStateEventGenerator.cs" />
+    <Compile Include="Generators\VisualStudio\SolutionEventGenerator.cs" />
+    <Compile Include="Generators\VisualStudio\TextEditorEventGenerator.cs" />
+    <Compile Include="Generators\VisualStudio\WindowEventGenerator.cs" />
+    <Compile Include="MessageBus\IMessageBus.cs" />
+    <Compile Include="MessageBus\TinyMessengerMessageBus.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\SessionManager.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SessionManager.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SessionManager\Presentation\ContextVisualizationConverter.cs" />
+    <Compile Include="SessionManager\Presentation\XamlBindableRichTextBox.cs" />
+    <Compile Include="SessionManager\Presentation\SessionManagerWindowActionHandler.cs" />
+    <Compile Include="SessionManager\Presentation\FeedbackManagerControl.xaml.cs">
+      <DependentUpon>FeedbackManagerControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SessionManager\Presentation\SessionManagerWindowDescriptor.cs" />
+    <Compile Include="SessionManager\Presentation\SessionManagerWindowRegistrar.cs" />
+    <Compile Include="SessionManager\Presentation\FeedbackGeneratorOptionPage.xaml.cs">
+      <DependentUpon>FeedbackGeneratorOptionPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SessionManager\Presentation\ExportSettings.cs" />
+    <Compile Include="SessionManager\SessionViewModel.cs" />
+    <Compile Include="SessionManager\EventViewModel.cs" />
+    <Compile Include="SessionManager\FeedbackViewModel.cs" />
+    <Compile Include="MessageBus\TinyMessenger.cs" />
+    <Compile Include="Utils\DateUtils.cs" />
+    <Compile Include="Utils\Exporter.cs" />
+    <Compile Include="Utils\FilePublisher.cs" />
+    <Compile Include="Utils\HttpPublisher.cs" />
+    <Compile Include="Utils\IDateUtils.cs" />
+    <Compile Include="Utils\InverseObjectToVisibilityConverter.cs" />
+    <Compile Include="Utils\IoUtils.cs" />
+    <Compile Include="Utils\IPublisher.cs" />
+    <Compile Include="SessionManager\UploadSettings.cs" />
+    <Compile Include="Utils\Json\CoReNameToStringConverter.cs" />
+    <Compile Include="Utils\Logging\ILogManager.cs" />
+    <Compile Include="Utils\Logging\ILogReader.cs" />
+    <Compile Include="Utils\Logging\ILogWriter.cs" />
+    <Compile Include="Utils\Json\JsonLogFileManager.cs" />
+    <Compile Include="Utils\Logging\LogFile.cs" />
+    <Compile Include="Utils\Logging\LogFileManager.cs" />
+    <Compile Include="Utils\Names\ReSharperDeclarationNameFactory.cs" />
+    <Compile Include="Utils\Registry.cs" />
+    <Compile Include="Utils\SettingsCleaner.cs" />
+    <Compile Include="Utils\SettingsStore.cs" />
+    <Compile Include="SessionManager\UploadReminder.cs" />
+    <Compile Include="Utils\InverseBoolConverter.cs" />
+    <Compile Include="Utils\Json\EnumToStringConverter.cs" />
+    <Compile Include="Utils\Json\JsonLogReader.cs" />
+    <Compile Include="Utils\Json\JsonSerialization.cs" />
+    <Compile Include="Utils\Json\JsonLogWriter.cs" />
+    <Compile Include="Utils\Json\NameToIdentifierConverter.cs" />
+    <Compile Include="Utils\Json\NameToJsonConverter.cs" />
+    <Compile Include="Utils\LookupItemUtils.cs" />
+    <Compile Include="Utils\Names\ReSharperDeclaredElementNameFactory.cs" />
+    <Compile Include="Utils\Names\ReSharperTypeNameFactory.cs" />
+    <Compile Include="Utils\Names\VsComponentNameFactory.cs" />
+    <Compile Include="Utils\ObjectToVisibilityConverter.cs" />
+    <Compile Include="Utils\StringUtils.cs" />
+    <Compile Include="Utils\TypeNameExtensions.cs" />
+    <Compile Include="Utils\XamlFormattingUtil.cs" />
+    <Compile Include="VsIntegration\AssemblyResolver.cs" />
+    <Compile Include="VsIntegration\IDESession.cs" />
+    <Compile Include="VsIntegration\IIDESession.cs" />
+    <Compile Include="VsIntegration\IDESessionSettings.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Actions.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\XamlBindableRichTextBox.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>XamlBindableRichTextBox.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\PopupNotification.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>PopupNotification.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\PopupAbortConfirmationDialog.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>PopupAbortConfirmationDialog.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\General.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>General.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\SessionManager.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>SessionManager.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\UploadWizard.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>UploadWizard.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="TrayNotification\HardBalloonPopup.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="TrayNotification\SoftBalloonPopup.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SessionManager\Presentation\FeedbackManagerControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="SessionManager\Presentation\FeedbackGeneratorOptionPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Export\UploadWizard.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\KaVE.VsFeedbackGenerator.licenseheader">
+      <Link>KaVE.VsFeedbackGenerator.licenseheader</Link>
+    </None>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\refresh.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\options.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\export.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\delete.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\send.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\website.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\KaVE.Model\KaVE.Model.csproj">
+      <Project>{236E2794-DE4D-4F94-AC87-2ABFD1059CE0}</Project>
+      <Name>KaVE.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\KaVE.Utils\KaVE.Utils.csproj">
+      <Project>{4439FDE5-778A-4FAB-8BB0-7A4E23C45BDB}</Project>
+      <Name>KaVE.Utils</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\loading.gif">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\arrow.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Content Include="Resources\Bulb.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Resource Include="Resources\question.png" />
+    <Resource Include="Resources\close.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\..\packages\JetBrains.ReSharper.SDK.8.2.1158\build\JetBrains.ReSharper.SDK.Props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\JetBrains.ReSharper.SDK.8.2.1158\build\JetBrains.ReSharper.SDK.Props'))" />
+    <Error Condition="!Exists('..\..\packages\JetBrains.ReSharper.SDK.8.2.1158\build\JetBrains.ReSharper.SDK.Targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\JetBrains.ReSharper.SDK.8.2.1158\build\JetBrains.ReSharper.SDK.Targets'))" />
+  </Target>
+  <Import Project="..\..\packages\JetBrains.ReSharper.SDK.8.2.1158\build\JetBrains.ReSharper.SDK.Targets" Condition="Exists('..\..\packages\JetBrains.ReSharper.SDK.8.2.1158\build\JetBrains.ReSharper.SDK.Targets')" />
+  <Import Project="..\..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets" Condition="Exists('..\..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" />
+  <Target Name="EnsureBclBuildImported" BeforeTargets="BeforeBuild" Condition="'$(BclBuildImported)' == ''">
+    <Error Condition="!Exists('..\..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" Text="This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=317567." HelpKeyword="BCLBUILD2001" />
+    <Error Condition="Exists('..\..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" Text="The build restored NuGet packages. Build the project again to include these packages in the build. For more information, see http://go.microsoft.com/fwlink/?LinkID=317568." HelpKeyword="BCLBUILD2002" />
+  </Target>
+</Project>
