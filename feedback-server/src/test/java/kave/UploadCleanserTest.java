@@ -79,28 +79,31 @@ public class UploadCleanserTest {
 
     @Test
     public void fileNameIsRequestedFromUFC() throws IOException {
-        givenAFile().create();
+        givenAFile().with("0.json", json(123));
         purify();
         verify(ufc).createNextUniqueFile();
         assertEquals(FILE_OUT_EXPECTED, actualOut);
     }
 
-    @Test
+    @Test(expected = KaVEException.class)
+    public void emptyFile() {
+        givenAFile();
+
+        purify();
+    }
+
+    @Test(expected = KaVEException.class)
     public void binaryContent() {
         givenAFile().with("a.bin", new byte[] { 127, 13, 45, 114, 3, 72, 96 });
 
         purify();
-
-        assertNumberOfFiles(0);
     }
 
-    @Test
+    @Test(expected = KaVEException.class)
     public void plainTextContent() {
         givenAFile().with("b.txt", "some plain text");
 
         purify();
-
-        assertNumberOfFiles(0);
     }
 
     @Test
@@ -135,11 +138,12 @@ public class UploadCleanserTest {
 
     @Test
     public void emptyFilesAreIgnored() {
-        givenAFile().with("0.json", "");
+        givenAFile().with("0.json", "").with("1.json", json(1));
 
         purify();
 
-        assertNumberOfFiles(0);
+        assertNumberOfFiles(1);
+        assertContents("0.json", json(1));
     }
 
     @Test

@@ -38,9 +38,7 @@ import com.sun.jersey.multipart.MultiPart;
 @Path("/")
 public class FeedbackService {
 
-    public static final MediaType APPLICATION_ZIP = new MediaType("application", "zip");
     public static final String NO_SINGLE_UPLOAD = "Es muss eine einzelne Datei ausgewählt werden!";
-    public static final String NO_ZIP_FILE = "Die hochgeladene Datei ist kein Zip!";
     public static final String UPLOAD_FAILED = "Der Upload ist fehlgeschlagen!";
 
     private final File dataFolder;
@@ -77,13 +75,11 @@ public class FeedbackService {
 
     @POST
     @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Produces(MediaType.APPLICATION_JSON)
     public Result upload(MultiPart data) {
         try {
             if (!isSingleFileUpload(data)) {
                 return Result.fail(NO_SINGLE_UPLOAD);
-            }
-            if (!isZipUpload(data)) {
-                return Result.fail(NO_ZIP_FILE);
             }
 
             File tmpFile = storeTmp(data);
@@ -92,6 +88,8 @@ public class FeedbackService {
             moveToData(purifiedFile);
 
             return Result.ok();
+        } catch (KaVEException e) {
+            return Result.fail(e.getMessage());
         } catch (Exception e) {
             return Result.fail(UPLOAD_FAILED);
         }
@@ -100,11 +98,6 @@ public class FeedbackService {
     private boolean isSingleFileUpload(MultiPart data) {
         int numParts = data.getBodyParts().size();
         return numParts == 1;
-    }
-
-    private boolean isZipUpload(MultiPart data) {
-        BodyPart bp = data.getBodyParts().get(0);
-        return APPLICATION_ZIP.equals(bp.getMediaType());
     }
 
     private File storeTmp(MultiPart data) throws IOException {

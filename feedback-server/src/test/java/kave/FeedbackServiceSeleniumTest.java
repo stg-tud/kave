@@ -22,8 +22,6 @@ import static org.openqa.selenium.support.ui.ExpectedConditions.presenceOfElemen
 import java.io.File;
 import java.io.IOException;
 
-import kave.FeedbackService;
-
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Before;
@@ -105,7 +103,20 @@ public class FeedbackServiceSeleniumTest {
         whenConfirmationIsSelected();
         whenFormIsSubmitted();
 
-        thenResponseIs(growlErrorLocator, FeedbackService.NO_ZIP_FILE);
+        thenResponseIs(growlErrorLocator, UploadCleanser.NO_ZIP);
+    }
+
+    @Test
+    public void shouldFailIfInputIsEmptyZip() throws IOException {
+        givenPageIsLoaded();
+
+        File fileToUpload = fix.getEmptyZipFile();
+
+        whenFileIsSelected(fileToUpload);
+        whenConfirmationIsSelected();
+        whenFormIsSubmitted();
+
+        thenResponseIs(growlErrorLocator, UploadCleanser.EMPTY_FILE);
     }
 
     @Test

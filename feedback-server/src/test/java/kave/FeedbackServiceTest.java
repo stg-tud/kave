@@ -16,8 +16,8 @@
 package kave;
 
 import static kave.FeedbackService.NO_SINGLE_UPLOAD;
-import static kave.FeedbackService.NO_ZIP_FILE;
 import static kave.FeedbackService.UPLOAD_FAILED;
+import static kave.FeedbackServiceTest.ValidationResult.ERROR;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -41,13 +41,19 @@ import org.mockito.stubbing.Answer;
 
 public class FeedbackServiceTest {
 
+    private static final String KAVE_ERROR_MESSAGE = "KAVE_ERROR_MESSAGE";
+
+    enum ValidationResult {
+        OK, KAVE_ERROR, ERROR
+    }
+
     @Rule
     public TemporaryFolder temporaryFolder = new TemporaryFolder();
 
     private File dataDir;
     private File tmpDir;
 
-    private boolean isUploadValid;
+    private ValidationResult validationResult;
     private UploadCleanser checker;
 
     private FeedbackServiceFixture fix;
@@ -64,15 +70,18 @@ public class FeedbackServiceTest {
         tmpDir = fix.getTempFolder();
 
         // upload checker
-        isUploadValid = true;
+        validationResult = ValidationResult.OK;
         checker = mock(UploadCleanser.class);
         when(checker.purify(any(File.class))).thenAnswer(new Answer<File>() {
             @Override
             public File answer(InvocationOnMock invocation) throws Throwable {
-                if (isUploadValid) {
+                switch (validationResult) {
+                case ERROR:
+                    throw new RuntimeException("GENERAL_ERROR_MESSAGE");
+                case KAVE_ERROR:
+                    throw new KaVEException(KAVE_ERROR_MESSAGE);
+                default:
                     return (File) invocation.getArguments()[0];
-                } else {
-                    throw new KaVEException("möp!");
                 }
             }
         });
@@ -125,17 +134,20 @@ public class FeedbackServiceTest {
     }
 
     @Test
-    public void uploadingNonZipFilesFails() throws FileNotFoundException {
-        Result actual = sut.upload(fix.createRandomFileUpload());
-        Result expected = Result.fail(NO_ZIP_FILE);
+    public void failingValidationCreateError() throws FileNotFoundException {
+        validationResult = ERROR;
+        Result actual = sut.upload(fix.createZipFileUpload());
+        Result expected = Result.fail(FeedbackService.UPLOAD_FAILED);
         assertEquals(expected, actual);
+
+        assertDirectoryDoesNotContainFile(tmpDir, "10.zip");
     }
 
     @Test
-    public void failingValidationCreateError() throws FileNotFoundException {
-        isUploadValid = false;
+    public void failingValidationCreateKaveError() throws FileNotFoundException {
+        validationResult = ValidationResult.KAVE_ERROR;
         Result actual = sut.upload(fix.createZipFileUpload());
-        Result expected = Result.fail(UPLOAD_FAILED);
+        Result expected = Result.fail(KAVE_ERROR_MESSAGE);
         assertEquals(expected, actual);
 
         assertDirectoryDoesNotContainFile(tmpDir, "10.zip");

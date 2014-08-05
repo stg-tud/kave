@@ -27,6 +27,7 @@ import java.io.InputStream;
 import java.util.Enumeration;
 import java.util.Map;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
@@ -35,6 +36,9 @@ import org.codehaus.jackson.JsonGenerator;
 import org.codehaus.jackson.map.ObjectMapper;
 
 public class UploadCleanser {
+
+    public static final String EMPTY_FILE = "Die Datei ist leer oder enthält kein valides Feedback.";
+    public static final String NO_ZIP = "Keine valide Zip Datei";
 
     private UniqueFileCreator ufc;
     private ObjectMapper mapper;
@@ -52,6 +56,8 @@ public class UploadCleanser {
         try {
             zfin = new ZipFile(in);
             cloneTo(zfin, out);
+        } catch (ZipException e) {
+            throw new KaVEException(NO_ZIP);
         } finally {
             closeQuietly(zfin);
         }
@@ -74,6 +80,9 @@ public class UploadCleanser {
                     String fileName = (num++) + ".json";
                     putEntry(content, zfout, fileName);
                 }
+            }
+            if (num == 0) {
+                throw new KaVEException(EMPTY_FILE);
             }
         } finally {
             IOUtils.closeQuietly(zfout);

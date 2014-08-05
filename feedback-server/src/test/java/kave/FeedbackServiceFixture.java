@@ -18,7 +18,6 @@
  */
 package kave;
 
-import static kave.FeedbackService.APPLICATION_ZIP;
 import static org.apache.commons.io.FileUtils.writeByteArrayToFile;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -44,6 +43,8 @@ import com.sun.jersey.multipart.MultiPart;
 
 public class FeedbackServiceFixture {
 
+    private static final MediaType APPLICATION_ZIP = new MediaType("application", "zip");
+
     private static Random random = new Random();
 
     private File dataDir;
@@ -51,6 +52,8 @@ public class FeedbackServiceFixture {
 
     private File rndFile;
     private File zipFile;
+
+    private File emptyZipFile;
 
     public FeedbackServiceFixture(File root) throws IOException {
         dataDir = new File(root, "data");
@@ -61,6 +64,14 @@ public class FeedbackServiceFixture {
 
         zipFile = new File(root, "zip.zip");
         writeZipFile(zipFile);
+
+        emptyZipFile = new File(root, "emptyZip.zip");
+        writeEmptyZipFile(emptyZipFile);
+    }
+
+    private void writeEmptyZipFile(File f) throws IOException {
+        ZipOutputStream out = new ZipOutputStream(new FileOutputStream(f));
+        out.close();
     }
 
     private void writeZipFile(File f) throws ZipException, IOException {
@@ -163,5 +174,9 @@ public class FeedbackServiceFixture {
         MultiPart data = mock(MultiPart.class);
         when(data.getBodyParts()).thenReturn(parts);
         return data;
+    }
+
+    public File getEmptyZipFile() {
+        return emptyZipFile;
     }
 }
