@@ -151,13 +151,17 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.JsonSerializationSuite
             {
                 type = new CoReTypeName("Lcc/recommenders/usages/Query"),
                 classCtx = new CoReTypeName("Lcc/recommenders/Context"),
-                methodCtx = new CoReMethodName("Lcc/recommenders/Receiver.equals(Lcc/recommenders/Argument;)Lcc/recommenders/Return;"),
+                methodCtx =
+                    new CoReMethodName(
+                        "Lcc/recommenders/Receiver.equals(Lcc/recommenders/Argument;)Lcc/recommenders/Result;"),
                 definition =
                     new DefinitionSite
                     {
                         kind = DefinitionKind.THIS,
                         type = new CoReTypeName("Lcc/recommender/Definition"),
-                        method = new CoReMethodName("Lcc/recommenders/Definer.define(Lcc/recommenders/Scheme;)Lcc/recommenders/Pattern;"),
+                        method =
+                            new CoReMethodName(
+                                "Lcc/receiver/Definer.define(Lcc/receiver/Scheme;)Lcc/recommenders/Pattern;"),
                         field = new CoReFieldName("Lcc/recommender/Field.field;Lcc/recommender/Type"),
                         arg = 42
                     }
@@ -168,19 +172,23 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.JsonSerializationSuite
                     new CallSite
                     {
                         kind = CallSiteKind.PARAM_CALL_SITE,
-                        call = new CoReMethodName("Lcc/recommenders/CallSite.param(Lcc/recommenders/Param;)Lcc/recommenders/Return;"),
+                        call =
+                            new CoReMethodName(
+                                "Lcc/recommenders/CallSite.param(Lcc/recommenders/Param;)Lcc/recommenders/Return;"),
                         argumentIndex = 23
                     },
                     new CallSite
                     {
                         kind = CallSiteKind.RECEIVER_CALL_SITE,
-                        call = new CoReMethodName("Lcc/recommenders/CallSite.receive(Lcc/recommenders/Receiver;)Lcc/recommenders/Return;"),
+                        call =
+                            new CoReMethodName(
+                                "Lcc/recommenders/CallSite.receive(Lcc/recommenders/Receiver;)Lcc/recommenders/Return;"),
                         argumentIndex = 0
                     }
                 });
 
             const string compare =
-                @"{""sites"":[{""kind"":""PARAM_CALL_SITE"",""call"":""Lcc/recommenders/CallSite.param(Lcc/recommenders/Param;)Lcc/recommenders/Return;"",""argumentIndex"":23},{""kind"":""RECEIVER_CALL_SITE"",""call"":""Lcc/recommenders/CallSite.receive(Lcc/recommenders/Receiver;)Lcc/recommenders/Return;"",""argumentIndex"":0}],""definition"":{""kind"":""THIS"",""type"":""Lcc/recommender/Definition"",""method"":""Lcc/receiver/Definer.define(Lcc/receiver/Scheme;)Lcc/recommenders/Pattern;"",""field"":""Lcc/recommender/Field.field;Lcc/recommender/Type"",""arg"":42},""methodCtx"":""Lcc/recommenders/Receiver.equals(Lcc/recommenders/Argument;)Lcc/recommenders/Return;"",""classCtx"":""Lcc/recommenders/Context"",""type"":""Lcc/recommenders/usages/Query""}";
+                @"{""sites"":[{""kind"":""PARAM_CALL_SITE"",""call"":""Lcc/recommenders/CallSite.param(Lcc/recommenders/Param;)Lcc/recommenders/Return;"",""argumentIndex"":23},{""kind"":""RECEIVER_CALL_SITE"",""call"":""Lcc/recommenders/CallSite.receive(Lcc/recommenders/Receiver;)Lcc/recommenders/Return;"",""argumentIndex"":0}],""definition"":{""kind"":""THIS"",""type"":""Lcc/recommender/Definition"",""method"":""Lcc/receiver/Definer.define(Lcc/receiver/Scheme;)Lcc/recommenders/Pattern;"",""field"":""Lcc/recommender/Field.field;Lcc/recommender/Type"",""arg"":42},""methodCtx"":""Lcc/recommenders/Receiver.equals(Lcc/recommenders/Argument;)Lcc/recommenders/Result;"",""classCtx"":""Lcc/recommenders/Context"",""type"":""Lcc/recommenders/usages/Query""}";
 
             var actual = query.ToTypelessJson();
 
