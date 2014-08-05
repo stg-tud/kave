@@ -38,11 +38,10 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             ");
 
             var mA = NewMethodDeclaration(Fix.Void, "A");
-            var ifElse = new IfElse();
+            var ifElse = new IfElse(new ConstantExpression());
 
             mA.Body.Add(new VariableDeclaration("i", Fix.Int));
             mA.Body.Add(ifElse);
-            ifElse.Condition = new ConstantExpression();
             ifElse.IfExpressions.Add(new Assignment("i", new ConstantExpression()));
             ifElse.ElseExpressions.Add(new Assignment("i", new ConstantExpression()));
 
