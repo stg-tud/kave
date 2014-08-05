@@ -31,6 +31,7 @@ import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.codehaus.jackson.JsonGenerator;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -57,7 +58,13 @@ public class UploadCleanser {
             zfin = new ZipFile(in);
             cloneTo(zfin, out);
         } catch (ZipException e) {
+            FileUtils.deleteQuietly(in);
+            FileUtils.deleteQuietly(out);
             throw new KaVEException(NO_ZIP);
+        } catch (KaVEException ke) {
+            FileUtils.deleteQuietly(in);
+            FileUtils.deleteQuietly(out);
+            throw ke;
         } finally {
             closeQuietly(zfin);
         }

@@ -19,8 +19,10 @@
 package kave;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -39,6 +41,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Rule;
@@ -85,25 +88,54 @@ public class UploadCleanserTest {
         assertEquals(FILE_OUT_EXPECTED, actualOut);
     }
 
-    @Test(expected = KaVEException.class)
+    @Test
+    public void nonZipFile() throws IOException {
+        
+        try {
+            FileUtils.writeStringToFile(FILE_IN, "XYZ");
+            sut.purify(FILE_IN);
+            
+            fail();
+        } catch (KaVEException e) {
+            assertEquals(UploadCleanser.NO_ZIP, e.getMessage());
+            assertFalse(FILE_IN.exists());
+        }
+    }
+
+    @Test
     public void emptyFile() {
         givenAFile();
-
-        purify();
+        try {
+            purify();
+            fail();
+        } catch (KaVEException e) {
+            assertEquals(UploadCleanser.EMPTY_FILE, e.getMessage());
+            assertFalse(FILE_IN.exists());
+        }
     }
 
-    @Test(expected = KaVEException.class)
+    @Test
     public void binaryContent() {
         givenAFile().with("a.bin", new byte[] { 127, 13, 45, 114, 3, 72, 96 });
-
-        purify();
+        try {
+            purify();
+            fail();
+        } catch (KaVEException e) {
+            assertEquals(UploadCleanser.EMPTY_FILE, e.getMessage());
+            assertFalse(FILE_IN.exists());
+        }
     }
 
-    @Test(expected = KaVEException.class)
+    @Test
     public void plainTextContent() {
         givenAFile().with("b.txt", "some plain text");
-
-        purify();
+        try {
+            purify();
+            fail();
+        } catch (KaVEException e) {
+            assertEquals(UploadCleanser.EMPTY_FILE, e.getMessage());
+            assertFalse(FILE_IN.exists());
+        }
     }
 
     @Test

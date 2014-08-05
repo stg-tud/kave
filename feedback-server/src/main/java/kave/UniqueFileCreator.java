@@ -47,7 +47,6 @@ public class UniqueFileCreator {
         while (nextFile.exists()) {
             nextFile = getNextFile();
         }
-        nextFile.createNewFile();
         return nextFile;
     }
 

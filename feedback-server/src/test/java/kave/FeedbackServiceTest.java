@@ -69,7 +69,15 @@ public class FeedbackServiceTest {
         dataDir = fix.getDataFolder();
         tmpDir = fix.getTempFolder();
 
-        // upload checker
+        mockUploadCleanser();
+
+        tmpUfc = mockFileCreator(tmpDir);
+        dataUfc = mockFileCreator(dataDir);
+
+        sut = new FeedbackService(dataDir, tmpDir, checker, tmpUfc, dataUfc);
+    }
+
+    private void mockUploadCleanser() throws IOException {
         validationResult = ValidationResult.OK;
         checker = mock(UploadCleanser.class);
         when(checker.purify(any(File.class))).thenAnswer(new Answer<File>() {
@@ -85,21 +93,16 @@ public class FeedbackServiceTest {
                 }
             }
         });
-
-        tmpUfc = mockFileCreator(tmpDir);
-        dataUfc = mockFileCreator(dataDir);
-
-        sut = new FeedbackService(dataDir, tmpDir, checker, tmpUfc, dataUfc);
     }
 
-    private UniqueFileCreator mockFileCreator(File base) throws IOException {
+    private UniqueFileCreator mockFileCreator(final File base) throws IOException {
         final int[] fileNum = new int[] { 10 };
         UniqueFileCreator ufc = mock(UniqueFileCreator.class);
         when(ufc.createNextUniqueFile()).thenAnswer(new Answer<File>() {
             @Override
             public File answer(InvocationOnMock invocation) throws Throwable {
                 String fileName = (fileNum[0]++) + ".zip";
-                return new File(dataDir, fileName);
+                return new File(base, fileName);
             }
         });
         return ufc;
@@ -139,8 +142,6 @@ public class FeedbackServiceTest {
         Result actual = sut.upload(fix.createZipFileUpload());
         Result expected = Result.fail(FeedbackService.UPLOAD_FAILED);
         assertEquals(expected, actual);
-
-        assertDirectoryDoesNotContainFile(tmpDir, "10.zip");
     }
 
     @Test
@@ -149,8 +150,6 @@ public class FeedbackServiceTest {
         Result actual = sut.upload(fix.createZipFileUpload());
         Result expected = Result.fail(KAVE_ERROR_MESSAGE);
         assertEquals(expected, actual);
-
-        assertDirectoryDoesNotContainFile(tmpDir, "10.zip");
     }
 
     @Test

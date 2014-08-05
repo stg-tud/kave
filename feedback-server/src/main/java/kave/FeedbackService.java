@@ -118,7 +118,6 @@ public class FeedbackService {
 
     private void moveToData(File tmpFile) throws IOException {
         File dataFile = dataUfc.createNextUniqueFile();
-        tmpFile.renameTo(dataFile);
+        FileUtils.moveFile(tmpFile, dataFile);
     }
-
 }
