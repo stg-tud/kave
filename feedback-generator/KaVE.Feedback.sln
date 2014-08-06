@@ -14,11 +14,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KaVE.Utils", "KaVE.Utils\Ka
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KaVE.Model.Tests", "KaVE.Model.Tests\KaVE.Model.Tests.csproj", "{5EADDF98-328D-4E54-8819-C0611A942B6F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KaVE.VsFeedbackGenerator", "KaVE.VsFeedbackGenerator\KaVE.VsFeedbackGenerator\KaVE.VsFeedbackGenerator.csproj", "{42CE1875-DF5B-4D9E-ADC4-47A96C06EF66}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KaVE.VsFeedbackGenerator", "KaVE.VsFeedbackGenerator\KaVE.VsFeedbackGenerator.csproj", "{42CE1875-DF5B-4D9E-ADC4-47A96C06EF66}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KaVE.VsFeedbackGenerator.Tests", "KaVE.VsFeedbackGenerator\KaVE.VsFeedbackGenerator.Tests\KaVE.VsFeedbackGenerator.Tests.csproj", "{61231FF9-BF33-4210-89AA-6C9973FA00A0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KaVE.VsFeedbackGenerator.Tests", "KaVE.VsFeedbackGenerator.Tests\KaVE.VsFeedbackGenerator.Tests.csproj", "{61231FF9-BF33-4210-89AA-6C9973FA00A0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KaVE.VsFeedbackGenerator.RS8Tests", "KaVE.VsFeedbackGenerator\KaVE.VsFeedbackGenerator.RS8Tests\KaVE.VsFeedbackGenerator.RS8Tests.csproj", "{4979D8EC-B49B-4578-BDC3-D4015C493A98}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KaVE.VsFeedbackGenerator.RS8Tests", "KaVE.VsFeedbackGenerator.RS8Tests\KaVE.VsFeedbackGenerator.RS8Tests.csproj", "{4979D8EC-B49B-4578-BDC3-D4015C493A98}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KaVE.Model", "KaVE.Model\KaVE.Model.csproj", "{236E2794-DE4D-4F94-AC87-2ABFD1059CE0}"
 EndProject
