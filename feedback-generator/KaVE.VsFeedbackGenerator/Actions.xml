@@ -28,6 +28,7 @@ Contributors:
         <vs-shortcut>Shift+Control+Alt+M</vs-shortcut>
       </action>
       <action id="KaVE.VsFeedbackGenerator.UploadWizard" text="Feedback exportieren..."/>
+      <action id="KaVE.VsFeedbackGenerator.Options" text="Optionen"/>
       <action id="KaVE.VsFeedbackGenerator.About" text="About KaVE"/>
     </action-group>
   </insert>

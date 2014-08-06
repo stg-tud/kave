@@ -174,10 +174,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
             var settingsStore = Registry.GetComponent<ISettingsStore>();
             var export = settingsStore.GetSettings<ExportSettings>();
 
-            var idx = export.UploadUrl.LastIndexOf('/');
-            var url = export.UploadUrl.Substring(0, idx);
-
-            System.Diagnostics.Process.Start(url);
+            System.Diagnostics.Process.Start(export.UploadUrl);
         }
 
         private void VisitHomepageButton_OnClick(object sender, RoutedEventArgs e)

@@ -160,6 +160,25 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Logging
         }
 
         [Test]
+        public void ShouldGetAccumulatedLogsSize()
+        {
+            var today = GetValidLogPath(_baseDirectory, DateTime.Today);
+            var yesterday = GetValidLogPath(_baseDirectory, DateTime.Today.AddDays(-1));
+            var theDayBeforeYesterday = GetValidLogPath(_baseDirectory, DateTime.Today.AddDays(-2));
+
+            GivenLogsExist(
+                DateTime.Today,
+                DateTime.Today.AddDays(-1),
+                DateTime.Today.AddDays(-2));
+
+            var acutual = _uut.TotalLogsSizeInMB;
+
+            _ioUtilMock.Verify(io => io.GetFileSize(today));
+            _ioUtilMock.Verify(io => io.GetFileSize(yesterday));
+            _ioUtilMock.Verify(io => io.GetFileSize(theDayBeforeYesterday));
+        }
+
+        [Test]
         public void ShouldDeleteLogFileDirectory()
         {
             GivenLogsExist(DateTime.Today);
@@ -186,6 +205,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Logging
             Registry.Clear();
             Registry.RegisterComponent(_ioUtilMock.Object);
         }
+
 
         private static string GetValidLogPath(string path, DateTime date)
         {

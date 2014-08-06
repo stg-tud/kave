@@ -133,6 +133,18 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Logging
         }
 
         [Test]
+        public void ShouldConvertFileSizeInMB()
+        {
+            //2MB in Bytes
+            _mockIoUtils.Setup(iou => iou.GetFileSize(It.IsAny<String>())).Returns(2097152);
+
+            var actual = _uut.SizeInMB;
+            const double expected = 2;
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
         public void ShouldRetryCreatingReaderOnConcurrentAccessException()
         {
             var numberOfCalls = 0;

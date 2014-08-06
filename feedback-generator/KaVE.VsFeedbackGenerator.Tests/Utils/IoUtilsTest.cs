@@ -17,6 +17,7 @@
  *    - Sebastian Proksch
  *    - Dennis Albrecht
  *    - Sven Amann
+ *    - Uli Fahrer
  */
 
 using System;
@@ -149,6 +150,30 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
 
             Assert.IsTrue(File.Exists(path));
         }
+
+        [Test]
+        public void EmptyFileShouldHaveZeroSize()
+        {
+            var filename = Path.GetTempFileName();
+
+            var actual = _sut.GetFileSize(filename);
+            const long expected = 0;
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void ShouldHaveCorrectSize()
+        {
+            var filename = Path.GetTempFileName();
+            File.WriteAllBytes(filename, new byte[100]);
+
+            var actual = _sut.GetFileSize(filename);
+            const long expected = 100;
+
+            Assert.AreEqual(expected, actual);
+        }
+
 
         [Test]
         public void ShouldDetectIfFileExists()
