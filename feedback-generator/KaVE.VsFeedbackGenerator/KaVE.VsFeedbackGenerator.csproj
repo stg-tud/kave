@@ -52,7 +52,7 @@
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
     <Reference Include="MsgBox">
-      <HintPath>.\MsgBox.dll</HintPath>
+      <HintPath>..\3rd-party\MsgBox.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.6.0.3\lib\net40\Newtonsoft.Json.dll</HintPath>
@@ -60,7 +60,7 @@
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="smileNet">
-      <HintPath>.\smileNet.dll</HintPath>
+      <HintPath>..\3rd-party\smileNet.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -99,7 +99,7 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="UserNotification">
-      <HintPath>.\UserNotification.dll</HintPath>
+      <HintPath>..\3rd-party\UserNotification.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="WpfAnimatedGif">
