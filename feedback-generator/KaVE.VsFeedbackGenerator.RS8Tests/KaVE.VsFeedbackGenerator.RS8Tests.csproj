@@ -126,8 +126,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\KaVE.VsFeedbackGenerator.licenseheader">
-      <Link>KaVE.VsFeedbackGenerator.licenseheader</Link>
+    <None Include="..\KaVE.licenseheader">
+      <Link>KaVE.licenseheader</Link>
     </None>
     <None Include="packages.config" />
   </ItemGroup>
