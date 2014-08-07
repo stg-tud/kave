@@ -134,7 +134,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Logging
         [Test]
         public void ShouldNotDeleteTodayLog()
         {
-            var today = new DateTime(2014, 06,26);
+            var today = new DateTime(2014, 06, 26);
             GivenLogsExist(today);
             WhenLogFileManagerIsInitialized();
 
@@ -160,22 +160,31 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Logging
         }
 
         [Test]
-        public void ShouldGetAccumulatedLogsSize()
+        public void ShouldGetFormatedLogsSize_B()
         {
-            var today = GetValidLogPath(_baseDirectory, DateTime.Today);
-            var yesterday = GetValidLogPath(_baseDirectory, DateTime.Today.AddDays(-1));
-            var theDayBeforeYesterday = GetValidLogPath(_baseDirectory, DateTime.Today.AddDays(-2));
+            GivenLogsExistWithSizeInBytes(1000);
+            Assert.AreEqual("1000 B", _uut.FormatedLogsSize);
+        }
 
-            GivenLogsExist(
-                DateTime.Today,
-                DateTime.Today.AddDays(-1),
-                DateTime.Today.AddDays(-2));
+        [Test]
+        public void ShouldGetFormatedLogsSize_KB()
+        {
+            GivenLogsExistWithSizeInBytes(1024 * 23);
+            Assert.AreEqual("23.0 KB", _uut.FormatedLogsSize);
+        }
 
-            var acutual = _uut.TotalLogsSizeInMB;
+        [Test]
+        public void ShouldGetFormatedLogsSize_MB()
+        {
+            GivenLogsExistWithSizeInBytes(1024 * 1024 * 20);
+            Assert.AreEqual("20.0 MB", _uut.FormatedLogsSize);
+        }
 
-            _ioUtilMock.Verify(io => io.GetFileSize(today));
-            _ioUtilMock.Verify(io => io.GetFileSize(yesterday));
-            _ioUtilMock.Verify(io => io.GetFileSize(theDayBeforeYesterday));
+        [Test]
+        public void ShouldGetFormatedLogsSize_MultipleFiles()
+        {
+            GivenLogsExistWithSizeInBytes(1024 * 1024 * 20, 1024 * 512);
+            Assert.AreEqual("20.5 MB", _uut.FormatedLogsSize);
         }
 
         [Test]
@@ -204,6 +213,21 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Logging
 
             Registry.Clear();
             Registry.RegisterComponent(_ioUtilMock.Object);
+        }
+
+        private void GivenLogsExistWithSizeInBytes(params int[] sizesInBytes)
+        {
+            var pathes = new string[sizesInBytes.Length];
+
+            for (var i = 0; i < sizesInBytes.Length; i++)
+            {
+                var currentPath = GetValidLogPath(_baseDirectory, DateTime.Today.AddDays(-i));
+                _ioUtilMock.Setup(u => u.GetFileSize(currentPath)).Returns(sizesInBytes[i]);
+                pathes[i] = currentPath;
+            }
+
+            _ioUtilMock.Setup(io => io.GetFiles(_baseDirectory, It.IsAny<string>()))
+                       .Returns(pathes);
         }
 
 
