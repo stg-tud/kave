@@ -32,6 +32,6 @@
         <file src="3rd-party\MsgBox.dll" target="ReSharper\v8.2\plugins\MsgBox.dll" />
         <file src="3rd-party\UserNotification.dll" target="ReSharper\v8.2\plugins\UserNotification.dll" />
         <file src="3rd-party\smileNet.dll" target="ReSharper\v8.2\plugins\smileNet.dll" />
-        <file src="3rd-party\3rd-party\System.Net.Http.dll" target="ReSharper\v8.2\plugins\System.Net.Http.dll" />
+        <file src="3rd-party\System.Net.Http.dll" target="ReSharper\v8.2\plugins\System.Net.Http.dll" />
     </files>
 </package>
