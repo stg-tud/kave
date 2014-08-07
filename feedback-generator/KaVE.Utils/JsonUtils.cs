@@ -50,21 +50,14 @@ namespace KaVE.Utils
             {
                 case JTokenType.Array:
                     var jArray = token as JArray;
-                    Asserts.NotNull(jArray, "JSON-TokenType 'Array' wasn't wrapped in a JArray");
+                    Asserts.NotNull(jArray);
                     return jArray.Select(ParseJson).ToList();
                 case JTokenType.Object:
                     var jObject = token as JObject;
-                    Asserts.NotNull(jObject, "JSON-TokenType 'Object' wasn't wrapped in a JObject");
+                    Asserts.NotNull(jObject);
                     return jObject.ToDictionary<KeyValuePair<string, JToken>, string, object>(
                         pair => pair.Key,
                         pair => ParseJson(pair.Value));
-                case JTokenType.Property:
-                    var jProperty = token as JProperty;
-                    Asserts.NotNull(jProperty, "JSON-TokenType 'Property' wasn't wrapped in a JProperty");
-                    return new KeyValuePair<string, object>(jProperty.Name, ParseJson(jProperty.Value));
-                case JTokenType.Constructor:
-                    // TODO: how to convert them?
-                    break;
                 case JTokenType.Null:
                 case JTokenType.Undefined:
                     return null;
@@ -80,17 +73,13 @@ namespace KaVE.Utils
                 case JTokenType.Uri:
                 case JTokenType.TimeSpan:
                     var jValue = token as JValue;
-                    Asserts.NotNull(
-                        jValue,
-                        string.Format("JSON-TokenType '{0}' wasn't wrapped in a JValue", token.Type));
+                    Asserts.NotNull(jValue);
                     return jValue.Value;
-                case JTokenType.None:
-                    Asserts.Fail("JSON-Token must not be of Type 'None'");
-                    break;
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    Asserts.Fail();
+                    break;
             }
-            throw new AssertException("Not Handled Yet");
+            throw new AssertException("");
         }
 
         /// <summary>
@@ -121,16 +110,6 @@ namespace KaVE.Utils
                        dict1.Keys.All(key => dict1[key].IsEquivalentObject(dict2[key]));
             }
             if (obj1 is IDictionary<string, object> || obj2 is IDictionary<string, object>)
-            {
-                return false;
-            }
-            if (obj1 is KeyValuePair<string, object> && obj2 is KeyValuePair<string, object>)
-            {
-                var pair1 = (obj1 as KeyValuePair<string, object>?).Value;
-                var pair2 = (obj2 as KeyValuePair<string, object>?).Value;
-                return pair1.Key.Equals(pair2.Value) && pair1.Value.IsEquivalentObject(pair2.Value);
-            }
-            if (obj1 is KeyValuePair<string, object> || obj2 is KeyValuePair<string, object>)
             {
                 return false;
             }

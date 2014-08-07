@@ -197,5 +197,14 @@ namespace KaVE.Utils.Tests
 
             Assert.AreEqual(expected, actual);
         }
+
+        [Test]
+        public void ShouldRecognizeDifferentlySortedObjects()
+        {
+            const string json1 = "{\"a\":1, \"b\":2}";
+            const string json2 = "{\"b\":2, \"a\":1}";
+
+            Assert.IsTrue(json1.DescribesEquivalentObject(json2));
+        }
     }
 }
