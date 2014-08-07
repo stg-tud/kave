@@ -30,26 +30,24 @@ namespace KaVE.Model.Tests.ObjectUsage
         public void ShouldRecognizeEqualFieldNames()
         {
             Assert.AreEqual(
-                new CoReFieldName("Lcc/recommender/Field.field;Lcc/recommender/Type"),
-                new CoReFieldName("Lcc/recommender/Field.field;Lcc/recommender/Type"));
+                new CoReFieldName("LField.field;LType"),
+                new CoReFieldName("LField.field;LType"));
         }
 
         [Test]
         public void ShouldRecognizeEqualMethodNames()
         {
             Assert.AreEqual(
-                new CoReMethodName(
-                    "Lcc/recommenders/Receiver.method(Lcc/recommenders/Argument;)Lcc/recommeners/Return;"),
-                new CoReMethodName(
-                    "Lcc/recommenders/Receiver.method(Lcc/recommenders/Argument;)Lcc/recommeners/Return;"));
+                new CoReMethodName("LReceiver.method(LArgument;)LReturn;"),
+                new CoReMethodName("LReceiver.method(LArgument;)LReturn;"));
         }
 
         [Test]
         public void ShouldRecognizeEqualTypeNames()
         {
             Assert.AreEqual(
-                new CoReTypeName("Lcc/recommenders/Class"),
-                new CoReTypeName("Lcc/recommenders/Class"));
+                new CoReTypeName("LClass"),
+                new CoReTypeName("LClass"));
         }
 
         [Test]
@@ -59,17 +57,13 @@ namespace KaVE.Model.Tests.ObjectUsage
                 new CallSite
                 {
                     kind = CallSiteKind.PARAM_CALL_SITE,
-                    call =
-                        new CoReMethodName(
-                            "Lcc/recommenders/Receiver.method(Lcc/recommenders/Argument;)Lcc/recommeners/Return;"),
+                    call = new CoReMethodName("LReceiver.method(LArgument;)LReturn;"),
                     argumentIndex = 2
                 },
                 new CallSite
                 {
                     kind = CallSiteKind.PARAM_CALL_SITE,
-                    call =
-                        new CoReMethodName(
-                            "Lcc/recommenders/Receiver.method(Lcc/recommenders/Argument;)Lcc/recommeners/Return;"),
+                    call = new CoReMethodName("LReceiver.method(LArgument;)LReturn;"),
                     argumentIndex = 2
                 });
         }
@@ -81,21 +75,17 @@ namespace KaVE.Model.Tests.ObjectUsage
                 new DefinitionSite
                 {
                     kind = DefinitionKind.RETURN,
-                    type = new CoReTypeName("Lcc/recommenders/Class"),
-                    method =
-                        new CoReMethodName(
-                            "Lcc/recommenders/Receiver.method(Lcc/recommenders/Argument;)Lcc/recommeners/Return;"),
-                    field = new CoReFieldName("Lcc/recommender/Field.field;Lcc/recommender/Type"),
+                    type = new CoReTypeName("LClass"),
+                    method = new CoReMethodName("LReceiver.method(LArgument;)LReturn;"),
+                    field = new CoReFieldName("LField.field;LType"),
                     arg = 42
                 },
                 new DefinitionSite
                 {
                     kind = DefinitionKind.RETURN,
-                    type = new CoReTypeName("Lcc/recommenders/Class"),
-                    method =
-                        new CoReMethodName(
-                            "Lcc/recommenders/Receiver.method(Lcc/recommenders/Argument;)Lcc/recommeners/Return;"),
-                    field = new CoReFieldName("Lcc/recommender/Field.field;Lcc/recommender/Type"),
+                    type = new CoReTypeName("LClass"),
+                    method = new CoReMethodName("LReceiver.method(LArgument;)LReturn;"),
+                    field = new CoReFieldName("LField.field;LType"),
                     arg = 42
                 });
         }
@@ -105,74 +95,61 @@ namespace KaVE.Model.Tests.ObjectUsage
         {
             var expected = new Query
             {
-                type = new CoReTypeName("Lcc/recommenders/Type"),
+                type = new CoReTypeName("LType"),
                 definition = new DefinitionSite
                 {
                     kind = DefinitionKind.RETURN,
-                    method = new CoReMethodName("Lcc/recommenders/Factory.method()Lcc/recommeners/Type;")
+                    method = new CoReMethodName("LFactory.method()LType;")
                 },
-                classCtx = new CoReTypeName("Lcc/recommenders/Class"),
-                methodCtx =
-                    new CoReMethodName(
-                        "Lcc/recommenders/Receiver.method(Lcc/recommenders/Argument;)Lcc/recommeners/Return;"),
+                classCtx = new CoReTypeName("LClass"),
+                methodCtx = new CoReMethodName("LReceiver.method(LArgument;)LReturn;"),
             };
             expected.sites.Add(
                 new CallSite
                 {
                     kind = CallSiteKind.PARAM_CALL_SITE,
-                    call =
-                        new CoReMethodName(
-                            "Lcc/recommenders/Receiver.method(Lcc/recommenders/Type;)Lcc/recommeners/Return;"),
+                    call = new CoReMethodName("LReceiver.method(LType;)LReturn;"),
                     argumentIndex = 3
                 });
             expected.sites.Add(
                 new CallSite
                 {
                     kind = CallSiteKind.RECEIVER_CALL_SITE,
-                    call =
-                        new CoReMethodName(
-                            "Lcc/recommenders/Type.method(Lcc/recommenders/Argument;)Lcc/recommeners/Return;"),
+                    call = new CoReMethodName("LType.method(LArgument;)LReturn;"),
                     argumentIndex = 0
                 });
 
             var actual = new Query
             {
-                type = new CoReTypeName("Lcc/recommenders/Type"),
+                type = new CoReTypeName("LType"),
                 definition = new DefinitionSite
                 {
                     kind = DefinitionKind.RETURN,
-                    method = new CoReMethodName("Lcc/recommenders/Factory.method()Lcc/recommeners/Type;")
+                    method = new CoReMethodName("LFactory.method()LType;")
                 },
-                classCtx = new CoReTypeName("Lcc/recommenders/Class"),
-                methodCtx =
-                    new CoReMethodName(
-                        "Lcc/recommenders/Receiver.method(Lcc/recommenders/Argument;)Lcc/recommeners/Return;")
+                classCtx = new CoReTypeName("LClass"),
+                methodCtx = new CoReMethodName("LReceiver.method(LArgument;)LReturn;")
             };
             actual.sites.Add(
                 new CallSite
                 {
                     kind = CallSiteKind.PARAM_CALL_SITE,
-                    call =
-                        new CoReMethodName(
-                            "Lcc/recommenders/Receiver.method(Lcc/recommenders/Type;)Lcc/recommeners/Return;"),
+                    call = new CoReMethodName("LReceiver.method(LType;)LReturn;"),
                     argumentIndex = 3
                 });
             actual.sites.Add(
                 new CallSite
                 {
                     kind = CallSiteKind.RECEIVER_CALL_SITE,
-                    call =
-                        new CoReMethodName(
-                            "Lcc/recommenders/Type.method(Lcc/recommenders/Argument;)Lcc/recommeners/Return;"),
+                    call = new CoReMethodName("LType.method(LArgument;)LReturn;"),
                     argumentIndex = 0
                 });
 
-            Assert.AreEqual(
-                expected,
-                actual);
+            Assert.AreEqual(expected, actual);
         }
 
-        [TestCase("System.Int32, mscore, 4.0.0.0"), TestCase("KaVE.Model.ObjectUsage.Query"),
+        [TestCase("System.Int32, mscore, 4.0.0.0"), TestCase("KaVE.Model.ObjectUsage.Query"), TestCase("Type"),
+         TestCase("LType;"), TestCase("L"), TestCase("LN.T"),
          ExpectedException(typeof (AssertException))]
         public void ShouldRejectInvalidTypeNames(string typeName)
         {
@@ -180,7 +157,8 @@ namespace KaVE.Model.Tests.ObjectUsage
             new CoReTypeName(typeName);
         }
 
-        [TestCase("Lcc/recommenders/Type"), TestCase("LKaVE/Model/ObjectUsage/Query")]
+        [TestCase("LType"), TestCase("LKaVE/Model/ObjectUsage/Query"), TestCase("LT1"), TestCase("LT$"),
+         TestCase("LN1/T")]
         public void ShouldAcceptValidTypeNames(string typeName)
         {
             // ReSharper disable once ObjectCreationAsStatement
@@ -189,37 +167,38 @@ namespace KaVE.Model.Tests.ObjectUsage
 
         [TestCase(
             "[System.String, mscore, 4.0.0.0] [MyType, MyAssembly, 1.0.0.0].AMethod([System.Int32, mscore, 4.0.0.0] length)"
-            ), TestCase("KaVE.Model.ObjectUsage.Query.method(arg)"),
+            ), TestCase("KaVE.Model.ObjectUsage.Query.method(arg)"), TestCase("LSystem/Console.WriteLine()LSystem/Void"),
+         TestCase("LType.method(LArgument)LReturn;"),
          ExpectedException(typeof (AssertException))]
-        public void ShouldRejectInvalidMethodNames(string typeName)
+        public void ShouldRejectInvalidMethodNames(string methodName)
         {
             // ReSharper disable once ObjectCreationAsStatement
-            new CoReMethodName(typeName);
+            new CoReMethodName(methodName);
         }
 
-        [TestCase("Lcc/recommenders/Type.method(Lcc/recommenders/Argument;)Lcc/recommeners/Return;"),
+        [TestCase("LType.method(LArgument;)LReturn;"),
          TestCase("LSystem/Console.WriteLine()LSystem/Void;")]
-        public void ShouldAcceptValidMethodNames(string typeName)
+        public void ShouldAcceptValidMethodNames(string methodName)
         {
             // ReSharper disable once ObjectCreationAsStatement
-            new CoReMethodName(typeName);
+            new CoReMethodName(methodName);
         }
 
         [TestCase("[System.Int32, mscore, 4.0.0.0] [MyClass, MyAssembly, 1.2.3.4].Constant"),
-         TestCase("KaVE.Model.ObjectUsage.Query.type"),
+         TestCase("KaVE.Model.ObjectUsage.Query.type"), TestCase("LType.field;LType;"),
          ExpectedException(typeof (AssertException))]
-        public void ShouldRejectInvalidFieldNames(string typeName)
+        public void ShouldRejectInvalidFieldNames(string fieldName)
         {
             // ReSharper disable once ObjectCreationAsStatement
-            new CoReFieldName(typeName);
+            new CoReFieldName(fieldName);
         }
 
-        [TestCase("Lcc/recommenders/Type.field;Lcc/recommenders/Type"),
+        [TestCase("LType.field;LType"),
          TestCase("LKaVE/Model/ObjectUsage/Query.type;LKave/Model/ObjectUsage/CoReTypeName")]
-        public void ShouldAcceptValidFieldNames(string typeName)
+        public void ShouldAcceptValidFieldNames(string fieldName)
         {
             // ReSharper disable once ObjectCreationAsStatement
-            new CoReFieldName(typeName);
+            new CoReFieldName(fieldName);
         }
     }
 }
