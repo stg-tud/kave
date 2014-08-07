@@ -133,14 +133,13 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Logging
         }
 
         [Test]
-        public void ShouldConvertFileSizeInMB()
+        public void ShouldGetCorrectSizeInBytes()
         {
-            //2MB in Bytes
-            _mockIoUtils.Setup(iou => iou.GetFileSize(It.IsAny<String>())).Returns(2097152);
+            const long expected = 2097152;
+            _mockIoUtils.Setup(iou => iou.GetFileSize(It.IsAny<String>())).Returns(expected);
 
-            var actual = _uut.SizeInMB;
-            const double expected = 2;
-
+            var actual = _uut.SizeInBytes;
+            
             Assert.AreEqual(expected, actual);
         }
 
