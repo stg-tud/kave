@@ -1,13 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{1653AC61-ECF8-438C-A174-ADD2D5E776CD}"
-	ProjectSection(SolutionItems) = preProject
-		.nuget\NuGet.Config = .nuget\NuGet.Config
-		.nuget\NuGet.exe = .nuget\NuGet.exe
-		.nuget\NuGet.targets = .nuget\NuGet.targets
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KaVE.Utils.Tests", "KaVE.Utils.Tests\KaVE.Utils.Tests.csproj", "{5D2BC4B0-0A61-489D-B22B-88DA115A31A0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KaVE.Utils", "KaVE.Utils\KaVE.Utils.csproj", "{4439FDE5-778A-4FAB-8BB0-7A4E23C45BDB}"
