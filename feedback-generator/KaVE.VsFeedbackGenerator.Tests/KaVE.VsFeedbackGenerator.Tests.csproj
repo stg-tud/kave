@@ -58,6 +58,10 @@
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="smileNet, Version=1.1.4431.20499, Culture=neutral">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\3rd-party\smileNet.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -74,6 +78,7 @@
     <Compile Include="Assertion\NameAssert.cs" />
     <Compile Include="CodeCompletion\CodeCompletionLifecycleManagerTest.cs" />
     <Compile Include="CodeCompletion\ExampleNetworkTest.cs" />
+    <Compile Include="CodeCompletion\UsageModelTest.cs" />
     <Compile Include="Generators\LogEventGeneratorTest.cs" />
     <Compile Include="Generators\EventGeneratorTestBase.cs" />
     <Compile Include="Generators\Merging\CompletionEventMergingStrategyTest.cs" />

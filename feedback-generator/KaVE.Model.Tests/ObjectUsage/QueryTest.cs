@@ -200,5 +200,14 @@ namespace KaVE.Model.Tests.ObjectUsage
             // ReSharper disable once ObjectCreationAsStatement
             new CoReFieldName(fieldName);
         }
+
+        [TestCase("LType.Method()LReturn;", "Method"), TestCase("LType.Method(LArg;)LReturn;", "Method"),
+         TestCase("LType.Method(LArg1;LArg2;)LReturn;", "Method")]
+        public void ShouldExtractMethodnameFromCoReMethodName(string origin, string expected)
+        {
+            var actual = new CoReMethodName(origin).Method;
+
+            Assert.AreEqual(expected, actual);
+        }
     }
 }

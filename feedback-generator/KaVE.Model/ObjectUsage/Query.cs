@@ -142,7 +142,7 @@ namespace KaVE.Model.ObjectUsage
     {
         protected CoReName(string name, string validationPattern)
         {
-            var regex = new Regex("^"+validationPattern+"$");
+            var regex = new Regex("^" + validationPattern + "$");
             Asserts.That(regex.IsMatch(name));
             Name = name;
         }
@@ -159,6 +159,11 @@ namespace KaVE.Model.ObjectUsage
         {
             return Name.GetHashCode();
         }
+
+        public override string ToString()
+        {
+            return GetType().Name + "[" + Name + "]";
+        }
     }
 
     public class CoReTypeName : CoReName
@@ -174,6 +179,11 @@ namespace KaVE.Model.ObjectUsage
     public class CoReMethodName : CoReName
     {
         public CoReMethodName(string name) : base(name, ValidationPattern()) {}
+
+        public string Method
+        {
+            get { return Name.Split('.', '(')[1]; }
+        }
 
         private static string ValidationPattern()
         {

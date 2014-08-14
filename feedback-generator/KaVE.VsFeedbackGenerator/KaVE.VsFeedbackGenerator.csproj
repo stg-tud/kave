@@ -96,6 +96,7 @@
     <Compile Include="CodeCompletion\LookupItemWrapper.cs" />
     <Compile Include="CodeCompletion\ExampleNetwork.cs" />
     <Compile Include="CodeCompletion\ExemplaryProposalProvider.cs" />
+    <Compile Include="CodeCompletion\UsageModel.cs" />
     <Compile Include="Generators\ILogger.cs" />
     <Compile Include="Generators\LogEventGenerator.cs" />
     <Compile Include="Generators\ReSharper\CommandEventGeneratorBase.cs" />
