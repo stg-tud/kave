@@ -17,65 +17,26 @@
  *    - Dennis Albrecht
  */
 
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using KaVE.Model.ObjectUsage;
 using KaVE.VsFeedbackGenerator.CodeCompletion;
 using NUnit.Framework;
-using Smile;
 
 namespace KaVE.VsFeedbackGenerator.Tests.CodeCompletion
 {
     [TestFixture]
     internal class UsageModelTest
     {
-        private static Network Fixture()
-        {
-            var net = new Network();
-            var handle = net.AddNode(Network.NodeType.Cpt, "pattern");
-            net.SetNodeName(handle, "pattern");
-            SetNodeProperties(net, handle, new[] {"p1", "p2"}, new[] {0.5, 0.5});
-            AddMethod(net, handle, "Init", new[] {0.95, 0.15});
-            AddMethod(net, handle, "Execute", new[] {0.7, 0.25});
-            AddMethod(net, handle, "Finish", new[] {0.05, 0.8});
-            return net;
-        }
-
-        private static void AddMethod(Network net, int patternNodeHandle, string methodName, double[] trueProbs)
-        {
-            var handle = net.AddNode(Network.NodeType.Cpt, methodName);
-            net.SetNodeName(handle, string.Format("LType.{0}()LReturn;", methodName));
-            net.AddArc(patternNodeHandle, handle);
-
-            var fullProbs = new double[trueProbs.Length*2];
-            for (var i = 0; i < trueProbs.Length; i++)
-            {
-                fullProbs[2*i] = trueProbs[i];
-                fullProbs[2*i + 1] = 1 - trueProbs[i];
-            }
-            SetNodeProperties(net, handle, new[] {"true", "false"}, fullProbs);
-        }
-
-        private static void SetNodeProperties(Network net, int handle, string[] ids, double[] probs)
-        {
-            for (var i = 0; i < ids.Length; i++)
-            {
-                net.SetOutcomeId(handle, i, ids[i]);
-            }
-            net.SetNodeDefinition(handle, probs);
-        }
-
         [Test, Ignore]
-        public void ShouldSaveFixtureToDisk()
+        public void SaveFixtureToDisk()
         {
-            Fixture().WriteFile("c:/.../Network.xdsl");
+            UsageModelFixture.Network().WriteFile("c:/.../Network.xdsl");
         }
 
         [Test]
         public void ShouldNotProduceAnyProposalsIfAllMethodsAreAlreadyCalled()
         {
-            var net = Fixture();
+            var net = UsageModelFixture.Network();
             var model = new UsageModel(net);
             var query = new Query();
             query.sites.Add(new CallSite {call = new CoReMethodName("LType.Init()LReturn;")});
@@ -85,13 +46,13 @@ namespace KaVE.VsFeedbackGenerator.Tests.CodeCompletion
 
             var actual = model.Query(query);
 
-            AssertEquivalence(expected, actual);
+            UsageModelFixture.AssertEquivalenceIgnoringRoundingErrors(expected, actual);
         }
 
         [Test]
         public void ShouldProduceAllProposalsIfNoMethodsAreAlreadyCalled()
         {
-            var net = Fixture();
+            var net = UsageModelFixture.Network();
             var model = new UsageModel(net);
             var query = new Query();
             var expected = new Dictionary<CoReMethodName, double>
@@ -103,16 +64,16 @@ namespace KaVE.VsFeedbackGenerator.Tests.CodeCompletion
 
             var actual = model.Query(query);
 
-            AssertEquivalence(expected, actual);
+            UsageModelFixture.AssertEquivalenceIgnoringRoundingErrors(expected, actual);
         }
 
         [Test]
         public void ShouldProduceSomeProposalsIfSomeMethodsAreAlreadyCalled()
         {
-            var net = Fixture();
+            var net = UsageModelFixture.Network();
             var model = new UsageModel(net);
             var query = new Query();
-            query.sites.Add(new CallSite { call = new CoReMethodName("LType.Init()LReturn;") });
+            query.sites.Add(new CallSite {call = new CoReMethodName("LType.Init()LReturn;")});
             var expected = new Dictionary<CoReMethodName, double>
             {
                 {new CoReMethodName("LType.Execute()LReturn;"), 0.639},
@@ -121,25 +82,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.CodeCompletion
 
             var actual = model.Query(query);
 
-            AssertEquivalence(expected, actual);
-        }
-
-        private static IDictionary<TKey, string> ValuesToString<TKey, TValue>(IDictionary<TKey, TValue> src,
-            Func<TValue, string> policy = null)
-        {
-            return src.ToDictionary(
-                pair => pair.Key,
-                pair => (policy == null) ? pair.Value.ToString() : policy(pair.Value));
-        }
-
-        private void AssertEquivalence<TKey>(IDictionary<TKey, double> expected, IDictionary<TKey, double> actual)
-        {
-            Func<double, string> policy = d => string.Format("{0:0.###}", d);
-
-            var convertedExpected = ValuesToString(expected, policy);
-            var convertedActual = ValuesToString(actual, policy);
-
-            CollectionAssert.AreEquivalent(convertedExpected, convertedActual);
+            UsageModelFixture.AssertEquivalenceIgnoringRoundingErrors(expected, actual);
         }
     }
 }
