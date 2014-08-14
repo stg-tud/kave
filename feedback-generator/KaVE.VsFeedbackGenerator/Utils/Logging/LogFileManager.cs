@@ -20,6 +20,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using KaVE.JetBrains.Annotations;
@@ -32,7 +33,7 @@ namespace KaVE.VsFeedbackGenerator.Utils.Logging
         private readonly IIoUtils _ioUtils;
         internal const string LogDirectoryPrefix = "Log_";
 
-        public event EventHandler LogsChanged = delegate {  };
+        public event EventHandler LogsChanged = delegate { };
 
         public LogFileManager([NotNull] string baseLocation)
         {
@@ -52,9 +53,26 @@ namespace KaVE.VsFeedbackGenerator.Utils.Logging
             return new LogFile<TLogEntry>(logDirectoryPath);
         }
 
-        public double TotalLogsSizeInMB
+        public string FormatedLogsSize
         {
-            get { return Logs.Select(log => log.SizeInMB).Sum(); }
+            get
+            {
+                var sumB = Logs.Select(log => log.SizeInBytes).Sum();
+                
+                if (sumB < 1024)
+                {
+                    return sumB + " B";
+                }
+
+                var sumKb = sumB/1024f;
+
+                if (sumKb < 1024)
+                {
+                    return sumKb.ToString("0.0", CultureInfo.InvariantCulture) + " KB";
+                }
+
+                return (sumKb / 1024f).ToString("0.0", CultureInfo.InvariantCulture) + " MB";    
+            }
         }
 
         public void DeleteLogsOlderThan(DateTime time)

@@ -75,8 +75,7 @@ namespace KaVE.VsFeedbackGenerator.Export
             }
         }
 
-        // TODO @Uli: Compilation error: Error	1	'KaVE.VsFeedbackGenerator.Export.UploadWizard.OnClosing(System.ComponentModel.CancelEventArgs)': no suitable method found to override	C:\Users\seb\versioned_code\kave\feedback-generator\KaVE.VsFeedbackGenerator\Export\UploadWizard.xaml.cs	78	33	KaVE.VsFeedbackGenerator
-/*        protected override void OnClosing(CancelEventArgs e)
+       protected override void OnClosing(CancelEventArgs e)
         {
             base.OnClosing(e);
             if (_uploadWizardViewModel.IsBusy)
@@ -86,5 +85,5 @@ namespace KaVE.VsFeedbackGenerator.Export
                     Properties.UploadWizard.window_title);
             }
         }
-*/    }
+   }
 }
