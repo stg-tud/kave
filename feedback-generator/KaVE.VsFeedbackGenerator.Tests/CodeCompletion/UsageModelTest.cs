@@ -73,7 +73,26 @@ namespace KaVE.VsFeedbackGenerator.Tests.CodeCompletion
             var net = UsageModelFixture.Network();
             var model = new UsageModel(net);
             var query = new Query();
-            query.sites.Add(new CallSite {call = new CoReMethodName("LType.Init()LReturn;")});
+            query.sites.Add(new CallSite { call = new CoReMethodName("LType.Init()LReturn;") });
+            var expected = new Dictionary<CoReMethodName, double>
+            {
+                {new CoReMethodName("LType.Execute()LReturn;"), 0.639},
+                {new CoReMethodName("LType.Finish()LReturn;"), 0.152}
+            };
+
+            var actual = model.Query(query);
+
+            UsageModelFixture.AssertEquivalenceIgnoringRoundingErrors(expected, actual);
+        }
+
+        [Test]
+        public void ShouldStillWorkIfUnknownMethodsAreCalled()
+        {
+            var net = UsageModelFixture.Network();
+            var model = new UsageModel(net);
+            var query = new Query();
+            query.sites.Add(new CallSite { call = new CoReMethodName("LType.Init()LReturn;") });
+            query.sites.Add(new CallSite { call = new CoReMethodName("LOtherType.SomeMethod()LResult;") });
             var expected = new Dictionary<CoReMethodName, double>
             {
                 {new CoReMethodName("LType.Execute()LReturn;"), 0.639},
