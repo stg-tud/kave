@@ -20,6 +20,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using KaVE.Utils.Assertion;
+using KaVE.VsFeedbackGenerator.CodeCompletion;
 using NUnit.Framework;
 using Smile;
 
@@ -32,39 +34,80 @@ namespace KaVE.VsFeedbackGenerator.Tests.CodeCompletion
             var net = new Network();
             var handle = net.AddNode(Smile.Network.NodeType.Cpt, "pattern");
             net.SetNodeName(handle, "pattern");
-            SetNodeProperties(net, handle, new[] {"p1", "p2"}, new[] {0.5, 0.5});
-            AddMethod(net, handle, "Init", new[] {0.95, 0.15});
-            AddMethod(net, handle, "Execute", new[] {0.7, 0.25});
-            AddMethod(net, handle, "Finish", new[] {0.05, 0.8});
+            net.SetNodeProperties(handle, new[] {"Create", "Use", "Destroy"}, new[] {0.3, 0.5, 0.2});
+            net.AddNode(
+                handle,
+                "classContext",
+                new[] {"LType", "LType2", "LType3"},
+                new[] {0.6, 0.2, 0.2, 0.3, 0.4, 0.3, 0.2, 0.3, 0.5});
+            net.AddNode(
+                handle,
+                "methodContext",
+                new[] {"LType.M()LVoid;", "LType.Ret()LRet;", "LType.Param(LArg;)LVoid;", "LType.Id(LArg;)LRet;"},
+                new[] {0.6, 0.2, 0.1, 0.1, 0.3, 0.4, 0.2, 0.1, 0.2, 0.3, 0.4, 0.1});
+            net.AddNode(
+                handle,
+                "definitionSite",
+                new[] {"RETURN:LType.Create()LType;", "THIS", "CONSTANT", "FIELD:LType.object;LType"},
+                new[] {0.6, 0.2, 0.1, 0.1, 0.1, 0.3, 0.3, 0.3, 0.05, 0.4, 0.05, 0.4});
+
+            net.AddMethod(handle, "LType.Init()LVoid;", new[] {0.95, 0.15, 0.05});
+            net.AddMethod(handle, "LType.Execute()LVoid;", new[] {0.6, 0.99, 0.7});
+            net.AddMethod(handle, "LType.Finish()LVoid;", new[] {0.05, 0.5, 0.9});
             return net;
         }
 
-        private static void AddMethod(Network net, int patternNodeHandle, string methodName, double[] trueProbs)
+        private static void AddMethod(this Network net, int patternNodeHandle, string methodName, double[] trues)
         {
-            var handle = net.AddNode(Smile.Network.NodeType.Cpt, methodName);
-            net.SetNodeName(handle, string.Format("LType.{0}()LReturn;", methodName));
-            net.AddArc(patternNodeHandle, handle);
-
-            var fullProbs = new double[trueProbs.Length*2];
-            for (var i = 0; i < trueProbs.Length; i++)
-            {
-                fullProbs[2*i] = trueProbs[i];
-                fullProbs[2*i + 1] = 1 - trueProbs[i];
-            }
-            SetNodeProperties(net, handle, new[] {"true", "false"}, fullProbs);
+            net.AddNode(patternNodeHandle, methodName, new[] {"true", "false"}, Expand(trues));
         }
 
-        private static void SetNodeProperties(Network net, int handle, string[] ids, double[] probs)
+        private static double[] Expand(double[] trues)
         {
-            for (var i = 0; i < ids.Length; i++)
+            var probs = new double[trues.Length*2];
+            for (int i = 0; i < trues.Length; i++)
             {
-                net.SetOutcomeId(handle, i, ids[i]);
+                probs[2*i] = trues[i];
+                probs[2*i + 1] = 1 - trues[i];
             }
-            net.SetNodeDefinition(handle, probs);
+            return probs;
         }
 
-        public static void AssertEquivalenceIgnoringRoundingErrors<TKey>(IDictionary<TKey, double> expected,
-            IDictionary<TKey, double> actual)
+        private static void AddNode(this Network net,
+            int patternNodeHandle,
+            string name,
+            string[] states,
+            double[] probs)
+        {
+            var id = net.AddNode(Smile.Network.NodeType.Cpt, UsageModel.Escape(name));
+            net.SetNodeName(id, name);
+            net.AddArc(patternNodeHandle, id);
+            net.SetNodeProperties(id, states, probs);
+        }
+
+        private static void SetNodeProperties(this Network net, int id, string[] states, double[] probs)
+        {
+            Asserts.That(states.Length > 0);
+            for (var i = 0; i < states.Length; i++)
+            {
+                if (i < 2)
+                {
+                    net.SetOutcomeId(id, i, UsageModel.Escape(states[i]));
+                }
+                else
+                {
+                    net.AddOutcome(id, UsageModel.Escape(states[i]));
+                }
+            }
+            if (states.Length == 1)
+            {
+                net.DeleteOutcome(id, 1);
+            }
+            net.SetNodeDefinition(id, probs);
+        }
+
+        public static void AssertEqualityIgnoringRoundingErrors<TKey>(KeyValuePair<TKey, double>[] expected,
+            KeyValuePair<TKey, double>[] actual)
         {
             Func<double, string> policy = d => string.Format("{0:0.###}", d);
 
@@ -74,12 +117,13 @@ namespace KaVE.VsFeedbackGenerator.Tests.CodeCompletion
             CollectionAssert.AreEquivalent(convertedExpected, convertedActual);
         }
 
-        private static IDictionary<TKey, string> ValuesToString<TKey, TValue>(this IDictionary<TKey, TValue> src,
+        private static IEnumerable<KeyValuePair<TKey, string>> ValuesToString<TKey, TValue>(
+            this IEnumerable<KeyValuePair<TKey, TValue>> src,
             Func<TValue, string> policy = null)
         {
-            return src.ToDictionary(
-                pair => pair.Key,
-                pair => (policy == null) ? pair.Value.ToString() : policy(pair.Value));
+            return
+                src.Select(
+                    p => new KeyValuePair<TKey, string>(p.Key, (policy == null) ? p.Value.ToString() : policy(p.Value)));
         }
     }
 }

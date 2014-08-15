@@ -18,19 +18,112 @@
  */
 
 using System.Collections.Generic;
+using System.Linq;
 using KaVE.Model.ObjectUsage;
 using KaVE.VsFeedbackGenerator.CodeCompletion;
 using NUnit.Framework;
+using Smile;
 
 namespace KaVE.VsFeedbackGenerator.Tests.CodeCompletion
 {
     [TestFixture]
     internal class UsageModelTest
     {
+        private UsageModel _uut;
+        private Network _network;
+
+        [SetUp]
+        public void SetUp()
+        {
+            _network = UsageModelFixture.Network();
+            _uut = new UsageModel(_network);
+        }
+
         [Test, Ignore]
         public void SaveFixtureToDisk()
         {
-            UsageModelFixture.Network().WriteFile("c:/.../Network.xdsl");
+            _network.WriteFile("c:/.../Network.xdsl");
+        }
+
+        [Test]
+        public void ShouldNotSetEvidencesOnEmptyQuery()
+        {
+            var query = new Query();
+
+            _uut.Query(query);
+
+            Assert.IsTrue(_network.GetAllNodes().All(id => !_network.IsEvidence(id)));
+        }
+
+        [Test]
+        public void ShouldNotSetEvidencesOnNotMatchingQuery()
+        {
+            var query = new Query
+            {
+                definition = new DefinitionSite
+                {
+                    kind = DefinitionKind.RETURN,
+                    method = new CoReMethodName("LStrangeType.M()LType;")
+                },
+                classCtx = new CoReTypeName("LStrangeType"),
+                methodCtx = new CoReMethodName("LStrangeType.M()LType;"),
+                type = new CoReTypeName("LType")
+            };
+            query.sites.Add(new CallSite {call = new CoReMethodName("LStrangeType.M()LType;")});
+
+            _uut.Query(query);
+
+            Assert.IsTrue(_network.GetAllNodes().All(id => !_network.IsEvidence(id)));
+        }
+
+        [Test]
+        public void ShouldSetEvidenceOnClassContext()
+        {
+            var query = new Query {classCtx = new CoReTypeName("LType")};
+
+            _uut.Query(query);
+
+            Assert.AreEqual(UsageModel.Escape("LType"), _network.GetEvidenceId("classContext"));
+        }
+
+        [Test]
+        public void ShouldSetEvidenceOnMethodContext()
+        {
+            var query = new Query {methodCtx = new CoReMethodName("LType.M()LVoid;")};
+
+            _uut.Query(query);
+
+            Assert.AreEqual(UsageModel.Escape("LType.M()LVoid;"), _network.GetEvidenceId("methodContext"));
+        }
+
+        [Test]
+        public void ShouldSetEvidenceOnDefinitionSite()
+        {
+            var query = new Query
+            {
+                definition =
+                    new DefinitionSite
+                    {
+                        kind = DefinitionKind.RETURN,
+                        method = new CoReMethodName("LType.Create()LType;")
+                    }
+            };
+
+            _uut.Query(query);
+
+            Assert.AreEqual(UsageModel.Escape("RETURN:LType.Create()LType;"), _network.GetEvidenceId("definitionSite"));
+        }
+
+        [Test]
+        public void ShouldSetEvidenceOnCallSite()
+        {
+            var query = new Query();
+            query.sites.Add(
+                new CallSite {kind = CallSiteKind.RECEIVER_CALL_SITE, call = new CoReMethodName("LType.Init()LVoid;")});
+
+            _uut.Query(query);
+
+            Assert.AreEqual("true", _network.GetEvidenceId(UsageModel.Escape("LType.Init()LVoid;")));
         }
 
         [Test]
@@ -39,69 +132,113 @@ namespace KaVE.VsFeedbackGenerator.Tests.CodeCompletion
             var net = UsageModelFixture.Network();
             var model = new UsageModel(net);
             var query = new Query();
-            query.sites.Add(new CallSite {call = new CoReMethodName("LType.Init()LReturn;")});
-            query.sites.Add(new CallSite {call = new CoReMethodName("LType.Execute()LReturn;")});
-            query.sites.Add(new CallSite {call = new CoReMethodName("LType.Finish()LReturn;")});
-            var expected = new Dictionary<CoReMethodName, double>();
+            query.sites.Add(new CallSite {call = new CoReMethodName("LType.Init()LVoid;")});
+            query.sites.Add(new CallSite {call = new CoReMethodName("LType.Execute()LVoid;")});
+            query.sites.Add(new CallSite {call = new CoReMethodName("LType.Finish()LVoid;")});
+            var expected = new KeyValuePair<CoReMethodName, double>[] {};
 
             var actual = model.Query(query);
 
-            UsageModelFixture.AssertEquivalenceIgnoringRoundingErrors(expected, actual);
+            UsageModelFixture.AssertEqualityIgnoringRoundingErrors(expected, actual);
         }
 
         [Test]
-        public void ShouldProduceAllProposalsIfNoMethodsAreAlreadyCalled()
+        public void ShouldProduceAllProposalsIfNoMethodIsAlreadyCalled()
         {
             var net = UsageModelFixture.Network();
             var model = new UsageModel(net);
             var query = new Query();
-            var expected = new Dictionary<CoReMethodName, double>
+            var expected = new[]
             {
-                {new CoReMethodName("LType.Init()LReturn;"), 0.55},
-                {new CoReMethodName("LType.Execute()LReturn;"), 0.475},
-                {new CoReMethodName("LType.Finish()LReturn;"), 0.425}
+                new CoReMethodName("LType.Init()LVoid;"),
+                new CoReMethodName("LType.Execute()LVoid;"),
+                new CoReMethodName("LType.Finish()LVoid;")
             };
 
-            var actual = model.Query(query);
+            var proposals = model.Query(query);
+            var actual = proposals.Select(p => p.Key);
 
-            UsageModelFixture.AssertEquivalenceIgnoringRoundingErrors(expected, actual);
+            CollectionAssert.AreEquivalent(expected, actual);
         }
 
         [Test]
-        public void ShouldProduceSomeProposalsIfSomeMethodsAreAlreadyCalled()
+        public void ShouldProduceSomeProposalsIfSomeMethodIsAlreadyCalled()
         {
             var net = UsageModelFixture.Network();
             var model = new UsageModel(net);
             var query = new Query();
-            query.sites.Add(new CallSite { call = new CoReMethodName("LType.Init()LReturn;") });
-            var expected = new Dictionary<CoReMethodName, double>
+            query.sites.Add(new CallSite {call = new CoReMethodName("LType.Init()LVoid;")});
+            var expected = new[]
             {
-                {new CoReMethodName("LType.Execute()LReturn;"), 0.639},
-                {new CoReMethodName("LType.Finish()LReturn;"), 0.152}
+                new CoReMethodName("LType.Execute()LVoid;"),
+                new CoReMethodName("LType.Finish()LVoid;")
             };
 
-            var actual = model.Query(query);
+            var proposals = model.Query(query);
+            var actual = proposals.Select(p => p.Key);
 
-            UsageModelFixture.AssertEquivalenceIgnoringRoundingErrors(expected, actual);
+            CollectionAssert.AreEquivalent(expected, actual);
         }
 
         [Test]
-        public void ShouldStillWorkIfUnknownMethodsAreCalled()
+        public void ShouldProduceOrderedProposals()
         {
             var net = UsageModelFixture.Network();
             var model = new UsageModel(net);
             var query = new Query();
-            query.sites.Add(new CallSite { call = new CoReMethodName("LType.Init()LReturn;") });
-            query.sites.Add(new CallSite { call = new CoReMethodName("LOtherType.SomeMethod()LResult;") });
-            var expected = new Dictionary<CoReMethodName, double>
+            var expected = new[]
             {
-                {new CoReMethodName("LType.Execute()LReturn;"), 0.639},
-                {new CoReMethodName("LType.Finish()LReturn;"), 0.152}
+                new KeyValuePair<CoReMethodName, double>(new CoReMethodName("LType.Execute()LVoid;"), 0.817),
+                new KeyValuePair<CoReMethodName, double>(new CoReMethodName("LType.Finish()LVoid;"), 0.436),
+                new KeyValuePair<CoReMethodName, double>(new CoReMethodName("LType.Init()LVoid;"), 0.377)
             };
 
             var actual = model.Query(query);
 
-            UsageModelFixture.AssertEquivalenceIgnoringRoundingErrors(expected, actual);
+            UsageModelFixture.AssertEqualityIgnoringRoundingErrors(expected, actual);
+        }
+
+        [Test]
+        public void ShouldProduceAdaptedPropertiesIfContextsAreSet()
+        {
+            var net = UsageModelFixture.Network();
+            var model = new UsageModel(net);
+            var query = new Query
+            {
+                classCtx = new CoReTypeName("LType"),
+                methodCtx = new CoReMethodName("LType.M()LVoid;"),
+                definition =
+                    new DefinitionSite {kind = DefinitionKind.FIELD, field = new CoReFieldName("LType.object;LType")}
+            };
+            var expected = new[]
+            {
+                new KeyValuePair<CoReMethodName, double>(new CoReMethodName("LType.Execute()LVoid;"), 0.803),
+                new KeyValuePair<CoReMethodName, double>(new CoReMethodName("LType.Init()LVoid;"), 0.453),
+                new KeyValuePair<CoReMethodName, double>(new CoReMethodName("LType.Finish()LVoid;"), 0.37)
+            };
+
+            var actual = model.Query(query);
+
+            UsageModelFixture.AssertEqualityIgnoringRoundingErrors(expected, actual);
+        }
+
+        [Test]
+        public void ShouldProduceAdaptedPropertiesIfCallSiteIsSet()
+        {
+            var net = UsageModelFixture.Network();
+            var model = new UsageModel(net);
+            var query = new Query();
+            query.sites.Add(
+                new CallSite {kind = CallSiteKind.RECEIVER_CALL_SITE, call = new CoReMethodName("LType.Init()LVoid;")});
+            var expected = new[]
+            {
+                new KeyValuePair<CoReMethodName, double>(new CoReMethodName("LType.Execute()LVoid;"), 0.682),
+                new KeyValuePair<CoReMethodName, double>(new CoReMethodName("LType.Finish()LVoid;"), 0.162)
+            };
+
+            var actual = model.Query(query);
+
+            UsageModelFixture.AssertEqualityIgnoringRoundingErrors(expected, actual);
         }
     }
 }
