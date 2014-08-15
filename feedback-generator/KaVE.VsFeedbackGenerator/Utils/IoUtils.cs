@@ -56,6 +56,7 @@ namespace KaVE.VsFeedbackGenerator.Utils
         string GetTempDirectoryName();
         void CreateDirectory(string path);
         bool DirectoryExists(string path);
+        string GetDirectoryName(string path);
         void DeleteDirectoryWithContent(string path);
 
         string Combine(params string[] paths);
@@ -86,7 +87,11 @@ namespace KaVE.VsFeedbackGenerator.Utils
                     response = null;
                     Asserts.Fail(Messages.ServerRequestNotAvailable, targetUri);
                 }
-                Asserts.That(response.IsSuccessStatusCode, Messages.ServerResponseFailure, targetUri, response.StatusCode);
+                Asserts.That(
+                    response.IsSuccessStatusCode,
+                    Messages.ServerResponseFailure,
+                    targetUri,
+                    response.StatusCode);
                 return response;
             }
         }
@@ -158,6 +163,11 @@ namespace KaVE.VsFeedbackGenerator.Utils
         public bool DirectoryExists(string path)
         {
             return Directory.Exists(path);
+        }
+
+        public string GetDirectoryName(string path)
+        {
+            return Path.GetDirectoryName(path);
         }
 
         public bool IsDirectoryEmpty(string path)

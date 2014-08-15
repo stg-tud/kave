@@ -47,7 +47,8 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
             _sut = new IoUtils();
         }
 
-        [Test, ExpectedException(typeof(AssertException), ExpectedMessage = "Http-Upload erwartet Http- oder Https-Adresse")]
+        [Test,
+         ExpectedException(typeof (AssertException), ExpectedMessage = "Http-Upload erwartet Http- oder Https-Adresse")]
         public void ShouldFailOnDifferentScheme()
         {
             _sut.TransferByHttp(new Mock<HttpContent>().Object, new Uri("ftp://www.google.de"), 5);
@@ -93,7 +94,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
         public void ShouldReturnTempFileNameWithExtension()
         {
             var fileName = _sut.GetTempFileName(Extension);
-            Assert.AreEqual("." +Extension, Path.GetExtension(fileName));
+            Assert.AreEqual("." + Extension, Path.GetExtension(fileName));
         }
 
         [Test]
@@ -257,7 +258,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
         [Test]
         public void ShouldCombineElements()
         {
-            var origin = new List<string> {"1st", "2nd","3rd"};
+            var origin = new List<string> {"1st", "2nd", "3rd"};
             var expected = origin[0] + Path.DirectorySeparatorChar + origin[1] + Path.DirectorySeparatorChar + origin[2];
 
             var actual = _sut.Combine(origin[0], origin[1], origin[2]);
@@ -270,7 +271,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
             var dir = IoTestHelper.GetTempDirectoryName();
             var expected = new List<string> {"ABC", "DEF", "XYZ"};
             expected.ForEach(f => { using (File.Create(Path.Combine(dir, f))) {} });
-            
+
             var actual = _sut.EnumerateFiles(dir).Select(Path.GetFileName);
             Assert.AreEqual(expected, actual);
         }
@@ -301,7 +302,17 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
             network.WriteFile(path);
 
             var loadedNetwork = _sut.LoadNetwork(path);
-            Assert.AreEqual(new[]{0}, loadedNetwork.GetAllNodes());
+            Assert.AreEqual(new[] {0}, loadedNetwork.GetAllNodes());
+        }
+
+        [Test]
+        public void ShouldGetDirectoryName()
+        {
+            const string path = @"c:\parentdir\dir\file.txt";
+            const string expected = @"c:\parentdir\dir";
+            var actual = _sut.GetDirectoryName(path);
+
+            Assert.AreEqual(expected, actual);
         }
     }
 }
