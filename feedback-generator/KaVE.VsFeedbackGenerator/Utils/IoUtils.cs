@@ -28,6 +28,7 @@ using System.Net.Http;
 using JetBrains.Application;
 using KaVE.JetBrains.Annotations;
 using KaVE.Utils.Assertion;
+using Smile;
 using Messages = KaVE.VsFeedbackGenerator.Properties.SessionManager;
 
 namespace KaVE.VsFeedbackGenerator.Utils
@@ -59,6 +60,8 @@ namespace KaVE.VsFeedbackGenerator.Utils
 
         string Combine(params string[] paths);
         IEnumerable<string> EnumerateFiles(string path);
+
+        Network LoadNetwork(string path);
     }
 
     [ShellComponent]
@@ -138,6 +141,13 @@ namespace KaVE.VsFeedbackGenerator.Utils
         public IEnumerable<string> EnumerateFiles(string path)
         {
             return Directory.EnumerateFiles(path);
+        }
+
+        public Network LoadNetwork(string path)
+        {
+            var network = new Network();
+            network.ReadFile(path);
+            return network;
         }
 
         public bool FileExists(string fileName)

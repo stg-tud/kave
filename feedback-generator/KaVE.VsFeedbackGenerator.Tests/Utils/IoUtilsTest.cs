@@ -31,6 +31,7 @@ using KaVE.Utils.IO;
 using KaVE.VsFeedbackGenerator.Utils;
 using Moq;
 using NUnit.Framework;
+using Smile;
 
 namespace KaVE.VsFeedbackGenerator.Tests.Utils
 {
@@ -289,6 +290,18 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
         private string GetNonExistentTempFileName()
         {
             return Path.Combine(IoTestHelper.GetTempDirectoryName(), "ArbitraryFileName" + DateTime.Now.Ticks);
+        }
+
+        [Test]
+        public void ShouldLoadNetwork()
+        {
+            var path = _sut.GetTempFileName("xdsl");
+            var network = new Network();
+            network.AddNode(Network.NodeType.Cpt);
+            network.WriteFile(path);
+
+            var loadedNetwork = _sut.LoadNetwork(path);
+            Assert.AreEqual(new[]{0}, loadedNetwork.GetAllNodes());
         }
     }
 }
