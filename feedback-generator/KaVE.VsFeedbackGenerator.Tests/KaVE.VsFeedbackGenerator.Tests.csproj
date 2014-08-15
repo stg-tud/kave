@@ -180,7 +180,6 @@
       <Link>KaVE.licenseheader</Link>
     </None>
     <None Include="app.config" />
-    <None Include="LType.zip" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup />
