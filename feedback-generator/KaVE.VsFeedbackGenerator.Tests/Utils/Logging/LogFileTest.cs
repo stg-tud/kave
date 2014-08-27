@@ -22,6 +22,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using KaVE.Model.Events;
 using KaVE.TestUtils.Model.Events;
 using KaVE.VsFeedbackGenerator.Tests.Utils.Json;
 using KaVE.VsFeedbackGenerator.Utils;
@@ -44,7 +45,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Logging
         private MemoryStream _inputStream;
         private MemoryStream _outputStream;
 
-        private LogFile<TestIDEEvent> _uut;
+        private LogFile _uut;
 
         [SetUp]
         public void SetUp()
@@ -61,7 +62,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Logging
 
             Registry.RegisterComponent(_mockIoUtils.Object);
 
-            _uut = new LogFile<TestIDEEvent>(TestLogFilePath);
+            _uut = new LogFile(TestLogFilePath);
         }
 
         [TearDown]
@@ -211,7 +212,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Logging
             _mockIoUtils.Setup(iou => iou.OpenFile(TestLogFilePath, It.IsAny<FileMode>(), FileAccess.Read))
                         .Returns(new MemoryStream(_inputStream.ToArray()));
 
-            IEnumerable<TestIDEEvent> actual;
+            IEnumerable<IDEEvent> actual;
             using (var reader = _uut.NewLogReader())
             {
                 actual = reader.ReadAll().ToList();
@@ -249,7 +250,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Logging
             _mockIoUtils.Setup(iou => iou.OpenFile(TestLogFilePath, It.IsAny<FileMode>(), FileAccess.Read))
                         .Returns(new MemoryStream(_inputStream.ToArray()));
 
-            IEnumerable<TestIDEEvent> actual;
+            IEnumerable<IDEEvent> actual;
             using (var reader = _uut.NewLogReader())
             {
                 actual = reader.ReadAll().ToList();

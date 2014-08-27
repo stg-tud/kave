@@ -38,8 +38,8 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModel
     internal class DeleteSessionCommandTest
     {
         private VsFeedbackGenerator.SessionManager.FeedbackViewModel _uut;
-        private IList<Mock<ILog<IDEEvent>>> _mockLogs;
-        private Mock<ILogManager<IDEEvent>> _mockLogFileManager;
+        private IList<Mock<ILog>> _mockLogs;
+        private Mock<ILogManager> _mockLogFileManager;
         private InteractionRequestTestHelper<Confirmation> _confirmationRequestHelper;
         private IList<SessionViewModel> _sessionViewModels;
 
@@ -48,15 +48,15 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModel
         {
             Registry.RegisterComponent(new Mock<IIoUtils>().Object);
 
-            var mockLog1 = new Mock<ILog<IDEEvent>>();
+            var mockLog1 = new Mock<ILog>();
             mockLog1.Setup(log => log.NewLogReader()).Returns(new Mock<ILogReader<IDEEvent>>().Object);
-            var mockLog2 = new Mock<ILog<IDEEvent>>();
+            var mockLog2 = new Mock<ILog>();
             mockLog2.Setup(log => log.NewLogReader()).Returns(new Mock<ILogReader<IDEEvent>>().Object);
-            var mockLog3 = new Mock<ILog<IDEEvent>>();
+            var mockLog3 = new Mock<ILog>();
             mockLog3.Setup(log => log.NewLogReader()).Returns(new Mock<ILogReader<IDEEvent>>().Object);
-            _mockLogs = new List<Mock<ILog<IDEEvent>>> {mockLog1, mockLog2, mockLog3};
+            _mockLogs = new List<Mock<ILog>> {mockLog1, mockLog2, mockLog3};
 
-            _mockLogFileManager = new Mock<ILogManager<IDEEvent>>();
+            _mockLogFileManager = new Mock<ILogManager>();
             _mockLogFileManager.Setup(mgr => mgr.Logs).Returns(_mockLogs.Select(m => m.Object));
 
             _uut = new VsFeedbackGenerator.SessionManager.FeedbackViewModel(_mockLogFileManager.Object);

@@ -18,7 +18,6 @@
  */
 
 using JetBrains.Application.DataContext;
-using KaVE.Model.Events;
 using KaVE.VsFeedbackGenerator.SessionManager;
 using KaVE.VsFeedbackGenerator.SessionManager.Presentation;
 using KaVE.VsFeedbackGenerator.Utils;
@@ -34,13 +33,13 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
     {
         private SettingsCleaner _uut;
         private Mock<ISettingsStore> _mockSettingsStore;
-        private Mock<ILogManager<IDEEvent>> _mockLogFileManager;
+        private Mock<ILogManager> _mockLogFileManager;
 
         [SetUp]
         public void SetUp()
         {
             _mockSettingsStore = new Mock<ISettingsStore>();
-            _mockLogFileManager = new Mock<ILogManager<IDEEvent>>();
+            _mockLogFileManager = new Mock<ILogManager>();
             Registry.RegisterComponent(_mockSettingsStore.Object);
             Registry.RegisterComponent(_mockLogFileManager.Object);
 

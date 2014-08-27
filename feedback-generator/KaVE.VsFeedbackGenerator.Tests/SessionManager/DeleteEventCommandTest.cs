@@ -36,7 +36,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
     internal class DeleteEventCommandTest
     {
         private SessionViewModel _uut;
-        private Mock<ILog<IDEEvent>> _mockLog;
+        private Mock<ILog> _mockLog;
         private InteractionRequestTestHelper<Confirmation> _confirmationRequestHelper;
         private List<IDEEvent> _displayedEvents;
 
@@ -48,7 +48,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
             var mockLogReader = new Mock<ILogReader<IDEEvent>>();
             mockLogReader.Setup(reader => reader.ReadAll()).Returns(_displayedEvents);
 
-            _mockLog = new Mock<ILog<IDEEvent>>();
+            _mockLog = new Mock<ILog>();
             _mockLog.Setup(log => log.NewLogReader()).Returns(mockLogReader.Object);
 
             _uut = new SessionViewModel(_mockLog.Object);

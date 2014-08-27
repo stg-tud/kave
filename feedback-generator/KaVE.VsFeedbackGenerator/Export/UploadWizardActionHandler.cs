@@ -21,7 +21,6 @@ using System.Linq;
 using JetBrains.ActionManagement;
 using JetBrains.Application.DataContext;
 using JetBrains.Util;
-using KaVE.Model.Events;
 using KaVE.VsFeedbackGenerator.Utils;
 using KaVE.VsFeedbackGenerator.Utils.Logging;
 using NuGet;
@@ -35,7 +34,7 @@ namespace KaVE.VsFeedbackGenerator.Export
 
         private readonly ISettingsStore _settingsStore;
         private readonly IExporter _exporter;
-        private readonly ILogManager<IDEEvent> _logManager;
+        private readonly ILogManager _logManager;
         private readonly IDateUtils _dateUtils;
         private readonly IActionManager _actionManager;
 
@@ -49,7 +48,7 @@ namespace KaVE.VsFeedbackGenerator.Export
             _actionManager = Registry.GetComponent<IActionManager>();
             _settingsStore = Registry.GetComponent<ISettingsStore>();
             _exporter = Registry.GetComponent<IExporter>();
-            _logManager = Registry.GetComponent<ILogManager<IDEEvent>>();
+            _logManager = Registry.GetComponent<ILogManager>();
             _dateUtils = Registry.GetComponent<IDateUtils>();
         }
 
@@ -79,7 +78,7 @@ namespace KaVE.VsFeedbackGenerator.Export
             return !noLogs && !singleEmptyLog;
         }
 
-        private static bool IsEmpty(ILog<IDEEvent> log)
+        private static bool IsEmpty(ILog log)
         {
             using (var reader = log.NewLogReader())
             {

@@ -23,7 +23,6 @@ using JetBrains.DataFlow;
 using JetBrains.UI.CrossFramework;
 using JetBrains.UI.ToolWindowManagement;
 using KaVE.JetBrains.Annotations;
-using KaVE.Model.Events;
 using KaVE.VsFeedbackGenerator.Utils;
 using KaVE.VsFeedbackGenerator.Utils.Logging;
 
@@ -42,7 +41,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
             ToolWindowManager toolWindowManager,
             SessionManagerWindowDescriptor descriptor,
             IActionManager actionManager,
-            ILogManager<IDEEvent> logManager,
+            ILogManager logManager,
             ISettingsStore settingsStore,
             IDateUtils dateUtils)
         {

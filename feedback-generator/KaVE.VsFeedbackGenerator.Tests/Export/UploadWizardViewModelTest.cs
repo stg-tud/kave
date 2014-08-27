@@ -46,8 +46,8 @@ namespace KaVE.VsFeedbackGenerator.Tests.Export
     {
         private const string TestUploadUrl = "http://foo.bar/";
 
-        private Mock<ILogManager<IDEEvent>> _mockLogFileManager;
-        private List<Mock<ILog<IDEEvent>>> _mockLogs;
+        private Mock<ILogManager> _mockLogFileManager;
+        private List<Mock<ILog>> _mockLogs;
         private UploadWizardViewModel _uut;
         private Mock<IExporter> _mockExporter;
         private Mock<ISettingsStore> _mockSettingStore;
@@ -69,15 +69,15 @@ namespace KaVE.VsFeedbackGenerator.Tests.Export
 
             _mockExporter = new Mock<IExporter>();
 
-            var mockLog1 = new Mock<ILog<IDEEvent>>();
+            var mockLog1 = new Mock<ILog>();
             mockLog1.Setup(log => log.NewLogReader()).Returns(new Mock<ILogReader<IDEEvent>>().Object);
-            var mockLog2 = new Mock<ILog<IDEEvent>>();
+            var mockLog2 = new Mock<ILog>();
             mockLog2.Setup(log => log.NewLogReader()).Returns(new Mock<ILogReader<IDEEvent>>().Object);
-            var mockLog3 = new Mock<ILog<IDEEvent>>();
+            var mockLog3 = new Mock<ILog>();
             mockLog3.Setup(log => log.NewLogReader()).Returns(new Mock<ILogReader<IDEEvent>>().Object);
-            _mockLogs = new List<Mock<ILog<IDEEvent>>> {mockLog1, mockLog2, mockLog3};
+            _mockLogs = new List<Mock<ILog>> {mockLog1, mockLog2, mockLog3};
 
-            _mockLogFileManager = new Mock<ILogManager<IDEEvent>>();
+            _mockLogFileManager = new Mock<ILogManager>();
             _mockLogFileManager.Setup(mgr => mgr.Logs).Returns(_mockLogs.Select(m => m.Object));
 
             _mockSettingStore = new Mock<ISettingsStore>();

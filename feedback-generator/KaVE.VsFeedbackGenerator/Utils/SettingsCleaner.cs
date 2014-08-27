@@ -19,7 +19,6 @@
 
 using JetBrains.ActionManagement;
 using JetBrains.Application.DataContext;
-using KaVE.Model.Events;
 using KaVE.VsFeedbackGenerator.SessionManager;
 using KaVE.VsFeedbackGenerator.SessionManager.Presentation;
 using KaVE.VsFeedbackGenerator.Utils.Logging;
@@ -33,12 +32,12 @@ namespace KaVE.VsFeedbackGenerator.Utils
         public const string ActionId = "KaVE.VsFeedbackGenerator.ResetAll";
 
         private readonly ISettingsStore _settings;
-        private readonly ILogManager<IDEEvent> _logManager;
+        private readonly ILogManager _logManager;
 
         public SettingsCleaner()
         {
             _settings = Registry.GetComponent<ISettingsStore>();
-            _logManager = Registry.GetComponent<ILogManager<IDEEvent>>();
+            _logManager = Registry.GetComponent<ILogManager>();
         }
 
         public bool Update(IDataContext context, ActionPresentation presentation, DelegateUpdate nextUpdate)

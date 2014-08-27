@@ -22,7 +22,6 @@ using System.Windows;
 using System.Windows.Controls.Primitives;
 using Hardcodet.Wpf.TaskbarNotification;
 using JetBrains.Application;
-using KaVE.Model.Events;
 using KaVE.Utils;
 using KaVE.VsFeedbackGenerator.Properties;
 using KaVE.VsFeedbackGenerator.Utils.Logging;
@@ -32,9 +31,9 @@ namespace KaVE.VsFeedbackGenerator.TrayNotification
     [ShellComponent]
     public class NotifyTrayIcon
     {
-        private readonly ILogManager<IDEEvent> _logManager;
+        private readonly ILogManager _logManager;
 
-        public NotifyTrayIcon(ILogManager<IDEEvent> logManager)
+        public NotifyTrayIcon(ILogManager logManager)
         {
             _logManager = logManager;
             Invoke.OnSTA(InitTaskbarIcon);

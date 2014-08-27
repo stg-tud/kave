@@ -24,7 +24,6 @@ using System.Linq;
 using JetBrains;
 using JetBrains.UI.Extensions.Commands;
 using JetBrains.Util;
-using KaVE.Model.Events;
 using KaVE.Utils;
 using KaVE.VsFeedbackGenerator.Interactivity;
 using KaVE.VsFeedbackGenerator.Utils.Logging;
@@ -35,12 +34,12 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
 {
     public class SessionViewModel : ViewModelBase<SessionViewModel>
     {
-        public ILog<IDEEvent> Log { get; private set; }
+        public ILog Log { get; private set; }
         private readonly IList<EventViewModel> _events = new ObservableCollection<EventViewModel>();
         private readonly IList<EventViewModel> _selectedEvents = new List<EventViewModel>();
         private readonly InteractionRequest<Confirmation> _confirmationRequest = new InteractionRequest<Confirmation>();
 
-        public SessionViewModel(ILog<IDEEvent> log)
+        public SessionViewModel(ILog log)
         {
             Log = log;
             // loading eagerly because lazy approaches led to UI display bugs

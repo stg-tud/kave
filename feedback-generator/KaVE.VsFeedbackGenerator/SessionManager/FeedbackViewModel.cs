@@ -39,7 +39,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
 {
     public sealed class FeedbackViewModel : ViewModelBase<FeedbackViewModel>
     {
-        private readonly ILogManager<IDEEvent> _logManager;
+        private readonly ILogManager _logManager;
         private readonly IList<SessionViewModel> _sessions;
         private readonly IList<SessionViewModel> _selectedSessions;
         private BackgroundWorker<IList<SessionViewModel>> _refreshWorker;
@@ -61,7 +61,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             get { return _confirmationRequest; }
         }
 
-        public FeedbackViewModel(ILogManager<IDEEvent> logManager)
+        public FeedbackViewModel(ILogManager logManager)
         {
             _logManager = logManager;
             _sessions = new ObservableCollection<SessionViewModel>();

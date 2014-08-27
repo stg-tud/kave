@@ -20,7 +20,6 @@
 using System.Windows;
 using System.Windows.Input;
 using JetBrains;
-using KaVE.Model.Events;
 using KaVE.VsFeedbackGenerator.Utils.Logging;
 
 namespace KaVE.VsFeedbackGenerator.TrayNotification
@@ -30,13 +29,13 @@ namespace KaVE.VsFeedbackGenerator.TrayNotification
     /// </summary>
     public partial class HardBalloonPopup
     {
-        public HardBalloonPopup(ILogManager<IDEEvent> logManager)
+        public HardBalloonPopup(ILogManager logManager)
         {
             InitializeComponent();
             SetPopupMessage(logManager);
         }
 
-        private void SetPopupMessage(ILogManager<IDEEvent> logManager)
+        private void SetPopupMessage(ILogManager logManager)
         {
             var size = logManager.FormatedLogsSize;
             Message.Text = Properties.PopupNotification.InformationHardpopup.FormatEx(size);

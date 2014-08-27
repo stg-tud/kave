@@ -40,7 +40,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModel
     [TestFixture]
     internal class FeedbackViewModelTest
     {
-        private Mock<ILogManager<IDEEvent>> _mockLogManager;
+        private Mock<ILogManager> _mockLogManager;
         private Mock<ILogger> _mockLogger;
 
         private VsFeedbackGenerator.SessionManager.FeedbackViewModel _uut;
@@ -51,7 +51,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModel
             _mockLogger = new Mock<ILogger>();
             Registry.RegisterComponent(_mockLogger.Object);
 
-            _mockLogManager = new Mock<ILogManager<IDEEvent>>();
+            _mockLogManager = new Mock<ILogManager>();
 
             var mockThreading = new Mock<IThreading>();
             Registry.RegisterComponent(mockThreading.Object);
@@ -198,7 +198,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModel
             CollectionAssert.AreEquivalent(expectedSelection, actualSelection);
         }
 
-        private static List<ILog<IDEEvent>> MockLogs(int numberOfLogs, int numberOfEventsPerLog = 0)
+        private static List<ILog> MockLogs(int numberOfLogs, int numberOfEventsPerLog = 0)
         {
             var somePointInTime = DateTime.Now;
             return
@@ -212,7 +212,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModel
             return Enumerable.Range(0, number).Select(i => (IDEEvent) new TestIDEEvent {TestProperty = prefix + i});
         }
 
-        private void RefreshFeedbackViewModelWithSessions(IEnumerable<ILog<IDEEvent>> sessions)
+        private void RefreshFeedbackViewModelWithSessions(IEnumerable<ILog> sessions)
         {
             _mockLogManager.Setup(m => m.Logs).Returns(sessions);
             RefreshFeedbackViewModel();
@@ -224,16 +224,16 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModel
             WaitForRefreshToFinish();
         }
 
-        private static ILog<IDEEvent> MockLog()
+        private static ILog MockLog()
         {
-            var log = new Mock<ILog<IDEEvent>>();
+            var log = new Mock<ILog>();
             log.Setup(l => l.NewLogReader()).Returns(new Mock<ILogReader<IDEEvent>>().Object);
             return log.Object;
         }
 
-        private static ILog<IDEEvent> MockLog(DateTime startTime, IEnumerable<IDEEvent> events)
+        private static ILog MockLog(DateTime startTime, IEnumerable<IDEEvent> events)
         {
-            var log = new Mock<ILog<IDEEvent>>();
+            var log = new Mock<ILog>();
             var reader = new Mock<ILogReader<IDEEvent>>();
             reader.Setup(r => r.ReadAll()).Returns(events);
             log.Setup(l => l.NewLogReader()).Returns(reader.Object);

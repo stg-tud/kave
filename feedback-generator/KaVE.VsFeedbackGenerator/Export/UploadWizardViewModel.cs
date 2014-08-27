@@ -37,7 +37,7 @@ namespace KaVE.VsFeedbackGenerator.Export
     public class UploadWizardViewModel : ViewModelBase<UploadWizardViewModel>
     {
         private readonly IExporter _exporter;
-        private readonly ILogManager<IDEEvent> _logManager;
+        private readonly ILogManager _logManager;
         private readonly ISettingsStore _settingsStore;
         private readonly IDateUtils _dateUtils;
         private readonly BackgroundWorker _exportWorker;
@@ -58,7 +58,7 @@ namespace KaVE.VsFeedbackGenerator.Export
         }
 
         public UploadWizardViewModel(IExporter exporter,
-            ILogManager<IDEEvent> logManager,
+            ILogManager logManager,
             ISettingsStore settingsStore,
             IDateUtils dateUtils)
         {

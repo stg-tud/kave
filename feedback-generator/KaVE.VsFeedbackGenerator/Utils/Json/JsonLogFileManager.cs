@@ -20,13 +20,12 @@
 using System;
 using System.IO;
 using JetBrains.Application;
-using KaVE.Model.Events;
 using KaVE.VsFeedbackGenerator.Utils.Logging;
 
 namespace KaVE.VsFeedbackGenerator.Utils.Json
 {
     [ShellComponent]
-    public class IDEEventLogFileManager : LogFileManager<IDEEvent>
+    public class IDEEventLogFileManager : LogFileManager
     {
         /// <summary>
         ///     Usually something like "C:\Users\%USERNAME%\AppData\Roaming\"

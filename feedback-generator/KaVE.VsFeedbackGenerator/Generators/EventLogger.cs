@@ -41,11 +41,11 @@ namespace KaVE.VsFeedbackGenerator.Generators
         };
 
         private readonly IMessageBus _messageChannel;
-        private readonly ILogManager<IDEEvent> _logManager;
+        private readonly ILogManager _logManager;
 
         private IDEEvent _lastEvent;
 
-        public EventLogger(IMessageBus messageBus, ILogManager<IDEEvent> logManager)
+        public EventLogger(IMessageBus messageBus, ILogManager logManager)
         {
             _messageChannel = messageBus;
             _logManager = logManager;

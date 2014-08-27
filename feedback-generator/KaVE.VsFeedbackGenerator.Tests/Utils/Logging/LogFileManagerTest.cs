@@ -21,7 +21,6 @@
 using System;
 using System.IO;
 using System.Linq;
-using KaVE.TestUtils.Model.Events;
 using KaVE.Utils.IO;
 using KaVE.VsFeedbackGenerator.Utils;
 using KaVE.VsFeedbackGenerator.Utils.Logging;
@@ -34,7 +33,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Logging
     internal class LogFileManagerTest
     {
         private string _baseDirectory;
-        private LogFileManager<TestIDEEvent> _uut;
+        private LogFileManager _uut;
         private Mock<IIoUtils> _ioUtilMock;
 
         [SetUp]
@@ -99,10 +98,21 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Logging
         [Test]
         public void ShouldReturnTodaysLog()
         {
-            var todaysLog = (LogFile<TestIDEEvent>) _uut.CurrentLog;
+            var todaysLog = (LogFile) _uut.CurrentLog;
 
             Assert.AreEqual(DateTime.Today, todaysLog.Date);
             Assert.AreEqual(_uut.BaseLocation, Path.GetDirectoryName(todaysLog.Path));
+        }
+
+        [Test]
+        public void ShouldCreateCurrentLogIfItDoesntExist()
+        {
+            Assert.IsEmpty(_uut.Logs);
+
+            // ReSharper disable once UnusedVariable
+            var currentLog = _uut.CurrentLog;
+
+            Assert.AreEqual(1, _uut.Logs.Count());
         }
 
         [Test]
@@ -200,7 +210,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Logging
 
         private void WhenLogFileManagerIsInitialized()
         {
-            _uut = new LogFileManager<TestIDEEvent>(_baseDirectory);
+            _uut = new LogFileManager(_baseDirectory);
         }
 
         private void GivenLogsExist(params DateTime[] dates)

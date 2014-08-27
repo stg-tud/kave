@@ -23,25 +23,29 @@ using KaVE.Model.Events;
 
 namespace KaVE.VsFeedbackGenerator.Utils.Logging
 {
-    public interface ILog<TLogEntry> where TLogEntry : IDEEvent
+    public interface ILog
     {
         DateTime Date { get; }
         long SizeInBytes { get; }
 
-        ILogReader<TLogEntry> NewLogReader();
-        ILogWriter<TLogEntry> NewLogWriter();
-        void RemoveRange(IEnumerable<TLogEntry> entries);
+        ILogReader<IDEEvent> NewLogReader();
+        ILogWriter<IDEEvent> NewLogWriter();
+        void RemoveRange(IEnumerable<IDEEvent> entries);
         void RemoveEntriesOlderThan(DateTime time);
         void Delete();
     }
 
-    public interface ILogManager<TLogEntry> where TLogEntry : IDEEvent
+    public delegate void LogEventHandler(ILog log);
+
+    public interface ILogManager
     {
+        event LogEventHandler LogAdded;
+
         event EventHandler LogsChanged;
 
         string BaseLocation { get; }
-        IEnumerable<ILog<TLogEntry>> Logs { get; }
-        ILog<TLogEntry> CurrentLog { get; }
+        IEnumerable<ILog> Logs { get; }
+        ILog CurrentLog { get; }
         string FormatedLogsSize { get; }
 
         void DeleteLogsOlderThan(DateTime time);

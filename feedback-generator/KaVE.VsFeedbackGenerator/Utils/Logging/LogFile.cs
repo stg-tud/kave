@@ -31,7 +31,7 @@ using KaVE.VsFeedbackGenerator.Utils.Json;
 
 namespace KaVE.VsFeedbackGenerator.Utils.Logging
 {
-    public class LogFile<TLogEntry> : ILog<TLogEntry> where TLogEntry : IDEEvent
+    public class LogFile : ILog
     {
         private readonly IIoUtils _ioUtils;
 
@@ -49,16 +49,16 @@ namespace KaVE.VsFeedbackGenerator.Utils.Logging
             {
                 var fileName = System.IO.Path.GetFileName(Path);
                 Asserts.NotNull(fileName, "illegal log path: '{0}'", Path);
-                var dateString = fileName.Substring(LogFileManager<TLogEntry>.LogDirectoryPrefix.Length);
+                var dateString = fileName.Substring(LogFileManager.LogDirectoryPrefix.Length);
                 var date = DateTime.Parse(dateString);
                 return date;
             }
         }
 
-        public ILogReader<TLogEntry> NewLogReader()
+        public ILogReader<IDEEvent> NewLogReader()
         {
             var logStream = TryOpenLogFile();
-            return new JsonLogReader<TLogEntry>(logStream);
+            return new JsonLogReader<IDEEvent>(logStream);
         }
 
         // TODO @Sven: pull reader/writer handling into logfile and solve this by synchronization?
@@ -103,11 +103,11 @@ namespace KaVE.VsFeedbackGenerator.Utils.Logging
                     Path));
         }
 
-        public ILogWriter<TLogEntry> NewLogWriter()
+        public ILogWriter<IDEEvent> NewLogWriter()
         {
             _ioUtils.CreateDirectory(Directory.GetParent(Path).FullName);
             var logStream = _ioUtils.OpenFile(Path, FileMode.Append, FileAccess.Write);
-            return new JsonLogWriter<TLogEntry>(logStream);
+            return new JsonLogWriter<IDEEvent>(logStream);
         }
 
         public long SizeInBytes
@@ -115,7 +115,7 @@ namespace KaVE.VsFeedbackGenerator.Utils.Logging
             get { return _ioUtils.GetFileSize(Path); }
         }
 
-        public void RemoveRange(IEnumerable<TLogEntry> entries)
+        public void RemoveRange(IEnumerable<IDEEvent> entries)
         {
             RemoveEntries(entries.Contains);
         }
@@ -130,7 +130,7 @@ namespace KaVE.VsFeedbackGenerator.Utils.Logging
             var tempFileName = _ioUtils.GetTempFileName();
             using (var stream = _ioUtils.OpenFile(tempFileName, FileMode.Append, FileAccess.Write))
             {
-                using (var writer = new JsonLogWriter<TLogEntry>(stream))
+                using (var writer = new JsonLogWriter<IDEEvent>(stream))
                 {
                     using (var reader = NewLogReader())
                     {
@@ -155,7 +155,7 @@ namespace KaVE.VsFeedbackGenerator.Utils.Logging
             _ioUtils.DeleteFile(Path);
         }
 
-        protected bool Equals(LogFile<TLogEntry> other)
+        protected bool Equals(LogFile other)
         {
             return string.Equals(Path, other.Path);
         }

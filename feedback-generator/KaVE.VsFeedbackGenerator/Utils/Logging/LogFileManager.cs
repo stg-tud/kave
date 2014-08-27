@@ -24,15 +24,15 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using KaVE.JetBrains.Annotations;
-using KaVE.Model.Events;
 
 namespace KaVE.VsFeedbackGenerator.Utils.Logging
 {
-    public class LogFileManager<TLogEntry> : ILogManager<TLogEntry> where TLogEntry : IDEEvent
+    public class LogFileManager : ILogManager
     {
         private readonly IIoUtils _ioUtils;
         internal const string LogDirectoryPrefix = "Log_";
 
+        public event LogEventHandler LogAdded = delegate { }; 
         public event EventHandler LogsChanged = delegate { };
 
         public LogFileManager([NotNull] string baseLocation)
@@ -43,14 +43,14 @@ namespace KaVE.VsFeedbackGenerator.Utils.Logging
 
         public string BaseLocation { get; private set; }
 
-        public IEnumerable<ILog<TLogEntry>> Logs
+        public IEnumerable<ILog> Logs
         {
             get { return _ioUtils.GetFiles(BaseLocation, LogDirectoryPrefix + "*").Select(CreateLogFile); }
         }
 
-        private static LogFile<TLogEntry> CreateLogFile(string logDirectoryPath)
+        private static LogFile CreateLogFile(string logDirectoryPath)
         {
-            return new LogFile<TLogEntry>(logDirectoryPath);
+            return new LogFile(logDirectoryPath);
         }
 
         public string FormatedLogsSize
@@ -96,7 +96,7 @@ namespace KaVE.VsFeedbackGenerator.Utils.Logging
             _ioUtils.DeleteDirectoryWithContent(BaseLocation);
         }
 
-        public ILog<TLogEntry> CurrentLog
+        public ILog CurrentLog
         {
             get
             {

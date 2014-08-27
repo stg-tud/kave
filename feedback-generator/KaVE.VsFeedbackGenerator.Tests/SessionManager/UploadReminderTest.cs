@@ -18,7 +18,6 @@
  */
 
 using System;
-using KaVE.Model.Events;
 using KaVE.VsFeedbackGenerator.SessionManager;
 using KaVE.VsFeedbackGenerator.TrayNotification;
 using KaVE.VsFeedbackGenerator.Utils;
@@ -54,7 +53,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
             _mockSettingsStore.Setup(store => store.SetSettings(It.IsAny<UploadSettings>()))
                   .Callback<UploadSettings>(settings => _newUploadSettings = settings);
 
-            _mockTrayIcon = new Mock<NotifyTrayIcon>(new Mock<ILogManager<IDEEvent>>().Object);
+            _mockTrayIcon = new Mock<NotifyTrayIcon>(new Mock<ILogManager>().Object);
 
             _dateUtils = new TestDateUtils();
 
