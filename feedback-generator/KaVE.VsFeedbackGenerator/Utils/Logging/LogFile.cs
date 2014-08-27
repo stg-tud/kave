@@ -35,6 +35,12 @@ namespace KaVE.VsFeedbackGenerator.Utils.Logging
     {
         private readonly IIoUtils _ioUtils;
 
+        public event LogEntryEventHandler EntryAppended = delegate { };
+
+        public event LogEntriesEventHandler EntriesRemoved = delegate { };
+
+        public event LogEventHandler Deleted = delegate { };
+
         public LogFile(string path)
         {
             _ioUtils = Registry.GetComponent<IIoUtils>();
@@ -115,7 +121,7 @@ namespace KaVE.VsFeedbackGenerator.Utils.Logging
         {
             using (var reader = NewLogReader())
             {
-                return reader.ReadNext() != null;
+                return reader.ReadNext() == null;
             }
         }
 
@@ -124,6 +130,7 @@ namespace KaVE.VsFeedbackGenerator.Utils.Logging
             using (var writer = NewLogWriter())
             {
                 writer.Write(entry);
+                EntryAppended(entry);
             }
         }
 
@@ -152,6 +159,7 @@ namespace KaVE.VsFeedbackGenerator.Utils.Logging
         private void RemoveEntries(Func<IDEEvent, bool> removeCondition)
         {
             var tempFileName = _ioUtils.GetTempFileName();
+            var removed = new List<IDEEvent>();
             using (var stream = _ioUtils.OpenFile(tempFileName, FileMode.Append, FileAccess.Write))
             {
                 using (var writer = new JsonLogWriter<IDEEvent>(stream))
@@ -165,6 +173,10 @@ namespace KaVE.VsFeedbackGenerator.Utils.Logging
                                 {
                                     writer.Write(entry);
                                 }
+                                else
+                                {
+                                    removed.Add(entry);
+                                }
                             });
                     }
                 }
@@ -172,11 +184,13 @@ namespace KaVE.VsFeedbackGenerator.Utils.Logging
 
             _ioUtils.DeleteFile(Path);
             _ioUtils.MoveFile(tempFileName, Path);
+            EntriesRemoved(removed);
         }
 
         public void Delete()
         {
             _ioUtils.DeleteFile(Path);
+            Deleted(this);
         }
 
         protected bool Equals(LogFile other)

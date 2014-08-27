@@ -102,7 +102,17 @@ namespace KaVE.VsFeedbackGenerator.Utils.Logging
             {
                 var fileName = LogDirectoryPrefix + DateTime.Today.ToString("yyyy-MM-dd");
                 var logPath = Path.Combine(BaseLocation, fileName);
-                return CreateLogFile(logPath);
+                var currentLog = CreateLogFile(logPath);
+                MaybeRaiseLogAdded(currentLog);
+                return currentLog;
+            }
+        }
+
+        private void MaybeRaiseLogAdded(LogFile log)
+        {
+            if (!File.Exists(log.Path))
+            {
+                LogAdded(log);
             }
         }
 

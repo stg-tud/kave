@@ -116,6 +116,17 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Logging
         }
 
         [Test]
+        public void ShouldFireLogAddedEventWhenCreatingLog()
+        {
+            ILog newLog = null;
+            _uut.LogAdded += log => newLog = log;
+
+            var currentLog = _uut.CurrentLog;
+
+            Assert.AreSame(currentLog, newLog);
+        }
+
+        [Test]
         public void ShouldDeleteOldLogEntries()
         {
             GivenLogsExist(new DateTime(2014, 03, 21), new DateTime(2014, 03, 29));
