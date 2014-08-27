@@ -51,6 +51,7 @@
   <ItemGroup>
     <Compile Include="AsyncTestHelper.cs" />
     <Compile Include="ItIsException.cs" />
+    <Compile Include="MemoryFile.cs" />
     <Compile Include="Model\Events\CompletionEvent\CompletionEventTestFactory.cs" />
     <Compile Include="Model\Events\IDEEventTestFactory.cs" />
     <Compile Include="Model\Events\TestIDEEvent.cs" />
