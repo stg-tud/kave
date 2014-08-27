@@ -74,16 +74,8 @@ namespace KaVE.VsFeedbackGenerator.Export
         {
             var logs = _logManager.Logs.ToList();
             var noLogs = EnumerableExtensions.IsEmpty(logs);
-            var singleEmptyLog = logs.Count == 1 && IsEmpty(logs[0]);
+            var singleEmptyLog = logs.Count == 1 && logs[0].IsEmpty();
             return !noLogs && !singleEmptyLog;
-        }
-
-        private static bool IsEmpty(ILog log)
-        {
-            using (var reader = log.NewLogReader())
-            {
-                return EnumerableExtensions.IsEmpty(reader.ReadAll());
-            }
         }
     }
 }

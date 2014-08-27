@@ -43,10 +43,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
         {
             Log = log;
             // loading eagerly because lazy approaches led to UI display bugs
-            using (var logReader = log.NewLogReader())
-            {
-                Events = logReader.ReadAll().Select(evt => new EventViewModel(evt)).ToList();
-            }
+            Events = log.ReadAll().Select(evt => new EventViewModel(evt)).ToList();
         }
 
         public IInteractionRequest<Confirmation> ConfirmationRequest

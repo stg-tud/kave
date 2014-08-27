@@ -69,13 +69,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Export
 
             _mockExporter = new Mock<IExporter>();
 
-            var mockLog1 = new Mock<ILog>();
-            mockLog1.Setup(log => log.NewLogReader()).Returns(new Mock<ILogReader<IDEEvent>>().Object);
-            var mockLog2 = new Mock<ILog>();
-            mockLog2.Setup(log => log.NewLogReader()).Returns(new Mock<ILogReader<IDEEvent>>().Object);
-            var mockLog3 = new Mock<ILog>();
-            mockLog3.Setup(log => log.NewLogReader()).Returns(new Mock<ILogReader<IDEEvent>>().Object);
-            _mockLogs = new List<Mock<ILog>> {mockLog1, mockLog2, mockLog3};
+            _mockLogs = new List<Mock<ILog>> {new Mock<ILog>(), new Mock<ILog>(), new Mock<ILog>()};
 
             _mockLogFileManager = new Mock<ILogManager>();
             _mockLogFileManager.Setup(mgr => mgr.Logs).Returns(_mockLogs.Select(m => m.Object));
@@ -334,7 +328,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Export
                 new TestIDEEvent {TriggeredAt = new DateTime(2014, 7, 1)},
                 new TestIDEEvent {TriggeredAt = new DateTime(2014, 7, 3)}
             };
-            _mockLogs[0].Setup(log => log.NewLogReader().ReadAll()).Returns(logContent);
+            _mockLogs[0].Setup(log => log.ReadAll()).Returns(logContent);
             var expectedExport = new[] {logContent[0]};
             IEnumerable<IDEEvent> actualExport = null;
             _mockExporter.Setup(e => e.Export(It.IsAny<IEnumerable<IDEEvent>>(), It.IsAny<IPublisher>()))
@@ -356,7 +350,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Export
                 new TestIDEEvent {TriggeredAt = new DateTime(2014, 7, 1)},
                 new TestIDEEvent {TriggeredAt = _testDateUtils.Now}
             };
-            _mockLogs[0].Setup(log => log.NewLogReader().ReadAll()).Returns(logContent);
+            _mockLogs[0].Setup(log => log.ReadAll()).Returns(logContent);
             IEnumerable<IDEEvent> actualExport = null;
             _mockExporter.Setup(e => e.Export(It.IsAny<IEnumerable<IDEEvent>>(), It.IsAny<IPublisher>()))
                          .Callback<IEnumerable<IDEEvent>, IPublisher>((export, p) => actualExport = export);

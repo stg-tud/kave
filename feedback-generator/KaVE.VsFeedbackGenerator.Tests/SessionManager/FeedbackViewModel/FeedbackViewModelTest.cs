@@ -87,8 +87,8 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModel
         {
             var logs = new[]
             {
-                MockLog(),
-                MockLog()
+                new Mock<ILog>().Object,
+                new Mock<ILog>().Object
             };
             _mockLogManager.Setup(lm => lm.Logs).Returns(logs);
 
@@ -224,19 +224,10 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModel
             WaitForRefreshToFinish();
         }
 
-        private static ILog MockLog()
-        {
-            var log = new Mock<ILog>();
-            log.Setup(l => l.NewLogReader()).Returns(new Mock<ILogReader<IDEEvent>>().Object);
-            return log.Object;
-        }
-
         private static ILog MockLog(DateTime startTime, IEnumerable<IDEEvent> events)
         {
             var log = new Mock<ILog>();
-            var reader = new Mock<ILogReader<IDEEvent>>();
-            reader.Setup(r => r.ReadAll()).Returns(events);
-            log.Setup(l => l.NewLogReader()).Returns(reader.Object);
+            log.Setup(l => l.ReadAll()).Returns(events);
             log.Setup(l => l.Date).Returns(startTime);
             return log.Object;
         }

@@ -49,7 +49,6 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
             mockLogReader.Setup(reader => reader.ReadAll()).Returns(_displayedEvents);
 
             _mockLog = new Mock<ILog>();
-            _mockLog.Setup(log => log.NewLogReader()).Returns(mockLogReader.Object);
 
             _uut = new SessionViewModel(_mockLog.Object);
             _confirmationRequestHelper = _uut.ConfirmationRequest.NewTestHelper();

@@ -12,8 +12,13 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sven Amann
  */
+
 using System.IO;
+using KaVE.VsFeedbackGenerator.Utils;
 using KaVE.VsFeedbackGenerator.Utils.Json;
 using KaVE.VsFeedbackGenerator.Utils.Logging;
 using NUnit.Framework;
@@ -70,6 +75,18 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json
             var instance2 = new SerializationTestTarget { Id = "bar" };
 
             _writer.WriteAll(new[] { instance1, instance2 });
+
+            var serialization = _logStream.AsString();
+            Assert.AreEqual("{\"$type\":\"KaVE.VsFeedbackGenerator.Tests.Utils.Json.SerializationTestTarget, KaVE.VsFeedbackGenerator.Tests\",\"Id\":\"foo\"}\r\n{\"$type\":\"KaVE.VsFeedbackGenerator.Tests.Utils.Json.SerializationTestTarget, KaVE.VsFeedbackGenerator.Tests\",\"Id\":\"bar\"}\r\n", serialization);
+        }
+
+        [Test]
+        public void ShouldAppendToStreamWrittenByOtherWriter()
+        {
+            var writer = new JsonLogWriter<object>(_logStream);
+            writer.Write(new SerializationTestTarget { Id = "foo" });
+            
+            _writer.Write(new SerializationTestTarget{Id = "bar"});
 
             var serialization = _logStream.AsString();
             Assert.AreEqual("{\"$type\":\"KaVE.VsFeedbackGenerator.Tests.Utils.Json.SerializationTestTarget, KaVE.VsFeedbackGenerator.Tests\",\"Id\":\"foo\"}\r\n{\"$type\":\"KaVE.VsFeedbackGenerator.Tests.Utils.Json.SerializationTestTarget, KaVE.VsFeedbackGenerator.Tests\",\"Id\":\"bar\"}\r\n", serialization);

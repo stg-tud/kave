@@ -28,8 +28,9 @@ namespace KaVE.VsFeedbackGenerator.Utils.Logging
         DateTime Date { get; }
         long SizeInBytes { get; }
 
-        ILogReader<IDEEvent> NewLogReader();
-        ILogWriter<IDEEvent> NewLogWriter();
+        IEnumerable<IDEEvent> ReadAll();
+        bool IsEmpty();
+        void Append(IDEEvent entry);
         void RemoveRange(IEnumerable<IDEEvent> entries);
         void RemoveEntriesOlderThan(DateTime time);
         void Delete();

@@ -55,7 +55,15 @@ namespace KaVE.VsFeedbackGenerator.Utils.Logging
             }
         }
 
-        public ILogReader<IDEEvent> NewLogReader()
+        public IEnumerable<IDEEvent> ReadAll()
+        {
+            using (var reader = NewLogReader())
+            {
+                return reader.ReadAll().ToList();
+            }
+        }
+
+        private ILogReader<IDEEvent> NewLogReader()
         {
             var logStream = TryOpenLogFile();
             return new JsonLogReader<IDEEvent>(logStream);
@@ -103,7 +111,23 @@ namespace KaVE.VsFeedbackGenerator.Utils.Logging
                     Path));
         }
 
-        public ILogWriter<IDEEvent> NewLogWriter()
+        public bool IsEmpty()
+        {
+            using (var reader = NewLogReader())
+            {
+                return reader.ReadNext() != null;
+            }
+        }
+
+        public void Append(IDEEvent entry)
+        {
+            using (var writer = NewLogWriter())
+            {
+                writer.Write(entry);
+            }
+        }
+
+        private ILogWriter<IDEEvent> NewLogWriter()
         {
             _ioUtils.CreateDirectory(Directory.GetParent(Path).FullName);
             var logStream = _ioUtils.OpenFile(Path, FileMode.Append, FileAccess.Write);

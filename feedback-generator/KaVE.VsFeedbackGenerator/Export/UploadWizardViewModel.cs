@@ -133,10 +133,7 @@ namespace KaVE.VsFeedbackGenerator.Export
             var events = new List<IDEEvent>();
             foreach (var log in _logManager.Logs)
             {
-                using (var reader = log.NewLogReader())
-                {
-                    events.AddRange(reader.ReadAll().Where(e => e.TriggeredAt <= _exportEndDate));
-                }
+                events.AddRange(log.ReadAll().Where(e => e.TriggeredAt <= _exportEndDate));
             }
             return events;
         }

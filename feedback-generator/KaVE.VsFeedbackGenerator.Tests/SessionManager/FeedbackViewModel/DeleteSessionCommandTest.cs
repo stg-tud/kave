@@ -48,13 +48,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModel
         {
             Registry.RegisterComponent(new Mock<IIoUtils>().Object);
 
-            var mockLog1 = new Mock<ILog>();
-            mockLog1.Setup(log => log.NewLogReader()).Returns(new Mock<ILogReader<IDEEvent>>().Object);
-            var mockLog2 = new Mock<ILog>();
-            mockLog2.Setup(log => log.NewLogReader()).Returns(new Mock<ILogReader<IDEEvent>>().Object);
-            var mockLog3 = new Mock<ILog>();
-            mockLog3.Setup(log => log.NewLogReader()).Returns(new Mock<ILogReader<IDEEvent>>().Object);
-            _mockLogs = new List<Mock<ILog>> {mockLog1, mockLog2, mockLog3};
+            _mockLogs = new List<Mock<ILog>> {new Mock<ILog>(), new Mock<ILog>(), new Mock<ILog>()};
 
             _mockLogFileManager = new Mock<ILogManager>();
             _mockLogFileManager.Setup(mgr => mgr.Logs).Returns(_mockLogs.Select(m => m.Object));

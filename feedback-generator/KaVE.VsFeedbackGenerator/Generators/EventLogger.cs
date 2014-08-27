@@ -94,14 +94,9 @@ namespace KaVE.VsFeedbackGenerator.Generators
 
         private void LogEvent(IDEEvent @event)
         {
-            if (@event == null)
+            if (@event != null)
             {
-                return;
-            }
-            var log = _logManager.CurrentLog;
-            using (var logWriter = log.NewLogWriter())
-            {
-                logWriter.Write(@event);
+                _logManager.CurrentLog.Append(@event);
             }
         }
     }
