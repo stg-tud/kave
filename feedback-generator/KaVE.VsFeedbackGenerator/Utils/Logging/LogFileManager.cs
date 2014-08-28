@@ -32,25 +32,55 @@ namespace KaVE.VsFeedbackGenerator.Utils.Logging
         private readonly IIoUtils _ioUtils;
         internal const string LogDirectoryPrefix = "Log_";
 
-        public event LogEventHandler LogAdded = delegate { }; 
+        public event LogEventHandler LogCreated = delegate { };
         public event EventHandler LogsChanged = delegate { };
+
+        private IDictionary<string, ILog> _logs;
 
         public LogFileManager([NotNull] string baseLocation)
         {
             BaseLocation = baseLocation;
             _ioUtils = Registry.GetComponent<IIoUtils>();
+            _logs = new Dictionary<string, ILog>();
         }
 
         public string BaseLocation { get; private set; }
 
         public IEnumerable<ILog> Logs
         {
-            get { return _ioUtils.GetFiles(BaseLocation, LogDirectoryPrefix + "*").Select(CreateLogFile); }
+            get
+            {
+                var logs = new Dictionary<string, ILog>();
+                var logPaths = _ioUtils.GetFiles(BaseLocation, LogDirectoryPrefix + "*");
+                foreach (var logPath in logPaths)
+                {
+                    logs[logPath] = GetOrCreateLog(logPath);
+                }
+                _logs = logs;
+                return _logs.Values;
+            }
         }
 
-        private static LogFile CreateLogFile(string logDirectoryPath)
+        public ILog CurrentLog
         {
-            return new LogFile(logDirectoryPath);
+            get
+            {
+                var fileName = LogDirectoryPrefix + DateTime.Today.ToString("yyyy-MM-dd");
+                var logPath = Path.Combine(BaseLocation, fileName);
+                var log = GetOrCreateLog(logPath);
+                if (!_ioUtils.FileExists(logPath))
+                {
+                    _ioUtils.CreateFile(logPath);
+                    _logs[logPath] = log;
+                    LogCreated(log);
+                }
+                return log;
+            }
+        }
+
+        private ILog GetOrCreateLog(string logPath)
+        {
+            return _logs.ContainsKey(logPath) ? _logs[logPath] : new LogFile(logPath);
         }
 
         public string FormatedLogsSize
@@ -83,7 +113,7 @@ namespace KaVE.VsFeedbackGenerator.Utils.Logging
                 {
                     log.Delete();
                 }
-                else
+                else if (log.Date == time.Date)
                 {
                     log.RemoveEntriesOlderThan(time);
                 }
@@ -93,27 +123,11 @@ namespace KaVE.VsFeedbackGenerator.Utils.Logging
 
         public void DeleteAllLogs()
         {
+            foreach (var log in Logs)
+            {
+                log.Delete();
+            }
             _ioUtils.DeleteDirectoryWithContent(BaseLocation);
-        }
-
-        public ILog CurrentLog
-        {
-            get
-            {
-                var fileName = LogDirectoryPrefix + DateTime.Today.ToString("yyyy-MM-dd");
-                var logPath = Path.Combine(BaseLocation, fileName);
-                var currentLog = CreateLogFile(logPath);
-                MaybeRaiseLogAdded(currentLog);
-                return currentLog;
-            }
-        }
-
-        private void MaybeRaiseLogAdded(LogFile log)
-        {
-            if (!File.Exists(log.Path))
-            {
-                LogAdded(log);
-            }
         }
 
         public override string ToString()

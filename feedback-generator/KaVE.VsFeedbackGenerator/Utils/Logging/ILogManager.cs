@@ -48,7 +48,7 @@ namespace KaVE.VsFeedbackGenerator.Utils.Logging
 
     public interface ILogManager
     {
-        event LogEventHandler LogAdded;
+        event LogEventHandler LogCreated;
 
         event EventHandler LogsChanged;
 

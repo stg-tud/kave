@@ -154,6 +154,16 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
         }
 
         [Test]
+        public void ShouldCreateFileInNonExistentDirectory()
+        {
+            var path = Path.Combine(GetNonExistentTempFileName(), "ActualFile");
+
+            _sut.CreateFile(path);
+
+            Assert.IsTrue(File.Exists(path));
+        }
+
+        [Test]
         public void EmptyFileShouldHaveZeroSize()
         {
             var filename = Path.GetTempFileName();
@@ -278,7 +288,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
             Assert.AreEqual(expected, actual);
         }
 
-        private string GetNonExistentTempFileName()
+        private static string GetNonExistentTempFileName()
         {
             return Path.Combine(IoTestHelper.GetTempDirectoryName(), "ArbitraryFileName" + DateTime.Now.Ticks);
         }

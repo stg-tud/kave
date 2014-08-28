@@ -19,8 +19,10 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using JetBrains.Util;
 using KaVE.Utils.IO;
 using KaVE.VsFeedbackGenerator.Utils;
 using KaVE.VsFeedbackGenerator.Utils.Logging;
@@ -40,13 +42,13 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Logging
         public void SetUp()
         {
             _baseDirectory = IoTestHelper.GetTempDirectoryName();
-            _ioUtilMock = new Mock<IIoUtils>();
 
+            _ioUtilMock = new Mock<IIoUtils>();
             _ioUtilMock.Setup(io => io.OpenFile(It.IsAny<string>(), It.IsAny<FileMode>(), It.IsAny<FileAccess>()))
                        .Returns(() => new MemoryStream());
+            Registry.RegisterComponent(_ioUtilMock.Object);
 
-            GivenLogsExist();
-            WhenLogFileManagerIsInitialized();
+            _uut = new LogFileManager(_baseDirectory);
         }
 
         [TearDown]
@@ -58,68 +60,115 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Logging
         [Test]
         public void ShouldFindNoLogFilesInEmptyDirectory()
         {
-            GivenLogsExist();
-            WhenLogFileManagerIsInitialized();
+            GivenLogsExist( /* none */);
 
-            Assert.AreEqual(0, _uut.Logs.Count());
+            var actuals = _uut.Logs;
+
+            Assert.IsTrue(actuals.IsEmpty());
         }
 
         [Test]
         public void ShouldFindSingleLog()
         {
-            GivenLogsExist(DateTime.Today);
-            WhenLogFileManagerIsInitialized();
+            GivenLogsExist(1);
 
-            Assert.AreEqual(1, _uut.Logs.Count());
+            var actuals = _uut.Logs;
+
+            Assert.AreEqual(1, actuals.Count());
         }
 
         [Test]
         public void ShouldFindMultipleLogs()
         {
-            GivenLogsExist(
-                DateTime.Today,
-                DateTime.Today.AddDays(-1),
-                DateTime.Today.AddDays(-2));
+            GivenLogsExist(3);
 
-            WhenLogFileManagerIsInitialized();
+            var actuals = _uut.Logs;
 
-            Assert.AreEqual(3, _uut.Logs.Count());
+            Assert.AreEqual(3, actuals.Count());
         }
 
         [Test]
-        public void ShouldCreateLogsFromFilesWhoseNamesFollowTheLogFileNamePattern()
+        public void ShouldFindLogForRightDate()
         {
-            // ReSharper disable once UnusedVariable
+            var expected = new DateTime(2014, 8, 28);
+            GivenLogsExist(expected);
+
             var logs = _uut.Logs;
 
-            _ioUtilMock.Verify(iou => iou.GetFiles(_baseDirectory, "Log_*"));
+            Assert.AreEqual(expected, logs.First().Date);
+        }
+
+        [Test]
+        public void ShouldReturnSameLogInstance()
+        {
+            GivenLogsExist(1);
+
+            var log1 = _uut.Logs.First();
+            var log2 = _uut.Logs.First();
+
+            Assert.AreSame(log1, log2);
+        }
+
+        [Test]
+        public void ShouldDetectNewLog()
+        {
+            Assert.IsEmpty(_uut.Logs);
+
+            GivenLogsExist(1);
+
+            Assert.IsNotEmpty(_uut.Logs);
+        }
+
+        [Test]
+        public void ShouldDropDeletedLog()
+        {
+            GivenLogsExist(1);
+
+            Assert.IsNotEmpty(_uut.Logs);
+
+            GivenLogsExist( /* none */);
+
+            Assert.IsEmpty(_uut.Logs);
         }
 
         [Test]
         public void ShouldReturnTodaysLog()
         {
+            var expected = GetLogPath(DateTime.Today);
+
             var todaysLog = (LogFile) _uut.CurrentLog;
 
-            Assert.AreEqual(DateTime.Today, todaysLog.Date);
-            Assert.AreEqual(_uut.BaseLocation, Path.GetDirectoryName(todaysLog.Path));
+            Assert.AreEqual(expected, todaysLog.Path);
         }
 
         [Test]
         public void ShouldCreateCurrentLogIfItDoesntExist()
         {
-            Assert.IsEmpty(_uut.Logs);
+            var currentLogPath = GetLogPath(DateTime.Today);
 
             // ReSharper disable once UnusedVariable
             var currentLog = _uut.CurrentLog;
 
-            Assert.AreEqual(1, _uut.Logs.Count());
+            _ioUtilMock.Verify(iou => iou.CreateFile(currentLogPath));
         }
 
         [Test]
-        public void ShouldFireLogAddedEventWhenCreatingLog()
+        public void ShouldNotCreateCurrentLogIfItExists()
+        {
+            GivenLogsExist(DateTime.Today);
+            var currentLogPath = GetLogPath(DateTime.Today);
+
+            // ReSharper disable once UnusedVariable
+            var currentLog = _uut.CurrentLog;
+
+            _ioUtilMock.Verify(iou => iou.CreateFile(currentLogPath), Times.Never);
+        }
+
+        [Test]
+        public void ShouldFireLogCreatedEventWhenCreatingLog()
         {
             ILog newLog = null;
-            _uut.LogAdded += log => newLog = log;
+            _uut.LogCreated += log => newLog = log;
 
             var currentLog = _uut.CurrentLog;
 
@@ -127,14 +176,13 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Logging
         }
 
         [Test]
-        public void ShouldDeleteOldLogEntries()
+        public void ShouldNotFireLogCreatedWhenLogExists()
         {
-            GivenLogsExist(new DateTime(2014, 03, 21), new DateTime(2014, 03, 29));
-            WhenLogFileManagerIsInitialized();
+            GivenLogsExist(DateTime.Today);
+            _uut.LogCreated += log => Assert.Fail("created " + log);
 
-            _uut.DeleteLogsOlderThan(new DateTime(2014, 03, 20));
-
-            _ioUtilMock.Verify(io => io.GetTempFileName(), Times.Exactly(2));
+            // ReSharper disable once UnusedVariable
+            var currentLog = _uut.CurrentLog;
         }
 
         [Test]
@@ -142,31 +190,43 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Logging
         {
             var d1 = new DateTime(2014, 03, 21);
             var d2 = new DateTime(2014, 02, 19);
-
             GivenLogsExist(d1, d2);
-            WhenLogFileManagerIsInitialized();
 
-            _uut.DeleteLogsOlderThan(new DateTime(2014, 03, 30));
+            _uut.DeleteLogsOlderThan(new DateTime(2014, 03, 30, 21, 23, 42));
 
-            _ioUtilMock.Verify(io => io.DeleteFile(GetValidLogPath(_baseDirectory, d1)));
-            _ioUtilMock.Verify(io => io.DeleteFile(GetValidLogPath(_baseDirectory, d2)));
+            _ioUtilMock.Verify(io => io.DeleteFile(GetLogPath(d1)));
+            _ioUtilMock.Verify(io => io.DeleteFile(GetLogPath(d2)));
         }
 
         [Test]
-        public void ShouldNotDeleteTodayLog()
+        public void ShouldNotDeleteNewLogs()
         {
-            var today = new DateTime(2014, 06, 26);
-            GivenLogsExist(today);
-            WhenLogFileManagerIsInitialized();
+            GivenLogsExist(new DateTime(2014, 03, 21), new DateTime(2014, 03, 29));
 
-            _uut.DeleteLogsOlderThan(today);
+            _uut.DeleteLogsOlderThan(new DateTime(2014, 03, 20, 09, 00, 00));
 
-            const string logFileName = "Log_2014-06-26";
-            var logFilePath = Path.Combine(_baseDirectory, logFileName);
+            _ioUtilMock.Verify(iou => iou.DeleteFile(It.IsAny<string>()), Times.Never);
+        }
+
+        [Test]
+        public void ShouldRemoveOlderEntriesFromLogOnSameDate()
+        {
+            var date = new DateTime(2014, 06, 26);
+            GivenLogsExist(date);
+
+            _uut.DeleteLogsOlderThan(new DateTime(2014, 06, 26, 14, 33, 12));
+
+            AssertThatRemoveEntriesOlderThanWasInvokedOnLog(date);
+        }
+
+        private void AssertThatRemoveEntriesOlderThanWasInvokedOnLog(DateTime logDate)
+        {
+            // Since the LogFile is created by the manager, we have no way of mocking it. Therefore,
+            // we check the method's invocation by checking its behavior.
+            var logFilePath = GetLogPath(logDate);
             _ioUtilMock.Verify(iou => iou.OpenFile(logFilePath, FileMode.OpenOrCreate, FileAccess.Read));
             _ioUtilMock.Verify(iou => iou.DeleteFile(logFilePath));
             _ioUtilMock.Verify(iou => iou.MoveFile(It.IsAny<string>(), logFilePath));
-            Assert.AreEqual(1, _uut.Logs.Count());
         }
 
         [Test]
@@ -190,77 +250,83 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Logging
         [Test]
         public void ShouldGetFormatedLogsSize_KB()
         {
-            GivenLogsExistWithSizeInBytes(1024 * 23);
+            GivenLogsExistWithSizeInBytes(1024*23);
             Assert.AreEqual("23.0 KB", _uut.FormatedLogsSize);
         }
 
         [Test]
         public void ShouldGetFormatedLogsSize_MB()
         {
-            GivenLogsExistWithSizeInBytes(1024 * 1024 * 20);
+            GivenLogsExistWithSizeInBytes(1024*1024*20);
             Assert.AreEqual("20.0 MB", _uut.FormatedLogsSize);
         }
 
         [Test]
         public void ShouldGetFormatedLogsSize_MultipleFiles()
         {
-            GivenLogsExistWithSizeInBytes(1024 * 1024 * 20, 1024 * 512);
+            GivenLogsExistWithSizeInBytes(1024*1024*20, 1024*512);
             Assert.AreEqual("20.5 MB", _uut.FormatedLogsSize);
         }
 
         [Test]
-        public void ShouldDeleteLogFileDirectory()
+        public void ShouldDeleteLogFileDirectoryOnDeleteAllLogs()
         {
-            GivenLogsExist(DateTime.Today);
-            WhenLogFileManagerIsInitialized();
-
             _uut.DeleteAllLogs();
 
             _ioUtilMock.Verify(io => io.DeleteDirectoryWithContent(_uut.BaseLocation));
         }
 
-        private void WhenLogFileManagerIsInitialized()
+        [Test]
+        public void ShouldRaiseDeletedOnAllLogWhenDeletingAllLogs()
         {
-            _uut = new LogFileManager(_baseDirectory);
-        }
+            GivenLogsExist(3);
 
-        private void GivenLogsExist(params DateTime[] dates)
-        {
-            _ioUtilMock.Setup(io => io.GetFiles(_baseDirectory, It.IsAny<string>()))
-                       .Returns(
-                           dates.Select(
-                               dateTime =>
-                                   GetValidLogPath(_baseDirectory, dateTime)).ToArray());
+            var actuals = new List<ILog>();
+            var expecteds = _uut.Logs.ToList();
+            expecteds[0].Deleted += actuals.Add;
+            expecteds[1].Deleted += actuals.Add;
+            expecteds[2].Deleted += actuals.Add;
 
-            Registry.Clear();
-            Registry.RegisterComponent(_ioUtilMock.Object);
+            _uut.DeleteAllLogs();
+
+            CollectionAssert.AreEqual(expecteds, actuals);
         }
 
         private void GivenLogsExistWithSizeInBytes(params int[] sizesInBytes)
         {
-            var pathes = new string[sizesInBytes.Length];
-
+            var dates = new DateTime[sizesInBytes.Length];
             for (var i = 0; i < sizesInBytes.Length; i++)
             {
-                var currentPath = GetValidLogPath(_baseDirectory, DateTime.Today.AddDays(-i));
+                dates[i] = DateTime.Today.AddDays(-i);
+                var currentPath = GetLogPath(dates[i]);
                 _ioUtilMock.Setup(u => u.GetFileSize(currentPath)).Returns(sizesInBytes[i]);
-                pathes[i] = currentPath;
             }
 
-            _ioUtilMock.Setup(io => io.GetFiles(_baseDirectory, It.IsAny<string>()))
-                       .Returns(pathes);
+            GivenLogsExist(dates);
         }
 
-
-        private static string GetValidLogPath(string path, DateTime date)
+        private void GivenLogsExist(int numberOfLogs)
         {
-            return GetLogPath(path, date, "Log_");
+            var dates = Enumerable.Range(0, numberOfLogs).Select(i => DateTime.Today.AddDays(-i)).ToArray();
+            GivenLogsExist(dates);
         }
 
-        private static string GetLogPath(string path, DateTime date, string logPrefix)
+        private void GivenLogsExist(params DateTime[] dates)
         {
-            var filename = logPrefix + date.ToString("yyyy-MM-dd");
-            return Path.Combine(path, filename);
+            var logPaths = ToLogPaths(dates);
+            _ioUtilMock.Setup(io => io.GetFiles(_baseDirectory, "Log_*")).Returns(logPaths);
+            _ioUtilMock.Setup(io => io.FileExists(It.IsAny<string>())).Returns<string>(logPaths.Contains);
+        }
+
+        private string[] ToLogPaths(params DateTime[] dates)
+        {
+            return dates.Select(GetLogPath).ToArray();
+        }
+
+        private string GetLogPath(DateTime date)
+        {
+            var filename = "Log_" + date.ToString("yyyy-MM-dd");
+            return Path.Combine(_baseDirectory, filename);
         }
     }
 }

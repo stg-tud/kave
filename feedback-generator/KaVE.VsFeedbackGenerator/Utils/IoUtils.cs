@@ -42,7 +42,12 @@ namespace KaVE.VsFeedbackGenerator.Utils
         string GetTempFileName(string extension);
         string[] GetFiles(string path, string searchPattern);
         long GetFileSize(string fileName);
+
+        /// <summary>
+        ///     Creates or overrides a file. Creates non-existing parent directories.
+        /// </summary>
         void CreateFile(string path);
+
         void CopyFile(string src, string trg);
         void MoveFile(string source, string target);
         bool FileExists(string fileName);
@@ -194,6 +199,7 @@ namespace KaVE.VsFeedbackGenerator.Utils
 
         public void CreateFile(string path)
         {
+            CreateDirectory(Directory.GetParent(path).FullName);
             File.Create(path).Close();
         }
 
