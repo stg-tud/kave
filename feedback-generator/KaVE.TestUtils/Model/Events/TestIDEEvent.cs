@@ -46,5 +46,10 @@ namespace KaVE.TestUtils.Model.Events
                 return (base.GetHashCode()*397) ^ (TestProperty != null ? TestProperty.GetHashCode() : 0);
             }
         }
+
+        public override string ToString()
+        {
+            return string.Format("TestProperty: {1}, {0}", base.ToString(), TestProperty);
+        }
     }
 }

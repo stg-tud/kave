@@ -28,14 +28,19 @@ namespace KaVE.TestUtils.Model.Events
     {
         private static readonly Random Random = new Random();
 
-        public static List<IDEEvent> CreateAnonymousEvents(int num)
+        public static List<IDEEvent> SomeEvents(int num)
         {
             var list = new List<IDEEvent>();
             for (var i = 0; i < num; i ++)
             {
-                list.Add(new TestIDEEvent {TestProperty = Random.Next().ToString(CultureInfo.InvariantCulture)});
+                list.Add(SomeEvent());
             }
             return list;
+        }
+
+        public static TestIDEEvent SomeEvent()
+        {
+            return new TestIDEEvent {TestProperty = Random.Next().ToString(CultureInfo.InvariantCulture)};
         }
     }
 }

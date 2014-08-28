@@ -50,8 +50,6 @@ namespace KaVE.VsFeedbackGenerator.Utils.Logging
     {
         event LogEventHandler LogCreated;
 
-        event EventHandler LogsChanged;
-
         string BaseLocation { get; }
         IEnumerable<ILog> Logs { get; }
         ILog CurrentLog { get; }

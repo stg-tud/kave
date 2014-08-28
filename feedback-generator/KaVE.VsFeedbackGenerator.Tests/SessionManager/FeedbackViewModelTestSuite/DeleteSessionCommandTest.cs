@@ -22,7 +22,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using JetBrains;
-using KaVE.Model.Events;
 using KaVE.Utils.Reflection;
 using KaVE.VsFeedbackGenerator.Interactivity;
 using KaVE.VsFeedbackGenerator.SessionManager;
@@ -32,12 +31,12 @@ using KaVE.VsFeedbackGenerator.Utils.Logging;
 using Moq;
 using NUnit.Framework;
 
-namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModel
+namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModelTestSuite
 {
     [TestFixture]
     internal class DeleteSessionCommandTest
     {
-        private VsFeedbackGenerator.SessionManager.FeedbackViewModel _uut;
+        private FeedbackViewModel _uut;
         private IList<Mock<ILog>> _mockLogs;
         private Mock<ILogManager> _mockLogFileManager;
         private InteractionRequestTestHelper<Confirmation> _confirmationRequestHelper;
@@ -48,12 +47,12 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModel
         {
             Registry.RegisterComponent(new Mock<IIoUtils>().Object);
 
-            _mockLogs = new List<Mock<ILog>> {new Mock<ILog>(), new Mock<ILog>(), new Mock<ILog>()};
+            _mockLogs = new List<Mock<ILog>> {LogTestHelper.MockLog(), LogTestHelper.MockLog(), LogTestHelper.MockLog()};
 
             _mockLogFileManager = new Mock<ILogManager>();
             _mockLogFileManager.Setup(mgr => mgr.Logs).Returns(_mockLogs.Select(m => m.Object));
 
-            _uut = new VsFeedbackGenerator.SessionManager.FeedbackViewModel(_mockLogFileManager.Object);
+            _uut = new FeedbackViewModel(_mockLogFileManager.Object);
             _uut.Refresh();
             while (_uut.IsBusy)
             {
@@ -178,7 +177,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModel
         public void ShouldNotRemoveSessionFromViewModelWhenDeletionOfFileFails()
         {
             _mockLogs[0].Setup(log => log.Delete()).Throws<Exception>();
-            GivenSessionsAreSelected(_sessionViewModels[0]);
+            GivenSessionsAreSelected(_sessionViewModels[0]); 
             var selectedSession = _uut.Sessions.First();
 
             _uut.DeleteSessionsCommand.Execute(null);

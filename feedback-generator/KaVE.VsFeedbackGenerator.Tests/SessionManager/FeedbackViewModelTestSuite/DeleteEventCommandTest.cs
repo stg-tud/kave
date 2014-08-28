@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using System.Linq;
 using JetBrains;
 using KaVE.Model.Events;
+using KaVE.TestUtils;
 using KaVE.TestUtils.Model.Events;
 using KaVE.VsFeedbackGenerator.Interactivity;
 using KaVE.VsFeedbackGenerator.SessionManager;
@@ -28,9 +29,8 @@ using KaVE.VsFeedbackGenerator.Tests.Interactivity;
 using KaVE.VsFeedbackGenerator.Utils.Logging;
 using Moq;
 using NUnit.Framework;
-using Messages = KaVE.VsFeedbackGenerator.Properties.SessionManager;
 
-namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
+namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModelTestSuite
 {
     [TestFixture]
     internal class DeleteEventCommandTest
@@ -43,31 +43,34 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
         [SetUp]
         public void SetUp()
         {
-            _displayedEvents = IDEEventTestFactory.CreateAnonymousEvents(3);
+            _displayedEvents = IDEEventTestFactory.SomeEvents(3);
 
-            _mockLog = new Mock<ILog>();
+            _mockLog = LogTestHelper.MockLog();
             _mockLog.Setup(log => log.ReadAll()).Returns(_displayedEvents);
 
             _uut = new SessionViewModel(_mockLog.Object);
+            // ReSharper disable once UnusedVariable
+            var tmp = _uut.Events;
+            AsyncTestHelper.WaitForCondition(() => !_uut.IsBusy);
             _confirmationRequestHelper = _uut.ConfirmationRequest.NewTestHelper();
         }
 
         [Test]
-        public void ShouldBeDisabledIfNoEventIsSelected()
+        public void ShouldIndicateIfNoEventsAreSelected()
         {
             GivenEventsAreSelected( /* none */);
 
-            var deletionEnabled = _uut.DeleteEventsCommand.CanExecute(null);
+            var deletionEnabled = _uut.HasSelection;
 
             Assert.IsFalse(deletionEnabled);
         }
 
         [Test]
-        public void ShouldBeEnabledIfAnEventIsSelected()
+        public void ShouldIndicateIfSomeEventsAreSelected()
         {
             GivenEventsAreSelected(_displayedEvents[1]);
 
-            var deletionEnabled = _uut.DeleteEventsCommand.CanExecute(null);
+            var deletionEnabled = _uut.HasSelection;
 
             Assert.IsTrue(deletionEnabled);
         }
@@ -77,7 +80,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
         {
             GivenEventsAreSelected(_displayedEvents[0]);
 
-            _uut.DeleteEventsCommand.Execute(null);
+            _uut.DeleteSelectedEvents();
 
             Assert.IsTrue(_confirmationRequestHelper.IsRequestRaised);
         }
@@ -87,12 +90,12 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
         {
             GivenEventsAreSelected(_displayedEvents[0]);
 
-            _uut.DeleteEventsCommand.Execute(null);
+            _uut.DeleteSelectedEvents();
 
             var expected = new Confirmation
             {
-                Caption = Messages.EventDeleteConfirmTitle,
-                Message = Messages.EventDeleteConfirmSingular
+                Caption = Properties.SessionManager.EventDeleteConfirmTitle,
+                Message = Properties.SessionManager.EventDeleteConfirmSingular
             };
             var actual = _confirmationRequestHelper.Context;
             Assert.AreEqual(expected, actual);
@@ -103,12 +106,12 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
         {
             GivenEventsAreSelected(_displayedEvents[0], _displayedEvents[1], _displayedEvents[2]);
 
-            _uut.DeleteEventsCommand.Execute(null);
+            _uut.DeleteSelectedEvents();
 
             var expected = new Confirmation
             {
-                Caption = Messages.EventDeleteConfirmTitle,
-                Message = Messages.EventDeleteConfirmPlural.FormatEx(3)
+                Caption = Properties.SessionManager.EventDeleteConfirmTitle,
+                Message = Properties.SessionManager.EventDeleteConfirmPlural.FormatEx(3)
             };
             var actual = _confirmationRequestHelper.Context;
             Assert.AreEqual(expected, actual);
@@ -119,7 +122,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
         {
             GivenEventsAreSelected(_displayedEvents[2]);
 
-            _uut.DeleteEventsCommand.Execute(null);
+            _uut.DeleteSelectedEvents();
             _confirmationRequestHelper.Context.Confirmed = false;
             _confirmationRequestHelper.Callback();
 
@@ -131,7 +134,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
         {
             GivenEventsAreSelected(_displayedEvents[1]);
 
-            _uut.DeleteEventsCommand.Execute(null);
+            _uut.DeleteSelectedEvents();
             _confirmationRequestHelper.Context.Confirmed = true;
             _confirmationRequestHelper.Callback();
 
@@ -144,17 +147,17 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
         {
             GivenEventsAreSelected(_displayedEvents[0], _displayedEvents[2]);
 
-            _uut.DeleteEventsCommand.Execute(null);
+            _uut.DeleteSelectedEvents();
             _confirmationRequestHelper.Context.Confirmed = true;
             _confirmationRequestHelper.Callback();
 
-            _mockLog.Verify(log => log.RemoveRange(new[] { _displayedEvents[0], _displayedEvents[2] }));
+            _mockLog.Verify(log => log.RemoveRange(new[] {_displayedEvents[0], _displayedEvents[2]}));
             Assert.AreEqual(1, _uut.Events.Count());
         }
 
         private void GivenEventsAreSelected(params IDEEvent[] events)
         {
-            _uut.SelectedEvents = _uut.Events.Where(ev => events.Contains(ev.Event));
+            _uut.SelectedEvents = _uut.Events.Where(ev => events.Contains(ev.Event)).ToList();
         }
     }
 }

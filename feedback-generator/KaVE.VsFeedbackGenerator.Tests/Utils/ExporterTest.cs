@@ -84,7 +84,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
         [Test]
         public void ShouldInvokePublisher()
         {
-            var events = IDEEventTestFactory.CreateAnonymousEvents(25);
+            var events = IDEEventTestFactory.SomeEvents(25);
             _sut.Export(events, _publisherMock.Object);
             _publisherMock.Verify(p => p.Publish(It.IsAny<MemoryStream>()));
         }
@@ -92,7 +92,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
         [Test]
         public void ShouldCreateOneFilePerEvent()
         {
-            var events = IDEEventTestFactory.CreateAnonymousEvents(25);
+            var events = IDEEventTestFactory.SomeEvents(25);
             _sut.Export(events, _publisherMock.Object);
             var zipFile = GetZipFileFromExport();
             Assert.AreEqual(25, zipFile.Entries.Count);
@@ -101,7 +101,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
         [Test]
         public void ShouldPersistAllProvidedEvents()
         {
-            var expecteds = IDEEventTestFactory.CreateAnonymousEvents(25);
+            var expecteds = IDEEventTestFactory.SomeEvents(25);
 
             _sut.Export(expecteds, _publisherMock.Object);
             var actuals = GetExportedEvents();
@@ -125,7 +125,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
         [Test]
         public void ShouldInvokeAnonymizerOnEveryEvent()
         {
-            var expected = IDEEventTestFactory.CreateAnonymousEvents(13);
+            var expected = IDEEventTestFactory.SomeEvents(13);
             var actual = new List<IDEEvent>();
             _anonymizerMock.Setup(a => a.Anonymize(It.IsAny<IDEEvent>()))
                            .Callback<IDEEvent>(actual.Add)
@@ -139,7 +139,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
         [Test]
         public void ShouldCreateZipFromAnonymizedEvents()
         {
-            var original = IDEEventTestFactory.CreateAnonymousEvents(3);
+            var original = IDEEventTestFactory.SomeEvents(3);
             var anonymousEvent = new TestIDEEvent {TestProperty = "It's me!"};
             _anonymizerMock.Setup(a => a.Anonymize(It.IsAny<IDEEvent>())).Returns(anonymousEvent);
             var expected = new[] {anonymousEvent, anonymousEvent, anonymousEvent};

@@ -26,10 +26,8 @@ using System.ComponentModel;
 using System.Linq;
 using JetBrains;
 using JetBrains.Annotations;
-using JetBrains.UI.Extensions.Commands;
-using KaVE.Model.Events;
-using KaVE.Utils;
 using KaVE.VsFeedbackGenerator.Interactivity;
+using KaVE.VsFeedbackGenerator.SessionManager.Presentation;
 using KaVE.VsFeedbackGenerator.Utils;
 using KaVE.VsFeedbackGenerator.Utils.Logging;
 using NuGet;
@@ -40,21 +38,11 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
     public sealed class FeedbackViewModel : ViewModelBase<FeedbackViewModel>
     {
         private readonly ILogManager _logManager;
-        private readonly IList<SessionViewModel> _sessions;
-        private readonly IList<SessionViewModel> _selectedSessions;
+        private ICollection<SessionViewModel> _sessions;
+        private ICollection<SessionViewModel> _selectedSessions;
         private BackgroundWorker<IList<SessionViewModel>> _refreshWorker;
-
         private DelegateCommand _deleteCommand;
-
         private readonly InteractionRequest<Confirmation> _confirmationRequest;
-
-        public delegate void SessionSelectionHandler(object sender, List<SessionViewModel> model);
-
-        public event SessionSelectionHandler SessionSelection = delegate { };
-
-        public delegate void EventSelectionHandler(object sender, List<EventViewModel> model);
-
-        public event EventSelectionHandler EventSelection = delegate { };
 
         public IInteractionRequest<Confirmation> ConfirmationRequest
         {
@@ -65,11 +53,18 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
         {
             _logManager = logManager;
             _sessions = new ObservableCollection<SessionViewModel>();
-            _selectedSessions = new List<SessionViewModel>();
+            _selectedSessions = new ObservableCollection<SessionViewModel>();
             _confirmationRequest = new InteractionRequest<Confirmation>();
 
-            _logManager.LogsChanged += delegate { Invoke.OnSTA(Refresh); };
             SetupRefresh();
+            _logManager.LogCreated += OnLogCreated;
+        }
+
+        private void OnLogCreated(ILog log)
+        {
+            _sessions.Add(CreateOrRefreshSessionViewModel(log));
+            RaisePropertyChanged(self => self.Sessions);
+            RaisePropertyChanged(self => self.AreAnyEventsPresent);
         }
 
         private void SetupRefresh()
@@ -77,9 +72,9 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             // TODO Maybe introduce an specific worker that capsules the boilerplate?
             _refreshWorker = new BackgroundWorker<IList<SessionViewModel>> {WorkerReportsProgress = true};
             _refreshWorker.DoWork += OnRefresh;
+            _refreshWorker.ProgressChanged += OnRefreshProgress;
             _refreshWorker.WorkCompleted += OnRefreshCompleted;
             _refreshWorker.WorkFailed += OnRefreshFailed;
-            _refreshWorker.ProgressChanged += OnRefreshProgress;
         }
 
         /// <summary>
@@ -104,13 +99,28 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
                 logs.Select(
                     log =>
                     {
-                        var vm = new SessionViewModel(log);
-                        vm.ConfirmationRequest.Raised +=
-                            (sender, args) => _confirmationRequest.Delegate(args);
+                        var vm = CreateOrRefreshSessionViewModel(log);
                         progress += progressPerFile;
                         worker.ReportProgress(progress);
                         return vm;
                     }).ToList();
+        }
+
+        private SessionViewModel CreateOrRefreshSessionViewModel(ILog log)
+        {
+            log.Deleted += OnLogDeleted;
+            var viewModel = Sessions.FirstOrDefault(session => session.Log.Equals(log));
+            if (viewModel == null)
+            {
+                viewModel = new SessionViewModel(log);
+                viewModel.ConfirmationRequest.Raised += (sender, args) => _confirmationRequest.Delegate(args);
+                RegisterSubViewModel(viewModel);
+            }
+            else
+            {
+                viewModel.Refresh();
+            }
+            return viewModel;
         }
 
         private void OnRefreshProgress(int percentageProgressed)
@@ -124,74 +134,53 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             SetIdle();
         }
 
+        private void HandleSuccessfulRefresh([NotNull] ICollection<SessionViewModel> sessions)
+        {
+            var oldSelectedSessions = _selectedSessions.ToList();
+
+            Sessions = sessions;
+
+            var newSelectedSessions = Sessions.Where(oldSelectedSessions.Contains).ToList();
+            if (newSelectedSessions.Any())
+            {
+                SelectedSessions = newSelectedSessions;
+            }
+        }
+
         private void OnRefreshFailed(Exception e)
         {
             var logEventGenerator = Registry.GetComponent<Generators.ILogger>();
             logEventGenerator.Error(new Exception("refresh failed", e));
             // TODO send error notification event to inform user!
-            Sessions = null;
+            Sessions.Clear();
             SetIdle();
         }
 
-        private void HandleSuccessfulRefresh(IEnumerable<SessionViewModel> sessions)
-        {
-            var oldSelectedSessions = _selectedSessions.Select(s => s.Log).ToList();
-            var oldSelectedEvents = CollectSelectedEvents();
-
-            Sessions = sessions;
-
-            var newSelectedSessions = Sessions.Where(s => oldSelectedSessions.Contains(s.Log)).ToList();
-            if (newSelectedSessions.Any())
-            {
-                SessionSelection(this, newSelectedSessions);
-                if (SingleSelectedSession != null)
-                {
-                    var newSelectedEvents =
-                        SingleSelectedSession.Events.Where(e => oldSelectedEvents.Contains(e.Event)).ToList();
-                    if (newSelectedEvents.Any())
-                    {
-                        EventSelection(this, newSelectedEvents);
-                    }
-                }
-            }
-        }
-
-        private List<IDEEvent> CollectSelectedEvents()
-        {
-            if (SingleSelectedSession == null)
-            {
-                return new List<IDEEvent>();
-            }
-            return SingleSelectedSession.SelectedEvents.Select(e => e.Event).ToList();
-        }
-
-        public IEnumerable<SessionViewModel> Sessions
+        [NotNull]
+        public ICollection<SessionViewModel> Sessions
         {
             private set
             {
-                _sessions.Clear();
-                if (value != null)
-                {
-                    _sessions.AddRange(value);
-                }
+                _sessions = value;
+                RaisePropertyChanged(self => self.Sessions);
                 RaisePropertyChanged(self => self.AreAnyEventsPresent);
             }
             get { return _sessions; }
         }
 
-        public IEnumerable<SessionViewModel> SelectedSessions
+        [NotNull]
+        public ICollection<SessionViewModel> SelectedSessions
         {
             set
             {
-                _selectedSessions.Clear();
-                _selectedSessions.AddRange(value);
-                // single selected session depends on selected session
-                RaisePropertyChanged(vm => vm.SingleSelectedSession);
+                _selectedSessions = value;
+                RaisePropertyChanged(self => self.SelectedSessions);
+                RaisePropertyChanged(self => self.SingleSelectedSession);
                 DeleteSessionsCommand.RaiseCanExecuteChanged();
             }
             get { return _selectedSessions; }
         }
-
+        
         [CanBeNull]
         public SessionViewModel SingleSelectedSession
         {
@@ -238,24 +227,17 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
                 return;
             }
 
-            // Changing _sessions implicitly changes _selectedSessions, what
-            // leads to concurrent modification problems, if we change _session
-            // in the loop. Therefore, we collect what has been successfully
-            // deleted and update the UI afterwards.
-            var deletedSessions = new List<SessionViewModel>();
-            try
+            foreach (var selectedSession in _selectedSessions)
             {
-                foreach (var selectedSession in _selectedSessions)
-                {
-                    selectedSession.Log.Delete();
-                    deletedSessions.Add(selectedSession);
-                }
+                selectedSession.Log.Delete();
             }
-            finally
-            {
-                _sessions.RemoveAll(deletedSessions.Contains);
-                RaisePropertyChanged(self => self.AreAnyEventsPresent);
-            }
+        }
+
+        private void OnLogDeleted(ILog log)
+        {
+            _sessions.RemoveAll(svm => svm.Log.Equals(log));
+            log.Deleted -= OnLogDeleted;
+            RaisePropertyChanged(self => self.AreAnyEventsPresent);
         }
     }
 }

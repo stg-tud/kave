@@ -18,7 +18,6 @@
  */
 
 using System.IO;
-using KaVE.VsFeedbackGenerator.Utils;
 using KaVE.VsFeedbackGenerator.Utils.Json;
 using KaVE.VsFeedbackGenerator.Utils.Logging;
 using NUnit.Framework;

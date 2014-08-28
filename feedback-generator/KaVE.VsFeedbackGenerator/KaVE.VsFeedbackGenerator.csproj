@@ -135,8 +135,10 @@
     <Compile Include="SessionManager\Anonymize\WindowEventAnonymizer.cs" />
     <Compile Include="SessionManager\FeedbackSettings.cs" />
     <Compile Include="KaVESettings.cs" />
+    <Compile Include="SessionManager\Presentation\DelegateCommand.cs" />
     <Compile Include="SessionManager\Presentation\IDEEventDetailsToJsonConverter.cs" />
     <Compile Include="SessionManager\Presentation\JsonSyntaxHighlighter.cs" />
+    <Compile Include="SessionManager\Presentation\MultiSelection.cs" />
     <Compile Include="SessionManager\Presentation\OptionPageActionHandler.cs" />
     <Compile Include="SessionManager\Presentation\SortableListView.cs" />
     <Compile Include="SessionManager\ViewModelBase.cs" />

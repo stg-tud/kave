@@ -113,11 +113,9 @@ Contributors:
                         </Button>
                     </StackPanel>
                     <presentation:SortableListView Grid.Row="1"
-                                                   x:Name="SessionListView"
-                                                   x:FieldModifier="private"
                                                    ItemsSource="{Binding Source={StaticResource SortedSessions}}"
                                                    SelectionMode="Extended"
-                                                   SelectionChanged="SessionListView_OnSelectionChanged">
+                                                   presentation:MultiSelection.SelectedItems="{Binding SelectedSessions}">
                         <presentation:SortableListView.View>
                             <GridView>
                                 <GridViewColumn
@@ -142,16 +140,14 @@ Contributors:
                                 Visibility="{Binding Converter={StaticResource ObjectToVisibilityConverter}, Path=., FallbackValue=Collapsed}">
                         <Button ToolTip="{x:Static root:Properties.SessionManager.EventDelete}"
                                 Style="{StaticResource DefaultDisabledButton}"
-                                Command="{Binding Path=DeleteEventsCommand, FallbackValue={x:Null}}">
+                                Command="{Binding Path=DeleteEventsCommand}">
                             <Image Source="/KaVE.VsFeedbackGenerator;Component/Resources/delete.png" />
                         </Button>
                     </StackPanel>
                     <presentation:SortableListView Grid.Row="1"
-                                                   x:Name="EventListView"
-                                                   x:FieldModifier="private"
                                                    ItemsSource="{Binding Source={StaticResource SortedEvents}}"
                                                    SelectionMode="Extended"
-                                                   SelectionChanged="EventListView_OnSelectionChanged"
+                                                   presentation:MultiSelection.SelectedItems="{Binding SelectedEvents}"
                                                    Visibility="{Binding Converter={StaticResource ObjectToVisibilityConverter}, Path=., FallbackValue=Collapsed}">
                         <presentation:SortableListView.View>
                             <GridView>

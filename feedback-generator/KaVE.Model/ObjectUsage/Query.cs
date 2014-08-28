@@ -76,4 +76,5 @@ namespace KaVE.Model.ObjectUsage
             return hashCode;
         }
     }
+
 }

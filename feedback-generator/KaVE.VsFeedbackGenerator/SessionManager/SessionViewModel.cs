@@ -20,14 +20,18 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using JetBrains;
-using JetBrains.UI.Extensions.Commands;
 using JetBrains.Util;
+using KaVE.Model.Events;
 using KaVE.Utils;
 using KaVE.VsFeedbackGenerator.Interactivity;
+using KaVE.VsFeedbackGenerator.SessionManager.Presentation;
+using KaVE.VsFeedbackGenerator.Utils;
 using KaVE.VsFeedbackGenerator.Utils.Logging;
 using NuGet;
+using ILogger = KaVE.VsFeedbackGenerator.Generators.ILogger;
 using Messages = KaVE.VsFeedbackGenerator.Properties.SessionManager;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager
@@ -35,20 +39,40 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
     public class SessionViewModel : ViewModelBase<SessionViewModel>
     {
         public ILog Log { get; private set; }
-        private readonly IList<EventViewModel> _events = new ObservableCollection<EventViewModel>();
-        private readonly IList<EventViewModel> _selectedEvents = new List<EventViewModel>();
+        private bool _isLoaded;
+        private readonly BackgroundWorker<ICollection<EventViewModel>> _logLoader;
+
+        private ICollection<EventViewModel> _events = new ObservableCollection<EventViewModel>();
+        private ICollection<EventViewModel> _selectedEvents = new ObservableCollection<EventViewModel>();
+        private ICollection<EventViewModel> _previousSelection = new Collection<EventViewModel>();
+
         private readonly InteractionRequest<Confirmation> _confirmationRequest = new InteractionRequest<Confirmation>();
 
-        public SessionViewModel(ILog log)
-        {
-            Log = log;
-            // loading eagerly because lazy approaches led to UI display bugs
-            Events = log.ReadAll().Select(evt => new EventViewModel(evt)).ToList();
-        }
+        private DelegateCommand _deleteEventsCommand;
 
         public IInteractionRequest<Confirmation> ConfirmationRequest
         {
             get { return _confirmationRequest; }
+        }
+
+        public SessionViewModel(ILog log)
+        {
+            Log = log;
+            Log.EntriesRemoved += OnEntriesRemoved;
+            Log.EntryAppended += OnEntryAdded;
+
+            _logLoader = CreateBackgroundLogLoader();
+        }
+
+        private void OnEntryAdded(IDEEvent entry)
+        {
+            _events.Add(CreateEventViewModel(entry));
+            RaisePropertyChanged(self => self.Events);
+        }
+
+        private void OnEntriesRemoved(IEnumerable<IDEEvent> entries)
+        {
+            _events.RemoveAll(vm => entries.Contains(vm.Event));
         }
 
         public DateTime StartDate
@@ -56,25 +80,70 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             get { return Log.Date; }
         }
 
-        public IEnumerable<EventViewModel> Events
+        public ICollection<EventViewModel> Events
         {
-            set
+            private set
             {
-                _events.Clear();
-                CollectionExtensions.AddRange(_events, value);
+                _events = value;
+                RaisePropertyChanged(self => self.Events);
+                RaisePropertyChanged(self => self.SingleSelectedEvent);
             }
 
-            get { return _events; }
+            get
+            {
+                if (!_isLoaded)
+                {
+                    SetBusy(Messages.Loading);
+                    _isLoaded = true;
+                    _logLoader.RunWorkerAsync();
+                }
+                return _events;
+            }
         }
 
-        public IEnumerable<EventViewModel> SelectedEvents
+        private BackgroundWorker<ICollection<EventViewModel>> CreateBackgroundLogLoader()
+        {
+            var logLoader = new BackgroundWorker<ICollection<EventViewModel>>();
+            logLoader.DoWork += LoadLog;
+            logLoader.WorkCompleted += OnLoadCompleted;
+            logLoader.WorkFailed += OnLoadFailed;
+            return logLoader;
+        }
+
+        private ICollection<EventViewModel> LoadLog(BackgroundWorker worker)
+        {
+            return new ObservableCollection<EventViewModel>(Log.ReadAll().Select(CreateEventViewModel));
+        }
+
+        private static EventViewModel CreateEventViewModel(IDEEvent evt)
+        {
+            return new EventViewModel(evt);
+        }
+
+        private void OnLoadCompleted(ICollection<EventViewModel> result)
+        {
+            Events = result;
+            if (_previousSelection.Any())
+            {
+                var selection = Events.Where(evm => _previousSelection.Contains(evm));
+                SelectedEvents = new ObservableCollection<EventViewModel>(selection);
+            }
+            SetIdle();
+        }
+
+        private void OnLoadFailed(Exception e)
+        {
+            Registry.GetComponent<ILogger>().Error(new Exception("could not read log", e));
+            SetIdle();
+        }
+
+        public ICollection<EventViewModel> SelectedEvents
         {
             set
             {
-                _selectedEvents.Clear();
-                CollectionExtensions.AddRange(_selectedEvents, value);
-                // notify listeners about dependent property cange
-                RaisePropertyChanged(vm => vm.SingleSelectedEvent);
+                _selectedEvents = value;
+                RaisePropertyChanged(self => self.SelectedEvents);
+                RaisePropertyChanged(self => self.SingleSelectedEvent);
                 DeleteEventsCommand.RaiseCanExecuteChanged();
             }
             get { return _selectedEvents; }
@@ -85,21 +154,26 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             get { return _selectedEvents.Count == 1 ? _selectedEvents.First() : null; }
         }
 
-        private DelegateCommand _deleteEventsCommand;
+        public void Refresh()
+        {
+            _previousSelection = new List<EventViewModel>(SelectedEvents);
+            Events = new Collection<EventViewModel>();
+            _isLoaded = false;
+        }
 
         public DelegateCommand DeleteEventsCommand
         {
-            get
-            {
-                return
-                    _deleteEventsCommand ??
-                    (_deleteEventsCommand = new DelegateCommand(OnDeleteSelectedEvents, CanDeleteEvents));
-            }
+            get { return _deleteEventsCommand ?? (_deleteEventsCommand = new DelegateCommand(DeleteSelectedEvents, () => HasSelection)); }
         }
 
-        private void OnDeleteSelectedEvents()
+        public bool HasSelection
         {
-            var numberOfEvents = _selectedEvents.Count;
+            get { return SelectedEvents.Any(); }
+        }
+
+        public void DeleteSelectedEvents()
+        {
+            var numberOfEvents = SelectedEvents.Count;
             _confirmationRequest.Raise(
                 new Confirmation
                 {
@@ -108,28 +182,17 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
                         ? Messages.EventDeleteConfirmSingular
                         : Messages.EventDeleteConfirmPlural.FormatEx(numberOfEvents)
                 },
-                DeleteEvents);
+                DoDeleteSelectedEvents);
         }
 
-        private bool CanDeleteEvents()
-        {
-            return _selectedEvents.Count > 0;
-        }
-
-        private void DeleteEvents(Confirmation confirmation)
+        private void DoDeleteSelectedEvents(Confirmation confirmation)
         {
             if (!confirmation.Confirmed)
             {
                 return;
             }
 
-            // Changing _events implicitly changes _selectedEvents, what
-            // leads to concurrent modification problems, since RemoveRange()
-            // loops over the selection. Therefore, we copy the selection.
-            // TODO this can lead to events being shown in the UI that don't exist in the log file! Somehow force refresh on error?
-            var selection = new List<EventViewModel>(_selectedEvents);
-            Log.RemoveRange(selection.Select(evm => evm.Event));
-            _events.RemoveRange(selection);
+            Log.RemoveRange(SelectedEvents.Select(evm => evm.Event));
         }
 
         protected bool Equals(SessionViewModel other)

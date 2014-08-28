@@ -17,7 +17,6 @@
  *    - Sebastian Proksch
  */
 
-using KaVE.Model.Names;
 using KaVE.Model.Names.CSharp;
 using KaVE.Model.SSTs;
 using NUnit.Framework;

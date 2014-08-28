@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 using System;
 using System.ComponentModel;
 using System.Linq.Expressions;
@@ -70,6 +71,15 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
                 _busyMessage = value;
                 RaisePropertyChanged(vm => vm.BusyMessage);
             }
+        }
+
+        /// <summary>
+        /// When a registered sub view model becomes busy, so does its parent. <b>Make sure there's only one busy view model at a time!</b>
+        /// </summary>
+        protected void RegisterSubViewModel<TM>(ViewModelBase<TM> subViewModel) where TM : ViewModelBase<TM>
+        {
+            subViewModel.OnPropertyChanged(svm => svm.IsBusy, busy => IsBusy = busy);
+            subViewModel.OnPropertyChanged(svm => svm.BusyMessage, msg => BusyMessage = msg);
         }
     }
 }

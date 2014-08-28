@@ -20,7 +20,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using JetBrains.ActionManagement;
@@ -75,8 +74,6 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
                         SetLastReviewDate(_dateUtils.Now);
                     }
                 });
-            _feedbackViewModel.SessionSelection += (o, sessions) => SetSelection(SessionListView, sessions);
-            _feedbackViewModel.EventSelection += (o, events) => SetSelection(EventListView, events);
 
             _actionManager = actionManager;
             _dateUtils = dateUtils;
@@ -137,30 +134,6 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
             if (overflowGrid != null)
             {
                 overflowGrid.Visibility = Visibility.Collapsed;
-            }
-        }
-
-        /// <summary>
-        ///     Unfortunately, SelectedItems is not a bidirectional control property, hence, we cannot bind it to a
-        ///     property of out view model to access the set of selected items. Therefore, we react on selection changes
-        ///     here and update our model property manually.
-        /// </summary>
-        private void SessionListView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            _feedbackViewModel.SelectedSessions = SessionListView.SelectedItems.Cast<SessionViewModel>();
-        }
-
-        /// <summary>
-        ///     Unfortunately, SelectedItems is not a bidirectional control property, hence, we cannot bind it to a
-        ///     property of out view model to access the set of selected items. Therefore, we react on selection changes
-        ///     here and update our model property manually.
-        /// </summary>
-        private void EventListView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (_feedbackViewModel.SingleSelectedSession != null)
-            {
-                _feedbackViewModel.SingleSelectedSession.SelectedEvents =
-                    EventListView.SelectedItems.Cast<EventViewModel>();
             }
         }
 
