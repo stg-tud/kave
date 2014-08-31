@@ -36,12 +36,14 @@ namespace KaVE.VsFeedbackGenerator.CodeCompletion
     public class ModelStore : IModelStore
     {
         private readonly string _basePath;
+        private readonly string _tempPath;
         private readonly IIoUtils _utils;
         private readonly ILogger _logger;
 
-        public ModelStore(string basePath, IIoUtils utils, ILogger logger)
+        public ModelStore(string basePath, string tempPath, IIoUtils utils, ILogger logger)
         {
             _basePath = basePath;
+            _tempPath = tempPath;
             _utils = utils;
             _logger = logger;
         }
@@ -59,7 +61,7 @@ namespace KaVE.VsFeedbackGenerator.CodeCompletion
         public UsageModel GetModel(string assembly, CoReTypeName typeName, bool forceReload)
         {
             var fileName = GetFileName(typeName) + ".xdsl";
-            var path = _utils.Combine(_basePath, assembly, fileName);
+            var path = _utils.Combine(_tempPath, assembly, fileName);
             if (!forceReload)
             {
                 var model = GetModel(path);

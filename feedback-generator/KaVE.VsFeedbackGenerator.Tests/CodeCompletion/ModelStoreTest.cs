@@ -37,13 +37,14 @@ namespace KaVE.VsFeedbackGenerator.Tests.CodeCompletion
         private Mock<ILogger> _logger;
         private ModelStore _uut;
         private const string BasePath = "c:/Base/";
-        private static readonly string ZipPath = Path.Combine(BasePath, Zip);
-        private static readonly string AssemblyPath = Path.Combine(BasePath, Assembly);
-        private static readonly string NetworkPath = Path.Combine(BasePath, Assembly, Network);
+        private const string TempPath = "c:/Temp/";
         private const string Assembly = "assembly";
         private const string Type = "LType";
-        private const string Network = "LType.xdsl";
         private const string Zip = "assembly.zip";
+        private const string Network = "LType.xdsl";
+        private static readonly string ZipPath = Path.Combine(BasePath, Zip);
+        private static readonly string AssemblyPath = Path.Combine(TempPath, Assembly);
+        private static readonly string NetworkPath = Path.Combine(TempPath, Assembly, Network);
 
         [SetUp]
         public void SetUp()
@@ -51,23 +52,11 @@ namespace KaVE.VsFeedbackGenerator.Tests.CodeCompletion
             _utils = new Mock<IIoUtils>();
             _utils.Setup(u => u.Combine(It.IsAny<string[]>())).Returns<string[]>(Path.Combine);
             _logger = new Mock<ILogger>();
-            _uut = new ModelStore(BasePath, _utils.Object, _logger.Object);
+            _uut = new ModelStore(BasePath, TempPath, _utils.Object, _logger.Object);
         }
 
         [Test]
-        public void ShouldReturnNullIfModelDoesNotExist_Network()
-        {
-            _utils.Setup(u => u.FileExists(It.IsAny<string>())).Returns(false);
-
-            var model = _uut.GetModel(Assembly, new CoReTypeName(Type));
-
-            Assert.IsNull(model);
-
-            _utils.Verify(u => u.FileExists(NetworkPath));
-        }
-
-        [Test]
-        public void ShouldReturnNullIfModelDoesNotExist_ZipForceReload()
+        public void ShouldReturnNullIfModelDoesNotExist_ForceReload()
         {
             _utils.Setup(u => u.FileExists(It.IsAny<string>())).Returns(false);
 
@@ -80,7 +69,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.CodeCompletion
         }
 
         [Test]
-        public void ShouldReturnNullIfModelDoesNotExist_Zip()
+        public void ShouldReturnNullIfModelDoesNotExist_NotForceReload()
         {
             _utils.Setup(u => u.FileExists(It.IsAny<string>())).Returns(false);
 
