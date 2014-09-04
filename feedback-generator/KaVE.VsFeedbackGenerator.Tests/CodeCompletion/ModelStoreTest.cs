@@ -19,7 +19,6 @@
 
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using Ionic.Zip;
 using KaVE.Model.ObjectUsage;
 using KaVE.VsFeedbackGenerator.CodeCompletion;
@@ -41,10 +40,10 @@ namespace KaVE.VsFeedbackGenerator.Tests.CodeCompletion
         private const string Assembly = "assembly";
         private const string Type = "LType";
         private const string Zip = "assembly.zip";
-        private const string Network = "LType.xdsl";
+        private const string NetworkFileName = "LType.xdsl";
         private static readonly string ZipPath = Path.Combine(BasePath, Zip);
         private static readonly string AssemblyPath = Path.Combine(TempPath, Assembly);
-        private static readonly string NetworkPath = Path.Combine(TempPath, Assembly, Network);
+        private static readonly string NetworkPath = Path.Combine(TempPath, Assembly, NetworkFileName);
 
         [SetUp]
         public void SetUp()
@@ -60,10 +59,12 @@ namespace KaVE.VsFeedbackGenerator.Tests.CodeCompletion
         {
             _utils.Setup(u => u.FileExists(It.IsAny<string>())).Returns(false);
 
+            // TODO @Dennis: kill force reload flag
             var model = _uut.GetModel(Assembly, new CoReTypeName(Type), true);
 
             Assert.IsNull(model);
 
+            // TODO @Dennis: extract to separate test cases, because it's unrelated to "model does not exist"
             _utils.Verify(u => u.FileExists(ZipPath));
             _utils.Verify(u => u.FileExists(NetworkPath), Times.Never);
         }
@@ -77,6 +78,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.CodeCompletion
 
             Assert.IsNull(model);
 
+            // TODO @Dennis: see previous test
             _utils.Verify(u => u.FileExists(ZipPath));
             _utils.Verify(u => u.FileExists(NetworkPath));
         }
@@ -89,6 +91,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.CodeCompletion
 
             var model = _uut.GetModel(Assembly, new CoReTypeName(Type));
 
+            // TODO @Dennis: check Assert.Equals(new UsageModel(UsageModelFixture.Network), model)
             AssertCorrectModelLoaded(model);
         }
 
@@ -97,34 +100,31 @@ namespace KaVE.VsFeedbackGenerator.Tests.CodeCompletion
         {
             _utils.Setup(u => u.FileExists(ZipPath)).Returns(true);
 
-            const string content = "CONTENT";
-            _utils.Setup(u => u.OpenFile(ZipPath, FileMode.Open, FileAccess.Read))
-                  .Returns(GetZipStream(Network, content));
-
+            var content = new byte[] {1, 2, 3};
+            var zipStream = GetZipStream(NetworkFileName, content);
+            _utils.Setup(u => u.OpenFile(ZipPath, FileMode.Open, FileAccess.Read)).Returns(zipStream);
+            // TODO @Dennis: clean up directory name
             _utils.Setup(u => u.GetDirectoryName(NetworkPath)).Returns(AssemblyPath);
 
-            var isModelWritten = false;
             _utils.Setup(u => u.WriteAllByte(It.IsAny<byte[]>(), NetworkPath))
                   .Callback<byte[], string>(
                       (bytes, path) =>
                       {
-                          if (content.Select(c => (byte) c).SequenceEqual(bytes))
-                          {
-                              isModelWritten = true;
-                          }
+                          CollectionAssert.AreEqual(content, bytes);
+                          _utils.Setup(u => u.FileExists(NetworkPath)).Returns(true);
+                          _utils.Setup(u => u.LoadNetwork(NetworkPath)).Returns(UsageModelFixture.Network);
                       });
 
-            _utils.Setup(u => u.FileExists(NetworkPath)).Returns(() => isModelWritten);
-
-            _utils.Setup(u => u.LoadNetwork(NetworkPath))
-                  .Returns(() => (isModelWritten) ? UsageModelFixture.Network() : null);
-
-            var model = _uut.GetModel(Assembly, new CoReTypeName(Type), true);
+            var model = _uut.GetModel(Assembly, new CoReTypeName(Type));
 
             AssertCorrectModelLoaded(model);
 
             _utils.Verify(u => u.CreateDirectory(AssemblyPath));
         }
+
+        // TODO @Dennis: test for zip entry doesn't exist
+        // TODO @Dennis: test for read failure (exception)
+        // TODO @Dennis: test for load network failure
 
         private static void AssertCorrectModelLoaded(UsageModel model)
         {
@@ -140,7 +140,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.CodeCompletion
             UsageModelFixture.AssertEqualityIgnoringRoundingErrors(expected, actual);
         }
 
-        private static Stream GetZipStream(string fileName, string content)
+        private static Stream GetZipStream(string fileName, byte[] content)
         {
             var zip = new ZipFile();
             zip.AddEntry(fileName, content);
