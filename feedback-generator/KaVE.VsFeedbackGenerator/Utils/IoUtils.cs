@@ -23,7 +23,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net.Http;
 using JetBrains.Application;
 using KaVE.JetBrains.Annotations;
@@ -56,7 +55,6 @@ namespace KaVE.VsFeedbackGenerator.Utils
         string GetTempDirectoryName();
         void CreateDirectory(string path);
         bool DirectoryExists(string path);
-        string GetDirectoryName(string path);
         void DeleteDirectoryWithContent(string path);
 
         string Combine(params string[] paths);
@@ -163,16 +161,6 @@ namespace KaVE.VsFeedbackGenerator.Utils
         public bool DirectoryExists(string path)
         {
             return Directory.Exists(path);
-        }
-
-        public string GetDirectoryName(string path)
-        {
-            return Path.GetDirectoryName(path);
-        }
-
-        public bool IsDirectoryEmpty(string path)
-        {
-            return !Directory.EnumerateFiles(path).Any();
         }
 
         public void WriteAllByte(byte[] bytes, string fileName)

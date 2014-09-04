@@ -30,7 +30,6 @@ namespace KaVE.VsFeedbackGenerator.CodeCompletion
     {
         UsageModel GetModel(CoReTypeName typeName);
         UsageModel GetModel(string assembly, CoReTypeName typeName);
-        UsageModel GetModel(string assembly, CoReTypeName typeName, bool forceReload);
     }
 
     public class ModelStore : IModelStore
@@ -55,27 +54,21 @@ namespace KaVE.VsFeedbackGenerator.CodeCompletion
 
         public UsageModel GetModel(string assembly, CoReTypeName typeName)
         {
-            return GetModel(assembly, typeName, false);
-        }
-
-        public UsageModel GetModel(string assembly, CoReTypeName typeName, bool forceReload)
-        {
             var fileName = GetFileName(typeName) + ".xdsl";
             var path = _utils.Combine(_tempPath, assembly, fileName);
-            if (!forceReload)
+
+            var model = GetModel(path);
+            if (model != null)
             {
-                var model = GetModel(path);
-                if (model != null)
-                {
-                    return model;
-                }
+                return model;
             }
+
             var zipPath = _utils.Combine(_basePath, assembly + ".zip");
             if (!_utils.FileExists(zipPath))
             {
                 return null;
             }
-            ExtractModel(zipPath, path, fileName);
+            ExtractModel(zipPath, _utils.Combine(_tempPath, assembly), path, fileName);
             return GetModel(path);
         }
 
@@ -90,10 +83,18 @@ namespace KaVE.VsFeedbackGenerator.CodeCompletion
             {
                 return null;
             }
-            return new UsageModel(_utils.LoadNetwork(path));
+            try
+            {
+                return new UsageModel(_utils.LoadNetwork(path));
+            }
+            catch (Exception e)
+            {
+                _logger.Error(e);
+                return null;
+            }
         }
 
-        private void ExtractModel(string zipPath, string path, string fileName)
+        private void ExtractModel(string zipPath, string folderPath, string filePath, string fileName)
         {
             try
             {
@@ -106,8 +107,8 @@ namespace KaVE.VsFeedbackGenerator.CodeCompletion
                 using (var stream = new MemoryStream())
                 {
                     entry.Extract(stream);
-                    _utils.CreateDirectory(_utils.GetDirectoryName(path));
-                    _utils.WriteAllByte(stream.ToArray(), path);
+                    _utils.CreateDirectory(folderPath);
+                    _utils.WriteAllByte(stream.ToArray(), filePath);
                 }
             }
             catch (Exception e)

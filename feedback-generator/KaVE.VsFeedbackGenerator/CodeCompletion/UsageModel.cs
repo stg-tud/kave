@@ -24,6 +24,7 @@ using System.Text.RegularExpressions;
 using JetBrains.Util;
 using KaVE.JetBrains.Annotations;
 using KaVE.Model.ObjectUsage;
+using KaVE.Utils;
 using Smile;
 
 namespace KaVE.VsFeedbackGenerator.CodeCompletion
@@ -155,6 +156,21 @@ namespace KaVE.VsFeedbackGenerator.CodeCompletion
         private static string ClassContextEvidence([NotNull] CoReTypeName name)
         {
             return name.Name;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return this.Equals(obj, Equals);
+        }
+
+        private bool Equals(UsageModel oth)
+        {
+            return Equals(_network, oth._network);
+        }
+
+        public override int GetHashCode()
+        {
+            return (_network == null) ? 0 : _network.GetHashCode();
         }
     }
 }

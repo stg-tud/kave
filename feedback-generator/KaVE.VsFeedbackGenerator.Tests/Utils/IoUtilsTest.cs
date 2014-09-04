@@ -304,15 +304,5 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
             var loadedNetwork = _sut.LoadNetwork(path);
             Assert.AreEqual(new[] {0}, loadedNetwork.GetAllNodes());
         }
-
-        [Test]
-        public void ShouldGetDirectoryName()
-        {
-            const string path = @"c:\parentdir\dir\file.txt";
-            const string expected = @"c:\parentdir\dir";
-            var actual = _sut.GetDirectoryName(path);
-
-            Assert.AreEqual(expected, actual);
-        }
     }
 }
