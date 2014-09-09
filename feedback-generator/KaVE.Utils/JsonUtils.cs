@@ -17,7 +17,6 @@
  *    - Dennis Albrecht
  */
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using KaVE.JetBrains.Annotations;
@@ -83,47 +82,89 @@ namespace KaVE.Utils
         }
 
         /// <summary>
-        /// Compares two Json-strings element-wise based on the result of <see cref="ParseJson"/>.
+        ///     Compares two Json-strings element-wise based on the result of <see cref="ParseJson" />.
         /// </summary>
-        public static bool DescribesEquivalentObject([NotNull] this string json1, [NotNull] string json2)
+        public static IList<CompareResult> DescribesEquivalentObject([NotNull] this string expected,
+            [NotNull] string actual,
+            bool actualMayContainAdditionalFields)
         {
-            var obj1 = json1.ParseJson();
-            var obj2 = json2.ParseJson();
-            return obj1.IsEquivalentObject(obj2);
+            var expectedObj = expected.ParseJson();
+            var actualObj = actual.ParseJson();
+            return expectedObj.IsEquivalentObject(actualObj, !actualMayContainAdditionalFields);
         }
 
-        private static bool IsEquivalentObject(this object obj1, object obj2)
+        private static IList<CompareResult> IsEquivalentObject(this object expected, object actual, bool exact)
         {
-            if (obj1 == null && obj2 == null)
+            if (expected == null && actual == null)
             {
-                return true;
+                return null;
             }
-            if (obj1 == null || obj2 == null)
+            if (expected == null || actual == null)
             {
-                return false;
+                return new List<CompareResult> {new CompareResult(expected, actual)};
             }
-            if (obj1 is IDictionary<string, object> && obj2 is IDictionary<string, object>)
+            if (expected is IDictionary<string, object> && actual is IDictionary<string, object>)
             {
-                var dict1 = obj1 as IDictionary<string, object>;
-                var dict2 = obj2 as IDictionary<string, object>;
-                return !dict1.Keys.Except(dict2.Keys).Any() && !dict2.Keys.Except(dict1.Keys).Any() &&
-                       dict1.Keys.All(key => dict1[key].IsEquivalentObject(dict2[key]));
+                var expectedDict = expected as IDictionary<string, object>;
+                var actualDict = actual as IDictionary<string, object>;
+                if (expectedDict.Keys.Except(actualDict.Keys).Any() ||
+                    (exact && actualDict.Keys.Except(expectedDict.Keys).Any()))
+                {
+                    return new List<CompareResult> {new CompareResult(expected, actual)};
+                }
+                return
+                    expectedDict.Keys.Select(key => expectedDict[key].IsEquivalentObject(actualDict[key], exact))
+                                .Where(r => r != null)
+                                .SelectMany(i => i)
+                                .ToList();
             }
-            if (obj1 is IDictionary<string, object> || obj2 is IDictionary<string, object>)
+            if (expected is IDictionary<string, object> || actual is IDictionary<string, object>)
             {
-                return false;
+                return new List<CompareResult> {new CompareResult(expected, actual)};
             }
-            if (obj1 is IList<object> && obj2 is IList<object>)
+            if (expected is IList<object> && actual is IList<object>)
             {
-                var list1 = (obj1 as IList<object>);
-                var list2 = (obj2 as IList<object>);
-                return list1.Count == list2.Count && !list1.Where((t, i) => !t.IsEquivalentObject(list2[i])).Any();
+                var expectedList = (expected as IList<object>);
+                var actualList = (actual as IList<object>);
+                if (expectedList.Count != actualList.Count)
+                {
+                    return new List<CompareResult> {new CompareResult(expected, actual)};
+                }
+                return
+                    expectedList.Select((t, i) => t.IsEquivalentObject(actualList[i], exact))
+                                .Where(r => r != null)
+                                .SelectMany(i => i)
+                                .ToList();
             }
-            if (obj1 is IList<object> || obj2 is IList<object>)
+            if (expected is IList<object> || actual is IList<object>)
             {
-                return false;
+                return new List<CompareResult> {new CompareResult(expected, actual)};
             }
-            return obj1.Equals(obj2);
+            if (expected.Equals(actual))
+            {
+                return null;
+            }
+            return new List<CompareResult> {new CompareResult(expected, actual)};
+        }
+    }
+
+    public class CompareResult
+    {
+        public object Expected { get; private set; }
+        public object Actual { get; private set; }
+
+        public CompareResult(object expected, object actual)
+        {
+            Expected = expected;
+            Actual = actual;
+        }
+
+        public override string ToString()
+        {
+            return string.Format(
+                @"expected: ""{0}"" but was: ""{1}""",
+                (Expected == null) ? null : Expected.ToString(),
+                (Actual == null) ? null : Actual.ToString());
         }
     }
 }

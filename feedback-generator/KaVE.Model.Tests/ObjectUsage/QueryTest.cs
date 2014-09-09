@@ -56,15 +56,15 @@ namespace KaVE.Model.Tests.ObjectUsage
             Assert.AreEqual(
                 new CallSite
                 {
-                    kind = CallSiteKind.PARAM_CALL_SITE,
-                    call = new CoReMethodName("LReceiver.method(LArgument;)LReturn;"),
-                    argumentIndex = 2
+                    kind = CallSiteKind.PARAMETER,
+                    method = new CoReMethodName("LReceiver.method(LArgument;)LReturn;"),
+                    argIndex = 2
                 },
                 new CallSite
                 {
-                    kind = CallSiteKind.PARAM_CALL_SITE,
-                    call = new CoReMethodName("LReceiver.method(LArgument;)LReturn;"),
-                    argumentIndex = 2
+                    kind = CallSiteKind.PARAMETER,
+                    method = new CoReMethodName("LReceiver.method(LArgument;)LReturn;"),
+                    argIndex = 2
                 });
         }
 
@@ -75,18 +75,16 @@ namespace KaVE.Model.Tests.ObjectUsage
                 new DefinitionSite
                 {
                     kind = DefinitionKind.RETURN,
-                    type = new CoReTypeName("LClass"),
                     method = new CoReMethodName("LReceiver.method(LArgument;)LReturn;"),
                     field = new CoReFieldName("LField.field;LType"),
-                    arg = 42
+                    argIndex = 42
                 },
                 new DefinitionSite
                 {
                     kind = DefinitionKind.RETURN,
-                    type = new CoReTypeName("LClass"),
                     method = new CoReMethodName("LReceiver.method(LArgument;)LReturn;"),
                     field = new CoReFieldName("LField.field;LType"),
-                    arg = 42
+                    argIndex = 42
                 });
         }
 
@@ -107,16 +105,16 @@ namespace KaVE.Model.Tests.ObjectUsage
             expected.sites.Add(
                 new CallSite
                 {
-                    kind = CallSiteKind.PARAM_CALL_SITE,
-                    call = new CoReMethodName("LReceiver.method(LType;)LReturn;"),
-                    argumentIndex = 3
+                    kind = CallSiteKind.PARAMETER,
+                    method = new CoReMethodName("LReceiver.method(LType;)LReturn;"),
+                    argIndex = 3
                 });
             expected.sites.Add(
                 new CallSite
                 {
-                    kind = CallSiteKind.RECEIVER_CALL_SITE,
-                    call = new CoReMethodName("LType.method(LArgument;)LReturn;"),
-                    argumentIndex = 0
+                    kind = CallSiteKind.RECEIVER,
+                    method = new CoReMethodName("LType.method(LArgument;)LReturn;"),
+                    argIndex = 0
                 });
 
             var actual = new Query
@@ -133,16 +131,16 @@ namespace KaVE.Model.Tests.ObjectUsage
             actual.sites.Add(
                 new CallSite
                 {
-                    kind = CallSiteKind.PARAM_CALL_SITE,
-                    call = new CoReMethodName("LReceiver.method(LType;)LReturn;"),
-                    argumentIndex = 3
+                    kind = CallSiteKind.PARAMETER,
+                    method = new CoReMethodName("LReceiver.method(LType;)LReturn;"),
+                    argIndex = 3
                 });
             actual.sites.Add(
                 new CallSite
                 {
-                    kind = CallSiteKind.RECEIVER_CALL_SITE,
-                    call = new CoReMethodName("LType.method(LArgument;)LReturn;"),
-                    argumentIndex = 0
+                    kind = CallSiteKind.RECEIVER,
+                    method = new CoReMethodName("LType.method(LArgument;)LReturn;"),
+                    argIndex = 0
                 });
 
             Assert.AreEqual(expected, actual);

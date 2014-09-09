@@ -131,7 +131,7 @@ namespace KaVE.VsFeedbackGenerator.CodeCompletion
                 case DefinitionKind.NEW:
                     return string.Format("INIT:{0}", site.method.Name);
                 case DefinitionKind.PARAM:
-                    return string.Format("{0}({1}):{2}", site.kind, site.arg, site.method.Name);
+                    return string.Format("{0}({1}):{2}", site.kind, site.argIndex, site.method.Name);
                 case DefinitionKind.FIELD:
                     return string.Format("{0}:{1}", site.kind, site.field.Name);
                 case DefinitionKind.THIS:
@@ -145,7 +145,7 @@ namespace KaVE.VsFeedbackGenerator.CodeCompletion
 
         private static string CallSiteEvidence([NotNull] CallSite site)
         {
-            return site.call.Name;
+            return site.method.Name;
         }
 
         private static string MethodContextEvidence([NotNull] CoReMethodName name)

@@ -69,7 +69,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.CodeCompletion
                 methodCtx = new CoReMethodName("LStrangeType.M()LType;"),
                 type = new CoReTypeName("LType")
             };
-            query.sites.Add(new CallSite {call = new CoReMethodName("LStrangeType.M()LType;")});
+            query.sites.Add(new CallSite {method = new CoReMethodName("LStrangeType.M()LType;")});
 
             _uut.Query(query);
 
@@ -119,7 +119,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.CodeCompletion
         {
             var query = new Query();
             query.sites.Add(
-                new CallSite {kind = CallSiteKind.RECEIVER_CALL_SITE, call = new CoReMethodName("LType.Init()LVoid;")});
+                new CallSite {kind = CallSiteKind.RECEIVER, method = new CoReMethodName("LType.Init()LVoid;")});
 
             _uut.Query(query);
 
@@ -132,9 +132,9 @@ namespace KaVE.VsFeedbackGenerator.Tests.CodeCompletion
             var net = UsageModelFixture.Network();
             var model = new UsageModel(net);
             var query = new Query();
-            query.sites.Add(new CallSite {call = new CoReMethodName("LType.Init()LVoid;")});
-            query.sites.Add(new CallSite {call = new CoReMethodName("LType.Execute()LVoid;")});
-            query.sites.Add(new CallSite {call = new CoReMethodName("LType.Finish()LVoid;")});
+            query.sites.Add(new CallSite {method = new CoReMethodName("LType.Init()LVoid;")});
+            query.sites.Add(new CallSite {method = new CoReMethodName("LType.Execute()LVoid;")});
+            query.sites.Add(new CallSite {method = new CoReMethodName("LType.Finish()LVoid;")});
             var expected = new KeyValuePair<CoReMethodName, double>[] {};
 
             var actual = model.Query(query);
@@ -167,7 +167,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.CodeCompletion
             var net = UsageModelFixture.Network();
             var model = new UsageModel(net);
             var query = new Query();
-            query.sites.Add(new CallSite {call = new CoReMethodName("LType.Init()LVoid;")});
+            query.sites.Add(new CallSite {method = new CoReMethodName("LType.Init()LVoid;")});
             var expected = new[]
             {
                 new CoReMethodName("LType.Execute()LVoid;"),
@@ -229,7 +229,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.CodeCompletion
             var model = new UsageModel(net);
             var query = new Query();
             query.sites.Add(
-                new CallSite {kind = CallSiteKind.RECEIVER_CALL_SITE, call = new CoReMethodName("LType.Init()LVoid;")});
+                new CallSite {kind = CallSiteKind.RECEIVER, method = new CoReMethodName("LType.Init()LVoid;")});
             var expected = new[]
             {
                 new KeyValuePair<CoReMethodName, double>(new CoReMethodName("LType.Execute()LVoid;"), 0.682),

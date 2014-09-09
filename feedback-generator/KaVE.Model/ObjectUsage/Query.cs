@@ -65,10 +65,9 @@ namespace KaVE.Model.ObjectUsage
     public class DefinitionSite
     {
         public DefinitionKind kind { get; set; }
-        public CoReTypeName type { get; set; }
         public CoReMethodName method { get; set; }
         public CoReFieldName field { get; set; }
-        public int arg { get; set; }
+        public int argIndex { get; set; }
 
         public override bool Equals(object obj)
         {
@@ -77,18 +76,16 @@ namespace KaVE.Model.ObjectUsage
 
         private bool Equals(DefinitionSite oth)
         {
-            return kind.Equals(oth.kind) && arg == oth.arg && Equals(type, oth.type) && Equals(method, oth.method) &&
-                   Equals(field, oth.field);
+            return kind.Equals(oth.kind) && argIndex == oth.argIndex && Equals(method, oth.method) && Equals(field, oth.field);
         }
 
         public override int GetHashCode()
         {
             var hashCode = 397;
             hashCode = (hashCode*397) ^ (kind.GetHashCode());
-            hashCode = (hashCode*397) ^ (type != null ? type.GetHashCode() : 0);
             hashCode = (hashCode*397) ^ (method != null ? method.GetHashCode() : 0);
             hashCode = (hashCode*397) ^ (field != null ? field.GetHashCode() : 0);
-            hashCode = (hashCode*397) ^ (arg.GetHashCode());
+            hashCode = (hashCode*397) ^ (argIndex.GetHashCode());
             return hashCode;
         }
     }
@@ -107,8 +104,8 @@ namespace KaVE.Model.ObjectUsage
     public class CallSite
     {
         public CallSiteKind kind { get; set; }
-        public CoReMethodName call { get; set; }
-        public int argumentIndex { get; set; }
+        public CoReMethodName method { get; set; }
+        public int argIndex { get; set; }
 
         public override bool Equals(object obj)
         {
@@ -117,23 +114,23 @@ namespace KaVE.Model.ObjectUsage
 
         private bool Equals(CallSite oth)
         {
-            return kind.Equals(oth.kind) && argumentIndex == oth.argumentIndex && Equals(call, oth.call);
+            return kind.Equals(oth.kind) && argIndex == oth.argIndex && Equals(method, oth.method);
         }
 
         public override int GetHashCode()
         {
             var hashCode = 397;
             hashCode = (hashCode*397) ^ (kind.GetHashCode());
-            hashCode = (hashCode*397) ^ (call != null ? call.GetHashCode() : 0);
-            hashCode = (hashCode*397) ^ (argumentIndex.GetHashCode());
+            hashCode = (hashCode*397) ^ (method != null ? method.GetHashCode() : 0);
+            hashCode = (hashCode*397) ^ (argIndex.GetHashCode());
             return hashCode;
         }
     }
 
     public enum CallSiteKind
     {
-        RECEIVER_CALL_SITE,
-        PARAM_CALL_SITE,
+        RECEIVER,
+        PARAMETER,
     }
 
     // ReSharper restore InconsistentNaming
