@@ -84,7 +84,7 @@ namespace KaVE.Utils
         /// <summary>
         ///     Compares two Json-strings element-wise based on the result of <see cref="ParseJson" />.
         /// </summary>
-        public static IList<CompareResult> DescribesEquivalentObject([NotNull] this string expected,
+        public static IList<CompareResult> CompareSerializedObjects([NotNull] this string expected,
             [NotNull] string actual,
             bool actualMayContainAdditionalFields)
         {

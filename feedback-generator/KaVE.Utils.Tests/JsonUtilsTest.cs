@@ -18,6 +18,7 @@
  */
 
 using System.Collections.Generic;
+using System.Linq;
 using NUnit.Framework;
 
 namespace KaVE.Utils.Tests
@@ -191,11 +192,12 @@ namespace KaVE.Utils.Tests
         }
 
         [TestCaseSource("TestCases")]
-        public void ShouldRecognizeEquivalence(string json1, string json2, bool expected)
+        public void ShouldRecognizeEquivalentObjects(string json1, string json2, bool expected)
         {
-            var actual = json1.DescribesEquivalentObject(json2);
+            var compareResult = json1.CompareSerializedObjects(json2, false);
+            var actualEquals = compareResult == null || !compareResult.Any();
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actualEquals);
         }
 
         [Test]
@@ -204,7 +206,16 @@ namespace KaVE.Utils.Tests
             const string json1 = "{\"a\":1, \"b\":2}";
             const string json2 = "{\"b\":2, \"a\":1}";
 
-            Assert.IsTrue(json1.DescribesEquivalentObject(json2));
+            CollectionAssert.IsEmpty(json1.CompareSerializedObjects(json2, false));
+        }
+
+        [Test]
+        public void ShouldRecognizeLargerActualObjectsIfFlagIsSet()
+        {
+            const string json1 = "{\"a\":1, \"b\":2}";
+            const string json2 = "{\"a\":1, \"b\":2, \"c\":3}";
+
+            CollectionAssert.IsEmpty(json1.CompareSerializedObjects(json2, true));
         }
     }
 }

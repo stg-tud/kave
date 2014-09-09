@@ -191,7 +191,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.JsonSerializationSuite
 
             var actual = query.ToTypelessJson();
 
-            CollectionAssert.IsEmpty(compare.DescribesEquivalentObject(actual, true));
+            CollectionAssert.IsEmpty(compare.CompareSerializedObjects(actual, true));
         }
     }
 }
