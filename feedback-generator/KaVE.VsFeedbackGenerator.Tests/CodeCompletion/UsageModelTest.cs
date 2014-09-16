@@ -188,9 +188,9 @@ namespace KaVE.VsFeedbackGenerator.Tests.CodeCompletion
             var query = new Query();
             var expected = new[]
             {
-                new KeyValuePair<CoReMethodName, double>(new CoReMethodName("LType.Execute()LVoid;"), 0.817),
-                new KeyValuePair<CoReMethodName, double>(new CoReMethodName("LType.Finish()LVoid;"), 0.436),
-                new KeyValuePair<CoReMethodName, double>(new CoReMethodName("LType.Init()LVoid;"), 0.377)
+                new KeyValuePair<CoReMethodName, double>(new CoReMethodName("LType.Execute()LVoid;"), 0.815),
+                new KeyValuePair<CoReMethodName, double>(new CoReMethodName("LType.Finish()LVoid;"), 0.445),
+                new KeyValuePair<CoReMethodName, double>(new CoReMethodName("LType.Init()LVoid;"), 0.37)
             };
 
             var actual = model.Query(query);
@@ -233,7 +233,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.CodeCompletion
             var expected = new[]
             {
                 new KeyValuePair<CoReMethodName, double>(new CoReMethodName("LType.Execute()LVoid;"), 0.682),
-                new KeyValuePair<CoReMethodName, double>(new CoReMethodName("LType.Finish()LVoid;"), 0.162)
+                new KeyValuePair<CoReMethodName, double>(new CoReMethodName("LType.Finish()LVoid;"), 0.164)
             };
 
             var actual = model.Query(query);
