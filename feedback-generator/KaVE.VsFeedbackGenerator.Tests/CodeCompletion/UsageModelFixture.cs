@@ -49,7 +49,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.CodeCompletion
                 handle,
                 "definitionSite",
                 new[] {"RETURN:LType.Create()LType;", "THIS", "CONSTANT", "FIELD:LType.object;LType"},
-                new[] {0.6, 0.2, 0.1, 0.1, 0.1, 0.3, 0.3, 0.3, 0.05, 0.4, 0.05, 0.4});
+                new[] {0.6, 0.2, 0.1, 0.1, 0.1, 0.3, 0.3, 0.3, 0.1, 0.4, 0.1, 0.4});
 
             net.AddMethod(handle, "LType.Init()LVoid;", new[] {0.95, 0.15, 0.05});
             net.AddMethod(handle, "LType.Execute()LVoid;", new[] {0.6, 0.99, 0.7});
