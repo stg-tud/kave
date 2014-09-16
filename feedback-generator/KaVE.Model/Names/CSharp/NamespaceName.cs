@@ -23,11 +23,11 @@ namespace KaVE.Model.Names.CSharp
 {
     public class NamespaceName : Name, INamespaceName
     {
-        public const string GlobaleNamespaceIdentifier = "";
+        public const string GlobalNamespaceIdentifier = "";
 
         private static readonly WeakNameCache<NamespaceName> Registry = WeakNameCache<NamespaceName>.Get(id => new NamespaceName(id));
 
-        public static readonly INamespaceName GlobalNamespace = Get(GlobaleNamespaceIdentifier);
+        public static readonly INamespaceName GlobalNamespace = Get(GlobalNamespaceIdentifier);
 
         public new static INamespaceName UnknownName
         {
@@ -78,7 +78,7 @@ namespace KaVE.Model.Names.CSharp
 
         public bool IsGlobalNamespace
         {
-            get { return Identifier.Equals(GlobaleNamespaceIdentifier); }
+            get { return Identifier.Equals(GlobalNamespaceIdentifier); }
         }
     }
 }

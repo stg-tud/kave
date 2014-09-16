@@ -62,8 +62,8 @@ namespace KaVE.VsFeedbackGenerator.CodeCompletion
             RegisterToLookupEvents(_currentLookup);
         }
 
-        /// <param name="inialPrefix">The prefix present when completion is triggered.</param>
-        public delegate void TriggeredHandler(string inialPrefix, IEnumerable<ILookupItem> displayedItems);
+        /// <param name="initialPrefix">The prefix present when completion is triggered.</param>
+        public delegate void TriggeredHandler(string initialPrefix, IEnumerable<ILookupItem> displayedItems);
 
         /// <summary>
         /// Fired when the code completion is about to be opened.

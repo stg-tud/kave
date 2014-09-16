@@ -337,7 +337,7 @@ namespace KaVE.Model.Tests.Names.CSharp
          TestCase("System.Nullable`1[[System.Int32, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0", "System"),
          TestCase("T -> Some.Arbitrary.Type, Assembly, 5.6.4.7", "Some.Arbitrary"),
          TestCase("Outer.Type+InnerType, As, 1.2.3.4", "Outer"),
-         TestCase("GlobalType, A, 5.6.7.4", NamespaceName.GlobaleNamespaceIdentifier)]
+         TestCase("GlobalType, A, 5.6.7.4", NamespaceName.GlobalNamespaceIdentifier)]
         public void ShouldDetermineNamespace(string identifier, string expectedNamespace)
         {
             var uut = TypeName.Get(identifier);

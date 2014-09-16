@@ -66,8 +66,8 @@ namespace KaVE.VsFeedbackGenerator.Utils
                 return null;
             }
             // Only the lookup-item type tells whether this is a proposal for a constructor call or not.
-            // In fact, ConstructorLookupItem is derived from TypeLookupItem and the additional internface
-            // IConstructorLookupItem doesnot provide anything new. Hence, the special treatment.
+            // In fact, ConstructorLookupItem is derived from TypeLookupItem and the additional interface
+            // IConstructorLookupItem does not provide anything new. Hence, the special treatment.
             var constructorLookupItem = declaredElementLookupItem as ConstructorLookupItem;
             return constructorLookupItem != null
                 ? constructorLookupItem.GetName()
