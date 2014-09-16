@@ -26,5 +26,14 @@ namespace KaVE.Utils
                 identifier.Append(stringToAppend);
             }
         }
+
+        public static StringBuilder Append(this StringBuilder builder, params string[] values)
+        {
+            foreach (var value in values)
+            {
+                builder.Append(value);
+            }
+            return builder;
+        }
     }
 }

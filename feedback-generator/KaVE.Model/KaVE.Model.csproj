@@ -126,6 +126,7 @@
     <Compile Include="Names\VisualStudio\ProjectName.cs" />
     <Compile Include="Names\VisualStudio\SolutionName.cs" />
     <Compile Include="Names\VisualStudio\WindowName.cs" />
+    <Compile Include="ObjectUsage\CoReNameUtil.cs" />
     <Compile Include="ObjectUsage\Query.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SSTs\MethodDeclaration.cs" />
