@@ -33,7 +33,6 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
 {
     public static class ContextVisualizationConverter
     {
-        private const string LineBreak = "\r\n";
         private const string Indent = "  ";
         private const string Space = " ";
         private const string CurlyBracketOpen = "{";
@@ -66,7 +65,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
         private static void AppendLine([NotNull] this StringBuilder builder, int indent, params string[] elems)
         {
             builder.Append(indent, elems);
-            builder.Append(LineBreak);
+            builder.AppendLine();
         }
 
         private static void Append([NotNull] this StringBuilder builder, int indent, params string[] elems)
