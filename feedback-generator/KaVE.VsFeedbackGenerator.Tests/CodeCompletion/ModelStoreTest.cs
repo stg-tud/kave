@@ -46,13 +46,14 @@ namespace KaVE.VsFeedbackGenerator.Tests.CodeCompletion
         private const string DifferentNetworkFileName = "DIFFERENT.xdsl";
         private static readonly string ZipPath = Path.Combine(BasePath, Zip);
         private static readonly string AssemblyPath = Path.Combine(TempPath, Assembly);
-        private static readonly string NetworkPath = Path.Combine(TempPath, Assembly, NetworkFileName);
+        private static readonly string NetworkPath = Path.Combine(AssemblyPath, NetworkFileName);
 
         [SetUp]
         public void SetUp()
         {
             _network = UsageModelFixture.Network();
             _utils = new Mock<IIoUtils>();
+            // TODO @Dennis: kill IOUtils.Combine()
             _utils.Setup(u => u.Combine(It.IsAny<string[]>())).Returns<string[]>(Path.Combine);
             _logger = new Mock<ILogger>();
             _uut = new ModelStore(BasePath, TempPath, _utils.Object, _logger.Object);
@@ -71,12 +72,8 @@ namespace KaVE.VsFeedbackGenerator.Tests.CodeCompletion
         [Test]
         public void ShouldHandleNetworkExists()
         {
-            _utils.Setup(u => u.FileExists(NetworkPath)).Returns(
-                () =>
-                {
-                    _utils.Setup(u => u.LoadNetwork(NetworkPath)).Returns(_network);
-                    return true;
-                });
+            _utils.Setup(u => u.FileExists(NetworkPath)).Returns(true);
+            _utils.Setup(u => u.LoadNetwork(NetworkPath)).Returns(_network);
 
             var model = _uut.GetModel(Assembly, new CoReTypeName(Type));
 
@@ -84,7 +81,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.CodeCompletion
         }
 
         [Test]
-        public void ShouldHandleZipAndContentExists()
+        public void ShouldHandleZipWithEntryForType()
         {
             _utils.Setup(u => u.FileExists(ZipPath)).Returns(true);
 
@@ -109,7 +106,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.CodeCompletion
         }
 
         [Test]
-        public void ShouldHandleZipWithUnmatchingContentExists()
+        public void ShouldHandleZipWithoutEntryForType()
         {
             _utils.Setup(u => u.FileExists(ZipPath)).Returns(true);
 
@@ -126,12 +123,8 @@ namespace KaVE.VsFeedbackGenerator.Tests.CodeCompletion
         public void ShouldHandleNetworkExistsButLoadingFails()
         {
             var exception = new Exception();
-            _utils.Setup(u => u.FileExists(NetworkPath)).Returns(
-                () =>
-                {
-                    _utils.Setup(u => u.LoadNetwork(NetworkPath)).Throws(exception);
-                    return true;
-                });
+            _utils.Setup(u => u.FileExists(NetworkPath)).Returns(true);
+            _utils.Setup(u => u.LoadNetwork(NetworkPath)).Throws(exception);
 
             var model = _uut.GetModel(Assembly, new CoReTypeName(Type));
 
