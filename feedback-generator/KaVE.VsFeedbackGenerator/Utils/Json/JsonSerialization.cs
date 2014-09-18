@@ -69,18 +69,6 @@ namespace KaVE.VsFeedbackGenerator.Utils.Json
             TypeNameHandling = TypeNameHandling.None
         };
 
-        private static readonly JsonSerializerSettings TypelessSettings = new JsonSerializerSettings
-        {
-            Converters =
-            {
-                new CoReNameToStringConverter(),
-                new EnumToStringConverter()
-            },
-            Formatting = Formatting.None,
-            NullValueHandling = NullValueHandling.Ignore,
-            TypeNameHandling = TypeNameHandling.None
-        };
-
         private static JsonSerializerSettings CreateSerializationSettings()
         {
             return new JsonSerializerSettings
@@ -142,18 +130,6 @@ namespace KaVE.VsFeedbackGenerator.Utils.Json
         internal static string ToPrettyPrintJson([CanBeNull] this object instance)
         {
             return SerializeWithCustomIndentationDepth(instance, PrettyPrintSettings);
-        }
-
-        /// <summary>
-        /// Converts an object to a Json string without type-information and any unnecessary whitespaces or newlines.
-        /// </summary>
-        /// <remarks>
-        /// typeless serialization cannot generally be deserialized, because information is lost during serialization.
-        /// </remarks>
-        [NotNull]
-        internal static string ToTypelessJson([CanBeNull] this object instance)
-        {
-            return SerializeWithCustomIndentationDepth(instance, TypelessSettings);
         }
 
         private static string SerializeWithCustomIndentationDepth(object instance,

@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 using System;
+using KaVE.Utils.Assertion;
 using Newtonsoft.Json;
 
 namespace KaVE.VsFeedbackGenerator.Utils.Json
@@ -30,7 +31,9 @@ namespace KaVE.VsFeedbackGenerator.Utils.Json
             object existingValue,
             JsonSerializer serializer)
         {
-            throw new NotImplementedException();
+            Asserts.That(reader.TokenType == JsonToken.String);
+            var value = (string)reader.Value;
+            return Enum.Parse(objectType, value);
         }
 
         public override bool CanConvert(Type objectType)

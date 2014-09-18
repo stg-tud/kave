@@ -227,6 +227,7 @@
     <Compile Include="Utils\IPublisher.cs" />
     <Compile Include="SessionManager\UploadSettings.cs" />
     <Compile Include="Utils\Json\CoReNameToStringConverter.cs" />
+    <Compile Include="Utils\Json\QueryJsonSerialization.cs" />
     <Compile Include="Utils\Logging\ILogManager.cs" />
     <Compile Include="Utils\Logging\ILogReader.cs" />
     <Compile Include="Utils\Logging\ILogWriter.cs" />

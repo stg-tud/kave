@@ -18,7 +18,9 @@
  */
 
 using System;
+using System.ComponentModel;
 using KaVE.Model.ObjectUsage;
+using KaVE.Utils.Assertion;
 using Newtonsoft.Json;
 
 namespace KaVE.VsFeedbackGenerator.Utils.Json
@@ -35,7 +37,15 @@ namespace KaVE.VsFeedbackGenerator.Utils.Json
             object existingValue,
             JsonSerializer serializer)
         {
-            throw new NotImplementedException();
+            Asserts.That(reader.TokenType == JsonToken.String);
+            var name = (string)reader.Value;
+            if (objectType == typeof(CoReTypeName))
+                return new CoReTypeName(name);
+            if (objectType == typeof(CoReMethodName))
+                return new CoReMethodName(name);
+            if (objectType == typeof(CoReFieldName))
+                return new CoReFieldName(name);
+            throw new ArgumentException("this converter may only convert to CoReNames");
         }
 
         public override bool CanConvert(Type objectType)

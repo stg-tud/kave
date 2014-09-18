@@ -17,11 +17,7 @@
  *    - Sven Amann
  */
 
-using System.Collections.Generic;
-using JetBrains.Util;
 using KaVE.Model.Names.CSharp;
-using KaVE.Model.ObjectUsage;
-using KaVE.Utils;
 using KaVE.VsFeedbackGenerator.Utils.Json;
 using Newtonsoft.Json;
 using NUnit.Framework;
@@ -65,6 +61,20 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.JsonSerializationSuite
             const string json = "{\"$type\":\"" + TestTargetTypeName + "\",\"Id\":\"HalliGalli\"}";
             var expected = new SerializationTestTarget {Id = "HalliGalli"};
             JsonAssert.DeserializesTo(json, expected);
+        }
+
+        [Test]
+        public void ShouldDeserializePrettyPrintedEnum()
+        {
+            const Formatting expected = Formatting.Indented;
+
+            var serializedEnum = string.Format(@"""{0}""", expected);
+            var actual = JsonConvert.DeserializeObject<Formatting>(serializedEnum, new JsonSerializerSettings
+            {
+                Converters = new JsonConverter[] { new EnumToStringConverter() }
+            });
+
+            Assert.AreEqual(expected, actual);
         }
 
         [Test]
@@ -142,56 +152,6 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.JsonSerializationSuite
             const string expected = "\"Indented\"";
             var actual = target.ToPrettyPrintJson();
             Assert.AreEqual(expected, actual);
-        }
-
-        [Test]
-        public void ShouldProduceTypelessSerialization()
-        {
-            var query = new Query
-            {
-                type = new CoReTypeName("Lusages/Query"),
-                classCtx = new CoReTypeName("LContext"),
-                methodCtx =
-                    new CoReMethodName(
-                        "LReceiver.equals(LArgument;)LResult;"),
-                definition =
-                    new DefinitionSite
-                    {
-                        kind = DefinitionKind.THIS,
-                        method =
-                            new CoReMethodName(
-                                "LDefiner.define(LScheme;)LPattern;"),
-                        field = new CoReFieldName("LField.field;LType"),
-                        argIndex = 42
-                    }
-            };
-            query.sites.AddRange(
-                new List<CallSite>
-                {
-                    new CallSite
-                    {
-                        kind = CallSiteKind.PARAMETER,
-                        method =
-                            new CoReMethodName(
-                                "LCallSite.param(LParam;)LReturn;"),
-                        argIndex = 23
-                    },
-                    new CallSite
-                    {
-                        kind = CallSiteKind.RECEIVER,
-                        method =
-                            new CoReMethodName(
-                                "LCallSite.param(LParam;)LReturn;"),
-                        argIndex = 0
-                    }
-                });
-
-            const string compare =
-                @"{""type"":""Lusages/Query"",""classCtx"":""LContext"",""methodCtx"":""LReceiver.equals(LArgument;)LResult;"",""definition"":{""kind"":""THIS"",""field"":""LField.field;LType"",""method"":""LDefiner.define(LScheme;)LPattern;"",""argIndex"":42},""sites"":[{""kind"":""PARAMETER"",""method"":""LCallSite.param(LParam;)LReturn;"",""argIndex"":23},{""kind"":""RECEIVER"",""method"":""LCallSite.param(LParam;)LReturn;""}]}";
-
-            var actual = query.ToTypelessJson();
-
-            CollectionAssert.IsEmpty(compare.CompareSerializedObjects(actual, true));
         }
     }
 }

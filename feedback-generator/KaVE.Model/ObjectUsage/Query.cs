@@ -40,9 +40,9 @@ namespace KaVE.Model.ObjectUsage
         }
 
         public CoReTypeName type { get; set; }
-        public DefinitionSite definition { get; set; }
         public CoReTypeName classCtx { get; set; }
         public CoReMethodName methodCtx { get; set; }
+        public DefinitionSite definition { get; set; }
         public IList<CallSite> sites { get; private set; }
 
         public override bool Equals(object obj)
@@ -70,9 +70,9 @@ namespace KaVE.Model.ObjectUsage
 
     public class DefinitionSite
     {
-        public DefinitionKind kind { get; set; }
-        public CoReMethodName method { get; set; }
+        public DefinitionSiteKind kind { get; set; }
         public CoReFieldName field { get; set; }
+        public CoReMethodName method { get; set; }
         public int argIndex { get; set; }
 
         public override bool Equals(object obj)
@@ -82,7 +82,8 @@ namespace KaVE.Model.ObjectUsage
 
         private bool Equals(DefinitionSite oth)
         {
-            return kind.Equals(oth.kind) && argIndex == oth.argIndex && Equals(method, oth.method) && Equals(field, oth.field);
+            return kind.Equals(oth.kind) && argIndex == oth.argIndex && Equals(method, oth.method) &&
+                   Equals(field, oth.field);
         }
 
         public override int GetHashCode()
@@ -96,7 +97,7 @@ namespace KaVE.Model.ObjectUsage
         }
     }
 
-    public enum DefinitionKind
+    public enum DefinitionSiteKind
     {
         THIS,
         RETURN,
@@ -112,6 +113,15 @@ namespace KaVE.Model.ObjectUsage
         public CallSiteKind kind { get; set; }
         public CoReMethodName method { get; set; }
         public int argIndex { get; set; }
+
+        /// <summary>
+        ///     This method is used by the serialization to determine if the property should be serialized or not.
+        ///     As the method's name depends directly on the porperty's name, the method must not be renamed.
+        /// </summary>
+        public bool ShouldSerializeargIndex()
+        {
+            return argIndex != 0;
+        }
 
         public override bool Equals(object obj)
         {

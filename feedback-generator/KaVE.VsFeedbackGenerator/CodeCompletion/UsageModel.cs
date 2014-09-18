@@ -126,17 +126,17 @@ namespace KaVE.VsFeedbackGenerator.CodeCompletion
         {
             switch (site.kind)
             {
-                case DefinitionKind.RETURN:
+                case DefinitionSiteKind.RETURN:
                     return string.Format("{0}:{1}", site.kind, site.method.Name);
-                case DefinitionKind.NEW:
+                case DefinitionSiteKind.NEW:
                     return string.Format("INIT:{0}", site.method.Name);
-                case DefinitionKind.PARAM:
+                case DefinitionSiteKind.PARAM:
                     return string.Format("{0}({1}):{2}", site.kind, site.argIndex, site.method.Name);
-                case DefinitionKind.FIELD:
+                case DefinitionSiteKind.FIELD:
                     return string.Format("{0}:{1}", site.kind, site.field.Name);
-                case DefinitionKind.THIS:
-                case DefinitionKind.CONSTANT:
-                case DefinitionKind.UNKNOWN:
+                case DefinitionSiteKind.THIS:
+                case DefinitionSiteKind.CONSTANT:
+                case DefinitionSiteKind.UNKNOWN:
                     return site.kind.ToString();
                 default:
                     throw new ArgumentOutOfRangeException();

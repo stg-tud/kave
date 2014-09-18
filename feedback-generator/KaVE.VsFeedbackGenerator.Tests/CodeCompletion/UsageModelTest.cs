@@ -62,7 +62,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.CodeCompletion
             {
                 definition = new DefinitionSite
                 {
-                    kind = DefinitionKind.RETURN,
+                    kind = DefinitionSiteKind.RETURN,
                     method = new CoReMethodName("LStrangeType.M()LType;")
                 },
                 classCtx = new CoReTypeName("LStrangeType"),
@@ -104,7 +104,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.CodeCompletion
                 definition =
                     new DefinitionSite
                     {
-                        kind = DefinitionKind.RETURN,
+                        kind = DefinitionSiteKind.RETURN,
                         method = new CoReMethodName("LType.Create()LType;")
                     }
             };
@@ -208,7 +208,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.CodeCompletion
                 classCtx = new CoReTypeName("LType"),
                 methodCtx = new CoReMethodName("LType.M()LVoid;"),
                 definition =
-                    new DefinitionSite {kind = DefinitionKind.FIELD, field = new CoReFieldName("LType.object;LType")}
+                    new DefinitionSite {kind = DefinitionSiteKind.FIELD, field = new CoReFieldName("LType.object;LType")}
             };
             var expected = new[]
             {

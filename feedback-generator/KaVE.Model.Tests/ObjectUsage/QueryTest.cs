@@ -74,14 +74,14 @@ namespace KaVE.Model.Tests.ObjectUsage
             Assert.AreEqual(
                 new DefinitionSite
                 {
-                    kind = DefinitionKind.RETURN,
+                    kind = DefinitionSiteKind.RETURN,
                     method = new CoReMethodName("LReceiver.method(LArgument;)LReturn;"),
                     field = new CoReFieldName("LField.field;LType"),
                     argIndex = 42
                 },
                 new DefinitionSite
                 {
-                    kind = DefinitionKind.RETURN,
+                    kind = DefinitionSiteKind.RETURN,
                     method = new CoReMethodName("LReceiver.method(LArgument;)LReturn;"),
                     field = new CoReFieldName("LField.field;LType"),
                     argIndex = 42
@@ -96,7 +96,7 @@ namespace KaVE.Model.Tests.ObjectUsage
                 type = new CoReTypeName("LType"),
                 definition = new DefinitionSite
                 {
-                    kind = DefinitionKind.RETURN,
+                    kind = DefinitionSiteKind.RETURN,
                     method = new CoReMethodName("LFactory.method()LType;")
                 },
                 classCtx = new CoReTypeName("LClass"),
@@ -122,7 +122,7 @@ namespace KaVE.Model.Tests.ObjectUsage
                 type = new CoReTypeName("LType"),
                 definition = new DefinitionSite
                 {
-                    kind = DefinitionKind.RETURN,
+                    kind = DefinitionSiteKind.RETURN,
                     method = new CoReMethodName("LFactory.method()LType;")
                 },
                 classCtx = new CoReTypeName("LClass"),
