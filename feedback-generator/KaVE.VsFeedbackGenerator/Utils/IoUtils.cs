@@ -57,7 +57,6 @@ namespace KaVE.VsFeedbackGenerator.Utils
         bool DirectoryExists(string path);
         void DeleteDirectoryWithContent(string path);
 
-        string Combine(params string[] paths);
         IEnumerable<string> EnumerateFiles(string path);
 
         Network LoadNetwork(string path);
@@ -134,11 +133,6 @@ namespace KaVE.VsFeedbackGenerator.Utils
         {
             var fileInfo = new FileInfo(fileName);
             return fileInfo.Length;
-        }
-
-        public string Combine(params string[] paths)
-        {
-            return Path.Combine(paths);
         }
 
         public IEnumerable<string> EnumerateFiles(string path)

@@ -53,8 +53,6 @@ namespace KaVE.VsFeedbackGenerator.Tests.CodeCompletion
         {
             _network = UsageModelFixture.Network();
             _utils = new Mock<IIoUtils>();
-            // TODO @Dennis: kill IOUtils.Combine()
-            _utils.Setup(u => u.Combine(It.IsAny<string[]>())).Returns<string[]>(Path.Combine);
             _logger = new Mock<ILogger>();
             _uut = new ModelStore(BasePath, TempPath, _utils.Object, _logger.Object);
         }

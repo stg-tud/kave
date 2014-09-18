@@ -55,7 +55,7 @@ namespace KaVE.VsFeedbackGenerator.CodeCompletion
         public UsageModel GetModel(string assembly, CoReTypeName typeName)
         {
             var fileName = GetFileName(typeName) + ".xdsl";
-            var path = _utils.Combine(_tempPath, assembly, fileName);
+            var path = Path.Combine(_tempPath, assembly, fileName);
 
             var model = GetModel(path);
             if (model != null)
@@ -63,12 +63,12 @@ namespace KaVE.VsFeedbackGenerator.CodeCompletion
                 return model;
             }
 
-            var zipPath = _utils.Combine(_basePath, assembly + ".zip");
+            var zipPath = Path.Combine(_basePath, assembly + ".zip");
             if (!_utils.FileExists(zipPath))
             {
                 return null;
             }
-            ExtractModel(zipPath, _utils.Combine(_tempPath, assembly), path, fileName);
+            ExtractModel(zipPath, Path.Combine(_tempPath, assembly), path, fileName);
             return GetModel(path);
         }
 

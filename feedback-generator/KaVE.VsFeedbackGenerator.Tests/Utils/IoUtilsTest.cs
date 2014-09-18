@@ -256,16 +256,6 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
         }
 
         [Test]
-        public void ShouldCombineElements()
-        {
-            var origin = new List<string> {"1st", "2nd", "3rd"};
-            var expected = origin[0] + Path.DirectorySeparatorChar + origin[1] + Path.DirectorySeparatorChar + origin[2];
-
-            var actual = _sut.Combine(origin[0], origin[1], origin[2]);
-            Assert.AreEqual(expected, actual);
-        }
-
-        [Test]
         public void ShouldFindAllFiles()
         {
             var dir = IoTestHelper.GetTempDirectoryName();
