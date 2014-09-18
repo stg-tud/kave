@@ -116,7 +116,7 @@ namespace KaVE.Model.ObjectUsage
 
         /// <summary>
         ///     This method is used by the serialization to determine if the property should be serialized or not.
-        ///     As the method's name depends directly on the porperty's name, the method must not be renamed.
+        ///     As the method's name depends directly on the property's name, the method must not be renamed.
         /// </summary>
         public bool ShouldSerializeargIndex()
         {
