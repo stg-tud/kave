@@ -19,6 +19,8 @@
 
 using System.Linq;
 using System.Text;
+using KaVE.JetBrains.Annotations;
+using KaVE.Model.Events.CompletionEvent;
 using KaVE.Model.Names;
 using KaVE.Utils;
 
@@ -26,7 +28,14 @@ namespace KaVE.Model.ObjectUsage
 {
     public static class CoReNameUtil
     {
-        public static CoReName ToCoReName(this IName name)
+        [CanBeNull]
+        public static CoReName ToCoReName([NotNull] this Proposal proposal)
+        {
+            return proposal.Name.ToCoReName();
+        }
+
+        [CanBeNull]
+        public static CoReName ToCoReName([NotNull] this IName name)
         {
             var typeName = name as ITypeName;
             if (typeName != null)
@@ -49,12 +58,14 @@ namespace KaVE.Model.ObjectUsage
             return null;
         }
 
-        private static CoReName ToCoReName(this ITypeName name)
+        [NotNull]
+        public static CoReTypeName ToCoReName([NotNull] this ITypeName name)
         {
             return new CoReTypeName(name.ToName());
         }
 
-        private static CoReName ToCoReName(this IMethodName name)
+        [NotNull]
+        public static CoReMethodName ToCoReName([NotNull] this IMethodName name)
         {
             var builder = new StringBuilder();
             builder.Append(name.DeclaringType.ToName(), ".", name.Name, "(");
@@ -63,7 +74,8 @@ namespace KaVE.Model.ObjectUsage
             return new CoReMethodName(builder.ToString());
         }
 
-        private static CoReName ToCoReName(this IFieldName name)
+        [NotNull]
+        public static CoReFieldName ToCoReName([NotNull] this IFieldName name)
         {
             var builder = new StringBuilder();
             builder.Append(name.DeclaringType.ToName(), ".", name.Name, ";", name.ValueType.ToName());

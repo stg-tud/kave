@@ -18,6 +18,7 @@
  */
 
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 using KaVE.Model.Collections;
 using KaVE.Utils;
@@ -31,6 +32,11 @@ namespace KaVE.Model.ObjectUsage
         public Query()
         {
             sites = Lists.NewList<CallSite>();
+        }
+
+        public Query(IEnumerable<CallSite> callSites)
+        {
+            sites = Lists.NewList(callSites.ToArray());
         }
 
         public CoReTypeName type { get; set; }
