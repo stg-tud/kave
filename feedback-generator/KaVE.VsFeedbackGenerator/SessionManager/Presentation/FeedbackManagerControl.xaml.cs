@@ -18,64 +18,31 @@
  *    - Sven Amann
  */
 
-using System;
 using System.Windows;
 using System.Windows.Controls;
 using JetBrains.ActionManagement;
-using JetBrains.Application;
 using JetBrains.DataFlow;
-using KaVE.Utils.Reflection;
 using KaVE.VsFeedbackGenerator.Export;
 using KaVE.VsFeedbackGenerator.Interactivity;
 using KaVE.VsFeedbackGenerator.Utils;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
 {
-    [ShellComponent]
-    public class SessionManagerInitializer
-    {
-        public SessionManagerInitializer(ISettingsStore settingsStore)
-        {
-            EnsureLastReviewDateReset(settingsStore);
-        }
-
-        /// <summary>
-        ///     If the IDE crashed, the date might not be reset and we end in an inconsistent state. We prevent this by resetting
-        ///     on startup.
-        /// </summary>
-        private static void EnsureLastReviewDateReset(ISettingsStore settingsStore)
-        {
-            settingsStore.UpdateSettings<ExportSettings>(settings => settings.LastReviewDate = null);
-        }
-    }
-
     public partial class SessionManagerControl
     {
         private readonly FeedbackViewModel _feedbackViewModel;
         private readonly IActionManager _actionManager;
-        private readonly IDateUtils _dateUtils;
         private readonly ISettingsStore _settingsStore;
 
         public SessionManagerControl(FeedbackViewModel feedbackViewModel,
             IActionManager actionManager,
-            IDateUtils dateUtils,
             ISettingsStore settingsStore)
         {
             DataContext = feedbackViewModel;
             _feedbackViewModel = feedbackViewModel;
             _feedbackViewModel.ConfirmationRequest.Raised += new ConfirmationRequestHandler(this).Handle;
-            _feedbackViewModel.OnPropertyChanged(
-                self => self.IsBusy,
-                isBusy =>
-                {
-                    if (isBusy)
-                    {
-                        SetLastReviewDate(_dateUtils.Now);
-                    }
-                });
 
             _actionManager = actionManager;
-            _dateUtils = dateUtils;
             _settingsStore = settingsStore;
 
             InitializeComponent();
@@ -89,10 +56,6 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
             {
                 RefreshControl();
             }
-            else if (wasVisible && !isVisible)
-            {
-                SetLastReviewDate(null);
-            }
         }
 
         private void RefreshButton_OnClick(object sender, RoutedEventArgs e)
@@ -103,11 +66,6 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
         private void RefreshControl()
         {
             _feedbackViewModel.Refresh();
-        }
-
-        private void SetLastReviewDate(DateTime? lastReviewDate)
-        {
-            _settingsStore.UpdateSettings<ExportSettings>(settings => settings.LastReviewDate = lastReviewDate);
         }
 
         /// <summary>

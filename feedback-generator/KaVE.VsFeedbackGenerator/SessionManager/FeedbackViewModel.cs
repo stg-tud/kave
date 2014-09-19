@@ -21,11 +21,11 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using JetBrains;
 using JetBrains.Annotations;
+using KaVE.Utils.Collections;
 using KaVE.VsFeedbackGenerator.Interactivity;
 using KaVE.VsFeedbackGenerator.SessionManager.Presentation;
 using KaVE.VsFeedbackGenerator.Utils;
@@ -38,11 +38,14 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
     public sealed class FeedbackViewModel : ViewModelBase<FeedbackViewModel>
     {
         private readonly ILogManager _logManager;
-        private ICollection<SessionViewModel> _sessions;
-        private ICollection<SessionViewModel> _selectedSessions;
+        private ICollection<SessionViewModel> _sessions = new DispatchingObservableCollection<SessionViewModel>();
+
+        private ICollection<SessionViewModel> _selectedSessions =
+            new DispatchingObservableCollection<SessionViewModel>();
+
         private BackgroundWorker<IList<SessionViewModel>> _refreshWorker;
         private DelegateCommand _deleteCommand;
-        private readonly InteractionRequest<Confirmation> _confirmationRequest;
+        private readonly InteractionRequest<Confirmation> _confirmationRequest = new InteractionRequest<Confirmation>();
 
         public IInteractionRequest<Confirmation> ConfirmationRequest
         {
@@ -52,9 +55,6 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
         public FeedbackViewModel(ILogManager logManager)
         {
             _logManager = logManager;
-            _sessions = new ObservableCollection<SessionViewModel>();
-            _selectedSessions = new ObservableCollection<SessionViewModel>();
-            _confirmationRequest = new InteractionRequest<Confirmation>();
 
             SetupRefresh();
             _logManager.LogCreated += OnLogCreated;
@@ -63,7 +63,6 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
         private void OnLogCreated(ILog log)
         {
             _sessions.Add(CreateOrRefreshSessionViewModel(log));
-            RaisePropertyChanged(self => self.Sessions);
             RaisePropertyChanged(self => self.AreAnyEventsPresent);
         }
 
@@ -130,20 +129,15 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
 
         private void OnRefreshCompleted(IList<SessionViewModel> result)
         {
-            HandleSuccessfulRefresh(result);
+            var previousSelection = new List<SessionViewModel>(_selectedSessions);
+
+            Sessions = new DispatchingObservableCollection<SessionViewModel>(result);
+
             SetIdle();
-        }
-
-        private void HandleSuccessfulRefresh([NotNull] ICollection<SessionViewModel> sessions)
-        {
-            var oldSelectedSessions = _selectedSessions.ToList();
-
-            Sessions = sessions;
-
-            var newSelectedSessions = Sessions.Where(oldSelectedSessions.Contains).ToList();
-            if (newSelectedSessions.Any())
+            if (previousSelection.Any())
             {
-                SelectedSessions = newSelectedSessions;
+                var newSelectedSessions = Sessions.Where(previousSelection.Contains).ToList();
+                SelectedSessions = new DispatchingObservableCollection<SessionViewModel>(newSelectedSessions);
             }
         }
 
@@ -180,7 +174,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             }
             get { return _selectedSessions; }
         }
-        
+
         [CanBeNull]
         public SessionViewModel SingleSelectedSession
         {

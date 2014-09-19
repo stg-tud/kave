@@ -165,7 +165,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Logging
         }
 
         [Test]
-        public void ShouldFireLogCreatedEventWhenCreatingLog()
+        public void ShouldRaiseLogCreatedEventWhenCreatingLog()
         {
             ILog newLog = null;
             _uut.LogCreated += log => newLog = log;
@@ -176,7 +176,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Logging
         }
 
         [Test]
-        public void ShouldNotFireLogCreatedWhenLogExists()
+        public void ShouldNotRaiseLogCreatedWhenLogExists()
         {
             GivenLogsExist(DateTime.Today);
             _uut.LogCreated += log => Assert.Fail("created " + log);

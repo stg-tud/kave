@@ -139,18 +139,6 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModelTestSui
             Assert.AreEqual(expected, actual);
         }
 
-        [Test(Description = "UI doesn't update otherwise, because entry append is not triggered by user interaction")]
-        public void ShouldRaiseEventsPropertyChangedAfterNewEventIsAdded()
-        {
-            WhenEventViewModelsAreLoaded();
-            var isInvoked = false;
-            _uut.OnPropertyChanged(uut => uut.Events, events => isInvoked = true);
-
-            _mockLog.Raise(l => l.EntryAppended += null, IDEEventTestFactory.SomeEvent());
-
-            Assert.IsTrue(isInvoked);
-        }
-
         [Test]
         public void ShouldReReadLogAfterRefresh()
         {
@@ -176,15 +164,14 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModelTestSui
             _uut.SelectedEvents = expecteds;
 
             _uut.Refresh();
-            // refresh clears the events, which makes the UI clear the selection
-            _uut.SelectedEvents = new EventViewModel[0];
+
             WhenEventViewModelsAreLoaded();
             var actuals = _uut.SelectedEvents;
 
             CollectionAssert.AreEquivalent(expecteds, actuals);
         }
 
-        private void GivenLogContainsEvents(List<IDEEvent> someEvents)
+        private void GivenLogContainsEvents(IEnumerable<IDEEvent> someEvents)
         {
             _mockLog.Setup(log => log.ReadAll()).Returns(someEvents);
         }

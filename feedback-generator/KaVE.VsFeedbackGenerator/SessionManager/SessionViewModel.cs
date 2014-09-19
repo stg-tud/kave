@@ -19,13 +19,13 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using JetBrains;
 using JetBrains.Util;
 using KaVE.Model.Events;
 using KaVE.Utils;
+using KaVE.Utils.Collections;
 using KaVE.VsFeedbackGenerator.Interactivity;
 using KaVE.VsFeedbackGenerator.SessionManager.Presentation;
 using KaVE.VsFeedbackGenerator.Utils;
@@ -42,9 +42,8 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
         private bool _isLoaded;
         private readonly BackgroundWorker<ICollection<EventViewModel>> _logLoader;
 
-        private ICollection<EventViewModel> _events = new ObservableCollection<EventViewModel>();
-        private ICollection<EventViewModel> _selectedEvents = new ObservableCollection<EventViewModel>();
-        private ICollection<EventViewModel> _previousSelection = new List<EventViewModel>();
+        private ICollection<EventViewModel> _events = new DispatchingObservableCollection<EventViewModel>();
+        private ICollection<EventViewModel> _selectedEvents = new DispatchingObservableCollection<EventViewModel>();
 
         private readonly InteractionRequest<Confirmation> _confirmationRequest = new InteractionRequest<Confirmation>();
 
@@ -121,11 +120,14 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
 
         private void OnLoadCompleted(ICollection<EventViewModel> result)
         {
-            Events = new ObservableCollection<EventViewModel>(result);
-            if (_previousSelection.Any())
+            var previousSelection = new List<EventViewModel>(SelectedEvents);
+
+            Events = new DispatchingObservableCollection<EventViewModel>(result);
+
+            if (previousSelection.Any())
             {
-                var selection = Events.Where(evm => _previousSelection.Contains(evm));
-                SelectedEvents = new ObservableCollection<EventViewModel>(selection);
+                var selection = Events.Where(previousSelection.Contains);
+                SelectedEvents = new DispatchingObservableCollection<EventViewModel>(selection);
             }
             SetIdle();
         }
@@ -156,7 +158,6 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
 
         public void Refresh()
         {
-            _previousSelection = new List<EventViewModel>(SelectedEvents);
             _isLoaded = false;
         }
 

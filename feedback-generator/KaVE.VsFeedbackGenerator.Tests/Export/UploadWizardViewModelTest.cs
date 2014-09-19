@@ -319,17 +319,17 @@ namespace KaVE.VsFeedbackGenerator.Tests.Export
         }
 
         [Test]
-        public void ShouldExportOnlyEventsOlderThanLastReviewDate()
+        public void ShouldExportAllEventsThatStartetBeforeOrAtExportTime()
         {
-            var lastReviewDate = new DateTime(2014, 7, 2);
-            _exportSettings.LastReviewDate = lastReviewDate;
+            _testDateUtils.Now = DateTime.Now;
             var logContent = new[]
             {
-                new TestIDEEvent {TriggeredAt = new DateTime(2014, 7, 1)},
-                new TestIDEEvent {TriggeredAt = new DateTime(2014, 7, 3)}
+                new TestIDEEvent {TriggeredAt = _testDateUtils.Now.AddSeconds(-1)},
+                new TestIDEEvent {TriggeredAt = _testDateUtils.Now},
+                new TestIDEEvent {TriggeredAt = _testDateUtils.Now.AddSeconds(1)}
             };
             _mockLogs[0].Setup(log => log.ReadAll()).Returns(logContent);
-            var expectedExport = new[] {logContent[0]};
+            var expectedExport = logContent.Take(2);
             IEnumerable<IDEEvent> actualExport = null;
             _mockExporter.Setup(e => e.Export(It.IsAny<IEnumerable<IDEEvent>>(), It.IsAny<IPublisher>()))
                          .Callback<IEnumerable<IDEEvent>, IPublisher>((export, p) => actualExport = export);
@@ -337,27 +337,6 @@ namespace KaVE.VsFeedbackGenerator.Tests.Export
             WhenExportIsExecuted();
 
             Assert.AreEqual(expectedExport, actualExport);
-            _mockLogFileManager.Verify(lm => lm.DeleteLogsOlderThan(lastReviewDate));
-        }
-
-        [Test]
-        public void ShouldExportEverythingIfLastReviewDateIsNotSet()
-        {
-            _exportSettings.LastReviewDate = null;
-            _testDateUtils.Now = new DateTime(2014, 7, 3);
-            var logContent = new[]
-            {
-                new TestIDEEvent {TriggeredAt = new DateTime(2014, 7, 1)},
-                new TestIDEEvent {TriggeredAt = _testDateUtils.Now}
-            };
-            _mockLogs[0].Setup(log => log.ReadAll()).Returns(logContent);
-            IEnumerable<IDEEvent> actualExport = null;
-            _mockExporter.Setup(e => e.Export(It.IsAny<IEnumerable<IDEEvent>>(), It.IsAny<IPublisher>()))
-                         .Callback<IEnumerable<IDEEvent>, IPublisher>((export, p) => actualExport = export);
-
-            WhenExportIsExecuted();
-
-            Assert.AreEqual(logContent, actualExport);
             _mockLogFileManager.Verify(lm => lm.DeleteLogsOlderThan(_testDateUtils.Now));
         }
 

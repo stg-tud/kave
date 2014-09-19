@@ -47,20 +47,5 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
 
         [SettingsEntry("", "KaVE FeedbackGenerator WebAccessPrefix")]
         public string WebAccessPrefix;
-
-        /// <summary>
-        /// Internal use only! Use LastReviewDate instead.
-        /// </summary>
-        [SettingsEntry(DateTimeMinValue, "Internal representation of the review date. Do not use this directly.")]
-        public DateTime LastReviewDateInternal;
-
-        /// <summary>
-        /// The last-review date or null, if the session manager (review tool) is currently closed.
-        /// </summary>
-        public DateTime? LastReviewDate
-        {
-            get { return LastReviewDateInternal == default(DateTime) ? (DateTime?) null : LastReviewDateInternal; }
-            set { LastReviewDateInternal = value.GetValueOrDefault(); }
-        }
     }
 }

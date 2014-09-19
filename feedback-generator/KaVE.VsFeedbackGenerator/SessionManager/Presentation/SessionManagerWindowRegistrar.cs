@@ -42,8 +42,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
             SessionManagerWindowDescriptor descriptor,
             IActionManager actionManager,
             ILogManager logManager,
-            ISettingsStore settingsStore,
-            IDateUtils dateUtils)
+            ISettingsStore settingsStore)
         {
             // objects are kept in fields to prevent garbage collection
             _lifetime = lifetime;
@@ -56,7 +55,6 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
                     var control = new SessionManagerControl(
                         new FeedbackViewModel(logManager),
                         actionManager,
-                        dateUtils,
                         settingsStore);
                     visibilitySignal.Advise(lt, control.OnVisibilityChanged);
                     var wrapper = new EitherControl(control);

@@ -41,7 +41,7 @@ namespace KaVE.VsFeedbackGenerator.Export
         private readonly ISettingsStore _settingsStore;
         private readonly IDateUtils _dateUtils;
         private readonly BackgroundWorker _exportWorker;
-        private DateTime _exportEndDate;
+        private DateTime _exportTime;
         private UploadWizard.ExportType _exportType;
 
         private readonly InteractionRequest<Notification> _errorNotificationRequest;
@@ -105,8 +105,7 @@ namespace KaVE.VsFeedbackGenerator.Export
         internal void Export(UploadWizard.ExportType exportType)
         {
             SetBusy(Properties.UploadWizard.Export_BusyMessage);
-            var exportSettings = ExportSettings;
-            _exportEndDate = exportSettings.LastReviewDate ?? _dateUtils.Now;
+            _exportTime = _dateUtils.Now;
             _exportWorker.RunWorkerAsync(exportType);
         }
 
@@ -124,7 +123,7 @@ namespace KaVE.VsFeedbackGenerator.Export
                 _exporter.Export(events, new HttpPublisher(GetUploadUrl()));
             }
 
-            _logManager.DeleteLogsOlderThan(_exportEndDate);
+            _logManager.DeleteLogsOlderThan(_exportTime);
             e.Result = events.Count;
         }
 
@@ -133,7 +132,7 @@ namespace KaVE.VsFeedbackGenerator.Export
             var events = new List<IDEEvent>();
             foreach (var log in _logManager.Logs)
             {
-                events.AddRange(log.ReadAll().Where(e => e.TriggeredAt <= _exportEndDate));
+                events.AddRange(log.ReadAll().Where(e => e.TriggeredAt <= _exportTime));
             }
             return events;
         }

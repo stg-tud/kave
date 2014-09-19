@@ -120,17 +120,6 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModelTestSui
             Assert.AreEqual(log, _uut.Sessions.First().Log);
         }
 
-        [Test(Description = "UI doesn't update otherwise, because log creation is not triggered by user interaction")]
-        public void ShouldRaiseSessionsPropertyChangedAfterLogIsCreated()
-        {
-            var sessionsChanged = false;
-            _uut.OnPropertyChanged(uut => uut.Sessions, sessions => sessionsChanged = true);
-
-            _mockLogManager.Raise(lm => lm.LogCreated += null, Fix.SomeLog());
-
-            Assert.IsTrue(sessionsChanged);
-        }
-
         [Test]
         public void ShouldRemoveSessionViewIfLogIsDeleted()
         {
