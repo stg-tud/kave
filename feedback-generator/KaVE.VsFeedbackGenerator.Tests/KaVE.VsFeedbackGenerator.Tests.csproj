@@ -78,6 +78,7 @@
     <Compile Include="CodeCompletion\ModelStoreTest.cs" />
     <Compile Include="CodeCompletion\UsageModelFixture.cs" />
     <Compile Include="CodeCompletion\UsageModelTest.cs" />
+    <Compile Include="Generators\EventLoggerTest.cs" />
     <Compile Include="Generators\LogEventGeneratorTest.cs" />
     <Compile Include="Generators\EventGeneratorTestBase.cs" />
     <Compile Include="Generators\Merging\CompletionEventMergingStrategyTest.cs" />

@@ -19,7 +19,6 @@
  */
 
 using System;
-using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using JetBrains.ActionManagement;
@@ -80,15 +79,6 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
             _settingsStore = settingsStore;
 
             InitializeComponent();
-        }
-
-        private static void SetSelection(ListBox view, IEnumerable<object> elements)
-        {
-            var selection = view.SelectedItems;
-            foreach (var element in elements)
-            {
-                selection.Add(element);
-            }
         }
 
         public void OnVisibilityChanged(PropertyChangedEventArgs<bool> e)

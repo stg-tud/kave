@@ -44,7 +44,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
 
         private ICollection<EventViewModel> _events = new ObservableCollection<EventViewModel>();
         private ICollection<EventViewModel> _selectedEvents = new ObservableCollection<EventViewModel>();
-        private ICollection<EventViewModel> _previousSelection = new Collection<EventViewModel>();
+        private ICollection<EventViewModel> _previousSelection = new List<EventViewModel>();
 
         private readonly InteractionRequest<Confirmation> _confirmationRequest = new InteractionRequest<Confirmation>();
 
@@ -67,7 +67,6 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
         private void OnEntryAdded(IDEEvent entry)
         {
             _events.Add(CreateEventViewModel(entry));
-            RaisePropertyChanged(self => self.Events);
         }
 
         private void OnEntriesRemoved(IEnumerable<IDEEvent> entries)
@@ -112,7 +111,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
 
         private ICollection<EventViewModel> LoadLog(BackgroundWorker worker)
         {
-            return new ObservableCollection<EventViewModel>(Log.ReadAll().Select(CreateEventViewModel));
+            return Log.ReadAll().Select(CreateEventViewModel).ToList();
         }
 
         private static EventViewModel CreateEventViewModel(IDEEvent evt)
@@ -122,7 +121,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
 
         private void OnLoadCompleted(ICollection<EventViewModel> result)
         {
-            Events = result;
+            Events = new ObservableCollection<EventViewModel>(result);
             if (_previousSelection.Any())
             {
                 var selection = Events.Where(evm => _previousSelection.Contains(evm));
@@ -134,6 +133,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
         private void OnLoadFailed(Exception e)
         {
             Registry.GetComponent<ILogger>().Error(new Exception("could not read log", e));
+            Events.Clear();
             SetIdle();
         }
 
@@ -157,7 +157,6 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
         public void Refresh()
         {
             _previousSelection = new List<EventViewModel>(SelectedEvents);
-            Events = new Collection<EventViewModel>();
             _isLoaded = false;
         }
 

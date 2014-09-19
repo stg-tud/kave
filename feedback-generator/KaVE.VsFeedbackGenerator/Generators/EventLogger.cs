@@ -94,10 +94,18 @@ namespace KaVE.VsFeedbackGenerator.Generators
 
         private void LogEvent(IDEEvent @event)
         {
-            if (@event != null)
+            if (@event == null)
+            {
+                return;
+            }
+
+            try
             {
                 _logManager.CurrentLog.Append(@event);
             }
+                // ReSharper disable once EmptyGeneralCatchClause
+                // if logging fails, there's nothing we can do.
+            catch {}
         }
     }
 }
