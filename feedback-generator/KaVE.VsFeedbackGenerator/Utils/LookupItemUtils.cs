@@ -29,7 +29,6 @@ using KaVE.Model.Events.CompletionEvent;
 using KaVE.Model.Names;
 using KaVE.Model.Names.CSharp;
 using KaVE.Model.Names.ReSharper;
-using KaVE.Utils.Assertion;
 using KaVE.VsFeedbackGenerator.Utils.Names;
 
 namespace KaVE.VsFeedbackGenerator.Utils
@@ -55,7 +54,7 @@ namespace KaVE.VsFeedbackGenerator.Utils
                    TryGetNameFromWrappedLookupItem(lookupItem) ??
                    TryGetNameFromKeywordOrTextualLookupItem(lookupItem) ??
                    TryGetNameFromTemplateLookupItem(lookupItem) ??
-                   Asserts.Fail<IName>("unknown kind of lookup item: {0}", lookupItem.GetType());
+                   GetNameFromLookupItemIdentity(lookupItem);
         }
 
         private static IName TryGetNameFromDeclaredElementLookupItem(ILookupItem lookupItem)
@@ -111,6 +110,11 @@ namespace KaVE.VsFeedbackGenerator.Utils
         private static LiveTemplateName GetName(this Template template)
         {
             return LiveTemplateName.Get(template.Shortcut + ":" + template.Description);
+        }
+
+        private static IName GetNameFromLookupItemIdentity(ILookupItem item)
+        {
+            return Name.Get(item.GetType().Name + ":" + item.Identity);
         }
     }
 }
