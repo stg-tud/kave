@@ -20,11 +20,13 @@
 
 using System.Collections.Generic;
 using System.Linq;
+// ReSharper disable RedundantUsingDirective
 using JetBrains.Application;
 using JetBrains.ReSharper.Feature.Services.CSharp.CodeCompletion.Infrastructure;
 using JetBrains.ReSharper.Feature.Services.Lookup;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
+// ReSharper restore RedundantUsingDirective
 using KaVE.Model.Events.CompletionEvent;
 using KaVE.Model.Names;
 using KaVE.Model.Names.CSharp;
@@ -35,7 +37,7 @@ using KaVE.VsFeedbackGenerator.Utils;
 
 namespace KaVE.VsFeedbackGenerator.CodeCompletion
 {
-    [ShellComponent]
+    //[ShellComponent]
     public class MyModelStore : IModelStore
     {
         public IUsageModel GetModel(CoReTypeName typeName)
@@ -63,7 +65,7 @@ namespace KaVE.VsFeedbackGenerator.CodeCompletion
         }
     }
 
-    [Language(typeof (CSharpLanguage))]
+    //[Language(typeof (CSharpLanguage))]
     public class ExemplaryProposalProvider : CSharpItemsProviderBasic
     {
         private readonly IModelStore _store;
