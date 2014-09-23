@@ -17,6 +17,7 @@
  *    - Dennis Albrecht
  */
 
+using System;
 using System.Linq;
 using System.Text;
 using KaVE.JetBrains.Annotations;
@@ -58,20 +59,34 @@ namespace KaVE.Model.ObjectUsage
             return null;
         }
 
-        [NotNull]
+        //[NotNull]
         public static CoReTypeName ToCoReName([NotNull] this ITypeName name)
         {
-            return new CoReTypeName(name.ToName());
+            try
+            {
+                return new CoReTypeName(name.ToName());
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
 
-        [NotNull]
+        //[NotNull]
         public static CoReMethodName ToCoReName([NotNull] this IMethodName name)
         {
             var builder = new StringBuilder();
             builder.Append(name.DeclaringType.ToName(), ".", name.Name, "(");
             StringBuilderUtils.Append(builder, name.Parameters.Select(n => n.ValueType.ToName() + ";").ToArray());
             builder.Append(")", name.ReturnType.ToName(), ";");
-            return new CoReMethodName(builder.ToString());
+            try
+            {
+                return new CoReMethodName(builder.ToString());
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
 
         [NotNull]
@@ -89,6 +104,7 @@ namespace KaVE.Model.ObjectUsage
 
         private static string ToName(this ITypeName name)
         {
+            //TODO @Seb+Dennis: How to handle Array-Types (because of Type-Erasure)?
             var builder = new StringBuilder();
             builder.Append("L", name.Namespace.ToName(), name.Name);
             return builder.ToString();
