@@ -28,8 +28,8 @@ namespace KaVE.VsFeedbackGenerator.CodeCompletion
 {
     public interface IModelStore
     {
-        UsageModel GetModel(CoReTypeName typeName);
-        UsageModel GetModel(string assembly, CoReTypeName typeName);
+        IUsageModel GetModel(CoReTypeName typeName);
+        IUsageModel GetModel(string assembly, CoReTypeName typeName);
     }
 
     public class ModelStore : IModelStore
@@ -47,12 +47,12 @@ namespace KaVE.VsFeedbackGenerator.CodeCompletion
             _logger = logger;
         }
 
-        public UsageModel GetModel(CoReTypeName typeName)
+        public IUsageModel GetModel(CoReTypeName typeName)
         {
             return GetModel(GetFileName(typeName), typeName);
         }
 
-        public UsageModel GetModel(string assembly, CoReTypeName typeName)
+        public IUsageModel GetModel(string assembly, CoReTypeName typeName)
         {
             var fileName = GetFileName(typeName) + ".xdsl";
             var path = Path.Combine(_tempPath, assembly, fileName);

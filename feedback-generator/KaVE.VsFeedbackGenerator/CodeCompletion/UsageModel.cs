@@ -29,7 +29,12 @@ using Smile;
 
 namespace KaVE.VsFeedbackGenerator.CodeCompletion
 {
-    public class UsageModel
+    public interface IUsageModel
+    {
+        KeyValuePair<CoReMethodName, double>[] Query([NotNull] Query query);
+    }
+
+    public class UsageModel : IUsageModel
     {
         private readonly Network _network;
         private readonly string[] _contexts = {"pattern", "classContext", "methodContext", "definitionSite"};
