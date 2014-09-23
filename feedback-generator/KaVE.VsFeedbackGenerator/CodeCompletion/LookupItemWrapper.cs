@@ -32,13 +32,11 @@ namespace KaVE.VsFeedbackGenerator.CodeCompletion
     {
         private readonly ILookupItem _wrappedItem;
 
-        private readonly string _name;
         private readonly int _probability;
 
-        public LookupItemWrapper(ILookupItem wrappedItem, string name, int probability)
+        public LookupItemWrapper(ILookupItem wrappedItem, int probability)
         {
             _wrappedItem = wrappedItem;
-            _name = name;
             _probability = probability;
         }
 
@@ -46,16 +44,9 @@ namespace KaVE.VsFeedbackGenerator.CodeCompletion
         {
             get
             {
-                // strangely, this assignment is necessary to prevent resharper from getting stuck
-                // ReSharper disable once RedundantAssignment
-                var name = _wrappedItem.DisplayName;
-
-                var nameStyle = new TextStyle {FontStyle = FontStyle.Bold};
-                name = new RichText(_name, nameStyle);
+                var original = _wrappedItem.DisplayName.Clone();
                 var probStyle = new TextStyle {ForegroundColor = Color.Gray};
-                var prob = new RichText(" (" + _probability + "%)", probStyle);
-                var all = name.Append(prob);
-                return all;
+                return original.Append(" (" + _probability + "%)", probStyle);
             }
         }
 
@@ -63,16 +54,17 @@ namespace KaVE.VsFeedbackGenerator.CodeCompletion
         {
             get
             {
-                var reverse = 100 - _probability;
-                if (reverse < 10)
+                var inverseProbability = 100 - _probability;
+                string orderingPrefix = "0";
+                if (inverseProbability < 100)
                 {
-                    return "AAA00" + reverse;
+                    orderingPrefix = "00";
                 }
-                if (reverse < 100)
+                else if (inverseProbability < 10)
                 {
-                    return "AAA0" + reverse;
+                    orderingPrefix = "000";
                 }
-                return "AAA" + reverse;
+                return orderingPrefix + inverseProbability + _wrappedItem.OrderingString;
             }
         }
 
