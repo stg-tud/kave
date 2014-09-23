@@ -185,7 +185,7 @@ namespace KaVE.Model.ObjectUsage
 
         internal static string ValidationPattern()
         {
-            return "L([a-zA-Z0-9]+/)*[a-zA-Z0-9$]+";
+            return @"\[*L([a-zA-Z0-9]+/)*[a-zA-Z0-9$]+";
         }
     }
 

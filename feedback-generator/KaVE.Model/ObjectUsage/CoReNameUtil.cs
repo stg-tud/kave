@@ -17,7 +17,6 @@
  *    - Dennis Albrecht
  */
 
-using System;
 using System.Linq;
 using System.Text;
 using KaVE.JetBrains.Annotations;
@@ -59,34 +58,20 @@ namespace KaVE.Model.ObjectUsage
             return null;
         }
 
-        //[NotNull]
+        [NotNull]
         public static CoReTypeName ToCoReName([NotNull] this ITypeName name)
         {
-            try
-            {
-                return new CoReTypeName(name.ToName());
-            }
-            catch (Exception)
-            {
-                return null;
-            }
+            return new CoReTypeName(name.ToName());
         }
 
-        //[NotNull]
+        [NotNull]
         public static CoReMethodName ToCoReName([NotNull] this IMethodName name)
         {
             var builder = new StringBuilder();
             builder.Append(name.DeclaringType.ToName(), ".", name.Name, "(");
             StringBuilderUtils.Append(builder, name.Parameters.Select(n => n.ValueType.ToName() + ";").ToArray());
             builder.Append(")", name.ReturnType.ToName(), ";");
-            try
-            {
-                return new CoReMethodName(builder.ToString());
-            }
-            catch (Exception)
-            {
-                return null;
-            }
+            return new CoReMethodName(builder.ToString());
         }
 
         [NotNull]
