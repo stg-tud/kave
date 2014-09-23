@@ -89,10 +89,21 @@ namespace KaVE.Model.ObjectUsage
 
         private static string ToName(this ITypeName name)
         {
-            //TODO @Seb+Dennis: How to handle Array-Types (because of Type-Erasure)?
             var builder = new StringBuilder();
-            builder.Append("L", name.Namespace.ToName(), name.Name);
+            if (name.IsArrayType)
+            {
+                builder.Append(GenerateArrayPrefix(name), "L", name.Namespace.ToName(), name.Name.Replace("[]", ""));
+            }
+            else
+            {
+                builder.Append("L", name.Namespace.ToName(), name.Name);
+            }
             return builder.ToString();
+        }
+
+        private static string GenerateArrayPrefix(ITypeName name)
+        {
+            return string.Join("", name.Name.Where(c => c == '['));
         }
     }
 }

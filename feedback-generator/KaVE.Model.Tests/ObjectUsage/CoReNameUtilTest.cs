@@ -33,6 +33,8 @@ namespace KaVE.Model.Tests.ObjectUsage
             new TestCaseData(TypeName.Get("TType, A, 1.0.0.0"), new CoReTypeName("LTType")),
             new TestCaseData(TypeName.Get("System.Void, mscore, 4.0.0.0"), new CoReTypeName("LSystem/Void")),
             new TestCaseData(TypeName.Get("Coll.List`1[T -> T], mscore, 4.0.0.0"), new CoReTypeName("LColl/List")),
+            new TestCaseData(TypeName.Get("N.Type[], A, 1.0.0.0"), new CoReTypeName("[LN/Type")),
+            new TestCaseData(TypeName.Get("N.Type[][][], A, 1.0.0.0"), new CoReTypeName("[[[LN/Type")),
             //new TestCaseData(TypeName.Get("Name.Outer+Inner, Assembly, 1.2.3.4"), new CoReTypeName("???")),
             new TestCaseData(
                 MethodName.Get("[Sys.V, A, 1.0.0.0] [N.T, A, 1.0.0.0].m([N.P, A, 1.0.0.0] arg)"),
