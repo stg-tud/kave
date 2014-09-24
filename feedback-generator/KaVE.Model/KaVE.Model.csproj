@@ -133,6 +133,7 @@
     <Compile Include="ObjectUsage\CoReMethodName.cs" />
     <Compile Include="ObjectUsage\CoReName.cs" />
     <Compile Include="ObjectUsage\CoReNameUtil.cs" />
+    <Compile Include="ObjectUsage\CoReProposal.cs" />
     <Compile Include="ObjectUsage\CoReTypeName.cs" />
     <Compile Include="ObjectUsage\DefinitionSite.cs" />
     <Compile Include="ObjectUsage\DefinitionSiteKind.cs" />
