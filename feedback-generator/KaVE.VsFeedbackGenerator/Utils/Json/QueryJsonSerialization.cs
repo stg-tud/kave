@@ -17,8 +17,10 @@
  *    - Dennis Albrecht
  */
 
+using JetBrains.ReSharper.Features.SolBuilderDuo.Engine.MsbuildExe.Components;
 using KaVE.JetBrains.Annotations;
 using KaVE.Model.ObjectUsage;
+using KaVE.Utils.Assertion;
 using Newtonsoft.Json;
 
 namespace KaVE.VsFeedbackGenerator.Utils.Json
@@ -45,7 +47,9 @@ namespace KaVE.VsFeedbackGenerator.Utils.Json
         /// </remarks>
         internal static Query ParseJsonToQuery([NotNull] this string json)
         {
-            return JsonConvert.DeserializeObject<Query>(json, QuerySerializationSettings);
+            var query = JsonConvert.DeserializeObject<Query>(json, QuerySerializationSettings);
+            Asserts.NotNull(query);
+            return query;
         }
 
         /// <summary>

@@ -90,7 +90,8 @@ namespace KaVE.VsFeedbackGenerator.CodeCompletion
 
         protected override bool AddLookupItems(CSharpCodeCompletionContext context, GroupedItemsCollector collector)
         {
-            var proposals = _model.Query(CreateQuery(_context));
+            var query = CreateQuery(_context);
+            var proposals = _model.Query(query);
             foreach (var item in collector.Items)
             {
                 ConditionallyAddWrappedLookupItem(collector, proposals, item);

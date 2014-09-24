@@ -20,6 +20,7 @@
 using System.Collections.Generic;
 using JetBrains.Util;
 using KaVE.Model.ObjectUsage;
+using KaVE.Utils.Assertion;
 using KaVE.VsFeedbackGenerator.Utils.Json;
 using NUnit.Framework;
 
@@ -46,6 +47,13 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.JsonSerializationSuite
             var actual = Fixture.ToJson();
 
             Assert.AreEqual(expected, actual);
+        }
+
+        [TestCase(""), TestCase(" "), TestCase("\t"), TestCase("\n"), TestCase("null"),
+         ExpectedException(typeof (AssertException))]
+        public void ShouldRaiseExceptionForEmptyString(string input)
+        {
+            input.ParseJsonToQuery();
         }
 
         private static Query Fixture

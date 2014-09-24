@@ -45,6 +45,7 @@ namespace KaVE.VsFeedbackGenerator.CodeCompletion
             get
             {
                 var original = _wrappedItem.DisplayName.Clone();
+                original.SetStyle(FontStyle.Bold);
                 var probStyle = new TextStyle {ForegroundColor = Color.Gray};
                 return original.Append(" (" + _probability + "%)", probStyle);
             }
