@@ -51,7 +51,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.CodeCompletion
         [SetUp]
         public void SetUp()
         {
-            _network = UsageModelFixture.Network();
+            _network = UsageModelFixture.CreateNetwork();
             _utils = new Mock<IIoUtils>();
             _logger = new Mock<ILogger>();
             _uut = new ModelStore(BasePath, TempPath, _utils.Object, _logger.Object);

@@ -15,6 +15,7 @@
  * 
  * Contributors:
  *    - Dennis Albrecht
+ *    - Uli Fahrer
  */
 
 using KaVE.Model.ObjectUsage;
@@ -54,18 +55,8 @@ namespace KaVE.Model.Tests.ObjectUsage
         public void ShouldRecognizeEqualCallSites()
         {
             Assert.AreEqual(
-                new CallSite
-                {
-                    kind = CallSiteKind.PARAMETER,
-                    method = new CoReMethodName("LReceiver.method(LArgument;)LReturn;"),
-                    argIndex = 2
-                },
-                new CallSite
-                {
-                    kind = CallSiteKind.PARAMETER,
-                    method = new CoReMethodName("LReceiver.method(LArgument;)LReturn;"),
-                    argIndex = 2
-                });
+                CallSites.CreateParameterCallSite("LReceiver.method(LArgument;)LReturn;", 2),
+                CallSites.CreateParameterCallSite("LReceiver.method(LArgument;)LReturn;", 2));
         }
 
         [Test]
@@ -94,54 +85,24 @@ namespace KaVE.Model.Tests.ObjectUsage
             var expected = new Query
             {
                 type = new CoReTypeName("LType"),
-                definition = new DefinitionSite
-                {
-                    kind = DefinitionSiteKind.RETURN,
-                    method = new CoReMethodName("LFactory.method()LType;")
-                },
+                definition = DefinitionSites.CreateDefinitionByReturn("LFactory.method()LType;"),
                 classCtx = new CoReTypeName("LClass"),
                 methodCtx = new CoReMethodName("LReceiver.method(LArgument;)LReturn;"),
             };
-            expected.sites.Add(
-                new CallSite
-                {
-                    kind = CallSiteKind.PARAMETER,
-                    method = new CoReMethodName("LReceiver.method(LType;)LReturn;"),
-                    argIndex = 3
-                });
-            expected.sites.Add(
-                new CallSite
-                {
-                    kind = CallSiteKind.RECEIVER,
-                    method = new CoReMethodName("LType.method(LArgument;)LReturn;"),
-                    argIndex = 0
-                });
+
+            expected.sites.Add(CallSites.CreateParameterCallSite("LReceiver.method(LType;)LReturn;", 3));
+            expected.sites.Add(CallSites.CreateParameterCallSite("LType.method(LArgument;)LReturn;", 0));
 
             var actual = new Query
             {
                 type = new CoReTypeName("LType"),
-                definition = new DefinitionSite
-                {
-                    kind = DefinitionSiteKind.RETURN,
-                    method = new CoReMethodName("LFactory.method()LType;")
-                },
+                definition = DefinitionSites.CreateDefinitionByReturn("LFactory.method()LType;"),
                 classCtx = new CoReTypeName("LClass"),
                 methodCtx = new CoReMethodName("LReceiver.method(LArgument;)LReturn;")
             };
-            actual.sites.Add(
-                new CallSite
-                {
-                    kind = CallSiteKind.PARAMETER,
-                    method = new CoReMethodName("LReceiver.method(LType;)LReturn;"),
-                    argIndex = 3
-                });
-            actual.sites.Add(
-                new CallSite
-                {
-                    kind = CallSiteKind.RECEIVER,
-                    method = new CoReMethodName("LType.method(LArgument;)LReturn;"),
-                    argIndex = 0
-                });
+
+            actual.sites.Add(CallSites.CreateParameterCallSite("LReceiver.method(LType;)LReturn;", 3));
+            actual.sites.Add(CallSites.CreateParameterCallSite("LType.method(LArgument;)LReturn;", 0));
 
             Assert.AreEqual(expected, actual);
         }

@@ -15,12 +15,13 @@
  * 
  * Contributors:
  *    - Dennis Albrecht
+ *    - Uli Fahrer
  */
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using KaVE.Utils.Assertion;
+using KaVE.Model.ObjectUsage;
 using KaVE.VsFeedbackGenerator.CodeCompletion;
 using NUnit.Framework;
 using Smile;
@@ -29,37 +30,53 @@ namespace KaVE.VsFeedbackGenerator.Tests.CodeCompletion
 {
     internal static class UsageModelFixture
     {
-        public static Network Network()
+        public static Network CreateNetwork()
         {
-            var net = new Network();
-            var handle = net.AddNode(Smile.Network.NodeType.Cpt, "pattern");
-            net.SetNodeName(handle, "pattern");
-            net.SetNodeProperties(handle, new[] {"Create", "Use", "Destroy"}, new[] {0.3, 0.5, 0.2});
-            net.AddNode(
-                handle,
-                "classContext",
+            var network = new Network();
+
+            var patternHandle = network.AddNode(Network.NodeType.Cpt, ModelConstants.PatternTitle);
+            network.SetNodeName(patternHandle, ModelConstants.PatternTitle);
+            network.SetNodeProperties(patternHandle, new[] {"p1", "p2", "p3"}, new[] {0.3, 0.5, 0.2});
+            
+            AddNode(
+                network,
+                patternHandle,
+                ModelConstants.ClassContextTitle,
+                ModelConstants.ClassContextTitle,
                 new[] {"LType", "LType2", "LType3"},
                 new[] {0.6, 0.2, 0.2, 0.3, 0.4, 0.3, 0.2, 0.3, 0.5});
-            net.AddNode(
-                handle,
-                "methodContext",
+            AddNode(
+                network,
+                patternHandle,
+                ModelConstants.MethodContextTitle,
+                ModelConstants.MethodContextTitle,
                 new[] {"LType.M()LVoid;", "LType.Ret()LRet;", "LType.Param(LArg;)LVoid;", "LType.Id(LArg;)LRet;"},
                 new[] {0.6, 0.2, 0.1, 0.1, 0.3, 0.4, 0.2, 0.1, 0.2, 0.3, 0.4, 0.1});
-            net.AddNode(
-                handle,
-                "definitionSite",
+            AddNode(
+                network,
+                patternHandle,
+                ModelConstants.DefinitionTitle,
+                ModelConstants.DefinitionTitle,
                 new[] {"RETURN:LType.Create()LType;", "THIS", "CONSTANT", "FIELD:LType.object;LType"},
                 new[] {0.6, 0.2, 0.1, 0.1, 0.1, 0.3, 0.3, 0.3, 0.1, 0.4, 0.1, 0.4});
 
-            net.AddMethod(handle, "LType.Init()LVoid;", new[] {0.95, 0.15, 0.05});
-            net.AddMethod(handle, "LType.Execute()LVoid;", new[] {0.6, 0.99, 0.7});
-            net.AddMethod(handle, "LType.Finish()LVoid;", new[] {0.05, 0.5, 0.9});
-            return net;
+            AddMethod(network, patternHandle, "LType.Init()LVoid;", new[] {0.95, 0.15, 0.05});
+            AddMethod(network, patternHandle, "LType.Execute()LVoid;", new[] {0.6, 0.99, 0.7});
+            AddMethod(network, patternHandle, "LType.Finish()LVoid;", new[] {0.05, 0.5, 0.9});
+
+            return network;
         }
 
-        private static void AddMethod(this Network net, int patternNodeHandle, string methodName, double[] trues)
+        private static void AddMethod(Network net, int patternNodeHandle, string methodName, double[] probabilities)
         {
-            net.AddNode(patternNodeHandle, methodName, new[] {"true", "false"}, Expand(trues));
+            var nodeId = "C_" + UsageModel.ConvertToLegalSmileName(methodName);
+            AddNode(
+                net,
+                patternNodeHandle,
+                nodeId,
+                methodName,
+                new[] {ModelConstants.StateTrue, ModelConstants.StateFalse},
+                Expand(probabilities));
         }
 
         private static double[] Expand(double[] trues)
@@ -73,37 +90,32 @@ namespace KaVE.VsFeedbackGenerator.Tests.CodeCompletion
             return probs;
         }
 
-        private static void AddNode(this Network net,
+        private static void AddNode(
+            Network net,
             int patternNodeHandle,
-            string name,
+            string nodeId,
+            string nodeName,
             string[] states,
             double[] probs)
         {
-            var id = net.AddNode(Smile.Network.NodeType.Cpt, UsageModel.Escape(name));
-            net.SetNodeName(id, name);
-            net.AddArc(patternNodeHandle, id);
-            net.SetNodeProperties(id, states, probs);
+            var handle = net.AddNode(Network.NodeType.Cpt, nodeId);
+            net.SetNodeName(handle, nodeName);
+            net.AddArc(patternNodeHandle, handle);
+            net.SetNodeProperties(handle, states, probs);
         }
 
-        private static void SetNodeProperties(this Network net, int id, string[] states, double[] probs)
+        private static void SetNodeProperties(this Network net, int nodeHandle, string[] states, double[] probs)
         {
-            Asserts.That(states.Length > 0);
-            for (var i = 0; i < states.Length; i++)
+            foreach (var state in states)
             {
-                if (i < 2)
-                {
-                    net.SetOutcomeId(id, i, UsageModel.Escape(states[i]));
-                }
-                else
-                {
-                    net.AddOutcome(id, UsageModel.Escape(states[i]));
-                }
+                var convertedName = UsageModel.ConvertToLegalSmileName(state);
+                net.AddOutcome(nodeHandle, convertedName);
             }
-            if (states.Length == 1)
-            {
-                net.DeleteOutcome(id, 1);
-            }
-            net.SetNodeDefinition(id, probs);
+            //Remove default states
+            net.DeleteOutcome(nodeHandle, "State0");
+            net.DeleteOutcome(nodeHandle, "State1");
+
+            net.SetNodeDefinition(nodeHandle, probs);
         }
 
         public static void AssertEqualityIgnoringRoundingErrors<TKey>(KeyValuePair<TKey, double>[] expected,
@@ -124,6 +136,19 @@ namespace KaVE.VsFeedbackGenerator.Tests.CodeCompletion
             return
                 src.Select(
                     p => new KeyValuePair<TKey, string>(p.Key, (policy == null) ? p.Value.ToString() : policy(p.Value)));
+        }
+
+        public static Query CreateDefaultQuery()
+        {
+            var query = new Query
+            {
+                type = new CoReTypeName("LTypeUnknown"),
+                classCtx = new CoReTypeName("LTypeUnknown"),
+                methodCtx = new CoReMethodName("LTypeUnknown.M()LVoid;"),
+                definition = new DefinitionSite {kind = DefinitionSiteKind.UNKNOWN}
+            };
+
+            return query;
         }
     }
 }

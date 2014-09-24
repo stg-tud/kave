@@ -74,6 +74,7 @@
     <Compile Include="Assertion\NameAssert.cs" />
     <Compile Include="CodeCompletion\CodeCompletionLifecycleManagerTest.cs" />
     <Compile Include="CodeCompletion\ExampleNetworkTest.cs" />
+    <Compile Include="CodeCompletion\ModelConstantsTest.cs" />
     <Compile Include="CodeCompletion\ModelStoreTest.cs" />
     <Compile Include="CodeCompletion\UsageModelFixture.cs" />
     <Compile Include="CodeCompletion\UsageModelTest.cs" />

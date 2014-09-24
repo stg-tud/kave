@@ -14,11 +14,10 @@
  * limitations under the License.
  * 
  * Contributors:
- *    - 
+ *    - Dennis Albrecht
  */
 
 using System;
-using System.ComponentModel;
 using KaVE.Model.ObjectUsage;
 using KaVE.Utils.Assertion;
 using Newtonsoft.Json;

@@ -92,6 +92,7 @@
     <Compile Include="CodeCompletion\LookupItemWrapper.cs" />
     <Compile Include="CodeCompletion\ExampleNetwork.cs" />
     <Compile Include="CodeCompletion\ExemplaryProposalProvider.cs" />
+    <Compile Include="CodeCompletion\ModelConstants.cs" />
     <Compile Include="CodeCompletion\ModelStore.cs" />
     <Compile Include="CodeCompletion\UsageModel.cs" />
     <Compile Include="Generators\ILogger.cs" />

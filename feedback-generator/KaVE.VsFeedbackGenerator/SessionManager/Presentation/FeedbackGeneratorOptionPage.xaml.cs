@@ -30,6 +30,7 @@ using JetBrains.ReSharper.Features.Common.Options;
 using JetBrains.ReSharper.Features.Finding.Resources;
 using JetBrains.UI.CrossFramework;
 using JetBrains.UI.Options;
+using JetBrains.UI.TreeGrid;
 using KaVE.Utils.Assertion;
 using KaVE.VsFeedbackGenerator.Utils;
 using MessageBox = JetBrains.Util.MessageBox;
@@ -87,18 +88,26 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
 
         public bool OnOk()
         {
-            var valid = ValidateUploadUri();
-            if (!valid)
+            var uriIsValid = ValidateUri(UploadUrlTextBox.Text);
+            var prefixIsValid = ValidateUri(WebPraefixTextBox.Text);
+
+            if (!uriIsValid)
             {
-                UploadUrlTextBox.Background =  Brushes.Pink;
+                UploadUrlTextBox.Background = Brushes.Pink;
             }
-            return valid;
+
+            if (!prefixIsValid)
+            {
+                WebPraefixTextBox.Background = Brushes.Pink;
+            }
+
+            return uriIsValid && prefixIsValid;
         }
 
-        private bool ValidateUploadUri()
+        private static bool ValidateUri(string url)
         {
             Uri uri;
-            return Uri.TryCreate(UploadUrlTextBox.Text, UriKind.Absolute, out uri) && HasSupportedScheme(uri);
+            return Uri.TryCreate(url, UriKind.Absolute, out uri) && HasSupportedScheme(uri);
         }
 
         private static bool HasSupportedScheme(Uri uri)

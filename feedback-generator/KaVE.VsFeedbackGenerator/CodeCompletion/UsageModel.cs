@@ -15,6 +15,7 @@
  * 
  * Contributors:
  *    - Dennis Albrecht
+ *    - Uli Fahrer
  */
 
 using System;
@@ -37,130 +38,156 @@ namespace KaVE.VsFeedbackGenerator.CodeCompletion
     public class UsageModel : IUsageModel
     {
         private readonly Network _network;
-        private readonly string[] _contexts = {"pattern", "classContext", "methodContext", "definitionSite"};
-        private readonly string[] _methods;
+
+        private int _classContextHandle;
+        private int _methodContextHandle;
+        private int _definitionHandle;
+
+        private readonly Dictionary<CallSite, int> _callNodes = new Dictionary<CallSite, int>();
+        private readonly Dictionary<CallSite, int> _parameterNodes = new Dictionary<CallSite, int>();
+
+        private readonly ISet<CallSite> _queriedMethods = new HashSet<CallSite>();
 
         public UsageModel(Network network)
         {
             _network = network;
-            _methods = network.GetAllNodeIds().Where(id => !_contexts.Contains(id)).ToArray();
+            InitializeNodes();
+        }
+
+        private void InitializeNodes()
+        {
+            _network.GetAllNodes().ForEach(AssignToClassMember);
+        }
+
+        private void AssignToClassMember(int nodeHandle)
+        {
+            var nodeId = _network.GetNodeId(nodeHandle);
+
+            if (nodeId.Equals(ModelConstants.ClassContextTitle))
+            {
+                _classContextHandle = nodeHandle;
+            }
+            else if (nodeId.Equals(ModelConstants.MethodContextTitle))
+            {
+                _methodContextHandle = nodeHandle;
+            }
+            else if (nodeId.Equals(ModelConstants.DefinitionTitle))
+            {
+                _definitionHandle = nodeHandle;
+            }
+            else if (nodeId.StartsWith(ModelConstants.CallPrefix))
+            {
+                var nodeName = _network.GetNodeName(nodeHandle);
+                var site = new CallSite
+                {
+                    kind = CallSiteKind.RECEIVER,
+                    method = new CoReMethodName(nodeName)
+                };
+
+                _callNodes.Add(site, nodeHandle);
+            }
+            else if(nodeId.StartsWith(ModelConstants.ParameterPrefix))
+            {
+                var nodeName = _network.GetNodeName(nodeHandle);
+                var site = new CallSite
+                {
+                    kind = CallSiteKind.PARAMETER,
+                    method = new CoReMethodName(nodeName)
+                };
+
+                _parameterNodes.Add(site, nodeHandle);
+            }
         }
 
         public KeyValuePair<CoReMethodName, double>[] Query([NotNull] Query query)
         {
             _network.ClearAllEvidence();
 
-            SetClassContext(query.classCtx);
+            AddEvidenceIfAvailable(_classContextHandle, ModelConstants.NewClassContext(query.classCtx));
+            AddEvidenceIfAvailable(_methodContextHandle, ModelConstants.NewMethodContext(query.methodCtx));
+            AddEvidenceIfAvailable(_definitionHandle, ModelConstants.NewDefinition(query.definition));
 
-            SetMethodContext(query.methodCtx);
-
-            SetDefinitionSite(query.definition);
-
-            var evidences =
-                query.sites.Select(site => Escape(CallSiteEvidence(site)))
-                     .Where(method => _methods.Contains(method))
-                     .Distinct()
-                     .ToList();
-            evidences.ForEach(m => _network.SetEvidence(m, "true"));
+            query.sites.ForEach(AddCallSiteEvidenceIfAvailable);
 
             _network.UpdateBeliefs();
 
-            return CollectProposals(evidences);
+            return CollectProposals();
         }
 
-        private void SetClassContext(CoReTypeName typeName)
+        private void AddEvidenceIfAvailable(int nodeHandle, String outcome)
         {
-            if (typeName != null)
+            var outcomeIds = _network.GetOutcomeIds(nodeHandle);
+            var legalSmileState = ConvertToLegalSmileName(outcome);
+
+            if (outcomeIds.Contains(legalSmileState))
             {
-                var classCtx = ClassContextEvidence(typeName);
-                SetEvidence(_contexts[1], classCtx);
+                _network.SetEvidence(nodeHandle, legalSmileState);
             }
         }
 
-        private void SetMethodContext(CoReMethodName methodName)
+        private void AddCallSiteEvidenceIfAvailable(CallSite site)
         {
-            if (methodName != null)
+            switch (site.kind)
             {
-                var methodCtx = MethodContextEvidence(methodName);
-                SetEvidence(_contexts[2], methodCtx);
+                case CallSiteKind.PARAMETER:
+                    AddCallSiteEvidenceIfAvailable(site, _parameterNodes);
+                    break;
+                case CallSiteKind.RECEIVER:
+                    AddCallSiteEvidenceIfAvailable(site, _callNodes);
+                    _queriedMethods.Add(site);
+                    break;
             }
         }
 
-        private void SetDefinitionSite(DefinitionSite definitionSite)
+        private void AddCallSiteEvidenceIfAvailable(CallSite callSite, Dictionary<CallSite, int> sitesToHandle)
         {
-            if (definitionSite != null)
+            if (sitesToHandle.ContainsKey(callSite))
             {
-                var defintionSite = DefinitionSiteEvidence(definitionSite);
-                SetEvidence(_contexts[3], defintionSite);
+                _network.SetEvidence(sitesToHandle[callSite], ModelConstants.StateTrue);
             }
         }
 
-        private void SetEvidence(string nodeId, string stateId)
+        private KeyValuePair<CoReMethodName, double>[] CollectProposals()
         {
-            var escaped = Escape(stateId);
-            if (_network.GetOutcomeIds(nodeId).Contains(escaped))
-            {
-                _network.SetEvidence(nodeId, escaped);
-            }
-        }
+            var unqueriedCallSites = _callNodes.Keys.Except(_queriedMethods);
+            var proposals = unqueriedCallSites.ToDictionary(site => site.method, GetProbability);
 
-        private KeyValuePair<CoReMethodName, double>[] CollectProposals(IEnumerable<string> evidences)
-        {
-            var proposals =
-                _methods.Except(evidences)
-                        .ToDictionary(
-                            method => new CoReMethodName(_network.GetNodeName(method)),
-                            method => _network.GetNodeValue(method)[0]);
-
-            var sortedProposals =
-                new SortedSet<KeyValuePair<CoReMethodName, double>>(
-                    new global::JetBrains.Comparer<KeyValuePair<CoReMethodName, double>>(
-                        (p1, p2) => (Math.Abs(p1.Value - p2.Value) < 0.0001) ? 0 : ((p1.Value > p2.Value) ? -1 : 1)));
+            var sortedProposals = new SortedProbabilitySet();
             sortedProposals.AddRange(proposals);
 
             return sortedProposals.ToArray();
         }
 
-        public static string Escape(string origin)
+        private double GetProbability(CallSite site)
         {
-            var regex = new Regex("[^a-zA-z0-9]");
-            return regex.Replace(origin, "_");
+            var nodeName = ModelConstants.NewReceiverCallSite(site);
+            var nodeId = ConvertToLegalSmileName(nodeName);
+
+            return _network.GetNodeValue(nodeId)[0];
         }
 
-        private static string DefinitionSiteEvidence([NotNull] DefinitionSite site)
+        public static string ConvertToLegalSmileName(string name)
         {
-            switch (site.kind)
+            if (Regex.IsMatch(name, "^[0-9]"))
             {
-                case DefinitionSiteKind.RETURN:
-                    return string.Format("{0}:{1}", site.kind, site.method.Name);
-                case DefinitionSiteKind.NEW:
-                    return string.Format("INIT:{0}", site.method.Name);
-                case DefinitionSiteKind.PARAM:
-                    return string.Format("{0}({1}):{2}", site.kind, site.argIndex, site.method.Name);
-                case DefinitionSiteKind.FIELD:
-                    return string.Format("{0}:{1}", site.kind, site.field.Name);
-                case DefinitionSiteKind.THIS:
-                case DefinitionSiteKind.CONSTANT:
-                case DefinitionSiteKind.UNKNOWN:
-                    return site.kind.ToString();
-                default:
-                    throw new ArgumentOutOfRangeException();
+                name = "x" + name;
             }
+
+            var pattern = new Regex("[^A-Za-z0-9]");
+            return pattern.Replace(name, "_");
         }
 
-        private static string CallSiteEvidence([NotNull] CallSite site)
+        internal class SortedProbabilitySet : SortedSet<KeyValuePair<CoReMethodName, double>>
         {
-            return site.method.Name;
-        }
+            private const double Epsilon = 0.01;
 
-        private static string MethodContextEvidence([NotNull] CoReMethodName name)
-        {
-            return name.Name;
-        }
+            public SortedProbabilitySet() : base(PropabilityComparer()) {}
 
-        private static string ClassContextEvidence([NotNull] CoReTypeName name)
-        {
-            return name.Name;
+            private static global::JetBrains.Comparer<KeyValuePair<CoReMethodName, double>> PropabilityComparer()
+            {
+                return new global::JetBrains.Comparer<KeyValuePair<CoReMethodName, double>>(
+                    (p1, p2) => (Math.Abs(p1.Value - p2.Value) < Epsilon) ? 0 : ((p1.Value > p2.Value) ? -1 : 1));
+            }
         }
 
         public override bool Equals(object obj)

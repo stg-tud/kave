@@ -15,11 +15,13 @@
  * 
  * Contributors:
  *    - Dennis Albrecht
+ *    - Uli Fahrer
  */
 
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using KaVE.JetBrains.Annotations;
 using KaVE.Model.Collections;
 using KaVE.Utils;
 using KaVE.Utils.Assertion;
@@ -39,10 +41,19 @@ namespace KaVE.Model.ObjectUsage
             sites = Lists.NewList(callSites.ToArray());
         }
 
+        [NotNull]
         public CoReTypeName type { get; set; }
+
+        [NotNull]
         public CoReTypeName classCtx { get; set; }
+
+        [NotNull]
         public CoReMethodName methodCtx { get; set; }
+
+        [NotNull]
         public DefinitionSite definition { get; set; }
+
+        [NotNull]
         public IList<CallSite> sites { get; private set; }
 
         public override bool Equals(object obj)
@@ -59,11 +70,11 @@ namespace KaVE.Model.ObjectUsage
         public override int GetHashCode()
         {
             var hashCode = 397;
-            hashCode = (hashCode*397) ^ (type != null ? type.GetHashCode() : 0);
-            hashCode = (hashCode*397) ^ (definition != null ? definition.GetHashCode() : 0);
-            hashCode = (hashCode*397) ^ (classCtx != null ? classCtx.GetHashCode() : 0);
-            hashCode = (hashCode*397) ^ (methodCtx != null ? methodCtx.GetHashCode() : 0);
-            hashCode = (hashCode*397) ^ (sites != null ? sites.GetHashCode() : 0);
+            hashCode = (hashCode*397) ^ type.GetHashCode();
+            hashCode = (hashCode*397) ^ definition.GetHashCode();
+            hashCode = (hashCode*397) ^ classCtx.GetHashCode();
+            hashCode = (hashCode*397) ^ methodCtx.GetHashCode();
+            hashCode = (hashCode*397) ^ sites.GetHashCode();
             return hashCode;
         }
     }
@@ -71,8 +82,13 @@ namespace KaVE.Model.ObjectUsage
     public class DefinitionSite
     {
         public DefinitionSiteKind kind { get; set; }
+
+        [NotNull]
         public CoReFieldName field { get; set; }
+
+        [NotNull]
         public CoReMethodName method { get; set; }
+
         public int argIndex { get; set; }
 
         public override bool Equals(object obj)
@@ -89,10 +105,10 @@ namespace KaVE.Model.ObjectUsage
         public override int GetHashCode()
         {
             var hashCode = 397;
-            hashCode = (hashCode*397) ^ (kind.GetHashCode());
-            hashCode = (hashCode*397) ^ (method != null ? method.GetHashCode() : 0);
-            hashCode = (hashCode*397) ^ (field != null ? field.GetHashCode() : 0);
-            hashCode = (hashCode*397) ^ (argIndex.GetHashCode());
+            hashCode = (hashCode*397) ^ kind.GetHashCode();
+            hashCode = (hashCode*397) ^ method.GetHashCode();
+            hashCode = (hashCode*397) ^ field.GetHashCode();
+            hashCode = (hashCode*397) ^ argIndex.GetHashCode();
             return hashCode;
         }
     }
@@ -111,7 +127,10 @@ namespace KaVE.Model.ObjectUsage
     public class CallSite
     {
         public CallSiteKind kind { get; set; }
+
+        [NotNull]
         public CoReMethodName method { get; set; }
+
         public int argIndex { get; set; }
 
         /// <summary>
@@ -136,9 +155,9 @@ namespace KaVE.Model.ObjectUsage
         public override int GetHashCode()
         {
             var hashCode = 397;
-            hashCode = (hashCode*397) ^ (kind.GetHashCode());
-            hashCode = (hashCode*397) ^ (method != null ? method.GetHashCode() : 0);
-            hashCode = (hashCode*397) ^ (argIndex.GetHashCode());
+            hashCode = (hashCode*397) ^ kind.GetHashCode();
+            hashCode = (hashCode*397) ^ method.GetHashCode();
+            hashCode = (hashCode*397) ^ argIndex.GetHashCode();
             return hashCode;
         }
     }

@@ -42,9 +42,10 @@ namespace KaVE.VsFeedbackGenerator.Export
         private readonly IDateUtils _dateUtils;
         private readonly BackgroundWorker _exportWorker;
         private DateTime _exportEndDate;
+        private UploadWizard.ExportType _exportType;
 
         private readonly InteractionRequest<Notification> _errorNotificationRequest;
-        private readonly InteractionRequest<LinkNotification> _successNotificationRequest; 
+        private readonly InteractionRequest<LinkNotification> _successNotificationRequest;
 
         public IInteractionRequest<Notification> ErrorNotificationRequest
         {
@@ -111,10 +112,10 @@ namespace KaVE.VsFeedbackGenerator.Export
 
         private void OnExport(object worker, DoWorkEventArgs e)
         {
-            var exportType = (UploadWizard.ExportType) e.Argument;
+            _exportType = (UploadWizard.ExportType) e.Argument;
             var events = ExtractEventsForExport();
 
-            if (exportType == UploadWizard.ExportType.ZipFile)
+            if (_exportType == UploadWizard.ExportType.ZipFile)
             {
                 _exporter.Export(events, new FilePublisher(AskForExportLocation));
             }
@@ -181,10 +182,18 @@ namespace KaVE.VsFeedbackGenerator.Export
 
         private void ShowExportSucceededMessage(int numberOfExportedEvents)
         {
-            var export = _settingsStore.GetSettings<ExportSettings>();
-            RaiseLinkNotificationRequest(
-                string.Format(Properties.UploadWizard.ExportSuccess, numberOfExportedEvents),
-                export.UploadUrl);
+            var message = string.Format(Properties.UploadWizard.ExportSuccess, numberOfExportedEvents);
+
+            switch (_exportType)
+            {
+                case UploadWizard.ExportType.ZipFile:
+                    RaiseNotificationRequest(message);
+                    break;
+                case UploadWizard.ExportType.HttpUpload:
+                    var export = _settingsStore.GetSettings<ExportSettings>();
+                    RaiseLinkNotificationRequest(message, export.UploadUrl);
+                    break;
+            }
         }
 
         private void ShowExportFailedMessage(string message)
@@ -211,7 +220,7 @@ namespace KaVE.VsFeedbackGenerator.Export
                 {
                     Caption = Properties.UploadWizard.window_title,
                     Message = text,
-                    LinkDescription =  Properties.UploadWizard.ExportSuccessLinkDescription,
+                    LinkDescription = Properties.UploadWizard.ExportSuccessLinkDescription,
                     Link = url,
                 });
         }
