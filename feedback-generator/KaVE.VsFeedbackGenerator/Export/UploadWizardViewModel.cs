@@ -193,7 +193,6 @@ namespace KaVE.VsFeedbackGenerator.Export
                 case UploadWizard.ExportType.HttpUpload:
                     RaiseNotificationRequest(message);
                     break;
-                    
             }
         }
 

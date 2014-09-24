@@ -222,17 +222,25 @@ namespace KaVE.VsFeedbackGenerator.Tests.Export
         }
 
         [Test]
-        public void SuccessfulExportCreatesNotification()
+        public void SuccessfulDirectUploadCreatesNotification()
         {
             WhenExportIsExecuted();
+
+            Assert.IsTrue(_notificationHelper.IsRequestRaised);
+        }
+
+        [Test]
+        public void SuccessfulZipExportCreatesNotification()
+        {
+            WhenExportIsExecuted(UploadWizard.ExportType.ZipFile);
 
             Assert.IsTrue(_linkNotificationHelper.IsRequestRaised);
         }
 
         [Test]
-        public void SuccessfulExportNotificationHasCorrectMessage()
+        public void SuccessfulZipExportNotificationHasCorrectMessage()
         {
-            WhenExportIsExecuted();
+            WhenExportIsExecuted(UploadWizard.ExportType.ZipFile);
 
             var actual = _linkNotificationHelper.Context;
             // TODO @Sven: extend setup to include some events that are exported here
@@ -248,7 +256,23 @@ namespace KaVE.VsFeedbackGenerator.Tests.Export
         }
 
         [Test]
-        public void FailingExportCreatesNotification()
+        public void SuccessfulDirectUploadNotificationHasCorrectMessage()
+        {
+            WhenExportIsExecuted();
+
+            var actual = _notificationHelper.Context;
+            // TODO @Sven: extend setup to include some events that are exported here
+            // TODO @Seb: help sven with above task
+            var expected = new Notification()
+            {
+                Caption = Properties.UploadWizard.window_title,
+                Message = Properties.UploadWizard.ExportSuccess.FormatEx(0),
+            };
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void FailingZipExportCreatesNotification()
         {
             _mockExporter.Setup(e => e.Export(It.IsAny<IEnumerable<IDEEvent>>(), It.IsAny<IPublisher>()))
                          .Throws(new AssertException("TEST"));
@@ -276,7 +300,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Export
         }
 
         [Test]
-        public void FailingExportLogsError()
+        public void FailingZipExportLogsError()
         {
             var exception = new AssertException("TEST");
             _mockExporter.Setup(e => e.Export(It.IsAny<IEnumerable<IDEEvent>>(), It.IsAny<IPublisher>()))
@@ -288,7 +312,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Export
         }
 
         [Test]
-        public void SuccessfulExportUpdatesLastUploadDate()
+        public void SuccessfulZipExportUpdatesLastUploadDate()
         {
             _testDateUtils.Now = DateTime.Now;
             UploadSettings uploadSettings = null;

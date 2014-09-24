@@ -292,6 +292,7 @@
     <EmbeddedResource Include="Properties\UploadWizard.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>UploadWizard.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

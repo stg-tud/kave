@@ -48,7 +48,7 @@ namespace KaVE.VsFeedbackGenerator.Interactivity
 
         public override string ToString()
         {
-            return string.Format("[Caption: {0}, Message: {1}, Link: {2}]", Caption, Message);
+            return string.Format("[Caption: {0}, Message: {1}]", Caption, Message);
         }
     }
 }
