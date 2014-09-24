@@ -28,9 +28,9 @@ namespace KaVE.Model.Tests.ObjectUsage
     {
         [TestCase("TType, A, 1.0.0.0", "LTType"),
          TestCase("System.Void, mscore, 4.0.0.0", "LSystem/Void"),
-         TestCase("Coll.List`1[T -> T], mscore, 4.0.0.0", "LColl/List"),
+         TestCase("Coll.List`1[[T -> T]], mscore, 4.0.0.0", "LColl/List"),
          TestCase("N.Type[], A, 1.0.0.0", "[LN/Type"),
-         TestCase("N.Type[][][], A, 1.0.0.0", "[[[LN/Type"),
+         TestCase("N.Type[,,], A, 1.0.0.0", "[LN/Type"),
          TestCase("Name.Outer+Inner, Assembly, 1.2.3.4", "LName/Outer$Inner")]
         public void ShouldConvertTypeNames(string iName, string coReName)
         {

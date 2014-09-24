@@ -98,34 +98,21 @@ namespace KaVE.Model.ObjectUsage
 
         private static string ToName(this ITypeName name)
         {
-            var builder = new StringBuilder();
             if (name.IsTypeParameter)
             {
-                builder.Append("LSystem/Object");
+                return "LSystem/Object";
             }
-            else
+            if (name.IsArrayType)
             {
-                if (name.IsArrayType)
-                {
-                    builder.Append(GenerateArrayPrefix(name));
-                }
-                builder.Append("L", name.Namespace.ToName());
-                //name.IsNestedType;
-                if (name.IsArrayType)
-                {
-                    builder.Append(name.Name.Replace("[]", ""));
-                }
-                else
-                {
-                    builder.Append(name.Name);
-                }
+                return "[" + name.ArrayBaseType.ToName();
             }
+            if (name.IsNestedType)
+            {
+                return name.DeclaringType.ToName() + "$" + name.Name;
+            }
+            var builder = new StringBuilder();
+            builder.Append("L", name.Namespace.ToName(), name.Name);
             return builder.ToString();
-        }
-
-        private static string GenerateArrayPrefix(ITypeName name)
-        {
-            return string.Join("", name.Name.Where(c => c == '['));
         }
     }
 }
