@@ -27,6 +27,12 @@ namespace KaVE.Model.ObjectUsage
         public CoReName Name { get; set; }
         public double Probability { get; set; }
 
+        public CoReProposal(CoReName name, double probability)
+        {
+            Name = name;
+            Probability = probability;
+        }
+
         public string FormattedProbability
         {
             get { return string.Format("{0}%", (int) (Probability*100)); }

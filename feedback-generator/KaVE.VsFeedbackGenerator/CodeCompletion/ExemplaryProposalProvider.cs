@@ -19,7 +19,7 @@
  */
 
 using System.Collections.Generic;
-using JetBrains.Util;
+using System.Linq;
 using KaVE.Model.Events.CompletionEvent;
 using KaVE.Model.Names;
 using KaVE.Model.Names.CSharp;
@@ -52,22 +52,14 @@ namespace KaVE.VsFeedbackGenerator.CodeCompletion
 
         private class MyUsageModel : IUsageModel
         {
-            public KeyValuePair<CoReMethodName, double>[] Query(Query query)
+            public CoReProposal[] Query(Query query)
             {
                 return new[]
                 {
-                    new KeyValuePair<CoReMethodName, double>(
-                        new CoReMethodName("LSystem/Object.Equals(LSystem/Object;)LSystem/Boolean;"),
-                        0.85),
-                    new KeyValuePair<CoReMethodName, double>(
-                        new CoReMethodName("LSystem/Object.ToString()LSystem/String;"),
-                        0.6),
-                    new KeyValuePair<CoReMethodName, double>(
-                        new CoReMethodName("LSystem/Object.GetHashCode()LSystem/Int32;"),
-                        0.35),
-                    new KeyValuePair<CoReMethodName, double>(
-                        new CoReMethodName("LSystem/Object.GetType()LSystem/Type;"),
-                        0.1)
+                    new CoReProposal(new CoReMethodName("LSystem/Object.Equals(LSystem/Object;)LSystem/Boolean;"), 0.85),
+                    new CoReProposal(new CoReMethodName("LSystem/Object.ToString()LSystem/String;"), 0.6),
+                    new CoReProposal(new CoReMethodName("LSystem/Object.GetHashCode()LSystem/Int32;"), 0.35),
+                    new CoReProposal(new CoReMethodName("LSystem/Object.GetType()LSystem/Type;"), 0.1)
                 };
             }
         }
@@ -108,21 +100,20 @@ namespace KaVE.VsFeedbackGenerator.CodeCompletion
         }
 
         private static void ConditionallyAddWrappedLookupItem(GroupedItemsCollector collector,
-            IEnumerable<KeyValuePair<CoReMethodName, double>> proposals,
+            IEnumerable<CoReProposal> proposals,
             ILookupItem candidate)
         {
             if (candidate is LookupItemWrapper)
             {
                 return;
             }
-            //TODO @Dennis: create CoReProposal-class
             var representation = candidate.ToProposal().ToCoReName();
             if (representation != null)
             {
-                var matchingProposal = proposals.FirstOrNull(p => p.Key.Equals(representation));
+                var matchingProposal = proposals.FirstOrDefault(p => p.Name.Equals(representation));
                 if (matchingProposal != null)
                 {
-                    collector.AddToTop(new LookupItemWrapper(candidate, matchingProposal.Value.Value));
+                    collector.AddToTop(new LookupItemWrapper(candidate, matchingProposal.Probability));
                 }
             }
         }
@@ -130,12 +121,16 @@ namespace KaVE.VsFeedbackGenerator.CodeCompletion
         private static Query CreateQuery(Context context)
         {
             var triggerType = ExtractTypeName(context.TriggerTarget);
+            if (context.EnclosingMethod == null || triggerType == null)
+            {
+                return null;
+            }
             return new Query(new List<CallSite>())
             {
                 //definition = new DefinitionSite(), // we are not object-sensitive yet
                 classCtx = context.TypeShape.TypeHierarchy.Element.ToCoReName(),
-                methodCtx = (context.EnclosingMethod == null) ? null : context.EnclosingMethod.ToCoReName(),
-                type = triggerType == null ? null : triggerType.ToCoReName()
+                methodCtx = context.EnclosingMethod.ToCoReName(),
+                type = triggerType.ToCoReName()
             };
         }
 

@@ -32,7 +32,7 @@ namespace KaVE.VsFeedbackGenerator.CodeCompletion
 {
     public interface IUsageModel
     {
-        KeyValuePair<CoReMethodName, double>[] Query([NotNull] Query query);
+        CoReProposal[] Query([NotNull] Query query);
     }
 
     public class UsageModel : IUsageModel
@@ -86,7 +86,7 @@ namespace KaVE.VsFeedbackGenerator.CodeCompletion
 
                 _callNodes.Add(site, nodeHandle);
             }
-            else if(nodeId.StartsWith(ModelConstants.ParameterPrefix))
+            else if (nodeId.StartsWith(ModelConstants.ParameterPrefix))
             {
                 var nodeName = _network.GetNodeName(nodeHandle);
                 var site = new CallSite
@@ -99,7 +99,7 @@ namespace KaVE.VsFeedbackGenerator.CodeCompletion
             }
         }
 
-        public KeyValuePair<CoReMethodName, double>[] Query([NotNull] Query query)
+        public CoReProposal[] Query(Query query)
         {
             _network.ClearAllEvidence();
 
@@ -147,10 +147,11 @@ namespace KaVE.VsFeedbackGenerator.CodeCompletion
             }
         }
 
-        private KeyValuePair<CoReMethodName, double>[] CollectProposals()
+        private CoReProposal[] CollectProposals()
         {
             var unqueriedCallSites = _callNodes.Keys.Except(_queriedMethods);
-            var proposals = unqueriedCallSites.ToDictionary(site => site.method, GetProbability);
+            var proposals =
+                unqueriedCallSites.Select(cs => new CoReProposal(cs.method, GetProbability(cs)));
 
             var sortedProposals = new SortedProbabilitySet();
             sortedProposals.AddRange(proposals);
@@ -177,16 +178,19 @@ namespace KaVE.VsFeedbackGenerator.CodeCompletion
             return pattern.Replace(name, "_");
         }
 
-        internal class SortedProbabilitySet : SortedSet<KeyValuePair<CoReMethodName, double>>
+        internal class SortedProbabilitySet : SortedSet<CoReProposal>
         {
             private const double Epsilon = 0.01;
 
             public SortedProbabilitySet() : base(PropabilityComparer()) {}
 
-            private static global::JetBrains.Comparer<KeyValuePair<CoReMethodName, double>> PropabilityComparer()
+            private static global::JetBrains.Comparer<CoReProposal> PropabilityComparer()
             {
-                return new global::JetBrains.Comparer<KeyValuePair<CoReMethodName, double>>(
-                    (p1, p2) => (Math.Abs(p1.Value - p2.Value) < Epsilon) ? 0 : ((p1.Value > p2.Value) ? -1 : 1));
+                return new global::JetBrains.Comparer<CoReProposal>(
+                    (p1, p2) =>
+                        (Math.Abs(p1.Probability - p2.Probability) < Epsilon)
+                            ? 0
+                            : ((p1.Probability > p2.Probability) ? -1 : 1));
             }
         }
 

@@ -18,12 +18,8 @@
  *    - Uli Fahrer
  */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using KaVE.Model.ObjectUsage;
 using KaVE.VsFeedbackGenerator.CodeCompletion;
-using NUnit.Framework;
 using Smile;
 
 namespace KaVE.VsFeedbackGenerator.Tests.CodeCompletion
@@ -37,7 +33,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.CodeCompletion
             var patternHandle = network.AddNode(Network.NodeType.Cpt, ModelConstants.PatternTitle);
             network.SetNodeName(patternHandle, ModelConstants.PatternTitle);
             network.SetNodeProperties(patternHandle, new[] {"p1", "p2", "p3"}, new[] {0.3, 0.5, 0.2});
-            
+
             AddNode(
                 network,
                 patternHandle,
@@ -116,26 +112,6 @@ namespace KaVE.VsFeedbackGenerator.Tests.CodeCompletion
             net.DeleteOutcome(nodeHandle, "State1");
 
             net.SetNodeDefinition(nodeHandle, probs);
-        }
-
-        public static void AssertEqualityIgnoringRoundingErrors<TKey>(KeyValuePair<TKey, double>[] expected,
-            KeyValuePair<TKey, double>[] actual)
-        {
-            Func<double, string> policy = d => string.Format("{0:0.###}", d);
-
-            var convertedExpected = expected.ValuesToString(policy);
-            var convertedActual = actual.ValuesToString(policy);
-
-            CollectionAssert.AreEquivalent(convertedExpected, convertedActual);
-        }
-
-        private static IEnumerable<KeyValuePair<TKey, string>> ValuesToString<TKey, TValue>(
-            this IEnumerable<KeyValuePair<TKey, TValue>> src,
-            Func<TValue, string> policy = null)
-        {
-            return
-                src.Select(
-                    p => new KeyValuePair<TKey, string>(p.Key, (policy == null) ? p.Value.ToString() : policy(p.Value)));
         }
 
         public static Query CreateDefaultQuery()

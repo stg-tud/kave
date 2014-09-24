@@ -18,7 +18,6 @@
  *    - Uli Fahrer
  */
 
-using System.Collections.Generic;
 using System.Linq;
 using KaVE.Model.ObjectUsage;
 using KaVE.VsFeedbackGenerator.CodeCompletion;
@@ -160,10 +159,10 @@ namespace KaVE.VsFeedbackGenerator.Tests.CodeCompletion
             query.sites.Add(CallSites.CreateReceiverCallSite("LType.Execute()LVoid;"));
             query.sites.Add(CallSites.CreateReceiverCallSite("LType.Finish()LVoid;"));
 
-            var expected = new KeyValuePair<CoReMethodName, double>[] {};
+            var expected = new CoReProposal[] {};
             var actual = _uut.Query(query);
 
-            UsageModelFixture.AssertEqualityIgnoringRoundingErrors(expected, actual);
+            CollectionAssert.AreEquivalent(expected, actual);
         }
 
         [Test]
@@ -179,7 +178,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.CodeCompletion
             };
 
             var proposals = _uut.Query(query);
-            var actual = proposals.Select(p => p.Key);
+            var actual = proposals.Select(p => p.Name);
 
             CollectionAssert.AreEquivalent(expected, actual);
         }
@@ -197,7 +196,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.CodeCompletion
             };
 
             var proposals = _uut.Query(query);
-            var actual = proposals.Select(p => p.Key);
+            var actual = proposals.Select(p => p.Name);
 
             CollectionAssert.AreEquivalent(expected, actual);
         }
@@ -209,14 +208,14 @@ namespace KaVE.VsFeedbackGenerator.Tests.CodeCompletion
 
             var expected = new[]
             {
-                new KeyValuePair<CoReMethodName, double>(new CoReMethodName("LType.Execute()LVoid;"), 0.815),
-                new KeyValuePair<CoReMethodName, double>(new CoReMethodName("LType.Finish()LVoid;"), 0.445),
-                new KeyValuePair<CoReMethodName, double>(new CoReMethodName("LType.Init()LVoid;"), 0.37)
+                new CoReProposal(new CoReMethodName("LType.Execute()LVoid;"), 0.815),
+                new CoReProposal(new CoReMethodName("LType.Finish()LVoid;"), 0.445),
+                new CoReProposal(new CoReMethodName("LType.Init()LVoid;"), 0.37)
             };
 
             var actual = _uut.Query(query);
 
-            UsageModelFixture.AssertEqualityIgnoringRoundingErrors(expected, actual);
+            CollectionAssert.AreEquivalent(expected, actual);
         }
 
         [Test]
@@ -229,14 +228,14 @@ namespace KaVE.VsFeedbackGenerator.Tests.CodeCompletion
           
             var expected = new[]
             {
-                new KeyValuePair<CoReMethodName, double>(new CoReMethodName("LType.Execute()LVoid;"), 0.803),
-                new KeyValuePair<CoReMethodName, double>(new CoReMethodName("LType.Init()LVoid;"), 0.453),
-                new KeyValuePair<CoReMethodName, double>(new CoReMethodName("LType.Finish()LVoid;"), 0.37)
+                new CoReProposal(new CoReMethodName("LType.Execute()LVoid;"), 0.803),
+                new CoReProposal(new CoReMethodName("LType.Init()LVoid;"), 0.453),
+                new CoReProposal(new CoReMethodName("LType.Finish()LVoid;"), 0.37)
             };
 
             var actual = _uut.Query(query);
 
-            UsageModelFixture.AssertEqualityIgnoringRoundingErrors(expected, actual);
+            CollectionAssert.AreEquivalent(expected, actual);
         }
 
         [Test]
@@ -247,13 +246,13 @@ namespace KaVE.VsFeedbackGenerator.Tests.CodeCompletion
 
             var expected = new[]
             {
-                new KeyValuePair<CoReMethodName, double>(new CoReMethodName("LType.Execute()LVoid;"), 0.682),
-                new KeyValuePair<CoReMethodName, double>(new CoReMethodName("LType.Finish()LVoid;"), 0.164)
+                new CoReProposal(new CoReMethodName("LType.Execute()LVoid;"), 0.682),
+                new CoReProposal(new CoReMethodName("LType.Finish()LVoid;"), 0.164)
             };
 
             var actual = _uut.Query(query);
 
-            UsageModelFixture.AssertEqualityIgnoringRoundingErrors(expected, actual);
+            CollectionAssert.AreEquivalent(expected, actual);
         }
     }
 }
