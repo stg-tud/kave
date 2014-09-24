@@ -126,8 +126,16 @@
     <Compile Include="Names\VisualStudio\ProjectName.cs" />
     <Compile Include="Names\VisualStudio\SolutionName.cs" />
     <Compile Include="Names\VisualStudio\WindowName.cs" />
+    <Compile Include="ObjectUsage\CallSite.cs" />
+    <Compile Include="ObjectUsage\CallSiteKind.cs" />
     <Compile Include="ObjectUsage\CallSites.cs" />
+    <Compile Include="ObjectUsage\CoReFieldName.cs" />
+    <Compile Include="ObjectUsage\CoReMethodName.cs" />
+    <Compile Include="ObjectUsage\CoReName.cs" />
     <Compile Include="ObjectUsage\CoReNameUtil.cs" />
+    <Compile Include="ObjectUsage\CoReTypeName.cs" />
+    <Compile Include="ObjectUsage\DefinitionSite.cs" />
+    <Compile Include="ObjectUsage\DefinitionSiteKind.cs" />
     <Compile Include="ObjectUsage\DefinitionSites.cs" />
     <Compile Include="ObjectUsage\Query.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -15,39 +15,39 @@
  * 
  * Contributors:
  *    - Uli Fahrer
+ *    - Dennis Albrecht
  */
 
+using System.Text.RegularExpressions;
 using KaVE.Utils.Assertion;
 
 namespace KaVE.Model.ObjectUsage
 {
-    public class CallSites
+    public abstract class CoReName
     {
-        public static CallSite CreateReceiverCallSite(string methodName)
+        protected CoReName(string name, string validationPattern)
         {
-            Asserts.NotNull(methodName);
-
-            var callSite = new CallSite
-            {
-                kind = CallSiteKind.RECEIVER, 
-                method = new CoReMethodName(methodName)
-            };
-
-            return callSite;
+            var regex = new Regex("^" + validationPattern + "$");
+            Asserts.That(regex.IsMatch(name));
+            Name = name;
         }
 
-        public static CallSite CreateParameterCallSite(string methodName, int argIndex)
+        public string Name { get; private set; }
+
+        public override bool Equals(object obj)
         {
-            Asserts.NotNull(methodName);
+            var name = obj as CoReName;
+            return name != null && Name.Equals(name.Name);
+        }
 
-            var callSite = new CallSite
-            {
-                kind = CallSiteKind.PARAMETER,
-                method = new CoReMethodName(methodName),
-                argIndex = argIndex
-            };
+        public override int GetHashCode()
+        {
+            return Name.GetHashCode();
+        }
 
-            return callSite;
+        public override string ToString()
+        {
+            return GetType().Name + "[" + Name + "]";
         }
     }
 }

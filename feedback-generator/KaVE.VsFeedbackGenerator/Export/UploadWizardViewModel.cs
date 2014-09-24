@@ -187,12 +187,13 @@ namespace KaVE.VsFeedbackGenerator.Export
             switch (_exportType)
             {
                 case UploadWizard.ExportType.ZipFile:
-                    RaiseNotificationRequest(message);
-                    break;
-                case UploadWizard.ExportType.HttpUpload:
                     var export = _settingsStore.GetSettings<ExportSettings>();
                     RaiseLinkNotificationRequest(message, export.UploadUrl);
                     break;
+                case UploadWizard.ExportType.HttpUpload:
+                    RaiseNotificationRequest(message);
+                    break;
+                    
             }
         }
 

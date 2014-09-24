@@ -17,13 +17,11 @@
  *    - Uli Fahrer
  */
 
-using System;
-
 namespace KaVE.Model.ObjectUsage
 {
     public class DefinitionSites
     {
-        public static DefinitionSite CreateDefinitionByReturn(String methodName)
+        public static DefinitionSite CreateDefinitionByReturn(string methodName)
         {
             var definitionSite = new DefinitionSite
             {
@@ -34,7 +32,7 @@ namespace KaVE.Model.ObjectUsage
             return definitionSite;
         }
 
-        public static DefinitionSite CreateDefinitionByField(String field)
+        public static DefinitionSite CreateDefinitionByField(string field)
         {
             var definitionSite = new DefinitionSite
             {
@@ -45,7 +43,7 @@ namespace KaVE.Model.ObjectUsage
             return definitionSite;
         }
 
-        public static DefinitionSite CreateDefinitionByConstructor(String constructor)
+        public static DefinitionSite CreateDefinitionByConstructor(string constructor)
         {
             var definitionSite = new DefinitionSite
             {
@@ -56,7 +54,7 @@ namespace KaVE.Model.ObjectUsage
             return definitionSite;
         }
 
-        public static DefinitionSite CreateDefinitionByParam(String methodName, int argIndex)
+        public static DefinitionSite CreateDefinitionByParam(string methodName, int argIndex)
         {
             var definitionSite = new DefinitionSite
             {
@@ -77,6 +75,5 @@ namespace KaVE.Model.ObjectUsage
 
             return definitionSite;
         }
-        
     }
 }

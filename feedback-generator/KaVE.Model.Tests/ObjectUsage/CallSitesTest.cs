@@ -26,15 +26,13 @@ namespace KaVE.Model.Tests.ObjectUsage
     [TestFixture]
     internal class CallSitesTest
     {
-        [Test]
-        [ExpectedException(typeof(AssertException))]
+        [Test, ExpectedException(typeof (AssertException))]
         public void NullValueReceiverCallSite()
         {
             CallSites.CreateReceiverCallSite(null);
         }
 
-        [Test]
-        [ExpectedException(typeof(AssertException))]
+        [Test, ExpectedException(typeof (AssertException))]
         public void NullValueParameterCallSite()
         {
             CallSites.CreateParameterCallSite(null, 0);
@@ -43,11 +41,11 @@ namespace KaVE.Model.Tests.ObjectUsage
         [Test]
         public void ReceiverCallSiteIsCorrectInitialized()
         {
-            var actual = CallSites.CreateReceiverCallSite("LReceiver.method(LArgument;)LReturn;");
+            var actual = CallSites.CreateReceiverCallSite("LType.method(LArgument;)LReturn;");
             var expected = new CallSite
             {
                 kind = CallSiteKind.RECEIVER,
-                method = new CoReMethodName("LReceiver.method(LArgument;)LReturn;")
+                method = new CoReMethodName("LType.method(LArgument;)LReturn;")
             };
 
             Assert.AreEqual(expected, actual);

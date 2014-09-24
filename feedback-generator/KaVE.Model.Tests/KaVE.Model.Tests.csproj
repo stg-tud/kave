@@ -64,8 +64,13 @@
     <Compile Include="Names\VisualStudio\ProjectNameTest.cs" />
     <Compile Include="Names\VisualStudio\WindowNameTest.cs" />
     <Compile Include="ObjectUsage\CallSitesTest.cs" />
+    <Compile Include="ObjectUsage\CallSiteTest.cs" />
+    <Compile Include="ObjectUsage\CoReFieldNameTest.cs" />
+    <Compile Include="ObjectUsage\CoReMethodNameTest.cs" />
     <Compile Include="ObjectUsage\CoReNameUtilTest.cs" />
+    <Compile Include="ObjectUsage\CoReTypeNameTest.cs" />
     <Compile Include="ObjectUsage\DefinitionSitesTest.cs" />
+    <Compile Include="ObjectUsage\DefinitionSiteTest.cs" />
     <Compile Include="ObjectUsage\QueryTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SSTs\MethodDeclarationTest.cs" />
