@@ -127,7 +127,7 @@ namespace KaVE.Model.Tests.Names.CSharp
         [Test]
         public void ShouldHaveTwoUnboundTypeParameters()
         {
-            var methodName = MethodName.Get("[T] [D, D, 4.5.6.7].M`2[[T],[O]]([0] p)");
+            var methodName = MethodName.Get("[T] [D, D, 4.5.6.7].M`2[[T],[O]]([O] p)");
 
             var expected = new[] {TypeName.Get("T"), TypeName.Get("O")};
             Assert.AreEqual(expected, methodName.TypeParameters);

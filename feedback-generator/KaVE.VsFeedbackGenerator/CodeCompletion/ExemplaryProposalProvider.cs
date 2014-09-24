@@ -19,7 +19,13 @@
  */
 
 using System.Collections.Generic;
-using System.Linq;
+using JetBrains.Util;
+using KaVE.Model.Events.CompletionEvent;
+using KaVE.Model.Names;
+using KaVE.Model.Names.CSharp;
+using KaVE.Model.ObjectUsage;
+using KaVE.VsFeedbackGenerator.Analysis;
+using KaVE.VsFeedbackGenerator.Utils;
 // ReSharper disable RedundantUsingDirective
 using JetBrains.Application;
 using JetBrains.ReSharper.Feature.Services.CSharp.CodeCompletion.Infrastructure;
@@ -27,13 +33,7 @@ using JetBrains.ReSharper.Feature.Services.Lookup;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 // ReSharper restore RedundantUsingDirective
-using KaVE.Model.Events.CompletionEvent;
-using KaVE.Model.Names;
-using KaVE.Model.Names.CSharp;
-using KaVE.Model.ObjectUsage;
-using KaVE.VsFeedbackGenerator.Analysis;
-using KaVE.VsFeedbackGenerator.Generators;
-using KaVE.VsFeedbackGenerator.Utils;
+using KaVELogger = KaVE.VsFeedbackGenerator.Generators.ILogger;
 
 namespace KaVE.VsFeedbackGenerator.CodeCompletion
 {
@@ -56,10 +56,18 @@ namespace KaVE.VsFeedbackGenerator.CodeCompletion
             {
                 return new[]
                 {
-                    new KeyValuePair<CoReMethodName, double>(new CoReMethodName("LSystem/Object.Equals(LSystem/Object;)LSystem/Boolean;"), 0.85),
-                    new KeyValuePair<CoReMethodName, double>(new CoReMethodName("LSystem/Object.ToString()LSystem/String;"), 0.6),
-                    new KeyValuePair<CoReMethodName, double>(new CoReMethodName("LSystem/Object.GetHashCode()LSystem/Int32;"), 0.35),
-                    new KeyValuePair<CoReMethodName, double>(new CoReMethodName("LSystem/Object.GetType()LSystem/Type;"), 0.1)
+                    new KeyValuePair<CoReMethodName, double>(
+                        new CoReMethodName("LSystem/Object.Equals(LSystem/Object;)LSystem/Boolean;"),
+                        0.85),
+                    new KeyValuePair<CoReMethodName, double>(
+                        new CoReMethodName("LSystem/Object.ToString()LSystem/String;"),
+                        0.6),
+                    new KeyValuePair<CoReMethodName, double>(
+                        new CoReMethodName("LSystem/Object.GetHashCode()LSystem/Int32;"),
+                        0.35),
+                    new KeyValuePair<CoReMethodName, double>(
+                        new CoReMethodName("LSystem/Object.GetType()LSystem/Type;"),
+                        0.1)
                 };
             }
         }
@@ -69,12 +77,12 @@ namespace KaVE.VsFeedbackGenerator.CodeCompletion
     public class ExemplaryProposalProvider : CSharpItemsProviderBasic
     {
         private readonly IModelStore _store;
-        private readonly ILogger _logger;
+        private readonly KaVELogger _logger;
 
         private Context _context;
         private IUsageModel _model;
 
-        public ExemplaryProposalProvider(IModelStore store, ILogger logger)
+        public ExemplaryProposalProvider(IModelStore store, KaVELogger logger)
         {
             _store = store;
             _logger = logger;
@@ -90,7 +98,7 @@ namespace KaVE.VsFeedbackGenerator.CodeCompletion
 
         protected override bool AddLookupItems(CSharpCodeCompletionContext context, GroupedItemsCollector collector)
         {
-            var proposals = ConvertPropabilities(_model.Query(CreateQuery(_context))).ToList();
+            var proposals = _model.Query(CreateQuery(_context));
             foreach (var item in collector.Items)
             {
                 ConditionallyAddWrappedLookupItem(collector, proposals, item);
@@ -99,41 +107,35 @@ namespace KaVE.VsFeedbackGenerator.CodeCompletion
             return base.AddLookupItems(context, collector);
         }
 
-        private static IEnumerable<KeyValuePair<CoReMethodName, int>> ConvertPropabilities(
-            IEnumerable<KeyValuePair<CoReMethodName, double>> proposals)
-        {
-            return
-                proposals.Select(
-                    proposal => new KeyValuePair<CoReMethodName, int>(proposal.Key, (int) (proposal.Value*100)));
-        }
-
         private static void ConditionallyAddWrappedLookupItem(GroupedItemsCollector collector,
-            IEnumerable<KeyValuePair<CoReMethodName, int>> proposals,
+            IEnumerable<KeyValuePair<CoReMethodName, double>> proposals,
             ILookupItem candidate)
         {
             if (candidate is LookupItemWrapper)
             {
                 return;
             }
+            //TODO @Dennis: create CoReProposal-class
             var representation = candidate.ToProposal().ToCoReName();
             if (representation != null)
             {
-                var matchingProposals = proposals.Where(p => p.Key.Equals(representation));
-                foreach (var probability in matchingProposals.Select(proposal => proposal.Value))
+                var matchingProposal = proposals.FirstOrNull(p => p.Key.Equals(representation));
+                if (matchingProposal != null)
                 {
-                    collector.AddToTop(new LookupItemWrapper(candidate, probability));
+                    collector.AddToTop(new LookupItemWrapper(candidate, matchingProposal.Value.Value));
                 }
             }
         }
 
         private static Query CreateQuery(Context context)
         {
+            var triggerType = ExtractTypeName(context.TriggerTarget);
             return new Query(new List<CallSite>())
             {
                 //definition = new DefinitionSite(), // we are not object-sensitive yet
                 classCtx = context.TypeShape.TypeHierarchy.Element.ToCoReName(),
                 methodCtx = (context.EnclosingMethod == null) ? null : context.EnclosingMethod.ToCoReName(),
-                type = (context.TriggerTarget is ITypeName) ? (context.TriggerTarget as ITypeName).ToCoReName() : null
+                type = triggerType == null ? null : triggerType.ToCoReName()
             };
         }
 
@@ -158,6 +160,16 @@ namespace KaVE.VsFeedbackGenerator.CodeCompletion
             if (localVarName != null)
             {
                 return localVarName.ValueType;
+            }
+            var propertyName = triggerTarget as IPropertyName;
+            if (propertyName != null)
+            {
+                return propertyName.ValueType;
+            }
+            var methodName = triggerTarget as IMethodName;
+            if (methodName != null)
+            {
+                return methodName.ReturnType;
             }
             return null;
         }

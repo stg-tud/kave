@@ -17,7 +17,6 @@
  *    - Dennis Albrecht
  */
 
-using KaVE.Model.Names;
 using KaVE.Model.Names.CSharp;
 using KaVE.Model.ObjectUsage;
 using NUnit.Framework;
@@ -27,31 +26,42 @@ namespace KaVE.Model.Tests.ObjectUsage
     [TestFixture]
     internal class CoReNameUtilTest
     {
-        private static readonly TestCaseData[] TestCases =
+        [TestCase("TType, A, 1.0.0.0", "LTType"),
+         TestCase("System.Void, mscore, 4.0.0.0", "LSystem/Void"),
+         TestCase("Coll.List`1[T -> T], mscore, 4.0.0.0", "LColl/List"),
+         TestCase("N.Type[], A, 1.0.0.0", "[LN/Type"),
+         TestCase("N.Type[][][], A, 1.0.0.0", "[[[LN/Type"),
+         TestCase("Name.Outer+Inner, Assembly, 1.2.3.4", "LName/Outer$Inner")]
+        public void ShouldConvertTypeNames(string iName, string coReName)
         {
-            // TODO: How to represent the disabled examples
-            new TestCaseData(TypeName.Get("TType, A, 1.0.0.0"), new CoReTypeName("LTType")),
-            new TestCaseData(TypeName.Get("System.Void, mscore, 4.0.0.0"), new CoReTypeName("LSystem/Void")),
-            new TestCaseData(TypeName.Get("Coll.List`1[T -> T], mscore, 4.0.0.0"), new CoReTypeName("LColl/List")),
-            new TestCaseData(TypeName.Get("N.Type[], A, 1.0.0.0"), new CoReTypeName("[LN/Type")),
-            new TestCaseData(TypeName.Get("N.Type[][][], A, 1.0.0.0"), new CoReTypeName("[[[LN/Type")),
-            //new TestCaseData(TypeName.Get("Name.Outer+Inner, Assembly, 1.2.3.4"), new CoReTypeName("???")),
-            new TestCaseData(
-                MethodName.Get("[Sys.V, A, 1.0.0.0] [N.T, A, 1.0.0.0].m([N.P, A, 1.0.0.0] arg)"),
-                new CoReMethodName("LN/T.m(LN/P;)LSys/V;")),
-            new TestCaseData(
-                MethodName.Get("[Sys.V, A, 1.0.0.0] [N.T, A, 1.0.0.0].m`1[G -> G]([G, A, 1.0.0.0] arg)"),
-                new CoReMethodName("LN/T.m(LG;)LSys/V;")),
-            //new TestCaseData(MethodName.Get("[N.T, A, 1.0.0.0] [N.T, A, 1.0.0.0]..ctor()"), new CoReMethodName("LN/T..ctor()LN/T;"))
-            new TestCaseData(FieldName.Get("[N.S, A, 1.0.0.0] [N.T, A, 1.0.0.0].f"), new CoReFieldName("LN/T.f;LN/S")),
-            new TestCaseData(AssemblyName.Get("mscore, 4.0.0.0"), null)
-            // TODO: Some more test-cases that aren't convertable?
-        };
+            var expected = new CoReTypeName(coReName);
+            var original = TypeName.Get(iName);
 
-        [TestCaseSource("TestCases")]
-        public void ShouldConvertNames(IName input, CoReName expected)
+            var actual = original.ToCoReName();
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestCase("[Sys.V, A, 1.0.0.0] [N.T, A, 1.0.0.0].m([N.P, A, 1.0.0.0] arg)", "LN/T.m(LN/P;)LSys/V;"),
+         TestCase("[Sys.V, A, 1.0.0.0] [N.T, A, 1.0.0.0].m`1[[G]]([G] arg)", "LN/T.m(LSystem/Object;)LSys/V;"),
+         TestCase("[N.T, A, 1.0.0.0] [N.T, A, 1.0.0.0]..ctor()", "LN/T.<init>()LSystem/Void;")]
+        public void ShouldConvertMethodNames(string iName, string coReName)
         {
-            var actual = input.ToCoReName();
+            var expected = new CoReMethodName(coReName);
+            var original = MethodName.Get(iName);
+
+            var actual = original.ToCoReName();
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestCase("[N.S, A, 1.0.0.0] [N.T, A, 1.0.0.0].f", "LN/T.f;LN/S")]
+        public void ShouldConvertFieldNames(string iName, string coReName)
+        {
+            var expected = new CoReFieldName(coReName);
+            var original = FieldName.Get(iName);
+
+            var actual = original.ToCoReName();
 
             Assert.AreEqual(expected, actual);
         }

@@ -34,10 +34,10 @@ namespace KaVE.VsFeedbackGenerator.CodeCompletion
 
         private readonly int _probability;
 
-        public LookupItemWrapper(ILookupItem wrappedItem, int probability)
+        public LookupItemWrapper(ILookupItem wrappedItem, double probability)
         {
             _wrappedItem = wrappedItem;
-            _probability = probability;
+            _probability = (int) (probability*100);
         }
 
         public RichText DisplayName

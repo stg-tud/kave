@@ -68,9 +68,18 @@ namespace KaVE.Model.ObjectUsage
         public static CoReMethodName ToCoReName([NotNull] this IMethodName name)
         {
             var builder = new StringBuilder();
-            builder.Append(name.DeclaringType.ToName(), ".", name.Name, "(");
-            StringBuilderUtils.Append(builder, name.Parameters.Select(n => n.ValueType.ToName() + ";").ToArray());
-            builder.Append(")", name.ReturnType.ToName(), ";");
+            if (name.IsConstructor)
+            {
+                builder.Append(name.DeclaringType.ToName(), ".<init>(");
+                StringBuilderUtils.Append(builder, name.Parameters.Select(n => n.ValueType.ToName() + ";").ToArray());
+                builder.Append(")LSystem/Void;");
+            }
+            else
+            {
+                builder.Append(name.DeclaringType.ToName(), ".", name.Name, "(");
+                StringBuilderUtils.Append(builder, name.Parameters.Select(n => n.ValueType.ToName() + ";").ToArray());
+                builder.Append(")", name.ReturnType.ToName(), ";");
+            }
             return new CoReMethodName(builder.ToString());
         }
 
@@ -90,13 +99,26 @@ namespace KaVE.Model.ObjectUsage
         private static string ToName(this ITypeName name)
         {
             var builder = new StringBuilder();
-            if (name.IsArrayType)
+            if (name.IsTypeParameter)
             {
-                builder.Append(GenerateArrayPrefix(name), "L", name.Namespace.ToName(), name.Name.Replace("[]", ""));
+                builder.Append("LSystem/Object");
             }
             else
             {
-                builder.Append("L", name.Namespace.ToName(), name.Name);
+                if (name.IsArrayType)
+                {
+                    builder.Append(GenerateArrayPrefix(name));
+                }
+                builder.Append("L", name.Namespace.ToName());
+                //name.IsNestedType;
+                if (name.IsArrayType)
+                {
+                    builder.Append(name.Name.Replace("[]", ""));
+                }
+                else
+                {
+                    builder.Append(name.Name);
+                }
             }
             return builder.ToString();
         }
