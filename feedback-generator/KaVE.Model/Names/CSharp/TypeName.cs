@@ -322,6 +322,11 @@ namespace KaVE.Model.Names.CSharp
             get { return false; }
         }
 
+        public virtual ITypeName ArrayBaseType
+        {
+            get { return null; }
+        }
+
         public ITypeName DeriveArrayTypeName(int rank)
         {
             Asserts.That(rank > 0, "rank smaller than 1");

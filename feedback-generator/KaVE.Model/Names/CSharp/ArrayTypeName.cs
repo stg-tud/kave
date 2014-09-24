@@ -40,5 +40,31 @@ namespace KaVE.Model.Names.CSharp
         {
             get { return true; }
         }
+
+        public override ITypeName ArrayBaseType
+        {
+            get
+            {
+                if (!IsArrayType)
+                {
+                    return null;
+                }
+
+                var fullName = FullName;
+                var rawFullName = RawFullName;
+                var startOfArrayBraces = rawFullName.IndexOf('[');
+                if (startOfArrayBraces > -1)
+                {
+                    var start = rawFullName.Substring(0, startOfArrayBraces);
+                    var end = fullName.Substring(rawFullName.Length);
+                    fullName = start + end;
+                }
+                if (Assembly.Identifier.Length > 0)
+                {
+                    fullName += ", " + Assembly;
+                }
+                return TypeName.Get(fullName);
+            }
+        }
     }
 }

@@ -179,14 +179,28 @@ namespace KaVE.Model.Tests.Names.CSharp
 
         [TestCase("ValueType[,,], As, 9.8.7.6"),
          TestCase("ValueType[], As, 5.4.3.2"),
-         TestCase("a.Foo`1[][[T -> int, mscore, 1.0.0.0]]"),
-         TestCase("T -> A[], A, 1.2.3.4"),
+         TestCase("a.Foo`1[][[T -> int, mscore, 1.0.0.0]], Y, 4.3.6.1"),
+         TestCase("A[]"),
+         TestCase("T -> System.String[], mscorlib, 4.0.0.0"),
          TestCase("System.Int32[], mscorlib, 4.0.0.0")]
         public void ShouldBeArrayType(string identifier)
         {
             var arrayTypeName = TypeName.Get(identifier);
 
             Assert.IsTrue(arrayTypeName.IsArrayType);
+        }
+
+        [TestCase("ValueType[,,], As, 9.8.7.6", "ValueType, As, 9.8.7.6"),
+         TestCase("ValueType[], As, 5.4.3.2", "ValueType, As, 5.4.3.2"),
+         TestCase("a.Foo`1[][[T -> int, mscore, 1.0.0.0]], A, 1.2.3.4", "a.Foo`1[[T -> int, mscore, 1.0.0.0]], A, 1.2.3.4"),
+         TestCase("A[]", "A"),
+         TestCase("T -> System.String[], mscorlib, 4.0.0.0", "System.String, mscorlib, 4.0.0.0"),
+         TestCase("System.Int32[], mscorlib, 4.0.0.0", "System.Int32, mscorlib, 4.0.0.0")]
+        public void ShouldGetArrayBaseType(string identifier, string expected)
+        {
+            var arrayTypeName = TypeName.Get(identifier);
+            
+            Assert.AreEqual(expected, arrayTypeName.ArrayBaseType.Identifier);
         }
 
         [Test]

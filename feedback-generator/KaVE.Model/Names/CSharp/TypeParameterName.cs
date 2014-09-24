@@ -65,7 +65,7 @@ namespace KaVE.Model.Names.CSharp
 
         private static bool IsFreeTypeParameterIdentifier(string identifier)
         {
-            return !identifier.Contains(",");
+            return !identifier.Contains(",") && !identifier.Contains("[");
         }
 
         private static bool IsBoundTypeParameterIdentifier(string identifier)
@@ -183,6 +183,11 @@ namespace KaVE.Model.Names.CSharp
         public bool IsArrayType
         {
             get { return TypeParameterType.IsArrayType; }
+        }
+
+        public ITypeName ArrayBaseType
+        {
+            get { return TypeParameterType.ArrayBaseType; }
         }
 
         // TODO test this method

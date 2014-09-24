@@ -90,6 +90,7 @@ namespace KaVE.Model.Names
         bool IsNestedType { get; }
 
         bool IsArrayType { get; }
+        ITypeName ArrayBaseType { get; }
 
         /// <summary>
         /// Creates an array-type name from this name.

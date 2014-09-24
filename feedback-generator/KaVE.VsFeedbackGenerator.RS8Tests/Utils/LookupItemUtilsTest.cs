@@ -811,6 +811,19 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Utils
             ThenProposalCollectionContains("[System.Void, mscorlib, 4.0.0.0] [d:C+D, TestProject].Invoke([System.Int32, mscorlib, 4.0.0.0] i)");
         }
 
+        [Test]
+        public void ShouldResolveArraysOfGenericTypes()
+        {
+            CompleteInFile(@"
+                class C {
+                    void M<T>(T[] ts) {
+                        this.$
+                    }
+                }");
+
+            ThenProposalCollectionContains("[System.Void, mscorlib, 4.0.0.0] [C, TestProject].M`1[[T -> T]]([T[]] ts)");
+        }
+
         // Test cases for keywords (e.g., private), templates (e.g., for), and
         // combined proposals (e.g., return true) donnot seem possible, as such
         // proposals are not made by the test environment's completion engine.
