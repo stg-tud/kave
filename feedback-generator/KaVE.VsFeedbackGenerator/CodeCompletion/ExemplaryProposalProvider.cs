@@ -26,13 +26,8 @@ using KaVE.Model.Names.CSharp;
 using KaVE.Model.ObjectUsage;
 using KaVE.VsFeedbackGenerator.Analysis;
 using KaVE.VsFeedbackGenerator.Utils;
-// ReSharper disable RedundantUsingDirective
-using JetBrains.Application;
 using JetBrains.ReSharper.Feature.Services.CSharp.CodeCompletion.Infrastructure;
 using JetBrains.ReSharper.Feature.Services.Lookup;
-using JetBrains.ReSharper.Psi;
-using JetBrains.ReSharper.Psi.CSharp;
-// ReSharper restore RedundantUsingDirective
 using KaVELogger = KaVE.VsFeedbackGenerator.Generators.ILogger;
 
 namespace KaVE.VsFeedbackGenerator.CodeCompletion
