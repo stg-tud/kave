@@ -15,6 +15,7 @@
  * 
  * Contributors:
  *    - Sven Amann
+ *    - Dennis Albrecht
  */
 
 using System;
@@ -25,7 +26,7 @@ using NUnit.Framework;
 namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.JsonSerializationSuite
 {
     [TestFixture]
-    class ProposalSelectionSerializationTest
+    internal class ProposalSelectionSerializationTest : SerializationTestBase
     {
         [Test]
         public void ShouldSerializeProposalSelection()
@@ -36,6 +37,19 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.JsonSerializationSuite
             };
 
             JsonAssert.SerializationPreservesData(uut);
+        }
+
+        [Test]
+        public void ShouldSerializeToString()
+        {
+            var proposal = new ProposalSelection(CompletionEventTestFactory.CreatePredictableProposal())
+            {
+                SelectedAfter = TimeSpan.FromSeconds(4)
+            };
+            const string expected =
+                "{\"$type\":\"KaVE.Model.Events.CompletionEvent.ProposalSelection, KaVE.Model\",\"SelectedAfter\":\"00:00:04\",\"Proposal\":{\"$type\":\"KaVE.Model.Events.CompletionEvent.Proposal, KaVE.Model\",\"Name\":\"CSharp.Name:1\"}}";
+
+            JsonAssert.SerializesTo(proposal, expected);
         }
     }
 }

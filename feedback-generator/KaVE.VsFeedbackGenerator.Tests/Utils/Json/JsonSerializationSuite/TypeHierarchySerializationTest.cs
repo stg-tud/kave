@@ -15,16 +15,18 @@
  * 
  * Contributors:
  *    - Sven Amann
+ *    - Dennis Albrecht
  */
 
 using System.Collections.Generic;
 using KaVE.Model.Events.CompletionEvent;
+using KaVE.TestUtils.Model.Names;
 using NUnit.Framework;
 
 namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.JsonSerializationSuite
 {
     [TestFixture]
-    class TypeHierarchySerializationTest
+    internal class TypeHierarchySerializationTest : SerializationTestBase
     {
         [Test]
         public void ShouldSerializeTypeHierarchy()
@@ -38,6 +40,24 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.JsonSerializationSuite
                 }
             };
             JsonAssert.SerializationPreservesData(uut);
+        }
+
+        [Test]
+        public void ShouldSerializeToString()
+        {
+            var typeHierarchy = new TypeHierarchy(TestNameFactory.GetAnonymousTypeName().Identifier)
+            {
+                Extends = new TypeHierarchy(TestNameFactory.GetAnonymousTypeName().Identifier),
+                Implements = new HashSet<ITypeHierarchy>
+                {
+                    new TypeHierarchy(TestNameFactory.GetAnonymousTypeName().Identifier),
+                    new TypeHierarchy(TestNameFactory.GetAnonymousTypeName().Identifier)
+                }
+            };
+            const string expected =
+                "{\"$type\":\"KaVE.Model.Events.CompletionEvent.TypeHierarchy, KaVE.Model\",\"Element\":\"CSharp.TypeName:SomeType1, SomeAssembly2, 9.8.7.6\",\"Extends\":{\"$type\":\"KaVE.Model.Events.CompletionEvent.TypeHierarchy, KaVE.Model\",\"Element\":\"CSharp.TypeName:SomeType3, SomeAssembly4, 9.8.7.6\",\"Implements\":[]},\"Implements\":[{\"$type\":\"KaVE.Model.Events.CompletionEvent.TypeHierarchy, KaVE.Model\",\"Element\":\"CSharp.TypeName:SomeType5, SomeAssembly6, 9.8.7.6\",\"Implements\":[]},{\"$type\":\"KaVE.Model.Events.CompletionEvent.TypeHierarchy, KaVE.Model\",\"Element\":\"CSharp.TypeName:SomeType7, SomeAssembly8, 9.8.7.6\",\"Implements\":[]}]}";
+
+            JsonAssert.SerializesTo(typeHierarchy, expected);
         }
     }
 }

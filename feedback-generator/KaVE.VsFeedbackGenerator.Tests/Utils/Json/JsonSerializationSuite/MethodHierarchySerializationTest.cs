@@ -15,6 +15,7 @@
  * 
  * Contributors:
  *    - Sven Amann
+ *    - Dennis Albrecht
  */
 
 using KaVE.Model.Events.CompletionEvent;
@@ -24,7 +25,7 @@ using NUnit.Framework;
 namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.JsonSerializationSuite
 {
     [TestFixture]
-    class MethodHierarchySerializationTest
+    internal class MethodHierarchySerializationTest : SerializationTestBase
     {
         [Test]
         public void ShouldSerializeMethodHierarchy()
@@ -35,6 +36,20 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.JsonSerializationSuite
                 Super = TestNameFactory.GetAnonymousMethodName()
             };
             JsonAssert.SerializationPreservesData(uut);
+        }
+
+        [Test]
+        public void ShouldSerializeToString()
+        {
+            var methodHierarchy = new MethodHierarchy(TestNameFactory.GetAnonymousMethodName())
+            {
+                Super = TestNameFactory.GetAnonymousMethodName(),
+                First = TestNameFactory.GetAnonymousMethodName()
+            };
+            const string expected =
+                "{\"$type\":\"KaVE.Model.Events.CompletionEvent.MethodHierarchy, KaVE.Model\",\"Element\":\"CSharp.MethodName:[SomeType1, SomeAssembly2, 9.8.7.6] [SomeType3, SomeAssembly4, 9.8.7.6].Method5()\",\"Super\":\"CSharp.MethodName:[SomeType6, SomeAssembly7, 9.8.7.6] [SomeType8, SomeAssembly9, 9.8.7.6].Method10()\",\"First\":\"CSharp.MethodName:[SomeType11, SomeAssembly12, 9.8.7.6] [SomeType13, SomeAssembly14, 9.8.7.6].Method15()\"}";
+
+            JsonAssert.SerializesTo(methodHierarchy, expected);
         }
     }
 }

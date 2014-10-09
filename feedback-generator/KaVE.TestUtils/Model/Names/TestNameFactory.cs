@@ -15,6 +15,7 @@
  * 
  * Contributors:
  *    - Sven Amann
+ *    - Dennis Albrecht
  */
 
 using KaVE.Model.Names;
@@ -29,6 +30,11 @@ namespace KaVE.TestUtils.Model.Names
         private static int NextCounter()
         {
             return ++_counter;
+        }
+
+        public static void Reset()
+        {
+            _counter = 0;
         }
 
         public static IMethodName GetAnonymousMethodName()
