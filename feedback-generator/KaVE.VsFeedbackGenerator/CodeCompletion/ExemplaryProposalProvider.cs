@@ -20,14 +20,14 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.ReSharper.Feature.Services.CSharp.CodeCompletion.Infrastructure;
+using JetBrains.ReSharper.Feature.Services.Lookup;
 using KaVE.Model.Events.CompletionEvent;
 using KaVE.Model.Names;
 using KaVE.Model.Names.CSharp;
 using KaVE.Model.ObjectUsage;
 using KaVE.VsFeedbackGenerator.Analysis;
 using KaVE.VsFeedbackGenerator.Utils;
-using JetBrains.ReSharper.Feature.Services.CSharp.CodeCompletion.Infrastructure;
-using JetBrains.ReSharper.Feature.Services.Lookup;
 using KaVELogger = KaVE.VsFeedbackGenerator.Generators.ILogger;
 
 namespace KaVE.VsFeedbackGenerator.CodeCompletion
@@ -51,6 +51,26 @@ namespace KaVE.VsFeedbackGenerator.CodeCompletion
             {
                 return new[]
                 {
+                    new CoReProposal(
+                        new CoReMethodName(
+                            "LSystem/Text/StringBuilder.Append(LSystem/String;)LSystem/Text/StringBuilder;"),
+                        0.9),
+                    new CoReProposal(
+                        new CoReMethodName(
+                            "LSystem/Text/StringBuilder.Append(LSystem/Char;)LSystem/Text/StringBuilder;"),
+                        0.65),
+                    new CoReProposal(
+                        new CoReMethodName(
+                            "LSystem/Text/StringBuilder.Append(LSystem/Char;LSystem/Int32;)LSystem/Text/StringBuilder;"),
+                        0.5),
+                    new CoReProposal(
+                        new CoReMethodName(
+                            "LSystem/Text/StringBuilder.Append(LSystem/Int32;)LSystem/Text/StringBuilder;"),
+                        0.4),
+                    new CoReProposal(
+                        new CoReMethodName(
+                            "LSystem/Text/StringBuilder.Append(LSystem/Boolean;)LSystem/Text/StringBuilder;"),
+                        0.15),
                     new CoReProposal(new CoReMethodName("LSystem/Object.Equals(LSystem/Object;)LSystem/Boolean;"), 0.85),
                     new CoReProposal(new CoReMethodName("LSystem/Object.ToString()LSystem/String;"), 0.6),
                     new CoReProposal(new CoReMethodName("LSystem/Object.GetHashCode()LSystem/Int32;"), 0.35),
