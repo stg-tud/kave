@@ -23,6 +23,8 @@ using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Feature.Services.Lookup;
 using JetBrains.TextControl;
 using JetBrains.UI.Icons;
+using JetBrains.UI.Icons.ColorIcons;
+using JetBrains.UI.Icons.ComposedIcons;
 using JetBrains.UI.RichText;
 using JetBrains.Util;
 
@@ -69,6 +71,10 @@ namespace KaVE.VsFeedbackGenerator.CodeCompletion
             }
         }
 
+        public IconId Image
+        {
+            get { return CompositeIconId.Compose(new ColorIconId(Color.Gold), _wrappedItem.Image); }
+        }
 
         public bool AcceptIfOnlyMatched(LookupItemAcceptanceContext itemAcceptanceContext)
         {
@@ -103,11 +109,6 @@ namespace KaVE.VsFeedbackGenerator.CodeCompletion
         public void Unshrink()
         {
             _wrappedItem.Unshrink();
-        }
-
-        public IconId Image
-        {
-            get { return _wrappedItem.Image; }
         }
 
         public RichText DisplayTypeName
