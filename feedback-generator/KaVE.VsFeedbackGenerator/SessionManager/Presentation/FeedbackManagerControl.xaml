@@ -93,7 +93,7 @@ Contributors:
         </ToolBarTray>
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="100" />
+                <ColumnDefinition Width="120" />
                 <ColumnDefinition Width="220" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
