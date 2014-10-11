@@ -30,7 +30,6 @@ using JetBrains.ReSharper.Features.Common.Options;
 using JetBrains.ReSharper.Features.Finding.Resources;
 using JetBrains.UI.CrossFramework;
 using JetBrains.UI.Options;
-using JetBrains.UI.TreeGrid;
 using KaVE.Utils.Assertion;
 using KaVE.VsFeedbackGenerator.Utils;
 using MessageBox = JetBrains.Util.MessageBox;
@@ -40,17 +39,18 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
 {
     [OptionsPage(PID, "KaVE Feedback", typeof (FeaturesFindingThemedIcons.SearchOptionsPage),
         ParentId = ToolsPage.PID)]
-    public partial class FeedbackGeneratorOptionPage : IOptionsPage
+    public partial class OptionPage : IOptionsPage
     {
         private readonly IActionManager _actionManager;
         private const string PID = "FeedbackGenerator.OptionPage";
 
-        public FeedbackGeneratorOptionPage(Lifetime lifetime,
+        public OptionPage(Lifetime lifetime,
             OptionsSettingsSmartContext ctx,
             IActionManager actionManager)
         {
             _actionManager = actionManager;
             InitializeComponent();
+
             SetToggleButtonBinding(ctx, lifetime, s => (bool?) s.RemoveCodeNames, RemoveCodeNamesCheckBox);
             SetToggleButtonBinding(ctx, lifetime, s => (bool?) s.RemoveStartTimes, RemoveStartTimesCheckBox);
             SetToggleButtonBinding(ctx, lifetime, s => (bool?) s.RemoveDurations, RemoveDurationsCheckBox);
@@ -101,10 +101,17 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
                 WebPraefixTextBox.Background = Brushes.Pink;
             }
 
+            if (!uriIsValid || !prefixIsValid)
+            {
+                MessageBox.ShowError(
+                    Properties.SessionManager.OptionPageErrorMessage,
+                    Properties.SessionManager.Options_Title);
+            }
+
             return uriIsValid && prefixIsValid;
         }
 
-        private static bool ValidateUri(string url)
+        private bool ValidateUri(string url)
         {
             Uri uri;
             return Uri.TryCreate(url, UriKind.Absolute, out uri) && HasSupportedScheme(uri);

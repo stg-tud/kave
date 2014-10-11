@@ -276,4 +276,7 @@
   <data name="Loading" xml:space="preserve">
     <value>Lade Feedback...</value>
   </data>
+  <data name="OptionPageErrorMessage" xml:space="preserve">
+    <value>Bei denen von ihnen eingegebenen Informationen handelt es sich um keine gültige URL</value>
+  </data>
 </root>

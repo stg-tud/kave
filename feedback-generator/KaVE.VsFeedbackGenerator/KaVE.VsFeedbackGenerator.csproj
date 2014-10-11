@@ -212,8 +212,8 @@
     </Compile>
     <Compile Include="SessionManager\Presentation\SessionManagerWindowDescriptor.cs" />
     <Compile Include="SessionManager\Presentation\SessionManagerWindowRegistrar.cs" />
-    <Compile Include="SessionManager\Presentation\FeedbackGeneratorOptionPage.xaml.cs">
-      <DependentUpon>FeedbackGeneratorOptionPage.xaml</DependentUpon>
+    <Compile Include="SessionManager\Presentation\OptionPage.xaml.cs">
+      <DependentUpon>OptionPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="SessionManager\Presentation\ExportSettings.cs" />
     <Compile Include="SessionManager\SessionViewModel.cs" />
@@ -310,7 +310,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="SessionManager\Presentation\FeedbackGeneratorOptionPage.xaml">
+    <Page Include="SessionManager\Presentation\OptionPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
