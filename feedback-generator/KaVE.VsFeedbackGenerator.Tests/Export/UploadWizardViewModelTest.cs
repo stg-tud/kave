@@ -257,7 +257,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Export
             var actual = _notificationHelper.Context;
             // TODO @Sven: extend setup to include some events that are exported here
             // TODO @Seb: help sven with above task
-            var expected = new Notification()
+            var expected = new Notification
             {
                 Caption = Properties.UploadWizard.window_title,
                 Message = Properties.UploadWizard.ExportSuccess.FormatEx(0),

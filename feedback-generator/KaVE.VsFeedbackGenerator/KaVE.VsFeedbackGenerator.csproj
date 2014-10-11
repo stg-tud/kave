@@ -222,6 +222,7 @@
     <Compile Include="MessageBus\TinyMessenger.cs" />
     <Compile Include="Utils\DateUtils.cs" />
     <Compile Include="Utils\Exporter.cs" />
+    <Compile Include="Utils\ExtensionSettingsListener.cs" />
     <Compile Include="Utils\FilePublisher.cs" />
     <Compile Include="Utils\HttpPublisher.cs" />
     <Compile Include="Utils\IDateUtils.cs" />

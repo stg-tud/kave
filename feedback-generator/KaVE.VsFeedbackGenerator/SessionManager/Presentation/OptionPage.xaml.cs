@@ -111,7 +111,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
             return uriIsValid && prefixIsValid;
         }
 
-        private bool ValidateUri(string url)
+        private static bool ValidateUri(string url)
         {
             Uri uri;
             return Uri.TryCreate(url, UriKind.Absolute, out uri) && HasSupportedScheme(uri);
