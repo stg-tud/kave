@@ -28,22 +28,30 @@ namespace KaVE.VsFeedbackGenerator.Utils
     class ExtensionSettingsListener
     {
         private const string Id = "KaVE Feedback Generator";
+        private readonly PluginsDirectory _directory;
 
         public ExtensionSettingsListener(Lifetime lifetime, PluginsDirectory directory)
         {
-            var plugin = GetPlugin(Id, directory);
-            plugin.IsEnabled.BeforeChange.Advise(lifetime, Handler);
+            _directory = directory;
+            RegisterPluginUnloadCallback(lifetime);
         }
 
-        private static Plugin GetPlugin(string id, PluginsDirectory directory)
+        private void RegisterPluginUnloadCallback(Lifetime lifetime)
         {
-            var feedbackManagerPlugin = directory.Plugins.ToList().Find(plugin => plugin.ID == id);
-            feedbackManagerPlugin.NotNull();
-            
+            var plugin = GetPlugin(Id);
+            if (plugin != null)
+            {
+                plugin.IsEnabled.BeforeChange.Advise(lifetime, BeforePluginStateChangedEvent);
+            }
+        }
+
+        private Plugin GetPlugin(string id)
+        {
+            var feedbackManagerPlugin = _directory.Plugins.ToList().Find(plugin => plugin.ID == id);
             return feedbackManagerPlugin;
         }
 
-        private void Handler(BeforePropertyChangedEventArgs<bool?> changedEvent)
+        private void BeforePluginStateChangedEvent(BeforePropertyChangedEventArgs<bool?> changedEvent)
         {
             if (IsDisabled(changedEvent))
             {
