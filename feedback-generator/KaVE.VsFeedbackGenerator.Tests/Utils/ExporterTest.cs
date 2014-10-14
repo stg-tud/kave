@@ -150,6 +150,19 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
             CollectionAssert.AreEqual(expected, actual);
         }
 
+        [Test]
+        public void ShouldInvokeCallbackForEveryEvent()
+        {
+            var events = IDEEventTestFactory.SomeEvents(25);
+            var counter = 0;
+            Action eventProcessed = () => { counter ++; };
+            _sut.EventProcessed += eventProcessed;
+            _sut.Export(events, _publisherMock.Object);
+            _sut.EventProcessed -= eventProcessed;
+
+            Assert.AreEqual(25, counter);
+        }
+
         [Test, Ignore("manual test that the server receives valid file - RealLifeExample part 1")]
         public void ShouldUploadValidZipToServer()
         {

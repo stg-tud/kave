@@ -19,6 +19,7 @@
  *    - Dennis Albrecht
  */
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -33,6 +34,7 @@ namespace KaVE.VsFeedbackGenerator.Utils
 {
     public interface IExporter
     {
+        event Action EventProcessed;
         void Export(IEnumerable<IDEEvent> events, IPublisher publisher);
     }
 
@@ -46,6 +48,8 @@ namespace KaVE.VsFeedbackGenerator.Utils
             _anonymizer = anonymizer;
         }
 
+        public event Action EventProcessed = () => { };
+
         public void Export(IEnumerable<IDEEvent> events, IPublisher publisher)
         {
             using (var stream = new MemoryStream())
@@ -56,7 +60,7 @@ namespace KaVE.VsFeedbackGenerator.Utils
             }
         }
 
-        private static void CreateZipFile(IEnumerable<IDEEvent> events, Stream stream)
+        private void CreateZipFile(IEnumerable<IDEEvent> events, Stream stream)
         {
             using (var zipFile = new ZipFile())
             {
@@ -66,7 +70,9 @@ namespace KaVE.VsFeedbackGenerator.Utils
                     var fileName = (i++) + "-" + e.GetType().Name + ".json";
                     var json = e.ToFormattedJson();
                     zipFile.AddEntry(fileName, json);
+                    EventProcessed();
                 }
+                // TODO: Sven+Dennis: Move this check to UploadViewModel and always export here?
                 Asserts.That(i > 0, "There are no events to export");
                 zipFile.Save(stream);
             }

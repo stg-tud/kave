@@ -68,9 +68,16 @@ namespace KaVE.VsFeedbackGenerator.Export
             _dateUtils = dateUtils;
             _errorNotificationRequest = new InteractionRequest<Notification>();
             _successNotificationRequest = new InteractionRequest<LinkNotification>();
-            _exportWorker = new BackgroundWorker {WorkerSupportsCancellation = false};
+            _exportWorker = new BackgroundWorker {WorkerSupportsCancellation = false, WorkerReportsProgress = true};
             _exportWorker.DoWork += OnExport;
+            _exportWorker.ProgressChanged += OnProgressChanged;
             _exportWorker.RunWorkerCompleted += OnExportCompleted;
+        }
+
+        private void OnProgressChanged(object sender, ProgressChangedEventArgs progressChangedEventArgs)
+        {
+            BusyMessage =
+                Properties.UploadWizard.Export_BusyMessage + " " + progressChangedEventArgs.ProgressPercentage + "%";
         }
 
         private ExportSettings ExportSettings
@@ -109,18 +116,44 @@ namespace KaVE.VsFeedbackGenerator.Export
             _exportWorker.RunWorkerAsync(exportType);
         }
 
-        private void OnExport(object worker, DoWorkEventArgs e)
+        private void OnExport(object sender, DoWorkEventArgs e)
         {
+            var worker = (BackgroundWorker) sender;
             _exportType = (UploadWizard.ExportType) e.Argument;
             var events = ExtractEventsForExport();
+            var processed = 0;
+            var count = events.Count;
+            Action reportNextElementProcessed =
+                () =>
+                {
+                    processed ++;
+                    if (count == 0)
+                    {
+                        worker.ReportProgress(100);
+                    }
+                    else
+                    {
+                        worker.ReportProgress(100*processed/count);
+                    }
+                };
 
-            if (_exportType == UploadWizard.ExportType.ZipFile)
+            worker.ReportProgress(0);
+
+            try
             {
-                _exporter.Export(events, new FilePublisher(AskForExportLocation));
+                _exporter.EventProcessed += reportNextElementProcessed;
+                if (_exportType == UploadWizard.ExportType.ZipFile)
+                {
+                    _exporter.Export(events, new FilePublisher(AskForExportLocation));
+                }
+                else
+                {
+                    _exporter.Export(events, new HttpPublisher(GetUploadUrl()));
+                }
             }
-            else
+            finally
             {
-                _exporter.Export(events, new HttpPublisher(GetUploadUrl()));
+                _exporter.EventProcessed -= reportNextElementProcessed;
             }
 
             _logManager.DeleteLogsOlderThan(_exportTime);
