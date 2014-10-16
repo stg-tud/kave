@@ -21,16 +21,17 @@ using JetBrains.Application;
 using JetBrains.Application.PluginSupport;
 using JetBrains.DataFlow;
 using JetBrains.Util;
+using KaVE.VsFeedbackGenerator.Properties;
 
-namespace KaVE.VsFeedbackGenerator.Utils
+namespace KaVE.VsFeedbackGenerator
 {
     [ShellComponent]
-    class ExtensionSettingsListener
+    class PluginUnloadBehavior
     {
-        private const string Id = "KaVE Feedback Generator";
+        private const string PluginId = "KaVE Feedback Generator";
         private readonly PluginsDirectory _directory;
 
-        public ExtensionSettingsListener(Lifetime lifetime, PluginsDirectory directory)
+        public PluginUnloadBehavior(Lifetime lifetime, PluginsDirectory directory)
         {
             _directory = directory;
             RegisterPluginUnloadCallback(lifetime);
@@ -38,7 +39,7 @@ namespace KaVE.VsFeedbackGenerator.Utils
 
         private void RegisterPluginUnloadCallback(Lifetime lifetime)
         {
-            var plugin = GetPlugin(Id);
+            var plugin = GetPlugin(PluginId);
             if (plugin != null)
             {
                 plugin.IsEnabled.BeforeChange.Advise(lifetime, BeforePluginStateChangedEvent);
@@ -47,15 +48,14 @@ namespace KaVE.VsFeedbackGenerator.Utils
 
         private Plugin GetPlugin(string id)
         {
-            var feedbackManagerPlugin = _directory.Plugins.ToList().Find(plugin => plugin.ID == id);
-            return feedbackManagerPlugin;
+            return _directory.Plugins.ToList().Find(plugin => plugin.ID == id);
         }
 
-        private void BeforePluginStateChangedEvent(BeforePropertyChangedEventArgs<bool?> changedEvent)
+        private static void BeforePluginStateChangedEvent(BeforePropertyChangedEventArgs<bool?> changedEvent)
         {
             if (IsDisabled(changedEvent))
             {
-                MessageBox.ShowExclamation("Sie müssen ihre Entwicklungsumgebung neustarten, damit das Plugin weiterhin korrekt funktioniert!");
+                MessageBox.ShowExclamation(General.DisableWarning);
             }
         }
 

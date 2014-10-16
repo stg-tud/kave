@@ -132,4 +132,9 @@ TU Darmstadt
   <data name="Confirmation_OK" xml:space="preserve">
     <value>Ja</value>
   </data>
+  <data name="DisableWarning" xml:space="preserve">
+    <value>Das Deaktivieren des Plugins wird aktuell nicht unterstützt. Um Fehlverhalten zu vermeiden, starten Sie bitte Ihre IDE neu.
+
+ACHTUNG: Das Deaktivieren des Plugin benötigt einige Zeit, bitte haben Sie einen Moment Geduld.</value>
+  </data>
 </root>

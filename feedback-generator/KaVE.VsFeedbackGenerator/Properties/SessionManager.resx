@@ -277,6 +277,6 @@
     <value>Lade Feedback...</value>
   </data>
   <data name="OptionPageErrorMessage" xml:space="preserve">
-    <value>Bei denen von ihnen eingegebenen Informationen handelt es sich um keine gültige URL</value>
+    <value>Bitte geben Sie ein gültige HTTP- oder HTTPS-URL ein.</value>
   </data>
 </root>

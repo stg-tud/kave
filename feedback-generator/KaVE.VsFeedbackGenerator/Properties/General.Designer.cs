@@ -9,6 +9,9 @@
 //------------------------------------------------------------------------------
 
 namespace KaVE.VsFeedbackGenerator.Properties {
+    using System;
+    
+    
     /// <summary>
     ///   A strongly-typed resource class, for looking up localized strings, etc.
     /// </summary>
@@ -93,6 +96,17 @@ namespace KaVE.VsFeedbackGenerator.Properties {
         public static string Confirmation_OK {
             get {
                 return ResourceManager.GetString("Confirmation_OK", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Das Deaktivieren des Plugins wird aktuell nicht unterstützt. Um Fehlverhalten zu vermeiden, starten Sie bitte Ihre IDE neu.
+        ///
+        ///ACHTUNG: Das Deaktivieren des Plugin benötigt einige Zeit, bitte haben Sie einen Moment Geduld..
+        /// </summary>
+        public static string DisableWarning {
+            get {
+                return ResourceManager.GetString("DisableWarning", resourceCulture);
             }
         }
     }
