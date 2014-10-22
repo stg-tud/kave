@@ -31,6 +31,7 @@ using JetBrains.ReSharper.Features.Finding.Resources;
 using JetBrains.UI.CrossFramework;
 using JetBrains.UI.Options;
 using KaVE.Utils.Assertion;
+using KaVE.VsFeedbackGenerator.Interactivity;
 using KaVE.VsFeedbackGenerator.Utils;
 using MessageBox = JetBrains.Util.MessageBox;
 using Ressource = KaVE.VsFeedbackGenerator.Properties;
@@ -41,6 +42,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
         ParentId = ToolsPage.PID)]
     public partial class OptionPage : IOptionsPage
     {
+        private readonly OptionPageViewModel _optionPageViewModel;
         private readonly IActionManager _actionManager;
         private const string PID = "FeedbackGenerator.OptionPage";
 
@@ -48,6 +50,9 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
             OptionsSettingsSmartContext ctx,
             IActionManager actionManager)
         {
+            _optionPageViewModel = new OptionPageViewModel();
+            _optionPageViewModel.ErrorNotificationRequest.Raised += new NotificationRequestHandler(this).Handle;
+
             _actionManager = actionManager;
             InitializeComponent();
 
@@ -88,38 +93,19 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
 
         public bool OnOk()
         {
-            var uriIsValid = ValidateUri(UploadUrlTextBox.Text);
-            var prefixIsValid = ValidateUri(WebPraefixTextBox.Text);
+            var uploadInformationVerification = _optionPageViewModel.ValidateUploadInformation(UploadUrlTextBox.Text, WebPraefixTextBox.Text);
 
-            if (!uriIsValid)
+            if (!uploadInformationVerification.IsUrlValid)
             {
                 UploadUrlTextBox.Background = Brushes.Pink;
             }
 
-            if (!prefixIsValid)
+            if (!uploadInformationVerification.IsPrefixValid)
             {
                 WebPraefixTextBox.Background = Brushes.Pink;
             }
 
-            if (!uriIsValid || !prefixIsValid)
-            {
-                MessageBox.ShowError(
-                    Properties.SessionManager.OptionPageErrorMessage,
-                    Properties.SessionManager.Options_Title);
-            }
-
-            return uriIsValid && prefixIsValid;
-        }
-
-        private static bool ValidateUri(string url)
-        {
-            Uri uri;
-            return Uri.TryCreate(url, UriKind.Absolute, out uri) && HasSupportedScheme(uri);
-        }
-
-        private static bool HasSupportedScheme(Uri uri)
-        {
-            return (uri.Scheme == Uri.UriSchemeHttp || uri.Scheme == Uri.UriSchemeHttps);
+            return uploadInformationVerification.IsValidUploadInformation;
         }
 
         public bool ValidatePage()
