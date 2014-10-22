@@ -95,15 +95,8 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
         {
             var uploadInformationVerification = _optionPageViewModel.ValidateUploadInformation(UploadUrlTextBox.Text, WebPraefixTextBox.Text);
 
-            if (!uploadInformationVerification.IsUrlValid)
-            {
-                UploadUrlTextBox.Background = Brushes.Pink;
-            }
-
-            if (!uploadInformationVerification.IsPrefixValid)
-            {
-                WebPraefixTextBox.Background = Brushes.Pink;
-            }
+            UploadUrlTextBox.Background = !uploadInformationVerification.IsUrlValid ? Brushes.Pink : Brushes.White;
+            WebPraefixTextBox.Background = !uploadInformationVerification.IsPrefixValid ? Brushes.Pink : Brushes.White;
 
             return uploadInformationVerification.IsValidUploadInformation;
         }
