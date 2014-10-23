@@ -58,7 +58,7 @@ namespace KaVE.VsFeedbackGenerator.CodeCompletion
             get
             {
                 var inverseProbability = 100 - _probability;
-                string orderingPrefix = "0";
+                var orderingPrefix = "0";
                 if (inverseProbability < 100)
                 {
                     orderingPrefix = "00";
