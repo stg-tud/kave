@@ -24,7 +24,6 @@ using System.Linq;
 using EnvDTE;
 using JetBrains.Application;
 using JetBrains.Application.Components;
-using JetBrains.Util;
 using KaVE.JetBrains.Annotations;
 using KaVE.Model.Events;
 using KaVE.Utils.Assertion;
@@ -33,7 +32,6 @@ using KaVE.VsFeedbackGenerator.MessageBus;
 using KaVE.VsFeedbackGenerator.Utils;
 using KaVE.VsFeedbackGenerator.Utils.Names;
 using KaVE.VsFeedbackGenerator.VsIntegration;
-using Microsoft.VisualStudio.CommandBars;
 
 namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
 {
@@ -74,69 +72,17 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
             "{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:4800:"
         };
 
-        private CommandEvents _commandEvents;
-        private IEnumerable<CommandBar> _commandBars;
-        private IEnumerable<CommandBarControl> _commandBarsControls;
-
-        private CommandEvent _preceedingCommandBarEvent;
+        [UsedImplicitly]
+        private readonly CommandEvents _commandEvents;
         private readonly Dictionary<string, CommandEvent> _eventQueue;
 
         public CommandEventGenerator(IIDESession session, IMessageBus messageBus, IDateUtils dateUtils)
             : base(session, messageBus, dateUtils)
         {
             _eventQueue = new Dictionary<string, CommandEvent>();
-            InitCommandBarObservation();
-            InitCommandObservation();
-        }
-
-        private CommandBars CommandBars
-        {
-            get { return (CommandBars) DTE.CommandBars; }
-        }
-
-        private void InitCommandBarObservation()
-        {
-            _commandBars = CommandBars.Cast<CommandBar>().ToList();
-            _commandBarsControls = _commandBars.GetLeafControls().ToList();
-            foreach (var control in _commandBarsControls)
-            {
-                var button = control as CommandBarButton;
-                if (button != null)
-                {
-                    button.Click += _commandBarEvents_Button_Click;
-                }
-
-                var box = control as CommandBarComboBox;
-                if (box != null)
-                {
-                    box.Change += _commandBarEvents_Dropdown_Change;
-                }
-
-                Asserts.Not(button == null && box == null, "unknown type of control: {0}", control.GetType());
-            }
-        }
-
-        private void InitCommandObservation()
-        {
             _commandEvents = DTE.Events.CommandEvents;
             _commandEvents.BeforeExecute += HandleCommandStarts;
             _commandEvents.AfterExecute += HandleCommandEnded;
-        }
-
-        private void _commandBarEvents_Dropdown_Change(CommandBarComboBox comboBox)
-        {
-            CreateCommandBarCommandEvent();
-        }
-
-        private void _commandBarEvents_Button_Click(CommandBarButton button, ref bool cancelDefault)
-        {
-            CreateCommandBarCommandEvent();
-        }
-
-        private void CreateCommandBarCommandEvent()
-        {
-            _preceedingCommandBarEvent = Create<CommandEvent>();
-            _preceedingCommandBarEvent.TriggeredBy = IDEEvent.Trigger.Click;
         }
 
         private void HandleCommandStarts(string guid,
@@ -147,15 +93,13 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
         {
             var commandEvent = CreateCommandEvent(guid, id);
             EnqueueEvent(commandEvent);
-
-            _preceedingCommandBarEvent = null;
         }
 
         private CommandEvent CreateCommandEvent(string guid, int id)
         {
             var command = GetCommand(guid, id);
-            var commandEvent = _preceedingCommandBarEvent ?? Create<CommandEvent>();
-            if (_preceedingCommandBarEvent == null && command.HasPressedKeyBinding())
+            var commandEvent = Create<CommandEvent>();
+            if (command.HasPressedKeyBinding())
             {
                 commandEvent.TriggeredBy = IDEEvent.Trigger.Shortcut;
             }
@@ -244,29 +188,6 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
 
     internal static class CommandHelper
     {
-        internal static IEnumerable<CommandBarControl> GetLeafControls(this IEnumerable<CommandBar> commandBars)
-        {
-            return commandBars.SelectMany(bar => GetLeafControls(bar.Controls));
-        }
-
-        private static IEnumerable<CommandBarControl> GetLeafControls(CommandBarControls controls)
-        {
-            ISet<CommandBarControl> leafs = new HashSet<CommandBarControl>();
-            foreach (CommandBarControl commandBarControl in controls)
-            {
-                var popup = commandBarControl as CommandBarPopup;
-                if (popup != null)
-                {
-                    leafs.AddRange(GetLeafControls(popup.Controls));
-                }
-                else
-                {
-                    leafs.Add(commandBarControl);
-                }
-            }
-            return leafs;
-        }
-
         internal static bool HasPressedKeyBinding(this Command command)
         {
             var bindings = ((object[]) command.Bindings).Cast<string>();
