@@ -25,7 +25,7 @@ using NUnit.Framework;
 namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
 {
     [TestFixture]
-    class OptionPageViewModelTest
+    internal class OptionPageViewModelTest
     {
         private const string TestUploadUrl = "http://foo.bar/";
         private const string InvalidUploadUrl = "ht8tp://foo.bar/";
@@ -33,41 +33,44 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
         private const string TestUploadPrefix = "http://pre";
         private const string InvalidUploadPrefix = "ht5tp://";
 
-        private readonly OptionPageViewModel _uut;
+        private OptionPageViewModel _uut;
+        private InteractionRequestTestHelper<Notification> _notificationHelper;
 
-        private readonly InteractionRequestTestHelper<Notification> _notificationHelper;
-
-        public OptionPageViewModelTest()
+        [SetUp]
+        public void SetUp()
         {
             _uut = new OptionPageViewModel();
-
             _notificationHelper = _uut.ErrorNotificationRequest.NewTestHelper();
         }
 
         [Test]
-        public void WrongUploadUrlRaisesErrorNotification()
+        public void InvalidUploadUrlRaisesErrorNotification()
         {
-            _uut.ValidateUploadInformation(InvalidUploadUrl, TestUploadPrefix);
-
+            var info = _uut.ValidateUploadInformation(InvalidUploadUrl, TestUploadPrefix);
             Assert.IsTrue(_notificationHelper.IsRequestRaised);
+            Assert.IsFalse(info.IsUrlValid);
         }
 
         [Test]
-        public void WrongUploadPrefixRaisesErrorNotification()
+        public void InvalidUploadPrefixRaisesErrorNotification()
         {
-            _uut.ValidateUploadInformation(TestUploadUrl, InvalidUploadPrefix);
+            var info = _uut.ValidateUploadInformation(TestUploadUrl, InvalidUploadPrefix);
             Assert.IsTrue(_notificationHelper.IsRequestRaised);
+            Assert.IsFalse(info.IsPrefixValid);
         }
 
         [Test]
-        public void CorrectUploadInformationRaisesNoErrorNotification()
+        public void ValidUploadInformationRaisesNoErrorNotification()
         {
-            _uut.ValidateUploadInformation(TestUploadUrl, TestUploadPrefix);
+            var info = _uut.ValidateUploadInformation(TestUploadUrl, TestUploadPrefix);
             Assert.IsFalse(_notificationHelper.IsRequestRaised);
+            Assert.IsTrue(info.IsUrlValid);
+            Assert.IsTrue(info.IsPrefixValid);
+            Assert.IsTrue(info.IsValidUploadInformation);
         }
 
         [Test]
-        public void ErrorNotificationHasCorrectMessage()
+        public void InvalidUploadPrefixErrorHasCorrectMessage()
         {
             _uut.ValidateUploadInformation(TestUploadUrl, InvalidUploadPrefix);
 
@@ -82,10 +85,25 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
         }
 
         [Test]
-        public void WrongUrlAndPrefixRaisesOneNotification()
+        public void InvalidUploadUrlErrorHasCorrectMessage()
+        {
+            _uut.ValidateUploadInformation(InvalidUploadUrl, TestUploadPrefix);
+
+            var actual = _notificationHelper.Context;
+            var expected = new Notification
+            {
+                Caption = Properties.SessionManager.Options_Title,
+                Message = Properties.SessionManager.OptionPageErrorMessage,
+            };
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void InvalidUrlAndPrefixRaisesOneNotification()
         {
             _uut.ValidateUploadInformation(InvalidUploadPrefix, InvalidUploadPrefix);
-            //TODO:
+            Assert.AreEqual(1, _notificationHelper.NumberOfRequests);
         }
     }
 }

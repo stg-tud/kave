@@ -33,7 +33,10 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
         public bool IsUrlValid { private set; get; }
         public bool IsPrefixValid { private set; get; }
 
-        public bool IsValidUploadInformation { get { return IsUrlValid && IsPrefixValid; }}
+        public bool IsValidUploadInformation
+        {
+            get { return IsUrlValid && IsPrefixValid; }
+        }
     }
 
     public class OptionPageViewModel : ViewModelBase<OptionPageViewModel>

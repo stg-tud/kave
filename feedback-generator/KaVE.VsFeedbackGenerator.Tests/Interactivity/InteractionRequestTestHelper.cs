@@ -28,6 +28,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Interactivity
     public class InteractionRequestTestHelper<T> where T : Notification
     {
         public bool IsRequestRaised { get; private set; }
+        public int NumberOfRequests { get; private set; }
         public T Context { get; private set; }
         public Action Callback { get; private set; }
 
@@ -36,6 +37,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Interactivity
             request.Raised += (s, e) =>
             {
                 IsRequestRaised = true;
+                NumberOfRequests += 1;
                 Context = e.Notification;
                 Callback = e.Callback;
             };
