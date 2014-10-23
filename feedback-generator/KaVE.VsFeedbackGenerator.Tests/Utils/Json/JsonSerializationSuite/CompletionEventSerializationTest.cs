@@ -142,8 +142,6 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.JsonSerializationSuite
         {
             var completionEvent = new CompletionEvent
             {
-                ActiveDocument = DocumentName.Get("SomeDocument"),
-                ActiveWindow = WindowName.Get("SomeWindow"),
                 Context = new Context
                 {
                     EnclosingMethod = TestNameFactory.GetAnonymousMethodName(),
@@ -153,17 +151,14 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.JsonSerializationSuite
                         TypeHierarchy = CompletionEventTestFactory.GetAnonymousTypeHierarchy()
                     }
                 },
-                Duration = TimeSpan.FromSeconds(2),
-                IDESessionUUID = "0xDEADBEEF",
                 Prefix = "SomePrefix",
                 ProposalCollection = new ProposalCollection(CompletionEventTestFactory.CreatePredictableProposals(2)),
-                Selections =CompletionEventTestFactory.CreatePredictableProposalSelections(1),
+                Selections = CompletionEventTestFactory.CreatePredictableProposalSelections(1),
                 TerminatedAs = CompletionEvent.TerminationState.Cancelled,
-                TerminatedBy = IDEEvent.Trigger.Click,
-                TriggeredAt = new DateTime(2013, 12, 6, 11, 34, 24),
-                TriggeredBy = IDEEvent.Trigger.Click,
+                TerminatedBy = IDEEvent.Trigger.Click
             };
-            const string expected = "{\"$type\":\"KaVE.Model.Events.CompletionEvent.CompletionEvent, KaVE.Model\",\"Context\":{\"$type\":\"KaVE.Model.Events.CompletionEvent.Context, KaVE.Model\",\"EnclosingMethod\":\"CSharp.MethodName:[SomeType1, SomeAssembly2, 9.8.7.6] [SomeType3, SomeAssembly4, 9.8.7.6].Method5()\",\"EntryPointToCalledMethods\":{\"$type\":\"System.Collections.Generic.Dictionary`2[[KaVE.Model.Names.IMethodName, KaVE.Model],[System.Collections.Generic.ISet`1[[KaVE.Model.Names.IMethodName, KaVE.Model]], System]], mscorlib\"},\"TypeShape\":{\"$type\":\"KaVE.Model.Events.CompletionEvent.TypeShape, KaVE.Model\",\"TypeHierarchy\":{\"$type\":\"KaVE.Model.Events.CompletionEvent.TypeHierarchy, KaVE.Model\",\"Element\":\"CSharp.TypeName:SomeType16, SomeAssembly17, 9.8.7.6\",\"Implements\":[]},\"MethodHierarchies\":[{\"$type\":\"KaVE.Model.Events.CompletionEvent.MethodHierarchy, KaVE.Model\",\"Element\":\"CSharp.MethodName:[SomeType6, SomeAssembly7, 9.8.7.6] [SomeType8, SomeAssembly9, 9.8.7.6].Method10()\"},{\"$type\":\"KaVE.Model.Events.CompletionEvent.MethodHierarchy, KaVE.Model\",\"Element\":\"CSharp.MethodName:[SomeType11, SomeAssembly12, 9.8.7.6] [SomeType13, SomeAssembly14, 9.8.7.6].Method15()\"}]}},\"ProposalCollection\":{\"$type\":\"KaVE.Model.Events.CompletionEvent.ProposalCollection, KaVE.Model\",\"Proposals\":[{\"$type\":\"KaVE.Model.Events.CompletionEvent.Proposal, KaVE.Model\",\"Name\":\"CSharp.Name:1\"},{\"$type\":\"KaVE.Model.Events.CompletionEvent.Proposal, KaVE.Model\",\"Name\":\"CSharp.Name:2\"}]},\"Prefix\":\"SomePrefix\",\"Selections\":[{\"$type\":\"KaVE.Model.Events.CompletionEvent.ProposalSelection, KaVE.Model\",\"Proposal\":{\"$type\":\"KaVE.Model.Events.CompletionEvent.Proposal, KaVE.Model\",\"Name\":\"CSharp.Name:3\"}}],\"TerminatedBy\":1,\"TerminatedAs\":1,\"IDESessionUUID\":\"0xDEADBEEF\",\"TriggeredAt\":\"2013-12-06T11:34:24\",\"TriggeredBy\":1,\"Duration\":\"00:00:02\",\"ActiveWindow\":\"VisualStudio.WindowName:SomeWindow\",\"ActiveDocument\":\"VisualStudio.DocumentName:SomeDocument\"}";
+            const string expected =
+                "{\"$type\":\"KaVE.Model.Events.CompletionEvent.CompletionEvent, KaVE.Model\",\"Context\":{\"$type\":\"KaVE.Model.Events.CompletionEvent.Context, KaVE.Model\",\"EnclosingMethod\":\"CSharp.MethodName:[SomeType1, SomeAssembly2, 9.8.7.6] [SomeType3, SomeAssembly4, 9.8.7.6].Method5()\",\"EntryPointToCalledMethods\":{\"$type\":\"System.Collections.Generic.Dictionary`2[[KaVE.Model.Names.IMethodName, KaVE.Model],[System.Collections.Generic.ISet`1[[KaVE.Model.Names.IMethodName, KaVE.Model]], System]], mscorlib\"},\"TypeShape\":{\"$type\":\"KaVE.Model.Events.CompletionEvent.TypeShape, KaVE.Model\",\"TypeHierarchy\":{\"$type\":\"KaVE.Model.Events.CompletionEvent.TypeHierarchy, KaVE.Model\",\"Element\":\"CSharp.TypeName:SomeType16, SomeAssembly17, 9.8.7.6\",\"Implements\":[]},\"MethodHierarchies\":[{\"$type\":\"KaVE.Model.Events.CompletionEvent.MethodHierarchy, KaVE.Model\",\"Element\":\"CSharp.MethodName:[SomeType6, SomeAssembly7, 9.8.7.6] [SomeType8, SomeAssembly9, 9.8.7.6].Method10()\"},{\"$type\":\"KaVE.Model.Events.CompletionEvent.MethodHierarchy, KaVE.Model\",\"Element\":\"CSharp.MethodName:[SomeType11, SomeAssembly12, 9.8.7.6] [SomeType13, SomeAssembly14, 9.8.7.6].Method15()\"}]}},\"ProposalCollection\":{\"$type\":\"KaVE.Model.Events.CompletionEvent.ProposalCollection, KaVE.Model\",\"Proposals\":[{\"$type\":\"KaVE.Model.Events.CompletionEvent.Proposal, KaVE.Model\",\"Name\":\"CSharp.Name:1\"},{\"$type\":\"KaVE.Model.Events.CompletionEvent.Proposal, KaVE.Model\",\"Name\":\"CSharp.Name:2\"}]},\"Prefix\":\"SomePrefix\",\"Selections\":[{\"$type\":\"KaVE.Model.Events.CompletionEvent.ProposalSelection, KaVE.Model\",\"Proposal\":{\"$type\":\"KaVE.Model.Events.CompletionEvent.Proposal, KaVE.Model\",\"Name\":\"CSharp.Name:3\"}}],\"TerminatedBy\":1,\"TerminatedAs\":1,\"TriggeredBy\":0}";
 
             JsonAssert.SerializesTo(completionEvent, expected);
         }

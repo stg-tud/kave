@@ -17,10 +17,7 @@
  *    - Dennis Albrecht
  */
 
-using System;
-using KaVE.Model.Events;
 using KaVE.Model.Events.VisualStudio;
-using KaVE.Model.Names.VisualStudio;
 using NUnit.Framework;
 
 namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.JsonSerializationSuite
@@ -33,18 +30,12 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.JsonSerializationSuite
         {
             var debuggerEvent = new DebuggerEvent
             {
-                ActiveDocument = DocumentName.Get("SomeDocument"),
-                ActiveWindow = WindowName.Get("SomeWindow"),
                 Action = "SomeAction",
-                Duration = new TimeSpan(0, 0, 1),
-                IDESessionUUID = "0xDEADBEEF",
                 Mode = DebuggerEvent.DebuggerMode.Design,
-                Reason = "SomeReason",
-                TriggeredAt = new DateTime(2010, 01, 01, 12, 30, 44),
-                TriggeredBy = IDEEvent.Trigger.Click
+                Reason = "SomeReason"
             };
             const string expected =
-                "{\"$type\":\"KaVE.Model.Events.VisualStudio.DebuggerEvent, KaVE.Model\",\"Mode\":0,\"Reason\":\"SomeReason\",\"Action\":\"SomeAction\",\"IDESessionUUID\":\"0xDEADBEEF\",\"TriggeredAt\":\"2010-01-01T12:30:44\",\"TriggeredBy\":1,\"Duration\":\"00:00:01\",\"ActiveWindow\":\"VisualStudio.WindowName:SomeWindow\",\"ActiveDocument\":\"VisualStudio.DocumentName:SomeDocument\"}";
+                "{\"$type\":\"KaVE.Model.Events.VisualStudio.DebuggerEvent, KaVE.Model\",\"Mode\":0,\"Reason\":\"SomeReason\",\"Action\":\"SomeAction\",\"TriggeredBy\":0}";
 
             JsonAssert.SerializesTo(debuggerEvent, expected);
         }

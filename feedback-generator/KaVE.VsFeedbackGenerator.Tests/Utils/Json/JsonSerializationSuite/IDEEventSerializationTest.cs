@@ -15,6 +15,7 @@
  * 
  * Contributors:
  *    - Sven Amann
+ *    - Dennis Albrecht
  */
 
 using System;
@@ -41,8 +42,27 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.JsonSerializationSuite
                 TriggeredAt = DateTime.Now,
                 Duration = TimeSpan.FromSeconds(5)
             };
-            
+
             JsonAssert.SerializationPreservesData(ideEvent);
+        }
+
+        [Test]
+        public void ShouldSerializeToString()
+        {
+            var ideEvent = new TestIDEEvent
+            {
+                ActiveDocument = DocumentName.Get("SomeDocument"),
+                ActiveWindow = WindowName.Get("SomeWindow"),
+                Duration = new TimeSpan(0, 0, 1),
+                IDESessionUUID = "0xDEADBEEF",
+                TriggeredAt = new DateTime(2010, 01, 01, 12, 30, 44),
+                TriggeredBy = IDEEvent.Trigger.Click
+            };
+
+            const string expected =
+                "{\"$type\":\"KaVE.TestUtils.Model.Events.TestIDEEvent, KaVE.TestUtils\",\"IDESessionUUID\":\"0xDEADBEEF\",\"TriggeredAt\":\"2010-01-01T12:30:44\",\"TriggeredBy\":1,\"Duration\":\"00:00:01\",\"ActiveWindow\":\"VisualStudio.WindowName:SomeWindow\",\"ActiveDocument\":\"VisualStudio.DocumentName:SomeDocument\"}";
+
+            JsonAssert.SerializesTo(ideEvent, expected);
         }
 
         [Test]

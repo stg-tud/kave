@@ -17,10 +17,7 @@
  *    - Dennis Albrecht
  */
 
-using System;
-using KaVE.Model.Events;
 using KaVE.Model.Events.VisualStudio;
-using KaVE.Model.Names.VisualStudio;
 using NUnit.Framework;
 
 namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.JsonSerializationSuite
@@ -33,16 +30,10 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.JsonSerializationSuite
         {
             var findEvent = new FindEvent
             {
-                ActiveDocument = DocumentName.Get("SomeDocument"),
-                ActiveWindow = WindowName.Get("SomeWindow"),
-                Cancelled = false,
-                Duration = new TimeSpan(0, 0, 1),
-                IDESessionUUID = "0xDEADBEEF",
-                TriggeredAt = new DateTime(2010, 01, 01, 12, 30, 44),
-                TriggeredBy = IDEEvent.Trigger.Click
+                Cancelled = false
             };
             const string expected =
-                "{\"$type\":\"KaVE.Model.Events.VisualStudio.FindEvent, KaVE.Model\",\"Cancelled\":false,\"IDESessionUUID\":\"0xDEADBEEF\",\"TriggeredAt\":\"2010-01-01T12:30:44\",\"TriggeredBy\":1,\"Duration\":\"00:00:01\",\"ActiveWindow\":\"VisualStudio.WindowName:SomeWindow\",\"ActiveDocument\":\"VisualStudio.DocumentName:SomeDocument\"}";
+                "{\"$type\":\"KaVE.Model.Events.VisualStudio.FindEvent, KaVE.Model\",\"Cancelled\":false,\"TriggeredBy\":0}";
 
             JsonAssert.SerializesTo(findEvent, expected);
         }
