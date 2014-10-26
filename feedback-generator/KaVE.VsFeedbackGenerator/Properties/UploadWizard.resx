@@ -124,7 +124,7 @@
     <value>Erläuterung Upload:...</value>
   </data>
   <data name="Export_BusyMessage" xml:space="preserve">
-    <value>Exportiere...</value>
+    <value>Exportiere Events...</value>
   </data>
   <data name="export_upload_button" xml:space="preserve">
     <value>Direktupload</value>
@@ -149,5 +149,17 @@
   </data>
   <data name="ExportSuccessLinkDescription" xml:space="preserve">
     <value>Zum Hochladen des Feedbacks besuchen Sie bitte die folgende Seite:</value>
+  </data>
+  <data name="CompressingEvents" xml:space="preserve">
+    <value>3/4: Komprimieren</value>
+  </data>
+  <data name="FetchingEvents" xml:space="preserve">
+    <value>1/4: Laden</value>
+  </data>
+  <data name="PublishingEvents" xml:space="preserve">
+    <value>4/4: Speichern</value>
+  </data>
+  <data name="WritingEvents" xml:space="preserve">
+    <value>2/4: Schreiben - {0}%</value>
   </data>
 </root>

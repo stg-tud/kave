@@ -175,11 +175,50 @@ namespace KaVE.VsFeedbackGenerator.Tests.Export
         }
 
         [Test]
-        public void ShouldSetRefreshBusyMessage()
+        public void ShouldSetExportBusyMessage()
         {
             _uut.Export(UploadWizard.ExportType.ZipFile);
 
             Assert.IsTrue(_uut.BusyMessage.StartsWith(Properties.UploadWizard.Export_BusyMessage));
+        }
+
+        [Test]
+        public void ShouldPropagateExportStatus()
+        {
+            _mockExporter.Setup(e => e.Export(It.IsAny<IList<IDEEvent>>(), It.IsAny<IPublisher>()))
+                         .Callback(
+                             () =>
+                             {
+                                 _mockExporter.Raise(e => e.StatusChanged += null, "13%");
+                                 _mockExporter.Raise(e => e.StatusChanged += null, "42%");
+                                 _mockExporter.Raise(e => e.StatusChanged += null, "finishing");
+                             });
+
+            var expected = new List<string>
+            {
+                Properties.UploadWizard.Export_BusyMessage,
+                string.Format(
+                    "{0} ({1})",
+                    Properties.UploadWizard.Export_BusyMessage,
+                    Properties.UploadWizard.FetchingEvents),
+                Properties.UploadWizard.Export_BusyMessage + " (13%)",
+                Properties.UploadWizard.Export_BusyMessage + " (42%)",
+                Properties.UploadWizard.Export_BusyMessage + " (finishing)"
+            };
+
+            var actual = new List<string>();
+
+            _uut.PropertyChanged += (sender, args) =>
+            {
+                if (args.PropertyName == "BusyMessage")
+                {
+                    actual.Add(_uut.BusyMessage);
+                }
+            };
+
+            WhenExportIsExecuted();
+
+            Assert.AreEqual(expected, actual);
         }
 
         [Test]
@@ -189,7 +228,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Export
 
             _mockExporter.Verify(
                 exporter =>
-                    exporter.Export(It.IsAny<IEnumerable<IDEEvent>>(), It.IsAny<FilePublisher>()));
+                    exporter.Export(It.IsAny<IList<IDEEvent>>(), It.IsAny<FilePublisher>()));
         }
 
         [Test]
@@ -199,7 +238,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Export
 
             _mockExporter.Verify(
                 exporter =>
-                    exporter.Export(It.IsAny<IEnumerable<IDEEvent>>(), It.IsAny<HttpPublisher>()));
+                    exporter.Export(It.IsAny<IList<IDEEvent>>(), It.IsAny<HttpPublisher>()));
         }
 
         [Test]
@@ -208,7 +247,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Export
             HttpPublisher httpPublisher = null;
             _mockExporter.Setup(
                 exporter =>
-                    exporter.Export(It.IsAny<IEnumerable<IDEEvent>>(), It.IsAny<HttpPublisher>()))
+                    exporter.Export(It.IsAny<IList<IDEEvent>>(), It.IsAny<HttpPublisher>()))
                          .Callback<IEnumerable<IDEEvent>, IPublisher>(
                              (evts, publisher) => httpPublisher = (HttpPublisher) publisher);
 
@@ -277,10 +316,10 @@ namespace KaVE.VsFeedbackGenerator.Tests.Export
         }
 
         [Test]
-        public void FailingZipExportCreatesNotification()
+        public void FailingExportCreatesNotification()
         {
             _mockExporter.Setup(
-                e => e.Export(It.IsAny<IEnumerable<IDEEvent>>(), It.IsAny<IPublisher>()))
+                e => e.Export(It.IsAny<IList<IDEEvent>>(), It.IsAny<IPublisher>()))
                          .Throws(new AssertException("TEST"));
 
             WhenExportIsExecuted();
@@ -292,7 +331,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Export
         public void FailingExportNotificationHasCorrectMessage()
         {
             _mockExporter.Setup(
-                e => e.Export(It.IsAny<IEnumerable<IDEEvent>>(), It.IsAny<IPublisher>()))
+                e => e.Export(It.IsAny<IList<IDEEvent>>(), It.IsAny<IPublisher>()))
                          .Throws(new AssertException("TEST"));
 
             WhenExportIsExecuted();
@@ -307,11 +346,11 @@ namespace KaVE.VsFeedbackGenerator.Tests.Export
         }
 
         [Test]
-        public void FailingZipExportLogsError()
+        public void FailingExportLogsError()
         {
             var exception = new AssertException("TEST");
             _mockExporter.Setup(
-                e => e.Export(It.IsAny<IEnumerable<IDEEvent>>(), It.IsAny<IPublisher>())).Throws(exception);
+                e => e.Export(It.IsAny<IList<IDEEvent>>(), It.IsAny<IPublisher>())).Throws(exception);
 
             WhenExportIsExecuted();
 
@@ -319,7 +358,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Export
         }
 
         [Test]
-        public void SuccessfulZipExportUpdatesLastUploadDate()
+        public void SuccessfulExportUpdatesLastUploadDate()
         {
             _testDateUtils.Now = DateTime.Now;
             UploadSettings uploadSettings = null;
@@ -345,7 +384,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Export
             var expectedExport = logContent.Take(2);
             IEnumerable<IDEEvent> actualExport = null;
             _mockExporter.Setup(
-                e => e.Export(It.IsAny<IEnumerable<IDEEvent>>(), It.IsAny<IPublisher>()))
+                e => e.Export(It.IsAny<IList<IDEEvent>>(), It.IsAny<IPublisher>()))
                          .Callback<IEnumerable<IDEEvent>, IPublisher>((export, p) => actualExport = export);
 
             WhenExportIsExecuted();

@@ -23,6 +23,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Ionic.Zip;
+using JetBrains;
 using KaVE.Model.Events;
 using KaVE.Model.Events.VisualStudio;
 using KaVE.TestUtils.Model.Events;
@@ -39,7 +40,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
     [TestFixture]
     internal class ExporterTest
     {
-        private readonly IEnumerable<IDEEvent> _eventsForRealLifeExample = new List<IDEEvent>
+        private readonly IList<IDEEvent> _eventsForRealLifeExample = new List<IDEEvent>
         {
             new WindowEvent {TriggeredAt = new DateTime(2014, 1, 1)},
             new WindowEvent {TriggeredAt = new DateTime(2014, 1, 2)}
@@ -63,7 +64,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
             _sut = new Exporter(_anonymizerMock.Object);
         }
 
-        [Test, ExpectedException(typeof (AssertException), ExpectedMessage = "There are no events to export")]
+        [Test, ExpectedException(typeof (AssertException), ExpectedMessage = "Es gibt nichts zu exportieren.")]
         public void ShouldFailWithNoEvents()
         {
             _sut.Export(new List<IDEEvent>(), _publisherMock.Object);
@@ -151,16 +152,22 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
         }
 
         [Test]
-        public void ShouldInvokeCallbackForEveryEvent()
+        public void ShouldReportProgress()
         {
             var events = IDEEventTestFactory.SomeEvents(25);
-            var counter = 0;
-            Action eventProcessed = () => { counter ++; };
-            _sut.EventProcessed += eventProcessed;
-            _sut.Export(events, _publisherMock.Object);
-            _sut.EventProcessed -= eventProcessed;
+            var expected = events.Select((e, i) => Properties.UploadWizard.WritingEvents.FormatEx(i*4)).ToList();
+            expected.Add(Properties.UploadWizard.WritingEvents.FormatEx(100));
+            expected.Add(Properties.UploadWizard.CompressingEvents);
+            expected.Add(Properties.UploadWizard.PublishingEvents);
 
-            Assert.AreEqual(25, counter);
+            var actual = new List<string>();
+
+            Action<string> eventProcessed = actual.Add;
+            _sut.StatusChanged += eventProcessed;
+            _sut.Export(events, _publisherMock.Object);
+            _sut.StatusChanged -= eventProcessed;
+
+            Assert.AreEqual(expected, actual);
         }
 
         [Test, Ignore("manual test that the server receives valid file - RealLifeExample part 1")]

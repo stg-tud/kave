@@ -25,6 +25,7 @@ using System.Linq;
 using System.Windows.Forms;
 using KaVE.Model.Events;
 using KaVE.Utils;
+using KaVE.Utils.Assertion;
 using KaVE.VsFeedbackGenerator.Generators;
 using KaVE.VsFeedbackGenerator.Interactivity;
 using KaVE.VsFeedbackGenerator.SessionManager;
@@ -76,8 +77,11 @@ namespace KaVE.VsFeedbackGenerator.Export
 
         private void OnProgressChanged(object sender, ProgressChangedEventArgs progressChangedEventArgs)
         {
-            BusyMessage =
-                Properties.UploadWizard.Export_BusyMessage + " " + progressChangedEventArgs.ProgressPercentage + "%";
+            Asserts.NotNull(progressChangedEventArgs.UserState);
+            BusyMessage = string.Format(
+                "{0} ({1})",
+                Properties.UploadWizard.Export_BusyMessage,
+                progressChangedEventArgs.UserState);
         }
 
         private ExportSettings ExportSettings
@@ -120,28 +124,14 @@ namespace KaVE.VsFeedbackGenerator.Export
         {
             var worker = (BackgroundWorker) sender;
             _exportType = (UploadWizard.ExportType) e.Argument;
-            var events = ExtractEventsForExport();
-            var processed = 0;
-            var count = events.Count;
-            Action reportNextElementProcessed =
-                () =>
-                {
-                    processed ++;
-                    if (count == 0)
-                    {
-                        worker.ReportProgress(100);
-                    }
-                    else
-                    {
-                        worker.ReportProgress(100*processed/count);
-                    }
-                };
+            Action<string> reportExportStatusChange = exportStatus => worker.ReportProgress(0, exportStatus);
 
-            worker.ReportProgress(0);
+            reportExportStatusChange(Properties.UploadWizard.FetchingEvents);
+            var events = ExtractEventsForExport();
 
             try
             {
-                _exporter.EventProcessed += reportNextElementProcessed;
+                _exporter.StatusChanged += reportExportStatusChange;
                 if (_exportType == UploadWizard.ExportType.ZipFile)
                 {
                     _exporter.Export(events, new FilePublisher(AskForExportLocation));
@@ -153,7 +143,7 @@ namespace KaVE.VsFeedbackGenerator.Export
             }
             finally
             {
-                _exporter.EventProcessed -= reportNextElementProcessed;
+                _exporter.StatusChanged -= reportExportStatusChange;
             }
 
             _logManager.DeleteLogsOlderThan(_exportTime);

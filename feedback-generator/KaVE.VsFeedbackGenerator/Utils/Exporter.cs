@@ -21,9 +21,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using Ionic.Zip;
+using JetBrains;
 using JetBrains.Application;
 using KaVE.Model.Events;
 using KaVE.Utils.Assertion;
@@ -34,8 +36,8 @@ namespace KaVE.VsFeedbackGenerator.Utils
 {
     public interface IExporter
     {
-        event Action EventProcessed;
-        void Export(IEnumerable<IDEEvent> events, IPublisher publisher);
+        event Action<string> StatusChanged;
+        void Export(IList<IDEEvent> events, IPublisher publisher);
     }
 
     [ShellComponent]
@@ -48,32 +50,37 @@ namespace KaVE.VsFeedbackGenerator.Utils
             _anonymizer = anonymizer;
         }
 
-        public event Action EventProcessed = () => { };
+        public event Action<string> StatusChanged = s => { };
 
-        public void Export(IEnumerable<IDEEvent> events, IPublisher publisher)
+        public void Export(IList<IDEEvent> events, IPublisher publisher)
         {
+            Asserts.That(events.Any(), Properties.UploadWizard.NothingToExport);
+            Action<int> numberOfEventsProcessed =
+                no => StatusChanged(Properties.UploadWizard.WritingEvents.FormatEx(no*100/events.Count));
+
             using (var stream = new MemoryStream())
             {
                 var anonymousEvents = events.Select(_anonymizer.Anonymize);
-                CreateZipFile(anonymousEvents, stream);
+                CreateZipFile(anonymousEvents, stream, numberOfEventsProcessed);
+                StatusChanged(Properties.UploadWizard.PublishingEvents);
                 publisher.Publish(stream);
             }
         }
 
-        private void CreateZipFile(IEnumerable<IDEEvent> events, Stream stream)
+        private void CreateZipFile(IEnumerable<IDEEvent> events, Stream stream, Action<int> numberOfEventsProcessed)
         {
             using (var zipFile = new ZipFile())
             {
                 var i = 0;
+                numberOfEventsProcessed(i);
                 foreach (var e in events)
                 {
                     var fileName = (i++) + "-" + e.GetType().Name + ".json";
                     var json = e.ToFormattedJson();
                     zipFile.AddEntry(fileName, json);
-                    EventProcessed();
+                    numberOfEventsProcessed(i);
                 }
-                // TODO: Sven+Dennis: Move this check to UploadViewModel and always export here?
-                Asserts.That(i > 0, "There are no events to export");
+                StatusChanged(Properties.UploadWizard.CompressingEvents);
                 zipFile.Save(stream);
             }
         }
