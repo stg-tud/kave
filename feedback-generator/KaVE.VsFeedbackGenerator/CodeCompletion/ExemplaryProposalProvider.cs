@@ -20,8 +20,11 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Application;
 using JetBrains.ReSharper.Feature.Services.CSharp.CodeCompletion.Infrastructure;
 using JetBrains.ReSharper.Feature.Services.Lookup;
+using JetBrains.ReSharper.Psi;
+using JetBrains.ReSharper.Psi.CSharp;
 using KaVE.Model.Events.CompletionEvent;
 using KaVE.Model.Names;
 using KaVE.Model.Names.CSharp;
@@ -32,7 +35,7 @@ using KaVELogger = KaVE.VsFeedbackGenerator.Generators.ILogger;
 
 namespace KaVE.VsFeedbackGenerator.CodeCompletion
 {
-    //[ShellComponent]
+    [ShellComponent]
     public class MyModelStore : IModelStore
     {
         public IUsageModel GetModel(CoReTypeName typeName)
@@ -80,7 +83,7 @@ namespace KaVE.VsFeedbackGenerator.CodeCompletion
         }
     }
 
-    //[Language(typeof (CSharpLanguage))]
+    [Language(typeof (CSharpLanguage))]
     public class ExemplaryProposalProvider : CSharpItemsProviderBasic
     {
         private readonly IModelStore _store;
@@ -107,7 +110,7 @@ namespace KaVE.VsFeedbackGenerator.CodeCompletion
         {
             var query = CreateQuery(_context);
             var proposals = _model.Query(query);
-            foreach (var item in collector.Items)
+            foreach (var item in collector.Items.ToList())
             {
                 ConditionallyAddWrappedLookupItem(collector, proposals, item);
             }

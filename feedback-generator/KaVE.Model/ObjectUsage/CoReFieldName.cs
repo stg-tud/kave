@@ -25,7 +25,7 @@ namespace KaVE.Model.ObjectUsage
 
         private static string ValidationPattern()
         {
-            return string.Format(@"{0}\.[a-zA-Z0-9]+;{0}", CoReTypeName.ValidationPattern());
+            return string.Format(@"{0}\.[a-zA-Z0-9_]+;{0}", CoReTypeName.ValidationPattern());
         }
     }
 }
