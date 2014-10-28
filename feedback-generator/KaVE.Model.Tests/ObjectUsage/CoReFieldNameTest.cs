@@ -42,7 +42,7 @@ namespace KaVE.Model.Tests.ObjectUsage
             new CoReFieldName(fieldName);
         }
 
-        [TestCase("LType.field;LType"),
+        [TestCase("LType.field;LType"), TestCase("LType._field;LType"),
          TestCase("LKaVE/Model/ObjectUsage/Query.type;LKave/Model/ObjectUsage/CoReTypeName")]
         public void ShouldAcceptValidFieldNames(string fieldName)
         {

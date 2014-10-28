@@ -110,6 +110,7 @@ namespace KaVE.VsFeedbackGenerator.CodeCompletion
         {
             var query = CreateQuery(_context);
             var proposals = _model.Query(query);
+            // ToList is necessary to avoid ConcurrentModificationExceptions
             foreach (var item in collector.Items.ToList())
             {
                 ConditionallyAddWrappedLookupItem(collector, proposals, item);

@@ -22,6 +22,7 @@ using System.Text;
 using KaVE.JetBrains.Annotations;
 using KaVE.Model.Events.CompletionEvent;
 using KaVE.Model.Names;
+using KaVE.Model.Names.CSharp;
 using KaVE.Utils;
 
 namespace KaVE.Model.ObjectUsage
@@ -76,7 +77,16 @@ namespace KaVE.Model.ObjectUsage
             }
             else
             {
-                builder.Append(name.DeclaringType.ToName(), ".", name.Name, "(");
+                builder.Append(name.DeclaringType.ToName(), ".");
+                if (name.Equals(MethodName.UnknownName))
+                {
+                    builder.Append("unknown");
+                }
+                else
+                {
+                    builder.Append(name.Name);
+                }
+                builder.Append("(");
                 StringBuilderUtils.Append(builder, name.Parameters.Select(n => n.ValueType.ToName() + ";").ToArray());
                 builder.Append(")", name.ReturnType.ToName(), ";");
             }
@@ -87,7 +97,16 @@ namespace KaVE.Model.ObjectUsage
         public static CoReFieldName ToCoReName([NotNull] this IFieldName name)
         {
             var builder = new StringBuilder();
-            builder.Append(name.DeclaringType.ToName(), ".", name.Name, ";", name.ValueType.ToName());
+            builder.Append(name.DeclaringType.ToName(), ".");
+            if (name.Equals(FieldName.UnknownName))
+            {
+                builder.Append("unknown");
+            }
+            else
+            {
+                builder.Append(name.Name);
+            }
+            builder.Append(";", name.ValueType.ToName());
             return new CoReFieldName(builder.ToString());
         }
 
@@ -109,6 +128,10 @@ namespace KaVE.Model.ObjectUsage
             if (name.IsNestedType)
             {
                 return name.DeclaringType.ToName() + "$" + name.Name;
+            }
+            if (name.IsUnknownType)
+            {
+                return "LUnknown";
             }
             var builder = new StringBuilder();
             builder.Append("L", name.Namespace.ToName(), name.Name);

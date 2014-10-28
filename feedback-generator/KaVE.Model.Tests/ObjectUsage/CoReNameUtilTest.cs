@@ -31,7 +31,8 @@ namespace KaVE.Model.Tests.ObjectUsage
          TestCase("Coll.List`1[[T -> T]], mscore, 4.0.0.0", "LColl/List"),
          TestCase("N.Type[], A, 1.0.0.0", "[LN/Type"),
          TestCase("N.Type[,,], A, 1.0.0.0", "[LN/Type"),
-         TestCase("Name.Outer+Inner, Assembly, 1.2.3.4", "LName/Outer$Inner")]
+         TestCase("Name.Outer+Inner, Assembly, 1.2.3.4", "LName/Outer$Inner"),
+         TestCase("?", "LUnknown")]
         public void ShouldConvertTypeNames(string iName, string coReName)
         {
             var expected = new CoReTypeName(coReName);
@@ -44,7 +45,8 @@ namespace KaVE.Model.Tests.ObjectUsage
 
         [TestCase("[Sys.V, A, 1.0.0.0] [N.T, A, 1.0.0.0].m([N.P, A, 1.0.0.0] arg)", "LN/T.m(LN/P;)LSys/V;"),
          TestCase("[Sys.V, A, 1.0.0.0] [N.T, A, 1.0.0.0].m`1[[G]]([G] arg)", "LN/T.m(LSystem/Object;)LSys/V;"),
-         TestCase("[N.T, A, 1.0.0.0] [N.T, A, 1.0.0.0]..ctor()", "LN/T.<init>()LSystem/Void;")]
+         TestCase("[N.T, A, 1.0.0.0] [N.T, A, 1.0.0.0]..ctor()", "LN/T.<init>()LSystem/Void;"),
+         TestCase("[?] [?].???()", "LUnknown.unknown()LUnknown;")]
         public void ShouldConvertMethodNames(string iName, string coReName)
         {
             var expected = new CoReMethodName(coReName);
@@ -55,7 +57,8 @@ namespace KaVE.Model.Tests.ObjectUsage
             Assert.AreEqual(expected, actual);
         }
 
-        [TestCase("[N.S, A, 1.0.0.0] [N.T, A, 1.0.0.0].f", "LN/T.f;LN/S")]
+        [TestCase("[N.S, A, 1.0.0.0] [N.T, A, 1.0.0.0].f", "LN/T.f;LN/S"),
+        TestCase("[?] [?].???", "LUnknown.unknown;LUnknown")]
         public void ShouldConvertFieldNames(string iName, string coReName)
         {
             var expected = new CoReFieldName(coReName);
