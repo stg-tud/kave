@@ -12,7 +12,12 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sven Amann
+ *    - Uli Fahrer
  */
+
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -53,7 +58,13 @@ namespace KaVE.VsFeedbackGenerator.Utils.Names
         [NotNull]
         public static IList<WindowName> GetNames([NotNull] this Windows windows)
         {
-            Asserts.NotNull(windows, "windows");
+            return GetNames(windows.Cast<Window>().ToList());
+        }
+
+        [NotNull]
+        public static IList<WindowName> GetNames([NotNull] this IList<Window> windows)
+        {
+            Asserts.NotNull(windows);
             return (from Window window in windows select window.GetName()).ToList();
         }
 

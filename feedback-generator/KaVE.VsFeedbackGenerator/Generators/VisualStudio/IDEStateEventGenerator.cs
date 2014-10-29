@@ -17,7 +17,10 @@
  *    - Sven Amann
  */
 
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
+using EnvDTE;
 using JetBrains.Application;
 using JetBrains.Application.Components;
 using JetBrains.DataFlow;
@@ -66,9 +69,15 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
         {
             var ideStateEvent = Create<IDEStateEvent>();
             ideStateEvent.IDELifecyclePhase = phase;
-            ideStateEvent.OpenWindows = DTE.Windows.GetNames();
+
+            ideStateEvent.OpenWindows = GetVisibleWindows().GetNames();
             ideStateEvent.OpenDocuments = DTE.Documents.GetNames();
             return ideStateEvent;
+        }
+
+        private IList<Window> GetVisibleWindows()
+        {
+            return (from Window window in DTE.Windows where window.Visible select window).ToList();
         }
     }
 }
