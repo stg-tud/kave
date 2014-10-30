@@ -187,7 +187,7 @@
     <Compile Include="Generators\ReSharper\EventGeneratingBulbActionProxy.cs" />
     <Compile Include="Generators\EventGeneratorBase.cs" />
     <Compile Include="Generators\VisualStudio\BuildEventGenerator.cs" />
-    <Compile Include="Generators\VisualStudio\CommandEventGenerator.cs" />
+    <Compile Include="Generators\VisualStudio\DTECommandEventGenerator.cs" />
     <Compile Include="Generators\VisualStudio\DebuggerEventGenerator.cs" />
     <Compile Include="Generators\VisualStudio\DocumentEventGenerator.cs" />
     <Compile Include="Generators\VisualStudio\FindEventGenerator.cs" />

@@ -29,7 +29,7 @@ using NUnit.Framework;
 namespace KaVE.VsFeedbackGenerator.Tests.Generators.VisualStudio
 {
     [TestFixture]
-    internal class CommandEventGeneratorTest : VisualStudioEventGeneratorTestBase
+    internal class DTECommandEventGeneratorTest : VisualStudioEventGeneratorTestBase
     {
         private Mock<CommandEvents> _mockCommandEvents;
         private Mock<Commands> _mockCommands;
@@ -47,7 +47,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.VisualStudio
         {
             SetUpCommands();
             // ReSharper disable once ObjectCreationAsStatement
-            new CommandEventGenerator(TestIDESession, TestMessageBus, TestDateUtils);
+            new DTECommandEventGenerator(TestIDESession, TestMessageBus, TestDateUtils);
         }
 
         private void SetUpCommands()

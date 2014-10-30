@@ -20,8 +20,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Windows;
-using System.Windows.Media;
 using EnvDTE;
 using JetBrains.Application;
 using JetBrains.Application.Components;
@@ -33,7 +31,6 @@ using KaVE.VsFeedbackGenerator.MessageBus;
 using KaVE.VsFeedbackGenerator.Utils;
 using KaVE.VsFeedbackGenerator.VsIntegration;
 using Microsoft.VisualStudio.CommandBars;
-using Window = EnvDTE.Window;
 
 namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
 {
@@ -104,8 +101,6 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
 
         private void FireCommandBarEvent(CommandBarControl command)
         {
-            // TODO @Sven: Capture the parents's name, as "Bug" is not helpfull (or unique) whereas "Create Working Item" > "Bug" probably is
-            // We can walk up the control's and menu bar's parents until an instance of Sytem._ComObject is reached
             var commandEvent = Create<CommandEvent>();
             commandEvent.TriggeredBy = IDEEvent.Trigger.Click;
             commandEvent.CommandId = command.GetFullQualifiedId();
@@ -141,6 +136,7 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
 
         internal static string GetFullQualifiedId(this CommandBarControl control)
         {
+            // TODO Capture the parents's name, as "Bug" is not helpfull (or unique) whereas "Create Working Item" > "Bug" probably is
             /*
              * We can compute the whole tree path, by stepping up the parents (ControlBars and Popups).
              * Sometimes there are both a Bar and a Popup with the same name, these should be mergen then:
@@ -152,6 +148,7 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
              *       + ControlY
              *       + ...
              * 
+             * We can walk up the control's and menu bar's parents until an instance of Sytem._ComObject is reached.
              * Maybe it's easier to build the names when we walk down the tree. We should avoid to create
              * throusands of unecessary strings, though.
              */

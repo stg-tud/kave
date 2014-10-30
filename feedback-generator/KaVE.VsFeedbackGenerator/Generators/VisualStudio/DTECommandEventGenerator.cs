@@ -36,7 +36,7 @@ using KaVE.VsFeedbackGenerator.VsIntegration;
 namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
 {
     [ShellComponent(ProgramConfigurations.VS_ADDIN)]
-    internal class CommandEventGenerator : EventGeneratorBase
+    internal class DTECommandEventGenerator : EventGeneratorBase
     {
         private static readonly ICollection<string> EventsDuplicatedByReSharper = new Collection<string>
         {
@@ -76,7 +76,7 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
         private readonly CommandEvents _commandEvents;
         private readonly Dictionary<string, CommandEvent> _eventQueue;
 
-        public CommandEventGenerator(IIDESession session, IMessageBus messageBus, IDateUtils dateUtils)
+        public DTECommandEventGenerator(IIDESession session, IMessageBus messageBus, IDateUtils dateUtils)
             : base(session, messageBus, dateUtils)
         {
             _eventQueue = new Dictionary<string, CommandEvent>();
