@@ -30,6 +30,8 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.VisualStudio
 {
     class CommandBarEventGeneratorTest : VisualStudioEventGeneratorTestBase
     {
+        private Mock<WindowEvents> _mockWindowEvents;
+
         [SetUp]
         public void SetUp()
         {
@@ -44,6 +46,9 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.VisualStudio
 
         protected override void MockEvents(Mock<Events> mockEvents)
         {
+            _mockWindowEvents = new Mock<WindowEvents>();
+            // ReSharper disable once UseIndexedProperty
+            mockEvents.Setup(events => events.get_WindowEvents(It.IsAny<Window>())).Returns(_mockWindowEvents.Object);
         }
 
         private static Mock<CommandBarButton> MockButton(string commandId)
