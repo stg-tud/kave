@@ -88,9 +88,11 @@ namespace KaVE.VsFeedbackGenerator.Utils
         private static IName TryGetNameFromWrappedLookupItem(ILookupItem lookupItem)
         {
             var wrappedLookupItem = lookupItem as IWrappedLookupItem;
-            // TODO find example of wrapped case and decide whether or not to include wrapping information
-            // there are no implementations of this interface found by hierarchy inspection...
-            return wrappedLookupItem != null ? wrappedLookupItem.Item.GetName() : null;
+            if (wrappedLookupItem != null)
+            {
+                return Name.Get(wrappedLookupItem.GetType().Name + ":" + wrappedLookupItem.Item.GetName());
+            }
+            return null;
         }
 
         private static IName TryGetNameFromKeywordOrTextualLookupItem(ILookupItem lookupItem)
