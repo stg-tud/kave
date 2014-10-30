@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+    <metadata>
+        <id>KaVE.VsFeedbackGenerator.Dependency</id>
+        <version>1.0.0-alpha1</version>
+        <authors>Sven Amann,Sebastian Proksch</authors>
+        <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0.html</licenseUrl>
+        <projectUrl>http://kave.cc</projectUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>KaVE FeedbackGenerator</description>
+        <dependencies>
+            <dependency id="Hardcodet.NotifyIcon.Wpf" version="1.0.5" />
+            <dependency id="Newtonsoft.Json" version="6.0.3" />
+            <dependency id="WpfAnimatedGif" version="1.4.4" />
+            <dependency id="JetBrains.ReSharper.SDK" version="8.2.1158" />
+        </dependencies>
+    </metadata>
+    <files>
+        <file src="KaVE.VsFeedbackGenerator\bin\Debug\KaVE.Model.dll" target="lib\net40\KaVE.Model.dll" />
+        <file src="KaVE.VsFeedbackGenerator\bin\Debug\KaVE.Utils.dll" target="lib\net40\KaVE.Utils.dll" />
+        <file src="KaVE.VsFeedbackGenerator\bin\Debug\KaVE.VsFeedbackGenerator.dll" target="lib\net40\KaVE.VsFeedbackGenerator.dll" />
+        <file src="3rd-party\MsgBox.dll" target="lib\net40\MsgBox.dll" />
+        <file src="3rd-party\smileNet.dll" target="lib\net40\smileNet.dll" />
+        <file src="3rd-party\System.Net.Http.dll" target="lib\net40\System.Net.Http.dll" />
+        <file src="3rd-party\UserNotification.dll" target="lib\net40\UserNotification.dll" />
+    </files>
+</package>
