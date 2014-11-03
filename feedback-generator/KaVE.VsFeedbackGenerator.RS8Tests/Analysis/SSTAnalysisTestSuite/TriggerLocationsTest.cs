@@ -18,6 +18,7 @@
  */
 
 using System;
+using JetBrains.Util.DnsAPI;
 using KaVE.Model.SSTs;
 using NUnit.Framework;
 using Fix = KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite.SSTAnalysisFixture;
@@ -37,6 +38,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 
             var sst = NewSST();
             sst.AddEntrypoint(NewMethodDeclaration(Fix.Void, "A"));
+            sst.Add(new TypeTrigger());
 
             AssertResult(sst);
         }
@@ -83,7 +85,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
                 }
             ");
 
-            var trigger = new TypeTrigger();
+            var trigger = new MethodTrigger();
 
             var mA = NewMethodDeclaration(Fix.Void, "A");
             mA.Body.Add(trigger);
@@ -124,6 +126,8 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
                     $
                 }
             ");
+
+            // TODO think about this again... what abaout abstract base classes?
         }
     }
 }

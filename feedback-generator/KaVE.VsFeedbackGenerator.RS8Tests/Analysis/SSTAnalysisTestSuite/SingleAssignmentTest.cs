@@ -99,7 +99,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             mA.Body.Add(new VariableDeclaration("i", Fix.Int));
             mA.Body.Add(new VariableDeclaration("v0", Fix.Int));
             mA.Body.Add(new Assignment("v0", new Invocation("c1", Fix.GetMethodName("C.get"))));
-            mA.Body.Add(new VariableDeclaration("v0", Fix.Int));
+            mA.Body.Add(new VariableDeclaration("v1", Fix.Int));
             mA.Body.Add(new Assignment("v1", new Invocation("c2", Fix.GetMethodName("C.get"))));
             mA.Body.Add(new Assignment("i", new ComposedExpression {Variables = new[] {"v0", "v1"}}));
 
@@ -133,10 +133,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             mA.Body.Add(new Assignment("v1", new Invocation("c2", Fix.GetMethodName("C.plus"), "v0")));
             mA.Body.Add(new VariableDeclaration("v2", Fix.Int));
             mA.Body.Add(new Assignment("v2", new Invocation("c1", Fix.GetMethodName("C.plus"), "v1")));
-            mA.Body.Add(new Assignment("i", new ComposedExpression {Variables = new[] {"v0", "v1", "v2"}}));
-            // or do we prefer: 
-            // mA.Body.Add(new Assignment("i", new ComposedExpression { Variables = new[] { "c1, c2" } }));
-            // ??
+            mA.Body.Add(new Assignment("i", new ComposedExpression {Variables = new[] {"v2"}}));
 
             AssertEntryPoints(mA);
         }
@@ -151,10 +148,14 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
              var c = new C1();
              var a = c.m1(o) + C.m2();
              -->
-             var c = new C1();
-             var v1 = c.m1(o);
-             var v2 = c.m2()
-             var a = v1 + v2; -> assignment(a, cplxOp(v1, v2))
+             var c;
+             c = new C1();
+             var v1;
+             v1 = c.m1(o);
+             var v2;
+             v2 = c.m2()
+             var a;
+             a = v1 + v2; -> assignment(a, cplxOp(v1, v2))
              */
 
         /*
@@ -163,7 +164,6 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
              -->
              var c = new C1();
              var v1 = c.m1(o);
-             var j = 3;
              var a = v1 + j + 1; -> assignment(a, cplxOp(v1, j))
              */
 

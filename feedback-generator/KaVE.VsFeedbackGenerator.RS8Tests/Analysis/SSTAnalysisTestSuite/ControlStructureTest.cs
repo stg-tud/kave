@@ -17,6 +17,7 @@
  *    - Sebastian Proksch
  */
 
+using System.IO;
 using KaVE.Model.Names.CSharp;
 using KaVE.Model.SSTs;
 using NUnit.Framework;
@@ -191,6 +192,8 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             AssertEntryPoints(mA);
         }
 
+        // TODO: handle "from Window window in windows select window.GetName()" like LINQ expression windows.Select(win => win.getName())
+
         [Test]
         public void UsingBlock()
         {
@@ -245,6 +248,11 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
                         Console.GetHashCode();
                         $
                     } catch(Exception e) {
+                        Console.Read();
+                        e.GetStacktrace();
+                    } catch(Exception) {
+                        Console.Read();
+                    } catch {
                         Console.Read();
                     } finally {
                         Console.Beep();
