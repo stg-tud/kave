@@ -14,12 +14,13 @@
  * limitations under the License.
  * 
  * Contributors:
- *    - 
+ *    - Sebastian Proksch
  */
 
 using KaVE.Model.Names;
 using KaVE.Model.Names.CSharp;
-using KaVE.Model.SSTs;
+using KaVE.Model.SSTs.Declarations;
+using KaVE.Model.SSTs.Statements;
 using NUnit.Framework;
 
 namespace KaVE.Model.Tests.SSTs
@@ -34,7 +35,7 @@ namespace KaVE.Model.Tests.SSTs
         {
             var a = new MethodDeclaration();
             var b = new MethodDeclaration();
-            
+
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
         }
@@ -50,7 +51,7 @@ namespace KaVE.Model.Tests.SSTs
             {
                 Name = _mA
             };
-            
+
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
         }
@@ -66,7 +67,7 @@ namespace KaVE.Model.Tests.SSTs
             {
                 Name = _mB
             };
-            
+
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
         }
@@ -78,7 +79,7 @@ namespace KaVE.Model.Tests.SSTs
             a.Body.Add(new VariableDeclaration("i", null));
             var b = new MethodDeclaration();
             b.Body.Add(new VariableDeclaration("i", null));
-            
+
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
         }
@@ -89,7 +90,7 @@ namespace KaVE.Model.Tests.SSTs
             var a = new MethodDeclaration();
             a.Body.Add(new VariableDeclaration("i", null));
             var b = new MethodDeclaration();
-            b.Body.Add(new ConstantExpression());
+            b.Body.Add(new ContinueStatement());
 
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());

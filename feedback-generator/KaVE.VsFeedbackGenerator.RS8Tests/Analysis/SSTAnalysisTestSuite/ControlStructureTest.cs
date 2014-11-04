@@ -17,9 +17,11 @@
  *    - Sebastian Proksch
  */
 
-using System.IO;
 using KaVE.Model.Names.CSharp;
-using KaVE.Model.SSTs;
+using KaVE.Model.SSTs.Blocks;
+using KaVE.Model.SSTs.Declarations;
+using KaVE.Model.SSTs.Expressions;
+using KaVE.Model.SSTs.Statements;
 using NUnit.Framework;
 using Fix = KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite.SSTAnalysisFixture;
 
@@ -40,8 +42,8 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             ");
 
             var mA = NewMethodDeclaration(Fix.Void, "A");
-            mA.Body.Add(new MethodTrigger());
-            mA.Body.Add(new ReturnStatement(new ConstantExpression()));
+            mA.Body.Add(new CompletionTrigger());
+            mA.Body.Add(new ReturnStatement {Expression = new ConstantExpression()});
 
             AssertEntryPoints(mA);
         }
@@ -61,14 +63,13 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             ");
 
             var mA = NewMethodDeclaration(Fix.Void, "A");
-            mA.Body.Add(new MethodTrigger());
+            mA.Body.Add(new CompletionTrigger());
 
-
-            var ifElse = new IfElse(new ConstantExpression());
-            ifElse.IfExpressions.Add(new ReturnStatement(new ConstantExpression()));
+            var ifElse = new IfElseBlock {Condition = new ConstantExpression()};
+            ifElse.Body.Add(new ReturnStatement {Expression = new ConstantExpression()});
 
             mA.Body.Add(ifElse);
-            mA.Body.Add(new ReturnStatement(new ConstantExpression()));
+            mA.Body.Add(new ReturnStatement {Expression = new ConstantExpression()});
 
             AssertEntryPoints(mA);
         }
@@ -89,11 +90,11 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             ");
 
             var mA = NewMethodDeclaration(Fix.Void, "A");
-            mA.Body.Add(new MethodTrigger());
+            mA.Body.Add(new CompletionTrigger());
 
-            var ifElse = new IfElse(new ConstantExpression());
-            ifElse.IfExpressions.Add(new ReturnStatement(new ConstantExpression()));
-            ifElse.ElseExpressions.Add(new ReturnStatement(new ConstantExpression()));
+            var ifElse = new IfElseBlock {Condition = new ConstantExpression()};
+            ifElse.Body.Add(new ReturnStatement {Expression = new ConstantExpression()});
+            ifElse.ElseBody.Add(new ReturnStatement {Expression = new ConstantExpression()});
 
             mA.Body.Add(ifElse);
 
@@ -117,10 +118,10 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             var mA = NewMethodDeclaration(Fix.Void, "A");
             mA.Body.Add(new VariableDeclaration("i", Fix.Int));
 
-            var whileLoop = new WhileLoop(new ConstantExpression());
+            var whileLoop = new WhileLoop {Condition = new ConstantExpression()};
 
-            whileLoop.Expressions.Add(new Assignment("i", new ComposedExpression {Variables = new[] {"i"}}));
-            whileLoop.Expressions.Add(new MethodTrigger());
+            whileLoop.Body.Add(new Assignment("i", new ComposedExpression {Variables = new[] {"i"}}));
+            whileLoop.Body.Add(new CompletionTrigger());
 
             mA.Body.Add(whileLoop);
 
@@ -144,11 +145,11 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             var forLoop = new ForLoop();
             forLoop.Init.Add(new VariableDeclaration("i", Fix.Int));
             forLoop.Init.Add(new Assignment("i", new ConstantExpression()));
-            forLoop.While.Add(new ComposedExpression {Variables = new[] {"i"}});
-            forLoop.Stepping.Add(new ComposedExpression {Variables = new[] {"i"}});
+            forLoop.Condition = new ComposedExpression {Variables = new[] {"i"}};
+            forLoop.Step.Add(new Assignment("i", new ComposedExpression {Variables = new[] {"i"}}));
 
-            forLoop.Body.Add(new Invocation(MethodName.Get("Console.Write"), "i"));
-            forLoop.Body.Add(new MethodTrigger());
+            forLoop.Body.Add(new InvocationStatement(MethodName.Get("Console.Write"), "i"));
+            forLoop.Body.Add(new CompletionTrigger());
 
             mA.Body.Add(forLoop);
 
@@ -183,9 +184,11 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             ");
 
             var mA = NewMethodDeclaration(Fix.Void, "A");
-            var forEachLoop = new ForEachLoop("n", Fix.Int) {Values = new ConstantExpression()};
-            forEachLoop.Body.Add(new Invocation(MethodName.Get("Console.Write"), "n"));
-            forEachLoop.Body.Add(new MethodTrigger());
+            mA.Body.Add(new VariableDeclaration("v0", Fix.IntArray));
+            mA.Body.Add(new Assignment("v0", new ConstantExpression()));
+            var forEachLoop = new ForEachLoop {LoopedIdentifier = "v0"};
+            forEachLoop.Body.Add(new InvocationStatement(MethodName.Get("Console.Write"), "n"));
+            forEachLoop.Body.Add(new CompletionTrigger());
 
             mA.Body.Add(forEachLoop);
 
@@ -207,13 +210,16 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 	                }
                 }
             ");
-            
+
             var mA = NewMethodDeclaration(Fix.Void, "A");
             mA.Body.Add(new VariableDeclaration("o", Fix.Object));
 
-            var usingBlock = new UsingBlock("o", new Invocation(MethodName.Get("Object.ctor()")));
-            usingBlock.Body.Add(new Invocation(MethodName.Get("Console.Write"), "n"));
-            usingBlock.Body.Add(new MethodTrigger());
+            mA.Body.Add(new VariableDeclaration("o", Fix.Object));
+            mA.Body.Add(new Assignment("o", new InvocationExpression(MethodName.Get("Object.ctor()"))));
+
+            var usingBlock = new UsingBlock {Identifier = "o"};
+            usingBlock.Body.Add(new InvocationStatement(MethodName.Get("Console.Write"), "n"));
+            usingBlock.Body.Add(new CompletionTrigger());
 
             mA.Body.Add(usingBlock);
 
@@ -232,8 +238,8 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             ");
 
             var mA = NewMethodDeclaration(Fix.Void, "A");
-            mA.Body.Add(new MethodTrigger());
-            mA.Body.Add(new ThrowStatement(Fix.Exception));
+            mA.Body.Add(new CompletionTrigger());
+            mA.Body.Add(new ThrowStatement {Exception = Fix.Exception});
 
             AssertEntryPoints(mA);
         }
@@ -264,12 +270,13 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 
             var tryBlock = new TryBlock();
 
-            tryBlock.Body.Add(new Invocation(MethodName.Get("Console.GetHashCode()")));
-            tryBlock.Body.Add(new MethodTrigger());
+            tryBlock.Body.Add(new InvocationStatement(MethodName.Get("Console.GetHashCode()")));
+            tryBlock.Body.Add(new CompletionTrigger());
 
-            var catchBlock = tryBlock.AddCatch(Fix.Exception);
-            catchBlock.Add(new Invocation(MethodName.Get("Console.Read()")));
-            tryBlock.Finally.Add(new Invocation(MethodName.Get("Console.Beep()")));
+            tryBlock.CatchBlocks.Add(new CatchBlock {Exception = new VariableDeclaration("e", Fix.Exception)});
+            tryBlock.CatchBlocks.Add(new CatchBlock {Exception = new VariableDeclaration(null, Fix.Exception)});
+            tryBlock.CatchBlocks.Add(new CatchBlock());
+            tryBlock.Finally.Add(new InvocationStatement(MethodName.Get("Console.Beep()")));
 
             AssertEntryPoints(mA);
         }

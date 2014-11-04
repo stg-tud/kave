@@ -21,15 +21,14 @@ using System;
 using System.Collections.Generic;
 using KaVE.Model.Collections;
 using KaVE.Model.Names;
-using KaVE.Model.Names.CSharp;
-using KaVE.Utils;
-using KaVE.Utils.Assertion;
+using KaVE.Model.SSTs.Declarations;
+using KaVE.Model.SSTs.Statements;
 
 namespace KaVE.Model.SSTs
 {
     public class SST
     {
-        private ITypeName _td;
+        private readonly ITypeName _td;
 
         private readonly ISet<FieldDeclaration> _fields = Sets.NewHashSet<FieldDeclaration>();
         private readonly ISet<PropertyDeclaration> _properties = Sets.NewHashSet<PropertyDeclaration>();
@@ -43,7 +42,12 @@ namespace KaVE.Model.SSTs
             _td = td;
         }
 
-        public void SetTriggerPoint(MethodDeclaration md)
+        public ITypeName GetEnclosingType()
+        {
+            return _td;
+        }
+
+        public void Add(CompletionTrigger tp)
         {
             //var i = 1 + 2;
             //var b = Console.Read();
@@ -65,8 +69,6 @@ namespace KaVE.Model.SSTs
         {
             _fields.Add(fd);
         }
-
-        public void Add(TypeTrigger md) {}
 
         public ISet<MethodDeclaration> GetEntrypoints()
         {
@@ -93,266 +95,4 @@ namespace KaVE.Model.SSTs
             _events.Add(ed);
         }
     }
-
-
-    public class Expression {}
-
-
-    public class FieldDeclaration : Expression
-    {
-        public string Name;
-        public ITypeName Type;
-
-        public FieldDeclaration(string s, ITypeName typeName)
-        {
-            Name = s;
-            Type = typeName;
-        }
-
-        public string Identifier
-        {
-            get { return Name; }
-        }
-    }
-
-    public class TypeDeclaration : Expression
-    {
-        public ITypeName Type { get; set; }
-
-        public TypeDeclaration(ITypeName type)
-        {
-            Type = type;
-        }
-    }
-
-    public class DelegateDeclaration : Expression
-    {
-        public string Name { get; set; }
-        public MethodName MethodName { get; set; }
-
-        public DelegateDeclaration(string name, MethodName methodName)
-        {
-            Name = name;
-            MethodName = methodName;
-        }
-    }
-
-    public class EventDeclaration : Expression
-    {
-        public string Identifier { get; set; }
-        public ITypeName Type { get; set; }
-
-        public EventDeclaration(string identifier, ITypeName type)
-        {
-            Identifier = identifier;
-            Type = type;
-        }
-    }
-
-
-    public class VariableDeclaration : Expression
-    {
-        // var a = 1 --> var a; a = 1
-        public readonly string Identifier;
-        public readonly ITypeName Type;
-
-        public VariableDeclaration(string identifier, ITypeName type)
-        {
-            Identifier = identifier;
-            Type = type;
-        }
-
-        public override bool Equals(object obj)
-        {
-            return this.Equals(obj, Equals);
-        }
-
-        protected bool Equals(VariableDeclaration other)
-        {
-            return string.Equals(Identifier, other.Identifier) && Equals(Type, other.Type);
-        }
-
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                return ((Identifier != null ? Identifier.GetHashCode() : 0)*397) ^
-                       (Type != null ? Type.GetHashCode() : 0);
-            }
-        }
-    }
-
-    public class PropertyDeclaration : Expression
-    {
-        public string Name { get; set; }
-        public ITypeName Type { get; set; }
-
-        public List<Expression> GetExpressions = new List<Expression>();
-        public List<Expression> SetExpressions = new List<Expression>();
-
-        public PropertyDeclaration(string s, ITypeName typeName)
-        {
-            Name = s;
-            Type = typeName;
-        }
-    }
-
-    public class LambdaDeclaration : Expression
-    {
-        public List<Expression> Body = new List<Expression>();
-    }
-
-
-    public class Block : Expression
-    {
-        public List<Expression> Expressions;
-    }
-
-    public class Assignment : Expression
-    {
-        public string Identifier;
-        public Expression Value;
-
-        public Assignment(string identifier, Expression expr)
-        {
-            Identifier = identifier;
-            Value = expr;
-        }
-    }
-
-    public class Invocation : Expression
-    {
-        public string Identifier;
-        public IMethodName Name;
-        public string[] Parameters;
-
-        public Invocation(IMethodName name, params string[] parameters)
-        {
-            Asserts.That(name.IsStatic);
-            Identifier = "";
-            Name = name;
-            Parameters = parameters;
-        }
-
-        public Invocation(string id, IMethodName name, params string[] parameters)
-        {
-            Asserts.Not(name.IsStatic);
-            Identifier = id;
-            Name = name;
-            Parameters = parameters;
-        }
-    }
-
-    public class ConstantExpression : Expression {}
-
-    public class ComposedExpression : Expression
-    {
-        public string[] Variables;
-    }
-
-    public class ThrowStatement : Expression
-    {
-        public ITypeName Exception;
-
-        public ThrowStatement(ITypeName exception)
-        {
-            Exception = exception;
-        }
-    }
-
-
-    public class TypeTrigger : Expression
-    {
-        public string Token = "";
-    }
-
-    public class MethodTrigger : Expression
-    {
-        public string Token = "";
-    }
-
-
-    public class ReturnStatement : Expression
-    {
-        public Expression Value { get; private set; }
-
-        public ReturnStatement(Expression value)
-        {
-            Value = value;
-        }
-    }
-
-    public class IfElse : Expression
-    {
-        public Expression Condition { get; set; }
-        public List<Expression> IfExpressions = new List<Expression>();
-        public List<Expression> ElseExpressions = new List<Expression>();
-
-        public IfElse(Expression condition)
-        {
-            Condition = condition;
-        }
-    }
-
-    public class WhileLoop : Expression
-    {
-        public Expression Condition { get; private set; }
-        public List<Expression> Expressions = new List<Expression>();
-
-        public WhileLoop(Expression condition)
-        {
-            Condition = condition;
-        }
-    }
-
-    public class ForLoop : Expression
-    {
-        public List<Expression> Init = new List<Expression>();
-        public List<Expression> While = new List<Expression>();
-        public List<Expression> Stepping = new List<Expression>();
-        public List<Expression> Body = new List<Expression>();
-    }
-
-    public class ForEachLoop : Expression
-    {
-        public VariableDeclaration Decl { get; set; }
-        public Expression Values;
-        public List<Expression> Body;
-
-        public ForEachLoop(string identifier, ITypeName typeName) : this(new VariableDeclaration(identifier, typeName)) { }
-
-        public ForEachLoop(VariableDeclaration decl)
-        {
-            Decl = decl;
-        }
-    }
-
-    public class UsingBlock : Expression
-    {
-        public string Identifier { get; set; }
-        public Expression Init { get; set; }
-        public List<Expression> Body = new List<Expression>();
-
-        public UsingBlock(string identifier, Expression init)
-        {
-            Identifier = identifier;
-            Init = init;
-        }
-    }
-
-    public class TryBlock : Expression
-    {
-        public List<Expression> Body { get; set; }
-        public Dictionary<ITypeName, List<Expression>> CatchBlocks = new Dictionary<ITypeName, List<Expression>>();
-        public List<Expression> Finally { get; set; }
-
-        public new List<Expression> AddCatch(ITypeName get)
-        {
-            var l = new List<Expression>();
-            CatchBlocks.Add(get, l);
-            return l;
-        }
-    }
-
-    // ... whatever is missing (lock, using, etc..)
 }

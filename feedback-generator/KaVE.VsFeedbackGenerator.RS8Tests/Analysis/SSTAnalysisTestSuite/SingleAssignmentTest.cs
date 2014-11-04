@@ -17,7 +17,10 @@
  *    - Sebastian Proksch
  */
 
-using KaVE.Model.SSTs;
+using KaVE.Model.SSTs.Blocks;
+using KaVE.Model.SSTs.Declarations;
+using KaVE.Model.SSTs.Expressions;
+using KaVE.Model.SSTs.Statements;
 using NUnit.Framework;
 using Fix = KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite.SSTAnalysisFixture;
 
@@ -38,12 +41,15 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             ");
 
             var mA = NewMethodDeclaration(Fix.Void, "A");
-            var ifElse = new IfElse(new ConstantExpression());
+            mA.Body.Add(new VariableDeclaration("v0", Fix.Bool));
+            mA.Body.Add(new Assignment("v0", new ConstantExpression()));
+
+            var ifElse = new IfElseBlock {Condition = new ComposedExpression {Variables = new[] {"v0"}}};
 
             mA.Body.Add(new VariableDeclaration("i", Fix.Int));
             mA.Body.Add(ifElse);
-            ifElse.IfExpressions.Add(new Assignment("i", new ConstantExpression()));
-            ifElse.ElseExpressions.Add(new Assignment("i", new ConstantExpression()));
+            ifElse.Body.Add(new Assignment("i", new ConstantExpression()));
+            ifElse.ElseBody.Add(new Assignment("i", new ConstantExpression()));
 
             AssertEntryPoints(mA);
         }
@@ -70,7 +76,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 
             mA.Body.Add(new VariableDeclaration("i", Fix.Int));
             mA.Body.Add(new VariableDeclaration("v0", Fix.Int));
-            mA.Body.Add(new Assignment("v0", new Invocation("c", Fix.GetMethodName("C.get"))));
+            mA.Body.Add(new Assignment("v0", new InvocationExpression("c", Fix.GetMethodName("C.get"))));
             mA.Body.Add(new Assignment("i", new ComposedExpression {Variables = new[] {"v0"}}));
 
             AssertEntryPoints(mA);
@@ -98,9 +104,9 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 
             mA.Body.Add(new VariableDeclaration("i", Fix.Int));
             mA.Body.Add(new VariableDeclaration("v0", Fix.Int));
-            mA.Body.Add(new Assignment("v0", new Invocation("c1", Fix.GetMethodName("C.get"))));
+            mA.Body.Add(new Assignment("v0", new InvocationExpression("c1", Fix.GetMethodName("C.get"))));
             mA.Body.Add(new VariableDeclaration("v1", Fix.Int));
-            mA.Body.Add(new Assignment("v1", new Invocation("c2", Fix.GetMethodName("C.get"))));
+            mA.Body.Add(new Assignment("v1", new InvocationExpression("c2", Fix.GetMethodName("C.get"))));
             mA.Body.Add(new Assignment("i", new ComposedExpression {Variables = new[] {"v0", "v1"}}));
 
             AssertEntryPoints(mA);
@@ -130,9 +136,9 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             mA.Body.Add(new VariableDeclaration("v0", Fix.Int));
             mA.Body.Add(new Assignment("v0", new ConstantExpression()));
             mA.Body.Add(new VariableDeclaration("v1", Fix.Int));
-            mA.Body.Add(new Assignment("v1", new Invocation("c2", Fix.GetMethodName("C.plus"), "v0")));
+            mA.Body.Add(new Assignment("v1", new InvocationExpression("c2", Fix.GetMethodName("C.plus"), "v0")));
             mA.Body.Add(new VariableDeclaration("v2", Fix.Int));
-            mA.Body.Add(new Assignment("v2", new Invocation("c1", Fix.GetMethodName("C.plus"), "v1")));
+            mA.Body.Add(new Assignment("v2", new InvocationExpression("c1", Fix.GetMethodName("C.plus"), "v1")));
             mA.Body.Add(new Assignment("i", new ComposedExpression {Variables = new[] {"v2"}}));
 
             AssertEntryPoints(mA);

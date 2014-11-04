@@ -24,6 +24,7 @@ using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
 using KaVE.Model.Names;
 using KaVE.Model.SSTs;
+using KaVE.Model.SSTs.Declarations;
 using KaVE.VsFeedbackGenerator.Utils.Names;
 
 namespace KaVE.VsFeedbackGenerator.Analysis
@@ -41,10 +42,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis
 
             foreach (var ep in entryPoints)
             {
-                var decl = new MethodDeclaration
-                {
-                    Name = ep.Name
-                };
+                var decl = new MethodDeclaration {Name = ep.Name};
                 sst.AddEntrypoint(decl);
                 epNames.Add(ep.Name);
             }
@@ -59,10 +57,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis
 
                     if (!epNames.Contains(dName))
                     {
-                        var decl = new MethodDeclaration
-                        {
-                            Name = dName
-                        };
+                        var decl = new MethodDeclaration {Name = dName};
                         sst.Add(decl);
                     }
 

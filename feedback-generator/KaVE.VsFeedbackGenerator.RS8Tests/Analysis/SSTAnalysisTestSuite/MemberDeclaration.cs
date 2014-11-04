@@ -18,7 +18,7 @@
  */
 
 using KaVE.Model.Names.CSharp;
-using KaVE.Model.SSTs;
+using KaVE.Model.SSTs.Declarations;
 using NUnit.Framework;
 using Fix = KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite.SSTAnalysisFixture;
 

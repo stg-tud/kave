@@ -17,7 +17,10 @@
  *    - Sebastian Proksch
  */
 
-using KaVE.Model.SSTs;
+using KaVE.Model.Names.CSharp;
+using KaVE.Model.SSTs.Declarations;
+using KaVE.Model.SSTs.Expressions;
+using KaVE.Model.SSTs.Statements;
 using NUnit.Framework;
 using Fix = KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite.SSTAnalysisFixture;
 
@@ -81,8 +84,83 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             AssertEntryPoints(mA);
         }
 
-        // constant array init: var a = new[] {1,2,3}; -> ConstantExpression
-        // composed array init: var a = new[] {1,b,3}; -> ComposedExpression
-        // array init with Calls: var a = new[] {1,b.m(),3}; -> Assignment(v0, Invocation);ComposedExpression(v0)
+        [Test]
+        public void VariableToVariableAssignment()
+        {
+            CompleteInClass(@"
+                public void A()
+                {
+                    var i = 1
+                    var j = i;
+                }
+            ");
+
+            var mA = NewMethodDeclaration(Fix.Void, "A");
+            mA.Body.Add(new VariableDeclaration("i", Fix.Int));
+            mA.Body.Add(new Assignment("i", new ConstantExpression()));
+            mA.Body.Add(new VariableDeclaration("j", Fix.Int));
+            mA.Body.Add(new Assignment("j", new ComposedExpression {Variables = new[] {"i"}}));
+
+            AssertEntryPoints(mA);
+        }
+
+        [Test]
+        public void ArrayInit_Constant()
+        {
+            CompleteInClass(@"
+                public void A()
+                {
+                    var arr = new[] {1,2,3};
+                }
+            ");
+
+            var mA = NewMethodDeclaration(Fix.Void, "A");
+            mA.Body.Add(new VariableDeclaration("arr", Fix.IntArray));
+            mA.Body.Add(new Assignment("arr", new ConstantExpression()));
+
+            AssertEntryPoints(mA);
+        }
+
+        [Test]
+        public void ArrayInit_Composed()
+        {
+            CompleteInClass(@"
+                public void A()
+                {
+                    var n = 1;
+                    var arr = new[] {1,2,n};
+                }
+            ");
+
+            var mA = NewMethodDeclaration(Fix.Void, "A");
+            mA.Body.Add(new VariableDeclaration("n", Fix.Int));
+            mA.Body.Add(new Assignment("n", new ConstantExpression()));
+            mA.Body.Add(new VariableDeclaration("arr", Fix.IntArray));
+            mA.Body.Add(new Assignment("arr", new ComposedExpression {Variables = new[] {"n"}}));
+
+            AssertEntryPoints(mA);
+        }
+
+        [Test]
+        public void ArrayInit_WithCalls()
+        {
+            CompleteInClass(@"
+                public void A()
+                {
+                    var o = new Object();
+                    var arr = new[] {1,2,o.GetHashCode()};
+                }
+            ");
+
+            var mA = NewMethodDeclaration(Fix.Void, "A");
+            mA.Body.Add(new VariableDeclaration("o", Fix.Object));
+            mA.Body.Add(new Assignment("n", new InvocationExpression(MethodName.Get("o..ctor"))));
+            mA.Body.Add(new VariableDeclaration("o", Fix.Object));
+            mA.Body.Add(new Assignment("v0", new InvocationExpression("o", MethodName.Get("Object.GetHashCode"))));
+            mA.Body.Add(new VariableDeclaration("arr", Fix.IntArray));
+            mA.Body.Add(new Assignment("arr", new ComposedExpression {Variables = new[] {"v0"}}));
+
+            AssertEntryPoints(mA);
+        }
     }
 }

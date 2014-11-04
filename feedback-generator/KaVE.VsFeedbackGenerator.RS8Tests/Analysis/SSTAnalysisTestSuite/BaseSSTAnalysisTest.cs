@@ -20,6 +20,7 @@
 using KaVE.Model.Names;
 using KaVE.Model.Names.CSharp;
 using KaVE.Model.SSTs;
+using KaVE.Model.SSTs.Declarations;
 using NUnit.Framework;
 
 namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
@@ -35,10 +36,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
         {
             const string package = "N.C, TestProject";
             var identifier = string.Format("[{0}] [{1}].{2}()", returnType, package, simpleName);
-            return new MethodDeclaration
-            {
-                Name = MethodName.Get(identifier)
-            };
+            return new MethodDeclaration {Name = MethodName.Get(identifier)};
         }
 
         internal void AssertResult(SST expected)

@@ -55,6 +55,6 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             AssertMethodDeclarations(mB);
         }
 
-        // TODO @Seb: adapt remaining tests from EntryPointSelectorTest
+        // TODO @Seb: adapt remaining tests from EntryPointSelectorTest to ensure that the Entrypoints are included correctly
     }
 }

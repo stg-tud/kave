@@ -18,7 +18,9 @@
  */
 
 using KaVE.Model.Names.CSharp;
-using KaVE.Model.SSTs;
+using KaVE.Model.SSTs.Declarations;
+using KaVE.Model.SSTs.Expressions;
+using KaVE.Model.SSTs.Statements;
 using NUnit.Framework;
 using Fix = KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite.SSTAnalysisFixture;
 
@@ -38,7 +40,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
                 }
             ");
             var mA = NewMethodDeclaration(Fix.Void, "A");
-            mA.Body.Add(new Invocation("s", MethodName.Get("string.getHashCode")));
+            mA.Body.Add(new InvocationStatement("s", MethodName.Get("string.getHashCode")));
 
             AssertEntryPoints(mA);
         }
@@ -56,7 +58,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             var mA = NewMethodDeclaration(Fix.Void, "A");
             mA.Body.Add(new VariableDeclaration("v0", Fix.String));
             mA.Body.Add(new Assignment("v0", new ConstantExpression()));
-            mA.Body.Add(new Invocation("s", MethodName.Get("string.getHashCode"), "v0"));
+            mA.Body.Add(new InvocationStatement("s", MethodName.Get("string.getHashCode"), "v0"));
 
             AssertEntryPoints(mA);
         }
@@ -72,7 +74,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
                 }
             ");
             var mA = NewMethodDeclaration(Fix.Void, "A");
-            mA.Body.Add(new Invocation("s", MethodName.Get("string.getHashCode"), "this"));
+            mA.Body.Add(new InvocationStatement("s", MethodName.Get("string.getHashCode"), "this"));
 
             AssertEntryPoints(mA);
         }
@@ -90,8 +92,8 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 
             var mA = NewMethodDeclaration(Fix.Void, "A");
             mA.Body.Add(new VariableDeclaration("v0", Fix.String));
-            mA.Body.Add(new Assignment("v0", new Invocation("s", MethodName.Get("string.Normalize"))));
-            mA.Body.Add(new Invocation("s", MethodName.Get("string.getHashCode"), "v0"));
+            mA.Body.Add(new Assignment("v0", new InvocationExpression("s", MethodName.Get("string.Normalize"))));
+            mA.Body.Add(new InvocationStatement("s", MethodName.Get("string.getHashCode"), "v0"));
 
             AssertEntryPoints(mA);
         }
@@ -109,7 +111,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             ");
 
             var mA = NewMethodDeclaration(Fix.Void, "A");
-            mA.Body.Add(new Invocation("this", MethodName.Get("C.B")));
+            mA.Body.Add(new InvocationStatement("this", MethodName.Get("C.B")));
 
             var mB = NewMethodDeclaration(Fix.Void, "B");
 
@@ -137,7 +139,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             ");
 
             var mA = NewMethodDeclaration(Fix.Void, "A");
-            mA.Body.Add(new Invocation("this", MethodName.Get("I.B")));
+            mA.Body.Add(new InvocationStatement("this", MethodName.Get("I.B")));
 
             var mB = NewMethodDeclaration(Fix.Void, "B");
 
@@ -161,7 +163,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 
             mA.Body.Add(new VariableDeclaration("v0", Fix.Int));
             mA.Body.Add(new Assignment("v0", new ConstantExpression()));
-            mA.Body.Add(new Invocation(MethodName.Get("Console.Write"), "v0"));
+            mA.Body.Add(new InvocationStatement(MethodName.Get("Console.Write"), "v0"));
 
             var mB = NewMethodDeclaration(Fix.Void, "B");
 

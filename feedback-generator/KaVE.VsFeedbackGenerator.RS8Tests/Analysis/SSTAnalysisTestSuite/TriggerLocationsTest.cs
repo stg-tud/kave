@@ -18,8 +18,7 @@
  */
 
 using System;
-using JetBrains.Util.DnsAPI;
-using KaVE.Model.SSTs;
+using KaVE.Model.SSTs.Statements;
 using NUnit.Framework;
 using Fix = KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite.SSTAnalysisFixture;
 
@@ -38,7 +37,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 
             var sst = NewSST();
             sst.AddEntrypoint(NewMethodDeclaration(Fix.Void, "A"));
-            sst.Add(new TypeTrigger());
+            sst.Add(new CompletionTrigger());
 
             AssertResult(sst);
         }
@@ -54,7 +53,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             var sst = NewSST();
             sst.AddEntrypoint(NewMethodDeclaration(Fix.Void, "A"));
 
-            sst.Add(new TypeTrigger {Token = "B"});
+            sst.Add(new CompletionTrigger {Token = "B"});
 
             AssertResult(sst);
         }
@@ -85,7 +84,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
                 }
             ");
 
-            var trigger = new MethodTrigger();
+            var trigger = new CompletionTrigger();
 
             var mA = NewMethodDeclaration(Fix.Void, "A");
             mA.Body.Add(trigger);
@@ -106,7 +105,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
                 }
             ");
 
-            var trigger = new MethodTrigger {Token = "a.b"};
+            var trigger = new CompletionTrigger {Token = "a.b"};
 
             var mA = NewMethodDeclaration(Fix.Void, "A");
             mA.Body.Add(trigger);

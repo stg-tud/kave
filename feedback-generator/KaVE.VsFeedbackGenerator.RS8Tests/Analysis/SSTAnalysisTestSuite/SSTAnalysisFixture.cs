@@ -25,6 +25,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
     internal class SSTAnalysisFixture
     {
         internal static readonly ITypeName Int = TypeName.Get("System.Int32, mscorlib, 4.0.0.0");
+        internal static readonly ITypeName IntArray = TypeName.Get("..., mscorlib, 4.0.0.0");
         internal static readonly ITypeName Void = TypeName.Get("System.Void, mscorlib, 4.0.0.0");
         internal static readonly ITypeName Unknown = UnknownTypeName.Instance;
         internal static readonly ITypeName String = TypeName.Get("System.String, mscorlib, 4.0.0.0");
