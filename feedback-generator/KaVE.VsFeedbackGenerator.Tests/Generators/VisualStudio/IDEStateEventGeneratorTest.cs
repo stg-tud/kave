@@ -32,11 +32,8 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.VisualStudio
     [TestFixture]
     internal class IDEStateEventGeneratorTest : EventGeneratorTestBase
     {
-        private Mock<IEnumerable> _mockWindows;
-        private Mock<IEnumerable> _mockDocuments;
         private WindowName _visibleWindowName;
-        private WindowName _invisibleWindowName;
-        
+
         [SetUp]
         public void SetUp()
         {
@@ -44,23 +41,22 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.VisualStudio
             var mockInvisibleWindow = CreateWindowMock("InvisibleWindow", false);
             IEnumerable windowPieces = new[] {mockVisibleWindow.Object, mockInvisibleWindow.Object};
 
-            _invisibleWindowName = mockInvisibleWindow.Object.GetName();
             _visibleWindowName = mockVisibleWindow.Object.GetName();
 
-            _mockWindows = new Mock<Windows>().As<IEnumerable>();
-            _mockWindows.Setup(w => w.GetEnumerator()).Returns(windowPieces.GetEnumerator);
+            var mockWindows = new Mock<Windows>().As<IEnumerable>();
+            mockWindows.Setup(w => w.GetEnumerator()).Returns(windowPieces.GetEnumerator);
 
-            TestIDESession.MockDTE.Setup(dte => dte.Windows).Returns((Windows) _mockWindows.Object);
+            TestIDESession.MockDTE.Setup(dte => dte.Windows).Returns((Windows) mockWindows.Object);
 
             var document = new Mock<Document>();
             document.Setup(d => d.FullName).Returns("TestDocument");
             document.Setup(d => d.DTE).Returns(TestIDESession.DTE);
             IEnumerable documentPieces = new[] {document.Object};
 
-            _mockDocuments = new Mock<Documents>().As<IEnumerable>();
-            _mockDocuments.Setup(d => d.GetEnumerator()).Returns(documentPieces.GetEnumerator);
+            var mockDocuments = new Mock<Documents>().As<IEnumerable>();
+            mockDocuments.Setup(d => d.GetEnumerator()).Returns(documentPieces.GetEnumerator);
 
-            TestIDESession.MockDTE.Setup(dte => dte.Documents).Returns((Documents) _mockDocuments.Object);
+            TestIDESession.MockDTE.Setup(dte => dte.Documents).Returns((Documents) mockDocuments.Object);
 
             // ReSharper disable once ObjectCreationAsStatement
             new IDEStateEventGenerator(TestIDESession, TestMessageBus, EternalLifetime.Instance, TestDateUtils, null);
@@ -76,19 +72,15 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.VisualStudio
         }
 
         [Test]
-        public void EventShouldNotContainInvisibleWindows()
+        public void ShouldCaptureOnlyVisibleWindows()
         {
             var actual = GetSinglePublished<IDEStateEvent>();
 
-            Assert.IsFalse(actual.OpenWindows.Contains(_invisibleWindowName));
+            var expected = new[] {_visibleWindowName};
+            CollectionAssert.AreEqual(expected, actual.OpenWindows);
         }
 
-        [Test]
-        public void EventShouldContainWindows()
-        {
-            var actual = GetSinglePublished<IDEStateEvent>();
-
-            Assert.IsTrue(actual.OpenWindows.Contains(_visibleWindowName));
-        }
+        // TODO test other functionality of the generator
+        // use Lifetimes.Using(lt => ...) to test behaviour on Lifetime's end
     }
 }

@@ -62,9 +62,8 @@ namespace KaVE.VsFeedbackGenerator.Utils.Names
         }
 
         [NotNull]
-        public static IList<WindowName> GetNames([NotNull] this IList<Window> windows)
+        public static IList<WindowName> GetNames([NotNull] this IEnumerable<Window> windows)
         {
-            Asserts.NotNull(windows);
             return (from Window window in windows select window.GetName()).ToList();
         }
 

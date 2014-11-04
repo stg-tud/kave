@@ -75,9 +75,9 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
             return ideStateEvent;
         }
 
-        private IList<Window> GetVisibleWindows()
+        private IEnumerable<Window> GetVisibleWindows()
         {
-            return (from Window window in DTE.Windows where window.Visible select window).ToList();
+            return from Window window in DTE.Windows where window.Visible select window;
         }
     }
 }
