@@ -28,7 +28,6 @@ namespace KaVE.VsFeedbackGenerator
     [ShellComponent]
     class PluginUnloadBehavior
     {
-        private const string PluginId = "KaVE Feedback Generator";
         private readonly PluginsDirectory _directory;
 
         public PluginUnloadBehavior(Lifetime lifetime, PluginsDirectory directory)
@@ -39,7 +38,7 @@ namespace KaVE.VsFeedbackGenerator
 
         private void RegisterPluginUnloadCallback(Lifetime lifetime)
         {
-            var plugin = GetPlugin(PluginId);
+            var plugin = GetPlugin(RSEnv.ExtensionId);
             if (plugin != null)
             {
                 plugin.IsEnabled.BeforeChange.Advise(lifetime, BeforePluginStateChangedEvent);

@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright 2014 Technische Universität Darmstadt
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,11 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sven Amann
  */
+
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using JetBrains.ActionManagement;
@@ -21,12 +25,14 @@ using JetBrains.Application.PluginSupport;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("KaVE Feedback Generator")]
+using KaVE.VsFeedbackGenerator;
+
+[assembly: AssemblyTitle(RSEnv.ExtensionId)]
 [assembly: AssemblyDescription("Generates IDE events from the interaction of developers with VisualStudio and ReSharper 8 features.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("TU Darmstadt")]
-[assembly: AssemblyProduct("KaVE.VsFeedbackGenerator")]
-[assembly: AssemblyCopyright("Copyright © TU Darmstadt, 2013")]
+[assembly: AssemblyProduct(RSEnv.ExtensionId)]
+[assembly: AssemblyCopyright("Copyright © TU Darmstadt, 2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -36,7 +42,7 @@ using JetBrains.Application.PluginSupport;
 [assembly: ActionsXml("KaVE.VsFeedbackGenerator.Actions.xml")]
 
 // The following information is displayed by ReSharper in the Plugins dialog
-[assembly: PluginTitle("KaVE Feedback Generator")]
+[assembly: PluginTitle(RSEnv.ExtensionId)]
 [assembly: PluginDescription("Generates IDE events from the interaction of developers with VisualStudio and ReSharper 8 features.")]
 [assembly: PluginVendor("TU Darmstadt")]
 
