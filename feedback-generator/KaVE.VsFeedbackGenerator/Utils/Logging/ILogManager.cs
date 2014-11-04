@@ -29,33 +29,71 @@ namespace KaVE.VsFeedbackGenerator.Utils.Logging
 
     public delegate void LogEntriesEventHandler(IEnumerable<IDEEvent> entries);
 
+    /// <summary>
+    ///     A log file represents a series of log entries for a specific day.
+    /// </summary>
     public interface ILog
     {
+        /// <summary>
+        ///     Fires when <see cref="Append" /> is invoked on this log.
+        /// </summary>
         event LogEntryEventHandler EntryAppended;
+
+        /// <summary>
+        ///     Fires when either <see cref="RemoveRange" /> or <see cref="RemoveEntriesOlderThan" /> is invoked on this log and at
+        ///     least one entry is actually removed.
+        /// </summary>
         event LogEntriesEventHandler EntriesRemoved;
+
+        /// <summary>
+        ///     Fires when <see cref="Delete" /> is invoked on this log.
+        /// </summary>
         event LogEventHandler Deleted;
 
+        /// <summary>
+        ///     The day this log represents.
+        /// </summary>
         DateTime Date { get; }
+
         long SizeInBytes { get; }
+
         bool IsEmpty();
+
         IEnumerable<IDEEvent> ReadAll();
 
         void Append(IDEEvent entry);
+
         void RemoveRange(IEnumerable<IDEEvent> entries);
+
         void RemoveEntriesOlderThan(DateTime time);
+
         void Delete();
     }
 
+    /// <summary>
+    ///     A log manager series a set of log files, where each file represents one day.
+    /// </summary>
     public interface ILogManager
     {
+        /// <summary>
+        ///     Fires when <see cref="CurrentLog" /> is requested and there is no log for the current day.
+        /// </summary>
         event LogEventHandler LogCreated;
 
-        string BaseLocation { get; }
         IEnumerable<ILog> Logs { get; }
+
+        /// <summary>
+        ///     Returns the log for today. If there is none, it will be created.
+        /// </summary>
         ILog CurrentLog { get; }
+
+        /// <summary>
+        ///     Returns a pretty-printed representation of the logs's accumulated size.
+        /// </summary>
         string FormatedLogsSize { get; }
 
         void DeleteLogsOlderThan(DateTime time);
+
         void DeleteAllLogs();
     }
 }
