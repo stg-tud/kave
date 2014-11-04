@@ -14,21 +14,20 @@
  * limitations under the License.
  * 
  * Contributors:
- *    - Sven Amann
+ *    - Dennis Albrecht
  */
-using System;
-using JetBrains.Application.Settings;
 
-namespace KaVE.VsFeedbackGenerator.VsIntegration
+using System.Runtime.Serialization;
+
+namespace KaVE.Model.Events.VisualStudio
 {
-    [SettingsKey(typeof(KaVESettings), "Settings of the current IDE session")]
-    // WARNING: Do not change classname, as it is used to identify settings
-    internal class IDESessionSettings
+    [DataContract]
+    public class UpdateEvent : IDEEvent
     {
-        [SettingsEntry("0001-01-01T00:00:00", "The generation time of the current session id.")]
-        public DateTime SessionUUIDCreationDate;
+        [DataMember]
+        public string OldPluginVersion { get; set; }
 
-        [SettingsEntry("", "The current session id.")]
-        public string SessionUUID;
+        [DataMember]
+        public string NewPluginVersion { get; set; }
     }
 }

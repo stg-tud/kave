@@ -19,7 +19,6 @@
  *    - Sebastian Proksch
  */
 
-using System;
 using JetBrains.Application.Settings;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
@@ -28,8 +27,6 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
     // WARNING: Do not change classname, as it is used to identify settings
     internal class ExportSettings
     {
-        private const string DateTimeMinValue = "0001-01-01T00:00:00";
-
         [SettingsEntry(false, "KaVE FeedbackGeneration RemoveCodeNames")]
         public bool RemoveCodeNames;
 

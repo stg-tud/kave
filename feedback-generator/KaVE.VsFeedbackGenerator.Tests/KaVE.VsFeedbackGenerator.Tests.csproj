@@ -111,6 +111,7 @@
     <Compile Include="SessionManager\FeedbackViewModelTestSuite\FeedbackViewModelTest.cs" />
     <Compile Include="SessionManager\FeedbackViewModelTestSuite\LogTestHelper.cs" />
     <Compile Include="SessionManager\FeedbackViewModelTestSuite\SessionViewModelTest.cs" />
+    <Compile Include="SessionManager\PluginVersionChangeObserverTest.cs" />
     <Compile Include="SessionManager\Presentation\IDEEventDetailsToJsonConverterTest.cs" />
     <Compile Include="SessionManager\Presentation\JsonSyntaxHighlighterTest.cs" />
     <Compile Include="SessionManager\Presentation\MultiSelectionTest.cs" />
@@ -143,6 +144,7 @@
     <Compile Include="Utils\Json\JsonSerializationSuite\FindEventSerializationEvent.cs" />
     <Compile Include="Utils\Json\JsonSerializationSuite\IDEStateEventSerializationTest.cs" />
     <Compile Include="Utils\Json\JsonSerializationSuite\InfoEventSerializationTest.cs" />
+    <Compile Include="Utils\Json\JsonSerializationSuite\InstallEventSerializationTest.cs" />
     <Compile Include="Utils\Json\JsonSerializationSuite\JsonSerializationTest.cs" />
     <Compile Include="Utils\Json\JsonSerializationSuite\CompletionEventSerializationTest.cs" />
     <Compile Include="Utils\Json\JsonSerializationSuite\JsonAssert.cs" />
@@ -151,6 +153,7 @@
     <Compile Include="Utils\Json\JsonSerializationSuite\QueryJsonSerializationTest.cs" />
     <Compile Include="Utils\Json\JsonSerializationSuite\SerializationTestBase.cs" />
     <Compile Include="Utils\Json\JsonSerializationSuite\SolutionEventSerializationTest.cs" />
+    <Compile Include="Utils\Json\JsonSerializationSuite\UpdateEventSerializationTest.cs" />
     <Compile Include="Utils\Json\JsonSerializationSuite\WindowEventSerializationTest.cs" />
     <Compile Include="Utils\Json\MemoryStreamUtils.cs" />
     <Compile Include="Utils\Json\JsonSerializationSuite\ContextSerializationTest.cs" />

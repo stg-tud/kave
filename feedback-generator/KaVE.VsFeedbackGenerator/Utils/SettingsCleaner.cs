@@ -52,6 +52,7 @@ namespace KaVE.VsFeedbackGenerator.Utils
 
         private void RestoreDefaultSettings()
         {
+            // WARNING: Do not reset FeedbackSettings, as it is used to store entries that have to be consistent over time
             _settings.ResetSettings<UploadSettings>();
             _settings.ResetSettings<ExportSettings>();
             _settings.ResetSettings<IDESessionSettings>();

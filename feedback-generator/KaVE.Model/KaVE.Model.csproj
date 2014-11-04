@@ -59,7 +59,9 @@
     <Compile Include="Events\VisualStudio\EditEvent.cs" />
     <Compile Include="Events\VisualStudio\FindEvent.cs" />
     <Compile Include="Events\VisualStudio\IDEStateEvent.cs" />
+    <Compile Include="Events\VisualStudio\InstallEvent.cs" />
     <Compile Include="Events\VisualStudio\SolutionEvent.cs" />
+    <Compile Include="Events\VisualStudio\UpdateEvent.cs" />
     <Compile Include="Events\VisualStudio\WindowEvent.cs" />
     <Compile Include="Groums\Groum.cs" />
     <Compile Include="Groum\CallGroum.cs" />

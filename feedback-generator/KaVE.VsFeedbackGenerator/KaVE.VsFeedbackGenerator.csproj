@@ -139,6 +139,7 @@
     <Compile Include="SessionManager\Anonymize\WindowEventAnonymizer.cs" />
     <Compile Include="SessionManager\FeedbackSettings.cs" />
     <Compile Include="KaVESettings.cs" />
+    <Compile Include="SessionManager\PluginVersionChangeObserver.cs" />
     <Compile Include="SessionManager\Presentation\DelegateCommand.cs" />
     <Compile Include="SessionManager\Presentation\IDEEventDetailsToJsonConverter.cs" />
     <Compile Include="SessionManager\Presentation\JsonSyntaxHighlighter.cs" />
