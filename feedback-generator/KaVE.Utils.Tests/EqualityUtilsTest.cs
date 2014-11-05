@@ -215,5 +215,43 @@ namespace KaVE.Utils.Tests
 
             Assert.IsFalse(dict1.DeepEquals(dict2));
         }
+
+        [Test]
+        public void Arrays_selfReference()
+        {
+            int[] a = { 1, 2, 3 };
+            Assert.True(a.DeepEquals(a));
+        }
+
+        [Test]
+        public void Arrays_equal()
+        {
+            int[] a = { 1, 2 };
+            int[] b = { 1, 2 };
+            Assert.True(a.DeepEquals(b));
+        }
+
+        [Test]
+        public void Arrays_otherIsNull()
+        {
+            int[] a = { 1, 2, 3 };
+            Assert.False(a.DeepEquals(null));
+        }
+
+        [Test]
+        public void Arrays_differentLength()
+        {
+            int[] a = { 1, 2, 3 };
+            int[] b = { 1, 2 };
+            Assert.False(a.DeepEquals(b));
+        }
+
+        [Test]
+        public void Arrays_ordering()
+        {
+            int[] a = { 1, 2 };
+            int[] b = { 2, 1 };
+            Assert.False(a.DeepEquals(b));
+        }
     }
 }

@@ -17,27 +17,7 @@
  *    - Sebastian Proksch
  */
 
-using KaVE.Utils;
-
-namespace KaVE.Model.SSTs.Statements
+namespace KaVE.Model.Tests.SSTs.Statements
 {
-    public class GotoStatement
-    {
-        public string Label { get; set; }
-
-        private bool Equals(GotoStatement other)
-        {
-            return string.Equals(Label, other.Label);
-        }
-
-        public override bool Equals(object obj)
-        {
-            return this.Equals(obj, Equals);
-        }
-
-        public override int GetHashCode()
-        {
-            return (Label != null ? Label.GetHashCode() : 0);
-        }
-    }
+    public class LabelledStatementTest {}
 }

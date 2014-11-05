@@ -19,6 +19,7 @@
 
 using KaVE.Model.Names;
 using KaVE.Model.SSTs.Expressions;
+using KaVE.Utils;
 
 namespace KaVE.Model.SSTs.Statements
 {
@@ -34,6 +35,21 @@ namespace KaVE.Model.SSTs.Statements
         public InvocationStatement(string id, IMethodName name, params string[] parameters)
         {
             Target = new InvocationExpression(id, name, parameters);
+        }
+
+        private bool Equals(InvocationStatement other)
+        {
+            return Equals(Target, other.Target);
+        }
+
+        public override bool Equals(object obj)
+        {
+            return this.Equals(obj, Equals);
+        }
+
+        public override int GetHashCode()
+        {
+            return (Target != null ? Target.GetHashCode() : 0);
         }
     }
 }

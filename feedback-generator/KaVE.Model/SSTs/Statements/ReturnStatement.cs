@@ -17,10 +17,27 @@
  *    - Sebastian Proksch
  */
 
+using KaVE.Utils;
+
 namespace KaVE.Model.SSTs.Statements
 {
     public class ReturnStatement : Statement
     {
         public Expression Expression { get; set; }
+
+        private bool Equals(ReturnStatement other)
+        {
+            return Equals(Expression, other.Expression);
+        }
+
+        public override bool Equals(object obj)
+        {
+            return this.Equals(obj, Equals);
+        }
+
+        public override int GetHashCode()
+        {
+            return (Expression != null ? Expression.GetHashCode() : 0);
+        }
     }
 }

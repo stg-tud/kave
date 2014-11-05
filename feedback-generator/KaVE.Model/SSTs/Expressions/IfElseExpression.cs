@@ -21,7 +21,7 @@ namespace KaVE.Model.SSTs.Expressions
 {
     public class IfElseExpression : Expression
     {
-        public string ConditionIdentifier { get; set; }
+        public Expression Condition { get; set; }
         // use LambdaExpression here in case of more complex subexpressions
         public Expression IfExpression { get; set; }
         public Expression ElseExpression { get; set; }

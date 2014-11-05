@@ -17,7 +17,25 @@
  *    - Sebastian Proksch
  */
 
+using KaVE.Utils;
+
 namespace KaVE.Model.SSTs.Statements
 {
-    public class BreakStatement {}
+    public class BreakStatement
+    {
+        public override bool Equals(object obj)
+        {
+            return this.Equals(obj, Equals);
+        }
+
+        private static bool Equals(BreakStatement other)
+        {
+            return true;
+        }
+
+        public override int GetHashCode()
+        {
+            return 0;
+        }
+    }
 }

@@ -18,11 +18,27 @@
  */
 
 using KaVE.Model.Names;
+using KaVE.Utils;
 
 namespace KaVE.Model.SSTs.Statements
 {
     public class ThrowStatement : Statement
     {
         public ITypeName Exception { get; set; }
+
+        private bool Equals(ThrowStatement other)
+        {
+            return Equals(Exception, other.Exception);
+        }
+
+        public override bool Equals(object obj)
+        {
+            return this.Equals(obj, Equals);
+        }
+
+        public override int GetHashCode()
+        {
+            return (Exception != null ? Exception.GetHashCode() : 0);
+        }
     }
 }

@@ -18,15 +18,18 @@
  */
 
 using KaVE.Model.Names;
+using KaVE.Utils;
 using KaVE.Utils.Assertion;
 
 namespace KaVE.Model.SSTs.Expressions
 {
     public class InvocationExpression : Expression
     {
-        public string Identifier;
-        public IMethodName Name;
-        public string[] Parameters;
+        public string Identifier { get; set; }
+        public IMethodName Name { get; set; }
+        public string[] Parameters { get; set; }
+
+        public InvocationExpression() {}
 
         public InvocationExpression(IMethodName name, params string[] parameters)
         {
@@ -43,6 +46,28 @@ namespace KaVE.Model.SSTs.Expressions
             Identifier = id;
             Name = name;
             Parameters = parameters;
+        }
+
+        private bool Equals(InvocationExpression other)
+        {
+            return string.Equals(Identifier, other.Identifier) && Equals(Name, other.Name) &&
+                   Parameters.DeepEquals(other.Parameters);
+        }
+
+        public override bool Equals(object obj)
+        {
+            return this.Equals(obj, Equals);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                var hashCode = (Identifier != null ? Identifier.GetHashCode() : 0);
+                hashCode = (hashCode*397) ^ (Name != null ? Name.GetHashCode() : 0);
+                hashCode = (hashCode*397) ^ (Parameters != null ? HashCodeUtils.For(398, Parameters) : 0);
+                return hashCode;
+            }
         }
     }
 }

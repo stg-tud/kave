@@ -17,10 +17,27 @@
  *    - Sebastian Proksch
  */
 
+using KaVE.Utils;
+
 namespace KaVE.Model.SSTs.Statements
 {
     public class LockStatement : Statement
     {
         public string Identifier { get; set; }
+
+        private bool Equals(LockStatement other)
+        {
+            return string.Equals(Identifier, other.Identifier);
+        }
+
+        public override bool Equals(object obj)
+        {
+            return this.Equals(obj, Equals);
+        }
+
+        public override int GetHashCode()
+        {
+            return (Identifier != null ? Identifier.GetHashCode() : 0);
+        }
     }
 }

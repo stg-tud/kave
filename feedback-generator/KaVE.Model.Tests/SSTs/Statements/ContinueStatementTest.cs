@@ -17,27 +17,20 @@
  *    - Sebastian Proksch
  */
 
-using KaVE.Utils;
+using KaVE.Model.SSTs.Statements;
+using NUnit.Framework;
 
-namespace KaVE.Model.SSTs.Statements
+namespace KaVE.Model.Tests.SSTs.Statements
 {
-    public class GotoStatement
+    public class ContinueStatementTest
     {
-        public string Label { get; set; }
-
-        private bool Equals(GotoStatement other)
+        [Test]
+        public void Equality()
         {
-            return string.Equals(Label, other.Label);
-        }
-
-        public override bool Equals(object obj)
-        {
-            return this.Equals(obj, Equals);
-        }
-
-        public override int GetHashCode()
-        {
-            return (Label != null ? Label.GetHashCode() : 0);
+            var a = new ContinueStatement();
+            var b = new ContinueStatement();
+            Assert.AreEqual(a, b);
+            Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
         }
     }
 }

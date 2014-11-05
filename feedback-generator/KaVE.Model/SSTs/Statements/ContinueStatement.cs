@@ -17,7 +17,25 @@
  *    - Sebastian Proksch
  */
 
+using KaVE.Utils;
+
 namespace KaVE.Model.SSTs.Statements
 {
-    public class ContinueStatement : Statement {}
+    public class ContinueStatement : Statement
+    {
+        private static bool Equals(ContinueStatement other)
+        {
+            return true;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return this.Equals(obj, Equals);
+        }
+
+        public override int GetHashCode()
+        {
+            return 3;
+        }
+    }
 }

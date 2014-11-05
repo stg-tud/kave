@@ -43,12 +43,14 @@ namespace KaVE.Utils
             return equalsIfSameType((T) other);
         }
 
-        public static bool Equals<TKey, TValue>([NotNull] this IDictionary<TKey, TValue> self, IDictionary<TKey, TValue> other)
+        public static bool Equals<TKey, TValue>([NotNull] this IDictionary<TKey, TValue> self,
+            IDictionary<TKey, TValue> other)
         {
             return self.Count == other.Count && !self.Except(other).Any();
         }
 
-        public static bool DeepEquals<TKey, TDValue>([NotNull] this IDictionary<TKey, ISet<TDValue>> self, IDictionary<TKey, ISet<TDValue>> other)
+        public static bool DeepEquals<TKey, TDValue>([NotNull] this IDictionary<TKey, ISet<TDValue>> self,
+            IDictionary<TKey, ISet<TDValue>> other)
         {
             if (self.Count != other.Count)
             {
@@ -65,6 +67,35 @@ namespace KaVE.Utils
                     return false;
                 }
             }
+            return true;
+        }
+
+        public static bool DeepEquals<T>([NotNull] this T[] self, T[] others)
+        {
+            if (self == others)
+            {
+                return true;
+            }
+
+            if (others == null)
+            {
+                return false;
+            }
+
+            if (self.Length != others.Length)
+            {
+                return false;
+            }
+
+            // ReSharper disable once LoopCanBeConvertedToQuery
+            for (var i = 0; i < self.Length; i++)
+            {
+                if (!self[i].Equals(others[i]))
+                {
+                    return false;
+                }
+            }
+
             return true;
         }
     }

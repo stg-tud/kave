@@ -17,7 +17,25 @@
  *    - Sebastian Proksch
  */
 
+using KaVE.Utils;
+
 namespace KaVE.Model.SSTs.Expressions
 {
-    public class ConstantExpression : Expression {}
+    public class ConstantExpression : Expression
+    {
+        private static bool Equals(ConstantExpression other)
+        {
+            return true;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return this.Equals(obj, Equals);
+        }
+
+        public override int GetHashCode()
+        {
+            return 1;
+        }
+    }
 }

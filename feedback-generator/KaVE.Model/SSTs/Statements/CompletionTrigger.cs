@@ -17,18 +17,37 @@
  *    - Sebastian Proksch
  */
 
+using KaVE.Utils;
+
 namespace KaVE.Model.SSTs.Statements
 {
     public class CompletionTrigger : Statement
     {
         public TriggerType Kind { get; set; }
+        public string Token { get; set; }
 
-        public string Token = "";
-
-        public enum TriggerType
+        private bool Equals(CompletionTrigger other)
         {
-            InMethod,
-            InType
+            return Kind == other.Kind && string.Equals(Token, other.Token);
         }
+
+        public override bool Equals(object obj)
+        {
+            return this.Equals(obj, Equals);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return ((int) Kind*397) ^ (Token != null ? Token.GetHashCode() : 0);
+            }
+        }
+    }
+
+    public enum TriggerType
+    {
+        InMethod,
+        InType
     }
 }
