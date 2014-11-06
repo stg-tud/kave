@@ -26,16 +26,17 @@ using Fix = KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite.SSTA
 
 namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 {
-    [Ignore]
+    [TestFixture]
     internal class AssignmentTest : BaseSSTAnalysisTest
     {
         [Test]
-        public void Simple()
+        public void SuperSimple()
         {
             CompleteInClass(@"
                 public void A()
                 {
-                    var i = 3;
+                    int i;
+                    i = 3;
                     $
                 }
             ");
@@ -48,12 +49,13 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
         }
 
         [Test]
-        public void CompositionOfConstants()
+        public void Simple()
         {
             CompleteInClass(@"
                 public void A()
                 {
-                    var i = 5 + 3;
+                    int i = 3;
+                    $
                 }
             ");
 
@@ -64,7 +66,25 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             AssertEntryPoints(mA);
         }
 
-        [Test]
+        [Test, Ignore]
+        public void CompositionOfConstants()
+        {
+            CompleteInClass(@"
+                public void A()
+                {
+                    var i = 5 + 3;
+                    $
+                }
+            ");
+
+            var mA = NewMethodDeclaration(Fix.Void, "A");
+            mA.Body.Add(new VariableDeclaration("i", Fix.Int));
+            mA.Body.Add(new Assignment("i", new ConstantExpression()));
+
+            AssertEntryPoints(mA);
+        }
+
+        [Test, Ignore]
         public void CompositionOfPrimitives()
         {
             CompleteInClass(@"
@@ -72,6 +92,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
                 {
                     var i = 1
                     var j = i + 1;
+                    $
                 }
             ");
 
@@ -80,6 +101,28 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             mA.Body.Add(new Assignment("i", new ConstantExpression()));
             mA.Body.Add(new VariableDeclaration("j", Fix.Int));
             mA.Body.Add(new Assignment("j", new ComposedExpression {Variables = new[] {"i"}}));
+
+            AssertEntryPoints(mA);
+        }
+
+        [Test]
+        public void SimpleVariableToVariableAssignment()
+        {
+            CompleteInClass(@"
+                public void A()
+                {
+                    int i, j;
+                    i = 1
+                    j = i;
+                    $
+                }
+            ");
+
+            var mA = NewMethodDeclaration(Fix.Void, "A");
+            mA.Body.Add(new VariableDeclaration("i", Fix.Int));
+            mA.Body.Add(new VariableDeclaration("j", Fix.Int));
+            mA.Body.Add(new Assignment("i", new ConstantExpression()));
+            mA.Body.Add(new Assignment("j", new ComposedExpression { Variables = new[] { "i" } }));
 
             AssertEntryPoints(mA);
         }
@@ -92,6 +135,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
                 {
                     var i = 1
                     var j = i;
+                    $
                 }
             ");
 
@@ -99,18 +143,19 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             mA.Body.Add(new VariableDeclaration("i", Fix.Int));
             mA.Body.Add(new Assignment("i", new ConstantExpression()));
             mA.Body.Add(new VariableDeclaration("j", Fix.Int));
-            mA.Body.Add(new Assignment("j", new ComposedExpression {Variables = new[] {"i"}}));
+            mA.Body.Add(new Assignment("j", new ComposedExpression { Variables = new[] { "i" } }));
 
             AssertEntryPoints(mA);
         }
 
-        [Test]
+        [Test, Ignore]
         public void ArrayInit_Constant()
         {
             CompleteInClass(@"
                 public void A()
                 {
                     var arr = new[] {1,2,3};
+                    $
                 }
             ");
 
@@ -121,7 +166,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             AssertEntryPoints(mA);
         }
 
-        [Test]
+        [Test, Ignore]
         public void ArrayInit_Composed()
         {
             CompleteInClass(@"
@@ -129,6 +174,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
                 {
                     var n = 1;
                     var arr = new[] {1,2,n};
+                    $
                 }
             ");
 
@@ -141,7 +187,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             AssertEntryPoints(mA);
         }
 
-        [Test]
+        [Test, Ignore]
         public void ArrayInit_WithCalls()
         {
             CompleteInClass(@"
@@ -149,6 +195,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
                 {
                     var o = new Object();
                     var arr = new[] {1,2,o.GetHashCode()};
+                    $
                 }
             ");
 

@@ -17,6 +17,7 @@
  *    - Sebastian Proksch
  */
 
+using KaVE.Model.Names.CSharp;
 using KaVE.Model.SSTs.Declarations;
 using KaVE.Model.SSTs.Expressions;
 using KaVE.Model.SSTs.Statements;
@@ -25,7 +26,7 @@ using Fix = KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite.SSTA
 
 namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 {
-    [Ignore]
+    [TestFixture]
     internal class DeclarationTest : BaseSSTAnalysisTest
     {
         [Test]
@@ -65,11 +66,11 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
         [Test]
         public void ImplicitlyTypedVariable()
         {
+            // TODO: @Seb: "var i; i=3;" cannot work here?!?
             CompleteInClass(@"
                 public void A()
                 {
-                    var i;
-                    i = 3;
+                    var i = 3;
                     $
                 }
             ");
@@ -81,7 +82,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             AssertEntryPoints(mA);
         }
 
-        [Test]
+        [Test, Ignore]
         public void LambdaDeclaration()
         {
             CompleteInClass(@"

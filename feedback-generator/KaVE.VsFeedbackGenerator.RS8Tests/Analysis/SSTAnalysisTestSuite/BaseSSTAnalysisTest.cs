@@ -49,10 +49,12 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             var eps = ResultSST.EntryPoints;
             Assert.AreEqual(expectedDecls.Length, eps.Count);
 
-            foreach (var expectedDecl in expectedDecls)
+            CollectionAssert.AreEqual(expectedDecls, eps);
+            // TODO: @Seb: CollectionAssert works but contains doesn't
+            /*foreach (var expectedDecl in expectedDecls)
             {
                 Assert.IsTrue(eps.Contains(expectedDecl));
-            }
+            }*/
         }
 
         internal void AssertMethodDeclarations(params MethodDeclaration[] expectedDecls)

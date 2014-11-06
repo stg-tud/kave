@@ -23,6 +23,11 @@ namespace KaVE.Model.SSTs.Expressions
 {
     public class ComposedExpression : Expression
     {
+        public static ComposedExpression Create(params string[] references)
+        {
+            return new ComposedExpression {Variables = references};
+        }
+
         public string[] Variables { get; set; }
 
         private bool Equals(ComposedExpression other)

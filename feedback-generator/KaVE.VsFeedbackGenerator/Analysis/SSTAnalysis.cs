@@ -59,7 +59,13 @@ namespace KaVE.VsFeedbackGenerator.Analysis
                     {
                         var decl = new MethodDeclaration {Name = dName, IsEntryPoint = false};
                         sst.Methods.Add(decl);
+                        d.Accept(new SSTMethodTransformer(decl));
                     }
+                    else
+                    {
+                        d.Accept(new SSTMethodTransformer(sst.GetEntrypoints().First(ep => ep.Name == dName)));
+                    }
+
 
                     //var dRef = MethodRef.CreateLocalReference(dName, dElem, dElem.GetDeclaration());
                 }
