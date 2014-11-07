@@ -18,7 +18,6 @@
  */
 
 using KaVE.Model.Names.CSharp;
-using KaVE.Model.SSTs.Expressions;
 using KaVE.Model.SSTs.Statements;
 using NUnit.Framework;
 
@@ -36,7 +35,7 @@ namespace KaVE.Model.Tests.SSTs.Statements
         [Test]
         public void SettingValues()
         {
-            var sut = new ThrowStatement { Exception = TypeName.UnknownName };
+            var sut = new ThrowStatement {Exception = TypeName.UnknownName};
             Assert.AreEqual(TypeName.UnknownName, sut.Exception);
         }
 
@@ -52,8 +51,8 @@ namespace KaVE.Model.Tests.SSTs.Statements
         [Test]
         public void Equality_reallyTheSame()
         {
-            var a = new ThrowStatement { Exception = TypeName.UnknownName };
-            var b = new ThrowStatement { Exception = TypeName.UnknownName };
+            var a = new ThrowStatement {Exception = TypeName.UnknownName};
+            var b = new ThrowStatement {Exception = TypeName.UnknownName};
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
         }
@@ -61,8 +60,8 @@ namespace KaVE.Model.Tests.SSTs.Statements
         [Test]
         public void Equality_differentException()
         {
-            var a = new ThrowStatement { Exception = TypeName.UnknownName };
-            var b = new ThrowStatement { Exception = TypeName.Get("System.Int32, mscore, 4.0.0.0") };
+            var a = new ThrowStatement {Exception = TypeName.UnknownName};
+            var b = new ThrowStatement {Exception = TypeName.Get("System.Int32, mscore, 4.0.0.0")};
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
         }

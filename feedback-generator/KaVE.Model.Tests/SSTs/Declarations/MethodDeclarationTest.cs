@@ -23,7 +23,7 @@ using KaVE.Model.SSTs.Declarations;
 using KaVE.Model.SSTs.Statements;
 using NUnit.Framework;
 
-namespace KaVE.Model.Tests.SSTs
+namespace KaVE.Model.Tests.SSTs.Declarations
 {
     internal class MethodDeclarationTest
     {

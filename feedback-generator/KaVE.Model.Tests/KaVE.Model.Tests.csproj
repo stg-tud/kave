@@ -73,9 +73,12 @@
     <Compile Include="ObjectUsage\DefinitionSiteTest.cs" />
     <Compile Include="ObjectUsage\QueryTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SSTs\Expressions\ComposedExpressionTest.cs" />
     <Compile Include="SSTs\Expressions\ConstantExpressionTest.cs" />
+    <Compile Include="SSTs\Expressions\IfElseExpressionTest.cs" />
     <Compile Include="SSTs\Expressions\InvocationExpressionTest.cs" />
-    <Compile Include="SSTs\MethodDeclarationTest.cs" />
+    <Compile Include="SSTs\Expressions\LambdaExpressionTest.cs" />
+    <Compile Include="SSTs\Declarations\MethodDeclarationTest.cs" />
     <Compile Include="SSTs\SSTTest.cs" />
     <Compile Include="SSTs\Statements\AssignmentTest.cs" />
     <Compile Include="SSTs\Statements\BreakStatementTest.cs" />

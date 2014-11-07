@@ -17,34 +17,41 @@
  *    - Sebastian Proksch
  */
 
+using KaVE.Model.Collections;
+using KaVE.Model.SSTs;
+using KaVE.Model.SSTs.Expressions;
 using KaVE.Model.SSTs.Statements;
 using NUnit.Framework;
 
-namespace KaVE.Model.Tests.SSTs.Statements
+namespace KaVE.Model.Tests.SSTs.Expressions
 {
-    public class LabelledStatementTest
+    public class LambdaExpressionTest
     {
         [Test]
-        public void DefautlValues()
+        public void DefaultValues()
         {
-            var sut = new LabelledStatement();
-            Assert.IsNull(sut.Label);
-            Assert.IsNull(sut.Statement);
+            var sut = new LambdaExpression();
+            Assert.AreEqual(Lists.NewList<Statement>(), sut.Body);
         }
 
         [Test]
         public void SettingValues()
         {
-            var sut = new LabelledStatement {Label = "a", Statement = new BreakStatement()};
-            Assert.AreEqual("a", sut.Label);
-            Assert.AreEqual(new BreakStatement(), sut.Statement);
+            var sut = new LambdaExpression();
+            sut.Body.Add(new GotoStatement());
+
+            var expected = Lists.NewList<Statement>();
+            expected.Add(new GotoStatement());
+
+            Assert.AreEqual(expected, sut.Body);
         }
 
         [Test]
         public void Equality_Default()
         {
-            var a = new LabelledStatement();
-            var b = new LabelledStatement();
+            var a = new LambdaExpression();
+            var b = new LambdaExpression();
+
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
         }
@@ -52,26 +59,22 @@ namespace KaVE.Model.Tests.SSTs.Statements
         [Test]
         public void Equality_ReallyTheSame()
         {
-            var a = new LabelledStatement {Label = "a", Statement = new BreakStatement()};
-            var b = new LabelledStatement {Label = "a", Statement = new BreakStatement()};
+            var a = new LambdaExpression();
+            a.Body.Add(new GotoStatement());
+            var b = new LambdaExpression();
+            b.Body.Add(new GotoStatement());
+
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
         }
 
         [Test]
-        public void Equality_DifferentLabel()
+        public void Equality_DifferentBody()
         {
-            var a = new LabelledStatement {Label = "a"};
-            var b = new LabelledStatement {Label = "b"};
-            Assert.AreNotEqual(a, b);
-            Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
-        }
+            var a = new LambdaExpression();
+            a.Body.Add(new GotoStatement());
+            var b = new LambdaExpression();
 
-        [Test]
-        public void Equality_DifferentStatement()
-        {
-            var a = new LabelledStatement {Statement = new ContinueStatement()};
-            var b = new LabelledStatement {Statement = new BreakStatement()};
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
         }

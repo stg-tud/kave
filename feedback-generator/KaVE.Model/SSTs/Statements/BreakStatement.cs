@@ -21,7 +21,7 @@ using KaVE.Utils;
 
 namespace KaVE.Model.SSTs.Statements
 {
-    public class BreakStatement
+    public class BreakStatement : Statement
     {
         public override bool Equals(object obj)
         {

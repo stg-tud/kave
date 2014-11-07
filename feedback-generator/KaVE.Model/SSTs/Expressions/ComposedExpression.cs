@@ -17,10 +17,37 @@
  *    - Sebastian Proksch
  */
 
+using KaVE.Utils;
+
 namespace KaVE.Model.SSTs.Expressions
 {
     public class ComposedExpression : Expression
     {
-        public string[] Variables;
+        public string[] Variables { get; set; }
+
+        private bool Equals(ComposedExpression other)
+        {
+            if (Variables == other.Variables)
+            {
+                return true;
+            }
+
+            if (Variables == null || other.Variables == null)
+            {
+                return false;
+            }
+
+            return Variables.DeepEquals(other.Variables);
+        }
+
+        public override bool Equals(object obj)
+        {
+            return this.Equals(obj, Equals);
+        }
+
+        public override int GetHashCode()
+        {
+            return 5 + (Variables != null ? HashCodeUtils.For(5, Variables) : 0);
+        }
     }
 }

@@ -19,11 +19,27 @@
 
 using System.Collections.Generic;
 using KaVE.Model.Collections;
+using KaVE.Utils;
 
 namespace KaVE.Model.SSTs.Expressions
 {
     public class LambdaExpression : Expression
     {
-        public IList<Statement> Body = Lists.NewList<Statement>();
+        public readonly IList<Statement> Body = Lists.NewList<Statement>();
+
+        private bool Equals(LambdaExpression other)
+        {
+            return Equals(Body, other.Body);
+        }
+
+        public override bool Equals(object obj)
+        {
+            return this.Equals(obj, Equals);
+        }
+
+        public override int GetHashCode()
+        {
+            return (Body != null ? Body.GetHashCode() : 0);
+        }
     }
 }

@@ -17,34 +17,34 @@
  *    - Sebastian Proksch
  */
 
-using KaVE.Model.SSTs.Statements;
+using KaVE.Model.SSTs.Expressions;
+using KaVE.Utils;
 using NUnit.Framework;
 
-namespace KaVE.Model.Tests.SSTs.Statements
+namespace KaVE.Model.Tests.SSTs.Expressions
 {
-    public class LabelledStatementTest
+    public class ComposedExpressionTest
     {
         [Test]
-        public void DefautlValues()
+        public void DefaultValues()
         {
-            var sut = new LabelledStatement();
-            Assert.IsNull(sut.Label);
-            Assert.IsNull(sut.Statement);
+            var sut = new ComposedExpression();
+            Assert.IsNull(sut.Variables);
         }
 
         [Test]
         public void SettingValues()
         {
-            var sut = new LabelledStatement {Label = "a", Statement = new BreakStatement()};
-            Assert.AreEqual("a", sut.Label);
-            Assert.AreEqual(new BreakStatement(), sut.Statement);
+            var sut = new ComposedExpression {Variables = new[] {"a"}};
+            var expected = new[] {"a"};
+            Assert.That(expected.DeepEquals(sut.Variables));
         }
 
         [Test]
         public void Equality_Default()
         {
-            var a = new LabelledStatement();
-            var b = new LabelledStatement();
+            var a = new ComposedExpression();
+            var b = new ComposedExpression();
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
         }
@@ -52,26 +52,26 @@ namespace KaVE.Model.Tests.SSTs.Statements
         [Test]
         public void Equality_ReallyTheSame()
         {
-            var a = new LabelledStatement {Label = "a", Statement = new BreakStatement()};
-            var b = new LabelledStatement {Label = "a", Statement = new BreakStatement()};
+            var a = new ComposedExpression {Variables = new[] {"b"}};
+            var b = new ComposedExpression {Variables = new[] {"b"}};
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
         }
 
         [Test]
-        public void Equality_DifferentLabel()
+        public void Equality_DifferentVariables()
         {
-            var a = new LabelledStatement {Label = "a"};
-            var b = new LabelledStatement {Label = "b"};
+            var a = new ComposedExpression {Variables = new[] {"a"}};
+            var b = new ComposedExpression {Variables = new[] {"b"}};
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
         }
 
         [Test]
-        public void Equality_DifferentStatement()
+        public void Equality_EmptyArray()
         {
-            var a = new LabelledStatement {Statement = new ContinueStatement()};
-            var b = new LabelledStatement {Statement = new BreakStatement()};
+            var a = new ComposedExpression {Variables = null};
+            var b = new ComposedExpression {Variables = new string[] {}};
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
         }

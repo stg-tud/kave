@@ -17,11 +17,32 @@
  *    - Sebastian Proksch
  */
 
+using KaVE.Utils;
+
 namespace KaVE.Model.SSTs.Statements
 {
     public class LabelledStatement : Statement
     {
         public string Label { get; set; }
         public Statement Statement { get; set; }
+
+        private bool Equals(LabelledStatement other)
+        {
+            return string.Equals(Label, other.Label) && Equals(Statement, other.Statement);
+        }
+
+        public override bool Equals(object obj)
+        {
+            return this.Equals(obj, Equals);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return ((Label != null ? Label.GetHashCode() : 0)*397) ^
+                       (Statement != null ? Statement.GetHashCode() : 0);
+            }
+        }
     }
 }
