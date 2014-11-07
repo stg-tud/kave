@@ -17,8 +17,26 @@
  *    - Sebastian Proksch
  */
 
+using KaVE.Utils;
+
 namespace KaVE.Model.SSTs.Blocks
 {
     // not analyzed (this includes "fixed" statements as they are only allowed in unsafe blocks)
-    public class UnsafeBlock {}
+    public class UnsafeBlock
+    {
+        private static bool Equals(UnsafeBlock other)
+        {
+            return true;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return this.Equals(obj, Equals);
+        }
+
+        public override int GetHashCode()
+        {
+            return 7;
+        }
+    }
 }

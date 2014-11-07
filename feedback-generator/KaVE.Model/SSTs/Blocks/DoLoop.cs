@@ -19,5 +19,8 @@
 
 namespace KaVE.Model.SSTs.Blocks
 {
-    public class DoLoop {}
+    public class DoLoop : Block
+    {
+        public Expression Condition { get; set; }
+    }
 }

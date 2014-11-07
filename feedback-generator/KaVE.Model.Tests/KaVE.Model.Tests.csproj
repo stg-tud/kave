@@ -73,6 +73,9 @@
     <Compile Include="ObjectUsage\DefinitionSiteTest.cs" />
     <Compile Include="ObjectUsage\QueryTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SSTs\Blocks\UnsafeBlockTest.cs" />
+    <Compile Include="SSTs\Blocks\UsingBlockTest.cs" />
+    <Compile Include="SSTs\Blocks\WhileLoopTest.cs" />
     <Compile Include="SSTs\Expressions\ComposedExpressionTest.cs" />
     <Compile Include="SSTs\Expressions\ConstantExpressionTest.cs" />
     <Compile Include="SSTs\Expressions\IfElseExpressionTest.cs" />

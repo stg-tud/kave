@@ -17,27 +17,20 @@
  *    - Sebastian Proksch
  */
 
-using KaVE.Utils;
+using KaVE.Model.SSTs.Blocks;
+using NUnit.Framework;
 
-namespace KaVE.Model.SSTs.Blocks
+namespace KaVE.Model.Tests.SSTs.Blocks
 {
-    public class UsingBlock : Block
+    public class UnsafeBlockTest
     {
-        public string Identifier { get; set; }
-
-        protected bool Equals(UsingBlock other)
+        [Test]
+        public void Equality()
         {
-            return base.Equals(other) && string.Equals(Identifier, other.Identifier);
-        }
-
-        public override bool Equals(object obj)
-        {
-            return this.Equals(obj, Equals);
-        }
-
-        public override int GetHashCode()
-        {
-            return 6 * base.GetHashCode() + (Identifier != null ? Identifier.GetHashCode() : 0);
+            var a = new UnsafeBlock();
+            var b = new UnsafeBlock();
+            Assert.AreEqual(a, b);
+            Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
         }
     }
 }

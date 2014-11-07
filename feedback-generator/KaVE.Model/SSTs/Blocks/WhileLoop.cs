@@ -17,10 +17,30 @@
  *    - Sebastian Proksch
  */
 
+using KaVE.Utils;
+
 namespace KaVE.Model.SSTs.Blocks
 {
     public class WhileLoop : Block
     {
         public Expression Condition { get; set; }
+
+        private bool Equals(WhileLoop other)
+        {
+            return base.Equals(other) && Equals(Condition, other.Condition);
+        }
+
+        public override bool Equals(object obj)
+        {
+            return this.Equals(obj, Equals);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return (base.GetHashCode()*397) ^ (Condition != null ? Condition.GetHashCode() : 0);
+            }
+        }
     }
 }
