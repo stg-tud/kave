@@ -80,6 +80,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AboutAction.cs" />
+    <Compile Include="Analysis\BaseSSTTransformer.cs" />
     <Compile Include="Analysis\CalledMethodsForEntryPointsAnalysis.cs" />
     <Compile Include="Analysis\CompletionTargetAnalysis.cs" />
     <Compile Include="Analysis\ContextAnalysis.cs" />
@@ -89,7 +90,9 @@
     <Compile Include="Analysis\ReSharperUtils.cs" />
     <Compile Include="Analysis\SSTAnalysis.cs" />
     <Compile Include="Analysis\SSTAssignmentGenerator.cs" />
+    <Compile Include="Analysis\SSTInvocationGenerator.cs" />
     <Compile Include="Analysis\SSTMethodTransformer.cs" />
+    <Compile Include="Analysis\SSTReferenceCollector.cs" />
     <Compile Include="Analysis\TypeHierarchyAnalysisUtils.cs" />
     <Compile Include="Analysis\TypeShapeAnalysis.cs" />
     <Compile Include="CodeCompletion\LookupItemWrapper.cs" />

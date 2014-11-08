@@ -51,5 +51,10 @@ namespace KaVE.Model.SSTs.Statements
         {
             return (Target != null ? Target.GetHashCode() : 0);
         }
+
+        public override string ToString()
+        {
+            return Target + ";";
+        }
     }
 }

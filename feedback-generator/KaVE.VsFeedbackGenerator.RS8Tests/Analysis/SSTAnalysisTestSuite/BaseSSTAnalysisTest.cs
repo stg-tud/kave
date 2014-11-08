@@ -34,9 +34,14 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 
         internal MethodDeclaration NewMethodDeclaration(ITypeName returnType, string simpleName)
         {
+            return NewMethodDeclaration(returnType, simpleName, new string[0]);
+        }
+
+        internal MethodDeclaration NewMethodDeclaration(ITypeName returnType, string simpleName, params string[] args)
+        {
             const string package = "N.C, TestProject";
-            var identifier = string.Format("[{0}] [{1}].{2}()", returnType, package, simpleName);
-            return new MethodDeclaration {Name = MethodName.Get(identifier)};
+            var identifier = string.Format("[{0}] [{1}].{2}({3})", returnType, package, simpleName, string.Join(", ", args));
+            return new MethodDeclaration { Name = MethodName.Get(identifier) };
         }
 
         internal void AssertResult(SST expected)

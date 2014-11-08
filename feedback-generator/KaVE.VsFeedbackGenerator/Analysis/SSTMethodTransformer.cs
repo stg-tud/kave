@@ -25,14 +25,9 @@ using KaVE.VsFeedbackGenerator.Utils.Names;
 
 namespace KaVE.VsFeedbackGenerator.Analysis
 {
-    public class SSTMethodTransformer : TreeNodeVisitor
+    public class SSTMethodTransformer : BaseSSTTransformer
     {
-        private readonly MethodDeclaration _declaration;
-
-        public SSTMethodTransformer(MethodDeclaration declaration)
-        {
-            _declaration = declaration;
-        }
+        public SSTMethodTransformer(MethodDeclaration declaration) : base(declaration) {}
 
         public override void VisitMethodDeclaration(IMethodDeclaration methodDeclarationParam)
         {
@@ -64,7 +59,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis
         {
             var name = multipleDeclarationMemberParam.NameIdentifier.Name;
             var type = multipleDeclarationMemberParam.Type.GetName();
-            _declaration.Body.Add(new VariableDeclaration(name, type));
+            Declaration.Body.Add(new VariableDeclaration(name, type));
         }
 
         public override void VisitLocalVariableDeclaration(ILocalVariableDeclaration localVariableDeclarationParam)
@@ -74,7 +69,8 @@ namespace KaVE.VsFeedbackGenerator.Analysis
             if (localVariableDeclarationParam.Initializer is IExpressionInitializer)
             {
                 var expression = (localVariableDeclarationParam.Initializer as IExpressionInitializer).Value;
-                expression.Accept(new SSTAssignmentGenerator(_declaration, localVariableDeclarationParam.NameIdentifier.Name));
+                expression.Accept(
+                    new SSTAssignmentGenerator(Declaration, localVariableDeclarationParam.NameIdentifier.Name));
             }
         }
 
@@ -83,8 +79,16 @@ namespace KaVE.VsFeedbackGenerator.Analysis
             if (assignmentExpressionParam.Dest is IReferenceExpression)
             {
                 var dest = (assignmentExpressionParam.Dest as IReferenceExpression).NameIdentifier.Name;
-                assignmentExpressionParam.Source.Accept(new SSTAssignmentGenerator(_declaration, dest));
+                assignmentExpressionParam.Source.Accept(new SSTAssignmentGenerator(Declaration, dest));
             }
+        }
+
+        public override void VisitInvocationExpression(IInvocationExpression invocationExpressionParam)
+        {
+            var collector = new SSTReferenceCollector(Declaration);
+            invocationExpressionParam.ArgumentList.Accept(collector);
+            invocationExpressionParam.InvokedExpression.Accept(
+                new SSTInvocationGenerator(Declaration, collector.References));
         }
     }
 }

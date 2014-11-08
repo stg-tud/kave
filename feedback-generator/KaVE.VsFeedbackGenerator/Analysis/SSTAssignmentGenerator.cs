@@ -17,6 +17,7 @@
  *    - Dennis Albrecht
  */
 
+using System.Linq;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using KaVE.Model.SSTs.Declarations;
 using KaVE.Model.SSTs.Expressions;
@@ -24,26 +25,49 @@ using KaVE.Model.SSTs.Statements;
 
 namespace KaVE.VsFeedbackGenerator.Analysis
 {
-    public class SSTAssignmentGenerator : TreeNodeVisitor
+    public class SSTAssignmentGenerator : BaseSSTTransformer
     {
-        private readonly MethodDeclaration _declaration;
         private readonly string _dest;
 
-        public SSTAssignmentGenerator(MethodDeclaration declaration, string dest)
+        public SSTAssignmentGenerator(MethodDeclaration declaration, string dest) : base(declaration)
         {
-            _declaration = declaration;
             _dest = dest;
         }
 
         public override void VisitCSharpLiteralExpression(ICSharpLiteralExpression cSharpLiteralExpressionParam)
         {
-            _declaration.Body.Add(new Assignment(_dest, new ConstantExpression()));
+            Declaration.Body.Add(new Assignment(_dest, new ConstantExpression()));
         }
 
         public override void VisitReferenceExpression(IReferenceExpression referenceExpressionParam)
         {
             var name = referenceExpressionParam.NameIdentifier.Name;
-            _declaration.Body.Add(new Assignment(_dest, ComposedExpression.Create(name)));
+            Declaration.Body.Add(new Assignment(_dest, ComposedExpression.Create(name)));
+        }
+
+        public override void VisitBinaryExpression(IBinaryExpression binaryExpressionParam)
+        {
+            AddAssignmentAfterCollectingReferences(binaryExpressionParam);
+        }
+
+        public override void VisitArrayCreationExpression(IArrayCreationExpression arrayCreationExpressionParam)
+        {
+            AddAssignmentAfterCollectingReferences(arrayCreationExpressionParam.ArrayInitializer);
+        }
+
+        private void AddAssignmentAfterCollectingReferences(ICSharpTreeNode treeNode)
+        {
+            var collector = new SSTReferenceCollector(Declaration);
+            treeNode.Accept(collector);
+            var references = collector.References;
+            if (references.Any())
+            {
+                Declaration.Body.Add(new Assignment(_dest, ComposedExpression.Create(references)));
+            }
+            else
+            {
+                Declaration.Body.Add(new Assignment(_dest, new ConstantExpression()));
+            }
         }
     }
 }

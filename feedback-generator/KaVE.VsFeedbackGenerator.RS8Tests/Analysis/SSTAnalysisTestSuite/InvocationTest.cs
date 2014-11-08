@@ -26,7 +26,7 @@ using Fix = KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite.SSTA
 
 namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 {
-    [Ignore]
+    [TestFixture]
     internal class InvocationTest : BaseSSTAnalysisTest
     {
         [Test]
@@ -39,13 +39,13 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
                     $
                 }
             ");
-            var mA = NewMethodDeclaration(Fix.Void, "A");
-            mA.Body.Add(new InvocationStatement("s", MethodName.Get("string.getHashCode")));
+            var mA = NewMethodDeclaration(Fix.Void, "A", string.Format("[{0}] s", Fix.String));
+            mA.Body.Add(new InvocationStatement("s", MethodName.Get(string.Format("[{0}] [{1}].GetHashCode()", Fix.Int, Fix.String))));
 
             AssertEntryPoints(mA);
         }
 
-        [Test]
+        [Test, Ignore]
         public void ExternalSimpleWithConstant()
         {
             CompleteInClass(@"
@@ -63,7 +63,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             AssertEntryPoints(mA);
         }
 
-        [Test]
+        [Test, Ignore]
         public void ExternalSimpleWithParam()
         {
             CompleteInClass(@"
@@ -79,7 +79,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             AssertEntryPoints(mA);
         }
 
-        [Test]
+        [Test, Ignore]
         public void ExternalNested()
         {
             CompleteInClass(@"
@@ -98,7 +98,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             AssertEntryPoints(mA);
         }
 
-        [Test]
+        [Test, Ignore]
         public void ThisSimple()
         {
             CompleteInClass(@"
@@ -118,8 +118,8 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             AssertEntryPoints(mA, mB);
         }
 
-        [Test]
-        public void ThisWithOverriddes()
+        [Test, Ignore]
+        public void ThisWithHiding()
         {
             CompleteInFile(@"
                 namespace N {
@@ -146,7 +146,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             AssertEntryPoints(mA, mB);
         }
 
-        [Test]
+        [Test, Ignore]
         public void StaticInvocation()
         {
             CompleteInFile(@"

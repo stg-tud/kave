@@ -1,5 +1,5 @@
-/*
- * Copyright 2014 Technische Universit�t Darmstadt
+﻿/*
+ * Copyright 2014 Technische Universität Darmstadt
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,33 +14,21 @@
  * limitations under the License.
  * 
  * Contributors:
- *    - Sebastian Proksch
+ *    - Dennis Albrecht
  */
 
-using KaVE.Utils;
+using JetBrains.ReSharper.Psi.CSharp.Tree;
+using KaVE.Model.SSTs.Declarations;
 
-namespace KaVE.Model.SSTs.Expressions
+namespace KaVE.VsFeedbackGenerator.Analysis
 {
-    public class ConstantExpression : Expression
+    public abstract class BaseSSTTransformer : TreeNodeVisitor
     {
-        private static bool Equals(ConstantExpression other)
-        {
-            return true;
-        }
+        protected readonly MethodDeclaration Declaration;
 
-        public override bool Equals(object obj)
+        protected BaseSSTTransformer(MethodDeclaration declaration)
         {
-            return this.Equals(obj, Equals);
-        }
-
-        public override int GetHashCode()
-        {
-            return 1;
-        }
-
-        public override string ToString()
-        {
-            return "const";
+            Declaration = declaration;
         }
     }
 }

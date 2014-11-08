@@ -19,6 +19,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using KaVE.Model.Collections;
 using KaVE.Model.Names;
 using KaVE.Utils;
@@ -45,6 +46,13 @@ namespace KaVE.Model.SSTs.Declarations
         {
             var nameHash = Name != null ? Name.GetHashCode() : 0;
             return nameHash*20349 + HashCodeUtils.For(3456, Body);
+        }
+
+        public override string ToString()
+        {
+            var bodyBeginning = Body.Take(5).Aggregate("", (s, statement) => s + string.Format("{0} ", statement));
+            var bodyRepresentation = (Body.Count > 5) ? bodyBeginning + "..." : bodyBeginning;
+            return string.Format("Method:{0} Body:[{1}]", Name, bodyRepresentation);
         }
     }
 }

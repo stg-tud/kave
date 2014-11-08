@@ -126,7 +126,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
                 }
             ");
 
-            // TODO think about this again... what abaout abstract base classes?
+            // TODO think about this again... what about abstract base classes?
         }
     }
 }

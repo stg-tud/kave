@@ -54,5 +54,10 @@ namespace KaVE.Model.SSTs.Expressions
         {
             return 5 + (Variables != null ? HashCodeUtils.For(5, Variables) : 0);
         }
+
+        public override string ToString()
+        {
+            return "{" + string.Join(", ", Variables) + "}";
+        }
     }
 }

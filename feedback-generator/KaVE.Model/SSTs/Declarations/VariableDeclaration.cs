@@ -52,5 +52,10 @@ namespace KaVE.Model.SSTs.Declarations
                        (Type != null ? Type.GetHashCode() : 0);
             }
         }
+
+        public override string ToString()
+        {
+            return string.Format("{0} {1};", Type.Name, Identifier);
+        }
     }
 }
