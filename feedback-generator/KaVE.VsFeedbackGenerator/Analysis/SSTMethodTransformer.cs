@@ -20,7 +20,9 @@
 
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.Util;
+using KaVE.Model.Names;
 using KaVE.Model.SSTs.Declarations;
+using KaVE.Model.SSTs.Statements;
 using KaVE.VsFeedbackGenerator.Utils.Names;
 
 namespace KaVE.VsFeedbackGenerator.Analysis
@@ -85,10 +87,19 @@ namespace KaVE.VsFeedbackGenerator.Analysis
 
         public override void VisitInvocationExpression(IInvocationExpression invocationExpressionParam)
         {
-            var collector = new SSTReferenceCollector(Declaration);
-            invocationExpressionParam.ArgumentList.Accept(collector);
-            invocationExpressionParam.InvokedExpression.Accept(
-                new SSTInvocationGenerator(Declaration, collector.References));
+            var invokedExpression = invocationExpressionParam.InvokedExpression as IReferenceExpression;
+            if (invocationExpressionParam.Reference != null &&
+                invokedExpression != null &&
+                invokedExpression.QualifierExpression is IReferenceExpression)
+            {
+                var collector = new SSTArgumentCollector(Declaration);
+
+                var methodName = invocationExpressionParam.Reference.ResolveMethod().GetName<IMethodName>();
+                invocationExpressionParam.ArgumentList.Accept(collector);
+                var name = (invokedExpression.QualifierExpression as IReferenceExpression).NameIdentifier.Name;
+
+                Declaration.Body.Add(new InvocationStatement(name, methodName, collector.Arguments));
+            }
         }
     }
 }

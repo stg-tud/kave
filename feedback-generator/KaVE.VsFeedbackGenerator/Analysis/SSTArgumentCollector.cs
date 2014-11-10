@@ -29,36 +29,38 @@ using KaVE.VsFeedbackGenerator.Utils.Names;
 
 namespace KaVE.VsFeedbackGenerator.Analysis
 {
-    public class SSTReferenceCollector : BaseSSTTransformer
+    public class SSTArgumentCollector : BaseSSTTransformer
     {
-        private readonly IList<string> _references = new List<string>();
+        private readonly IList<string> _arguments = new List<string>();
 
-        public SSTReferenceCollector(MethodDeclaration declaration) : base(declaration) {}
+        public SSTArgumentCollector(MethodDeclaration declaration) : base(declaration) {}
 
-        public string[] References
+        public string[] Arguments
         {
-            get { return Enumerable.ToArray(_references); }
+            get { return Enumerable.ToArray(_arguments); }
         }
 
-        public override void VisitBinaryExpression(IBinaryExpression binaryExpressionParam)
+        public override void VisitArgumentList(IArgumentList argumentListParam)
         {
-            binaryExpressionParam.LeftOperand.Accept(this);
-            binaryExpressionParam.RightOperand.Accept(this);
+            argumentListParam.Arguments.ForEach(argument => argument.Accept(this));
+        }
+
+        public override void VisitCSharpArgument(ICSharpArgument cSharpArgumentParam)
+        {
+            cSharpArgumentParam.Value.Accept(this);
         }
 
         public override void VisitReferenceExpression(IReferenceExpression referenceExpressionParam)
         {
-            _references.Add(referenceExpressionParam.NameIdentifier.Name);
+            _arguments.Add(referenceExpressionParam.NameIdentifier.Name);
         }
 
-        public override void VisitArrayInitializer(IArrayInitializer arrayInitializerParam)
+        public override void VisitCSharpLiteralExpression(ICSharpLiteralExpression cSharpLiteralExpressionParam)
         {
-            arrayInitializerParam.ElementInitializers.ForEach(i => i.Accept(this));
-        }
-
-        public override void VisitExpressionInitializer(IExpressionInitializer expressionInitializerParam)
-        {
-            expressionInitializerParam.Value.Accept(this);
+            var tmp = Declaration.GetNewTempVariable();
+            Declaration.Body.Add(new VariableDeclaration(tmp, cSharpLiteralExpressionParam.Type().GetName()));
+            Declaration.Body.Add(new Assignment(tmp, new ConstantExpression()));
+            _arguments.Add(tmp);
         }
 
         public override void VisitInvocationExpression(IInvocationExpression invocationExpressionParam)
@@ -77,13 +79,13 @@ namespace KaVE.VsFeedbackGenerator.Analysis
                 var tmp = Declaration.GetNewTempVariable();
                 Declaration.Body.Add(new VariableDeclaration(tmp, invocationExpressionParam.Type().GetName()));
                 Declaration.Body.Add(new Assignment(tmp, new InvocationExpression(name, methodName, collector.Arguments)));
-                _references.Add(tmp);
+                _arguments.Add(tmp);
             }
         }
 
         public override void VisitThisExpression(IThisExpression thisExpressionParam)
         {
-            _references.Add("this");
+            _arguments.Add("this");
         }
     }
 }

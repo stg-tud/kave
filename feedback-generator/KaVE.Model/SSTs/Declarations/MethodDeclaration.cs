@@ -50,8 +50,7 @@ namespace KaVE.Model.SSTs.Declarations
 
         public override string ToString()
         {
-            var bodyBeginning = Body.Take(5).Aggregate("", (s, statement) => s + string.Format("{0} ", statement));
-            var bodyRepresentation = (Body.Count > 5) ? bodyBeginning + "..." : bodyBeginning;
+            var bodyRepresentation = string.Join(" ", Body.Select(s => s.ToString()));
             return string.Format("Method:{0} Body:[{1}]", Name, bodyRepresentation);
         }
     }

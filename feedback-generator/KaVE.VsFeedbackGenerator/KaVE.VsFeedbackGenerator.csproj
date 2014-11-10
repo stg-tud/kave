@@ -89,8 +89,8 @@
     <Compile Include="Analysis\InvocationCollector.cs" />
     <Compile Include="Analysis\ReSharperUtils.cs" />
     <Compile Include="Analysis\SSTAnalysis.cs" />
+    <Compile Include="Analysis\SSTArgumentCollector.cs" />
     <Compile Include="Analysis\SSTAssignmentGenerator.cs" />
-    <Compile Include="Analysis\SSTInvocationGenerator.cs" />
     <Compile Include="Analysis\SSTMethodTransformer.cs" />
     <Compile Include="Analysis\SSTReferenceCollector.cs" />
     <Compile Include="Analysis\TypeHierarchyAnalysisUtils.cs" />

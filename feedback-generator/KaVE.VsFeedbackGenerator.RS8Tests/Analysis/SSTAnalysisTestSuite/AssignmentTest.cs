@@ -17,7 +17,6 @@
  *    - Sebastian Proksch
  */
 
-using KaVE.Model.Names.CSharp;
 using KaVE.Model.SSTs.Declarations;
 using KaVE.Model.SSTs.Expressions;
 using KaVE.Model.SSTs.Statements;
@@ -122,7 +121,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             mA.Body.Add(new VariableDeclaration("i", Fix.Int));
             mA.Body.Add(new VariableDeclaration("j", Fix.Int));
             mA.Body.Add(new Assignment("i", new ConstantExpression()));
-            mA.Body.Add(new Assignment("j", new ComposedExpression { Variables = new[] { "i" } }));
+            mA.Body.Add(new Assignment("j", new ComposedExpression {Variables = new[] {"i"}}));
 
             AssertEntryPoints(mA);
         }
@@ -143,7 +142,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             mA.Body.Add(new VariableDeclaration("i", Fix.Int));
             mA.Body.Add(new Assignment("i", new ConstantExpression()));
             mA.Body.Add(new VariableDeclaration("j", Fix.Int));
-            mA.Body.Add(new Assignment("j", new ComposedExpression { Variables = new[] { "i" } }));
+            mA.Body.Add(new Assignment("j", new ComposedExpression {Variables = new[] {"i"}}));
 
             AssertEntryPoints(mA);
         }
@@ -187,25 +186,22 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             AssertEntryPoints(mA);
         }
 
-        [Test, Ignore]
+        [Test]
         public void ArrayInit_WithCalls()
         {
             CompleteInClass(@"
-                public void A()
+                public void A(object o)
                 {
-                    var o = new Object();
                     var arr = new[] {1,2,o.GetHashCode()};
                     $
                 }
             ");
 
-            var mA = NewMethodDeclaration(Fix.Void, "A");
-            mA.Body.Add(new VariableDeclaration("o", Fix.Object));
-            mA.Body.Add(new Assignment("n", new InvocationExpression(MethodName.Get("o..ctor"))));
-            mA.Body.Add(new VariableDeclaration("o", Fix.Object));
-            mA.Body.Add(new Assignment("v0", new InvocationExpression("o", MethodName.Get("Object.GetHashCode"))));
+            var mA = NewMethodDeclaration(Fix.Void, "A", string.Format("[{0}] o", Fix.Object));
             mA.Body.Add(new VariableDeclaration("arr", Fix.IntArray));
-            mA.Body.Add(new Assignment("arr", new ComposedExpression {Variables = new[] {"v0"}}));
+            mA.Body.Add(new VariableDeclaration("$0", Fix.Int));
+            mA.Body.Add(new Assignment("$0", new InvocationExpression("o", Fix.GetHashCode(Fix.Object))));
+            mA.Body.Add(new Assignment("arr", new ComposedExpression {Variables = new[] {"$0"}}));
 
             AssertEntryPoints(mA);
         }

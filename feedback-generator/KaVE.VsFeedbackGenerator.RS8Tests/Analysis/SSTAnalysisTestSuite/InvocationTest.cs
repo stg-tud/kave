@@ -40,12 +40,30 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
                 }
             ");
             var mA = NewMethodDeclaration(Fix.Void, "A", string.Format("[{0}] s", Fix.String));
-            mA.Body.Add(new InvocationStatement("s", MethodName.Get(string.Format("[{0}] [{1}].GetHashCode()", Fix.Int, Fix.String))));
+            mA.Body.Add(new InvocationStatement("s", Fix.GetHashCode(Fix.String)));
 
             AssertEntryPoints(mA);
         }
 
         [Test, Ignore]
+        public void Constructor()
+        {
+            CompleteInClass(@"
+                public void A()
+                {
+                    var o = new Object();
+                    $
+                }
+            ");
+            var mA = NewMethodDeclaration(Fix.Void, "A");
+            mA.Body.Add(new VariableDeclaration("o", Fix.Object));
+            //mA.Body.Add(new Assignment("o", new NewInstance(Fix.Object)));
+            mA.Body.Add(new InvocationStatement("o", Fix.GetHashCode(Fix.Object)));
+
+            AssertEntryPoints(mA);
+        }
+
+        [Test]
         public void ExternalSimpleWithConstant()
         {
             CompleteInClass(@"
@@ -55,15 +73,15 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
                     $
                 }
             ");
-            var mA = NewMethodDeclaration(Fix.Void, "A");
-            mA.Body.Add(new VariableDeclaration("v0", Fix.String));
-            mA.Body.Add(new Assignment("v0", new ConstantExpression()));
-            mA.Body.Add(new InvocationStatement("s", MethodName.Get("string.getHashCode"), "v0"));
+            var mA = NewMethodDeclaration(Fix.Void, "A", string.Format("[{0}] s", Fix.String));
+            mA.Body.Add(new VariableDeclaration("$0", Fix.String));
+            mA.Body.Add(new Assignment("$0", new ConstantExpression()));
+            mA.Body.Add(new InvocationStatement("s", Fix.Equals(Fix.String, Fix.String, "value"), "$0"));
 
             AssertEntryPoints(mA);
         }
 
-        [Test, Ignore]
+        [Test]
         public void ExternalSimpleWithParam()
         {
             CompleteInClass(@"
@@ -73,13 +91,13 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
                     $
                 }
             ");
-            var mA = NewMethodDeclaration(Fix.Void, "A");
-            mA.Body.Add(new InvocationStatement("s", MethodName.Get("string.getHashCode"), "this"));
+            var mA = NewMethodDeclaration(Fix.Void, "A", string.Format("[{0}] s", Fix.String));
+            mA.Body.Add(new InvocationStatement("s", Fix.Equals(Fix.String, Fix.Object, "obj"), "this"));
 
             AssertEntryPoints(mA);
         }
 
-        [Test, Ignore]
+        [Test]
         public void ExternalNested()
         {
             CompleteInClass(@"
@@ -90,10 +108,32 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
                 }
             ");
 
+            var mA = NewMethodDeclaration(Fix.Void, "A", string.Format("[{0}] s", Fix.String));
+            mA.Body.Add(new VariableDeclaration("$0", Fix.String));
+            mA.Body.Add(
+                new Assignment(
+                    "$0",
+                    new InvocationExpression("s", MethodName.Get(string.Format("[{0}] [{0}].Normalize()", Fix.String)))));
+            mA.Body.Add(new InvocationStatement("s", Fix.Equals(Fix.String, Fix.String, "value"), "$0"));
+
+            AssertEntryPoints(mA);
+        }
+
+        [Test, Ignore]
+        public void ExternalCallChain()
+        {
+            CompleteInClass(@"
+                public void A(string s)
+                {
+                    s.GetHashCode().ToString();
+                    $
+                }
+            ");
+
             var mA = NewMethodDeclaration(Fix.Void, "A");
-            mA.Body.Add(new VariableDeclaration("v0", Fix.String));
-            mA.Body.Add(new Assignment("v0", new InvocationExpression("s", MethodName.Get("string.Normalize"))));
-            mA.Body.Add(new InvocationStatement("s", MethodName.Get("string.getHashCode"), "v0"));
+            mA.Body.Add(new VariableDeclaration("$0", Fix.Int));
+            mA.Body.Add(new Assignment("$0", new InvocationExpression("s", Fix.GetHashCode(Fix.Object))));
+            mA.Body.Add(new InvocationStatement("$0", Fix.GetHashCode(Fix.Int)));
 
             AssertEntryPoints(mA);
         }

@@ -33,6 +33,21 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
         internal static readonly ITypeName Object = TypeName.Get("System.Object, mscorlib, 4.0.0.0");
         internal static readonly ITypeName Exception = TypeName.Get("System.Exception, mscorlib, 4.0.0.0");
 
+        internal static IMethodName GetHashCode(ITypeName declaringType)
+        {
+            return MethodName.Get(string.Format("[{0}] [{1}].GetHashCode()", Int, declaringType));
+        }
+
+        internal static IMethodName ToString(ITypeName declaringType)
+        {
+            return MethodName.Get(string.Format("[{0}] [{1}].ToString()", String, declaringType));
+        }
+
+        internal static IMethodName Equals(ITypeName declaringType, ITypeName argType, string argName)
+        {
+            return MethodName.Get(string.Format("[{0}] [{1}].Equals([{2}] {3})", Bool, declaringType, argType, argName));
+        }
+
         public static IMethodName GetMethodName(string cGet)
         {
             return null;
