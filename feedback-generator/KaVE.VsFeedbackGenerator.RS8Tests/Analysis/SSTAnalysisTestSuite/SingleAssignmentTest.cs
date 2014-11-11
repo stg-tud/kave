@@ -78,7 +78,12 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 
             mA.Body.Add(new VariableDeclaration("i", Fix.Int));
             mA.Body.Add(new VariableDeclaration("$0", Fix.Int));
-            mA.Body.Add(new Assignment("$0", new InvocationExpression("h", MethodName.Get(string.Format("[{0}] [N.H, TestProject].Get()", Fix.Int)))));
+            mA.Body.Add(
+                new Assignment(
+                    "$0",
+                    new InvocationExpression(
+                        "h",
+                        MethodName.Get(string.Format("[{0}] [N.H, TestProject].Get()", Fix.Int)))));
             mA.Body.Add(new Assignment("i", ComposedExpression.Create("$0")));
 
             AssertEntryPoints(mA);
@@ -103,13 +108,27 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
                 }
             ");
 
-            var mA = NewMethodDeclaration(Fix.Void, "A", string.Format("[N.H, TestProject] h1"), string.Format("[N.H, TestProject] h2"));
+            var mA = NewMethodDeclaration(
+                Fix.Void,
+                "A",
+                string.Format("[N.H, TestProject] h1"),
+                string.Format("[N.H, TestProject] h2"));
 
             mA.Body.Add(new VariableDeclaration("i", Fix.Int));
             mA.Body.Add(new VariableDeclaration("$0", Fix.Int));
-            mA.Body.Add(new Assignment("$0", new InvocationExpression("h1", MethodName.Get(string.Format("[{0}] [N.H, TestProject].Get()", Fix.Int)))));
+            mA.Body.Add(
+                new Assignment(
+                    "$0",
+                    new InvocationExpression(
+                        "h1",
+                        MethodName.Get(string.Format("[{0}] [N.H, TestProject].Get()", Fix.Int)))));
             mA.Body.Add(new VariableDeclaration("$1", Fix.Int));
-            mA.Body.Add(new Assignment("$1", new InvocationExpression("h2", MethodName.Get(string.Format("[{0}] [N.H, TestProject].Get()", Fix.Int)))));
+            mA.Body.Add(
+                new Assignment(
+                    "$1",
+                    new InvocationExpression(
+                        "h2",
+                        MethodName.Get(string.Format("[{0}] [N.H, TestProject].Get()", Fix.Int)))));
             mA.Body.Add(new Assignment("i", ComposedExpression.Create("$0", "$1")));
 
             AssertEntryPoints(mA);
@@ -134,14 +153,30 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
                 }
             ");
 
-            var mA = NewMethodDeclaration(Fix.Void, "A", string.Format("[N.U, TestProject] u1"), string.Format("[N.U, TestProject] u2"));
+            var mA = NewMethodDeclaration(
+                Fix.Void,
+                "A",
+                string.Format("[N.U, TestProject] u1"),
+                string.Format("[N.U, TestProject] u2"));
 
             mA.Body.Add(new VariableDeclaration("i", Fix.Int));
             mA.Body.Add(new VariableDeclaration("$0", Fix.Int));
             mA.Body.Add(new Assignment("$0", new ConstantExpression()));
             mA.Body.Add(new VariableDeclaration("$1", Fix.Int));
-            mA.Body.Add(new Assignment("$1", new InvocationExpression("u2", MethodName.Get(string.Format("[{0}] [N.U, TestProject].Plus([{0}] i)", Fix.Int)), "$0")));
-            mA.Body.Add(new Assignment("i", new InvocationExpression("u1", MethodName.Get(string.Format("[{0}] [N.U, TestProject].Plus([{0}] i)", Fix.Int)), "$1")));
+            mA.Body.Add(
+                new Assignment(
+                    "$1",
+                    new InvocationExpression(
+                        "u2",
+                        MethodName.Get(string.Format("[{0}] [N.U, TestProject].Plus([{0}] i)", Fix.Int)),
+                        "$0")));
+            mA.Body.Add(
+                new Assignment(
+                    "i",
+                    new InvocationExpression(
+                        "u1",
+                        MethodName.Get(string.Format("[{0}] [N.U, TestProject].Plus([{0}] i)", Fix.Int)),
+                        "$1")));
 
             AssertEntryPoints(mA);
         }

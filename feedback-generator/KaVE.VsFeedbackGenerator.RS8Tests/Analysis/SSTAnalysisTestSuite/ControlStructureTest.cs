@@ -129,6 +129,36 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
         }
 
         [Test]
+        public void WhileLoop_AssignmentInCondition()
+        {
+            CompleteInClass(@"
+                public int A(object o)
+                {
+                    var i = 0;
+                    string s;
+                    while((s = o.ToString()) != null) {
+                        i++;
+                        $
+                    }
+                }
+            ");
+
+            var mA = NewMethodDeclaration(Fix.Void, "A", string.Format("[{0}] o", Fix.Object));
+            mA.Body.Add(new VariableDeclaration("i", Fix.Int));
+            mA.Body.Add(new Assignment("i", new ConstantExpression()));
+
+            // TODO: replace null if model contains corresponding classes
+            var whileLoop = new WhileLoop {Condition = null};
+
+            whileLoop.Body.Add(new Assignment("i", new ComposedExpression {Variables = new[] {"i"}}));
+            whileLoop.Body.Add(new CompletionTrigger());
+
+            mA.Body.Add(whileLoop);
+
+            AssertEntryPoints(mA);
+        }
+
+        [Test]
         public void ForLoop()
         {
             CompleteInClass(@"

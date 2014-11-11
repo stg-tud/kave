@@ -57,8 +57,12 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             ");
             var mA = NewMethodDeclaration(Fix.Void, "A");
             mA.Body.Add(new VariableDeclaration("o", Fix.Object));
-            //mA.Body.Add(new Assignment("o", new NewInstance(Fix.Object)));
-            mA.Body.Add(new InvocationStatement("o", Fix.GetHashCode(Fix.Object)));
+            mA.Body.Add(
+                new Assignment(
+                    "o",
+                    new InvocationExpression(
+                        "o",
+                        MethodName.Get(string.Format("[{0}] [{1}]..ctor()", Fix.Void, Fix.Object)))));
 
             AssertEntryPoints(mA);
         }
@@ -151,7 +155,8 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             ");
 
             var mA = NewMethodDeclaration(Fix.Void, "A");
-            mA.Body.Add(new InvocationStatement("this", MethodName.Get(string.Format("[{0}] [N.C, TestProject].B()", Fix.Void))));
+            mA.Body.Add(
+                new InvocationStatement("this", MethodName.Get(string.Format("[{0}] [N.C, TestProject].B()", Fix.Void))));
 
             var mB = NewMethodDeclaration(Fix.Void, "B");
 
