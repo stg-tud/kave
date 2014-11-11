@@ -119,7 +119,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             AssertEntryPoints(mA);
         }
 
-        [Test, Ignore]
+        [Test]
         public void ExternalCallChain()
         {
             CompleteInClass(@"
@@ -130,10 +130,10 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
                 }
             ");
 
-            var mA = NewMethodDeclaration(Fix.Void, "A");
+            var mA = NewMethodDeclaration(Fix.Void, "A", string.Format("[{0}] s", Fix.String));
             mA.Body.Add(new VariableDeclaration("$0", Fix.Int));
-            mA.Body.Add(new Assignment("$0", new InvocationExpression("s", Fix.GetHashCode(Fix.Object))));
-            mA.Body.Add(new InvocationStatement("$0", Fix.GetHashCode(Fix.Int)));
+            mA.Body.Add(new Assignment("$0", new InvocationExpression("s", Fix.GetHashCode(Fix.String))));
+            mA.Body.Add(new InvocationStatement("$0", Fix.ToString(Fix.Int)));
 
             AssertEntryPoints(mA);
         }
@@ -151,11 +151,12 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             ");
 
             var mA = NewMethodDeclaration(Fix.Void, "A");
-            mA.Body.Add(new InvocationStatement("this", MethodName.Get("C.B")));
+            mA.Body.Add(new InvocationStatement("this", MethodName.Get(string.Format("[{0}] [N.C, TestProject].B()", Fix.Void))));
 
             var mB = NewMethodDeclaration(Fix.Void, "B");
 
-            AssertEntryPoints(mA, mB);
+            AssertEntryPoints(mA);
+            AssertMethodDeclarations(mB);
         }
 
         [Test, Ignore]

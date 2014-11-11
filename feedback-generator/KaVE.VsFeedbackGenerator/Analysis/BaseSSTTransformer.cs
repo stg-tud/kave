@@ -17,8 +17,13 @@
  *    - Dennis Albrecht
  */
 
+using System;
+using System.Linq;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
+using KaVE.Model.Names;
 using KaVE.Model.SSTs.Declarations;
+using KaVE.Utils.Assertion;
+using KaVE.VsFeedbackGenerator.Utils.Names;
 
 namespace KaVE.VsFeedbackGenerator.Analysis
 {
@@ -29,6 +34,36 @@ namespace KaVE.VsFeedbackGenerator.Analysis
         protected BaseSSTTransformer(MethodDeclaration declaration)
         {
             Declaration = declaration;
+        }
+
+        protected void HandleInvocationExpression(IInvocationExpression invocationExpressionParam,
+            Action<MethodDeclaration, string, IMethodName, string[], ITypeName> handler)
+        {
+            var invokedExpression = invocationExpressionParam.InvokedExpression as IReferenceExpression;
+            if (invocationExpressionParam.Reference != null && invokedExpression != null)
+            {
+                var methodName = invocationExpressionParam.Reference.ResolveMethod().GetName<IMethodName>();
+                var typeName = invocationExpressionParam.Type().GetName();
+                string callee;
+                if (invokedExpression.QualifierExpression is IReferenceExpression)
+                {
+                    callee = (invokedExpression.QualifierExpression as IReferenceExpression).NameIdentifier.Name;
+                }
+                else if (invokedExpression.QualifierExpression is IInvocationExpression)
+                {
+                    var refCollector = new SSTReferenceCollector(Declaration);
+                    invokedExpression.QualifierExpression.Accept(refCollector);
+                    Asserts.That(refCollector.References.Count() == 1);
+                    callee = refCollector.References[0];
+                }
+                else
+                {
+                    return;
+                }
+                var argCollector = new SSTArgumentCollector(Declaration);
+                invocationExpressionParam.ArgumentList.Accept(argCollector);
+                handler(Declaration, callee, methodName, argCollector.Arguments, typeName);
+            }
         }
     }
 }

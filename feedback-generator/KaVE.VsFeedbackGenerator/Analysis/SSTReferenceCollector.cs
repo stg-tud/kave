@@ -21,11 +21,9 @@ using System.Collections.Generic;
 using System.Linq;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.Util;
-using KaVE.Model.Names;
 using KaVE.Model.SSTs.Declarations;
 using KaVE.Model.SSTs.Expressions;
 using KaVE.Model.SSTs.Statements;
-using KaVE.VsFeedbackGenerator.Utils.Names;
 
 namespace KaVE.VsFeedbackGenerator.Analysis
 {
@@ -63,22 +61,15 @@ namespace KaVE.VsFeedbackGenerator.Analysis
 
         public override void VisitInvocationExpression(IInvocationExpression invocationExpressionParam)
         {
-            var invokedExpression = invocationExpressionParam.InvokedExpression as IReferenceExpression;
-            if (invocationExpressionParam.Reference != null &&
-                invokedExpression != null &&
-                invokedExpression.QualifierExpression is IReferenceExpression)
-            {
-                var collector = new SSTArgumentCollector(Declaration);
-
-                var methodName = invocationExpressionParam.Reference.ResolveMethod().GetName<IMethodName>();
-                invocationExpressionParam.ArgumentList.Accept(collector);
-                var name = (invokedExpression.QualifierExpression as IReferenceExpression).NameIdentifier.Name;
-
-                var tmp = Declaration.GetNewTempVariable();
-                Declaration.Body.Add(new VariableDeclaration(tmp, invocationExpressionParam.Type().GetName()));
-                Declaration.Body.Add(new Assignment(tmp, new InvocationExpression(name, methodName, collector.Arguments)));
-                _references.Add(tmp);
-            }
+            HandleInvocationExpression(
+                invocationExpressionParam,
+                (declaration, callee, method, args, retType) =>
+                {
+                    var tmp = declaration.GetNewTempVariable();
+                    declaration.Body.Add(new VariableDeclaration(tmp, retType));
+                    declaration.Body.Add(new Assignment(tmp, new InvocationExpression(callee, method, args)));
+                    _references.Add(tmp);
+                });
         }
 
         public override void VisitThisExpression(IThisExpression thisExpressionParam)
