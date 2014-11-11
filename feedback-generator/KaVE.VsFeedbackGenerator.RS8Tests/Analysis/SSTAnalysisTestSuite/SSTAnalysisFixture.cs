@@ -50,7 +50,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 
         public static IMethodName GetMethodName(string cGet)
         {
-            return null;
+            return MethodName.Get(cGet);
         }
     }
 }

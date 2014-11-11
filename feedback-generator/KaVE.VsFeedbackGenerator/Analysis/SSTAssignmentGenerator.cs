@@ -19,9 +19,11 @@
 
 using System.Linq;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
+using KaVE.Model.Names;
 using KaVE.Model.SSTs.Declarations;
 using KaVE.Model.SSTs.Expressions;
 using KaVE.Model.SSTs.Statements;
+using KaVE.VsFeedbackGenerator.Utils.Names;
 
 namespace KaVE.VsFeedbackGenerator.Analysis
 {
@@ -43,6 +45,23 @@ namespace KaVE.VsFeedbackGenerator.Analysis
         {
             var name = referenceExpressionParam.NameIdentifier.Name;
             Declaration.Body.Add(new Assignment(_dest, ComposedExpression.Create(name)));
+        }
+
+        public override void VisitInvocationExpression(IInvocationExpression invocationExpressionParam)
+        {
+            var invokedExpression = invocationExpressionParam.InvokedExpression as IReferenceExpression;
+            if (invocationExpressionParam.Reference != null &&
+                invokedExpression != null &&
+                invokedExpression.QualifierExpression is IReferenceExpression)
+            {
+                var collector = new SSTArgumentCollector(Declaration);
+
+                var methodName = invocationExpressionParam.Reference.ResolveMethod().GetName<IMethodName>();
+                invocationExpressionParam.ArgumentList.Accept(collector);
+                var name = (invokedExpression.QualifierExpression as IReferenceExpression).NameIdentifier.Name;
+
+                Declaration.Body.Add(new Assignment(_dest, new InvocationExpression(name, methodName, collector.Arguments)));
+            }
         }
 
         public override void VisitBinaryExpression(IBinaryExpression binaryExpressionParam)

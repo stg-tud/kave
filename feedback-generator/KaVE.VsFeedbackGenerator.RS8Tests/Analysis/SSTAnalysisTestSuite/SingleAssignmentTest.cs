@@ -17,6 +17,7 @@
  *    - Sebastian Proksch
  */
 
+using KaVE.Model.Names.CSharp;
 using KaVE.Model.SSTs.Blocks;
 using KaVE.Model.SSTs.Declarations;
 using KaVE.Model.SSTs.Expressions;
@@ -26,10 +27,10 @@ using Fix = KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite.SSTA
 
 namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 {
-    [Ignore]
+    [TestFixture]
     internal class SingleAssignmentTest : BaseSSTAnalysisTest
     {
-        [Test]
+        [Test, Ignore]
         public void InlineIfElse()
         {
             CompleteInClass(@"
@@ -59,25 +60,26 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
         {
             CompleteInFile(@"
                 namespace N {
-                    public class C {
-                        public int get() {
+                    public class H {
+                        public int Get() {
                             return 1;
                         }
                     }
-                    public class Test {
-                        public void A(C c) {
-                            var i = 1 + c.get();
+                    public class C {
+                        public void A(H h) {
+                            var i = 1 + h.Get();
                             $
                         }
                     }
+                }
             ");
 
-            var mA = NewMethodDeclaration(Fix.Void, "A");
+            var mA = NewMethodDeclaration(Fix.Void, "A", string.Format("[N.H, TestProject] h"));
 
             mA.Body.Add(new VariableDeclaration("i", Fix.Int));
-            mA.Body.Add(new VariableDeclaration("v0", Fix.Int));
-            mA.Body.Add(new Assignment("v0", new InvocationExpression("c", Fix.GetMethodName("C.get"))));
-            mA.Body.Add(new Assignment("i", new ComposedExpression {Variables = new[] {"v0"}}));
+            mA.Body.Add(new VariableDeclaration("$0", Fix.Int));
+            mA.Body.Add(new Assignment("$0", new InvocationExpression("h", MethodName.Get(string.Format("[{0}] [N.H, TestProject].Get()", Fix.Int)))));
+            mA.Body.Add(new Assignment("i", ComposedExpression.Create("$0")));
 
             AssertEntryPoints(mA);
         }
@@ -87,27 +89,28 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
         {
             CompleteInFile(@"
                 namespace N {
-                    public class C {
-                        public int get() {
+                    public class H {
+                        public int Get() {
                             return 1;
                         }
                     }
-                    public class Test {
-                        public void A(C c1, C c2) {
-                            var i = c1.get() + c2.get() + 1;
+                    public class C {
+                        public void A(H h1, H h2) {
+                            var i = h1.Get() + h2.Get() + 1;
                             $
                         }
                     }
+                }
             ");
 
-            var mA = NewMethodDeclaration(Fix.Void, "A");
+            var mA = NewMethodDeclaration(Fix.Void, "A", string.Format("[N.H, TestProject] h1"), string.Format("[N.H, TestProject] h2"));
 
             mA.Body.Add(new VariableDeclaration("i", Fix.Int));
-            mA.Body.Add(new VariableDeclaration("v0", Fix.Int));
-            mA.Body.Add(new Assignment("v0", new InvocationExpression("c1", Fix.GetMethodName("C.get"))));
-            mA.Body.Add(new VariableDeclaration("v1", Fix.Int));
-            mA.Body.Add(new Assignment("v1", new InvocationExpression("c2", Fix.GetMethodName("C.get"))));
-            mA.Body.Add(new Assignment("i", new ComposedExpression {Variables = new[] {"v0", "v1"}}));
+            mA.Body.Add(new VariableDeclaration("$0", Fix.Int));
+            mA.Body.Add(new Assignment("$0", new InvocationExpression("h1", MethodName.Get(string.Format("[{0}] [N.H, TestProject].Get()", Fix.Int)))));
+            mA.Body.Add(new VariableDeclaration("$1", Fix.Int));
+            mA.Body.Add(new Assignment("$1", new InvocationExpression("h2", MethodName.Get(string.Format("[{0}] [N.H, TestProject].Get()", Fix.Int)))));
+            mA.Body.Add(new Assignment("i", ComposedExpression.Create("$0", "$1")));
 
             AssertEntryPoints(mA);
         }
@@ -117,29 +120,28 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
         {
             CompleteInFile(@"
                 namespace N {
-                    public class C {
-                        public int plus(int in) {
-                            return in + 1;
+                    public class U {
+                        public int Plus(int i) {
+                            return i + 1;
                         }
                     }
-                    public class Test {
-                        public void A(C c1, C c2) {
-                            var i = c1.plus(c2.plus(1));
+                    public class C {
+                        public void A(U u1, U u2) {
+                            var i = u1.Plus(u2.Plus(1));
                             $
                         }
                     }
+                }
             ");
 
-            var mA = NewMethodDeclaration(Fix.Void, "A");
+            var mA = NewMethodDeclaration(Fix.Void, "A", string.Format("[N.U, TestProject] u1"), string.Format("[N.U, TestProject] u2"));
 
             mA.Body.Add(new VariableDeclaration("i", Fix.Int));
-            mA.Body.Add(new VariableDeclaration("v0", Fix.Int));
-            mA.Body.Add(new Assignment("v0", new ConstantExpression()));
-            mA.Body.Add(new VariableDeclaration("v1", Fix.Int));
-            mA.Body.Add(new Assignment("v1", new InvocationExpression("c2", Fix.GetMethodName("C.plus"), "v0")));
-            mA.Body.Add(new VariableDeclaration("v2", Fix.Int));
-            mA.Body.Add(new Assignment("v2", new InvocationExpression("c1", Fix.GetMethodName("C.plus"), "v1")));
-            mA.Body.Add(new Assignment("i", new ComposedExpression {Variables = new[] {"v2"}}));
+            mA.Body.Add(new VariableDeclaration("$0", Fix.Int));
+            mA.Body.Add(new Assignment("$0", new ConstantExpression()));
+            mA.Body.Add(new VariableDeclaration("$1", Fix.Int));
+            mA.Body.Add(new Assignment("$1", new InvocationExpression("u2", MethodName.Get(string.Format("[{0}] [N.U, TestProject].Plus([{0}] i)", Fix.Int)), "$0")));
+            mA.Body.Add(new Assignment("i", new InvocationExpression("u1", MethodName.Get(string.Format("[{0}] [N.U, TestProject].Plus([{0}] i)", Fix.Int)), "$1")));
 
             AssertEntryPoints(mA);
         }
