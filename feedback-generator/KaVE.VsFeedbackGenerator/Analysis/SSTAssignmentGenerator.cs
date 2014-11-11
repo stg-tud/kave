@@ -25,56 +25,78 @@ using KaVE.Model.SSTs.Statements;
 
 namespace KaVE.VsFeedbackGenerator.Analysis
 {
-    public class SSTAssignmentGenerator : BaseSSTTransformer
+    public class AssignmentGeneratorContext : ITransformerContext
     {
-        private readonly string _dest;
+        public AssignmentGeneratorContext(ITransformerContext context, string dest)
+            : this(context.Factory, context.Generator, context.Declaration, dest) {}
 
-        public SSTAssignmentGenerator(MethodDeclaration declaration, string dest) : base(declaration)
+        private AssignmentGeneratorContext(ISSTTransformerFactory factory,
+            ITempVariableGenerator generator,
+            MethodDeclaration declaration,
+            string dest)
         {
-            _dest = dest;
+            Generator = generator;
+            Factory = factory;
+            Declaration = declaration;
+            Dest = dest;
         }
 
-        public override void VisitCSharpLiteralExpression(ICSharpLiteralExpression cSharpLiteralExpressionParam)
+        public ISSTTransformerFactory Factory { get; private set; }
+        public ITempVariableGenerator Generator { get; private set; }
+        public MethodDeclaration Declaration { get; private set; }
+        public readonly string Dest;
+    }
+
+    public class SSTAssignmentGenerator : BaseSSTTransformer<AssignmentGeneratorContext>
+    {
+        public override void VisitCSharpLiteralExpression(ICSharpLiteralExpression cSharpLiteralExpressionParam,
+            AssignmentGeneratorContext context)
         {
-            Declaration.Body.Add(new Assignment(_dest, new ConstantExpression()));
+            context.Declaration.Body.Add(new Assignment(context.Dest, new ConstantExpression()));
         }
 
-        public override void VisitReferenceExpression(IReferenceExpression referenceExpressionParam)
+        public override void VisitReferenceExpression(IReferenceExpression referenceExpressionParam,
+            AssignmentGeneratorContext context)
         {
             var name = referenceExpressionParam.NameIdentifier.Name;
-            Declaration.Body.Add(new Assignment(_dest, ComposedExpression.Create(name)));
+            context.Declaration.Body.Add(new Assignment(context.Dest, ComposedExpression.Create(name)));
         }
 
-        public override void VisitInvocationExpression(IInvocationExpression invocationExpressionParam)
+        public override void VisitInvocationExpression(IInvocationExpression invocationExpressionParam,
+            AssignmentGeneratorContext context)
         {
             HandleInvocationExpression(
                 invocationExpressionParam,
+                context,
                 (declaration, callee, method, args, retType) =>
-                    declaration.Body.Add(new Assignment(_dest, new InvocationExpression(callee, method, args))));
+                    declaration.Body.Add(new Assignment(context.Dest, new InvocationExpression(callee, method, args))));
         }
 
-        public override void VisitBinaryExpression(IBinaryExpression binaryExpressionParam)
+        public override void VisitBinaryExpression(IBinaryExpression binaryExpressionParam,
+            AssignmentGeneratorContext context)
         {
-            AddAssignmentAfterCollectingReferences(binaryExpressionParam);
+            AddAssignmentAfterCollectingReferences(binaryExpressionParam, context);
         }
 
-        public override void VisitArrayCreationExpression(IArrayCreationExpression arrayCreationExpressionParam)
+        public override void VisitArrayCreationExpression(IArrayCreationExpression arrayCreationExpressionParam,
+            AssignmentGeneratorContext context)
         {
-            AddAssignmentAfterCollectingReferences(arrayCreationExpressionParam.ArrayInitializer);
+            AddAssignmentAfterCollectingReferences(arrayCreationExpressionParam.ArrayInitializer, context);
         }
 
-        private void AddAssignmentAfterCollectingReferences(ICSharpTreeNode treeNode)
+        private static void AddAssignmentAfterCollectingReferences(ICSharpTreeNode treeNode,
+            AssignmentGeneratorContext context)
         {
-            var collector = new SSTReferenceCollector(Declaration);
-            treeNode.Accept(collector);
-            var references = collector.References;
+            var refCollectorContext = new ReferenceCollectorContext(context);
+            treeNode.Accept(context.Factory.ReferenceCollector(), refCollectorContext);
+            var references = refCollectorContext.References.ToArray();
             if (references.Any())
             {
-                Declaration.Body.Add(new Assignment(_dest, ComposedExpression.Create(references)));
+                context.Declaration.Body.Add(new Assignment(context.Dest, ComposedExpression.Create(references)));
             }
             else
             {
-                Declaration.Body.Add(new Assignment(_dest, new ConstantExpression()));
+                context.Declaration.Body.Add(new Assignment(context.Dest, new ConstantExpression()));
             }
         }
     }

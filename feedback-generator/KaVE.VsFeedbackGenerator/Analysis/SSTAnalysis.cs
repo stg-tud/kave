@@ -48,6 +48,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis
             }
 
             var allDecls = typeDeclaration.MemberDeclarations.Select(m => m as IMethodDeclaration).Where(m => m != null);
+            var factory = new SSTTransformerFactory();
             foreach (var d in allDecls)
             {
                 if (d.DeclaredElement != null)
@@ -59,11 +60,18 @@ namespace KaVE.VsFeedbackGenerator.Analysis
                     {
                         var decl = new MethodDeclaration {Name = dName, IsEntryPoint = false};
                         sst.Methods.Add(decl);
-                        d.Accept(new SSTMethodTransformer(decl));
+                        d.Accept(
+                            factory.MethodTransformer(),
+                            new MethodTransformerContext(factory, new TempVariableGenerator(), decl));
                     }
                     else
                     {
-                        d.Accept(new SSTMethodTransformer(sst.GetEntrypoints().First(ep => ep.Name == dName)));
+                        d.Accept(
+                            factory.MethodTransformer(),
+                            new MethodTransformerContext(
+                                factory,
+                                new TempVariableGenerator(),
+                                sst.GetEntrypoints().First(ep => ep.Name == dName)));
                     }
 
 

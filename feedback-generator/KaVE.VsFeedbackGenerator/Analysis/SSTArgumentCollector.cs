@@ -18,7 +18,6 @@
  */
 
 using System.Collections.Generic;
-using System.Linq;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.Util;
 using KaVE.Model.SSTs.Declarations;
@@ -28,56 +27,72 @@ using KaVE.VsFeedbackGenerator.Utils.Names;
 
 namespace KaVE.VsFeedbackGenerator.Analysis
 {
-    public class SSTArgumentCollector : BaseSSTTransformer
+    public class ArgumentCollectorContext : ITransformerContext
     {
-        private readonly IList<string> _arguments = new List<string>();
+        public ArgumentCollectorContext(ITransformerContext context)
+            : this(context.Factory, context.Generator, context.Declaration) {}
 
-        public SSTArgumentCollector(MethodDeclaration declaration) : base(declaration) {}
-
-        public string[] Arguments
+        private ArgumentCollectorContext(ISSTTransformerFactory factory,
+            ITempVariableGenerator generator,
+            MethodDeclaration declaration)
         {
-            get { return Enumerable.ToArray(_arguments); }
+            Factory = factory;
+            Generator = generator;
+            Declaration = declaration;
+            Arguments = new List<string>();
         }
 
-        public override void VisitArgumentList(IArgumentList argumentListParam)
+        public ISSTTransformerFactory Factory { get; private set; }
+        public ITempVariableGenerator Generator { get; private set; }
+        public MethodDeclaration Declaration { get; private set; }
+        public readonly IList<string> Arguments;
+    }
+
+    public class SSTArgumentCollector : BaseSSTTransformer<ArgumentCollectorContext>
+    {
+        public override void VisitArgumentList(IArgumentList argumentListParam, ArgumentCollectorContext context)
         {
-            argumentListParam.Arguments.ForEach(argument => argument.Accept(this));
+            argumentListParam.Arguments.ForEach(argument => argument.Accept(this, context));
         }
 
-        public override void VisitCSharpArgument(ICSharpArgument cSharpArgumentParam)
+        public override void VisitCSharpArgument(ICSharpArgument cSharpArgumentParam, ArgumentCollectorContext context)
         {
-            cSharpArgumentParam.Value.Accept(this);
+            cSharpArgumentParam.Value.Accept(this, context);
         }
 
-        public override void VisitReferenceExpression(IReferenceExpression referenceExpressionParam)
+        public override void VisitReferenceExpression(IReferenceExpression referenceExpressionParam,
+            ArgumentCollectorContext context)
         {
-            _arguments.Add(referenceExpressionParam.NameIdentifier.Name);
+            context.Arguments.Add(referenceExpressionParam.NameIdentifier.Name);
         }
 
-        public override void VisitCSharpLiteralExpression(ICSharpLiteralExpression cSharpLiteralExpressionParam)
+        public override void VisitCSharpLiteralExpression(ICSharpLiteralExpression cSharpLiteralExpressionParam,
+            ArgumentCollectorContext context)
         {
-            var tmp = Declaration.GetNewTempVariable();
-            Declaration.Body.Add(new VariableDeclaration(tmp, cSharpLiteralExpressionParam.Type().GetName()));
-            Declaration.Body.Add(new Assignment(tmp, new ConstantExpression()));
-            _arguments.Add(tmp);
+            var tmp = context.Generator.GetNextVariableName();
+            context.Declaration.Body.Add(new VariableDeclaration(tmp, cSharpLiteralExpressionParam.Type().GetName()));
+            context.Declaration.Body.Add(new Assignment(tmp, new ConstantExpression()));
+            context.Arguments.Add(tmp);
         }
 
-        public override void VisitInvocationExpression(IInvocationExpression invocationExpressionParam)
+        public override void VisitInvocationExpression(IInvocationExpression invocationExpressionParam,
+            ArgumentCollectorContext context)
         {
             HandleInvocationExpression(
                 invocationExpressionParam,
+                context,
                 (declaration, callee, method, args, retType) =>
                 {
-                    var tmp = declaration.GetNewTempVariable();
-                    declaration.Body.Add(new VariableDeclaration(tmp, retType));
-                    declaration.Body.Add(new Assignment(tmp, new InvocationExpression(callee, method, args)));
-                    _arguments.Add(tmp);
+                    var tmp = context.Generator.GetNextVariableName();
+                    context.Declaration.Body.Add(new VariableDeclaration(tmp, retType));
+                    context.Declaration.Body.Add(new Assignment(tmp, new InvocationExpression(callee, method, args)));
+                    context.Arguments.Add(tmp);
                 });
         }
 
-        public override void VisitThisExpression(IThisExpression thisExpressionParam)
+        public override void VisitThisExpression(IThisExpression thisExpressionParam, ArgumentCollectorContext context)
         {
-            _arguments.Add("this");
+            context.Arguments.Add("this");
         }
     }
 }

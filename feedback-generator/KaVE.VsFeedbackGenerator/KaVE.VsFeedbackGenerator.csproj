@@ -93,6 +93,8 @@
     <Compile Include="Analysis\SSTAssignmentGenerator.cs" />
     <Compile Include="Analysis\SSTMethodTransformer.cs" />
     <Compile Include="Analysis\SSTReferenceCollector.cs" />
+    <Compile Include="Analysis\SSTTransformerFactory.cs" />
+    <Compile Include="Analysis\TempVariableGenerator.cs" />
     <Compile Include="Analysis\TypeHierarchyAnalysisUtils.cs" />
     <Compile Include="Analysis\TypeShapeAnalysis.cs" />
     <Compile Include="CodeCompletion\LookupItemWrapper.cs" />

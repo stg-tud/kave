@@ -18,7 +18,6 @@
  */
 
 using System.Collections.Generic;
-using System.Linq;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.Util;
 using KaVE.Model.SSTs.Declarations;
@@ -27,54 +26,72 @@ using KaVE.Model.SSTs.Statements;
 
 namespace KaVE.VsFeedbackGenerator.Analysis
 {
-    public class SSTReferenceCollector : BaseSSTTransformer
+    public class ReferenceCollectorContext : ITransformerContext
     {
-        private readonly IList<string> _references = new List<string>();
+        public ReferenceCollectorContext(ITransformerContext context)
+            : this(context.Factory, context.Generator, context.Declaration) {}
 
-        public SSTReferenceCollector(MethodDeclaration declaration) : base(declaration) {}
-
-        public string[] References
+        private ReferenceCollectorContext(ISSTTransformerFactory factory,
+            ITempVariableGenerator generator,
+            MethodDeclaration declaration)
         {
-            get { return Enumerable.ToArray(_references); }
+            Factory = factory;
+            Generator = generator;
+            Declaration = declaration;
+            References = new List<string>();
         }
 
-        public override void VisitBinaryExpression(IBinaryExpression binaryExpressionParam)
+        public ISSTTransformerFactory Factory { get; private set; }
+        public ITempVariableGenerator Generator { get; private set; }
+        public MethodDeclaration Declaration { get; private set; }
+        public readonly IList<string> References;
+    }
+
+    public class SSTReferenceCollector : BaseSSTTransformer<ReferenceCollectorContext>
+    {
+        public override void VisitBinaryExpression(IBinaryExpression binaryExpressionParam,
+            ReferenceCollectorContext context)
         {
-            binaryExpressionParam.LeftOperand.Accept(this);
-            binaryExpressionParam.RightOperand.Accept(this);
+            binaryExpressionParam.LeftOperand.Accept(this, context);
+            binaryExpressionParam.RightOperand.Accept(this, context);
         }
 
-        public override void VisitReferenceExpression(IReferenceExpression referenceExpressionParam)
+        public override void VisitReferenceExpression(IReferenceExpression referenceExpressionParam,
+            ReferenceCollectorContext context)
         {
-            _references.Add(referenceExpressionParam.NameIdentifier.Name);
+            context.References.Add(referenceExpressionParam.NameIdentifier.Name);
         }
 
-        public override void VisitArrayInitializer(IArrayInitializer arrayInitializerParam)
+        public override void VisitArrayInitializer(IArrayInitializer arrayInitializerParam,
+            ReferenceCollectorContext context)
         {
-            arrayInitializerParam.ElementInitializers.ForEach(i => i.Accept(this));
+            arrayInitializerParam.ElementInitializers.ForEach(i => i.Accept(this, context));
         }
 
-        public override void VisitExpressionInitializer(IExpressionInitializer expressionInitializerParam)
+        public override void VisitExpressionInitializer(IExpressionInitializer expressionInitializerParam,
+            ReferenceCollectorContext context)
         {
-            expressionInitializerParam.Value.Accept(this);
+            expressionInitializerParam.Value.Accept(this, context);
         }
 
-        public override void VisitInvocationExpression(IInvocationExpression invocationExpressionParam)
+        public override void VisitInvocationExpression(IInvocationExpression invocationExpressionParam,
+            ReferenceCollectorContext context)
         {
             HandleInvocationExpression(
                 invocationExpressionParam,
+                context,
                 (declaration, callee, method, args, retType) =>
                 {
-                    var tmp = declaration.GetNewTempVariable();
-                    declaration.Body.Add(new VariableDeclaration(tmp, retType));
-                    declaration.Body.Add(new Assignment(tmp, new InvocationExpression(callee, method, args)));
-                    _references.Add(tmp);
+                    var tmp = context.Generator.GetNextVariableName();
+                    context.Declaration.Body.Add(new VariableDeclaration(tmp, retType));
+                    context.Declaration.Body.Add(new Assignment(tmp, new InvocationExpression(callee, method, args)));
+                    context.References.Add(tmp);
                 });
         }
 
-        public override void VisitThisExpression(IThisExpression thisExpressionParam)
+        public override void VisitThisExpression(IThisExpression thisExpressionParam, ReferenceCollectorContext context)
         {
-            _references.Add("this");
+            context.References.Add("this");
         }
     }
 }

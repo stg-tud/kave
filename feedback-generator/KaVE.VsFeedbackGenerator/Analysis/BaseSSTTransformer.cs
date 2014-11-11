@@ -27,16 +27,17 @@ using KaVE.VsFeedbackGenerator.Utils.Names;
 
 namespace KaVE.VsFeedbackGenerator.Analysis
 {
-    public abstract class BaseSSTTransformer : TreeNodeVisitor
+    public interface ITransformerContext
     {
-        protected readonly MethodDeclaration Declaration;
+        ISSTTransformerFactory Factory { get; }
+        ITempVariableGenerator Generator { get; }
+        MethodDeclaration Declaration { get; }
+    }
 
-        protected BaseSSTTransformer(MethodDeclaration declaration)
-        {
-            Declaration = declaration;
-        }
-
-        protected void HandleInvocationExpression(IInvocationExpression invocationExpressionParam,
+    public abstract class BaseSSTTransformer<TContext> : TreeNodeVisitor<TContext> where TContext : ITransformerContext
+    {
+        protected static void HandleInvocationExpression(IInvocationExpression invocationExpressionParam,
+            ITransformerContext context,
             Action<MethodDeclaration, string, IMethodName, string[], ITypeName> handler)
         {
             var invokedExpression = invocationExpressionParam.InvokedExpression as IReferenceExpression;
@@ -51,18 +52,20 @@ namespace KaVE.VsFeedbackGenerator.Analysis
                 }
                 else if (invokedExpression.QualifierExpression is IInvocationExpression)
                 {
-                    var refCollector = new SSTReferenceCollector(Declaration);
-                    invokedExpression.QualifierExpression.Accept(refCollector);
-                    Asserts.That(refCollector.References.Count() == 1);
-                    callee = refCollector.References[0];
+                    var refCollectorContext = new ReferenceCollectorContext(context);
+                    invokedExpression.QualifierExpression.Accept(
+                        context.Factory.ReferenceCollector(),
+                        refCollectorContext);
+                    Asserts.That(refCollectorContext.References.Count() == 1);
+                    callee = refCollectorContext.References[0];
                 }
                 else
                 {
                     return;
                 }
-                var argCollector = new SSTArgumentCollector(Declaration);
-                invocationExpressionParam.ArgumentList.Accept(argCollector);
-                handler(Declaration, callee, methodName, argCollector.Arguments, typeName);
+                var argCollectorContext = new ArgumentCollectorContext(context);
+                invocationExpressionParam.ArgumentList.Accept(context.Factory.ArgumentCollector(), argCollectorContext);
+                handler(context.Declaration, callee, methodName, argCollectorContext.Arguments.ToArray(), typeName);
             }
         }
     }

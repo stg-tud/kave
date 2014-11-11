@@ -26,68 +26,98 @@ using KaVE.VsFeedbackGenerator.Utils.Names;
 
 namespace KaVE.VsFeedbackGenerator.Analysis
 {
-    public class SSTMethodTransformer : BaseSSTTransformer
+    public class MethodTransformerContext : ITransformerContext
     {
-        public SSTMethodTransformer(MethodDeclaration declaration) : base(declaration) {}
+        public MethodTransformerContext(ITransformerContext context)
+            : this(context.Factory, context.Generator, context.Declaration) {}
 
-        public override void VisitMethodDeclaration(IMethodDeclaration methodDeclarationParam)
+        public MethodTransformerContext(ISSTTransformerFactory factory,
+            ITempVariableGenerator generator,
+            MethodDeclaration declaration)
         {
-            methodDeclarationParam.Body.Accept(this);
+            Generator = generator;
+            Factory = factory;
+            Declaration = declaration;
         }
 
-        public override void VisitBlock(IBlock blockParam)
+        public ISSTTransformerFactory Factory { get; private set; }
+        public ITempVariableGenerator Generator { get; private set; }
+        public MethodDeclaration Declaration { get; private set; }
+    }
+
+    public class SSTMethodTransformer : BaseSSTTransformer<MethodTransformerContext>
+    {
+        public override void VisitMethodDeclaration(IMethodDeclaration methodDeclarationParam,
+            MethodTransformerContext context)
         {
-            blockParam.Statements.ForEach(s => s.Accept(this));
+            methodDeclarationParam.Body.Accept(this, context);
         }
 
-        public override void VisitDeclarationStatement(IDeclarationStatement declarationStatementParam)
+        public override void VisitBlock(IBlock blockParam, MethodTransformerContext context)
         {
-            declarationStatementParam.Declaration.Accept(this);
+            blockParam.Statements.ForEach(s => s.Accept(this, context));
         }
 
-        public override void VisitExpressionStatement(IExpressionStatement expressionStatementParam)
+        public override void VisitDeclarationStatement(IDeclarationStatement declarationStatementParam,
+            MethodTransformerContext context)
         {
-            expressionStatementParam.Expression.Accept(this);
+            declarationStatementParam.Declaration.Accept(this, context);
+        }
+
+        public override void VisitExpressionStatement(IExpressionStatement expressionStatementParam,
+            MethodTransformerContext context)
+        {
+            expressionStatementParam.Expression.Accept(this, context);
         }
 
         public override void VisitMultipleLocalVariableDeclaration(
-            IMultipleLocalVariableDeclaration multipleLocalVariableDeclarationParam)
+            IMultipleLocalVariableDeclaration multipleLocalVariableDeclarationParam,
+            MethodTransformerContext context)
         {
-            multipleLocalVariableDeclarationParam.Declarators.ForEach(d => d.Accept(this));
+            multipleLocalVariableDeclarationParam.Declarators.ForEach(d => d.Accept(this, context));
         }
 
-        public override void VisitMultipleDeclarationMember(IMultipleDeclarationMember multipleDeclarationMemberParam)
+        public override void VisitMultipleDeclarationMember(IMultipleDeclarationMember multipleDeclarationMemberParam,
+            MethodTransformerContext context)
         {
             var name = multipleDeclarationMemberParam.NameIdentifier.Name;
             var type = multipleDeclarationMemberParam.Type.GetName();
-            Declaration.Body.Add(new VariableDeclaration(name, type));
+            context.Declaration.Body.Add(new VariableDeclaration(name, type));
         }
 
-        public override void VisitLocalVariableDeclaration(ILocalVariableDeclaration localVariableDeclarationParam)
+        public override void VisitLocalVariableDeclaration(ILocalVariableDeclaration localVariableDeclarationParam,
+            MethodTransformerContext context)
         {
-            base.VisitLocalVariableDeclaration(localVariableDeclarationParam);
+            base.VisitLocalVariableDeclaration(localVariableDeclarationParam, new MethodTransformerContext(context));
 
             if (localVariableDeclarationParam.Initializer is IExpressionInitializer)
             {
                 var expression = (localVariableDeclarationParam.Initializer as IExpressionInitializer).Value;
+                var dest = localVariableDeclarationParam.NameIdentifier.Name;
                 expression.Accept(
-                    new SSTAssignmentGenerator(Declaration, localVariableDeclarationParam.NameIdentifier.Name));
+                    context.Factory.AssignmentGenerator(),
+                    new AssignmentGeneratorContext(context, dest));
             }
         }
 
-        public override void VisitAssignmentExpression(IAssignmentExpression assignmentExpressionParam)
+        public override void VisitAssignmentExpression(IAssignmentExpression assignmentExpressionParam,
+            MethodTransformerContext context)
         {
             if (assignmentExpressionParam.Dest is IReferenceExpression)
             {
                 var dest = (assignmentExpressionParam.Dest as IReferenceExpression).NameIdentifier.Name;
-                assignmentExpressionParam.Source.Accept(new SSTAssignmentGenerator(Declaration, dest));
+                assignmentExpressionParam.Source.Accept(
+                    context.Factory.AssignmentGenerator(),
+                    new AssignmentGeneratorContext(context, dest));
             }
         }
 
-        public override void VisitInvocationExpression(IInvocationExpression invocationExpressionParam)
+        public override void VisitInvocationExpression(IInvocationExpression invocationExpressionParam,
+            MethodTransformerContext context)
         {
             HandleInvocationExpression(
                 invocationExpressionParam,
+                context,
                 (declaration, callee, method, args, retType) =>
                     declaration.Body.Add(new InvocationStatement(callee, method, args)));
         }
