@@ -14,27 +14,25 @@
  * limitations under the License.
  * 
  * Contributors:
- *    - Sebastian Proksch
+ *    - Dennis Albrecht
  */
 
 using System.Collections.Generic;
 using System.Linq;
-using KaVE.Model.Collections;
+using KaVE.Model.SSTs;
+using KaVE.Model.SSTs.Expressions;
 
-namespace KaVE.Model.SSTs.Blocks
+namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
 {
-    public class IfElseBlock : Statement
+    public static class SSTTransformerUtil
     {
-        public Expression Condition { get; set; }
-        public readonly IList<Statement> Then = Lists.NewList<Statement>();
-        public readonly IList<Statement> Else = Lists.NewList<Statement>();
-        public override string ToString()
+        public static Expression AsExpression(this IList<string> references)
         {
-            return string.Format(
-                "if ({0}) {{{1}}} else {{{2}}};",
-                Condition,
-                string.Join(" ", Then.Select(s => s.ToString())),
-                string.Join(" ", Else.Select(s => s.ToString())));
+            if (references.Any())
+            {
+                return ComposedExpression.Create(references.ToArray());
+            }
+            return new ConstantExpression();
         }
     }
 }

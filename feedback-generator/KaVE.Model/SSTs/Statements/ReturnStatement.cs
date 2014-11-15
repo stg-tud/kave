@@ -39,5 +39,10 @@ namespace KaVE.Model.SSTs.Statements
         {
             return (Expression != null ? Expression.GetHashCode() : 0);
         }
+
+        public override string ToString()
+        {
+            return string.Format("return {0};", Expression);
+        }
     }
 }

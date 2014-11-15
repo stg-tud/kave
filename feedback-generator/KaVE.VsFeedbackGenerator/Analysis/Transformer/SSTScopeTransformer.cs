@@ -18,9 +18,13 @@
  *    - Uli Fahrer
  */
 
+using JetBrains.ReSharper.Feature.Services.Html;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.Util;
+using KaVE.Model.SSTs;
+using KaVE.Model.SSTs.Blocks;
 using KaVE.Model.SSTs.Declarations;
+using KaVE.Model.SSTs.Expressions;
 using KaVE.Model.SSTs.Statements;
 using KaVE.VsFeedbackGenerator.Analysis.Util;
 using KaVE.VsFeedbackGenerator.Utils.Names;
@@ -69,6 +73,34 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
             ScopeTransformerContext context)
         {
             expressionStatementParam.Expression.Accept(this, context);
+        }
+
+        public override void VisitIfStatement(IIfStatement ifStatementParam, ScopeTransformerContext context)
+        {
+            var ifBlock = new IfElseBlock();
+            var refCollectorContext = new ReferenceCollectorContext(context);
+            ifStatementParam.Condition.Accept(context.Factory.ReferenceCollector(), refCollectorContext);
+            ifBlock.Condition = refCollectorContext.References.AsExpression();
+            var thenScopeContext = new ScopeTransformerContext(
+                context.Factory,
+                context.Generator,
+                context.Factory.Scope());
+            ifStatementParam.Then.Accept(context.Factory.ScopeTransformer(), thenScopeContext);
+            var elseScopeContext = new ScopeTransformerContext(
+                context.Factory,
+                context.Generator,
+                context.Factory.Scope());
+            ifStatementParam.Then.Accept(context.Factory.ScopeTransformer(), elseScopeContext);
+            ifBlock.Body.AddRange(thenScopeContext.Scope.Body);
+            ifBlock.ElseBody.AddRange(elseScopeContext.Scope.Body);
+            context.Scope.Body.Add(ifBlock);
+        }
+
+        public override void VisitReturnStatement(IReturnStatement returnStatementParam, ScopeTransformerContext context)
+        {
+            var refCollectorContext = new ReferenceCollectorContext(context);
+            returnStatementParam.Value.Accept(context.Factory.ReferenceCollector(), refCollectorContext);
+            context.Scope.Body.Add(new ReturnStatement{Expression = refCollectorContext.References.AsExpression()});
         }
 
         public override void VisitMultipleLocalVariableDeclaration(

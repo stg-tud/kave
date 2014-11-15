@@ -17,6 +17,7 @@
  *    - Dennis Albrecht
  */
 
+using System.Collections.Generic;
 using System.Linq;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using KaVE.Model.SSTs.Expressions;
@@ -89,15 +90,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
         {
             var refCollectorContext = new ReferenceCollectorContext(context);
             treeNode.Accept(context.Factory.ReferenceCollector(), refCollectorContext);
-            var references = refCollectorContext.References.ToArray();
-            if (references.Any())
-            {
-                context.Scope.Body.Add(new Assignment(context.Dest, ComposedExpression.Create(references)));
-            }
-            else
-            {
-                context.Scope.Body.Add(new Assignment(context.Dest, new ConstantExpression()));
-            }
+            context.Scope.Body.Add(new Assignment(context.Dest, refCollectorContext.References.AsExpression()));
         }
     }
 }
