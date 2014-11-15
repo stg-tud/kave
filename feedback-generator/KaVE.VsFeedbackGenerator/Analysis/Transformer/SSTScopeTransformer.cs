@@ -22,73 +22,74 @@ using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.Util;
 using KaVE.Model.SSTs.Declarations;
 using KaVE.Model.SSTs.Statements;
+using KaVE.VsFeedbackGenerator.Analysis.Util;
 using KaVE.VsFeedbackGenerator.Utils.Names;
 
-namespace KaVE.VsFeedbackGenerator.Analysis
+namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
 {
-    public class MethodTransformerContext : ITransformerContext
+    public class ScopeTransformerContext : ITransformerContext
     {
-        public MethodTransformerContext(ITransformerContext context)
-            : this(context.Factory, context.Generator, context.Declaration) {}
+        public ScopeTransformerContext(ITransformerContext context)
+            : this(context.Factory, context.Generator, context.Scope) {}
 
-        public MethodTransformerContext(ISSTTransformerFactory factory,
+        public ScopeTransformerContext(ISSTFactory factory,
             ITempVariableGenerator generator,
-            MethodDeclaration declaration)
+            IScope scope)
         {
             Generator = generator;
             Factory = factory;
-            Declaration = declaration;
+            Scope = scope;
         }
 
-        public ISSTTransformerFactory Factory { get; private set; }
+        public ISSTFactory Factory { get; private set; }
         public ITempVariableGenerator Generator { get; private set; }
-        public MethodDeclaration Declaration { get; private set; }
+        public IScope Scope { get; private set; }
     }
 
-    public class SSTMethodTransformer : BaseSSTTransformer<MethodTransformerContext>
+    public class SSTScopeTransformer : BaseSSTTransformer<ScopeTransformerContext>
     {
         public override void VisitMethodDeclaration(IMethodDeclaration methodDeclarationParam,
-            MethodTransformerContext context)
+            ScopeTransformerContext context)
         {
             methodDeclarationParam.Body.Accept(this, context);
         }
 
-        public override void VisitBlock(IBlock blockParam, MethodTransformerContext context)
+        public override void VisitBlock(IBlock blockParam, ScopeTransformerContext context)
         {
             blockParam.Statements.ForEach(s => s.Accept(this, context));
         }
 
         public override void VisitDeclarationStatement(IDeclarationStatement declarationStatementParam,
-            MethodTransformerContext context)
+            ScopeTransformerContext context)
         {
             declarationStatementParam.Declaration.Accept(this, context);
         }
 
         public override void VisitExpressionStatement(IExpressionStatement expressionStatementParam,
-            MethodTransformerContext context)
+            ScopeTransformerContext context)
         {
             expressionStatementParam.Expression.Accept(this, context);
         }
 
         public override void VisitMultipleLocalVariableDeclaration(
             IMultipleLocalVariableDeclaration multipleLocalVariableDeclarationParam,
-            MethodTransformerContext context)
+            ScopeTransformerContext context)
         {
             multipleLocalVariableDeclarationParam.Declarators.ForEach(d => d.Accept(this, context));
         }
 
         public override void VisitMultipleDeclarationMember(IMultipleDeclarationMember multipleDeclarationMemberParam,
-            MethodTransformerContext context)
+            ScopeTransformerContext context)
         {
             var name = multipleDeclarationMemberParam.NameIdentifier.Name;
             var type = multipleDeclarationMemberParam.Type.GetName();
-            context.Declaration.Body.Add(new VariableDeclaration(name, type));
+            context.Scope.Body.Add(new VariableDeclaration(name, type));
         }
 
         public override void VisitLocalVariableDeclaration(ILocalVariableDeclaration localVariableDeclarationParam,
-            MethodTransformerContext context)
+            ScopeTransformerContext context)
         {
-            base.VisitLocalVariableDeclaration(localVariableDeclarationParam, new MethodTransformerContext(context));
+            base.VisitLocalVariableDeclaration(localVariableDeclarationParam, new ScopeTransformerContext(context));
 
             if (localVariableDeclarationParam.Initializer is IExpressionInitializer)
             {
@@ -101,7 +102,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis
         }
 
         public override void VisitAssignmentExpression(IAssignmentExpression assignmentExpressionParam,
-            MethodTransformerContext context)
+            ScopeTransformerContext context)
         {
             if (assignmentExpressionParam.Dest is IReferenceExpression)
             {
@@ -113,13 +114,13 @@ namespace KaVE.VsFeedbackGenerator.Analysis
         }
 
         public override void VisitInvocationExpression(IInvocationExpression invocationExpressionParam,
-            MethodTransformerContext context)
+            ScopeTransformerContext context)
         {
             HandleInvocationExpression(
                 invocationExpressionParam,
                 context,
-                (declaration, callee, method, args, retType) =>
-                    declaration.Body.Add(new InvocationStatement(callee, method, args)));
+                (callee, method, args, retType) =>
+                    context.Scope.Body.Add(new InvocationStatement(callee, method, args)));
         }
     }
 }

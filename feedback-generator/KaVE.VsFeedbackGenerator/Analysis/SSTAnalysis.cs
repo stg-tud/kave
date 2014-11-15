@@ -22,9 +22,12 @@ using System.Linq;
 using JetBrains.ReSharper.Feature.Services.CSharp.CodeCompletion.Infrastructure;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
+using JetBrains.Util;
 using KaVE.Model.Names;
 using KaVE.Model.SSTs;
 using KaVE.Model.SSTs.Declarations;
+using KaVE.VsFeedbackGenerator.Analysis.Transformer;
+using KaVE.VsFeedbackGenerator.Analysis.Util;
 using KaVE.VsFeedbackGenerator.Utils.Names;
 
 namespace KaVE.VsFeedbackGenerator.Analysis
@@ -33,7 +36,8 @@ namespace KaVE.VsFeedbackGenerator.Analysis
     {
         public static SST Analyze(CSharpCodeCompletionContext rsContext,
             ITypeDeclaration typeDeclaration,
-            ISet<MethodRef> entryPoints)
+            ISet<MethodRef> entryPoints,
+            ISSTFactory factory)
         {
             var sst = new SST();
 
@@ -48,7 +52,6 @@ namespace KaVE.VsFeedbackGenerator.Analysis
             }
 
             var allDecls = typeDeclaration.MemberDeclarations.Select(m => m as IMethodDeclaration).Where(m => m != null);
-            var factory = new SSTTransformerFactory();
             foreach (var d in allDecls)
             {
                 if (d.DeclaredElement != null)
@@ -56,24 +59,24 @@ namespace KaVE.VsFeedbackGenerator.Analysis
                     var dElem = d.DeclaredElement;
                     var dName = dElem.GetName<IMethodName>();
 
+                    MethodDeclaration decl;
+                    var context = new ScopeTransformerContext(
+                        factory,
+                        factory.TempVariableGenerator(),
+                        factory.Scope());
+
                     if (!epNames.Contains(dName))
                     {
-                        var decl = new MethodDeclaration {Name = dName, IsEntryPoint = false};
+                        decl = new MethodDeclaration {Name = dName, IsEntryPoint = false};
                         sst.Methods.Add(decl);
-                        d.Accept(
-                            factory.MethodTransformer(),
-                            new MethodTransformerContext(factory, new TempVariableGenerator(), decl));
                     }
                     else
                     {
-                        d.Accept(
-                            factory.MethodTransformer(),
-                            new MethodTransformerContext(
-                                factory,
-                                new TempVariableGenerator(),
-                                sst.GetEntrypoints().First(ep => ep.Name == dName)));
+                        decl = sst.GetEntrypoints().First(ep => ep.Name == dName);
                     }
 
+                    d.Accept(factory.ScopeTransformer(), context);
+                    decl.Body.AddRange(context.Scope.Body);
 
                     //var dRef = MethodRef.CreateLocalReference(dName, dElem, dElem.GetDeclaration());
                 }

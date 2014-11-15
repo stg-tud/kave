@@ -80,7 +80,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AboutAction.cs" />
-    <Compile Include="Analysis\BaseSSTTransformer.cs" />
+    <Compile Include="Analysis\Transformer\BaseSSTTransformer.cs" />
     <Compile Include="Analysis\CalledMethodsForEntryPointsAnalysis.cs" />
     <Compile Include="Analysis\CompletionTargetAnalysis.cs" />
     <Compile Include="Analysis\ContextAnalysis.cs" />
@@ -89,12 +89,13 @@
     <Compile Include="Analysis\InvocationCollector.cs" />
     <Compile Include="Analysis\ReSharperUtils.cs" />
     <Compile Include="Analysis\SSTAnalysis.cs" />
-    <Compile Include="Analysis\SSTArgumentCollector.cs" />
-    <Compile Include="Analysis\SSTAssignmentGenerator.cs" />
-    <Compile Include="Analysis\SSTMethodTransformer.cs" />
-    <Compile Include="Analysis\SSTReferenceCollector.cs" />
-    <Compile Include="Analysis\SSTTransformerFactory.cs" />
-    <Compile Include="Analysis\TempVariableGenerator.cs" />
+    <Compile Include="Analysis\Transformer\SSTArgumentCollector.cs" />
+    <Compile Include="Analysis\Transformer\SSTAssignmentGenerator.cs" />
+    <Compile Include="Analysis\Transformer\SSTScopeTransformer.cs" />
+    <Compile Include="Analysis\Transformer\SSTReferenceCollector.cs" />
+    <Compile Include="Analysis\Util\SSTFactory.cs" />
+    <Compile Include="Analysis\Util\Scope.cs" />
+    <Compile Include="Analysis\Util\TempVariableGenerator.cs" />
     <Compile Include="Analysis\TypeHierarchyAnalysisUtils.cs" />
     <Compile Include="Analysis\TypeShapeAnalysis.cs" />
     <Compile Include="CodeCompletion\LookupItemWrapper.cs" />

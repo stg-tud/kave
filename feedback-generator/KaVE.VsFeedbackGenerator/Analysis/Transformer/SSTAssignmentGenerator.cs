@@ -19,31 +19,31 @@
 
 using System.Linq;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
-using KaVE.Model.SSTs.Declarations;
 using KaVE.Model.SSTs.Expressions;
 using KaVE.Model.SSTs.Statements;
+using KaVE.VsFeedbackGenerator.Analysis.Util;
 
-namespace KaVE.VsFeedbackGenerator.Analysis
+namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
 {
     public class AssignmentGeneratorContext : ITransformerContext
     {
         public AssignmentGeneratorContext(ITransformerContext context, string dest)
-            : this(context.Factory, context.Generator, context.Declaration, dest) {}
+            : this(context.Factory, context.Generator, context.Scope, dest) {}
 
-        private AssignmentGeneratorContext(ISSTTransformerFactory factory,
+        private AssignmentGeneratorContext(ISSTFactory factory,
             ITempVariableGenerator generator,
-            MethodDeclaration declaration,
+            IScope scope,
             string dest)
         {
             Generator = generator;
             Factory = factory;
-            Declaration = declaration;
+            Scope = scope;
             Dest = dest;
         }
 
-        public ISSTTransformerFactory Factory { get; private set; }
+        public ISSTFactory Factory { get; private set; }
         public ITempVariableGenerator Generator { get; private set; }
-        public MethodDeclaration Declaration { get; private set; }
+        public IScope Scope { get; private set; }
         public readonly string Dest;
     }
 
@@ -52,14 +52,14 @@ namespace KaVE.VsFeedbackGenerator.Analysis
         public override void VisitCSharpLiteralExpression(ICSharpLiteralExpression cSharpLiteralExpressionParam,
             AssignmentGeneratorContext context)
         {
-            context.Declaration.Body.Add(new Assignment(context.Dest, new ConstantExpression()));
+            context.Scope.Body.Add(new Assignment(context.Dest, new ConstantExpression()));
         }
 
         public override void VisitReferenceExpression(IReferenceExpression referenceExpressionParam,
             AssignmentGeneratorContext context)
         {
             var name = referenceExpressionParam.NameIdentifier.Name;
-            context.Declaration.Body.Add(new Assignment(context.Dest, ComposedExpression.Create(name)));
+            context.Scope.Body.Add(new Assignment(context.Dest, ComposedExpression.Create(name)));
         }
 
         public override void VisitInvocationExpression(IInvocationExpression invocationExpressionParam,
@@ -68,8 +68,8 @@ namespace KaVE.VsFeedbackGenerator.Analysis
             HandleInvocationExpression(
                 invocationExpressionParam,
                 context,
-                (declaration, callee, method, args, retType) =>
-                    declaration.Body.Add(new Assignment(context.Dest, new InvocationExpression(callee, method, args))));
+                (callee, method, args, retType) =>
+                    context.Scope.Body.Add(new Assignment(context.Dest, new InvocationExpression(callee, method, args))));
         }
 
         public override void VisitBinaryExpression(IBinaryExpression binaryExpressionParam,
@@ -92,11 +92,11 @@ namespace KaVE.VsFeedbackGenerator.Analysis
             var references = refCollectorContext.References.ToArray();
             if (references.Any())
             {
-                context.Declaration.Body.Add(new Assignment(context.Dest, ComposedExpression.Create(references)));
+                context.Scope.Body.Add(new Assignment(context.Dest, ComposedExpression.Create(references)));
             }
             else
             {
-                context.Declaration.Body.Add(new Assignment(context.Dest, new ConstantExpression()));
+                context.Scope.Body.Add(new Assignment(context.Dest, new ConstantExpression()));
             }
         }
     }

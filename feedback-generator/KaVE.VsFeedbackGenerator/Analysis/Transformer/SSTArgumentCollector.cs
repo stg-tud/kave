@@ -23,28 +23,29 @@ using JetBrains.Util;
 using KaVE.Model.SSTs.Declarations;
 using KaVE.Model.SSTs.Expressions;
 using KaVE.Model.SSTs.Statements;
+using KaVE.VsFeedbackGenerator.Analysis.Util;
 using KaVE.VsFeedbackGenerator.Utils.Names;
 
-namespace KaVE.VsFeedbackGenerator.Analysis
+namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
 {
     public class ArgumentCollectorContext : ITransformerContext
     {
         public ArgumentCollectorContext(ITransformerContext context)
-            : this(context.Factory, context.Generator, context.Declaration) {}
+            : this(context.Factory, context.Generator, context.Scope) {}
 
-        private ArgumentCollectorContext(ISSTTransformerFactory factory,
+        private ArgumentCollectorContext(ISSTFactory factory,
             ITempVariableGenerator generator,
-            MethodDeclaration declaration)
+            IScope scope)
         {
             Factory = factory;
             Generator = generator;
-            Declaration = declaration;
+            Scope = scope;
             Arguments = new List<string>();
         }
 
-        public ISSTTransformerFactory Factory { get; private set; }
+        public ISSTFactory Factory { get; private set; }
         public ITempVariableGenerator Generator { get; private set; }
-        public MethodDeclaration Declaration { get; private set; }
+        public IScope Scope { get; private set; }
         public readonly IList<string> Arguments;
     }
 
@@ -70,8 +71,8 @@ namespace KaVE.VsFeedbackGenerator.Analysis
             ArgumentCollectorContext context)
         {
             var tmp = context.Generator.GetNextVariableName();
-            context.Declaration.Body.Add(new VariableDeclaration(tmp, cSharpLiteralExpressionParam.Type().GetName()));
-            context.Declaration.Body.Add(new Assignment(tmp, new ConstantExpression()));
+            context.Scope.Body.Add(new VariableDeclaration(tmp, cSharpLiteralExpressionParam.Type().GetName()));
+            context.Scope.Body.Add(new Assignment(tmp, new ConstantExpression()));
             context.Arguments.Add(tmp);
         }
 
@@ -81,11 +82,11 @@ namespace KaVE.VsFeedbackGenerator.Analysis
             HandleInvocationExpression(
                 invocationExpressionParam,
                 context,
-                (declaration, callee, method, args, retType) =>
+                (callee, method, args, retType) =>
                 {
                     var tmp = context.Generator.GetNextVariableName();
-                    context.Declaration.Body.Add(new VariableDeclaration(tmp, retType));
-                    context.Declaration.Body.Add(new Assignment(tmp, new InvocationExpression(callee, method, args)));
+                    context.Scope.Body.Add(new VariableDeclaration(tmp, retType));
+                    context.Scope.Body.Add(new Assignment(tmp, new InvocationExpression(callee, method, args)));
                     context.Arguments.Add(tmp);
                 });
         }

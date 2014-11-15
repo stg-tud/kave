@@ -17,17 +17,23 @@
  *    - Dennis Albrecht
  */
 
-namespace KaVE.VsFeedbackGenerator.Analysis
+using JetBrains.Application;
+using KaVE.VsFeedbackGenerator.Analysis.Transformer;
+
+namespace KaVE.VsFeedbackGenerator.Analysis.Util
 {
-    public interface ISSTTransformerFactory
+    public interface ISSTFactory
     {
         SSTArgumentCollector ArgumentCollector();
         SSTReferenceCollector ReferenceCollector();
         SSTAssignmentGenerator AssignmentGenerator();
-        SSTMethodTransformer MethodTransformer();
+        SSTScopeTransformer ScopeTransformer();
+        IScope Scope();
+        ITempVariableGenerator TempVariableGenerator();
     }
 
-    public class SSTTransformerFactory : ISSTTransformerFactory
+    [ShellComponent]
+    public class SSTFactory : ISSTFactory
     {
         public SSTArgumentCollector ArgumentCollector()
         {
@@ -44,9 +50,19 @@ namespace KaVE.VsFeedbackGenerator.Analysis
             return new SSTAssignmentGenerator();
         }
 
-        public SSTMethodTransformer MethodTransformer()
+        public SSTScopeTransformer ScopeTransformer()
         {
-            return new SSTMethodTransformer();
+            return new SSTScopeTransformer();
+        }
+
+        public IScope Scope()
+        {
+            return new Scope();
+        }
+
+        public ITempVariableGenerator TempVariableGenerator()
+        {
+            return new TempVariableGenerator();
         }
     }
 }

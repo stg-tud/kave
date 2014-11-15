@@ -31,6 +31,7 @@ using KaVE.Model.Events.CompletionEvent;
 using KaVE.Model.Names;
 using KaVE.Model.SSTs;
 using KaVE.VsFeedbackGenerator.Analysis;
+using KaVE.VsFeedbackGenerator.Analysis.Util;
 using KaVE.VsFeedbackGenerator.Generators;
 using Moq;
 
@@ -39,10 +40,16 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
     [ShellComponent, Language(typeof (CSharpLanguage))]
     public class TestAnalysisTrigger : CSharpItemsProviderBase<CSharpCodeCompletionContext>
     {
+        private readonly ISSTFactory _factory;
         public IEnumerable<IMethodName> LastEntryPoints { get; private set; }
         public Context LastContext { get; private set; }
         public SST LastSST { get; private set; }
         public Tuple<Exception, string> LastException { get; private set; }
+
+        public TestAnalysisTrigger(ISSTFactory factory)
+        {
+            _factory = factory;
+        }
 
         public bool HasFailed
         {
@@ -59,7 +66,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
             {
                 var typeShape = new TypeShapeAnalysis().Analyze(typeDeclaration);
                 var entryPoints = new EntryPointSelector(typeDeclaration, typeShape).GetEntryPoints();
-                LastSST = SSTAnalysis.Analyze(context, typeDeclaration, entryPoints);
+                LastSST = SSTAnalysis.Analyze(context, typeDeclaration, entryPoints, _factory);
                 LastEntryPoints = entryPoints.Select(ep => ep.Name);
             }
             return false;

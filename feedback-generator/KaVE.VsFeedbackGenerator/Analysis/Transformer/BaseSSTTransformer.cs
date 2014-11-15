@@ -21,24 +21,24 @@ using System;
 using System.Linq;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using KaVE.Model.Names;
-using KaVE.Model.SSTs.Declarations;
 using KaVE.Utils.Assertion;
+using KaVE.VsFeedbackGenerator.Analysis.Util;
 using KaVE.VsFeedbackGenerator.Utils.Names;
 
-namespace KaVE.VsFeedbackGenerator.Analysis
+namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
 {
     public interface ITransformerContext
     {
-        ISSTTransformerFactory Factory { get; }
+        ISSTFactory Factory { get; }
         ITempVariableGenerator Generator { get; }
-        MethodDeclaration Declaration { get; }
+        IScope Scope { get; }
     }
 
     public abstract class BaseSSTTransformer<TContext> : TreeNodeVisitor<TContext> where TContext : ITransformerContext
     {
         protected static void HandleInvocationExpression(IInvocationExpression invocationExpressionParam,
             ITransformerContext context,
-            Action<MethodDeclaration, string, IMethodName, string[], ITypeName> handler)
+            Action<string, IMethodName, string[], ITypeName> handler)
         {
             var invokedExpression = invocationExpressionParam.InvokedExpression as IReferenceExpression;
             if (invocationExpressionParam.Reference != null && invokedExpression != null)
@@ -65,7 +65,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis
                 }
                 var argCollectorContext = new ArgumentCollectorContext(context);
                 invocationExpressionParam.ArgumentList.Accept(context.Factory.ArgumentCollector(), argCollectorContext);
-                handler(context.Declaration, callee, methodName, argCollectorContext.Arguments.ToArray(), typeName);
+                handler(callee, methodName, argCollectorContext.Arguments.ToArray(), typeName);
             }
         }
     }

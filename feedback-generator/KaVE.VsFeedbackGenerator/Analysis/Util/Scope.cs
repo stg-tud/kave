@@ -17,20 +17,23 @@
  *    - Dennis Albrecht
  */
 
-namespace KaVE.VsFeedbackGenerator.Analysis
+using System.Collections.Generic;
+using KaVE.Model.SSTs;
+
+namespace KaVE.VsFeedbackGenerator.Analysis.Util
 {
-    public interface ITempVariableGenerator
+    public interface IScope
     {
-        string GetNextVariableName();
+        IList<Statement> Body { get; }
     }
 
-    public class TempVariableGenerator : ITempVariableGenerator
+    public class Scope : IScope
     {
-        private int _tempVariableCounter;
-
-        public string GetNextVariableName()
+        public Scope()
         {
-            return string.Format("${0}", _tempVariableCounter++);
+            Body = new List<Statement>();
         }
+
+        public IList<Statement> Body { get; private set; }
     }
 }
