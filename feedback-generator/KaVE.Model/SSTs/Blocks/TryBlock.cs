@@ -22,8 +22,9 @@ using KaVE.Model.Collections;
 
 namespace KaVE.Model.SSTs.Blocks
 {
-    public class TryBlock : Block
+    public class TryBlock : Statement
     {
+        public readonly IList<Statement> Body = Lists.NewList<Statement>();
         public readonly IList<CatchBlock> CatchBlocks = Lists.NewList<CatchBlock>();
         public readonly IList<Statement> Finally = Lists.NewList<Statement>();
     }

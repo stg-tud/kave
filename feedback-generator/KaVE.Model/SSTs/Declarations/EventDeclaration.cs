@@ -23,13 +23,6 @@ namespace KaVE.Model.SSTs.Declarations
 {
     public class EventDeclaration
     {
-        public string Identifier { get; set; }
-        public ITypeName Type { get; set; }
-
-        public EventDeclaration(string identifier, ITypeName type)
-        {
-            Identifier = identifier;
-            Type = type;
-        }
+        public IEventName Name { get; set; }
     }
 }

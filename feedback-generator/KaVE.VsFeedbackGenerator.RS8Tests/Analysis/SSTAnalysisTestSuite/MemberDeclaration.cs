@@ -42,12 +42,12 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             var sst = NewSST();
 
             // TODO @Seb: Properties und Events wie Methoden behandeln (können überschrieben werden)
-            sst.Add(new FieldDeclaration("_b", Fix.Bool));
+            /*sst.Add(new FieldDeclaration("_b", Fix.Bool));
             sst.Add(new PropertyDeclaration("I", Fix.Int));
             sst.Add(NewMethodDeclaration(Fix.Void, "M"));
             sst.Add(new DelegateDeclaration("I", MethodName.Get("Delegate Syntax")));
             sst.Add(new EventDeclaration("E", TypeName.Get("MyClass")));
-
+            */
             Assert.AreEqual(ResultSST, sst);
         }
     }

@@ -22,9 +22,10 @@ using KaVE.Model.Collections;
 
 namespace KaVE.Model.SSTs.Blocks
 {
-    public class SwitchBlock
+    public class SwitchBlock : Statement
     {
-        public IList<SwitchSection> Sections = Lists.NewList<SwitchSection>();
+        public string Identifier { get; set; }
+        public IList<CaseBlock> Sections = Lists.NewList<CaseBlock>();
         public IList<Statement> DefaultSection = Lists.NewList<Statement>();
     }
 }

@@ -17,10 +17,14 @@
  *    - Sebastian Proksch
  */
 
+using System.Collections.Generic;
+using KaVE.Model.Collections;
+
 namespace KaVE.Model.SSTs.Blocks
 {
-    public class DoLoop : Block
+    public class DoLoop : Statement
     {
         public Expression Condition { get; set; }
+        public readonly IList<Statement> Body = Lists.NewList<Statement>();
     }
 }

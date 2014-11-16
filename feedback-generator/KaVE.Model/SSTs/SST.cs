@@ -17,8 +17,8 @@
  *    - Sebastian Proksch
  */
 
-using System;
 using System.Collections.Generic;
+using System.Linq;
 using KaVE.Model.Collections;
 using KaVE.Model.Names;
 using KaVE.Model.SSTs.Declarations;
@@ -28,71 +28,34 @@ namespace KaVE.Model.SSTs
 {
     public class SST
     {
-        private readonly ITypeName _td;
+        public ITypeName EnclosingType { get; set; }
+        public ISet<FieldDeclaration> Fields { get; set; }
+        public ISet<PropertyDeclaration> Properties { get; set; }
+        public ISet<MethodDeclaration> Methods { get; set; }
+        public ISet<EventDeclaration> Events { get; set; }
+        public ISet<DelegateDeclaration> Delegates { get; set; }
 
-        private readonly ISet<FieldDeclaration> _fields = Sets.NewHashSet<FieldDeclaration>();
-        private readonly ISet<PropertyDeclaration> _properties = Sets.NewHashSet<PropertyDeclaration>();
-        private readonly ISet<MethodDeclaration> _methods = Sets.NewHashSet<MethodDeclaration>();
-        private readonly ISet<MethodDeclaration> _eps = Sets.NewHashSet<MethodDeclaration>();
-        private readonly ISet<EventDeclaration> _events = Sets.NewHashSet<EventDeclaration>();
-        private readonly ISet<DelegateDeclaration> _delegates = Sets.NewHashSet<DelegateDeclaration>();
-
-        public SST(ITypeName td)
+        public SST()
         {
-            _td = td;
+            Fields = Sets.NewHashSet<FieldDeclaration>();
+            Properties = Sets.NewHashSet<PropertyDeclaration>();
+            Methods = Sets.NewHashSet<MethodDeclaration>();
+            Events = Sets.NewHashSet<EventDeclaration>();
+            Delegates = Sets.NewHashSet<DelegateDeclaration>();
         }
 
-        public ITypeName GetEnclosingType()
+        // TODO convert to ISet
+        public IList<MethodDeclaration> EntryPoints
         {
-            return _td;
+            get { return Methods.Where(m => m.IsEntryPoint).ToList(); }
         }
 
-        public void Add(CompletionTrigger tp)
+        // TODO convert to ISet
+        public IList<MethodDeclaration> NonEntryPoints
         {
-            //var i = 1 + 2;
-            //var b = Console.Read();
-            Console.Write("");
-            Add((FieldDeclaration) null);
+            get { return Methods.Where(m => !m.IsEntryPoint).ToList(); }
         }
 
-        public void Add(MethodDeclaration md)
-        {
-            _methods.Add(md);
-        }
-
-        public void AddEntrypoint(MethodDeclaration mA)
-        {
-            _eps.Add(mA);
-        }
-
-        public void Add(FieldDeclaration fd)
-        {
-            _fields.Add(fd);
-        }
-
-        public ISet<MethodDeclaration> GetEntrypoints()
-        {
-            return _eps;
-        }
-
-        public ISet<MethodDeclaration> GetNonEntrypoints()
-        {
-            return _methods;
-        }
-
-        public void Add(PropertyDeclaration pd)
-        {
-            _properties.Add(pd);
-        }
-
-        public void Add(DelegateDeclaration dd)
-        {
-            _delegates.Add(dd);
-        }
-
-        public void Add(EventDeclaration ed)
-        {
-            _events.Add(ed);
-        }
+        public void Add(CompletionTrigger tp) {}
     }
 }

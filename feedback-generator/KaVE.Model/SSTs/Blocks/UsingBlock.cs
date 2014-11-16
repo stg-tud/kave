@@ -17,17 +17,20 @@
  *    - Sebastian Proksch
  */
 
+using System.Collections.Generic;
+using KaVE.Model.Collections;
 using KaVE.Utils;
 
 namespace KaVE.Model.SSTs.Blocks
 {
-    public class UsingBlock : Block
+    public class UsingBlock : Statement
     {
         public string Identifier { get; set; }
+        public readonly IList<Statement> Body = Lists.NewList<Statement>();
 
         protected bool Equals(UsingBlock other)
         {
-            return base.Equals(other) && string.Equals(Identifier, other.Identifier);
+            return Body.Equals(other.Body) && string.Equals(Identifier, other.Identifier);
         }
 
         public override bool Equals(object obj)
@@ -37,7 +40,7 @@ namespace KaVE.Model.SSTs.Blocks
 
         public override int GetHashCode()
         {
-            return 6 * base.GetHashCode() + (Identifier != null ? Identifier.GetHashCode() : 0);
+            return 6 * Body.GetHashCode() + (Identifier != null ? Identifier.GetHashCode() : 0);
         }
     }
 }

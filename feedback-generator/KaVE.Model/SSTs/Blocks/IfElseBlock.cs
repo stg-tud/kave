@@ -22,9 +22,10 @@ using KaVE.Model.Collections;
 
 namespace KaVE.Model.SSTs.Blocks
 {
-    public class IfElseBlock : Block
+    public class IfElseBlock : Statement
     {
         public Expression Condition { get; set; }
-        public IList<Statement> ElseBody = Lists.NewList<Statement>();
+        public readonly IList<Statement> Then = Lists.NewList<Statement>();
+        public readonly IList<Statement> Else = Lists.NewList<Statement>();
     }
 }

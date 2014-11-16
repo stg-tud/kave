@@ -36,7 +36,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             ");
 
             var sst = NewSST();
-            sst.AddEntrypoint(NewMethodDeclaration(Fix.Void, "A"));
+            sst.Methods.Add(NewMethodDeclaration(Fix.Void, "A"));
             sst.Add(new CompletionTrigger());
 
             AssertResult(sst);
@@ -51,7 +51,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             ");
 
             var sst = NewSST();
-            sst.AddEntrypoint(NewMethodDeclaration(Fix.Void, "A"));
+            sst.Methods.Add(NewMethodDeclaration(Fix.Void, "A"));
 
             sst.Add(new CompletionTrigger {Token = "B"});
 
@@ -90,7 +90,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             mA.Body.Add(trigger);
 
             var sst = NewSST();
-            sst.AddEntrypoint(mA);
+            sst.Methods.Add(mA);
 
             AssertResult(sst);
         }
@@ -111,7 +111,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             mA.Body.Add(trigger);
 
             var sst = NewSST();
-            sst.AddEntrypoint(mA);
+            sst.Methods.Add(mA);
 
             AssertResult(sst);
         }

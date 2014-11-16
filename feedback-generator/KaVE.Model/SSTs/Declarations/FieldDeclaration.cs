@@ -23,18 +23,6 @@ namespace KaVE.Model.SSTs.Declarations
 {
     public class FieldDeclaration
     {
-        public string Name;
-        public ITypeName Type;
-
-        public FieldDeclaration(string s, ITypeName typeName)
-        {
-            Name = s;
-            Type = typeName;
-        }
-
-        public string Identifier
-        {
-            get { return Name; }
-        }
+        public IFieldName Name { get; set; }
     }
 }

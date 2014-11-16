@@ -29,7 +29,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
     {
         internal SST NewSST()
         {
-            return new SST(null);
+            return new SST();
         }
 
         internal MethodDeclaration NewMethodDeclaration(ITypeName returnType, string simpleName)
@@ -46,7 +46,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 
         internal void AssertEntryPoints(params MethodDeclaration[] expectedDecls)
         {
-            var eps = ResultSST.GetEntrypoints();
+            var eps = ResultSST.EntryPoints;
             Assert.AreEqual(expectedDecls.Length, eps.Count);
 
             foreach (var expectedDecl in expectedDecls)
@@ -57,7 +57,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 
         internal void AssertMethodDeclarations(params MethodDeclaration[] expectedDecls)
         {
-            var neps = ResultSST.GetNonEntrypoints();
+            var neps = ResultSST.NonEntryPoints;
             Assert.AreEqual(expectedDecls.Length, neps.Count);
 
             foreach (var expectedDecl in expectedDecls)

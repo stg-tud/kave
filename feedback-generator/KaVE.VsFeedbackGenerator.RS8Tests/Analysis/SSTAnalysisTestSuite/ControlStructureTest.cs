@@ -66,7 +66,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             mA.Body.Add(new CompletionTrigger());
 
             var ifElse = new IfElseBlock {Condition = new ConstantExpression()};
-            ifElse.Body.Add(new ReturnStatement {Expression = new ConstantExpression()});
+            ifElse.Then.Add(new ReturnStatement {Expression = new ConstantExpression()});
 
             mA.Body.Add(ifElse);
             mA.Body.Add(new ReturnStatement {Expression = new ConstantExpression()});
@@ -93,8 +93,8 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             mA.Body.Add(new CompletionTrigger());
 
             var ifElse = new IfElseBlock {Condition = new ConstantExpression()};
-            ifElse.Body.Add(new ReturnStatement {Expression = new ConstantExpression()});
-            ifElse.ElseBody.Add(new ReturnStatement {Expression = new ConstantExpression()});
+            ifElse.Then.Add(new ReturnStatement {Expression = new ConstantExpression()});
+            ifElse.Else.Add(new ReturnStatement {Expression = new ConstantExpression()});
 
             mA.Body.Add(ifElse);
 

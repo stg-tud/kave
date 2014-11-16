@@ -19,12 +19,14 @@
 
 using System.Collections.Generic;
 using KaVE.Model.Collections;
+using KaVE.Model.SSTs.Declarations;
 using KaVE.Utils;
 
 namespace KaVE.Model.SSTs.Expressions
 {
     public class LambdaExpression : Expression
     {
+        public readonly IList<VariableDeclaration> Parameters = Lists.NewList<VariableDeclaration>(); 
         public readonly IList<Statement> Body = Lists.NewList<Statement>();
 
         private bool Equals(LambdaExpression other)

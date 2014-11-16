@@ -17,13 +17,16 @@
  *    - Sebastian Proksch
  */
 
+using System.Collections.Generic;
+using KaVE.Model.Collections;
 using KaVE.Model.SSTs.Declarations;
 
 namespace KaVE.Model.SSTs.Blocks
 {
-    public class ForEachLoop : Block
+    public class ForEachLoop : Statement
     {
         public VariableDeclaration Decl { get; set; }
         public string LoopedIdentifier { get; set; }
+        public readonly IList<Statement> Body = Lists.NewList<Statement>();
     }
 }

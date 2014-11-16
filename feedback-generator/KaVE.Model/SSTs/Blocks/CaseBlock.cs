@@ -22,7 +22,7 @@ using KaVE.Model.Collections;
 
 namespace KaVE.Model.SSTs.Blocks
 {
-    public class SwitchSection
+    public class CaseBlock
     {
         public string Label { get; set; }
         public readonly IList<Statement> Body = Lists.NewList<Statement>();

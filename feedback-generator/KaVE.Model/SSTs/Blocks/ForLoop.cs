@@ -22,10 +22,11 @@ using KaVE.Model.Collections;
 
 namespace KaVE.Model.SSTs.Blocks
 {
-    public class ForLoop : Block
+    public class ForLoop : Statement
     {
         public IList<Statement> Init = Lists.NewList<Statement>();
         public Expression Condition { get; set; }
         public IList<Statement> Step = Lists.NewList<Statement>();
+        public readonly IList<Statement> Body = Lists.NewList<Statement>();
     }
 }

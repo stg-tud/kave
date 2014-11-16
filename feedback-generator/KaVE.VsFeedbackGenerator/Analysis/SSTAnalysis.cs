@@ -35,15 +35,15 @@ namespace KaVE.VsFeedbackGenerator.Analysis
             ITypeDeclaration typeDeclaration,
             ISet<MethodRef> entryPoints)
         {
-            var sst = new SST(null);
+            var sst = new SST();
 
 
             var epNames = new HashSet<IMethodName>();
 
             foreach (var ep in entryPoints)
             {
-                var decl = new MethodDeclaration {Name = ep.Name};
-                sst.AddEntrypoint(decl);
+                var decl = new MethodDeclaration {Name = ep.Name, IsEntryPoint = true};
+                sst.Methods.Add(decl);
                 epNames.Add(ep.Name);
             }
 
@@ -57,8 +57,8 @@ namespace KaVE.VsFeedbackGenerator.Analysis
 
                     if (!epNames.Contains(dName))
                     {
-                        var decl = new MethodDeclaration {Name = dName};
-                        sst.Add(decl);
+                        var decl = new MethodDeclaration {Name = dName, IsEntryPoint = false};
+                        sst.Methods.Add(decl);
                     }
 
                     //var dRef = MethodRef.CreateLocalReference(dName, dElem, dElem.GetDeclaration());

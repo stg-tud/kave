@@ -142,12 +142,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SSTs\Blocks\DoLoop.cs" />
     <Compile Include="SSTs\Blocks\SwitchBlock.cs" />
-    <Compile Include="SSTs\Blocks\SwitchSection.cs" />
+    <Compile Include="SSTs\Blocks\CaseBlock.cs" />
     <Compile Include="SSTs\Blocks\UnsafeBlock.cs" />
+    <Compile Include="SSTs\Expressions\BlockExpression.cs" />
     <Compile Include="SSTs\Expressions\IfElseExpression.cs" />
     <Compile Include="SSTs\Statements\Assignment.cs" />
     <Compile Include="SSTs\Statement.cs" />
-    <Compile Include="SSTs\Block.cs" />
     <Compile Include="SSTs\Expressions\ComposedExpression.cs" />
     <Compile Include="SSTs\Expressions\ConstantExpression.cs" />
     <Compile Include="SSTs\Declarations\DelegateDeclaration.cs" />

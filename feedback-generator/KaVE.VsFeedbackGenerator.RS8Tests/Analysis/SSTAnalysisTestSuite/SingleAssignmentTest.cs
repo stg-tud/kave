@@ -48,8 +48,8 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 
             mA.Body.Add(new VariableDeclaration("i", Fix.Int));
             mA.Body.Add(ifElse);
-            ifElse.Body.Add(new Assignment("i", new ConstantExpression()));
-            ifElse.ElseBody.Add(new Assignment("i", new ConstantExpression()));
+            ifElse.Then.Add(new Assignment("i", new ConstantExpression()));
+            ifElse.Else.Add(new Assignment("i", new ConstantExpression()));
 
             AssertEntryPoints(mA);
         }

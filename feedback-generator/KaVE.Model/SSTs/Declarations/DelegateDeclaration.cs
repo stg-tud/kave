@@ -23,13 +23,6 @@ namespace KaVE.Model.SSTs.Declarations
 {
     public class DelegateDeclaration
     {
-        public string Name { get; set; }
-        public MethodName MethodName { get; set; }
-
-        public DelegateDeclaration(string name, MethodName methodName)
-        {
-            Name = name;
-            MethodName = methodName;
-        }
+        public DelegateTypeName Name { get; set; }
     }
 }

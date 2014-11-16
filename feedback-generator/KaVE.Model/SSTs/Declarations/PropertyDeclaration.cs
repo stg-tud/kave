@@ -25,16 +25,9 @@ namespace KaVE.Model.SSTs.Declarations
 {
     public class PropertyDeclaration
     {
-        public string Name { get; set; }
-        public ITypeName Type { get; set; }
+        public IPropertyName Name { get; set; }
 
-        public IList<Statement> GetExpressions = Lists.NewList<Statement>();
-        public IList<Statement> SetExpressions = Lists.NewList<Statement>();
-
-        public PropertyDeclaration(string s, ITypeName typeName)
-        {
-            Name = s;
-            Type = typeName;
-        }
+        public IList<Statement> Get = Lists.NewList<Statement>();
+        public IList<Statement> Set = Lists.NewList<Statement>();
     }
 }

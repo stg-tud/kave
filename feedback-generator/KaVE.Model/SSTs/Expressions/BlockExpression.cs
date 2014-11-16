@@ -18,28 +18,16 @@
  */
 
 using System.Collections.Generic;
-using KaVE.Model.Collections;
-using KaVE.Utils;
 
-namespace KaVE.Model.SSTs
+namespace KaVE.Model.SSTs.Expressions
 {
-    public abstract class Block : Statement
+    /*
+     * some expressions are broken down to small SST statemets (e.g., nested calls).
+     * Block Expressions add support for this transformation to SSTs.
+     */
+
+    public class BlockExpression
     {
-        public readonly IList<Statement> Body = Lists.NewList<Statement>();
-
-        private bool Equals(Block other)
-        {
-            return Equals(Body, other.Body);
-        }
-
-        public override bool Equals(object obj)
-        {
-            return this.Equals(obj, Equals);
-        }
-
-        public override int GetHashCode()
-        {
-            return (Body != null ? Body.GetHashCode() : 0);
-        }
+        public IList<Statement> Body { get; set; }
     }
 }

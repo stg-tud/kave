@@ -17,12 +17,15 @@
  *    - Sebastian Proksch
  */
 
+using System.Collections.Generic;
+using KaVE.Model.Collections;
 using KaVE.Model.SSTs.Declarations;
 
 namespace KaVE.Model.SSTs.Blocks
 {
-    public class CatchBlock : Block
+    public class CatchBlock : Statement
     {
         public VariableDeclaration Exception { get; set; }
+        public readonly IList<Statement> Body = Lists.NewList<Statement>();
     }
 }
