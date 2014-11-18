@@ -17,8 +17,6 @@
  *    - Dennis Albrecht
  */
 
-using System.Collections.Generic;
-using System.Linq;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using KaVE.Model.SSTs.Expressions;
 using KaVE.Model.SSTs.Statements;

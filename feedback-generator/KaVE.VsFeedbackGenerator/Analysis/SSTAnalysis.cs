@@ -72,7 +72,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis
                     }
                     else
                     {
-                        decl = sst.GetEntrypoints().First(ep => ep.Name == dName);
+                        decl = sst.Methods.First(ep => ep.Name == dName);
                     }
 
                     d.Accept(factory.ScopeTransformer(), context);

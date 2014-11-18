@@ -31,7 +31,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
     internal class ControlStructureTest : BaseSSTAnalysisTest
     {
         [Test]
-        public void Return()
+        public void ReturnConst()
         {
             CompleteInClass(@"
                 public int A()
@@ -43,7 +43,25 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 
             var mA = NewMethodDeclaration(Fix.Int, "A");
             //mA.Body.Add(new CompletionTrigger());
-            mA.Body.Add(new ReturnStatement {Expression = new ConstantExpression()});
+            mA.Body.Add(new ReturnStatement { Expression = new ConstantExpression() });
+
+            AssertEntryPoints(mA);
+        }
+
+        [Test]
+        public void ReturnRef()
+        {
+            CompleteInClass(@"
+                public int A(int i)
+                {
+                    $
+                    return i;
+                }
+            ");
+
+            var mA = NewMethodDeclaration(Fix.Int, "A", string.Format("[{0}] i", Fix.Int));
+            //mA.Body.Add(new CompletionTrigger());
+            mA.Body.Add(new ReturnStatement { Expression = ComposedExpression.Create("i") });
 
             AssertEntryPoints(mA);
         }
@@ -101,7 +119,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             AssertEntryPoints(mA);
         }
 
-        [Test, Ignore]
+        [Test]
         public void WhileLoop()
         {
             CompleteInClass(@"
@@ -115,15 +133,43 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
                 }
             ");
 
-            var mA = NewMethodDeclaration(Fix.Void, "A");
+            var mA = NewMethodDeclaration(Fix.Int, "A");
             mA.Body.Add(new VariableDeclaration("i", Fix.Int));
+            mA.Body.Add(new Assignment("i", new ConstantExpression()));
 
-            var whileLoop = new WhileLoop {Condition = new ConstantExpression()};
-
-            whileLoop.Body.Add(new Assignment("i", new ComposedExpression {Variables = new[] {"i"}}));
-            whileLoop.Body.Add(new CompletionTrigger());
+            var whileLoop = new WhileLoop { Condition = new ConstantExpression() };
+            whileLoop.Body.Add(new Assignment("i", new ComposedExpression { Variables = new[] { "i" } }));
+            //whileLoop.Body.Add(new CompletionTrigger());
 
             mA.Body.Add(whileLoop);
+
+            AssertEntryPoints(mA);
+        }
+
+        [Test]
+        public void DoLoop()
+        {
+            CompleteInClass(@"
+                public int A()
+                {
+                    var i = 0;
+                    do
+                    {
+                        i = i + 1;
+                        $
+                    } while (true);
+                }
+            ");
+
+            var mA = NewMethodDeclaration(Fix.Int, "A");
+            mA.Body.Add(new VariableDeclaration("i", Fix.Int));
+            mA.Body.Add(new Assignment("i", new ConstantExpression()));
+
+            var doLoop = new DoLoop { Condition = new ConstantExpression() };
+            doLoop.Body.Add(new Assignment("i", new ComposedExpression { Variables = new[] { "i" } }));
+            //whileLoop.Body.Add(new CompletionTrigger());
+
+            mA.Body.Add(doLoop);
 
             AssertEntryPoints(mA);
         }

@@ -20,6 +20,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using KaVE.Model.Collections;
+using KaVE.Utils;
 
 namespace KaVE.Model.SSTs.Blocks
 {
@@ -28,6 +29,28 @@ namespace KaVE.Model.SSTs.Blocks
         public Expression Condition { get; set; }
         public readonly IList<Statement> Then = Lists.NewList<Statement>();
         public readonly IList<Statement> Else = Lists.NewList<Statement>();
+
+        public bool Equals(IfElseBlock block)
+        {
+            return Equals(Condition, block.Condition) && Equals(Then, block.Then) && Equals(Else, block.Else);
+        }
+
+        public override bool Equals(object obj)
+        {
+            return this.Equals(obj, Equals);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                var hashCode = Then.GetHashCode();
+                hashCode = (hashCode*397) ^ Else.GetHashCode();
+                hashCode = (hashCode*397) ^ (Condition != null ? Condition.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+
         public override string ToString()
         {
             return string.Format(

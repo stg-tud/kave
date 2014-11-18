@@ -18,13 +18,10 @@
  *    - Uli Fahrer
  */
 
-using JetBrains.ReSharper.Feature.Services.Html;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.Util;
-using KaVE.Model.SSTs;
 using KaVE.Model.SSTs.Blocks;
 using KaVE.Model.SSTs.Declarations;
-using KaVE.Model.SSTs.Expressions;
 using KaVE.Model.SSTs.Statements;
 using KaVE.VsFeedbackGenerator.Analysis.Util;
 using KaVE.VsFeedbackGenerator.Utils.Names;
@@ -86,14 +83,47 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
                 context.Generator,
                 context.Factory.Scope());
             ifStatementParam.Then.Accept(context.Factory.ScopeTransformer(), thenScopeContext);
-            var elseScopeContext = new ScopeTransformerContext(
+            ifBlock.Then.AddRange(thenScopeContext.Scope.Body);
+            if (ifStatementParam.Else != null)
+            {
+                var elseScopeContext = new ScopeTransformerContext(
+                    context.Factory,
+                    context.Generator,
+                    context.Factory.Scope());
+                ifStatementParam.Else.Accept(context.Factory.ScopeTransformer(), elseScopeContext);
+                ifBlock.Else.AddRange(elseScopeContext.Scope.Body);
+            }
+            context.Scope.Body.Add(ifBlock);
+        }
+
+        public override void VisitWhileStatement(IWhileStatement whileStatementParam, ScopeTransformerContext context)
+        {
+            var whileLoop = new WhileLoop();
+            var refCollectorContext = new ReferenceCollectorContext(context);
+            whileStatementParam.Condition.Accept(context.Factory.ReferenceCollector(), refCollectorContext);
+            whileLoop.Condition = refCollectorContext.References.AsExpression();
+            var bodyScopeContext = new ScopeTransformerContext(
                 context.Factory,
                 context.Generator,
                 context.Factory.Scope());
-            ifStatementParam.Then.Accept(context.Factory.ScopeTransformer(), elseScopeContext);
-            ifBlock.Body.AddRange(thenScopeContext.Scope.Body);
-            ifBlock.ElseBody.AddRange(elseScopeContext.Scope.Body);
-            context.Scope.Body.Add(ifBlock);
+            whileStatementParam.Body.Accept(context.Factory.ScopeTransformer(), bodyScopeContext);
+            whileLoop.Body.AddRange(bodyScopeContext.Scope.Body);
+            context.Scope.Body.Add(whileLoop);
+        }
+
+        public override void VisitDoStatement(IDoStatement doStatementParam, ScopeTransformerContext context)
+        {
+            var doLoop = new DoLoop();
+            var refCollectorContext = new ReferenceCollectorContext(context);
+            doStatementParam.Condition.Accept(context.Factory.ReferenceCollector(), refCollectorContext);
+            doLoop.Condition = refCollectorContext.References.AsExpression();
+            var bodyScopeContext = new ScopeTransformerContext(
+                context.Factory,
+                context.Generator,
+                context.Factory.Scope());
+            doStatementParam.Body.Accept(context.Factory.ScopeTransformer(), bodyScopeContext);
+            doLoop.Body.AddRange(bodyScopeContext.Scope.Body);
+            context.Scope.Body.Add(doLoop);
         }
 
         public override void VisitReturnStatement(IReturnStatement returnStatementParam, ScopeTransformerContext context)
