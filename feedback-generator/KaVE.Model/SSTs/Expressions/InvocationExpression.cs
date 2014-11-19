@@ -72,7 +72,11 @@ namespace KaVE.Model.SSTs.Expressions
 
         public override string ToString()
         {
-            return string.Format("{0}.{1}({2})", Identifier, Name.Name, string.Join(", ", Parameters));
+            return string.Format(
+                "{0}.{1}({2})",
+                Name.IsStatic ? Name.DeclaringType.Name : Identifier,
+                Name.Name,
+                string.Join(", ", Parameters));
         }
     }
 }

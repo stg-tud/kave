@@ -21,7 +21,6 @@ using System;
 using System.Linq;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using KaVE.Model.Names;
-using KaVE.Utils.Assertion;
 using KaVE.VsFeedbackGenerator.Analysis.Util;
 using KaVE.VsFeedbackGenerator.Utils.Names;
 
@@ -45,19 +44,27 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
             {
                 var methodName = invocationExpressionParam.Reference.ResolveMethod().GetName<IMethodName>();
                 var typeName = invocationExpressionParam.Type().GetName();
-                string callee;
-                if (invokedExpression.QualifierExpression is IReferenceExpression)
+                string callee = null;
+                if (invokedExpression.QualifierExpression == null ||
+                    invokedExpression.QualifierExpression is IThisExpression)
                 {
-                    callee = (invokedExpression.QualifierExpression as IReferenceExpression).NameIdentifier.Name;
+                    callee = "this";
+                }
+                else if (invokedExpression.QualifierExpression is IBaseExpression)
+                {
+                    callee = "base";
+                }
+                else if (invokedExpression.QualifierExpression is IReferenceExpression)
+                {
+                    var referenceExpression = invokedExpression.QualifierExpression as IReferenceExpression;
+                    if (referenceExpression.IsClassifiedAsVariable)
+                    {
+                        callee = referenceExpression.NameIdentifier.Name;
+                    }
                 }
                 else if (invokedExpression.QualifierExpression is IInvocationExpression)
                 {
-                    var refCollectorContext = new ReferenceCollectorContext(context);
-                    invokedExpression.QualifierExpression.Accept(
-                        context.Factory.ReferenceCollector(),
-                        refCollectorContext);
-                    Asserts.That(refCollectorContext.References.Count() == 1);
-                    callee = refCollectorContext.References[0];
+                    callee = invokedExpression.QualifierExpression.GetReference(context);
                 }
                 else
                 {

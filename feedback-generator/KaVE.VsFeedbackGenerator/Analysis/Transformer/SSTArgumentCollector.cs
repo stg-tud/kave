@@ -67,6 +67,15 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
             context.Arguments.Add(referenceExpressionParam.NameIdentifier.Name);
         }
 
+        public override void VisitBinaryExpression(IBinaryExpression binaryExpressionParam,
+            ArgumentCollectorContext context)
+        {
+            var tmp = context.Generator.GetNextVariableName();
+            context.Scope.Body.Add(new VariableDeclaration(tmp, binaryExpressionParam.Type().GetName()));
+            context.Scope.Body.Add(new Assignment(tmp, binaryExpressionParam.GetReferences(context)));
+            context.Arguments.Add(tmp);
+        }
+
         public override void VisitCSharpLiteralExpression(ICSharpLiteralExpression cSharpLiteralExpressionParam,
             ArgumentCollectorContext context)
         {
@@ -86,7 +95,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
                 {
                     var tmp = context.Generator.GetNextVariableName();
                     context.Scope.Body.Add(new VariableDeclaration(tmp, retType));
-                    context.Scope.Body.Add(new Assignment(tmp, new InvocationExpression(callee, method, args)));
+                    context.Scope.Body.Add(new Assignment(tmp, callee.CreateInvocation(method, args)));
                     context.Arguments.Add(tmp);
                 });
         }

@@ -74,63 +74,32 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
 
         public override void VisitIfStatement(IIfStatement ifStatementParam, ScopeTransformerContext context)
         {
-            var ifBlock = new IfElseBlock();
-            var refCollectorContext = new ReferenceCollectorContext(context);
-            ifStatementParam.Condition.Accept(context.Factory.ReferenceCollector(), refCollectorContext);
-            ifBlock.Condition = refCollectorContext.References.AsExpression();
-            var thenScopeContext = new ScopeTransformerContext(
-                context.Factory,
-                context.Generator,
-                context.Factory.Scope());
-            ifStatementParam.Then.Accept(context.Factory.ScopeTransformer(), thenScopeContext);
-            ifBlock.Then.AddRange(thenScopeContext.Scope.Body);
+            var ifBlock = new IfElseBlock {Condition = ifStatementParam.Condition.GetReferences(context)};
+            ifBlock.Then.AddRange(ifStatementParam.Then.GetScope(context).Body);
             if (ifStatementParam.Else != null)
             {
-                var elseScopeContext = new ScopeTransformerContext(
-                    context.Factory,
-                    context.Generator,
-                    context.Factory.Scope());
-                ifStatementParam.Else.Accept(context.Factory.ScopeTransformer(), elseScopeContext);
-                ifBlock.Else.AddRange(elseScopeContext.Scope.Body);
+                ifBlock.Else.AddRange(ifStatementParam.Else.GetScope(context).Body);
             }
             context.Scope.Body.Add(ifBlock);
         }
 
         public override void VisitWhileStatement(IWhileStatement whileStatementParam, ScopeTransformerContext context)
         {
-            var whileLoop = new WhileLoop();
-            var refCollectorContext = new ReferenceCollectorContext(context);
-            whileStatementParam.Condition.Accept(context.Factory.ReferenceCollector(), refCollectorContext);
-            whileLoop.Condition = refCollectorContext.References.AsExpression();
-            var bodyScopeContext = new ScopeTransformerContext(
-                context.Factory,
-                context.Generator,
-                context.Factory.Scope());
-            whileStatementParam.Body.Accept(context.Factory.ScopeTransformer(), bodyScopeContext);
-            whileLoop.Body.AddRange(bodyScopeContext.Scope.Body);
+            var whileLoop = new WhileLoop {Condition = whileStatementParam.Condition.GetScopedReferences(context)};
+            whileLoop.Body.AddRange(whileStatementParam.Body.GetScope(context).Body);
             context.Scope.Body.Add(whileLoop);
         }
 
         public override void VisitDoStatement(IDoStatement doStatementParam, ScopeTransformerContext context)
         {
-            var doLoop = new DoLoop();
-            var refCollectorContext = new ReferenceCollectorContext(context);
-            doStatementParam.Condition.Accept(context.Factory.ReferenceCollector(), refCollectorContext);
-            doLoop.Condition = refCollectorContext.References.AsExpression();
-            var bodyScopeContext = new ScopeTransformerContext(
-                context.Factory,
-                context.Generator,
-                context.Factory.Scope());
-            doStatementParam.Body.Accept(context.Factory.ScopeTransformer(), bodyScopeContext);
-            doLoop.Body.AddRange(bodyScopeContext.Scope.Body);
+            var doLoop = new DoLoop {Condition = doStatementParam.Condition.GetScopedReferences(context)};
+            doLoop.Body.AddRange(doStatementParam.Body.GetScope(context).Body);
             context.Scope.Body.Add(doLoop);
         }
 
         public override void VisitReturnStatement(IReturnStatement returnStatementParam, ScopeTransformerContext context)
         {
-            var refCollectorContext = new ReferenceCollectorContext(context);
-            returnStatementParam.Value.Accept(context.Factory.ReferenceCollector(), refCollectorContext);
-            context.Scope.Body.Add(new ReturnStatement{Expression = refCollectorContext.References.AsExpression()});
+            context.Scope.Body.Add(new ReturnStatement {Expression = returnStatementParam.Value.GetReferences(context)});
         }
 
         public override void VisitMultipleLocalVariableDeclaration(
@@ -151,7 +120,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
         public override void VisitLocalVariableDeclaration(ILocalVariableDeclaration localVariableDeclarationParam,
             ScopeTransformerContext context)
         {
-            base.VisitLocalVariableDeclaration(localVariableDeclarationParam, new ScopeTransformerContext(context));
+            base.VisitLocalVariableDeclaration(localVariableDeclarationParam, context);
 
             if (localVariableDeclarationParam.Initializer is IExpressionInitializer)
             {
@@ -182,7 +151,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
                 invocationExpressionParam,
                 context,
                 (callee, method, args, retType) =>
-                    context.Scope.Body.Add(new InvocationStatement(callee, method, args)));
+                    context.Scope.Body.Add(new InvocationStatement(callee.CreateInvocation(method, args))));
         }
     }
 }

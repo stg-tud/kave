@@ -21,7 +21,6 @@ using System.Collections.Generic;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.Util;
 using KaVE.Model.SSTs.Declarations;
-using KaVE.Model.SSTs.Expressions;
 using KaVE.Model.SSTs.Statements;
 using KaVE.VsFeedbackGenerator.Analysis.Util;
 
@@ -32,7 +31,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
         public ReferenceCollectorContext(ITransformerContext context)
             : this(context.Factory, context.Generator, context.Scope) {}
 
-        private ReferenceCollectorContext(ISSTFactory factory,
+        public ReferenceCollectorContext(ISSTFactory factory,
             ITempVariableGenerator generator,
             IScope scope)
         {
@@ -85,7 +84,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
                 {
                     var tmp = context.Generator.GetNextVariableName();
                     context.Scope.Body.Add(new VariableDeclaration(tmp, retType));
-                    context.Scope.Body.Add(new Assignment(tmp, new InvocationExpression(callee, method, args)));
+                    context.Scope.Body.Add(new Assignment(tmp, callee.CreateInvocation(method, args)));
                     context.References.Add(tmp);
                 });
         }

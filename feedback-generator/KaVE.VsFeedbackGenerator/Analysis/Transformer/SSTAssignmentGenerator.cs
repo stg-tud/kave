@@ -68,27 +68,20 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
                 invocationExpressionParam,
                 context,
                 (callee, method, args, retType) =>
-                    context.Scope.Body.Add(new Assignment(context.Dest, new InvocationExpression(callee, method, args))));
+                    context.Scope.Body.Add(new Assignment(context.Dest, callee.CreateInvocation(method, args))));
         }
 
         public override void VisitBinaryExpression(IBinaryExpression binaryExpressionParam,
             AssignmentGeneratorContext context)
         {
-            AddAssignmentAfterCollectingReferences(binaryExpressionParam, context);
+            context.Scope.Body.Add(new Assignment(context.Dest, binaryExpressionParam.GetReferences(context)));
         }
 
         public override void VisitArrayCreationExpression(IArrayCreationExpression arrayCreationExpressionParam,
             AssignmentGeneratorContext context)
         {
-            AddAssignmentAfterCollectingReferences(arrayCreationExpressionParam.ArrayInitializer, context);
-        }
-
-        private static void AddAssignmentAfterCollectingReferences(ICSharpTreeNode treeNode,
-            AssignmentGeneratorContext context)
-        {
-            var refCollectorContext = new ReferenceCollectorContext(context);
-            treeNode.Accept(context.Factory.ReferenceCollector(), refCollectorContext);
-            context.Scope.Body.Add(new Assignment(context.Dest, refCollectorContext.References.AsExpression()));
+            context.Scope.Body.Add(
+                new Assignment(context.Dest, arrayCreationExpressionParam.ArrayInitializer.GetReferences(context)));
         }
     }
 }

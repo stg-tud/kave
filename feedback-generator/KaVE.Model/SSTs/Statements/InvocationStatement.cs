@@ -27,6 +27,11 @@ namespace KaVE.Model.SSTs.Statements
     {
         public InvocationExpression Target { get; set; }
 
+        public InvocationStatement(InvocationExpression expression)
+        {
+            Target = expression;
+        }
+
         public InvocationStatement(IMethodName name, params string[] parameters)
         {
             Target = new InvocationExpression(name, parameters);

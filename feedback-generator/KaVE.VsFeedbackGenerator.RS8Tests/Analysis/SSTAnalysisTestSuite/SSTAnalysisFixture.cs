@@ -48,6 +48,13 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             return MethodName.Get(string.Format("[{0}] [{1}].Equals([{2}] {3})", Bool, declaringType, argType, argName));
         }
 
+        internal static IMethodName ConsoleWrite(ITypeName arg)
+        {
+            return
+                MethodName.Get(
+                    string.Format("static [{0}] [System.Console, mscorlib, 4.0.0.0].Write([{1}] value)", Void, arg));
+        }
+
         public static IMethodName GetMethodName(string cGet)
         {
             return MethodName.Get(cGet);

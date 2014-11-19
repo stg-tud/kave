@@ -86,6 +86,24 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
         }
 
         [Test]
+        public void ExternalSimpleWithArithmetics()
+        {
+            CompleteInClass(@"
+                public void A(int i)
+                {
+                    i.Equals(0 + i);
+                    $
+                }
+            ");
+            var mA = NewMethodDeclaration(Fix.Void, "A", string.Format("[{0}] i", Fix.Int));
+            mA.Body.Add(new VariableDeclaration("$0", Fix.Int));
+            mA.Body.Add(new Assignment("$0", ComposedExpression.Create("i")));
+            mA.Body.Add(new InvocationStatement("i", Fix.Equals(Fix.Int, Fix.Int, "obj"), "$0"));
+
+            AssertEntryPoints(mA);
+        }
+
+        [Test]
         public void ExternalSimpleWithParam()
         {
             CompleteInClass(@"
@@ -142,7 +160,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             AssertEntryPoints(mA);
         }
 
-        [Test, Ignore]
+        [Test]
         public void ThisSimple()
         {
             CompleteInClass(@"
@@ -162,6 +180,90 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 
             AssertEntryPoints(mA);
             AssertMethodDeclarations(mB);
+        }
+
+        [Test]
+        public void ThisExplicitly()
+        {
+            CompleteInClass(@"
+                public void A()
+                {
+                    this.B();
+                    $
+                }
+                public void B() {}
+            ");
+
+            var mA = NewMethodDeclaration(Fix.Void, "A");
+            mA.Body.Add(
+                new InvocationStatement("this", MethodName.Get(string.Format("[{0}] [N.C, TestProject].B()", Fix.Void))));
+
+            var mB = NewMethodDeclaration(Fix.Void, "B");
+
+            AssertEntryPoints(mA);
+            AssertMethodDeclarations(mB);
+        }
+
+        [Test]
+        public void BaseWithOverride()
+        {
+            CompleteInFile(@"
+                namespace N
+                {
+                    public class D
+                    {
+                        public virtual void B() {}
+                    }
+                    public class C : D
+                    {
+                        public void A()
+                        {
+                            base.B();
+                            $
+                        }
+                        public override void B() {}
+                    }
+                }
+            ");
+
+            var mA = NewMethodDeclaration(Fix.Void, "A");
+            mA.Body.Add(
+                new InvocationStatement("base", MethodName.Get(string.Format("[{0}] [N.D, TestProject].B()", Fix.Void))));
+
+            var mB = NewMethodDeclaration(Fix.Void, "B");
+
+            AssertEntryPoints(mA, mB);
+        }
+
+        [Test]
+        public void BaseWithHiding()
+        {
+            CompleteInFile(@"
+                namespace N
+                {
+                    public class D
+                    {
+                        public void B() {}
+                    }
+                    public class C : D
+                    {
+                        public void A()
+                        {
+                            base.B();
+                            $
+                        }
+                        public void B() {}
+                    }
+                }
+            ");
+
+            var mA = NewMethodDeclaration(Fix.Void, "A");
+            mA.Body.Add(
+                new InvocationStatement("base", MethodName.Get(string.Format("[{0}] [N.D, TestProject].B()", Fix.Void))));
+
+            var mB = NewMethodDeclaration(Fix.Void, "B");
+
+            AssertEntryPoints(mA, mB);
         }
 
         [Test, Ignore]
@@ -185,35 +287,32 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             ");
 
             var mA = NewMethodDeclaration(Fix.Void, "A");
-            mA.Body.Add(new InvocationStatement("this", MethodName.Get("I.B")));
+            mA.Body.Add(
+                new InvocationStatement("this", MethodName.Get(string.Format("[{0}] [N.I, TestProject].B()", Fix.Void))));
 
             var mB = NewMethodDeclaration(Fix.Void, "B");
 
             AssertEntryPoints(mA, mB);
         }
 
-        [Test, Ignore]
+        [Test]
         public void StaticInvocation()
         {
-            CompleteInFile(@"
-                public class C {
-                    public void A()
-                    {
-                        Console.Write(0);
-                        $
-                    }
+            CompleteInClass(@"
+                public void A()
+                {
+                    Console.Write(0);
+                    $
                 }
             ");
 
             var mA = NewMethodDeclaration(Fix.Void, "A");
 
-            mA.Body.Add(new VariableDeclaration("v0", Fix.Int));
-            mA.Body.Add(new Assignment("v0", new ConstantExpression()));
-            mA.Body.Add(new InvocationStatement(MethodName.Get("Console.Write"), "v0"));
+            mA.Body.Add(new VariableDeclaration("$0", Fix.Int));
+            mA.Body.Add(new Assignment("$0", new ConstantExpression()));
+            mA.Body.Add(new InvocationStatement(Fix.ConsoleWrite(Fix.Int), "$0"));
 
-            var mB = NewMethodDeclaration(Fix.Void, "B");
-
-            AssertEntryPoints(mA, mB);
+            AssertEntryPoints(mA);
         }
     }
 }

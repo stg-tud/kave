@@ -19,8 +19,12 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.ReSharper.Psi.CSharp.Tree;
+using KaVE.Model.Names;
 using KaVE.Model.SSTs;
 using KaVE.Model.SSTs.Expressions;
+using KaVE.Utils.Assertion;
+using KaVE.VsFeedbackGenerator.Analysis.Util;
 
 namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
 {
@@ -33,6 +37,49 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
                 return ComposedExpression.Create(references.ToArray());
             }
             return new ConstantExpression();
+        }
+
+        public static Expression GetScopedReferences(this ICSharpTreeNode node, ITransformerContext context)
+        {
+            var scope = context.Factory.Scope();
+            var refCollectorContext = new ReferenceCollectorContext(context.Factory, context.Generator, scope);
+            node.Accept(context.Factory.ReferenceCollector(), refCollectorContext);
+            if (scope.Body.Any())
+            {
+                return refCollectorContext.References.AsExpression();
+            }
+            return refCollectorContext.References.AsExpression();
+        }
+
+        public static Expression GetReferences(this ICSharpTreeNode node, ITransformerContext context)
+        {
+            var refCollectorContext = new ReferenceCollectorContext(context);
+            node.Accept(context.Factory.ReferenceCollector(), refCollectorContext);
+            return refCollectorContext.References.AsExpression();
+        }
+
+        public static string GetReference(this ICSharpTreeNode node, ITransformerContext context)
+        {
+            var refCollectorContext = new ReferenceCollectorContext(context);
+            node.Accept(context.Factory.ReferenceCollector(), refCollectorContext);
+            Asserts.That(refCollectorContext.References.Count == 1);
+            return refCollectorContext.References[0];
+        }
+
+        public static IScope GetScope(this ICSharpTreeNode node, ITransformerContext context)
+        {
+            var scopeContext = new ScopeTransformerContext(context.Factory, context.Generator, context.Factory.Scope());
+            node.Accept(context.Factory.ScopeTransformer(), scopeContext);
+            return scopeContext.Scope;
+        }
+
+        public static InvocationExpression CreateInvocation(this string callee, IMethodName method, string[] args)
+        {
+            if (callee == null)
+            {
+                return new InvocationExpression(method, args);
+            }
+            return new InvocationExpression(callee, method, args);
         }
     }
 }

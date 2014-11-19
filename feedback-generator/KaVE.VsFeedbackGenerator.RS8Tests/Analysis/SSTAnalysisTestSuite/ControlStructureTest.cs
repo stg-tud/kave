@@ -43,7 +43,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 
             var mA = NewMethodDeclaration(Fix.Int, "A");
             //mA.Body.Add(new CompletionTrigger());
-            mA.Body.Add(new ReturnStatement { Expression = new ConstantExpression() });
+            mA.Body.Add(new ReturnStatement {Expression = new ConstantExpression()});
 
             AssertEntryPoints(mA);
         }
@@ -61,7 +61,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 
             var mA = NewMethodDeclaration(Fix.Int, "A", string.Format("[{0}] i", Fix.Int));
             //mA.Body.Add(new CompletionTrigger());
-            mA.Body.Add(new ReturnStatement { Expression = ComposedExpression.Create("i") });
+            mA.Body.Add(new ReturnStatement {Expression = ComposedExpression.Create("i")});
 
             AssertEntryPoints(mA);
         }
@@ -137,8 +137,8 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             mA.Body.Add(new VariableDeclaration("i", Fix.Int));
             mA.Body.Add(new Assignment("i", new ConstantExpression()));
 
-            var whileLoop = new WhileLoop { Condition = new ConstantExpression() };
-            whileLoop.Body.Add(new Assignment("i", new ComposedExpression { Variables = new[] { "i" } }));
+            var whileLoop = new WhileLoop {Condition = new ConstantExpression()};
+            whileLoop.Body.Add(new Assignment("i", new ComposedExpression {Variables = new[] {"i"}}));
             //whileLoop.Body.Add(new CompletionTrigger());
 
             mA.Body.Add(whileLoop);
@@ -165,8 +165,8 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             mA.Body.Add(new VariableDeclaration("i", Fix.Int));
             mA.Body.Add(new Assignment("i", new ConstantExpression()));
 
-            var doLoop = new DoLoop { Condition = new ConstantExpression() };
-            doLoop.Body.Add(new Assignment("i", new ComposedExpression { Variables = new[] { "i" } }));
+            var doLoop = new DoLoop {Condition = new ConstantExpression()};
+            doLoop.Body.Add(new Assignment("i", new ComposedExpression {Variables = new[] {"i"}}));
             //whileLoop.Body.Add(new CompletionTrigger());
 
             mA.Body.Add(doLoop);
@@ -259,12 +259,12 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
                 }
             ");
 
-            var mA = NewMethodDeclaration(Fix.Void, "A");
-            mA.Body.Add(new VariableDeclaration("v0", Fix.IntArray));
-            mA.Body.Add(new Assignment("v0", new ConstantExpression()));
-            var forEachLoop = new ForEachLoop {LoopedIdentifier = "v0"};
-            forEachLoop.Body.Add(new InvocationStatement(MethodName.Get("Console.Write"), "n"));
-            forEachLoop.Body.Add(new CompletionTrigger());
+            var mA = NewMethodDeclaration(Fix.Int, "A");
+            mA.Body.Add(new VariableDeclaration("$0", Fix.IntArray));
+            mA.Body.Add(new Assignment("$0", new ConstantExpression()));
+            var forEachLoop = new ForEachLoop {LoopedIdentifier = "$0", Decl = new VariableDeclaration("n", Fix.Int)};
+            forEachLoop.Body.Add(new InvocationStatement(Fix.ConsoleWrite(Fix.Int), "n"));
+            //forEachLoop.Body.Add(new CompletionTrigger());
 
             mA.Body.Add(forEachLoop);
 
