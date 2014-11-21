@@ -18,8 +18,10 @@
  */
 
 using System.Collections.Generic;
+using System.Linq;
 using KaVE.Model.Collections;
 using KaVE.Model.SSTs.Declarations;
+using KaVE.Utils;
 
 namespace KaVE.Model.SSTs.Blocks
 {
@@ -28,5 +30,35 @@ namespace KaVE.Model.SSTs.Blocks
         public VariableDeclaration Decl { get; set; }
         public string LoopedIdentifier { get; set; }
         public readonly IList<Statement> Body = Lists.NewList<Statement>();
+
+        private bool Equals(ForEachLoop other)
+        {
+            return Body.Equals(other.Body) && Equals(Decl, other.Decl) && Equals(LoopedIdentifier, other.LoopedIdentifier);
+        }
+
+        public override bool Equals(object obj)
+        {
+            return this.Equals(obj, Equals);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                var hashCode = Body.GetHashCode();
+                hashCode = (hashCode * 397) ^ (Decl != null ? Decl.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (LoopedIdentifier != null ? LoopedIdentifier.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+
+        public override string ToString()
+        {
+            return string.Format(
+                "foreach ({0} in {1}) {{{2}}};",
+                Decl.ToString().Replace(";", ""),
+                LoopedIdentifier,
+                string.Join(" ", Body.Select(s => s.ToString())));
+        }
     }
 }

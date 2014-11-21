@@ -208,7 +208,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
         public void ForLoop()
         {
             CompleteInClass(@"
-                public int A()
+                public void A()
                 {
                     for(int i = 0; i < 10; i++) {
                         Console.Write(i);
@@ -224,9 +224,9 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             forLoop.Condition = new ComposedExpression {Variables = new[] {"i"}};
             forLoop.Step.Add(new Assignment("i", new ComposedExpression {Variables = new[] {"i"}}));
 
-            forLoop.Body.Add(new InvocationStatement(MethodName.Get("Console.Write"), "i"));
-            forLoop.Body.Add(new CompletionTrigger());
-
+            forLoop.Body.Add(new InvocationStatement(Fix.ConsoleWrite(Fix.Int), "i"));
+            //forLoop.Body.Add(new CompletionTrigger());
+            
             mA.Body.Add(forLoop);
 
             AssertEntryPoints(mA);
@@ -246,11 +246,11 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
          * --> create more complex exmaple with calls and multiple variables
          */
 
-        [Test, Ignore]
+        [Test]
         public void ForEachLoop()
         {
             CompleteInClass(@"
-                public int A()
+                public void A()
                 {
                     foreach(var n in new[] {1, 2, 3}) {
                         Console.Write(n);
@@ -259,7 +259,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
                 }
             ");
 
-            var mA = NewMethodDeclaration(Fix.Int, "A");
+            var mA = NewMethodDeclaration(Fix.Void, "A");
             mA.Body.Add(new VariableDeclaration("$0", Fix.IntArray));
             mA.Body.Add(new Assignment("$0", new ConstantExpression()));
             var forEachLoop = new ForEachLoop {LoopedIdentifier = "$0", Decl = new VariableDeclaration("n", Fix.Int)};

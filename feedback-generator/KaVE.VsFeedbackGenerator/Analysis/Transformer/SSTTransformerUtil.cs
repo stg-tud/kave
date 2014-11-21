@@ -58,6 +58,14 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
             return refCollectorContext.References.AsExpression();
         }
 
+        public static string GetArgument(this ICSharpTreeNode node, ITransformerContext context)
+        {
+            var argCollectorContext = new ArgumentCollectorContext(context);
+            node.Accept(context.Factory.ArgumentCollector(), argCollectorContext);
+            Asserts.That(argCollectorContext.Arguments.Count == 1);
+            return argCollectorContext.Arguments[0];
+        }
+
         public static string GetReference(this ICSharpTreeNode node, ITransformerContext context)
         {
             var refCollectorContext = new ReferenceCollectorContext(context);

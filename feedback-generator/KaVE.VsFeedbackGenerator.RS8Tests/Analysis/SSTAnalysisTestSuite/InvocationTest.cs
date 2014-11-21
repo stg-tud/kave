@@ -104,6 +104,28 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
         }
 
         [Test]
+        public void ExternalSimpleWithArray()
+        {
+            CompleteInClass(@"
+                public void B(int[] a) {}
+                public void A(int i)
+                {
+                    B(new []{i});
+                    $
+                }
+            ");
+            var mA = NewMethodDeclaration(Fix.Void, "A", string.Format("[{0}] i", Fix.Int));
+            mA.Body.Add(new VariableDeclaration("$0", Fix.IntArray));
+            mA.Body.Add(new Assignment("$0", ComposedExpression.Create("i")));
+            mA.Body.Add(new InvocationStatement("this", MethodName.Get(string.Format("[{0}] [N.C, TestProject].B([{1}] a)", Fix.Void, Fix.IntArray)), "$0"));
+
+            var mB = NewMethodDeclaration(Fix.Void, "B", string.Format("[{0}] a", Fix.IntArray));
+
+            AssertEntryPoints(mA);
+            AssertMethodDeclarations(mB);
+        }
+
+        [Test]
         public void ExternalSimpleWithParam()
         {
             CompleteInClass(@"

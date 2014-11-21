@@ -76,6 +76,16 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
             context.Arguments.Add(tmp);
         }
 
+        public override void VisitArrayCreationExpression(IArrayCreationExpression arrayCreationExpressionParam,
+            ArgumentCollectorContext context)
+        {
+            var tmp = context.Generator.GetNextVariableName();
+            context.Scope.Body.Add(new VariableDeclaration(tmp, arrayCreationExpressionParam.Type().GetName()));
+            context.Scope.Body.Add(
+                new Assignment(tmp, arrayCreationExpressionParam.ArrayInitializer.GetReferences(context)));
+            context.Arguments.Add(tmp);
+        }
+
         public override void VisitCSharpLiteralExpression(ICSharpLiteralExpression cSharpLiteralExpressionParam,
             ArgumentCollectorContext context)
         {

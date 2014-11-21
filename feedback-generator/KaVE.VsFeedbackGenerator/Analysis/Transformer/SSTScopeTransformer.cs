@@ -97,6 +97,40 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
             context.Scope.Body.Add(doLoop);
         }
 
+        public override void VisitForStatement(IForStatement forStatementParam, ScopeTransformerContext context)
+        {
+            var forLoop = new ForLoop {Condition = forStatementParam.Condition.GetScopedReferences(context)};
+            forLoop.Init.AddRange(forStatementParam.Initializer.GetScope(context).Body);
+            forLoop.Step.AddRange(forStatementParam.Iterators.GetScope(context).Body);
+            forLoop.Body.AddRange(forStatementParam.Body.GetScope(context).Body);
+            context.Scope.Body.Add(forLoop);
+        }
+
+        public override void VisitForInitializer(IForInitializer forInitializerParam, ScopeTransformerContext context)
+        {
+            forInitializerParam.ToString();
+        }
+
+        public override void VisitForIterator(IForIterator forIteratorParam, ScopeTransformerContext context)
+        {
+            forIteratorParam.ToString();
+        }
+
+        public override void VisitForeachStatement(IForeachStatement foreachStatementParam,
+            ScopeTransformerContext context)
+        {
+            var foreachLoop = new ForEachLoop
+            {
+                Decl =
+                    new VariableDeclaration(
+                        foreachStatementParam.IteratorName,
+                        foreachStatementParam.IteratorDeclaration.DeclaredElement.Type.GetName()),
+                LoopedIdentifier = foreachStatementParam.Collection.GetArgument(context)
+            };
+            foreachLoop.Body.AddRange(foreachStatementParam.Body.GetScope(context).Body);
+            context.Scope.Body.Add(foreachLoop);
+        }
+
         public override void VisitReturnStatement(IReturnStatement returnStatementParam, ScopeTransformerContext context)
         {
             context.Scope.Body.Add(new ReturnStatement {Expression = returnStatementParam.Value.GetReferences(context)});
