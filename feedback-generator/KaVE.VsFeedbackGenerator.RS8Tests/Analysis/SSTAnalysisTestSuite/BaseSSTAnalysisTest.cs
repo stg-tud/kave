@@ -17,16 +17,30 @@
  *    - Sebastian Proksch
  */
 
+using System.Collections.Generic;
 using KaVE.Model.Names;
 using KaVE.Model.Names.CSharp;
 using KaVE.Model.SSTs;
 using KaVE.Model.SSTs.Declarations;
+using KaVE.VsFeedbackGenerator.Generators;
+using KaVE.VsFeedbackGenerator.Utils;
+using Moq;
 using NUnit.Framework;
 
 namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 {
     internal abstract class BaseSSTAnalysisTest : BaseTest
     {
+        internal readonly IList<string> Log = new List<string>();
+            
+        [SetUp]
+        public void RegisterLogger()
+        {
+            var loggerMock = new Mock<ILogger>();
+            loggerMock.Setup(l => l.Info(It.IsAny<string>())).Callback<string>(info => Log.Add(info));
+            Registry.RegisterComponent(loggerMock.Object);
+        }
+
         internal SST NewSST()
         {
             return new SST();
@@ -40,8 +54,13 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
         internal MethodDeclaration NewMethodDeclaration(ITypeName returnType, string simpleName, params string[] args)
         {
             const string package = "N.C, TestProject";
-            var identifier = string.Format("[{0}] [{1}].{2}({3})", returnType, package, simpleName, string.Join(", ", args));
-            return new MethodDeclaration { Name = MethodName.Get(identifier) };
+            var identifier = string.Format(
+                "[{0}] [{1}].{2}({3})",
+                returnType,
+                package,
+                simpleName,
+                string.Join(", ", args));
+            return new MethodDeclaration {Name = MethodName.Get(identifier)};
         }
 
         internal void AssertResult(SST expected)
@@ -71,6 +90,14 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             {
                 Assert.IsTrue(neps.Contains(expectedDecl));
             }
+        }
+
+        [TearDown]
+        public void ClearRegistry()
+        {
+            Registry.Clear();
+            Assert.IsEmpty(Log);
+            Log.Clear();
         }
     }
 }

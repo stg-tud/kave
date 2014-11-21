@@ -28,7 +28,9 @@ using KaVE.Model.SSTs;
 using KaVE.Model.SSTs.Declarations;
 using KaVE.VsFeedbackGenerator.Analysis.Transformer;
 using KaVE.VsFeedbackGenerator.Analysis.Util;
+using KaVE.VsFeedbackGenerator.Utils;
 using KaVE.VsFeedbackGenerator.Utils.Names;
+using ILogger = KaVE.VsFeedbackGenerator.Generators.ILogger;
 
 namespace KaVE.VsFeedbackGenerator.Analysis
 {
@@ -63,7 +65,8 @@ namespace KaVE.VsFeedbackGenerator.Analysis
                     var context = new ScopeTransformerContext(
                         factory,
                         factory.TempVariableGenerator(),
-                        factory.Scope());
+                        factory.Scope(),
+                        Registry.GetComponent<ILogger>());
 
                     if (!epNames.Contains(dName))
                     {

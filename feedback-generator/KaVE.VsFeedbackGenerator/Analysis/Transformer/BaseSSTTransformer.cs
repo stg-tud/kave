@@ -20,21 +20,20 @@
 using System;
 using System.Linq;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
+using JetBrains.ReSharper.Psi.Tree;
 using KaVE.Model.Names;
-using KaVE.VsFeedbackGenerator.Analysis.Util;
 using KaVE.VsFeedbackGenerator.Utils.Names;
 
 namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
 {
-    public interface ITransformerContext
-    {
-        ISSTFactory Factory { get; }
-        ITempVariableGenerator Generator { get; }
-        IScope Scope { get; }
-    }
-
     public abstract class BaseSSTTransformer<TContext> : TreeNodeVisitor<TContext> where TContext : ITransformerContext
     {
+        public override void VisitNode(ITreeNode node, TContext context)
+        {
+            context.Logger.Info(
+                string.Format("{0} has no treatment for TreeNodes of type {1}", GetType(), node.GetType()));
+        }
+
         protected static void HandleInvocationExpression(IInvocationExpression invocationExpressionParam,
             ITransformerContext context,
             Action<string, IMethodName, string[], ITypeName> handler)

@@ -17,38 +17,21 @@
  *    - Dennis Albrecht
  */
 
-using System.Collections.Generic;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.Util;
 using KaVE.Model.SSTs.Declarations;
 using KaVE.Model.SSTs.Statements;
-using KaVE.VsFeedbackGenerator.Analysis.Util;
 
 namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
 {
-    public class ReferenceCollectorContext : ITransformerContext
-    {
-        public ReferenceCollectorContext(ITransformerContext context)
-            : this(context.Factory, context.Generator, context.Scope) {}
-
-        public ReferenceCollectorContext(ISSTFactory factory,
-            ITempVariableGenerator generator,
-            IScope scope)
-        {
-            Factory = factory;
-            Generator = generator;
-            Scope = scope;
-            References = new List<string>();
-        }
-
-        public ISSTFactory Factory { get; private set; }
-        public ITempVariableGenerator Generator { get; private set; }
-        public IScope Scope { get; private set; }
-        public readonly IList<string> References;
-    }
-
     public class SSTReferenceCollector : BaseSSTTransformer<ReferenceCollectorContext>
     {
+        public override void VisitArrayInitializer(IArrayInitializer arrayInitializerParam,
+            ReferenceCollectorContext context)
+        {
+            arrayInitializerParam.ElementInitializers.ForEach(i => i.Accept(this, context));
+        }
+
         public override void VisitBinaryExpression(IBinaryExpression binaryExpressionParam,
             ReferenceCollectorContext context)
         {
@@ -56,17 +39,8 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
             binaryExpressionParam.RightOperand.Accept(this, context);
         }
 
-        public override void VisitReferenceExpression(IReferenceExpression referenceExpressionParam,
-            ReferenceCollectorContext context)
-        {
-            context.References.Add(referenceExpressionParam.NameIdentifier.Name);
-        }
-
-        public override void VisitArrayInitializer(IArrayInitializer arrayInitializerParam,
-            ReferenceCollectorContext context)
-        {
-            arrayInitializerParam.ElementInitializers.ForEach(i => i.Accept(this, context));
-        }
+        public override void VisitCSharpLiteralExpression(ICSharpLiteralExpression cSharpLiteralExpressionParam,
+            ReferenceCollectorContext context) {}
 
         public override void VisitExpressionInitializer(IExpressionInitializer expressionInitializerParam,
             ReferenceCollectorContext context)
@@ -87,6 +61,12 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
                     context.Scope.Body.Add(new Assignment(tmp, callee.CreateInvocation(method, args)));
                     context.References.Add(tmp);
                 });
+        }
+
+        public override void VisitReferenceExpression(IReferenceExpression referenceExpressionParam,
+            ReferenceCollectorContext context)
+        {
+            context.References.Add(referenceExpressionParam.NameIdentifier.Name);
         }
 
         public override void VisitThisExpression(IThisExpression thisExpressionParam, ReferenceCollectorContext context)

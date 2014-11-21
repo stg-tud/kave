@@ -17,6 +17,7 @@
  *    - Sebastian Proksch
  */
 
+using KaVE.Model.Names.CSharp;
 using KaVE.Model.SSTs.Declarations;
 using KaVE.Model.SSTs.Expressions;
 using KaVE.Model.SSTs.Statements;
@@ -201,7 +202,97 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             mA.Body.Add(new VariableDeclaration("arr", Fix.IntArray));
             mA.Body.Add(new VariableDeclaration("$0", Fix.Int));
             mA.Body.Add(new Assignment("$0", new InvocationExpression("o", Fix.GetHashCode(Fix.Object))));
-            mA.Body.Add(new Assignment("arr", new ComposedExpression {Variables = new[] {"$0"}}));
+            mA.Body.Add(new Assignment("arr", new ComposedExpression { Variables = new[] { "$0" } }));
+
+            AssertEntryPoints(mA);
+        }
+
+        [Test]
+        public void Is_Reference()
+        {
+            CompleteInClass(@"
+                public void A(object o)
+                {
+                    var isInstanceOf = o is string;
+                    $
+                }
+            ");
+
+            var mA = NewMethodDeclaration(Fix.Void, "A", string.Format("[{0}] o", Fix.Object));
+            mA.Body.Add(new VariableDeclaration("isInstanceOf", Fix.Bool));
+            mA.Body.Add(new Assignment("isInstanceOf", new ComposedExpression { Variables = new[] { "o" } }));
+
+            AssertEntryPoints(mA);
+        }
+
+        [Test]
+        public void Is_Const()
+        {
+            CompleteInClass(@"
+                public void A()
+                {
+                    var isInstanceOf = 1 is double;
+                    $
+                }
+            ");
+
+            var mA = NewMethodDeclaration(Fix.Void, "A");
+            mA.Body.Add(new VariableDeclaration("isInstanceOf", Fix.Bool));
+            mA.Body.Add(new Assignment("isInstanceOf", new ConstantExpression()));
+
+            AssertEntryPoints(mA);
+        }
+
+        [Test]
+        public void As_Reference()
+        {
+            CompleteInClass(@"
+                public void A(object o)
+                {
+                    var cast = o as string;
+                    $
+                }
+            ");
+
+            var mA = NewMethodDeclaration(Fix.Void, "A", string.Format("[{0}] o", Fix.Object));
+            mA.Body.Add(new VariableDeclaration("cast", Fix.String));
+            mA.Body.Add(new Assignment("cast", new ComposedExpression { Variables = new[] { "o" } }));
+
+            AssertEntryPoints(mA);
+        }
+
+        [Test]
+        public void As_Const()
+        {
+            CompleteInClass(@"
+                public void A()
+                {
+                    var cast = 1.0 as int;
+                    $
+                }
+            ");
+
+            var mA = NewMethodDeclaration(Fix.Void, "A");
+            mA.Body.Add(new VariableDeclaration("cast", Fix.Int));
+            mA.Body.Add(new Assignment("cast", new ConstantExpression()));
+
+            AssertEntryPoints(mA);
+        }
+
+        [Test]
+        public void This()
+        {
+            CompleteInClass(@"
+                public void A()
+                {
+                    var obj = this;
+                    $
+                }
+            ");
+
+            var mA = NewMethodDeclaration(Fix.Void, "A");
+            mA.Body.Add(new VariableDeclaration("obj", TypeName.Get("N.C, TestProject")));
+            mA.Body.Add(new Assignment("obj", ComposedExpression.Create("this")));
 
             AssertEntryPoints(mA);
         }

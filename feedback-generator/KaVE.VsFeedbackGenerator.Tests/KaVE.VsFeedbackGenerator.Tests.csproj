@@ -132,6 +132,7 @@
     <Compile Include="Utils\DateTimeTest.cs" />
     <Compile Include="Utils\ExporterTest.cs" />
     <Compile Include="Utils\GZipStreamTest.cs" />
+    <Compile Include="Utils\HierarchyTest.cs" />
     <Compile Include="Utils\HttpPublisherTest.cs" />
     <Compile Include="Utils\InverseBoolConverterTest.cs" />
     <Compile Include="Utils\IoUtilsTest.cs" />

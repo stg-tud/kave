@@ -23,30 +23,10 @@ using JetBrains.Util;
 using KaVE.Model.SSTs.Blocks;
 using KaVE.Model.SSTs.Declarations;
 using KaVE.Model.SSTs.Statements;
-using KaVE.VsFeedbackGenerator.Analysis.Util;
 using KaVE.VsFeedbackGenerator.Utils.Names;
 
 namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
 {
-    public class ScopeTransformerContext : ITransformerContext
-    {
-        public ScopeTransformerContext(ITransformerContext context)
-            : this(context.Factory, context.Generator, context.Scope) {}
-
-        public ScopeTransformerContext(ISSTFactory factory,
-            ITempVariableGenerator generator,
-            IScope scope)
-        {
-            Generator = generator;
-            Factory = factory;
-            Scope = scope;
-        }
-
-        public ISSTFactory Factory { get; private set; }
-        public ITempVariableGenerator Generator { get; private set; }
-        public IScope Scope { get; private set; }
-    }
-
     public class SSTScopeTransformer : BaseSSTTransformer<ScopeTransformerContext>
     {
         public override void VisitMethodDeclaration(IMethodDeclaration methodDeclarationParam,

@@ -336,5 +336,85 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 
             AssertEntryPoints(mA);
         }
+
+        [Test]
+        public void As_Reference()
+        {
+            CompleteInClass(@"
+                public void A(object o)
+                {
+                    Console.Write(o as int);
+                    $
+                }
+            ");
+
+            var mA = NewMethodDeclaration(Fix.Void, "A", string.Format("[{0}] o", Fix.Object));
+
+            mA.Body.Add(new VariableDeclaration("$0", Fix.Int));
+            mA.Body.Add(new Assignment("$0", ComposedExpression.Create("o")));
+            mA.Body.Add(new InvocationStatement(Fix.ConsoleWrite(Fix.Int), "$0"));
+
+            AssertEntryPoints(mA);
+        }
+
+        [Test]
+        public void As_Const()
+        {
+            CompleteInClass(@"
+                public void A()
+                {
+                    Console.Write(1.0 as int);
+                    $
+                }
+            ");
+
+            var mA = NewMethodDeclaration(Fix.Void, "A");
+
+            mA.Body.Add(new VariableDeclaration("$0", Fix.Int));
+            mA.Body.Add(new Assignment("$0", new ConstantExpression()));
+            mA.Body.Add(new InvocationStatement(Fix.ConsoleWrite(Fix.Int), "$0"));
+
+            AssertEntryPoints(mA);
+        }
+
+        [Test]
+        public void Is_Reference()
+        {
+            CompleteInClass(@"
+                public void A(object o)
+                {
+                    Console.Write(o is int);
+                    $
+                }
+            ");
+
+            var mA = NewMethodDeclaration(Fix.Void, "A", string.Format("[{0}] o", Fix.Object));
+
+            mA.Body.Add(new VariableDeclaration("$0", Fix.Bool));
+            mA.Body.Add(new Assignment("$0", ComposedExpression.Create("o")));
+            mA.Body.Add(new InvocationStatement(Fix.ConsoleWrite(Fix.Bool), "$0"));
+
+            AssertEntryPoints(mA);
+        }
+
+        [Test]
+        public void Is_Const()
+        {
+            CompleteInClass(@"
+                public void A()
+                {
+                    Console.Write(1.0 is int);
+                    $
+                }
+            ");
+
+            var mA = NewMethodDeclaration(Fix.Void, "A");
+
+            mA.Body.Add(new VariableDeclaration("$0", Fix.Bool));
+            mA.Body.Add(new Assignment("$0", new ConstantExpression()));
+            mA.Body.Add(new InvocationStatement(Fix.ConsoleWrite(Fix.Bool), "$0"));
+
+            AssertEntryPoints(mA);
+        }
     }
 }

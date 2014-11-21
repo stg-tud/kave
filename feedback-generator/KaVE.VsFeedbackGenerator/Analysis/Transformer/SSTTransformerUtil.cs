@@ -42,10 +42,15 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
         public static Expression GetScopedReferences(this ICSharpTreeNode node, ITransformerContext context)
         {
             var scope = context.Factory.Scope();
-            var refCollectorContext = new ReferenceCollectorContext(context.Factory, context.Generator, scope);
+            var refCollectorContext = new ReferenceCollectorContext(
+                context.Factory,
+                context.Generator,
+                scope,
+                context.Logger);
             node.Accept(context.Factory.ReferenceCollector(), refCollectorContext);
             if (scope.Body.Any())
             {
+                // TODO: use BlockExpression here
                 return refCollectorContext.References.AsExpression();
             }
             return refCollectorContext.References.AsExpression();
@@ -76,7 +81,11 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
 
         public static IScope GetScope(this ICSharpTreeNode node, ITransformerContext context)
         {
-            var scopeContext = new ScopeTransformerContext(context.Factory, context.Generator, context.Factory.Scope());
+            var scopeContext = new ScopeTransformerContext(
+                context.Factory,
+                context.Generator,
+                context.Factory.Scope(),
+                context.Logger);
             node.Accept(context.Factory.ScopeTransformer(), scopeContext);
             return scopeContext.Scope;
         }
