@@ -29,10 +29,16 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
         public IScope Scope { get; private set; }
         public ILogger Logger { get; private set; }
 
+        public ScopeTransformerContext(ISSTFactory factory, ILogger logger)
+            : this(factory, factory.TempVariableGenerator(), factory.Scope(), logger) {}
+
         public ScopeTransformerContext(ITransformerContext context)
             : this(context.Factory, context.Generator, context.Scope, context.Logger) {}
 
-        public ScopeTransformerContext(ISSTFactory factory,
+        public ScopeTransformerContext(ITransformerContext context, IScope scope)
+            : this(context.Factory, context.Generator, scope, context.Logger) {}
+
+        private ScopeTransformerContext(ISSTFactory factory,
             ITempVariableGenerator generator,
             IScope scope,
             ILogger logger)

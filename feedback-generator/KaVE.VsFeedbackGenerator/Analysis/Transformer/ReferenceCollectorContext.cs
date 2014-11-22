@@ -34,7 +34,10 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
         public ReferenceCollectorContext(ITransformerContext context)
             : this(context.Factory, context.Generator, context.Scope, context.Logger) {}
 
-        public ReferenceCollectorContext(ISSTFactory factory,
+        public ReferenceCollectorContext(ITransformerContext context, IScope scope)
+            : this(context.Factory, context.Generator, scope, context.Logger) {}
+
+        private ReferenceCollectorContext(ISSTFactory factory,
             ITempVariableGenerator generator,
             IScope scope,
             ILogger logger)

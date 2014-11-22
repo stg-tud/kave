@@ -62,11 +62,6 @@ namespace KaVE.VsFeedbackGenerator.Analysis
                     var dName = dElem.GetName<IMethodName>();
 
                     MethodDeclaration decl;
-                    var context = new ScopeTransformerContext(
-                        factory,
-                        factory.TempVariableGenerator(),
-                        factory.Scope(),
-                        Registry.GetComponent<ILogger>());
 
                     if (!epNames.Contains(dName))
                     {
@@ -78,8 +73,8 @@ namespace KaVE.VsFeedbackGenerator.Analysis
                         decl = sst.Methods.First(ep => ep.Name == dName);
                     }
 
-                    d.Accept(factory.ScopeTransformer(), context);
-                    decl.Body.AddRange(context.Scope.Body);
+                    var context = new ScopeTransformerContext(factory, Registry.GetComponent<ILogger>());
+                    decl.Body.AddRange(d.GetScope(context).Body);
 
                     //var dRef = MethodRef.CreateLocalReference(dName, dElem, dElem.GetDeclaration());
                 }

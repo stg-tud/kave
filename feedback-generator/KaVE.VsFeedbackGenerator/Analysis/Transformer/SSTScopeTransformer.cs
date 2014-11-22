@@ -140,9 +140,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
             {
                 var expression = (localVariableDeclarationParam.Initializer as IExpressionInitializer).Value;
                 var dest = localVariableDeclarationParam.NameIdentifier.Name;
-                expression.Accept(
-                    context.Factory.AssignmentGenerator(),
-                    new AssignmentGeneratorContext(context, dest));
+                expression.ProcessAssignment(context, dest);
             }
         }
 
@@ -150,9 +148,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
             ScopeTransformerContext context)
         {
             var dest = assignmentExpressionParam.Dest.GetReference(context);
-            assignmentExpressionParam.Source.Accept(
-                context.Factory.AssignmentGenerator(),
-                new AssignmentGeneratorContext(context, dest));
+            assignmentExpressionParam.Source.ProcessAssignment(context, dest);
         }
 
         public override void VisitInvocationExpression(IInvocationExpression invocationExpressionParam,

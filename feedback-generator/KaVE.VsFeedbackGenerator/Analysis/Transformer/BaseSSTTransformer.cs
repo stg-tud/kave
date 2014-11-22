@@ -18,7 +18,6 @@
  */
 
 using System;
-using System.Linq;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
 using KaVE.Model.Names;
@@ -69,9 +68,8 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
                 {
                     return;
                 }
-                var argCollectorContext = new ArgumentCollectorContext(context);
-                invocationExpressionParam.ArgumentList.Accept(context.Factory.ArgumentCollector(), argCollectorContext);
-                handler(callee, methodName, argCollectorContext.Arguments.ToArray(), typeName);
+                var arguments = invocationExpressionParam.ArgumentList.GetArguments(context);
+                handler(callee, methodName, arguments, typeName);
             }
         }
     }

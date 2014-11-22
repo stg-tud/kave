@@ -41,9 +41,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
             AssignmentGeneratorContext context)
         {
             var dest = assignmentExpressionParam.Dest.GetReference(context);
-            assignmentExpressionParam.Source.Accept(
-                context.Factory.AssignmentGenerator(),
-                new AssignmentGeneratorContext(context, dest));
+            assignmentExpressionParam.Source.ProcessAssignment(context, dest);
             context.Scope.Body.Add(new Assignment(context.Dest, ComposedExpression.Create(dest)));
         }
 

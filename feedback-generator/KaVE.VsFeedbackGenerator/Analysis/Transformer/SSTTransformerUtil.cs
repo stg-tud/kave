@@ -42,11 +42,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
         public static Expression GetScopedReferences(this ICSharpTreeNode node, ITransformerContext context)
         {
             var scope = context.Factory.Scope();
-            var refCollectorContext = new ReferenceCollectorContext(
-                context.Factory,
-                context.Generator,
-                scope,
-                context.Logger);
+            var refCollectorContext = new ReferenceCollectorContext(context, scope);
             node.Accept(context.Factory.ReferenceCollector(), refCollectorContext);
             if (scope.Body.Any())
             {
@@ -61,6 +57,13 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
             var refCollectorContext = new ReferenceCollectorContext(context);
             node.Accept(context.Factory.ReferenceCollector(), refCollectorContext);
             return refCollectorContext.References.AsExpression();
+        }
+
+        public static string[] GetArguments(this ICSharpTreeNode node, ITransformerContext context)
+        {
+            var argCollectorContext = new ArgumentCollectorContext(context);
+            node.Accept(context.Factory.ArgumentCollector(), argCollectorContext);
+            return argCollectorContext.Arguments.ToArray();
         }
 
         public static string GetArgument(this ICSharpTreeNode node, ITransformerContext context)
@@ -81,13 +84,14 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
 
         public static IScope GetScope(this ICSharpTreeNode node, ITransformerContext context)
         {
-            var scopeContext = new ScopeTransformerContext(
-                context.Factory,
-                context.Generator,
-                context.Factory.Scope(),
-                context.Logger);
+            var scopeContext = new ScopeTransformerContext(context, context.Factory.Scope());
             node.Accept(context.Factory.ScopeTransformer(), scopeContext);
             return scopeContext.Scope;
+        }
+
+        public static void ProcessAssignment(this ICSharpTreeNode node, ITransformerContext context, string dest)
+        {
+            node.Accept(context.Factory.AssignmentGenerator(), new AssignmentGeneratorContext(context, dest));
         }
 
         public static InvocationExpression CreateInvocation(this string callee, IMethodName method, string[] args)
