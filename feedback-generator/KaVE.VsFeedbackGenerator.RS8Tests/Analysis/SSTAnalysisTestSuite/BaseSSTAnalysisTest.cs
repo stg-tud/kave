@@ -96,8 +96,9 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
         public void ClearRegistry()
         {
             Registry.Clear();
-            Assert.IsEmpty(Log);
+            var logCopy = new List<string>(Log);
             Log.Clear();
+            Assert.IsEmpty(logCopy);
         }
     }
 }

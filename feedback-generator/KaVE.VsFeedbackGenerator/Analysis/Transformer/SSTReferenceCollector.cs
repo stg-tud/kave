@@ -20,16 +20,46 @@
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.Util;
 using KaVE.Model.SSTs.Declarations;
+using KaVE.Model.SSTs.Expressions;
 using KaVE.Model.SSTs.Statements;
+using KaVE.VsFeedbackGenerator.Utils.Names;
 
 namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
 {
     public class SSTReferenceCollector : BaseSSTTransformer<ReferenceCollectorContext>
     {
+        public override void VisitArrayCreationExpression(IArrayCreationExpression arrayCreationExpressionParam,
+            ReferenceCollectorContext context)
+        {
+            var tmp = context.Generator.GetNextVariableName();
+            context.Scope.Body.Add(new VariableDeclaration(tmp, arrayCreationExpressionParam.Type().GetName()));
+            context.Scope.Body.Add(
+                new Assignment(tmp, arrayCreationExpressionParam.ArrayInitializer.GetReferences(context)));
+            context.References.Add(tmp);
+        }
+
         public override void VisitArrayInitializer(IArrayInitializer arrayInitializerParam,
             ReferenceCollectorContext context)
         {
             arrayInitializerParam.ElementInitializers.ForEach(i => i.Accept(this, context));
+        }
+
+        public override void VisitAsExpression(IAsExpression asExpressionParam, ReferenceCollectorContext context)
+        {
+            var tmp = context.Generator.GetNextVariableName();
+            context.Scope.Body.Add(new VariableDeclaration(tmp, asExpressionParam.Type().GetName()));
+            context.Scope.Body.Add(new Assignment(tmp, asExpressionParam.Operand.GetReferences(context)));
+            context.References.Add(tmp);
+        }
+
+        public override void VisitAssignmentExpression(IAssignmentExpression assignmentExpressionParam,
+            ReferenceCollectorContext context)
+        {
+            var dest = assignmentExpressionParam.Dest.GetReference(context);
+            assignmentExpressionParam.Source.Accept(
+                context.Factory.AssignmentGenerator(),
+                new AssignmentGeneratorContext(context, dest));
+            context.References.Add(dest);
         }
 
         public override void VisitBinaryExpression(IBinaryExpression binaryExpressionParam,
@@ -37,6 +67,14 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
         {
             binaryExpressionParam.LeftOperand.Accept(this, context);
             binaryExpressionParam.RightOperand.Accept(this, context);
+        }
+
+        public override void VisitCastExpression(ICastExpression castExpressionParam, ReferenceCollectorContext context)
+        {
+            var tmp = context.Generator.GetNextVariableName();
+            context.Scope.Body.Add(new VariableDeclaration(tmp, castExpressionParam.Type().GetName()));
+            context.Scope.Body.Add(new Assignment(tmp, castExpressionParam.Op.GetReferences(context)));
+            context.References.Add(tmp);
         }
 
         public override void VisitCSharpLiteralExpression(ICSharpLiteralExpression cSharpLiteralExpressionParam,
@@ -63,6 +101,36 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
                 });
         }
 
+        public override void VisitIsExpression(IIsExpression isExpressionParam, ReferenceCollectorContext context)
+        {
+            var tmp = context.Generator.GetNextVariableName();
+            context.Scope.Body.Add(new VariableDeclaration(tmp, isExpressionParam.Type().GetName()));
+            context.Scope.Body.Add(new Assignment(tmp, isExpressionParam.Operand.GetReferences(context)));
+            context.References.Add(tmp);
+        }
+
+        public override void VisitParenthesizedExpression(IParenthesizedExpression parenthesizedExpressionParam,
+            ReferenceCollectorContext context)
+        {
+            parenthesizedExpressionParam.Expression.Accept(this, context);
+        }
+
+        public override void VisitPostfixOperatorExpression(IPostfixOperatorExpression postfixOperatorExpressionParam,
+            ReferenceCollectorContext context)
+        {
+            var reference = postfixOperatorExpressionParam.Operand.GetReference(context);
+            context.Scope.Body.Add(new Assignment(reference, ComposedExpression.Create(reference)));
+            context.References.Add(reference);
+        }
+
+        public override void VisitPrefixOperatorExpression(IPrefixOperatorExpression prefixOperatorExpressionParam,
+            ReferenceCollectorContext context)
+        {
+            var reference = prefixOperatorExpressionParam.Operand.GetReference(context);
+            context.Scope.Body.Add(new Assignment(reference, ComposedExpression.Create(reference)));
+            context.References.Add(reference);
+        }
+
         public override void VisitReferenceExpression(IReferenceExpression referenceExpressionParam,
             ReferenceCollectorContext context)
         {
@@ -72,6 +140,15 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
         public override void VisitThisExpression(IThisExpression thisExpressionParam, ReferenceCollectorContext context)
         {
             context.References.Add("this");
+        }
+
+        public override void VisitTypeofExpression(ITypeofExpression typeofExpressionParam,
+            ReferenceCollectorContext context) {}
+
+        public override void VisitUnaryOperatorExpression(IUnaryOperatorExpression unaryOperatorExpressionParam,
+            ReferenceCollectorContext context)
+        {
+            unaryOperatorExpressionParam.Operand.Accept(this, context);
         }
     }
 }

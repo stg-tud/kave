@@ -17,6 +17,7 @@
  *    - Sebastian Proksch
  */
 
+using JetBrains.Annotations;
 using KaVE.Model.Names.CSharp;
 using KaVE.Model.SSTs.Blocks;
 using KaVE.Model.SSTs.Declarations;
@@ -177,6 +178,131 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
                         "u1",
                         MethodName.Get(string.Format("[{0}] [N.U, TestProject].Plus([{0}] i)", Fix.Int)),
                         "$1")));
+
+            AssertEntryPoints(mA);
+        }
+
+        [Test]
+        public void CombinedIs()
+        {
+            CompleteInClass(@"
+                public void A(object o)
+                {
+                    var i = (o is int) || (1.0 is int);
+                    $
+                }
+            ");
+
+            var mA = NewMethodDeclaration(Fix.Void, "A", string.Format("[{0}] o", Fix.Object));
+            mA.Body.Add(new VariableDeclaration("i", Fix.Bool));
+            mA.Body.Add(new VariableDeclaration("$0", Fix.Bool));
+            mA.Body.Add(new Assignment("$0", ComposedExpression.Create("o")));
+            mA.Body.Add(new VariableDeclaration("$1", Fix.Bool));
+            mA.Body.Add(new Assignment("$1", new ConstantExpression()));
+            mA.Body.Add(new Assignment("i", ComposedExpression.Create("$0", "$1")));
+
+            AssertEntryPoints(mA);
+        }
+
+        [Test]
+        public void CombinedAs()
+        {
+            CompleteInClass(@"
+                public void A(object o)
+                {
+                    var i = (o as string) + (1.0 as string);
+                    $
+                }
+            ");
+
+            var mA = NewMethodDeclaration(Fix.Void, "A", string.Format("[{0}] o", Fix.Object));
+            mA.Body.Add(new VariableDeclaration("i", Fix.String));
+            mA.Body.Add(new VariableDeclaration("$0", Fix.String));
+            mA.Body.Add(new Assignment("$0", ComposedExpression.Create("o")));
+            mA.Body.Add(new VariableDeclaration("$1", Fix.String));
+            mA.Body.Add(new Assignment("$1", new ConstantExpression()));
+            mA.Body.Add(new Assignment("i", ComposedExpression.Create("$0", "$1")));
+
+            AssertEntryPoints(mA);
+        }
+
+        [Test]
+        public void CombinedCast()
+        {
+            CompleteInClass(@"
+                public void A(object o)
+                {
+                    var i = ((string) o) + ((string) 1.0);
+                    $
+                }
+            ");
+
+            var mA = NewMethodDeclaration(Fix.Void, "A", string.Format("[{0}] o", Fix.Object));
+            mA.Body.Add(new VariableDeclaration("i", Fix.String));
+            mA.Body.Add(new VariableDeclaration("$0", Fix.String));
+            mA.Body.Add(new Assignment("$0", ComposedExpression.Create("o")));
+            mA.Body.Add(new VariableDeclaration("$1", Fix.String));
+            mA.Body.Add(new Assignment("$1", new ConstantExpression()));
+            mA.Body.Add(new Assignment("i", ComposedExpression.Create("$0", "$1")));
+
+            AssertEntryPoints(mA);
+        }
+
+        [Test]
+        public void CombinedAssignment()
+        {
+            CompleteInClass(@"
+                public void A(int i)
+                {
+                    int j;
+                    var sum = (j = i) + i;
+                    $
+                }
+            ");
+
+            var mA = NewMethodDeclaration(Fix.Void, "A", string.Format("[{0}] i", Fix.Int));
+            mA.Body.Add(new VariableDeclaration("j", Fix.Int));
+            mA.Body.Add(new VariableDeclaration("sum", Fix.Int));
+            mA.Body.Add(new Assignment("j", ComposedExpression.Create("i")));
+            mA.Body.Add(new Assignment("sum", ComposedExpression.Create("j", "i")));
+
+            AssertEntryPoints(mA);
+        }
+
+        [Test]
+        public void CombinedPostfixPrefix()
+        {
+            CompleteInClass(@"
+                public void A(int i)
+                {
+                    var j = (i++) + (++i);
+                    $
+                }
+            ");
+
+            var mA = NewMethodDeclaration(Fix.Void, "A", string.Format("[{0}] i", Fix.Int));
+            mA.Body.Add(new VariableDeclaration("j", Fix.Int));
+            mA.Body.Add(new Assignment("i", ComposedExpression.Create("i")));
+            mA.Body.Add(new Assignment("i", ComposedExpression.Create("i")));
+            mA.Body.Add(new Assignment("j", ComposedExpression.Create("i", "i")));
+
+            AssertEntryPoints(mA);
+        }
+
+        [Test]
+        public void CombinedUnary()
+        {
+            CompleteInClass(@"
+                public void A(int i)
+                {
+                    var j = 0 + (-i);
+                    $
+                }
+            ");
+
+            var mA = NewMethodDeclaration(Fix.Void, "A", string.Format("[{0}] i", Fix.Int));
+            mA.Body.Add(new VariableDeclaration("j", Fix.Int));
+            mA.Body.Add(new Assignment("j", ComposedExpression.Create("i")));
 
             AssertEntryPoints(mA);
         }

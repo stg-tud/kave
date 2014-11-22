@@ -149,13 +149,10 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
         public override void VisitAssignmentExpression(IAssignmentExpression assignmentExpressionParam,
             ScopeTransformerContext context)
         {
-            if (assignmentExpressionParam.Dest is IReferenceExpression)
-            {
-                var dest = (assignmentExpressionParam.Dest as IReferenceExpression).NameIdentifier.Name;
-                assignmentExpressionParam.Source.Accept(
-                    context.Factory.AssignmentGenerator(),
-                    new AssignmentGeneratorContext(context, dest));
-            }
+            var dest = assignmentExpressionParam.Dest.GetReference(context);
+            assignmentExpressionParam.Source.Accept(
+                context.Factory.AssignmentGenerator(),
+                new AssignmentGeneratorContext(context, dest));
         }
 
         public override void VisitInvocationExpression(IInvocationExpression invocationExpressionParam,

@@ -188,6 +188,28 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
         }
 
         [Test]
+        public void ArrayInit_WithArrays()
+        {
+            CompleteInClass(@"
+                public void A()
+                {
+                    var arr = new[] {new[] {1, 2}, new[] {3, 4}};
+                    $
+                }
+            ");
+
+            var mA = NewMethodDeclaration(Fix.Void, "A");
+            mA.Body.Add(new VariableDeclaration("arr", TypeName.Get("System.Int32[][], mscorlib, 4.0.0.0")));
+            mA.Body.Add(new VariableDeclaration("$0", Fix.IntArray));
+            mA.Body.Add(new Assignment("$0", new ConstantExpression()));
+            mA.Body.Add(new VariableDeclaration("$1", Fix.IntArray));
+            mA.Body.Add(new Assignment("$1", new ConstantExpression()));
+            mA.Body.Add(new Assignment("arr", ComposedExpression.Create("$0", "$1")));
+
+            AssertEntryPoints(mA);
+        }
+
+        [Test]
         public void ArrayInit_WithCalls()
         {
             CompleteInClass(@"
@@ -202,7 +224,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             mA.Body.Add(new VariableDeclaration("arr", Fix.IntArray));
             mA.Body.Add(new VariableDeclaration("$0", Fix.Int));
             mA.Body.Add(new Assignment("$0", new InvocationExpression("o", Fix.GetHashCode(Fix.Object))));
-            mA.Body.Add(new Assignment("arr", new ComposedExpression { Variables = new[] { "$0" } }));
+            mA.Body.Add(new Assignment("arr", new ComposedExpression {Variables = new[] {"$0"}}));
 
             AssertEntryPoints(mA);
         }
@@ -220,7 +242,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 
             var mA = NewMethodDeclaration(Fix.Void, "A", string.Format("[{0}] o", Fix.Object));
             mA.Body.Add(new VariableDeclaration("isInstanceOf", Fix.Bool));
-            mA.Body.Add(new Assignment("isInstanceOf", new ComposedExpression { Variables = new[] { "o" } }));
+            mA.Body.Add(new Assignment("isInstanceOf", new ComposedExpression {Variables = new[] {"o"}}));
 
             AssertEntryPoints(mA);
         }
@@ -256,7 +278,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 
             var mA = NewMethodDeclaration(Fix.Void, "A", string.Format("[{0}] o", Fix.Object));
             mA.Body.Add(new VariableDeclaration("cast", Fix.String));
-            mA.Body.Add(new Assignment("cast", new ComposedExpression { Variables = new[] { "o" } }));
+            mA.Body.Add(new Assignment("cast", new ComposedExpression {Variables = new[] {"o"}}));
 
             AssertEntryPoints(mA);
         }
@@ -267,13 +289,13 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             CompleteInClass(@"
                 public void A()
                 {
-                    var cast = 1.0 as int;
+                    var cast = 1.0 as object;
                     $
                 }
             ");
 
             var mA = NewMethodDeclaration(Fix.Void, "A");
-            mA.Body.Add(new VariableDeclaration("cast", Fix.Int));
+            mA.Body.Add(new VariableDeclaration("cast", Fix.Object));
             mA.Body.Add(new Assignment("cast", new ConstantExpression()));
 
             AssertEntryPoints(mA);
@@ -294,6 +316,153 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             mA.Body.Add(new VariableDeclaration("obj", TypeName.Get("N.C, TestProject")));
             mA.Body.Add(new Assignment("obj", ComposedExpression.Create("this")));
 
+            AssertEntryPoints(mA);
+        }
+
+        [Test]
+        public void AssignmentChain()
+        {
+            CompleteInClass(@"
+                public void A(int i)
+                {
+                    var j = (i = 0);
+                    $
+                }
+            ");
+
+            var mA = NewMethodDeclaration(Fix.Void, "A", string.Format("[{0}] i", Fix.Int));
+            mA.Body.Add(new VariableDeclaration("j", Fix.Int));
+            mA.Body.Add(new Assignment("i", new ConstantExpression()));
+            mA.Body.Add(new Assignment("j", ComposedExpression.Create("i")));
+
+            AssertEntryPoints(mA);
+        }
+
+        [Test]
+        public void Cast_Const()
+        {
+            CompleteInClass(@"
+                public void A()
+                {
+                    var i = (int) 1.0;
+                    $
+                }
+            ");
+
+            var mA = NewMethodDeclaration(Fix.Void, "A");
+            mA.Body.Add(new VariableDeclaration("i", Fix.Int));
+            mA.Body.Add(new Assignment("i", new ConstantExpression()));
+
+            AssertEntryPoints(mA);
+        }
+
+        [Test]
+        public void Cast_Reference()
+        {
+            CompleteInClass(@"
+                public void A(object o)
+                {
+                    var s = (string) o;
+                    $
+                }
+            ");
+
+            var mA = NewMethodDeclaration(Fix.Void, "A", string.Format("[{0}] o", Fix.Object));
+            mA.Body.Add(new VariableDeclaration("s", Fix.String));
+            mA.Body.Add(new Assignment("s", ComposedExpression.Create("o")));
+
+            AssertEntryPoints(mA);
+        }
+
+        [Test]
+        public void Postfix()
+        {
+            CompleteInClass(@"
+                public void A(int i)
+                {
+                    var j = i++;
+                    $
+                }
+            ");
+
+            var mA = NewMethodDeclaration(Fix.Void, "A", string.Format("[{0}] i", Fix.Int));
+            mA.Body.Add(new VariableDeclaration("j", Fix.Int));
+            mA.Body.Add(new Assignment("i", ComposedExpression.Create("i")));
+            mA.Body.Add(new Assignment("j", ComposedExpression.Create("i")));
+
+            AssertEntryPoints(mA);
+        }
+
+        [Test]
+        public void Prefix()
+        {
+            CompleteInClass(@"
+                public void A(int i)
+                {
+                    var j = ++i;
+                    $
+                }
+            ");
+
+            var mA = NewMethodDeclaration(Fix.Void, "A", string.Format("[{0}] i", Fix.Int));
+            mA.Body.Add(new VariableDeclaration("j", Fix.Int));
+            mA.Body.Add(new Assignment("i", ComposedExpression.Create("i")));
+            mA.Body.Add(new Assignment("j", ComposedExpression.Create("i")));
+
+            AssertEntryPoints(mA);
+        }
+
+        [Test]
+        public void Unary()
+        {
+            CompleteInClass(@"
+                public void A(int i)
+                {
+                    var j = -i;
+                    $
+                }
+            ");
+
+            var mA = NewMethodDeclaration(Fix.Void, "A", string.Format("[{0}] i", Fix.Int));
+            mA.Body.Add(new VariableDeclaration("j", Fix.Int));
+            mA.Body.Add(new Assignment("j", ComposedExpression.Create("i")));
+
+            AssertEntryPoints(mA);
+        }
+
+        [Test]
+        public void TypeOf()
+        {
+            CompleteInClass(@"
+                public void A()
+                {
+                    var t = typeof(int);
+                    $
+                }
+            ");
+
+            var mA = NewMethodDeclaration(Fix.Void, "A");
+            mA.Body.Add(new VariableDeclaration("t", TypeName.Get("System.Type, mscorlib, 4.0.0.0")));
+            mA.Body.Add(new Assignment("t", new ConstantExpression()));
+
+            AssertEntryPoints(mA);
+        }
+
+        [Test]
+        public void CompositionOfTypeOf()
+        {
+            CompleteInClass(@"
+                public void A()
+                {
+                    var t = typeof(int) == typeof(string);
+                    $
+                }
+            ");
+
+            var mA = NewMethodDeclaration(Fix.Void, "A");
+            mA.Body.Add(new VariableDeclaration("t", Fix.Bool));
+            mA.Body.Add(new Assignment("t", new ConstantExpression()));
+            
             AssertEntryPoints(mA);
         }
     }
