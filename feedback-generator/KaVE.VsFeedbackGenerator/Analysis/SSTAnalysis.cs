@@ -27,10 +27,9 @@ using KaVE.Model.Names;
 using KaVE.Model.SSTs;
 using KaVE.Model.SSTs.Declarations;
 using KaVE.VsFeedbackGenerator.Analysis.Transformer;
+using KaVE.VsFeedbackGenerator.Analysis.Transformer.Context;
 using KaVE.VsFeedbackGenerator.Analysis.Util;
-using KaVE.VsFeedbackGenerator.Utils;
 using KaVE.VsFeedbackGenerator.Utils.Names;
-using ILogger = KaVE.VsFeedbackGenerator.Generators.ILogger;
 
 namespace KaVE.VsFeedbackGenerator.Analysis
 {
@@ -73,7 +72,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis
                         decl = sst.Methods.First(ep => ep.Name == dName);
                     }
 
-                    var context = new ScopeTransformerContext(factory, Registry.GetComponent<ILogger>());
+                    var context = new ScopeTransformerContext(factory);
                     decl.Body.AddRange(d.GetScope(context).Body);
 
                     //var dRef = MethodRef.CreateLocalReference(dName, dElem, dElem.GetDeclaration());

@@ -80,8 +80,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AboutAction.cs" />
-    <Compile Include="Analysis\Transformer\ArgumentCollectorContext.cs" />
-    <Compile Include="Analysis\Transformer\AssignmentGeneratorContext.cs" />
     <Compile Include="Analysis\Transformer\BaseSSTTransformer.cs" />
     <Compile Include="Analysis\CalledMethodsForEntryPointsAnalysis.cs" />
     <Compile Include="Analysis\CompletionTargetAnalysis.cs" />
@@ -91,9 +89,11 @@
     <Compile Include="Analysis\InvocationCollector.cs" />
     <Compile Include="Analysis\ReSharperUtils.cs" />
     <Compile Include="Analysis\SSTAnalysis.cs" />
-    <Compile Include="Analysis\Transformer\ITransformerContext.cs" />
-    <Compile Include="Analysis\Transformer\ReferenceCollectorContext.cs" />
-    <Compile Include="Analysis\Transformer\ScopeTransformerContext.cs" />
+    <Compile Include="Analysis\Transformer\Context\ArgumentCollectorContext.cs" />
+    <Compile Include="Analysis\Transformer\Context\AssignmentGeneratorContext.cs" />
+    <Compile Include="Analysis\Transformer\Context\ITransformerContext.cs" />
+    <Compile Include="Analysis\Transformer\Context\ReferenceCollectorContext.cs" />
+    <Compile Include="Analysis\Transformer\Context\ScopeTransformerContext.cs" />
     <Compile Include="Analysis\Transformer\SSTArgumentCollector.cs" />
     <Compile Include="Analysis\Transformer\SSTAssignmentGenerator.cs" />
     <Compile Include="Analysis\Transformer\SSTScopeTransformer.cs" />

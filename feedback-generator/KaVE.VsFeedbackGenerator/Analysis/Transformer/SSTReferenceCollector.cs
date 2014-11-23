@@ -22,6 +22,7 @@ using JetBrains.Util;
 using KaVE.Model.SSTs.Declarations;
 using KaVE.Model.SSTs.Expressions;
 using KaVE.Model.SSTs.Statements;
+using KaVE.VsFeedbackGenerator.Analysis.Transformer.Context;
 using KaVE.VsFeedbackGenerator.Utils.Names;
 
 namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
@@ -76,6 +77,9 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
         }
 
         public override void VisitCSharpLiteralExpression(ICSharpLiteralExpression cSharpLiteralExpressionParam,
+            ReferenceCollectorContext context) {}
+
+        public override void VisitDefaultExpression(IDefaultExpression defaultExpressionParam,
             ReferenceCollectorContext context) {}
 
         public override void VisitExpressionInitializer(IExpressionInitializer expressionInitializerParam,

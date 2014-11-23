@@ -18,6 +18,9 @@
  */
 
 using System.Collections.Generic;
+using System.Linq;
+using KaVE.Model.Collections;
+using KaVE.Utils;
 
 namespace KaVE.Model.SSTs.Expressions
 {
@@ -26,8 +29,33 @@ namespace KaVE.Model.SSTs.Expressions
      * Block Expressions add support for this transformation to SSTs.
      */
 
-    public class BlockExpression
+    public class BlockExpression : Expression
     {
-        public IList<Statement> Body { get; set; }
+        public string[] Value { get; set; }
+        public readonly IList<Statement> Body = Lists.NewList<Statement>();
+
+        protected bool Equals(BlockExpression other)
+        {
+            return Body.Equals(other.Body) && Value.SequenceEqual(other.Value);
+        }
+
+        public override bool Equals(object obj)
+        {
+            return this.Equals(obj, Equals);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return (Body.GetHashCode()*397) ^
+                       (Value != null ? HashCodeUtils.For(398, Value) : 0);
+            }
+        }
+
+        public override string ToString()
+        {
+            return string.Format("[{0} <{{{1}}}>]", string.Join(", ", Body), string.Join(" ", Value));
+        }
     }
 }

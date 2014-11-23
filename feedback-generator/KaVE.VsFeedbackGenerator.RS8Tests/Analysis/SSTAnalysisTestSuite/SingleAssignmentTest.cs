@@ -17,7 +17,6 @@
  *    - Sebastian Proksch
  */
 
-using JetBrains.Annotations;
 using KaVE.Model.Names.CSharp;
 using KaVE.Model.SSTs.Blocks;
 using KaVE.Model.SSTs.Declarations;
@@ -303,6 +302,24 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             var mA = NewMethodDeclaration(Fix.Void, "A", string.Format("[{0}] i", Fix.Int));
             mA.Body.Add(new VariableDeclaration("j", Fix.Int));
             mA.Body.Add(new Assignment("j", ComposedExpression.Create("i")));
+
+            AssertEntryPoints(mA);
+        }
+
+        [Test]
+        public void CombinedDefault()
+        {
+            CompleteInClass(@"
+                public void A()
+                {
+                    var i = 0 + default(int);
+                    $
+                }
+            ");
+
+            var mA = NewMethodDeclaration(Fix.Void, "A");
+            mA.Body.Add(new VariableDeclaration("i", Fix.Int));
+            mA.Body.Add(new Assignment("i", new ConstantExpression()));
 
             AssertEntryPoints(mA);
         }

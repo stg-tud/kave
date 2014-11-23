@@ -24,7 +24,9 @@ using KaVE.Model.Names;
 using KaVE.Model.SSTs;
 using KaVE.Model.SSTs.Expressions;
 using KaVE.Utils.Assertion;
+using KaVE.VsFeedbackGenerator.Analysis.Transformer.Context;
 using KaVE.VsFeedbackGenerator.Analysis.Util;
+using NuGet;
 
 namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
 {
@@ -46,8 +48,9 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
             node.Accept(context.Factory.ReferenceCollector(), refCollectorContext);
             if (scope.Body.Any())
             {
-                // TODO: use BlockExpression here
-                return refCollectorContext.References.AsExpression();
+                var block = new BlockExpression {Value = refCollectorContext.References.ToArray()};
+                block.Body.AddRange(refCollectorContext.Scope.Body);
+                return block;
             }
             return refCollectorContext.References.AsExpression();
         }
@@ -57,6 +60,29 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
             var refCollectorContext = new ReferenceCollectorContext(context);
             node.Accept(context.Factory.ReferenceCollector(), refCollectorContext);
             return refCollectorContext.References.AsExpression();
+        }
+
+        public static string GetReference(this ICSharpTreeNode node, ITransformerContext context)
+        {
+            var refCollectorContext = new ReferenceCollectorContext(context);
+            node.Accept(context.Factory.ReferenceCollector(), refCollectorContext);
+            Asserts.That(refCollectorContext.References.Count == 1);
+            return refCollectorContext.References[0];
+        }
+
+        public static string GetReference(this IEnumerable<ICSharpTreeNode> nodes, ITransformerContext context)
+        {
+            var enumerator = nodes.GetEnumerator();
+            var node = default(ICSharpTreeNode);
+            while (enumerator.MoveNext())
+            {
+                if (node != null)
+                {
+                    node.CollectSideEffects(context);
+                }
+                node = enumerator.Current;
+            }
+            return node.GetReference(context);
         }
 
         public static string[] GetArguments(this ICSharpTreeNode node, ITransformerContext context)
@@ -74,14 +100,6 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
             return argCollectorContext.Arguments[0];
         }
 
-        public static string GetReference(this ICSharpTreeNode node, ITransformerContext context)
-        {
-            var refCollectorContext = new ReferenceCollectorContext(context);
-            node.Accept(context.Factory.ReferenceCollector(), refCollectorContext);
-            Asserts.That(refCollectorContext.References.Count == 1);
-            return refCollectorContext.References[0];
-        }
-
         public static IScope GetScope(this ICSharpTreeNode node, ITransformerContext context)
         {
             var scopeContext = new ScopeTransformerContext(context, context.Factory.Scope());
@@ -92,6 +110,11 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
         public static void ProcessAssignment(this ICSharpTreeNode node, ITransformerContext context, string dest)
         {
             node.Accept(context.Factory.AssignmentGenerator(), new AssignmentGeneratorContext(context, dest));
+        }
+
+        public static void CollectSideEffects(this ICSharpTreeNode node, ITransformerContext context)
+        {
+            node.Accept(context.Factory.ReferenceCollector(), new ReferenceCollectorContext(context));
         }
 
         public static InvocationExpression CreateInvocation(this string callee, IMethodName method, string[] args)

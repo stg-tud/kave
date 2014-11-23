@@ -33,7 +33,11 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
         [Test]
         public void Test()
         {
-            SubTypeGraphOf(typeof (ICSharpTreeNode), "c:/typegraph.dot", type => type.IsInterface, false);
+            SubTypeGraphOf(
+                typeof (ICSharpTreeNode),
+                "c:/typegraph.dot",
+                type => type.IsInterface && !typeof (ICSharpExpression).IsAssignableFrom(type),
+                false);
         }
 
         public void SubTypeGraphOf(Type t, string path)

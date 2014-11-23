@@ -24,6 +24,7 @@ namespace KaVE.Model.SSTs.Statements
 {
     public class ThrowStatement : Statement
     {
+        // TODO @Seb: no references here?
         public ITypeName Exception { get; set; }
 
         private bool Equals(ThrowStatement other)
@@ -39,6 +40,11 @@ namespace KaVE.Model.SSTs.Statements
         public override int GetHashCode()
         {
             return (Exception != null ? Exception.GetHashCode() : 0);
+        }
+
+        public override string ToString()
+        {
+            return string.Format("throw {0};", Exception.Name);
         }
     }
 }

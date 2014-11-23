@@ -174,11 +174,11 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             AssertEntryPoints(mA);
         }
 
-        [Test, Ignore]
+        [Test]
         public void WhileLoop_AssignmentInCondition()
         {
             CompleteInClass(@"
-                public int A(object o)
+                public void A(object o)
                 {
                     var i = 0;
                     string s;
@@ -192,19 +192,21 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             var mA = NewMethodDeclaration(Fix.Void, "A", string.Format("[{0}] o", Fix.Object));
             mA.Body.Add(new VariableDeclaration("i", Fix.Int));
             mA.Body.Add(new Assignment("i", new ConstantExpression()));
+            mA.Body.Add(new VariableDeclaration("s", Fix.String));
 
-            // TODO: replace null if model contains corresponding classes
-            var whileLoop = new WhileLoop {Condition = null};
+            var block = new BlockExpression {Value = new[] {"s"}};
+            block.Body.Add(new Assignment("s", new InvocationExpression("o", Fix.ToString(Fix.Object))));
+            var whileLoop = new WhileLoop {Condition = block};
 
             whileLoop.Body.Add(new Assignment("i", new ComposedExpression {Variables = new[] {"i"}}));
-            whileLoop.Body.Add(new CompletionTrigger());
+            //whileLoop.Body.Add(new CompletionTrigger());
 
             mA.Body.Add(whileLoop);
 
             AssertEntryPoints(mA);
         }
 
-        [Test, Ignore]
+        [Test]
         public void ForLoop()
         {
             CompleteInClass(@"
@@ -226,7 +228,36 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 
             forLoop.Body.Add(new InvocationStatement(Fix.ConsoleWrite(Fix.Int), "i"));
             //forLoop.Body.Add(new CompletionTrigger());
-            
+
+            mA.Body.Add(forLoop);
+
+            AssertEntryPoints(mA);
+        }
+
+        [Test]
+        public void ForLoop_Predeclaration()
+        {
+            CompleteInClass(@"
+                public void A()
+                {
+                    int i;
+                    for(i = 0; i < 10; i++) {
+                        Console.Write(i);
+                        $
+                    }
+                }
+            ");
+
+            var mA = NewMethodDeclaration(Fix.Void, "A");
+            mA.Body.Add(new VariableDeclaration("i", Fix.Int));
+            var forLoop = new ForLoop();
+            forLoop.Init.Add(new Assignment("i", new ConstantExpression()));
+            forLoop.Condition = new ComposedExpression {Variables = new[] {"i"}};
+            forLoop.Step.Add(new Assignment("i", new ComposedExpression {Variables = new[] {"i"}}));
+
+            forLoop.Body.Add(new InvocationStatement(Fix.ConsoleWrite(Fix.Int), "i"));
+            //forLoop.Body.Add(new CompletionTrigger());
+
             mA.Body.Add(forLoop);
 
             AssertEntryPoints(mA);
@@ -276,6 +307,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
         [Test, Ignore]
         public void UsingBlock()
         {
+            // TODO @Seb: object isn't disposable
             CompleteInClass(@"
                 public int A()
                 {
@@ -302,7 +334,38 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             AssertEntryPoints(mA);
         }
 
-        [Test, Ignore]
+        [Test]
+        public void UsingBlockFromParameter()
+        {
+            var stream = TypeName.Get("System.IO.FileStream, mscorlib, 4.0.0.0");
+
+            CompleteInClass(@"
+                public void A(System.IO.FileStream s)
+                {
+                    using (s)
+	                {
+	                    s.WriteByte(123);
+                        $
+	                }
+                }
+            ");
+
+            var mA = NewMethodDeclaration(Fix.Void, "A", string.Format("[{0}] s", stream));
+            var usingBlock = new UsingBlock {Identifier = "s"};
+            usingBlock.Body.Add(new VariableDeclaration("$0", Fix.Int));
+            usingBlock.Body.Add(new Assignment("$0", new ConstantExpression()));
+            usingBlock.Body.Add(
+                new InvocationStatement(
+                    "s",
+                    MethodName.Get(string.Format("[{0}] [{1}].WriteByte([{2}] value)", Fix.Void, stream, Fix.Byte)),
+                    "$0"));
+            //usingBlock.Body.Add(new CompletionTrigger());
+            mA.Body.Add(usingBlock);
+
+            AssertEntryPoints(mA);
+        }
+
+        [Test]
         public void ThrowStatement()
         {
             CompleteInClass(@"
@@ -314,7 +377,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             ");
 
             var mA = NewMethodDeclaration(Fix.Void, "A");
-            mA.Body.Add(new CompletionTrigger());
+            //mA.Body.Add(new CompletionTrigger());
             mA.Body.Add(new ThrowStatement {Exception = Fix.Exception});
 
             AssertEntryPoints(mA);
@@ -324,10 +387,10 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
         public void TryCatchBlock()
         {
             CompleteInClass(@"
-                public int A()
+                public void A()
                 {
                     try {
-                        Console.GetHashCode();
+                        Console.WriteLine();
                         $
                     } catch(Exception e) {
                         Console.Read();

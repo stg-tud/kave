@@ -22,6 +22,7 @@ using JetBrains.Util;
 using KaVE.Model.SSTs.Declarations;
 using KaVE.Model.SSTs.Expressions;
 using KaVE.Model.SSTs.Statements;
+using KaVE.VsFeedbackGenerator.Analysis.Transformer.Context;
 using KaVE.VsFeedbackGenerator.Utils.Names;
 
 namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
@@ -86,6 +87,14 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
         {
             var tmp = context.Generator.GetNextVariableName();
             context.Scope.Body.Add(new VariableDeclaration(tmp, cSharpLiteralExpressionParam.Type().GetName()));
+            context.Scope.Body.Add(new Assignment(tmp, new ConstantExpression()));
+            context.Arguments.Add(tmp);
+        }
+
+        public override void VisitDefaultExpression(IDefaultExpression defaultExpressionParam, ArgumentCollectorContext context)
+        {
+            var tmp = context.Generator.GetNextVariableName();
+            context.Scope.Body.Add(new VariableDeclaration(tmp, defaultExpressionParam.Type().GetName()));
             context.Scope.Body.Add(new Assignment(tmp, new ConstantExpression()));
             context.Arguments.Add(tmp);
         }

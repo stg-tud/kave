@@ -20,6 +20,7 @@
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using KaVE.Model.SSTs.Expressions;
 using KaVE.Model.SSTs.Statements;
+using KaVE.VsFeedbackGenerator.Analysis.Transformer.Context;
 
 namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
 {
@@ -58,6 +59,11 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
 
         public override void VisitCSharpLiteralExpression(ICSharpLiteralExpression cSharpLiteralExpressionParam,
             AssignmentGeneratorContext context)
+        {
+            context.Scope.Body.Add(new Assignment(context.Dest, new ConstantExpression()));
+        }
+
+        public override void VisitDefaultExpression(IDefaultExpression defaultExpressionParam, AssignmentGeneratorContext context)
         {
             context.Scope.Body.Add(new Assignment(context.Dest, new ConstantExpression()));
         }

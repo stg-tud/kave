@@ -17,7 +17,6 @@
  *    - Sebastian Proksch
  */
 
-using System.Threading.Tasks;
 using KaVE.Model.Names.CSharp;
 using KaVE.Model.SSTs.Declarations;
 using KaVE.Model.SSTs.Expressions;
@@ -551,6 +550,26 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             mA.Body.Add(new VariableDeclaration("$0", TypeName.Get("System.Type, mscorlib, 4.0.0.0")));
             mA.Body.Add(new Assignment("$0", new ConstantExpression()));
             mA.Body.Add(new InvocationStatement(Fix.ConsoleWrite(Fix.Object), "$0"));
+
+            AssertEntryPoints(mA);
+        }
+
+        [Test]
+        public void Default()
+        {
+            CompleteInClass(@"
+                public void A()
+                {
+                    Console.Write(default(int));
+                    $
+                }
+            ");
+
+            var mA = NewMethodDeclaration(Fix.Void, "A");
+
+            mA.Body.Add(new VariableDeclaration("$0", Fix.Int));
+            mA.Body.Add(new Assignment("$0", new ConstantExpression()));
+            mA.Body.Add(new InvocationStatement(Fix.ConsoleWrite(Fix.Int), "$0"));
 
             AssertEntryPoints(mA);
         }

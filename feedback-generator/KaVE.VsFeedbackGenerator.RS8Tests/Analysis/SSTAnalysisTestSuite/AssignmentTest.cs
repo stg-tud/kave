@@ -462,7 +462,25 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             var mA = NewMethodDeclaration(Fix.Void, "A");
             mA.Body.Add(new VariableDeclaration("t", Fix.Bool));
             mA.Body.Add(new Assignment("t", new ConstantExpression()));
-            
+
+            AssertEntryPoints(mA);
+        }
+
+        [Test]
+        public void Default()
+        {
+            CompleteInClass(@"
+                public void A()
+                {
+                    var i = default(int);
+                    $
+                }
+            ");
+
+            var mA = NewMethodDeclaration(Fix.Void, "A");
+            mA.Body.Add(new VariableDeclaration("i", Fix.Int));
+            mA.Body.Add(new Assignment("i", new ConstantExpression()));
+
             AssertEntryPoints(mA);
         }
     }

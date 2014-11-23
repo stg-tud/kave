@@ -30,7 +30,7 @@ namespace KaVE.Model.SSTs.Blocks
 
         protected bool Equals(UsingBlock other)
         {
-            return Body.Equals(other.Body) && string.Equals(Identifier, other.Identifier);
+            return Body.Equals(other.Body) && Equals(Identifier, other.Identifier);
         }
 
         public override bool Equals(object obj)
@@ -41,6 +41,11 @@ namespace KaVE.Model.SSTs.Blocks
         public override int GetHashCode()
         {
             return 6 * Body.GetHashCode() + (Identifier != null ? Identifier.GetHashCode() : 0);
+        }
+
+        public override string ToString()
+        {
+            return string.Format("using ({0}) {{{1}}};", Identifier, string.Join(" ", Body));
         }
     }
 }

@@ -19,30 +19,26 @@
 
 using System.Collections.Generic;
 using KaVE.VsFeedbackGenerator.Analysis.Util;
-using KaVE.VsFeedbackGenerator.Generators;
 
-namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
+namespace KaVE.VsFeedbackGenerator.Analysis.Transformer.Context
 {
     public class ArgumentCollectorContext : ITransformerContext
     {
         public ISSTFactory Factory { get; private set; }
         public ITempVariableGenerator Generator { get; private set; }
         public IScope Scope { get; private set; }
-        public ILogger Logger { get; private set; }
         public readonly IList<string> Arguments;
 
         public ArgumentCollectorContext(ITransformerContext context)
-            : this(context.Factory, context.Generator, context.Scope, context.Logger) {}
+            : this(context.Factory, context.Generator, context.Scope) {}
 
         private ArgumentCollectorContext(ISSTFactory factory,
             ITempVariableGenerator generator,
-            IScope scope,
-            ILogger logger)
+            IScope scope)
         {
             Factory = factory;
             Generator = generator;
             Scope = scope;
-            Logger = logger;
             Arguments = new List<string>();
         }
     }

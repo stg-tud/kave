@@ -21,6 +21,9 @@ using System;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
 using KaVE.Model.Names;
+using KaVE.VsFeedbackGenerator.Analysis.Transformer.Context;
+using KaVE.VsFeedbackGenerator.Generators;
+using KaVE.VsFeedbackGenerator.Utils;
 using KaVE.VsFeedbackGenerator.Utils.Names;
 
 namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
@@ -29,8 +32,8 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
     {
         public override void VisitNode(ITreeNode node, TContext context)
         {
-            context.Logger.Info(
-                string.Format("{0} has no treatment for TreeNodes of type {1}", GetType(), node.GetType()));
+            Registry.GetComponent<ILogger>().Info(
+                string.Format("{0} has no treatment for TreeNodes of type {1}", GetType().Name, node.GetType().Name));
         }
 
         protected static void HandleInvocationExpression(IInvocationExpression invocationExpressionParam,

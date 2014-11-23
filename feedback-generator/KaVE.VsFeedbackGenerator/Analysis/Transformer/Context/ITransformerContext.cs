@@ -18,15 +18,13 @@
  */
 
 using KaVE.VsFeedbackGenerator.Analysis.Util;
-using KaVE.VsFeedbackGenerator.Generators;
 
-namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
+namespace KaVE.VsFeedbackGenerator.Analysis.Transformer.Context
 {
     public interface ITransformerContext
     {
         ISSTFactory Factory { get; }
         ITempVariableGenerator Generator { get; }
         IScope Scope { get; }
-        ILogger Logger { get; }
     }
 }

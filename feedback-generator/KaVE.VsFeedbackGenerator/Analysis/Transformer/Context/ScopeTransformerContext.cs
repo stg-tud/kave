@@ -18,35 +18,31 @@
  */
 
 using KaVE.VsFeedbackGenerator.Analysis.Util;
-using KaVE.VsFeedbackGenerator.Generators;
 
-namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
+namespace KaVE.VsFeedbackGenerator.Analysis.Transformer.Context
 {
     public class ScopeTransformerContext : ITransformerContext
     {
         public ISSTFactory Factory { get; private set; }
         public ITempVariableGenerator Generator { get; private set; }
         public IScope Scope { get; private set; }
-        public ILogger Logger { get; private set; }
 
-        public ScopeTransformerContext(ISSTFactory factory, ILogger logger)
-            : this(factory, factory.TempVariableGenerator(), factory.Scope(), logger) {}
+        public ScopeTransformerContext(ISSTFactory factory)
+            : this(factory, factory.TempVariableGenerator(), factory.Scope()) {}
 
         public ScopeTransformerContext(ITransformerContext context)
-            : this(context.Factory, context.Generator, context.Scope, context.Logger) {}
+            : this(context.Factory, context.Generator, context.Scope) {}
 
         public ScopeTransformerContext(ITransformerContext context, IScope scope)
-            : this(context.Factory, context.Generator, scope, context.Logger) {}
+            : this(context.Factory, context.Generator, scope) {}
 
         private ScopeTransformerContext(ISSTFactory factory,
             ITempVariableGenerator generator,
-            IScope scope,
-            ILogger logger)
+            IScope scope)
         {
             Factory = factory;
             Generator = generator;
             Scope = scope;
-            Logger = logger;
         }
     }
 }
