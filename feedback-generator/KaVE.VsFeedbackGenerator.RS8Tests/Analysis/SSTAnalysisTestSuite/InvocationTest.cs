@@ -61,7 +61,6 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
                 new Assignment(
                     "o",
                     new InvocationExpression(
-                        "o",
                         MethodName.Get(string.Format("[{0}] [{1}]..ctor()", Fix.Void, Fix.Object)))));
 
             AssertEntryPoints(mA);

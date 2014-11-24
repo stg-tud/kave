@@ -99,6 +99,25 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
             context.Scope.Body.Add(new Assignment(context.Dest, isExpressionParam.Operand.GetReferences(context)));
         }
 
+        /*public override void VisitObjectCreationExpression(IObjectCreationExpression objectCreationExpressionParam,
+            AssignmentGeneratorContext context)
+        {
+            if (objectCreationExpressionParam.Reference != null)
+            {
+                var element = objectCreationExpressionParam.Reference.Resolve().DeclaredElement as ConstructorElement;
+                if (element != null)
+                {
+                    var typeName = element.GetContainingType().GetName<ITypeName>(element.IdSubstitution);
+                    var typeNames = element.Parameters.Select(p => p.GetName<ITypeName>(element.IdSubstitution));
+                    var methodName =
+                        MethodName.Get("[System.Void, mscorlib, 4.0.0.0] [System.Object, mscorlib, 4.0.0.0]..ctor()");
+                    var arguments = objectCreationExpressionParam.ArgumentList.GetArguments(context);
+                    context.Scope.Body.Add(
+                        new Assignment(context.Dest, new InvocationExpression(methodName, arguments)));
+                }
+            }
+        }*/
+
         public override void VisitParenthesizedExpression(IParenthesizedExpression parenthesizedExpressionParam,
             AssignmentGeneratorContext context)
         {

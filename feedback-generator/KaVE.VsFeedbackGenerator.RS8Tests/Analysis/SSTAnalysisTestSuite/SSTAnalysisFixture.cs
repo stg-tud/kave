@@ -33,6 +33,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
         internal static readonly ITypeName Bool = TypeName.Get("System.Boolean, mscorlib, 4.0.0.0");
         internal static readonly ITypeName Object = TypeName.Get("System.Object, mscorlib, 4.0.0.0");
         internal static readonly ITypeName Exception = TypeName.Get("System.Exception, mscorlib, 4.0.0.0");
+        internal static readonly ITypeName IOException = TypeName.Get("System.IO.IOException, mscorlib, 4.0.0.0");
 
         internal static IMethodName GetHashCode(ITypeName declaringType)
         {

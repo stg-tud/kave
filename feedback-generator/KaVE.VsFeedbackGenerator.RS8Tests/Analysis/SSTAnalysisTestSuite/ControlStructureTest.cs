@@ -383,7 +383,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             AssertEntryPoints(mA);
         }
 
-        [Test, Ignore]
+        [Test]
         public void TryCatchBlock()
         {
             CompleteInClass(@"
@@ -393,7 +393,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
                         Console.WriteLine();
                         $
                     } catch(IOException e) {
-                        Console.Write(e.StackTrace);
+                        Console.Write(e.GetHashCode());
                     } catch(Exception) {
                         Console.Write(""catch this"");
                     } catch {
@@ -407,14 +407,32 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             var mA = NewMethodDeclaration(Fix.Void, "A");
 
             var tryBlock = new TryBlock();
-
-            tryBlock.Body.Add(new InvocationStatement(MethodName.Get("Console.GetHashCode()")));
+            tryBlock.Body.Add(
+                new InvocationStatement(
+                    MethodName.Get(
+                        string.Format("static [{0}] [System.Console, mscorlib, 4.0.0.0].WriteLine()", Fix.Void))));
             //tryBlock.Body.Add(new CompletionTrigger());
 
-            tryBlock.CatchBlocks.Add(new CatchBlock {Exception = new VariableDeclaration("e", Fix.Exception)});
-            tryBlock.CatchBlocks.Add(new CatchBlock {Exception = new VariableDeclaration(null, Fix.Exception)});
-            tryBlock.CatchBlocks.Add(new CatchBlock());
-            tryBlock.Finally.Add(new InvocationStatement(MethodName.Get("Console.Beep()")));
+            var namedCatch = new CatchBlock {Exception = new VariableDeclaration("e", Fix.IOException)};
+            namedCatch.Body.Add(new VariableDeclaration("$0", Fix.Int));
+            namedCatch.Body.Add(new Assignment("$0", new InvocationExpression("e", Fix.GetHashCode(Fix.Object))));
+            namedCatch.Body.Add(new InvocationStatement(Fix.ConsoleWrite(Fix.Int), "$0"));
+            tryBlock.CatchBlocks.Add(namedCatch);
+            var unnamedCatch = new CatchBlock {Exception = new VariableDeclaration(null, Fix.Exception)};
+            unnamedCatch.Body.Add(new VariableDeclaration("$1", Fix.String));
+            unnamedCatch.Body.Add(new Assignment("$1", new ConstantExpression()));
+            unnamedCatch.Body.Add(new InvocationStatement(Fix.ConsoleWrite(Fix.String), "$1"));
+            tryBlock.CatchBlocks.Add(unnamedCatch);
+            var catchAll = new CatchBlock();
+            catchAll.Body.Add(new VariableDeclaration("$2", Fix.String));
+            catchAll.Body.Add(new Assignment("$2", new ConstantExpression()));
+            catchAll.Body.Add(new InvocationStatement(Fix.ConsoleWrite(Fix.String), "$2"));
+            tryBlock.CatchBlocks.Add(catchAll);
+            tryBlock.Finally.Add(new VariableDeclaration("$3", Fix.String));
+            tryBlock.Finally.Add(new Assignment("$3", new ConstantExpression()));
+            tryBlock.Finally.Add(new InvocationStatement(Fix.ConsoleWrite(Fix.String), "$3"));
+
+            mA.Body.Add(tryBlock);
 
             AssertEntryPoints(mA);
         }

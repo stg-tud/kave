@@ -22,10 +22,13 @@ using System.Linq;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using KaVE.Model.Names;
 using KaVE.Model.SSTs;
+using KaVE.Model.SSTs.Blocks;
+using KaVE.Model.SSTs.Declarations;
 using KaVE.Model.SSTs.Expressions;
 using KaVE.Utils.Assertion;
 using KaVE.VsFeedbackGenerator.Analysis.Transformer.Context;
 using KaVE.VsFeedbackGenerator.Analysis.Util;
+using KaVE.VsFeedbackGenerator.Utils.Names;
 using NuGet;
 
 namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
@@ -124,6 +127,23 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
                 return new InvocationExpression(method, args);
             }
             return new InvocationExpression(callee, method, args);
+        }
+
+        public static CatchBlock GetCatchBlock(this ICatchClause catchClauseParam, ITransformerContext context)
+        {
+            var catchBlock = new CatchBlock();
+            if (catchClauseParam is ISpecificCatchClause)
+            {
+                var specificCatchClause = catchClauseParam as ISpecificCatchClause;
+                string identifier = null;
+                if (specificCatchClause.ExceptionDeclaration != null)
+                {
+                    identifier = specificCatchClause.ExceptionDeclaration.DeclaredName;
+                }
+                catchBlock.Exception = new VariableDeclaration(identifier, catchClauseParam.ExceptionType.GetName());
+            }
+            catchBlock.Body.AddRange(catchClauseParam.Body.GetScope(context).Body);
+            return catchBlock;
         }
     }
 }

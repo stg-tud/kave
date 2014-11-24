@@ -163,10 +163,18 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
             context.Scope.Body.Add(new ThrowStatement {Exception = throwStatementParam.Exception.Type().GetName()});
         }
 
+        public override void VisitTryStatement(ITryStatement tryStatementParam, ScopeTransformerContext context)
+        {
+            var tryBlock = new TryBlock();
+            tryBlock.Body.AddRange(tryStatementParam.Try.GetScope(context).Body);
+            tryBlock.CatchBlocks.AddRange(tryStatementParam.Catches.Select(c => c.GetCatchBlock(context)));
+            tryBlock.Finally.AddRange(tryStatementParam.FinallyBlock.GetScope(context).Body);
+            context.Scope.Body.Add(tryBlock);
+        }
+
         public override void VisitUsingStatement(IUsingStatement usingStatementParam, ScopeTransformerContext context)
         {
-            var usingBlock = new UsingBlock();
-            usingBlock.Identifier = usingStatementParam.Expressions.GetReference(context);
+            var usingBlock = new UsingBlock {Identifier = usingStatementParam.Expressions.GetReference(context)};
             usingBlock.Body.AddRange(usingStatementParam.Body.GetScope(context).Body);
             context.Scope.Body.Add(usingBlock);
         }

@@ -49,7 +49,8 @@ namespace KaVE.Model.SSTs.Blocks
 
         public override string ToString()
         {
-            return string.Format("catch ({0}) {{{1}}}", (object)Exception ?? "", string.Join(" ", Body));
+            var exception = Exception == null ? "" : Exception.ToString().Replace(";", "");
+            return string.Format("catch ({0}) {{{1}}}", exception, string.Join(" ", Body));
         }
     }
 }

@@ -33,16 +33,15 @@ namespace KaVE.Model.SSTs.Expressions
 
         public InvocationExpression(IMethodName name, params string[] parameters)
         {
-            Asserts.That(name.IsStatic);
+            Asserts.That(name.IsStatic || name.IsConstructor);
             Identifier = "";
             Name = name;
-
             Parameters = parameters;
         }
 
         public InvocationExpression(string id, IMethodName name, params string[] parameters)
         {
-            Asserts.Not(name.IsStatic);
+            Asserts.Not(name.IsStatic || name.IsConstructor);
             Identifier = id;
             Name = name;
             Parameters = parameters;
@@ -74,7 +73,7 @@ namespace KaVE.Model.SSTs.Expressions
         {
             return string.Format(
                 "{0}.{1}({2})",
-                Name.IsStatic ? Name.DeclaringType.Name : Identifier,
+                (Name.IsStatic || Name.IsConstructor) ? Name.DeclaringType.Name : Identifier,
                 Name.Name,
                 string.Join(", ", Parameters));
         }
