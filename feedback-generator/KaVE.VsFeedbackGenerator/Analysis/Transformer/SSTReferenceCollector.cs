@@ -76,6 +76,24 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
             context.References.Add(tmp);
         }
 
+        public override void VisitConditionalTernaryExpression(
+            IConditionalTernaryExpression conditionalTernaryExpressionParam,
+            ReferenceCollectorContext context)
+        {
+            var tmp = context.Generator.GetNextVariableName();
+            context.Scope.Body.Add(new VariableDeclaration(tmp, conditionalTernaryExpressionParam.Type().GetName()));
+            context.Scope.Body.Add(
+                new Assignment(
+                    tmp,
+                    new IfElseExpression
+                    {
+                        Condition = conditionalTernaryExpressionParam.ConditionOperand.GetScopedReferences(context),
+                        ThenExpression = conditionalTernaryExpressionParam.ThenResult.GetScopedReferences(context),
+                        ElseExpression = conditionalTernaryExpressionParam.ElseResult.GetScopedReferences(context)
+                    }));
+            context.References.Add(tmp);
+        }
+
         public override void VisitCSharpLiteralExpression(ICSharpLiteralExpression cSharpLiteralExpressionParam,
             ReferenceCollectorContext context) {}
 

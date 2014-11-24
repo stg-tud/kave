@@ -18,7 +18,6 @@
  */
 
 using KaVE.Model.Names.CSharp;
-using KaVE.Model.SSTs.Blocks;
 using KaVE.Model.SSTs.Declarations;
 using KaVE.Model.SSTs.Expressions;
 using KaVE.Model.SSTs.Statements;
@@ -30,7 +29,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
     [TestFixture]
     internal class SingleAssignmentTest : BaseSSTAnalysisTest
     {
-        [Test, Ignore]
+        [Test]
         public void InlineIfElse()
         {
             CompleteInClass(@"
@@ -42,16 +41,69 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             ");
 
             var mA = NewMethodDeclaration(Fix.Void, "A");
-            mA.Body.Add(new VariableDeclaration("v0", Fix.Bool));
-            mA.Body.Add(new Assignment("v0", new ConstantExpression()));
-
-            var ifElse = new IfElseBlock {Condition = new ComposedExpression {Variables = new[] {"v0"}}};
-
             mA.Body.Add(new VariableDeclaration("i", Fix.Int));
-            mA.Body.Add(ifElse);
-            ifElse.Then.Add(new Assignment("i", new ConstantExpression()));
-            ifElse.Else.Add(new Assignment("i", new ConstantExpression()));
+            mA.Body.Add(
+                new Assignment(
+                    "i",
+                    new IfElseExpression
+                    {
+                        Condition = new ConstantExpression(),
+                        ThenExpression = new ConstantExpression(),
+                        ElseExpression = new ConstantExpression()
+                    }));
 
+            AssertEntryPoints(mA);
+        }
+
+        [Test]
+        public void ComplexInlineIfElse()
+        {
+            CompleteInClass(@"
+                public void A(object o1, object o2, object o3)
+                {
+                    var compare = (o2.GetHashCode() > o3.GetHashCode())
+                        ? o1.ToString().Equals(o2.ToString())
+                        : o1.ToString().Equals(o3.ToString());
+                    $
+                }
+            ");
+
+            var mA = NewMethodDeclaration(
+                Fix.Void,
+                "A",
+                string.Format("[{0}] o1", Fix.Object),
+                string.Format("[{0}] o2", Fix.Object),
+                string.Format("[{0}] o3", Fix.Object));
+            mA.Body.Add(new VariableDeclaration("compare", Fix.Bool));
+            var ifBlock = new BlockExpression {Value = new[] {"$0", "$1"}};
+            ifBlock.Body.Add(new VariableDeclaration("$0", Fix.Int));
+            ifBlock.Body.Add(new Assignment("$0", new InvocationExpression("o2", Fix.GetHashCode(Fix.Object))));
+            ifBlock.Body.Add(new VariableDeclaration("$1", Fix.Int));
+            ifBlock.Body.Add(new Assignment("$1", new InvocationExpression("o3", Fix.GetHashCode(Fix.Object))));
+            var thenBlock = new BlockExpression {Value = new[] {"$4"}};
+            thenBlock.Body.Add(new VariableDeclaration("$2", Fix.String));
+            thenBlock.Body.Add(new Assignment("$2", new InvocationExpression("o1", Fix.ToString(Fix.Object))));
+            thenBlock.Body.Add(new VariableDeclaration("$3", Fix.String));
+            thenBlock.Body.Add(new Assignment("$3", new InvocationExpression("o2", Fix.ToString(Fix.Object))));
+            thenBlock.Body.Add(new VariableDeclaration("$4", Fix.Bool));
+            thenBlock.Body.Add(
+                new Assignment(
+                    "$4",
+                    new InvocationExpression("$2", Fix.Equals(Fix.String, Fix.String, "value"), new[] {"$3"})));
+            var elseBlock = new BlockExpression {Value = new[] {"$7"}};
+            elseBlock.Body.Add(new VariableDeclaration("$5", Fix.String));
+            elseBlock.Body.Add(new Assignment("$5", new InvocationExpression("o1", Fix.ToString(Fix.Object))));
+            elseBlock.Body.Add(new VariableDeclaration("$6", Fix.String));
+            elseBlock.Body.Add(new Assignment("$6", new InvocationExpression("o3", Fix.ToString(Fix.Object))));
+            elseBlock.Body.Add(new VariableDeclaration("$7", Fix.Bool));
+            elseBlock.Body.Add(
+                new Assignment(
+                    "$7",
+                    new InvocationExpression("$5", Fix.Equals(Fix.String, Fix.String, "value"), new[] {"$6"})));
+            mA.Body.Add(
+                new Assignment(
+                    "compare",
+                    new IfElseExpression {Condition = ifBlock, ThenExpression = thenBlock, ElseExpression = elseBlock}));
             AssertEntryPoints(mA);
         }
 
@@ -302,6 +354,34 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             var mA = NewMethodDeclaration(Fix.Void, "A", string.Format("[{0}] i", Fix.Int));
             mA.Body.Add(new VariableDeclaration("j", Fix.Int));
             mA.Body.Add(new Assignment("j", ComposedExpression.Create("i")));
+
+            AssertEntryPoints(mA);
+        }
+
+        [Test]
+        public void CombinedInlineIfElse()
+        {
+            CompleteInClass(@"
+                public void A()
+                {
+                    var i = (true ? 1 : 2) + 3;
+                    $
+                }
+            ");
+
+            var mA = NewMethodDeclaration(Fix.Void, "A");
+            mA.Body.Add(new VariableDeclaration("i", Fix.Int));
+            mA.Body.Add(new VariableDeclaration("$0", Fix.Int));
+            mA.Body.Add(
+                new Assignment(
+                    "$0",
+                    new IfElseExpression
+                    {
+                        Condition = new ConstantExpression(),
+                        ThenExpression = new ConstantExpression(),
+                        ElseExpression = new ConstantExpression()
+                    }));
+            mA.Body.Add(new Assignment("i", ComposedExpression.Create("$0")));
 
             AssertEntryPoints(mA);
         }

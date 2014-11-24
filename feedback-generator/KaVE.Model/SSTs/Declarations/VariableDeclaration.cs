@@ -55,7 +55,7 @@ namespace KaVE.Model.SSTs.Declarations
 
         public override string ToString()
         {
-            return string.Format("{0} {1};", Type.Name, Identifier);
+            return string.Format("{0} {1};", Type.Name, Identifier ?? "");
         }
     }
 }

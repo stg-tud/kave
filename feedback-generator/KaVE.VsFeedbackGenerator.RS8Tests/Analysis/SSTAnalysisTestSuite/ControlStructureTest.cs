@@ -392,15 +392,14 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
                     try {
                         Console.WriteLine();
                         $
-                    } catch(Exception e) {
-                        Console.Read();
-                        e.GetStacktrace();
+                    } catch(IOException e) {
+                        Console.Write(e.StackTrace);
                     } catch(Exception) {
-                        Console.Read();
+                        Console.Write(""catch this"");
                     } catch {
-                        Console.Read();
+                        Console.Write(""catch all"");
                     } finally {
-                        Console.Beep();
+                        Console.Write(""final"");
                     }
                 }
             ");
@@ -410,7 +409,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             var tryBlock = new TryBlock();
 
             tryBlock.Body.Add(new InvocationStatement(MethodName.Get("Console.GetHashCode()")));
-            tryBlock.Body.Add(new CompletionTrigger());
+            //tryBlock.Body.Add(new CompletionTrigger());
 
             tryBlock.CatchBlocks.Add(new CatchBlock {Exception = new VariableDeclaration("e", Fix.Exception)});
             tryBlock.CatchBlocks.Add(new CatchBlock {Exception = new VariableDeclaration(null, Fix.Exception)});

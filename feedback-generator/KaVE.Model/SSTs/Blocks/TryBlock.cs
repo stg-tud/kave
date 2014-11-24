@@ -19,6 +19,7 @@
 
 using System.Collections.Generic;
 using KaVE.Model.Collections;
+using KaVE.Utils;
 
 namespace KaVE.Model.SSTs.Blocks
 {
@@ -27,5 +28,35 @@ namespace KaVE.Model.SSTs.Blocks
         public readonly IList<Statement> Body = Lists.NewList<Statement>();
         public readonly IList<CatchBlock> CatchBlocks = Lists.NewList<CatchBlock>();
         public readonly IList<Statement> Finally = Lists.NewList<Statement>();
+
+        private bool Equals(TryBlock other)
+        {
+            return Body.Equals(other.Body) && CatchBlocks.Equals(other.CatchBlocks) && Finally.Equals(other.Finally);
+        }
+
+        public override bool Equals(object obj)
+        {
+            return this.Equals(obj, Equals);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                var hashCode = Body.GetHashCode();
+                hashCode = (hashCode*397) ^ CatchBlocks.GetHashCode();
+                hashCode = (hashCode*397) ^ Finally.GetHashCode();
+                return hashCode;
+            }
+        }
+
+        public override string ToString()
+        {
+            return string.Format(
+                "try {{{0}}} {1} finally {{{2}}};",
+                string.Join(" ", Body),
+                string.Join(" ", CatchBlocks),
+                string.Join(" ", Finally));
+        }
     }
 }

@@ -55,7 +55,7 @@ namespace KaVE.Model.SSTs.Expressions
 
         public override string ToString()
         {
-            return string.Format("[{0} <{{{1}}}>]", string.Join(", ", Body), string.Join(" ", Value));
+            return string.Format("[{0} <{{{1}}}>]", string.Join(" ", Body), string.Join(", ", Value));
         }
     }
 }

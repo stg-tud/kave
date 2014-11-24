@@ -90,7 +90,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             CompleteInClass(@"
                 public void A()
                 {
-                    var i = 1
+                    var i = 1;
                     var j = i + 1;
                     $
                 }
@@ -112,7 +112,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
                 public void A()
                 {
                     int i, j;
-                    i = 1
+                    i = 1;
                     j = i;
                     $
                 }
@@ -133,7 +133,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             CompleteInClass(@"
                 public void A()
                 {
-                    var i = 1
+                    var i = 1;
                     var j = i;
                     $
                 }

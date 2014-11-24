@@ -29,7 +29,7 @@ namespace KaVE.Model.Tests.SSTs.Expressions
         {
             var sut = new IfElseExpression();
             Assert.IsNull(sut.Condition);
-            Assert.IsNull(sut.IfExpression);
+            Assert.IsNull(sut.ThenExpression);
             Assert.IsNull(sut.ElseExpression);
         }
 
@@ -39,11 +39,11 @@ namespace KaVE.Model.Tests.SSTs.Expressions
             var sut = new IfElseExpression
             {
                 Condition = new ComposedExpression(),
-                IfExpression = new ConstantExpression(),
+                ThenExpression = new ConstantExpression(),
                 ElseExpression = new InvocationExpression()
             };
             Assert.AreEqual(new ComposedExpression(), sut.Condition);
-            Assert.AreEqual(new ConstantExpression(), sut.IfExpression);
+            Assert.AreEqual(new ConstantExpression(), sut.ThenExpression);
             Assert.AreEqual(new InvocationExpression(), sut.ElseExpression);
         }
 
@@ -62,13 +62,13 @@ namespace KaVE.Model.Tests.SSTs.Expressions
             var a = new IfElseExpression
             {
                 Condition = new ComposedExpression(),
-                IfExpression = new ConstantExpression(),
+                ThenExpression = new ConstantExpression(),
                 ElseExpression = new InvocationExpression()
             };
             var b = new IfElseExpression
             {
                 Condition = new ComposedExpression(),
-                IfExpression = new ConstantExpression(),
+                ThenExpression = new ConstantExpression(),
                 ElseExpression = new InvocationExpression()
             };
             Assert.AreEqual(a, b);
@@ -87,7 +87,7 @@ namespace KaVE.Model.Tests.SSTs.Expressions
         [Test]
         public void Equality_DifferentIf()
         {
-            var a = new IfElseExpression {IfExpression = new ComposedExpression()};
+            var a = new IfElseExpression {ThenExpression = new ComposedExpression()};
             var b = new IfElseExpression();
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());

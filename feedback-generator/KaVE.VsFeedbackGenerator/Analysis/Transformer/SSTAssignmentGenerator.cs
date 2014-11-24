@@ -57,13 +57,29 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
             context.Scope.Body.Add(new Assignment(context.Dest, castExpressionParam.Op.GetReferences(context)));
         }
 
+        public override void VisitConditionalTernaryExpression(
+            IConditionalTernaryExpression conditionalTernaryExpressionParam,
+            AssignmentGeneratorContext context)
+        {
+            context.Scope.Body.Add(
+                new Assignment(
+                    context.Dest,
+                    new IfElseExpression
+                    {
+                        Condition = conditionalTernaryExpressionParam.ConditionOperand.GetScopedReferences(context),
+                        ThenExpression = conditionalTernaryExpressionParam.ThenResult.GetScopedReferences(context),
+                        ElseExpression = conditionalTernaryExpressionParam.ElseResult.GetScopedReferences(context)
+                    }));
+        }
+
         public override void VisitCSharpLiteralExpression(ICSharpLiteralExpression cSharpLiteralExpressionParam,
             AssignmentGeneratorContext context)
         {
             context.Scope.Body.Add(new Assignment(context.Dest, new ConstantExpression()));
         }
 
-        public override void VisitDefaultExpression(IDefaultExpression defaultExpressionParam, AssignmentGeneratorContext context)
+        public override void VisitDefaultExpression(IDefaultExpression defaultExpressionParam,
+            AssignmentGeneratorContext context)
         {
             context.Scope.Body.Add(new Assignment(context.Dest, new ConstantExpression()));
         }

@@ -25,12 +25,12 @@ namespace KaVE.Model.SSTs.Expressions
     {
         public Expression Condition { get; set; }
         // use LambdaExpression here in case of more complex subexpressions
-        public Expression IfExpression { get; set; }
+        public Expression ThenExpression { get; set; }
         public Expression ElseExpression { get; set; }
 
         private bool Equals(IfElseExpression other)
         {
-            return Equals(Condition, other.Condition) && Equals(IfExpression, other.IfExpression) &&
+            return Equals(Condition, other.Condition) && Equals(ThenExpression, other.ThenExpression) &&
                    Equals(ElseExpression, other.ElseExpression);
         }
 
@@ -44,10 +44,15 @@ namespace KaVE.Model.SSTs.Expressions
             unchecked
             {
                 var hashCode = (Condition != null ? Condition.GetHashCode() : 0);
-                hashCode = (hashCode*397) ^ (IfExpression != null ? IfExpression.GetHashCode() : 0);
+                hashCode = (hashCode*397) ^ (ThenExpression != null ? ThenExpression.GetHashCode() : 0);
                 hashCode = (hashCode*397) ^ (ElseExpression != null ? ElseExpression.GetHashCode() : 0);
                 return hashCode;
             }
+        }
+
+        public override string ToString()
+        {
+            return string.Format("{0} ? {1} : {2}", Condition, ThenExpression, ElseExpression);
         }
     }
 }

@@ -135,7 +135,11 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             var mA = NewMethodDeclaration(Fix.Void, "A", string.Format("[{0}] i", Fix.Int));
             mA.Body.Add(new VariableDeclaration("$0", Fix.IntArray));
             mA.Body.Add(new Assignment("$0", ComposedExpression.Create("i")));
-            mA.Body.Add(new InvocationStatement("this", MethodName.Get(string.Format("[{0}] [N.C, TestProject].B([{1}] a)", Fix.Void, Fix.IntArray)), "$0"));
+            mA.Body.Add(
+                new InvocationStatement(
+                    "this",
+                    MethodName.Get(string.Format("[{0}] [N.C, TestProject].B([{1}] a)", Fix.Void, Fix.IntArray)),
+                    "$0"));
 
             var mB = NewMethodDeclaration(Fix.Void, "B", string.Format("[{0}] a", Fix.IntArray));
 
@@ -391,7 +395,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             mA.Body.Add(new VariableDeclaration("$0", Fix.String));
             mA.Body.Add(new Assignment("$0", new ConstantExpression()));
             mA.Body.Add(new InvocationStatement(Fix.ConsoleWrite(Fix.String), "$0"));
-            
+
             AssertEntryPoints(mA);
         }
 
@@ -570,6 +574,33 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             mA.Body.Add(new VariableDeclaration("$0", Fix.Int));
             mA.Body.Add(new Assignment("$0", new ConstantExpression()));
             mA.Body.Add(new InvocationStatement(Fix.ConsoleWrite(Fix.Int), "$0"));
+
+            AssertEntryPoints(mA);
+        }
+
+        [Test]
+        public void InlineIfElse()
+        {
+            CompleteInClass(@"
+                public void A()
+                {
+                    Console.Write(true ? 1 : 2);
+                    $
+                }
+            ");
+
+            var mA = NewMethodDeclaration(Fix.Void, "A");
+            mA.Body.Add(new VariableDeclaration("$0", Fix.Int));
+            mA.Body.Add(
+                new Assignment(
+                    "$0",
+                    new IfElseExpression
+                    {
+                        Condition = new ConstantExpression(),
+                        ThenExpression = new ConstantExpression(),
+                        ElseExpression = new ConstantExpression()
+                    }));
+            mA.Body.Add(new InvocationStatement(Fix.ConsoleWrite(Fix.Int), new []{"$0"}));
 
             AssertEntryPoints(mA);
         }
