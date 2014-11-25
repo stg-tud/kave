@@ -149,17 +149,21 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
         public override void VisitPostfixOperatorExpression(IPostfixOperatorExpression postfixOperatorExpressionParam,
             ArgumentCollectorContext context)
         {
+            var tmp = context.Generator.GetNextVariableName();
+            context.Scope.Body.Add(new VariableDeclaration(tmp, postfixOperatorExpressionParam.Type().GetName()));
             var reference = postfixOperatorExpressionParam.Operand.GetReference(context);
-            context.Scope.Body.Add(new Assignment(reference, ComposedExpression.Create(reference)));
-            context.Arguments.Add(reference);
+            context.Scope.Body.Add(new Assignment(tmp, ComposedExpression.Create(reference)));
+            context.Arguments.Add(tmp);
         }
 
         public override void VisitPrefixOperatorExpression(IPrefixOperatorExpression prefixOperatorExpressionParam,
             ArgumentCollectorContext context)
         {
+            var tmp = context.Generator.GetNextVariableName();
+            context.Scope.Body.Add(new VariableDeclaration(tmp, prefixOperatorExpressionParam.Type().GetName()));
             var reference = prefixOperatorExpressionParam.Operand.GetReference(context);
-            context.Scope.Body.Add(new Assignment(reference, ComposedExpression.Create(reference)));
-            context.Arguments.Add(reference);
+            context.Scope.Body.Add(new Assignment(tmp, ComposedExpression.Create(reference)));
+            context.Arguments.Add(tmp);
         }
 
         public override void VisitReferenceExpression(IReferenceExpression referenceExpressionParam,

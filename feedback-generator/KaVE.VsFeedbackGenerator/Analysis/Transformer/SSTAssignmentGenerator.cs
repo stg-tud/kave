@@ -128,7 +128,6 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
             AssignmentGeneratorContext context)
         {
             var reference = postfixOperatorExpressionParam.Operand.GetReference(context);
-            context.Scope.Body.Add(new Assignment(reference, ComposedExpression.Create(reference)));
             context.Scope.Body.Add(new Assignment(context.Dest, ComposedExpression.Create(reference)));
         }
 
@@ -136,7 +135,6 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
             AssignmentGeneratorContext context)
         {
             var reference = prefixOperatorExpressionParam.Operand.GetReference(context);
-            context.Scope.Body.Add(new Assignment(reference, ComposedExpression.Create(reference)));
             context.Scope.Body.Add(new Assignment(context.Dest, ComposedExpression.Create(reference)));
         }
 

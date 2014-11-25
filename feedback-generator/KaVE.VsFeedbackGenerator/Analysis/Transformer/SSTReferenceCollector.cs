@@ -47,10 +47,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
 
         public override void VisitAsExpression(IAsExpression asExpressionParam, ReferenceCollectorContext context)
         {
-            var tmp = context.Generator.GetNextVariableName();
-            context.Scope.Body.Add(new VariableDeclaration(tmp, asExpressionParam.Type().GetName()));
-            context.Scope.Body.Add(new Assignment(tmp, asExpressionParam.Operand.GetReferences(context)));
-            context.References.Add(tmp);
+            asExpressionParam.Operand.Accept(this, context);
         }
 
         public override void VisitAssignmentExpression(IAssignmentExpression assignmentExpressionParam,
@@ -70,10 +67,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
 
         public override void VisitCastExpression(ICastExpression castExpressionParam, ReferenceCollectorContext context)
         {
-            var tmp = context.Generator.GetNextVariableName();
-            context.Scope.Body.Add(new VariableDeclaration(tmp, castExpressionParam.Type().GetName()));
-            context.Scope.Body.Add(new Assignment(tmp, castExpressionParam.Op.GetReferences(context)));
-            context.References.Add(tmp);
+            castExpressionParam.Op.Accept(this, context);
         }
 
         public override void VisitConditionalTernaryExpression(
@@ -123,10 +117,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
 
         public override void VisitIsExpression(IIsExpression isExpressionParam, ReferenceCollectorContext context)
         {
-            var tmp = context.Generator.GetNextVariableName();
-            context.Scope.Body.Add(new VariableDeclaration(tmp, isExpressionParam.Type().GetName()));
-            context.Scope.Body.Add(new Assignment(tmp, isExpressionParam.Operand.GetReferences(context)));
-            context.References.Add(tmp);
+            isExpressionParam.Operand.Accept(this, context);
         }
 
         public override void VisitParenthesizedExpression(IParenthesizedExpression parenthesizedExpressionParam,
@@ -138,17 +129,13 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
         public override void VisitPostfixOperatorExpression(IPostfixOperatorExpression postfixOperatorExpressionParam,
             ReferenceCollectorContext context)
         {
-            var reference = postfixOperatorExpressionParam.Operand.GetReference(context);
-            context.Scope.Body.Add(new Assignment(reference, ComposedExpression.Create(reference)));
-            context.References.Add(reference);
+            postfixOperatorExpressionParam.Operand.Accept(this, context);
         }
 
         public override void VisitPrefixOperatorExpression(IPrefixOperatorExpression prefixOperatorExpressionParam,
             ReferenceCollectorContext context)
         {
-            var reference = prefixOperatorExpressionParam.Operand.GetReference(context);
-            context.Scope.Body.Add(new Assignment(reference, ComposedExpression.Create(reference)));
-            context.References.Add(reference);
+            prefixOperatorExpressionParam.Operand.Accept(this, context);
         }
 
         public override void VisitReferenceExpression(IReferenceExpression referenceExpressionParam,

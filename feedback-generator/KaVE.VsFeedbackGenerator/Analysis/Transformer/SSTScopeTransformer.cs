@@ -69,7 +69,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
                     new VariableDeclaration(
                         foreachStatementParam.IteratorName,
                         foreachStatementParam.IteratorDeclaration.DeclaredElement.Type.GetName()),
-                LoopedIdentifier = foreachStatementParam.Collection.GetArgument(context)
+                LoopedIdentifier = foreachStatementParam.Collection.GetReference(context)
             };
             foreachLoop.Body.AddRange(foreachStatementParam.Body.GetScope(context).Body);
             context.Scope.Body.Add(foreachLoop);

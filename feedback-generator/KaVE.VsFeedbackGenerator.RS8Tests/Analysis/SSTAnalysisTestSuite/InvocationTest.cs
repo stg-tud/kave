@@ -512,6 +512,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 
             var mA = NewMethodDeclaration(Fix.Void, "A", string.Format("[{0}] i", Fix.Int));
 
+            mA.Body.Add(new VariableDeclaration("$0", Fix.Int));
             mA.Body.Add(new Assignment("$0", ComposedExpression.Create("i")));
             mA.Body.Add(new InvocationStatement(Fix.ConsoleWrite(Fix.Int), "$0"));
 
@@ -531,6 +532,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 
             var mA = NewMethodDeclaration(Fix.Void, "A", string.Format("[{0}] i", Fix.Int));
 
+            mA.Body.Add(new VariableDeclaration("$0", Fix.Int));
             mA.Body.Add(new Assignment("$0", ComposedExpression.Create("i")));
             mA.Body.Add(new InvocationStatement(Fix.ConsoleWrite(Fix.Int), "$0"));
 
