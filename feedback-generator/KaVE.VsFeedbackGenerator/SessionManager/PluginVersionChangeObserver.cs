@@ -19,6 +19,7 @@
 
 using JetBrains.Application;
 using JetBrains.Application.Extensions;
+using JetBrains.Util;
 using KaVE.Model.Events.VisualStudio;
 using KaVE.VsFeedbackGenerator.Generators;
 using KaVE.VsFeedbackGenerator.MessageBus;
@@ -41,7 +42,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
 
             if (storedPluginVersion != currentPluginVersion)
             {
-                if (storedPluginVersion == string.Empty)
+                if (storedPluginVersion.IsNullOrEmpty())
                 {
                     var updateEvent = Create<InstallEvent>();
                     updateEvent.PluginVersion = currentPluginVersion;

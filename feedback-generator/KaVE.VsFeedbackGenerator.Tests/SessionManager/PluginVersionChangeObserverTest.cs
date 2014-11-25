@@ -36,17 +36,22 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
         private const string VersionB = "1.1.0.0";
         private const string InitialVersion = "";
         private Mock<ISettingsStore> StoreMock { get; set; }
+        private Mock<IRSEnv> EnvironmentMock { get; set; }
 
         [TearDown]
         public void ClearMocks()
         {
             StoreMock = null;
+            EnvironmentMock = null;
         }
 
         [Test]
         public void ShouldNotGenerateEventsIfVersionsMatch()
         {
-            WhenPluginVersionChangeObserverReceives(VersionA, VersionA);
+            GivenStoredVersion(VersionA);
+            GivenCurrentVersion(VersionA);
+
+            WhenPluginVersionChangeObserverStarts();
 
             AssertNoEvent();
         }
@@ -54,7 +59,10 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
         [Test]
         public void ShouldNotUpdatePluginVersionIfVersionsMatch()
         {
-            WhenPluginVersionChangeObserverReceives(VersionA, VersionA);
+            GivenStoredVersion(VersionA);
+            GivenCurrentVersion(VersionA);
+
+            WhenPluginVersionChangeObserverStarts();
 
             StoreMock.Verify(s => s.UpdateSettings(It.IsAny<Action<FeedbackSettings>>()), Times.Never);
         }
@@ -62,7 +70,10 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
         [Test]
         public void ShouldGenerateInstallEventIfVersionsDoesntMatch()
         {
-            WhenPluginVersionChangeObserverReceives(InitialVersion, VersionA);
+            GivenStoredVersion(InitialVersion);
+            GivenCurrentVersion(VersionA);
+
+            WhenPluginVersionChangeObserverStarts();
 
             var installEvent = GetSinglePublished<InstallEvent>();
 
@@ -72,7 +83,10 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
         [Test]
         public void ShouldGenerateUpdateEventIfVersionsDoesntMatch()
         {
-            WhenPluginVersionChangeObserverReceives(VersionA, VersionB);
+            GivenStoredVersion(VersionA);
+            GivenCurrentVersion(VersionB);
+
+            WhenPluginVersionChangeObserverStarts();
 
             var updateEvent = GetSinglePublished<UpdateEvent>();
 
@@ -83,24 +97,16 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
         [Test]
         public void ShouldUpdatePluginVersionIfVersionsDoesntMatch()
         {
-            WhenPluginVersionChangeObserverReceives(VersionA, VersionB);
+            GivenStoredVersion(VersionA);
+            GivenCurrentVersion(VersionB);
+
+            WhenPluginVersionChangeObserverStarts();
 
             StoreMock.Verify(s => s.UpdateSettings(It.IsAny<Action<FeedbackSettings>>()));
             Assert.AreEqual(VersionB, StoreMock.Object.GetSettings<FeedbackSettings>().PluginVersion);
         }
 
-        private void WhenPluginVersionChangeObserverReceives(string storedVersion, string currentVersion)
-        {
-            // ReSharper disable once ObjectCreationAsStatement
-            new PluginVersionChangeObserver(
-                SetUpSettingsStore(storedVersion),
-                SetUpRSEnv(currentVersion),
-                TestIDESession,
-                TestMessageBus,
-                TestDateUtils);
-        }
-
-        private ISettingsStore SetUpSettingsStore(string storedVersion)
+        private void GivenStoredVersion(string storedVersion)
         {
             var settings = new FeedbackSettings
             {
@@ -110,16 +116,25 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
             StoreMock.Setup(s => s.GetSettings<FeedbackSettings>()).Returns(settings);
             StoreMock.Setup(s => s.UpdateSettings(It.IsAny<Action<FeedbackSettings>>()))
                      .Callback<Action<FeedbackSettings>>(a => a(settings));
-            return StoreMock.Object;
         }
 
-        private IRSEnv SetUpRSEnv(string currentVersion)
+        private void GivenCurrentVersion(string currentVersion)
         {
             var extensionMock = new Mock<IExtension>();
             extensionMock.Setup(e => e.Version).Returns(SemanticVersion.Parse(currentVersion));
-            var environmentMock = new Mock<IRSEnv>();
-            environmentMock.Setup(e => e.KaVEExtension).Returns(extensionMock.Object);
-            return environmentMock.Object;
+            EnvironmentMock = new Mock<IRSEnv>();
+            EnvironmentMock.Setup(e => e.KaVEExtension).Returns(extensionMock.Object);
+        }
+
+        private void WhenPluginVersionChangeObserverStarts()
+        {
+            // ReSharper disable once ObjectCreationAsStatement
+            new PluginVersionChangeObserver(
+                StoreMock.Object,
+                EnvironmentMock.Object,
+                TestIDESession,
+                TestMessageBus,
+                TestDateUtils);
         }
     }
 }
