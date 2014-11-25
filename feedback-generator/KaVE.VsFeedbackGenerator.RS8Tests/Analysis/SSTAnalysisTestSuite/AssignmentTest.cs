@@ -387,7 +387,6 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 
             var mA = NewMethodDeclaration(Fix.Void, "A", string.Format("[{0}] i", Fix.Int));
             mA.Body.Add(new VariableDeclaration("j", Fix.Int));
-            mA.Body.Add(new Assignment("i", ComposedExpression.Create("i")));
             mA.Body.Add(new Assignment("j", ComposedExpression.Create("i")));
 
             AssertEntryPoints(mA);
@@ -406,7 +405,6 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 
             var mA = NewMethodDeclaration(Fix.Void, "A", string.Format("[{0}] i", Fix.Int));
             mA.Body.Add(new VariableDeclaration("j", Fix.Int));
-            mA.Body.Add(new Assignment("i", ComposedExpression.Create("i")));
             mA.Body.Add(new Assignment("j", ComposedExpression.Create("i")));
 
             AssertEntryPoints(mA);

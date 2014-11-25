@@ -279,7 +279,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
         }
 
         [Test]
-        public void BaseWithHiding()
+        public void BaseWithShadowing()
         {
             CompleteInFile(@"
                 namespace N
@@ -512,8 +512,8 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 
             var mA = NewMethodDeclaration(Fix.Void, "A", string.Format("[{0}] i", Fix.Int));
 
-            mA.Body.Add(new Assignment("i", ComposedExpression.Create("i")));
-            mA.Body.Add(new InvocationStatement(Fix.ConsoleWrite(Fix.Int), "i"));
+            mA.Body.Add(new Assignment("$0", ComposedExpression.Create("i")));
+            mA.Body.Add(new InvocationStatement(Fix.ConsoleWrite(Fix.Int), "$0"));
 
             AssertEntryPoints(mA);
         }
@@ -531,8 +531,8 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 
             var mA = NewMethodDeclaration(Fix.Void, "A", string.Format("[{0}] i", Fix.Int));
 
-            mA.Body.Add(new Assignment("i", ComposedExpression.Create("i")));
-            mA.Body.Add(new InvocationStatement(Fix.ConsoleWrite(Fix.Int), "i"));
+            mA.Body.Add(new Assignment("$0", ComposedExpression.Create("i")));
+            mA.Body.Add(new InvocationStatement(Fix.ConsoleWrite(Fix.Int), "$0"));
 
             AssertEntryPoints(mA);
         }

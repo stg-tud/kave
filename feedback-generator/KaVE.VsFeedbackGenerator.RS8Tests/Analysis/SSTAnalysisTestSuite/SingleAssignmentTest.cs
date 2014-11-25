@@ -246,11 +246,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 
             var mA = NewMethodDeclaration(Fix.Void, "A", string.Format("[{0}] o", Fix.Object));
             mA.Body.Add(new VariableDeclaration("i", Fix.Bool));
-            mA.Body.Add(new VariableDeclaration("$0", Fix.Bool));
-            mA.Body.Add(new Assignment("$0", ComposedExpression.Create("o")));
-            mA.Body.Add(new VariableDeclaration("$1", Fix.Bool));
-            mA.Body.Add(new Assignment("$1", new ConstantExpression()));
-            mA.Body.Add(new Assignment("i", ComposedExpression.Create("$0", "$1")));
+            mA.Body.Add(new Assignment("i", ComposedExpression.Create("o")));
 
             AssertEntryPoints(mA);
         }
@@ -268,11 +264,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 
             var mA = NewMethodDeclaration(Fix.Void, "A", string.Format("[{0}] o", Fix.Object));
             mA.Body.Add(new VariableDeclaration("i", Fix.String));
-            mA.Body.Add(new VariableDeclaration("$0", Fix.String));
-            mA.Body.Add(new Assignment("$0", ComposedExpression.Create("o")));
-            mA.Body.Add(new VariableDeclaration("$1", Fix.String));
-            mA.Body.Add(new Assignment("$1", new ConstantExpression()));
-            mA.Body.Add(new Assignment("i", ComposedExpression.Create("$0", "$1")));
+            mA.Body.Add(new Assignment("i", ComposedExpression.Create("o")));
 
             AssertEntryPoints(mA);
         }
@@ -290,11 +282,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 
             var mA = NewMethodDeclaration(Fix.Void, "A", string.Format("[{0}] o", Fix.Object));
             mA.Body.Add(new VariableDeclaration("i", Fix.String));
-            mA.Body.Add(new VariableDeclaration("$0", Fix.String));
-            mA.Body.Add(new Assignment("$0", ComposedExpression.Create("o")));
-            mA.Body.Add(new VariableDeclaration("$1", Fix.String));
-            mA.Body.Add(new Assignment("$1", new ConstantExpression()));
-            mA.Body.Add(new Assignment("i", ComposedExpression.Create("$0", "$1")));
+            mA.Body.Add(new Assignment("i", ComposedExpression.Create("o")));
 
             AssertEntryPoints(mA);
         }
@@ -333,9 +321,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 
             var mA = NewMethodDeclaration(Fix.Void, "A", string.Format("[{0}] i", Fix.Int));
             mA.Body.Add(new VariableDeclaration("j", Fix.Int));
-            mA.Body.Add(new Assignment("i", ComposedExpression.Create("i")));
-            mA.Body.Add(new Assignment("i", ComposedExpression.Create("i")));
-            mA.Body.Add(new Assignment("j", ComposedExpression.Create("i", "i")));
+            mA.Body.Add(new Assignment("j", ComposedExpression.Create("i")));
 
             AssertEntryPoints(mA);
         }

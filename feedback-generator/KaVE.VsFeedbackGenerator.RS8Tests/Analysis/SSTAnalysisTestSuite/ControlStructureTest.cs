@@ -312,10 +312,10 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
                 public int A()
                 {
                     using (var o = new Object())
-	                {
-	                    Console.WriteLine(o);
+                    {
+                        Console.WriteLine(o);
                         $
-	                }
+                    }
                 }
             ");
 
@@ -343,10 +343,10 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
                 public void A(System.IO.FileStream s)
                 {
                     using (s)
-	                {
-	                    s.WriteByte(123);
+                    {
+                        s.WriteByte(123);
                         $
-	                }
+                    }
                 }
             ");
 

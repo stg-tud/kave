@@ -66,11 +66,31 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             ");
         }
 
-        [Test, ExpectedException(typeof (NotSupportedException))]
+        [Test, ExpectedException(typeof(NotSupportedException))]
         public void TriggeredInParameterList()
         {
             CompleteInClass(@"
                 public void A($) {}
+            ");
+        }
+
+        [Test, ExpectedException(typeof(NotSupportedException))]
+        public void TriggeredInParameterList2()
+        {
+            CompleteInClass(@"
+                public void A(object o) {
+                    o.Equals($);
+                }
+            ");
+        }
+
+        [Test, ExpectedException(typeof(NotSupportedException))]
+        public void TriggeredInParameterList3()
+        {
+            CompleteInClass(@"
+                public void A(object o) {
+                    o.Equals(o.$);
+                }
             ");
         }
 

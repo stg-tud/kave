@@ -50,9 +50,8 @@ namespace KaVE.Model.Collections
             return this.Equals(obj, Equals);
         }
 
-        private bool Equals(ISet<T> other)
+        private bool Equals(KaVEHashSet<T> other)
         {
-            // TODO: @Seb: Shouldn't this class implement a deep equals instead of a hashcode-comparison?
             return GetHashCode() == other.GetHashCode();
         }
 
