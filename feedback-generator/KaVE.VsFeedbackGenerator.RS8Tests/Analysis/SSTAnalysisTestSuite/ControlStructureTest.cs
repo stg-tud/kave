@@ -197,8 +197,6 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             var block = new BlockExpression {Value = new[] {"s"}};
             block.Body.Add(new Assignment("s", new InvocationExpression("o", Fix.ToString(Fix.Object))));
             var whileLoop = new WhileLoop {Condition = block};
-
-            whileLoop.Body.Add(new Assignment("i", new ComposedExpression {Variables = new[] {"i"}}));
             //whileLoop.Body.Add(new CompletionTrigger());
 
             mA.Body.Add(whileLoop);
@@ -224,7 +222,6 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             forLoop.Init.Add(new VariableDeclaration("i", Fix.Int));
             forLoop.Init.Add(new Assignment("i", new ConstantExpression()));
             forLoop.Condition = new ComposedExpression {Variables = new[] {"i"}};
-            forLoop.Step.Add(new Assignment("i", new ComposedExpression {Variables = new[] {"i"}}));
 
             forLoop.Body.Add(new InvocationStatement(Fix.ConsoleWrite(Fix.Int), "i"));
             //forLoop.Body.Add(new CompletionTrigger());
@@ -253,7 +250,6 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             var forLoop = new ForLoop();
             forLoop.Init.Add(new Assignment("i", new ConstantExpression()));
             forLoop.Condition = new ComposedExpression {Variables = new[] {"i"}};
-            forLoop.Step.Add(new Assignment("i", new ComposedExpression {Variables = new[] {"i"}}));
 
             forLoop.Body.Add(new InvocationStatement(Fix.ConsoleWrite(Fix.Int), "i"));
             //forLoop.Body.Add(new CompletionTrigger());
