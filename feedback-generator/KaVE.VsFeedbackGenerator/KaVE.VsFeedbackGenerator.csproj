@@ -94,6 +94,10 @@
     <Compile Include="Analysis\Transformer\Context\ITransformerContext.cs" />
     <Compile Include="Analysis\Transformer\Context\ReferenceCollectorContext.cs" />
     <Compile Include="Analysis\Transformer\Context\ScopeTransformerContext.cs" />
+    <Compile Include="Analysis\Transformer\BlockVisitor.cs" />
+    <Compile Include="Analysis\Transformer\ToBlockReducer.cs" />
+    <Compile Include="Analysis\Transformer\ToExpressionReducer.cs" />
+    <Compile Include="Analysis\Transformer\ToNameReducer.cs" />
     <Compile Include="Analysis\Transformer\SSTArgumentCollector.cs" />
     <Compile Include="Analysis\Transformer\SSTAssignmentGenerator.cs" />
     <Compile Include="Analysis\Transformer\SSTScopeTransformer.cs" />
