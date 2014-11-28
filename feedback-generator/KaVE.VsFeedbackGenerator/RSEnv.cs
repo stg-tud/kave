@@ -33,7 +33,7 @@ namespace KaVE.VsFeedbackGenerator
     }
 
     [ShellComponent]
-    internal class RSEnv
+    internal class RSEnv : IRSEnv
     {
         public const string ExtensionId = "KaVE.VsFeedbackGenerator";
 
