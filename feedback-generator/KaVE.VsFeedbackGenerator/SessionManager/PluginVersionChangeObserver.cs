@@ -18,7 +18,6 @@
  */
 
 using JetBrains.Application;
-using JetBrains.Application.Extensions;
 using JetBrains.Util;
 using KaVE.Model.Events.VisualStudio;
 using KaVE.VsFeedbackGenerator.Generators;
@@ -58,10 +57,5 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
                 store.UpdateSettings<FeedbackSettings>(s => s.PluginVersion = currentPluginVersion);
             }
         }
-    }
-
-    public interface IRSEnv
-    {
-        IExtension KaVEExtension { get; }
     }
 }

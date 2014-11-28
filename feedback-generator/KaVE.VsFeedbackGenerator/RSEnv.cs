@@ -27,7 +27,7 @@ using KaVE.JetBrains.Annotations;
 
 namespace KaVE.VsFeedbackGenerator
 {
-    internal interface IRSEnv
+    public interface IRSEnv
     {
         IExtension KaVEExtension { get; }
     }
