@@ -24,7 +24,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer.Context
     public class AssignmentGeneratorContext : ITransformerContext
     {
         public ISSTFactory Factory { get; private set; }
-        public ITempVariableGenerator Generator { get; private set; }
+        public IUniqueVariableNameGenerator Generator { get; private set; }
         public IScope Scope { get; private set; }
         public readonly string Dest;
 
@@ -32,7 +32,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer.Context
             : this(context.Factory, context.Generator, context.Scope, dest) {}
 
         private AssignmentGeneratorContext(ISSTFactory factory,
-            ITempVariableGenerator generator,
+            IUniqueVariableNameGenerator generator,
             IScope scope,
             string dest)
         {

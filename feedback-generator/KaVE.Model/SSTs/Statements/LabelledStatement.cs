@@ -40,7 +40,7 @@ namespace KaVE.Model.SSTs.Statements
         {
             unchecked
             {
-                return ((Label != null ? Label.GetHashCode() : 0)*397) ^
+                return 7 + ((Label != null ? Label.GetHashCode() : 0)*397) ^
                        (Statement != null ? Statement.GetHashCode() : 0);
             }
         }

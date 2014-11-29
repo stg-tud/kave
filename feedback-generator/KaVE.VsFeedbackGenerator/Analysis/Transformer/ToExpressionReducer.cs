@@ -1,5 +1,5 @@
-﻿/*
- * Copyright 2014 Technische Universität Darmstadt
+/*
+ * Copyright 2014 Technische Universit�t Darmstadt
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,23 +14,22 @@
  * limitations under the License.
  * 
  * Contributors:
- *    - Dennis Albrecht
+ *    - Sebastian Proksch
  */
 
-namespace KaVE.VsFeedbackGenerator.Analysis.Util
+using System;
+using System.Collections.Generic;
+using JetBrains.ReSharper.Psi.CSharp.Tree;
+using KaVE.Model.SSTs;
+using KaVE.VsFeedbackGenerator.Analysis.Util;
+
+namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
 {
-    public interface ITempVariableGenerator
+    public class ToExpressionReducer : TreeNodeVisitor<IList<Statement>, Expression>
     {
-        string GetNextVariableName();
-    }
-
-    public class TempVariableGenerator : ITempVariableGenerator
-    {
-        private int _tempVariableCounter;
-
-        public string GetNextVariableName()
+        public ToExpressionReducer(UniqueVariableNameGenerator nameGen)
         {
-            return string.Format("${0}", _tempVariableCounter++);
+            throw new NotImplementedException();
         }
     }
 }

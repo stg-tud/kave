@@ -24,10 +24,15 @@ namespace KaVE.Model.SSTs.Declarations
 {
     public class VariableDeclaration : Statement
     {
-        // var a = 1 --> var a; a = 1
-        public readonly string Identifier;
-        public readonly ITypeName Type;
+        public string Identifier { get; set; }
+        public ITypeName Type { get; set; }
 
+        public VariableDeclaration()
+        {
+            // TODO get rid of this constructor too as soon as we got rid of the other one
+        }
+
+        // TODO get rid of this constructor
         public VariableDeclaration(string identifier, ITypeName type)
         {
             Identifier = identifier;
@@ -39,7 +44,7 @@ namespace KaVE.Model.SSTs.Declarations
             return this.Equals(obj, Equals);
         }
 
-        protected bool Equals(VariableDeclaration other)
+        private bool Equals(VariableDeclaration other)
         {
             return string.Equals(Identifier, other.Identifier) && Equals(Type, other.Type);
         }
@@ -48,14 +53,9 @@ namespace KaVE.Model.SSTs.Declarations
         {
             unchecked
             {
-                return ((Identifier != null ? Identifier.GetHashCode() : 0)*397) ^
+                return 20 + ((Identifier != null ? Identifier.GetHashCode() : 0)*397) ^
                        (Type != null ? Type.GetHashCode() : 0);
             }
-        }
-
-        public override string ToString()
-        {
-            return string.Format("{0} {1};", Type.Name, Identifier ?? "");
         }
     }
 }

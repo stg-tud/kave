@@ -31,6 +31,8 @@ namespace KaVE.Model.Tests.SSTs.Statements
             var b = new ContinueStatement();
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
+            Assert.AreNotEqual(0, a.GetHashCode());
+            Assert.AreNotEqual(1, a.GetHashCode());
         }
     }
 }

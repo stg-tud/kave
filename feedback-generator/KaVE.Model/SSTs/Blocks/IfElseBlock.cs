@@ -18,7 +18,6 @@
  */
 
 using System.Collections.Generic;
-using System.Linq;
 using KaVE.Model.Collections;
 using KaVE.Utils;
 
@@ -49,15 +48,6 @@ namespace KaVE.Model.SSTs.Blocks
                 hashCode = (hashCode*397) ^ (Condition != null ? Condition.GetHashCode() : 0);
                 return hashCode;
             }
-        }
-
-        public override string ToString()
-        {
-            return string.Format(
-                "if ({0}) {{{1}}} else {{{2}}};",
-                Condition,
-                string.Join(" ", Then.Select(s => s.ToString())),
-                string.Join(" ", Else.Select(s => s.ToString())));
         }
     }
 }

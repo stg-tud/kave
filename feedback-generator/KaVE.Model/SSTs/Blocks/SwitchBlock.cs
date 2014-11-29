@@ -19,6 +19,7 @@
 
 using System.Collections.Generic;
 using KaVE.Model.Collections;
+using KaVE.Utils;
 
 namespace KaVE.Model.SSTs.Blocks
 {
@@ -27,5 +28,27 @@ namespace KaVE.Model.SSTs.Blocks
         public string Identifier { get; set; }
         public IList<CaseBlock> Sections = Lists.NewList<CaseBlock>();
         public IList<Statement> DefaultSection = Lists.NewList<Statement>();
+
+        protected bool Equals(SwitchBlock other)
+        {
+            return Equals(Sections, other.Sections) && Equals(DefaultSection, other.DefaultSection) &&
+                   string.Equals(Identifier, other.Identifier);
+        }
+
+        public override bool Equals(object obj)
+        {
+            return this.Equals(obj, Equals);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                var hashCode = (Sections != null ? Sections.GetHashCode() : 0);
+                hashCode = (hashCode*397) ^ (DefaultSection != null ? DefaultSection.GetHashCode() : 0);
+                hashCode = (hashCode*397) ^ (Identifier != null ? Identifier.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
     }
 }

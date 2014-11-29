@@ -116,7 +116,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
                 invocationExpressionParam,
                 context,
                 (callee, method, args, retType) =>
-                    context.Scope.Body.Add(new InvocationStatement(callee.CreateInvocation(method, args))));
+                    context.Scope.Body.Add(new InvocationStatement{Target = callee.CreateInvocation(method, args)}));
         }
 
         public override void VisitLocalVariableDeclaration(ILocalVariableDeclaration localVariableDeclarationParam,

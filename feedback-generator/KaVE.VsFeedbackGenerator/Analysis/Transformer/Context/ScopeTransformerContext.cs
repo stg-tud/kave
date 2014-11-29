@@ -24,7 +24,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer.Context
     public class ScopeTransformerContext : ITransformerContext
     {
         public ISSTFactory Factory { get; private set; }
-        public ITempVariableGenerator Generator { get; private set; }
+        public IUniqueVariableNameGenerator Generator { get; private set; }
         public IScope Scope { get; private set; }
 
         public ScopeTransformerContext(ISSTFactory factory)
@@ -37,7 +37,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer.Context
             : this(context.Factory, context.Generator, scope) {}
 
         private ScopeTransformerContext(ISSTFactory factory,
-            ITempVariableGenerator generator,
+            IUniqueVariableNameGenerator generator,
             IScope scope)
         {
             Factory = factory;

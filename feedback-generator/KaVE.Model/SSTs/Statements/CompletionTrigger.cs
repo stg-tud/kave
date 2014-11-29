@@ -40,7 +40,7 @@ namespace KaVE.Model.SSTs.Statements
         {
             unchecked
             {
-                return ((int) Kind*397) ^ (Token != null ? Token.GetHashCode() : 0);
+                return 3 + ((int) Kind*397) ^ (Token != null ? Token.GetHashCode() : 0);
             }
         }
     }

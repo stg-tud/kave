@@ -18,7 +18,6 @@
  */
 
 using System.Collections.Generic;
-using System.Linq;
 using KaVE.Model.Collections;
 using KaVE.Utils;
 
@@ -27,7 +26,12 @@ namespace KaVE.Model.SSTs.Blocks
     public class DoLoop : Statement
     {
         public Expression Condition { get; set; }
-        public readonly IList<Statement> Body = Lists.NewList<Statement>();
+        public IList<Statement> Body { get; set; }
+
+        public DoLoop()
+        {
+            Body = Lists.NewList<Statement>();
+        }
 
         private bool Equals(DoLoop other)
         {
@@ -45,11 +49,6 @@ namespace KaVE.Model.SSTs.Blocks
             {
                 return (Body.GetHashCode()*397) ^ (Condition != null ? Condition.GetHashCode() : 0);
             }
-        }
-
-        public override string ToString()
-        {
-            return string.Format("do {{{0}}} while ({1});", string.Join(" ", Body.Select(s => s.ToString())), Condition);
         }
     }
 }

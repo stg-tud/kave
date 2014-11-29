@@ -28,6 +28,15 @@ namespace KaVE.Model.Tests.SSTs.Statements
     public class InvocationStatementTest
     {
         [Test]
+        public void DefaultValues()
+        {
+            var sut = new InvocationStatement();
+            Assert.Null(sut.Target);
+            Assert.AreNotEqual(0, sut.GetHashCode());
+            Assert.AreNotEqual(1, sut.GetHashCode());
+        }
+
+        [Test]
         public void CustomConstructorNonStatic()
         {
             var sut = new InvocationStatement("a", GetMethod("A"), "b");

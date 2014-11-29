@@ -49,14 +49,5 @@ namespace KaVE.Model.SSTs.Blocks
                 return hashCode;
             }
         }
-
-        public override string ToString()
-        {
-            return string.Format(
-                "try {{{0}}} {1} finally {{{2}}};",
-                string.Join(" ", Body),
-                string.Join(" ", CatchBlocks),
-                string.Join(" ", Finally));
-        }
     }
 }

@@ -19,6 +19,7 @@
 
 using System.Collections.Generic;
 using KaVE.Model.Collections;
+using KaVE.Utils;
 
 namespace KaVE.Model.SSTs.Blocks
 {
@@ -26,5 +27,23 @@ namespace KaVE.Model.SSTs.Blocks
     {
         public string Label { get; set; }
         public readonly IList<Statement> Body = Lists.NewList<Statement>();
+
+        protected bool Equals(CaseBlock other)
+        {
+            return Equals(Body, other.Body) && string.Equals(Label, other.Label);
+        }
+
+        public override bool Equals(object obj)
+        {
+            return this.Equals(obj, Equals);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return 30 + ((Body != null ? Body.GetHashCode() : 0)*397) ^ (Label != null ? Label.GetHashCode() : 0);
+            }
+        }
     }
 }

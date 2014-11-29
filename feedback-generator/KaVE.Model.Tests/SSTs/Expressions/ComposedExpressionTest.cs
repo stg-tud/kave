@@ -30,6 +30,8 @@ namespace KaVE.Model.Tests.SSTs.Expressions
         {
             var sut = new ComposedExpression();
             Assert.IsNull(sut.Variables);
+            Assert.AreNotEqual(0, sut.GetHashCode());
+            Assert.AreNotEqual(1, sut.GetHashCode());
         }
 
         [Test]
@@ -38,6 +40,14 @@ namespace KaVE.Model.Tests.SSTs.Expressions
             var sut = new ComposedExpression {Variables = new[] {"a"}};
             var expected = new[] {"a"};
             Assert.That(expected.DeepEquals(sut.Variables));
+        }
+
+        [Test]
+        public void SettingValues_StaticHelper()
+        {
+            var sut = ComposedExpression.Create("a", "b");
+            var expected = new[] {"a", "b"};
+            Assert.AreEqual(expected, sut.Variables);
         }
 
         [Test]

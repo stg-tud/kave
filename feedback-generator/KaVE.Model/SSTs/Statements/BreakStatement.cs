@@ -35,7 +35,7 @@ namespace KaVE.Model.SSTs.Statements
 
         public override int GetHashCode()
         {
-            return 0;
+            return 2;
         }
     }
 }

@@ -18,11 +18,27 @@
  */
 
 using KaVE.Model.Names;
+using KaVE.Utils;
 
 namespace KaVE.Model.SSTs.Declarations
 {
     public class EventDeclaration
     {
         public IEventName Name { get; set; }
+
+        private bool Equals(EventDeclaration other)
+        {
+            return Equals(Name, other.Name);
+        }
+
+        public override bool Equals(object obj)
+        {
+            return this.Equals(obj, Equals);
+        }
+
+        public override int GetHashCode()
+        {
+            return 22 + (Name != null ? Name.GetHashCode() : 0);
+        }
     }
 }

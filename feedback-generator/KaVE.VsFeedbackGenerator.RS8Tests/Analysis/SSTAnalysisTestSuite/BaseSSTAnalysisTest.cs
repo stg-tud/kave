@@ -32,7 +32,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
     internal abstract class BaseSSTAnalysisTest : BaseTest
     {
         internal readonly IList<string> Log = new List<string>();
-            
+
         [SetUp]
         public void RegisterLogger()
         {
@@ -43,7 +43,10 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 
         internal SST NewSST()
         {
-            return new SST();
+            return new SST
+            {
+                EnclosingType = TypeName.Get("N.C, TestProject")
+            };
         }
 
         internal MethodDeclaration NewMethodDeclaration(ITypeName returnType, string simpleName)

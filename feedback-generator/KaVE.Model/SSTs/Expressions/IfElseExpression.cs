@@ -43,16 +43,11 @@ namespace KaVE.Model.SSTs.Expressions
         {
             unchecked
             {
-                var hashCode = (Condition != null ? Condition.GetHashCode() : 0);
+                var hashCode = 10 + (Condition != null ? Condition.GetHashCode() : 0);
                 hashCode = (hashCode*397) ^ (ThenExpression != null ? ThenExpression.GetHashCode() : 0);
                 hashCode = (hashCode*397) ^ (ElseExpression != null ? ElseExpression.GetHashCode() : 0);
                 return hashCode;
             }
-        }
-
-        public override string ToString()
-        {
-            return string.Format("{0} ? {1} : {2}", Condition, ThenExpression, ElseExpression);
         }
     }
 }

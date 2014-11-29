@@ -27,7 +27,7 @@ namespace KaVE.Model.SSTs.Blocks
     public class CatchBlock : Statement
     {
         public VariableDeclaration Exception { get; set; }
-        public readonly IList<Statement> Body = Lists.NewList<Statement>();
+        public IList<Statement> Body = Lists.NewList<Statement>();
 
         private bool Equals(CatchBlock other)
         {
@@ -43,14 +43,9 @@ namespace KaVE.Model.SSTs.Blocks
         {
             unchecked
             {
-                return (Body.GetHashCode()*397) ^ (Exception != null ? Exception.GetHashCode() : 0);
+                return 31 + ((Body != null ? Body.GetHashCode() : 0)*397) ^
+                       (Exception != null ? Exception.GetHashCode() : 0);
             }
-        }
-
-        public override string ToString()
-        {
-            var exception = Exception == null ? "" : Exception.ToString().Replace(";", "");
-            return string.Format("catch ({0}) {{{1}}}", exception, string.Join(" ", Body));
         }
     }
 }

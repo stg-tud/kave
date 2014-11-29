@@ -44,7 +44,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Util
         /// </summary>
         SSTScopeTransformer ScopeTransformer();
         IScope Scope();
-        ITempVariableGenerator TempVariableGenerator();
+        IUniqueVariableNameGenerator TempVariableGenerator();
     }
 
     [ShellComponent]
@@ -75,9 +75,9 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Util
             return new Scope();
         }
 
-        public ITempVariableGenerator TempVariableGenerator()
+        public IUniqueVariableNameGenerator TempVariableGenerator()
         {
-            return new TempVariableGenerator();
+            return new UniqueVariableNameGenerator();
         }
     }
 }

@@ -17,6 +17,7 @@
  *    - Sebastian Proksch
  */
 
+using KaVE.Model.Collections;
 using KaVE.Model.SSTs.Blocks;
 using KaVE.Model.SSTs.Expressions;
 using KaVE.Model.SSTs.Statements;
@@ -31,13 +32,18 @@ namespace KaVE.Model.Tests.SSTs.Blocks
         {
             var sut = new WhileLoop();
             Assert.IsNull(sut.Condition);
+            Assert.NotNull(sut.Body);
+            Assert.AreNotEqual(0, sut.GetHashCode());
+            Assert.AreNotEqual(1, sut.GetHashCode());
         }
 
         [Test]
         public void SettingValues()
         {
             var sut = new WhileLoop {Condition = new ConstantExpression()};
+            sut.Body.Add(new ReturnStatement());
             Assert.AreEqual(new ConstantExpression(), sut.Condition);
+            Assert.AreEqual(Lists.NewList(new ReturnStatement()), sut.Body);
         }
 
         [Test]
@@ -53,7 +59,9 @@ namespace KaVE.Model.Tests.SSTs.Blocks
         public void Equality_ReallyTheSame()
         {
             var a = new WhileLoop {Condition = new ConstantExpression()};
+            a.Body.Add(new ReturnStatement());
             var b = new WhileLoop {Condition = new ConstantExpression()};
+            b.Body.Add(new ReturnStatement());
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
         }

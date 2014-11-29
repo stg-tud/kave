@@ -38,6 +38,9 @@
     <Reference Include="envdte, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
+    <Reference Include="Microsoft.VisualStudio.CommandBars, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
     <Reference Include="Moq, Version=4.2.1408.619, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Moq.4.2.1408.0619\lib\net40\Moq.dll</HintPath>
@@ -68,7 +71,7 @@
     <Compile Include="Analysis\SSTAnalysisTestSuite\EntrypointsTest.cs" />
     <Compile Include="Analysis\SSTAnalysisTestSuite\IncompleteCodeTest.cs" />
     <Compile Include="Analysis\SSTAnalysisTestSuite\InvocationTest.cs" />
-    <Compile Include="Analysis\SSTAnalysisTestSuite\MemberDeclaration.cs" />
+    <Compile Include="Analysis\SSTAnalysisTestSuite\MemberDeclarationTest.cs" />
     <Compile Include="Analysis\SSTAnalysisTestSuite\SingleAssignmentTest.cs" />
     <Compile Include="Analysis\SSTAnalysisTestSuite\SSTAnalysisFixture.cs" />
     <Compile Include="Analysis\SSTAnalysisTestSuite\TriggerLocationsTest.cs" />

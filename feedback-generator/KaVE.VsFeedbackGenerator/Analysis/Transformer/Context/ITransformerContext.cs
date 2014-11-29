@@ -24,7 +24,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer.Context
     public interface ITransformerContext
     {
         ISSTFactory Factory { get; }
-        ITempVariableGenerator Generator { get; }
+        IUniqueVariableNameGenerator Generator { get; }
         IScope Scope { get; }
     }
 }

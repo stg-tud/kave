@@ -31,6 +31,8 @@ namespace KaVE.Model.Tests.SSTs.Blocks
             var b = new UnsafeBlock();
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
+            Assert.AreNotEqual(0, a.GetHashCode());
+            Assert.AreNotEqual(1, a.GetHashCode());
         }
     }
 }

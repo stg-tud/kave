@@ -17,12 +17,28 @@
  *    - Sebastian Proksch
  */
 
-using KaVE.Model.Names.CSharp;
+using KaVE.Model.Names;
+using KaVE.Utils;
 
 namespace KaVE.Model.SSTs.Declarations
 {
     public class DelegateDeclaration
     {
-        public DelegateTypeName Name { get; set; }
+        public ITypeName Name { get; set; }
+
+        private bool Equals(DelegateDeclaration other)
+        {
+            return Equals(Name, other.Name);
+        }
+
+        public override bool Equals(object obj)
+        {
+            return this.Equals(obj, Equals);
+        }
+
+        public override int GetHashCode()
+        {
+            return 23 + (Name != null ? Name.GetHashCode() : 0);
+        }
     }
 }

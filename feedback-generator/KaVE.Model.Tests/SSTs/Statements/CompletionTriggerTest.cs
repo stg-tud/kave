@@ -30,6 +30,8 @@ namespace KaVE.Model.Tests.SSTs.Statements
             var sut = new CompletionTrigger();
             Assert.AreEqual(TriggerType.InMethod, sut.Kind);
             Assert.Null(sut.Token);
+            Assert.AreNotEqual(0, sut.GetHashCode());
+            Assert.AreNotEqual(1, sut.GetHashCode());
         }
 
         [Test]

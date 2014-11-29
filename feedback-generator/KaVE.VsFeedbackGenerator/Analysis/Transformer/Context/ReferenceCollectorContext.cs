@@ -25,7 +25,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer.Context
     public class ReferenceCollectorContext : ITransformerContext
     {
         public ISSTFactory Factory { get; private set; }
-        public ITempVariableGenerator Generator { get; private set; }
+        public IUniqueVariableNameGenerator Generator { get; private set; }
         public IScope Scope { get; private set; }
         public readonly IList<string> References;
 
@@ -36,7 +36,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer.Context
             : this(context.Factory, context.Generator, scope) {}
 
         private ReferenceCollectorContext(ISSTFactory factory,
-            ITempVariableGenerator generator,
+            IUniqueVariableNameGenerator generator,
             IScope scope)
         {
             Factory = factory;

@@ -37,7 +37,7 @@ namespace KaVE.Model.SSTs.Statements
 
         public override int GetHashCode()
         {
-            return (Identifier != null ? Identifier.GetHashCode() : 0);
+            return 8 + (Identifier != null ? Identifier.GetHashCode() : 0);
         }
     }
 }

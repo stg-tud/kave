@@ -46,21 +46,11 @@ namespace KaVE.Model.SSTs.Blocks
             unchecked
             {
                 var hashCode = Init.GetHashCode();
-                hashCode = (hashCode * 397) ^ Step.GetHashCode();
-                hashCode = (hashCode * 397) ^ Body.GetHashCode();
-                hashCode = (hashCode * 397) ^ (Condition != null ? Condition.GetHashCode() : 0);
+                hashCode = (hashCode*397) ^ Step.GetHashCode();
+                hashCode = (hashCode*397) ^ Body.GetHashCode();
+                hashCode = (hashCode*397) ^ (Condition != null ? Condition.GetHashCode() : 0);
                 return hashCode;
             }
-        }
-
-        public override string ToString()
-        {
-            return string.Format(
-                "for ({{{0}}}; {1}; {{{2}}}) {{{3}}};",
-                string.Join(" ", Init),
-                Condition,
-                string.Join(" ", Step),
-                string.Join(" ", Body));
         }
     }
 }

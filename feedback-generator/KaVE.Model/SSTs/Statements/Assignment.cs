@@ -48,14 +48,9 @@ namespace KaVE.Model.SSTs.Statements
         {
             unchecked
             {
-                return ((Identifier != null ? Identifier.GetHashCode() : 0)*397) ^
+                return 101 + ((Identifier != null ? Identifier.GetHashCode() : 0)*397) ^
                        (Value != null ? Value.GetHashCode() : 0);
             }
-        }
-
-        public override string ToString()
-        {
-            return string.Format("{0} = {1};", Identifier, Value);
         }
     }
 }

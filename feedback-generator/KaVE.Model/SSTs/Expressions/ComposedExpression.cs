@@ -23,11 +23,6 @@ namespace KaVE.Model.SSTs.Expressions
 {
     public class ComposedExpression : Expression
     {
-        public static ComposedExpression Create(params string[] references)
-        {
-            return new ComposedExpression {Variables = references};
-        }
-
         public string[] Variables { get; set; }
 
         private bool Equals(ComposedExpression other)
@@ -55,9 +50,9 @@ namespace KaVE.Model.SSTs.Expressions
             return 5 + (Variables != null ? HashCodeUtils.For(5, Variables) : 0);
         }
 
-        public override string ToString()
+        public static ComposedExpression Create(params string[] references)
         {
-            return "{" + string.Join(", ", Variables) + "}";
+            return new ComposedExpression {Variables = references};
         }
     }
 }

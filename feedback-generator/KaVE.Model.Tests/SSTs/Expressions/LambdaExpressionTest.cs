@@ -32,6 +32,8 @@ namespace KaVE.Model.Tests.SSTs.Expressions
         {
             var sut = new LambdaExpression();
             Assert.AreEqual(Lists.NewList<Statement>(), sut.Body);
+            Assert.AreNotEqual(0, sut.GetHashCode());
+            Assert.AreNotEqual(1, sut.GetHashCode());
         }
 
         [Test]

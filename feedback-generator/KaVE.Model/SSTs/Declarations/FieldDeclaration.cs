@@ -18,11 +18,27 @@
  */
 
 using KaVE.Model.Names;
+using KaVE.Utils;
 
 namespace KaVE.Model.SSTs.Declarations
 {
     public class FieldDeclaration
     {
         public IFieldName Name { get; set; }
+
+        private bool Equals(FieldDeclaration other)
+        {
+            return Equals(Name, other.Name);
+        }
+
+        public override bool Equals(object obj)
+        {
+            return this.Equals(obj, Equals);
+        }
+
+        public override int GetHashCode()
+        {
+            return 21 + (Name != null ? Name.GetHashCode() : 0);
+        }
     }
 }

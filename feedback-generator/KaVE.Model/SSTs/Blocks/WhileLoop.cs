@@ -18,7 +18,6 @@
  */
 
 using System.Collections.Generic;
-using System.Linq;
 using KaVE.Model.Collections;
 using KaVE.Utils;
 
@@ -45,11 +44,6 @@ namespace KaVE.Model.SSTs.Blocks
             {
                 return (Body.GetHashCode()*397) ^ (Condition != null ? Condition.GetHashCode() : 0);
             }
-        }
-
-        public override string ToString()
-        {
-            return string.Format("while ({0}) {{{1}}};", Condition, string.Join(" ", Body.Select(s => s.ToString())));
         }
     }
 }

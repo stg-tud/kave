@@ -37,7 +37,7 @@ namespace KaVE.Model.SSTs.Statements
 
         public override int GetHashCode()
         {
-            return (Label != null ? Label.GetHashCode() : 0);
+            return 5 + (Label != null ? Label.GetHashCode() : 0);
         }
     }
 }

@@ -62,20 +62,11 @@ namespace KaVE.Model.SSTs.Expressions
         {
             unchecked
             {
-                var hashCode = (Identifier != null ? Identifier.GetHashCode() : 0);
+                var hashCode = 11 + (Identifier != null ? Identifier.GetHashCode() : 0);
                 hashCode = (hashCode*397) ^ (Name != null ? Name.GetHashCode() : 0);
                 hashCode = (hashCode*397) ^ (Parameters != null ? HashCodeUtils.For(398, Parameters) : 0);
                 return hashCode;
             }
-        }
-
-        public override string ToString()
-        {
-            return string.Format(
-                "{0}.{1}({2})",
-                (Name.IsStatic || Name.IsConstructor) ? Name.DeclaringType.Name : Identifier,
-                Name.Name,
-                string.Join(", ", Parameters));
         }
     }
 }

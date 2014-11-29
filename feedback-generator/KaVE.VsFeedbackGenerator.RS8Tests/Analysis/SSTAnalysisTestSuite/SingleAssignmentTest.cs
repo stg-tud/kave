@@ -75,12 +75,12 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
                 string.Format("[{0}] o2", Fix.Object),
                 string.Format("[{0}] o3", Fix.Object));
             mA.Body.Add(new VariableDeclaration("compare", Fix.Bool));
-            var ifBlock = new BlockExpression {Value = new[] {"$0", "$1"}};
+            var ifBlock = new BlockExpression();// {Value = new[] {"$0", "$1"}};
             ifBlock.Body.Add(new VariableDeclaration("$0", Fix.Int));
             ifBlock.Body.Add(new Assignment("$0", new InvocationExpression("o2", Fix.GetHashCode(Fix.Object))));
             ifBlock.Body.Add(new VariableDeclaration("$1", Fix.Int));
             ifBlock.Body.Add(new Assignment("$1", new InvocationExpression("o3", Fix.GetHashCode(Fix.Object))));
-            var thenBlock = new BlockExpression {Value = new[] {"$4"}};
+            var thenBlock = new BlockExpression(); //) {Value = new[] {"$4"}};
             thenBlock.Body.Add(new VariableDeclaration("$2", Fix.String));
             thenBlock.Body.Add(new Assignment("$2", new InvocationExpression("o1", Fix.ToString(Fix.Object))));
             thenBlock.Body.Add(new VariableDeclaration("$3", Fix.String));
@@ -90,7 +90,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
                 new Assignment(
                     "$4",
                     new InvocationExpression("$2", Fix.Equals(Fix.String, Fix.String, "value"), new[] {"$3"})));
-            var elseBlock = new BlockExpression {Value = new[] {"$7"}};
+            var elseBlock = new BlockExpression();//) {Value = new[] {"$7"}};
             elseBlock.Body.Add(new VariableDeclaration("$5", Fix.String));
             elseBlock.Body.Add(new Assignment("$5", new InvocationExpression("o1", Fix.ToString(Fix.Object))));
             elseBlock.Body.Add(new VariableDeclaration("$6", Fix.String));

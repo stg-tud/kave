@@ -18,8 +18,10 @@
  */
 
 using System.Collections.Generic;
+using KaVE.JetBrains.Annotations;
 using KaVE.Model.Collections;
 using KaVE.Model.Names;
+using KaVE.Utils;
 
 namespace KaVE.Model.SSTs.Declarations
 {
@@ -27,7 +29,31 @@ namespace KaVE.Model.SSTs.Declarations
     {
         public IPropertyName Name { get; set; }
 
+        [NotNull]
         public IList<Statement> Get = Lists.NewList<Statement>();
+
+        [NotNull]
         public IList<Statement> Set = Lists.NewList<Statement>();
+
+        private bool Equals(PropertyDeclaration other)
+        {
+            return Equals(Get, other.Get) && Equals(Set, other.Set) && Equals(Name, other.Name);
+        }
+
+        public override bool Equals(object obj)
+        {
+            return this.Equals(obj, Equals);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                var hashCode = Get.GetHashCode();
+                hashCode = (hashCode*397) ^ Set.GetHashCode();
+                hashCode = (hashCode*397) ^ (Name != null ? Name.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
     }
 }

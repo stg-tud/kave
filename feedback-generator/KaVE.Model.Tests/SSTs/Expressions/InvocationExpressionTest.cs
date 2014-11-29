@@ -34,6 +34,8 @@ namespace KaVE.Model.Tests.SSTs.Expressions
             Assert.IsNull(sut.Identifier);
             Assert.IsNull(sut.Name);
             Assert.IsNull(sut.Parameters);
+            Assert.AreNotEqual(0, sut.GetHashCode());
+            Assert.AreNotEqual(1, sut.GetHashCode());
         }
 
         [Test]

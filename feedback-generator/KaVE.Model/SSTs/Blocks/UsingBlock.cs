@@ -40,12 +40,7 @@ namespace KaVE.Model.SSTs.Blocks
 
         public override int GetHashCode()
         {
-            return 6 * Body.GetHashCode() + (Identifier != null ? Identifier.GetHashCode() : 0);
-        }
-
-        public override string ToString()
-        {
-            return string.Format("using ({0}) {{{1}}};", Identifier, string.Join(" ", Body));
+            return 6*Body.GetHashCode() + (Identifier != null ? Identifier.GetHashCode() : 0);
         }
     }
 }

@@ -35,12 +35,7 @@ namespace KaVE.Model.SSTs.Expressions
 
         public override int GetHashCode()
         {
-            return 1;
-        }
-
-        public override string ToString()
-        {
-            return "const";
+            return 102;
         }
     }
 }

@@ -194,7 +194,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             mA.Body.Add(new Assignment("i", new ConstantExpression()));
             mA.Body.Add(new VariableDeclaration("s", Fix.String));
 
-            var block = new BlockExpression {Value = new[] {"s"}};
+            var block = new BlockExpression();//) {Value = new[] {"s"}};
             block.Body.Add(new Assignment("s", new InvocationExpression("o", Fix.ToString(Fix.Object))));
             var whileLoop = new WhileLoop {Condition = block};
             //whileLoop.Body.Add(new CompletionTrigger());

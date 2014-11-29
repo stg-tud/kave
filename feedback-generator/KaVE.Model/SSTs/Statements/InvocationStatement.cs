@@ -27,9 +27,9 @@ namespace KaVE.Model.SSTs.Statements
     {
         public InvocationExpression Target { get; set; }
 
-        public InvocationStatement(InvocationExpression expression)
+        public InvocationStatement()
         {
-            Target = expression;
+            // TODO get rid of all constructors?!
         }
 
         public InvocationStatement(IMethodName name, params string[] parameters)
@@ -54,12 +54,7 @@ namespace KaVE.Model.SSTs.Statements
 
         public override int GetHashCode()
         {
-            return (Target != null ? Target.GetHashCode() : 0);
-        }
-
-        public override string ToString()
-        {
-            return Target + ";";
+            return 6 + (Target != null ? Target.GetHashCode() : 0);
         }
     }
 }

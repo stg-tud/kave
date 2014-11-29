@@ -17,8 +17,10 @@
  *    - Sebastian Proksch
  */
 
+using KaVE.Model.Collections;
 using KaVE.Model.Names;
 using KaVE.Model.Names.CSharp;
+using KaVE.Model.SSTs;
 using KaVE.Model.SSTs.Declarations;
 using KaVE.Model.SSTs.Statements;
 using NUnit.Framework;
@@ -29,6 +31,35 @@ namespace KaVE.Model.Tests.SSTs.Declarations
     {
         private readonly IMethodName _mA = MethodName.Get("MA");
         private readonly IMethodName _mB = MethodName.Get("MB");
+
+        [Test]
+        public void DefaultValues()
+        {
+            var sut = new MethodDeclaration();
+            Assert.Null(sut.Name);
+            Assert.False(sut.IsEntryPoint);
+            Assert.NotNull(sut.Body);
+            Assert.AreNotEqual(0, sut.GetHashCode());
+            Assert.AreNotEqual(1, sut.GetHashCode());
+        }
+
+        [Test]
+        public void SettingValues()
+        {
+            var sut = new MethodDeclaration
+            {
+                Name = _mA,
+                IsEntryPoint = true
+            };
+            sut.Body.Add(new ReturnStatement());
+
+            Assert.AreEqual(_mA, sut.Name);
+            Assert.True(sut.IsEntryPoint);
+
+            var expectedBody = Lists.NewList<Statement>();
+            expectedBody.Add(new ReturnStatement());
+            Assert.AreEqual(expectedBody, sut.Body);
+        }
 
         [Test]
         public void HashCodeAndEquals_DefaultInstantitation()
