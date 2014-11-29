@@ -23,11 +23,12 @@ using KaVE.Model.Collections;
 using KaVE.Model.Names;
 using KaVE.Model.SSTs.Declarations;
 using KaVE.Model.SSTs.Statements;
+using KaVE.Model.SSTs.Visitor;
 using KaVE.Utils;
 
 namespace KaVE.Model.SSTs
 {
-    public class SST
+    public class SST : ISSTNode
     {
         public ITypeName EnclosingType { get; set; }
         public ISet<FieldDeclaration> Fields { get; set; }
@@ -59,14 +60,21 @@ namespace KaVE.Model.SSTs
 
         public void Add(CompletionTrigger tp) {}
 
+        public void Accept<TContext>(ISSTNodeVisitor<TContext> visitor, TContext context)
+        {
+            visitor.Visit(this, context);
+        }
+
         protected bool Equals(SST other)
         {
-            return Equals(EnclosingType, other.EnclosingType) && Equals(Fields, other.Fields) && Equals(Properties, other.Properties) && Equals(Methods, other.Methods) && Equals(Events, other.Events) && Equals(Delegates, other.Delegates);
+            return Equals(EnclosingType, other.EnclosingType) && Equals(Fields, other.Fields) &&
+                   Equals(Properties, other.Properties) && Equals(Methods, other.Methods) &&
+                   Equals(Events, other.Events) && Equals(Delegates, other.Delegates);
         }
 
         public override bool Equals(object obj)
         {
-           return this.Equals(obj, Equals);
+            return this.Equals(obj, Equals);
         }
 
         public override int GetHashCode()

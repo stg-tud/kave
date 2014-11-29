@@ -23,6 +23,8 @@ using KaVE.Model.Names.CSharp;
 using KaVE.Model.SSTs;
 using KaVE.Model.SSTs.Declarations;
 using KaVE.Model.SSTs.Statements;
+using KaVE.Model.SSTs.Visitor;
+using Moq;
 using NUnit.Framework;
 
 namespace KaVE.Model.Tests.SSTs.Declarations
@@ -125,6 +127,18 @@ namespace KaVE.Model.Tests.SSTs.Declarations
 
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
+        }
+
+        [Test]
+        public void VisitorImplementation()
+        {
+            var sut = new MethodDeclaration();
+            var @visitor = new Mock<ISSTNodeVisitor<object>>();
+            var context = new object();
+
+            sut.Accept(@visitor.Object, context);
+
+            @visitor.Verify(v => v.Visit(sut, context));
         }
     }
 }

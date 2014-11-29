@@ -146,6 +146,7 @@
     <Compile Include="SSTs\Blocks\SwitchBlock.cs" />
     <Compile Include="SSTs\Blocks\CaseBlock.cs" />
     <Compile Include="SSTs\Blocks\UnsafeBlock.cs" />
+    <Compile Include="SSTs\MemberDeclaration.cs" />
     <Compile Include="SSTs\Expressions\BlockExpression.cs" />
     <Compile Include="SSTs\Expressions\IfElseExpression.cs" />
     <Compile Include="SSTs\Statements\Assignment.cs" />
@@ -178,6 +179,10 @@
     <Compile Include="SSTs\Blocks\TryBlock.cs" />
     <Compile Include="SSTs\Blocks\UsingBlock.cs" />
     <Compile Include="SSTs\Blocks\WhileLoop.cs" />
+    <Compile Include="SSTs\Visitor\ISSTNode.cs" />
+    <Compile Include="SSTs\Visitor\ISSTNodeVisitor.cs" />
+    <Compile Include="SSTs\Visitor\SSTNodeVisitor.cs" />
+    <Compile Include="SSTs\Visitor\SSTToStringVisitor.cs" />
     <Compile Include="Utils\WeakNameCache.cs" />
   </ItemGroup>
   <ItemGroup>

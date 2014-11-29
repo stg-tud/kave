@@ -18,13 +18,19 @@
  */
 
 using KaVE.Model.Names;
+using KaVE.Model.SSTs.Visitor;
 using KaVE.Utils;
 
 namespace KaVE.Model.SSTs.Declarations
 {
-    public class EventDeclaration
+    public class EventDeclaration : MemberDeclaration
     {
         public IEventName Name { get; set; }
+
+        public override void Accept<TContext>(ISSTNodeVisitor<TContext> visitor, TContext context)
+        {
+            visitor.Visit(this, context);
+        }
 
         private bool Equals(EventDeclaration other)
         {

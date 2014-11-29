@@ -21,11 +21,12 @@ using System.Collections.Generic;
 using KaVE.JetBrains.Annotations;
 using KaVE.Model.Collections;
 using KaVE.Model.Names;
+using KaVE.Model.SSTs.Visitor;
 using KaVE.Utils;
 
 namespace KaVE.Model.SSTs.Declarations
 {
-    public class PropertyDeclaration
+    public class PropertyDeclaration : MemberDeclaration
     {
         public IPropertyName Name { get; set; }
 
@@ -34,6 +35,11 @@ namespace KaVE.Model.SSTs.Declarations
 
         [NotNull]
         public IList<Statement> Set = Lists.NewList<Statement>();
+
+        public override void Accept<TContext>(ISSTNodeVisitor<TContext> visitor, TContext context)
+        {
+            visitor.Visit(this, context);
+        }
 
         private bool Equals(PropertyDeclaration other)
         {

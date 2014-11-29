@@ -21,6 +21,8 @@ using KaVE.Model.Collections;
 using KaVE.Model.Names.CSharp;
 using KaVE.Model.SSTs;
 using KaVE.Model.SSTs.Declarations;
+using KaVE.Model.SSTs.Visitor;
+using Moq;
 using NUnit.Framework;
 
 namespace KaVE.Model.Tests.SSTs
@@ -94,9 +96,74 @@ namespace KaVE.Model.Tests.SSTs
         }
 
         [Test]
-        public void Equality_DifferentX()
+        public void Equality_DifferentType()
         {
-            Assert.Fail();
+            var a = new SST {EnclosingType = TypeName.UnknownName};
+            var b = new SST();
+            Assert.AreNotEqual(a, b);
+            Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
+        }
+
+        [Test]
+        public void Equality_DifferentDelegates()
+        {
+            var a = new SST();
+            a.Delegates.Add(new DelegateDeclaration());
+            var b = new SST();
+            Assert.AreNotEqual(a, b);
+            Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
+        }
+
+        [Test]
+        public void Equality_DifferentEvents()
+        {
+            var a = new SST();
+            a.Events.Add(new EventDeclaration());
+            var b = new SST();
+            Assert.AreNotEqual(a, b);
+            Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
+        }
+
+        [Test]
+        public void Equality_DifferentFields()
+        {
+            var a = new SST();
+            a.Fields.Add(new FieldDeclaration());
+            var b = new SST();
+            Assert.AreNotEqual(a, b);
+            Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
+        }
+
+        [Test]
+        public void Equality_DifferentMethods()
+        {
+            var a = new SST();
+            a.Methods.Add(new MethodDeclaration());
+            var b = new SST();
+            Assert.AreNotEqual(a, b);
+            Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
+        }
+
+        [Test]
+        public void Equality_DifferentProperties()
+        {
+            var a = new SST();
+            a.Properties.Add(new PropertyDeclaration());
+            var b = new SST();
+            Assert.AreNotEqual(a, b);
+            Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
+        }
+
+        [Test]
+        public void VisitorImplementation()
+        {
+            var sut = new SST();
+            var visitorMock = new Mock<ISSTNodeVisitor<object>>();
+            var context = new object();
+
+            sut.Accept(visitorMock.Object, context);
+
+            visitorMock.Verify(v => v.Visit(sut, context));
         }
     }
 }

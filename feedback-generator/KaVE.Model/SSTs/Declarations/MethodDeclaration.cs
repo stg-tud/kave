@@ -21,15 +21,21 @@ using System;
 using System.Collections.Generic;
 using KaVE.Model.Collections;
 using KaVE.Model.Names;
+using KaVE.Model.SSTs.Visitor;
 using KaVE.Utils;
 
 namespace KaVE.Model.SSTs.Declarations
 {
-    public class MethodDeclaration
+    public class MethodDeclaration : MemberDeclaration
     {
         public IMethodName Name { get; set; }
         public readonly IList<Statement> Body = Lists.NewList<Statement>();
         public Boolean IsEntryPoint { get; set; }
+
+        public override void Accept<TContext>(ISSTNodeVisitor<TContext> visitor, TContext context)
+        {
+            visitor.Visit(this, context);
+        }
 
         public override bool Equals(object obj)
         {
