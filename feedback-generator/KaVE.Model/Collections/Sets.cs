@@ -14,7 +14,7 @@
  * limitations under the License.
  * 
  * Contributors:
- *    - 
+ *    - Sebastian Proksch
  */
 
 using System.Collections.Generic;
@@ -31,6 +31,16 @@ namespace KaVE.Model.Collections
         }
 
         public static ISet<T> NewHashSet<T>(params T[] ts)
+        {
+            var s = new KaVEHashSet<T>();
+            foreach (var t in ts)
+            {
+                s.Add(t);
+            }
+            return s;
+        }
+
+        public static ISet<T> NewHashSetFrom<T>(IEnumerable<T> ts)
         {
             var s = new KaVEHashSet<T>();
             foreach (var t in ts)

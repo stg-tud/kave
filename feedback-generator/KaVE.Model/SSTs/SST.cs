@@ -36,6 +36,7 @@ namespace KaVE.Model.SSTs
         public ISet<MethodDeclaration> Methods { get; set; }
         public ISet<EventDeclaration> Events { get; set; }
         public ISet<DelegateDeclaration> Delegates { get; set; }
+        public CompletionTrigger TypeLevelTrigger { get; set; }
 
         public SST()
         {
@@ -46,35 +47,33 @@ namespace KaVE.Model.SSTs
             Delegates = Sets.NewHashSet<DelegateDeclaration>();
         }
 
-        // TODO convert to ISet
-        public IList<MethodDeclaration> EntryPoints
+        public ISet<MethodDeclaration> EntryPoints
         {
-            get { return Methods.Where(m => m.IsEntryPoint).ToList(); }
+            get { return Sets.NewHashSetFrom(Methods.AsEnumerable().Where(m => m.IsEntryPoint)); }
         }
 
-        // TODO convert to ISet
-        public IList<MethodDeclaration> NonEntryPoints
+        public ISet<MethodDeclaration> NonEntryPoints
         {
-            get { return Methods.Where(m => !m.IsEntryPoint).ToList(); }
+            get { return Sets.NewHashSetFrom(Methods.AsEnumerable().Where(m => !m.IsEntryPoint)); }
         }
-
-        public void Add(CompletionTrigger tp) {}
 
         public void Accept<TContext>(ISSTNodeVisitor<TContext> visitor, TContext context)
         {
             visitor.Visit(this, context);
         }
 
-        protected bool Equals(SST other)
-        {
-            return Equals(EnclosingType, other.EnclosingType) && Equals(Fields, other.Fields) &&
-                   Equals(Properties, other.Properties) && Equals(Methods, other.Methods) &&
-                   Equals(Events, other.Events) && Equals(Delegates, other.Delegates);
-        }
 
         public override bool Equals(object obj)
         {
             return this.Equals(obj, Equals);
+        }
+
+        private bool Equals(SST other)
+        {
+            return Equals(EnclosingType, other.EnclosingType) && Equals(Fields, other.Fields) &&
+                   Equals(Methods, other.Methods) && Equals(Properties, other.Properties) &&
+                   Equals(Events, other.Events) && Equals(Delegates, other.Delegates) &&
+                   Equals(TypeLevelTrigger, other.TypeLevelTrigger);
         }
 
         public override int GetHashCode()
@@ -83,10 +82,11 @@ namespace KaVE.Model.SSTs
             {
                 var hashCode = (EnclosingType != null ? EnclosingType.GetHashCode() : 0);
                 hashCode = (hashCode*397) ^ (Fields != null ? Fields.GetHashCode() : 0);
-                hashCode = (hashCode*397) ^ (Properties != null ? Properties.GetHashCode() : 0);
                 hashCode = (hashCode*397) ^ (Methods != null ? Methods.GetHashCode() : 0);
+                hashCode = (hashCode*397) ^ (Properties != null ? Properties.GetHashCode() : 0);
                 hashCode = (hashCode*397) ^ (Events != null ? Events.GetHashCode() : 0);
                 hashCode = (hashCode*397) ^ (Delegates != null ? Delegates.GetHashCode() : 0);
+                hashCode = (hashCode*397) ^ (TypeLevelTrigger != null ? TypeLevelTrigger.GetHashCode() : 0);
                 return hashCode;
             }
         }

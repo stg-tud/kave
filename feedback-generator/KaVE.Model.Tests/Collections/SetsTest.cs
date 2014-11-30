@@ -14,7 +14,7 @@
  * limitations under the License.
  * 
  * Contributors:
- *    - 
+ *    - Sebastian Proksch
  */
 
 using System.Collections.Generic;
@@ -90,13 +90,21 @@ namespace KaVE.Model.Tests.Collections
             Assert.IsFalse(a.GetHashCode() == b.GetHashCode());
         }
 
-
         [Test]
         public void TakeCareWhenAssertingEqualityWithNUnit()
         {
             var a = Sets.NewHashSet(1, 2);
             var b = Sets.NewHashSet(2, 1);
             CollectionAssert.AreEquivalent(a, b);
+        }
+
+        [Test]
+        public void CreatingSetFromEnumerable()
+        {
+            var input = new HashSet<int>(new[] {1, 2, 3});
+            var a = Sets.NewHashSetFrom(input);
+            var b = Sets.NewHashSet(1, 2, 3);
+            Assert.AreEqual(a, b);
         }
     }
 }

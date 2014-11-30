@@ -14,7 +14,7 @@
  * limitations under the License.
  * 
  * Contributors:
- *    - 
+ *    - Sebastian Proksch
  */
 
 using System.Collections.Generic;
@@ -31,6 +31,13 @@ namespace KaVE.Model.Collections
         }
 
         public static IList<T> NewList<T>(params T[] ts)
+        {
+            var s = new KaVEList<T>();
+            s.AddRange(ts);
+            return s;
+        }
+
+        public static IList<T> NewListFrom<T>(IEnumerable<T> ts)
         {
             var s = new KaVEList<T>();
             s.AddRange(ts);
@@ -55,7 +62,7 @@ namespace KaVE.Model.Collections
         public override int GetHashCode()
         {
             var init = typeof (T).GetHashCode();
-            return Seed*this.Aggregate(init, (current, e) => Seed * current + e.GetHashCode());
+            return Seed*this.Aggregate(init, (current, e) => Seed*current + e.GetHashCode());
         }
     }
 }

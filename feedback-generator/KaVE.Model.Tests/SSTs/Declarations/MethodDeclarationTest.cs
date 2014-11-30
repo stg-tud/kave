@@ -20,7 +20,6 @@
 using KaVE.Model.Collections;
 using KaVE.Model.Names;
 using KaVE.Model.Names.CSharp;
-using KaVE.Model.SSTs;
 using KaVE.Model.SSTs.Declarations;
 using KaVE.Model.SSTs.Statements;
 using KaVE.Model.SSTs.Visitor;
@@ -58,13 +57,11 @@ namespace KaVE.Model.Tests.SSTs.Declarations
             Assert.AreEqual(_mA, sut.Name);
             Assert.True(sut.IsEntryPoint);
 
-            var expectedBody = Lists.NewList<Statement>();
-            expectedBody.Add(new ReturnStatement());
-            Assert.AreEqual(expectedBody, sut.Body);
+            Assert.AreEqual(Lists.NewList(new ReturnStatement()), sut.Body);
         }
 
         [Test]
-        public void HashCodeAndEquals_DefaultInstantitation()
+        public void Equality_Default()
         {
             var a = new MethodDeclaration();
             var b = new MethodDeclaration();
@@ -74,23 +71,27 @@ namespace KaVE.Model.Tests.SSTs.Declarations
         }
 
         [Test]
-        public void HashCodeAndEquals_SameName()
+        public void Equality_ReallyTheSame()
         {
             var a = new MethodDeclaration
             {
-                Name = _mA
+                Name = _mA,
+                IsEntryPoint = true
             };
+            a.Body.Add(new ReturnStatement());
             var b = new MethodDeclaration
             {
-                Name = _mA
+                Name = _mA,
+                IsEntryPoint = true
             };
+            b.Body.Add(new ReturnStatement());
 
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
         }
 
         [Test]
-        public void HashCodeAndEquals_DifferentName()
+        public void Equality_DifferentName()
         {
             var a = new MethodDeclaration
             {
@@ -106,24 +107,21 @@ namespace KaVE.Model.Tests.SSTs.Declarations
         }
 
         [Test]
-        public void HashCodeAndEquals_SameBody()
+        public void Equality_DifferentEntryPoint()
         {
-            var a = new MethodDeclaration();
-            a.Body.Add(new VariableDeclaration("i", null));
+            var a = new MethodDeclaration {IsEntryPoint = true};
             var b = new MethodDeclaration();
-            b.Body.Add(new VariableDeclaration("i", null));
 
-            Assert.AreEqual(a, b);
-            Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
+            Assert.AreNotEqual(a, b);
+            Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
         }
 
         [Test]
-        public void HashCodeAndEquals_DifferentBody()
+        public void Equality_DifferentBody()
         {
             var a = new MethodDeclaration();
-            a.Body.Add(new VariableDeclaration("i", null));
+            a.Body.Add(new ContinueStatement());
             var b = new MethodDeclaration();
-            b.Body.Add(new ContinueStatement());
 
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());

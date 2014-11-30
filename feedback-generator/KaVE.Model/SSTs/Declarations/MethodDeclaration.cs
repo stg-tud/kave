@@ -42,15 +42,20 @@ namespace KaVE.Model.SSTs.Declarations
             return this.Equals(obj, Equals);
         }
 
-        protected bool Equals(MethodDeclaration other)
+        private bool Equals(MethodDeclaration other)
         {
-            return Equals(Name, other.Name) && Equals(Body, other.Body);
+            return Equals(Body, other.Body) && Equals(Name, other.Name) && IsEntryPoint.Equals(other.IsEntryPoint);
         }
 
         public override int GetHashCode()
         {
-            var nameHash = Name != null ? Name.GetHashCode() : 0;
-            return nameHash*20349 + HashCodeUtils.For(3456, Body);
+            unchecked
+            {
+                var hashCode = (Body != null ? Body.GetHashCode() : 0);
+                hashCode = (hashCode*397) ^ (Name != null ? Name.GetHashCode() : 0);
+                hashCode = (hashCode*397) ^ IsEntryPoint.GetHashCode();
+                return hashCode;
+            }
         }
     }
 }

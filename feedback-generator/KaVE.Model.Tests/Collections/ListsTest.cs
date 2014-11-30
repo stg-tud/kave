@@ -14,7 +14,7 @@
  * limitations under the License.
  * 
  * Contributors:
- *    - 
+ *    - Sebastian Proksch
  */
 
 using System.Collections.Generic;
@@ -104,6 +104,15 @@ namespace KaVE.Model.Tests.Collections
             var a = Lists.NewList(1, 2);
             var b = Lists.NewList(2, 1);
             CollectionAssert.AreNotEqual(a, b);
+        }
+
+        [Test]
+        public void CreatingSetFromEnumerable()
+        {
+            var input = new HashSet<int>(new[] {1, 2, 3});
+            var a = Lists.NewListFrom(input);
+            var b = Lists.NewList(1, 2, 3);
+            Assert.AreEqual(a, b);
         }
     }
 }
