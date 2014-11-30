@@ -44,7 +44,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 
             var mA = NewMethodDeclaration(Fix.Void, "A");
 
-            AssertEntryPoints(mA);
+            AssertAllMethods(mA);
         }
 
         [Test]

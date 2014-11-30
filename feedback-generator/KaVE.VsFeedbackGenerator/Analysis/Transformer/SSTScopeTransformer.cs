@@ -91,22 +91,46 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
 
         public override void VisitForStatement(IForStatement forStatementParam, ScopeTransformerContext context)
         {
-            var forLoop = new ForLoop {Condition = forStatementParam.Condition.GetScopedReferences(context)};
-            forLoop.Init.AddRange(forStatementParam.Initializer.GetScope(context).Body);
-            forLoop.Step.AddRange(forStatementParam.Iterators.GetScope(context).Body);
-            forLoop.Body.AddRange(forStatementParam.Body.GetScope(context).Body);
+            var forLoop = new ForLoop();
             context.Scope.Body.Add(forLoop);
+            if (forStatementParam.Condition != null)
+            {
+                forLoop.Condition = forStatementParam.Condition.GetScopedReferences(context);
+            }
+            if (forStatementParam.Initializer != null)
+            {
+                forLoop.Init.AddRange(forStatementParam.Initializer.GetScope(context).Body);
+            }
+            if (forStatementParam.Iterators != null)
+            {
+                forLoop.Step.AddRange(forStatementParam.Iterators.GetScope(context).Body);
+            }
+            if (forStatementParam.Body != null)
+            {
+                forLoop.Body.AddRange(forStatementParam.Body.GetScope(context).Body);
+            }
         }
 
         public override void VisitIfStatement(IIfStatement ifStatementParam, ScopeTransformerContext context)
         {
-            var ifBlock = new IfElseBlock {Condition = ifStatementParam.Condition.GetReferences(context)};
-            ifBlock.Then.AddRange(ifStatementParam.Then.GetScope(context).Body);
-            if (ifStatementParam.Else != null)
+            if (ifStatementParam.Condition != null)
             {
-                ifBlock.Else.AddRange(ifStatementParam.Else.GetScope(context).Body);
+                var ifBlock = new IfElseBlock();
+                if (ifStatementParam.Condition != null)
+                {
+                    ifBlock.Condition = ifStatementParam.Condition.GetReferences(context);
+                }
+                ;
+                if (ifStatementParam.Then != null)
+                {
+                    ifBlock.Then.AddRange(ifStatementParam.Then.GetScope(context).Body);
+                }
+                if (ifStatementParam.Else != null)
+                {
+                    ifBlock.Else.AddRange(ifStatementParam.Else.GetScope(context).Body);
+                }
+                context.Scope.Body.Add(ifBlock);
             }
-            context.Scope.Body.Add(ifBlock);
         }
 
         public override void VisitInvocationExpression(IInvocationExpression invocationExpressionParam,
@@ -116,7 +140,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
                 invocationExpressionParam,
                 context,
                 (callee, method, args, retType) =>
-                    context.Scope.Body.Add(new InvocationStatement{Target = callee.CreateInvocation(method, args)}));
+                    context.Scope.Body.Add(new InvocationStatement {Target = callee.CreateInvocation(method, args)}));
         }
 
         public override void VisitLocalVariableDeclaration(ILocalVariableDeclaration localVariableDeclarationParam,
@@ -135,7 +159,10 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
         public override void VisitMethodDeclaration(IMethodDeclaration methodDeclarationParam,
             ScopeTransformerContext context)
         {
-            methodDeclarationParam.Body.Accept(this, context);
+            if (methodDeclarationParam.Body != null)
+            {
+                methodDeclarationParam.Body.Accept(this, context);
+            }
         }
 
         public override void VisitMultipleDeclarationMember(IMultipleDeclarationMember multipleDeclarationMemberParam,
@@ -168,22 +195,40 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
             var tryBlock = new TryBlock();
             tryBlock.Body.AddRange(tryStatementParam.Try.GetScope(context).Body);
             tryBlock.CatchBlocks.AddRange(tryStatementParam.Catches.Select(c => c.GetCatchBlock(context)));
-            tryBlock.Finally.AddRange(tryStatementParam.FinallyBlock.GetScope(context).Body);
-            context.Scope.Body.Add(tryBlock);
+            var finallyBlock = tryStatementParam.FinallyBlock;
+            if (finallyBlock != null)
+            {
+                tryBlock.Finally.AddRange(finallyBlock.GetScope(context).Body);
+                context.Scope.Body.Add(tryBlock);
+            }
         }
 
         public override void VisitUsingStatement(IUsingStatement usingStatementParam, ScopeTransformerContext context)
         {
-            var usingBlock = new UsingBlock {Identifier = usingStatementParam.Expressions.GetReference(context)};
-            usingBlock.Body.AddRange(usingStatementParam.Body.GetScope(context).Body);
+            var usingBlock = new UsingBlock();
+            if (usingStatementParam.Expressions.Count > 0)
+            {
+                usingBlock.Identifier = usingStatementParam.Expressions.GetReference(context);
+            }
+            if (usingBlock.Body != null)
+            {
+                usingBlock.Body.AddRange(usingStatementParam.Body.GetScope(context).Body);
+            }
             context.Scope.Body.Add(usingBlock);
         }
 
         public override void VisitWhileStatement(IWhileStatement whileStatementParam, ScopeTransformerContext context)
         {
-            var whileLoop = new WhileLoop {Condition = whileStatementParam.Condition.GetScopedReferences(context)};
-            whileLoop.Body.AddRange(whileStatementParam.Body.GetScope(context).Body);
+            var whileLoop = new WhileLoop();
             context.Scope.Body.Add(whileLoop);
+            if (whileStatementParam.Condition != null)
+            {
+                whileLoop.Condition = whileStatementParam.Condition.GetScopedReferences(context);
+            }
+            if (whileStatementParam.Body != null)
+            {
+                whileLoop.Body.AddRange(whileStatementParam.Body.GetScope(context).Body);
+            }
         }
 
         #region Redirections

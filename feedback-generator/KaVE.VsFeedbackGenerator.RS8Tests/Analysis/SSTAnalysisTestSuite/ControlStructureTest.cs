@@ -45,7 +45,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             //mA.Body.Add(new CompletionTrigger());
             mA.Body.Add(new ReturnStatement {Expression = new ConstantExpression()});
 
-            AssertEntryPoints(mA);
+            AssertAllMethods(mA);
         }
 
         [Test]
@@ -63,7 +63,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             //mA.Body.Add(new CompletionTrigger());
             mA.Body.Add(new ReturnStatement {Expression = ComposedExpression.Create("i")});
 
-            AssertEntryPoints(mA);
+            AssertAllMethods(mA);
         }
 
         [Test]
@@ -89,7 +89,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             mA.Body.Add(ifElse);
             mA.Body.Add(new ReturnStatement {Expression = new ConstantExpression()});
 
-            AssertEntryPoints(mA);
+            AssertAllMethods(mA);
         }
 
         [Test]
@@ -116,7 +116,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 
             mA.Body.Add(ifElse);
 
-            AssertEntryPoints(mA);
+            AssertAllMethods(mA);
         }
 
         [Test]
@@ -143,7 +143,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 
             mA.Body.Add(whileLoop);
 
-            AssertEntryPoints(mA);
+            AssertAllMethods(mA);
         }
 
         [Test]
@@ -171,7 +171,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 
             mA.Body.Add(doLoop);
 
-            AssertEntryPoints(mA);
+            AssertAllMethods(mA);
         }
 
         [Test]
@@ -201,7 +201,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 
             mA.Body.Add(whileLoop);
 
-            AssertEntryPoints(mA);
+            AssertAllMethods(mA);
         }
 
         [Test]
@@ -228,7 +228,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 
             mA.Body.Add(forLoop);
 
-            AssertEntryPoints(mA);
+            AssertAllMethods(mA);
         }
 
         [Test]
@@ -256,7 +256,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 
             mA.Body.Add(forLoop);
 
-            AssertEntryPoints(mA);
+            AssertAllMethods(mA);
         }
 
         /*  WTF:
@@ -295,7 +295,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 
             mA.Body.Add(forEachLoop);
 
-            AssertEntryPoints(mA);
+            AssertAllMethods(mA);
         }
 
         // TODO: handle "from Window window in windows select window.GetName()" like LINQ expression windows.Select(win => win.getName())
@@ -327,7 +327,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 
             mA.Body.Add(usingBlock);
 
-            AssertEntryPoints(mA);
+            AssertAllMethods(mA);
         }
 
         [Test]
@@ -358,7 +358,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             //usingBlock.Body.Add(new CompletionTrigger());
             mA.Body.Add(usingBlock);
 
-            AssertEntryPoints(mA);
+            AssertAllMethods(mA);
         }
 
         [Test]
@@ -376,7 +376,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             //mA.Body.Add(new CompletionTrigger());
             mA.Body.Add(new ThrowStatement {Exception = Fix.Exception});
 
-            AssertEntryPoints(mA);
+            AssertAllMethods(mA);
         }
 
         [Test]
@@ -430,7 +430,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 
             mA.Body.Add(tryBlock);
 
-            AssertEntryPoints(mA);
+            AssertAllMethods(mA);
         }
     }
 }

@@ -17,6 +17,7 @@
  *    - Sebastian Proksch
  */
 
+using KaVE.Model.Collections;
 using KaVE.Model.Names.CSharp;
 using KaVE.Model.SSTs.Declarations;
 using NUnit.Framework;
@@ -34,14 +35,12 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
                 $
             ");
 
-            var sst = NewSST();
-
-            sst.Delegates.Add(
+            var expected = Sets.NewHashSet(
                 new DelegateDeclaration
                 {
                     Name = TypeName.Get("d:N.C+D, TestProject")
                 });
-            Assert.AreEqual(ResultSST, sst);
+            Assert.AreEqual(expected, ResultSST.Delegates);
         }
 
         [Test]
@@ -52,10 +51,12 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
                 $
             ");
 
-            var sst = NewSST();
-
-            sst.Events.Add(new EventDeclaration());
-            Assert.AreEqual(ResultSST, sst);
+            var expected = Sets.NewHashSet(
+                new EventDeclaration
+                {
+                    Name = EventName.Get("[System.Int32, mscorlib, 4.0.0.0] [N.C, TestProject].E")
+                });
+            Assert.AreEqual(expected, ResultSST.Events);
         }
 
         [Test]
@@ -66,38 +67,36 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
                 $
             ");
 
-            var sst = NewSST();
-
-            sst.Fields.Add(new FieldDeclaration());
-            Assert.AreEqual(ResultSST, sst);
+            var expected =
+                Sets.NewHashSet(
+                    new FieldDeclaration
+                    {
+                        Name = FieldName.Get("[System.Int32, mscorlib, 4.0.0.0] [N.C, TestProject]._f")
+                    });
+            Assert.AreEqual(expected, ResultSST.Fields);
         }
 
         [Test]
-        public void MethodDeclaration_EntryPoint()
+        public void MethodDeclaration()
         {
             CompleteInClass(@"
                 public void M() {}
+                private void N() {}
                 $
             ");
 
-            var sst = NewSST();
-
-            sst.Methods.Add(new MethodDeclaration());
-            Assert.AreEqual(ResultSST, sst);
-        }
-
-        [Test]
-        public void MethodDeclaration_NonEntryPoint()
-        {
-            CompleteInClass(@"
-                private void M() {}
-                $
-            ");
-
-            var sst = NewSST();
-
-            sst.Methods.Add(new MethodDeclaration());
-            Assert.AreEqual(ResultSST, sst);
+            var m = new MethodDeclaration
+            {
+                Name = MethodName.Get("[System.Void, mscorlib, 4.0.0.0] [N.C, TestProject].M()"),
+                IsEntryPoint = true
+            };
+            var n = new MethodDeclaration
+            {
+                Name = MethodName.Get("[System.Void, mscorlib, 4.0.0.0] [N.C, TestProject].N()"),
+                IsEntryPoint = false
+            };
+            var expected = Sets.NewHashSet(m, n);
+            Assert.AreEqual(expected, ResultSST.Methods);
         }
 
         [Test]
@@ -108,10 +107,13 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
                 $
             ");
 
-            var sst = NewSST();
-
-            sst.Properties.Add(new PropertyDeclaration());
-            Assert.AreEqual(ResultSST, sst);
+            var expected =
+                Sets.NewHashSet(
+                    new PropertyDeclaration
+                    {
+                        Name = PropertyName.Get("set get [System.Int32, mscorlib, 4.0.0.0] [N.C, TestProject].P()")
+                    });
+            Assert.AreEqual(expected, ResultSST.Properties);
         }
     }
 }

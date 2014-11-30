@@ -42,7 +42,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             var mA = NewMethodDeclaration(SSTAnalysisFixture.Void, "A");
             mA.Body.Add(new VariableDeclaration("i", Fix.Unknown));
 
-            AssertEntryPoints(mA);
+            AssertAllMethods(mA);
         }
 
         [Test]
@@ -59,7 +59,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             var mA = NewMethodDeclaration(SSTAnalysisFixture.Void, "A");
             mA.Body.Add(new VariableDeclaration("i", Fix.Int));
 
-            AssertEntryPoints(mA);
+            AssertAllMethods(mA);
         }
 
         [Test]
@@ -77,7 +77,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             mA.Body.Add(new VariableDeclaration("i", Fix.Int));
             mA.Body.Add(new Assignment("i", new ConstantExpression()));
 
-            AssertEntryPoints(mA);
+            AssertAllMethods(mA);
         }
 
         [Test, Ignore]
@@ -100,7 +100,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 
             // TODO assert that c.M does not show up
 
-            AssertEntryPoints(mA);
+            AssertAllMethods(mA);
         }
     }
 }

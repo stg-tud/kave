@@ -17,6 +17,8 @@
  *    - Sebastian Proksch
  */
 
+using KaVE.Model.Names.CSharp;
+using KaVE.Model.SSTs.Statements;
 using NUnit.Framework;
 using Fix = KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite.SSTAnalysisFixture;
 
@@ -32,9 +34,11 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
                 public void PublicA() {}
             ");
 
-            var mA = NewMethodDeclaration(Fix.Void, "PublicA");
+            var mPub = NewMethodDeclaration(Fix.Void, "PublicA");
+            var mPriv = NewMethodDeclaration(Fix.Void, "PrivateA");
+            mPriv.IsEntryPoint = false;
 
-            AssertEntryPoints(mA);
+            AssertAllMethods(mPub, mPriv);
         }
 
         [Test]
@@ -47,12 +51,12 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             ");
 
             var mA = NewMethodDeclaration(Fix.Void, "A");
+            mA.Body.Add(new InvocationStatement("this", MethodName.Get("[System.Void, mscorlib, 4.0.0.0] [N.C, TestProject].B()"), new string[]{}));
             var mB = NewMethodDeclaration(Fix.Void, "B"); // ...
-            //mB.Body.Add(new Invocation("this", Fix.GetMethodName("A.B")));
+            mB.IsEntryPoint = false;
             var mC = NewMethodDeclaration(Fix.Void, "C");
 
-            AssertEntryPoints(mA, mC);
-            AssertMethodDeclarations(mB);
+            AssertAllMethods(mA, mB, mC);
         }
 
         // TODO @Seb: adapt remaining tests from EntryPointSelectorTest to ensure that the Entrypoints are included correctly

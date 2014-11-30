@@ -63,7 +63,11 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
                 package,
                 simpleName,
                 string.Join(", ", args));
-            return new MethodDeclaration {Name = MethodName.Get(identifier)};
+            return new MethodDeclaration
+            {
+                Name = MethodName.Get(identifier),
+                IsEntryPoint = true
+            };
         }
 
         internal void AssertResult(SST expected)
@@ -71,27 +75,19 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             Assert.AreEqual(expected, ResultSST);
         }
 
-        internal void AssertEntryPoints(params MethodDeclaration[] expectedDecls)
+        internal void AssertMethod(MethodDeclaration expected)
         {
-            var eps = ResultSST.EntryPoints;
-            Assert.AreEqual(expectedDecls.Length, eps.Count);
-
-            CollectionAssert.AreEqual(expectedDecls, eps);
-            // TODO: @Seb: CollectionAssert works but contains doesn't
-            /*foreach (var expectedDecl in expectedDecls)
-            {
-                Assert.IsTrue(eps.Contains(expectedDecl));
-            }*/
+            Assert.IsTrue(ResultSST.Methods.Contains(expected));
         }
 
-        internal void AssertMethodDeclarations(params MethodDeclaration[] expectedDecls)
+        internal void AssertAllMethods(params MethodDeclaration[] expectedDecls)
         {
-            var neps = ResultSST.NonEntryPoints;
-            Assert.AreEqual(expectedDecls.Length, neps.Count);
+            var ms = ResultSST.Methods;
+            Assert.AreEqual(expectedDecls.Length, ms.Count);
 
             foreach (var expectedDecl in expectedDecls)
             {
-                Assert.IsTrue(neps.Contains(expectedDecl));
+                Assert.IsTrue(ms.Contains(expectedDecl));
             }
         }
 

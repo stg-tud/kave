@@ -7,8 +7,12 @@
                 namespace N {
                     public class C {
                         
-                public int P {get;set;}
-                {caret}
-            
+                public void M() {
+                    
+                using (var usingVar = new MemoryStream())
+                {
+                    usi{caret}
+                }
+                }
                     }
                 }

@@ -6,9 +6,9 @@
                 
                 namespace N {
                     public class C {
-                        
-                public int P {get;set;}
-                {caret}
+                        {caret}
+                private void PrivateA() {}
+                public void PublicA() {}
             
                     }
                 }

@@ -28,6 +28,7 @@ using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
+using KaVE.Model.Collections;
 using KaVE.Model.Events.CompletionEvent;
 using KaVE.Model.Names;
 using KaVE.Model.Names.CSharp;
@@ -44,16 +45,10 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
     [ShellComponent, Language(typeof (CSharpLanguage))]
     public class TestAnalysisTrigger : CSharpItemsProviderBase<CSharpCodeCompletionContext>
     {
-        private readonly ISSTFactory _factory;
-        public IEnumerable<IMethodName> LastEntryPoints { get; private set; }
+        public ISet<IMethodName> LastEntryPoints { get; private set; }
         public Context LastContext { get; private set; }
         public SST LastSST { get; private set; }
         public Tuple<Exception, string> LastException { get; private set; }
-
-        public TestAnalysisTrigger(ISSTFactory factory)
-        {
-            _factory = factory;
-        }
 
         public bool HasFailed
         {
@@ -70,11 +65,10 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
             {
                 var typeShape = new TypeShapeAnalysis().Analyze(typeDeclaration);
                 var entryPoints = new EntryPointSelector(typeDeclaration, typeShape).GetEntryPoints();
-                LastSST = SSTAnalysis.Analyze(context, typeDeclaration, entryPoints, _factory);
-                LastEntryPoints = entryPoints.Select(ep => ep.Name);
+                //LastSST = SSTAnalysis.Analyze(context, typeDeclaration, entryPoints, _factory);
+                LastEntryPoints = Sets.NewHashSetFrom(entryPoints.Select(ep => ep.Name));
             }
 
-            // <new approach>
             var classDeclaration = ContextAnalysis.FindEnclosing<IClassDeclaration>(context.NodeInFile);
             if (classDeclaration != null)
             {
@@ -88,13 +82,8 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
                 {
                     LastSST.EnclosingType = TypeName.UnknownName;
                 }
-                foreach (var decl in classDeclaration.MemberDeclarations)
-                {
-                    decl.Accept(new DeclarationVisitor(), LastSST);
-                }
+                classDeclaration.Accept(new DeclarationVisitor(LastEntryPoints), LastSST);
             }
-            // </new approach>
-
 
             return false;
         }

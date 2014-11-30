@@ -54,8 +54,12 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
             ReferenceCollectorContext context)
         {
             var dest = assignmentExpressionParam.Dest.GetReference(context);
-            assignmentExpressionParam.Source.ProcessAssignment(context, dest);
-            context.References.Add(dest);
+            var source = assignmentExpressionParam.Source;
+            if (source != null)
+            {
+                source.ProcessAssignment(context, dest);
+                context.References.Add(dest);
+            }
         }
 
         public override void VisitBinaryExpression(IBinaryExpression binaryExpressionParam,
@@ -141,7 +145,10 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
         public override void VisitReferenceExpression(IReferenceExpression referenceExpressionParam,
             ReferenceCollectorContext context)
         {
-            context.References.Add(referenceExpressionParam.NameIdentifier.Name);
+            if (referenceExpressionParam.NameIdentifier != null)
+            {
+                context.References.Add(referenceExpressionParam.NameIdentifier.Name);
+            }
         }
 
         public override void VisitThisExpression(IThisExpression thisExpressionParam, ReferenceCollectorContext context)

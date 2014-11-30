@@ -43,36 +43,40 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
             var invokedExpression = invocationExpressionParam.InvokedExpression as IReferenceExpression;
             if (invocationExpressionParam.Reference != null && invokedExpression != null)
             {
-                var methodName = invocationExpressionParam.Reference.ResolveMethod().GetName<IMethodName>();
-                var typeName = invocationExpressionParam.Type().GetName();
-                string callee = null;
-                if (invokedExpression.QualifierExpression == null ||
-                    invokedExpression.QualifierExpression is IThisExpression)
+                var resolvedMethod = invocationExpressionParam.Reference.ResolveMethod();
+                if (resolvedMethod != null)
                 {
-                    callee = "this";
-                }
-                else if (invokedExpression.QualifierExpression is IBaseExpression)
-                {
-                    callee = "base";
-                }
-                else if (invokedExpression.QualifierExpression is IReferenceExpression)
-                {
-                    var referenceExpression = invokedExpression.QualifierExpression as IReferenceExpression;
-                    if (referenceExpression.IsClassifiedAsVariable)
+                    var methodName = resolvedMethod.GetName<IMethodName>();
+                    var typeName = invocationExpressionParam.Type().GetName();
+                    string callee = null;
+                    if (invokedExpression.QualifierExpression == null ||
+                        invokedExpression.QualifierExpression is IThisExpression)
                     {
-                        callee = referenceExpression.NameIdentifier.Name;
+                        callee = "this";
                     }
+                    else if (invokedExpression.QualifierExpression is IBaseExpression)
+                    {
+                        callee = "base";
+                    }
+                    else if (invokedExpression.QualifierExpression is IReferenceExpression)
+                    {
+                        var referenceExpression = invokedExpression.QualifierExpression as IReferenceExpression;
+                        if (referenceExpression.IsClassifiedAsVariable)
+                        {
+                            callee = referenceExpression.NameIdentifier.Name;
+                        }
+                    }
+                    else if (invokedExpression.QualifierExpression is IInvocationExpression)
+                    {
+                        callee = invokedExpression.QualifierExpression.GetReference(context);
+                    }
+                    else
+                    {
+                        return;
+                    }
+                    var arguments = invocationExpressionParam.ArgumentList.GetArguments(context);
+                    handler(callee, methodName, arguments, typeName);
                 }
-                else if (invokedExpression.QualifierExpression is IInvocationExpression)
-                {
-                    callee = invokedExpression.QualifierExpression.GetReference(context);
-                }
-                else
-                {
-                    return;
-                }
-                var arguments = invocationExpressionParam.ArgumentList.GetArguments(context);
-                handler(callee, methodName, arguments, typeName);
             }
         }
     }

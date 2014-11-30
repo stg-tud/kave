@@ -54,7 +54,10 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
 
         public override void VisitCastExpression(ICastExpression castExpressionParam, AssignmentGeneratorContext context)
         {
-            context.Scope.Body.Add(new Assignment(context.Dest, castExpressionParam.Op.GetReferences(context)));
+            if (castExpressionParam.Op != null)
+            {
+                context.Scope.Body.Add(new Assignment(context.Dest, castExpressionParam.Op.GetReferences(context)));
+            }
         }
 
         public override void VisitConditionalTernaryExpression(

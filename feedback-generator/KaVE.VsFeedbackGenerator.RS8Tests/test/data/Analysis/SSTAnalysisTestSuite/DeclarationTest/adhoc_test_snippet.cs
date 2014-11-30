@@ -7,8 +7,11 @@
                 namespace N {
                     public class C {
                         
-                public int P {get;set;}
-                {caret}
+                public void A()
+                {
+                    var i;
+                    {caret}
+                }
             
                     }
                 }

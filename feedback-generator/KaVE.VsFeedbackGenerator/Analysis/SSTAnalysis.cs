@@ -81,14 +81,5 @@ namespace KaVE.VsFeedbackGenerator.Analysis
 
             return sst;
         }
-
-        public int M()
-        {
-            var i = 0;
-            i++;
-            i = i + 1;
-            i += 2;
-            return i;
-        }
     }
 }

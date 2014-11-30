@@ -45,7 +45,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             mA.Body.Add(new VariableDeclaration("i", Fix.Int));
             mA.Body.Add(new Assignment("i", new ConstantExpression()));
 
-            AssertEntryPoints(mA);
+            AssertAllMethods(mA);
         }
 
         [Test]
@@ -63,7 +63,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             mA.Body.Add(new VariableDeclaration("i", Fix.Int));
             mA.Body.Add(new Assignment("i", new ConstantExpression()));
 
-            AssertEntryPoints(mA);
+            AssertAllMethods(mA);
         }
 
         [Test]
@@ -81,7 +81,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             mA.Body.Add(new VariableDeclaration("i", Fix.Int));
             mA.Body.Add(new Assignment("i", new ConstantExpression()));
 
-            AssertEntryPoints(mA);
+            AssertAllMethods(mA);
         }
 
         [Test]
@@ -102,7 +102,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             mA.Body.Add(new VariableDeclaration("j", Fix.Int));
             mA.Body.Add(new Assignment("j", new ComposedExpression {Variables = new[] {"i"}}));
 
-            AssertEntryPoints(mA);
+            AssertAllMethods(mA);
         }
 
         [Test]
@@ -124,7 +124,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             mA.Body.Add(new Assignment("i", new ConstantExpression()));
             mA.Body.Add(new Assignment("j", new ComposedExpression {Variables = new[] {"i"}}));
 
-            AssertEntryPoints(mA);
+            AssertAllMethods(mA);
         }
 
         [Test]
@@ -145,7 +145,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             mA.Body.Add(new VariableDeclaration("j", Fix.Int));
             mA.Body.Add(new Assignment("j", new ComposedExpression {Variables = new[] {"i"}}));
 
-            AssertEntryPoints(mA);
+            AssertAllMethods(mA);
         }
 
         [Test]
@@ -163,7 +163,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             mA.Body.Add(new VariableDeclaration("arr", Fix.IntArray));
             mA.Body.Add(new Assignment("arr", new ConstantExpression()));
 
-            AssertEntryPoints(mA);
+            AssertAllMethods(mA);
         }
 
         [Test]
@@ -184,7 +184,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             mA.Body.Add(new VariableDeclaration("arr", Fix.IntArray));
             mA.Body.Add(new Assignment("arr", new ComposedExpression {Variables = new[] {"n"}}));
 
-            AssertEntryPoints(mA);
+            AssertAllMethods(mA);
         }
 
         [Test]
@@ -206,7 +206,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             mA.Body.Add(new Assignment("$1", new ConstantExpression()));
             mA.Body.Add(new Assignment("arr", ComposedExpression.Create("$0", "$1")));
 
-            AssertEntryPoints(mA);
+            AssertAllMethods(mA);
         }
 
         [Test]
@@ -226,7 +226,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             mA.Body.Add(new Assignment("$0", new InvocationExpression("o", Fix.GetHashCode(Fix.Object))));
             mA.Body.Add(new Assignment("arr", new ComposedExpression {Variables = new[] {"$0"}}));
 
-            AssertEntryPoints(mA);
+            AssertAllMethods(mA);
         }
 
         [Test]
@@ -244,7 +244,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             mA.Body.Add(new VariableDeclaration("isInstanceOf", Fix.Bool));
             mA.Body.Add(new Assignment("isInstanceOf", new ComposedExpression {Variables = new[] {"o"}}));
 
-            AssertEntryPoints(mA);
+            AssertAllMethods(mA);
         }
 
         [Test]
@@ -262,7 +262,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             mA.Body.Add(new VariableDeclaration("isInstanceOf", Fix.Bool));
             mA.Body.Add(new Assignment("isInstanceOf", new ConstantExpression()));
 
-            AssertEntryPoints(mA);
+            AssertAllMethods(mA);
         }
 
         [Test]
@@ -280,7 +280,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             mA.Body.Add(new VariableDeclaration("cast", Fix.String));
             mA.Body.Add(new Assignment("cast", new ComposedExpression {Variables = new[] {"o"}}));
 
-            AssertEntryPoints(mA);
+            AssertAllMethods(mA);
         }
 
         [Test]
@@ -298,7 +298,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             mA.Body.Add(new VariableDeclaration("cast", Fix.Object));
             mA.Body.Add(new Assignment("cast", new ConstantExpression()));
 
-            AssertEntryPoints(mA);
+            AssertAllMethods(mA);
         }
 
         [Test]
@@ -316,7 +316,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             mA.Body.Add(new VariableDeclaration("obj", TypeName.Get("N.C, TestProject")));
             mA.Body.Add(new Assignment("obj", ComposedExpression.Create("this")));
 
-            AssertEntryPoints(mA);
+            AssertAllMethods(mA);
         }
 
         [Test]
@@ -335,7 +335,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             mA.Body.Add(new Assignment("i", new ConstantExpression()));
             mA.Body.Add(new Assignment("j", ComposedExpression.Create("i")));
 
-            AssertEntryPoints(mA);
+            AssertAllMethods(mA);
         }
 
         [Test]
@@ -353,7 +353,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             mA.Body.Add(new VariableDeclaration("i", Fix.Int));
             mA.Body.Add(new Assignment("i", new ConstantExpression()));
 
-            AssertEntryPoints(mA);
+            AssertAllMethods(mA);
         }
 
         [Test]
@@ -371,7 +371,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             mA.Body.Add(new VariableDeclaration("s", Fix.String));
             mA.Body.Add(new Assignment("s", ComposedExpression.Create("o")));
 
-            AssertEntryPoints(mA);
+            AssertAllMethods(mA);
         }
 
         [Test]
@@ -389,7 +389,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             mA.Body.Add(new VariableDeclaration("j", Fix.Int));
             mA.Body.Add(new Assignment("j", ComposedExpression.Create("i")));
 
-            AssertEntryPoints(mA);
+            AssertAllMethods(mA);
         }
 
         [Test]
@@ -407,7 +407,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             mA.Body.Add(new VariableDeclaration("j", Fix.Int));
             mA.Body.Add(new Assignment("j", ComposedExpression.Create("i")));
 
-            AssertEntryPoints(mA);
+            AssertAllMethods(mA);
         }
 
         [Test]
@@ -425,7 +425,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             mA.Body.Add(new VariableDeclaration("j", Fix.Int));
             mA.Body.Add(new Assignment("j", ComposedExpression.Create("i")));
 
-            AssertEntryPoints(mA);
+            AssertAllMethods(mA);
         }
 
         [Test]
@@ -443,7 +443,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             mA.Body.Add(new VariableDeclaration("t", TypeName.Get("System.Type, mscorlib, 4.0.0.0")));
             mA.Body.Add(new Assignment("t", new ConstantExpression()));
 
-            AssertEntryPoints(mA);
+            AssertAllMethods(mA);
         }
 
         [Test]
@@ -461,7 +461,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             mA.Body.Add(new VariableDeclaration("t", Fix.Bool));
             mA.Body.Add(new Assignment("t", new ConstantExpression()));
 
-            AssertEntryPoints(mA);
+            AssertAllMethods(mA);
         }
 
         [Test]
@@ -479,7 +479,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             mA.Body.Add(new VariableDeclaration("i", Fix.Int));
             mA.Body.Add(new Assignment("i", new ConstantExpression()));
 
-            AssertEntryPoints(mA);
+            AssertAllMethods(mA);
         }
     }
 }

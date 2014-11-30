@@ -4,11 +4,11 @@
                 using System.IO;
                 
                 
-                namespace N {
-                    public class C {
-                        
-                public int P {get;set;}
-                {caret}
-            
+                class C
+                {
+                    public void M()
+                    {
+                        this.Unknown();
+                        {caret}
                     }
                 }

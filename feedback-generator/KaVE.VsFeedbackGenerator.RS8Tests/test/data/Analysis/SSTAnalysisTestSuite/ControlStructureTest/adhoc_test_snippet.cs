@@ -7,8 +7,15 @@
                 namespace N {
                     public class C {
                         
-                public int P {get;set;}
-                {caret}
+                public void A(object o)
+                {
+                    var i = 0;
+                    string s;
+                    while((s = o.ToString()) != null) {
+                        i++;
+                        {caret}
+                    }
+                }
             
                     }
                 }

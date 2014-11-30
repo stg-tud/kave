@@ -17,7 +17,7 @@
  *    - Sebastian Proksch
  */
 
-using JetBrains.Annotations;
+using System.Collections.Generic;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.Util;
@@ -25,6 +25,7 @@ using KaVE.Model.Names;
 using KaVE.Model.Names.CSharp;
 using KaVE.Model.SSTs;
 using KaVE.Model.SSTs.Declarations;
+using KaVE.VsFeedbackGenerator.Analysis.Transformer.Context;
 using KaVE.VsFeedbackGenerator.Analysis.Util;
 using KaVE.VsFeedbackGenerator.Utils.Names;
 
@@ -32,6 +33,15 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
 {
     public class DeclarationVisitor : TreeNodeVisitor<SST>
     {
+        private readonly ISet<IMethodName> _entryPoints;
+        private readonly ISSTFactory _sstFactory;
+
+        public DeclarationVisitor(ISet<IMethodName> entryPoints)
+        {
+            _entryPoints = entryPoints;
+            _sstFactory = new SSTFactory();
+        }
+
         public override void VisitNode(ITreeNode node, SST context)
         {
             node.Children<ICSharpTreeNode>().ForEach(child => child.Accept(this, context));
@@ -69,13 +79,21 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
         {
             if (decl.DeclaredElement != null)
             {
+                var methodName = decl.DeclaredElement.GetName<IMethodName>();
                 var sstDecl = new MethodDeclaration
                 {
-                    Name = decl.DeclaredElement.GetName<IMethodName>(),
-                    IsEntryPoint = true // TODO
+                    Name = methodName,
+                    IsEntryPoint = _entryPoints.Contains(methodName)
                 };
-                context.Methods.Add(sstDecl);
-                decl.Accept(CreateBlockVisitor(), sstDecl.Body);
+
+                if (!decl.IsAbstract)
+                {
+                    var stctx = new ScopeTransformerContext(_sstFactory);
+                    var stmts = decl.GetScope(stctx).Body;
+                    sstDecl.Body.AddRange(stmts);
+                    context.Methods.Add(sstDecl);
+                    //decl.Accept(CreateBlockVisitor(), sstDecl.Body);
+                }
             }
         }
 

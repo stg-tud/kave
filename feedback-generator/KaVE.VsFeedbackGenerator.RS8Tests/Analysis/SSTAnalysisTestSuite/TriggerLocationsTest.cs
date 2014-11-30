@@ -37,7 +37,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 
             var sst = NewSST();
             sst.Methods.Add(NewMethodDeclaration(Fix.Void, "A"));
-            sst.Add(new CompletionTrigger());
+            sst.TypeLevelTrigger = new CompletionTrigger();
 
             AssertResult(sst);
         }
@@ -53,7 +53,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             var sst = NewSST();
             sst.Methods.Add(NewMethodDeclaration(Fix.Void, "A"));
 
-            sst.Add(new CompletionTrigger {Token = "B"});
+            sst.TypeLevelTrigger = new CompletionTrigger {Token = "B"};
 
             AssertResult(sst);
         }
@@ -66,7 +66,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             ");
         }
 
-        [Test, ExpectedException(typeof(NotSupportedException))]
+        [Test, ExpectedException(typeof (NotSupportedException))]
         public void TriggeredInParameterList()
         {
             CompleteInClass(@"
@@ -74,7 +74,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             ");
         }
 
-        [Test, ExpectedException(typeof(NotSupportedException))]
+        [Test, ExpectedException(typeof (NotSupportedException))]
         public void TriggeredInParameterList2()
         {
             CompleteInClass(@"
@@ -84,7 +84,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             ");
         }
 
-        [Test, ExpectedException(typeof(NotSupportedException))]
+        [Test, ExpectedException(typeof (NotSupportedException))]
         public void TriggeredInParameterList3()
         {
             CompleteInClass(@"
