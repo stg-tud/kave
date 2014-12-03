@@ -43,9 +43,9 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             {
                 if (storedPluginVersion.IsNullOrEmpty())
                 {
-                    var updateEvent = Create<InstallEvent>();
-                    updateEvent.PluginVersion = currentPluginVersion;
-                    FireNow(updateEvent);
+                    var installEvent = Create<InstallEvent>();
+                    installEvent.PluginVersion = currentPluginVersion;
+                    FireNow(installEvent);
                 }
                 else
                 {
