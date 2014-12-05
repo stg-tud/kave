@@ -24,7 +24,6 @@ using KaVE.Model.Events.VisualStudio;
 using KaVE.VsFeedbackGenerator.MessageBus;
 using KaVE.VsFeedbackGenerator.Utils;
 using KaVE.VsFeedbackGenerator.Utils.Names;
-using KaVE.VsFeedbackGenerator.VsIntegration;
 
 namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
 {
@@ -34,8 +33,8 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
         // ReSharper disable once PrivateFieldCanBeConvertedToLocalVariable
         private readonly DocumentEvents _documentEvents;
 
-        public DocumentEventGenerator(IIDESession session, IMessageBus messageBus, IDateUtils dateUtils)
-            : base(session, messageBus, dateUtils)
+        public DocumentEventGenerator(IRSEnv env, IMessageBus messageBus, IDateUtils dateUtils)
+            : base(env, messageBus, dateUtils)
         {
             _documentEvents = DTE.Events.DocumentEvents;
             _documentEvents.DocumentOpened += HandleDocumentOpened;

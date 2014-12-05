@@ -22,7 +22,6 @@ using JetBrains.Application.DataContext;
 using KaVE.Model.Events;
 using KaVE.VsFeedbackGenerator.MessageBus;
 using KaVE.VsFeedbackGenerator.Utils;
-using KaVE.VsFeedbackGenerator.VsIntegration;
 
 namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
 {
@@ -35,9 +34,10 @@ namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
         private readonly IUpdatableAction _updatableAction;
 
         public EventGeneratingActionHandler(IUpdatableAction updatableAction,
-            IIDESession session,
-            IMessageBus messageBus, IDateUtils dateUtils)
-            : base(session, messageBus, dateUtils)
+            IRSEnv env,
+            IMessageBus messageBus,
+            IDateUtils dateUtils)
+            : base(env, messageBus, dateUtils)
         {
             _updatableAction = updatableAction;
         }

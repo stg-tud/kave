@@ -31,7 +31,6 @@ using KaVE.Utils.IO;
 using KaVE.VsFeedbackGenerator.MessageBus;
 using KaVE.VsFeedbackGenerator.Utils;
 using KaVE.VsFeedbackGenerator.Utils.Names;
-using KaVE.VsFeedbackGenerator.VsIntegration;
 
 namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
 {
@@ -76,8 +75,8 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
         private readonly CommandEvents _commandEvents;
         private readonly Dictionary<string, CommandEvent> _eventQueue;
 
-        public DTECommandEventGenerator(IIDESession session, IMessageBus messageBus, IDateUtils dateUtils)
-            : base(session, messageBus, dateUtils)
+        public DTECommandEventGenerator(IRSEnv env, IMessageBus messageBus, IDateUtils dateUtils)
+            : base(env, messageBus, dateUtils)
         {
             _eventQueue = new Dictionary<string, CommandEvent>();
             _commandEvents = DTE.Events.CommandEvents;

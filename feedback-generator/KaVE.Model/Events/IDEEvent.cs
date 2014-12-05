@@ -70,6 +70,12 @@ namespace KaVE.Model.Events
         public string IDESessionUUID { get; set; }
 
         /// <summary>
+        ///     The version of the KaVE extension that generated the event.
+        /// </summary>
+        [DataMember]
+        public string KaVEVersion { get; set; }
+
+        /// <summary>
         ///     The moment the event is created. Defaults to the event's creation time.
         /// </summary>
         [DataMember]

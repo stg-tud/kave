@@ -33,7 +33,6 @@ using KaVE.VsFeedbackGenerator.Analysis;
 using KaVE.VsFeedbackGenerator.CodeCompletion;
 using KaVE.VsFeedbackGenerator.MessageBus;
 using KaVE.VsFeedbackGenerator.Utils;
-using KaVE.VsFeedbackGenerator.VsIntegration;
 
 namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
 {
@@ -79,8 +78,8 @@ namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
         private CompletionEvent _event;
         private Context _context;
 
-        public CodeCompletionEventHandler(IIDESession session, IMessageBus messageBus, IDateUtils dateUtils)
-            : base(session, messageBus, dateUtils)
+        public CodeCompletionEventHandler(IRSEnv env, IMessageBus messageBus, IDateUtils dateUtils)
+            : base(env, messageBus, dateUtils)
         {
             _context = Context.Empty;
         }

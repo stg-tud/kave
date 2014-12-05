@@ -32,15 +32,15 @@ namespace KaVE.VsFeedbackGenerator.Generators
 {
     public abstract class EventGeneratorBase
     {
-        private readonly IIDESession _session;
+        private readonly IRSEnv _env;
         private readonly IMessageBus _messageBus;
         private readonly IDateUtils _dateUtils;
 
-        protected EventGeneratorBase([NotNull] IIDESession session,
+        protected EventGeneratorBase([NotNull] IRSEnv env,
             [NotNull] IMessageBus messageBus,
             [NotNull] IDateUtils dateUtils)
         {
-            _session = session;
+            _env = env;
             _messageBus = messageBus;
             _dateUtils = dateUtils;
         }
@@ -48,13 +48,14 @@ namespace KaVE.VsFeedbackGenerator.Generators
         [NotNull]
         protected DTE DTE
         {
-            get { return _session.DTE; }
+            get { return _env.IDESession.DTE; }
         }
 
         protected TIDEEvent Create<TIDEEvent>() where TIDEEvent : IDEEvent, new()
         {
             return new TIDEEvent
             {
+                KaVEVersion = _env.KaVEExtension.Version.ToString(),
                 ActiveWindow = DTEActiveWindow.GetName(),
                 ActiveDocument = DTEActiveDocument.GetName(),
                 TriggeredBy = CurrentTrigger,
@@ -121,7 +122,7 @@ namespace KaVE.VsFeedbackGenerator.Generators
         /// </summary>
         protected void Fire<TEvent>([NotNull] TEvent @event) where TEvent : IDEEvent
         {
-            @event.IDESessionUUID = _session.UUID;
+            @event.IDESessionUUID = _env.IDESession.UUID;
             _messageBus.Publish<IDEEvent>(@event);
             WriteToDebugConsole(@event);
         }

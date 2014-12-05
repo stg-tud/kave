@@ -25,7 +25,6 @@ using JetBrains.Application.Components;
 using KaVE.Model.Events.VisualStudio;
 using KaVE.VsFeedbackGenerator.MessageBus;
 using KaVE.VsFeedbackGenerator.Utils;
-using KaVE.VsFeedbackGenerator.VsIntegration;
 
 namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
 {
@@ -42,8 +41,8 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
         private readonly Timer _eventSendingTimer = new Timer(InactivityPeriodToCompleteEditAction);
         private readonly object _eventLock = new object();
 
-        public TextEditorEventGenerator(IIDESession session, IMessageBus messageBus, IDateUtils dateUtils)
-            : base(session, messageBus, dateUtils)
+        public TextEditorEventGenerator(IRSEnv env, IMessageBus messageBus, IDateUtils dateUtils)
+            : base(env, messageBus, dateUtils)
         {
             _textEditorEvents = DTE.Events.TextEditorEvents;
             _textEditorEvents.LineChanged += TextEditorEvents_LineChanged;

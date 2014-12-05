@@ -24,7 +24,6 @@ using KaVE.Model.Events;
 using KaVE.Utils.Exceptions;
 using KaVE.VsFeedbackGenerator.MessageBus;
 using KaVE.VsFeedbackGenerator.Utils;
-using KaVE.VsFeedbackGenerator.VsIntegration;
 
 namespace KaVE.VsFeedbackGenerator.Generators
 {
@@ -33,8 +32,8 @@ namespace KaVE.VsFeedbackGenerator.Generators
     {
         private readonly IDateUtils _dateUtils;
 
-        public LogEventGenerator(IIDESession session, IMessageBus messageBus, IDateUtils dateUtils)
-            : base(session, messageBus, dateUtils)
+        public LogEventGenerator(IRSEnv env, IMessageBus messageBus, IDateUtils dateUtils)
+            : base(env, messageBus, dateUtils)
         {
             _dateUtils = dateUtils;
         }

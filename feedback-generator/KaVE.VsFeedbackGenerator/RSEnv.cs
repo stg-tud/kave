@@ -24,12 +24,15 @@ using JetBrains.Application.Extensions;
 using JetBrains.DataFlow;
 using JetBrains.Util;
 using KaVE.JetBrains.Annotations;
+using KaVE.VsFeedbackGenerator.VsIntegration;
 
 namespace KaVE.VsFeedbackGenerator
 {
     public interface IRSEnv
     {
         IExtension KaVEExtension { get; }
+
+        IIDESession IDESession { get; }
     }
 
     [ShellComponent]
@@ -38,10 +41,12 @@ namespace KaVE.VsFeedbackGenerator
         public const string ExtensionId = "KaVE.VsFeedbackGenerator";
 
         private readonly ExtensionManager _extensionManager;
+        private readonly IIDESession _ideSession;
 
-        public RSEnv(ExtensionManager extensionManager)
+        public RSEnv(ExtensionManager extensionManager, IIDESession ideSession)
         {
             _extensionManager = extensionManager;
+            _ideSession = ideSession;
         }
 
         [NotNull]
@@ -52,6 +57,12 @@ namespace KaVE.VsFeedbackGenerator
                 var extension = _extensionManager.GetExtension(ExtensionId);
                 return extension ?? new DevExtension();
             }
+        }
+
+        [NotNull]
+        public IIDESession IDESession
+        {
+            get { return _ideSession; }
         }
 
         private class DevExtension : IExtension

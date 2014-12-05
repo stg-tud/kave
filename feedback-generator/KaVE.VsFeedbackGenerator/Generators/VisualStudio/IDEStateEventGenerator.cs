@@ -28,7 +28,6 @@ using KaVE.Model.Events.VisualStudio;
 using KaVE.VsFeedbackGenerator.MessageBus;
 using KaVE.VsFeedbackGenerator.Utils;
 using KaVE.VsFeedbackGenerator.Utils.Names;
-using KaVE.VsFeedbackGenerator.VsIntegration;
 
 namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
 {
@@ -37,12 +36,12 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
     {
         private readonly EventLogger _logger;
 
-        public IDEStateEventGenerator(IIDESession session,
+        public IDEStateEventGenerator(IRSEnv env,
             IMessageBus messageBus,
             Lifetime lifetime,
             IDateUtils dateUtils,
             EventLogger logger)
-            : base(session, messageBus, dateUtils)
+            : base(env, messageBus, dateUtils)
         {
             _logger = logger;
             FireIDEStateEvent(IDEStateEvent.LifecyclePhase.Startup);

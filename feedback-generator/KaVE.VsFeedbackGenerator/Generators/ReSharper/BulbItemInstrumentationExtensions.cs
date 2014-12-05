@@ -40,26 +40,26 @@ namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
         ///     <see cref="EventGeneratingBulbActionProxy" />.
         /// </summary>
         public static void WrapBulbAction(this IntentionAction.MyExecutableProxi proxy,
-            IIDESession session,
+            IRSEnv env,
             IMessageBus messageBus,
             IDateUtils dateUtils)
         {
             var originalBulbAction = proxy.BulbAction;
             var bulbActionWrapper = new EventGeneratingBulbActionProxy(
                 originalBulbAction,
-                session,
+                env,
                 messageBus,
                 dateUtils);
             MyExecutableProxiBulbActionSetter.Invoke(proxy, new object[] {bulbActionWrapper});
         }
 
         public static void WrapBulbAction(this ExecutableItem executable,
-            IIDESession session,
+            IRSEnv env,
             IMessageBus messageBus,
             IDateUtils dateUtils)
         {
             var originalAction = (Action) ExecutableItemActionField.GetValue(executable);
-            var wrapper = new EventGeneratingActionWrapper(originalAction, session, messageBus, dateUtils);
+            var wrapper = new EventGeneratingActionWrapper(originalAction, env, messageBus, dateUtils);
             var newAction = (Action) (wrapper.Execute);
             ExecutableItemActionField.SetValue(executable, newAction);
         }

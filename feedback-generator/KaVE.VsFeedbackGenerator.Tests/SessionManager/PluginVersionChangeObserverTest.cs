@@ -18,7 +18,6 @@
  */
 
 using System;
-using JetBrains.Application.Extensions;
 using JetBrains.Util;
 using KaVE.Model.Events.VisualStudio;
 using KaVE.VsFeedbackGenerator.SessionManager;
@@ -36,13 +35,11 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
         private const string VersionB = "1.1.0.0";
         private const string InitialVersion = "";
         private Mock<ISettingsStore> StoreMock { get; set; }
-        private Mock<IRSEnv> EnvironmentMock { get; set; }
 
         [TearDown]
         public void ClearMocks()
         {
             StoreMock = null;
-            EnvironmentMock = null;
         }
 
         [Test]
@@ -120,10 +117,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
 
         private void GivenCurrentVersion(string currentVersion)
         {
-            var extensionMock = new Mock<IExtension>();
-            extensionMock.Setup(e => e.Version).Returns(SemanticVersion.Parse(currentVersion));
-            EnvironmentMock = new Mock<IRSEnv>();
-            EnvironmentMock.Setup(e => e.KaVEExtension).Returns(extensionMock.Object);
+            TestRSEnv.MockExtension.Setup(e => e.Version).Returns(SemanticVersion.Parse(currentVersion));
         }
 
         private void WhenPluginVersionChangeObserverStarts()
@@ -131,8 +125,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
             // ReSharper disable once ObjectCreationAsStatement
             new PluginVersionChangeObserver(
                 StoreMock.Object,
-                EnvironmentMock.Object,
-                TestIDESession,
+                TestRSEnv,
                 TestMessageBus,
                 TestDateUtils);
         }

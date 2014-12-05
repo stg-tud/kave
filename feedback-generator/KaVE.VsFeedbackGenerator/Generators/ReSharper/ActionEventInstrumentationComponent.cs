@@ -25,7 +25,6 @@ using JetBrains.DataFlow;
 using KaVE.VsFeedbackGenerator.Export;
 using KaVE.VsFeedbackGenerator.MessageBus;
 using KaVE.VsFeedbackGenerator.Utils;
-using KaVE.VsFeedbackGenerator.VsIntegration;
 
 namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
 {
@@ -34,13 +33,13 @@ namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
     {
         public ActionEventInstrumentationComponent(Lifetime lifetime,
             IActionManager actionManager,
-            IIDESession session,
+            IRSEnv env,
             IMessageBus messageBus,
             IDateUtils dateUtils)
         {
             foreach (var action in GetInstrumentableActions(actionManager))
             {
-                var handler = new EventGeneratingActionHandler(action, session, messageBus, dateUtils);
+                var handler = new EventGeneratingActionHandler(action, env, messageBus, dateUtils);
                 action.AddHandler(lifetime, handler);
             }
         }

@@ -23,7 +23,6 @@ using KaVE.Model.Events.VisualStudio;
 using KaVE.VsFeedbackGenerator.Generators;
 using KaVE.VsFeedbackGenerator.MessageBus;
 using KaVE.VsFeedbackGenerator.Utils;
-using KaVE.VsFeedbackGenerator.VsIntegration;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager
 {
@@ -32,9 +31,8 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
     {
         public PluginVersionChangeObserver(ISettingsStore store,
             IRSEnv rsEnv,
-            IIDESession session,
             IMessageBus messageBus,
-            IDateUtils dateUtils) : base(session, messageBus, dateUtils)
+            IDateUtils dateUtils) : base(rsEnv, messageBus, dateUtils)
         {
             var storedPluginVersion = store.GetSettings<FeedbackSettings>().PluginVersion;
             var currentPluginVersion = rsEnv.KaVEExtension.Version.ToString();

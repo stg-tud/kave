@@ -37,7 +37,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.ReSharper
         [SetUp]
         public void SetupMockEnvironment()
         {
-            _generator = new CodeCompletionEventHandler(TestIDESession, TestMessageBus, TestDateUtils);
+            _generator = new CodeCompletionEventHandler(TestRSEnv, TestMessageBus, TestDateUtils);
         }
 
         [Test]

@@ -28,20 +28,19 @@ using JetBrains.UI.BulbMenu;
 using KaVE.Utils.Assertion;
 using KaVE.VsFeedbackGenerator.MessageBus;
 using KaVE.VsFeedbackGenerator.Utils;
-using KaVE.VsFeedbackGenerator.VsIntegration;
 
 namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
 {
     [SolutionComponent]
     internal class BulbItemInstrumentationComponent : IBulbItemsProvider
     {
-        private readonly IIDESession _session;
+        private readonly IRSEnv _env;
         private readonly IMessageBus _messageBus;
         private readonly IDateUtils _dateUtils;
 
-        public BulbItemInstrumentationComponent(IIDESession session, IMessageBus messageBus, IDateUtils dateUtils)
+        public BulbItemInstrumentationComponent(IRSEnv env, IMessageBus messageBus, IDateUtils dateUtils)
         {
-            _session = session;
+            _env = env;
             _messageBus = messageBus;
             _dateUtils = dateUtils;
         }
@@ -74,14 +73,14 @@ namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
                 var proxy = executableItem as IntentionAction.MyExecutableProxi;
                 if (proxy != null)
                 {
-                    proxy.WrapBulbAction(_session, _messageBus, _dateUtils);
+                    proxy.WrapBulbAction(_env, _messageBus, _dateUtils);
                     continue;
                 }
 
                 var executable = executableItem as ExecutableItem;
                 if (executable != null)
                 {
-                    executable.WrapBulbAction(_session, _messageBus, _dateUtils);
+                    executable.WrapBulbAction(_env, _messageBus, _dateUtils);
                     continue;
                 }
 

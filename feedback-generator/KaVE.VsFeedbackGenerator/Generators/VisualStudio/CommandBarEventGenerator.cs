@@ -29,7 +29,6 @@ using KaVE.Model.Events;
 using KaVE.Utils.Assertion;
 using KaVE.VsFeedbackGenerator.MessageBus;
 using KaVE.VsFeedbackGenerator.Utils;
-using KaVE.VsFeedbackGenerator.VsIntegration;
 using Microsoft.VisualStudio.CommandBars;
 
 namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
@@ -44,9 +43,9 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
         [UsedImplicitly]
         private WindowEvents _windowEvents;
 
-        public CommandBarEventGenerator([NotNull] IIDESession session,
+        public CommandBarEventGenerator([NotNull] IRSEnv env,
             [NotNull] IMessageBus messageBus,
-            [NotNull] IDateUtils dateUtils) : base(session, messageBus, dateUtils)
+            [NotNull] IDateUtils dateUtils) : base(env, messageBus, dateUtils)
         {
             AttachToCommandBars((CommandBars) DTE.CommandBars);
             _windowEvents = DTE.Events.WindowEvents;

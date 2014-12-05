@@ -22,7 +22,6 @@ using JetBrains.ReSharper.Intentions.Extensibility;
 using JetBrains.TextControl;
 using KaVE.VsFeedbackGenerator.MessageBus;
 using KaVE.VsFeedbackGenerator.Utils;
-using KaVE.VsFeedbackGenerator.VsIntegration;
 
 namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
 {
@@ -38,10 +37,10 @@ namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
         private readonly IBulbAction _target;
 
         public EventGeneratingBulbActionProxy(IBulbAction target,
-            IIDESession session,
+            IRSEnv env,
             IMessageBus messageBus,
             IDateUtils dateUtils)
-            : base(session, messageBus, dateUtils)
+            : base(env, messageBus, dateUtils)
         {
             _target = target;
         }

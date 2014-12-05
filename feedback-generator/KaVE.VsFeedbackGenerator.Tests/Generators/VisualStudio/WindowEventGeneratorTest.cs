@@ -70,7 +70,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.VisualStudio
                                .Returns(ScheduledAction.NoOp);
 
             // ReSharper disable once ObjectCreationAsStatement
-            new WindowEventGenerator(TestIDESession, TestMessageBus, mockCallbackManager.Object, TestDateUtils);
+            new WindowEventGenerator(TestRSEnv, TestMessageBus, mockCallbackManager.Object, TestDateUtils);
 
             _expected = new WindowEvent
             {

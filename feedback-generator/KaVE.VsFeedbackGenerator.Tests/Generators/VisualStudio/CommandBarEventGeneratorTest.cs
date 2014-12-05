@@ -41,7 +41,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.VisualStudio
         private void GivenEventGeneratorIsInitialized()
         {
             // ReSharper disable once ObjectCreationAsStatement
-            new CommandBarEventGenerator(TestIDESession, TestMessageBus, TestDateUtils);
+            new CommandBarEventGenerator(TestRSEnv, TestMessageBus, TestDateUtils);
         }
 
         protected override void MockEvents(Mock<Events> mockEvents)

@@ -16,18 +16,19 @@
  * Contributors:
  *    - Sven Amann
  */
+
 using System;
 using KaVE.Model.Events;
 using KaVE.Utils.Exceptions;
 using KaVE.VsFeedbackGenerator.MessageBus;
 using KaVE.VsFeedbackGenerator.Utils;
-using KaVE.VsFeedbackGenerator.VsIntegration;
 
 namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
 {
     internal abstract class CommandEventGeneratorBase : CommandEventGeneratorBase<object>
     {
-        protected CommandEventGeneratorBase(IIDESession session, IMessageBus messageBus, IDateUtils dateUtils) : base(session, messageBus, dateUtils) {}
+        protected CommandEventGeneratorBase(IRSEnv env, IMessageBus messageBus, IDateUtils dateUtils)
+            : base(env, messageBus, dateUtils) {}
 
         public void Execute()
         {
@@ -44,8 +45,8 @@ namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
 
     internal abstract class CommandEventGeneratorBase<TC> : EventGeneratorBase where TC : class
     {
-        protected CommandEventGeneratorBase(IIDESession session, IMessageBus messageBus, IDateUtils dateUtils)
-            : base(session, messageBus, dateUtils) {}
+        protected CommandEventGeneratorBase(IRSEnv env, IMessageBus messageBus, IDateUtils dateUtils)
+            : base(env, messageBus, dateUtils) {}
 
         protected void Execute(TC context)
         {

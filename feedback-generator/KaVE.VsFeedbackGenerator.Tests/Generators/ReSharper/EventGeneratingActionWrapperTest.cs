@@ -38,7 +38,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.ReSharper
         {
             _testActionInvoked = false;
             _testAction = () => _testActionInvoked = true;
-            _uut = new EventGeneratingActionWrapper(_testAction, TestIDESession, TestMessageBus, TestDateUtils);
+            _uut = new EventGeneratingActionWrapper(_testAction, TestRSEnv, TestMessageBus, TestDateUtils);
         }
 
         [Test]

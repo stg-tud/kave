@@ -25,7 +25,6 @@ using KaVE.Model.Events.VisualStudio;
 using KaVE.Utils.Assertion;
 using KaVE.VsFeedbackGenerator.MessageBus;
 using KaVE.VsFeedbackGenerator.Utils;
-using KaVE.VsFeedbackGenerator.VsIntegration;
 
 namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
 {
@@ -37,8 +36,8 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
         private BuildEvent _currentEvent;
         private BuildTarget _currentTarget;
 
-        public BuildEventGenerator(IIDESession session, IMessageBus messageBus, IDateUtils dateUtils)
-            : base(session, messageBus, dateUtils)
+        public BuildEventGenerator(IRSEnv env, IMessageBus messageBus, IDateUtils dateUtils)
+            : base(env, messageBus, dateUtils)
         {
             _buildEvents = DTE.Events.BuildEvents;
             _buildEvents.OnBuildBegin += _buildEvents_OnBuildBegin;

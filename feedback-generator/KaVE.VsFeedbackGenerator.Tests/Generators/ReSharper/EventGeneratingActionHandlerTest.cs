@@ -41,7 +41,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.ReSharper
         {
             _mockTestAction = new Mock<IUpdatableAction>();
             _mockTestAction.Setup(a => a.Id).Returns(TestActionId);
-            _uut = new EventGeneratingActionHandler(_mockTestAction.Object, TestIDESession, TestMessageBus, TestDateUtils);
+            _uut = new EventGeneratingActionHandler(_mockTestAction.Object, TestRSEnv, TestMessageBus, TestDateUtils);
             _testDataContext = new Mock<IDataContext>().Object;
         }
 

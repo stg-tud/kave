@@ -35,6 +35,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators
     {
         private IList<IDEEvent> _publishedEvents;
         private AutoResetEvent _eventReceptionLock;
+        protected TestRSEnv TestRSEnv { get; private set; }
         protected TestIDESession TestIDESession { get; private set; }
         protected TestDateUtils TestDateUtils { get; private set; }
         protected Mock<ILogger> MockLogger { get; private set; }
@@ -43,6 +44,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators
         public void SetUpEventReception()
         {
             TestIDESession = new TestIDESession();
+            TestRSEnv = new TestRSEnv(TestIDESession);
             TestDateUtils = new TestDateUtils();
             Registry.RegisterComponent<IDateUtils>(TestDateUtils);
             MockLogger = new Mock<ILogger>();

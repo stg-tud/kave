@@ -59,7 +59,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.VisualStudio
             TestIDESession.MockDTE.Setup(dte => dte.Documents).Returns((Documents) mockDocuments.Object);
 
             // ReSharper disable once ObjectCreationAsStatement
-            new IDEStateEventGenerator(TestIDESession, TestMessageBus, EternalLifetime.Instance, TestDateUtils, null);
+            new IDEStateEventGenerator(TestRSEnv, TestMessageBus, EternalLifetime.Instance, TestDateUtils, null);
         }
 
         private static Mock<Window> CreateWindowMock(string caption, bool visible)

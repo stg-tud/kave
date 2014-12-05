@@ -17,34 +17,32 @@
  *    - Sven Amann
  */
 
-using System;
-using KaVE.VsFeedbackGenerator.MessageBus;
-using KaVE.VsFeedbackGenerator.Utils;
+using JetBrains.Application.Extensions;
+using JetBrains.Util;
 using KaVE.VsFeedbackGenerator.VsIntegration;
+using Moq;
 
-namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
+namespace KaVE.VsFeedbackGenerator.Tests
 {
-    internal class EventGeneratingActionWrapper : CommandEventGeneratorBase
+    internal class TestRSEnv : IRSEnv
     {
-        private readonly Action _originalAction;
+        private readonly IIDESession _session;
+        private const string KaVEVersion = "1.0-test";
 
-        public EventGeneratingActionWrapper(Action originalAction,
-            IRSEnv env,
-            IMessageBus messageBus,
-            IDateUtils dateUtils)
-            : base(env, messageBus, dateUtils)
+        public TestRSEnv(IIDESession session)
         {
-            _originalAction = originalAction;
+            _session = session;
+            MockExtension = new Mock<IExtension>();
+            MockExtension.Setup(ex => ex.Version).Returns(SemanticVersion.Parse(KaVEVersion));
+            KaVEExtension = MockExtension.Object;
         }
 
-        protected override void InvokeOriginalCommand()
-        {
-            _originalAction.Invoke();
-        }
+        public Mock<IExtension> MockExtension { get; private set; }
+        public IExtension KaVEExtension { get; private set; }
 
-        protected override string GetCommandId()
+        public IIDESession IDESession
         {
-            return _originalAction.Target.ToString();
+            get { return _session; }
         }
     }
 }
