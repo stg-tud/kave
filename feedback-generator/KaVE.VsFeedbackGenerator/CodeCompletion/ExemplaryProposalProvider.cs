@@ -23,8 +23,6 @@ using System.Linq;
 using JetBrains.Application;
 using JetBrains.ReSharper.Feature.Services.CSharp.CodeCompletion.Infrastructure;
 using JetBrains.ReSharper.Feature.Services.Lookup;
-using JetBrains.ReSharper.Psi;
-using JetBrains.ReSharper.Psi.CSharp;
 using KaVE.Model.Events.CompletionEvent;
 using KaVE.Model.Names;
 using KaVE.Model.Names.CSharp;
@@ -83,7 +81,7 @@ namespace KaVE.VsFeedbackGenerator.CodeCompletion
         }
     }
 
-    [Language(typeof (CSharpLanguage))]
+    //[Language(typeof (CSharpLanguage))]
     public class ExemplaryProposalProvider : CSharpItemsProviderBasic
     {
         private readonly IModelStore _store;
