@@ -22,6 +22,7 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
+using KaVE.JetBrains.Annotations;
 using KaVE.Model.Names.CSharp;
 using KaVE.Utils.Assertion;
 
@@ -63,19 +64,19 @@ namespace KaVE.Model.Names
             {
                 var data = serialization.Split(new[] {Separator}, 2);
                 var type = TypeFrom(data[0]);
+                Asserts.NotNull(type, "Could not load required type for '" + serialization + "'");
                 var factoryMethod = GetFactoryMethod(type);
                 return factoryMethod.Invoke(null, new object[] {data[1]});
             }
             return base.ConvertFrom(context, culture, value);
         }
 
+        [CanBeNull]
         private static Type TypeFrom(string alias)
         {
             var assemblyName = typeof (IName).Assembly.FullName;
             var assemblyQualifiedTypeName = NameQualifierPrefix + alias + ", " + assemblyName;
-            var type = Type.GetType(assemblyQualifiedTypeName);
-            Asserts.NotNull(type, "Could not load required type " + assemblyQualifiedTypeName);
-            return type;
+            return Type.GetType(assemblyQualifiedTypeName);
         }
 
         private static MethodInfo GetFactoryMethod(Type type)
