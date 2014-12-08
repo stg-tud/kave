@@ -20,7 +20,6 @@
 
 using System;
 using KaVE.Model.Events;
-using KaVE.Model.Events.CompletionEvent;
 using KaVE.Utils;
 using KaVE.VsFeedbackGenerator.SessionManager.Presentation;
 using KaVE.VsFeedbackGenerator.Utils.Json;
@@ -75,8 +74,9 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
 
         private string GetContextAsXaml()
         {
-            var completionEvent = Event as CompletionEvent;
-            return completionEvent == null ? null : completionEvent.Context.ToXaml();
+            //var completionEvent = Event as CompletionEvent;
+            //return completionEvent == null ? null : completionEvent.Context.ToXaml();
+            return null;
         }
 
         public string Details
