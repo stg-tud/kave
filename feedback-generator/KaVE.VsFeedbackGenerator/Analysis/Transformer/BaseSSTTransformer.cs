@@ -32,8 +32,8 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
     {
         public override void VisitNode(ITreeNode node, TContext context)
         {
-            Registry.GetComponent<ILogger>().Info(
-                string.Format("{0} has no treatment for TreeNodes of type {1}", GetType().Name, node.GetType().Name));
+            //Registry.GetComponent<ILogger>().Info(
+            //    string.Format("{0} has no treatment for TreeNodes of type {1}", GetType().Name, node.GetType().Name));
         }
 
         protected static void HandleInvocationExpression(IInvocationExpression invocationExpressionParam,

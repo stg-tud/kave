@@ -22,6 +22,7 @@ using JetBrains.Util;
 using KaVE.Model.SSTs.Declarations;
 using KaVE.Model.SSTs.Expressions;
 using KaVE.Model.SSTs.Statements;
+using KaVE.Utils.Assertion;
 using KaVE.VsFeedbackGenerator.Analysis.Transformer.Context;
 using KaVE.VsFeedbackGenerator.Utils.Names;
 
@@ -107,16 +108,23 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
         public override void VisitInvocationExpression(IInvocationExpression invocationExpressionParam,
             ReferenceCollectorContext context)
         {
-            HandleInvocationExpression(
-                invocationExpressionParam,
-                context,
-                (callee, method, args, retType) =>
-                {
-                    var tmp = context.Generator.GetNextVariableName();
-                    context.Scope.Body.Add(new VariableDeclaration(tmp, retType));
-                    context.Scope.Body.Add(new Assignment(tmp, callee.CreateInvocation(method, args)));
-                    context.References.Add(tmp);
-                });
+            try
+            {
+                HandleInvocationExpression(
+                    invocationExpressionParam,
+                    context,
+                    (callee, method, args, retType) =>
+                    {
+                        var tmp = context.Generator.GetNextVariableName();
+                        context.Scope.Body.Add(new VariableDeclaration(tmp, retType));
+                        context.Scope.Body.Add(new Assignment(tmp, callee.CreateInvocation(method, args)));
+                        context.References.Add(tmp);
+                    });
+            }
+            catch(AssertException)
+            {
+                // suppress KaVE errors
+            }
         }
 
         public override void VisitIsExpression(IIsExpression isExpressionParam, ReferenceCollectorContext context)
