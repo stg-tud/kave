@@ -26,18 +26,13 @@ using JetBrains.ReSharper.Feature.Services.CSharp.CodeCompletion.Infrastructure;
 using JetBrains.ReSharper.Feature.Services.Lookup;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
-using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
 using KaVE.Model.Collections;
 using KaVE.Model.Events.CompletionEvent;
 using KaVE.Model.Names;
-using KaVE.Model.Names.CSharp;
 using KaVE.Model.SSTs;
 using KaVE.VsFeedbackGenerator.Analysis;
-using KaVE.VsFeedbackGenerator.Analysis.Transformer;
-using KaVE.VsFeedbackGenerator.Analysis.Util;
 using KaVE.VsFeedbackGenerator.Generators;
-using KaVE.VsFeedbackGenerator.Utils.Names;
 using Moq;
 
 namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
@@ -59,30 +54,14 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
         {
             LastException = null;
             LastContext = ContextAnalysis.Analyze(context, MockLogger());
+            LastSST = LastContext.SST;
 
             var typeDeclaration = ContextAnalysis.FindEnclosing<ITypeDeclaration>(context.NodeInFile);
             if (typeDeclaration != null)
             {
                 var typeShape = new TypeShapeAnalysis().Analyze(typeDeclaration);
                 var entryPoints = new EntryPointSelector(typeDeclaration, typeShape).GetEntryPoints();
-                //LastSST = SSTAnalysis.Analyze(context, typeDeclaration, entryPoints, _factory);
                 LastEntryPoints = Sets.NewHashSetFrom(entryPoints.Select(ep => ep.Name));
-            }
-
-            var classDeclaration = ContextAnalysis.FindEnclosing<IClassDeclaration>(context.NodeInFile);
-            if (classDeclaration != null)
-            {
-                LastSST = new SST();
-                if (typeDeclaration != null && typeDeclaration.DeclaredElement != null)
-                {
-                    LastSST.EnclosingType = typeDeclaration.DeclaredElement.GetName<ITypeName>();
-                    // adding GetName introduces *strange* missing assembly reference error (CommandBars)
-                }
-                else
-                {
-                    LastSST.EnclosingType = TypeName.UnknownName;
-                }
-                classDeclaration.Accept(new DeclarationVisitor(LastEntryPoints), LastSST);
             }
 
             return false;

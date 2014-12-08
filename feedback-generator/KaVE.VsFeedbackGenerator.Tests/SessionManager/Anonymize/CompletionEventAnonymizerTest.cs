@@ -22,7 +22,6 @@ using System;
 using System.Collections.Generic;
 using JetBrains.Util;
 using KaVE.Model.Events.CompletionEvent;
-using KaVE.Model.Names;
 using KaVE.Model.Names.CSharp;
 using NUnit.Framework;
 
@@ -56,8 +55,6 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
                 },
                 Context = new Context
                 {
-                    EnclosingMethod = MethodName.Get("[R, A, 1.2.3.4] [D, P].M()"),
-                    TriggerTarget = TypeName.Get("T, P"),
                     TypeShape = new TypeShape
                     {
                         TypeHierarchy = new TypeHierarchy("C, P")
@@ -77,13 +74,6 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
                                 First = MethodName.Get("[R, A, 1.2.3.4] [I1, P].N()")
                             },
                             new MethodHierarchy(MethodName.Get("[R, A, 4.3.2.1] [D, P].L()"))
-                        }
-                    },
-                    EntryPointToCalledMethods = new Dictionary<IMethodName, ISet<IMethodName>>
-                    {
-                        {
-                            MethodName.Get("[R, A, 1.2.3.4] [D, P].M()"),
-                            new HashSet<IMethodName> {MethodName.Get("[R, A, 1.2.3.4] [D, P].N()")}
                         }
                     }
                 }
@@ -139,52 +129,6 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
         }
 
         [Test]
-        public void ShouldAnonymizeContextEnclosingMethodIfRemoveNamesIsSet()
-        {
-            ExportSettings.RemoveCodeNames = true;
-            var expected =
-                MethodName.Get(
-                    "[R, A, 1.2.3.4] [BTxSgd7rLC1KLBfBSU59-w==, aUaDMpYpDqsiSh5nQjiWFw==].lNSAgClcjc9lDeUkXybdNQ==()");
-
-            var actual = WhenEventIsAnonymized();
-
-            Assert.AreEqual(expected, actual.Context.EnclosingMethod);
-        }
-
-        [Test]
-        public void ShouldNotFailWhenEnclosingMethodIsNullAndRemoveNamesIsSet()
-        {
-            OriginalEvent.Context.EnclosingMethod = null;
-            ExportSettings.RemoveCodeNames = true;
-
-            var actual = WhenEventIsAnonymized();
-
-            Assert.IsNull(actual.Context.EnclosingMethod);
-        }
-
-        [Test]
-        public void ShouldAnonymizeContextTriggerTarget()
-        {
-            ExportSettings.RemoveCodeNames = true;
-            var expected = TypeName.Get("TM6pgLI0nE5n0EEgAKIIFw==, aUaDMpYpDqsiSh5nQjiWFw==");
-
-            var actual = WhenEventIsAnonymized();
-
-            Assert.AreEqual(expected, actual.Context.TriggerTarget);
-        }
-
-        [Test]
-        public void ShouldNotFailWhenTriggerTargetIsNullAndRemoveNamesIsSet()
-        {
-            OriginalEvent.Context.TriggerTarget = null;
-            ExportSettings.RemoveCodeNames = true;
-
-            var actual = WhenEventIsAnonymized();
-
-            Assert.IsNull(actual.Context.TriggerTarget);
-        }
-
-        [Test]
         public void ShouldAnonymizeContextTypeShape()
         {
             ExportSettings.RemoveCodeNames = true;
@@ -223,28 +167,6 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
             Assert.AreEqual(expected, actual.Context.TypeShape);
         }
 
-        [Test]
-        public void ShouldAnonymizeEntryPointsAndCalledMethods()
-        {
-            ExportSettings.RemoveCodeNames = true;
-            var expected = new Dictionary<IMethodName, ISet<IMethodName>>
-            {
-                {
-                    MethodName.Get(
-                        "[R, A, 1.2.3.4] [BTxSgd7rLC1KLBfBSU59-w==, aUaDMpYpDqsiSh5nQjiWFw==].lNSAgClcjc9lDeUkXybdNQ==()"),
-                    new HashSet<IMethodName>
-                    {
-                        MethodName.Get(
-                            "[R, A, 1.2.3.4] [BTxSgd7rLC1KLBfBSU59-w==, aUaDMpYpDqsiSh5nQjiWFw==].FrZejHdXesK4GmGTziBKog==()")
-                    }
-                }
-            };
-
-            var actual = WhenEventIsAnonymized();
-
-            AssertAreEquivalent(expected, actual.Context.EntryPointToCalledMethods);
-        }
-
         // TODO @Seb: Add tests for entryPointToGroum when groum implementation is done
 
         [Test]
@@ -254,19 +176,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
             ExportSettings.RemoveDurations = true;
             ExportSettings.RemoveStartTimes = true;
 
-            OriginalEvent.Context.TriggerTarget = null;
-            OriginalEvent.Context.EnclosingMethod = null;
-
             WhenEventIsAnonymized();
-        }
-
-        private static void AssertAreEquivalent(IDictionary<IMethodName, ISet<IMethodName>> expected,
-            IDictionary<IMethodName, ISet<IMethodName>> actual)
-        {
-            CollectionAssert.AreEqual(expected.Keys, actual.Keys);
-            expected.Keys.ForEach(
-                key =>
-                    CollectionAssert.AreEquivalent(expected[key], actual[key], "Called methods for entry point " + key));
         }
 
         protected override void AssertThatPropertiesThatAreNotTouchedByAnonymizationAreUnchanged(

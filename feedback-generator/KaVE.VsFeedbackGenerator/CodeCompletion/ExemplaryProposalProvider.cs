@@ -99,8 +99,8 @@ namespace KaVE.VsFeedbackGenerator.CodeCompletion
         protected override bool IsAvailable(CSharpCodeCompletionContext context)
         {
             _context = ContextAnalysis.Analyze(context, _logger);
-            var typeName = ExtractTypeName(_context.TriggerTarget);
-            _model = typeName == null ? null : _store.GetModel(typeName.ToCoReName());
+            //var typeName = ExtractTypeName(_context.TriggerTarget);
+            //_model = typeName == null ? null : _store.GetModel(typeName.ToCoReName());
             return _model != null;
         }
 
@@ -138,17 +138,17 @@ namespace KaVE.VsFeedbackGenerator.CodeCompletion
 
         private static Query CreateQuery(Context context)
         {
-            var triggerType = ExtractTypeName(context.TriggerTarget);
+            /*var triggerType = ExtractTypeName(context.TriggerTarget);
             if (context.EnclosingMethod == null || triggerType == null)
             {
                 return null;
-            }
+            }*/
             return new Query(new List<CallSite>())
             {
                 //definition = new DefinitionSite(), // we are not object-sensitive yet
                 classCtx = context.TypeShape.TypeHierarchy.Element.ToCoReName(),
-                methodCtx = context.EnclosingMethod.ToCoReName(),
-                type = triggerType.ToCoReName()
+                //methodCtx = context.EnclosingMethod.ToCoReName(),
+                //type = triggerType.ToCoReName()
             };
         }
 

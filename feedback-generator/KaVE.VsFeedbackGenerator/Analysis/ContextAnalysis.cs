@@ -19,11 +19,16 @@
  */
 
 using System;
+using System.Linq;
 using JetBrains.ReSharper.Feature.Services.CSharp.CodeCompletion.Infrastructure;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
 using KaVE.JetBrains.Annotations;
+using KaVE.Model.Collections;
 using KaVE.Model.Events.CompletionEvent;
+using KaVE.Model.Names;
+using KaVE.Model.Names.CSharp;
+using KaVE.VsFeedbackGenerator.Analysis.Transformer;
 using KaVE.VsFeedbackGenerator.Generators;
 using KaVE.VsFeedbackGenerator.Utils.Names;
 
@@ -34,9 +39,6 @@ namespace KaVE.VsFeedbackGenerator.Analysis
         private readonly ILogger _logger;
         private readonly TypeShapeAnalysis _typeShapeAnalysis = new TypeShapeAnalysis();
         private readonly CompletionTargetAnalysis _completionTargetAnalysis = new CompletionTargetAnalysis();
-
-        private readonly CalledMethodsForEntryPointsAnalysis _calledMethodsForEntryPointsAnalysis =
-            new CalledMethodsForEntryPointsAnalysis();
 
         private ContextAnalysis(ILogger logger)
         {
@@ -66,20 +68,20 @@ namespace KaVE.VsFeedbackGenerator.Analysis
 
         private void AnalyzeInternal(ITreeNode nodeInFile, Context context)
         {
-            var typeDeclaration = FindEnclosing<ITypeDeclaration>(nodeInFile);
-            if (typeDeclaration != null)
+            var classDeclaration = FindEnclosing<IClassDeclaration>(nodeInFile);
+            if (classDeclaration != null && classDeclaration.DeclaredElement != null)
             {
-                context.TypeShape = _typeShapeAnalysis.Analyze(typeDeclaration);
-                context.TriggerTarget = _completionTargetAnalysis.Analyze(nodeInFile);
+                context.TypeShape = _typeShapeAnalysis.Analyze(classDeclaration);
 
-                var entryPoints = new EntryPointSelector(typeDeclaration, context.TypeShape).GetEntryPoints();
-                context.EntryPointToCalledMethods = _calledMethodsForEntryPointsAnalysis.Analyze(entryPoints);
+                var entryPointRefs = new EntryPointSelector(classDeclaration, context.TypeShape).GetEntryPoints();
+                var entryPoints = Sets.NewHashSetFrom(entryPointRefs.Select(epr => epr.Name));
 
-                var methodDeclaration = FindEnclosing<IMethodDeclaration>(nodeInFile);
-                if (methodDeclaration != null)
-                {
-                    context.EnclosingMethod = methodDeclaration.GetName();
-                }
+                context.SST.EnclosingType = classDeclaration.DeclaredElement.GetName<ITypeName>();
+                classDeclaration.Accept(new DeclarationVisitor(entryPoints), context.SST);
+            }
+            else
+            {
+                context.SST.EnclosingType = TypeName.UnknownName;
             }
         }
 

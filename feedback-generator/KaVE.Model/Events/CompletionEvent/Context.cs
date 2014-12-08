@@ -18,11 +18,9 @@
  *    - Sebastian Proksch
  */
 
-using System.Collections.Generic;
 using System.Runtime.Serialization;
-using System.Text;
 using KaVE.JetBrains.Annotations;
-using KaVE.Model.Names;
+using KaVE.Model.SSTs;
 using KaVE.Utils;
 
 namespace KaVE.Model.Events.CompletionEvent
@@ -41,45 +39,15 @@ namespace KaVE.Model.Events.CompletionEvent
 
         public Context()
         {
-            EntryPointToCalledMethods = new Dictionary<IMethodName, ISet<IMethodName>>();
-            EntryPointToGroum = new Dictionary<IMethodName, Groums.Groum>();
             TypeShape = new TypeShape();
-        }
-
-        /// <summary>
-        ///     Information about the method whose body is currently edited. <code>null</code> if completion is triggered
-        ///     outside a method.
-        /// </summary>
-        [DataMember, CanBeNull]
-        public IMethodName EnclosingMethod { get; set; }
-
-        /// <summary>
-        ///     Maps from entry points to the derived GROUM of those methods.
-        /// </summary>
-        [NotNull]
-        public IDictionary<IMethodName, Groums.Groum> EntryPointToGroum { get; set; }
-
-        /// <summary>
-        ///     Maps from entry points to the methods called in the call-graph below the respective entry point.
-        /// </summary>
-        [NotNull, DataMember]
-        public IDictionary<IMethodName, ISet<IMethodName>> EntryPointToCalledMethods { get; set; }
-
-        [NotNull]
-        public ICollection<IMethodName> EntryPoints
-        {
-            get { return EntryPointToCalledMethods.Keys; }
+            SST = new SST();
         }
 
         [DataMember, NotNull]
         public TypeShape TypeShape { get; set; }
 
-        /// <summary>
-        ///     The type of the reference completion was triggered on or <code>null</code>, if completion was triggered without an
-        ///     (explicit) reference.
-        /// </summary>
-        [DataMember, CanBeNull]
-        public IName TriggerTarget { get; set; }
+        [DataMember, NotNull]
+        public SST SST { get; set; }
 
         public override bool Equals(object obj)
         {
@@ -88,11 +56,8 @@ namespace KaVE.Model.Events.CompletionEvent
 
         protected bool Equals(Context other)
         {
-            return EntryPointToCalledMethods.DeepEquals(other.EntryPointToCalledMethods) &&
-                   Equals(EnclosingMethod, other.EnclosingMethod) &&
-                   EqualityUtils.Equals(EntryPointToGroum, other.EntryPointToGroum) &&
-                   Equals(TypeShape, other.TypeShape) &&
-                   Equals(TriggerTarget, other.TriggerTarget);
+            return Equals(TypeShape, other.TypeShape) &&
+                   Equals(SST, other.SST);
         }
 
         public override int GetHashCode()
@@ -100,49 +65,15 @@ namespace KaVE.Model.Events.CompletionEvent
             unchecked
             {
                 var hashCode = 397;
-                hashCode = (hashCode*397) ^ (EnclosingMethod != null ? EnclosingMethod.GetHashCode() : 0);
                 hashCode = (hashCode*397) ^ TypeShape.GetHashCode();
-                hashCode = (hashCode*397) ^ (TriggerTarget != null ? TriggerTarget.GetHashCode() : 0);
-                hashCode = (hashCode*397) ^ HashCodeUtils.For(191, EntryPointToCalledMethods);
-                hashCode = (hashCode*397) ^ HashCodeUtils.For(193, EntryPointToGroum);
+                hashCode = (hashCode*397) ^ SST.GetHashCode();
                 return hashCode;
             }
         }
 
         public override string ToString()
         {
-            return
-                string.Format(
-                    "[EnclosingMethod: {0}, Groums: {1}, CalledMethods: [{2}], TypeShape: {3}]",
-                    EnclosingMethod,
-                    ToString(EntryPointToGroum),
-                    ToString(EntryPointToCalledMethods),
-                    TypeShape);
-        }
-
-        private static string ToString(IEnumerable<KeyValuePair<IMethodName, ISet<IMethodName>>> dictionary)
-        {
-            var builder = new StringBuilder();
-            foreach (var keyValuePair in dictionary)
-            {
-                builder.Append(keyValuePair.Key);
-                builder.Append(":{");
-                builder.Append(string.Join(",", keyValuePair.Value));
-                builder.Append("},");
-            }
-            return builder.ToString();
-        }
-
-        private static string ToString(IEnumerable<KeyValuePair<IMethodName, Groums.Groum>> dictionary)
-        {
-            var builder = new StringBuilder();
-            foreach (var keyValuePair in dictionary)
-            {
-                builder.Append(keyValuePair.Key);
-                builder.Append(":");
-                builder.Append(keyValuePair.Value);
-            }
-            return builder.ToString();
+            return string.Format("[TypeShape: {0}, SST: {1}]", TypeShape, SST);
         }
     }
 }
