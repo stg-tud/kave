@@ -18,6 +18,7 @@
  */
 using System;
 using KaVE.Model.Events;
+using KaVE.Utils.Exceptions;
 using KaVE.VsFeedbackGenerator.MessageBus;
 using KaVE.VsFeedbackGenerator.Utils;
 using KaVE.VsFeedbackGenerator.VsIntegration;

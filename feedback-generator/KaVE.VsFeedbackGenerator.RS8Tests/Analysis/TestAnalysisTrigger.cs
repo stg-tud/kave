@@ -31,8 +31,8 @@ using KaVE.Model.Collections;
 using KaVE.Model.Events.CompletionEvent;
 using KaVE.Model.Names;
 using KaVE.Model.SSTs;
+using KaVE.Utils.Exceptions;
 using KaVE.VsFeedbackGenerator.Analysis;
-using KaVE.VsFeedbackGenerator.Generators;
 using Moq;
 
 namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis

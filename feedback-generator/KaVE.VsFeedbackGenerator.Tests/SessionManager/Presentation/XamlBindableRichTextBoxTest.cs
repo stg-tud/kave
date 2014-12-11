@@ -23,7 +23,7 @@ using System.Windows.Documents;
 using System.Windows.Threading;
 using KaVE.JetBrains.Annotations;
 using KaVE.Utils;
-using KaVE.VsFeedbackGenerator.Generators;
+using KaVE.Utils.Exceptions;
 using KaVE.VsFeedbackGenerator.SessionManager.Presentation;
 using KaVE.VsFeedbackGenerator.Utils;
 using Moq;
@@ -68,11 +68,12 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
                 xaml.Append("<Bold>Text</Bold>\n");
             }
 
-            TestDisplayXaml(xaml.ToString(),
+            TestDisplayXaml(
+                xaml.ToString(),
                 par =>
                 {
                     var text = GetFirstChild<Run>(par);
-                    Assert.AreEqual(65535 * 5, text.Text.Length);
+                    Assert.AreEqual(65535*5, text.Text.Length);
                     Assert.IsTrue(text.Text.StartsWith("Text\nText\nText\n"));
                 });
         }

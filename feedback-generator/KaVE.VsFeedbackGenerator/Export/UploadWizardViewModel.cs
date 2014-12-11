@@ -26,7 +26,7 @@ using System.Windows.Forms;
 using KaVE.Model.Events;
 using KaVE.Utils;
 using KaVE.Utils.Assertion;
-using KaVE.VsFeedbackGenerator.Generators;
+using KaVE.Utils.Exceptions;
 using KaVE.VsFeedbackGenerator.Interactivity;
 using KaVE.VsFeedbackGenerator.SessionManager;
 using KaVE.VsFeedbackGenerator.SessionManager.Presentation;

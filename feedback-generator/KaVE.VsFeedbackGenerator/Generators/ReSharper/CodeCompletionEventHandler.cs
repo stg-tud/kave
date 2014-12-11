@@ -28,6 +28,7 @@ using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using KaVE.Model.Events;
 using KaVE.Model.Events.CompletionEvent;
+using KaVE.Utils.Exceptions;
 using KaVE.VsFeedbackGenerator.Analysis;
 using KaVE.VsFeedbackGenerator.CodeCompletion;
 using KaVE.VsFeedbackGenerator.MessageBus;

@@ -31,7 +31,7 @@ using KaVE.VsFeedbackGenerator.SessionManager.Presentation;
 using KaVE.VsFeedbackGenerator.Utils;
 using KaVE.VsFeedbackGenerator.Utils.Logging;
 using NuGet;
-using ILogger = KaVE.VsFeedbackGenerator.Generators.ILogger;
+using ILogger = KaVE.Utils.Exceptions.ILogger;
 using Messages = KaVE.VsFeedbackGenerator.Properties.SessionManager;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager

@@ -23,8 +23,8 @@ using System.Linq;
 using KaVE.Model.Events;
 using KaVE.TestUtils;
 using KaVE.TestUtils.Model.Events;
+using KaVE.Utils.Exceptions;
 using KaVE.Utils.Reflection;
-using KaVE.VsFeedbackGenerator.Generators;
 using KaVE.VsFeedbackGenerator.SessionManager;
 using KaVE.VsFeedbackGenerator.Utils;
 using KaVE.VsFeedbackGenerator.Utils.Logging;
@@ -35,7 +35,7 @@ using Messages = KaVE.VsFeedbackGenerator.Properties.SessionManager;
 namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModelTestSuite
 {
     [TestFixture]
-    class SessionViewModelTest
+    internal class SessionViewModelTest
     {
         private Mock<ILog> _mockLog;
         private SessionViewModel _uut;
@@ -115,7 +115,8 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModelTestSui
             _mockLogger.Verify(l => l.Error(ItIsException.With("could not read log", exception)));
         }
 
-        [Test(Description = "UI doesn't update after refresh, because load is asynchronous and finishes after UI update")]
+        [Test(Description = "UI doesn't update after refresh, because load is asynchronous and finishes after UI update"
+            )]
         public void ShouldRaiseEventsPropertyChangedAfterLoad()
         {
             var actual = false;

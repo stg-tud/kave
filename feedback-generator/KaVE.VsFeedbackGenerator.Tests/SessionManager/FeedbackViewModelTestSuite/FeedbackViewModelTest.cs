@@ -23,8 +23,8 @@ using System.Linq;
 using KaVE.TestUtils;
 using KaVE.TestUtils.Model.Events;
 using KaVE.Utils.Assertion;
+using KaVE.Utils.Exceptions;
 using KaVE.Utils.Reflection;
-using KaVE.VsFeedbackGenerator.Generators;
 using KaVE.VsFeedbackGenerator.SessionManager;
 using KaVE.VsFeedbackGenerator.Utils;
 using KaVE.VsFeedbackGenerator.Utils.Logging;
@@ -124,7 +124,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModelTestSui
         public void ShouldRemoveSessionViewIfLogIsDeleted()
         {
             var mockLog = new Mock<ILog>();
-            WhenViewModelIsRefreshedWithSessions(new []{mockLog.Object});
+            WhenViewModelIsRefreshedWithSessions(new[] {mockLog.Object});
 
             Assert.IsNotEmpty(_uut.Sessions);
 
@@ -186,7 +186,9 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModelTestSui
             var expectedSelection = _uut.SingleSelectedSession.Events.Take(numberOfSelection).ToList();
             _uut.SingleSelectedSession.SelectedEvents = expectedSelection;
             ICollection<EventViewModel> actualSelection = null;
-            _uut.SingleSelectedSession.OnPropertyChanged(m => m.SelectedEvents, selection => actualSelection = selection);
+            _uut.SingleSelectedSession.OnPropertyChanged(
+                m => m.SelectedEvents,
+                selection => actualSelection = selection);
 
             WhenViewModelIsRefreshedWithSessions(sessions);
             WhenEventsOfSingleSelectedSessionAreLoaded();

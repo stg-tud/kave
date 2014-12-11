@@ -18,9 +18,9 @@
  */
 
 using System;
-using JetBrains.Annotations;
+using KaVE.JetBrains.Annotations;
 
-namespace KaVE.VsFeedbackGenerator.Generators
+namespace KaVE.Utils.Exceptions
 {
     public interface ILogger
     {

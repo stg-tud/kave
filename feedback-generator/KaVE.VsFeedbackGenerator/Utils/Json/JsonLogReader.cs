@@ -21,7 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using KaVE.Utils.Assertion;
-using KaVE.VsFeedbackGenerator.Generators;
+using KaVE.Utils.Exceptions;
 using KaVE.VsFeedbackGenerator.Utils.Logging;
 
 namespace KaVE.VsFeedbackGenerator.Utils.Json

@@ -27,7 +27,7 @@ namespace KaVE.TestUtils
         public static Exception With(string message, Exception innerException)
         {
             return Match.Create(
-                (Predicate<Exception>)(
+                (Predicate<Exception>) (
                     exception => message.Equals(exception.Message) && Equals(innerException, exception.InnerException)));
         }
     }

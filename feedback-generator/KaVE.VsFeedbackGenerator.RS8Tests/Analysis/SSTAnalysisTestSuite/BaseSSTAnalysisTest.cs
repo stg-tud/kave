@@ -22,7 +22,7 @@ using KaVE.Model.Names;
 using KaVE.Model.Names.CSharp;
 using KaVE.Model.SSTs;
 using KaVE.Model.SSTs.Declarations;
-using KaVE.VsFeedbackGenerator.Generators;
+using KaVE.Utils.Exceptions;
 using KaVE.VsFeedbackGenerator.Utils;
 using Moq;
 using NUnit.Framework;

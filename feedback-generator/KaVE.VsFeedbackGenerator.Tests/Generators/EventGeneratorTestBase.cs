@@ -22,7 +22,7 @@ using System.Linq;
 using System.Threading;
 using KaVE.JetBrains.Annotations;
 using KaVE.Model.Events;
-using KaVE.VsFeedbackGenerator.Generators;
+using KaVE.Utils.Exceptions;
 using KaVE.VsFeedbackGenerator.MessageBus;
 using KaVE.VsFeedbackGenerator.Tests.Utils;
 using KaVE.VsFeedbackGenerator.Utils;
@@ -38,7 +38,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators
         protected TestIDESession TestIDESession { get; private set; }
         protected TestDateUtils TestDateUtils { get; private set; }
         protected Mock<ILogger> MockLogger { get; private set; }
-        
+
         [SetUp]
         public void SetUpEventReception()
         {

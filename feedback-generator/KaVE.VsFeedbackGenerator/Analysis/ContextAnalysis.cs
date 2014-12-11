@@ -27,9 +27,9 @@ using KaVE.JetBrains.Annotations;
 using KaVE.Model.Collections;
 using KaVE.Model.Events.CompletionEvent;
 using KaVE.Model.Names;
+using KaVE.Utils.Exceptions;
 using KaVE.Model.Names.CSharp;
 using KaVE.VsFeedbackGenerator.Analysis.Transformer;
-using KaVE.VsFeedbackGenerator.Generators;
 using KaVE.VsFeedbackGenerator.Utils.Names;
 
 namespace KaVE.VsFeedbackGenerator.Analysis

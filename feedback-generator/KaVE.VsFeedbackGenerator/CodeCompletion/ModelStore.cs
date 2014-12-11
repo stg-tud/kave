@@ -21,7 +21,7 @@ using System;
 using System.IO;
 using Ionic.Zip;
 using KaVE.Model.ObjectUsage;
-using KaVE.VsFeedbackGenerator.Generators;
+using KaVE.Utils.Exceptions;
 using KaVE.VsFeedbackGenerator.Utils;
 
 namespace KaVE.VsFeedbackGenerator.CodeCompletion

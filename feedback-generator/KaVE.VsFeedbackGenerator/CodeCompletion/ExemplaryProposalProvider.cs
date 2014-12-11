@@ -29,7 +29,7 @@ using KaVE.Model.Names.CSharp;
 using KaVE.Model.ObjectUsage;
 using KaVE.VsFeedbackGenerator.Analysis;
 using KaVE.VsFeedbackGenerator.Utils;
-using KaVELogger = KaVE.VsFeedbackGenerator.Generators.ILogger;
+using KaVELogger = KaVE.Utils.Exceptions.ILogger;
 
 namespace KaVE.VsFeedbackGenerator.CodeCompletion
 {

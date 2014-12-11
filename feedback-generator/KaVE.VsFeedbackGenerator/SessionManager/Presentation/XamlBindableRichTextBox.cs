@@ -22,6 +22,7 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Markup;
 using System.Windows.Threading;
+using KaVE.Utils.Exceptions;
 using KaVE.VsFeedbackGenerator.Utils;
 using Msg = KaVE.VsFeedbackGenerator.Properties.XamlBindableRichTextBox;
 
@@ -109,7 +110,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
             }
             catch (Exception exception)
             {
-                var logEventGenerator = Registry.GetComponent<Generators.ILogger>();
+                var logEventGenerator = Registry.GetComponent<ILogger>();
                 logEventGenerator.Error(exception, "Parsing Xaml in XamlBindableRichTextBox");
                 throw;
             }
