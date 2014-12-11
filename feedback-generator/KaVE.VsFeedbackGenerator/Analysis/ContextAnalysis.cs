@@ -54,14 +54,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis
         {
             var context = Context.Empty;
 
-            try
-            {
-                AnalyzeInternal(rsContext.NodeInFile, context);
-            }
-            catch (Exception e)
-            {
-                _logger.Error(new Exception("analysis failed", e));
-            }
+            Execute.WithExceptionLogging(_logger, () => AnalyzeInternal(rsContext.NodeInFile, context));
 
             return context;
         }
