@@ -40,21 +40,21 @@ namespace KaVE.VsFeedbackGenerator.Generators
             new CompletionEventMergingStrategy()
         };
 
-        private readonly IMessageBus _messageChannel;
+        private readonly object _logLock = new object();
         private readonly ILogManager _logManager;
+
 
         private IDEEvent _lastEvent;
 
         public EventLogger(IMessageBus messageBus, ILogManager logManager)
         {
-            _messageChannel = messageBus;
             _logManager = logManager;
-            _messageChannel.Subscribe<IDEEvent>(ProcessEvent);
+            messageBus.Subscribe<IDEEvent>(ProcessEvent);
         }
 
         private void ProcessEvent(IDEEvent @event)
         {
-            lock (_messageChannel)
+            lock (_logLock)
             {
                 if (IsIDEShutdownEvent(@event))
                 {

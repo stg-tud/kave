@@ -31,7 +31,7 @@ using NUnit.Framework;
 namespace KaVE.VsFeedbackGenerator.Tests.Generators
 {
     [TestFixture]
-    class EventLoggerTest
+    internal class EventLoggerTest
     {
         private class TestMessageBus : IMessageBus
         {
@@ -42,7 +42,8 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators
                 _receivers.ForEach(r => r.Invoke(evt));
             }
 
-            public void Subscribe<TMessage>(Action<TMessage> action, Func<TMessage, bool> filter = null) where TMessage : class
+            public void Subscribe<TMessage>(Action<TMessage> action, Func<TMessage, bool> filter = null)
+                where TMessage : class
             {
                 _receivers.Add(o => action((TMessage) o));
             }
