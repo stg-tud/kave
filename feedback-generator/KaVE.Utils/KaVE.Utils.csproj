@@ -46,9 +46,11 @@
     <Compile Include="Assertion\AssertException.cs" />
     <Compile Include="Assertion\Asserts.cs" />
     <Compile Include="Collections\DispatchingObservableCollection.cs" />
+    <Compile Include="Collections\BlockingCollection.cs" />
     <Compile Include="Collections\SetEqualityComparer.cs" />
     <Compile Include="Collections\ThreadSafeDictionary.cs" />
     <Compile Include="Collections\WeakReferenceDictionary.cs" />
+    <Compile Include="Concurrent\Task.cs" />
     <Compile Include="DateTime\SimilarDateTimeComparer.cs" />
     <Compile Include="EqualityUtils.cs" />
     <Compile Include="Exceptions\Execute.cs" />

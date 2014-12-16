@@ -51,13 +51,7 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
 
         private void FireShutdownEvent()
         {
-            // Sven: I found no way to ensure that the message bus is still
-            // running and the logger attachted to it, when we reach this point.
-            var ideStateEvent = CreateIDEStateEvent(IDEStateEvent.LifecyclePhase.Shutdown);
-            var process = typeof (EventLogger).GetMethod(
-                EventLogger.ProcessMethodName,
-                BindingFlags.Instance | BindingFlags.NonPublic);
-            process.Invoke(_logger, new object[] {ideStateEvent});
+            _logger.Log(CreateIDEStateEvent(IDEStateEvent.LifecyclePhase.Shutdown));
         }
 
         private void FireIDEStateEvent(IDEStateEvent.LifecyclePhase phase)

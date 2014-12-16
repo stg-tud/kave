@@ -22,7 +22,8 @@ using System.Linq;
 using JetBrains.Application;
 using KaVE.Model.Events;
 using KaVE.Model.Events.VisualStudio;
-using KaVE.Utils.Reflection;
+using KaVE.Utils.Collections;
+using KaVE.Utils.Concurrent;
 using KaVE.VsFeedbackGenerator.Generators.Merging;
 using KaVE.VsFeedbackGenerator.MessageBus;
 using KaVE.VsFeedbackGenerator.Utils.Logging;
@@ -32,45 +33,56 @@ namespace KaVE.VsFeedbackGenerator.Generators
     [ShellComponent]
     internal class EventLogger
     {
-        internal static readonly string ProcessMethodName =
-            TypeExtensions<EventLogger>.GetMethodName(l => l.ProcessEvent(null));
-
         private static readonly IList<IEventMergeStrategy> MergeStrategies = new List<IEventMergeStrategy>
         {
             new CompletionEventMergingStrategy()
         };
 
-        private readonly object _logLock = new object();
-        private readonly ILogManager _logManager;
-
-
+        private readonly BlockingCollection<IDEEvent> _eventQueue;
         private IDEEvent _lastEvent;
+        private readonly ILogManager _logManager;
 
         public EventLogger(IMessageBus messageBus, ILogManager logManager)
         {
             _logManager = logManager;
-            messageBus.Subscribe<IDEEvent>(ProcessEvent);
+            _eventQueue = new BlockingCollection<IDEEvent>();
+            messageBus.Subscribe<IDEEvent>(Log);
+            Task.StartNewLongRunning(ProcessEvents);
         }
 
-        private void ProcessEvent(IDEEvent @event)
+        internal void Log(IDEEvent @event)
         {
-            lock (_logLock)
+            if (@event == null)
             {
-                if (IsIDEShutdownEvent(@event))
+                return;
+            }
+
+            _eventQueue.Add(@event);
+        }
+
+        private void ProcessEvents()
+        {
+            foreach (var @event in _eventQueue.GetConsumingEnumerable())
+            {
+                if (IsShutdownEvent(@event))
                 {
-                    LogEvent(_lastEvent);
-                    LogEvent(@event);
+                    ProcessShutdownEvent(@event);
                     return;
                 }
-
                 ProcessNormalEvent(@event);
             }
         }
 
-        private static bool IsIDEShutdownEvent(IDEEvent @event)
+        private static bool IsShutdownEvent(IDEEvent @event)
         {
             var ideStateEvent = @event as IDEStateEvent;
             return ideStateEvent != null && ideStateEvent.IDELifecyclePhase == IDEStateEvent.LifecyclePhase.Shutdown;
+        }
+
+        private void ProcessShutdownEvent(IDEEvent @event)
+        {
+            LogEvent(_lastEvent);
+            LogEvent(@event);
         }
 
         private void ProcessNormalEvent(IDEEvent @event)
@@ -94,11 +106,6 @@ namespace KaVE.VsFeedbackGenerator.Generators
 
         private void LogEvent(IDEEvent @event)
         {
-            if (@event == null)
-            {
-                return;
-            }
-
             try
             {
                 _logManager.CurrentLog.Append(@event);

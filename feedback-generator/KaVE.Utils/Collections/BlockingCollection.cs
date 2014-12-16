@@ -17,13 +17,7 @@
  *    - Sven Amann
  */
 
-using KaVE.Model.Events;
-
-namespace KaVE.VsFeedbackGenerator.Generators
+namespace KaVE.Utils.Collections
 {
-    interface IEventMergeStrategy
-    {
-        bool AreMergable(IDEEvent @event, IDEEvent subsequentEvent);
-        IDEEvent Merge(IDEEvent @event, IDEEvent subsequentEvent);
-    }
+    public class BlockingCollection<TE> : System.Collections.Concurrent.BlockingCollection<TE> { }
 }

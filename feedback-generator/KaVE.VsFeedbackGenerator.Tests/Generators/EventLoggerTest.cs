@@ -17,11 +17,13 @@
  *    - Sven Amann
  */
 
-using System;
 using System.Collections.Generic;
 using System.IO;
-using JetBrains.Util;
+using System.Threading;
+using KaVE.Model.Events;
+using KaVE.Model.Events.VisualStudio;
 using KaVE.TestUtils.Model.Events;
+using KaVE.Utils.Assertion;
 using KaVE.VsFeedbackGenerator.Generators;
 using KaVE.VsFeedbackGenerator.MessageBus;
 using KaVE.VsFeedbackGenerator.Utils.Logging;
@@ -33,36 +35,101 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators
     [TestFixture]
     internal class EventLoggerTest
     {
-        private class TestMessageBus : IMessageBus
+        private Mock<IMessageBus> _mockMessageBus;
+        private Mock<ILogManager> _mockLogManager;
+        private AutoResetEvent _logAppendSignal;
+        private List<IDEEvent> _loggedEvents;
+
+        [SetUp]
+        public void SetUp()
         {
-            private readonly IList<Action<object>> _receivers = new List<Action<object>>();
+            _loggedEvents = new List<IDEEvent>();
+            _mockMessageBus = new Mock<IMessageBus>();
+            _logAppendSignal = new AutoResetEvent(false);
+            _mockLogManager = new Mock<ILogManager>();
+            _mockLogManager.Setup(lm => lm.CurrentLog.Append(It.IsAny<IDEEvent>())).Callback<IDEEvent>(
+                e =>
+                {
+                    _loggedEvents.Add(e);
+                    _logAppendSignal.Set();
+                });
+        }
 
-            public void Publish<TMessage>(TMessage evt) where TMessage : class
-            {
-                _receivers.ForEach(r => r.Invoke(evt));
-            }
+        [Test]
+        public void ShouldSubscribeToMessageBus()
+        {
+            var uut = new EventLogger(_mockMessageBus.Object, _mockLogManager.Object);
 
-            public void Subscribe<TMessage>(Action<TMessage> action, Func<TMessage, bool> filter = null)
-                where TMessage : class
-            {
-                _receivers.Add(o => action((TMessage) o));
-            }
+            _mockMessageBus.Verify(mb => mb.Subscribe<IDEEvent>(uut.Log, null));
+        }
+
+        [Test]
+        public void ShouldWriteEventsWithDelayOfOne()
+        {
+            var anEvent = IDEEventTestFactory.SomeEvent();
+
+            var uut = new EventLogger(_mockMessageBus.Object, _mockLogManager.Object);
+            uut.Log(anEvent); // this is written to the buffer
+            uut.Log(IDEEventTestFactory.SomeEvent()); // there anEvent should be appended
+            WaitForLogAppend();
+
+            CollectionAssert.AreEqual(new[] {anEvent}, _loggedEvents);
+        }
+
+        [Test]
+        public void ShouldSupressNullEvents()
+        {
+            var anEvent = IDEEventTestFactory.SomeEvent();
+
+            var uut = new EventLogger(_mockMessageBus.Object, _mockLogManager.Object);
+            uut.Log(null);
+            uut.Log(anEvent); // this is written to the buffer
+            uut.Log(IDEEventTestFactory.SomeEvent()); // there anEvent should be appended
+            WaitForLogAppend();
+
+            CollectionAssert.AreEqual(new[] { anEvent }, _loggedEvents);
         }
 
         [Test]
         public void ShouldNotFailIfLoggingFails()
         {
-            var evt1 = IDEEventTestFactory.SomeEvent();
-            var mockLogManager = new Mock<ILogManager>();
-            mockLogManager.Setup(lm => lm.CurrentLog.Append(evt1)).Throws<IOException>();
+            var anEvent = IDEEventTestFactory.SomeEvent();
 
-            var testMessageBus = new TestMessageBus();
-            // ReSharper disable once ObjectCreationAsStatement
-            new EventLogger(testMessageBus, mockLogManager.Object);
+            _mockLogManager.Setup(lm => lm.CurrentLog.Append(It.IsAny<IDEEvent>())).Callback<IDEEvent>(
+               e =>
+               {
+                   Asserts.Not(anEvent.Equals(e));
+                   _loggedEvents.Add(e);
+                   _logAppendSignal.Set();
+               });
 
-            // first event goes to buffer
-            testMessageBus.Publish(evt1);
-            testMessageBus.Publish(evt1);
+            var uut = new EventLogger(_mockMessageBus.Object, _mockLogManager.Object);
+            uut.Log(anEvent); // this is written to the buffer
+            uut.Log(IDEEventTestFactory.SomeEvent()); // here anEvent is appended, which fails
+            uut.Log(IDEEventTestFactory.SomeEvent()); // here an event should be appended
+
+            WaitForLogAppend();
+        }
+
+        [Test]
+        public void ShouldFlushOnIDEShutdownEvent()
+        {
+            var anEvent = IDEEventTestFactory.SomeEvent();
+            var shutdownEvent = new IDEStateEvent {IDELifecyclePhase = IDEStateEvent.LifecyclePhase.Shutdown};
+
+            var uut = new EventLogger(_mockMessageBus.Object, _mockLogManager.Object);
+            uut.Log(anEvent); // this is written to the buffer
+            uut.Log(shutdownEvent); // here both events should be appended
+            WaitForLogAppend();
+
+            CollectionAssert.AreEqual(new IDEEvent[] { anEvent, shutdownEvent }, _loggedEvents);
+        }
+
+        // TODO add tests for event merging logic
+
+        private void WaitForLogAppend()
+        {
+            Assert.IsTrue(_logAppendSignal.WaitOne(5000), "append was not invoked");
         }
     }
 }
