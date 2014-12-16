@@ -58,6 +58,7 @@ namespace KaVE.VsFeedbackGenerator.Utils.Json
             {
                 return json.ParseJsonTo<TMessage>();
             }
+                // TODO think about more concrete exception types
             catch (Exception jre)
             {
                 Registry.GetComponent<ILogger>().Error(jre, json);
