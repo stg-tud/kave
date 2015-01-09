@@ -5,7 +5,7 @@ body {
 }
 
 form {
-	margin: 0 0 40px 0;
+	margin: 10px 0 30px 0;
 	padding: 0;
 }
 
@@ -24,6 +24,8 @@ form {
 }
 
 h1 {
+	font-size: 1.25em;
+	font-weight: bold;
 	margin: 0 0 10px 0;
 	padding: 0;
 }
@@ -50,17 +52,17 @@ h1 {
 
 #footer {
 	margin:10px 0px 0px 0px;
-	height:23pt;
 	font-size:80%;
 }
 
 #footer dt {
 	float:left;
 	width:35%;
+	margin: 2px 0;
 }
 
 #footer dd {
 	float:left;
 	width:55%;
-	margin:0;
+	margin: 2px 0;
 }

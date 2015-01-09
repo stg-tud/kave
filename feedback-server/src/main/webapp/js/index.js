@@ -1,17 +1,26 @@
 require([], function() {
 	
+	function cbFail(msg) {
+		$.growl.error({
+			"title":msg,
+			"message":"",
+			"location":"tl"
+		})
+	}
+	
+	function cbOk(msg) {
+		$.growl.notice({
+			"title":"Die Datei wurde erfolgreich hochgeladen.",
+			"message":"",
+			"location":"tl"
+		})
+	}
+
 	$("#submit-upload").removeAttr("disabled")
 	
 	$("#submit-upload").click(function(e) {
 		e.preventDefault()
 		e.stopPropagation()
-		
-		var cbFail = function(msg) {
-			$.growl.error({
-				"title":msg,
-				"message":""
-			})
-		}
 		
 		var confirmation = $("#confirm")[0]
 		if (!confirmation.checked) {
@@ -45,10 +54,7 @@ require([], function() {
 			contentType: false
 		}).done(function(r) {
 			if (r.status == "OK") {
-				$.growl.notice({
-					"title":"Die Datei wurde erfolgreich hochgeladen.",
-					"message":""
-				})
+				cbOk("Die Datei wurde erfolgreich hochgeladen.")
 				$("#file-upload-form")[0].reset()
 			} else {
 				cbFail(r.message)
