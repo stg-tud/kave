@@ -15,6 +15,7 @@
  * 
  * Contributors:
  *    - Uli Fahrer
+ *    - Sebastian Proksch
  */
 
 using KaVE.VsFeedbackGenerator.Interactivity;
@@ -63,6 +64,24 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
         public void ValidUploadInformationRaisesNoErrorNotification()
         {
             var info = _uut.ValidateUploadInformation(TestUploadUrl, TestUploadPrefix);
+            Assert.IsFalse(_notificationHelper.IsRequestRaised);
+            Assert.IsTrue(info.IsUrlValid);
+            Assert.IsTrue(info.IsPrefixValid);
+            Assert.IsTrue(info.IsValidUploadInformation);
+        }
+
+        [Test]
+        public void EmptyUploadUrlRaisesErrorNotification()
+        {
+            var info = _uut.ValidateUploadInformation("", TestUploadPrefix);
+            Assert.IsTrue(_notificationHelper.IsRequestRaised);
+            Assert.IsFalse(info.IsUrlValid);
+        }
+
+        [Test]
+        public void EmptyPrefixRaisesNoErrorNotification()
+        {
+            var info = _uut.ValidateUploadInformation(TestUploadUrl, "");
             Assert.IsFalse(_notificationHelper.IsRequestRaised);
             Assert.IsTrue(info.IsUrlValid);
             Assert.IsTrue(info.IsPrefixValid);

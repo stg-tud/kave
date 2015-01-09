@@ -15,6 +15,7 @@
  * 
  * Contributors:
  *    - Uli Fahrer
+ *    - Sebastian Proksch
  */
 
 using System;
@@ -56,7 +57,8 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
         public UploadValidation ValidateUploadInformation(string url, string prefix)
         {
             var uriIsValid = ValidateUri(url);
-            var prefixIsValid = ValidateUri(prefix);
+            var prefixIsEmpty = prefix.Length == 0;
+            var prefixIsValid = prefixIsEmpty || ValidateUri(prefix);
 
             if (!uriIsValid || !prefixIsValid)
             {
