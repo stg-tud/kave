@@ -15,6 +15,7 @@ set DATE1=%date:~-4,4%%date:~-7,2%%date:~-10,2%
 set TIMESTAMP=%DATE1%-%TIME3%
 echo Building KaVE Feedback Generator @ %TIMESTAMP%...
 
-C:\Users\Sven\Downloads\NuGet.exe pack KaVE.VsFeedbackGenerator.1.0.0-alpha1.nuspec -Verbosity detailed -NoPackageAnalysis -Version 1.0.0-v%TIMESTAMP%
+::C:\Users\Sven\Downloads\
+nuget.exe pack KaVE.VsFeedbackGenerator.1.0.0-alpha1.nuspec -Verbosity detailed -NoPackageAnalysis -Version 1.0.0-v%TIMESTAMP%
 
 pause
