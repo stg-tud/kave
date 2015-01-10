@@ -62,6 +62,7 @@
     <Compile Include="EqualityUtilsTest.cs" />
     <Compile Include="Events\EventHandlingTest.cs" />
     <Compile Include="Exceptions\ExecuteTest.cs" />
+    <Compile Include="Exceptions\TimeLimitRunnerTest.cs" />
     <Compile Include="HashCodeUtilsTest.cs" />
     <Compile Include="InvokeTest.cs" />
     <Compile Include="IO\KeyUtilsTest.cs" />
