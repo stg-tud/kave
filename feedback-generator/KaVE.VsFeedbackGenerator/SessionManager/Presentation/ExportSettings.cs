@@ -39,10 +39,12 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
         [SettingsEntry(false, "KaVE FeedbackGenerator RemoveSessionIDs")]
         public bool RemoveSessionIDs;
 
-        [SettingsEntry("http://kave.st.informatik.tu-darmstadt.de:80/", "KaVE FeedbackGenerator UploadUrl")]
+        [SettingsEntry("https://licsrv1.zd.datev.de/feedback-server/", "KaVE FeedbackGenerator UploadUrl")]
+        //[SettingsEntry("http://kave.st.informatik.tu-darmstadt.de:80/", "KaVE FeedbackGenerator UploadUrl")]
         public string UploadUrl;
 
-        [SettingsEntry("", "KaVE FeedbackGenerator WebAccessPrefix")]
+        [SettingsEntry("http://www3.bk.datev.de/eprtl/dyn.ica?", "KaVE FeedbackGenerator WebAccessPrefix")]
+        //[SettingsEntry("", "KaVE FeedbackGenerator WebAccessPrefix")]
         public string WebAccessPrefix;
     }
 }
