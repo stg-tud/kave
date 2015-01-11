@@ -74,7 +74,12 @@ namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
             var token = _tokenSource.CancelAndCreate();
 
             // TODO discuss different cases
-            Func<Context> impl = () => ContextAnalysis.Analyze(context, _logger);
+            Func<Context> impl = () =>
+            {
+                Context result = null;
+                ReadLockCookie.Execute(() => result = ContextAnalysis.Analyze(context, _logger));
+                return result;
+            };
             //Func<Context> endless = () => { while (true) {} };
             /*Func<Context> fail = () =>
             {
