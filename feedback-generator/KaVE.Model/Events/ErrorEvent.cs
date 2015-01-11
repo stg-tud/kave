@@ -28,12 +28,26 @@ namespace KaVE.Model.Events
     {
         [DataMember]
         public string Content { get; set; }
+
         [DataMember]
         public string[] StackTrace { get; set; }
 
         protected bool Equals(ErrorEvent other)
         {
-            return base.Equals(other) && string.Equals(Content, other.Content) && StackTrace.SequenceEqual(other.StackTrace);
+            var isBaseEqual = base.Equals(other);
+            var hasEqualContent = string.Equals(Content, other.Content);
+
+            if (StackTrace == other.StackTrace)
+            {
+                return isBaseEqual && hasEqualContent;
+            }
+
+            if (StackTrace == null || other.StackTrace == null)
+            {
+                return false;
+            }
+            var hasEqualStacktrace = StackTrace.SequenceEqual(other.StackTrace);
+            return isBaseEqual && hasEqualContent && hasEqualStacktrace;
         }
 
         public override bool Equals(object obj)
@@ -46,15 +60,19 @@ namespace KaVE.Model.Events
             unchecked
             {
                 var hashCode = base.GetHashCode();
-                hashCode = (hashCode*397) ^ (Content != null ? Content.GetHashCode() : 0);
-                hashCode = (hashCode*397) ^ (StackTrace != null ? StackTrace.GetHashCode() : 0);
+                hashCode = (hashCode*397) ^ (Content != null ? Content.GetHashCode() : 17);
+                hashCode = (hashCode*397) ^ (StackTrace != null ? HashCodeUtils.For(397, StackTrace) : 13);
                 return hashCode;
             }
         }
 
         public override string ToString()
         {
-            return string.Format("{0}, Content: {1}, StackTrace: [{2}]", base.ToString(), Content, string.Join("\n", StackTrace));
+            return string.Format(
+                "{0}, Content: {1}, StackTrace: [{2}]",
+                base.ToString(),
+                Content,
+                string.Join("\n", StackTrace));
         }
     }
 }

@@ -48,7 +48,9 @@
     <Compile Include="Events\CompletionEvent\ContextTest.cs" />
     <Compile Include="Events\CompletionEvent\MethodHierarchyTest.cs" />
     <Compile Include="Events\CompletionEvent\TypeHierarchyTest.cs" />
+    <Compile Include="Events\ErrorEventTest.cs" />
     <Compile Include="Events\IDEEventTest.cs" />
+    <Compile Include="Events\InfoEventTest.cs" />
     <Compile Include="Groums\GroumTest.cs" />
     <Compile Include="Names\CSharp\AssemblyNameTest.cs" />
     <Compile Include="Names\CSharp\AssemblyVersionTest.cs" />

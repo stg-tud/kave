@@ -52,27 +52,66 @@ namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
         }
     }
 
-    [ShellComponent, Language(typeof (CSharpLanguage))]
+    [Language(typeof (CSharpLanguage))]
     internal class CodeCompletionContextAnalysisTrigger : CSharpItemsProviderBase<CSharpCodeCompletionContext>
     {
+        private const int LimitInMs = 1000;
+
         private readonly CodeCompletionEventHandler _handler;
         private readonly ILogger _logger;
+
+        private readonly KaVECancellationTokenSource _tokenSource;
 
         public CodeCompletionContextAnalysisTrigger(CodeCompletionEventHandler handler, ILogger logger)
         {
             _handler = handler;
             _logger = logger;
+            _tokenSource = new KaVECancellationTokenSource();
         }
 
         protected override bool AddLookupItems(CSharpCodeCompletionContext context, GroupedItemsCollector collector)
         {
-            var ctx = ContextAnalysis.Analyze(context, _logger);
-            _handler.SetContext(ctx);
+            var token = _tokenSource.CancelAndCreate();
+
+            // TODO discuss different cases
+            Func<Context> impl = () => ContextAnalysis.Analyze(context, _logger);
+            //Func<Context> endless = () => { while (true) {} };
+            /*Func<Context> fail = () =>
+            {
+                Asserts.Fail("test exception!!");
+                return new Context();
+            };*/
+
+            TimeLimitRunner.Run(
+                impl,
+                LimitInMs,
+                token,
+                OnSuccess,
+                OnTimeout,
+                OnError);
+
             return false;
+        }
+
+        private void OnSuccess(Context ctx)
+        {
+            _handler.SetContext(ctx);
+        }
+
+        private void OnTimeout()
+        {
+            // TODO more sophisticated handling necessary
+            _logger.Error(string.Format("timeout! analysis did not finish within {0}ms", LimitInMs));
+        }
+
+        private void OnError(Exception e)
+        {
+            // TODO more sophisticated handling necessary
+            _logger.Error(e, "analysis error!");
         }
     }
 
-    [ShellComponent, Language(typeof (CSharpLanguage))]
+    [ShellComponent] //, Language(typeof (CSharpLanguage))]
     internal class CodeCompletionEventHandler : EventGeneratorBase
     {
         private CompletionEvent _event;

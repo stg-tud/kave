@@ -45,13 +45,13 @@ namespace KaVE.Utils.Exceptions
                     }
                     catch (Exception e)
                     {
-                        // TODO review selective catch. Extend KaVE.Execute?
+                        // TODO rethink selective catch. Extend KaVE.Execute?
                         exception = e;
                     }
                     execDoneHandle.Set();
                 });
 
-            Start(thread);
+            thread.Start();
             WaitHandle.WaitAny(new[] {execDoneHandle, token.WaitHandle}, limitInMs);
 
             if (!token.IsCancellationRequested)
@@ -76,26 +76,7 @@ namespace KaVE.Utils.Exceptions
                 }
             }
 
-            Abort(thread);
-        }
-
-        private static void Start(Thread thread)
-        {
-            thread.Start();
-
-            while (!thread.IsAlive)
-            {
-                // wait to become alive
-            }
-        }
-
-        private static void Abort(Thread thread)
-        {
             thread.Abort();
-            while (thread.IsAlive)
-            {
-                // wait to finish
-            }
         }
     }
 }
