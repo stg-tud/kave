@@ -32,13 +32,10 @@ namespace KaVE.Utils.Exceptions
 
         public CancellationToken CancelAndCreate()
         {
-            lock (this)
-            {
-                _tokenSource.Cancel();
+            _tokenSource.Cancel();
 
-                _tokenSource = new CancellationTokenSource();
-                return _tokenSource.Token;
-            }
+            _tokenSource = new CancellationTokenSource();
+            return _tokenSource.Token;
         }
     }
 }

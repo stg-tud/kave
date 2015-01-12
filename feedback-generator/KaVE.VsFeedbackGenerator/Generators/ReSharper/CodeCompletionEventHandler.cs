@@ -71,31 +71,45 @@ namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
 
         protected override bool AddLookupItems(CSharpCodeCompletionContext context, GroupedItemsCollector collector)
         {
-            var token = _tokenSource.CancelAndCreate();
-
-            // TODO discuss different cases
-            Func<Context> impl = () =>
+            // TODO not happy with this... still not thread safe :/
+            Action runnable;
+            lock (this)
             {
-                Context result = null;
-                ReadLockCookie.Execute(() => result = ContextAnalysis.Analyze(context, _logger));
-                return result;
-            };
-            //Func<Context> endless = () => { while (true) {} };
-            /*Func<Context> fail = () =>
-            {
-                Asserts.Fail("test exception!!");
-                return new Context();
-            };*/
-
-            TimeLimitRunner.Run(
-                impl,
-                LimitInMs,
-                token,
-                OnSuccess,
-                OnTimeout,
-                OnError);
+                runnable = CreateRunnable(context);
+            }
+            runnable();
 
             return false;
+        }
+
+        private Action CreateRunnable(CSharpCodeCompletionContext context)
+        {
+            return () =>
+            {
+                var token = _tokenSource.CancelAndCreate();
+
+                // TODO discuss different cases
+                Func<Context> impl = () =>
+                {
+                    Context result = null;
+                    ReadLockCookie.Execute(() => result = ContextAnalysis.Analyze(context, _logger));
+                    return result;
+                };
+                //Func<Context> endless = () => { while (true) {} };
+                /*Func<Context> fail = () =>
+               {
+                    Asserts.Fail("test exception!!");
+                    return new Context();
+                };*/
+
+                TimeLimitRunner.Run(
+                    impl,
+                    LimitInMs,
+                    token,
+                    OnSuccess,
+                    OnTimeout,
+                    OnError);
+            };
         }
 
         private void OnSuccess(Context ctx)
