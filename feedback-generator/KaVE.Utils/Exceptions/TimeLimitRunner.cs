@@ -45,7 +45,6 @@ namespace KaVE.Utils.Exceptions
                     }
                     catch (Exception e)
                     {
-                        // TODO rethink selective catch. Extend KaVE.Execute?
                         exception = e;
                     }
                     execDoneHandle.Set();
@@ -56,21 +55,16 @@ namespace KaVE.Utils.Exceptions
 
             if (!token.IsCancellationRequested)
             {
-                // success case
                 if (result != null)
                 {
                     onSuccess(result);
                 }
-
-                // exceptional case
-                if (exception != null)
+                else if (exception != null)
                 {
+                    // TODO think over selective rethrow (e.g., on thread interrupt)
                     onError(exception);
                 }
-
-                // avoid race condition
-                Thread.Sleep(10);
-                if (thread.IsAlive)
+                else
                 {
                     onTimeout();
                 }

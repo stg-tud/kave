@@ -35,7 +35,6 @@ namespace KaVE.Utils.Tests.Exceptions
         private bool _onTimeoutCalled;
         private bool _onErrorCalled;
         private string _actualResult;
-        private bool _wasTimeOut;
         private Exception _actualException;
 
         private long ActualDuration
@@ -54,7 +53,6 @@ namespace KaVE.Utils.Tests.Exceptions
             _onErrorCalled = false;
 
             _actualResult = null;
-            _wasTimeOut = false;
             _actualException = null;
         }
 
@@ -187,6 +185,7 @@ namespace KaVE.Utils.Tests.Exceptions
 
         private static Func<string> EndlessLoop()
         {
+            // ReSharper disable once FunctionNeverReturns
             return () => { while (true) {} };
         }
     }

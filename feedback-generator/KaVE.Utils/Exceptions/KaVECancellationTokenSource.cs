@@ -23,19 +23,19 @@ namespace KaVE.Utils.Exceptions
 {
     public class KaVECancellationTokenSource
     {
-        private CancellationTokenSource _tokenSource;
+        private CancellationTokenSource _tokenSource = new CancellationTokenSource();
 
-        public KaVECancellationTokenSource()
-        {
-            _tokenSource = new CancellationTokenSource();
-        }
+        private readonly object _lock = new object();
 
         public CancellationToken CancelAndCreate()
         {
-            _tokenSource.Cancel();
+            lock (_lock)
+            {
+                _tokenSource.Cancel();
 
-            _tokenSource = new CancellationTokenSource();
-            return _tokenSource.Token;
+                _tokenSource = new CancellationTokenSource();
+                return _tokenSource.Token;
+            }
         }
     }
 }

@@ -24,8 +24,6 @@ using JetBrains.Application;
 using JetBrains.ReSharper.Feature.Services.CSharp.CodeCompletion.Infrastructure;
 using JetBrains.ReSharper.Feature.Services.Lookup;
 using KaVE.Model.Events.CompletionEvent;
-using KaVE.Model.Names;
-using KaVE.Model.Names.CSharp;
 using KaVE.Model.ObjectUsage;
 using KaVE.VsFeedbackGenerator.Analysis;
 using KaVE.VsFeedbackGenerator.Utils;
@@ -99,8 +97,6 @@ namespace KaVE.VsFeedbackGenerator.CodeCompletion
         protected override bool IsAvailable(CSharpCodeCompletionContext context)
         {
             _context = ContextAnalysis.Analyze(context, _logger);
-            //var typeName = ExtractTypeName(_context.TriggerTarget);
-            //_model = typeName == null ? null : _store.GetModel(typeName.ToCoReName());
             return _model != null;
         }
 
@@ -138,53 +134,10 @@ namespace KaVE.VsFeedbackGenerator.CodeCompletion
 
         private static Query CreateQuery(Context context)
         {
-            /*var triggerType = ExtractTypeName(context.TriggerTarget);
-            if (context.EnclosingMethod == null || triggerType == null)
-            {
-                return null;
-            }*/
             return new Query(new List<CallSite>())
             {
-                //definition = new DefinitionSite(), // we are not object-sensitive yet
                 classCtx = context.TypeShape.TypeHierarchy.Element.ToCoReName(),
-                //methodCtx = context.EnclosingMethod.ToCoReName(),
-                //type = triggerType.ToCoReName()
             };
-        }
-
-        private static ITypeName ExtractTypeName(IName triggerTarget)
-        {
-            var typeName = triggerTarget as ITypeName;
-            if (typeName != null)
-            {
-                return typeName;
-            }
-            var paramName = triggerTarget as IParameterName;
-            if (paramName != null)
-            {
-                return paramName.ValueType;
-            }
-            var fieldName = triggerTarget as IFieldName;
-            if (fieldName != null)
-            {
-                return fieldName.ValueType;
-            }
-            var localVarName = triggerTarget as LocalVariableName;
-            if (localVarName != null)
-            {
-                return localVarName.ValueType;
-            }
-            var propertyName = triggerTarget as IPropertyName;
-            if (propertyName != null)
-            {
-                return propertyName.ValueType;
-            }
-            var methodName = triggerTarget as IMethodName;
-            if (methodName != null)
-            {
-                return methodName.ReturnType;
-            }
-            return null;
         }
     }
 }
