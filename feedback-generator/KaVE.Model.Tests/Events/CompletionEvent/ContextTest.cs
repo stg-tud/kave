@@ -17,19 +17,38 @@
  *    - Sebastian Proksch
  */
 
-using System.Collections.Generic;
 using KaVE.Model.Events.CompletionEvent;
 using KaVE.Model.Names;
 using KaVE.Model.Names.CSharp;
+using KaVE.Model.SSTs;
 using NUnit.Framework;
 
 namespace KaVE.Model.Tests.Events.CompletionEvent
 {
-    [TestFixture]
     internal class ContextTest
     {
         [Test]
-        public void HashCodeAndEquals_NewContextObjects()
+        public void DefaultValues()
+        {
+            var sut = new Context();
+            Assert.AreEqual(new TypeShape(), sut.TypeShape);
+            Assert.AreEqual(new SST(), sut.SST);
+        }
+
+        [Test]
+        public void ValuesCanBeSet()
+        {
+            var sut = new Context
+            {
+                TypeShape = TS("A"),
+                SST = new SST {EnclosingType = T("B.C")}
+            };
+            Assert.AreEqual(TS("A"), sut.TypeShape);
+            Assert.AreEqual(new SST {EnclosingType = T("B.C")}, sut.SST);
+        }
+
+        [Test]
+        public void Equality_Default()
         {
             var a = new Context();
             var b = new Context();
@@ -37,25 +56,41 @@ namespace KaVE.Model.Tests.Events.CompletionEvent
             Assert.IsTrue(a.GetHashCode() == b.GetHashCode());
         }
 
+
         [Test]
-        public void HashCodeAndEquals_TypeShape()
+        public void Equality_ReallyTheSame()
         {
-            var a = new Context {TypeShape = TS("A")};
-            var b = new Context {TypeShape = TS("A")};
+            var a = new Context
+            {
+                TypeShape = TS("A"),
+                SST = new SST()
+            };
+            var b = new Context
+            {
+                TypeShape = TS("A"),
+                SST = new SST()
+            };
             Assert.AreEqual(a, b);
             Assert.IsTrue(a.GetHashCode() == b.GetHashCode());
         }
 
         [Test]
-        public void HashCodeAndEquals_TypeShapeDiff()
+        public void Equality_DifferentTypeShape()
         {
             var a = new Context {TypeShape = TS("A")};
-            var b = new Context {TypeShape = TS("B")};
+            var b = new Context();
             Assert.AreNotEqual(a, b);
-            Assert.IsFalse(a.GetHashCode() == b.GetHashCode());
+            Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
         }
 
-        // TODO @seb: extend Equality tests
+        [Test]
+        public void Equality_DifferentSST()
+        {
+            var a = new Context {SST = new SST {EnclosingType = T("C.D")}};
+            var b = new Context();
+            Assert.AreNotEqual(a, b);
+            Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
+        }
 
         public static IMethodName M(string methodName)
         {
@@ -65,9 +100,9 @@ namespace KaVE.Model.Tests.Events.CompletionEvent
                     "(opt [System.Int32, mscore, 4.0.0.0] length)");
         }
 
-        private static Model.Groums.Groum G(int s)
+        private static ITypeName T(string typeName)
         {
-            return new Model.Groums.Groum {Name = s};
+            return TypeName.Get(typeName + ", mscore, 4.0.0.0");
         }
 
         // ReSharper disable once InconsistentNaming

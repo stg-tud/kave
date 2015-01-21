@@ -18,6 +18,7 @@ using System.Reflection;
 using JetBrains.Application;
 using JetBrains.Threading;
 using KaVE.VsFeedbackGenerator;
+using KaVE.VsFeedbackGenerator.Generators.ReSharper;
 using NUnit.Framework;
 
 [assembly: RequiresSTA]
@@ -44,6 +45,7 @@ public class KaVE_VsFeedbackGenerator_Rs8TestsAssembly : ReSharperTestEnvironmen
 
     public override void SetUp()
     {
+        CodeCompletionContextAnalysisTrigger.Disabled = true;
         base.SetUp();
         ReentrancyGuard.Current.Execute(
             "LoadAssemblies",

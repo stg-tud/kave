@@ -55,6 +55,8 @@ namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
     [Language(typeof (CSharpLanguage))]
     internal class CodeCompletionContextAnalysisTrigger : CSharpItemsProviderBase<CSharpCodeCompletionContext>
     {
+        // TODO get rid of this ugly flag... currently necessary for successful test execution
+        public static bool Disabled = false;
         private const int LimitInMs = 1000;
 
         private readonly CodeCompletionEventHandler _handler;
@@ -67,6 +69,11 @@ namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
             _handler = handler;
             _logger = logger;
             _tokenSource = new KaVECancellationTokenSource();
+        }
+
+        protected override bool IsAvailable(CSharpCodeCompletionContext context)
+        {
+            return !Disabled;
         }
 
         protected override bool AddLookupItems(CSharpCodeCompletionContext context, GroupedItemsCollector collector)
