@@ -104,7 +104,7 @@
     <Compile Include="SSTs\SSTTest.cs" />
     <Compile Include="SSTs\Statements\AssignmentTest.cs" />
     <Compile Include="SSTs\Statements\BreakStatementTest.cs" />
-    <Compile Include="SSTs\Statements\CompletionTriggerTest.cs" />
+    <Compile Include="SSTs\Statements\StatementCompletionTest.cs" />
     <Compile Include="SSTs\Statements\ContinueStatementTest.cs" />
     <Compile Include="SSTs\Statements\GotoStatementTest.cs" />
     <Compile Include="SSTs\Statements\InvocationStatementTest.cs" />

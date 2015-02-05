@@ -70,7 +70,8 @@ namespace KaVE.VsFeedbackGenerator.Analysis
                 var entryPoints = Sets.NewHashSetFrom(entryPointRefs.Select(epr => epr.Name));
 
                 context.SST.EnclosingType = classDeclaration.DeclaredElement.GetName<ITypeName>();
-                classDeclaration.Accept(new DeclarationVisitor(entryPoints), context.SST);
+                var marker = _completionTargetAnalysis.Analyze(nodeInFile);
+                classDeclaration.Accept(new DeclarationVisitor(entryPoints, marker), context.SST);
             }
             else
             {

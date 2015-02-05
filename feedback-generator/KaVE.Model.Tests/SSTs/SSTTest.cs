@@ -44,7 +44,7 @@ namespace KaVE.Model.Tests.SSTs
             Assert.NotNull(sut.EntryPoints);
             Assert.NotNull(sut.NonEntryPoints);
             Assert.IsNull(sut.EnclosingType);
-            Assert.IsNull(sut.TypeLevelTrigger);
+            Assert.IsNull(sut.TypeLevel);
 
             Assert.AreNotEqual(0, sut.GetHashCode());
             Assert.AreNotEqual(1, sut.GetHashCode());
@@ -56,7 +56,7 @@ namespace KaVE.Model.Tests.SSTs
             var sut = new SST
             {
                 EnclosingType = TypeName.UnknownName,
-                TypeLevelTrigger = new CompletionTrigger()
+                TypeLevel = new StatementCompletion()
             };
             sut.Delegates.Add(new DelegateDeclaration());
             sut.Events.Add(new EventDeclaration());
@@ -65,7 +65,7 @@ namespace KaVE.Model.Tests.SSTs
             sut.Properties.Add(new PropertyDeclaration());
 
             Assert.AreEqual(TypeName.UnknownName, sut.EnclosingType);
-            Assert.AreEqual(new CompletionTrigger(), sut.TypeLevelTrigger);
+            Assert.AreEqual(new StatementCompletion(), sut.TypeLevel);
             Assert.AreEqual(Lists.NewList(new DelegateDeclaration()), sut.Delegates);
             Assert.AreEqual(Lists.NewList(new EventDeclaration()), sut.Events);
             Assert.AreEqual(Lists.NewList(new FieldDeclaration()), sut.Fields);
@@ -89,8 +89,8 @@ namespace KaVE.Model.Tests.SSTs
             var b = new SST();
             a.EnclosingType = TypeName.UnknownName;
             b.EnclosingType = TypeName.UnknownName;
-            a.TypeLevelTrigger = new CompletionTrigger();
-            b.TypeLevelTrigger = new CompletionTrigger();
+            a.TypeLevel = new StatementCompletion();
+            b.TypeLevel = new StatementCompletion();
             a.Delegates.Add(new DelegateDeclaration());
             b.Delegates.Add(new DelegateDeclaration());
             a.Events.Add(new EventDeclaration());
@@ -118,7 +118,7 @@ namespace KaVE.Model.Tests.SSTs
         [Test]
         public void Equality_DifferentTrigger()
         {
-            var a = new SST {TypeLevelTrigger = new CompletionTrigger()};
+            var a = new SST {TypeLevel = new StatementCompletion()};
             var b = new SST();
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());

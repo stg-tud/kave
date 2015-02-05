@@ -42,7 +42,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             ");
 
             var mA = NewMethodDeclaration(Fix.Int, "A");
-            //mA.Body.Add(new CompletionTrigger());
+            //mA.Body.Add(new StatementCompletion());
             mA.Body.Add(new ReturnStatement {Expression = new ConstantExpression()});
 
             AssertAllMethods(mA);
@@ -60,7 +60,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             ");
 
             var mA = NewMethodDeclaration(Fix.Int, "A", string.Format("[{0}] i", Fix.Int));
-            //mA.Body.Add(new CompletionTrigger());
+            //mA.Body.Add(new StatementCompletion());
             mA.Body.Add(new ReturnStatement {Expression = ComposedExpression.Create("i")});
 
             AssertAllMethods(mA);
@@ -81,7 +81,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             ");
 
             var mA = NewMethodDeclaration(Fix.Int, "A");
-            //mA.Body.Add(new CompletionTrigger());
+            //mA.Body.Add(new StatementCompletion());
 
             var ifElse = new IfElseBlock {Condition = new ConstantExpression()};
             ifElse.Then.Add(new ReturnStatement {Expression = new ConstantExpression()});
@@ -108,7 +108,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             ");
 
             var mA = NewMethodDeclaration(Fix.Int, "A");
-            //mA.Body.Add(new CompletionTrigger());
+            //mA.Body.Add(new StatementCompletion());
 
             var ifElse = new IfElseBlock {Condition = new ConstantExpression()};
             ifElse.Then.Add(new ReturnStatement {Expression = new ConstantExpression()});
@@ -139,7 +139,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 
             var whileLoop = new WhileLoop {Condition = new ConstantExpression()};
             whileLoop.Body.Add(new Assignment("i", new ComposedExpression {Variables = new[] {"i"}}));
-            //whileLoop.Body.Add(new CompletionTrigger());
+            //whileLoop.Body.Add(new StatementCompletion());
 
             mA.Body.Add(whileLoop);
 
@@ -167,7 +167,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 
             var doLoop = new DoLoop {Condition = new ConstantExpression()};
             doLoop.Body.Add(new Assignment("i", new ComposedExpression {Variables = new[] {"i"}}));
-            //whileLoop.Body.Add(new CompletionTrigger());
+            //whileLoop.Body.Add(new StatementCompletion());
 
             mA.Body.Add(doLoop);
 
@@ -197,7 +197,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             var block = new BlockExpression();//) {Value = new[] {"s"}};
             block.Body.Add(new Assignment("s", new InvocationExpression("o", Fix.ToString(Fix.Object))));
             var whileLoop = new WhileLoop {Condition = block};
-            //whileLoop.Body.Add(new CompletionTrigger());
+            //whileLoop.Body.Add(new StatementCompletion());
 
             mA.Body.Add(whileLoop);
 
@@ -224,7 +224,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             forLoop.Condition = new ComposedExpression {Variables = new[] {"i"}};
 
             forLoop.Body.Add(new InvocationStatement(Fix.ConsoleWrite(Fix.Int), "i"));
-            //forLoop.Body.Add(new CompletionTrigger());
+            //forLoop.Body.Add(new StatementCompletion());
 
             mA.Body.Add(forLoop);
 
@@ -252,7 +252,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             forLoop.Condition = new ComposedExpression {Variables = new[] {"i"}};
 
             forLoop.Body.Add(new InvocationStatement(Fix.ConsoleWrite(Fix.Int), "i"));
-            //forLoop.Body.Add(new CompletionTrigger());
+            //forLoop.Body.Add(new StatementCompletion());
 
             mA.Body.Add(forLoop);
 
@@ -291,7 +291,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             mA.Body.Add(new Assignment("$0", new ConstantExpression()));
             var forEachLoop = new ForEachLoop {LoopedIdentifier = "$0", Decl = new VariableDeclaration("n", Fix.Int)};
             forEachLoop.Body.Add(new InvocationStatement(Fix.ConsoleWrite(Fix.Int), "n"));
-            //forEachLoop.Body.Add(new CompletionTrigger());
+            //forEachLoop.Body.Add(new StatementCompletion());
 
             mA.Body.Add(forEachLoop);
 
@@ -323,7 +323,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 
             var usingBlock = new UsingBlock {Identifier = "o"};
             usingBlock.Body.Add(new InvocationStatement(MethodName.Get("Console.Write"), "n"));
-            usingBlock.Body.Add(new CompletionTrigger());
+            usingBlock.Body.Add(new StatementCompletion());
 
             mA.Body.Add(usingBlock);
 
@@ -355,7 +355,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
                     "s",
                     MethodName.Get(string.Format("[{0}] [{1}].WriteByte([{2}] value)", Fix.Void, stream, Fix.Byte)),
                     "$0"));
-            //usingBlock.Body.Add(new CompletionTrigger());
+            //usingBlock.Body.Add(new StatementCompletion());
             mA.Body.Add(usingBlock);
 
             AssertAllMethods(mA);
@@ -373,7 +373,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             ");
 
             var mA = NewMethodDeclaration(Fix.Void, "A");
-            //mA.Body.Add(new CompletionTrigger());
+            //mA.Body.Add(new StatementCompletion());
             mA.Body.Add(new ThrowStatement {Exception = Fix.Exception});
 
             AssertAllMethods(mA);
@@ -407,7 +407,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
                 new InvocationStatement(
                     MethodName.Get(
                         string.Format("static [{0}] [System.Console, mscorlib, 4.0.0.0].WriteLine()", Fix.Void))));
-            //tryBlock.Body.Add(new CompletionTrigger());
+            //tryBlock.Body.Add(new StatementCompletion());
 
             var namedCatch = new CatchBlock {Exception = new VariableDeclaration("e", Fix.IOException)};
             namedCatch.Body.Add(new VariableDeclaration("$0", Fix.Int));

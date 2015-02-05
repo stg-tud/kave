@@ -34,11 +34,13 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
     public class DeclarationVisitor : TreeNodeVisitor<SST>
     {
         private readonly ISet<IMethodName> _entryPoints;
+        private readonly CompletionTargetAnalysis.TriggerPointMarker _marker;
         private readonly ISSTFactory _sstFactory;
 
-        public DeclarationVisitor(ISet<IMethodName> entryPoints)
+        public DeclarationVisitor(ISet<IMethodName> entryPoints, CompletionTargetAnalysis.TriggerPointMarker marker)
         {
             _entryPoints = entryPoints;
+            _marker = marker;
             _sstFactory = new SSTFactory();
         }
 
@@ -85,6 +87,11 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
                     Name = methodName,
                     IsEntryPoint = _entryPoints.Contains(methodName)
                 };
+
+                if (_marker.Parent == decl)
+                {
+                    sstDecl.Body.Add(_marker.Completion);
+                }
 
                 if (!decl.IsAbstract)
                 {

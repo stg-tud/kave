@@ -36,7 +36,7 @@ namespace KaVE.Model.SSTs
         public ISet<MethodDeclaration> Methods { get; set; }
         public ISet<EventDeclaration> Events { get; set; }
         public ISet<DelegateDeclaration> Delegates { get; set; }
-        public CompletionTrigger TypeLevelTrigger { get; set; }
+        public StatementCompletion TypeLevel { get; set; }
 
         public SST()
         {
@@ -73,7 +73,7 @@ namespace KaVE.Model.SSTs
             return Equals(EnclosingType, other.EnclosingType) && Equals(Fields, other.Fields) &&
                    Equals(Methods, other.Methods) && Equals(Properties, other.Properties) &&
                    Equals(Events, other.Events) && Equals(Delegates, other.Delegates) &&
-                   Equals(TypeLevelTrigger, other.TypeLevelTrigger);
+                   Equals(TypeLevel, other.TypeLevel);
         }
 
         public override int GetHashCode()
@@ -86,7 +86,7 @@ namespace KaVE.Model.SSTs
                 hashCode = (hashCode*397) ^ (Properties != null ? Properties.GetHashCode() : 0);
                 hashCode = (hashCode*397) ^ (Events != null ? Events.GetHashCode() : 0);
                 hashCode = (hashCode*397) ^ (Delegates != null ? Delegates.GetHashCode() : 0);
-                hashCode = (hashCode*397) ^ (TypeLevelTrigger != null ? TypeLevelTrigger.GetHashCode() : 0);
+                hashCode = (hashCode*397) ^ (TypeLevel != null ? TypeLevel.GetHashCode() : 0);
                 return hashCode;
             }
         }

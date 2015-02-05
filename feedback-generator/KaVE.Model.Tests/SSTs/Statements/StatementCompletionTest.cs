@@ -22,13 +22,12 @@ using NUnit.Framework;
 
 namespace KaVE.Model.Tests.SSTs.Statements
 {
-    public class CompletionTriggerTest
+    public class StatementCompletionTest
     {
         [Test]
         public void DefaultValues()
         {
-            var sut = new CompletionTrigger();
-            Assert.AreEqual(TriggerType.InMethod, sut.Kind);
+            var sut = new StatementCompletion();
             Assert.Null(sut.Token);
             Assert.AreNotEqual(0, sut.GetHashCode());
             Assert.AreNotEqual(1, sut.GetHashCode());
@@ -37,20 +36,18 @@ namespace KaVE.Model.Tests.SSTs.Statements
         [Test]
         public void SettingValues()
         {
-            var sut = new CompletionTrigger
+            var sut = new StatementCompletion
             {
-                Kind = TriggerType.InType,
                 Token = "abc"
             };
             Assert.AreEqual("abc", sut.Token);
-            Assert.AreEqual(TriggerType.InType, sut.Kind);
         }
 
         [Test]
         public void Equality_Default()
         {
-            var a = new CompletionTrigger();
-            var b = new CompletionTrigger();
+            var a = new StatementCompletion();
+            var b = new StatementCompletion();
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
         }
@@ -58,26 +55,18 @@ namespace KaVE.Model.Tests.SSTs.Statements
         [Test]
         public void Equality_ReallyTheSame()
         {
-            var a = new CompletionTrigger {Kind = TriggerType.InMethod, Token = "a"};
-            var b = new CompletionTrigger {Kind = TriggerType.InMethod, Token = "a"};
+            var a = new StatementCompletion {Token = "a"};
+            var b = new StatementCompletion {Token = "a"};
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
         }
 
-        [Test]
-        public void Equality_DifferentType()
-        {
-            var a = new CompletionTrigger {Kind = TriggerType.InMethod};
-            var b = new CompletionTrigger {Kind = TriggerType.InType};
-            Assert.AreNotEqual(a, b);
-            Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
-        }
 
         [Test]
         public void Equality_DifferentToken()
         {
-            var a = new CompletionTrigger {Token = "a"};
-            var b = new CompletionTrigger {Token = "b"};
+            var a = new StatementCompletion {Token = "a"};
+            var b = new StatementCompletion {Token = "b"};
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
         }

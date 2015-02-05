@@ -21,13 +21,23 @@ using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Resolve;
 using JetBrains.ReSharper.Psi.Tree;
 using KaVE.Model.Names;
+using KaVE.Model.SSTs.Statements;
+using KaVE.Utils.Assertion;
 using KaVE.VsFeedbackGenerator.Utils.Names;
 
 namespace KaVE.VsFeedbackGenerator.Analysis
 {
-    internal class CompletionTargetAnalysis
+    public class CompletionTargetAnalysis
     {
-        public IName Analyze(ITreeNode targetNode)
+        public class TriggerPointMarker
+        {
+            public ICSharpTreeNode Parent { get; set; }
+            public ICSharpTreeNode Predecessor { get; set; }
+            public ICSharpTreeNode Expression { get; set; }
+            public StatementCompletion Completion { get; set; }
+        }
+
+        public TriggerPointMarker Analyze(ITreeNode targetNode)
         {
             var finder = new TargetFinder();
             ((ICSharpTreeNode) targetNode).Accept(finder);
@@ -44,71 +54,53 @@ namespace KaVE.VsFeedbackGenerator.Analysis
 
         private class TargetFinder : TreeNodeVisitor
         {
-            public IName Result { get; private set; }
+            public TriggerPointMarker Result { get; private set; }
+
+            public TargetFinder()
+            {
+                Result = new TriggerPointMarker();
+            }
 
             public override void VisitNode(ITreeNode node)
             {
-                var prevSibling = node.PrevSibling;
-                var cSharpTreeNode = prevSibling as ICSharpTreeNode;
-                if (cSharpTreeNode != null)
+                var cSharpNode = node.Parent as ICSharpTreeNode;
+                if (cSharpNode != null)
                 {
-                    cSharpTreeNode.Accept(this);
-                }
-                else if (prevSibling != null)
-                {
-                    VisitNode(prevSibling);
-                }
-            }
-
-            public override void VisitExpressionStatement(IExpressionStatement expressionStatementParam)
-            {
-                if (expressionStatementParam.Semicolon == null)
-                {
-                    var lastChild = expressionStatementParam.LastChild;
-                    var lastChildNode = lastChild as ICSharpTreeNode;
-                    if (lastChildNode != null)
-                    {
-                        lastChildNode.Accept(this);
-                    }
-                    var errorElement = lastChild as IErrorElement;
-                    if (errorElement != null)
-                    {
-                        VisitNode(errorElement);
-                    }
-                }
-            }
-
-            public override void VisitPredefinedTypeExpression(IPredefinedTypeExpression predefinedTypeExpressionParam)
-            {
-                predefinedTypeExpressionParam.PredefinedTypeName.Accept(this);
-            }
-
-            public override void VisitPredefinedTypeReference(IPredefinedTypeReference predefinedTypeReferenceParam)
-            {
-                Result = GetName(predefinedTypeReferenceParam.Reference);
-            }
-
-            public override void VisitReferenceExpression(IReferenceExpression referenceExpressionParam)
-            {
-                var errorElement = referenceExpressionParam.LastChild as IErrorElement;
-                if (errorElement != null)
-                {
-                    VisitNode(errorElement);
+                    cSharpNode.Accept(this);
                 }
                 else
                 {
-                    Result = GetName(referenceExpressionParam.Reference);
+                    Asserts.Fail("inconsistent tree? " + node.NodeType);
                 }
             }
 
-            public override void VisitInvocationExpression(IInvocationExpression invocationExpressionParam)
+            public override void VisitMethodDeclaration(IMethodDeclaration methodDeclarationParam)
             {
-                VisitCSharpExpression(invocationExpressionParam);
+                Result.Parent = methodDeclarationParam;
+                Result.Completion = new StatementCompletion();
             }
 
-            public override void VisitCSharpExpression(ICSharpExpression cSharpExpressionParam)
+            public override void VisitReferenceExpression(IReferenceExpression refExpr)
             {
-                Result = cSharpExpressionParam.Type().GetName();
+                var parent = refExpr.Parent as ICSharpTreeNode;
+                if (parent != null)
+                {
+                    parent.Accept(this);
+
+                    // in case of member access, refExpr.QualifierExpression and refExpr.Delimiter are set
+                    var qRrefExpr = refExpr.QualifierExpression as IReferenceExpression;
+                    if (qRrefExpr != null && refExpr.Delimiter != null)
+                    {
+                        var refName = qRrefExpr.Reference.GetName();
+                        var token = refExpr.Reference.GetName();
+                        Result.Completion = new StatementCompletion {Token = token, Identifier = refName};
+                    }
+                    else
+                    {
+                        var token = refExpr.Reference.GetName();
+                        Result.Completion = new StatementCompletion {Token = token};
+                    }
+                }
             }
         }
     }

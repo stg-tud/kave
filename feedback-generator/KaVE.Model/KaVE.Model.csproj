@@ -166,7 +166,7 @@
     <Compile Include="SSTs\Blocks\IfElseBlock.cs" />
     <Compile Include="SSTs\Expressions\InvocationExpression.cs" />
     <Compile Include="SSTs\Statements\BreakStatement.cs" />
-    <Compile Include="SSTs\Statements\CompletionTrigger.cs" />
+    <Compile Include="SSTs\Statements\StatementCompletion.cs" />
     <Compile Include="SSTs\Statements\ContinueStatement.cs" />
     <Compile Include="SSTs\Statements\GotoStatement.cs" />
     <Compile Include="SSTs\Statements\InvocationStatement.cs" />

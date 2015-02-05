@@ -21,14 +21,14 @@ using KaVE.Utils;
 
 namespace KaVE.Model.SSTs.Statements
 {
-    public class CompletionTrigger : Statement
+    public class StatementCompletion : Statement
     {
-        public TriggerType Kind { get; set; }
         public string Token { get; set; }
+        public string Identifier { get; set; }
 
-        private bool Equals(CompletionTrigger other)
+        private bool Equals(StatementCompletion other)
         {
-            return Kind == other.Kind && string.Equals(Token, other.Token);
+            return string.Equals(Token, other.Token);
         }
 
         public override bool Equals(object obj)
@@ -40,14 +40,13 @@ namespace KaVE.Model.SSTs.Statements
         {
             unchecked
             {
-                return 3 + ((int) Kind*397) ^ (Token != null ? Token.GetHashCode() : 0);
+                return 3 + (Token != null ? Token.GetHashCode() : 0);
             }
         }
     }
 
-    public enum TriggerType
+    public class ExpressionCompletion : Expression
     {
-        InMethod,
-        InType
+        public string Token { get; set; }
     }
 }
