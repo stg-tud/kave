@@ -41,6 +41,7 @@ namespace KaVE.VsFeedbackGenerator.Export
         private readonly ILogManager _logManager;
         private readonly ISettingsStore _settingsStore;
         private readonly IDateUtils _dateUtils;
+        private readonly ILogger _logger;
         private readonly BackgroundWorker _exportWorker;
         private DateTime _exportTime;
         private UploadWizard.ExportType _exportType;
@@ -58,15 +59,13 @@ namespace KaVE.VsFeedbackGenerator.Export
             get { return _successNotificationRequest; }
         }
 
-        public UploadWizardViewModel(IExporter exporter,
-            ILogManager logManager,
-            ISettingsStore settingsStore,
-            IDateUtils dateUtils)
+        public UploadWizardViewModel(IExporter exporter, ILogManager logManager, ISettingsStore settingsStore, IDateUtils dateUtils, ILogger logger)
         {
             _exporter = exporter;
             _logManager = logManager;
             _settingsStore = settingsStore;
             _dateUtils = dateUtils;
+            _logger = logger;
             _errorNotificationRequest = new InteractionRequest<Notification>();
             _successNotificationRequest = new InteractionRequest<LinkNotification>();
             _exportWorker = new BackgroundWorker {WorkerSupportsCancellation = false, WorkerReportsProgress = true};
@@ -120,10 +119,10 @@ namespace KaVE.VsFeedbackGenerator.Export
             _exportWorker.RunWorkerAsync(exportType);
         }
 
-        private void OnExport(object sender, DoWorkEventArgs e)
+        private void OnExport(object sender, DoWorkEventArgs args)
         {
             var worker = (BackgroundWorker) sender;
-            _exportType = (UploadWizard.ExportType) e.Argument;
+            _exportType = (UploadWizard.ExportType) args.Argument;
             Action<string> reportExportStatusChange = exportStatus => worker.ReportProgress(0, exportStatus);
 
             reportExportStatusChange(Properties.UploadWizard.FetchingEvents);
@@ -140,14 +139,14 @@ namespace KaVE.VsFeedbackGenerator.Export
                 {
                     _exporter.Export(events, new HttpPublisher(GetUploadUrl()));
                 }
+
+                _logManager.DeleteLogsOlderThan(_exportTime);
+                args.Result = events.Count;
             }
             finally
             {
                 _exporter.StatusChanged -= reportExportStatusChange;
             }
-
-            _logManager.DeleteLogsOlderThan(_exportTime);
-            e.Result = events.Count;
         }
 
         private IList<IDEEvent> ExtractEventsForExport()
@@ -186,8 +185,8 @@ namespace KaVE.VsFeedbackGenerator.Export
             }
             else
             {
+                _logger.Error(e.Error, "export failed");
                 ShowExportFailedMessage(e.Error.Message);
-                Registry.GetComponent<ILogger>().Error(e.Error, "export failed");
             }
             SetIdle();
         }

@@ -34,9 +34,7 @@ namespace KaVE.VsFeedbackGenerator.Utils
 {
     public interface IIoUtils
     {
-        HttpResponseMessage TransferByHttp([NotNull] HttpContent content,
-            [NotNull] Uri targetUri,
-            int timeoutInSeconds = 5);
+        HttpResponseMessage TransferByHttp([NotNull] HttpContent content, [NotNull] Uri targetUri);
 
         string GetTempFileName();
         string GetTempFileName(string extension);
@@ -70,7 +68,7 @@ namespace KaVE.VsFeedbackGenerator.Utils
     [ShellComponent]
     public class IoUtils : IIoUtils
     {
-        public HttpResponseMessage TransferByHttp(HttpContent content, Uri targetUri, int timeoutInSeconds)
+        public HttpResponseMessage TransferByHttp(HttpContent content, Uri targetUri)
         {
             var isHttp = targetUri.Scheme == Uri.UriSchemeHttp;
             var isHttps = targetUri.Scheme == Uri.UriSchemeHttps;
@@ -78,13 +76,12 @@ namespace KaVE.VsFeedbackGenerator.Utils
 
             using (var client = new HttpClient())
             {
-                client.Timeout = new TimeSpan(0, 0, timeoutInSeconds);
                 HttpResponseMessage response;
                 try
                 {
                     response = client.PostAsync(targetUri, content).Result;
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
                     response = null;
                     Asserts.Fail(Messages.ServerRequestNotAvailable, targetUri);

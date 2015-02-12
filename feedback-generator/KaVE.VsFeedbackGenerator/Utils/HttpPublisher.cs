@@ -21,10 +21,11 @@
 using System;
 using System.IO;
 using System.Net.Http;
-using JetBrains.Util;
+using JetBrains;
 using KaVE.JetBrains.Annotations;
 using KaVE.Utils.Assertion;
 using Newtonsoft.Json;
+using CollectionUtil = JetBrains.Util.CollectionUtil;
 using Messages = KaVE.VsFeedbackGenerator.Properties.SessionManager;
 
 namespace KaVE.VsFeedbackGenerator.Utils
@@ -47,16 +48,16 @@ namespace KaVE.VsFeedbackGenerator.Utils
             var response = _ioUtils.TransferByHttp(content, _hostAddress);
             var json = response.Content.ReadAsStringAsync().Result;
 
-            Asserts.Not(json.IsNullOrEmpty(), Messages.ServerResponseEmpty);
+            Asserts.Not(CollectionUtil.IsNullOrEmpty(json), Messages.ServerResponseEmpty);
 
-            ExportResult res = null;
+            ExportResult res;
             try
             {
                 res = Deserialize(json);
             }
-            catch (Exception)
+            catch (JsonException e)
             {
-                Asserts.Fail(Messages.ServerResponseIncorrentFormat, json);
+                throw new InvalidResponseException(Messages.ServerResponseIncorrentFormat.FormatEx(json), e);
             }
 
             Asserts.NotNull(res, Messages.ServerResponseIncompatible);

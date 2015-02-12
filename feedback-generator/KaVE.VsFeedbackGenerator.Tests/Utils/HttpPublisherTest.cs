@@ -63,7 +63,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
             SetupResponse(resp);
 
             _uut.Publish(_stream);
-            _ioUtilsMock.Verify(io => io.TransferByHttp(It.IsAny<HttpContent>(), ValidUri, It.IsAny<int>()));
+            _ioUtilsMock.Verify(io => io.TransferByHttp(It.IsAny<HttpContent>(), ValidUri));
         }
 
         [Test]
@@ -71,8 +71,8 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
         {
             HttpContent lastUploadedContent = null;
 
-            _ioUtilsMock.Setup(io => io.TransferByHttp(It.IsAny<HttpContent>(), ValidUri, It.IsAny<int>())).Returns(
-                (HttpContent content, Uri uri, int timeout) =>
+            _ioUtilsMock.Setup(io => io.TransferByHttp(It.IsAny<HttpContent>(), ValidUri)).Returns(
+                (HttpContent content, Uri uri) =>
                 {
                     lastUploadedContent = content;
                     return CreateResponse(true);
@@ -89,7 +89,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
         [Test, ExpectedException(typeof (AssertException), ExpectedMessage = TransferFailMessage)]
         public void ShouldFailIfTransferFails()
         {
-            _ioUtilsMock.Setup(io => io.TransferByHttp(It.IsAny<HttpContent>(), ValidUri, It.IsAny<int>()))
+            _ioUtilsMock.Setup(io => io.TransferByHttp(It.IsAny<HttpContent>(), ValidUri))
                         .Throws(new AssertException(TransferFailMessage));
             _uut.Publish(_stream);
         }
@@ -109,9 +109,21 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
         }
 
         [Test,
-         ExpectedException(typeof (AssertException),
+         ExpectedException(typeof (InvalidResponseException),
              ExpectedMessage = "Antwort des Servers entspricht nicht dem erwarteten Format: XYZ")]
         public void ShouldFailIfMessageCannotBeParsed()
+        {
+            var resp = new HttpResponseMessage
+            {
+                Content = new StringContent("XYZ")
+            };
+            SetupResponse(resp);
+
+            _uut.Publish(_stream);
+        }
+
+        [Test, ExpectedException(typeof (InvalidResponseException))]
+        public void ShouldFailIfMessageCannotBeParsed_verifyLog()
         {
             var resp = new HttpResponseMessage
             {
@@ -135,7 +147,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
 
         private void SetupResponse(HttpResponseMessage resp)
         {
-            _ioUtilsMock.Setup(io => io.TransferByHttp(It.IsAny<HttpContent>(), ValidUri, It.IsAny<int>()))
+            _ioUtilsMock.Setup(io => io.TransferByHttp(It.IsAny<HttpContent>(), ValidUri))
                         .Returns(resp);
         }
 
@@ -168,6 +180,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
             var byteArrayContent = element as ByteArrayContent;
             Assert.IsNotNull(byteArrayContent);
 
+            // ReSharper disable once PossibleNullReferenceException
             Assert.AreEqual("file", byteArrayContent.Headers.ContentDisposition.Name);
             Assert.AreEqual("tmp.zip", byteArrayContent.Headers.ContentDisposition.FileName);
 

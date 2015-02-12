@@ -24,6 +24,7 @@ using JetBrains.Util;
 using KaVE.VsFeedbackGenerator.Utils;
 using KaVE.VsFeedbackGenerator.Utils.Logging;
 using NuGet;
+using ILogger = KaVE.Utils.Exceptions.ILogger;
 
 namespace KaVE.VsFeedbackGenerator.Export
 {
@@ -35,6 +36,7 @@ namespace KaVE.VsFeedbackGenerator.Export
         private readonly ISettingsStore _settingsStore;
         private readonly IExporter _exporter;
         private readonly ILogManager _logManager;
+        private readonly ILogger _logger;
         private readonly IDateUtils _dateUtils;
         private readonly IActionManager _actionManager;
 
@@ -43,13 +45,14 @@ namespace KaVE.VsFeedbackGenerator.Export
             actionManager.ExecuteActionGuarded(ActionId, "KaVE.Feedback.Export");
         }
 
-        public UploadWizardActionHandler()
+        public UploadWizardActionHandler(IActionManager actionManager, ISettingsStore settingsStore, IExporter exporter, ILogManager logManager, ILogger logger, IDateUtils dateUtils)
         {
-            _actionManager = Registry.GetComponent<IActionManager>();
-            _settingsStore = Registry.GetComponent<ISettingsStore>();
-            _exporter = Registry.GetComponent<IExporter>();
-            _logManager = Registry.GetComponent<ILogManager>();
-            _dateUtils = Registry.GetComponent<IDateUtils>();
+            _actionManager = actionManager;
+            _settingsStore = settingsStore;
+            _exporter = exporter;
+            _logManager = logManager;
+            _logger = logger;
+            _dateUtils = dateUtils;
         }
 
         public bool Update(IDataContext context, ActionPresentation presentation, DelegateUpdate nextUpdate)
@@ -61,7 +64,7 @@ namespace KaVE.VsFeedbackGenerator.Export
         {
             if (HasContentToExport())
             {
-                var viewModel = new UploadWizardViewModel(_exporter, _logManager, _settingsStore, _dateUtils);
+                var viewModel = new UploadWizardViewModel(_exporter, _logManager, _settingsStore, _dateUtils, _logger);
                 new UploadWizard(_actionManager, viewModel).ShowDialog();
             }
             else

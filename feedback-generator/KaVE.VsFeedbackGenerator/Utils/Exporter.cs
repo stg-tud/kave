@@ -21,7 +21,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using Ionic.Zip;
@@ -55,34 +54,37 @@ namespace KaVE.VsFeedbackGenerator.Utils
         public void Export(IList<IDEEvent> events, IPublisher publisher)
         {
             Asserts.That(events.Any(), Properties.UploadWizard.NothingToExport);
-            Action<int> numberOfEventsProcessed =
-                no => StatusChanged(Properties.UploadWizard.WritingEvents.FormatEx(no*100/events.Count));
 
             using (var stream = new MemoryStream())
             {
                 var anonymousEvents = events.Select(_anonymizer.Anonymize);
-                CreateZipFile(anonymousEvents, stream, numberOfEventsProcessed);
+                WriteEventsToZipStream(anonymousEvents, events.Count, stream);
                 StatusChanged(Properties.UploadWizard.PublishingEvents);
                 publisher.Publish(stream);
             }
         }
 
-        private void CreateZipFile(IEnumerable<IDEEvent> events, Stream stream, Action<int> numberOfEventsProcessed)
+        private void WriteEventsToZipStream(IEnumerable<IDEEvent> events, int numberOfEvents, Stream stream)
         {
             using (var zipFile = new ZipFile())
             {
                 var i = 0;
-                numberOfEventsProcessed(i);
+                ReportNumberOfEventsProcessed(i, numberOfEvents);
                 foreach (var e in events)
                 {
                     var fileName = (i++) + "-" + e.GetType().Name + ".json";
                     var json = e.ToFormattedJson();
                     zipFile.AddEntry(fileName, json);
-                    numberOfEventsProcessed(i);
+                    ReportNumberOfEventsProcessed(i, numberOfEvents);
                 }
                 StatusChanged(Properties.UploadWizard.CompressingEvents);
                 zipFile.Save(stream);
             }
+        }
+
+        private void ReportNumberOfEventsProcessed(int cur, int total)
+        {
+            StatusChanged(Properties.UploadWizard.WritingEvents.FormatEx(cur*100/total));
         }
     }
 }

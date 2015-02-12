@@ -65,7 +65,6 @@ namespace KaVE.VsFeedbackGenerator.Tests.Export
             Registry.RegisterComponent(_mockIoUtils.Object);
 
             _mockLogger = new Mock<ILogger>();
-            Registry.RegisterComponent(_mockLogger.Object);
 
             _mockExporter = new Mock<IExporter>();
 
@@ -86,7 +85,8 @@ namespace KaVE.VsFeedbackGenerator.Tests.Export
                 _mockExporter.Object,
                 _mockLogFileManager.Object,
                 _mockSettingStore.Object,
-                _testDateUtils);
+                _testDateUtils,
+                _mockLogger.Object);
 
             _notificationHelper = _uut.ErrorNotificationRequest.NewTestHelper();
             _linkNotificationHelper = _uut.SuccessNotificationRequest.NewTestHelper();
@@ -262,7 +262,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Export
             catch (NullReferenceException) {}
 
             _mockIoUtils.Verify(
-                ioUtils => ioUtils.TransferByHttp(It.IsAny<HttpContent>(), new Uri(TestUploadUrl), 5));
+                ioUtils => ioUtils.TransferByHttp(It.IsAny<HttpContent>(), new Uri(TestUploadUrl)));
         }
 
         [Test]

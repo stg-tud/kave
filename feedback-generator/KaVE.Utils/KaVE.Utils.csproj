@@ -56,6 +56,8 @@
     <Compile Include="Exceptions\KaVECancellationTokenSource.cs" />
     <Compile Include="Exceptions\Execute.cs" />
     <Compile Include="Exceptions\ILogger.cs" />
+    <Compile Include="Exceptions\KaVEException.cs" />
+    <Compile Include="Exceptions\NullLogger.cs" />
     <Compile Include="Exceptions\TimeLimitRunner.cs" />
     <Compile Include="HashCodeUtils.cs" />
     <Compile Include="Invoke.cs" />

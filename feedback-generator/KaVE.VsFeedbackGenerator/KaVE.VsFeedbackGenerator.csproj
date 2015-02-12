@@ -247,6 +247,7 @@
     <Compile Include="Utils\FilePublisher.cs" />
     <Compile Include="Utils\HttpPublisher.cs" />
     <Compile Include="Utils\IDateUtils.cs" />
+    <Compile Include="Utils\InvalidResponseException.cs" />
     <Compile Include="Utils\InverseObjectToVisibilityConverter.cs" />
     <Compile Include="Utils\IoUtils.cs" />
     <Compile Include="Utils\IPublisher.cs" />
