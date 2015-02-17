@@ -110,7 +110,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
         [Test]
         public void Invocation_SimpleComposition()
         {
-            CompleteInFile(@"
+            CompleteInCSharpFile(@"
                 namespace N {
                     public class H {
                         public int Get() {
@@ -144,7 +144,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
         [Test]
         public void Invocation_RealComposition()
         {
-            CompleteInFile(@"
+            CompleteInCSharpFile(@"
                 namespace N {
                     public class H {
                         public int Get() {
@@ -189,7 +189,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
         [Test]
         public void Invocation_NestedComposition()
         {
-            CompleteInFile(@"
+            CompleteInCSharpFile(@"
                 namespace N {
                     public class U {
                         public int Plus(int i) {

@@ -25,12 +25,12 @@ using NUnit.Framework;
 namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
 {
     [TestFixture]
-    internal class EntryPointSelectorTest : BaseTest
+    internal class EntryPointSelectorTest : BaseCSharpCodeCompletionTest
     {
         [Test]
         public void ShouldUseInterfaceImplementationAsEntryPoint()
         {
-            CompleteInFile(@"
+            CompleteInCSharpFile(@"
                 interface I
                 {
                     void EP();
@@ -50,7 +50,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
         [Test]
         public void ShouldUseOverrideAsEntryPoint()
         {
-            CompleteInFile(@"
+            CompleteInCSharpFile(@"
                 abstract class A
                 {
                     public abstract void EP();
@@ -70,7 +70,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
         [Test]
         public void ShouldNotUseAbstractImplementationAsEntryPoint()
         {
-            CompleteInFile(@"
+            CompleteInCSharpFile(@"
                 interface I
                 {
                     void EP();
@@ -92,7 +92,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
         [Test]
         public void ShouldUseMethodAsEntryPointIfItIsNotCalledFromOtherMethod()
         {
-            CompleteInFile(@"
+            CompleteInCSharpFile(@"
                 class C
                 {
                     public void EP()
@@ -108,7 +108,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
         [Test]
         public void ShouldNotUseMethodAsEntryPointIfItIsCalledFromOtherEntryPoint()
         {
-            CompleteInFile(@"
+            CompleteInCSharpFile(@"
                 interface I
                 {
                     void EP();
@@ -133,7 +133,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
         [Test]
         public void ShouldNotUseMethodAsEntryPointIfItIsCalledFromOtherMethod()
         {
-            CompleteInFile(@"
+            CompleteInCSharpFile(@"
                 class C
                 {
                     public void M1()
@@ -153,7 +153,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
         [Test]
         public void ShouldNotUseMethodAsEntryPointIfItIsCalledFromOtherMethodEvenForNestedCalls()
         {
-            CompleteInFile(@"
+            CompleteInCSharpFile(@"
                 class C
                 {
                     public void M1()
@@ -178,7 +178,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
         [Test]
         public void SimpleRecursion()
         {
-            CompleteInFile(@"
+            CompleteInCSharpFile(@"
                 class C
                 {
                     public void EP()
@@ -195,7 +195,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
         [Test]
         public void TransitiveRecursion()
         {
-            CompleteInFile(@"
+            CompleteInCSharpFile(@"
                 class C
                 {
                     private void M()
@@ -216,7 +216,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
         [Test]
         public void MutualRecursion()
         {
-            CompleteInFile(@"
+            CompleteInCSharpFile(@"
                 class C
                 {
                     public void M1()
@@ -237,7 +237,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
         [Test]
         public void PrivateMethodsShouldNeverBeEntryPoints()
         {
-            CompleteInFile(@"
+            CompleteInCSharpFile(@"
                 class C
                 {
                     private void M()
@@ -252,7 +252,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
         [Test]
         public void InternalMethodsShouldNeverBeEntryPoints()
         {
-            CompleteInFile(@"
+            CompleteInCSharpFile(@"
                 class C
                 {
                     internal void M()
@@ -267,7 +267,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
         [Test]
         public void ProtectedMethodsShouldBeEntryPoints()
         {
-            CompleteInFile(@"
+            CompleteInCSharpFile(@"
                 class C
                 {
                     protected void M()
@@ -282,7 +282,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
         [Test]
         public void ShouldUseImplementationAsEntryPointEvenIfItIsCalledFromOtherMethod()
         {
-            CompleteInFile(@"
+            CompleteInCSharpFile(@"
                 interface I
                 {
                     void EP();
@@ -305,7 +305,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
         [Test]
         public void Bug_UnresolvedDeclarationsAreNotAnIssue()
         {
-            CompleteInFile(@"
+            CompleteInCSharpFile(@"
                 class C {
                     public void M(string s) {}
                 
@@ -324,7 +324,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
         [Test]
         public void Bug_AbstractDeclarationHaveNoBody()
         {
-            CompleteInFile(@"
+            CompleteInCSharpFile(@"
                 abstract class A
                 {
                     public abstract void M(object o);

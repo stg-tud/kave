@@ -19,11 +19,12 @@
 
 using System.Linq;
 using NUnit.Framework;
+using JetBrains.ReSharper.Psi.Xaml.Impl.Tree;
 
 namespace KaVE.VsFeedbackGenerator.RS8Tests.Utils
 {
     [TestFixture]
-    internal class LookupItemUtilsTest : BaseTest
+    internal class LookupItemUtilsTest : BaseCSharpCodeCompletionTest
     {
         private void ThenProposalCollectionContains(params string[] proposalNameIdentifiers)
         {
@@ -106,7 +107,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Utils
         [Test]
         public void ShouldTranslateFieldProposals()
         {
-            CompleteInFile(@"
+            CompleteInCSharpFile(@"
                 class C
                 {
                     Object field;
@@ -124,7 +125,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Utils
         [Test]
         public void ShouldTranslateMethodProposal()
         {
-            CompleteInFile(@"
+            CompleteInCSharpFile(@"
                 class C
                 {
                     public void M()
@@ -140,7 +141,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Utils
         [Test]
         public void ShouldTranslateMethodWithReturnTypeProposal()
         {
-            CompleteInFile(@"
+            CompleteInCSharpFile(@"
                 class C
                 {
                     public Object M()
@@ -156,7 +157,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Utils
         [Test]
         public void ShouldTranslateMethodWithAliasedReturnTypeProposal()
         {
-            CompleteInFile(@"
+            CompleteInCSharpFile(@"
                 class C
                 {
                     public int M()
@@ -172,7 +173,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Utils
         [Test]
         public void ShouldTranslateMethodWithParameterProposal()
         {
-            CompleteInFile(@"
+            CompleteInCSharpFile(@"
                 class C
                 {
                     public void M(Object p)
@@ -188,7 +189,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Utils
         [Test]
         public void ShouldTranslateMethodWithRefParameterProposal()
         {
-            CompleteInFile(@"
+            CompleteInCSharpFile(@"
                 class C
                 {
                     public void M(ref int i)
@@ -204,7 +205,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Utils
         [Test]
         public void ShouldTranslateMethodWithOutParameterProposal()
         {
-            CompleteInFile(@"
+            CompleteInCSharpFile(@"
                 class C
                 {
                     public void M(out bool b)
@@ -220,7 +221,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Utils
         [Test]
         public void ShouldTranslateMethodVarArgsParameterProposal()
         {
-            CompleteInFile(@"
+            CompleteInCSharpFile(@"
                 class C
                 {
                     public void M(params Object[] objs)
@@ -236,7 +237,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Utils
         [Test]
         public void ShouldTranslateMethodWithOptionalProposals()
         {
-            CompleteInFile(@"
+            CompleteInCSharpFile(@"
                 class C
                 {
                     public void M(Object obj = null)
@@ -252,7 +253,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Utils
         [Test]
         public void ShouldTranslateEventProposal()
         {
-            CompleteInFile(@"
+            CompleteInCSharpFile(@"
                 public class C
                 {
                     public delegate void Delegate(object obj);
@@ -270,7 +271,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Utils
         [Test]
         public void ShouldTranslatePropertyWithGetterAndSetterProposal()
         {
-            CompleteInFile(@"
+            CompleteInCSharpFile(@"
                 public class C
                 {
                     public int Property { get; set; }
@@ -288,7 +289,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Utils
         [Test]
         public void ShouldTranslatePropertyWithGetterProposal()
         {
-            CompleteInFile(@"
+            CompleteInCSharpFile(@"
                 public class C
                 {
                     public int Property { get { return 0; } }
@@ -306,7 +307,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Utils
         [Test]
         public void ShouldTranslatePropertyWithSetterProposal()
         {
-            CompleteInFile(@"
+            CompleteInCSharpFile(@"
                 public class C
                 {
                     public int Property { set {} }
@@ -324,7 +325,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Utils
         [Test]
         public void ShouldTranslateIndexerProposal()
         {
-            CompleteInFile(@"
+            CompleteInCSharpFile(@"
                 public class C
                 {
                     public object this[int i]
@@ -345,7 +346,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Utils
         [Test]
         public void ShouldTranslateMethodWithOwnTypeParameter()
         {
-            CompleteInFile(@"
+            CompleteInCSharpFile(@"
                 class C
                 {
                     public void M<T>(T p)
@@ -360,7 +361,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Utils
         [Test]
         public void ShouldTranslateTypeWithNestedTypeParameters()
         {
-            CompleteInFile(@"
+            CompleteInCSharpFile(@"
                 class C<T>
                 {
                     void M(IList<C<IList<string>>> l)
@@ -412,7 +413,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Utils
         [Test]
         public void ShouldTranslateMethodWithTypeParameterFromEnclosingType()
         {
-            CompleteInFile(@"
+            CompleteInCSharpFile(@"
                 class C<T>
                 {
                     private T GetT()
@@ -444,7 +445,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Utils
         [Test]
         public void ShouldTranslateStaticConstantProposal()
         {
-            CompleteInFile(@"
+            CompleteInCSharpFile(@"
                 public class C
                 {
                     public const string Constant = ""constant"";
@@ -461,7 +462,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Utils
         [Test]
         public void ShouldTranslateNestedTypeProposal()
         {
-            CompleteInFile(@"
+            CompleteInCSharpFile(@"
                 public class C
                 {
                     public class N { }
@@ -478,7 +479,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Utils
         [Test]
         public void ShouldTranslateStaticMethodProposal()
         {
-            CompleteInFile(@"
+            CompleteInCSharpFile(@"
                 public class C
                 {
                     public static bool M()
@@ -493,7 +494,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Utils
         [Test]
         public void ShouldTranslateStaticFieldProposal()
         {
-            CompleteInFile(@"
+            CompleteInCSharpFile(@"
                 public class C
                 {
                     static string _field;
@@ -510,7 +511,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Utils
         [Test]
         public void ShouldTranslateNamespaceProposals()
         {
-            CompleteInFile(@"
+            CompleteInCSharpFile(@"
                 namespace N
                 {
                     public class C
@@ -532,7 +533,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Utils
         [Test]
         public void ShouldTranslateConstructorWithoutArgsProposal()
         {
-            CompleteInFile(@"
+            CompleteInCSharpFile(@"
                 public class C
                 {
                     public C() {}
@@ -549,7 +550,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Utils
         [Test]
         public void ShouldTranslateConstructorWithArgsProposal()
         {
-            CompleteInFile(@"
+            CompleteInCSharpFile(@"
                 public class C
                 {
                     public C(object o) {}
@@ -566,7 +567,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Utils
         [Test]
         public void ShouldTranslateImplicitConstructorProposal()
         {
-            CompleteInFile(@"
+            CompleteInCSharpFile(@"
                 public class C
                 {
                     public void M()
@@ -581,7 +582,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Utils
         [Test]
         public void ShouldTranslateConstructorOfGenericTypeProposal1()
         {
-            CompleteInFile(@"
+            CompleteInCSharpFile(@"
                 public class MyTestClass<T>
                 {
                     public void M()
@@ -597,7 +598,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Utils
         [Test]
         public void ShouldTranslateConstructorOfGenericTypeProposal2()
         {
-            CompleteInFile(@"
+            CompleteInCSharpFile(@"
                 public class MyTestClass<T>
                 {
                     public void M()
@@ -613,7 +614,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Utils
         [Test]
         public void ShouldTranslateStructConstructorProposal()
         {
-            CompleteInFile(@"
+            CompleteInCSharpFile(@"
                 public class C
                 {
                     public void M()
@@ -635,7 +636,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Utils
         [Test]
         public void ShouldTranslateNewArrayInstanceProposals()
         {
-            CompleteInFile(@"
+            CompleteInCSharpFile(@"
                 public class C
                 {
                     public void M()
@@ -652,7 +653,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Utils
         [Test]
         public void ShouldTranslateArrayTypeProposals()
         {
-            CompleteInFile(@"
+            CompleteInCSharpFile(@"
                 public class C
                 {
                     private string[] myStringArray;
@@ -677,7 +678,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Utils
         [Test]
         public void ShouldTranslateProposalsForOverloadedMethod()
         {
-            CompleteInFile(@"
+            CompleteInCSharpFile(@"
                 public class C
                 {
                     public void M()
@@ -710,7 +711,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Utils
         [Test]
         public void ShouldTranslateMethodWithTypeParametersProposals()
         {
-            CompleteInFile(@"namespace N
+            CompleteInCSharpFile(@"namespace N
                 {
                     class C
                     {
@@ -737,7 +738,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Utils
         [Test]
         public void ShouldFlagEnumTypesAsSuch()
         {
-            CompleteInFile(@"
+            CompleteInCSharpFile(@"
                 enum MyEnum
                 {
                     EnumValue
@@ -757,7 +758,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Utils
         [Test]
         public void ShouldFlagInterfaceTypesAsSuch()
         {
-            CompleteInFile(@"
+            CompleteInCSharpFile(@"
                 interface MyInterface
                 {
                     public void M();
@@ -777,7 +778,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Utils
         [Test]
         public void ShouldFlagCustomStructAsSuch()
         {
-            CompleteInFile(@"
+            CompleteInCSharpFile(@"
                 struct MyStruct
                 {
                     public int i;
@@ -797,7 +798,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Utils
         [Test]
         public void ShouldFlagDelegateAsSuch()
         {
-            CompleteInFile(@"
+            CompleteInCSharpFile(@"
                 class C
                 {
                     delegate void D(int i);
@@ -814,7 +815,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Utils
         [Test]
         public void ShouldResolveArraysOfGenericTypes()
         {
-            CompleteInFile(@"
+            CompleteInCSharpFile(@"
                 class C {
                     void M<T>(T[] ts) {
                         this.$
@@ -822,6 +823,33 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Utils
                 }");
 
             ThenProposalCollectionContains("[System.Void, mscorlib, 4.0.0.0] [C, TestProject].M`1[[T -> T]]([T[]] ts)");
+        }
+
+        [Test]
+        public void ShouldNotCrashOnCompletionInXaml()
+        {
+            CompleteInFile(@"<Window x:Class=""WpfApplication1.MainWindow""
+                                     xmlns=""http://schemas.microsoft.com/winfx/2006/xaml/presentation""
+                                     xmlns:x=""http://schemas.microsoft.com/winfx/2006/xaml""
+                                     Title=""MainWindow"" Height=""350"" Width=""525"">
+               <Grid>
+                 $
+               </Grid>
+            </Window>", "xaml");
+        }
+
+        [Test]
+        public void ShouldHandleUnknownLookupItemType()
+        {
+            TestProposalProvider.Enabled = true;
+            
+            CompleteInMethod("$");
+        }
+
+        [TearDown]
+        public void DisableTestProposalProvider()
+        {
+            TestProposalProvider.Enabled = false;
         }
 
         // Test cases for keywords (e.g., private), templates (e.g., for), and

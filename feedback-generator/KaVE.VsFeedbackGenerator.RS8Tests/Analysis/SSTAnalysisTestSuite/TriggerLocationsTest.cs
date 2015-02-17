@@ -139,7 +139,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
         [Test, ExpectedException(typeof (NotSupportedException))]
         public void TriggeredInInterface()
         {
-            CompleteInFile(@"
+            CompleteInCSharpFile(@"
                 public interface I {
                     public void A();
                     $

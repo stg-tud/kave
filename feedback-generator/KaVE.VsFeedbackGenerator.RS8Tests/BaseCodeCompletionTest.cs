@@ -1,5 +1,5 @@
-﻿/*
- * Copyright 2014 Technische Universität Darmstadt
+/*
+ * Copyright 2014 Technische Universit�t Darmstadt
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,14 +15,10 @@
  * 
  * Contributors:
  *    - Sven Amann
- *    - Sebastian Proksch
  */
-
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using JetBrains.Application;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Feature.Services.CodeCompletion;
 using JetBrains.ReSharper.Feature.Services.Lookup;
@@ -30,37 +26,32 @@ using JetBrains.ReSharper.Feature.Services.Tests.CSharp.FeatureServices.CodeComp
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.TestFramework;
 using JetBrains.TextControl;
+using JetBrains.Util;
 using KaVE.Model.Events.CompletionEvent;
-using KaVE.Model.Names;
-using KaVE.Model.SSTs;
 using KaVE.Utils.Assertion;
-using KaVE.VsFeedbackGenerator.RS8Tests.Analysis;
 using KaVE.VsFeedbackGenerator.Utils;
 using NUnit.Framework;
 
 namespace KaVE.VsFeedbackGenerator.RS8Tests
 {
     [TestNetFramework4]
-    // ReSharper disable once InconsistentNaming
-    internal abstract class BaseTest : CodeCompletionTestBase
+    internal abstract class BaseCodeCompletionTest : CodeCompletionTestBase
     {
         private const string Caret = "$";
 
-        private readonly List<CodeCompletionType> _myCodeCompletionTypes;
-
-        protected BaseTest()
+        private readonly List<CodeCompletionType> _myCodeCompletionTypes = new List<CodeCompletionType>
         {
-            _myCodeCompletionTypes = new List<CodeCompletionType> {CodeCompletionType.BasicCompletion};
-        }
+            CodeCompletionType.BasicCompletion
+        };
 
         protected override string RelativeTestDataPath
         {
             get
             {
-                var defaultNamespace = typeof (BaseTest).Namespace;
+                var defaultNamespace = typeof (BaseCSharpCodeCompletionTest).Namespace;
                 var concreteNamespace = GetType().FullName;
 
-                Asserts.NotNull(defaultNamespace, "BaseTest somehow moved to global namespace?!");
+                Asserts.NotNull(defaultNamespace, "BaseCSharpCodeCompletionTest somehow moved to global namespace?!");
 
                 string basePath;
                 if (concreteNamespace.StartsWith(defaultNamespace))
@@ -81,53 +72,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests
             get { return false; }
         }
 
-        protected void CompleteInMethod(string methodBody)
-        {
-            CompleteInClass(string.Format(@"
-                public void M() {{
-                    {0}
-                }}", methodBody));
-        }
-
-        protected void CompleteInClass(string classBody)
-        {
-            CompleteInFile(string.Format(@"
-                namespace N {{
-                    public class C {{
-                        {0}
-                    }}
-                }}", classBody));
-        }
-
-        protected void CompleteInFile(string fileContent)
-        {
-            fileContent = @"
-                using System;
-                using System.Collections.Generic;
-                using System.IO;
-                
-                " + fileContent;
-
-            fileContent = fileContent.Replace(Caret, "{caret}");
-
-            var file = GetTestDataFilePath2("adhoc_test_snippet").ChangeExtension("cs");
-            var parentPath = Path.GetDirectoryName(file.FullPath);
-            Asserts.NotNull(parentPath, "impossible, since file is alway an absolute path");
-            Directory.CreateDirectory(parentPath);
-            using (var stream = file.OpenStream(FileMode.Create))
-            {
-                using (var writer = new StreamWriter(stream))
-                {
-                    writer.Write(fileContent);
-                }
-            }
-            WhenCodeCompletionIsInvokedInFile("adhoc_test_snippet");
-        }
-
-        protected void WhenCodeCompletionIsInvokedInFile(string fileName)
-        {
-            DoOneTest(fileName);
-        }
+        protected ProposalCollection ResultProposalCollection { get; private set; }
 
         protected override void ExecuteCodeCompletion(Suffix suffix,
             ITextControl textControl,
@@ -160,39 +105,39 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests
             {
                 ResultProposalCollection = new ProposalCollection();
             }
-
-            if (TestAnalysisComponent.HasFailed)
-            {
-                throw new Exception(TestAnalysisComponent.LastException.Item2, TestAnalysisComponent.LastException.Item1);
-            }
-        }
-
-        protected ProposalCollection ResultProposalCollection { get; private set; }
-
-        protected Context ResultContext
-        {
-            get { return TestAnalysisComponent.LastContext; }
-        }
-
-        protected SST ResultSST
-        {
-            get { return TestAnalysisComponent.LastSST; }
-        }
-
-        protected IEnumerable<IMethodName> AnalyzedEntryPoints
-        {
-            get { return TestAnalysisComponent.LastEntryPoints; }
-        }
-
-        private static TestAnalysisTrigger TestAnalysisComponent
-        {
-            get { return Shell.Instance.GetComponent<TestAnalysisTrigger>(); }
         }
 
         [TearDown]
         public void ClearResults()
         {
             ResultProposalCollection = null;
+        }
+
+        protected void CompleteInFile(string fileContent, string newExtension)
+        {
+            fileContent = fileContent.Replace(Caret, "{caret}");
+            var file = GetTestDataFilePath2("adhoc_test_snippet").ChangeExtension(newExtension);
+            var parentPath = Path.GetDirectoryName(file.FullPath);
+            Asserts.NotNull(parentPath, "impossible, since file is alway an absolute path");
+            Directory.CreateDirectory(parentPath);
+            WriteContentToFile(fileContent, file);
+            WhenCodeCompletionIsInvokedInFile("adhoc_test_snippet");
+        }
+
+        private static void WriteContentToFile(string fileContent, FileSystemPath file)
+        {
+            using (var stream = file.OpenStream(FileMode.Create))
+            {
+                using (var writer = new StreamWriter(stream))
+                {
+                    writer.Write(fileContent);
+                }
+            }
+        }
+
+        protected void WhenCodeCompletionIsInvokedInFile(string fileName)
+        {
+            DoOneTest(fileName);
         }
     }
 }

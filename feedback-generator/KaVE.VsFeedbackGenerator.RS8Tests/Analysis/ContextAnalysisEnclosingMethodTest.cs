@@ -24,7 +24,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
 {
     // TODO split this into enclosingMethod and methodHierarchy tests
     [TestFixture, Ignore]
-    internal class ContextAnalysisEnclosingMethodTest : BaseTest
+    internal class ContextAnalysisEnclosingMethodTest : BaseCSharpCodeCompletionTest
     {
         private static MethodHierarchy FindEnclosingMethodHierarchy(Context context)
         {
@@ -356,7 +356,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
         [Test]
         public void IncompleteParameterDeclaration()
         {
-            CompleteInFile(@"
+            CompleteInCSharpFile(@"
                 class C
                 {
                     public void M(int i, )

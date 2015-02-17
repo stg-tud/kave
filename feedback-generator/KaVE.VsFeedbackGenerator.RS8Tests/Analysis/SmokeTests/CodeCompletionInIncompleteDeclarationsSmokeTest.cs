@@ -18,12 +18,12 @@ using NUnit.Framework;
 namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SmokeTests
 {
     [TestFixture]
-    internal class CodeCompletionInIncompleteDeclarationsSmokeTest : BaseTest
+    internal class CodeCompletionInIncompleteDeclarationsSmokeTest : BaseCSharpCodeCompletionTest
     {
         [Test]
         public void NamespaceDeclarationKeyword()
         {
-            CompleteInFile(@"
+            CompleteInCSharpFile(@"
                 names$
             ");
         }
@@ -31,7 +31,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SmokeTests
         [Test]
         public void NamespaceDeclarationName()
         {
-            CompleteInFile(@"
+            CompleteInCSharpFile(@"
                 namespace $
             ");
         }
@@ -39,7 +39,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SmokeTests
         [Test]
         public void NamespaceDeclarationNameContinuation()
         {
-            CompleteInFile(@"
+            CompleteInCSharpFile(@"
                 namespace N$
             ");
         }
@@ -47,7 +47,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SmokeTests
         [Test]
         public void NamespaceDeclarationSubNamespaceName()
         {
-            CompleteInFile(@"
+            CompleteInCSharpFile(@"
                 namespace N.$
             ");
         }
@@ -55,7 +55,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SmokeTests
         [Test]
         public void NamespaceDeclarationSubNamespaceNameContinuation()
         {
-            CompleteInFile(@"
+            CompleteInCSharpFile(@"
                 namespace N.M$
             ");
         }
@@ -63,7 +63,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SmokeTests
         [Test]
         public void TypeDeclarationKeyword()
         {
-            CompleteInFile(@"
+            CompleteInCSharpFile(@"
                 cla$
             ");
         }
@@ -71,7 +71,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SmokeTests
         [Test]
         public void TypeDeclarationName()
         {
-            CompleteInFile(@"
+            CompleteInCSharpFile(@"
                 class $
             ");
         }
@@ -79,7 +79,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SmokeTests
         [Test]
         public void ClassDeclarationNameContinuation()
         {
-            CompleteInFile(@"
+            CompleteInCSharpFile(@"
                 class Foo$
             ");
         }

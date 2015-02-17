@@ -19,7 +19,7 @@ using NUnit.Framework;
 namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
 {
     [TestFixture, Ignore]
-    internal class ContextAnalysisCompletionTargetTest : BaseTest
+    internal class ContextAnalysisCompletionTargetTest : BaseCSharpCodeCompletionTest
     {
         [Test]
         public void ShouldBeReference()
@@ -72,7 +72,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
         [Test]
         public void ShouldBeEnclosingTypeIfExplicitThisIsSpecified()
         {
-            CompleteInFile(@"
+            CompleteInCSharpFile(@"
                 namespace N
                 {
                     class C
@@ -93,7 +93,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
         [Test]
         public void ShouldBeSuperTypeIfExplicitBaseIsSpecified()
         {
-            CompleteInFile(@"
+            CompleteInCSharpFile(@"
                 namespace N
                 {
                     class S {}
@@ -170,7 +170,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
         [Test]
         public void ShouldBeField()
         {
-            CompleteInFile(@"
+            CompleteInCSharpFile(@"
                 class C
                 {
                     private string Field;

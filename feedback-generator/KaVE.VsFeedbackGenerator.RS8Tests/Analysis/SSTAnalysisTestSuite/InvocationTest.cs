@@ -250,7 +250,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
         [Test]
         public void BaseWithOverride()
         {
-            CompleteInFile(@"
+            CompleteInCSharpFile(@"
                 namespace N
                 {
                     public class D
@@ -281,7 +281,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
         [Test]
         public void BaseWithShadowing()
         {
-            CompleteInFile(@"
+            CompleteInCSharpFile(@"
                 namespace N
                 {
                     public class D
@@ -312,7 +312,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
         [Test, Ignore]
         public void ThisWithHiding()
         {
-            CompleteInFile(@"
+            CompleteInCSharpFile(@"
                 namespace N {
                     public interface I {
                         void A();

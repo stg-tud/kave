@@ -18,7 +18,7 @@ using NUnit.Framework;
 namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SmokeTests
 {
     [TestFixture]
-    internal class CodeCompletionWithUnresolvableReferencesSmokeTest : BaseTest
+    internal class CodeCompletionWithUnresolvableReferencesSmokeTest : BaseCSharpCodeCompletionTest
     {
         [Test]
         public void MemberAccessOnUnkownType()
@@ -60,7 +60,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SmokeTests
         [Test]
         public void CallToInaccessibleMethod()
         {
-            CompleteInFile(@"
+            CompleteInCSharpFile(@"
                 class C
                 {
                     private void M(){}

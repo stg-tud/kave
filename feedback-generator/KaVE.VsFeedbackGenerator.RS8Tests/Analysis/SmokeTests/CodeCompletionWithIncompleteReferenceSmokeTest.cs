@@ -18,12 +18,12 @@ using NUnit.Framework;
 namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SmokeTests
 {
     [TestFixture]
-    internal class CodeCompletionWithIncompleteReferenceSmokeTest : BaseTest
+    internal class CodeCompletionWithIncompleteReferenceSmokeTest : BaseCSharpCodeCompletionTest
     {
         [Test]
         public void UsingKeyword()
         {
-            CompleteInFile(@"
+            CompleteInCSharpFile(@"
                 usin$
             ");
         }
@@ -31,7 +31,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SmokeTests
         [Test]
         public void UsingNamespace()
         {
-            CompleteInFile(@"
+            CompleteInCSharpFile(@"
                 using $
             ");
         }
@@ -39,7 +39,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SmokeTests
         [Test]
         public void UsingNamespaceContinuation()
         {
-            CompleteInFile(@"
+            CompleteInCSharpFile(@"
                 using Sys$
             ");
         }
@@ -47,7 +47,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SmokeTests
         [Test]
         public void UsingSubNamespace()
         {
-            CompleteInFile(@"
+            CompleteInCSharpFile(@"
                 using Sytem.$
             ");
         }
@@ -55,7 +55,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SmokeTests
         [Test]
         public void UsingSubNamespaceContinuation()
         {
-            CompleteInFile(@"
+            CompleteInCSharpFile(@"
                 using Sytem.Coll$
             ");
         }
@@ -63,7 +63,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SmokeTests
         [Test]
         public void UsingWithAlias()
         {
-            CompleteInFile(@"
+            CompleteInCSharpFile(@"
                 using MyAlias = $
             ");
         }
@@ -71,7 +71,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SmokeTests
         [Test]
         public void ClassAnntation()
         {
-            CompleteInFile(@"
+            CompleteInCSharpFile(@"
                 [$]
                 public class C {}
             ");
@@ -80,7 +80,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SmokeTests
         [Test]
         public void ClassAnntationContinuation()
         {
-            CompleteInFile(@"
+            CompleteInCSharpFile(@"
                 [Not$]
                 public class C {}
             ");
@@ -89,7 +89,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SmokeTests
         [Test]
         public void ConstructorDelegationKeyword()
         {
-            CompleteInFile(@"
+            CompleteInCSharpFile(@"
                 class C
                 {
                     public C(int i) : th$
@@ -101,7 +101,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SmokeTests
         [Test]
         public void ConstructorDelegationDisambiguation()
         {
-            CompleteInFile(@"
+            CompleteInCSharpFile(@"
                 class C
                 {
                     public C(int i) : this$
@@ -113,7 +113,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SmokeTests
         [Test]
         public void ConstructorDelegationParameter()
         {
-            CompleteInFile(@"
+            CompleteInCSharpFile(@"
                 class C
                 {
                     public C(int i) : this($)

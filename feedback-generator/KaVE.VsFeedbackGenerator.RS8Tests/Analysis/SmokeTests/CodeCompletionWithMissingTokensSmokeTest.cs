@@ -18,12 +18,12 @@ using NUnit.Framework;
 namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SmokeTests
 {
     [TestFixture]
-    internal class CodeCompletionWithMissingTokensSmokeTest : BaseTest
+    internal class CodeCompletionWithMissingTokensSmokeTest : BaseCSharpCodeCompletionTest
     {
         [Test]
         public void MissingClassBodyOpeningBrace()
         {
-            CompleteInFile(@"
+            CompleteInCSharpFile(@"
                 class C $
                 }");
         }
@@ -31,7 +31,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SmokeTests
         [Test]
         public void MissingClassBodyClosingBrace()
         {
-            CompleteInFile(@"
+            CompleteInCSharpFile(@"
                 class C
                 {
                     $
@@ -41,7 +41,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SmokeTests
         [Test]
         public void DuplicatedClassBodyOpeningBrace()
         {
-            CompleteInFile(@"
+            CompleteInCSharpFile(@"
                 class C
                 {
                     {$
@@ -52,7 +52,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SmokeTests
         [Test]
         public void DuplicatedClassBodyClosingBrace()
         {
-            CompleteInFile(@"
+            CompleteInCSharpFile(@"
                 class C
                 {
                     }$

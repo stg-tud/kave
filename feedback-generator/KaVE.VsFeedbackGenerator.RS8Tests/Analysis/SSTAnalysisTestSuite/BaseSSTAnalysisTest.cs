@@ -29,7 +29,7 @@ using NUnit.Framework;
 
 namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 {
-    internal abstract class BaseSSTAnalysisTest : BaseTest
+    internal abstract class BaseSSTAnalysisTest : BaseCSharpCodeCompletionTest
     {
         internal readonly IList<string> Log = new List<string>();
 

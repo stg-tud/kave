@@ -89,10 +89,14 @@ namespace KaVE.VsFeedbackGenerator.Utils.Names
 
         private static IName FallbackHandler(IDeclaredElement element, ISubstitution substitution)
         {
+<<<<<<< HEAD
             var typeName = element.GetType().FullName;
             var elementName = element.ShortName;
             var id = string.Format("UnknownDeclaredElement: {0}, '{1}', {2}", typeName, elementName, substitution);
             return Name.Get(id);
+=======
+            return Name.Get("UnknownDeclaredElement: " + element.GetType().FullName + ", '" + element.ShortName + "', " + substitution);
+>>>>>>> Got test to run and implemented fix.
         }
 
         private static bool IsMissingDeclaration(IDeclaredElement element)
