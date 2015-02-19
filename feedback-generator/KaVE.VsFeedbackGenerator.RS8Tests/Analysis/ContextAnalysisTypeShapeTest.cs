@@ -12,7 +12,11 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sebastian Proksch
  */
+
 using System.Collections.Generic;
 using JetBrains.Util;
 using KaVE.Model.Events.CompletionEvent;
@@ -21,9 +25,9 @@ using NUnit.Framework;
 
 namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
 {
-    [TestFixture]
     internal class ContextAnalysisTypeShapeTest : BaseTest
     {
+
         [Test]
         public void ImplementedMethodsAreCaptured()
         {
@@ -173,6 +177,222 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
 
             CollectionAssert.AreEquivalent(expected, actual);
         }
+
+        [Test]
+        public void ShouldNotContainObjectInTypeHierarchy()
+        {
+            CompleteInFile(@"
+                namespace N
+                {
+                    public class C
+                    {
+                        public void M()
+                        {
+                            $
+                        }
+                    }
+                }
+            ");
+            Assert.IsNull(ResultContext.TypeShape.TypeHierarchy.Extends);
+        }
+
+
+        [Test]
+        public void ShouldRetrieveEnclosingType()
+        {
+            CompleteInFile(@"
+                namespace TestNamespace
+                {
+                    public interface AnInterface {}
+
+                    public class SuperClass {}
+
+                    public class TestClass : SuperClass, AnInterface
+                    {
+                        public void Doit()
+                        {
+                            this.Doit();
+                            {caret}
+                        }
+                    }
+                }");
+            var actual = ResultContext.TypeShape.TypeHierarchy.Element;
+
+            var expected = TypeName.Get("TestNamespace.TestClass, TestProject");
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void ShouldRetrieveSuperType()
+        {
+            CompleteInFile(@"
+                namespace TestNamespace
+                {
+                    public interface AnInterface {}
+
+                    public class SuperClass {}
+
+                    public class TestClass : SuperClass, AnInterface
+                    {
+                        public void Doit()
+                        {
+                            this.Doit();
+                            {caret}
+                        }
+                    }
+                }");
+            var actual = ResultContext.TypeShape.TypeHierarchy.Extends.Element;
+
+            var expected = TypeName.Get("TestNamespace.SuperClass, TestProject");
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void ShouldRetrieveImplementedInterfaces()
+        {
+            CompleteInFile(@"
+                namespace TestNamespace
+                {
+                    public interface AnInterface {}
+
+                    public class SuperClass {}
+
+                    public class TestClass : SuperClass, AnInterface
+                    {
+                        public void Doit()
+                        {
+                            this.Doit();
+                            {caret}
+                        }
+                    }
+                }");
+            var actual = ResultContext.TypeShape.TypeHierarchy.Implements;
+
+            var expected = new HashSet<ITypeHierarchy>
+            {
+                new TypeHierarchy("i:TestNamespace.AnInterface, TestProject")
+            };
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void ShouldRetrieveSubstitution()
+        {
+            CompleteInFile(@"
+                namespace N
+                {
+                    class IC<T>
+                    {
+                        
+                    }
+                
+                    class C<T> : IC<int>
+                    {
+                        void M()
+                        {
+                            {caret}
+                        }
+                    }
+                }");
+
+            var actual = ResultContext.TypeShape.TypeHierarchy.Extends.Element;
+            var expected = TypeName.Get("N.IC`1[[T -> System.Int32, mscorlib, 4.0.0.0]], TestProject");
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void ShouldRetrieveFreeSubstitution()
+        {
+            CompleteInFile(@"
+                namespace N
+                {
+                    class IC<T>
+                    {
+                        
+                    }
+                
+                    class C<T> : IC<int>
+                    {
+                        void M()
+                        {
+                            {caret}
+                        }
+                    }
+                }");
+
+            var actual = ResultContext.TypeShape.TypeHierarchy.Element;
+            var expected = TypeName.Get("N.C`1[[T]], TestProject");
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void ShouldRetrieveLargeHierarchy()
+        {
+            CompleteInFile(@"
+                namespace N
+                {
+                    interface I0
+                    {
+                         
+                    }
+                
+                    interface IA : I0
+                    {
+                         
+                    }
+                
+                    interface IB<TB>
+                    {
+                        
+                    }
+                
+                    interface IC
+                    {
+                        
+                    }
+                
+                    class A : IA
+                    {
+                        
+                    }
+                
+                    class B : A, IB<int>, IC
+                    {
+                        public void m()
+                        {
+                            {caret}
+                        }
+                    }
+                }");
+
+            var actual = ResultContext.TypeShape.TypeHierarchy;
+            var expected = new TypeHierarchy("N.B, TestProject")
+            {
+                Extends = new TypeHierarchy("N.A, TestProject")
+                {
+                    Implements = new HashSet<ITypeHierarchy>
+                    {
+                        new TypeHierarchy("i:N.IA, TestProject")
+                        {
+                            Implements = new HashSet<ITypeHierarchy>
+                            {
+                                new TypeHierarchy("i:N.I0, TestProject")
+                            }
+                        }
+                    }
+                },
+                Implements = new HashSet<ITypeHierarchy>
+                {
+                    new TypeHierarchy("i:N.IB`1[[TB -> System.Int32, mscorlib, 4.0.0.0]], TestProject"),
+                    new TypeHierarchy("i:N.IC, TestProject")
+                }
+            };
+            Assert.AreEqual(expected, actual);
+        }
+
 
         private static MethodHierarchy Decl(string encType, string superType, string firstType)
         {

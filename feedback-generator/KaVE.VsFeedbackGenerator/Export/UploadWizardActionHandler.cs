@@ -45,14 +45,14 @@ namespace KaVE.VsFeedbackGenerator.Export
             actionManager.ExecuteActionGuarded(ActionId, "KaVE.Feedback.Export");
         }
 
-        public UploadWizardActionHandler(IActionManager actionManager, ISettingsStore settingsStore, IExporter exporter, ILogManager logManager, ILogger logger, IDateUtils dateUtils)
+        public UploadWizardActionHandler()
         {
-            _actionManager = actionManager;
-            _settingsStore = settingsStore;
-            _exporter = exporter;
-            _logManager = logManager;
-            _logger = logger;
-            _dateUtils = dateUtils;
+            _actionManager = Registry.GetComponent<IActionManager>();
+            _settingsStore = Registry.GetComponent<ISettingsStore>();
+            _exporter = Registry.GetComponent<IExporter>();
+            _logManager = Registry.GetComponent<ILogManager>();
+            _logger = Registry.GetComponent<ILogger>();
+            _dateUtils = Registry.GetComponent<IDateUtils>();
         }
 
         public bool Update(IDataContext context, ActionPresentation presentation, DelegateUpdate nextUpdate)
