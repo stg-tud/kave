@@ -26,8 +26,8 @@ using System.Linq;
 using Ionic.Zip;
 using JetBrains;
 using JetBrains.Application;
+using JetBrains.Util;
 using KaVE.Model.Events;
-using KaVE.Utils.Assertion;
 using KaVE.VsFeedbackGenerator.SessionManager.Anonymize;
 using KaVE.VsFeedbackGenerator.Utils.Json;
 
@@ -53,7 +53,10 @@ namespace KaVE.VsFeedbackGenerator.Utils
 
         public void Export(IList<IDEEvent> events, IPublisher publisher)
         {
-            Asserts.That(events.Any(), Properties.UploadWizard.NothingToExport);
+            if (events.IsEmpty())
+            {
+                return;
+            }
 
             using (var stream = new MemoryStream())
             {
@@ -69,22 +72,23 @@ namespace KaVE.VsFeedbackGenerator.Utils
             using (var zipFile = new ZipFile())
             {
                 var i = 0;
-                ReportNumberOfEventsProcessed(i, numberOfEvents);
+                ReportExportProgress(i, numberOfEvents);
                 foreach (var e in events)
                 {
                     var fileName = (i++) + "-" + e.GetType().Name + ".json";
                     var json = e.ToFormattedJson();
                     zipFile.AddEntry(fileName, json);
-                    ReportNumberOfEventsProcessed(i, numberOfEvents);
+                    ReportExportProgress(i, numberOfEvents);
                 }
                 StatusChanged(Properties.UploadWizard.CompressingEvents);
                 zipFile.Save(stream);
             }
         }
 
-        private void ReportNumberOfEventsProcessed(int cur, int total)
+        private void ReportExportProgress(int eventsExported, int totalNumberOfEvents)
         {
-            StatusChanged(Properties.UploadWizard.WritingEvents.FormatEx(cur*100/total));
+            var progress = eventsExported*100/totalNumberOfEvents;
+            StatusChanged(Properties.UploadWizard.WritingEvents.FormatEx(progress));
         }
     }
 }

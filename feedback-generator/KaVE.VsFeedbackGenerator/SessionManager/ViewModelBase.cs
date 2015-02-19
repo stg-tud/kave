@@ -12,21 +12,51 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sven Amann
  */
 
 using System;
 using System.ComponentModel;
 using System.Linq.Expressions;
+using KaVE.Utils;
 using KaVE.Utils.Reflection;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager
 {
     public abstract class ViewModelBase<T> : INotifyPropertyChanged where T : ViewModelBase<T>
     {
+        private readonly string[] _suffixes = {"", ".", "..", "..."};
+
         public event PropertyChangedEventHandler PropertyChanged = delegate { };
 
         private bool _isBusy;
         private string _busyMessage;
+        private int _suffixIndex;
+        public  int AnimationRefreshDelayInMillis { get; set; }
+
+        protected ViewModelBase()
+        {
+            AnimationRefreshDelayInMillis = 1000;
+            this.OnPropertyChanged(
+                self => self.IsBusy,
+                amBusy => ScheduleBusyMessageAnimation());
+        }
+
+        private void ScheduleBusyMessageAnimation()
+        {
+            if (IsBusy)
+            {
+                Invoke.Later(
+                    () =>
+                    {
+                        _suffixIndex = (_suffixIndex + 1) % _suffixes.Length;
+                        RaisePropertyChanged(self => self.BusyMessageAnimated);
+
+                    }, AnimationRefreshDelayInMillis, ScheduleBusyMessageAnimation);
+            }
+        }
 
         private void RaisePropertyChanged(string propertyName)
         {
@@ -69,12 +99,19 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             set
             {
                 _busyMessage = value;
-                RaisePropertyChanged(vm => vm.BusyMessage);
+                RaisePropertyChanged(self => self.BusyMessage);
+                RaisePropertyChanged(self => self.BusyMessageAnimated);
             }
         }
 
+        public string BusyMessageAnimated
+        {
+            get { return BusyMessage + _suffixes[_suffixIndex]; }
+        }
+
         /// <summary>
-        /// When a registered sub view model becomes busy, so does its parent. <b>Make sure there's only one busy view model at a time!</b>
+        ///     When a registered sub view model becomes busy, so does its parent.
+        ///     <b>Make sure there's only one busy view model at a time!</b>
         /// </summary>
         protected void RegisterSubViewModel<TM>(ViewModelBase<TM> subViewModel) where TM : ViewModelBase<TM>
         {

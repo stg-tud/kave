@@ -64,21 +64,10 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
             _sut = new Exporter(_anonymizerMock.Object);
         }
 
-        [Test, ExpectedException(typeof (AssertException), ExpectedMessage = "Es gibt nichts zu exportieren.")]
-        public void ShouldFailWithNoEvents()
-        {
-            _sut.Export(new List<IDEEvent>(), _publisherMock.Object);
-        }
-
         [Test]
-        public void ShouldFailWithNoEventsBeforePublishing()
+        public void ShouldSilentlySkipPublishingOfEmptyEventList()
         {
-            try
-            {
-                _sut.Export(new IDEEvent[0], _publisherMock.Object);
-            }
-            catch (AssertException) {}
-
+            _sut.Export(new IDEEvent[0], _publisherMock.Object);
             _publisherMock.Verify(p => p.Publish(It.IsAny<MemoryStream>()), Times.Never);
         }
 

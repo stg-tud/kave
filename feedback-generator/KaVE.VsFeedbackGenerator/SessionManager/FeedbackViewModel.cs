@@ -63,7 +63,6 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
         private void OnLogCreated(ILog log)
         {
             _sessions.Add(CreateOrRefreshSessionViewModel(log));
-            RaisePropertyChanged(self => self.AreAnyEventsPresent);
         }
 
         private void SetupRefresh()
@@ -157,7 +156,6 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             {
                 _sessions = value;
                 RaisePropertyChanged(self => self.Sessions);
-                RaisePropertyChanged(self => self.AreAnyEventsPresent);
             }
             get { return _sessions; }
         }
@@ -179,11 +177,6 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
         public SessionViewModel SingleSelectedSession
         {
             get { return _selectedSessions.Count == 1 ? _selectedSessions.First() : null; }
-        }
-
-        public bool AreAnyEventsPresent
-        {
-            get { return _sessions.Any(s => s.Events.Any()); }
         }
 
         public DelegateCommand DeleteSessionsCommand
@@ -231,7 +224,6 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
         {
             _sessions.RemoveAll(svm => svm.Log.Equals(log));
             log.Deleted -= OnLogDeleted;
-            RaisePropertyChanged(self => self.AreAnyEventsPresent);
         }
     }
 }

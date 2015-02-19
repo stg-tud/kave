@@ -24,7 +24,6 @@ Contributors:
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:properties="clr-namespace:KaVE.VsFeedbackGenerator.Properties"
         xmlns:root="clr-namespace:KaVE.VsFeedbackGenerator"
-        xmlns:gif="http://wpfanimatedgif.codeplex.com"
         xmlns:export="clr-namespace:KaVE.VsFeedbackGenerator.Export"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
@@ -34,8 +33,7 @@ Contributors:
         WindowStyle="SingleBorderWindow"
         ResizeMode="NoResize"
         d:DataContext="{d:DesignInstance Type=export:UploadWizardViewModel, IsDesignTimeCreatable=False}"
-        Title="{x:Static root:Properties.UploadWizard.window_title}"
-        gif:ImageBehavior.AnimateInDesignMode="True">
+        Title="{x:Static root:Properties.UploadWizard.window_title}">
     <Window.Resources>
         <ResourceDictionary>
             <BitmapImage x:Key="Icon" UriSource="/KaVE.VsFeedbackGenerator;Component/Resources/question.png" />
@@ -95,10 +93,7 @@ Contributors:
                 Grid.Column="0">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center"
                         VerticalAlignment="Center" Width="Auto">
-                <Image gif:ImageBehavior.RepeatBehavior="Forever"
-                       gif:ImageBehavior.AnimatedSource="/KaVE.VsFeedbackGenerator;component/Resources/loading.gif"
-                       Width="24" Height="24" Margin="0 0 10 0" />
-                <TextBlock Text="{Binding BusyMessage}"
+                <TextBlock Text="{Binding BusyMessageAnimated}"
                            FontWeight="Bold" FontSize="24" />
             </StackPanel>
         </Border>

@@ -208,7 +208,7 @@
     <value>Auslöser</value>
   </data>
   <data name="Refreshing" xml:space="preserve">
-    <value>Lade Feedback...</value>
+    <value>Lade Feedback</value>
   </data>
   <data name="EventContext" xml:space="preserve">
     <value>Kontext</value>
@@ -274,7 +274,7 @@
     <value>Selektiere Session für mehr Details</value>
   </data>
   <data name="Loading" xml:space="preserve">
-    <value>Lade Feedback...</value>
+    <value>Lade Feedback</value>
   </data>
   <data name="OptionPageErrorMessage" xml:space="preserve">
     <value>Bitte geben Sie ein gültige HTTP- oder HTTPS-URL ein.</value>

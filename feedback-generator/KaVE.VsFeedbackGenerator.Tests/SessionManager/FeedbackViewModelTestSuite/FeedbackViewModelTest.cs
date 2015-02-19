@@ -86,17 +86,6 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModelTestSui
         }
 
         [Test]
-        public void ShouldFireHasEventsPropertyChangedAfterRefresh()
-        {
-            var hasEventsChanged = false;
-            _uut.OnPropertyChanged(self => self.AreAnyEventsPresent, newVal => hasEventsChanged = true);
-
-            WhenViewModelIsRefreshedWithSessions(new ILog[0]);
-
-            Assert.IsTrue(hasEventsChanged);
-        }
-
-        [Test]
         public void ShouldDisplayNothingAndLogErrorWhenRefreshFails()
         {
             var exception = new AssertException("test exception");

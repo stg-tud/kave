@@ -97,7 +97,7 @@ namespace KaVE.VsFeedbackGenerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Exportiere Events....
+        ///   Looks up a localized string similar to Exportiere Events.
         /// </summary>
         public static string Export_BusyMessage {
             get {

@@ -232,7 +232,7 @@ namespace KaVE.VsFeedbackGenerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Lade Feedback....
+        ///   Looks up a localized string similar to Lade Feedback.
         /// </summary>
         public static string Loading {
             get {
@@ -385,7 +385,7 @@ namespace KaVE.VsFeedbackGenerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Lade Feedback....
+        ///   Looks up a localized string similar to Lade Feedback.
         /// </summary>
         public static string Refreshing {
             get {

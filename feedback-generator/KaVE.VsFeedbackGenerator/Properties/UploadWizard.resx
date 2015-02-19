@@ -133,7 +133,7 @@ manuelle Hochladen. Es werden die selben Informationen gesendet wie beim ZIP-Exp
 </value>
   </data>
   <data name="Export_BusyMessage" xml:space="preserve">
-    <value>Exportiere Events...</value>
+    <value>Exportiere Events</value>
   </data>
   <data name="export_upload_button" xml:space="preserve">
     <value>Direktupload</value>

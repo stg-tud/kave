@@ -28,7 +28,6 @@ Contributors:
              xmlns:root="clr-namespace:KaVE.VsFeedbackGenerator"
              xmlns:util="clr-namespace:KaVE.VsFeedbackGenerator.Utils"
              xmlns:presentation="clr-namespace:KaVE.VsFeedbackGenerator.SessionManager.Presentation"
-             xmlns:gif="http://wpfanimatedgif.codeplex.com"
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="1000"
              d:DataContext="{d:DesignInstance Type=sessionManager:FeedbackViewModel, IsDesignTimeCreatable=False}">
@@ -72,8 +71,7 @@ Contributors:
                 </Button>
                 <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
                 <Button ToolTip="{x:Static root:Properties.SessionManager.Export}"
-                        Click="Export_OnClick"
-                        IsEnabled="{Binding Path=AreAnyEventsPresent}">
+                        Click="Export_OnClick">
                     <Image Source="/KaVE.VsFeedbackGenerator;Component/Resources/send.png" />
                 </Button>
                 <Button ToolTip="{x:Static root:Properties.SessionManager.VisitUploadPage}"
@@ -284,10 +282,7 @@ Contributors:
                     Grid.Column="0">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center"
                             VerticalAlignment="Center" Width="Auto">
-                    <Image gif:ImageBehavior.RepeatBehavior="Forever"
-                           gif:ImageBehavior.AnimatedSource="/KaVE.VsFeedbackGenerator;component/Resources/loading.gif"
-                           Width="24" Height="24" Margin="0 0 10 0" />
-                    <TextBlock Text="{Binding BusyMessage}"
+                    <TextBlock Text="{Binding BusyMessageAnimated}"
                                FontWeight="Bold" FontSize="24" />
                 </StackPanel>
             </Border>

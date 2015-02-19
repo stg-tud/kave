@@ -192,20 +192,6 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModelTestSui
             Assert.AreEqual(selectedSession, _uut.Sessions.First());
         }
 
-        [Test]
-        public void ShouldRaiseHasEventsChangedAfterDelete()
-        {
-            GivenSessionsAreSelected(_sessionViewModels[0]);
-            var hasEventsChanged = false;
-            _uut.OnPropertyChanged(self => self.AreAnyEventsPresent, v => hasEventsChanged = true);
-
-            _uut.DeleteSessionsCommand.Execute(null);
-            _confirmationRequestHelper.Context.Confirmed = true;
-            _confirmationRequestHelper.Callback();
-
-            Assert.IsTrue(hasEventsChanged);
-        }
-
         private void GivenSessionsAreSelected(params SessionViewModel[] sessions)
         {
             _uut.SelectedSessions = sessions;

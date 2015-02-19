@@ -74,9 +74,6 @@
       <HintPath>..\3rd-party\UserNotification.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
-    <Reference Include="WpfAnimatedGif">
-      <HintPath>..\packages\WpfAnimatedGif.1.4.4\lib\net\WpfAnimatedGif.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AboutAction.cs" />
@@ -280,7 +277,6 @@
     <Compile Include="Utils\StringUtils.cs" />
     <Compile Include="Utils\TypeNameExtensions.cs" />
     <Compile Include="Utils\XamlFormattingUtil.cs" />
-    <Compile Include="VsIntegration\AssemblyResolver.cs" />
     <Compile Include="VsIntegration\IDESession.cs" />
     <Compile Include="VsIntegration\IIDESession.cs" />
     <Compile Include="VsIntegration\IDESessionSettings.cs" />
