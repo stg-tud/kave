@@ -23,6 +23,7 @@ using KaVE.Model.Names.CSharp;
 using KaVE.Model.SSTs;
 using KaVE.Model.SSTs.Declarations;
 using KaVE.Model.SSTs.Statements;
+using KaVE.Model.SSTs.Statements.Wrapped;
 using KaVE.Model.SSTs.Visitor;
 using Moq;
 using NUnit.Framework;

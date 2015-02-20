@@ -20,10 +20,10 @@
 using KaVE.Model.Names;
 using KaVE.Model.Names.CSharp;
 using KaVE.Model.SSTs.Expressions;
-using KaVE.Model.SSTs.Statements;
+using KaVE.Model.SSTs.Statements.Wrapped;
 using NUnit.Framework;
 
-namespace KaVE.Model.Tests.SSTs.Statements
+namespace KaVE.Model.Tests.SSTs.Statements.Wrapped
 {
     public class InvocationStatementTest
     {
@@ -37,33 +37,49 @@ namespace KaVE.Model.Tests.SSTs.Statements
         }
 
         [Test]
-        public void CustomConstructorNonStatic()
+        public void SettingValues_Helper1()
         {
-            var sut = new InvocationStatement("a", GetMethod("A"), "b");
+            var sut = InvocationStatement.Create("a", GetMethod("A"), "b");
             Assert.AreEqual(new InvocationExpression("a", GetMethod("A"), "b"), sut.Target);
         }
 
         [Test]
-        public void CustomConstructorStatic()
+        public void SettingValues_Helper2()
         {
-            var sut = new InvocationStatement(GetStaticMethod("A"), "b");
+            var sut = InvocationStatement.Create(GetStaticMethod("A"), "b");
             Assert.AreEqual(new InvocationExpression(GetStaticMethod("A"), "b"), sut.Target);
         }
 
         [Test]
-        public void Equality()
+        public void TargetDoesNotChange()
         {
-            var a = new InvocationStatement(GetStaticMethod("A"), "b");
-            var b = new InvocationStatement(GetStaticMethod("A"), "b");
+            var sut = InvocationStatement.Create(GetStaticMethod("A"), "b");
+            Assert.AreSame(sut.Invocation, sut.Target);
+        }
+
+        [Test]
+        public void Equality_Default()
+        {
+            var a = new InvocationStatement();
+            var b = new InvocationStatement();
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
         }
 
         [Test]
-        public void Equality_DifferentTarget()
+        public void Equality_ReallyTheSame()
         {
-            var a = new InvocationStatement(GetStaticMethod("A"), "b");
-            var b = new InvocationStatement(GetStaticMethod("B"), "b");
+            var a = InvocationStatement.Create(GetStaticMethod("A"), "b");
+            var b = InvocationStatement.Create(GetStaticMethod("A"), "b");
+            Assert.AreEqual(a, b);
+            Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
+        }
+
+        [Test]
+        public void Equality_DifferentInvocation()
+        {
+            var a = InvocationStatement.Create(GetStaticMethod("A"), "b");
+            var b = InvocationStatement.Create(GetStaticMethod("B"), "b");
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
         }

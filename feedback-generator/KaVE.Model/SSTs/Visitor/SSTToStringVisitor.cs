@@ -16,9 +16,7 @@
  * Contributors:
  *    - Sebastian Proksch
  */
-using System;
-using System.Collections.Generic;
-using System.Linq;
+
 using System.Text;
 using KaVE.Model.SSTs.Declarations;
 
@@ -31,7 +29,7 @@ namespace KaVE.Model.SSTs.Visitor
             context.Append("class ");
             context.Append(sst.EnclosingType.Name);
             context.Append(" {\n");
-                
+
             foreach (var e in sst.Events)
             {
                 e.Accept(this, context);

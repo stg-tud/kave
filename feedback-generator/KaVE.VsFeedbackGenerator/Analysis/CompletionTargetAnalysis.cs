@@ -22,6 +22,7 @@ using JetBrains.ReSharper.Psi.Resolve;
 using JetBrains.ReSharper.Psi.Tree;
 using KaVE.Model.Names;
 using KaVE.Model.SSTs.Statements;
+using KaVE.Model.SSTs.Statements.Wrapped;
 using KaVE.Utils.Assertion;
 using KaVE.VsFeedbackGenerator.Utils.Names;
 
@@ -63,15 +64,18 @@ namespace KaVE.VsFeedbackGenerator.Analysis
 
             public override void VisitNode(ITreeNode node)
             {
-                var cSharpNode = node.Parent as ICSharpTreeNode;
-                if (cSharpNode != null)
-                {
-                    cSharpNode.Accept(this);
-                }
-                else
-                {
-                    Asserts.Fail("inconsistent tree? " + node.NodeType);
-                }
+                Asserts.NotNull(node.Parent, "reached top of tree... missed something?");
+
+                var parent = node.Parent as ICSharpTreeNode;
+                Asserts.NotNull(parent, "inconsistent tree? {0}", node.NodeType);
+
+                parent.Accept(this);
+            }
+
+            public override void VisitClassDeclaration(IClassDeclaration classDecl)
+            {
+                Result.Parent = classDecl;
+                // TODO add type for type completion
             }
 
             public override void VisitMethodDeclaration(IMethodDeclaration methodDeclarationParam)
@@ -93,12 +97,12 @@ namespace KaVE.VsFeedbackGenerator.Analysis
                     {
                         var refName = qRrefExpr.Reference.GetName();
                         var token = refExpr.Reference.GetName();
-                        Result.Completion = new StatementCompletion {Token = token, Identifier = refName};
+                        Result.Completion = StatementCompletion.Create(refName, token);
                     }
                     else
                     {
                         var token = refExpr.Reference.GetName();
-                        Result.Completion = new StatementCompletion {Token = token};
+                        Result.Completion = StatementCompletion.Create(token);
                     }
                 }
             }

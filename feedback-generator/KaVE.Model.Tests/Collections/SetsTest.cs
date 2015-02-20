@@ -17,8 +17,11 @@
  *    - Sebastian Proksch
  */
 
+using System;
 using System.Collections.Generic;
 using KaVE.Model.Collections;
+using KaVE.Model.Names.CSharp;
+using KaVE.Model.SSTs.Statements;
 using NUnit.Framework;
 
 namespace KaVE.Model.Tests.Collections
@@ -101,10 +104,23 @@ namespace KaVE.Model.Tests.Collections
         [Test]
         public void CreatingSetFromEnumerable()
         {
-            var input = new HashSet<int>(new[] {1, 2, 3});
+            var input = new HashSet<int>(new[] { 1, 2, 3 });
             var a = Sets.NewHashSetFrom(input);
             var b = Sets.NewHashSet(1, 2, 3);
             Assert.AreEqual(a, b);
+        }
+
+        [Test]
+        public void SetContains()
+        {
+            var a = new BreakStatement();
+            var b = new BreakStatement();
+            Assert.AreNotSame(a, b);
+            Assert.AreEqual(a, b);
+            Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
+
+            var sut = Sets.NewHashSet(a);
+            Assert.True(sut.Contains(b));
         }
     }
 }

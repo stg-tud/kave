@@ -17,18 +17,19 @@
  *    - Sebastian Proksch
  */
 
-using KaVE.Model.SSTs.Statements;
+using KaVE.Model.SSTs.Expressions;
+using KaVE.Model.SSTs.Statements.Wrapped;
 using NUnit.Framework;
 
-namespace KaVE.Model.Tests.SSTs.Statements
+namespace KaVE.Model.Tests.SSTs.Statements.Wrapped
 {
-    public class StatementCompletionTest
+    public class ExpressionStatementTest
     {
         [Test]
         public void DefaultValues()
         {
-            var sut = new StatementCompletion();
-            Assert.Null(sut.Token);
+            var sut = new TestStatement();
+            Assert.IsNull(sut.Target);
             Assert.AreNotEqual(0, sut.GetHashCode());
             Assert.AreNotEqual(1, sut.GetHashCode());
         }
@@ -36,18 +37,15 @@ namespace KaVE.Model.Tests.SSTs.Statements
         [Test]
         public void SettingValues()
         {
-            var sut = new StatementCompletion
-            {
-                Token = "abc"
-            };
-            Assert.AreEqual("abc", sut.Token);
+            var sut = new TestStatement {Target = new ConstantExpression()};
+            Assert.AreEqual(new ConstantExpression(), sut.Target);
         }
 
         [Test]
         public void Equality_Default()
         {
-            var a = new StatementCompletion();
-            var b = new StatementCompletion();
+            var a = new TestStatement();
+            var b = new TestStatement();
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
         }
@@ -55,20 +53,21 @@ namespace KaVE.Model.Tests.SSTs.Statements
         [Test]
         public void Equality_ReallyTheSame()
         {
-            var a = new StatementCompletion {Token = "a"};
-            var b = new StatementCompletion {Token = "a"};
+            var a = new TestStatement {Target = new ConstantExpression()};
+            var b = new TestStatement {Target = new ConstantExpression()};
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
         }
 
-
         [Test]
-        public void Equality_DifferentToken()
+        public void Equality_DifferentTarget()
         {
-            var a = new StatementCompletion {Token = "a"};
-            var b = new StatementCompletion {Token = "b"};
+            var a = new TestStatement {Target = new ConstantExpression()};
+            var b = new TestStatement();
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
         }
     }
+
+    internal class TestStatement : ExpressionStatement {}
 }

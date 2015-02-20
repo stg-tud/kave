@@ -85,6 +85,7 @@
     <Compile Include="Analysis\InvocationCollector.cs" />
     <Compile Include="Analysis\ReSharperUtils.cs" />
     <Compile Include="Analysis\SSTAnalysis.cs" />
+    <Compile Include="Analysis\Transformer\BodyVisitor.cs" />
     <Compile Include="Analysis\Transformer\Context\ArgumentCollectorContext.cs" />
     <Compile Include="Analysis\Transformer\Context\AssignmentGeneratorContext.cs" />
     <Compile Include="Analysis\Transformer\Context\ITransformerContext.cs" />

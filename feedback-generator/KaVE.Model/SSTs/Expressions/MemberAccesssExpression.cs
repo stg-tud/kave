@@ -17,34 +17,18 @@
  *    - Sebastian Proksch
  */
 
-using KaVE.Model.Names;
-using KaVE.Model.SSTs.Expressions;
 using KaVE.Utils;
 
-namespace KaVE.Model.SSTs.Statements
+namespace KaVE.Model.SSTs.Expressions
 {
-    public class InvocationStatement : Statement
+    public class MemberAccessExpression : Expression
     {
-        public InvocationExpression Target { get; set; }
+        public string Identifier { get; set; }
+        public string MemberName { get; set; }
 
-        public InvocationStatement()
+        protected bool Equals(MemberAccessExpression other)
         {
-            // TODO get rid of all constructors?!
-        }
-
-        public InvocationStatement(IMethodName name, params string[] parameters)
-        {
-            Target = new InvocationExpression(name, parameters);
-        }
-
-        public InvocationStatement(string id, IMethodName name, params string[] parameters)
-        {
-            Target = new InvocationExpression(id, name, parameters);
-        }
-
-        private bool Equals(InvocationStatement other)
-        {
-            return Equals(Target, other.Target);
+            return string.Equals(Identifier, other.Identifier) && string.Equals(MemberName, other.MemberName);
         }
 
         public override bool Equals(object obj)
@@ -54,7 +38,9 @@ namespace KaVE.Model.SSTs.Statements
 
         public override int GetHashCode()
         {
-            return 6 + (Target != null ? Target.GetHashCode() : 0);
+            var hcIdentifier = Identifier != null ? Identifier.GetHashCode() : 0;
+            var hcMemberName = MemberName != null ? MemberName.GetHashCode() : 0;
+            return 29 + hcIdentifier*397 + hcMemberName;
         }
     }
 }

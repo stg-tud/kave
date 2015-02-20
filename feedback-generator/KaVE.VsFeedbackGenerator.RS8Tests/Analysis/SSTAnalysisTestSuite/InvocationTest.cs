@@ -21,6 +21,7 @@ using KaVE.Model.Names.CSharp;
 using KaVE.Model.SSTs.Declarations;
 using KaVE.Model.SSTs.Expressions;
 using KaVE.Model.SSTs.Statements;
+using KaVE.Model.SSTs.Statements.Wrapped;
 using NUnit.Framework;
 using Fix = KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite.SSTAnalysisFixture;
 
@@ -40,7 +41,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
                 }
             ");
             var mA = NewMethodDeclaration(Fix.Void, "A", string.Format("[{0}] s", Fix.String));
-            mA.Body.Add(new InvocationStatement("s", Fix.GetHashCode(Fix.String)));
+            mA.Body.Add(InvocationStatement.Create("s", Fix.GetHashCode(Fix.String)));
 
             AssertAllMethods(mA);
         }
@@ -79,7 +80,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             var mA = NewMethodDeclaration(Fix.Void, "A", string.Format("[{0}] s", Fix.String));
             mA.Body.Add(new VariableDeclaration("$0", Fix.String));
             mA.Body.Add(new Assignment("$0", new ConstantExpression()));
-            mA.Body.Add(new InvocationStatement("s", Fix.Equals(Fix.String, Fix.String, "value"), "$0"));
+            mA.Body.Add(InvocationStatement.Create("s", Fix.Equals(Fix.String, Fix.String, "value"), "$0"));
 
             AssertAllMethods(mA);
         }
@@ -97,7 +98,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             var mA = NewMethodDeclaration(Fix.Void, "A", string.Format("[{0}] i", Fix.Int));
             mA.Body.Add(new VariableDeclaration("$0", Fix.Int));
             mA.Body.Add(new Assignment("$0", ComposedExpression.Create("i")));
-            mA.Body.Add(new InvocationStatement("i", Fix.Equals(Fix.Int, Fix.Int, "obj"), "$0"));
+            mA.Body.Add(InvocationStatement.Create("i", Fix.Equals(Fix.Int, Fix.Int, "obj"), "$0"));
 
             AssertAllMethods(mA);
         }
@@ -115,7 +116,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             var mA = NewMethodDeclaration(Fix.Void, "A", string.Format("[{0}] b", Fix.Bool));
             mA.Body.Add(new VariableDeclaration("$0", Fix.Bool));
             mA.Body.Add(new Assignment("$0", ComposedExpression.Create("b")));
-            mA.Body.Add(new InvocationStatement("b", Fix.Equals(Fix.Bool, Fix.Bool, "obj"), "$0"));
+            mA.Body.Add(InvocationStatement.Create("b", Fix.Equals(Fix.Bool, Fix.Bool, "obj"), "$0"));
 
             AssertAllMethods(mA);
         }
@@ -135,7 +136,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             mA.Body.Add(new VariableDeclaration("$0", Fix.IntArray));
             mA.Body.Add(new Assignment("$0", ComposedExpression.Create("i")));
             mA.Body.Add(
-                new InvocationStatement(
+                InvocationStatement.Create(
                     "this",
                     MethodName.Get(string.Format("[{0}] [N.C, TestProject].B([{1}] a)", Fix.Void, Fix.IntArray)),
                     "$0"));
@@ -157,7 +158,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
                 }
             ");
             var mA = NewMethodDeclaration(Fix.Void, "A", string.Format("[{0}] s", Fix.String));
-            mA.Body.Add(new InvocationStatement("s", Fix.Equals(Fix.String, Fix.Object, "obj"), "this"));
+            mA.Body.Add(InvocationStatement.Create("s", Fix.Equals(Fix.String, Fix.Object, "obj"), "this"));
 
             AssertAllMethods(mA);
         }
@@ -179,7 +180,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
                 new Assignment(
                     "$0",
                     new InvocationExpression("s", MethodName.Get(string.Format("[{0}] [{0}].Normalize()", Fix.String)))));
-            mA.Body.Add(new InvocationStatement("s", Fix.Equals(Fix.String, Fix.String, "value"), "$0"));
+            mA.Body.Add(InvocationStatement.Create("s", Fix.Equals(Fix.String, Fix.String, "value"), "$0"));
 
             AssertAllMethods(mA);
         }
@@ -198,7 +199,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             var mA = NewMethodDeclaration(Fix.Void, "A", string.Format("[{0}] s", Fix.String));
             mA.Body.Add(new VariableDeclaration("$0", Fix.Int));
             mA.Body.Add(new Assignment("$0", new InvocationExpression("s", Fix.GetHashCode(Fix.String))));
-            mA.Body.Add(new InvocationStatement("$0", Fix.ToString(Fix.Int)));
+            mA.Body.Add(InvocationStatement.Create("$0", Fix.ToString(Fix.Int)));
 
             AssertAllMethods(mA);
         }
@@ -217,7 +218,9 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 
             var mA = NewMethodDeclaration(Fix.Void, "A");
             mA.Body.Add(
-                new InvocationStatement("this", MethodName.Get(string.Format("[{0}] [N.C, TestProject].B()", Fix.Void))));
+                InvocationStatement.Create(
+                    "this",
+                    MethodName.Get(string.Format("[{0}] [N.C, TestProject].B()", Fix.Void))));
 
             var mB = NewMethodDeclaration(Fix.Void, "B");
             mB.IsEntryPoint = false;
@@ -239,7 +242,9 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 
             var mA = NewMethodDeclaration(Fix.Void, "A");
             mA.Body.Add(
-                new InvocationStatement("this", MethodName.Get(string.Format("[{0}] [N.C, TestProject].B()", Fix.Void))));
+                InvocationStatement.Create(
+                    "this",
+                    MethodName.Get(string.Format("[{0}] [N.C, TestProject].B()", Fix.Void))));
 
             var mB = NewMethodDeclaration(Fix.Void, "B");
             mB.IsEntryPoint = false;
@@ -271,7 +276,9 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 
             var mA = NewMethodDeclaration(Fix.Void, "A");
             mA.Body.Add(
-                new InvocationStatement("base", MethodName.Get(string.Format("[{0}] [N.D, TestProject].B()", Fix.Void))));
+                InvocationStatement.Create(
+                    "base",
+                    MethodName.Get(string.Format("[{0}] [N.D, TestProject].B()", Fix.Void))));
 
             var mB = NewMethodDeclaration(Fix.Void, "B");
 
@@ -302,7 +309,9 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 
             var mA = NewMethodDeclaration(Fix.Void, "A");
             mA.Body.Add(
-                new InvocationStatement("base", MethodName.Get(string.Format("[{0}] [N.D, TestProject].B()", Fix.Void))));
+                InvocationStatement.Create(
+                    "base",
+                    MethodName.Get(string.Format("[{0}] [N.D, TestProject].B()", Fix.Void))));
 
             var mB = NewMethodDeclaration(Fix.Void, "B");
 
@@ -331,7 +340,9 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 
             var mA = NewMethodDeclaration(Fix.Void, "A");
             mA.Body.Add(
-                new InvocationStatement("this", MethodName.Get(string.Format("[{0}] [N.I, TestProject].B()", Fix.Void))));
+                InvocationStatement.Create(
+                    "this",
+                    MethodName.Get(string.Format("[{0}] [N.I, TestProject].B()", Fix.Void))));
 
             var mB = NewMethodDeclaration(Fix.Void, "B");
 
@@ -353,7 +364,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 
             mA.Body.Add(new VariableDeclaration("$0", Fix.Int));
             mA.Body.Add(new Assignment("$0", new ConstantExpression()));
-            mA.Body.Add(new InvocationStatement(Fix.ConsoleWrite(Fix.Int), "$0"));
+            mA.Body.Add(InvocationStatement.Create(Fix.ConsoleWrite(Fix.Int), "$0"));
 
             AssertAllMethods(mA);
         }
@@ -373,7 +384,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 
             mA.Body.Add(new VariableDeclaration("$0", Fix.Int));
             mA.Body.Add(new Assignment("$0", ComposedExpression.Create("o")));
-            mA.Body.Add(new InvocationStatement(Fix.ConsoleWrite(Fix.Int), "$0"));
+            mA.Body.Add(InvocationStatement.Create(Fix.ConsoleWrite(Fix.Int), "$0"));
 
             AssertAllMethods(mA);
         }
@@ -393,7 +404,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 
             mA.Body.Add(new VariableDeclaration("$0", Fix.String));
             mA.Body.Add(new Assignment("$0", new ConstantExpression()));
-            mA.Body.Add(new InvocationStatement(Fix.ConsoleWrite(Fix.String), "$0"));
+            mA.Body.Add(InvocationStatement.Create(Fix.ConsoleWrite(Fix.String), "$0"));
 
             AssertAllMethods(mA);
         }
@@ -413,7 +424,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 
             mA.Body.Add(new VariableDeclaration("$0", Fix.Bool));
             mA.Body.Add(new Assignment("$0", ComposedExpression.Create("o")));
-            mA.Body.Add(new InvocationStatement(Fix.ConsoleWrite(Fix.Bool), "$0"));
+            mA.Body.Add(InvocationStatement.Create(Fix.ConsoleWrite(Fix.Bool), "$0"));
 
             AssertAllMethods(mA);
         }
@@ -433,7 +444,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 
             mA.Body.Add(new VariableDeclaration("$0", Fix.Bool));
             mA.Body.Add(new Assignment("$0", new ConstantExpression()));
-            mA.Body.Add(new InvocationStatement(Fix.ConsoleWrite(Fix.Bool), "$0"));
+            mA.Body.Add(InvocationStatement.Create(Fix.ConsoleWrite(Fix.Bool), "$0"));
 
             AssertAllMethods(mA);
         }
@@ -453,7 +464,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 
             mA.Body.Add(new VariableDeclaration("$0", Fix.Int));
             mA.Body.Add(new Assignment("$0", new ConstantExpression()));
-            mA.Body.Add(new InvocationStatement(Fix.ConsoleWrite(Fix.Int), "$0"));
+            mA.Body.Add(InvocationStatement.Create(Fix.ConsoleWrite(Fix.Int), "$0"));
 
             AssertAllMethods(mA);
         }
@@ -473,7 +484,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 
             mA.Body.Add(new VariableDeclaration("$0", Fix.Int));
             mA.Body.Add(new Assignment("$0", ComposedExpression.Create("o")));
-            mA.Body.Add(new InvocationStatement(Fix.ConsoleWrite(Fix.Int), "$0"));
+            mA.Body.Add(InvocationStatement.Create(Fix.ConsoleWrite(Fix.Int), "$0"));
 
             AssertAllMethods(mA);
         }
@@ -494,7 +505,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 
             mA.Body.Add(new VariableDeclaration("j", Fix.Int));
             mA.Body.Add(new Assignment("j", ComposedExpression.Create("i")));
-            mA.Body.Add(new InvocationStatement(Fix.ConsoleWrite(Fix.Int), "j"));
+            mA.Body.Add(InvocationStatement.Create(Fix.ConsoleWrite(Fix.Int), "j"));
 
             AssertAllMethods(mA);
         }
@@ -514,7 +525,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 
             mA.Body.Add(new VariableDeclaration("$0", Fix.Int));
             mA.Body.Add(new Assignment("$0", ComposedExpression.Create("i")));
-            mA.Body.Add(new InvocationStatement(Fix.ConsoleWrite(Fix.Int), "$0"));
+            mA.Body.Add(InvocationStatement.Create(Fix.ConsoleWrite(Fix.Int), "$0"));
 
             AssertAllMethods(mA);
         }
@@ -534,7 +545,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 
             mA.Body.Add(new VariableDeclaration("$0", Fix.Int));
             mA.Body.Add(new Assignment("$0", ComposedExpression.Create("i")));
-            mA.Body.Add(new InvocationStatement(Fix.ConsoleWrite(Fix.Int), "$0"));
+            mA.Body.Add(InvocationStatement.Create(Fix.ConsoleWrite(Fix.Int), "$0"));
 
             AssertAllMethods(mA);
         }
@@ -554,7 +565,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 
             mA.Body.Add(new VariableDeclaration("$0", TypeName.Get("System.Type, mscorlib, 4.0.0.0")));
             mA.Body.Add(new Assignment("$0", new ConstantExpression()));
-            mA.Body.Add(new InvocationStatement(Fix.ConsoleWrite(Fix.Object), "$0"));
+            mA.Body.Add(InvocationStatement.Create(Fix.ConsoleWrite(Fix.Object), "$0"));
 
             AssertAllMethods(mA);
         }
@@ -574,7 +585,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 
             mA.Body.Add(new VariableDeclaration("$0", Fix.Int));
             mA.Body.Add(new Assignment("$0", new ConstantExpression()));
-            mA.Body.Add(new InvocationStatement(Fix.ConsoleWrite(Fix.Int), "$0"));
+            mA.Body.Add(InvocationStatement.Create(Fix.ConsoleWrite(Fix.Int), "$0"));
 
             AssertAllMethods(mA);
         }
@@ -601,7 +612,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
                         ThenExpression = new ConstantExpression(),
                         ElseExpression = new ConstantExpression()
                     }));
-            mA.Body.Add(new InvocationStatement(Fix.ConsoleWrite(Fix.Int), new[] {"$0"}));
+            mA.Body.Add(InvocationStatement.Create(Fix.ConsoleWrite(Fix.Int), new[] {"$0"}));
 
             AssertAllMethods(mA);
         }

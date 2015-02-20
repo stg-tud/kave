@@ -23,6 +23,7 @@ using JetBrains.Util;
 using KaVE.Model.SSTs.Blocks;
 using KaVE.Model.SSTs.Declarations;
 using KaVE.Model.SSTs.Statements;
+using KaVE.Model.SSTs.Statements.Wrapped;
 using KaVE.VsFeedbackGenerator.Analysis.Transformer.Context;
 using KaVE.VsFeedbackGenerator.Utils.Names;
 
@@ -120,7 +121,6 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
                 {
                     ifBlock.Condition = ifStatementParam.Condition.GetReferences(context);
                 }
-                ;
                 if (ifStatementParam.Then != null)
                 {
                     ifBlock.Then.AddRange(ifStatementParam.Then.GetScope(context).Body);
@@ -140,7 +140,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
                 invocationExpressionParam,
                 context,
                 (callee, method, args, retType) =>
-                    context.Scope.Body.Add(new InvocationStatement {Target = callee.CreateInvocation(method, args)}));
+                    context.Scope.Body.Add(InvocationStatement.Create(method, args)));
         }
 
         public override void VisitLocalVariableDeclaration(ILocalVariableDeclaration localVariableDeclarationParam,

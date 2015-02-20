@@ -35,6 +35,10 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
         internal static readonly ITypeName Exception = TypeName.Get("System.Exception, mscorlib, 4.0.0.0");
         internal static readonly ITypeName IOException = TypeName.Get("System.IO.IOException, mscorlib, 4.0.0.0");
 
+        // ReSharper disable once InconsistentNaming
+        internal static readonly IMethodName Object_GetHashCode =
+            MethodName.Get("[System.Boolean, mscorlib, 4.0.0.0] [System.Object, mscorlib, 4.0.0.0].GetHashCode()");
+
         internal static IMethodName GetHashCode(ITypeName declaringType)
         {
             return MethodName.Get(string.Format("[{0}] [{1}].GetHashCode()", Int, declaringType));

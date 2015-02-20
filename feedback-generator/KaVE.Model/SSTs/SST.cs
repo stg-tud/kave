@@ -23,6 +23,7 @@ using KaVE.Model.Collections;
 using KaVE.Model.Names;
 using KaVE.Model.SSTs.Declarations;
 using KaVE.Model.SSTs.Statements;
+using KaVE.Model.SSTs.Statements.Wrapped;
 using KaVE.Model.SSTs.Visitor;
 using KaVE.Utils;
 

@@ -19,16 +19,15 @@
 
 using KaVE.Utils;
 
-namespace KaVE.Model.SSTs.Statements
+namespace KaVE.Model.SSTs.Statements.Wrapped
 {
-    public class StatementCompletion : Statement
+    public abstract class ExpressionStatement : Statement
     {
-        public string Token { get; set; }
-        public string Identifier { get; set; }
+        public Expression Target { get; set; }
 
-        private bool Equals(StatementCompletion other)
+        private bool Equals(ExpressionStatement other)
         {
-            return string.Equals(Token, other.Token);
+            return Equals(Target, other.Target);
         }
 
         public override bool Equals(object obj)
@@ -38,15 +37,7 @@ namespace KaVE.Model.SSTs.Statements
 
         public override int GetHashCode()
         {
-            unchecked
-            {
-                return 3 + (Token != null ? Token.GetHashCode() : 0);
-            }
+            return 6 + (Target != null ? Target.GetHashCode() : 0);
         }
-    }
-
-    public class ExpressionCompletion : Expression
-    {
-        public string Token { get; set; }
     }
 }

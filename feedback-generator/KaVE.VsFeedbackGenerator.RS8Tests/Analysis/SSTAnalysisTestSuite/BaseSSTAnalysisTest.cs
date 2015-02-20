@@ -77,7 +77,14 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 
         internal void AssertMethod(MethodDeclaration expected)
         {
-            Assert.IsTrue(ResultSST.Methods.Contains(expected));
+            foreach(var actual in ResultSST.Methods)
+            {
+                if (expected.Equals(actual))
+                {
+                    return;
+                }
+            }
+            Assert.Fail("method not found");
         }
 
         internal void AssertAllMethods(params MethodDeclaration[] expectedDecls)

@@ -18,10 +18,11 @@
  */
 
 using System;
-using KaVE.Model.Names.CSharp;
+using System.Linq;
 using KaVE.Model.SSTs.Blocks;
 using KaVE.Model.SSTs.Expressions;
 using KaVE.Model.SSTs.Statements;
+using KaVE.Model.SSTs.Statements.Wrapped;
 using NUnit.Framework;
 using Fix = KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite.SSTAnalysisFixture;
 
@@ -110,6 +111,14 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 
             var mA = NewMethodDeclaration(Fix.Void, "A");
             mA.Body.Add(trigger);
+
+            var first = ResultSST.Methods.FirstOrDefault();
+            var hc1 = mA.GetHashCode();
+            var hc2 = first.GetHashCode();
+
+            var eq = mA.Equals(first);
+            var eq2 = first.Equals(mA);
+
             AssertMethod(mA);
         }
 
@@ -123,7 +132,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
                 }
             ");
 
-            var trigger = new StatementCompletion {Token = "o"};
+            var trigger = StatementCompletion.Create("o");
 
             var mA = NewMethodDeclaration(Fix.Void, "A");
             mA.Body.Add(trigger);
@@ -140,7 +149,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
                 }
             ");
 
-            var trigger = new StatementCompletion {Identifier = "a"};
+            var trigger = StatementCompletion.Create("a", "");
 
             var mA = NewMethodDeclaration(Fix.Void, "A");
             mA.Body.Add(trigger);
@@ -157,7 +166,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
                 }
             ");
 
-            var trigger = new StatementCompletion {Identifier = "a", Token = "b"};
+            var trigger = StatementCompletion.Create("a", "b");
 
             var mA = NewMethodDeclaration(Fix.Void, "A");
             mA.Body.Add(trigger);
@@ -174,7 +183,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
                 }
             ");
 
-            var trigger = new StatementCompletion {Identifier = "a", Token = "b"};
+            var trigger = StatementCompletion.Create("a", "b");
 
             var mA = NewMethodDeclaration(Fix.Void, "A");
             mA.Body.Add(trigger);
@@ -193,29 +202,9 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
                 }
             ");
 
-            var preceedingInvocation = new InvocationStatement
-            {
-                Target =
-                    new InvocationExpression
-                    {
-                        Identifier = "this",
-                        Name =
-                            MethodName.Get(
-                                "[System.Boolean, mscorlib, 4.0.0.0] [System.Object, mscorlib, 4.0.0.0].GetHashCode()")
-                    }
-            };
-            var trigger = new StatementCompletion {Identifier = "a", Token = "b"};
-            var subsequentInvocation = new InvocationStatement
-            {
-                Target =
-                    new InvocationExpression
-                    {
-                        Identifier = "this",
-                        Name =
-                            MethodName.Get(
-                                "[System.Boolean, mscorlib, 4.0.0.0] [System.Object, mscorlib, 4.0.0.0].GetHashCode()")
-                    }
-            };
+            var preceedingInvocation = InvocationStatement.Create("this", Fix.Object_GetHashCode);
+            var trigger = StatementCompletion.Create("a", "b");
+            var subsequentInvocation = InvocationStatement.Create("this", Fix.Object_GetHashCode);
 
             var mA = NewMethodDeclaration(Fix.Void, "A");
             mA.Body.Add(preceedingInvocation);

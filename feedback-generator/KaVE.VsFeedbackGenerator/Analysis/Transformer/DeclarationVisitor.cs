@@ -87,6 +87,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
                     Name = methodName,
                     IsEntryPoint = _entryPoints.Contains(methodName)
                 };
+                context.Methods.Add(sstDecl);
 
                 if (_marker.Parent == decl)
                 {
@@ -95,11 +96,8 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
 
                 if (!decl.IsAbstract)
                 {
-                    var stctx = new ScopeTransformerContext(_sstFactory);
-                    var stmts = decl.GetScope(stctx).Body;
-                    sstDecl.Body.AddRange(stmts);
-                    context.Methods.Add(sstDecl);
-                    //decl.Accept(CreateBlockVisitor(), sstDecl.Body);
+                    var bodyVisitor = new BodyVisitor();
+                    decl.Accept(bodyVisitor, sstDecl.Body);
                 }
             }
         }
