@@ -93,6 +93,7 @@
     <Compile Include="Analysis\Transformer\Context\ScopeTransformerContext.cs" />
     <Compile Include="Analysis\Transformer\BlockVisitor.cs" />
     <Compile Include="Analysis\Transformer\DeclarationVisitor.cs" />
+    <Compile Include="Analysis\Transformer\ToArgumentList.cs" />
     <Compile Include="Analysis\Transformer\ToBlockReducer.cs" />
     <Compile Include="Analysis\Transformer\ToExpressionReducer.cs" />
     <Compile Include="Analysis\Transformer\ToNameReducer.cs" />
@@ -101,6 +102,7 @@
     <Compile Include="Analysis\Transformer\SSTScopeTransformer.cs" />
     <Compile Include="Analysis\Transformer\SSTReferenceCollector.cs" />
     <Compile Include="Analysis\Transformer\SSTTransformerUtil.cs" />
+    <Compile Include="Analysis\Transformer\ToRefReducer.cs" />
     <Compile Include="Analysis\Util\SSTFactory.cs" />
     <Compile Include="Analysis\Util\Scope.cs" />
     <Compile Include="Analysis\Util\UniqueVariableNameGenerator.cs" />

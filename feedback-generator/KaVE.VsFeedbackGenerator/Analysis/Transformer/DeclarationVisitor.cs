@@ -96,7 +96,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
 
                 if (!decl.IsAbstract)
                 {
-                    var bodyVisitor = new BodyVisitor();
+                    var bodyVisitor = new BodyVisitor(_marker);
                     decl.Accept(bodyVisitor, sstDecl.Body);
                 }
             }

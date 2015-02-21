@@ -193,10 +193,14 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
         [Test]
         public void TriggeredInMethod_BetweenStatements()
         {
+            // TODO wieder alles auf ausgang :)
             CompleteInClass(@"
                 public void A()
                 {
+                    var o = new object();
                     this.GetHashCode();
+                    this.Equals(o);
+                    this.Equals(this);
                     $
                     this.GetHashCode();
                 }
