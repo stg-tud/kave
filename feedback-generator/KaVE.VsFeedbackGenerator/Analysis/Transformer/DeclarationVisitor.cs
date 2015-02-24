@@ -25,7 +25,6 @@ using KaVE.Model.Names;
 using KaVE.Model.Names.CSharp;
 using KaVE.Model.SSTs;
 using KaVE.Model.SSTs.Declarations;
-using KaVE.VsFeedbackGenerator.Analysis.Transformer.Context;
 using KaVE.VsFeedbackGenerator.Analysis.Util;
 using KaVE.VsFeedbackGenerator.Utils.Names;
 
@@ -88,11 +87,6 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
                     IsEntryPoint = _entryPoints.Contains(methodName)
                 };
                 context.Methods.Add(sstDecl);
-
-                if (_marker.Parent == decl)
-                {
-                    sstDecl.Body.Add(_marker.Completion);
-                }
 
                 if (!decl.IsAbstract)
                 {

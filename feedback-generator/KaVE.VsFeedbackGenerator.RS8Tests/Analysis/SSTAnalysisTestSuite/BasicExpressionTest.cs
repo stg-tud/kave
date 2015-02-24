@@ -32,6 +32,20 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
     internal class BasicExpressionTest : BaseSSTAnalysisTest
     {
         [Test]
+        public void LonelyVariableDeclaration()
+        {
+            CompleteInMethod(@"
+                int i;
+                $
+            ");
+
+            var body = Lists.NewList<Statement>();
+            body.Add(new VariableDeclaration("i", Fix.Int));
+
+            AssertBody(body);
+        }
+
+        [Test]
         public void ConstantValue()
         {
             CompleteInMethod(@"
@@ -123,14 +137,14 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
         public void ReferenceExpression()
         {
             CompleteInMethod(@"
-                object o = new object();
+                object o = null;
                 object o2 = o;
                 $
             ");
 
             var body = Lists.NewList<Statement>();
             body.Add(new VariableDeclaration("o", Fix.Object));
-            body.Add(new Assignment("o", new InvocationExpression {Identifier = "o", Name = Fix.Object_Init}));
+            body.Add(new Assignment("o", new NullExpression()));
             body.Add(new VariableDeclaration("o2", Fix.Object));
             body.Add(new Assignment("o2", new ReferenceExpression {Identifier = "o"}));
 

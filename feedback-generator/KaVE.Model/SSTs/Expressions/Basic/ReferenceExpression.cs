@@ -17,10 +17,28 @@
  *    - Sebastian Proksch
  */
 
+using KaVE.Utils;
+
 namespace KaVE.Model.SSTs.Expressions.Basic
 {
     public class ReferenceExpression : BasicExpression
     {
         public string Identifier { get; set; }
+
+        protected bool Equals(ReferenceExpression other)
+        {
+            return string.Equals(Identifier, other.Identifier);
+        }
+
+        public override bool Equals(object obj)
+        {
+            return this.Equals(obj, Equals);
+        }
+
+        public override int GetHashCode()
+        {
+            var hcIdentifier = Identifier != null ? Identifier.GetHashCode() : 0;
+            return 29 + hcIdentifier;
+        }
     }
 }

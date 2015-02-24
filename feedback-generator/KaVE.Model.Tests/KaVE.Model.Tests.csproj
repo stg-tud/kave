@@ -103,6 +103,7 @@
     <Compile Include="SSTs\Expressions\LambdaExpressionTest.cs" />
     <Compile Include="SSTs\Declarations\MethodDeclarationTest.cs" />
     <Compile Include="SSTs\Expressions\MemberAccessExpressionTest.cs" />
+    <Compile Include="SSTs\Expressions\ReferenceExpressionTest.cs" />
     <Compile Include="SSTs\SSTTest.cs" />
     <Compile Include="SSTs\Statements\AssignmentTest.cs" />
     <Compile Include="SSTs\Statements\BreakStatementTest.cs" />

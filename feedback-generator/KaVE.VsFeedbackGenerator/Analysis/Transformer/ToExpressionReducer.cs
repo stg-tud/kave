@@ -17,19 +17,39 @@
  *    - Sebastian Proksch
  */
 
-using System;
 using System.Collections.Generic;
+using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using KaVE.Model.SSTs;
+using KaVE.Model.SSTs.Expressions.Basic;
 using KaVE.VsFeedbackGenerator.Analysis.Util;
 
 namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
 {
-    public class ToExpressionReducer : TreeNodeVisitor<IList<Statement>, Expression>
+    public class ToBasicExpressionReducer : TreeNodeVisitor<IList<Statement>, Expression>
     {
-        public ToExpressionReducer(UniqueVariableNameGenerator nameGen)
+        public ToBasicExpressionReducer(UniqueVariableNameGenerator nameGen) {}
+
+        public override Expression VisitExpressionInitializer(IExpressionInitializer exprInit, IList<Statement> context)
         {
-            throw new NotImplementedException();
+            return exprInit.Value.Accept(this, context);
+        }
+
+        public override Expression VisitCSharpLiteralExpression(ICSharpLiteralExpression litExpr,
+            IList<Statement> context)
+        {
+            var isNull = litExpr.ConstantValue.IsPureNull(CSharpLanguage.Instance);
+            if (isNull)
+            {
+                return new NullExpression();
+            }
+            return new ConstantValueExpression();
+        }
+
+        public override Expression VisitReferenceExpression(IReferenceExpression refExpr, IList<Statement> context)
+        {
+            var id = refExpr.NameIdentifier.Name;
+            return new ReferenceExpression {Identifier = id};
         }
     }
 }

@@ -25,8 +25,11 @@ using JetBrains.Util;
 using KaVE.Model.Collections;
 using KaVE.Model.Names;
 using KaVE.Model.SSTs;
+using KaVE.Model.SSTs.Declarations;
 using KaVE.Model.SSTs.Expressions.Basic;
+using KaVE.Model.SSTs.Statements;
 using KaVE.Model.SSTs.Statements.Wrapped;
+using KaVE.VsFeedbackGenerator.Analysis.Util;
 using KaVE.VsFeedbackGenerator.Utils.Names;
 
 namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
@@ -34,15 +37,31 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
     public class BodyVisitor : TreeNodeVisitor<IList<Statement>>
     {
         private readonly CompletionTargetAnalysis.TriggerPointMarker _marker;
+        private readonly ToBasicExpressionReducer _toBasicExprReducer;
 
         public BodyVisitor(CompletionTargetAnalysis.TriggerPointMarker marker)
         {
             _marker = marker;
+            _toBasicExprReducer = new ToBasicExpressionReducer(new UniqueVariableNameGenerator());
         }
 
         public override void VisitNode(ITreeNode node, IList<Statement> context)
         {
             node.Children<ICSharpTreeNode>().ForEach(child => child.Accept(this, context));
+        }
+
+        public override void VisitLocalVariableDeclaration(ILocalVariableDeclaration decl, IList<Statement> context)
+        {
+            var id = decl.DeclaredName;
+            var type = decl.Type.GetName();
+            context.Add(new VariableDeclaration {Identifier = id, Type = type});
+
+            var isInitialized = decl.Initial != null;
+            if (isInitialized)
+            {
+                var initialiser = decl.Initial.Accept(_toBasicExprReducer, context);
+                context.Add(new Assignment {Identifier = id, Value = initialiser});
+            }
         }
 
         public override void VisitInvocationExpression(IInvocationExpression inv, IList<Statement> body)
