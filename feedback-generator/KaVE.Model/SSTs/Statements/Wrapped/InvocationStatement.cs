@@ -19,6 +19,7 @@
 
 using KaVE.Model.Names;
 using KaVE.Model.SSTs.Expressions;
+using KaVE.Model.SSTs.Expressions.Basic;
 
 namespace KaVE.Model.SSTs.Statements.Wrapped
 {
@@ -29,14 +30,14 @@ namespace KaVE.Model.SSTs.Statements.Wrapped
             get { return Target as InvocationExpression; }
         }
 
-        public static InvocationStatement Create(IMethodName name, params string[] parameters)
+        public static InvocationStatement Create(IMethodName name, params BasicExpression[] parameters)
         {
-            return new InvocationStatement {Target = new InvocationExpression(name, parameters)};
+            return new InvocationStatement {Target = InvocationExpression.Create(name, parameters)};
         }
 
-        public static InvocationStatement Create(string id, IMethodName name, params string[] parameters)
+        public static InvocationStatement Create(string id, IMethodName name, params BasicExpression[] parameters)
         {
-            return new InvocationStatement {Target = new InvocationExpression(id, name, parameters)};
+            return new InvocationStatement {Target = InvocationExpression.Create(id, name, parameters)};
         }
     }
 }

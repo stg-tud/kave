@@ -17,20 +17,10 @@
  *    - Sebastian Proksch
  */
 
-using KaVE.Utils;
-
-namespace KaVE.Model.SSTs.Statements
+namespace KaVE.Model.SSTs.Expressions.Basic
 {
-    public class ContinueStatement : Statement
+    public class ReferenceExpression : BasicExpression
     {
-        public override bool Equals(object obj)
-        {
-            return this.Equals(obj, other => true);
-        }
-
-        public override int GetHashCode()
-        {
-            return 4;
-        }
+        public string Identifier { get; set; }
     }
 }

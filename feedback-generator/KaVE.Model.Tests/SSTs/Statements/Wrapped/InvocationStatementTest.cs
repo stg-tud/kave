@@ -20,6 +20,7 @@
 using KaVE.Model.Names;
 using KaVE.Model.Names.CSharp;
 using KaVE.Model.SSTs.Expressions;
+using KaVE.Model.SSTs.Expressions.Basic;
 using KaVE.Model.SSTs.Statements.Wrapped;
 using NUnit.Framework;
 
@@ -39,21 +40,21 @@ namespace KaVE.Model.Tests.SSTs.Statements.Wrapped
         [Test]
         public void SettingValues_Helper1()
         {
-            var sut = InvocationStatement.Create("a", GetMethod("A"), "b");
-            Assert.AreEqual(new InvocationExpression("a", GetMethod("A"), "b"), sut.Target);
+            var sut = InvocationStatement.Create("a", GetMethod("A"), Ref("b"));
+            Assert.AreEqual(InvocationExpression.Create("a", GetMethod("A"), Ref("b")), sut.Target);
         }
 
         [Test]
         public void SettingValues_Helper2()
         {
-            var sut = InvocationStatement.Create(GetStaticMethod("A"), "b");
-            Assert.AreEqual(new InvocationExpression(GetStaticMethod("A"), "b"), sut.Target);
+            var sut = InvocationStatement.Create(GetStaticMethod("A"), Ref("b"));
+            Assert.AreEqual(InvocationExpression.Create(GetStaticMethod("A"), Ref("b")), sut.Target);
         }
 
         [Test]
         public void TargetDoesNotChange()
         {
-            var sut = InvocationStatement.Create(GetStaticMethod("A"), "b");
+            var sut = InvocationStatement.Create(GetStaticMethod("A"), Ref("b"));
             Assert.AreSame(sut.Invocation, sut.Target);
         }
 
@@ -69,8 +70,8 @@ namespace KaVE.Model.Tests.SSTs.Statements.Wrapped
         [Test]
         public void Equality_ReallyTheSame()
         {
-            var a = InvocationStatement.Create(GetStaticMethod("A"), "b");
-            var b = InvocationStatement.Create(GetStaticMethod("A"), "b");
+            var a = InvocationStatement.Create(GetStaticMethod("A"), Ref("b"));
+            var b = InvocationStatement.Create(GetStaticMethod("A"), Ref("b"));
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
         }
@@ -78,8 +79,8 @@ namespace KaVE.Model.Tests.SSTs.Statements.Wrapped
         [Test]
         public void Equality_DifferentInvocation()
         {
-            var a = InvocationStatement.Create(GetStaticMethod("A"), "b");
-            var b = InvocationStatement.Create(GetStaticMethod("B"), "b");
+            var a = InvocationStatement.Create(GetStaticMethod("A"), Ref("b"));
+            var b = InvocationStatement.Create(GetStaticMethod("B"), Ref("b"));
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
         }
@@ -98,6 +99,11 @@ namespace KaVE.Model.Tests.SSTs.Statements.Wrapped
                 "static [System.String, mscore, 4.0.0.0] [System.String, mscore, 4.0.0.0].{0}()",
                 simpleName);
             return MethodName.Get(methodName);
+        }
+
+        private static BasicExpression Ref(string id)
+        {
+            return new ReferenceExpression {Identifier = id};
         }
     }
 }

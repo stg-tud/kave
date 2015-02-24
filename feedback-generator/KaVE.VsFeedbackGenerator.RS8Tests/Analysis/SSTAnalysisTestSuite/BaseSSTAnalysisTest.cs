@@ -18,10 +18,12 @@
  */
 
 using System.Collections.Generic;
+using System.Linq;
 using KaVE.Model.Names;
 using KaVE.Model.Names.CSharp;
 using KaVE.Model.SSTs;
 using KaVE.Model.SSTs.Declarations;
+using KaVE.Model.SSTs.Expressions.Basic;
 using KaVE.Utils.Exceptions;
 using KaVE.VsFeedbackGenerator.Utils;
 using Moq;
@@ -41,7 +43,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             Registry.RegisterComponent(loggerMock.Object);
         }
 
-        internal SST NewSST()
+        protected SST NewSST()
         {
             return new SST
             {
@@ -49,12 +51,12 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             };
         }
 
-        internal MethodDeclaration NewMethodDeclaration(ITypeName returnType, string simpleName)
+        protected MethodDeclaration NewMethodDeclaration(ITypeName returnType, string simpleName)
         {
             return NewMethodDeclaration(returnType, simpleName, new string[0]);
         }
 
-        internal MethodDeclaration NewMethodDeclaration(ITypeName returnType, string simpleName, params string[] args)
+        protected MethodDeclaration NewMethodDeclaration(ITypeName returnType, string simpleName, params string[] args)
         {
             const string package = "N.C, TestProject";
             var identifier = string.Format(
@@ -70,14 +72,14 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             };
         }
 
-        internal void AssertResult(SST expected)
+        protected void AssertResult(SST expected)
         {
             Assert.AreEqual(expected, ResultSST);
         }
 
-        internal void AssertMethod(MethodDeclaration expected)
+        protected void AssertMethod(MethodDeclaration expected)
         {
-            foreach(var actual in ResultSST.Methods)
+            foreach (var actual in ResultSST.Methods)
             {
                 if (expected.Equals(actual))
                 {
@@ -87,7 +89,13 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             Assert.Fail("method not found");
         }
 
-        internal void AssertAllMethods(params MethodDeclaration[] expectedDecls)
+
+        protected BasicExpression Ref(string id)
+        {
+            return new ReferenceExpression {Identifier = id};
+        }
+
+        protected void AssertAllMethods(params MethodDeclaration[] expectedDecls)
         {
             var ms = ResultSST.Methods;
             Assert.AreEqual(expectedDecls.Length, ms.Count);
@@ -97,6 +105,14 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
                 Assert.IsTrue(ms.Contains(expectedDecl));
             }
         }
+
+        protected void AssertBody(IList<Statement> body)
+        {
+            Assert.AreEqual(1, ResultSST.Methods.Count);
+            var m = ResultSST.Methods.First();
+            Assert.AreEqual(body, m.Body);
+        }
+
 
         [TearDown]
         public void ClearRegistry()

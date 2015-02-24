@@ -18,6 +18,7 @@
  */
 
 using KaVE.Model.Names.CSharp;
+using KaVE.Model.SSTs.Expressions.Basic;
 using KaVE.Model.SSTs.Statements.Wrapped;
 using NUnit.Framework;
 using Fix = KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite.SSTAnalysisFixture;
@@ -55,7 +56,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
                 InvocationStatement.Create(
                     "this",
                     MethodName.Get("[System.Void, mscorlib, 4.0.0.0] [N.C, TestProject].B()"),
-                    new string[] {}));
+                    new BasicExpression[] {}));
             var mB = NewMethodDeclaration(Fix.Void, "B"); // ...
             mB.IsEntryPoint = false;
             var mC = NewMethodDeclaration(Fix.Void, "C");

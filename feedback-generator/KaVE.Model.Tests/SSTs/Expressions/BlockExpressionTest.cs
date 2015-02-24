@@ -20,6 +20,7 @@
 using KaVE.Model.Collections;
 using KaVE.Model.SSTs;
 using KaVE.Model.SSTs.Expressions;
+using KaVE.Model.SSTs.Expressions.LoopCondition;
 using KaVE.Model.SSTs.Statements;
 using NUnit.Framework;
 

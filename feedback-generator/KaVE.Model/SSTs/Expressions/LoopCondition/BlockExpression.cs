@@ -1,5 +1,5 @@
-/*
- * Copyright 2014 Technische Universit�t Darmstadt
+﻿/*
+ * Copyright 2014 Technische Universität Darmstadt
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,15 +17,24 @@
  *    - Sebastian Proksch
  */
 
+using System.Collections.Generic;
+using KaVE.Model.Collections;
 using KaVE.Utils;
 
-namespace KaVE.Model.SSTs.Expressions
+namespace KaVE.Model.SSTs.Expressions.LoopCondition
 {
-    public class ConstantExpression : Expression
+    /*
+     * some expressions are broken down to small SST statemets (e.g., nested calls).
+     * Block Expressions add support for this transformation to SSTs.
+     */
+
+    public class BlockExpression : LoopConditionExpression
     {
-        private static bool Equals(ConstantExpression other)
+        public readonly IList<Statement> Body = Lists.NewList<Statement>();
+
+        protected bool Equals(BlockExpression other)
         {
-            return true;
+            return Body.Equals(other.Body);
         }
 
         public override bool Equals(object obj)
@@ -35,7 +44,7 @@ namespace KaVE.Model.SSTs.Expressions
 
         public override int GetHashCode()
         {
-            return 102;
+            return (Body != null ? Body.GetHashCode() : 0);
         }
     }
 }

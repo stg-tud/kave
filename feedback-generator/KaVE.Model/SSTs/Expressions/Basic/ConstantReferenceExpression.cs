@@ -17,20 +17,12 @@
  *    - Sebastian Proksch
  */
 
-using KaVE.Utils;
+using KaVE.Model.Names;
 
-namespace KaVE.Model.SSTs.Statements
+namespace KaVE.Model.SSTs.Expressions.Basic
 {
-    public class ContinueStatement : Statement
+    public class ConstantReferenceExpression : BasicExpression
     {
-        public override bool Equals(object obj)
-        {
-            return this.Equals(obj, other => true);
-        }
-
-        public override int GetHashCode()
-        {
-            return 4;
-        }
+        public IMemberName Reference { get; set; }
     }
 }

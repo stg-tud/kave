@@ -17,20 +17,9 @@
  *    - Sebastian Proksch
  */
 
-using KaVE.Utils;
+using KaVE.Model.SSTs.Expressions.Basic;
 
-namespace KaVE.Model.SSTs.Statements
+namespace KaVE.Model.SSTs.Expressions.LoopCondition
 {
-    public class ContinueStatement : Statement
-    {
-        public override bool Equals(object obj)
-        {
-            return this.Equals(obj, other => true);
-        }
-
-        public override int GetHashCode()
-        {
-            return 4;
-        }
-    }
+    public class LoopConditionExpression : Expression {}
 }

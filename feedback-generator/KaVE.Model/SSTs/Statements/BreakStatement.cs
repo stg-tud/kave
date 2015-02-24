@@ -25,12 +25,7 @@ namespace KaVE.Model.SSTs.Statements
     {
         public override bool Equals(object obj)
         {
-            return this.Equals(obj, Equals);
-        }
-
-        private static bool Equals(BreakStatement other)
-        {
-            return true;
+            return this.Equals(obj, other => true);
         }
 
         public override int GetHashCode()

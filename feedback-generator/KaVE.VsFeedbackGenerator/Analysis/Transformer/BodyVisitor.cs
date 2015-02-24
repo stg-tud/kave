@@ -18,12 +18,14 @@
  */
 
 using System.Collections.Generic;
+using System.Linq;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.Util;
 using KaVE.Model.Collections;
 using KaVE.Model.Names;
 using KaVE.Model.SSTs;
+using KaVE.Model.SSTs.Expressions.Basic;
 using KaVE.Model.SSTs.Statements.Wrapped;
 using KaVE.VsFeedbackGenerator.Utils.Names;
 
@@ -78,13 +80,16 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
                     {
                         return;
                     }
-                    var args = GetArgumentList(inv.ArgumentList, body);
+                    var args =
+                        GetArgumentList(inv.ArgumentList, body)
+                            .Select<string, BasicExpression>(id => new ReferenceExpression {Identifier = id})
+                            .AsArray();
                     body.Add(InvocationStatement.Create(callee, methodName, args));
                 }
             }
         }
 
-        public string[] GetArgumentList(IArgumentList argumentListParam, IList<Statement> body)
+        public IList<string> GetArgumentList(IArgumentList argumentListParam, IList<Statement> body)
         {
             var args = Lists.NewList<string>();
             foreach (var arg in argumentListParam.Arguments)
@@ -93,7 +98,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
                 var id = arg.Value.Accept(toArgumentRef, body);
                 args.Add(id);
             }
-            return args.AsArray();
+            return args;
         }
     }
 

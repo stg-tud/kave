@@ -17,34 +17,20 @@
  *    - Sebastian Proksch
  */
 
-using System.Collections.Generic;
-using KaVE.Model.Collections;
 using KaVE.Utils;
 
-namespace KaVE.Model.SSTs.Expressions
+namespace KaVE.Model.SSTs.Expressions.Basic
 {
-    /*
-     * some expressions are broken down to small SST statemets (e.g., nested calls).
-     * Block Expressions add support for this transformation to SSTs.
-     */
-
-    public class BlockExpression : Expression
+    public class NullExpression : BasicExpression
     {
-        public readonly IList<Statement> Body = Lists.NewList<Statement>();
-
-        protected bool Equals(BlockExpression other)
-        {
-            return Body.Equals(other.Body);
-        }
-
         public override bool Equals(object obj)
         {
-            return this.Equals(obj, Equals);
+            return this.Equals(obj, other => true);
         }
 
         public override int GetHashCode()
         {
-            return (Body != null ? Body.GetHashCode() : 0);
+            return 397;
         }
     }
 }

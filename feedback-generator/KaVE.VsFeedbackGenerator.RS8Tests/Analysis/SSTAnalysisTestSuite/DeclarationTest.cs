@@ -19,6 +19,7 @@
 
 using KaVE.Model.SSTs.Declarations;
 using KaVE.Model.SSTs.Expressions;
+using KaVE.Model.SSTs.Expressions.Basic;
 using KaVE.Model.SSTs.Statements;
 using NUnit.Framework;
 using Fix = KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite.SSTAnalysisFixture;
@@ -75,7 +76,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 
             var mA = NewMethodDeclaration(SSTAnalysisFixture.Void, "A");
             mA.Body.Add(new VariableDeclaration("i", Fix.Int));
-            mA.Body.Add(new Assignment("i", new ConstantExpression()));
+            mA.Body.Add(new Assignment("i", new ConstantValueExpression()));
 
             AssertAllMethods(mA);
         }

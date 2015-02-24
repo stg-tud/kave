@@ -21,6 +21,7 @@ using KaVE.Model.Collections;
 using KaVE.Model.SSTs;
 using KaVE.Model.SSTs.Blocks;
 using KaVE.Model.SSTs.Expressions;
+using KaVE.Model.SSTs.Expressions.Basic;
 using KaVE.Model.SSTs.Statements;
 using NUnit.Framework;
 
@@ -42,10 +43,10 @@ namespace KaVE.Model.Tests.SSTs.Blocks
         [Test]
         public void SettingValues()
         {
-            var sut = new IfElseBlock {Condition = new ConstantExpression()};
+            var sut = new IfElseBlock {Condition = new ConstantValueExpression()};
             sut.Then.Add(new ReturnStatement());
             sut.Else.Add(new ContinueStatement());
-            Assert.AreEqual(new ConstantExpression(), sut.Condition);
+            Assert.AreEqual(new ConstantValueExpression(), sut.Condition);
             Assert.AreEqual(Lists.NewList(new ReturnStatement()), sut.Then);
             Assert.AreEqual(Lists.NewList(new ContinueStatement()), sut.Else);
         }
@@ -62,10 +63,10 @@ namespace KaVE.Model.Tests.SSTs.Blocks
         [Test]
         public void Equality_ReallyTheSame()
         {
-            var a = new IfElseBlock {Condition = new ConstantExpression()};
+            var a = new IfElseBlock {Condition = new ConstantValueExpression()};
             a.Then.Add(new ReturnStatement());
             a.Else.Add(new ContinueStatement());
-            var b = new IfElseBlock {Condition = new ConstantExpression()};
+            var b = new IfElseBlock {Condition = new ConstantValueExpression()};
             b.Then.Add(new ReturnStatement());
             b.Else.Add(new ContinueStatement());
             Assert.AreEqual(a, b);
@@ -75,7 +76,7 @@ namespace KaVE.Model.Tests.SSTs.Blocks
         [Test]
         public void Equality_DifferentCondition()
         {
-            var a = new IfElseBlock {Condition = new ConstantExpression()};
+            var a = new IfElseBlock {Condition = new ConstantValueExpression()};
             var b = new IfElseBlock();
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());

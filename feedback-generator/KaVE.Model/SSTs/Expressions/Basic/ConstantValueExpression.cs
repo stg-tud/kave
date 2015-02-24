@@ -1,5 +1,5 @@
-﻿/*
- * Copyright 2014 Technische Universität Darmstadt
+/*
+ * Copyright 2014 Technische Universit�t Darmstadt
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,18 +19,23 @@
 
 using KaVE.Utils;
 
-namespace KaVE.Model.SSTs.Statements
+namespace KaVE.Model.SSTs.Expressions.Basic
 {
-    public class ContinueStatement : Statement
+    public class ConstantValueExpression : BasicExpression
     {
+        private static bool Equals(ConstantValueExpression other)
+        {
+            return true;
+        }
+
         public override bool Equals(object obj)
         {
-            return this.Equals(obj, other => true);
+            return this.Equals(obj, Equals);
         }
 
         public override int GetHashCode()
         {
-            return 4;
+            return 102;
         }
     }
 }

@@ -18,6 +18,7 @@
  */
 
 using KaVE.Model.SSTs.Expressions;
+using KaVE.Model.SSTs.Expressions.Basic;
 using NUnit.Framework;
 
 namespace KaVE.Model.Tests.SSTs.Expressions
@@ -40,12 +41,12 @@ namespace KaVE.Model.Tests.SSTs.Expressions
         {
             var sut = new IfElseExpression
             {
-                Condition = new ComposedExpression(),
-                ThenExpression = new ConstantExpression(),
-                ElseExpression = new InvocationExpression()
+                Condition = new ConstantValueExpression(),
+                ThenExpression = new ConstantValueExpression(),
+                ElseExpression = new ReferenceExpression()
             };
             Assert.AreEqual(new ComposedExpression(), sut.Condition);
-            Assert.AreEqual(new ConstantExpression(), sut.ThenExpression);
+            Assert.AreEqual(new ConstantValueExpression(), sut.ThenExpression);
             Assert.AreEqual(new InvocationExpression(), sut.ElseExpression);
         }
 
@@ -63,15 +64,15 @@ namespace KaVE.Model.Tests.SSTs.Expressions
         {
             var a = new IfElseExpression
             {
-                Condition = new ComposedExpression(),
-                ThenExpression = new ConstantExpression(),
-                ElseExpression = new InvocationExpression()
+                Condition = new ConstantValueExpression(),
+                ThenExpression = new ConstantValueExpression(),
+                ElseExpression = new ReferenceExpression()
             };
             var b = new IfElseExpression
             {
-                Condition = new ComposedExpression(),
-                ThenExpression = new ConstantExpression(),
-                ElseExpression = new InvocationExpression()
+                Condition = new ConstantValueExpression(),
+                ThenExpression = new ConstantValueExpression(),
+                ElseExpression = new ReferenceExpression()
             };
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
@@ -80,7 +81,7 @@ namespace KaVE.Model.Tests.SSTs.Expressions
         [Test]
         public void Equality_DifferentCondition()
         {
-            var a = new IfElseExpression {Condition = new ComposedExpression()};
+            var a = new IfElseExpression {Condition = new ConstantValueExpression()};
             var b = new IfElseExpression();
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
@@ -89,7 +90,7 @@ namespace KaVE.Model.Tests.SSTs.Expressions
         [Test]
         public void Equality_DifferentIf()
         {
-            var a = new IfElseExpression {ThenExpression = new ComposedExpression()};
+            var a = new IfElseExpression {ThenExpression = new ConstantValueExpression()};
             var b = new IfElseExpression();
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
@@ -98,7 +99,7 @@ namespace KaVE.Model.Tests.SSTs.Expressions
         [Test]
         public void Equality_DifferentElse()
         {
-            var a = new IfElseExpression {ElseExpression = new ComposedExpression()};
+            var a = new IfElseExpression {ElseExpression = new ConstantValueExpression()};
             var b = new IfElseExpression();
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());

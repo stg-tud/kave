@@ -18,10 +18,12 @@
  *    - Uli Fahrer
  */
 
+using System.Linq;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.Util;
 using KaVE.Model.SSTs.Blocks;
 using KaVE.Model.SSTs.Declarations;
+using KaVE.Model.SSTs.Expressions.Basic;
 using KaVE.Model.SSTs.Statements;
 using KaVE.Model.SSTs.Statements.Wrapped;
 using KaVE.VsFeedbackGenerator.Analysis.Transformer.Context;
@@ -140,7 +142,10 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
                 invocationExpressionParam,
                 context,
                 (callee, method, args, retType) =>
-                    context.Scope.Body.Add(InvocationStatement.Create(method, args)));
+                {
+                    var basicExpressions = args.Select<string, BasicExpression>(id => new ReferenceExpression{Identifier = id}).AsArray();
+                    context.Scope.Body.Add(InvocationStatement.Create(method, basicExpressions));
+                });
         }
 
         public override void VisitLocalVariableDeclaration(ILocalVariableDeclaration localVariableDeclarationParam,

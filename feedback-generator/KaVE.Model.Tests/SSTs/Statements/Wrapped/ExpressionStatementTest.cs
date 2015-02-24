@@ -18,6 +18,7 @@
  */
 
 using KaVE.Model.SSTs.Expressions;
+using KaVE.Model.SSTs.Expressions.Basic;
 using KaVE.Model.SSTs.Statements.Wrapped;
 using NUnit.Framework;
 
@@ -37,8 +38,8 @@ namespace KaVE.Model.Tests.SSTs.Statements.Wrapped
         [Test]
         public void SettingValues()
         {
-            var sut = new TestStatement {Target = new ConstantExpression()};
-            Assert.AreEqual(new ConstantExpression(), sut.Target);
+            var sut = new TestStatement {Target = new ConstantValueExpression()};
+            Assert.AreEqual(new ConstantValueExpression(), sut.Target);
         }
 
         [Test]
@@ -53,8 +54,8 @@ namespace KaVE.Model.Tests.SSTs.Statements.Wrapped
         [Test]
         public void Equality_ReallyTheSame()
         {
-            var a = new TestStatement {Target = new ConstantExpression()};
-            var b = new TestStatement {Target = new ConstantExpression()};
+            var a = new TestStatement {Target = new ConstantValueExpression()};
+            var b = new TestStatement {Target = new ConstantValueExpression()};
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
         }
@@ -62,7 +63,7 @@ namespace KaVE.Model.Tests.SSTs.Statements.Wrapped
         [Test]
         public void Equality_DifferentTarget()
         {
-            var a = new TestStatement {Target = new ConstantExpression()};
+            var a = new TestStatement {Target = new ConstantValueExpression()};
             var b = new TestStatement();
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());

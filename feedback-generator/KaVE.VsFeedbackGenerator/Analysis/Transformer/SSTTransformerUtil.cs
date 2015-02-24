@@ -20,11 +20,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
+using JetBrains.Util;
 using KaVE.Model.Names;
 using KaVE.Model.SSTs;
 using KaVE.Model.SSTs.Blocks;
 using KaVE.Model.SSTs.Declarations;
 using KaVE.Model.SSTs.Expressions;
+using KaVE.Model.SSTs.Expressions.Basic;
+using KaVE.Model.SSTs.Expressions.LoopCondition;
 using KaVE.Utils.Assertion;
 using KaVE.VsFeedbackGenerator.Analysis.Transformer.Context;
 using KaVE.VsFeedbackGenerator.Analysis.Util;
@@ -41,11 +44,11 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
         /// </summary>
         public static Expression AsExpression(this IList<string> references)
         {
-            if (references.Any())
+            if (Enumerable.Any(references))
             {
                 return ComposedExpression.Create(references.Distinct().ToArray());
             }
-            return new ConstantExpression();
+            return new ConstantValueExpression();
         }
 
         /// <summary>
@@ -57,10 +60,10 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
             var scope = context.Factory.Scope();
             var refCollectorContext = new ReferenceCollectorContext(context, scope);
             node.Accept(context.Factory.ReferenceCollector(), refCollectorContext);
-            if (scope.Body.Any())
+            if (Enumerable.Any(scope.Body))
             {
                 var block = new BlockExpression(); //Why?: {Value = refCollectorContext.References.ToArray()};
-                block.Body.AddRange(refCollectorContext.Scope.Body);
+                CollectionExtensions.AddRange(block.Body, refCollectorContext.Scope.Body);
                 return block;
             }
             return refCollectorContext.References.AsExpression();
@@ -115,7 +118,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
         {
             var argCollectorContext = new ArgumentCollectorContext(context);
             node.Accept(context.Factory.ArgumentCollector(), argCollectorContext);
-            return argCollectorContext.Arguments.ToArray();
+            return Enumerable.ToArray(argCollectorContext.Arguments);
         }
 
         /// <summary>
@@ -148,13 +151,14 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
         /// <summary>
         ///     Constructs InvocationExpressions either as static call if callee isn't given or as non-static call otherwise.
         /// </summary>
-        public static InvocationExpression CreateInvocation(this string callee, IMethodName method, string[] args)
+        public static InvocationExpression CreateInvocation(this string callee, IMethodName method, string[] argIds)
         {
+            var args = argIds.Select<string, BasicExpression>(id => new ReferenceExpression {Identifier = id}).AsArray();
             if (callee == null)
             {
-                return new InvocationExpression(method, args);
+                return InvocationExpression.Create(method, args);
             }
-            return new InvocationExpression(callee, method, args);
+            return InvocationExpression.Create(callee, method, args);
         }
 
         public static CatchBlock GetCatchBlock(this ICatchClause catchClauseParam, ITransformerContext context)
@@ -170,7 +174,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
                 }
                 catchBlock.Exception = new VariableDeclaration(identifier, catchClauseParam.ExceptionType.GetName());
             }
-            catchBlock.Body.AddRange(catchClauseParam.Body.GetScope(context).Body);
+            CollectionExtensions.AddRange(catchBlock.Body, catchClauseParam.Body.GetScope(context).Body);
             return catchBlock;
         }
     }

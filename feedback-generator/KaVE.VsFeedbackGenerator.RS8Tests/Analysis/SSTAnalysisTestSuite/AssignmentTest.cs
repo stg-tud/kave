@@ -20,13 +20,13 @@
 using KaVE.Model.Names.CSharp;
 using KaVE.Model.SSTs.Declarations;
 using KaVE.Model.SSTs.Expressions;
+using KaVE.Model.SSTs.Expressions.Basic;
 using KaVE.Model.SSTs.Statements;
 using NUnit.Framework;
 using Fix = KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite.SSTAnalysisFixture;
 
 namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 {
-    [TestFixture]
     internal class AssignmentTest : BaseSSTAnalysisTest
     {
         [Test]
@@ -43,7 +43,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 
             var mA = NewMethodDeclaration(Fix.Void, "A");
             mA.Body.Add(new VariableDeclaration("i", Fix.Int));
-            mA.Body.Add(new Assignment("i", new ConstantExpression()));
+            mA.Body.Add(new Assignment("i", new ConstantValueExpression()));
 
             AssertAllMethods(mA);
         }
@@ -61,7 +61,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 
             var mA = NewMethodDeclaration(Fix.Void, "A");
             mA.Body.Add(new VariableDeclaration("i", Fix.Int));
-            mA.Body.Add(new Assignment("i", new ConstantExpression()));
+            mA.Body.Add(new Assignment("i", new ConstantValueExpression()));
 
             AssertAllMethods(mA);
         }
@@ -79,7 +79,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 
             var mA = NewMethodDeclaration(Fix.Void, "A");
             mA.Body.Add(new VariableDeclaration("i", Fix.Int));
-            mA.Body.Add(new Assignment("i", new ConstantExpression()));
+            mA.Body.Add(new Assignment("i", new ConstantValueExpression()));
 
             AssertAllMethods(mA);
         }
@@ -98,7 +98,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 
             var mA = NewMethodDeclaration(Fix.Void, "A");
             mA.Body.Add(new VariableDeclaration("i", Fix.Int));
-            mA.Body.Add(new Assignment("i", new ConstantExpression()));
+            mA.Body.Add(new Assignment("i", new ConstantValueExpression()));
             mA.Body.Add(new VariableDeclaration("j", Fix.Int));
             mA.Body.Add(new Assignment("j", new ComposedExpression {Variables = new[] {"i"}}));
 
@@ -121,8 +121,8 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             var mA = NewMethodDeclaration(Fix.Void, "A");
             mA.Body.Add(new VariableDeclaration("i", Fix.Int));
             mA.Body.Add(new VariableDeclaration("j", Fix.Int));
-            mA.Body.Add(new Assignment("i", new ConstantExpression()));
-            mA.Body.Add(new Assignment("j", new ComposedExpression {Variables = new[] {"i"}}));
+            mA.Body.Add(new Assignment("i", new ConstantValueExpression()));
+            mA.Body.Add(new Assignment("j", new ReferenceExpression {Identifier = "i"}));
 
             AssertAllMethods(mA);
         }
@@ -141,165 +141,15 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 
             var mA = NewMethodDeclaration(Fix.Void, "A");
             mA.Body.Add(new VariableDeclaration("i", Fix.Int));
-            mA.Body.Add(new Assignment("i", new ConstantExpression()));
+            mA.Body.Add(new Assignment("i", new ConstantValueExpression()));
             mA.Body.Add(new VariableDeclaration("j", Fix.Int));
-            mA.Body.Add(new Assignment("j", new ComposedExpression {Variables = new[] {"i"}}));
+            mA.Body.Add(new Assignment("j", new ReferenceExpression { Identifier = "i" }));
 
             AssertAllMethods(mA);
         }
 
-        [Test]
-        public void ArrayInit_Constant()
-        {
-            CompleteInClass(@"
-                public void A()
-                {
-                    var arr = new[] {1,2,3};
-                    $
-                }
-            ");
+       
 
-            var mA = NewMethodDeclaration(Fix.Void, "A");
-            mA.Body.Add(new VariableDeclaration("arr", Fix.IntArray));
-            mA.Body.Add(new Assignment("arr", new ConstantExpression()));
-
-            AssertAllMethods(mA);
-        }
-
-        [Test]
-        public void ArrayInit_Composed()
-        {
-            CompleteInClass(@"
-                public void A()
-                {
-                    var n = 1;
-                    var arr = new[] {1,2,n};
-                    $
-                }
-            ");
-
-            var mA = NewMethodDeclaration(Fix.Void, "A");
-            mA.Body.Add(new VariableDeclaration("n", Fix.Int));
-            mA.Body.Add(new Assignment("n", new ConstantExpression()));
-            mA.Body.Add(new VariableDeclaration("arr", Fix.IntArray));
-            mA.Body.Add(new Assignment("arr", new ComposedExpression {Variables = new[] {"n"}}));
-
-            AssertAllMethods(mA);
-        }
-
-        [Test]
-        public void ArrayInit_WithArrays()
-        {
-            CompleteInClass(@"
-                public void A()
-                {
-                    var arr = new[] {new[] {1, 2}, new[] {3, 4}};
-                    $
-                }
-            ");
-
-            var mA = NewMethodDeclaration(Fix.Void, "A");
-            mA.Body.Add(new VariableDeclaration("arr", TypeName.Get("System.Int32[][], mscorlib, 4.0.0.0")));
-            mA.Body.Add(new VariableDeclaration("$0", Fix.IntArray));
-            mA.Body.Add(new Assignment("$0", new ConstantExpression()));
-            mA.Body.Add(new VariableDeclaration("$1", Fix.IntArray));
-            mA.Body.Add(new Assignment("$1", new ConstantExpression()));
-            mA.Body.Add(new Assignment("arr", ComposedExpression.Create("$0", "$1")));
-
-            AssertAllMethods(mA);
-        }
-
-        [Test]
-        public void ArrayInit_WithCalls()
-        {
-            CompleteInClass(@"
-                public void A(object o)
-                {
-                    var arr = new[] {1,2,o.GetHashCode()};
-                    $
-                }
-            ");
-
-            var mA = NewMethodDeclaration(Fix.Void, "A", string.Format("[{0}] o", Fix.Object));
-            mA.Body.Add(new VariableDeclaration("arr", Fix.IntArray));
-            mA.Body.Add(new VariableDeclaration("$0", Fix.Int));
-            mA.Body.Add(new Assignment("$0", new InvocationExpression("o", Fix.GetHashCode(Fix.Object))));
-            mA.Body.Add(new Assignment("arr", new ComposedExpression {Variables = new[] {"$0"}}));
-
-            AssertAllMethods(mA);
-        }
-
-        [Test]
-        public void Is_Reference()
-        {
-            CompleteInClass(@"
-                public void A(object o)
-                {
-                    var isInstanceOf = o is string;
-                    $
-                }
-            ");
-
-            var mA = NewMethodDeclaration(Fix.Void, "A", string.Format("[{0}] o", Fix.Object));
-            mA.Body.Add(new VariableDeclaration("isInstanceOf", Fix.Bool));
-            mA.Body.Add(new Assignment("isInstanceOf", new ComposedExpression {Variables = new[] {"o"}}));
-
-            AssertAllMethods(mA);
-        }
-
-        [Test]
-        public void Is_Const()
-        {
-            CompleteInClass(@"
-                public void A()
-                {
-                    var isInstanceOf = 1 is double;
-                    $
-                }
-            ");
-
-            var mA = NewMethodDeclaration(Fix.Void, "A");
-            mA.Body.Add(new VariableDeclaration("isInstanceOf", Fix.Bool));
-            mA.Body.Add(new Assignment("isInstanceOf", new ConstantExpression()));
-
-            AssertAllMethods(mA);
-        }
-
-        [Test]
-        public void As_Reference()
-        {
-            CompleteInClass(@"
-                public void A(object o)
-                {
-                    var cast = o as string;
-                    $
-                }
-            ");
-
-            var mA = NewMethodDeclaration(Fix.Void, "A", string.Format("[{0}] o", Fix.Object));
-            mA.Body.Add(new VariableDeclaration("cast", Fix.String));
-            mA.Body.Add(new Assignment("cast", new ComposedExpression {Variables = new[] {"o"}}));
-
-            AssertAllMethods(mA);
-        }
-
-        [Test]
-        public void As_Const()
-        {
-            CompleteInClass(@"
-                public void A()
-                {
-                    var cast = 1.0 as object;
-                    $
-                }
-            ");
-
-            var mA = NewMethodDeclaration(Fix.Void, "A");
-            mA.Body.Add(new VariableDeclaration("cast", Fix.Object));
-            mA.Body.Add(new Assignment("cast", new ConstantExpression()));
-
-            AssertAllMethods(mA);
-        }
 
         [Test]
         public void This()
@@ -332,44 +182,8 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 
             var mA = NewMethodDeclaration(Fix.Void, "A", string.Format("[{0}] i", Fix.Int));
             mA.Body.Add(new VariableDeclaration("j", Fix.Int));
-            mA.Body.Add(new Assignment("i", new ConstantExpression()));
+            mA.Body.Add(new Assignment("i", new ConstantValueExpression()));
             mA.Body.Add(new Assignment("j", ComposedExpression.Create("i")));
-
-            AssertAllMethods(mA);
-        }
-
-        [Test]
-        public void Cast_Const()
-        {
-            CompleteInClass(@"
-                public void A()
-                {
-                    var i = (int) 1.0;
-                    $
-                }
-            ");
-
-            var mA = NewMethodDeclaration(Fix.Void, "A");
-            mA.Body.Add(new VariableDeclaration("i", Fix.Int));
-            mA.Body.Add(new Assignment("i", new ConstantExpression()));
-
-            AssertAllMethods(mA);
-        }
-
-        [Test]
-        public void Cast_Reference()
-        {
-            CompleteInClass(@"
-                public void A(object o)
-                {
-                    var s = (string) o;
-                    $
-                }
-            ");
-
-            var mA = NewMethodDeclaration(Fix.Void, "A", string.Format("[{0}] o", Fix.Object));
-            mA.Body.Add(new VariableDeclaration("s", Fix.String));
-            mA.Body.Add(new Assignment("s", ComposedExpression.Create("o")));
 
             AssertAllMethods(mA);
         }
@@ -428,41 +242,6 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             AssertAllMethods(mA);
         }
 
-        [Test]
-        public void TypeOf()
-        {
-            CompleteInClass(@"
-                public void A()
-                {
-                    var t = typeof(int);
-                    $
-                }
-            ");
-
-            var mA = NewMethodDeclaration(Fix.Void, "A");
-            mA.Body.Add(new VariableDeclaration("t", TypeName.Get("System.Type, mscorlib, 4.0.0.0")));
-            mA.Body.Add(new Assignment("t", new ConstantExpression()));
-
-            AssertAllMethods(mA);
-        }
-
-        [Test]
-        public void CompositionOfTypeOf()
-        {
-            CompleteInClass(@"
-                public void A()
-                {
-                    var t = typeof(int) == typeof(string);
-                    $
-                }
-            ");
-
-            var mA = NewMethodDeclaration(Fix.Void, "A");
-            mA.Body.Add(new VariableDeclaration("t", Fix.Bool));
-            mA.Body.Add(new Assignment("t", new ConstantExpression()));
-
-            AssertAllMethods(mA);
-        }
 
         [Test]
         public void Default()
@@ -477,7 +256,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 
             var mA = NewMethodDeclaration(Fix.Void, "A");
             mA.Body.Add(new VariableDeclaration("i", Fix.Int));
-            mA.Body.Add(new Assignment("i", new ConstantExpression()));
+            mA.Body.Add(new Assignment("i", new ConstantValueExpression()));
 
             AssertAllMethods(mA);
         }

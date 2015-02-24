@@ -17,16 +17,17 @@
  *    - Sebastian Proksch
  */
 
+using KaVE.Model.SSTs.Expressions.Basic;
 using KaVE.Utils;
 
 namespace KaVE.Model.SSTs.Expressions
 {
     public class IfElseExpression : Expression
     {
-        public Expression Condition { get; set; }
+        public BasicExpression Condition { get; set; }
         // use LambdaExpression here in case of more complex subexpressions
-        public Expression ThenExpression { get; set; }
-        public Expression ElseExpression { get; set; }
+        public BasicExpression ThenExpression { get; set; }
+        public BasicExpression ElseExpression { get; set; }
 
         private bool Equals(IfElseExpression other)
         {

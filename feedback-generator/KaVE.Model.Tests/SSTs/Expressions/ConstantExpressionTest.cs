@@ -18,6 +18,7 @@
  */
 
 using KaVE.Model.SSTs.Expressions;
+using KaVE.Model.SSTs.Expressions.Basic;
 using NUnit.Framework;
 
 namespace KaVE.Model.Tests.SSTs.Expressions
@@ -27,8 +28,8 @@ namespace KaVE.Model.Tests.SSTs.Expressions
         [Test]
         public void Equality()
         {
-            var a = new ConstantExpression();
-            var b = new ConstantExpression();
+            var a = new ConstantValueExpression();
+            var b = new ConstantValueExpression();
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
             Assert.AreNotEqual(0, a.GetHashCode());

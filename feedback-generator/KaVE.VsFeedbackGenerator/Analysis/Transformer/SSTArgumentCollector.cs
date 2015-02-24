@@ -21,6 +21,7 @@ using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.Util;
 using KaVE.Model.SSTs.Declarations;
 using KaVE.Model.SSTs.Expressions;
+using KaVE.Model.SSTs.Expressions.Basic;
 using KaVE.Model.SSTs.Statements;
 using KaVE.VsFeedbackGenerator.Analysis.Transformer.Context;
 using KaVE.VsFeedbackGenerator.Utils.Names;
@@ -86,12 +87,13 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
             context.Scope.Body.Add(
                 new Assignment(
                     tmp,
-                    new IfElseExpression
-                    {
-                        Condition = conditionalTernaryExpressionParam.ConditionOperand.GetScopedReferences(context),
-                        ThenExpression = conditionalTernaryExpressionParam.ThenResult.GetScopedReferences(context),
-                        ElseExpression = conditionalTernaryExpressionParam.ElseResult.GetScopedReferences(context)
-                    }));
+                    null));
+            //new IfElseExpression
+             //       {
+              //          Condition = conditionalTernaryExpressionParam.ConditionOperand.GetScopedReferences(context),
+               //         ThenExpression = conditionalTernaryExpressionParam.ThenResult.GetScopedReferences(context),
+                //        ElseExpression = conditionalTernaryExpressionParam.ElseResult.GetScopedReferences(context)
+                 //   }));
             context.Arguments.Add(tmp);
         }
 
@@ -105,7 +107,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
         {
             var tmp = context.Generator.GetNextVariableName();
             context.Scope.Body.Add(new VariableDeclaration(tmp, cSharpLiteralExpressionParam.Type().GetName()));
-            context.Scope.Body.Add(new Assignment(tmp, new ConstantExpression()));
+            context.Scope.Body.Add(new Assignment(tmp, new ConstantValueExpression()));
             context.Arguments.Add(tmp);
         }
 
@@ -113,7 +115,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
         {
             var tmp = context.Generator.GetNextVariableName();
             context.Scope.Body.Add(new VariableDeclaration(tmp, defaultExpressionParam.Type().GetName()));
-            context.Scope.Body.Add(new Assignment(tmp, new ConstantExpression()));
+            context.Scope.Body.Add(new Assignment(tmp, new ConstantValueExpression()));
             context.Arguments.Add(tmp);
         }
 
@@ -182,7 +184,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
         {
             var tmp = context.Generator.GetNextVariableName();
             context.Scope.Body.Add(new VariableDeclaration(tmp, typeofExpressionParam.Type().GetName()));
-            context.Scope.Body.Add(new Assignment(tmp, new ConstantExpression()));
+            context.Scope.Body.Add(new Assignment(tmp, new ConstantValueExpression()));
             context.Arguments.Add(tmp);
         }
 

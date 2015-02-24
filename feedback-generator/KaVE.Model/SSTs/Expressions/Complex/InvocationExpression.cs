@@ -18,6 +18,7 @@
  */
 
 using KaVE.Model.Names;
+using KaVE.Model.SSTs.Expressions.Basic;
 using KaVE.Utils;
 using KaVE.Utils.Assertion;
 
@@ -27,25 +28,7 @@ namespace KaVE.Model.SSTs.Expressions
     {
         public string Identifier { get; set; }
         public IMethodName Name { get; set; }
-        public string[] Parameters { get; set; }
-
-        public InvocationExpression() {}
-
-        public InvocationExpression(IMethodName name, params string[] parameters)
-        {
-            Asserts.That(name.IsStatic || name.IsConstructor);
-            Identifier = "";
-            Name = name;
-            Parameters = parameters;
-        }
-
-        public InvocationExpression(string id, IMethodName name, params string[] parameters)
-        {
-            Asserts.Not(name.IsStatic || name.IsConstructor);
-            Identifier = id;
-            Name = name;
-            Parameters = parameters;
-        }
+        public BasicExpression[] Parameters { get; set; }
 
         private bool Equals(InvocationExpression other)
         {
@@ -67,6 +50,28 @@ namespace KaVE.Model.SSTs.Expressions
                 hashCode = (hashCode*397) ^ (Parameters != null ? HashCodeUtils.For(398, Parameters) : 0);
                 return hashCode;
             }
+        }
+
+        public static InvocationExpression Create(IMethodName name, params BasicExpression[] parameters)
+        {
+            Asserts.That(name.IsStatic || name.IsConstructor);
+            return new InvocationExpression
+            {
+                Identifier = "",
+                Name = name,
+                Parameters = parameters
+            };
+        }
+
+        public static InvocationExpression Create(string id, IMethodName name, params BasicExpression[] parameters)
+        {
+            Asserts.Not(name.IsStatic || name.IsConstructor);
+            return new InvocationExpression
+            {
+                Identifier = id,
+                Name = name,
+                Parameters = parameters,
+            };
         }
     }
 }

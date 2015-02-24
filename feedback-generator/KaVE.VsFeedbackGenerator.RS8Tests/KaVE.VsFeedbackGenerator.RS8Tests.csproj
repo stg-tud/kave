@@ -62,8 +62,11 @@
     <Compile Include="Analysis\SmokeTests\CodeCompletionWithIncompleteReferenceSmokeTest.cs" />
     <Compile Include="Analysis\SmokeTests\CodeCompletionWithMissingTokensSmokeTest.cs" />
     <Compile Include="Analysis\SmokeTests\CodeCompletionWithUnresolvableReferencesSmokeTest.cs" />
+    <Compile Include="Analysis\SSTAnalysisTestSuite\ArrayTest.cs" />
     <Compile Include="Analysis\SSTAnalysisTestSuite\AssignmentTest.cs" />
     <Compile Include="Analysis\SSTAnalysisTestSuite\BaseSSTAnalysisTest.cs" />
+    <Compile Include="Analysis\SSTAnalysisTestSuite\BasicExpressionTest.cs" />
+    <Compile Include="Analysis\SSTAnalysisTestSuite\Casting.cs" />
     <Compile Include="Analysis\SSTAnalysisTestSuite\ControlStructureTest.cs" />
     <Compile Include="Analysis\SSTAnalysisTestSuite\DeclarationTest.cs" />
     <Compile Include="Analysis\SSTAnalysisTestSuite\EntrypointsTest.cs" />

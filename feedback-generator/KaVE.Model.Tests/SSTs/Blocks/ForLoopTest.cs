@@ -21,6 +21,7 @@ using KaVE.Model.Collections;
 using KaVE.Model.SSTs;
 using KaVE.Model.SSTs.Blocks;
 using KaVE.Model.SSTs.Expressions;
+using KaVE.Model.SSTs.Expressions.Basic;
 using KaVE.Model.SSTs.Statements;
 using NUnit.Framework;
 
@@ -43,12 +44,12 @@ namespace KaVE.Model.Tests.SSTs.Blocks
         [Test]
         public void SettingValues()
         {
-            var sut = new ForLoop {Condition = new ConstantExpression()};
+            var sut = new ForLoop {Condition = new ConstantValueExpression()};
             sut.Init.Add(new GotoStatement());
             sut.Step.Add(new BreakStatement());
             sut.Body.Add(new ContinueStatement());
 
-            Assert.AreEqual(new ConstantExpression(), sut.Condition);
+            Assert.AreEqual(new ConstantValueExpression(), sut.Condition);
             Assert.AreEqual(Lists.NewList(new GotoStatement()), sut.Init);
             Assert.AreEqual(Lists.NewList(new BreakStatement()), sut.Step);
             Assert.AreEqual(Lists.NewList(new ContinueStatement()), sut.Body);
@@ -66,11 +67,11 @@ namespace KaVE.Model.Tests.SSTs.Blocks
         [Test]
         public void Equality_ReallyTheSame()
         {
-            var a = new ForLoop {Condition = new ConstantExpression()};
+            var a = new ForLoop {Condition = new ConstantValueExpression()};
             a.Init.Add(new GotoStatement());
             a.Step.Add(new BreakStatement());
             a.Body.Add(new ContinueStatement());
-            var b = new ForLoop {Condition = new ConstantExpression()};
+            var b = new ForLoop {Condition = new ConstantValueExpression()};
             b.Init.Add(new GotoStatement());
             b.Step.Add(new BreakStatement());
             b.Body.Add(new ContinueStatement());
@@ -81,7 +82,7 @@ namespace KaVE.Model.Tests.SSTs.Blocks
         [Test]
         public void Equality_DifferentCondition()
         {
-            var a = new ForLoop {Condition = new ConstantExpression()};
+            var a = new ForLoop {Condition = new ConstantValueExpression()};
             var b = new ForLoop();
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());

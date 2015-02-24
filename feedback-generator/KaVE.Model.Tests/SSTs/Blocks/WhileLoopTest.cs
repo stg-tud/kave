@@ -20,6 +20,7 @@
 using KaVE.Model.Collections;
 using KaVE.Model.SSTs.Blocks;
 using KaVE.Model.SSTs.Expressions;
+using KaVE.Model.SSTs.Expressions.Basic;
 using KaVE.Model.SSTs.Statements;
 using NUnit.Framework;
 
@@ -40,9 +41,9 @@ namespace KaVE.Model.Tests.SSTs.Blocks
         [Test]
         public void SettingValues()
         {
-            var sut = new WhileLoop {Condition = new ConstantExpression()};
+            var sut = new WhileLoop {Condition = new ConstantValueExpression()};
             sut.Body.Add(new ReturnStatement());
-            Assert.AreEqual(new ConstantExpression(), sut.Condition);
+            Assert.AreEqual(new ConstantValueExpression(), sut.Condition);
             Assert.AreEqual(Lists.NewList(new ReturnStatement()), sut.Body);
         }
 
@@ -58,9 +59,9 @@ namespace KaVE.Model.Tests.SSTs.Blocks
         [Test]
         public void Equality_ReallyTheSame()
         {
-            var a = new WhileLoop {Condition = new ConstantExpression()};
+            var a = new WhileLoop {Condition = new ConstantValueExpression()};
             a.Body.Add(new ReturnStatement());
-            var b = new WhileLoop {Condition = new ConstantExpression()};
+            var b = new WhileLoop {Condition = new ConstantValueExpression()};
             b.Body.Add(new ReturnStatement());
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
@@ -69,7 +70,7 @@ namespace KaVE.Model.Tests.SSTs.Blocks
         [Test]
         public void Equality_DifferentCondition()
         {
-            var a = new WhileLoop {Condition = new ConstantExpression()};
+            var a = new WhileLoop {Condition = new ConstantValueExpression()};
             var b = new WhileLoop {Condition = new ComposedExpression()};
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());

@@ -19,6 +19,7 @@
 
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using KaVE.Model.SSTs.Expressions;
+using KaVE.Model.SSTs.Expressions.Basic;
 using KaVE.Model.SSTs.Statements;
 using KaVE.VsFeedbackGenerator.Analysis.Transformer.Context;
 
@@ -67,24 +68,25 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
             context.Scope.Body.Add(
                 new Assignment(
                     context.Dest,
-                    new IfElseExpression
-                    {
-                        Condition = conditionalTernaryExpressionParam.ConditionOperand.GetScopedReferences(context),
-                        ThenExpression = conditionalTernaryExpressionParam.ThenResult.GetScopedReferences(context),
-                        ElseExpression = conditionalTernaryExpressionParam.ElseResult.GetScopedReferences(context)
-                    }));
+                    null));
+            //new IfElseExpression
+              //      {
+                //        Condition = conditionalTernaryExpressionParam.ConditionOperand.GetScopedReferences(context),
+                  //      ThenExpression = conditionalTernaryExpressionParam.ThenResult.GetScopedReferences(context),
+                    //    ElseExpression = conditionalTernaryExpressionParam.ElseResult.GetScopedReferences(context)
+           //         }));
         }
 
         public override void VisitCSharpLiteralExpression(ICSharpLiteralExpression cSharpLiteralExpressionParam,
             AssignmentGeneratorContext context)
         {
-            context.Scope.Body.Add(new Assignment(context.Dest, new ConstantExpression()));
+            context.Scope.Body.Add(new Assignment(context.Dest, new ConstantValueExpression()));
         }
 
         public override void VisitDefaultExpression(IDefaultExpression defaultExpressionParam,
             AssignmentGeneratorContext context)
         {
-            context.Scope.Body.Add(new Assignment(context.Dest, new ConstantExpression()));
+            context.Scope.Body.Add(new Assignment(context.Dest, new ConstantValueExpression()));
         }
 
         public override void VisitInvocationExpression(IInvocationExpression invocationExpressionParam,
@@ -156,7 +158,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
         public override void VisitTypeofExpression(ITypeofExpression typeofExpressionParam,
             AssignmentGeneratorContext context)
         {
-            context.Scope.Body.Add(new Assignment(context.Dest, new ConstantExpression()));
+            context.Scope.Body.Add(new Assignment(context.Dest, new ConstantValueExpression()));
         }
 
         public override void VisitUnaryOperatorExpression(IUnaryOperatorExpression unaryOperatorExpressionParam,

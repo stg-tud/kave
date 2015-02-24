@@ -84,12 +84,13 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
             context.Scope.Body.Add(
                 new Assignment(
                     tmp,
-                    new IfElseExpression
-                    {
-                        Condition = conditionalTernaryExpressionParam.ConditionOperand.GetScopedReferences(context),
-                        ThenExpression = conditionalTernaryExpressionParam.ThenResult.GetScopedReferences(context),
-                        ElseExpression = conditionalTernaryExpressionParam.ElseResult.GetScopedReferences(context)
-                    }));
+                    null));
+            //new IfElseExpression
+             //       {
+              //          Condition = conditionalTernaryExpressionParam.ConditionOperand.GetScopedReferences(context),
+               //         ThenExpression = conditionalTernaryExpressionParam.ThenResult.GetScopedReferences(context),
+                //        ElseExpression = conditionalTernaryExpressionParam.ElseResult.GetScopedReferences(context)
+                 //   }));
             context.References.Add(tmp);
         }
 

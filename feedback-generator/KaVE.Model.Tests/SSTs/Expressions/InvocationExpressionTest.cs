@@ -17,9 +17,11 @@
  *    - Sebastian Proksch
  */
 
+using System.Linq;
 using KaVE.Model.Names;
 using KaVE.Model.Names.CSharp;
 using KaVE.Model.SSTs.Expressions;
+using KaVE.Model.SSTs.Expressions.Basic;
 using KaVE.Utils.Assertion;
 using NUnit.Framework;
 
@@ -45,17 +47,17 @@ namespace KaVE.Model.Tests.SSTs.Expressions
             {
                 Identifier = "a1",
                 Name = GetMethod("A2"),
-                Parameters = new[] {"a3"}
+                Parameters = new[] {Ref("a3")}
             };
             Assert.AreEqual("a1", a.Identifier);
             Assert.AreEqual(GetMethod("A2"), a.Name);
-            Assert.AreEqual(new[] {"a3"}, a.Parameters);
+            Assert.AreEqual(new[] {Ref("a3")}, a.Parameters);
         }
 
         [Test]
         public void CustomConstructor_NonStatic()
         {
-            var a = new InvocationExpression("a1", GetMethod("B1"), "c1");
+            var a = InvocationExpression.Create("a1", GetMethod("B1"), Ref("c1"));
             Assert.AreEqual("a1", a.Identifier);
             Assert.AreEqual(GetMethod("B1"), a.Name);
             Assert.AreEqual(new[] {"c1"}, a.Parameters);
@@ -64,14 +66,13 @@ namespace KaVE.Model.Tests.SSTs.Expressions
         [Test, ExpectedException(typeof (AssertException))]
         public void CustomConstructor_NonStaticAssert()
         {
-            // ReSharper disable once ObjectCreationAsStatement
-            new InvocationExpression("a1", GetStaticMethod("B1"), "c1");
+            InvocationExpression.Create("a1", GetStaticMethod("B1"), Ref("c1"));
         }
 
         [Test]
         public void CustomConstructor_Static()
         {
-            var a = new InvocationExpression(GetStaticMethod("B2"), "c2");
+            var a = InvocationExpression.Create(GetStaticMethod("B2"), Ref("c2"));
             Assert.AreEqual("", a.Identifier);
             Assert.AreEqual(GetStaticMethod("B2"), a.Name);
             Assert.AreEqual(new[] {"c2"}, a.Parameters);
@@ -80,8 +81,7 @@ namespace KaVE.Model.Tests.SSTs.Expressions
         [Test, ExpectedException(typeof (AssertException))]
         public void CustomConstructor_StaticAssert()
         {
-            // ReSharper disable once ObjectCreationAsStatement
-            new InvocationExpression(GetMethod("B2"), "c2");
+            InvocationExpression.Create(GetMethod("B2"), Ref("c2"));
         }
 
         [Test]
@@ -98,8 +98,8 @@ namespace KaVE.Model.Tests.SSTs.Expressions
         {
             Assert.AreEqual(GetMethod("a"), GetMethod("a"));
 
-            var a = new InvocationExpression("o", GetMethod("A"), "a", "b", "c");
-            var b = new InvocationExpression("o", GetMethod("A"), "a", "b", "c");
+            var a = InvocationExpression.Create("o", GetMethod("A"), Refs("a", "b", "c"));
+            var b = InvocationExpression.Create("o", GetMethod("A"), Refs("a", "b", "c"));
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
         }
@@ -125,8 +125,8 @@ namespace KaVE.Model.Tests.SSTs.Expressions
         [Test]
         public void Equality_DifferentParameters()
         {
-            var a = new InvocationExpression {Parameters = new[] {"a"}};
-            var b = new InvocationExpression {Parameters = new[] {"b"}};
+            var a = new InvocationExpression {Parameters = new[] {Ref("a")}};
+            var b = new InvocationExpression {Parameters = new[] {Ref("b")}};
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
         }
@@ -145,6 +145,16 @@ namespace KaVE.Model.Tests.SSTs.Expressions
                 "static [System.String, mscore, 4.0.0.0] [System.String, mscore, 4.0.0.0].{0}()",
                 simpleName);
             return MethodName.Get(methodName);
+        }
+
+        private static BasicExpression Ref(string id)
+        {
+            return new ReferenceExpression {Identifier = id};
+        }
+
+        private static BasicExpression[] Refs(params string[] ids)
+        {
+            return ids.Select<string, BasicExpression>(id => new ReferenceExpression {Identifier = id}).ToArray();
         }
     }
 }
