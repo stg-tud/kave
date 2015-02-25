@@ -18,8 +18,7 @@
  */
 
 using KaVE.Model.SSTs.Declarations;
-using KaVE.Model.SSTs.Impl;
-using KaVE.Model.SSTs.Impl.Declarations;
+using KaVE.Model.SSTs.References;
 
 namespace KaVE.Model.SSTs.Visitor
 {
@@ -35,5 +34,12 @@ namespace KaVE.Model.SSTs.Visitor
 
         void Visit(IStatement stmt, TContext context);
         void Visit(IExpression expr, TContext context);
+
+        // References
+        void Visit(IEventReference eventRef, TContext context);
+        void Visit(IFieldReference fieldRef, TContext context);
+        void Visit(IMethodReference methodRef, TContext context);
+        void Visit(IPropertyReference methodRef, TContext context);
+        void Visit(IVariableReference varRef, TContext context);
     }
 }

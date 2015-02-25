@@ -19,53 +19,79 @@
 
 using System.Text;
 using KaVE.Model.SSTs.Declarations;
+using KaVE.Model.SSTs.References;
 
 namespace KaVE.Model.SSTs.Impl.Visitor
 {
     public class SSTToStringVisitor : SSTNodeVisitor<StringBuilder>
     {
-        public override void Visit(ISST sst, StringBuilder context)
+        public override void Visit(ISST sst, StringBuilder sb)
         {
-            context.Append("class ");
-            context.Append(sst.EnclosingType.Name);
-            context.Append(" {\n");
+            sb.Append("class ");
+            sb.Append(sst.EnclosingType.Name);
+            sb.Append(" {\n");
 
             foreach (var e in sst.Events)
             {
-                e.Accept(this, context);
+                e.Accept(this, sb);
             }
             foreach (var f in sst.Fields)
             {
-                f.Accept(this, context);
+                f.Accept(this, sb);
             }
 
-            context.Append("}\n");
+            sb.Append("}\n");
         }
 
-        public override void Visit(IDelegateDeclaration stmt, StringBuilder context)
+        public override void Visit(IDelegateDeclaration stmt, StringBuilder sb)
         {
-            context.Append(stmt.Name.DeclaringType.Name);
-            context.Append(" ");
-            context.Append(stmt.Name.Name);
-            context.Append(";\n");
+            sb.Append(stmt.Name.DeclaringType.Name);
+            sb.Append(" ");
+            sb.Append(stmt.Name.Name);
+            sb.Append(";\n");
         }
 
-        public override void Visit(IEventDeclaration stmt, StringBuilder context)
+        public override void Visit(IEventDeclaration stmt, StringBuilder sb)
         {
-            context.Append("\tevent ");
-            context.Append(stmt.Name.HandlerType.Name);
-            context.Append(" ");
-            context.Append(stmt.Name.Name);
-            context.Append(";\n");
+            sb.Append("\tevent ");
+            sb.Append(stmt.Name.HandlerType.Name);
+            sb.Append(" ");
+            sb.Append(stmt.Name.Name);
+            sb.Append(";\n");
         }
 
-        public override void Visit(IFieldDeclaration stmt, StringBuilder context)
+        public override void Visit(IFieldDeclaration stmt, StringBuilder sb)
         {
-            context.Append("\t");
-            context.Append(stmt.Name.ValueType.Name);
-            context.Append(" ");
-            context.Append(stmt.Name.Name);
-            context.Append(";\n");
+            sb.Append("\t");
+            sb.Append(stmt.Name.ValueType.Name);
+            sb.Append(" ");
+            sb.Append(stmt.Name.Name);
+            sb.Append(";\n");
+        }
+
+        public override void Visit(IEventReference eventRef, StringBuilder sb)
+        {
+            sb.Append("TODO: IEventReference");
+        }
+
+        public override void Visit(IFieldReference fieldRef, StringBuilder sb)
+        {
+            sb.Append("TODO: IFieldReference");
+        }
+
+        public override void Visit(IMethodReference methodRef, StringBuilder sb)
+        {
+            sb.Append("TODO: IMethodReference");
+        }
+
+        public override void Visit(IPropertyReference propertyRef, StringBuilder sb)
+        {
+            sb.Append("TODO: IPropertyReference");
+        }
+
+        public override void Visit(IVariableReference varRef, StringBuilder sb)
+        {
+            sb.Append("TODO: IVariableReference");
         }
     }
 }

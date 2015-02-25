@@ -17,7 +17,12 @@
  *    - Sebastian Proksch
  */
 
+using KaVE.Model.Names;
+
 namespace KaVE.Model.SSTs.References
 {
-    public interface IMethodReference : IMemberReference {}
+    public interface IMethodReference : IMemberReference
+    {
+        IMethodName MethodName { get; }
+    }
 }

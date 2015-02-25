@@ -17,10 +17,18 @@
  *    - Sebastian Proksch
  */
 
-namespace KaVE.Model.SSTs.References
+using KaVE.Model.SSTs.References;
+using KaVE.Model.SSTs.Visitor;
+
+namespace KaVE.Model.SSTs.Impl.References
 {
-    public interface IVariableReference : IAssignableReference
+    public class VariableReference : IVariableReference
     {
-        string Identifier { get; }
+        public string Identifier { get; set; }
+
+        public void Accept<TContext>(ISSTNodeVisitor<TContext> visitor, TContext context)
+        {
+            visitor.Visit(this, context);
+        }
     }
 }

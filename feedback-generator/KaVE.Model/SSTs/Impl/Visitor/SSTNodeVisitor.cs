@@ -18,12 +18,11 @@
  */
 
 using KaVE.Model.SSTs.Declarations;
-using KaVE.Model.SSTs.Impl.Declarations;
+using KaVE.Model.SSTs.References;
 using KaVE.Model.SSTs.Visitor;
 
 namespace KaVE.Model.SSTs.Impl.Visitor
 {
-    // TODO implement "navigation" in SST structure in this class?!
     public class SSTNodeVisitor<TContext> : ISSTNodeVisitor<TContext>
     {
         public virtual void Visit(ISST sst, TContext context) {}
@@ -36,5 +35,11 @@ namespace KaVE.Model.SSTs.Impl.Visitor
 
         public virtual void Visit(IStatement stmt, TContext context) {}
         public virtual void Visit(IExpression expr, TContext context) {}
+
+        public virtual void Visit(IEventReference eventRef, TContext context) {}
+        public virtual void Visit(IFieldReference fieldRef, TContext context) {}
+        public virtual void Visit(IMethodReference methodRef, TContext context) {}
+        public virtual void Visit(IPropertyReference methodRef, TContext context) {}
+        public virtual void Visit(IVariableReference varRef, TContext context) {}
     }
 }

@@ -17,7 +17,12 @@
  *    - Sebastian Proksch
  */
 
+using KaVE.Model.Names;
+
 namespace KaVE.Model.SSTs.References
 {
-    public interface IPropertyReference : IAssignableReference, IMemberReference {}
+    public interface IPropertyReference : IAssignableReference, IMemberReference
+    {
+        IPropertyName PropertyName { get; }
+    }
 }

@@ -17,7 +17,12 @@
  *    - Sebastian Proksch
  */
 
+using KaVE.Model.Names;
+
 namespace KaVE.Model.SSTs.References
 {
-    public interface IEventReference : IAssignableReference, IMemberReference {}
+    public interface IEventReference : IAssignableReference, IMemberReference
+    {
+        IEventName EventName { get; }
+    }
 }
