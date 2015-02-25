@@ -21,8 +21,5 @@ using KaVE.Model.SSTs.Visitor;
 
 namespace KaVE.Model.SSTs
 {
-    public abstract class MemberDeclaration : ISSTNode
-    {
-        public abstract void Accept<TContext>(ISSTNodeVisitor<TContext> visitor, TContext context);
-    }
+    public interface IMemberDeclaration : ISSTNode {}
 }

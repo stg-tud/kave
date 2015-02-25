@@ -24,16 +24,16 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Util
 {
     public interface IScope
     {
-        IList<Statement> Body { get; }
+        IList<IStatement> Body { get; }
     }
 
     public class Scope : IScope
     {
         public Scope()
         {
-            Body = new List<Statement>();
+            Body = new List<IStatement>();
         }
 
-        public IList<Statement> Body { get; private set; }
+        public IList<IStatement> Body { get; private set; }
     }
 }

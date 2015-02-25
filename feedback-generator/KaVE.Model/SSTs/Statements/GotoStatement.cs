@@ -21,7 +21,7 @@ using KaVE.Utils;
 
 namespace KaVE.Model.SSTs.Statements
 {
-    public class GotoStatement : Statement
+    public class GotoStatement : IStatement
     {
         public string Label { get; set; }
 

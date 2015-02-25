@@ -22,8 +22,8 @@ using System.Linq;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.Util;
 using KaVE.Model.SSTs.Blocks;
-using KaVE.Model.SSTs.Declarations;
 using KaVE.Model.SSTs.Expressions.Basic;
+using KaVE.Model.SSTs.Impl.Declarations;
 using KaVE.Model.SSTs.Statements;
 using KaVE.Model.SSTs.Statements.Wrapped;
 using KaVE.VsFeedbackGenerator.Analysis.Transformer.Context;
@@ -69,7 +69,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
             var foreachLoop = new ForEachLoop
             {
                 Decl =
-                    new VariableDeclaration(
+                    VariableDeclaration.Create(
                         foreachStatementParam.IteratorName,
                         foreachStatementParam.IteratorDeclaration.DeclaredElement.Type.GetName()),
                 LoopedIdentifier = foreachStatementParam.Collection.GetReference(context)
@@ -143,7 +143,8 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
                 context,
                 (callee, method, args, retType) =>
                 {
-                    var basicExpressions = args.Select<string, BasicExpression>(id => new ReferenceExpression{Identifier = id}).AsArray();
+                    var basicExpressions =
+                        args.Select<string, BasicExpression>(id => new ReferenceExpression {Identifier = id}).AsArray();
                     context.Scope.Body.Add(InvocationStatement.Create(method, basicExpressions));
                 });
         }
@@ -175,7 +176,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
         {
             var name = multipleDeclarationMemberParam.NameIdentifier.Name;
             var type = multipleDeclarationMemberParam.Type.GetName();
-            context.Scope.Body.Add(new VariableDeclaration(name, type));
+            context.Scope.Body.Add(VariableDeclaration.Create(name, type));
         }
 
         public override void VisitMultipleLocalVariableDeclaration(

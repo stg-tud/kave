@@ -19,9 +19,9 @@
 
 using System.Text;
 using KaVE.Model.Names.CSharp;
-using KaVE.Model.SSTs;
-using KaVE.Model.SSTs.Declarations;
-using KaVE.Model.SSTs.Visitor;
+using KaVE.Model.SSTs.Impl;
+using KaVE.Model.SSTs.Impl.Declarations;
+using KaVE.Model.SSTs.Impl.Visitor;
 using NUnit.Framework;
 
 namespace KaVE.Model.Tests.SSTs.Visitor
@@ -40,7 +40,7 @@ namespace KaVE.Model.Tests.SSTs.Visitor
                 Name = FieldName.Get("[MyField, mscore, 4.0.0.0] [DeclaringType, mscore, 4.0.0.0]._f")
             };
 
-            var sst = new SST { EnclosingType = TypeName.Get("MyType, mscore, 4.0.0.0") };
+            var sst = new SST {EnclosingType = TypeName.Get("MyType, mscore, 4.0.0.0")};
             sst.Events.Add(eventDeclaration);
             sst.Fields.Add(fieldDeclaration);
 

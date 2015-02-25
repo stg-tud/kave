@@ -22,7 +22,7 @@ using KaVE.Utils;
 namespace KaVE.Model.SSTs.Blocks
 {
     // not analyzed (this includes "fixed" statements as they are only allowed in unsafe blocks)
-    public class UnsafeBlock : Statement
+    public class UnsafeBlock : IStatement
     {
         private static bool Equals(UnsafeBlock other)
         {

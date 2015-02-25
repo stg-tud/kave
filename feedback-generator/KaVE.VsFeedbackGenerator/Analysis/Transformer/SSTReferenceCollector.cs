@@ -19,8 +19,7 @@
 
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.Util;
-using KaVE.Model.SSTs.Declarations;
-using KaVE.Model.SSTs.Expressions;
+using KaVE.Model.SSTs.Impl.Declarations;
 using KaVE.Model.SSTs.Statements;
 using KaVE.Utils.Assertion;
 using KaVE.VsFeedbackGenerator.Analysis.Transformer.Context;
@@ -34,7 +33,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
             ReferenceCollectorContext context)
         {
             var tmp = context.Generator.GetNextVariableName();
-            context.Scope.Body.Add(new VariableDeclaration(tmp, arrayCreationExpressionParam.Type().GetName()));
+            context.Scope.Body.Add(VariableDeclaration.Create(tmp, arrayCreationExpressionParam.Type().GetName()));
             context.Scope.Body.Add(
                 new Assignment(tmp, arrayCreationExpressionParam.ArrayInitializer.GetReferences(context)));
             context.References.Add(tmp);
@@ -80,17 +79,17 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
             ReferenceCollectorContext context)
         {
             var tmp = context.Generator.GetNextVariableName();
-            context.Scope.Body.Add(new VariableDeclaration(tmp, conditionalTernaryExpressionParam.Type().GetName()));
+            context.Scope.Body.Add(VariableDeclaration.Create(tmp, conditionalTernaryExpressionParam.Type().GetName()));
             context.Scope.Body.Add(
                 new Assignment(
                     tmp,
                     null));
             //new IfElseExpression
-             //       {
-              //          Condition = conditionalTernaryExpressionParam.ConditionOperand.GetScopedReferences(context),
-               //         ThenExpression = conditionalTernaryExpressionParam.ThenResult.GetScopedReferences(context),
-                //        ElseExpression = conditionalTernaryExpressionParam.ElseResult.GetScopedReferences(context)
-                 //   }));
+            //       {
+            //          Condition = conditionalTernaryExpressionParam.ConditionOperand.GetScopedReferences(context),
+            //         ThenExpression = conditionalTernaryExpressionParam.ThenResult.GetScopedReferences(context),
+            //        ElseExpression = conditionalTernaryExpressionParam.ElseResult.GetScopedReferences(context)
+            //   }));
             context.References.Add(tmp);
         }
 
@@ -117,12 +116,12 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
                     (callee, method, args, retType) =>
                     {
                         var tmp = context.Generator.GetNextVariableName();
-                        context.Scope.Body.Add(new VariableDeclaration(tmp, retType));
+                        context.Scope.Body.Add(VariableDeclaration.Create(tmp, retType));
                         context.Scope.Body.Add(new Assignment(tmp, callee.CreateInvocation(method, args)));
                         context.References.Add(tmp);
                     });
             }
-            catch(AssertException)
+            catch (AssertException)
             {
                 // suppress KaVE errors
             }

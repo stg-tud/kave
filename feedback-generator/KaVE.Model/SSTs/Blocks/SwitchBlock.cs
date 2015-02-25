@@ -23,11 +23,11 @@ using KaVE.Utils;
 
 namespace KaVE.Model.SSTs.Blocks
 {
-    public class SwitchBlock : Statement
+    public class SwitchBlock : IStatement
     {
         public string Identifier { get; set; }
         public IList<CaseBlock> Sections = Lists.NewList<CaseBlock>();
-        public IList<Statement> DefaultSection = Lists.NewList<Statement>();
+        public IList<IStatement> DefaultSection = Lists.NewList<IStatement>();
 
         protected bool Equals(SwitchBlock other)
         {

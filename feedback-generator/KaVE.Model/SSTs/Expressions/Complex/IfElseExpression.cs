@@ -22,7 +22,7 @@ using KaVE.Utils;
 
 namespace KaVE.Model.SSTs.Expressions
 {
-    public class IfElseExpression : Expression
+    public class IfElseExpression : IExpression
     {
         public BasicExpression Condition { get; set; }
         // use LambdaExpression here in case of more complex subexpressions

@@ -18,21 +18,23 @@
  */
 
 using KaVE.Model.SSTs.Declarations;
+using KaVE.Model.SSTs.Impl.Declarations;
+using KaVE.Model.SSTs.Visitor;
 
-namespace KaVE.Model.SSTs.Visitor
+namespace KaVE.Model.SSTs.Impl.Visitor
 {
     // TODO implement "navigation" in SST structure in this class?!
     public class SSTNodeVisitor<TContext> : ISSTNodeVisitor<TContext>
     {
-        public virtual void Visit(SST sst, TContext context) {}
+        public virtual void Visit(ISST sst, TContext context) {}
 
-        public virtual void Visit(DelegateDeclaration stmt, TContext context) {}
-        public virtual void Visit(EventDeclaration stmt, TContext context) {}
-        public virtual void Visit(FieldDeclaration stmt, TContext context) {}
-        public virtual void Visit(MethodDeclaration stmt, TContext context) {}
-        public virtual void Visit(PropertyDeclaration stmt, TContext context) {}
+        public virtual void Visit(IDelegateDeclaration stmt, TContext context) {}
+        public virtual void Visit(IEventDeclaration stmt, TContext context) {}
+        public virtual void Visit(IFieldDeclaration stmt, TContext context) {}
+        public virtual void Visit(IMethodDeclaration stmt, TContext context) {}
+        public virtual void Visit(IPropertyDeclaration stmt, TContext context) {}
 
-        public virtual void Visit(Statement stmt, TContext context) {}
-        public virtual void Visit(Expression expr, TContext context) {}
+        public virtual void Visit(IStatement stmt, TContext context) {}
+        public virtual void Visit(IExpression expr, TContext context) {}
     }
 }

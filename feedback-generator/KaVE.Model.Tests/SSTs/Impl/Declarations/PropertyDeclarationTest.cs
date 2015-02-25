@@ -20,13 +20,13 @@
 using KaVE.Model.Collections;
 using KaVE.Model.Names.CSharp;
 using KaVE.Model.SSTs;
-using KaVE.Model.SSTs.Declarations;
+using KaVE.Model.SSTs.Impl.Declarations;
 using KaVE.Model.SSTs.Statements;
 using KaVE.Model.SSTs.Visitor;
 using Moq;
 using NUnit.Framework;
 
-namespace KaVE.Model.Tests.SSTs.Declarations
+namespace KaVE.Model.Tests.SSTs.Impl.Declarations
 {
     internal class PropertyDeclarationTest
     {
@@ -48,10 +48,10 @@ namespace KaVE.Model.Tests.SSTs.Declarations
             sut.Get.Add(new ReturnStatement());
             sut.Set.Add(new ContinueStatement());
 
-            var expectedGet = Lists.NewList<Statement>();
+            var expectedGet = Lists.NewList<IStatement>();
             expectedGet.Add(new ReturnStatement());
 
-            var expectedSet = Lists.NewList<Statement>();
+            var expectedSet = Lists.NewList<IStatement>();
             expectedSet.Add(new ContinueStatement());
 
             Assert.AreEqual(PropertyName.UnknownName, sut.Name);

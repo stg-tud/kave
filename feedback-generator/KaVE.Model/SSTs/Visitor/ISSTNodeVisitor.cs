@@ -18,20 +18,22 @@
  */
 
 using KaVE.Model.SSTs.Declarations;
+using KaVE.Model.SSTs.Impl;
+using KaVE.Model.SSTs.Impl.Declarations;
 
 namespace KaVE.Model.SSTs.Visitor
 {
     public interface ISSTNodeVisitor<in TContext>
     {
-        void Visit(SST sst, TContext context);
+        void Visit(ISST sst, TContext context);
 
-        void Visit(DelegateDeclaration stmt, TContext context);
-        void Visit(EventDeclaration stmt, TContext context);
-        void Visit(FieldDeclaration stmt, TContext context);
-        void Visit(MethodDeclaration stmt, TContext context);
-        void Visit(PropertyDeclaration stmt, TContext context);
+        void Visit(IDelegateDeclaration stmt, TContext context);
+        void Visit(IEventDeclaration stmt, TContext context);
+        void Visit(IFieldDeclaration stmt, TContext context);
+        void Visit(IMethodDeclaration stmt, TContext context);
+        void Visit(IPropertyDeclaration stmt, TContext context);
 
-        void Visit(Statement stmt, TContext context);
-        void Visit(Expression expr, TContext context);
+        void Visit(IStatement stmt, TContext context);
+        void Visit(IExpression expr, TContext context);
     }
 }

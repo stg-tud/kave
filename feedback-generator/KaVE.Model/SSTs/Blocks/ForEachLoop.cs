@@ -24,11 +24,11 @@ using KaVE.Utils;
 
 namespace KaVE.Model.SSTs.Blocks
 {
-    public class ForEachLoop : Statement
+    public class ForEachLoop : IStatement
     {
-        public VariableDeclaration Decl { get; set; }
+        public IVariableDeclaration Decl { get; set; }
         public string LoopedIdentifier { get; set; }
-        public readonly IList<Statement> Body = Lists.NewList<Statement>();
+        public readonly IList<IStatement> Body = Lists.NewList<IStatement>();
 
         private bool Equals(ForEachLoop other)
         {

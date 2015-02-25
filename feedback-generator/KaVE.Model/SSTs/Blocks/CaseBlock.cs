@@ -26,7 +26,7 @@ namespace KaVE.Model.SSTs.Blocks
     public class CaseBlock
     {
         public string Label { get; set; }
-        public readonly IList<Statement> Body = Lists.NewList<Statement>();
+        public readonly IList<IStatement> Body = Lists.NewList<IStatement>();
 
         protected bool Equals(CaseBlock other)
         {

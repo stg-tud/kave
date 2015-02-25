@@ -21,7 +21,7 @@ using KaVE.Utils;
 
 namespace KaVE.Model.SSTs.Statements
 {
-    public class LockStatement : Statement
+    public class LockStatement : IStatement
     {
         public string Identifier { get; set; }
 

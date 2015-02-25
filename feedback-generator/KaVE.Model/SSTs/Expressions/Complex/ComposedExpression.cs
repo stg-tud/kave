@@ -21,7 +21,7 @@ using KaVE.Utils;
 
 namespace KaVE.Model.SSTs.Expressions
 {
-    public class ComposedExpression : Expression
+    public class ComposedExpression : IExpression
     {
         public string[] Variables { get; set; }
 

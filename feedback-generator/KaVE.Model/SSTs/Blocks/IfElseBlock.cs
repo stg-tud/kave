@@ -23,11 +23,11 @@ using KaVE.Utils;
 
 namespace KaVE.Model.SSTs.Blocks
 {
-    public class IfElseBlock : Statement
+    public class IfElseBlock : IStatement
     {
-        public Expression Condition { get; set; }
-        public readonly IList<Statement> Then = Lists.NewList<Statement>();
-        public readonly IList<Statement> Else = Lists.NewList<Statement>();
+        public IExpression Condition { get; set; }
+        public readonly IList<IStatement> Then = Lists.NewList<IStatement>();
+        public readonly IList<IStatement> Else = Lists.NewList<IStatement>();
 
         public bool Equals(IfElseBlock block)
         {

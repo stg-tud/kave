@@ -20,11 +20,11 @@
 using System.Text;
 using KaVE.Model.SSTs.Declarations;
 
-namespace KaVE.Model.SSTs.Visitor
+namespace KaVE.Model.SSTs.Impl.Visitor
 {
     public class SSTToStringVisitor : SSTNodeVisitor<StringBuilder>
     {
-        public override void Visit(SST sst, StringBuilder context)
+        public override void Visit(ISST sst, StringBuilder context)
         {
             context.Append("class ");
             context.Append(sst.EnclosingType.Name);
@@ -42,7 +42,15 @@ namespace KaVE.Model.SSTs.Visitor
             context.Append("}\n");
         }
 
-        public override void Visit(EventDeclaration stmt, StringBuilder context)
+        public override void Visit(IDelegateDeclaration stmt, StringBuilder context)
+        {
+            context.Append(stmt.Name.DeclaringType.Name);
+            context.Append(" ");
+            context.Append(stmt.Name.Name);
+            context.Append(";\n");
+        }
+
+        public override void Visit(IEventDeclaration stmt, StringBuilder context)
         {
             context.Append("\tevent ");
             context.Append(stmt.Name.HandlerType.Name);
@@ -51,7 +59,7 @@ namespace KaVE.Model.SSTs.Visitor
             context.Append(";\n");
         }
 
-        public override void Visit(FieldDeclaration stmt, StringBuilder context)
+        public override void Visit(IFieldDeclaration stmt, StringBuilder context)
         {
             context.Append("\t");
             context.Append(stmt.Name.ValueType.Name);

@@ -21,7 +21,7 @@ using KaVE.Utils;
 
 namespace KaVE.Model.SSTs.Expressions
 {
-    public class ExpressionCompletion : Expression
+    public class ExpressionCompletion : IExpression
     {
         public string Token { get; set; }
         public string Identifier { get; set; }

@@ -22,7 +22,7 @@ using KaVE.Utils;
 
 namespace KaVE.Model.SSTs.Statements
 {
-    public class ThrowStatement : Statement
+    public class ThrowStatement : IStatement
     {
         public ITypeName Exception { get; set; }
 

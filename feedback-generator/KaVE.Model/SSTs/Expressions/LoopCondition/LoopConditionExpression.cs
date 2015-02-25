@@ -21,5 +21,5 @@ using KaVE.Model.SSTs.Expressions.Basic;
 
 namespace KaVE.Model.SSTs.Expressions.LoopCondition
 {
-    public class LoopConditionExpression : Expression {}
+    public class LoopConditionExpression : IExpression {}
 }

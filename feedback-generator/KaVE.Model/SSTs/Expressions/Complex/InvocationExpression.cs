@@ -24,7 +24,7 @@ using KaVE.Utils.Assertion;
 
 namespace KaVE.Model.SSTs.Expressions
 {
-    public class InvocationExpression : Expression
+    public class InvocationExpression : IExpression
     {
         public string Identifier { get; set; }
         public IMethodName Name { get; set; }

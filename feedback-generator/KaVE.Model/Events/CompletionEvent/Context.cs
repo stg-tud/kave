@@ -21,6 +21,7 @@
 using System.Runtime.Serialization;
 using KaVE.JetBrains.Annotations;
 using KaVE.Model.SSTs;
+using KaVE.Model.SSTs.Impl;
 using KaVE.Utils;
 
 namespace KaVE.Model.Events.CompletionEvent

@@ -25,7 +25,7 @@ using KaVE.VsFeedbackGenerator.Analysis.Util;
 
 namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
 {
-    public class ToRefReducer : TreeNodeVisitor<IList<Statement>, Expression>
+    public class ToRefReducer : TreeNodeVisitor<IList<IStatement>, IExpression>
     {
         public ToRefReducer(UniqueVariableNameGenerator nameGen)
         {

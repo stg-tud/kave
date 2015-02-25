@@ -21,10 +21,10 @@ using KaVE.Utils;
 
 namespace KaVE.Model.SSTs.Statements
 {
-    public class LabelledStatement : Statement
+    public class LabelledStatement : IStatement
     {
         public string Label { get; set; }
-        public Statement Statement { get; set; }
+        public IStatement Statement { get; set; }
 
         private bool Equals(LabelledStatement other)
         {

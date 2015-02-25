@@ -14,23 +14,23 @@
  * limitations under the License.
  * 
  * Contributors:
- *    - 
+ *    - Sebastian Proksch
  */
 
 using KaVE.Model.Names.CSharp;
-using KaVE.Model.SSTs.Declarations;
+using KaVE.Model.SSTs.Impl.Declarations;
 using KaVE.Model.SSTs.Visitor;
 using Moq;
 using NUnit.Framework;
 
-namespace KaVE.Model.Tests.SSTs.Declarations
+namespace KaVE.Model.Tests.SSTs.Impl.Declarations
 {
-    internal class FieldDeclarationTest
+    internal class DelegateDeclarationTest
     {
         [Test]
         public void DefaultValues()
         {
-            var sut = new FieldDeclaration();
+            var sut = new DelegateDeclaration();
             Assert.Null(sut.Name);
             Assert.AreNotEqual(0, sut.GetHashCode());
             Assert.AreNotEqual(1, sut.GetHashCode());
@@ -39,15 +39,15 @@ namespace KaVE.Model.Tests.SSTs.Declarations
         [Test]
         public void SettingValues()
         {
-            var sut = new FieldDeclaration {Name = FieldName.UnknownName};
-            Assert.AreEqual(FieldName.UnknownName, sut.Name);
+            var sut = new DelegateDeclaration {Name = TypeName.UnknownName};
+            Assert.AreEqual(TypeName.UnknownName, sut.Name);
         }
 
         [Test]
         public void Equality_Default()
         {
-            var a = new FieldDeclaration();
-            var b = new FieldDeclaration();
+            var a = new DelegateDeclaration();
+            var b = new DelegateDeclaration();
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
         }
@@ -55,8 +55,8 @@ namespace KaVE.Model.Tests.SSTs.Declarations
         [Test]
         public void Equality_ReallyEquals()
         {
-            var a = new FieldDeclaration {Name = FieldName.UnknownName};
-            var b = new FieldDeclaration {Name = FieldName.UnknownName};
+            var a = new DelegateDeclaration {Name = TypeName.UnknownName};
+            var b = new DelegateDeclaration {Name = TypeName.UnknownName};
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
         }
@@ -64,8 +64,8 @@ namespace KaVE.Model.Tests.SSTs.Declarations
         [Test]
         public void Equality_DifferentType()
         {
-            var a = new FieldDeclaration {Name = FieldName.UnknownName};
-            var b = new FieldDeclaration();
+            var a = new DelegateDeclaration {Name = TypeName.UnknownName};
+            var b = new DelegateDeclaration();
 
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
@@ -74,7 +74,7 @@ namespace KaVE.Model.Tests.SSTs.Declarations
         [Test]
         public void VisitorImplementation()
         {
-            var sut = new FieldDeclaration();
+            var sut = new DelegateDeclaration();
             var @visitor = new Mock<ISSTNodeVisitor<object>>();
             var context = new object();
 

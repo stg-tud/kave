@@ -24,6 +24,7 @@ using KaVE.Model.Events;
 using KaVE.Model.Events.CompletionEvent;
 using KaVE.Model.Names;
 using KaVE.Model.SSTs;
+using KaVE.Model.SSTs.Impl;
 using KaVE.Utils.Assertion;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize

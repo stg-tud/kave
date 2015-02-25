@@ -24,7 +24,6 @@ using JetBrains.Util;
 using KaVE.Model.Names;
 using KaVE.Model.SSTs;
 using KaVE.Model.SSTs.Blocks;
-using KaVE.Model.SSTs.Declarations;
 using KaVE.Model.SSTs.Expressions;
 using KaVE.Model.SSTs.Expressions.Basic;
 using KaVE.Model.SSTs.Expressions.LoopCondition;
@@ -33,6 +32,7 @@ using KaVE.VsFeedbackGenerator.Analysis.Transformer.Context;
 using KaVE.VsFeedbackGenerator.Analysis.Util;
 using KaVE.VsFeedbackGenerator.Utils.Names;
 using NuGet;
+using KaVEVariableDeclaration = KaVE.Model.SSTs.Impl.Declarations.VariableDeclaration;
 
 namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
 {
@@ -42,7 +42,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
         ///     Constructs an Expression from a list of references. Empty list causes ConstantExpression, ComposedExpression
         ///     otherwise.
         /// </summary>
-        public static Expression AsExpression(this IList<string> references)
+        public static IExpression AsExpression(this IList<string> references)
         {
             if (Enumerable.Any(references))
             {
@@ -55,7 +55,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
         ///     Traverses the given (expression-)node and collects references. If the transformation causes declarations,
         ///     invocations, assignments, etc. the result is a BlockExpression.
         /// </summary>
-        public static Expression GetScopedReferences(this ICSharpTreeNode node, ITransformerContext context)
+        public static IExpression GetScopedReferences(this ICSharpTreeNode node, ITransformerContext context)
         {
             var scope = context.Factory.Scope();
             var refCollectorContext = new ReferenceCollectorContext(context, scope);
@@ -73,7 +73,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
         ///     Traverses the given (expression-)node and collects references. If the transformation causes declarations,
         ///     invocations, assignments, etc., such statements are added to the given scope.
         /// </summary>
-        public static Expression GetReferences(this ICSharpTreeNode node, ITransformerContext context)
+        public static IExpression GetReferences(this ICSharpTreeNode node, ITransformerContext context)
         {
             var refCollectorContext = new ReferenceCollectorContext(context);
             node.Accept(context.Factory.ReferenceCollector(), refCollectorContext);
@@ -172,7 +172,9 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
                 {
                     identifier = specificCatchClause.ExceptionDeclaration.DeclaredName;
                 }
-                catchBlock.Exception = new VariableDeclaration(identifier, catchClauseParam.ExceptionType.GetName());
+                catchBlock.Exception = KaVEVariableDeclaration.Create(
+                    identifier,
+                    catchClauseParam.ExceptionType.GetName());
             }
             CollectionExtensions.AddRange(catchBlock.Body, catchClauseParam.Body.GetScope(context).Body);
             return catchBlock;

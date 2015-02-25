@@ -24,6 +24,8 @@ using KaVE.Model.Names.CSharp;
 using KaVE.Model.SSTs;
 using KaVE.Model.SSTs.Declarations;
 using KaVE.Model.SSTs.Expressions.Basic;
+using KaVE.Model.SSTs.Impl;
+using KaVE.Model.SSTs.Impl.Declarations;
 using KaVE.Utils.Exceptions;
 using KaVE.VsFeedbackGenerator.Utils;
 using Moq;
@@ -77,7 +79,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             Assert.AreEqual(expected, ResultSST);
         }
 
-        protected void AssertMethod(MethodDeclaration expected)
+        protected void AssertMethod(IMethodDeclaration expected)
         {
             foreach (var actual in ResultSST.Methods)
             {
@@ -95,7 +97,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             return new ReferenceExpression {Identifier = id};
         }
 
-        protected void AssertAllMethods(params MethodDeclaration[] expectedDecls)
+        protected void AssertAllMethods(params IMethodDeclaration[] expectedDecls)
         {
             var ms = ResultSST.Methods;
             Assert.AreEqual(expectedDecls.Length, ms.Count);
@@ -106,7 +108,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             }
         }
 
-        protected void AssertBody(IList<Statement> body)
+        protected void AssertBody(IList<IStatement> body)
         {
             Assert.AreEqual(1, ResultSST.Methods.Count);
             var m = ResultSST.Methods.First();

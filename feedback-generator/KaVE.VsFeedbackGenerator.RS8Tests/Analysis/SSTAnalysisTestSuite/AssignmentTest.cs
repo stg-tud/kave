@@ -18,9 +18,9 @@
  */
 
 using KaVE.Model.Names.CSharp;
-using KaVE.Model.SSTs.Declarations;
 using KaVE.Model.SSTs.Expressions;
 using KaVE.Model.SSTs.Expressions.Basic;
+using KaVE.Model.SSTs.Impl.Declarations;
 using KaVE.Model.SSTs.Statements;
 using NUnit.Framework;
 using Fix = KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite.SSTAnalysisFixture;
@@ -42,7 +42,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             ");
 
             var mA = NewMethodDeclaration(Fix.Void, "A");
-            mA.Body.Add(new VariableDeclaration("i", Fix.Int));
+            mA.Body.Add(VariableDeclaration.Create("i", Fix.Int));
             mA.Body.Add(new Assignment("i", new ConstantValueExpression()));
 
             AssertAllMethods(mA);
@@ -60,7 +60,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             ");
 
             var mA = NewMethodDeclaration(Fix.Void, "A");
-            mA.Body.Add(new VariableDeclaration("i", Fix.Int));
+            mA.Body.Add(VariableDeclaration.Create("i", Fix.Int));
             mA.Body.Add(new Assignment("i", new ConstantValueExpression()));
 
             AssertAllMethods(mA);
@@ -78,7 +78,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             ");
 
             var mA = NewMethodDeclaration(Fix.Void, "A");
-            mA.Body.Add(new VariableDeclaration("i", Fix.Int));
+            mA.Body.Add(VariableDeclaration.Create("i", Fix.Int));
             mA.Body.Add(new Assignment("i", new ConstantValueExpression()));
 
             AssertAllMethods(mA);
@@ -97,9 +97,9 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             ");
 
             var mA = NewMethodDeclaration(Fix.Void, "A");
-            mA.Body.Add(new VariableDeclaration("i", Fix.Int));
+            mA.Body.Add(VariableDeclaration.Create("i", Fix.Int));
             mA.Body.Add(new Assignment("i", new ConstantValueExpression()));
-            mA.Body.Add(new VariableDeclaration("j", Fix.Int));
+            mA.Body.Add(VariableDeclaration.Create("j", Fix.Int));
             mA.Body.Add(new Assignment("j", new ComposedExpression {Variables = new[] {"i"}}));
 
             AssertAllMethods(mA);
@@ -119,8 +119,8 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             ");
 
             var mA = NewMethodDeclaration(Fix.Void, "A");
-            mA.Body.Add(new VariableDeclaration("i", Fix.Int));
-            mA.Body.Add(new VariableDeclaration("j", Fix.Int));
+            mA.Body.Add(VariableDeclaration.Create("i", Fix.Int));
+            mA.Body.Add(VariableDeclaration.Create("j", Fix.Int));
             mA.Body.Add(new Assignment("i", new ConstantValueExpression()));
             mA.Body.Add(new Assignment("j", new ReferenceExpression {Identifier = "i"}));
 
@@ -140,15 +140,13 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             ");
 
             var mA = NewMethodDeclaration(Fix.Void, "A");
-            mA.Body.Add(new VariableDeclaration("i", Fix.Int));
+            mA.Body.Add(VariableDeclaration.Create("i", Fix.Int));
             mA.Body.Add(new Assignment("i", new ConstantValueExpression()));
-            mA.Body.Add(new VariableDeclaration("j", Fix.Int));
-            mA.Body.Add(new Assignment("j", new ReferenceExpression { Identifier = "i" }));
+            mA.Body.Add(VariableDeclaration.Create("j", Fix.Int));
+            mA.Body.Add(new Assignment("j", new ReferenceExpression {Identifier = "i"}));
 
             AssertAllMethods(mA);
         }
-
-       
 
 
         [Test]
@@ -163,7 +161,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             ");
 
             var mA = NewMethodDeclaration(Fix.Void, "A");
-            mA.Body.Add(new VariableDeclaration("obj", TypeName.Get("N.C, TestProject")));
+            mA.Body.Add(VariableDeclaration.Create("obj", TypeName.Get("N.C, TestProject")));
             mA.Body.Add(new Assignment("obj", ComposedExpression.Create("this")));
 
             AssertAllMethods(mA);
@@ -181,7 +179,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             ");
 
             var mA = NewMethodDeclaration(Fix.Void, "A", string.Format("[{0}] i", Fix.Int));
-            mA.Body.Add(new VariableDeclaration("j", Fix.Int));
+            mA.Body.Add(VariableDeclaration.Create("j", Fix.Int));
             mA.Body.Add(new Assignment("i", new ConstantValueExpression()));
             mA.Body.Add(new Assignment("j", ComposedExpression.Create("i")));
 
@@ -200,7 +198,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             ");
 
             var mA = NewMethodDeclaration(Fix.Void, "A", string.Format("[{0}] i", Fix.Int));
-            mA.Body.Add(new VariableDeclaration("j", Fix.Int));
+            mA.Body.Add(VariableDeclaration.Create("j", Fix.Int));
             mA.Body.Add(new Assignment("j", ComposedExpression.Create("i")));
 
             AssertAllMethods(mA);
@@ -218,7 +216,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             ");
 
             var mA = NewMethodDeclaration(Fix.Void, "A", string.Format("[{0}] i", Fix.Int));
-            mA.Body.Add(new VariableDeclaration("j", Fix.Int));
+            mA.Body.Add(VariableDeclaration.Create("j", Fix.Int));
             mA.Body.Add(new Assignment("j", ComposedExpression.Create("i")));
 
             AssertAllMethods(mA);
@@ -236,7 +234,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             ");
 
             var mA = NewMethodDeclaration(Fix.Void, "A", string.Format("[{0}] i", Fix.Int));
-            mA.Body.Add(new VariableDeclaration("j", Fix.Int));
+            mA.Body.Add(VariableDeclaration.Create("j", Fix.Int));
             mA.Body.Add(new Assignment("j", ComposedExpression.Create("i")));
 
             AssertAllMethods(mA);
@@ -255,7 +253,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             ");
 
             var mA = NewMethodDeclaration(Fix.Void, "A");
-            mA.Body.Add(new VariableDeclaration("i", Fix.Int));
+            mA.Body.Add(VariableDeclaration.Create("i", Fix.Int));
             mA.Body.Add(new Assignment("i", new ConstantValueExpression()));
 
             AssertAllMethods(mA);

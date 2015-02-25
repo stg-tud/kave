@@ -23,11 +23,11 @@ using KaVE.Utils;
 
 namespace KaVE.Model.SSTs.Blocks
 {
-    public class TryBlock : Statement
+    public class TryBlock : IStatement
     {
-        public readonly IList<Statement> Body = Lists.NewList<Statement>();
+        public readonly IList<IStatement> Body = Lists.NewList<IStatement>();
         public readonly IList<CatchBlock> CatchBlocks = Lists.NewList<CatchBlock>();
-        public readonly IList<Statement> Finally = Lists.NewList<Statement>();
+        public readonly IList<IStatement> Finally = Lists.NewList<IStatement>();
 
         private bool Equals(TryBlock other)
         {

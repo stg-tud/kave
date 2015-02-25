@@ -26,17 +26,17 @@ using KaVE.VsFeedbackGenerator.Analysis.Util;
 
 namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
 {
-    public class ToBasicExpressionReducer : TreeNodeVisitor<IList<Statement>, Expression>
+    public class ToBasicExpressionReducer : TreeNodeVisitor<IList<IStatement>, IExpression>
     {
         public ToBasicExpressionReducer(UniqueVariableNameGenerator nameGen) {}
 
-        public override Expression VisitExpressionInitializer(IExpressionInitializer exprInit, IList<Statement> context)
+        public override IExpression VisitExpressionInitializer(IExpressionInitializer exprInit, IList<IStatement> context)
         {
             return exprInit.Value.Accept(this, context);
         }
 
-        public override Expression VisitCSharpLiteralExpression(ICSharpLiteralExpression litExpr,
-            IList<Statement> context)
+        public override IExpression VisitCSharpLiteralExpression(ICSharpLiteralExpression litExpr,
+            IList<IStatement> context)
         {
             var isNull = litExpr.ConstantValue.IsPureNull(CSharpLanguage.Instance);
             if (isNull)
@@ -46,7 +46,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
             return new ConstantValueExpression();
         }
 
-        public override Expression VisitReferenceExpression(IReferenceExpression refExpr, IList<Statement> context)
+        public override IExpression VisitReferenceExpression(IReferenceExpression refExpr, IList<IStatement> context)
         {
             var id = refExpr.NameIdentifier.Name;
             return new ReferenceExpression {Identifier = id};

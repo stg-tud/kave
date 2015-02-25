@@ -21,14 +21,14 @@ using KaVE.Utils;
 
 namespace KaVE.Model.SSTs.Statements
 {
-    public class Assignment : Statement
+    public class Assignment : IStatement
     {
         public string Identifier { get; set; }
-        public Expression Value { get; set; }
+        public IExpression Value { get; set; }
 
         public Assignment() {}
 
-        public Assignment(string identifier, Expression expr)
+        public Assignment(string identifier, IExpression expr)
         {
             Identifier = identifier;
             Value = expr;

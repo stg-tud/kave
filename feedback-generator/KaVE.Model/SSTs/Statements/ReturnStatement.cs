@@ -21,9 +21,9 @@ using KaVE.Utils;
 
 namespace KaVE.Model.SSTs.Statements
 {
-    public class ReturnStatement : Statement
+    public class ReturnStatement : IStatement
     {
-        public Expression Expression { get; set; }
+        public IExpression Expression { get; set; }
 
         private bool Equals(ReturnStatement other)
         {

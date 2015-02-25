@@ -23,10 +23,10 @@ using KaVE.Utils;
 
 namespace KaVE.Model.SSTs.Blocks
 {
-    public class WhileLoop : Statement
+    public class WhileLoop : IStatement
     {
-        public Expression Condition { get; set; }
-        public readonly IList<Statement> Body = Lists.NewList<Statement>();
+        public IExpression Condition { get; set; }
+        public readonly IList<IStatement> Body = Lists.NewList<IStatement>();
 
         private bool Equals(WhileLoop other)
         {

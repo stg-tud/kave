@@ -14,24 +14,24 @@
  * limitations under the License.
  * 
  * Contributors:
- *    - 
+ *    - Sebastian Proksch
  */
 
 using KaVE.Model.Names.CSharp;
 using KaVE.Model.SSTs.Declarations;
-using KaVE.Model.SSTs.Visitor;
-using Moq;
+using KaVE.Model.SSTs.Impl.Declarations;
 using NUnit.Framework;
 
-namespace KaVE.Model.Tests.SSTs.Declarations
+namespace KaVE.Model.Tests.SSTs.Impl.Declarations
 {
-    internal class EventDeclarationTest
+    internal class VariableDeclarationTest
     {
         [Test]
         public void DefaultValues()
         {
-            var sut = new EventDeclaration();
-            Assert.Null(sut.Name);
+            var sut = new VariableDeclaration();
+            Assert.Null(sut.Identifier);
+            Assert.Null(sut.Type);
             Assert.AreNotEqual(0, sut.GetHashCode());
             Assert.AreNotEqual(1, sut.GetHashCode());
         }
@@ -39,15 +39,30 @@ namespace KaVE.Model.Tests.SSTs.Declarations
         [Test]
         public void SettingValues()
         {
-            var sut = new EventDeclaration {Name = EventName.UnknownName};
-            Assert.AreEqual(EventName.UnknownName, sut.Name);
+            var sut = new VariableDeclaration
+            {
+                Identifier = "a",
+                Type = TypeName.UnknownName
+            };
+
+            Assert.AreEqual("a", sut.Identifier);
+            Assert.AreEqual(TypeName.UnknownName, sut.Type);
+        }
+
+        [Test]
+        public void SettingValues_2()
+        {
+            var sut = VariableDeclaration.Create("a", TypeName.UnknownName);
+
+            Assert.AreEqual("a", sut.Identifier);
+            Assert.AreEqual(TypeName.UnknownName, sut.Type);
         }
 
         [Test]
         public void Equality_Default()
         {
-            var a = new EventDeclaration();
-            var b = new EventDeclaration();
+            var a = new VariableDeclaration();
+            var b = new VariableDeclaration();
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
         }
@@ -55,32 +70,30 @@ namespace KaVE.Model.Tests.SSTs.Declarations
         [Test]
         public void Equality_ReallyEquals()
         {
-            var a = new EventDeclaration {Name = EventName.UnknownName};
-            var b = new EventDeclaration {Name = EventName.UnknownName};
+            var a = new VariableDeclaration {Identifier = "a", Type = TypeName.UnknownName};
+            var b = new VariableDeclaration {Identifier = "a", Type = TypeName.UnknownName};
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
         }
 
         [Test]
-        public void Equality_DifferentType()
+        public void Equality_DifferentIdentifier()
         {
-            var a = new EventDeclaration {Name = EventName.UnknownName};
-            var b = new EventDeclaration();
+            var a = new VariableDeclaration {Identifier = "a"};
+            var b = new VariableDeclaration();
 
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
         }
 
         [Test]
-        public void VisitorImplementation()
+        public void Equality_DifferentType()
         {
-            var sut = new EventDeclaration();
-            var @visitor = new Mock<ISSTNodeVisitor<object>>();
-            var context = new object();
+            var a = new VariableDeclaration {Type = TypeName.UnknownName};
+            var b = new VariableDeclaration();
 
-            sut.Accept(@visitor.Object, context);
-
-            @visitor.Verify(v => v.Visit(sut, context));
+            Assert.AreNotEqual(a, b);
+            Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
         }
     }
 }

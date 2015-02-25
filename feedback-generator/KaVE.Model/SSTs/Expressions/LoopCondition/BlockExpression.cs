@@ -30,7 +30,7 @@ namespace KaVE.Model.SSTs.Expressions.LoopCondition
 
     public class BlockExpression : LoopConditionExpression
     {
-        public readonly IList<Statement> Body = Lists.NewList<Statement>();
+        public readonly IList<IStatement> Body = Lists.NewList<IStatement>();
 
         protected bool Equals(BlockExpression other)
         {

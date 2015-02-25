@@ -19,9 +19,9 @@
 
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.Util;
-using KaVE.Model.SSTs.Declarations;
 using KaVE.Model.SSTs.Expressions;
 using KaVE.Model.SSTs.Expressions.Basic;
+using KaVE.Model.SSTs.Impl.Declarations;
 using KaVE.Model.SSTs.Statements;
 using KaVE.VsFeedbackGenerator.Analysis.Transformer.Context;
 using KaVE.VsFeedbackGenerator.Utils.Names;
@@ -39,7 +39,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
             ArgumentCollectorContext context)
         {
             var tmp = context.Generator.GetNextVariableName();
-            context.Scope.Body.Add(new VariableDeclaration(tmp, arrayCreationExpressionParam.Type().GetName()));
+            context.Scope.Body.Add(VariableDeclaration.Create(tmp, arrayCreationExpressionParam.Type().GetName()));
             context.Scope.Body.Add(
                 new Assignment(tmp, arrayCreationExpressionParam.ArrayInitializer.GetReferences(context)));
             context.Arguments.Add(tmp);
@@ -48,7 +48,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
         public override void VisitAsExpression(IAsExpression asExpressionParam, ArgumentCollectorContext context)
         {
             var tmp = context.Generator.GetNextVariableName();
-            context.Scope.Body.Add(new VariableDeclaration(tmp, asExpressionParam.Type().GetName()));
+            context.Scope.Body.Add(VariableDeclaration.Create(tmp, asExpressionParam.Type().GetName()));
             context.Scope.Body.Add(new Assignment(tmp, asExpressionParam.Operand.GetReferences(context)));
             context.Arguments.Add(tmp);
         }
@@ -65,7 +65,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
             ArgumentCollectorContext context)
         {
             var tmp = context.Generator.GetNextVariableName();
-            context.Scope.Body.Add(new VariableDeclaration(tmp, binaryExpressionParam.Type().GetName()));
+            context.Scope.Body.Add(VariableDeclaration.Create(tmp, binaryExpressionParam.Type().GetName()));
             context.Scope.Body.Add(new Assignment(tmp, binaryExpressionParam.GetReferences(context)));
             context.Arguments.Add(tmp);
         }
@@ -73,7 +73,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
         public override void VisitCastExpression(ICastExpression castExpressionParam, ArgumentCollectorContext context)
         {
             var tmp = context.Generator.GetNextVariableName();
-            context.Scope.Body.Add(new VariableDeclaration(tmp, castExpressionParam.Type().GetName()));
+            context.Scope.Body.Add(VariableDeclaration.Create(tmp, castExpressionParam.Type().GetName()));
             context.Scope.Body.Add(new Assignment(tmp, castExpressionParam.Op.GetReferences(context)));
             context.Arguments.Add(tmp);
         }
@@ -83,17 +83,17 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
             ArgumentCollectorContext context)
         {
             var tmp = context.Generator.GetNextVariableName();
-            context.Scope.Body.Add(new VariableDeclaration(tmp, conditionalTernaryExpressionParam.Type().GetName()));
+            context.Scope.Body.Add(VariableDeclaration.Create(tmp, conditionalTernaryExpressionParam.Type().GetName()));
             context.Scope.Body.Add(
                 new Assignment(
                     tmp,
                     null));
             //new IfElseExpression
-             //       {
-              //          Condition = conditionalTernaryExpressionParam.ConditionOperand.GetScopedReferences(context),
-               //         ThenExpression = conditionalTernaryExpressionParam.ThenResult.GetScopedReferences(context),
-                //        ElseExpression = conditionalTernaryExpressionParam.ElseResult.GetScopedReferences(context)
-                 //   }));
+            //       {
+            //          Condition = conditionalTernaryExpressionParam.ConditionOperand.GetScopedReferences(context),
+            //         ThenExpression = conditionalTernaryExpressionParam.ThenResult.GetScopedReferences(context),
+            //        ElseExpression = conditionalTernaryExpressionParam.ElseResult.GetScopedReferences(context)
+            //   }));
             context.Arguments.Add(tmp);
         }
 
@@ -106,15 +106,16 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
             ArgumentCollectorContext context)
         {
             var tmp = context.Generator.GetNextVariableName();
-            context.Scope.Body.Add(new VariableDeclaration(tmp, cSharpLiteralExpressionParam.Type().GetName()));
+            context.Scope.Body.Add(VariableDeclaration.Create(tmp, cSharpLiteralExpressionParam.Type().GetName()));
             context.Scope.Body.Add(new Assignment(tmp, new ConstantValueExpression()));
             context.Arguments.Add(tmp);
         }
 
-        public override void VisitDefaultExpression(IDefaultExpression defaultExpressionParam, ArgumentCollectorContext context)
+        public override void VisitDefaultExpression(IDefaultExpression defaultExpressionParam,
+            ArgumentCollectorContext context)
         {
             var tmp = context.Generator.GetNextVariableName();
-            context.Scope.Body.Add(new VariableDeclaration(tmp, defaultExpressionParam.Type().GetName()));
+            context.Scope.Body.Add(VariableDeclaration.Create(tmp, defaultExpressionParam.Type().GetName()));
             context.Scope.Body.Add(new Assignment(tmp, new ConstantValueExpression()));
             context.Arguments.Add(tmp);
         }
@@ -128,7 +129,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
                 (callee, method, args, retType) =>
                 {
                     var tmp = context.Generator.GetNextVariableName();
-                    context.Scope.Body.Add(new VariableDeclaration(tmp, retType));
+                    context.Scope.Body.Add(VariableDeclaration.Create(tmp, retType));
                     context.Scope.Body.Add(new Assignment(tmp, callee.CreateInvocation(method, args)));
                     context.Arguments.Add(tmp);
                 });
@@ -137,7 +138,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
         public override void VisitIsExpression(IIsExpression isExpressionParam, ArgumentCollectorContext context)
         {
             var tmp = context.Generator.GetNextVariableName();
-            context.Scope.Body.Add(new VariableDeclaration(tmp, isExpressionParam.Type().GetName()));
+            context.Scope.Body.Add(VariableDeclaration.Create(tmp, isExpressionParam.Type().GetName()));
             context.Scope.Body.Add(new Assignment(tmp, isExpressionParam.Operand.GetReferences(context)));
             context.Arguments.Add(tmp);
         }
@@ -152,7 +153,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
             ArgumentCollectorContext context)
         {
             var tmp = context.Generator.GetNextVariableName();
-            context.Scope.Body.Add(new VariableDeclaration(tmp, postfixOperatorExpressionParam.Type().GetName()));
+            context.Scope.Body.Add(VariableDeclaration.Create(tmp, postfixOperatorExpressionParam.Type().GetName()));
             var reference = postfixOperatorExpressionParam.Operand.GetReference(context);
             context.Scope.Body.Add(new Assignment(tmp, ComposedExpression.Create(reference)));
             context.Arguments.Add(tmp);
@@ -162,7 +163,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
             ArgumentCollectorContext context)
         {
             var tmp = context.Generator.GetNextVariableName();
-            context.Scope.Body.Add(new VariableDeclaration(tmp, prefixOperatorExpressionParam.Type().GetName()));
+            context.Scope.Body.Add(VariableDeclaration.Create(tmp, prefixOperatorExpressionParam.Type().GetName()));
             var reference = prefixOperatorExpressionParam.Operand.GetReference(context);
             context.Scope.Body.Add(new Assignment(tmp, ComposedExpression.Create(reference)));
             context.Arguments.Add(tmp);
@@ -183,7 +184,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
             ArgumentCollectorContext context)
         {
             var tmp = context.Generator.GetNextVariableName();
-            context.Scope.Body.Add(new VariableDeclaration(tmp, typeofExpressionParam.Type().GetName()));
+            context.Scope.Body.Add(VariableDeclaration.Create(tmp, typeofExpressionParam.Type().GetName()));
             context.Scope.Body.Add(new Assignment(tmp, new ConstantValueExpression()));
             context.Arguments.Add(tmp);
         }
@@ -192,7 +193,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
             ArgumentCollectorContext context)
         {
             var tmp = context.Generator.GetNextVariableName();
-            context.Scope.Body.Add(new VariableDeclaration(tmp, unaryOperatorExpressionParam.Type().GetName()));
+            context.Scope.Body.Add(VariableDeclaration.Create(tmp, unaryOperatorExpressionParam.Type().GetName()));
             context.Scope.Body.Add(new Assignment(tmp, unaryOperatorExpressionParam.Operand.GetReferences(context)));
             context.Arguments.Add(tmp);
         }

@@ -23,14 +23,14 @@ using KaVE.Utils;
 
 namespace KaVE.Model.SSTs.Blocks
 {
-    public class DoLoop : Statement
+    public class DoLoop : IStatement
     {
-        public Expression Condition { get; set; }
-        public IList<Statement> Body { get; set; }
+        public IExpression Condition { get; set; }
+        public IList<IStatement> Body { get; set; }
 
         public DoLoop()
         {
-            Body = Lists.NewList<Statement>();
+            Body = Lists.NewList<IStatement>();
         }
 
         private bool Equals(DoLoop other)

@@ -18,32 +18,28 @@
  */
 
 using System.Collections.Generic;
-using KaVE.JetBrains.Annotations;
 using KaVE.Model.Collections;
 using KaVE.Model.Names;
+using KaVE.Model.SSTs.Declarations;
 using KaVE.Model.SSTs.Visitor;
 using KaVE.Utils;
 
-namespace KaVE.Model.SSTs.Declarations
+namespace KaVE.Model.SSTs.Impl.Declarations
 {
-    public class PropertyDeclaration : MemberDeclaration
+    public class MethodDeclaration : IMethodDeclaration
     {
-        public IPropertyName Name { get; set; }
+        public IMethodName Name { get; set; }
+        public bool IsEntryPoint { get; set; }
+        public IList<IStatement> Body { get; set; }
 
-        [NotNull]
-        public IList<Statement> Get = Lists.NewList<Statement>();
-
-        [NotNull]
-        public IList<Statement> Set = Lists.NewList<Statement>();
-
-        public override void Accept<TContext>(ISSTNodeVisitor<TContext> visitor, TContext context)
+        public MethodDeclaration()
         {
-            visitor.Visit(this, context);
+            Body = Lists.NewList<IStatement>();
         }
 
-        private bool Equals(PropertyDeclaration other)
+        public void Accept<TContext>(ISSTNodeVisitor<TContext> visitor, TContext context)
         {
-            return Equals(Get, other.Get) && Equals(Set, other.Set) && Equals(Name, other.Name);
+            visitor.Visit(this, context);
         }
 
         public override bool Equals(object obj)
@@ -51,13 +47,18 @@ namespace KaVE.Model.SSTs.Declarations
             return this.Equals(obj, Equals);
         }
 
+        private bool Equals(MethodDeclaration other)
+        {
+            return Equals(Body, other.Body) && Equals(Name, other.Name) && IsEntryPoint.Equals(other.IsEntryPoint);
+        }
+
         public override int GetHashCode()
         {
             unchecked
             {
-                var hashCode = Get.GetHashCode();
-                hashCode = (hashCode*397) ^ Set.GetHashCode();
+                var hashCode = (Body != null ? Body.GetHashCode() : 0);
                 hashCode = (hashCode*397) ^ (Name != null ? Name.GetHashCode() : 0);
+                hashCode = (hashCode*397) ^ IsEntryPoint.GetHashCode();
                 return hashCode;
             }
         }

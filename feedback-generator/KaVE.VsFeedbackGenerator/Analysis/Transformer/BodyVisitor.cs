@@ -24,17 +24,17 @@ using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.Util;
 using KaVE.Model.Collections;
 using KaVE.Model.Names;
-using KaVE.Model.SSTs;
-using KaVE.Model.SSTs.Declarations;
 using KaVE.Model.SSTs.Expressions.Basic;
+using KaVE.Model.SSTs.Impl.Declarations;
 using KaVE.Model.SSTs.Statements;
 using KaVE.Model.SSTs.Statements.Wrapped;
 using KaVE.VsFeedbackGenerator.Analysis.Util;
 using KaVE.VsFeedbackGenerator.Utils.Names;
+using IStatement = KaVE.Model.SSTs.IStatement;
 
 namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
 {
-    public class BodyVisitor : TreeNodeVisitor<IList<Statement>>
+    public class BodyVisitor : TreeNodeVisitor<IList<IStatement>>
     {
         private readonly CompletionTargetAnalysis.TriggerPointMarker _marker;
         private readonly ToBasicExpressionReducer _toBasicExprReducer;
@@ -45,12 +45,12 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
             _toBasicExprReducer = new ToBasicExpressionReducer(new UniqueVariableNameGenerator());
         }
 
-        public override void VisitNode(ITreeNode node, IList<Statement> context)
+        public override void VisitNode(ITreeNode node, IList<IStatement> context)
         {
             node.Children<ICSharpTreeNode>().ForEach(child => child.Accept(this, context));
         }
 
-        public override void VisitLocalVariableDeclaration(ILocalVariableDeclaration decl, IList<Statement> context)
+        public override void VisitLocalVariableDeclaration(ILocalVariableDeclaration decl, IList<IStatement> context)
         {
             var id = decl.DeclaredName;
             var type = decl.Type.GetName();
@@ -64,7 +64,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
             }
         }
 
-        public override void VisitInvocationExpression(IInvocationExpression inv, IList<Statement> body)
+        public override void VisitInvocationExpression(IInvocationExpression inv, IList<IStatement> body)
         {
             var invokedExpression = inv.InvokedExpression as IReferenceExpression;
             if (inv.Reference != null && invokedExpression != null)
@@ -108,7 +108,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
             }
         }
 
-        public IList<string> GetArgumentList(IArgumentList argumentListParam, IList<Statement> body)
+        public IList<string> GetArgumentList(IArgumentList argumentListParam, IList<IStatement> body)
         {
             var args = Lists.NewList<string>();
             foreach (var arg in argumentListParam.Arguments)
@@ -121,14 +121,14 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
         }
     }
 
-    public class ToArgumentRef : TreeNodeVisitor<IList<Statement>, string>
+    public class ToArgumentRef : TreeNodeVisitor<IList<IStatement>, string>
     {
-        public override string VisitReferenceExpression(IReferenceExpression expr, IList<Statement> body)
+        public override string VisitReferenceExpression(IReferenceExpression expr, IList<IStatement> body)
         {
             return expr.NameIdentifier.Name;
         }
 
-        public override string VisitThisExpression(IThisExpression thisExpressionParam, IList<Statement> context)
+        public override string VisitThisExpression(IThisExpression thisExpressionParam, IList<IStatement> context)
         {
             return "this";
         }

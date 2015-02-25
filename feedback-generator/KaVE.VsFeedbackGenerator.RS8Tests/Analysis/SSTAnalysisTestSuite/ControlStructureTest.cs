@@ -19,10 +19,10 @@
 
 using KaVE.Model.Names.CSharp;
 using KaVE.Model.SSTs.Blocks;
-using KaVE.Model.SSTs.Declarations;
 using KaVE.Model.SSTs.Expressions;
 using KaVE.Model.SSTs.Expressions.Basic;
 using KaVE.Model.SSTs.Expressions.LoopCondition;
+using KaVE.Model.SSTs.Impl.Declarations;
 using KaVE.Model.SSTs.Statements;
 using KaVE.Model.SSTs.Statements.Wrapped;
 using NUnit.Framework;
@@ -137,7 +137,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             ");
 
             var mA = NewMethodDeclaration(Fix.Int, "A");
-            mA.Body.Add(new VariableDeclaration("i", Fix.Int));
+            mA.Body.Add(VariableDeclaration.Create("i", Fix.Int));
             mA.Body.Add(new Assignment("i", new ConstantValueExpression()));
 
             var whileLoop = new WhileLoop {Condition = new ConstantValueExpression()};
@@ -165,7 +165,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             ");
 
             var mA = NewMethodDeclaration(Fix.Int, "A");
-            mA.Body.Add(new VariableDeclaration("i", Fix.Int));
+            mA.Body.Add(VariableDeclaration.Create("i", Fix.Int));
             mA.Body.Add(new Assignment("i", new ConstantValueExpression()));
 
             var doLoop = new DoLoop {Condition = new ConstantValueExpression()};
@@ -193,9 +193,9 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             ");
 
             var mA = NewMethodDeclaration(Fix.Void, "A", string.Format("[{0}] o", Fix.Object));
-            mA.Body.Add(new VariableDeclaration("i", Fix.Int));
+            mA.Body.Add(VariableDeclaration.Create("i", Fix.Int));
             mA.Body.Add(new Assignment("i", new ConstantValueExpression()));
-            mA.Body.Add(new VariableDeclaration("s", Fix.String));
+            mA.Body.Add(VariableDeclaration.Create("s", Fix.String));
 
             var block = new BlockExpression(); //) {Value = new[] {"s"}};
             block.Body.Add(new Assignment("s", InvocationExpression.Create("o", Fix.ToString(Fix.Object))));
@@ -222,7 +222,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 
             var mA = NewMethodDeclaration(Fix.Void, "A");
             var forLoop = new ForLoop();
-            forLoop.Init.Add(new VariableDeclaration("i", Fix.Int));
+            forLoop.Init.Add(VariableDeclaration.Create("i", Fix.Int));
             forLoop.Init.Add(new Assignment("i", new ConstantValueExpression()));
             forLoop.Condition = new ComposedExpression {Variables = new[] {"i"}};
 
@@ -249,7 +249,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             ");
 
             var mA = NewMethodDeclaration(Fix.Void, "A");
-            mA.Body.Add(new VariableDeclaration("i", Fix.Int));
+            mA.Body.Add(VariableDeclaration.Create("i", Fix.Int));
             var forLoop = new ForLoop();
             forLoop.Init.Add(new Assignment("i", new ConstantValueExpression()));
             forLoop.Condition = new ComposedExpression {Variables = new[] {"i"}};
@@ -290,9 +290,9 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             ");
 
             var mA = NewMethodDeclaration(Fix.Void, "A");
-            mA.Body.Add(new VariableDeclaration("$0", Fix.IntArray));
+            mA.Body.Add(VariableDeclaration.Create("$0", Fix.IntArray));
             mA.Body.Add(new Assignment("$0", new ConstantValueExpression()));
-            var forEachLoop = new ForEachLoop {LoopedIdentifier = "$0", Decl = new VariableDeclaration("n", Fix.Int)};
+            var forEachLoop = new ForEachLoop {LoopedIdentifier = "$0", Decl = VariableDeclaration.Create("n", Fix.Int)};
             forEachLoop.Body.Add(InvocationStatement.Create(Fix.ConsoleWrite(Fix.Int), Ref("n")));
             //forEachLoop.Body.Add(new StatementCompletion());
 
@@ -319,9 +319,9 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             ");
 
             var mA = NewMethodDeclaration(Fix.Void, "A");
-            mA.Body.Add(new VariableDeclaration("o", Fix.Object));
+            mA.Body.Add(VariableDeclaration.Create("o", Fix.Object));
 
-            mA.Body.Add(new VariableDeclaration("o", Fix.Object));
+            mA.Body.Add(VariableDeclaration.Create("o", Fix.Object));
             mA.Body.Add(new Assignment("o", InvocationExpression.Create(MethodName.Get("Object.ctor()"))));
 
             var usingBlock = new UsingBlock {Identifier = "o"};
@@ -351,7 +351,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 
             var mA = NewMethodDeclaration(Fix.Void, "A", string.Format("[{0}] s", stream));
             var usingBlock = new UsingBlock {Identifier = "s"};
-            usingBlock.Body.Add(new VariableDeclaration("$0", Fix.Int));
+            usingBlock.Body.Add(VariableDeclaration.Create("$0", Fix.Int));
             usingBlock.Body.Add(new Assignment("$0", new ConstantValueExpression()));
             usingBlock.Body.Add(
                 InvocationStatement.Create(
@@ -412,22 +412,22 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
                         string.Format("static [{0}] [System.Console, mscorlib, 4.0.0.0].WriteLine()", Fix.Void))));
             //tryBlock.Body.Add(new StatementCompletion());
 
-            var namedCatch = new CatchBlock {Exception = new VariableDeclaration("e", Fix.IOException)};
-            namedCatch.Body.Add(new VariableDeclaration("$0", Fix.Int));
+            var namedCatch = new CatchBlock {Exception = VariableDeclaration.Create("e", Fix.IOException)};
+            namedCatch.Body.Add(VariableDeclaration.Create("$0", Fix.Int));
             namedCatch.Body.Add(new Assignment("$0", InvocationExpression.Create("e", Fix.GetHashCode(Fix.Object))));
             namedCatch.Body.Add(InvocationStatement.Create(Fix.ConsoleWrite(Fix.Int), Ref("$0")));
             tryBlock.CatchBlocks.Add(namedCatch);
-            var unnamedCatch = new CatchBlock {Exception = new VariableDeclaration(null, Fix.Exception)};
-            unnamedCatch.Body.Add(new VariableDeclaration("$1", Fix.String));
+            var unnamedCatch = new CatchBlock {Exception = VariableDeclaration.Create(null, Fix.Exception)};
+            unnamedCatch.Body.Add(VariableDeclaration.Create("$1", Fix.String));
             unnamedCatch.Body.Add(new Assignment("$1", new ConstantValueExpression()));
             unnamedCatch.Body.Add(InvocationStatement.Create(Fix.ConsoleWrite(Fix.String), Ref("$1")));
             tryBlock.CatchBlocks.Add(unnamedCatch);
             var catchAll = new CatchBlock();
-            catchAll.Body.Add(new VariableDeclaration("$2", Fix.String));
+            catchAll.Body.Add(VariableDeclaration.Create("$2", Fix.String));
             catchAll.Body.Add(new Assignment("$2", new ConstantValueExpression()));
             catchAll.Body.Add(InvocationStatement.Create(Fix.ConsoleWrite(Fix.String), Ref("$2")));
             tryBlock.CatchBlocks.Add(catchAll);
-            tryBlock.Finally.Add(new VariableDeclaration("$3", Fix.String));
+            tryBlock.Finally.Add(VariableDeclaration.Create("$3", Fix.String));
             tryBlock.Finally.Add(new Assignment("$3", new ConstantValueExpression()));
             tryBlock.Finally.Add(InvocationStatement.Create(Fix.ConsoleWrite(Fix.String), Ref("$3")));
 

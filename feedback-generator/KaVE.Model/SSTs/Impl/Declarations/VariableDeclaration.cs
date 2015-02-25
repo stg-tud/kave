@@ -18,26 +18,15 @@
  */
 
 using KaVE.Model.Names;
+using KaVE.Model.SSTs.Declarations;
 using KaVE.Utils;
 
-namespace KaVE.Model.SSTs.Declarations
+namespace KaVE.Model.SSTs.Impl.Declarations
 {
-    public class VariableDeclaration : Statement
+    public class VariableDeclaration : IVariableDeclaration
     {
         public string Identifier { get; set; }
         public ITypeName Type { get; set; }
-
-        public VariableDeclaration()
-        {
-            // TODO get rid of this constructor too as soon as we got rid of the other one
-        }
-
-        // TODO get rid of this constructor
-        public VariableDeclaration(string identifier, ITypeName type)
-        {
-            Identifier = identifier;
-            Type = type;
-        }
 
         public override bool Equals(object obj)
         {
@@ -56,6 +45,15 @@ namespace KaVE.Model.SSTs.Declarations
                 return 20 + ((Identifier != null ? Identifier.GetHashCode() : 0)*397) ^
                        (Type != null ? Type.GetHashCode() : 0);
             }
+        }
+
+        public static IVariableDeclaration Create(string identifier, ITypeName type)
+        {
+            return new VariableDeclaration
+            {
+                Identifier = identifier,
+                Type = type
+            };
         }
     }
 }

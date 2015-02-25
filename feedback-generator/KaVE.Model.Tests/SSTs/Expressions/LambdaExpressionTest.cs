@@ -31,7 +31,7 @@ namespace KaVE.Model.Tests.SSTs.Expressions
         public void DefaultValues()
         {
             var sut = new LambdaExpression();
-            Assert.AreEqual(Lists.NewList<Statement>(), sut.Body);
+            Assert.AreEqual(Lists.NewList<IStatement>(), sut.Body);
             Assert.AreNotEqual(0, sut.GetHashCode());
             Assert.AreNotEqual(1, sut.GetHashCode());
         }
@@ -42,7 +42,7 @@ namespace KaVE.Model.Tests.SSTs.Expressions
             var sut = new LambdaExpression();
             sut.Body.Add(new GotoStatement());
 
-            var expected = Lists.NewList<Statement>();
+            var expected = Lists.NewList<IStatement>();
             expected.Add(new GotoStatement());
 
             Assert.AreEqual(expected, sut.Body);

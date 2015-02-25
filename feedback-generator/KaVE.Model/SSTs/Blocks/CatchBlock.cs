@@ -24,10 +24,10 @@ using KaVE.Utils;
 
 namespace KaVE.Model.SSTs.Blocks
 {
-    public class CatchBlock : Statement
+    public class CatchBlock : IStatement
     {
-        public VariableDeclaration Exception { get; set; }
-        public IList<Statement> Body = Lists.NewList<Statement>();
+        public IVariableDeclaration Exception { get; set; }
+        public IList<IStatement> Body = Lists.NewList<IStatement>();
 
         private bool Equals(CatchBlock other)
         {

@@ -22,38 +22,38 @@ using System.Linq;
 using KaVE.Model.Collections;
 using KaVE.Model.Names;
 using KaVE.Model.SSTs.Declarations;
-using KaVE.Model.SSTs.Statements;
+using KaVE.Model.SSTs.Impl.Declarations;
 using KaVE.Model.SSTs.Statements.Wrapped;
 using KaVE.Model.SSTs.Visitor;
 using KaVE.Utils;
 
-namespace KaVE.Model.SSTs
+namespace KaVE.Model.SSTs.Impl
 {
-    public class SST : ISSTNode
+    public class SST : ISST
     {
         public ITypeName EnclosingType { get; set; }
-        public ISet<FieldDeclaration> Fields { get; set; }
-        public ISet<PropertyDeclaration> Properties { get; set; }
-        public ISet<MethodDeclaration> Methods { get; set; }
-        public ISet<EventDeclaration> Events { get; set; }
-        public ISet<DelegateDeclaration> Delegates { get; set; }
+        public ISet<IFieldDeclaration> Fields { get; set; }
+        public ISet<IPropertyDeclaration> Properties { get; set; }
+        public ISet<IMethodDeclaration> Methods { get; set; }
+        public ISet<IEventDeclaration> Events { get; set; }
+        public ISet<IDelegateDeclaration> Delegates { get; set; }
         public StatementCompletion TypeLevel { get; set; }
 
         public SST()
         {
-            Fields = Sets.NewHashSet<FieldDeclaration>();
-            Properties = Sets.NewHashSet<PropertyDeclaration>();
-            Methods = Sets.NewHashSet<MethodDeclaration>();
-            Events = Sets.NewHashSet<EventDeclaration>();
-            Delegates = Sets.NewHashSet<DelegateDeclaration>();
+            Fields = Sets.NewHashSet<IFieldDeclaration>();
+            Properties = Sets.NewHashSet<IPropertyDeclaration>();
+            Methods = Sets.NewHashSet<IMethodDeclaration>();
+            Events = Sets.NewHashSet<IEventDeclaration>();
+            Delegates = Sets.NewHashSet<IDelegateDeclaration>();
         }
 
-        public ISet<MethodDeclaration> EntryPoints
+        public ISet<IMethodDeclaration> EntryPoints
         {
             get { return Sets.NewHashSetFrom(Methods.AsEnumerable().Where(m => m.IsEntryPoint)); }
         }
 
-        public ISet<MethodDeclaration> NonEntryPoints
+        public ISet<IMethodDeclaration> NonEntryPoints
         {
             get { return Sets.NewHashSetFrom(Methods.AsEnumerable().Where(m => !m.IsEntryPoint)); }
         }

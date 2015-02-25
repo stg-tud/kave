@@ -17,34 +17,18 @@
  *    - Sebastian Proksch
  */
 
+using System.Collections.Generic;
+using KaVE.JetBrains.Annotations;
 using KaVE.Model.Names;
-using KaVE.Model.SSTs.Visitor;
-using KaVE.Utils;
 
 namespace KaVE.Model.SSTs.Declarations
 {
-    public class DelegateDeclaration : MemberDeclaration
+    public interface IMethodDeclaration : IMemberDeclaration
     {
-        public ITypeName Name { get; set; }
+        IMethodName Name { get; }
+        bool IsEntryPoint { get; }
 
-        public override void Accept<TContext>(ISSTNodeVisitor<TContext> visitor, TContext context)
-        {
-            visitor.Visit(this, context);
-        }
-
-        private bool Equals(DelegateDeclaration other)
-        {
-            return Equals(Name, other.Name);
-        }
-
-        public override bool Equals(object obj)
-        {
-            return this.Equals(obj, Equals);
-        }
-
-        public override int GetHashCode()
-        {
-            return 23 + (Name != null ? Name.GetHashCode() : 0);
-        }
+        [NotNull]
+        IList<IStatement> Body { get; }
     }
 }

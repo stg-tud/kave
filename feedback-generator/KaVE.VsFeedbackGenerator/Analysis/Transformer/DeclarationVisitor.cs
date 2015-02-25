@@ -23,9 +23,8 @@ using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.Util;
 using KaVE.Model.Names;
 using KaVE.Model.Names.CSharp;
-using KaVE.Model.SSTs;
-using KaVE.Model.SSTs.Declarations;
-using KaVE.VsFeedbackGenerator.Analysis.Util;
+using KaVE.Model.SSTs.Impl;
+using KaVE.Model.SSTs.Impl.Declarations;
 using KaVE.VsFeedbackGenerator.Utils.Names;
 
 namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
@@ -34,13 +33,11 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
     {
         private readonly ISet<IMethodName> _entryPoints;
         private readonly CompletionTargetAnalysis.TriggerPointMarker _marker;
-        private readonly ISSTFactory _sstFactory;
 
         public DeclarationVisitor(ISet<IMethodName> entryPoints, CompletionTargetAnalysis.TriggerPointMarker marker)
         {
             _entryPoints = entryPoints;
             _marker = marker;
-            _sstFactory = new SSTFactory();
         }
 
         public override void VisitNode(ITreeNode node, SST context)
@@ -57,7 +54,8 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
             }
         }
 
-        public override void VisitEventDeclaration(IEventDeclaration decl, SST context)
+        public override void VisitEventDeclaration(IEventDeclaration decl,
+            SST context)
         {
             if (decl.DeclaredElement != null)
             {
@@ -67,7 +65,8 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
         }
 
 
-        public override void VisitFieldDeclaration(IFieldDeclaration decl, SST context)
+        public override void VisitFieldDeclaration(IFieldDeclaration decl,
+            SST context)
         {
             if (decl.DeclaredElement != null)
             {
@@ -107,11 +106,6 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
                 context.Properties.Add(sstDecl);
                 // TODO analyze getter/setter block
             }
-        }
-
-        private static BlockVisitor CreateBlockVisitor()
-        {
-            return new BlockVisitor(new UniqueVariableNameGenerator());
         }
     }
 }

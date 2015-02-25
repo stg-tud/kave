@@ -17,7 +17,7 @@
  *    - Sebastian Proksch
  */
 
-namespace KaVE.Model.SSTs
+namespace KaVE.Model.SSTs.References
 {
-    public abstract class Statement {}
+    public interface IVariableReference : IAssignableReference {}
 }

@@ -21,6 +21,7 @@ using KaVE.Model.Events.CompletionEvent;
 using KaVE.Model.Names;
 using KaVE.Model.Names.CSharp;
 using KaVE.Model.SSTs;
+using KaVE.Model.SSTs.Impl;
 using NUnit.Framework;
 
 namespace KaVE.Model.Tests.Events.CompletionEvent

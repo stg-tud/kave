@@ -19,6 +19,9 @@
 
 using KaVE.Model.SSTs;
 using KaVE.Model.SSTs.Declarations;
+using KaVE.Model.SSTs.Impl;
+using KaVE.Model.SSTs.Impl.Declarations;
+using KaVE.Model.SSTs.Impl.Visitor;
 using KaVE.Model.SSTs.Visitor;
 using NUnit.Framework;
 
@@ -33,13 +36,13 @@ namespace KaVE.Model.Tests.SSTs.Visitor
             sut.Visit((SST) null, null);
 
             sut.Visit((DelegateDeclaration) null, null);
-            sut.Visit((EventDeclaration) null, null);
-            sut.Visit((FieldDeclaration) null, null);
-            sut.Visit((MethodDeclaration) null, null);
-            sut.Visit((PropertyDeclaration) null, null);
+            sut.Visit((IEventDeclaration) null, null);
+            sut.Visit((IFieldDeclaration) null, null);
+            sut.Visit((IMethodDeclaration) null, null);
+            sut.Visit((IPropertyDeclaration) null, null);
 
-            sut.Visit((Statement) null, null);
-            sut.Visit((Expression) null, null);
+            sut.Visit((IStatement) null, null);
+            sut.Visit((IExpression) null, null);
         }
     }
 }

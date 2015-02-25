@@ -20,12 +20,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using JetBrains.ReSharper.Feature.Services.CSharp.CodeCompletion.Infrastructure;
-using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.Util;
 using KaVE.Model.Names;
-using KaVE.Model.SSTs;
 using KaVE.Model.SSTs.Declarations;
+using KaVE.Model.SSTs.Impl;
+using KaVE.Model.SSTs.Impl.Declarations;
 using KaVE.VsFeedbackGenerator.Analysis.Transformer;
 using KaVE.VsFeedbackGenerator.Analysis.Transformer.Context;
 using KaVE.VsFeedbackGenerator.Analysis.Util;
@@ -52,7 +52,9 @@ namespace KaVE.VsFeedbackGenerator.Analysis
                 epNames.Add(ep.Name);
             }
 
-            var allDecls = typeDeclaration.MemberDeclarations.Select(m => m as IMethodDeclaration).Where(m => m != null);
+            var allDecls =
+                typeDeclaration.MemberDeclarations.Select(
+                    m => m as global::JetBrains.ReSharper.Psi.CSharp.Tree.IMethodDeclaration).Where(m => m != null);
             foreach (var d in allDecls)
             {
                 if (d.DeclaredElement != null)
@@ -60,7 +62,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis
                     var dElem = d.DeclaredElement;
                     var dName = dElem.GetName<IMethodName>();
 
-                    MethodDeclaration decl;
+                    IMethodDeclaration decl;
 
                     if (!epNames.Contains(dName))
                     {

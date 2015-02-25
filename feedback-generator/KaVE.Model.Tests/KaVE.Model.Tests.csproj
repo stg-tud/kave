@@ -89,11 +89,11 @@
     <Compile Include="SSTs\Blocks\UnsafeBlockTest.cs" />
     <Compile Include="SSTs\Blocks\UsingBlockTest.cs" />
     <Compile Include="SSTs\Blocks\WhileLoopTest.cs" />
-    <Compile Include="SSTs\Declarations\VariableDeclarationTest.cs" />
-    <Compile Include="SSTs\Declarations\PropertyDeclarationTest.cs" />
-    <Compile Include="SSTs\Declarations\EventDeclarationTest.cs" />
-    <Compile Include="SSTs\Declarations\FieldDeclarationTest.cs" />
-    <Compile Include="SSTs\Declarations\DelegateDeclarationTest.cs" />
+    <Compile Include="SSTs\Impl\Declarations\VariableDeclarationTest.cs" />
+    <Compile Include="SSTs\Impl\Declarations\PropertyDeclarationTest.cs" />
+    <Compile Include="SSTs\Impl\Declarations\EventDeclarationTest.cs" />
+    <Compile Include="SSTs\Impl\Declarations\FieldDeclarationTest.cs" />
+    <Compile Include="SSTs\Impl\Declarations\DelegateDeclarationTest.cs" />
     <Compile Include="SSTs\Expressions\BlockExpressionTest.cs" />
     <Compile Include="SSTs\Expressions\ComposedExpressionTest.cs" />
     <Compile Include="SSTs\Expressions\ConstantExpressionTest.cs" />
@@ -101,7 +101,7 @@
     <Compile Include="SSTs\Expressions\IfElseExpressionTest.cs" />
     <Compile Include="SSTs\Expressions\InvocationExpressionTest.cs" />
     <Compile Include="SSTs\Expressions\LambdaExpressionTest.cs" />
-    <Compile Include="SSTs\Declarations\MethodDeclarationTest.cs" />
+    <Compile Include="SSTs\Impl\Declarations\MethodDeclarationTest.cs" />
     <Compile Include="SSTs\Expressions\MemberAccessExpressionTest.cs" />
     <Compile Include="SSTs\Expressions\ReferenceExpressionTest.cs" />
     <Compile Include="SSTs\SSTTest.cs" />

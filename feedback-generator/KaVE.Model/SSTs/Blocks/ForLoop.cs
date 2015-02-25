@@ -23,12 +23,12 @@ using KaVE.Utils;
 
 namespace KaVE.Model.SSTs.Blocks
 {
-    public class ForLoop : Statement
+    public class ForLoop : IStatement
     {
-        public readonly IList<Statement> Init = Lists.NewList<Statement>();
-        public Expression Condition { get; set; }
-        public readonly IList<Statement> Step = Lists.NewList<Statement>();
-        public readonly IList<Statement> Body = Lists.NewList<Statement>();
+        public readonly IList<IStatement> Init = Lists.NewList<IStatement>();
+        public IExpression Condition { get; set; }
+        public readonly IList<IStatement> Step = Lists.NewList<IStatement>();
+        public readonly IList<IStatement> Body = Lists.NewList<IStatement>();
 
         private bool Equals(ForLoop other)
         {

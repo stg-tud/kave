@@ -21,7 +21,7 @@ using KaVE.Utils;
 
 namespace KaVE.Model.SSTs.Expressions
 {
-    public class MemberAccessExpression : Expression
+    public class MemberAccessExpression : IExpression
     {
         public string Identifier { get; set; }
         public string MemberName { get; set; }

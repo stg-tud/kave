@@ -43,7 +43,7 @@ namespace KaVE.Model.Tests.SSTs.Expressions
             var sut = new BlockExpression();
             sut.Body.Add(new ReturnStatement());
 
-            var expected = Lists.NewList<Statement>();
+            var expected = Lists.NewList<IStatement>();
             expected.Add(new ReturnStatement());
 
             Assert.AreEqual(expected, sut.Body);

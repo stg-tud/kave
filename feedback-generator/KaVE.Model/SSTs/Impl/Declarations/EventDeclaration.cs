@@ -18,21 +18,22 @@
  */
 
 using KaVE.Model.Names;
+using KaVE.Model.SSTs.Declarations;
 using KaVE.Model.SSTs.Visitor;
 using KaVE.Utils;
 
-namespace KaVE.Model.SSTs.Declarations
+namespace KaVE.Model.SSTs.Impl.Declarations
 {
-    public class FieldDeclaration : MemberDeclaration
+    public class EventDeclaration : IEventDeclaration
     {
-        public IFieldName Name { get; set; }
+        public IEventName Name { get; set; }
 
-        public override void Accept<TContext>(ISSTNodeVisitor<TContext> visitor, TContext context)
+        public void Accept<TContext>(ISSTNodeVisitor<TContext> visitor, TContext context)
         {
             visitor.Visit(this, context);
         }
 
-        private bool Equals(FieldDeclaration other)
+        private bool Equals(EventDeclaration other)
         {
             return Equals(Name, other.Name);
         }
@@ -44,7 +45,7 @@ namespace KaVE.Model.SSTs.Declarations
 
         public override int GetHashCode()
         {
-            return 21 + (Name != null ? Name.GetHashCode() : 0);
+            return 22 + (Name != null ? Name.GetHashCode() : 0);
         }
     }
 }

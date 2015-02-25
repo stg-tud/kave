@@ -24,7 +24,7 @@ using KaVE.VsFeedbackGenerator.Analysis.Util;
 
 namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
 {
-    public class BlockVisitor : TreeNodeVisitor<IList<Statement>>
+    public class BlockVisitor : TreeNodeVisitor<IList<IStatement>>
     {
         private readonly ToNameReducer _toNameReducer;
         private readonly ToBasicExpressionReducer _toBasicExpressionReducer;

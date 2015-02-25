@@ -24,10 +24,10 @@ using KaVE.Utils;
 
 namespace KaVE.Model.SSTs.Expressions
 {
-    public class LambdaExpression : Expression
+    public class LambdaExpression : IExpression
     {
-        public readonly IList<VariableDeclaration> Parameters = Lists.NewList<VariableDeclaration>(); 
-        public readonly IList<Statement> Body = Lists.NewList<Statement>();
+        public readonly IList<IVariableDeclaration> Parameters = Lists.NewList<IVariableDeclaration>(); 
+        public readonly IList<IStatement> Body = Lists.NewList<IStatement>();
 
         private bool Equals(LambdaExpression other)
         {

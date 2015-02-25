@@ -23,10 +23,10 @@ using KaVE.Utils;
 
 namespace KaVE.Model.SSTs.Blocks
 {
-    public class UsingBlock : Statement
+    public class UsingBlock : IStatement
     {
         public string Identifier { get; set; }
-        public readonly IList<Statement> Body = Lists.NewList<Statement>();
+        public readonly IList<IStatement> Body = Lists.NewList<IStatement>();
 
         protected bool Equals(UsingBlock other)
         {

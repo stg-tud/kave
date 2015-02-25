@@ -23,5 +23,5 @@ using KaVE.Model.SSTs;
 
 namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
 {
-    public class ToArgumentList : TreeNodeVisitor<IList<Statement>, string[]> {}
+    public class ToArgumentList : TreeNodeVisitor<IList<IStatement>, string[]> {}
 }
