@@ -25,8 +25,10 @@ using KaVE.Model.Names;
 using KaVE.Model.SSTs;
 using KaVE.Model.SSTs.Blocks;
 using KaVE.Model.SSTs.Expressions;
-using KaVE.Model.SSTs.Expressions.Basic;
 using KaVE.Model.SSTs.Expressions.LoopCondition;
+using KaVE.Model.SSTs.Impl.Expressions.Assignable;
+using KaVE.Model.SSTs.Impl.Expressions.LoopCondition;
+using KaVE.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Utils.Assertion;
 using KaVE.VsFeedbackGenerator.Analysis.Transformer.Context;
 using KaVE.VsFeedbackGenerator.Analysis.Util;
@@ -153,7 +155,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
         /// </summary>
         public static InvocationExpression CreateInvocation(this string callee, IMethodName method, string[] argIds)
         {
-            var args = argIds.Select<string, BasicExpression>(id => new ReferenceExpression {Identifier = id}).AsArray();
+            var args = argIds.Select<string, ISimpleExpression>(id => new ReferenceExpression {Identifier = id}).AsArray();
             if (callee == null)
             {
                 return InvocationExpression.Create(method, args);

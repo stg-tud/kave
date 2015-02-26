@@ -18,6 +18,7 @@
  */
 
 using KaVE.Model.SSTs.Expressions;
+using KaVE.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Model.SSTs.Statements.Wrapped;
 using NUnit.Framework;
 

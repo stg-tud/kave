@@ -23,9 +23,10 @@ using KaVE.Model.Names;
 using KaVE.Model.Names.CSharp;
 using KaVE.Model.SSTs;
 using KaVE.Model.SSTs.Declarations;
-using KaVE.Model.SSTs.Expressions.Basic;
+using KaVE.Model.SSTs.Expressions;
 using KaVE.Model.SSTs.Impl;
 using KaVE.Model.SSTs.Impl.Declarations;
+using KaVE.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Utils.Exceptions;
 using KaVE.VsFeedbackGenerator.Utils;
 using Moq;
@@ -92,7 +93,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
         }
 
 
-        protected BasicExpression Ref(string id)
+        protected ISimpleExpression Ref(string id)
         {
             return new ReferenceExpression {Identifier = id};
         }

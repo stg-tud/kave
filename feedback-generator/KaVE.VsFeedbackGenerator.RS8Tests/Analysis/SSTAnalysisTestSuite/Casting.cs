@@ -19,8 +19,9 @@
 
 using KaVE.Model.Names.CSharp;
 using KaVE.Model.SSTs.Expressions;
-using KaVE.Model.SSTs.Expressions.Basic;
 using KaVE.Model.SSTs.Impl.Declarations;
+using KaVE.Model.SSTs.Impl.Expressions.Assignable;
+using KaVE.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Model.SSTs.Statements;
 using NUnit.Framework;
 

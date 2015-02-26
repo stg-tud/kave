@@ -20,7 +20,8 @@
 using KaVE.Model.Names;
 using KaVE.Model.Names.CSharp;
 using KaVE.Model.SSTs.Expressions;
-using KaVE.Model.SSTs.Expressions.Basic;
+using KaVE.Model.SSTs.Impl.Expressions.Assignable;
+using KaVE.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Model.SSTs.Statements.Wrapped;
 using NUnit.Framework;
 
@@ -101,7 +102,7 @@ namespace KaVE.Model.Tests.SSTs.Statements.Wrapped
             return MethodName.Get(methodName);
         }
 
-        private static BasicExpression Ref(string id)
+        private static ISimpleExpression Ref(string id)
         {
             return new ReferenceExpression {Identifier = id};
         }

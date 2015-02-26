@@ -24,8 +24,9 @@ using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.Util;
 using KaVE.Model.Collections;
 using KaVE.Model.Names;
-using KaVE.Model.SSTs.Expressions.Basic;
+using KaVE.Model.SSTs.Expressions;
 using KaVE.Model.SSTs.Impl.Declarations;
+using KaVE.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Model.SSTs.Statements;
 using KaVE.Model.SSTs.Statements.Wrapped;
 using KaVE.VsFeedbackGenerator.Analysis.Util;
@@ -101,7 +102,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
                     }
                     var args =
                         GetArgumentList(inv.ArgumentList, body)
-                            .Select<string, BasicExpression>(id => new ReferenceExpression {Identifier = id})
+                            .Select<string, ISimpleExpression>(id => new ReferenceExpression {Identifier = id})
                             .AsArray();
                     body.Add(InvocationStatement.Create(callee, methodName, args));
                 }

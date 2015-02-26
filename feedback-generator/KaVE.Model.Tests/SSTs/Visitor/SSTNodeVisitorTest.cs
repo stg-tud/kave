@@ -42,7 +42,8 @@ namespace KaVE.Model.Tests.SSTs.Visitor
             sut.Visit((IPropertyDeclaration) null, null);
 
             sut.Visit((IStatement) null, null);
-            sut.Visit((IExpression) null, null);
+            
+            // TODO complete after hierarchy is stable
         }
     }
 }

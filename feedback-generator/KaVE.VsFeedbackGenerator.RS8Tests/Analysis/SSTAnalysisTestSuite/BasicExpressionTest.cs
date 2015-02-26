@@ -21,8 +21,9 @@ using KaVE.Model.Collections;
 using KaVE.Model.Names.CSharp;
 using KaVE.Model.SSTs;
 using KaVE.Model.SSTs.Expressions;
-using KaVE.Model.SSTs.Expressions.Basic;
 using KaVE.Model.SSTs.Impl.Declarations;
+using KaVE.Model.SSTs.Impl.Expressions.Assignable;
+using KaVE.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Model.SSTs.Statements;
 using NUnit.Framework;
 using Fix = KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite.SSTAnalysisFixture;
@@ -85,7 +86,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             var methodName = MethodName.Get("[System.Void, mscore, 4.0.0.0] [A.TestProject]..ctor()");
             body.Add(new Assignment("a", new InvocationExpression {Identifier = "a", Name = methodName}));
             body.Add(VariableDeclaration.Create("c", Fix.Int));
-            body.Add(new Assignment("i", new MemberAccessExpression {Identifier = "a", MemberName = "I"}));
+            // body.Add(new Assignment("i", new MemberAccessExpression {Identifier = "a", MemberName = "I"}));
 
             AssertBody(body);
         }
@@ -112,7 +113,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             var body = Lists.NewList<IStatement>();
             body.Add(VariableDeclaration.Create("i", Fix.Int));
             var field = FieldName.Get("[System.Int32, mscore, 4.0.0.0] [N.A, TestProject].I");
-            body.Add(new Assignment("i", new ConstantReferenceExpression {Reference = field}));
+            //body.Add(new Assignment("i", new ConstantReferenceExpression {Reference = field}));
 
             AssertBody(body);
             // TODO
