@@ -17,47 +17,86 @@
  *    - Sebastian Proksch
  */
 
-using KaVE.Utils.Assertion;
+
+using KaVE.Model.Names.CSharp;
+using KaVE.Model.SSTs.Impl.References;
+using KaVE.Model.SSTs.Impl.Visitor;
+using KaVE.Model.SSTs.References;
 using NUnit.Framework;
 
 namespace KaVE.Model.Tests.SSTs.Impl.References
 {
     public class EventReferenceTest
     {
+        private EventVisitor _visitor;
+
+        [SetUp]
+        public void SetUp()
+        {
+            _visitor = new EventVisitor();
+        }
+
         [Test]
         public void DefaultValues()
         {
-            Asserts.Fail("not implemented");
+            var sut = new EventReference();
+            Assert.Null(sut.EventName);
+            Assert.AreNotEqual(0, sut.GetHashCode());
+            Assert.AreNotEqual(1, sut.GetHashCode());
         }
 
         [Test]
         public void SettingValues()
         {
-            Asserts.Fail("not implemented");
+            var sut = new EventReference {EventName = EventName.UnknownName};
+            Assert.AreEqual(EventName.UnknownName, sut.EventName);
         }
 
         [Test]
         public void Equality_Default()
         {
-            Asserts.Fail("not implemented");
+            var a = new EventReference();
+            var b = new EventReference();
+            Assert.AreEqual(a, b);
+            Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
         }
 
         [Test]
         public void Equality_ReallyTheSame()
         {
-            Asserts.Fail("not implemented");
+            var a = new EventReference {EventName = EventName.UnknownName};
+            var b = new EventReference {EventName = EventName.UnknownName};
+            Assert.AreEqual(a, b);
+            Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
         }
 
         [Test]
         public void Equality_DifferentName()
         {
-            Asserts.Fail("not implemented");
+            var a = new EventReference {EventName = EventName.UnknownName};
+            var b = new EventReference();
+            Assert.AreNotEqual(a, b);
+            Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
         }
 
         [Test]
         public void VisitorIsImplemented()
         {
-            Asserts.Fail("not implemented");
+            var sut = new EventReference();
+            Assert.Null(_visitor.Argument);
+            sut.Accept(_visitor, 0);
+            Assert.AreEqual(sut, _visitor.Argument);
+        }
+
+
+        internal class EventVisitor : SSTNodeVisitor<int>
+        {
+            public IEventReference Argument { get; set; }
+
+            public override void Visit(IEventReference eventRef, int context)
+            {
+                Argument = eventRef;
+            }
         }
     }
 }

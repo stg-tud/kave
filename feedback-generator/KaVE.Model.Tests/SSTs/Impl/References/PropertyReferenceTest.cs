@@ -17,47 +17,85 @@
  *    - Sebastian Proksch
  */
 
-using KaVE.Utils.Assertion;
+using KaVE.Model.Names.CSharp;
+using KaVE.Model.SSTs.Impl.References;
+using KaVE.Model.SSTs.Impl.Visitor;
+using KaVE.Model.SSTs.References;
 using NUnit.Framework;
 
 namespace KaVE.Model.Tests.SSTs.Impl.References
 {
     public class PropertyReferenceTest
     {
+        private PropertyVisitor _visitor;
+
+        [SetUp]
+        public void SetUp()
+        {
+            _visitor = new PropertyVisitor();
+        }
+
         [Test]
         public void DefaultValues()
         {
-            Asserts.Fail("not implemented");
+            var sut = new PropertyReference();
+            Assert.Null(sut.PropertyName);
+            Assert.AreNotEqual(0, sut.GetHashCode());
+            Assert.AreNotEqual(1, sut.GetHashCode());
         }
 
         [Test]
         public void SettingValues()
         {
-            Asserts.Fail("not implemented");
+            var sut = new PropertyReference {PropertyName = PropertyName.UnknownName};
+            Assert.AreEqual(PropertyName.UnknownName, sut.PropertyName);
         }
 
         [Test]
         public void Equality_Default()
         {
-            Asserts.Fail("not implemented");
+            var a = new PropertyReference();
+            var b = new PropertyReference();
+            Assert.AreEqual(a, b);
+            Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
         }
 
         [Test]
         public void Equality_ReallyTheSame()
         {
-            Asserts.Fail("not implemented");
+            var a = new PropertyReference {PropertyName = PropertyName.UnknownName};
+            var b = new PropertyReference {PropertyName = PropertyName.UnknownName};
+            Assert.AreEqual(a, b);
+            Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
         }
 
         [Test]
         public void Equality_DifferentName()
         {
-            Asserts.Fail("not implemented");
+            var a = new PropertyReference {PropertyName = PropertyName.UnknownName};
+            var b = new PropertyReference();
+            Assert.AreNotEqual(a, b);
+            Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
         }
 
         [Test]
         public void VisitorIsImplemented()
         {
-            Asserts.Fail("not implemented");
+            var sut = new PropertyReference();
+            Assert.Null(_visitor.Argument);
+            sut.Accept(_visitor, 0);
+            Assert.AreEqual(sut, _visitor.Argument);
+        }
+
+
+        internal class PropertyVisitor : SSTNodeVisitor<int>
+        {
+            public IPropertyReference Argument { get; set; }
+
+            public override void Visit(IPropertyReference eventRef, int context)
+            {
+                Argument = eventRef;
+            }
         }
     }
 }

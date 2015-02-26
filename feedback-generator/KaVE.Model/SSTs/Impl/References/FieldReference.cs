@@ -20,6 +20,7 @@
 using KaVE.Model.Names;
 using KaVE.Model.SSTs.References;
 using KaVE.Model.SSTs.Visitor;
+using KaVE.Utils;
 
 namespace KaVE.Model.SSTs.Impl.References
 {
@@ -30,6 +31,22 @@ namespace KaVE.Model.SSTs.Impl.References
         public void Accept<TContext>(ISSTNodeVisitor<TContext> visitor, TContext context)
         {
             visitor.Visit(this, context);
+        }
+
+        protected bool Equals(FieldReference other)
+        {
+            return Equals(FieldName, other.FieldName);
+        }
+
+        public override bool Equals(object obj)
+        {
+            return this.Equals(obj, Equals);
+        }
+
+        public override int GetHashCode()
+        {
+            var hcFieldName = FieldName != null ? FieldName.GetHashCode() : 0;
+            return 2387645 + hcFieldName;
         }
     }
 }

@@ -158,6 +158,11 @@
     <Compile Include="SSTs\Expressions\Basic\ReferenceExpression.cs" />
     <Compile Include="SSTs\Expressions\LoopCondition\LoopConditionExpression.cs" />
     <Compile Include="SSTs\Expressions\Basic\MemberAccesssExpression.cs" />
+    <Compile Include="SSTs\Impl\References\EventReference.cs" />
+    <Compile Include="SSTs\Impl\References\FieldReference.cs" />
+    <Compile Include="SSTs\Impl\References\MethodReference.cs" />
+    <Compile Include="SSTs\Impl\References\PropertyReference.cs" />
+    <Compile Include="SSTs\Impl\References\VariableReference.cs" />
     <Compile Include="SSTs\IReference.cs" />
     <Compile Include="SSTs\IMemberDeclaration.cs" />
     <Compile Include="SSTs\Expressions\LoopCondition\BlockExpression.cs" />

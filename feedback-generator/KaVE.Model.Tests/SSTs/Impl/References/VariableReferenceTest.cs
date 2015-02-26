@@ -17,47 +17,84 @@
  *    - Sebastian Proksch
  */
 
-using KaVE.Utils.Assertion;
+using KaVE.Model.SSTs.Impl.References;
+using KaVE.Model.SSTs.Impl.Visitor;
+using KaVE.Model.SSTs.References;
 using NUnit.Framework;
 
 namespace KaVE.Model.Tests.SSTs.Impl.References
 {
     public class VariableReferenceTest
     {
+        private VariableVisitor _visitor;
+
+        [SetUp]
+        public void SetUp()
+        {
+            _visitor = new VariableVisitor();
+        }
+
         [Test]
         public void DefaultValues()
         {
-            Asserts.Fail("not implemented");
+            var sut = new VariableReference();
+            Assert.Null(sut.Identifier);
+            Assert.AreNotEqual(0, sut.GetHashCode());
+            Assert.AreNotEqual(1, sut.GetHashCode());
         }
 
         [Test]
         public void SettingValues()
         {
-            Asserts.Fail("not implemented");
+            var sut = new VariableReference {Identifier = "a"};
+            Assert.AreEqual("a", sut.Identifier);
         }
 
         [Test]
         public void Equality_Default()
         {
-            Asserts.Fail("not implemented");
+            var a = new VariableReference();
+            var b = new VariableReference();
+            Assert.AreEqual(a, b);
+            Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
         }
 
         [Test]
         public void Equality_ReallyTheSame()
         {
-            Asserts.Fail("not implemented");
+            var a = new VariableReference {Identifier = "a"};
+            var b = new VariableReference {Identifier = "a"};
+            Assert.AreEqual(a, b);
+            Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
         }
 
         [Test]
         public void Equality_DifferentName()
         {
-            Asserts.Fail("not implemented");
+            var a = new VariableReference {Identifier = "a"};
+            var b = new VariableReference();
+            Assert.AreNotEqual(a, b);
+            Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
         }
 
         [Test]
         public void VisitorIsImplemented()
         {
-            Asserts.Fail("not implemented");
+            var sut = new VariableReference();
+            Assert.Null(_visitor.Argument);
+            sut.Accept(_visitor, 0);
+            Assert.AreEqual(sut, _visitor.Argument);
+        }
+
+
+        internal class VariableVisitor : SSTNodeVisitor<int>
+        {
+            public IVariableReference Argument { get; set; }
+
+            public override void Visit(IVariableReference eventRef, int context)
+            {
+                Argument = eventRef;
+            }
         }
     }
 }

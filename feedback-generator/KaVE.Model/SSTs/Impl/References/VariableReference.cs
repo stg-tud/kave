@@ -19,6 +19,7 @@
 
 using KaVE.Model.SSTs.References;
 using KaVE.Model.SSTs.Visitor;
+using KaVE.Utils;
 
 namespace KaVE.Model.SSTs.Impl.References
 {
@@ -29,6 +30,22 @@ namespace KaVE.Model.SSTs.Impl.References
         public void Accept<TContext>(ISSTNodeVisitor<TContext> visitor, TContext context)
         {
             visitor.Visit(this, context);
+        }
+
+        protected bool Equals(VariableReference other)
+        {
+            return Equals(Identifier, other.Identifier);
+        }
+
+        public override bool Equals(object obj)
+        {
+            return this.Equals(obj, Equals);
+        }
+
+        public override int GetHashCode()
+        {
+            var hcIdentifier = Identifier != null ? Identifier.GetHashCode() : 0;
+            return 2387645 + hcIdentifier;
         }
     }
 }
