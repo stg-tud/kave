@@ -17,27 +17,25 @@
  *    - Sebastian Proksch
  */
 
+using System.Collections.Generic;
+using System.Linq;
+using KaVE.JetBrains.Annotations;
+using KaVE.Model.Collections;
+using KaVE.Model.SSTs.Expressions.Assignable;
+using KaVE.Model.SSTs.Impl.References;
+using KaVE.Model.SSTs.References;
+using KaVE.Model.SSTs.Visitor;
 using KaVE.Utils;
 
 namespace KaVE.Model.SSTs.Impl.Expressions.Assignable
 {
-    public class ComposedExpression : IExpression
+    public class ComposedExpression : IComposedExpression
     {
-        public string[] Variables { get; set; }
+        public IList<IVariableReference> References { get; set; }
 
         private bool Equals(ComposedExpression other)
         {
-            if (Variables == other.Variables)
-            {
-                return true;
-            }
-
-            if (Variables == null || other.Variables == null)
-            {
-                return false;
-            }
-
-            return Variables.DeepEquals(other.Variables);
+            return References.Equals(other.References);
         }
 
         public override bool Equals(object obj)
@@ -47,12 +45,24 @@ namespace KaVE.Model.SSTs.Impl.Expressions.Assignable
 
         public override int GetHashCode()
         {
-            return 5 + (Variables != null ? HashCodeUtils.For(5, Variables) : 0);
+            return 5 + (References != null ? HashCodeUtils.For(5, References) : 0);
         }
 
-        public static ComposedExpression Create(params string[] references)
+        public void Accept<TContext>(ISSTNodeVisitor<TContext> visitor, TContext context)
         {
-            return new ComposedExpression {Variables = references};
+            throw new System.NotImplementedException();
+        }
+
+        public static ComposedExpression New(params string[] strReferences)
+        {
+            // TODO wuah
+            var refs = Lists.NewListFrom<IVariableReference>(
+                strReferences.ToList().Select(
+                    r => new VariableReference
+                    {
+                        Identifier = r
+                    }));
+            return new ComposedExpression {References = refs};
         }
     }
 }

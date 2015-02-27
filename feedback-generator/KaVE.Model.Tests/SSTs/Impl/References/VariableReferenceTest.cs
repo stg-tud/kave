@@ -87,7 +87,7 @@ namespace KaVE.Model.Tests.SSTs.Impl.References
         }
 
 
-        internal class VariableVisitor : SSTNodeVisitor<int>
+        internal class VariableVisitor : AbstractNodeVisitor<int>
         {
             public IVariableReference Argument { get; set; }
 

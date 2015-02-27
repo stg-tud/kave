@@ -17,18 +17,23 @@
  *    - Sebastian Proksch
  */
 
+using KaVE.Model.Names;
+using KaVE.Model.SSTs.Expressions.Assignable;
+using KaVE.Model.SSTs.References;
+using KaVE.Model.SSTs.Visitor;
 using KaVE.Utils;
 
 namespace KaVE.Model.SSTs.Impl.Expressions.Assignable
 {
-    public class ExpressionCompletion : IExpression
+    public class ExpressionCompletion : IExpressionCompletion
     {
+        public ITypeName TypeReference { get; set; }
+        public IVariableReference ObjectReference { get; set; }
         public string Token { get; set; }
-        public string Identifier { get; set; }
 
         protected bool Equals(ExpressionCompletion other)
         {
-            var isEqIdentifier = string.Equals(Identifier, other.Identifier);
+            var isEqIdentifier = string.Equals(ObjectReference, other.ObjectReference);
             var isEqToken = string.Equals(Token, other.Token);
             return isEqIdentifier && isEqToken;
         }
@@ -42,10 +47,15 @@ namespace KaVE.Model.SSTs.Impl.Expressions.Assignable
         {
             unchecked
             {
-                var hcIdentifier = Identifier != null ? Identifier.GetHashCode() : 0;
+                var hcIdentifier = ObjectReference != null ? ObjectReference.GetHashCode() : 0;
                 var hcToken = Token != null ? Token.GetHashCode() : 0;
                 return 3 + hcToken*397 + hcIdentifier;
             }
+        }
+
+        public void Accept<TContext>(ISSTNodeVisitor<TContext> visitor, TContext context)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

@@ -46,7 +46,7 @@ namespace KaVE.Model.Tests.SSTs.Visitor
 
             var context = new StringBuilder();
 
-            var sut = new SSTToStringVisitor();
+            var sut = new ToStringVisitor();
             sst.Accept(sut, context);
 
             var actual = context.ToString();

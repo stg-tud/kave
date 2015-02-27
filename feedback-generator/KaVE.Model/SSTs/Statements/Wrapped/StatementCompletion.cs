@@ -17,8 +17,8 @@
  *    - Sebastian Proksch
  */
 
-using KaVE.Model.SSTs.Expressions;
 using KaVE.Model.SSTs.Impl.Expressions.Assignable;
+using KaVE.Model.SSTs.Impl.References;
 
 namespace KaVE.Model.SSTs.Statements.Wrapped
 {
@@ -36,7 +36,8 @@ namespace KaVE.Model.SSTs.Statements.Wrapped
 
         public static StatementCompletion Create(string identifier, string token)
         {
-            return new StatementCompletion {Target = new ExpressionCompletion {Identifier = identifier, Token = token}};
+            var vref = new VariableReference {Identifier = identifier};
+            return new StatementCompletion {Target = new ExpressionCompletion {ObjectReference = vref, Token = token}};
         }
     }
 }

@@ -22,6 +22,7 @@ using KaVE.Model.Names.CSharp;
 using KaVE.Model.SSTs.Expressions;
 using KaVE.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Model.SSTs.Impl.Expressions.Simple;
+using KaVE.Model.SSTs.Impl.References;
 using KaVE.Model.SSTs.Statements.Wrapped;
 using NUnit.Framework;
 
@@ -42,14 +43,14 @@ namespace KaVE.Model.Tests.SSTs.Statements.Wrapped
         public void SettingValues_Helper1()
         {
             var sut = InvocationStatement.Create("a", GetMethod("A"), Ref("b"));
-            Assert.AreEqual(InvocationExpression.Create("a", GetMethod("A"), Ref("b")), sut.Target);
+            Assert.AreEqual(InvocationExpression.New("a", GetMethod("A"), Ref("b")), sut.Target);
         }
 
         [Test]
         public void SettingValues_Helper2()
         {
             var sut = InvocationStatement.Create(GetStaticMethod("A"), Ref("b"));
-            Assert.AreEqual(InvocationExpression.Create(GetStaticMethod("A"), Ref("b")), sut.Target);
+            Assert.AreEqual(InvocationExpression.New(GetStaticMethod("A"), Ref("b")), sut.Target);
         }
 
         [Test]
@@ -104,7 +105,7 @@ namespace KaVE.Model.Tests.SSTs.Statements.Wrapped
 
         private static ISimpleExpression Ref(string id)
         {
-            return new ReferenceExpression {Identifier = id};
+            return new ReferenceExpression {Reference = new VariableReference {Identifier = id}};
         }
     }
 }

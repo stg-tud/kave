@@ -19,6 +19,6 @@
 
 namespace KaVE.Model.SSTs.Expressions
 {
-    // e.g., expressions that do not contain other references
-    public interface ISimpleExpression : IAssignableExpression, ILoopConditionExpression {}
+    // e.g., expressions that do not contain other expressions
+    public interface ISimpleExpression : IAssignableExpression, ILoopHeaderExpression {}
 }

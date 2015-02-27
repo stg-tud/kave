@@ -19,5 +19,8 @@
 
 namespace KaVE.Model.SSTs.References
 {
-    public interface IMemberReference : IReference {}
+    public interface IMemberReference : IReference
+    {
+        IVariableReference Reference { get; }
+    }
 }

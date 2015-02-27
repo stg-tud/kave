@@ -17,23 +17,37 @@
  *    - Sebastian Proksch
  */
 
+using System.Collections.Generic;
+using KaVE.JetBrains.Annotations;
+using KaVE.Model.Collections;
 using KaVE.Model.Names;
 using KaVE.Model.SSTs.Expressions;
+using KaVE.Model.SSTs.Expressions.Assignable;
+using KaVE.Model.SSTs.Impl.References;
+using KaVE.Model.SSTs.References;
+using KaVE.Model.SSTs.Visitor;
 using KaVE.Utils;
 using KaVE.Utils.Assertion;
 
 namespace KaVE.Model.SSTs.Impl.Expressions.Assignable
 {
-    public class InvocationExpression : IExpression
+    public class InvocationExpression : IInvocationExpression
     {
-        public string Identifier { get; set; }
+        public IVariableReference Reference { get; set; }
         public IMethodName Name { get; set; }
-        public ISimpleExpression[] Parameters { get; set; }
+
+        [NotNull]
+        public IList<ISimpleExpression> Parameters { get; set; }
+
+        public InvocationExpression()
+        {
+            Parameters = Lists.NewList<ISimpleExpression>();
+        }
 
         private bool Equals(InvocationExpression other)
         {
-            return string.Equals(Identifier, other.Identifier) && Equals(Name, other.Name) &&
-                   Parameters.DeepEquals(other.Parameters);
+            return string.Equals(Reference, other.Reference) && Equals(Name, other.Name) &&
+                   Parameters.Equals(other.Parameters);
         }
 
         public override bool Equals(object obj)
@@ -45,32 +59,36 @@ namespace KaVE.Model.SSTs.Impl.Expressions.Assignable
         {
             unchecked
             {
-                var hashCode = 11 + (Identifier != null ? Identifier.GetHashCode() : 0);
+                var hashCode = 11 + (Reference != null ? Reference.GetHashCode() : 0);
                 hashCode = (hashCode*397) ^ (Name != null ? Name.GetHashCode() : 0);
                 hashCode = (hashCode*397) ^ (Parameters != null ? HashCodeUtils.For(398, Parameters) : 0);
                 return hashCode;
             }
         }
 
-        public static InvocationExpression Create(IMethodName name, params ISimpleExpression[] parameters)
+        public void Accept<TContext>(ISSTNodeVisitor<TContext> visitor, TContext context)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public static InvocationExpression New(IMethodName name, params ISimpleExpression[] parameters)
         {
             Asserts.That(name.IsStatic || name.IsConstructor);
             return new InvocationExpression
             {
-                Identifier = "",
                 Name = name,
-                Parameters = parameters
+                Parameters = Lists.NewListFrom(parameters),
             };
         }
 
-        public static InvocationExpression Create(string id, IMethodName name, params ISimpleExpression[] parameters)
+        public static InvocationExpression New(string id, IMethodName name, params ISimpleExpression[] parameters)
         {
             Asserts.Not(name.IsStatic || name.IsConstructor);
             return new InvocationExpression
             {
-                Identifier = id,
+                Reference = new VariableReference {Identifier = id},
                 Name = name,
-                Parameters = parameters,
+                Parameters = Lists.NewListFrom(parameters),
             };
         }
     }

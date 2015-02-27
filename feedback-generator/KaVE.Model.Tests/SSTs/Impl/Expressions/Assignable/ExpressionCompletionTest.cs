@@ -18,6 +18,8 @@
  */
 
 using KaVE.Model.SSTs.Impl.Expressions.Assignable;
+using KaVE.Model.SSTs.Impl.References;
+using KaVE.Model.SSTs.References;
 using NUnit.Framework;
 
 namespace KaVE.Model.Tests.SSTs.Impl.Expressions.Assignable
@@ -29,7 +31,7 @@ namespace KaVE.Model.Tests.SSTs.Impl.Expressions.Assignable
         {
             var sut = new ExpressionCompletion();
             Assert.Null(sut.Token);
-            Assert.Null(sut.Identifier);
+            Assert.Null(sut.ObjectReference);
             Assert.AreNotEqual(0, sut.GetHashCode());
             Assert.AreNotEqual(1, sut.GetHashCode());
         }
@@ -39,11 +41,16 @@ namespace KaVE.Model.Tests.SSTs.Impl.Expressions.Assignable
         {
             var sut = new ExpressionCompletion
             {
-                Identifier = "i",
+                ObjectReference = Ref("i"),
                 Token = "t"
             };
-            Assert.AreEqual("i", sut.Identifier);
+            Assert.AreEqual("i", sut.ObjectReference);
             Assert.AreEqual("t", sut.Token);
+        }
+
+        private IVariableReference Ref(string id)
+        {
+            return new VariableReference {Identifier = id};
         }
 
         [Test]
@@ -58,8 +65,8 @@ namespace KaVE.Model.Tests.SSTs.Impl.Expressions.Assignable
         [Test]
         public void Equality_ReallyTheSame()
         {
-            var a = new ExpressionCompletion {Identifier = "i", Token = "t"};
-            var b = new ExpressionCompletion {Identifier = "i", Token = "t"};
+            var a = new ExpressionCompletion {ObjectReference = Ref("i"), Token = "t"};
+            var b = new ExpressionCompletion {ObjectReference = Ref("i"), Token = "t"};
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
         }
@@ -67,8 +74,8 @@ namespace KaVE.Model.Tests.SSTs.Impl.Expressions.Assignable
         [Test]
         public void Equality_DifferentIdentifier()
         {
-            var a = new ExpressionCompletion {Identifier = "i"};
-            var b = new ExpressionCompletion {Identifier = "j"};
+            var a = new ExpressionCompletion {ObjectReference = Ref("i")};
+            var b = new ExpressionCompletion {ObjectReference = Ref("j")};
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
         }

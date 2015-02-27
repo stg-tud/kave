@@ -88,7 +88,7 @@ namespace KaVE.Model.Tests.SSTs.Impl.References
         }
 
 
-        internal class MethodVisitor : SSTNodeVisitor<int>
+        internal class MethodVisitor : AbstractNodeVisitor<int>
         {
             public IMethodReference Argument { get; set; }
 

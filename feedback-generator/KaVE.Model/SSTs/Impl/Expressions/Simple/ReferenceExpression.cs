@@ -17,18 +17,20 @@
  *    - Sebastian Proksch
  */
 
-using KaVE.Model.SSTs.Expressions;
+using KaVE.Model.SSTs.Expressions.Simple;
+using KaVE.Model.SSTs.Impl.References;
+using KaVE.Model.SSTs.Visitor;
 using KaVE.Utils;
 
 namespace KaVE.Model.SSTs.Impl.Expressions.Simple
 {
-    public class ReferenceExpression : ISimpleExpression
+    public class ReferenceExpression : IReferenceExpression
     {
-        public string Identifier { get; set; }
+        public IReference Reference { get; set; }
 
         protected bool Equals(ReferenceExpression other)
         {
-            return string.Equals(Identifier, other.Identifier);
+            return string.Equals(Reference, other.Reference);
         }
 
         public override bool Equals(object obj)
@@ -38,8 +40,19 @@ namespace KaVE.Model.SSTs.Impl.Expressions.Simple
 
         public override int GetHashCode()
         {
-            var hcIdentifier = Identifier != null ? Identifier.GetHashCode() : 0;
+            var hcIdentifier = Reference != null ? Reference.GetHashCode() : 0;
             return 29 + hcIdentifier;
+        }
+
+        public void Accept<TContext>(ISSTNodeVisitor<TContext> visitor, TContext context)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public static ReferenceExpression ToVariable(string id)
+        {
+            var variableReference = new VariableReference {Identifier = id};
+            return new ReferenceExpression {Reference = variableReference};
         }
     }
 }

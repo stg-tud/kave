@@ -88,7 +88,7 @@ namespace KaVE.Model.Tests.SSTs.Impl.References
         }
 
 
-        internal class PropertyVisitor : SSTNodeVisitor<int>
+        internal class PropertyVisitor : AbstractNodeVisitor<int>
         {
             public IPropertyReference Argument { get; set; }
 

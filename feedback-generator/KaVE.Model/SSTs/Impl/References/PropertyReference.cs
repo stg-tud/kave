@@ -26,6 +26,7 @@ namespace KaVE.Model.SSTs.Impl.References
 {
     public class PropertyReference : IPropertyReference
     {
+        public IVariableReference Reference { get; set; }
         public IPropertyName PropertyName { get; set; }
 
         public void Accept<TContext>(ISSTNodeVisitor<TContext> visitor, TContext context)

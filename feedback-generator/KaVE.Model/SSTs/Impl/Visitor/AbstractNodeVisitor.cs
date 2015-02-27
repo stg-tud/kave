@@ -19,37 +19,39 @@
 
 using KaVE.Model.SSTs.Declarations;
 using KaVE.Model.SSTs.Expressions.Assignable;
-using KaVE.Model.SSTs.Expressions.LoopCondition;
+using KaVE.Model.SSTs.Expressions.LoopHeader;
 using KaVE.Model.SSTs.Expressions.Simple;
 using KaVE.Model.SSTs.References;
 using KaVE.Model.SSTs.Visitor;
 
 namespace KaVE.Model.SSTs.Impl.Visitor
 {
-    public class SSTNodeVisitor<TContext> : ISSTNodeVisitor<TContext>
+    public class AbstractNodeVisitor<TContext> : ISSTNodeVisitor<TContext>
     {
         public virtual void Visit(ISST sst, TContext context) {}
 
+        // declarations
         public virtual void Visit(IDelegateDeclaration stmt, TContext context) {}
         public virtual void Visit(IEventDeclaration stmt, TContext context) {}
         public virtual void Visit(IFieldDeclaration stmt, TContext context) {}
         public virtual void Visit(IMethodDeclaration stmt, TContext context) {}
         public virtual void Visit(IPropertyDeclaration stmt, TContext context) {}
 
+        // statements
         public virtual void Visit(IStatement stmt, TContext context) {}
 
-        public virtual void Visit(IAnonymousInvocationExpression expr, TContext context) {}
-        public virtual void Visit(IExpressionCompletion expr, TContext context) {}
+        // Expressions
         public virtual void Visit(IComposedExpression expr, TContext context) {}
+        public virtual void Visit(IExpressionCompletion expr, TContext context) {}
         public virtual void Visit(IIfElseExpression expr, TContext context) {}
         public virtual void Visit(IInvocationExpression expr, TContext context) {}
         public virtual void Visit(ILambdaExpression expr, TContext context) {}
-        public virtual void Visit(IBlockExpression expr, TContext context) {}
+        public virtual void Visit(ILoopHeaderBlockExpression expr, TContext context) {}
         public virtual void Visit(IConstantValueExpression expr, TContext context) {}
         public virtual void Visit(INullExpression expr, TContext context) {}
         public virtual void Visit(IReferenceExpression expr, TContext context) {}
 
-
+        // References
         public virtual void Visit(IEventReference eventRef, TContext context) {}
         public virtual void Visit(IFieldReference fieldRef, TContext context) {}
         public virtual void Visit(IMethodReference methodRef, TContext context) {}

@@ -19,7 +19,7 @@
 
 using KaVE.Model.Collections;
 using KaVE.Model.SSTs;
-using KaVE.Model.SSTs.Impl.Expressions.LoopCondition;
+using KaVE.Model.SSTs.Impl.Expressions.LoopHeader;
 using KaVE.Model.SSTs.Statements;
 using NUnit.Framework;
 
@@ -30,7 +30,7 @@ namespace KaVE.Model.Tests.SSTs.Impl.Expressions.LoopCondition
         [Test]
         public void DefaultValues()
         {
-            var sut = new BlockExpression();
+            var sut = new LoopHeaderBlockExpression();
             Assert.NotNull(sut.Body);
             Assert.AreNotEqual(0, sut.GetHashCode());
             Assert.AreNotEqual(1, sut.GetHashCode());
@@ -39,7 +39,7 @@ namespace KaVE.Model.Tests.SSTs.Impl.Expressions.LoopCondition
         [Test]
         public void SettingValues()
         {
-            var sut = new BlockExpression();
+            var sut = new LoopHeaderBlockExpression();
             sut.Body.Add(new ReturnStatement());
 
             var expected = Lists.NewList<IStatement>();
@@ -51,8 +51,8 @@ namespace KaVE.Model.Tests.SSTs.Impl.Expressions.LoopCondition
         [Test]
         public void Equality_Default()
         {
-            var a = new BlockExpression();
-            var b = new BlockExpression();
+            var a = new LoopHeaderBlockExpression();
+            var b = new LoopHeaderBlockExpression();
 
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
@@ -61,9 +61,9 @@ namespace KaVE.Model.Tests.SSTs.Impl.Expressions.LoopCondition
         [Test]
         public void Equality_SettingValues()
         {
-            var a = new BlockExpression();
+            var a = new LoopHeaderBlockExpression();
             a.Body.Add(new ReturnStatement());
-            var b = new BlockExpression();
+            var b = new LoopHeaderBlockExpression();
             b.Body.Add(new ReturnStatement());
 
             Assert.AreEqual(a, b);
@@ -73,9 +73,9 @@ namespace KaVE.Model.Tests.SSTs.Impl.Expressions.LoopCondition
         [Test]
         public void Equality_DifferentBody()
         {
-            var a = new BlockExpression();
+            var a = new LoopHeaderBlockExpression();
             a.Body.Add(new ReturnStatement());
-            var b = new BlockExpression();
+            var b = new LoopHeaderBlockExpression();
 
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());

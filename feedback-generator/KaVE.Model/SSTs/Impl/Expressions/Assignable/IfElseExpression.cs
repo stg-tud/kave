@@ -18,11 +18,13 @@
  */
 
 using KaVE.Model.SSTs.Expressions;
+using KaVE.Model.SSTs.Expressions.Assignable;
+using KaVE.Model.SSTs.Visitor;
 using KaVE.Utils;
 
 namespace KaVE.Model.SSTs.Impl.Expressions.Assignable
 {
-    public class IfElseExpression : IExpression
+    public class IfElseExpression : IIfElseExpression
     {
         public ISimpleExpression Condition { get; set; }
         public ISimpleExpression ThenExpression { get; set; }
@@ -48,6 +50,11 @@ namespace KaVE.Model.SSTs.Impl.Expressions.Assignable
                 hashCode = (hashCode*397) ^ (ElseExpression != null ? ElseExpression.GetHashCode() : 0);
                 return hashCode;
             }
+        }
+
+        public void Accept<TContext>(ISSTNodeVisitor<TContext> visitor, TContext context)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

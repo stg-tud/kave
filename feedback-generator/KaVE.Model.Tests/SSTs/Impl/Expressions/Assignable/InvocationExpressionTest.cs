@@ -23,6 +23,7 @@ using KaVE.Model.Names.CSharp;
 using KaVE.Model.SSTs.Expressions;
 using KaVE.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Model.SSTs.Impl.Expressions.Simple;
+using KaVE.Model.SSTs.Impl.References;
 using KaVE.Utils.Assertion;
 using NUnit.Framework;
 
@@ -34,7 +35,7 @@ namespace KaVE.Model.Tests.SSTs.Impl.Expressions.Assignable
         public void DefaultValues()
         {
             var sut = new InvocationExpression();
-            Assert.IsNull(sut.Identifier);
+            Assert.IsNull(sut.Reference);
             Assert.IsNull(sut.Name);
             Assert.IsNull(sut.Parameters);
             Assert.AreNotEqual(0, sut.GetHashCode());
@@ -44,13 +45,8 @@ namespace KaVE.Model.Tests.SSTs.Impl.Expressions.Assignable
         [Test]
         public void SettingValues()
         {
-            var a = new InvocationExpression
-            {
-                Identifier = "a1",
-                Name = GetMethod("A2"),
-                Parameters = new[] {Ref("a3")}
-            };
-            Assert.AreEqual("a1", a.Identifier);
+            var a = InvocationExpression.New("a1", GetMethod("A2"), Ref("a3"));
+            Assert.AreEqual(new VariableReference {Identifier = "a1"}, a.Reference);
             Assert.AreEqual(GetMethod("A2"), a.Name);
             Assert.AreEqual(new[] {Ref("a3")}, a.Parameters);
         }
@@ -58,8 +54,8 @@ namespace KaVE.Model.Tests.SSTs.Impl.Expressions.Assignable
         [Test]
         public void CustomConstructor_NonStatic()
         {
-            var a = InvocationExpression.Create("a1", GetMethod("B1"), Ref("c1"));
-            Assert.AreEqual("a1", a.Identifier);
+            var a = InvocationExpression.New("a1", GetMethod("B1"), Ref("c1"));
+            Assert.AreEqual("a1", a.Reference);
             Assert.AreEqual(GetMethod("B1"), a.Name);
             Assert.AreEqual(new[] {Ref("c1")}, a.Parameters);
         }
@@ -67,14 +63,14 @@ namespace KaVE.Model.Tests.SSTs.Impl.Expressions.Assignable
         [Test, ExpectedException(typeof (AssertException))]
         public void CustomConstructor_NonStaticAssert()
         {
-            InvocationExpression.Create("a1", GetStaticMethod("B1"), Ref("c1"));
+            InvocationExpression.New("a1", GetStaticMethod("B1"), Ref("c1"));
         }
 
         [Test]
         public void CustomConstructor_Static()
         {
-            var a = InvocationExpression.Create(GetStaticMethod("B2"), Ref("c2"));
-            Assert.AreEqual("", a.Identifier);
+            var a = InvocationExpression.New(GetStaticMethod("B2"), Ref("c2"));
+            Assert.AreEqual("", a.Reference);
             Assert.AreEqual(GetStaticMethod("B2"), a.Name);
             Assert.AreEqual(new[] {Ref("c2")}, a.Parameters);
         }
@@ -82,7 +78,7 @@ namespace KaVE.Model.Tests.SSTs.Impl.Expressions.Assignable
         [Test, ExpectedException(typeof (AssertException))]
         public void CustomConstructor_StaticAssert()
         {
-            InvocationExpression.Create(GetMethod("B2"), Ref("c2"));
+            InvocationExpression.New(GetMethod("B2"), Ref("c2"));
         }
 
         [Test]
@@ -99,8 +95,8 @@ namespace KaVE.Model.Tests.SSTs.Impl.Expressions.Assignable
         {
             Assert.AreEqual(GetMethod("a"), GetMethod("a"));
 
-            var a = InvocationExpression.Create("o", GetMethod("A"), Refs("a", "b", "c"));
-            var b = InvocationExpression.Create("o", GetMethod("A"), Refs("a", "b", "c"));
+            var a = InvocationExpression.New("o", GetMethod("A"), Refs("a", "b", "c"));
+            var b = InvocationExpression.New("o", GetMethod("A"), Refs("a", "b", "c"));
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
         }
@@ -108,8 +104,8 @@ namespace KaVE.Model.Tests.SSTs.Impl.Expressions.Assignable
         [Test]
         public void Equality_DifferentIdentifier()
         {
-            var a = new InvocationExpression {Identifier = "a"};
-            var b = new InvocationExpression {Identifier = "b"};
+            var a = new InvocationExpression {Reference = new VariableReference {Identifier = "a"}};
+            var b = new InvocationExpression {Reference = new VariableReference {Identifier = "b"}};
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
         }
@@ -150,12 +146,14 @@ namespace KaVE.Model.Tests.SSTs.Impl.Expressions.Assignable
 
         private static ISimpleExpression Ref(string id)
         {
-            return new ReferenceExpression {Identifier = id};
+            return new ReferenceExpression {Reference = new VariableReference {Identifier = id}};
         }
 
         private static ISimpleExpression[] Refs(params string[] ids)
         {
-            return ids.Select<string, ISimpleExpression>(id => new ReferenceExpression {Identifier = id}).ToArray();
+            return
+                ids.Select<string, ISimpleExpression>(
+                    id => new ReferenceExpression {Reference = new VariableReference {Identifier = id}}).ToArray();
         }
     }
 }

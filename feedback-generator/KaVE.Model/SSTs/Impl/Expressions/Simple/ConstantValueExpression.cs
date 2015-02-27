@@ -17,12 +17,13 @@
  *    - Sebastian Proksch
  */
 
-using KaVE.Model.SSTs.Expressions;
+using KaVE.Model.SSTs.Expressions.Simple;
+using KaVE.Model.SSTs.Visitor;
 using KaVE.Utils;
 
 namespace KaVE.Model.SSTs.Impl.Expressions.Simple
 {
-    public class ConstantValueExpression : ISimpleExpression
+    public class ConstantValueExpression : IConstantValueExpression
     {
         private static bool Equals(ConstantValueExpression other)
         {
@@ -37,6 +38,11 @@ namespace KaVE.Model.SSTs.Impl.Expressions.Simple
         public override int GetHashCode()
         {
             return 102;
+        }
+
+        public void Accept<TContext>(ISSTNodeVisitor<TContext> visitor, TContext context)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

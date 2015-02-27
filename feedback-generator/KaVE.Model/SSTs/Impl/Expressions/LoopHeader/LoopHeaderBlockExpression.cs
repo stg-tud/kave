@@ -19,21 +19,27 @@
 
 using System.Collections.Generic;
 using KaVE.Model.Collections;
-using KaVE.Model.SSTs.Expressions;
+using KaVE.Model.SSTs.Expressions.LoopHeader;
+using KaVE.Model.SSTs.Visitor;
 using KaVE.Utils;
 
-namespace KaVE.Model.SSTs.Impl.Expressions.LoopCondition
+namespace KaVE.Model.SSTs.Impl.Expressions.LoopHeader
 {
     /*
      * some expressions are broken down to small SST statemets (e.g., nested calls).
      * Block Expressions add support for this transformation to SSTs.
      */
 
-    public class BlockExpression : ILoopConditionExpression
+    public class LoopHeaderBlockExpression : ILoopHeaderBlockExpression
     {
-        public readonly IList<IStatement> Body = Lists.NewList<IStatement>();
+        public IList<IStatement> Body { get; set; }
 
-        protected bool Equals(BlockExpression other)
+        public LoopHeaderBlockExpression()
+        {
+            Body = Lists.NewList<IStatement>();
+        }
+
+        protected bool Equals(LoopHeaderBlockExpression other)
         {
             return Body.Equals(other.Body);
         }
@@ -46,6 +52,11 @@ namespace KaVE.Model.SSTs.Impl.Expressions.LoopCondition
         public override int GetHashCode()
         {
             return (Body != null ? Body.GetHashCode() : 0);
+        }
+
+        public void Accept<TContext>(ISSTNodeVisitor<TContext> visitor, TContext context)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

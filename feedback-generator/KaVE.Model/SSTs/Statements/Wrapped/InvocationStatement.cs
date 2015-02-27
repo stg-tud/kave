@@ -32,12 +32,12 @@ namespace KaVE.Model.SSTs.Statements.Wrapped
 
         public static InvocationStatement Create(IMethodName name, params ISimpleExpression[] parameters)
         {
-            return new InvocationStatement {Target = InvocationExpression.Create(name, parameters)};
+            return new InvocationStatement {Target = InvocationExpression.New(name, parameters)};
         }
 
         public static InvocationStatement Create(string id, IMethodName name, params ISimpleExpression[] parameters)
         {
-            return new InvocationStatement {Target = InvocationExpression.Create(id, name, parameters)};
+            return new InvocationStatement {Target = InvocationExpression.New(id, name, parameters)};
         }
     }
 }

@@ -17,7 +17,15 @@
  *    - Sebastian Proksch
  */
 
+using System.Collections.Generic;
+using KaVE.JetBrains.Annotations;
+using KaVE.Model.SSTs.References;
+
 namespace KaVE.Model.SSTs.Expressions.Assignable
 {
-    public interface IComposedExpression : IAssignableExpression {}
+    public interface IComposedExpression : IAssignableExpression
+    {
+        [NotNull]
+        IList<IVariableReference> References { get; }
+    }
 }

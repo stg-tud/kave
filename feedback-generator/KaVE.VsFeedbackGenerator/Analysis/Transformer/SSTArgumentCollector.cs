@@ -156,7 +156,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
             var tmp = context.Generator.GetNextVariableName();
             context.Scope.Body.Add(VariableDeclaration.Create(tmp, postfixOperatorExpressionParam.Type().GetName()));
             var reference = postfixOperatorExpressionParam.Operand.GetReference(context);
-            context.Scope.Body.Add(new Assignment(tmp, ComposedExpression.Create(reference)));
+            context.Scope.Body.Add(new Assignment(tmp, ComposedExpression.New(reference)));
             context.Arguments.Add(tmp);
         }
 
@@ -166,7 +166,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
             var tmp = context.Generator.GetNextVariableName();
             context.Scope.Body.Add(VariableDeclaration.Create(tmp, prefixOperatorExpressionParam.Type().GetName()));
             var reference = prefixOperatorExpressionParam.Operand.GetReference(context);
-            context.Scope.Body.Add(new Assignment(tmp, ComposedExpression.Create(reference)));
+            context.Scope.Body.Add(new Assignment(tmp, ComposedExpression.New(reference)));
             context.Arguments.Add(tmp);
         }
 

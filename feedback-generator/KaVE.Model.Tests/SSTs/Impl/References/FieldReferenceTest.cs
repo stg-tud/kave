@@ -88,7 +88,7 @@ namespace KaVE.Model.Tests.SSTs.Impl.References
         }
 
 
-        internal class FieldVisitor : SSTNodeVisitor<int>
+        internal class FieldVisitor : AbstractNodeVisitor<int>
         {
             public IFieldReference Argument { get; set; }
 

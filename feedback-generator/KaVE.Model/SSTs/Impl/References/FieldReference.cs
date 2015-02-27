@@ -26,6 +26,7 @@ namespace KaVE.Model.SSTs.Impl.References
 {
     public class FieldReference : IFieldReference
     {
+        public IVariableReference Reference { get; set; }
         public IFieldName FieldName { get; set; }
 
         public void Accept<TContext>(ISSTNodeVisitor<TContext> visitor, TContext context)

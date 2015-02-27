@@ -20,14 +20,22 @@
 using System.Collections.Generic;
 using KaVE.Model.Collections;
 using KaVE.Model.SSTs.Declarations;
+using KaVE.Model.SSTs.Expressions.Assignable;
+using KaVE.Model.SSTs.Visitor;
 using KaVE.Utils;
 
 namespace KaVE.Model.SSTs.Impl.Expressions.Assignable
 {
-    public class LambdaExpression : IExpression
+    public class LambdaExpression : ILambdaExpression
     {
-        public readonly IList<IVariableDeclaration> Parameters = Lists.NewList<IVariableDeclaration>(); 
-        public readonly IList<IStatement> Body = Lists.NewList<IStatement>();
+        public IList<IVariableDeclaration> Parameters { get; set; }
+        public IList<IStatement> Body { get; set; }
+
+        public LambdaExpression()
+        {
+            Parameters = Lists.NewList<IVariableDeclaration>();
+            Body = Lists.NewList<IStatement>();
+        }
 
         private bool Equals(LambdaExpression other)
         {
@@ -42,6 +50,11 @@ namespace KaVE.Model.SSTs.Impl.Expressions.Assignable
         public override int GetHashCode()
         {
             return (Body != null ? Body.GetHashCode() : 0);
+        }
+
+        public void Accept<TContext>(ISSTNodeVisitor<TContext> visitor, TContext context)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

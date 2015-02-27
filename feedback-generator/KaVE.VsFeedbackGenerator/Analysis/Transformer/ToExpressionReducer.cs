@@ -22,6 +22,7 @@ using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using KaVE.Model.SSTs;
 using KaVE.Model.SSTs.Impl.Expressions.Simple;
+using KaVE.Model.SSTs.Impl.References;
 using KaVE.VsFeedbackGenerator.Analysis.Util;
 
 namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
@@ -30,7 +31,8 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
     {
         public ToBasicExpressionReducer(UniqueVariableNameGenerator nameGen) {}
 
-        public override IExpression VisitExpressionInitializer(IExpressionInitializer exprInit, IList<IStatement> context)
+        public override IExpression VisitExpressionInitializer(IExpressionInitializer exprInit,
+            IList<IStatement> context)
         {
             return exprInit.Value.Accept(this, context);
         }
@@ -48,8 +50,8 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
 
         public override IExpression VisitReferenceExpression(IReferenceExpression refExpr, IList<IStatement> context)
         {
-            var id = refExpr.NameIdentifier.Name;
-            return new ReferenceExpression {Identifier = id};
+            var vref = new VariableReference {Identifier = refExpr.NameIdentifier.Name};
+            return new ReferenceExpression {Reference = vref};
         }
     }
 }

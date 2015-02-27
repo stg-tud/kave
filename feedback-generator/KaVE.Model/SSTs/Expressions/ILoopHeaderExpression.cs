@@ -20,5 +20,5 @@
 namespace KaVE.Model.SSTs.Expressions
 {
     // e.g., expression that can be used in a loop condition
-    public interface ILoopConditionExpression : IExpression {}
+    public interface ILoopHeaderExpression : IExpression {}
 }

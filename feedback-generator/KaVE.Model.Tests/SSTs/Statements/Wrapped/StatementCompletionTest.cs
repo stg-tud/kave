@@ -17,8 +17,8 @@
  *    - Sebastian Proksch
  */
 
-using KaVE.Model.SSTs.Expressions;
 using KaVE.Model.SSTs.Impl.Expressions.Assignable;
+using KaVE.Model.SSTs.Impl.References;
 using KaVE.Model.SSTs.Statements.Wrapped;
 using NUnit.Framework;
 
@@ -60,7 +60,7 @@ namespace KaVE.Model.Tests.SSTs.Statements.Wrapped
         public void SettingValues_Helper2()
         {
             var sut = StatementCompletion.Create("i", "t");
-            Assert.AreEqual("i", sut.Completion.Identifier);
+            Assert.AreEqual("i", sut.Completion.ObjectReference);
             Assert.AreEqual("t", sut.Completion.Token);
         }
 
@@ -85,7 +85,10 @@ namespace KaVE.Model.Tests.SSTs.Statements.Wrapped
         [Test]
         public void Equality_DifferentIdentifier()
         {
-            var a = new StatementCompletion {Target = new ExpressionCompletion {Identifier = "a"}};
+            var a = new StatementCompletion
+            {
+                Target = new ExpressionCompletion {ObjectReference = new VariableReference {Identifier = "a"}}
+            };
             var b = new StatementCompletion {Target = new ExpressionCompletion()};
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());

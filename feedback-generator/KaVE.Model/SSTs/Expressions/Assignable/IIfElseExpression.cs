@@ -19,5 +19,10 @@
 
 namespace KaVE.Model.SSTs.Expressions.Assignable
 {
-    public interface IIfElseExpression : IAssignableExpression {}
+    public interface IIfElseExpression : IAssignableExpression
+    {
+        ISimpleExpression Condition { get; }
+        ISimpleExpression ThenExpression { get; }
+        ISimpleExpression ElseExpression { get; }
+    }
 }

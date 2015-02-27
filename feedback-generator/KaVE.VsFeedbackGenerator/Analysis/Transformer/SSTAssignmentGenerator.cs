@@ -45,7 +45,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
         {
             var dest = assignmentExpressionParam.Dest.GetReference(context);
             assignmentExpressionParam.Source.ProcessAssignment(context, dest);
-            context.Scope.Body.Add(new Assignment(context.Dest, ComposedExpression.Create(dest)));
+            context.Scope.Body.Add(new Assignment(context.Dest, ComposedExpression.New(dest)));
         }
 
         public override void VisitBinaryExpression(IBinaryExpression binaryExpressionParam,
@@ -134,26 +134,26 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
             AssignmentGeneratorContext context)
         {
             var reference = postfixOperatorExpressionParam.Operand.GetReference(context);
-            context.Scope.Body.Add(new Assignment(context.Dest, ComposedExpression.Create(reference)));
+            context.Scope.Body.Add(new Assignment(context.Dest, ComposedExpression.New(reference)));
         }
 
         public override void VisitPrefixOperatorExpression(IPrefixOperatorExpression prefixOperatorExpressionParam,
             AssignmentGeneratorContext context)
         {
             var reference = prefixOperatorExpressionParam.Operand.GetReference(context);
-            context.Scope.Body.Add(new Assignment(context.Dest, ComposedExpression.Create(reference)));
+            context.Scope.Body.Add(new Assignment(context.Dest, ComposedExpression.New(reference)));
         }
 
         public override void VisitReferenceExpression(IReferenceExpression referenceExpressionParam,
             AssignmentGeneratorContext context)
         {
             var name = referenceExpressionParam.NameIdentifier.Name;
-            context.Scope.Body.Add(new Assignment(context.Dest, ComposedExpression.Create(name)));
+            context.Scope.Body.Add(new Assignment(context.Dest, ComposedExpression.New(name)));
         }
 
         public override void VisitThisExpression(IThisExpression thisExpressionParam, AssignmentGeneratorContext context)
         {
-            context.Scope.Body.Add(new Assignment(context.Dest, ComposedExpression.Create("this")));
+            context.Scope.Body.Add(new Assignment(context.Dest, ComposedExpression.New("this")));
         }
 
         public override void VisitTypeofExpression(ITypeofExpression typeofExpressionParam,

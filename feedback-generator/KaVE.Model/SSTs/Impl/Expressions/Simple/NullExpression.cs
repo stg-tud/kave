@@ -17,11 +17,12 @@
  *    - Sebastian Proksch
  */
 
-using KaVE.Model.SSTs.Expressions;
+using KaVE.Model.SSTs.Expressions.Simple;
+using KaVE.Model.SSTs.Visitor;
 
 namespace KaVE.Model.SSTs.Impl.Expressions.Simple
 {
-    public class NullExpression : ISimpleExpression
+    public class NullExpression : INullExpression
     {
         protected bool Equals(NullExpression other)
         {
@@ -48,6 +49,11 @@ namespace KaVE.Model.SSTs.Impl.Expressions.Simple
         public override int GetHashCode()
         {
             return 239876;
+        }
+
+        public void Accept<TContext>(ISSTNodeVisitor<TContext> visitor, TContext context)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

@@ -17,8 +17,12 @@
  *    - Sebastian Proksch
  */
 
-namespace KaVE.Model.SSTs.Expressions.Assignable
+using System.Collections.Generic;
+
+namespace KaVE.Model.SSTs.Expressions.LoopHeader
 {
-    // e.g., invocations of delegate- or lambda expressions
-    public interface IAnonymousInvocationExpression : IAssignableExpression {}
+    public interface ILoopHeaderBlockExpression : ILoopHeaderExpression
+    {
+        IList<IStatement> Body { get; }
+    }
 }

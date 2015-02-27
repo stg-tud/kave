@@ -89,7 +89,7 @@ namespace KaVE.Model.Tests.SSTs.Impl.References
         }
 
 
-        internal class EventVisitor : SSTNodeVisitor<int>
+        internal class EventVisitor : AbstractNodeVisitor<int>
         {
             public IEventReference Argument { get; set; }
 

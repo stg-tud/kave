@@ -17,7 +17,14 @@
  *    - Sebastian Proksch
  */
 
+using System.Collections.Generic;
+using KaVE.Model.SSTs.Declarations;
+
 namespace KaVE.Model.SSTs.Expressions.Assignable
 {
-    public interface ILambdaExpression : IAssignableExpression {}
+    public interface ILambdaExpression : IAssignableExpression
+    {
+        IList<IVariableDeclaration> Parameters { get; }
+        IList<IStatement> Body { get; }
+    }
 }

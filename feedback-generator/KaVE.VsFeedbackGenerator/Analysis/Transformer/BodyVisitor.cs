@@ -27,6 +27,7 @@ using KaVE.Model.Names;
 using KaVE.Model.SSTs.Expressions;
 using KaVE.Model.SSTs.Impl.Declarations;
 using KaVE.Model.SSTs.Impl.Expressions.Simple;
+using KaVE.Model.SSTs.Impl.References;
 using KaVE.Model.SSTs.Statements;
 using KaVE.Model.SSTs.Statements.Wrapped;
 using KaVE.VsFeedbackGenerator.Analysis.Util;
@@ -102,7 +103,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
                     }
                     var args =
                         GetArgumentList(inv.ArgumentList, body)
-                            .Select<string, ISimpleExpression>(id => new ReferenceExpression {Identifier = id})
+                            .Select<string, ISimpleExpression>(id => new ReferenceExpression {Reference = new VariableReference{Identifier = id}})
                             .AsArray();
                     body.Add(InvocationStatement.Create(callee, methodName, args));
                 }

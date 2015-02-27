@@ -23,7 +23,7 @@ using KaVE.Model.SSTs.References;
 
 namespace KaVE.Model.SSTs.Impl.Visitor
 {
-    public class SSTToStringVisitor : SSTNodeVisitor<StringBuilder>
+    public class ToStringVisitor : AbstractNodeVisitor<StringBuilder>
     {
         public override void Visit(ISST sst, StringBuilder sb)
         {

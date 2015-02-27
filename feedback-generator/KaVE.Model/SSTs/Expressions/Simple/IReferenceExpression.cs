@@ -19,5 +19,8 @@
 
 namespace KaVE.Model.SSTs.Expressions.Simple
 {
-    public interface IReferenceExpression : ISimpleExpression {}
+    public interface IReferenceExpression : ISimpleExpression
+    {
+        IReference Reference { get; }
+    }
 }

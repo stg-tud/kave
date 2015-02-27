@@ -17,19 +17,34 @@
  *    - Sebastian Proksch
  */
 
+using System.Collections.Generic;
+using System.Linq;
+using KaVE.Model.Collections;
+using KaVE.Model.SSTs.Expressions.Assignable;
 using KaVE.Model.SSTs.Impl.Expressions.Assignable;
-using KaVE.Utils;
+using KaVE.Model.SSTs.Impl.References;
+using KaVE.Model.SSTs.Impl.Visitor;
+using KaVE.Model.SSTs.References;
 using NUnit.Framework;
 
 namespace KaVE.Model.Tests.SSTs.Impl.Expressions.Assignable
 {
     public class ComposedExpressionTest
     {
+        private TestVisitor _visitor;
+
+        [SetUp]
+        public void Setup()
+        {
+            _visitor = new TestVisitor();
+        }
+
         [Test]
         public void DefaultValues()
         {
             var sut = new ComposedExpression();
-            Assert.IsNull(sut.Variables);
+            Assert.IsNotNull(sut.References);
+            Assert.AreEqual(0, sut.References.Count);
             Assert.AreNotEqual(0, sut.GetHashCode());
             Assert.AreNotEqual(1, sut.GetHashCode());
         }
@@ -37,17 +52,16 @@ namespace KaVE.Model.Tests.SSTs.Impl.Expressions.Assignable
         [Test]
         public void SettingValues()
         {
-            var sut = new ComposedExpression {Variables = new[] {"a"}};
-            var expected = new[] {"a"};
-            Assert.That(expected.DeepEquals(sut.Variables));
+            var sut = new ComposedExpression {References = Refs("a")};
+            Assert.AreEqual(Refs("a"), sut.References);
         }
 
         [Test]
         public void SettingValues_StaticHelper()
         {
-            var sut = ComposedExpression.Create("a", "b");
+            var sut = ComposedExpression.New("a", "b");
             var expected = new[] {"a", "b"};
-            Assert.AreEqual(expected, sut.Variables);
+            Assert.AreEqual(expected, sut.References);
         }
 
         [Test]
@@ -62,8 +76,8 @@ namespace KaVE.Model.Tests.SSTs.Impl.Expressions.Assignable
         [Test]
         public void Equality_ReallyTheSame()
         {
-            var a = new ComposedExpression {Variables = new[] {"b"}};
-            var b = new ComposedExpression {Variables = new[] {"b"}};
+            var a = ComposedExpression.New("b");
+            var b = ComposedExpression.New("b");
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
         }
@@ -71,19 +85,35 @@ namespace KaVE.Model.Tests.SSTs.Impl.Expressions.Assignable
         [Test]
         public void Equality_DifferentVariables()
         {
-            var a = new ComposedExpression {Variables = new[] {"a"}};
-            var b = new ComposedExpression {Variables = new[] {"b"}};
+            var a = ComposedExpression.New("a");
+            var b = ComposedExpression.New("b");
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
         }
 
         [Test]
-        public void Equality_EmptyArray()
+        public void VisitorIsImplemented()
         {
-            var a = new ComposedExpression {Variables = null};
-            var b = new ComposedExpression {Variables = new string[] {}};
-            Assert.AreNotEqual(a, b);
-            Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
+            var sut = new ComposedExpression();
+            Assert.Null(_visitor.Expr);
+            sut.Accept(_visitor, 0);
+            Assert.AreEqual(sut, _visitor.Expr);
+        }
+
+        private IList<IVariableReference> Refs(params string[] strRefs)
+        {
+            var refs = strRefs.ToList().Select(r => new VariableReference {Identifier = r});
+            return Lists.NewListFrom<IVariableReference>(refs);
+        }
+
+        internal class TestVisitor : AbstractNodeVisitor<int>
+        {
+            public IComposedExpression Expr { get; private set; }
+
+            public override void Visit(IComposedExpression expr, int context)
+            {
+                Expr = expr;
+            }
         }
     }
 }

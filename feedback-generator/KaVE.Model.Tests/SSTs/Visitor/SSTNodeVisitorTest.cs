@@ -32,7 +32,7 @@ namespace KaVE.Model.Tests.SSTs.Visitor
         [Test]
         public void AllVisitsAreImplemented()
         {
-            var sut = new SSTNodeVisitor<object>();
+            var sut = new AbstractNodeVisitor<object>();
             sut.Visit((SST) null, null);
 
             sut.Visit((DelegateDeclaration) null, null);

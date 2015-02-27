@@ -26,6 +26,7 @@ namespace KaVE.Model.SSTs.Impl.References
 {
     public class EventReference : IEventReference
     {
+        public IVariableReference Reference { get; set; }
         public IEventName EventName { get; set; }
 
         public void Accept<TContext>(ISSTNodeVisitor<TContext> visitor, TContext context)
