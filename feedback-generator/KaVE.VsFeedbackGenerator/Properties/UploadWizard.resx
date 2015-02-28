@@ -121,7 +121,16 @@
     <value>Der Export wird im Hintergrund fortgührt.</value>
   </data>
   <data name="description" xml:space="preserve">
-    <value>Erläuterung Upload:...</value>
+    <value>Sie haben zwei Alternativen zum Export des Feedbacks:
+
+ZIP-Export - das Feedback wird als ZIP-Datei lokal gespeichert. Sie haben damit die Möglichkeit
+alles Feedback einzusehen und anschließend manuell hochladen. Die URL der Uploadseite wird
+Ihnen nach Abschluss des Exports angezeigt.
+
+Direktupload - das Feedback wird direkt an die Uploadseite gesendet. Sie sparen sich das
+manuelle Hochladen. Es werden die selben Informationen gesendet wie beim ZIP-Export.
+
+</value>
   </data>
   <data name="Export_BusyMessage" xml:space="preserve">
     <value>Exportiere Events...</value>
