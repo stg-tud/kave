@@ -18,8 +18,8 @@
  */
 
 using KaVE.Model.Names.CSharp;
+using KaVE.Model.SSTs;
 using KaVE.Model.SSTs.Impl.Declarations;
-using KaVE.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Model.SSTs.Statements;
 using NUnit.Framework;
@@ -80,7 +80,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
                 "A",
                 string.Format("[{0}] o", SSTAnalysisFixture.Object));
             mA.Body.Add(VariableDeclaration.Create("isInstanceOf", SSTAnalysisFixture.Bool));
-            mA.Body.Add(new Assignment("isInstanceOf", ComposedExpression.New("o")));
+            mA.Body.Add(new Assignment("isInstanceOf", SSTUtil.ComposedExpression("o")));
 
             AssertAllMethods(mA);
         }
@@ -119,7 +119,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
                 "A",
                 string.Format("[{0}] o", SSTAnalysisFixture.Object));
             mA.Body.Add(VariableDeclaration.Create("cast", SSTAnalysisFixture.String));
-            mA.Body.Add(new Assignment("cast", ComposedExpression.New("o")));
+            mA.Body.Add(new Assignment("cast", SSTUtil.ComposedExpression("o")));
 
             AssertAllMethods(mA);
         }
@@ -176,7 +176,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
                 "A",
                 string.Format("[{0}] o", SSTAnalysisFixture.Object));
             mA.Body.Add(VariableDeclaration.Create("s", SSTAnalysisFixture.String));
-            mA.Body.Add(new Assignment("s", ComposedExpression.New("o")));
+            mA.Body.Add(new Assignment("s", SSTUtil.ComposedExpression("o")));
 
             AssertAllMethods(mA);
         }

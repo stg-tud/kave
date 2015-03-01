@@ -20,10 +20,13 @@
 using System.Linq;
 using KaVE.Model.Names;
 using KaVE.Model.Names.CSharp;
+using KaVE.Model.SSTs;
 using KaVE.Model.SSTs.Expressions;
+using KaVE.Model.SSTs.Expressions.Assignable;
 using KaVE.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Model.SSTs.Impl.References;
+using KaVE.Model.SSTs.Impl.Visitor;
 using KaVE.Utils.Assertion;
 using NUnit.Framework;
 
@@ -31,6 +34,14 @@ namespace KaVE.Model.Tests.SSTs.Impl.Expressions.Assignable
 {
     public class InvocationExpressionTest
     {
+        private TestVisitor _visitor;
+
+        [SetUp]
+        public void Setup()
+        {
+            _visitor = new TestVisitor();
+        }
+
         [Test]
         public void DefaultValues()
         {
@@ -45,7 +56,7 @@ namespace KaVE.Model.Tests.SSTs.Impl.Expressions.Assignable
         [Test]
         public void SettingValues()
         {
-            var a = InvocationExpression.New("a1", GetMethod("A2"), Ref("a3"));
+            var a = SSTUtil.InvocationExpression("a1", GetMethod("A2"), Ref("a3"));
             Assert.AreEqual(new VariableReference {Identifier = "a1"}, a.Reference);
             Assert.AreEqual(GetMethod("A2"), a.Name);
             Assert.AreEqual(new[] {Ref("a3")}, a.Parameters);
@@ -54,7 +65,7 @@ namespace KaVE.Model.Tests.SSTs.Impl.Expressions.Assignable
         [Test]
         public void CustomConstructor_NonStatic()
         {
-            var a = InvocationExpression.New("a1", GetMethod("B1"), Ref("c1"));
+            var a = SSTUtil.InvocationExpression("a1", GetMethod("B1"), Ref("c1"));
             Assert.AreEqual("a1", a.Reference);
             Assert.AreEqual(GetMethod("B1"), a.Name);
             Assert.AreEqual(new[] {Ref("c1")}, a.Parameters);
@@ -63,13 +74,13 @@ namespace KaVE.Model.Tests.SSTs.Impl.Expressions.Assignable
         [Test, ExpectedException(typeof (AssertException))]
         public void CustomConstructor_NonStaticAssert()
         {
-            InvocationExpression.New("a1", GetStaticMethod("B1"), Ref("c1"));
+            SSTUtil.InvocationExpression("a1", GetStaticMethod("B1"), Ref("c1"));
         }
 
         [Test]
         public void CustomConstructor_Static()
         {
-            var a = InvocationExpression.New(GetStaticMethod("B2"), Ref("c2"));
+            var a = SSTUtil.InvocationExpression(GetStaticMethod("B2"), Ref("c2"));
             Assert.AreEqual("", a.Reference);
             Assert.AreEqual(GetStaticMethod("B2"), a.Name);
             Assert.AreEqual(new[] {Ref("c2")}, a.Parameters);
@@ -78,7 +89,7 @@ namespace KaVE.Model.Tests.SSTs.Impl.Expressions.Assignable
         [Test, ExpectedException(typeof (AssertException))]
         public void CustomConstructor_StaticAssert()
         {
-            InvocationExpression.New(GetMethod("B2"), Ref("c2"));
+            SSTUtil.InvocationExpression(GetMethod("B2"), Ref("c2"));
         }
 
         [Test]
@@ -95,8 +106,8 @@ namespace KaVE.Model.Tests.SSTs.Impl.Expressions.Assignable
         {
             Assert.AreEqual(GetMethod("a"), GetMethod("a"));
 
-            var a = InvocationExpression.New("o", GetMethod("A"), Refs("a", "b", "c"));
-            var b = InvocationExpression.New("o", GetMethod("A"), Refs("a", "b", "c"));
+            var a = SSTUtil.InvocationExpression("o", GetMethod("A"), Refs("a", "b", "c"));
+            var b = SSTUtil.InvocationExpression("o", GetMethod("A"), Refs("a", "b", "c"));
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
         }
@@ -154,6 +165,27 @@ namespace KaVE.Model.Tests.SSTs.Impl.Expressions.Assignable
             return
                 ids.Select<string, ISimpleExpression>(
                     id => new ReferenceExpression {Reference = new VariableReference {Identifier = id}}).ToArray();
+        }
+
+        [Test]
+        public void VisitorIsImplemented()
+        {
+            var sut = new ComposedExpression();
+            sut.Accept(_visitor, 13);
+            Assert.AreEqual(sut, _visitor.Expr);
+            Assert.AreEqual(13, _visitor.Context);
+        }
+
+        internal class TestVisitor : AbstractNodeVisitor<int>
+        {
+            public IExpressionCompletion Expr { get; private set; }
+            public int Context { get; private set; }
+
+            public override void Visit(IExpressionCompletion expr, int context)
+            {
+                Expr = expr;
+                Context = context;
+            }
         }
     }
 }

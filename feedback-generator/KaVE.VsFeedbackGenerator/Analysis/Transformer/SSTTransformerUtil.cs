@@ -28,7 +28,6 @@ using KaVE.Model.SSTs.Expressions;
 using KaVE.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Model.SSTs.Impl.Expressions.LoopHeader;
 using KaVE.Model.SSTs.Impl.Expressions.Simple;
-using KaVE.Model.SSTs.Impl.References;
 using KaVE.Utils.Assertion;
 using KaVE.VsFeedbackGenerator.Analysis.Transformer.Context;
 using KaVE.VsFeedbackGenerator.Analysis.Util;
@@ -48,7 +47,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
         {
             if (Enumerable.Any(references))
             {
-                return ComposedExpression.New(references.Distinct().ToArray());
+                return SSTUtil.ComposedExpression(references.Distinct().ToArray());
             }
             return new ConstantValueExpression();
         }
@@ -155,14 +154,12 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
         /// </summary>
         public static InvocationExpression CreateInvocation(this string callee, IMethodName method, string[] argIds)
         {
-            var args =
-                argIds.Select<string, ISimpleExpression>(
-                    id => new ReferenceExpression {Reference = new VariableReference {Identifier = id}}).AsArray();
+            var args = argIds.Select<string, ISimpleExpression>(SSTUtil.ReferenceExprToVariable).AsArray();
             if (callee == null)
             {
-                return InvocationExpression.New(method, args);
+                return SSTUtil.InvocationExpression(method, args);
             }
-            return InvocationExpression.New(callee, method, args);
+            return SSTUtil.InvocationExpression(callee, method, args);
         }
 
         public static CatchBlock GetCatchBlock(this ICatchClause catchClauseParam, ITransformerContext context)

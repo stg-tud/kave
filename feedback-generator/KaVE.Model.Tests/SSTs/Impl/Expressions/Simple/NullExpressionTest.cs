@@ -17,7 +17,42 @@
  *    - Sebastian Proksch
  */
 
+using KaVE.Model.SSTs.Expressions.Assignable;
+using KaVE.Model.SSTs.Impl.Expressions.Assignable;
+using KaVE.Model.SSTs.Impl.Visitor;
+using NUnit.Framework;
+
 namespace KaVE.Model.Tests.SSTs.Impl.Expressions.Simple
 {
-    public class NullExpressionTest {}
+    public class NullExpressionTest
+    {
+        private TestVisitor _visitor;
+
+        [SetUp]
+        public void Setup()
+        {
+            _visitor = new TestVisitor();
+        }
+
+        [Test]
+        public void VisitorIsImplemented()
+        {
+            var sut = new ComposedExpression();
+            sut.Accept(_visitor, 13);
+            Assert.AreEqual(sut, _visitor.Expr);
+            Assert.AreEqual(13, _visitor.Context);
+        }
+
+        internal class TestVisitor : AbstractNodeVisitor<int>
+        {
+            public IExpressionCompletion Expr { get; private set; }
+            public int Context { get; private set; }
+
+            public override void Visit(IExpressionCompletion expr, int context)
+            {
+                Expr = expr;
+                Context = context;
+            }
+        }
+    }
 }

@@ -18,8 +18,8 @@
  */
 
 using KaVE.Model.Names.CSharp;
+using KaVE.Model.SSTs;
 using KaVE.Model.SSTs.Impl.Declarations;
-using KaVE.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Model.SSTs.Statements;
 using NUnit.Framework;
@@ -63,7 +63,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             mA.Body.Add(VariableDeclaration.Create("n", SSTAnalysisFixture.Int));
             mA.Body.Add(new Assignment("n", new ConstantValueExpression()));
             mA.Body.Add(VariableDeclaration.Create("arr", SSTAnalysisFixture.IntArray));
-            mA.Body.Add(new Assignment("arr", ComposedExpression.New("n")));
+            mA.Body.Add(new Assignment("arr", SSTUtil.ComposedExpression("n")));
 
             AssertAllMethods(mA);
         }
@@ -85,7 +85,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             mA.Body.Add(new Assignment("$0", new ConstantValueExpression()));
             mA.Body.Add(VariableDeclaration.Create("$1", SSTAnalysisFixture.IntArray));
             mA.Body.Add(new Assignment("$1", new ConstantValueExpression()));
-            mA.Body.Add(new Assignment("arr", ComposedExpression.New("$0", "$1")));
+            mA.Body.Add(new Assignment("arr", SSTUtil.ComposedExpression("$0", "$1")));
 
             AssertAllMethods(mA);
         }
@@ -107,8 +107,8 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
                 string.Format("[{0}] o", SSTAnalysisFixture.Object));
             mA.Body.Add(VariableDeclaration.Create("arr", SSTAnalysisFixture.IntArray));
             mA.Body.Add(VariableDeclaration.Create("$0", SSTAnalysisFixture.Int));
-            mA.Body.Add(new Assignment("$0", InvocationExpression.New("o", Fix.Object_GetHashCode)));
-            mA.Body.Add(new Assignment("arr", ComposedExpression.New("$0")));
+            mA.Body.Add(new Assignment("$0", SSTUtil.InvocationExpression("o", Fix.Object_GetHashCode)));
+            mA.Body.Add(new Assignment("arr", SSTUtil.ComposedExpression("$0")));
 
             AssertAllMethods(mA);
         }

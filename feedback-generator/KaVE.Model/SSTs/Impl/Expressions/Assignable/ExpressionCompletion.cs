@@ -33,9 +33,10 @@ namespace KaVE.Model.SSTs.Impl.Expressions.Assignable
 
         protected bool Equals(ExpressionCompletion other)
         {
-            var isEqIdentifier = string.Equals(ObjectReference, other.ObjectReference);
+            var isEqTypeRef = Equals(TypeReference, other.TypeReference);
+            var isEqObjRef = Equals(ObjectReference, other.ObjectReference);
             var isEqToken = string.Equals(Token, other.Token);
-            return isEqIdentifier && isEqToken;
+            return isEqTypeRef && isEqObjRef && isEqToken;
         }
 
         public override bool Equals(object obj)
@@ -47,15 +48,16 @@ namespace KaVE.Model.SSTs.Impl.Expressions.Assignable
         {
             unchecked
             {
-                var hcIdentifier = ObjectReference != null ? ObjectReference.GetHashCode() : 0;
+                var hcTypeRef = TypeReference != null ? TypeReference.GetHashCode() : 0;
+                var hcObjRef = ObjectReference != null ? ObjectReference.GetHashCode() : 0;
                 var hcToken = Token != null ? Token.GetHashCode() : 0;
-                return 3 + hcToken*397 + hcIdentifier;
+                return 3 + hcToken*397 + hcTypeRef*23846 + hcObjRef;
             }
         }
 
         public void Accept<TContext>(ISSTNodeVisitor<TContext> visitor, TContext context)
         {
-            throw new System.NotImplementedException();
+            visitor.Visit(this, context);
         }
     }
 }

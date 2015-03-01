@@ -21,7 +21,6 @@ using KaVE.Model.Collections;
 using KaVE.Model.Names.CSharp;
 using KaVE.Model.SSTs;
 using KaVE.Model.SSTs.Impl.Declarations;
-using KaVE.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Model.SSTs.Statements;
 using NUnit.Framework;
@@ -83,7 +82,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             var body = Lists.NewList<IStatement>();
             body.Add(VariableDeclaration.Create("a", TypeName.Get("A, TestProject")));
             var methodName = MethodName.Get("[System.Void, mscore, 4.0.0.0] [A.TestProject]..ctor()");
-            body.Add(new Assignment("a", InvocationExpression.New("a", methodName)));
+            body.Add(new Assignment("a", SSTUtil.InvocationExpression("a", methodName)));
             body.Add(VariableDeclaration.Create("c", Fix.Int));
             // body.Add(new Assignment("i", new MemberAccessExpression {Identifier = "a", MemberName = "I"}));
 
@@ -146,7 +145,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             body.Add(VariableDeclaration.Create("o", Fix.Object));
             body.Add(new Assignment("o", new NullExpression()));
             body.Add(VariableDeclaration.Create("o2", Fix.Object));
-            body.Add(new Assignment("o2", ReferenceExpression.ToVariable("o")));
+            body.Add(new Assignment("o2", SSTUtil.ReferenceExprToVariable("o")));
 
             AssertBody(body);
         }

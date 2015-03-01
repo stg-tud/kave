@@ -57,14 +57,6 @@ namespace KaVE.Model.Tests.SSTs.Impl.Expressions.Assignable
         }
 
         [Test]
-        public void SettingValues_StaticHelper()
-        {
-            var sut = ComposedExpression.New("a", "b");
-            var expected = new[] {"a", "b"};
-            Assert.AreEqual(expected, sut.References);
-        }
-
-        [Test]
         public void Equality_Default()
         {
             var a = new ComposedExpression();
@@ -76,8 +68,8 @@ namespace KaVE.Model.Tests.SSTs.Impl.Expressions.Assignable
         [Test]
         public void Equality_ReallyTheSame()
         {
-            var a = ComposedExpression.New("b");
-            var b = ComposedExpression.New("b");
+            var a = new ComposedExpression {References = Refs("a")};
+            var b = new ComposedExpression {References = Refs("a")};
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
         }
@@ -85,8 +77,8 @@ namespace KaVE.Model.Tests.SSTs.Impl.Expressions.Assignable
         [Test]
         public void Equality_DifferentVariables()
         {
-            var a = ComposedExpression.New("a");
-            var b = ComposedExpression.New("b");
+            var a = new ComposedExpression {References = Refs("a")};
+            var b = new ComposedExpression {References = Refs("b")};
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
         }
@@ -95,12 +87,12 @@ namespace KaVE.Model.Tests.SSTs.Impl.Expressions.Assignable
         public void VisitorIsImplemented()
         {
             var sut = new ComposedExpression();
-            Assert.Null(_visitor.Expr);
-            sut.Accept(_visitor, 0);
+            sut.Accept(_visitor, 13);
             Assert.AreEqual(sut, _visitor.Expr);
+            Assert.AreEqual(13, _visitor.Context);
         }
 
-        private IList<IVariableReference> Refs(params string[] strRefs)
+        private static IList<IVariableReference> Refs(params string[] strRefs)
         {
             var refs = strRefs.ToList().Select(r => new VariableReference {Identifier = r});
             return Lists.NewListFrom<IVariableReference>(refs);
@@ -109,10 +101,12 @@ namespace KaVE.Model.Tests.SSTs.Impl.Expressions.Assignable
         internal class TestVisitor : AbstractNodeVisitor<int>
         {
             public IComposedExpression Expr { get; private set; }
+            public int Context { get; private set; }
 
             public override void Visit(IComposedExpression expr, int context)
             {
                 Expr = expr;
+                Context = context;
             }
         }
     }

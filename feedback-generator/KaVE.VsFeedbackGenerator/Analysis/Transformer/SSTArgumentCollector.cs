@@ -19,9 +19,8 @@
 
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.Util;
-using KaVE.Model.SSTs.Expressions;
+using KaVE.Model.SSTs;
 using KaVE.Model.SSTs.Impl.Declarations;
-using KaVE.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Model.SSTs.Statements;
 using KaVE.VsFeedbackGenerator.Analysis.Transformer.Context;
@@ -156,7 +155,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
             var tmp = context.Generator.GetNextVariableName();
             context.Scope.Body.Add(VariableDeclaration.Create(tmp, postfixOperatorExpressionParam.Type().GetName()));
             var reference = postfixOperatorExpressionParam.Operand.GetReference(context);
-            context.Scope.Body.Add(new Assignment(tmp, ComposedExpression.New(reference)));
+            context.Scope.Body.Add(new Assignment(tmp, SSTUtil.ComposedExpression(reference)));
             context.Arguments.Add(tmp);
         }
 
@@ -166,7 +165,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
             var tmp = context.Generator.GetNextVariableName();
             context.Scope.Body.Add(VariableDeclaration.Create(tmp, prefixOperatorExpressionParam.Type().GetName()));
             var reference = prefixOperatorExpressionParam.Operand.GetReference(context);
-            context.Scope.Body.Add(new Assignment(tmp, ComposedExpression.New(reference)));
+            context.Scope.Body.Add(new Assignment(tmp, SSTUtil.ComposedExpression(reference)));
             context.Arguments.Add(tmp);
         }
 

@@ -48,11 +48,5 @@ namespace KaVE.Model.SSTs.Impl.Expressions.Simple
         {
             throw new System.NotImplementedException();
         }
-
-        public static ReferenceExpression ToVariable(string id)
-        {
-            var variableReference = new VariableReference {Identifier = id};
-            return new ReferenceExpression {Reference = variableReference};
-        }
     }
 }

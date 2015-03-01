@@ -17,8 +17,11 @@
  *    - Sebastian Proksch
  */
 
+using KaVE.Model.Names.CSharp;
+using KaVE.Model.SSTs.Expressions.Assignable;
 using KaVE.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Model.SSTs.Impl.References;
+using KaVE.Model.SSTs.Impl.Visitor;
 using KaVE.Model.SSTs.References;
 using NUnit.Framework;
 
@@ -26,12 +29,21 @@ namespace KaVE.Model.Tests.SSTs.Impl.Expressions.Assignable
 {
     public class ExpressionCompletionTest
     {
+        private TestVisitor _visitor;
+
+        [SetUp]
+        public void Setup()
+        {
+            _visitor = new TestVisitor();
+        }
+
         [Test]
         public void DefaultValues()
         {
             var sut = new ExpressionCompletion();
             Assert.Null(sut.Token);
             Assert.Null(sut.ObjectReference);
+            Assert.Null(sut.TypeReference);
             Assert.AreNotEqual(0, sut.GetHashCode());
             Assert.AreNotEqual(1, sut.GetHashCode());
         }
@@ -42,9 +54,11 @@ namespace KaVE.Model.Tests.SSTs.Impl.Expressions.Assignable
             var sut = new ExpressionCompletion
             {
                 ObjectReference = Ref("i"),
+                TypeReference = TypeName.UnknownName,
                 Token = "t"
             };
-            Assert.AreEqual("i", sut.ObjectReference);
+            Assert.AreEqual(Ref("i"), sut.ObjectReference);
+            Assert.AreEqual(TypeName.UnknownName, sut.TypeReference);
             Assert.AreEqual("t", sut.Token);
         }
 
@@ -65,14 +79,24 @@ namespace KaVE.Model.Tests.SSTs.Impl.Expressions.Assignable
         [Test]
         public void Equality_ReallyTheSame()
         {
-            var a = new ExpressionCompletion {ObjectReference = Ref("i"), Token = "t"};
-            var b = new ExpressionCompletion {ObjectReference = Ref("i"), Token = "t"};
+            var a = new ExpressionCompletion
+            {
+                ObjectReference = Ref("i"),
+                Token = "t",
+                TypeReference = TypeName.UnknownName
+            };
+            var b = new ExpressionCompletion
+            {
+                ObjectReference = Ref("i"),
+                Token = "t",
+                TypeReference = TypeName.UnknownName
+            };
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
         }
 
         [Test]
-        public void Equality_DifferentIdentifier()
+        public void Equality_DifferentObjectReference()
         {
             var a = new ExpressionCompletion {ObjectReference = Ref("i")};
             var b = new ExpressionCompletion {ObjectReference = Ref("j")};
@@ -88,6 +112,36 @@ namespace KaVE.Model.Tests.SSTs.Impl.Expressions.Assignable
             var b = new ExpressionCompletion {Token = "u"};
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
+        }
+
+        [Test]
+        public void Equality_DifferentTypeReference()
+        {
+            var a = new ExpressionCompletion {TypeReference = TypeName.UnknownName};
+            var b = new ExpressionCompletion {TypeReference = TypeName.Get("System.Int32, mscore, 4.0.0.0")};
+            Assert.AreNotEqual(a, b);
+            Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
+        }
+
+        [Test]
+        public void VisitorIsImplemented()
+        {
+            var sut = new ExpressionCompletion();
+            sut.Accept(_visitor, 13);
+            Assert.AreEqual(sut, _visitor.Expr);
+            Assert.AreEqual(13, _visitor.Context);
+        }
+
+        internal class TestVisitor : AbstractNodeVisitor<int>
+        {
+            public IExpressionCompletion Expr { get; private set; }
+            public int Context { get; private set; }
+
+            public override void Visit(IExpressionCompletion expr, int context)
+            {
+                Expr = expr;
+                Context = context;
+            }
         }
     }
 }

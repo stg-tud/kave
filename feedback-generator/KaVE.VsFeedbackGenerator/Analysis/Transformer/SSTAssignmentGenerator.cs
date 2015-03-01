@@ -18,8 +18,7 @@
  */
 
 using JetBrains.ReSharper.Psi.CSharp.Tree;
-using KaVE.Model.SSTs.Expressions;
-using KaVE.Model.SSTs.Impl.Expressions.Assignable;
+using KaVE.Model.SSTs;
 using KaVE.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Model.SSTs.Statements;
 using KaVE.VsFeedbackGenerator.Analysis.Transformer.Context;
@@ -45,7 +44,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
         {
             var dest = assignmentExpressionParam.Dest.GetReference(context);
             assignmentExpressionParam.Source.ProcessAssignment(context, dest);
-            context.Scope.Body.Add(new Assignment(context.Dest, ComposedExpression.New(dest)));
+            context.Scope.Body.Add(new Assignment(context.Dest, SSTUtil.ComposedExpression(dest)));
         }
 
         public override void VisitBinaryExpression(IBinaryExpression binaryExpressionParam,
@@ -71,11 +70,11 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
                     context.Dest,
                     null));
             //new IfElseExpression
-              //      {
-                //        Condition = conditionalTernaryExpressionParam.ConditionOperand.GetScopedReferences(context),
-                  //      ThenExpression = conditionalTernaryExpressionParam.ThenResult.GetScopedReferences(context),
-                    //    ElseExpression = conditionalTernaryExpressionParam.ElseResult.GetScopedReferences(context)
-           //         }));
+            //      {
+            //        Condition = conditionalTernaryExpressionParam.ConditionOperand.GetScopedReferences(context),
+            //      ThenExpression = conditionalTernaryExpressionParam.ThenResult.GetScopedReferences(context),
+            //    ElseExpression = conditionalTernaryExpressionParam.ElseResult.GetScopedReferences(context)
+            //         }));
         }
 
         public override void VisitCSharpLiteralExpression(ICSharpLiteralExpression cSharpLiteralExpressionParam,
@@ -134,26 +133,26 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
             AssignmentGeneratorContext context)
         {
             var reference = postfixOperatorExpressionParam.Operand.GetReference(context);
-            context.Scope.Body.Add(new Assignment(context.Dest, ComposedExpression.New(reference)));
+            context.Scope.Body.Add(new Assignment(context.Dest, SSTUtil.ComposedExpression(reference)));
         }
 
         public override void VisitPrefixOperatorExpression(IPrefixOperatorExpression prefixOperatorExpressionParam,
             AssignmentGeneratorContext context)
         {
             var reference = prefixOperatorExpressionParam.Operand.GetReference(context);
-            context.Scope.Body.Add(new Assignment(context.Dest, ComposedExpression.New(reference)));
+            context.Scope.Body.Add(new Assignment(context.Dest, SSTUtil.ComposedExpression(reference)));
         }
 
         public override void VisitReferenceExpression(IReferenceExpression referenceExpressionParam,
             AssignmentGeneratorContext context)
         {
             var name = referenceExpressionParam.NameIdentifier.Name;
-            context.Scope.Body.Add(new Assignment(context.Dest, ComposedExpression.New(name)));
+            context.Scope.Body.Add(new Assignment(context.Dest, SSTUtil.ComposedExpression(name)));
         }
 
         public override void VisitThisExpression(IThisExpression thisExpressionParam, AssignmentGeneratorContext context)
         {
-            context.Scope.Body.Add(new Assignment(context.Dest, ComposedExpression.New("this")));
+            context.Scope.Body.Add(new Assignment(context.Dest, SSTUtil.ComposedExpression("this")));
         }
 
         public override void VisitTypeofExpression(ITypeofExpression typeofExpressionParam,

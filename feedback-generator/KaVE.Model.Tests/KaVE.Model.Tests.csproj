@@ -109,6 +109,7 @@
     <Compile Include="SSTs\Impl\References\MethodReferenceTest.cs" />
     <Compile Include="SSTs\Impl\References\PropertyReferenceTest.cs" />
     <Compile Include="SSTs\Impl\References\VariableReferenceTest.cs" />
+    <Compile Include="SSTs\SSTUtilTest.cs" />
     <Compile Include="SSTs\SSTTest.cs" />
     <Compile Include="SSTs\Statements\AssignmentTest.cs" />
     <Compile Include="SSTs\Statements\BreakStatementTest.cs" />

@@ -183,6 +183,7 @@
     <Compile Include="SSTs\References\IMethodReference.cs" />
     <Compile Include="SSTs\References\IPropertyReference.cs" />
     <Compile Include="SSTs\References\IVariableReference.cs" />
+    <Compile Include="SSTs\SSTUtil.cs" />
     <Compile Include="SSTs\Statements\Assignment.cs" />
     <Compile Include="SSTs\IStatement.cs" />
     <Compile Include="SSTs\Impl\Expressions\Assignable\ComposedExpression.cs" />

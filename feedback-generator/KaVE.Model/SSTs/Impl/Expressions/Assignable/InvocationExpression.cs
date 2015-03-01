@@ -70,26 +70,5 @@ namespace KaVE.Model.SSTs.Impl.Expressions.Assignable
         {
             throw new System.NotImplementedException();
         }
-
-        public static InvocationExpression New(IMethodName name, params ISimpleExpression[] parameters)
-        {
-            Asserts.That(name.IsStatic || name.IsConstructor);
-            return new InvocationExpression
-            {
-                Name = name,
-                Parameters = Lists.NewListFrom(parameters),
-            };
-        }
-
-        public static InvocationExpression New(string id, IMethodName name, params ISimpleExpression[] parameters)
-        {
-            Asserts.Not(name.IsStatic || name.IsConstructor);
-            return new InvocationExpression
-            {
-                Reference = new VariableReference {Identifier = id},
-                Name = name,
-                Parameters = Lists.NewListFrom(parameters),
-            };
-        }
     }
 }

@@ -18,11 +18,8 @@
  */
 
 using System.Collections.Generic;
-using System.Linq;
-using KaVE.JetBrains.Annotations;
 using KaVE.Model.Collections;
 using KaVE.Model.SSTs.Expressions.Assignable;
-using KaVE.Model.SSTs.Impl.References;
 using KaVE.Model.SSTs.References;
 using KaVE.Model.SSTs.Visitor;
 using KaVE.Utils;
@@ -32,6 +29,11 @@ namespace KaVE.Model.SSTs.Impl.Expressions.Assignable
     public class ComposedExpression : IComposedExpression
     {
         public IList<IVariableReference> References { get; set; }
+
+        public ComposedExpression()
+        {
+            References = Lists.NewList<IVariableReference>();
+        }
 
         private bool Equals(ComposedExpression other)
         {
@@ -45,24 +47,12 @@ namespace KaVE.Model.SSTs.Impl.Expressions.Assignable
 
         public override int GetHashCode()
         {
-            return 5 + (References != null ? HashCodeUtils.For(5, References) : 0);
+            return 5 + References.GetHashCode();
         }
 
         public void Accept<TContext>(ISSTNodeVisitor<TContext> visitor, TContext context)
         {
-            throw new System.NotImplementedException();
-        }
-
-        public static ComposedExpression New(params string[] strReferences)
-        {
-            // TODO wuah
-            var refs = Lists.NewListFrom<IVariableReference>(
-                strReferences.ToList().Select(
-                    r => new VariableReference
-                    {
-                        Identifier = r
-                    }));
-            return new ComposedExpression {References = refs};
+            visitor.Visit(this, context);
         }
     }
 }
