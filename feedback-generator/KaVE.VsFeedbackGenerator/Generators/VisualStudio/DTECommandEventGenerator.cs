@@ -59,20 +59,14 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
         private static readonly ICollection<string> EventsFiredAutomatically = new Collection<string>
         {
             "{5EFC7975-14BC-11CF-9B2B-00AA00573819}:1096:View.ObjectBrowsingScope",
-            "{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:1627:",
             "{5EFC7975-14BC-11CF-9B2B-00AA00573819}:337:Edit.GoToFindCombo",
             "{5EFC7975-14BC-11CF-9B2B-00AA00573819}:684:Build.SolutionConfigurations",
-            "{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:1990:Build.SolutionPlatforms",
-            "{5EFC7975-14BC-11CF-9B2B-00AA00573819}:1657:",
-            "{5EFC7975-14BC-11CF-9B2B-00AA00573819}:1717:",
-            "{CB26E292-901A-419C-B79D-49BD45C43929}:120:",
-            "{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:4820:",
-            "{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:6155:",
-            "{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:4800:"
+            "{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:1990:Build.SolutionPlatforms"
         };
 
         [UsedImplicitly]
         private readonly CommandEvents _commandEvents;
+
         private readonly Dictionary<string, CommandEvent> _eventQueue;
 
         public DTECommandEventGenerator(IRSEnv env, IMessageBus messageBus, IDateUtils dateUtils)
@@ -158,7 +152,7 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
 
         private static bool IsSuperfluousCommand(string commandId)
         {
-            return IsDuplicatedByReSharper(commandId) || IsAutomaticEvent(commandId);
+            return IsDuplicatedByReSharper(commandId) || IsAutomaticEvent(commandId) || IsNamelessEvent(commandId);
         }
 
         /// <summary>
@@ -182,6 +176,15 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
         private static bool IsAutomaticEvent(string commandId)
         {
             return EventsFiredAutomatically.Contains(commandId);
+        }
+
+        /// <summary>
+        ///     Visual Studio often automatically triggers events without a name. Since we can't interpret them (and some are
+        ///     triggered quite often and seemingly uncrelated to user interaction) we ignore them.
+        /// </summary>
+        private static bool IsNamelessEvent(string commandId)
+        {
+            return commandId.EndsWith(":");
         }
     }
 
