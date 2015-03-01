@@ -20,6 +20,7 @@
 using KaVE.Model.Collections;
 using KaVE.Model.SSTs.Blocks;
 using KaVE.Model.SSTs.Impl.Declarations;
+using KaVE.Model.SSTs.Impl.Statements;
 using KaVE.Model.SSTs.Statements;
 using NUnit.Framework;
 

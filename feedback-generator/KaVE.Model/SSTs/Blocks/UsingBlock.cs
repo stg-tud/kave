@@ -19,6 +19,7 @@
 
 using System.Collections.Generic;
 using KaVE.Model.Collections;
+using KaVE.Model.SSTs.Visitor;
 using KaVE.Utils;
 
 namespace KaVE.Model.SSTs.Blocks
@@ -41,6 +42,11 @@ namespace KaVE.Model.SSTs.Blocks
         public override int GetHashCode()
         {
             return 6*Body.GetHashCode() + (Identifier != null ? Identifier.GetHashCode() : 0);
+        }
+
+        public void Accept<TContext>(ISSTNodeVisitor<TContext> visitor, TContext context)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

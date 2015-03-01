@@ -23,7 +23,6 @@ using KaVE.Model.SSTs.Impl.Declarations;
 using KaVE.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Model.SSTs.Impl.Expressions.LoopHeader;
 using KaVE.Model.SSTs.Impl.Expressions.Simple;
-using KaVE.Model.SSTs.Statements;
 using NUnit.Framework;
 using Fix = KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite.SSTAnalysisFixture;
 
@@ -46,7 +45,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             var mA = NewMethodDeclaration(Fix.Void, "A");
             mA.Body.Add(VariableDeclaration.Create("i", Fix.Int));
             mA.Body.Add(
-                new Assignment(
+                SSTUtil.AssignmentToLocal(
                     "i",
                     new IfElseExpression
                     {
@@ -80,27 +79,31 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             mA.Body.Add(VariableDeclaration.Create("compare", Fix.Bool));
             var ifBlock = new LoopHeaderBlockExpression(); // {Value = new[] {"$0", "$1"}};
             ifBlock.Body.Add(VariableDeclaration.Create("$0", Fix.Int));
-            ifBlock.Body.Add(new Assignment("$0", SSTUtil.InvocationExpression("o2", Fix.GetHashCode(Fix.Object))));
+            ifBlock.Body.Add(
+                SSTUtil.AssignmentToLocal("$0", SSTUtil.InvocationExpression("o2", Fix.GetHashCode(Fix.Object))));
             ifBlock.Body.Add(VariableDeclaration.Create("$1", Fix.Int));
-            ifBlock.Body.Add(new Assignment("$1", SSTUtil.InvocationExpression("o3", Fix.GetHashCode(Fix.Object))));
+            ifBlock.Body.Add(
+                SSTUtil.AssignmentToLocal("$1", SSTUtil.InvocationExpression("o3", Fix.GetHashCode(Fix.Object))));
             var thenBlock = new LoopHeaderBlockExpression(); //) {Value = new[] {"$4"}};
             thenBlock.Body.Add(VariableDeclaration.Create("$2", Fix.String));
-            thenBlock.Body.Add(new Assignment("$2", SSTUtil.InvocationExpression("o1", Fix.ToString(Fix.Object))));
+            thenBlock.Body.Add(
+                SSTUtil.AssignmentToLocal("$2", SSTUtil.InvocationExpression("o1", Fix.ToString(Fix.Object))));
             thenBlock.Body.Add(VariableDeclaration.Create("$3", Fix.String));
-            thenBlock.Body.Add(new Assignment("$3", SSTUtil.InvocationExpression("o2", Fix.ToString(Fix.Object))));
+            thenBlock.Body.Add(
+                SSTUtil.AssignmentToLocal("$3", SSTUtil.InvocationExpression("o2", Fix.ToString(Fix.Object))));
             thenBlock.Body.Add(VariableDeclaration.Create("$4", Fix.Bool));
             thenBlock.Body.Add(
-                new Assignment(
+                SSTUtil.AssignmentToLocal(
                     "$4",
                     SSTUtil.InvocationExpression("$2", Fix.Equals(Fix.String, Fix.String, "value"), new[] {Ref("$3")})));
             var elseBlock = new LoopHeaderBlockExpression(); //) {Value = new[] {"$7"}};
             elseBlock.Body.Add(VariableDeclaration.Create("$5", Fix.String));
-            //elseBlock.Body.Add(new Assignment("$5", InvocationExpression("o1", Fix.ToString(Fix.Object))));
+            //elseBlock.Body.Add(SSTUtil.AssignmentToLocal("$5", InvocationExpression("o1", Fix.ToString(Fix.Object))));
             elseBlock.Body.Add(VariableDeclaration.Create("$6", Fix.String));
-            //elseBlock.Body.Add(new Assignment("$6", InvocationExpression("o3", Fix.ToString(Fix.Object))));
+            //elseBlock.Body.Add(SSTUtil.AssignmentToLocal("$6", InvocationExpression("o3", Fix.ToString(Fix.Object))));
             elseBlock.Body.Add(VariableDeclaration.Create("$7", Fix.Bool));
             elseBlock.Body.Add(
-                new Assignment(
+                SSTUtil.AssignmentToLocal(
                     "$7",
                     SSTUtil.InvocationExpression("$5", Fix.Equals(Fix.String, Fix.String, "value"), new[] {Ref("$6")})));
             //  mA.Body.Add(
@@ -134,12 +137,12 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             mA.Body.Add(VariableDeclaration.Create("i", Fix.Int));
             mA.Body.Add(VariableDeclaration.Create("$0", Fix.Int));
             mA.Body.Add(
-                new Assignment(
+                SSTUtil.AssignmentToLocal(
                     "$0",
                     SSTUtil.InvocationExpression(
                         "h",
                         MethodName.Get(string.Format("[{0}] [N.H, TestProject].Get()", Fix.Int)))));
-            mA.Body.Add(new Assignment("i", SSTUtil.ComposedExpression("$0")));
+            mA.Body.Add(SSTUtil.AssignmentToLocal("i", SSTUtil.ComposedExpression("$0")));
 
             AssertAllMethods(mA);
         }
@@ -172,19 +175,19 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             mA.Body.Add(VariableDeclaration.Create("i", Fix.Int));
             mA.Body.Add(VariableDeclaration.Create("$0", Fix.Int));
             mA.Body.Add(
-                new Assignment(
+                SSTUtil.AssignmentToLocal(
                     "$0",
                     SSTUtil.InvocationExpression(
                         "h1",
                         MethodName.Get(string.Format("[{0}] [N.H, TestProject].Get()", Fix.Int)))));
             mA.Body.Add(VariableDeclaration.Create("$1", Fix.Int));
             mA.Body.Add(
-                new Assignment(
+                SSTUtil.AssignmentToLocal(
                     "$1",
                     SSTUtil.InvocationExpression(
                         "h2",
                         MethodName.Get(string.Format("[{0}] [N.H, TestProject].Get()", Fix.Int)))));
-            mA.Body.Add(new Assignment("i", SSTUtil.ComposedExpression("$0", "$1")));
+            mA.Body.Add(SSTUtil.AssignmentToLocal("i", SSTUtil.ComposedExpression("$0", "$1")));
 
             AssertAllMethods(mA);
         }
@@ -216,17 +219,17 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 
             mA.Body.Add(VariableDeclaration.Create("i", Fix.Int));
             mA.Body.Add(VariableDeclaration.Create("$0", Fix.Int));
-            mA.Body.Add(new Assignment("$0", new ConstantValueExpression()));
+            mA.Body.Add(SSTUtil.AssignmentToLocal("$0", new ConstantValueExpression()));
             mA.Body.Add(VariableDeclaration.Create("$1", Fix.Int));
             mA.Body.Add(
-                new Assignment(
+                SSTUtil.AssignmentToLocal(
                     "$1",
                     SSTUtil.InvocationExpression(
                         "u2",
                         MethodName.Get(string.Format("[{0}] [N.U, TestProject].Plus([{0}] i)", Fix.Int)),
                         Ref("$0"))));
             mA.Body.Add(
-                new Assignment(
+                SSTUtil.AssignmentToLocal(
                     "i",
                     SSTUtil.InvocationExpression(
                         "u1",
@@ -249,7 +252,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 
             var mA = NewMethodDeclaration(Fix.Void, "A", string.Format("[{0}] o", Fix.Object));
             mA.Body.Add(VariableDeclaration.Create("i", Fix.Bool));
-            mA.Body.Add(new Assignment("i", SSTUtil.ComposedExpression("o")));
+            mA.Body.Add(SSTUtil.AssignmentToLocal("i", SSTUtil.ComposedExpression("o")));
 
             AssertAllMethods(mA);
         }
@@ -267,7 +270,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 
             var mA = NewMethodDeclaration(Fix.Void, "A", string.Format("[{0}] o", Fix.Object));
             mA.Body.Add(VariableDeclaration.Create("i", Fix.String));
-            mA.Body.Add(new Assignment("i", SSTUtil.ComposedExpression("o")));
+            mA.Body.Add(SSTUtil.AssignmentToLocal("i", SSTUtil.ComposedExpression("o")));
 
             AssertAllMethods(mA);
         }
@@ -285,7 +288,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 
             var mA = NewMethodDeclaration(Fix.Void, "A", string.Format("[{0}] o", Fix.Object));
             mA.Body.Add(VariableDeclaration.Create("i", Fix.String));
-            mA.Body.Add(new Assignment("i", SSTUtil.ComposedExpression("o")));
+            mA.Body.Add(SSTUtil.AssignmentToLocal("i", SSTUtil.ComposedExpression("o")));
 
             AssertAllMethods(mA);
         }
@@ -305,8 +308,8 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             var mA = NewMethodDeclaration(Fix.Void, "A", string.Format("[{0}] i", Fix.Int));
             mA.Body.Add(VariableDeclaration.Create("j", Fix.Int));
             mA.Body.Add(VariableDeclaration.Create("sum", Fix.Int));
-            mA.Body.Add(new Assignment("j", SSTUtil.ComposedExpression("i")));
-            mA.Body.Add(new Assignment("sum", SSTUtil.ComposedExpression("j", "i")));
+            mA.Body.Add(SSTUtil.AssignmentToLocal("j", SSTUtil.ComposedExpression("i")));
+            mA.Body.Add(SSTUtil.AssignmentToLocal("sum", SSTUtil.ComposedExpression("j", "i")));
 
             AssertAllMethods(mA);
         }
@@ -324,7 +327,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 
             var mA = NewMethodDeclaration(Fix.Void, "A", string.Format("[{0}] i", Fix.Int));
             mA.Body.Add(VariableDeclaration.Create("j", Fix.Int));
-            mA.Body.Add(new Assignment("j", SSTUtil.ComposedExpression("i")));
+            mA.Body.Add(SSTUtil.AssignmentToLocal("j", SSTUtil.ComposedExpression("i")));
 
             AssertAllMethods(mA);
         }
@@ -342,7 +345,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 
             var mA = NewMethodDeclaration(Fix.Void, "A", string.Format("[{0}] i", Fix.Int));
             mA.Body.Add(VariableDeclaration.Create("j", Fix.Int));
-            mA.Body.Add(new Assignment("j", SSTUtil.ComposedExpression("i")));
+            mA.Body.Add(SSTUtil.AssignmentToLocal("j", SSTUtil.ComposedExpression("i")));
 
             AssertAllMethods(mA);
         }
@@ -362,7 +365,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             mA.Body.Add(VariableDeclaration.Create("i", Fix.Int));
             mA.Body.Add(VariableDeclaration.Create("$0", Fix.Int));
             mA.Body.Add(
-                new Assignment(
+                SSTUtil.AssignmentToLocal(
                     "$0",
                     new IfElseExpression
                     {
@@ -370,7 +373,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
                         ThenExpression = new ConstantValueExpression(),
                         ElseExpression = new ConstantValueExpression()
                     }));
-            mA.Body.Add(new Assignment("i", SSTUtil.ComposedExpression("$0")));
+            mA.Body.Add(SSTUtil.AssignmentToLocal("i", SSTUtil.ComposedExpression("$0")));
 
             AssertAllMethods(mA);
         }
@@ -388,7 +391,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 
             var mA = NewMethodDeclaration(Fix.Void, "A");
             mA.Body.Add(VariableDeclaration.Create("i", Fix.Int));
-            mA.Body.Add(new Assignment("i", new ConstantValueExpression()));
+            mA.Body.Add(SSTUtil.AssignmentToLocal("i", new ConstantValueExpression()));
 
             AssertAllMethods(mA);
         }

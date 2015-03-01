@@ -22,6 +22,7 @@ using KaVE.Model.SSTs.Expressions.Assignable;
 using KaVE.Model.SSTs.Expressions.LoopHeader;
 using KaVE.Model.SSTs.Expressions.Simple;
 using KaVE.Model.SSTs.References;
+using KaVE.Model.SSTs.Statements;
 
 namespace KaVE.Model.SSTs.Visitor
 {
@@ -36,14 +37,26 @@ namespace KaVE.Model.SSTs.Visitor
         void Visit(IMethodDeclaration stmt, TContext context);
         void Visit(IPropertyDeclaration stmt, TContext context);
 
+        // ambiguous entities
+        void Visit(ICompletion entity, TContext context);
+        void Visit(IInvocation entity, TContext context);
+
         // statements
-        void Visit(IStatement stmt, TContext context);
+        void Visit(IAssignment stmt, TContext context);
+        void Visit(IBreakStatement stmt, TContext context);
+        void Visit(IContinueStatement stmt, TContext context);
+        void Visit(IGotoStatement stmt, TContext context);
+        void Visit(ILabelledStatement stmt, TContext context);
+        void Visit(ILockStatement stmt, TContext context);
+        void Visit(IReturnStatement stmt, TContext context);
+        void Visit(IThrowStatement stmt, TContext context);
+
+        // blocks
+        // ...
 
         // Expressions
         void Visit(IComposedExpression expr, TContext context);
-        void Visit(IExpressionCompletion expr, TContext context);
         void Visit(IIfElseExpression expr, TContext context);
-        void Visit(IInvocationExpression expr, TContext context);
         void Visit(ILambdaExpression expr, TContext context);
         void Visit(ILoopHeaderBlockExpression expr, TContext context);
         void Visit(IConstantValueExpression expr, TContext context);

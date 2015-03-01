@@ -19,6 +19,7 @@
 
 using KaVE.Model.Names;
 using KaVE.Model.SSTs.Declarations;
+using KaVE.Model.SSTs.Visitor;
 using KaVE.Utils;
 
 namespace KaVE.Model.SSTs.Impl.Declarations
@@ -45,6 +46,11 @@ namespace KaVE.Model.SSTs.Impl.Declarations
                 return 20 + ((Identifier != null ? Identifier.GetHashCode() : 0)*397) ^
                        (Type != null ? Type.GetHashCode() : 0);
             }
+        }
+
+        public void Accept<TContext>(ISSTNodeVisitor<TContext> visitor, TContext context)
+        {
+            throw new System.NotImplementedException();
         }
 
         public static IVariableDeclaration Create(string identifier, ITypeName type)

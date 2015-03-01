@@ -21,13 +21,13 @@
 using System.Linq;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.Util;
+using KaVE.Model.SSTs;
 using KaVE.Model.SSTs.Blocks;
 using KaVE.Model.SSTs.Expressions;
 using KaVE.Model.SSTs.Impl.Declarations;
 using KaVE.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Model.SSTs.Impl.References;
-using KaVE.Model.SSTs.Statements;
-using KaVE.Model.SSTs.Statements.Wrapped;
+using KaVE.Model.SSTs.Impl.Statements;
 using KaVE.VsFeedbackGenerator.Analysis.Transformer.Context;
 using KaVE.VsFeedbackGenerator.Utils.Names;
 
@@ -149,7 +149,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
                         args.Select<string, ISimpleExpression>(
                             id => new ReferenceExpression {Reference = new VariableReference {Identifier = id}})
                             .AsArray();
-                    context.Scope.Body.Add(InvocationStatement.Create(method, basicExpressions));
+                    context.Scope.Body.Add(SSTUtil.InvocationExpression(method, basicExpressions));
                 });
         }
 
@@ -192,7 +192,9 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
 
         public override void VisitReturnStatement(IReturnStatement returnStatementParam, ScopeTransformerContext context)
         {
-            context.Scope.Body.Add(new ReturnStatement {Expression = returnStatementParam.Value.GetReferences(context)});
+            var references = returnStatementParam.Value.GetReferences(context);
+            // TODO
+            context.Scope.Body.Add(new ReturnStatement {Expression = null});
         }
 
         public override void VisitThrowStatement(IThrowStatement throwStatementParam, ScopeTransformerContext context)

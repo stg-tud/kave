@@ -22,7 +22,6 @@ using JetBrains.Util;
 using KaVE.Model.SSTs;
 using KaVE.Model.SSTs.Impl.Declarations;
 using KaVE.Model.SSTs.Impl.Expressions.Simple;
-using KaVE.Model.SSTs.Statements;
 using KaVE.VsFeedbackGenerator.Analysis.Transformer.Context;
 using KaVE.VsFeedbackGenerator.Utils.Names;
 
@@ -41,7 +40,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
             var tmp = context.Generator.GetNextVariableName();
             context.Scope.Body.Add(VariableDeclaration.Create(tmp, arrayCreationExpressionParam.Type().GetName()));
             context.Scope.Body.Add(
-                new Assignment(tmp, arrayCreationExpressionParam.ArrayInitializer.GetReferences(context)));
+                SSTUtil.AssignmentToLocal(tmp, arrayCreationExpressionParam.ArrayInitializer.GetReferences(context)));
             context.Arguments.Add(tmp);
         }
 
@@ -49,7 +48,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
         {
             var tmp = context.Generator.GetNextVariableName();
             context.Scope.Body.Add(VariableDeclaration.Create(tmp, asExpressionParam.Type().GetName()));
-            context.Scope.Body.Add(new Assignment(tmp, asExpressionParam.Operand.GetReferences(context)));
+            context.Scope.Body.Add(SSTUtil.AssignmentToLocal(tmp, asExpressionParam.Operand.GetReferences(context)));
             context.Arguments.Add(tmp);
         }
 
@@ -66,7 +65,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
         {
             var tmp = context.Generator.GetNextVariableName();
             context.Scope.Body.Add(VariableDeclaration.Create(tmp, binaryExpressionParam.Type().GetName()));
-            context.Scope.Body.Add(new Assignment(tmp, binaryExpressionParam.GetReferences(context)));
+            context.Scope.Body.Add(SSTUtil.AssignmentToLocal(tmp, binaryExpressionParam.GetReferences(context)));
             context.Arguments.Add(tmp);
         }
 
@@ -74,7 +73,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
         {
             var tmp = context.Generator.GetNextVariableName();
             context.Scope.Body.Add(VariableDeclaration.Create(tmp, castExpressionParam.Type().GetName()));
-            context.Scope.Body.Add(new Assignment(tmp, castExpressionParam.Op.GetReferences(context)));
+            context.Scope.Body.Add(SSTUtil.AssignmentToLocal(tmp, castExpressionParam.Op.GetReferences(context)));
             context.Arguments.Add(tmp);
         }
 
@@ -85,7 +84,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
             var tmp = context.Generator.GetNextVariableName();
             context.Scope.Body.Add(VariableDeclaration.Create(tmp, conditionalTernaryExpressionParam.Type().GetName()));
             context.Scope.Body.Add(
-                new Assignment(
+                SSTUtil.AssignmentToLocal(
                     tmp,
                     null));
             //new IfElseExpression
@@ -107,7 +106,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
         {
             var tmp = context.Generator.GetNextVariableName();
             context.Scope.Body.Add(VariableDeclaration.Create(tmp, cSharpLiteralExpressionParam.Type().GetName()));
-            context.Scope.Body.Add(new Assignment(tmp, new ConstantValueExpression()));
+            context.Scope.Body.Add(SSTUtil.AssignmentToLocal(tmp, new ConstantValueExpression()));
             context.Arguments.Add(tmp);
         }
 
@@ -116,7 +115,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
         {
             var tmp = context.Generator.GetNextVariableName();
             context.Scope.Body.Add(VariableDeclaration.Create(tmp, defaultExpressionParam.Type().GetName()));
-            context.Scope.Body.Add(new Assignment(tmp, new ConstantValueExpression()));
+            context.Scope.Body.Add(SSTUtil.AssignmentToLocal(tmp, new ConstantValueExpression()));
             context.Arguments.Add(tmp);
         }
 
@@ -130,7 +129,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
                 {
                     var tmp = context.Generator.GetNextVariableName();
                     context.Scope.Body.Add(VariableDeclaration.Create(tmp, retType));
-                    context.Scope.Body.Add(new Assignment(tmp, callee.CreateInvocation(method, args)));
+                    context.Scope.Body.Add(SSTUtil.AssignmentToLocal(tmp, callee.CreateInvocation(method, args)));
                     context.Arguments.Add(tmp);
                 });
         }
@@ -139,7 +138,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
         {
             var tmp = context.Generator.GetNextVariableName();
             context.Scope.Body.Add(VariableDeclaration.Create(tmp, isExpressionParam.Type().GetName()));
-            context.Scope.Body.Add(new Assignment(tmp, isExpressionParam.Operand.GetReferences(context)));
+            context.Scope.Body.Add(SSTUtil.AssignmentToLocal(tmp, isExpressionParam.Operand.GetReferences(context)));
             context.Arguments.Add(tmp);
         }
 
@@ -155,7 +154,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
             var tmp = context.Generator.GetNextVariableName();
             context.Scope.Body.Add(VariableDeclaration.Create(tmp, postfixOperatorExpressionParam.Type().GetName()));
             var reference = postfixOperatorExpressionParam.Operand.GetReference(context);
-            context.Scope.Body.Add(new Assignment(tmp, SSTUtil.ComposedExpression(reference)));
+            context.Scope.Body.Add(SSTUtil.AssignmentToLocal(tmp, SSTUtil.ComposedExpression(reference)));
             context.Arguments.Add(tmp);
         }
 
@@ -165,7 +164,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
             var tmp = context.Generator.GetNextVariableName();
             context.Scope.Body.Add(VariableDeclaration.Create(tmp, prefixOperatorExpressionParam.Type().GetName()));
             var reference = prefixOperatorExpressionParam.Operand.GetReference(context);
-            context.Scope.Body.Add(new Assignment(tmp, SSTUtil.ComposedExpression(reference)));
+            context.Scope.Body.Add(SSTUtil.AssignmentToLocal(tmp, SSTUtil.ComposedExpression(reference)));
             context.Arguments.Add(tmp);
         }
 
@@ -185,7 +184,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
         {
             var tmp = context.Generator.GetNextVariableName();
             context.Scope.Body.Add(VariableDeclaration.Create(tmp, typeofExpressionParam.Type().GetName()));
-            context.Scope.Body.Add(new Assignment(tmp, new ConstantValueExpression()));
+            context.Scope.Body.Add(SSTUtil.AssignmentToLocal(tmp, new ConstantValueExpression()));
             context.Arguments.Add(tmp);
         }
 
@@ -194,7 +193,8 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
         {
             var tmp = context.Generator.GetNextVariableName();
             context.Scope.Body.Add(VariableDeclaration.Create(tmp, unaryOperatorExpressionParam.Type().GetName()));
-            context.Scope.Body.Add(new Assignment(tmp, unaryOperatorExpressionParam.Operand.GetReferences(context)));
+            context.Scope.Body.Add(
+                SSTUtil.AssignmentToLocal(tmp, unaryOperatorExpressionParam.Operand.GetReferences(context)));
             context.Arguments.Add(tmp);
         }
     }

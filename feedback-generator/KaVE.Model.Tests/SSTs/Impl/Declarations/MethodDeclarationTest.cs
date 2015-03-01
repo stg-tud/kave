@@ -21,6 +21,7 @@ using KaVE.Model.Collections;
 using KaVE.Model.Names;
 using KaVE.Model.Names.CSharp;
 using KaVE.Model.SSTs.Impl.Declarations;
+using KaVE.Model.SSTs.Impl.Statements;
 using KaVE.Model.SSTs.Statements;
 using KaVE.Model.SSTs.Visitor;
 using Moq;

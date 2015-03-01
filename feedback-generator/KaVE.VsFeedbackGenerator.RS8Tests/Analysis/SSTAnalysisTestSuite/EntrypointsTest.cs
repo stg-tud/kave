@@ -18,8 +18,8 @@
  */
 
 using KaVE.Model.Names.CSharp;
+using KaVE.Model.SSTs;
 using KaVE.Model.SSTs.Expressions;
-using KaVE.Model.SSTs.Statements.Wrapped;
 using NUnit.Framework;
 using Fix = KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite.SSTAnalysisFixture;
 
@@ -53,7 +53,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 
             var mA = NewMethodDeclaration(Fix.Void, "A");
             mA.Body.Add(
-                InvocationStatement.Create(
+                SSTUtil.InvocationExpression(
                     "this",
                     MethodName.Get("[System.Void, mscorlib, 4.0.0.0] [N.C, TestProject].B()"),
                     new ISimpleExpression[] {}));

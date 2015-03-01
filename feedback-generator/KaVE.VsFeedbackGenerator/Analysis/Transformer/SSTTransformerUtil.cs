@@ -25,7 +25,7 @@ using KaVE.Model.Names;
 using KaVE.Model.SSTs;
 using KaVE.Model.SSTs.Blocks;
 using KaVE.Model.SSTs.Expressions;
-using KaVE.Model.SSTs.Impl.Expressions.Assignable;
+using KaVE.Model.SSTs.Impl;
 using KaVE.Model.SSTs.Impl.Expressions.LoopHeader;
 using KaVE.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Utils.Assertion;
@@ -43,7 +43,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
         ///     Constructs an Expression from a list of references. Empty list causes ConstantExpression, ComposedExpression
         ///     otherwise.
         /// </summary>
-        public static IExpression AsExpression(this IList<string> references)
+        public static IAssignableExpression AsExpression(this IList<string> references)
         {
             if (Enumerable.Any(references))
             {
@@ -74,7 +74,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
         ///     Traverses the given (expression-)node and collects references. If the transformation causes declarations,
         ///     invocations, assignments, etc., such statements are added to the given scope.
         /// </summary>
-        public static IExpression GetReferences(this ICSharpTreeNode node, ITransformerContext context)
+        public static IAssignableExpression GetReferences(this ICSharpTreeNode node, ITransformerContext context)
         {
             var refCollectorContext = new ReferenceCollectorContext(context);
             node.Accept(context.Factory.ReferenceCollector(), refCollectorContext);
@@ -152,7 +152,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
         /// <summary>
         ///     Constructs InvocationExpressions either as static call if callee isn't given or as non-static call otherwise.
         /// </summary>
-        public static InvocationExpression CreateInvocation(this string callee, IMethodName method, string[] argIds)
+        public static Invocation CreateInvocation(this string callee, IMethodName method, string[] argIds)
         {
             var args = argIds.Select<string, ISimpleExpression>(SSTUtil.ReferenceExprToVariable).AsArray();
             if (callee == null)

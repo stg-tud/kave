@@ -17,19 +17,7 @@
  *    - Sebastian Proksch
  */
 
-using System.Collections.Generic;
-using KaVE.JetBrains.Annotations;
-using KaVE.Model.Names;
-using KaVE.Model.SSTs.References;
-
 namespace KaVE.Model.SSTs.Expressions.Assignable
 {
-    public interface IInvocationExpression : IAssignableExpression
-    {
-        IVariableReference Reference { get; }
-        IMethodName MethodName { get; }
-
-        [NotNull]
-        IList<ISimpleExpression> Parameters { get; }
-    }
+    public interface IInvocationExpression : IInvocation, IAssignableExpression {}
 }

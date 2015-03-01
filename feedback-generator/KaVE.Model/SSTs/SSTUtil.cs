@@ -23,10 +23,13 @@ using KaVE.Model.Names;
 using KaVE.Model.SSTs.Expressions;
 using KaVE.Model.SSTs.Expressions.Assignable;
 using KaVE.Model.SSTs.Expressions.Simple;
+using KaVE.Model.SSTs.Impl;
 using KaVE.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Model.SSTs.Impl.References;
+using KaVE.Model.SSTs.Impl.Statements;
 using KaVE.Model.SSTs.References;
+using KaVE.Model.SSTs.Statements;
 using KaVE.Utils.Assertion;
 
 namespace KaVE.Model.SSTs
@@ -51,11 +54,20 @@ namespace KaVE.Model.SSTs
             return new ComposedExpression {References = refs};
         }
 
+        public static IAssignment AssignmentToLocal(string identifier, IAssignableExpression expr)
+        {
+            return new Assignment
+            {
+                Reference = VariableReference(identifier),
+                Expression = expr
+            };
+        }
+
         // TODO use interface
-        public static InvocationExpression InvocationExpression(IMethodName name, params ISimpleExpression[] parameters)
+        public static Invocation InvocationExpression(IMethodName name, params ISimpleExpression[] parameters)
         {
             Asserts.That(name.IsStatic || name.IsConstructor);
-            return new InvocationExpression
+            return new Invocation
             {
                 MethodName = name,
                 Parameters = Lists.NewListFrom(parameters),
@@ -63,17 +75,35 @@ namespace KaVE.Model.SSTs
         }
 
         // TODO use interface
-        public static InvocationExpression InvocationExpression(string id,
+        public static Invocation InvocationExpression(string id,
             IMethodName name,
             params ISimpleExpression[] parameters)
         {
             Asserts.Not(name.IsStatic || name.IsConstructor);
-            return new InvocationExpression
+            return new Invocation
             {
                 Reference = new VariableReference {Identifier = id},
                 MethodName = name,
                 Parameters = Lists.NewListFrom(parameters),
             };
+        }
+
+        public static ILockStatement LockStatement(string id)
+        {
+            return new LockStatement {Reference = new VariableReference {Identifier = id}};
+        }
+
+        public static IStatement Return(ISimpleExpression expression)
+        {
+            return new ReturnStatement
+            {
+                Expression = expression
+            };
+        }
+
+        public static IStatement ReturnVariable(string id)
+        {
+            return Return(ReferenceExprToVariable(id));
         }
     }
 }

@@ -97,9 +97,9 @@
     <Compile Include="SSTs\Impl\Expressions\LoopHeader\LoopHeaderBlockExpressionTest.cs" />
     <Compile Include="SSTs\Impl\Expressions\Assignable\ComposedExpressionTest.cs" />
     <Compile Include="SSTs\Impl\Expressions\Simple\ConstantValueExpressionTest.cs" />
-    <Compile Include="SSTs\Impl\Expressions\Assignable\ExpressionCompletionTest.cs" />
+    <Compile Include="SSTs\CompletionTest.cs" />
     <Compile Include="SSTs\Impl\Expressions\Assignable\IfElseExpressionTest.cs" />
-    <Compile Include="SSTs\Impl\Expressions\Assignable\InvocationExpressionTest.cs" />
+    <Compile Include="SSTs\InvocationTest.cs" />
     <Compile Include="SSTs\Impl\Expressions\Assignable\LambdaExpressionTest.cs" />
     <Compile Include="SSTs\Impl\Declarations\MethodDeclarationTest.cs" />
     <Compile Include="SSTs\Impl\Expressions\Simple\NullExpressionTest.cs" />
@@ -111,17 +111,14 @@
     <Compile Include="SSTs\Impl\References\VariableReferenceTest.cs" />
     <Compile Include="SSTs\SSTUtilTest.cs" />
     <Compile Include="SSTs\SSTTest.cs" />
-    <Compile Include="SSTs\Statements\AssignmentTest.cs" />
-    <Compile Include="SSTs\Statements\BreakStatementTest.cs" />
-    <Compile Include="SSTs\Statements\Wrapped\ExpressionStatementTest.cs" />
-    <Compile Include="SSTs\Statements\Wrapped\StatementCompletionTest.cs" />
-    <Compile Include="SSTs\Statements\ContinueStatementTest.cs" />
-    <Compile Include="SSTs\Statements\GotoStatementTest.cs" />
-    <Compile Include="SSTs\Statements\Wrapped\InvocationStatementTest.cs" />
-    <Compile Include="SSTs\Statements\LabelledStatementTest.cs" />
-    <Compile Include="SSTs\Statements\LockStatementTest.cs" />
-    <Compile Include="SSTs\Statements\ReturnStatementTest.cs" />
-    <Compile Include="SSTs\Statements\ThrowStatementTest.cs" />
+    <Compile Include="SSTs\Impl\Statements\AssignmentTest.cs" />
+    <Compile Include="SSTs\Impl\Statements\BreakStatementTest.cs" />
+    <Compile Include="SSTs\Impl\Statements\ContinueStatementTest.cs" />
+    <Compile Include="SSTs\Impl\Statements\GotoStatementTest.cs" />
+    <Compile Include="SSTs\Impl\Statements\LabelledStatementTest.cs" />
+    <Compile Include="SSTs\Impl\Statements\LockStatementTest.cs" />
+    <Compile Include="SSTs\Impl\Statements\ReturnStatementTest.cs" />
+    <Compile Include="SSTs\Impl\Statements\ThrowStatementTest.cs" />
     <Compile Include="SSTs\Visitor\SSTNodeVisitorTest.cs" />
     <Compile Include="SSTs\Visitor\SSTToStringVisitorTest.cs" />
   </ItemGroup>

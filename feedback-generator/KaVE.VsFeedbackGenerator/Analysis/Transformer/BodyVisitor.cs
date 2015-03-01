@@ -24,12 +24,11 @@ using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.Util;
 using KaVE.Model.Collections;
 using KaVE.Model.Names;
+using KaVE.Model.SSTs;
 using KaVE.Model.SSTs.Expressions;
 using KaVE.Model.SSTs.Impl.Declarations;
 using KaVE.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Model.SSTs.Impl.References;
-using KaVE.Model.SSTs.Statements;
-using KaVE.Model.SSTs.Statements.Wrapped;
 using KaVE.VsFeedbackGenerator.Analysis.Util;
 using KaVE.VsFeedbackGenerator.Utils.Names;
 using IStatement = KaVE.Model.SSTs.IStatement;
@@ -62,7 +61,8 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
             if (isInitialized)
             {
                 var initialiser = decl.Initial.Accept(_toBasicExprReducer, context);
-                context.Add(new Assignment {Identifier = id, Value = initialiser});
+                // TODO
+                context.Add(SSTUtil.AssignmentToLocal(id, null));
             }
         }
 
@@ -103,9 +103,10 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
                     }
                     var args =
                         GetArgumentList(inv.ArgumentList, body)
-                            .Select<string, ISimpleExpression>(id => new ReferenceExpression {Reference = new VariableReference{Identifier = id}})
+                            .Select<string, ISimpleExpression>(
+                                id => new ReferenceExpression {Reference = new VariableReference {Identifier = id}})
                             .AsArray();
-                    body.Add(InvocationStatement.Create(callee, methodName, args));
+                    body.Add(SSTUtil.InvocationExpression(callee, methodName, args));
                 }
             }
         }

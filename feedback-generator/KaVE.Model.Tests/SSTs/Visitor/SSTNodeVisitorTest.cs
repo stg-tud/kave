@@ -17,12 +17,10 @@
  *    - Sebastian Proksch
  */
 
-using KaVE.Model.SSTs;
 using KaVE.Model.SSTs.Declarations;
 using KaVE.Model.SSTs.Impl;
 using KaVE.Model.SSTs.Impl.Declarations;
 using KaVE.Model.SSTs.Impl.Visitor;
-using KaVE.Model.SSTs.Visitor;
 using NUnit.Framework;
 
 namespace KaVE.Model.Tests.SSTs.Visitor
@@ -41,8 +39,7 @@ namespace KaVE.Model.Tests.SSTs.Visitor
             sut.Visit((IMethodDeclaration) null, null);
             sut.Visit((IPropertyDeclaration) null, null);
 
-            sut.Visit((IStatement) null, null);
-            
+
             // TODO complete after hierarchy is stable
         }
     }

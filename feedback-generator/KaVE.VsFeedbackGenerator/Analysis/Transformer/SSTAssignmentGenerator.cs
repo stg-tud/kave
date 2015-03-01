@@ -20,7 +20,6 @@
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using KaVE.Model.SSTs;
 using KaVE.Model.SSTs.Impl.Expressions.Simple;
-using KaVE.Model.SSTs.Statements;
 using KaVE.VsFeedbackGenerator.Analysis.Transformer.Context;
 
 namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
@@ -31,12 +30,15 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
             AssignmentGeneratorContext context)
         {
             context.Scope.Body.Add(
-                new Assignment(context.Dest, arrayCreationExpressionParam.ArrayInitializer.GetReferences(context)));
+                SSTUtil.AssignmentToLocal(
+                    context.Dest,
+                    arrayCreationExpressionParam.ArrayInitializer.GetReferences(context)));
         }
 
         public override void VisitAsExpression(IAsExpression asExpressionParam, AssignmentGeneratorContext context)
         {
-            context.Scope.Body.Add(new Assignment(context.Dest, asExpressionParam.Operand.GetReferences(context)));
+            context.Scope.Body.Add(
+                SSTUtil.AssignmentToLocal(context.Dest, asExpressionParam.Operand.GetReferences(context)));
         }
 
         public override void VisitAssignmentExpression(IAssignmentExpression assignmentExpressionParam,
@@ -44,20 +46,22 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
         {
             var dest = assignmentExpressionParam.Dest.GetReference(context);
             assignmentExpressionParam.Source.ProcessAssignment(context, dest);
-            context.Scope.Body.Add(new Assignment(context.Dest, SSTUtil.ComposedExpression(dest)));
+            context.Scope.Body.Add(SSTUtil.AssignmentToLocal(context.Dest, SSTUtil.ComposedExpression(dest)));
         }
 
         public override void VisitBinaryExpression(IBinaryExpression binaryExpressionParam,
             AssignmentGeneratorContext context)
         {
-            context.Scope.Body.Add(new Assignment(context.Dest, binaryExpressionParam.GetReferences(context)));
+            context.Scope.Body.Add(
+                SSTUtil.AssignmentToLocal(context.Dest, binaryExpressionParam.GetReferences(context)));
         }
 
         public override void VisitCastExpression(ICastExpression castExpressionParam, AssignmentGeneratorContext context)
         {
             if (castExpressionParam.Op != null)
             {
-                context.Scope.Body.Add(new Assignment(context.Dest, castExpressionParam.Op.GetReferences(context)));
+                context.Scope.Body.Add(
+                    SSTUtil.AssignmentToLocal(context.Dest, castExpressionParam.Op.GetReferences(context)));
             }
         }
 
@@ -66,7 +70,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
             AssignmentGeneratorContext context)
         {
             context.Scope.Body.Add(
-                new Assignment(
+                SSTUtil.AssignmentToLocal(
                     context.Dest,
                     null));
             //new IfElseExpression
@@ -80,13 +84,13 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
         public override void VisitCSharpLiteralExpression(ICSharpLiteralExpression cSharpLiteralExpressionParam,
             AssignmentGeneratorContext context)
         {
-            context.Scope.Body.Add(new Assignment(context.Dest, new ConstantValueExpression()));
+            context.Scope.Body.Add(SSTUtil.AssignmentToLocal(context.Dest, new ConstantValueExpression()));
         }
 
         public override void VisitDefaultExpression(IDefaultExpression defaultExpressionParam,
             AssignmentGeneratorContext context)
         {
-            context.Scope.Body.Add(new Assignment(context.Dest, new ConstantValueExpression()));
+            context.Scope.Body.Add(SSTUtil.AssignmentToLocal(context.Dest, new ConstantValueExpression()));
         }
 
         public override void VisitInvocationExpression(IInvocationExpression invocationExpressionParam,
@@ -96,12 +100,14 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
                 invocationExpressionParam,
                 context,
                 (callee, method, args, retType) =>
-                    context.Scope.Body.Add(new Assignment(context.Dest, callee.CreateInvocation(method, args))));
+                    context.Scope.Body.Add(
+                        SSTUtil.AssignmentToLocal(context.Dest, callee.CreateInvocation(method, args))));
         }
 
         public override void VisitIsExpression(IIsExpression isExpressionParam, AssignmentGeneratorContext context)
         {
-            context.Scope.Body.Add(new Assignment(context.Dest, isExpressionParam.Operand.GetReferences(context)));
+            context.Scope.Body.Add(
+                SSTUtil.AssignmentToLocal(context.Dest, isExpressionParam.Operand.GetReferences(context)));
         }
 
         /*public override void VisitObjectCreationExpression(IObjectCreationExpression objectCreationExpressionParam,
@@ -133,39 +139,39 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
             AssignmentGeneratorContext context)
         {
             var reference = postfixOperatorExpressionParam.Operand.GetReference(context);
-            context.Scope.Body.Add(new Assignment(context.Dest, SSTUtil.ComposedExpression(reference)));
+            context.Scope.Body.Add(SSTUtil.AssignmentToLocal(context.Dest, SSTUtil.ComposedExpression(reference)));
         }
 
         public override void VisitPrefixOperatorExpression(IPrefixOperatorExpression prefixOperatorExpressionParam,
             AssignmentGeneratorContext context)
         {
             var reference = prefixOperatorExpressionParam.Operand.GetReference(context);
-            context.Scope.Body.Add(new Assignment(context.Dest, SSTUtil.ComposedExpression(reference)));
+            context.Scope.Body.Add(SSTUtil.AssignmentToLocal(context.Dest, SSTUtil.ComposedExpression(reference)));
         }
 
         public override void VisitReferenceExpression(IReferenceExpression referenceExpressionParam,
             AssignmentGeneratorContext context)
         {
             var name = referenceExpressionParam.NameIdentifier.Name;
-            context.Scope.Body.Add(new Assignment(context.Dest, SSTUtil.ComposedExpression(name)));
+            context.Scope.Body.Add(SSTUtil.AssignmentToLocal(context.Dest, SSTUtil.ComposedExpression(name)));
         }
 
         public override void VisitThisExpression(IThisExpression thisExpressionParam, AssignmentGeneratorContext context)
         {
-            context.Scope.Body.Add(new Assignment(context.Dest, SSTUtil.ComposedExpression("this")));
+            context.Scope.Body.Add(SSTUtil.AssignmentToLocal(context.Dest, SSTUtil.ComposedExpression("this")));
         }
 
         public override void VisitTypeofExpression(ITypeofExpression typeofExpressionParam,
             AssignmentGeneratorContext context)
         {
-            context.Scope.Body.Add(new Assignment(context.Dest, new ConstantValueExpression()));
+            context.Scope.Body.Add(SSTUtil.AssignmentToLocal(context.Dest, new ConstantValueExpression()));
         }
 
         public override void VisitUnaryOperatorExpression(IUnaryOperatorExpression unaryOperatorExpressionParam,
             AssignmentGeneratorContext context)
         {
             context.Scope.Body.Add(
-                new Assignment(context.Dest, unaryOperatorExpressionParam.Operand.GetReferences(context)));
+                SSTUtil.AssignmentToLocal(context.Dest, unaryOperatorExpressionParam.Operand.GetReferences(context)));
         }
     }
 }

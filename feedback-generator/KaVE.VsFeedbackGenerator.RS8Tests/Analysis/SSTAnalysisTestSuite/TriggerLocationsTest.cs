@@ -19,12 +19,11 @@
 
 using System;
 using System.Linq;
+using KaVE.Model.SSTs;
 using KaVE.Model.SSTs.Blocks;
-using KaVE.Model.SSTs.Expressions;
+using KaVE.Model.SSTs.Impl;
 using KaVE.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Model.SSTs.Impl.Expressions.Simple;
-using KaVE.Model.SSTs.Statements;
-using KaVE.Model.SSTs.Statements.Wrapped;
 using NUnit.Framework;
 using Fix = KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite.SSTAnalysisFixture;
 
@@ -109,7 +108,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
                 }
             ");
 
-            var trigger = new StatementCompletion();
+            var trigger = new Completion();
 
             var mA = NewMethodDeclaration(Fix.Void, "A");
             mA.Body.Add(trigger);
@@ -134,7 +133,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
                 }
             ");
 
-            var trigger = StatementCompletion.Create("o");
+            var trigger = new Completion {Token = "o"};
 
             var mA = NewMethodDeclaration(Fix.Void, "A");
             mA.Body.Add(trigger);
@@ -151,7 +150,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
                 }
             ");
 
-            var trigger = StatementCompletion.Create("a", "");
+            var trigger = new Completion {Token = "a."};
 
             var mA = NewMethodDeclaration(Fix.Void, "A");
             mA.Body.Add(trigger);
@@ -168,7 +167,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
                 }
             ");
 
-            var trigger = StatementCompletion.Create("a", "b");
+            var trigger = new Completion {Token = "a.b"};
 
             var mA = NewMethodDeclaration(Fix.Void, "A");
             mA.Body.Add(trigger);
@@ -185,7 +184,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
                 }
             ");
 
-            var trigger = StatementCompletion.Create("a", "b");
+            var trigger = new Completion {Token = "a.b.c"};
 
             var mA = NewMethodDeclaration(Fix.Void, "A");
             mA.Body.Add(trigger);
@@ -208,9 +207,9 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
                 }
             ");
 
-            var preceedingInvocation = InvocationStatement.Create("this", Fix.Object_GetHashCode);
-            var trigger = StatementCompletion.Create("a", "b");
-            var subsequentInvocation = InvocationStatement.Create("this", Fix.Object_GetHashCode);
+            var preceedingInvocation = SSTUtil.InvocationExpression("this", Fix.Object_GetHashCode);
+            var trigger = new Completion {Token = "a.b.c"};
+            var subsequentInvocation = SSTUtil.InvocationExpression("this", Fix.Object_GetHashCode);
 
             var mA = NewMethodDeclaration(Fix.Void, "A");
             mA.Body.Add(preceedingInvocation);
@@ -229,8 +228,8 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
                 }
             ");
 
-            var trigger = new ExpressionCompletion();
-            var assignment = new Assignment("v", trigger);
+            var trigger = new Completion();
+            var assignment = SSTUtil.AssignmentToLocal("v", trigger);
 
             var mA = NewMethodDeclaration(Fix.Void, "A");
             mA.Body.Add(assignment);
@@ -249,7 +248,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
                 }
             ");
 
-            var trigger = new StatementCompletion();
+            var trigger = new Completion();
             var whileLoop = new WhileLoop {Condition = new ConstantValueExpression()};
             whileLoop.Body.Add(trigger);
 
@@ -270,7 +269,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
                 }
             ");
 
-            var trigger = new StatementCompletion();
+            var trigger = new Completion();
             var whileLoop = new WhileLoop {Condition = new ConstantValueExpression()};
             whileLoop.Body.Add(trigger);
 
@@ -289,14 +288,14 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
                 }
             ");
 
-            var trigger = new ExpressionCompletion();
+            var trigger = new Completion();
             var ifElseExpression = new IfElseExpression
             {
                 Condition = new ConstantValueExpression(),
-                ThenExpression = null,//trigger,
+                ThenExpression = null, //trigger,
                 ElseExpression = null
             };
-            var assignment = new Assignment {Identifier = "v", Value = ifElseExpression};
+            var assignment = SSTUtil.AssignmentToLocal("v", ifElseExpression);
 
             var mA = NewMethodDeclaration(Fix.Void, "A");
             mA.Body.Add(assignment);

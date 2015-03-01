@@ -17,6 +17,7 @@
  *    - Sebastian Proksch
  */
 
+using KaVE.Model.SSTs.Visitor;
 using KaVE.Utils;
 
 namespace KaVE.Model.SSTs.Blocks
@@ -37,6 +38,11 @@ namespace KaVE.Model.SSTs.Blocks
         public override int GetHashCode()
         {
             return 7;
+        }
+
+        public void Accept<TContext>(ISSTNodeVisitor<TContext> visitor, TContext context)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

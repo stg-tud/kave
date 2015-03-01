@@ -22,6 +22,7 @@ using KaVE.Model.SSTs.Expressions.Assignable;
 using KaVE.Model.SSTs.Expressions.LoopHeader;
 using KaVE.Model.SSTs.Expressions.Simple;
 using KaVE.Model.SSTs.References;
+using KaVE.Model.SSTs.Statements;
 using KaVE.Model.SSTs.Visitor;
 
 namespace KaVE.Model.SSTs.Impl.Visitor
@@ -37,14 +38,26 @@ namespace KaVE.Model.SSTs.Impl.Visitor
         public virtual void Visit(IMethodDeclaration stmt, TContext context) {}
         public virtual void Visit(IPropertyDeclaration stmt, TContext context) {}
 
+        // ambiguous
+        public virtual void Visit(ICompletion entity, TContext context) {}
+        public virtual void Visit(IInvocation entity, TContext context) {}
+
         // statements
-        public virtual void Visit(IStatement stmt, TContext context) {}
+        public virtual void Visit(IAssignment stmt, TContext context) {}
+        public virtual void Visit(IBreakStatement stmt, TContext context) {}
+        public virtual void Visit(IContinueStatement stmt, TContext context) {}
+        public virtual void Visit(IGotoStatement stmt, TContext context) {}
+        public virtual void Visit(ILabelledStatement stmt, TContext context) {}
+        public virtual void Visit(ILockStatement stmt, TContext context) {}
+        public virtual void Visit(IReturnStatement stmt, TContext context) {}
+        public virtual void Visit(IThrowStatement stmt, TContext context) {}
+
+        // blocks
+        // ...
 
         // Expressions
         public virtual void Visit(IComposedExpression expr, TContext context) {}
-        public virtual void Visit(IExpressionCompletion expr, TContext context) {}
         public virtual void Visit(IIfElseExpression expr, TContext context) {}
-        public virtual void Visit(IInvocationExpression expr, TContext context) {}
         public virtual void Visit(ILambdaExpression expr, TContext context) {}
         public virtual void Visit(ILoopHeaderBlockExpression expr, TContext context) {}
         public virtual void Visit(IConstantValueExpression expr, TContext context) {}

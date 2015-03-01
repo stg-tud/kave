@@ -20,7 +20,6 @@
 using System.Collections.Generic;
 using KaVE.Model.Names;
 using KaVE.Model.SSTs.Declarations;
-using KaVE.Model.SSTs.Statements.Wrapped;
 using KaVE.Model.SSTs.Visitor;
 
 namespace KaVE.Model.SSTs
@@ -33,7 +32,6 @@ namespace KaVE.Model.SSTs
         ISet<IMethodDeclaration> Methods { get; }
         ISet<IEventDeclaration> Events { get; }
         ISet<IDelegateDeclaration> Delegates { get; }
-        StatementCompletion TypeLevel { get; }
 
         ISet<IMethodDeclaration> EntryPoints { get; }
         ISet<IMethodDeclaration> NonEntryPoints { get; }

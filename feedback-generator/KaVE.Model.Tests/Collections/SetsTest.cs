@@ -21,6 +21,7 @@ using System;
 using System.Collections.Generic;
 using KaVE.Model.Collections;
 using KaVE.Model.Names.CSharp;
+using KaVE.Model.SSTs.Impl.Statements;
 using KaVE.Model.SSTs.Statements;
 using NUnit.Framework;
 
