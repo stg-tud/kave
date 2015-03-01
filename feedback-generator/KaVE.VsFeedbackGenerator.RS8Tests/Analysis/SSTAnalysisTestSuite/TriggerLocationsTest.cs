@@ -22,6 +22,7 @@ using System.Linq;
 using KaVE.Model.SSTs;
 using KaVE.Model.SSTs.Blocks;
 using KaVE.Model.SSTs.Impl;
+using KaVE.Model.SSTs.Impl.Blocks;
 using KaVE.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Model.SSTs.Impl.Expressions.Simple;
 using NUnit.Framework;

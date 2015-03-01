@@ -17,23 +17,8 @@
  *    - Sebastian Proksch
  */
 
-using KaVE.Model.SSTs.Blocks;
-using KaVE.Model.SSTs.Impl.Blocks;
-using NUnit.Framework;
-
-namespace KaVE.Model.Tests.SSTs.Blocks
+namespace KaVE.Model.SSTs.Blocks
 {
-    public class UnsafeBlockTest
-    {
-        [Test]
-        public void Equality()
-        {
-            var a = new UnsafeBlock();
-            var b = new UnsafeBlock();
-            Assert.AreEqual(a, b);
-            Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
-            Assert.AreNotEqual(0, a.GetHashCode());
-            Assert.AreNotEqual(1, a.GetHashCode());
-        }
-    }
+    // not analyzed (this includes "fixed" statements as they are only allowed in unsafe blocks)
+    public interface IUnsafeBlock : IStatement {}
 }

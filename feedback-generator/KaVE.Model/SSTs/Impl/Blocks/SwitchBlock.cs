@@ -19,24 +19,28 @@
 
 using System.Collections.Generic;
 using KaVE.Model.Collections;
+using KaVE.Model.SSTs.Blocks;
 using KaVE.Model.SSTs.Visitor;
 using KaVE.Utils;
 
-namespace KaVE.Model.SSTs.Blocks
+namespace KaVE.Model.SSTs.Impl.Blocks
 {
-    public class DoLoop : IStatement
+    public class SwitchBlock : ISwitchBlock
     {
-        public IExpression Condition { get; set; }
-        public IList<IStatement> Body { get; set; }
+        public string Identifier { get; set; }
+        public IList<CaseBlock> Sections { get; set; }
+        public IList<IStatement> DefaultSection { get; set; }
 
-        public DoLoop()
+        public SwitchBlock()
         {
-            Body = Lists.NewList<IStatement>();
+            Sections = Lists.NewList<CaseBlock>();
+            DefaultSection = Lists.NewList<IStatement>();
         }
 
-        private bool Equals(DoLoop other)
+        protected bool Equals(SwitchBlock other)
         {
-            return Body.Equals(other.Body) && Equals(Condition, other.Condition);
+            return Equals(Sections, other.Sections) && Equals(DefaultSection, other.DefaultSection) &&
+                   string.Equals(Identifier, other.Identifier);
         }
 
         public override bool Equals(object obj)
@@ -48,7 +52,10 @@ namespace KaVE.Model.SSTs.Blocks
         {
             unchecked
             {
-                return (Body.GetHashCode()*397) ^ (Condition != null ? Condition.GetHashCode() : 0);
+                var hashCode = (Sections != null ? Sections.GetHashCode() : 0);
+                hashCode = (hashCode*397) ^ (DefaultSection != null ? DefaultSection.GetHashCode() : 0);
+                hashCode = (hashCode*397) ^ (Identifier != null ? Identifier.GetHashCode() : 0);
+                return hashCode;
             }
         }
 

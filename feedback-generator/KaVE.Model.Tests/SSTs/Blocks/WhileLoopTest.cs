@@ -18,12 +18,9 @@
  */
 
 using KaVE.Model.Collections;
-using KaVE.Model.SSTs.Blocks;
-using KaVE.Model.SSTs.Expressions;
-using KaVE.Model.SSTs.Impl.Expressions.Assignable;
+using KaVE.Model.SSTs.Impl.Blocks;
 using KaVE.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Model.SSTs.Impl.Statements;
-using KaVE.Model.SSTs.Statements;
 using NUnit.Framework;
 
 namespace KaVE.Model.Tests.SSTs.Blocks
@@ -73,7 +70,7 @@ namespace KaVE.Model.Tests.SSTs.Blocks
         public void Equality_DifferentCondition()
         {
             var a = new WhileLoop {Condition = new ConstantValueExpression()};
-            var b = new WhileLoop {Condition = new ComposedExpression()};
+            var b = new WhileLoop {Condition = new ReferenceExpression()};
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
         }

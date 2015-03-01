@@ -19,21 +19,25 @@
 
 using System.Collections.Generic;
 using KaVE.Model.Collections;
+using KaVE.Model.SSTs.Blocks;
 using KaVE.Model.SSTs.Visitor;
 using KaVE.Utils;
 
-namespace KaVE.Model.SSTs.Blocks
+namespace KaVE.Model.SSTs.Impl.Blocks
 {
-    public class SwitchBlock : IStatement
+    public class UsingBlock : IUsingBlock
     {
         public string Identifier { get; set; }
-        public IList<CaseBlock> Sections = Lists.NewList<CaseBlock>();
-        public IList<IStatement> DefaultSection = Lists.NewList<IStatement>();
+        public IList<IStatement> Body { get; set; }
 
-        protected bool Equals(SwitchBlock other)
+        public UsingBlock()
         {
-            return Equals(Sections, other.Sections) && Equals(DefaultSection, other.DefaultSection) &&
-                   string.Equals(Identifier, other.Identifier);
+            Body = Lists.NewList<IStatement>();
+        }
+
+        protected bool Equals(UsingBlock other)
+        {
+            return Body.Equals(other.Body) && Equals(Identifier, other.Identifier);
         }
 
         public override bool Equals(object obj)
@@ -43,13 +47,7 @@ namespace KaVE.Model.SSTs.Blocks
 
         public override int GetHashCode()
         {
-            unchecked
-            {
-                var hashCode = (Sections != null ? Sections.GetHashCode() : 0);
-                hashCode = (hashCode*397) ^ (DefaultSection != null ? DefaultSection.GetHashCode() : 0);
-                hashCode = (hashCode*397) ^ (Identifier != null ? Identifier.GetHashCode() : 0);
-                return hashCode;
-            }
+            return 6*Body.GetHashCode() + (Identifier != null ? Identifier.GetHashCode() : 0);
         }
 
         public void Accept<TContext>(ISSTNodeVisitor<TContext> visitor, TContext context)

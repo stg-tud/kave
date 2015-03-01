@@ -17,6 +17,7 @@
  *    - Sebastian Proksch
  */
 
+using KaVE.Model.SSTs.Blocks;
 using KaVE.Model.SSTs.Declarations;
 using KaVE.Model.SSTs.Expressions.Assignable;
 using KaVE.Model.SSTs.Expressions.LoopHeader;
@@ -53,7 +54,17 @@ namespace KaVE.Model.SSTs.Impl.Visitor
         public virtual void Visit(IThrowStatement stmt, TContext context) {}
 
         // blocks
-        // ...
+        public virtual void Visit(ICaseBlock block, TContext context) {}
+        public virtual void Visit(ICatchBlock block, TContext context) {}
+        public virtual void Visit(IDoLoop block, TContext context) {}
+        public virtual void Visit(IForEachLoop block, TContext context) {}
+        public virtual void Visit(IForLoop block, TContext context) {}
+        public virtual void Visit(IIfElseBlock block, TContext context) {}
+        public virtual void Visit(ISwitchBlock block, TContext context) {}
+        public virtual void Visit(ITryBlock block, TContext context) {}
+        public virtual void Visit(IUnsafeBlock block, TContext context) {}
+        public virtual void Visit(IUsingBlock block, TContext context) {}
+        public virtual void Visit(IWhileLoop block, TContext context) {}
 
         // Expressions
         public virtual void Visit(IComposedExpression expr, TContext context) {}

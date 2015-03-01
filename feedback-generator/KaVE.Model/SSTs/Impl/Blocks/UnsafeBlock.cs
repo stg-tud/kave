@@ -18,22 +18,31 @@
  */
 
 using KaVE.Model.SSTs.Blocks;
-using KaVE.Model.SSTs.Impl.Blocks;
-using NUnit.Framework;
+using KaVE.Model.SSTs.Visitor;
+using KaVE.Utils;
 
-namespace KaVE.Model.Tests.SSTs.Blocks
+namespace KaVE.Model.SSTs.Impl.Blocks
 {
-    public class UnsafeBlockTest
+    public class UnsafeBlock : IUnsafeBlock
     {
-        [Test]
-        public void Equality()
+        private static bool Equals(UnsafeBlock other)
         {
-            var a = new UnsafeBlock();
-            var b = new UnsafeBlock();
-            Assert.AreEqual(a, b);
-            Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
-            Assert.AreNotEqual(0, a.GetHashCode());
-            Assert.AreNotEqual(1, a.GetHashCode());
+            return true;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return this.Equals(obj, Equals);
+        }
+
+        public override int GetHashCode()
+        {
+            return 7;
+        }
+
+        public void Accept<TContext>(ISSTNodeVisitor<TContext> visitor, TContext context)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

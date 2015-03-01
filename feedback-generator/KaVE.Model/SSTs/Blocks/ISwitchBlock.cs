@@ -17,23 +17,15 @@
  *    - Sebastian Proksch
  */
 
-using KaVE.Model.SSTs.Blocks;
+using System.Collections.Generic;
 using KaVE.Model.SSTs.Impl.Blocks;
-using NUnit.Framework;
 
-namespace KaVE.Model.Tests.SSTs.Blocks
+namespace KaVE.Model.SSTs.Blocks
 {
-    public class UnsafeBlockTest
+    public interface ISwitchBlock : IStatement
     {
-        [Test]
-        public void Equality()
-        {
-            var a = new UnsafeBlock();
-            var b = new UnsafeBlock();
-            Assert.AreEqual(a, b);
-            Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
-            Assert.AreNotEqual(0, a.GetHashCode());
-            Assert.AreNotEqual(1, a.GetHashCode());
-        }
+        string Identifier { get; }
+        IList<CaseBlock> Sections { get; }
+        IList<IStatement> DefaultSection { get; }
     }
 }

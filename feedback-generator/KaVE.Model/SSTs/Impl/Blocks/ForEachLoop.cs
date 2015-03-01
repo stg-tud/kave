@@ -1,5 +1,5 @@
-﻿/*
- * Copyright 2014 Technische Universität Darmstadt
+/*
+ * Copyright 2014 Technische Universit�t Darmstadt
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,19 +19,28 @@
 
 using System.Collections.Generic;
 using KaVE.Model.Collections;
+using KaVE.Model.SSTs.Blocks;
+using KaVE.Model.SSTs.Declarations;
 using KaVE.Model.SSTs.Visitor;
 using KaVE.Utils;
 
-namespace KaVE.Model.SSTs.Blocks
+namespace KaVE.Model.SSTs.Impl.Blocks
 {
-    public class UsingBlock : IStatement
+    public class ForEachLoop : IForEachLoop
     {
-        public string Identifier { get; set; }
-        public readonly IList<IStatement> Body = Lists.NewList<IStatement>();
+        public IVariableDeclaration Decl { get; set; }
+        public string LoopedIdentifier { get; set; }
+        public IList<IStatement> Body { get; set; }
 
-        protected bool Equals(UsingBlock other)
+        public ForEachLoop()
         {
-            return Body.Equals(other.Body) && Equals(Identifier, other.Identifier);
+            Body = Lists.NewList<IStatement>();
+        }
+
+        private bool Equals(ForEachLoop other)
+        {
+            return Body.Equals(other.Body) && Equals(Decl, other.Decl) &&
+                   Equals(LoopedIdentifier, other.LoopedIdentifier);
         }
 
         public override bool Equals(object obj)
@@ -41,7 +50,13 @@ namespace KaVE.Model.SSTs.Blocks
 
         public override int GetHashCode()
         {
-            return 6*Body.GetHashCode() + (Identifier != null ? Identifier.GetHashCode() : 0);
+            unchecked
+            {
+                var hashCode = Body.GetHashCode();
+                hashCode = (hashCode*397) ^ (Decl != null ? Decl.GetHashCode() : 0);
+                hashCode = (hashCode*397) ^ (LoopedIdentifier != null ? LoopedIdentifier.GetHashCode() : 0);
+                return hashCode;
+            }
         }
 
         public void Accept<TContext>(ISSTNodeVisitor<TContext> visitor, TContext context)

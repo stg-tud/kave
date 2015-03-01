@@ -17,32 +17,13 @@
  *    - Sebastian Proksch
  */
 
-using KaVE.Model.SSTs.Visitor;
-using KaVE.Utils;
+using System.Collections.Generic;
 
 namespace KaVE.Model.SSTs.Blocks
 {
-    // not analyzed (this includes "fixed" statements as they are only allowed in unsafe blocks)
-    public class UnsafeBlock : IStatement
+    public interface IUsingBlock : IStatement
     {
-        private static bool Equals(UnsafeBlock other)
-        {
-            return true;
-        }
-
-        public override bool Equals(object obj)
-        {
-            return this.Equals(obj, Equals);
-        }
-
-        public override int GetHashCode()
-        {
-            return 7;
-        }
-
-        public void Accept<TContext>(ISSTNodeVisitor<TContext> visitor, TContext context)
-        {
-            throw new System.NotImplementedException();
-        }
+        string Identifier { get; }
+        IList<IStatement> Body { get; }
     }
 }

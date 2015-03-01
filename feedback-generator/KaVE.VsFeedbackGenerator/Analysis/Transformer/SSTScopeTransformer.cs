@@ -22,8 +22,8 @@ using System.Linq;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.Util;
 using KaVE.Model.SSTs;
-using KaVE.Model.SSTs.Blocks;
 using KaVE.Model.SSTs.Expressions;
+using KaVE.Model.SSTs.Impl.Blocks;
 using KaVE.Model.SSTs.Impl.Declarations;
 using KaVE.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Model.SSTs.Impl.References;
@@ -235,7 +235,9 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
             context.Scope.Body.Add(whileLoop);
             if (whileStatementParam.Condition != null)
             {
-                whileLoop.Condition = whileStatementParam.Condition.GetScopedReferences(context);
+                var scopedReferences = whileStatementParam.Condition.GetScopedReferences(context);
+                // TODO
+                whileLoop.Condition = null;
             }
             if (whileStatementParam.Body != null)
             {

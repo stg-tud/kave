@@ -20,6 +20,7 @@
 using KaVE.Model.Collections;
 using KaVE.Model.SSTs.Blocks;
 using KaVE.Model.SSTs.Expressions;
+using KaVE.Model.SSTs.Impl.Blocks;
 using KaVE.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Model.SSTs.Impl.Statements;
 using KaVE.Model.SSTs.Statements;

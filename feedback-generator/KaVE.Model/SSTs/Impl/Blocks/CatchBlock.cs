@@ -19,20 +19,26 @@
 
 using System.Collections.Generic;
 using KaVE.Model.Collections;
+using KaVE.Model.SSTs.Blocks;
+using KaVE.Model.SSTs.Declarations;
 using KaVE.Model.SSTs.Visitor;
 using KaVE.Utils;
 
-namespace KaVE.Model.SSTs.Blocks
+namespace KaVE.Model.SSTs.Impl.Blocks
 {
-    public class IfElseBlock : IStatement
+    public class CatchBlock : ICatchBlock
     {
-        public IExpression Condition { get; set; }
-        public readonly IList<IStatement> Then = Lists.NewList<IStatement>();
-        public readonly IList<IStatement> Else = Lists.NewList<IStatement>();
+        public IVariableDeclaration Exception { get; set; }
+        public IList<IStatement> Body { get; set; }
 
-        public bool Equals(IfElseBlock block)
+        public CatchBlock()
         {
-            return Equals(Condition, block.Condition) && Equals(Then, block.Then) && Equals(Else, block.Else);
+            Body = Lists.NewList<IStatement>();
+        }
+
+        private bool Equals(CatchBlock other)
+        {
+            return Body.Equals(other.Body) && Equals(Exception, other.Exception);
         }
 
         public override bool Equals(object obj)
@@ -44,10 +50,8 @@ namespace KaVE.Model.SSTs.Blocks
         {
             unchecked
             {
-                var hashCode = Then.GetHashCode();
-                hashCode = (hashCode*397) ^ Else.GetHashCode();
-                hashCode = (hashCode*397) ^ (Condition != null ? Condition.GetHashCode() : 0);
-                return hashCode;
+                return 31 + ((Body != null ? Body.GetHashCode() : 0)*397) ^
+                       (Exception != null ? Exception.GetHashCode() : 0);
             }
         }
 

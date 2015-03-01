@@ -1,5 +1,5 @@
-﻿/*
- * Copyright 2014 Technische Universität Darmstadt
+/*
+ * Copyright 2014 Technische Universit�t Darmstadt
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,22 +19,26 @@
 
 using System.Collections.Generic;
 using KaVE.Model.Collections;
+using KaVE.Model.SSTs.Blocks;
+using KaVE.Model.SSTs.Expressions;
 using KaVE.Model.SSTs.Visitor;
 using KaVE.Utils;
 
-namespace KaVE.Model.SSTs.Blocks
+namespace KaVE.Model.SSTs.Impl.Blocks
 {
-    public class ForLoop : IStatement
+    public class WhileLoop : IWhileLoop
     {
-        public readonly IList<IStatement> Init = Lists.NewList<IStatement>();
-        public IExpression Condition { get; set; }
-        public readonly IList<IStatement> Step = Lists.NewList<IStatement>();
-        public readonly IList<IStatement> Body = Lists.NewList<IStatement>();
+        public ILoopHeaderExpression Condition { get; set; }
+        public IList<IStatement> Body { get; set; }
 
-        private bool Equals(ForLoop other)
+        public WhileLoop()
         {
-            return Body.Equals(other.Body) && Step.Equals(other.Step) && Init.Equals(other.Init) &&
-                   Equals(Condition, other.Condition);
+            Body = Lists.NewList<IStatement>();
+        }
+
+        private bool Equals(WhileLoop other)
+        {
+            return Body.Equals(other.Body) && Equals(Condition, other.Condition);
         }
 
         public override bool Equals(object obj)
@@ -46,11 +50,7 @@ namespace KaVE.Model.SSTs.Blocks
         {
             unchecked
             {
-                var hashCode = Init.GetHashCode();
-                hashCode = (hashCode*397) ^ Step.GetHashCode();
-                hashCode = (hashCode*397) ^ Body.GetHashCode();
-                hashCode = (hashCode*397) ^ (Condition != null ? Condition.GetHashCode() : 0);
-                return hashCode;
+                return (Body.GetHashCode()*397) ^ (Condition != null ? Condition.GetHashCode() : 0);
             }
         }
 
