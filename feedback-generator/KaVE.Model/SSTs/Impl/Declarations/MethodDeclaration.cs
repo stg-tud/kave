@@ -56,7 +56,7 @@ namespace KaVE.Model.SSTs.Impl.Declarations
         {
             unchecked
             {
-                var hashCode = (Body != null ? Body.GetHashCode() : 0);
+                var hashCode = Body.GetHashCode();
                 hashCode = (hashCode*397) ^ (Name != null ? Name.GetHashCode() : 0);
                 hashCode = (hashCode*397) ^ IsEntryPoint.GetHashCode();
                 return hashCode;

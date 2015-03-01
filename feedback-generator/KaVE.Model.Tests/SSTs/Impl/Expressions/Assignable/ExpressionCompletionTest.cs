@@ -29,14 +29,6 @@ namespace KaVE.Model.Tests.SSTs.Impl.Expressions.Assignable
 {
     public class ExpressionCompletionTest
     {
-        private TestVisitor _visitor;
-
-        [SetUp]
-        public void Setup()
-        {
-            _visitor = new TestVisitor();
-        }
-
         [Test]
         public void DefaultValues()
         {
@@ -60,11 +52,6 @@ namespace KaVE.Model.Tests.SSTs.Impl.Expressions.Assignable
             Assert.AreEqual(Ref("i"), sut.ObjectReference);
             Assert.AreEqual(TypeName.UnknownName, sut.TypeReference);
             Assert.AreEqual("t", sut.Token);
-        }
-
-        private IVariableReference Ref(string id)
-        {
-            return new VariableReference {Identifier = id};
         }
 
         [Test]
@@ -127,9 +114,16 @@ namespace KaVE.Model.Tests.SSTs.Impl.Expressions.Assignable
         public void VisitorIsImplemented()
         {
             var sut = new ExpressionCompletion();
-            sut.Accept(_visitor, 13);
-            Assert.AreEqual(sut, _visitor.Expr);
-            Assert.AreEqual(13, _visitor.Context);
+            var visitor = new TestVisitor();
+            sut.Accept(visitor, 2);
+
+            Assert.AreEqual(sut, visitor.Expr);
+            Assert.AreEqual(2, visitor.Context);
+        }
+
+        private static IVariableReference Ref(string id)
+        {
+            return new VariableReference {Identifier = id};
         }
 
         internal class TestVisitor : AbstractNodeVisitor<int>

@@ -40,6 +40,7 @@ namespace KaVE.Model.Tests.SSTs.Impl.Declarations
             Assert.Null(sut.Name);
             Assert.False(sut.IsEntryPoint);
             Assert.NotNull(sut.Body);
+            Assert.AreEqual(0, sut.Body.Count);
             Assert.AreNotEqual(0, sut.GetHashCode());
             Assert.AreNotEqual(1, sut.GetHashCode());
         }

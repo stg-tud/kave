@@ -17,6 +17,7 @@
  *    - Sebastian Proksch
  */
 
+using KaVE.Model.SSTs;
 using KaVE.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Model.SSTs.Impl.References;
 using KaVE.Model.SSTs.Statements.Wrapped;
@@ -60,7 +61,7 @@ namespace KaVE.Model.Tests.SSTs.Statements.Wrapped
         public void SettingValues_Helper2()
         {
             var sut = StatementCompletion.Create("i", "t");
-            Assert.AreEqual("i", sut.Completion.ObjectReference);
+            Assert.AreEqual(SSTUtil.VariableReference("i"), sut.Completion.ObjectReference);
             Assert.AreEqual("t", sut.Completion.Token);
         }
 

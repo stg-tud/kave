@@ -31,14 +31,6 @@ namespace KaVE.Model.Tests.SSTs.Impl.Expressions.Assignable
 {
     public class ComposedExpressionTest
     {
-        private TestVisitor _visitor;
-
-        [SetUp]
-        public void Setup()
-        {
-            _visitor = new TestVisitor();
-        }
-
         [Test]
         public void DefaultValues()
         {
@@ -75,7 +67,7 @@ namespace KaVE.Model.Tests.SSTs.Impl.Expressions.Assignable
         }
 
         [Test]
-        public void Equality_DifferentVariables()
+        public void Equality_DifferentReferences()
         {
             var a = new ComposedExpression {References = Refs("a")};
             var b = new ComposedExpression {References = Refs("b")};
@@ -87,9 +79,11 @@ namespace KaVE.Model.Tests.SSTs.Impl.Expressions.Assignable
         public void VisitorIsImplemented()
         {
             var sut = new ComposedExpression();
-            sut.Accept(_visitor, 13);
-            Assert.AreEqual(sut, _visitor.Expr);
-            Assert.AreEqual(13, _visitor.Context);
+            var visitor = new TestVisitor();
+            sut.Accept(visitor, 1);
+
+            Assert.AreEqual(sut, visitor.Expr);
+            Assert.AreEqual(1, visitor.Context);
         }
 
         private static IList<IVariableReference> Refs(params string[] strRefs)

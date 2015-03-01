@@ -19,7 +19,9 @@
 
 using KaVE.Model.Collections;
 using KaVE.Model.SSTs;
+using KaVE.Model.SSTs.Declarations;
 using KaVE.Model.SSTs.Expressions.Assignable;
+using KaVE.Model.SSTs.Impl.Declarations;
 using KaVE.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Model.SSTs.Impl.Visitor;
 using KaVE.Model.SSTs.Statements;
@@ -29,19 +31,14 @@ namespace KaVE.Model.Tests.SSTs.Impl.Expressions.Assignable
 {
     public class LambdaExpressionTest
     {
-        private TestVisitor _visitor;
-
-        [SetUp]
-        public void Setup()
-        {
-            _visitor = new TestVisitor();
-        }
-
         [Test]
         public void DefaultValues()
         {
             var sut = new LambdaExpression();
-            Assert.AreEqual(Lists.NewList<IStatement>(), sut.Body);
+            Assert.NotNull(sut.Parameters);
+            Assert.AreEqual(0, sut.Parameters.Count);
+            Assert.NotNull(sut.Body);
+            Assert.AreEqual(0, sut.Body.Count);
             Assert.AreNotEqual(0, sut.GetHashCode());
             Assert.AreNotEqual(1, sut.GetHashCode());
         }
@@ -50,12 +47,16 @@ namespace KaVE.Model.Tests.SSTs.Impl.Expressions.Assignable
         public void SettingValues()
         {
             var sut = new LambdaExpression();
+            sut.Parameters.Add(new VariableDeclaration());
             sut.Body.Add(new GotoStatement());
 
-            var expected = Lists.NewList<IStatement>();
-            expected.Add(new GotoStatement());
+            var expectedBody = Lists.NewList<IStatement>();
+            expectedBody.Add(new GotoStatement());
+            Assert.AreEqual(expectedBody, sut.Body);
 
-            Assert.AreEqual(expected, sut.Body);
+            var expectedParameters = Lists.NewList<IVariableDeclaration>();
+            expectedParameters.Add(new VariableDeclaration());
+            Assert.AreEqual(expectedParameters, sut.Parameters);
         }
 
         [Test]
@@ -72,12 +73,26 @@ namespace KaVE.Model.Tests.SSTs.Impl.Expressions.Assignable
         public void Equality_ReallyTheSame()
         {
             var a = new LambdaExpression();
+            a.Parameters.Add(new VariableDeclaration());
             a.Body.Add(new GotoStatement());
+
             var b = new LambdaExpression();
+            b.Parameters.Add(new VariableDeclaration());
             b.Body.Add(new GotoStatement());
 
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
+        }
+
+        [Test]
+        public void Equality_DifferentParameters()
+        {
+            var a = new LambdaExpression();
+            a.Parameters.Add(new VariableDeclaration());
+            var b = new LambdaExpression();
+
+            Assert.AreNotEqual(a, b);
+            Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
         }
 
         [Test]
@@ -94,23 +109,23 @@ namespace KaVE.Model.Tests.SSTs.Impl.Expressions.Assignable
         [Test]
         public void VisitorIsImplemented()
         {
-            var sut = new ComposedExpression();
-            sut.Accept(_visitor, 13);
-            Assert.AreEqual(sut, _visitor.Expr);
-            Assert.AreEqual(13, _visitor.Context);
+            var sut = new LambdaExpression();
+            var visitor = new TestVisitor();
+            sut.Accept(visitor, 5);
+            Assert.AreEqual(sut, visitor.Expr);
+            Assert.AreEqual(5, visitor.Context);
         }
 
         internal class TestVisitor : AbstractNodeVisitor<int>
         {
-            public IExpressionCompletion Expr { get; private set; }
+            public ILambdaExpression Expr { get; private set; }
             public int Context { get; private set; }
 
-            public override void Visit(IExpressionCompletion expr, int context)
+            public override void Visit(ILambdaExpression expr, int context)
             {
                 Expr = expr;
                 Context = context;
             }
         }
-
     }
 }

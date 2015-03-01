@@ -18,8 +18,7 @@
  */
 
 using KaVE.Model.SSTs;
-using KaVE.Model.SSTs.Expressions.Assignable;
-using KaVE.Model.SSTs.Impl.Expressions.Assignable;
+using KaVE.Model.SSTs.Expressions.Simple;
 using KaVE.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Model.SSTs.Impl.References;
 using KaVE.Model.SSTs.Impl.Visitor;
@@ -29,14 +28,6 @@ namespace KaVE.Model.Tests.SSTs.Impl.Expressions.Simple
 {
     internal class ReferenceExpressionTest
     {
-        private TestVisitor _visitor;
-
-        [SetUp]
-        public void Setup()
-        {
-            _visitor = new TestVisitor();
-        }
-
         [Test]
         public void DefaultValues()
         {
@@ -50,12 +41,7 @@ namespace KaVE.Model.Tests.SSTs.Impl.Expressions.Simple
         public void SettingValues()
         {
             var sut = new ReferenceExpression {Reference = Ref("a")};
-            Assert.AreEqual("a", sut.Reference);
-        }
-
-        private IReference Ref(string id)
-        {
-            return new VariableReference {Identifier = id};
+            Assert.AreEqual(Ref("a"), sut.Reference);
         }
 
         [Test]
@@ -88,18 +74,25 @@ namespace KaVE.Model.Tests.SSTs.Impl.Expressions.Simple
         [Test]
         public void VisitorIsImplemented()
         {
-            var sut = new ComposedExpression();
-            sut.Accept(_visitor, 13);
-            Assert.AreEqual(sut, _visitor.Expr);
-            Assert.AreEqual(13, _visitor.Context);
+            var sut = new ReferenceExpression();
+            var visitor = new TestVisitor();
+            sut.Accept(visitor, 9);
+
+            Assert.AreEqual(sut, visitor.Expr);
+            Assert.AreEqual(9, visitor.Context);
+        }
+
+        private static IReference Ref(string id)
+        {
+            return new VariableReference {Identifier = id};
         }
 
         internal class TestVisitor : AbstractNodeVisitor<int>
         {
-            public IExpressionCompletion Expr { get; private set; }
+            public IReferenceExpression Expr { get; private set; }
             public int Context { get; private set; }
 
-            public override void Visit(IExpressionCompletion expr, int context)
+            public override void Visit(IReferenceExpression expr, int context)
             {
                 Expr = expr;
                 Context = context;

@@ -39,7 +39,9 @@ namespace KaVE.Model.SSTs.Impl.Expressions.Assignable
 
         private bool Equals(LambdaExpression other)
         {
-            return Equals(Body, other.Body);
+            var eqParams = Equals(Parameters, other.Parameters);
+            var eqBody = Equals(Body, other.Body);
+            return eqBody && eqParams;
         }
 
         public override bool Equals(object obj)
@@ -49,12 +51,12 @@ namespace KaVE.Model.SSTs.Impl.Expressions.Assignable
 
         public override int GetHashCode()
         {
-            return (Body != null ? Body.GetHashCode() : 0);
+            return unchecked (2990306 + Body.GetHashCode()*5 + Parameters.GetHashCode()*3);
         }
 
         public void Accept<TContext>(ISSTNodeVisitor<TContext> visitor, TContext context)
         {
-            throw new System.NotImplementedException();
+            visitor.Visit(this, context);
         }
     }
 }

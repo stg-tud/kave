@@ -47,7 +47,7 @@ namespace KaVE.Model.SSTs.Impl.References
         public override int GetHashCode()
         {
             var hcMethodName = MethodName != null ? MethodName.GetHashCode() : 0;
-            return 2387645 + hcMethodName;
+            return unchecked(91747 + hcMethodName);
         }
     }
 }

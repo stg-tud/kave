@@ -25,11 +25,6 @@ using KaVE.Utils;
 
 namespace KaVE.Model.SSTs.Impl.Expressions.LoopHeader
 {
-    /*
-     * some expressions are broken down to small SST statemets (e.g., nested calls).
-     * Block Expressions add support for this transformation to SSTs.
-     */
-
     public class LoopHeaderBlockExpression : ILoopHeaderBlockExpression
     {
         public IList<IStatement> Body { get; set; }
@@ -51,12 +46,12 @@ namespace KaVE.Model.SSTs.Impl.Expressions.LoopHeader
 
         public override int GetHashCode()
         {
-            return (Body != null ? Body.GetHashCode() : 0);
+            return unchecked (4874 + Body.GetHashCode());
         }
 
         public void Accept<TContext>(ISSTNodeVisitor<TContext> visitor, TContext context)
         {
-            throw new System.NotImplementedException();
+            visitor.Visit(this, context);
         }
     }
 }

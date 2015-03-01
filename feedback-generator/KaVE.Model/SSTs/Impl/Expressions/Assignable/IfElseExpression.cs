@@ -54,7 +54,7 @@ namespace KaVE.Model.SSTs.Impl.Expressions.Assignable
 
         public void Accept<TContext>(ISSTNodeVisitor<TContext> visitor, TContext context)
         {
-            throw new System.NotImplementedException();
+            visitor.Visit(this, context);
         }
     }
 }

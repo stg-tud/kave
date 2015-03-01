@@ -47,7 +47,7 @@ namespace KaVE.Model.SSTs.Impl.References
         public override int GetHashCode()
         {
             var hcFieldName = FieldName != null ? FieldName.GetHashCode() : 0;
-            return 2387645 + hcFieldName;
+            return unchecked(345 + hcFieldName);
         }
     }
 }

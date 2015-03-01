@@ -36,7 +36,9 @@ namespace KaVE.Model.Tests.SSTs.Impl.Declarations
             var sut = new PropertyDeclaration();
             Assert.Null(sut.Name);
             Assert.NotNull(sut.Get);
+            Assert.AreEqual(0, sut.Get.Count);
             Assert.NotNull(sut.Set);
+            Assert.AreEqual(0, sut.Set.Count);
             Assert.AreNotEqual(0, sut.GetHashCode());
             Assert.AreNotEqual(1, sut.GetHashCode());
         }

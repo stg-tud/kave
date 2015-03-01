@@ -18,7 +18,6 @@
  */
 
 using KaVE.Model.SSTs.Expressions.Simple;
-using KaVE.Model.SSTs.Impl.References;
 using KaVE.Model.SSTs.Visitor;
 using KaVE.Utils;
 
@@ -41,12 +40,12 @@ namespace KaVE.Model.SSTs.Impl.Expressions.Simple
         public override int GetHashCode()
         {
             var hcIdentifier = Reference != null ? Reference.GetHashCode() : 0;
-            return 29 + hcIdentifier;
+            return unchecked (29 + hcIdentifier);
         }
 
         public void Accept<TContext>(ISSTNodeVisitor<TContext> visitor, TContext context)
         {
-            throw new System.NotImplementedException();
+            visitor.Visit(this, context);
         }
     }
 }

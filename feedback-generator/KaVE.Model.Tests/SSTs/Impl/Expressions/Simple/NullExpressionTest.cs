@@ -17,8 +17,8 @@
  *    - Sebastian Proksch
  */
 
-using KaVE.Model.SSTs.Expressions.Assignable;
-using KaVE.Model.SSTs.Impl.Expressions.Assignable;
+using KaVE.Model.SSTs.Expressions.Simple;
+using KaVE.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Model.SSTs.Impl.Visitor;
 using NUnit.Framework;
 
@@ -26,29 +26,34 @@ namespace KaVE.Model.Tests.SSTs.Impl.Expressions.Simple
 {
     public class NullExpressionTest
     {
-        private TestVisitor _visitor;
-
-        [SetUp]
-        public void Setup()
+        [Test]
+        public void Equality()
         {
-            _visitor = new TestVisitor();
+            var a = new NullExpression();
+            var b = new NullExpression();
+            Assert.AreEqual(a, b);
+            Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
+            Assert.AreNotEqual(0, a.GetHashCode());
+            Assert.AreNotEqual(1, a.GetHashCode());
         }
 
         [Test]
         public void VisitorIsImplemented()
         {
-            var sut = new ComposedExpression();
-            sut.Accept(_visitor, 13);
-            Assert.AreEqual(sut, _visitor.Expr);
-            Assert.AreEqual(13, _visitor.Context);
+            var sut = new NullExpression();
+            var visitor = new TestVisitor();
+            sut.Accept(visitor, 8);
+
+            Assert.AreEqual(sut, visitor.Expr);
+            Assert.AreEqual(8, visitor.Context);
         }
 
         internal class TestVisitor : AbstractNodeVisitor<int>
         {
-            public IExpressionCompletion Expr { get; private set; }
+            public INullExpression Expr { get; private set; }
             public int Context { get; private set; }
 
-            public override void Visit(IExpressionCompletion expr, int context)
+            public override void Visit(INullExpression expr, int context)
             {
                 Expr = expr;
                 Context = context;

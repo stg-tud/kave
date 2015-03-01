@@ -47,7 +47,7 @@ namespace KaVE.Model.SSTs.Impl.References
         public override int GetHashCode()
         {
             var hcEventName = EventName != null ? EventName.GetHashCode() : 0;
-            return 2387645 + hcEventName;
+            return unchecked(175 + hcEventName);
         }
     }
 }

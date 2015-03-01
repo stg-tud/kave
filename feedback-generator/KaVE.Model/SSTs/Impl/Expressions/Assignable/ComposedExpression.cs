@@ -35,19 +35,14 @@ namespace KaVE.Model.SSTs.Impl.Expressions.Assignable
             References = Lists.NewList<IVariableReference>();
         }
 
-        private bool Equals(ComposedExpression other)
-        {
-            return References.Equals(other.References);
-        }
-
         public override bool Equals(object obj)
         {
-            return this.Equals(obj, Equals);
+            return this.Equals(obj, other => Equals(References, other.References));
         }
 
         public override int GetHashCode()
         {
-            return 5 + References.GetHashCode();
+            return unchecked (5 + References.GetHashCode());
         }
 
         public void Accept<TContext>(ISSTNodeVisitor<TContext> visitor, TContext context)

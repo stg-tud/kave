@@ -57,7 +57,7 @@ namespace KaVE.Model.SSTs
             Asserts.That(name.IsStatic || name.IsConstructor);
             return new InvocationExpression
             {
-                Name = name,
+                MethodName = name,
                 Parameters = Lists.NewListFrom(parameters),
             };
         }
@@ -71,7 +71,7 @@ namespace KaVE.Model.SSTs
             return new InvocationExpression
             {
                 Reference = new VariableReference {Identifier = id},
-                Name = name,
+                MethodName = name,
                 Parameters = Lists.NewListFrom(parameters),
             };
         }

@@ -18,13 +18,17 @@
  */
 
 using System.Collections.Generic;
+using KaVE.JetBrains.Annotations;
 using KaVE.Model.SSTs.Declarations;
 
 namespace KaVE.Model.SSTs.Expressions.Assignable
 {
     public interface ILambdaExpression : IAssignableExpression
     {
+        [NotNull]
         IList<IVariableDeclaration> Parameters { get; }
+
+        [NotNull]
         IList<IStatement> Body { get; }
     }
 }

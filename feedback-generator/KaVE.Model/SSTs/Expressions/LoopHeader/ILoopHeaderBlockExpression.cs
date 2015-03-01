@@ -18,11 +18,18 @@
  */
 
 using System.Collections.Generic;
+using KaVE.JetBrains.Annotations;
 
 namespace KaVE.Model.SSTs.Expressions.LoopHeader
 {
+    /*
+     * some expressions are broken down to small SST statemets (e.g., nested calls).
+     * Block Expressions add support for this transformation to SSTs.
+     */
+
     public interface ILoopHeaderBlockExpression : ILoopHeaderExpression
     {
+        [NotNull]
         IList<IStatement> Body { get; }
     }
 }

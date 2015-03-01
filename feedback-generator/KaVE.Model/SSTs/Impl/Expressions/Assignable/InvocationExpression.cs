@@ -18,25 +18,20 @@
  */
 
 using System.Collections.Generic;
-using KaVE.JetBrains.Annotations;
 using KaVE.Model.Collections;
 using KaVE.Model.Names;
 using KaVE.Model.SSTs.Expressions;
 using KaVE.Model.SSTs.Expressions.Assignable;
-using KaVE.Model.SSTs.Impl.References;
 using KaVE.Model.SSTs.References;
 using KaVE.Model.SSTs.Visitor;
 using KaVE.Utils;
-using KaVE.Utils.Assertion;
 
 namespace KaVE.Model.SSTs.Impl.Expressions.Assignable
 {
     public class InvocationExpression : IInvocationExpression
     {
         public IVariableReference Reference { get; set; }
-        public IMethodName Name { get; set; }
-
-        [NotNull]
+        public IMethodName MethodName { get; set; }
         public IList<ISimpleExpression> Parameters { get; set; }
 
         public InvocationExpression()
@@ -46,7 +41,7 @@ namespace KaVE.Model.SSTs.Impl.Expressions.Assignable
 
         private bool Equals(InvocationExpression other)
         {
-            return string.Equals(Reference, other.Reference) && Equals(Name, other.Name) &&
+            return string.Equals(Reference, other.Reference) && Equals(MethodName, other.MethodName) &&
                    Parameters.Equals(other.Parameters);
         }
 
@@ -60,15 +55,15 @@ namespace KaVE.Model.SSTs.Impl.Expressions.Assignable
             unchecked
             {
                 var hashCode = 11 + (Reference != null ? Reference.GetHashCode() : 0);
-                hashCode = (hashCode*397) ^ (Name != null ? Name.GetHashCode() : 0);
-                hashCode = (hashCode*397) ^ (Parameters != null ? HashCodeUtils.For(398, Parameters) : 0);
+                hashCode = (hashCode*397) ^ (MethodName != null ? MethodName.GetHashCode() : 0);
+                hashCode = (hashCode*397) ^ Parameters.GetHashCode();
                 return hashCode;
             }
         }
 
         public void Accept<TContext>(ISSTNodeVisitor<TContext> visitor, TContext context)
         {
-            throw new System.NotImplementedException();
+            visitor.Visit(this, context);
         }
     }
 }

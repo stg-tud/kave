@@ -94,9 +94,9 @@
     <Compile Include="SSTs\Impl\Declarations\EventDeclarationTest.cs" />
     <Compile Include="SSTs\Impl\Declarations\FieldDeclarationTest.cs" />
     <Compile Include="SSTs\Impl\Declarations\DelegateDeclarationTest.cs" />
-    <Compile Include="SSTs\Impl\Expressions\LoopCondition\BlockExpressionTest.cs" />
+    <Compile Include="SSTs\Impl\Expressions\LoopHeader\LoopHeaderBlockExpressionTest.cs" />
     <Compile Include="SSTs\Impl\Expressions\Assignable\ComposedExpressionTest.cs" />
-    <Compile Include="SSTs\Impl\Expressions\Simple\ConstantExpressionTest.cs" />
+    <Compile Include="SSTs\Impl\Expressions\Simple\ConstantValueExpressionTest.cs" />
     <Compile Include="SSTs\Impl\Expressions\Assignable\ExpressionCompletionTest.cs" />
     <Compile Include="SSTs\Impl\Expressions\Assignable\IfElseExpressionTest.cs" />
     <Compile Include="SSTs\Impl\Expressions\Assignable\InvocationExpressionTest.cs" />

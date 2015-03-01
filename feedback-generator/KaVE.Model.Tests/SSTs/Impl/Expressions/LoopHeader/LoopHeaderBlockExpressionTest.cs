@@ -19,30 +19,22 @@
 
 using KaVE.Model.Collections;
 using KaVE.Model.SSTs;
-using KaVE.Model.SSTs.Expressions.Assignable;
-using KaVE.Model.SSTs.Impl.Expressions.Assignable;
+using KaVE.Model.SSTs.Expressions.LoopHeader;
 using KaVE.Model.SSTs.Impl.Expressions.LoopHeader;
 using KaVE.Model.SSTs.Impl.Visitor;
 using KaVE.Model.SSTs.Statements;
 using NUnit.Framework;
 
-namespace KaVE.Model.Tests.SSTs.Impl.Expressions.LoopCondition
+namespace KaVE.Model.Tests.SSTs.Impl.Expressions.LoopHeader
 {
     internal class BlockExpressionTest
     {
-        private TestVisitor _visitor;
-
-        [SetUp]
-        public void Setup()
-        {
-            _visitor = new TestVisitor();
-        }
-
         [Test]
         public void DefaultValues()
         {
             var sut = new LoopHeaderBlockExpression();
             Assert.NotNull(sut.Body);
+            Assert.AreEqual(0, sut.Body.Count);
             Assert.AreNotEqual(0, sut.GetHashCode());
             Assert.AreNotEqual(1, sut.GetHashCode());
         }
@@ -91,26 +83,28 @@ namespace KaVE.Model.Tests.SSTs.Impl.Expressions.LoopCondition
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
         }
+
         [Test]
         public void VisitorIsImplemented()
         {
-            var sut = new ComposedExpression();
-            sut.Accept(_visitor, 13);
-            Assert.AreEqual(sut, _visitor.Expr);
-            Assert.AreEqual(13, _visitor.Context);
+            var sut = new LoopHeaderBlockExpression();
+            var visitor = new TestVisitor();
+            sut.Accept(visitor, 6);
+
+            Assert.AreEqual(sut, visitor.Expr);
+            Assert.AreEqual(6, visitor.Context);
         }
 
         internal class TestVisitor : AbstractNodeVisitor<int>
         {
-            public IExpressionCompletion Expr { get; private set; }
+            public ILoopHeaderBlockExpression Expr { get; private set; }
             public int Context { get; private set; }
 
-            public override void Visit(IExpressionCompletion expr, int context)
+            public override void Visit(ILoopHeaderBlockExpression expr, int context)
             {
                 Expr = expr;
                 Context = context;
             }
         }
-
     }
 }

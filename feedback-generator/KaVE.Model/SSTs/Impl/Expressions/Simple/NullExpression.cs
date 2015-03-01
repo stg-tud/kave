@@ -19,31 +19,15 @@
 
 using KaVE.Model.SSTs.Expressions.Simple;
 using KaVE.Model.SSTs.Visitor;
+using KaVE.Utils;
 
 namespace KaVE.Model.SSTs.Impl.Expressions.Simple
 {
     public class NullExpression : INullExpression
     {
-        protected bool Equals(NullExpression other)
-        {
-            return true;
-        }
-
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-            if (obj.GetType() != this.GetType())
-            {
-                return false;
-            }
-            return Equals((NullExpression) obj);
+            return this.Equals(obj, other => true);
         }
 
         public override int GetHashCode()
@@ -53,7 +37,7 @@ namespace KaVE.Model.SSTs.Impl.Expressions.Simple
 
         public void Accept<TContext>(ISSTNodeVisitor<TContext> visitor, TContext context)
         {
-            throw new System.NotImplementedException();
+            visitor.Visit(this, context);
         }
     }
 }

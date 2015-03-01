@@ -25,14 +25,9 @@ namespace KaVE.Model.SSTs.Impl.Expressions.Simple
 {
     public class ConstantValueExpression : IConstantValueExpression
     {
-        private static bool Equals(ConstantValueExpression other)
-        {
-            return true;
-        }
-
         public override bool Equals(object obj)
         {
-            return this.Equals(obj, Equals);
+            return this.Equals(obj, other => true);
         }
 
         public override int GetHashCode()
@@ -42,7 +37,7 @@ namespace KaVE.Model.SSTs.Impl.Expressions.Simple
 
         public void Accept<TContext>(ISSTNodeVisitor<TContext> visitor, TContext context)
         {
-            throw new System.NotImplementedException();
+            visitor.Visit(this, context);
         }
     }
 }

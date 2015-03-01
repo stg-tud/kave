@@ -45,7 +45,7 @@ namespace KaVE.Model.SSTs.Impl.Declarations
 
         public override int GetHashCode()
         {
-            return 22 + (Name != null ? Name.GetHashCode() : 0);
+            return unchecked (22 + (Name != null ? Name.GetHashCode() : 0));
         }
     }
 }

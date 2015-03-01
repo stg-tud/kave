@@ -45,7 +45,7 @@ namespace KaVE.Model.SSTs.Impl.References
         public override int GetHashCode()
         {
             var hcIdentifier = Identifier != null ? Identifier.GetHashCode() : 0;
-            return 2387645 + hcIdentifier;
+            return unchecked (724584 + hcIdentifier);
         }
     }
 }

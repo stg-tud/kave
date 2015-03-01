@@ -17,24 +17,15 @@
  *    - Sebastian Proksch
  */
 
-using KaVE.Model.SSTs.Expressions.Assignable;
-using KaVE.Model.SSTs.Impl.Expressions.Assignable;
+using KaVE.Model.SSTs.Expressions.Simple;
 using KaVE.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Model.SSTs.Impl.Visitor;
 using NUnit.Framework;
 
 namespace KaVE.Model.Tests.SSTs.Impl.Expressions.Simple
 {
-    public class ConstantExpressionTest
+    public class ConstantValueExpressionTest
     {
-        private TestVisitor _visitor;
-
-        [SetUp]
-        public void Setup()
-        {
-            _visitor = new TestVisitor();
-        }
-
         [Test]
         public void Equality()
         {
@@ -45,26 +36,28 @@ namespace KaVE.Model.Tests.SSTs.Impl.Expressions.Simple
             Assert.AreNotEqual(0, a.GetHashCode());
             Assert.AreNotEqual(1, a.GetHashCode());
         }
+
         [Test]
         public void VisitorIsImplemented()
         {
-            var sut = new ComposedExpression();
-            sut.Accept(_visitor, 13);
-            Assert.AreEqual(sut, _visitor.Expr);
-            Assert.AreEqual(13, _visitor.Context);
+            var sut = new ConstantValueExpression();
+            var visitor = new TestVisitor();
+            sut.Accept(visitor, 7);
+
+            Assert.AreEqual(sut, visitor.Expr);
+            Assert.AreEqual(7, visitor.Context);
         }
 
         internal class TestVisitor : AbstractNodeVisitor<int>
         {
-            public IExpressionCompletion Expr { get; private set; }
+            public IConstantValueExpression Expr { get; private set; }
             public int Context { get; private set; }
 
-            public override void Visit(IExpressionCompletion expr, int context)
+            public override void Visit(IConstantValueExpression expr, int context)
             {
                 Expr = expr;
                 Context = context;
             }
         }
-
     }
 }
