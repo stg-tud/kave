@@ -28,7 +28,7 @@ using KaVE.Model.SSTs.Impl.References;
 using KaVE.Model.SSTs.Impl.Visitor;
 using NUnit.Framework;
 
-namespace KaVE.Model.Tests.SSTs
+namespace KaVE.Model.Tests.SSTs.Impl
 {
     public class InvocationTest
     {

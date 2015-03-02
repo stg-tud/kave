@@ -24,9 +24,9 @@ using KaVE.Model.SSTs.Impl.Declarations;
 using KaVE.Model.SSTs.Impl.Visitor;
 using NUnit.Framework;
 
-namespace KaVE.Model.Tests.SSTs.Visitor
+namespace KaVE.Model.Tests.SSTs.Impl.Visitor
 {
-    internal class SSTToStringVisitorTest
+    internal class ToStringVisitorTest
     {
         [Test]
         public void Asd()

@@ -25,7 +25,7 @@ using KaVE.Model.SSTs.Visitor;
 using Moq;
 using NUnit.Framework;
 
-namespace KaVE.Model.Tests.SSTs
+namespace KaVE.Model.Tests.SSTs.Impl
 {
     internal class SSTTest
     {

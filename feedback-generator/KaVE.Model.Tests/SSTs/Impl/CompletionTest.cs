@@ -25,7 +25,7 @@ using KaVE.Model.SSTs.Impl.Visitor;
 using KaVE.Model.SSTs.References;
 using NUnit.Framework;
 
-namespace KaVE.Model.Tests.SSTs
+namespace KaVE.Model.Tests.SSTs.Impl
 {
     public class CompletionTest
     {

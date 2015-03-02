@@ -18,20 +18,64 @@
  */
 
 using System.Linq;
+using KaVE.Model.Collections;
 using KaVE.Model.Names;
 using KaVE.Model.Names.CSharp;
-using KaVE.Model.SSTs;
 using KaVE.Model.SSTs.Expressions;
 using KaVE.Model.SSTs.Impl;
+using KaVE.Model.SSTs.Impl.Declarations;
+using KaVE.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Model.SSTs.Impl.References;
+using KaVE.Model.SSTs.Impl.Statements;
+using KaVE.Model.SSTs.References;
 using KaVE.Utils.Assertion;
 using NUnit.Framework;
 
-namespace KaVE.Model.Tests.SSTs
+namespace KaVE.Model.Tests.SSTs.Impl
 {
     public class SSTUtilTest
     {
+        [Test]
+        public void Declare()
+        {
+            var actual = SSTUtil.Declare("a", TypeName.UnknownName);
+            var expected = new VariableDeclaration
+            {
+                Reference = Ref("a"),
+                Type = TypeName.UnknownName
+            };
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void Return()
+        {
+            var actual = SSTUtil.Return(new ConstantValueExpression());
+            var expected = new ReturnStatement
+            {
+                Expression = new ConstantValueExpression()
+            };
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void ReturnVariable()
+        {
+            var actual = SSTUtil.ReturnVariable("a");
+            var expected = new ReturnStatement
+            {
+                Expression = new ReferenceExpression {Reference = new VariableReference {Identifier = "a"}}
+            };
+            Assert.AreEqual(expected, actual);
+        }
+
+        private static IVariableReference Ref(string id)
+        {
+            return new VariableReference {Identifier = id};
+        }
+
+
         [Test]
         public void ReferenceExprToVariable()
         {
@@ -46,7 +90,9 @@ namespace KaVE.Model.Tests.SSTs
         [Test]
         public void ComposedExpression()
         {
-            SSTUtil.ComposedExpression("a", "b");
+            var actual = SSTUtil.ComposedExpression("a", "b");
+            var expected = new ComposedExpression {References = Lists.NewList(Ref("a"), Ref("b"))};
+            Assert.AreEqual(expected, actual);
         }
 
         [Test]
