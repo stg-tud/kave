@@ -28,6 +28,7 @@ using KaVE.Model.SSTs.Impl;
 using KaVE.Model.SSTs.Impl.Declarations;
 using KaVE.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Model.SSTs.Impl.References;
+using KaVE.Model.SSTs.References;
 using KaVE.Utils.Exceptions;
 using KaVE.VsFeedbackGenerator.Utils;
 using Moq;
@@ -94,9 +95,14 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
         }
 
 
-        protected ISimpleExpression Ref(string id)
+        protected ISimpleExpression RefExpr(string id)
         {
             return new ReferenceExpression {Reference = new VariableReference {Identifier = id}};
+        }
+
+        protected IVariableReference Ref(string id)
+        {
+            return new VariableReference {Identifier = id};
         }
 
         protected void AssertAllMethods(params IMethodDeclaration[] expectedDecls)

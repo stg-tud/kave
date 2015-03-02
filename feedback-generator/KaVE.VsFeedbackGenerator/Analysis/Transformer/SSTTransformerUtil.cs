@@ -23,7 +23,6 @@ using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.Util;
 using KaVE.Model.Names;
 using KaVE.Model.SSTs;
-using KaVE.Model.SSTs.Blocks;
 using KaVE.Model.SSTs.Expressions;
 using KaVE.Model.SSTs.Impl;
 using KaVE.Model.SSTs.Impl.Blocks;
@@ -174,7 +173,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
                 {
                     identifier = specificCatchClause.ExceptionDeclaration.DeclaredName;
                 }
-                catchBlock.Exception = KaVEVariableDeclaration.Create(
+                catchBlock.Exception = SSTUtil.Declare(
                     identifier,
                     catchClauseParam.ExceptionType.GetName());
             }

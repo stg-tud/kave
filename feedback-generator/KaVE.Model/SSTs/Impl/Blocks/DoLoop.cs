@@ -20,6 +20,7 @@
 using System.Collections.Generic;
 using KaVE.Model.Collections;
 using KaVE.Model.SSTs.Blocks;
+using KaVE.Model.SSTs.Expressions;
 using KaVE.Model.SSTs.Visitor;
 using KaVE.Utils;
 
@@ -27,7 +28,7 @@ namespace KaVE.Model.SSTs.Impl.Blocks
 {
     public class DoLoop : IDoLoop
     {
-        public IExpression Condition { get; set; }
+        public ILoopHeaderExpression Condition { get; set; }
         public IList<IStatement> Body { get; set; }
 
         public DoLoop()
@@ -49,13 +50,13 @@ namespace KaVE.Model.SSTs.Impl.Blocks
         {
             unchecked
             {
-                return (Body.GetHashCode()*397) ^ (Condition != null ? Condition.GetHashCode() : 0);
+                return 32 + (Body.GetHashCode()*397) ^ (Condition != null ? Condition.GetHashCode() : 0);
             }
         }
 
         public void Accept<TContext>(ISSTNodeVisitor<TContext> visitor, TContext context)
         {
-            throw new System.NotImplementedException();
+            visitor.Visit(this, context);
         }
     }
 }

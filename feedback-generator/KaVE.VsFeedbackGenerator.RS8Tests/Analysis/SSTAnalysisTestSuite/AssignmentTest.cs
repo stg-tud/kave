@@ -18,8 +18,7 @@
  */
 
 using KaVE.Model.Names.CSharp;
-using KaVE.Model.SSTs;
-using KaVE.Model.SSTs.Impl.Declarations;
+using KaVE.Model.SSTs.Impl;
 using KaVE.Model.SSTs.Impl.Expressions.Simple;
 using NUnit.Framework;
 using Fix = KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite.SSTAnalysisFixture;
@@ -41,7 +40,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             ");
 
             var mA = NewMethodDeclaration(Fix.Void, "A");
-            mA.Body.Add(VariableDeclaration.Create("i", Fix.Int));
+            mA.Body.Add(SSTUtil.Declare("i", Fix.Int));
             mA.Body.Add(SSTUtil.AssignmentToLocal("i", new ConstantValueExpression()));
 
             AssertAllMethods(mA);
@@ -59,7 +58,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             ");
 
             var mA = NewMethodDeclaration(Fix.Void, "A");
-            mA.Body.Add(VariableDeclaration.Create("i", Fix.Int));
+            mA.Body.Add(SSTUtil.Declare("i", Fix.Int));
             mA.Body.Add(SSTUtil.AssignmentToLocal("i", new ConstantValueExpression()));
 
             AssertAllMethods(mA);
@@ -77,7 +76,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             ");
 
             var mA = NewMethodDeclaration(Fix.Void, "A");
-            mA.Body.Add(VariableDeclaration.Create("i", Fix.Int));
+            mA.Body.Add(SSTUtil.Declare("i", Fix.Int));
             mA.Body.Add(SSTUtil.AssignmentToLocal("i", new ConstantValueExpression()));
 
             AssertAllMethods(mA);
@@ -96,9 +95,9 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             ");
 
             var mA = NewMethodDeclaration(Fix.Void, "A");
-            mA.Body.Add(VariableDeclaration.Create("i", Fix.Int));
+            mA.Body.Add(SSTUtil.Declare("i", Fix.Int));
             mA.Body.Add(SSTUtil.AssignmentToLocal("i", new ConstantValueExpression()));
-            mA.Body.Add(VariableDeclaration.Create("j", Fix.Int));
+            mA.Body.Add(SSTUtil.Declare("j", Fix.Int));
             mA.Body.Add(SSTUtil.AssignmentToLocal("j", SSTUtil.ComposedExpression("i")));
 
             AssertAllMethods(mA);
@@ -118,8 +117,8 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             ");
 
             var mA = NewMethodDeclaration(Fix.Void, "A");
-            mA.Body.Add(VariableDeclaration.Create("i", Fix.Int));
-            mA.Body.Add(VariableDeclaration.Create("j", Fix.Int));
+            mA.Body.Add(SSTUtil.Declare("i", Fix.Int));
+            mA.Body.Add(SSTUtil.Declare("j", Fix.Int));
             mA.Body.Add(SSTUtil.AssignmentToLocal("i", new ConstantValueExpression()));
             mA.Body.Add(SSTUtil.AssignmentToLocal("j", SSTUtil.ReferenceExprToVariable("i")));
 
@@ -139,9 +138,9 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             ");
 
             var mA = NewMethodDeclaration(Fix.Void, "A");
-            mA.Body.Add(VariableDeclaration.Create("i", Fix.Int));
+            mA.Body.Add(SSTUtil.Declare("i", Fix.Int));
             mA.Body.Add(SSTUtil.AssignmentToLocal("i", new ConstantValueExpression()));
-            mA.Body.Add(VariableDeclaration.Create("j", Fix.Int));
+            mA.Body.Add(SSTUtil.Declare("j", Fix.Int));
             mA.Body.Add(SSTUtil.AssignmentToLocal("j", SSTUtil.ReferenceExprToVariable("i")));
 
             AssertAllMethods(mA);
@@ -160,7 +159,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             ");
 
             var mA = NewMethodDeclaration(Fix.Void, "A");
-            mA.Body.Add(VariableDeclaration.Create("obj", TypeName.Get("N.C, TestProject")));
+            mA.Body.Add(SSTUtil.Declare("obj", TypeName.Get("N.C, TestProject")));
             mA.Body.Add(SSTUtil.AssignmentToLocal("obj", SSTUtil.ComposedExpression("this")));
 
             AssertAllMethods(mA);
@@ -178,7 +177,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             ");
 
             var mA = NewMethodDeclaration(Fix.Void, "A", string.Format("[{0}] i", Fix.Int));
-            mA.Body.Add(VariableDeclaration.Create("j", Fix.Int));
+            mA.Body.Add(SSTUtil.Declare("j", Fix.Int));
             mA.Body.Add(SSTUtil.AssignmentToLocal("i", new ConstantValueExpression()));
             mA.Body.Add(SSTUtil.AssignmentToLocal("j", SSTUtil.ComposedExpression("i")));
 
@@ -197,7 +196,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             ");
 
             var mA = NewMethodDeclaration(Fix.Void, "A", string.Format("[{0}] i", Fix.Int));
-            mA.Body.Add(VariableDeclaration.Create("j", Fix.Int));
+            mA.Body.Add(SSTUtil.Declare("j", Fix.Int));
             mA.Body.Add(SSTUtil.AssignmentToLocal("j", SSTUtil.ComposedExpression("i")));
 
             AssertAllMethods(mA);
@@ -215,7 +214,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             ");
 
             var mA = NewMethodDeclaration(Fix.Void, "A", string.Format("[{0}] i", Fix.Int));
-            mA.Body.Add(VariableDeclaration.Create("j", Fix.Int));
+            mA.Body.Add(SSTUtil.Declare("j", Fix.Int));
             mA.Body.Add(SSTUtil.AssignmentToLocal("j", SSTUtil.ComposedExpression("i")));
 
             AssertAllMethods(mA);
@@ -233,7 +232,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             ");
 
             var mA = NewMethodDeclaration(Fix.Void, "A", string.Format("[{0}] i", Fix.Int));
-            mA.Body.Add(VariableDeclaration.Create("j", Fix.Int));
+            mA.Body.Add(SSTUtil.Declare("j", Fix.Int));
             mA.Body.Add(SSTUtil.AssignmentToLocal("j", SSTUtil.ComposedExpression("i")));
 
             AssertAllMethods(mA);
@@ -252,7 +251,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             ");
 
             var mA = NewMethodDeclaration(Fix.Void, "A");
-            mA.Body.Add(VariableDeclaration.Create("i", Fix.Int));
+            mA.Body.Add(SSTUtil.Declare("i", Fix.Int));
             mA.Body.Add(SSTUtil.AssignmentToLocal("i", new ConstantValueExpression()));
 
             AssertAllMethods(mA);

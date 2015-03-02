@@ -18,12 +18,16 @@
  */
 
 using System.Collections.Generic;
+using KaVE.JetBrains.Annotations;
+using KaVE.Model.SSTs.References;
 
 namespace KaVE.Model.SSTs.Blocks
 {
     public interface IUsingBlock : IStatement
     {
-        string Identifier { get; }
+        IVariableReference Reference { get; }
+
+        [NotNull]
         IList<IStatement> Body { get; }
     }
 }

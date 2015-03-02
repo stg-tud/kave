@@ -20,10 +20,11 @@
 using System.Linq;
 using KaVE.Model.Collections;
 using KaVE.Model.Names;
+using KaVE.Model.SSTs.Declarations;
 using KaVE.Model.SSTs.Expressions;
 using KaVE.Model.SSTs.Expressions.Assignable;
 using KaVE.Model.SSTs.Expressions.Simple;
-using KaVE.Model.SSTs.Impl;
+using KaVE.Model.SSTs.Impl.Declarations;
 using KaVE.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Model.SSTs.Impl.References;
@@ -32,10 +33,19 @@ using KaVE.Model.SSTs.References;
 using KaVE.Model.SSTs.Statements;
 using KaVE.Utils.Assertion;
 
-namespace KaVE.Model.SSTs
+namespace KaVE.Model.SSTs.Impl
 {
     public class SSTUtil
     {
+        public static IVariableDeclaration Declare(string identifier, ITypeName type)
+        {
+            return new VariableDeclaration
+            {
+                Reference = VariableReference(identifier),
+                Type = type
+            };
+        }
+
         public static IReferenceExpression ReferenceExprToVariable(string id)
         {
             var variableReference = new VariableReference {Identifier = id};

@@ -18,6 +18,7 @@
  */
 
 using System.Collections.Generic;
+using KaVE.JetBrains.Annotations;
 using KaVE.Model.SSTs.Declarations;
 
 namespace KaVE.Model.SSTs.Blocks
@@ -25,6 +26,8 @@ namespace KaVE.Model.SSTs.Blocks
     public interface ICatchBlock : IStatement
     {
         IVariableDeclaration Exception { get; }
+
+        [NotNull]
         IList<IStatement> Body { get; }
     }
 }

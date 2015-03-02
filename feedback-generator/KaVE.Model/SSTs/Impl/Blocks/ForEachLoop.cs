@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using KaVE.Model.Collections;
 using KaVE.Model.SSTs.Blocks;
 using KaVE.Model.SSTs.Declarations;
+using KaVE.Model.SSTs.References;
 using KaVE.Model.SSTs.Visitor;
 using KaVE.Utils;
 
@@ -28,8 +29,8 @@ namespace KaVE.Model.SSTs.Impl.Blocks
 {
     public class ForEachLoop : IForEachLoop
     {
-        public IVariableDeclaration Decl { get; set; }
-        public string LoopedIdentifier { get; set; }
+        public IVariableDeclaration Declaration { get; set; }
+        public IVariableReference LoopedReference { get; set; }
         public IList<IStatement> Body { get; set; }
 
         public ForEachLoop()
@@ -39,8 +40,8 @@ namespace KaVE.Model.SSTs.Impl.Blocks
 
         private bool Equals(ForEachLoop other)
         {
-            return Body.Equals(other.Body) && Equals(Decl, other.Decl) &&
-                   Equals(LoopedIdentifier, other.LoopedIdentifier);
+            return Body.Equals(other.Body) && Equals(Declaration, other.Declaration) &&
+                   Equals(LoopedReference, other.LoopedReference);
         }
 
         public override bool Equals(object obj)
@@ -52,16 +53,16 @@ namespace KaVE.Model.SSTs.Impl.Blocks
         {
             unchecked
             {
-                var hashCode = Body.GetHashCode();
-                hashCode = (hashCode*397) ^ (Decl != null ? Decl.GetHashCode() : 0);
-                hashCode = (hashCode*397) ^ (LoopedIdentifier != null ? LoopedIdentifier.GetHashCode() : 0);
+                var hashCode = 33 + Body.GetHashCode();
+                hashCode = (hashCode*397) ^ (Declaration != null ? Declaration.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (LoopedReference != null ? LoopedReference.GetHashCode() : 0);
                 return hashCode;
             }
         }
 
         public void Accept<TContext>(ISSTNodeVisitor<TContext> visitor, TContext context)
         {
-            throw new System.NotImplementedException();
+            visitor.Visit(this, context);
         }
     }
 }

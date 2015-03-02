@@ -18,8 +18,7 @@
  */
 
 using KaVE.Model.Names.CSharp;
-using KaVE.Model.SSTs;
-using KaVE.Model.SSTs.Impl.Declarations;
+using KaVE.Model.SSTs.Impl;
 using KaVE.Model.SSTs.Impl.Expressions.Simple;
 using NUnit.Framework;
 
@@ -39,7 +38,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             ");
 
             var mA = NewMethodDeclaration(SSTAnalysisFixture.Void, "A");
-            mA.Body.Add(VariableDeclaration.Create("t", TypeName.Get("System.Type, mscorlib, 4.0.0.0")));
+            mA.Body.Add(SSTUtil.Declare("t", TypeName.Get("System.Type, mscorlib, 4.0.0.0")));
             mA.Body.Add(SSTUtil.AssignmentToLocal("t", new ConstantValueExpression()));
 
             AssertAllMethods(mA);
@@ -57,7 +56,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             ");
 
             var mA = NewMethodDeclaration(SSTAnalysisFixture.Void, "A");
-            mA.Body.Add(VariableDeclaration.Create("t", SSTAnalysisFixture.Bool));
+            mA.Body.Add(SSTUtil.Declare("t", SSTAnalysisFixture.Bool));
             mA.Body.Add(SSTUtil.AssignmentToLocal("t", new ConstantValueExpression()));
 
             AssertAllMethods(mA);
@@ -78,7 +77,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
                 SSTAnalysisFixture.Void,
                 "A",
                 string.Format("[{0}] o", SSTAnalysisFixture.Object));
-            mA.Body.Add(VariableDeclaration.Create("isInstanceOf", SSTAnalysisFixture.Bool));
+            mA.Body.Add(SSTUtil.Declare("isInstanceOf", SSTAnalysisFixture.Bool));
             mA.Body.Add(SSTUtil.AssignmentToLocal("isInstanceOf", SSTUtil.ComposedExpression("o")));
 
             AssertAllMethods(mA);
@@ -96,7 +95,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             ");
 
             var mA = NewMethodDeclaration(SSTAnalysisFixture.Void, "A");
-            mA.Body.Add(VariableDeclaration.Create("isInstanceOf", SSTAnalysisFixture.Bool));
+            mA.Body.Add(SSTUtil.Declare("isInstanceOf", SSTAnalysisFixture.Bool));
             mA.Body.Add(SSTUtil.AssignmentToLocal("isInstanceOf", new ConstantValueExpression()));
 
             AssertAllMethods(mA);
@@ -117,7 +116,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
                 SSTAnalysisFixture.Void,
                 "A",
                 string.Format("[{0}] o", SSTAnalysisFixture.Object));
-            mA.Body.Add(VariableDeclaration.Create("cast", SSTAnalysisFixture.String));
+            mA.Body.Add(SSTUtil.Declare("cast", SSTAnalysisFixture.String));
             mA.Body.Add(SSTUtil.AssignmentToLocal("cast", SSTUtil.ComposedExpression("o")));
 
             AssertAllMethods(mA);
@@ -135,7 +134,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             ");
 
             var mA = NewMethodDeclaration(SSTAnalysisFixture.Void, "A");
-            mA.Body.Add(VariableDeclaration.Create("cast", SSTAnalysisFixture.Object));
+            mA.Body.Add(SSTUtil.Declare("cast", SSTAnalysisFixture.Object));
             mA.Body.Add(SSTUtil.AssignmentToLocal("cast", new ConstantValueExpression()));
 
             AssertAllMethods(mA);
@@ -153,7 +152,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             ");
 
             var mA = NewMethodDeclaration(SSTAnalysisFixture.Void, "A");
-            mA.Body.Add(VariableDeclaration.Create("i", SSTAnalysisFixture.Int));
+            mA.Body.Add(SSTUtil.Declare("i", SSTAnalysisFixture.Int));
             mA.Body.Add(SSTUtil.AssignmentToLocal("i", new ConstantValueExpression()));
 
             AssertAllMethods(mA);
@@ -174,7 +173,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
                 SSTAnalysisFixture.Void,
                 "A",
                 string.Format("[{0}] o", SSTAnalysisFixture.Object));
-            mA.Body.Add(VariableDeclaration.Create("s", SSTAnalysisFixture.String));
+            mA.Body.Add(SSTUtil.Declare("s", SSTAnalysisFixture.String));
             mA.Body.Add(SSTUtil.AssignmentToLocal("s", SSTUtil.ComposedExpression("o")));
 
             AssertAllMethods(mA);

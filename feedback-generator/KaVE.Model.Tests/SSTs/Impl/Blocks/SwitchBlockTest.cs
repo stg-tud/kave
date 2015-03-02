@@ -20,11 +20,13 @@
 using KaVE.Model.Collections;
 using KaVE.Model.SSTs.Blocks;
 using KaVE.Model.SSTs.Impl.Blocks;
+using KaVE.Model.SSTs.Impl.References;
 using KaVE.Model.SSTs.Impl.Statements;
-using KaVE.Model.SSTs.Statements;
+using KaVE.Model.SSTs.Impl.Visitor;
+using KaVE.Model.SSTs.References;
 using NUnit.Framework;
 
-namespace KaVE.Model.Tests.SSTs.Blocks
+namespace KaVE.Model.Tests.SSTs.Impl.Blocks
 {
     internal class SwitchBlockTest
     {
@@ -32,9 +34,11 @@ namespace KaVE.Model.Tests.SSTs.Blocks
         public void DefaultValues()
         {
             var sut = new SwitchBlock();
-            Assert.Null(sut.Identifier);
+            Assert.Null(sut.Reference);
             Assert.NotNull(sut.Sections);
+            Assert.AreEqual(0, sut.Sections.Count);
             Assert.NotNull(sut.DefaultSection);
+            Assert.AreEqual(0, sut.DefaultSection.Count);
             Assert.AreNotEqual(0, sut.GetHashCode());
             Assert.AreNotEqual(1, sut.GetHashCode());
         }
@@ -42,10 +46,10 @@ namespace KaVE.Model.Tests.SSTs.Blocks
         [Test]
         public void SettingValues()
         {
-            var sut = new SwitchBlock {Identifier = "a"};
+            var sut = new SwitchBlock {Reference = Ref("a")};
             sut.Sections.Add(new CaseBlock());
             sut.DefaultSection.Add(new ReturnStatement());
-            Assert.AreEqual("a", sut.Identifier);
+            Assert.AreEqual(Ref("a"), sut.Reference);
             Assert.AreEqual(Lists.NewList(new CaseBlock()), sut.Sections);
             Assert.AreEqual(Lists.NewList(new ReturnStatement()), sut.DefaultSection);
         }
@@ -62,10 +66,10 @@ namespace KaVE.Model.Tests.SSTs.Blocks
         [Test]
         public void Equality_ReallyTheSame()
         {
-            var a = new SwitchBlock {Identifier = "a"};
+            var a = new SwitchBlock {Reference = Ref("a")};
             a.Sections.Add(new CaseBlock());
             a.DefaultSection.Add(new ReturnStatement());
-            var b = new SwitchBlock {Identifier = "a"};
+            var b = new SwitchBlock {Reference = Ref("a")};
             b.Sections.Add(new CaseBlock());
             b.DefaultSection.Add(new ReturnStatement());
             Assert.AreEqual(a, b);
@@ -73,9 +77,9 @@ namespace KaVE.Model.Tests.SSTs.Blocks
         }
 
         [Test]
-        public void Equality_DifferentIdentifier()
+        public void Equality_DifferentReference()
         {
-            var a = new SwitchBlock {Identifier = "a"};
+            var a = new SwitchBlock {Reference = Ref("a")};
             var b = new SwitchBlock();
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
@@ -99,6 +103,34 @@ namespace KaVE.Model.Tests.SSTs.Blocks
             var b = new SwitchBlock();
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
+        }
+
+        [Test]
+        public void VisitorIsImplemented()
+        {
+            var sut = new SwitchBlock();
+            var visitor = new TestVisitor();
+            sut.Accept(visitor, 7);
+
+            Assert.AreEqual(sut, visitor.Statement);
+            Assert.AreEqual(7, visitor.Context);
+        }
+
+        private static IVariableReference Ref(string id)
+        {
+            return new VariableReference {Identifier = id};
+        }
+
+        internal class TestVisitor : AbstractNodeVisitor<int>
+        {
+            public ISwitchBlock Statement { get; private set; }
+            public int Context { get; private set; }
+
+            public override void Visit(ISwitchBlock stmt, int context)
+            {
+                Statement = stmt;
+                Context = context;
+            }
         }
     }
 }

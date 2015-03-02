@@ -19,14 +19,11 @@
 
 using System.Collections.Generic;
 using KaVE.JetBrains.Annotations;
-using KaVE.Model.SSTs.Expressions;
 
 namespace KaVE.Model.SSTs.Blocks
 {
-    public interface IWhileLoop : IStatement
+    public interface IUncheckedBlock : IStatement
     {
-        ILoopHeaderExpression Condition { get; }
-
         [NotNull]
         IList<IStatement> Body { get; }
     }

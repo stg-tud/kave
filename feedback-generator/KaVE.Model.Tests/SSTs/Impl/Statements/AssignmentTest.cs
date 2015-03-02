@@ -18,6 +18,7 @@
  */
 
 using KaVE.Model.SSTs;
+using KaVE.Model.SSTs.Impl;
 using KaVE.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Model.SSTs.Impl.References;
@@ -71,7 +72,7 @@ namespace KaVE.Model.Tests.SSTs.Impl.Statements
         }
 
         [Test]
-        public void Equality_DifferentName()
+        public void Equality_DifferentReference()
         {
             var a = SSTUtil.AssignmentToLocal("a", new ConstantValueExpression());
             var b = SSTUtil.AssignmentToLocal("b", new ConstantValueExpression());
@@ -80,7 +81,7 @@ namespace KaVE.Model.Tests.SSTs.Impl.Statements
         }
 
         [Test]
-        public void Equality_DifferentValue()
+        public void Equality_DifferentExpression()
         {
             var a = SSTUtil.AssignmentToLocal("a", new ConstantValueExpression());
             var b = SSTUtil.AssignmentToLocal("a", new ComposedExpression());

@@ -18,21 +18,24 @@
  */
 
 using KaVE.Model.Collections;
+using KaVE.Model.SSTs.Blocks;
 using KaVE.Model.SSTs.Impl.Blocks;
 using KaVE.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Model.SSTs.Impl.Statements;
+using KaVE.Model.SSTs.Impl.Visitor;
 using NUnit.Framework;
 
-namespace KaVE.Model.Tests.SSTs.Blocks
+namespace KaVE.Model.Tests.SSTs.Impl.Blocks
 {
-    public class WhileLoopTest
+    internal class DoLoopTest
     {
         [Test]
         public void DefaultValues()
         {
-            var sut = new WhileLoop();
-            Assert.IsNull(sut.Condition);
+            var sut = new DoLoop();
+            Assert.Null(sut.Condition);
             Assert.NotNull(sut.Body);
+            Assert.AreEqual(0, sut.Body.Count);
             Assert.AreNotEqual(0, sut.GetHashCode());
             Assert.AreNotEqual(1, sut.GetHashCode());
         }
@@ -40,8 +43,9 @@ namespace KaVE.Model.Tests.SSTs.Blocks
         [Test]
         public void SettingValues()
         {
-            var sut = new WhileLoop {Condition = new ConstantValueExpression()};
+            var sut = new DoLoop {Condition = new ConstantValueExpression()};
             sut.Body.Add(new ReturnStatement());
+
             Assert.AreEqual(new ConstantValueExpression(), sut.Condition);
             Assert.AreEqual(Lists.NewList(new ReturnStatement()), sut.Body);
         }
@@ -49,8 +53,8 @@ namespace KaVE.Model.Tests.SSTs.Blocks
         [Test]
         public void Equality_Default()
         {
-            var a = new WhileLoop();
-            var b = new WhileLoop();
+            var a = new DoLoop();
+            var b = new DoLoop();
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
         }
@@ -58,9 +62,9 @@ namespace KaVE.Model.Tests.SSTs.Blocks
         [Test]
         public void Equality_ReallyTheSame()
         {
-            var a = new WhileLoop {Condition = new ConstantValueExpression()};
+            var a = new DoLoop {Condition = new ConstantValueExpression()};
             a.Body.Add(new ReturnStatement());
-            var b = new WhileLoop {Condition = new ConstantValueExpression()};
+            var b = new DoLoop {Condition = new ConstantValueExpression()};
             b.Body.Add(new ReturnStatement());
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
@@ -69,8 +73,8 @@ namespace KaVE.Model.Tests.SSTs.Blocks
         [Test]
         public void Equality_DifferentCondition()
         {
-            var a = new WhileLoop {Condition = new ConstantValueExpression()};
-            var b = new WhileLoop {Condition = new ReferenceExpression()};
+            var a = new DoLoop {Condition = new ConstantValueExpression()};
+            var b = new DoLoop();
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
         }
@@ -78,12 +82,34 @@ namespace KaVE.Model.Tests.SSTs.Blocks
         [Test]
         public void Equality_DifferentBody()
         {
-            var a = new WhileLoop();
-            a.Body.Add(new ContinueStatement());
-            var b = new WhileLoop();
-            b.Body.Add(new GotoStatement());
+            var a = new DoLoop();
+            a.Body.Add(new ReturnStatement());
+            var b = new DoLoop();
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
+        }
+
+        [Test]
+        public void VisitorIsImplemented()
+        {
+            var sut = new DoLoop();
+            var visitor = new TestVisitor();
+            sut.Accept(visitor, 3);
+
+            Assert.AreEqual(sut, visitor.Statement);
+            Assert.AreEqual(3, visitor.Context);
+        }
+
+        internal class TestVisitor : AbstractNodeVisitor<int>
+        {
+            public IDoLoop Statement { get; private set; }
+            public int Context { get; private set; }
+
+            public override void Visit(IDoLoop stmt, int context)
+            {
+                Statement = stmt;
+                Context = context;
+            }
         }
     }
 }

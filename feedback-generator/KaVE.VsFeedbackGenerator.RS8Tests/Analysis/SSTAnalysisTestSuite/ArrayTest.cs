@@ -18,11 +18,8 @@
  */
 
 using KaVE.Model.Names.CSharp;
-using KaVE.Model.SSTs;
-using KaVE.Model.SSTs.Impl.Declarations;
+using KaVE.Model.SSTs.Impl;
 using KaVE.Model.SSTs.Impl.Expressions.Simple;
-using KaVE.Model.SSTs.Impl.Statements;
-using KaVE.Model.SSTs.Statements;
 using NUnit.Framework;
 using Fix = KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite.SSTAnalysisFixture;
 
@@ -42,7 +39,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             ");
 
             var mA = NewMethodDeclaration(SSTAnalysisFixture.Void, "A");
-            mA.Body.Add(VariableDeclaration.Create("arr", SSTAnalysisFixture.IntArray));
+            mA.Body.Add(SSTUtil.Declare("arr", SSTAnalysisFixture.IntArray));
             mA.Body.Add(SSTUtil.AssignmentToLocal("arr", new ConstantValueExpression()));
 
             AssertAllMethods(mA);
@@ -61,9 +58,9 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             ");
 
             var mA = NewMethodDeclaration(SSTAnalysisFixture.Void, "A");
-            mA.Body.Add(VariableDeclaration.Create("n", SSTAnalysisFixture.Int));
+            mA.Body.Add(SSTUtil.Declare("n", SSTAnalysisFixture.Int));
             mA.Body.Add(SSTUtil.AssignmentToLocal("n", new ConstantValueExpression()));
-            mA.Body.Add(VariableDeclaration.Create("arr", SSTAnalysisFixture.IntArray));
+            mA.Body.Add(SSTUtil.Declare("arr", SSTAnalysisFixture.IntArray));
             mA.Body.Add(SSTUtil.AssignmentToLocal("arr", SSTUtil.ComposedExpression("n")));
 
             AssertAllMethods(mA);
@@ -81,10 +78,10 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             ");
 
             var mA = NewMethodDeclaration(SSTAnalysisFixture.Void, "A");
-            mA.Body.Add(VariableDeclaration.Create("arr", TypeName.Get("System.Int32[][], mscorlib, 4.0.0.0")));
-            mA.Body.Add(VariableDeclaration.Create("$0", SSTAnalysisFixture.IntArray));
+            mA.Body.Add(SSTUtil.Declare("arr", TypeName.Get("System.Int32[][], mscorlib, 4.0.0.0")));
+            mA.Body.Add(SSTUtil.Declare("$0", SSTAnalysisFixture.IntArray));
             mA.Body.Add(SSTUtil.AssignmentToLocal("$0", new ConstantValueExpression()));
-            mA.Body.Add(VariableDeclaration.Create("$1", SSTAnalysisFixture.IntArray));
+            mA.Body.Add(SSTUtil.Declare("$1", SSTAnalysisFixture.IntArray));
             mA.Body.Add(SSTUtil.AssignmentToLocal("$1", new ConstantValueExpression()));
             mA.Body.Add(SSTUtil.AssignmentToLocal("arr", SSTUtil.ComposedExpression("$0", "$1")));
 
@@ -106,8 +103,8 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
                 SSTAnalysisFixture.Void,
                 "A",
                 string.Format("[{0}] o", SSTAnalysisFixture.Object));
-            mA.Body.Add(VariableDeclaration.Create("arr", SSTAnalysisFixture.IntArray));
-            mA.Body.Add(VariableDeclaration.Create("$0", SSTAnalysisFixture.Int));
+            mA.Body.Add(SSTUtil.Declare("arr", SSTAnalysisFixture.IntArray));
+            mA.Body.Add(SSTUtil.Declare("$0", SSTAnalysisFixture.Int));
             mA.Body.Add(SSTUtil.AssignmentToLocal("$0", SSTUtil.InvocationExpression("o", Fix.Object_GetHashCode)));
             mA.Body.Add(SSTUtil.AssignmentToLocal("arr", SSTUtil.ComposedExpression("$0")));
 

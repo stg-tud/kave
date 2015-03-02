@@ -20,6 +20,7 @@
 using System.Collections.Generic;
 using KaVE.Model.Collections;
 using KaVE.Model.SSTs.Blocks;
+using KaVE.Model.SSTs.References;
 using KaVE.Model.SSTs.Visitor;
 using KaVE.Utils;
 
@@ -27,7 +28,7 @@ namespace KaVE.Model.SSTs.Impl.Blocks
 {
     public class UsingBlock : IUsingBlock
     {
-        public string Identifier { get; set; }
+        public IVariableReference Reference { get; set; }
         public IList<IStatement> Body { get; set; }
 
         public UsingBlock()
@@ -37,7 +38,7 @@ namespace KaVE.Model.SSTs.Impl.Blocks
 
         protected bool Equals(UsingBlock other)
         {
-            return Body.Equals(other.Body) && Equals(Identifier, other.Identifier);
+            return Body.Equals(other.Body) && Equals(Reference, other.Reference);
         }
 
         public override bool Equals(object obj)
@@ -47,12 +48,12 @@ namespace KaVE.Model.SSTs.Impl.Blocks
 
         public override int GetHashCode()
         {
-            return 6*Body.GetHashCode() + (Identifier != null ? Identifier.GetHashCode() : 0);
+            return unchecked(39 + 6*Body.GetHashCode() + (Reference != null ? Reference.GetHashCode() : 0));
         }
 
         public void Accept<TContext>(ISSTNodeVisitor<TContext> visitor, TContext context)
         {
-            throw new System.NotImplementedException();
+            visitor.Visit(this, context);
         }
     }
 }

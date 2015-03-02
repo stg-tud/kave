@@ -19,8 +19,7 @@
 
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.Util;
-using KaVE.Model.SSTs;
-using KaVE.Model.SSTs.Impl.Declarations;
+using KaVE.Model.SSTs.Impl;
 using KaVE.Utils.Assertion;
 using KaVE.VsFeedbackGenerator.Analysis.Transformer.Context;
 using KaVE.VsFeedbackGenerator.Utils.Names;
@@ -33,7 +32,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
             ReferenceCollectorContext context)
         {
             var tmp = context.Generator.GetNextVariableName();
-            context.Scope.Body.Add(VariableDeclaration.Create(tmp, arrayCreationExpressionParam.Type().GetName()));
+            context.Scope.Body.Add(SSTUtil.Declare(tmp, arrayCreationExpressionParam.Type().GetName()));
             context.Scope.Body.Add(
                 SSTUtil.AssignmentToLocal(tmp, arrayCreationExpressionParam.ArrayInitializer.GetReferences(context)));
             context.References.Add(tmp);
@@ -79,7 +78,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
             ReferenceCollectorContext context)
         {
             var tmp = context.Generator.GetNextVariableName();
-            context.Scope.Body.Add(VariableDeclaration.Create(tmp, conditionalTernaryExpressionParam.Type().GetName()));
+            context.Scope.Body.Add(SSTUtil.Declare(tmp, conditionalTernaryExpressionParam.Type().GetName()));
             context.Scope.Body.Add(
                 SSTUtil.AssignmentToLocal(
                     tmp,
@@ -116,7 +115,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
                     (callee, method, args, retType) =>
                     {
                         var tmp = context.Generator.GetNextVariableName();
-                        context.Scope.Body.Add(VariableDeclaration.Create(tmp, retType));
+                        context.Scope.Body.Add(SSTUtil.Declare(tmp, retType));
                         context.Scope.Body.Add(SSTUtil.AssignmentToLocal(tmp, callee.CreateInvocation(method, args)));
                         context.References.Add(tmp);
                     });

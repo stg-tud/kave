@@ -18,14 +18,20 @@
  */
 
 using System.Collections.Generic;
+using KaVE.JetBrains.Annotations;
 using KaVE.Model.SSTs.Impl.Blocks;
 
 namespace KaVE.Model.SSTs.Blocks
 {
     public interface ITryBlock : IStatement
     {
+        [NotNull]
         IList<IStatement> Body { get; }
+
+        [NotNull]
         IList<CatchBlock> CatchBlocks { get; }
+
+        [NotNull]
         IList<IStatement> Finally { get; }
     }
 }

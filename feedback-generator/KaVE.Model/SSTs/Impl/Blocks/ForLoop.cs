@@ -20,6 +20,7 @@
 using System.Collections.Generic;
 using KaVE.Model.Collections;
 using KaVE.Model.SSTs.Blocks;
+using KaVE.Model.SSTs.Expressions;
 using KaVE.Model.SSTs.Visitor;
 using KaVE.Utils;
 
@@ -28,7 +29,7 @@ namespace KaVE.Model.SSTs.Impl.Blocks
     public class ForLoop : IForLoop
     {
         public IList<IStatement> Init { get; set; }
-        public IExpression Condition { get; set; }
+        public ILoopHeaderExpression Condition { get; set; }
         public IList<IStatement> Step { get; set; }
         public IList<IStatement> Body { get; set; }
 
@@ -54,7 +55,7 @@ namespace KaVE.Model.SSTs.Impl.Blocks
         {
             unchecked
             {
-                var hashCode = Init.GetHashCode();
+                var hashCode = 34 + Init.GetHashCode();
                 hashCode = (hashCode*397) ^ Step.GetHashCode();
                 hashCode = (hashCode*397) ^ Body.GetHashCode();
                 hashCode = (hashCode*397) ^ (Condition != null ? Condition.GetHashCode() : 0);
@@ -64,7 +65,7 @@ namespace KaVE.Model.SSTs.Impl.Blocks
 
         public void Accept<TContext>(ISSTNodeVisitor<TContext> visitor, TContext context)
         {
-            throw new System.NotImplementedException();
+            visitor.Visit(this, context);
         }
     }
 }

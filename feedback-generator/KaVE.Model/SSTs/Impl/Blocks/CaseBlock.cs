@@ -49,13 +49,13 @@ namespace KaVE.Model.SSTs.Impl.Blocks
         {
             unchecked
             {
-                return 30 + ((Body != null ? Body.GetHashCode() : 0)*397) ^ (Label != null ? Label.GetHashCode() : 0);
+                return 30 + (Body.GetHashCode()*397) ^ (Label != null ? Label.GetHashCode() : 0);
             }
         }
 
         public void Accept<TContext>(ISSTNodeVisitor<TContext> visitor, TContext context)
         {
-            throw new System.NotImplementedException();
+            visitor.Visit(this, context);
         }
     }
 }

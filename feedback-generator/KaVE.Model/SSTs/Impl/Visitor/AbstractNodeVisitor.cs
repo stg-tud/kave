@@ -38,6 +38,7 @@ namespace KaVE.Model.SSTs.Impl.Visitor
         public virtual void Visit(IFieldDeclaration stmt, TContext context) {}
         public virtual void Visit(IMethodDeclaration stmt, TContext context) {}
         public virtual void Visit(IPropertyDeclaration stmt, TContext context) {}
+        public virtual void Visit(IVariableDeclaration stmt, TContext context) {}
 
         // ambiguous
         public virtual void Visit(ICompletion entity, TContext context) {}
@@ -62,6 +63,7 @@ namespace KaVE.Model.SSTs.Impl.Visitor
         public virtual void Visit(IIfElseBlock block, TContext context) {}
         public virtual void Visit(ISwitchBlock block, TContext context) {}
         public virtual void Visit(ITryBlock block, TContext context) {}
+        public virtual void Visit(IUncheckedBlock block, TContext context) {}
         public virtual void Visit(IUnsafeBlock block, TContext context) {}
         public virtual void Visit(IUsingBlock block, TContext context) {}
         public virtual void Visit(IWhileLoop block, TContext context) {}

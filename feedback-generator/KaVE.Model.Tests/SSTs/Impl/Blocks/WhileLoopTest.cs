@@ -18,26 +18,24 @@
  */
 
 using KaVE.Model.Collections;
-using KaVE.Model.SSTs;
 using KaVE.Model.SSTs.Blocks;
-using KaVE.Model.SSTs.Expressions;
 using KaVE.Model.SSTs.Impl.Blocks;
 using KaVE.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Model.SSTs.Impl.Statements;
-using KaVE.Model.SSTs.Statements;
+using KaVE.Model.SSTs.Impl.Visitor;
 using NUnit.Framework;
 
-namespace KaVE.Model.Tests.SSTs.Blocks
+namespace KaVE.Model.Tests.SSTs.Impl.Blocks
 {
-    internal class IfElseBlockTest
+    public class WhileLoopTest
     {
         [Test]
         public void DefaultValues()
         {
-            var sut = new IfElseBlock();
-            Assert.Null(sut.Condition);
-            Assert.NotNull(sut.Then);
-            Assert.NotNull(sut.Else);
+            var sut = new WhileLoop();
+            Assert.IsNull(sut.Condition);
+            Assert.NotNull(sut.Body);
+            Assert.AreEqual(0, sut.Body.Count);
             Assert.AreNotEqual(0, sut.GetHashCode());
             Assert.AreNotEqual(1, sut.GetHashCode());
         }
@@ -45,19 +43,17 @@ namespace KaVE.Model.Tests.SSTs.Blocks
         [Test]
         public void SettingValues()
         {
-            var sut = new IfElseBlock {Condition = new ConstantValueExpression()};
-            sut.Then.Add(new ReturnStatement());
-            sut.Else.Add(new ContinueStatement());
+            var sut = new WhileLoop {Condition = new ConstantValueExpression()};
+            sut.Body.Add(new ReturnStatement());
             Assert.AreEqual(new ConstantValueExpression(), sut.Condition);
-            Assert.AreEqual(Lists.NewList(new ReturnStatement()), sut.Then);
-            Assert.AreEqual(Lists.NewList(new ContinueStatement()), sut.Else);
+            Assert.AreEqual(Lists.NewList(new ReturnStatement()), sut.Body);
         }
 
         [Test]
         public void Equality_Default()
         {
-            var a = new IfElseBlock();
-            var b = new IfElseBlock();
+            var a = new WhileLoop();
+            var b = new WhileLoop();
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
         }
@@ -65,12 +61,10 @@ namespace KaVE.Model.Tests.SSTs.Blocks
         [Test]
         public void Equality_ReallyTheSame()
         {
-            var a = new IfElseBlock {Condition = new ConstantValueExpression()};
-            a.Then.Add(new ReturnStatement());
-            a.Else.Add(new ContinueStatement());
-            var b = new IfElseBlock {Condition = new ConstantValueExpression()};
-            b.Then.Add(new ReturnStatement());
-            b.Else.Add(new ContinueStatement());
+            var a = new WhileLoop {Condition = new ConstantValueExpression()};
+            a.Body.Add(new ReturnStatement());
+            var b = new WhileLoop {Condition = new ConstantValueExpression()};
+            b.Body.Add(new ReturnStatement());
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
         }
@@ -78,30 +72,44 @@ namespace KaVE.Model.Tests.SSTs.Blocks
         [Test]
         public void Equality_DifferentCondition()
         {
-            var a = new IfElseBlock {Condition = new ConstantValueExpression()};
-            var b = new IfElseBlock();
+            var a = new WhileLoop {Condition = new ConstantValueExpression()};
+            var b = new WhileLoop {Condition = new ReferenceExpression()};
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
         }
 
         [Test]
-        public void Equality_DifferentThen()
+        public void Equality_DifferentBody()
         {
-            var a = new IfElseBlock();
-            a.Then.Add(new ReturnStatement());
-            var b = new IfElseBlock();
+            var a = new WhileLoop();
+            a.Body.Add(new ContinueStatement());
+            var b = new WhileLoop();
+            b.Body.Add(new GotoStatement());
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
         }
 
         [Test]
-        public void Equality_DifferentElse()
+        public void VisitorIsImplemented()
         {
-            var a = new IfElseBlock();
-            a.Else.Add(new ContinueStatement());
-            var b = new IfElseBlock();
-            Assert.AreNotEqual(a, b);
-            Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
+            var sut = new WhileLoop();
+            var visitor = new TestVisitor();
+            sut.Accept(visitor, 12);
+
+            Assert.AreEqual(sut, visitor.Statement);
+            Assert.AreEqual(12, visitor.Context);
+        }
+
+        internal class TestVisitor : AbstractNodeVisitor<int>
+        {
+            public IWhileLoop Statement { get; private set; }
+            public int Context { get; private set; }
+
+            public override void Visit(IWhileLoop stmt, int context)
+            {
+                Statement = stmt;
+                Context = context;
+            }
         }
     }
 }

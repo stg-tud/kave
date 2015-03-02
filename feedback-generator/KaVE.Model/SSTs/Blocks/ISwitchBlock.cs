@@ -18,14 +18,20 @@
  */
 
 using System.Collections.Generic;
+using KaVE.JetBrains.Annotations;
 using KaVE.Model.SSTs.Impl.Blocks;
+using KaVE.Model.SSTs.References;
 
 namespace KaVE.Model.SSTs.Blocks
 {
     public interface ISwitchBlock : IStatement
     {
-        string Identifier { get; }
+        IVariableReference Reference { get; }
+
+        [NotNull]
         IList<CaseBlock> Sections { get; }
+
+        [NotNull]
         IList<IStatement> DefaultSection { get; }
     }
 }

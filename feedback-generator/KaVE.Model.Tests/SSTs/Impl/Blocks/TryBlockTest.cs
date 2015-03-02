@@ -14,17 +14,17 @@
  * limitations under the License.
  * 
  * Contributors:
- *    - 
+ *    - Sebastian Proksch
  */
 
 using KaVE.Model.Collections;
 using KaVE.Model.SSTs.Blocks;
 using KaVE.Model.SSTs.Impl.Blocks;
 using KaVE.Model.SSTs.Impl.Statements;
-using KaVE.Model.SSTs.Statements;
+using KaVE.Model.SSTs.Impl.Visitor;
 using NUnit.Framework;
 
-namespace KaVE.Model.Tests.SSTs.Blocks
+namespace KaVE.Model.Tests.SSTs.Impl.Blocks
 {
     internal class TryBlockTest
     {
@@ -33,8 +33,11 @@ namespace KaVE.Model.Tests.SSTs.Blocks
         {
             var sut = new TryBlock();
             Assert.NotNull(sut.Body);
+            Assert.AreEqual(0, sut.Body.Count);
             Assert.NotNull(sut.CatchBlocks);
+            Assert.AreEqual(0, sut.CatchBlocks.Count);
             Assert.NotNull(sut.Finally);
+            Assert.AreEqual(0, sut.Finally.Count);
             Assert.AreNotEqual(0, sut.GetHashCode());
             Assert.AreNotEqual(1, sut.GetHashCode());
         }
@@ -106,6 +109,29 @@ namespace KaVE.Model.Tests.SSTs.Blocks
             var b = new TryBlock();
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
+        }
+
+        [Test]
+        public void VisitorIsImplemented()
+        {
+            var sut = new TryBlock();
+            var visitor = new TestVisitor();
+            sut.Accept(visitor, 8);
+
+            Assert.AreEqual(sut, visitor.Statement);
+            Assert.AreEqual(8, visitor.Context);
+        }
+
+        internal class TestVisitor : AbstractNodeVisitor<int>
+        {
+            public ITryBlock Statement { get; private set; }
+            public int Context { get; private set; }
+
+            public override void Visit(ITryBlock stmt, int context)
+            {
+                Statement = stmt;
+                Context = context;
+            }
         }
     }
 }

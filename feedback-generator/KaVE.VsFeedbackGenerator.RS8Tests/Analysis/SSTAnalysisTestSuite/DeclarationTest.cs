@@ -17,11 +17,8 @@
  *    - Sebastian Proksch
  */
 
-using KaVE.Model.SSTs;
-using KaVE.Model.SSTs.Impl.Declarations;
+using KaVE.Model.SSTs.Impl;
 using KaVE.Model.SSTs.Impl.Expressions.Simple;
-using KaVE.Model.SSTs.Impl.Statements;
-using KaVE.Model.SSTs.Statements;
 using NUnit.Framework;
 using Fix = KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite.SSTAnalysisFixture;
 
@@ -42,7 +39,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             ");
 
             var mA = NewMethodDeclaration(SSTAnalysisFixture.Void, "A");
-            mA.Body.Add(VariableDeclaration.Create("i", Fix.Unknown));
+            mA.Body.Add(SSTUtil.Declare("i", Fix.Unknown));
 
             AssertAllMethods(mA);
         }
@@ -59,7 +56,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             ");
 
             var mA = NewMethodDeclaration(SSTAnalysisFixture.Void, "A");
-            mA.Body.Add(VariableDeclaration.Create("i", Fix.Int));
+            mA.Body.Add(SSTUtil.Declare("i", Fix.Int));
 
             AssertAllMethods(mA);
         }
@@ -76,7 +73,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             ");
 
             var mA = NewMethodDeclaration(SSTAnalysisFixture.Void, "A");
-            mA.Body.Add(VariableDeclaration.Create("i", Fix.Int));
+            mA.Body.Add(SSTUtil.Declare("i", Fix.Int));
             mA.Body.Add(SSTUtil.AssignmentToLocal("i", new ConstantValueExpression()));
 
             AssertAllMethods(mA);

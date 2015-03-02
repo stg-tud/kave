@@ -18,13 +18,19 @@
  */
 
 using System.Collections.Generic;
+using KaVE.JetBrains.Annotations;
+using KaVE.Model.SSTs.Expressions;
 
 namespace KaVE.Model.SSTs.Blocks
 {
     public interface IIfElseBlock : IStatement
     {
-        IExpression Condition { get; }
+        ISimpleExpression Condition { get; }
+
+        [NotNull]
         IList<IStatement> Then { get; }
+
+        [NotNull]
         IList<IStatement> Else { get; }
     }
 }

@@ -50,14 +50,14 @@ namespace KaVE.Model.SSTs.Impl.Blocks
         {
             unchecked
             {
-                return 31 + ((Body != null ? Body.GetHashCode() : 0)*397) ^
+                return 31 + (Body.GetHashCode()*397) ^
                        (Exception != null ? Exception.GetHashCode() : 0);
             }
         }
 
         public void Accept<TContext>(ISSTNodeVisitor<TContext> visitor, TContext context)
         {
-            throw new System.NotImplementedException();
+            visitor.Visit(this, context);
         }
     }
 }

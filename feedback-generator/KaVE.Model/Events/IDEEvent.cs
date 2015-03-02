@@ -62,7 +62,7 @@ namespace KaVE.Model.Events
         }
 
         /// <summary>
-        ///     Identifier of this IDE session. Used to identify events that
+        ///     Reference of this IDE session. Used to identify events that
         ///     originate from the same IDE session. A session starts when the IDE
         ///     is opened and ends when the IDE is shut down.
         /// </summary>

@@ -18,14 +18,18 @@
  */
 
 using System.Collections.Generic;
+using KaVE.JetBrains.Annotations;
 using KaVE.Model.SSTs.Declarations;
+using KaVE.Model.SSTs.References;
 
 namespace KaVE.Model.SSTs.Blocks
 {
     public interface IForEachLoop : IStatement
     {
-        IVariableDeclaration Decl { get; }
-        string LoopedIdentifier { get; }
+        IVariableDeclaration Declaration { get; }
+        IVariableReference LoopedReference { get; }
+
+        [NotNull]
         IList<IStatement> Body { get; }
     }
 }

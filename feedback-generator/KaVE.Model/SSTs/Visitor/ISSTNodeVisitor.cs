@@ -37,6 +37,7 @@ namespace KaVE.Model.SSTs.Visitor
         void Visit(IFieldDeclaration stmt, TContext context);
         void Visit(IMethodDeclaration stmt, TContext context);
         void Visit(IPropertyDeclaration stmt, TContext context);
+        void Visit(IVariableDeclaration stmt, TContext context);
 
         // ambiguous entities
         void Visit(ICompletion entity, TContext context);
@@ -52,6 +53,7 @@ namespace KaVE.Model.SSTs.Visitor
         void Visit(IReturnStatement stmt, TContext context);
         void Visit(IThrowStatement stmt, TContext context);
 
+
         // blocks
         void Visit(ICaseBlock block, TContext context);
         void Visit(ICatchBlock block, TContext context);
@@ -61,6 +63,7 @@ namespace KaVE.Model.SSTs.Visitor
         void Visit(IIfElseBlock block, TContext context);
         void Visit(ISwitchBlock block, TContext context);
         void Visit(ITryBlock block, TContext context);
+        void Visit(IUncheckedBlock block, TContext context);
         void Visit(IUnsafeBlock block, TContext context);
         void Visit(IUsingBlock block, TContext context);
         void Visit(IWhileLoop block, TContext context);

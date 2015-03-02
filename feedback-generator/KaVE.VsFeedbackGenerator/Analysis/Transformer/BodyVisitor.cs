@@ -24,9 +24,8 @@ using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.Util;
 using KaVE.Model.Collections;
 using KaVE.Model.Names;
-using KaVE.Model.SSTs;
 using KaVE.Model.SSTs.Expressions;
-using KaVE.Model.SSTs.Impl.Declarations;
+using KaVE.Model.SSTs.Impl;
 using KaVE.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Model.SSTs.Impl.References;
 using KaVE.VsFeedbackGenerator.Analysis.Util;
@@ -55,7 +54,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
         {
             var id = decl.DeclaredName;
             var type = decl.Type.GetName();
-            context.Add(new VariableDeclaration {Identifier = id, Type = type});
+            context.Add(SSTUtil.Declare(id, type));
 
             var isInitialized = decl.Initial != null;
             if (isInitialized)

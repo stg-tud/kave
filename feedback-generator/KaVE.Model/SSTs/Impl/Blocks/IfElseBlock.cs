@@ -20,6 +20,7 @@
 using System.Collections.Generic;
 using KaVE.Model.Collections;
 using KaVE.Model.SSTs.Blocks;
+using KaVE.Model.SSTs.Expressions;
 using KaVE.Model.SSTs.Visitor;
 using KaVE.Utils;
 
@@ -27,7 +28,7 @@ namespace KaVE.Model.SSTs.Impl.Blocks
 {
     public class IfElseBlock : IIfElseBlock
     {
-        public IExpression Condition { get; set; }
+        public ISimpleExpression Condition { get; set; }
         public IList<IStatement> Then { get; set; }
         public IList<IStatement> Else { get; set; }
 
@@ -51,7 +52,7 @@ namespace KaVE.Model.SSTs.Impl.Blocks
         {
             unchecked
             {
-                var hashCode = Then.GetHashCode();
+                var hashCode = 35 + Then.GetHashCode();
                 hashCode = (hashCode*397) ^ Else.GetHashCode();
                 hashCode = (hashCode*397) ^ (Condition != null ? Condition.GetHashCode() : 0);
                 return hashCode;
@@ -60,7 +61,7 @@ namespace KaVE.Model.SSTs.Impl.Blocks
 
         public void Accept<TContext>(ISSTNodeVisitor<TContext> visitor, TContext context)
         {
-            throw new System.NotImplementedException();
+            visitor.Visit(this, context);
         }
     }
 }

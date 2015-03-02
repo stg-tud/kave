@@ -18,12 +18,16 @@
  */
 
 using System.Collections.Generic;
+using KaVE.JetBrains.Annotations;
+using KaVE.Model.SSTs.Expressions;
 
 namespace KaVE.Model.SSTs.Blocks
 {
     public interface IDoLoop : IStatement
     {
-        IExpression Condition { get; }
+        ILoopHeaderExpression Condition { get; }
+
+        [NotNull]
         IList<IStatement> Body { get; }
     }
 }

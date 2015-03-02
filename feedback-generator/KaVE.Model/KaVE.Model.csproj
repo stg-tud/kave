@@ -150,12 +150,14 @@
     <Compile Include="SSTs\Blocks\IIfElseBlock.cs" />
     <Compile Include="SSTs\Blocks\ISwitchBlock.cs" />
     <Compile Include="SSTs\Blocks\ITryBlock.cs" />
+    <Compile Include="SSTs\Blocks\IUncheckedBlock.cs" />
     <Compile Include="SSTs\Blocks\IUnsafeBlock.cs" />
     <Compile Include="SSTs\Blocks\IUsingBlock.cs" />
     <Compile Include="SSTs\Blocks\IWhileLoop.cs" />
     <Compile Include="SSTs\Impl\Blocks\DoLoop.cs" />
     <Compile Include="SSTs\Impl\Blocks\SwitchBlock.cs" />
     <Compile Include="SSTs\Impl\Blocks\CaseBlock.cs" />
+    <Compile Include="SSTs\Impl\Blocks\UncheckedBlock.cs" />
     <Compile Include="SSTs\Impl\Blocks\UnsafeBlock.cs" />
     <Compile Include="SSTs\Declarations\IDelegateDeclaration.cs" />
     <Compile Include="SSTs\Declarations\IEventDeclaration.cs" />
@@ -196,7 +198,7 @@
     <Compile Include="SSTs\References\IMethodReference.cs" />
     <Compile Include="SSTs\References\IPropertyReference.cs" />
     <Compile Include="SSTs\References\IVariableReference.cs" />
-    <Compile Include="SSTs\SSTUtil.cs" />
+    <Compile Include="SSTs\Impl\SSTUtil.cs" />
     <Compile Include="SSTs\Impl\Statements\Assignment.cs" />
     <Compile Include="SSTs\IStatement.cs" />
     <Compile Include="SSTs\Impl\Expressions\Assignable\ComposedExpression.cs" />

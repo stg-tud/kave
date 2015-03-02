@@ -19,6 +19,7 @@
 
 using KaVE.Model.Names;
 using KaVE.Model.SSTs.Declarations;
+using KaVE.Model.SSTs.References;
 using KaVE.Model.SSTs.Visitor;
 using KaVE.Utils;
 
@@ -26,7 +27,7 @@ namespace KaVE.Model.SSTs.Impl.Declarations
 {
     public class VariableDeclaration : IVariableDeclaration
     {
-        public string Identifier { get; set; }
+        public IVariableReference Reference { get; set; }
         public ITypeName Type { get; set; }
 
         public override bool Equals(object obj)
@@ -36,30 +37,21 @@ namespace KaVE.Model.SSTs.Impl.Declarations
 
         private bool Equals(VariableDeclaration other)
         {
-            return string.Equals(Identifier, other.Identifier) && Equals(Type, other.Type);
+            return Equals(Reference, other.Reference) && Equals(Type, other.Type);
         }
 
         public override int GetHashCode()
         {
             unchecked
             {
-                return 20 + ((Identifier != null ? Identifier.GetHashCode() : 0)*397) ^
+                return 20 + ((Reference != null ? Reference.GetHashCode() : 0)*397) ^
                        (Type != null ? Type.GetHashCode() : 0);
             }
         }
 
         public void Accept<TContext>(ISSTNodeVisitor<TContext> visitor, TContext context)
         {
-            throw new System.NotImplementedException();
-        }
-
-        public static IVariableDeclaration Create(string identifier, ITypeName type)
-        {
-            return new VariableDeclaration
-            {
-                Identifier = identifier,
-                Type = type
-            };
+            visitor.Visit(this, context);
         }
     }
 }

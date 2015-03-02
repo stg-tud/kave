@@ -21,13 +21,13 @@
 using System.Linq;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.Util;
-using KaVE.Model.SSTs;
 using KaVE.Model.SSTs.Expressions;
+using KaVE.Model.SSTs.Impl;
 using KaVE.Model.SSTs.Impl.Blocks;
-using KaVE.Model.SSTs.Impl.Declarations;
 using KaVE.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Model.SSTs.Impl.References;
 using KaVE.Model.SSTs.Impl.Statements;
+using KaVE.Model.SSTs.References;
 using KaVE.VsFeedbackGenerator.Analysis.Transformer.Context;
 using KaVE.VsFeedbackGenerator.Utils.Names;
 
@@ -54,7 +54,9 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
 
         public override void VisitDoStatement(IDoStatement doStatementParam, ScopeTransformerContext context)
         {
-            var doLoop = new DoLoop {Condition = doStatementParam.Condition.GetScopedReferences(context)};
+            var scopedReferences = doStatementParam.Condition.GetScopedReferences(context);
+            // TODO
+            var doLoop = new DoLoop {Condition = null};
             doLoop.Body.AddRange(doStatementParam.Body.GetScope(context).Body);
             context.Scope.Body.Add(doLoop);
         }
@@ -70,14 +72,19 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
         {
             var foreachLoop = new ForEachLoop
             {
-                Decl =
-                    VariableDeclaration.Create(
+                Declaration =
+                    SSTUtil.Declare(
                         foreachStatementParam.IteratorName,
                         foreachStatementParam.IteratorDeclaration.DeclaredElement.Type.GetName()),
-                LoopedIdentifier = foreachStatementParam.Collection.GetReference(context)
+                LoopedReference = Ref(foreachStatementParam.Collection.GetReference(context))
             };
             foreachLoop.Body.AddRange(foreachStatementParam.Body.GetScope(context).Body);
             context.Scope.Body.Add(foreachLoop);
+        }
+
+        private static IVariableReference Ref(string id)
+        {
+            return new VariableReference {Identifier = id};
         }
 
         public override void VisitForInitializer(IForInitializer forInitializerParam, ScopeTransformerContext context)
@@ -100,7 +107,9 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
             context.Scope.Body.Add(forLoop);
             if (forStatementParam.Condition != null)
             {
-                forLoop.Condition = forStatementParam.Condition.GetScopedReferences(context);
+                var scopedReferences = forStatementParam.Condition.GetScopedReferences(context);
+                // TODO
+                forLoop.Condition = null;
             }
             if (forStatementParam.Initializer != null)
             {
@@ -123,7 +132,9 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
                 var ifBlock = new IfElseBlock();
                 if (ifStatementParam.Condition != null)
                 {
-                    ifBlock.Condition = ifStatementParam.Condition.GetReferences(context);
+                    var assignableExpression = ifStatementParam.Condition.GetReferences(context);
+                    // TODO
+                    ifBlock.Condition = null;
                 }
                 if (ifStatementParam.Then != null)
                 {
@@ -180,7 +191,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
         {
             var name = multipleDeclarationMemberParam.NameIdentifier.Name;
             var type = multipleDeclarationMemberParam.Type.GetName();
-            context.Scope.Body.Add(VariableDeclaration.Create(name, type));
+            context.Scope.Body.Add(SSTUtil.Declare(name, type));
         }
 
         public override void VisitMultipleLocalVariableDeclaration(
@@ -220,12 +231,9 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
             var usingBlock = new UsingBlock();
             if (usingStatementParam.Expressions.Count > 0)
             {
-                usingBlock.Identifier = usingStatementParam.Expressions.GetReference(context);
+                usingBlock.Reference = Ref(usingStatementParam.Expressions.GetReference(context));
             }
-            if (usingBlock.Body != null)
-            {
-                usingBlock.Body.AddRange(usingStatementParam.Body.GetScope(context).Body);
-            }
+            usingBlock.Body.AddRange(usingStatementParam.Body.GetScope(context).Body);
             context.Scope.Body.Add(usingBlock);
         }
 

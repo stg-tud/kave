@@ -25,24 +25,19 @@ namespace KaVE.Model.SSTs.Impl.Blocks
 {
     public class UnsafeBlock : IUnsafeBlock
     {
-        private static bool Equals(UnsafeBlock other)
-        {
-            return true;
-        }
-
         public override bool Equals(object obj)
         {
-            return this.Equals(obj, Equals);
+            return this.Equals(obj, other => true);
         }
 
         public override int GetHashCode()
         {
-            return 7;
+            return 38;
         }
 
         public void Accept<TContext>(ISSTNodeVisitor<TContext> visitor, TContext context)
         {
-            throw new System.NotImplementedException();
+            visitor.Visit(this, context);
         }
     }
 }

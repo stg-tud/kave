@@ -19,23 +19,21 @@
 
 using KaVE.Model.Collections;
 using KaVE.Model.SSTs.Blocks;
-using KaVE.Model.SSTs.Expressions;
 using KaVE.Model.SSTs.Impl.Blocks;
-using KaVE.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Model.SSTs.Impl.Statements;
-using KaVE.Model.SSTs.Statements;
+using KaVE.Model.SSTs.Impl.Visitor;
 using NUnit.Framework;
 
-namespace KaVE.Model.Tests.SSTs.Blocks
+namespace KaVE.Model.Tests.SSTs.Impl.Blocks
 {
-    internal class DoLoopTest
+    internal class UncheckedBlockTest
     {
         [Test]
         public void DefaultValues()
         {
-            var sut = new DoLoop();
-            Assert.Null(sut.Condition);
+            var sut = new UncheckedBlock();
             Assert.NotNull(sut.Body);
+            Assert.AreEqual(0, sut.Body.Count);
             Assert.AreNotEqual(0, sut.GetHashCode());
             Assert.AreNotEqual(1, sut.GetHashCode());
         }
@@ -43,18 +41,16 @@ namespace KaVE.Model.Tests.SSTs.Blocks
         [Test]
         public void SettingValues()
         {
-            var sut = new DoLoop {Condition = new ConstantValueExpression()};
-            sut.Body.Add(new ReturnStatement());
-
-            Assert.AreEqual(new ConstantValueExpression(), sut.Condition);
-            Assert.AreEqual(Lists.NewList(new ReturnStatement()), sut.Body);
+            var sut = new UncheckedBlock();
+            sut.Body.Add(new BreakStatement());
+            Assert.AreEqual(Lists.NewList(new BreakStatement()), sut.Body);
         }
 
         [Test]
         public void Equality_Default()
         {
-            var a = new DoLoop();
-            var b = new DoLoop();
+            var a = new UncheckedBlock();
+            var b = new UncheckedBlock();
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
         }
@@ -62,31 +58,45 @@ namespace KaVE.Model.Tests.SSTs.Blocks
         [Test]
         public void Equality_ReallyTheSame()
         {
-            var a = new DoLoop {Condition = new ConstantValueExpression()};
-            a.Body.Add(new ReturnStatement());
-            var b = new DoLoop {Condition = new ConstantValueExpression()};
-            b.Body.Add(new ReturnStatement());
+            var a = new UncheckedBlock();
+            a.Body.Add(new BreakStatement());
+            var b = new UncheckedBlock();
+            b.Body.Add(new BreakStatement());
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
         }
 
         [Test]
-        public void Equality_DifferentCondition()
+        public void Equality_DifferentBody()
         {
-            var a = new DoLoop {Condition = new ConstantValueExpression()};
-            var b = new DoLoop();
+            var a = new UncheckedBlock();
+            a.Body.Add(new BreakStatement());
+            var b = new UncheckedBlock();
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
         }
 
         [Test]
-        public void Equality_DifferentBody()
+        public void VisitorIsImplemented()
         {
-            var a = new DoLoop();
-            a.Body.Add(new ReturnStatement());
-            var b = new DoLoop();
-            Assert.AreNotEqual(a, b);
-            Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
+            var sut = new UncheckedBlock();
+            var visitor = new TestVisitor();
+            sut.Accept(visitor, 9);
+
+            Assert.AreEqual(sut, visitor.Statement);
+            Assert.AreEqual(9, visitor.Context);
+        }
+
+        internal class TestVisitor : AbstractNodeVisitor<int>
+        {
+            public IUncheckedBlock Statement { get; private set; }
+            public int Context { get; private set; }
+
+            public override void Visit(IUncheckedBlock stmt, int context)
+            {
+                Statement = stmt;
+                Context = context;
+            }
         }
     }
 }

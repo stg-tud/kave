@@ -20,6 +20,7 @@
 using KaVE.Model.Collections;
 using KaVE.Model.Names.CSharp;
 using KaVE.Model.SSTs;
+using KaVE.Model.SSTs.Impl;
 using KaVE.Model.SSTs.Impl.Declarations;
 using KaVE.Model.SSTs.Impl.Expressions.Simple;
 using NUnit.Framework;
@@ -38,7 +39,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             ");
 
             var body = Lists.NewList<IStatement>();
-            body.Add(VariableDeclaration.Create("i", Fix.Int));
+            body.Add(SSTUtil.Declare("i", Fix.Int));
 
             AssertBody(body);
         }
@@ -52,7 +53,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             ");
 
             var body = Lists.NewList<IStatement>();
-            body.Add(VariableDeclaration.Create("i", Fix.Int));
+            body.Add(SSTUtil.Declare("i", Fix.Int));
             body.Add(SSTUtil.AssignmentToLocal("i", new ConstantValueExpression()));
 
             AssertBody(body);
@@ -79,11 +80,11 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             ");
 
             var body = Lists.NewList<IStatement>();
-            body.Add(VariableDeclaration.Create("a", TypeName.Get("A, TestProject")));
+            body.Add(SSTUtil.Declare("a", TypeName.Get("A, TestProject")));
             var methodName = MethodName.Get("[System.Void, mscore, 4.0.0.0] [A.TestProject]..ctor()");
             body.Add(SSTUtil.AssignmentToLocal("a", SSTUtil.InvocationExpression("a", methodName)));
-            body.Add(VariableDeclaration.Create("c", Fix.Int));
-            // body.Add(SSTUtil.AssignmentToLocal("i", new MemberAccessExpression {Identifier = "a", MemberName = "I"}));
+            body.Add(SSTUtil.Declare("c", Fix.Int));
+            // body.Add(SSTUtil.AssignmentToLocal("i", new MemberAccessExpression {Reference = "a", MemberName = "I"}));
 
             AssertBody(body);
         }
@@ -108,7 +109,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             ");
 
             var body = Lists.NewList<IStatement>();
-            body.Add(VariableDeclaration.Create("i", Fix.Int));
+            body.Add(SSTUtil.Declare("i", Fix.Int));
             var field = FieldName.Get("[System.Int32, mscore, 4.0.0.0] [N.A, TestProject].I");
             //body.Add(SSTUtil.AssignmentToLocal("i", new ConstantReferenceExpression {Reference = field}));
 
@@ -125,7 +126,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             ");
 
             var body = Lists.NewList<IStatement>();
-            body.Add(VariableDeclaration.Create("o", Fix.Object));
+            body.Add(SSTUtil.Declare("o", Fix.Object));
             body.Add(SSTUtil.AssignmentToLocal("o", new NullExpression()));
 
             AssertBody(body);
@@ -141,9 +142,9 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             ");
 
             var body = Lists.NewList<IStatement>();
-            body.Add(VariableDeclaration.Create("o", Fix.Object));
+            body.Add(SSTUtil.Declare("o", Fix.Object));
             body.Add(SSTUtil.AssignmentToLocal("o", new NullExpression()));
-            body.Add(VariableDeclaration.Create("o2", Fix.Object));
+            body.Add(SSTUtil.Declare("o2", Fix.Object));
             body.Add(SSTUtil.AssignmentToLocal("o2", SSTUtil.ReferenceExprToVariable("o")));
 
             AssertBody(body);

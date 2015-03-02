@@ -18,12 +18,13 @@
  */
 
 using KaVE.Model.Names;
+using KaVE.Model.SSTs.References;
 
 namespace KaVE.Model.SSTs.Declarations
 {
     public interface IVariableDeclaration : IStatement
     {
-        string Identifier { get; }
+        IVariableReference Reference { get; }
         ITypeName Type { get; }
     }
 }

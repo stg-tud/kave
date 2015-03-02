@@ -21,11 +21,13 @@ using KaVE.Model.Collections;
 using KaVE.Model.SSTs.Blocks;
 using KaVE.Model.SSTs.Impl.Blocks;
 using KaVE.Model.SSTs.Impl.Declarations;
+using KaVE.Model.SSTs.Impl.References;
 using KaVE.Model.SSTs.Impl.Statements;
-using KaVE.Model.SSTs.Statements;
+using KaVE.Model.SSTs.Impl.Visitor;
+using KaVE.Model.SSTs.References;
 using NUnit.Framework;
 
-namespace KaVE.Model.Tests.SSTs.Blocks
+namespace KaVE.Model.Tests.SSTs.Impl.Blocks
 {
     internal class ForEachLoopTest
     {
@@ -34,8 +36,9 @@ namespace KaVE.Model.Tests.SSTs.Blocks
         {
             var sut = new ForEachLoop();
             Assert.NotNull(sut.Body);
-            Assert.Null(sut.Decl);
-            Assert.Null(sut.LoopedIdentifier);
+            Assert.AreEqual(0, sut.Body.Count);
+            Assert.Null(sut.Declaration);
+            Assert.Null(sut.LoopedReference);
             Assert.AreNotEqual(0, sut.GetHashCode());
             Assert.AreNotEqual(1, sut.GetHashCode());
         }
@@ -43,11 +46,11 @@ namespace KaVE.Model.Tests.SSTs.Blocks
         [Test]
         public void SettingValues()
         {
-            var sut = new ForEachLoop {LoopedIdentifier = "a", Decl = new VariableDeclaration()};
+            var sut = new ForEachLoop {LoopedReference = Ref("a"), Declaration = new VariableDeclaration()};
             sut.Body.Add(new ReturnStatement());
 
-            Assert.AreEqual("a", sut.LoopedIdentifier);
-            Assert.AreEqual(new VariableDeclaration(), sut.Decl);
+            Assert.AreEqual(Ref("a"), sut.LoopedReference);
+            Assert.AreEqual(new VariableDeclaration(), sut.Declaration);
             Assert.AreEqual(Lists.NewList(new ReturnStatement()), sut.Body);
         }
 
@@ -63,18 +66,18 @@ namespace KaVE.Model.Tests.SSTs.Blocks
         [Test]
         public void Equality_ReallyTheSame()
         {
-            var a = new ForEachLoop {LoopedIdentifier = "a", Decl = new VariableDeclaration()};
+            var a = new ForEachLoop {LoopedReference = Ref("a"), Declaration = new VariableDeclaration()};
             a.Body.Add(new ReturnStatement());
-            var b = new ForEachLoop {LoopedIdentifier = "a", Decl = new VariableDeclaration()};
+            var b = new ForEachLoop {LoopedReference = Ref("a"), Declaration = new VariableDeclaration()};
             b.Body.Add(new ReturnStatement());
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
         }
 
         [Test]
-        public void Equality_DifferentLoop()
+        public void Equality_DifferentLoopedReference()
         {
-            var a = new ForEachLoop {LoopedIdentifier = "a"};
+            var a = new ForEachLoop {LoopedReference = Ref("a")};
             var b = new ForEachLoop();
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
@@ -83,7 +86,7 @@ namespace KaVE.Model.Tests.SSTs.Blocks
         [Test]
         public void Equality_DifferentDeclaration()
         {
-            var a = new ForEachLoop {Decl = new VariableDeclaration()};
+            var a = new ForEachLoop {Declaration = new VariableDeclaration()};
             var b = new ForEachLoop();
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
@@ -97,6 +100,34 @@ namespace KaVE.Model.Tests.SSTs.Blocks
             var b = new ForEachLoop();
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
+        }
+
+        [Test]
+        public void VisitorIsImplemented()
+        {
+            var sut = new ForEachLoop();
+            var visitor = new TestVisitor();
+            sut.Accept(visitor, 4);
+
+            Assert.AreEqual(sut, visitor.Statement);
+            Assert.AreEqual(4, visitor.Context);
+        }
+
+        private static IVariableReference Ref(string id)
+        {
+            return new VariableReference {Identifier = id};
+        }
+
+        internal class TestVisitor : AbstractNodeVisitor<int>
+        {
+            public IForEachLoop Statement { get; private set; }
+            public int Context { get; private set; }
+
+            public override void Visit(IForEachLoop stmt, int context)
+            {
+                Statement = stmt;
+                Context = context;
+            }
         }
     }
 }

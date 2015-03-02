@@ -19,9 +19,10 @@
 
 using KaVE.Model.SSTs.Blocks;
 using KaVE.Model.SSTs.Impl.Blocks;
+using KaVE.Model.SSTs.Impl.Visitor;
 using NUnit.Framework;
 
-namespace KaVE.Model.Tests.SSTs.Blocks
+namespace KaVE.Model.Tests.SSTs.Impl.Blocks
 {
     public class UnsafeBlockTest
     {
@@ -34,6 +35,29 @@ namespace KaVE.Model.Tests.SSTs.Blocks
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
             Assert.AreNotEqual(0, a.GetHashCode());
             Assert.AreNotEqual(1, a.GetHashCode());
+        }
+
+        [Test]
+        public void VisitorIsImplemented()
+        {
+            var sut = new UnsafeBlock();
+            var visitor = new TestVisitor();
+            sut.Accept(visitor, 10);
+
+            Assert.AreEqual(sut, visitor.Statement);
+            Assert.AreEqual(10, visitor.Context);
+        }
+
+        internal class TestVisitor : AbstractNodeVisitor<int>
+        {
+            public IUnsafeBlock Statement { get; private set; }
+            public int Context { get; private set; }
+
+            public override void Visit(IUnsafeBlock stmt, int context)
+            {
+                Statement = stmt;
+                Context = context;
+            }
         }
     }
 }

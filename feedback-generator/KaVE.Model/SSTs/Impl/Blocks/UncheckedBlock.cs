@@ -1,5 +1,5 @@
-/*
- * Copyright 2014 Technische Universit�t Darmstadt
+﻿/*
+ * Copyright 2014 Technische Universität Darmstadt
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,38 +25,23 @@ using KaVE.Utils;
 
 namespace KaVE.Model.SSTs.Impl.Blocks
 {
-    public class TryBlock : ITryBlock
+    public class UncheckedBlock : IUncheckedBlock
     {
         public IList<IStatement> Body { get; set; }
-        public IList<CatchBlock> CatchBlocks { get; set; }
-        public IList<IStatement> Finally { get; set; }
 
-        public TryBlock()
+        public UncheckedBlock()
         {
             Body = Lists.NewList<IStatement>();
-            CatchBlocks = Lists.NewList<CatchBlock>();
-            Finally = Lists.NewList<IStatement>();
-        }
-
-        private bool Equals(TryBlock other)
-        {
-            return Body.Equals(other.Body) && CatchBlocks.Equals(other.CatchBlocks) && Finally.Equals(other.Finally);
         }
 
         public override bool Equals(object obj)
         {
-            return this.Equals(obj, Equals);
+            return this.Equals(obj, other => Equals(Body, other.Body));
         }
 
         public override int GetHashCode()
         {
-            unchecked
-            {
-                var hashCode = 37 + Body.GetHashCode();
-                hashCode = (hashCode*397) ^ CatchBlocks.GetHashCode();
-                hashCode = (hashCode*397) ^ Finally.GetHashCode();
-                return hashCode;
-            }
+            return unchecked(372 + Body.GetHashCode());
         }
 
         public void Accept<TContext>(ISSTNodeVisitor<TContext> visitor, TContext context)
