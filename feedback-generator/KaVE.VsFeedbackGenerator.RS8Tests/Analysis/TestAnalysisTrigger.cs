@@ -44,7 +44,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
     {
         public ISet<IMethodName> LastEntryPoints { get; private set; }
         public Context LastContext { get; private set; }
-        public SST LastSST { get; private set; }
+        public ISST LastSST { get; private set; }
         public Tuple<Exception, string> LastException { get; private set; }
 
         public bool HasFailed

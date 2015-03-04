@@ -143,6 +143,7 @@
     <Compile Include="Interactivity\InteractionRequest.cs" />
     <Compile Include="Interactivity\ConfirmationRequestHandler.cs" />
     <Compile Include="RSEnv.cs" />
+    <Compile Include="SessionManager\Anonymize\SSTAnonymizer.cs" />
     <Compile Include="SessionManager\Anonymize\BuildEventAnonymizer.cs" />
     <Compile Include="SessionManager\Anonymize\CompletionEventAnonymizer.cs" />
     <Compile Include="SessionManager\Anonymize\DataExportAnonymizer.cs" />

@@ -23,8 +23,6 @@ using JetBrains.Util;
 using KaVE.Model.Events;
 using KaVE.Model.Events.CompletionEvent;
 using KaVE.Model.Names;
-using KaVE.Model.SSTs;
-using KaVE.Model.SSTs.Impl;
 using KaVE.Utils.Assertion;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
@@ -61,12 +59,18 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
         {
             AnonymizeCodeNames(context.TypeShape.TypeHierarchy);
             context.TypeShape.MethodHierarchies.ForEach(AnonymizeCodeNames);
-            AnonymizeCodeNames(context.SST);
+
+            var anonSST = CreateSSTAnonymizer().Anonymize(context.SST);
+            context.SST = anonSST;
         }
 
-        private static void AnonymizeCodeNames(SST sst)
+        private static SSTAnonymization CreateSSTAnonymizer()
         {
-            // TODO implement anonymization for SSTs
+            var exprAnon = new SSTExpressionAnonymization();
+            var refAnon = new SSTReferenceAnonymization();
+
+            var stmtAnon = new SSTStatementAnonymization();
+            return new SSTAnonymization(stmtAnon);
         }
 
         private static void AnonymizeCodeNames(ITypeHierarchy hierarchy)

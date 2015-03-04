@@ -48,7 +48,7 @@ namespace KaVE.Model.Events.CompletionEvent
         public TypeShape TypeShape { get; set; }
 
         [DataMember, NotNull]
-        public SST SST { get; set; }
+        public ISST SST { get; set; }
 
         public override bool Equals(object obj)
         {

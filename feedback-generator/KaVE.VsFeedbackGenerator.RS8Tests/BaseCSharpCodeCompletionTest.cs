@@ -88,7 +88,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests
             get { return TestAnalysisComponent.LastContext; }
         }
 
-        protected SST ResultSST
+        protected ISST ResultSST
         {
             get { return TestAnalysisComponent.LastSST; }
         }

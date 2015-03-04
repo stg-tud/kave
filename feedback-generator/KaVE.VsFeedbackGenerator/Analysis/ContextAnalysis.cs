@@ -18,7 +18,6 @@
  *    - Sven Amann
  */
 
-using System;
 using System.Linq;
 using JetBrains.ReSharper.Feature.Services.CSharp.CodeCompletion.Infrastructure;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
@@ -27,8 +26,9 @@ using KaVE.JetBrains.Annotations;
 using KaVE.Model.Collections;
 using KaVE.Model.Events.CompletionEvent;
 using KaVE.Model.Names;
-using KaVE.Utils.Exceptions;
 using KaVE.Model.Names.CSharp;
+using KaVE.Model.SSTs.Impl;
+using KaVE.Utils.Exceptions;
 using KaVE.VsFeedbackGenerator.Analysis.Transformer;
 using KaVE.VsFeedbackGenerator.Utils.Names;
 
@@ -61,6 +61,9 @@ namespace KaVE.VsFeedbackGenerator.Analysis
 
         private void AnalyzeInternal(ITreeNode nodeInFile, Context context)
         {
+            var sst = new SST();
+            context.SST = sst;
+
             var classDeclaration = FindEnclosing<IClassDeclaration>(nodeInFile);
             if (classDeclaration != null && classDeclaration.DeclaredElement != null)
             {
@@ -69,13 +72,13 @@ namespace KaVE.VsFeedbackGenerator.Analysis
                 var entryPointRefs = new EntryPointSelector(classDeclaration, context.TypeShape).GetEntryPoints();
                 var entryPoints = Sets.NewHashSetFrom(entryPointRefs.Select(epr => epr.Name));
 
-                context.SST.EnclosingType = classDeclaration.DeclaredElement.GetName<ITypeName>();
+                sst.EnclosingType = classDeclaration.DeclaredElement.GetName<ITypeName>();
                 var marker = _completionTargetAnalysis.Analyze(nodeInFile);
-                classDeclaration.Accept(new DeclarationVisitor(entryPoints, marker), context.SST);
+                classDeclaration.Accept(new DeclarationVisitor(entryPoints, marker), sst);
             }
             else
             {
-                context.SST.EnclosingType = TypeName.UnknownName;
+                sst.EnclosingType = TypeName.UnknownName;
             }
         }
 

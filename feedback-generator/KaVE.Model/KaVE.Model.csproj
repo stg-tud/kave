@@ -186,6 +186,7 @@
     <Compile Include="SSTs\Impl\References\MethodReference.cs" />
     <Compile Include="SSTs\Impl\References\PropertyReference.cs" />
     <Compile Include="SSTs\Impl\References\VariableReference.cs" />
+    <Compile Include="SSTs\Impl\Visitor\AbstractNodeTransformer.cs" />
     <Compile Include="SSTs\IReference.cs" />
     <Compile Include="SSTs\IMemberDeclaration.cs" />
     <Compile Include="SSTs\Impl\Expressions\LoopHeader\LoopHeaderBlockExpression.cs" />
@@ -239,6 +240,7 @@
     <Compile Include="SSTs\Statements\IReturnStatement.cs" />
     <Compile Include="SSTs\Statements\IThrowStatement.cs" />
     <Compile Include="SSTs\Visitor\ISSTNode.cs" />
+    <Compile Include="SSTs\Visitor\ISSTNodeTransformer.cs" />
     <Compile Include="SSTs\Visitor\ISSTNodeVisitor.cs" />
     <Compile Include="SSTs\Impl\Visitor\AbstractNodeVisitor.cs" />
     <Compile Include="SSTs\Impl\Visitor\ToStringVisitor.cs" />

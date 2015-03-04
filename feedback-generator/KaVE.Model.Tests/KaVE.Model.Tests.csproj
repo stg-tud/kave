@@ -121,6 +121,7 @@
     <Compile Include="SSTs\Impl\Statements\ReturnStatementTest.cs" />
     <Compile Include="SSTs\Impl\Statements\ThrowStatementTest.cs" />
     <Compile Include="SSTs\Impl\Visitor\AbstractNodeVisitorTest.cs" />
+    <Compile Include="SSTs\Impl\Visitor\AbstractNodeTransformerTest.cs" />
     <Compile Include="SSTs\Impl\Visitor\ToStringVisitorTest.cs" />
   </ItemGroup>
   <ItemGroup>

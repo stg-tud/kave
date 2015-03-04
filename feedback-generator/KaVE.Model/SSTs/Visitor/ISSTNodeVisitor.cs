@@ -53,7 +53,6 @@ namespace KaVE.Model.SSTs.Visitor
         void Visit(IReturnStatement stmt, TContext context);
         void Visit(IThrowStatement stmt, TContext context);
 
-
         // blocks
         void Visit(ICaseBlock block, TContext context);
         void Visit(ICatchBlock block, TContext context);

@@ -105,6 +105,7 @@
     <Compile Include="SessionManager\Anonymize\IDEStateEventAnonymizerTest.cs" />
     <Compile Include="SessionManager\Anonymize\InfoEventAnonymizerTest.cs" />
     <Compile Include="SessionManager\Anonymize\SolutionEventAnonymizerTest.cs" />
+    <Compile Include="SessionManager\Anonymize\SSTAnonymizerTest.cs" />
     <Compile Include="SessionManager\Anonymize\WindowEventAnonymizerTest.cs" />
     <Compile Include="SessionManager\FeedbackViewModelTestSuite\DeleteEventCommandTest.cs" />
     <Compile Include="SessionManager\FeedbackViewModelTestSuite\DeleteSessionCommandTest.cs" />
