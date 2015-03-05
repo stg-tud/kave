@@ -19,7 +19,6 @@
 
 using System.Collections.Generic;
 using KaVE.JetBrains.Annotations;
-using KaVE.Model.SSTs.Impl.Blocks;
 using KaVE.Model.SSTs.References;
 
 namespace KaVE.Model.SSTs.Blocks
@@ -29,7 +28,7 @@ namespace KaVE.Model.SSTs.Blocks
         IVariableReference Reference { get; }
 
         [NotNull]
-        IList<CaseBlock> Sections { get; }
+        IList<ICaseBlock> Sections { get; }
 
         [NotNull]
         IList<IStatement> DefaultSection { get; }

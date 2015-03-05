@@ -29,12 +29,12 @@ namespace KaVE.Model.SSTs.Impl.Blocks
     public class SwitchBlock : ISwitchBlock
     {
         public IVariableReference Reference { get; set; }
-        public IList<CaseBlock> Sections { get; set; }
+        public IList<ICaseBlock> Sections { get; set; }
         public IList<IStatement> DefaultSection { get; set; }
 
         public SwitchBlock()
         {
-            Sections = Lists.NewList<CaseBlock>();
+            Sections = Lists.NewList<ICaseBlock>();
             DefaultSection = Lists.NewList<IStatement>();
         }
 

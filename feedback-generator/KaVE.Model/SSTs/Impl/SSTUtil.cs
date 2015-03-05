@@ -73,7 +73,6 @@ namespace KaVE.Model.SSTs.Impl
             };
         }
 
-        // TODO use interface
         public static Invocation InvocationExpression(IMethodName name, params ISimpleExpression[] parameters)
         {
             Asserts.That(name.IsStatic || name.IsConstructor);
@@ -84,7 +83,6 @@ namespace KaVE.Model.SSTs.Impl
             };
         }
 
-        // TODO use interface
         public static Invocation InvocationExpression(string id,
             IMethodName name,
             params ISimpleExpression[] parameters)

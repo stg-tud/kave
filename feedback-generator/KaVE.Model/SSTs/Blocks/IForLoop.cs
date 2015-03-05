@@ -25,7 +25,6 @@ namespace KaVE.Model.SSTs.Blocks
 {
     public interface IForLoop : IStatement
     {
-        // TODO rediscuss
         [NotNull]
         IList<IStatement> Init { get; }
 
