@@ -27,11 +27,6 @@ namespace KaVE.Model.SSTs.Impl.References
     {
         public string Identifier { get; set; }
 
-        public void Accept<TContext>(ISSTNodeVisitor<TContext> visitor, TContext context)
-        {
-            visitor.Visit(this, context);
-        }
-
         protected bool Equals(VariableReference other)
         {
             return Equals(Identifier, other.Identifier);
@@ -46,6 +41,16 @@ namespace KaVE.Model.SSTs.Impl.References
         {
             var hcIdentifier = Identifier != null ? Identifier.GetHashCode() : 0;
             return unchecked (724584 + hcIdentifier);
+        }
+
+        public void Accept<TContext>(ISSTNodeVisitor<TContext> visitor, TContext context)
+        {
+            visitor.Visit(this, context);
+        }
+
+        public TReturn Accept<TContext, TReturn>(ISSTNodeVisitor<TContext, TReturn> visitor, TContext context)
+        {
+            return visitor.Visit(this, context);
         }
     }
 }

@@ -67,5 +67,10 @@ namespace KaVE.Model.SSTs.Impl.Blocks
         {
             visitor.Visit(this, context);
         }
+
+        public TReturn Accept<TContext, TReturn>(ISSTNodeVisitor<TContext, TReturn> visitor, TContext context)
+        {
+            return visitor.Visit(this, context);
+        }
     }
 }

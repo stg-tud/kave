@@ -90,5 +90,64 @@ namespace KaVE.Model.Tests.SSTs.Impl.Visitor
             sut.Visit((IPropertyReference) null, null);
             sut.Visit((IVariableReference) null, null);
         }
+
+        [Test]
+        public void AllVisitsAreImplementedForVisitorWithReturn()
+        {
+            var sut = new AbstractNodeVisitor<int, object>();
+            Assert.Null(sut.Visit((ISST) null, 0));
+
+            // declarations
+            Assert.Null(sut.Visit((IDelegateDeclaration) null, 0));
+            Assert.Null(sut.Visit((IEventDeclaration) null, 0));
+            Assert.Null(sut.Visit((IFieldDeclaration) null, 0));
+            Assert.Null(sut.Visit((IMethodDeclaration) null, 0));
+            Assert.Null(sut.Visit((IPropertyDeclaration) null, 0));
+            Assert.Null(sut.Visit((IVariableDeclaration) null, 0));
+
+            // ambiguous entities
+            Assert.Null(sut.Visit((ICompletion) null, 0));
+            Assert.Null(sut.Visit((IInvocation) null, 0));
+
+            // statements
+            Assert.Null(sut.Visit((IAssignment) null, 0));
+            Assert.Null(sut.Visit((IBreakStatement) null, 0));
+            Assert.Null(sut.Visit((IContinueStatement) null, 0));
+            Assert.Null(sut.Visit((IGotoStatement) null, 0));
+            Assert.Null(sut.Visit((ILabelledStatement) null, 0));
+            Assert.Null(sut.Visit((ILockStatement) null, 0));
+            Assert.Null(sut.Visit((IReturnStatement) null, 0));
+            Assert.Null(sut.Visit((IThrowStatement) null, 0));
+
+            // blocks
+            Assert.Null(sut.Visit((ICaseBlock) null, 0));
+            Assert.Null(sut.Visit((ICatchBlock) null, 0));
+            Assert.Null(sut.Visit((IDoLoop) null, 0));
+            Assert.Null(sut.Visit((IForEachLoop) null, 0));
+            Assert.Null(sut.Visit((IForLoop) null, 0));
+            Assert.Null(sut.Visit((IIfElseBlock) null, 0));
+            Assert.Null(sut.Visit((ISwitchBlock) null, 0));
+            Assert.Null(sut.Visit((ITryBlock) null, 0));
+            Assert.Null(sut.Visit((IUncheckedBlock) null, 0));
+            Assert.Null(sut.Visit((IUnsafeBlock) null, 0));
+            Assert.Null(sut.Visit((IUsingBlock) null, 0));
+            Assert.Null(sut.Visit((IWhileLoop) null, 0));
+
+            // Expressions
+            Assert.Null(sut.Visit((IComposedExpression) null, 0));
+            Assert.Null(sut.Visit((IIfElseExpression) null, 0));
+            Assert.Null(sut.Visit((ILambdaExpression) null, 0));
+            Assert.Null(sut.Visit((ILoopHeaderBlockExpression) null, 0));
+            Assert.Null(sut.Visit((IConstantValueExpression) null, 0));
+            Assert.Null(sut.Visit((INullExpression) null, 0));
+            Assert.Null(sut.Visit((IReferenceExpression) null, 0));
+
+            // References
+            Assert.Null(sut.Visit((IEventReference) null, 0));
+            Assert.Null(sut.Visit((IFieldReference) null, 0));
+            Assert.Null(sut.Visit((IMethodReference) null, 0));
+            Assert.Null(sut.Visit((IPropertyReference) null, 0));
+            Assert.Null(sut.Visit((IVariableReference) null, 0));
+        }
     }
 }

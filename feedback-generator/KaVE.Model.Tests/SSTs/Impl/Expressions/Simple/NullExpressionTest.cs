@@ -17,9 +17,7 @@
  *    - Sebastian Proksch
  */
 
-using KaVE.Model.SSTs.Expressions.Simple;
 using KaVE.Model.SSTs.Impl.Expressions.Simple;
-using KaVE.Model.SSTs.Impl.Visitor;
 using NUnit.Framework;
 
 namespace KaVE.Model.Tests.SSTs.Impl.Expressions.Simple
@@ -41,23 +39,14 @@ namespace KaVE.Model.Tests.SSTs.Impl.Expressions.Simple
         public void VisitorIsImplemented()
         {
             var sut = new NullExpression();
-            var visitor = new TestVisitor();
-            sut.Accept(visitor, 8);
-
-            Assert.AreEqual(sut, visitor.Expr);
-            Assert.AreEqual(8, visitor.Context);
+            sut.Accept(23).Verify(v => v.Visit(sut, 23));
         }
 
-        internal class TestVisitor : AbstractNodeVisitor<int>
+        [Test]
+        public void VisitorWithReturnIsImplemented()
         {
-            public INullExpression Expr { get; private set; }
-            public int Context { get; private set; }
-
-            public override void Visit(INullExpression expr, int context)
-            {
-                Expr = expr;
-                Context = context;
-            }
+            var sut = new NullExpression();
+            sut.Accept(23).VerifyWithReturn(v => v.Visit(sut, 23));
         }
     }
 }

@@ -18,10 +18,8 @@
  */
 
 using KaVE.Model.Collections;
-using KaVE.Model.SSTs.Blocks;
 using KaVE.Model.SSTs.Impl.Blocks;
 using KaVE.Model.SSTs.Impl.Statements;
-using KaVE.Model.SSTs.Impl.Visitor;
 using NUnit.Framework;
 
 namespace KaVE.Model.Tests.SSTs.Impl.Blocks
@@ -80,23 +78,14 @@ namespace KaVE.Model.Tests.SSTs.Impl.Blocks
         public void VisitorIsImplemented()
         {
             var sut = new UncheckedBlock();
-            var visitor = new TestVisitor();
-            sut.Accept(visitor, 9);
-
-            Assert.AreEqual(sut, visitor.Statement);
-            Assert.AreEqual(9, visitor.Context);
+            sut.Accept(23).Verify(v => v.Visit(sut, 23));
         }
 
-        internal class TestVisitor : AbstractNodeVisitor<int>
+        [Test]
+        public void VisitorWithReturnIsImplemented()
         {
-            public IUncheckedBlock Statement { get; private set; }
-            public int Context { get; private set; }
-
-            public override void Visit(IUncheckedBlock stmt, int context)
-            {
-                Statement = stmt;
-                Context = context;
-            }
+            var sut = new UncheckedBlock();
+            sut.Accept(23).VerifyWithReturn(v => v.Visit(sut, 23));
         }
     }
 }

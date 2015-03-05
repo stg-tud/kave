@@ -18,12 +18,10 @@
  */
 
 using KaVE.Model.Collections;
-using KaVE.Model.SSTs.Blocks;
 using KaVE.Model.SSTs.Impl.Blocks;
 using KaVE.Model.SSTs.Impl.Declarations;
 using KaVE.Model.SSTs.Impl.References;
 using KaVE.Model.SSTs.Impl.Statements;
-using KaVE.Model.SSTs.Impl.Visitor;
 using KaVE.Model.SSTs.References;
 using NUnit.Framework;
 
@@ -102,32 +100,23 @@ namespace KaVE.Model.Tests.SSTs.Impl.Blocks
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
         }
 
-        [Test]
-        public void VisitorIsImplemented()
-        {
-            var sut = new ForEachLoop();
-            var visitor = new TestVisitor();
-            sut.Accept(visitor, 4);
-
-            Assert.AreEqual(sut, visitor.Statement);
-            Assert.AreEqual(4, visitor.Context);
-        }
-
         private static IVariableReference Ref(string id)
         {
             return new VariableReference {Identifier = id};
         }
 
-        internal class TestVisitor : AbstractNodeVisitor<int>
+        [Test]
+        public void VisitorIsImplemented()
         {
-            public IForEachLoop Statement { get; private set; }
-            public int Context { get; private set; }
+            var sut = new ForEachLoop();
+            sut.Accept(23).Verify(v => v.Visit(sut, 23));
+        }
 
-            public override void Visit(IForEachLoop stmt, int context)
-            {
-                Statement = stmt;
-                Context = context;
-            }
+        [Test]
+        public void VisitorWithReturnIsImplemented()
+        {
+            var sut = new ForEachLoop();
+            sut.Accept(23).VerifyWithReturn(v => v.Visit(sut, 23));
         }
     }
 }

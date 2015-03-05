@@ -38,11 +38,6 @@ namespace KaVE.Model.SSTs.Impl.Declarations
             Set = Lists.NewList<IStatement>();
         }
 
-        public void Accept<TContext>(ISSTNodeVisitor<TContext> visitor, TContext context)
-        {
-            visitor.Visit(this, context);
-        }
-
         private bool Equals(PropertyDeclaration other)
         {
             return Equals(Get, other.Get) && Equals(Set, other.Set) && Equals(Name, other.Name);
@@ -62,6 +57,16 @@ namespace KaVE.Model.SSTs.Impl.Declarations
                 hashCode = (hashCode*397) ^ (Name != null ? Name.GetHashCode() : 0);
                 return hashCode;
             }
+        }
+
+        public void Accept<TContext>(ISSTNodeVisitor<TContext> visitor, TContext context)
+        {
+            visitor.Visit(this, context);
+        }
+
+        public TReturn Accept<TContext, TReturn>(ISSTNodeVisitor<TContext, TReturn> visitor, TContext context)
+        {
+            return visitor.Visit(this, context);
         }
     }
 }

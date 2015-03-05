@@ -18,10 +18,8 @@
  */
 
 using KaVE.Model.SSTs;
-using KaVE.Model.SSTs.Expressions.Simple;
 using KaVE.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Model.SSTs.Impl.References;
-using KaVE.Model.SSTs.Impl.Visitor;
 using NUnit.Framework;
 
 namespace KaVE.Model.Tests.SSTs.Impl.Expressions.Simple
@@ -71,32 +69,24 @@ namespace KaVE.Model.Tests.SSTs.Impl.Expressions.Simple
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
         }
 
-        [Test]
-        public void VisitorIsImplemented()
-        {
-            var sut = new ReferenceExpression();
-            var visitor = new TestVisitor();
-            sut.Accept(visitor, 9);
-
-            Assert.AreEqual(sut, visitor.Expr);
-            Assert.AreEqual(9, visitor.Context);
-        }
-
         private static IReference Ref(string id)
         {
             return new VariableReference {Identifier = id};
         }
 
-        internal class TestVisitor : AbstractNodeVisitor<int>
-        {
-            public IReferenceExpression Expr { get; private set; }
-            public int Context { get; private set; }
 
-            public override void Visit(IReferenceExpression expr, int context)
-            {
-                Expr = expr;
-                Context = context;
-            }
+        [Test]
+        public void VisitorIsImplemented()
+        {
+            var sut = new ReferenceExpression();
+            sut.Accept(23).Verify(v => v.Visit(sut, 23));
+        }
+
+        [Test]
+        public void VisitorWithReturnIsImplemented()
+        {
+            var sut = new ReferenceExpression();
+            sut.Accept(23).VerifyWithReturn(v => v.Visit(sut, 23));
         }
     }
 }

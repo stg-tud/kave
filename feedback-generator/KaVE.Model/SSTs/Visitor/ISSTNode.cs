@@ -22,5 +22,6 @@ namespace KaVE.Model.SSTs.Visitor
     public interface ISSTNode
     {
         void Accept<TContext>(ISSTNodeVisitor<TContext> visitor, TContext context);
+        TReturn Accept<TContext, TReturn>(ISSTNodeVisitor<TContext, TReturn> visitor, TContext context);
     }
 }

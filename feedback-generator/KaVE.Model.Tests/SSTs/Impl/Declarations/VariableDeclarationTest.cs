@@ -18,10 +18,8 @@
  */
 
 using KaVE.Model.Names.CSharp;
-using KaVE.Model.SSTs.Declarations;
 using KaVE.Model.SSTs.Impl;
 using KaVE.Model.SSTs.Impl.Declarations;
-using KaVE.Model.SSTs.Impl.Visitor;
 using NUnit.Framework;
 
 namespace KaVE.Model.Tests.SSTs.Impl.Declarations
@@ -93,23 +91,14 @@ namespace KaVE.Model.Tests.SSTs.Impl.Declarations
         public void VisitorIsImplemented()
         {
             var sut = new VariableDeclaration();
-            var visitor = new TestVisitor();
-            sut.Accept(visitor, 12);
-
-            Assert.AreEqual(sut, visitor.Statement);
-            Assert.AreEqual(12, visitor.Context);
+            sut.Accept(23).Verify(v => v.Visit(sut, 23));
         }
 
-        internal class TestVisitor : AbstractNodeVisitor<int>
+        [Test]
+        public void VisitorWithReturnIsImplemented()
         {
-            public IVariableDeclaration Statement { get; private set; }
-            public int Context { get; private set; }
-
-            public override void Visit(IVariableDeclaration stmt, int context)
-            {
-                Statement = stmt;
-                Context = context;
-            }
+            var sut = new VariableDeclaration();
+            sut.Accept(23).VerifyWithReturn(v => v.Visit(sut, 23));
         }
     }
 }

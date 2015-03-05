@@ -18,11 +18,9 @@
  */
 
 using KaVE.Model.Collections;
-using KaVE.Model.SSTs.Blocks;
 using KaVE.Model.SSTs.Impl.Blocks;
 using KaVE.Model.SSTs.Impl.Declarations;
 using KaVE.Model.SSTs.Impl.Statements;
-using KaVE.Model.SSTs.Impl.Visitor;
 using NUnit.Framework;
 
 namespace KaVE.Model.Tests.SSTs.Impl.Blocks
@@ -93,23 +91,14 @@ namespace KaVE.Model.Tests.SSTs.Impl.Blocks
         public void VisitorIsImplemented()
         {
             var sut = new CatchBlock();
-            var visitor = new TestVisitor();
-            sut.Accept(visitor, 2);
-
-            Assert.AreEqual(sut, visitor.Statement);
-            Assert.AreEqual(2, visitor.Context);
+            sut.Accept(23).Verify(v => v.Visit(sut, 23));
         }
 
-        internal class TestVisitor : AbstractNodeVisitor<int>
+        [Test]
+        public void VisitorWithReturnIsImplemented()
         {
-            public ICatchBlock Statement { get; private set; }
-            public int Context { get; private set; }
-
-            public override void Visit(ICatchBlock stmt, int context)
-            {
-                Statement = stmt;
-                Context = context;
-            }
+            var sut = new CatchBlock();
+            sut.Accept(23).VerifyWithReturn(v => v.Visit(sut, 23));
         }
     }
 }

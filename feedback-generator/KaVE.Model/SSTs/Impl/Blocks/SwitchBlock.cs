@@ -55,7 +55,7 @@ namespace KaVE.Model.SSTs.Impl.Blocks
             {
                 var hashCode = 36 + Sections.GetHashCode();
                 hashCode = (hashCode*397) ^ DefaultSection.GetHashCode();
-                hashCode = (hashCode * 397) ^ (Reference != null ? Reference.GetHashCode() : 0);
+                hashCode = (hashCode*397) ^ (Reference != null ? Reference.GetHashCode() : 0);
                 return hashCode;
             }
         }
@@ -63,6 +63,11 @@ namespace KaVE.Model.SSTs.Impl.Blocks
         public void Accept<TContext>(ISSTNodeVisitor<TContext> visitor, TContext context)
         {
             visitor.Visit(this, context);
+        }
+
+        public TReturn Accept<TContext, TReturn>(ISSTNodeVisitor<TContext, TReturn> visitor, TContext context)
+        {
+            return visitor.Visit(this, context);
         }
     }
 }

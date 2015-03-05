@@ -92,9 +92,9 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
     }
 
 
-    public class SSTExpressionAnonymization : AbstractNodeTransformer<IExpression> {}
+    public class SSTExpressionAnonymization : AbstractNodeVisitor<int, IExpression> {}
 
-    public class SSTReferenceAnonymization : AbstractNodeTransformer<IReference> {}
+    public class SSTReferenceAnonymization : AbstractNodeVisitor<int, IReference> { }
 
-    public class SSTStatementAnonymization : AbstractNodeTransformer<IStatement> {}
+    public class SSTStatementAnonymization : AbstractNodeVisitor<int, IStatement> { }
 }

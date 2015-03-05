@@ -18,8 +18,6 @@
  */
 
 using KaVE.Model.SSTs.Impl.Statements;
-using KaVE.Model.SSTs.Impl.Visitor;
-using KaVE.Model.SSTs.Statements;
 using NUnit.Framework;
 
 namespace KaVE.Model.Tests.SSTs.Impl.Statements
@@ -27,7 +25,7 @@ namespace KaVE.Model.Tests.SSTs.Impl.Statements
     public class LabelledStatementTest
     {
         [Test]
-        public void DefautlValues()
+        public void DefaultValues()
         {
             var sut = new LabelledStatement();
             Assert.IsNull(sut.Label);
@@ -84,23 +82,14 @@ namespace KaVE.Model.Tests.SSTs.Impl.Statements
         public void VisitorIsImplemented()
         {
             var sut = new LabelledStatement();
-            var visitor = new TestVisitor();
-            sut.Accept(visitor, 1);
-
-            Assert.AreEqual(sut, visitor.Statement);
-            Assert.AreEqual(1, visitor.Context);
+            sut.Accept(23).Verify(v => v.Visit(sut, 23));
         }
 
-        internal class TestVisitor : AbstractNodeVisitor<int>
+        [Test]
+        public void VisitorWithReturnIsImplemented()
         {
-            public ILabelledStatement Statement { get; private set; }
-            public int Context { get; private set; }
-
-            public override void Visit(ILabelledStatement stmt, int context)
-            {
-                Statement = stmt;
-                Context = context;
-            }
+            var sut = new LabelledStatement();
+            sut.Accept(23).VerifyWithReturn(v => v.Visit(sut, 23));
         }
     }
 }

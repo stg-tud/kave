@@ -84,4 +84,56 @@ namespace KaVE.Model.SSTs.Impl.Visitor
         public virtual void Visit(IPropertyReference methodRef, TContext context) {}
         public virtual void Visit(IVariableReference varRef, TContext context) {}
     }
+
+    public class AbstractNodeVisitor<TContext, TReturn> : ISSTNodeVisitor<TContext, TReturn>
+        where TReturn : class
+    {
+        public virtual TReturn Visit(ISST sst, TContext context) { return null; }
+
+        public virtual TReturn Visit(IDelegateDeclaration stmt, TContext context) { return null; }
+        public virtual TReturn Visit(IEventDeclaration stmt, TContext context) { return null; }
+        public virtual TReturn Visit(IFieldDeclaration stmt, TContext context) { return null; }
+        public virtual TReturn Visit(IMethodDeclaration stmt, TContext context) { return null; }
+        public virtual TReturn Visit(IPropertyDeclaration stmt, TContext context) { return null; }
+        public virtual TReturn Visit(IVariableDeclaration stmt, TContext context) { return null; }
+
+        public virtual TReturn Visit(ICompletion entity, TContext context) { return null; }
+        public virtual TReturn Visit(IInvocation entity, TContext context) { return null; }
+
+        public virtual TReturn Visit(IAssignment stmt, TContext context) { return null; }
+        public virtual TReturn Visit(IBreakStatement stmt, TContext context) { return null; }
+        public virtual TReturn Visit(IContinueStatement stmt, TContext context) { return null; }
+        public virtual TReturn Visit(IGotoStatement stmt, TContext context) { return null; }
+        public virtual TReturn Visit(ILabelledStatement stmt, TContext context) { return null; }
+        public virtual TReturn Visit(ILockStatement stmt, TContext context) { return null; }
+        public virtual TReturn Visit(IReturnStatement stmt, TContext context) { return null; }
+        public virtual TReturn Visit(IThrowStatement stmt, TContext context) { return null; }
+
+        public virtual TReturn Visit(ICaseBlock block, TContext context) { return null; }
+        public virtual TReturn Visit(ICatchBlock block, TContext context) { return null; }
+        public virtual TReturn Visit(IDoLoop block, TContext context) { return null; }
+        public virtual TReturn Visit(IForEachLoop block, TContext context) { return null; }
+        public virtual TReturn Visit(IForLoop block, TContext context) { return null; }
+        public virtual TReturn Visit(IIfElseBlock block, TContext context) { return null; }
+        public virtual TReturn Visit(ISwitchBlock block, TContext context) { return null; }
+        public virtual TReturn Visit(ITryBlock block, TContext context) { return null; }
+        public virtual TReturn Visit(IUncheckedBlock block, TContext context) { return null; }
+        public virtual TReturn Visit(IUnsafeBlock block, TContext context) { return null; }
+        public virtual TReturn Visit(IUsingBlock block, TContext context) { return null; }
+        public virtual TReturn Visit(IWhileLoop block, TContext context) { return null; }
+
+        public virtual TReturn Visit(IComposedExpression expr, TContext context) { return null; }
+        public virtual TReturn Visit(IIfElseExpression expr, TContext context) { return null; }
+        public virtual TReturn Visit(ILambdaExpression expr, TContext context) { return null; }
+        public virtual TReturn Visit(ILoopHeaderBlockExpression expr, TContext context) { return null; }
+        public virtual TReturn Visit(IConstantValueExpression expr, TContext context) { return null; }
+        public virtual TReturn Visit(INullExpression expr, TContext context) { return null; }
+        public virtual TReturn Visit(IReferenceExpression expr, TContext context) { return null; }
+
+        public virtual TReturn Visit(IEventReference eventRef, TContext context) { return null; }
+        public virtual TReturn Visit(IFieldReference fieldRef, TContext context) { return null; }
+        public virtual TReturn Visit(IMethodReference methodRef, TContext context) { return null; }
+        public virtual TReturn Visit(IPropertyReference methodRef, TContext context) { return null; }
+        public virtual TReturn Visit(IVariableReference varRef, TContext context) { return null; }
+    }
 }

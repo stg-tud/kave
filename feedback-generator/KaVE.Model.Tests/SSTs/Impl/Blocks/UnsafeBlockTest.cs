@@ -17,9 +17,7 @@
  *    - Sebastian Proksch
  */
 
-using KaVE.Model.SSTs.Blocks;
 using KaVE.Model.SSTs.Impl.Blocks;
-using KaVE.Model.SSTs.Impl.Visitor;
 using NUnit.Framework;
 
 namespace KaVE.Model.Tests.SSTs.Impl.Blocks
@@ -41,23 +39,14 @@ namespace KaVE.Model.Tests.SSTs.Impl.Blocks
         public void VisitorIsImplemented()
         {
             var sut = new UnsafeBlock();
-            var visitor = new TestVisitor();
-            sut.Accept(visitor, 10);
-
-            Assert.AreEqual(sut, visitor.Statement);
-            Assert.AreEqual(10, visitor.Context);
+            sut.Accept(23).Verify(v => v.Visit(sut, 23));
         }
 
-        internal class TestVisitor : AbstractNodeVisitor<int>
+        [Test]
+        public void VisitorWithReturnIsImplemented()
         {
-            public IUnsafeBlock Statement { get; private set; }
-            public int Context { get; private set; }
-
-            public override void Visit(IUnsafeBlock stmt, int context)
-            {
-                Statement = stmt;
-                Context = context;
-            }
+            var sut = new UnsafeBlock();
+            sut.Accept(23).VerifyWithReturn(v => v.Visit(sut, 23));
         }
     }
 }

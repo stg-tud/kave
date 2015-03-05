@@ -55,12 +55,6 @@ namespace KaVE.Model.SSTs.Impl
             get { return Sets.NewHashSetFrom(Methods.AsEnumerable().Where(m => !m.IsEntryPoint)); }
         }
 
-        public void Accept<TContext>(ISSTNodeVisitor<TContext> visitor, TContext context)
-        {
-            visitor.Visit(this, context);
-        }
-
-
         public override bool Equals(object obj)
         {
             return this.Equals(obj, Equals);
@@ -85,6 +79,16 @@ namespace KaVE.Model.SSTs.Impl
                 hashCode = (hashCode*397) ^ (Delegates != null ? Delegates.GetHashCode() : 0);
                 return hashCode;
             }
+        }
+
+        public void Accept<TContext>(ISSTNodeVisitor<TContext> visitor, TContext context)
+        {
+            visitor.Visit(this, context);
+        }
+
+        public TReturn Accept<TContext, TReturn>(ISSTNodeVisitor<TContext, TReturn> visitor, TContext context)
+        {
+            return visitor.Visit(this, context);
         }
     }
 }

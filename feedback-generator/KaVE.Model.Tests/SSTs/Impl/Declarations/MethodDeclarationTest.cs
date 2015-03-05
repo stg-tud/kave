@@ -22,9 +22,6 @@ using KaVE.Model.Names;
 using KaVE.Model.Names.CSharp;
 using KaVE.Model.SSTs.Impl.Declarations;
 using KaVE.Model.SSTs.Impl.Statements;
-using KaVE.Model.SSTs.Statements;
-using KaVE.Model.SSTs.Visitor;
-using Moq;
 using NUnit.Framework;
 
 namespace KaVE.Model.Tests.SSTs.Impl.Declarations
@@ -130,15 +127,17 @@ namespace KaVE.Model.Tests.SSTs.Impl.Declarations
         }
 
         [Test]
-        public void VisitorImplementation()
+        public void VisitorIsImplemented()
         {
             var sut = new MethodDeclaration();
-            var @visitor = new Mock<ISSTNodeVisitor<object>>();
-            var context = new object();
+            sut.Accept(23).Verify(v => v.Visit(sut, 23));
+        }
 
-            sut.Accept(@visitor.Object, context);
-
-            @visitor.Verify(v => v.Visit(sut, context));
+        [Test]
+        public void VisitorWithReturnIsImplemented()
+        {
+            var sut = new MethodDeclaration();
+            sut.Accept(23).VerifyWithReturn(v => v.Visit(sut, 23));
         }
     }
 }

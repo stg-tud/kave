@@ -19,11 +19,8 @@
 
 using KaVE.Model.Collections;
 using KaVE.Model.SSTs;
-using KaVE.Model.SSTs.Expressions.LoopHeader;
 using KaVE.Model.SSTs.Impl.Expressions.LoopHeader;
 using KaVE.Model.SSTs.Impl.Statements;
-using KaVE.Model.SSTs.Impl.Visitor;
-using KaVE.Model.SSTs.Statements;
 using NUnit.Framework;
 
 namespace KaVE.Model.Tests.SSTs.Impl.Expressions.LoopHeader
@@ -89,23 +86,14 @@ namespace KaVE.Model.Tests.SSTs.Impl.Expressions.LoopHeader
         public void VisitorIsImplemented()
         {
             var sut = new LoopHeaderBlockExpression();
-            var visitor = new TestVisitor();
-            sut.Accept(visitor, 6);
-
-            Assert.AreEqual(sut, visitor.Expr);
-            Assert.AreEqual(6, visitor.Context);
+            sut.Accept(23).Verify(v => v.Visit(sut, 23));
         }
 
-        internal class TestVisitor : AbstractNodeVisitor<int>
+        [Test]
+        public void VisitorWithReturnIsImplemented()
         {
-            public ILoopHeaderBlockExpression Expr { get; private set; }
-            public int Context { get; private set; }
-
-            public override void Visit(ILoopHeaderBlockExpression expr, int context)
-            {
-                Expr = expr;
-                Context = context;
-            }
+            var sut = new LoopHeaderBlockExpression();
+            sut.Accept(23).VerifyWithReturn(v => v.Visit(sut, 23));
         }
     }
 }

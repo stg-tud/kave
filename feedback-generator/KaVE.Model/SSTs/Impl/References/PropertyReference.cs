@@ -29,11 +29,6 @@ namespace KaVE.Model.SSTs.Impl.References
         public IVariableReference Reference { get; set; }
         public IPropertyName PropertyName { get; set; }
 
-        public void Accept<TContext>(ISSTNodeVisitor<TContext> visitor, TContext context)
-        {
-            visitor.Visit(this, context);
-        }
-
         protected bool Equals(PropertyReference other)
         {
             return Equals(PropertyName, other.PropertyName);
@@ -48,6 +43,16 @@ namespace KaVE.Model.SSTs.Impl.References
         {
             var hcMethodName = PropertyName != null ? PropertyName.GetHashCode() : 0;
             return unchecked (505239 + hcMethodName);
+        }
+
+        public void Accept<TContext>(ISSTNodeVisitor<TContext> visitor, TContext context)
+        {
+            visitor.Visit(this, context);
+        }
+
+        public TReturn Accept<TContext, TReturn>(ISSTNodeVisitor<TContext, TReturn> visitor, TContext context)
+        {
+            return visitor.Visit(this, context);
         }
     }
 }

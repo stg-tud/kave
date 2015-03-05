@@ -20,22 +20,12 @@
 
 using KaVE.Model.Names.CSharp;
 using KaVE.Model.SSTs.Impl.References;
-using KaVE.Model.SSTs.Impl.Visitor;
-using KaVE.Model.SSTs.References;
 using NUnit.Framework;
 
 namespace KaVE.Model.Tests.SSTs.Impl.References
 {
     public class EventReferenceTest
     {
-        private EventVisitor _visitor;
-
-        [SetUp]
-        public void SetUp()
-        {
-            _visitor = new EventVisitor();
-        }
-
         [Test]
         public void DefaultValues()
         {
@@ -83,20 +73,14 @@ namespace KaVE.Model.Tests.SSTs.Impl.References
         public void VisitorIsImplemented()
         {
             var sut = new EventReference();
-            Assert.Null(_visitor.Argument);
-            sut.Accept(_visitor, 0);
-            Assert.AreEqual(sut, _visitor.Argument);
+            sut.Accept(23).Verify(v => v.Visit(sut, 23));
         }
 
-
-        internal class EventVisitor : AbstractNodeVisitor<int>
+        [Test]
+        public void VisitorWithReturnIsImplemented()
         {
-            public IEventReference Argument { get; set; }
-
-            public override void Visit(IEventReference eventRef, int context)
-            {
-                Argument = eventRef;
-            }
+            var sut = new EventReference();
+            sut.Accept(23).VerifyWithReturn(v => v.Visit(sut, 23));
         }
     }
 }

@@ -28,11 +28,6 @@ namespace KaVE.Model.SSTs.Impl.Declarations
     {
         public ITypeName Name { get; set; }
 
-        public void Accept<TContext>(ISSTNodeVisitor<TContext> visitor, TContext context)
-        {
-            visitor.Visit(this, context);
-        }
-
         private bool Equals(DelegateDeclaration other)
         {
             return Equals(Name, other.Name);
@@ -46,6 +41,16 @@ namespace KaVE.Model.SSTs.Impl.Declarations
         public override int GetHashCode()
         {
             return unchecked (23 + (Name != null ? Name.GetHashCode() : 0));
+        }
+
+        public void Accept<TContext>(ISSTNodeVisitor<TContext> visitor, TContext context)
+        {
+            visitor.Visit(this, context);
+        }
+
+        public TReturn Accept<TContext, TReturn>(ISSTNodeVisitor<TContext, TReturn> visitor, TContext context)
+        {
+            return visitor.Visit(this, context);
         }
     }
 }

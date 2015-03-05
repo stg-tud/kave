@@ -20,12 +20,10 @@
 using System.Linq;
 using KaVE.Model.Names;
 using KaVE.Model.Names.CSharp;
-using KaVE.Model.SSTs;
 using KaVE.Model.SSTs.Expressions;
 using KaVE.Model.SSTs.Impl;
 using KaVE.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Model.SSTs.Impl.References;
-using KaVE.Model.SSTs.Impl.Visitor;
 using NUnit.Framework;
 
 namespace KaVE.Model.Tests.SSTs.Impl
@@ -91,6 +89,20 @@ namespace KaVE.Model.Tests.SSTs.Impl
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
         }
 
+        [Test]
+        public void VisitorIsImplemented()
+        {
+            var sut = new Invocation();
+            sut.Accept(23).Verify(v => v.Visit(sut, 23));
+        }
+
+        [Test]
+        public void VisitorWithReturnIsImplemented()
+        {
+            var sut = new Invocation();
+            sut.Accept(23).VerifyWithReturn(v => v.Visit(sut, 23));
+        }
+
         private static IMethodName GetMethod(string simpleName)
         {
             var methodName = string.Format(
@@ -104,29 +116,6 @@ namespace KaVE.Model.Tests.SSTs.Impl
             return
                 ids.Select<string, ISimpleExpression>(
                     id => new ReferenceExpression {Reference = new VariableReference {Identifier = id}}).ToArray();
-        }
-
-        [Test]
-        public void VisitorIsImplemented()
-        {
-            var sut = new Invocation();
-            var visitor = new TestVisitor();
-            sut.Accept(visitor, 4);
-
-            Assert.AreEqual(sut, visitor.Expr);
-            Assert.AreEqual(4, visitor.Context);
-        }
-
-        internal class TestVisitor : AbstractNodeVisitor<int>
-        {
-            public IInvocation Expr { get; private set; }
-            public int Context { get; private set; }
-
-            public override void Visit(IInvocation expr, int context)
-            {
-                Expr = expr;
-                Context = context;
-            }
         }
     }
 }

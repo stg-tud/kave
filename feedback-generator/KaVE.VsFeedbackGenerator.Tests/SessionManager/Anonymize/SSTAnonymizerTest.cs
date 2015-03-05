@@ -41,7 +41,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
             _anyStatementAnonymized = Mock.Of<IBreakStatement>();
 
             var stmtAnon = Mock.Of<SSTStatementAnonymization>();
-            Mock.Get(stmtAnon).Setup(m => m.Visit(_anyStatement)).Returns(_anyStatementAnonymized);
+            Mock.Get(stmtAnon).Setup(m => m.Visit(_anyStatement, It.IsAny<int>())).Returns(_anyStatementAnonymized);
 
             _sut = new SSTAnonymization(stmtAnon);
         }

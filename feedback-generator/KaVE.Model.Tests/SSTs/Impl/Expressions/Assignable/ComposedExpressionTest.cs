@@ -20,10 +20,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using KaVE.Model.Collections;
-using KaVE.Model.SSTs.Expressions.Assignable;
 using KaVE.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Model.SSTs.Impl.References;
-using KaVE.Model.SSTs.Impl.Visitor;
 using KaVE.Model.SSTs.References;
 using NUnit.Framework;
 
@@ -75,33 +73,24 @@ namespace KaVE.Model.Tests.SSTs.Impl.Expressions.Assignable
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
         }
 
-        [Test]
-        public void VisitorIsImplemented()
-        {
-            var sut = new ComposedExpression();
-            var visitor = new TestVisitor();
-            sut.Accept(visitor, 1);
-
-            Assert.AreEqual(sut, visitor.Expr);
-            Assert.AreEqual(1, visitor.Context);
-        }
-
         private static IList<IVariableReference> Refs(params string[] strRefs)
         {
             var refs = strRefs.ToList().Select(r => new VariableReference {Identifier = r});
             return Lists.NewListFrom<IVariableReference>(refs);
         }
 
-        internal class TestVisitor : AbstractNodeVisitor<int>
+        [Test]
+        public void VisitorIsImplemented()
         {
-            public IComposedExpression Expr { get; private set; }
-            public int Context { get; private set; }
+            var sut = new ComposedExpression();
+            sut.Accept(23).Verify(v => v.Visit(sut, 23));
+        }
 
-            public override void Visit(IComposedExpression expr, int context)
-            {
-                Expr = expr;
-                Context = context;
-            }
+        [Test]
+        public void VisitorWithReturnIsImplemented()
+        {
+            var sut = new ComposedExpression();
+            sut.Accept(23).VerifyWithReturn(v => v.Visit(sut, 23));
         }
     }
 }

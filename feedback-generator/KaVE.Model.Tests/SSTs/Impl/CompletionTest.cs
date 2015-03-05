@@ -18,10 +18,8 @@
  */
 
 using KaVE.Model.Names.CSharp;
-using KaVE.Model.SSTs;
 using KaVE.Model.SSTs.Impl;
 using KaVE.Model.SSTs.Impl.References;
-using KaVE.Model.SSTs.Impl.Visitor;
 using KaVE.Model.SSTs.References;
 using NUnit.Framework;
 
@@ -114,28 +112,19 @@ namespace KaVE.Model.Tests.SSTs.Impl
         public void VisitorIsImplemented()
         {
             var sut = new Completion();
-            var visitor = new TestVisitor();
-            sut.Accept(visitor, 2);
+            sut.Accept(23).Verify(v => v.Visit(sut, 23));
+        }
 
-            Assert.AreEqual(sut, visitor.Expr);
-            Assert.AreEqual(2, visitor.Context);
+        [Test]
+        public void VisitorWithReturnIsImplemented()
+        {
+            var sut = new Completion();
+            sut.Accept(23).VerifyWithReturn(v => v.Visit(sut, 23));
         }
 
         private static IVariableReference Ref(string id)
         {
             return new VariableReference {Identifier = id};
-        }
-
-        internal class TestVisitor : AbstractNodeVisitor<int>
-        {
-            public ICompletion Expr { get; private set; }
-            public int Context { get; private set; }
-
-            public override void Visit(ICompletion expr, int context)
-            {
-                Expr = expr;
-                Context = context;
-            }
         }
     }
 }
