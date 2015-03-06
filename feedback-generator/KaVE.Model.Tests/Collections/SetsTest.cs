@@ -17,12 +17,10 @@
  *    - Sebastian Proksch
  */
 
-using System;
 using System.Collections.Generic;
 using KaVE.Model.Collections;
-using KaVE.Model.Names.CSharp;
 using KaVE.Model.SSTs.Impl.Statements;
-using KaVE.Model.SSTs.Statements;
+using KaVE.Utils.Assertion;
 using NUnit.Framework;
 
 namespace KaVE.Model.Tests.Collections
@@ -105,7 +103,7 @@ namespace KaVE.Model.Tests.Collections
         [Test]
         public void CreatingSetFromEnumerable()
         {
-            var input = new HashSet<int>(new[] { 1, 2, 3 });
+            var input = new HashSet<int>(new[] {1, 2, 3});
             var a = Sets.NewHashSetFrom(input);
             var b = Sets.NewHashSet(1, 2, 3);
             Assert.AreEqual(a, b);
@@ -122,6 +120,18 @@ namespace KaVE.Model.Tests.Collections
 
             var sut = Sets.NewHashSet(a);
             Assert.True(sut.Contains(b));
+        }
+
+        [Test, ExpectedException(typeof (AssertException))]
+        public void NullsCannotBeAddedWithStaticCreate()
+        {
+            Sets.NewHashSet(new object[] {null});
+        }
+
+        [Test, ExpectedException(typeof (AssertException))]
+        public void NullsCannotBeAddedWithEnumerable()
+        {
+            Sets.NewHashSetFrom(new object[] {null});
         }
     }
 }

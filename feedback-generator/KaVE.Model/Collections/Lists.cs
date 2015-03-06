@@ -20,6 +20,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using KaVE.Utils;
+using KaVE.Utils.Assertion;
 
 namespace KaVE.Model.Collections
 {
@@ -32,15 +33,17 @@ namespace KaVE.Model.Collections
 
         public static IList<T> NewList<T>(params T[] ts)
         {
-            var s = new KaVEList<T>();
-            s.AddRange(ts);
-            return s;
+            return NewListFrom(ts);
         }
 
         public static IList<T> NewListFrom<T>(IEnumerable<T> ts)
         {
             var s = new KaVEList<T>();
-            s.AddRange(ts);
+            foreach (var t in ts)
+            {
+                Asserts.NotNull(t);
+                s.Add(t);
+            }
             return s;
         }
     }

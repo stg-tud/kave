@@ -19,6 +19,7 @@
 
 using System.Collections.Generic;
 using KaVE.Model.Collections;
+using KaVE.Utils.Assertion;
 using NUnit.Framework;
 
 namespace KaVE.Model.Tests.Collections
@@ -113,6 +114,18 @@ namespace KaVE.Model.Tests.Collections
             var a = Lists.NewListFrom(input);
             var b = Lists.NewList(1, 2, 3);
             Assert.AreEqual(a, b);
+        }
+
+        [Test, ExpectedException(typeof (AssertException))]
+        public void NullsCannotBeAddedWithStaticCreate()
+        {
+            Lists.NewList(new object[] {null});
+        }
+
+        [Test, ExpectedException(typeof (AssertException))]
+        public void NullsCannotBeAddedWithEnumerable()
+        {
+            Lists.NewListFrom(new object[] {null});
         }
     }
 }

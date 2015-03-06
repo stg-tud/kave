@@ -20,6 +20,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using KaVE.Utils;
+using KaVE.Utils.Assertion;
 
 namespace KaVE.Model.Collections
 {
@@ -32,12 +33,7 @@ namespace KaVE.Model.Collections
 
         public static ISet<T> NewHashSet<T>(params T[] ts)
         {
-            var s = new KaVEHashSet<T>();
-            foreach (var t in ts)
-            {
-                s.Add(t);
-            }
-            return s;
+            return NewHashSetFrom(ts);
         }
 
         public static ISet<T> NewHashSetFrom<T>(IEnumerable<T> ts)
@@ -45,6 +41,7 @@ namespace KaVE.Model.Collections
             var s = new KaVEHashSet<T>();
             foreach (var t in ts)
             {
+                Asserts.NotNull(t);
                 s.Add(t);
             }
             return s;
