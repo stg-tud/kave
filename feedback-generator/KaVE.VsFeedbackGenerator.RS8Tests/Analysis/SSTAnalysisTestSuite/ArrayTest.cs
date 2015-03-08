@@ -27,7 +27,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 {
     internal class ArrayTest : BaseSSTAnalysisTest
     {
-        [Test]
+        [Test, Ignore]
         public void ArrayInit_Constant()
         {
             CompleteInClass(@"
@@ -45,7 +45,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             AssertAllMethods(mA);
         }
 
-        [Test]
+        [Test, Ignore]
         public void ArrayInit_Composed()
         {
             CompleteInClass(@"
@@ -66,7 +66,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             AssertAllMethods(mA);
         }
 
-        [Test]
+        [Test, Ignore]
         public void ArrayInit_WithArrays()
         {
             CompleteInClass(@"
@@ -88,7 +88,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             AssertAllMethods(mA);
         }
 
-        [Test]
+        [Test, Ignore]
         public void ArrayInit_WithCalls()
         {
             CompleteInClass(@"

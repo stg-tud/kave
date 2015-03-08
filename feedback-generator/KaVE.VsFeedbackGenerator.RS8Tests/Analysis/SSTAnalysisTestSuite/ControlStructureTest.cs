@@ -28,10 +28,9 @@ using Fix = KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite.SSTA
 
 namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 {
-    [TestFixture]
     internal class ControlStructureTest : BaseSSTAnalysisTest
     {
-        [Test]
+        [Test, Ignore]
         public void ReturnConst()
         {
             CompleteInClass(@"
@@ -49,7 +48,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             AssertAllMethods(mA);
         }
 
-        [Test]
+        [Test, Ignore]
         public void ReturnRef()
         {
             CompleteInClass(@"
@@ -67,7 +66,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             AssertAllMethods(mA);
         }
 
-        [Test]
+        [Test, Ignore]
         public void IfBlock()
         {
             CompleteInClass(@"
@@ -93,7 +92,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             AssertAllMethods(mA);
         }
 
-        [Test]
+        [Test, Ignore]
         public void IfElseBlock()
         {
             CompleteInClass(@"
@@ -120,7 +119,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             AssertAllMethods(mA);
         }
 
-        [Test]
+        [Test, Ignore]
         public void WhileLoop()
         {
             CompleteInClass(@"
@@ -147,7 +146,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             AssertAllMethods(mA);
         }
 
-        [Test]
+        [Test, Ignore]
         public void DoLoop()
         {
             CompleteInClass(@"
@@ -175,7 +174,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             AssertAllMethods(mA);
         }
 
-        [Test]
+        [Test, Ignore]
         public void WhileLoop_AssignmentInCondition()
         {
             CompleteInClass(@"
@@ -205,7 +204,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             AssertAllMethods(mA);
         }
 
-        [Test]
+        [Test, Ignore]
         public void ForLoop()
         {
             CompleteInClass(@"
@@ -232,7 +231,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             AssertAllMethods(mA);
         }
 
-        [Test]
+        [Test, Ignore]
         public void ForLoop_Predeclaration()
         {
             CompleteInClass(@"
@@ -274,7 +273,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
          * --> create more complex exmaple with calls and multiple variables
          */
 
-        [Test]
+        [Test, Ignore]
         public void ForEachLoop()
         {
             CompleteInClass(@"
@@ -335,7 +334,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             AssertAllMethods(mA);
         }
 
-        [Test]
+        [Test, Ignore]
         public void UsingBlockFromParameter()
         {
             var stream = TypeName.Get("System.IO.FileStream, mscorlib, 4.0.0.0");
@@ -366,7 +365,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             AssertAllMethods(mA);
         }
 
-        [Test]
+        [Test, Ignore]
         public void ThrowStatement()
         {
             CompleteInClass(@"
@@ -384,7 +383,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             AssertAllMethods(mA);
         }
 
-        [Test]
+        [Test, Ignore]
         public void TryCatchBlock()
         {
             CompleteInClass(@"

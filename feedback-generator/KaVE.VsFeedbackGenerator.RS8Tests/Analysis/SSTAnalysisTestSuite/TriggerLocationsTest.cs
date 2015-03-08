@@ -19,8 +19,6 @@
 
 using System;
 using System.Linq;
-using KaVE.Model.SSTs;
-using KaVE.Model.SSTs.Blocks;
 using KaVE.Model.SSTs.Impl;
 using KaVE.Model.SSTs.Impl.Blocks;
 using KaVE.Model.SSTs.Impl.Expressions.Assignable;
@@ -32,7 +30,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 {
     internal class TriggerLocationsTest : BaseSSTAnalysisTest
     {
-        [Test, ExpectedException(typeof (NotSupportedException))]
+        [Test, ExpectedException(typeof (NotSupportedException)), Ignore]
         public void TriggeredOutsideMethod()
         {
             CompleteInClass(@"
@@ -41,7 +39,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             ");
         }
 
-        [Test, ExpectedException(typeof (NotSupportedException))]
+        [Test, ExpectedException(typeof (NotSupportedException)), Ignore]
         public void TriggeredOutsideMethod_WithToken()
         {
             CompleteInClass(@"
@@ -50,7 +48,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             ");
         }
 
-        [Test, ExpectedException(typeof (NotSupportedException))]
+        [Test, ExpectedException(typeof (NotSupportedException)), Ignore]
         public void TriggeredInMethodDeclaration()
         {
             CompleteInClass(@"
@@ -58,7 +56,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             ");
         }
 
-        [Test, ExpectedException(typeof (NotSupportedException))]
+        [Test, ExpectedException(typeof (NotSupportedException)), Ignore]
         public void TriggeredInParameterList()
         {
             CompleteInClass(@"
@@ -66,7 +64,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             ");
         }
 
-        [Test, ExpectedException(typeof (NotSupportedException))]
+        [Test, ExpectedException(typeof (NotSupportedException)), Ignore]
         public void TriggeredInParameterList2()
         {
             CompleteInClass(@"
@@ -76,7 +74,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             ");
         }
 
-        [Test, ExpectedException(typeof (NotSupportedException))]
+        [Test, ExpectedException(typeof (NotSupportedException)), Ignore]
         public void TriggeredInParameterList3()
         {
             CompleteInClass(@"
@@ -86,7 +84,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             ");
         }
 
-        [Test, ExpectedException(typeof (NotSupportedException))]
+        [Test, ExpectedException(typeof (NotSupportedException)), Ignore]
         public void TriggeredInInterface()
         {
             CompleteInCSharpFile(@"
@@ -99,7 +97,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             // TODO think about this again... what about abstract base classes?
         }
 
-        [Test]
+        [Test, Ignore]
         public void TriggeredInMethod()
         {
             CompleteInClass(@"
@@ -124,7 +122,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             AssertMethod(mA);
         }
 
-        [Test]
+        [Test, Ignore]
         public void TriggeredInMethodOnPrefix()
         {
             CompleteInClass(@"
@@ -141,7 +139,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             AssertMethod(mA);
         }
 
-        [Test]
+        [Test, Ignore]
         public void TriggeredInMethod_OnReference()
         {
             CompleteInClass(@"
@@ -158,7 +156,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             AssertMethod(mA);
         }
 
-        [Test]
+        [Test, Ignore]
         public void TriggeredInMethod_OnReference_WithToken()
         {
             CompleteInClass(@"
@@ -175,7 +173,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             AssertMethod(mA);
         }
 
-        [Test]
+        [Test, Ignore]
         public void TriggeredInMethod_OnReferenceChain()
         {
             CompleteInClass(@"
@@ -192,7 +190,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             AssertMethod(mA);
         }
 
-        [Test]
+        [Test, Ignore]
         public void TriggeredInMethod_BetweenStatements()
         {
             // TODO wieder alles auf ausgang :)
@@ -219,7 +217,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             AssertMethod(mA);
         }
 
-        [Test]
+        [Test, Ignore]
         public void TriggeredInMethod_InAssignment()
         {
             CompleteInClass(@"
@@ -237,7 +235,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             AssertMethod(mA);
         }
 
-        [Test]
+        [Test, Ignore]
         public void TriggeredInMethod_InLock()
         {
             CompleteInClass(@"
@@ -258,7 +256,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             AssertMethod(mA);
         }
 
-        [Test]
+        [Test, Ignore]
         public void METHOD_FOR_DEBUGGING_ONLY()
         {
             CompleteInClass(@"

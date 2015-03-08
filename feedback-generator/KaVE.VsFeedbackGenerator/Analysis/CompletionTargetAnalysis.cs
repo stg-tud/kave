@@ -67,9 +67,10 @@ namespace KaVE.VsFeedbackGenerator.Analysis
                 Asserts.NotNull(node.Parent, "reached top of tree... missed something?");
 
                 var parent = node.Parent as ICSharpTreeNode;
-                Asserts.NotNull(parent, "inconsistent tree? {0}", node.NodeType);
-
-                parent.Accept(this);
+                if (parent != null)
+                {
+                    parent.Accept(this);
+                }
             }
 
             public override void VisitClassDeclaration(IClassDeclaration classDecl)

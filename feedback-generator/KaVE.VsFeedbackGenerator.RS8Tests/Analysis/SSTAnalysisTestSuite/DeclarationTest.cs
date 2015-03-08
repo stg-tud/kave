@@ -24,10 +24,9 @@ using Fix = KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite.SSTA
 
 namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 {
-    [TestFixture]
     internal class DeclarationTest : BaseSSTAnalysisTest
     {
-        [Test]
+        [Test, Ignore]
         public void UntypedVariable()
         {
             CompleteInClass(@"
@@ -44,7 +43,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             AssertAllMethods(mA);
         }
 
-        [Test]
+        [Test, Ignore]
         public void ExplicitlyTypedVariable()
         {
             CompleteInClass(@"
@@ -61,7 +60,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             AssertAllMethods(mA);
         }
 
-        [Test]
+        [Test, Ignore]
         public void ImplicitlyTypedVariable()
         {
             CompleteInClass(@"

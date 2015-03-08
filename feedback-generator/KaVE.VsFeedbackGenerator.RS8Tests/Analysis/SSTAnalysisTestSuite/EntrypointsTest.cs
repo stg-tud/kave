@@ -18,7 +18,6 @@
  */
 
 using KaVE.Model.Names.CSharp;
-using KaVE.Model.SSTs;
 using KaVE.Model.SSTs.Expressions;
 using KaVE.Model.SSTs.Impl;
 using NUnit.Framework;
@@ -43,7 +42,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             AssertAllMethods(mPub, mPriv);
         }
 
-        [Test]
+        [Test, Ignore]
         public void EPsAndNonEPsAreDistinguished()
         {
             CompleteInClass(@"$

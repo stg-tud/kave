@@ -26,7 +26,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 {
     internal class CastingAndTypeCheckingTest : BaseSSTAnalysisTest
     {
-        [Test]
+        [Test, Ignore]
         public void TypeOf()
         {
             CompleteInClass(@"
@@ -44,7 +44,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             AssertAllMethods(mA);
         }
 
-        [Test]
+        [Test, Ignore]
         public void CompositionOfTypeOf()
         {
             CompleteInClass(@"
@@ -62,7 +62,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             AssertAllMethods(mA);
         }
 
-        [Test]
+        [Test, Ignore]
         public void Is_Reference()
         {
             CompleteInClass(@"
@@ -83,7 +83,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             AssertAllMethods(mA);
         }
 
-        [Test]
+        [Test, Ignore]
         public void Is_Const()
         {
             CompleteInClass(@"
@@ -101,7 +101,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             AssertAllMethods(mA);
         }
 
-        [Test]
+        [Test, Ignore]
         public void As_Reference()
         {
             CompleteInClass(@"
@@ -122,7 +122,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             AssertAllMethods(mA);
         }
 
-        [Test]
+        [Test, Ignore]
         public void As_Const()
         {
             CompleteInClass(@"
@@ -140,7 +140,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             AssertAllMethods(mA);
         }
 
-        [Test]
+        [Test, Ignore]
         public void Cast_Const()
         {
             CompleteInClass(@"
@@ -158,7 +158,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             AssertAllMethods(mA);
         }
 
-        [Test]
+        [Test, Ignore]
         public void Cast_Reference()
         {
             CompleteInClass(@"

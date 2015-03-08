@@ -27,10 +27,9 @@ using Fix = KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite.SSTA
 
 namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 {
-    [TestFixture]
     internal class SingleAssignmentTest : BaseSSTAnalysisTest
     {
-        [Test]
+        [Test, Ignore]
         public void InlineIfElse()
         {
             CompleteInClass(@"
@@ -118,7 +117,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             AssertAllMethods(mA);
         }
 
-        [Test]
+        [Test, Ignore]
         public void Invocation_SimpleComposition()
         {
             CompleteInCSharpFile(@"
@@ -152,7 +151,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             AssertAllMethods(mA);
         }
 
-        [Test]
+        [Test, Ignore]
         public void Invocation_RealComposition()
         {
             CompleteInCSharpFile(@"
@@ -197,7 +196,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             AssertAllMethods(mA);
         }
 
-        [Test]
+        [Test, Ignore]
         public void Invocation_NestedComposition()
         {
             CompleteInCSharpFile(@"
@@ -244,7 +243,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             AssertAllMethods(mA);
         }
 
-        [Test]
+        [Test, Ignore]
         public void CombinedIs()
         {
             CompleteInClass(@"
@@ -262,7 +261,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             AssertAllMethods(mA);
         }
 
-        [Test]
+        [Test, Ignore]
         public void CombinedAs()
         {
             CompleteInClass(@"
@@ -280,7 +279,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             AssertAllMethods(mA);
         }
 
-        [Test]
+        [Test, Ignore]
         public void CombinedCast()
         {
             CompleteInClass(@"
@@ -298,7 +297,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             AssertAllMethods(mA);
         }
 
-        [Test]
+        [Test, Ignore]
         public void CombinedAssignment()
         {
             CompleteInClass(@"
@@ -319,7 +318,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             AssertAllMethods(mA);
         }
 
-        [Test]
+        [Test, Ignore]
         public void CombinedPostfixPrefix()
         {
             CompleteInClass(@"
@@ -337,7 +336,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             AssertAllMethods(mA);
         }
 
-        [Test]
+        [Test, Ignore]
         public void CombinedUnary()
         {
             CompleteInClass(@"
@@ -355,7 +354,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             AssertAllMethods(mA);
         }
 
-        [Test]
+        [Test, Ignore]
         public void CombinedInlineIfElse()
         {
             CompleteInClass(@"
@@ -383,7 +382,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             AssertAllMethods(mA);
         }
 
-        [Test]
+        [Test, Ignore]
         public void CombinedDefault()
         {
             CompleteInClass(@"
