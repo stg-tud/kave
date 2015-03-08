@@ -18,7 +18,9 @@
  */
 
 using KaVE.Model.Collections;
+using KaVE.Model.SSTs.Expressions;
 using KaVE.Model.SSTs.Impl.Blocks;
+using KaVE.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Model.SSTs.Impl.Statements;
 using NUnit.Framework;
 
@@ -40,10 +42,10 @@ namespace KaVE.Model.Tests.SSTs.Impl.Blocks
         [Test]
         public void SettingValues()
         {
-            var sut = new CaseBlock {Label = "a"};
+            var sut = new CaseBlock {Label = Label("a")};
             sut.Body.Add(new ReturnStatement());
 
-            Assert.AreEqual("a", sut.Label);
+            Assert.AreEqual(Label("a"), sut.Label);
             Assert.AreEqual(Lists.NewList(new ReturnStatement()), sut.Body);
         }
 
@@ -59,9 +61,9 @@ namespace KaVE.Model.Tests.SSTs.Impl.Blocks
         [Test]
         public void Equality_ReallyTheSame()
         {
-            var a = new CaseBlock {Label = "a"};
+            var a = new CaseBlock {Label = Label("a")};
             a.Body.Add(new ReturnStatement());
-            var b = new CaseBlock {Label = "a"};
+            var b = new CaseBlock {Label = Label("a")};
             b.Body.Add(new ReturnStatement());
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
@@ -70,7 +72,7 @@ namespace KaVE.Model.Tests.SSTs.Impl.Blocks
         [Test]
         public void Equality_DifferentLabel()
         {
-            var a = new CaseBlock {Label = "a"};
+            var a = new CaseBlock {Label = Label("a")};
             var b = new CaseBlock();
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
@@ -84,6 +86,12 @@ namespace KaVE.Model.Tests.SSTs.Impl.Blocks
             var b = new CaseBlock();
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
+        }
+
+        private static ISimpleExpression Label(string label)
+        {
+            // TODO think about integrating a label string!!
+            return new ConstantValueExpression();
         }
     }
 }

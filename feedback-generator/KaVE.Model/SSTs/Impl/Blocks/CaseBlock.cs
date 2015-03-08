@@ -20,13 +20,14 @@
 using System.Collections.Generic;
 using KaVE.Model.Collections;
 using KaVE.Model.SSTs.Blocks;
+using KaVE.Model.SSTs.Expressions;
 using KaVE.Utils;
 
 namespace KaVE.Model.SSTs.Impl.Blocks
 {
     public class CaseBlock : ICaseBlock
     {
-        public string Label { get; set; }
+        public ISimpleExpression Label { get; set; }
         public IList<IStatement> Body { get; set; }
 
         public CaseBlock()
@@ -36,7 +37,7 @@ namespace KaVE.Model.SSTs.Impl.Blocks
 
         protected bool Equals(CaseBlock other)
         {
-            return Equals(Body, other.Body) && string.Equals(Label, other.Label);
+            return Equals(Body, other.Body) && Equals(Label, other.Label);
         }
 
         public override bool Equals(object obj)

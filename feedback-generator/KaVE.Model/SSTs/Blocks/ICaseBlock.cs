@@ -19,12 +19,13 @@
 
 using System.Collections.Generic;
 using KaVE.JetBrains.Annotations;
+using KaVE.Model.SSTs.Expressions;
 
 namespace KaVE.Model.SSTs.Blocks
 {
     public interface ICaseBlock
     {
-        string Label { get; }
+        ISimpleExpression Label { get; }
 
         [NotNull]
         IList<IStatement> Body { get; }

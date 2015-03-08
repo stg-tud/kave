@@ -20,6 +20,7 @@
 using KaVE.Model.SSTs;
 using KaVE.Model.SSTs.Impl.Blocks;
 using KaVE.Model.SSTs.Impl.Declarations;
+using KaVE.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.VsFeedbackGenerator.SessionManager.Anonymize;
 using NUnit.Framework;
 
@@ -165,14 +166,14 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
             var caseBlock =
                 new CaseBlock
                 {
-                    Label = "a",
+                    Label = new ConstantValueExpression(), // TODO include label somehow!
                     Body = {AnyStatement}
                 };
 
             var caseBlockAnonymized =
                 new CaseBlock
                 {
-                    Label = "a", // not anonymized
+                    Label = new ConstantValueExpression(), // not anonymized
                     Body = {AnyStatementAnonymized}
                 };
 
