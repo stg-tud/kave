@@ -19,7 +19,6 @@
 
 using System.Collections.Generic;
 using KaVE.JetBrains.Annotations;
-using KaVE.Model.SSTs.Impl.Blocks;
 
 namespace KaVE.Model.SSTs.Blocks
 {
@@ -29,7 +28,7 @@ namespace KaVE.Model.SSTs.Blocks
         IList<IStatement> Body { get; }
 
         [NotNull]
-        IList<CatchBlock> CatchBlocks { get; }
+        IList<ICatchBlock> CatchBlocks { get; }
 
         [NotNull]
         IList<IStatement> Finally { get; }

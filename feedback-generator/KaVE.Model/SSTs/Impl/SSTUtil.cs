@@ -20,10 +20,12 @@
 using System.Linq;
 using KaVE.Model.Collections;
 using KaVE.Model.Names;
+using KaVE.Model.SSTs.Blocks;
 using KaVE.Model.SSTs.Declarations;
 using KaVE.Model.SSTs.Expressions;
 using KaVE.Model.SSTs.Expressions.Assignable;
 using KaVE.Model.SSTs.Expressions.Simple;
+using KaVE.Model.SSTs.Impl.Blocks;
 using KaVE.Model.SSTs.Impl.Declarations;
 using KaVE.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Model.SSTs.Impl.Expressions.Simple;
@@ -96,9 +98,9 @@ namespace KaVE.Model.SSTs.Impl
             };
         }
 
-        public static ILockStatement LockStatement(string id)
+        public static ILockBlock LockStatement(string id)
         {
-            return new LockStatement {Reference = new VariableReference {Identifier = id}};
+            return new LockBlock {Reference = new VariableReference {Identifier = id}};
         }
 
         public static IStatement Return(ISimpleExpression expression)

@@ -220,7 +220,7 @@
     <Compile Include="SSTs\Impl\Statements\ContinueStatement.cs" />
     <Compile Include="SSTs\Impl\Statements\GotoStatement.cs" />
     <Compile Include="SSTs\Impl\Statements\LabelledStatement.cs" />
-    <Compile Include="SSTs\Impl\Statements\LockStatement.cs" />
+    <Compile Include="SSTs\Impl\Blocks\LockStatement.cs" />
     <Compile Include="SSTs\Impl\Statements\ReturnStatement.cs" />
     <Compile Include="SSTs\Impl\SST.cs" />
     <Compile Include="SSTs\Impl\Declarations\VariableDeclaration.cs" />
@@ -235,7 +235,7 @@
     <Compile Include="SSTs\Statements\IGotoStatement.cs" />
     <Compile Include="SSTs\Statements\IInvocationStatement.cs" />
     <Compile Include="SSTs\Statements\ILabelledStatement.cs" />
-    <Compile Include="SSTs\Statements\ILockStatement.cs" />
+    <Compile Include="SSTs\Blocks\ILockBlock.cs" />
     <Compile Include="SSTs\Statements\IReturnStatement.cs" />
     <Compile Include="SSTs\Statements\IThrowStatement.cs" />
     <Compile Include="SSTs\Visitor\ISSTNode.cs" />

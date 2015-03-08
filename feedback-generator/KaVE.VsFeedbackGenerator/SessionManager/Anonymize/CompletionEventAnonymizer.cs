@@ -66,10 +66,9 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
 
         private static SSTAnonymization CreateSSTAnonymizer()
         {
-            var exprAnon = new SSTExpressionAnonymization();
             var refAnon = new SSTReferenceAnonymization();
-
-            var stmtAnon = new SSTStatementAnonymization();
+            var exprAnon = new SSTExpressionAnonymization(refAnon);
+            var stmtAnon = new SSTStatementAnonymization(exprAnon, refAnon);
             return new SSTAnonymization(stmtAnon);
         }
 

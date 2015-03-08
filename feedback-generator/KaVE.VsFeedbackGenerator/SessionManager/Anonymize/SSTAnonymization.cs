@@ -23,17 +23,16 @@ using KaVE.Model.SSTs;
 using KaVE.Model.SSTs.Declarations;
 using KaVE.Model.SSTs.Impl;
 using KaVE.Model.SSTs.Impl.Declarations;
-using KaVE.Model.SSTs.Impl.Visitor;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
 {
     public class SSTAnonymization
     {
-        private SSTStatementAnonymization _statementAnonymization;
+        private readonly SSTStatementAnonymization _statementAnon;
 
         public SSTAnonymization(SSTStatementAnonymization stmtAnon)
         {
-            _statementAnonymization = stmtAnon;
+            _statementAnon = stmtAnon;
         }
 
         public ISST Anonymize(ISST sst)
@@ -71,30 +70,22 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
 
         public IMethodDeclaration Anonymize(IMethodDeclaration d)
         {
-            var body = d.Body.Select(Anonymize);
             return new MethodDeclaration
             {
                 Name = d.Name.ToAnonymousName(),
                 IsEntryPoint = d.IsEntryPoint,
-                Body = Lists.NewListFrom(body)
+                Body = _statementAnon.Anonymize(d.Body)
             };
         }
 
         public IPropertyDeclaration Anonymize(IPropertyDeclaration d)
         {
-            return new PropertyDeclaration {Name = d.Name.ToAnonymousName()};
-        }
-
-        public IStatement Anonymize(IStatement stmt)
-        {
-            return null;//stmt.Accept(_statementAnonymization);
+            return new PropertyDeclaration
+            {
+                Name = d.Name.ToAnonymousName(),
+                Get = _statementAnon.Anonymize(d.Get),
+                Set = _statementAnon.Anonymize(d.Set)
+            };
         }
     }
-
-
-    public class SSTExpressionAnonymization : AbstractNodeVisitor<int, IExpression> {}
-
-    public class SSTReferenceAnonymization : AbstractNodeVisitor<int, IReference> { }
-
-    public class SSTStatementAnonymization : AbstractNodeVisitor<int, IStatement> { }
 }

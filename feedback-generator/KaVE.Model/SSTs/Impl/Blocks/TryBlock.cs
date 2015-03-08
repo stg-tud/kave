@@ -28,13 +28,13 @@ namespace KaVE.Model.SSTs.Impl.Blocks
     public class TryBlock : ITryBlock
     {
         public IList<IStatement> Body { get; set; }
-        public IList<CatchBlock> CatchBlocks { get; set; }
+        public IList<ICatchBlock> CatchBlocks { get; set; }
         public IList<IStatement> Finally { get; set; }
 
         public TryBlock()
         {
             Body = Lists.NewList<IStatement>();
-            CatchBlocks = Lists.NewList<CatchBlock>();
+            CatchBlocks = Lists.NewList<ICatchBlock>();
             Finally = Lists.NewList<IStatement>();
         }
 

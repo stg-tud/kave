@@ -56,13 +56,11 @@ namespace KaVE.Model.Tests.SSTs.Impl.Visitor
             sut.Visit((IContinueStatement) null, null);
             sut.Visit((IGotoStatement) null, null);
             sut.Visit((ILabelledStatement) null, null);
-            sut.Visit((ILockStatement) null, null);
+            sut.Visit((ILockBlock) null, null);
             sut.Visit((IReturnStatement) null, null);
             sut.Visit((IThrowStatement) null, null);
 
             // blocks
-            sut.Visit((ICaseBlock) null, null);
-            sut.Visit((ICatchBlock) null, null);
             sut.Visit((IDoLoop) null, null);
             sut.Visit((IForEachLoop) null, null);
             sut.Visit((IForLoop) null, null);
@@ -115,13 +113,11 @@ namespace KaVE.Model.Tests.SSTs.Impl.Visitor
             Assert.Null(sut.Visit((IContinueStatement) null, 0));
             Assert.Null(sut.Visit((IGotoStatement) null, 0));
             Assert.Null(sut.Visit((ILabelledStatement) null, 0));
-            Assert.Null(sut.Visit((ILockStatement) null, 0));
+            Assert.Null(sut.Visit((ILockBlock) null, 0));
             Assert.Null(sut.Visit((IReturnStatement) null, 0));
             Assert.Null(sut.Visit((IThrowStatement) null, 0));
 
             // blocks
-            Assert.Null(sut.Visit((ICaseBlock) null, 0));
-            Assert.Null(sut.Visit((ICatchBlock) null, 0));
             Assert.Null(sut.Visit((IDoLoop) null, 0));
             Assert.Null(sut.Visit((IForEachLoop) null, 0));
             Assert.Null(sut.Visit((IForLoop) null, 0));

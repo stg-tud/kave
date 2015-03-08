@@ -49,17 +49,15 @@ namespace KaVE.Model.SSTs.Visitor
         void Visit(IContinueStatement stmt, TContext context);
         void Visit(IGotoStatement stmt, TContext context);
         void Visit(ILabelledStatement stmt, TContext context);
-        void Visit(ILockStatement stmt, TContext context);
         void Visit(IReturnStatement stmt, TContext context);
         void Visit(IThrowStatement stmt, TContext context);
 
         // blocks
-        void Visit(ICaseBlock block, TContext context);
-        void Visit(ICatchBlock block, TContext context);
         void Visit(IDoLoop block, TContext context);
         void Visit(IForEachLoop block, TContext context);
         void Visit(IForLoop block, TContext context);
         void Visit(IIfElseBlock block, TContext context);
+        void Visit(ILockBlock stmt, TContext context);
         void Visit(ISwitchBlock block, TContext context);
         void Visit(ITryBlock block, TContext context);
         void Visit(IUncheckedBlock block, TContext context);
@@ -106,17 +104,15 @@ namespace KaVE.Model.SSTs.Visitor
         TReturn Visit(IContinueStatement stmt, TContext context);
         TReturn Visit(IGotoStatement stmt, TContext context);
         TReturn Visit(ILabelledStatement stmt, TContext context);
-        TReturn Visit(ILockStatement stmt, TContext context);
         TReturn Visit(IReturnStatement stmt, TContext context);
         TReturn Visit(IThrowStatement stmt, TContext context);
 
         // blocks
-        TReturn Visit(ICaseBlock block, TContext context);
-        TReturn Visit(ICatchBlock block, TContext context);
         TReturn Visit(IDoLoop block, TContext context);
         TReturn Visit(IForEachLoop block, TContext context);
         TReturn Visit(IForLoop block, TContext context);
         TReturn Visit(IIfElseBlock block, TContext context);
+        TReturn Visit(ILockBlock stmt, TContext context);
         TReturn Visit(ISwitchBlock block, TContext context);
         TReturn Visit(ITryBlock block, TContext context);
         TReturn Visit(IUncheckedBlock block, TContext context);
@@ -140,5 +136,4 @@ namespace KaVE.Model.SSTs.Visitor
         TReturn Visit(IPropertyReference methodRef, TContext context);
         TReturn Visit(IVariableReference varRef, TContext context);
     }
-
 }

@@ -19,11 +19,10 @@
 
 using System.Collections.Generic;
 using KaVE.JetBrains.Annotations;
-using KaVE.Model.SSTs.Visitor;
 
 namespace KaVE.Model.SSTs.Blocks
 {
-    public interface ICaseBlock : ISSTNode
+    public interface ICaseBlock
     {
         string Label { get; }
 

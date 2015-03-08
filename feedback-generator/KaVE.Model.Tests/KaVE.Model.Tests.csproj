@@ -118,7 +118,7 @@
     <Compile Include="SSTs\Impl\Statements\ContinueStatementTest.cs" />
     <Compile Include="SSTs\Impl\Statements\GotoStatementTest.cs" />
     <Compile Include="SSTs\Impl\Statements\LabelledStatementTest.cs" />
-    <Compile Include="SSTs\Impl\Statements\LockStatementTest.cs" />
+    <Compile Include="SSTs\Impl\Blocks\LockBlockTest.cs" />
     <Compile Include="SSTs\Impl\Statements\ReturnStatementTest.cs" />
     <Compile Include="SSTs\Impl\Statements\ThrowStatementTest.cs" />
     <Compile Include="SSTs\Impl\Visitor\AbstractNodeVisitorTest.cs" />

@@ -17,12 +17,17 @@
  *    - Sebastian Proksch
  */
 
+using System.Collections.Generic;
+using KaVE.JetBrains.Annotations;
 using KaVE.Model.SSTs.References;
 
-namespace KaVE.Model.SSTs.Statements
+namespace KaVE.Model.SSTs.Blocks
 {
-    public interface ILockStatement : IStatement
+    public interface ILockBlock : IStatement
     {
         IVariableReference Reference { get; }
+
+        [NotNull]
+        IList<IStatement> Body { get; }
     }
 }

@@ -17,19 +17,23 @@
  *    - Sebastian Proksch
  */
 
-using KaVE.Model.SSTs.Impl;
+using KaVE.Model.Collections;
+using KaVE.Model.SSTs.Impl.Blocks;
 using KaVE.Model.SSTs.Impl.References;
 using KaVE.Model.SSTs.Impl.Statements;
 using NUnit.Framework;
 
-namespace KaVE.Model.Tests.SSTs.Impl.Statements
+namespace KaVE.Model.Tests.SSTs.Impl.Blocks
 {
-    public class LockStatementTest
+    public class LockBlockTest
     {
         [Test]
         public void DefaultValues()
         {
-            var sut = new LockStatement();
+            var sut = new LockBlock();
+            Assert.IsNull(sut.Reference);
+            Assert.IsNotNull(sut.Body);
+            Assert.AreEqual(0, sut.Body.Count);
             Assert.IsNull(sut.Reference);
             Assert.AreNotEqual(0, sut.GetHashCode());
             Assert.AreNotEqual(1, sut.GetHashCode());
@@ -38,15 +42,20 @@ namespace KaVE.Model.Tests.SSTs.Impl.Statements
         [Test]
         public void SettingValues()
         {
-            var sut = new LockStatement {Reference = new VariableReference {Identifier = "x"}};
+            var sut = new LockBlock
+            {
+                Reference = new VariableReference {Identifier = "x"},
+                Body = {new BreakStatement()}
+            };
             Assert.AreEqual(new VariableReference {Identifier = "x"}, sut.Reference);
+            Assert.AreEqual(Lists.NewList(new BreakStatement()), sut.Body);
         }
 
         [Test]
         public void Equality_default()
         {
-            var a = new LockStatement();
-            var b = new LockStatement();
+            var a = new LockBlock();
+            var b = new LockBlock();
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
         }
@@ -54,17 +63,43 @@ namespace KaVE.Model.Tests.SSTs.Impl.Statements
         [Test]
         public void Equality_reallyTheSame()
         {
-            var a = SSTUtil.LockStatement("a");
-            var b = SSTUtil.LockStatement("a");
+            var a = new LockBlock
+            {
+                Reference = new VariableReference {Identifier = "x"},
+                Body = {new BreakStatement()}
+            };
+            var b = new LockBlock
+            {
+                Reference = new VariableReference {Identifier = "x"},
+                Body = {new BreakStatement()}
+            };
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
         }
 
         [Test]
-        public void Equality_differentIdentifier()
+        public void Equality_differentReference()
         {
-            var a = SSTUtil.LockStatement("a");
-            var b = SSTUtil.LockStatement("b");
+            var a = new LockBlock
+            {
+                Reference = new VariableReference {Identifier = "a"}
+            };
+            var b = new LockBlock
+            {
+                Reference = new VariableReference {Identifier = "b"}
+            };
+            Assert.AreNotEqual(a, b);
+            Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
+        }
+
+        [Test]
+        public void Equality_differentBody()
+        {
+            var a = new LockBlock
+            {
+                Body = {new BreakStatement()}
+            };
+            var b = new LockBlock();
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
         }
@@ -72,14 +107,14 @@ namespace KaVE.Model.Tests.SSTs.Impl.Statements
         [Test]
         public void VisitorIsImplemented()
         {
-            var sut = new LockStatement();
+            var sut = new LockBlock();
             sut.Accept(23).Verify(v => v.Visit(sut, 23));
         }
 
         [Test]
         public void VisitorWithReturnIsImplemented()
         {
-            var sut = new LockStatement();
+            var sut = new LockBlock();
             sut.Accept(23).VerifyWithReturn(v => v.Visit(sut, 23));
         }
     }

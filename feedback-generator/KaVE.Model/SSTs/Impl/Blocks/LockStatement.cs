@@ -17,20 +17,28 @@
  *    - Sebastian Proksch
  */
 
+using System.Collections.Generic;
+using KaVE.Model.Collections;
+using KaVE.Model.SSTs.Blocks;
 using KaVE.Model.SSTs.References;
-using KaVE.Model.SSTs.Statements;
 using KaVE.Model.SSTs.Visitor;
 using KaVE.Utils;
 
-namespace KaVE.Model.SSTs.Impl.Statements
+namespace KaVE.Model.SSTs.Impl.Blocks
 {
-    public class LockStatement : ILockStatement
+    public class LockBlock : ILockBlock
     {
         public IVariableReference Reference { get; set; }
+        public IList<IStatement> Body { get; set; }
 
-        private bool Equals(LockStatement other)
+        public LockBlock()
         {
-            return Equals(Reference, other.Reference);
+            Body = Lists.NewList<IStatement>();
+        }
+
+        private bool Equals(LockBlock other)
+        {
+            return Equals(Reference, other.Reference) && Body.Equals(other.Body);
         }
 
         public override bool Equals(object obj)
@@ -40,7 +48,7 @@ namespace KaVE.Model.SSTs.Impl.Statements
 
         public override int GetHashCode()
         {
-            return unchecked (16 + (Reference != null ? Reference.GetHashCode() : 0));
+            return unchecked (16 + (Reference != null ? Reference.GetHashCode() : 0)*8 + Body.GetHashCode());
         }
 
         public void Accept<TContext>(ISSTNodeVisitor<TContext> visitor, TContext context)

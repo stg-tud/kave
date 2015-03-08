@@ -17,17 +17,16 @@
  *    - Sebastian Proksch
  */
 
-using System.Collections.Generic;
-using KaVE.JetBrains.Annotations;
-using KaVE.Model.SSTs.Declarations;
+using NUnit.Framework;
 
-namespace KaVE.Model.SSTs.Blocks
+namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.JsonSerializationSuite
 {
-    public interface ICatchBlock
+    public class SSTSerializationTest
     {
-        IVariableDeclaration Exception { get; }
-
-        [NotNull]
-        IList<IStatement> Body { get; }
+        [Test, Ignore]
+        public void EntrypointAndNonEntryPointsAreNotSerialized()
+        {
+            // TODO write some tests for ST de-/serialization!
+        }
     }
 }

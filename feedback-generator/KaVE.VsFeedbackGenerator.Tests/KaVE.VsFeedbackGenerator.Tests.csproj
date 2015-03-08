@@ -99,13 +99,18 @@
     <Compile Include="MessageBus\TinyMessengerMessageChannelTest.cs" />
     <Compile Include="SessionManager\Anonymize\AnonymousNameUtilsTest.cs" />
     <Compile Include="SessionManager\Anonymize\BuildEventAnonymizerTest.cs" />
+    <Compile Include="SessionManager\Anonymize\SSTAnonymizationBaseTest.cs" />
     <Compile Include="SessionManager\Anonymize\CompletionEventAnonymizerTest.cs" />
     <Compile Include="SessionManager\Anonymize\DocumentEventAnonymizerTest.cs" />
     <Compile Include="SessionManager\Anonymize\ErrorEventAnonymizerTest.cs" />
     <Compile Include="SessionManager\Anonymize\IDEStateEventAnonymizerTest.cs" />
     <Compile Include="SessionManager\Anonymize\InfoEventAnonymizerTest.cs" />
     <Compile Include="SessionManager\Anonymize\SolutionEventAnonymizerTest.cs" />
-    <Compile Include="SessionManager\Anonymize\SSTAnonymizerTest.cs" />
+    <Compile Include="SessionManager\Anonymize\SSTAnonymizationTest.cs" />
+    <Compile Include="SessionManager\Anonymize\SSTBlockAnonymizationTest.cs" />
+    <Compile Include="SessionManager\Anonymize\SSTExpressionAnonymizationTest.cs" />
+    <Compile Include="SessionManager\Anonymize\SSTReferenceAnonymizationTest.cs" />
+    <Compile Include="SessionManager\Anonymize\SSTStatementAnonymizationTest.cs" />
     <Compile Include="SessionManager\Anonymize\WindowEventAnonymizerTest.cs" />
     <Compile Include="SessionManager\FeedbackViewModelTestSuite\DeleteEventCommandTest.cs" />
     <Compile Include="SessionManager\FeedbackViewModelTestSuite\DeleteSessionCommandTest.cs" />
@@ -159,6 +164,7 @@
     <Compile Include="Utils\Json\JsonSerializationSuite\QueryJsonSerializationTest.cs" />
     <Compile Include="Utils\Json\JsonSerializationSuite\SerializationTestBase.cs" />
     <Compile Include="Utils\Json\JsonSerializationSuite\SolutionEventSerializationTest.cs" />
+    <Compile Include="Utils\Json\JsonSerializationSuite\SSTSerializationTEst.cs" />
     <Compile Include="Utils\Json\JsonSerializationSuite\UpdateEventSerializationTest.cs" />
     <Compile Include="Utils\Json\JsonSerializationSuite\WindowEventSerializationTest.cs" />
     <Compile Include="Utils\Json\MemoryStreamUtils.cs" />

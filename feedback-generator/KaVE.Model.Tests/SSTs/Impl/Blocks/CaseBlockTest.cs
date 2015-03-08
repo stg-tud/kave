@@ -85,19 +85,5 @@ namespace KaVE.Model.Tests.SSTs.Impl.Blocks
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
         }
-
-        [Test]
-        public void VisitorIsImplemented()
-        {
-            var sut = new CaseBlock();
-            sut.Accept(23).Verify(v => v.Visit(sut, 23));
-        }
-
-        [Test]
-        public void VisitorWithReturnIsImplemented()
-        {
-            var sut = new CaseBlock();
-            sut.Accept(23).VerifyWithReturn(v => v.Visit(sut, 23));
-        }
     }
 }

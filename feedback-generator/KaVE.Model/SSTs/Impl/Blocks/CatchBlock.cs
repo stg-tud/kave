@@ -21,7 +21,6 @@ using System.Collections.Generic;
 using KaVE.Model.Collections;
 using KaVE.Model.SSTs.Blocks;
 using KaVE.Model.SSTs.Declarations;
-using KaVE.Model.SSTs.Visitor;
 using KaVE.Utils;
 
 namespace KaVE.Model.SSTs.Impl.Blocks
@@ -53,16 +52,6 @@ namespace KaVE.Model.SSTs.Impl.Blocks
                 return 31 + (Body.GetHashCode()*397) ^
                        (Exception != null ? Exception.GetHashCode() : 0);
             }
-        }
-
-        public void Accept<TContext>(ISSTNodeVisitor<TContext> visitor, TContext context)
-        {
-            visitor.Visit(this, context);
-        }
-
-        public TReturn Accept<TContext, TReturn>(ISSTNodeVisitor<TContext, TReturn> visitor, TContext context)
-        {
-            return visitor.Visit(this, context);
         }
     }
 }

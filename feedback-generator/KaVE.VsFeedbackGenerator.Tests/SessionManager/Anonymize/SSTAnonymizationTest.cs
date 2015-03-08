@@ -20,30 +20,25 @@
 using KaVE.Model.Names.CSharp;
 using KaVE.Model.SSTs.Impl;
 using KaVE.Model.SSTs.Impl.Declarations;
-using KaVE.Model.SSTs.Statements;
 using KaVE.VsFeedbackGenerator.SessionManager.Anonymize;
-using Moq;
 using NUnit.Framework;
 
 namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
 {
-    public class SSTAnonymizerTest
+    public class SSTAnonymizationTest : SSTAnonymizationBaseTest
     {
         private SSTAnonymization _sut;
 
-        private IBreakStatement _anyStatement;
-        private IBreakStatement _anyStatementAnonymized;
-
         [SetUp]
-        public void SetUp()
+        public void Setup()
         {
-            _anyStatement = Mock.Of<IBreakStatement>();
-            _anyStatementAnonymized = Mock.Of<IBreakStatement>();
+            _sut = new SSTAnonymization(StatementAnonymizationMock);
+        }
 
-            var stmtAnon = Mock.Of<SSTStatementAnonymization>();
-            Mock.Get(stmtAnon).Setup(m => m.Visit(_anyStatement, It.IsAny<int>())).Returns(_anyStatementAnonymized);
-
-            _sut = new SSTAnonymization(stmtAnon);
+        [Test]
+        public void AnonymizeNullValues()
+        {
+            _sut.Anonymize(new SST());
         }
 
         [Test]
@@ -144,13 +139,13 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
             var actual = _sut.Anonymize(
                 new SST
                 {
-                    Properties = {new PropertyDeclaration {Get = {_anyStatement}}}
+                    Properties = {new PropertyDeclaration {Get = {AnyStatement}}}
                 });
 
             var expected =
                 new SST
                 {
-                    Properties = {new PropertyDeclaration {Get = {_anyStatementAnonymized}}}
+                    Properties = {new PropertyDeclaration {Get = {AnyStatementAnonymized}}}
                 };
 
             Assert.AreEqual(expected, actual);
@@ -162,13 +157,13 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
             var actual = _sut.Anonymize(
                 new SST
                 {
-                    Properties = {new PropertyDeclaration {Set = {_anyStatement}}}
+                    Properties = {new PropertyDeclaration {Set = {AnyStatement}}}
                 });
 
             var expected =
                 new SST
                 {
-                    Properties = {new PropertyDeclaration {Set = {_anyStatementAnonymized}}}
+                    Properties = {new PropertyDeclaration {Set = {AnyStatementAnonymized}}}
                 };
 
             Assert.AreEqual(expected, actual);
@@ -226,13 +221,13 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
             var actual = _sut.Anonymize(
                 new SST
                 {
-                    Methods = {new MethodDeclaration {Body = {_anyStatement}}}
+                    Methods = {new MethodDeclaration {Body = {AnyStatement}}}
                 });
 
             var expected =
                 new SST
                 {
-                    Methods = {new MethodDeclaration {Body = {_anyStatementAnonymized}}}
+                    Methods = {new MethodDeclaration {Body = {AnyStatementAnonymized}}}
                 };
 
             Assert.AreEqual(expected, actual);
