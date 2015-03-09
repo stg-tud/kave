@@ -23,8 +23,11 @@ using KaVE.Model.Collections;
 using KaVE.Model.SSTs;
 using KaVE.Model.SSTs.Blocks;
 using KaVE.Model.SSTs.Expressions;
-using KaVE.Model.SSTs.Impl;
+using KaVE.Model.SSTs.Expressions.Assignable;
+using KaVE.Model.SSTs.Expressions.LoopHeader;
 using KaVE.Model.SSTs.Impl.Blocks;
+using KaVE.Model.SSTs.Impl.Expressions.Assignable;
+using KaVE.Model.SSTs.Impl.Expressions.LoopHeader;
 using KaVE.Model.SSTs.Impl.Statements;
 using KaVE.Model.SSTs.Impl.Visitor;
 using KaVE.Model.SSTs.Statements;
@@ -51,11 +54,6 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
                 Condition = Anonymize(stmt.Condition),
                 Body = Anonymize(stmt.Body)
             };
-        }
-
-        private ILoopHeaderExpression Anonymize(ILoopHeaderExpression expr)
-        {
-            return expr == null ? null : (ILoopHeaderExpression) expr.Accept(_expr, 0);
         }
 
         public override IStatement Visit(IForEachLoop stmt, int context)
@@ -195,34 +193,22 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
             return new BreakStatement();
         }
 
-        public override IStatement Visit(ICompletion stmt, int context)
-        {
-            return new Completion
-            {
-                ObjectReference = _ref.Anonymize(stmt.ObjectReference),
-                TypeReference = stmt.TypeReference.ToAnonymousName(),
-                Token = stmt.Token
-            };
-        }
-
         public override IStatement Visit(IContinueStatement stmt, int context)
         {
             return new ContinueStatement();
         }
 
+        public override IStatement Visit(IExpressionStatement stmt, int context)
+        {
+            return new ExpressionStatement
+            {
+                Expression = Anonymize(stmt.Expression)
+            };
+        }
+
         public override IStatement Visit(IGotoStatement stmt, int context)
         {
             return new GotoStatement {Label = stmt.Label};
-        }
-
-        public override IStatement Visit(IInvocation stmt, int context)
-        {
-            return new Invocation
-            {
-                Reference = _ref.Anonymize(stmt.Reference),
-                MethodName = stmt.MethodName.ToAnonymousName(),
-                Parameters = _expr.Anonymize(stmt.Parameters)
-            };
         }
 
         public override IStatement Visit(ILabelledStatement stmt, int context)
@@ -252,6 +238,21 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
 
         #endregion
 
+        private IExpression Anonymize(IExpression expr)
+        {
+            var aexpr = expr as IAssignableExpression;
+            if (aexpr != null)
+            {
+                return Anonymize(aexpr);
+            }
+            var lhexpr = expr as ILoopHeaderExpression;
+            if (lhexpr != null)
+            {
+                return Anonymize(lhexpr);
+            }
+            return null;
+        }
+
         public virtual ISimpleExpression Anonymize(ISimpleExpression expr)
         {
             if (expr == null)
@@ -261,11 +262,33 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
             return (ISimpleExpression) expr.Accept(_expr, 0);
         }
 
+        private ILoopHeaderExpression Anonymize(ILoopHeaderExpression expr)
+        {
+            var block = expr as ILoopHeaderBlockExpression;
+            if (block != null)
+            {
+                return new LoopHeaderBlockExpression
+                {
+                    Body = Anonymize(block.Body)
+                };
+            }
+            return expr == null ? null : (ILoopHeaderExpression) expr.Accept(_expr, 0);
+        }
+
         public virtual IAssignableExpression Anonymize(IAssignableExpression expr)
         {
             if (expr == null)
             {
                 return null;
+            }
+            var lambda = expr as ILambdaExpression;
+            if (lambda != null)
+            {
+                return new LambdaExpression
+                {
+                    Parameters = Lists.NewListFrom(lambda.Parameters.Select(_ref.Anonymize)),
+                    Body = Anonymize(lambda.Body)
+                };
             }
             return (IAssignableExpression) expr.Accept(_expr, 0);
         }

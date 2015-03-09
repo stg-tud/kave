@@ -25,7 +25,6 @@ using KaVE.Model.SSTs.Expressions;
 using KaVE.Model.SSTs.Expressions.Assignable;
 using KaVE.Model.SSTs.Expressions.LoopHeader;
 using KaVE.Model.SSTs.Expressions.Simple;
-using KaVE.Model.SSTs.Impl;
 using KaVE.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Model.SSTs.Impl.Visitor;
@@ -43,19 +42,9 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
             _refAnon = refAnon;
         }
 
-        public override IExpression Visit(IInvocation entity, int context)
+        public override IExpression Visit(ICompletionExpression entity, int context)
         {
-            return new Invocation
-            {
-                Reference = _refAnon.Anonymize(entity.Reference),
-                MethodName = entity.MethodName.ToAnonymousName(),
-                Parameters = Anonymize(entity.Parameters)
-            };
-        }
-
-        public override IExpression Visit(ICompletion entity, int context)
-        {
-            return new Completion
+            return new CompletionExpression
             {
                 ObjectReference = _refAnon.Anonymize(entity.ObjectReference),
                 TypeReference = entity.TypeReference.ToAnonymousName(),
@@ -78,7 +67,10 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
 
         public override IExpression Visit(IConstantValueExpression expr, int context)
         {
-            return new ConstantValueExpression();
+            return new ConstantValueExpression
+            {
+                Value = expr.Value == null ? null : expr.Value.ToHash()
+            };
         }
 
         public override IExpression Visit(IIfElseExpression expr, int context)
@@ -88,6 +80,16 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
                 Condition = Anonymize(expr.Condition),
                 ThenExpression = Anonymize(expr.ThenExpression),
                 ElseExpression = Anonymize(expr.ElseExpression)
+            };
+        }
+
+        public override IExpression Visit(IInvocationExpression entity, int context)
+        {
+            return new InvocationExpression
+            {
+                Reference = _refAnon.Anonymize(entity.Reference),
+                MethodName = entity.MethodName.ToAnonymousName(),
+                Parameters = Anonymize(entity.Parameters)
             };
         }
 

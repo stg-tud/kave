@@ -23,6 +23,7 @@ using KaVE.Model.Names;
 using KaVE.Model.Names.CSharp;
 using KaVE.Model.SSTs.Expressions;
 using KaVE.Model.SSTs.Impl;
+using KaVE.Model.SSTs.Impl.Blocks;
 using KaVE.Model.SSTs.Impl.Declarations;
 using KaVE.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Model.SSTs.Impl.Expressions.Simple;
@@ -105,7 +106,7 @@ namespace KaVE.Model.Tests.SSTs.Impl
         }
 
         [Test]
-        public void CustomConstructor_Static()
+        public void InvocationExpression_Static()
         {
             var a = SSTUtil.InvocationExpression(GetStaticMethod("B2"), VarRefExpr("c2"));
             Assert.Null(a.Reference);
@@ -114,12 +115,54 @@ namespace KaVE.Model.Tests.SSTs.Impl
         }
 
         [Test]
-        public void CustomConstructor_NonStatic()
+        public void InvocationExpression_NonStatic()
         {
             var a = SSTUtil.InvocationExpression("a1", GetMethod("B1"), VarRefExpr("c1"));
             Assert.AreEqual(SSTUtil.VariableReference("a1"), a.Reference);
             Assert.AreEqual(GetMethod("B1"), a.MethodName);
             Assert.AreEqual(Refs("c1"), a.Parameters);
+        }
+
+        [Test]
+        public void InvocationStatement_Static()
+        {
+            var actual = SSTUtil.InvocationStatement(GetStaticMethod("B2"), VarRefExpr("c2"));
+            var expected = new ExpressionStatement
+            {
+                Expression = new InvocationExpression
+                {
+                    MethodName = GetStaticMethod("B2"),
+                    Parameters = {VarRefExpr("c2")}
+                }
+            };
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void InvocationStatement_NonStatic()
+        {
+            var actual = SSTUtil.InvocationStatement("a", GetMethod("B2"), VarRefExpr("c2"));
+            var expected = new ExpressionStatement
+            {
+                Expression = new InvocationExpression
+                {
+                    Reference = new VariableReference {Identifier = "a"},
+                    MethodName = GetMethod("B2"),
+                    Parameters = {VarRefExpr("c2")}
+                }
+            };
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void LockBlock()
+        {
+            var actual = SSTUtil.LockBlock("a");
+            var expected = new LockBlock
+            {
+                Reference = new VariableReference {Identifier = "a"}
+            };
+            Assert.AreEqual(expected, actual);
         }
 
         [Test, ExpectedException(typeof (AssertException))]

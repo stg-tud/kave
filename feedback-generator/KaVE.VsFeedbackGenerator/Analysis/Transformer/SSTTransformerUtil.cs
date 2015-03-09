@@ -34,6 +34,7 @@ using KaVE.VsFeedbackGenerator.Analysis.Util;
 using KaVE.VsFeedbackGenerator.Utils.Names;
 using NuGet;
 using KaVEVariableDeclaration = KaVE.Model.SSTs.Impl.Declarations.VariableDeclaration;
+using KaVEIInvocationExpression = KaVE.Model.SSTs.Expressions.Assignable.IInvocationExpression;
 
 namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
 {
@@ -152,7 +153,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
         /// <summary>
         ///     Constructs InvocationExpressions either as static call if callee isn't given or as non-static call otherwise.
         /// </summary>
-        public static Invocation CreateInvocation(this string callee, IMethodName method, string[] argIds)
+        public static KaVEIInvocationExpression CreateInvocation(this string callee, IMethodName method, string[] argIds)
         {
             var args = argIds.Select<string, ISimpleExpression>(SSTUtil.ReferenceExprToVariable).AsArray();
             if (callee == null)

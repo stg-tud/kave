@@ -17,42 +17,47 @@
  *    - Sebastian Proksch
  */
 
+using System.Collections.Generic;
+using KaVE.Model.Collections;
 using KaVE.Model.Names;
+using KaVE.Model.SSTs.Expressions;
 using KaVE.Model.SSTs.Expressions.Assignable;
 using KaVE.Model.SSTs.References;
-using KaVE.Model.SSTs.Statements;
 using KaVE.Model.SSTs.Visitor;
 using KaVE.Utils;
 
-namespace KaVE.Model.SSTs.Impl
+namespace KaVE.Model.SSTs.Impl.Expressions.Assignable
 {
-    public class Completion : ICompletionExpression, ICompletionStatement
+    public class InvocationExpression : IInvocationExpression
     {
-        public ITypeName TypeReference { get; set; }
-        public IVariableReference ObjectReference { get; set; }
-        public string Token { get; set; }
+        public IVariableReference Reference { get; set; }
+        public IMethodName MethodName { get; set; }
+        public IList<ISimpleExpression> Parameters { get; set; }
+
+        public InvocationExpression()
+        {
+            Parameters = Lists.NewList<ISimpleExpression>();
+        }
+
+        private bool Equals(IInvocationExpression other)
+        {
+            return string.Equals(Reference, other.Reference) && Equals(MethodName, other.MethodName) &&
+                   Parameters.Equals(other.Parameters);
+        }
 
         public override bool Equals(object obj)
         {
             return this.Equals(obj, Equals);
         }
 
-        protected bool Equals(Completion other)
-        {
-            var isEqTypeRef = Equals(TypeReference, other.TypeReference);
-            var isEqObjRef = Equals(ObjectReference, other.ObjectReference);
-            var isEqToken = string.Equals(Token, other.Token);
-            return isEqTypeRef && isEqObjRef && isEqToken;
-        }
-
         public override int GetHashCode()
         {
             unchecked
             {
-                var hcTypeRef = TypeReference != null ? TypeReference.GetHashCode() : 0;
-                var hcObjRef = ObjectReference != null ? ObjectReference.GetHashCode() : 0;
-                var hcToken = Token != null ? Token.GetHashCode() : 0;
-                return unchecked (3 + hcToken*397 + hcTypeRef*23846 + hcObjRef);
+                var hashCode = 11 + (Reference != null ? Reference.GetHashCode() : 0);
+                hashCode = (hashCode*397) ^ (MethodName != null ? MethodName.GetHashCode() : 0);
+                hashCode = (hashCode*397) ^ Parameters.GetHashCode();
+                return hashCode;
             }
         }
 

@@ -176,8 +176,6 @@
     <Compile Include="SSTs\Expressions\Assignable\IInvocationExpression.cs" />
     <Compile Include="SSTs\Expressions\Simple\IReferenceExpression.cs" />
     <Compile Include="SSTs\Expressions\ISimpleExpression.cs" />
-    <Compile Include="SSTs\ICompletion.cs" />
-    <Compile Include="SSTs\IInvocation.cs" />
     <Compile Include="SSTs\Impl\Expressions\Simple\NullExpression.cs" />
     <Compile Include="SSTs\Impl\Expressions\Simple\ReferenceExpression.cs" />
     <Compile Include="SSTs\Expressions\ILoopHeaderExpression.cs" />
@@ -186,6 +184,7 @@
     <Compile Include="SSTs\Impl\References\MethodReference.cs" />
     <Compile Include="SSTs\Impl\References\PropertyReference.cs" />
     <Compile Include="SSTs\Impl\References\VariableReference.cs" />
+    <Compile Include="SSTs\Impl\Statements\ExpressionStatement.cs" />
     <Compile Include="SSTs\IReference.cs" />
     <Compile Include="SSTs\IMemberDeclaration.cs" />
     <Compile Include="SSTs\Impl\Expressions\LoopHeader\LoopHeaderBlockExpression.cs" />
@@ -214,9 +213,9 @@
     <Compile Include="SSTs\Impl\Blocks\ForEachLoop.cs" />
     <Compile Include="SSTs\Impl\Blocks\ForLoop.cs" />
     <Compile Include="SSTs\Impl\Blocks\IfElseBlock.cs" />
-    <Compile Include="SSTs\Impl\Invocation.cs" />
+    <Compile Include="SSTs\Impl\Expressions\Assignable\InvocationExpression.cs" />
     <Compile Include="SSTs\Impl\Statements\BreakStatement.cs" />
-    <Compile Include="SSTs\Impl\Completion.cs" />
+    <Compile Include="SSTs\Impl\Expressions\Assignable\CompletionExpression.cs" />
     <Compile Include="SSTs\Impl\Statements\ContinueStatement.cs" />
     <Compile Include="SSTs\Impl\Statements\GotoStatement.cs" />
     <Compile Include="SSTs\Impl\Statements\LabelledStatement.cs" />
@@ -230,10 +229,9 @@
     <Compile Include="SSTs\Impl\Blocks\WhileLoop.cs" />
     <Compile Include="SSTs\Statements\IAssignment.cs" />
     <Compile Include="SSTs\Statements\IBreakStatement.cs" />
-    <Compile Include="SSTs\Statements\ICompletionStatement.cs" />
     <Compile Include="SSTs\Statements\IContinueStatement.cs" />
     <Compile Include="SSTs\Statements\IGotoStatement.cs" />
-    <Compile Include="SSTs\Statements\IInvocationStatement.cs" />
+    <Compile Include="SSTs\Statements\IExpressionStatement.cs" />
     <Compile Include="SSTs\Statements\ILabelledStatement.cs" />
     <Compile Include="SSTs\Blocks\ILockBlock.cs" />
     <Compile Include="SSTs\Statements\IReturnStatement.cs" />

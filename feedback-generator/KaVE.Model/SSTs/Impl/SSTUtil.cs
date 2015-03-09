@@ -75,22 +75,40 @@ namespace KaVE.Model.SSTs.Impl
             };
         }
 
-        public static Invocation InvocationExpression(IMethodName name, params ISimpleExpression[] parameters)
+        public static IExpressionStatement InvocationStatement(IMethodName name, params ISimpleExpression[] parameters)
+        {
+            return new ExpressionStatement
+            {
+                Expression = InvocationExpression(name, parameters)
+            };
+        }
+
+        public static IExpressionStatement InvocationStatement(string id,
+            IMethodName name,
+            params ISimpleExpression[] parameters)
+        {
+            return new ExpressionStatement
+            {
+                Expression = InvocationExpression(id, name, parameters)
+            };
+        }
+
+        public static IInvocationExpression InvocationExpression(IMethodName name, params ISimpleExpression[] parameters)
         {
             Asserts.That(name.IsStatic || name.IsConstructor);
-            return new Invocation
+            return new InvocationExpression
             {
                 MethodName = name,
                 Parameters = Lists.NewListFrom(parameters),
             };
         }
 
-        public static Invocation InvocationExpression(string id,
+        public static IInvocationExpression InvocationExpression(string id,
             IMethodName name,
             params ISimpleExpression[] parameters)
         {
             Asserts.Not(name.IsStatic || name.IsConstructor);
-            return new Invocation
+            return new InvocationExpression
             {
                 Reference = new VariableReference {Identifier = id},
                 MethodName = name,
@@ -98,7 +116,7 @@ namespace KaVE.Model.SSTs.Impl
             };
         }
 
-        public static ILockBlock LockStatement(string id)
+        public static ILockBlock LockBlock(string id)
         {
             return new LockBlock {Reference = new VariableReference {Identifier = id}};
         }

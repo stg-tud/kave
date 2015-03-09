@@ -18,19 +18,19 @@
  */
 
 using KaVE.Model.Names.CSharp;
-using KaVE.Model.SSTs.Impl;
+using KaVE.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Model.SSTs.Impl.References;
 using KaVE.Model.SSTs.References;
 using NUnit.Framework;
 
-namespace KaVE.Model.Tests.SSTs.Impl
+namespace KaVE.Model.Tests.SSTs.Impl.Expressions.Assignable
 {
-    public class CompletionTest
+    public class CompletionExpressionTest
     {
         [Test]
         public void DefaultValues()
         {
-            var sut = new Completion();
+            var sut = new CompletionExpression();
             Assert.Null(sut.Token);
             Assert.Null(sut.ObjectReference);
             Assert.Null(sut.TypeReference);
@@ -41,7 +41,7 @@ namespace KaVE.Model.Tests.SSTs.Impl
         [Test]
         public void SettingValues()
         {
-            var sut = new Completion
+            var sut = new CompletionExpression
             {
                 ObjectReference = Ref("i"),
                 TypeReference = TypeName.UnknownName,
@@ -55,8 +55,8 @@ namespace KaVE.Model.Tests.SSTs.Impl
         [Test]
         public void Equality_Default()
         {
-            var a = new Completion();
-            var b = new Completion();
+            var a = new CompletionExpression();
+            var b = new CompletionExpression();
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
         }
@@ -64,13 +64,13 @@ namespace KaVE.Model.Tests.SSTs.Impl
         [Test]
         public void Equality_ReallyTheSame()
         {
-            var a = new Completion
+            var a = new CompletionExpression
             {
                 ObjectReference = Ref("i"),
                 Token = "t",
                 TypeReference = TypeName.UnknownName
             };
-            var b = new Completion
+            var b = new CompletionExpression
             {
                 ObjectReference = Ref("i"),
                 Token = "t",
@@ -83,8 +83,8 @@ namespace KaVE.Model.Tests.SSTs.Impl
         [Test]
         public void Equality_DifferentObjectReference()
         {
-            var a = new Completion {ObjectReference = Ref("i")};
-            var b = new Completion {ObjectReference = Ref("j")};
+            var a = new CompletionExpression { ObjectReference = Ref("i") };
+            var b = new CompletionExpression { ObjectReference = Ref("j") };
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
         }
@@ -93,8 +93,8 @@ namespace KaVE.Model.Tests.SSTs.Impl
         [Test]
         public void Equality_DifferentToken()
         {
-            var a = new Completion {Token = "t"};
-            var b = new Completion {Token = "u"};
+            var a = new CompletionExpression { Token = "t" };
+            var b = new CompletionExpression { Token = "u" };
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
         }
@@ -102,8 +102,8 @@ namespace KaVE.Model.Tests.SSTs.Impl
         [Test]
         public void Equality_DifferentTypeReference()
         {
-            var a = new Completion {TypeReference = TypeName.UnknownName};
-            var b = new Completion {TypeReference = TypeName.Get("System.Int32, mscore, 4.0.0.0")};
+            var a = new CompletionExpression { TypeReference = TypeName.UnknownName };
+            var b = new CompletionExpression { TypeReference = TypeName.Get("System.Int32, mscore, 4.0.0.0") };
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
         }
@@ -111,14 +111,14 @@ namespace KaVE.Model.Tests.SSTs.Impl
         [Test]
         public void VisitorIsImplemented()
         {
-            var sut = new Completion();
+            var sut = new CompletionExpression();
             sut.Accept(23).Verify(v => v.Visit(sut, 23));
         }
 
         [Test]
         public void VisitorWithReturnIsImplemented()
         {
-            var sut = new Completion();
+            var sut = new CompletionExpression();
             sut.Accept(23).VerifyWithReturn(v => v.Visit(sut, 23));
         }
 

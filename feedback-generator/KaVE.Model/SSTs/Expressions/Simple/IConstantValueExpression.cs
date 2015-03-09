@@ -19,5 +19,8 @@
 
 namespace KaVE.Model.SSTs.Expressions.Simple
 {
-    public interface IConstantValueExpression : ISimpleExpression {}
+    public interface IConstantValueExpression : ISimpleExpression
+    {
+        string Value { get; }
+    }
 }

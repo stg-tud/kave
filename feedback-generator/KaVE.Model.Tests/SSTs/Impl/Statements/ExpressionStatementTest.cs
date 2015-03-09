@@ -18,17 +18,18 @@
  */
 
 using KaVE.Model.SSTs.Impl.Expressions.Simple;
+using KaVE.Model.SSTs.Impl.Statements;
 using NUnit.Framework;
 
-namespace KaVE.Model.Tests.SSTs.Impl.Expressions.Simple
+namespace KaVE.Model.Tests.SSTs.Impl.Statements
 {
-    public class ConstantValueExpressionTest
+    internal class ExpressionStatementTest
     {
         [Test]
         public void DefaultValues()
         {
-            var sut = new ConstantValueExpression();
-            Assert.Null(sut.Value);
+            var sut = new ExpressionStatement();
+            Assert.Null(sut.Expression);
             Assert.AreNotEqual(0, sut.GetHashCode());
             Assert.AreNotEqual(1, sut.GetHashCode());
         }
@@ -36,15 +37,15 @@ namespace KaVE.Model.Tests.SSTs.Impl.Expressions.Simple
         [Test]
         public void SettingValues()
         {
-            var sut = new ConstantValueExpression {Value = "a"};
-            Assert.AreEqual("a", sut.Value);
+            var sut = new ExpressionStatement {Expression = new NullExpression()};
+            Assert.AreEqual(new NullExpression(), sut.Expression);
         }
 
         [Test]
         public void Equality_Default()
         {
-            var a = new ConstantValueExpression();
-            var b = new ConstantValueExpression();
+            var a = new ExpressionStatement();
+            var b = new ExpressionStatement();
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
         }
@@ -52,17 +53,17 @@ namespace KaVE.Model.Tests.SSTs.Impl.Expressions.Simple
         [Test]
         public void Equality_ReallyTheSame()
         {
-            var a = new ConstantValueExpression {Value = "a"};
-            var b = new ConstantValueExpression {Value = "a"};
+            var a = new ExpressionStatement {Expression = new NullExpression()};
+            var b = new ExpressionStatement {Expression = new NullExpression()};
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
         }
 
         [Test]
-        public void Equality_DifferentValue()
+        public void Equality_DifferentExpression()
         {
-            var a = new ConstantValueExpression {Value = "a"};
-            var b = new ConstantValueExpression();
+            var a = new ExpressionStatement {Expression = new NullExpression()};
+            var b = new ExpressionStatement();
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
         }
@@ -70,14 +71,14 @@ namespace KaVE.Model.Tests.SSTs.Impl.Expressions.Simple
         [Test]
         public void VisitorIsImplemented()
         {
-            var sut = new ConstantValueExpression();
+            var sut = new ExpressionStatement();
             sut.Accept(23).Verify(v => v.Visit(sut, 23));
         }
 
         [Test]
         public void VisitorWithReturnIsImplemented()
         {
-            var sut = new ConstantValueExpression();
+            var sut = new ExpressionStatement();
             sut.Accept(23).VerifyWithReturn(v => v.Visit(sut, 23));
         }
     }

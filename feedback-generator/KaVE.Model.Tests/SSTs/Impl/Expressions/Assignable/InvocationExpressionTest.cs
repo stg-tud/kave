@@ -22,18 +22,19 @@ using KaVE.Model.Names;
 using KaVE.Model.Names.CSharp;
 using KaVE.Model.SSTs.Expressions;
 using KaVE.Model.SSTs.Impl;
+using KaVE.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Model.SSTs.Impl.References;
 using NUnit.Framework;
 
-namespace KaVE.Model.Tests.SSTs.Impl
+namespace KaVE.Model.Tests.SSTs.Impl.Expressions.Assignable
 {
-    public class InvocationTest
+    public class InvocationExpressionTest
     {
         [Test]
         public void DefaultValues()
         {
-            var sut = new Invocation();
+            var sut = new InvocationExpression();
             Assert.IsNull(sut.Reference);
             Assert.IsNull(sut.MethodName);
             Assert.IsNotNull(sut.Parameters);
@@ -45,8 +46,8 @@ namespace KaVE.Model.Tests.SSTs.Impl
         [Test]
         public void Equality_Default()
         {
-            var a = new Invocation();
-            var b = new Invocation();
+            var a = new InvocationExpression();
+            var b = new InvocationExpression();
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
         }
@@ -65,8 +66,8 @@ namespace KaVE.Model.Tests.SSTs.Impl
         [Test]
         public void Equality_DifferentIdentifier()
         {
-            var a = new Invocation {Reference = new VariableReference {Identifier = "a"}};
-            var b = new Invocation {Reference = new VariableReference {Identifier = "b"}};
+            var a = new InvocationExpression {Reference = new VariableReference {Identifier = "a"}};
+            var b = new InvocationExpression {Reference = new VariableReference {Identifier = "b"}};
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
         }
@@ -74,8 +75,8 @@ namespace KaVE.Model.Tests.SSTs.Impl
         [Test]
         public void Equality_DifferentMethod()
         {
-            var a = new Invocation {MethodName = GetMethod("A")};
-            var b = new Invocation {MethodName = GetMethod("B")};
+            var a = new InvocationExpression {MethodName = GetMethod("A")};
+            var b = new InvocationExpression {MethodName = GetMethod("B")};
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
         }
@@ -83,8 +84,8 @@ namespace KaVE.Model.Tests.SSTs.Impl
         [Test]
         public void Equality_DifferentParameters()
         {
-            var a = new Invocation {Parameters = RefExprs("a")};
-            var b = new Invocation {Parameters = RefExprs("b")};
+            var a = new InvocationExpression {Parameters = RefExprs("a")};
+            var b = new InvocationExpression {Parameters = RefExprs("b")};
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
         }
@@ -92,14 +93,14 @@ namespace KaVE.Model.Tests.SSTs.Impl
         [Test]
         public void VisitorIsImplemented()
         {
-            var sut = new Invocation();
+            var sut = new InvocationExpression();
             sut.Accept(23).Verify(v => v.Visit(sut, 23));
         }
 
         [Test]
         public void VisitorWithReturnIsImplemented()
         {
-            var sut = new Invocation();
+            var sut = new InvocationExpression();
             sut.Accept(23).VerifyWithReturn(v => v.Visit(sut, 23));
         }
 

@@ -17,49 +17,24 @@
  *    - Sebastian Proksch
  */
 
-using System.Collections.Generic;
-using KaVE.Model.Collections;
-using KaVE.Model.Names;
-using KaVE.Model.SSTs.Expressions;
-using KaVE.Model.SSTs.Expressions.Assignable;
-using KaVE.Model.SSTs.References;
 using KaVE.Model.SSTs.Statements;
 using KaVE.Model.SSTs.Visitor;
 using KaVE.Utils;
 
-namespace KaVE.Model.SSTs.Impl
+namespace KaVE.Model.SSTs.Impl.Statements
 {
-    public class Invocation : IInvocationExpression, IInvocationStatement
+    public class ExpressionStatement : IExpressionStatement
     {
-        public IVariableReference Reference { get; set; }
-        public IMethodName MethodName { get; set; }
-        public IList<ISimpleExpression> Parameters { get; set; }
-
-        public Invocation()
-        {
-            Parameters = Lists.NewList<ISimpleExpression>();
-        }
-
-        private bool Equals(Invocation other)
-        {
-            return string.Equals(Reference, other.Reference) && Equals(MethodName, other.MethodName) &&
-                   Parameters.Equals(other.Parameters);
-        }
+        public IExpression Expression { get; set; }
 
         public override bool Equals(object obj)
         {
-            return this.Equals(obj, Equals);
+            return this.Equals(obj, other => Equals(Expression, other.Expression));
         }
 
         public override int GetHashCode()
         {
-            unchecked
-            {
-                var hashCode = 11 + (Reference != null ? Reference.GetHashCode() : 0);
-                hashCode = (hashCode*397) ^ (MethodName != null ? MethodName.GetHashCode() : 0);
-                hashCode = (hashCode*397) ^ Parameters.GetHashCode();
-                return hashCode;
-            }
+            return unchecked(12946783 + (Expression != null ? Expression.GetHashCode() : 0));
         }
 
         public void Accept<TContext>(ISSTNodeVisitor<TContext> visitor, TContext context)

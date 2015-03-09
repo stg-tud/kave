@@ -46,14 +46,11 @@ namespace KaVE.Model.Tests.SSTs.Impl.Visitor
             sut.Visit((IPropertyDeclaration) null, null);
             sut.Visit((IVariableDeclaration) null, null);
 
-            // ambiguous entities
-            sut.Visit((ICompletion) null, null);
-            sut.Visit((IInvocation) null, null);
-
             // statements
             sut.Visit((IAssignment) null, null);
             sut.Visit((IBreakStatement) null, null);
             sut.Visit((IContinueStatement) null, null);
+            sut.Visit((IExpressionStatement) null, null);
             sut.Visit((IGotoStatement) null, null);
             sut.Visit((ILabelledStatement) null, null);
             sut.Visit((ILockBlock) null, null);
@@ -73,8 +70,10 @@ namespace KaVE.Model.Tests.SSTs.Impl.Visitor
             sut.Visit((IWhileLoop) null, null);
 
             // Expressions
+            sut.Visit((ICompletionExpression) null, null);
             sut.Visit((IComposedExpression) null, null);
             sut.Visit((IIfElseExpression) null, null);
+            sut.Visit((IInvocationExpression) null, null);
             sut.Visit((ILambdaExpression) null, null);
             sut.Visit((ILoopHeaderBlockExpression) null, null);
             sut.Visit((IConstantValueExpression) null, null);
@@ -103,14 +102,11 @@ namespace KaVE.Model.Tests.SSTs.Impl.Visitor
             Assert.Null(sut.Visit((IPropertyDeclaration) null, 0));
             Assert.Null(sut.Visit((IVariableDeclaration) null, 0));
 
-            // ambiguous entities
-            Assert.Null(sut.Visit((ICompletion) null, 0));
-            Assert.Null(sut.Visit((IInvocation) null, 0));
-
             // statements
             Assert.Null(sut.Visit((IAssignment) null, 0));
             Assert.Null(sut.Visit((IBreakStatement) null, 0));
             Assert.Null(sut.Visit((IContinueStatement) null, 0));
+            Assert.Null(sut.Visit((IExpressionStatement) null, 0));
             Assert.Null(sut.Visit((IGotoStatement) null, 0));
             Assert.Null(sut.Visit((ILabelledStatement) null, 0));
             Assert.Null(sut.Visit((ILockBlock) null, 0));
@@ -130,8 +126,10 @@ namespace KaVE.Model.Tests.SSTs.Impl.Visitor
             Assert.Null(sut.Visit((IWhileLoop) null, 0));
 
             // Expressions
+            Assert.Null(sut.Visit((ICompletionExpression) null, 0));
             Assert.Null(sut.Visit((IComposedExpression) null, 0));
             Assert.Null(sut.Visit((IIfElseExpression) null, 0));
+            Assert.Null(sut.Visit((IInvocationExpression) null, 0));
             Assert.Null(sut.Visit((ILambdaExpression) null, 0));
             Assert.Null(sut.Visit((ILoopHeaderBlockExpression) null, 0));
             Assert.Null(sut.Visit((IConstantValueExpression) null, 0));

@@ -28,6 +28,7 @@ using KaVE.Model.SSTs.Expressions;
 using KaVE.Model.SSTs.Impl;
 using KaVE.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Model.SSTs.Impl.References;
+using KaVE.Model.SSTs.Impl.Statements;
 using KaVE.VsFeedbackGenerator.Analysis.Util;
 using KaVE.VsFeedbackGenerator.Utils.Names;
 using IStatement = KaVE.Model.SSTs.IStatement;
@@ -105,7 +106,8 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
                             .Select<string, ISimpleExpression>(
                                 id => new ReferenceExpression {Reference = new VariableReference {Identifier = id}})
                             .AsArray();
-                    body.Add(SSTUtil.InvocationExpression(callee, methodName, args));
+                    body.Add(
+                        new ExpressionStatement {Expression = SSTUtil.InvocationExpression(callee, methodName, args)});
                 }
             }
         }

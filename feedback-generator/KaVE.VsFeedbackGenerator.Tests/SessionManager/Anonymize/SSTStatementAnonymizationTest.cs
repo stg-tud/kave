@@ -18,7 +18,6 @@
  */
 
 using KaVE.Model.SSTs;
-using KaVE.Model.SSTs.Impl;
 using KaVE.Model.SSTs.Impl.Statements;
 using KaVE.VsFeedbackGenerator.SessionManager.Anonymize;
 using NUnit.Framework;
@@ -42,55 +41,6 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
         }
 
         [Test]
-        public void Invocation()
-        {
-            AssertAnonymization(
-                new Invocation
-                {
-                    Reference = AnyVarReference,
-                    MethodName = Method("a"),
-                    Parameters = {AnyExpression}
-                },
-                new Invocation
-                {
-                    Reference = AnyVarReferenceAnonymized,
-                    MethodName = MethodAnonymized("a"),
-                    Parameters = {AnyExpressionAnonymized}
-                });
-        }
-
-        [Test]
-        public void Invocation_NullSafe()
-        {
-            _sut.Visit(new Invocation(), 0);
-        }
-
-        [Test]
-        public void Completion()
-        {
-            AssertAnonymization(
-                new Completion
-                {
-                    ObjectReference = AnyVarReference,
-                    TypeReference = Type("a"),
-                    Token = "t"
-                },
-                new Completion
-                {
-                    ObjectReference = AnyVarReferenceAnonymized,
-                    TypeReference = TypeAnonymized("a"),
-                    Token = "t" // not anonymized
-                });
-        }
-
-
-        [Test]
-        public void Completion_NullSafe()
-        {
-            _sut.Visit(new Completion(), 0);
-        }
-
-        [Test]
         public void Assignment()
         {
             AssertAnonymization(
@@ -103,6 +53,22 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
                 {
                     Reference = AnyVarReferenceAnonymized,
                     Expression = AnyExpressionAnonymized
+                });
+        }
+
+        [Test]
+        public void Assignment_Lambda()
+        {
+            AssertAnonymization(
+                new Assignment
+                {
+                    Reference = AnyVarReference,
+                    Expression = AnyLambdaExpr
+                },
+                new Assignment
+                {
+                    Reference = AnyVarReferenceAnonymized,
+                    Expression = AnyLambdaExprAnonymized
                 });
         }
 
@@ -134,6 +100,54 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
         public void ContinueStatement_NullSafe()
         {
             _sut.Visit(new ContinueStatement(), 0);
+        }
+
+        [Test]
+        public void ExpressionStatement()
+        {
+            AssertAnonymization(
+                new ExpressionStatement
+                {
+                    Expression = AnyExpression
+                },
+                new ExpressionStatement
+                {
+                    Expression = AnyExpressionAnonymized
+                });
+        }
+
+        [Test]
+        public void ExpressionStatement_Block()
+        {
+            AssertAnonymization(
+                new ExpressionStatement
+                {
+                    Expression = AnyBlockExpr
+                },
+                new ExpressionStatement
+                {
+                    Expression = AnyBlockExprAnonymized
+                });
+        }
+
+        [Test]
+        public void ExpressionStatement_Lambda()
+        {
+            AssertAnonymization(
+                new ExpressionStatement
+                {
+                    Expression = AnyLambdaExpr
+                },
+                new ExpressionStatement
+                {
+                    Expression = AnyLambdaExprAnonymized
+                });
+        }
+
+        [Test]
+        public void ExpressionStatement_NullSafe()
+        {
+            _sut.Visit(new ExpressionStatement(), 0);
         }
 
         [Test]

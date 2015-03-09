@@ -160,7 +160,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
                         args.Select<string, ISimpleExpression>(
                             id => new ReferenceExpression {Reference = new VariableReference {Identifier = id}})
                             .AsArray();
-                    context.Scope.Body.Add(SSTUtil.InvocationExpression(method, basicExpressions));
+                    context.Scope.Body.Add(new ExpressionStatement{Expression = SSTUtil.InvocationExpression(method, basicExpressions)});
                 });
         }
 

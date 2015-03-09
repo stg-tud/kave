@@ -40,14 +40,11 @@ namespace KaVE.Model.SSTs.Impl.Visitor
         public virtual void Visit(IPropertyDeclaration stmt, TContext context) {}
         public virtual void Visit(IVariableDeclaration stmt, TContext context) {}
 
-        // ambiguous
-        public virtual void Visit(ICompletion entity, TContext context) {}
-        public virtual void Visit(IInvocation entity, TContext context) {}
-
         // statements
         public virtual void Visit(IAssignment stmt, TContext context) {}
         public virtual void Visit(IBreakStatement stmt, TContext context) {}
         public virtual void Visit(IContinueStatement stmt, TContext context) {}
+        public virtual void Visit(IExpressionStatement stmt, TContext context) {}
         public virtual void Visit(IGotoStatement stmt, TContext context) {}
         public virtual void Visit(ILabelledStatement stmt, TContext context) {}
         public virtual void Visit(IReturnStatement stmt, TContext context) {}
@@ -67,8 +64,10 @@ namespace KaVE.Model.SSTs.Impl.Visitor
         public virtual void Visit(IWhileLoop block, TContext context) {}
 
         // Expressions
+        public virtual void Visit(ICompletionExpression entity, TContext context) {}
         public virtual void Visit(IComposedExpression expr, TContext context) {}
         public virtual void Visit(IIfElseExpression expr, TContext context) {}
+        public virtual void Visit(IInvocationExpression entity, TContext context) {}
         public virtual void Visit(ILambdaExpression expr, TContext context) {}
         public virtual void Visit(ILoopHeaderBlockExpression expr, TContext context) {}
         public virtual void Visit(IConstantValueExpression expr, TContext context) {}
@@ -121,16 +120,6 @@ namespace KaVE.Model.SSTs.Impl.Visitor
             return null;
         }
 
-        public virtual TReturn Visit(ICompletion entity, TContext context)
-        {
-            return null;
-        }
-
-        public virtual TReturn Visit(IInvocation entity, TContext context)
-        {
-            return null;
-        }
-
         public virtual TReturn Visit(IAssignment stmt, TContext context)
         {
             return null;
@@ -142,6 +131,11 @@ namespace KaVE.Model.SSTs.Impl.Visitor
         }
 
         public virtual TReturn Visit(IContinueStatement stmt, TContext context)
+        {
+            return null;
+        }
+
+        public virtual TReturn Visit(IExpressionStatement stmt, TContext context)
         {
             return null;
         }
@@ -221,12 +215,22 @@ namespace KaVE.Model.SSTs.Impl.Visitor
             return null;
         }
 
+        public virtual TReturn Visit(ICompletionExpression entity, TContext context)
+        {
+            return null;
+        }
+
         public virtual TReturn Visit(IComposedExpression expr, TContext context)
         {
             return null;
         }
 
         public virtual TReturn Visit(IIfElseExpression expr, TContext context)
+        {
+            return null;
+        }
+
+        public virtual TReturn Visit(IInvocationExpression entity, TContext context)
         {
             return null;
         }

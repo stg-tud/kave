@@ -17,7 +17,15 @@
  *    - Sebastian Proksch
  */
 
+using KaVE.Model.Names;
+using KaVE.Model.SSTs.References;
+
 namespace KaVE.Model.SSTs.Expressions.Assignable
 {
-    public interface ICompletionExpression : IAssignableExpression, ICompletion {}
+    public interface ICompletionExpression : IAssignableExpression
+    {
+        ITypeName TypeReference { get; }
+        IVariableReference ObjectReference { get; }
+        string Token { get; }
+    }
 }

@@ -59,6 +59,22 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
         }
 
         [Test]
+        public void DoLoop_BlockCondition()
+        {
+            AssertAnonymization(
+                new DoLoop
+                {
+                    Condition = AnyBlockExpr,
+                    Body = {AnyStatement}
+                },
+                new DoLoop
+                {
+                    Condition = AnyBlockExprAnonymized,
+                    Body = {AnyStatementAnonymized}
+                });
+        }
+
+        [Test]
         public void DoLoop_NullSafe()
         {
             _sut.Visit(new DoLoop(), 0);
@@ -103,6 +119,26 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
                 {
                     Init = {AnyStatementAnonymized},
                     Condition = AnyExpressionAnonymized,
+                    Step = {AnyStatementAnonymized},
+                    Body = {AnyStatementAnonymized}
+                });
+        }
+
+        [Test]
+        public void ForLoop_BlockCondition()
+        {
+            AssertAnonymization(
+                new ForLoop
+                {
+                    Init = {AnyStatement},
+                    Condition = AnyBlockExpr,
+                    Step = {AnyStatement},
+                    Body = {AnyStatement}
+                },
+                new ForLoop
+                {
+                    Init = {AnyStatementAnonymized},
+                    Condition = AnyBlockExprAnonymized,
                     Step = {AnyStatementAnonymized},
                     Body = {AnyStatementAnonymized}
                 });
@@ -307,6 +343,22 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
                 new WhileLoop
                 {
                     Condition = AnyExpressionAnonymized,
+                    Body = {AnyStatementAnonymized}
+                });
+        }
+
+        [Test]
+        public void WhileLoop_BlockCondition()
+        {
+            AssertAnonymization(
+                new WhileLoop
+                {
+                    Condition = AnyBlockExpr,
+                    Body = {AnyStatement}
+                },
+                new WhileLoop
+                {
+                    Condition = AnyBlockExprAnonymized,
                     Body = {AnyStatementAnonymized}
                 });
         }

@@ -22,7 +22,11 @@ using KaVE.Model.Names.CSharp;
 using KaVE.Model.SSTs;
 using KaVE.Model.SSTs.Declarations;
 using KaVE.Model.SSTs.Expressions;
+using KaVE.Model.SSTs.Expressions.Assignable;
+using KaVE.Model.SSTs.Expressions.LoopHeader;
 using KaVE.Model.SSTs.Impl.Declarations;
+using KaVE.Model.SSTs.Impl.Expressions.Assignable;
+using KaVE.Model.SSTs.Impl.Expressions.LoopHeader;
 using KaVE.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Model.SSTs.Impl.References;
 using KaVE.Model.SSTs.Impl.Statements;
@@ -46,6 +50,11 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
         protected IVariableDeclaration AnyVarDeclaration { get; private set; }
         protected IVariableDeclaration AnyVarDeclarationAnonymized { get; private set; }
 
+        protected ILoopHeaderBlockExpression AnyBlockExpr { get; private set; }
+        protected ILoopHeaderBlockExpression AnyBlockExprAnonymized { get; private set; }
+        protected ILambdaExpression AnyLambdaExpr { get; private set; }
+        protected ILambdaExpression AnyLambdaExprAnonymized { get; private set; }
+
         protected SSTStatementAnonymization StatementAnonymizationMock { get; private set; }
         protected SSTExpressionAnonymization ExpressionAnonymizationMock { get; private set; }
         protected SSTReferenceAnonymization ReferenceAnonymizationMock { get; private set; }
@@ -61,6 +70,26 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
             AnyExpressionAnonymized = new ReferenceExpression {Reference = AnyVarReferenceAnonymized};
             AnyStatement = new ThrowStatement {Exception = Type("abc")};
             AnyStatementAnonymized = new ThrowStatement {Exception = TypeAnonymized("abc")};
+
+            AnyBlockExpr = new LoopHeaderBlockExpression
+            {
+                Body = {AnyStatement}
+            };
+            AnyBlockExprAnonymized = new LoopHeaderBlockExpression
+            {
+                Body = {AnyStatementAnonymized}
+            };
+
+            AnyLambdaExpr = new LambdaExpression
+            {
+                Parameters = {AnyVarDeclaration},
+                Body = {AnyStatement}
+            };
+            AnyLambdaExprAnonymized = new LambdaExpression
+            {
+                Parameters = {AnyVarDeclarationAnonymized},
+                Body = {AnyStatementAnonymized}
+            };
 
             ReferenceAnonymizationMock = new SSTReferenceAnonymization();
             ExpressionAnonymizationMock = new SSTExpressionAnonymization(ReferenceAnonymizationMock);

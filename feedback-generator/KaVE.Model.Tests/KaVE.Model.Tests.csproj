@@ -98,9 +98,9 @@
     <Compile Include="SSTs\Impl\Expressions\LoopHeader\LoopHeaderBlockExpressionTest.cs" />
     <Compile Include="SSTs\Impl\Expressions\Assignable\ComposedExpressionTest.cs" />
     <Compile Include="SSTs\Impl\Expressions\Simple\ConstantValueExpressionTest.cs" />
-    <Compile Include="SSTs\Impl\CompletionTest.cs" />
+    <Compile Include="SSTs\Impl\Expressions\Assignable\CompletionExpressionTest.cs" />
     <Compile Include="SSTs\Impl\Expressions\Assignable\IfElseExpressionTest.cs" />
-    <Compile Include="SSTs\Impl\InvocationTest.cs" />
+    <Compile Include="SSTs\Impl\Expressions\Assignable\InvocationExpressionTest.cs" />
     <Compile Include="SSTs\Impl\Expressions\Assignable\LambdaExpressionTest.cs" />
     <Compile Include="SSTs\Impl\Declarations\MethodDeclarationTest.cs" />
     <Compile Include="SSTs\Impl\Expressions\Simple\NullExpressionTest.cs" />
@@ -116,6 +116,7 @@
     <Compile Include="SSTs\Impl\Statements\AssignmentTest.cs" />
     <Compile Include="SSTs\Impl\Statements\BreakStatementTest.cs" />
     <Compile Include="SSTs\Impl\Statements\ContinueStatementTest.cs" />
+    <Compile Include="SSTs\Impl\Statements\ExpressionStatementTest.cs" />
     <Compile Include="SSTs\Impl\Statements\GotoStatementTest.cs" />
     <Compile Include="SSTs\Impl\Statements\LabelledStatementTest.cs" />
     <Compile Include="SSTs\Impl\Blocks\LockBlockTest.cs" />

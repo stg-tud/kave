@@ -25,14 +25,16 @@ namespace KaVE.Model.SSTs.Impl.Expressions.Simple
 {
     public class ConstantValueExpression : IConstantValueExpression
     {
+        public string Value { get; set; }
+
         public override bool Equals(object obj)
         {
-            return this.Equals(obj, other => true);
+            return this.Equals(obj, other => string.Equals(Value, other.Value));
         }
 
         public override int GetHashCode()
         {
-            return 102;
+            return 102 + (Value != null ? Value.GetHashCode() : 0);
         }
 
         public void Accept<TContext>(ISSTNodeVisitor<TContext> visitor, TContext context)

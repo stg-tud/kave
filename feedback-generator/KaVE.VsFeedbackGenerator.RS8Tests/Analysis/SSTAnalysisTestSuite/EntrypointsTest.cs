@@ -53,7 +53,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 
             var mA = NewMethodDeclaration(Fix.Void, "A");
             mA.Body.Add(
-                SSTUtil.InvocationExpression(
+                SSTUtil.InvocationStatement(
                     "this",
                     MethodName.Get("[System.Void, mscorlib, 4.0.0.0] [N.C, TestProject].B()"),
                     new ISimpleExpression[] {}));

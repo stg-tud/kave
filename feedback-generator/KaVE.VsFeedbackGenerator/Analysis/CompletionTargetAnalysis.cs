@@ -18,13 +18,14 @@
  */
 
 using JetBrains.ReSharper.Psi.CSharp.Tree;
+using JetBrains.ReSharper.Psi.Resolve;
 using JetBrains.ReSharper.Psi.Tree;
 using KaVE.Model.Names;
-using KaVE.Model.SSTs;
+using KaVE.Model.SSTs.Expressions.Assignable;
 using KaVE.Model.SSTs.Impl;
+using KaVE.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Utils.Assertion;
 using KaVE.VsFeedbackGenerator.Utils.Names;
-using IReference = JetBrains.ReSharper.Psi.Resolve.IReference;
 
 namespace KaVE.VsFeedbackGenerator.Analysis
 {
@@ -35,7 +36,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis
             public ICSharpTreeNode Parent { get; set; }
             public ICSharpTreeNode Predecessor { get; set; }
             public ICSharpTreeNode Expression { get; set; }
-            public ICompletion Completion { get; set; }
+            public ICompletionExpression Completion { get; set; }
         }
 
         public TriggerPointMarker Analyze(ITreeNode targetNode)
@@ -82,7 +83,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis
             public override void VisitMethodDeclaration(IMethodDeclaration methodDeclarationParam)
             {
                 Result.Parent = methodDeclarationParam;
-                Result.Completion = new Completion();
+                Result.Completion = new CompletionExpression();
             }
 
             public override void VisitReferenceExpression(IReferenceExpression refExpr)
@@ -98,7 +99,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis
                     {
                         var refName = qRrefExpr.Reference.GetName();
                         var token = refExpr.Reference.GetName();
-                        Result.Completion = new Completion
+                        Result.Completion = new CompletionExpression
                         {
                             ObjectReference = SSTUtil.VariableReference(refName),
                             Token = token
@@ -107,7 +108,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis
                     else
                     {
                         var token = refExpr.Reference.GetName();
-                        Result.Completion = new Completion {Token = token};
+                        Result.Completion = new CompletionExpression {Token = token};
                     }
                 }
             }

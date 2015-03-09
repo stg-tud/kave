@@ -17,15 +17,10 @@
  *    - Sebastian Proksch
  */
 
-using KaVE.Model.Names;
-using KaVE.Model.SSTs.References;
-
-namespace KaVE.Model.SSTs
+namespace KaVE.Model.SSTs.Statements
 {
-    public interface ICompletion
+    public interface IExpressionStatement : IStatement
     {
-        ITypeName TypeReference { get; }
-        IVariableReference ObjectReference { get; }
-        string Token { get; }
+        IExpression Expression { get; }
     }
 }
