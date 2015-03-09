@@ -18,6 +18,7 @@
  */
 
 using KaVE.Model.Names;
+using KaVE.Model.Names.CSharp;
 using KaVE.Model.SSTs.Declarations;
 using KaVE.Model.SSTs.Visitor;
 using KaVE.Utils;
@@ -27,6 +28,11 @@ namespace KaVE.Model.SSTs.Impl.Declarations
     public class DelegateDeclaration : IDelegateDeclaration
     {
         public ITypeName Name { get; set; }
+
+        public DelegateDeclaration()
+        {
+            Name = TypeName.UnknownName;
+        }
 
         private bool Equals(DelegateDeclaration other)
         {

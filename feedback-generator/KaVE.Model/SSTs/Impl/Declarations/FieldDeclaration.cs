@@ -18,6 +18,7 @@
  */
 
 using KaVE.Model.Names;
+using KaVE.Model.Names.CSharp;
 using KaVE.Model.SSTs.Declarations;
 using KaVE.Model.SSTs.Visitor;
 using KaVE.Utils;
@@ -28,6 +29,10 @@ namespace KaVE.Model.SSTs.Impl.Declarations
     {
         public IFieldName Name { get; set; }
 
+        public FieldDeclaration()
+        {
+            Name = FieldName.UnknownName;
+        }
 
         private bool Equals(FieldDeclaration other)
         {
@@ -41,7 +46,7 @@ namespace KaVE.Model.SSTs.Impl.Declarations
 
         public override int GetHashCode()
         {
-            return unchecked(21 + (Name != null ? Name.GetHashCode() : 0));
+            return unchecked(21 + Name.GetHashCode());
         }
 
         public void Accept<TContext>(ISSTNodeVisitor<TContext> visitor, TContext context)

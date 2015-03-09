@@ -17,6 +17,7 @@
  *    - Sebastian Proksch
  */
 
+using KaVE.Model.Names;
 using KaVE.Model.Names.CSharp;
 using KaVE.Model.SSTs.Impl.Declarations;
 using NUnit.Framework;
@@ -29,7 +30,7 @@ namespace KaVE.Model.Tests.SSTs.Impl.Declarations
         public void DefaultValues()
         {
             var sut = new DelegateDeclaration();
-            Assert.Null(sut.Name);
+            Assert.AreEqual(TypeName.UnknownName, sut.Name);
             Assert.AreNotEqual(0, sut.GetHashCode());
             Assert.AreNotEqual(1, sut.GetHashCode());
         }
@@ -37,8 +38,8 @@ namespace KaVE.Model.Tests.SSTs.Impl.Declarations
         [Test]
         public void SettingValues()
         {
-            var sut = new DelegateDeclaration {Name = TypeName.UnknownName};
-            Assert.AreEqual(TypeName.UnknownName, sut.Name);
+            var sut = new DelegateDeclaration {Name = SomeType()};
+            Assert.AreEqual(SomeType(), sut.Name);
         }
 
         [Test]
@@ -53,8 +54,8 @@ namespace KaVE.Model.Tests.SSTs.Impl.Declarations
         [Test]
         public void Equality_ReallyEquals()
         {
-            var a = new DelegateDeclaration {Name = TypeName.UnknownName};
-            var b = new DelegateDeclaration {Name = TypeName.UnknownName};
+            var a = new DelegateDeclaration {Name = SomeType()};
+            var b = new DelegateDeclaration {Name = SomeType()};
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
         }
@@ -62,7 +63,7 @@ namespace KaVE.Model.Tests.SSTs.Impl.Declarations
         [Test]
         public void Equality_DifferentType()
         {
-            var a = new DelegateDeclaration {Name = TypeName.UnknownName};
+            var a = new DelegateDeclaration {Name = SomeType()};
             var b = new DelegateDeclaration();
 
             Assert.AreNotEqual(a, b);
@@ -81,6 +82,11 @@ namespace KaVE.Model.Tests.SSTs.Impl.Declarations
         {
             var sut = new DelegateDeclaration();
             sut.Accept(23).VerifyWithReturn(v => v.Visit(sut, 23));
+        }
+
+        private static ITypeName SomeType()
+        {
+            return TypeName.Get("SoemType,P");
         }
     }
 }

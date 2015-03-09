@@ -18,6 +18,7 @@
  */
 
 using System.Collections.Generic;
+using KaVE.JetBrains.Annotations;
 using KaVE.Model.Names;
 using KaVE.Model.SSTs.Declarations;
 using KaVE.Model.SSTs.Visitor;
@@ -26,14 +27,28 @@ namespace KaVE.Model.SSTs
 {
     public interface ISST : ISSTNode
     {
+        [NotNull]
         ITypeName EnclosingType { get; }
+
+        [NotNull]
         ISet<IFieldDeclaration> Fields { get; }
+
+        [NotNull]
         ISet<IPropertyDeclaration> Properties { get; }
+
+        [NotNull]
         ISet<IMethodDeclaration> Methods { get; }
+
+        [NotNull]
         ISet<IEventDeclaration> Events { get; }
+
+        [NotNull]
         ISet<IDelegateDeclaration> Delegates { get; }
 
+        [NotNull]
         ISet<IMethodDeclaration> EntryPoints { get; }
+
+        [NotNull]
         ISet<IMethodDeclaration> NonEntryPoints { get; }
     }
 }

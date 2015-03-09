@@ -17,6 +17,7 @@
  *    - Sebastian Proksch
  */
 
+using KaVE.Model.Names;
 using KaVE.Model.Names.CSharp;
 using KaVE.Model.SSTs.Impl.Declarations;
 using NUnit.Framework;
@@ -25,11 +26,16 @@ namespace KaVE.Model.Tests.SSTs.Impl.Declarations
 {
     internal class FieldDeclarationTest
     {
+        private static IFieldName SomeField
+        {
+            get { return FieldName.Get("[T1,P1] [T2,P2].Field"); }
+        }
+
         [Test]
         public void DefaultValues()
         {
             var sut = new FieldDeclaration();
-            Assert.Null(sut.Name);
+            Assert.AreEqual(FieldName.UnknownName, sut.Name);
             Assert.AreNotEqual(0, sut.GetHashCode());
             Assert.AreNotEqual(1, sut.GetHashCode());
         }
@@ -37,8 +43,8 @@ namespace KaVE.Model.Tests.SSTs.Impl.Declarations
         [Test]
         public void SettingValues()
         {
-            var sut = new FieldDeclaration {Name = FieldName.UnknownName};
-            Assert.AreEqual(FieldName.UnknownName, sut.Name);
+            var sut = new FieldDeclaration {Name = SomeField};
+            Assert.AreEqual(SomeField, sut.Name);
         }
 
         [Test]
@@ -53,8 +59,8 @@ namespace KaVE.Model.Tests.SSTs.Impl.Declarations
         [Test]
         public void Equality_ReallyEquals()
         {
-            var a = new FieldDeclaration {Name = FieldName.UnknownName};
-            var b = new FieldDeclaration {Name = FieldName.UnknownName};
+            var a = new FieldDeclaration {Name = SomeField};
+            var b = new FieldDeclaration {Name = SomeField};
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
         }
@@ -62,7 +68,7 @@ namespace KaVE.Model.Tests.SSTs.Impl.Declarations
         [Test]
         public void Equality_DifferentType()
         {
-            var a = new FieldDeclaration {Name = FieldName.UnknownName};
+            var a = new FieldDeclaration {Name = SomeField};
             var b = new FieldDeclaration();
 
             Assert.AreNotEqual(a, b);

@@ -18,6 +18,7 @@
  */
 
 using KaVE.Model.Names;
+using KaVE.Model.Names.CSharp;
 using KaVE.Model.SSTs.Declarations;
 using KaVE.Model.SSTs.Visitor;
 using KaVE.Utils;
@@ -28,6 +29,10 @@ namespace KaVE.Model.SSTs.Impl.Declarations
     {
         public IEventName Name { get; set; }
 
+        public EventDeclaration()
+        {
+            Name = EventName.UnknownName;
+        }
 
         private bool Equals(EventDeclaration other)
         {
@@ -41,7 +46,7 @@ namespace KaVE.Model.SSTs.Impl.Declarations
 
         public override int GetHashCode()
         {
-            return unchecked (22 + (Name != null ? Name.GetHashCode() : 0));
+            return unchecked (22 + Name.GetHashCode());
         }
 
         public void Accept<TContext>(ISSTNodeVisitor<TContext> visitor, TContext context)

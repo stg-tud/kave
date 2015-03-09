@@ -156,7 +156,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.Merging
             var mergedCompletionEvent = (CompletionEvent)mergedEvent;
             // could be taken from either event, as both are equal
             Assert.AreEqual(_event.IDESessionUUID, mergedCompletionEvent.IDESessionUUID);
-            Assert.AreEqual(_event.Context, mergedCompletionEvent.Context);
+            Assert.AreEqual(_event.CompletionContext, mergedCompletionEvent.CompletionContext);
             Assert.AreEqual(_event.ActiveWindow, mergedCompletionEvent.ActiveWindow);
             Assert.AreEqual(_event.ActiveDocument, mergedCompletionEvent.ActiveDocument);
             // has to be taken from earlier event

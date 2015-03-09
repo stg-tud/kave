@@ -53,7 +53,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
                         SelectedAfter = TimeSpan.FromSeconds(2)
                     }
                 },
-                Context = new Context
+                CompletionContext = new Context
                 {
                     TypeShape = new TypeShape
                     {
@@ -164,7 +164,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
 
             var actual = WhenEventIsAnonymized();
 
-            Assert.AreEqual(expected, actual.Context.TypeShape);
+            Assert.AreEqual(expected, actual.CompletionContext.TypeShape);
         }
 
         // TODO @Seb: Add tests for entryPointToGroum when groum implementation is done

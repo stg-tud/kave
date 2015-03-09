@@ -20,6 +20,7 @@
 using KaVE.Model.Names.CSharp;
 using KaVE.Model.SSTs.Impl;
 using KaVE.Model.SSTs.Impl.Declarations;
+using KaVE.Model.SSTs.Impl.References;
 using NUnit.Framework;
 
 namespace KaVE.Model.Tests.SSTs.Impl.Declarations
@@ -30,8 +31,8 @@ namespace KaVE.Model.Tests.SSTs.Impl.Declarations
         public void DefaultValues()
         {
             var sut = new VariableDeclaration();
-            Assert.Null(sut.Reference);
-            Assert.Null(sut.Type);
+            Assert.AreEqual(new VariableReference(), sut.Reference);
+            Assert.AreEqual(TypeName.UnknownName, sut.Type);
             Assert.AreNotEqual(0, sut.GetHashCode());
             Assert.AreNotEqual(1, sut.GetHashCode());
         }
@@ -61,8 +62,8 @@ namespace KaVE.Model.Tests.SSTs.Impl.Declarations
         [Test]
         public void Equality_ReallyEquals()
         {
-            var a = new VariableDeclaration {Reference = SSTUtil.VariableReference("a"), Type = TypeName.UnknownName};
-            var b = new VariableDeclaration {Reference = SSTUtil.VariableReference("a"), Type = TypeName.UnknownName};
+            var a = new VariableDeclaration {Reference = SSTUtil.VariableReference("a"), Type = TypeName.Get("T1,P1")};
+            var b = new VariableDeclaration {Reference = SSTUtil.VariableReference("a"), Type = TypeName.Get("T1,P1")};
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
         }
@@ -80,7 +81,7 @@ namespace KaVE.Model.Tests.SSTs.Impl.Declarations
         [Test]
         public void Equality_DifferentType()
         {
-            var a = new VariableDeclaration {Type = TypeName.UnknownName};
+            var a = new VariableDeclaration {Type = TypeName.Get("T1,P1")};
             var b = new VariableDeclaration();
 
             Assert.AreNotEqual(a, b);

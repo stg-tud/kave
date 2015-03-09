@@ -19,6 +19,7 @@
 
 using System.Linq;
 using KaVE.Model.Collections;
+using KaVE.Model.Names.CSharp;
 using KaVE.Model.SSTs;
 using KaVE.Model.SSTs.Declarations;
 using KaVE.Model.SSTs.Impl;
@@ -55,24 +56,32 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
 
         public IDelegateDeclaration Anonymize(IDelegateDeclaration d)
         {
-            return new DelegateDeclaration {Name = d.Name.ToAnonymousName()};
+            var defaultName = TypeName.UnknownName;
+            var isDefaultName = defaultName.Equals(d.Name);
+            return new DelegateDeclaration {Name = isDefaultName ? defaultName : d.Name.ToAnonymousName()};
         }
 
         public IEventDeclaration Anonymize(IEventDeclaration d)
         {
-            return new EventDeclaration {Name = d.Name.ToAnonymousName()};
+            var defaultName = EventName.UnknownName;
+            var isDefaultName = defaultName.Equals(d.Name);
+            return new EventDeclaration {Name = isDefaultName ? defaultName : d.Name.ToAnonymousName()};
         }
 
         public IFieldDeclaration Anonymize(IFieldDeclaration d)
         {
-            return new FieldDeclaration {Name = d.Name.ToAnonymousName()};
+            var defaultName = FieldName.UnknownName;
+            var isDefaultName = defaultName.Equals(d.Name);
+            return new FieldDeclaration {Name = isDefaultName ? defaultName : d.Name.ToAnonymousName()};
         }
 
         public IMethodDeclaration Anonymize(IMethodDeclaration d)
         {
+            var defaultName = MethodName.UnknownName;
+            var isDefaultName = defaultName.Equals(d.Name);
             return new MethodDeclaration
             {
-                Name = d.Name.ToAnonymousName(),
+                Name = isDefaultName ? defaultName : d.Name.ToAnonymousName(),
                 IsEntryPoint = d.IsEntryPoint,
                 Body = _statementAnon.Anonymize(d.Body)
             };
@@ -80,9 +89,11 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
 
         public IPropertyDeclaration Anonymize(IPropertyDeclaration d)
         {
+            var defaultName = PropertyName.UnknownName;
+            var isDefaultName = defaultName.Equals(d.Name);
             return new PropertyDeclaration
             {
-                Name = d.Name.ToAnonymousName(),
+                Name = isDefaultName ? defaultName : d.Name.ToAnonymousName(),
                 Get = _statementAnon.Anonymize(d.Get),
                 Set = _statementAnon.Anonymize(d.Set)
             };

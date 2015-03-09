@@ -25,6 +25,7 @@ namespace KaVE.Model.SSTs.Declarations
 {
     public interface IPropertyDeclaration : IMemberDeclaration
     {
+        [NotNull]
         IPropertyName Name { get; }
 
         [NotNull]

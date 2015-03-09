@@ -20,6 +20,7 @@
 using System.Collections.Generic;
 using KaVE.Model.Collections;
 using KaVE.Model.Names;
+using KaVE.Model.Names.CSharp;
 using KaVE.Model.SSTs.Declarations;
 using KaVE.Model.SSTs.Visitor;
 using KaVE.Utils;
@@ -34,6 +35,7 @@ namespace KaVE.Model.SSTs.Impl.Declarations
 
         public PropertyDeclaration()
         {
+            Name = PropertyName.UnknownName;
             Get = Lists.NewList<IStatement>();
             Set = Lists.NewList<IStatement>();
         }
@@ -54,7 +56,7 @@ namespace KaVE.Model.SSTs.Impl.Declarations
             {
                 var hashCode = Get.GetHashCode();
                 hashCode = (hashCode*397) ^ Set.GetHashCode();
-                hashCode = (hashCode*397) ^ (Name != null ? Name.GetHashCode() : 0);
+                hashCode = (hashCode*397) ^ Name.GetHashCode();
                 return hashCode;
             }
         }

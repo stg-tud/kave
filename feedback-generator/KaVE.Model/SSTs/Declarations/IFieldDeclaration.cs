@@ -17,12 +17,14 @@
  *    - Sebastian Proksch
  */
 
+using KaVE.JetBrains.Annotations;
 using KaVE.Model.Names;
 
 namespace KaVE.Model.SSTs.Declarations
 {
     public interface IFieldDeclaration : IMemberDeclaration
     {
+        [NotNull]
         IFieldName Name { get; }
     }
 }

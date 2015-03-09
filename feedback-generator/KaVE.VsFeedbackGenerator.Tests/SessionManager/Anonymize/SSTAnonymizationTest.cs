@@ -232,5 +232,45 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
 
             Assert.AreEqual(expected, actual);
         }
+
+        [Test]
+        public void DefaultName_Delegates()
+        {
+            var actual = _sut.Anonymize(new DelegateDeclaration());
+            var expected = new DelegateDeclaration();
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void DefaultName_Events()
+        {
+            var actual = _sut.Anonymize(new EventDeclaration());
+            var expected = new EventDeclaration();
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void DefaultName_Fields()
+        {
+            var actual = _sut.Anonymize(new FieldDeclaration());
+            var expected = new FieldDeclaration();
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void DefaultName_Methods()
+        {
+            var actual = _sut.Anonymize(new MethodDeclaration());
+            var expected = new MethodDeclaration();
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void DefaultName_Properties()
+        {
+            var actual = _sut.Anonymize(new PropertyDeclaration());
+            var expected = new PropertyDeclaration();
+            Assert.AreEqual(expected, actual);
+        }
     }
 }

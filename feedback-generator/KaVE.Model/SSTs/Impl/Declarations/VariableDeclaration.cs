@@ -18,7 +18,9 @@
  */
 
 using KaVE.Model.Names;
+using KaVE.Model.Names.CSharp;
 using KaVE.Model.SSTs.Declarations;
+using KaVE.Model.SSTs.Impl.References;
 using KaVE.Model.SSTs.References;
 using KaVE.Model.SSTs.Visitor;
 using KaVE.Utils;
@@ -29,6 +31,12 @@ namespace KaVE.Model.SSTs.Impl.Declarations
     {
         public IVariableReference Reference { get; set; }
         public ITypeName Type { get; set; }
+
+        public VariableDeclaration()
+        {
+            Reference = new VariableReference();
+            Type = TypeName.UnknownName;
+        }
 
         public override bool Equals(object obj)
         {

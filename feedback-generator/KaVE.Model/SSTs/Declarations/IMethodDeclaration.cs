@@ -25,7 +25,9 @@ namespace KaVE.Model.SSTs.Declarations
 {
     public interface IMethodDeclaration : IMemberDeclaration
     {
+        [NotNull]
         IMethodName Name { get; }
+
         bool IsEntryPoint { get; }
 
         [NotNull]

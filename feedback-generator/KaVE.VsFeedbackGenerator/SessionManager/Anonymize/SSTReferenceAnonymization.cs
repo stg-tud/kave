@@ -68,7 +68,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
         {
             return new VariableReference
             {
-                Identifier = aref.Identifier == null ? null : aref.Identifier.ToHash()
+                Identifier = string.Equals("", aref.Identifier) ? "" : aref.Identifier.ToHash()
             };
         }
 

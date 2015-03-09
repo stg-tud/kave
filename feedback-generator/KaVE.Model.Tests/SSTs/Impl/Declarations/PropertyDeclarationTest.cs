@@ -18,6 +18,7 @@
  */
 
 using KaVE.Model.Collections;
+using KaVE.Model.Names;
 using KaVE.Model.Names.CSharp;
 using KaVE.Model.SSTs;
 using KaVE.Model.SSTs.Impl.Declarations;
@@ -28,15 +29,18 @@ namespace KaVE.Model.Tests.SSTs.Impl.Declarations
 {
     internal class PropertyDeclarationTest
     {
+        private static IPropertyName SomeProperty
+        {
+            get { return PropertyName.Get("[T1,P1] [T2,P2].Property"); }
+        }
+
         [Test]
         public void DefaultValues()
         {
             var sut = new PropertyDeclaration();
-            Assert.Null(sut.Name);
-            Assert.NotNull(sut.Get);
-            Assert.AreEqual(0, sut.Get.Count);
-            Assert.NotNull(sut.Set);
-            Assert.AreEqual(0, sut.Set.Count);
+            Assert.AreEqual(PropertyName.UnknownName, sut.Name);
+            Assert.AreEqual(Lists.NewList<IStatement>(), sut.Get);
+            Assert.AreEqual(Lists.NewList<IStatement>(), sut.Set);
             Assert.AreNotEqual(0, sut.GetHashCode());
             Assert.AreNotEqual(1, sut.GetHashCode());
         }
@@ -44,17 +48,17 @@ namespace KaVE.Model.Tests.SSTs.Impl.Declarations
         [Test]
         public void SettingValues()
         {
-            var sut = new PropertyDeclaration {Name = PropertyName.UnknownName};
-            sut.Get.Add(new ReturnStatement());
-            sut.Set.Add(new ContinueStatement());
+            var sut = new PropertyDeclaration
+            {
+                Name = SomeProperty,
+                Get = {new ReturnStatement()},
+                Set = {new ContinueStatement()}
+            };
 
-            var expectedGet = Lists.NewList<IStatement>();
-            expectedGet.Add(new ReturnStatement());
+            var expectedGet = Lists.NewList(new ReturnStatement());
+            var expectedSet = Lists.NewList(new ContinueStatement());
 
-            var expectedSet = Lists.NewList<IStatement>();
-            expectedSet.Add(new ContinueStatement());
-
-            Assert.AreEqual(PropertyName.UnknownName, sut.Name);
+            Assert.AreEqual(SomeProperty, sut.Name);
             Assert.AreEqual(expectedGet, sut.Get);
             Assert.AreEqual(expectedSet, sut.Set);
         }
@@ -71,8 +75,8 @@ namespace KaVE.Model.Tests.SSTs.Impl.Declarations
         [Test]
         public void Equality_ReallyEquals()
         {
-            var a = new PropertyDeclaration {Name = PropertyName.UnknownName};
-            var b = new PropertyDeclaration {Name = PropertyName.UnknownName};
+            var a = new PropertyDeclaration {Name = SomeProperty};
+            var b = new PropertyDeclaration {Name = SomeProperty};
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
         }
@@ -80,7 +84,7 @@ namespace KaVE.Model.Tests.SSTs.Impl.Declarations
         [Test]
         public void Equality_DifferentType()
         {
-            var a = new PropertyDeclaration {Name = PropertyName.UnknownName};
+            var a = new PropertyDeclaration {Name = SomeProperty};
             var b = new PropertyDeclaration();
 
             Assert.AreNotEqual(a, b);
@@ -90,10 +94,8 @@ namespace KaVE.Model.Tests.SSTs.Impl.Declarations
         [Test]
         public void Equality_DifferentGet()
         {
-            var a = new PropertyDeclaration();
+            var a = new PropertyDeclaration {Get = {new ReturnStatement()}};
             var b = new PropertyDeclaration();
-
-            a.Get.Add(new ReturnStatement());
 
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
@@ -102,10 +104,8 @@ namespace KaVE.Model.Tests.SSTs.Impl.Declarations
         [Test]
         public void Equality_DifferentSet()
         {
-            var a = new PropertyDeclaration();
+            var a = new PropertyDeclaration {Set = {new ReturnStatement()}};
             var b = new PropertyDeclaration();
-
-            a.Set.Add(new ReturnStatement());
 
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());

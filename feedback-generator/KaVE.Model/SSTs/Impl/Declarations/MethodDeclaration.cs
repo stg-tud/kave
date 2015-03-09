@@ -20,6 +20,7 @@
 using System.Collections.Generic;
 using KaVE.Model.Collections;
 using KaVE.Model.Names;
+using KaVE.Model.Names.CSharp;
 using KaVE.Model.SSTs.Declarations;
 using KaVE.Model.SSTs.Visitor;
 using KaVE.Utils;
@@ -34,6 +35,7 @@ namespace KaVE.Model.SSTs.Impl.Declarations
 
         public MethodDeclaration()
         {
+            Name = MethodName.UnknownName;
             Body = Lists.NewList<IStatement>();
         }
 
@@ -52,7 +54,7 @@ namespace KaVE.Model.SSTs.Impl.Declarations
             unchecked
             {
                 var hashCode = Body.GetHashCode();
-                hashCode = (hashCode*397) ^ (Name != null ? Name.GetHashCode() : 0);
+                hashCode = (hashCode*397) ^ Name.GetHashCode();
                 hashCode = (hashCode*397) ^ IsEntryPoint.GetHashCode();
                 return hashCode;
             }

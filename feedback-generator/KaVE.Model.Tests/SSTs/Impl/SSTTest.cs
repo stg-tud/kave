@@ -19,6 +19,7 @@
 
 using KaVE.Model.Collections;
 using KaVE.Model.Names.CSharp;
+using KaVE.Model.SSTs.Declarations;
 using KaVE.Model.SSTs.Impl;
 using KaVE.Model.SSTs.Impl.Declarations;
 using NUnit.Framework;
@@ -32,14 +33,14 @@ namespace KaVE.Model.Tests.SSTs.Impl
         {
             var sut = new SST();
 
-            Assert.NotNull(sut.Delegates);
-            Assert.NotNull(sut.Events);
-            Assert.NotNull(sut.Fields);
-            Assert.NotNull(sut.Methods);
-            Assert.NotNull(sut.Properties);
-            Assert.NotNull(sut.EntryPoints);
-            Assert.NotNull(sut.NonEntryPoints);
-            Assert.IsNull(sut.EnclosingType);
+            Assert.AreEqual(TypeName.UnknownName, sut.EnclosingType);
+            Assert.AreEqual(Lists.NewList<IDelegateDeclaration>(), sut.Delegates);
+            Assert.AreEqual(Lists.NewList<IEventDeclaration>(), sut.Events);
+            Assert.AreEqual(Lists.NewList<IFieldDeclaration>(), sut.Fields);
+            Assert.AreEqual(Lists.NewList<IMethodDeclaration>(), sut.Methods);
+            Assert.AreEqual(Lists.NewList<IPropertyDeclaration>(), sut.Properties);
+            Assert.AreEqual(Lists.NewList<IMethodDeclaration>(), sut.EntryPoints);
+            Assert.AreEqual(Lists.NewList<IMethodDeclaration>(), sut.NonEntryPoints);
 
             Assert.AreNotEqual(0, sut.GetHashCode());
             Assert.AreNotEqual(1, sut.GetHashCode());
@@ -50,7 +51,7 @@ namespace KaVE.Model.Tests.SSTs.Impl
         {
             var sut = new SST
             {
-                EnclosingType = TypeName.UnknownName,
+                EnclosingType = TypeName.Get("T1, P1"),
             };
             sut.Delegates.Add(new DelegateDeclaration());
             sut.Events.Add(new EventDeclaration());
@@ -58,7 +59,7 @@ namespace KaVE.Model.Tests.SSTs.Impl
             sut.Methods.Add(new MethodDeclaration());
             sut.Properties.Add(new PropertyDeclaration());
 
-            Assert.AreEqual(TypeName.UnknownName, sut.EnclosingType);
+            Assert.AreEqual(TypeName.Get("T1, P1"), sut.EnclosingType);
             Assert.AreEqual(Lists.NewList(new DelegateDeclaration()), sut.Delegates);
             Assert.AreEqual(Lists.NewList(new EventDeclaration()), sut.Events);
             Assert.AreEqual(Lists.NewList(new FieldDeclaration()), sut.Fields);
@@ -80,8 +81,8 @@ namespace KaVE.Model.Tests.SSTs.Impl
         {
             var a = new SST();
             var b = new SST();
-            a.EnclosingType = TypeName.UnknownName;
-            b.EnclosingType = TypeName.UnknownName;
+            a.EnclosingType = TypeName.Get("T1, P1");
+            b.EnclosingType = TypeName.Get("T1, P1");
             a.Delegates.Add(new DelegateDeclaration());
             b.Delegates.Add(new DelegateDeclaration());
             a.Events.Add(new EventDeclaration());
@@ -100,7 +101,7 @@ namespace KaVE.Model.Tests.SSTs.Impl
         [Test]
         public void Equality_DifferentType()
         {
-            var a = new SST {EnclosingType = TypeName.UnknownName};
+            var a = new SST {EnclosingType = TypeName.Get("T1, P1")};
             var b = new SST();
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());

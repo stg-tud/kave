@@ -20,6 +20,7 @@
 using KaVE.Model.Collections;
 using KaVE.Model.Names;
 using KaVE.Model.Names.CSharp;
+using KaVE.Model.SSTs.Declarations;
 using KaVE.Model.SSTs.Impl.Declarations;
 using KaVE.Model.SSTs.Impl.Statements;
 using NUnit.Framework;
@@ -28,17 +29,16 @@ namespace KaVE.Model.Tests.SSTs.Impl.Declarations
 {
     internal class MethodDeclarationTest
     {
-        private readonly IMethodName _mA = MethodName.Get("MA");
-        private readonly IMethodName _mB = MethodName.Get("MB");
+        private readonly IMethodName _mA = MethodName.Get("[T1,P1] [T2,P2].A()");
+        private readonly IMethodName _mB = MethodName.Get("[T1,P1] [T2,P2].B()");
 
         [Test]
         public void DefaultValues()
         {
             var sut = new MethodDeclaration();
-            Assert.Null(sut.Name);
+            Assert.AreEqual(MethodName.UnknownName, sut.Name);
             Assert.False(sut.IsEntryPoint);
-            Assert.NotNull(sut.Body);
-            Assert.AreEqual(0, sut.Body.Count);
+            Assert.AreEqual(Lists.NewList<IMethodDeclaration>(), sut.Body);
             Assert.AreNotEqual(0, sut.GetHashCode());
             Assert.AreNotEqual(1, sut.GetHashCode());
         }

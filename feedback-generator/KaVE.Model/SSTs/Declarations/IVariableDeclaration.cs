@@ -17,6 +17,7 @@
  *    - 
  */
 
+using KaVE.JetBrains.Annotations;
 using KaVE.Model.Names;
 using KaVE.Model.SSTs.References;
 
@@ -24,7 +25,10 @@ namespace KaVE.Model.SSTs.Declarations
 {
     public interface IVariableDeclaration : IStatement
     {
+        [NotNull]
         IVariableReference Reference { get; }
+
+        [NotNull]
         ITypeName Type { get; }
     }
 }

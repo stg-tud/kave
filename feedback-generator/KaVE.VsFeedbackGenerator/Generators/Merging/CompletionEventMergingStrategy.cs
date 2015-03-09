@@ -73,7 +73,7 @@ namespace KaVE.VsFeedbackGenerator.Generators.Merging
                 IDESessionUUID = evt2.IDESessionUUID,
                 ActiveDocument = evt2.ActiveDocument,
                 ActiveWindow = evt2.ActiveWindow,
-                Context = evt2.Context,
+                CompletionContext = evt2.CompletionContext,
                 // properties that need be taken from first event
                 TriggeredBy = evt1.TriggeredBy,
                 TriggeredAt = evt1.TriggeredAt,

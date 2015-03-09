@@ -27,6 +27,11 @@ namespace KaVE.Model.SSTs.Impl.References
     {
         public string Identifier { get; set; }
 
+        public VariableReference()
+        {
+            Identifier = "";
+        }
+
         protected bool Equals(VariableReference other)
         {
             return Equals(Identifier, other.Identifier);

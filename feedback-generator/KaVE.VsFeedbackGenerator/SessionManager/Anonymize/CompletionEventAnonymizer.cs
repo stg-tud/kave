@@ -41,7 +41,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
             var completionEvent = (CompletionEvent) ideEvent;
             completionEvent.ProposalCollection.Proposals.ForEach(AnonymizeCodeNames);
             completionEvent.Selections.ForEach(AnonymizeCodeNames);
-            AnonymizeCodeNames(completionEvent.Context);
+            AnonymizeCodeNames(completionEvent.CompletionContext);
             base.AnonymizeCodeNames(completionEvent);
         }
 

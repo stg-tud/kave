@@ -19,31 +19,36 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using KaVE.Model.Collections;
 using KaVE.Model.Names;
+using KaVE.Model.Names.CSharp;
 using KaVE.Model.SSTs.Declarations;
 using KaVE.Model.SSTs.Visitor;
 using KaVE.Utils;
 
 namespace KaVE.Model.SSTs.Impl
 {
+    [DataContract]
     public class SST : ISST
     {
+        [DataMember]
         public ITypeName EnclosingType { get; set; }
-        public ISet<IFieldDeclaration> Fields { get; set; }
-        public ISet<IPropertyDeclaration> Properties { get; set; }
-        public ISet<IMethodDeclaration> Methods { get; set; }
-        public ISet<IEventDeclaration> Events { get; set; }
-        public ISet<IDelegateDeclaration> Delegates { get; set; }
 
-        public SST()
-        {
-            Fields = Sets.NewHashSet<IFieldDeclaration>();
-            Properties = Sets.NewHashSet<IPropertyDeclaration>();
-            Methods = Sets.NewHashSet<IMethodDeclaration>();
-            Events = Sets.NewHashSet<IEventDeclaration>();
-            Delegates = Sets.NewHashSet<IDelegateDeclaration>();
-        }
+        [DataMember]
+        public ISet<IFieldDeclaration> Fields { get; set; }
+
+        [DataMember]
+        public ISet<IPropertyDeclaration> Properties { get; set; }
+
+        [DataMember]
+        public ISet<IMethodDeclaration> Methods { get; set; }
+
+        [DataMember]
+        public ISet<IEventDeclaration> Events { get; set; }
+
+        [DataMember]
+        public ISet<IDelegateDeclaration> Delegates { get; set; }
 
         public ISet<IMethodDeclaration> EntryPoints
         {
@@ -53,6 +58,16 @@ namespace KaVE.Model.SSTs.Impl
         public ISet<IMethodDeclaration> NonEntryPoints
         {
             get { return Sets.NewHashSetFrom(Methods.AsEnumerable().Where(m => !m.IsEntryPoint)); }
+        }
+
+        public SST()
+        {
+            EnclosingType = TypeName.UnknownName;
+            Fields = Sets.NewHashSet<IFieldDeclaration>();
+            Properties = Sets.NewHashSet<IPropertyDeclaration>();
+            Methods = Sets.NewHashSet<IMethodDeclaration>();
+            Events = Sets.NewHashSet<IEventDeclaration>();
+            Delegates = Sets.NewHashSet<IDelegateDeclaration>();
         }
 
         public override bool Equals(object obj)
