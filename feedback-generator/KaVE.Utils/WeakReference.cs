@@ -55,5 +55,20 @@ namespace KaVE.Utils
         {
             return _reference.IsAlive;
         }
+
+        public override bool Equals(object obj)
+        {
+            return this.Equals(obj, Equals);
+        }
+
+        private bool Equals(WeakReference<TRef> other)
+        {
+            return IsAlive() == other.IsAlive() && Equals(Target, other.Target);
+        }
+
+        public override int GetHashCode()
+        {
+            return IsAlive() ? Target.GetHashCode() : 1;
+        }
     }
 }

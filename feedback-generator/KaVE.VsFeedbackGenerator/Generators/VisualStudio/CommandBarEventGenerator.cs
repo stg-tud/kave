@@ -17,10 +17,9 @@
  *    - Sven Amann
  */
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using EnvDTE;
 using JetBrains.Application;
 using JetBrains.Application.Components;
 using JetBrains.Util;
@@ -38,32 +37,12 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
     {
         private IEnumerable<CommandBar> _commandBars;
         private IEnumerable<CommandBarControl> _commandBarsControls;
-        private readonly ISet<Window> _registeredWindows = new HashSet<Window>();
-
-        [UsedImplicitly]
-        private WindowEvents _windowEvents;
 
         public CommandBarEventGenerator([NotNull] IRSEnv env,
             [NotNull] IMessageBus messageBus,
             [NotNull] IDateUtils dateUtils) : base(env, messageBus, dateUtils)
         {
             AttachToCommandBars((CommandBars) DTE.CommandBars);
-            _windowEvents = DTE.Events.WindowEvents;
-            _windowEvents.WindowActivated += OnWindowActivated;
-        }
-
-        private void OnWindowActivated(Window gotFocus, Window lostfocus)
-        {
-            if (!_registeredWindows.Contains(gotFocus))
-            {
-                _registeredWindows.Add(gotFocus);
-                var windowType = gotFocus.GetType();
-                var propertyInfo = windowType.GetProperty("CommandBars", BindingFlags.Public | BindingFlags.Instance);
-                if (propertyInfo != null)
-                {
-                    AttachToCommandBars((CommandBars) propertyInfo.GetValue(gotFocus, new object[0]));
-                }
-            }
         }
 
         private void AttachToCommandBars(CommandBars commandBars)
@@ -98,11 +77,11 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
             FireCommandBarEvent(button);
         }
 
-        private void FireCommandBarEvent(CommandBarControl command)
+        private void FireCommandBarEvent(CommandBarControl control)
         {
             var commandEvent = Create<CommandEvent>();
             commandEvent.TriggeredBy = IDEEvent.Trigger.Click;
-            commandEvent.CommandId = command.GetFullQualifiedId();
+            commandEvent.CommandId = control.GetFullQualifiedId();
             Fire(commandEvent);
         }
     }

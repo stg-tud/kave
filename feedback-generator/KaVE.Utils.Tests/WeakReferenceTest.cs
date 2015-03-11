@@ -59,5 +59,24 @@ namespace KaVE.Utils.Tests
 
             Assert.AreEqual(newStrongReference, _uut.Target);
         }
+
+        [Test]
+        public void ShouldBeEqual()
+        {
+            var secondReference = new WeakReference<object>(_strongReference);
+
+            Assert.AreEqual(_uut, secondReference);
+            Assert.AreEqual(_uut.GetHashCode(), secondReference.GetHashCode());
+        }
+
+        [Test]
+        public void ShouldBeDifferent()
+        {
+            var strongReference = new int[0];
+            var secondReference = new WeakReference<object>(strongReference);
+
+            Assert.AreNotEqual(_uut, secondReference);
+            Assert.AreNotEqual(_uut.GetHashCode(), secondReference.GetHashCode());
+        }
     }
 }
