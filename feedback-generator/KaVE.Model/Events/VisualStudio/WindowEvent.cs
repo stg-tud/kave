@@ -31,7 +31,8 @@ namespace KaVE.Model.Events.VisualStudio
             Create,
             Activate,
             Move,
-            Close
+            Close,
+            Deactivate
         }
 
         [DataMember]
