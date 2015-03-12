@@ -27,7 +27,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
 {
     public abstract class ViewModelBase<T> : INotifyPropertyChanged where T : ViewModelBase<T>
     {
-        private readonly string[] _suffixes = {"", ".", "..", "..."};
+        private readonly string[] _suffixes = {"   ", ".  ", ".. ", "..."};
 
         public event PropertyChangedEventHandler PropertyChanged = delegate { };
 

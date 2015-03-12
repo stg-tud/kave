@@ -87,14 +87,16 @@ Contributors:
                 </StackPanel>
             </Grid>
         </StackPanel>
-        <!-- REFRESH OVERLAY -->
+        <!-- EXPORT OVERLAY -->
         <Border Background="LightGray" Opacity=".9"
                 Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibilityConverter}}"
                 Grid.Column="0">
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center"
+            <StackPanel Orientation="Vertical" HorizontalAlignment="Center"
                         VerticalAlignment="Center" Width="Auto">
                 <TextBlock Text="{Binding BusyMessageAnimated}"
                            FontWeight="Bold" FontSize="24" />
+				<TextBlock Text="{x:Static root:Properties.UploadWizard.CloseWizardDuringExportHint}"
+						   FontSize="18" />
             </StackPanel>
         </Border>
     </Grid>

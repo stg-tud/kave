@@ -171,4 +171,8 @@ manuelle Hochladen. Es werden die selben Informationen gesendet wie beim ZIP-Exp
   <data name="WritingEvents" xml:space="preserve">
     <value>2/4: Schreiben - {0}%</value>
   </data>
+  <data name="CloseWizardDuringExportHint" xml:space="preserve">
+    <value>Sie können den Dialog jederzeit schließen.
+Der Export wird im Hintergrund fortgesetzt.</value>
+  </data>
 </root>

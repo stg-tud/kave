@@ -61,6 +61,16 @@ namespace KaVE.VsFeedbackGenerator.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Sie können den Dialog jederzeit schließen.
+        ///Der Export wird im Hintergrund fortgesetzt..
+        /// </summary>
+        public static string CloseWizardDuringExportHint {
+            get {
+                return ResourceManager.GetString("CloseWizardDuringExportHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 3/4: Komprimieren.
         /// </summary>
         public static string CompressingEvents {

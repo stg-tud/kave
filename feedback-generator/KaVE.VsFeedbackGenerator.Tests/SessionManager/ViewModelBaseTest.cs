@@ -69,19 +69,19 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
                     switch (update)
                     {
                         case 0:
-                            Assert.AreEqual("Msg", newValue);
+                            Assert.AreEqual("Msg   ", newValue);
                             break;
                         case 1:
-                            Assert.AreEqual("Msg.", newValue);
+                            Assert.AreEqual("Msg.  ", newValue);
                             break;
                         case 2:
-                            Assert.AreEqual("Msg..", newValue);
+                            Assert.AreEqual("Msg.. ", newValue);
                             break;
                         case 3:
                             Assert.AreEqual("Msg...", newValue);
                             break;
                         case 4:
-                            Assert.AreEqual("Msg", newValue);
+                            Assert.AreEqual("Msg   ", newValue);
                             _uut.SetIdle();
                             break;
                     }
