@@ -44,6 +44,10 @@ namespace KaVE.VsFeedbackGenerator.Utils.Json
             object existingValue,
             JsonSerializer serializer)
         {
+            if (reader.TokenType == JsonToken.Null)
+            {
+                return null;
+            }
             var serialization = ReadSerializationFrom(reader);
             return _converter.ConvertFromString(serialization);
         }

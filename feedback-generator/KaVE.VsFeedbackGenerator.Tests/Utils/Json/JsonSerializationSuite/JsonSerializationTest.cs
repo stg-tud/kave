@@ -33,10 +33,27 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.JsonSerializationSuite
         [Test]
         public void ShouldSerializeNull()
         {
-            object o = null;
-            const string expected = "null";
-            // ReSharper disable once ExpressionIsAlwaysNull
-            JsonAssert.SerializesTo(o, expected);
+            JsonAssert.SerializesTo((object) null, "null");
+        }
+
+        [Test]
+        public void ShouldDeserializeNull()
+        {
+            JsonAssert.DeserializesTo("null", (object) null);
+        }
+
+        [Test]
+        public void ShouldNotDeserializeNullProperties()
+        {
+            JsonAssert.DeserializesTo(
+                "{\"$type\":\"" + TestTargetTypeName + "\",\"Id\":null}",
+                new SerializationTestTarget());
+        }
+
+        [Test]
+        public void ShouldIgnoreMissingPropertiesForDeserialization()
+        {
+            JsonAssert.DeserializesTo("{\"$type\":\"" + TestTargetTypeName + "\"}", new SerializationTestTarget());
         }
 
         [Test]
@@ -69,10 +86,12 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.JsonSerializationSuite
             const Formatting expected = Formatting.Indented;
 
             var serializedEnum = string.Format(@"""{0}""", expected);
-            var actual = JsonConvert.DeserializeObject<Formatting>(serializedEnum, new JsonSerializerSettings
-            {
-                Converters = new JsonConverter[] { new EnumToStringConverter() }
-            });
+            var actual = JsonConvert.DeserializeObject<Formatting>(
+                serializedEnum,
+                new JsonSerializerSettings
+                {
+                    Converters = new JsonConverter[] {new EnumToStringConverter()}
+                });
 
             Assert.AreEqual(expected, actual);
         }
@@ -80,6 +99,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.JsonSerializationSuite
         [Test]
         public void ShouldNotSerializeNullProperty()
         {
+            // ReSharper disable once AssignNullToNotNullAttribute
             var target = new SerializationTestTarget {Id = null};
             const string expected = "{\"$type\":\"" + TestTargetTypeName + "\"}";
             JsonAssert.SerializesTo(target, expected);
@@ -108,6 +128,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.JsonSerializationSuite
         [Test]
         public void ShouldNotSerializeNullPropertyWhenFormatting()
         {
+            // ReSharper disable once AssignNullToNotNullAttribute
             var target = new SerializationTestTarget {Id = null};
             const string expected = "{\r\n" +
                                     "    \"$type\": \"" + TestTargetTypeName + "\"\r\n" +

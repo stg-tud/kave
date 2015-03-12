@@ -27,6 +27,18 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.JsonSerializationSuite
     public class NamesSerializationTest
     {
         [Test]
+        public void ShouldSerializeNullNames()
+        {
+            JsonAssert.SerializesTo((Name) null, "null");
+        }
+
+        [Test]
+        public void ShouldDeserializeNullNames()
+        {
+            JsonAssert.DeserializesTo("null", (Name) null);
+        }
+
+        [Test]
         public void ShouldSerializeName()
         {
             var name = Name.Get("Foobar! That's my Name.");

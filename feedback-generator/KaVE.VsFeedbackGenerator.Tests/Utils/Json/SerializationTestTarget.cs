@@ -16,13 +16,21 @@
  * Contributors:
  *    - Sven Amann
  */
+
+using KaVE.JetBrains.Annotations;
 using KaVE.Utils;
 
 namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json
 {
-    class SerializationTestTarget
+    public class SerializationTestTarget
     {
+        [NotNull]
         public string Id { get; set; }
+
+        public SerializationTestTarget()
+        {
+            Id = "";
+        }
 
         private bool Equals(SerializationTestTarget other)
         {

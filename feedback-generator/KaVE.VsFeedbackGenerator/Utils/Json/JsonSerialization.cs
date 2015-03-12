@@ -16,6 +16,7 @@
  * Contributors:
  *    - Sven Amann
  */
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -109,10 +110,10 @@ namespace KaVE.VsFeedbackGenerator.Utils.Json
         }
 
         /// <summary>
-        /// Parses an instance of <typeparamref name="T"/> from a Json string.
+        ///     Parses an instance of <typeparamref name="T" /> from a Json string.
         /// </summary>
         /// <remarks>
-        /// Uses the same serialization settings as <see cref="ToCompactJson"/>.
+        ///     Uses the same serialization settings as <see cref="ToCompactJson" />.
         /// </remarks>
         internal static T ParseJsonTo<T>([NotNull] this string json)
         {
@@ -121,10 +122,10 @@ namespace KaVE.VsFeedbackGenerator.Utils.Json
         }
 
         /// <summary>
-        /// Converts an object to a pretty Json string that is tuned for human readability.
+        ///     Converts an object to a pretty Json string that is tuned for human readability.
         /// </summary>
         /// <remarks>
-        /// Pretty-print serialization cannot generally be deserialized, because information is lost during serialization.
+        ///     Pretty-print serialization cannot generally be deserialized, because information is lost during serialization.
         /// </remarks>
         [NotNull]
         internal static string ToPrettyPrintJson([CanBeNull] this object instance)
