@@ -207,6 +207,8 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
                 DeleteSessions);
         }
 
+        private bool _bulkDelete;
+
         private void DeleteSessions(Confirmation confirmation)
         {
             if (!confirmation.Confirmed)
@@ -214,16 +216,28 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
                 return;
             }
 
+            // Removing sessions while iterating here, leads to strange
+            // Schroeding bugs in production mode (seems some UI-update
+            // events interfere with the deletion).
+            _bulkDelete = true;
+            var deletedLogs = new List<ILog>();
             foreach (var selectedSession in _selectedSessions)
             {
                 selectedSession.Log.Delete();
+                deletedLogs.Add(selectedSession.Log);
             }
+            _bulkDelete = false;
+
+            deletedLogs.ForEach(OnLogDeleted);
         }
 
         private void OnLogDeleted(ILog log)
         {
-            _sessions.RemoveAll(svm => svm.Log.Equals(log));
-            log.Deleted -= OnLogDeleted;
+            if (!_bulkDelete)
+            {
+                _sessions.RemoveAll(svm => svm.Log.Equals(log));
+                log.Deleted -= OnLogDeleted;
+            }
         }
     }
 }
