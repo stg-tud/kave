@@ -12,7 +12,11 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sven Amann
  */
+
 using System.Windows.Input;
 using KaVE.Utils.IO;
 using NUnit.Framework;
@@ -67,6 +71,26 @@ namespace KaVE.Utils.Tests.IO
         [TestCase("Esc", Key.Escape)]
         [TestCase("Escape", Key.Escape)]
         public void ShouldResolveCharacterKey(string keyString, Key key)
+        {
+            Assert.AreEqual(key, KeyUtils.ResolveKey(keyString));
+        }
+
+        [TestCase("Strg", Key.LeftCtrl)]
+        [TestCase("Umschalt", Key.LeftShift)]
+        [TestCase("Eingabe", Key.Enter)]
+        [TestCase("Bild-Auf", Key.PageUp)] // Confuses ReSharper because Key.PageUp == Key.Prior
+        [TestCase("Bild-Ab", Key.PageDown)] // Confuses ReSharper because Key.PageDown == Key.Next
+        [TestCase("Rücktaste", Key.Back)]
+        [TestCase("Ende", Key.End)]
+        [TestCase("Pos1", Key.Home)]
+        [TestCase("Einfügen", Key.Insert)]
+        [TestCase("NACH-RECHTS-TASTE", Key.Right)]
+        [TestCase("Nach-Links-Taste", Key.Left)]
+        [TestCase("NACH-LINKS-TASTE", Key.Left)]
+        [TestCase("NACH-OBEN-TASTE", Key.Up)]
+        [TestCase("NACH-UNTEN-TASTE", Key.Down)]
+        [TestCase("Entf", Key.Delete)]
+        public void ShouldResolveGermanCharacterKey(string keyString, Key key)
         {
             Assert.AreEqual(key, KeyUtils.ResolveKey(keyString));
         }

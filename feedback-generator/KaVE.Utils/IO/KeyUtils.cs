@@ -12,7 +12,11 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sven Amann
  */
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,6 +29,31 @@ namespace KaVE.Utils.IO
 {
     public static class KeyUtils
     {
+        private static readonly IDictionary<string, string> KeyNameAliases = new Dictionary<string, string>
+        {
+            // alternative key names
+            {"bkspce", "Back"},
+            {"up arrow", "Up"},
+            {"down arrow", "Down"},
+            {"left arrow", "Left"},
+            {"right arrow", "Right"},
+            // German localizations
+            {"strg", "Ctrl"},
+            {"umschalt", "Shift"},
+            {"eingabe", "Enter"},
+            {"bild-auf", "PgUp"},
+            {"bild-ab", "PgDn"},
+            {"rücktaste", "Back"},
+            {"ende", "End"},
+            {"pos1", "Home"},
+            {"einfügen", "Ins"},
+            {"nach-rechts-taste", "Right"},
+            {"nach-links-taste", "Left"},
+            {"nach-oben-taste", "Up"},
+            {"nach-unten-taste", "Down"},
+            {"entf", "Del"},
+        };
+
         /// <summary>
         /// <see cref="ParseBinding"/>
         /// </summary>
@@ -78,21 +107,9 @@ namespace KaVE.Utils.IO
 
         private static string UnifyKeyName(string keyName)
         {
-            switch (keyName)
-            {
-                case "Bkspce":
-                    return "Back";
-                case "Up Arrow":
-                    return "Up";
-                case "Down Arrow":
-                    return "Down";
-                case "Left Arrow":
-                    return "Left";
-                case "Right Arrow":
-                    return "Right";
-                default:
-                    return keyName;
-            }
+            string unifiedName;
+            KeyNameAliases.TryGetValue(keyName.ToLower(), out unifiedName);
+            return unifiedName ?? keyName;
         }
 
         [DllImport("user32.dll")]

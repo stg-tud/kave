@@ -12,7 +12,11 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sven Amann
  */
+
 using System.Linq;
 using System.Windows.Input;
 
@@ -37,7 +41,12 @@ namespace KaVE.Utils.IO
 
         public bool IsPressed()
         {
-            return _keyCombinations.Last().All(Keyboard.IsKeyDown);
+            return _keyCombinations.Last().All(IsKeyDown);
+        }
+
+        private static bool IsKeyDown(Key key)
+        {
+            return key != Key.None && Keyboard.IsKeyDown(key);
         }
     }
 }
