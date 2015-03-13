@@ -20,6 +20,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using KaVE.JetBrains.Annotations;
+using KaVE.Model.Names.CSharp.Modularization;
+using KaVE.Model.Names.CSharp.TypeNames;
 using KaVE.Model.Utils;
 using KaVE.Utils.Assertion;
 
@@ -32,6 +35,11 @@ namespace KaVE.Model.Names.CSharp
         public new static ITypeName UnknownName
         {
             get { return UnknownTypeName.Instance; }
+        }
+
+        public override bool IsUnknown
+        {
+            get { return Equals(this, UnknownName); }
         }
 
         private static ITypeName CreateTypeName(string identifier)
@@ -115,6 +123,7 @@ namespace KaVE.Model.Names.CSharp
         ///     parameter-type names follow the scheme <code>'short-name' -> 'actual-type identifier'</code>, with actual-type
         ///     identifier being either the identifier of a type name, as declared above, or another parameter-type name.
         /// </summary>
+        [NotNull]
         public new static ITypeName Get(string identifier)
         {
             if (identifier == String.Empty)

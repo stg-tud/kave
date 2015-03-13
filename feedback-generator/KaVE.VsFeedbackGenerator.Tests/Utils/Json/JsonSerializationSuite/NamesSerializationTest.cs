@@ -18,6 +18,9 @@
  */
 
 using KaVE.Model.Names.CSharp;
+using KaVE.Model.Names.CSharp.MemberNames;
+using KaVE.Model.Names.CSharp.Modularization;
+using KaVE.Model.Names.CSharp.TypeNames;
 using KaVE.VsFeedbackGenerator.Utils.Json;
 using NUnit.Framework;
 

@@ -13,15 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 using KaVE.Model.Names.CSharp;
 using NUnit.Framework;
 
 namespace KaVE.Model.Tests.Names.CSharp
 {
     [TestFixture]
-    class CSharpNameUtilsTest
+    internal class CSharpNameUtilsTest
     {
-        [Test] 
+        [Test]
         public void ShouldBeVoidType()
         {
             var voidTypeName = CSharpNameUtils.GetFullTypeNameFromTypeAlias("void");

@@ -18,10 +18,10 @@
  */
 
 using KaVE.Model.Names;
-using KaVE.Model.Names.CSharp;
+using KaVE.Model.Names.CSharp.Modularization;
 using NUnit.Framework;
 
-namespace KaVE.Model.Tests.Names.CSharp
+namespace KaVE.Model.Tests.Names.CSharp.Modularization
 {
     [TestFixture]
     public class NamespaceNameTest
@@ -37,7 +37,13 @@ namespace KaVE.Model.Tests.Names.CSharp
             _testNamespaceName = NamespaceName.Get(TestNamespaceIdentifier);
             _testNamespaceParentName = _testNamespaceName.ParentNamespace;
         }
-        
+
+        [Test]
+        public void ShouldImplementIsUnknown()
+        {
+            Assert.That(NamespaceName.UnknownName.IsUnknown);
+        }
+
         [Test]
         public void ShouldHaveLastIdentifierSegmentAsName()
         {

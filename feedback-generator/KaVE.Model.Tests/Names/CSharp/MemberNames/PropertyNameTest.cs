@@ -13,20 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using KaVE.Model.Names.CSharp;
+
+using KaVE.Model.Names.CSharp.MemberNames;
 using NUnit.Framework;
 
-namespace KaVE.Model.Tests.Names.CSharp
+namespace KaVE.Model.Tests.Names.CSharp.MemberNames
 {
-    [TestFixture, TestFixture]
-    class PropertyNameTest
+    internal class PropertyNameTest
     {
+        [Test]
+        public void ShouldImplementIsUnknown()
+        {
+            Assert.That(PropertyName.UnknownName.IsUnknown);
+        }
+
         [Test]
         public void ShouldBeSimpleProperty()
         {
             const string valueTypeIdentifier = "A, B, 1.0.0.0";
             const string declaringTypeIdentifier = "C, D, 0.9.8.7";
-            var propertyName = PropertyName.Get("[" + valueTypeIdentifier + "] [" + declaringTypeIdentifier + "].Property");
+            var propertyName =
+                PropertyName.Get("[" + valueTypeIdentifier + "] [" + declaringTypeIdentifier + "].Property");
 
             Assert.AreEqual("Property", propertyName.Name);
             Assert.AreEqual(valueTypeIdentifier, propertyName.ValueType.Identifier);

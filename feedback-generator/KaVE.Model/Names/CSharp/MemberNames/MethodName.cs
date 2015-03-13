@@ -19,16 +19,25 @@
 
 using System;
 using System.Collections.Generic;
+using KaVE.JetBrains.Annotations;
 using KaVE.Model.Utils;
 
-namespace KaVE.Model.Names.CSharp
+namespace KaVE.Model.Names.CSharp.MemberNames
 {
     public class MethodName : MemberName, IMethodName
     {
         private static readonly WeakNameCache<MethodName> Registry =
             WeakNameCache<MethodName>.Get(id => new MethodName(id));
 
-        public static new IMethodName UnknownName {get { return Get("[?] [?].???()"); }}
+        public new static IMethodName UnknownName
+        {
+            get { return Get("[?] [?].???()"); }
+        }
+
+        public override bool IsUnknown
+        {
+            get { return Equals(this, UnknownName); }
+        }
 
         /// <summary>
         ///     Method type names follow the scheme
@@ -58,6 +67,7 @@ namespace KaVE.Model.Names.CSharp
         ///         </item>
         ///     </list>
         /// </summary>
+        [NotNull]
         public new static MethodName Get(string identifier)
         {
             return Registry.GetOrCreate(identifier);

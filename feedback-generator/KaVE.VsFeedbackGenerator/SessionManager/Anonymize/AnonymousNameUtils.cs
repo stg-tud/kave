@@ -25,6 +25,9 @@ using JetBrains.Annotations;
 using JetBrains.Util;
 using KaVE.Model.Names;
 using KaVE.Model.Names.CSharp;
+using KaVE.Model.Names.CSharp.MemberNames;
+using KaVE.Model.Names.CSharp.Modularization;
+using KaVE.Model.Names.CSharp.TypeNames;
 using KaVE.Model.Names.VisualStudio;
 using KaVE.Utils;
 using KaVE.Utils.Assertion;
@@ -35,9 +38,13 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
 {
     internal static class AnonymousNameUtils
     {
-        [NotNull]
-        public static string ToHash([NotNull] this string value)
+        [ContractAnnotation("notnull => notnull")]
+        public static string ToHash(this string value)
         {
+            if (value.IsEmpty())
+            {
+                return value;
+            }
             var tmpSource = value.AsBytes();
             var hash = new MD5CryptoServiceProvider().ComputeHash(tmpSource);
             return Convert.ToBase64String(hash).Replace('+', '-').Replace('/', '_');
@@ -46,7 +53,10 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
         [ContractAnnotation("notnull => notnull")]
         public static TName ToAnonymousName<TName>(this TName name) where TName : class, IName
         {
-            if (name == null) return null;
+            if (name == null || name.IsUnknown)
+            {
+                return name;
+            }
             return ToAnonymousName<DocumentName, TName>(name, ToAnonymousName) ??
                    ToAnonymousName<WindowName, TName>(name, ToAnonymousName) ??
                    ToAnonymousName<SolutionName, TName>(name, ToAnonymousName) ??
@@ -142,7 +152,8 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
             identifier.AppendIf(member.IsStatic, MemberName.StaticModifier + " ");
             identifier.AppendAnonymousTypeName(valueType).Append(' ');
             identifier.AppendAnonymousTypeName(member.DeclaringType).Append('.');
-            identifier.Append(member.DeclaringType.IsDeclaredInEnclosingProjectOrUnknown() ? member.Name.ToHash() : member.Name);
+            identifier.Append(
+                member.DeclaringType.IsDeclaredInEnclosingProjectOrUnknown() ? member.Name.ToHash() : member.Name);
         }
 
         private static LocalVariableName ToAnonymousName(LocalVariableName variable)
@@ -175,7 +186,8 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
         {
             var identifier = new StringBuilder();
             identifier.AppendTypeKindPrefix(type);
-            identifier.Append(type.IsDeclaredInEnclosingProjectOrUnknown() ? type.AnonymizedRawFullName() : type.RawFullName);
+            identifier.Append(
+                type.IsDeclaredInEnclosingProjectOrUnknown() ? type.AnonymizedRawFullName() : type.RawFullName);
             identifier.AppendTypeParameters(type).Append(", ");
             identifier.Append(type.Assembly.ToAnonymousName());
             return (TypeName) TypeName.Get(identifier.ToString());

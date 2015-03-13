@@ -31,6 +31,11 @@ namespace KaVE.Model.Names.CSharp
             get { return Get("[?] ???"); }
         }
 
+        public override bool IsUnknown
+        {
+            get { return Equals(this, UnknownName); }
+        }
+
         /// <summary>
         ///     Local variable names have the form '[value-type-identifier] variable-name'.
         /// </summary>

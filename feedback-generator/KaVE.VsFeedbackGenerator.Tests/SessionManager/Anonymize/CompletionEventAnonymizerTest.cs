@@ -23,6 +23,8 @@ using System.Collections.Generic;
 using JetBrains.Util;
 using KaVE.Model.Events.CompletionEvent;
 using KaVE.Model.Names.CSharp;
+using KaVE.Model.Names.CSharp.MemberNames;
+using KaVE.Model.Names.CSharp.Modularization;
 using NUnit.Framework;
 
 namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize

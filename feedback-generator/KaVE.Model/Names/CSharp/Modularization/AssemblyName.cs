@@ -21,7 +21,7 @@ using System;
 using System.Linq;
 using KaVE.Model.Utils;
 
-namespace KaVE.Model.Names.CSharp
+namespace KaVE.Model.Names.CSharp.Modularization
 {
     public class AssemblyName : Name, IAssemblyName
     {
@@ -31,6 +31,11 @@ namespace KaVE.Model.Names.CSharp
         public new static IAssemblyName UnknownName
         {
             get { return Get(UnknownNameIdentifier); }
+        }
+
+        public override bool IsUnknown
+        {
+            get { return Equals(this, UnknownName); }
         }
 
         /// <summary>
@@ -63,7 +68,9 @@ namespace KaVE.Model.Names.CSharp
             get
             {
                 var fragments = GetFragments();
-                return fragments.Length <= 1 ? CSharp.AssemblyVersion.UnknownName : CSharp.AssemblyVersion.Get(fragments[1]);
+                return fragments.Length <= 1
+                    ? Modularization.AssemblyVersion.UnknownName
+                    : Modularization.AssemblyVersion.Get(fragments[1]);
             }
         }
 

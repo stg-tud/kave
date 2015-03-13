@@ -20,7 +20,7 @@
 using System;
 using KaVE.Model.Utils;
 
-namespace KaVE.Model.Names.CSharp
+namespace KaVE.Model.Names.CSharp.Modularization
 {
     public class AssemblyVersion : Name, IAssemblyVersion
     {

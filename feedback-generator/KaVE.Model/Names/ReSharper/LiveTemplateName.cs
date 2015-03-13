@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 using KaVE.Model.Names.CSharp;
 using KaVE.Model.Utils;
 
@@ -24,7 +25,7 @@ namespace KaVE.Model.Names.ReSharper
             WeakNameCache<LiveTemplateName>.Get(id => new LiveTemplateName(id));
 
         /// <summary>
-        /// Template names follow the scheme "&lt;template name&gt;:&lt;template description&gt;".
+        ///     Template names follow the scheme "&lt;template name&gt;:&lt;template description&gt;".
         /// </summary>
         public new static LiveTemplateName Get(string identifier)
         {

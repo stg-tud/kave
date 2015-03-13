@@ -20,7 +20,7 @@
 using System;
 using KaVE.JetBrains.Annotations;
 using KaVE.Model.Names;
-using KaVE.Model.Names.CSharp;
+using KaVE.Model.Names.CSharp.TypeNames;
 
 namespace KaVE.VsFeedbackGenerator.Utils
 {
@@ -47,7 +47,9 @@ namespace KaVE.VsFeedbackGenerator.Utils
                 {
                     return "delegate";
                 }
-                throw new ArgumentException(@"Given ITypeName claims to be a ReferenceType but does not match any subtype", "elem");
+                throw new ArgumentException(
+                    @"Given ITypeName claims to be a ReferenceType but does not match any subtype",
+                    "elem");
             }
             if (elem.IsValueType)
             {
@@ -63,7 +65,9 @@ namespace KaVE.VsFeedbackGenerator.Utils
                 {
                     return elem.IsNullableType ? "nullable" : (elem.IsSimpleType ? "simple" : "struct");
                 }
-                throw new ArgumentException(@"Given ITypeName claims to be a ValueType but does not match any subtype", "elem");
+                throw new ArgumentException(
+                    @"Given ITypeName claims to be a ValueType but does not match any subtype",
+                    "elem");
             }
             if (elem.IsUnknownType)
             {

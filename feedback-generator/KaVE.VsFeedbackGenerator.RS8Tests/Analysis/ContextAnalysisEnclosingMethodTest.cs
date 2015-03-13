@@ -17,7 +17,7 @@
 using System.Linq;
 using KaVE.Model.Events.CompletionEvent;
 using KaVE.Model.Names;
-using KaVE.Model.Names.CSharp;
+using KaVE.Model.Names.CSharp.MemberNames;
 using NUnit.Framework;
 
 namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis

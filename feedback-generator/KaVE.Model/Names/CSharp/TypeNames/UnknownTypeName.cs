@@ -18,14 +18,22 @@
  */
 
 using KaVE.JetBrains.Annotations;
+using KaVE.Model.Names.CSharp.Modularization;
 
-namespace KaVE.Model.Names.CSharp
+namespace KaVE.Model.Names.CSharp.TypeNames
 {
-    public class InterfaceTypeName : TypeName
+    public class UnknownTypeName : TypeName
     {
-        internal static bool IsInterfaceTypeIdentifier(string identifier)
+        public new const string Identifier = "?";
+
+        public static ITypeName Instance
         {
-            return identifier.StartsWith("i:");
+            get { return TypeName.Get(Identifier); }
+        }
+
+        internal static bool IsUnknownTypeIdentifier(string identifier)
+        {
+            return Identifier.Equals(identifier);
         }
 
         [UsedImplicitly]
@@ -34,21 +42,21 @@ namespace KaVE.Model.Names.CSharp
             return TypeName.Get(identifier);
         }
 
-        internal InterfaceTypeName(string identifier) : base(identifier) {}
+        internal UnknownTypeName(string identifier) : base(identifier) {}
 
         public override bool IsUnknownType
-        {
-            get { return false; }
-        }
-
-        public override bool IsInterfaceType
         {
             get { return true; }
         }
 
-        public override bool IsArrayType
+        public override IAssemblyName Assembly
         {
-            get { return false; }
+            get { return AssemblyName.UnknownName; }
+        }
+
+        public override INamespaceName Namespace
+        {
+            get { return NamespaceName.UnknownName; }
         }
     }
 }

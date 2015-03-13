@@ -17,14 +17,20 @@
  *    - Sven Amann
  */
 
-using KaVE.Model.Names.CSharp;
+using KaVE.Model.Names.CSharp.Modularization;
 using NUnit.Framework;
 
-namespace KaVE.Model.Tests.Names.CSharp
+namespace KaVE.Model.Tests.Names.CSharp.Modularization
 {
     [TestFixture]
     internal class AssemblyVersionTest
     {
+        [Test]
+        public void ShouldImplementIsUnknown()
+        {
+            Assert.That(AssemblyVersion.UnknownName.IsUnknown);
+        }
+
         [Test]
         public void ShouldEqualsSameVersion()
         {

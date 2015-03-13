@@ -22,15 +22,19 @@ using System.ComponentModel;
 namespace KaVE.Model.Names
 {
     /// <summary>
-    /// Represents full-qualified names.
+    ///     Represents full-qualified names.
     /// </summary>
-    /// 
-    [TypeConverter(typeof(NameToStringConverter))]
+    [TypeConverter(typeof (NameToStringConverter))]
     public interface IName
     {
         /// <summary>
-        /// Returns a unique representation of the qualified name.
+        ///     Returns a unique representation of the qualified name.
         /// </summary>
         string Identifier { get; }
+
+        /// <summary>
+        ///     Tells if this instance refers to an unknown name.
+        /// </summary>
+        bool IsUnknown { get; }
     }
 }

@@ -69,7 +69,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
         {
             return new ConstantValueExpression
             {
-                Value = expr.Value == null ? null : expr.Value.ToHash()
+                Value = expr.Value.ToHash()
             };
         }
 

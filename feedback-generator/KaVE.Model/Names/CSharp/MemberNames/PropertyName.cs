@@ -17,9 +17,10 @@
  *    - Sven Amann
  */
 
+using KaVE.JetBrains.Annotations;
 using KaVE.Model.Utils;
 
-namespace KaVE.Model.Names.CSharp
+namespace KaVE.Model.Names.CSharp.MemberNames
 {
     public class PropertyName : MemberName, IPropertyName
     {
@@ -34,15 +35,36 @@ namespace KaVE.Model.Names.CSharp
             get { return Get("[?] [?].???"); }
         }
 
+        public override bool IsUnknown
+        {
+            get { return Equals(this, UnknownName); }
+        }
+
         /// <summary>
-        /// Property names follow the scheme <code>'modifiers' ['value type name'] ['declaring type name'].'property name'</code>.
-        /// Examples of property names are:
-        /// <list type="buller">
-        ///     <item><description><code>[System.Int32, mscore, 4.0.0.0] [Collections.IList, mscore, 4.0.0.0].Internal</code></description></item>
-        ///     <item><description><code>get [System.Int32, mscore, 4.0.0.0] [MyClass, MyAssembly, 1.2.3.4].Count</code> (property with public getter)</description></item>
-        ///     <item><description><code>set [System.Int32, mscore, 4.0.0.0] [MyClass, MyAssembly, 1.2.3.4].Position</code> (property with public setter)</description></item>
-        /// </list>
+        ///     Property names follow the scheme
+        ///     <code>'modifiers' ['value type name'] ['declaring type name'].'property name'</code>.
+        ///     Examples of property names are:
+        ///     <list type="buller">
+        ///         <item>
+        ///             <description>
+        ///                 <code>[System.Int32, mscore, 4.0.0.0] [Collections.IList, mscore, 4.0.0.0].Internal</code>
+        ///             </description>
+        ///         </item>
+        ///         <item>
+        ///             <description>
+        ///                 <code>get [System.Int32, mscore, 4.0.0.0] [MyClass, MyAssembly, 1.2.3.4].Count</code>
+        ///                 (property with public getter)
+        ///             </description>
+        ///         </item>
+        ///         <item>
+        ///             <description>
+        ///                 <code>set [System.Int32, mscore, 4.0.0.0] [MyClass, MyAssembly, 1.2.3.4].Position</code>
+        ///                 (property with public setter)
+        ///             </description>
+        ///         </item>
+        ///     </list>
         /// </summary>
+        [NotNull]
         public new static PropertyName Get(string identifier)
         {
             return Registry.GetOrCreate(identifier);

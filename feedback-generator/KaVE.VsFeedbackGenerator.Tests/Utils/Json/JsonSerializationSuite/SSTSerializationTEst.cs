@@ -17,16 +17,28 @@
  *    - Sebastian Proksch
  */
 
+using System;
+using KaVE.Model.SSTs.Impl;
+using KaVE.VsFeedbackGenerator.Utils.Json;
 using NUnit.Framework;
 
 namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.JsonSerializationSuite
 {
     public class SSTSerializationTest
     {
-        [Test, Ignore]
+        [Test]
         public void EntrypointAndNonEntryPointsAreNotSerialized()
         {
             // TODO write some tests for ST de-/serialization!
+            var sst = new SST();
+            // ReSharper disable once AssignNullToNotNullAttribute
+            sst.EnclosingType = null;
+            var json1 = sst.ToCompactJson();
+            var json = "{}";
+            var sst2 = json.ParseJsonTo<SST>();
+            json = "{\"$type\":\"KaVE.Model.SSTs.Impl.SST, KaVE.Model\",\"EnclosingType\":null,\"Fields\":[],\"Properties\":[],\"Methods\":[],\"Events\":[],\"Delegates\":[]}";
+            var sst3 = json.ParseJsonTo<SST>();
+            Console.WriteLine();
         }
     }
 }

@@ -20,13 +20,19 @@
 using System.Collections.Generic;
 using KaVE.Model.Names;
 using KaVE.Model.Names.CSharp;
+using KaVE.Model.Names.CSharp.MemberNames;
 using NUnit.Framework;
 
-namespace KaVE.Model.Tests.Names.CSharp
+namespace KaVE.Model.Tests.Names.CSharp.MemberNames
 {
-    [TestFixture]
     internal class MethodNameTest
     {
+        [Test]
+        public void ShouldImplementIsUnknown()
+        {
+            Assert.That(MethodName.UnknownName.IsUnknown);
+        }
+
         [Test]
         public void ShouldBeSimpleMethod()
         {
@@ -156,7 +162,7 @@ namespace KaVE.Model.Tests.Names.CSharp
         {
             var method = MethodName.Get("[T, A, 1.0.0.0] [T, A, 1.0.0.0].M`1[[T]]([F`1[[U]], A, 1.0.0.0] p)");
 
-            var expected = new List<ITypeName> { TypeName.Get("T") };
+            var expected = new List<ITypeName> {TypeName.Get("T")};
             Assert.AreEqual(expected, method.TypeParameters);
         }
 

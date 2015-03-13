@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 using System;
 using KaVE.Model.Names.CSharp;
 using NUnit.Framework;
@@ -20,15 +21,14 @@ using Test.Targets;
 
 namespace KaVE.Model.Tests.Names.CSharp
 {
-    [TestFixture]
-    class CSharpNameFromInfoFactoryTest
+    internal class CSharpNameFromInfoFactoryTest
     {
-        private static readonly string TestTargetAssemblyQualifiedName = typeof(SimpleType).Assembly.FullName;
+        private static readonly string TestTargetAssemblyQualifiedName = typeof (SimpleType).Assembly.FullName;
 
         [Test]
         public void ShouldCreateSimpleTypeName()
         {
-            var typeName = typeof(SimpleType).GetName();
+            var typeName = typeof (SimpleType).GetName();
 
             Assert.AreEqual("Test.Targets.SimpleType", typeName.FullName);
             Assert.AreEqual(TestTargetAssemblyQualifiedName, typeName.Assembly.Identifier);
@@ -37,16 +37,18 @@ namespace KaVE.Model.Tests.Names.CSharp
         [Test]
         public void ShouldCreateTypeNameWithGenericParameters()
         {
-            var typeName = typeof(GenericType<SimpleType>).GetName();
+            var typeName = typeof (GenericType<SimpleType>).GetName();
 
-            Assert.AreEqual("Test.Targets.GenericType`1[[Test.Targets.SimpleType, " + TestTargetAssemblyQualifiedName + "]]", typeName.FullName);
+            Assert.AreEqual(
+                "Test.Targets.GenericType`1[[Test.Targets.SimpleType, " + TestTargetAssemblyQualifiedName + "]]",
+                typeName.FullName);
             Assert.AreEqual(TestTargetAssemblyQualifiedName, typeName.Assembly.Identifier);
         }
 
         [Test]
         public void ShouldGenerateInnerType()
         {
-            var typeName = typeof(GenericType<>.IInnerType).GetName();
+            var typeName = typeof (GenericType<>.IInnerType).GetName();
 
             Assert.AreEqual("Test.Targets.GenericType`1+IInnerType", typeName.FullName);
             Assert.AreEqual("Test.Targets.GenericType`1", typeName.DeclaringType.FullName);
@@ -55,7 +57,7 @@ namespace KaVE.Model.Tests.Names.CSharp
         [Test]
         public void ShouldCreateMethodNameWithoutParameters()
         {
-            var methodName = typeof(SimpleType).GetMethod("SimpleMethod").GetName();
+            var methodName = typeof (SimpleType).GetMethod("SimpleMethod").GetName();
 
             Assert.AreEqual("System.Int32", methodName.ReturnType.FullName);
             Assert.AreEqual("SimpleMethod", methodName.Name);
@@ -75,7 +77,7 @@ namespace KaVE.Model.Tests.Names.CSharp
         [Test]
         public void ShouldCreateMethodNameWithParameter()
         {
-            var methodName = typeof(SimpleType).GetMethod("ParameterizedMethod").GetName();
+            var methodName = typeof (SimpleType).GetMethod("ParameterizedMethod").GetName();
 
             Assert.IsTrue(methodName.HasParameters);
             var firstParameterName = methodName.Parameters[0];
@@ -89,7 +91,7 @@ namespace KaVE.Model.Tests.Names.CSharp
         [Test]
         public void ShouldCreateVarArgsParameter()
         {
-            var parameterName = typeof(SimpleType).GetMethod("ParamsMethod").GetParameters()[0].GetName();
+            var parameterName = typeof (SimpleType).GetMethod("ParamsMethod").GetParameters()[0].GetName();
 
             Assert.AreEqual("System.Int32[]", parameterName.ValueType.FullName);
             Assert.IsTrue(parameterName.IsParameterArray);
@@ -98,7 +100,7 @@ namespace KaVE.Model.Tests.Names.CSharp
         [Test]
         public void ShouldCreateRefParameter()
         {
-            var parameterName = typeof(SimpleType).GetMethod("RefParamMethod").GetParameters()[0].GetName();
+            var parameterName = typeof (SimpleType).GetMethod("RefParamMethod").GetParameters()[0].GetName();
 
             Assert.IsTrue(parameterName.IsPassedByReference);
             Assert.IsFalse(parameterName.IsOutput);
@@ -107,7 +109,7 @@ namespace KaVE.Model.Tests.Names.CSharp
         [Test]
         public void ShouldCreateOutParameter()
         {
-            var parameterName = typeof(SimpleType).GetMethod("OutParamMethod").GetParameters()[0].GetName();
+            var parameterName = typeof (SimpleType).GetMethod("OutParamMethod").GetParameters()[0].GetName();
 
             Assert.IsTrue(parameterName.IsOutput);
             Assert.IsTrue(parameterName.IsPassedByReference);
@@ -116,7 +118,7 @@ namespace KaVE.Model.Tests.Names.CSharp
         [Test]
         public void ShouldCreateOptionalParameter()
         {
-            var parameterName = typeof(SimpleType).GetMethod("OptionalParamMethod").GetParameters()[0].GetName();
+            var parameterName = typeof (SimpleType).GetMethod("OptionalParamMethod").GetParameters()[0].GetName();
 
             Assert.IsTrue(parameterName.IsOptional);
         }
@@ -124,7 +126,7 @@ namespace KaVE.Model.Tests.Names.CSharp
         [Test]
         public void ShouldCreateFieldName()
         {
-            var fieldName = typeof(SimpleType).GetField("_simpleTypedField").GetName();
+            var fieldName = typeof (SimpleType).GetField("_simpleTypedField").GetName();
 
             Assert.AreEqual("_simpleTypedField", fieldName.Name);
             Assert.AreEqual("System.Int32", fieldName.ValueType.FullName);
@@ -135,7 +137,7 @@ namespace KaVE.Model.Tests.Names.CSharp
         [Test]
         public void ShouldCreateStaticFieldName()
         {
-            var fieldName = typeof(SimpleType).GetField("_staticField").GetName();
+            var fieldName = typeof (SimpleType).GetField("_staticField").GetName();
 
             Assert.IsTrue(fieldName.IsStatic);
         }
@@ -152,7 +154,7 @@ namespace KaVE.Model.Tests.Names.CSharp
         [Test]
         public void ShouldCreateSimpleProperty()
         {
-            var propertyName = typeof(SimpleType).GetProperty("SimpleProperty").GetName();
+            var propertyName = typeof (SimpleType).GetProperty("SimpleProperty").GetName();
 
             Assert.AreEqual("SimpleProperty", propertyName.Name);
             Assert.AreEqual("Test.Targets.SimpleType", propertyName.DeclaringType.FullName);
@@ -165,7 +167,7 @@ namespace KaVE.Model.Tests.Names.CSharp
         [Test]
         public void ShouldCreateGetOnlyProperty()
         {
-            var propertyName = typeof(SimpleType).GetProperty("GetOnlyProperty").GetName();
+            var propertyName = typeof (SimpleType).GetProperty("GetOnlyProperty").GetName();
 
             Assert.IsTrue(propertyName.HasGetter);
             Assert.IsFalse(propertyName.HasSetter);
@@ -174,7 +176,7 @@ namespace KaVE.Model.Tests.Names.CSharp
         [Test]
         public void ShouldCreateSetOnlyProperty()
         {
-            var propertyName = typeof(SimpleType).GetProperty("SetOnlyProperty").GetName();
+            var propertyName = typeof (SimpleType).GetProperty("SetOnlyProperty").GetName();
 
             Assert.IsTrue(propertyName.HasSetter);
             Assert.IsFalse(propertyName.HasGetter);
@@ -183,7 +185,7 @@ namespace KaVE.Model.Tests.Names.CSharp
         [Test]
         public void ShouldCreateGetOnlyPropertyIfSetIsPrivate()
         {
-            var propertyName = typeof(SimpleType).GetProperty("PrivateSetProperty").GetName();
+            var propertyName = typeof (SimpleType).GetProperty("PrivateSetProperty").GetName();
 
             Assert.IsTrue(propertyName.HasGetter);
             Assert.IsFalse(propertyName.HasSetter);
@@ -211,7 +213,7 @@ namespace KaVE.Model.Tests.Names.CSharp
         [Test]
         public void ShouldCreateStaticEvent()
         {
-            var eventName = typeof(SimpleType).GetEvent("StaticEvent").GetName();
+            var eventName = typeof (SimpleType).GetEvent("StaticEvent").GetName();
 
             Assert.IsTrue(eventName.IsStatic);
         }
@@ -219,7 +221,7 @@ namespace KaVE.Model.Tests.Names.CSharp
         [Test]
         public void ShouldCreateArrayTypeName()
         {
-            var typeName = typeof(SimpleType[,][][,,]).GetName();
+            var typeName = typeof (SimpleType[,][][,,]).GetName();
 
             Assert.AreEqual("Test.Targets.SimpleType[,,,,,]", typeName.FullName);
         }
@@ -253,7 +255,8 @@ namespace Test.Targets
             get { return 0; }
         }
 
-        public int SetOnlyProperty {
+        public int SetOnlyProperty
+        {
             // ReSharper disable once ValueParameterNotUsed
             set { }
         }
@@ -265,18 +268,18 @@ namespace Test.Targets
             return 0;
         }
 
-        public void ParameterizedMethod(int firstParam, Object secondParam) { }
+        public void ParameterizedMethod(int firstParam, Object secondParam) {}
 
-        public void ParamsMethod(params int[] varArgs) { }
+        public void ParamsMethod(params int[] varArgs) {}
 
-        public void RefParamMethod(ref int primitiveInOut) { }
+        public void RefParamMethod(ref int primitiveInOut) {}
 
         public void OutParamMethod(out int primitiveOut)
         {
             primitiveOut = 0;
         }
 
-        public void OptionalParamMethod(int optional = 0) { }
+        public void OptionalParamMethod(int optional = 0) {}
 
         public delegate void SomeEventHandler(int param);
 
@@ -285,13 +288,13 @@ namespace Test.Targets
         public static event SomeEventHandler StaticEvent;
     }
 
-    class GenericType<TA>
+    internal class GenericType<TA>
     {
         public TA _genericTypedField;
 
-        public interface IInnerType { }
-
+        public interface IInnerType {}
     }
+
     // ReSharper restore EventNeverSubscribedTo.Global
     // ReSharper restore EventNeverInvoked
     // ReSharper restore UnusedAutoPropertyAccessor.Local

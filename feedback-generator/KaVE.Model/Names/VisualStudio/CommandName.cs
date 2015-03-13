@@ -24,10 +24,11 @@ namespace KaVE.Model.Names.VisualStudio
 {
     public class CommandName : Name, IIDEComponentName
     {
-        private static readonly WeakNameCache<CommandName> Registry = WeakNameCache<CommandName>.Get(id => new CommandName(id));
+        private static readonly WeakNameCache<CommandName> Registry =
+            WeakNameCache<CommandName>.Get(id => new CommandName(id));
 
         /// <summary>
-        /// <code>{guid}:id:name</code>
+        ///     <code>{guid}:id:name</code>
         /// </summary>
         /// <param name="identifier"></param>
         /// <returns></returns>
@@ -37,16 +38,11 @@ namespace KaVE.Model.Names.VisualStudio
         }
 
         private CommandName(string identifier)
-            : base(identifier)
-        {
-        }
+            : base(identifier) {}
 
         public string Guid
         {
-            get
-            {
-                return Identifier.Substring(0, Identifier.IndexOf(':'));
-            }
+            get { return Identifier.Substring(0, Identifier.IndexOf(':')); }
         }
 
         public int Id

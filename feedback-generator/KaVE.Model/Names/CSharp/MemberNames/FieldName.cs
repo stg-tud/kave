@@ -18,9 +18,10 @@
  */
 
 using System;
+using KaVE.JetBrains.Annotations;
 using KaVE.Model.Utils;
 
-namespace KaVE.Model.Names.CSharp
+namespace KaVE.Model.Names.CSharp.MemberNames
 {
     public class FieldName : MemberName, IFieldName
     {
@@ -30,6 +31,11 @@ namespace KaVE.Model.Names.CSharp
         public new static IFieldName UnknownName
         {
             get { return Get("[?] [?].???"); }
+        }
+
+        public override bool IsUnknown
+        {
+            get { return Equals(this, UnknownName); }
         }
 
         /// <summary>
@@ -48,6 +54,7 @@ namespace KaVE.Model.Names.CSharp
         ///         </item>
         ///     </list>
         /// </summary>
+        [NotNull]
         public new static FieldName Get(string identifier)
         {
             return Registry.GetOrCreate(identifier);

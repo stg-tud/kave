@@ -28,6 +28,7 @@ using KaVE.JetBrains.Annotations;
 using KaVE.Model.Events.CompletionEvent;
 using KaVE.Model.Names;
 using KaVE.Model.Names.CSharp;
+using KaVE.Model.Names.CSharp.MemberNames;
 using KaVE.Model.Names.ReSharper;
 using KaVE.VsFeedbackGenerator.Utils.Names;
 
@@ -78,10 +79,10 @@ namespace KaVE.VsFeedbackGenerator.Utils
             var typeName = constructor.PreferredDeclaredElement.GetName();
             var identifier = new StringBuilder();
             identifier.Append('[')
-                .Append(typeName.Identifier)
-                .Append("] [")
-                .Append(typeName.Identifier)
-                .Append("]..ctor()");
+                      .Append(typeName.Identifier)
+                      .Append("] [")
+                      .Append(typeName.Identifier)
+                      .Append("]..ctor()");
             return MethodName.Get(identifier.ToString());
         }
 

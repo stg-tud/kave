@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 namespace KaVE.Model.Names
 {
     public interface INamespaceName : IName
@@ -21,7 +22,7 @@ namespace KaVE.Model.Names
         string Name { get; }
 
         /// <summary>
-        /// <returns>Wheather this is the global (or default) namespace</returns>
+        ///     <returns>Wheather this is the global (or default) namespace</returns>
         /// </summary>
         bool IsGlobalNamespace { get; }
     }

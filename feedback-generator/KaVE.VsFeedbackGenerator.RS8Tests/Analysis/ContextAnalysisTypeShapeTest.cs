@@ -21,13 +21,13 @@ using System.Collections.Generic;
 using JetBrains.Util;
 using KaVE.Model.Events.CompletionEvent;
 using KaVE.Model.Names.CSharp;
+using KaVE.Model.Names.CSharp.MemberNames;
 using NUnit.Framework;
 
 namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
 {
     internal class ContextAnalysisTypeShapeTest : BaseCSharpCodeCompletionTest
     {
-
         [Test]
         public void ImplementedMethodsAreCaptured()
         {

@@ -13,25 +13,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using KaVE.JetBrains.Annotations;
+using KaVE.Model.Names.CSharp.MemberNames;
 using KaVE.Utils;
 using KaVE.Utils.Assertion;
 
 namespace KaVE.Model.Names.CSharp
 {
     /// <summary>
-    /// This implementation lacks support for the following:
-    /// <list type="bullet">
-    ///     <item><description>proper handling of type parameters</description></item>
-    ///     <item><description>generation of constructor names</description></item>
-    ///     <item><description>generation of array-type names</description></item>
-    ///     <item><description>stripping of additional assembly information, i.e., Culture and PublicKeyToken, from assembly names</description></item>
-    /// </list>
+    ///     This implementation lacks support for the following:
+    ///     <list type="bullet">
+    ///         <item>
+    ///             <description>proper handling of type parameters</description>
+    ///         </item>
+    ///         <item>
+    ///             <description>generation of constructor names</description>
+    ///         </item>
+    ///         <item>
+    ///             <description>generation of array-type names</description>
+    ///         </item>
+    ///         <item>
+    ///             <description>
+    ///                 stripping of additional assembly information, i.e., Culture and PublicKeyToken, from assembly
+    ///                 names
+    ///             </description>
+    ///         </item>
+    ///     </list>
     /// </summary>
     [Obsolete("This implementation is outdated and should not be used.")]
     public static class CSharpNameFromInfoFactory
@@ -104,10 +117,10 @@ namespace KaVE.Model.Names.CSharp
         private static void Append(this StringBuilder identifier, MemberInfo property, Type valueType)
         {
             identifier.AppendType(valueType)
-                .Append(" ")
-                .AppendType(property.DeclaringType)
-                .Append(".")
-                .Append(property.Name);
+                      .Append(" ")
+                      .AppendType(property.DeclaringType)
+                      .Append(".")
+                      .Append(property.Name);
         }
 
         private static StringBuilder AppendType(this StringBuilder identifier, Type type)

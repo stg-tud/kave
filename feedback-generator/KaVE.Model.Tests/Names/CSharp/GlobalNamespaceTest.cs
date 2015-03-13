@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 using KaVE.Model.Names;
-using KaVE.Model.Names.CSharp;
+using KaVE.Model.Names.CSharp.Modularization;
 using NUnit.Framework;
 
 namespace KaVE.Model.Tests.Names.CSharp
 {
-    [TestFixture]
     public class GlobalNamespaceTest
     {
         private readonly INamespaceName _globalNamespace = NamespaceName.GlobalNamespace;

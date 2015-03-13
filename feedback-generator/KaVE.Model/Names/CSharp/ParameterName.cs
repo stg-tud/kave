@@ -31,9 +31,14 @@ namespace KaVE.Model.Names.CSharp
         private static readonly WeakNameCache<ParameterName> Registry =
             WeakNameCache<ParameterName>.Get(id => new ParameterName(id));
 
-        public static new IParameterName UnknownName
+        public new static IParameterName UnknownName
         {
             get { return Get("[?] ???"); }
+        }
+
+        public override bool IsUnknown
+        {
+            get { return Equals(this, UnknownName); }
         }
 
         /// <summary>

@@ -18,14 +18,20 @@
  */
 
 using KaVE.Model.Names.CSharp;
+using KaVE.Model.Names.CSharp.Modularization;
 using NUnit.Framework;
 
 namespace KaVE.Model.Tests.Names.CSharp
 {
-    [TestFixture]
     internal class TypeNameTest
     {
         private const string TestAssemblyIdentifier = "a, 1.0.0.0";
+
+        [Test]
+        public void ShouldImplementIsUnknown()
+        {
+            Assert.That(TypeName.UnknownName.IsUnknown);
+        }
 
         [Test]
         public void ShouldGetNamespaceFromTypeInGlobalNamespace()
@@ -192,14 +198,15 @@ namespace KaVE.Model.Tests.Names.CSharp
 
         [TestCase("ValueType[,,], As, 9.8.7.6", "ValueType, As, 9.8.7.6"),
          TestCase("ValueType[], As, 5.4.3.2", "ValueType, As, 5.4.3.2"),
-         TestCase("a.Foo`1[][[T -> int, mscore, 1.0.0.0]], A, 1.2.3.4", "a.Foo`1[[T -> int, mscore, 1.0.0.0]], A, 1.2.3.4"),
+         TestCase("a.Foo`1[][[T -> int, mscore, 1.0.0.0]], A, 1.2.3.4",
+             "a.Foo`1[[T -> int, mscore, 1.0.0.0]], A, 1.2.3.4"),
          TestCase("A[]", "A"),
          TestCase("T -> System.String[], mscorlib, 4.0.0.0", "System.String, mscorlib, 4.0.0.0"),
          TestCase("System.Int32[], mscorlib, 4.0.0.0", "System.Int32, mscorlib, 4.0.0.0")]
         public void ShouldGetArrayBaseType(string identifier, string expected)
         {
             var arrayTypeName = TypeName.Get(identifier);
-            
+
             Assert.AreEqual(expected, arrayTypeName.ArrayBaseType.Identifier);
         }
 
@@ -322,7 +329,8 @@ namespace KaVE.Model.Tests.Names.CSharp
 
         [TestCase("System.UInt16, mscorlib, 4.0.0.0", "System.UInt16"),
          TestCase("e:Full.Enum.Type, E, 1.2.3.4", "Full.Enum.Type"),
-         TestCase("System.Nullable`1[[System.Int32, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0", "System.Nullable`1[[System.Int32, mscorlib, 4.0.0.0]]"),
+         TestCase("System.Nullable`1[[System.Int32, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0",
+             "System.Nullable`1[[System.Int32, mscorlib, 4.0.0.0]]"),
          TestCase("T -> Some.Arbitrary.Type, Assembly, 5.6.4.7", "Some.Arbitrary.Type"),
          TestCase("Outer.Type+InnerType, As, 1.2.3.4", "Outer.Type+InnerType"),
          TestCase("?", "?")]

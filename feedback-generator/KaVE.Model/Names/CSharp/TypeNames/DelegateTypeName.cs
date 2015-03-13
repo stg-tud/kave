@@ -12,24 +12,33 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sven Amann
  */
 
-using KaVE.Model.Names.CSharp;
-using KaVE.Model.Utils;
+using KaVE.JetBrains.Annotations;
 
-namespace KaVE.Model.Names.VisualStudio
+namespace KaVE.Model.Names.CSharp.TypeNames
 {
-    public class SolutionName : Name, IIDEComponentName
+    public class DelegateTypeName : TypeName
     {
-        private static readonly WeakNameCache<SolutionName> Registry =
-            WeakNameCache<SolutionName>.Get(id => new SolutionName(id));
-
-        public new static SolutionName Get(string identifier)
+        internal static bool IsDelegateTypeIdentifier(string identifier)
         {
-            return Registry.GetOrCreate(identifier);
+            return identifier.StartsWith("d:");
         }
 
-        private SolutionName(string identifier)
-            : base(identifier) {}
+        [UsedImplicitly]
+        internal new static ITypeName Get(string identifier)
+        {
+            return TypeName.Get(identifier);
+        }
+
+        internal DelegateTypeName(string identifier) : base(identifier) {}
+
+        public override bool IsDelegateType
+        {
+            get { return true; }
+        }
     }
 }

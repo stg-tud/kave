@@ -20,6 +20,7 @@
 using System;
 using System.Collections.Generic;
 using KaVE.JetBrains.Annotations;
+using KaVE.Model.Names.CSharp.TypeNames;
 using KaVE.Utils.Assertion;
 
 namespace KaVE.Model.Names.CSharp

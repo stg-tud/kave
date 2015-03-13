@@ -19,20 +19,13 @@
 
 using KaVE.JetBrains.Annotations;
 
-namespace KaVE.Model.Names.CSharp
+namespace KaVE.Model.Names.CSharp.TypeNames
 {
-    public class UnknownTypeName : TypeName
+    public class EnumTypeName : TypeName
     {
-        public new const string Identifier = "?";
-
-        public static ITypeName Instance
+        internal static bool IsEnumTypeIdentifier(string identifier)
         {
-            get { return TypeName.Get(Identifier); }
-        }
-
-        internal static bool IsUnknownTypeIdentifier(string identifier)
-        {
-            return Identifier.Equals(identifier);
+            return identifier.StartsWith("e:");
         }
 
         [UsedImplicitly]
@@ -41,21 +34,11 @@ namespace KaVE.Model.Names.CSharp
             return TypeName.Get(identifier);
         }
 
-        internal UnknownTypeName(string identifier) : base(identifier) {}
+        internal EnumTypeName(string identifier) : base(identifier) {}
 
-        public override bool IsUnknownType
+        public override bool IsEnumType
         {
             get { return true; }
-        }
-
-        public override IAssemblyName Assembly
-        {
-            get { return AssemblyName.UnknownName; }
-        }
-
-        public override INamespaceName Namespace
-        {
-            get { return NamespaceName.UnknownName; }
         }
     }
 }

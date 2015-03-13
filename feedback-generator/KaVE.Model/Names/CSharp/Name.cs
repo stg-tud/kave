@@ -35,6 +35,11 @@ namespace KaVE.Model.Names.CSharp
             get { return Get(UnknownNameIdentifier); }
         }
 
+        public virtual bool IsUnknown
+        {
+            get { return Equals(this, UnknownName); }
+        }
+
         public static Name Get(string identifier)
         {
             if (!NameRegistry.ContainsKey(identifier))

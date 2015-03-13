@@ -22,9 +22,14 @@ using NUnit.Framework;
 
 namespace KaVE.Model.Tests.Names.CSharp
 {
-    [TestFixture]
-    class ParameterNameTest
+    internal class ParameterNameTest
     {
+        [Test]
+        public void ShouldImplementIsUnknown()
+        {
+            Assert.That(ParameterName.UnknownName.IsUnknown);
+        }
+
         [Test]
         public void ShouldBeSimpleParameter()
         {

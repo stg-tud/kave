@@ -19,13 +19,13 @@
 
 using KaVE.JetBrains.Annotations;
 
-namespace KaVE.Model.Names.CSharp
+namespace KaVE.Model.Names.CSharp.TypeNames
 {
-    public class DelegateTypeName : TypeName
+    public class InterfaceTypeName : TypeName
     {
-        internal static bool IsDelegateTypeIdentifier(string identifier)
+        internal static bool IsInterfaceTypeIdentifier(string identifier)
         {
-            return identifier.StartsWith("d:");
+            return identifier.StartsWith("i:");
         }
 
         [UsedImplicitly]
@@ -34,11 +34,21 @@ namespace KaVE.Model.Names.CSharp
             return TypeName.Get(identifier);
         }
 
-        internal DelegateTypeName(string identifier) : base(identifier) { }
+        internal InterfaceTypeName(string identifier) : base(identifier) {}
 
-        public override bool IsDelegateType
+        public override bool IsUnknownType
+        {
+            get { return false; }
+        }
+
+        public override bool IsInterfaceType
         {
             get { return true; }
+        }
+
+        public override bool IsArrayType
+        {
+            get { return false; }
         }
     }
 }

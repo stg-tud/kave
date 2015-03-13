@@ -14,31 +14,20 @@
  * limitations under the License.
  * 
  * Contributors:
- *    - Sven Amann
+ *    - Sebastian Proksch
  */
 
-using KaVE.JetBrains.Annotations;
+using KaVE.Model.Names.CSharp;
+using NUnit.Framework;
 
-namespace KaVE.Model.Names.CSharp
+namespace KaVE.Model.Tests.Names.CSharp
 {
-    public class EnumTypeName : TypeName
+    internal class LocalVariableNameTest
     {
-        internal static bool IsEnumTypeIdentifier(string identifier)
+        [Test]
+        public void ShouldImplementIsUnknown()
         {
-            return identifier.StartsWith("e:");
-        }
-
-        [UsedImplicitly]
-        internal new static ITypeName Get(string identifier)
-        {
-            return TypeName.Get(identifier);
-        }
-
-        internal EnumTypeName(string identifier) : base(identifier) {}
-
-        public override bool IsEnumType
-        {
-            get { return true; }
+            Assert.That(LocalVariableName.UnknownName.IsUnknown);
         }
     }
 }

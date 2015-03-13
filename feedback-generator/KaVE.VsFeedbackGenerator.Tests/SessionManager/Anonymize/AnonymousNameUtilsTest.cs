@@ -21,15 +21,52 @@
 using KaVE.JetBrains.Annotations;
 using KaVE.Model.Names;
 using KaVE.Model.Names.CSharp;
+using KaVE.Model.Names.CSharp.MemberNames;
+using KaVE.Model.Names.CSharp.Modularization;
+using KaVE.Model.Names.CSharp.TypeNames;
 using KaVE.Model.Names.VisualStudio;
 using KaVE.VsFeedbackGenerator.SessionManager.Anonymize;
 using NUnit.Framework;
 
 namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
 {
-    [TestFixture]
     internal class AnonymousNameUtilsTest
     {
+        [Test]
+        public void ShouldAnonymizeStrings()
+        {
+            Assert.AreEqual("QUThlfRt54o2I9pzZNBPEQ==", "a".ToHash());
+        }
+
+        [Test]
+        public void ShouldAnonymizeNull()
+        {
+            // ReSharper disable once AssignNullToNotNullAttribute
+            Assert.Null(((string) null).ToHash());
+        }
+
+        [Test]
+        public void ShouldNotAnonymizeEmptyString()
+        {
+            Assert.AreEqual("", "".ToHash());
+        }
+
+        [Test]
+        public void ShouldNotAnonymizeUnknownNames()
+        {
+            var actual = Name.UnknownName.ToAnonymousName();
+            var expected = Name.UnknownName;
+            Assert.AreEqual(expected, actual);
+            // equivalent...
+            var actual2 = TypeName.UnknownName.ToAnonymousName();
+            var expected2 = TypeName.UnknownName;
+            Assert.AreEqual(expected2, actual2);
+            // equivalent...
+            var actual3 = MethodName.UnknownName.ToAnonymousName();
+            var expected3 = MethodName.UnknownName;
+            Assert.AreEqual(expected3, actual3);
+        }
+
         [Test]
         public void ShouldAnonymizeFileNameFromDocumentName()
         {

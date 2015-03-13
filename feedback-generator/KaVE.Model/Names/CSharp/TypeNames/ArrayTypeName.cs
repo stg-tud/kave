@@ -19,7 +19,7 @@
 
 using KaVE.JetBrains.Annotations;
 
-namespace KaVE.Model.Names.CSharp
+namespace KaVE.Model.Names.CSharp.TypeNames
 {
     public class ArrayTypeName : TypeName
     {

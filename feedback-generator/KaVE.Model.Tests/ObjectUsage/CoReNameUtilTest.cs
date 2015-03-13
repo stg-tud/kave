@@ -18,6 +18,7 @@
  */
 
 using KaVE.Model.Names.CSharp;
+using KaVE.Model.Names.CSharp.MemberNames;
 using KaVE.Model.ObjectUsage;
 using NUnit.Framework;
 
@@ -58,7 +59,7 @@ namespace KaVE.Model.Tests.ObjectUsage
         }
 
         [TestCase("[N.S, A, 1.0.0.0] [N.T, A, 1.0.0.0].f", "LN/T.f;LN/S"),
-        TestCase("[?] [?].???", "LUnknown.unknown;LUnknown")]
+         TestCase("[?] [?].???", "LUnknown.unknown;LUnknown")]
         public void ShouldConvertFieldNames(string iName, string coReName)
         {
             var expected = new CoReFieldName(coReName);

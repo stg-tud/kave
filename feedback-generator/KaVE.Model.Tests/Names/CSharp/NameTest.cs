@@ -14,7 +14,7 @@
  * limitations under the License.
  * 
  * Contributors:
- *    - Sven Amann
+ *    - Sebastian Proksch
  */
 
 using KaVE.Model.Names.CSharp;
@@ -22,25 +22,12 @@ using NUnit.Framework;
 
 namespace KaVE.Model.Tests.Names.CSharp
 {
-    [TestFixture]
-    class EventNameTest
+    internal class NameTest
     {
         [Test]
-        public void ShouldBeSimpleEvent()
+        public void ShouldImplementIsUnknown()
         {
-            var eventName = EventName.Get("[ChangedEventHandler, IO, 1.2.3.4] [TextBox, GUI, 0.8.7.6].Changed");
-
-            Assert.AreEqual("ChangedEventHandler", eventName.HandlerType.FullName);
-            Assert.AreEqual("TextBox", eventName.DeclaringType.FullName);
-            Assert.AreEqual("Changed", eventName.Name);
-        }
-
-        [Test]
-        public void ShouldBeUnknownEvent()
-        {
-            Assert.AreSame(TypeName.UnknownName, EventName.UnknownName.HandlerType);
-            Assert.AreSame(TypeName.UnknownName, EventName.UnknownName.DeclaringType);
-            Assert.AreEqual("???", EventName.UnknownName.Name);
+            Assert.That(Name.UnknownName.IsUnknown);
         }
     }
 }

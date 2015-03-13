@@ -13,7 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 using KaVE.Model.Names.CSharp;
+using KaVE.Model.Names.CSharp.MemberNames;
+using KaVE.Model.Names.CSharp.Modularization;
 using NUnit.Framework;
 
 namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
@@ -84,7 +87,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
                     }
                 }
             ");
-            
+
             //var actual = ResultContext.TriggerTarget;
             var expected = TypeName.Get("N.C, TestProject");
             //Assert.AreEqual(expected, actual);

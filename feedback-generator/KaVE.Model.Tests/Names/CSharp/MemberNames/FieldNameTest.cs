@@ -18,14 +18,20 @@
  */
 
 using KaVE.Model.Names.CSharp;
+using KaVE.Model.Names.CSharp.MemberNames;
 using NUnit.Framework;
 
-namespace KaVE.Model.Tests.Names.CSharp
+namespace KaVE.Model.Tests.Names.CSharp.MemberNames
 {
-    [TestFixture]
-    class FieldNameTest
+    internal class FieldNameTest
     {
         private const string Identifier = "[b.ValueType, B, 1.3.3.7] [a.ValueType, A, 4.2.2.3].fieldName";
+
+        [Test]
+        public void ShouldImplementIsUnknown()
+        {
+            Assert.That(FieldName.UnknownName.IsUnknown);
+        }
 
         [Test]
         public void ShouldBeInstanceFieldName()
@@ -52,7 +58,7 @@ namespace KaVE.Model.Tests.Names.CSharp
         {
             const string valueTypeIdentifier = "T`1[[A, B, 1.0.0.0]], A, 9.1.8.2";
             const string declaringTypeIdentifier = "U`2[[B, C, 6.7.5.8],[C, D, 8.3.7.4]], Z, 0.0.0.0";
-            var fieldName = FieldName.Get("[" + valueTypeIdentifier + "] ["+ declaringTypeIdentifier + "].bar");
+            var fieldName = FieldName.Get("[" + valueTypeIdentifier + "] [" + declaringTypeIdentifier + "].bar");
 
             Assert.AreEqual("bar", fieldName.Name);
             Assert.AreEqual(valueTypeIdentifier, fieldName.ValueType.Identifier);

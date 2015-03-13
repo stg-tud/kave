@@ -22,7 +22,7 @@ using System;
 using System.Collections.Generic;
 using KaVE.Model.Events;
 using KaVE.Model.Events.CompletionEvent;
-using KaVE.Model.Names.CSharp;
+using KaVE.Model.Names.CSharp.MemberNames;
 using KaVE.Model.Names.VisualStudio;
 using KaVE.TestUtils.Model.Events.CompletionEvent;
 using KaVE.TestUtils.Model.Names;

@@ -83,29 +83,29 @@
     <Compile Include="Groum\UsingGroum.cs" />
     <Compile Include="Groum\WhileGroum.cs" />
     <Compile Include="Events\IDEEvent.cs" />
-    <Compile Include="Names\CSharp\AliasName.cs" />
-    <Compile Include="Names\CSharp\ArrayTypeName.cs" />
-    <Compile Include="Names\CSharp\AssemblyName.cs" />
-    <Compile Include="Names\CSharp\AssemblyVersion.cs" />
+    <Compile Include="Names\CSharp\Modularization\AliasName.cs" />
+    <Compile Include="Names\CSharp\Modularization\AssemblyName.cs" />
+    <Compile Include="Names\CSharp\Modularization\AssemblyVersion.cs" />
     <Compile Include="Names\CSharp\CSharpNameFromInfoFactory.cs" />
     <Compile Include="Names\CSharp\CSharpNameUtils.cs" />
-    <Compile Include="Names\CSharp\DelegateTypeName.cs" />
-    <Compile Include="Names\CSharp\EnumTypeName.cs" />
-    <Compile Include="Names\CSharp\EventName.cs" />
-    <Compile Include="Names\CSharp\FieldName.cs" />
     <Compile Include="Names\CSharp\GenericNameUtils.cs" />
-    <Compile Include="Names\CSharp\InterfaceTypeName.cs" />
     <Compile Include="Names\CSharp\LocalVariableName.cs" />
     <Compile Include="Names\CSharp\MemberName.cs" />
-    <Compile Include="Names\CSharp\MethodName.cs" />
+    <Compile Include="Names\CSharp\MemberNames\EventName.cs" />
+    <Compile Include="Names\CSharp\MemberNames\FieldName.cs" />
+    <Compile Include="Names\CSharp\MemberNames\MethodName.cs" />
+    <Compile Include="Names\CSharp\MemberNames\PropertyName.cs" />
     <Compile Include="Names\CSharp\Name.cs" />
-    <Compile Include="Names\CSharp\NamespaceName.cs" />
+    <Compile Include="Names\CSharp\Modularization\NamespaceName.cs" />
     <Compile Include="Names\CSharp\ParameterName.cs" />
-    <Compile Include="Names\CSharp\StructTypeName.cs" />
+    <Compile Include="Names\CSharp\TypeNames\ArrayTypeName.cs" />
+    <Compile Include="Names\CSharp\TypeNames\DelegateTypeName.cs" />
+    <Compile Include="Names\CSharp\TypeNames\EnumTypeName.cs" />
+    <Compile Include="Names\CSharp\TypeNames\InterfaceTypeName.cs" />
+    <Compile Include="Names\CSharp\TypeNames\StructTypeName.cs" />
+    <Compile Include="Names\CSharp\TypeNames\UnknownTypeName.cs" />
     <Compile Include="Names\CSharp\TypeParameterName.cs" />
-    <Compile Include="Names\CSharp\PropertyName.cs" />
     <Compile Include="Names\CSharp\TypeName.cs" />
-    <Compile Include="Names\CSharp\UnknownTypeName.cs" />
     <Compile Include="Names\IAssemblyName.cs" />
     <Compile Include="Names\IAssemblyVersion.cs" />
     <Compile Include="Names\IEventName.cs" />
@@ -246,7 +246,6 @@
     <None Include="..\KaVE.licenseheader">
       <Link>KaVE.licenseheader</Link>
     </None>
-    <None Include="Names\NameStructure.cd" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\KaVE.Utils\KaVE.Utils.csproj">

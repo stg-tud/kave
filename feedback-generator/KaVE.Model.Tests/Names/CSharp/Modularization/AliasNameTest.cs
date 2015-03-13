@@ -12,24 +12,22 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sebastian Proksch
  */
 
-using KaVE.Model.Names.CSharp;
-using KaVE.Model.Utils;
+using KaVE.Model.Names.CSharp.Modularization;
+using NUnit.Framework;
 
-namespace KaVE.Model.Names.VisualStudio
+namespace KaVE.Model.Tests.Names.CSharp.Modularization
 {
-    public class SolutionName : Name, IIDEComponentName
+    internal class AliasNameTest
     {
-        private static readonly WeakNameCache<SolutionName> Registry =
-            WeakNameCache<SolutionName>.Get(id => new SolutionName(id));
-
-        public new static SolutionName Get(string identifier)
+        [Test]
+        public void ShouldImplementIsUnknown()
         {
-            return Registry.GetOrCreate(identifier);
+            Assert.That(AliasName.UnknownName.IsUnknown);
         }
-
-        private SolutionName(string identifier)
-            : base(identifier) {}
     }
 }

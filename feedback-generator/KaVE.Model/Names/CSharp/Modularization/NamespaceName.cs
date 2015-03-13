@@ -19,13 +19,14 @@
 
 using KaVE.Model.Utils;
 
-namespace KaVE.Model.Names.CSharp
+namespace KaVE.Model.Names.CSharp.Modularization
 {
     public class NamespaceName : Name, INamespaceName
     {
         public const string GlobalNamespaceIdentifier = "";
 
-        private static readonly WeakNameCache<NamespaceName> Registry = WeakNameCache<NamespaceName>.Get(id => new NamespaceName(id));
+        private static readonly WeakNameCache<NamespaceName> Registry =
+            WeakNameCache<NamespaceName>.Get(id => new NamespaceName(id));
 
         public static readonly INamespaceName GlobalNamespace = Get(GlobalNamespaceIdentifier);
 
@@ -35,12 +36,21 @@ namespace KaVE.Model.Names.CSharp
         }
 
         /// <summary>
-        /// Namespace names follow the scheme <code>'parent namespace name'.'namespace name'</code>. An exception is the global namespace, which has the empty string as its identfier.
-        /// Examples of namespace names are:
-        /// <list type="bullet">
-        ///     <item><description><code>System</code></description></item>
-        ///     <item><description><code>CodeCompletion.Model.Names.CSharp</code></description></item>
-        /// </list>
+        ///     Namespace names follow the scheme <code>'parent namespace name'.'namespace name'</code>. An exception is the global
+        ///     namespace, which has the empty string as its identfier.
+        ///     Examples of namespace names are:
+        ///     <list type="bullet">
+        ///         <item>
+        ///             <description>
+        ///                 <code>System</code>
+        ///             </description>
+        ///         </item>
+        ///         <item>
+        ///             <description>
+        ///                 <code>CodeCompletion.Model.Names.CSharp</code>
+        ///             </description>
+        ///         </item>
+        ///     </list>
         /// </summary>
         public new static NamespaceName Get(string identifier)
         {
@@ -48,9 +58,7 @@ namespace KaVE.Model.Names.CSharp
         }
 
         private NamespaceName(string identifier)
-            : base(identifier)
-        {
-        }
+            : base(identifier) {}
 
         public INamespaceName ParentNamespace
         {
