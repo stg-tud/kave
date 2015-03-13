@@ -52,8 +52,8 @@ namespace KaVE.Model.SSTs.Impl.Declarations
         {
             unchecked
             {
-                return 20 + ((Reference != null ? Reference.GetHashCode() : 0)*397) ^
-                       (Type != null ? Type.GetHashCode() : 0);
+                return 20 + (Reference.GetHashCode()*397) ^
+                       Type.GetHashCode();
             }
         }
 

@@ -17,10 +17,13 @@
  *    - Sebastian Proksch
  */
 
+using KaVE.JetBrains.Annotations;
+
 namespace KaVE.Model.SSTs.References
 {
     public interface IMemberReference : IReference
     {
+        [NotNull]
         IVariableReference Reference { get; }
     }
 }

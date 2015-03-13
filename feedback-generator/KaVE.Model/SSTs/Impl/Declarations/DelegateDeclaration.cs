@@ -46,7 +46,7 @@ namespace KaVE.Model.SSTs.Impl.Declarations
 
         public override int GetHashCode()
         {
-            return unchecked (23 + (Name != null ? Name.GetHashCode() : 0));
+            return unchecked (23 + Name.GetHashCode());
         }
 
         public void Accept<TContext>(ISSTNodeVisitor<TContext> visitor, TContext context)

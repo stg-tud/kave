@@ -17,6 +17,7 @@
  *    - Sebastian Proksch
  */
 
+using KaVE.Model.Names;
 using KaVE.Model.Names.CSharp.MemberNames;
 using KaVE.Model.SSTs.Impl.References;
 using NUnit.Framework;
@@ -25,11 +26,16 @@ namespace KaVE.Model.Tests.SSTs.Impl.References
 {
     public class MethodReferenceTest
     {
+        private static IMethodName SomeMethod
+        {
+            get { return MethodName.Get("[T1,P1] [T2,P2].E()"); }
+        }
+
         [Test]
         public void DefaultValues()
         {
             var sut = new MethodReference();
-            Assert.Null(sut.MethodName);
+            Assert.AreEqual(MethodName.UnknownName, sut.MethodName);
             Assert.AreNotEqual(0, sut.GetHashCode());
             Assert.AreNotEqual(1, sut.GetHashCode());
         }
@@ -37,8 +43,8 @@ namespace KaVE.Model.Tests.SSTs.Impl.References
         [Test]
         public void SettingValues()
         {
-            var sut = new MethodReference {MethodName = MethodName.UnknownName};
-            Assert.AreEqual(MethodName.UnknownName, sut.MethodName);
+            var sut = new MethodReference {MethodName = SomeMethod};
+            Assert.AreEqual(SomeMethod, sut.MethodName);
         }
 
         [Test]
@@ -53,8 +59,8 @@ namespace KaVE.Model.Tests.SSTs.Impl.References
         [Test]
         public void Equality_ReallyTheSame()
         {
-            var a = new MethodReference {MethodName = MethodName.UnknownName};
-            var b = new MethodReference {MethodName = MethodName.UnknownName};
+            var a = new MethodReference {MethodName = SomeMethod};
+            var b = new MethodReference {MethodName = SomeMethod};
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
         }
@@ -62,7 +68,7 @@ namespace KaVE.Model.Tests.SSTs.Impl.References
         [Test]
         public void Equality_DifferentName()
         {
-            var a = new MethodReference {MethodName = MethodName.UnknownName};
+            var a = new MethodReference {MethodName = SomeMethod};
             var b = new MethodReference();
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());

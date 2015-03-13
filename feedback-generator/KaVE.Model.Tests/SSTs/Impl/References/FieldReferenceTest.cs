@@ -17,6 +17,7 @@
  *    - Sebastian Proksch
  */
 
+using KaVE.Model.Names;
 using KaVE.Model.Names.CSharp.MemberNames;
 using KaVE.Model.SSTs.Impl.References;
 using NUnit.Framework;
@@ -25,11 +26,16 @@ namespace KaVE.Model.Tests.SSTs.Impl.References
 {
     public class FieldReferenceTest
     {
+        private static IFieldName SomeField
+        {
+            get { return FieldName.Get("[T1,P1] [T2,P2].E"); }
+        }
+
         [Test]
         public void DefaultValues()
         {
             var sut = new FieldReference();
-            Assert.Null(sut.FieldName);
+            Assert.AreEqual(FieldName.UnknownName, sut.FieldName);
             Assert.AreNotEqual(0, sut.GetHashCode());
             Assert.AreNotEqual(1, sut.GetHashCode());
         }
@@ -37,8 +43,8 @@ namespace KaVE.Model.Tests.SSTs.Impl.References
         [Test]
         public void SettingValues()
         {
-            var sut = new FieldReference {FieldName = FieldName.UnknownName};
-            Assert.AreEqual(FieldName.UnknownName, sut.FieldName);
+            var sut = new FieldReference {FieldName = SomeField};
+            Assert.AreEqual(SomeField, sut.FieldName);
         }
 
         [Test]
@@ -53,8 +59,8 @@ namespace KaVE.Model.Tests.SSTs.Impl.References
         [Test]
         public void Equality_ReallyTheSame()
         {
-            var a = new FieldReference {FieldName = FieldName.UnknownName};
-            var b = new FieldReference {FieldName = FieldName.UnknownName};
+            var a = new FieldReference {FieldName = SomeField};
+            var b = new FieldReference {FieldName = SomeField};
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
         }
@@ -62,7 +68,7 @@ namespace KaVE.Model.Tests.SSTs.Impl.References
         [Test]
         public void Equality_DifferentName()
         {
-            var a = new FieldReference {FieldName = FieldName.UnknownName};
+            var a = new FieldReference {FieldName = SomeField};
             var b = new FieldReference();
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());

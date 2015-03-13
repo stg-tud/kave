@@ -29,6 +29,11 @@ namespace KaVE.Model.SSTs.Impl.References
         public IVariableReference Reference { get; set; }
         public IEventName EventName { get; set; }
 
+        public EventReference()
+        {
+            EventName = Names.CSharp.MemberNames.EventName.UnknownName;
+        }
+
         protected bool Equals(EventReference other)
         {
             return Equals(EventName, other.EventName);
@@ -41,8 +46,7 @@ namespace KaVE.Model.SSTs.Impl.References
 
         public override int GetHashCode()
         {
-            var hcEventName = EventName != null ? EventName.GetHashCode() : 0;
-            return unchecked(175 + hcEventName);
+            return unchecked(175 + EventName.GetHashCode());
         }
 
         public void Accept<TContext>(ISSTNodeVisitor<TContext> visitor, TContext context)

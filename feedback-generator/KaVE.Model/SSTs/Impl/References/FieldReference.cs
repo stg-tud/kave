@@ -29,6 +29,11 @@ namespace KaVE.Model.SSTs.Impl.References
         public IVariableReference Reference { get; set; }
         public IFieldName FieldName { get; set; }
 
+        public FieldReference()
+        {
+            FieldName = Names.CSharp.MemberNames.FieldName.UnknownName;
+        }
+
         protected bool Equals(FieldReference other)
         {
             return Equals(FieldName, other.FieldName);
@@ -41,8 +46,7 @@ namespace KaVE.Model.SSTs.Impl.References
 
         public override int GetHashCode()
         {
-            var hcFieldName = FieldName != null ? FieldName.GetHashCode() : 0;
-            return unchecked(345 + hcFieldName);
+            return unchecked(345 + FieldName.GetHashCode());
         }
 
         public void Accept<TContext>(ISSTNodeVisitor<TContext> visitor, TContext context)

@@ -17,6 +17,7 @@
  *    - Sebastian Proksch
  */
 
+using KaVE.Model.Names;
 using KaVE.Model.Names.CSharp.MemberNames;
 using KaVE.Model.SSTs.Impl.References;
 using NUnit.Framework;
@@ -25,11 +26,16 @@ namespace KaVE.Model.Tests.SSTs.Impl.References
 {
     public class PropertyReferenceTest
     {
+        private static IPropertyName SomeProperty
+        {
+            get { return PropertyName.Get("[T1,P1] [T2,P2].P"); }
+        }
+
         [Test]
         public void DefaultValues()
         {
             var sut = new PropertyReference();
-            Assert.Null(sut.PropertyName);
+            Assert.AreEqual(PropertyName.UnknownName, sut.PropertyName);
             Assert.AreNotEqual(0, sut.GetHashCode());
             Assert.AreNotEqual(1, sut.GetHashCode());
         }
@@ -37,8 +43,8 @@ namespace KaVE.Model.Tests.SSTs.Impl.References
         [Test]
         public void SettingValues()
         {
-            var sut = new PropertyReference {PropertyName = PropertyName.UnknownName};
-            Assert.AreEqual(PropertyName.UnknownName, sut.PropertyName);
+            var sut = new PropertyReference {PropertyName = SomeProperty};
+            Assert.AreEqual(SomeProperty, sut.PropertyName);
         }
 
         [Test]
@@ -53,8 +59,8 @@ namespace KaVE.Model.Tests.SSTs.Impl.References
         [Test]
         public void Equality_ReallyTheSame()
         {
-            var a = new PropertyReference {PropertyName = PropertyName.UnknownName};
-            var b = new PropertyReference {PropertyName = PropertyName.UnknownName};
+            var a = new PropertyReference {PropertyName = SomeProperty};
+            var b = new PropertyReference {PropertyName = SomeProperty};
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
         }
@@ -62,7 +68,7 @@ namespace KaVE.Model.Tests.SSTs.Impl.References
         [Test]
         public void Equality_DifferentName()
         {
-            var a = new PropertyReference {PropertyName = PropertyName.UnknownName};
+            var a = new PropertyReference {PropertyName = SomeProperty};
             var b = new PropertyReference();
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());

@@ -44,8 +44,7 @@ namespace KaVE.Model.SSTs.Impl.References
 
         public override int GetHashCode()
         {
-            var hcIdentifier = Identifier != null ? Identifier.GetHashCode() : 0;
-            return unchecked (724584 + hcIdentifier);
+            return unchecked (724584 + Identifier.GetHashCode());
         }
 
         public void Accept<TContext>(ISSTNodeVisitor<TContext> visitor, TContext context)
