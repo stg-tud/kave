@@ -17,11 +17,16 @@
  *    - Sebastian Proksch
  */
 
+using KaVE.JetBrains.Annotations;
+
 namespace KaVE.Model.SSTs.Statements
 {
     public interface ILabelledStatement : IStatement
     {
+        [NotNull]
         string Label { get; }
+
+        [NotNull]
         IStatement Statement { get; }
     }
 }

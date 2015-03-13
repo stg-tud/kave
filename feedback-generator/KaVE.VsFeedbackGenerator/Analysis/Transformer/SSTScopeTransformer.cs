@@ -205,6 +205,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
         {
             var references = returnStatementParam.Value.GetReferences(context);
             // TODO
+            // ReSharper disable once AssignNullToNotNullAttribute
             context.Scope.Body.Add(new ReturnStatement {Expression = null});
         }
 

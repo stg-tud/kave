@@ -14,70 +14,44 @@
  * limitations under the License.
  * 
  * Contributors:
- *    - Sebastian Proksch
+ *    - 
  */
 
-using KaVE.Model.SSTs.Impl.Statements;
+using KaVE.Model.SSTs.Impl.Expressions.Simple;
 using NUnit.Framework;
 
-namespace KaVE.Model.Tests.SSTs.Impl.Statements
+namespace KaVE.Model.Tests.SSTs.Impl.Expressions.Simple
 {
-    public class GotoStatementTest
+    internal class UnknownExpressionTest
     {
         [Test]
         public void DefaultValues()
         {
-            var sut = new GotoStatement();
-            Assert.AreEqual("", sut.Label);
+            var sut = new UnknownExpression();
             Assert.AreNotEqual(0, sut.GetHashCode());
             Assert.AreNotEqual(1, sut.GetHashCode());
         }
 
         [Test]
-        public void SettingValues()
+        public void Equality()
         {
-            var sut = new GotoStatement {Label = "x"};
-            Assert.AreEqual("x", sut.Label);
-        }
-
-        [Test]
-        public void Equality_Default()
-        {
-            var a = new GotoStatement();
-            var b = new GotoStatement();
+            var a = new UnknownExpression();
+            var b = new UnknownExpression();
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
-        }
-
-        [Test]
-        public void Equality_ReallyTheSame()
-        {
-            var a = new GotoStatement {Label = "a"};
-            var b = new GotoStatement {Label = "a"};
-            Assert.AreEqual(a, b);
-            Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
-        }
-
-        [Test]
-        public void Equality_DifferentLabel()
-        {
-            var a = new GotoStatement {Label = "a"};
-            var b = new GotoStatement {Label = "b"};
-            Assert.AreNotEqual(a, b);
-            Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
         }
 
         [Test]
         public void VisitorIsImplemented()
         {
-            var sut = new GotoStatement();
+            var sut = new UnknownExpression();
             sut.Accept(23).Verify(v => v.Visit(sut, 23));
         }
 
         [Test]
         public void VisitorWithReturnIsImplemented()
         {
-            var sut = new GotoStatement();
+            var sut = new UnknownExpression();
             sut.Accept(23).VerifyWithReturn(v => v.Visit(sut, 23));
         }
     }

@@ -28,8 +28,8 @@ namespace KaVE.Model.Tests.SSTs.Impl.Statements
         public void DefaultValues()
         {
             var sut = new LabelledStatement();
-            Assert.IsNull(sut.Label);
-            Assert.IsNull(sut.Statement);
+            Assert.AreEqual("", sut.Label);
+            Assert.AreEqual(new UnknownStatement(), sut.Statement);
             Assert.AreNotEqual(0, sut.GetHashCode());
             Assert.AreNotEqual(1, sut.GetHashCode());
         }

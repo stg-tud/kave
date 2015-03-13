@@ -14,40 +14,35 @@
  * limitations under the License.
  * 
  * Contributors:
- *    - Sven Amann
+ *    - Sebastian Proksch
  */
 
-using KaVE.JetBrains.Annotations;
+using KaVE.Model.SSTs.Statements;
+using KaVE.Model.SSTs.Visitor;
 using KaVE.Utils;
 
-namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json
+namespace KaVE.Model.SSTs.Impl.Statements
 {
-    public class SerializationTestTarget
+    public class UnknownStatement : IUnknownStatement
     {
-        [NotNull]
-        public string Id { get; set; }
-
-        public SerializationTestTarget()
-        {
-            Id = "";
-        }
-
-        private bool Equals(SerializationTestTarget other)
-        {
-            return string.Equals(Id, other.Id);
-        }
-
         public override bool Equals(object obj)
         {
-            return this.Equals(obj, Equals);
+            return this.Equals(obj, other => true);
         }
 
         public override int GetHashCode()
         {
-            unchecked
-            {
-                return Id.GetHashCode()*397;
-            }
+            return -102;
+        }
+
+        public void Accept<TContext>(ISSTNodeVisitor<TContext> visitor, TContext context)
+        {
+            visitor.Visit(this, context);
+        }
+
+        public TReturn Accept<TContext, TReturn>(ISSTNodeVisitor<TContext, TReturn> visitor, TContext context)
+        {
+            return visitor.Visit(this, context);
         }
     }
 }

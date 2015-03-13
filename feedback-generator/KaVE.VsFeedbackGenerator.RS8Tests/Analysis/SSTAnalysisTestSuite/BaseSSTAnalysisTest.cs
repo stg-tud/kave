@@ -85,12 +85,9 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 
         protected void AssertMethod(IMethodDeclaration expected)
         {
-            foreach (var actual in ResultSST.Methods)
+            if (Enumerable.Contains(ResultSST.Methods, expected))
             {
-                if (expected.Equals(actual))
-                {
-                    return;
-                }
+                return;
             }
             Assert.Fail("method not found");
         }

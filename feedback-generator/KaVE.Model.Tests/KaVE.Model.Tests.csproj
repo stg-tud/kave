@@ -108,10 +108,12 @@
     <Compile Include="SSTs\Impl\Declarations\MethodDeclarationTest.cs" />
     <Compile Include="SSTs\Impl\Expressions\Simple\NullExpressionTest.cs" />
     <Compile Include="SSTs\Impl\Expressions\Simple\ReferenceExpressionTest.cs" />
+    <Compile Include="SSTs\Impl\Expressions\Simple\UnknownExpressionTest.cs" />
     <Compile Include="SSTs\Impl\References\EventReferenceTest.cs" />
     <Compile Include="SSTs\Impl\References\FieldReferenceTest.cs" />
     <Compile Include="SSTs\Impl\References\MethodReferenceTest.cs" />
     <Compile Include="SSTs\Impl\References\PropertyReferenceTest.cs" />
+    <Compile Include="SSTs\Impl\References\UnknownReferenceTest.cs" />
     <Compile Include="SSTs\Impl\References\VariableReferenceTest.cs" />
     <Compile Include="SSTs\Impl\SSTTestHelper.cs" />
     <Compile Include="SSTs\Impl\SSTUtilTest.cs" />
@@ -125,6 +127,7 @@
     <Compile Include="SSTs\Impl\Blocks\LockBlockTest.cs" />
     <Compile Include="SSTs\Impl\Statements\ReturnStatementTest.cs" />
     <Compile Include="SSTs\Impl\Statements\ThrowStatementTest.cs" />
+    <Compile Include="SSTs\Impl\Statements\UnknownStatementTest.cs" />
     <Compile Include="SSTs\Impl\Visitor\AbstractNodeVisitorTest.cs" />
     <Compile Include="SSTs\Impl\Visitor\ToStringVisitorTest.cs" />
   </ItemGroup>

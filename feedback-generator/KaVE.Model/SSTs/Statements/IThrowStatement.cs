@@ -17,12 +17,14 @@
  *    - Sebastian Proksch
  */
 
+using KaVE.JetBrains.Annotations;
 using KaVE.Model.Names;
 
 namespace KaVE.Model.SSTs.Statements
 {
     public interface IThrowStatement : IStatement
     {
+        [NotNull]
         ITypeName Exception { get; }
     }
 }

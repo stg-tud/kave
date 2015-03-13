@@ -18,6 +18,7 @@
  */
 
 using KaVE.Model.SSTs.Expressions;
+using KaVE.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Model.SSTs.Statements;
 using KaVE.Model.SSTs.Visitor;
 using KaVE.Utils;
@@ -28,6 +29,11 @@ namespace KaVE.Model.SSTs.Impl.Statements
     {
         public ISimpleExpression Expression { get; set; }
 
+        public ReturnStatement()
+        {
+            Expression = new UnknownExpression();
+        }
+
         public override bool Equals(object obj)
         {
             return this.Equals(obj, other => Equals(Expression, other.Expression));
@@ -35,7 +41,7 @@ namespace KaVE.Model.SSTs.Impl.Statements
 
         public override int GetHashCode()
         {
-            return unchecked (17 + (Expression != null ? Expression.GetHashCode() : 0));
+            return unchecked (17 + Expression.GetHashCode());
         }
 
         public void Accept<TContext>(ISSTNodeVisitor<TContext> visitor, TContext context)

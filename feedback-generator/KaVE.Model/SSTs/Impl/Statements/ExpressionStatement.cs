@@ -17,6 +17,7 @@
  *    - Sebastian Proksch
  */
 
+using KaVE.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Model.SSTs.Statements;
 using KaVE.Model.SSTs.Visitor;
 using KaVE.Utils;
@@ -26,6 +27,11 @@ namespace KaVE.Model.SSTs.Impl.Statements
     public class ExpressionStatement : IExpressionStatement
     {
         public IExpression Expression { get; set; }
+
+        public ExpressionStatement()
+        {
+            Expression = new UnknownExpression();
+        }
 
         public override bool Equals(object obj)
         {

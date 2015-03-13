@@ -90,8 +90,7 @@ namespace KaVE.Model.Tests.SSTs.Impl.Blocks
 
         private static ISimpleExpression Label(string label)
         {
-            // TODO think about integrating a label string!!
-            return new ConstantValueExpression();
+            return new ConstantValueExpression {Value = label};
         }
     }
 }

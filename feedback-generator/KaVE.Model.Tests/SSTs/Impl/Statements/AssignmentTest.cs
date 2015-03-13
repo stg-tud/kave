@@ -32,8 +32,8 @@ namespace KaVE.Model.Tests.SSTs.Impl.Statements
         public void DefaultValues()
         {
             var sut = new Assignment();
-            Assert.Null(sut.Reference);
-            Assert.Null(sut.Expression);
+            Assert.AreEqual(new UnknownReference(), sut.Reference);
+            Assert.AreEqual(new UnknownExpression(), sut.Expression);
             Assert.AreNotEqual(0, sut.GetHashCode());
             Assert.AreNotEqual(1, sut.GetHashCode());
         }

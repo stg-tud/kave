@@ -19,7 +19,6 @@
 
 using System.Linq;
 using NUnit.Framework;
-using JetBrains.ReSharper.Psi.Xaml.Impl.Tree;
 
 namespace KaVE.VsFeedbackGenerator.RS8Tests.Utils
 {
@@ -407,7 +406,8 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Utils
                 l$
             ");
 
-            ThenProposalCollectionContains("[i:System.Collections.Generic.IList`1[[T -> System.String, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0] l");
+            ThenProposalCollectionContains(
+                "[i:System.Collections.Generic.IList`1[[T -> System.String, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0] l");
         }
 
         [Test]
@@ -809,7 +809,8 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Utils
                     }
                 }");
 
-            ThenProposalCollectionContains("[System.Void, mscorlib, 4.0.0.0] [d:C+D, TestProject].Invoke([System.Int32, mscorlib, 4.0.0.0] i)");
+            ThenProposalCollectionContains(
+                "[System.Void, mscorlib, 4.0.0.0] [d:C+D, TestProject].Invoke([System.Int32, mscorlib, 4.0.0.0] i)");
         }
 
         [Test]
@@ -842,7 +843,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Utils
         public void ShouldHandleUnknownLookupItemType()
         {
             TestProposalProvider.Enabled = true;
-            
+
             CompleteInMethod("$");
         }
 

@@ -17,68 +17,41 @@
  *    - Sebastian Proksch
  */
 
-using KaVE.Model.Names.CSharp;
 using KaVE.Model.SSTs.Impl.Statements;
 using NUnit.Framework;
 
 namespace KaVE.Model.Tests.SSTs.Impl.Statements
 {
-    public class ThrowStatementTest
+    internal class UnknownStatementTest
     {
         [Test]
         public void DefaultValues()
         {
-            var sut = new ThrowStatement();
-            Assert.AreEqual(TypeName.UnknownName, sut.Exception);
+            var sut = new UnknownStatement();
             Assert.AreNotEqual(0, sut.GetHashCode());
             Assert.AreNotEqual(1, sut.GetHashCode());
         }
 
         [Test]
-        public void SettingValues()
+        public void Equality()
         {
-            var sut = new ThrowStatement {Exception = TypeName.UnknownName};
-            Assert.AreEqual(TypeName.UnknownName, sut.Exception);
-        }
-
-        [Test]
-        public void Equality_default()
-        {
-            var a = new ThrowStatement();
-            var b = new ThrowStatement();
+            var a = new UnknownStatement();
+            var b = new UnknownStatement();
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
-        }
-
-        [Test]
-        public void Equality_reallyTheSame()
-        {
-            var a = new ThrowStatement {Exception = TypeName.UnknownName};
-            var b = new ThrowStatement {Exception = TypeName.UnknownName};
-            Assert.AreEqual(a, b);
-            Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
-        }
-
-        [Test]
-        public void Equality_differentException()
-        {
-            var a = new ThrowStatement {Exception = TypeName.UnknownName};
-            var b = new ThrowStatement {Exception = TypeName.Get("System.Int32, mscore, 4.0.0.0")};
-            Assert.AreNotEqual(a, b);
-            Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
         }
 
         [Test]
         public void VisitorIsImplemented()
         {
-            var sut = new ThrowStatement();
+            var sut = new UnknownStatement();
             sut.Accept(23).Verify(v => v.Visit(sut, 23));
         }
 
         [Test]
         public void VisitorWithReturnIsImplemented()
         {
-            var sut = new ThrowStatement();
+            var sut = new UnknownStatement();
             sut.Accept(23).VerifyWithReturn(v => v.Visit(sut, 23));
         }
     }

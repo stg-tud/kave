@@ -17,7 +17,6 @@
  *    - Dennis Albrecht
  */
 
-using JetBrains.ReSharper.Features.SolBuilderDuo.Engine.MsbuildExe.Components;
 using KaVE.JetBrains.Annotations;
 using KaVE.Model.ObjectUsage;
 using KaVE.Utils.Assertion;

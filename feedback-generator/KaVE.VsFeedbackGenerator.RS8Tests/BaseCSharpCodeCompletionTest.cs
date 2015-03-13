@@ -27,7 +27,6 @@ using JetBrains.TextControl;
 using KaVE.Model.Events.CompletionEvent;
 using KaVE.Model.Names;
 using KaVE.Model.SSTs;
-using KaVE.Model.SSTs.Impl;
 using KaVE.VsFeedbackGenerator.RS8Tests.Analysis;
 
 namespace KaVE.VsFeedbackGenerator.RS8Tests

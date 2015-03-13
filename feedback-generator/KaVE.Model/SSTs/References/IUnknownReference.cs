@@ -17,13 +17,7 @@
  *    - Sebastian Proksch
  */
 
-using KaVE.JetBrains.Annotations;
-
-namespace KaVE.Model.SSTs.Statements
+namespace KaVE.Model.SSTs.References
 {
-    public interface IGotoStatement : IStatement
-    {
-        [NotNull]
-        string Label { get; }
-    }
+    public interface IUnknownReference : IAssignableReference {}
 }

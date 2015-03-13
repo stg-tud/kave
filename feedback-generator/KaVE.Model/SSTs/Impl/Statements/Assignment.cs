@@ -18,6 +18,8 @@
  */
 
 using KaVE.Model.SSTs.Expressions;
+using KaVE.Model.SSTs.Impl.Expressions.Simple;
+using KaVE.Model.SSTs.Impl.References;
 using KaVE.Model.SSTs.References;
 using KaVE.Model.SSTs.Statements;
 using KaVE.Model.SSTs.Visitor;
@@ -29,6 +31,12 @@ namespace KaVE.Model.SSTs.Impl.Statements
     {
         public IAssignableReference Reference { get; set; }
         public IAssignableExpression Expression { get; set; }
+
+        public Assignment()
+        {
+            Reference = new UnknownReference();
+            Expression = new UnknownExpression();
+        }
 
         public override bool Equals(object obj)
         {
@@ -44,8 +52,8 @@ namespace KaVE.Model.SSTs.Impl.Statements
         {
             unchecked
             {
-                return 11 + ((Reference != null ? Reference.GetHashCode() : 0)*397) ^
-                       (Expression != null ? Expression.GetHashCode() : 0);
+                return 11 + (Reference.GetHashCode()*397) ^
+                       Expression.GetHashCode();
             }
         }
 

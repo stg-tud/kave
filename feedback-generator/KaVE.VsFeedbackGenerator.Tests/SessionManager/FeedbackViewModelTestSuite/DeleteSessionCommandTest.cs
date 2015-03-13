@@ -22,7 +22,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using JetBrains;
-using KaVE.Utils.Reflection;
 using KaVE.VsFeedbackGenerator.Interactivity;
 using KaVE.VsFeedbackGenerator.SessionManager;
 using KaVE.VsFeedbackGenerator.Tests.Interactivity;
@@ -177,7 +176,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModelTestSui
         public void ShouldNotRemoveSessionFromViewModelWhenDeletionOfFileFails()
         {
             _mockLogs[0].Setup(log => log.Delete()).Throws<Exception>();
-            GivenSessionsAreSelected(_sessionViewModels[0]); 
+            GivenSessionsAreSelected(_sessionViewModels[0]);
             var selectedSession = _uut.Sessions.First();
 
             _uut.DeleteSessionsCommand.Execute(null);

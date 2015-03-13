@@ -17,10 +17,13 @@
  *    - Sebastian Proksch
  */
 
+using KaVE.JetBrains.Annotations;
+
 namespace KaVE.Model.SSTs.Statements
 {
     public interface IExpressionStatement : IStatement
     {
+        [NotNull]
         IExpression Expression { get; }
     }
 }

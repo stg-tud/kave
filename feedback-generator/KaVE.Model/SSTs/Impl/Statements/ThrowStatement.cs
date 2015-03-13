@@ -18,6 +18,7 @@
  */
 
 using KaVE.Model.Names;
+using KaVE.Model.Names.CSharp;
 using KaVE.Model.SSTs.Statements;
 using KaVE.Model.SSTs.Visitor;
 using KaVE.Utils;
@@ -27,6 +28,11 @@ namespace KaVE.Model.SSTs.Impl.Statements
     public class ThrowStatement : IThrowStatement
     {
         public ITypeName Exception { get; set; }
+
+        public ThrowStatement()
+        {
+            Exception = TypeName.UnknownName;
+        }
 
         private bool Equals(ThrowStatement other)
         {

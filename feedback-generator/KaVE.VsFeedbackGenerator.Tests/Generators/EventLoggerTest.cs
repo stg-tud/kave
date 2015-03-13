@@ -18,7 +18,6 @@
  */
 
 using System.Collections.Generic;
-using System.IO;
 using System.Threading;
 using KaVE.Model.Events;
 using KaVE.Model.Events.VisualStudio;
@@ -87,7 +86,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators
             uut.Log(IDEEventTestFactory.SomeEvent()); // there anEvent should be appended
             WaitForLogAppend();
 
-            CollectionAssert.AreEqual(new[] { anEvent }, _loggedEvents);
+            CollectionAssert.AreEqual(new[] {anEvent}, _loggedEvents);
         }
 
         [Test]
@@ -96,12 +95,12 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators
             var anEvent = IDEEventTestFactory.SomeEvent();
 
             _mockLogManager.Setup(lm => lm.CurrentLog.Append(It.IsAny<IDEEvent>())).Callback<IDEEvent>(
-               e =>
-               {
-                   Asserts.Not(anEvent.Equals(e));
-                   _loggedEvents.Add(e);
-                   _logAppendSignal.Set();
-               });
+                e =>
+                {
+                    Asserts.Not(anEvent.Equals(e));
+                    _loggedEvents.Add(e);
+                    _logAppendSignal.Set();
+                });
 
             var uut = new EventLogger(_mockMessageBus.Object, _mockLogManager.Object);
             uut.Log(anEvent); // this is written to the buffer
@@ -122,7 +121,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators
             uut.Log(shutdownEvent); // here both events should be appended
             WaitForLogAppend();
 
-            CollectionAssert.AreEqual(new IDEEvent[] { anEvent, shutdownEvent }, _loggedEvents);
+            CollectionAssert.AreEqual(new IDEEvent[] {anEvent, shutdownEvent}, _loggedEvents);
         }
 
         // TODO add tests for event merging logic

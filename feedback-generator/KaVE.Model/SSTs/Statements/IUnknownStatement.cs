@@ -17,13 +17,7 @@
  *    - Sebastian Proksch
  */
 
-using KaVE.JetBrains.Annotations;
-
 namespace KaVE.Model.SSTs.Statements
 {
-    public interface IGotoStatement : IStatement
-    {
-        [NotNull]
-        string Label { get; }
-    }
+    public interface IUnknownStatement : IStatement {}
 }

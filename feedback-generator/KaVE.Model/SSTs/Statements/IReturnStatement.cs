@@ -17,12 +17,14 @@
  *    - Sebastian Proksch
  */
 
+using KaVE.JetBrains.Annotations;
 using KaVE.Model.SSTs.Expressions;
 
 namespace KaVE.Model.SSTs.Statements
 {
     public interface IReturnStatement : IStatement
     {
+        [NotNull]
         ISimpleExpression Expression { get; }
     }
 }

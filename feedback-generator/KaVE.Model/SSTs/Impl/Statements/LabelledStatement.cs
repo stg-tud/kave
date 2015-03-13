@@ -28,6 +28,12 @@ namespace KaVE.Model.SSTs.Impl.Statements
         public string Label { get; set; }
         public IStatement Statement { get; set; }
 
+        public LabelledStatement()
+        {
+            Label = "";
+            Statement = new UnknownStatement();
+        }
+
         private bool Equals(LabelledStatement other)
         {
             return string.Equals(Label, other.Label) && Equals(Statement, other.Statement);

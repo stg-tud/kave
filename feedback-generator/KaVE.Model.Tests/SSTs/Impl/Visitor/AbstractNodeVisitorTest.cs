@@ -86,6 +86,11 @@ namespace KaVE.Model.Tests.SSTs.Impl.Visitor
             sut.Visit((IMethodReference) null, null);
             sut.Visit((IPropertyReference) null, null);
             sut.Visit((IVariableReference) null, null);
+
+            // Unknowns
+            sut.Visit((IUnknownReference) null, null);
+            sut.Visit((IUnknownExpression) null, null);
+            sut.Visit((IUnknownStatement) null, null);
         }
 
         [Test]
@@ -142,6 +147,11 @@ namespace KaVE.Model.Tests.SSTs.Impl.Visitor
             Assert.Null(sut.Visit((IMethodReference) null, 0));
             Assert.Null(sut.Visit((IPropertyReference) null, 0));
             Assert.Null(sut.Visit((IVariableReference) null, 0));
+
+            // Unknowns
+            Assert.Null(sut.Visit((IUnknownReference) null, 0));
+            Assert.Null(sut.Visit((IUnknownExpression) null, 0));
+            Assert.Null(sut.Visit((IUnknownStatement) null, 0));
         }
     }
 }

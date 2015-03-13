@@ -22,8 +22,6 @@ using System.Text;
 using KaVE.JetBrains.Annotations;
 using KaVE.Model.Events.CompletionEvent;
 using KaVE.Model.Names;
-using KaVE.Model.Names.CSharp;
-using KaVE.Model.Names.CSharp.MemberNames;
 using KaVE.Utils;
 
 namespace KaVE.Model.ObjectUsage
@@ -79,14 +77,7 @@ namespace KaVE.Model.ObjectUsage
             else
             {
                 builder.Append(name.DeclaringType.ToName(), ".");
-                if (name.Equals(MethodName.UnknownName))
-                {
-                    builder.Append("unknown");
-                }
-                else
-                {
-                    builder.Append(name.Name);
-                }
+                builder.Append(name.IsUnknown ? "unknown" : name.Name);
                 builder.Append("(");
                 StringBuilderUtils.Append(builder, name.Parameters.Select(n => n.ValueType.ToName() + ";").ToArray());
                 builder.Append(")", name.ReturnType.ToName(), ";");
@@ -99,14 +90,7 @@ namespace KaVE.Model.ObjectUsage
         {
             var builder = new StringBuilder();
             builder.Append(name.DeclaringType.ToName(), ".");
-            if (name.Equals(FieldName.UnknownName))
-            {
-                builder.Append("unknown");
-            }
-            else
-            {
-                builder.Append(name.Name);
-            }
+            builder.Append(name.IsUnknown ? "unknown" : name.Name);
             builder.Append(";", name.ValueType.ToName());
             return new CoReFieldName(builder.ToString());
         }

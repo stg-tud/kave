@@ -18,6 +18,7 @@
  *    - Uli Fahrer
  */
 
+using System.Collections.Generic;
 using KaVE.Model.ObjectUsage;
 using KaVE.VsFeedbackGenerator.CodeCompletion;
 using Smile;
@@ -91,7 +92,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.CodeCompletion
             int patternNodeHandle,
             string nodeId,
             string nodeName,
-            string[] states,
+            IEnumerable<string> states,
             double[] probs)
         {
             var handle = net.AddNode(Network.NodeType.Cpt, nodeId);
@@ -100,7 +101,10 @@ namespace KaVE.VsFeedbackGenerator.Tests.CodeCompletion
             net.SetNodeProperties(handle, states, probs);
         }
 
-        private static void SetNodeProperties(this Network net, int nodeHandle, string[] states, double[] probs)
+        private static void SetNodeProperties(this Network net,
+            int nodeHandle,
+            IEnumerable<string> states,
+            double[] probs)
         {
             foreach (var state in states)
             {

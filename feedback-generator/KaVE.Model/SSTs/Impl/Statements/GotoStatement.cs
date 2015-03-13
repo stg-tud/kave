@@ -27,6 +27,11 @@ namespace KaVE.Model.SSTs.Impl.Statements
     {
         public string Label { get; set; }
 
+        public GotoStatement()
+        {
+            Label = "";
+        }
+
         private bool Equals(GotoStatement other)
         {
             return string.Equals(Label, other.Label);
@@ -39,7 +44,7 @@ namespace KaVE.Model.SSTs.Impl.Statements
 
         public override int GetHashCode()
         {
-            return unchecked (14 + (Label != null ? Label.GetHashCode() : 0));
+            return unchecked (14 + Label.GetHashCode());
         }
 
         public void Accept<TContext>(ISSTNodeVisitor<TContext> visitor, TContext context)

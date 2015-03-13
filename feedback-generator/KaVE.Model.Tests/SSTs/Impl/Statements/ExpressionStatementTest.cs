@@ -29,7 +29,7 @@ namespace KaVE.Model.Tests.SSTs.Impl.Statements
         public void DefaultValues()
         {
             var sut = new ExpressionStatement();
-            Assert.Null(sut.Expression);
+            Assert.AreEqual(new UnknownExpression(), sut.Expression);
             Assert.AreNotEqual(0, sut.GetHashCode());
             Assert.AreNotEqual(1, sut.GetHashCode());
         }

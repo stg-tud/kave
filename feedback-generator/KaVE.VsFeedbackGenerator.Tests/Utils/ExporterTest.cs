@@ -27,7 +27,6 @@ using JetBrains;
 using KaVE.Model.Events;
 using KaVE.Model.Events.VisualStudio;
 using KaVE.TestUtils.Model.Events;
-using KaVE.Utils.Assertion;
 using KaVE.VsFeedbackGenerator.SessionManager.Anonymize;
 using KaVE.VsFeedbackGenerator.Tests.Utils.Json;
 using KaVE.VsFeedbackGenerator.Utils;

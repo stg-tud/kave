@@ -31,8 +31,6 @@ using KaVE.Model.Collections;
 using KaVE.Model.Events.CompletionEvent;
 using KaVE.Model.Names;
 using KaVE.Model.SSTs;
-using KaVE.Model.SSTs.Impl;
-using KaVE.Model.SSTs.Statements;
 using KaVE.Utils.Exceptions;
 using KaVE.VsFeedbackGenerator.Analysis;
 using Moq;

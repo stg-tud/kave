@@ -80,6 +80,11 @@ namespace KaVE.Model.SSTs.Impl.Visitor
         public virtual void Visit(IMethodReference methodRef, TContext context) {}
         public virtual void Visit(IPropertyReference methodRef, TContext context) {}
         public virtual void Visit(IVariableReference varRef, TContext context) {}
+
+        // References
+        public virtual void Visit(IUnknownReference unknownRef, TContext context) {}
+        public virtual void Visit(IUnknownExpression unknownExpr, TContext context) {}
+        public virtual void Visit(IUnknownStatement unknownStmt, TContext context) {}
     }
 
     public class AbstractNodeVisitor<TContext, TReturn> : ISSTNodeVisitor<TContext, TReturn>
@@ -281,6 +286,21 @@ namespace KaVE.Model.SSTs.Impl.Visitor
         }
 
         public virtual TReturn Visit(IVariableReference varRef, TContext context)
+        {
+            return null;
+        }
+
+        public virtual TReturn Visit(IUnknownReference unknownRef, TContext context)
+        {
+            return null;
+        }
+
+        public virtual TReturn Visit(IUnknownExpression unknownExpr, TContext context)
+        {
+            return null;
+        }
+
+        public virtual TReturn Visit(IUnknownStatement unknownStmt, TContext context)
         {
             return null;
         }
