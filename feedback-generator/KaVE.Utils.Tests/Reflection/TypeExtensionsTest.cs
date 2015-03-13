@@ -17,7 +17,9 @@
  *    - Sven Amann
  */
 
+using System;
 using KaVE.JetBrains.Annotations;
+using KaVE.Utils.Assertion;
 using KaVE.Utils.Reflection;
 using NUnit.Framework;
 
@@ -26,8 +28,13 @@ namespace KaVE.Utils.Tests.Reflection
     [TestFixture]
     internal class TypeExtensionsTest
     {
-        // ReSharper disable once UnusedAutoPropertyAccessor.Local
-        private int MyTestProperty { get; set; }
+        public int MyTestProperty { get; set; }
+
+        private bool MyPrivateProperty { get; set; }
+
+        private int _myField;
+
+        public event EventHandler MyEvent;
 
         [NotNull, UsedImplicitly]
         public string AttributedMember;
@@ -49,7 +56,9 @@ namespace KaVE.Utils.Tests.Reflection
         }
 
         [Test,
-         ExpectedException(ExpectedMessage = "Invalid expression type: Expected ExpressionType.MemberAccess, found ExpressionType.Call"
+         ExpectedException(
+             ExpectedMessage =
+                 "Invalid expression type: Expected ExpressionType.MemberAccess, found ExpressionType.Call"
              )]
         public void ShouldFailToGetPropertyNameFromMethod()
         {
@@ -60,7 +69,7 @@ namespace KaVE.Utils.Tests.Reflection
         public void ShouldGetAttributedMember()
         {
             var expected = new[] {typeof (TypeExtensionsTest).GetField("AttributedMember")};
-            var actual = typeof(TypeExtensionsTest).GetMembersWithCustomAttributeNoInherit<NotNullAttribute>();
+            var actual = typeof (TypeExtensionsTest).GetMembersWithCustomAttributeNoInherit<NotNullAttribute>();
 
             Assert.AreEqual(expected, actual);
         }
@@ -72,6 +81,83 @@ namespace KaVE.Utils.Tests.Reflection
             var actual = TypeExtensions<TypeExtensionsTest>.GetMethodName(o => o.ShouldGetMethodName());
 
             Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void ShouldGetPublicPropertyValue()
+        {
+            MyTestProperty = 42;
+
+            var actual = this.GetPublicPropertyValue<int>("MyTestProperty");
+
+            Assert.AreEqual(MyTestProperty, actual);
+        }
+
+        [Test,
+         ExpectedException(typeof (AssertException),
+             ExpectedMessage =
+                 "Property 'NonExistentProperty' doesn't exist on 'KaVE.Utils.Tests.Reflection.TypeExtensionsTest'.")]
+        public void ShouldThrowIfPublicPropertyDoesNotExist()
+        {
+            this.GetPublicPropertyValue<int>("NonExistentProperty");
+        }
+
+        [Test]
+        public void ShouldGetPrivatePropertyValue()
+        {
+            MyPrivateProperty = true;
+
+            var actual = this.GetPrivatePropertyValue<bool>("MyPrivateProperty");
+
+            Assert.AreEqual(MyPrivateProperty, actual);
+        }
+
+        [Test,
+         ExpectedException(typeof (AssertException),
+             ExpectedMessage =
+                 "Property 'NonExistentProperty' doesn't exist on 'KaVE.Utils.Tests.Reflection.TypeExtensionsTest'.")]
+        public void ShouldThrowIfPrivatePropertyDoesNotExist()
+        {
+            this.GetPrivatePropertyValue<int>("NonExistentProperty");
+        }
+
+        [Test]
+        public void ShouldGetPrivateFieldValue()
+        {
+            _myField = 23;
+
+            var actual = this.GetPrivateFieldValue<int>("_myField");
+
+            Assert.AreEqual(_myField, actual);
+        }
+
+        [Test,
+         ExpectedException(typeof (AssertException),
+             ExpectedMessage =
+                 "Field '_myNonExistentField' doesn't exist on 'KaVE.Utils.Tests.Reflection.TypeExtensionsTest'.")]
+        public void ShouldThrowIfPrivateFieldDoesNotExist()
+        {
+            this.GetPrivateFieldValue<int>("_myNonExistentField");
+        }
+
+        [Test]
+        public void ShouldRegisterToEvent()
+        {
+            var invoked = false;
+
+            this.RegisterToEvent("MyEvent", (EventHandler) delegate { invoked = true; });
+            MyEvent(this, new EventArgs());
+
+            Assert.IsTrue(invoked);
+        }
+
+        [Test,
+         ExpectedException(typeof(AssertException),
+             ExpectedMessage =
+                 "Event 'MyNonExistentEvent' doesn't exist on 'KaVE.Utils.Tests.Reflection.TypeExtensionsTest'.")]
+        public void ShouldThrowIfEventDoesNotExist()
+        {
+            this.RegisterToEvent("MyNonExistentEvent", null);
         }
     }
 }

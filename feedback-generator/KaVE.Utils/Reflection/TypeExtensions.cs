@@ -22,6 +22,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using KaVE.Utils.Assertion;
 
 namespace KaVE.Utils.Reflection
 {
@@ -47,7 +48,8 @@ namespace KaVE.Utils.Reflection
             throw new Exception(
                 string.Format(
                     "Invalid expression type: Expected ExpressionType.{0}, found ExpressionType.{1}",
-                    expectedType, actualType));
+                    expectedType,
+                    actualType));
         }
 
         public static string GetMethodName(Expression<Action<T>> expression)
@@ -66,7 +68,47 @@ namespace KaVE.Utils.Reflection
         public static IEnumerable<MemberInfo> GetMembersWithCustomAttributeNoInherit<TAttribute>(this Type self)
         {
             var members = self.GetMembers();
-            return members.Where(member => member.GetCustomAttributes(typeof(TAttribute), false).Any());
+            return members.Where(member => member.GetCustomAttributes(typeof (TAttribute), false).Any());
+        }
+
+        public static TValue GetPublicPropertyValue<TValue>(this object self, String propertyName)
+        {
+            var type = self.GetType();
+            var propertyInfo = type.GetProperty(propertyName, BindingFlags.Public | BindingFlags.Instance);
+            Asserts.NotNull(
+                propertyInfo,
+                string.Format("Property '{0}' doesn't exist on '{1}'.", propertyName, type.FullName));
+            return (TValue) propertyInfo.GetValue(self, new object[0]);
+        }
+
+        public static TValue GetPrivatePropertyValue<TValue>(this object self, String propertyName)
+        {
+            var type = self.GetType();
+            var propertyInfo = type.GetProperty(propertyName, BindingFlags.NonPublic | BindingFlags.Instance);
+            Asserts.NotNull(
+                propertyInfo,
+                string.Format("Property '{0}' doesn't exist on '{1}'.", propertyName, type.FullName));
+            return (TValue) propertyInfo.GetValue(self, new object[0]);
+        }
+
+        public static TValue GetPrivateFieldValue<TValue>(this object self, String fieldName)
+        {
+            var type = self.GetType();
+            var propertyInfo = type.GetField(fieldName, BindingFlags.NonPublic | BindingFlags.Instance);
+            Asserts.NotNull(
+                propertyInfo,
+                string.Format("Field '{0}' doesn't exist on '{1}'.", fieldName, type.FullName));
+            return (TValue)propertyInfo.GetValue(self);
+        }
+
+        public static void RegisterToEvent(this object self, String eventName, Delegate handler)
+        {
+            var type = self.GetType();
+            var eventInfo = type.GetEvent(eventName);
+            Asserts.NotNull(
+                eventInfo,
+                string.Format("Event '{0}' doesn't exist on '{1}'.", eventName, type.FullName));
+            eventInfo.AddEventHandler(self, handler);
         }
     }
 }

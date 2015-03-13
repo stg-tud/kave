@@ -21,14 +21,13 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using JetBrains.Util;
 using KaVE.JetBrains.Annotations;
 using KaVE.Model.Events;
-using KaVE.Utils.Assertion;
+using KaVE.Utils.Reflection;
 using KaVE.VsFeedbackGenerator.MessageBus;
 using KaVE.VsFeedbackGenerator.Utils;
 using ILogger = KaVE.Utils.Exceptions.ILogger;
@@ -38,7 +37,10 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
 {
     internal class VsWindowButtonClickEventGenerator : EventGeneratorBase
     {
+        private static readonly ISet<WeakReference<Button>> ButtonRegistry = new HashSet<WeakReference<Button>>();
+
         private readonly object _frame;
+        private FrameworkElement _frameContent;
         private readonly ILogger _logger;
 
         public VsWindowButtonClickEventGenerator(Window window,
@@ -51,84 +53,95 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
             _frame = GetFrame(window);
             _logger = logger;
 
-            RegisterToFrameUpdates();
+            RegisterToFrameEvents();
         }
 
         private static object GetFrame(Window window)
         {
-            var windowImpl = GetWindowImpl(window);
-            return GetFrameFromWindowImpl(windowImpl);
+            var windowImpl = window.GetPrivateFieldValue<object>("_impl");
+            return windowImpl.GetPublicPropertyValue<object>("Frame");
         }
 
-        private static object GetWindowImpl(Window target)
+        private void RegisterToFrameEvents()
         {
-            var type = target.GetType();
-            Asserts.That(type.Name.Equals("WindowBase"), "Only work for WindowBase");
-            var windowField = type.GetField("_impl", BindingFlags.NonPublic | BindingFlags.Instance);
-            Asserts.NotNull(windowField, "WindowBase has this field");
-            return windowField.GetValue(target);
-        }
-
-        private static object GetFrameFromWindowImpl(object windowImpl)
-        {
-            var frameProperty = windowImpl.GetType()
-                                          .GetProperty("Frame", BindingFlags.Public | BindingFlags.Instance);
-            return frameProperty.GetValue(windowImpl, new object[0]);
-        }
-
-        private FrameworkElement FrameContent
-        {
-            get
+            // if view changes, content also changes
+            ((INotifyPropertyChanged) _frame).PropertyChanged += (sender, args) =>
             {
-                var contentProperty = _frame.GetType()
-                                            .GetProperty("Content", BindingFlags.NonPublic | BindingFlags.Instance);
-                return (FrameworkElement) contentProperty.GetValue(_frame, new object[0]);
-            }
+                if (Equals(args.PropertyName, "FrameView"))
+                {
+                    WindowChanged();
+                }
+            };
+            // dispose of frame invalidates content (and window)
+            _frame.RegisterToEvent(
+                "Disposing",
+                (EventHandler) ((content, args) => UnregisterFromContentUpdates()));
         }
 
         public void WindowChanged()
         {
-            FrameContent.LayoutUpdated += delegate { RegisterToAllNewButtons(); };
+            UnregisterFromContentUpdates();
+            UpdateFrameContent();
+            RegisterToContentUpdates();
         }
 
-        private void RegisterToAllNewButtons()
+        private void UnregisterFromContentUpdates()
         {
-            FrameContent.FindChildren<Button>().Where(WasNotSeenBefore).ForEach(
-                button =>
-                {
-                    button.Click += delegate
-                    {
-                        try
-                        {
-                            var commandEvent = Create<CommandEvent>();
-                            commandEvent.TriggeredBy = IDEEvent.Trigger.Click;
-                            commandEvent.CommandId = button.GetId();
-                            Fire(commandEvent);
-                        }
-                        catch (Exception e)
-                        {
-                            _logger.Error(e);
-                        }
-                    };
-                });
+            if (_frameContent != null)
+            {
+                _frameContent.LayoutUpdated -= RegisterToAllNewButtons;
+            }
         }
 
-        private static readonly ISet<WeakReference<Button>> ButtonRegistry = new HashSet<WeakReference<Button>>();
+        private void UpdateFrameContent()
+        {
+            try
+            {
+                _frameContent = _frame.GetPrivatePropertyValue<FrameworkElement>("Content");
+            }
+            catch (Exception e)
+            {
+                _logger.Error(e, "couldn't get frame content");
+                _frameContent = null;
+            }
+        }
+
+        private void RegisterToContentUpdates()
+        {
+            if (_frameContent != null)
+            {
+                _frameContent.LayoutUpdated += RegisterToAllNewButtons;
+            }
+        }
+
+        private void RegisterToAllNewButtons(object sender, EventArgs eventArgs)
+        {
+            _frameContent.FindChildren<Button>().Where(WasNotSeenBefore).ForEach(RegisterToButton);
+        }
 
         private static bool WasNotSeenBefore(Button view)
         {
             return ButtonRegistry.Add(new WeakReference<Button>(view));
         }
 
-        private void RegisterToFrameUpdates()
+        private void RegisterToButton(Button button)
         {
-            ((INotifyPropertyChanged) _frame).PropertyChanged += (sender, args) =>
+            button.Click += delegate { FireCommandEvent(button); };
+        }
+
+        private void FireCommandEvent(Button button)
+        {
+            try
             {
-                if (args.PropertyName.Equals("FrameView"))
-                {
-                    WindowChanged();
-                }
-            };
+                var commandEvent = Create<CommandEvent>();
+                commandEvent.TriggeredBy = IDEEvent.Trigger.Click;
+                commandEvent.CommandId = button.GetId();
+                Fire(commandEvent);
+            }
+            catch (Exception e)
+            {
+                _logger.Error(e, "failed to fire command event");
+            }
         }
     }
 
