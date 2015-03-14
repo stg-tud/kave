@@ -35,6 +35,7 @@ namespace KaVE.Model.Tests.SSTs.Impl.References
         public void DefaultValues()
         {
             var sut = new MethodReference();
+            Assert.AreEqual(new VariableReference(), sut.Reference);
             Assert.AreEqual(MethodName.UnknownName, sut.MethodName);
             Assert.AreNotEqual(0, sut.GetHashCode());
             Assert.AreNotEqual(1, sut.GetHashCode());

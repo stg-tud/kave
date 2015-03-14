@@ -19,6 +19,8 @@
 
 namespace KaVE.Model.SSTs.Blocks
 {
-    // not analyzed (this includes "fixed" statements as they are only allowed in unsafe blocks)
+    /// <summary>
+    ///     not analyzed (this includes "fixed" statements as they are only allowed in unsafe blocks)
+    /// </summary>
     public interface IUnsafeBlock : IStatement {}
 }

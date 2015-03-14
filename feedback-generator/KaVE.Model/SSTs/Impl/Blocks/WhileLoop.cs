@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using KaVE.Model.Collections;
 using KaVE.Model.SSTs.Blocks;
 using KaVE.Model.SSTs.Expressions;
+using KaVE.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Model.SSTs.Visitor;
 using KaVE.Utils;
 
@@ -33,6 +34,7 @@ namespace KaVE.Model.SSTs.Impl.Blocks
 
         public WhileLoop()
         {
+            Condition = new UnknownExpression();
             Body = Lists.NewList<IStatement>();
         }
 
@@ -50,7 +52,7 @@ namespace KaVE.Model.SSTs.Impl.Blocks
         {
             unchecked
             {
-                return 40 + (Body.GetHashCode()*397) ^ (Condition != null ? Condition.GetHashCode() : 0);
+                return 40 + (Body.GetHashCode()*397) ^ Condition.GetHashCode();
             }
         }
 

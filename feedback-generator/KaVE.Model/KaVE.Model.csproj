@@ -224,7 +224,7 @@
     <Compile Include="SSTs\Impl\Statements\ContinueStatement.cs" />
     <Compile Include="SSTs\Impl\Statements\GotoStatement.cs" />
     <Compile Include="SSTs\Impl\Statements\LabelledStatement.cs" />
-    <Compile Include="SSTs\Impl\Blocks\LockStatement.cs" />
+    <Compile Include="SSTs\Impl\Blocks\LockBlock.cs" />
     <Compile Include="SSTs\Impl\Statements\ReturnStatement.cs" />
     <Compile Include="SSTs\Impl\SST.cs" />
     <Compile Include="SSTs\Impl\Declarations\VariableDeclaration.cs" />

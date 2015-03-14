@@ -25,6 +25,7 @@ namespace KaVE.Model.SSTs.Blocks
 {
     public interface ICaseBlock
     {
+        [NotNull]
         ISimpleExpression Label { get; }
 
         [NotNull]

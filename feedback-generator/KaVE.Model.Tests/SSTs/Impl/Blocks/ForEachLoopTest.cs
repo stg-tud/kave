@@ -18,25 +18,24 @@
  */
 
 using KaVE.Model.Collections;
+using KaVE.Model.SSTs;
 using KaVE.Model.SSTs.Impl.Blocks;
 using KaVE.Model.SSTs.Impl.Declarations;
 using KaVE.Model.SSTs.Impl.References;
 using KaVE.Model.SSTs.Impl.Statements;
-using KaVE.Model.SSTs.References;
 using NUnit.Framework;
 
 namespace KaVE.Model.Tests.SSTs.Impl.Blocks
 {
-    internal class ForEachLoopTest
+    internal class ForEachLoopTest : BaseBlockTest
     {
         [Test]
         public void DefaultValues()
         {
             var sut = new ForEachLoop();
-            Assert.NotNull(sut.Body);
-            Assert.AreEqual(0, sut.Body.Count);
-            Assert.Null(sut.Declaration);
-            Assert.Null(sut.LoopedReference);
+            Assert.AreEqual(new VariableDeclaration(), sut.Declaration);
+            Assert.AreEqual(new VariableReference(), sut.LoopedReference);
+            Assert.AreEqual(Lists.NewList<IStatement>(), sut.Body);
             Assert.AreNotEqual(0, sut.GetHashCode());
             Assert.AreNotEqual(1, sut.GetHashCode());
         }
@@ -44,11 +43,11 @@ namespace KaVE.Model.Tests.SSTs.Impl.Blocks
         [Test]
         public void SettingValues()
         {
-            var sut = new ForEachLoop {LoopedReference = Ref("a"), Declaration = new VariableDeclaration()};
+            var sut = new ForEachLoop {LoopedReference = SomeVarRef("a"), Declaration = SomeDeclaration()};
             sut.Body.Add(new ReturnStatement());
 
-            Assert.AreEqual(Ref("a"), sut.LoopedReference);
-            Assert.AreEqual(new VariableDeclaration(), sut.Declaration);
+            Assert.AreEqual(SomeVarRef("a"), sut.LoopedReference);
+            Assert.AreEqual(SomeDeclaration(), sut.Declaration);
             Assert.AreEqual(Lists.NewList(new ReturnStatement()), sut.Body);
         }
 
@@ -64,9 +63,9 @@ namespace KaVE.Model.Tests.SSTs.Impl.Blocks
         [Test]
         public void Equality_ReallyTheSame()
         {
-            var a = new ForEachLoop {LoopedReference = Ref("a"), Declaration = new VariableDeclaration()};
+            var a = new ForEachLoop {LoopedReference = SomeVarRef("a"), Declaration = SomeDeclaration()};
             a.Body.Add(new ReturnStatement());
-            var b = new ForEachLoop {LoopedReference = Ref("a"), Declaration = new VariableDeclaration()};
+            var b = new ForEachLoop {LoopedReference = SomeVarRef("a"), Declaration = SomeDeclaration()};
             b.Body.Add(new ReturnStatement());
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
@@ -75,7 +74,7 @@ namespace KaVE.Model.Tests.SSTs.Impl.Blocks
         [Test]
         public void Equality_DifferentLoopedReference()
         {
-            var a = new ForEachLoop {LoopedReference = Ref("a")};
+            var a = new ForEachLoop {LoopedReference = SomeVarRef("a")};
             var b = new ForEachLoop();
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
@@ -84,7 +83,7 @@ namespace KaVE.Model.Tests.SSTs.Impl.Blocks
         [Test]
         public void Equality_DifferentDeclaration()
         {
-            var a = new ForEachLoop {Declaration = new VariableDeclaration()};
+            var a = new ForEachLoop {Declaration = SomeDeclaration()};
             var b = new ForEachLoop();
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
@@ -98,11 +97,6 @@ namespace KaVE.Model.Tests.SSTs.Impl.Blocks
             var b = new ForEachLoop();
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
-        }
-
-        private static IVariableReference Ref(string id)
-        {
-            return new VariableReference {Identifier = id};
         }
 
         [Test]

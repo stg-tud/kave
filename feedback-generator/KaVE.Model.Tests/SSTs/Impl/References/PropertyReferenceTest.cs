@@ -35,6 +35,7 @@ namespace KaVE.Model.Tests.SSTs.Impl.References
         public void DefaultValues()
         {
             var sut = new PropertyReference();
+            Assert.AreEqual(new VariableReference(), sut.Reference);
             Assert.AreEqual(PropertyName.UnknownName, sut.PropertyName);
             Assert.AreNotEqual(0, sut.GetHashCode());
             Assert.AreNotEqual(1, sut.GetHashCode());

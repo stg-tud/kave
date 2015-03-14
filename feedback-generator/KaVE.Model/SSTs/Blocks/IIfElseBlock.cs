@@ -25,6 +25,7 @@ namespace KaVE.Model.SSTs.Blocks
 {
     public interface IIfElseBlock : IStatement
     {
+        [NotNull]
         ISimpleExpression Condition { get; }
 
         [NotNull]

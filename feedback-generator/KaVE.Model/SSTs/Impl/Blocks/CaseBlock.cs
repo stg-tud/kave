@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using KaVE.Model.Collections;
 using KaVE.Model.SSTs.Blocks;
 using KaVE.Model.SSTs.Expressions;
+using KaVE.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Utils;
 
 namespace KaVE.Model.SSTs.Impl.Blocks
@@ -32,6 +33,7 @@ namespace KaVE.Model.SSTs.Impl.Blocks
 
         public CaseBlock()
         {
+            Label = new UnknownExpression();
             Body = Lists.NewList<IStatement>();
         }
 
@@ -49,7 +51,7 @@ namespace KaVE.Model.SSTs.Impl.Blocks
         {
             unchecked
             {
-                return 30 + (Body.GetHashCode()*397) ^ (Label != null ? Label.GetHashCode() : 0);
+                return 30 + (Body.GetHashCode()*397) ^ Label.GetHashCode();
             }
         }
     }

@@ -21,6 +21,8 @@ using System.Collections.Generic;
 using KaVE.Model.Collections;
 using KaVE.Model.SSTs.Blocks;
 using KaVE.Model.SSTs.Declarations;
+using KaVE.Model.SSTs.Impl.Declarations;
+using KaVE.Model.SSTs.Impl.References;
 using KaVE.Model.SSTs.References;
 using KaVE.Model.SSTs.Visitor;
 using KaVE.Utils;
@@ -35,6 +37,8 @@ namespace KaVE.Model.SSTs.Impl.Blocks
 
         public ForEachLoop()
         {
+            Declaration = new VariableDeclaration();
+            LoopedReference = new VariableReference();
             Body = Lists.NewList<IStatement>();
         }
 
@@ -54,8 +58,8 @@ namespace KaVE.Model.SSTs.Impl.Blocks
             unchecked
             {
                 var hashCode = 33 + Body.GetHashCode();
-                hashCode = (hashCode*397) ^ (Declaration != null ? Declaration.GetHashCode() : 0);
-                hashCode = (hashCode*397) ^ (LoopedReference != null ? LoopedReference.GetHashCode() : 0);
+                hashCode = (hashCode*397) ^ Declaration.GetHashCode();
+                hashCode = (hashCode*397) ^ LoopedReference.GetHashCode();
                 return hashCode;
             }
         }

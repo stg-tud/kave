@@ -30,5 +30,7 @@ namespace KaVE.Model.SSTs.Declarations
 
         [NotNull]
         ITypeName Type { get; }
+
+        bool IsMissing { get; }
     }
 }

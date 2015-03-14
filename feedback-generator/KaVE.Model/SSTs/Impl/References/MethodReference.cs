@@ -31,6 +31,7 @@ namespace KaVE.Model.SSTs.Impl.References
 
         public MethodReference()
         {
+            Reference = new VariableReference();
             MethodName = Names.CSharp.MemberNames.MethodName.UnknownName;
         }
 

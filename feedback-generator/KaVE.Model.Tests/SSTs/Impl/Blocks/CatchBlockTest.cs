@@ -18,6 +18,7 @@
  */
 
 using KaVE.Model.Collections;
+using KaVE.Model.SSTs;
 using KaVE.Model.SSTs.Impl.Blocks;
 using KaVE.Model.SSTs.Impl.Declarations;
 using KaVE.Model.SSTs.Impl.Statements;
@@ -25,15 +26,14 @@ using NUnit.Framework;
 
 namespace KaVE.Model.Tests.SSTs.Impl.Blocks
 {
-    internal class CatchBlockTest
+    internal class CatchBlockTest : BaseBlockTest
     {
         [Test]
         public void DefaultValues()
         {
             var sut = new CatchBlock();
-            Assert.Null(sut.Exception);
-            Assert.NotNull(sut.Body);
-            Assert.AreEqual(0, sut.Body.Count);
+            Assert.AreEqual(new VariableDeclaration(), sut.Exception);
+            Assert.AreEqual(Lists.NewList<IStatement>(), sut.Body);
             Assert.AreNotEqual(0, sut.GetHashCode());
             Assert.AreNotEqual(1, sut.GetHashCode());
         }
@@ -41,10 +41,10 @@ namespace KaVE.Model.Tests.SSTs.Impl.Blocks
         [Test]
         public void SettingValues()
         {
-            var sut = new CatchBlock {Exception = new VariableDeclaration()};
+            var sut = new CatchBlock {Exception = SomeDeclaration()};
             sut.Body.Add(new ReturnStatement());
 
-            Assert.AreEqual(new VariableDeclaration(), sut.Exception);
+            Assert.AreEqual(SomeDeclaration(), sut.Exception);
             Assert.AreEqual(Lists.NewList(new ReturnStatement()), sut.Body);
         }
 
@@ -60,9 +60,9 @@ namespace KaVE.Model.Tests.SSTs.Impl.Blocks
         [Test]
         public void Equality_ReallyTheSame()
         {
-            var a = new CatchBlock {Exception = new VariableDeclaration()};
+            var a = new CatchBlock {Exception = SomeDeclaration()};
             a.Body.Add(new ReturnStatement());
-            var b = new CatchBlock {Exception = new VariableDeclaration()};
+            var b = new CatchBlock {Exception = SomeDeclaration()};
             b.Body.Add(new ReturnStatement());
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
@@ -71,7 +71,7 @@ namespace KaVE.Model.Tests.SSTs.Impl.Blocks
         [Test]
         public void Equality_DifferentException()
         {
-            var a = new CatchBlock {Exception = new VariableDeclaration()};
+            var a = new CatchBlock {Exception = SomeDeclaration()};
             var b = new CatchBlock();
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());

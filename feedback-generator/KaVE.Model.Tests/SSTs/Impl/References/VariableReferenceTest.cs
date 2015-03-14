@@ -29,6 +29,7 @@ namespace KaVE.Model.Tests.SSTs.Impl.References
         {
             var sut = new VariableReference();
             Assert.AreEqual("", sut.Identifier);
+            Assert.True(sut.IsMissing);
             Assert.AreNotEqual(0, sut.GetHashCode());
             Assert.AreNotEqual(1, sut.GetHashCode());
         }
@@ -37,6 +38,7 @@ namespace KaVE.Model.Tests.SSTs.Impl.References
         public void SettingValues()
         {
             var sut = new VariableReference {Identifier = "a"};
+            Assert.False(sut.IsMissing);
             Assert.AreEqual("a", sut.Identifier);
         }
 

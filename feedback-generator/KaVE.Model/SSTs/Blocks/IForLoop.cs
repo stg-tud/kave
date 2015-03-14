@@ -28,6 +28,7 @@ namespace KaVE.Model.SSTs.Blocks
         [NotNull]
         IList<IStatement> Init { get; }
 
+        [NotNull]
         ILoopHeaderExpression Condition { get; }
 
         [NotNull]

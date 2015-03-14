@@ -18,6 +18,7 @@
  */
 
 using KaVE.Model.Collections;
+using KaVE.Model.SSTs;
 using KaVE.Model.SSTs.Impl.Blocks;
 using KaVE.Model.SSTs.Impl.Statements;
 using NUnit.Framework;
@@ -30,8 +31,7 @@ namespace KaVE.Model.Tests.SSTs.Impl.Blocks
         public void DefaultValues()
         {
             var sut = new UncheckedBlock();
-            Assert.NotNull(sut.Body);
-            Assert.AreEqual(0, sut.Body.Count);
+            Assert.AreEqual(Lists.NewList<IStatement>(), sut.Body);
             Assert.AreNotEqual(0, sut.GetHashCode());
             Assert.AreNotEqual(1, sut.GetHashCode());
         }

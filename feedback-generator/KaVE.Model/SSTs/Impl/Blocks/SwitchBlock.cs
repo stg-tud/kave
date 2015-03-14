@@ -20,6 +20,7 @@
 using System.Collections.Generic;
 using KaVE.Model.Collections;
 using KaVE.Model.SSTs.Blocks;
+using KaVE.Model.SSTs.Impl.References;
 using KaVE.Model.SSTs.References;
 using KaVE.Model.SSTs.Visitor;
 using KaVE.Utils;
@@ -34,6 +35,7 @@ namespace KaVE.Model.SSTs.Impl.Blocks
 
         public SwitchBlock()
         {
+            Reference = new VariableReference();
             Sections = Lists.NewList<ICaseBlock>();
             DefaultSection = Lists.NewList<IStatement>();
         }
@@ -55,7 +57,7 @@ namespace KaVE.Model.SSTs.Impl.Blocks
             {
                 var hashCode = 36 + Sections.GetHashCode();
                 hashCode = (hashCode*397) ^ DefaultSection.GetHashCode();
-                hashCode = (hashCode*397) ^ (Reference != null ? Reference.GetHashCode() : 0);
+                hashCode = (hashCode*397) ^ Reference.GetHashCode();
                 return hashCode;
             }
         }

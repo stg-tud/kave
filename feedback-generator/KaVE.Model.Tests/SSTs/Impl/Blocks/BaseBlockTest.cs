@@ -17,22 +17,31 @@
  *    - Sebastian Proksch
  */
 
-using System.Collections.Generic;
-using KaVE.JetBrains.Annotations;
+using KaVE.Model.Names.CSharp;
 using KaVE.Model.SSTs.Declarations;
+using KaVE.Model.SSTs.Expressions;
+using KaVE.Model.SSTs.Impl.Declarations;
+using KaVE.Model.SSTs.Impl.Expressions.Simple;
+using KaVE.Model.SSTs.Impl.References;
 using KaVE.Model.SSTs.References;
 
-namespace KaVE.Model.SSTs.Blocks
+namespace KaVE.Model.Tests.SSTs.Impl.Blocks
 {
-    public interface IForEachLoop : IStatement
+    internal abstract class BaseBlockTest
     {
-        [NotNull]
-        IVariableDeclaration Declaration { get; }
+        protected ISimpleExpression Label(string label)
+        {
+            return new ConstantValueExpression {Value = label};
+        }
 
-        [NotNull]
-        IVariableReference LoopedReference { get; }
+        protected IVariableDeclaration SomeDeclaration(string type = "T1")
+        {
+            return new VariableDeclaration {Type = TypeName.Get(type + ",P1")};
+        }
 
-        [NotNull]
-        IList<IStatement> Body { get; }
+        protected IVariableReference SomeVarRef(string id = "v")
+        {
+            return new VariableReference {Identifier = id};
+        }
     }
 }

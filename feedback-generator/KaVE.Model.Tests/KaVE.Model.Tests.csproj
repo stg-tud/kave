@@ -81,6 +81,7 @@
     <Compile Include="ObjectUsage\DefinitionSiteTest.cs" />
     <Compile Include="ObjectUsage\QueryTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SSTs\Impl\Blocks\BaseBlockTest.cs" />
     <Compile Include="SSTs\Impl\Blocks\CaseBlockTest.cs" />
     <Compile Include="SSTs\Impl\Blocks\CatchBlockTest.cs" />
     <Compile Include="SSTs\Impl\Blocks\DoLoopTest.cs" />

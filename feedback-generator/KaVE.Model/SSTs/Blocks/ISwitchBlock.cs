@@ -25,6 +25,7 @@ namespace KaVE.Model.SSTs.Blocks
 {
     public interface ISwitchBlock : IStatement
     {
+        [NotNull]
         IVariableReference Reference { get; }
 
         [NotNull]

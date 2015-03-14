@@ -20,6 +20,7 @@
 using System.Collections.Generic;
 using KaVE.Model.Collections;
 using KaVE.Model.SSTs.Blocks;
+using KaVE.Model.SSTs.Impl.References;
 using KaVE.Model.SSTs.References;
 using KaVE.Model.SSTs.Visitor;
 using KaVE.Utils;
@@ -33,6 +34,7 @@ namespace KaVE.Model.SSTs.Impl.Blocks
 
         public UsingBlock()
         {
+            Reference = new VariableReference();
             Body = Lists.NewList<IStatement>();
         }
 
@@ -48,7 +50,7 @@ namespace KaVE.Model.SSTs.Impl.Blocks
 
         public override int GetHashCode()
         {
-            return unchecked(39 + 6*Body.GetHashCode() + (Reference != null ? Reference.GetHashCode() : 0));
+            return unchecked(39 + 6*Body.GetHashCode() + Reference.GetHashCode());
         }
 
         public void Accept<TContext>(ISSTNodeVisitor<TContext> visitor, TContext context)

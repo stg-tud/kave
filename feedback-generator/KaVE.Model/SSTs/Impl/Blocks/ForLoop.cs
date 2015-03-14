@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using KaVE.Model.Collections;
 using KaVE.Model.SSTs.Blocks;
 using KaVE.Model.SSTs.Expressions;
+using KaVE.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Model.SSTs.Visitor;
 using KaVE.Utils;
 
@@ -36,6 +37,7 @@ namespace KaVE.Model.SSTs.Impl.Blocks
         public ForLoop()
         {
             Init = Lists.NewList<IStatement>();
+            Condition = new UnknownExpression();
             Step = Lists.NewList<IStatement>();
             Body = Lists.NewList<IStatement>();
         }
@@ -58,7 +60,7 @@ namespace KaVE.Model.SSTs.Impl.Blocks
                 var hashCode = 34 + Init.GetHashCode();
                 hashCode = (hashCode*397) ^ Step.GetHashCode();
                 hashCode = (hashCode*397) ^ Body.GetHashCode();
-                hashCode = (hashCode*397) ^ (Condition != null ? Condition.GetHashCode() : 0);
+                hashCode = (hashCode*397) ^ Condition.GetHashCode();
                 return hashCode;
             }
         }

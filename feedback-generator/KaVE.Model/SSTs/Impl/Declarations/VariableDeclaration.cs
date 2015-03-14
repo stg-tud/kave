@@ -32,6 +32,11 @@ namespace KaVE.Model.SSTs.Impl.Declarations
         public IVariableReference Reference { get; set; }
         public ITypeName Type { get; set; }
 
+        public bool IsMissing
+        {
+            get { return Reference.IsMissing; }
+        }
+
         public VariableDeclaration()
         {
             Reference = new VariableReference();

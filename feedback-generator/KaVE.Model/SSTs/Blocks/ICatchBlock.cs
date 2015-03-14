@@ -25,6 +25,7 @@ namespace KaVE.Model.SSTs.Blocks
 {
     public interface ICatchBlock
     {
+        [NotNull]
         IVariableDeclaration Exception { get; }
 
         [NotNull]

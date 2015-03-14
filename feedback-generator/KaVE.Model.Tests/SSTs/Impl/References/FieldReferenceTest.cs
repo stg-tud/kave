@@ -35,6 +35,7 @@ namespace KaVE.Model.Tests.SSTs.Impl.References
         public void DefaultValues()
         {
             var sut = new FieldReference();
+            Assert.AreEqual(new VariableReference(), sut.Reference);
             Assert.AreEqual(FieldName.UnknownName, sut.FieldName);
             Assert.AreNotEqual(0, sut.GetHashCode());
             Assert.AreNotEqual(1, sut.GetHashCode());

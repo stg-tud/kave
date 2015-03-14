@@ -25,11 +25,18 @@ namespace KaVE.Model.SSTs.Impl.References
 {
     public class VariableReference : IVariableReference
     {
+        public const string DefaultIdentifier = "";
+
         public string Identifier { get; set; }
+
+        public bool IsMissing
+        {
+            get { return string.Equals(Identifier, DefaultIdentifier); }
+        }
 
         public VariableReference()
         {
-            Identifier = "";
+            Identifier = DefaultIdentifier;
         }
 
         protected bool Equals(VariableReference other)

@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using KaVE.Model.Collections;
 using KaVE.Model.SSTs.Blocks;
 using KaVE.Model.SSTs.Expressions;
+using KaVE.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Model.SSTs.Visitor;
 using KaVE.Utils;
 
@@ -34,6 +35,7 @@ namespace KaVE.Model.SSTs.Impl.Blocks
 
         public IfElseBlock()
         {
+            Condition = new UnknownExpression();
             Then = Lists.NewList<IStatement>();
             Else = Lists.NewList<IStatement>();
         }
@@ -54,7 +56,7 @@ namespace KaVE.Model.SSTs.Impl.Blocks
             {
                 var hashCode = 35 + Then.GetHashCode();
                 hashCode = (hashCode*397) ^ Else.GetHashCode();
-                hashCode = (hashCode*397) ^ (Condition != null ? Condition.GetHashCode() : 0);
+                hashCode = (hashCode*397) ^ Condition.GetHashCode();
                 return hashCode;
             }
         }

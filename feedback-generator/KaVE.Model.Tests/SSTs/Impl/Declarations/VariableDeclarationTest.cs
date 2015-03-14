@@ -33,6 +33,7 @@ namespace KaVE.Model.Tests.SSTs.Impl.Declarations
             var sut = new VariableDeclaration();
             Assert.AreEqual(new VariableReference(), sut.Reference);
             Assert.AreEqual(TypeName.UnknownName, sut.Type);
+            Assert.True(sut.IsMissing);
             Assert.AreNotEqual(0, sut.GetHashCode());
             Assert.AreNotEqual(1, sut.GetHashCode());
         }
@@ -46,6 +47,7 @@ namespace KaVE.Model.Tests.SSTs.Impl.Declarations
                 Type = TypeName.UnknownName
             };
 
+            Assert.False(sut.IsMissing);
             Assert.AreEqual(SSTUtil.VariableReference("a"), sut.Reference);
             Assert.AreEqual(TypeName.UnknownName, sut.Type);
         }

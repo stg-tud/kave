@@ -25,6 +25,7 @@ namespace KaVE.Model.SSTs.Blocks
 {
     public interface IWhileLoop : IStatement
     {
+        [NotNull]
         ILoopHeaderExpression Condition { get; }
 
         [NotNull]

@@ -25,6 +25,7 @@ namespace KaVE.Model.SSTs.Blocks
 {
     public interface ILockBlock : IStatement
     {
+        [NotNull]
         IVariableReference Reference { get; }
 
         [NotNull]

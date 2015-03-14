@@ -18,23 +18,22 @@
  */
 
 using KaVE.Model.Collections;
+using KaVE.Model.SSTs;
 using KaVE.Model.SSTs.Impl.Blocks;
 using KaVE.Model.SSTs.Impl.References;
 using KaVE.Model.SSTs.Impl.Statements;
-using KaVE.Model.SSTs.References;
 using NUnit.Framework;
 
 namespace KaVE.Model.Tests.SSTs.Impl.Blocks
 {
-    public class UsingBlockTest
+    internal class UsingBlockTest : BaseBlockTest
     {
         [Test]
         public void DefaultValues()
         {
             var sut = new UsingBlock();
-            Assert.IsNull(sut.Reference);
-            Assert.NotNull(sut.Body);
-            Assert.AreEqual(0, sut.Body.Count);
+            Assert.AreEqual(new VariableReference(), sut.Reference);
+            Assert.AreEqual(Lists.NewList<IStatement>(), sut.Body);
             Assert.AreNotEqual(0, sut.GetHashCode());
             Assert.AreNotEqual(1, sut.GetHashCode());
         }
@@ -42,9 +41,9 @@ namespace KaVE.Model.Tests.SSTs.Impl.Blocks
         [Test]
         public void SettingValues()
         {
-            var sut = new UsingBlock {Reference = Ref("a")};
+            var sut = new UsingBlock {Reference = SomeVarRef("a")};
             sut.Body.Add(new ReturnStatement());
-            Assert.AreEqual(Ref("a"), sut.Reference);
+            Assert.AreEqual(SomeVarRef("a"), sut.Reference);
             Assert.AreEqual(Lists.NewList(new ReturnStatement()), sut.Body);
         }
 
@@ -60,9 +59,9 @@ namespace KaVE.Model.Tests.SSTs.Impl.Blocks
         [Test]
         public void Equality_ReallyTheSame()
         {
-            var a = new UsingBlock {Reference = Ref("b")};
+            var a = new UsingBlock {Reference = SomeVarRef("b")};
             a.Body.Add(new ReturnStatement());
-            var b = new UsingBlock {Reference = Ref("b")};
+            var b = new UsingBlock {Reference = SomeVarRef("b")};
             b.Body.Add(new ReturnStatement());
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
@@ -71,8 +70,8 @@ namespace KaVE.Model.Tests.SSTs.Impl.Blocks
         [Test]
         public void Equality_DifferentReference()
         {
-            var a = new UsingBlock {Reference = Ref("a")};
-            var b = new UsingBlock {Reference = Ref("b")};
+            var a = new UsingBlock {Reference = SomeVarRef("a")};
+            var b = new UsingBlock {Reference = SomeVarRef("b")};
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
         }
@@ -100,11 +99,6 @@ namespace KaVE.Model.Tests.SSTs.Impl.Blocks
         {
             var sut = new UsingBlock();
             sut.Accept(23).VerifyWithReturn(v => v.Visit(sut, 23));
-        }
-
-        private static IVariableReference Ref(string id)
-        {
-            return new VariableReference {Identifier = id};
         }
     }
 }

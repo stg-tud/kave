@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using KaVE.Model.Collections;
 using KaVE.Model.SSTs.Blocks;
 using KaVE.Model.SSTs.Declarations;
+using KaVE.Model.SSTs.Impl.Declarations;
 using KaVE.Utils;
 
 namespace KaVE.Model.SSTs.Impl.Blocks
@@ -32,6 +33,7 @@ namespace KaVE.Model.SSTs.Impl.Blocks
 
         public CatchBlock()
         {
+            Exception = new VariableDeclaration();
             Body = Lists.NewList<IStatement>();
         }
 
@@ -49,8 +51,7 @@ namespace KaVE.Model.SSTs.Impl.Blocks
         {
             unchecked
             {
-                return 31 + (Body.GetHashCode()*397) ^
-                       (Exception != null ? Exception.GetHashCode() : 0);
+                return 31 + (Body.GetHashCode()*397) ^ Exception.GetHashCode();
             }
         }
     }

@@ -25,5 +25,7 @@ namespace KaVE.Model.SSTs.References
     {
         [NotNull]
         string Identifier { get; }
+
+        bool IsMissing { get; }
     }
 }
