@@ -22,7 +22,7 @@ using NUnit.Framework;
 
 namespace KaVE.Model.Tests.SSTs.Impl.Expressions.Simple
 {
-    public class ConstantValueExpressionTest
+    internal class ConstantValueExpressionTest : SSTBaseTest
     {
         [Test]
         public void DefaultValues()

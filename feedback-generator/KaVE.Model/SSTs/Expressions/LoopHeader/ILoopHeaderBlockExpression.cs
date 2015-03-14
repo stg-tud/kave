@@ -23,7 +23,7 @@ using KaVE.JetBrains.Annotations;
 namespace KaVE.Model.SSTs.Expressions.LoopHeader
 {
     /*
-     * some expressions are broken down to small SST statemets (e.g., nested calls).
+     * some expressions are broken down to smaller SST statemets (e.g., nested calls).
      * Block Expressions add support for this transformation to SSTs.
      */
 

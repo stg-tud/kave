@@ -14,7 +14,7 @@
  * limitations under the License.
  * 
  * Contributors:
- *    - 
+ *    - Sebastian Proksch
  */
 
 using KaVE.Model.SSTs.Impl.Expressions.Simple;
@@ -22,7 +22,7 @@ using NUnit.Framework;
 
 namespace KaVE.Model.Tests.SSTs.Impl.Expressions.Simple
 {
-    internal class UnknownExpressionTest
+    internal class UnknownExpressionTest : SSTBaseTest
     {
         [Test]
         public void DefaultValues()

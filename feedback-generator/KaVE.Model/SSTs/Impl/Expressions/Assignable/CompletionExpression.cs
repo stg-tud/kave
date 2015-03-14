@@ -31,6 +31,11 @@ namespace KaVE.Model.SSTs.Impl.Expressions.Assignable
         public IVariableReference ObjectReference { get; set; }
         public string Token { get; set; }
 
+        public CompletionExpression()
+        {
+            Token = "";
+        }
+
         public override bool Equals(object obj)
         {
             return this.Equals(obj, Equals);
@@ -50,7 +55,7 @@ namespace KaVE.Model.SSTs.Impl.Expressions.Assignable
             {
                 var hcTypeRef = TypeReference != null ? TypeReference.GetHashCode() : 0;
                 var hcObjRef = ObjectReference != null ? ObjectReference.GetHashCode() : 0;
-                var hcToken = Token != null ? Token.GetHashCode() : 0;
+                var hcToken = Token.GetHashCode();
                 return unchecked (3 + hcToken*397 + hcTypeRef*23846 + hcObjRef);
             }
         }

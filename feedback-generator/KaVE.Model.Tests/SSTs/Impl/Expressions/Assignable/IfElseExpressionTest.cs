@@ -23,15 +23,15 @@ using NUnit.Framework;
 
 namespace KaVE.Model.Tests.SSTs.Impl.Expressions.Assignable
 {
-    public class IfElseExpressionTest
+    internal class IfElseExpressionTest : SSTBaseTest
     {
         [Test]
         public void DefaultValues()
         {
             var sut = new IfElseExpression();
-            Assert.IsNull(sut.Condition);
-            Assert.IsNull(sut.ThenExpression);
-            Assert.IsNull(sut.ElseExpression);
+            Assert.AreEqual(new UnknownExpression(), sut.Condition);
+            Assert.AreEqual(new UnknownExpression(), sut.ThenExpression);
+            Assert.AreEqual(new UnknownExpression(), sut.ElseExpression);
             Assert.AreNotEqual(0, sut.GetHashCode());
             Assert.AreNotEqual(1, sut.GetHashCode());
         }
@@ -88,7 +88,7 @@ namespace KaVE.Model.Tests.SSTs.Impl.Expressions.Assignable
         }
 
         [Test]
-        public void Equality_DifferentIf()
+        public void Equality_DifferentThen()
         {
             var a = new IfElseExpression {ThenExpression = new ConstantValueExpression()};
             var b = new IfElseExpression();

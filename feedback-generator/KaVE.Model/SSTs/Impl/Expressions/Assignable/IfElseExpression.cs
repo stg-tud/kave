@@ -19,6 +19,7 @@
 
 using KaVE.Model.SSTs.Expressions;
 using KaVE.Model.SSTs.Expressions.Assignable;
+using KaVE.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Model.SSTs.Visitor;
 using KaVE.Utils;
 
@@ -29,6 +30,13 @@ namespace KaVE.Model.SSTs.Impl.Expressions.Assignable
         public ISimpleExpression Condition { get; set; }
         public ISimpleExpression ThenExpression { get; set; }
         public ISimpleExpression ElseExpression { get; set; }
+
+        public IfElseExpression()
+        {
+            Condition = new UnknownExpression();
+            ThenExpression = new UnknownExpression();
+            ElseExpression = new UnknownExpression();
+        }
 
         private bool Equals(IfElseExpression other)
         {
@@ -45,9 +53,9 @@ namespace KaVE.Model.SSTs.Impl.Expressions.Assignable
         {
             unchecked
             {
-                var hashCode = 10 + (Condition != null ? Condition.GetHashCode() : 0);
-                hashCode = (hashCode*397) ^ (ThenExpression != null ? ThenExpression.GetHashCode() : 0);
-                hashCode = (hashCode*397) ^ (ElseExpression != null ? ElseExpression.GetHashCode() : 0);
+                var hashCode = 10 + Condition.GetHashCode();
+                hashCode = (hashCode*397) ^ ThenExpression.GetHashCode();
+                hashCode = (hashCode*397) ^ ElseExpression.GetHashCode();
                 return hashCode;
             }
         }

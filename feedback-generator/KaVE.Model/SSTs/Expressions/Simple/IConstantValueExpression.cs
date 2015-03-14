@@ -17,10 +17,13 @@
  *    - Sebastian Proksch
  */
 
+using KaVE.JetBrains.Annotations;
+
 namespace KaVE.Model.SSTs.Expressions.Simple
 {
     public interface IConstantValueExpression : ISimpleExpression
     {
+        [CanBeNull]
         string Value { get; }
     }
 }

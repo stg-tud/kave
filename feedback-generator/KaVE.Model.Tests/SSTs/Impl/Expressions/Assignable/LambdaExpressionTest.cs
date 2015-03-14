@@ -27,16 +27,14 @@ using NUnit.Framework;
 
 namespace KaVE.Model.Tests.SSTs.Impl.Expressions.Assignable
 {
-    public class LambdaExpressionTest
+    internal class LambdaExpressionTest : SSTBaseTest
     {
         [Test]
         public void DefaultValues()
         {
             var sut = new LambdaExpression();
-            Assert.NotNull(sut.Parameters);
-            Assert.AreEqual(0, sut.Parameters.Count);
-            Assert.NotNull(sut.Body);
-            Assert.AreEqual(0, sut.Body.Count);
+            Assert.AreEqual(Lists.NewList<IVariableDeclaration>(), sut.Parameters);
+            Assert.AreEqual(Lists.NewList<IStatement>(), sut.Body);
             Assert.AreNotEqual(0, sut.GetHashCode());
             Assert.AreNotEqual(1, sut.GetHashCode());
         }
@@ -48,13 +46,8 @@ namespace KaVE.Model.Tests.SSTs.Impl.Expressions.Assignable
             sut.Parameters.Add(new VariableDeclaration());
             sut.Body.Add(new GotoStatement());
 
-            var expectedBody = Lists.NewList<IStatement>();
-            expectedBody.Add(new GotoStatement());
-            Assert.AreEqual(expectedBody, sut.Body);
-
-            var expectedParameters = Lists.NewList<IVariableDeclaration>();
-            expectedParameters.Add(new VariableDeclaration());
-            Assert.AreEqual(expectedParameters, sut.Parameters);
+            Assert.AreEqual(Lists.NewList(new GotoStatement()), sut.Body);
+            Assert.AreEqual(Lists.NewList(new VariableDeclaration()), sut.Parameters);
         }
 
         [Test]

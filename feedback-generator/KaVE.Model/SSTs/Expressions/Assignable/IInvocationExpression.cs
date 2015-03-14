@@ -26,7 +26,10 @@ namespace KaVE.Model.SSTs.Expressions.Assignable
 {
     public interface IInvocationExpression : IAssignableExpression
     {
+        [NotNull]
         IVariableReference Reference { get; }
+
+        [NotNull]
         IMethodName MethodName { get; }
 
         [NotNull]

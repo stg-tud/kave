@@ -19,19 +19,17 @@
 
 using KaVE.Model.Names.CSharp;
 using KaVE.Model.SSTs.Impl.Expressions.Assignable;
-using KaVE.Model.SSTs.Impl.References;
-using KaVE.Model.SSTs.References;
 using NUnit.Framework;
 
 namespace KaVE.Model.Tests.SSTs.Impl.Expressions.Assignable
 {
-    public class CompletionExpressionTest
+    internal class CompletionExpressionTest : SSTBaseTest
     {
         [Test]
         public void DefaultValues()
         {
             var sut = new CompletionExpression();
-            Assert.Null(sut.Token);
+            Assert.AreEqual("", sut.Token);
             Assert.Null(sut.ObjectReference);
             Assert.Null(sut.TypeReference);
             Assert.AreNotEqual(0, sut.GetHashCode());
@@ -43,11 +41,11 @@ namespace KaVE.Model.Tests.SSTs.Impl.Expressions.Assignable
         {
             var sut = new CompletionExpression
             {
-                ObjectReference = Ref("i"),
+                ObjectReference = SomeVarRef("i"),
                 TypeReference = TypeName.UnknownName,
                 Token = "t"
             };
-            Assert.AreEqual(Ref("i"), sut.ObjectReference);
+            Assert.AreEqual(SomeVarRef("i"), sut.ObjectReference);
             Assert.AreEqual(TypeName.UnknownName, sut.TypeReference);
             Assert.AreEqual("t", sut.Token);
         }
@@ -66,13 +64,13 @@ namespace KaVE.Model.Tests.SSTs.Impl.Expressions.Assignable
         {
             var a = new CompletionExpression
             {
-                ObjectReference = Ref("i"),
+                ObjectReference = SomeVarRef("i"),
                 Token = "t",
                 TypeReference = TypeName.UnknownName
             };
             var b = new CompletionExpression
             {
-                ObjectReference = Ref("i"),
+                ObjectReference = SomeVarRef("i"),
                 Token = "t",
                 TypeReference = TypeName.UnknownName
             };
@@ -83,8 +81,8 @@ namespace KaVE.Model.Tests.SSTs.Impl.Expressions.Assignable
         [Test]
         public void Equality_DifferentObjectReference()
         {
-            var a = new CompletionExpression { ObjectReference = Ref("i") };
-            var b = new CompletionExpression { ObjectReference = Ref("j") };
+            var a = new CompletionExpression {ObjectReference = SomeVarRef("i")};
+            var b = new CompletionExpression {ObjectReference = SomeVarRef("j")};
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
         }
@@ -93,8 +91,8 @@ namespace KaVE.Model.Tests.SSTs.Impl.Expressions.Assignable
         [Test]
         public void Equality_DifferentToken()
         {
-            var a = new CompletionExpression { Token = "t" };
-            var b = new CompletionExpression { Token = "u" };
+            var a = new CompletionExpression {Token = "t"};
+            var b = new CompletionExpression {Token = "u"};
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
         }
@@ -102,8 +100,8 @@ namespace KaVE.Model.Tests.SSTs.Impl.Expressions.Assignable
         [Test]
         public void Equality_DifferentTypeReference()
         {
-            var a = new CompletionExpression { TypeReference = TypeName.UnknownName };
-            var b = new CompletionExpression { TypeReference = TypeName.Get("System.Int32, mscore, 4.0.0.0") };
+            var a = new CompletionExpression {TypeReference = TypeName.UnknownName};
+            var b = new CompletionExpression {TypeReference = TypeName.Get("System.Int32, mscore, 4.0.0.0")};
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
         }
@@ -120,11 +118,6 @@ namespace KaVE.Model.Tests.SSTs.Impl.Expressions.Assignable
         {
             var sut = new CompletionExpression();
             sut.Accept(23).VerifyWithReturn(v => v.Visit(sut, 23));
-        }
-
-        private static IVariableReference Ref(string id)
-        {
-            return new VariableReference {Identifier = id};
         }
     }
 }

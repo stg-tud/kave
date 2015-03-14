@@ -22,8 +22,16 @@ using NUnit.Framework;
 
 namespace KaVE.Model.Tests.SSTs.Impl.Expressions.Simple
 {
-    public class NullExpressionTest
+    internal class NullExpressionTest : SSTBaseTest
     {
+        [Test]
+        public void DefaultValues()
+        {
+            var sut = new NullExpression();
+            Assert.AreNotEqual(0, sut.GetHashCode());
+            Assert.AreNotEqual(1, sut.GetHashCode());
+        }
+
         [Test]
         public void Equality()
         {
@@ -31,8 +39,6 @@ namespace KaVE.Model.Tests.SSTs.Impl.Expressions.Simple
             var b = new NullExpression();
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
-            Assert.AreNotEqual(0, a.GetHashCode());
-            Assert.AreNotEqual(1, a.GetHashCode());
         }
 
         [Test]

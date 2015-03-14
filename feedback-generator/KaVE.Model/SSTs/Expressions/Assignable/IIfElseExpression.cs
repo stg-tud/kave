@@ -17,12 +17,19 @@
  *    - Sebastian Proksch
  */
 
+using KaVE.JetBrains.Annotations;
+
 namespace KaVE.Model.SSTs.Expressions.Assignable
 {
     public interface IIfElseExpression : IAssignableExpression
     {
+        [NotNull]
         ISimpleExpression Condition { get; }
+
+        [NotNull]
         ISimpleExpression ThenExpression { get; }
+
+        [NotNull]
         ISimpleExpression ElseExpression { get; }
     }
 }

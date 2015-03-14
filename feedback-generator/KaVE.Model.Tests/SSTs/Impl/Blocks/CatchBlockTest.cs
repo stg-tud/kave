@@ -26,7 +26,7 @@ using NUnit.Framework;
 
 namespace KaVE.Model.Tests.SSTs.Impl.Blocks
 {
-    internal class CatchBlockTest : BaseBlockTest
+    internal class CatchBlockTest : SSTBaseTest
     {
         [Test]
         public void DefaultValues()

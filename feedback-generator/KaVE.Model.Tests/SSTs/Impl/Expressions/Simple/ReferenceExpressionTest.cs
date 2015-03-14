@@ -17,20 +17,19 @@
  *    - Sebastian Proksch
  */
 
-using KaVE.Model.SSTs;
 using KaVE.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Model.SSTs.Impl.References;
 using NUnit.Framework;
 
 namespace KaVE.Model.Tests.SSTs.Impl.Expressions.Simple
 {
-    internal class ReferenceExpressionTest
+    internal class ReferenceExpressionTest : SSTBaseTest
     {
         [Test]
         public void DefaultValues()
         {
             var sut = new ReferenceExpression();
-            Assert.Null(sut.Reference);
+            Assert.AreEqual(new UnknownReference(), sut.Reference);
             Assert.AreNotEqual(0, sut.GetHashCode());
             Assert.AreNotEqual(1, sut.GetHashCode());
         }
@@ -38,8 +37,8 @@ namespace KaVE.Model.Tests.SSTs.Impl.Expressions.Simple
         [Test]
         public void SettingValues()
         {
-            var sut = new ReferenceExpression {Reference = Ref("a")};
-            Assert.AreEqual(Ref("a"), sut.Reference);
+            var sut = new ReferenceExpression {Reference = SomeVarRef("a")};
+            Assert.AreEqual(SomeVarRef("a"), sut.Reference);
         }
 
         [Test]
@@ -54,26 +53,20 @@ namespace KaVE.Model.Tests.SSTs.Impl.Expressions.Simple
         [Test]
         public void Equality_ReallyTheSame()
         {
-            var a = new ReferenceExpression {Reference = Ref("a")};
-            var b = new ReferenceExpression {Reference = Ref("a")};
+            var a = new ReferenceExpression {Reference = SomeVarRef("a")};
+            var b = new ReferenceExpression {Reference = SomeVarRef("a")};
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
         }
 
         [Test]
-        public void Equality_DifferentIDentifier()
+        public void Equality_DifferentReference()
         {
-            var a = new ReferenceExpression {Reference = Ref("a")};
-            var b = new ReferenceExpression {Reference = Ref("b")};
+            var a = new ReferenceExpression {Reference = SomeVarRef("a")};
+            var b = new ReferenceExpression {Reference = SomeVarRef("b")};
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
         }
-
-        private static IReference Ref(string id)
-        {
-            return new VariableReference {Identifier = id};
-        }
-
 
         [Test]
         public void VisitorIsImplemented()

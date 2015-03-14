@@ -22,6 +22,7 @@ using KaVE.Model.Collections;
 using KaVE.Model.Names;
 using KaVE.Model.SSTs.Expressions;
 using KaVE.Model.SSTs.Expressions.Assignable;
+using KaVE.Model.SSTs.Impl.References;
 using KaVE.Model.SSTs.References;
 using KaVE.Model.SSTs.Visitor;
 using KaVE.Utils;
@@ -36,6 +37,8 @@ namespace KaVE.Model.SSTs.Impl.Expressions.Assignable
 
         public InvocationExpression()
         {
+            Reference = new VariableReference();
+            MethodName = Names.CSharp.MemberNames.MethodName.UnknownName;
             Parameters = Lists.NewList<ISimpleExpression>();
         }
 
@@ -54,8 +57,8 @@ namespace KaVE.Model.SSTs.Impl.Expressions.Assignable
         {
             unchecked
             {
-                var hashCode = 11 + (Reference != null ? Reference.GetHashCode() : 0);
-                hashCode = (hashCode*397) ^ (MethodName != null ? MethodName.GetHashCode() : 0);
+                var hashCode = 11 + Reference.GetHashCode();
+                hashCode = (hashCode*397) ^ MethodName.GetHashCode();
                 hashCode = (hashCode*397) ^ Parameters.GetHashCode();
                 return hashCode;
             }

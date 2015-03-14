@@ -17,6 +17,7 @@
  *    - Sebastian Proksch
  */
 
+using KaVE.JetBrains.Annotations;
 using KaVE.Model.Names;
 using KaVE.Model.SSTs.References;
 
@@ -24,8 +25,13 @@ namespace KaVE.Model.SSTs.Expressions.Assignable
 {
     public interface ICompletionExpression : IAssignableExpression
     {
+        [CanBeNull]
         ITypeName TypeReference { get; }
+
+        [CanBeNull]
         IVariableReference ObjectReference { get; }
+
+        [NotNull]
         string Token { get; }
     }
 }

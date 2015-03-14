@@ -18,6 +18,7 @@
  */
 
 using KaVE.Model.SSTs.Expressions.Simple;
+using KaVE.Model.SSTs.Impl.References;
 using KaVE.Model.SSTs.Visitor;
 using KaVE.Utils;
 
@@ -26,6 +27,11 @@ namespace KaVE.Model.SSTs.Impl.Expressions.Simple
     public class ReferenceExpression : IReferenceExpression
     {
         public IReference Reference { get; set; }
+
+        public ReferenceExpression()
+        {
+            Reference = new UnknownReference();
+        }
 
         protected bool Equals(ReferenceExpression other)
         {
@@ -39,7 +45,7 @@ namespace KaVE.Model.SSTs.Impl.Expressions.Simple
 
         public override int GetHashCode()
         {
-            var hcIdentifier = Reference != null ? Reference.GetHashCode() : 0;
+            var hcIdentifier = Reference.GetHashCode();
             return unchecked (29 + hcIdentifier);
         }
 

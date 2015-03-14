@@ -25,14 +25,13 @@ using NUnit.Framework;
 
 namespace KaVE.Model.Tests.SSTs.Impl.Expressions.LoopHeader
 {
-    internal class BlockExpressionTest
+    internal class BlockExpressionTest : SSTBaseTest
     {
         [Test]
         public void DefaultValues()
         {
             var sut = new LoopHeaderBlockExpression();
-            Assert.NotNull(sut.Body);
-            Assert.AreEqual(0, sut.Body.Count);
+            Assert.AreEqual(Lists.NewList<IStatement>(), sut.Body);
             Assert.AreNotEqual(0, sut.GetHashCode());
             Assert.AreNotEqual(1, sut.GetHashCode());
         }

@@ -86,12 +86,12 @@ namespace KaVE.Model.SSTs.Impl
         {
             unchecked
             {
-                var hashCode = (EnclosingType != null ? EnclosingType.GetHashCode() : 0);
-                hashCode = (hashCode*397) ^ (Fields != null ? Fields.GetHashCode() : 0);
-                hashCode = (hashCode*397) ^ (Methods != null ? Methods.GetHashCode() : 0);
-                hashCode = (hashCode*397) ^ (Properties != null ? Properties.GetHashCode() : 0);
-                hashCode = (hashCode*397) ^ (Events != null ? Events.GetHashCode() : 0);
-                hashCode = (hashCode*397) ^ (Delegates != null ? Delegates.GetHashCode() : 0);
+                var hashCode = EnclosingType.GetHashCode();
+                hashCode = (hashCode*397) ^ Fields.GetHashCode();
+                hashCode = (hashCode*397) ^ Methods.GetHashCode();
+                hashCode = (hashCode*397) ^ Properties.GetHashCode();
+                hashCode = (hashCode*397) ^ Events.GetHashCode();
+                hashCode = (hashCode*397) ^ Delegates.GetHashCode();
                 return hashCode;
             }
         }

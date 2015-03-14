@@ -17,8 +17,7 @@
  *    - Sebastian Proksch
  */
 
-using System.Linq;
-using KaVE.Model.Names;
+using KaVE.Model.Collections;
 using KaVE.Model.Names.CSharp.MemberNames;
 using KaVE.Model.SSTs.Expressions;
 using KaVE.Model.SSTs.Impl;
@@ -29,18 +28,31 @@ using NUnit.Framework;
 
 namespace KaVE.Model.Tests.SSTs.Impl.Expressions.Assignable
 {
-    public class InvocationExpressionTest
+    internal class InvocationExpressionTest : SSTBaseTest
     {
         [Test]
         public void DefaultValues()
         {
             var sut = new InvocationExpression();
-            Assert.IsNull(sut.Reference);
-            Assert.IsNull(sut.MethodName);
-            Assert.IsNotNull(sut.Parameters);
-            Assert.AreEqual(0, sut.Parameters.Count);
+            Assert.AreEqual(new VariableReference(), sut.Reference);
+            Assert.AreEqual(MethodName.UnknownName, sut.MethodName);
+            Assert.AreEqual(Lists.NewList<ISimpleExpression>(), sut.Parameters);
             Assert.AreNotEqual(0, sut.GetHashCode());
             Assert.AreNotEqual(1, sut.GetHashCode());
+        }
+
+        [Test]
+        public void SettingValues()
+        {
+            var sut = new InvocationExpression
+            {
+                Reference = SomeVarRef("a"),
+                MethodName = GetMethod("b"),
+                Parameters = {new NullExpression()}
+            };
+            Assert.AreEqual(SomeVarRef("a"), sut.Reference);
+            Assert.AreEqual(GetMethod("b"), sut.MethodName);
+            Assert.AreEqual(Lists.NewList(new NullExpression()), sut.Parameters);
         }
 
         [Test]
@@ -64,7 +76,7 @@ namespace KaVE.Model.Tests.SSTs.Impl.Expressions.Assignable
         }
 
         [Test]
-        public void Equality_DifferentIdentifier()
+        public void Equality_DifferentReference()
         {
             var a = new InvocationExpression {Reference = new VariableReference {Identifier = "a"}};
             var b = new InvocationExpression {Reference = new VariableReference {Identifier = "b"}};
@@ -102,21 +114,6 @@ namespace KaVE.Model.Tests.SSTs.Impl.Expressions.Assignable
         {
             var sut = new InvocationExpression();
             sut.Accept(23).VerifyWithReturn(v => v.Visit(sut, 23));
-        }
-
-        private static IMethodName GetMethod(string simpleName)
-        {
-            var methodName = string.Format(
-                "[System.String, mscore, 4.0.0.0] [System.String, mscore, 4.0.0.0].{0}()",
-                simpleName);
-            return MethodName.Get(methodName);
-        }
-
-        private static ISimpleExpression[] RefExprs(params string[] ids)
-        {
-            return
-                ids.Select<string, ISimpleExpression>(
-                    id => new ReferenceExpression {Reference = new VariableReference {Identifier = id}}).ToArray();
         }
     }
 }

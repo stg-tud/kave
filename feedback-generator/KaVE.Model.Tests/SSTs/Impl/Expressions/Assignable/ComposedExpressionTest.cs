@@ -17,24 +17,20 @@
  *    - Sebastian Proksch
  */
 
-using System.Collections.Generic;
-using System.Linq;
 using KaVE.Model.Collections;
 using KaVE.Model.SSTs.Impl.Expressions.Assignable;
-using KaVE.Model.SSTs.Impl.References;
 using KaVE.Model.SSTs.References;
 using NUnit.Framework;
 
 namespace KaVE.Model.Tests.SSTs.Impl.Expressions.Assignable
 {
-    public class ComposedExpressionTest
+    internal class ComposedExpressionTest : SSTBaseTest
     {
         [Test]
         public void DefaultValues()
         {
             var sut = new ComposedExpression();
-            Assert.IsNotNull(sut.References);
-            Assert.AreEqual(0, sut.References.Count);
+            Assert.AreEqual(Lists.NewList<IVariableReference>(), sut.References);
             Assert.AreNotEqual(0, sut.GetHashCode());
             Assert.AreNotEqual(1, sut.GetHashCode());
         }
@@ -71,12 +67,6 @@ namespace KaVE.Model.Tests.SSTs.Impl.Expressions.Assignable
             var b = new ComposedExpression {References = Refs("b")};
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
-        }
-
-        private static IList<IVariableReference> Refs(params string[] strRefs)
-        {
-            var refs = strRefs.ToList().Select(r => new VariableReference {Identifier = r});
-            return Lists.NewListFrom<IVariableReference>(refs);
         }
 
         [Test]
