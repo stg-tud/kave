@@ -123,7 +123,7 @@ namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
         public CodeCompletionEventHandler(IRSEnv env, IMessageBus messageBus, IDateUtils dateUtils)
             : base(env, messageBus, dateUtils)
         {
-            _context = Context.Empty;
+            _context = new Context();
         }
 
         public void SetContext(Context context)
@@ -134,7 +134,7 @@ namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
         public void HandleTriggered(string prefix, IEnumerable<ILookupItem> displayedItems)
         {
             _event = Create<CompletionEvent>();
-            _event.CompletionContext = _context;
+            _event.Context2 = _context;
             _event.Prefix = prefix;
             HandleDisplayedItemsChanged(displayedItems);
         }
@@ -158,7 +158,7 @@ namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
             Fire(_event);
 
             _event = Create<CompletionEvent>();
-            _event.CompletionContext = _context;
+            _event.Context2 = _context;
             _event.Prefix = newPrefix;
             _event.ProposalCollection = displayedLookupItems.ToProposalCollection();
             if (lastSelection != null && _event.ProposalCollection.Proposals.Contains(lastSelection.Proposal))

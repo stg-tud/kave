@@ -12,47 +12,52 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sebastian Proksch
  */
+
 using System.Collections.Generic;
 using KaVE.JetBrains.Annotations;
 using KaVE.Model.Names;
 
-namespace KaVE.Model.Events.CompletionEvent
+namespace KaVE.Model.TypeShapes
 {
     /// <summary>
-    /// Represents one level of a type hierarchy.
+    ///     Represents one level of a type hierarchy.
     /// </summary>
     public interface ITypeHierarchy
     {
         /// <summary>
-        /// The type at this level in the type hierarchy.
+        ///     The type at this level in the type hierarchy.
         /// </summary>
         [NotNull]
-        ITypeName Element { get; set; }
+        ITypeName Element { get; }
 
         /// <summary>
-        /// The direct superclass of the type at this level.
+        ///     The direct superclass of the type at this level.
         /// </summary>
+        [CanBeNull]
         ITypeHierarchy Extends { get; }
 
         /// <summary>
-        /// The interfaces directly implemented by the type at this level.
+        ///     The interfaces directly implemented by the type at this level.
         /// </summary>
         [NotNull]
-        ISet<ITypeHierarchy> Implements { get; set; }
+        ISet<ITypeHierarchy> Implements { get; }
 
         /// <summary>
-        /// <returns>Wheather this type extends some superclass or implements any interfaces</returns>
+        ///     <returns>Whether this type extends some superclass or implements any interfaces</returns>
         /// </summary>
         bool HasSupertypes { get; }
 
         /// <summary>
-        /// <returns>Wheather this type extends some superclass</returns>
+        ///     <returns>Whether this type extends some superclass</returns>
         /// </summary>
         bool HasSuperclass { get; }
 
         /// <summary>
-        /// <returns>Wheather this type implements any interfaces</returns>
+        ///     <returns>Whether this type implements any interfaces</returns>
         /// </summary>
         bool IsImplementingInterfaces { get; }
     }

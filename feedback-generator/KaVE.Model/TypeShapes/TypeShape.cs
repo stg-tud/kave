@@ -19,37 +19,31 @@
 
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using KaVE.JetBrains.Annotations;
+using KaVE.Model.Collections;
 using KaVE.Utils;
 using KaVE.Utils.Collections;
 
-namespace KaVE.Model.Events.CompletionEvent
+namespace KaVE.Model.TypeShapes
 {
     [DataContract]
-    public class TypeShape
+    public class TypeShape : ITypeShape
     {
-        public TypeShape()
-        {
-            MethodHierarchies = new HashSet<MethodHierarchy>();
-        }
-
-        /// <summary>
-        ///     A description of the enclosing class, including its parent class and implemented interfaces.
-        /// </summary>
         [DataMember]
         public ITypeHierarchy TypeHierarchy { get; set; }
 
-        /// <summary>
-        ///     All Methods that are overridden in the class under edit (including information about the first and super
-        ///     declaration).
-        /// </summary>
-        [NotNull, DataMember]
-        public ISet<MethodHierarchy> MethodHierarchies { get; set; }
+        [DataMember]
+        public ISet<IMethodHierarchy> MethodHierarchies { get; set; }
+
+        public TypeShape()
+        {
+            TypeHierarchy = new TypeHierarchy();
+            MethodHierarchies = Sets.NewHashSet<IMethodHierarchy>();
+        }
 
         protected bool Equals(TypeShape other)
         {
             return Equals(TypeHierarchy, other.TypeHierarchy) &&
-                   MethodHierarchies.SetEquals(other.MethodHierarchies);
+                   Equals(MethodHierarchies, other.MethodHierarchies);
         }
 
         public override bool Equals(object obj)
@@ -61,17 +55,9 @@ namespace KaVE.Model.Events.CompletionEvent
         {
             unchecked
             {
-                return ((TypeHierarchy != null ? TypeHierarchy.GetHashCode() : 0)*397) ^
+                return (TypeHierarchy.GetHashCode()*397) ^
                        MethodHierarchies.GetSetHashCode();
             }
-        }
-
-        public override string ToString()
-        {
-            return string.Format(
-                "[TypeHierarchy: {0}, MethodHierarchies: [{1}]]",
-                TypeHierarchy,
-                string.Join(", ", MethodHierarchies));
         }
     }
 }

@@ -13,19 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 using System;
 using System.Linq;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.Util;
 using KaVE.JetBrains.Annotations;
-using KaVE.Model.Events.CompletionEvent;
 using KaVE.Model.Names;
+using KaVE.Model.TypeShapes;
 using KaVE.Utils.Assertion;
 using KaVE.VsFeedbackGenerator.Utils.Names;
 
 namespace KaVE.VsFeedbackGenerator.Analysis
 {
-    static class TypeHierarchyAnalysisUtils
+    internal static class TypeHierarchyAnalysisUtils
     {
         public static MethodHierarchy CollectDeclarationInfo([NotNull] this IMethod method, [NotNull] IMethodName name)
         {
@@ -78,7 +79,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis
                     {
                         return null;
                     }
-                    return (IMethodName)method.GetName(method.IdSubstitution);
+                    return (IMethodName) method.GetName(method.IdSubstitution);
                 }
             }
 
@@ -110,7 +111,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis
 
                             if (name.Equals(encName))
                             {
-                                return (IMethodName)method.GetName(method.IdSubstitution);
+                                return (IMethodName) method.GetName(method.IdSubstitution);
                             }
                         }
                     }

@@ -23,7 +23,6 @@ using JetBrains.ReSharper.Intentions.Extensibility;
 using JetBrains.UI.BulbMenu;
 using KaVE.VsFeedbackGenerator.MessageBus;
 using KaVE.VsFeedbackGenerator.Utils;
-using KaVE.VsFeedbackGenerator.VsIntegration;
 
 namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
 {

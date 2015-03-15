@@ -60,7 +60,7 @@ namespace KaVE.Model.Events.CompletionEvent
         {
             Selections = new List<ProposalSelection>();
             ProposalCollection = new ProposalCollection();
-            CompletionContext = Context.Empty;
+            Context2 = new Context();
             Prefix = "";
         }
 
@@ -69,7 +69,7 @@ namespace KaVE.Model.Events.CompletionEvent
         ///     is what is used as the query to the intelligent code completion.
         /// </summary>
         [DataMember, NotNull]
-        public Context CompletionContext { get; set; }
+        public Context Context2 { get; set; }
 
         /// <summary>
         ///     The completion proposals shown to the user.
@@ -112,7 +112,7 @@ namespace KaVE.Model.Events.CompletionEvent
 
         protected bool Equals(CompletionEvent other)
         {
-            return base.Equals(other) && Equals(CompletionContext, other.CompletionContext) &&
+            return base.Equals(other) && Equals(Context2, other.Context2) &&
                    Equals(ProposalCollection, other.ProposalCollection) && string.Equals(Prefix, other.Prefix) &&
                    Selections.SequenceEqual(other.Selections) && TerminatedBy == other.TerminatedBy &&
                    TerminatedAs == other.TerminatedAs;
@@ -128,7 +128,7 @@ namespace KaVE.Model.Events.CompletionEvent
             unchecked
             {
                 var hashCode = base.GetHashCode();
-                hashCode = (hashCode*397) ^ CompletionContext.GetHashCode();
+                hashCode = (hashCode*397) ^ Context2.GetHashCode();
                 hashCode = (hashCode*397) ^ ProposalCollection.GetHashCode();
                 hashCode = (hashCode*397) ^ Prefix.GetHashCode();
                 hashCode = (hashCode*397) ^ Selections.GetHashCode();
@@ -144,7 +144,7 @@ namespace KaVE.Model.Events.CompletionEvent
                 string.Format(
                     "{0}, Context: {1}, ProposalCollection: {2}, Prefix: {3}, Selections: [{4}], TerminatedBy: {5}, TerminatedAs: {6}",
                     base.ToString(),
-                    CompletionContext,
+                    Context2,
                     ProposalCollection,
                     Prefix,
                     string.Join(", ", Selections),

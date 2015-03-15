@@ -21,41 +21,31 @@
 using System.Runtime.Serialization;
 using KaVE.JetBrains.Annotations;
 using KaVE.Model.Names;
+using KaVE.Model.Names.CSharp.MemberNames;
 using KaVE.Utils;
 
-namespace KaVE.Model.Events.CompletionEvent
+namespace KaVE.Model.TypeShapes
 {
     [DataContract]
-    public class MethodHierarchy
+    public class MethodHierarchy : IMethodHierarchy
     {
-        /// <summary>
-        ///     The name of a method.
-        /// </summary>
-        [NotNull, DataMember]
+        [DataMember]
         public IMethodName Element { get; set; }
 
-        /// <summary>
-        ///     The implementation of the enclosing method that is referred to by calling
-        ///     <code>super.'methodName'(...)</code>.
-        /// </summary>
         [DataMember]
         public IMethodName Super { get; set; }
 
-        /// <summary>
-        ///     The declarations of the enclosing method, i.e., the method names specified in interfaces or the highest
-        ///     parent class that the enclosing method is an implementation of.
-        /// </summary>
         [DataMember]
         public IMethodName First { get; set; }
 
-        /// <summary>
-        ///     Wheather or not this is a hierarchy of a method that overrides or implements a declaration from further up in the
-        ///     type hierarchy.
-        /// </summary>
-        // TODO review: think about renaming "isDeclaredInParentHierarchy"?
-        public bool IsOverrideOrImplementation
+        public bool IsDeclaredInParentHierarchy
         {
             get { return First != null; }
+        }
+
+        public MethodHierarchy()
+        {
+            Element = MethodName.UnknownName;
         }
 
         public MethodHierarchy([NotNull] IMethodName methodName)
@@ -82,11 +72,6 @@ namespace KaVE.Model.Events.CompletionEvent
                 hashCode = (hashCode*397) ^ (First != null ? First.GetHashCode() : 0);
                 return hashCode;
             }
-        }
-
-        public override string ToString()
-        {
-            return string.Format("[Element: {0}, Super: {1}, First: {2}]", Element, Super, First);
         }
     }
 }

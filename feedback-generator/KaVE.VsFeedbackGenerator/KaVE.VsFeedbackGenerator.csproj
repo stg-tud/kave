@@ -146,9 +146,9 @@
     <Compile Include="Interactivity\InteractionRequest.cs" />
     <Compile Include="Interactivity\ConfirmationRequestHandler.cs" />
     <Compile Include="RSEnv.cs" />
-    <Compile Include="SessionManager\Anonymize\SSTAnonymization.cs" />
+    <Compile Include="SessionManager\Anonymize\CompletionEvents\SSTAnonymization.cs" />
     <Compile Include="SessionManager\Anonymize\BuildEventAnonymizer.cs" />
-    <Compile Include="SessionManager\Anonymize\CompletionEventAnonymizer.cs" />
+    <Compile Include="SessionManager\Anonymize\CompletionEvents\CompletionEventAnonymizer.cs" />
     <Compile Include="SessionManager\Anonymize\DataExportAnonymizer.cs" />
     <Compile Include="SessionManager\Anonymize\DocumentEventAnonymizer.cs" />
     <Compile Include="SessionManager\Anonymize\ErrorEventAnonymizer.cs" />
@@ -157,9 +157,10 @@
     <Compile Include="SessionManager\Anonymize\InfoEventAnonymizer.cs" />
     <Compile Include="SessionManager\Anonymize\AnonymousNameUtils.cs" />
     <Compile Include="SessionManager\Anonymize\SolutionEventAnonymizer.cs" />
-    <Compile Include="SessionManager\Anonymize\SSTExpressionAnonymization.cs" />
-    <Compile Include="SessionManager\Anonymize\SSTReferenceAnonymization.cs" />
-    <Compile Include="SessionManager\Anonymize\SSTStatementAnonymization.cs" />
+    <Compile Include="SessionManager\Anonymize\CompletionEvents\SSTExpressionAnonymization.cs" />
+    <Compile Include="SessionManager\Anonymize\CompletionEvents\SSTReferenceAnonymization.cs" />
+    <Compile Include="SessionManager\Anonymize\CompletionEvents\SSTStatementAnonymization.cs" />
+    <Compile Include="SessionManager\Anonymize\CompletionEvents\TypeShapeAnonymizer.cs" />
     <Compile Include="SessionManager\Anonymize\WindowEventAnonymizer.cs" />
     <Compile Include="SessionManager\FeedbackSettings.cs" />
     <Compile Include="KaVESettings.cs" />

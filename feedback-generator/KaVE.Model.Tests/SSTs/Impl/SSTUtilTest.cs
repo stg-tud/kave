@@ -110,7 +110,7 @@ namespace KaVE.Model.Tests.SSTs.Impl
         public void InvocationExpression_Static()
         {
             var a = SSTUtil.InvocationExpression(GetStaticMethod("B2"), VarRefExpr("c2"));
-            Assert.Null(a.Reference);
+            Assert.AreEqual(new VariableReference(), a.Reference);
             Assert.AreEqual(GetStaticMethod("B2"), a.MethodName);
             Assert.AreEqual(Refs("c2"), a.Parameters);
         }

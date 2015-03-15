@@ -22,9 +22,10 @@ using KaVE.Model.Names.CSharp.MemberNames;
 using KaVE.Model.SSTs.Impl;
 using KaVE.Model.SSTs.Impl.Declarations;
 using KaVE.VsFeedbackGenerator.SessionManager.Anonymize;
+using KaVE.VsFeedbackGenerator.SessionManager.Anonymize.CompletionEvents;
 using NUnit.Framework;
 
-namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
+namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize.CompletionEvents
 {
     public class SSTAnonymizationTest : SSTAnonymizationBaseTest
     {

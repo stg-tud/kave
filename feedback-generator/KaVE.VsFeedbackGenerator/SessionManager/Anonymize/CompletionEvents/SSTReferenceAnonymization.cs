@@ -17,6 +17,7 @@
  *    - Sebastian Proksch
  */
 
+using KaVE.JetBrains.Annotations;
 using KaVE.Model.SSTs;
 using KaVE.Model.SSTs.Declarations;
 using KaVE.Model.SSTs.Impl.Declarations;
@@ -24,7 +25,7 @@ using KaVE.Model.SSTs.Impl.References;
 using KaVE.Model.SSTs.Impl.Visitor;
 using KaVE.Model.SSTs.References;
 
-namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
+namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize.CompletionEvents
 {
     public class SSTReferenceAnonymization : AbstractNodeVisitor<int, IReference>
     {
@@ -64,6 +65,11 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
             };
         }
 
+        public override IReference Visit(IUnknownReference eventRef, int context)
+        {
+            return new UnknownReference();
+        }
+
         public override IReference Visit(IVariableReference aref, int context)
         {
             return new VariableReference
@@ -72,12 +78,8 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
             };
         }
 
-        public virtual IVariableDeclaration Anonymize(IVariableDeclaration d)
+        public virtual IVariableDeclaration Anonymize([NotNull] IVariableDeclaration d)
         {
-            if (d == null)
-            {
-                return null;
-            }
             return new VariableDeclaration
             {
                 Reference = Anonymize(d.Reference),
@@ -95,12 +97,8 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
         }
 
 
-        public virtual IAssignableReference Anonymize(IAssignableReference aref)
+        public virtual IAssignableReference Anonymize([NotNull] IAssignableReference aref)
         {
-            if (aref == null)
-            {
-                return null;
-            }
             return (IAssignableReference) aref.Accept(this, 0);
         }
     }

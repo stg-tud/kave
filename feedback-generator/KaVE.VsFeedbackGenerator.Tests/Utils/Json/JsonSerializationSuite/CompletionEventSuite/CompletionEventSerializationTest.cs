@@ -24,12 +24,13 @@ using KaVE.Model.Events;
 using KaVE.Model.Events.CompletionEvent;
 using KaVE.Model.Names.CSharp.MemberNames;
 using KaVE.Model.Names.VisualStudio;
+using KaVE.Model.TypeShapes;
 using KaVE.TestUtils.Model.Events.CompletionEvent;
 using KaVE.TestUtils.Model.Names;
 using KaVE.VsFeedbackGenerator.Utils.Json;
 using NUnit.Framework;
 
-namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.JsonSerializationSuite
+namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.JsonSerializationSuite.CompletionEventSuite
 {
     [TestFixture]
     internal class CompletionEventSerializationTest : SerializationTestBase
@@ -55,7 +56,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.JsonSerializationSuite
                 TriggeredAt = triggeredAt,
                 TriggeredBy = IDEEvent.Trigger.Unknown,
                 Prefix = "Foo",
-                CompletionContext = new Context(),
+                Context2 = new Context(),
                 ProposalCollection = new ProposalCollection(new List<Proposal> {proposal1, proposal2}),
                 TerminatedAt = triggeredAt.AddSeconds(5),
                 TerminatedBy = IDEEvent.Trigger.Typing,
@@ -139,7 +140,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.JsonSerializationSuite
         {
             var completionEvent = new CompletionEvent
             {
-                CompletionContext = new Context
+                Context2 = new Context
                 {
                     TypeShape = new TypeShape
                     {

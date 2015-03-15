@@ -19,6 +19,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using KaVE.JetBrains.Annotations;
 using KaVE.Model.Collections;
 using KaVE.Model.SSTs;
 using KaVE.Model.SSTs.Expressions;
@@ -31,7 +32,7 @@ using KaVE.Model.SSTs.Impl.Visitor;
 using KaVE.Model.SSTs.References;
 using KaVE.Utils.Assertion;
 
-namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
+namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize.CompletionEvents
 {
     public class SSTExpressionAnonymization : AbstractNodeVisitor<int, IExpression>
     {
@@ -112,8 +113,13 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
         {
             return new ReferenceExpression
             {
-                Reference = expr.Reference == null ? null : expr.Reference.Accept(_refAnon, 0)
+                Reference = expr.Reference.Accept(_refAnon, 0)
             };
+        }
+
+        public override IExpression Visit(IUnknownExpression expr, int context)
+        {
+            return new UnknownExpression();
         }
 
         public IList<ISimpleExpression> Anonymize(IEnumerable<ISimpleExpression> exprs)
@@ -121,12 +127,8 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
             return Lists.NewListFrom(exprs.Select(Anonymize));
         }
 
-        private ISimpleExpression Anonymize(ISimpleExpression expr)
+        private ISimpleExpression Anonymize([NotNull] ISimpleExpression expr)
         {
-            if (expr == null)
-            {
-                return null;
-            }
             return (ISimpleExpression) expr.Accept(this, 0);
         }
     }

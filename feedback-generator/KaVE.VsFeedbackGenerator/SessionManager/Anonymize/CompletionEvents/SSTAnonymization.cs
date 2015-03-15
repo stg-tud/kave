@@ -26,7 +26,7 @@ using KaVE.Model.SSTs.Declarations;
 using KaVE.Model.SSTs.Impl;
 using KaVE.Model.SSTs.Impl.Declarations;
 
-namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
+namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize.CompletionEvents
 {
     public class SSTAnonymization
     {

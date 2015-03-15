@@ -19,17 +19,17 @@
  */
 
 using System;
-using System.Collections.Generic;
 using JetBrains.Util;
 using KaVE.Model.Events.CompletionEvent;
 using KaVE.Model.Names.CSharp;
-using KaVE.Model.Names.CSharp.MemberNames;
 using KaVE.Model.Names.CSharp.Modularization;
+using KaVE.Model.SSTs.Impl;
+using KaVE.Model.TypeShapes;
+using KaVE.VsFeedbackGenerator.SessionManager.Anonymize;
 using NUnit.Framework;
 
-namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
+namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize.CompletionEvents
 {
-    [TestFixture]
     internal class CompletionEventAnonymizerTest : IDEEventAnonymizerTestBase<CompletionEvent>
     {
         protected override CompletionEvent CreateEventWithAllAnonymizablePropertiesSet()
@@ -55,30 +55,16 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
                         SelectedAfter = TimeSpan.FromSeconds(2)
                     }
                 },
-                CompletionContext = new Context
-                {
-                    TypeShape = new TypeShape
-                    {
-                        TypeHierarchy = new TypeHierarchy("C, P")
-                        {
-                            Extends = new TypeHierarchy("S, P"),
-                            Implements = new HashSet<ITypeHierarchy>
-                            {
-                                new TypeHierarchy("I1, P"),
-                                new TypeHierarchy("I2, P")
-                            }
-                        },
-                        MethodHierarchies = new HashSet<MethodHierarchy>
-                        {
-                            new MethodHierarchy(MethodName.Get("[R, A, 1.2.3.4] [D, P].N()"))
-                            {
-                                Super = MethodName.Get("[R, A, 1.2.3.4] [S, P].N()"),
-                                First = MethodName.Get("[R, A, 1.2.3.4] [I1, P].N()")
-                            },
-                            new MethodHierarchy(MethodName.Get("[R, A, 4.3.2.1] [D, P].L()"))
-                        }
-                    }
-                }
+                Context2 = CreateSimpleContext()
+            };
+        }
+
+        private static Context CreateSimpleContext()
+        {
+            return new Context
+            {
+                TypeShape = new TypeShape {TypeHierarchy = new TypeHierarchy("C, P")},
+                SST = new SST {EnclosingType = TypeName.Get("T,P")}
             };
         }
 
@@ -131,45 +117,25 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
         }
 
         [Test]
-        public void ShouldAnonymizeContextTypeShape()
+        public void ShouldAnonymizeContext()
         {
             ExportSettings.RemoveCodeNames = true;
-            var expected = new TypeShape
+            var expected = new Context
             {
-                TypeHierarchy = new TypeHierarchy("3Rx860ySZTppa3kHpN1N8Q==, aUaDMpYpDqsiSh5nQjiWFw==")
+                TypeShape = new TypeShape
                 {
-                    Extends = new TypeHierarchy("bwrIwYfO24Nam6NzYDvaPw==, aUaDMpYpDqsiSh5nQjiWFw=="),
-                    Implements = new HashSet<ITypeHierarchy>
-                    {
-                        new TypeHierarchy("eGEyMBjXL4zPn7I6S8mfDw==, aUaDMpYpDqsiSh5nQjiWFw=="),
-                        new TypeHierarchy("L_ae-p4-hxBsaXczpcEyIQ==, aUaDMpYpDqsiSh5nQjiWFw==")
-                    }
+                    TypeHierarchy = new TypeHierarchy("3Rx860ySZTppa3kHpN1N8Q==, aUaDMpYpDqsiSh5nQjiWFw=="),
                 },
-                MethodHierarchies = new HashSet<MethodHierarchy>
+                SST = new SST
                 {
-                    new MethodHierarchy(
-                        MethodName.Get(
-                            "[R, A, 1.2.3.4] [BTxSgd7rLC1KLBfBSU59-w==, aUaDMpYpDqsiSh5nQjiWFw==].FrZejHdXesK4GmGTziBKog==()"))
-                    {
-                        Super =
-                            MethodName.Get(
-                                "[R, A, 1.2.3.4] [bwrIwYfO24Nam6NzYDvaPw==, aUaDMpYpDqsiSh5nQjiWFw==].FrZejHdXesK4GmGTziBKog==()"),
-                        First =
-                            MethodName.Get(
-                                "[R, A, 1.2.3.4] [eGEyMBjXL4zPn7I6S8mfDw==, aUaDMpYpDqsiSh5nQjiWFw==].FrZejHdXesK4GmGTziBKog==()")
-                    },
-                    new MethodHierarchy(
-                        MethodName.Get(
-                            "[R, A, 4.3.2.1] [BTxSgd7rLC1KLBfBSU59-w==, aUaDMpYpDqsiSh5nQjiWFw==].teEFVPLjq1yy_faHQwbDSg==()"))
+                    EnclosingType = TypeName.Get("T,P").ToAnonymousName()
                 }
             };
 
-            var actual = WhenEventIsAnonymized();
+            var actual = WhenEventIsAnonymized().Context2;
 
-            Assert.AreEqual(expected, actual.CompletionContext.TypeShape);
+            Assert.AreEqual(expected, actual);
         }
-
-        // TODO @Seb: Add tests for entryPointToGroum when groum implementation is done
 
         [Test]
         public void ShouldNotFailIfPropertiesAreNotSet()

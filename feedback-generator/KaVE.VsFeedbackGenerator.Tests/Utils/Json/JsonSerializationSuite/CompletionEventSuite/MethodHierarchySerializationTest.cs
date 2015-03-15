@@ -18,11 +18,11 @@
  *    - Dennis Albrecht
  */
 
-using KaVE.Model.Events.CompletionEvent;
+using KaVE.Model.TypeShapes;
 using KaVE.TestUtils.Model.Names;
 using NUnit.Framework;
 
-namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.JsonSerializationSuite
+namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.JsonSerializationSuite.CompletionEventSuite
 {
     [TestFixture]
     internal class MethodHierarchySerializationTest : SerializationTestBase

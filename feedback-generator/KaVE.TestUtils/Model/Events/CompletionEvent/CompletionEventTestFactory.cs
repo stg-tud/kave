@@ -22,9 +22,11 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using KaVE.Model.Collections;
 using KaVE.Model.Events;
 using KaVE.Model.Events.CompletionEvent;
 using KaVE.Model.Names.CSharp;
+using KaVE.Model.TypeShapes;
 using KaVE.TestUtils.Model.Names;
 
 namespace KaVE.TestUtils.Model.Events.CompletionEvent
@@ -94,9 +96,9 @@ namespace KaVE.TestUtils.Model.Events.CompletionEvent
             return new TypeHierarchy(TestNameFactory.GetAnonymousTypeName().Identifier);
         }
 
-        public static ISet<MethodHierarchy> GetAnonymousMethodHierarchies(uint numberOfElements)
+        public static ISet<IMethodHierarchy> GetAnonymousMethodHierarchies(uint numberOfElements)
         {
-            var hierarchies = new HashSet<MethodHierarchy>();
+            var hierarchies = Sets.NewHashSet<IMethodHierarchy>();
             for (var i = 0; i < numberOfElements; i++)
             {
                 hierarchies.Add(GetAnonymousMethodHierarchy());

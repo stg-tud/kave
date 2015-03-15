@@ -46,11 +46,7 @@ namespace KaVE.Model.SSTs.Impl.Statements
 
         public override int GetHashCode()
         {
-            unchecked
-            {
-                return 15 + ((Label != null ? Label.GetHashCode() : 0)*397) ^
-                       (Statement != null ? Statement.GetHashCode() : 0);
-            }
+            return unchecked(15 + (Label.GetHashCode()*397) ^ Statement.GetHashCode());
         }
 
         public void Accept<TContext>(ISSTNodeVisitor<TContext> visitor, TContext context)

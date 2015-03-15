@@ -46,8 +46,8 @@
     <Compile Include="Collections\ListsTest.cs" />
     <Compile Include="Collections\SetsTest.cs" />
     <Compile Include="Events\CompletionEvent\ContextTest.cs" />
-    <Compile Include="Events\CompletionEvent\MethodHierarchyTest.cs" />
-    <Compile Include="Events\CompletionEvent\TypeHierarchyTest.cs" />
+    <Compile Include="TypeShapes\MethodHierarchyTest.cs" />
+    <Compile Include="TypeShapes\TypeHierarchyTest.cs" />
     <Compile Include="Events\ErrorEventTest.cs" />
     <Compile Include="Events\IDEEventTest.cs" />
     <Compile Include="Events\InfoEventTest.cs" />
@@ -131,6 +131,7 @@
     <Compile Include="SSTs\Impl\Statements\UnknownStatementTest.cs" />
     <Compile Include="SSTs\Impl\Visitor\AbstractNodeVisitorTest.cs" />
     <Compile Include="SSTs\Impl\Visitor\ToStringVisitorTest.cs" />
+    <Compile Include="TypeShapes\TypeShapeTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\KaVE.Model\KaVE.Model.csproj">

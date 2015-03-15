@@ -33,9 +33,10 @@ using KaVE.Model.SSTs.Impl.References;
 using KaVE.Model.SSTs.Impl.Statements;
 using KaVE.Model.SSTs.References;
 using KaVE.VsFeedbackGenerator.SessionManager.Anonymize;
+using KaVE.VsFeedbackGenerator.SessionManager.Anonymize.CompletionEvents;
 using NUnit.Framework;
 
-namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
+namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize.CompletionEvents
 {
     public abstract class SSTAnonymizationBaseTest
     {
@@ -51,8 +52,8 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
         protected IVariableDeclaration AnyVarDeclaration { get; private set; }
         protected IVariableDeclaration AnyVarDeclarationAnonymized { get; private set; }
 
-        protected ILoopHeaderBlockExpression AnyBlockExpr { get; private set; }
-        protected ILoopHeaderBlockExpression AnyBlockExprAnonymized { get; private set; }
+        protected ILoopHeaderBlockExpression AnyLoopHeaderBlock { get; private set; }
+        protected ILoopHeaderBlockExpression AnyLoopHeaderBlockAnonymized { get; private set; }
         protected ILambdaExpression AnyLambdaExpr { get; private set; }
         protected ILambdaExpression AnyLambdaExprAnonymized { get; private set; }
 
@@ -72,11 +73,11 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
             AnyStatement = new ThrowStatement {Exception = Type("abc")};
             AnyStatementAnonymized = new ThrowStatement {Exception = TypeAnonymized("abc")};
 
-            AnyBlockExpr = new LoopHeaderBlockExpression
+            AnyLoopHeaderBlock = new LoopHeaderBlockExpression
             {
                 Body = {AnyStatement}
             };
-            AnyBlockExprAnonymized = new LoopHeaderBlockExpression
+            AnyLoopHeaderBlockAnonymized = new LoopHeaderBlockExpression
             {
                 Body = {AnyStatementAnonymized}
             };

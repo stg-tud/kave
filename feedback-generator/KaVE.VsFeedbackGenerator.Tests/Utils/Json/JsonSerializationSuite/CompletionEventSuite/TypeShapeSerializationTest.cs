@@ -18,12 +18,11 @@
  *    - Dennis Albrecht
  */
 
-using System.Collections.Generic;
-using KaVE.Model.Events.CompletionEvent;
+using KaVE.Model.TypeShapes;
 using KaVE.TestUtils.Model.Events.CompletionEvent;
 using NUnit.Framework;
 
-namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.JsonSerializationSuite
+namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.JsonSerializationSuite.CompletionEventSuite
 {
     [TestFixture]
     internal class TypeShapeSerializationTest : SerializationTestBase
@@ -34,11 +33,10 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.JsonSerializationSuite
             var uut = new TypeShape
             {
                 MethodHierarchies =
-                    new HashSet<MethodHierarchy>
-                    {
-                        CompletionEventTestFactory.GetAnonymousMethodHierarchy(),
-                        CompletionEventTestFactory.GetAnonymousMethodHierarchy()
-                    },
+                {
+                    CompletionEventTestFactory.GetAnonymousMethodHierarchy(),
+                    CompletionEventTestFactory.GetAnonymousMethodHierarchy()
+                },
                 TypeHierarchy = new TypeHierarchy("TestClass")
             };
             JsonAssert.SerializationPreservesData(uut);
@@ -50,11 +48,10 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.JsonSerializationSuite
             var typeShape = new TypeShape
             {
                 MethodHierarchies =
-                    new HashSet<MethodHierarchy>
-                    {
-                        CompletionEventTestFactory.GetAnonymousMethodHierarchy(),
-                        CompletionEventTestFactory.GetAnonymousMethodHierarchy()
-                    },
+                {
+                    CompletionEventTestFactory.GetAnonymousMethodHierarchy(),
+                    CompletionEventTestFactory.GetAnonymousMethodHierarchy()
+                },
                 TypeHierarchy = CompletionEventTestFactory.GetAnonymousTypeHierarchy()
             };
             const string expected =

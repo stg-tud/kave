@@ -19,10 +19,10 @@
 
 using KaVE.Model.SSTs;
 using KaVE.Model.SSTs.Impl.Statements;
-using KaVE.VsFeedbackGenerator.SessionManager.Anonymize;
+using KaVE.VsFeedbackGenerator.SessionManager.Anonymize.CompletionEvents;
 using NUnit.Framework;
 
-namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
+namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize.CompletionEvents
 {
     public class SSTStatementAnonymizationTest : SSTAnonymizationBaseTest
     {
@@ -73,9 +73,9 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
         }
 
         [Test]
-        public void Assignment_NullSafe()
+        public void Assignment_DefaultSafe()
         {
-            _sut.Visit(new Assignment(), 0);
+            AssertAnonymization(new Assignment(), new Assignment());
         }
 
         [Test]
@@ -85,21 +85,9 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
         }
 
         [Test]
-        public void BreakStatement_NullSafe()
-        {
-            _sut.Visit(new BreakStatement(), 0);
-        }
-
-        [Test]
         public void ContinueStatement()
         {
             AssertAnonymization(new ContinueStatement(), new ContinueStatement());
-        }
-
-        [Test]
-        public void ContinueStatement_NullSafe()
-        {
-            _sut.Visit(new ContinueStatement(), 0);
         }
 
         [Test]
@@ -122,11 +110,11 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
             AssertAnonymization(
                 new ExpressionStatement
                 {
-                    Expression = AnyBlockExpr
+                    Expression = AnyLambdaExpr
                 },
                 new ExpressionStatement
                 {
-                    Expression = AnyBlockExprAnonymized
+                    Expression = AnyLambdaExprAnonymized
                 });
         }
 
@@ -145,9 +133,9 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
         }
 
         [Test]
-        public void ExpressionStatement_NullSafe()
+        public void ExpressionStatement_DefaultSafe()
         {
-            _sut.Visit(new ExpressionStatement(), 0);
+            AssertAnonymization(new ExpressionStatement(), new ExpressionStatement());
         }
 
         [Test]
@@ -165,9 +153,9 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
         }
 
         [Test]
-        public void GotoStatement_NullSafe()
+        public void GotoStatement_DefaultSafe()
         {
-            _sut.Visit(new GotoStatement(), 0);
+            AssertAnonymization(new GotoStatement(), new GotoStatement());
         }
 
         [Test]
@@ -187,49 +175,43 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
         }
 
         [Test]
-        public void LabelledStatement_NullSafe()
+        public void LabelledStatement_DefaultSafe()
         {
-            _sut.Visit(new LabelledStatement(), 0);
+            AssertAnonymization(new LabelledStatement(), new LabelledStatement());
         }
 
         [Test]
         public void ReturnStatement()
         {
             AssertAnonymization(
-                new ReturnStatement
-                {
-                    Expression = AnyExpression
-                },
-                new ReturnStatement
-                {
-                    Expression = AnyExpressionAnonymized
-                });
+                new ReturnStatement {Expression = AnyExpression},
+                new ReturnStatement {Expression = AnyExpressionAnonymized});
         }
 
         [Test]
-        public void ReturnStatement_NullSafe()
+        public void ReturnStatement_DefaultSafe()
         {
-            _sut.Visit(new ReturnStatement(), 0);
+            AssertAnonymization(new ReturnStatement(), new ReturnStatement());
         }
 
         [Test]
         public void ThrowStatement()
         {
             AssertAnonymization(
-                new ThrowStatement
-                {
-                    Exception = Type("a")
-                },
-                new ThrowStatement
-                {
-                    Exception = TypeAnonymized("a")
-                });
+                new ThrowStatement {Exception = Type("a")},
+                new ThrowStatement {Exception = TypeAnonymized("a")});
         }
 
         [Test]
-        public void ThrowStatement_NullSafe()
+        public void ThrowStatement_DefaultSafe()
         {
-            _sut.Visit(new ThrowStatement(), 0);
+            AssertAnonymization(new ThrowStatement(), new ThrowStatement());
+        }
+
+        [Test]
+        public void UnknownStatement()
+        {
+            AssertAnonymization(new UnknownStatement(), new UnknownStatement());
         }
     }
 }

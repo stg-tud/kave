@@ -81,7 +81,7 @@ namespace KaVE.VsFeedbackGenerator.Utils
                 {
                     response = client.PostAsync(targetUri, content).Result;
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     response = null;
                     Asserts.Fail(Messages.ServerRequestNotAvailable, targetUri);

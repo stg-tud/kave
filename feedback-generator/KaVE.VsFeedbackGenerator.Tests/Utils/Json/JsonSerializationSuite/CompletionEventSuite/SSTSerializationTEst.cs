@@ -22,7 +22,7 @@ using KaVE.Model.SSTs.Impl;
 using KaVE.VsFeedbackGenerator.Utils.Json;
 using NUnit.Framework;
 
-namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.JsonSerializationSuite
+namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.JsonSerializationSuite.CompletionEventSuite
 {
     public class SSTSerializationTest
     {
@@ -36,7 +36,8 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.JsonSerializationSuite
             var json1 = sst.ToCompactJson();
             var json = "{}";
             var sst2 = json.ParseJsonTo<SST>();
-            json = "{\"$type\":\"KaVE.Model.SSTs.Impl.SST, KaVE.Model\",\"EnclosingType\":null,\"Fields\":[],\"Properties\":[],\"Methods\":[],\"Events\":[],\"Delegates\":[]}";
+            json =
+                "{\"$type\":\"KaVE.Model.SSTs.Impl.SST, KaVE.Model\",\"EnclosingType\":null,\"Fields\":[],\"Properties\":[],\"Methods\":[],\"Events\":[],\"Delegates\":[]}";
             var sst3 = json.ParseJsonTo<SST>();
             Console.WriteLine();
         }

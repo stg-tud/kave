@@ -22,6 +22,7 @@ using System.Runtime.Serialization;
 using KaVE.JetBrains.Annotations;
 using KaVE.Model.SSTs;
 using KaVE.Model.SSTs.Impl;
+using KaVE.Model.TypeShapes;
 using KaVE.Utils;
 
 namespace KaVE.Model.Events.CompletionEvent
@@ -33,22 +34,17 @@ namespace KaVE.Model.Events.CompletionEvent
     [DataContract]
     public class Context
     {
-        public static Context Empty
-        {
-            get { return new Context(); }
-        }
+        [DataMember, NotNull]
+        public ITypeShape TypeShape { get; set; }
+
+        [DataMember, NotNull]
+        public ISST SST { get; set; }
 
         public Context()
         {
             TypeShape = new TypeShape();
             SST = new SST();
         }
-
-        [DataMember, NotNull]
-        public TypeShape TypeShape { get; set; }
-
-        [DataMember, NotNull]
-        public ISST SST { get; set; }
 
         public override bool Equals(object obj)
         {

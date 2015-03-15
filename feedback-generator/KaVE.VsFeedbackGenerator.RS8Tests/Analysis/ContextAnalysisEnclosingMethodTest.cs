@@ -18,6 +18,7 @@ using System.Linq;
 using KaVE.Model.Events.CompletionEvent;
 using KaVE.Model.Names;
 using KaVE.Model.Names.CSharp.MemberNames;
+using KaVE.Model.TypeShapes;
 using NUnit.Framework;
 
 namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
@@ -26,7 +27,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
     [TestFixture, Ignore]
     internal class ContextAnalysisEnclosingMethodTest : BaseCSharpCodeCompletionTest
     {
-        private static MethodHierarchy FindEnclosingMethodHierarchy(Context context)
+        private static IMethodHierarchy FindEnclosingMethodHierarchy(Context context)
         {
             IMethodName enclosingMethod = null; //context.EnclosingMethod;
             var enclosingMethodHierarchies =

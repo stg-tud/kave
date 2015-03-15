@@ -21,10 +21,10 @@ using KaVE.Model.SSTs;
 using KaVE.Model.SSTs.Impl.Blocks;
 using KaVE.Model.SSTs.Impl.Declarations;
 using KaVE.Model.SSTs.Impl.Expressions.Simple;
-using KaVE.VsFeedbackGenerator.SessionManager.Anonymize;
+using KaVE.VsFeedbackGenerator.SessionManager.Anonymize.CompletionEvents;
 using NUnit.Framework;
 
-namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
+namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize.CompletionEvents
 {
     public class SSTBlockAnonymizationTest : SSTAnonymizationBaseTest
     {
@@ -64,18 +64,18 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
             AssertAnonymization(
                 new DoLoop
                 {
-                    Condition = AnyBlockExpr,
+                    Condition = AnyLoopHeaderBlock,
                     Body = {AnyStatement}
                 },
                 new DoLoop
                 {
-                    Condition = AnyBlockExprAnonymized,
+                    Condition = AnyLoopHeaderBlockAnonymized,
                     Body = {AnyStatementAnonymized}
                 });
         }
 
         [Test]
-        public void DoLoop_NullSafe()
+        public void DoLoop_DefaultSafe()
         {
             _sut.Visit(new DoLoop(), 0);
         }
@@ -99,7 +99,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
         }
 
         [Test]
-        public void ForEachLoop_NullSafe()
+        public void ForEachLoop_DefaultSafe()
         {
             _sut.Visit(new ForEachLoop(), 0);
         }
@@ -131,21 +131,21 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
                 new ForLoop
                 {
                     Init = {AnyStatement},
-                    Condition = AnyBlockExpr,
+                    Condition = AnyLoopHeaderBlock,
                     Step = {AnyStatement},
                     Body = {AnyStatement}
                 },
                 new ForLoop
                 {
                     Init = {AnyStatementAnonymized},
-                    Condition = AnyBlockExprAnonymized,
+                    Condition = AnyLoopHeaderBlockAnonymized,
                     Step = {AnyStatementAnonymized},
                     Body = {AnyStatementAnonymized}
                 });
         }
 
         [Test]
-        public void ForLoop_NullSafe()
+        public void ForLoop_DefaultSafe()
         {
             _sut.Visit(new ForLoop(), 0);
         }
@@ -169,7 +169,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
         }
 
         [Test]
-        public void IfElseBlock_NullSafe()
+        public void IfElseBlock_DefaultSafe()
         {
             _sut.Visit(new IfElseBlock(), 0);
         }
@@ -191,7 +191,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
         }
 
         [Test]
-        public void LockBlock_NullSafe()
+        public void LockBlock_DefaultSafe()
         {
             _sut.Visit(new LockBlock(), 0);
         }
@@ -199,37 +199,37 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
         [Test]
         public void SwitchBlock()
         {
-            var caseBlock =
-                new CaseBlock
-                {
-                    Label = new ConstantValueExpression(), // TODO include label somehow!
-                    Body = {AnyStatement}
-                };
-
-            var caseBlockAnonymized =
-                new CaseBlock
-                {
-                    Label = new ConstantValueExpression(), // not anonymized
-                    Body = {AnyStatementAnonymized}
-                };
-
             AssertAnonymization(
                 new SwitchBlock
                 {
                     Reference = AnyVarReference,
-                    Sections = {caseBlock},
+                    Sections =
+                    {
+                        new CaseBlock
+                        {
+                            Label = new ConstantValueExpression {Value = "a"},
+                            Body = {AnyStatement}
+                        }
+                    },
                     DefaultSection = {AnyStatement}
                 },
                 new SwitchBlock
                 {
                     Reference = AnyVarReferenceAnonymized,
-                    Sections = {caseBlockAnonymized},
+                    Sections =
+                    {
+                        new CaseBlock
+                        {
+                            Label = new ConstantValueExpression {Value = "a"}, // not anonymized
+                            Body = {AnyStatementAnonymized}
+                        }
+                    },
                     DefaultSection = {AnyStatementAnonymized}
                 });
         }
 
         [Test]
-        public void SwitchBlock_NullSafe()
+        public void SwitchBlock_DefaultSafe()
         {
             _sut.Visit(new SwitchBlock(), 0);
         }
@@ -237,42 +237,45 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
         [Test]
         public void TryBlock()
         {
-            var catchBlock = new CatchBlock
-            {
-                Exception = new VariableDeclaration
-                {
-                    Reference = AnyVarReference,
-                    Type = Type("a")
-                },
-                Body = {AnyStatement}
-            };
-            var catchBlockAnonymized = new CatchBlock
-            {
-                Exception = new VariableDeclaration
-                {
-                    Reference = AnyVarReferenceAnonymized,
-                    Type = TypeAnonymized("a")
-                },
-                Body = {AnyStatementAnonymized}
-            };
-
             AssertAnonymization(
                 new TryBlock
                 {
                     Body = {AnyStatement},
-                    CatchBlocks = {catchBlock},
+                    CatchBlocks =
+                    {
+                        new CatchBlock
+                        {
+                            Exception = new VariableDeclaration
+                            {
+                                Reference = AnyVarReference,
+                                Type = Type("a")
+                            },
+                            Body = {AnyStatement}
+                        }
+                    },
                     Finally = {AnyStatement}
                 },
                 new TryBlock
                 {
                     Body = {AnyStatementAnonymized},
-                    CatchBlocks = {catchBlockAnonymized},
+                    CatchBlocks =
+                    {
+                        new CatchBlock
+                        {
+                            Exception = new VariableDeclaration
+                            {
+                                Reference = AnyVarReferenceAnonymized,
+                                Type = TypeAnonymized("a")
+                            },
+                            Body = {AnyStatementAnonymized}
+                        }
+                    },
                     Finally = {AnyStatementAnonymized}
                 });
         }
 
         [Test]
-        public void TryBlock_NullSafe()
+        public void TryBlock_DefaultSafe()
         {
             _sut.Visit(new TryBlock(), 0);
         }
@@ -292,7 +295,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
         }
 
         [Test]
-        public void UncheckedBlock_NullSafe()
+        public void UncheckedBlock_DefaultSafe()
         {
             _sut.Visit(new UncheckedBlock(), 0);
         }
@@ -304,7 +307,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
         }
 
         [Test]
-        public void UnsafeBlock_NullSafe()
+        public void UnsafeBlock_DefaultSafe()
         {
             _sut.Visit(new UnsafeBlock(), 0);
         }
@@ -326,7 +329,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
         }
 
         [Test]
-        public void UsingBlock_NullSafe()
+        public void UsingBlock_DefaultSafe()
         {
             _sut.Visit(new UsingBlock(), 0);
         }
@@ -353,18 +356,18 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
             AssertAnonymization(
                 new WhileLoop
                 {
-                    Condition = AnyBlockExpr,
+                    Condition = AnyLoopHeaderBlock,
                     Body = {AnyStatement}
                 },
                 new WhileLoop
                 {
-                    Condition = AnyBlockExprAnonymized,
+                    Condition = AnyLoopHeaderBlockAnonymized,
                     Body = {AnyStatementAnonymized}
                 });
         }
 
         [Test]
-        public void WhileLoop_NullSafe()
+        public void WhileLoop_DefaultSafe()
         {
             _sut.Visit(new WhileLoop(), 0);
         }

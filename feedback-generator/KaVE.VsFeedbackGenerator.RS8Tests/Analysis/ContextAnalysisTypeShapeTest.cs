@@ -19,9 +19,9 @@
 
 using System.Collections.Generic;
 using JetBrains.Util;
-using KaVE.Model.Events.CompletionEvent;
 using KaVE.Model.Names.CSharp;
 using KaVE.Model.Names.CSharp.MemberNames;
+using KaVE.Model.TypeShapes;
 using NUnit.Framework;
 
 namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
@@ -242,6 +242,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
                         }
                     }
                 }");
+            // ReSharper disable once PossibleNullReferenceException
             var actual = ResultContext.TypeShape.TypeHierarchy.Extends.Element;
 
             var expected = TypeName.Get("TestNamespace.SuperClass, TestProject");
@@ -298,6 +299,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
                     }
                 }");
 
+            // ReSharper disable once PossibleNullReferenceException
             var actual = ResultContext.TypeShape.TypeHierarchy.Extends.Element;
             var expected = TypeName.Get("N.IC`1[[T -> System.Int32, mscorlib, 4.0.0.0]], TestProject");
             Assert.AreEqual(expected, actual);
@@ -373,18 +375,18 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
             {
                 Extends = new TypeHierarchy("N.A, TestProject")
                 {
-                    Implements = new HashSet<ITypeHierarchy>
+                    Implements =
                     {
                         new TypeHierarchy("i:N.IA, TestProject")
                         {
-                            Implements = new HashSet<ITypeHierarchy>
+                            Implements =
                             {
                                 new TypeHierarchy("i:N.I0, TestProject")
                             }
                         }
                     }
                 },
-                Implements = new HashSet<ITypeHierarchy>
+                Implements =
                 {
                     new TypeHierarchy("i:N.IB`1[[TB -> System.Int32, mscorlib, 4.0.0.0]], TestProject"),
                     new TypeHierarchy("i:N.IC, TestProject")

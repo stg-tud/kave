@@ -17,14 +17,24 @@
  *    - Sebastian Proksch
  */
 
+using System.Collections.Generic;
 using KaVE.JetBrains.Annotations;
-using KaVE.Model.SSTs.Expressions;
 
-namespace KaVE.Model.SSTs.Statements
+namespace KaVE.Model.TypeShapes
 {
-    public interface IExpressionStatement : IStatement
+    public interface ITypeShape
     {
+        /// <summary>
+        ///     A description of the enclosing class, including its parent class and implemented interfaces.
+        /// </summary>
         [NotNull]
-        IAssignableExpression Expression { get; }
+        ITypeHierarchy TypeHierarchy { get; set; }
+
+        /// <summary>
+        ///     All Methods that are overridden in the class under edit (including information about the first and super
+        ///     declaration).
+        /// </summary>
+        [NotNull]
+        ISet<IMethodHierarchy> MethodHierarchies { get; set; }
     }
 }

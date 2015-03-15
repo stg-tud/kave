@@ -23,9 +23,10 @@ using KaVE.Model.SSTs.Impl.Expressions.LoopHeader;
 using KaVE.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Utils.Assertion;
 using KaVE.VsFeedbackGenerator.SessionManager.Anonymize;
+using KaVE.VsFeedbackGenerator.SessionManager.Anonymize.CompletionEvents;
 using NUnit.Framework;
 
-namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
+namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize.CompletionEvents
 {
     public class SSTExpressionAnonymizationTest : SSTAnonymizationBaseTest
     {
@@ -62,9 +63,9 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
         }
 
         [Test]
-        public void CompletionExpression_NullSafe()
+        public void CompletionExpression_DefaultSafe()
         {
-            _sut.Visit(new CompletionExpression(), 0);
+            AssertAnonymization(new CompletionExpression(), new CompletionExpression());
         }
 
         [Test]
@@ -82,9 +83,9 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
         }
 
         [Test]
-        public void ComposedExpression_NullSafe()
+        public void ComposedExpression_DefaultSafe()
         {
-            _sut.Visit(new ComposedExpression(), 0);
+            AssertAnonymization(new ComposedExpression(), new ComposedExpression());
         }
 
         [Test]
@@ -106,9 +107,9 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
         }
 
         [Test]
-        public void IfElseExpression_NullSafe()
+        public void IfElseExpression_DefaultSafe()
         {
-            _sut.Visit(new IfElseExpression(), 0);
+            AssertAnonymization(new IfElseExpression(), new IfElseExpression());
         }
 
         [Test]
@@ -130,9 +131,9 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
         }
 
         [Test]
-        public void InvocationExpression_NullSafe()
+        public void InvocationExpression_DefaultSafe()
         {
-            _sut.Visit(new InvocationExpression(), 0);
+            AssertAnonymization(new InvocationExpression(), new InvocationExpression());
         }
 
         [Test, ExpectedException(typeof (AssertException))]
@@ -162,9 +163,9 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
         }
 
         [Test]
-        public void ConstantValueExpression_NullSafe()
+        public void ConstantValueExpression_DefaultSafe()
         {
-            _sut.Visit(new ConstantValueExpression(), 0);
+            AssertAnonymization(new ConstantValueExpression(), new ConstantValueExpression());
         }
 
         [Test]
@@ -176,9 +177,9 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
         }
 
         [Test]
-        public void NullExpression_NullSafe()
+        public void NullExpression_DefaultSafe()
         {
-            _sut.Visit(new NullExpression(), 0);
+            AssertAnonymization(new NullExpression(), new NullExpression());
         }
 
         [Test]
@@ -196,9 +197,15 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
         }
 
         [Test]
-        public void ReferenceExpression_NullSafe()
+        public void ReferenceExpression_DefaultSafe()
         {
-            _sut.Visit(new ReferenceExpression(), 0);
+            AssertAnonymization(new ReferenceExpression(), new ReferenceExpression());
+        }
+
+        [Test]
+        public void UnknownExpression()
+        {
+            AssertAnonymization(new UnknownExpression(), new UnknownExpression());
         }
     }
 }

@@ -18,13 +18,13 @@
  *    - Dennis Albrecht
  */
 
-using System.Collections.Generic;
 using KaVE.Model.Events.CompletionEvent;
+using KaVE.Model.TypeShapes;
 using KaVE.TestUtils.Model.Events.CompletionEvent;
 using KaVE.TestUtils.Model.Names;
 using NUnit.Framework;
 
-namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.JsonSerializationSuite
+namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.JsonSerializationSuite.CompletionEventSuite
 {
     [TestFixture]
     internal class ContextSerializationTest : SerializationTestBase
@@ -32,7 +32,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.JsonSerializationSuite
         [Test]
         public void ShouldSerializeEmptyContext()
         {
-            var context = Context.Empty;
+            var context = new Context();
             JsonAssert.SerializationPreservesData(context);
         }
 
@@ -44,7 +44,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.JsonSerializationSuite
                 TypeShape = new TypeShape
                 {
                     TypeHierarchy = CompletionEventTestFactory.GetAnonymousTypeHierarchy(),
-                    MethodHierarchies = new HashSet<MethodHierarchy>
+                    MethodHierarchies =
                     {
                         new MethodHierarchy(TestNameFactory.GetAnonymousMethodName())
                         {

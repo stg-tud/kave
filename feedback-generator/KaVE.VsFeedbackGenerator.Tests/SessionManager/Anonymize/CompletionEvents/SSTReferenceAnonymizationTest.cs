@@ -17,15 +17,15 @@
  *    - Sebastian Proksch
  */
 
-using KaVE.Model.SSTs.Declarations;
 using KaVE.Model.SSTs.Impl.Declarations;
 using KaVE.Model.SSTs.Impl.References;
 using KaVE.Model.SSTs.References;
 using KaVE.Model.SSTs.Visitor;
 using KaVE.VsFeedbackGenerator.SessionManager.Anonymize;
+using KaVE.VsFeedbackGenerator.SessionManager.Anonymize.CompletionEvents;
 using NUnit.Framework;
 
-namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
+namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize.CompletionEvents
 {
     public class SSTReferenceAnonymizationTest : SSTAnonymizationBaseTest
     {
@@ -60,9 +60,9 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
         }
 
         [Test]
-        public void EventReference_null()
+        public void EventReference_DefaultSafe()
         {
-            _sut.Visit(new EventReference(), 0);
+            AssertAnonymization(new EventReference(), new EventReference());
         }
 
         [Test]
@@ -82,9 +82,9 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
         }
 
         [Test]
-        public void FieldReference_null()
+        public void FieldReference_DefaultSafe()
         {
-            _sut.Visit(new FieldReference(), 0);
+            AssertAnonymization(new FieldReference(), new FieldReference());
         }
 
         [Test]
@@ -104,9 +104,9 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
         }
 
         [Test]
-        public void MethodReference_null()
+        public void MethodReference_DefaultSafe()
         {
-            _sut.Visit(new MethodReference(), 0);
+            AssertAnonymization(new MethodReference(), new MethodReference());
         }
 
         [Test]
@@ -126,29 +126,35 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
         }
 
         [Test]
-        public void PropertyReference_null()
+        public void PropertyReference_DefaultSafe()
         {
-            _sut.Visit(new PropertyReference(), 0);
+            AssertAnonymization(new PropertyReference(), new PropertyReference());
+        }
+
+        [Test]
+        public void UnknownReference()
+        {
+            AssertAnonymization(new UnknownReference(), new UnknownReference());
         }
 
         [Test]
         public void VariableReference()
         {
             AssertAnonymization(
-                new VariableReference
-                {
-                    Identifier = "a"
-                },
-                new VariableReference
-                {
-                    Identifier = "a".ToHash()
-                });
+                new VariableReference {Identifier = "a"},
+                new VariableReference {Identifier = "a".ToHash()});
+        }
+
+        [Test]
+        public void VariableReference_DefaultSafe()
+        {
+            AssertAnonymization(new VariableReference(), new VariableReference());
         }
 
         [Test]
         public void VariableReference_null()
         {
-            _sut.Visit(new VariableReference(), 0);
+            Assert.Null(_sut.Anonymize((IVariableReference) null));
         }
 
         [Test]
@@ -168,17 +174,11 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
         }
 
         [Test]
-        public void Anonymization_VariableDeclaration_NullSafe()
+        public void Anonymization_VariableDeclaration_DefaultSafe()
         {
             var actual = _sut.Anonymize(new VariableDeclaration());
             var expected = new VariableDeclaration();
             Assert.AreEqual(expected, actual);
-        }
-
-        [Test]
-        public void Anonymization_VariableDeclaration_null()
-        {
-            Assert.Null(_sut.Anonymize((IVariableDeclaration) null));
         }
 
         [Test]
@@ -199,17 +199,11 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
         }
 
         [Test]
-        public void Anonymization_IAssignableReference_NullSafe()
+        public void Anonymization_IAssignableReference_DefaultSafe()
         {
             var actual = _sut.Anonymize((IAssignableReference) new VariableReference());
             var expected = new VariableReference();
             Assert.AreEqual(expected, actual);
-        }
-
-        [Test]
-        public void Anonymization_IAssignableReference_null()
-        {
-            Assert.Null(_sut.Anonymize((IAssignableReference) null));
         }
     }
 }

@@ -19,6 +19,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using KaVE.JetBrains.Annotations;
 using KaVE.Model.Collections;
 using KaVE.Model.SSTs;
 using KaVE.Model.SSTs.Blocks;
@@ -32,7 +33,7 @@ using KaVE.Model.SSTs.Impl.Statements;
 using KaVE.Model.SSTs.Impl.Visitor;
 using KaVE.Model.SSTs.Statements;
 
-namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
+namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize.CompletionEvents
 {
     public class SSTStatementAnonymization : AbstractNodeVisitor<int, IStatement>
     {
@@ -236,29 +237,15 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
             };
         }
 
-        #endregion
-
-        private IExpression Anonymize(IExpression expr)
+        public override IStatement Visit(IUnknownStatement stmt, int context)
         {
-            var aexpr = expr as IAssignableExpression;
-            if (aexpr != null)
-            {
-                return Anonymize(aexpr);
-            }
-            var lhexpr = expr as ILoopHeaderExpression;
-            if (lhexpr != null)
-            {
-                return Anonymize(lhexpr);
-            }
-            return null;
+            return new UnknownStatement();
         }
 
-        public virtual ISimpleExpression Anonymize(ISimpleExpression expr)
+        #endregion
+
+        public virtual ISimpleExpression Anonymize([NotNull] ISimpleExpression expr)
         {
-            if (expr == null)
-            {
-                return null;
-            }
             return (ISimpleExpression) expr.Accept(_expr, 0);
         }
 
@@ -275,12 +262,8 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
             return expr == null ? null : (ILoopHeaderExpression) expr.Accept(_expr, 0);
         }
 
-        public virtual IAssignableExpression Anonymize(IAssignableExpression expr)
+        public virtual IAssignableExpression Anonymize([NotNull] IAssignableExpression expr)
         {
-            if (expr == null)
-            {
-                return null;
-            }
             var lambda = expr as ILambdaExpression;
             if (lambda != null)
             {
@@ -298,12 +281,8 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
             return Lists.NewListFrom(body.Select(Anonymize));
         }
 
-        public virtual IStatement Anonymize(IStatement stmt)
+        public virtual IStatement Anonymize([NotNull] IStatement stmt)
         {
-            if (stmt == null)
-            {
-                return null;
-            }
             return stmt.Accept(this, 0);
         }
     }

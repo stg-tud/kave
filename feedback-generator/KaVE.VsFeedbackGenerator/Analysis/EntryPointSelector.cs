@@ -24,8 +24,8 @@ using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Parsing;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
-using KaVE.Model.Events.CompletionEvent;
 using KaVE.Model.Names;
+using KaVE.Model.TypeShapes;
 using KaVE.VsFeedbackGenerator.Utils.Names;
 
 namespace KaVE.VsFeedbackGenerator.Analysis
@@ -33,14 +33,14 @@ namespace KaVE.VsFeedbackGenerator.Analysis
     public class EntryPointSelector
     {
         private readonly ITypeDeclaration _typeDeclaration;
-        private readonly TypeShape _typeShape;
+        private readonly ITypeShape _typeShape;
         private readonly ITypeElement _typeElem;
 
         private IList<MethodRef> _entryPoints;
         private IList<MethodRef> _analyzed;
 
 
-        public EntryPointSelector(ITypeDeclaration typeDeclaration, TypeShape typeShape)
+        public EntryPointSelector(ITypeDeclaration typeDeclaration, ITypeShape typeShape)
         {
             _typeDeclaration = typeDeclaration;
             _typeShape = typeShape;
@@ -107,7 +107,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis
 
         private bool IsDefiniteEntryPoint(IMethodName methodName)
         {
-            return _typeShape.MethodHierarchies.Any(mh => mh.Element == methodName && mh.IsOverrideOrImplementation);
+            return _typeShape.MethodHierarchies.Any(mh => mh.Element == methodName && mh.IsDeclaredInParentHierarchy);
         }
 
         private void AnalyzeTransitiveCallsIn(MethodRef ep)

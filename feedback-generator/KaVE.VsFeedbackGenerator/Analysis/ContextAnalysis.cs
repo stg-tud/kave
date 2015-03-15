@@ -52,7 +52,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis
 
         private Context AnalyzeInternal(CSharpCodeCompletionContext rsContext)
         {
-            var context = Context.Empty;
+            var context = new Context();
 
             Execute.WithExceptionLogging(_logger, () => AnalyzeInternal(rsContext.NodeInFile, context));
 

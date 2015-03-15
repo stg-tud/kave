@@ -18,16 +18,26 @@
  */
 
 using KaVE.Model.Events.CompletionEvent;
-using KaVE.Model.Names;
 using KaVE.Model.Names.CSharp;
-using KaVE.Model.Names.CSharp.MemberNames;
+using KaVE.Model.SSTs;
 using KaVE.Model.SSTs.Impl;
+using KaVE.Model.TypeShapes;
 using NUnit.Framework;
 
 namespace KaVE.Model.Tests.Events.CompletionEvent
 {
     internal class ContextTest
     {
+        private static ISST SomeSST
+        {
+            get { return new SST {EnclosingType = TypeName.Get("T, P")}; }
+        }
+
+        private static ITypeShape SomeTypeShape
+        {
+            get { return new TypeShape {TypeHierarchy = new TypeHierarchy {Element = TypeName.Get("T2, P2")}}; }
+        }
+
         [Test]
         public void DefaultValues()
         {
@@ -41,11 +51,11 @@ namespace KaVE.Model.Tests.Events.CompletionEvent
         {
             var sut = new Context
             {
-                TypeShape = TS("A"),
-                SST = new SST {EnclosingType = T("B.C")}
+                TypeShape = SomeTypeShape,
+                SST = SomeSST
             };
-            Assert.AreEqual(TS("A"), sut.TypeShape);
-            Assert.AreEqual(new SST {EnclosingType = T("B.C")}, sut.SST);
+            Assert.AreEqual(SomeTypeShape, sut.TypeShape);
+            Assert.AreEqual(SomeSST, sut.SST);
         }
 
         [Test]
@@ -63,13 +73,13 @@ namespace KaVE.Model.Tests.Events.CompletionEvent
         {
             var a = new Context
             {
-                TypeShape = TS("A"),
-                SST = new SST()
+                TypeShape = SomeTypeShape,
+                SST = SomeSST
             };
             var b = new Context
             {
-                TypeShape = TS("A"),
-                SST = new SST()
+                TypeShape = SomeTypeShape,
+                SST = SomeSST
             };
             Assert.AreEqual(a, b);
             Assert.IsTrue(a.GetHashCode() == b.GetHashCode());
@@ -78,7 +88,7 @@ namespace KaVE.Model.Tests.Events.CompletionEvent
         [Test]
         public void Equality_DifferentTypeShape()
         {
-            var a = new Context {TypeShape = TS("A")};
+            var a = new Context {TypeShape = SomeTypeShape};
             var b = new Context();
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
@@ -87,29 +97,10 @@ namespace KaVE.Model.Tests.Events.CompletionEvent
         [Test]
         public void Equality_DifferentSST()
         {
-            var a = new Context {SST = new SST {EnclosingType = T("C.D")}};
+            var a = new Context {SST = SomeSST};
             var b = new Context();
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
-        }
-
-        public static IMethodName M(string methodName)
-        {
-            return
-                MethodName.Get(
-                    "[System.String, mscore, 4.0.0.0] [MyType, MyAssembly, 1.0.0.0]." + methodName +
-                    "(opt [System.Int32, mscore, 4.0.0.0] length)");
-        }
-
-        private static ITypeName T(string typeName)
-        {
-            return TypeName.Get(typeName + ", mscore, 4.0.0.0");
-        }
-
-        // ReSharper disable once InconsistentNaming
-        private static TypeShape TS(string type)
-        {
-            return new TypeShape {TypeHierarchy = new TypeHierarchy(type)};
         }
     }
 }
