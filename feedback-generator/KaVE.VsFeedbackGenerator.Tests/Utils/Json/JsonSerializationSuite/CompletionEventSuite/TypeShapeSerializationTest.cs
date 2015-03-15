@@ -18,105 +18,84 @@
  *    - Dennis Albrecht
  */
 
-using System.Collections.Generic;
+using KaVE.Model.Names.CSharp;
+using KaVE.Model.Names.CSharp.MemberNames;
 using KaVE.Model.TypeShapes;
-using KaVE.TestUtils.Model.Events.CompletionEvent;
-using KaVE.TestUtils.Model.Names;
+using KaVE.VsFeedbackGenerator.Utils.Json;
 using NUnit.Framework;
 
 namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.JsonSerializationSuite.CompletionEventSuite
 {
-    [TestFixture]
     internal class TypeShapeSerializationTest : SerializationTestBase
     {
         [Test]
-        public void ShouldSerializeTypeHierarchy()
+        public void VerifyToJson()
         {
-            var uut = new TypeHierarchy("Test.Class")
+            var actual = GetExample().ToCompactJson();
+            var expected = GetExampleJson();
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void VerifyFromJson()
+        {
+            var actual = GetExampleJson().ParseJsonTo<ITypeShape>();
+            var expected = GetExample();
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void VerifyObjToObjEquality()
+        {
+            var actual = GetExample().ToCompactJson().ParseJsonTo<ITypeShape>();
+            var expected = GetExample();
+            Assert.AreEqual(expected, actual);
+        }
+
+        private static ITypeShape GetExample()
+        {
+            return new TypeShape
             {
-                Extends = new TypeHierarchy("Another.Test.Class"),
-                Implements =
+                TypeHierarchy = new TypeHierarchy
                 {
-                    new TypeHierarchy("Some.Interface")
-                }
-            };
-            JsonAssert.SerializationPreservesData(uut);
-        }
-
-        [Test]
-        public void ShouldSerializeTHToString()
-        {
-            var typeHierarchy = new TypeHierarchy(TestNameFactory.GetAnonymousTypeName().Identifier)
-            {
-                Extends = new TypeHierarchy(TestNameFactory.GetAnonymousTypeName().Identifier),
-                Implements = new HashSet<ITypeHierarchy>
-                {
-                    new TypeHierarchy(TestNameFactory.GetAnonymousTypeName().Identifier),
-                    new TypeHierarchy(TestNameFactory.GetAnonymousTypeName().Identifier)
-                }
-            };
-            const string expected =
-                "{\"$type\":\"KaVE.Model.Events.CompletionEvent.TypeHierarchy, KaVE.Model\",\"Element\":\"CSharp.TypeName:SomeType1, SomeAssembly2, 9.8.7.6\",\"Extends\":{\"$type\":\"KaVE.Model.Events.CompletionEvent.TypeHierarchy, KaVE.Model\",\"Element\":\"CSharp.TypeName:SomeType3, SomeAssembly4, 9.8.7.6\",\"Implements\":[]},\"Implements\":[{\"$type\":\"KaVE.Model.Events.CompletionEvent.TypeHierarchy, KaVE.Model\",\"Element\":\"CSharp.TypeName:SomeType5, SomeAssembly6, 9.8.7.6\",\"Implements\":[]},{\"$type\":\"KaVE.Model.Events.CompletionEvent.TypeHierarchy, KaVE.Model\",\"Element\":\"CSharp.TypeName:SomeType7, SomeAssembly8, 9.8.7.6\",\"Implements\":[]}]}";
-
-            JsonAssert.SerializesTo(typeHierarchy, expected);
-        }
-
-        [Test]
-        public void ShouldSerializeMethodHierarchy()
-        {
-            var uut = new MethodHierarchy(TestNameFactory.GetAnonymousMethodName())
-            {
-                First = TestNameFactory.GetAnonymousMethodName(),
-                Super = TestNameFactory.GetAnonymousMethodName()
-            };
-            JsonAssert.SerializationPreservesData(uut);
-        }
-
-        [Test]
-        public void ShouldSerializeMHToString()
-        {
-            var methodHierarchy = new MethodHierarchy(TestNameFactory.GetAnonymousMethodName())
-            {
-                Super = TestNameFactory.GetAnonymousMethodName(),
-                First = TestNameFactory.GetAnonymousMethodName()
-            };
-            const string expected =
-                "{\"$type\":\"KaVE.Model.Events.CompletionEvent.MethodHierarchy, KaVE.Model\",\"Element\":\"CSharp.MethodName:[SomeType1, SomeAssembly2, 9.8.7.6] [SomeType3, SomeAssembly4, 9.8.7.6].Method5()\",\"Super\":\"CSharp.MethodName:[SomeType6, SomeAssembly7, 9.8.7.6] [SomeType8, SomeAssembly9, 9.8.7.6].Method10()\",\"First\":\"CSharp.MethodName:[SomeType11, SomeAssembly12, 9.8.7.6] [SomeType13, SomeAssembly14, 9.8.7.6].Method15()\"}";
-
-            JsonAssert.SerializesTo(methodHierarchy, expected);
-        }
-
-        [Test]
-        public void ShouldSerializeTypeShape()
-        {
-            var uut = new TypeShape
-            {
+                    Element = TypeName.Get("T,P"),
+                    Extends = new TypeHierarchy
+                    {
+                        Element = TypeName.Get("S,P"),
+                    },
+                    Implements =
+                    {
+                        new TypeHierarchy
+                        {
+                            Element = TypeName.Get("I,P"),
+                        }
+                    }
+                },
                 MethodHierarchies =
                 {
-                    CompletionEventTestFactory.GetAnonymousMethodHierarchy(),
-                    CompletionEventTestFactory.GetAnonymousMethodHierarchy()
-                },
-                TypeHierarchy = new TypeHierarchy("TestClass")
+                    new MethodHierarchy
+                    {
+                        Element = MethodName.Get("[T,P] [T,P].M1()"),
+                        Super = MethodName.Get("[T,P] [T,P].M2()"),
+                        First = MethodName.Get("[T,P] [T,P].M3()")
+                    }
+                }
             };
-            JsonAssert.SerializationPreservesData(uut);
         }
 
-        [Test]
-        public void ShouldSerializeToString()
+        private static string GetExampleJson()
         {
-            var typeShape = new TypeShape
-            {
-                MethodHierarchies =
-                {
-                    CompletionEventTestFactory.GetAnonymousMethodHierarchy(),
-                    CompletionEventTestFactory.GetAnonymousMethodHierarchy()
-                },
-                TypeHierarchy = CompletionEventTestFactory.GetAnonymousTypeHierarchy()
-            };
-            const string expected =
-                "{\"$type\":\"KaVE.Model.Events.CompletionEvent.TypeShape, KaVE.Model\",\"TypeHierarchy\":{\"$type\":\"KaVE.Model.Events.CompletionEvent.TypeHierarchy, KaVE.Model\",\"Element\":\"CSharp.TypeName:SomeType11, SomeAssembly12, 9.8.7.6\",\"Implements\":[]},\"MethodHierarchies\":[{\"$type\":\"KaVE.Model.Events.CompletionEvent.MethodHierarchy, KaVE.Model\",\"Element\":\"CSharp.MethodName:[SomeType1, SomeAssembly2, 9.8.7.6] [SomeType3, SomeAssembly4, 9.8.7.6].Method5()\"},{\"$type\":\"KaVE.Model.Events.CompletionEvent.MethodHierarchy, KaVE.Model\",\"Element\":\"CSharp.MethodName:[SomeType6, SomeAssembly7, 9.8.7.6] [SomeType8, SomeAssembly9, 9.8.7.6].Method10()\"}]}";
-
-            JsonAssert.SerializesTo(typeShape, expected);
+            // do not change! keep for checking exception free reading of old formats!
+            return "{\"$type\":\"KaVE.Model.TypeShapes.TypeShape, KaVE.Model\"," +
+                   "\"TypeHierarchy\":{\"$type\":\"KaVE.Model.TypeShapes.TypeHierarchy, KaVE.Model\"," +
+                   "\"Element\":\"CSharp.TypeName:T,P\"," +
+                   "\"Extends\":{\"$type\":\"KaVE.Model.TypeShapes.TypeHierarchy, KaVE.Model\",\"Element\":\"CSharp.TypeName:S,P\",\"Implements\":[]}," +
+                   "\"Implements\":[{\"$type\":\"KaVE.Model.TypeShapes.TypeHierarchy, KaVE.Model\",\"Element\":\"CSharp.TypeName:I,P\",\"Implements\":[]}]}," +
+                   "\"MethodHierarchies\":[" +
+                   "{\"$type\":\"KaVE.Model.TypeShapes.MethodHierarchy, KaVE.Model\"," +
+                   "\"Element\":\"CSharp.MemberNames.MethodName:[T,P] [T,P].M1()\"," +
+                   "\"Super\":\"CSharp.MemberNames.MethodName:[T,P] [T,P].M2()\"," +
+                   "\"First\":\"CSharp.MemberNames.MethodName:[T,P] [T,P].M3()\"}]}";
         }
     }
 }
