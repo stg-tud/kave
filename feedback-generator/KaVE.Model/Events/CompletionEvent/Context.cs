@@ -67,10 +67,5 @@ namespace KaVE.Model.Events.CompletionEvent
                 return hashCode;
             }
         }
-
-        public override string ToString()
-        {
-            return string.Format("[TypeShape: {0}, SST: {1}]", TypeShape, SST);
-        }
     }
 }

@@ -45,7 +45,11 @@
   <ItemGroup>
     <Compile Include="Collections\ListsTest.cs" />
     <Compile Include="Collections\SetsTest.cs" />
+    <Compile Include="Events\CompletionEvent\CompletionEventTest.cs" />
     <Compile Include="Events\CompletionEvent\ContextTest.cs" />
+    <Compile Include="Events\CompletionEvent\ProposalCollectionTest.cs" />
+    <Compile Include="Events\CompletionEvent\ProposalSelectionTest.cs" />
+    <Compile Include="Events\CompletionEvent\ProposalTest.cs" />
     <Compile Include="TypeShapes\MethodHierarchyTest.cs" />
     <Compile Include="TypeShapes\TypeHierarchyTest.cs" />
     <Compile Include="Events\ErrorEventTest.cs" />

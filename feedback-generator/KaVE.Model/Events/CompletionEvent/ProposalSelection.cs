@@ -15,32 +15,32 @@
  * 
  * Contributors:
  *    - Sven Amann
+ *    - Sebastian Proksch
  */
 
 using System;
 using System.Runtime.Serialization;
-using KaVE.JetBrains.Annotations;
 using KaVE.Utils;
 
 namespace KaVE.Model.Events.CompletionEvent
 {
     [DataContract]
-    public class ProposalSelection
+    public class ProposalSelection : IProposalSelection
     {
-        public ProposalSelection([NotNull] Proposal proposal)
-        {
-            Proposal = proposal;
-        }
+        [DataMember]
+        public IProposal Proposal { get; set; }
 
         [DataMember]
         public TimeSpan? SelectedAfter { get; set; }
 
-        [DataMember, NotNull]
-        public Proposal Proposal { get; private set; }
-
-        public override string ToString()
+        public ProposalSelection()
         {
-            return Proposal + "@" + SelectedAfter;
+            Proposal = new Proposal();
+        }
+
+        public ProposalSelection(IProposal p)
+        {
+            Proposal = p;
         }
 
         protected bool Equals(ProposalSelection other)
@@ -57,7 +57,7 @@ namespace KaVE.Model.Events.CompletionEvent
         {
             unchecked
             {
-                var hashCode = SelectedAfter.GetHashCode();
+                var hashCode = SelectedAfter.HasValue ? SelectedAfter.GetHashCode() : -1;
                 hashCode = (hashCode*397) ^ Proposal.GetHashCode();
                 return hashCode;
             }

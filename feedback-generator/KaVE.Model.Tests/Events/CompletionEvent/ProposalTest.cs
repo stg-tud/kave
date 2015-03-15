@@ -19,86 +19,89 @@
 
 using KaVE.Model.Events.CompletionEvent;
 using KaVE.Model.Names.CSharp;
-using KaVE.Model.SSTs;
-using KaVE.Model.SSTs.Impl;
-using KaVE.Model.TypeShapes;
 using NUnit.Framework;
 
 namespace KaVE.Model.Tests.Events.CompletionEvent
 {
-    internal class ContextTest
+    internal class ProposalTest
     {
-        private static ISST SomeSST
-        {
-            get { return new SST {EnclosingType = TypeName.Get("T, P")}; }
-        }
-
-        private static ITypeShape SomeTypeShape
-        {
-            get { return new TypeShape {TypeHierarchy = new TypeHierarchy {Element = TypeName.Get("T2, P2")}}; }
-        }
-
         [Test]
         public void DefaultValues()
         {
-            var sut = new Context();
-            Assert.AreEqual(new TypeShape(), sut.TypeShape);
-            Assert.AreEqual(new SST(), sut.SST);
+            var sut = new Proposal();
+            Assert.Null(sut.Name);
+            Assert.False(sut.Relevance.HasValue);
+            Assert.AreNotEqual(0, sut.GetHashCode());
+            Assert.AreNotEqual(1, sut.GetHashCode());
         }
 
         [Test]
         public void SettingValues()
         {
-            var sut = new Context
+            var sut = new Proposal
             {
-                TypeShape = SomeTypeShape,
-                SST = SomeSST
+                Name = Name.Get("a"),
+                Relevance = 3
             };
-            Assert.AreEqual(SomeTypeShape, sut.TypeShape);
-            Assert.AreEqual(SomeSST, sut.SST);
+            Assert.AreEqual(Name.Get("a"), sut.Name);
+            Assert.AreEqual(3, sut.Relevance);
         }
 
         [Test]
         public void Equality_Default()
         {
-            var a = new Context();
-            var b = new Context();
+            var a = new Proposal();
+            var b = new Proposal();
             Assert.AreEqual(a, b);
-            Assert.IsTrue(a.GetHashCode() == b.GetHashCode());
+            Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
         }
-
 
         [Test]
         public void Equality_ReallyTheSame()
         {
-            var a = new Context
+            var a = new Proposal
             {
-                TypeShape = SomeTypeShape,
-                SST = SomeSST
+                Name = Name.Get("a"),
+                Relevance = 3
             };
-            var b = new Context
+            var b = new Proposal
             {
-                TypeShape = SomeTypeShape,
-                SST = SomeSST
+                Name = Name.Get("a"),
+                Relevance = 3
             };
             Assert.AreEqual(a, b);
-            Assert.IsTrue(a.GetHashCode() == b.GetHashCode());
+            Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
         }
 
         [Test]
-        public void Equality_DifferentTypeShape()
+        public void Equality_DifferentName()
         {
-            var a = new Context {TypeShape = SomeTypeShape};
-            var b = new Context();
+            var a = new Proposal
+            {
+                Name = Name.Get("a"),
+            };
+            var b = new Proposal();
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
         }
 
         [Test]
-        public void Equality_DifferentSST()
+        public void Equality_DifferentRelevance()
         {
-            var a = new Context {SST = SomeSST};
-            var b = new Context();
+            var a = new Proposal
+            {
+                Relevance = 3
+            };
+            var b = new Proposal();
+            Assert.AreNotEqual(a, b);
+            Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
+        }
+
+        [Test]
+        public void Equality_DifferentRelevanceWithZero()
+        {
+            var a = new Proposal {Relevance = 0};
+            var b = new Proposal();
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
         }

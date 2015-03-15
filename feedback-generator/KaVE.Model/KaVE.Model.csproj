@@ -42,6 +42,10 @@
     <Compile Include="Collections\Lists.cs" />
     <Compile Include="Collections\Sets.cs" />
     <Compile Include="Events\CommandEvent.cs" />
+    <Compile Include="Events\CompletionEvent\ICompletionEvent.cs" />
+    <Compile Include="Events\CompletionEvent\IProposal.cs" />
+    <Compile Include="Events\CompletionEvent\IProposalCollection.cs" />
+    <Compile Include="Events\CompletionEvent\IProposalSelection.cs" />
     <Compile Include="TypeShapes\IMethodHierarchy.cs" />
     <Compile Include="TypeShapes\ITypeShape.cs" />
     <Compile Include="TypeShapes\MethodHierarchy.cs" />

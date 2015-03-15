@@ -12,29 +12,24 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sven Amann
+ *    - Sebastian Proksch
  */
+
 using System.Runtime.Serialization;
 using KaVE.Model.Names;
 using KaVE.Utils;
 
 namespace KaVE.Model.Events.CompletionEvent
 {
-    /// <summary>
-    /// A completion proposal.
-    /// </summary>
     [DataContract]
-    public class Proposal
+    public class Proposal : IProposal
     {
-        /// <summary>
-        /// The name of the element that is proposed for completion.
-        /// </summary>
         [DataMember]
         public IName Name { get; set; }
 
-        /// <summary>
-        /// The relevance this proposal was ranked with by the code completion. Bigger better.
-        /// Optional if no relevance is known.
-        /// </summary>
         [DataMember]
         public int? Relevance { get; set; }
 
@@ -52,13 +47,9 @@ namespace KaVE.Model.Events.CompletionEvent
         {
             unchecked
             {
-                return ((Name != null ? Name.GetHashCode() : 0)*397) ^ Relevance.GetHashCode();
+                var hcRelevance = Relevance.HasValue ? Relevance.Value : -1;
+                return 129487 + ((Name != null ? Name.GetHashCode() : 0) * 397) ^ hcRelevance;
             }
-        }
-
-        public override string ToString()
-        {
-            return string.Format("Proposal: {0}, Relevance: {1}", Name, Relevance);
         }
     }
 }

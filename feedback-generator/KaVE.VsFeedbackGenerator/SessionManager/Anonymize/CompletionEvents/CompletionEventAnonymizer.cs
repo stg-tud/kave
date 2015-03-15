@@ -41,12 +41,12 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize.CompletionEvents
             base.AnonymizeCodeNames(completionEvent);
         }
 
-        private static void AnonymizeCodeNames(ProposalSelection selection)
+        private static void AnonymizeCodeNames(IProposalSelection selection)
         {
             AnonymizeCodeNames(selection.Proposal);
         }
 
-        private static void AnonymizeCodeNames(Proposal proposal)
+        private static void AnonymizeCodeNames(IProposal proposal)
         {
             proposal.Name = proposal.Name.ToAnonymousName();
         }

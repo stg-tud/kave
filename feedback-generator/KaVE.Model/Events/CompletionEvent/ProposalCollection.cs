@@ -15,76 +15,55 @@
  * 
  * Contributors:
  *    - Sven Amann
+ *    - Sebastian Proksch
  */
 
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
-using KaVE.JetBrains.Annotations;
-using KaVE.Model.Names;
+using KaVE.Model.Collections;
 using KaVE.Utils;
 
 namespace KaVE.Model.Events.CompletionEvent
 {
-    /// <summary>
-    /// An ordered collection of completion proposals as, for example,
-    /// presented to the code-completion user in the code-completion
-    /// dropdown.
-    /// </summary>
     [DataContract]
-    public class ProposalCollection
+    public class ProposalCollection : IProposalCollection
     {
-        /// <summary>
-        /// The proposals contained in this collection.
-        /// </summary>
-        [DataMember, NotNull]
-        public IList<Proposal> Proposals { get; private set; }
+        [DataMember]
+        public IList<IProposal> Proposals { get; private set; }
 
-        /// <summary>
-        /// For internal use only.
-        /// </summary>
-        [UsedImplicitly]
         public ProposalCollection()
         {
-            Proposals = new List<Proposal>();
+            Proposals = Lists.NewList<IProposal>();
         }
 
-        /// <summary>
-        /// Creates a collection from a list of proposals.
-        /// </summary>
-        public ProposalCollection([NotNull] IList<Proposal> proposals)
+        public ProposalCollection(IEnumerable<IProposal> proposals) : this()
         {
-            Proposals = proposals;
+            foreach (var p in proposals)
+            {
+                Add(p);
+            }
         }
 
-        /// <summary>
-        /// Creates a collection from a sequence of proposals.
-        /// </summary>
-        public ProposalCollection(params Proposal[] proposals) : this(proposals.ToList()) {}
-
-        /// <returns>The 0-based position of the given proposal in this collection.</returns>
-        public int GetPosition(Proposal proposal)
+        public int GetPosition(IProposal proposal)
         {
             return Proposals.IndexOf(proposal);
         }
 
-        /// <returns>The name of the completion engine that recommended the given proposal.</returns>
-        public IName GetCompletionEngine(Proposal proposal)
+        public void Add(IProposal proposal)
         {
-            return null;
+            Proposals.Add(proposal);
         }
 
-        /// <returns>The names of all completion engines that provided proposals to this collection.</returns>
-        public ISet<IName> GetActiveCompletionEngines()
+        IEnumerator IEnumerable.GetEnumerator()
         {
-            return null;
+            return GetEnumerator();
         }
 
-
-        /// <returns>All proposals contributed by a specific completion engine, in the same order as in this collection.</returns>
-        public IList<Proposal> GetProposalsFrom(IName engine)
+        public IEnumerator<IProposal> GetEnumerator()
         {
-            return null;
+            return Proposals.GetEnumerator();
         }
 
         protected bool Equals(ProposalCollection other)
@@ -100,11 +79,6 @@ namespace KaVE.Model.Events.CompletionEvent
         public override int GetHashCode()
         {
             return Proposals.GetHashCode();
-        }
-
-        public override string ToString()
-        {
-            return "[" + string.Join(", ", Proposals) + "]";
         }
     }
 }

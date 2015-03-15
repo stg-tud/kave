@@ -52,7 +52,7 @@ namespace KaVE.VsFeedbackGenerator.Generators.Merging
         private static bool IsMergable(CompletionEvent @event)
         {
             var eventIsIntermediateFilterEvent = (@event.TriggeredBy == IDEEvent.Trigger.Automatic) &&
-                                                 (@event.TerminatedAs == CompletionEvent.TerminationState.Filtered);
+                                                 (@event.TerminatedState == TerminationState.Filtered);
             // If there is no selection, we know that there was no interaction. If there is one selection, it may be
             // the previous selection or an initial selection (if there was no selection before). We cannot distinguish
             // this here. However, since we never merge the initial event (triggeredBy != Automatic), we know whether
@@ -81,22 +81,23 @@ namespace KaVE.VsFeedbackGenerator.Generators.Merging
                 Prefix = evt2.Prefix,
                 ProposalCollection = evt2.ProposalCollection,
                 Selections = GetRebasedSelections(evt2, evt1.TriggeredAt, evt2.TriggeredAt),
-                TerminatedAs = evt2.TerminatedAs,
+                TerminatedState = evt2.TerminatedState,
                 TerminatedAt = evt2.TerminatedAt,
                 TerminatedBy = evt2.TerminatedBy,
             };
         }
 
-        private static IList<ProposalSelection> GetRebasedSelections(CompletionEvent evt2,
+        private static IList<IProposalSelection> GetRebasedSelections(ICompletionEvent evt2,
             DateTime? oldBaseTime,
             DateTime? newBaseTime)
         {
             var rebaseOffset = newBaseTime - oldBaseTime;
             return evt2.Selections.Select(
-                selection => new ProposalSelection(selection.Proposal)
+                selection => new ProposalSelection
                 {
+                    Proposal = selection.Proposal,
                     SelectedAfter = selection.SelectedAfter + rebaseOffset
-                }).ToList();
+                }).ToList<IProposalSelection>();
         }
     }
 }

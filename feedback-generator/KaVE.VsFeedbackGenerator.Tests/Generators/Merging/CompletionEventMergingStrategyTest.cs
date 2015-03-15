@@ -31,7 +31,7 @@ using NUnit.Framework;
 namespace KaVE.VsFeedbackGenerator.Tests.Generators.Merging
 {
     [TestFixture]
-    class CompletionEventMergingStrategyTest
+    internal class CompletionEventMergingStrategyTest
     {
         private CompletionEventMergingStrategy _strategy;
         private ProposalCollection _proposalCollection;
@@ -39,8 +39,8 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.Merging
         private CompletionEvent _subsequentEvent;
 
         /// <summary>
-        /// Creates two <see cref="CompletionEvent"/>s and sets all properties that are not considered by the merging
-        /// strategy.
+        ///     Creates two <see cref="CompletionEvent" />s and sets all properties that are not considered by the merging
+        ///     strategy.
         /// </summary>
         [SetUp]
         public void SetUpSubsequentCompletionEvents()
@@ -70,7 +70,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.Merging
                 Prefix = "a",
                 ProposalCollection = new ProposalCollection(_proposalCollection.Proposals.Take(3).ToList()),
                 TerminatedAt = now.AddMilliseconds(300),
-                TerminatedAs = CompletionEvent.TerminationState.Applied,
+                TerminatedState = TerminationState.Applied,
                 TerminatedBy = IDEEvent.Trigger.Shortcut,
             };
         }
@@ -90,12 +90,10 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.Merging
         }
 
         /// <summary>
-        /// The first event from a completion process should always be kept, in order to keep the invocation state.
+        ///     The first event from a completion process should always be kept, in order to keep the invocation state.
         /// </summary>
-        [TestCase(IDEEvent.Trigger.Shortcut)]
-        [TestCase(IDEEvent.Trigger.Typing)]
-        [TestCase(IDEEvent.Trigger.Unknown)]
-        [TestCase(IDEEvent.Trigger.Click)]
+        [TestCase(IDEEvent.Trigger.Shortcut), TestCase(IDEEvent.Trigger.Typing), TestCase(IDEEvent.Trigger.Unknown),
+         TestCase(IDEEvent.Trigger.Click)]
         public void ShouldNotMergeIfEarlierEventIsTriggeredByShortcut(IDEEvent.Trigger earlierEventTrigger)
         {
             GivenEventsMeetMergeConditions();
@@ -133,12 +131,11 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.Merging
             Assert.IsTrue(_strategy.AreMergable(_event, _subsequentEvent));
         }
 
-        [TestCase(CompletionEvent.TerminationState.Applied)]
-        [TestCase(CompletionEvent.TerminationState.Cancelled)]
-        public void ShouldNotMergeIfEarlierEventWasntTerminatedByFiltering(CompletionEvent.TerminationState earlierEventTerminatedAs)
+        [TestCase(TerminationState.Applied), TestCase(TerminationState.Cancelled)]
+        public void ShouldNotMergeIfEarlierEventWasntTerminatedByFiltering(TerminationState earlierEventTerminatedAs)
         {
             GivenEventsMeetMergeConditions();
-            _event.TerminatedAs = earlierEventTerminatedAs;
+            _event.TerminatedState = earlierEventTerminatedAs;
 
             Assert.IsFalse(_strategy.AreMergable(_event, _subsequentEvent));
         }
@@ -152,8 +149,8 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.Merging
 
             var mergedEvent = _strategy.Merge(_event, _subsequentEvent);
 
-            Assert.IsInstanceOf(typeof(CompletionEvent), mergedEvent);
-            var mergedCompletionEvent = (CompletionEvent)mergedEvent;
+            Assert.IsInstanceOf(typeof (CompletionEvent), mergedEvent);
+            var mergedCompletionEvent = (CompletionEvent) mergedEvent;
             // could be taken from either event, as both are equal
             Assert.AreEqual(_event.IDESessionUUID, mergedCompletionEvent.IDESessionUUID);
             Assert.AreEqual(_event.Context2, mergedCompletionEvent.Context2);
@@ -165,7 +162,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.Merging
             // has to be taken from subsequent event
             Assert.AreEqual(_subsequentEvent.Prefix, mergedCompletionEvent.Prefix);
             Assert.AreEqual(_subsequentEvent.ProposalCollection, mergedCompletionEvent.ProposalCollection);
-            Assert.AreEqual(_subsequentEvent.TerminatedAs, mergedCompletionEvent.TerminatedAs);
+            Assert.AreEqual(_subsequentEvent.TerminatedState, mergedCompletionEvent.TerminatedState);
             Assert.AreEqual(_subsequentEvent.TerminatedAt, mergedCompletionEvent.TerminatedAt);
             Assert.AreEqual(_subsequentEvent.TerminatedBy, mergedCompletionEvent.TerminatedBy);
             // Selections is recomputed, see ShouldRebaseSelectionOffsetsOnMerge
@@ -178,8 +175,16 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.Merging
             _event.TriggeredAt = DateTime.Now;
 
             _subsequentEvent.TriggeredAt = _event.TriggeredAt.Value.AddSeconds(4);
-            _subsequentEvent.Selections.Add(new ProposalSelection(CompletionEventTestFactory.CreateAnonymousProposal()) { SelectedAfter = TimeSpan.FromSeconds(3)});
-            _subsequentEvent.Selections.Add(new ProposalSelection(CompletionEventTestFactory.CreateAnonymousProposal()) { SelectedAfter = TimeSpan.FromSeconds(6)});
+            _subsequentEvent.Selections.Add(
+                new ProposalSelection(CompletionEventTestFactory.CreateAnonymousProposal())
+                {
+                    SelectedAfter = TimeSpan.FromSeconds(3)
+                });
+            _subsequentEvent.Selections.Add(
+                new ProposalSelection(CompletionEventTestFactory.CreateAnonymousProposal())
+                {
+                    SelectedAfter = TimeSpan.FromSeconds(6)
+                });
 
             var mergedEvent = (CompletionEvent) _strategy.Merge(_event, _subsequentEvent);
 
@@ -190,7 +195,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.Merging
         private void GivenEventsMeetMergeConditions()
         {
             _event.TriggeredBy = IDEEvent.Trigger.Automatic;
-            _event.TerminatedAs = CompletionEvent.TerminationState.Filtered;
+            _event.TerminatedState = TerminationState.Filtered;
         }
     }
 }

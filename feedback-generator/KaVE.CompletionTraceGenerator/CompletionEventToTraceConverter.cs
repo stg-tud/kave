@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 using System;
 using KaVE.CompletionTraceGenerator.Model;
 using KaVE.JetBrains.Annotations;
@@ -38,17 +39,17 @@ namespace KaVE.CompletionTraceGenerator
             trace.DurationInMillis += completionEvent.ComputeDuration();
             trace.AppendSelectionChangeActions(completionEvent);
 
-            switch (completionEvent.TerminatedAs)
+            switch (completionEvent.TerminatedState)
             {
-                case CompletionEvent.TerminationState.Applied:
+                case TerminationState.Applied:
                     trace.AppendAction(CompletionAction.NewApply());
                     _writer.Write(trace);
                     break;
-                case CompletionEvent.TerminationState.Cancelled:
+                case TerminationState.Cancelled:
                     trace.AppendAction(CompletionAction.NewCancel());
                     _writer.Write(trace);
                     break;
-                case CompletionEvent.TerminationState.Filtered:
+                case TerminationState.Filtered:
                     // Filtering is not a termination of code completion. Moreover, we know the changed prefix
                     // only from the subsequent completion event. Therefore, no action is appended here.
                     break;

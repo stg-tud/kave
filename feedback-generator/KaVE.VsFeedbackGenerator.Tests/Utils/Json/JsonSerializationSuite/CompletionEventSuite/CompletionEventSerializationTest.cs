@@ -19,152 +19,137 @@
  */
 
 using System;
-using System.Collections.Generic;
 using KaVE.Model.Events;
 using KaVE.Model.Events.CompletionEvent;
-using KaVE.Model.Names.CSharp.MemberNames;
+using KaVE.Model.Names.CSharp;
 using KaVE.Model.Names.VisualStudio;
-using KaVE.Model.TypeShapes;
-using KaVE.TestUtils.Model.Events.CompletionEvent;
+using KaVE.Model.SSTs.Impl;
 using KaVE.TestUtils.Model.Names;
 using KaVE.VsFeedbackGenerator.Utils.Json;
 using NUnit.Framework;
 
 namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.JsonSerializationSuite.CompletionEventSuite
 {
-    [TestFixture]
     internal class CompletionEventSerializationTest : SerializationTestBase
     {
         [Test]
-        public void ShouldSerializeCompletionEvent()
+        public void VerifyToJson()
         {
-            var proposal1 = new Proposal
-            {
-                Name = TestNameFactory.GetAnonymousMethodName(),
-                Relevance = 42
-            };
-            var proposal2 = new Proposal
-            {
-                Name = TestNameFactory.GetAnonymousNamespace(),
-                Relevance = -23
-            };
-
-            var triggeredAt = new DateTime(2012, 2, 23, 18, 54, 59, 549);
-            var completionEvent = new CompletionEvent
-            {
-                IDESessionUUID = "0xDEADBEEF",
-                TriggeredAt = triggeredAt,
-                TriggeredBy = IDEEvent.Trigger.Unknown,
-                Prefix = "Foo",
-                Context2 = new Context(),
-                ProposalCollection = new ProposalCollection(new List<Proposal> {proposal1, proposal2}),
-                TerminatedAt = triggeredAt.AddSeconds(5),
-                TerminatedBy = IDEEvent.Trigger.Typing,
-                TerminatedAs = CompletionEvent.TerminationState.Applied
-            };
-            completionEvent.AddSelection(proposal1);
-            completionEvent.AddSelection(proposal2);
-            completionEvent.AddSelection(proposal1);
-
-            JsonAssert.SerializationPreservesData(completionEvent);
-        }
-
-        [Test]
-        public void ShouldDeserializeCompletionEvent()
-        {
-            const string jsonEvent = "{\"$type\":\"KaVE.Model.Events.CompletionEvent.CompletionEvent, KaVE.Model\"," +
-                                     "\"ProposalCollection\":{\"$type\":\"KaVE.Model.Events.CompletionEvent.ProposalCollection, KaVE.Model\"," +
-                                     "\"Proposals\":{\"$type\":\"System.Collections.Generic.List`1[[KaVE.Model.Events.CompletionEvent.Proposal, KaVE.Model]], mscorlib\"," +
-                                     "\"$values\":[" +
-                                     "{\"$type\":\"KaVE.Model.Events.CompletionEvent.Proposal, KaVE.Model\",\"Name\":{\"type\":\"CSharp.PropertyName\",\"identifier\":\"get [System.Boolean, mscorlib, 4.0.0.0] [System.IO.Stream, mscorlib, 4.0.0.0].CanRead()\"}}," +
-                                     "{\"$type\":\"KaVE.Model.Events.CompletionEvent.Proposal, KaVE.Model\",\"Name\":{\"type\":\"CSharp.PropertyName\",\"identifier\":\"get [System.Boolean, mscorlib, 4.0.0.0] [System.IO.Stream, mscorlib, 4.0.0.0].CanSeek()\"}}," +
-                                     "{\"$type\":\"KaVE.Model.Events.CompletionEvent.Proposal, KaVE.Model\",\"Name\":{\"type\":\"CSharp.PropertyName\",\"identifier\":\"get [System.Boolean, mscorlib, 4.0.0.0] [System.IO.Stream, mscorlib, 4.0.0.0].CanTimeout()\"}}," +
-                                     "{\"$type\":\"KaVE.Model.Events.CompletionEvent.Proposal, KaVE.Model\",\"Name\":{\"type\":\"CSharp.PropertyName\",\"identifier\":\"get [System.Boolean, mscorlib, 4.0.0.0] [System.IO.Stream, mscorlib, 4.0.0.0].CanWrite()\"}}," +
-                                     /* other proposals removed to reduce size of this string */
-                                     "]}}," +
-                                     "\"Selections\":{\"$type\":\"System.Collections.Generic.List`1[[KaVE.Model.Events.CompletionEvent.ProposalSelection, KaVE.Model]], mscorlib\"," +
-                                     "\"$values\":[{\"$type\":\"KaVE.Model.Events.CompletionEvent.ProposalSelection, KaVE.Model\",\"SelectedAfter\":\"00:00:00\"," +
-                                     "\"Proposal\":{\"$type\":\"KaVE.Model.Events.CompletionEvent.Proposal, KaVE.Model\",\"Name\":{\"type\":\"CSharp.PropertyName\",\"identifier\":\"get [System.Boolean, mscorlib, 4.0.0.0] [System.IO.Stream, mscorlib, 4.0.0.0].CanRead()\"}}}" +
-                                     "]}," +
-                                     "\"Prefix\":\"\"," +
-                                     "\"TerminatedBy\":1," +
-                                     "\"TerminatedAs\":1," +
-                                     "\"IDESessionUUID\":\"57d18e20-952f-4583-88b3-3aadc1db48b1\"," +
-                                     "\"TriggeredAt\":\"2013-12-06T11:34:24\"," +
-                                     "\"TriggeredBy\":0," +
-                                     "\"Duration\":\"00:00:02\"," +
-                                     "\"ActiveWindow\":{\"type\":\"VisualStudio.WindowName\",\"identifier\":\"vsWindowTypeDocument Initializer.cs\"}," +
-                                     "\"ActiveDocument\":{\"type\":\"VisualStudio.DocumentName\",\"identifier\":\"\\\\CodeCompletion.FeedbackGenerator\\\\KaVE.VsFeedbackGenerator\\\\KaVE.VsFeedbackGenerator\\\\Initializer.cs\"}}";
-
-            var actual = jsonEvent.ParseJsonTo<CompletionEvent>();
-
-            var initiallySelectedProposal = CreatePropertyProposal(
-                "get [System.Boolean, mscorlib, 4.0.0.0] [System.IO.Stream, mscorlib, 4.0.0.0].CanRead()");
-            var expected = new CompletionEvent
-            {
-                ProposalCollection =
-                    new ProposalCollection(
-                        initiallySelectedProposal,
-                        CreatePropertyProposal(
-                            "get [System.Boolean, mscorlib, 4.0.0.0] [System.IO.Stream, mscorlib, 4.0.0.0].CanSeek()"),
-                        CreatePropertyProposal(
-                            "get [System.Boolean, mscorlib, 4.0.0.0] [System.IO.Stream, mscorlib, 4.0.0.0].CanTimeout()"),
-                        CreatePropertyProposal(
-                            "get [System.Boolean, mscorlib, 4.0.0.0] [System.IO.Stream, mscorlib, 4.0.0.0].CanWrite()")),
-                Selections =
-                    new List<ProposalSelection>
-                    {
-                        new ProposalSelection(initiallySelectedProposal)
-                        {
-                            SelectedAfter = TimeSpan.FromSeconds(0)
-                        }
-                    },
-                Prefix = "",
-                TerminatedBy = IDEEvent.Trigger.Click,
-                TerminatedAs = CompletionEvent.TerminationState.Cancelled,
-                IDESessionUUID = "57d18e20-952f-4583-88b3-3aadc1db48b1",
-                TriggeredAt = new DateTime(2013, 12, 6, 11, 34, 24),
-                Duration = TimeSpan.FromSeconds(2),
-                TriggeredBy = IDEEvent.Trigger.Unknown,
-                ActiveWindow = WindowName.Get("vsWindowTypeDocument Initializer.cs"),
-                ActiveDocument =
-                    DocumentName.Get(
-                        "\\CodeCompletion.FeedbackGenerator\\KaVE.VsFeedbackGenerator\\KaVE.VsFeedbackGenerator\\Initializer.cs"),
-            };
-
+            var actual = GetExample().ToCompactJson();
+            var expected = GetExampleJson();
             Assert.AreEqual(expected, actual);
         }
 
         [Test]
-        public void ShouldSerializeToString()
+        public void VerifyFromJson()
+        {
+            var actual = GetExampleJson().ParseJsonTo<CompletionEvent>();
+            var expected = GetExample();
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void VerifyObjToObjEquality()
+        {
+            var actual = GetExample().ToCompactJson().ParseJsonTo<CompletionEvent>();
+            var expected = GetExample();
+            Assert.AreEqual(expected, actual);
+        }
+
+        private static CompletionEvent GetExample()
         {
             var completionEvent = new CompletionEvent
             {
-                Context2 = new Context
+                /* IDEEvent */
+                IDESessionUUID = "0xDEADBEEF",
+                TriggeredAt = new DateTime(2012, 2, 23, 18, 54, 59, 549),
+                TriggeredBy = IDEEvent.Trigger.Unknown,
+                TerminatedBy = IDEEvent.Trigger.Typing,
+                Duration = TimeSpan.FromSeconds(2),
+                ActiveWindow = WindowName.Get("vsWindowTypeDocument File.cs"),
+                ActiveDocument = DocumentName.Get("\\Path\\To\\File.cs"),
+                /* CompletionEvent */
+                ProposalCollection =
                 {
-                    TypeShape = new TypeShape
+                    Proposals =
                     {
-                        MethodHierarchies = CompletionEventTestFactory.GetAnonymousMethodHierarchies(2),
-                        TypeHierarchy = CompletionEventTestFactory.GetAnonymousTypeHierarchy()
+                        new Proposal
+                        {
+                            Name = TestNameFactory.GetAnonymousMethodName(),
+                            Relevance = 42
+                        },
+                        new Proposal
+                        {
+                            Name = TestNameFactory.GetAnonymousNamespace(),
+                            Relevance = -23
+                        }
                     }
                 },
-                Prefix = "SomePrefix",
-                ProposalCollection = new ProposalCollection(CompletionEventTestFactory.CreatePredictableProposals(2)),
-                Selections = CompletionEventTestFactory.CreatePredictableProposalSelections(1),
-                TerminatedAs = CompletionEvent.TerminationState.Cancelled,
-                TerminatedBy = IDEEvent.Trigger.Click
+                Context2 = new Context {SST = new SST {EnclosingType = TypeName.Get("T,P")}},
+                Prefix = "Foo",
+                TerminatedAt = new DateTime(2012, 2, 23, 18, 54, 59, 549).AddSeconds(5),
+                TerminatedState = TerminationState.Applied
             };
-            const string expected =
-                "{\"$type\":\"KaVE.Model.Events.CompletionEvent.CompletionEvent, KaVE.Model\",\"CompletionContext\":{\"$type\":\"KaVE.Model.Events.CompletionEvent.Context, KaVE.Model\"," +
-                "\"TypeShape\":{\"$type\":\"KaVE.Model.Events.CompletionEvent.TypeShape, KaVE.Model\",\"TypeHierarchy\":{\"$type\":\"KaVE.Model.Events.CompletionEvent.TypeHierarchy, KaVE.Model\",\"Element\":\"CSharp.TypeName:SomeType11, SomeAssembly12, 9.8.7.6\",\"Implements\":[]},\"MethodHierarchies\":[{\"$type\":\"KaVE.Model.Events.CompletionEvent.MethodHierarchy, KaVE.Model\",\"Element\":\"CSharp.MethodName:[SomeType1, SomeAssembly2, 9.8.7.6] [SomeType3, SomeAssembly4, 9.8.7.6].Method5()\"},{\"$type\":\"KaVE.Model.Events.CompletionEvent.MethodHierarchy, KaVE.Model\",\"Element\":\"CSharp.MethodName:[SomeType6, SomeAssembly7, 9.8.7.6] [SomeType8, SomeAssembly9, 9.8.7.6].Method10()\"}]}," +
-                "\"SST\":{\"$type\":\"KaVE.Model.SSTs.Impl.SST, KaVE.Model\",\"EnclosingType\":\"CSharp.UnknownTypeName:?\",\"Fields\":[],\"Properties\":[],\"Methods\":[],\"Events\":[],\"Delegates\":[]}}," +
-                "\"ProposalCollection\":{\"$type\":\"KaVE.Model.Events.CompletionEvent.ProposalCollection, KaVE.Model\",\"Proposals\":[{\"$type\":\"KaVE.Model.Events.CompletionEvent.Proposal, KaVE.Model\",\"Name\":\"CSharp.Name:1\"},{\"$type\":\"KaVE.Model.Events.CompletionEvent.Proposal, KaVE.Model\",\"Name\":\"CSharp.Name:2\"}]},\"Prefix\":\"SomePrefix\",\"Selections\":[{\"$type\":\"KaVE.Model.Events.CompletionEvent.ProposalSelection, KaVE.Model\",\"Proposal\":{\"$type\":\"KaVE.Model.Events.CompletionEvent.Proposal, KaVE.Model\",\"Name\":\"CSharp.Name:3\"}}],\"TerminatedBy\":1,\"TerminatedAs\":1,\"TriggeredBy\":0}";
-            JsonAssert.SerializesTo(completionEvent, expected);
+            completionEvent.AddSelection(
+                new Proposal
+                {
+                    Name = TestNameFactory.GetAnonymousMethodName(),
+                    Relevance = 42
+                });
+            completionEvent.AddSelection(
+                new Proposal
+                {
+                    Name = TestNameFactory.GetAnonymousNamespace(),
+                    Relevance = -23
+                });
+            completionEvent.AddSelection(
+                new Proposal
+                {
+                    Name = TestNameFactory.GetAnonymousMethodName(),
+                    Relevance = 42
+                });
+            return completionEvent;
         }
 
-        private Proposal CreatePropertyProposal(string identifier)
+        private static string GetExampleJson()
         {
-            return new Proposal {Name = PropertyName.Get(identifier)};
+            var jsonEvent = "{\"$type\":\"KaVE.Model.Events.CompletionEvent.CompletionEvent, KaVE.Model\"," +
+                            "\"ProposalCollection\":{\"$type\":\"KaVE.Model.Events.CompletionEvent.ProposalCollection, KaVE.Model\"," +
+                            "\"Proposals\":{\"$type\":\"System.Collections.Generic.List`1[[KaVE.Model.Events.CompletionEvent.Proposal, KaVE.Model]], mscorlib\"," +
+                            "\"$values\":[" +
+                            "{\"$type\":\"KaVE.Model.Events.CompletionEvent.Proposal, KaVE.Model\",\"Name\":{\"type\":\"CSharp.PropertyName\",\"identifier\":\"get [System.Boolean, mscorlib, 4.0.0.0] [System.IO.Stream, mscorlib, 4.0.0.0].CanRead()\"}}," +
+                            "{\"$type\":\"KaVE.Model.Events.CompletionEvent.Proposal, KaVE.Model\",\"Name\":{\"type\":\"CSharp.PropertyName\",\"identifier\":\"get [System.Boolean, mscorlib, 4.0.0.0] [System.IO.Stream, mscorlib, 4.0.0.0].CanSeek()\"}}," +
+                            "{\"$type\":\"KaVE.Model.Events.CompletionEvent.Proposal, KaVE.Model\",\"Name\":{\"type\":\"CSharp.PropertyName\",\"identifier\":\"get [System.Boolean, mscorlib, 4.0.0.0] [System.IO.Stream, mscorlib, 4.0.0.0].CanTimeout()\"}}," +
+                            "{\"$type\":\"KaVE.Model.Events.CompletionEvent.Proposal, KaVE.Model\",\"Name\":{\"type\":\"CSharp.PropertyName\",\"identifier\":\"get [System.Boolean, mscorlib, 4.0.0.0] [System.IO.Stream, mscorlib, 4.0.0.0].CanWrite()\"}}," +
+                            /* other proposals removed to reduce size of this string */
+                            "]}}," +
+                            "\"Selections\":{\"$type\":\"System.Collections.Generic.List`1[[KaVE.Model.Events.CompletionEvent.ProposalSelection, KaVE.Model]], mscorlib\"," +
+                            "\"$values\":[{\"$type\":\"KaVE.Model.Events.CompletionEvent.ProposalSelection, KaVE.Model\",\"SelectedAfter\":\"00:00:00\"," +
+                            "\"Proposal\":{\"$type\":\"KaVE.Model.Events.CompletionEvent.Proposal, KaVE.Model\",\"Name\":{\"type\":\"CSharp.PropertyName\",\"identifier\":\"get [System.Boolean, mscorlib, 4.0.0.0] [System.IO.Stream, mscorlib, 4.0.0.0].CanRead()\"}}}" +
+                            "]}," +
+                            /* context */
+                            "\"Context2\":" + EmptyContextJson() + "," +
+                            "\"Prefix\":\"\"," +
+                            "\"TerminatedBy\":1," +
+                            "\"TerminatedAs\":1," +
+                            "\"IDESessionUUID\":\"57d18e20-952f-4583-88b3-3aadc1db48b1\"," +
+                            "\"TriggeredAt\":\"2013-12-06T11:34:24\"," +
+                            "\"TriggeredBy\":0," +
+                            "\"Duration\":\"00:00:02\"," +
+                            "\"ActiveWindow\":{\"type\":\"VisualStudio.WindowName\",\"identifier\":\"vsWindowTypeDocument File.cs\"}," +
+                            "\"ActiveDocument\":{\"type\":\"VisualStudio.DocumentName\",\"identifier\":\"\\\\Path\\\\To\\\\File.cs\"}}";
+            return jsonEvent;
+        }
+
+        private static string EmptyContextJson()
+        {
+            return "{\"$type\":\"KaVE.Model.Events.CompletionEvent.Context, KaVE.Model\"," +
+                   "\"TypeShape\":{\"$type\":\"KaVE.Model.TypeShapes.TypeShape, KaVE.Model\"," +
+                   "\"TypeHierarchy\":{\"$type\":\"KaVE.Model.TypeShapes.TypeHierarchy, KaVE.Model\",\"Element\":\"CSharp.TypeNames.UnknownTypeName:?\",\"Implements\":[]}," +
+                   "\"MethodHierarchies\":[]}," +
+                   "\"SST\":{\"$type\":\"KaVE.Model.SSTs.Impl.SST, KaVE.Model\"," +
+                   "\"EnclosingType\":\"CSharp.TypeNames.UnknownTypeName:?\"," +
+                   "\"Fields\":[],\"Properties\":[],\"Methods\":[],\"Events\":[],\"Delegates\":[]}}";
         }
     }
 }

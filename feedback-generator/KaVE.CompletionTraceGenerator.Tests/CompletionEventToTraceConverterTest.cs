@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 using System.Linq;
 using KaVE.CompletionTraceGenerator.Model;
 using KaVE.Model.Events;
@@ -42,7 +43,7 @@ namespace KaVE.CompletionTraceGenerator.Tests
         public void ShouldCreateTraceFromAppliedCompletion()
         {
             var @event = TestFactory.CreateAnonymousCompletionEvent(5234);
-            @event.TerminatedAs = CompletionEvent.TerminationState.Applied;
+            @event.TerminatedState = TerminationState.Applied;
 
             var expected = new CompletionTrace {DurationInMillis = 5234};
             expected.AppendAction(CompletionAction.NewApply());
@@ -56,7 +57,7 @@ namespace KaVE.CompletionTraceGenerator.Tests
         public void ShouldCreateTraceFromCancelledCompletion()
         {
             var @event = TestFactory.CreateAnonymousCompletionEvent(398);
-            @event.TerminatedAs = CompletionEvent.TerminationState.Cancelled;
+            @event.TerminatedState = TerminationState.Cancelled;
 
             var expected = new CompletionTrace {DurationInMillis = 398};
             expected.AppendAction(CompletionAction.NewCancel());
@@ -70,7 +71,7 @@ namespace KaVE.CompletionTraceGenerator.Tests
         public void ShouldCreateTraceFromCompletionWithTwoStepActions()
         {
             var @event = TestFactory.CreateAnonymousCompletionEvent(698);
-            @event.TerminatedAs = CompletionEvent.TerminationState.Applied;
+            @event.TerminatedState = TerminationState.Applied;
             var proposals = TestFactory.CreateAnonymousProposals(3);
             @event.ProposalCollection = new ProposalCollection(proposals);
             @event.AddSelection(proposals[0]);
@@ -93,7 +94,7 @@ namespace KaVE.CompletionTraceGenerator.Tests
         public void ShouldCreateTraceWithMouseGotoFromCompletionWithJump()
         {
             var @event = TestFactory.CreateAnonymousCompletionEvent(34);
-            @event.TerminatedAs = CompletionEvent.TerminationState.Applied;
+            @event.TerminatedState = TerminationState.Applied;
             var proposals = TestFactory.CreateAnonymousProposals(10);
             @event.ProposalCollection = new ProposalCollection(proposals);
             @event.AddSelection(proposals[0]);
@@ -112,7 +113,7 @@ namespace KaVE.CompletionTraceGenerator.Tests
         public void ShouldNotCreateTraceFromIncompleteCompletionWithFiltering()
         {
             var @event = TestFactory.CreateAnonymousCompletionEvent(66);
-            @event.TerminatedAs = CompletionEvent.TerminationState.Filtered;
+            @event.TerminatedState = TerminationState.Filtered;
 
             _sut.Process(@event);
 
@@ -123,10 +124,10 @@ namespace KaVE.CompletionTraceGenerator.Tests
         public void ShouldCreateTraceFromCompletionWithFiltering()
         {
             var firstEvent = TestFactory.CreateAnonymousCompletionEvent(33);
-            firstEvent.TerminatedAs = CompletionEvent.TerminationState.Filtered;
+            firstEvent.TerminatedState = TerminationState.Filtered;
             var secondEvent = TestFactory.CreateAnonymousCompletionEvent(42);
             secondEvent.TriggeredBy = IDEEvent.Trigger.Automatic;
-            secondEvent.TerminatedAs = CompletionEvent.TerminationState.Cancelled;
+            secondEvent.TerminatedState = TerminationState.Cancelled;
             secondEvent.Prefix = "Get";
 
             var expected = new CompletionTrace {DurationInMillis = 75};
@@ -147,7 +148,7 @@ namespace KaVE.CompletionTraceGenerator.Tests
             firstEvent.ProposalCollection = new ProposalCollection(proposals);
             firstEvent.AddSelection(proposals[0]);
             firstEvent.AddSelection(proposals[1]);
-            firstEvent.TerminatedAs = CompletionEvent.TerminationState.Filtered;
+            firstEvent.TerminatedState = TerminationState.Filtered;
             var secondEvent = TestFactory.CreateAnonymousCompletionEvent(23);
             var filteredProposals = proposals.Take(4).ToList();
             secondEvent.TriggeredBy = IDEEvent.Trigger.Automatic;
@@ -155,7 +156,7 @@ namespace KaVE.CompletionTraceGenerator.Tests
             secondEvent.ProposalCollection = new ProposalCollection(filteredProposals);
             secondEvent.AddSelection(proposals[0]);
             secondEvent.AddSelection(proposals[3]);
-            secondEvent.TerminatedAs = CompletionEvent.TerminationState.Applied;
+            secondEvent.TerminatedState = TerminationState.Applied;
 
             var expected = new CompletionTrace {DurationInMillis = 35};
             expected.AppendAction(CompletionAction.NewStep(Direction.Down));
@@ -173,18 +174,18 @@ namespace KaVE.CompletionTraceGenerator.Tests
         public void ShouldCreateAsManyTracesAsTerminatedCompletionsAreProcessed()
         {
             var event1 = TestFactory.CreateAnonymousCompletionEvent(55);
-            event1.TerminatedAs = CompletionEvent.TerminationState.Applied;
+            event1.TerminatedState = TerminationState.Applied;
             var event2 = TestFactory.CreateAnonymousCompletionEvent(42);
-            event2.TerminatedAs = CompletionEvent.TerminationState.Applied;
+            event2.TerminatedState = TerminationState.Applied;
             var event3 = TestFactory.CreateAnonymousCompletionEvent(23);
-            event3.TerminatedAs = CompletionEvent.TerminationState.Cancelled;
+            event3.TerminatedState = TerminationState.Cancelled;
             var event4 = TestFactory.CreateAnonymousCompletionEvent(666);
-            event4.TerminatedAs = CompletionEvent.TerminationState.Filtered;
+            event4.TerminatedState = TerminationState.Filtered;
             var event5 = TestFactory.CreateAnonymousCompletionEvent(99);
             event5.TriggeredBy = IDEEvent.Trigger.Automatic;
-            event5.TerminatedAs = CompletionEvent.TerminationState.Applied;
+            event5.TerminatedState = TerminationState.Applied;
             var event6 = TestFactory.CreateAnonymousCompletionEvent(69);
-            event6.TerminatedAs = CompletionEvent.TerminationState.Cancelled;
+            event6.TerminatedState = TerminationState.Cancelled;
 
             _sut.Process(event1);
             _sut.Process(event2);
@@ -200,10 +201,10 @@ namespace KaVE.CompletionTraceGenerator.Tests
         public void ShouldIgnoreInconsistentCompletions()
         {
             var firstEvent = TestFactory.CreateAnonymousCompletionEvent(33);
-            firstEvent.TerminatedAs = CompletionEvent.TerminationState.Filtered;
+            firstEvent.TerminatedState = TerminationState.Filtered;
             var secondEvent = TestFactory.CreateAnonymousCompletionEvent(42);
             secondEvent.TriggeredBy = IDEEvent.Trigger.Click;
-            secondEvent.TerminatedAs = CompletionEvent.TerminationState.Applied;
+            secondEvent.TerminatedState = TerminationState.Applied;
 
             var expected = new CompletionTrace {DurationInMillis = 42};
             expected.AppendAction(CompletionAction.NewApply());

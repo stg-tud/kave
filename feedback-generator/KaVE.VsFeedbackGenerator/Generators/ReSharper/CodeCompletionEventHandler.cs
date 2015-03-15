@@ -151,7 +151,7 @@ namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
 
         public void HandlePrefixChanged(string newPrefix, IEnumerable<ILookupItem> displayedLookupItems)
         {
-            _event.TerminatedAs = CompletionEvent.TerminationState.Filtered;
+            _event.TerminatedState = TerminationState.Filtered;
             _event.TerminatedAt = DateTime.Now;
             _event.TerminatedBy = IDEEvent.Trigger.Automatic;
             var lastSelection = _event.Selections.LastOrDefault();
@@ -175,14 +175,14 @@ namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
 
         public void HandleApplied(IDEEvent.Trigger trigger, ILookupItem appliedItem)
         {
-            _event.TerminatedAs = CompletionEvent.TerminationState.Applied;
+            _event.TerminatedState = TerminationState.Applied;
             _event.TerminatedBy = trigger;
             Fire(_event);
         }
 
         public void HandleCancelled(IDEEvent.Trigger trigger)
         {
-            _event.TerminatedAs = CompletionEvent.TerminationState.Cancelled;
+            _event.TerminatedState = TerminationState.Cancelled;
             _event.TerminatedBy = trigger;
             Fire(_event);
         }

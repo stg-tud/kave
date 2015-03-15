@@ -30,7 +30,7 @@ using NUnit.Framework;
 namespace KaVE.VsFeedbackGenerator.Tests.Generators.ReSharper
 {
     [TestFixture]
-    class CodeCompletionEventHandlerTest : EventGeneratorTestBase
+    internal class CodeCompletionEventHandlerTest : EventGeneratorTestBase
     {
         private CodeCompletionEventHandler _generator;
 
@@ -51,7 +51,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.ReSharper
             _generator.HandleApplied(IDEEvent.Trigger.Click, lookupItems[0]);
 
             var ce = GetSinglePublished<CompletionEvent>();
-            Assert.AreEqual(CompletionEvent.TerminationState.Applied, ce.TerminatedAs);
+            Assert.AreEqual(TerminationState.Applied, ce.TerminatedState);
         }
 
         [Test]
@@ -83,7 +83,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.ReSharper
             _generator.HandleCancelled(IDEEvent.Trigger.Shortcut);
 
             var ce = GetSinglePublished<CompletionEvent>();
-            Assert.AreEqual(CompletionEvent.TerminationState.Cancelled, ce.TerminatedAs);
+            Assert.AreEqual(TerminationState.Cancelled, ce.TerminatedState);
         }
 
         [Test]
@@ -95,7 +95,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.ReSharper
             _generator.HandlePrefixChanged("a", lookupItems);
 
             var ce = GetSinglePublished<CompletionEvent>();
-            Assert.AreEqual(CompletionEvent.TerminationState.Filtered, ce.TerminatedAs);
+            Assert.AreEqual(TerminationState.Filtered, ce.TerminatedState);
             Assert.AreEqual(IDEEvent.Trigger.Automatic, ce.TerminatedBy);
         }
 
