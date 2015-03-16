@@ -18,7 +18,7 @@
  */
 
 using KaVE.Model.Collections;
-using KaVE.Model.Names.CSharp.MemberNames;
+using KaVE.Model.Names.CSharp;
 using KaVE.Model.SSTs.Expressions;
 using KaVE.Model.SSTs.Impl;
 using KaVE.Model.SSTs.Impl.Expressions.Assignable;

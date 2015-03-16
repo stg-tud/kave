@@ -22,7 +22,6 @@ using System;
 using JetBrains.Util;
 using KaVE.Model.Events.CompletionEvent;
 using KaVE.Model.Names.CSharp;
-using KaVE.Model.Names.CSharp.Modularization;
 using KaVE.Model.SSTs.Impl;
 using KaVE.Model.TypeShapes;
 using KaVE.VsFeedbackGenerator.SessionManager.Anonymize;

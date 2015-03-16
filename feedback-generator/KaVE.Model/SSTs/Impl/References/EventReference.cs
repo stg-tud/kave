@@ -32,7 +32,7 @@ namespace KaVE.Model.SSTs.Impl.References
         public EventReference()
         {
             Reference = new VariableReference();
-            EventName = Names.CSharp.MemberNames.EventName.UnknownName;
+            EventName = Names.CSharp.EventName.UnknownName;
         }
 
         protected bool Equals(EventReference other)

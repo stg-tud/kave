@@ -15,8 +15,6 @@
  */
 
 using KaVE.Model.Names.CSharp;
-using KaVE.Model.Names.CSharp.MemberNames;
-using KaVE.Model.Names.CSharp.Modularization;
 using NUnit.Framework;
 
 namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis

@@ -19,7 +19,7 @@
 
 using KaVE.Model.Utils;
 
-namespace KaVE.Model.Names.CSharp.Modularization
+namespace KaVE.Model.Names.CSharp
 {
     /// <summary>
     ///     Aliases are defined by using statements, like "using alias = Some.Reference;". A special case is the alias

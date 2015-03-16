@@ -18,7 +18,6 @@
  */
 
 using KaVE.Model.Names.CSharp;
-using KaVE.Model.Names.CSharp.MemberNames;
 using KaVE.Model.ObjectUsage;
 using NUnit.Framework;
 

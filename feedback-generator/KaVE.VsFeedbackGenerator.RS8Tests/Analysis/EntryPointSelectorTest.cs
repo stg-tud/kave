@@ -19,7 +19,7 @@
  */
 
 using System.Linq;
-using KaVE.Model.Names.CSharp.MemberNames;
+using KaVE.Model.Names.CSharp;
 using NUnit.Framework;
 
 namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis

@@ -19,7 +19,7 @@
 
 using KaVE.Model.Utils;
 
-namespace KaVE.Model.Names.CSharp.Modularization
+namespace KaVE.Model.Names.CSharp
 {
     public class NamespaceName : Name, INamespaceName
     {

@@ -28,7 +28,6 @@ using KaVE.JetBrains.Annotations;
 using KaVE.Model.Events.CompletionEvent;
 using KaVE.Model.Names;
 using KaVE.Model.Names.CSharp;
-using KaVE.Model.Names.CSharp.MemberNames;
 using KaVE.Model.Names.ReSharper;
 using KaVE.VsFeedbackGenerator.Utils.Names;
 

@@ -17,7 +17,7 @@
  *    - Sebastian Proksch
  */
 
-using KaVE.Model.Names.CSharp.Modularization;
+using KaVE.Model.Names.CSharp;
 using NUnit.Framework;
 
 namespace KaVE.Model.Tests.Names.CSharp.Modularization

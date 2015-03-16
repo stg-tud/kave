@@ -20,7 +20,6 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using KaVE.JetBrains.Annotations;
-using KaVE.Model.Names.CSharp.MemberNames;
 using KaVE.Utils;
 using KaVE.Utils.Assertion;
 

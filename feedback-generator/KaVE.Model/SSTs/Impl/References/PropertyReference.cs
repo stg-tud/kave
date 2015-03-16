@@ -32,7 +32,7 @@ namespace KaVE.Model.SSTs.Impl.References
         public PropertyReference()
         {
             Reference = new VariableReference();
-            PropertyName = Names.CSharp.MemberNames.PropertyName.UnknownName;
+            PropertyName = Names.CSharp.PropertyName.UnknownName;
         }
 
         protected bool Equals(PropertyReference other)

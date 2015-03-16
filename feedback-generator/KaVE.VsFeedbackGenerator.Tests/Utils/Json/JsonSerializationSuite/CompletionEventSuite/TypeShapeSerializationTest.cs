@@ -19,7 +19,6 @@
  */
 
 using KaVE.Model.Names.CSharp;
-using KaVE.Model.Names.CSharp.MemberNames;
 using KaVE.Model.TypeShapes;
 using KaVE.VsFeedbackGenerator.Utils.Json;
 using NUnit.Framework;
@@ -86,16 +85,8 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.JsonSerializationSuite.Compl
         private static string GetExampleJson()
         {
             // do not change! keep for checking exception free reading of old formats!
-            return "{\"$type\":\"KaVE.Model.TypeShapes.TypeShape, KaVE.Model\"," +
-                   "\"TypeHierarchy\":{\"$type\":\"KaVE.Model.TypeShapes.TypeHierarchy, KaVE.Model\"," +
-                   "\"Element\":\"CSharp.TypeName:T,P\"," +
-                   "\"Extends\":{\"$type\":\"KaVE.Model.TypeShapes.TypeHierarchy, KaVE.Model\",\"Element\":\"CSharp.TypeName:S,P\",\"Implements\":[]}," +
-                   "\"Implements\":[{\"$type\":\"KaVE.Model.TypeShapes.TypeHierarchy, KaVE.Model\",\"Element\":\"CSharp.TypeName:I,P\",\"Implements\":[]}]}," +
-                   "\"MethodHierarchies\":[" +
-                   "{\"$type\":\"KaVE.Model.TypeShapes.MethodHierarchy, KaVE.Model\"," +
-                   "\"Element\":\"CSharp.MemberNames.MethodName:[T,P] [T,P].M1()\"," +
-                   "\"Super\":\"CSharp.MemberNames.MethodName:[T,P] [T,P].M2()\"," +
-                   "\"First\":\"CSharp.MemberNames.MethodName:[T,P] [T,P].M3()\"}]}";
+            return
+                "{\"$type\":\"KaVE.Model.TypeShapes.TypeShape, KaVE.Model\",\"TypeHierarchy\":{\"$type\":\"KaVE.Model.TypeShapes.TypeHierarchy, KaVE.Model\",\"Element\":\"CSharp.TypeName:T,P\",\"Extends\":{\"$type\":\"KaVE.Model.TypeShapes.TypeHierarchy, KaVE.Model\",\"Element\":\"CSharp.TypeName:S,P\",\"Implements\":[]},\"Implements\":[{\"$type\":\"KaVE.Model.TypeShapes.TypeHierarchy, KaVE.Model\",\"Element\":\"CSharp.TypeName:I,P\",\"Implements\":[]}]},\"MethodHierarchies\":[{\"$type\":\"KaVE.Model.TypeShapes.MethodHierarchy, KaVE.Model\",\"Element\":\"CSharp.MethodName:[T,P] [T,P].M1()\",\"Super\":\"CSharp.MethodName:[T,P] [T,P].M2()\",\"First\":\"CSharp.MethodName:[T,P] [T,P].M3()\"}]}";
         }
     }
 }

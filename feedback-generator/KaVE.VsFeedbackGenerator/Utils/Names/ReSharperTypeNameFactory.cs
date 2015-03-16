@@ -21,7 +21,7 @@ using System;
 using JetBrains.ReSharper.Psi;
 using KaVE.JetBrains.Annotations;
 using KaVE.Model.Names;
-using KaVE.Model.Names.CSharp.TypeNames;
+using KaVE.Model.Names.CSharp;
 using KaVE.Utils.Assertion;
 
 namespace KaVE.VsFeedbackGenerator.Utils.Names

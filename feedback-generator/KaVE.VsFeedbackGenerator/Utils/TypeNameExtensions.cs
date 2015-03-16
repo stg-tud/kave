@@ -20,7 +20,7 @@
 using System;
 using KaVE.JetBrains.Annotations;
 using KaVE.Model.Names;
-using KaVE.Model.Names.CSharp.TypeNames;
+using KaVE.Model.Names.CSharp;
 
 namespace KaVE.VsFeedbackGenerator.Utils
 {

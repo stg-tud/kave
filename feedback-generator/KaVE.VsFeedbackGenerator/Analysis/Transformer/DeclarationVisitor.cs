@@ -22,7 +22,7 @@ using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.Util;
 using KaVE.Model.Names;
-using KaVE.Model.Names.CSharp.TypeNames;
+using KaVE.Model.Names.CSharp;
 using KaVE.Model.SSTs.Impl;
 using KaVE.Model.SSTs.Impl.Declarations;
 using KaVE.VsFeedbackGenerator.Utils.Names;

@@ -19,8 +19,6 @@
 
 using KaVE.Model.Names;
 using KaVE.Model.Names.CSharp;
-using KaVE.Model.Names.CSharp.MemberNames;
-using KaVE.Model.Names.CSharp.TypeNames;
 
 namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 {

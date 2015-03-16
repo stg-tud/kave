@@ -19,7 +19,7 @@
 
 using System.Collections.Generic;
 using KaVE.Model.Names;
-using KaVE.Model.Names.CSharp.MemberNames;
+using KaVE.Model.Names.CSharp;
 using NUnit.Framework;
 
 namespace KaVE.Utils.Tests

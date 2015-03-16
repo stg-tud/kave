@@ -32,7 +32,9 @@ namespace KaVE.Model.Names
     {
         private const string NameQualifierPrefix = "KaVE.Model.Names.";
         private const char Separator = ':';
-        private const BindingFlags GetMethodBindingFlags = BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
+
+        private const BindingFlags GetMethodBindingFlags =
+            BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
 
         public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
         {

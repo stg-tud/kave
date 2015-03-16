@@ -19,7 +19,6 @@
 
 using KaVE.Model.Names;
 using KaVE.Model.Names.CSharp;
-using KaVE.Model.Names.CSharp.MemberNames;
 using KaVE.Model.TypeShapes;
 using KaVE.VsFeedbackGenerator.SessionManager.Anonymize;
 using KaVE.VsFeedbackGenerator.SessionManager.Anonymize.CompletionEvents;

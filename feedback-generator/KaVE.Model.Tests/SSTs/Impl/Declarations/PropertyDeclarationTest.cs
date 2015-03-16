@@ -19,7 +19,7 @@
 
 using KaVE.Model.Collections;
 using KaVE.Model.Names;
-using KaVE.Model.Names.CSharp.MemberNames;
+using KaVE.Model.Names.CSharp;
 using KaVE.Model.SSTs;
 using KaVE.Model.SSTs.Impl.Declarations;
 using KaVE.Model.SSTs.Impl.Statements;

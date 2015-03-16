@@ -171,9 +171,6 @@
     <Compile Include="Utils\Json\MemoryStreamUtils.cs" />
     <Compile Include="Utils\Json\JsonSerializationSuite\IDEEventSerializationTest.cs" />
     <Compile Include="Utils\Json\JsonSerializationSuite\NamesSerializationTest.cs" />
-    <Compile Include="Utils\Json\JsonSerializationSuite\ProposalCollectionSerializationTest.cs" />
-    <Compile Include="Utils\Json\JsonSerializationSuite\ProposalSelectionSerializationTest.cs" />
-    <Compile Include="Utils\Json\JsonSerializationSuite\ProposalSerializationTest.cs" />
     <Compile Include="Utils\Json\JsonSerializationSuite\CompletionEventSuite\TypeShapeSerializationTest.cs" />
     <Compile Include="Utils\Json\SerializationTestTarget.cs" />
     <Compile Include="Utils\Logging\LogFileManagerTest.cs" />

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-using KaVE.Model.Names.CSharp.MemberNames;
+using KaVE.Model.Names.CSharp;
 using NUnit.Framework;
 
 namespace KaVE.Model.Tests.Names.CSharp.MemberNames

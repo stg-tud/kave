@@ -21,7 +21,7 @@ using System;
 using KaVE.JetBrains.Annotations;
 using KaVE.Model.Utils;
 
-namespace KaVE.Model.Names.CSharp.MemberNames
+namespace KaVE.Model.Names.CSharp
 {
     public class FieldName : MemberName, IFieldName
     {

@@ -21,7 +21,7 @@
 using System.Runtime.Serialization;
 using KaVE.JetBrains.Annotations;
 using KaVE.Model.Names;
-using KaVE.Model.Names.CSharp.MemberNames;
+using KaVE.Model.Names.CSharp;
 using KaVE.Utils;
 
 namespace KaVE.Model.TypeShapes

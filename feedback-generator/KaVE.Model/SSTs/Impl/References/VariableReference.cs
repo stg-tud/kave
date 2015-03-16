@@ -17,16 +17,19 @@
  *    - Sebastian Proksch
  */
 
+using System.Runtime.Serialization;
 using KaVE.Model.SSTs.References;
 using KaVE.Model.SSTs.Visitor;
 using KaVE.Utils;
 
 namespace KaVE.Model.SSTs.Impl.References
 {
+    [DataContract]
     public class VariableReference : IVariableReference
     {
         public const string DefaultIdentifier = "";
 
+        [DataMember]
         public string Identifier { get; set; }
 
         public bool IsMissing

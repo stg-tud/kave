@@ -32,7 +32,7 @@ namespace KaVE.Model.SSTs.Impl.References
         public MethodReference()
         {
             Reference = new VariableReference();
-            MethodName = Names.CSharp.MemberNames.MethodName.UnknownName;
+            MethodName = Names.CSharp.MethodName.UnknownName;
         }
 
         protected bool Equals(MethodReference other)

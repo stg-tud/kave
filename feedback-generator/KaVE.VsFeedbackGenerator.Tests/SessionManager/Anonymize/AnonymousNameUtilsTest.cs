@@ -21,9 +21,6 @@
 using KaVE.JetBrains.Annotations;
 using KaVE.Model.Names;
 using KaVE.Model.Names.CSharp;
-using KaVE.Model.Names.CSharp.MemberNames;
-using KaVE.Model.Names.CSharp.Modularization;
-using KaVE.Model.Names.CSharp.TypeNames;
 using KaVE.Model.Names.VisualStudio;
 using KaVE.VsFeedbackGenerator.SessionManager.Anonymize;
 using NUnit.Framework;

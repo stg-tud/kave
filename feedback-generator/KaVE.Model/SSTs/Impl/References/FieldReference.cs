@@ -32,7 +32,7 @@ namespace KaVE.Model.SSTs.Impl.References
         public FieldReference()
         {
             Reference = new VariableReference();
-            FieldName = Names.CSharp.MemberNames.FieldName.UnknownName;
+            FieldName = Names.CSharp.FieldName.UnknownName;
         }
 
         protected bool Equals(FieldReference other)

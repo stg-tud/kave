@@ -20,7 +20,7 @@
 using System.Linq;
 using KaVE.JetBrains.Annotations;
 
-namespace KaVE.Model.Names.CSharp.TypeNames
+namespace KaVE.Model.Names.CSharp
 {
     public class StructTypeName : TypeName
     {

@@ -20,7 +20,6 @@
 using System.Collections.Generic;
 using JetBrains.Util;
 using KaVE.Model.Names.CSharp;
-using KaVE.Model.Names.CSharp.MemberNames;
 using KaVE.Model.TypeShapes;
 using NUnit.Framework;
 

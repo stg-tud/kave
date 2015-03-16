@@ -21,7 +21,7 @@ using System;
 using System.Linq;
 using KaVE.Model.Utils;
 
-namespace KaVE.Model.Names.CSharp.Modularization
+namespace KaVE.Model.Names.CSharp
 {
     public class AssemblyName : Name, IAssemblyName
     {
@@ -69,8 +69,8 @@ namespace KaVE.Model.Names.CSharp.Modularization
             {
                 var fragments = GetFragments();
                 return fragments.Length <= 1
-                    ? Modularization.AssemblyVersion.UnknownName
-                    : Modularization.AssemblyVersion.Get(fragments[1]);
+                    ? CSharp.AssemblyVersion.UnknownName
+                    : CSharp.AssemblyVersion.Get(fragments[1]);
             }
         }
 

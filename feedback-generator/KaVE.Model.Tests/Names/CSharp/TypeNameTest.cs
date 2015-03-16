@@ -18,7 +18,6 @@
  */
 
 using KaVE.Model.Names.CSharp;
-using KaVE.Model.Names.CSharp.Modularization;
 using NUnit.Framework;
 
 namespace KaVE.Model.Tests.Names.CSharp

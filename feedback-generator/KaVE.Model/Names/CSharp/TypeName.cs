@@ -21,8 +21,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using KaVE.JetBrains.Annotations;
-using KaVE.Model.Names.CSharp.Modularization;
-using KaVE.Model.Names.CSharp.TypeNames;
 using KaVE.Model.Utils;
 using KaVE.Utils.Assertion;
 

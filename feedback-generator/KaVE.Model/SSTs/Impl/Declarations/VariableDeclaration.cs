@@ -17,6 +17,7 @@
  *    - Sebastian Proksch
  */
 
+using System.Runtime.Serialization;
 using KaVE.Model.Names;
 using KaVE.Model.Names.CSharp;
 using KaVE.Model.SSTs.Declarations;
@@ -27,9 +28,13 @@ using KaVE.Utils;
 
 namespace KaVE.Model.SSTs.Impl.Declarations
 {
+    [DataContract]
     public class VariableDeclaration : IVariableDeclaration
     {
+        [DataMember]
         public IVariableReference Reference { get; set; }
+
+        [DataMember]
         public ITypeName Type { get; set; }
 
         public bool IsMissing

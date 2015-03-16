@@ -17,7 +17,7 @@
 using System.Linq;
 using KaVE.Model.Events.CompletionEvent;
 using KaVE.Model.Names;
-using KaVE.Model.Names.CSharp.MemberNames;
+using KaVE.Model.Names.CSharp;
 using KaVE.Model.TypeShapes;
 using NUnit.Framework;
 

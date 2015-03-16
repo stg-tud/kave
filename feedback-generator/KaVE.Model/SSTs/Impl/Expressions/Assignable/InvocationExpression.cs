@@ -38,7 +38,7 @@ namespace KaVE.Model.SSTs.Impl.Expressions.Assignable
         public InvocationExpression()
         {
             Reference = new VariableReference();
-            MethodName = Names.CSharp.MemberNames.MethodName.UnknownName;
+            MethodName = Names.CSharp.MethodName.UnknownName;
             Parameters = Lists.NewList<ISimpleExpression>();
         }
 
