@@ -17,8 +17,8 @@
  *    - Sebastian Proksch
  */
 
-using System.Collections.Generic;
 using KaVE.JetBrains.Annotations;
+using KaVE.Model.Collections;
 using KaVE.Model.Names;
 
 namespace KaVE.Model.TypeShapes
@@ -44,7 +44,7 @@ namespace KaVE.Model.TypeShapes
         ///     The interfaces directly implemented by the type at this level.
         /// </summary>
         [NotNull]
-        ISet<ITypeHierarchy> Implements { get; }
+        IKaVESet<ITypeHierarchy> Implements { get; }
 
         /// <summary>
         ///     <returns>Whether this type extends some superclass or implements any interfaces</returns>

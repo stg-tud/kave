@@ -61,7 +61,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize.CompletionEvents
             };
         }
 
-        private IList<IVariableReference> Anonymize(IEnumerable<IVariableReference> references)
+        private IKaVEList<IVariableReference> Anonymize(IEnumerable<IVariableReference> references)
         {
             return Lists.NewListFrom(references.Select(r => (IVariableReference) _refAnon.Visit(r, 0)));
         }
@@ -122,7 +122,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize.CompletionEvents
             return new UnknownExpression();
         }
 
-        public IList<ISimpleExpression> Anonymize(IEnumerable<ISimpleExpression> exprs)
+        private IKaVEList<ISimpleExpression> Anonymize(IEnumerable<ISimpleExpression> exprs)
         {
             return Lists.NewListFrom(exprs.Select(Anonymize));
         }

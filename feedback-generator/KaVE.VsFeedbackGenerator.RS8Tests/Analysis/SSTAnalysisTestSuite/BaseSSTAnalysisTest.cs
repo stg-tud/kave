@@ -19,6 +19,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using KaVE.Model.Collections;
 using KaVE.Model.Names;
 using KaVE.Model.Names.CSharp;
 using KaVE.Model.SSTs;
@@ -91,6 +92,11 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             Assert.Fail("method not found");
         }
 
+
+        protected IEnumerable<ISimpleExpression> RefExprs(params string[] ids)
+        {
+            return Lists.NewListFrom(ids.Select(RefExpr));
+        }
 
         protected ISimpleExpression RefExpr(string id)
         {

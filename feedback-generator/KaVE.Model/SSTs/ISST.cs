@@ -17,8 +17,8 @@
  *    - Sebastian Proksch
  */
 
-using System.Collections.Generic;
 using KaVE.JetBrains.Annotations;
+using KaVE.Model.Collections;
 using KaVE.Model.Names;
 using KaVE.Model.SSTs.Declarations;
 using KaVE.Model.SSTs.Visitor;
@@ -31,24 +31,24 @@ namespace KaVE.Model.SSTs
         ITypeName EnclosingType { get; }
 
         [NotNull]
-        ISet<IFieldDeclaration> Fields { get; }
+        IKaVESet<IFieldDeclaration> Fields { get; }
 
         [NotNull]
-        ISet<IPropertyDeclaration> Properties { get; }
+        IKaVESet<IPropertyDeclaration> Properties { get; }
 
         [NotNull]
-        ISet<IMethodDeclaration> Methods { get; }
+        IKaVESet<IMethodDeclaration> Methods { get; }
 
         [NotNull]
-        ISet<IEventDeclaration> Events { get; }
+        IKaVESet<IEventDeclaration> Events { get; }
 
         [NotNull]
-        ISet<IDelegateDeclaration> Delegates { get; }
+        IKaVESet<IDelegateDeclaration> Delegates { get; }
 
         [NotNull]
-        ISet<IMethodDeclaration> EntryPoints { get; }
+        IKaVESet<IMethodDeclaration> EntryPoints { get; }
 
         [NotNull]
-        ISet<IMethodDeclaration> NonEntryPoints { get; }
+        IKaVESet<IMethodDeclaration> NonEntryPoints { get; }
     }
 }

@@ -31,7 +31,7 @@ namespace KaVE.Model.Events.CompletionEvent
     public class ProposalCollection : IProposalCollection
     {
         [DataMember]
-        public IList<IProposal> Proposals { get; private set; }
+        public IKaVEList<IProposal> Proposals { get; private set; }
 
         public ProposalCollection()
         {

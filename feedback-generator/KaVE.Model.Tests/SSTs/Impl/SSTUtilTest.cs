@@ -99,7 +99,7 @@ namespace KaVE.Model.Tests.SSTs.Impl
         [Test]
         public void SettingValues()
         {
-            var a = SSTUtil.InvocationExpression("a1", GetMethod("A2"), VarRefExpr("a3"));
+            var a = SSTUtil.InvocationExpression("a1", GetMethod("A2"), Refs("a3"));
             Assert.AreEqual(new VariableReference {Identifier = "a1"}, a.Reference);
             Assert.AreEqual(GetMethod("A2"), a.MethodName);
             Assert.AreEqual(Refs("a3"), a.Parameters);
@@ -108,7 +108,7 @@ namespace KaVE.Model.Tests.SSTs.Impl
         [Test]
         public void InvocationExpression_Static()
         {
-            var a = SSTUtil.InvocationExpression(GetStaticMethod("B2"), VarRefExpr("c2"));
+            var a = SSTUtil.InvocationExpression(GetStaticMethod("B2"), Refs("c2"));
             Assert.AreEqual(new VariableReference(), a.Reference);
             Assert.AreEqual(GetStaticMethod("B2"), a.MethodName);
             Assert.AreEqual(Refs("c2"), a.Parameters);
@@ -117,7 +117,7 @@ namespace KaVE.Model.Tests.SSTs.Impl
         [Test]
         public void InvocationExpression_NonStatic()
         {
-            var a = SSTUtil.InvocationExpression("a1", GetMethod("B1"), VarRefExpr("c1"));
+            var a = SSTUtil.InvocationExpression("a1", GetMethod("B1"), Refs("c1"));
             Assert.AreEqual(SSTUtil.VariableReference("a1"), a.Reference);
             Assert.AreEqual(GetMethod("B1"), a.MethodName);
             Assert.AreEqual(Refs("c1"), a.Parameters);
@@ -126,7 +126,7 @@ namespace KaVE.Model.Tests.SSTs.Impl
         [Test]
         public void InvocationStatement_Static()
         {
-            var actual = SSTUtil.InvocationStatement(GetStaticMethod("B2"), VarRefExpr("c2"));
+            var actual = SSTUtil.InvocationStatement(GetStaticMethod("B2"), Refs("c2"));
             var expected = new ExpressionStatement
             {
                 Expression = new InvocationExpression
@@ -141,7 +141,7 @@ namespace KaVE.Model.Tests.SSTs.Impl
         [Test]
         public void InvocationStatement_NonStatic()
         {
-            var actual = SSTUtil.InvocationStatement("a", GetMethod("B2"), VarRefExpr("c2"));
+            var actual = SSTUtil.InvocationStatement("a", GetMethod("B2"), Refs("c2"));
             var expected = new ExpressionStatement
             {
                 Expression = new InvocationExpression
@@ -168,13 +168,13 @@ namespace KaVE.Model.Tests.SSTs.Impl
         [Test, ExpectedException(typeof (AssertException))]
         public void CustomConstructor_NonStaticAssert()
         {
-            SSTUtil.InvocationExpression("a1", GetStaticMethod("B1"), VarRefExpr("c1"));
+            SSTUtil.InvocationExpression("a1", GetStaticMethod("B1"), Refs("c1"));
         }
 
         [Test, ExpectedException(typeof (AssertException))]
         public void CustomConstructor_StaticAssert()
         {
-            SSTUtil.InvocationExpression(GetMethod("B2"), VarRefExpr("c2"));
+            SSTUtil.InvocationExpression(GetMethod("B2"), Refs("c2"));
         }
 
         private static IMethodName GetMethod(string simpleName)

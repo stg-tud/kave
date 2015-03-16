@@ -17,7 +17,6 @@
  *    - Sebastian Proksch
  */
 
-using System.Collections.Generic;
 using KaVE.Model.Collections;
 using KaVE.Model.SSTs.Declarations;
 using KaVE.Model.SSTs.Expressions.Assignable;
@@ -28,8 +27,8 @@ namespace KaVE.Model.SSTs.Impl.Expressions.Assignable
 {
     public class LambdaExpression : ILambdaExpression
     {
-        public IList<IVariableDeclaration> Parameters { get; set; }
-        public IList<IStatement> Body { get; set; }
+        public IKaVEList<IVariableDeclaration> Parameters { get; set; }
+        public IKaVEList<IStatement> Body { get; set; }
 
         public LambdaExpression()
         {

@@ -17,6 +17,7 @@
  *    - Sebastian Proksch
  */
 
+using System.Collections.Generic;
 using System.Linq;
 using KaVE.Model.Collections;
 using KaVE.Model.Names;
@@ -75,7 +76,8 @@ namespace KaVE.Model.SSTs.Impl
             };
         }
 
-        public static IExpressionStatement InvocationStatement(IMethodName name, params ISimpleExpression[] parameters)
+        public static IExpressionStatement InvocationStatement(IMethodName name,
+            IEnumerable<ISimpleExpression> parameters)
         {
             return new ExpressionStatement
             {
@@ -84,8 +86,14 @@ namespace KaVE.Model.SSTs.Impl
         }
 
         public static IExpressionStatement InvocationStatement(string id,
+            IMethodName name)
+        {
+            return InvocationStatement(id, name, new ISimpleExpression[] {});
+        }
+
+        public static IExpressionStatement InvocationStatement(string id,
             IMethodName name,
-            params ISimpleExpression[] parameters)
+            IEnumerable<ISimpleExpression> parameters)
         {
             return new ExpressionStatement
             {
@@ -93,7 +101,13 @@ namespace KaVE.Model.SSTs.Impl
             };
         }
 
-        public static IInvocationExpression InvocationExpression(IMethodName name, params ISimpleExpression[] parameters)
+        public static IInvocationExpression InvocationExpression(string id, IMethodName name)
+        {
+            return InvocationExpression(id, name, new ISimpleExpression[] {});
+        }
+
+        public static IInvocationExpression InvocationExpression(IMethodName name,
+            IEnumerable<ISimpleExpression> parameters)
         {
             Asserts.That(name.IsStatic || name.IsConstructor);
             return new InvocationExpression
@@ -105,7 +119,7 @@ namespace KaVE.Model.SSTs.Impl
 
         public static IInvocationExpression InvocationExpression(string id,
             IMethodName name,
-            params ISimpleExpression[] parameters)
+            IEnumerable<ISimpleExpression> parameters)
         {
             Asserts.Not(name.IsStatic || name.IsConstructor);
             return new InvocationExpression

@@ -17,8 +17,8 @@
  *    - Sebastian Proksch
  */
 
-using System.Collections.Generic;
 using KaVE.JetBrains.Annotations;
+using KaVE.Model.Collections;
 using KaVE.Model.SSTs.Expressions;
 
 namespace KaVE.Model.SSTs.Blocks
@@ -26,15 +26,15 @@ namespace KaVE.Model.SSTs.Blocks
     public interface IForLoop : IStatement
     {
         [NotNull]
-        IList<IStatement> Init { get; }
+        IKaVEList<IStatement> Init { get; }
 
         [NotNull]
         ILoopHeaderExpression Condition { get; }
 
         [NotNull]
-        IList<IStatement> Step { get; }
+        IKaVEList<IStatement> Step { get; }
 
         [NotNull]
-        IList<IStatement> Body { get; }
+        IKaVEList<IStatement> Body { get; }
     }
 }

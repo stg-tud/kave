@@ -17,7 +17,6 @@
  *    - Sebastian Proksch
  */
 
-using System.Collections.Generic;
 using KaVE.Model.Collections;
 using KaVE.Model.SSTs.Blocks;
 using KaVE.Model.SSTs.Impl.References;
@@ -30,8 +29,8 @@ namespace KaVE.Model.SSTs.Impl.Blocks
     public class SwitchBlock : ISwitchBlock
     {
         public IVariableReference Reference { get; set; }
-        public IList<ICaseBlock> Sections { get; set; }
-        public IList<IStatement> DefaultSection { get; set; }
+        public IKaVEList<ICaseBlock> Sections { get; set; }
+        public IKaVEList<IStatement> DefaultSection { get; set; }
 
         public SwitchBlock()
         {

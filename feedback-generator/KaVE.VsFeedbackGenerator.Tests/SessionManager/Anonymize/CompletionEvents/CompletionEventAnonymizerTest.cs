@@ -43,7 +43,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize.CompletionEven
                         new Proposal {Name = TypeName.Get("OtherType, Assembly, 1.2.3.4")},
                         new Proposal {Name = NamespaceName.Get("Some.Namepsace")}
                     }),
-                Selections = new[]
+                Selections = 
                 {
                     new ProposalSelection(new Proposal {Name = TypeName.Get("MyType, EnclosingProject")})
                     {

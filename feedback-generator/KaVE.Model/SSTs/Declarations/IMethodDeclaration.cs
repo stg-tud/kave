@@ -17,8 +17,8 @@
  *    - Sebastian Proksch
  */
 
-using System.Collections.Generic;
 using KaVE.JetBrains.Annotations;
+using KaVE.Model.Collections;
 using KaVE.Model.Names;
 
 namespace KaVE.Model.SSTs.Declarations
@@ -31,6 +31,6 @@ namespace KaVE.Model.SSTs.Declarations
         bool IsEntryPoint { get; }
 
         [NotNull]
-        IList<IStatement> Body { get; }
+        IKaVEList<IStatement> Body { get; }
     }
 }

@@ -223,7 +223,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             forLoop.Init.Add(SSTUtil.AssignmentToLocal("i", new ConstantValueExpression()));
             forLoop.Condition = SSTUtil.ReferenceExprToVariable("i");
 
-            forLoop.Body.Add(SSTUtil.InvocationStatement(Fix.ConsoleWrite(Fix.Int), RefExpr("i")));
+            forLoop.Body.Add(SSTUtil.InvocationStatement(Fix.ConsoleWrite(Fix.Int), RefExprs("i")));
             //forLoop.Body.Add(new StatementCompletion());
 
             mA.Body.Add(forLoop);
@@ -251,7 +251,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             forLoop.Init.Add(SSTUtil.AssignmentToLocal("i", new ConstantValueExpression()));
             forLoop.Condition = SSTUtil.ReferenceExprToVariable("i");
 
-            forLoop.Body.Add(SSTUtil.InvocationStatement(Fix.ConsoleWrite(Fix.Int), RefExpr("i")));
+            forLoop.Body.Add(SSTUtil.InvocationStatement(Fix.ConsoleWrite(Fix.Int), RefExprs("i")));
             //forLoop.Body.Add(new StatementCompletion());
 
             mA.Body.Add(forLoop);
@@ -294,7 +294,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
                 LoopedReference = Ref("$0"),
                 Declaration = SSTUtil.Declare("n", Fix.Int)
             };
-            forEachLoop.Body.Add(SSTUtil.InvocationStatement(Fix.ConsoleWrite(Fix.Int), RefExpr("n")));
+            forEachLoop.Body.Add(SSTUtil.InvocationStatement(Fix.ConsoleWrite(Fix.Int), RefExprs("n")));
             //forEachLoop.Body.Add(new StatementCompletion());
 
             mA.Body.Add(forEachLoop);
@@ -323,10 +323,13 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             mA.Body.Add(SSTUtil.Declare("o", Fix.Object));
 
             mA.Body.Add(SSTUtil.Declare("o", Fix.Object));
-            mA.Body.Add(SSTUtil.AssignmentToLocal("o", SSTUtil.InvocationExpression(MethodName.Get("Object.ctor()"))));
+            mA.Body.Add(
+                SSTUtil.AssignmentToLocal(
+                    "o",
+                    SSTUtil.InvocationExpression(MethodName.Get("Object.ctor()"), RefExprs())));
 
             var usingBlock = new UsingBlock {Reference = Ref("o")};
-            usingBlock.Body.Add(SSTUtil.InvocationStatement(MethodName.Get("Console.Write"), RefExpr("n")));
+            usingBlock.Body.Add(SSTUtil.InvocationStatement(MethodName.Get("Console.Write"), RefExprs("n")));
 
             mA.Body.Add(usingBlock);
 
@@ -357,7 +360,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
                 SSTUtil.InvocationStatement(
                     "s",
                     MethodName.Get(string.Format("[{0}] [{1}].WriteByte([{2}] value)", Fix.Void, stream, Fix.Byte)),
-                    RefExpr("$0")));
+                    RefExprs("$0")));
             //usingBlock.Body.Add(new StatementCompletion());
             mA.Body.Add(usingBlock);
 
@@ -409,28 +412,29 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             tryBlock.Body.Add(
                 SSTUtil.InvocationStatement(
                     MethodName.Get(
-                        string.Format("static [{0}] [System.Console, mscorlib, 4.0.0.0].WriteLine()", Fix.Void))));
+                        string.Format("static [{0}] [System.Console, mscorlib, 4.0.0.0].WriteLine()", Fix.Void)),
+                    RefExprs()));
             //tryBlock.Body.Add(new StatementCompletion());
 
             var namedCatch = new CatchBlock {Exception = SSTUtil.Declare("e", Fix.IOException)};
             namedCatch.Body.Add(SSTUtil.Declare("$0", Fix.Int));
             namedCatch.Body.Add(
                 SSTUtil.AssignmentToLocal("$0", SSTUtil.InvocationExpression("e", Fix.GetHashCode(Fix.Object))));
-            namedCatch.Body.Add(SSTUtil.InvocationStatement(Fix.ConsoleWrite(Fix.Int), RefExpr("$0")));
+            namedCatch.Body.Add(SSTUtil.InvocationStatement(Fix.ConsoleWrite(Fix.Int), RefExprs("$0")));
             tryBlock.CatchBlocks.Add(namedCatch);
             var unnamedCatch = new CatchBlock {Exception = SSTUtil.Declare(null, Fix.Exception)};
             unnamedCatch.Body.Add(SSTUtil.Declare("$1", Fix.String));
             unnamedCatch.Body.Add(SSTUtil.AssignmentToLocal("$1", new ConstantValueExpression()));
-            unnamedCatch.Body.Add(SSTUtil.InvocationStatement(Fix.ConsoleWrite(Fix.String), RefExpr("$1")));
+            unnamedCatch.Body.Add(SSTUtil.InvocationStatement(Fix.ConsoleWrite(Fix.String), RefExprs("$1")));
             tryBlock.CatchBlocks.Add(unnamedCatch);
             var catchAll = new CatchBlock();
             catchAll.Body.Add(SSTUtil.Declare("$2", Fix.String));
             catchAll.Body.Add(SSTUtil.AssignmentToLocal("$2", new ConstantValueExpression()));
-            catchAll.Body.Add(SSTUtil.InvocationStatement(Fix.ConsoleWrite(Fix.String), RefExpr("$2")));
+            catchAll.Body.Add(SSTUtil.InvocationStatement(Fix.ConsoleWrite(Fix.String), RefExprs("$2")));
             tryBlock.CatchBlocks.Add(catchAll);
             tryBlock.Finally.Add(SSTUtil.Declare("$3", Fix.String));
             tryBlock.Finally.Add(SSTUtil.AssignmentToLocal("$3", new ConstantValueExpression()));
-            tryBlock.Finally.Add(SSTUtil.InvocationStatement(Fix.ConsoleWrite(Fix.String), RefExpr("$3")));
+            tryBlock.Finally.Add(SSTUtil.InvocationStatement(Fix.ConsoleWrite(Fix.String), RefExprs("$3")));
 
             mA.Body.Add(tryBlock);
 

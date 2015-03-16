@@ -71,7 +71,7 @@ namespace KaVE.TestUtils.Model.Events.CompletionEvent
             return new Proposal {Name = Name.Get(Guid.NewGuid().ToString())};
         }
 
-        public static IList<Proposal> CreatePredictableProposals(uint numberOfProposals)
+        private static IEnumerable<Proposal> CreatePredictableProposals(uint numberOfProposals)
         {
             var proposals = new List<Proposal>();
             for (var i = 0; i < numberOfProposals; i++)
@@ -86,7 +86,7 @@ namespace KaVE.TestUtils.Model.Events.CompletionEvent
             return CreatePredictableProposals(numberOfProposals).Select(p => new ProposalSelection(p)).ToList();
         }
 
-        public static Proposal CreatePredictableProposal()
+        private static Proposal CreatePredictableProposal()
         {
             return new Proposal {Name = Name.Get(NextCounter().ToString(CultureInfo.InvariantCulture))};
         }
@@ -106,7 +106,7 @@ namespace KaVE.TestUtils.Model.Events.CompletionEvent
             return hierarchies;
         }
 
-        public static MethodHierarchy GetAnonymousMethodHierarchy()
+        private static MethodHierarchy GetAnonymousMethodHierarchy()
         {
             return new MethodHierarchy(TestNameFactory.GetAnonymousMethodName());
         }

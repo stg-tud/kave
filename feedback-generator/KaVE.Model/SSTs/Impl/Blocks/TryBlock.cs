@@ -17,7 +17,6 @@
  *    - Sebastian Proksch
  */
 
-using System.Collections.Generic;
 using KaVE.Model.Collections;
 using KaVE.Model.SSTs.Blocks;
 using KaVE.Model.SSTs.Visitor;
@@ -27,9 +26,9 @@ namespace KaVE.Model.SSTs.Impl.Blocks
 {
     public class TryBlock : ITryBlock
     {
-        public IList<IStatement> Body { get; set; }
-        public IList<ICatchBlock> CatchBlocks { get; set; }
-        public IList<IStatement> Finally { get; set; }
+        public IKaVEList<IStatement> Body { get; set; }
+        public IKaVEList<ICatchBlock> CatchBlocks { get; set; }
+        public IKaVEList<IStatement> Finally { get; set; }
 
         public TryBlock()
         {

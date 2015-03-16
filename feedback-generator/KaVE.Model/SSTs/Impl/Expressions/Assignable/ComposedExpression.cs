@@ -17,7 +17,6 @@
  *    - Sebastian Proksch
  */
 
-using System.Collections.Generic;
 using KaVE.Model.Collections;
 using KaVE.Model.SSTs.Expressions.Assignable;
 using KaVE.Model.SSTs.References;
@@ -28,7 +27,7 @@ namespace KaVE.Model.SSTs.Impl.Expressions.Assignable
 {
     public class ComposedExpression : IComposedExpression
     {
-        public IList<IVariableReference> References { get; set; }
+        public IKaVEList<IVariableReference> References { get; set; }
 
         public ComposedExpression()
         {

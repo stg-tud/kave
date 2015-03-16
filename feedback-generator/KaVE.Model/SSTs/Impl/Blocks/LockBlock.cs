@@ -17,7 +17,6 @@
  *    - Sebastian Proksch
  */
 
-using System.Collections.Generic;
 using KaVE.Model.Collections;
 using KaVE.Model.SSTs.Blocks;
 using KaVE.Model.SSTs.Impl.References;
@@ -30,7 +29,7 @@ namespace KaVE.Model.SSTs.Impl.Blocks
     public class LockBlock : ILockBlock
     {
         public IVariableReference Reference { get; set; }
-        public IList<IStatement> Body { get; set; }
+        public IKaVEList<IStatement> Body { get; set; }
 
         public LockBlock()
         {

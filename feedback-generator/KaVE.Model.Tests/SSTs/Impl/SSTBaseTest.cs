@@ -17,7 +17,6 @@
  *    - Sebastian Proksch
  */
 
-using System.Collections.Generic;
 using System.Linq;
 using KaVE.Model.Collections;
 using KaVE.Model.Names;
@@ -48,7 +47,7 @@ namespace KaVE.Model.Tests.SSTs.Impl
             return new VariableReference {Identifier = id};
         }
 
-        protected IList<IVariableReference> Refs(params string[] strRefs)
+        protected IKaVEList<IVariableReference> Refs(params string[] strRefs)
         {
             var refs = strRefs.ToList().Select(SomeVarRef);
             return Lists.NewListFrom(refs);
@@ -60,11 +59,11 @@ namespace KaVE.Model.Tests.SSTs.Impl
             return MethodName.Get(methodName);
         }
 
-        protected ISimpleExpression[] RefExprs(params string[] ids)
+        protected IKaVEList<ISimpleExpression> RefExprs(params string[] ids)
         {
-            return
-                ids.Select<string, ISimpleExpression>(
-                    id => new ReferenceExpression {Reference = new VariableReference {Identifier = id}}).ToArray();
+            var exprs = ids.Select<string, ISimpleExpression>(
+                id => new ReferenceExpression {Reference = new VariableReference {Identifier = id}});
+            return Lists.NewListFrom(exprs);
         }
     }
 }

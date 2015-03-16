@@ -17,8 +17,8 @@
  *    - Sebastian Proksch
  */
 
-using System.Collections.Generic;
 using KaVE.JetBrains.Annotations;
+using KaVE.Model.Collections;
 using KaVE.Model.SSTs.Declarations;
 using KaVE.Model.SSTs.References;
 
@@ -33,6 +33,6 @@ namespace KaVE.Model.SSTs.Blocks
         IVariableReference LoopedReference { get; }
 
         [NotNull]
-        IList<IStatement> Body { get; }
+        IKaVEList<IStatement> Body { get; }
     }
 }

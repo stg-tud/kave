@@ -17,7 +17,6 @@
  *    - Sebastian Proksch
  */
 
-using System.Collections.Generic;
 using KaVE.Model.Collections;
 using KaVE.Model.SSTs.Blocks;
 using KaVE.Model.SSTs.Expressions;
@@ -29,10 +28,10 @@ namespace KaVE.Model.SSTs.Impl.Blocks
 {
     public class ForLoop : IForLoop
     {
-        public IList<IStatement> Init { get; set; }
+        public IKaVEList<IStatement> Init { get; set; }
         public ILoopHeaderExpression Condition { get; set; }
-        public IList<IStatement> Step { get; set; }
-        public IList<IStatement> Body { get; set; }
+        public IKaVEList<IStatement> Step { get; set; }
+        public IKaVEList<IStatement> Body { get; set; }
 
         public ForLoop()
         {

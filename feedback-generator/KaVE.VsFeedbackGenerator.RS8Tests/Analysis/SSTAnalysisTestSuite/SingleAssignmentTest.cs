@@ -231,14 +231,14 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
                     SSTUtil.InvocationExpression(
                         "u2",
                         MethodName.Get(string.Format("[{0}] [N.U, TestProject].Plus([{0}] i)", Fix.Int)),
-                        RefExpr("$0"))));
+                        RefExprs("$0"))));
             mA.Body.Add(
                 SSTUtil.AssignmentToLocal(
                     "i",
                     SSTUtil.InvocationExpression(
                         "u1",
                         MethodName.Get(string.Format("[{0}] [N.U, TestProject].Plus([{0}] i)", Fix.Int)),
-                        RefExpr("$1"))));
+                        RefExprs("$1"))));
 
             AssertAllMethods(mA);
         }

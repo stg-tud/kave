@@ -17,7 +17,6 @@
  *    - Sebastian Proksch
  */
 
-using System.Collections.Generic;
 using System.Runtime.Serialization;
 using KaVE.Model.Collections;
 using KaVE.Utils;
@@ -32,7 +31,7 @@ namespace KaVE.Model.TypeShapes
         public ITypeHierarchy TypeHierarchy { get; set; }
 
         [DataMember]
-        public ISet<IMethodHierarchy> MethodHierarchies { get; set; }
+        public IKaVESet<IMethodHierarchy> MethodHierarchies { get; set; }
 
         public TypeShape()
         {
@@ -40,7 +39,7 @@ namespace KaVE.Model.TypeShapes
             MethodHierarchies = Sets.NewHashSet<IMethodHierarchy>();
         }
 
-        protected bool Equals(TypeShape other)
+        private bool Equals(TypeShape other)
         {
             return Equals(TypeHierarchy, other.TypeHierarchy) &&
                    Equals(MethodHierarchies, other.MethodHierarchies);

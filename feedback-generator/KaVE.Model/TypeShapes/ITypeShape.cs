@@ -17,8 +17,8 @@
  *    - Sebastian Proksch
  */
 
-using System.Collections.Generic;
 using KaVE.JetBrains.Annotations;
+using KaVE.Model.Collections;
 
 namespace KaVE.Model.TypeShapes
 {
@@ -35,6 +35,6 @@ namespace KaVE.Model.TypeShapes
         ///     declaration).
         /// </summary>
         [NotNull]
-        ISet<IMethodHierarchy> MethodHierarchies { get; set; }
+        IKaVESet<IMethodHierarchy> MethodHierarchies { get; set; }
     }
 }

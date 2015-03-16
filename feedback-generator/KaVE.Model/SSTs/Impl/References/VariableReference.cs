@@ -27,7 +27,7 @@ namespace KaVE.Model.SSTs.Impl.References
     [DataContract]
     public class VariableReference : IVariableReference
     {
-        public const string DefaultIdentifier = "";
+        private const string DefaultIdentifier = "";
 
         [DataMember]
         public string Identifier { get; set; }

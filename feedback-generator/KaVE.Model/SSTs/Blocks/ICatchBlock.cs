@@ -17,8 +17,8 @@
  *    - Sebastian Proksch
  */
 
-using System.Collections.Generic;
 using KaVE.JetBrains.Annotations;
+using KaVE.Model.Collections;
 using KaVE.Model.SSTs.Declarations;
 
 namespace KaVE.Model.SSTs.Blocks
@@ -29,6 +29,6 @@ namespace KaVE.Model.SSTs.Blocks
         IVariableDeclaration Exception { get; }
 
         [NotNull]
-        IList<IStatement> Body { get; }
+        IKaVEList<IStatement> Body { get; }
     }
 }

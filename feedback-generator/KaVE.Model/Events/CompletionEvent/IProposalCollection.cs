@@ -19,6 +19,7 @@
 
 using System.Collections.Generic;
 using KaVE.JetBrains.Annotations;
+using KaVE.Model.Collections;
 
 namespace KaVE.Model.Events.CompletionEvent
 {
@@ -33,7 +34,7 @@ namespace KaVE.Model.Events.CompletionEvent
         ///     The proposals contained in this collection.
         /// </summary>
         [NotNull]
-        IList<IProposal> Proposals { get; }
+        IKaVEList<IProposal> Proposals { get; }
 
         /// <summary>
         ///     Convenience method for collection initialization.

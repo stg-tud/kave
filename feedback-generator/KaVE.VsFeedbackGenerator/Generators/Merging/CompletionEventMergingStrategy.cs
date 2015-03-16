@@ -18,8 +18,8 @@
  */
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
+using KaVE.Model.Collections;
 using KaVE.Model.Events;
 using KaVE.Model.Events.CompletionEvent;
 
@@ -87,17 +87,18 @@ namespace KaVE.VsFeedbackGenerator.Generators.Merging
             };
         }
 
-        private static IList<IProposalSelection> GetRebasedSelections(ICompletionEvent evt2,
+        private static IKaVEList<IProposalSelection> GetRebasedSelections(ICompletionEvent evt2,
             DateTime? oldBaseTime,
             DateTime? newBaseTime)
         {
             var rebaseOffset = newBaseTime - oldBaseTime;
-            return evt2.Selections.Select(
-                selection => new ProposalSelection
-                {
-                    Proposal = selection.Proposal,
-                    SelectedAfter = selection.SelectedAfter + rebaseOffset
-                }).ToList<IProposalSelection>();
+            return Lists.NewListFrom<IProposalSelection>(
+                evt2.Selections.Select(
+                    selection => new ProposalSelection
+                    {
+                        Proposal = selection.Proposal,
+                        SelectedAfter = selection.SelectedAfter + rebaseOffset
+                    }));
         }
     }
 }

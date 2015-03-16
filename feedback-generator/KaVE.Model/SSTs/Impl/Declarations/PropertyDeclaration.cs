@@ -17,7 +17,6 @@
  *    - Sebastian Proksch
  */
 
-using System.Collections.Generic;
 using KaVE.Model.Collections;
 using KaVE.Model.Names;
 using KaVE.Model.Names.CSharp;
@@ -30,8 +29,8 @@ namespace KaVE.Model.SSTs.Impl.Declarations
     public class PropertyDeclaration : IPropertyDeclaration
     {
         public IPropertyName Name { get; set; }
-        public IList<IStatement> Get { get; set; }
-        public IList<IStatement> Set { get; set; }
+        public IKaVEList<IStatement> Get { get; set; }
+        public IKaVEList<IStatement> Set { get; set; }
 
         public PropertyDeclaration()
         {

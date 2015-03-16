@@ -17,7 +17,6 @@
  *    - Sebastian Proksch
  */
 
-using System.Collections.Generic;
 using KaVE.Model.Collections;
 using KaVE.Model.SSTs.Blocks;
 using KaVE.Model.SSTs.Expressions;
@@ -30,8 +29,8 @@ namespace KaVE.Model.SSTs.Impl.Blocks
     public class IfElseBlock : IIfElseBlock
     {
         public ISimpleExpression Condition { get; set; }
-        public IList<IStatement> Then { get; set; }
-        public IList<IStatement> Else { get; set; }
+        public IKaVEList<IStatement> Then { get; set; }
+        public IKaVEList<IStatement> Else { get; set; }
 
         public IfElseBlock()
         {

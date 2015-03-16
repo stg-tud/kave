@@ -17,8 +17,8 @@
  *    - Sebastian Proksch
  */
 
-using System.Collections.Generic;
 using KaVE.JetBrains.Annotations;
+using KaVE.Model.Collections;
 using KaVE.Model.SSTs.Expressions;
 
 namespace KaVE.Model.SSTs.Blocks
@@ -29,9 +29,9 @@ namespace KaVE.Model.SSTs.Blocks
         ISimpleExpression Condition { get; }
 
         [NotNull]
-        IList<IStatement> Then { get; }
+        IKaVEList<IStatement> Then { get; }
 
         [NotNull]
-        IList<IStatement> Else { get; }
+        IKaVEList<IStatement> Else { get; }
     }
 }

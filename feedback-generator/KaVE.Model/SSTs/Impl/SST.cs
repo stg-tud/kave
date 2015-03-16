@@ -17,7 +17,6 @@
  *    - Sebastian Proksch
  */
 
-using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using KaVE.Model.Collections;
@@ -36,26 +35,26 @@ namespace KaVE.Model.SSTs.Impl
         public ITypeName EnclosingType { get; set; }
 
         [DataMember]
-        public ISet<IFieldDeclaration> Fields { get; set; }
+        public IKaVESet<IFieldDeclaration> Fields { get; set; }
 
         [DataMember]
-        public ISet<IPropertyDeclaration> Properties { get; set; }
+        public IKaVESet<IPropertyDeclaration> Properties { get; set; }
 
         [DataMember]
-        public ISet<IMethodDeclaration> Methods { get; set; }
+        public IKaVESet<IMethodDeclaration> Methods { get; set; }
 
         [DataMember]
-        public ISet<IEventDeclaration> Events { get; set; }
+        public IKaVESet<IEventDeclaration> Events { get; set; }
 
         [DataMember]
-        public ISet<IDelegateDeclaration> Delegates { get; set; }
+        public IKaVESet<IDelegateDeclaration> Delegates { get; set; }
 
-        public ISet<IMethodDeclaration> EntryPoints
+        public IKaVESet<IMethodDeclaration> EntryPoints
         {
             get { return Sets.NewHashSetFrom(Methods.AsEnumerable().Where(m => m.IsEntryPoint)); }
         }
 
-        public ISet<IMethodDeclaration> NonEntryPoints
+        public IKaVESet<IMethodDeclaration> NonEntryPoints
         {
             get { return Sets.NewHashSetFrom(Methods.AsEnumerable().Where(m => !m.IsEntryPoint)); }
         }

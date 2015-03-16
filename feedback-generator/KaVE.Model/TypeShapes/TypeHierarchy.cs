@@ -17,7 +17,6 @@
  *    - Sebastian Proksch
  */
 
-using System.Collections.Generic;
 using System.Runtime.Serialization;
 using KaVE.Model.Collections;
 using KaVE.Model.Names;
@@ -37,7 +36,7 @@ namespace KaVE.Model.TypeShapes
         public ITypeHierarchy Extends { get; set; }
 
         [DataMember]
-        public ISet<ITypeHierarchy> Implements { get; set; }
+        public IKaVESet<ITypeHierarchy> Implements { get; set; }
 
         public bool HasSupertypes
         {

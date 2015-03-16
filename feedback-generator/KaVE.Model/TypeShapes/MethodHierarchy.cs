@@ -58,7 +58,7 @@ namespace KaVE.Model.TypeShapes
             return this.Equals(obj, Equals);
         }
 
-        protected bool Equals(MethodHierarchy other)
+        private bool Equals(MethodHierarchy other)
         {
             return Element.Equals(other.Element) && Equals(Super, other.Super) && Equals(First, other.First);
         }

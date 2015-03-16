@@ -17,8 +17,8 @@
  *    - Sebastian Proksch
  */
 
-using System.Collections.Generic;
 using KaVE.JetBrains.Annotations;
+using KaVE.Model.Collections;
 
 namespace KaVE.Model.SSTs.Expressions.LoopHeader
 {
@@ -30,6 +30,6 @@ namespace KaVE.Model.SSTs.Expressions.LoopHeader
     public interface ILoopHeaderBlockExpression : ILoopHeaderExpression
     {
         [NotNull]
-        IList<IStatement> Body { get; }
+        IKaVEList<IStatement> Body { get; }
     }
 }

@@ -17,7 +17,6 @@
  *    - Sebastian Proksch
  */
 
-using System.Collections.Generic;
 using KaVE.Model.Collections;
 using KaVE.Model.Names;
 using KaVE.Model.Names.CSharp;
@@ -31,7 +30,7 @@ namespace KaVE.Model.SSTs.Impl.Declarations
     {
         public IMethodName Name { get; set; }
         public bool IsEntryPoint { get; set; }
-        public IList<IStatement> Body { get; set; }
+        public IKaVEList<IStatement> Body { get; set; }
 
         public MethodDeclaration()
         {

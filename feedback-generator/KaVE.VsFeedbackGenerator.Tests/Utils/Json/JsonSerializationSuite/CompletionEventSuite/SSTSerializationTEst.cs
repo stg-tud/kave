@@ -17,7 +17,6 @@
  *    - Sebastian Proksch
  */
 
-using System.Collections.Generic;
 using KaVE.Model.Collections;
 using KaVE.Model.Names.CSharp;
 using KaVE.Model.SSTs;
@@ -120,12 +119,12 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.JsonSerializationSuite.Compl
             };
         }
 
-        private static IList<IStatement> CreateBody()
+        private static IKaVEList<IStatement> CreateBody()
         {
             // TODO add values to statements to create valid configurations
-            var anyVarRef = new VariableReference();
-            var anyStmt = new BreakStatement();
-            var anyExpr = new ConstantValueExpression();
+            //var anyVarRef = new VariableReference();
+            //var anyStmt = new BreakStatement();
+            //var anyExpr = new ConstantValueExpression();
 
             return Lists.NewList(
                 //

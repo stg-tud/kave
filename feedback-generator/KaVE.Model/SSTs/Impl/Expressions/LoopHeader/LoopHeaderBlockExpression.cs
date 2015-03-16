@@ -17,7 +17,6 @@
  *    - Sebastian Proksch
  */
 
-using System.Collections.Generic;
 using KaVE.Model.Collections;
 using KaVE.Model.SSTs.Expressions.LoopHeader;
 using KaVE.Model.SSTs.Visitor;
@@ -27,7 +26,7 @@ namespace KaVE.Model.SSTs.Impl.Expressions.LoopHeader
 {
     public class LoopHeaderBlockExpression : ILoopHeaderBlockExpression
     {
-        public IList<IStatement> Body { get; set; }
+        public IKaVEList<IStatement> Body { get; set; }
 
         public LoopHeaderBlockExpression()
         {

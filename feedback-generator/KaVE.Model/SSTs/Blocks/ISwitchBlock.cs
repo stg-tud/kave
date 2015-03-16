@@ -17,8 +17,8 @@
  *    - Sebastian Proksch
  */
 
-using System.Collections.Generic;
 using KaVE.JetBrains.Annotations;
+using KaVE.Model.Collections;
 using KaVE.Model.SSTs.References;
 
 namespace KaVE.Model.SSTs.Blocks
@@ -29,9 +29,9 @@ namespace KaVE.Model.SSTs.Blocks
         IVariableReference Reference { get; }
 
         [NotNull]
-        IList<ICaseBlock> Sections { get; }
+        IKaVEList<ICaseBlock> Sections { get; }
 
         [NotNull]
-        IList<IStatement> DefaultSection { get; }
+        IKaVEList<IStatement> DefaultSection { get; }
     }
 }

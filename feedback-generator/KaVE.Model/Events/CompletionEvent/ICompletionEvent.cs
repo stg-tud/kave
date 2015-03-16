@@ -17,8 +17,8 @@
  *    - Seabstian Proksch
  */
 
-using System.Collections.Generic;
 using KaVE.JetBrains.Annotations;
+using KaVE.Model.Collections;
 
 namespace KaVE.Model.Events.CompletionEvent
 {
@@ -64,7 +64,7 @@ namespace KaVE.Model.Events.CompletionEvent
         ///     the order of selection.
         /// </summary>
         [NotNull]
-        IList<IProposalSelection> Selections { get; }
+        IKaVEList<IProposalSelection> Selections { get; }
 
         /// <summary>
         ///     The kind of interaction that termined the completion, e.g., by a mouse click.

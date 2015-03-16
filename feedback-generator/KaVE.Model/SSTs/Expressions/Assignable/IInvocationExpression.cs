@@ -17,8 +17,8 @@
  *    - Sebastian Proksch
  */
 
-using System.Collections.Generic;
 using KaVE.JetBrains.Annotations;
+using KaVE.Model.Collections;
 using KaVE.Model.Names;
 using KaVE.Model.SSTs.References;
 
@@ -33,6 +33,6 @@ namespace KaVE.Model.SSTs.Expressions.Assignable
         IMethodName MethodName { get; }
 
         [NotNull]
-        IList<ISimpleExpression> Parameters { get; }
+        IKaVEList<ISimpleExpression> Parameters { get; }
     }
 }

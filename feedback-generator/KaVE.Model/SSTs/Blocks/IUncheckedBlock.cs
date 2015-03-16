@@ -17,14 +17,14 @@
  *    - Sebastian Proksch
  */
 
-using System.Collections.Generic;
 using KaVE.JetBrains.Annotations;
+using KaVE.Model.Collections;
 
 namespace KaVE.Model.SSTs.Blocks
 {
     public interface IUncheckedBlock : IStatement
     {
         [NotNull]
-        IList<IStatement> Body { get; }
+        IKaVEList<IStatement> Body { get; }
     }
 }

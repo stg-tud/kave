@@ -17,8 +17,8 @@
  *    - Sebastian Proksch
  */
 
-using System.Collections.Generic;
 using KaVE.JetBrains.Annotations;
+using KaVE.Model.Collections;
 using KaVE.Model.Names;
 
 namespace KaVE.Model.SSTs.Declarations
@@ -29,9 +29,9 @@ namespace KaVE.Model.SSTs.Declarations
         IPropertyName Name { get; }
 
         [NotNull]
-        IList<IStatement> Get { get; }
+        IKaVEList<IStatement> Get { get; }
 
         [NotNull]
-        IList<IStatement> Set { get; }
+        IKaVEList<IStatement> Set { get; }
     }
 }

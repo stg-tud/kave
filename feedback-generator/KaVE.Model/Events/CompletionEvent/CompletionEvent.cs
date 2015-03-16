@@ -19,7 +19,6 @@
  */
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using KaVE.JetBrains.Annotations;
@@ -41,7 +40,7 @@ namespace KaVE.Model.Events.CompletionEvent
         public string Prefix { get; set; }
 
         [DataMember]
-        public IList<IProposalSelection> Selections { get; set; }
+        public IKaVEList<IProposalSelection> Selections { get; set; }
 
         [DataMember]
         public Trigger TerminatedBy { get; set; }

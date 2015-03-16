@@ -17,7 +17,6 @@
  *    - Sebastian Proksch
  */
 
-using System.Collections.Generic;
 using KaVE.Model.Collections;
 using KaVE.Model.SSTs.Blocks;
 using KaVE.Model.SSTs.Expressions;
@@ -29,7 +28,7 @@ namespace KaVE.Model.SSTs.Impl.Blocks
     public class CaseBlock : ICaseBlock
     {
         public ISimpleExpression Label { get; set; }
-        public IList<IStatement> Body { get; set; }
+        public IKaVEList<IStatement> Body { get; set; }
 
         public CaseBlock()
         {

@@ -107,7 +107,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize.CompletionEvents
             };
         }
 
-        private IList<ICaseBlock> Anonymize(IEnumerable<ICaseBlock> caseBlocks)
+        private IKaVEList<ICaseBlock> Anonymize(IEnumerable<ICaseBlock> caseBlocks)
         {
             return Lists.NewListFrom(caseBlocks.Select(Anonymize));
         }
@@ -131,7 +131,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize.CompletionEvents
             };
         }
 
-        private IList<ICatchBlock> Anonymize(IEnumerable<ICatchBlock> catchBlocks)
+        private IKaVEList<ICatchBlock> Anonymize(IEnumerable<ICatchBlock> catchBlocks)
         {
             return Lists.NewListFrom(catchBlocks.Select(Anonymize));
         }
@@ -262,7 +262,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize.CompletionEvents
             return expr == null ? null : (ILoopHeaderExpression) expr.Accept(_expr, 0);
         }
 
-        public virtual IAssignableExpression Anonymize([NotNull] IAssignableExpression expr)
+        private IAssignableExpression Anonymize([NotNull] IAssignableExpression expr)
         {
             var lambda = expr as ILambdaExpression;
             if (lambda != null)
@@ -276,12 +276,12 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize.CompletionEvents
             return (IAssignableExpression) expr.Accept(_expr, 0);
         }
 
-        public virtual IList<IStatement> Anonymize(IList<IStatement> body)
+        public IKaVEList<IStatement> Anonymize(IEnumerable<IStatement> body)
         {
             return Lists.NewListFrom(body.Select(Anonymize));
         }
 
-        public virtual IStatement Anonymize([NotNull] IStatement stmt)
+        private IStatement Anonymize([NotNull] IStatement stmt)
         {
             return stmt.Accept(this, 0);
         }

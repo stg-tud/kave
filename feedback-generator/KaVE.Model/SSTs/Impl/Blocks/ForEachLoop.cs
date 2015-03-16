@@ -17,7 +17,6 @@
  *    - Sebastian Proksch
  */
 
-using System.Collections.Generic;
 using KaVE.Model.Collections;
 using KaVE.Model.SSTs.Blocks;
 using KaVE.Model.SSTs.Declarations;
@@ -33,7 +32,7 @@ namespace KaVE.Model.SSTs.Impl.Blocks
     {
         public IVariableDeclaration Declaration { get; set; }
         public IVariableReference LoopedReference { get; set; }
-        public IList<IStatement> Body { get; set; }
+        public IKaVEList<IStatement> Body { get; set; }
 
         public ForEachLoop()
         {
