@@ -45,6 +45,17 @@ namespace KaVE.Model.Tests.Collections
         }
 
         [Test]
+        public void ItemsCanBeAdded()
+        {
+            var a = Sets.NewHashSet<string>();
+            Assert.True(a.Add("a"));
+            Assert.False(a.Add("a"));
+            var b = Sets.NewHashSet("a");
+            Assert.AreEqual(a, b);
+            Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
+        }
+
+        [Test]
         public void TwoEmptySets()
         {
             var a = Sets.NewHashSet<string>();
@@ -120,6 +131,13 @@ namespace KaVE.Model.Tests.Collections
 
             var sut = Sets.NewHashSet(a);
             Assert.True(sut.Contains(b));
+        }
+
+        [Test, ExpectedException(typeof (AssertException))]
+        public void NullsCannotBeAdded()
+        {
+            // ReSharper disable once AssignNullToNotNullAttribute
+            Sets.NewHashSet<object>().Add(null);
         }
 
         [Test, ExpectedException(typeof (AssertException))]

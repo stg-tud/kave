@@ -19,6 +19,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using KaVE.JetBrains.Annotations;
 using KaVE.Utils;
 using KaVE.Utils.Assertion;
 
@@ -26,17 +27,17 @@ namespace KaVE.Model.Collections
 {
     public class Sets
     {
-        public static ISet<T> NewHashSet<T>()
+        public static IKaVESet<T> NewHashSet<T>()
         {
             return new KaVEHashSet<T>();
         }
 
-        public static ISet<T> NewHashSet<T>(params T[] ts)
+        public static IKaVESet<T> NewHashSet<T>(params T[] ts)
         {
             return NewHashSetFrom(ts);
         }
 
-        public static ISet<T> NewHashSetFrom<T>(IEnumerable<T> ts)
+        public static IKaVESet<T> NewHashSetFrom<T>(IEnumerable<T> ts)
         {
             var s = new KaVEHashSet<T>();
             foreach (var t in ts)
@@ -48,9 +49,15 @@ namespace KaVE.Model.Collections
         }
     }
 
-    public class KaVEHashSet<T> : HashSet<T>
+    public class KaVEHashSet<T> : HashSet<T>, IKaVESet<T>
     {
         private const int Seed = 1367;
+
+        public new bool Add(T item)
+        {
+            Asserts.NotNull(item);
+            return base.Add(item);
+        }
 
         public override bool Equals(object obj)
         {
@@ -67,5 +74,11 @@ namespace KaVE.Model.Collections
             var init = typeof (T).GetHashCode();
             return Seed*this.Aggregate(init, (current, e) => current + e.GetHashCode());
         }
+    }
+
+    // ReSharper disable once InconsistentNaming
+    public interface IKaVESet<T> : ISet<T>
+    {
+        new bool Add([NotNull] T item);
     }
 }

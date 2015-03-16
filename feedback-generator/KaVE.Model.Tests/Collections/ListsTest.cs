@@ -44,6 +44,16 @@ namespace KaVE.Model.Tests.Collections
         }
 
         [Test]
+        public void ItemsCanBeAdded()
+        {
+            var a = Lists.NewList<string>();
+            a.Add("a");
+            var b = Lists.NewList("a");
+            Assert.AreEqual(a, b);
+            Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
+        }
+
+        [Test]
         public void TwoEmptyLists()
         {
             var a = Lists.NewList<string>();
@@ -114,6 +124,13 @@ namespace KaVE.Model.Tests.Collections
             var a = Lists.NewListFrom(input);
             var b = Lists.NewList(1, 2, 3);
             Assert.AreEqual(a, b);
+        }
+
+        [Test, ExpectedException(typeof (AssertException))]
+        public void NullsCannotBeAdded()
+        {
+            // ReSharper disable once AssignNullToNotNullAttribute
+            Lists.NewList<object>().Add(null);
         }
 
         [Test, ExpectedException(typeof (AssertException))]

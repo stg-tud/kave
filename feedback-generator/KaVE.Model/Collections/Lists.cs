@@ -19,6 +19,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using KaVE.JetBrains.Annotations;
 using KaVE.Utils;
 using KaVE.Utils.Assertion;
 
@@ -26,17 +27,17 @@ namespace KaVE.Model.Collections
 {
     public class Lists
     {
-        public static IList<T> NewList<T>()
+        public static IKaVEList<T> NewList<T>()
         {
             return new KaVEList<T>();
         }
 
-        public static IList<T> NewList<T>(params T[] ts)
+        public static IKaVEList<T> NewList<T>(params T[] ts)
         {
             return NewListFrom(ts);
         }
 
-        public static IList<T> NewListFrom<T>(IEnumerable<T> ts)
+        public static IKaVEList<T> NewListFrom<T>(IEnumerable<T> ts)
         {
             var s = new KaVEList<T>();
             foreach (var t in ts)
@@ -48,9 +49,15 @@ namespace KaVE.Model.Collections
         }
     }
 
-    public class KaVEList<T> : List<T>
+    public class KaVEList<T> : List<T>, IKaVEList<T>
     {
         private const int Seed = 1371;
+
+        public new void Add(T item)
+        {
+            Asserts.NotNull(item);
+            base.Add(item);
+        }
 
         public override bool Equals(object obj)
         {
@@ -67,5 +74,11 @@ namespace KaVE.Model.Collections
             var init = typeof (T).GetHashCode();
             return Seed*this.Aggregate(init, (current, e) => Seed*current + e.GetHashCode());
         }
+    }
+
+    // ReSharper disable once InconsistentNaming
+    public interface IKaVEList<T> : IList<T>
+    {
+        new void Add([NotNull] T item);
     }
 }
