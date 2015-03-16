@@ -35,7 +35,7 @@ namespace KaVE.Model.SSTs.Impl.References
             PropertyName = Names.CSharp.PropertyName.UnknownName;
         }
 
-        protected bool Equals(PropertyReference other)
+        private bool Equals(PropertyReference other)
         {
             return Equals(PropertyName, other.PropertyName);
         }

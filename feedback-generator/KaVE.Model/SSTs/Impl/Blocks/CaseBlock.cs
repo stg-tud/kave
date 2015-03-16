@@ -36,7 +36,7 @@ namespace KaVE.Model.SSTs.Impl.Blocks
             Body = Lists.NewList<IStatement>();
         }
 
-        protected bool Equals(CaseBlock other)
+        private bool Equals(CaseBlock other)
         {
             return Equals(Body, other.Body) && Equals(Label, other.Label);
         }

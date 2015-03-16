@@ -42,7 +42,7 @@ namespace KaVE.Model.SSTs.Impl.References
             Identifier = DefaultIdentifier;
         }
 
-        protected bool Equals(VariableReference other)
+        private bool Equals(VariableReference other)
         {
             return Equals(Identifier, other.Identifier);
         }

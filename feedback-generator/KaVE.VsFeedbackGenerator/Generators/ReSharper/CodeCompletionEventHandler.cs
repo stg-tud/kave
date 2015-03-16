@@ -27,7 +27,7 @@ using JetBrains.ReSharper.Feature.Services.Lookup;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using KaVE.Model.Events;
-using KaVE.Model.Events.CompletionEvent;
+using KaVE.Model.Events.CompletionEvents;
 using KaVE.Utils.Exceptions;
 using KaVE.VsFeedbackGenerator.Analysis;
 using KaVE.VsFeedbackGenerator.CodeCompletion;

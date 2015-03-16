@@ -25,7 +25,7 @@ using JetBrains.ReSharper.Feature.Services.LiveTemplates.Util;
 using JetBrains.ReSharper.Feature.Services.Lookup;
 using JetBrains.ReSharper.LiveTemplates.Templates;
 using KaVE.JetBrains.Annotations;
-using KaVE.Model.Events.CompletionEvent;
+using KaVE.Model.Events.CompletionEvents;
 using KaVE.Model.Names;
 using KaVE.Model.Names.CSharp;
 using KaVE.Model.Names.ReSharper;

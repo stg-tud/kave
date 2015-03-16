@@ -33,7 +33,7 @@ namespace KaVE.Model.SSTs.Impl.Expressions.LoopHeader
             Body = Lists.NewList<IStatement>();
         }
 
-        protected bool Equals(LoopHeaderBlockExpression other)
+        private bool Equals(LoopHeaderBlockExpression other)
         {
             return Body.Equals(other.Body);
         }

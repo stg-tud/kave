@@ -20,7 +20,7 @@
 using System.Linq;
 using System.Text;
 using KaVE.JetBrains.Annotations;
-using KaVE.Model.Events.CompletionEvent;
+using KaVE.Model.Events.CompletionEvents;
 using KaVE.Model.Names;
 using KaVE.Model.Names.CSharp;
 using KaVE.Utils;

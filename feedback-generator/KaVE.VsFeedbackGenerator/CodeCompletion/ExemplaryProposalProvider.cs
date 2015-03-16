@@ -23,7 +23,7 @@ using System.Linq;
 using JetBrains.Application;
 using JetBrains.ReSharper.Feature.Services.CSharp.CodeCompletion.Infrastructure;
 using JetBrains.ReSharper.Feature.Services.Lookup;
-using KaVE.Model.Events.CompletionEvent;
+using KaVE.Model.Events.CompletionEvents;
 using KaVE.Model.ObjectUsage;
 using KaVE.VsFeedbackGenerator.Analysis;
 using KaVE.VsFeedbackGenerator.Utils;

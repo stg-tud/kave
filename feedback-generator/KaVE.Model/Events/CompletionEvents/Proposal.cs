@@ -14,7 +14,6 @@
  * limitations under the License.
  * 
  * Contributors:
- *    - Sven Amann
  *    - Sebastian Proksch
  */
 
@@ -22,7 +21,7 @@ using System.Runtime.Serialization;
 using KaVE.Model.Names;
 using KaVE.Utils;
 
-namespace KaVE.Model.Events.CompletionEvent
+namespace KaVE.Model.Events.CompletionEvents
 {
     [DataContract]
     public class Proposal : IProposal
@@ -48,7 +47,7 @@ namespace KaVE.Model.Events.CompletionEvent
             unchecked
             {
                 var hcRelevance = Relevance.HasValue ? Relevance.Value : -1;
-                return 129487 + ((Name != null ? Name.GetHashCode() : 0) * 397) ^ hcRelevance;
+                return 129487 + ((Name != null ? Name.GetHashCode() : 0)*397) ^ hcRelevance;
             }
         }
     }

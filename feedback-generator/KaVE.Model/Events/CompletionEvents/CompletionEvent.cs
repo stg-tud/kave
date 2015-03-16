@@ -14,7 +14,6 @@
  * limitations under the License.
  * 
  * Contributors:
- *    - Sven Amann
  *    - Sebastian Proksch
  */
 
@@ -25,7 +24,7 @@ using KaVE.JetBrains.Annotations;
 using KaVE.Model.Collections;
 using KaVE.Utils;
 
-namespace KaVE.Model.Events.CompletionEvent
+namespace KaVE.Model.Events.CompletionEvents
 {
     [DataContract]
     public class CompletionEvent : IDEEvent, ICompletionEvent
@@ -63,7 +62,7 @@ namespace KaVE.Model.Events.CompletionEvent
             Selections.Add(new ProposalSelection {Proposal = proposal, SelectedAfter = selectedAfter});
         }
 
-        protected bool Equals(CompletionEvent other)
+        private bool Equals(CompletionEvent other)
         {
             return base.Equals(other) && Equals(Context2, other.Context2) &&
                    Equals(ProposalCollection, other.ProposalCollection) && string.Equals(Prefix, other.Prefix) &&

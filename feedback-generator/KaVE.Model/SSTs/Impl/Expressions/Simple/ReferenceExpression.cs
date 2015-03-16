@@ -33,7 +33,7 @@ namespace KaVE.Model.SSTs.Impl.Expressions.Simple
             Reference = new UnknownReference();
         }
 
-        protected bool Equals(ReferenceExpression other)
+        private bool Equals(ReferenceExpression other)
         {
             return string.Equals(Reference, other.Reference);
         }

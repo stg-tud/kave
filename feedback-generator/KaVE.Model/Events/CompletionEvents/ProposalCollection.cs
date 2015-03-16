@@ -14,7 +14,6 @@
  * limitations under the License.
  * 
  * Contributors:
- *    - Sven Amann
  *    - Sebastian Proksch
  */
 
@@ -25,7 +24,7 @@ using System.Runtime.Serialization;
 using KaVE.Model.Collections;
 using KaVE.Utils;
 
-namespace KaVE.Model.Events.CompletionEvent
+namespace KaVE.Model.Events.CompletionEvents
 {
     [DataContract]
     public class ProposalCollection : IProposalCollection
@@ -66,7 +65,7 @@ namespace KaVE.Model.Events.CompletionEvent
             return Proposals.GetEnumerator();
         }
 
-        protected bool Equals(ProposalCollection other)
+        private bool Equals(ProposalCollection other)
         {
             return Proposals.SequenceEqual(other.Proposals);
         }

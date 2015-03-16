@@ -20,7 +20,7 @@
 
 using System;
 using JetBrains.Util;
-using KaVE.Model.Events.CompletionEvent;
+using KaVE.Model.Events.CompletionEvents;
 using KaVE.Model.Names.CSharp;
 using KaVE.Model.SSTs.Impl;
 using KaVE.Model.TypeShapes;

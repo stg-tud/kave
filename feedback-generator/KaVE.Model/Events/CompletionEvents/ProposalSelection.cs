@@ -14,7 +14,6 @@
  * limitations under the License.
  * 
  * Contributors:
- *    - Sven Amann
  *    - Sebastian Proksch
  */
 
@@ -22,7 +21,7 @@ using System;
 using System.Runtime.Serialization;
 using KaVE.Utils;
 
-namespace KaVE.Model.Events.CompletionEvent
+namespace KaVE.Model.Events.CompletionEvents
 {
     [DataContract]
     public class ProposalSelection : IProposalSelection
@@ -43,7 +42,7 @@ namespace KaVE.Model.Events.CompletionEvent
             Proposal = p;
         }
 
-        protected bool Equals(ProposalSelection other)
+        private bool Equals(ProposalSelection other)
         {
             return SelectedAfter.Equals(other.SelectedAfter) && Equals(Proposal, other.Proposal);
         }

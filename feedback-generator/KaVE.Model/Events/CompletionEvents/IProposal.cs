@@ -17,31 +17,27 @@
  *    - Sebastian Proksch
  */
 
-using System.Collections.Generic;
 using KaVE.JetBrains.Annotations;
-using KaVE.Model.Collections;
+using KaVE.Model.Names;
 
-namespace KaVE.Model.Events.CompletionEvent
+namespace KaVE.Model.Events.CompletionEvents
 {
     /// <summary>
-    ///     An ordered collection of completion proposals as, for example,
-    ///     presented to the code-completion user in the code-completion
-    ///     dropdown.
+    ///     A completion proposal.
     /// </summary>
-    public interface IProposalCollection : IEnumerable<IProposal>
+    public interface IProposal
     {
         /// <summary>
-        ///     The proposals contained in this collection.
+        ///     The name of the element that is proposed for completion.
         /// </summary>
-        [NotNull]
-        IKaVEList<IProposal> Proposals { get; }
+        [CanBeNull]
+        IName Name { get; set; }
 
         /// <summary>
-        ///     Convenience method for collection initialization.
+        ///     The relevance this proposal was ranked with by the code completion. Bigger better.
+        ///     Optional if no relevance is known.
         /// </summary>
-        void Add(IProposal proposal);
-
-        /// <returns>The 0-based position of the given proposal in this collection.</returns>
-        int GetPosition(IProposal proposal);
+        [CanBeNull]
+        int? Relevance { get; set; }
     }
 }

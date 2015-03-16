@@ -17,7 +17,7 @@
  *    - Sebastian Proksch
  */
 
-using KaVE.Model.Events.CompletionEvent;
+using KaVE.Model.Events.CompletionEvents;
 using KaVE.Model.Names.CSharp;
 using NUnit.Framework;
 

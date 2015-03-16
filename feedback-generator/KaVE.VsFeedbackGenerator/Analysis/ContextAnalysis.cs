@@ -24,7 +24,7 @@ using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
 using KaVE.JetBrains.Annotations;
 using KaVE.Model.Collections;
-using KaVE.Model.Events.CompletionEvent;
+using KaVE.Model.Events.CompletionEvents;
 using KaVE.Model.Names;
 using KaVE.Model.Names.CSharp;
 using KaVE.Model.SSTs.Impl;

@@ -35,7 +35,7 @@ namespace KaVE.Model.SSTs.Impl.References
             MethodName = Names.CSharp.MethodName.UnknownName;
         }
 
-        protected bool Equals(MethodReference other)
+        private bool Equals(MethodReference other)
         {
             return Equals(MethodName, other.MethodName);
         }

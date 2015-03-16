@@ -39,7 +39,7 @@ namespace KaVE.Model.SSTs.Impl.Blocks
             DefaultSection = Lists.NewList<IStatement>();
         }
 
-        protected bool Equals(SwitchBlock other)
+        private bool Equals(SwitchBlock other)
         {
             return Equals(Sections, other.Sections) && Equals(DefaultSection, other.DefaultSection) &&
                    string.Equals(Reference, other.Reference);

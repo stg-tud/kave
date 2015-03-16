@@ -20,11 +20,11 @@
 using System;
 using KaVE.Model.Collections;
 using KaVE.Model.Events;
-using KaVE.Model.Events.CompletionEvent;
+using KaVE.Model.Events.CompletionEvents;
 using KaVE.Model.Names.CSharp;
 using KaVE.Model.SSTs.Impl;
 using NUnit.Framework;
-using ComplEvent = KaVE.Model.Events.CompletionEvent.CompletionEvent;
+using ComplEvent = KaVE.Model.Events.CompletionEvents.CompletionEvent;
 
 namespace KaVE.Model.Tests.Events.CompletionEvent
 {

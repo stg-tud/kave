@@ -43,7 +43,7 @@ namespace KaVE.Model.SSTs.Impl.Statements
             return this.Equals(obj, Equals);
         }
 
-        protected bool Equals(Assignment other)
+        private bool Equals(Assignment other)
         {
             return Equals(Reference, other.Reference) && Equals(Expression, other.Expression);
         }

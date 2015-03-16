@@ -41,7 +41,7 @@ namespace KaVE.Model.SSTs.Impl.Expressions.Assignable
             return this.Equals(obj, Equals);
         }
 
-        protected bool Equals(ICompletionExpression other)
+        private bool Equals(ICompletionExpression other)
         {
             var isEqTypeRef = Equals(TypeReference, other.TypeReference);
             var isEqObjRef = Equals(ObjectReference, other.ObjectReference);

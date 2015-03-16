@@ -14,7 +14,6 @@
  * limitations under the License.
  * 
  * Contributors:
- *    - Sven Amann
  *    - Sebastian Proksch
  */
 
@@ -25,7 +24,7 @@ using KaVE.Model.SSTs.Impl;
 using KaVE.Model.TypeShapes;
 using KaVE.Utils;
 
-namespace KaVE.Model.Events.CompletionEvent
+namespace KaVE.Model.Events.CompletionEvents
 {
     /// <summary>
     ///     The context of a code-completion event, i.e., a description of the code environment in which the completion
@@ -51,7 +50,7 @@ namespace KaVE.Model.Events.CompletionEvent
             return this.Equals(obj, Equals);
         }
 
-        protected bool Equals(Context other)
+        private bool Equals(Context other)
         {
             return Equals(TypeShape, other.TypeShape) &&
                    Equals(SST, other.SST);

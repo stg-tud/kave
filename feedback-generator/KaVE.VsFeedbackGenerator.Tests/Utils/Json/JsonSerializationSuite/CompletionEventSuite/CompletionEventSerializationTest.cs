@@ -20,7 +20,7 @@
 
 using System;
 using KaVE.Model.Events;
-using KaVE.Model.Events.CompletionEvent;
+using KaVE.Model.Events.CompletionEvents;
 using KaVE.Model.Names.CSharp;
 using KaVE.Model.Names.VisualStudio;
 using KaVE.Model.SSTs.Impl;
@@ -35,14 +35,22 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.JsonSerializationSuite.Compl
         public void VerifyToJson()
         {
             var actual = GetExample().ToCompactJson();
-            var expected = GetExampleJson();
+            var expected = GetExampleJson_Current();
             Assert.AreEqual(expected, actual);
         }
 
         [Test]
         public void VerifyFromJson()
         {
-            var actual = GetExampleJson().ParseJsonTo<CompletionEvent>();
+            var actual = GetExampleJson_Current().ParseJsonTo<CompletionEvent>();
+            var expected = GetExample();
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void VerifyFromLegacyJson()
+        {
+            var actual = GetExampleJson_Legacy_BeforeRenamingTheCodeCompletionNamespace().ParseJsonTo<CompletionEvent>();
             var expected = GetExample();
             Assert.AreEqual(expected, actual);
         }
@@ -122,11 +130,18 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.JsonSerializationSuite.Compl
             };
         }
 
-        private static string GetExampleJson()
+        private static string GetExampleJson_Legacy_BeforeRenamingTheCodeCompletionNamespace()
         {
             // do not change! keep for checking exception free reading of old formats!
             return
                 "{\"$type\":\"KaVE.Model.Events.CompletionEvent.CompletionEvent, KaVE.Model\",\"Context2\":{\"$type\":\"KaVE.Model.Events.CompletionEvent.Context, KaVE.Model\",\"TypeShape\":{\"$type\":\"KaVE.Model.TypeShapes.TypeShape, KaVE.Model\",\"TypeHierarchy\":{\"$type\":\"KaVE.Model.TypeShapes.TypeHierarchy, KaVE.Model\",\"Element\":\"CSharp.UnknownTypeName:?\",\"Implements\":[]},\"MethodHierarchies\":[]},\"SST\":{\"$type\":\"KaVE.Model.SSTs.Impl.SST, KaVE.Model\",\"EnclosingType\":\"CSharp.TypeName:T,P\",\"Fields\":[],\"Properties\":[],\"Methods\":[],\"Events\":[],\"Delegates\":[]}},\"ProposalCollection\":[{\"$type\":\"KaVE.Model.Events.CompletionEvent.Proposal, KaVE.Model\",\"Name\":\"CSharp.MethodName:[T1,P1] [T1,P2].M1()\",\"Relevance\":42},{\"$type\":\"KaVE.Model.Events.CompletionEvent.Proposal, KaVE.Model\",\"Name\":\"CSharp.MethodName:[T1,P1] [T1,P2].M2()\",\"Relevance\":42}],\"Prefix\":\"Foo\",\"Selections\":[{\"$type\":\"KaVE.Model.Events.CompletionEvent.ProposalSelection, KaVE.Model\",\"Proposal\":{\"$type\":\"KaVE.Model.Events.CompletionEvent.Proposal, KaVE.Model\",\"Name\":\"CSharp.MethodName:[T1,P1] [T1,P2].M1()\",\"Relevance\":42},\"SelectedAfter\":\"18:54:59.6720000\"},{\"$type\":\"KaVE.Model.Events.CompletionEvent.ProposalSelection, KaVE.Model\",\"Proposal\":{\"$type\":\"KaVE.Model.Events.CompletionEvent.Proposal, KaVE.Model\",\"Name\":\"CSharp.MethodName:[T1,P1] [T1,P2].M2()\",\"Relevance\":42},\"SelectedAfter\":\"18:54:59.7830000\"},{\"$type\":\"KaVE.Model.Events.CompletionEvent.ProposalSelection, KaVE.Model\",\"Proposal\":{\"$type\":\"KaVE.Model.Events.CompletionEvent.Proposal, KaVE.Model\",\"Name\":\"CSharp.MethodName:[T1,P1] [T1,P2].M1()\",\"Relevance\":42},\"SelectedAfter\":\"18:54:59.8940000\"}],\"TerminatedBy\":3,\"TerminatedState\":0,\"IDESessionUUID\":\"0xDEADBEEF\",\"KaVEVersion\":\"1.0\",\"TriggeredAt\":\"2012-02-23T18:54:59.549\",\"TriggeredBy\":0,\"Duration\":\"00:00:02\",\"ActiveWindow\":\"VisualStudio.WindowName:vsWindowTypeDocument File.cs\",\"ActiveDocument\":\"VisualStudio.DocumentName:\\\\Path\\\\To\\\\File.cs\"}";
+        }
+
+        private static string GetExampleJson_Current()
+        {
+            // should reflect current serialization format!
+            return
+                "{\"$type\":\"KaVE.Model.Events.CompletionEvents.CompletionEvent, KaVE.Model\",\"Context2\":{\"$type\":\"KaVE.Model.Events.CompletionEvents.Context, KaVE.Model\",\"TypeShape\":{\"$type\":\"KaVE.Model.TypeShapes.TypeShape, KaVE.Model\",\"TypeHierarchy\":{\"$type\":\"KaVE.Model.TypeShapes.TypeHierarchy, KaVE.Model\",\"Element\":\"CSharp.UnknownTypeName:?\",\"Implements\":[]},\"MethodHierarchies\":[]},\"SST\":{\"$type\":\"KaVE.Model.SSTs.Impl.SST, KaVE.Model\",\"EnclosingType\":\"CSharp.TypeName:T,P\",\"Fields\":[],\"Properties\":[],\"Methods\":[],\"Events\":[],\"Delegates\":[]}},\"ProposalCollection\":[{\"$type\":\"KaVE.Model.Events.CompletionEvents.Proposal, KaVE.Model\",\"Name\":\"CSharp.MethodName:[T1,P1] [T1,P2].M1()\",\"Relevance\":42},{\"$type\":\"KaVE.Model.Events.CompletionEvents.Proposal, KaVE.Model\",\"Name\":\"CSharp.MethodName:[T1,P1] [T1,P2].M2()\",\"Relevance\":42}],\"Prefix\":\"Foo\",\"Selections\":[{\"$type\":\"KaVE.Model.Events.CompletionEvents.ProposalSelection, KaVE.Model\",\"Proposal\":{\"$type\":\"KaVE.Model.Events.CompletionEvents.Proposal, KaVE.Model\",\"Name\":\"CSharp.MethodName:[T1,P1] [T1,P2].M1()\",\"Relevance\":42},\"SelectedAfter\":\"18:54:59.6720000\"},{\"$type\":\"KaVE.Model.Events.CompletionEvents.ProposalSelection, KaVE.Model\",\"Proposal\":{\"$type\":\"KaVE.Model.Events.CompletionEvents.Proposal, KaVE.Model\",\"Name\":\"CSharp.MethodName:[T1,P1] [T1,P2].M2()\",\"Relevance\":42},\"SelectedAfter\":\"18:54:59.7830000\"},{\"$type\":\"KaVE.Model.Events.CompletionEvents.ProposalSelection, KaVE.Model\",\"Proposal\":{\"$type\":\"KaVE.Model.Events.CompletionEvents.Proposal, KaVE.Model\",\"Name\":\"CSharp.MethodName:[T1,P1] [T1,P2].M1()\",\"Relevance\":42},\"SelectedAfter\":\"18:54:59.8940000\"}],\"TerminatedBy\":3,\"TerminatedState\":0,\"IDESessionUUID\":\"0xDEADBEEF\",\"KaVEVersion\":\"1.0\",\"TriggeredAt\":\"2012-02-23T18:54:59.549\",\"TriggeredBy\":0,\"Duration\":\"00:00:02\",\"ActiveWindow\":\"VisualStudio.WindowName:vsWindowTypeDocument File.cs\",\"ActiveDocument\":\"VisualStudio.DocumentName:\\\\Path\\\\To\\\\File.cs\"}";
         }
     }
 }

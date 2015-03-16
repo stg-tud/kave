@@ -39,7 +39,7 @@ namespace KaVE.Model.SSTs.Impl.Blocks
             Else = Lists.NewList<IStatement>();
         }
 
-        public bool Equals(IfElseBlock block)
+        private bool Equals(IfElseBlock block)
         {
             return Equals(Condition, block.Condition) && Equals(Then, block.Then) && Equals(Else, block.Else);
         }

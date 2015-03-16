@@ -14,13 +14,13 @@
  * limitations under the License.
  * 
  * Contributors:
- *    - Seabstian Proksch
+ *    - Sebastian Proksch
  */
 
 using KaVE.JetBrains.Annotations;
 using KaVE.Model.Collections;
 
-namespace KaVE.Model.Events.CompletionEvent
+namespace KaVE.Model.Events.CompletionEvents
 {
     /// <summary>
     ///     A completion event represents one cycle through the code completion

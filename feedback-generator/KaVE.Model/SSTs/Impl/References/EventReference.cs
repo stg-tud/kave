@@ -35,7 +35,7 @@ namespace KaVE.Model.SSTs.Impl.References
             EventName = Names.CSharp.EventName.UnknownName;
         }
 
-        protected bool Equals(EventReference other)
+        private bool Equals(EventReference other)
         {
             return Equals(EventName, other.EventName);
         }

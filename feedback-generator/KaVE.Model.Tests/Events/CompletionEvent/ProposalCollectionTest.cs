@@ -18,7 +18,7 @@
  */
 
 using KaVE.Model.Collections;
-using KaVE.Model.Events.CompletionEvent;
+using KaVE.Model.Events.CompletionEvents;
 using NUnit.Framework;
 
 namespace KaVE.Model.Tests.Events.CompletionEvent

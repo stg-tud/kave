@@ -37,7 +37,7 @@ namespace KaVE.Model.SSTs.Impl.Blocks
             Body = Lists.NewList<IStatement>();
         }
 
-        protected bool Equals(UsingBlock other)
+        private bool Equals(UsingBlock other)
         {
             return Body.Equals(other.Body) && Equals(Reference, other.Reference);
         }

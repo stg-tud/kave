@@ -24,7 +24,7 @@ using System.Globalization;
 using System.Linq;
 using KaVE.Model.Collections;
 using KaVE.Model.Events;
-using KaVE.Model.Events.CompletionEvent;
+using KaVE.Model.Events.CompletionEvents;
 using KaVE.Model.Names.CSharp;
 using KaVE.Model.TypeShapes;
 using KaVE.TestUtils.Model.Names;
@@ -45,10 +45,10 @@ namespace KaVE.TestUtils.Model.Events.CompletionEvent
             _counter = 0;
         }
 
-        public static KaVE.Model.Events.CompletionEvent.CompletionEvent CreateAnonymousCompletionEvent(int duration)
+        public static KaVE.Model.Events.CompletionEvents.CompletionEvent CreateAnonymousCompletionEvent(int duration)
         {
             var now = DateTime.Now;
-            return new KaVE.Model.Events.CompletionEvent.CompletionEvent
+            return new KaVE.Model.Events.CompletionEvents.CompletionEvent
             {
                 TriggeredAt = now,
                 TriggeredBy = IDEEvent.Trigger.Shortcut,

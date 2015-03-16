@@ -24,7 +24,7 @@ using JetBrains.Application;
 using JetBrains.ReSharper.Feature.Services.CodeCompletion;
 using JetBrains.ReSharper.Feature.Services.Lookup;
 using JetBrains.TextControl;
-using KaVE.Model.Events.CompletionEvent;
+using KaVE.Model.Events.CompletionEvents;
 using KaVE.Model.Names;
 using KaVE.Model.SSTs;
 using KaVE.VsFeedbackGenerator.RS8Tests.Analysis;

@@ -29,7 +29,6 @@ using NUnit.Framework;
 
 namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json
 {
-    [TestFixture]
     public class JsonLogReaderTest
     {
         private Mock<ILogger> _mockLogger;

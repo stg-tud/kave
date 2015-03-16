@@ -118,6 +118,11 @@ namespace KaVE.VsFeedbackGenerator.Utils.Json
         internal static T ParseJsonTo<T>([NotNull] this string json)
         {
             var settings = CreateSerializationSettings();
+            // TODO get rid of this special case handling
+            if (json.StartsWith("{\"$type\":\"KaVE.Model.Events.CompletionEvent.CompletionEvent, KaVE.Model\""))
+            {
+                json = json.Replace("KaVE.Model.Events.CompletionEvent.", "KaVE.Model.Events.CompletionEvents.");
+            }
             return JsonConvert.DeserializeObject<T>(json, settings);
         }
 

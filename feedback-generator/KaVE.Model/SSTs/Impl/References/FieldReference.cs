@@ -35,7 +35,7 @@ namespace KaVE.Model.SSTs.Impl.References
             FieldName = Names.CSharp.FieldName.UnknownName;
         }
 
-        protected bool Equals(FieldReference other)
+        private bool Equals(FieldReference other)
         {
             return Equals(FieldName, other.FieldName);
         }

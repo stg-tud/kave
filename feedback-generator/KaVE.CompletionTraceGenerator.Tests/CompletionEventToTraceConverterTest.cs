@@ -17,7 +17,7 @@
 using System.Linq;
 using KaVE.CompletionTraceGenerator.Model;
 using KaVE.Model.Events;
-using KaVE.Model.Events.CompletionEvent;
+using KaVE.Model.Events.CompletionEvents;
 using KaVE.VsFeedbackGenerator.Utils.Logging;
 using Moq;
 using NUnit.Framework;
