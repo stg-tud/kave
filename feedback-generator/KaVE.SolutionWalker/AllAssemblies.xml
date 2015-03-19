@@ -1,0 +1,56 @@
+﻿<?xml version="1.0"?>
+<!--
+Copyright 2014 Technische Universität Darmstadt
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+Contributors:
+   - Sven Amann
+-->
+<AllAssemblies xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Product="JetBrains.ReSharper" xmlns="urn:shemas-jetbrains-com:all-assemblies-xml">
+  <KnownConfigurations>
+    <KnownConfiguration Name="CommandLine_Console" Description="Run tool in Console" />
+    <KnownConfiguration Name="CLR4" Description=".NET Framework 4.0, 4.5" />
+  </KnownConfigurations>
+  <ConfigurationAliases>
+    <ConfigurationAlias Name="CommandLine" Configurations="CommandLine_Console" />
+  </ConfigurationAliases>
+  <ProductEditions>
+    <ProductEdition Name="Standalone" DisplayName="KaVE Standalone" Description="KaVE Solution Analyzer">
+      <AssemblyConfigurationRef Name="CommandLine_Console" />
+    </ProductEdition>
+  </ProductEditions>
+  <Assemblies>
+    <Assembly Name="JetBrains.Platform.ReSharper.Interop.WinApi" Configurations="CommandLine" MsiComponentGuid="{FF37F08D-5311-4D5D-856F-454DDFB30F1E}" Subplatform="Platform"/>
+    <Assembly Name="JetBrains.Platform.ReSharper.Shell" Configurations="CommandLine" MsiComponentGuid="{1DBABDA4-6449-43D5-962B-6493BE183C8D}" Subplatform="Platform"/>
+    <Assembly Name="JetBrains.Platform.ReSharper.UI" Configurations="CommandLine"  MsiComponentGuid="{0178CCD4-5A17-4998-8023-C8778E1813ED}" Subplatform="Platform"/>
+    <Assembly Name="JetBrains.Platform.ReSharper.Util" Configurations="CommandLine" MsiComponentGuid="{C3F8647A-A598-4852-980A-AEF86D47DDF1}" Subplatform="Platform"/>
+    <Assembly Name="JetBrains.Platform.ReSharper.Metadata" Configurations="CommandLine" MsiComponentGuid="{B4D85CFB-16E2-43A5-85F4-9F807E624034}" Subplatform="Platform"/>
+    <!--<Assembly Name="JetBrains.Platform.ReSharper.ActionManagement" Configurations="" MsiComponentGuid="{1C54DEF1-756E-431E-878F-8A46B311EB5E}"/>-->
+    <Assembly Name="JetBrains.Platform.ReSharper.ProjectModel" Configurations="CommandLine"  MsiComponentGuid="{D1E8FF1C-3A03-4808-BF17-32DC525DA9C9}" Subplatform="Platform"/>
+    <Assembly Name="JetBrains.Platform.ReSharper.DocumentModel" Configurations="CommandLine" MsiComponentGuid="{7CFCC25C-ADAB-470A-9E47-E568B09FE041}" Subplatform="Platform"/>
+    <!--<Assembly Name="JetBrains.Platform.ReSharper.DocumentManager" Configurations="" MsiComponentGuid="{068ECD1B-A30E-42CA-923E-E850398A464D}" />-->
+    <Assembly Name="JetBrains.Platform.ReSharper.IDE" Configurations="CommandLine"  MsiComponentGuid="{5519E2CB-2BC9-472C-B5B3-A65EB53869AC}" Subplatform="Platform"/>
+    <!--<Assembly Name="JetBrains.Platform.ReSharper.TextControl" Configurations=""  MsiComponentGuid="{BED96E4F-8403-4C98-AA30-7077905F0DA8}"/>-->
+    <!--<Assembly Name="JetBrains.Platform.ReSharper.VSIntegration" Configurations=""  MsiComponentGuid="{6C14B66F-DE6E-4156-A365-C34BD86E70F8}" />-->
+    <!--<Assembly Name="JetBrains.Platform.ReSharper.ActivityTracking" Configurations=""  MsiComponentGuid="{9ADCAA23-1140-4D15-B930-EB00F398CC53}" />-->
+    <!--<Assembly Name="JetBrains.ReSharper.Psi" Configurations="" MsiComponentGuid="{BACCDAC4-B43A-4D5D-8937-12840E9699C6}" />-->
+    <!--<Assembly Name="JetBrains.ReSharper.Psi.CSharp" Configurations="" MsiComponentGuid="{D33C58C7-C349-4EEA-82CF-A1D49D8AC33E}" />-->
+    <!--<Assembly Name="JetBrains.ReSharper.SolutionBuilder" Configurations="" MsiComponentGuid="{E9ACE02C-A6BF-4ACC-9A1C-1A17A32003B3}" />-->
+    <!--<Assembly Name="JetBrains.ReSharper.UnitTestExplorer" Configurations="" MsiComponentGuid="{6934FD6C-580F-438C-AFD0-466377AFDC48}" />-->
+    <!--<Assembly Name="JetBrains.ReSharper.TaskRunnerFramework" Configurations="" MsiComponentGuid="{32005CDB-EF63-4A92-A115-61AAF0943D0D}" />-->
+  </Assemblies>
+  <PlatformReferences/>
+  <ProductReferences/>
+  <GacReferences/>
+</AllAssemblies>

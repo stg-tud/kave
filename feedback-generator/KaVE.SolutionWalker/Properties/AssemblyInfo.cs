@@ -1,6 +1,4 @@
 ﻿using System.Reflection;
-using JetBrains.ActionManagement;
-using JetBrains.Application.PluginSupport;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
@@ -16,10 +14,3 @@ using JetBrains.Application.PluginSupport;
 
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
-
-[assembly: ActionsXml("KaVE.SolutionWalker.Actions.xml")]
-
-// The following information is displayed by ReSharper in the Plugins dialog
-[assembly: PluginTitle("KaVE - Solution Walker")]
-[assembly: PluginDescription("Walks VS solutions and transforms all code to SSTs.")]
-[assembly: PluginVendor("KaVE")]

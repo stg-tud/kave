@@ -14,9 +14,10 @@
  * limitations under the License.
  * 
  * Contributors:
- *    - 
+ *    - Sven Amann
  */
 
+using System.Threading;
 using JetBrains.Application;
 using JetBrains.CommandLine.Common;
 
@@ -25,6 +26,16 @@ namespace KaVE.SolutionWalker
     public static class SolutionWalkerProgram
     {
         public static int Main(string[] args)
+        {
+            var returnCode = 0;
+            var thread = new Thread(() => returnCode = Startup(args));
+            thread.SetApartmentState(ApartmentState.STA); //Set the thread to STA
+            thread.Start();
+            thread.Join();
+            return returnCode;
+        }
+
+        private static int Startup(string[] args)
         {
             return ConsoleApplicationHost.Main(
                 () => (IApplicationDescriptor) new SolutionWalkerProductDescriptor(),

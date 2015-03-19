@@ -14,13 +14,12 @@
  * limitations under the License.
  * 
  * Contributors:
- *    - 
+ *    - Sven Amann
  */
 
 using System;
 using System.Drawing;
 using System.Reflection;
-using JetBrains.Annotations;
 using JetBrains.Application.ExceptionReport;
 using JetBrains.ReSharper;
 
@@ -28,27 +27,19 @@ namespace KaVE.SolutionWalker
 {
     public class SolutionWalkerProductDescriptor : ReSharperApplicationDescriptor
     {
-        public bool CheckCommandList = true;
-        private readonly Version _myOverriddenProductVersion;
-
-        public override Version ProductVersion
-        {
-            get { return _myOverriddenProductVersion ?? base.ProductVersion; }
-        }
-
         public override Assembly AllAssembliesResourceAssembly
         {
             get { return GetType().Assembly; }
         }
 
+        public override string AllAssembliesResourceName
+        {
+            get { return "KaVE.SolutionWalker.AllAssemblies.xml"; }
+        }
+
         public override IIssueTracker IssueTracker
         {
             get { return null; }
-        }
-
-        public override Uri UpdatesFilterUri
-        {
-            get { return new Uri("http://kave.cc"); }
         }
 
         public override Icon ProductIcon
@@ -63,27 +54,17 @@ namespace KaVE.SolutionWalker
 
         public override string ProductName
         {
-            get { return "SolutionWalker"; }
+            get { return "KaVE-SolutionWalker"; }
         }
+
+        //public override Version ProductVersion
+        //{
+        //    get { return new Version(8, 2, 0, 2151); }
+        //}
 
         public override string ProductFullName
         {
             get { return ProductName + " " + ProductVersion; }
-        }
-
-        public SolutionWalkerProductDescriptor() {}
-
-        public SolutionWalkerProductDescriptor([NotNull] Version versionOverride)
-        {
-            if (versionOverride == null)
-            {
-                throw new ArgumentNullException("versionOverride");
-            }
-            _myOverriddenProductVersion = new Version(
-                Math.Max(versionOverride.Major, 0),
-                Math.Max(versionOverride.Minor, 0),
-                Math.Max(versionOverride.Build, 0),
-                Math.Max(versionOverride.Revision, 0));
         }
     }
 }
