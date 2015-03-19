@@ -232,6 +232,15 @@ namespace KaVE.VsFeedbackGenerator.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Export-Wizard.
+        /// </summary>
+        public static string Export_Button {
+            get {
+                return ResourceManager.GetString("Export_Button", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Lade Feedback.
         /// </summary>
         public static string Loading {
@@ -273,6 +282,15 @@ namespace KaVE.VsFeedbackGenerator.Properties {
         public static string Options {
             get {
                 return ResourceManager.GetString("Options", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Einstellungen.
+        /// </summary>
+        public static string Options_Button {
+            get {
+                return ResourceManager.GetString("Options_Button", resourceCulture);
             }
         }
         
@@ -381,6 +399,15 @@ namespace KaVE.VsFeedbackGenerator.Properties {
         public static string Refresh {
             get {
                 return ResourceManager.GetString("Refresh", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Aktualisieren.
+        /// </summary>
+        public static string Refresh_Button {
+            get {
+                return ResourceManager.GetString("Refresh_Button", resourceCulture);
             }
         }
         
@@ -529,7 +556,7 @@ namespace KaVE.VsFeedbackGenerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Die Projektwebseite besuchen....
+        ///   Looks up a localized string similar to Die offizielle Webseite des Projekts öffnen....
         /// </summary>
         public static string VisitHomepage {
             get {
@@ -538,11 +565,29 @@ namespace KaVE.VsFeedbackGenerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Die Seite zum manuellen hochladen von Feedback besuchen.
+        ///   Looks up a localized string similar to Offizielle Webseite.
+        /// </summary>
+        public static string VisitHomepage_Button {
+            get {
+                return ResourceManager.GetString("VisitHomepage_Button", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Die Webseite zum manuellen Hochladen von Feedback öffnen....
         /// </summary>
         public static string VisitUploadPage {
             get {
                 return ResourceManager.GetString("VisitUploadPage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Webseite für manuelles Hochladen.
+        /// </summary>
+        public static string VisitUploadPage_Button {
+            get {
+                return ResourceManager.GetString("VisitUploadPage_Button", resourceCulture);
             }
         }
     }

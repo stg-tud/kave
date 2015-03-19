@@ -67,25 +67,38 @@ Contributors:
                      IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}">
                 <Button ToolTip="{x:Static root:Properties.SessionManager.Refresh}"
                         Click="RefreshButton_OnClick">
-                    <Image Source="/KaVE.VsFeedbackGenerator;Component/Resources/refresh.png" />
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/KaVE.VsFeedbackGenerator;Component/Resources/refresh.png" />
+                        <TextBlock Text="{x:Static root:Properties.SessionManager.Refresh_Button}" Margin="3,0,0,0" />
+                    </StackPanel>
                 </Button>
-                <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
                 <Button ToolTip="{x:Static root:Properties.SessionManager.Export}"
                         Click="Export_OnClick">
-                    <Image Source="/KaVE.VsFeedbackGenerator;Component/Resources/send.png" />
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/KaVE.VsFeedbackGenerator;Component/Resources/send.png" />
+                        <TextBlock Text="{x:Static root:Properties.SessionManager.Export_Button}" Margin="3,0,0,0" />
+                    </StackPanel>
                 </Button>
                 <Button ToolTip="{x:Static root:Properties.SessionManager.VisitUploadPage}"
                         Click="VisitUploadPageButton_OnClick">
-                    <Image Source="/KaVE.VsFeedbackGenerator;Component/Resources/arrow.png" />
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/KaVE.VsFeedbackGenerator;Component/Resources/website.png" />
+                        <TextBlock Text="{x:Static root:Properties.SessionManager.VisitUploadPage_Button}" Margin="3,0,0,0" />
+                    </StackPanel>
                 </Button>
-                <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
                 <Button ToolTip="{x:Static root:Properties.SessionManager.Options}"
                         Click="OpenOptionPage_OnClick">
-                    <Image Source="/KaVE.VsFeedbackGenerator;Component/Resources/options.png" />
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/KaVE.VsFeedbackGenerator;Component/Resources/options.png" />
+                        <TextBlock Text="{x:Static root:Properties.SessionManager.Options_Button}" Margin="3,0,0,0" />
+                    </StackPanel>
                 </Button>
                 <Button ToolTip="{x:Static root:Properties.SessionManager.VisitHomepage}"
                         Click="VisitHomepageButton_OnClick">
-                    <Image Source="/KaVE.VsFeedbackGenerator;Component/Resources/website.png" />
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/KaVE.VsFeedbackGenerator;Component/Resources/website.png" />
+                        <TextBlock Text="{x:Static root:Properties.SessionManager.VisitHomepage_Button}" Margin="3,0,0,0" />
+                    </StackPanel>
                 </Button>
             </ToolBar>
         </ToolBarTray>
