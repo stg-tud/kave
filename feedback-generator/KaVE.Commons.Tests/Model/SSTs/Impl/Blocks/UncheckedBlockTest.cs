@@ -20,6 +20,7 @@
 using KaVE.Commons.Model.SSTs;
 using KaVE.Commons.Model.SSTs.Impl.Blocks;
 using KaVE.Commons.Model.SSTs.Impl.Statements;
+using KaVE.Commons.TestUtils;
 using KaVE.Commons.Utils.Collections;
 using NUnit.Framework;
 
@@ -86,6 +87,12 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Blocks
         {
             var sut = new UncheckedBlock();
             sut.Accept(23).VerifyWithReturn(v => v.Visit(sut, 23));
+        }
+
+        [Test]
+        public void ToStringReflection()
+        {
+            ToStringAssert.Reflection(new UncheckedBlock());
         }
     }
 }

@@ -31,7 +31,7 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Expressions.Assignable
         {
             var sut = new CompletionExpression();
             Assert.AreEqual("", sut.Token);
-            Assert.Null(sut.ObjectReference);
+            Assert.Null(sut.VariableReference);
             Assert.Null(sut.TypeReference);
             Assert.AreNotEqual(0, sut.GetHashCode());
             Assert.AreNotEqual(1, sut.GetHashCode());
@@ -42,11 +42,11 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Expressions.Assignable
         {
             var sut = new CompletionExpression
             {
-                ObjectReference = SomeVarRef("i"),
+                VariableReference = SomeVarRef("i"),
                 TypeReference = TypeName.UnknownName,
                 Token = "t"
             };
-            Assert.AreEqual(SomeVarRef("i"), sut.ObjectReference);
+            Assert.AreEqual(SomeVarRef("i"), sut.VariableReference);
             Assert.AreEqual(TypeName.UnknownName, sut.TypeReference);
             Assert.AreEqual("t", sut.Token);
         }
@@ -65,13 +65,13 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Expressions.Assignable
         {
             var a = new CompletionExpression
             {
-                ObjectReference = SomeVarRef("i"),
+                VariableReference = SomeVarRef("i"),
                 Token = "t",
                 TypeReference = TypeName.UnknownName
             };
             var b = new CompletionExpression
             {
-                ObjectReference = SomeVarRef("i"),
+                VariableReference = SomeVarRef("i"),
                 Token = "t",
                 TypeReference = TypeName.UnknownName
             };
@@ -82,8 +82,8 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Expressions.Assignable
         [Test]
         public void Equality_DifferentObjectReference()
         {
-            var a = new CompletionExpression {ObjectReference = SomeVarRef("i")};
-            var b = new CompletionExpression {ObjectReference = SomeVarRef("j")};
+            var a = new CompletionExpression {VariableReference = SomeVarRef("i")};
+            var b = new CompletionExpression {VariableReference = SomeVarRef("j")};
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
         }

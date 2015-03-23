@@ -456,9 +456,9 @@ namespace KaVE.Commons.Utils.SSTPrinter
 
         public void Visit(ICompletionExpression entity, SSTPrintingContext c)
         {
-            if (entity.ObjectReference != null)
+            if (entity.VariableReference != null)
             {
-                c.Text(entity.ObjectReference.Identifier).Text(".");
+                c.Text(entity.VariableReference.Identifier).Text(".");
             }
             else if (entity.TypeReference != null)
             {

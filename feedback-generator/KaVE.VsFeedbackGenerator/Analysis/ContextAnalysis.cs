@@ -22,13 +22,14 @@ using System.Linq;
 using JetBrains.ReSharper.Feature.Services.CSharp.CodeCompletion.Infrastructure;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
-using KaVE.Commons.Utils.Collections;
-using KaVE.JetBrains.Annotations;
 using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.SSTs.Impl;
+using KaVE.Commons.Utils.Collections;
 using KaVE.Commons.Utils.Exceptions;
+using KaVE.JetBrains.Annotations;
+using KaVE.VsFeedbackGenerator.Analysis.CompletionTarget;
 using KaVE.VsFeedbackGenerator.Analysis.Transformer;
 using KaVE.VsFeedbackGenerator.Utils.Names;
 
@@ -45,36 +46,31 @@ namespace KaVE.VsFeedbackGenerator.Analysis
             _logger = logger;
         }
 
-        public static Context Analyze(CSharpCodeCompletionContext rsContext, ILogger logger)
+        public static ContextAnalysisResult Analyze(CSharpCodeCompletionContext rsContext, ILogger logger)
         {
-            return new ContextAnalysis(logger).AnalyzeInternal(rsContext);
+            return Analyze(rsContext.NodeInFile, logger);
         }
 
-        public static Context Analyze(ICSharpTypeDeclaration classDeclaration, ILogger logger)
+        public static ContextAnalysisResult Analyze(ITreeNode node, ILogger logger)
         {
-            return new ContextAnalysis(logger).AnalyzeInternal(classDeclaration);
+            return new ContextAnalysis(logger).AnalyzeInternal(node);
         }
 
-        private Context AnalyzeInternal(CSharpCodeCompletionContext rsContext)
+        private ContextAnalysisResult AnalyzeInternal(ITreeNode type)
         {
-            var context = new Context();
+            var res = new ContextAnalysisResult
+            {
+                Context = new Context()
+            };
 
-            Execute.WithExceptionLogging(_logger, () => AnalyzeInternal(rsContext.NodeInFile, context));
+            Execute.WithExceptionLogging(_logger, () => AnalyzeInternal(type, res));
 
-            return context;
+            return res;
         }
 
-        private Context AnalyzeInternal(ICSharpTypeDeclaration type)
+        private void AnalyzeInternal(ITreeNode nodeInFile, ContextAnalysisResult res)
         {
-            var context = new Context();
-
-            Execute.WithExceptionLogging(_logger, () => AnalyzeInternal(type, context));
-
-            return context;
-        }
-
-        private void AnalyzeInternal(ITreeNode nodeInFile, Context context)
-        {
+            var context = res.Context;
             var sst = new SST();
             context.SST = sst;
 
@@ -84,11 +80,11 @@ namespace KaVE.VsFeedbackGenerator.Analysis
                 context.TypeShape = _typeShapeAnalysis.Analyze(classDeclaration);
 
                 var entryPointRefs = new EntryPointSelector(classDeclaration, context.TypeShape).GetEntryPoints();
-                var entryPoints = Sets.NewHashSetFrom(entryPointRefs.Select(epr => epr.Name));
+                res.EntryPoints = Sets.NewHashSetFrom(entryPointRefs.Select(epr => epr.Name));
 
                 sst.EnclosingType = classDeclaration.DeclaredElement.GetName<ITypeName>();
-                var marker = _completionTargetAnalysis.Analyze(nodeInFile);
-                classDeclaration.Accept(new DeclarationVisitor(entryPoints, marker), sst);
+                res.CompletionMarker = _completionTargetAnalysis.Analyze(nodeInFile);
+                classDeclaration.Accept(new DeclarationVisitor(res.EntryPoints, res.CompletionMarker), sst);
             }
             else
             {
@@ -110,6 +106,16 @@ namespace KaVE.VsFeedbackGenerator.Analysis
                 node = node.Parent;
             }
             return null;
+        }
+
+        // TODO discuss change in return values
+        public class ContextAnalysisResult
+        {
+            [NotNull]
+            public Context Context { get; set; }
+
+            public CompletionTargetMarker CompletionMarker { get; set; }
+            public IKaVESet<IMethodName> EntryPoints { get; set; }
         }
     }
 }

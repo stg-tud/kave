@@ -27,13 +27,13 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
     public class BlockVisitor : TreeNodeVisitor<IList<IStatement>>
     {
         private readonly ToNameReducer _toNameReducer;
-        private readonly ToBasicExpressionReducer _toBasicExpressionReducer;
+        private readonly ToAssignableExpression _toAssignableExpression;
         private readonly ToBlockReducer _toBlockReducer;
 
         public BlockVisitor(UniqueVariableNameGenerator nameGen)
         {
             _toNameReducer = new ToNameReducer(nameGen);
-            _toBasicExpressionReducer = new ToBasicExpressionReducer(nameGen);
+            _toAssignableExpression = new ToAssignableExpression(nameGen, null);
             _toBlockReducer = new ToBlockReducer(nameGen);
         }
     }

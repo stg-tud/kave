@@ -96,7 +96,7 @@ namespace KaVE.VsFeedbackGenerator.CodeCompletion
 
         protected override bool IsAvailable(CSharpCodeCompletionContext context)
         {
-            _context = ContextAnalysis.Analyze(context, _logger);
+            _context = ContextAnalysis.Analyze(context, _logger).Context;
             return _model != null;
         }
 

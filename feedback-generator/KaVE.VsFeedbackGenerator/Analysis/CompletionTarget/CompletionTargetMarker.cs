@@ -17,19 +17,21 @@
  *    - Sebastian Proksch
  */
 
-using System;
-using System.Collections.Generic;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
-using KaVE.Commons.Model.SSTs;
-using KaVE.VsFeedbackGenerator.Analysis.Util;
 
-namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
+namespace KaVE.VsFeedbackGenerator.Analysis.CompletionTarget
 {
-    public class ToRefReducer : TreeNodeVisitor<IList<IStatement>, IExpression>
+    public class CompletionTargetMarker
     {
-        public ToRefReducer(UniqueVariableNameGenerator nameGen)
-        {
-            throw new NotImplementedException();
-        }
+        public ICSharpTreeNode AffectedNode { get; set; }
+        public CompletionCase Case { get; set; }
+    }
+
+    public enum CompletionCase
+    {
+        Undefined,
+        EmptyCompletionBefore,
+        EmptyCompletionAfter,
+        InBody
     }
 }

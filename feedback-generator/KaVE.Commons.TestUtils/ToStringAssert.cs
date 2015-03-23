@@ -17,6 +17,7 @@
  *    - Sebastian Proksch
  */
 
+using System.Collections;
 using NUnit.Framework;
 
 namespace KaVE.Commons.TestUtils
@@ -25,11 +26,12 @@ namespace KaVE.Commons.TestUtils
     {
         public static void Reflection<T>(T obj)
         {
-            var expectedStart = string.Format("{0}@{1} {{\n", typeof (T).Name, obj.GetHashCode());
+            var openingBrace = obj is IEnumerable ? "[" : "{";
+            var expectedStart = string.Format("{0}@{1} {2}\n", typeof (T).Name, obj.GetHashCode(), openingBrace);
             var actual = obj.ToString();
             if (!actual.StartsWith(expectedStart))
             {
-                Assert.Fail("unexpected ToString output: '{0}'", obj);
+                Assert.Fail("unexpected ToString output: '{0}'\nexpected start: {1}", obj, expectedStart);
             }
         }
     }

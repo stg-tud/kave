@@ -77,8 +77,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AboutAction.cs" />
+    <Compile Include="Analysis\CompletionTarget\CompletionTargetAnalysis.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Analysis\CompletionTarget\CompletionTargetMarker.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Analysis\Transformer\BaseSSTTransformer.cs" />
-    <Compile Include="Analysis\CompletionTargetAnalysis.cs" />
     <Compile Include="Analysis\ContextAnalysis.cs" />
     <Compile Include="Analysis\MethodRef.cs" />
     <Compile Include="Analysis\EntryPointSelector.cs" />
@@ -86,6 +91,7 @@
     <Compile Include="Analysis\ReSharperUtils.cs" />
     <Compile Include="Analysis\SSTAnalysis.cs" />
     <Compile Include="Analysis\Transformer\BodyVisitor.cs" />
+    <Compile Include="Analysis\Transformer\CompletionTargetVisitor.cs" />
     <Compile Include="Analysis\Transformer\Context\ArgumentCollectorContext.cs" />
     <Compile Include="Analysis\Transformer\Context\AssignmentGeneratorContext.cs" />
     <Compile Include="Analysis\Transformer\Context\ITransformerContext.cs" />
@@ -93,16 +99,17 @@
     <Compile Include="Analysis\Transformer\Context\ScopeTransformerContext.cs" />
     <Compile Include="Analysis\Transformer\BlockVisitor.cs" />
     <Compile Include="Analysis\Transformer\DeclarationVisitor.cs" />
+    <Compile Include="Analysis\Transformer\JetbrainsTreeDebugger.cs" />
     <Compile Include="Analysis\Transformer\ToArgumentList.cs" />
+    <Compile Include="Analysis\Transformer\ToAssignableReference.cs" />
     <Compile Include="Analysis\Transformer\ToBlockReducer.cs" />
-    <Compile Include="Analysis\Transformer\ToExpressionReducer.cs" />
+    <Compile Include="Analysis\Transformer\ToAssignableExpression.cs" />
     <Compile Include="Analysis\Transformer\ToNameReducer.cs" />
     <Compile Include="Analysis\Transformer\SSTArgumentCollector.cs" />
     <Compile Include="Analysis\Transformer\SSTAssignmentGenerator.cs" />
     <Compile Include="Analysis\Transformer\SSTScopeTransformer.cs" />
     <Compile Include="Analysis\Transformer\SSTReferenceCollector.cs" />
     <Compile Include="Analysis\Transformer\SSTTransformerUtil.cs" />
-    <Compile Include="Analysis\Transformer\ToRefReducer.cs" />
     <Compile Include="Analysis\Util\SSTFactory.cs" />
     <Compile Include="Analysis\Util\Scope.cs" />
     <Compile Include="Analysis\Util\UniqueVariableNameGenerator.cs" />

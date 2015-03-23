@@ -107,7 +107,7 @@ namespace KaVE.SolutionAnalysis
             {
                 _logger.Info("   - Analyzing type '{0}'...", aType.CLRName);
 
-                contexts.Add(ContextAnalysis.Analyze(aType, _logger));
+                contexts.Add(ContextAnalysis.Analyze(aType, _logger).Context);
             }
             contexts.AddRange(AnalyzeInnerTypes(aType));
             return contexts;

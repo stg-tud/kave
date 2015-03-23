@@ -83,7 +83,7 @@ namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
             Func<Context> analysis = () =>
             {
                 Context result = null;
-                ReadLockCookie.Execute(() => result = ContextAnalysis.Analyze(context, _logger));
+                ReadLockCookie.Execute(() => result = ContextAnalysis.Analyze(context, _logger).Context);
                 return result;
             };
 

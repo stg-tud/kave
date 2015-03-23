@@ -21,23 +21,31 @@ using System.Collections.Generic;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using KaVE.Commons.Model.SSTs;
+using KaVE.Commons.Model.SSTs.Expressions;
+using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Commons.Model.SSTs.Impl.References;
+using KaVE.VsFeedbackGenerator.Analysis.CompletionTarget;
 using KaVE.VsFeedbackGenerator.Analysis.Util;
 
 namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
 {
-    public class ToBasicExpressionReducer : TreeNodeVisitor<IList<IStatement>, IExpression>
+    public class ToAssignableExpression : TreeNodeVisitor<IList<IStatement>, IAssignableExpression>
     {
-        public ToBasicExpressionReducer(UniqueVariableNameGenerator nameGen) {}
+        private readonly CompletionTargetMarker _marker;
 
-        public override IExpression VisitExpressionInitializer(IExpressionInitializer exprInit,
+        public ToAssignableExpression(UniqueVariableNameGenerator nameGen, CompletionTargetMarker marker)
+        {
+            _marker = marker;
+        }
+
+        public override IAssignableExpression VisitExpressionInitializer(IExpressionInitializer exprInit,
             IList<IStatement> context)
         {
             return exprInit.Value.Accept(this, context);
         }
 
-        public override IExpression VisitCSharpLiteralExpression(ICSharpLiteralExpression litExpr,
+        public override IAssignableExpression VisitCSharpLiteralExpression(ICSharpLiteralExpression litExpr,
             IList<IStatement> context)
         {
             var isNull = litExpr.ConstantValue.IsPureNull(CSharpLanguage.Instance);
@@ -48,10 +56,18 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
             return new ConstantValueExpression();
         }
 
-        public override IExpression VisitReferenceExpression(IReferenceExpression refExpr, IList<IStatement> context)
+        public override IAssignableExpression VisitReferenceExpression(IReferenceExpression expr,
+            IList<IStatement> context)
         {
-            var vref = new VariableReference {Identifier = refExpr.NameIdentifier.Name};
-            return new ReferenceExpression {Reference = vref};
+            var refName = expr.NameIdentifier.Name;
+            if (expr == _marker.AffectedNode)
+            {
+                return new CompletionExpression
+                {
+                    Token = refName
+                };
+            }
+            return new ReferenceExpression {Reference = new VariableReference {Identifier = refName}};
         }
     }
 }

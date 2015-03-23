@@ -18,7 +18,6 @@
  */
 
 using System;
-using System.Linq;
 using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.Commons.Model.SSTs.Impl.Blocks;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
@@ -98,40 +97,36 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             // TODO think about this again... what about abstract base classes?
         }
 
-        [Test, Ignore]
-        public void TriggeredInMethod()
+        [Test]
+        public void PlainCompletion_Marker()
         {
-            CompleteInClass(@"
-                public void A()
-                {
-                    $
-                }
+            CompleteInMethod(@"
+                $
             ");
 
-            var trigger = new CompletionExpression();
+            // TODO
+        }
 
-            var mA = NewMethodDeclaration(Fix.Void, "A");
-            mA.Body.Add(new ExpressionStatement {Expression = trigger});
+        [Test]
+        public void PlainCompletion_Result()
+        {
+            CompleteInMethod(@"
+                $
+            ");
 
-            var first = ResultSST.Methods.FirstOrDefault();
-            var hc1 = mA.GetHashCode();
-            var hc2 = first.GetHashCode();
-
-            var eq = mA.Equals(first);
-            var eq2 = first.Equals(mA);
-
-            AssertMethod(mA);
+            AssertBody(
+                new ExpressionStatement
+                {
+                    Expression = new CompletionExpression()
+                });
         }
 
         [Test, Ignore]
-        public void TriggeredInMethodOnPrefix()
+        public void OnPrefix_()
         {
-            CompleteInClass(@"
-                public void A()
-                {
-                    o$
-                }
-            ");
+            CompleteInMethod(@"
+                o$
+             ");
 
             var trigger = new CompletionExpression {Token = "o"};
 
@@ -141,7 +136,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
         }
 
         [Test, Ignore]
-        public void TriggeredInMethod_OnReference()
+        public void OnReference_()
         {
             CompleteInClass(@"
                 public void A()
@@ -158,7 +153,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
         }
 
         [Test, Ignore]
-        public void TriggeredInMethod_OnReference_WithToken()
+        public void TriggeredInMethod_OnReference_WithToken_()
         {
             CompleteInClass(@"
                 public void A()
@@ -175,7 +170,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
         }
 
         [Test, Ignore]
-        public void TriggeredInMethod_OnReferenceChain()
+        public void TriggeredInMethod_OnReference_Chain_()
         {
             CompleteInClass(@"
                 public void A()
@@ -300,6 +295,76 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             var mA = NewMethodDeclaration(Fix.Void, "A");
             mA.Body.Add(assignment);
             AssertMethod(mA);
+        }
+
+
+        [Test, Ignore]
+        public void CompletionWithVariable()
+        {
+            CompleteInMethod(@"
+                this.$
+            ");
+
+            AssertBody(
+                new ExpressionStatement
+                {
+                    Expression = new CompletionExpression
+                    {
+                        VariableReference = VarRef("this")
+                    }
+                });
+        }
+
+        [Test, Ignore]
+        public void CompletionWithType()
+        {
+            CompleteInMethod(@"
+                this.$
+            ");
+
+            AssertBody(
+                new ExpressionStatement
+                {
+                    Expression = new CompletionExpression
+                    {
+                        VariableReference = VarRef("this")
+                    }
+                });
+        }
+
+        [Test, Ignore]
+        public void CompletionWithToken()
+        {
+            CompleteInMethod(@"
+                G$
+            ");
+
+            AssertBody(
+                new ExpressionStatement
+                {
+                    Expression = new CompletionExpression
+                    {
+                        Token = "G"
+                    }
+                });
+        }
+
+        [Test, Ignore]
+        public void CompletionWithVariableAndToken()
+        {
+            CompleteInMethod(@"
+                this.G$
+            ");
+
+            AssertBody(
+                new ExpressionStatement
+                {
+                    Expression = new CompletionExpression
+                    {
+                        VariableReference = VarRef("this"),
+                        Token = "G"
+                    }
+                });
         }
     }
 }

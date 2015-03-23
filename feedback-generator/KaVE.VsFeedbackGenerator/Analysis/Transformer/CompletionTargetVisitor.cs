@@ -17,20 +17,7 @@
  *    - Sebastian Proksch
  */
 
-using KaVE.Commons.Model.SSTs.Expressions;
-using KaVE.Commons.Model.SSTs.References;
-using KaVE.JetBrains.Annotations;
-
-namespace KaVE.Commons.Model.SSTs.Statements
+namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
 {
-    public interface IAssignment : IStatement
-    {
-        [NotNull]
-        IAssignableReference Reference { get; }
-
-        [NotNull]
-        IAssignableExpression Expression { get; }
-
-        // TODO introduce operator enum (=, +=, -=)
-    }
+    internal class CompletionTargetVisitor {}
 }

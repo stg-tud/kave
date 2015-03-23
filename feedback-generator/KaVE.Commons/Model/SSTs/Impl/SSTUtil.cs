@@ -21,12 +21,10 @@ using System.Collections.Generic;
 using System.Linq;
 using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.SSTs.Blocks;
-using KaVE.Commons.Model.SSTs.Declarations;
 using KaVE.Commons.Model.SSTs.Expressions;
 using KaVE.Commons.Model.SSTs.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Expressions.Simple;
 using KaVE.Commons.Model.SSTs.Impl.Blocks;
-using KaVE.Commons.Model.SSTs.Impl.Declarations;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Commons.Model.SSTs.Impl.References;
@@ -35,6 +33,7 @@ using KaVE.Commons.Model.SSTs.References;
 using KaVE.Commons.Model.SSTs.Statements;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Collections;
+using KaVE.JetBrains.Annotations;
 
 namespace KaVE.Commons.Model.SSTs.Impl
 {
@@ -67,7 +66,7 @@ namespace KaVE.Commons.Model.SSTs.Impl
             return new ComposedExpression {References = refs};
         }
 
-        public static IAssignment AssignmentToLocal(string identifier, IAssignableExpression expr)
+        public static IAssignment AssignmentToLocal([NotNull] string identifier, [NotNull] IAssignableExpression expr)
         {
             return new Assignment
             {

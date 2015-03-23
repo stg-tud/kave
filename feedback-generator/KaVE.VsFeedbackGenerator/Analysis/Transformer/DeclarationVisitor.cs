@@ -25,6 +25,9 @@ using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.Commons.Model.SSTs.Impl.Declarations;
+using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
+using KaVE.Commons.Model.SSTs.Impl.Statements;
+using KaVE.VsFeedbackGenerator.Analysis.CompletionTarget;
 using KaVE.VsFeedbackGenerator.Utils.Names;
 
 namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
@@ -32,9 +35,9 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
     public class DeclarationVisitor : TreeNodeVisitor<SST>
     {
         private readonly ISet<IMethodName> _entryPoints;
-        private readonly CompletionTargetAnalysis.TriggerPointMarker _marker;
+        private readonly CompletionTargetMarker _marker;
 
-        public DeclarationVisitor(ISet<IMethodName> entryPoints, CompletionTargetAnalysis.TriggerPointMarker marker)
+        public DeclarationVisitor(ISet<IMethodName> entryPoints, CompletionTargetMarker marker)
         {
             _entryPoints = entryPoints;
             _marker = marker;
@@ -87,10 +90,15 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
                 };
                 context.Methods.Add(sstDecl);
 
+                if (decl == _marker.AffectedNode)
+                {
+                    sstDecl.Body.Add(new ExpressionStatement {Expression = new CompletionExpression()});
+                }
+
                 if (!decl.IsAbstract)
                 {
-                    //var bodyVisitor = new BodyVisitor(_marker);
-                    //decl.Accept(bodyVisitor, sstDecl.Body);
+                    var bodyVisitor = new BodyVisitor(_marker);
+                    decl.Accept(bodyVisitor, sstDecl.Body);
                 }
             }
         }

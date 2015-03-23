@@ -64,15 +64,16 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SmokeTests
         public void MissingConditionOpeningBrace()
         {
             CompleteInMethod(@"
-                if ($ {}
+                if $) {}
             ");
         }
 
         [Test]
         public void MissingConditionClosingBrace()
         {
+            TestAnalysisTrigger.IsPrintingType = true;
             CompleteInMethod(@"
-                if $) {}
+                if ($ {}
             ");
         }
 

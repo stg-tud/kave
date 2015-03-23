@@ -172,7 +172,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
         [Test]
         public void CompletionExpression_OnObjectReference()
         {
-            var sst = new CompletionExpression {ObjectReference = SSTUtil.VariableReference("obj"), Token = "incompl"};
+            var sst = new CompletionExpression {VariableReference = SSTUtil.VariableReference("obj"), Token = "incompl"};
             AssertPrint(sst, "obj.incompl$");
         }
 

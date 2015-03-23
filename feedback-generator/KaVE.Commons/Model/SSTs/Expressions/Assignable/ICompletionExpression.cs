@@ -29,7 +29,7 @@ namespace KaVE.Commons.Model.SSTs.Expressions.Assignable
         ITypeName TypeReference { get; }
 
         [CanBeNull]
-        IVariableReference ObjectReference { get; }
+        IVariableReference VariableReference { get; }
 
         [NotNull]
         string Token { get; }

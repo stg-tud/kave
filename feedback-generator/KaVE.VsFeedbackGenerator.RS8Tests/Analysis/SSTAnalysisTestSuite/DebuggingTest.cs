@@ -17,37 +17,41 @@
  *    - Sebastian Proksch
  */
 
-using KaVE.Commons.Model.SSTs.Blocks;
-using KaVE.Commons.Model.SSTs.Visitor;
-using KaVE.Commons.Utils;
+using NUnit.Framework;
 
-namespace KaVE.Commons.Model.SSTs.Impl.Blocks
+namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 {
-    public class UnsafeBlock : IUnsafeBlock
+    internal class DebuggingTest : BaseSSTAnalysisTest
     {
-        public override bool Equals(object obj)
+        [SetUp]
+        public void Setup()
         {
-            return this.Equals(obj, other => true);
+            TestAnalysisTrigger.IsPrintingType = true;
         }
 
-        public override int GetHashCode()
+        [TearDown]
+        public void Teardown()
         {
-            return 38;
+            TestAnalysisTrigger.IsPrintingType = false;
         }
 
-        public void Accept<TContext>(ISSTNodeVisitor<TContext> visitor, TContext context)
+        [Test, Ignore]
+        public void Asd()
         {
-            visitor.Visit(this, context);
+            CompleteInMethod(@"
+                this.GetHashCode();
+                GetHasHCode().GetType();
+                this.GetHashCode().GetType();
+                $
+            ");
         }
 
-        public TReturn Accept<TContext, TReturn>(ISSTNodeVisitor<TContext, TReturn> visitor, TContext context)
+        [Test, Ignore]
+        public void Asd2()
         {
-            return visitor.Visit(this, context);
-        }
-
-        public override string ToString()
-        {
-            return this.ToStringReflection();
+            CompleteInMethod(@"
+                int i = $
+            ");
         }
     }
 }

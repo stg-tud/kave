@@ -323,6 +323,73 @@ namespace KaVE.Commons.Tests.Utils
             Assert.AreEqual(expected, actual);
         }
 
+        [Test]
+        public void StringIsPrintedAsString()
+        {
+            var actual = "a".ToStringReflection();
+            const string expected = "a";
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void NestedStringIsPrintedAsString()
+        {
+            var actual = new ClassWithNesting
+            {
+                HashCode = 1,
+                Nested = "a"
+            }.ToStringReflection();
+            const string expected = "ClassWithNesting@1 {\n" +
+                                    "   HashCode = 1,\n" +
+                                    "   Nested = \"a\",\n" +
+                                    "}";
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void NestedStringInEnumerableIsPrintedAsString()
+        {
+            var actual = new ClassWithNesting
+            {
+                HashCode = 1,
+                Nested = new SomeList<object> {"a"}
+            }.ToStringReflection();
+            const string expected = "ClassWithNesting@1 {\n" +
+                                    "   HashCode = 1,\n" +
+                                    "   Nested = SomeList`1@16 [\n" +
+                                    "      \"a\",\n" +
+                                    "   ],\n" +
+                                    "}";
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void LongNestedString()
+        {
+            var actual = new ClassWithNesting
+            {
+                HashCode = 1,
+                Nested = new string('x', 129)
+            }.ToStringReflection();
+            var expected = string.Format(
+                "ClassWithNesting@1 {{\n" +
+                "   HashCode = 1,\n" +
+                "   Nested = \"{0}... (cut)\",\n" +
+                "}}",
+                new string('x', 128));
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void LongStringsAreShortened()
+        {
+            // added special start char to make sure substring starts at correct location
+            var input = "x" + new string('*', 128);
+            var actual = input.ToStringReflection();
+            var expected = "x" + new string('*', 127) + "... (cut)";
+            Assert.AreEqual(expected, actual);
+        }
+
         public class ClassWithDifferentVisibilities
         {
             // ReSharper disable once UnusedField.Compiler

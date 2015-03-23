@@ -27,6 +27,7 @@ using JetBrains.TextControl;
 using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.SSTs;
+using KaVE.VsFeedbackGenerator.Analysis.CompletionTarget;
 using KaVE.VsFeedbackGenerator.RS8Tests.Analysis;
 
 namespace KaVE.VsFeedbackGenerator.RS8Tests
@@ -90,6 +91,11 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests
         protected ISST ResultSST
         {
             get { return TestAnalysisComponent.LastSST; }
+        }
+
+        protected CompletionTargetMarker LastCompletionMarker
+        {
+            get { return TestAnalysisComponent.LastCompletionMarker; }
         }
 
         protected IEnumerable<IMethodName> AnalyzedEntryPoints

@@ -50,13 +50,13 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize.CompletionEven
             AssertAnonymization(
                 new CompletionExpression
                 {
-                    ObjectReference = AnyVarReference,
+                    VariableReference = AnyVarReference,
                     TypeReference = Type("a"),
                     Token = "t"
                 },
                 new CompletionExpression
                 {
-                    ObjectReference = AnyVarReferenceAnonymized,
+                    VariableReference = AnyVarReferenceAnonymized,
                     TypeReference = TypeAnonymized("a"),
                     Token = "t" // not anonymized
                 });

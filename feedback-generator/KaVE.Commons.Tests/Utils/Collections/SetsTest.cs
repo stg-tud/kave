@@ -19,6 +19,7 @@
 
 using System.Collections.Generic;
 using KaVE.Commons.Model.SSTs.Impl.Statements;
+using KaVE.Commons.TestUtils;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Collections;
 using NUnit.Framework;
@@ -150,6 +151,12 @@ namespace KaVE.Commons.Tests.Utils.Collections
         public void NullsCannotBeAddedWithEnumerable()
         {
             Sets.NewHashSetFrom(new object[] {null});
+        }
+
+        [Test]
+        public void ToStringReflection()
+        {
+            ToStringAssert.Reflection(new KaVEHashSet<int>());
         }
     }
 }

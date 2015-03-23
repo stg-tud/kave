@@ -47,7 +47,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize.CompletionEvents
         {
             return new CompletionExpression
             {
-                ObjectReference = _refAnon.Anonymize(entity.ObjectReference),
+                VariableReference = _refAnon.Anonymize(entity.VariableReference),
                 TypeReference = entity.TypeReference.ToAnonymousName(),
                 Token = entity.Token
             };

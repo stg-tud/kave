@@ -73,6 +73,11 @@ namespace KaVE.Commons.Utils.Collections
             var init = typeof (T).GetHashCode();
             return Seed*this.Aggregate(init, (current, e) => Seed*current + e.GetHashCode());
         }
+
+        public override string ToString()
+        {
+            return this.ToStringReflection();
+        }
     }
 
     // ReSharper disable once InconsistentNaming

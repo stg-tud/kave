@@ -53,5 +53,10 @@ namespace KaVE.Commons.Model.SSTs.Impl.Blocks
                 return 30 + (Body.GetHashCode()*397) ^ Label.GetHashCode();
             }
         }
+
+        public override string ToString()
+        {
+            return this.ToStringReflection();
+        }
     }
 }

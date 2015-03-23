@@ -305,6 +305,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
         [Test]
         public void Bug_UnresolvedDeclarationsAreNotAnIssue()
         {
+            // TODO: let's talk about this test case, I don't understand the intuition behind (seb)
             CompleteInCSharpFile(@"
                 class C {
                     public void M(string s) {}

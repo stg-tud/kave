@@ -18,13 +18,13 @@
  */
 
 using System.Collections.Generic;
+using KaVE.Commons.TestUtils;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Collections;
 using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Utils.Collections
 {
-    [TestFixture]
     internal class ListsTest
     {
         [Test]
@@ -143,6 +143,12 @@ namespace KaVE.Commons.Tests.Utils.Collections
         public void NullsCannotBeAddedWithEnumerable()
         {
             Lists.NewListFrom(new object[] {null});
+        }
+
+        [Test]
+        public void ToStringReflection()
+        {
+            ToStringAssert.Reflection(new KaVEList<int>());
         }
     }
 }

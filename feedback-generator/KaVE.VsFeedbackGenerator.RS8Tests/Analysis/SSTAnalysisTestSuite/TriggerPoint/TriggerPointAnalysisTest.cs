@@ -14,23 +14,16 @@
  * limitations under the License.
  * 
  * Contributors:
- *    - Sebastian Proksch
+ *    - 
  */
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
-using KaVE.Commons.Model.SSTs.Expressions;
-using KaVE.Commons.Model.SSTs.References;
-using KaVE.JetBrains.Annotations;
-
-namespace KaVE.Commons.Model.SSTs.Statements
+namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite.TriggerPoint
 {
-    public interface IAssignment : IStatement
+    class TriggerPointAnalysisTest
     {
-        [NotNull]
-        IAssignableReference Reference { get; }
-
-        [NotNull]
-        IAssignableExpression Expression { get; }
-
-        // TODO introduce operator enum (=, +=, -=)
     }
 }

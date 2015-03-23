@@ -17,20 +17,16 @@
  *    - Sebastian Proksch
  */
 
-using KaVE.Commons.Model.SSTs.Expressions;
-using KaVE.Commons.Model.SSTs.References;
-using KaVE.JetBrains.Annotations;
-
-namespace KaVE.Commons.Model.SSTs.Statements
+namespace KaVE.Commons.Model.SSTs.Expressions.Assignable
 {
-    public interface IAssignment : IStatement
+    internal interface IBooleanExpression : IAssignableExpression
     {
-        [NotNull]
-        IAssignableReference Reference { get; }
+        ISimpleExpression Left { get; }
 
-        [NotNull]
-        IAssignableExpression Expression { get; }
+        // TODO: introduce enum, e.g., (==, !=, <, >)
+        string Operation { get; }
+        // use case: if(o == null) { ... }
 
-        // TODO introduce operator enum (=, +=, -=)
+        ISimpleExpression Right { get; }
     }
 }

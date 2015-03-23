@@ -37,7 +37,8 @@ namespace KaVE.Commons.Utils
             }
             try
             {
-                return PrimitiveToString(obj) ?? EnumerableToString(obj) ?? ReflectiveToString(obj);
+                return PrimitiveToString(obj) ??
+                       StringToString(obj) ?? EnumerableToString(obj) ?? ReflectiveToString(obj);
             }
             catch (Exception e)
             {
@@ -53,6 +54,20 @@ namespace KaVE.Commons.Utils
         private static string PrimitiveToString(object o)
         {
             return o.GetType().IsPrimitive ? o.ToString() : null;
+        }
+
+        private static string StringToString(object o)
+        {
+            var s = o as string;
+            if (s == null)
+            {
+                return null;
+            }
+            if (s.Length <= 128)
+            {
+                return s;
+            }
+            return s.Substring(0, 128) + "... (cut)";
         }
 
         private static string EnumerableToString(object o)
@@ -101,6 +116,13 @@ namespace KaVE.Commons.Utils
             {
                 sb.Append("null");
             }
+            else if (value is string)
+            {
+                // TODO shortening
+                sb.Append('"');
+                sb.Append(StringToString(value));
+                sb.Append('"');
+            }
             else
             {
                 var enumerable2 = value as IEnumerable;
@@ -139,6 +161,14 @@ namespace KaVE.Commons.Utils
                 {
                     sb.Append("null");
                 }
+                else if (item is string)
+                {
+                    // TODO shortening
+                    sb.Append('"');
+                    sb.Append(StringToString(item));
+                    sb.Append('"');
+                }
+            
                 else if (item == parent)
                 {
                     sb.AppendReference(item);

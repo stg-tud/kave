@@ -20,7 +20,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using JetBrains.Application;
 using JetBrains.ReSharper.Feature.Services.CSharp.CodeCompletion.Infrastructure;
 using JetBrains.ReSharper.Feature.Services.Lookup;
@@ -30,16 +29,20 @@ using JetBrains.ReSharper.Psi.Tree;
 using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.SSTs;
-using KaVE.Commons.Utils.Collections;
 using KaVE.Commons.Utils.Exceptions;
 using KaVE.VsFeedbackGenerator.Analysis;
+using KaVE.VsFeedbackGenerator.Analysis.CompletionTarget;
+using KaVE.VsFeedbackGenerator.Analysis.Transformer;
 
 namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
 {
     [ShellComponent, Language(typeof (CSharpLanguage))]
     public class TestAnalysisTrigger : CSharpItemsProviderBase<CSharpCodeCompletionContext>
     {
+        public static bool IsPrintingType = false;
+
         public ISet<IMethodName> LastEntryPoints { get; private set; }
+        public CompletionTargetMarker LastCompletionMarker { get; set; }
         public Context LastContext { get; private set; }
         public ISST LastSST { get; private set; }
         public Tuple<Exception, string> LastException { get; private set; }
@@ -52,18 +55,33 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
         protected override bool AddLookupItems(CSharpCodeCompletionContext context, GroupedItemsCollector collector)
         {
             LastException = null;
-            LastContext = ContextAnalysis.Analyze(context, MockLogger());
-            LastSST = LastContext.SST;
-
-            var typeDeclaration = ContextAnalysis.FindEnclosing<ITypeDeclaration>(context.NodeInFile);
-            if (typeDeclaration != null)
+            var analysisResult = ContextAnalysis.Analyze(context, MockLogger());
+            LastContext = analysisResult.Context;
+            LastEntryPoints = analysisResult.EntryPoints;
+            LastCompletionMarker = analysisResult.CompletionMarker;
+            if (IsPrintingType)
             {
-                var typeShape = new TypeShapeAnalysis().Analyze(typeDeclaration);
-                var entryPoints = new EntryPointSelector(typeDeclaration, typeShape).GetEntryPoints();
-                LastEntryPoints = Sets.NewHashSetFrom(entryPoints.Select(ep => ep.Name));
+                PrintType(context, LastCompletionMarker);
             }
 
+            
+            
+            LastSST = LastContext.SST;
+
             return false;
+        }
+
+        private static void PrintType(CSharpCodeCompletionContext context, CompletionTargetMarker marker)
+        {
+            for (var node = context.NodeInFile; node != null; node = node.Parent)
+            {
+                var type = node as ITypeDeclaration;
+                if (type != null)
+                {
+                    JetbrainsTreeDebugger.Dump(type, marker);
+                    return;
+                }
+            }
         }
 
         private ILogger MockLogger()

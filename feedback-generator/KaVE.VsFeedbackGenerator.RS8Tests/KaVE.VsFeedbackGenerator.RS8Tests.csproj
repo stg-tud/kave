@@ -65,17 +65,23 @@
     <Compile Include="Analysis\SSTAnalysisTestSuite\ArrayTest.cs" />
     <Compile Include="Analysis\SSTAnalysisTestSuite\AssignmentTest.cs" />
     <Compile Include="Analysis\SSTAnalysisTestSuite\BaseSSTAnalysisTest.cs" />
-    <Compile Include="Analysis\SSTAnalysisTestSuite\BasicExpressionTest.cs" />
+    <Compile Include="Analysis\SSTAnalysisTestSuite\BasicTest.cs" />
     <Compile Include="Analysis\SSTAnalysisTestSuite\Casting.cs" />
     <Compile Include="Analysis\SSTAnalysisTestSuite\ControlStructureTest.cs" />
+    <Compile Include="Analysis\SSTAnalysisTestSuite\DebuggingTest.cs" />
     <Compile Include="Analysis\SSTAnalysisTestSuite\DeclarationTest.cs" />
     <Compile Include="Analysis\SSTAnalysisTestSuite\EntrypointsTest.cs" />
     <Compile Include="Analysis\SSTAnalysisTestSuite\IncompleteCodeTest.cs" />
     <Compile Include="Analysis\SSTAnalysisTestSuite\InvocationTest.cs" />
+    <Compile Include="Analysis\SSTAnalysisTestSuite\MemberAccessTest.cs" />
     <Compile Include="Analysis\SSTAnalysisTestSuite\MemberDeclarationTest.cs" />
+    <Compile Include="Analysis\SSTAnalysisTestSuite\ReferencesTest.cs" />
     <Compile Include="Analysis\SSTAnalysisTestSuite\SingleAssignmentTest.cs" />
     <Compile Include="Analysis\SSTAnalysisTestSuite\SSTAnalysisFixture.cs" />
     <Compile Include="Analysis\SSTAnalysisTestSuite\TriggerLocationsTest.cs" />
+    <Compile Include="Analysis\SSTAnalysisTestSuite\TriggerPoint\CompletionTargetMarkerTest.cs" />
+    <Compile Include="Analysis\SSTAnalysisTestSuite\TriggerPoint\TriggerPointAnalysisTest.cs" />
+    <Compile Include="Analysis\SSTAnalysisTestSuite\UncheckedTest.cs" />
     <Compile Include="Analysis\TestAnalysisTrigger.cs" />
     <Compile Include="BaseCodeCompletionTest.cs" />
     <Compile Include="BaseCSharpCodeCompletionTest.cs" />
@@ -107,6 +113,7 @@
     </None>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\JetBrains.ReSharper.SDK.8.2.1158\build\JetBrains.ReSharper.SDK.Targets" Condition="Exists('..\packages\JetBrains.ReSharper.SDK.8.2.1158\build\JetBrains.ReSharper.SDK.Targets')" />
 </Project>

@@ -17,20 +17,27 @@
  *    - Sebastian Proksch
  */
 
-using KaVE.Commons.Model.SSTs.Expressions;
-using KaVE.Commons.Model.SSTs.References;
-using KaVE.JetBrains.Annotations;
+using NUnit.Framework;
 
-namespace KaVE.Commons.Model.SSTs.Statements
+namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 {
-    public interface IAssignment : IStatement
+    internal class UncheckedTest : BaseSSTAnalysisTest
     {
-        [NotNull]
-        IAssignableReference Reference { get; }
+        [Test, Ignore]
+        public void UncheckedBlock()
+        {
+            CompleteInMethod(@"
+                unchecked { var i = 1; }
+            ");
+        }
 
-        [NotNull]
-        IAssignableExpression Expression { get; }
-
-        // TODO introduce operator enum (=, +=, -=)
+        [Test, Ignore]
+        public void UncheckedExpression()
+        {
+            CompleteInMethod(@"
+                var i = unchecked(1);
+            ");
+            // -> transform to unchecked block
+        }
     }
 }

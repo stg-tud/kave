@@ -17,6 +17,7 @@
  *    - Sebastian Proksch
  */
 
+using JetBrains;
 using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.Names.CSharp;
 
@@ -40,7 +41,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 
         // ReSharper disable once InconsistentNaming
         internal static readonly IMethodName Object_GetHashCode =
-            MethodName.Get("[System.Boolean, mscorlib, 4.0.0.0] [System.Object, mscorlib, 4.0.0.0].GetHashCode()");
+            MethodName.Get("[System.Int32, mscorlib, 4.0.0.0] [System.Object, mscorlib, 4.0.0.0].GetHashCode()");
 
         // ReSharper disable once InconsistentNaming
         internal static readonly IMethodName Object_Init =
@@ -75,6 +76,22 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
         public static IMethodName GetMethodName(string cGet)
         {
             return MethodName.Get(cGet);
+        }
+
+        public static ITypeName Type(string simpleName)
+        {
+            return TypeName.Get(simpleName + ", TestProject");
+        }
+
+        public static IMethodName Method(ITypeName returnType, ITypeName declType, string name)
+        {
+            // TODO extend for parameters
+            return MethodName.Get("[{0}] [{1}].{2}()".FormatEx(returnType, declType, name));
+        }
+
+        public static IFieldName Field(ITypeName valueType, ITypeName declType, string name)
+        {
+            return FieldName.Get("[{0}] [{1}].{2}".FormatEx(valueType, declType, name));
         }
     }
 }

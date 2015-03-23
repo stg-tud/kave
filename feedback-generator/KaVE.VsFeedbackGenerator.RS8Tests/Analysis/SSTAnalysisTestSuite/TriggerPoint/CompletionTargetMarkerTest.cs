@@ -17,20 +17,14 @@
  *    - Sebastian Proksch
  */
 
-using KaVE.Commons.Model.SSTs.Expressions;
-using KaVE.Commons.Model.SSTs.References;
-using KaVE.JetBrains.Annotations;
+using KaVE.VsFeedbackGenerator.Analysis.CompletionTarget;
 
-namespace KaVE.Commons.Model.SSTs.Statements
+namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite.TriggerPoint
 {
-    public interface IAssignment : IStatement
+    internal class CompletionTargetMarkerTest
     {
-        [NotNull]
-        IAssignableReference Reference { get; }
+        private CompletionTargetMarker _sut;
 
-        [NotNull]
-        IAssignableExpression Expression { get; }
-
-        // TODO introduce operator enum (=, +=, -=)
+        // TODO
     }
 }

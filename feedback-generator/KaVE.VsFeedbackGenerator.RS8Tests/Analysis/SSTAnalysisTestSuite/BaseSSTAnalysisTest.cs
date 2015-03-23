@@ -31,9 +31,10 @@ using KaVE.Commons.Model.SSTs.Impl.References;
 using KaVE.Commons.Model.SSTs.References;
 using KaVE.Commons.Utils.Collections;
 using KaVE.Commons.Utils.Exceptions;
+using KaVE.VsFeedbackGenerator.Analysis.CompletionTarget;
 using KaVE.VsFeedbackGenerator.Utils;
-using Moq;
 using NUnit.Framework;
+using RS = JetBrains.ReSharper.Psi.CSharp.Tree;
 
 namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 {
@@ -127,6 +128,12 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
         }
 
 
+        protected void AssertBody(params IStatement[] bodyArr)
+        {
+            AssertBody(Lists.NewListFrom(bodyArr));
+        }
+
+
         [TearDown]
         public void ClearRegistry()
         {
@@ -134,6 +141,60 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             var logCopy = new List<string>(Log);
             Log.Clear();
             Assert.IsEmpty(logCopy);
+            TestAnalysisTrigger.IsPrintingType = false;
+        }
+
+        protected static VariableReference VarRef(string id)
+        {
+            return new VariableReference {Identifier = id};
+        }
+
+        protected static void AssertNodeIsMethodDeclaration(string simpleMethodName, RS.ICSharpTreeNode node)
+        {
+            var decl = node as RS.IMethodDeclaration;
+            Assert.NotNull(decl);
+            Assert.AreEqual(simpleMethodName, decl.NameIdentifier.Name);
+        }
+
+        protected static void AssertNodeIsVariableDeclaration(string varName, RS.ICSharpTreeNode node)
+        {
+            var decl = node as RS.ILocalVariableDeclaration;
+            Assert.NotNull(decl);
+            Assert.AreEqual(varName, decl.NameIdentifier.Name);
+        }
+
+        protected static void AssertNodeIsReference(string refName, RS.ICSharpTreeNode node)
+        {
+            var expr = node as RS.IReferenceExpression;
+            Assert.NotNull(expr);
+            Assert.AreEqual(refName, expr.NameIdentifier.Name);
+        }
+
+        protected static void AssertNodeIsAssignment(string varName, RS.ICSharpTreeNode node)
+        {
+            var ass = node as RS.IAssignmentExpression;
+            Assert.NotNull(ass);
+            var dest = ass.Dest as RS.IReferenceExpression;
+            Assert.NotNull(dest);
+            Assert.AreEqual(varName, dest.NameIdentifier.Name);
+        }
+
+        protected void AssertCompletionCase(CompletionCase expectedCase)
+        {
+            Assert.AreEqual(expectedCase, LastCompletionMarker.Case);
+        }
+
+        protected void AssertNodeIsIf(RS.ICSharpTreeNode node)
+        {
+            Assert.True(node is RS.IIfStatement);
+        }
+
+        protected void AssertNodeIsCall(string expectedName, RS.ICSharpTreeNode node)
+        {
+            var call = node as RS.IInvocationExpression;
+            Assert.NotNull(call);
+            var actualName = call.InvocationExpressionReference.GetName();
+            Assert.AreEqual(expectedName, actualName);
         }
     }
 }
