@@ -18,27 +18,31 @@
  */
 
 using JetBrains.ReSharper.TestFramework;
+using JetBrains.Util;
 using NUnit.Framework;
 
 namespace KaVE.SolutionAnalysis.Tests
 {
     [TestFixture]
-    internal class SolutionAnalysisTest : BaseTestWithSingleProject
+    internal class SolutionAnalysisTest : BaseTestWithExistingSolution
     {
         protected override string RelativeTestDataPath
         {
-            get { return @"SolutionAnalysis\Project1"; }
+            get { return @"TestSolution"; }
+        }
+
+        protected override FileSystemPath ExistingSolutionFilePath
+        {
+            get { return GetTestDataFilePath2("TestSolution.sln"); }
         }
 
         [Test]
         public void TestSolutionAnalysis()
         {
-            WithSingleProject(
-                RelativeTestDataPath + @"\GlobalNamespaceClass.cs",
-                (lifetime, solution, project) => SolutionAnalysis.StartFromTestContext(solution));
+            DoTestSolution((lifetime, solution) => { });
 
             var projects = SolutionAnalysis.AnalysedProjects;
-            CollectionAssert.Contains(projects, "TestProject");
+            CollectionAssert.Contains(projects, "Project1");
         }
     }
 }

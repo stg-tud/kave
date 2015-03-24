@@ -20,9 +20,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using JetBrains.Application;
 using JetBrains.ProjectModel;
-using JetBrains.Threading;
 using JetBrains.Util;
 
 namespace KaVE.SolutionAnalysis
@@ -30,28 +28,13 @@ namespace KaVE.SolutionAnalysis
     [SolutionComponent]
     public class SolutionAnalysis
     {
-        public static IList<String> AnalysedProjects = new List<String>();
+        public static IList<String> AnalysedProjects = new List<string>();
+        public static IList<String> AnalysedFiles = new List<string>();
 
         public SolutionAnalysis(ISolution solution)
         {
-            // Do everything in Analyse(), because in the test environment the solution is not ready yet
-            // and thus the test calls StartFromTestContext() when this is the case.
-            Analyse(solution);
-        }
-
-        private static void Analyse(ISolution solution)
-        {
             var projects = solution.GetAllProjects();
             AnalysedProjects.AddRange(projects.Select(project => project.Name));
-        }
-
-        internal static void StartFromTestContext(ISolution solution)
-        {
-            ReentrancyGuard.Current.Execute(
-                "solution analysis",
-                () =>
-                    ReadLockCookie.Execute(
-                        () => Analyse(solution)));
         }
     }
 }
