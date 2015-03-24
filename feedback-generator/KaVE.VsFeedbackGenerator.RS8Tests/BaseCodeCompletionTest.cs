@@ -49,10 +49,10 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests
         {
             get
             {
-                var defaultNamespace = typeof (BaseCSharpCodeCompletionTest).Namespace;
+                var defaultNamespace = GetType().Namespace;
                 var concreteNamespace = GetType().FullName;
 
-                Asserts.NotNull(defaultNamespace, "BaseCSharpCodeCompletionTest somehow moved to global namespace?!");
+                Asserts.NotNull(defaultNamespace, GetType() + " cannot be in global namespace!");
 
                 string basePath;
                 if (concreteNamespace.StartsWith(defaultNamespace))
