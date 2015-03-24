@@ -48,6 +48,9 @@ namespace KaVE.SolutionAnalysis.Tests
 
             var files = SolutionAnalysis.AnalyzedFiles;
             CollectionAssert.AreEquivalent(new[] {"AssemblyInfo.cs", "GlobalClass.cs"}, files.Select(Path.GetFileName));
+
+            var classes = SolutionAnalysis.AnalyzedClasses;
+            CollectionAssert.AreEquivalent(new[]{"GlobalClass"}, classes);
         }
     }
 }
