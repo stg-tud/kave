@@ -19,6 +19,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using JetBrains.ProjectModel;
 using JetBrains.Util;
@@ -28,18 +29,19 @@ namespace KaVE.SolutionAnalysis
     [SolutionComponent]
     public class SolutionAnalysis
     {
-        public static IList<String> AnalysedProjects = new List<string>();
-        public static IList<String> AnalysedFiles = new List<string>();
+        public static IList<String> AnalyzedProjects = new List<string>();
+        public static IList<String> AnalyzedFiles = new List<string>();
 
         public SolutionAnalysis(ISolution solution)
         {
             var projects = solution.GetAllProjects().Where(NotDefaultProject);
-            projects.ForEach(AnalyseProject);
+            projects.ForEach(AnalyzeProject);
         }
 
-        private void AnalyseProject(IProject project)
+        private void AnalyzeProject(IProject project)
         {
-            AnalysedProjects.Add(project.Name);
+            AnalyzedProjects.Add(project.Name);
+            AnalyzedFiles.AddRange(Directory.GetFiles(project.Location.FullPath, "*.cs", SearchOption.AllDirectories));
         }
 
         private bool NotDefaultProject(IProject project)

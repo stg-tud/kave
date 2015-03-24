@@ -17,6 +17,8 @@
  *    - Sven Amann
  */
 
+using System.IO;
+using System.Linq;
 using JetBrains.ReSharper.TestFramework;
 using JetBrains.Util;
 using NUnit.Framework;
@@ -41,8 +43,11 @@ namespace KaVE.SolutionAnalysis.Tests
         {
             DoTestSolution((lifetime, solution) => { });
 
-            var projects = SolutionAnalysis.AnalysedProjects;
+            var projects = SolutionAnalysis.AnalyzedProjects;
             CollectionAssert.AreEqual(new[] {"Project1"}, projects);
+
+            var files = SolutionAnalysis.AnalyzedFiles;
+            CollectionAssert.AreEquivalent(new[] {"AssemblyInfo.cs", "GlobalClass.cs"}, files.Select(Path.GetFileName));
         }
     }
 }
