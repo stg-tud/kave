@@ -33,8 +33,18 @@ namespace KaVE.SolutionAnalysis
 
         public SolutionAnalysis(ISolution solution)
         {
-            var projects = solution.GetAllProjects();
-            AnalysedProjects.AddRange(projects.Select(project => project.Name));
+            var projects = solution.GetAllProjects().Where(NotDefaultProject);
+            projects.ForEach(AnalyseProject);
+        }
+
+        private void AnalyseProject(IProject project)
+        {
+            AnalysedProjects.Add(project.Name);
+        }
+
+        private bool NotDefaultProject(IProject project)
+        {
+            return !project.Name.Equals("Miscellaneous Files") && !project.Name.Equals("&");
         }
     }
 }

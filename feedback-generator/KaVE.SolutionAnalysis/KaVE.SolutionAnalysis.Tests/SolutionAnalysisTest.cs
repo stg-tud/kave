@@ -42,7 +42,7 @@ namespace KaVE.SolutionAnalysis.Tests
             DoTestSolution((lifetime, solution) => { });
 
             var projects = SolutionAnalysis.AnalysedProjects;
-            CollectionAssert.Contains(projects, "Project1");
+            CollectionAssert.AreEqual(new[] {"Project1"}, projects);
         }
     }
 }
