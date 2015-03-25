@@ -19,13 +19,16 @@
 
 using System.IO;
 using System.Linq;
+using JetBrains.Application;
 using JetBrains.ReSharper.TestFramework;
 using JetBrains.Util;
+using KaVE.Model.Names.CSharp;
 using NUnit.Framework;
+using ILogger = KaVE.Utils.Exceptions.ILogger;
 
 namespace KaVE.SolutionAnalysis.Tests
 {
-    [TestFixture]
+    [TestFixture, TestNetFramework4]
     internal class SolutionAnalysisTest : BaseTestWithExistingSolution
     {
         protected override string RelativeTestDataPath
@@ -41,16 +44,21 @@ namespace KaVE.SolutionAnalysis.Tests
         [Test]
         public void TestSolutionAnalysis()
         {
-            DoTestSolution((lifetime, solution) => { });
+            DoTestSolution(
+                (lifetime, solution) =>
+                    new SolutionAnalysis(solution, Shell.Instance.GetComponent<ILogger>()).AnalyzeAllProjects());
 
-            var projects = SolutionAnalysis.AnalyzedProjects;
-            CollectionAssert.AreEqual(new[] {"Project1"}, projects);
+            CollectionAssert.AreEquivalent(new[] {"Project1"}, SolutionAnalysis.AnalyzedProjects);
 
-            var files = SolutionAnalysis.AnalyzedFiles;
-            CollectionAssert.AreEquivalent(new[] {"AssemblyInfo.cs", "GlobalClass.cs"}, files.Select(Path.GetFileName));
+            CollectionAssert.AreEquivalent(
+                new[] {"AssemblyInfo.cs", "GlobalClass.cs"},
+                SolutionAnalysis.AnalyzedFiles.Select(Path.GetFileName));
 
-            var classes = SolutionAnalysis.AnalyzedClasses;
-            CollectionAssert.AreEquivalent(new[]{"GlobalClass"}, classes);
+            CollectionAssert.AreEquivalent(new[] {"GlobalClass"}, SolutionAnalysis.AnalyzedClasses);
+
+            var contexts = SolutionAnalysis.AnalyzedContexts;
+            var types = contexts.Select(context => context.TypeShape.TypeHierarchy.Element);
+            CollectionAssert.AreEquivalent(new[]{TypeName.Get("GlobalClass, Project1")}, types);
         }
     }
 }

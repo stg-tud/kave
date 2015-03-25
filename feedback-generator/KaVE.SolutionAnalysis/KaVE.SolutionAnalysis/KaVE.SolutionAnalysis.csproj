@@ -39,6 +39,10 @@
     <StartWorkingDirectory>$(MSBuildProjectDirectory)\$(OutputPath)</StartWorkingDirectory>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="envdte, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>..\..\..\..\..\..\..\..\Program Files (x86)\Common Files\Microsoft Shared\MSEnv\PublicAssemblies\envdte.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -61,6 +65,14 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\KaVE.Model\KaVE.Model.csproj">
+      <Project>{236E2794-DE4D-4F94-AC87-2ABFD1059CE0}</Project>
+      <Name>KaVE.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\KaVE.Utils\KaVE.Utils.csproj">
+      <Project>{4439FDE5-778A-4FAB-8BB0-7A4E23C45BDB}</Project>
+      <Name>KaVE.Utils</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\KaVE.VsFeedbackGenerator\KaVE.VsFeedbackGenerator.csproj">
       <Project>{42CE1875-DF5B-4D9E-ADC4-47A96C06EF66}</Project>
       <Name>KaVE.VsFeedbackGenerator</Name>

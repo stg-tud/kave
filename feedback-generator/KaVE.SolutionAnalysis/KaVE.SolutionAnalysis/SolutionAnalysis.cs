@@ -17,66 +17,98 @@
  *    - Sven Amann
  */
 
+using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
+using EnvDTE;
+using JetBrains.Application;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Parsing;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
+using JetBrains.ReSharper.Psi.ExtensionsAPI.Tree;
 using JetBrains.ReSharper.Psi.Modules;
 using JetBrains.ReSharper.Psi.Parsing;
-using JetBrains.ReSharper.Psi.Tree;
-using JetBrains.Text;
 using JetBrains.Util;
+using KaVE.Model.Events.CompletionEvents;
+using KaVE.VsFeedbackGenerator.Analysis;
+using KaVE.VsFeedbackGenerator.VsIntegration;
+using ILogger = KaVE.Utils.Exceptions.ILogger;
 
 namespace KaVE.SolutionAnalysis
 {
-    [SolutionComponent]
+    [ShellComponent]
+    public class AnalysisSession : IIDESession
+    {
+        public string UUID
+        {
+            get { return "SolutionAnalysisUUID"; }
+        }
+
+        public DTE DTE
+        {
+            get { throw new NotSupportedException("no IDE in analysis session"); }
+        }
+    }
+
+    //[SolutionComponent]
     public class SolutionAnalysis
     {
         public static readonly IList<string> AnalyzedProjects = new List<string>();
         public static readonly IList<string> AnalyzedFiles = new List<string>();
         public static readonly IList<string> AnalyzedClasses = new List<string>();
+        public static readonly IList<Context> AnalyzedContexts = new List<Context>();
 
         private readonly ISolution _solution;
+        private readonly ILogger _logger;
 
-        public SolutionAnalysis(ISolution solution)
+        public SolutionAnalysis(ISolution solution, ILogger logger)
         {
             _solution = solution;
-            var projects = solution.GetAllProjects().Where(NotDefaultProject);
-            projects.ForEach(AnalyzeProject);
+            _logger = logger;
         }
 
+        public void AnalyzeAllProjects()
+        {
+            var projects = _solution.GetAllProjects();
+            projects.Remove(_solution.MiscFilesProject);
+            projects.Remove(_solution.SolutionProject);
+            projects.ForEach(AnalyzeProject);
+        }
 
         private void AnalyzeProject(IProject project)
         {
             AnalyzedProjects.Add(project.Name);
-            Directory.GetFiles(project.Location.FullPath, "*.cs", SearchOption.AllDirectories)
-                     .ForEach(file => AnalyzeFile(file, project));
+
+            var psiModules = _solution.PsiModules();
+            var primaryPsiModule = psiModules.GetPrimaryPsiModule(project).NotNull("no psi module");
+            primaryPsiModule.SourceFiles.Where(file => file.Name.EndsWith(".cs")).ForEach(file => AnalyzeFile(file, primaryPsiModule));
         }
 
-        private void AnalyzeFile(string file, IProject project)
+        private void AnalyzeFile(IPsiSourceFile psiSourceFile, IPsiModule primaryPsiModule)
         {
-            AnalyzedFiles.Add(file);
-            var languageService = CSharpLanguage.Instance.LanguageService();
-            ILexer lexer = languageService.CreateCachingLexer(new StringBuffer(File.ReadAllText(file)));
-            var primaryPsiModule = _solution.PsiModules().GetPrimaryPsiModule(project);
-            var csharpParser = (ICSharpParser) languageService.CreateParser(lexer, primaryPsiModule, null);
+            AnalyzedFiles.Add(psiSourceFile.Name);
+
+            var languageService = CSharpLanguage.Instance.LanguageService().NotNull("CSharp language service not available");
+            ILexer lexer = languageService.CreateCachingLexer(psiSourceFile.Document.Buffer);
+            var csharpParser = (ICSharpParser) languageService.CreateParser(lexer, primaryPsiModule, psiSourceFile);
             csharpParser.ExpandChameleons = csharpParser.OpenChameleonStrategy;
-            var psiFile = (ICSharpFile)csharpParser.ParseFile();
+            var psiFile = (ICSharpFile) csharpParser.ParseFile();
+            SandBox.CreateSandBoxFor(psiFile, primaryPsiModule);
+            AnalyzeTypeAndNamespaceHolder(psiFile);
+        }
+
+        private void AnalyzeTypeAndNamespaceHolder(ICSharpTypeAndNamespaceHolderDeclaration psiFile)
+        {
             psiFile.TypeDeclarations.ForEach(AnalyzeType);
+            psiFile.NamespaceDeclarations.ForEach(AnalyzeTypeAndNamespaceHolder);
         }
 
         private void AnalyzeType(ICSharpTypeDeclaration aType)
         {
             AnalyzedClasses.Add(aType.CLRName);
-        }
-
-        private bool NotDefaultProject(IProject project)
-        {
-            return !project.Name.Equals("Miscellaneous Files") && !project.Name.Equals("&");
+            AnalyzedContexts.Add(ContextAnalysis.Analyze(aType, _logger));
         }
     }
 }

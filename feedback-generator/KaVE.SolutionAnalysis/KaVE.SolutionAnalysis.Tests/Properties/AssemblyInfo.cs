@@ -37,6 +37,7 @@ public class TestEnvironmentAssembly : ReSharperTestEnvironmentAssembly
     {
         // Test assembly
         yield return Assembly.GetExecutingAssembly();
+        yield return typeof (KaVE.VsFeedbackGenerator.AboutAction).Assembly;
         yield return typeof(KaVE.SolutionAnalysis.SolutionAnalysis).Assembly;
     }
 

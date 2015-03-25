@@ -34,7 +34,7 @@ using KaVE.VsFeedbackGenerator.Utils.Names;
 
 namespace KaVE.VsFeedbackGenerator.Analysis
 {
-    internal class ContextAnalysis
+    public class ContextAnalysis
     {
         private readonly ILogger _logger;
         private readonly TypeShapeAnalysis _typeShapeAnalysis = new TypeShapeAnalysis();
@@ -50,11 +50,25 @@ namespace KaVE.VsFeedbackGenerator.Analysis
             return new ContextAnalysis(logger).AnalyzeInternal(rsContext);
         }
 
+        public static Context Analyze(ICSharpTypeDeclaration classDeclaration, ILogger logger)
+        {
+            return new ContextAnalysis(logger).AnalyzeInternal(classDeclaration);
+        }
+
         private Context AnalyzeInternal(CSharpCodeCompletionContext rsContext)
         {
             var context = new Context();
 
             Execute.WithExceptionLogging(_logger, () => AnalyzeInternal(rsContext.NodeInFile, context));
+
+            return context;
+        }
+
+        private Context AnalyzeInternal(ICSharpTypeDeclaration type)
+        {
+            var context = new Context();
+
+            Execute.WithExceptionLogging(_logger, () => AnalyzeInternal(type, context));
 
             return context;
         }
