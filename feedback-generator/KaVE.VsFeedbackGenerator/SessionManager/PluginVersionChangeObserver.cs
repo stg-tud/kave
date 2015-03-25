@@ -18,6 +18,7 @@
  */
 
 using JetBrains.Application;
+using JetBrains.Application.Components;
 using JetBrains.Util;
 using KaVE.Model.Events.VisualStudio;
 using KaVE.VsFeedbackGenerator.Generators;
@@ -26,7 +27,7 @@ using KaVE.VsFeedbackGenerator.Utils;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager
 {
-    [ShellComponent]
+    [ShellComponent(ProgramConfigurations.VS_ADDIN)]
     public class PluginVersionChangeObserver : EventGeneratorBase
     {
         public PluginVersionChangeObserver(ISettingsStore store,

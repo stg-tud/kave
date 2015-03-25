@@ -19,12 +19,13 @@
 
 using System;
 using JetBrains.Application;
+using JetBrains.Application.Components;
 using KaVE.VsFeedbackGenerator.TrayNotification;
 using KaVE.VsFeedbackGenerator.Utils;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager
 {
-    [ShellComponent]
+    [ShellComponent(ProgramConfigurations.VS_ADDIN)]
     public class UploadReminder
     {
         private const int WorkTimeStart = 10;
