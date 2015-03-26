@@ -21,6 +21,7 @@ using System.Linq;
 using JetBrains.Application;
 using JetBrains.ReSharper.TestFramework;
 using JetBrains.Util;
+using KaVE.Model.Events.CompletionEvents;
 using KaVE.Model.Names.CSharp;
 using KaVE.Model.SSTs.Impl.Declarations;
 using NUnit.Framework;
@@ -154,14 +155,27 @@ namespace KaVE.SolutionAnalysis.Tests
         {
             var results = RunAnalysis();
 
-            var contextForTypeWithDependency = results.AnalyzedContexts.First(
-                context => context.TypeShape.TypeHierarchy.Element.Name.Equals("ClassWithCoreLibDependency"));
+            var context = GetContextForType(results, "ClassWithCoreLibDependency");
             var expectedDeclaration = new FieldDeclaration
             {
                 Name = FieldName.Get(
                     "[i:System.Collections.Generic.IList`1[[T -> System.String, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0] [Project1.ClassWithCoreLibDependency, Project1].MyList")
             };
-            CollectionAssert.Contains(contextForTypeWithDependency.SST.Fields, expectedDeclaration);
+            CollectionAssert.Contains(context.SST.Fields, expectedDeclaration);
+        }
+
+        [Test]
+        public void AnalysisResolvesNuGetDependencies()
+        {
+            var results = RunAnalysis();
+
+            var context = GetContextForType(results, "ClassWithNuGetDependency");
+            var expectedDeclaration = new FieldDeclaration
+            {
+                Name = FieldName.Get(
+                "[Newtonsoft.Json.JsonConverter, Newtonsoft.Json, 6.0.0.0] [Project1.ClassWithNuGetDependency, Project1].MyConverter")
+            };
+            CollectionAssert.Contains(context.SST.Fields, expectedDeclaration);
         }
 
         private SolutionAnalysis.AnalysesResults RunAnalysis()
@@ -172,6 +186,12 @@ namespace KaVE.SolutionAnalysis.Tests
                     results =
                         new SolutionAnalysis(solution, Shell.Instance.GetComponent<ILogger>()).AnalyzeAllProjects());
             return results;
+        }
+
+        private static Context GetContextForType(SolutionAnalysis.AnalysesResults results, string classname)
+        {
+            return results.AnalyzedContexts.First(
+                context => context.TypeShape.TypeHierarchy.Element.Name.Equals(classname));
         }
     }
 }
