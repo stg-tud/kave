@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using System.Linq;
 using JetBrains.ActionManagement;
 using JetBrains.Application;
+using JetBrains.Application.Components;
 using JetBrains.DataFlow;
 using KaVE.VsFeedbackGenerator.Export;
 using KaVE.VsFeedbackGenerator.MessageBus;
@@ -28,7 +29,7 @@ using KaVE.VsFeedbackGenerator.Utils;
 
 namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
 {
-    [ShellComponent]
+    [ShellComponent(ProgramConfigurations.VS_ADDIN)]
     internal class ActionEventInstrumentationComponent
     {
         public ActionEventInstrumentationComponent(Lifetime lifetime,

@@ -51,6 +51,7 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SolutionAnalysisTest.cs" />
+    <Compile Include="TestLogger.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\KaVE.Model\KaVE.Model.csproj">

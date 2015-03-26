@@ -18,6 +18,7 @@
  */
 
 using System.Linq;
+using JetBrains.Application.Components;
 using JetBrains.DataFlow;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Intentions.Bulbs;
@@ -31,7 +32,7 @@ using KaVE.VsFeedbackGenerator.Utils;
 
 namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
 {
-    [SolutionComponent]
+    [SolutionComponent(ProgramConfigurations.VS_ADDIN)]
     internal class BulbItemInstrumentationComponent : IBulbItemsProvider
     {
         private readonly IRSEnv _env;

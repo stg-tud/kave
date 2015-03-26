@@ -20,6 +20,7 @@
 
 using System.Collections.Generic;
 using JetBrains.Application;
+using JetBrains.Application.Components;
 using JetBrains.Application.Extensions;
 using JetBrains.DataFlow;
 using JetBrains.Util;
@@ -35,7 +36,7 @@ namespace KaVE.VsFeedbackGenerator
         IIDESession IDESession { get; }
     }
 
-    [ShellComponent]
+    [ShellComponent(ProgramConfigurations.VS_ADDIN)]
     internal class RSEnv : IRSEnv
     {
         public const string ExtensionId = "KaVE.VsFeedbackGenerator";

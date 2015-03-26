@@ -17,11 +17,38 @@
  *    - Sven Amann
  */
 
+using System;
 using JetBrains.Application;
 using KaVE.Utils.Exceptions;
+using NUnit.Framework;
 
-namespace KaVE.SolutionAnalysis
+namespace KaVE.SolutionAnalysis.Tests
 {
     [ShellComponent]
-    public class AnalysisLogger : ConsoleLogger {}
+    class TestLogger : ILogger
+    {
+        public delegate void LogInfoHandler(string info);
+
+        public event LogInfoHandler InfoLogged = delegate { };  
+
+        public void Error(Exception exception, string content)
+        {
+            Assert.Fail(content + "\r\n" + exception);
+        }
+
+        public void Error(Exception exception)
+        {
+            Assert.Fail(exception.ToString());
+        }
+
+        public void Error(string content)
+        {
+            Assert.Fail(content);
+        }
+
+        public void Info(string info)
+        {
+            InfoLogged(info);
+        }
+    }
 }
