@@ -17,7 +17,6 @@
  *    - Sven Amann
  */
 
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -31,35 +30,35 @@ using ILogger = KaVE.Utils.Exceptions.ILogger;
 
 namespace KaVE.SolutionAnalysis.Tests
 {
-	[TestFixture, TestNetFramework4]
-	internal class SolutionAnalysisTest : BaseTestWithExistingSolution
-	{
-		protected override string RelativeTestDataPath
-		{
-			get { return @"TestSolution"; }
-		}
+    [TestFixture, TestNetFramework4]
+    internal class SolutionAnalysisTest : BaseTestWithExistingSolution
+    {
+        protected override string RelativeTestDataPath
+        {
+            get { return @"TestSolution"; }
+        }
 
-		protected override FileSystemPath ExistingSolutionFilePath
-		{
-			get { return GetTestDataFilePath2("TestSolution.sln"); }
-		}
+        protected override FileSystemPath ExistingSolutionFilePath
+        {
+            get { return GetTestDataFilePath2("TestSolution.sln"); }
+        }
 
-	    [Test]
-	    public void AnalyzesAllProjects()
-	    {
-	        var results = RunAnalysis();
+        [Test]
+        public void AnalyzesAllProjects()
+        {
+            var results = RunAnalysis();
 
-	        CollectionAssert.AreEquivalent(new []{"Project1"}, results.AnalyzedProjectNames);
-	    }
+            CollectionAssert.AreEquivalent(new[] {"Project1"}, results.AnalyzedProjectNames);
+        }
 
-		[Test]
-		public void AnalyzesGlobalClass()
-		{
-		    var results = RunAnalysis();
+        [Test]
+        public void AnalyzesGlobalClass()
+        {
+            var results = RunAnalysis();
 
-		    CollectionAssert.Contains(results.AnalyzedFileNames, "GlobalClass.cs");
+            CollectionAssert.Contains(results.AnalyzedFileNames, "GlobalClass.cs");
             CollectionAssert.Contains(results.AnalyzedTypes, TypeName.Get("GlobalClass, Project1"));
-		}
+        }
 
         [Test]
         public void AnalyzesClassInNamespace()
@@ -80,27 +79,37 @@ namespace KaVE.SolutionAnalysis.Tests
             CollectionAssert.Contains(results.AnalyzedTypes, TypeName.Get("Project1.SiblingClass2, Project1"));
         }
 
-		private TestAnalysesResults RunAnalysis()
-		{
-		    SolutionAnalysis.AnalysesResults results = null;
-			DoTestSolution(
-				(lifetime, solution) =>
-					results = new SolutionAnalysis(solution, Shell.Instance.GetComponent<ILogger>()).AnalyzeAllProjects());
-		    return new TestAnalysesResults(results);
-		}
+        [Test]
+        public void AnalyzesClassInSubfolders()
+        {
+            var results = RunAnalysis();
 
-	    private class TestAnalysesResults
-	    {
-	        private readonly SolutionAnalysis.AnalysesResults _results;
+            CollectionAssert.Contains(results.AnalyzedFileNames, "ClassInFileInFolder.cs");
+            CollectionAssert.Contains(results.AnalyzedTypes, TypeName.Get("Project1.A.B.ClassInFileInFolder, Project1"));
+        }
 
-	        public TestAnalysesResults(SolutionAnalysis.AnalysesResults results)
-	        {
-	            _results = results;
-	        }
+        private TestAnalysesResults RunAnalysis()
+        {
+            SolutionAnalysis.AnalysesResults results = null;
+            DoTestSolution(
+                (lifetime, solution) =>
+                    results =
+                        new SolutionAnalysis(solution, Shell.Instance.GetComponent<ILogger>()).AnalyzeAllProjects());
+            return new TestAnalysesResults(results);
+        }
 
-	        public IEnumerable<string> AnalyzedProjectNames
-	        {
-	            get { return _results.AnalyzedProjects; }
+        private class TestAnalysesResults
+        {
+            private readonly SolutionAnalysis.AnalysesResults _results;
+
+            public TestAnalysesResults(SolutionAnalysis.AnalysesResults results)
+            {
+                _results = results;
+            }
+
+            public IEnumerable<string> AnalyzedProjectNames
+            {
+                get { return _results.AnalyzedProjects; }
             }
 
             public IEnumerable<string> AnalyzedFileNames
@@ -108,10 +117,10 @@ namespace KaVE.SolutionAnalysis.Tests
                 get { return _results.AnalyzedFiles.Select(Path.GetFileName); }
             }
 
-	        public IEnumerable<ITypeName> AnalyzedTypes
+            public IEnumerable<ITypeName> AnalyzedTypes
             {
                 get { return _results.AnalyzedContexts.Select(context => context.TypeShape.TypeHierarchy.Element); }
-            } 
-	    }
-	}
+            }
+        }
+    }
 }
