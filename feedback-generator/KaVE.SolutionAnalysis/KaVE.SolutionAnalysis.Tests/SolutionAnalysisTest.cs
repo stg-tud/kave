@@ -115,6 +115,15 @@ namespace KaVE.SolutionAnalysis.Tests
             CollectionAssert.DoesNotContain(results.AnalyzedTypeNames, "Project1.IInterface");
         }
 
+        [Test]
+        public void DoesNotAnalyzeEnum()
+        {
+            var results = RunAnalysis();
+
+            CollectionAssert.Contains(results.AnalyzedFileNames, @"<Project1>\Enum.cs");
+            CollectionAssert.DoesNotContain(results.AnalyzedTypeNames, "Project1.Enum");
+        }
+
         private TestAnalysesResults RunAnalysis()
         {
             SolutionAnalysis.AnalysesResults results = null;
