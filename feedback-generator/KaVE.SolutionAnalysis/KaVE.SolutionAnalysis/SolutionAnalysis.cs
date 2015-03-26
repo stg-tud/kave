@@ -31,6 +31,7 @@ using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.ExtensionsAPI.Tree;
 using JetBrains.ReSharper.Psi.Modules;
 using JetBrains.ReSharper.Psi.Parsing;
+using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.Util;
 using KaVE.Model.Events.CompletionEvents;
 using KaVE.VsFeedbackGenerator.Analysis;
@@ -125,11 +126,17 @@ namespace KaVE.SolutionAnalysis
 
         private void AnalyzeType(ICSharpTypeDeclaration aType, AnalysesResults results)
         {
+            AnalyzeInnerTypes(aType, results);
+            if (aType is IClassDeclaration || aType is IStructDeclaration)
+            {
+                results.AnalyzedTypeNames.Add(aType.CLRName);
+                results.AnalyzedContexts.Add(ContextAnalysis.Analyze(aType, _logger));
+            }
+        }
+
+        private void AnalyzeInnerTypes(ITypeDeclarationHolder aType, AnalysesResults results)
+        {
             aType.TypeDeclarations.OfType<ICSharpTypeDeclaration>().ForEach(innerType => AnalyzeType(innerType, results));
-            if (aType is IInterfaceDeclaration || aType is IEnumDeclaration || aType is IDelegateDeclaration)
-                return;
-            results.AnalyzedTypeNames.Add(aType.CLRName);
-            results.AnalyzedContexts.Add(ContextAnalysis.Analyze(aType, _logger));
         }
     }
 }

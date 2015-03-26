@@ -107,6 +107,15 @@ namespace KaVE.SolutionAnalysis.Tests
         }
 
         [Test]
+        public void AnalyzesStruct()
+        {
+            var results = RunAnalysis();
+
+            CollectionAssert.Contains(results.AnalyzedFileNames, @"<Project1>\Struct.cs");
+            CollectionAssert.Contains(results.AnalyzedTypeNames, "Project1.Struct");
+        }
+
+        [Test]
         public void DoesNotAnalyzeInterface()
         {
             var results = RunAnalysis();

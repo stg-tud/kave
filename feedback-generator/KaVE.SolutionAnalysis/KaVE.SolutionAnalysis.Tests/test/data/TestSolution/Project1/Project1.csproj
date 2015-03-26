@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="A\B\ClassInFileInFolder.cs" />
+    <Compile Include="Struct.cs" />
     <Compile Include="ClassInNamespace.cs" />
     <Compile Include="ClassInNestedNamespace.cs" />
     <Compile Include="Delegate.cs" />
