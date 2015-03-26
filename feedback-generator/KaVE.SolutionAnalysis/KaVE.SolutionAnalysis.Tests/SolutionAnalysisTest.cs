@@ -57,7 +57,7 @@ namespace KaVE.SolutionAnalysis.Tests
             var results = RunAnalysis();
 
             CollectionAssert.Contains(results.AnalyzedFileNames, "GlobalClass.cs");
-            CollectionAssert.Contains(results.AnalyzedTypes, TypeName.Get("GlobalClass, Project1"));
+            CollectionAssert.Contains(results.AnalyzedTypeNames, "GlobalClass");
         }
 
         [Test]
@@ -66,7 +66,7 @@ namespace KaVE.SolutionAnalysis.Tests
             var results = RunAnalysis();
 
             CollectionAssert.Contains(results.AnalyzedFileNames, "ClassInNamespace.cs");
-            CollectionAssert.Contains(results.AnalyzedTypes, TypeName.Get("Project1.ClassInNamespace, Project1"));
+            CollectionAssert.Contains(results.AnalyzedTypeNames, "Project1.ClassInNamespace");
         }
 
         [Test]
@@ -75,8 +75,8 @@ namespace KaVE.SolutionAnalysis.Tests
             var results = RunAnalysis();
 
             CollectionAssert.Contains(results.AnalyzedFileNames, "MultipleClassesFile.cs");
-            CollectionAssert.Contains(results.AnalyzedTypes, TypeName.Get("Project1.SiblingClass1, Project1"));
-            CollectionAssert.Contains(results.AnalyzedTypes, TypeName.Get("Project1.SiblingClass2, Project1"));
+            CollectionAssert.Contains(results.AnalyzedTypeNames, "Project1.SiblingClass1");
+            CollectionAssert.Contains(results.AnalyzedTypeNames, "Project1.SiblingClass2");
         }
 
         [Test]
@@ -85,7 +85,7 @@ namespace KaVE.SolutionAnalysis.Tests
             var results = RunAnalysis();
 
             CollectionAssert.Contains(results.AnalyzedFileNames, "ClassInFileInFolder.cs");
-            CollectionAssert.Contains(results.AnalyzedTypes, TypeName.Get("Project1.A.B.ClassInFileInFolder, Project1"));
+            CollectionAssert.Contains(results.AnalyzedTypeNames, "Project1.A.B.ClassInFileInFolder");
         }
 
         [Test]
@@ -94,7 +94,7 @@ namespace KaVE.SolutionAnalysis.Tests
             var results = RunAnalysis();
 
             CollectionAssert.Contains(results.AnalyzedFileNames, "ClassInNestedNamespace.cs");
-            CollectionAssert.Contains(results.AnalyzedTypes, TypeName.Get("Project1.A.B.C.ClassInNestedNamespace, Project1"));
+            CollectionAssert.Contains(results.AnalyzedTypeNames, "Project1.A.B.C.ClassInNestedNamespace");
         }
 
         [Test]
@@ -103,7 +103,7 @@ namespace KaVE.SolutionAnalysis.Tests
             var results = RunAnalysis();
 
             CollectionAssert.Contains(results.AnalyzedFileNames, "NestedClasses.cs");
-            CollectionAssert.Contains(results.AnalyzedTypes, TypeName.Get("Project1.OuterClass+InnerClass, Project1"));
+            CollectionAssert.Contains(results.AnalyzedTypeNames, "Project1.OuterClass+InnerClass");
         }
 
         [Test]
@@ -112,7 +112,7 @@ namespace KaVE.SolutionAnalysis.Tests
             var results = RunAnalysis();
 
             CollectionAssert.Contains(results.AnalyzedFileNames, "IInterface.cs");
-            CollectionAssert.DoesNotContain(results.AnalyzedTypes, TypeName.Get("IInterface, Project1"));
+            CollectionAssert.DoesNotContain(results.AnalyzedTypeNames, "Project1.IInterface");
             // this happened initially, because analysis failed to resolve the interface's type shape
             CollectionAssert.DoesNotContain(results.AnalyzedTypes, TypeName.UnknownName);
         }
@@ -144,6 +144,11 @@ namespace KaVE.SolutionAnalysis.Tests
             public IEnumerable<string> AnalyzedFileNames
             {
                 get { return _results.AnalyzedFiles.Select(Path.GetFileName); }
+            }
+
+            public IEnumerable<string> AnalyzedTypeNames
+            {
+                get { return _results.AnalyzedTypeNames; }
             }
 
             public IEnumerable<ITypeName> AnalyzedTypes

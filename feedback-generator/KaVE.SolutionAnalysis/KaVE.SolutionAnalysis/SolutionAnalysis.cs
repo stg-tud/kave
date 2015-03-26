@@ -60,6 +60,7 @@ namespace KaVE.SolutionAnalysis
         {
             public readonly IList<string> AnalyzedProjects = new List<string>();
             public readonly IList<string> AnalyzedFiles = new List<string>();
+            public readonly IList<string> AnalyzedTypeNames = new List<string>();
             public readonly IList<Context> AnalyzedContexts = new List<Context>();
         }
 
@@ -121,6 +122,7 @@ namespace KaVE.SolutionAnalysis
             aType.TypeDeclarations.OfType<ICSharpTypeDeclaration>().ForEach(innerType => AnalyzeType(innerType, results));
             if (aType is IInterfaceDeclaration)
                 return;
+            results.AnalyzedTypeNames.Add(aType.CLRName);
             results.AnalyzedContexts.Add(ContextAnalysis.Analyze(aType, _logger));
         }
     }
