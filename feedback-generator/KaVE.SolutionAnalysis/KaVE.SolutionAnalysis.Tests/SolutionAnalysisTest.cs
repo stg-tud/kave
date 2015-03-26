@@ -22,6 +22,7 @@ using JetBrains.Application;
 using JetBrains.ReSharper.TestFramework;
 using JetBrains.Util;
 using KaVE.Model.Names.CSharp;
+using KaVE.Model.SSTs.Impl.Declarations;
 using NUnit.Framework;
 using ILogger = KaVE.Utils.Exceptions.ILogger;
 
@@ -146,6 +147,21 @@ namespace KaVE.SolutionAnalysis.Tests
 
             var analyzedTypes = results.AnalyzedContexts.Select(context => context.TypeShape.TypeHierarchy.Element);
             CollectionAssert.Contains(analyzedTypes, TypeName.Get("Project1.ClassInNamespace, Project1"));
+        }
+
+        [Test]
+        public void AnalysisResolvesCoreDependencies()
+        {
+            var results = RunAnalysis();
+
+            var contextForTypeWithDependency = results.AnalyzedContexts.First(
+                context => context.TypeShape.TypeHierarchy.Element.Name.Equals("ClassWithCoreLibDependency"));
+            var expectedDeclaration = new FieldDeclaration
+            {
+                Name = FieldName.Get(
+                    "[i:System.Collections.Generic.IList`1[[T -> System.String, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0] [Project1.ClassWithCoreLibDependency, Project1].MyList")
+            };
+            CollectionAssert.Contains(contextForTypeWithDependency.SST.Fields, expectedDeclaration);
         }
 
         private SolutionAnalysis.AnalysesResults RunAnalysis()
