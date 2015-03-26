@@ -98,6 +98,15 @@ namespace KaVE.SolutionAnalysis.Tests
         }
 
         [Test]
+        public void AnalyzesNestedClass()
+        {
+            var results = RunAnalysis();
+
+            CollectionAssert.Contains(results.AnalyzedFileNames, "NestedClasses.cs");
+            CollectionAssert.Contains(results.AnalyzedTypes, TypeName.Get("Project1.OuterClass+InnerClass, Project1"));
+        }
+
+        [Test]
         public void DoesNotAnalyzeInterface()
         {
             var results = RunAnalysis();

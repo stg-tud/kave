@@ -46,6 +46,7 @@
     <Compile Include="GlobalClass.cs" />
     <Compile Include="IInterface.cs" />
     <Compile Include="MultipleClassesFile.cs" />
+    <Compile Include="NestedClasses.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

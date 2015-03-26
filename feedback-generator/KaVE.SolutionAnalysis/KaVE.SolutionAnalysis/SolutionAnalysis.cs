@@ -118,6 +118,7 @@ namespace KaVE.SolutionAnalysis
 
         private void AnalyzeType(ICSharpTypeDeclaration aType, AnalysesResults results)
         {
+            aType.TypeDeclarations.OfType<ICSharpTypeDeclaration>().ForEach(innerType => AnalyzeType(innerType, results));
             if (aType is IInterfaceDeclaration)
                 return;
             results.AnalyzedContexts.Add(ContextAnalysis.Analyze(aType, _logger));
