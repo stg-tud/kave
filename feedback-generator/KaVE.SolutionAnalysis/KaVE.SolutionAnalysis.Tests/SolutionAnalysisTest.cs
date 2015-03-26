@@ -18,13 +18,11 @@
  */
 
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using JetBrains.Application;
 using JetBrains.ReSharper.TestFramework;
 using JetBrains.Util;
 using KaVE.Model.Names;
-using KaVE.Model.Names.CSharp;
 using NUnit.Framework;
 using ILogger = KaVE.Utils.Exceptions.ILogger;
 

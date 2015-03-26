@@ -23,7 +23,6 @@ using System.Linq;
 using EnvDTE;
 using JetBrains.Application;
 using JetBrains.ProjectModel;
-using JetBrains.ReSharper.Feature.Services.CSharp.CompleteStatement;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Parsing;
@@ -118,7 +117,8 @@ namespace KaVE.SolutionAnalysis
             return psiFile;
         }
 
-        private void AnalyzeTypeAndNamespaceHolder(ICSharpTypeAndNamespaceHolderDeclaration psiFile, AnalysesResults results)
+        private void AnalyzeTypeAndNamespaceHolder(ICSharpTypeAndNamespaceHolderDeclaration psiFile,
+            AnalysesResults results)
         {
             psiFile.TypeDeclarations.ForEach(aType => AnalyzeType(aType, results));
             psiFile.NamespaceDeclarations.ForEach(psiFile1 => AnalyzeTypeAndNamespaceHolder(psiFile1, results));
