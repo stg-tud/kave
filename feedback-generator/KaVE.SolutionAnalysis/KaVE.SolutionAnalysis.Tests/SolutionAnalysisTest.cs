@@ -17,48 +17,101 @@
  *    - Sven Amann
  */
 
+using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using JetBrains.Application;
 using JetBrains.ReSharper.TestFramework;
 using JetBrains.Util;
+using KaVE.Model.Names;
 using KaVE.Model.Names.CSharp;
 using NUnit.Framework;
 using ILogger = KaVE.Utils.Exceptions.ILogger;
 
 namespace KaVE.SolutionAnalysis.Tests
 {
-    [TestFixture, TestNetFramework4]
-    internal class SolutionAnalysisTest : BaseTestWithExistingSolution
-    {
-        protected override string RelativeTestDataPath
-        {
-            get { return @"TestSolution"; }
-        }
+	[TestFixture, TestNetFramework4]
+	internal class SolutionAnalysisTest : BaseTestWithExistingSolution
+	{
+		protected override string RelativeTestDataPath
+		{
+			get { return @"TestSolution"; }
+		}
 
-        protected override FileSystemPath ExistingSolutionFilePath
+		protected override FileSystemPath ExistingSolutionFilePath
+		{
+			get { return GetTestDataFilePath2("TestSolution.sln"); }
+		}
+
+	    [Test]
+	    public void AnalyzesAllProjects()
+	    {
+	        var results = RunAnalysis();
+
+	        CollectionAssert.AreEquivalent(new []{"Project1"}, results.AnalyzedProjectNames);
+	    }
+
+		[Test]
+		public void AnalyzesGlobalClass()
+		{
+		    var results = RunAnalysis();
+
+		    CollectionAssert.Contains(results.AnalyzedFileNames, "GlobalClass.cs");
+            CollectionAssert.Contains(results.AnalyzedTypes, TypeName.Get("GlobalClass, Project1"));
+		}
+
+        [Test]
+        public void AnalyzesClassInNamespace()
         {
-            get { return GetTestDataFilePath2("TestSolution.sln"); }
+            var results = RunAnalysis();
+
+            CollectionAssert.Contains(results.AnalyzedFileNames, "ClassInNamespace.cs");
+            CollectionAssert.Contains(results.AnalyzedTypes, TypeName.Get("Project1.ClassInNamespace, Project1"));
         }
 
         [Test]
-        public void TestSolutionAnalysis()
+        public void AnalyzesMultipleClassesInOneFileInSameNamespace()
         {
-            DoTestSolution(
-                (lifetime, solution) =>
-                    new SolutionAnalysis(solution, Shell.Instance.GetComponent<ILogger>()).AnalyzeAllProjects());
+            var results = RunAnalysis();
 
-            CollectionAssert.AreEquivalent(new[] {"Project1"}, SolutionAnalysis.AnalyzedProjects);
-
-            CollectionAssert.AreEquivalent(
-                new[] {"AssemblyInfo.cs", "GlobalClass.cs", "ClassInNamespace.cs", "MultipleClassesFile.cs"},
-                SolutionAnalysis.AnalyzedFiles.Select(Path.GetFileName));
-
-            CollectionAssert.AreEquivalent(new[] {"GlobalClass", "Project1.ClassInNamespace", "Project1.SiblingClass1", "Project1.SiblingClass2"}, SolutionAnalysis.AnalyzedClasses);
-
-            var contexts = SolutionAnalysis.AnalyzedContexts;
-            var types = contexts.Select(context => context.TypeShape.TypeHierarchy.Element);
-            CollectionAssert.AreEquivalent(new[]{TypeName.Get("GlobalClass, Project1"), TypeName.Get("Project1.ClassInNamespace, Project1"), TypeName.Get("Project1.SiblingClass1, Project1"), TypeName.Get("Project1.SiblingClass2, Project1")}, types);
+            CollectionAssert.Contains(results.AnalyzedFileNames, "MultipleClassesFile.cs");
+            CollectionAssert.Contains(results.AnalyzedTypes, TypeName.Get("Project1.SiblingClass1, Project1"));
+            CollectionAssert.Contains(results.AnalyzedTypes, TypeName.Get("Project1.SiblingClass2, Project1"));
         }
-    }
+
+		private TestAnalysesResults RunAnalysis()
+		{
+		    SolutionAnalysis.AnalysesResults results = null;
+			DoTestSolution(
+				(lifetime, solution) =>
+					results = new SolutionAnalysis(solution, Shell.Instance.GetComponent<ILogger>()).AnalyzeAllProjects());
+		    return new TestAnalysesResults(results);
+		}
+
+	    private class TestAnalysesResults
+	    {
+	        private readonly SolutionAnalysis.AnalysesResults _results;
+
+	        public TestAnalysesResults(SolutionAnalysis.AnalysesResults results)
+	        {
+	            _results = results;
+	        }
+
+	        public IEnumerable<string> AnalyzedProjectNames
+	        {
+	            get { return _results.AnalyzedProjects; }
+            }
+
+            public IEnumerable<string> AnalyzedFileNames
+            {
+                get { return _results.AnalyzedFiles.Select(Path.GetFileName); }
+            }
+
+	        public IEnumerable<ITypeName> AnalyzedTypes
+            {
+                get { return _results.AnalyzedContexts.Select(context => context.TypeShape.TypeHierarchy.Element); }
+            } 
+	    }
+	}
 }
