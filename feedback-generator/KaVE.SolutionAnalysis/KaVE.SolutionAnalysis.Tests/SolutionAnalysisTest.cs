@@ -51,14 +51,14 @@ namespace KaVE.SolutionAnalysis.Tests
             CollectionAssert.AreEquivalent(new[] {"Project1"}, SolutionAnalysis.AnalyzedProjects);
 
             CollectionAssert.AreEquivalent(
-                new[] {"AssemblyInfo.cs", "GlobalClass.cs"},
+                new[] {"AssemblyInfo.cs", "GlobalClass.cs", "ClassInNamespace.cs"},
                 SolutionAnalysis.AnalyzedFiles.Select(Path.GetFileName));
 
-            CollectionAssert.AreEquivalent(new[] {"GlobalClass"}, SolutionAnalysis.AnalyzedClasses);
+            CollectionAssert.AreEquivalent(new[] {"GlobalClass", "Project1.ClassInNamespace"}, SolutionAnalysis.AnalyzedClasses);
 
             var contexts = SolutionAnalysis.AnalyzedContexts;
             var types = contexts.Select(context => context.TypeShape.TypeHierarchy.Element);
-            CollectionAssert.AreEquivalent(new[]{TypeName.Get("GlobalClass, Project1")}, types);
+            CollectionAssert.AreEquivalent(new[]{TypeName.Get("GlobalClass, Project1"), TypeName.Get("Project1.ClassInNamespace, Project1")}, types);
         }
     }
 }
