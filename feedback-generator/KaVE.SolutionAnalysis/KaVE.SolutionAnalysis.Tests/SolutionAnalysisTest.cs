@@ -17,6 +17,7 @@
  *    - Sven Amann
  */
 
+using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Application;
 using JetBrains.ReSharper.TestFramework;
@@ -24,6 +25,7 @@ using JetBrains.Util;
 using KaVE.Model.Events.CompletionEvents;
 using KaVE.Model.Names.CSharp;
 using KaVE.Model.SSTs.Impl.Declarations;
+using KaVE.VsFeedbackGenerator.Utils;
 using NUnit.Framework;
 using ILogger = KaVE.Utils.Exceptions.ILogger;
 
@@ -173,22 +175,63 @@ namespace KaVE.SolutionAnalysis.Tests
             var expectedDeclaration = new FieldDeclaration
             {
                 Name = FieldName.Get(
-                "[Newtonsoft.Json.JsonConverter, Newtonsoft.Json, 6.0.0.0] [Project1.ClassWithNuGetDependency, Project1].MyConverter")
+                    "[Newtonsoft.Json.JsonConverter, Newtonsoft.Json, 6.0.0.0] [Project1.ClassWithNuGetDependency, Project1].MyConverter")
             };
             CollectionAssert.Contains(context.SST.Fields, expectedDeclaration);
         }
 
-        private SolutionAnalysis.AnalysesResults RunAnalysis()
+        private Results RunAnalysis()
         {
+            IList<string> infos = new List<string>();
+            var testLogger = Registry.GetComponent<TestLogger>();
+            testLogger.InfoLogged += infos.Add;
+
             SolutionAnalysis.AnalysesResults results = null;
             DoTestSolution(
                 (lifetime, solution) =>
                     results =
                         new SolutionAnalysis(solution, Shell.Instance.GetComponent<ILogger>()).AnalyzeAllProjects());
-            return results;
+
+            testLogger.InfoLogged -= infos.Add;
+            return new Results(results.AnalyzedContexts, infos);
         }
 
-        private static Context GetContextForType(SolutionAnalysis.AnalysesResults results, string classname)
+        private class Results
+        {
+            public Results(IEnumerable<Context> contexts, IList<string> loggedInfos)
+            {
+                AnalyzedContexts = contexts;
+                LoggedInfos = loggedInfos;
+            }
+
+            private IList<string> LoggedInfos { get; set; }
+
+            public IEnumerable<Context> AnalyzedContexts { get; private set; }
+
+            public IEnumerable<string> AnalyzedProjectsNames
+            {
+                get { return LoggedInfos.Where(info => info.Contains("Analyzing project")).Select(ParseEntityName); }
+            }
+
+            public IEnumerable<string> AnalyzedFilesNames
+            {
+                get { return LoggedInfos.Where(info => info.Contains("Analyzing file")).Select(ParseEntityName); }
+            }
+
+            public IEnumerable<string> AnalyzedTypesNames
+            {
+                get { return LoggedInfos.Where(info => info.Contains("Analyzing type")).Select(ParseEntityName); }
+            }
+
+            private static string ParseEntityName(string info)
+            {
+                var startOfName = info.IndexOf('\'') + 1;
+                var lengthOfName = info.LastIndexOf('\'') - startOfName;
+                return info.Substring(startOfName, lengthOfName);
+            }
+        }
+
+        private static Context GetContextForType(Results results, string classname)
         {
             return results.AnalyzedContexts.First(
                 context => context.TypeShape.TypeHierarchy.Element.Name.Equals(classname));
