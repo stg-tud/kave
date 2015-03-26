@@ -89,8 +89,13 @@ namespace KaVE.SolutionAnalysis
 
             var psiModules = _solution.PsiModules();
             var primaryPsiModule = psiModules.GetPrimaryPsiModule(project).NotNull("no psi module");
-            var csharpSourceFiles = primaryPsiModule.SourceFiles.Where(file => file.Name.EndsWith(".cs"));
+            var csharpSourceFiles = primaryPsiModule.SourceFiles.Where(IsCSharpFile);
             csharpSourceFiles.ForEach(file => AnalyzeFile(file, primaryPsiModule, results));
+        }
+
+        private static bool IsCSharpFile(IPsiSourceFile file)
+        {
+            return file.LanguageType.Is<CSharpProjectFileType>();
         }
 
         private void AnalyzeFile(IPsiSourceFile psiSourceFile, IPsiModule primaryPsiModule, AnalysesResults results)
