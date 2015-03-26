@@ -89,6 +89,15 @@ namespace KaVE.SolutionAnalysis.Tests
         }
 
         [Test]
+        public void AnalyzesClassInNestedNamespace()
+        {
+            var results = RunAnalysis();
+
+            CollectionAssert.Contains(results.AnalyzedFileNames, "ClassInNestedNamespace.cs");
+            CollectionAssert.Contains(results.AnalyzedTypes, TypeName.Get("Project1.A.B.C.ClassInNestedNamespace, Project1"));
+        }
+
+        [Test]
         public void DoesNotAnalyzeInterface()
         {
             var results = RunAnalysis();

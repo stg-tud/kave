@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="A\B\ClassInFileInFolder.cs" />
     <Compile Include="ClassInNamespace.cs" />
+    <Compile Include="ClassInNestedNamespace.cs" />
     <Compile Include="GlobalClass.cs" />
     <Compile Include="IInterface.cs" />
     <Compile Include="MultipleClassesFile.cs" />
