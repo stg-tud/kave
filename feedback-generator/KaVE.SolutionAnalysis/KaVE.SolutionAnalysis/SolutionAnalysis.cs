@@ -58,9 +58,9 @@ namespace KaVE.SolutionAnalysis
     {
         public class AnalysesResults
         {
-            public readonly IList<string> AnalyzedProjects = new List<string>();
-            public readonly IList<string> AnalyzedFiles = new List<string>();
-            public readonly IList<string> AnalyzedTypeNames = new List<string>();
+            public readonly IList<string> AnalyzedProjectsNames = new List<string>();
+            public readonly IList<string> AnalyzedFilesNames = new List<string>();
+            public readonly IList<string> AnalyzedTypesNames = new List<string>();
             public readonly IList<Context> AnalyzedContexts = new List<Context>();
         }
 
@@ -85,7 +85,7 @@ namespace KaVE.SolutionAnalysis
 
         private void AnalyzeProject(IProject project, AnalysesResults results)
         {
-            results.AnalyzedProjects.Add(project.Name);
+            results.AnalyzedProjectsNames.Add(project.Name);
 
             var psiModules = _solution.PsiModules();
             var primaryPsiModule = psiModules.GetPrimaryPsiModule(project).NotNull("no psi module");
@@ -100,7 +100,7 @@ namespace KaVE.SolutionAnalysis
 
         private void AnalyzeFile(IPsiSourceFile psiSourceFile, IPsiModule primaryPsiModule, AnalysesResults results)
         {
-            results.AnalyzedFiles.Add(psiSourceFile.DisplayName);
+            results.AnalyzedFilesNames.Add(psiSourceFile.DisplayName);
 
             var psiFile = ParseFile(psiSourceFile, primaryPsiModule);
             AnalyzeTypeAndNamespaceHolder(psiFile, results);
@@ -129,7 +129,7 @@ namespace KaVE.SolutionAnalysis
             AnalyzeInnerTypes(aType, results);
             if (aType is IClassDeclaration || aType is IStructDeclaration)
             {
-                results.AnalyzedTypeNames.Add(aType.CLRName);
+                results.AnalyzedTypesNames.Add(aType.CLRName);
                 results.AnalyzedContexts.Add(ContextAnalysis.Analyze(aType, _logger));
             }
         }
