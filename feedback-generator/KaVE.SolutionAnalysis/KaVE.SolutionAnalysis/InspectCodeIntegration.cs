@@ -54,17 +54,17 @@ namespace KaVE.SolutionAnalysis
             return new DummyInspectCodeConsumer();
         }
 
-        private static void WriteResultsToFile(SolutionAnalysis.AnalysesResults results)
+        private static void WriteResultsToFile(IEnumerable<Context> results)
         {
             using (var writer = new JsonLogWriter<Context>(new FileStream(LogFileName, FileMode.OpenOrCreate)))
             {
-                results.AnalyzedContexts.ForEach(writer.Write);
+                results.ForEach(writer.Write);
             }
         }
 
-        private SolutionAnalysis.AnalysesResults RunAnalysis()
+        private IEnumerable<Context> RunAnalysis()
         {
-            SolutionAnalysis.AnalysesResults results = null;
+            IEnumerable<Context> results = null;
             ReentrancyGuard.Current.Execute(
                 "SolutionAnalysis",
                 () =>

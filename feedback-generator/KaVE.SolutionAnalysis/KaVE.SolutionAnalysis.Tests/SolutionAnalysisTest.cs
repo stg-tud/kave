@@ -186,14 +186,14 @@ namespace KaVE.SolutionAnalysis.Tests
             var testLogger = Registry.GetComponent<TestLogger>();
             testLogger.InfoLogged += infos.Add;
 
-            SolutionAnalysis.AnalysesResults results = null;
+            IEnumerable<Context> results = null;
             DoTestSolution(
                 (lifetime, solution) =>
                     results =
                         new SolutionAnalysis(solution, Shell.Instance.GetComponent<ILogger>()).AnalyzeAllProjects());
 
             testLogger.InfoLogged -= infos.Add;
-            return new Results(results.AnalyzedContexts, infos);
+            return new Results(results, infos);
         }
 
         private class Results

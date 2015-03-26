@@ -51,24 +51,26 @@ namespace KaVE.SolutionAnalysis
             _logger = logger;
         }
 
-        public AnalysesResults AnalyzeAllProjects()
+        /// <summary>
+        /// Requires re-entrency guard (ReentrancyGuard.Current.Execute) and read lock (ReadLockCookie.Execute).
+        /// </summary>
+        public IList<Context> AnalyzeAllProjects()
         {
-            var results = new AnalysesResults();
             var projects = _solution.GetAllProjects();
             projects.Remove(_solution.MiscFilesProject);
             projects.Remove(_solution.SolutionProject);
-            projects.ForEach(project => AnalyzeProject(project, results));
-            return results;
+            // eager evaluation required, because caller context needs to asure guard/lock
+            return projects.SelectMany(AnalyzeProject).ToList();
         }
 
-        private void AnalyzeProject(IProject project, AnalysesResults results)
+        private IEnumerable<Context> AnalyzeProject(IProject project)
         {
             _logger.Info("Analyzing project '" + project.Name + "'...");
 
             var psiModules = _solution.PsiModules();
             var primaryPsiModule = psiModules.GetPrimaryPsiModule(project).NotNull("no psi module");
             var csharpSourceFiles = primaryPsiModule.SourceFiles.Where(IsCSharpFile);
-            csharpSourceFiles.ForEach(file => AnalyzeFile(file, primaryPsiModule, results));
+            return csharpSourceFiles.SelectMany(file => AnalyzeFile(file, primaryPsiModule));
         }
 
         private static bool IsCSharpFile(IPsiSourceFile file)
@@ -76,12 +78,12 @@ namespace KaVE.SolutionAnalysis
             return file.LanguageType.Is<CSharpProjectFileType>();
         }
 
-        private void AnalyzeFile(IPsiSourceFile psiSourceFile, IPsiModule primaryPsiModule, AnalysesResults results)
+        private IEnumerable<Context> AnalyzeFile(IPsiSourceFile psiSourceFile, IPsiModule primaryPsiModule)
         {
             _logger.Info(" - Analyzing file '" + psiSourceFile.DisplayName + "'...");
 
             var psiFile = ParseFile(psiSourceFile, primaryPsiModule);
-            AnalyzeTypeAndNamespaceHolder(psiFile, results);
+            return AnalyzeTypeAndNamespaceHolder(psiFile);
         }
 
         private static ICSharpFile ParseFile(IPsiSourceFile psiSourceFile, IPsiModule primaryPsiModule)
@@ -95,27 +97,30 @@ namespace KaVE.SolutionAnalysis
             return psiFile;
         }
 
-        private void AnalyzeTypeAndNamespaceHolder(ICSharpTypeAndNamespaceHolderDeclaration psiFile,
-            AnalysesResults results)
+        private IEnumerable<Context> AnalyzeTypeAndNamespaceHolder(ICSharpTypeAndNamespaceHolderDeclaration psiFile)
         {
-            psiFile.TypeDeclarations.ForEach(aType => AnalyzeType(aType, results));
-            psiFile.NamespaceDeclarations.ForEach(psiFile1 => AnalyzeTypeAndNamespaceHolder(psiFile1, results));
+            var contexts = new List<Context>();
+            contexts.AddRange(psiFile.TypeDeclarations.SelectMany(AnalyzeType));
+            contexts.AddRange(psiFile.NamespaceDeclarations.SelectMany(AnalyzeTypeAndNamespaceHolder));
+            return contexts;
         }
 
-        private void AnalyzeType(ICSharpTypeDeclaration aType, AnalysesResults results)
+        private IEnumerable<Context> AnalyzeType(ICSharpTypeDeclaration aType)
         {
-            AnalyzeInnerTypes(aType, results);
+            var contexts = new List<Context>();
             if (aType is IClassDeclaration || aType is IStructDeclaration)
             {
                 _logger.Info("   - Analyzing type '" + aType.CLRName + "'...");
 
-                results.AnalyzedContexts.Add(ContextAnalysis.Analyze(aType, _logger));
+                contexts.Add(ContextAnalysis.Analyze(aType, _logger));
             }
+            contexts.AddRange(AnalyzeInnerTypes(aType));
+            return contexts;
         }
 
-        private void AnalyzeInnerTypes(ITypeDeclarationHolder aType, AnalysesResults results)
+        private IEnumerable<Context> AnalyzeInnerTypes(ITypeDeclarationHolder aType)
         {
-            aType.TypeDeclarations.OfType<ICSharpTypeDeclaration>().ForEach(innerType => AnalyzeType(innerType, results));
+            return aType.TypeDeclarations.OfType<ICSharpTypeDeclaration>().SelectMany(AnalyzeType);
         }
     }
 }
