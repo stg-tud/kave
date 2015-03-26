@@ -22,7 +22,9 @@ using System.Linq;
 using JetBrains.Application;
 using JetBrains.ReSharper.TestFramework;
 using JetBrains.Util;
+using KaVE.Model.Events.CompletionEvents;
 using KaVE.Model.Names;
+using KaVE.Model.Names.CSharp;
 using NUnit.Framework;
 using ILogger = KaVE.Utils.Exceptions.ILogger;
 
@@ -140,6 +142,15 @@ namespace KaVE.SolutionAnalysis.Tests
             CollectionAssert.DoesNotContain(results.AnalyzedTypeNames, "Project1.SomeDelegate");
         }
 
+        [Test]
+        public void AnalysisResolvesLocalTypes()
+        {
+            var results = RunAnalysis();
+
+            var analyzedTypes = results.AnalyzedContexts.Select(context => context.TypeShape.TypeHierarchy.Element);
+            CollectionAssert.Contains(analyzedTypes, TypeName.Get("Project1.ClassInNamespace, Project1"));
+        }
+
         private TestAnalysesResults RunAnalysis()
         {
             SolutionAnalysis.AnalysesResults results = null;
@@ -174,9 +185,9 @@ namespace KaVE.SolutionAnalysis.Tests
                 get { return _results.AnalyzedTypeNames; }
             }
 
-            public IEnumerable<ITypeName> AnalyzedTypes
+            public IEnumerable<Context> AnalyzedContexts
             {
-                get { return _results.AnalyzedContexts.Select(context => context.TypeShape.TypeHierarchy.Element); }
+                get { return _results.AnalyzedContexts; }
             }
         }
     }
