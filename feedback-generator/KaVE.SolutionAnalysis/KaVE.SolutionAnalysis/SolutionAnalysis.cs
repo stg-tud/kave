@@ -17,11 +17,8 @@
  *    - Sven Amann
  */
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using EnvDTE;
-using JetBrains.Application;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
@@ -34,26 +31,10 @@ using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.Util;
 using KaVE.Model.Events.CompletionEvents;
 using KaVE.VsFeedbackGenerator.Analysis;
-using KaVE.VsFeedbackGenerator.VsIntegration;
 using ILogger = KaVE.Utils.Exceptions.ILogger;
 
 namespace KaVE.SolutionAnalysis
 {
-    [ShellComponent]
-    public class AnalysisSession : IIDESession
-    {
-        public string UUID
-        {
-            get { return "SolutionAnalysisUUID"; }
-        }
-
-        public DTE DTE
-        {
-            get { throw new NotSupportedException("no IDE in analysis session"); }
-        }
-    }
-
-    //[SolutionComponent]
     public class SolutionAnalysis
     {
         public class AnalysesResults

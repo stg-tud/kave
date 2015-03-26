@@ -20,6 +20,7 @@
 using System;
 using System.Linq;
 using JetBrains.Application;
+using JetBrains.Application.Components;
 using KaVE.Model.Events;
 using KaVE.Utils.Exceptions;
 using KaVE.VsFeedbackGenerator.MessageBus;
@@ -27,7 +28,7 @@ using KaVE.VsFeedbackGenerator.Utils;
 
 namespace KaVE.VsFeedbackGenerator.Generators
 {
-    [ShellComponent]
+    [ShellComponent(ProgramConfigurations.VS_ADDIN)]
     public class LogEventGenerator : EventGeneratorBase, ILogger
     {
         private readonly IDateUtils _dateUtils;

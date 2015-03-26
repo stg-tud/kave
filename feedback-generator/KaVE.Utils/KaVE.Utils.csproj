@@ -53,6 +53,7 @@
     <Compile Include="Concurrent\Task.cs" />
     <Compile Include="DateTime\SimilarDateTimeComparer.cs" />
     <Compile Include="EqualityUtils.cs" />
+    <Compile Include="Exceptions\ConsoleLogger.cs" />
     <Compile Include="Exceptions\KaVECancellationTokenSource.cs" />
     <Compile Include="Exceptions\Execute.cs" />
     <Compile Include="Exceptions\ILogger.cs" />
