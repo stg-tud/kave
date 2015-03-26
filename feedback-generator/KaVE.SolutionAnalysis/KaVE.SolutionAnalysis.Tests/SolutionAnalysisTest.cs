@@ -124,6 +124,15 @@ namespace KaVE.SolutionAnalysis.Tests
             CollectionAssert.DoesNotContain(results.AnalyzedTypeNames, "Project1.Enum");
         }
 
+        [Test]
+        public void DoesNotAnalyzeDelegate()
+        {
+            var results = RunAnalysis();
+
+            CollectionAssert.Contains(results.AnalyzedFileNames, @"<Project1>\Delegate.cs");
+            CollectionAssert.DoesNotContain(results.AnalyzedTypeNames, "Project1.SomeDelegate");
+        }
+
         private TestAnalysesResults RunAnalysis()
         {
             SolutionAnalysis.AnalysesResults results = null;

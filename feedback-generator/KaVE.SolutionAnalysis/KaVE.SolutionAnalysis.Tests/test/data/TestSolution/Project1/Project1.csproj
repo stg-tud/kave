@@ -43,6 +43,7 @@
     <Compile Include="A\B\ClassInFileInFolder.cs" />
     <Compile Include="ClassInNamespace.cs" />
     <Compile Include="ClassInNestedNamespace.cs" />
+    <Compile Include="Delegate.cs" />
     <Compile Include="Enum.cs" />
     <Compile Include="GlobalClass.cs" />
     <Compile Include="IInterface.cs" />
