@@ -43,6 +43,7 @@
     <Compile Include="A\B\ClassInFileInFolder.cs" />
     <Compile Include="ClassInNamespace.cs" />
     <Compile Include="GlobalClass.cs" />
+    <Compile Include="IInterface.cs" />
     <Compile Include="MultipleClassesFile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

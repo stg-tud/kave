@@ -88,6 +88,15 @@ namespace KaVE.SolutionAnalysis.Tests
             CollectionAssert.Contains(results.AnalyzedTypes, TypeName.Get("Project1.A.B.ClassInFileInFolder, Project1"));
         }
 
+        [Test]
+        public void DoesNotAnalyzeInterface()
+        {
+            var results = RunAnalysis();
+
+            CollectionAssert.Contains(results.AnalyzedFileNames, "IInterface.cs");
+            CollectionAssert.DoesNotContain(results.AnalyzedTypes, TypeName.Get("IInterface, Project1"));
+        }
+
         private TestAnalysesResults RunAnalysis()
         {
             SolutionAnalysis.AnalysesResults results = null;
