@@ -23,6 +23,7 @@ using System.Linq;
 using EnvDTE;
 using JetBrains.Application;
 using JetBrains.ProjectModel;
+using JetBrains.ReSharper.Feature.Services.CSharp.CompleteStatement;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Parsing;
@@ -117,6 +118,8 @@ namespace KaVE.SolutionAnalysis
 
         private void AnalyzeType(ICSharpTypeDeclaration aType, AnalysesResults results)
         {
+            if (aType is IInterfaceDeclaration)
+                return;
             results.AnalyzedContexts.Add(ContextAnalysis.Analyze(aType, _logger));
         }
     }

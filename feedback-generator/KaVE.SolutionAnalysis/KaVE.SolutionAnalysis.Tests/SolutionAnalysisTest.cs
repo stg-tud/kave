@@ -104,6 +104,8 @@ namespace KaVE.SolutionAnalysis.Tests
 
             CollectionAssert.Contains(results.AnalyzedFileNames, "IInterface.cs");
             CollectionAssert.DoesNotContain(results.AnalyzedTypes, TypeName.Get("IInterface, Project1"));
+            // this happened initially, because analysis failed to resolve the interface's type shape
+            CollectionAssert.DoesNotContain(results.AnalyzedTypes, TypeName.UnknownName);
         }
 
         private TestAnalysesResults RunAnalysis()
