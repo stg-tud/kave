@@ -48,7 +48,7 @@ namespace KaVE.SolutionAnalysis.Tests
         {
             var results = RunAnalysis();
 
-            CollectionAssert.AreEquivalent(new[] {"Project1"}, results.AnalyzedProjectNames);
+            CollectionAssert.AreEquivalent(new[] {"Project1", "Project2"}, results.AnalyzedProjectNames);
         }
 
         [Test]
