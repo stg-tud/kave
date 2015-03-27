@@ -152,6 +152,19 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Logging
             _ioUtilMock.Verify(iou => iou.CreateFile(currentLogPath));
         }
 
+        [Test(Description = "Manager needs to be thread safe.")]
+        public void ShouldNotFailIteratingLogsIfCurrentLogIsCreatedConcurrently()
+        {
+            GivenLogsExist(1);
+
+            // ReSharper disable UnusedVariable
+            foreach (var log in _uut.Logs)
+            {
+                var currentLog = _uut.CurrentLog;
+            }
+            // ReSharper restore UnusedVariable
+        }
+
         [Test]
         public void ShouldNotCreateCurrentLogIfItExists()
         {
@@ -296,7 +309,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Logging
 
         private void GivenLogsExist(int numberOfLogs)
         {
-            var dates = Enumerable.Range(0, numberOfLogs).Select(i => DateTime.Today.AddDays(-i)).ToArray();
+            var dates = Enumerable.Range(1, numberOfLogs).Select(i => DateTime.Today.AddDays(-i)).ToArray();
             GivenLogsExist(dates);
         }
 

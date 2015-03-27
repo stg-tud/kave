@@ -55,8 +55,10 @@ namespace KaVE.VsFeedbackGenerator.Utils.Logging
                 {
                     logs[logPath] = GetOrCreateLog(logPath);
                 }
+                // copy list to ensure the result is not modified
+                var result = logs.Values.ToList();
                 _logs = logs;
-                return _logs.Values;
+                return result;
             }
         }
 
