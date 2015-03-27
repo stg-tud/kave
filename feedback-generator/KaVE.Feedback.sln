@@ -21,9 +21,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KaVE.CompletionTraceGenerat
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KaVE.TestUtils", "KaVE.TestUtils\KaVE.TestUtils.csproj", "{126607DB-1F9F-4E2C-A39E-7B707874EAFC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KaVE.SolutionAnalysis", "KaVE.SolutionAnalysis\KaVE.SolutionAnalysis\KaVE.SolutionAnalysis.csproj", "{30CCA081-2DAD-46E5-982A-32C3600A29E2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KaVE.SolutionAnalysis", "KaVE.SolutionAnalysis\KaVE.SolutionAnalysis.csproj", "{30CCA081-2DAD-46E5-982A-32C3600A29E2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KaVE.SolutionAnalysis.Tests", "KaVE.SolutionAnalysis\KaVE.SolutionAnalysis.Tests\KaVE.SolutionAnalysis.Tests.csproj", "{CA830A75-61BC-412E-A4B0-EE1FA71EFDD7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KaVE.SolutionAnalysis.Tests", "KaVE.SolutionAnalysis.Tests\KaVE.SolutionAnalysis.Tests.csproj", "{CA830A75-61BC-412E-A4B0-EE1FA71EFDD7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
