@@ -110,7 +110,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
 
         [Test,
          ExpectedException(typeof (InvalidResponseException),
-             ExpectedMessage = "Antwort des Servers entspricht nicht dem erwarteten Format: XYZ")]
+             ExpectedMessage = "Antwort des Servers entspricht nicht dem erwarteten Format:\r\nXYZ")]
         public void ShouldFailIfMessageCannotBeParsed()
         {
             var resp = new HttpResponseMessage
@@ -136,7 +136,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
 
         [Test,
          ExpectedException(typeof (AssertException),
-             ExpectedMessage = "Server meldet eine fehlerhafte Anfrage: XYZ")]
+             ExpectedMessage = "Server meldet eine fehlerhafte Anfrage:\r\nXYZ")]
         public void ShouldFailIfStateIsNotOk()
         {
             var resp = CreateResponse(false, "XYZ");

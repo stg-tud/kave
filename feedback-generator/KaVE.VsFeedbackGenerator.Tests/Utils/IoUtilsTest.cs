@@ -54,12 +54,6 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils
             _sut.TransferByHttp(new Mock<HttpContent>().Object, new Uri("ftp://www.google.de"));
         }
 
-        // TODO review
-        //[Test, Ignore]
-        //public void TransferByHttpNotImplementedYet()
-        //[Test, ExpectedException(typeof (AssertException), ExpectedMessage = "Server nicht erreichbar")]
-        //public void ShouldThrowExceptionOnUnreachableServer()
-
         [Test]
         public void ShouldReturnExistingTempFileName()
         {
