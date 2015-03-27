@@ -58,5 +58,10 @@ namespace KaVE.Model.SSTs.Impl.Declarations
         {
             return visitor.Visit(this, context);
         }
+
+        public override string ToString()
+        {
+            return string.Format("Name: {0}", Name);
+        }
     }
 }
