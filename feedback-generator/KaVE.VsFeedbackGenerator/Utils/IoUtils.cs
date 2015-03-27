@@ -97,7 +97,7 @@ namespace KaVE.VsFeedbackGenerator.Utils
                         var we = hre.InnerException as WebException;
                         if (we != null)
                         {
-                            Asserts.Fail(Messages.ServerResponseFailure, targetUri, we.Message);
+                            throw new Exception(string.Format(Messages.ServerResponseFailure, targetUri, we.Message), e);
                         }
                     }
                     throw new Exception(string.Format(Messages.ServerRequestNotAvailable, targetUri), e);
