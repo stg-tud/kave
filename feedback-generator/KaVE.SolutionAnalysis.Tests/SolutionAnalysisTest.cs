@@ -19,7 +19,6 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using JetBrains.Application;
 using JetBrains.ReSharper.TestFramework;
 using JetBrains.Util;
 using KaVE.Model.Events.CompletionEvents;
@@ -27,7 +26,6 @@ using KaVE.Model.Names.CSharp;
 using KaVE.Model.SSTs.Impl.Declarations;
 using KaVE.VsFeedbackGenerator.Utils;
 using NUnit.Framework;
-using ILogger = KaVE.Utils.Exceptions.ILogger;
 
 namespace KaVE.SolutionAnalysis.Tests
 {
@@ -190,7 +188,7 @@ namespace KaVE.SolutionAnalysis.Tests
             DoTestSolution(
                 (lifetime, solution) =>
                     results =
-                        new SolutionAnalysis(solution, Shell.Instance.GetComponent<ILogger>()).AnalyzeAllProjects());
+                        new SolutionAnalysis(solution, testLogger).AnalyzeAllProjects());
 
             testLogger.InfoLogged -= infos.Add;
             return new Results(results, infos);

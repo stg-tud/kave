@@ -37,11 +37,6 @@ namespace KaVE.SolutionAnalysis
 {
     public class SolutionAnalysis
     {
-        public class AnalysesResults
-        {
-            public readonly IList<Context> AnalyzedContexts = new List<Context>();
-        }
-
         private readonly ISolution _solution;
         private readonly ILogger _logger;
 

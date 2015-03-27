@@ -5,5 +5,5 @@ REM    $> @powershell -NoProfile -ExecutionPolicy unrestricted -Command "iex ((n
 REM 2) Install CLT:
 REM    $> choco install resharper-clt.portable -version 8.2.0.2151
 
-inspectcode.exe ..\..\KaVE.Feedback.sln /project=KaVE.Model /o=tmp.xml /plugin=bin\Debug\KaVE.SolutionAnalysis.dll
+inspectcode.exe ..\KaVE.Feedback.sln /o=tmp.xml /plugin=bin\Debug\KaVE.SolutionAnalysis.dll
 PAUSE
