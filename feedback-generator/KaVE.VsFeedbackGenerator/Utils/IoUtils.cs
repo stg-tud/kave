@@ -23,7 +23,10 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net;
 using System.Net.Http;
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
 using JetBrains.Application;
 using KaVE.JetBrains.Annotations;
 using KaVE.Utils.Assertion;
@@ -76,6 +79,8 @@ namespace KaVE.VsFeedbackGenerator.Utils
 
             using (var client = new HttpClient())
             {
+                // allow self-signed certificates for upload
+                ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, errors) => true;
                 HttpResponseMessage response;
                 try
                 {
