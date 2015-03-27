@@ -232,10 +232,12 @@
     <value>Inkompatible Antwort des Server</value>
   </data>
   <data name="ServerResponseIncorrentFormat" xml:space="preserve">
-    <value>Antwort des Servers entspricht nicht dem erwarteten Format: {0}</value>
+    <value>Antwort des Servers entspricht nicht dem erwarteten Format:
+{0}</value>
   </data>
   <data name="ServerResponseRequestFailure" xml:space="preserve">
-    <value>Server meldet eine fehlerhafte Anfrage: {0}</value>
+    <value>Server meldet eine fehlerhafte Anfrage:
+{0}</value>
   </data>
   <data name="ServerRequestNotAvailable" xml:space="preserve">
     <value>Der Server ist nicht erreichbar ("{0}")</value>
@@ -244,7 +246,8 @@
     <value>Http-Upload erwartet Http- oder Https-Adresse</value>
   </data>
   <data name="ServerResponseFailure" xml:space="preserve">
-    <value>Fehler bei der Anfrage an den Server "{0}": {1}</value>
+    <value>Fehler bei der Anfrage an den Server "{0}":
+{1}</value>
   </data>
   <data name="Options_Export_Disclaimer" xml:space="preserve">
     <value>Die Exportoptionen bestimmen, welche Feedback-Details Ihren Rechner beim Export verlassen. Lokal wird das Feedback immer vollständig aufgenommen, um Ihnen die Einsicht zu erleichtern. Wenn Sie die Wirkung der Exportoptionen prüfen wollen, exportieren Sie einfach in ein ZIP-Archiv zum manuellen Hochladen. Diese Archive enthalten alle exportierten Informationen im Klartext.</value>

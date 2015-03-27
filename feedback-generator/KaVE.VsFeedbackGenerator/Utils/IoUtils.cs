@@ -25,8 +25,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.Http;
-using System.Net.Security;
-using System.Security.Cryptography.X509Certificates;
 using JetBrains.Application;
 using KaVE.JetBrains.Annotations;
 using KaVE.Utils.Assertion;
@@ -81,22 +79,29 @@ namespace KaVE.VsFeedbackGenerator.Utils
             {
                 // allow self-signed certificates for upload
                 ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, errors) => true;
-                HttpResponseMessage response;
                 try
                 {
-                    response = client.PostAsync(targetUri, content).Result;
+                    var response = client.PostAsync(targetUri, content).Result;
+                    Asserts.That(
+                        response.IsSuccessStatusCode,
+                        Messages.ServerResponseFailure,
+                        targetUri,
+                        response.StatusCode);
+                    return response;
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
-                    response = null;
-                    Asserts.Fail(Messages.ServerRequestNotAvailable, targetUri);
+                    var hre = e.InnerException as HttpRequestException;
+                    if (hre != null)
+                    {
+                        var we = hre.InnerException as WebException;
+                        if (we != null)
+                        {
+                            Asserts.Fail(Messages.ServerResponseFailure, targetUri, we.Message);
+                        }
+                    }
+                    throw new Exception(string.Format(Messages.ServerRequestNotAvailable, targetUri), e);
                 }
-                Asserts.That(
-                    response.IsSuccessStatusCode,
-                    Messages.ServerResponseFailure,
-                    targetUri,
-                    response.StatusCode);
-                return response;
             }
         }
 

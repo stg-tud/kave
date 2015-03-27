@@ -466,7 +466,8 @@ namespace KaVE.VsFeedbackGenerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Fehler bei der Anfrage an den Server &quot;{0}&quot;: {1}.
+        ///   Looks up a localized string similar to Fehler bei der Anfrage an den Server &quot;{0}&quot;:
+        ///{1}.
         /// </summary>
         public static string ServerResponseFailure {
             get {
@@ -484,7 +485,8 @@ namespace KaVE.VsFeedbackGenerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Antwort des Servers entspricht nicht dem erwarteten Format: {0}.
+        ///   Looks up a localized string similar to Antwort des Servers entspricht nicht dem erwarteten Format:
+        ///{0}.
         /// </summary>
         public static string ServerResponseIncorrentFormat {
             get {
@@ -493,7 +495,8 @@ namespace KaVE.VsFeedbackGenerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Server meldet eine fehlerhafte Anfrage: {0}.
+        ///   Looks up a localized string similar to Server meldet eine fehlerhafte Anfrage:
+        ///{0}.
         /// </summary>
         public static string ServerResponseRequestFailure {
             get {
