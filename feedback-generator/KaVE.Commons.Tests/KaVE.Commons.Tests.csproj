@@ -157,6 +157,7 @@
     <Compile Include="Utils\JsonUtilsTest.cs" />
     <Compile Include="Utils\Reflection\TypeExtensionsTest.cs" />
     <Compile Include="Utils\StringBuilderUtilsTest.cs" />
+    <Compile Include="Utils\ToStringUtilsTest.cs" />
     <Compile Include="Utils\WeakReferenceTest.cs" />
   </ItemGroup>
   <ItemGroup>
