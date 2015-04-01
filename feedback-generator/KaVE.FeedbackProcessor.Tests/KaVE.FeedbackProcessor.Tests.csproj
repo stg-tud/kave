@@ -31,6 +31,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Ionic.Zip.Reduced">
+      <HintPath>..\packages\DotNetZip.Reduced.1.9.1.8\lib\net20\Ionic.Zip.Reduced.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.framework">
+      <HintPath>..\packages\NUnit.2.6.3\lib\nunit.framework.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -40,12 +46,28 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FileLoaderTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\KaVE.licenseheader">
       <Link>KaVE.licenseheader</Link>
     </None>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\KaVE.Commons.TestUtils\KaVE.Commons.TestUtils.csproj">
+      <Project>{126607DB-1F9F-4E2C-A39E-7B707874EAFC}</Project>
+      <Name>KaVE.Commons.TestUtils</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\KaVE.Commons\KaVE.Commons.csproj">
+      <Project>{17FC7725-AC2E-47E5-8F24-D2107171A854}</Project>
+      <Name>KaVE.Commons</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\KaVE.FeedbackProcessor\KaVE.FeedbackProcessor.csproj">
+      <Project>{7B7AEA61-25F5-4938-BEE7-ED26AE7BE477}</Project>
+      <Name>KaVE.FeedbackProcessor</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

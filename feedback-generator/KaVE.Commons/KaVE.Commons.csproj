@@ -44,6 +44,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Utils\Streams\MemoryStreamUtils.cs" />
     <Compile Include="Model\Events\CommandEvent.cs" />
     <Compile Include="Model\Events\CompletionEvents\CompletionEvent.cs" />
     <Compile Include="Model\Events\CompletionEvents\Context.cs" />

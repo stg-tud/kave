@@ -168,7 +168,6 @@
     <Compile Include="Utils\Json\JsonSerializationSuite\CompletionEventSuite\SSTSerializationTest.cs" />
     <Compile Include="Utils\Json\JsonSerializationSuite\UpdateEventSerializationTest.cs" />
     <Compile Include="Utils\Json\JsonSerializationSuite\WindowEventSerializationTest.cs" />
-    <Compile Include="Utils\Json\MemoryStreamUtils.cs" />
     <Compile Include="Utils\Json\JsonSerializationSuite\IDEEventSerializationTest.cs" />
     <Compile Include="Utils\Json\JsonSerializationSuite\NamesSerializationTest.cs" />
     <Compile Include="Utils\Json\JsonSerializationSuite\CompletionEventSuite\TypeShapeSerializationTest.cs" />

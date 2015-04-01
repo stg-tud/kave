@@ -18,6 +18,7 @@
  */
 
 using System.Linq;
+using KaVE.Commons.Utils.Streams;
 using KaVE.JetBrains.Annotations;
 using KaVE.Commons.Utils.Exceptions;
 using KaVE.VsFeedbackGenerator.Utils;

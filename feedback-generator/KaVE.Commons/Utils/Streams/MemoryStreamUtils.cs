@@ -12,22 +12,28 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sven Amann
  */
-using System.IO;
-using KaVE.VsFeedbackGenerator.Utils.Json;
 
-namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json
+using System.IO;
+using System.Text;
+
+namespace KaVE.Commons.Utils.Streams
 {
-    internal static class MemoryStreamUtils
+    public static class MemoryStreamUtils
     {
+        public static Encoding Encoding = new UTF8Encoding(false);
+
         public static string AsString(this MemoryStream stream)
         {
-            return JsonSerialization.Encoding.GetString(stream.ToArray());
+            return Encoding.GetString(stream.ToArray());
         }
 
         public static MemoryStream AsStream(this string data)
         {
-            return new MemoryStream(JsonSerialization.Encoding.GetBytes(data));
+            return new MemoryStream(Encoding.GetBytes(data));
         }
     }
 }
