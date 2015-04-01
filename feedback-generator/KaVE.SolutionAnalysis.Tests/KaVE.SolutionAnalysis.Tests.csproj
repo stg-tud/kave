@@ -58,10 +58,6 @@
       <Project>{17FC7725-AC2E-47E5-8F24-D2107171A854}</Project>
       <Name>KaVE.Commons</Name>
     </ProjectReference>
-    <ProjectReference Include="..\KaVE.Model\KaVE.Model.csproj">
-      <Project>{236E2794-DE4D-4F94-AC87-2ABFD1059CE0}</Project>
-      <Name>KaVE.Model</Name>
-    </ProjectReference>
     <ProjectReference Include="..\KaVE.TestUtils\KaVE.TestUtils.csproj">
       <Project>{126607DB-1F9F-4E2C-A39E-7B707874EAFC}</Project>
       <Name>KaVE.TestUtils</Name>

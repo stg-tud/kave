@@ -1,15 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KaVE.Model.Tests", "KaVE.Model.Tests\KaVE.Model.Tests.csproj", "{5EADDF98-328D-4E54-8819-C0611A942B6F}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KaVE.VsFeedbackGenerator", "KaVE.VsFeedbackGenerator\KaVE.VsFeedbackGenerator.csproj", "{42CE1875-DF5B-4D9E-ADC4-47A96C06EF66}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KaVE.VsFeedbackGenerator.Tests", "KaVE.VsFeedbackGenerator.Tests\KaVE.VsFeedbackGenerator.Tests.csproj", "{61231FF9-BF33-4210-89AA-6C9973FA00A0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KaVE.VsFeedbackGenerator.RS8Tests", "KaVE.VsFeedbackGenerator.RS8Tests\KaVE.VsFeedbackGenerator.RS8Tests.csproj", "{4979D8EC-B49B-4578-BDC3-D4015C493A98}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KaVE.Model", "KaVE.Model\KaVE.Model.csproj", "{236E2794-DE4D-4F94-AC87-2ABFD1059CE0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KaVE.CompletionTraceGenerator", "KaVE.CompletionTraceGenerator\KaVE.CompletionTraceGenerator.csproj", "{9A656780-6292-4CE3-BA13-D6CBB797AABA}"
 EndProject
@@ -35,14 +31,6 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{5EADDF98-328D-4E54-8819-C0611A942B6F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5EADDF98-328D-4E54-8819-C0611A942B6F}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{5EADDF98-328D-4E54-8819-C0611A942B6F}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{5EADDF98-328D-4E54-8819-C0611A942B6F}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{5EADDF98-328D-4E54-8819-C0611A942B6F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5EADDF98-328D-4E54-8819-C0611A942B6F}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{5EADDF98-328D-4E54-8819-C0611A942B6F}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{5EADDF98-328D-4E54-8819-C0611A942B6F}.Release|x86.ActiveCfg = Release|Any CPU
 		{42CE1875-DF5B-4D9E-ADC4-47A96C06EF66}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{42CE1875-DF5B-4D9E-ADC4-47A96C06EF66}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{42CE1875-DF5B-4D9E-ADC4-47A96C06EF66}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
@@ -73,16 +61,6 @@ Global
 		{4979D8EC-B49B-4578-BDC3-D4015C493A98}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{4979D8EC-B49B-4578-BDC3-D4015C493A98}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{4979D8EC-B49B-4578-BDC3-D4015C493A98}.Release|x86.ActiveCfg = Release|Any CPU
-		{236E2794-DE4D-4F94-AC87-2ABFD1059CE0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{236E2794-DE4D-4F94-AC87-2ABFD1059CE0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{236E2794-DE4D-4F94-AC87-2ABFD1059CE0}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{236E2794-DE4D-4F94-AC87-2ABFD1059CE0}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{236E2794-DE4D-4F94-AC87-2ABFD1059CE0}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{236E2794-DE4D-4F94-AC87-2ABFD1059CE0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{236E2794-DE4D-4F94-AC87-2ABFD1059CE0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{236E2794-DE4D-4F94-AC87-2ABFD1059CE0}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{236E2794-DE4D-4F94-AC87-2ABFD1059CE0}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{236E2794-DE4D-4F94-AC87-2ABFD1059CE0}.Release|x86.ActiveCfg = Release|Any CPU
 		{9A656780-6292-4CE3-BA13-D6CBB797AABA}.Debug|Any CPU.ActiveCfg = Debug|x86
 		{9A656780-6292-4CE3-BA13-D6CBB797AABA}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
 		{9A656780-6292-4CE3-BA13-D6CBB797AABA}.Debug|Mixed Platforms.Build.0 = Debug|x86
