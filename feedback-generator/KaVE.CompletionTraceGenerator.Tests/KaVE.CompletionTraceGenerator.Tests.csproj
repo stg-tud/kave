@@ -62,6 +62,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\KaVE.Commons\KaVE.Commons.csproj">
+      <Project>{17FC7725-AC2E-47E5-8F24-D2107171A854}</Project>
+      <Name>KaVE.Commons</Name>
+    </ProjectReference>
     <ProjectReference Include="..\KaVE.CompletionTraceGenerator\KaVE.CompletionTraceGenerator.csproj">
       <Project>{9A656780-6292-4CE3-BA13-D6CBB797AABA}</Project>
       <Name>KaVE.CompletionTraceGenerator</Name>
