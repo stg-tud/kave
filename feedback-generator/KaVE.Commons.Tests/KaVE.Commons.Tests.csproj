@@ -167,9 +167,9 @@
       <Project>{17FC7725-AC2E-47E5-8F24-D2107171A854}</Project>
       <Name>KaVE.Commons</Name>
     </ProjectReference>
-    <ProjectReference Include="..\KaVE.TestUtils\KaVE.TestUtils.csproj">
+    <ProjectReference Include="..\KaVE.Commons.TestUtils\KaVE.Commons.TestUtils.csproj">
       <Project>{126607DB-1F9F-4E2C-A39E-7B707874EAFC}</Project>
-      <Name>KaVE.TestUtils</Name>
+      <Name>KaVE.Commons.TestUtils</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
