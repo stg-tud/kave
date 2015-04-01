@@ -82,7 +82,7 @@ namespace KaVE.Commons.Tests.Utils.Exceptions
             }
             catch (Exception e)
             {
-                Assert.That(e.StackTrace, Is.StringContaining("KaVE.Utils.Tests.Exceptions.ExecuteTest.ThrowException()"));
+                Assert.That(e.StackTrace, Is.StringContaining("KaVE.Commons.Tests.Utils.Exceptions.ExecuteTest.ThrowException()"));
             }
         }
 

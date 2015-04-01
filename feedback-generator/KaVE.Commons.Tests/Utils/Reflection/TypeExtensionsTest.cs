@@ -96,7 +96,7 @@ namespace KaVE.Commons.Tests.Utils.Reflection
         [Test,
          ExpectedException(typeof (AssertException),
              ExpectedMessage =
-                 "Property 'NonExistentProperty' doesn't exist on 'KaVE.Utils.Tests.Reflection.TypeExtensionsTest'.")]
+                 "Property 'NonExistentProperty' doesn't exist on 'KaVE.Commons.Tests.Utils.Reflection.TypeExtensionsTest'.")]
         public void ShouldThrowIfPublicPropertyDoesNotExist()
         {
             this.GetPublicPropertyValue<int>("NonExistentProperty");
@@ -115,7 +115,7 @@ namespace KaVE.Commons.Tests.Utils.Reflection
         [Test,
          ExpectedException(typeof (AssertException),
              ExpectedMessage =
-                 "Property 'NonExistentProperty' doesn't exist on 'KaVE.Utils.Tests.Reflection.TypeExtensionsTest'.")]
+                 "Property 'NonExistentProperty' doesn't exist on 'KaVE.Commons.Tests.Utils.Reflection.TypeExtensionsTest'.")]
         public void ShouldThrowIfPrivatePropertyDoesNotExist()
         {
             this.GetPrivatePropertyValue<int>("NonExistentProperty");
@@ -134,7 +134,7 @@ namespace KaVE.Commons.Tests.Utils.Reflection
         [Test,
          ExpectedException(typeof (AssertException),
              ExpectedMessage =
-                 "Field '_myNonExistentField' doesn't exist on 'KaVE.Utils.Tests.Reflection.TypeExtensionsTest'.")]
+                 "Field '_myNonExistentField' doesn't exist on 'KaVE.Commons.Tests.Utils.Reflection.TypeExtensionsTest'.")]
         public void ShouldThrowIfPrivateFieldDoesNotExist()
         {
             this.GetPrivateFieldValue<int>("_myNonExistentField");
@@ -154,7 +154,7 @@ namespace KaVE.Commons.Tests.Utils.Reflection
         [Test,
          ExpectedException(typeof(AssertException),
              ExpectedMessage =
-                 "Event 'MyNonExistentEvent' doesn't exist on 'KaVE.Utils.Tests.Reflection.TypeExtensionsTest'.")]
+                 "Event 'MyNonExistentEvent' doesn't exist on 'KaVE.Commons.Tests.Utils.Reflection.TypeExtensionsTest'.")]
         public void ShouldThrowIfEventDoesNotExist()
         {
             this.RegisterToEvent("MyNonExistentEvent", null);
