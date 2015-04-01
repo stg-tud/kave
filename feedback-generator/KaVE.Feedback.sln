@@ -21,9 +21,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KaVE.Commons", "KaVE.Common
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KaVE.Commons.Tests", "KaVE.Commons.Tests\KaVE.Commons.Tests.csproj", "{FC829D87-127A-498B-965C-9778D223792E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KaVE.Commons.ReSharper", "KaVE.Commons.ReSharper\KaVE.Commons.ReSharper.csproj", "{B2235734-D3E5-498F-87E2-E9780DBE0D8D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KaVE.ReSharper.Commons", "KaVE.ReSharper.Commons\KaVE.ReSharper.Commons.csproj", "{B2235734-D3E5-498F-87E2-E9780DBE0D8D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KaVE.Commons.ReSharper.Tests", "KaVE.Commons.ReSharper.Tests\KaVE.Commons.ReSharper.Tests.csproj", "{35FCB52A-CCD2-49C7-AD6D-78A71164A324}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KaVE.ReSharper.Commons.Tests", "KaVE.ReSharper.Commons.Tests\KaVE.ReSharper.Commons.Tests.csproj", "{35FCB52A-CCD2-49C7-AD6D-78A71164A324}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
