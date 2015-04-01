@@ -22,8 +22,8 @@
 		
 		<!-- Plugin for ReSharper 8.2 -->
 			<!-- KaVE Assemblies -->
-				<file src="KaVE.VsFeedbackGenerator\bin\Debug\KaVE.Model.dll" target="ReSharper\v8.2\plugins\KaVE.Model.dll" />
-				<file src="KaVE.VsFeedbackGenerator\bin\Debug\KaVE.Utils.dll" target="ReSharper\v8.2\plugins\KaVE.Utils.dll" />
+				<file src="KaVE.VsFeedbackGenerator\bin\Debug\KaVE.Commons.dll" target="ReSharper\v8.2\plugins\KaVE.Commons.dll" />
+				<file src="KaVE.VsFeedbackGenerator\bin\Debug\KaVE.ReSharper.Commons.dll" target="ReSharper\v8.2\plugins\KaVE.ReSharper.Commons.dll" />
 				<file src="KaVE.VsFeedbackGenerator\bin\Debug\KaVE.VsFeedbackGenerator.dll" target="ReSharper\v8.2\plugins\KaVE.VsFeedbackGenerator.dll" />
 			<!-- 3rd-Party Dependencies -->
 				<file src="KaVE.VsFeedbackGenerator\bin\Debug\Newtonsoft.Json.dll" target="ReSharper\v8.2\plugins\Newtonsoft.Json.dll" />

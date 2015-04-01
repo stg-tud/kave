@@ -381,6 +381,10 @@
       <Project>{17FC7725-AC2E-47E5-8F24-D2107171A854}</Project>
       <Name>KaVE.Commons</Name>
     </ProjectReference>
+    <ProjectReference Include="..\KaVE.ReSharper.Commons\KaVE.ReSharper.Commons.csproj">
+      <Project>{B2235734-D3E5-498F-87E2-E9780DBE0D8D}</Project>
+      <Name>KaVE.ReSharper.Commons</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\loading.gif">

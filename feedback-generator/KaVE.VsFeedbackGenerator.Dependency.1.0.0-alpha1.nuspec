@@ -15,9 +15,9 @@
         </dependencies>
     </metadata>
     <files>
-        <file src="KaVE.VsFeedbackGenerator\bin\Debug\KaVE.Model.dll" target="lib\net40\KaVE.Model.dll" />
-        <file src="KaVE.VsFeedbackGenerator\bin\Debug\KaVE.Utils.dll" target="lib\net40\KaVE.Utils.dll" />
-        <file src="KaVE.VsFeedbackGenerator\bin\Debug\KaVE.VsFeedbackGenerator.dll" target="lib\net40\KaVE.VsFeedbackGenerator.dll" />
+		<file src="KaVE.VsFeedbackGenerator\bin\Debug\KaVE.Commons.dll" target="lib\net40\KaVE.Commons.dll" />
+		<file src="KaVE.VsFeedbackGenerator\bin\Debug\KaVE.ReSharper.Commons.dll" target="lib\net40\KaVE.ReSharper.Commons.dll" />
+		<file src="KaVE.VsFeedbackGenerator\bin\Debug\KaVE.VsFeedbackGenerator.dll" target="lib\net40\KaVE.VsFeedbackGenerator.dll" />
         <file src="3rd-party\MsgBox.dll" target="lib\net40\MsgBox.dll" />
         <file src="3rd-party\smileNet.dll" target="lib\net40\smileNet.dll" />
         <file src="3rd-party\System.Net.Http.dll" target="lib\net40\System.Net.Http.dll" />
