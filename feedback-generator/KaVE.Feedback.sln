@@ -25,6 +25,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KaVE.SolutionAnalysis", "Ka
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KaVE.SolutionAnalysis.Tests", "KaVE.SolutionAnalysis.Tests\KaVE.SolutionAnalysis.Tests.csproj", "{CA830A75-61BC-412E-A4B0-EE1FA71EFDD7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KaVE.Commons", "KaVE.Commons\KaVE.Commons.csproj", "{17FC7725-AC2E-47E5-8F24-D2107171A854}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KaVE.Commons.Tests", "KaVE.Commons.Tests\KaVE.Commons.Tests.csproj", "{FC829D87-127A-498B-965C-9778D223792E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -151,6 +155,26 @@ Global
 		{CA830A75-61BC-412E-A4B0-EE1FA71EFDD7}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{CA830A75-61BC-412E-A4B0-EE1FA71EFDD7}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{CA830A75-61BC-412E-A4B0-EE1FA71EFDD7}.Release|x86.ActiveCfg = Release|Any CPU
+		{17FC7725-AC2E-47E5-8F24-D2107171A854}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{17FC7725-AC2E-47E5-8F24-D2107171A854}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{17FC7725-AC2E-47E5-8F24-D2107171A854}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{17FC7725-AC2E-47E5-8F24-D2107171A854}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{17FC7725-AC2E-47E5-8F24-D2107171A854}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{17FC7725-AC2E-47E5-8F24-D2107171A854}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{17FC7725-AC2E-47E5-8F24-D2107171A854}.Release|Any CPU.Build.0 = Release|Any CPU
+		{17FC7725-AC2E-47E5-8F24-D2107171A854}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{17FC7725-AC2E-47E5-8F24-D2107171A854}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{17FC7725-AC2E-47E5-8F24-D2107171A854}.Release|x86.ActiveCfg = Release|Any CPU
+		{FC829D87-127A-498B-965C-9778D223792E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC829D87-127A-498B-965C-9778D223792E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC829D87-127A-498B-965C-9778D223792E}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{FC829D87-127A-498B-965C-9778D223792E}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{FC829D87-127A-498B-965C-9778D223792E}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{FC829D87-127A-498B-965C-9778D223792E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC829D87-127A-498B-965C-9778D223792E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FC829D87-127A-498B-965C-9778D223792E}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{FC829D87-127A-498B-965C-9778D223792E}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{FC829D87-127A-498B-965C-9778D223792E}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
