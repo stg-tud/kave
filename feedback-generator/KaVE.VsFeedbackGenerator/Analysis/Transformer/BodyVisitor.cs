@@ -22,16 +22,16 @@ using System.Linq;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.Util;
-using KaVE.Model.Collections;
-using KaVE.Model.Names;
-using KaVE.Model.SSTs.Expressions;
-using KaVE.Model.SSTs.Impl;
-using KaVE.Model.SSTs.Impl.Expressions.Simple;
-using KaVE.Model.SSTs.Impl.References;
-using KaVE.Model.SSTs.Impl.Statements;
+using KaVE.Commons.Model.Names;
+using KaVE.Commons.Model.SSTs.Expressions;
+using KaVE.Commons.Model.SSTs.Impl;
+using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
+using KaVE.Commons.Model.SSTs.Impl.References;
+using KaVE.Commons.Model.SSTs.Impl.Statements;
+using KaVE.Commons.Utils.Collections;
 using KaVE.VsFeedbackGenerator.Analysis.Util;
 using KaVE.VsFeedbackGenerator.Utils.Names;
-using IStatement = KaVE.Model.SSTs.IStatement;
+using IStatement = KaVE.Commons.Model.SSTs.IStatement;
 
 namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
 {

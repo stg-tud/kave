@@ -12,12 +12,15 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sven Amann
  */
+
 using System;
 using System.Runtime.CompilerServices;
-using KaVE.Utils.Collections;
 
-namespace KaVE.Model.Utils
+namespace KaVE.Commons.Utils.Collections
 {
     internal class WeakNameCache<TName> where TName : class
     {

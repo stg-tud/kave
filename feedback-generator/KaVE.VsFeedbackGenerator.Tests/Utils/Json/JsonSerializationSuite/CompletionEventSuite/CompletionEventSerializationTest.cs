@@ -19,11 +19,11 @@
  */
 
 using System;
-using KaVE.Model.Events;
-using KaVE.Model.Events.CompletionEvents;
-using KaVE.Model.Names.CSharp;
-using KaVE.Model.Names.VisualStudio;
-using KaVE.Model.SSTs.Impl;
+using KaVE.Commons.Model.Events;
+using KaVE.Commons.Model.Events.CompletionEvents;
+using KaVE.Commons.Model.Names.CSharp;
+using KaVE.Commons.Model.Names.VisualStudio;
+using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.VsFeedbackGenerator.Utils.Json;
 using NUnit.Framework;
 

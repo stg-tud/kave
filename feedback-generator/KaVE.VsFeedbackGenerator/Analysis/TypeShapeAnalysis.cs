@@ -21,8 +21,8 @@ using System.Collections.Generic;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.Resolve;
 using JetBrains.ReSharper.Psi.Tree;
-using KaVE.Model.Names;
-using KaVE.Model.TypeShapes;
+using KaVE.Commons.Model.Names;
+using KaVE.Commons.Model.TypeShapes;
 using KaVE.VsFeedbackGenerator.Utils.Names;
 
 namespace KaVE.VsFeedbackGenerator.Analysis

@@ -17,11 +17,11 @@
  *    - Dennis Albrecht
  */
 
-using KaVE.Model.Names.CSharp;
-using KaVE.Model.ObjectUsage;
+using KaVE.Commons.Model.Names.CSharp;
+using KaVE.Commons.Model.ObjectUsage;
 using NUnit.Framework;
 
-namespace KaVE.Model.Tests.ObjectUsage
+namespace KaVE.Commons.Tests.Model.ObjectUsage
 {
     [TestFixture]
     internal class CoReNameUtilTest

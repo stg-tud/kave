@@ -18,12 +18,12 @@
  */
 
 using KaVE.JetBrains.Annotations;
-using KaVE.Model.SSTs;
-using KaVE.Model.SSTs.Declarations;
-using KaVE.Model.SSTs.Impl.Declarations;
-using KaVE.Model.SSTs.Impl.References;
-using KaVE.Model.SSTs.Impl.Visitor;
-using KaVE.Model.SSTs.References;
+using KaVE.Commons.Model.SSTs;
+using KaVE.Commons.Model.SSTs.Declarations;
+using KaVE.Commons.Model.SSTs.Impl.Declarations;
+using KaVE.Commons.Model.SSTs.Impl.References;
+using KaVE.Commons.Model.SSTs.Impl.Visitor;
+using KaVE.Commons.Model.SSTs.References;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize.CompletionEvents
 {

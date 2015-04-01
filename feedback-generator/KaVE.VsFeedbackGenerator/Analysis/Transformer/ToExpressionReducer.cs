@@ -20,9 +20,9 @@
 using System.Collections.Generic;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
-using KaVE.Model.SSTs;
-using KaVE.Model.SSTs.Impl.Expressions.Simple;
-using KaVE.Model.SSTs.Impl.References;
+using KaVE.Commons.Model.SSTs;
+using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
+using KaVE.Commons.Model.SSTs.Impl.References;
 using KaVE.VsFeedbackGenerator.Analysis.Util;
 
 namespace KaVE.VsFeedbackGenerator.Analysis.Transformer

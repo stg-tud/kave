@@ -17,7 +17,7 @@
  *    - Sebastian Proksch
  */
 
-namespace KaVE.Model.SSTs.Expressions.Simple
+namespace KaVE.Commons.Model.SSTs.Expressions.Simple
 {
     public interface INullExpression : ISimpleExpression {}
 }

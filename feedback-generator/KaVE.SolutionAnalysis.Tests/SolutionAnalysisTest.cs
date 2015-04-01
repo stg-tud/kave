@@ -21,9 +21,9 @@ using System.Collections.Generic;
 using System.Linq;
 using JetBrains.ReSharper.TestFramework;
 using JetBrains.Util;
-using KaVE.Model.Events.CompletionEvents;
-using KaVE.Model.Names.CSharp;
-using KaVE.Model.SSTs.Impl.Declarations;
+using KaVE.Commons.Model.Events.CompletionEvents;
+using KaVE.Commons.Model.Names.CSharp;
+using KaVE.Commons.Model.SSTs.Impl.Declarations;
 using KaVE.VsFeedbackGenerator.Utils;
 using NUnit.Framework;
 

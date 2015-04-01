@@ -17,7 +17,7 @@
  *    - Sebastian Proksch
  */
 
-namespace KaVE.Model.SSTs.Expressions
+namespace KaVE.Commons.Model.SSTs.Expressions
 {
     // e.g., every expression that can be used on the right side of an assignment
     public interface IAssignableExpression : IExpression {}

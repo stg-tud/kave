@@ -17,15 +17,15 @@
  *    - Sebastian Proksch
  */
 
-using KaVE.Model.Collections;
-using KaVE.Model.SSTs;
-using KaVE.Model.SSTs.Declarations;
-using KaVE.Model.SSTs.Impl.Declarations;
-using KaVE.Model.SSTs.Impl.Expressions.Assignable;
-using KaVE.Model.SSTs.Impl.Statements;
+using KaVE.Commons.Model.SSTs;
+using KaVE.Commons.Model.SSTs.Declarations;
+using KaVE.Commons.Model.SSTs.Impl.Declarations;
+using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
+using KaVE.Commons.Model.SSTs.Impl.Statements;
+using KaVE.Commons.Utils.Collections;
 using NUnit.Framework;
 
-namespace KaVE.Model.Tests.SSTs.Impl.Expressions.Assignable
+namespace KaVE.Commons.Tests.Model.SSTs.Impl.Expressions.Assignable
 {
     internal class LambdaExpressionTest : SSTBaseTest
     {

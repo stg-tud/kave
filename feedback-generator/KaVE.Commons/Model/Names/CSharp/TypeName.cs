@@ -20,11 +20,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using KaVE.Commons.Utils.Collections;
 using KaVE.JetBrains.Annotations;
-using KaVE.Model.Utils;
-using KaVE.Utils.Assertion;
+using KaVE.Commons.Utils.Assertion;
 
-namespace KaVE.Model.Names.CSharp
+namespace KaVE.Commons.Model.Names.CSharp
 {
     public class TypeName : Name, ITypeName
     {

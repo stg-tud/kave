@@ -21,20 +21,20 @@ using System.Collections.Generic;
 using System.Linq;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.Util;
-using KaVE.Model.Names;
-using KaVE.Model.SSTs;
-using KaVE.Model.SSTs.Expressions;
-using KaVE.Model.SSTs.Impl;
-using KaVE.Model.SSTs.Impl.Blocks;
-using KaVE.Model.SSTs.Impl.Expressions.LoopHeader;
-using KaVE.Model.SSTs.Impl.Expressions.Simple;
-using KaVE.Utils.Assertion;
+using KaVE.Commons.Model.Names;
+using KaVE.Commons.Model.SSTs;
+using KaVE.Commons.Model.SSTs.Expressions;
+using KaVE.Commons.Model.SSTs.Impl;
+using KaVE.Commons.Model.SSTs.Impl.Blocks;
+using KaVE.Commons.Model.SSTs.Impl.Expressions.LoopHeader;
+using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
+using KaVE.Commons.Utils.Assertion;
 using KaVE.VsFeedbackGenerator.Analysis.Transformer.Context;
 using KaVE.VsFeedbackGenerator.Analysis.Util;
 using KaVE.VsFeedbackGenerator.Utils.Names;
 using NuGet;
-using KaVEVariableDeclaration = KaVE.Model.SSTs.Impl.Declarations.VariableDeclaration;
-using KaVEIInvocationExpression = KaVE.Model.SSTs.Expressions.Assignable.IInvocationExpression;
+using KaVEVariableDeclaration = KaVE.Commons.Model.SSTs.Impl.Declarations.VariableDeclaration;
+using KaVEIInvocationExpression = KaVE.Commons.Model.SSTs.Expressions.Assignable.IInvocationExpression;
 
 namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
 {

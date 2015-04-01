@@ -19,7 +19,7 @@
 
 using JetBrains.ActionManagement;
 using JetBrains.Application.DataContext;
-using KaVE.Model.Events;
+using KaVE.Commons.Model.Events;
 using KaVE.VsFeedbackGenerator.MessageBus;
 using KaVE.VsFeedbackGenerator.Utils;
 

@@ -20,8 +20,8 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using KaVE.Utils.Assertion;
-using KaVE.Utils.Exceptions;
+using KaVE.Commons.Utils.Assertion;
+using KaVE.Commons.Utils.Exceptions;
 using KaVE.VsFeedbackGenerator.Utils.Logging;
 
 namespace KaVE.VsFeedbackGenerator.Utils.Json

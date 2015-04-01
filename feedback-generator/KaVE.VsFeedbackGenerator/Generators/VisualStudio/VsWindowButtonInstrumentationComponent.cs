@@ -23,7 +23,7 @@ using EnvDTE;
 using JetBrains.Application;
 using JetBrains.Application.Components;
 using KaVE.JetBrains.Annotations;
-using KaVE.Utils.Exceptions;
+using KaVE.Commons.Utils.Exceptions;
 using KaVE.VsFeedbackGenerator.MessageBus;
 using KaVE.VsFeedbackGenerator.Utils;
 

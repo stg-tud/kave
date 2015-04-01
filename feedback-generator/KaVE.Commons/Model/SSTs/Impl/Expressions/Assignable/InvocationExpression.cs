@@ -17,16 +17,16 @@
  *    - Sebastian Proksch
  */
 
-using KaVE.Model.Collections;
-using KaVE.Model.Names;
-using KaVE.Model.SSTs.Expressions;
-using KaVE.Model.SSTs.Expressions.Assignable;
-using KaVE.Model.SSTs.Impl.References;
-using KaVE.Model.SSTs.References;
-using KaVE.Model.SSTs.Visitor;
-using KaVE.Utils;
+using KaVE.Commons.Model.Names;
+using KaVE.Commons.Model.SSTs.Expressions;
+using KaVE.Commons.Model.SSTs.Expressions.Assignable;
+using KaVE.Commons.Model.SSTs.Impl.References;
+using KaVE.Commons.Model.SSTs.References;
+using KaVE.Commons.Model.SSTs.Visitor;
+using KaVE.Commons.Utils;
+using KaVE.Commons.Utils.Collections;
 
-namespace KaVE.Model.SSTs.Impl.Expressions.Assignable
+namespace KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable
 {
     public class InvocationExpression : IInvocationExpression
     {

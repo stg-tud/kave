@@ -18,11 +18,10 @@
  */
 
 using System.Runtime.Serialization;
-using KaVE.Model.Collections;
-using KaVE.Utils;
-using KaVE.Utils.Collections;
+using KaVE.Commons.Utils;
+using KaVE.Commons.Utils.Collections;
 
-namespace KaVE.Model.TypeShapes
+namespace KaVE.Commons.Model.TypeShapes
 {
     [DataContract]
     public class TypeShape : ITypeShape

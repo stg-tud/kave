@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using KaVE.Model.Names;
+using KaVE.Commons.Model.Names;
 using NUnit.Framework;
 
 namespace KaVE.VsFeedbackGenerator.Tests.Assertion

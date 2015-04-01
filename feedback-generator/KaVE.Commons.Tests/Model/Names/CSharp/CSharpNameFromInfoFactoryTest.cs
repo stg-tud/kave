@@ -15,11 +15,11 @@
  */
 
 using System;
-using KaVE.Model.Names.CSharp;
+using KaVE.Commons.Model.Names.CSharp;
 using NUnit.Framework;
 using Test.Targets;
 
-namespace KaVE.Model.Tests.Names.CSharp
+namespace KaVE.Commons.Tests.Model.Names.CSharp
 {
     internal class CSharpNameFromInfoFactoryTest
     {

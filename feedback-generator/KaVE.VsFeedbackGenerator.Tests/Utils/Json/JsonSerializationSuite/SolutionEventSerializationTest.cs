@@ -18,9 +18,9 @@
  */
 
 using System;
-using KaVE.Model.Events;
-using KaVE.Model.Events.VisualStudio;
-using KaVE.Model.Names.VisualStudio;
+using KaVE.Commons.Model.Events;
+using KaVE.Commons.Model.Events.VisualStudio;
+using KaVE.Commons.Model.Names.VisualStudio;
 using NUnit.Framework;
 
 namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.JsonSerializationSuite

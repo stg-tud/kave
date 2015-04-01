@@ -19,9 +19,9 @@
 
 using System;
 using System.Linq;
-using KaVE.Model.Collections;
-using KaVE.Model.Events;
-using KaVE.Model.Events.CompletionEvents;
+using KaVE.Commons.Model.Events;
+using KaVE.Commons.Model.Events.CompletionEvents;
+using KaVE.Commons.Utils.Collections;
 
 namespace KaVE.VsFeedbackGenerator.Generators.Merging
 {

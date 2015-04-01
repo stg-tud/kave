@@ -18,9 +18,9 @@
  */
 
 using System;
-using KaVE.Utils;
+using KaVE.Commons.Utils;
 
-namespace KaVE.Model.ObjectUsage
+namespace KaVE.Commons.Model.ObjectUsage
 {
     public class CoReProposal
     {

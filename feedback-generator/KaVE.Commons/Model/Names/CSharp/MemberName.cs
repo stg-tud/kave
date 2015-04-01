@@ -19,7 +19,7 @@
 
 using System;
 
-namespace KaVE.Model.Names.CSharp
+namespace KaVE.Commons.Model.Names.CSharp
 {
     public abstract class MemberName : Name, IMemberName
     {

@@ -18,8 +18,8 @@
  */
 
 using System.Linq;
-using KaVE.Model.Collections;
-using KaVE.Model.TypeShapes;
+using KaVE.Commons.Model.TypeShapes;
+using KaVE.Commons.Utils.Collections;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize.CompletionEvents
 {

@@ -17,11 +17,11 @@
  *    - Sebastian Proksch
  */
 
+using KaVE.Commons.Model.SSTs.Expressions;
+using KaVE.Commons.Model.SSTs.References;
 using KaVE.JetBrains.Annotations;
-using KaVE.Model.SSTs.Expressions;
-using KaVE.Model.SSTs.References;
 
-namespace KaVE.Model.SSTs.Statements
+namespace KaVE.Commons.Model.SSTs.Statements
 {
     public interface IAssignment : IStatement
     {

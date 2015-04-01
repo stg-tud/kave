@@ -16,7 +16,7 @@
 using System;
 using System.IO;
 
-namespace KaVE.Utils.IO
+namespace KaVE.Commons.Utils.IO
 {
     public static class IoTestHelper
     {

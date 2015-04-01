@@ -17,7 +17,7 @@
  *    - Sven Amann
  */
 
-using KaVE.Model.Events.VisualStudio;
+using KaVE.Commons.Model.Events.VisualStudio;
 using KaVE.VsFeedbackGenerator.Utils.Names;
 using NUnit.Framework;
 

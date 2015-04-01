@@ -23,7 +23,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using KaVE.JetBrains.Annotations;
-using KaVE.Utils.Assertion;
+using KaVE.Commons.Utils.Assertion;
 using KaVE.VsFeedbackGenerator.Utils;
 using Moq;
 using NUnit.Framework;

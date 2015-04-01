@@ -20,10 +20,10 @@
 
 using System;
 using JetBrains.Util;
-using KaVE.Model.Events.CompletionEvents;
-using KaVE.Model.Names.CSharp;
-using KaVE.Model.SSTs.Impl;
-using KaVE.Model.TypeShapes;
+using KaVE.Commons.Model.Events.CompletionEvents;
+using KaVE.Commons.Model.Names.CSharp;
+using KaVE.Commons.Model.SSTs.Impl;
+using KaVE.Commons.Model.TypeShapes;
 using KaVE.VsFeedbackGenerator.SessionManager.Anonymize;
 using NUnit.Framework;
 

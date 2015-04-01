@@ -17,9 +17,9 @@
  *    - Sven Amann
  */
 
-using KaVE.Model.Names.VisualStudio;
+using KaVE.Commons.Model.Names.VisualStudio;
 
-namespace KaVE.TestUtils.Model.Names
+namespace KaVE.Commons.TestUtils.Model.Names
 {
     public class VsComponentNameTestFactory
     {

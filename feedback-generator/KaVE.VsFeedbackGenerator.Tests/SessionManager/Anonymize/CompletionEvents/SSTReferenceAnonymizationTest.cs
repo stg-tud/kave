@@ -17,10 +17,10 @@
  *    - Sebastian Proksch
  */
 
-using KaVE.Model.SSTs.Impl.Declarations;
-using KaVE.Model.SSTs.Impl.References;
-using KaVE.Model.SSTs.References;
-using KaVE.Model.SSTs.Visitor;
+using KaVE.Commons.Model.SSTs.Impl.Declarations;
+using KaVE.Commons.Model.SSTs.Impl.References;
+using KaVE.Commons.Model.SSTs.References;
+using KaVE.Commons.Model.SSTs.Visitor;
 using KaVE.VsFeedbackGenerator.SessionManager.Anonymize;
 using KaVE.VsFeedbackGenerator.SessionManager.Anonymize.CompletionEvents;
 using NUnit.Framework;

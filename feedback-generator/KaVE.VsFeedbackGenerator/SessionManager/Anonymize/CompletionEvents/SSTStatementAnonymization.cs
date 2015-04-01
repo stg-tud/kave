@@ -19,19 +19,19 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using KaVE.Commons.Utils.Collections;
 using KaVE.JetBrains.Annotations;
-using KaVE.Model.Collections;
-using KaVE.Model.SSTs;
-using KaVE.Model.SSTs.Blocks;
-using KaVE.Model.SSTs.Expressions;
-using KaVE.Model.SSTs.Expressions.Assignable;
-using KaVE.Model.SSTs.Expressions.LoopHeader;
-using KaVE.Model.SSTs.Impl.Blocks;
-using KaVE.Model.SSTs.Impl.Expressions.Assignable;
-using KaVE.Model.SSTs.Impl.Expressions.LoopHeader;
-using KaVE.Model.SSTs.Impl.Statements;
-using KaVE.Model.SSTs.Impl.Visitor;
-using KaVE.Model.SSTs.Statements;
+using KaVE.Commons.Model.SSTs;
+using KaVE.Commons.Model.SSTs.Blocks;
+using KaVE.Commons.Model.SSTs.Expressions;
+using KaVE.Commons.Model.SSTs.Expressions.Assignable;
+using KaVE.Commons.Model.SSTs.Expressions.LoopHeader;
+using KaVE.Commons.Model.SSTs.Impl.Blocks;
+using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
+using KaVE.Commons.Model.SSTs.Impl.Expressions.LoopHeader;
+using KaVE.Commons.Model.SSTs.Impl.Statements;
+using KaVE.Commons.Model.SSTs.Impl.Visitor;
+using KaVE.Commons.Model.SSTs.Statements;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize.CompletionEvents
 {

@@ -23,11 +23,11 @@ using System.Linq;
 using JetBrains.Application;
 using JetBrains.ReSharper.Feature.Services.CSharp.CodeCompletion.Infrastructure;
 using JetBrains.ReSharper.Feature.Services.Lookup;
-using KaVE.Model.Events.CompletionEvents;
-using KaVE.Model.ObjectUsage;
+using KaVE.Commons.Model.Events.CompletionEvents;
+using KaVE.Commons.Model.ObjectUsage;
 using KaVE.VsFeedbackGenerator.Analysis;
 using KaVE.VsFeedbackGenerator.Utils;
-using KaVELogger = KaVE.Utils.Exceptions.ILogger;
+using KaVELogger = KaVE.Commons.Utils.Exceptions.ILogger;
 
 namespace KaVE.VsFeedbackGenerator.CodeCompletion
 {

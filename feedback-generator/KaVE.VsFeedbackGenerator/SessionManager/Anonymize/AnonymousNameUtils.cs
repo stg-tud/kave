@@ -23,11 +23,11 @@ using System.Security.Cryptography;
 using System.Text;
 using JetBrains.Annotations;
 using JetBrains.Util;
-using KaVE.Model.Names;
-using KaVE.Model.Names.CSharp;
-using KaVE.Model.Names.VisualStudio;
-using KaVE.Utils;
-using KaVE.Utils.Assertion;
+using KaVE.Commons.Model.Names;
+using KaVE.Commons.Model.Names.CSharp;
+using KaVE.Commons.Model.Names.VisualStudio;
+using KaVE.Commons.Utils;
+using KaVE.Commons.Utils.Assertion;
 using KaVE.VsFeedbackGenerator.Utils;
 using KaVE.VsFeedbackGenerator.Utils.Names;
 

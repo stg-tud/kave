@@ -20,11 +20,11 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using KaVE.TestUtils;
-using KaVE.TestUtils.Model.Events;
-using KaVE.Utils.Assertion;
-using KaVE.Utils.Exceptions;
-using KaVE.Utils.Reflection;
+using KaVE.Commons.TestUtils;
+using KaVE.Commons.TestUtils.Model.Events;
+using KaVE.Commons.Utils.Assertion;
+using KaVE.Commons.Utils.Exceptions;
+using KaVE.Commons.Utils.Reflection;
 using KaVE.VsFeedbackGenerator.SessionManager;
 using KaVE.VsFeedbackGenerator.Utils;
 using KaVE.VsFeedbackGenerator.Utils.Logging;

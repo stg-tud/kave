@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 using System;
-using KaVE.TestUtils.Model.Events;
+using KaVE.Commons.TestUtils.Model.Events;
 using NUnit.Framework;
 
-namespace KaVE.Model.Tests.Events
+namespace KaVE.Commons.Tests.Model.Events
 {
     [TestFixture]
     class IDEEventTest

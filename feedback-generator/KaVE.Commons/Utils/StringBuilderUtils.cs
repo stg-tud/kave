@@ -15,7 +15,7 @@
  */
 using System.Text;
 
-namespace KaVE.Utils
+namespace KaVE.Commons.Utils
 {
     public static class StringBuilderUtils
     {

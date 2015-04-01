@@ -16,7 +16,7 @@
 using System;
 using NUnit.Framework;
 
-namespace KaVE.Utils.Tests.Events
+namespace KaVE.Commons.Tests.Utils.Events
 {
     [TestFixture]
     internal class EventHandlingTest

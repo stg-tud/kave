@@ -17,7 +17,7 @@
  *    - Dennis Albrecht
  */
 
-using KaVE.Model.Events;
+using KaVE.Commons.Model.Events;
 using NUnit.Framework;
 
 namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.JsonSerializationSuite

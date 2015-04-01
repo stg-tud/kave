@@ -16,7 +16,7 @@
 using System;
 using System.Timers;
 
-namespace KaVE.Utils
+namespace KaVE.Commons.Utils
 {
     /// <summary>
     /// An action that is executed once, after a defined time.

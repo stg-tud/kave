@@ -19,13 +19,13 @@
 
 using System;
 using System.Threading;
-using KaVE.Utils.Assertion;
-using KaVE.Utils.Exceptions;
+using KaVE.Commons.Utils.Assertion;
+using KaVE.Commons.Utils.Exceptions;
 using Moq;
 using Newtonsoft.Json;
 using NUnit.Framework;
 
-namespace KaVE.Utils.Tests.Exceptions
+namespace KaVE.Commons.Tests.Utils.Exceptions
 {
     [TestFixture]
     internal class ExecuteTest

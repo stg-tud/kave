@@ -17,11 +17,11 @@
  *    - Sven Amann
  */
 
+using KaVE.Commons.Model.Names.CSharp;
+using KaVE.Commons.Utils.Collections;
 using KaVE.JetBrains.Annotations;
-using KaVE.Model.Names.CSharp;
-using KaVE.Model.Utils;
 
-namespace KaVE.Model.Names.VisualStudio
+namespace KaVE.Commons.Model.Names.VisualStudio
 {
     public class WindowName : Name, IIDEComponentName
     {

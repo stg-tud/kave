@@ -19,7 +19,7 @@
 
 using System;
 
-namespace KaVE.Utils.Exceptions
+namespace KaVE.Commons.Utils.Exceptions
 {
     public class NullLogger : ILogger
     {

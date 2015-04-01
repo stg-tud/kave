@@ -22,11 +22,11 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
+using KaVE.Commons.Model.Names.CSharp;
 using KaVE.JetBrains.Annotations;
-using KaVE.Model.Names.CSharp;
-using KaVE.Utils.Assertion;
+using KaVE.Commons.Utils.Assertion;
 
-namespace KaVE.Model.Names
+namespace KaVE.Commons.Model.Names
 {
     internal class NameToStringConverter : TypeConverter
     {

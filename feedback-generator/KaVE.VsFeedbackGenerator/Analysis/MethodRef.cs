@@ -19,8 +19,8 @@
 
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
-using KaVE.Model.Names;
-using KaVE.Utils;
+using KaVE.Commons.Model.Names;
+using KaVE.Commons.Utils;
 
 namespace KaVE.VsFeedbackGenerator.Analysis
 {

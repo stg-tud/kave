@@ -20,7 +20,7 @@
 using System.Threading;
 using NUnit.Framework;
 
-namespace KaVE.TestUtils
+namespace KaVE.Commons.TestUtils
 {
     public static class AsyncTestHelper
     {

@@ -20,12 +20,12 @@
 
 using System;
 using System.Linq.Expressions;
-using KaVE.Model.SSTs.Impl.Visitor;
-using KaVE.Model.SSTs.Visitor;
+using KaVE.Commons.Model.SSTs.Impl.Visitor;
+using KaVE.Commons.Model.SSTs.Visitor;
 using Moq;
 using NUnit.Framework;
 
-namespace KaVE.Model.Tests.SSTs.Impl
+namespace KaVE.Commons.Tests.Model.SSTs.Impl
 {
     public static class SSTTestHelper
     {

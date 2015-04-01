@@ -17,14 +17,14 @@
  *    - Sebastian Proksch
  */
 
-using KaVE.Model.SSTs.Impl;
-using KaVE.Model.SSTs.Impl.Expressions.Assignable;
-using KaVE.Model.SSTs.Impl.Expressions.Simple;
-using KaVE.Model.SSTs.Impl.References;
-using KaVE.Model.SSTs.Impl.Statements;
+using KaVE.Commons.Model.SSTs.Impl;
+using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
+using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
+using KaVE.Commons.Model.SSTs.Impl.References;
+using KaVE.Commons.Model.SSTs.Impl.Statements;
 using NUnit.Framework;
 
-namespace KaVE.Model.Tests.SSTs.Impl.Statements
+namespace KaVE.Commons.Tests.Model.SSTs.Impl.Statements
 {
     public class AssignmentTest
     {

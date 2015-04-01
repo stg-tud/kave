@@ -20,7 +20,7 @@
 using System;
 using System.Threading;
 
-namespace KaVE.Utils.Exceptions
+namespace KaVE.Commons.Utils.Exceptions
 {
     public class TimeLimitRunner
     {

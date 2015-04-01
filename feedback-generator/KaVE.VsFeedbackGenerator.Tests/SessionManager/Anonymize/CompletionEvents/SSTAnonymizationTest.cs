@@ -17,9 +17,9 @@
  *    - Sebastian Proksch
  */
 
-using KaVE.Model.Names.CSharp;
-using KaVE.Model.SSTs.Impl;
-using KaVE.Model.SSTs.Impl.Declarations;
+using KaVE.Commons.Model.Names.CSharp;
+using KaVE.Commons.Model.SSTs.Impl;
+using KaVE.Commons.Model.SSTs.Impl.Declarations;
 using KaVE.VsFeedbackGenerator.SessionManager.Anonymize;
 using KaVE.VsFeedbackGenerator.SessionManager.Anonymize.CompletionEvents;
 using NUnit.Framework;

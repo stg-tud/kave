@@ -17,13 +17,13 @@
  *    - Sebastian Proksch
  */
 
+using KaVE.Commons.Model.Names;
+using KaVE.Commons.Model.SSTs.Declarations;
+using KaVE.Commons.Model.SSTs.Visitor;
+using KaVE.Commons.Utils.Collections;
 using KaVE.JetBrains.Annotations;
-using KaVE.Model.Collections;
-using KaVE.Model.Names;
-using KaVE.Model.SSTs.Declarations;
-using KaVE.Model.SSTs.Visitor;
 
-namespace KaVE.Model.SSTs
+namespace KaVE.Commons.Model.SSTs
 {
     public interface ISST : ISSTNode
     {

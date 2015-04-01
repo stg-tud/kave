@@ -18,9 +18,9 @@
  */
 
 using System.Runtime.Serialization;
-using KaVE.Utils;
+using KaVE.Commons.Utils;
 
-namespace KaVE.Model.Events
+namespace KaVE.Commons.Model.Events
 {
     [DataContract]
     public class InfoEvent : IDEEvent

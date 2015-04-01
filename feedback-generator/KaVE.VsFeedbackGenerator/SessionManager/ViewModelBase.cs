@@ -20,8 +20,8 @@
 using System;
 using System.ComponentModel;
 using System.Linq.Expressions;
-using KaVE.Utils;
-using KaVE.Utils.Reflection;
+using KaVE.Commons.Utils;
+using KaVE.Commons.Utils.Reflection;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager
 {

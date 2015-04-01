@@ -17,11 +17,11 @@
  *    - Sebastian Proksch
  */
 
+using KaVE.Commons.Model.SSTs.Expressions;
+using KaVE.Commons.Utils.Collections;
 using KaVE.JetBrains.Annotations;
-using KaVE.Model.Collections;
-using KaVE.Model.SSTs.Expressions;
 
-namespace KaVE.Model.SSTs.Blocks
+namespace KaVE.Commons.Model.SSTs.Blocks
 {
     public interface IForLoop : IStatement
     {

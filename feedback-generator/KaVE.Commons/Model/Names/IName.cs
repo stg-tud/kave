@@ -19,7 +19,7 @@
 
 using System.ComponentModel;
 
-namespace KaVE.Model.Names
+namespace KaVE.Commons.Model.Names
 {
     /// <summary>
     ///     Represents full-qualified names.

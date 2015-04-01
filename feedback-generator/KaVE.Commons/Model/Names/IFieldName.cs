@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace KaVE.Model.Names
+namespace KaVE.Commons.Model.Names
 {
     public interface IFieldName : IMemberName
     {

@@ -21,10 +21,10 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Threading;
-using KaVE.Utils.Exceptions;
+using KaVE.Commons.Utils.Exceptions;
 using NUnit.Framework;
 
-namespace KaVE.Utils.Tests.Exceptions
+namespace KaVE.Commons.Tests.Utils.Exceptions
 {
     public class TimeLimitRunnerTest
     {

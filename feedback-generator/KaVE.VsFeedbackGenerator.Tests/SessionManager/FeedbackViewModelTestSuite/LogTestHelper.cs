@@ -20,7 +20,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using KaVE.Model.Events;
+using KaVE.Commons.Model.Events;
 using KaVE.VsFeedbackGenerator.Utils.Logging;
 using Moq;
 

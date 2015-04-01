@@ -18,10 +18,10 @@
  */
 
 using System.Windows.Input;
-using KaVE.Utils.IO;
+using KaVE.Commons.Utils.IO;
 using NUnit.Framework;
 
-namespace KaVE.Utils.Tests.IO
+namespace KaVE.Commons.Tests.Utils.IO
 {
     [TestFixture]
     class KeyUtilsTest

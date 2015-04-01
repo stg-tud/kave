@@ -17,11 +17,11 @@
  *    - Sebastian Proksch
  */
 
+using KaVE.Commons.Model.Names;
+using KaVE.Commons.Utils.Collections;
 using KaVE.JetBrains.Annotations;
-using KaVE.Model.Collections;
-using KaVE.Model.Names;
 
-namespace KaVE.Model.TypeShapes
+namespace KaVE.Commons.Model.TypeShapes
 {
     /// <summary>
     ///     Represents one level of a type hierarchy.

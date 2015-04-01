@@ -27,11 +27,11 @@ using JetBrains.ReSharper.Feature.Services.Lookup;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.Tree;
-using KaVE.Model.Collections;
-using KaVE.Model.Events.CompletionEvents;
-using KaVE.Model.Names;
-using KaVE.Model.SSTs;
-using KaVE.Utils.Exceptions;
+using KaVE.Commons.Model.Events.CompletionEvents;
+using KaVE.Commons.Model.Names;
+using KaVE.Commons.Model.SSTs;
+using KaVE.Commons.Utils.Collections;
+using KaVE.Commons.Utils.Exceptions;
 using KaVE.VsFeedbackGenerator.Analysis;
 using Moq;
 

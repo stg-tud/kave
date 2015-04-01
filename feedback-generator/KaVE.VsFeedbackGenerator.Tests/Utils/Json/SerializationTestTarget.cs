@@ -18,7 +18,7 @@
  */
 
 using KaVE.JetBrains.Annotations;
-using KaVE.Utils;
+using KaVE.Commons.Utils;
 
 namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json
 {

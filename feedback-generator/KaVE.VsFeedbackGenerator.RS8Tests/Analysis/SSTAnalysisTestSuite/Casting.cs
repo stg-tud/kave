@@ -17,9 +17,9 @@
  *    - Sebastian Proksch
  */
 
-using KaVE.Model.Names.CSharp;
-using KaVE.Model.SSTs.Impl;
-using KaVE.Model.SSTs.Impl.Expressions.Simple;
+using KaVE.Commons.Model.Names.CSharp;
+using KaVE.Commons.Model.SSTs.Impl;
+using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
 using NUnit.Framework;
 
 namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite

@@ -17,8 +17,8 @@
  *    - Sebastian Proksch
  */
 
-using KaVE.Model.Names;
-using KaVE.Model.Names.CSharp;
+using KaVE.Commons.Model.Names;
+using KaVE.Commons.Model.Names.CSharp;
 
 namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 {

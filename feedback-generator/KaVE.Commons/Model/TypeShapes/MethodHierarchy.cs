@@ -19,12 +19,12 @@
  */
 
 using System.Runtime.Serialization;
+using KaVE.Commons.Model.Names;
+using KaVE.Commons.Model.Names.CSharp;
 using KaVE.JetBrains.Annotations;
-using KaVE.Model.Names;
-using KaVE.Model.Names.CSharp;
-using KaVE.Utils;
+using KaVE.Commons.Utils;
 
-namespace KaVE.Model.TypeShapes
+namespace KaVE.Commons.Model.TypeShapes
 {
     [DataContract]
     public class MethodHierarchy : IMethodHierarchy

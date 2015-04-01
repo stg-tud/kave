@@ -24,8 +24,8 @@ using System.Linq;
 using EnvDTE;
 using JetBrains.Util;
 using KaVE.JetBrains.Annotations;
-using KaVE.Model.Names.VisualStudio;
-using KaVE.Utils.Assertion;
+using KaVE.Commons.Model.Names.VisualStudio;
+using KaVE.Commons.Utils.Assertion;
 using Microsoft.VisualStudio.CommandBars;
 
 namespace KaVE.VsFeedbackGenerator.Utils.Names

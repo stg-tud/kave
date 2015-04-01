@@ -19,10 +19,10 @@
 
 using System.Collections.Generic;
 using System.Threading;
-using KaVE.Model.Events;
-using KaVE.Model.Events.VisualStudio;
-using KaVE.TestUtils.Model.Events;
-using KaVE.Utils.Assertion;
+using KaVE.Commons.Model.Events;
+using KaVE.Commons.Model.Events.VisualStudio;
+using KaVE.Commons.TestUtils.Model.Events;
+using KaVE.Commons.Utils.Assertion;
 using KaVE.VsFeedbackGenerator.Generators;
 using KaVE.VsFeedbackGenerator.MessageBus;
 using KaVE.VsFeedbackGenerator.Utils.Logging;

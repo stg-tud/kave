@@ -17,11 +17,11 @@
  *    - Sebastian Proksch
  */
 
-using KaVE.Model.SSTs.Impl.Expressions.Assignable;
-using KaVE.Model.SSTs.Impl.Expressions.Simple;
+using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
+using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
 using NUnit.Framework;
 
-namespace KaVE.Model.Tests.SSTs.Impl.Expressions.Assignable
+namespace KaVE.Commons.Tests.Model.SSTs.Impl.Expressions.Assignable
 {
     internal class IfElseExpressionTest : SSTBaseTest
     {

@@ -19,7 +19,7 @@
 
 using System;
 using System.Collections.Generic;
-using KaVE.Model.Events;
+using KaVE.Commons.Model.Events;
 
 namespace KaVE.VsFeedbackGenerator.Utils.Logging
 {

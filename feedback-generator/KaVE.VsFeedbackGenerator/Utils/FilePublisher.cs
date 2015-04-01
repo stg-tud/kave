@@ -22,7 +22,7 @@ using System;
 using System.IO;
 using JetBrains.Util;
 using KaVE.JetBrains.Annotations;
-using KaVE.Utils.Assertion;
+using KaVE.Commons.Utils.Assertion;
 using Messages = KaVE.VsFeedbackGenerator.Properties.SessionManager;
 
 namespace KaVE.VsFeedbackGenerator.Utils

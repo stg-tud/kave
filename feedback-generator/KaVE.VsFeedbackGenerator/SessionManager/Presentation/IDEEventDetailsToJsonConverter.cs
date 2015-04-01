@@ -18,7 +18,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using JetBrains.Util;
-using KaVE.Model.Events;
+using KaVE.Commons.Model.Events;
 using KaVE.VsFeedbackGenerator.Utils.Json;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation

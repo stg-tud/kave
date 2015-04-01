@@ -15,7 +15,7 @@
  */
 using System.Collections.Generic;
 
-namespace KaVE.Model.Names.CSharp
+namespace KaVE.Commons.Model.Names.CSharp
 {
     public static class CSharpNameUtils
     {

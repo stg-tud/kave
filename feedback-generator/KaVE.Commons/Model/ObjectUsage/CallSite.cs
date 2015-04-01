@@ -17,9 +17,9 @@
  *    - Dennis Albrecht
  */
 using KaVE.JetBrains.Annotations;
-using KaVE.Utils;
+using KaVE.Commons.Utils;
 
-namespace KaVE.Model.ObjectUsage
+namespace KaVE.Commons.Model.ObjectUsage
 {
     // ReSharper disable InconsistentNaming
 

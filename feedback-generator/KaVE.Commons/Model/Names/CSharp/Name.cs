@@ -18,9 +18,9 @@
  */
 
 using System.Runtime.Serialization;
-using KaVE.Utils.Collections;
+using KaVE.Commons.Utils.Collections;
 
-namespace KaVE.Model.Names.CSharp
+namespace KaVE.Commons.Model.Names.CSharp
 {
     [DataContract]
     public class Name : IName

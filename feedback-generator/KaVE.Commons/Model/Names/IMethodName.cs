@@ -19,7 +19,7 @@
 
 using System.Collections.Generic;
 
-namespace KaVE.Model.Names
+namespace KaVE.Commons.Model.Names
 {
     public interface IMethodName : IMemberName, IGenericName
     {

@@ -19,7 +19,7 @@
 
 using System;
 using JetBrains.Application;
-using KaVE.Utils.Exceptions;
+using KaVE.Commons.Utils.Exceptions;
 using NUnit.Framework;
 
 namespace KaVE.SolutionAnalysis.Tests

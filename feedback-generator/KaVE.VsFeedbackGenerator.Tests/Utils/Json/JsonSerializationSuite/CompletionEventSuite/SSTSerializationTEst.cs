@@ -17,19 +17,19 @@
  *    - Sebastian Proksch
  */
 
-using KaVE.Model.Collections;
-using KaVE.Model.Names.CSharp;
-using KaVE.Model.SSTs;
-using KaVE.Model.SSTs.Expressions;
-using KaVE.Model.SSTs.Expressions.LoopHeader;
-using KaVE.Model.SSTs.Impl;
-using KaVE.Model.SSTs.Impl.Blocks;
-using KaVE.Model.SSTs.Impl.Declarations;
-using KaVE.Model.SSTs.Impl.Expressions.Assignable;
-using KaVE.Model.SSTs.Impl.Expressions.LoopHeader;
-using KaVE.Model.SSTs.Impl.Expressions.Simple;
-using KaVE.Model.SSTs.Impl.References;
-using KaVE.Model.SSTs.Impl.Statements;
+using KaVE.Commons.Model.Names.CSharp;
+using KaVE.Commons.Model.SSTs;
+using KaVE.Commons.Model.SSTs.Expressions;
+using KaVE.Commons.Model.SSTs.Expressions.LoopHeader;
+using KaVE.Commons.Model.SSTs.Impl;
+using KaVE.Commons.Model.SSTs.Impl.Blocks;
+using KaVE.Commons.Model.SSTs.Impl.Declarations;
+using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
+using KaVE.Commons.Model.SSTs.Impl.Expressions.LoopHeader;
+using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
+using KaVE.Commons.Model.SSTs.Impl.References;
+using KaVE.Commons.Model.SSTs.Impl.Statements;
+using KaVE.Commons.Utils.Collections;
 using KaVE.VsFeedbackGenerator.Utils.Json;
 using NUnit.Framework;
 

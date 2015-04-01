@@ -17,10 +17,10 @@
  *    - Sebastian Proksch
  */
 
+using KaVE.Commons.Model.Names;
 using KaVE.JetBrains.Annotations;
-using KaVE.Model.Names;
 
-namespace KaVE.Model.SSTs.Statements
+namespace KaVE.Commons.Model.SSTs.Statements
 {
     public interface IThrowStatement : IStatement
     {

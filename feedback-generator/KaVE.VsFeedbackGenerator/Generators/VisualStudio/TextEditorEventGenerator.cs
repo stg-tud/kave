@@ -22,7 +22,7 @@ using System.Timers;
 using EnvDTE;
 using JetBrains.Application;
 using JetBrains.Application.Components;
-using KaVE.Model.Events.VisualStudio;
+using KaVE.Commons.Model.Events.VisualStudio;
 using KaVE.VsFeedbackGenerator.MessageBus;
 using KaVE.VsFeedbackGenerator.Utils;
 

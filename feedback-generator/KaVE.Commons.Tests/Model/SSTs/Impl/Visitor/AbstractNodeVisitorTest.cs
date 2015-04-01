@@ -17,18 +17,18 @@
  *    - Sebastian Proksch
  */
 
-using KaVE.Model.SSTs;
-using KaVE.Model.SSTs.Blocks;
-using KaVE.Model.SSTs.Declarations;
-using KaVE.Model.SSTs.Expressions.Assignable;
-using KaVE.Model.SSTs.Expressions.LoopHeader;
-using KaVE.Model.SSTs.Expressions.Simple;
-using KaVE.Model.SSTs.Impl.Visitor;
-using KaVE.Model.SSTs.References;
-using KaVE.Model.SSTs.Statements;
+using KaVE.Commons.Model.SSTs;
+using KaVE.Commons.Model.SSTs.Blocks;
+using KaVE.Commons.Model.SSTs.Declarations;
+using KaVE.Commons.Model.SSTs.Expressions.Assignable;
+using KaVE.Commons.Model.SSTs.Expressions.LoopHeader;
+using KaVE.Commons.Model.SSTs.Expressions.Simple;
+using KaVE.Commons.Model.SSTs.Impl.Visitor;
+using KaVE.Commons.Model.SSTs.References;
+using KaVE.Commons.Model.SSTs.Statements;
 using NUnit.Framework;
 
-namespace KaVE.Model.Tests.SSTs.Impl.Visitor
+namespace KaVE.Commons.Tests.Model.SSTs.Impl.Visitor
 {
     internal class AbstractNodeVisitorTest
     {

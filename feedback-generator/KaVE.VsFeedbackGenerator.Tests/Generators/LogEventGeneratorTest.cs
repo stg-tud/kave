@@ -18,7 +18,7 @@
  */
 
 using System;
-using KaVE.Model.Events;
+using KaVE.Commons.Model.Events;
 using KaVE.VsFeedbackGenerator.Generators;
 using Moq;
 using NUnit.Framework;

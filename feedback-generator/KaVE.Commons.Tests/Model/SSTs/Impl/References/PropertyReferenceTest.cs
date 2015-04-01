@@ -17,12 +17,12 @@
  *    - Sebastian Proksch
  */
 
-using KaVE.Model.Names;
-using KaVE.Model.Names.CSharp;
-using KaVE.Model.SSTs.Impl.References;
+using KaVE.Commons.Model.Names;
+using KaVE.Commons.Model.Names.CSharp;
+using KaVE.Commons.Model.SSTs.Impl.References;
 using NUnit.Framework;
 
-namespace KaVE.Model.Tests.SSTs.Impl.References
+namespace KaVE.Commons.Tests.Model.SSTs.Impl.References
 {
     public class PropertyReferenceTest
     {

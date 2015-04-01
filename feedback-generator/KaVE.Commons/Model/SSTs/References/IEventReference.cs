@@ -17,10 +17,10 @@
  *    - Sebastian Proksch
  */
 
+using KaVE.Commons.Model.Names;
 using KaVE.JetBrains.Annotations;
-using KaVE.Model.Names;
 
-namespace KaVE.Model.SSTs.References
+namespace KaVE.Commons.Model.SSTs.References
 {
     public interface IEventReference : IAssignableReference, IMemberReference
     {

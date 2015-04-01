@@ -20,9 +20,9 @@
 using System;
 using System.Collections.Generic;
 using KaVE.JetBrains.Annotations;
-using KaVE.Utils.Assertion;
+using KaVE.Commons.Utils.Assertion;
 
-namespace KaVE.Model.Names.CSharp
+namespace KaVE.Commons.Model.Names.CSharp
 {
     public class TypeParameterName : Name, ITypeName
     {

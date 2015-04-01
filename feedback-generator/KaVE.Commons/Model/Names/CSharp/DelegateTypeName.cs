@@ -19,7 +19,7 @@
 
 using KaVE.JetBrains.Annotations;
 
-namespace KaVE.Model.Names.CSharp
+namespace KaVE.Commons.Model.Names.CSharp
 {
     public class DelegateTypeName : TypeName
     {

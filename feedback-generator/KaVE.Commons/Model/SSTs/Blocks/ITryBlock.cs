@@ -17,10 +17,10 @@
  *    - Sebastian Proksch
  */
 
+using KaVE.Commons.Utils.Collections;
 using KaVE.JetBrains.Annotations;
-using KaVE.Model.Collections;
 
-namespace KaVE.Model.SSTs.Blocks
+namespace KaVE.Commons.Model.SSTs.Blocks
 {
     public interface ITryBlock : IStatement
     {

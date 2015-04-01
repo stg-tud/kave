@@ -19,7 +19,7 @@
 
 using KaVE.JetBrains.Annotations;
 
-namespace KaVE.Model.SSTs.Expressions.Assignable
+namespace KaVE.Commons.Model.SSTs.Expressions.Assignable
 {
     public interface IIfElseExpression : IAssignableExpression
     {

@@ -17,7 +17,7 @@
  *    - Sebastian Proksch
  */
 
-namespace KaVE.Model.Groums
+namespace KaVE.Commons.Model.Groums
 {
     public class Groum
     {

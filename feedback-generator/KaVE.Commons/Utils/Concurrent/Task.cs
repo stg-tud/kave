@@ -22,7 +22,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using KaVE.JetBrains.Annotations;
 
-namespace KaVE.Utils.Concurrent
+namespace KaVE.Commons.Utils.Concurrent
 {
     public class Task : System.Threading.Tasks.Task
     {

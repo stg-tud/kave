@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-namespace KaVE.Model.Names.VisualStudio
+namespace KaVE.Commons.Model.Names.VisualStudio
 {
     public interface IIDEComponentName : IName
     {

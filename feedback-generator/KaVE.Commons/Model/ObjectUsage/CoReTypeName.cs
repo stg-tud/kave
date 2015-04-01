@@ -17,7 +17,7 @@
  *    - 
  */
 
-namespace KaVE.Model.ObjectUsage
+namespace KaVE.Commons.Model.ObjectUsage
 {
     public class CoReTypeName : CoReName
     {

@@ -19,9 +19,9 @@
 
 using System;
 using EnvDTE;
-using KaVE.Model.Events;
-using KaVE.Model.Names.VisualStudio;
-using KaVE.Utils.Assertion;
+using KaVE.Commons.Model.Events;
+using KaVE.Commons.Model.Names.VisualStudio;
+using KaVE.Commons.Utils.Assertion;
 using KaVE.VsFeedbackGenerator.Generators.VisualStudio;
 using Moq;
 using NUnit.Framework;

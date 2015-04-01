@@ -19,9 +19,9 @@
  */
 
 using KaVE.JetBrains.Annotations;
-using KaVE.Model.Names;
-using KaVE.Model.Names.CSharp;
-using KaVE.Model.Names.VisualStudio;
+using KaVE.Commons.Model.Names;
+using KaVE.Commons.Model.Names.CSharp;
+using KaVE.Commons.Model.Names.VisualStudio;
 using KaVE.VsFeedbackGenerator.SessionManager.Anonymize;
 using NUnit.Framework;
 

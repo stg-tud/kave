@@ -19,9 +19,9 @@
 
 using System;
 using System.Runtime.Serialization;
-using KaVE.Utils;
+using KaVE.Commons.Utils;
 
-namespace KaVE.Model.Events.CompletionEvents
+namespace KaVE.Commons.Model.Events.CompletionEvents
 {
     [DataContract]
     public class ProposalSelection : IProposalSelection

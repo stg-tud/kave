@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 using System;
-using KaVE.Utils.Assertion;
+using KaVE.Commons.Utils.Assertion;
 using Newtonsoft.Json;
 
 namespace KaVE.VsFeedbackGenerator.Utils.Json

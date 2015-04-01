@@ -17,9 +17,9 @@
  *    - Sven Amann
  */
 
-using KaVE.Model.Utils;
+using KaVE.Commons.Utils.Collections;
 
-namespace KaVE.Model.Names.CSharp
+namespace KaVE.Commons.Model.Names.CSharp
 {
     /// <summary>
     ///     Aliases are defined by using statements, like "using alias = Some.Reference;". A special case is the alias

@@ -15,7 +15,7 @@
  */
 using System;
 
-namespace KaVE.Utils
+namespace KaVE.Commons.Utils
 {
     /// <summary>
     /// A type-safe wrapper around <see cref="System.WeakReference"/>.

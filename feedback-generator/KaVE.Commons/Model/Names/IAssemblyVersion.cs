@@ -19,7 +19,7 @@
 
 using System;
 
-namespace KaVE.Model.Names
+namespace KaVE.Commons.Model.Names
 {
     public interface IAssemblyVersion : IName, IComparable<IAssemblyVersion>
     {

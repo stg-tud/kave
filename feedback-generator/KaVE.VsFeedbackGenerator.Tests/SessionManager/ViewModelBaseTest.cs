@@ -17,8 +17,8 @@
  *    - Sven Amann
  */
 
-using KaVE.TestUtils;
-using KaVE.Utils.Reflection;
+using KaVE.Commons.TestUtils;
+using KaVE.Commons.Utils.Reflection;
 using KaVE.VsFeedbackGenerator.SessionManager;
 using NUnit.Framework;
 

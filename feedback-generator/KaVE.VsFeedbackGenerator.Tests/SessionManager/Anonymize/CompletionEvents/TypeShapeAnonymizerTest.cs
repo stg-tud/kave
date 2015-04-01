@@ -17,9 +17,9 @@
  *    - Sebastian Proksch
  */
 
-using KaVE.Model.Names;
-using KaVE.Model.Names.CSharp;
-using KaVE.Model.TypeShapes;
+using KaVE.Commons.Model.Names;
+using KaVE.Commons.Model.Names.CSharp;
+using KaVE.Commons.Model.TypeShapes;
 using KaVE.VsFeedbackGenerator.SessionManager.Anonymize;
 using KaVE.VsFeedbackGenerator.SessionManager.Anonymize.CompletionEvents;
 using NUnit.Framework;

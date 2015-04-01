@@ -28,7 +28,7 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Markup;
 using JetBrains.Util;
-using KaVE.Utils.Reflection;
+using KaVE.Commons.Utils.Reflection;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
 {

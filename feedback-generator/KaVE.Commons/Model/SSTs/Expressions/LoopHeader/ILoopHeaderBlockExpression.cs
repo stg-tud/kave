@@ -17,10 +17,10 @@
  *    - Sebastian Proksch
  */
 
+using KaVE.Commons.Utils.Collections;
 using KaVE.JetBrains.Annotations;
-using KaVE.Model.Collections;
 
-namespace KaVE.Model.SSTs.Expressions.LoopHeader
+namespace KaVE.Commons.Model.SSTs.Expressions.LoopHeader
 {
     /*
      * some expressions are broken down to smaller SST statemets (e.g., nested calls).

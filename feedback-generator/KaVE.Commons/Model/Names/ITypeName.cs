@@ -19,7 +19,7 @@
 
 using KaVE.JetBrains.Annotations;
 
-namespace KaVE.Model.Names
+namespace KaVE.Commons.Model.Names
 {
     /// <summary>
     /// Represents a full-qualified type name. Such names can have

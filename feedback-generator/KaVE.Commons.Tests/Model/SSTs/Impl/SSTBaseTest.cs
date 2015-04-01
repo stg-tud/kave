@@ -18,17 +18,17 @@
  */
 
 using System.Linq;
-using KaVE.Model.Collections;
-using KaVE.Model.Names;
-using KaVE.Model.Names.CSharp;
-using KaVE.Model.SSTs.Declarations;
-using KaVE.Model.SSTs.Expressions;
-using KaVE.Model.SSTs.Impl.Declarations;
-using KaVE.Model.SSTs.Impl.Expressions.Simple;
-using KaVE.Model.SSTs.Impl.References;
-using KaVE.Model.SSTs.References;
+using KaVE.Commons.Model.Names;
+using KaVE.Commons.Model.Names.CSharp;
+using KaVE.Commons.Model.SSTs.Declarations;
+using KaVE.Commons.Model.SSTs.Expressions;
+using KaVE.Commons.Model.SSTs.Impl.Declarations;
+using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
+using KaVE.Commons.Model.SSTs.Impl.References;
+using KaVE.Commons.Model.SSTs.References;
+using KaVE.Commons.Utils.Collections;
 
-namespace KaVE.Model.Tests.SSTs.Impl
+namespace KaVE.Commons.Tests.Model.SSTs.Impl
 {
     internal abstract class SSTBaseTest
     {

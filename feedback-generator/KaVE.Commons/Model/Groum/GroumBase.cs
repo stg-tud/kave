@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace KaVE.Model.Groum
+namespace KaVE.Commons.Model.Groum
 {
     public abstract class GroumBase
     {

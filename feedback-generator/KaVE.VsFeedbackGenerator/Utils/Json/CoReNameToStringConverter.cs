@@ -18,8 +18,8 @@
  */
 
 using System;
-using KaVE.Model.ObjectUsage;
-using KaVE.Utils.Assertion;
+using KaVE.Commons.Model.ObjectUsage;
+using KaVE.Commons.Utils.Assertion;
 using Newtonsoft.Json;
 
 namespace KaVE.VsFeedbackGenerator.Utils.Json

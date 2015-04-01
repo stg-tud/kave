@@ -19,7 +19,7 @@
 
 using KaVE.JetBrains.Annotations;
 
-namespace KaVE.Model.SSTs.References
+namespace KaVE.Commons.Model.SSTs.References
 {
     public interface IMemberReference : IReference
     {

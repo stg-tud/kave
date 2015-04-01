@@ -22,10 +22,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Input;
+using KaVE.Commons.Utils.Assertion;
 using KaVE.JetBrains.Annotations;
-using KaVE.Utils.Assertion;
 
-namespace KaVE.Utils.IO
+namespace KaVE.Commons.Utils.IO
 {
     public static class KeyUtils
     {

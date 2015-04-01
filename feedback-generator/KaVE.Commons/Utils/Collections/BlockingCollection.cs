@@ -17,7 +17,7 @@
  *    - Sven Amann
  */
 
-namespace KaVE.Utils.Collections
+namespace KaVE.Commons.Utils.Collections
 {
     public class BlockingCollection<TE> : System.Collections.Concurrent.BlockingCollection<TE> { }
 }

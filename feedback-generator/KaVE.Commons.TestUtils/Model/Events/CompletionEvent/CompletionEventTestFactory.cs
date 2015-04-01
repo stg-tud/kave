@@ -22,14 +22,14 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using KaVE.Model.Collections;
-using KaVE.Model.Events;
-using KaVE.Model.Events.CompletionEvents;
-using KaVE.Model.Names.CSharp;
-using KaVE.Model.TypeShapes;
-using KaVE.TestUtils.Model.Names;
+using KaVE.Commons.Model.Events;
+using KaVE.Commons.Model.Events.CompletionEvents;
+using KaVE.Commons.Model.Names.CSharp;
+using KaVE.Commons.Model.TypeShapes;
+using KaVE.Commons.TestUtils.Model.Names;
+using KaVE.Commons.Utils.Collections;
 
-namespace KaVE.TestUtils.Model.Events.CompletionEvent
+namespace KaVE.Commons.TestUtils.Model.Events.CompletionEvent
 {
     public static class CompletionEventTestFactory
     {
@@ -45,10 +45,10 @@ namespace KaVE.TestUtils.Model.Events.CompletionEvent
             _counter = 0;
         }
 
-        public static KaVE.Model.Events.CompletionEvents.CompletionEvent CreateAnonymousCompletionEvent(int duration)
+        public static Commons.Model.Events.CompletionEvents.CompletionEvent CreateAnonymousCompletionEvent(int duration)
         {
             var now = DateTime.Now;
-            return new KaVE.Model.Events.CompletionEvents.CompletionEvent
+            return new Commons.Model.Events.CompletionEvents.CompletionEvent
             {
                 TriggeredAt = now,
                 TriggeredBy = IDEEvent.Trigger.Shortcut,

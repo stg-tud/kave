@@ -17,7 +17,7 @@
  *    - Sebastian Proksch
  */
 
-namespace KaVE.Model.SSTs.Statements
+namespace KaVE.Commons.Model.SSTs.Statements
 {
     public interface IUnknownStatement : IStatement {}
 }

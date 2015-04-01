@@ -18,7 +18,7 @@
  */
 
 using System;
-using KaVE.Utils.Assertion;
+using KaVE.Commons.Utils.Assertion;
 
 namespace KaVE.VsFeedbackGenerator.Interactivity
 {

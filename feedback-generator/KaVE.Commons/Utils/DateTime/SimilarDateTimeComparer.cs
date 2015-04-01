@@ -16,7 +16,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace KaVE.Utils.DateTime
+namespace KaVE.Commons.Utils.DateTime
 {
     public class SimilarDateTimeComparer : IComparer<System.DateTime>
     {

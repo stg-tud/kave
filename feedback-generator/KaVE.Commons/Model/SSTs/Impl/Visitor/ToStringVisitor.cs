@@ -18,10 +18,10 @@
  */
 
 using System.Text;
-using KaVE.Model.SSTs.Declarations;
-using KaVE.Model.SSTs.References;
+using KaVE.Commons.Model.SSTs.Declarations;
+using KaVE.Commons.Model.SSTs.References;
 
-namespace KaVE.Model.SSTs.Impl.Visitor
+namespace KaVE.Commons.Model.SSTs.Impl.Visitor
 {
     public class ToStringVisitor : AbstractNodeVisitor<StringBuilder>
     {

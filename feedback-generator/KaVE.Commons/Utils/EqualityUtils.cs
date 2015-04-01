@@ -22,7 +22,7 @@ using System.Collections.Generic;
 using System.Linq;
 using KaVE.JetBrains.Annotations;
 
-namespace KaVE.Utils
+namespace KaVE.Commons.Utils
 {
     public static class EqualityUtils
     {

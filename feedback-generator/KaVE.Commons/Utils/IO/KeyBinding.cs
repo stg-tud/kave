@@ -20,7 +20,7 @@
 using System.Linq;
 using System.Windows.Input;
 
-namespace KaVE.Utils.IO
+namespace KaVE.Commons.Utils.IO
 {
     public class KeyBinding
     {

@@ -17,10 +17,10 @@
  *    - Sebastian Proksch
  */
 
+using KaVE.Commons.Utils.Collections;
 using KaVE.JetBrains.Annotations;
-using KaVE.Model.Collections;
 
-namespace KaVE.Model.TypeShapes
+namespace KaVE.Commons.Model.TypeShapes
 {
     public interface ITypeShape
     {

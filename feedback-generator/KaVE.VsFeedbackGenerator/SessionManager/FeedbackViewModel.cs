@@ -25,7 +25,7 @@ using System.ComponentModel;
 using System.Linq;
 using JetBrains;
 using JetBrains.Annotations;
-using KaVE.Utils.Collections;
+using KaVE.Commons.Utils.Collections;
 using KaVE.VsFeedbackGenerator.Interactivity;
 using KaVE.VsFeedbackGenerator.SessionManager.Presentation;
 using KaVE.VsFeedbackGenerator.Utils;
@@ -142,7 +142,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
 
         private void OnRefreshFailed(Exception e)
         {
-            var logEventGenerator = Registry.GetComponent<KaVE.Utils.Exceptions.ILogger>();
+            var logEventGenerator = Registry.GetComponent<Commons.Utils.Exceptions.ILogger>();
             logEventGenerator.Error(new Exception("refresh failed", e));
             // TODO send error notification event to inform user!
             Sessions.Clear();

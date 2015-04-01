@@ -21,8 +21,8 @@ using System;
 using System.Linq;
 using JetBrains.Application;
 using JetBrains.Application.Components;
-using KaVE.Model.Events;
-using KaVE.Utils.Exceptions;
+using KaVE.Commons.Model.Events;
+using KaVE.Commons.Utils.Exceptions;
 using KaVE.VsFeedbackGenerator.MessageBus;
 using KaVE.VsFeedbackGenerator.Utils;
 

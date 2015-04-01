@@ -17,10 +17,10 @@
  *    - Sebastian Proksch
  */
 
-using KaVE.Model.SSTs.Impl.Expressions.Simple;
+using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
 using NUnit.Framework;
 
-namespace KaVE.Model.Tests.SSTs.Impl.Expressions.Simple
+namespace KaVE.Commons.Tests.Model.SSTs.Impl.Expressions.Simple
 {
     internal class ConstantValueExpressionTest : SSTBaseTest
     {

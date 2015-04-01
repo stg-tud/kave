@@ -20,8 +20,8 @@
 using System.Collections.Generic;
 using JetBrains.ReSharper.Feature.Services.Lookup;
 using JetBrains.Util;
-using KaVE.Model.Events;
-using KaVE.Model.Events.CompletionEvents;
+using KaVE.Commons.Model.Events;
+using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.VsFeedbackGenerator.Generators.ReSharper;
 using KaVE.VsFeedbackGenerator.Tests.TestFactories;
 using KaVE.VsFeedbackGenerator.Utils;

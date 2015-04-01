@@ -16,8 +16,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using KaVE.Model.Events;
-using KaVE.Model.Events.CompletionEvents;
+using KaVE.Commons.Model.Events;
+using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.VsFeedbackGenerator.Utils.Json;
 
 namespace KaVE.CompletionTraceGenerator

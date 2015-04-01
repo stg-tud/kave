@@ -1,5 +1,5 @@
 using System;
-using KaVE.Utils.Exceptions;
+using KaVE.Commons.Utils.Exceptions;
 
 namespace KaVE.VsFeedbackGenerator.Utils
 {

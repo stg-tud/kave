@@ -17,10 +17,10 @@
  *    - Sebastian Proksch
  */
 
-using KaVE.Model.SSTs.Impl.Blocks;
+using KaVE.Commons.Model.SSTs.Impl.Blocks;
 using NUnit.Framework;
 
-namespace KaVE.Model.Tests.SSTs.Impl.Blocks
+namespace KaVE.Commons.Tests.Model.SSTs.Impl.Blocks
 {
     public class UnsafeBlockTest
     {

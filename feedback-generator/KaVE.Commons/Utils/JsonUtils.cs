@@ -19,12 +19,12 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using KaVE.Commons.Utils.Assertion;
 using KaVE.JetBrains.Annotations;
-using KaVE.Utils.Assertion;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace KaVE.Utils
+namespace KaVE.Commons.Utils
 {
     public static class JsonUtils
     {

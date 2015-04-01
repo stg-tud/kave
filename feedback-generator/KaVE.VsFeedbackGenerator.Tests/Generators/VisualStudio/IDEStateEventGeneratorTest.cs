@@ -20,8 +20,8 @@
 using System.Collections;
 using EnvDTE;
 using JetBrains.DataFlow;
-using KaVE.Model.Events.VisualStudio;
-using KaVE.Model.Names.VisualStudio;
+using KaVE.Commons.Model.Events.VisualStudio;
+using KaVE.Commons.Model.Names.VisualStudio;
 using KaVE.VsFeedbackGenerator.Generators.VisualStudio;
 using KaVE.VsFeedbackGenerator.Utils.Names;
 using Moq;

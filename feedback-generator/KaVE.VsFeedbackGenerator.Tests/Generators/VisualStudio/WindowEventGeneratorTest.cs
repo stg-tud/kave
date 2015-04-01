@@ -19,9 +19,9 @@
 
 using System;
 using EnvDTE;
-using KaVE.Model.Events.VisualStudio;
-using KaVE.Model.Names.VisualStudio;
-using KaVE.Utils;
+using KaVE.Commons.Model.Events.VisualStudio;
+using KaVE.Commons.Model.Names.VisualStudio;
+using KaVE.Commons.Utils;
 using KaVE.VsFeedbackGenerator.Generators.VisualStudio;
 using KaVE.VsFeedbackGenerator.Utils;
 using KaVE.VsFeedbackGenerator.Utils.Names;

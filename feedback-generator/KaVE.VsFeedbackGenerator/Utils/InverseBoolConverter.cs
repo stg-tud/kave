@@ -16,7 +16,7 @@
 using System;
 using System.Globalization;
 using System.Windows.Data;
-using KaVE.Utils.Assertion;
+using KaVE.Commons.Utils.Assertion;
 
 namespace KaVE.VsFeedbackGenerator.Utils
 {

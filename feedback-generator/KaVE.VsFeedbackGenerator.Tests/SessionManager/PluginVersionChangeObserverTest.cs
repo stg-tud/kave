@@ -19,7 +19,7 @@
 
 using System;
 using JetBrains.Util;
-using KaVE.Model.Events.VisualStudio;
+using KaVE.Commons.Model.Events.VisualStudio;
 using KaVE.VsFeedbackGenerator.SessionManager;
 using KaVE.VsFeedbackGenerator.Tests.Generators;
 using KaVE.VsFeedbackGenerator.Utils;

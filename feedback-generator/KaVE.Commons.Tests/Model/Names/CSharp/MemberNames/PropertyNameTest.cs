@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-using KaVE.Model.Names.CSharp;
+using KaVE.Commons.Model.Names.CSharp;
 using NUnit.Framework;
 
-namespace KaVE.Model.Tests.Names.CSharp.MemberNames
+namespace KaVE.Commons.Tests.Model.Names.CSharp.MemberNames
 {
     internal class PropertyNameTest
     {

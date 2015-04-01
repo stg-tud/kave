@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-using KaVE.Model.Names;
-using KaVE.Model.Names.CSharp;
+using KaVE.Commons.Model.Names;
+using KaVE.Commons.Model.Names.CSharp;
 using NUnit.Framework;
 
-namespace KaVE.Model.Tests.Names.CSharp
+namespace KaVE.Commons.Tests.Model.Names.CSharp
 {
     public class GlobalNamespaceTest
     {

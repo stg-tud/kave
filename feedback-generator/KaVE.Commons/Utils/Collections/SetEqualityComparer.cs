@@ -16,7 +16,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace KaVE.Utils.Collections
+namespace KaVE.Commons.Utils.Collections
 {
     /// <summary>
     /// Compares sets based on the equality of their content.

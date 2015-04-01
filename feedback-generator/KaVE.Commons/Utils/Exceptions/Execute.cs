@@ -19,10 +19,10 @@
 
 using System;
 using System.Linq;
-using KaVE.Utils.Assertion;
+using KaVE.Commons.Utils.Assertion;
 using Newtonsoft.Json;
 
-namespace KaVE.Utils.Exceptions
+namespace KaVE.Commons.Utils.Exceptions
 {
     public static class Execute
     {

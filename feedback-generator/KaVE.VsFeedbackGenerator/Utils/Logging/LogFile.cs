@@ -24,9 +24,9 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using JetBrains.Util;
-using KaVE.Model.Events;
-using KaVE.Utils;
-using KaVE.Utils.Assertion;
+using KaVE.Commons.Model.Events;
+using KaVE.Commons.Utils;
+using KaVE.Commons.Utils.Assertion;
 using KaVE.VsFeedbackGenerator.Utils.Json;
 
 namespace KaVE.VsFeedbackGenerator.Utils.Logging

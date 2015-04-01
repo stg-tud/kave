@@ -8,7 +8,7 @@
     <ProjectGuid>{FC829D87-127A-498B-965C-9778D223792E}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>KaVE.Tests</RootNamespace>
+    <RootNamespace>KaVE.Commons.Tests</RootNamespace>
     <AssemblyName>KaVE.Commons.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

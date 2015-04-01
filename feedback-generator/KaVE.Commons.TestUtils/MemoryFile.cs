@@ -19,7 +19,7 @@
 
 using System.IO;
 
-namespace KaVE.TestUtils
+namespace KaVE.Commons.TestUtils
 {
     /// <summary>
     ///     An in-memory "file" containing a string value. Streams for reading and writing the content can be created from an

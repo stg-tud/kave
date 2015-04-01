@@ -18,8 +18,8 @@
  */
 
 using System;
-using KaVE.Model.Events;
-using KaVE.Model.Names.VisualStudio;
+using KaVE.Commons.Model.Events;
+using KaVE.Commons.Model.Names.VisualStudio;
 using KaVE.VsFeedbackGenerator.SessionManager.Anonymize;
 using KaVE.VsFeedbackGenerator.SessionManager.Presentation;
 using KaVE.VsFeedbackGenerator.Utils;

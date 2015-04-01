@@ -18,10 +18,10 @@
  */
 
 using System.Runtime.Serialization;
-using KaVE.Model.Names.VisualStudio;
-using KaVE.Utils;
+using KaVE.Commons.Model.Names.VisualStudio;
+using KaVE.Commons.Utils;
 
-namespace KaVE.Model.Events.VisualStudio
+namespace KaVE.Commons.Model.Events.VisualStudio
 {
     [DataContract]
     public class WindowEvent : IDEEvent

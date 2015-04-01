@@ -17,7 +17,7 @@
  *    - Sebastian Proksch
  */
 
-namespace KaVE.Model.SSTs.Expressions
+namespace KaVE.Commons.Model.SSTs.Expressions
 {
     // e.g., expression that can be used in a loop condition
     public interface ILoopHeaderExpression : IExpression {}

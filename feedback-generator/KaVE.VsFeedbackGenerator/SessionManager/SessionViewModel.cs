@@ -23,15 +23,15 @@ using System.ComponentModel;
 using System.Linq;
 using JetBrains;
 using JetBrains.Util;
-using KaVE.Model.Events;
-using KaVE.Utils;
-using KaVE.Utils.Collections;
+using KaVE.Commons.Model.Events;
+using KaVE.Commons.Utils;
+using KaVE.Commons.Utils.Collections;
 using KaVE.VsFeedbackGenerator.Interactivity;
 using KaVE.VsFeedbackGenerator.SessionManager.Presentation;
 using KaVE.VsFeedbackGenerator.Utils;
 using KaVE.VsFeedbackGenerator.Utils.Logging;
 using NuGet;
-using ILogger = KaVE.Utils.Exceptions.ILogger;
+using ILogger = KaVE.Commons.Utils.Exceptions.ILogger;
 using Messages = KaVE.VsFeedbackGenerator.Properties.SessionManager;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager

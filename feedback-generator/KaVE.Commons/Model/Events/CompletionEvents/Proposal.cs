@@ -18,10 +18,10 @@
  */
 
 using System.Runtime.Serialization;
-using KaVE.Model.Names;
-using KaVE.Utils;
+using KaVE.Commons.Model.Names;
+using KaVE.Commons.Utils;
 
-namespace KaVE.Model.Events.CompletionEvents
+namespace KaVE.Commons.Model.Events.CompletionEvents
 {
     [DataContract]
     public class Proposal : IProposal

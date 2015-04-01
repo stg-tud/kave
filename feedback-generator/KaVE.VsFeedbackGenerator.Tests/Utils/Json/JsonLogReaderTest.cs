@@ -19,7 +19,7 @@
 
 using System.Linq;
 using KaVE.JetBrains.Annotations;
-using KaVE.Utils.Exceptions;
+using KaVE.Commons.Utils.Exceptions;
 using KaVE.VsFeedbackGenerator.Utils;
 using KaVE.VsFeedbackGenerator.Utils.Json;
 using KaVE.VsFeedbackGenerator.Utils.Logging;

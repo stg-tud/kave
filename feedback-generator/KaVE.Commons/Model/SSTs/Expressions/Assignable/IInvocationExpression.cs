@@ -17,12 +17,12 @@
  *    - Sebastian Proksch
  */
 
+using KaVE.Commons.Model.Names;
+using KaVE.Commons.Model.SSTs.References;
+using KaVE.Commons.Utils.Collections;
 using KaVE.JetBrains.Annotations;
-using KaVE.Model.Collections;
-using KaVE.Model.Names;
-using KaVE.Model.SSTs.References;
 
-namespace KaVE.Model.SSTs.Expressions.Assignable
+namespace KaVE.Commons.Model.SSTs.Expressions.Assignable
 {
     public interface IInvocationExpression : IAssignableExpression
     {

@@ -17,9 +17,9 @@
  *    - Sebastian Proksch
  */
 
-using KaVE.Model.SSTs.Visitor;
+using KaVE.Commons.Model.SSTs.Visitor;
 
-namespace KaVE.Model.SSTs
+namespace KaVE.Commons.Model.SSTs
 {
     public interface IReference : ISSTNode {}
 }

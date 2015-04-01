@@ -17,7 +17,7 @@
  *    - Sebastian Proksch
  */
 
-namespace KaVE.Model.SSTs.Blocks
+namespace KaVE.Commons.Model.SSTs.Blocks
 {
     /// <summary>
     ///     not analyzed (this includes "fixed" statements as they are only allowed in unsafe blocks)

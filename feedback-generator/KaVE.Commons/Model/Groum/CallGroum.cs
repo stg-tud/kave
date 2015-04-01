@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 using System.Collections.Generic;
-using KaVE.Model.Names;
+using KaVE.Commons.Model.Names;
 
-namespace KaVE.Model.Groum
+namespace KaVE.Commons.Model.Groum
 {
     public class CallGroum : GroumBase
     {

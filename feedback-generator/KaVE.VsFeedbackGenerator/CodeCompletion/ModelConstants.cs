@@ -17,7 +17,7 @@
  *    - Uli Fahrer
  */
 using System;
-using KaVE.Model.ObjectUsage;
+using KaVE.Commons.Model.ObjectUsage;
 using KaVE.JetBrains.Annotations;
 
 namespace KaVE.VsFeedbackGenerator.CodeCompletion

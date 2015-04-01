@@ -18,7 +18,7 @@
  */
 
 using System.Collections.Generic;
-using KaVE.Model.SSTs;
+using KaVE.Commons.Model.SSTs;
 
 namespace KaVE.VsFeedbackGenerator.Analysis.Util
 {

@@ -27,7 +27,7 @@ using Ionic.Zip;
 using JetBrains;
 using JetBrains.Application;
 using JetBrains.Util;
-using KaVE.Model.Events;
+using KaVE.Commons.Model.Events;
 using KaVE.VsFeedbackGenerator.SessionManager.Anonymize;
 using KaVE.VsFeedbackGenerator.Utils.Json;
 

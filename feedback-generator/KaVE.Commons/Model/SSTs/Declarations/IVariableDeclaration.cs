@@ -17,11 +17,11 @@
  *    - 
  */
 
+using KaVE.Commons.Model.Names;
+using KaVE.Commons.Model.SSTs.References;
 using KaVE.JetBrains.Annotations;
-using KaVE.Model.Names;
-using KaVE.Model.SSTs.References;
 
-namespace KaVE.Model.SSTs.Declarations
+namespace KaVE.Commons.Model.SSTs.Declarations
 {
     public interface IVariableDeclaration : IStatement
     {

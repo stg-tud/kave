@@ -10,7 +10,7 @@
     <ProjectGuid>{35FCB52A-CCD2-49C7-AD6D-78A71164A324}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>KaVE.ReSharper.Tests</RootNamespace>
+    <RootNamespace>KaVE.Commons.ReSharper.Tests</RootNamespace>
     <AssemblyName>KaVE.Commons.ReSharper.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

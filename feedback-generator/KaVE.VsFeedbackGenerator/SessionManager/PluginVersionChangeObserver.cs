@@ -20,7 +20,7 @@
 using JetBrains.Application;
 using JetBrains.Application.Components;
 using JetBrains.Util;
-using KaVE.Model.Events.VisualStudio;
+using KaVE.Commons.Model.Events.VisualStudio;
 using KaVE.VsFeedbackGenerator.Generators;
 using KaVE.VsFeedbackGenerator.MessageBus;
 using KaVE.VsFeedbackGenerator.Utils;

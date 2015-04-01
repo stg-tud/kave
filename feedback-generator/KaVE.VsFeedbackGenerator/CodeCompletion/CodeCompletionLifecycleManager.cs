@@ -22,9 +22,9 @@ using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.TextControl.Actions;
 using JetBrains.Util;
-using KaVE.Model.Events;
-using KaVE.Utils;
-using KaVE.Utils.IO;
+using KaVE.Commons.Model.Events;
+using KaVE.Commons.Utils;
+using KaVE.Commons.Utils.IO;
 using Key = System.Windows.Input.Key;
 
 namespace KaVE.VsFeedbackGenerator.CodeCompletion

@@ -17,11 +17,11 @@
  *    - Sebastian Proksch
  */
 
+using KaVE.Commons.Model.SSTs.Declarations;
+using KaVE.Commons.Utils.Collections;
 using KaVE.JetBrains.Annotations;
-using KaVE.Model.Collections;
-using KaVE.Model.SSTs.Declarations;
 
-namespace KaVE.Model.SSTs.Expressions.Assignable
+namespace KaVE.Commons.Model.SSTs.Expressions.Assignable
 {
     public interface ILambdaExpression : IAssignableExpression
     {

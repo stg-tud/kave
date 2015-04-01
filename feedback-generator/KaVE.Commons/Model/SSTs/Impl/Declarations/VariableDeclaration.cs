@@ -18,15 +18,15 @@
  */
 
 using System.Runtime.Serialization;
-using KaVE.Model.Names;
-using KaVE.Model.Names.CSharp;
-using KaVE.Model.SSTs.Declarations;
-using KaVE.Model.SSTs.Impl.References;
-using KaVE.Model.SSTs.References;
-using KaVE.Model.SSTs.Visitor;
-using KaVE.Utils;
+using KaVE.Commons.Model.Names;
+using KaVE.Commons.Model.Names.CSharp;
+using KaVE.Commons.Model.SSTs.Declarations;
+using KaVE.Commons.Model.SSTs.Impl.References;
+using KaVE.Commons.Model.SSTs.References;
+using KaVE.Commons.Model.SSTs.Visitor;
+using KaVE.Commons.Utils;
 
-namespace KaVE.Model.SSTs.Impl.Declarations
+namespace KaVE.Commons.Model.SSTs.Impl.Declarations
 {
     [DataContract]
     public class VariableDeclaration : IVariableDeclaration

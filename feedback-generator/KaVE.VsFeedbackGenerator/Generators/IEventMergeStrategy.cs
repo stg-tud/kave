@@ -17,7 +17,7 @@
  *    - Sven Amann
  */
 
-using KaVE.Model.Events;
+using KaVE.Commons.Model.Events;
 
 namespace KaVE.VsFeedbackGenerator.Generators
 {

@@ -30,10 +30,10 @@ using JetBrains.ReSharper.Psi.ExtensionsAPI;
 using JetBrains.ReSharper.Psi.Resolve;
 using JetBrains.Util;
 using KaVE.JetBrains.Annotations;
-using KaVE.Model.Names;
-using KaVE.Model.Names.CSharp;
-using KaVE.Utils;
-using KaVE.Utils.Assertion;
+using KaVE.Commons.Model.Names;
+using KaVE.Commons.Model.Names.CSharp;
+using KaVE.Commons.Utils;
+using KaVE.Commons.Utils.Assertion;
 
 namespace KaVE.VsFeedbackGenerator.Utils.Names
 {

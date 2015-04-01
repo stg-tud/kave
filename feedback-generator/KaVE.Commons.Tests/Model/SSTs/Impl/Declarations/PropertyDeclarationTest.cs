@@ -17,15 +17,15 @@
  *    - Sebastian Proksch
  */
 
-using KaVE.Model.Collections;
-using KaVE.Model.Names;
-using KaVE.Model.Names.CSharp;
-using KaVE.Model.SSTs;
-using KaVE.Model.SSTs.Impl.Declarations;
-using KaVE.Model.SSTs.Impl.Statements;
+using KaVE.Commons.Model.Names;
+using KaVE.Commons.Model.Names.CSharp;
+using KaVE.Commons.Model.SSTs;
+using KaVE.Commons.Model.SSTs.Impl.Declarations;
+using KaVE.Commons.Model.SSTs.Impl.Statements;
+using KaVE.Commons.Utils.Collections;
 using NUnit.Framework;
 
-namespace KaVE.Model.Tests.SSTs.Impl.Declarations
+namespace KaVE.Commons.Tests.Model.SSTs.Impl.Declarations
 {
     internal class PropertyDeclarationTest
     {

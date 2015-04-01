@@ -20,11 +20,11 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using KaVE.Commons.Utils.Collections;
 using KaVE.JetBrains.Annotations;
-using KaVE.Model.Collections;
-using KaVE.Utils;
+using KaVE.Commons.Utils;
 
-namespace KaVE.Model.ObjectUsage
+namespace KaVE.Commons.Model.ObjectUsage
 {
     // ReSharper disable InconsistentNaming
     public class Query

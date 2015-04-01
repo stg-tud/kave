@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 using System.Collections.Generic;
-using KaVE.Utils.Collections;
+using KaVE.Commons.Utils.Collections;
 using NUnit.Framework;
 
-namespace KaVE.Utils.Tests.Collections
+namespace KaVE.Commons.Tests.Utils.Collections
 {
     [TestFixture]
     internal class SetEqualityComparerTest

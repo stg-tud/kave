@@ -17,7 +17,7 @@
  *    - Sven Amann
  */
 
-namespace KaVE.Model.Names
+namespace KaVE.Commons.Model.Names
 {
     public interface IPropertyName : IMemberName
     {

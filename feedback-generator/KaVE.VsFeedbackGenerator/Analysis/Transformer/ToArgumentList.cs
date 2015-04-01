@@ -19,7 +19,7 @@
 
 using System.Collections.Generic;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
-using KaVE.Model.SSTs;
+using KaVE.Commons.Model.SSTs;
 
 namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
 {

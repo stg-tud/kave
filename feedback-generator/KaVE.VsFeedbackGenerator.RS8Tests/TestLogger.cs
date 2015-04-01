@@ -18,7 +18,7 @@
  */
 
 using JetBrains.Application;
-using KaVE.Utils.Exceptions;
+using KaVE.Commons.Utils.Exceptions;
 
 namespace KaVE.VsFeedbackGenerator.RS8Tests
 {

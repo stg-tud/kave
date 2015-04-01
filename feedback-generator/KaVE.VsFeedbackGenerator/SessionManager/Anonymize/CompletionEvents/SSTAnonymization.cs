@@ -18,12 +18,12 @@
  */
 
 using System.Linq;
-using KaVE.Model.Collections;
-using KaVE.Model.Names.CSharp;
-using KaVE.Model.SSTs;
-using KaVE.Model.SSTs.Declarations;
-using KaVE.Model.SSTs.Impl;
-using KaVE.Model.SSTs.Impl.Declarations;
+using KaVE.Commons.Model.Names.CSharp;
+using KaVE.Commons.Model.SSTs;
+using KaVE.Commons.Model.SSTs.Declarations;
+using KaVE.Commons.Model.SSTs.Impl;
+using KaVE.Commons.Model.SSTs.Impl.Declarations;
+using KaVE.Commons.Utils.Collections;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize.CompletionEvents
 {

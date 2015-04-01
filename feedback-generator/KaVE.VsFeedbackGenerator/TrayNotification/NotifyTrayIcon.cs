@@ -23,7 +23,7 @@ using System.Windows.Controls.Primitives;
 using Hardcodet.Wpf.TaskbarNotification;
 using JetBrains.Application;
 using JetBrains.Application.Components;
-using KaVE.Utils;
+using KaVE.Commons.Utils;
 using KaVE.VsFeedbackGenerator.Properties;
 using KaVE.VsFeedbackGenerator.Utils.Logging;
 

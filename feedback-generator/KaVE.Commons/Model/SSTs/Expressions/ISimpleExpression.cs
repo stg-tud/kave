@@ -17,7 +17,7 @@
  *    - Sebastian Proksch
  */
 
-namespace KaVE.Model.SSTs.Expressions
+namespace KaVE.Commons.Model.SSTs.Expressions
 {
     // e.g., expressions that do not contain other expressions
     public interface ISimpleExpression : IAssignableExpression, ILoopHeaderExpression {}

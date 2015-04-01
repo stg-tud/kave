@@ -17,11 +17,11 @@
  *    - Dennis Albrecht
  */
 
-using KaVE.Model.ObjectUsage;
-using KaVE.Utils.Assertion;
+using KaVE.Commons.Model.ObjectUsage;
+using KaVE.Commons.Utils.Assertion;
 using NUnit.Framework;
 
-namespace KaVE.Model.Tests.ObjectUsage
+namespace KaVE.Commons.Tests.Model.ObjectUsage
 {
     internal class CoReMethodNameTest
     {

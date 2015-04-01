@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using KaVE.Utils.DateTime;
+
+using KaVE.Commons.Utils.DateTime;
 using NUnit.Framework;
 
-namespace KaVE.Utils.Tests.DateTime
+namespace KaVE.Commons.Tests.Utils.DateTime
 {
     [TestFixture]
     class SimilarDateTimeComparerTest

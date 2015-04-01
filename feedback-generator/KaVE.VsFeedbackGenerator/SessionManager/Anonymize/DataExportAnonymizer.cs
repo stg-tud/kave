@@ -20,9 +20,9 @@
 using System;
 using System.Collections.Generic;
 using JetBrains.Application;
-using KaVE.Model.Events;
-using KaVE.Model.Events.CompletionEvents;
-using KaVE.Model.Events.VisualStudio;
+using KaVE.Commons.Model.Events;
+using KaVE.Commons.Model.Events.CompletionEvents;
+using KaVE.Commons.Model.Events.VisualStudio;
 using KaVE.VsFeedbackGenerator.SessionManager.Anonymize.CompletionEvents;
 using KaVE.VsFeedbackGenerator.SessionManager.Presentation;
 using KaVE.VsFeedbackGenerator.Utils;

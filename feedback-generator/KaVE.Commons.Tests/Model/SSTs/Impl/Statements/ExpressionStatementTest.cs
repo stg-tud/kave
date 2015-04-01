@@ -17,11 +17,11 @@
  *    - Sebastian Proksch
  */
 
-using KaVE.Model.SSTs.Impl.Expressions.Simple;
-using KaVE.Model.SSTs.Impl.Statements;
+using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
+using KaVE.Commons.Model.SSTs.Impl.Statements;
 using NUnit.Framework;
 
-namespace KaVE.Model.Tests.SSTs.Impl.Statements
+namespace KaVE.Commons.Tests.Model.SSTs.Impl.Statements
 {
     internal class ExpressionStatementTest
     {

@@ -26,8 +26,8 @@ using JetBrains.ReSharper.Psi.CSharp.Resolve;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Resolve;
 using JetBrains.Util;
-using KaVE.Model.Names;
-using KaVE.Utils.Assertion;
+using KaVE.Commons.Model.Names;
+using KaVE.Commons.Utils.Assertion;
 
 namespace KaVE.VsFeedbackGenerator.Analysis
 {

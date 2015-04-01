@@ -17,10 +17,10 @@
  *    - Sven Amann
  */
 
-using KaVE.Model.Names.CSharp;
-using KaVE.Model.Utils;
+using KaVE.Commons.Model.Names.CSharp;
+using KaVE.Commons.Utils.Collections;
 
-namespace KaVE.Model.Names.VisualStudio
+namespace KaVE.Commons.Model.Names.VisualStudio
 {
     public class ProjectItemName : Name, IIDEComponentName
     {

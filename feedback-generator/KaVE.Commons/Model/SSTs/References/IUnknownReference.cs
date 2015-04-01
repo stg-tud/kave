@@ -17,7 +17,7 @@
  *    - Sebastian Proksch
  */
 
-namespace KaVE.Model.SSTs.References
+namespace KaVE.Commons.Model.SSTs.References
 {
     public interface IUnknownReference : IAssignableReference {}
 }

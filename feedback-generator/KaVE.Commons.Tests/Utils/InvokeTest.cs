@@ -15,9 +15,10 @@
  */
 using System;
 using System.Threading;
+using KaVE.Commons.Utils;
 using NUnit.Framework;
 
-namespace KaVE.Utils.Tests
+namespace KaVE.Commons.Tests.Utils
 {
     [TestFixture]
     internal class InvokeTest

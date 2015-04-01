@@ -17,10 +17,10 @@
  *    - Sven Amann
  */
 
-using KaVE.Model.Names.CSharp;
+using KaVE.Commons.Model.Names.CSharp;
 using NUnit.Framework;
 
-namespace KaVE.Model.Tests.Names.CSharp.Modularization
+namespace KaVE.Commons.Tests.Model.Names.CSharp.Modularization
 {
     internal class AssemblyNameTest
     {

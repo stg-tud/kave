@@ -19,8 +19,8 @@
 
 using System.Collections.Generic;
 using JetBrains.Util;
-using KaVE.Model.ObjectUsage;
-using KaVE.Utils.Assertion;
+using KaVE.Commons.Model.ObjectUsage;
+using KaVE.Commons.Utils.Assertion;
 using KaVE.VsFeedbackGenerator.Utils.Json;
 using NUnit.Framework;
 

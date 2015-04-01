@@ -18,7 +18,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace KaVE.Utils.Collections
+namespace KaVE.Commons.Utils.Collections
 {
     /// <summary>
     /// A dictionary that stores the values as <see cref="WeakReference{TRef}"/>. Mappings whose value gets garbage collected are implicitely removed.

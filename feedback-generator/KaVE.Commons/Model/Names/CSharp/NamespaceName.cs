@@ -17,9 +17,9 @@
  *    - Sven Amann
  */
 
-using KaVE.Model.Utils;
+using KaVE.Commons.Utils.Collections;
 
-namespace KaVE.Model.Names.CSharp
+namespace KaVE.Commons.Model.Names.CSharp
 {
     public class NamespaceName : Name, INamespaceName
     {

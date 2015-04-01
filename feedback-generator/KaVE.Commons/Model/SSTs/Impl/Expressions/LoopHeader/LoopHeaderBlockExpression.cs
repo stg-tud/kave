@@ -17,12 +17,12 @@
  *    - Sebastian Proksch
  */
 
-using KaVE.Model.Collections;
-using KaVE.Model.SSTs.Expressions.LoopHeader;
-using KaVE.Model.SSTs.Visitor;
-using KaVE.Utils;
+using KaVE.Commons.Model.SSTs.Expressions.LoopHeader;
+using KaVE.Commons.Model.SSTs.Visitor;
+using KaVE.Commons.Utils;
+using KaVE.Commons.Utils.Collections;
 
-namespace KaVE.Model.SSTs.Impl.Expressions.LoopHeader
+namespace KaVE.Commons.Model.SSTs.Impl.Expressions.LoopHeader
 {
     public class LoopHeaderBlockExpression : ILoopHeaderBlockExpression
     {

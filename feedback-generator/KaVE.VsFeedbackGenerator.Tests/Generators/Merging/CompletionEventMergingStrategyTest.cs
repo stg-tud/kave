@@ -19,10 +19,10 @@
 
 using System;
 using System.Linq;
-using KaVE.Model.Events;
-using KaVE.Model.Events.CompletionEvents;
-using KaVE.Model.Names.VisualStudio;
-using KaVE.TestUtils.Model.Events.CompletionEvent;
+using KaVE.Commons.Model.Events;
+using KaVE.Commons.Model.Events.CompletionEvents;
+using KaVE.Commons.Model.Names.VisualStudio;
+using KaVE.Commons.TestUtils.Model.Events.CompletionEvent;
 using KaVE.VsFeedbackGenerator.Generators.Merging;
 using KaVE.VsFeedbackGenerator.Tests.TestFactories;
 using KaVE.VsFeedbackGenerator.Utils;

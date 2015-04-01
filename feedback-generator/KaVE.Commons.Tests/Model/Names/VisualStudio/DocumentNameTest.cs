@@ -17,10 +17,10 @@
  *    - Sven Amann
  */
 
-using KaVE.Model.Names.VisualStudio;
+using KaVE.Commons.Model.Names.VisualStudio;
 using NUnit.Framework;
 
-namespace KaVE.Model.Tests.Names.VisualStudio
+namespace KaVE.Commons.Tests.Model.Names.VisualStudio
 {
     [TestFixture]
     class DocumentNameTest

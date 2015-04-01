@@ -16,7 +16,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using KaVE.CompletionTraceGenerator.Model;
-using KaVE.Utils;
+using KaVE.Commons.Utils;
 
 namespace KaVE.CompletionTraceGenerator
 {

@@ -20,8 +20,8 @@
 using System;
 using JetBrains.ActionManagement;
 using JetBrains.Application.DataContext;
-using KaVE.Model.Events;
-using KaVE.TestUtils;
+using KaVE.Commons.Model.Events;
+using KaVE.Commons.TestUtils;
 using KaVE.VsFeedbackGenerator.Generators.ReSharper;
 using Moq;
 using NUnit.Framework;

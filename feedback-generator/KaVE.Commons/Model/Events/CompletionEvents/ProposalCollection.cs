@@ -21,10 +21,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
-using KaVE.Model.Collections;
-using KaVE.Utils;
+using KaVE.Commons.Utils;
+using KaVE.Commons.Utils.Collections;
 
-namespace KaVE.Model.Events.CompletionEvents
+namespace KaVE.Commons.Model.Events.CompletionEvents
 {
     [DataContract]
     public class ProposalCollection : IProposalCollection

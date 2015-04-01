@@ -19,9 +19,10 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using KaVE.Commons.Utils;
 using NUnit.Framework;
 
-namespace KaVE.Utils.Tests
+namespace KaVE.Commons.Tests.Utils
 {
     [TestFixture]
     internal class JsonUtilsTest

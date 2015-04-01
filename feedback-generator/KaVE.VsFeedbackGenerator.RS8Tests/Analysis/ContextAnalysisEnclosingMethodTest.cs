@@ -15,10 +15,10 @@
  */
 
 using System.Linq;
-using KaVE.Model.Events.CompletionEvents;
-using KaVE.Model.Names;
-using KaVE.Model.Names.CSharp;
-using KaVE.Model.TypeShapes;
+using KaVE.Commons.Model.Events.CompletionEvents;
+using KaVE.Commons.Model.Names;
+using KaVE.Commons.Model.Names.CSharp;
+using KaVE.Commons.Model.TypeShapes;
 using NUnit.Framework;
 
 namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis

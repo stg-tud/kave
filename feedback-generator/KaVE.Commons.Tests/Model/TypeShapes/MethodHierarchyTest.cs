@@ -17,13 +17,13 @@
  *    - Sven Amann
  */
 
-using KaVE.Model.Names;
-using KaVE.Model.Names.CSharp;
-using KaVE.Model.TypeShapes;
-using KaVE.TestUtils.Model.Names;
+using KaVE.Commons.Model.Names;
+using KaVE.Commons.Model.Names.CSharp;
+using KaVE.Commons.Model.TypeShapes;
+using KaVE.Commons.TestUtils.Model.Names;
 using NUnit.Framework;
 
-namespace KaVE.Model.Tests.TypeShapes
+namespace KaVE.Commons.Tests.Model.TypeShapes
 {
     internal class MethodHierarchyTest
     {

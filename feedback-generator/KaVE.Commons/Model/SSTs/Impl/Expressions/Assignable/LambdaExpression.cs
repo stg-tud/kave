@@ -17,13 +17,13 @@
  *    - Sebastian Proksch
  */
 
-using KaVE.Model.Collections;
-using KaVE.Model.SSTs.Declarations;
-using KaVE.Model.SSTs.Expressions.Assignable;
-using KaVE.Model.SSTs.Visitor;
-using KaVE.Utils;
+using KaVE.Commons.Model.SSTs.Declarations;
+using KaVE.Commons.Model.SSTs.Expressions.Assignable;
+using KaVE.Commons.Model.SSTs.Visitor;
+using KaVE.Commons.Utils;
+using KaVE.Commons.Utils.Collections;
 
-namespace KaVE.Model.SSTs.Impl.Expressions.Assignable
+namespace KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable
 {
     public class LambdaExpression : ILambdaExpression
     {

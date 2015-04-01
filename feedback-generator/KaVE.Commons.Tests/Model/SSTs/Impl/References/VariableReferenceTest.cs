@@ -17,10 +17,10 @@
  *    - Sebastian Proksch
  */
 
-using KaVE.Model.SSTs.Impl.References;
+using KaVE.Commons.Model.SSTs.Impl.References;
 using NUnit.Framework;
 
-namespace KaVE.Model.Tests.SSTs.Impl.References
+namespace KaVE.Commons.Tests.Model.SSTs.Impl.References
 {
     public class VariableReferenceTest
     {

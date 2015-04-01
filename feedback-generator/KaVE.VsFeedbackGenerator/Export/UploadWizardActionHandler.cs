@@ -24,7 +24,7 @@ using JetBrains.Util;
 using KaVE.VsFeedbackGenerator.Utils;
 using KaVE.VsFeedbackGenerator.Utils.Logging;
 using NuGet;
-using ILogger = KaVE.Utils.Exceptions.ILogger;
+using ILogger = KaVE.Commons.Utils.Exceptions.ILogger;
 
 namespace KaVE.VsFeedbackGenerator.Export
 {

@@ -19,8 +19,8 @@
 
 using System.Collections.Generic;
 using JetBrains.Util;
-using KaVE.Model.Names.CSharp;
-using KaVE.Model.TypeShapes;
+using KaVE.Commons.Model.Names.CSharp;
+using KaVE.Commons.Model.TypeShapes;
 using NUnit.Framework;
 
 namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis

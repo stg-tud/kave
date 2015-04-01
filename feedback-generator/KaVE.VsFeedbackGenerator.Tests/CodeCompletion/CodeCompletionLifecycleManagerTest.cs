@@ -23,7 +23,7 @@ using JetBrains.Application.DataContext;
 using JetBrains.ReSharper.Feature.Services.Lookup;
 using JetBrains.TextControl.Actions;
 using JetBrains.Util;
-using KaVE.Model.Events;
+using KaVE.Commons.Model.Events;
 using KaVE.VsFeedbackGenerator.CodeCompletion;
 using KaVE.VsFeedbackGenerator.Tests.TestFactories;
 using KaVE.VsFeedbackGenerator.Tests.TestFactories.Actions;

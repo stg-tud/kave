@@ -30,7 +30,7 @@ using JetBrains.ReSharper.Features.Common.Options;
 using JetBrains.ReSharper.Features.Finding.Resources;
 using JetBrains.UI.CrossFramework;
 using JetBrains.UI.Options;
-using KaVE.Utils.Assertion;
+using KaVE.Commons.Utils.Assertion;
 using KaVE.VsFeedbackGenerator.Interactivity;
 using KaVE.VsFeedbackGenerator.Utils;
 using MessageBox = JetBrains.Util.MessageBox;

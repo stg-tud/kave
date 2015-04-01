@@ -19,8 +19,8 @@
 
 using System;
 using JetBrains.Util;
-using KaVE.Model.Events;
-using KaVE.Model.Events.VisualStudio;
+using KaVE.Commons.Model.Events;
+using KaVE.Commons.Model.Events.VisualStudio;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
 {

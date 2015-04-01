@@ -23,8 +23,8 @@ using JetBrains.Application;
 using JetBrains.Application.DataContext;
 using JetBrains.Application.Settings;
 using JetBrains.Extension;
-using KaVE.Utils.Assertion;
-using KaVE.Utils.Reflection;
+using KaVE.Commons.Utils.Assertion;
+using KaVE.Commons.Utils.Reflection;
 using RSISettingsStore = JetBrains.Application.Settings.ISettingsStore;
 
 namespace KaVE.VsFeedbackGenerator.Utils

@@ -28,8 +28,8 @@ using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.TestFramework;
 using JetBrains.TextControl;
 using JetBrains.Util;
-using KaVE.Model.Events.CompletionEvents;
-using KaVE.Utils.Assertion;
+using KaVE.Commons.Model.Events.CompletionEvents;
+using KaVE.Commons.Utils.Assertion;
 using KaVE.VsFeedbackGenerator.Utils;
 using NUnit.Framework;
 

@@ -17,14 +17,14 @@
  *    - Sebastian Proksch
  */
 
-using KaVE.Model.Events.CompletionEvents;
-using KaVE.Model.Names.CSharp;
-using KaVE.Model.SSTs;
-using KaVE.Model.SSTs.Impl;
-using KaVE.Model.TypeShapes;
+using KaVE.Commons.Model.Events.CompletionEvents;
+using KaVE.Commons.Model.Names.CSharp;
+using KaVE.Commons.Model.SSTs;
+using KaVE.Commons.Model.SSTs.Impl;
+using KaVE.Commons.Model.TypeShapes;
 using NUnit.Framework;
 
-namespace KaVE.Model.Tests.Events.CompletionEvent
+namespace KaVE.Commons.Tests.Model.Events.CompletionEvent
 {
     internal class ContextTest
     {

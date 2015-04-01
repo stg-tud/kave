@@ -17,13 +17,13 @@
  *    - Sebastian Proksch
  */
 
-using KaVE.Model.SSTs.Expressions;
-using KaVE.Model.SSTs.Impl.Expressions.Simple;
-using KaVE.Model.SSTs.Statements;
-using KaVE.Model.SSTs.Visitor;
-using KaVE.Utils;
+using KaVE.Commons.Model.SSTs.Expressions;
+using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
+using KaVE.Commons.Model.SSTs.Statements;
+using KaVE.Commons.Model.SSTs.Visitor;
+using KaVE.Commons.Utils;
 
-namespace KaVE.Model.SSTs.Impl.Statements
+namespace KaVE.Commons.Model.SSTs.Impl.Statements
 {
     public class ExpressionStatement : IExpressionStatement
     {

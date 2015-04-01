@@ -18,12 +18,12 @@
  */
 
 using System;
+using KaVE.Commons.Utils.Assertion;
+using KaVE.Commons.Utils.Reflection;
 using KaVE.JetBrains.Annotations;
-using KaVE.Utils.Assertion;
-using KaVE.Utils.Reflection;
 using NUnit.Framework;
 
-namespace KaVE.Utils.Tests.Reflection
+namespace KaVE.Commons.Tests.Utils.Reflection
 {
     [TestFixture]
     internal class TypeExtensionsTest

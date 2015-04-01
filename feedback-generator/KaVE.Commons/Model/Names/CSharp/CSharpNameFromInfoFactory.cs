@@ -20,10 +20,10 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using KaVE.JetBrains.Annotations;
-using KaVE.Utils;
-using KaVE.Utils.Assertion;
+using KaVE.Commons.Utils;
+using KaVE.Commons.Utils.Assertion;
 
-namespace KaVE.Model.Names.CSharp
+namespace KaVE.Commons.Model.Names.CSharp
 {
     /// <summary>
     ///     This implementation lacks support for the following:

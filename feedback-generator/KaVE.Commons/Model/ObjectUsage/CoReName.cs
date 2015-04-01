@@ -19,9 +19,9 @@
  */
 
 using System.Text.RegularExpressions;
-using KaVE.Utils.Assertion;
+using KaVE.Commons.Utils.Assertion;
 
-namespace KaVE.Model.ObjectUsage
+namespace KaVE.Commons.Model.ObjectUsage
 {
     public abstract class CoReName
     {

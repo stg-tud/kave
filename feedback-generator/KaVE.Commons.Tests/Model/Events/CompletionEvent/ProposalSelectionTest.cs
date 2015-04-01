@@ -18,10 +18,10 @@
  */
 
 using System;
-using KaVE.Model.Events.CompletionEvents;
+using KaVE.Commons.Model.Events.CompletionEvents;
 using NUnit.Framework;
 
-namespace KaVE.Model.Tests.Events.CompletionEvent
+namespace KaVE.Commons.Tests.Model.Events.CompletionEvent
 {
     internal class ProposalSelectionTest
     {

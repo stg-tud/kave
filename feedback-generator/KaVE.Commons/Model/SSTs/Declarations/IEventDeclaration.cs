@@ -17,10 +17,10 @@
  *    - Sebastian Proksch
  */
 
+using KaVE.Commons.Model.Names;
 using KaVE.JetBrains.Annotations;
-using KaVE.Model.Names;
 
-namespace KaVE.Model.SSTs.Declarations
+namespace KaVE.Commons.Model.SSTs.Declarations
 {
     public interface IEventDeclaration : IMemberDeclaration
     {

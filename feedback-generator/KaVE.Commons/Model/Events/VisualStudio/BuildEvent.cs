@@ -17,7 +17,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
-namespace KaVE.Model.Events.VisualStudio
+namespace KaVE.Commons.Model.Events.VisualStudio
 {
     [DataContract]
     public class BuildEvent : IDEEvent

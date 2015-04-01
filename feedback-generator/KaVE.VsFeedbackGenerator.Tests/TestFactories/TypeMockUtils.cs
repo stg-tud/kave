@@ -27,7 +27,7 @@ using JetBrains.ReSharper.Psi.Impl.Resolve;
 using JetBrains.ReSharper.Psi.Modules;
 using JetBrains.ReSharper.Psi.Resolve;
 using JetBrains.Util;
-using KaVE.Model.Names.CSharp;
+using KaVE.Commons.Model.Names.CSharp;
 using Moq;
 
 namespace KaVE.VsFeedbackGenerator.Tests.TestFactories

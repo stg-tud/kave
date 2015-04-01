@@ -19,7 +19,7 @@
 
 using System;
 using JetBrains.Application;
-using KaVE.Utils;
+using KaVE.Commons.Utils;
 
 namespace KaVE.VsFeedbackGenerator.Utils
 {

@@ -19,8 +19,8 @@
  */
 
 using System;
-using KaVE.Model.Events;
-using KaVE.Utils;
+using KaVE.Commons.Model.Events;
+using KaVE.Commons.Utils;
 using KaVE.VsFeedbackGenerator.SessionManager.Presentation;
 using KaVE.VsFeedbackGenerator.Utils.Json;
 

@@ -18,10 +18,10 @@
  */
 
 using System.Collections.Generic;
+using KaVE.Commons.Utils.Collections;
 using KaVE.JetBrains.Annotations;
-using KaVE.Model.Collections;
 
-namespace KaVE.Model.Events.CompletionEvents
+namespace KaVE.Commons.Model.Events.CompletionEvents
 {
     /// <summary>
     ///     An ordered collection of completion proposals as, for example,

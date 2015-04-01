@@ -18,15 +18,15 @@
  */
 
 using System;
-using KaVE.Model.Collections;
-using KaVE.Model.Events;
-using KaVE.Model.Events.CompletionEvents;
-using KaVE.Model.Names.CSharp;
-using KaVE.Model.SSTs.Impl;
+using KaVE.Commons.Model.Events;
+using KaVE.Commons.Model.Events.CompletionEvents;
+using KaVE.Commons.Model.Names.CSharp;
+using KaVE.Commons.Model.SSTs.Impl;
+using KaVE.Commons.Utils.Collections;
 using NUnit.Framework;
-using ComplEvent = KaVE.Model.Events.CompletionEvents.CompletionEvent;
+using ComplEvent = KaVE.Commons.Model.Events.CompletionEvents.CompletionEvent;
 
-namespace KaVE.Model.Tests.Events.CompletionEvent
+namespace KaVE.Commons.Tests.Model.Events.CompletionEvent
 {
     internal class CompletionEventTest
     {

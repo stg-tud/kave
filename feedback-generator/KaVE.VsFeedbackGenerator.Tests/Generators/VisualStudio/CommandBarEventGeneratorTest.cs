@@ -20,7 +20,7 @@
 using System;
 using System.Collections;
 using EnvDTE;
-using KaVE.Model.Events;
+using KaVE.Commons.Model.Events;
 using KaVE.VsFeedbackGenerator.Generators.VisualStudio;
 using Microsoft.VisualStudio.CommandBars;
 using Moq;

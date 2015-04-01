@@ -19,7 +19,7 @@
  */
 
 using System.Collections.Generic;
-using KaVE.Model.ObjectUsage;
+using KaVE.Commons.Model.ObjectUsage;
 using KaVE.VsFeedbackGenerator.CodeCompletion;
 using Smile;
 

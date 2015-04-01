@@ -19,14 +19,14 @@
 
 using System.Linq;
 using System.Runtime.Serialization;
-using KaVE.Model.Collections;
-using KaVE.Model.Names;
-using KaVE.Model.Names.CSharp;
-using KaVE.Model.SSTs.Declarations;
-using KaVE.Model.SSTs.Visitor;
-using KaVE.Utils;
+using KaVE.Commons.Model.Names;
+using KaVE.Commons.Model.Names.CSharp;
+using KaVE.Commons.Model.SSTs.Declarations;
+using KaVE.Commons.Model.SSTs.Visitor;
+using KaVE.Commons.Utils;
+using KaVE.Commons.Utils.Collections;
 
-namespace KaVE.Model.SSTs.Impl
+namespace KaVE.Commons.Model.SSTs.Impl
 {
     [DataContract]
     public class SST : ISST

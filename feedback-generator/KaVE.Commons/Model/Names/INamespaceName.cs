@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-namespace KaVE.Model.Names
+namespace KaVE.Commons.Model.Names
 {
     public interface INamespaceName : IName
     {

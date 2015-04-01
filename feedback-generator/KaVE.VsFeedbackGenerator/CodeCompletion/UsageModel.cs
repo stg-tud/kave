@@ -24,8 +24,8 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using JetBrains.Util;
 using KaVE.JetBrains.Annotations;
-using KaVE.Model.ObjectUsage;
-using KaVE.Utils;
+using KaVE.Commons.Model.ObjectUsage;
+using KaVE.Commons.Utils;
 using Smile;
 
 namespace KaVE.VsFeedbackGenerator.CodeCompletion

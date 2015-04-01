@@ -17,11 +17,11 @@
  *    - Sebastian Proksch
  */
 
+using KaVE.Commons.Model.Names;
+using KaVE.Commons.Model.SSTs.References;
 using KaVE.JetBrains.Annotations;
-using KaVE.Model.Names;
-using KaVE.Model.SSTs.References;
 
-namespace KaVE.Model.SSTs.Expressions.Assignable
+namespace KaVE.Commons.Model.SSTs.Expressions.Assignable
 {
     public interface ICompletionExpression : IAssignableExpression
     {

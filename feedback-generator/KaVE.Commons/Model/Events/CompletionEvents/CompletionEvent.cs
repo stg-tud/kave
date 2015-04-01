@@ -20,11 +20,11 @@
 using System;
 using System.Linq;
 using System.Runtime.Serialization;
+using KaVE.Commons.Utils.Collections;
 using KaVE.JetBrains.Annotations;
-using KaVE.Model.Collections;
-using KaVE.Utils;
+using KaVE.Commons.Utils;
 
-namespace KaVE.Model.Events.CompletionEvents
+namespace KaVE.Commons.Model.Events.CompletionEvents
 {
     [DataContract]
     public class CompletionEvent : IDEEvent, ICompletionEvent

@@ -17,7 +17,7 @@
  *    - Sven Amann
  */
 
-using KaVE.TestUtils.Model.Events;
+using KaVE.Commons.TestUtils.Model.Events;
 using NUnit.Framework;
 
 namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize

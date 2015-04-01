@@ -19,9 +19,9 @@
  */
 
 using System;
-using KaVE.Model.Events;
-using KaVE.Model.Names.VisualStudio;
-using KaVE.TestUtils.Model.Events;
+using KaVE.Commons.Model.Events;
+using KaVE.Commons.Model.Names.VisualStudio;
+using KaVE.Commons.TestUtils.Model.Events;
 using KaVE.VsFeedbackGenerator.Utils.Json;
 using NUnit.Framework;
 

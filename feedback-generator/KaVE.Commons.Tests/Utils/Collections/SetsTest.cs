@@ -18,12 +18,12 @@
  */
 
 using System.Collections.Generic;
-using KaVE.Model.Collections;
-using KaVE.Model.SSTs.Impl.Statements;
-using KaVE.Utils.Assertion;
+using KaVE.Commons.Model.SSTs.Impl.Statements;
+using KaVE.Commons.Utils.Assertion;
+using KaVE.Commons.Utils.Collections;
 using NUnit.Framework;
 
-namespace KaVE.Model.Tests.Collections
+namespace KaVE.Commons.Tests.Utils.Collections
 {
     [TestFixture]
     internal class SetsTest

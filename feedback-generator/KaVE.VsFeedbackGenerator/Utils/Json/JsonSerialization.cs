@@ -24,7 +24,7 @@ using System.Reflection;
 using System.Runtime.Serialization.Formatters;
 using System.Text;
 using KaVE.JetBrains.Annotations;
-using KaVE.Model.Names;
+using KaVE.Commons.Model.Names;
 using Newtonsoft.Json;
 
 namespace KaVE.VsFeedbackGenerator.Utils.Json

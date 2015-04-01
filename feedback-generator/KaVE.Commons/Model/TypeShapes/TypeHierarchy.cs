@@ -18,13 +18,12 @@
  */
 
 using System.Runtime.Serialization;
-using KaVE.Model.Collections;
-using KaVE.Model.Names;
-using KaVE.Model.Names.CSharp;
-using KaVE.Utils;
-using KaVE.Utils.Collections;
+using KaVE.Commons.Model.Names;
+using KaVE.Commons.Model.Names.CSharp;
+using KaVE.Commons.Utils;
+using KaVE.Commons.Utils.Collections;
 
-namespace KaVE.Model.TypeShapes
+namespace KaVE.Commons.Model.TypeShapes
 {
     [DataContract]
     public class TypeHierarchy : ITypeHierarchy

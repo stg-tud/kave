@@ -17,13 +17,13 @@
  *    - Sebastian Proksch
  */
 
-using KaVE.Model.Names;
-using KaVE.Model.SSTs.Expressions.Assignable;
-using KaVE.Model.SSTs.References;
-using KaVE.Model.SSTs.Visitor;
-using KaVE.Utils;
+using KaVE.Commons.Model.Names;
+using KaVE.Commons.Model.SSTs.Expressions.Assignable;
+using KaVE.Commons.Model.SSTs.References;
+using KaVE.Commons.Model.SSTs.Visitor;
+using KaVE.Commons.Utils;
 
-namespace KaVE.Model.SSTs.Impl.Expressions.Assignable
+namespace KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable
 {
     public class CompletionExpression : ICompletionExpression
     {

@@ -20,7 +20,7 @@
 using System;
 using Moq;
 
-namespace KaVE.TestUtils
+namespace KaVE.Commons.TestUtils
 {
     public static class ItIsException
     {

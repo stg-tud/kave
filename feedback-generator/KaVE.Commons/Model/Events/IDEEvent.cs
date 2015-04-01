@@ -19,10 +19,10 @@
 
 using System;
 using System.Runtime.Serialization;
-using KaVE.Model.Names.VisualStudio;
-using KaVE.Utils;
+using KaVE.Commons.Model.Names.VisualStudio;
+using KaVE.Commons.Utils;
 
-namespace KaVE.Model.Events
+namespace KaVE.Commons.Model.Events
 {
     [DataContract]
     public abstract class IDEEvent

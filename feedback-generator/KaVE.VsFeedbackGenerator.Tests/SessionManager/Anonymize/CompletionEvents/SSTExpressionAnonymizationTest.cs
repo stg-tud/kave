@@ -17,11 +17,11 @@
  *    - Sebastian Proksch
  */
 
-using KaVE.Model.SSTs;
-using KaVE.Model.SSTs.Impl.Expressions.Assignable;
-using KaVE.Model.SSTs.Impl.Expressions.LoopHeader;
-using KaVE.Model.SSTs.Impl.Expressions.Simple;
-using KaVE.Utils.Assertion;
+using KaVE.Commons.Model.SSTs;
+using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
+using KaVE.Commons.Model.SSTs.Impl.Expressions.LoopHeader;
+using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
+using KaVE.Commons.Utils.Assertion;
 using KaVE.VsFeedbackGenerator.SessionManager.Anonymize;
 using KaVE.VsFeedbackGenerator.SessionManager.Anonymize.CompletionEvents;
 using NUnit.Framework;

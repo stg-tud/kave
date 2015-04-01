@@ -19,7 +19,7 @@
 
 using JetBrains.Application;
 using JetBrains.Application.Components;
-using KaVE.Utils.Exceptions;
+using KaVE.Commons.Utils.Exceptions;
 
 namespace KaVE.SolutionAnalysis
 {

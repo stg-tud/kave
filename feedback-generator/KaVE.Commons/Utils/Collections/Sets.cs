@@ -19,11 +19,10 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using KaVE.Commons.Utils.Assertion;
 using KaVE.JetBrains.Annotations;
-using KaVE.Utils;
-using KaVE.Utils.Assertion;
 
-namespace KaVE.Model.Collections
+namespace KaVE.Commons.Utils.Collections
 {
     public class Sets
     {

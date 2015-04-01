@@ -20,7 +20,7 @@
 using System;
 using KaVE.JetBrains.Annotations;
 
-namespace KaVE.Model.Events.CompletionEvents
+namespace KaVE.Commons.Model.Events.CompletionEvents
 {
     public interface IProposalSelection
     {

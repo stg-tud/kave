@@ -17,12 +17,12 @@
  *    - Sebastian Proksch
  */
 
-using KaVE.Model.Collections;
-using KaVE.Model.SSTs.Impl.Expressions.Assignable;
-using KaVE.Model.SSTs.References;
+using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
+using KaVE.Commons.Model.SSTs.References;
+using KaVE.Commons.Utils.Collections;
 using NUnit.Framework;
 
-namespace KaVE.Model.Tests.SSTs.Impl.Expressions.Assignable
+namespace KaVE.Commons.Tests.Model.SSTs.Impl.Expressions.Assignable
 {
     internal class ComposedExpressionTest : SSTBaseTest
     {

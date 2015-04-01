@@ -17,13 +17,13 @@
  *    - Sebastian Proksch
  */
 
-using KaVE.Model.Collections;
-using KaVE.Model.SSTs.Blocks;
-using KaVE.Model.SSTs.Expressions;
-using KaVE.Model.SSTs.Impl.Expressions.Simple;
-using KaVE.Utils;
+using KaVE.Commons.Model.SSTs.Blocks;
+using KaVE.Commons.Model.SSTs.Expressions;
+using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
+using KaVE.Commons.Utils;
+using KaVE.Commons.Utils.Collections;
 
-namespace KaVE.Model.SSTs.Impl.Blocks
+namespace KaVE.Commons.Model.SSTs.Impl.Blocks
 {
     public class CaseBlock : ICaseBlock
     {

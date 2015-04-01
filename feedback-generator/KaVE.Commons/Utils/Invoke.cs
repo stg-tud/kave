@@ -17,7 +17,7 @@ using System;
 using System.Threading;
 using System.Windows;
 
-namespace KaVE.Utils
+namespace KaVE.Commons.Utils
 {
     // TODO write tests for this class (some tests exists transitively through the CallbackManager; these should be moved!)
     public static class Invoke

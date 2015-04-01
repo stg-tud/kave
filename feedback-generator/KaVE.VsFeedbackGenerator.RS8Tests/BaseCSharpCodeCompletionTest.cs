@@ -24,9 +24,9 @@ using JetBrains.Application;
 using JetBrains.ReSharper.Feature.Services.CodeCompletion;
 using JetBrains.ReSharper.Feature.Services.Lookup;
 using JetBrains.TextControl;
-using KaVE.Model.Events.CompletionEvents;
-using KaVE.Model.Names;
-using KaVE.Model.SSTs;
+using KaVE.Commons.Model.Events.CompletionEvents;
+using KaVE.Commons.Model.Names;
+using KaVE.Commons.Model.SSTs;
 using KaVE.VsFeedbackGenerator.RS8Tests.Analysis;
 
 namespace KaVE.VsFeedbackGenerator.RS8Tests

@@ -16,7 +16,7 @@
  * Contributors:
  *    - Dennis Albrecht
  */
-namespace KaVE.Model.ObjectUsage
+namespace KaVE.Commons.Model.ObjectUsage
 {
     // ReSharper disable InconsistentNaming
 

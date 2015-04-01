@@ -20,9 +20,9 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using KaVE.Model.Events;
+using KaVE.Commons.Model.Events;
 
-namespace KaVE.TestUtils.Model.Events
+namespace KaVE.Commons.TestUtils.Model.Events
 {
     public static class IDEEventTestFactory
     {

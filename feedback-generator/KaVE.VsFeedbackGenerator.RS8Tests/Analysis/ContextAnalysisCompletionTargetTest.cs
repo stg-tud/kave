@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-using KaVE.Model.Names.CSharp;
+using KaVE.Commons.Model.Names.CSharp;
 using NUnit.Framework;
 
 namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis

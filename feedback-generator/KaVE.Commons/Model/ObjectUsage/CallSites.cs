@@ -17,9 +17,9 @@
  *    - Uli Fahrer
  */
 
-using KaVE.Utils.Assertion;
+using KaVE.Commons.Utils.Assertion;
 
-namespace KaVE.Model.ObjectUsage
+namespace KaVE.Commons.Model.ObjectUsage
 {
     public class CallSites
     {

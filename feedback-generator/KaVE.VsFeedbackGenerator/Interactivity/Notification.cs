@@ -18,7 +18,7 @@
  *    - Uli Fahrer
  */
 
-using KaVE.Utils;
+using KaVE.Commons.Utils;
 
 namespace KaVE.VsFeedbackGenerator.Interactivity
 {

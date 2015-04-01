@@ -29,9 +29,9 @@ using JetBrains.ReSharper.Psi.Modules;
 using JetBrains.ReSharper.Psi.Parsing;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.Util;
-using KaVE.Model.Events.CompletionEvents;
+using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.VsFeedbackGenerator.Analysis;
-using ILogger = KaVE.Utils.Exceptions.ILogger;
+using ILogger = KaVE.Commons.Utils.Exceptions.ILogger;
 
 namespace KaVE.SolutionAnalysis
 {

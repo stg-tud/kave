@@ -17,7 +17,7 @@
  *    - Sven Amann
  */
 
-using KaVE.Model.Events;
+using KaVE.Commons.Model.Events;
 using KaVE.VsFeedbackGenerator.SessionManager;
 using NUnit.Framework;
 

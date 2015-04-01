@@ -22,9 +22,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using KaVE.Utils.Assertion;
+using KaVE.Commons.Utils.Assertion;
 
-namespace KaVE.Utils.Reflection
+namespace KaVE.Commons.Utils.Reflection
 {
     public static class TypeExtensions<T>
     {

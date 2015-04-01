@@ -17,7 +17,7 @@
  *    - Sven Amann
  */
 
-using KaVE.Model.Names.CSharp;
+using KaVE.Commons.Model.Names.CSharp;
 using KaVE.VsFeedbackGenerator.Utils.Json;
 using Newtonsoft.Json;
 using NUnit.Framework;

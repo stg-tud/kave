@@ -18,12 +18,12 @@
  */
 
 using System;
-using KaVE.Model.Events;
-using KaVE.Model.Events.VisualStudio;
-using KaVE.Model.Names.VisualStudio;
+using KaVE.Commons.Model.Events;
+using KaVE.Commons.Model.Events.VisualStudio;
+using KaVE.Commons.Model.Names.VisualStudio;
 using KaVE.VsFeedbackGenerator.SessionManager.Presentation;
 using NUnit.Framework;
-using CommandEvent = KaVE.Model.Events.CommandEvent;
+using CommandEvent = KaVE.Commons.Model.Events.CommandEvent;
 
 namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
 {

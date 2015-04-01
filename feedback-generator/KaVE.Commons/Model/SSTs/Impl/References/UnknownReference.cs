@@ -17,11 +17,11 @@
  *    - Sebastian Proksch
  */
 
-using KaVE.Model.SSTs.References;
-using KaVE.Model.SSTs.Visitor;
-using KaVE.Utils;
+using KaVE.Commons.Model.SSTs.References;
+using KaVE.Commons.Model.SSTs.Visitor;
+using KaVE.Commons.Utils;
 
-namespace KaVE.Model.SSTs.Impl.References
+namespace KaVE.Commons.Model.SSTs.Impl.References
 {
     public class UnknownReference : IUnknownReference
     {

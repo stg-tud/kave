@@ -20,9 +20,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using JetBrains;
-using KaVE.Model.Events;
-using KaVE.TestUtils;
-using KaVE.TestUtils.Model.Events;
+using KaVE.Commons.Model.Events;
+using KaVE.Commons.TestUtils;
+using KaVE.Commons.TestUtils.Model.Events;
 using KaVE.VsFeedbackGenerator.Interactivity;
 using KaVE.VsFeedbackGenerator.SessionManager;
 using KaVE.VsFeedbackGenerator.Tests.Interactivity;

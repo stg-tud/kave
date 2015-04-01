@@ -17,10 +17,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
+using KaVE.Commons.Utils.Assertion;
 using KaVE.JetBrains.Annotations;
-using KaVE.Utils.Assertion;
 
-namespace KaVE.Utils.Collections
+namespace KaVE.Commons.Utils.Collections
 {
     public class ThreadSafeDictionary<TKey, TValue> : IDictionary<TKey, TValue>
     {

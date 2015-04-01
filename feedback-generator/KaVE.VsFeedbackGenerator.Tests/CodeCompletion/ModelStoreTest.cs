@@ -20,8 +20,8 @@
 using System;
 using System.IO;
 using Ionic.Zip;
-using KaVE.Model.ObjectUsage;
-using KaVE.Utils.Exceptions;
+using KaVE.Commons.Model.ObjectUsage;
+using KaVE.Commons.Utils.Exceptions;
 using KaVE.VsFeedbackGenerator.CodeCompletion;
 using KaVE.VsFeedbackGenerator.Utils;
 using Moq;

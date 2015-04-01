@@ -16,7 +16,7 @@
 using System;
 using KaVE.JetBrains.Annotations;
 
-namespace KaVE.Utils.Assertion
+namespace KaVE.Commons.Utils.Assertion
 {
     public class AssertException : Exception
     {

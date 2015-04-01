@@ -18,13 +18,13 @@
  */
 
 using System.Runtime.Serialization;
+using KaVE.Commons.Model.SSTs;
+using KaVE.Commons.Model.SSTs.Impl;
+using KaVE.Commons.Model.TypeShapes;
 using KaVE.JetBrains.Annotations;
-using KaVE.Model.SSTs;
-using KaVE.Model.SSTs.Impl;
-using KaVE.Model.TypeShapes;
-using KaVE.Utils;
+using KaVE.Commons.Utils;
 
-namespace KaVE.Model.Events.CompletionEvents
+namespace KaVE.Commons.Model.Events.CompletionEvents
 {
     /// <summary>
     ///     The context of a code-completion event, i.e., a description of the code environment in which the completion

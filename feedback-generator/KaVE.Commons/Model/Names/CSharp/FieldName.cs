@@ -18,10 +18,10 @@
  */
 
 using System;
+using KaVE.Commons.Utils.Collections;
 using KaVE.JetBrains.Annotations;
-using KaVE.Model.Utils;
 
-namespace KaVE.Model.Names.CSharp
+namespace KaVE.Commons.Model.Names.CSharp
 {
     public class FieldName : MemberName, IFieldName
     {

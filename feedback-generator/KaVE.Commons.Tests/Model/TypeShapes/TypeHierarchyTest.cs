@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-using KaVE.Model.Collections;
-using KaVE.Model.Names.CSharp;
-using KaVE.Model.TypeShapes;
+using KaVE.Commons.Model.Names.CSharp;
+using KaVE.Commons.Model.TypeShapes;
+using KaVE.Commons.Utils.Collections;
 using NUnit.Framework;
 
-namespace KaVE.Model.Tests.TypeShapes
+namespace KaVE.Commons.Tests.Model.TypeShapes
 {
     internal class TypeHierarchyTest
     {

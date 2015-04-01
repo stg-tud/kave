@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 using System.Runtime.Serialization;
-using KaVE.Model.Names.VisualStudio;
+using KaVE.Commons.Model.Names.VisualStudio;
 
-namespace KaVE.Model.Events.VisualStudio
+namespace KaVE.Commons.Model.Events.VisualStudio
 {
     [DataContract]
     public class DocumentEvent : IDEEvent

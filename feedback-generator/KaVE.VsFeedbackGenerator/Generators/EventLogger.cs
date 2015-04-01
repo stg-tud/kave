@@ -20,10 +20,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Application;
-using KaVE.Model.Events;
-using KaVE.Model.Events.VisualStudio;
-using KaVE.Utils.Collections;
-using KaVE.Utils.Concurrent;
+using KaVE.Commons.Model.Events;
+using KaVE.Commons.Model.Events.VisualStudio;
+using KaVE.Commons.Utils.Collections;
+using KaVE.Commons.Utils.Concurrent;
 using KaVE.VsFeedbackGenerator.Generators.Merging;
 using KaVE.VsFeedbackGenerator.MessageBus;
 using KaVE.VsFeedbackGenerator.Utils.Logging;

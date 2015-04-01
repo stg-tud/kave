@@ -18,10 +18,10 @@
  */
 
 using System.Runtime.Serialization;
-using KaVE.Model.Events;
-using KaVE.Utils;
+using KaVE.Commons.Model.Events;
+using KaVE.Commons.Utils;
 
-namespace KaVE.TestUtils.Model.Events
+namespace KaVE.Commons.TestUtils.Model.Events
 {
     [DataContract]
     public class TestIDEEvent : IDEEvent

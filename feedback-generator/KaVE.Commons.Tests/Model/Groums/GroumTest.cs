@@ -17,9 +17,10 @@
  *    - Sebastian Proksch
  */
 
+using KaVE.Commons.Model.Groums;
 using NUnit.Framework;
 
-namespace KaVE.Model.Tests.Groums
+namespace KaVE.Commons.Tests.Model.Groums
 {
     [TestFixture]
     public class GroumTest
@@ -42,9 +43,9 @@ namespace KaVE.Model.Tests.Groums
             Assert.IsFalse(a.GetHashCode() == b.GetHashCode());
         }
 
-        private static Model.Groums.Groum G(int i)
+        private static Groum G(int i)
         {
-            return new Model.Groums.Groum {Name = i};
+            return new Groum {Name = i};
         }
     }
 }

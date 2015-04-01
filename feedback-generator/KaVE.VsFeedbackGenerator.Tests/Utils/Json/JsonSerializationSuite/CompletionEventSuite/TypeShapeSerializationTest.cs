@@ -18,8 +18,8 @@
  *    - Dennis Albrecht
  */
 
-using KaVE.Model.Names.CSharp;
-using KaVE.Model.TypeShapes;
+using KaVE.Commons.Model.Names.CSharp;
+using KaVE.Commons.Model.TypeShapes;
 using KaVE.VsFeedbackGenerator.Utils.Json;
 using NUnit.Framework;
 

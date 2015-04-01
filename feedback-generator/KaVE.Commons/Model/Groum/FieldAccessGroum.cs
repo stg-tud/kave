@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using KaVE.Model.Names;
 
-namespace KaVE.Model.Groum
+using KaVE.Commons.Model.Names;
+
+namespace KaVE.Commons.Model.Groum
 {
     public class FieldAccessGroum : GroumBase
     {

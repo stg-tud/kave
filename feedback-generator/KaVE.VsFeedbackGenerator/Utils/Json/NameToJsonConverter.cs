@@ -19,7 +19,7 @@
 
 using System;
 using System.ComponentModel;
-using KaVE.Model.Names;
+using KaVE.Commons.Model.Names;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 

@@ -17,14 +17,14 @@
  *    - Sebastian Proksch
  */
 
-using KaVE.Model.Collections;
-using KaVE.Model.SSTs;
-using KaVE.Model.SSTs.Impl.Blocks;
-using KaVE.Model.SSTs.Impl.Expressions.Simple;
-using KaVE.Model.SSTs.Impl.Statements;
+using KaVE.Commons.Model.SSTs;
+using KaVE.Commons.Model.SSTs.Impl.Blocks;
+using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
+using KaVE.Commons.Model.SSTs.Impl.Statements;
+using KaVE.Commons.Utils.Collections;
 using NUnit.Framework;
 
-namespace KaVE.Model.Tests.SSTs.Impl.Blocks
+namespace KaVE.Commons.Tests.Model.SSTs.Impl.Blocks
 {
     internal class CaseBlockTest : SSTBaseTest
     {

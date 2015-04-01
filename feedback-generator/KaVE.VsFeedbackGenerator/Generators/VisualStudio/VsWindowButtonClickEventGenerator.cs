@@ -26,11 +26,11 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using JetBrains.Util;
 using KaVE.JetBrains.Annotations;
-using KaVE.Model.Events;
-using KaVE.Utils.Reflection;
+using KaVE.Commons.Model.Events;
+using KaVE.Commons.Utils.Reflection;
 using KaVE.VsFeedbackGenerator.MessageBus;
 using KaVE.VsFeedbackGenerator.Utils;
-using ILogger = KaVE.Utils.Exceptions.ILogger;
+using ILogger = KaVE.Commons.Utils.Exceptions.ILogger;
 using Window = EnvDTE.Window;
 
 namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio

@@ -27,7 +27,7 @@ using System.Net;
 using System.Net.Http;
 using JetBrains.Application;
 using KaVE.JetBrains.Annotations;
-using KaVE.Utils.Assertion;
+using KaVE.Commons.Utils.Assertion;
 using Smile;
 using Messages = KaVE.VsFeedbackGenerator.Properties.SessionManager;
 

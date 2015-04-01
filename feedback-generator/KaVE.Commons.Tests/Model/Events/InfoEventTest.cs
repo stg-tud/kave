@@ -17,10 +17,10 @@
  *    - Sebastian Proksch
  */
 
-using KaVE.Model.Events;
+using KaVE.Commons.Model.Events;
 using NUnit.Framework;
 
-namespace KaVE.Model.Tests.Events
+namespace KaVE.Commons.Tests.Model.Events
 {
     internal class InfoEventTest
     {

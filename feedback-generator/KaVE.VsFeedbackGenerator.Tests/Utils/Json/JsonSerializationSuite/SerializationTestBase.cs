@@ -17,8 +17,8 @@
  *    - Dennis Albrecht
  */
 
-using KaVE.TestUtils.Model.Events.CompletionEvent;
-using KaVE.TestUtils.Model.Names;
+using KaVE.Commons.TestUtils.Model.Events.CompletionEvent;
+using KaVE.Commons.TestUtils.Model.Names;
 using NUnit.Framework;
 
 namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.JsonSerializationSuite

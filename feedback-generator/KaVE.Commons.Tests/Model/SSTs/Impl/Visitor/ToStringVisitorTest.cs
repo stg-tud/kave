@@ -18,13 +18,13 @@
  */
 
 using System.Text;
-using KaVE.Model.Names.CSharp;
-using KaVE.Model.SSTs.Impl;
-using KaVE.Model.SSTs.Impl.Declarations;
-using KaVE.Model.SSTs.Impl.Visitor;
+using KaVE.Commons.Model.Names.CSharp;
+using KaVE.Commons.Model.SSTs.Impl;
+using KaVE.Commons.Model.SSTs.Impl.Declarations;
+using KaVE.Commons.Model.SSTs.Impl.Visitor;
 using NUnit.Framework;
 
-namespace KaVE.Model.Tests.SSTs.Impl.Visitor
+namespace KaVE.Commons.Tests.Model.SSTs.Impl.Visitor
 {
     internal class ToStringVisitorTest
     {

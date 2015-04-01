@@ -18,8 +18,8 @@
  */
 
 using JetBrains.Util;
-using KaVE.Model.Events;
-using KaVE.Model.Events.CompletionEvents;
+using KaVE.Commons.Model.Events;
+using KaVE.Commons.Model.Events.CompletionEvents;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize.CompletionEvents
 {

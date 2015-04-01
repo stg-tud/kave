@@ -20,7 +20,7 @@
 using System;
 using KaVE.JetBrains.Annotations;
 
-namespace KaVE.Utils.Exceptions
+namespace KaVE.Commons.Utils.Exceptions
 {
     public interface ILogger
     {

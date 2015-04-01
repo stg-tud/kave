@@ -19,13 +19,13 @@
 
 using System.Linq;
 using System.Text;
+using KaVE.Commons.Model.Events.CompletionEvents;
+using KaVE.Commons.Model.Names;
+using KaVE.Commons.Model.Names.CSharp;
 using KaVE.JetBrains.Annotations;
-using KaVE.Model.Events.CompletionEvents;
-using KaVE.Model.Names;
-using KaVE.Model.Names.CSharp;
-using KaVE.Utils;
+using KaVE.Commons.Utils;
 
-namespace KaVE.Model.ObjectUsage
+namespace KaVE.Commons.Model.ObjectUsage
 {
     public static class CoReNameUtil
     {

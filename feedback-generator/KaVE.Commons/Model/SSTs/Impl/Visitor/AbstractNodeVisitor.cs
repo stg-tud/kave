@@ -17,16 +17,16 @@
  *    - Sebastian Proksch
  */
 
-using KaVE.Model.SSTs.Blocks;
-using KaVE.Model.SSTs.Declarations;
-using KaVE.Model.SSTs.Expressions.Assignable;
-using KaVE.Model.SSTs.Expressions.LoopHeader;
-using KaVE.Model.SSTs.Expressions.Simple;
-using KaVE.Model.SSTs.References;
-using KaVE.Model.SSTs.Statements;
-using KaVE.Model.SSTs.Visitor;
+using KaVE.Commons.Model.SSTs.Blocks;
+using KaVE.Commons.Model.SSTs.Declarations;
+using KaVE.Commons.Model.SSTs.Expressions.Assignable;
+using KaVE.Commons.Model.SSTs.Expressions.LoopHeader;
+using KaVE.Commons.Model.SSTs.Expressions.Simple;
+using KaVE.Commons.Model.SSTs.References;
+using KaVE.Commons.Model.SSTs.Statements;
+using KaVE.Commons.Model.SSTs.Visitor;
 
-namespace KaVE.Model.SSTs.Impl.Visitor
+namespace KaVE.Commons.Model.SSTs.Impl.Visitor
 {
     public class AbstractNodeVisitor<TContext> : ISSTNodeVisitor<TContext>
     {

@@ -20,7 +20,7 @@ using System;
 using System.ComponentModel;
 using System.Linq.Expressions;
 
-namespace KaVE.Utils.Reflection
+namespace KaVE.Commons.Utils.Reflection
 {
     public static class PropertyChangedEx
     {

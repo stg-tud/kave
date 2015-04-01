@@ -25,10 +25,10 @@ using JetBrains.ReSharper.Feature.Services.LiveTemplates.Util;
 using JetBrains.ReSharper.Feature.Services.Lookup;
 using JetBrains.ReSharper.LiveTemplates.Templates;
 using KaVE.JetBrains.Annotations;
-using KaVE.Model.Events.CompletionEvents;
-using KaVE.Model.Names;
-using KaVE.Model.Names.CSharp;
-using KaVE.Model.Names.ReSharper;
+using KaVE.Commons.Model.Events.CompletionEvents;
+using KaVE.Commons.Model.Names;
+using KaVE.Commons.Model.Names.CSharp;
+using KaVE.Commons.Model.Names.ReSharper;
 using KaVE.VsFeedbackGenerator.Utils.Names;
 
 namespace KaVE.VsFeedbackGenerator.Utils
