@@ -27,7 +27,9 @@ using JetBrains.Util;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Assertion;
-using KaVE.VsFeedbackGenerator.Utils.Json;
+using KaVE.Commons.Utils.Logging.Json;
+using ILogger = KaVE.Commons.Utils.Exceptions.ILogger;
+using KaVE.Commons.Utils.Logging;
 
 namespace KaVE.VsFeedbackGenerator.Utils.Logging
 {
@@ -72,7 +74,7 @@ namespace KaVE.VsFeedbackGenerator.Utils.Logging
         private ILogReader<IDEEvent> NewLogReader()
         {
             var logStream = TryOpenLogFile();
-            return new JsonLogReader<IDEEvent>(logStream);
+            return new JsonLogReader<IDEEvent>(logStream, Registry.GetComponent<ILogger>());
         }
 
         // TODO @Sven: pull reader/writer handling into logfile and solve this by synchronization?

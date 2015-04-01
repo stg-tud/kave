@@ -23,13 +23,13 @@ using System.IO;
 using System.Reflection;
 using System.Runtime.Serialization.Formatters;
 using System.Text;
-using KaVE.JetBrains.Annotations;
 using KaVE.Commons.Model.Names;
+using KaVE.JetBrains.Annotations;
 using Newtonsoft.Json;
 
-namespace KaVE.VsFeedbackGenerator.Utils.Json
+namespace KaVE.Commons.Utils.Json
 {
-    internal static class JsonSerialization
+    public static class JsonSerialization
     {
         private const int IndentationDepth = 4;
 
@@ -56,7 +56,7 @@ namespace KaVE.VsFeedbackGenerator.Utils.Json
             return null;
         }
 
-        internal static readonly Encoding Encoding = new UTF8Encoding(false);
+        public static readonly Encoding Encoding = new UTF8Encoding(false);
 
         private static readonly JsonSerializerSettings PrettyPrintSettings = new JsonSerializerSettings
         {
@@ -88,7 +88,7 @@ namespace KaVE.VsFeedbackGenerator.Utils.Json
         ///     Converts an object to a Json string without any unnecessary whitespaces or newlines.
         /// </summary>
         [NotNull]
-        internal static string ToCompactJson([CanBeNull] this object instance)
+        public static string ToCompactJson([CanBeNull] this object instance)
         {
             var settings = CreateSerializationSettings();
             settings.Formatting = Formatting.None;
@@ -102,7 +102,7 @@ namespace KaVE.VsFeedbackGenerator.Utils.Json
         ///     The method uses the same serialization settings as <see cref="ToCompactJson" />, except for the formatting.
         /// </remarks>
         [NotNull]
-        internal static string ToFormattedJson([CanBeNull] this object instance)
+        public static string ToFormattedJson([CanBeNull] this object instance)
         {
             var settings = CreateSerializationSettings();
             settings.Formatting = Formatting.Indented;
@@ -115,7 +115,7 @@ namespace KaVE.VsFeedbackGenerator.Utils.Json
         /// <remarks>
         ///     Uses the same serialization settings as <see cref="ToCompactJson" />.
         /// </remarks>
-        internal static T ParseJsonTo<T>([NotNull] this string json)
+        public static T ParseJsonTo<T>([NotNull] this string json)
         {
             var settings = CreateSerializationSettings();
             // TODO get rid of this special case handling
@@ -136,7 +136,7 @@ namespace KaVE.VsFeedbackGenerator.Utils.Json
         ///     Pretty-print serialization cannot generally be deserialized, because information is lost during serialization.
         /// </remarks>
         [NotNull]
-        internal static string ToPrettyPrintJson([CanBeNull] this object instance)
+        public static string ToPrettyPrintJson([CanBeNull] this object instance)
         {
             return SerializeWithCustomIndentationDepth(instance, PrettyPrintSettings);
         }

@@ -26,7 +26,7 @@ using JetBrains.ReSharper.Daemon.SolutionAnalysis;
 using JetBrains.Threading;
 using JetBrains.Util;
 using KaVE.Commons.Model.Events.CompletionEvents;
-using KaVE.VsFeedbackGenerator.Utils.Json;
+using KaVE.Commons.Utils.Logging.Json;
 using ILogger = KaVE.Commons.Utils.Exceptions.ILogger;
 
 namespace KaVE.SolutionAnalysis

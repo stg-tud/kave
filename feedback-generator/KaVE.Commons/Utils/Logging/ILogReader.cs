@@ -1,5 +1,5 @@
-/*
- * Copyright 2014 Technische Universit�t Darmstadt
+﻿/*
+ * Copyright 2014 Technische Universität Darmstadt
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,17 +12,22 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sven Amann
  */
+
 using System;
 using System.Collections.Generic;
 using KaVE.JetBrains.Annotations;
 
-namespace KaVE.VsFeedbackGenerator.Utils.Logging
+namespace KaVE.Commons.Utils.Logging
 {
-    public interface ILogWriter<in TMessage> : IDisposable
+    public interface ILogReader<out TMessage> : IDisposable
     {
-        void Write([NotNull] TMessage message);
+        TMessage ReadNext();
 
-        void WriteAll([NotNull] IEnumerable<TMessage> messages);
+        [NotNull]
+        IEnumerable<TMessage> ReadAll();
     }
 }

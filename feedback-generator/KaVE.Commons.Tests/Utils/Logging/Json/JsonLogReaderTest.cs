@@ -18,17 +18,17 @@
  */
 
 using System.Linq;
+using KaVE.Commons.Tests.Utils.Json;
+using KaVE.Commons.Utils.Exceptions;
+using KaVE.Commons.Utils.Logging;
+using KaVE.Commons.Utils.Logging.Json;
 using KaVE.Commons.Utils.Streams;
 using KaVE.JetBrains.Annotations;
-using KaVE.Commons.Utils.Exceptions;
-using KaVE.VsFeedbackGenerator.Utils;
-using KaVE.VsFeedbackGenerator.Utils.Json;
-using KaVE.VsFeedbackGenerator.Utils.Logging;
 using Moq;
 using Newtonsoft.Json;
 using NUnit.Framework;
 
-namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json
+namespace KaVE.Commons.Tests.Utils.Logging.Json
 {
     public class JsonLogReaderTest
     {
@@ -38,7 +38,6 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json
         public void SetUpRegistry()
         {
             _mockLogger = new Mock<ILogger>();
-            Registry.RegisterComponent(_mockLogger.Object);
         }
 
         [Test]
@@ -164,16 +163,10 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json
             _mockLogger.Verify(g => g.Error(It.IsAny<JsonReaderException>(), "broken line"));
         }
 
-        [TearDown]
-        public void CleanUpRegistry()
-        {
-            Registry.Clear();
-        }
-
         [NotNull]
-        private static ILogReader<SerializationTestTarget> CreateReader(string input)
+        private ILogReader<SerializationTestTarget> CreateReader(string input)
         {
-            return new JsonLogReader<SerializationTestTarget>(input.AsStream());
+            return new JsonLogReader<SerializationTestTarget>(input.AsStream(), _mockLogger.Object);
         }
     }
 }

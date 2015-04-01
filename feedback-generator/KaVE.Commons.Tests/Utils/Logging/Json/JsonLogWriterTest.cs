@@ -18,12 +18,13 @@
  */
 
 using System.IO;
+using KaVE.Commons.Tests.Utils.Json;
+using KaVE.Commons.Utils.Logging;
+using KaVE.Commons.Utils.Logging.Json;
 using KaVE.Commons.Utils.Streams;
-using KaVE.VsFeedbackGenerator.Utils.Json;
-using KaVE.VsFeedbackGenerator.Utils.Logging;
 using NUnit.Framework;
 
-namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json
+namespace KaVE.Commons.Tests.Utils.Logging.Json
 {
     [TestFixture]
     public class JsonLogWriterTest
@@ -52,7 +53,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json
             _writer.Write(instance);
             
             var serialization = _logStream.AsString();
-            Assert.AreEqual("{\"$type\":\"KaVE.VsFeedbackGenerator.Tests.Utils.Json.SerializationTestTarget, KaVE.VsFeedbackGenerator.Tests\",\"Id\":\"lalalaloooo\"}\r\n", serialization);
+            Assert.AreEqual("{\"$type\":\"KaVE.Commons.Tests.Utils.Json.SerializationTestTarget, KaVE.Commons.Tests\",\"Id\":\"lalalaloooo\"}\r\n", serialization);
         }
 
         [Test]
@@ -65,7 +66,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json
             _writer.Write(instance2);
 
             var serialization = _logStream.AsString();
-            Assert.AreEqual("{\"$type\":\"KaVE.VsFeedbackGenerator.Tests.Utils.Json.SerializationTestTarget, KaVE.VsFeedbackGenerator.Tests\",\"Id\":\"foo\"}\r\n{\"$type\":\"KaVE.VsFeedbackGenerator.Tests.Utils.Json.SerializationTestTarget, KaVE.VsFeedbackGenerator.Tests\",\"Id\":\"bar\"}\r\n", serialization);
+            Assert.AreEqual("{\"$type\":\"KaVE.Commons.Tests.Utils.Json.SerializationTestTarget, KaVE.Commons.Tests\",\"Id\":\"foo\"}\r\n{\"$type\":\"KaVE.Commons.Tests.Utils.Json.SerializationTestTarget, KaVE.Commons.Tests\",\"Id\":\"bar\"}\r\n", serialization);
         }
 
         [Test]
@@ -77,7 +78,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json
             _writer.WriteAll(new[] { instance1, instance2 });
 
             var serialization = _logStream.AsString();
-            Assert.AreEqual("{\"$type\":\"KaVE.VsFeedbackGenerator.Tests.Utils.Json.SerializationTestTarget, KaVE.VsFeedbackGenerator.Tests\",\"Id\":\"foo\"}\r\n{\"$type\":\"KaVE.VsFeedbackGenerator.Tests.Utils.Json.SerializationTestTarget, KaVE.VsFeedbackGenerator.Tests\",\"Id\":\"bar\"}\r\n", serialization);
+            Assert.AreEqual("{\"$type\":\"KaVE.Commons.Tests.Utils.Json.SerializationTestTarget, KaVE.Commons.Tests\",\"Id\":\"foo\"}\r\n{\"$type\":\"KaVE.Commons.Tests.Utils.Json.SerializationTestTarget, KaVE.Commons.Tests\",\"Id\":\"bar\"}\r\n", serialization);
         }
 
         [Test]
@@ -89,7 +90,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json
             _writer.Write(new SerializationTestTarget{Id = "bar"});
 
             var serialization = _logStream.AsString();
-            Assert.AreEqual("{\"$type\":\"KaVE.VsFeedbackGenerator.Tests.Utils.Json.SerializationTestTarget, KaVE.VsFeedbackGenerator.Tests\",\"Id\":\"foo\"}\r\n{\"$type\":\"KaVE.VsFeedbackGenerator.Tests.Utils.Json.SerializationTestTarget, KaVE.VsFeedbackGenerator.Tests\",\"Id\":\"bar\"}\r\n", serialization);
+            Assert.AreEqual("{\"$type\":\"KaVE.Commons.Tests.Utils.Json.SerializationTestTarget, KaVE.Commons.Tests\",\"Id\":\"foo\"}\r\n{\"$type\":\"KaVE.Commons.Tests.Utils.Json.SerializationTestTarget, KaVE.Commons.Tests\",\"Id\":\"bar\"}\r\n", serialization);
         }
     }
 }

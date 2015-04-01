@@ -27,10 +27,10 @@ using JetBrains;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.VisualStudio;
 using KaVE.Commons.TestUtils.Model.Events;
+using KaVE.Commons.Utils.Json;
 using KaVE.Commons.Utils.Streams;
 using KaVE.VsFeedbackGenerator.SessionManager.Anonymize;
 using KaVE.VsFeedbackGenerator.Utils;
-using KaVE.VsFeedbackGenerator.Utils.Json;
 using Moq;
 using NUnit.Framework;
 

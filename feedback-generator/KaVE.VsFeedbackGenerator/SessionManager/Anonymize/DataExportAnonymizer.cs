@@ -23,6 +23,7 @@ using JetBrains.Application;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Model.Events.VisualStudio;
+using KaVE.Commons.Utils.Json;
 using KaVE.VsFeedbackGenerator.SessionManager.Anonymize.CompletionEvents;
 using KaVE.VsFeedbackGenerator.SessionManager.Presentation;
 using KaVE.VsFeedbackGenerator.Utils;

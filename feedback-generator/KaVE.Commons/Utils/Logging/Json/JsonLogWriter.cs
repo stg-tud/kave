@@ -12,13 +12,17 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sven Amann
  */
+
 using System.Collections.Generic;
 using System.IO;
 using KaVE.Commons.Utils.Assertion;
-using KaVE.VsFeedbackGenerator.Utils.Logging;
+using KaVE.Commons.Utils.Json;
 
-namespace KaVE.VsFeedbackGenerator.Utils.Json
+namespace KaVE.Commons.Utils.Logging.Json
 {
     /// <summary>
     ///     Writes objects as Json to a stream. Every object is serialized and written as a single line, delimited by '\r\n'.

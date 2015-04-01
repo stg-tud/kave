@@ -18,6 +18,7 @@
  */
 
 using KaVE.Commons.Model.Names.CSharp;
+using KaVE.Commons.Utils.Json;
 using KaVE.VsFeedbackGenerator.Utils.Json;
 using NUnit.Framework;
 

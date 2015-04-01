@@ -17,6 +17,7 @@
  *    - Dennis Albrecht
  */
 
+using KaVE.Commons.Utils.Json;
 using KaVE.JetBrains.Annotations;
 using KaVE.Commons.Model.ObjectUsage;
 using KaVE.Commons.Utils.Assertion;
@@ -24,7 +25,7 @@ using Newtonsoft.Json;
 
 namespace KaVE.VsFeedbackGenerator.Utils.Json
 {
-    internal static class QueryJsonSerialization
+    public static class QueryJsonSerialization
     {
         private static readonly JsonSerializerSettings QuerySerializationSettings = new JsonSerializerSettings
         {
@@ -44,7 +45,7 @@ namespace KaVE.VsFeedbackGenerator.Utils.Json
         /// <remarks>
         ///     Uses the same serialization settings as <see cref="ToJson" />.
         /// </remarks>
-        internal static Query ParseJsonToQuery([NotNull] this string json)
+        public static Query ParseJsonToQuery([NotNull] this string json)
         {
             var query = JsonConvert.DeserializeObject<Query>(json, QuerySerializationSettings);
             Asserts.NotNull(query);
@@ -58,7 +59,7 @@ namespace KaVE.VsFeedbackGenerator.Utils.Json
         ///     typeless serialization cannot generally be deserialized, because information is lost during serialization.
         /// </remarks>
         [NotNull]
-        internal static string ToJson([CanBeNull] this Query instance)
+        public static string ToJson([CanBeNull] this Query instance)
         {
             return JsonConvert.SerializeObject(instance, QuerySerializationSettings);
         }

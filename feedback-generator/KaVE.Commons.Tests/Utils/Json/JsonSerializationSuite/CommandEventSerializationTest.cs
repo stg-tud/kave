@@ -14,40 +14,28 @@
  * limitations under the License.
  * 
  * Contributors:
- *    - Sven Amann
+ *    - Dennis Albrecht
  */
 
-using KaVE.JetBrains.Annotations;
-using KaVE.Commons.Utils;
+using KaVE.Commons.Model.Events;
+using NUnit.Framework;
 
-namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json
+namespace KaVE.Commons.Tests.Utils.Json.JsonSerializationSuite
 {
-    public class SerializationTestTarget
+    [TestFixture]
+    internal class CommandEventSerializationTest
     {
-        [NotNull]
-        public string Id { get; set; }
-
-        public SerializationTestTarget()
+        [Test]
+        public void ShouldSerializeToString()
         {
-            Id = "";
-        }
-
-        private bool Equals(SerializationTestTarget other)
-        {
-            return string.Equals(Id, other.Id);
-        }
-
-        public override bool Equals(object obj)
-        {
-            return this.Equals(obj, Equals);
-        }
-
-        public override int GetHashCode()
-        {
-            unchecked
+            var commandEvent = new CommandEvent
             {
-                return Id.GetHashCode()*397;
-            }
+                CommandId = "SomeId"
+            };
+            const string expected =
+                "{\"$type\":\"KaVE.Commons.Model.Events.CommandEvent, KaVE.Commons\",\"CommandId\":\"SomeId\",\"TriggeredBy\":0}";
+
+            JsonAssert.SerializesTo(commandEvent, expected);
         }
     }
 }

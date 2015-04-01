@@ -30,6 +30,7 @@ using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Commons.Model.SSTs.Impl.References;
 using KaVE.Commons.Model.SSTs.Impl.Statements;
 using KaVE.Commons.Utils.Collections;
+using KaVE.Commons.Utils.Json;
 using KaVE.VsFeedbackGenerator.Utils.Json;
 using NUnit.Framework;
 

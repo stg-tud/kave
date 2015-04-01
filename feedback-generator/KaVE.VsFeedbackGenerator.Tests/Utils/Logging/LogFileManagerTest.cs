@@ -23,6 +23,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using JetBrains.Util;
+using ILogger = KaVE.Commons.Utils.Exceptions.ILogger;
+using KaVE.Commons.Utils.Exceptions;
 using KaVE.Commons.Utils.IO;
 using KaVE.VsFeedbackGenerator.Utils;
 using KaVE.VsFeedbackGenerator.Utils.Logging;
@@ -47,6 +49,8 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Logging
             _ioUtilMock.Setup(io => io.OpenFile(It.IsAny<string>(), It.IsAny<FileMode>(), It.IsAny<FileAccess>()))
                        .Returns(() => new MemoryStream());
             Registry.RegisterComponent(_ioUtilMock.Object);
+
+            Registry.RegisterComponent<ILogger>(new ConsoleLogger());
 
             _uut = new LogFileManager(_baseDirectory);
         }

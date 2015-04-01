@@ -23,7 +23,7 @@ using KaVE.Commons.Model.Names;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace KaVE.VsFeedbackGenerator.Utils.Json
+namespace KaVE.Commons.Utils.Json
 {
     internal class NameToJsonConverter : JsonConverter
     {

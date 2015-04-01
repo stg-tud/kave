@@ -20,11 +20,11 @@
 using System;
 using System.Diagnostics;
 using EnvDTE;
+using KaVE.Commons.Utils.Json;
 using KaVE.JetBrains.Annotations;
 using KaVE.Commons.Model.Events;
 using KaVE.VsFeedbackGenerator.MessageBus;
 using KaVE.VsFeedbackGenerator.Utils;
-using KaVE.VsFeedbackGenerator.Utils.Json;
 using KaVE.VsFeedbackGenerator.Utils.Names;
 using KaVE.VsFeedbackGenerator.VsIntegration;
 

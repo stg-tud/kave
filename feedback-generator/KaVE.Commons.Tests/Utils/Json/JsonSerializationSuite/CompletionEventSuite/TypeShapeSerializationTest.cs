@@ -20,10 +20,10 @@
 
 using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.TypeShapes;
-using KaVE.VsFeedbackGenerator.Utils.Json;
+using KaVE.Commons.Utils.Json;
 using NUnit.Framework;
 
-namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.JsonSerializationSuite.CompletionEventSuite
+namespace KaVE.Commons.Tests.Utils.Json.JsonSerializationSuite.CompletionEventSuite
 {
     internal class TypeShapeSerializationTest : SerializationTestBase
     {

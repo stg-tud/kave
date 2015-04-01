@@ -24,6 +24,7 @@ using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.Names.VisualStudio;
 using KaVE.Commons.Model.SSTs.Impl;
+using KaVE.Commons.Utils.Json;
 using KaVE.VsFeedbackGenerator.Utils.Json;
 using NUnit.Framework;
 

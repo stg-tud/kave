@@ -15,6 +15,7 @@
  */
 
 using System;
+using KaVE.Commons.Utils.Logging;
 using KaVE.CompletionTraceGenerator.Model;
 using KaVE.JetBrains.Annotations;
 using KaVE.Commons.Model.Events;

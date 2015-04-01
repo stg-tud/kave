@@ -12,18 +12,22 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sven Amann
  */
+
 using System;
-using KaVE.Commons.Utils.Assertion;
+using KaVE.Commons.Model.Names;
 using Newtonsoft.Json;
 
-namespace KaVE.VsFeedbackGenerator.Utils.Json
+namespace KaVE.Commons.Utils.Json
 {
-    internal class EnumToStringConverter : JsonConverter
+    internal class NameToIdentifierConverter : JsonConverter
     {
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            writer.WriteValue(value.ToString());
+            writer.WriteValue(((IName) value).Identifier);
         }
 
         public override object ReadJson(JsonReader reader,
@@ -31,14 +35,12 @@ namespace KaVE.VsFeedbackGenerator.Utils.Json
             object existingValue,
             JsonSerializer serializer)
         {
-            Asserts.That(reader.TokenType == JsonToken.String);
-            var value = (string)reader.Value;
-            return Enum.Parse(objectType, value);
+            throw new NotImplementedException();
         }
 
         public override bool CanConvert(Type objectType)
         {
-            return objectType.IsEnum;
+            return typeof (IName).IsAssignableFrom(objectType);
         }
     }
 }

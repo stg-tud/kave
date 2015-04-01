@@ -18,17 +18,17 @@
  */
 
 using KaVE.Commons.Model.Names.CSharp;
-using KaVE.VsFeedbackGenerator.Utils.Json;
+using KaVE.Commons.Utils.Json;
 using Newtonsoft.Json;
 using NUnit.Framework;
 
-namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.JsonSerializationSuite
+namespace KaVE.Commons.Tests.Utils.Json
 {
     [TestFixture]
     internal class JsonSerializationTest
     {
         private const string TestTargetTypeName =
-            "KaVE.VsFeedbackGenerator.Tests.Utils.Json.SerializationTestTarget, KaVE.VsFeedbackGenerator.Tests";
+            "KaVE.Commons.Tests.Utils.Json.SerializationTestTarget, KaVE.Commons.Tests";
 
         [Test]
         public void ShouldSerializeNull()

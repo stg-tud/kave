@@ -17,10 +17,10 @@
  *    - Sven Amann
  */
 
-using KaVE.VsFeedbackGenerator.Utils.Json;
+using KaVE.Commons.Utils.Json;
 using NUnit.Framework;
 
-namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.JsonSerializationSuite
+namespace KaVE.Commons.Tests.Utils.Json
 {
     static class JsonAssert
     {

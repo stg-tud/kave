@@ -22,9 +22,9 @@ using System.Collections.Generic;
 using System.IO;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Exceptions;
-using KaVE.VsFeedbackGenerator.Utils.Logging;
+using KaVE.Commons.Utils.Json;
 
-namespace KaVE.VsFeedbackGenerator.Utils.Json
+namespace KaVE.Commons.Utils.Logging.Json
 {
     /// <summary>
     ///     A reader for streams written by <see cref="JsonLogWriter{TMessage}" />.
@@ -32,16 +32,19 @@ namespace KaVE.VsFeedbackGenerator.Utils.Json
     public class JsonLogReader<TMessage> : ILogReader<TMessage> where TMessage : class
     {
         private readonly StreamReader _logStreamReader;
+        private readonly ILogger _logger;
 
         /// <param name="logStream">
         ///     The reader takes ownership of the stream, i.e., the stream is closed when the reader is
         ///     disposed.
         /// </param>
-        public JsonLogReader(Stream logStream)
+        /// <param name="logger">used to log when reading of a log entry fails</param>
+        public JsonLogReader(Stream logStream, ILogger logger)
         {
             Asserts.NotNull(logStream, "log stream");
             Asserts.That(logStream.CanRead, "log stream not readable");
             _logStreamReader = new StreamReader(logStream, JsonSerialization.Encoding);
+            _logger = logger;
         }
 
         public TMessage ReadNext()
@@ -61,7 +64,7 @@ namespace KaVE.VsFeedbackGenerator.Utils.Json
                 // TODO think about more concrete exception types
             catch (Exception jre)
             {
-                Registry.GetComponent<ILogger>().Error(jre, json);
+                _logger.Error(jre, json);
                 // supressing broken lines
                 return ReadNext();
             }

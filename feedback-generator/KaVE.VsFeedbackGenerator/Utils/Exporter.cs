@@ -28,6 +28,7 @@ using JetBrains;
 using JetBrains.Application;
 using JetBrains.Util;
 using KaVE.Commons.Model.Events;
+using KaVE.Commons.Utils.Json;
 using KaVE.VsFeedbackGenerator.SessionManager.Anonymize;
 using KaVE.VsFeedbackGenerator.Utils.Json;
 

@@ -13,13 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using JetBrains.Util;
 using KaVE.Commons.Model.Events;
-using KaVE.VsFeedbackGenerator.Utils.Json;
+using KaVE.Commons.Utils.Json;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
 {

@@ -15,6 +15,7 @@
  */
 
 using System.Linq;
+using KaVE.Commons.Utils.Logging;
 using KaVE.CompletionTraceGenerator.Model;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.CompletionEvents;

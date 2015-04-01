@@ -17,30 +17,37 @@
  *    - Sven Amann
  */
 
-using System;
-using KaVE.Commons.Model.Names;
-using Newtonsoft.Json;
+using KaVE.Commons.Utils;
+using KaVE.JetBrains.Annotations;
 
-namespace KaVE.VsFeedbackGenerator.Utils.Json
+namespace KaVE.Commons.Tests.Utils.Json
 {
-    internal class NameToIdentifierConverter : JsonConverter
+    public class SerializationTestTarget
     {
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        [NotNull]
+        public string Id { get; set; }
+
+        public SerializationTestTarget()
         {
-            writer.WriteValue(((IName) value).Identifier);
+            Id = "";
         }
 
-        public override object ReadJson(JsonReader reader,
-            Type objectType,
-            object existingValue,
-            JsonSerializer serializer)
+        private bool Equals(SerializationTestTarget other)
         {
-            throw new NotImplementedException();
+            return string.Equals(Id, other.Id);
         }
 
-        public override bool CanConvert(Type objectType)
+        public override bool Equals(object obj)
         {
-            return typeof (IName).IsAssignableFrom(objectType);
+            return this.Equals(obj, Equals);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return Id.GetHashCode()*397;
+            }
         }
     }
 }

@@ -12,13 +12,18 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sven Amann
  */
+
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.CompletionEvents;
-using KaVE.VsFeedbackGenerator.Utils.Json;
+using KaVE.Commons.Utils.Exceptions;
+using KaVE.Commons.Utils.Logging.Json;
 
 namespace KaVE.CompletionTraceGenerator
 {
@@ -26,6 +31,8 @@ namespace KaVE.CompletionTraceGenerator
     {
         private static readonly string[] InputFileNames = {@"C:\Users\Sven\test.log"};
         private const string OutputFileName = @"C:\Users\Sven\test.trace";
+
+        private readonly ILogger _logger = new ConsoleLogger();
 
         public static void Main()
         {
@@ -58,7 +65,7 @@ namespace KaVE.CompletionTraceGenerator
         {
             using (var stream = new FileStream(logFileName, FileMode.Open, FileAccess.Read))
             {
-                using (var logReader = new JsonLogReader<IDEEvent>(stream))
+                using (var logReader = new JsonLogReader<IDEEvent>(stream, _logger))
                 {
                     return logReader.ReadAll().ToList();
                 }

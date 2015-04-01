@@ -25,8 +25,9 @@ using System.Linq;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.TestUtils;
 using KaVE.Commons.TestUtils.Model.Events;
+using KaVE.Commons.Utils.Exceptions;
+using KaVE.Commons.Utils.Json;
 using KaVE.VsFeedbackGenerator.Utils;
-using KaVE.VsFeedbackGenerator.Utils.Json;
 using KaVE.VsFeedbackGenerator.Utils.Logging;
 using Moq;
 using NUnit.Framework;
@@ -47,7 +48,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Logging
 
         private LogFile _uut;
         private MemoryFile _memoryFile;
-
+        
         [SetUp]
         public void SetUp()
         {
@@ -59,6 +60,8 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Logging
             _mockIoUtils.Setup(iou => iou.OpenFile(TestLogFilePath, It.IsAny<FileMode>(), FileAccess.Write))
                         .Returns(_memoryFile.OpenAppend);
             Registry.RegisterComponent(_mockIoUtils.Object);
+
+            Registry.RegisterComponent<ILogger>(new ConsoleLogger());
 
             _uut = new LogFile(TestLogFilePath);
         }
