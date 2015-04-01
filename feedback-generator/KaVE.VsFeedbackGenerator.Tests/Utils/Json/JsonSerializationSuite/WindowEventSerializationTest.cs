@@ -35,7 +35,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.JsonSerializationSuite
                 Window = WindowName.Get("SomeProcessedWindow")
             };
             const string expected =
-                "{\"$type\":\"KaVE.Model.Events.VisualStudio.WindowEvent, KaVE.Model\",\"Window\":\"VisualStudio.WindowName:SomeProcessedWindow\",\"Action\":1,\"TriggeredBy\":0}";
+                "{\"$type\":\"KaVE.Commons.Model.Events.VisualStudio.WindowEvent, KaVE.Commons\",\"Window\":\"VisualStudio.WindowName:SomeProcessedWindow\",\"Action\":1,\"TriggeredBy\":0}";
 
             JsonAssert.SerializesTo(windowEvent, expected);
         }

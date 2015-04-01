@@ -35,7 +35,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.JsonSerializationSuite
                 Reason = "SomeReason"
             };
             const string expected =
-                "{\"$type\":\"KaVE.Model.Events.VisualStudio.DebuggerEvent, KaVE.Model\",\"Mode\":0,\"Reason\":\"SomeReason\",\"Action\":\"SomeAction\",\"TriggeredBy\":0}";
+                "{\"$type\":\"KaVE.Commons.Model.Events.VisualStudio.DebuggerEvent, KaVE.Commons\",\"Mode\":0,\"Reason\":\"SomeReason\",\"Action\":\"SomeAction\",\"TriggeredBy\":0}";
 
             JsonAssert.SerializesTo(debuggerEvent, expected);
         }

@@ -33,7 +33,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.JsonSerializationSuite
                 PluginVersion = "SomeVersion"
             };
             const string expected =
-                "{\"$type\":\"KaVE.Model.Events.VisualStudio.InstallEvent, KaVE.Model\",\"PluginVersion\":\"SomeVersion\",\"TriggeredBy\":0}";
+                "{\"$type\":\"KaVE.Commons.Model.Events.VisualStudio.InstallEvent, KaVE.Commons\",\"PluginVersion\":\"SomeVersion\",\"TriggeredBy\":0}";
 
             JsonAssert.SerializesTo(installEvent, expected);
         }

@@ -35,7 +35,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.JsonSerializationSuite
                 Document = DocumentName.Get("SomeProcessedDocument")
             };
             const string expected =
-                "{\"$type\":\"KaVE.Model.Events.VisualStudio.DocumentEvent, KaVE.Model\",\"Document\":\"VisualStudio.DocumentName:SomeProcessedDocument\",\"Action\":1,\"TriggeredBy\":0}";
+                "{\"$type\":\"KaVE.Commons.Model.Events.VisualStudio.DocumentEvent, KaVE.Commons\",\"Document\":\"VisualStudio.DocumentName:SomeProcessedDocument\",\"Action\":1,\"TriggeredBy\":0}";
 
             JsonAssert.SerializesTo(documentEvent, expected);
         }

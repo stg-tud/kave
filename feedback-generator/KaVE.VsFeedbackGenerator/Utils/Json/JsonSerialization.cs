@@ -45,7 +45,7 @@ namespace KaVE.VsFeedbackGenerator.Utils.Json
         private static Assembly CurrentDomainOnAssemblyResolve(object sender, ResolveEventArgs args)
         {
             var assemblyName = args.Name;
-            if (assemblyName.StartsWith("KaVE.Model"))
+            if (assemblyName.StartsWith("KaVE.Commons.Model"))
             {
                 return typeof (IName).Assembly;
             }
@@ -119,10 +119,13 @@ namespace KaVE.VsFeedbackGenerator.Utils.Json
         {
             var settings = CreateSerializationSettings();
             // TODO get rid of this special case handling
+            // BEGIN legacy-data hanlding
             if (json.StartsWith("{\"$type\":\"KaVE.Model.Events.CompletionEvent.CompletionEvent, KaVE.Model\""))
             {
                 json = json.Replace("KaVE.Model.Events.CompletionEvent.", "KaVE.Model.Events.CompletionEvents.");
             }
+            json = json.Replace("KaVE.Model", "KaVE.Commons.Model");
+            // END legacy-data handling
             return JsonConvert.DeserializeObject<T>(json, settings);
         }
 

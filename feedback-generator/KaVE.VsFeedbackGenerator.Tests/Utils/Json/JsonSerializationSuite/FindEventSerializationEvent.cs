@@ -33,7 +33,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.JsonSerializationSuite
                 Cancelled = false
             };
             const string expected =
-                "{\"$type\":\"KaVE.Model.Events.VisualStudio.FindEvent, KaVE.Model\",\"Cancelled\":false,\"TriggeredBy\":0}";
+                "{\"$type\":\"KaVE.Commons.Model.Events.VisualStudio.FindEvent, KaVE.Commons\",\"Cancelled\":false,\"TriggeredBy\":0}";
 
             JsonAssert.SerializesTo(findEvent, expected);
         }

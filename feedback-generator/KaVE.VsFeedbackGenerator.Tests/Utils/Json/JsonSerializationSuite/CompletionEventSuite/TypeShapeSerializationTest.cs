@@ -31,14 +31,22 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.JsonSerializationSuite.Compl
         public void VerifyToJson()
         {
             var actual = GetExample().ToCompactJson();
-            var expected = GetExampleJson();
+            var expected = GetExampleJson_Current();
             Assert.AreEqual(expected, actual);
         }
 
         [Test]
-        public void VerifyFromJson()
+        public void VerifyFromCurrentJson()
         {
-            var actual = GetExampleJson().ParseJsonTo<ITypeShape>();
+            var actual = GetExampleJson_Current().ParseJsonTo<ITypeShape>();
+            var expected = GetExample();
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void VerifyFromJson_Legacy_BeforeRestructuringProjects()
+        {
+            var actual = GetExampleJson_Legacy_BeforeRestructuringProjects().ParseJsonTo<ITypeShape>();
             var expected = GetExample();
             Assert.AreEqual(expected, actual);
         }
@@ -82,7 +90,14 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.JsonSerializationSuite.Compl
             };
         }
 
-        private static string GetExampleJson()
+        private static string GetExampleJson_Current()
+        {
+            // do not change! keep for checking exception free reading of old formats!
+            return
+                "{\"$type\":\"KaVE.Commons.Model.TypeShapes.TypeShape, KaVE.Commons\",\"TypeHierarchy\":{\"$type\":\"KaVE.Commons.Model.TypeShapes.TypeHierarchy, KaVE.Commons\",\"Element\":\"CSharp.TypeName:T,P\",\"Extends\":{\"$type\":\"KaVE.Commons.Model.TypeShapes.TypeHierarchy, KaVE.Commons\",\"Element\":\"CSharp.TypeName:S,P\",\"Implements\":[]},\"Implements\":[{\"$type\":\"KaVE.Commons.Model.TypeShapes.TypeHierarchy, KaVE.Commons\",\"Element\":\"CSharp.TypeName:I,P\",\"Implements\":[]}]},\"MethodHierarchies\":[{\"$type\":\"KaVE.Commons.Model.TypeShapes.MethodHierarchy, KaVE.Commons\",\"Element\":\"CSharp.MethodName:[T,P] [T,P].M1()\",\"Super\":\"CSharp.MethodName:[T,P] [T,P].M2()\",\"First\":\"CSharp.MethodName:[T,P] [T,P].M3()\"}]}";
+        }
+
+        private static string GetExampleJson_Legacy_BeforeRestructuringProjects()
         {
             // do not change! keep for checking exception free reading of old formats!
             return

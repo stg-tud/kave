@@ -43,7 +43,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.JsonSerializationSuite
                 TriggeredBy = IDEEvent.Trigger.Click
             };
             const string expected =
-                "{\"$type\":\"KaVE.Model.Events.VisualStudio.SolutionEvent, KaVE.Model\",\"Action\":1,\"Target\":\"VisualStudio.SolutionName:SomeSolution\",\"IDESessionUUID\":\"0xDEADBEEF\",\"TriggeredAt\":\"2010-01-01T12:30:44\",\"TriggeredBy\":1,\"Duration\":\"00:00:01\",\"ActiveWindow\":\"VisualStudio.WindowName:SomeWindow\",\"ActiveDocument\":\"VisualStudio.DocumentName:SomeDocument\"}";
+                "{\"$type\":\"KaVE.Commons.Model.Events.VisualStudio.SolutionEvent, KaVE.Commons\",\"Action\":1,\"Target\":\"VisualStudio.SolutionName:SomeSolution\",\"IDESessionUUID\":\"0xDEADBEEF\",\"TriggeredAt\":\"2010-01-01T12:30:44\",\"TriggeredBy\":1,\"Duration\":\"00:00:01\",\"ActiveWindow\":\"VisualStudio.WindowName:SomeWindow\",\"ActiveDocument\":\"VisualStudio.DocumentName:SomeDocument\"}";
 
             JsonAssert.SerializesTo(solutionEvent, expected);
         }

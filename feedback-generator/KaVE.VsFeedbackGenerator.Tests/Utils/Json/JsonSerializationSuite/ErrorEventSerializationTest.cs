@@ -34,7 +34,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.JsonSerializationSuite
                 StackTrace = new[] {"line1", "line2"}
             };
             const string expected =
-                "{\"$type\":\"KaVE.Model.Events.ErrorEvent, KaVE.Model\",\"Content\":\"SomeContent\",\"StackTrace\":[\"line1\",\"line2\"],\"TriggeredBy\":0}";
+                "{\"$type\":\"KaVE.Commons.Model.Events.ErrorEvent, KaVE.Commons\",\"Content\":\"SomeContent\",\"StackTrace\":[\"line1\",\"line2\"],\"TriggeredBy\":0}";
 
             JsonAssert.SerializesTo(errorEvent, expected);
         }

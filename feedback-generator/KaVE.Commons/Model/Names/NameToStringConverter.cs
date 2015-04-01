@@ -30,7 +30,7 @@ namespace KaVE.Commons.Model.Names
 {
     internal class NameToStringConverter : TypeConverter
     {
-        private const string NameQualifierPrefix = "KaVE.Model.Names.";
+        private const string NameQualifierPrefix = "KaVE.Commons.Model.Names.";
         private const char Separator = ':';
 
         private const BindingFlags GetMethodBindingFlags =

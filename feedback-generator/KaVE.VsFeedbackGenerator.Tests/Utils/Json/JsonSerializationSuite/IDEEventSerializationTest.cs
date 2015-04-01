@@ -62,7 +62,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.JsonSerializationSuite
             };
 
             const string expected =
-                "{\"$type\":\"KaVE.TestUtils.Model.Events.TestIDEEvent, KaVE.TestUtils\",\"IDESessionUUID\":\"0xDEADBEEF\",\"KaVEVersion\":\"1.2.3.4\",\"TriggeredAt\":\"2010-01-01T12:30:44\",\"TriggeredBy\":1,\"Duration\":\"00:00:01\",\"ActiveWindow\":\"VisualStudio.WindowName:SomeWindow\",\"ActiveDocument\":\"VisualStudio.DocumentName:SomeDocument\"}";
+                "{\"$type\":\"KaVE.Commons.TestUtils.Model.Events.TestIDEEvent, KaVE.Commons.TestUtils\",\"IDESessionUUID\":\"0xDEADBEEF\",\"KaVEVersion\":\"1.2.3.4\",\"TriggeredAt\":\"2010-01-01T12:30:44\",\"TriggeredBy\":1,\"Duration\":\"00:00:01\",\"ActiveWindow\":\"VisualStudio.WindowName:SomeWindow\",\"ActiveDocument\":\"VisualStudio.DocumentName:SomeDocument\"}";
 
             JsonAssert.SerializesTo(ideEvent, expected);
         }

@@ -34,7 +34,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.JsonSerializationSuite
                 SizeOfChanges = 1024
             };
             const string expected =
-                "{\"$type\":\"KaVE.Model.Events.VisualStudio.EditEvent, KaVE.Model\",\"NumberOfChanges\":42,\"SizeOfChanges\":1024,\"TriggeredBy\":0}";
+                "{\"$type\":\"KaVE.Commons.Model.Events.VisualStudio.EditEvent, KaVE.Commons\",\"NumberOfChanges\":42,\"SizeOfChanges\":1024,\"TriggeredBy\":0}";
 
             JsonAssert.SerializesTo(editEvent, expected);
         }

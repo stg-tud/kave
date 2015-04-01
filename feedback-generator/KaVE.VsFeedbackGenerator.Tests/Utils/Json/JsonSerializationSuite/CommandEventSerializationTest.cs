@@ -33,7 +33,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.JsonSerializationSuite
                 CommandId = "SomeId"
             };
             const string expected =
-                "{\"$type\":\"KaVE.Model.Events.CommandEvent, KaVE.Model\",\"CommandId\":\"SomeId\",\"TriggeredBy\":0}";
+                "{\"$type\":\"KaVE.Commons.Model.Events.CommandEvent, KaVE.Commons\",\"CommandId\":\"SomeId\",\"TriggeredBy\":0}";
 
             JsonAssert.SerializesTo(commandEvent, expected);
         }

@@ -36,7 +36,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Json.JsonSerializationSuite
                 OpenWindows = new[] {WindowName.Get("SomeOpenWindow")}
             };
             const string expected =
-                "{\"$type\":\"KaVE.Model.Events.VisualStudio.IDEStateEvent, KaVE.Model\",\"IDELifecyclePhase\":2,\"OpenWindows\":[\"VisualStudio.WindowName:SomeOpenWindow\"],\"OpenDocuments\":[\"VisualStudio.DocumentName:SomeOpenDocument\"],\"TriggeredBy\":0}";
+                "{\"$type\":\"KaVE.Commons.Model.Events.VisualStudio.IDEStateEvent, KaVE.Commons\",\"IDELifecyclePhase\":2,\"OpenWindows\":[\"VisualStudio.WindowName:SomeOpenWindow\"],\"OpenDocuments\":[\"VisualStudio.DocumentName:SomeOpenDocument\"],\"TriggeredBy\":0}";
 
             JsonAssert.SerializesTo(ideStateEvent, expected);
         }
