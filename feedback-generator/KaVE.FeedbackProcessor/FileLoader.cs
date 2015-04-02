@@ -19,7 +19,6 @@
 
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using Ionic.Zip;
 using KaVE.Commons.Utils.Json;
 using KaVE.Commons.Utils.Streams;
@@ -30,11 +29,13 @@ namespace KaVE.FeedbackProcessor
     {
         public IEnumerable<object> ReadAllEvents(ZipFile archive)
         {
-            var file = archive.Entries.First();
-            using (var ms = new MemoryStream())
+            foreach (var file in archive.Entries)
             {
-                file.Extract(ms);
-                yield return ms.AsString().ParseJsonTo<object>();
+                using (var ms = new MemoryStream())
+                {
+                    file.Extract(ms);
+                    yield return ms.AsString().ParseJsonTo<object>();
+                }
             }
         }
     }

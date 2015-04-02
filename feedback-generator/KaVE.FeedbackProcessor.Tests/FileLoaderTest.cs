@@ -20,6 +20,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Ionic.Zip;
 using KaVE.Commons.Model.Events;
 using NUnit.Framework;
@@ -40,17 +41,33 @@ namespace KaVE.FeedbackProcessor.Tests
         [Test]
         public void ReadFile()
         {
-            var file = GivenAFile().With("0.json", "{\"$type\":\"KaVE.Commons.Model.Events.InfoEvent, KaVE.Commons\",\"Info\":\"My Info Text\"}");
+            var file = GivenAFile()
+                .With("0.json", "{\"$type\":\"KaVE.Commons.Model.Events.InfoEvent, KaVE.Commons\",\"Info\":\"A\"}");
 
             var actuals = ReadFile(file);
 
-            CollectionAssert.AreEqual(new[] {new InfoEvent {Info = "My Info Text"}}, actuals);
+            CollectionAssert.AreEqual(new[] {new InfoEvent {Info = "A"}}, actuals);
+        }
+
+        [Test]
+        public void ReadAllFiles()
+        {
+            var archive = GivenAFile()
+                .With("0.json", "{\"$type\":\"KaVE.Commons.Model.Events.InfoEvent, KaVE.Commons\",\"Info\":\"0\"}")
+                .With("1.json", "{\"$type\":\"KaVE.Commons.Model.Events.InfoEvent, KaVE.Commons\",\"Info\":\"1\"}")
+                .With("2.json", "{\"$type\":\"KaVE.Commons.Model.Events.InfoEvent, KaVE.Commons\",\"Info\":\"2\"}");
+
+            var actuals = ReadFile(archive);
+
+            Assert.AreEqual(3, actuals.Count());
         }
 
         private IEnumerable<object> ReadFile(FileBuilder file)
         {
-            var stream = file.Create();
-            return _sut.ReadAllEvents(stream);
+            using (var zipFile = file.Create())
+            {
+                return _sut.ReadAllEvents(zipFile);
+            }
         }
 
         private static FileBuilder GivenAFile()
