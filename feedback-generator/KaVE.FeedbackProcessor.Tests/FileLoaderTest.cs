@@ -21,7 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Ionic.Zip;
-using KaVE.Commons.Utils;
+using KaVE.Commons.Model.Events;
 using NUnit.Framework;
 
 namespace KaVE.FeedbackProcessor.Tests
@@ -40,11 +40,11 @@ namespace KaVE.FeedbackProcessor.Tests
         [Test]
         public void ReadFile()
         {
-            var file = GivenAFile().With("0.json", "{\"$type\":\"KaVE.FeedbackAnalyzer.Tests.Data\",\"Id\":1}");
+            var file = GivenAFile().With("0.json", "{\"$type\":\"KaVE.Commons.Model.Events.InfoEvent, KaVE.Commons\",\"Info\":\"My Info Text\"}");
 
             var actuals = ReadFile(file);
 
-            CollectionAssert.AreEqual(new[] {new Data {Id = 1}}, actuals);
+            CollectionAssert.AreEqual(new[] {new InfoEvent {Info = "My Info Text"}}, actuals);
         }
 
         private IEnumerable<object> ReadFile(FileBuilder file)
@@ -81,26 +81,6 @@ namespace KaVE.FeedbackProcessor.Tests
                 zipFile.Save(ms);
                 ms.Position = 0;
                 return ZipFile.Read(ms);
-            }
-        }
-
-        public class Data
-        {
-            public int Id { get; set; }
-
-            protected bool Equals(Data other)
-            {
-                return Id == other.Id;
-            }
-
-            public override bool Equals(object obj)
-            {
-                return this.Equals(obj, Equals);
-            }
-
-            public override int GetHashCode()
-            {
-                return Id;
             }
         }
     }
