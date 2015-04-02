@@ -17,34 +17,109 @@
  *    - Sven Amann
  */
 
+using System;
+using System.IO;
+using System.Linq;
+using Ionic.Zip;
+using KaVE.Commons.Model.Events;
+using MongoDB.Driver;
+using MongoDB.Driver.Builders;
+
 namespace KaVE.FeedbackProcessor
 {
-    class FeedbackImporter
+    internal class FeedbackImporter
     {
-        static void Main(string[] args)
+        private const string ImportDirectory = @"C:\Users\Sven\Documents\KaVE\Feedback\kave.st";
+
+        private const string DatabaseUrl = "mongodb://localhost";
+        private const string DatabaseName = "local";
+
+        private static void Main(string[] args)
         {
-            //var path = @"C:\Users\Sven\Documents\KaVE\Feedback\kave.st";
+            var database = GetDatabase();
+            var eventsCollection = GetCollection<IDEEvent>(database);
+            var developerCollection = GetCollection<Developer>(database);
 
-            //var connectionString = "mongodb://localhost";
-            //var client = new MongoClient(connectionString);
-            //var server = client.GetServer();
-            //var database = server.GetDatabase("test");
-            //var collection = database.GetCollection<Entity>("entities");
+            Import(developerCollection, eventsCollection);
+        }
 
-            //var entity = new Entity { Name = "Tom" };
-            //collection.Insert(entity);
-            //var id = entity.Id;
+        private static void Import(MongoCollection<Developer> developerCollection, MongoCollection<IDEEvent> eventsCollection)
+        {
+            var fileLoader = new FileLoader();
+            foreach (
+                var archive in
+                    Directory.GetFiles(ImportDirectory, "*.zip")
+                             .Select(ZipFile.Read))
+            {
+                Console.WriteLine(archive.Name);
 
-            //var query = Query<Entity>.EQ(e => e.Id, id);
-            //entity = collection.FindOne(query);
+                // reset developer since for a new file we don't know the developer
+                Developer currentDeveloper = null;
 
-            //entity.Name = "Dick";
-            //collection.Save(entity);
+                foreach (var evt in fileLoader.ReadAllEvents(archive))
+                {
+                    var ideSessionUUID = evt.IDESessionUUID;
+                    if (IsDuplicate(eventsCollection, evt)) continue;
+                    if (ideSessionUUID != null)
+                    {
+                        if (currentDeveloper == null)
+                        {
+                            currentDeveloper = FindOrCreateCurrentDeveloper(ideSessionUUID, developerCollection);
+                        }
+                        else
+                        {
+                            currentDeveloper.SessionIds.Add(ideSessionUUID);
+                            developerCollection.Save(currentDeveloper);
+                        }
+                    }
+                    eventsCollection.Insert(evt);
+                }
+            }
+        }
 
-            //var update = Update<Entity>.Set(e => e.Name, "Harry");
-            //collection.Update(query, update);
+        private static bool IsDuplicate(MongoCollection eventsCollection, IDEEvent evt)
+        {
+            return eventsCollection.Count(
+                Query.And(
+                    Query<IDEEvent>.EQ(e => e.IDESessionUUID, evt.IDESessionUUID),
+                    Query<IDEEvent>.EQ(e => e.TriggeredAt, evt.TriggeredAt),
+                    Query.EQ("_t", evt.GetType().Name))) > 0;
+        }
 
-            //collection.Remove(query);
+        private static Developer FindOrCreateCurrentDeveloper(string ideSessionUUID,
+            MongoCollection<Developer> developerCollection)
+        {
+            var query = Query<Developer>.EQ(dev => dev.SessionIds, ideSessionUUID);
+            var candidates = developerCollection.Find(query).ToList();
+            switch (candidates.Count)
+            {
+                case 0:
+                    var newDeveloper = new Developer();
+                    newDeveloper.SessionIds.Add(ideSessionUUID);
+                    developerCollection.Insert(newDeveloper);
+                    return newDeveloper;
+                case 1:
+                    return candidates.First();
+                default:
+                    throw new Exception("more than one developer with same session id");
+            }
+        }
+
+        private static MongoDatabase GetDatabase()
+        {
+            var client = new MongoClient(DatabaseUrl);
+            var server = client.GetServer();
+            return server.GetDatabase(DatabaseName);
+        }
+
+        private static MongoCollection<T> GetCollection<T>(MongoDatabase database)
+        {
+            var collectionName = typeof (T).Name;
+            if (!database.CollectionExists(collectionName))
+            {
+                database.CreateCollection(collectionName);
+            }
+            return database.GetCollection<T>(collectionName);
         }
     }
 }
