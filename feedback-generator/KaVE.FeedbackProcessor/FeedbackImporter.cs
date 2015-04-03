@@ -18,10 +18,13 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Ionic.Zip;
 using KaVE.Commons.Model.Events;
+using KaVE.Commons.Utils.Exceptions;
+using KaVE.Commons.Utils.Reflection;
 using MongoDB.Driver;
 using MongoDB.Driver.Builders;
 
@@ -34,47 +37,103 @@ namespace KaVE.FeedbackProcessor
         private const string DatabaseUrl = "mongodb://localhost";
         private const string DatabaseName = "local";
 
-        private static void Main(string[] args)
+        private static readonly ILogger Logger = new ConsoleLogger();
+
+        private static void Main()
         {
             var database = GetDatabase();
-            var eventsCollection = GetCollection<IDEEvent>(database);
+            var eventsCollection = GetEventsCollection(database);
             var developerCollection = GetCollection<Developer>(database);
 
             Import(developerCollection, eventsCollection);
+            LogDeveloperStatistics(developerCollection);
         }
 
-        private static void Import(MongoCollection<Developer> developerCollection, MongoCollection<IDEEvent> eventsCollection)
+        private static void LogDeveloperStatistics(MongoCollection<Developer> developerCollection)
+        {
+            var devs = developerCollection.FindAllAs<Developer>();
+            var sessIds = new HashSet<string>();
+            var dupSessIds = new HashSet<string>();
+            foreach (var sessionId in devs.SelectMany(developer => developer.SessionIds))
+            {
+                if (sessIds.Contains(sessionId))
+                {
+                    dupSessIds.Add(sessionId);
+                }
+                else
+                {
+                    sessIds.Add(sessionId);
+                }
+            }
+            Logger.Info(string.Format("Found {0} developers.", devs.Count()));
+            Logger.Info(string.Format("Found {0} sessions.", sessIds.Count));
+            Logger.Info(string.Format("Found {0} duplicated sessions.", dupSessIds.Count));
+        }
+
+        private static void Import(MongoCollection<Developer> developerCollection,
+            MongoCollection<IDEEvent> eventsCollection)
         {
             var fileLoader = new FileLoader();
+            var totalNumberOfUniqueEvents = 0;
+            var totalNumberOfDuplicatedEvents = 0;
+
             foreach (
                 var archive in
                     Directory.GetFiles(ImportDirectory, "*.zip")
                              .Select(ZipFile.Read))
             {
-                Console.WriteLine(archive.Name);
+                Logger.Info(archive.Name);
 
                 // reset developer since for a new file we don't know the developer
                 Developer currentDeveloper = null;
+                var numberOfUniqueEvents = 0;
+                var numberOfDuplicatedEvents = 0;
+                var numberNewOfSessions = 0;
+                var foundEventOfDupId1 = false;
+                var foundEventOfDupId2 = false;
 
                 foreach (var evt in fileLoader.ReadAllEvents(archive))
                 {
+                    if (IsDuplicate(eventsCollection, evt))
+                    {
+                        numberOfDuplicatedEvents++;
+                        continue;
+                    }
+
                     var ideSessionUUID = evt.IDESessionUUID;
-                    if (IsDuplicate(eventsCollection, evt)) continue;
                     if (ideSessionUUID != null)
                     {
+                        if ((ideSessionUUID.Equals("0a02cb7c-be92-43e2-8d8c-fcddbaa1d6cb") && !foundEventOfDupId1) ||
+                            (ideSessionUUID.Equals("dc7e8b83-722d-4fd3-9c6d-86bd5ff30dff") && !foundEventOfDupId2))
+                        {
+                            foundEventOfDupId1 |= ideSessionUUID.Equals("0a02cb7c-be92-43e2-8d8c-fcddbaa1d6cb");
+                            foundEventOfDupId2 |= ideSessionUUID.Equals("dc7e8b83-722d-4fd3-9c6d-86bd5ff30dff");
+                            Logger.Error(string.Format("found event of session {0}", ideSessionUUID));
+                        }
+
                         if (currentDeveloper == null)
                         {
                             currentDeveloper = FindOrCreateCurrentDeveloper(ideSessionUUID, developerCollection);
+                            Logger.Info(string.Format(" developer {0} with {1} sessions.", currentDeveloper.Id, currentDeveloper.SessionIds.Count));
                         }
                         else
                         {
+                            if (!currentDeveloper.SessionIds.Contains(ideSessionUUID)) numberNewOfSessions++;
                             currentDeveloper.SessionIds.Add(ideSessionUUID);
                             developerCollection.Save(currentDeveloper);
                         }
                     }
+
                     eventsCollection.Insert(evt);
+                    numberOfUniqueEvents++;
                 }
+
+                Logger.Info(string.Format(" Added {0} new sessions.", numberNewOfSessions));
+                Logger.Info(string.Format(" Inserted {0} events, filtered {1} duplicates.", numberOfUniqueEvents, numberOfDuplicatedEvents));
+                totalNumberOfUniqueEvents += numberOfUniqueEvents;
+                totalNumberOfDuplicatedEvents += numberOfDuplicatedEvents;
             }
+            Logger.Info(string.Format("Inserted {0} events, filtered {1} duplicates.", totalNumberOfUniqueEvents, totalNumberOfDuplicatedEvents));
         }
 
         private static bool IsDuplicate(MongoCollection eventsCollection, IDEEvent evt)
@@ -101,7 +160,11 @@ namespace KaVE.FeedbackProcessor
                 case 1:
                     return candidates.First();
                 default:
-                    throw new Exception("more than one developer with same session id");
+                    Logger.Error("More than one developer with the same session id encountered:");
+                    Logger.Error(" - Session Id: " + ideSessionUUID);
+                    Logger.Error(string.Format(" - {0} developers with same id:", candidates.Count));
+                    candidates.ForEach(d => Logger.Error("   - Developer: " + d.Id));
+                    throw new Exception("More than one developer with the same session id encountered");
             }
         }
 
@@ -110,6 +173,30 @@ namespace KaVE.FeedbackProcessor
             var client = new MongoClient(DatabaseUrl);
             var server = client.GetServer();
             return server.GetDatabase(DatabaseName);
+        }
+
+        private static MongoCollection<IDEEvent> GetEventsCollection(MongoDatabase database)
+        {
+            var eventsCollection = GetCollection<IDEEvent>(database);
+            EnsureEventIndex(eventsCollection);
+            return eventsCollection;
+        }
+
+        private static void EnsureEventIndex(MongoCollection<IDEEvent> eventsCollection)
+        {
+            var evtIndex = IndexKeys
+                .Ascending(TypeExtensions<IDEEvent>.GetPropertyName(evt => evt.IDESessionUUID))
+                .Ascending(TypeExtensions<IDEEvent>.GetPropertyName(evt => evt.TriggeredAt))
+                .Ascending("_t");
+            if (!eventsCollection.IndexExists(evtIndex))
+            {
+                eventsCollection.CreateIndex(
+                    evtIndex,
+                    // the index is unique, but there can be multiple instance with missing index fields (anonymization)
+                    IndexOptions<IDEEvent>
+                        .SetUnique(true)
+                        .SetSparse(true));
+            }
         }
 
         private static MongoCollection<T> GetCollection<T>(MongoDatabase database)
