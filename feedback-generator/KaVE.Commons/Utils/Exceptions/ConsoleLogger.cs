@@ -26,6 +26,8 @@ namespace KaVE.Commons.Utils.Exceptions
         public void Error(Exception exception, string content)
         {
             Console.Write("[ERROR] ");
+            Console.Write(System.DateTime.Now);
+            Console.Write(" - ");
             Console.WriteLine(content);
             Console.WriteLine(exception.ToString());
         }
@@ -33,18 +35,24 @@ namespace KaVE.Commons.Utils.Exceptions
         public void Error(Exception exception)
         {
             Console.Write("[ERROR] ");
+            Console.Write(System.DateTime.Now);
+            Console.Write(" - ");
             Console.WriteLine(exception.ToString());
         }
 
         public void Error(string content)
         {
             Console.Write("[ERROR] ");
+            Console.Write(System.DateTime.Now);
+            Console.Write(" - ");
             Console.WriteLine(content);
         }
 
         public void Info(string info)
         {
             Console.Write("[INFO] ");
+            Console.Write(System.DateTime.Now);
+            Console.Write(" - ");
             Console.WriteLine(info);
         }
     }
