@@ -43,6 +43,11 @@ namespace KaVE.Commons.Model.ObjectUsage
                    Equals(field, oth.field);
         }
 
+        public override string ToString()
+        {
+            return this.ToStringReflection();
+        }
+
         public override int GetHashCode()
         {
             var hashCode = 397;

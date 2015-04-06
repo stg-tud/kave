@@ -15,8 +15,11 @@
  * 
  * Contributors:
  *    - Uli Fahrer
+ *    - Roman Fojtik
  */
 
+using KaVE.Commons.Model.Names;
+using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.ObjectUsage;
 using KaVE.Commons.Utils.Assertion;
 using NUnit.Framework;
@@ -27,9 +30,15 @@ namespace KaVE.Commons.Tests.Model.ObjectUsage
     internal class CallSitesTest
     {
         [Test, ExpectedException(typeof (AssertException))]
+        public void NullStringReceiverCallSite()
+        {
+            CallSites.CreateReceiverCallSite((string) null);
+        }
+
+        [Test, ExpectedException(typeof(AssertException))]
         public void NullValueReceiverCallSite()
         {
-            CallSites.CreateReceiverCallSite(null);
+            CallSites.CreateReceiverCallSite((IMethodName)null);
         }
 
         [Test, ExpectedException(typeof (AssertException))]
@@ -39,13 +48,26 @@ namespace KaVE.Commons.Tests.Model.ObjectUsage
         }
 
         [Test]
-        public void ReceiverCallSiteIsCorrectInitialized()
+        public void ReceiverCallSiteForStringIsCorrectInitialized()
         {
             var actual = CallSites.CreateReceiverCallSite("LType.method(LArgument;)LReturn;");
             var expected = new CallSite
             {
                 kind = CallSiteKind.RECEIVER,
                 method = new CoReMethodName("LType.method(LArgument;)LReturn;")
+            };
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void ReceiverCallSiteForMethodNameIsCorrectInitialized()
+        {
+            var actual = CallSites.CreateReceiverCallSite(MethodName.Get("[LReturn,LAssembly] [LType,LAssembly].Method([LArgument,LAssembly] paramName)"));
+            var expected = new CallSite
+            {
+                kind = CallSiteKind.RECEIVER,
+                method = MethodName.Get("[LReturn,LAssembly] [LType,LAssembly].Method([LArgument,LAssembly] paramName)").ToCoReName()
             };
 
             Assert.AreEqual(expected, actual);

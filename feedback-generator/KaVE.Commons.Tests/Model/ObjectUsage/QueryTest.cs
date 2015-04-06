@@ -16,9 +16,12 @@
  * Contributors:
  *    - Dennis Albrecht
  *    - Uli Fahrer
+ *    - Roman Fojtik
  */
 
+using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.ObjectUsage;
+using KaVE.Commons.Utils.Collections;
 using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Model.ObjectUsage
@@ -52,6 +55,46 @@ namespace KaVE.Commons.Tests.Model.ObjectUsage
             actual.sites.Add(CallSites.CreateParameterCallSite("LType.method(LArgument;)LReturn;", 0));
 
             Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void TypeNotNullButDefault()
+        {
+            var query = new Query();
+            Assert.NotNull(query.type);
+            Assert.AreEqual(TypeName.UnknownName.ToCoReName(), query.type);
+        }
+
+        [Test]
+        public void ClassCtxNotNullButDefault()
+        {
+            var query = new Query();
+            Assert.NotNull(query.classCtx);
+            Assert.AreEqual( TypeName.UnknownName.ToCoReName(),query.classCtx);
+        }
+
+        [Test]
+        public void MethodCtxNotNullButDefault()
+        {
+            var query = new Query();
+            Assert.NotNull(query.methodCtx);
+            Assert.AreEqual( MethodName.UnknownName.ToCoReName(),query.methodCtx);
+        }
+
+        [Test]
+        public void DefinitionNotNullButDefault()
+        {
+            var query = new Query();
+            Assert.NotNull(query.definition);
+            Assert.AreEqual( DefinitionSites.CreateUnknownDefinitionSite(),query.definition);
+        }
+
+        [Test]
+        public void SitesNotNullButDefault()
+        {
+            var query = new Query();
+            Assert.NotNull(query.sites);
+            Assert.AreEqual(Lists.NewList<CallSite>(), query.sites);
         }
     }
 }

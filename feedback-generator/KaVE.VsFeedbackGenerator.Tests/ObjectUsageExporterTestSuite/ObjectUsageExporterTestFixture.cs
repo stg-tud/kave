@@ -14,21 +14,18 @@
  * limitations under the License.
  * 
  * Contributors:
- *    - Dennis Albrecht
+ *    - Roman Fojtik
  */
-namespace KaVE.Commons.Model.ObjectUsage
-{
-    // ReSharper disable InconsistentNaming
 
-    public enum DefinitionSiteKind
+using KaVE.Commons.Model.Names;
+using KaVE.Commons.Model.Names.CSharp;
+
+namespace KaVE.VsFeedbackGenerator.Tests.ObjectUsageExporterTestSuite
+{
+    internal class ObjectUsageExporterTestFixture
     {
-        THIS,
-        RETURN,
-        NEW,
-        PARAM,
-        FIELD,
-        CONSTANT,
-        UNKNOWN,
-        PROPERTY // TODO: add to Java part as well
+        public static ITypeName Void = TypeName.Get("System.Void, mscorlib, 4.0.0.0");
+        public static ITypeName IntType = TypeName.Get("System.Int32, mscore, 4.0.0.0");
+        public static IParameterName IntParam = ParameterName.Get("[" + IntType + "] paramName");
     }
 }

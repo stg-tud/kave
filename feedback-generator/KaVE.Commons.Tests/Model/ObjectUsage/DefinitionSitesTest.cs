@@ -15,8 +15,10 @@
  * 
  * Contributors:
  *    - Uli Fahrer
+ *    - Roman Fojtik
  */
 
+using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.ObjectUsage;
 using NUnit.Framework;
 
@@ -39,6 +41,20 @@ namespace KaVE.Commons.Tests.Model.ObjectUsage
         }
 
         [Test]
+        public void MethodReturnByMethodNameDefinitionIsCorrectInitialized()
+        {
+            var methodName = MethodName.Get("[RType,P1] [Decl,P1].MethodName()");
+            var actual = DefinitionSites.CreateDefinitionByReturn(methodName);
+            var expected = new DefinitionSite
+            {
+                kind = DefinitionSiteKind.RETURN,
+                method = methodName.ToCoReName()
+            };
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
         public void FieldDefinitionIsCorrectInitialized()
         {
             var actual = DefinitionSites.CreateDefinitionByField("LType.object;LType");
@@ -50,6 +66,21 @@ namespace KaVE.Commons.Tests.Model.ObjectUsage
 
             Assert.AreEqual(expected, actual);
         }
+
+        [Test]
+        public void FieldDefinitionByFieldNameIsCorrectInitialized()
+        {
+            var fieldName = FieldName.Get("[VType,P1] [Decl,P1]._fieldName");
+            var actual = DefinitionSites.CreateDefinitionByField(fieldName);
+            var expected = new DefinitionSite
+            {
+                kind = DefinitionSiteKind.FIELD,
+                field = fieldName.ToCoReName()
+            };
+
+            Assert.AreEqual(expected, actual);
+        }
+
 
         [Test]
         public void InitDefinitionIsCorrectInitialized()
@@ -65,6 +96,20 @@ namespace KaVE.Commons.Tests.Model.ObjectUsage
         }
 
         [Test]
+        public void InitDefinitionByMethodNameIsCorrectInitialized()
+        {
+            var methodName = MethodName.Get("[RType,P1] [Decl,P1]..ctor()");
+            var actual = DefinitionSites.CreateDefinitionByConstructor(methodName);
+            var expected = new DefinitionSite
+            {
+                kind = DefinitionSiteKind.NEW,
+                method = methodName.ToCoReName()
+            };
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
         public void ParameterDefinitionIsCorrectInitialized()
         {
             var actual = DefinitionSites.CreateDefinitionByParam("LType.M(LOtherType;)LType;", 0);
@@ -72,6 +117,21 @@ namespace KaVE.Commons.Tests.Model.ObjectUsage
             {
                 kind = DefinitionSiteKind.PARAM,
                 method = new CoReMethodName("LType.M(LOtherType;)LType;"),
+                argIndex = 0
+            };
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void ParameterDefinitionByMethodNameIsCorrectInitialized()
+        {
+            var methodName = MethodName.Get("[RType,P1] [Decl,P1].method([PType, Pq1] length)");
+            var actual = DefinitionSites.CreateDefinitionByParam(methodName, 0);
+            var expected = new DefinitionSite
+            {
+                kind = DefinitionSiteKind.PARAM,
+                method = methodName.ToCoReName(),
                 argIndex = 0
             };
 

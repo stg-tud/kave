@@ -17,6 +17,7 @@
  *    - Uli Fahrer
  */
 
+using KaVE.Commons.Model.Names;
 using KaVE.Commons.Utils.Assertion;
 
 namespace KaVE.Commons.Model.ObjectUsage
@@ -34,6 +35,12 @@ namespace KaVE.Commons.Model.ObjectUsage
             };
 
             return callSite;
+        }
+
+        public static CallSite CreateReceiverCallSite(IMethodName methodName)
+        {
+            Asserts.NotNull(methodName);
+            return CreateReceiverCallSite(methodName.ToCoReName().Name);
         }
 
         public static CallSite CreateParameterCallSite(string methodName, int argIndex)

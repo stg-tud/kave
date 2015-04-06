@@ -20,6 +20,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Utils.Collections;
 using KaVE.JetBrains.Annotations;
 using KaVE.Commons.Utils;
@@ -29,16 +30,6 @@ namespace KaVE.Commons.Model.ObjectUsage
     // ReSharper disable InconsistentNaming
     public class Query
     {
-        public Query()
-        {
-            sites = Lists.NewList<CallSite>();
-        }
-
-        public Query(IEnumerable<CallSite> callSites)
-        {
-            sites = Lists.NewList(callSites.ToArray());
-        }
-
         [NotNull]
         public CoReTypeName type { get; set; }
 
@@ -53,6 +44,21 @@ namespace KaVE.Commons.Model.ObjectUsage
 
         [NotNull]
         public IList<CallSite> sites { get; private set; }
+
+        public Query()
+            : this(Lists.NewList<CallSite>())
+        {
+        }
+
+        public Query(IEnumerable<CallSite> callSites)
+        {
+            type = TypeName.UnknownName.ToCoReName();
+            methodCtx = MethodName.UnknownName.ToCoReName();
+            classCtx = TypeName.UnknownName.ToCoReName();
+            definition = DefinitionSites.CreateUnknownDefinitionSite();
+            sites = Lists.NewList(callSites.ToArray());
+
+        }
 
         public override bool Equals(object obj)
         {
@@ -74,6 +80,11 @@ namespace KaVE.Commons.Model.ObjectUsage
             hashCode = (hashCode*397) ^ methodCtx.GetHashCode();
             hashCode = (hashCode*397) ^ sites.GetHashCode();
             return hashCode;
+        }
+
+        public override string ToString()
+        {
+            return this.ToStringReflection();
         }
     }
 }

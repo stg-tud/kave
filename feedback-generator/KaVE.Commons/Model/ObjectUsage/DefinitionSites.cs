@@ -15,7 +15,10 @@
  * 
  * Contributors:
  *    - Uli Fahrer
+ *    - Roman Fojtik
  */
+
+using KaVE.Commons.Model.Names;
 
 namespace KaVE.Commons.Model.ObjectUsage
 {
@@ -32,12 +35,34 @@ namespace KaVE.Commons.Model.ObjectUsage
             return definitionSite;
         }
 
+        public static DefinitionSite CreateDefinitionByReturn(IMethodName methodName)
+        {
+            var definitionSite = new DefinitionSite
+            {
+                kind = DefinitionSiteKind.RETURN,
+                method = methodName.ToCoReName()
+            };
+
+            return definitionSite;
+        }
+
         public static DefinitionSite CreateDefinitionByField(string field)
         {
             var definitionSite = new DefinitionSite
             {
                 kind = DefinitionSiteKind.FIELD,
                 field = new CoReFieldName(field)
+            };
+
+            return definitionSite;
+        }
+
+        public static DefinitionSite CreateDefinitionByField(IFieldName field)
+        {
+            var definitionSite = new DefinitionSite
+            {
+                kind = DefinitionSiteKind.FIELD,
+                field = field.ToCoReName()
             };
 
             return definitionSite;
@@ -54,12 +79,30 @@ namespace KaVE.Commons.Model.ObjectUsage
             return definitionSite;
         }
 
+        public static DefinitionSite CreateDefinitionByConstructor(IMethodName constructor)
+        {
+            // TODO refactor others
+            return CreateDefinitionByConstructor(constructor.ToCoReName().Name);
+        }
+
         public static DefinitionSite CreateDefinitionByParam(string methodName, int argIndex)
         {
             var definitionSite = new DefinitionSite
             {
                 kind = DefinitionSiteKind.PARAM,
                 method = new CoReMethodName(methodName),
+                argIndex = argIndex
+            };
+
+            return definitionSite;
+        }
+
+        public static DefinitionSite CreateDefinitionByParam(IMethodName methodName, int argIndex)
+        {
+            var definitionSite = new DefinitionSite
+            {
+                kind = DefinitionSiteKind.PARAM,
+                method = methodName.ToCoReName(),
                 argIndex = argIndex
             };
 
