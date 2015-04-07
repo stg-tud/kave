@@ -56,7 +56,8 @@ namespace KaVE.Commons.Utils.SSTPrinter
 
         public void Visit(IEventDeclaration stmt, StringBuilder context)
         {
-            throw new NotImplementedException();
+            // TODO: HandlerType with generics?
+            context.AppendFormat("event {0} {1};", stmt.Name.HandlerType.Name, stmt.Name.Name);
         }
 
         public void Visit(IFieldDeclaration stmt, StringBuilder context)

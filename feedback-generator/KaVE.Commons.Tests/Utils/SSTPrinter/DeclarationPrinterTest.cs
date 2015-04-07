@@ -52,6 +52,20 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter
         }
 
         [Test]
+        public void EventDeclaration()
+        {
+            var sst = new EventDeclaration { Name = EventName.Get("[EventHandlerType,TestProject] [DeclaringType,TestProject].DummyEvent") };
+            const string expected = "event EventHandlerType DummyEvent;";
+
+            var visitor = new SSTPrintingVisitor();
+            var context = new StringBuilder();
+
+            sst.Accept(visitor, context);
+
+            Assert.AreEqual(expected, context.ToString());
+        }
+
+        [Test]
         public void FieldDeclaration()
         {
             var sst = new FieldDeclaration() { Name = FieldName.Get("[FieldType,TestProject] [DeclaringType,TestProject].DummyField") };
