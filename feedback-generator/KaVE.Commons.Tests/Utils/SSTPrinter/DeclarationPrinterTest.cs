@@ -64,5 +64,19 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter
 
             Assert.AreEqual(expected, context.ToString());
         }
+
+        [Test]
+        public void EmptyPropertyDeclaration()
+        {
+            var sst = new PropertyDeclaration() { Name = PropertyName.Get("[PropertyType,TestProject] [DeclaringType,TestProject].DummyProperty") };
+            const string expected = "PropertyType DummyProperty {};";
+
+            var visitor = new SSTPrintingVisitor();
+            var context = new StringBuilder();
+
+            sst.Accept(visitor, context);
+
+            Assert.AreEqual(expected, context.ToString());
+        }
     }
 }

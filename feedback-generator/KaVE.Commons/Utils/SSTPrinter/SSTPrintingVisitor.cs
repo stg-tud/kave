@@ -72,7 +72,8 @@ namespace KaVE.Commons.Utils.SSTPrinter
 
         public void Visit(IPropertyDeclaration stmt, StringBuilder context)
         {
-            throw new NotImplementedException();
+            // TODO: Support getters/setters; visit getter/setter bodies
+            context.AppendFormat("{0} {1} {{}};", stmt.Name.ValueType.Name, stmt.Name.Name);
         }
 
         public void Visit(IVariableDeclaration stmt, StringBuilder context)
