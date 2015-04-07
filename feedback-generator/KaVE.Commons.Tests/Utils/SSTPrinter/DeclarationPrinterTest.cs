@@ -50,5 +50,19 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter
 
             Assert.AreEqual(expected, context.ToString());
         }
+
+        [Test]
+        public void FieldDeclaration()
+        {
+            var sst = new FieldDeclaration() { Name = FieldName.Get("[FieldType,TestProject] [DeclaringType,TestProject].DummyField") };
+            const string expected = "FieldType DummyField;";
+
+            var visitor = new SSTPrintingVisitor();
+            var context = new StringBuilder();
+
+            sst.Accept(visitor, context);
+
+            Assert.AreEqual(expected, context.ToString());
+        }
     }
 }

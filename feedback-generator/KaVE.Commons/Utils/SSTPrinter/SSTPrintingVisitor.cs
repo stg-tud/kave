@@ -61,7 +61,8 @@ namespace KaVE.Commons.Utils.SSTPrinter
 
         public void Visit(IFieldDeclaration stmt, StringBuilder context)
         {
-            throw new NotImplementedException();
+            // CHECK: static? print other options on .Name.ValueType?
+            context.AppendFormat("{0} {1};", stmt.Name.ValueType.Name, stmt.Name.Name);
         }
 
         public void Visit(IMethodDeclaration stmt, StringBuilder context)
