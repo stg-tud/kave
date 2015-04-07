@@ -36,7 +36,17 @@ namespace KaVE.Commons.Utils.SSTPrinter
     {
         public void Visit(ISST sst, StringBuilder context)
         {
-            context.AppendFormat("class {0} {{}}", sst.EnclosingType.Name);
+            context.AppendFormat("class {0}", sst.EnclosingType.Name).AppendLine()
+                .AppendLine("{");
+
+            // TODO: visit delegates
+            // TODO: visit events
+            // TODO: visit fields
+            // TODO: visit properties
+            // TODO: visit methods
+            // TODO: visit entrypoints/nonentrypoints?
+
+            context.Append("}");
         }
 
         public void Visit(IDelegateDeclaration stmt, StringBuilder context)

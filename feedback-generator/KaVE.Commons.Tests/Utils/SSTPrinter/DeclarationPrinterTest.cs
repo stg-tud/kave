@@ -30,11 +30,19 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter
     [TestFixture]
     class DeclarationPrinterTest
     {
-        [Test]
-        public void ClassDeclaration()
+        private string BuildExpectedResult(params string[] lines)
         {
-            var sst = new SST {EnclosingType = TypeName.Get("TestClass, TestProjest")};
-            var expected = "class TestClass {}";
+            return String.Join(Environment.NewLine, lines);
+        }
+
+        [Test]
+        public void EmptyClassDeclaration()
+        {
+            var sst = new SST {EnclosingType = TypeName.Get("TestClass, TestProject")};
+            var expected = BuildExpectedResult(
+                "class TestClass",
+                "{",
+                "}");
             var visitor = new SSTPrintingVisitor();
             var context = new StringBuilder();
 
