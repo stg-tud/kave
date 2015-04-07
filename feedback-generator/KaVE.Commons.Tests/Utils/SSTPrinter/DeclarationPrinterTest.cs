@@ -22,20 +22,20 @@ using System.Linq;
 using System.Text;
 using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.SSTs.Impl;
-using KaVE.Commons.Utils.SSTSerialization;
+using KaVE.Commons.Utils.SSTPrinter;
 using NUnit.Framework;
 
-namespace KaVE.Commons.Tests.Utils.SSTSerialization
+namespace KaVE.Commons.Tests.Utils.SSTPrinter
 {
     [TestFixture]
-    class DeclarationSerializationTest
+    class DeclarationPrinterTest
     {
         [Test]
         public void ClassDeclaration()
         {
             var sst = new SST {EnclosingType = TypeName.Get("TestClass, TestProjest")};
             var expected = "class TestClass {}";
-            var visitor = new SSTSerializer();
+            var visitor = new SSTPrintingVisitor();
             var context = new StringBuilder();
 
             sst.Accept(visitor, context);

@@ -30,9 +30,9 @@ using KaVE.Commons.Model.SSTs.References;
 using KaVE.Commons.Model.SSTs.Statements;
 using KaVE.Commons.Model.SSTs.Visitor;
 
-namespace KaVE.Commons.Utils.SSTSerialization
+namespace KaVE.Commons.Utils.SSTPrinter
 {
-    public class SSTSerializer : ISSTNodeVisitor<StringBuilder>
+    public class SSTPrintingVisitor : ISSTNodeVisitor<StringBuilder>
     {
         public void Visit(ISST sst, StringBuilder context)
         {
