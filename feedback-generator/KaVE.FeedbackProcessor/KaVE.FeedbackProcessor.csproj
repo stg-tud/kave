@@ -63,6 +63,7 @@
     <Compile Include="FeedbackImporter.cs" />
     <Compile Include="FileLoader.cs" />
     <Compile Include="KaVECollectionSerializer.cs" />
+    <Compile Include="DateTimeTicksSerializer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
