@@ -149,19 +149,5 @@ namespace KaVE.Commons.Model.Events
                 return hashCode;
             }
         }
-
-        public override string ToString()
-        {
-            return
-                string.Format(
-                    "IDESessionUUID: {0}, TriggeredAt: {1}, TriggeredBy: {2}, TerminatedAt: {3}, Duration: {4}, ActiveWindow: {5}, ActiveDocument: {6}",
-                    IDESessionUUID,
-                    TriggeredAt,
-                    TriggeredBy,
-                    TerminatedAt,
-                    Duration,
-                    ActiveWindow,
-                    ActiveDocument);
-        }
     }
 }

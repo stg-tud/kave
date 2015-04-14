@@ -12,10 +12,16 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sven Amann
  */
+
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
 using KaVE.Commons.Model.Names.VisualStudio;
+using KaVE.Commons.Utils;
 
 namespace KaVE.Commons.Model.Events.VisualStudio
 {
@@ -25,19 +31,25 @@ namespace KaVE.Commons.Model.Events.VisualStudio
         public enum LifecyclePhase
         {
             /// <summary>
-            /// State snapshot is taken immediately after startup, i.e., before first user interactions.
+            ///     State snapshot is taken immediately after startup, i.e., before first user interactions.
             /// </summary>
             Startup,
 
             /// <summary>
-            /// State snapshot is taken before shutdown, i.e., after the last user interaction.
+            ///     State snapshot is taken before shutdown, i.e., after the last user interaction.
             /// </summary>
             Shutdown,
 
             /// <summary>
-            /// State snapshot is taken somewhen during runtime.
+            ///     State snapshot is taken somewhen during runtime.
             /// </summary>
             Runtime
+        }
+
+        public IDEStateEvent()
+        {
+            OpenWindows = new List<WindowName>();
+            OpenDocuments = new List<DocumentName>();
         }
 
         [DataMember]
@@ -48,5 +60,28 @@ namespace KaVE.Commons.Model.Events.VisualStudio
 
         [DataMember]
         public IList<DocumentName> OpenDocuments { get; set; }
+
+        protected bool Equals(IDEStateEvent other)
+        {
+            return base.Equals(other) && IDELifecyclePhase == other.IDELifecyclePhase &&
+                   OpenWindows.SequenceEqual(other.OpenWindows) && OpenDocuments.SequenceEqual(other.OpenDocuments);
+        }
+
+        public override bool Equals(object obj)
+        {
+            return this.Equals(obj, Equals);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                var hashCode = base.GetHashCode();
+                hashCode = (hashCode*397) ^ (int) IDELifecyclePhase;
+                hashCode = (hashCode*397) ^ (OpenWindows != null ? HashCodeUtils.For(397, OpenWindows) : 0);
+                hashCode = (hashCode*397) ^ (OpenDocuments != null ? HashCodeUtils.For(397, OpenDocuments) : 0);
+                return hashCode;
+            }
+        }
     }
 }

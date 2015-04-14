@@ -65,14 +65,5 @@ namespace KaVE.Commons.Model.Events
                 return hashCode;
             }
         }
-
-        public override string ToString()
-        {
-            return string.Format(
-                "{0}, Content: {1}, StackTrace: [{2}]",
-                base.ToString(),
-                Content,
-                string.Join("\n", StackTrace));
-        }
     }
 }

@@ -61,10 +61,5 @@ namespace KaVE.Commons.Model.Events.VisualStudio
                 return hashCode;
             }
         }
-
-        public override string ToString()
-        {
-            return string.Format("{0}, Window: {1}, Action: {2}", base.ToString(), Window, Action);
-        }
     }
 }

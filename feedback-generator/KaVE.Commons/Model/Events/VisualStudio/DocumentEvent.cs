@@ -12,9 +12,14 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sven Amann
  */
+
 using System.Runtime.Serialization;
 using KaVE.Commons.Model.Names.VisualStudio;
+using KaVE.Commons.Utils;
 
 namespace KaVE.Commons.Model.Events.VisualStudio
 {
@@ -33,5 +38,26 @@ namespace KaVE.Commons.Model.Events.VisualStudio
 
         [DataMember]
         public DocumentAction Action { get; set; }
+
+        protected bool Equals(DocumentEvent other)
+        {
+            return base.Equals(other) && Equals(Document, other.Document) && Action == other.Action;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return this.Equals(obj, Equals);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                var hashCode = base.GetHashCode();
+                hashCode = (hashCode*397) ^ (Document != null ? Document.GetHashCode() : 0);
+                hashCode = (hashCode*397) ^ (int) Action;
+                return hashCode;
+            }
+        }
     }
 }

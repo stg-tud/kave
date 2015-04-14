@@ -18,6 +18,7 @@
  */
 
 using System.Runtime.Serialization;
+using KaVE.Commons.Utils;
 
 namespace KaVE.Commons.Model.Events.VisualStudio
 {
@@ -29,5 +30,27 @@ namespace KaVE.Commons.Model.Events.VisualStudio
 
         [DataMember]
         public string NewPluginVersion { get; set; }
+
+        protected bool Equals(UpdateEvent other)
+        {
+            return base.Equals(other) && string.Equals(OldPluginVersion, other.OldPluginVersion) &&
+                   string.Equals(NewPluginVersion, other.NewPluginVersion);
+        }
+
+        public override bool Equals(object obj)
+        {
+            return this.Equals(obj, Equals);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                var hashCode = base.GetHashCode();
+                hashCode = (hashCode*397) ^ (OldPluginVersion != null ? OldPluginVersion.GetHashCode() : 0);
+                hashCode = (hashCode*397) ^ (NewPluginVersion != null ? NewPluginVersion.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
     }
 }

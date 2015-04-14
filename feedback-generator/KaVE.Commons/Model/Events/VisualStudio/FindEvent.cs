@@ -12,8 +12,13 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sven Amann
  */
+
 using System.Runtime.Serialization;
+using KaVE.Commons.Utils;
 
 namespace KaVE.Commons.Model.Events.VisualStudio
 {
@@ -22,5 +27,23 @@ namespace KaVE.Commons.Model.Events.VisualStudio
     {
         [DataMember]
         public bool Cancelled { get; set; }
+
+        protected bool Equals(FindEvent other)
+        {
+            return base.Equals(other) && Cancelled.Equals(other.Cancelled);
+        }
+
+        public override bool Equals(object obj)
+        {
+            return this.Equals(obj, Equals);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return (base.GetHashCode()*397) ^ Cancelled.GetHashCode();
+            }
+        }
     }
 }
