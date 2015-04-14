@@ -23,10 +23,11 @@ using System.Linq;
 using System.Runtime.Serialization;
 using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Collections;
+using Newtonsoft.Json;
 
 namespace KaVE.Commons.Model.Events.CompletionEvents
 {
-    [DataContract]
+    [DataContract, JsonObject]
     public class ProposalCollection : IProposalCollection
     {
         [DataMember]

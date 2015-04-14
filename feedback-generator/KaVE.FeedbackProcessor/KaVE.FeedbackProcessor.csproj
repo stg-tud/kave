@@ -31,7 +31,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>KaVE.FeedbackProcessor.FeedbackCleaner</StartupObject>
+    <StartupObject>KaVE.FeedbackProcessor.FeedbackImporter</StartupObject>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Ionic.Zip.Reduced">
