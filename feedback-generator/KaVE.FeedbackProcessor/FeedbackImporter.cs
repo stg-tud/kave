@@ -130,11 +130,12 @@ namespace KaVE.FeedbackProcessor
 
         private static bool IsDuplicate(MongoCollection eventsCollection, IDEEvent evt)
         {
-            return eventsCollection.Count(
+            var candidates = eventsCollection.FindAs<IDEEvent>(
                 Query.And(
                     Query<IDEEvent>.EQ(e => e.IDESessionUUID, evt.IDESessionUUID),
                     Query<IDEEvent>.EQ(e => e.TriggeredAt, evt.TriggeredAt),
-                    Query.EQ("_t", evt.GetType().Name))) > 0;
+                    Query.EQ("_t", evt.GetType().Name)));
+            return candidates.Any(evt.Equals);
         }
 
         private static Developer FindOrCreateCurrentDeveloper(string ideSessionUUID,

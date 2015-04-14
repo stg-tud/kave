@@ -73,9 +73,7 @@ namespace KaVE.FeedbackProcessor
             {
                 eventsCollection.CreateIndex(
                     evtIndex,
-                    // the index is unique, but there can be multiple instance with missing index fields (anonymization)
-                    IndexOptions<IDEEvent>.SetUnique(true)
-                        .SetSparse(true));
+                    IndexOptions<IDEEvent>.SetUnique(false).SetSparse(true));
             }
         }
 
