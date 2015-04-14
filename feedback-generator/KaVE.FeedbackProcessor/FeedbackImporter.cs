@@ -74,6 +74,7 @@ namespace KaVE.FeedbackProcessor
             foreach (
                 var archive in
                     Directory.GetFiles(Configuration.ImportDirectory, "*.zip")
+                             .OrderBy(NumericalFilename)
                              .Select(ZipFile.Read))
             {
                 Logger.Info(archive.Name);
@@ -118,6 +119,13 @@ namespace KaVE.FeedbackProcessor
                 totalNumberOfDuplicatedEvents += numberOfDuplicatedEvents;
             }
             Logger.Info(string.Format("Inserted {0} events, filtered {1} duplicates.", totalNumberOfUniqueEvents, totalNumberOfDuplicatedEvents));
+        }
+
+        private static int NumericalFilename(string filename)
+        {
+            // ReSharper disable once AssignNullToNotNullAttribute
+            // If there is an archive without a filename, I don't know what to do...
+            return int.Parse(Path.GetFileNameWithoutExtension(filename));
         }
 
         private static bool IsDuplicate(MongoCollection eventsCollection, IDEEvent evt)
