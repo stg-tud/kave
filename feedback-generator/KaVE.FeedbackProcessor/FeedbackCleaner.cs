@@ -17,15 +17,47 @@
  *    - Sven Amann
  */
 
+using System.Collections.Generic;
+using KaVE.Commons.Model.Events;
+using MongoDB.Driver.Builders;
+
 namespace KaVE.FeedbackProcessor
 {
     internal class FeedbackCleaner
     {
+        private readonly FeedbackDatabase _database;
+
         private static void Main()
         {
             var database = new FeedbackDatabase(Configuration.DatabaseUrl, Configuration.DatabaseName);
-            var developerCollection = database.GetDeveloperCollection();
-            developerCollection.FindAll();
+            var cleaner = new FeedbackCleaner(database);
+            cleaner.IterateEventsPerDeveloper();
+        }
+
+        private FeedbackCleaner(FeedbackDatabase database)
+        {
+            _database = database;
+        }
+
+        private void IterateEventsPerDeveloper()
+        {
+            var developers = _database.GetDeveloperCollection();
+
+            foreach (var developer in developers.FindAll())
+            {
+                foreach (var ideEvent in GetAllEventsOf(developer))
+                {
+                    // do something with the events
+                }
+            }
+        }
+
+        private IEnumerable<IDEEvent> GetAllEventsOf(Developer developer)
+        {
+            var events = _database.GetEventsCollection();
+            return
+                events.Find(Query<IDEEvent>.In(evt => evt.IDESessionUUID, developer.SessionIds))
+                      .SetSortOrder(SortBy<IDEEvent>.Ascending(evt => evt.TriggeredAt));
         }
     }
 }
