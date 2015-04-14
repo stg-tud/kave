@@ -24,7 +24,6 @@ using System.Linq;
 using Ionic.Zip;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Utils.Exceptions;
-using KaVE.Commons.Utils.Reflection;
 using MongoDB.Driver;
 using MongoDB.Driver.Builders;
 
@@ -32,18 +31,13 @@ namespace KaVE.FeedbackProcessor
 {
     internal class FeedbackImporter
     {
-        private const string ImportDirectory = @"C:\Users\Sven\Documents\KaVE\Feedback\kave.st";
-
-        private const string DatabaseUrl = "mongodb://localhost";
-        private const string DatabaseName = "local";
-
         private static readonly ILogger Logger = new ConsoleLogger();
 
         private static void Main()
         {
-            var database = GetDatabase();
-            var eventsCollection = GetEventsCollection(database);
-            var developerCollection = GetCollection<Developer>(database);
+            var database = new FeedbackDatabase(Configuration.DatabaseUrl, Configuration.DatabaseName);
+            var eventsCollection = database.GetEventsCollection();
+            var developerCollection = database.GetDeveloperCollection();
 
             Import(developerCollection, eventsCollection);
             LogDeveloperStatistics(developerCollection);
@@ -51,7 +45,7 @@ namespace KaVE.FeedbackProcessor
 
         private static void LogDeveloperStatistics(MongoCollection<Developer> developerCollection)
         {
-            var devs = developerCollection.FindAllAs<Developer>();
+            var devs = developerCollection.FindAll();
             var sessIds = new HashSet<string>();
             var dupSessIds = new HashSet<string>();
             foreach (var sessionId in devs.SelectMany(developer => developer.SessionIds))
@@ -79,7 +73,7 @@ namespace KaVE.FeedbackProcessor
 
             foreach (
                 var archive in
-                    Directory.GetFiles(ImportDirectory, "*.zip")
+                    Directory.GetFiles(Configuration.ImportDirectory, "*.zip")
                              .Select(ZipFile.Read))
             {
                 Logger.Info(archive.Name);
@@ -166,47 +160,6 @@ namespace KaVE.FeedbackProcessor
                     candidates.ForEach(d => Logger.Error("   - Developer: " + d.Id));
                     throw new Exception("More than one developer with the same session id encountered");
             }
-        }
-
-        private static MongoDatabase GetDatabase()
-        {
-            var client = new MongoClient(DatabaseUrl);
-            var server = client.GetServer();
-            return server.GetDatabase(DatabaseName);
-        }
-
-        private static MongoCollection<IDEEvent> GetEventsCollection(MongoDatabase database)
-        {
-            var eventsCollection = GetCollection<IDEEvent>(database);
-            EnsureEventIndex(eventsCollection);
-            return eventsCollection;
-        }
-
-        private static void EnsureEventIndex(MongoCollection<IDEEvent> eventsCollection)
-        {
-            var evtIndex = IndexKeys
-                .Ascending(TypeExtensions<IDEEvent>.GetPropertyName(evt => evt.IDESessionUUID))
-                .Ascending(TypeExtensions<IDEEvent>.GetPropertyName(evt => evt.TriggeredAt))
-                .Ascending("_t");
-            if (!eventsCollection.IndexExists(evtIndex))
-            {
-                eventsCollection.CreateIndex(
-                    evtIndex,
-                    // the index is unique, but there can be multiple instance with missing index fields (anonymization)
-                    IndexOptions<IDEEvent>
-                        .SetUnique(true)
-                        .SetSparse(true));
-            }
-        }
-
-        private static MongoCollection<T> GetCollection<T>(MongoDatabase database)
-        {
-            var collectionName = typeof (T).Name;
-            if (!database.CollectionExists(collectionName))
-            {
-                database.CreateCollection(collectionName);
-            }
-            return database.GetCollection<T>(collectionName);
         }
     }
 }

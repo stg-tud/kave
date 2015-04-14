@@ -31,7 +31,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>KaVE.FeedbackProcessor.FeedbackImporter</StartupObject>
+    <StartupObject>KaVE.FeedbackProcessor.FeedbackCleaner</StartupObject>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Ionic.Zip.Reduced">
@@ -52,7 +52,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Configuration.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Configuration.resx</DependentUpon>
+    </Compile>
+    <Compile Include="FeedbackDatabase.cs" />
     <Compile Include="Developer.cs" />
+    <Compile Include="FeedbackCleaner.cs" />
     <Compile Include="FeedbackImporter.cs" />
     <Compile Include="FileLoader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -68,6 +75,12 @@
       <Project>{17FC7725-AC2E-47E5-8F24-D2107171A854}</Project>
       <Name>KaVE.Commons</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Configuration.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Configuration.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
