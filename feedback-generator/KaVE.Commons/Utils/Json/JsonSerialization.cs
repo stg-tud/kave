@@ -124,7 +124,8 @@ namespace KaVE.Commons.Utils.Json
             {
                 json = json.Replace("KaVE.Model.Events.CompletionEvent.", "KaVE.Model.Events.CompletionEvents.");
             }
-            json = json.Replace("KaVE.Model", "KaVE.Commons.Model");
+            json = json.Replace("KaVE.Model.", "KaVE.Commons.Model.").Replace("KaVE.Model", "KaVE.Commons");
+            settings.Converters.Add(new ProposalCollectionConverter());
             // END legacy-data handling
             return JsonConvert.DeserializeObject<T>(json, settings);
         }
