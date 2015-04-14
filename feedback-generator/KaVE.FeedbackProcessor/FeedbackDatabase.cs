@@ -21,6 +21,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using KaVE.Commons.Model.Events;
+using KaVE.Commons.Model.Events.CompletionEvents;
+using KaVE.Commons.Utils.Collections;
 using KaVE.Commons.Utils.Reflection;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.IdGenerators;
@@ -79,6 +81,9 @@ namespace KaVE.FeedbackProcessor
 
         private static void RegisterModel()
         {
+            BsonSerializer.RegisterGenericSerializerDefinition(typeof(IKaVESet<>), typeof(KaVECollectionSerializer<>));
+            BsonSerializer.RegisterGenericSerializerDefinition(typeof(IKaVEList<>), typeof(KaVECollectionSerializer<>));
+            BsonSerializer.RegisterSerializer(typeof(IProposalCollection), new KaVECollectionSerializer());
             BsonClassMap.RegisterClassMap<IDEEvent>(cm =>
             {
                 cm.AutoMap();

@@ -62,6 +62,7 @@
     <Compile Include="FeedbackCleaner.cs" />
     <Compile Include="FeedbackImporter.cs" />
     <Compile Include="FileLoader.cs" />
+    <Compile Include="KaVECollectionSerializer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
