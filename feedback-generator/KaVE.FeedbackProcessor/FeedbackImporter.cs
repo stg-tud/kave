@@ -83,8 +83,6 @@ namespace KaVE.FeedbackProcessor
                 var numberOfUniqueEvents = 0;
                 var numberOfDuplicatedEvents = 0;
                 var numberNewOfSessions = 0;
-                var foundEventOfDupId1 = false;
-                var foundEventOfDupId2 = false;
 
                 foreach (var evt in fileLoader.ReadAllEvents(archive))
                 {
@@ -97,14 +95,6 @@ namespace KaVE.FeedbackProcessor
                     var ideSessionUUID = evt.IDESessionUUID;
                     if (ideSessionUUID != null)
                     {
-                        if ((ideSessionUUID.Equals("0a02cb7c-be92-43e2-8d8c-fcddbaa1d6cb") && !foundEventOfDupId1) ||
-                            (ideSessionUUID.Equals("dc7e8b83-722d-4fd3-9c6d-86bd5ff30dff") && !foundEventOfDupId2))
-                        {
-                            foundEventOfDupId1 |= ideSessionUUID.Equals("0a02cb7c-be92-43e2-8d8c-fcddbaa1d6cb");
-                            foundEventOfDupId2 |= ideSessionUUID.Equals("dc7e8b83-722d-4fd3-9c6d-86bd5ff30dff");
-                            Logger.Error(string.Format("found event of session {0}", ideSessionUUID));
-                        }
-
                         if (currentDeveloper == null)
                         {
                             currentDeveloper = FindOrCreateCurrentDeveloper(ideSessionUUID, developerCollection);
