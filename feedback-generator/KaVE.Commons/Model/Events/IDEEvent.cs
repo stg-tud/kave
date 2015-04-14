@@ -62,6 +62,11 @@ namespace KaVE.Commons.Model.Events
         }
 
         /// <summary>
+        /// Unique id of this event, used for tracking in feedback processing.
+        /// </summary>
+        public string Id { get; set; }
+
+        /// <summary>
         ///     Reference of this IDE session. Used to identify events that
         ///     originate from the same IDE session. A session starts when the IDE
         ///     is opened and ends when the IDE is shut down.

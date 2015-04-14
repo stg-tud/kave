@@ -16,8 +16,14 @@
  * Contributors:
  *    - 
  */
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Utils.Reflection;
+using MongoDB.Bson.Serialization;
+using MongoDB.Bson.Serialization.IdGenerators;
 using MongoDB.Driver;
 using MongoDB.Driver.Builders;
 
@@ -31,6 +37,7 @@ namespace KaVE.FeedbackProcessor
             var client = new MongoClient(databaseUrl);
             var server = client.GetServer();
             _database = server.GetDatabase(databaseName);
+            RegisterModel();
         }
 
         public MongoCollection<Developer> GetDeveloperCollection()
@@ -68,6 +75,31 @@ namespace KaVE.FeedbackProcessor
                     IndexOptions<IDEEvent>.SetUnique(true)
                         .SetSparse(true));
             }
+        }
+
+        private static void RegisterModel()
+        {
+            BsonClassMap.RegisterClassMap<IDEEvent>(cm =>
+            {
+                cm.AutoMap();
+                cm.SetIdMember(cm.GetMemberMap(c => c.Id));
+                cm.IdMemberMap.SetIdGenerator(StringObjectIdGenerator.Instance);
+            });
+            foreach (var type in GetAllModelTypes())
+            {
+                BsonClassMap.LookupClassMap(type);
+            }
+        }
+
+        private static IEnumerable<Type> GetAllModelTypes()
+        {
+            return typeof(IDEEvent).Assembly.GetTypes().Where(IsModelClass);
+        }
+
+        private static bool IsModelClass(Type t)
+        {
+            return t.IsClass && !t.IsAbstract && !t.ContainsGenericParameters &&
+                   t.Namespace != null && t.Namespace.StartsWith("KaVE.Commons.Model");
         }
     }
 }
