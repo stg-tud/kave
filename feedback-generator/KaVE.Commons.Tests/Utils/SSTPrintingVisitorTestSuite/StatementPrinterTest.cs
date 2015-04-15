@@ -20,6 +20,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using KaVE.Commons.Model.Names.CSharp;
+using KaVE.Commons.Model.SSTs.Impl;
+using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Commons.Model.SSTs.Impl.Statements;
 using KaVE.Commons.Utils;
 using NUnit.Framework;
@@ -40,6 +43,48 @@ namespace KaVE.Commons.Tests.Utils.SSTPrintingVisitorTestSuite
         {
             var sst = new ContinueStatement();
             AssertPrint(sst, "continue;");
+        }
+
+        //[Test]
+        //public void Assignment()
+        //{
+        //    var sst = SSTUtil.AssignmentToLocal("var", new ConstantValueExpression());
+        //}
+
+        [Test]
+        public void GotoStatement()
+        {
+            var sst = new GotoStatement
+            {
+                Label = "L"
+            };
+
+            AssertPrint(sst, "goto L;");
+        }
+
+        [Test]
+        public void LabelledStatement()
+        {
+            var sst = new LabelledStatement
+            {
+                Label = "L",
+                Statement = new ContinueStatement()
+            };
+
+            AssertPrint(sst,
+                "L:",
+                "continue;");
+        }
+
+        [Test]
+        public void ThrowStatement()
+        {
+            var sst = new ThrowStatement
+            {
+                Exception = TypeName.Get("T,P")
+            };
+
+            AssertPrint(sst, "throw new T;");
         }
     }
 }

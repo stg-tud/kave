@@ -164,7 +164,8 @@ namespace KaVE.Commons.Utils
 
         public void Visit(IVariableDeclaration stmt, StringBuilder sb)
         {
-            throw new NotImplementedException();
+            // TODO: generics? "IsMissing"?
+            sb.AppendIndentation(_indentationLevel).AppendFormat("{0} {1};", stmt.Type.Name, stmt.Reference.Identifier);
         }
 
         public void Visit(IAssignment stmt, StringBuilder sb)
@@ -189,12 +190,13 @@ namespace KaVE.Commons.Utils
 
         public void Visit(IGotoStatement stmt, StringBuilder sb)
         {
-            throw new NotImplementedException();
+            sb.AppendIndentation(_indentationLevel).AppendFormat("goto {0};", stmt.Label);
         }
 
         public void Visit(ILabelledStatement stmt, StringBuilder sb)
         {
-            throw new NotImplementedException();
+            sb.AppendIndentation(_indentationLevel).AppendFormat("{0}:", stmt.Label).AppendLine();
+            stmt.Statement.Accept(this, sb);
         }
 
         public void Visit(IReturnStatement stmt, StringBuilder sb)
@@ -204,7 +206,8 @@ namespace KaVE.Commons.Utils
 
         public void Visit(IThrowStatement stmt, StringBuilder sb)
         {
-            throw new NotImplementedException();
+            // TODO: discuss: throw statement should also be able to throw existing objects (of type System.Exception)
+            sb.AppendIndentation(_indentationLevel).AppendFormat("throw new {0};", stmt.Exception.Name);
         }
 
         public void Visit(IDoLoop block, StringBuilder sb)

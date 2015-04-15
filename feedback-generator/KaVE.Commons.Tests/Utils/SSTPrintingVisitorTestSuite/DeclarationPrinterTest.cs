@@ -218,5 +218,13 @@ namespace KaVE.Commons.Tests.Utils.SSTPrintingVisitorTestSuite
                 "    break;",
                 "}");
         }
+
+        [Test]
+        public void VariableDeclaration()
+        {
+            var sst = SSTUtil.Declare("var", TypeName.Get("T,P"));
+
+            AssertPrint(sst, "T var;");
+        }
     }
 }
