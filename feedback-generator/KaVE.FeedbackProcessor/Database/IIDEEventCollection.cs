@@ -16,12 +16,14 @@
  * Contributors:
  *    - Sven Amann
  */
+using System.Collections.Generic;
+using KaVE.Commons.Model.Events;
 
 namespace KaVE.FeedbackProcessor.Database
 {
-    public interface IFeedbackDatabase
+    public interface IIDEEventCollection : IDatabaseCollection<IDEEvent>
     {
-        IDeveloperCollection GetDeveloperCollection();
-        IIDEEventCollection GetEventsCollection();
+        IEnumerable<IDEEvent> GetEventStream(Developer developer);
+        bool Contains(IDEEvent @event);
     }
 }

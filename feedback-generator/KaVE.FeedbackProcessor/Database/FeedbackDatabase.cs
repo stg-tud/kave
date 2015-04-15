@@ -31,12 +31,6 @@ using MongoDB.Driver.Builders;
 
 namespace KaVE.FeedbackProcessor.Database
 {
-    {
-
-        {
-        }
-    }
-
     internal class FeedbackDatabase : IFeedbackDatabase
     {
         private readonly MongoDatabase _database;
@@ -54,11 +48,11 @@ namespace KaVE.FeedbackProcessor.Database
             return new MongoDbDeveloperCollection(GetCollection<Developer>());
         }
 
-        public MongoCollection<IDEEvent> GetEventsCollection()
+        public IIDEEventCollection GetEventsCollection()
         {
             var eventsCollection = GetCollection<IDEEvent>();
             EnsureEventIndex(eventsCollection);
-            return eventsCollection;
+            return new MongoDbIDEEventCollection(eventsCollection);
         }
 
         private MongoCollection<T> GetCollection<T>()

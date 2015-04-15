@@ -22,11 +22,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Ionic.Zip;
-using KaVE.Commons.Model.Events;
 using KaVE.Commons.Utils.Exceptions;
 using KaVE.FeedbackProcessor.Database;
-using MongoDB.Driver;
-using MongoDB.Driver.Builders;
 
 namespace KaVE.FeedbackProcessor
 {
@@ -87,7 +84,7 @@ namespace KaVE.FeedbackProcessor
 
                 foreach (var evt in fileLoader.ReadAllEvents(archive))
                 {
-                    if (IsDuplicate(eventsCollection, evt))
+                    if (eventsCollection.Contains(evt))
                     {
                         numberOfDuplicatedEvents++;
                         continue;
@@ -99,11 +96,18 @@ namespace KaVE.FeedbackProcessor
                         if (currentDeveloper == null)
                         {
                             currentDeveloper = FindOrCreateCurrentDeveloper(ideSessionUUID, developerCollection);
-                            _logger.Info(string.Format(" developer {0} with {1} sessions.", currentDeveloper.Id, currentDeveloper.SessionIds.Count));
+                            _logger.Info(
+                                string.Format(
+                                    " developer {0} with {1} sessions.",
+                                    currentDeveloper.Id,
+                                    currentDeveloper.SessionIds.Count));
                         }
                         else
                         {
-                            if (!currentDeveloper.SessionIds.Contains(ideSessionUUID)) numberNewOfSessions++;
+                            if (!currentDeveloper.SessionIds.Contains(ideSessionUUID))
+                            {
+                                numberNewOfSessions++;
+                            }
                             currentDeveloper.SessionIds.Add(ideSessionUUID);
                             developerCollection.Save(currentDeveloper);
                         }
@@ -114,11 +118,19 @@ namespace KaVE.FeedbackProcessor
                 }
 
                 _logger.Info(string.Format(" Added {0} new sessions.", numberNewOfSessions));
-                _logger.Info(string.Format(" Inserted {0} events, filtered {1} duplicates.", numberOfUniqueEvents, numberOfDuplicatedEvents));
+                _logger.Info(
+                    string.Format(
+                        " Inserted {0} events, filtered {1} duplicates.",
+                        numberOfUniqueEvents,
+                        numberOfDuplicatedEvents));
                 totalNumberOfUniqueEvents += numberOfUniqueEvents;
                 totalNumberOfDuplicatedEvents += numberOfDuplicatedEvents;
             }
-            _logger.Info(string.Format("Inserted {0} events, filtered {1} duplicates.", totalNumberOfUniqueEvents, totalNumberOfDuplicatedEvents));
+            _logger.Info(
+                string.Format(
+                    "Inserted {0} events, filtered {1} duplicates.",
+                    totalNumberOfUniqueEvents,
+                    totalNumberOfDuplicatedEvents));
         }
 
         private static int NumericalFilename(string filename)
@@ -126,16 +138,6 @@ namespace KaVE.FeedbackProcessor
             // ReSharper disable once AssignNullToNotNullAttribute
             // If there is an archive without a filename, I don't know what to do...
             return int.Parse(Path.GetFileNameWithoutExtension(filename));
-        }
-
-        private static bool IsDuplicate(MongoCollection eventsCollection, IDEEvent evt)
-        {
-            var candidates = eventsCollection.FindAs<IDEEvent>(
-                Query.And(
-                    Query<IDEEvent>.EQ(e => e.IDESessionUUID, evt.IDESessionUUID),
-                    Query<IDEEvent>.EQ(e => e.TriggeredAt, evt.TriggeredAt),
-                    Query.EQ("_t", evt.GetType().Name)));
-            return candidates.Any(evt.Equals);
         }
 
         private static Developer FindOrCreateCurrentDeveloper(string ideSessionUUID,

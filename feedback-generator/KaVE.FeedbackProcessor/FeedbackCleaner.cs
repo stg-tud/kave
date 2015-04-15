@@ -20,7 +20,6 @@
 using System.Collections.Generic;
 using KaVE.Commons.Model.Events;
 using KaVE.FeedbackProcessor.Database;
-using MongoDB.Driver.Builders;
 
 namespace KaVE.FeedbackProcessor
 {
@@ -49,9 +48,7 @@ namespace KaVE.FeedbackProcessor
         private IEnumerable<IDEEvent> GetAllEventsOf(Developer developer)
         {
             var events = _database.GetEventsCollection();
-            return
-                events.Find(Query<IDEEvent>.In(evt => evt.IDESessionUUID, developer.SessionIds))
-                      .SetSortOrder(SortBy<IDEEvent>.Ascending(evt => evt.TriggeredAt));
+            return events.GetEventStream(developer);
         }
     }
 }
