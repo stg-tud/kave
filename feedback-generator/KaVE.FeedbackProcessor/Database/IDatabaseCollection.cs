@@ -1,5 +1,5 @@
-﻿/*
- * Copyright 2014 Technische Universität Darmstadt
+/*
+ * Copyright 2014 Technische Universit�t Darmstadt
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,19 +18,13 @@
  */
 
 using System.Collections.Generic;
-using MongoDB.Bson;
 
-namespace KaVE.FeedbackProcessor
+namespace KaVE.FeedbackProcessor.Database
 {
-    public class Developer
+    public interface IDatabaseCollection<T>
     {
-        public Developer()
-        {
-            SessionIds = new HashSet<string>();
-        }
-
-        public ObjectId Id { get; set; }
-
-        public HashSet<string> SessionIds { get; private set; }
+        IEnumerable<T> FindAll();
+        void Insert(T instance);
+        void Save(T instance);
     }
 }

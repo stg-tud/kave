@@ -1,5 +1,5 @@
-﻿/*
- * Copyright 2014 Technische Universität Darmstadt
+/*
+ * Copyright 2014 Technische Universit�t Darmstadt
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,23 +14,24 @@
  * limitations under the License.
  * 
  * Contributors:
- *    - Sven Amann
+ *    - 
  */
 
 using System.Collections.Generic;
-using MongoDB.Bson;
+using System.Linq;
+using MongoDB.Driver;
+using MongoDB.Driver.Builders;
 
-namespace KaVE.FeedbackProcessor
+namespace KaVE.FeedbackProcessor.Database
 {
-    public class Developer
+    internal class MongoDbDeveloperCollection : MongoDbDatabaseCollection<Developer>, IDeveloperCollection
     {
-        public Developer()
+        public MongoDbDeveloperCollection(MongoCollection<Developer> collection) : base(collection) {}
+
+        public IList<Developer> FindBySessionId(string sessionId)
         {
-            SessionIds = new HashSet<string>();
+            var query = Query<Developer>.EQ(dev => dev.SessionIds, sessionId);
+            return Collection.Find(query).ToList();
         }
-
-        public ObjectId Id { get; set; }
-
-        public HashSet<string> SessionIds { get; private set; }
     }
 }

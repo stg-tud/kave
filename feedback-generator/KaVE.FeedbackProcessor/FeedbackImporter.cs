@@ -44,7 +44,7 @@ namespace KaVE.FeedbackProcessor
         public void LogDeveloperStatistics()
         {
             var developerCollection = _database.GetDeveloperCollection();
-            var devs = developerCollection.FindAll();
+            var devs = developerCollection.FindAll().ToList();
             var sessIds = new HashSet<string>();
             var dupSessIds = new HashSet<string>();
             foreach (var sessionId in devs.SelectMany(developer => developer.SessionIds))
@@ -139,10 +139,9 @@ namespace KaVE.FeedbackProcessor
         }
 
         private static Developer FindOrCreateCurrentDeveloper(string ideSessionUUID,
-            MongoCollection<Developer> developerCollection)
+            IDeveloperCollection developerCollection)
         {
-            var query = Query<Developer>.EQ(dev => dev.SessionIds, ideSessionUUID);
-            var candidates = developerCollection.Find(query).ToList();
+            var candidates = developerCollection.FindBySessionId(ideSessionUUID);
             switch (candidates.Count)
             {
                 case 0:
@@ -156,7 +155,10 @@ namespace KaVE.FeedbackProcessor
                     _logger.Error("More than one developer with the same session id encountered:");
                     _logger.Error(" - Session Id: " + ideSessionUUID);
                     _logger.Error(string.Format(" - {0} developers with same id:", candidates.Count));
-                    candidates.ForEach(d => _logger.Error("   - Developer: " + d.Id));
+                    foreach (var developer in candidates)
+                    {
+                        _logger.Error("   - Developer: " + developer.Id);
+                    }
                     throw new Exception("More than one developer with the same session id encountered");
             }
         }

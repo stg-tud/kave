@@ -58,7 +58,11 @@
       <DependentUpon>Configuration.resx</DependentUpon>
     </Compile>
     <Compile Include="Database\FeedbackDatabase.cs" />
+    <Compile Include="Database\IDatabaseCollection.cs" />
+    <Compile Include="Database\IDeveloperCollection.cs" />
     <Compile Include="Database\IFeedbackDatabase.cs" />
+    <Compile Include="Database\MongoDbDatabaseCollection.cs" />
+    <Compile Include="Database\MongoDbDeveloperCollection.cs" />
     <Compile Include="Developer.cs" />
     <Compile Include="FeedbackCleaner.cs" />
     <Compile Include="FeedbackImporter.cs" />

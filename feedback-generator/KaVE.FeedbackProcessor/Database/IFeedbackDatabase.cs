@@ -1,5 +1,5 @@
-﻿/*
- * Copyright 2014 Technische Universität Darmstadt
+/*
+ * Copyright 2014 Technische Universit�t Darmstadt
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,21 +16,18 @@
  * Contributors:
  *    - Sven Amann
  */
-
 using System.Collections.Generic;
-using MongoDB.Bson;
+using KaVE.Commons.Model.Events;
+using MongoDB.Driver;
 
-namespace KaVE.FeedbackProcessor
+namespace KaVE.FeedbackProcessor.Database
 {
-    public class Developer
+    public interface IFeedbackDatabase
     {
-        public Developer()
-        {
-            SessionIds = new HashSet<string>();
-        }
+        IDeveloperCollection GetDeveloperCollection();
+        MongoCollection<IDEEvent> GetEventsCollection();
+    }
 
-        public ObjectId Id { get; set; }
-
-        public HashSet<string> SessionIds { get; private set; }
+    {
     }
 }
