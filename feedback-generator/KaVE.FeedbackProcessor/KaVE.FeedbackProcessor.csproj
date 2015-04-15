@@ -57,7 +57,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Configuration.resx</DependentUpon>
     </Compile>
-    <Compile Include="FeedbackDatabase.cs" />
+    <Compile Include="Database\FeedbackDatabase.cs" />
+    <Compile Include="Database\IFeedbackDatabase.cs" />
     <Compile Include="Developer.cs" />
     <Compile Include="FeedbackCleaner.cs" />
     <Compile Include="FeedbackImporter.cs" />

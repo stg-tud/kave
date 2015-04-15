@@ -14,7 +14,7 @@
  * limitations under the License.
  * 
  * Contributors:
- *    - 
+ *    - Sven Amann
  */
 
 using System;
@@ -24,17 +24,20 @@ using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Utils.Collections;
 using KaVE.Commons.Utils.Reflection;
-using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.IdGenerators;
-using MongoDB.Bson.Serialization.Options;
-using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
 using MongoDB.Driver.Builders;
 
-namespace KaVE.FeedbackProcessor
+namespace KaVE.FeedbackProcessor.Database
 {
-    internal class FeedbackDatabase {
+    internal interface IFeedbackDatabase {
+        MongoCollection<Developer> GetDeveloperCollection();
+        MongoCollection<IDEEvent> GetEventsCollection();
+    }
+
+    internal class FeedbackDatabase : IFeedbackDatabase
+    {
         private readonly MongoDatabase _database;
 
         public FeedbackDatabase(string databaseUrl, string databaseName)
@@ -48,7 +51,7 @@ namespace KaVE.FeedbackProcessor
         public MongoCollection<Developer> GetDeveloperCollection()
         {
             return GetCollection<Developer>();
-        } 
+        }
 
         public MongoCollection<IDEEvent> GetEventsCollection()
         {
@@ -59,7 +62,7 @@ namespace KaVE.FeedbackProcessor
 
         private MongoCollection<T> GetCollection<T>()
         {
-            var collectionName = typeof(T).Name;
+            var collectionName = typeof (T).Name;
             if (!_database.CollectionExists(collectionName))
             {
                 _database.CreateCollection(collectionName);
@@ -70,8 +73,8 @@ namespace KaVE.FeedbackProcessor
         private static void EnsureEventIndex(MongoCollection<IDEEvent> eventsCollection)
         {
             var evtIndex = IndexKeys.Ascending(TypeExtensions<IDEEvent>.GetPropertyName(evt => evt.IDESessionUUID))
-                .Ascending(TypeExtensions<IDEEvent>.GetPropertyName(evt => evt.TriggeredAt))
-                .Ascending("_t");
+                                    .Ascending(TypeExtensions<IDEEvent>.GetPropertyName(evt => evt.TriggeredAt))
+                                    .Ascending("_t");
             if (!eventsCollection.IndexExists(evtIndex))
             {
                 eventsCollection.CreateIndex(
@@ -82,16 +85,19 @@ namespace KaVE.FeedbackProcessor
 
         private static void RegisterModel()
         {
-            BsonSerializer.RegisterSerializer(typeof(DateTime), new DateTimeTicksSerializer());
-            BsonSerializer.RegisterGenericSerializerDefinition(typeof(IKaVESet<>), typeof(KaVECollectionSerializer<>));
-            BsonSerializer.RegisterGenericSerializerDefinition(typeof(IKaVEList<>), typeof(KaVECollectionSerializer<>));
-            BsonSerializer.RegisterSerializer(typeof(IProposalCollection), new KaVECollectionSerializer());
-            BsonClassMap.RegisterClassMap<IDEEvent>(cm =>
-            {
-                cm.AutoMap();
-                cm.SetIdMember(cm.GetMemberMap(c => c.Id));
-                cm.IdMemberMap.SetIdGenerator(StringObjectIdGenerator.Instance);
-            });
+            BsonSerializer.RegisterSerializer(typeof (DateTime), new DateTimeTicksSerializer());
+            BsonSerializer.RegisterGenericSerializerDefinition(typeof (IKaVESet<>), typeof (KaVECollectionSerializer<>));
+            BsonSerializer.RegisterGenericSerializerDefinition(
+                typeof (IKaVEList<>),
+                typeof (KaVECollectionSerializer<>));
+            BsonSerializer.RegisterSerializer(typeof (IProposalCollection), new KaVECollectionSerializer());
+            BsonClassMap.RegisterClassMap<IDEEvent>(
+                cm =>
+                {
+                    cm.AutoMap();
+                    cm.SetIdMember(cm.GetMemberMap(c => c.Id));
+                    cm.IdMemberMap.SetIdGenerator(StringObjectIdGenerator.Instance);
+                });
             foreach (var type in GetAllModelTypes())
             {
                 BsonClassMap.LookupClassMap(type);
@@ -100,7 +106,7 @@ namespace KaVE.FeedbackProcessor
 
         private static IEnumerable<Type> GetAllModelTypes()
         {
-            return typeof(IDEEvent).Assembly.GetTypes().Where(IsModelClass);
+            return typeof (IDEEvent).Assembly.GetTypes().Where(IsModelClass);
         }
 
         private static bool IsModelClass(Type t)

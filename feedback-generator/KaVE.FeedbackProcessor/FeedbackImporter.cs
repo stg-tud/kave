@@ -24,6 +24,7 @@ using System.Linq;
 using Ionic.Zip;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Utils.Exceptions;
+using KaVE.FeedbackProcessor.Database;
 using MongoDB.Driver;
 using MongoDB.Driver.Builders;
 
