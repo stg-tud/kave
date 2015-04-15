@@ -26,21 +26,14 @@ namespace KaVE.FeedbackProcessor
 {
     internal class FeedbackCleaner
     {
-        private readonly FeedbackDatabase _database;
+        private readonly IFeedbackDatabase _database;
 
-        private static void Main()
-        {
-            var database = new FeedbackDatabase(Configuration.DatabaseUrl, Configuration.DatabaseName);
-            var cleaner = new FeedbackCleaner(database);
-            cleaner.IterateEventsPerDeveloper();
-        }
-
-        private FeedbackCleaner(FeedbackDatabase database)
+        public FeedbackCleaner(IFeedbackDatabase database)
         {
             _database = database;
         }
 
-        private void IterateEventsPerDeveloper()
+        public void IterateEventsPerDeveloper()
         {
             var developers = _database.GetDeveloperCollection();
 
