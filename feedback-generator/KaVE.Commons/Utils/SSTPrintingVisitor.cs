@@ -54,19 +54,22 @@ namespace KaVE.Commons.Utils
 
         public void Visit(IDelegateDeclaration stmt, StringBuilder sb)
         {
-            sb.AppendFormat("delegate {0}();", stmt.Name.Name);
+            sb.AppendIndentation(_indentationLevel)
+                .AppendFormat("delegate {0}();", stmt.Name.Name);
         }
 
         public void Visit(IEventDeclaration stmt, StringBuilder sb)
         {
             // TODO: HandlerType with generics?
-            sb.AppendFormat("event {0} {1};", stmt.Name.HandlerType.Name, stmt.Name.Name);
+            sb.AppendIndentation(_indentationLevel)
+                .AppendFormat("event {0} {1};", stmt.Name.HandlerType.Name, stmt.Name.Name);
         }
 
         public void Visit(IFieldDeclaration stmt, StringBuilder sb)
         {
             // TODO: static? print other options on .Name.ValueType?
-            sb.AppendFormat("{0} {1};", stmt.Name.ValueType.Name, stmt.Name.Name);
+            sb.AppendIndentation(_indentationLevel)
+                .AppendFormat("{0} {1};", stmt.Name.ValueType.Name, stmt.Name.Name);
         }
 
         public void Visit(IMethodDeclaration stmt, StringBuilder sb)
@@ -151,17 +154,6 @@ namespace KaVE.Commons.Utils
             }
         }
 
-        private void AppendBlock(IEnumerable<IStatement> block, StringBuilder sb)
-        {
-            sb.AppendIndentation(_indentationLevel++).AppendLine("{");
-            foreach (var s in block)
-            {
-                s.Accept(this, sb);
-                sb.AppendLine();
-            }
-            sb.AppendIndentation(--_indentationLevel).Append("}");
-        }
-
         public void Visit(IVariableDeclaration stmt, StringBuilder sb)
         {
             // TODO: generics? "IsMissing"?
@@ -201,13 +193,17 @@ namespace KaVE.Commons.Utils
 
         public void Visit(IReturnStatement stmt, StringBuilder sb)
         {
-            throw new NotImplementedException();
+            // TODO: return without return value possible?
+            sb.AppendIndentation(_indentationLevel).AppendFormat("return ");
+            stmt.Expression.Accept(this, sb);
+            sb.Append(";");
         }
 
         public void Visit(IThrowStatement stmt, StringBuilder sb)
         {
             // TODO: discuss: throw statement should also be able to throw existing objects (of type System.Exception)
-            sb.AppendIndentation(_indentationLevel).AppendFormat("throw new {0};", stmt.Exception.Name);
+            // TODO: check if printing constructors is possible/necessary
+            sb.AppendIndentation(_indentationLevel).AppendFormat("throw new {0}();", stmt.Exception.Name);
         }
 
         public void Visit(IDoLoop block, StringBuilder sb)
@@ -217,7 +213,15 @@ namespace KaVE.Commons.Utils
 
         public void Visit(IForEachLoop block, StringBuilder sb)
         {
-            throw new NotImplementedException();
+            sb.AppendIndentation(_indentationLevel)
+              .AppendFormat(
+                  "foreach ({0} {1} in {2})",
+                  block.Declaration.Type.Name,
+                  block.Declaration.Reference.Identifier,
+                  block.LoopedReference.Identifier)
+              .AppendLine();
+
+            AppendBlock(block.Body, sb);
         }
 
         public void Visit(IForLoop block, StringBuilder sb)
@@ -237,27 +241,63 @@ namespace KaVE.Commons.Utils
 
         public void Visit(ISwitchBlock block, StringBuilder sb)
         {
-            throw new NotImplementedException();
+            sb.AppendIndentation(_indentationLevel).AppendFormat("switch ({0})", block.Reference.Identifier).AppendLine()
+              .AppendIndentation(_indentationLevel++).Append("{").AppendLine();
+
+            foreach (var section in block.Sections)
+            {
+                sb.AppendIndentation(_indentationLevel).AppendFormat("case ");
+                section.Label.Accept(this, sb);
+                sb.Append(":").AppendLine();
+                AppendBlock(section.Body, sb, false);
+                sb.AppendLine();
+            }
+
+            sb.AppendIndentation(_indentationLevel).Append("default:").AppendLine();
+            AppendBlock(block.DefaultSection, sb, false);
+            sb.AppendLine();
+
+            sb.AppendIndentation(--_indentationLevel).Append("}");
         }
 
         public void Visit(ITryBlock block, StringBuilder sb)
         {
-            throw new NotImplementedException();
+            sb.AppendIndentedLine(_indentationLevel, "try");
+            AppendBlock(block.Body, sb);
+            sb.AppendLine();
+
+            foreach (var catchBlock in block.CatchBlocks)
+            {
+                // TODO: Variable declaration could also be visited... Problem: indentation
+                sb.AppendIndentation(_indentationLevel)
+                  .AppendFormat("catch ({0} {1})", catchBlock.Exception.Type.Name, catchBlock.Exception.Reference.Identifier)
+                  .AppendLine();
+                AppendBlock(catchBlock.Body, sb);
+                sb.AppendLine();
+            }
+
+            sb.AppendIndentedLine(_indentationLevel, "finally");
+            AppendBlock(block.Finally, sb);
         }
 
         public void Visit(IUncheckedBlock block, StringBuilder sb)
         {
-            throw new NotImplementedException();
+            sb.AppendIndentedLine(_indentationLevel, "unchecked");
+            AppendBlock(block.Body, sb);
         }
 
         public void Visit(IUnsafeBlock block, StringBuilder sb)
         {
-            throw new NotImplementedException();
+            sb.AppendIndentation(_indentationLevel).Append("unsafe { }");
         }
 
         public void Visit(IUsingBlock block, StringBuilder sb)
         {
-            throw new NotImplementedException();
+            sb.AppendIndentation(_indentationLevel).Append("using (");
+            block.Reference.Accept(this, sb);
+            sb.Append(")").AppendLine();
+
+            AppendBlock(block.Body, sb);
         }
 
         public void Visit(IWhileLoop block, StringBuilder sb)
@@ -297,7 +337,7 @@ namespace KaVE.Commons.Utils
 
         public void Visit(IConstantValueExpression expr, StringBuilder sb)
         {
-            throw new NotImplementedException();
+            sb.Append(expr.Value);
         }
 
         public void Visit(INullExpression expr, StringBuilder sb)
@@ -307,6 +347,7 @@ namespace KaVE.Commons.Utils
 
         public void Visit(IReferenceExpression expr, StringBuilder sb)
         {
+            // TODO: when is this used?
             throw new NotImplementedException();
         }
 
@@ -332,7 +373,8 @@ namespace KaVE.Commons.Utils
 
         public void Visit(IVariableReference varRef, StringBuilder sb)
         {
-            throw new NotImplementedException();
+            // TODO: check if it's possible for references to be used on their own in seperate lines (probably not) 
+            sb.AppendFormat("{0}", varRef.Identifier);
         }
 
         public void Visit(IUnknownReference unknownRef, StringBuilder sb)
@@ -349,6 +391,38 @@ namespace KaVE.Commons.Utils
         {
             throw new NotImplementedException();
         }
+
+        /// <summary>
+        /// Appends the print result of a statement block to a string builder with correct indentation.
+        /// </summary>
+        /// <param name="block"></param>
+        /// <param name="sb"></param>
+        /// <param name="withBrackets">If false, opening and closing brackets will be omitted.</param>
+        private void AppendBlock(IEnumerable<IStatement> block, StringBuilder sb, bool withBrackets = true)
+        {
+            if (withBrackets)
+            {
+                sb.AppendIndentation(_indentationLevel).AppendLine("{");
+            }
+            _indentationLevel++;
+
+            var statements = block as IStatement[] ?? block.ToArray();
+            foreach (var statement in statements)
+            {
+                statement.Accept(this, sb);
+
+                if (withBrackets || !ReferenceEquals(statement, statements.Last()))
+                {
+                    sb.AppendLine();
+                }
+            }
+
+            _indentationLevel--;
+            if (withBrackets)
+            {
+                sb.AppendIndentation(_indentationLevel).Append("}");
+            }
+        }
     }
 
     internal static class SSTPrintingVisitorHelper
@@ -363,6 +437,11 @@ namespace KaVE.Commons.Utils
             }
 
             return sb;
+        }
+
+        public static StringBuilder AppendIndentedLine(this StringBuilder sb, int indentationLevel, string line)
+        {
+            return sb.AppendIndentation(indentationLevel).AppendLine(line);
         }
     }
 }

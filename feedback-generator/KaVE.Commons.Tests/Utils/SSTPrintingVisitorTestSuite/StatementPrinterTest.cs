@@ -84,7 +84,19 @@ namespace KaVE.Commons.Tests.Utils.SSTPrintingVisitorTestSuite
                 Exception = TypeName.Get("T,P")
             };
 
-            AssertPrint(sst, "throw new T;");
+            AssertPrint(sst, "throw new T();");
+        }
+
+        [Test]
+        public void ReturnStatement()
+        {
+            var sst = new ReturnStatement
+            {
+                Expression = new ConstantValueExpression {Value = "val"}
+            };
+
+            // TODO: check: value in quotes?
+            AssertPrint(sst, "return val;");
         }
     }
 }
