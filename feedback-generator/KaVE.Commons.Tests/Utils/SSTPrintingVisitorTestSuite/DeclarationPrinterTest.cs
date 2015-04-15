@@ -184,5 +184,39 @@ namespace KaVE.Commons.Tests.Utils.SSTPrintingVisitorTestSuite
                  "    }",
                  "};");
         }
+
+        [Test]
+        public void MethodDeclaration_EmptyMethod()
+        {
+            var sst = new MethodDeclaration
+            {
+                Name = MethodName.Get("[ReturnType,P] [DeclaringType,P].M([ParameterType,P] p)")
+                
+            };
+
+            AssertPrint(sst,
+                "ReturnType M(ParameterType p) { }");
+        }
+
+        [Test]
+        public void MethodDeclaration_WithBody()
+        {
+            var sst = new MethodDeclaration
+            {
+                Name = MethodName.Get("[ReturnType,P] [DeclaringType,P].M([ParameterType,P] p)"),
+                Body =
+                {
+                    new ContinueStatement(),
+                    new BreakStatement()
+                }
+            };
+
+            AssertPrint(sst,
+                "ReturnType M(ParameterType p)",
+                "{",
+                "    continue;",
+                "    break;",
+                "}");
+        }
     }
 }

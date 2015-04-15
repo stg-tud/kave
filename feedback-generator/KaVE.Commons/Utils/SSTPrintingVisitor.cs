@@ -65,13 +65,30 @@ namespace KaVE.Commons.Utils
 
         public void Visit(IFieldDeclaration stmt, StringBuilder sb)
         {
-            // CHECK: static? print other options on .Name.ValueType?
+            // TODO: static? print other options on .Name.ValueType?
             sb.AppendFormat("{0} {1};", stmt.Name.ValueType.Name, stmt.Name.Name);
         }
 
         public void Visit(IMethodDeclaration stmt, StringBuilder sb)
         {
-            throw new NotImplementedException();
+            // TODO: static? generics?
+            sb.AppendIndentation(_indentationLevel).AppendFormat("{0} {1}(", stmt.Name.ReturnType.Name, stmt.Name.Name);
+
+            // TODO: parameters: optional? passed by reference? output? parameter array?
+            var formattedParams = stmt.Name.Parameters.Select(p => String.Format("{0} {1}", p.ValueType.Name, p.Name));
+            sb.Append(String.Join(", ", formattedParams));
+
+            sb.Append(")");
+
+            if (stmt.Body.Any())
+            {
+                sb.AppendLine();
+                AppendBlock(stmt.Body, sb);
+            }
+            else
+            {
+                sb.Append(" { }");
+            }
         }
 
         public void Visit(IPropertyDeclaration stmt, StringBuilder sb)
