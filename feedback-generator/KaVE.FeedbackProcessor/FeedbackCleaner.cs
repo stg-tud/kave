@@ -19,6 +19,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using KaVE.Commons.Model.Events;
 using KaVE.FeedbackProcessor.Database;
 
@@ -51,9 +52,13 @@ namespace KaVE.FeedbackProcessor
             var developers = _database.GetDeveloperCollection().FindAll();
             foreach (var developer in developers)
             {
-                foreach (var processor in _processors)
+                var processors = _processors.Select(Activator.CreateInstance).Cast<IIDEEventProcessor>().ToList();
+                foreach (var ideEvent in GetAllEventsOf(developer))
                 {
-                    var ideEventProcessor = (IIDEEventProcessor)Activator.CreateInstance(processor);
+                    foreach (var ideEventProcessor in processors)
+                    {
+                        ideEventProcessor.Process(ideEvent);
+                    }
                 }
             }
             

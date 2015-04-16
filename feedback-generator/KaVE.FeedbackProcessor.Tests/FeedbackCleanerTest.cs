@@ -19,6 +19,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
 using KaVE.Commons.Model.Events;
 using KaVE.FeedbackProcessor.Database;
@@ -56,7 +57,23 @@ namespace KaVE.FeedbackProcessor.Tests
         [Test]
         public void PassesEventsToProcessors()
         {
+            const string ideSessionUUID = "sessionA";
+            GivenDeveloperExists("000000000000000000000001", ideSessionUUID);
+            GivenEventExists(new InfoEvent{IDESessionUUID = ideSessionUUID, Info = "1"});
+            GivenEventExists(new InfoEvent{IDESessionUUID = ideSessionUUID, Info = "2"});
 
+            _uut.RegisterProcessor<TestProcessor>();
+            _uut.ProcessFeedback();
+
+            Assert.AreEqual(1, TestProcessor.Instances.Count);
+            var testProcessor = TestProcessor.Instances.First();
+            Assert.AreEqual(2, testProcessor.ProcessedEvents.Count);
+        }
+
+        private void GivenEventExists(InfoEvent infoEvent)
+        {
+            var ideEventCollection = _testFeedbackDatabase.GetEventsCollection();
+            ideEventCollection.Insert(infoEvent);
         }
 
         /// <param name="developerId">must be 24 characters, hex</param>
@@ -74,6 +91,7 @@ namespace KaVE.FeedbackProcessor.Tests
         private class TestProcessor : IIDEEventProcessor
         {
             public static readonly ICollection<TestProcessor> Instances = new List<TestProcessor>();
+            public readonly ICollection<IDEEvent> ProcessedEvents = new List<IDEEvent>(); 
 
             public TestProcessor()
             {
@@ -82,7 +100,8 @@ namespace KaVE.FeedbackProcessor.Tests
 
             public IDEEvent Process(IDEEvent @event)
             {
-                throw new System.NotImplementedException();
+                ProcessedEvents.Add(@event);
+                return null;
             }
         }
 
@@ -148,7 +167,7 @@ namespace KaVE.FeedbackProcessor.Tests
 
             public IEnumerable<IDEEvent> GetEventStream(Developer developer)
             {
-                throw new System.NotImplementedException();
+                return _ideEvents;
             }
 
             public bool Contains(IDEEvent @event)
