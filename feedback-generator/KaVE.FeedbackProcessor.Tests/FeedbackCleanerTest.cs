@@ -17,9 +17,13 @@
  *    - Sven Amann
  */
 
+using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using KaVE.Commons.Model.Events;
 using KaVE.FeedbackProcessor.Database;
+using MongoDB.Bson;
+using MongoDB.Driver.Linq;
 using NUnit.Framework;
 
 namespace KaVE.FeedbackProcessor.Tests
@@ -27,22 +31,21 @@ namespace KaVE.FeedbackProcessor.Tests
     [TestFixture]
     internal class FeedbackCleanerTest
     {
-        private TestDatabase _testDatabase;
+        private TestFeedbackDatabase _testFeedbackDatabase;
         private FeedbackCleaner _uut;
 
         [SetUp]
         public void SetUpDatabase()
         {
-            _testDatabase = new TestDatabase();
-            _uut = new FeedbackCleaner(_testDatabase);
+            _testFeedbackDatabase = new TestFeedbackDatabase();
+            _uut = new FeedbackCleaner(_testFeedbackDatabase);
         }
 
         [Test]
         public void InstatiatesProcessorsForEachDeveloper()
         {
-            var developerCollection = _testDatabase.GetDeveloperCollection();
-            developerCollection.Insert(new Developer());
-            developerCollection.Insert(new Developer());
+            GivenDeveloperExists("000000000000000000000001", "sessionA");
+            GivenDeveloperExists("000000000000000000000002", "sessionB");
 
             _uut.RegisterProcessor<TestProcessor>();
             _uut.ProcessFeedback();
@@ -53,7 +56,19 @@ namespace KaVE.FeedbackProcessor.Tests
         [Test]
         public void PassesEventsToProcessors()
         {
-            
+
+        }
+
+        /// <param name="developerId">must be 24 characters, hex</param>
+        /// <param name="sessionIds"></param>
+        private void GivenDeveloperExists(String developerId, params String[] sessionIds)
+        {
+            var developer = new Developer { Id = new ObjectId(developerId) };
+            foreach (var sessionId in sessionIds)
+            {
+                developer.SessionIds.Add(sessionId);
+            }
+            _testFeedbackDatabase.GetDeveloperCollection().Insert(developer);
         }
 
         private class TestProcessor : IIDEEventProcessor
@@ -71,14 +86,10 @@ namespace KaVE.FeedbackProcessor.Tests
             }
         }
 
-        private class TestDatabase : IFeedbackDatabase
+        private class TestFeedbackDatabase : IFeedbackDatabase
         {
-            private readonly IDeveloperCollection _developerCollection;
-
-            public TestDatabase()
-            {
-                _developerCollection = new TestDeveloperCollection();
-            }
+            private readonly IDeveloperCollection _developerCollection = new TestDeveloperCollection();
+            private readonly IIDEEventCollection _ideEventCollection = new TestIDEEventCollection();
 
             public IDeveloperCollection GetDeveloperCollection()
             {
@@ -87,18 +98,13 @@ namespace KaVE.FeedbackProcessor.Tests
 
             public IIDEEventCollection GetEventsCollection()
             {
-                throw new System.NotImplementedException();
+                return _ideEventCollection;
             }
         }
 
         private class TestDeveloperCollection : IDeveloperCollection
         {
-            private readonly ICollection<Developer> _developers;
- 
-            public TestDeveloperCollection()
-            {
-                _developers = new List<Developer>();
-            }
+            private readonly ICollection<Developer> _developers = new List<Developer>();
 
             public IEnumerable<Developer> FindAll()
             {
@@ -116,6 +122,36 @@ namespace KaVE.FeedbackProcessor.Tests
             }
 
             public IList<Developer> FindBySessionId(string sessionId)
+            {
+                throw new System.NotImplementedException();
+            }
+        }
+
+        private class TestIDEEventCollection : IIDEEventCollection
+        {
+            private readonly ICollection<IDEEvent> _ideEvents = new List<IDEEvent>(); 
+
+            public IEnumerable<IDEEvent> FindAll()
+            {
+                throw new System.NotImplementedException();
+            }
+
+            public void Insert(IDEEvent instance)
+            {
+                _ideEvents.Add(instance);
+            }
+
+            public void Save(IDEEvent instance)
+            {
+                throw new System.NotImplementedException();
+            }
+
+            public IEnumerable<IDEEvent> GetEventStream(Developer developer)
+            {
+                throw new System.NotImplementedException();
+            }
+
+            public bool Contains(IDEEvent @event)
             {
                 throw new System.NotImplementedException();
             }
