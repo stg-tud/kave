@@ -16,6 +16,7 @@
  * Contributors:
  *    - Sven Amann
  */
+
 using System.Collections.Generic;
 using KaVE.Commons.Model.Events;
 
