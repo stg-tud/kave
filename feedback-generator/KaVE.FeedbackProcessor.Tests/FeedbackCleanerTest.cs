@@ -72,15 +72,19 @@ namespace KaVE.FeedbackProcessor.Tests
         {
             const string ideSessionUUID = "sessionA";
             GivenDeveloperExists("000000000000000000000001", ideSessionUUID);
-            GivenEventExists(new InfoEvent{IDESessionUUID = ideSessionUUID, Info = "1"});
-            GivenEventExists(new InfoEvent{IDESessionUUID = ideSessionUUID, Info = "2"});
+            var events = new[]
+            {
+                new InfoEvent {IDESessionUUID = ideSessionUUID, Info = "1"},
+                new InfoEvent {IDESessionUUID = ideSessionUUID, Info = "2"}
+            };
+            GivenEventExists(events[0]);
+            GivenEventExists(events[1]);
 
             _uut.RegisterProcessor<TestProcessor>();
             _uut.ProcessFeedback();
 
-            Assert.AreEqual(1, TestProcessor.Instances.Count);
             var testProcessor = TestProcessor.Instances.First();
-            Assert.AreEqual(2, testProcessor.ProcessedEvents.Count);
+            CollectionAssert.AreEqual(events, testProcessor.ProcessedEvents);
         }
 
         private void GivenEventExists(InfoEvent infoEvent)
@@ -93,7 +97,7 @@ namespace KaVE.FeedbackProcessor.Tests
         /// <param name="sessionIds"></param>
         private void GivenDeveloperExists(String developerId, params String[] sessionIds)
         {
-            var developer = new Developer { Id = new ObjectId(developerId) };
+            var developer = new Developer {Id = new ObjectId(developerId)};
             foreach (var sessionId in sessionIds)
             {
                 developer.SessionIds.Add(sessionId);
@@ -104,7 +108,7 @@ namespace KaVE.FeedbackProcessor.Tests
         private class TestProcessor : IIDEEventProcessor
         {
             public static readonly ICollection<TestProcessor> Instances = new List<TestProcessor>();
-            public readonly ICollection<IDEEvent> ProcessedEvents = new List<IDEEvent>(); 
+            public readonly ICollection<IDEEvent> ProcessedEvents = new List<IDEEvent>();
 
             public TestProcessor()
             {
@@ -161,7 +165,7 @@ namespace KaVE.FeedbackProcessor.Tests
 
         private class TestIDEEventCollection : IIDEEventCollection
         {
-            private readonly ICollection<IDEEvent> _ideEvents = new List<IDEEvent>(); 
+            private readonly ICollection<IDEEvent> _ideEvents = new List<IDEEvent>();
 
             public IEnumerable<IDEEvent> FindAll()
             {
