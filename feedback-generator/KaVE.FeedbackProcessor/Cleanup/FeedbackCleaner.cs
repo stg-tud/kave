@@ -56,13 +56,18 @@ namespace KaVE.FeedbackProcessor.Cleanup
                 var processors = _processors.Select(Activator.CreateInstance).Cast<IIDEEventProcessor>().ToList();
                 foreach (var ideEvent in GetAllEventsOf(developer))
                 {
+                    var returnedEvents = new HashSet<IDEEvent>();
                     foreach (var ideEventProcessor in processors)
                     {
-                        var cleanEvent = ideEventProcessor.Process(ideEvent);
-                        if (cleanEvent != null)
-                        {
-                            _database.GetCleanEventsCollection().Insert(cleanEvent);
-                        }
+                        returnedEvents.Add(ideEventProcessor.Process(ideEvent));
+                    }
+                    if (returnedEvents.Contains(null))
+                    {
+                        returnedEvents.Clear();
+                    }
+                    if (returnedEvents.Any())
+                    {
+                        _database.GetCleanEventsCollection().Insert(returnedEvents.First());
                     }
                 }
             }

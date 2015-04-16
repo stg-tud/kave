@@ -123,13 +123,13 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup
         }
 
         [Test]
-        public void DropsEventIfProcessorReturnsNull()
+        public void DropsEventIfProcessorConsumesIt()
         {
             const string ideSessionUUID = "sessionA";
             GivenDeveloperExists("000000000000000000000001", ideSessionUUID);
             GivenEventExists(ideSessionUUID, "1");
 
-            _uut.RegisterProcessor<NullReturningProcessor>();
+            _uut.RegisterProcessor<ConsumingProcessor>();
             _uut.ProcessFeedback();
 
             var cleanEvents = _testFeedbackDatabase.GetCleanEventsCollection().FindAll();
@@ -149,6 +149,21 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup
             var cleanEvents = _testFeedbackDatabase.GetCleanEventsCollection().FindAll().ToList();
             Assert.AreEqual(1, cleanEvents.Count());
             CollectionAssert.DoesNotContain(cleanEvents, event1);
+        }
+
+        [Test]
+        public void DropsEventIfOneProcessorConsumesIt()
+        {
+            const string ideSessionUUID = "sessionA";
+            GivenDeveloperExists("000000000000000000000001", ideSessionUUID);
+            GivenEventExists(ideSessionUUID, "1");
+
+            _uut.RegisterProcessor<ConsumingProcessor>();
+            _uut.RegisterProcessor<SameEventReturntingProcessor>();
+            _uut.ProcessFeedback();
+
+            var cleanEvents = _testFeedbackDatabase.GetCleanEventsCollection().FindAll();
+            CollectionAssert.IsEmpty(cleanEvents);
         }
 
         private TestIDEEvent GivenEventExists(String sessionId, String value)
@@ -197,7 +212,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup
             }
         }
 
-        private class NullReturningProcessor : TestProcessor
+        private class ConsumingProcessor : TestProcessor
         {
             public override IDEEvent Process(IDEEvent @event)
             {
