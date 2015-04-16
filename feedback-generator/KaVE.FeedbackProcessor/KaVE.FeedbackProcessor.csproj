@@ -52,12 +52,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Configuration.Designer.cs">
+    <Compile Include="Cleanup\DeveloperConsolidator.cs" />
+    <Compile Include="Cleanup\FeedbackCleaner.cs" />
+    <Compile Include="Cleanup\IIDEEventProcessor.cs" />
+    <Compile Include="Import\FeedbackImporter.cs" />
+    <Compile Include="Import\FeedbackArchiveReader.cs" />
+    <Compile Include="Model\Developer.cs" />
+    <Compile Include="Properties\Configuration.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Configuration.resx</DependentUpon>
     </Compile>
-    <Compile Include="Database\FeedbackDatabase.cs" />
+    <Compile Include="Database\DateTimeTicksSerializer.cs" />
+    <Compile Include="Database\MongoDbFeedbackDatabase.cs" />
     <Compile Include="Database\IDatabaseCollection.cs" />
     <Compile Include="Database\IDeveloperCollection.cs" />
     <Compile Include="Database\IFeedbackDatabase.cs" />
@@ -65,14 +72,8 @@
     <Compile Include="Database\MongoDbDatabaseCollection.cs" />
     <Compile Include="Database\MongoDbDeveloperCollection.cs" />
     <Compile Include="Database\MongoDbIDEEventCollection.cs" />
-    <Compile Include="Developer.cs" />
-    <Compile Include="DeveloperConsolidator.cs" />
-    <Compile Include="FeedbackCleaner.cs" />
-    <Compile Include="FeedbackImporter.cs" />
     <Compile Include="FeedbackProcessorApp.cs" />
-    <Compile Include="FileLoader.cs" />
-    <Compile Include="KaVECollectionSerializer.cs" />
-    <Compile Include="DateTimeTicksSerializer.cs" />
+    <Compile Include="Database\KaVECollectionSerializer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -88,7 +89,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Configuration.resx">
+    <EmbeddedResource Include="Properties\Configuration.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Configuration.Designer.cs</LastGenOutput>
     </EmbeddedResource>

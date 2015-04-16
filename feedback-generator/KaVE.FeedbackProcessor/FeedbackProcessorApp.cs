@@ -18,7 +18,10 @@
  */
 
 using KaVE.Commons.Utils.Exceptions;
+using KaVE.FeedbackProcessor.Cleanup;
 using KaVE.FeedbackProcessor.Database;
+using KaVE.FeedbackProcessor.Import;
+using KaVE.FeedbackProcessor.Properties;
 
 namespace KaVE.FeedbackProcessor
 {
@@ -28,19 +31,19 @@ namespace KaVE.FeedbackProcessor
 
         public static void Main()
         {
-            var database = new FeedbackDatabase(Configuration.DatabaseUrl, Configuration.DatabaseName);
+            var database = new MongoDbFeedbackDatabase(Configuration.DatabaseUrl, Configuration.DatabaseName);
             ImportFeedback(database);
             //CleanFeedback(database);
         }
 
-        private static void ImportFeedback(FeedbackDatabase database)
+        private static void ImportFeedback(IFeedbackDatabase database)
         {
             var feedbackImporter = new FeedbackImporter(database, Logger);
             feedbackImporter.Import();
             feedbackImporter.LogDeveloperStatistics();
         }
 
-        private static void CleanFeedback(FeedbackDatabase database)
+        private static void CleanFeedback(IFeedbackDatabase database)
         {
             var cleaner = new FeedbackCleaner(database);
             cleaner.ProcessFeedback();

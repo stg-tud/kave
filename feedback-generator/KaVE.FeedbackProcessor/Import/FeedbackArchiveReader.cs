@@ -1,5 +1,5 @@
-/*
- * Copyright 2014 Technische Universit�t Darmstadt
+﻿/*
+ * Copyright 2014 Technische Universität Darmstadt
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,25 +14,30 @@
  * limitations under the License.
  * 
  * Contributors:
- *    - 
+ *    - Sven Amann
  */
 
 using System.Collections.Generic;
-using System.Linq;
-using KaVE.FeedbackProcessor.Model;
-using MongoDB.Driver;
-using MongoDB.Driver.Builders;
+using System.IO;
+using Ionic.Zip;
+using KaVE.Commons.Model.Events;
+using KaVE.Commons.Utils.Json;
+using KaVE.Commons.Utils.Streams;
 
-namespace KaVE.FeedbackProcessor.Database
+namespace KaVE.FeedbackProcessor.Import
 {
-    internal class MongoDbDeveloperCollection : MongoDbDatabaseCollection<Developer>, IDeveloperCollection
+    public class FeedbackArchiveReader
     {
-        public MongoDbDeveloperCollection(MongoCollection<Developer> collection) : base(collection) {}
-
-        public IList<Developer> FindBySessionId(string sessionId)
+        public IEnumerable<IDEEvent> ReadAllEvents(ZipFile archive)
         {
-            var query = Query<Developer>.EQ(dev => dev.SessionIds, sessionId);
-            return Collection.Find(query).ToList();
+            foreach (var file in archive.Entries)
+            {
+                using (var ms = new MemoryStream())
+                {
+                    file.Extract(ms);
+                    yield return ms.AsString().ParseJsonTo<IDEEvent>();
+                }
+            }
         }
     }
 }

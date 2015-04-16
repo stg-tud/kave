@@ -52,8 +52,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FeedbackCleanerTest.cs" />
-    <Compile Include="FileLoaderTest.cs" />
+    <Compile Include="Cleanup\FeedbackCleanerTest.cs" />
+    <Compile Include="Database\TestDeveloperCollection.cs" />
+    <Compile Include="Database\TestFeedbackDatabase.cs" />
+    <Compile Include="Database\TestIDEEventCollection.cs" />
+    <Compile Include="Import\FeedbackArchiveReaderTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

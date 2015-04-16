@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace KaVE.FeedbackProcessor {
+namespace KaVE.FeedbackProcessor.Properties {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace KaVE.FeedbackProcessor {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("KaVE.FeedbackProcessor.Configuration", typeof(Configuration).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("KaVE.FeedbackProcessor.Properties.Configuration", typeof(Configuration).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,7 +61,7 @@ namespace KaVE.FeedbackProcessor {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to datev-2015-04-10.
+        ///   Looks up a localized string similar to bpdev-2014-04-02.
         /// </summary>
         internal static string DatabaseName {
             get {
@@ -79,7 +79,7 @@ namespace KaVE.FeedbackProcessor {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to C:\Users\Sven\Documents\KaVE\Feedback\DATEV 2015-04-10.
+        ///   Looks up a localized string similar to C:\Users\Sven\Documents\KaVE\Feedback\kave.st.
         /// </summary>
         internal static string ImportDirectory {
             get {

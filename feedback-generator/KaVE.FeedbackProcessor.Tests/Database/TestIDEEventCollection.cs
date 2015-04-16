@@ -16,34 +16,42 @@
  * Contributors:
  *    - Sven Amann
  */
-
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using KaVE.Commons.Model.Events;
+using KaVE.FeedbackProcessor.Database;
 using KaVE.FeedbackProcessor.Model;
-using MongoDB.Driver;
-using MongoDB.Driver.Builders;
 
-namespace KaVE.FeedbackProcessor.Database
+namespace KaVE.FeedbackProcessor.Tests.Database
 {
-    internal class MongoDbIDEEventCollection : MongoDbDatabaseCollection<IDEEvent>, IIDEEventCollection
+    internal class TestIDEEventCollection : IIDEEventCollection
     {
-        public MongoDbIDEEventCollection(MongoCollection<IDEEvent> collection) : base(collection) {}
+        private readonly ICollection<IDEEvent> _ideEvents = new List<IDEEvent>();
+
+        public IEnumerable<IDEEvent> FindAll()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Insert(IDEEvent instance)
+        {
+            _ideEvents.Add(instance);
+        }
+
+        public void Save(IDEEvent instance)
+        {
+            throw new NotImplementedException();
+        }
 
         public IEnumerable<IDEEvent> GetEventStream(Developer developer)
         {
-            return Collection.Find(Query<IDEEvent>.In(evt => evt.IDESessionUUID, developer.SessionIds))
-                             .SetSortOrder(SortBy<IDEEvent>.Ascending(evt => evt.TriggeredAt));
+            return _ideEvents.Where(evt => developer.SessionIds.Contains(evt.IDESessionUUID));
         }
 
         public bool Contains(IDEEvent @event)
         {
-            var candidates = Collection.FindAs<IDEEvent>(
-                Query.And(
-                    Query<IDEEvent>.EQ(e => e.IDESessionUUID, @event.IDESessionUUID),
-                    Query<IDEEvent>.EQ(e => e.TriggeredAt, @event.TriggeredAt),
-                    Query.EQ("_t", @event.GetType().Name)));
-            return candidates.Any(@event.Equals);
+            throw new NotImplementedException();
         }
     }
 }

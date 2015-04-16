@@ -24,8 +24,10 @@ using System.Linq;
 using Ionic.Zip;
 using KaVE.Commons.Utils.Exceptions;
 using KaVE.FeedbackProcessor.Database;
+using KaVE.FeedbackProcessor.Model;
+using KaVE.FeedbackProcessor.Properties;
 
-namespace KaVE.FeedbackProcessor
+namespace KaVE.FeedbackProcessor.Import
 {
     internal class FeedbackImporter
     {
@@ -64,7 +66,7 @@ namespace KaVE.FeedbackProcessor
         {
             var eventsCollection = _database.GetEventsCollection();
             var developerCollection = _database.GetDeveloperCollection();
-            var fileLoader = new FileLoader();
+            var fileLoader = new FeedbackArchiveReader();
             var totalNumberOfUniqueEvents = 0;
             var totalNumberOfDuplicatedEvents = 0;
 

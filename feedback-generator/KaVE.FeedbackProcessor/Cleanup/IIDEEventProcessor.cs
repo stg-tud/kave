@@ -17,20 +17,12 @@
  *    - Sven Amann
  */
 
-using System.Collections.Generic;
-using MongoDB.Bson;
+using KaVE.Commons.Model.Events;
 
-namespace KaVE.FeedbackProcessor
+namespace KaVE.FeedbackProcessor.Cleanup
 {
-    public class Developer
+    public interface IIDEEventProcessor
     {
-        public Developer()
-        {
-            SessionIds = new HashSet<string>();
-        }
-
-        public ObjectId Id { get; set; }
-
-        public HashSet<string> SessionIds { get; private set; }
+        IDEEvent Process(IDEEvent @event);
     }
 }

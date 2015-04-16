@@ -14,25 +14,37 @@
  * limitations under the License.
  * 
  * Contributors:
- *    - 
+ *    - Sven Amann
  */
-
+using System;
 using System.Collections.Generic;
-using System.Linq;
+using KaVE.FeedbackProcessor.Database;
 using KaVE.FeedbackProcessor.Model;
-using MongoDB.Driver;
-using MongoDB.Driver.Builders;
 
-namespace KaVE.FeedbackProcessor.Database
+namespace KaVE.FeedbackProcessor.Tests.Database
 {
-    internal class MongoDbDeveloperCollection : MongoDbDatabaseCollection<Developer>, IDeveloperCollection
+    internal class TestDeveloperCollection : IDeveloperCollection
     {
-        public MongoDbDeveloperCollection(MongoCollection<Developer> collection) : base(collection) {}
+        private readonly ICollection<Developer> _developers = new List<Developer>();
+
+        public IEnumerable<Developer> FindAll()
+        {
+            return _developers;
+        }
+
+        public void Insert(Developer instance)
+        {
+            _developers.Add(instance);
+        }
+
+        public void Save(Developer instance)
+        {
+            throw new NotImplementedException();
+        }
 
         public IList<Developer> FindBySessionId(string sessionId)
         {
-            var query = Query<Developer>.EQ(dev => dev.SessionIds, sessionId);
-            return Collection.Find(query).ToList();
+            throw new NotImplementedException();
         }
     }
 }

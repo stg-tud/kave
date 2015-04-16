@@ -24,6 +24,7 @@ using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Utils.Collections;
 using KaVE.Commons.Utils.Reflection;
+using KaVE.FeedbackProcessor.Model;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.IdGenerators;
 using MongoDB.Driver;
@@ -31,11 +32,11 @@ using MongoDB.Driver.Builders;
 
 namespace KaVE.FeedbackProcessor.Database
 {
-    internal class FeedbackDatabase : IFeedbackDatabase
+    internal class MongoDbFeedbackDatabase : IFeedbackDatabase
     {
         private readonly MongoDatabase _database;
 
-        public FeedbackDatabase(string databaseUrl, string databaseName)
+        public MongoDbFeedbackDatabase(string databaseUrl, string databaseName)
         {
             var client = new MongoClient(databaseUrl);
             var server = client.GetServer();

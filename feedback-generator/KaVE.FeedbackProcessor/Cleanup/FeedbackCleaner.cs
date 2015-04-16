@@ -22,8 +22,9 @@ using System.Collections.Generic;
 using System.Linq;
 using KaVE.Commons.Model.Events;
 using KaVE.FeedbackProcessor.Database;
+using KaVE.FeedbackProcessor.Model;
 
-namespace KaVE.FeedbackProcessor
+namespace KaVE.FeedbackProcessor.Cleanup
 {
     internal class FeedbackCleaner
     {
@@ -63,10 +64,5 @@ namespace KaVE.FeedbackProcessor
             }
             
         }
-    }
-
-    public interface IIDEEventProcessor
-    {
-        IDEEvent Process(IDEEvent @event);
     }
 }

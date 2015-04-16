@@ -18,6 +18,7 @@
  */
 
 using System.Collections.Generic;
+using KaVE.FeedbackProcessor.Model;
 
 namespace KaVE.FeedbackProcessor.Database
 {

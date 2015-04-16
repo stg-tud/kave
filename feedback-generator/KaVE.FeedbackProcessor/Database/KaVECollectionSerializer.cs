@@ -27,7 +27,7 @@ using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Options;
 using MongoDB.Bson.Serialization.Serializers;
 
-namespace KaVE.FeedbackProcessor
+namespace KaVE.FeedbackProcessor.Database
 {
     internal class KaVECollectionSerializer<T> : EnumerableSerializerBase<T>
     {

@@ -20,10 +20,11 @@
 using System.Linq;
 using KaVE.Commons.Utils.Exceptions;
 using KaVE.FeedbackProcessor.Database;
+using KaVE.FeedbackProcessor.Model;
 using MongoDB.Bson;
 using MongoDB.Driver.Builders;
 
-namespace KaVE.FeedbackProcessor
+namespace KaVE.FeedbackProcessor.Cleanup
 {
     class DeveloperConsolidator
     {

@@ -19,6 +19,7 @@
 
 using System.Collections.Generic;
 using KaVE.Commons.Model.Events;
+using KaVE.FeedbackProcessor.Model;
 
 namespace KaVE.FeedbackProcessor.Database
 {

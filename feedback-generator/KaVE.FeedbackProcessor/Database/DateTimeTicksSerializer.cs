@@ -16,12 +16,13 @@
  * Contributors:
  *    - Sven Amann
  */
+
 using System;
 using MongoDB.Bson.IO;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Serializers;
 
-namespace KaVE.FeedbackProcessor
+namespace KaVE.FeedbackProcessor.Database
 {
     public class DateTimeTicksSerializer : DateTimeSerializer
     {

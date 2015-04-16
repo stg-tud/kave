@@ -1,5 +1,5 @@
-﻿/*
- * Copyright 2014 Technische Universität Darmstadt
+/*
+ * Copyright 2014 Technische Universit�t Darmstadt
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,28 +16,23 @@
  * Contributors:
  *    - Sven Amann
  */
+using KaVE.FeedbackProcessor.Database;
 
-using System.Collections.Generic;
-using System.IO;
-using Ionic.Zip;
-using KaVE.Commons.Model.Events;
-using KaVE.Commons.Utils.Json;
-using KaVE.Commons.Utils.Streams;
-
-namespace KaVE.FeedbackProcessor
+namespace KaVE.FeedbackProcessor.Tests.Database
 {
-    public class FileLoader
+    internal class TestFeedbackDatabase : IFeedbackDatabase
     {
-        public IEnumerable<IDEEvent> ReadAllEvents(ZipFile archive)
+        private readonly IDeveloperCollection _developerCollection = new TestDeveloperCollection();
+        private readonly IIDEEventCollection _ideEventCollection = new TestIDEEventCollection();
+
+        public IDeveloperCollection GetDeveloperCollection()
         {
-            foreach (var file in archive.Entries)
-            {
-                using (var ms = new MemoryStream())
-                {
-                    file.Extract(ms);
-                    yield return ms.AsString().ParseJsonTo<IDEEvent>();
-                }
-            }
+            return _developerCollection;
+        }
+
+        public IIDEEventCollection GetEventsCollection()
+        {
+            return _ideEventCollection;
         }
     }
 }

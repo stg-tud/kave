@@ -21,11 +21,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using KaVE.Commons.Model.Events;
-using KaVE.FeedbackProcessor.Database;
+using KaVE.FeedbackProcessor.Cleanup;
+using KaVE.FeedbackProcessor.Model;
+using KaVE.FeedbackProcessor.Tests.Database;
 using MongoDB.Bson;
 using NUnit.Framework;
 
-namespace KaVE.FeedbackProcessor.Tests
+namespace KaVE.FeedbackProcessor.Tests.Cleanup
 {
     [TestFixture]
     internal class FeedbackCleanerTest
@@ -138,77 +140,6 @@ namespace KaVE.FeedbackProcessor.Tests
             {
                 ProcessedEvents.Add(@event);
                 return null;
-            }
-        }
-
-        private class TestFeedbackDatabase : IFeedbackDatabase
-        {
-            private readonly IDeveloperCollection _developerCollection = new TestDeveloperCollection();
-            private readonly IIDEEventCollection _ideEventCollection = new TestIDEEventCollection();
-
-            public IDeveloperCollection GetDeveloperCollection()
-            {
-                return _developerCollection;
-            }
-
-            public IIDEEventCollection GetEventsCollection()
-            {
-                return _ideEventCollection;
-            }
-        }
-
-        private class TestDeveloperCollection : IDeveloperCollection
-        {
-            private readonly ICollection<Developer> _developers = new List<Developer>();
-
-            public IEnumerable<Developer> FindAll()
-            {
-                return _developers;
-            }
-
-            public void Insert(Developer instance)
-            {
-                _developers.Add(instance);
-            }
-
-            public void Save(Developer instance)
-            {
-                throw new NotImplementedException();
-            }
-
-            public IList<Developer> FindBySessionId(string sessionId)
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        private class TestIDEEventCollection : IIDEEventCollection
-        {
-            private readonly ICollection<IDEEvent> _ideEvents = new List<IDEEvent>();
-
-            public IEnumerable<IDEEvent> FindAll()
-            {
-                throw new NotImplementedException();
-            }
-
-            public void Insert(IDEEvent instance)
-            {
-                _ideEvents.Add(instance);
-            }
-
-            public void Save(IDEEvent instance)
-            {
-                throw new NotImplementedException();
-            }
-
-            public IEnumerable<IDEEvent> GetEventStream(Developer developer)
-            {
-                return _ideEvents.Where(evt => developer.SessionIds.Contains(evt.IDESessionUUID));
-            }
-
-            public bool Contains(IDEEvent @event)
-            {
-                throw new NotImplementedException();
             }
         }
     }

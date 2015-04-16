@@ -23,19 +23,20 @@ using System.IO;
 using System.Linq;
 using Ionic.Zip;
 using KaVE.Commons.Model.Events;
+using KaVE.FeedbackProcessor.Import;
 using NUnit.Framework;
 
-namespace KaVE.FeedbackProcessor.Tests
+namespace KaVE.FeedbackProcessor.Tests.Import
 {
     [TestFixture]
-    public class FileLoaderTest
+    public class FeedbackArchiveReaderTest
     {
-        private FileLoader _sut;
+        private FeedbackArchiveReader _sut;
 
         [SetUp]
         public void Setup()
         {
-            _sut = new FileLoader();
+            _sut = new FeedbackArchiveReader();
         }
 
         [Test]
