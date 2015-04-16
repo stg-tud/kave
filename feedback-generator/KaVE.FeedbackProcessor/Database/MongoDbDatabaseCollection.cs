@@ -24,7 +24,7 @@ namespace KaVE.FeedbackProcessor.Database
 {
     internal class MongoDbDatabaseCollection<T> : IDatabaseCollection<T>
     {
-        protected readonly MongoCollection<T> Collection;
+        internal readonly MongoCollection<T> Collection;
 
         public MongoDbDatabaseCollection(MongoCollection<T> collection)
         {

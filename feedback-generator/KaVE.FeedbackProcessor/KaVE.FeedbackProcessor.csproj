@@ -66,6 +66,7 @@
     <Compile Include="Database\MongoDbDeveloperCollection.cs" />
     <Compile Include="Database\MongoDbIDEEventCollection.cs" />
     <Compile Include="Developer.cs" />
+    <Compile Include="DeveloperConsolidator.cs" />
     <Compile Include="FeedbackCleaner.cs" />
     <Compile Include="FeedbackImporter.cs" />
     <Compile Include="FeedbackProcessorApp.cs" />
