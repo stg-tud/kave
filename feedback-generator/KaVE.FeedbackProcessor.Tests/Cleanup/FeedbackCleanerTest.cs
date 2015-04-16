@@ -83,10 +83,13 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup
             var event2 = GivenEventExists(ideSessionUUID, "2");
 
             _uut.RegisterProcessor<TestProcessor>();
+            _uut.RegisterProcessor<TestProcessor>();
             _uut.ProcessFeedback();
 
-            var testProcessor = TestProcessor.Instances.First();
-            CollectionAssert.AreEqual(new[] {event1, event2}, testProcessor.ProcessedEvents);
+            var testProcessor1 = TestProcessor.Instances[0];
+            CollectionAssert.AreEqual(new[] { event1, event2 }, testProcessor1.ProcessedEvents);
+            var testProcessor2 = TestProcessor.Instances[1];
+            CollectionAssert.AreEqual(new[] { event1, event2 }, testProcessor2.ProcessedEvents);
         }
 
         [Test]
@@ -170,7 +173,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup
 
         private class TestProcessor : IIDEEventProcessor
         {
-            public static readonly ICollection<TestProcessor> Instances = new List<TestProcessor>();
+            public static readonly IList<TestProcessor> Instances = new List<TestProcessor>();
             public readonly ICollection<IDEEvent> ProcessedEvents = new List<IDEEvent>();
 
             public TestProcessor()
