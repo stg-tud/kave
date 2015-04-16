@@ -79,19 +79,14 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup
         {
             const string ideSessionUUID = "sessionA";
             GivenDeveloperExists("000000000000000000000001", ideSessionUUID);
-            var events = new[]
-            {
-                new TestIDEEvent {IDESessionUUID = ideSessionUUID, TestProperty = "1"},
-                new TestIDEEvent {IDESessionUUID = ideSessionUUID, TestProperty = "2"}
-            };
-            GivenEventExists(events[0]);
-            GivenEventExists(events[1]);
+            var event1 = GivenEventExists(ideSessionUUID, "1");
+            var event2 = GivenEventExists(ideSessionUUID, "2");
 
             _uut.RegisterProcessor<TestProcessor>();
             _uut.ProcessFeedback();
 
             var testProcessor = TestProcessor.Instances.First();
-            CollectionAssert.AreEqual(events, testProcessor.ProcessedEvents);
+            CollectionAssert.AreEqual(new[] {event1, event2}, testProcessor.ProcessedEvents);
         }
 
         [Test]
@@ -99,20 +94,15 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup
         {
             const string ideSessionUUID = "sessionA";
             GivenDeveloperExists("000000000000000000000001", ideSessionUUID);
-            var events = new[]
-            {
-                new TestIDEEvent {IDESessionUUID = ideSessionUUID, TestProperty = "1"},
-                new TestIDEEvent {IDESessionUUID = ideSessionUUID, TestProperty = "2"}
-            };
-            GivenEventExists(events[0]);
-            GivenEventExists(events[1]);
-            GivenEventExists(new TestIDEEvent { IDESessionUUID = "sessionB", Id = "1" });
+            var event1 = GivenEventExists(ideSessionUUID, "1");
+            var event2 = GivenEventExists(ideSessionUUID, "2");
+            GivenEventExists("sessionB", "1");
 
             _uut.RegisterProcessor<TestProcessor>();
             _uut.ProcessFeedback();
 
             var testProcessor = TestProcessor.Instances.First();
-            CollectionAssert.AreEqual(events, testProcessor.ProcessedEvents);
+            CollectionAssert.AreEqual(new[] { event1, event2 }, testProcessor.ProcessedEvents);
         }
 
         [Test]
@@ -120,14 +110,13 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup
         {
             const string ideSessionUUID = "sessionA";
             GivenDeveloperExists("000000000000000000000001", ideSessionUUID);
-            var @event = new TestIDEEvent { IDESessionUUID = ideSessionUUID, TestProperty = "1" };
-            GivenEventExists(@event);
+            var event1 = GivenEventExists(ideSessionUUID, "1");
 
             _uut.RegisterProcessor<SameEventReturntingProcessor>();
             _uut.ProcessFeedback();
 
             var cleanEvents = _testFeedbackDatabase.GetCleanEventsCollection().FindAll();
-            CollectionAssert.AreEquivalent(cleanEvents, new[]{@event});
+            CollectionAssert.AreEquivalent(cleanEvents, new[] {event1});
         }
 
         [Test]
@@ -135,8 +124,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup
         {
             const string ideSessionUUID = "sessionA";
             GivenDeveloperExists("000000000000000000000001", ideSessionUUID);
-            var @event = new TestIDEEvent { IDESessionUUID = ideSessionUUID, TestProperty = "1" };
-            GivenEventExists(@event);
+            GivenEventExists(ideSessionUUID, "1");
 
             _uut.RegisterProcessor<NullReturningProcessor>();
             _uut.ProcessFeedback();
@@ -150,21 +138,22 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup
         {
             const string ideSessionUUID = "sessionA";
             GivenDeveloperExists("000000000000000000000001", ideSessionUUID);
-            var @event = new TestIDEEvent { IDESessionUUID = ideSessionUUID, TestProperty = "1" };
-            GivenEventExists(@event);
+            var event1 = GivenEventExists(ideSessionUUID, "1");
 
             _uut.RegisterProcessor<DerivedEventReturningProcessor>();
             _uut.ProcessFeedback();
 
             var cleanEvents = _testFeedbackDatabase.GetCleanEventsCollection().FindAll().ToList();
             Assert.AreEqual(1, cleanEvents.Count());
-            CollectionAssert.DoesNotContain(cleanEvents, @event);
+            CollectionAssert.DoesNotContain(cleanEvents, event1);
         }
 
-        private void GivenEventExists(TestIDEEvent infoEvent)
+        private TestIDEEvent GivenEventExists(String sessionId, String value)
         {
+            var testIDEEvent = new TestIDEEvent { IDESessionUUID = sessionId, TestProperty = value };
             var ideEventCollection = _testFeedbackDatabase.GetOriginalEventsCollection();
-            ideEventCollection.Insert(infoEvent);
+            ideEventCollection.Insert(testIDEEvent);
+            return testIDEEvent;
         }
 
         /// <param name="developerId">must be 24 characters, hex</param>
@@ -220,7 +209,11 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup
             {
                 base.Process(@event);
                 var testIDEEvent = (TestIDEEvent) @event;
-                return new TestIDEEvent { IDESessionUUID = @event.IDESessionUUID, TestProperty = testIDEEvent.TestProperty + "_modified" };
+                return new TestIDEEvent
+                {
+                    IDESessionUUID = @event.IDESessionUUID,
+                    TestProperty = testIDEEvent.TestProperty + "_modified"
+                };
             }
         }
     }
