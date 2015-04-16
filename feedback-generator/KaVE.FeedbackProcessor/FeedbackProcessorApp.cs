@@ -43,7 +43,7 @@ namespace KaVE.FeedbackProcessor
         private static void CleanFeedback(FeedbackDatabase database)
         {
             var cleaner = new FeedbackCleaner(database);
-            cleaner.IterateEventsPerDeveloper();
+            cleaner.ProcessFeedback();
         }
     }
 }

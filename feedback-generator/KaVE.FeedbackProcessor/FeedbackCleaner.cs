@@ -17,6 +17,7 @@
  *    - Sven Amann
  */
 
+using System;
 using System.Collections.Generic;
 using KaVE.Commons.Model.Events;
 using KaVE.FeedbackProcessor.Database;
@@ -26,23 +27,12 @@ namespace KaVE.FeedbackProcessor
     internal class FeedbackCleaner
     {
         private readonly IFeedbackDatabase _database;
+        private readonly ICollection<Type> _processors; 
 
         public FeedbackCleaner(IFeedbackDatabase database)
         {
             _database = database;
-        }
-
-        public void IterateEventsPerDeveloper()
-        {
-            var developers = _database.GetDeveloperCollection();
-
-            foreach (var developer in developers.FindAll())
-            {
-                foreach (var ideEvent in GetAllEventsOf(developer))
-                {
-                    // do something with the events
-                }
-            }
+            _processors = new List<Type>();
         }
 
         private IEnumerable<IDEEvent> GetAllEventsOf(Developer developer)
@@ -50,5 +40,28 @@ namespace KaVE.FeedbackProcessor
             var events = _database.GetEventsCollection();
             return events.GetEventStream(developer);
         }
+
+        public void RegisterProcessor<TP>() where TP : IIDEEventProcessor, new()
+        {
+            _processors.Add(typeof(TP));
+        }
+
+        public void ProcessFeedback()
+        {
+            var developers = _database.GetDeveloperCollection().FindAll();
+            foreach (var developer in developers)
+            {
+                foreach (var processor in _processors)
+                {
+                    var ideEventProcessor = (IIDEEventProcessor)Activator.CreateInstance(processor);
+                }
+            }
+            
+        }
+    }
+
+    public interface IIDEEventProcessor
+    {
+        IDEEvent Process(IDEEvent @event);
     }
 }
