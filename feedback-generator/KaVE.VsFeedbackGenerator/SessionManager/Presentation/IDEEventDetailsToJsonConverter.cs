@@ -26,7 +26,14 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
 {
     internal static class IDEEventDetailsToJsonConverter
     {
-        private static readonly PropertyInfo[] IDEEventProperties = typeof (IDEEvent).GetProperties();
+        private static readonly String[] IDEEventPropertyKeys =
+            typeof (IDEEvent).GetProperties().Select(JsonKey).ToArray();
+
+        private static string JsonKey(PropertyInfo property)
+        {
+            return string.Format("\"{0}\"", property.Name);
+        }
+
         private static readonly string NewLine = Environment.NewLine;
 
         public static string GetDetailsAsJson(this IDEEvent ideEvent)
@@ -51,7 +58,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
         /// </summary>
         private static bool IsSpecializedEventInformation(string detailLine)
         {
-            return IDEEventProperties.All(ideEventProperty => !detailLine.Contains(ideEventProperty.Name));
+            return IDEEventPropertyKeys.All(key => !detailLine.Contains(key));
         }
 
         private static string WithoutComma(string arg)
