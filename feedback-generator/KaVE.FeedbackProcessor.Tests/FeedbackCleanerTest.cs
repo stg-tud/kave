@@ -55,6 +55,19 @@ namespace KaVE.FeedbackProcessor.Tests
         }
 
         [Test]
+        public void InstantiatesEachRegisteredProcessorOnce()
+        {
+            GivenDeveloperExists("000000000000000000000001", "sessionA");
+
+            _uut.RegisterProcessor<TestProcessor>();
+            _uut.RegisterProcessor<TestProcessor>();
+            _uut.RegisterProcessor<TestProcessor>();
+            _uut.ProcessFeedback();
+
+            Assert.AreEqual(3, TestProcessor.Instances.Count);
+        }
+
+        [Test]
         public void PassesEventsToProcessors()
         {
             const string ideSessionUUID = "sessionA";
