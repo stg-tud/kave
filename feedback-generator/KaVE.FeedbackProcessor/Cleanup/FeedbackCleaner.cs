@@ -29,7 +29,7 @@ namespace KaVE.FeedbackProcessor.Cleanup
     internal class FeedbackCleaner
     {
         private readonly IFeedbackDatabase _database;
-        private readonly ICollection<Type> _processors; 
+        private readonly ICollection<Type> _processors;
 
         public FeedbackCleaner(IFeedbackDatabase database)
         {
@@ -45,7 +45,7 @@ namespace KaVE.FeedbackProcessor.Cleanup
 
         public void RegisterProcessor<TP>() where TP : IIDEEventProcessor, new()
         {
-            _processors.Add(typeof(TP));
+            _processors.Add(typeof (TP));
         }
 
         public void ProcessFeedback()
@@ -59,11 +59,13 @@ namespace KaVE.FeedbackProcessor.Cleanup
                     foreach (var ideEventProcessor in processors)
                     {
                         var cleanEvent = ideEventProcessor.Process(ideEvent);
-                        _database.GetCleanEventsCollection().Insert(cleanEvent);
+                        if (cleanEvent != null)
+                        {
+                            _database.GetCleanEventsCollection().Insert(cleanEvent);
+                        }
                     }
                 }
             }
-            
         }
     }
 }

@@ -36,10 +36,16 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup
         private FeedbackCleaner _uut;
 
         [SetUp]
-        public void SetUpDatabase()
+        public void SetUp()
         {
             _testFeedbackDatabase = new TestFeedbackDatabase();
             _uut = new FeedbackCleaner(_testFeedbackDatabase);
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            TestProcessor.Instances.Clear();
         }
 
         [Test]
@@ -74,8 +80,8 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup
             GivenDeveloperExists("000000000000000000000001", ideSessionUUID);
             var events = new[]
             {
-                new InfoEvent {IDESessionUUID = ideSessionUUID, Info = "1"},
-                new InfoEvent {IDESessionUUID = ideSessionUUID, Info = "2"}
+                new TestIDEEvent {IDESessionUUID = ideSessionUUID, Id = "1"},
+                new TestIDEEvent {IDESessionUUID = ideSessionUUID, Id = "2"}
             };
             GivenEventExists(events[0]);
             GivenEventExists(events[1]);
@@ -94,12 +100,12 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup
             GivenDeveloperExists("000000000000000000000001", ideSessionUUID);
             var events = new[]
             {
-                new InfoEvent {IDESessionUUID = ideSessionUUID, Info = "1"},
-                new InfoEvent {IDESessionUUID = ideSessionUUID, Info = "2"}
+                new TestIDEEvent {IDESessionUUID = ideSessionUUID, Id = "1"},
+                new TestIDEEvent {IDESessionUUID = ideSessionUUID, Id = "2"}
             };
             GivenEventExists(events[0]);
             GivenEventExists(events[1]);
-            GivenEventExists(new InfoEvent {IDESessionUUID = "sessionB", Info = "1"});
+            GivenEventExists(new TestIDEEvent { IDESessionUUID = "sessionB", Id = "1" });
 
             _uut.RegisterProcessor<TestProcessor>();
             _uut.ProcessFeedback();
@@ -109,21 +115,36 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup
         }
 
         [Test]
-        public void WritesReturnedEventToCleanedCollection()
+        public void WritesReturnedEventToCleanCollection()
         {
             const string ideSessionUUID = "sessionA";
             GivenDeveloperExists("000000000000000000000001", ideSessionUUID);
-            var @event = new InfoEvent { IDESessionUUID = ideSessionUUID, Info = "1" };
+            var @event = new TestIDEEvent { IDESessionUUID = ideSessionUUID, Id = "1" };
             GivenEventExists(@event);
 
-            _uut.RegisterProcessor<TestProcessor>();
+            _uut.RegisterProcessor<SameEventReturntingProcessor>();
             _uut.ProcessFeedback();
 
             var cleanEvents = _testFeedbackDatabase.GetCleanEventsCollection().FindAll();
-            CollectionAssert.Contains(cleanEvents, @event);
+            CollectionAssert.AreEquivalent(cleanEvents, new[]{@event});
         }
 
-        private void GivenEventExists(IDEEvent infoEvent)
+        [Test]
+        public void DropsEventIfProcessorReturnsNull()
+        {
+            const string ideSessionUUID = "sessionA";
+            GivenDeveloperExists("000000000000000000000001", ideSessionUUID);
+            var @event = new TestIDEEvent { IDESessionUUID = ideSessionUUID, Id = "1" };
+            GivenEventExists(@event);
+
+            _uut.RegisterProcessor<NullReturningProcessor>();
+            _uut.ProcessFeedback();
+
+            var cleanEvents = _testFeedbackDatabase.GetCleanEventsCollection().FindAll();
+            CollectionAssert.IsEmpty(cleanEvents);
+        }
+
+        private void GivenEventExists(TestIDEEvent infoEvent)
         {
             var ideEventCollection = _testFeedbackDatabase.GetOriginalEventsCollection();
             ideEventCollection.Insert(infoEvent);
@@ -151,10 +172,28 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup
                 Instances.Add(this);
             }
 
-            public IDEEvent Process(IDEEvent @event)
+            public virtual IDEEvent Process(IDEEvent @event)
             {
                 ProcessedEvents.Add(@event);
+                return null;
+            }
+        }
+
+        private class SameEventReturntingProcessor : TestProcessor
+        {
+            public override IDEEvent Process(IDEEvent @event)
+            {
+                base.Process(@event);
                 return @event;
+            }
+        }
+
+        private class NullReturningProcessor : TestProcessor
+        {
+            public override IDEEvent Process(IDEEvent @event)
+            {
+                base.Process(@event);
+                return null;
             }
         }
     }
