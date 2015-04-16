@@ -21,6 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using KaVE.Commons.Model.Events;
+using KaVE.Commons.TestUtils.Model.Events;
 using KaVE.FeedbackProcessor.Cleanup;
 using KaVE.FeedbackProcessor.Model;
 using KaVE.FeedbackProcessor.Tests.Database;
@@ -80,8 +81,8 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup
             GivenDeveloperExists("000000000000000000000001", ideSessionUUID);
             var events = new[]
             {
-                new TestIDEEvent {IDESessionUUID = ideSessionUUID, Id = "1"},
-                new TestIDEEvent {IDESessionUUID = ideSessionUUID, Id = "2"}
+                new TestIDEEvent {IDESessionUUID = ideSessionUUID, TestProperty = "1"},
+                new TestIDEEvent {IDESessionUUID = ideSessionUUID, TestProperty = "2"}
             };
             GivenEventExists(events[0]);
             GivenEventExists(events[1]);
@@ -100,8 +101,8 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup
             GivenDeveloperExists("000000000000000000000001", ideSessionUUID);
             var events = new[]
             {
-                new TestIDEEvent {IDESessionUUID = ideSessionUUID, Id = "1"},
-                new TestIDEEvent {IDESessionUUID = ideSessionUUID, Id = "2"}
+                new TestIDEEvent {IDESessionUUID = ideSessionUUID, TestProperty = "1"},
+                new TestIDEEvent {IDESessionUUID = ideSessionUUID, TestProperty = "2"}
             };
             GivenEventExists(events[0]);
             GivenEventExists(events[1]);
@@ -119,7 +120,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup
         {
             const string ideSessionUUID = "sessionA";
             GivenDeveloperExists("000000000000000000000001", ideSessionUUID);
-            var @event = new TestIDEEvent { IDESessionUUID = ideSessionUUID, Id = "1" };
+            var @event = new TestIDEEvent { IDESessionUUID = ideSessionUUID, TestProperty = "1" };
             GivenEventExists(@event);
 
             _uut.RegisterProcessor<SameEventReturntingProcessor>();
@@ -134,7 +135,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup
         {
             const string ideSessionUUID = "sessionA";
             GivenDeveloperExists("000000000000000000000001", ideSessionUUID);
-            var @event = new TestIDEEvent { IDESessionUUID = ideSessionUUID, Id = "1" };
+            var @event = new TestIDEEvent { IDESessionUUID = ideSessionUUID, TestProperty = "1" };
             GivenEventExists(@event);
 
             _uut.RegisterProcessor<NullReturningProcessor>();
@@ -142,6 +143,22 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup
 
             var cleanEvents = _testFeedbackDatabase.GetCleanEventsCollection().FindAll();
             CollectionAssert.IsEmpty(cleanEvents);
+        }
+
+        [Test]
+        public void WritesReturnedDerivedEventToCleanCollection()
+        {
+            const string ideSessionUUID = "sessionA";
+            GivenDeveloperExists("000000000000000000000001", ideSessionUUID);
+            var @event = new TestIDEEvent { IDESessionUUID = ideSessionUUID, TestProperty = "1" };
+            GivenEventExists(@event);
+
+            _uut.RegisterProcessor<DerivedEventReturningProcessor>();
+            _uut.ProcessFeedback();
+
+            var cleanEvents = _testFeedbackDatabase.GetCleanEventsCollection().FindAll().ToList();
+            Assert.AreEqual(1, cleanEvents.Count());
+            CollectionAssert.DoesNotContain(cleanEvents, @event);
         }
 
         private void GivenEventExists(TestIDEEvent infoEvent)
@@ -194,6 +211,16 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup
             {
                 base.Process(@event);
                 return null;
+            }
+        }
+
+        private class DerivedEventReturningProcessor : TestProcessor
+        {
+            public override IDEEvent Process(IDEEvent @event)
+            {
+                base.Process(@event);
+                var testIDEEvent = (TestIDEEvent) @event;
+                return new TestIDEEvent { IDESessionUUID = @event.IDESessionUUID, TestProperty = testIDEEvent.TestProperty + "_modified" };
             }
         }
     }
