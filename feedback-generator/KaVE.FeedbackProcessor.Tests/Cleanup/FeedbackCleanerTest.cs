@@ -22,6 +22,7 @@ using System.Collections.Generic;
 using System.Linq;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.TestUtils.Model.Events;
+using KaVE.Commons.Utils.Assertion;
 using KaVE.FeedbackProcessor.Cleanup;
 using KaVE.FeedbackProcessor.Model;
 using KaVE.FeedbackProcessor.Tests.Database;
@@ -55,7 +56,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup
             GivenDeveloperExists("000000000000000000000001", "sessionA");
             GivenDeveloperExists("000000000000000000000002", "sessionB");
 
-            _uut.RegisterProcessor<TestProcessor>();
+            _uut.RegisterProcessor<InactiveProcessor>();
             _uut.ProcessFeedback();
 
             Assert.AreEqual(2, TestProcessor.Instances.Count);
@@ -66,9 +67,9 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup
         {
             GivenDeveloperExists("000000000000000000000001", "sessionA");
 
-            _uut.RegisterProcessor<TestProcessor>();
-            _uut.RegisterProcessor<TestProcessor>();
-            _uut.RegisterProcessor<TestProcessor>();
+            _uut.RegisterProcessor<InactiveProcessor>();
+            _uut.RegisterProcessor<InactiveProcessor>();
+            _uut.RegisterProcessor<InactiveProcessor>();
             _uut.ProcessFeedback();
 
             Assert.AreEqual(3, TestProcessor.Instances.Count);
@@ -82,8 +83,8 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup
             var event1 = GivenEventExists(ideSessionUUID, "1");
             var event2 = GivenEventExists(ideSessionUUID, "2");
 
-            _uut.RegisterProcessor<TestProcessor>();
-            _uut.RegisterProcessor<TestProcessor>();
+            _uut.RegisterProcessor<InactiveProcessor>();
+            _uut.RegisterProcessor<InactiveProcessor>();
             _uut.ProcessFeedback();
 
             var testProcessor1 = TestProcessor.Instances[0];
@@ -101,7 +102,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup
             var event2 = GivenEventExists(ideSessionUUID, "2");
             GivenEventExists("sessionB", "1");
 
-            _uut.RegisterProcessor<TestProcessor>();
+            _uut.RegisterProcessor<InactiveProcessor>();
             _uut.ProcessFeedback();
 
             var testProcessor = TestProcessor.Instances.First();
@@ -154,6 +155,30 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup
             CollectionAssert.DoesNotContain(cleanEvents, event1);
         }
 
+        [Test, ExpectedException(typeof(AssertException), ExpectedMessage = "cannot drop and replace an event")]
+        public void ThrowsIfOneProcessorReplacesAndOneConsumesAnEvent()
+        {
+            const string ideSessionUUID = "sessionA";
+            GivenDeveloperExists("000000000000000000000001", ideSessionUUID);
+            GivenEventExists(ideSessionUUID, "1");
+
+            _uut.RegisterProcessor<ReplacingConsumer>();
+            _uut.RegisterProcessor<ConsumingProcessor>();
+            _uut.ProcessFeedback();
+        }
+
+        [Test, ExpectedException(typeof(AssertException), ExpectedMessage = "cannot replace an event by two")]
+        public void ThrowsIfTwoProcessorsReplaceAnEvent()
+        {
+            const string ideSessionUUID = "sessionA";
+            GivenDeveloperExists("000000000000000000000001", ideSessionUUID);
+            GivenEventExists(ideSessionUUID, "1");
+
+            _uut.RegisterProcessor<ReplacingConsumer>();
+            _uut.RegisterProcessor<ReplacingConsumer>();
+            _uut.ProcessFeedback();
+        }
+
         private TestIDEEvent GivenEventExists(String sessionId, String value)
         {
             var testIDEEvent = new TestIDEEvent { IDESessionUUID = sessionId, TestProperty = value };
@@ -174,7 +199,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup
             _testFeedbackDatabase.GetDeveloperCollection().Insert(developer);
         }
 
-        private class TestProcessor : IIDEEventProcessor
+        private abstract class TestProcessor : IIDEEventProcessor
         {
             public static readonly IList<TestProcessor> Instances = new List<TestProcessor>();
             public readonly ICollection<IDEEvent> ProcessedEvents = new List<IDEEvent>();

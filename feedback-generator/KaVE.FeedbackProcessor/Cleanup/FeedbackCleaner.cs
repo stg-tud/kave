@@ -21,6 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using KaVE.Commons.Model.Events;
+using KaVE.Commons.Utils.Assertion;
 using KaVE.FeedbackProcessor.Database;
 using KaVE.FeedbackProcessor.Model;
 
@@ -37,12 +38,6 @@ namespace KaVE.FeedbackProcessor.Cleanup
             _processors = new List<Type>();
         }
 
-        private IEnumerable<IDEEvent> GetAllEventsOf(Developer developer)
-        {
-            var events = _database.GetOriginalEventsCollection();
-            return events.GetEventStream(developer);
-        }
-
         public void RegisterProcessor<TP>() where TP : IIDEEventProcessor, new()
         {
             _processors.Add(typeof (TP));
@@ -53,24 +48,52 @@ namespace KaVE.FeedbackProcessor.Cleanup
             var developers = _database.GetDeveloperCollection().FindAll();
             foreach (var developer in developers)
             {
-                var processors = _processors.Select(Activator.CreateInstance).Cast<IIDEEventProcessor>().ToList();
-                foreach (var ideEvent in GetAllEventsOf(developer))
+                ProcessEventStreamOf(developer);
+            }
+        }
+
+        private void ProcessEventStreamOf(Developer developer)
+        {
+            var processors = _processors.Select(Activator.CreateInstance).Cast<IIDEEventProcessor>().ToList();
+            foreach (var ideEvent in GetAllEventsOf(developer))
+            {
+                var cleanEvent = ideEvent;
+                foreach (var ideEventProcessor in processors)
                 {
-                    var returnedEvents = new HashSet<IDEEvent>();
-                    foreach (var ideEventProcessor in processors)
+                    var candidate = ideEventProcessor.Process(ideEvent);
+                    if (candidate == null)
                     {
-                        returnedEvents.Add(ideEventProcessor.Process(ideEvent));
+                        if (!ReferenceEquals(cleanEvent, ideEvent))
+                        {
+                            Asserts.Fail("cannot drop and replace an event");
+                        }
+                        cleanEvent = null;
                     }
-                    if (returnedEvents.Contains(null))
+                    else if (!candidate.Equals(ideEvent))
                     {
-                        returnedEvents.Clear();
-                    }
-                    if (returnedEvents.Any())
-                    {
-                        _database.GetCleanEventsCollection().Insert(returnedEvents.First());
+                        if (cleanEvent == null)
+                        {
+                            Asserts.Fail("cannot drop and replace an event");
+                        }
+                        else if (!ReferenceEquals(cleanEvent, ideEvent))
+                        {
+                            Asserts.Fail("cannot replace an event by two");
+                        }
+                        cleanEvent = candidate;
                     }
                 }
+
+                if (cleanEvent != null)
+                {
+                    _database.GetCleanEventsCollection().Insert(cleanEvent);
+                }
             }
+        }
+
+        private IEnumerable<IDEEvent> GetAllEventsOf(Developer developer)
+        {
+            var events = _database.GetOriginalEventsCollection();
+            return events.GetEventStream(developer);
         }
     }
 }
