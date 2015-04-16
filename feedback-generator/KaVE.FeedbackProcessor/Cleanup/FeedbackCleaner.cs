@@ -54,46 +54,65 @@ namespace KaVE.FeedbackProcessor.Cleanup
 
         private void ProcessEventStreamOf(Developer developer)
         {
-            var processors = _processors.Select(Activator.CreateInstance).Cast<IIDEEventProcessor>().ToList();
+            var processors = CreateProcessors();
             foreach (var ideEvent in GetAllEventsOf(developer))
             {
-                var cleanEvent = ideEvent;
-                foreach (var ideEventProcessor in processors)
-                {
-                    var candidate = ideEventProcessor.Process(ideEvent);
-                    if (candidate == null)
-                    {
-                        if (!ReferenceEquals(cleanEvent, ideEvent))
-                        {
-                            Asserts.Fail("cannot drop and replace an event");
-                        }
-                        cleanEvent = null;
-                    }
-                    else if (!candidate.Equals(ideEvent))
-                    {
-                        if (cleanEvent == null)
-                        {
-                            Asserts.Fail("cannot drop and replace an event");
-                        }
-                        else if (!ReferenceEquals(cleanEvent, ideEvent))
-                        {
-                            Asserts.Fail("cannot replace an event by two");
-                        }
-                        cleanEvent = candidate;
-                    }
-                }
-
-                if (cleanEvent != null)
-                {
-                    _database.GetCleanEventsCollection().Insert(cleanEvent);
-                }
+                ProcessEvent(ideEvent, processors);
             }
+        }
+
+        private List<IIDEEventProcessor> CreateProcessors()
+        {
+            return _processors.Select(Activator.CreateInstance).Cast<IIDEEventProcessor>().ToList();
         }
 
         private IEnumerable<IDEEvent> GetAllEventsOf(Developer developer)
         {
             var events = _database.GetOriginalEventsCollection();
             return events.GetEventStream(developer);
+        }
+
+        private void ProcessEvent(IDEEvent originalEvent, IEnumerable<IIDEEventProcessor> processors)
+        {
+            var resultingEvent = originalEvent;
+            foreach (var candidate in processors.Select(processor => processor.Process(originalEvent)))
+            {
+                if (IsDropSignal(candidate))
+                {
+                    if (IsReplacement(resultingEvent, originalEvent))
+                    {
+                        Asserts.Fail("cannot drop and replace an event");
+                    }
+                    resultingEvent = null;
+                }
+                else if (!candidate.Equals(originalEvent))
+                {
+                    if (IsDropSignal(resultingEvent))
+                    {
+                        Asserts.Fail("cannot drop and replace an event");
+                    }
+                    else if (IsReplacement(resultingEvent, originalEvent))
+                    {
+                        Asserts.Fail("cannot replace an event by two");
+                    }
+                    resultingEvent = candidate;
+                }
+            }
+
+            if (resultingEvent != null)
+            {
+                _database.GetCleanEventsCollection().Insert(resultingEvent);
+            }
+        }
+
+        private static bool IsReplacement(IDEEvent resultingEvent, IDEEvent originalEvent)
+        {
+            return !ReferenceEquals(resultingEvent, originalEvent);
+        }
+
+        private static bool IsDropSignal(IDEEvent candidate)
+        {
+            return candidate == null;
         }
     }
 }
