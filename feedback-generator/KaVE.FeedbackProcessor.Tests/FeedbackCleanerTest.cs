@@ -20,11 +20,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Serialization;
 using KaVE.Commons.Model.Events;
 using KaVE.FeedbackProcessor.Database;
 using MongoDB.Bson;
-using MongoDB.Driver.Linq;
 using NUnit.Framework;
 
 namespace KaVE.FeedbackProcessor.Tests
@@ -87,7 +85,28 @@ namespace KaVE.FeedbackProcessor.Tests
             CollectionAssert.AreEqual(events, testProcessor.ProcessedEvents);
         }
 
-        private void GivenEventExists(InfoEvent infoEvent)
+        [Test]
+        public void PassesOnlyEventsForTheSameDeveloperToOneProcessorInstance()
+        {
+            const string ideSessionUUID = "sessionA";
+            GivenDeveloperExists("000000000000000000000001", ideSessionUUID);
+            var events = new[]
+            {
+                new InfoEvent {IDESessionUUID = ideSessionUUID, Info = "1"},
+                new InfoEvent {IDESessionUUID = ideSessionUUID, Info = "2"}
+            };
+            GivenEventExists(events[0]);
+            GivenEventExists(events[1]);
+            GivenEventExists(new InfoEvent {IDESessionUUID = "sessionB", Info = "1"});
+
+            _uut.RegisterProcessor<TestProcessor>();
+            _uut.ProcessFeedback();
+
+            var testProcessor = TestProcessor.Instances.First();
+            CollectionAssert.AreEqual(events, testProcessor.ProcessedEvents);
+        }
+
+        private void GivenEventExists(IDEEvent infoEvent)
         {
             var ideEventCollection = _testFeedbackDatabase.GetEventsCollection();
             ideEventCollection.Insert(infoEvent);
@@ -154,12 +173,12 @@ namespace KaVE.FeedbackProcessor.Tests
 
             public void Save(Developer instance)
             {
-                throw new System.NotImplementedException();
+                throw new NotImplementedException();
             }
 
             public IList<Developer> FindBySessionId(string sessionId)
             {
-                throw new System.NotImplementedException();
+                throw new NotImplementedException();
             }
         }
 
@@ -169,7 +188,7 @@ namespace KaVE.FeedbackProcessor.Tests
 
             public IEnumerable<IDEEvent> FindAll()
             {
-                throw new System.NotImplementedException();
+                throw new NotImplementedException();
             }
 
             public void Insert(IDEEvent instance)
@@ -179,17 +198,17 @@ namespace KaVE.FeedbackProcessor.Tests
 
             public void Save(IDEEvent instance)
             {
-                throw new System.NotImplementedException();
+                throw new NotImplementedException();
             }
 
             public IEnumerable<IDEEvent> GetEventStream(Developer developer)
             {
-                return _ideEvents;
+                return _ideEvents.Where(evt => developer.SessionIds.Contains(evt.IDESessionUUID));
             }
 
             public bool Contains(IDEEvent @event)
             {
-                throw new System.NotImplementedException();
+                throw new NotImplementedException();
             }
         }
     }
