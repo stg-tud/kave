@@ -49,16 +49,23 @@ namespace KaVE.FeedbackProcessor.Database
             return new MongoDbDeveloperCollection(GetCollection<Developer>());
         }
 
-        public IIDEEventCollection GetEventsCollection()
+        public IIDEEventCollection GetOriginalEventsCollection()
         {
             var eventsCollection = GetCollection<IDEEvent>();
             EnsureEventIndex(eventsCollection);
             return new MongoDbIDEEventCollection(eventsCollection);
         }
 
-        private MongoCollection<T> GetCollection<T>()
+        public IIDEEventCollection GetCleanEventsCollection()
         {
-            var collectionName = typeof (T).Name;
+            var eventsCollection = GetCollection<IDEEvent>("_clean");
+            EnsureEventIndex(eventsCollection);
+            return new MongoDbIDEEventCollection(eventsCollection);
+        }
+
+        private MongoCollection<T> GetCollection<T>(String suffix = "")
+        {
+            var collectionName = typeof (T).Name + suffix;
             if (!_database.CollectionExists(collectionName))
             {
                 _database.CreateCollection(collectionName);

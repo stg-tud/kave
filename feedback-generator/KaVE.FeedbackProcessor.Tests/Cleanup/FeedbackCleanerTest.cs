@@ -108,14 +108,29 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup
             CollectionAssert.AreEqual(events, testProcessor.ProcessedEvents);
         }
 
+        [Test]
+        public void WritesReturnedEventToCleanedCollection()
+        {
+            const string ideSessionUUID = "sessionA";
+            GivenDeveloperExists("000000000000000000000001", ideSessionUUID);
+            var @event = new InfoEvent { IDESessionUUID = ideSessionUUID, Info = "1" };
+            GivenEventExists(@event);
+
+            _uut.RegisterProcessor<TestProcessor>();
+            _uut.ProcessFeedback();
+
+            var cleanEvents = _testFeedbackDatabase.GetCleanEventsCollection().FindAll();
+            CollectionAssert.Contains(cleanEvents, @event);
+        }
+
         private void GivenEventExists(IDEEvent infoEvent)
         {
-            var ideEventCollection = _testFeedbackDatabase.GetEventsCollection();
+            var ideEventCollection = _testFeedbackDatabase.GetOriginalEventsCollection();
             ideEventCollection.Insert(infoEvent);
         }
 
         /// <param name="developerId">must be 24 characters, hex</param>
-        /// <param name="sessionIds"></param>
+        /// <param name="sessionIds">should be disjunct from any other developer's ids</param>
         private void GivenDeveloperExists(String developerId, params String[] sessionIds)
         {
             var developer = new Developer {Id = new ObjectId(developerId)};
@@ -139,7 +154,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup
             public IDEEvent Process(IDEEvent @event)
             {
                 ProcessedEvents.Add(@event);
-                return null;
+                return @event;
             }
         }
     }

@@ -39,7 +39,7 @@ namespace KaVE.FeedbackProcessor.Cleanup
 
         private IEnumerable<IDEEvent> GetAllEventsOf(Developer developer)
         {
-            var events = _database.GetEventsCollection();
+            var events = _database.GetOriginalEventsCollection();
             return events.GetEventStream(developer);
         }
 
@@ -58,7 +58,8 @@ namespace KaVE.FeedbackProcessor.Cleanup
                 {
                     foreach (var ideEventProcessor in processors)
                     {
-                        ideEventProcessor.Process(ideEvent);
+                        var cleanEvent = ideEventProcessor.Process(ideEvent);
+                        _database.GetCleanEventsCollection().Insert(cleanEvent);
                     }
                 }
             }

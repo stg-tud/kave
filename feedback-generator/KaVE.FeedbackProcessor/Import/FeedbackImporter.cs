@@ -64,7 +64,7 @@ namespace KaVE.FeedbackProcessor.Import
 
         public void Import()
         {
-            var eventsCollection = _database.GetEventsCollection();
+            var eventsCollection = _database.GetOriginalEventsCollection();
             var developerCollection = _database.GetDeveloperCollection();
             var fileLoader = new FeedbackArchiveReader();
             var totalNumberOfUniqueEvents = 0;

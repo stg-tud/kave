@@ -31,7 +31,7 @@ namespace KaVE.FeedbackProcessor.Tests.Database
 
         public IEnumerable<IDEEvent> FindAll()
         {
-            throw new NotImplementedException();
+            return _ideEvents;
         }
 
         public void Insert(IDEEvent instance)
