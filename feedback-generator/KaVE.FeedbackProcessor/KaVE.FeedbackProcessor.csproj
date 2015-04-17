@@ -55,6 +55,7 @@
     <Compile Include="Cleanup\DeveloperConsolidator.cs" />
     <Compile Include="Cleanup\FeedbackCleaner.cs" />
     <Compile Include="Cleanup\IIDEEventProcessor.cs" />
+    <Compile Include="Cleanup\Processors\CloseEventProcessor.cs" />
     <Compile Include="Import\FeedbackImporter.cs" />
     <Compile Include="Import\FeedbackArchiveReader.cs" />
     <Compile Include="Model\Developer.cs" />
