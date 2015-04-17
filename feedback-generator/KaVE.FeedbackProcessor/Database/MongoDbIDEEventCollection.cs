@@ -30,12 +30,6 @@ namespace KaVE.FeedbackProcessor.Database
     {
         public MongoDbIDEEventCollection(MongoCollection<IDEEvent> collection) : base(collection) {}
 
-        public IEnumerable<IDEEvent> GetEventStream(Developer developer)
-        {
-            return Collection.Find(Query<IDEEvent>.In(evt => evt.IDESessionUUID, developer.SessionIds))
-                             .SetSortOrder(SortBy<IDEEvent>.Ascending(evt => evt.TriggeredAt));
-        }
-
         public bool Contains(IDEEvent @event)
         {
             var candidates = Collection.FindAs<IDEEvent>(
@@ -44,6 +38,36 @@ namespace KaVE.FeedbackProcessor.Database
                     Query<IDEEvent>.EQ(e => e.TriggeredAt, @event.TriggeredAt),
                     Query.EQ("_t", @event.GetType().Name)));
             return candidates.Any(@event.Equals);
+        }
+
+        public IEnumerable<IDEEvent> GetEventStream(Developer developer)
+        {
+            return Collection.Find(EventsFrom(developer)).SetSortOrder(Chronological);
+        }
+
+        public IDEEvent GetFirstEvent(Developer developer)
+        {
+            return Collection.Find(EventsFrom(developer)).SetSortOrder(Chronological).SetLimit(1).First();
+        }
+
+        public IDEEvent GetLastEvent(Developer developer)
+        {
+            return Collection.Find(EventsFrom(developer)).SetSortOrder(Reversed).SetLimit(1).First();
+        }
+
+        private static SortByBuilder<IDEEvent> Chronological
+        {
+            get { return SortBy<IDEEvent>.Ascending(evt => evt.TriggeredAt); }
+        }
+
+        private static SortByBuilder<IDEEvent> Reversed
+        {
+            get { return SortBy<IDEEvent>.Descending(evt => evt.TriggeredAt); }
+        }
+
+        private static IMongoQuery EventsFrom(Developer developer)
+        {
+            return Query<IDEEvent>.In(evt => evt.IDESessionUUID, developer.SessionIds);
         }
     }
 }

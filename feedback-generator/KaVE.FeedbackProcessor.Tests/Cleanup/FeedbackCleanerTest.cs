@@ -17,31 +17,25 @@
  *    - Sven Amann
  */
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.TestUtils.Model.Events;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.FeedbackProcessor.Cleanup;
-using KaVE.FeedbackProcessor.Model;
-using KaVE.FeedbackProcessor.Tests.Database;
-using MongoDB.Bson;
 using NUnit.Framework;
 
 namespace KaVE.FeedbackProcessor.Tests.Cleanup
 {
     [TestFixture]
-    internal class FeedbackCleanerTest
+    internal class FeedbackCleanerTest : FeedbackDatabaseBasedTest
     {
-        private TestFeedbackDatabase _testFeedbackDatabase;
         private FeedbackCleaner _uut;
 
         [SetUp]
         public void SetUp()
         {
-            _testFeedbackDatabase = new TestFeedbackDatabase();
-            _uut = new FeedbackCleaner(_testFeedbackDatabase);
+            _uut = new FeedbackCleaner(TestFeedbackDatabase);
         }
 
         [TearDown]
@@ -120,7 +114,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup
             _uut.RegisterProcessor<InactiveProcessor>();
             _uut.ProcessFeedback();
 
-            var cleanEvents = _testFeedbackDatabase.GetCleanEventsCollection().FindAll();
+            var cleanEvents = TestFeedbackDatabase.GetCleanEventsCollection().FindAll();
             CollectionAssert.AreEquivalent(cleanEvents, new[] {event1});
         }
 
@@ -135,7 +129,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup
             _uut.RegisterProcessor<InactiveProcessor>();
             _uut.ProcessFeedback();
 
-            var cleanEvents = _testFeedbackDatabase.GetCleanEventsCollection().FindAll();
+            var cleanEvents = TestFeedbackDatabase.GetCleanEventsCollection().FindAll();
             CollectionAssert.IsEmpty(cleanEvents);
         }
 
@@ -150,7 +144,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup
             _uut.RegisterProcessor<InactiveProcessor>();
             _uut.ProcessFeedback();
 
-            var cleanEvents = _testFeedbackDatabase.GetCleanEventsCollection().FindAll().ToList();
+            var cleanEvents = TestFeedbackDatabase.GetCleanEventsCollection().FindAll().ToList();
             Assert.AreEqual(1, cleanEvents.Count());
             CollectionAssert.DoesNotContain(cleanEvents, event1);
         }
@@ -179,32 +173,12 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup
             _uut.ProcessFeedback();
         }
 
-        private TestIDEEvent GivenEventExists(String sessionId, String value)
-        {
-            var testIDEEvent = new TestIDEEvent { IDESessionUUID = sessionId, TestProperty = value };
-            var ideEventCollection = _testFeedbackDatabase.GetOriginalEventsCollection();
-            ideEventCollection.Insert(testIDEEvent);
-            return testIDEEvent;
-        }
-
-        /// <param name="developerId">must be 24 characters, hex</param>
-        /// <param name="sessionIds">should be disjunct from any other developer's ids</param>
-        private void GivenDeveloperExists(String developerId, params String[] sessionIds)
-        {
-            var developer = new Developer {Id = new ObjectId(developerId)};
-            foreach (var sessionId in sessionIds)
-            {
-                developer.SessionIds.Add(sessionId);
-            }
-            _testFeedbackDatabase.GetDeveloperCollection().Insert(developer);
-        }
-
         private abstract class TestProcessor : IIDEEventProcessor
         {
             public static readonly IList<TestProcessor> Instances = new List<TestProcessor>();
             public readonly ICollection<IDEEvent> ProcessedEvents = new List<IDEEvent>();
 
-            public TestProcessor()
+            protected TestProcessor()
             {
                 Instances.Add(this);
             }

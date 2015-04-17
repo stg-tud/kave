@@ -27,5 +27,7 @@ namespace KaVE.FeedbackProcessor.Database
     {
         IEnumerable<IDEEvent> GetEventStream(Developer developer);
         bool Contains(IDEEvent @event);
+        IDEEvent GetFirstEvent(Developer developer);
+        IDEEvent GetLastEvent(Developer developer);
     }
 }

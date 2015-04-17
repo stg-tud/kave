@@ -16,6 +16,7 @@
  * Contributors:
  *    - Sven Amann
  */
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -52,6 +53,16 @@ namespace KaVE.FeedbackProcessor.Tests.Database
         public bool Contains(IDEEvent @event)
         {
             throw new NotImplementedException();
+        }
+
+        public IDEEvent GetFirstEvent(Developer developer)
+        {
+            return _ideEvents.OrderBy(ideEvent => ideEvent.TriggeredAt).First();
+        }
+
+        public IDEEvent GetLastEvent(Developer developer)
+        {
+            return _ideEvents.OrderByDescending(ideEvent => ideEvent.TriggeredAt).First();
         }
     }
 }

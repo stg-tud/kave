@@ -75,6 +75,7 @@
     <Compile Include="FeedbackProcessorApp.cs" />
     <Compile Include="Database\KaVECollectionSerializer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Statistics\DeveloperStatisticsCalculator.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\KaVE.licenseheader">
