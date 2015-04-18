@@ -48,6 +48,16 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
         }
 
         [Test]
+        public void ShouldNotFilterNonClosingDocumentEvents()
+        {
+            var openedDocumentEvent = new DocumentEvent{Action = DocumentEvent.DocumentAction.Opened};
+
+            var processedEvent = _uut.Process(openedDocumentEvent);
+
+            Assert.AreEqual(openedDocumentEvent, processedEvent);
+        }
+
+        [Test]
         public void ReplacesDocumentClosingEventWithCloseEventTest()
         {
             var closingEvent = new DocumentEvent {Action = DocumentEvent.DocumentAction.Closing};
