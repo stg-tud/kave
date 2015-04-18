@@ -53,6 +53,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Cleanup\FeedbackCleanerTest.cs" />
+    <Compile Include="Cleanup\Processors\AddFileProcessorTest.cs" />
     <Compile Include="Cleanup\Processors\CloseEventProcessorTest.cs" />
     <Compile Include="Database\TestDeveloperCollection.cs" />
     <Compile Include="Database\TestFeedbackDatabase.cs" />
