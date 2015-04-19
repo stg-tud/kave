@@ -54,6 +54,7 @@
   <ItemGroup>
     <Compile Include="Cleanup\DeveloperConsolidator.cs" />
     <Compile Include="Cleanup\FeedbackCleaner.cs" />
+    <Compile Include="Cleanup\Heuristics\TestVsProductionClassHeuristic.cs" />
     <Compile Include="Cleanup\IIDEEventProcessor.cs" />
     <Compile Include="Cleanup\Processors\AddFileProcessor.cs" />
     <Compile Include="Cleanup\Processors\CloseEventProcessor.cs" />
