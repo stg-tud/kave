@@ -157,7 +157,6 @@
     <Compile Include="Utils\ObjectToVisibilityConverterTest.cs" />
     <Compile Include="Utils\SettingsCleanerTest.cs" />
     <Compile Include="Utils\SettingsStoreTest.cs" />
-    <Compile Include="Utils\StringUtilsTest.cs" />
     <Compile Include="Utils\TestDateUtils.cs" />
     <Compile Include="Utils\XamlFormattingUtilTest.cs" />
     <Compile Include="VsIntegration\IDESessionTest.cs" />

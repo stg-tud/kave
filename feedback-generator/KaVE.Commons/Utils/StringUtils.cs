@@ -12,10 +12,15 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Sebastian Proksch
+ *    - Dennis Albrecht
  */
+
 using System;
 
-namespace KaVE.VsFeedbackGenerator.Utils
+namespace KaVE.Commons.Utils
 {
     public static class StringUtils
     {

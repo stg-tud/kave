@@ -182,6 +182,7 @@
     <Compile Include="Utils\Json\SerializationTestTarget.cs" />
     <Compile Include="Utils\Reflection\TypeExtensionsTest.cs" />
     <Compile Include="Utils\StringBuilderUtilsTest.cs" />
+    <Compile Include="Utils\StringUtilsTest.cs" />
     <Compile Include="Utils\ToStringUtilsTest.cs" />
     <Compile Include="Utils\WeakReferenceTest.cs" />
   </ItemGroup>

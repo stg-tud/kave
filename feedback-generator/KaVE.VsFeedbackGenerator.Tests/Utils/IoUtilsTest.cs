@@ -26,6 +26,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
+using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.IO;
 using KaVE.VsFeedbackGenerator.Utils;
