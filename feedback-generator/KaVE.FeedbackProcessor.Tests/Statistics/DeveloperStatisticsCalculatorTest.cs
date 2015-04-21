@@ -38,7 +38,7 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
         public void DeterminesDevelopersFirstActivity()
         {
             const string sessionId = "sessionA";
-            var developer = GivenDeveloperExists("00000000000000000000001", new[] {sessionId});
+            var developer = GivenDeveloperExists(new[] {sessionId});
             var expected = new DateTime(2015, 4, 1, 23, 01, 42);
             GivenEventExists(sessionId, triggeredAt: new DateTime(2015, 4, 3, 23, 01, 42));
             GivenEventExists(sessionId, triggeredAt: new DateTime(2015, 4, 1, 23, 23, 42));
@@ -53,7 +53,7 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
         public void DeterminesDevelopersLastActivity()
         {
             const string sessionId = "sessionA";
-            var developer = GivenDeveloperExists("00000000000000000000001", new[] { sessionId });
+            var developer = GivenDeveloperExists(new[] { sessionId });
             var expected = new DateTime(2015, 4, 3, 23, 01, 42);
             GivenEventExists(sessionId, triggeredAt: expected);
             GivenEventExists(sessionId, triggeredAt: new DateTime(2015, 4, 1, 23, 23, 42));

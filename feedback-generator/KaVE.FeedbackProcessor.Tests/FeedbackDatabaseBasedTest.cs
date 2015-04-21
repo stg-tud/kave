@@ -45,11 +45,10 @@ namespace KaVE.FeedbackProcessor.Tests
             return testIDEEvent;
         }
 
-        /// <param name="developerId">must be 24 characters, hex</param>
         /// <param name="sessionIds">should be disjunct from any other developer's ids</param>
-        protected Developer GivenDeveloperExists(String developerId, params String[] sessionIds)
+        protected Developer GivenDeveloperExists(params string[] sessionIds)
         {
-            var developer = new Developer {Id = new ObjectId(developerId)};
+            var developer = new Developer();
             foreach (var sessionId in sessionIds)
             {
                 developer.SessionIds.Add(sessionId);

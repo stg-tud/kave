@@ -16,15 +16,20 @@
  * Contributors:
  *    - Sven Amann
  */
+
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using KaVE.Commons.Utils.Assertion;
 using KaVE.FeedbackProcessor.Database;
 using KaVE.FeedbackProcessor.Model;
+using MongoDB.Bson;
 
 namespace KaVE.FeedbackProcessor.Tests.Database
 {
     internal class TestDeveloperCollection : IDeveloperCollection
     {
+        private int _nextDeveloperId = 1;
         private readonly ICollection<Developer> _developers = new List<Developer>();
 
         public IEnumerable<Developer> FindAll()
@@ -34,7 +39,10 @@ namespace KaVE.FeedbackProcessor.Tests.Database
 
         public void Insert(Developer instance)
         {
+            Asserts.That(instance.Id == default(ObjectId), "instance already added to a collection");
+            instance.Id = new ObjectId(Convert.ToString(_nextDeveloperId).PadLeft(24, '0'));
             _developers.Add(instance);
+            _nextDeveloperId++;
         }
 
         public void Save(Developer instance)

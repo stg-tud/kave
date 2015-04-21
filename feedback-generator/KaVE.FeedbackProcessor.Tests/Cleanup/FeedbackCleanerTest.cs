@@ -47,8 +47,8 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup
         [Test]
         public void InstatiatesProcessorsForEachDeveloper()
         {
-            GivenDeveloperExists("000000000000000000000001", "sessionA");
-            GivenDeveloperExists("000000000000000000000002", "sessionB");
+            GivenDeveloperExists("sessionA");
+            GivenDeveloperExists("sessionB");
 
             _uut.RegisterProcessor<InactiveProcessor>();
             _uut.ProcessFeedback();
@@ -59,7 +59,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup
         [Test]
         public void InstantiatesEachRegisteredProcessorOnce()
         {
-            GivenDeveloperExists("000000000000000000000001", "sessionA");
+            GivenDeveloperExists("sessionA");
 
             _uut.RegisterProcessor<InactiveProcessor>();
             _uut.RegisterProcessor<InactiveProcessor>();
@@ -73,7 +73,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup
         public void PassesEventsToProcessors()
         {
             const string ideSessionUUID = "sessionA";
-            GivenDeveloperExists("000000000000000000000001", ideSessionUUID);
+            GivenDeveloperExists(ideSessionUUID);
             var event1 = GivenEventExists(ideSessionUUID, "1");
             var event2 = GivenEventExists(ideSessionUUID, "2");
 
@@ -91,7 +91,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup
         public void PassesOnlyEventsForTheSameDeveloperToOneProcessorInstance()
         {
             const string ideSessionUUID = "sessionA";
-            GivenDeveloperExists("000000000000000000000001", ideSessionUUID);
+            GivenDeveloperExists(ideSessionUUID);
             var event1 = GivenEventExists(ideSessionUUID, "1");
             var event2 = GivenEventExists(ideSessionUUID, "2");
             GivenEventExists("sessionB", "1");
@@ -107,7 +107,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup
         public void KeepsEventIfProcessorIgnoresIt()
         {
             const string ideSessionUUID = "sessionA";
-            GivenDeveloperExists("000000000000000000000001", ideSessionUUID);
+            GivenDeveloperExists(ideSessionUUID);
             var event1 = GivenEventExists(ideSessionUUID, "1");
 
             _uut.RegisterProcessor<InactiveProcessor>();
@@ -122,7 +122,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup
         public void DropsEventIfProcessorConsumesIt()
         {
             const string ideSessionUUID = "sessionA";
-            GivenDeveloperExists("000000000000000000000001", ideSessionUUID);
+            GivenDeveloperExists(ideSessionUUID);
             GivenEventExists(ideSessionUUID, "1");
 
             _uut.RegisterProcessor<ConsumingProcessor>();
@@ -137,7 +137,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup
         public void ReplacesEventIfProcessorReplacesIt()
         {
             const string ideSessionUUID = "sessionA";
-            GivenDeveloperExists("000000000000000000000001", ideSessionUUID);
+            GivenDeveloperExists(ideSessionUUID);
             var event1 = GivenEventExists(ideSessionUUID, "1");
 
             _uut.RegisterProcessor<ReplacingConsumer>();
@@ -153,7 +153,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup
         public void ThrowsIfOneProcessorReplacesAndOneConsumesAnEvent()
         {
             const string ideSessionUUID = "sessionA";
-            GivenDeveloperExists("000000000000000000000001", ideSessionUUID);
+            GivenDeveloperExists(ideSessionUUID);
             GivenEventExists(ideSessionUUID, "1");
 
             _uut.RegisterProcessor<ReplacingConsumer>();
@@ -165,7 +165,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup
         public void ThrowsIfTwoProcessorsReplaceAnEvent()
         {
             const string ideSessionUUID = "sessionA";
-            GivenDeveloperExists("000000000000000000000001", ideSessionUUID);
+            GivenDeveloperExists(ideSessionUUID);
             GivenEventExists(ideSessionUUID, "1");
 
             _uut.RegisterProcessor<ReplacingConsumer>();
