@@ -17,11 +17,8 @@
  *    - Sven Amann
  */
 
-using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using Ionic.Zip;
 using KaVE.Commons.Model.Events;
 using KaVE.FeedbackProcessor.Import;
 using NUnit.Framework;
@@ -63,43 +60,17 @@ namespace KaVE.FeedbackProcessor.Tests.Import
             Assert.AreEqual(3, actuals.Count());
         }
 
-        private IEnumerable<object> ReadFile(FileBuilder file)
+        private IEnumerable<object> ReadFile(FeedbackArchiveBuilder feedbackArchive)
         {
-            using (var zipFile = file.Create())
+            using (var zipFile = feedbackArchive.Create())
             {
                 return _sut.ReadAllEvents(zipFile);
             }
         }
 
-        private static FileBuilder GivenAFile()
+        private static FeedbackArchiveBuilder GivenAFile()
         {
-            return new FileBuilder();
-        }
-
-        public class FileBuilder
-        {
-            private readonly IDictionary<string, string> _contents = new Dictionary<string, string>();
-
-            public FileBuilder With(String fileName, String content)
-            {
-                _contents[fileName] = content;
-                return this;
-            }
-
-            public ZipFile Create()
-            {
-                var zipFile = new ZipFile();
-                foreach (var e in _contents)
-                {
-                    var fileName = e.Key;
-                    var json = e.Value;
-                    zipFile.AddEntry(fileName, json);
-                }
-                var ms = new MemoryStream();
-                zipFile.Save(ms);
-                ms.Position = 0;
-                return ZipFile.Read(ms);
-            }
+            return FeedbackArchiveBuilder.AnArchive();
         }
     }
 }
