@@ -53,7 +53,7 @@ namespace KaVE.FeedbackProcessor.Tests.Database
 
         public bool Contains(IDEEvent @event)
         {
-            throw new NotImplementedException();
+            return _ideEvents.Contains(@event);
         }
 
         public IEnumerable<IDEEvent> Find(IMongoQuery query)

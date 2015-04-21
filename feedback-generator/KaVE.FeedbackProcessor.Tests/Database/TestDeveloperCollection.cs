@@ -47,12 +47,12 @@ namespace KaVE.FeedbackProcessor.Tests.Database
 
         public void Save(Developer instance)
         {
-            throw new NotImplementedException();
+            Asserts.That(_developers.Contains(instance), "saving instance that's not in the database");
         }
 
         public IList<Developer> FindBySessionId(string sessionId)
         {
-            throw new NotImplementedException();
+            return _developers.Where(dev => dev.SessionIds.Contains(sessionId)).ToList();
         }
     }
 }

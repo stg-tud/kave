@@ -69,12 +69,9 @@ namespace KaVE.FeedbackProcessor.Import
             var fileLoader = new FeedbackArchiveReader();
             var totalNumberOfUniqueEvents = 0;
             var totalNumberOfDuplicatedEvents = 0;
+            var nextArtificialTriggerTime = new DateTime();
 
-            foreach (
-                var archive in
-                    Directory.GetFiles(Configuration.ImportDirectory, "*.zip")
-                             .OrderBy(NumericalFilename)
-                             .Select(ZipFile.Read))
+            foreach (var archive in OpenFeedbackArchives().OrderBy(NumericalFilename))
             {
                 _logger.Info(archive.Name);
 
@@ -93,26 +90,34 @@ namespace KaVE.FeedbackProcessor.Import
                     }
 
                     var ideSessionUUID = evt.IDESessionUUID;
-                    if (ideSessionUUID != null)
+                    if (currentDeveloper == null)
                     {
-                        if (currentDeveloper == null)
+                        currentDeveloper = FindOrCreateCurrentDeveloper(ideSessionUUID, developerCollection);
+                        _logger.Info(
+                            string.Format(
+                                " developer {0} with {1} sessions.",
+                                currentDeveloper.Id,
+                                currentDeveloper.SessionIds.Count));
+                    }
+                    else if (ideSessionUUID != null)
+                    {
+                        if (!currentDeveloper.SessionIds.Contains(ideSessionUUID))
                         {
-                            currentDeveloper = FindOrCreateCurrentDeveloper(ideSessionUUID, developerCollection);
-                            _logger.Info(
-                                string.Format(
-                                    " developer {0} with {1} sessions.",
-                                    currentDeveloper.Id,
-                                    currentDeveloper.SessionIds.Count));
+                            numberNewOfSessions++;
                         }
-                        else
-                        {
-                            if (!currentDeveloper.SessionIds.Contains(ideSessionUUID))
-                            {
-                                numberNewOfSessions++;
-                            }
-                            currentDeveloper.SessionIds.Add(ideSessionUUID);
-                            developerCollection.Save(currentDeveloper);
-                        }
+                        currentDeveloper.SessionIds.Add(ideSessionUUID);
+                        developerCollection.Save(currentDeveloper);
+                    }
+
+                    if (ideSessionUUID == null)
+                    {
+                        evt.IDESessionUUID = currentDeveloper.Id.ToString();
+                    }
+
+                    if (evt.TriggeredAt == null)
+                    {
+                        evt.TriggeredAt = nextArtificialTriggerTime;
+                        nextArtificialTriggerTime = nextArtificialTriggerTime.AddSeconds(1);
                     }
 
                     eventsCollection.Insert(evt);
@@ -135,16 +140,25 @@ namespace KaVE.FeedbackProcessor.Import
                     totalNumberOfDuplicatedEvents));
         }
 
-        private static int NumericalFilename(string filename)
+        protected virtual IEnumerable<ZipFile> OpenFeedbackArchives()
+        {
+            return Directory.GetFiles(Configuration.ImportDirectory, "*.zip").Select(ZipFile.Read);
+        }
+
+        private static int NumericalFilename(ZipFile archive)
         {
             // ReSharper disable once AssignNullToNotNullAttribute
-            // If there is an archive without a filename, I don't know what to do...
-            return int.Parse(Path.GetFileNameWithoutExtension(filename));
+            // If there is an archive without a filename, I don't know what to do, so failing is the only option anyways.
+            return int.Parse(Path.GetFileNameWithoutExtension(archive.Name));
         }
 
         private static Developer FindOrCreateCurrentDeveloper(string ideSessionUUID,
             IDeveloperCollection developerCollection)
         {
+            if (ideSessionUUID == null)
+            {
+                return CreateAnonymousDeveloper(developerCollection);
+            }
             var candidates = developerCollection.FindBySessionId(ideSessionUUID);
             switch (candidates.Count)
             {
@@ -165,6 +179,13 @@ namespace KaVE.FeedbackProcessor.Import
                     }
                     throw new Exception("More than one developer with the same session id encountered");
             }
+        }
+
+        private static Developer CreateAnonymousDeveloper(IDeveloperCollection developerCollection)
+        {
+            var anonymousDeveloper = new Developer();
+            developerCollection.Insert(anonymousDeveloper);
+            return anonymousDeveloper;
         }
     }
 }

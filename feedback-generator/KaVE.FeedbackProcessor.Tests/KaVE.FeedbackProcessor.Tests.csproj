@@ -59,6 +59,9 @@
     <Compile Include="FeedbackDatabaseBasedTest.cs" />
     <Compile Include="Import\FeedbackArchiveBuilder.cs" />
     <Compile Include="Import\FeedbackArchiveReaderTest.cs" />
+    <Compile Include="Import\FeedbackImporterTestBase.cs" />
+    <Compile Include="Import\FeedbackImporterWithoutSessionIdsTest.cs" />
+    <Compile Include="Import\FeedbackImporterWithoutTriggerTimesTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Statistics\DeveloperStatisticsCalculatorTest.cs" />
   </ItemGroup>
