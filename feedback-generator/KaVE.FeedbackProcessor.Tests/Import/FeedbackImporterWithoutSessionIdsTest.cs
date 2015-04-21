@@ -52,6 +52,18 @@ namespace KaVE.FeedbackProcessor.Tests.Import
             Assert.AreEqual(developer.Id.ToString(), ideEvent.IDESessionUUID);
         }
 
+        [Test]
+        public void CreatesNewAnonymousDeveloperForNewArchive()
+        {
+            GivenInputArchive("0.zip").With("0.json", new TestIDEEvent { IDESessionUUID = null, TestProperty = "0"});
+            GivenInputArchive("1.zip").With("0.json", new TestIDEEvent { IDESessionUUID = null, TestProperty = "1"});
+
+            WhenImportIsRun();
+
+            var developers = TestFeedbackDatabase.GetDeveloperCollection().FindAll();
+            Assert.AreEqual(2, developers.Count());
+        }
+
         private Developer GetSingleDeveloperFromDatabase()
         {
             var developers = TestFeedbackDatabase.GetDeveloperCollection().FindAll().ToList();
