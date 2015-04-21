@@ -40,6 +40,16 @@ namespace KaVE.FeedbackProcessor.Database
             return candidates.Any(@event.Equals);
         }
 
+        public IEnumerable<IDEEvent> Find(IMongoQuery query)
+        {
+            return Collection.Find(query);
+        }
+
+        public IEnumerable<T> FindAs<T>(IMongoQuery query) where T : IDEEvent
+        {
+            return Collection.FindAs<T>(query);
+        }
+
         public IEnumerable<IDEEvent> GetEventStream(Developer developer)
         {
             return Collection.Find(EventsFrom(developer)).SetSortOrder(Chronological);

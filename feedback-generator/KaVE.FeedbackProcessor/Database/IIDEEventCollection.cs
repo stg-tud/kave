@@ -20,6 +20,7 @@
 using System.Collections.Generic;
 using KaVE.Commons.Model.Events;
 using KaVE.FeedbackProcessor.Model;
+using MongoDB.Driver;
 
 namespace KaVE.FeedbackProcessor.Database
 {
@@ -27,6 +28,8 @@ namespace KaVE.FeedbackProcessor.Database
     {
         IEnumerable<IDEEvent> GetEventStream(Developer developer);
         bool Contains(IDEEvent @event);
+        IEnumerable<IDEEvent> Find(IMongoQuery query);
+        IEnumerable<T> FindAs<T>(IMongoQuery query) where T : IDEEvent;
         IDEEvent GetFirstEvent(Developer developer);
         IDEEvent GetLastEvent(Developer developer);
     }

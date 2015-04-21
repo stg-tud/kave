@@ -23,6 +23,7 @@ using System.Linq;
 using KaVE.Commons.Model.Events;
 using KaVE.FeedbackProcessor.Database;
 using KaVE.FeedbackProcessor.Model;
+using MongoDB.Driver;
 
 namespace KaVE.FeedbackProcessor.Tests.Database
 {
@@ -51,6 +52,16 @@ namespace KaVE.FeedbackProcessor.Tests.Database
         }
 
         public bool Contains(IDEEvent @event)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<IDEEvent> Find(IMongoQuery query)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<T> FindAs<T>(IMongoQuery query) where T : IDEEvent
         {
             throw new NotImplementedException();
         }
