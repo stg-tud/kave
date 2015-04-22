@@ -30,7 +30,8 @@ namespace KaVE.FeedbackProcessor.Tests.Import
     {
         private readonly TestIDEEvent _completeEvent = new TestIDEEvent
         {
-            IDESessionUUID = "a"
+            IDESessionUUID = "a",
+            TriggeredAt = DateTime.Now /* just any time */
         };
 
         private readonly IDEStateEvent _brokenShutdownEvent = new IDEStateEvent
@@ -95,8 +96,7 @@ namespace KaVE.FeedbackProcessor.Tests.Import
                 IDELifecyclePhase = _brokenShutdownEvent.IDELifecyclePhase
             };
 
-            var ideEvents = TestFeedbackDatabase.GetOriginalEventsCollection().FindAll();
-            CollectionAssert.Contains(ideEvents, expected);
+            CollectionAssert.Contains(TestFeedbackDatabase.GetOriginalEventsCollection().FindAll(), expected);
         }
 
         [Test]
@@ -108,6 +108,26 @@ namespace KaVE.FeedbackProcessor.Tests.Import
 
             var singleEvent = TestFeedbackDatabase.GetOriginalEventsCollection().FindAll().First();
             Assert.AreEqual("a", singleEvent.IDESessionUUID);
+        }
+
+        [Test]
+        public void CorrectsStateEventIfAllPreviousAreDuplicates()
+        {
+            GivenInputArchive("0.zip").With("0.json", _completeEvent);
+            GivenInputArchive("1.zip")
+                .With("0.json", _completeEvent)
+                .With("1.json", _brokenShutdownEvent);
+
+            WhenImportIsRun();
+
+            var expected = new IDEStateEvent
+            {
+                IDESessionUUID = _completeEvent.IDESessionUUID,
+                TriggeredAt = _brokenShutdownEvent.TriggeredAt,
+                IDELifecyclePhase = _brokenShutdownEvent.IDELifecyclePhase
+            };
+
+            CollectionAssert.Contains(TestFeedbackDatabase.GetOriginalEventsCollection().FindAll(), expected);
         }
     }
 }

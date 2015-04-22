@@ -85,23 +85,11 @@ namespace KaVE.FeedbackProcessor.Import
                 var numberOfUniqueEvents = 0;
                 var numberOfDuplicatedEvents = 0;
                 var numberNewOfSessions = 0;
-                string ideSessionUUID = null;
+                string lastSessionId = null;
 
                 foreach (var evt in fileLoader.ReadAllEvents(archive))
                 {
-                    if (eventsCollection.Contains(evt))
-                    {
-                        numberOfDuplicatedEvents++;
-                        continue;
-                    }
-
-                    var ideStateEvent = evt as IDEStateEvent;
-                    if (ideStateEvent != null && ideStateEvent.IDESessionUUID == null)
-                    {
-                        ideStateEvent.IDESessionUUID = ideSessionUUID;
-                    }
-
-                    ideSessionUUID = evt.IDESessionUUID;
+                    var ideSessionUUID = evt.IDESessionUUID;
                     if (currentDeveloper == null)
                     {
                         currentDeveloper = FindOrCreateCurrentDeveloper(ideSessionUUID, developerCollection);
@@ -121,6 +109,14 @@ namespace KaVE.FeedbackProcessor.Import
                         developerCollection.Save(currentDeveloper);
                     }
 
+                    var ideStateEvent = evt as IDEStateEvent;
+                    if (ideStateEvent != null && ideStateEvent.IDESessionUUID == null)
+                    {
+                        ideStateEvent.IDESessionUUID = lastSessionId;
+                        ideSessionUUID = lastSessionId;
+                    }
+                    lastSessionId = ideSessionUUID;
+
                     if (ideSessionUUID == null)
                     {
                         evt.IDESessionUUID = currentDeveloper.Id.ToString();
@@ -130,6 +126,12 @@ namespace KaVE.FeedbackProcessor.Import
                     {
                         evt.TriggeredAt = nextArtificialTriggerTime;
                         nextArtificialTriggerTime = nextArtificialTriggerTime.AddSeconds(1);
+                    }
+
+                    if (eventsCollection.Contains(evt))
+                    {
+                        numberOfDuplicatedEvents++;
+                        continue;
                     }
 
                     eventsCollection.Insert(evt);

@@ -59,6 +59,7 @@
     <Compile Include="FeedbackDatabaseBasedTest.cs" />
     <Compile Include="Import\FeedbackArchiveBuilder.cs" />
     <Compile Include="Import\FeedbackArchiveReaderTest.cs" />
+    <Compile Include="Import\FeedbackImporterFilterDuplicatesTest.cs" />
     <Compile Include="Import\FeedbackImporterIDEStateEventNoSessionIdBugTest.cs" />
     <Compile Include="Import\FeedbackImporterTestBase.cs" />
     <Compile Include="Import\FeedbackImporterWithoutSessionIdsTest.cs" />

@@ -14,14 +14,13 @@
  * limitations under the License.
  * 
  * Contributors:
- *    - 
+ *    - Sven Amann
  */
 
 using System;
 using KaVE.Commons.TestUtils.Model.Events;
 using KaVE.FeedbackProcessor.Model;
 using KaVE.FeedbackProcessor.Tests.Database;
-using MongoDB.Bson;
 using NUnit.Framework;
 
 namespace KaVE.FeedbackProcessor.Tests
