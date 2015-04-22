@@ -22,6 +22,7 @@ using KaVE.FeedbackProcessor.Cleanup;
 using KaVE.FeedbackProcessor.Database;
 using KaVE.FeedbackProcessor.Import;
 using KaVE.FeedbackProcessor.Properties;
+using KaVE.FeedbackProcessor.Statistics;
 
 namespace KaVE.FeedbackProcessor
 {
@@ -33,6 +34,7 @@ namespace KaVE.FeedbackProcessor
         {
             var database = new MongoDbFeedbackDatabase(Configuration.DatabaseUrl, Configuration.DatabaseName);
             ImportFeedback(database);
+            //LogAnonymizationStatistics(database);
             //CleanFeedback(database);
         }
 
@@ -41,6 +43,15 @@ namespace KaVE.FeedbackProcessor
             var feedbackImporter = new FeedbackImporter(database, Logger);
             feedbackImporter.Import();
             feedbackImporter.LogDeveloperStatistics();
+        }
+
+        private static void LogAnonymizationStatistics(MongoDbFeedbackDatabase database)
+        {
+            var calculator = new AnonymizationStatisticsCalculator(database, Logger);
+            calculator.LogNumberOfEventsWithoutSessionId();
+            calculator.LogNumberOfEventsWithoutTriggerTime();
+            calculator.LogNumberOfEventsWithoutDuration();
+            calculator.LogNumberOfSessionsWithAnonymizedNames();
         }
 
         private static void CleanFeedback(IFeedbackDatabase database)
