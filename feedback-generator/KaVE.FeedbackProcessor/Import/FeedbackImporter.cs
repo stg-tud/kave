@@ -96,7 +96,7 @@ namespace KaVE.FeedbackProcessor.Import
                     }
 
                     var ideStateEvent = evt as IDEStateEvent;
-                    if (ideStateEvent != null)
+                    if (ideStateEvent != null && ideStateEvent.IDESessionUUID == null)
                     {
                         ideStateEvent.IDESessionUUID = ideSessionUUID;
                     }

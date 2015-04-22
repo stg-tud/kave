@@ -98,5 +98,16 @@ namespace KaVE.FeedbackProcessor.Tests.Import
             var ideEvents = TestFeedbackDatabase.GetOriginalEventsCollection().FindAll();
             CollectionAssert.Contains(ideEvents, expected);
         }
+
+        [Test]
+        public void DoesNotOverrideSessionId()
+        {
+            GivenInputArchive("0.zip").With("0.json", new IDEStateEvent {IDESessionUUID = "a"});
+
+            WhenImportIsRun();
+
+            var singleEvent = TestFeedbackDatabase.GetOriginalEventsCollection().FindAll().First();
+            Assert.AreEqual("a", singleEvent.IDESessionUUID);
+        }
     }
 }
