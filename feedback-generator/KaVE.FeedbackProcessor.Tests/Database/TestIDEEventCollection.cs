@@ -46,6 +46,11 @@ namespace KaVE.FeedbackProcessor.Tests.Database
             throw new NotImplementedException();
         }
 
+        public void Clear()
+        {
+            _ideEvents.Clear();
+        }
+
         public IEnumerable<IDEEvent> GetEventStream(Developer developer)
         {
             return _ideEvents.Where(evt => developer.SessionIds.Contains(evt.IDESessionUUID));

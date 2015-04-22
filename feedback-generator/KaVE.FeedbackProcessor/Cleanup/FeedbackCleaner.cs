@@ -45,6 +45,8 @@ namespace KaVE.FeedbackProcessor.Cleanup
 
         public void ProcessFeedback()
         {
+            _database.GetCleanEventsCollection().Clear();
+
             var developers = _database.GetDeveloperCollection().FindAll();
             foreach (var developer in developers)
             {

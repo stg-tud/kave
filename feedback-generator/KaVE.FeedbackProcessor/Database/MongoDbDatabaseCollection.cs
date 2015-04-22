@@ -45,5 +45,10 @@ namespace KaVE.FeedbackProcessor.Database
         {
             Collection.Save(instance);
         }
+
+        public void Clear()
+        {
+            Collection.RemoveAll();
+        }
     }
 }

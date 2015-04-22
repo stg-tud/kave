@@ -50,6 +50,11 @@ namespace KaVE.FeedbackProcessor.Tests.Database
             Asserts.That(_developers.Contains(instance), "saving instance that's not in the database");
         }
 
+        public void Clear()
+        {
+            _developers.Clear();
+        }
+
         public IList<Developer> FindBySessionId(string sessionId)
         {
             return _developers.Where(dev => dev.SessionIds.Contains(sessionId)).ToList();

@@ -26,5 +26,6 @@ namespace KaVE.FeedbackProcessor.Database
         IEnumerable<T> FindAll();
         void Insert(T instance);
         void Save(T instance);
+        void Clear();
     }
 }
