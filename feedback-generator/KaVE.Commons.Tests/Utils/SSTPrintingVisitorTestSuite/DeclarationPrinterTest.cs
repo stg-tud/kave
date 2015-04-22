@@ -45,7 +45,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrintingVisitorTestSuite
         [Test]
         public void DelegateDeclaration()
         {
-            // TODO discuss with Sven: TypeName or MethodName??
+            // TODO discuss with Sven: TypeName or MethodName?
             var sst = new DelegateDeclaration {Name = TypeName.Get("d:T,P")};
             AssertPrint(sst, "delegate T();");
         }
@@ -80,7 +80,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrintingVisitorTestSuite
                 Name = PropertyName.Get("get [PropertyType,P] [DeclaringType,P].P")
             };
 
-            AssertPrint(sst, "PropertyType P { get; };");
+            AssertPrint(sst, "PropertyType P { get; }");
         }
 
         [Test]
@@ -91,7 +91,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrintingVisitorTestSuite
                 Name = PropertyName.Get("set [PropertyType,P] [DeclaringType,P].P")
             };
 
-            AssertPrint(sst, "PropertyType P { set; };");
+            AssertPrint(sst, "PropertyType P { set; }");
         }
 
         [Test]
@@ -102,7 +102,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrintingVisitorTestSuite
                 Name = PropertyName.Get("get set [PropertyType,P] [DeclaringType,P].P"),
             };
 
-            AssertPrint(sst, "PropertyType P { get; set; };");
+            AssertPrint(sst, "PropertyType P { get; set; }");
         }
 
         [Test]
@@ -136,7 +136,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrintingVisitorTestSuite
                 "        break;",
                 "        continue;",
                 "    }",
-                "};");
+                "}");
         }
 
         [Test]
@@ -159,7 +159,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrintingVisitorTestSuite
                 "        break;",
                 "    }",
                 "    set;",
-                "};");
+                "}");
         }
 
         [Test]
@@ -182,7 +182,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrintingVisitorTestSuite
                  "    {",
                  "        break;",
                  "    }",
-                 "};");
+                 "}");
         }
 
         [Test]

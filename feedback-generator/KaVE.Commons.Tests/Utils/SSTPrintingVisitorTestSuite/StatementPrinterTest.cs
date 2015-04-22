@@ -22,6 +22,7 @@ using System.Linq;
 using System.Text;
 using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.SSTs.Impl;
+using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Commons.Model.SSTs.Impl.Statements;
 using KaVE.Commons.Utils;
@@ -45,11 +46,12 @@ namespace KaVE.Commons.Tests.Utils.SSTPrintingVisitorTestSuite
             AssertPrint(sst, "continue;");
         }
 
-        //[Test]
-        //public void Assignment()
-        //{
-        //    var sst = SSTUtil.AssignmentToLocal("var", new ConstantValueExpression());
-        //}
+        [Test]
+        public void Assignment()
+        {
+            var sst = SSTUtil.AssignmentToLocal("var", new ConstantValueExpression {Value = "true"});
+            AssertPrint(sst, "var = true;");
+        }
 
         [Test]
         public void GotoStatement()
@@ -84,6 +86,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrintingVisitorTestSuite
                 Exception = TypeName.Get("T,P")
             };
 
+            // note: we can ignore exception constructors and throwing existing objects
             AssertPrint(sst, "throw new T();");
         }
 
@@ -95,8 +98,22 @@ namespace KaVE.Commons.Tests.Utils.SSTPrintingVisitorTestSuite
                 Expression = new ConstantValueExpression {Value = "val"}
             };
 
-            // TODO: check: value in quotes?
-            AssertPrint(sst, "return val;");
+            AssertPrint(sst, "return \"val\";");
+        }
+
+        [Test]
+        public void ExpressionStatement()
+        {
+            var invocation = new InvocationExpression
+            {
+                Reference = SSTUtil.VariableReference("this"),
+                MethodName = MethodName.Get("[ReturnType,P] [DeclaringType,P].M([ParameterType,P] p)"),
+                Parameters = { new ConstantValueExpression { Value = "1" } }
+            };
+
+            var sst = new ExpressionStatement {Expression = invocation};
+
+            AssertPrint(sst, "this.M(1);");
         }
     }
 }

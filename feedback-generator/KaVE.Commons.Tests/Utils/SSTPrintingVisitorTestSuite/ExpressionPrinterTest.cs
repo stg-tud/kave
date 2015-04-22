@@ -20,7 +20,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.SSTs.Impl;
+using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
 using NUnit.Framework;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
 
@@ -29,10 +31,103 @@ namespace KaVE.Commons.Tests.Utils.SSTPrintingVisitorTestSuite
     internal class ExpressionPrinterTest : SSTPrintingVisitorTestBase
     {
         [Test]
-        public void ConstantValueExpression()
+        public void ConstantValueExpression_String()
         {
-            var sst = new ConstantValueExpression {Value = "val"};
-            AssertPrint(sst, "val");
+            var sst = new ConstantValueExpression { Value = "val" };
+            AssertPrint(sst, "\"val\"");
+        }
+
+        [Test]
+        public void ConstantValueExpression_Int()
+        {
+            var sst = new ConstantValueExpression { Value = "1" };
+            AssertPrint(sst, "1");
+        }
+
+        [Test]
+        public void ConstantValueExpression_Float()
+        {
+            var sst = new ConstantValueExpression { Value = "-3.141592" };
+            AssertPrint(sst, "-3.141592");
+        }
+
+        [Test]
+        public void ConstantValueExpression_BoolTrue()
+        {
+            var sst = new ConstantValueExpression { Value = "true" };
+            AssertPrint(sst, "true");
+        }
+
+        [Test]
+        public void ConstantValueExpression_BoolFalse()
+        {
+            var sst = new ConstantValueExpression { Value = "false" };
+            AssertPrint(sst, "false");
+        }
+
+        [Test]
+        public void ConstantValueExpression_Null()
+        {
+            var sst = new ConstantValueExpression { Value = "null" };
+            AssertPrint(sst, "null");
+        }
+
+        [Test]
+        public void IfElseExpression()
+        {
+            var sst = new IfElseExpression
+            {
+                Condition = new ConstantValueExpression { Value = "true" },
+                ThenExpression = new ConstantValueExpression { Value = "1" },
+                ElseExpression = new ConstantValueExpression { Value = "2" }
+            };
+
+            AssertPrint(sst, "(true) ? 1 : 2");
+        }
+
+        [Test]
+        public void InvocationExpression()
+        {
+            var sst = new InvocationExpression
+            {
+                Reference = SSTUtil.VariableReference("this"),
+                MethodName = MethodName.Get("[ReturnType,P] [DeclaringType,P].M([ParameterType,P] p)"),
+                Parameters = { new ConstantValueExpression { Value = "1" } }
+            };
+
+            AssertPrint(sst, "this.M(1)");
+        }
+
+        [Test]
+        public void NullExpression()
+        {
+            var sst = new NullExpression();
+            AssertPrint(sst, "null");
+        }
+
+        [Test]
+        public void ReferenceExpression()
+        {
+            var sst = new ReferenceExpression { Reference = SSTUtil.VariableReference("variable") };
+            AssertPrint(sst, "variable");
+        }
+
+        [Test]
+        public void ComposedExpression()
+        {
+            // TODO: how would comparison with value work?
+            var sst = new ComposedExpression
+            {
+                References =
+                {
+                    SSTUtil.VariableReference("a"),
+                    SSTUtil.VariableReference("b"),
+                    SSTUtil.VariableReference("c")
+                }
+            };
+
+            // TODO: maybe there is a better representation
+            AssertPrint(sst, "composed(a, b, c)");
         }
     }
 }

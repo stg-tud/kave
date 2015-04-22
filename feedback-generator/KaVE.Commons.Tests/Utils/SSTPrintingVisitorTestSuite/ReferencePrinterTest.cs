@@ -20,6 +20,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.Commons.Model.SSTs.Impl.References;
 using NUnit.Framework;
@@ -33,6 +34,55 @@ namespace KaVE.Commons.Tests.Utils.SSTPrintingVisitorTestSuite
         {
             var sst = SSTUtil.VariableReference("variable");
             AssertPrint(sst, "variable");
+        }
+
+        [Test]
+        public void EventReference()
+        {
+            // TODO: check if this is correct/how it is used (other reference types too)
+            var sst = new EventReference
+            {
+                EventName = EventName.Get("[EventType,P] [DeclaringType,P].E"),
+                Reference = SSTUtil.VariableReference("e")
+            };
+
+            AssertPrint(sst, "e");
+        }
+
+        [Test]
+        public void FieldReference()
+        {
+            var sst = new FieldReference
+            {
+                FieldName = FieldName.Get("[FieldType,P] [DeclaringType,P].F"),
+                Reference = SSTUtil.VariableReference("f")
+            };
+
+            AssertPrint(sst, "f");
+        }
+
+        [Test]
+        public void MethodReference()
+        {
+            var sst = new MethodReference
+            {
+                MethodName = MethodName.Get("[ReturnType,P] [DeclaringType,P].M([ParameterType,P] p)"),
+                Reference = SSTUtil.VariableReference("m")
+            };
+
+            AssertPrint(sst, "m");
+        }
+
+        [Test]
+        public void PropertyReference()
+        {
+            var sst = new PropertyReference
+            {
+                PropertyName = PropertyName.Get("get set [PropertyType,P] [DeclaringType,P].P"),
+                Reference = SSTUtil.VariableReference("p")
+            };
+
+            AssertPrint(sst, "p");
         }
     }
 }

@@ -19,6 +19,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.SSTs.Impl;
@@ -80,6 +81,30 @@ namespace KaVE.Commons.Tests.Utils.SSTPrintingVisitorTestSuite
         }
 
         [Test]
+        public void SwitchBlock_NoDefaultBlock()
+        {
+            var sst = new SwitchBlock
+            {
+                Reference = SSTUtil.VariableReference("a"),
+                Sections =
+                {
+                    new CaseBlock {Label = new ConstantValueExpression {Value = "1"}, Body = {new BreakStatement(), new BreakStatement()}},
+                    new CaseBlock {Label = new ConstantValueExpression {Value = "2"}, Body = {new BreakStatement()}}
+                }
+            };
+
+            AssertPrint(sst,
+                "switch (a)",
+                "{",
+                "    case 1:",
+                "        break;",
+                "        break;",
+                "    case 2:",
+                "        break;",
+                "}");
+        }
+
+        [Test]
         public void TryBlock()
         {
             var sst = new TryBlock
@@ -101,13 +126,40 @@ namespace KaVE.Commons.Tests.Utils.SSTPrintingVisitorTestSuite
                 "{",
                 "    throw new ExceptionType();",
                 "}",
-                "catch (ExceptionType e)",
+                "catch (ExceptionType e)", // TODO: general catch blocks
                 "{",
                 "    break;",
                 "}",
                 "finally",
                 "{",
                 "    continue;",
+                "}");
+        }
+
+        [Test]
+        public void TryBlock_NoFinallyBlock()
+        {
+            var sst = new TryBlock
+            {
+                Body = {new ThrowStatement {Exception = TypeName.Get("ExceptionType,P")}},
+                CatchBlocks =
+                {
+                    new CatchBlock
+                    {
+                        Exception = SSTUtil.Declare("e", TypeName.Get("ExceptionType,P")),
+                        Body = {new BreakStatement()}
+                    }
+                }
+            };
+
+            AssertPrint(sst,
+                "try",
+                "{",
+                "    throw new ExceptionType();",
+                "}",
+                "catch (ExceptionType e)", // TODO: general catch blocks
+                "{",
+                "    break;",
                 "}");
         }
 
@@ -131,7 +183,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrintingVisitorTestSuite
         {
             var sst = new UnsafeBlock();
 
-            AssertPrint(sst, "unsafe { }");
+            AssertPrint(sst, "unsafe { /* content ignored */ }");
         }
 
         [Test]
@@ -147,6 +199,59 @@ namespace KaVE.Commons.Tests.Utils.SSTPrintingVisitorTestSuite
                 "using (variable)",
                 "{",
                 "    break;",
+                "}");
+        }
+
+        [Test]
+        public void IfElseBlock()
+        {
+            var sst = new IfElseBlock
+            {
+                Condition = new ConstantValueExpression {Value = "true"},
+                Then = {new ContinueStatement()},
+                Else = {new BreakStatement()},
+            };
+
+            AssertPrint(sst,
+                "if (true)",
+                "{",
+                "    continue;",
+                "}",
+                "else",
+                "{",
+                "    break;",
+                "}");
+        }
+
+        [Test]
+        public void IfElseBlock_NoElseBlock()
+        {
+            var sst = new IfElseBlock
+            {
+                Condition = new ConstantValueExpression { Value = "true" },
+                Then = { new ContinueStatement() },
+            };
+
+            AssertPrint(sst,
+                "if (true)",
+                "{",
+                "    continue;",
+                "}");
+        }
+
+        [Test]
+        public void LockBlock()
+        {
+            var sst = new LockBlock
+            {
+                Reference = SSTUtil.VariableReference("variable"),
+                Body = {new ContinueStatement()}
+            };
+
+            AssertPrint(sst,
+                "lock (variable)",
+                "{",
+                "    continue;",
                 "}");
         }
     }
