@@ -33,15 +33,17 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
     [ShellComponent(ProgramConfigurations.VS_ADDIN)]
     internal class IDEStateEventGenerator : EventGeneratorBase
     {
-        private readonly EventLogger _logger;
+        private readonly IRSEnv _env;
+        private readonly IEventLogger _logger;
 
         public IDEStateEventGenerator(IRSEnv env,
             IMessageBus messageBus,
             Lifetime lifetime,
             IDateUtils dateUtils,
-            EventLogger logger)
+            IEventLogger logger)
             : base(env, messageBus, dateUtils)
         {
+            _env = env;
             _logger = logger;
             FireIDEStateEvent(IDEStateEvent.LifecyclePhase.Startup);
             lifetime.AddAction(FireShutdownEvent);
@@ -49,7 +51,10 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
 
         private void FireShutdownEvent()
         {
-            _logger.Log(CreateIDEStateEvent(IDEStateEvent.LifecyclePhase.Shutdown));
+            // pushing directly to logger since shutdown sometimes kills message bus too early
+            var @event = CreateIDEStateEvent(IDEStateEvent.LifecyclePhase.Shutdown);
+            @event.IDESessionUUID = _env.IDESession.UUID;
+            _logger.Log(@event);
         }
 
         private void FireIDEStateEvent(IDEStateEvent.LifecyclePhase phase)

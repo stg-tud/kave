@@ -18,10 +18,12 @@
  */
 
 using System.Collections;
+using System.Collections.Generic;
 using EnvDTE;
 using JetBrains.DataFlow;
+using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.VisualStudio;
-using KaVE.Commons.Model.Names.VisualStudio;
+using KaVE.VsFeedbackGenerator.Generators;
 using KaVE.VsFeedbackGenerator.Generators.VisualStudio;
 using KaVE.VsFeedbackGenerator.Utils.Names;
 using Moq;
@@ -32,34 +34,33 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.VisualStudio
     [TestFixture]
     internal class IDEStateEventGeneratorTest : EventGeneratorTestBase
     {
-        private WindowName _visibleWindowName;
+        /// <summary>
+        ///     Maybe both visible (open) and invisible (closed).
+        /// </summary>
+        private readonly ICollection<Window> _instantiatedWindows = new List<Window>();
+
+        private IList<Document> _openDocuments;
 
         [SetUp]
-        public void SetUp()
+        public void SetUpIDEWindows()
         {
-            var mockVisibleWindow = CreateWindowMock("VisibleWindow", true);
-            var mockInvisibleWindow = CreateWindowMock("InvisibleWindow", false);
-            IEnumerable windowPieces = new[] {mockVisibleWindow.Object, mockInvisibleWindow.Object};
-
-            _visibleWindowName = mockVisibleWindow.Object.GetName();
-
+            _instantiatedWindows.Clear();
             var mockWindows = new Mock<Windows>().As<IEnumerable>();
-            mockWindows.Setup(w => w.GetEnumerator()).Returns(windowPieces.GetEnumerator);
-
+            mockWindows.Setup(w => w.GetEnumerator()).Returns(() => _instantiatedWindows.GetEnumerator());
             TestIDESession.MockDTE.Setup(dte => dte.Windows).Returns((Windows) mockWindows.Object);
+        }
 
+        [SetUp]
+        public void SetUpDocuments()
+        {
             var document = new Mock<Document>();
             document.Setup(d => d.FullName).Returns("TestDocument");
             document.Setup(d => d.DTE).Returns(TestIDESession.DTE);
-            IEnumerable documentPieces = new[] {document.Object};
+            _openDocuments = new[] {document.Object};
 
             var mockDocuments = new Mock<Documents>().As<IEnumerable>();
-            mockDocuments.Setup(d => d.GetEnumerator()).Returns(documentPieces.GetEnumerator);
-
+            mockDocuments.Setup(d => d.GetEnumerator()).Returns(_openDocuments.GetEnumerator);
             TestIDESession.MockDTE.Setup(dte => dte.Documents).Returns((Documents) mockDocuments.Object);
-
-            // ReSharper disable once ObjectCreationAsStatement
-            new IDEStateEventGenerator(TestRSEnv, TestMessageBus, EternalLifetime.Instance, TestDateUtils, null);
         }
 
         private static Mock<Window> CreateWindowMock(string caption, bool visible)
@@ -74,10 +75,35 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.VisualStudio
         [Test]
         public void ShouldCaptureOnlyVisibleWindows()
         {
-            var actual = GetSinglePublished<IDEStateEvent>();
+            var mockVisibleWindow = CreateWindowMock("VisibleWindow", true);
+            var mockInvisibleWindow = CreateWindowMock("InvisibleWindow", false);
+            _instantiatedWindows.Add(mockVisibleWindow.Object);
+            _instantiatedWindows.Add(mockInvisibleWindow.Object);
+            var visibleWindowName = mockVisibleWindow.Object.GetName();
 
-            var expected = new[] {_visibleWindowName};
-            CollectionAssert.AreEqual(expected, actual.OpenWindows);
+            // ReSharper disable once ObjectCreationAsStatement
+            new IDEStateEventGenerator(TestRSEnv, TestMessageBus, EternalLifetime.Instance, TestDateUtils, null);
+
+            var actuals = GetSinglePublished<IDEStateEvent>().OpenWindows;
+            var expecteds = new[] {visibleWindowName};
+            CollectionAssert.AreEqual(expecteds, actuals);
+        }
+
+        [Test]
+        public void ShouldSetIDESessionUUIDToShutdownEvent()
+        {
+            IDEStateEvent shutdownEvent = null;
+            var mockLogger = new Mock<IEventLogger>();
+            mockLogger.Setup(logger => logger.Log(It.IsAny<IDEStateEvent>()))
+                      .Callback<IDEEvent>(ideEvent => shutdownEvent = (IDEStateEvent) ideEvent);
+
+            Lifetimes.Using(
+                lt =>
+                    new IDEStateEventGenerator(TestRSEnv, TestMessageBus, lt, TestDateUtils, mockLogger.Object));
+
+            Assert.AreEqual(TestIDESession.UUID, shutdownEvent.IDESessionUUID);
+            Assert.AreEqual(IDEStateEvent.LifecyclePhase.Shutdown, shutdownEvent.IDELifecyclePhase);
+            Assert.AreEqual(TestDateUtils.Now, shutdownEvent.TriggeredAt);
         }
 
         // TODO test other functionality of the generator

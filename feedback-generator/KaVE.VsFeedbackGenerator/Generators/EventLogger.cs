@@ -30,8 +30,12 @@ using KaVE.VsFeedbackGenerator.Utils.Logging;
 
 namespace KaVE.VsFeedbackGenerator.Generators
 {
+    public interface IEventLogger {
+        void Log(IDEEvent @event);
+    }
+
     [ShellComponent]
-    internal class EventLogger
+    internal class EventLogger : IEventLogger
     {
         private static readonly IList<IEventMergeStrategy> MergeStrategies = new List<IEventMergeStrategy>
         {
@@ -50,7 +54,7 @@ namespace KaVE.VsFeedbackGenerator.Generators
             Task.StartNewLongRunning(ProcessEvents);
         }
 
-        internal void Log(IDEEvent @event)
+        public void Log(IDEEvent @event)
         {
             if (@event == null)
             {
