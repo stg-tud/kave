@@ -61,7 +61,7 @@ namespace KaVE.FeedbackProcessor.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to bpdev-2014-04-02.
+        ///   Looks up a localized string similar to datev-2015-04-10.
         /// </summary>
         internal static string DatabaseName {
             get {
@@ -79,7 +79,7 @@ namespace KaVE.FeedbackProcessor.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to C:\Users\Sven\Documents\KaVE\Feedback\kave.st.
+        ///   Looks up a localized string similar to C:\Users\Sven\Documents\KaVE\Feedback\DATEV 2015-04-10.
         /// </summary>
         internal static string ImportDirectory {
             get {

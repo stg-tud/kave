@@ -118,12 +118,12 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="DatabaseName" xml:space="preserve">
-    <value>bpdev-2014-04-02</value>
+    <value>datev-2015-04-10</value>
   </data>
   <data name="DatabaseUrl" xml:space="preserve">
     <value>mongodb://localhost</value>
   </data>
   <data name="ImportDirectory" xml:space="preserve">
-    <value>C:\Users\Sven\Documents\KaVE\Feedback\kave.st</value>
+    <value>C:\Users\Sven\Documents\KaVE\Feedback\DATEV 2015-04-10</value>
   </data>
 </root>
