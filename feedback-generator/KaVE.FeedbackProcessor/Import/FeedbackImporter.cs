@@ -22,6 +22,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Ionic.Zip;
+using KaVE.Commons.Model.Events.VisualStudio;
 using KaVE.Commons.Utils.Exceptions;
 using KaVE.FeedbackProcessor.Database;
 using KaVE.FeedbackProcessor.Model;
@@ -80,6 +81,7 @@ namespace KaVE.FeedbackProcessor.Import
                 var numberOfUniqueEvents = 0;
                 var numberOfDuplicatedEvents = 0;
                 var numberNewOfSessions = 0;
+                string ideSessionUUID = null;
 
                 foreach (var evt in fileLoader.ReadAllEvents(archive))
                 {
@@ -89,7 +91,13 @@ namespace KaVE.FeedbackProcessor.Import
                         continue;
                     }
 
-                    var ideSessionUUID = evt.IDESessionUUID;
+                    var ideStateEvent = evt as IDEStateEvent;
+                    if (ideStateEvent != null)
+                    {
+                        ideStateEvent.IDESessionUUID = ideSessionUUID;
+                    }
+
+                    ideSessionUUID = evt.IDESessionUUID;
                     if (currentDeveloper == null)
                     {
                         currentDeveloper = FindOrCreateCurrentDeveloper(ideSessionUUID, developerCollection);
