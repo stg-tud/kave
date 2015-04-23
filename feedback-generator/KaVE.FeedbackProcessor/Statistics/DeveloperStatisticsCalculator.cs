@@ -21,7 +21,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using KaVE.Commons.Model.Events;
-using KaVE.Commons.Utils.Exceptions;
 using KaVE.FeedbackProcessor.Database;
 using KaVE.FeedbackProcessor.Model;
 
@@ -30,12 +29,10 @@ namespace KaVE.FeedbackProcessor.Statistics
     internal class DeveloperStatisticsCalculator
     {
         private readonly IFeedbackDatabase _feedbackDatabase;
-        private readonly ILogger _logger;
 
-        public DeveloperStatisticsCalculator(IFeedbackDatabase feedbackDatabase, ILogger logger)
+        public DeveloperStatisticsCalculator(IFeedbackDatabase feedbackDatabase)
         {
             _feedbackDatabase = feedbackDatabase;
-            _logger = logger;
         }
 
         private IIDEEventCollection EventsCollection
@@ -104,21 +101,6 @@ namespace KaVE.FeedbackProcessor.Statistics
         public int GetNumberOfSessions()
         {
             return new HashSet<string>(Developers.SelectMany(dev => dev.SessionIds)).Count;
-        }
-
-        public void LogDeveloperStatistic()
-        {
-            _logger.Info(string.Format("We have at most {0} participant(s).", GetUpperBoundToNumberOfParticipants()));
-            _logger.Info(string.Format("We have at least {0} participant(s).", GetLowerBoundToNumberOfParticipants()));
-            _logger.Info(string.Format("We have {0} session(s) in total.", GetNumberOfSessions()));
-            var numberOfSessionsAssignedToMultipleDevelopers = GetNumberOfSessionsAssignedToMultipleDevelopers();
-            if (numberOfSessionsAssignedToMultipleDevelopers > 0)
-            {
-                _logger.Error(
-                    string.Format(
-                        "We have {0} session(s) assigned to more than one developer!",
-                        numberOfSessionsAssignedToMultipleDevelopers));
-            }
         }
     }
 }

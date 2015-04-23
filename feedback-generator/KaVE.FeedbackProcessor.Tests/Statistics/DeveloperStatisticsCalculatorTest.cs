@@ -31,7 +31,7 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
         [SetUp]
         public void SetUp()
         {
-            _uut = new DeveloperStatisticsCalculator(TestFeedbackDatabase, null);
+            _uut = new DeveloperStatisticsCalculator(TestFeedbackDatabase);
         }
 
         [Test]
