@@ -17,8 +17,8 @@
  *    - Markus Zimmermann
  */
 
-using System;
 using KaVE.Commons.Model.Events;
+using KaVE.Commons.Utils.Collections;
 using KaVE.FeedbackProcessor.Cleanup;
 using NUnit.Framework;
 
@@ -30,7 +30,7 @@ namespace KaVE.FeedbackProcessor.Tests.TestUtils
         {
             var processedEvent = eventProcessor.Process(ideEvent);
 
-            Assert.AreEqual(ideEvent,processedEvent);
+            CollectionAssert.AreEqual(new KaVEHashSet<IDEEvent>{ideEvent},processedEvent);
         }
     }
 }

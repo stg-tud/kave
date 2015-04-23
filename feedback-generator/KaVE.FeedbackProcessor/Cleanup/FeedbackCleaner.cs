@@ -15,13 +15,15 @@
  * 
  * Contributors:
  *    - Sven Amann
+ *    - Mattis Manfred Kämmerer
+ *    - Markus Zimmermann
  */
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using KaVE.Commons.Model.Events;
-using KaVE.Commons.Utils.Assertion;
+using KaVE.Commons.Utils.Collections;
 using KaVE.FeedbackProcessor.Database;
 using KaVE.FeedbackProcessor.Model;
 
@@ -76,45 +78,38 @@ namespace KaVE.FeedbackProcessor.Cleanup
 
         private void ProcessEvent(IDEEvent originalEvent, IEnumerable<IIDEEventProcessor> processors)
         {
-            var resultingEvent = originalEvent;
-            foreach (var candidate in processors.Select(processor => processor.Process(originalEvent)))
+            ISet<IDEEvent> resultingEventSet = new KaVEHashSet<IDEEvent>();
+            var DropOriginalEvent = false;
+
+            foreach (var intermediateEventSet in processors.Select(processor => processor.Process(originalEvent)))
             {
-                if (IsDropSignal(candidate))
+                if (IsDropOriginalEventSignal(intermediateEventSet,originalEvent))
                 {
-                    if (IsReplacement(resultingEvent, originalEvent))
-                    {
-                        Asserts.Fail("cannot drop and replace an event");
-                    }
-                    resultingEvent = null;
+                    DropOriginalEvent = true;
                 }
-                else if (!candidate.Equals(originalEvent))
-                {
-                    if (IsDropSignal(resultingEvent))
-                    {
-                        Asserts.Fail("cannot drop and replace an event");
-                    }
-                    else if (IsReplacement(resultingEvent, originalEvent))
-                    {
-                        Asserts.Fail("cannot replace an event by two");
-                    }
-                    resultingEvent = candidate;
-                }
+                resultingEventSet.UnionWith(intermediateEventSet);
             }
 
-            if (resultingEvent != null)
+            if (DropOriginalEvent)
             {
-                _database.GetCleanEventsCollection().Insert(resultingEvent);
+                resultingEventSet.Remove(originalEvent);
+            }
+            
+            InsertEventsToCleanEventCollection(resultingEventSet);
+        }
+
+        private void InsertEventsToCleanEventCollection(ISet<IDEEvent> resultingEventSet)
+        {
+            foreach (var ideEvent in resultingEventSet)
+            {
+                _database.GetCleanEventsCollection().Insert(ideEvent);
             }
         }
 
-        private static bool IsReplacement(IDEEvent resultingEvent, IDEEvent originalEvent)
+        private static bool IsDropOriginalEventSignal(ISet<IDEEvent> eventSet, IDEEvent originalEvent)
         {
-            return !ReferenceEquals(resultingEvent, originalEvent);
+            return !eventSet.Contains(originalEvent);
         }
 
-        private static bool IsDropSignal(IDEEvent candidate)
-        {
-            return candidate == null;
-        }
     }
 }

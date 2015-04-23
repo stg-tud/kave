@@ -15,13 +15,15 @@
  * 
  * Contributors:
  *    - Sven Amann
+ *    - Mattis Manfred Kämmerer
+ *    - Markus Zimmermann
  */
 
 using System.Collections.Generic;
 using System.Linq;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.TestUtils.Model.Events;
-using KaVE.Commons.Utils.Assertion;
+using KaVE.Commons.Utils.Collections;
 using KaVE.FeedbackProcessor.Cleanup;
 using NUnit.Framework;
 
@@ -82,9 +84,9 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup
             _uut.ProcessFeedback();
 
             var testProcessor1 = TestProcessor.Instances[0];
-            CollectionAssert.AreEqual(new[] { event1, event2 }, testProcessor1.ProcessedEvents);
+            CollectionAssert.AreEqual(new[] {event1, event2}, testProcessor1.ProcessedEvents);
             var testProcessor2 = TestProcessor.Instances[1];
-            CollectionAssert.AreEqual(new[] { event1, event2 }, testProcessor2.ProcessedEvents);
+            CollectionAssert.AreEqual(new[] {event1, event2}, testProcessor2.ProcessedEvents);
         }
 
         [Test]
@@ -100,7 +102,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup
             _uut.ProcessFeedback();
 
             var testProcessor = TestProcessor.Instances.First();
-            CollectionAssert.AreEqual(new[] { event1, event2 }, testProcessor.ProcessedEvents);
+            CollectionAssert.AreEqual(new[] {event1, event2}, testProcessor.ProcessedEvents);
         }
 
         [Test]
@@ -149,28 +151,98 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup
             CollectionAssert.DoesNotContain(cleanEvents, event1);
         }
 
-        [Test, ExpectedException(typeof(AssertException), ExpectedMessage = "cannot drop and replace an event")]
-        public void ThrowsIfOneProcessorReplacesAndOneConsumesAnEvent()
+        [Test]
+        public void ShouldNotDropReplacedEvents()
         {
             const string ideSessionUUID = "sessionA";
             GivenDeveloperExists(ideSessionUUID);
-            GivenEventExists(ideSessionUUID, "1");
+            var event1 = GivenEventExists(ideSessionUUID, "1");
 
             _uut.RegisterProcessor<ReplacingConsumer>();
             _uut.RegisterProcessor<ConsumingProcessor>();
             _uut.ProcessFeedback();
+
+            var cleanEvents = TestFeedbackDatabase.GetCleanEventsCollection().FindAll().ToList();
+            Assert.AreEqual(1, cleanEvents.Count);
+            CollectionAssert.DoesNotContain(cleanEvents, event1);
         }
 
-        [Test, ExpectedException(typeof(AssertException), ExpectedMessage = "cannot replace an event by two")]
-        public void ThrowsIfTwoProcessorsReplaceAnEvent()
+        [Test]
+        public void ShouldInsertBothEventsWhenTwoProcessorReplaceEvent()
+        {
+            const string ideSessionUUID = "sessionA";
+            GivenDeveloperExists(ideSessionUUID);
+            var event1 = GivenEventExists(ideSessionUUID, "1");
+
+            _uut.RegisterProcessor<ReplacingConsumer>();
+            _uut.RegisterProcessor<ReplacingConsumer>();
+            _uut.ProcessFeedback();
+
+            var cleanEvents = TestFeedbackDatabase.GetCleanEventsCollection().FindAll().ToList();
+            Assert.AreEqual(2, cleanEvents.Count);
+            CollectionAssert.DoesNotContain(cleanEvents, event1);
+        }
+
+        [Test]
+        public void InsertsNewEventWhenOneProcessorIgnoresIt()
         {
             const string ideSessionUUID = "sessionA";
             GivenDeveloperExists(ideSessionUUID);
             GivenEventExists(ideSessionUUID, "1");
 
-            _uut.RegisterProcessor<ReplacingConsumer>();
+            _uut.RegisterProcessor<InsertingConsumer>();
+            _uut.RegisterProcessor<InactiveProcessor>();
+            _uut.ProcessFeedback();
+
+            var cleanEvents = TestFeedbackDatabase.GetCleanEventsCollection().FindAll().ToList();
+            Assert.AreEqual(2,cleanEvents.Count);
+        }
+
+        [Test]
+        public void InsertsNewEventAndDropsOriginalEventWhenAnotherProcessorDropsIt()
+        {
+            const string ideSessionUUID = "sessionA";
+            GivenDeveloperExists(ideSessionUUID);
+            var event1 = GivenEventExists(ideSessionUUID, "1");
+
+            _uut.RegisterProcessor<InsertingConsumer>();
+            _uut.RegisterProcessor<ConsumingProcessor>();
+            _uut.ProcessFeedback();
+
+            var cleanEvents = TestFeedbackDatabase.GetCleanEventsCollection().FindAll().ToList();
+            Assert.AreEqual(1,cleanEvents.Count);
+            CollectionAssert.DoesNotContain(cleanEvents,event1);
+        }
+
+        [Test]
+        public void DropsOriginalEventWhenOneProcessorReplacesAndAnotherInserts()
+        {
+            const string ideSessionUUID = "sessionA";
+            GivenDeveloperExists(ideSessionUUID);
+            var event1 = GivenEventExists(ideSessionUUID, "1");
+
+            _uut.RegisterProcessor<InsertingConsumer>();
             _uut.RegisterProcessor<ReplacingConsumer>();
             _uut.ProcessFeedback();
+
+            var cleanEvents = TestFeedbackDatabase.GetCleanEventsCollection().FindAll().ToList();
+            Assert.AreEqual(2, cleanEvents.Count);
+            CollectionAssert.DoesNotContain(cleanEvents, event1);
+        }
+
+        [Test]
+        public void ShouldNotDuplicateOriginalEvent()
+        {
+            const string ideSessionUUID = "sessionA";
+            GivenDeveloperExists(ideSessionUUID);
+            GivenEventExists(ideSessionUUID, "1");
+
+            _uut.RegisterProcessor<InsertingConsumer>();
+            _uut.RegisterProcessor<InsertingConsumer>();
+            _uut.ProcessFeedback();
+
+            var cleanEvents = TestFeedbackDatabase.GetCleanEventsCollection().FindAll().ToList();
+            Assert.AreEqual(3, cleanEvents.Count);
         }
 
         private abstract class TestProcessor : IIDEEventProcessor
@@ -183,7 +255,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup
                 Instances.Add(this);
             }
 
-            public virtual IDEEvent Process(IDEEvent @event)
+            public virtual ISet<IDEEvent> Process(IDEEvent @event)
             {
                 ProcessedEvents.Add(@event);
                 return null;
@@ -192,33 +264,45 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup
 
         private class InactiveProcessor : TestProcessor
         {
-            public override IDEEvent Process(IDEEvent @event)
+            public override ISet<IDEEvent> Process(IDEEvent @event)
             {
                 base.Process(@event);
-                return @event;
+                return new KaVEHashSet<IDEEvent> {@event};
             }
         }
 
         private class ConsumingProcessor : TestProcessor
         {
-            public override IDEEvent Process(IDEEvent @event)
+            public override ISet<IDEEvent> Process(IDEEvent @event)
             {
                 base.Process(@event);
-                return null;
+                return new KaVEHashSet<IDEEvent>();
             }
         }
 
         private class ReplacingConsumer : TestProcessor
         {
-            public override IDEEvent Process(IDEEvent @event)
+            public override ISet<IDEEvent> Process(IDEEvent @event)
             {
                 base.Process(@event);
-                var testIDEEvent = (TestIDEEvent) @event;
-                return new TestIDEEvent
-                {
-                    IDESessionUUID = @event.IDESessionUUID,
-                    TestProperty = testIDEEvent.TestProperty + "_modified"
-                };
+
+                var newEvent = IDEEventTestFactory.SomeEvent();
+                newEvent.IDESessionUUID = @event.IDESessionUUID;
+
+                return new KaVEHashSet<IDEEvent> {newEvent};
+            }
+        }
+
+        private class InsertingConsumer : TestProcessor
+        {
+            public override ISet<IDEEvent> Process(IDEEvent @event)
+            {
+                base.Process(@event);
+
+                var newEvent = IDEEventTestFactory.SomeEvent();
+                newEvent.IDESessionUUID = @event.IDESessionUUID;
+
+                return new KaVEHashSet<IDEEvent> {@event, newEvent};
             }
         }
     }

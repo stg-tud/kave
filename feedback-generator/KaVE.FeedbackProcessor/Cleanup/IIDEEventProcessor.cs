@@ -17,6 +17,7 @@
  *    - 
  */
 
+using System.Collections.Generic;
 using KaVE.Commons.Model.Events;
 
 namespace KaVE.FeedbackProcessor.Cleanup
@@ -28,6 +29,6 @@ namespace KaVE.FeedbackProcessor.Cleanup
         /// Returns null, if the argument event is consumed by this processor.
         /// Returns another event, if this event should be replaced by the other.
         /// </summary>
-        IDEEvent Process(IDEEvent @event);
+        ISet<IDEEvent> Process(IDEEvent @event);
     }
 }

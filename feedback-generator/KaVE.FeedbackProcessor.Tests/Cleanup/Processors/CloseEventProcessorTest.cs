@@ -18,6 +18,7 @@
  *    - Markus Zimmermann
  */
 
+using System.Linq;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.VisualStudio;
 using KaVE.Commons.TestUtils.Model.Events;
@@ -55,9 +56,15 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
         {
             var closingEvent = new DocumentEvent {Action = DocumentEvent.DocumentAction.Closing};
 
-            var processedEvent = (CommandEvent) _uut.Process(closingEvent);
+            var resultSet = _uut.Process(closingEvent);
 
-            Assert.AreEqual("Close", processedEvent.CommandId);
+            Assert.AreEqual(1,resultSet.Count);
+
+            var processedEvent = resultSet.First();
+            Assert.IsInstanceOf<CommandEvent>(processedEvent);
+            var commandEvent = (CommandEvent) processedEvent;
+
+            Assert.AreEqual("Close", commandEvent.CommandId);
         }
 
         [Test]

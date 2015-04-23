@@ -18,8 +18,10 @@
  *    - Markus Zimmermann
  */
 
+using System.Collections.Generic;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.VisualStudio;
+using KaVE.Commons.Utils.Collections;
 
 namespace KaVE.FeedbackProcessor.Cleanup.Processors
 {
@@ -27,7 +29,7 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
     {
         private bool _filterNextDocumentEvent;
 
-        public IDEEvent Process(IDEEvent @event)
+        public ISet<IDEEvent> Process(IDEEvent @event)
         {
             var commandEvent = @event as CommandEvent;
             if (commandEvent != null)
@@ -47,25 +49,25 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
                 return ProcessWindowEvent(windowEvent);
             }
 
-            return @event;
+            return new KaVEHashSet<IDEEvent>{@event};
         }
 
-        private IDEEvent ProcessCommandEvent(CommandEvent commandEvent)
+        private ISet<IDEEvent> ProcessCommandEvent(CommandEvent commandEvent)
         {
             if (commandEvent.CommandId == "Close")
             {
                 _filterNextDocumentEvent = true;
             }
 
-            return commandEvent;
+            return new KaVEHashSet<IDEEvent>{commandEvent};
         }
 
-        private static IDEEvent ProcessWindowEvent(WindowEvent windowEvent)
+        private static ISet<IDEEvent> ProcessWindowEvent(WindowEvent windowEvent)
         {
-            return windowEvent.Action == WindowEvent.WindowAction.Close ? null : windowEvent;
+            return windowEvent.Action == WindowEvent.WindowAction.Close ? null : new KaVEHashSet<IDEEvent>{windowEvent};
         }
 
-        private IDEEvent ProcessDocumentEvent(DocumentEvent documentEvent)
+        private ISet<IDEEvent> ProcessDocumentEvent(DocumentEvent documentEvent)
         {
             if (_filterNextDocumentEvent)
             {
@@ -75,7 +77,7 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
 
             if (documentEvent.Action != DocumentEvent.DocumentAction.Closing)
             {
-                return documentEvent;
+                return new KaVEHashSet<IDEEvent>{documentEvent};
             }
 
             var commandEvent = new CommandEvent
@@ -90,7 +92,7 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
                 TriggeredBy = documentEvent.TriggeredBy
             };
 
-            return commandEvent;
+            return new KaVEHashSet<IDEEvent>{commandEvent};
         }
     }
 }
