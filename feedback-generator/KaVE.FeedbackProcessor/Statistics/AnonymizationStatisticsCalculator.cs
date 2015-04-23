@@ -23,6 +23,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.VisualStudio;
+using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Exceptions;
 using KaVE.FeedbackProcessor.Database;
 using KaVE.FeedbackProcessor.Model;
@@ -48,22 +49,29 @@ namespace KaVE.FeedbackProcessor.Statistics
 
         public void LogNumberOfEventsWithoutSessionId()
         {
-            var anonymousEvents =
-                EventsCollection.Find(
-                    Query.Or(
-                        Query<IDEEvent>.NotExists(evt => evt.IDESessionUUID),
-                        Query<IDEEvent>.EQ(evt => evt.IDESessionUUID, null)));
-            _logger.Info(string.Format("Found {0} events without session id.", anonymousEvents.Count()));
+            var developers =
+                _database.GetDeveloperCollection().FindAll().Where(dev => dev.IsAnonymousSessionDeveloper).ToList();
+            _logger.Info(string.Format("Found {0} developer(s) of anonymous sessions.", developers.Count));
+
+            foreach (var developer in developers)
+            {
+                var anonymousEvents =
+                    EventsCollection.Find(Query<IDEEvent>.EQ(evt => evt.IDESessionUUID, developer.Id.ToString()));
+                _logger.Info(
+                    string.Format(
+                        " - Developer {0} with {1} event(s) for the session.",
+                        developer.Id,
+                        anonymousEvents.Count()));
+            }
         }
 
         public void LogNumberOfEventsWithoutTriggerTime()
         {
             var anonymousEvents =
-                EventsCollection.Find(
-                    Query.Or(
-                        Query<IDEEvent>.NotExists(evt => evt.TriggeredAt),
-                        Query<IDEEvent>.EQ(evt => evt.TriggeredAt, null)));
+                EventsCollection.Find(Query<IDEEvent>.LT(evt => evt.TriggeredAt, new DateTime(1000, 1, 1))).ToList();
             _logger.Info(string.Format("Found {0} events without trigger time.", anonymousEvents.Count()));
+            var sessionIds = new HashSet<string>(anonymousEvents.Select(evt => evt.IDESessionUUID));
+            _logger.Info(string.Format(" - The events are from the sessions: {0}", sessionIds.ToStringReflection()));
         }
 
         public void LogNumberOfEventsWithoutDuration()
@@ -91,7 +99,8 @@ namespace KaVE.FeedbackProcessor.Statistics
                 anonymizedWindowEvents.Select(we => we.IDESessionUUID));
             _logger.Info(String.Format("Found {0} sessions with anonymized events.", sessionsWithAnonymizedNames.Count));
             var anonymizingDevelopers = GetDevelopersForSessionIds(sessionsWithAnonymizedNames);
-            _logger.Info(String.Format("These sessions belong to at most {0} developers.", anonymizingDevelopers.Count()));
+            _logger.Info(
+                String.Format("These sessions belong to at most {0} developers.", anonymizingDevelopers.Count()));
         }
 
         private IEnumerable<IList<Developer>> GetDevelopersForSessionIds(IEnumerable<string> sessionIds)
@@ -102,13 +111,8 @@ namespace KaVE.FeedbackProcessor.Statistics
         private bool IsAnonymized(WindowEvent we)
         {
             var caption = we.Window.Caption;
-            var isAnonymized = (caption.Length == 24) &&
-                               Regex.IsMatch(caption, @"^[a-zA-Z0-9-_]*={0,3}$", RegexOptions.None);
-            if (isAnonymized)
-            {
-                _logger.Info(caption + " ");
-            }
-            return isAnonymized;
+            return (caption.Length == 24) &&
+                   Regex.IsMatch(caption, @"^[a-zA-Z0-9-_]*={0,3}$", RegexOptions.None);
         }
     }
 }
