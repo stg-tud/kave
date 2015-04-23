@@ -17,11 +17,13 @@
  *    - Sven Amann
  */
 
+using System;
+using System.Collections.Generic;
 using KaVE.JetBrains.Annotations;
 
 namespace KaVE.Commons.Model.Names.CSharp
 {
-    public class DelegateTypeName : TypeName
+    public class DelegateTypeName : TypeName, IDelegateTypeName
     {
         internal static bool IsDelegateTypeIdentifier(string identifier)
         {
@@ -39,6 +41,26 @@ namespace KaVE.Commons.Model.Names.CSharp
         public override bool IsDelegateType
         {
             get { return true; }
+        }
+
+        public string Signature
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        public IList<IParameterName> Parameters
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        public bool HasParameters
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        public ITypeName ReturnType
+        {
+            get { throw new NotImplementedException(); }
         }
     }
 }
