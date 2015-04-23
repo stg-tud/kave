@@ -17,25 +17,29 @@
  *    - Sven Amann
  */
 
-using System.Collections.Generic;
-using MongoDB.Bson;
+using KaVE.FeedbackProcessor.Model;
+using NUnit.Framework;
 
-namespace KaVE.FeedbackProcessor.Model
+namespace KaVE.FeedbackProcessor.Tests.Model
 {
-    public class Developer
+    [TestFixture]
+    class DeveloperTest
     {
-        public Developer()
+        [Test]
+        public void IsAnonymousSessionDeveloperIfItHasNoSessionIds()
         {
-            SessionIds = new HashSet<string>();
+            // ReSharper disable once RedundantEmptyObjectOrCollectionInitializer
+            var developer = new Developer{SessionIds = {}};
+
+            Assert.True(developer.IsAnonymousSessionDeveloper);
         }
 
-        public ObjectId Id { get; set; }
-
-        public HashSet<string> SessionIds { get; private set; }
-
-        public bool IsAnonymousSessionDeveloper
+        [Test]
+        public void IsNonAnonymousSessionDeveloperIfItHasSessionIds()
         {
-            get { return SessionIds.Count == 0; }
+            var developer = new Developer { SessionIds = { "sessionA" } };
+
+            Assert.False(developer.IsAnonymousSessionDeveloper);
         }
     }
 }
