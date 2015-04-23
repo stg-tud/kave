@@ -48,5 +48,74 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
             var expecteds = new[] { new DateTime(2015, 4, 1), new DateTime(2015, 3, 31) };
             CollectionAssert.AreEquivalent(expecteds, actuals);
         }
+
+        [Test]
+        public void ComputesLowerBoundToNumberOfParticipants_Overlapping()
+        {
+            // developer 1
+            const string dev1Session = "dev1";
+            GivenDeveloperExists(new[] { dev1Session });
+            GivenEventExists(dev1Session, triggeredAt: new DateTime(2015, 04, 02));
+            GivenEventExists(dev1Session, triggeredAt: new DateTime(2015, 04, 01));
+            GivenEventExists(dev1Session, triggeredAt: new DateTime(2015, 03, 31));
+            // developer 2
+            const string dev2Session = "dev2";
+            GivenDeveloperExists(new[] { dev2Session });
+            GivenEventExists(dev2Session, triggeredAt: new DateTime(2015, 04, 03));
+            GivenEventExists(dev2Session, triggeredAt: new DateTime(2015, 04, 02));
+
+            var actual = _uut.GetLowerBoundToNumberOfParticipants();
+
+            Assert.AreEqual(2, actual);
+        }
+
+        [Test]
+        public void ComputesLowerBoundToNumberOfParticipants_Separate()
+        {
+            // developer 1
+            const string dev1Session = "dev1";
+            GivenDeveloperExists(new[] { dev1Session });
+            GivenEventExists(dev1Session, triggeredAt: new DateTime(2015, 04, 01));
+            GivenEventExists(dev1Session, triggeredAt: new DateTime(2015, 03, 31));
+            // developer 2
+            const string dev2Session = "dev2";
+            GivenDeveloperExists(new[] { dev2Session });
+            GivenEventExists(dev2Session, triggeredAt: new DateTime(2015, 04, 03));
+            GivenEventExists(dev2Session, triggeredAt: new DateTime(2015, 04, 02));
+
+            var actual = _uut.GetLowerBoundToNumberOfParticipants();
+
+            Assert.AreEqual(1, actual);
+        }
+
+        [Test]
+        public void ComputesLowerBoundToNumberOfParticipants_Multiple()
+        {
+            // developer 1
+            const string dev1Session = "dev1";
+            GivenDeveloperExists(new[] { dev1Session });
+            GivenEventExists(dev1Session, triggeredAt: new DateTime(2015, 04, 02));
+            GivenEventExists(dev1Session, triggeredAt: new DateTime(2015, 04, 01));
+            GivenEventExists(dev1Session, triggeredAt: new DateTime(2015, 03, 31));
+            // developer 2
+            const string dev2Session = "dev2";
+            GivenDeveloperExists(new[] { dev2Session });
+            GivenEventExists(dev2Session, triggeredAt: new DateTime(2015, 04, 03));
+            GivenEventExists(dev2Session, triggeredAt: new DateTime(2015, 04, 02));
+            // developer 3
+            const string dev3Session = "dev3";
+            GivenDeveloperExists(new[] { dev3Session });
+            GivenEventExists(dev3Session, triggeredAt: new DateTime(2015, 04, 01));
+            GivenEventExists(dev3Session, triggeredAt: new DateTime(2015, 03, 31));
+            // developer 4
+            const string dev4Session = "dev4";
+            GivenDeveloperExists(new[] { dev4Session });
+            GivenEventExists(dev4Session, triggeredAt: new DateTime(2015, 04, 04));
+            GivenEventExists(dev4Session, triggeredAt: new DateTime(2015, 04, 03));
+
+            var actual = _uut.GetLowerBoundToNumberOfParticipants();
+
+            Assert.AreEqual(2, actual);
+        }
     }
 }

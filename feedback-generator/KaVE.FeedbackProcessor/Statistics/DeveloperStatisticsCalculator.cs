@@ -26,7 +26,7 @@ using KaVE.FeedbackProcessor.Model;
 
 namespace KaVE.FeedbackProcessor.Statistics
 {
-    class DeveloperStatisticsCalculator
+    internal class DeveloperStatisticsCalculator
     {
         private readonly IFeedbackDatabase _feedbackDatabase;
 
@@ -40,7 +40,7 @@ namespace KaVE.FeedbackProcessor.Statistics
             get { return _feedbackDatabase.GetOriginalEventsCollection(); }
         }
 
-        public IEnumerable<DateTime> GetActiveDays(Developer developer)
+        public ISet<DateTime> GetActiveDays(Developer developer)
         {
             return new HashSet<DateTime>(EventsCollection.GetEventStream(developer).Select(EventDate));
         }
@@ -50,5 +50,20 @@ namespace KaVE.FeedbackProcessor.Statistics
             var dateTime = evt.TriggeredAt;
             return dateTime.HasValue ? dateTime.Value.Date : new DateTime().Date;
         }
+
+        public int GetLowerBoundToNumberOfParticipants()
+        {
+            var developers = _feedbackDatabase.GetDeveloperCollection().FindAll();
+            var activeDaySets = developers.Select(GetActiveDays).ToList();
+            return activeDaySets.Select(dayset => IsOverlapingWithAllPrevious(activeDaySets, dayset)).Count(b => b);
+        }
+
+        private static bool IsOverlapingWithAllPrevious(IEnumerable<ISet<DateTime>> daySets, IEnumerable<DateTime> daySet)
+        {
+            var previoudDateSets = daySets.TakeWhile(otherDaySet => !daySet.Equals(otherDaySet));
+            return previoudDateSets.All(set => set.Overlaps(daySet));
+        }
+
+        
     }
 }
