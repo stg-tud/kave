@@ -17,6 +17,7 @@
  *    - Sven Amann
  */
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using KaVE.Commons.Model.Events;
@@ -58,11 +59,6 @@ namespace KaVE.FeedbackProcessor.Database
         private static SortByBuilder<IDEEvent> Chronological
         {
             get { return SortBy<IDEEvent>.Ascending(evt => evt.TriggeredAt); }
-        }
-
-        private static SortByBuilder<IDEEvent> Reversed
-        {
-            get { return SortBy<IDEEvent>.Descending(evt => evt.TriggeredAt); }
         }
 
         private static IMongoQuery EventsFrom(Developer developer)

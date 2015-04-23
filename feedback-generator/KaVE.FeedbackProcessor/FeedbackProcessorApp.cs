@@ -33,8 +33,8 @@ namespace KaVE.FeedbackProcessor
         public static void Main()
         {
             var database = new MongoDbFeedbackDatabase(Configuration.DatabaseUrl, Configuration.DatabaseName);
-            ImportFeedback(database);
-            //LogAnonymizationStatistics(database);
+            //ImportFeedback(database);
+            LogStatistics(database);
             //CleanFeedback(database);
         }
 
@@ -42,11 +42,13 @@ namespace KaVE.FeedbackProcessor
         {
             var feedbackImporter = new FeedbackImporter(database, Logger);
             feedbackImporter.Import();
-            feedbackImporter.LogDeveloperStatistics();
         }
 
-        private static void LogAnonymizationStatistics(MongoDbFeedbackDatabase database)
+        private static void LogStatistics(IFeedbackDatabase database)
         {
+            var developerStatistics = new DeveloperStatisticsCalculator(database, Logger);
+            developerStatistics.LogDeveloperStatistic();
+
             var calculator = new AnonymizationStatisticsCalculator(database, Logger);
             calculator.LogNumberOfEventsWithoutSessionId();
             calculator.LogNumberOfEventsWithoutTriggerTime();

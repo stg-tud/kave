@@ -31,7 +31,7 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
         [SetUp]
         public void SetUp()
         {
-            _uut = new DeveloperStatisticsCalculator(TestFeedbackDatabase);
+            _uut = new DeveloperStatisticsCalculator(TestFeedbackDatabase, null);
         }
 
         [Test]
@@ -116,6 +116,43 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
             var actual = _uut.GetLowerBoundToNumberOfParticipants();
 
             Assert.AreEqual(2, actual);
+        }
+
+        [Test]
+        public void UpperBoundToNumberOfParticipantsIsNumberOfDevelopers()
+        {
+            GivenDeveloperExists("dev1");
+            GivenDeveloperExists("dev2");
+            GivenDeveloperExists("dev3");
+
+            var actual = _uut.GetUpperBoundToNumberOfParticipants();
+
+            Assert.AreEqual(3, actual);
+        }
+
+        [Test]
+        public void ComputesNumberOfSessionsAssignedToMultipleDevelopers()
+        {
+            GivenDeveloperExists("sessionA", "sessionB");
+            GivenDeveloperExists("sessionB", "sessionC");
+            GivenDeveloperExists("sessionD", "sessionE");
+            GivenDeveloperExists("sessionE");
+
+            var actual = _uut.GetNumberOfSessionsAssignedToMultipleDevelopers();
+
+            Assert.AreEqual(2, actual);
+        }
+
+        [Test]
+        public void ComputesNumberOfSessions()
+        {
+            GivenDeveloperExists("sessionA", "sessionB");
+            GivenDeveloperExists("sessionA");
+            GivenDeveloperExists("sessionC");
+
+            var actual = _uut.GetNumberOfSessions();
+
+            Assert.AreEqual(3, actual);
         }
     }
 }

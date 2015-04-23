@@ -41,28 +41,6 @@ namespace KaVE.FeedbackProcessor.Import
             _logger = logger;
         }
 
-        public void LogDeveloperStatistics()
-        {
-            var developerCollection = _database.GetDeveloperCollection();
-            var devs = developerCollection.FindAll().ToList();
-            var sessIds = new HashSet<string>();
-            var dupSessIds = new HashSet<string>();
-            foreach (var sessionId in devs.SelectMany(developer => developer.SessionIds))
-            {
-                if (sessIds.Contains(sessionId))
-                {
-                    dupSessIds.Add(sessionId);
-                }
-                else
-                {
-                    sessIds.Add(sessionId);
-                }
-            }
-            _logger.Info(string.Format("Found {0} developers.", devs.Count()));
-            _logger.Info(string.Format("Found {0} sessions.", sessIds.Count));
-            _logger.Info(string.Format("Found {0} duplicated sessions.", dupSessIds.Count));
-        }
-
         public void Import()
         {
             var eventsCollection = _database.GetOriginalEventsCollection();
