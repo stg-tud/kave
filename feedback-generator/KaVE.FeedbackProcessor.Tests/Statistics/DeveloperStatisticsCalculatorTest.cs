@@ -89,7 +89,7 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
         }
 
         [Test]
-        public void ComputesLowerBoundToNumberOfParticipants_Multiple()
+        public void ComputesLowerBoundToNumberOfParticipants_Multiple1()
         {
             // developer 1
             const string dev1Session = "dev1";
@@ -116,6 +116,39 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
             var actual = _uut.GetLowerBoundToNumberOfParticipants();
 
             Assert.AreEqual(2, actual);
+        }
+
+        [Test]
+        public void ComputesLowerBoundToNumberOfParticipants_Multiple2()
+        {
+            // developer 1
+            const string dev1Session = "dev1";
+            GivenDeveloperExists(new[] { dev1Session });
+            GivenEventExists(dev1Session, triggeredAt: new DateTime(2015, 04, 01));
+            // developer 2
+            const string dev2Session = "dev2";
+            GivenDeveloperExists(new[] { dev2Session });
+            GivenEventExists(dev2Session, triggeredAt: new DateTime(2015, 04, 02));
+            // developer 3
+            const string dev3Session = "dev3";
+            GivenDeveloperExists(new[] { dev3Session });
+            GivenEventExists(dev3Session, triggeredAt: new DateTime(2015, 04, 02));
+
+            var actual = _uut.GetLowerBoundToNumberOfParticipants();
+
+            Assert.AreEqual(2, actual);
+        }
+
+        [Test]
+        public void ExcludesAnonymouseDevelopersFromLowerBound()
+        {
+            // developer 1
+            var dev1 = GivenDeveloperExists(/* anonymous */);
+            GivenEventExists(dev1.Id.ToString(), triggeredAt: new DateTime(2015, 04, 01));
+
+            var actual = _uut.GetLowerBoundToNumberOfParticipants();
+
+            Assert.AreEqual(0, actual);
         }
 
         [Test]

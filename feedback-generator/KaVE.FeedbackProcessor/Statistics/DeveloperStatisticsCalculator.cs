@@ -61,15 +61,31 @@ namespace KaVE.FeedbackProcessor.Statistics
 
         public int GetLowerBoundToNumberOfParticipants()
         {
-            var activeDaySets = Developers.Select(GetActiveDays).ToList();
-            return activeDaySets.Select(dayset => IsOverlapingWithAllPrevious(activeDaySets, dayset)).Count(b => b);
+            var activeDaySets = Developers.Where(dev => !dev.IsAnonymousSessionDeveloper).Select(GetActiveDays).ToList();
+
+            while (TryToCombineDaySets(activeDaySets)) {}
+
+            return activeDaySets.Count;
         }
 
-        private static bool IsOverlapingWithAllPrevious(IEnumerable<ISet<DateTime>> daySets,
-            IEnumerable<DateTime> daySet)
+        private static bool TryToCombineDaySets(IList<ISet<DateTime>> activeDaySets)
         {
-            var previousDateSets = daySets.TakeWhile(otherDaySet => !daySet.Equals(otherDaySet));
-            return previousDateSets.All(set => set.Overlaps(daySet));
+            for (var devIdx = 0; devIdx < activeDaySets.Count; devIdx++)
+            {
+                var devActiveDays = activeDaySets[devIdx];
+                for (var otherDevIdx = devIdx + 1; otherDevIdx < activeDaySets.Count; otherDevIdx++)
+                {
+                    var otherDevActiveDays = activeDaySets[otherDevIdx];
+                    if (!devActiveDays.Overlaps(otherDevActiveDays))
+                    {
+                        activeDaySets.Remove(otherDevActiveDays);
+                        activeDaySets.Remove(devActiveDays);
+                        activeDaySets.Add(new HashSet<DateTime>(devActiveDays.Union(otherDevActiveDays)));
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
 
         public int GetUpperBoundToNumberOfParticipants()
@@ -92,8 +108,8 @@ namespace KaVE.FeedbackProcessor.Statistics
 
         public void LogDeveloperStatistic()
         {
-            _logger.Info(string.Format("We have at most {0} developer(s).", GetUpperBoundToNumberOfParticipants()));
-            _logger.Info(string.Format("We have at least {0} developer(s).", GetLowerBoundToNumberOfParticipants()));
+            _logger.Info(string.Format("We have at most {0} participant(s).", GetUpperBoundToNumberOfParticipants()));
+            _logger.Info(string.Format("We have at least {0} participant(s).", GetLowerBoundToNumberOfParticipants()));
             _logger.Info(string.Format("We have {0} session(s) in total.", GetNumberOfSessions()));
             var numberOfSessionsAssignedToMultipleDevelopers = GetNumberOfSessionsAssignedToMultipleDevelopers();
             if (numberOfSessionsAssignedToMultipleDevelopers > 0)
