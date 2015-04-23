@@ -35,33 +35,18 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
         }
 
         [Test]
-        public void DeterminesDevelopersFirstActivity()
-        {
-            const string sessionId = "sessionA";
-            var developer = GivenDeveloperExists(new[] {sessionId});
-            var expected = new DateTime(2015, 4, 1, 23, 01, 42);
-            GivenEventExists(sessionId, triggeredAt: new DateTime(2015, 4, 3, 23, 01, 42));
-            GivenEventExists(sessionId, triggeredAt: new DateTime(2015, 4, 1, 23, 23, 42));
-            GivenEventExists(sessionId, triggeredAt: expected);
-
-            var actual = _uut.GetFirstActivity(developer);
-
-            Assert.AreEqual(expected, actual);
-        }
-
-        [Test]
-        public void DeterminesDevelopersLastActivity()
+        public void DeterminesDaysOfActivity()
         {
             const string sessionId = "sessionA";
             var developer = GivenDeveloperExists(new[] { sessionId });
-            var expected = new DateTime(2015, 4, 3, 23, 01, 42);
-            GivenEventExists(sessionId, triggeredAt: expected);
-            GivenEventExists(sessionId, triggeredAt: new DateTime(2015, 4, 1, 23, 23, 42));
-            GivenEventExists(sessionId, triggeredAt: new DateTime(2015, 4, 1, 23, 01, 42));
+            GivenEventExists(sessionId, triggeredAt: new DateTime(2015, 04, 01, 23, 01, 42));
+            GivenEventExists(sessionId, triggeredAt: new DateTime(2015, 04, 01, 23, 23, 42));
+            GivenEventExists(sessionId, triggeredAt: new DateTime(2015, 03, 31, 15, 12, 59));
 
-            var actual = _uut.GetLastActivity(developer);
+            var actuals = _uut.GetActiveDays(developer);
 
-            Assert.AreEqual(expected, actual);
+            var expecteds = new[] { new DateTime(2015, 4, 1), new DateTime(2015, 3, 31) };
+            CollectionAssert.AreEquivalent(expecteds, actuals);
         }
     }
 }

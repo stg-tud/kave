@@ -18,6 +18,9 @@
  */
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using KaVE.Commons.Model.Events;
 using KaVE.FeedbackProcessor.Database;
 using KaVE.FeedbackProcessor.Model;
 
@@ -32,16 +35,20 @@ namespace KaVE.FeedbackProcessor.Statistics
             _feedbackDatabase = feedbackDatabase;
         }
 
-        public DateTime? GetFirstActivity(Developer developer)
+        private IIDEEventCollection EventsCollection
         {
-            var eventsCollection = _feedbackDatabase.GetOriginalEventsCollection();
-            return eventsCollection.GetFirstEvent(developer).TriggeredAt;
+            get { return _feedbackDatabase.GetOriginalEventsCollection(); }
         }
 
-        public DateTime? GetLastActivity(Developer developer)
+        public IEnumerable<DateTime> GetActiveDays(Developer developer)
         {
-            var eventsCollection = _feedbackDatabase.GetOriginalEventsCollection();
-            return eventsCollection.GetLastEvent(developer).TriggeredAt;
+            return new HashSet<DateTime>(EventsCollection.GetEventStream(developer).Select(EventDate));
+        }
+
+        private static DateTime EventDate(IDEEvent evt)
+        {
+            var dateTime = evt.TriggeredAt;
+            return dateTime.HasValue ? dateTime.Value.Date : new DateTime().Date;
         }
     }
 }

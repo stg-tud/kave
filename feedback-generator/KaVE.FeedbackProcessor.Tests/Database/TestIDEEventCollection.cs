@@ -70,15 +70,5 @@ namespace KaVE.FeedbackProcessor.Tests.Database
         {
             throw new NotImplementedException();
         }
-
-        public IDEEvent GetFirstEvent(Developer developer)
-        {
-            return _ideEvents.OrderBy(ideEvent => ideEvent.TriggeredAt).First();
-        }
-
-        public IDEEvent GetLastEvent(Developer developer)
-        {
-            return _ideEvents.OrderByDescending(ideEvent => ideEvent.TriggeredAt).First();
-        }
     }
 }

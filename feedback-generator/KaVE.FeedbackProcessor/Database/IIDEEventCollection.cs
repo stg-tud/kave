@@ -30,7 +30,5 @@ namespace KaVE.FeedbackProcessor.Database
         bool Contains(IDEEvent @event);
         IEnumerable<IDEEvent> Find(IMongoQuery query);
         IEnumerable<T> FindAs<T>(IMongoQuery query) where T : IDEEvent;
-        IDEEvent GetFirstEvent(Developer developer);
-        IDEEvent GetLastEvent(Developer developer);
     }
 }

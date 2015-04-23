@@ -55,16 +55,6 @@ namespace KaVE.FeedbackProcessor.Database
             return Collection.Find(EventsFrom(developer)).SetSortOrder(Chronological);
         }
 
-        public IDEEvent GetFirstEvent(Developer developer)
-        {
-            return Collection.Find(EventsFrom(developer)).SetSortOrder(Chronological).SetLimit(1).First();
-        }
-
-        public IDEEvent GetLastEvent(Developer developer)
-        {
-            return Collection.Find(EventsFrom(developer)).SetSortOrder(Reversed).SetLimit(1).First();
-        }
-
         private static SortByBuilder<IDEEvent> Chronological
         {
             get { return SortBy<IDEEvent>.Ascending(evt => evt.TriggeredAt); }
