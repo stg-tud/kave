@@ -36,11 +36,6 @@ namespace KaVE.Commons.Model.Names
         private const BindingFlags GetMethodBindingFlags =
             BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
 
-        public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
-        {
-            return sourceType == typeof (string) || base.CanConvertFrom(context, sourceType);
-        }
-
         public override object ConvertTo(ITypeDescriptorContext context,
             CultureInfo culture,
             object value,
@@ -57,6 +52,11 @@ namespace KaVE.Commons.Model.Names
         private static string AliasFor(Type nameType)
         {
             return nameType.FullName.Substring(NameQualifierPrefix.Length);
+        }
+
+        public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
+        {
+            return sourceType == typeof(string) || base.CanConvertFrom(context, sourceType);
         }
 
         public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)

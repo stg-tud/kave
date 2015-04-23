@@ -32,7 +32,7 @@ namespace KaVE.Commons.Utils.Json
         private const string OldIdentifierPropertyName = "identifier";
         private const char PropertySeparator = ':';
 
-        private readonly TypeConverter _converter = TypeDescriptor.GetConverter(typeof (IName));
+        private readonly TypeConverter _converter = new NameToStringConverter();
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
