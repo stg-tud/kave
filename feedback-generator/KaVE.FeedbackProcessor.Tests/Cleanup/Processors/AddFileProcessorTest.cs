@@ -23,6 +23,7 @@ using KaVE.Commons.Model.Events.VisualStudio;
 using KaVE.Commons.Model.Names.VisualStudio;
 using KaVE.Commons.TestUtils.Model.Events;
 using KaVE.FeedbackProcessor.Cleanup.Processors;
+using KaVE.FeedbackProcessor.Tests.TestUtils;
 using NUnit.Framework;
 
 namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
@@ -41,97 +42,46 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
         [Test]
         public void ShouldNotFilterAnySolutionEvents()
         {
-            var solutionEvent = new SolutionEvent();
-
-            var processedEvent = _uut.Process(solutionEvent);
-
-            Assert.AreEqual(solutionEvent, processedEvent);
+            ProcessorAssert.DoesNotFilter(new SolutionEvent(), _uut);
         }
 
         [Test]
         public void ShouldNotFilterAnyDocumentEvents()
         {
-            var documentEvent = new DocumentEvent();
-
-            var processedEvent = _uut.Process(documentEvent);
-
-            Assert.AreEqual(documentEvent, processedEvent);
+            ProcessorAssert.DoesNotFilter(new DocumentEvent(), _uut);
         }
 
         [Test]
         public void ShouldNotFilterAnyOtherEvents()
         {
-            var anyEvent = new TestIDEEvent();
-
-            var processedEvent = _uut.Process(anyEvent);
-
-            Assert.AreEqual(anyEvent, processedEvent);
+            ProcessorAssert.DoesNotFilter(new TestIDEEvent(), _uut);
         }
 
-        [Test]
-        public void GeneratesNewAddFileEventForAddNewItemCommand()
+        [TestCase("CSharp Test.cs", "AddNewItem"), 
+         TestCase("CSharp Foo.cpp", "Project.AddClass"),
+         TestCase("CSharp Foo.c", "Class")]
+        public void GeneratesNewAddFileEventTest(string testIdentifier, string commandId)
         {
-            const string testIdentifier = "CSharp Test.cs";
-
-            var addNewItemCommandEvent = new CommandEvent {CommandId = "AddNewItem"};
+            var addNewItemCommandEvent = new CommandEvent {CommandId = commandId};
             var documentEvent = new DocumentEvent
             {
-                Document = DocumentName.Get(string.Format(testIdentifier))
+                Document = DocumentName.Get(testIdentifier)
             };
 
+            var solutionEvent = ProcessCommandAndDocumentEvent(addNewItemCommandEvent, documentEvent);
+
+            // ReSharper disable once PossibleNullReferenceException
+            Assert.AreEqual(documentEvent.Document, solutionEvent.Target);
+            Assert.AreEqual(SolutionEvent.SolutionAction.AddProjectItem, solutionEvent.Action);
+        }
+
+        private SolutionEvent ProcessCommandAndDocumentEvent(CommandEvent addNewItemCommandEvent, DocumentEvent documentEvent)
+        {
             _uut.Process(addNewItemCommandEvent);
             var processedEvent = _uut.Process(documentEvent);
 
             Assert.IsInstanceOf<SolutionEvent>(processedEvent);
-            var solutionEvent = processedEvent as SolutionEvent;
-
-            // ReSharper disable once PossibleNullReferenceException
-            Assert.AreEqual(testIdentifier, solutionEvent.Target.Identifier);
-            Assert.AreEqual(SolutionEvent.SolutionAction.AddProjectItem, solutionEvent.Action);
-        }
-
-        [Test]
-        public void GeneratesNewAddFileEventForAddClassEvent()
-        {
-            const string testIdentifier = "CSharp Foo.cpp";
-
-            var addNewItemCommandEvent = new CommandEvent {CommandId = "Project.AddClass"};
-            var documentEvent = new DocumentEvent
-            {
-                Document = DocumentName.Get(string.Format(testIdentifier))
-            };
-
-            _uut.Process(addNewItemCommandEvent);
-            var processedEvent = _uut.Process(documentEvent);
-
-            Assert.IsInstanceOf<SolutionEvent>(processedEvent);
-            var solutionEvent = processedEvent as SolutionEvent;
-
-            // ReSharper disable once PossibleNullReferenceException
-            Assert.AreEqual(testIdentifier, solutionEvent.Target.Identifier);
-            Assert.AreEqual(SolutionEvent.SolutionAction.AddProjectItem, solutionEvent.Action);
-        }
-
-        [Test]
-        public void GeneratesNewAddFileEventForClassEvent()
-        {
-            const string testIdentifier = "CSharp Foo.c";
-
-            var addNewItemCommandEvent = new CommandEvent {CommandId = "Class"};
-            var documentEvent = new DocumentEvent
-            {
-                Document = DocumentName.Get(string.Format(testIdentifier))
-            };
-
-            _uut.Process(addNewItemCommandEvent);
-            var processedEvent = _uut.Process(documentEvent);
-
-            Assert.IsInstanceOf<SolutionEvent>(processedEvent);
-            var solutionEvent = processedEvent as SolutionEvent;
-
-            // ReSharper disable once PossibleNullReferenceException
-            Assert.AreEqual(testIdentifier, solutionEvent.Target.Identifier);
-            Assert.AreEqual(SolutionEvent.SolutionAction.AddProjectItem, solutionEvent.Action);
+            return processedEvent as SolutionEvent;
         }
     }
 }

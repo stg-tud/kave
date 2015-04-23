@@ -22,6 +22,7 @@ using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.VisualStudio;
 using KaVE.Commons.TestUtils.Model.Events;
 using KaVE.FeedbackProcessor.Cleanup.Processors;
+using KaVE.FeedbackProcessor.Tests.TestUtils;
 using NUnit.Framework;
 
 namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
@@ -40,21 +41,13 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
         [Test]
         public void ShouldNotFilterOtherEvents()
         {
-            var anyEvent = new TestIDEEvent();
-
-            var processedEvent = _uut.Process(anyEvent);
-
-            Assert.AreEqual(anyEvent, processedEvent);
+            ProcessorAssert.DoesNotFilter(new TestIDEEvent(), _uut);
         }
 
         [Test]
         public void ShouldNotFilterNonClosingDocumentEvents()
         {
-            var openedDocumentEvent = new DocumentEvent{Action = DocumentEvent.DocumentAction.Opened};
-
-            var processedEvent = _uut.Process(openedDocumentEvent);
-
-            Assert.AreEqual(openedDocumentEvent, processedEvent);
+            ProcessorAssert.DoesNotFilter(new DocumentEvent{Action = DocumentEvent.DocumentAction.Opened},_uut);
         }
 
         [Test]
@@ -80,11 +73,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
         [Test]
         public void ShouldNotFilterNonClosingWindowEvents()
         {
-            var nonClosingWindowEvent = new WindowEvent {Action = WindowEvent.WindowAction.Activate};
-
-            var processedEvent = _uut.Process(nonClosingWindowEvent);
-
-            Assert.AreEqual(nonClosingWindowEvent, processedEvent);
+            ProcessorAssert.DoesNotFilter(new WindowEvent {Action = WindowEvent.WindowAction.Activate},_uut);
         }
 
         [Test]
