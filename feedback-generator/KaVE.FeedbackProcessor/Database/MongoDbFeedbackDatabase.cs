@@ -23,12 +23,10 @@ using System.Linq;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Utils.Collections;
-using KaVE.Commons.Utils.Reflection;
 using KaVE.FeedbackProcessor.Model;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.IdGenerators;
 using MongoDB.Driver;
-using MongoDB.Driver.Builders;
 
 namespace KaVE.FeedbackProcessor.Database
 {
@@ -52,14 +50,12 @@ namespace KaVE.FeedbackProcessor.Database
         public IIDEEventCollection GetOriginalEventsCollection()
         {
             var eventsCollection = GetCollection<IDEEvent>();
-            EnsureEventIndex(eventsCollection);
             return new MongoDbIDEEventCollection(eventsCollection);
         }
 
         public IIDEEventCollection GetCleanEventsCollection()
         {
             var eventsCollection = GetCollection<IDEEvent>("_clean");
-            EnsureEventIndex(eventsCollection);
             return new MongoDbIDEEventCollection(eventsCollection);
         }
 
@@ -71,19 +67,6 @@ namespace KaVE.FeedbackProcessor.Database
                 _database.CreateCollection(collectionName);
             }
             return _database.GetCollection<T>(collectionName);
-        }
-
-        private static void EnsureEventIndex(MongoCollection<IDEEvent> eventsCollection)
-        {
-            var evtIndex = IndexKeys.Ascending(TypeExtensions<IDEEvent>.GetPropertyName(evt => evt.IDESessionUUID))
-                                    .Ascending(TypeExtensions<IDEEvent>.GetPropertyName(evt => evt.TriggeredAt))
-                                    .Ascending("_t");
-            if (!eventsCollection.IndexExists(evtIndex))
-            {
-                eventsCollection.CreateIndex(
-                    evtIndex,
-                    IndexOptions<IDEEvent>.SetUnique(false).SetSparse(true));
-            }
         }
 
         private static void RegisterModel()

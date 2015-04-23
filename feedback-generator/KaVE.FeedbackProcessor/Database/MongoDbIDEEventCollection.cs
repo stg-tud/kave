@@ -17,10 +17,10 @@
  *    - Sven Amann
  */
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using KaVE.Commons.Model.Events;
+using KaVE.Commons.Utils.Reflection;
 using KaVE.FeedbackProcessor.Model;
 using MongoDB.Driver;
 using MongoDB.Driver.Builders;
@@ -29,7 +29,42 @@ namespace KaVE.FeedbackProcessor.Database
 {
     internal class MongoDbIDEEventCollection : MongoDbDatabaseCollection<IDEEvent>, IIDEEventCollection
     {
-        public MongoDbIDEEventCollection(MongoCollection<IDEEvent> collection) : base(collection) {}
+        public MongoDbIDEEventCollection(MongoCollection<IDEEvent> collection) : base(collection)
+        {
+            EnsureEventIdentityIndex();
+            EnsureEventChronologicalIndex();
+        }
+
+        /// <summary>
+        ///     Events are almost unique with repsect to their session id, trigger time, and type. We need this index to enable
+        ///     performant Contains checks.
+        /// </summary>
+        private void EnsureEventIdentityIndex()
+        {
+            var evtIndex = IndexKeys.Ascending(TypeExtensions<IDEEvent>.GetPropertyName(evt => evt.IDESessionUUID))
+                                    .Ascending(TypeExtensions<IDEEvent>.GetPropertyName(evt => evt.TriggeredAt))
+                                    .Ascending("_t");
+            var options = IndexOptions<IDEEvent>.SetUnique(false).SetSparse(true);
+            EnsureIndex(evtIndex, options);
+        }
+
+        /// <summary>
+        ///     Sorting by trigger time when retrieving a developer's event stream needs this index to be performant.
+        /// </summary>
+        private void EnsureEventChronologicalIndex()
+        {
+            var evtIndex = IndexKeys.Ascending(TypeExtensions<IDEEvent>.GetPropertyName(evt => evt.TriggeredAt));
+            var options = IndexOptions<IDEEvent>.SetUnique(false).SetSparse(false);
+            EnsureIndex(evtIndex, options);
+        }
+
+        private void EnsureIndex(IMongoIndexKeys evtIndex, IMongoIndexOptions options)
+        {
+            if (!Collection.IndexExists(evtIndex))
+            {
+                Collection.CreateIndex(evtIndex, options);
+            }
+        }
 
         public bool Contains(IDEEvent @event)
         {
