@@ -115,38 +115,12 @@ namespace KaVE.Commons.Model.Names.CSharp
 
         public IList<IParameterName> Parameters
         {
-            get
-            {
-                var parameters = new List<IParameterName>();
-                if (HasParameters)
-                {
-                    var startOfParameterIdentifier = Identifier.IndexOf('(') + 1;
-                    var endOfParameterList = Identifier.IndexOf(')');
-                    do
-                    {
-                        var endOfParameterType = Identifier.IndexOf(
-                            "] ",
-                            startOfParameterIdentifier,
-                            StringComparison.Ordinal);
-                        var endOfParameterIdentifier = Identifier.IndexOf(',', endOfParameterType);
-                        if (endOfParameterIdentifier < 0)
-                        {
-                            endOfParameterIdentifier = endOfParameterList;
-                        }
-                        var lengthOfParameterIdentifier = endOfParameterIdentifier - startOfParameterIdentifier;
-                        var identifier =
-                            Identifier.Substring(startOfParameterIdentifier, lengthOfParameterIdentifier).Trim();
-                        parameters.Add(ParameterName.Get(identifier));
-                        startOfParameterIdentifier = endOfParameterIdentifier + 1;
-                    } while (startOfParameterIdentifier < endOfParameterList);
-                }
-                return parameters;
-            }
+            get { return Identifier.GetParameterNames(); }
         }
 
         public bool HasParameters
         {
-            get { return !Identifier.Contains("()"); }
+            get { return Identifier.HasParameters(); }
         }
 
         public bool IsConstructor

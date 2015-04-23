@@ -63,6 +63,7 @@
     <Compile Include="Model\Names\CSharp\CSharpNameFromInfoFactoryTest.cs" />
     <Compile Include="Model\Names\CSharp\CSharpNameUtilsTest.cs" />
     <Compile Include="Model\Names\CSharp\GlobalNamespaceTest.cs" />
+    <Compile Include="Model\Names\CSharp\LambdaNameTest.cs" />
     <Compile Include="Model\Names\CSharp\LocalVariableNameTest.cs" />
     <Compile Include="Model\Names\CSharp\MemberNames\EventNameTest.cs" />
     <Compile Include="Model\Names\CSharp\MemberNames\FieldNameTest.cs" />
