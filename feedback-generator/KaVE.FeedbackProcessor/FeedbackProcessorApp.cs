@@ -21,6 +21,7 @@ using System.IO;
 using System.Linq;
 using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Exceptions;
+using KaVE.FeedbackProcessor.Activities;
 using KaVE.FeedbackProcessor.Cleanup;
 using KaVE.FeedbackProcessor.Database;
 using KaVE.FeedbackProcessor.Import;
@@ -37,6 +38,7 @@ namespace KaVE.FeedbackProcessor
         {
             const string importDatabase = "";
             const string cleanDatabase = "_clean";
+            const string activityDatabase = "activities";
 
             //ImportFeedback(OpenDatabase(importDatabase));
 
@@ -46,6 +48,8 @@ namespace KaVE.FeedbackProcessor
             CollectNames(OpenDatabase(importDatabase));
 
             //CleanFeedback(OpenDatabase(importDatabase), OpenDatabase(cleanDatabase));
+
+            MapToActivities(OpenDatabase(importDatabase), OpenDatabase(activityDatabase));
         }
 
         private static MongoDbFeedbackDatabase OpenDatabase(string databaseSuffix)
@@ -132,7 +136,17 @@ namespace KaVE.FeedbackProcessor
         private static void CleanFeedback(IFeedbackDatabase sourceDatabase, IFeedbackDatabase targetDatabase)
         {
             var cleaner = new EventsMapper(sourceDatabase, targetDatabase);
+            // add cleanup processors here
             cleaner.ProcessFeedback();
+        }
+
+        private static void MapToActivities(IFeedbackDatabase sourceDatabase, IFeedbackDatabase activityDatabase)
+        {
+            var activityMapper = new EventsMapper(sourceDatabase, activityDatabase);
+            activityMapper.RegisterProcessor<AlwaysDropProcessor>(); // only generated events reach activity database
+            activityMapper.RegisterProcessor<InIDEActivityDetector>();
+
+            activityMapper.ProcessFeedback();
         }
     }
 }
