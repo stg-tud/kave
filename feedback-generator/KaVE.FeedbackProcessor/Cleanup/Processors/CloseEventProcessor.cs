@@ -18,66 +18,49 @@
  *    - Markus Zimmermann
  */
 
-using System.Collections.Generic;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.VisualStudio;
 using KaVE.Commons.Utils.Collections;
 
 namespace KaVE.FeedbackProcessor.Cleanup.Processors
 {
-    internal class CloseEventProcessor : IIDEEventProcessor
+    internal class CloseEventProcessor : BaseProcessor
     {
         private bool _filterNextDocumentEvent;
 
-        public ISet<IDEEvent> Process(IDEEvent @event)
+        public CloseEventProcessor()
         {
-            var commandEvent = @event as CommandEvent;
-            if (commandEvent != null)
-            {
-                return ProcessCommandEvent(commandEvent);
-            }
-
-            var documentEvent = @event as DocumentEvent;
-            if (documentEvent != null)
-            {
-                return ProcessDocumentEvent(documentEvent);
-            }
-
-            var windowEvent = @event as WindowEvent;
-            if (windowEvent != null)
-            {
-                return ProcessWindowEvent(windowEvent);
-            }
-
-            return new KaVEHashSet<IDEEvent>{@event};
+            RegisterFor<CommandEvent>(ProcessCommandEvent);
+            RegisterFor<DocumentEvent>(ProcessDocumentEvent);
+            RegisterFor<WindowEvent>(ProcessWindowEvent);
         }
 
-        private ISet<IDEEvent> ProcessCommandEvent(CommandEvent commandEvent)
+        private IKaVESet<IDEEvent> ProcessCommandEvent(CommandEvent commandEvent)
         {
             if (commandEvent.CommandId == "Close")
             {
                 _filterNextDocumentEvent = true;
             }
 
-            return new KaVEHashSet<IDEEvent>{commandEvent};
+            return AnswerKeep();
         }
 
-        private static ISet<IDEEvent> ProcessWindowEvent(WindowEvent windowEvent)
+        private IKaVESet<IDEEvent> ProcessWindowEvent(WindowEvent windowEvent)
         {
-            return windowEvent.Action == WindowEvent.WindowAction.Close ? null : new KaVEHashSet<IDEEvent>{windowEvent};
+            return windowEvent.Action == WindowEvent.WindowAction.Close ? AnswerDrop() : AnswerKeep();
         }
 
-        private ISet<IDEEvent> ProcessDocumentEvent(DocumentEvent documentEvent)
+        private IKaVESet<IDEEvent> ProcessDocumentEvent(DocumentEvent documentEvent)
         {
             if (_filterNextDocumentEvent)
             {
                 _filterNextDocumentEvent = false;
-                return null;
+                return AnswerDrop();
             }
 
             if (documentEvent.Action != DocumentEvent.DocumentAction.Closing)
             {
-                return new KaVEHashSet<IDEEvent>{documentEvent};
+                return AnswerKeep();
             }
 
             var commandEvent = new CommandEvent
@@ -92,7 +75,7 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
                 TriggeredBy = documentEvent.TriggeredBy
             };
 
-            return new KaVEHashSet<IDEEvent>{commandEvent};
+            return AnswerReplace(commandEvent);
         }
     }
 }

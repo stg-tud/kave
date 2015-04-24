@@ -25,6 +25,7 @@ using KaVE.Commons.Model.Events;
 using KaVE.Commons.TestUtils.Model.Events;
 using KaVE.Commons.Utils.Collections;
 using KaVE.FeedbackProcessor.Cleanup;
+using KaVE.FeedbackProcessor.Cleanup.Processors;
 using KaVE.FeedbackProcessor.Database;
 using KaVE.FeedbackProcessor.Model;
 using KaVE.FeedbackProcessor.Tests.Database;
@@ -286,7 +287,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup
             Assert.AreEqual(3, cleanEvents.Count);
         }
 
-        private abstract class TestProcessor : IIDEEventProcessor
+        private abstract class TestProcessor : BaseProcessor
         {
             public static readonly IList<TestProcessor> Instances = new List<TestProcessor>();
             public readonly ICollection<IDEEvent> ProcessedEvents = new List<IDEEvent>();
@@ -294,56 +295,57 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup
             protected TestProcessor()
             {
                 Instances.Add(this);
+                RegisterFor<IDEEvent>(ProcessAnyEvent);
             }
 
-            public virtual ISet<IDEEvent> Process(IDEEvent @event)
+            public virtual IKaVESet<IDEEvent> ProcessAnyEvent(IDEEvent @event)
             {
                 ProcessedEvents.Add(@event);
-                return null;
+                return null; // illegal return value
             }
         }
 
         private class InactiveProcessor : TestProcessor
         {
-            public override ISet<IDEEvent> Process(IDEEvent @event)
+            public override IKaVESet<IDEEvent> ProcessAnyEvent(IDEEvent @event)
             {
-                base.Process(@event);
-                return new KaVEHashSet<IDEEvent> {@event};
+                base.ProcessAnyEvent(@event);
+                return AnswerKeep();
             }
         }
 
         private class ConsumingProcessor : TestProcessor
         {
-            public override ISet<IDEEvent> Process(IDEEvent @event)
+            public override IKaVESet<IDEEvent> ProcessAnyEvent(IDEEvent @event)
             {
-                base.Process(@event);
-                return new KaVEHashSet<IDEEvent>();
+                base.ProcessAnyEvent(@event);
+                return AnswerDrop();
             }
         }
 
         private class ReplacingConsumer : TestProcessor
         {
-            public override ISet<IDEEvent> Process(IDEEvent @event)
+            public override IKaVESet<IDEEvent> ProcessAnyEvent(IDEEvent @event)
             {
-                base.Process(@event);
+                base.ProcessAnyEvent(@event);
 
                 var newEvent = IDEEventTestFactory.SomeEvent();
                 newEvent.IDESessionUUID = @event.IDESessionUUID;
 
-                return new KaVEHashSet<IDEEvent> {newEvent};
+                return AnswerReplace(newEvent);
             }
         }
 
         private class InsertingConsumer : TestProcessor
         {
-            public override ISet<IDEEvent> Process(IDEEvent @event)
+            public override IKaVESet<IDEEvent> ProcessAnyEvent(IDEEvent @event)
             {
-                base.Process(@event);
+                base.ProcessAnyEvent(@event);
 
                 var newEvent = IDEEventTestFactory.SomeEvent();
                 newEvent.IDESessionUUID = @event.IDESessionUUID;
 
-                return new KaVEHashSet<IDEEvent> {@event, newEvent};
+                return AnswerInsert(newEvent);
             }
         }
     }

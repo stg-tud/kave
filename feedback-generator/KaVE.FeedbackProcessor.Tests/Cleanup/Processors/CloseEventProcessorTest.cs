@@ -18,7 +18,6 @@
  *    - Markus Zimmermann
  */
 
-using System.Linq;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.VisualStudio;
 using KaVE.Commons.TestUtils.Model.Events;
@@ -48,7 +47,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
         [Test]
         public void ShouldNotFilterNonClosingDocumentEvents()
         {
-            ProcessorAssert.DoesNotFilter(new DocumentEvent{Action = DocumentEvent.DocumentAction.Opened},_uut);
+            ProcessorAssert.DoesNotFilter(new DocumentEvent {Action = DocumentEvent.DocumentAction.Opened}, _uut);
         }
 
         [Test]
@@ -58,13 +57,8 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
 
             var resultSet = _uut.Process(closingEvent);
 
-            Assert.AreEqual(1,resultSet.Count);
-
-            var processedEvent = resultSet.First();
-            Assert.IsInstanceOf<CommandEvent>(processedEvent);
-            var commandEvent = (CommandEvent) processedEvent;
-
-            Assert.AreEqual("Close", commandEvent.CommandId);
+            var expected = new CommandEvent {CommandId = "Close"};
+            CollectionAssert.AreEquivalent(new[] {expected}, resultSet);
         }
 
         [Test]
@@ -74,13 +68,13 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
 
             var processedEvent = _uut.Process(windowClosingEvent);
 
-            Assert.IsNull(processedEvent);
+            CollectionAssert.IsEmpty(processedEvent);
         }
 
         [Test]
         public void ShouldNotFilterNonClosingWindowEvents()
         {
-            ProcessorAssert.DoesNotFilter(new WindowEvent {Action = WindowEvent.WindowAction.Activate},_uut);
+            ProcessorAssert.DoesNotFilter(new WindowEvent {Action = WindowEvent.WindowAction.Activate}, _uut);
         }
 
         [Test]
@@ -92,7 +86,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
             var documentEvent = new DocumentEvent {Action = DocumentEvent.DocumentAction.Closing};
             var processedEvent = _uut.Process(documentEvent);
 
-            Assert.IsNull(processedEvent);
+            CollectionAssert.IsEmpty(processedEvent);
         }
     }
 }

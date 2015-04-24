@@ -25,35 +25,24 @@ using KaVE.Commons.Utils.Collections;
 
 namespace KaVE.FeedbackProcessor.Cleanup.Processors
 {
-    internal class AddFileProcessor : IIDEEventProcessor
+    internal class AddFileProcessor : BaseProcessor
     {
         private bool _addedNewItem;
 
-        public ISet<IDEEvent> Process(IDEEvent @event)
+        public AddFileProcessor()
         {
-            var commandEvent = @event as CommandEvent;
-            if (commandEvent != null)
-            {
-                return ProcessCommandEvent(commandEvent);
-            }
-
-            var documentEvent = @event as DocumentEvent;
-            if (documentEvent != null)
-            {
-                return ProcessDocumentEvent(documentEvent);
-            }
-
-            return new KaVEHashSet<IDEEvent>{@event};
+            RegisterFor<CommandEvent>(ProcessCommandEvent);
+            RegisterFor<DocumentEvent>(ProcessDocumentEvent);
         }
 
-        private ISet<IDEEvent> ProcessCommandEvent(CommandEvent commandEvent)
+        private IKaVESet<IDEEvent> ProcessCommandEvent(CommandEvent commandEvent)
         {
             if (commandEvent.CommandId != null)
             {
                 _addedNewItem = IsAddNewItemCommand(commandEvent.CommandId);
             }
 
-            return new KaVEHashSet<IDEEvent>{commandEvent};
+            return AnswerKeep();
         }
 
         private static bool IsAddNewItemCommand(string commandId)
@@ -63,11 +52,11 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
                    commandId.Equals("Class");
         }
 
-        private ISet<IDEEvent> ProcessDocumentEvent(DocumentEvent documentEvent)
+        private IKaVESet<IDEEvent> ProcessDocumentEvent(DocumentEvent documentEvent)
         {
             if (!_addedNewItem)
             {
-                return new KaVEHashSet<IDEEvent>{documentEvent};
+                return AnswerKeep();
             }
 
             _addedNewItem = false;
@@ -84,7 +73,7 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
                 TriggeredBy = documentEvent.TriggeredBy,
                 Target = documentEvent.Document
             };
-            return new KaVEHashSet<IDEEvent>{documentEvent,solutionEvent};
+            return AnswerInsert(solutionEvent);
         }
     }
 }

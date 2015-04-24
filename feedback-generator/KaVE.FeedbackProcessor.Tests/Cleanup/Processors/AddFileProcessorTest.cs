@@ -18,13 +18,10 @@
  *    - Markus Zimmermann
  */
 
-using System.Collections.Generic;
-using System.Linq;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.VisualStudio;
 using KaVE.Commons.Model.Names.VisualStudio;
 using KaVE.Commons.TestUtils.Model.Events;
-using KaVE.Commons.Utils.Collections;
 using KaVE.FeedbackProcessor.Cleanup.Processors;
 using KaVE.FeedbackProcessor.Tests.TestUtils;
 using NUnit.Framework;
@@ -60,38 +57,34 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
             ProcessorAssert.DoesNotFilter(new TestIDEEvent(), _uut);
         }
 
-        [TestCase("CSharp Test.cs", "AddNewItem"), 
+        [TestCase("AddNewItem"),
+         TestCase("Project.AddClass"),
+         TestCase("Class")]
+        public void ShouldNotFilterAddNewItemCommandEvent(string commandId)
+        {
+            ProcessorAssert.DoesNotFilter(new CommandEvent {CommandId = commandId}, _uut);
+        }
+
+        [TestCase("CSharp Test.cs", "AddNewItem"),
          TestCase("CSharp Foo.cpp", "Project.AddClass"),
          TestCase("CSharp Foo.c", "Class")]
-        public void GenerateSolutionEventTest(string testIdentifier, string commandId)
+        public void GenerateSolutionEventTest(string documentIdentifier, string commandId)
         {
             var addNewItemCommandEvent = new CommandEvent {CommandId = commandId};
             var documentEvent = new DocumentEvent
             {
-                Document = DocumentName.Get(testIdentifier)
+                Document = DocumentName.Get(documentIdentifier)
             };
 
-            var resultEventSet = ProcessEventSequence(addNewItemCommandEvent, documentEvent);
+            _uut.Process(addNewItemCommandEvent);
+            var actuals = _uut.Process(documentEvent);
 
-            Assert.AreEqual(2,resultEventSet.Count);
-
-            CollectionAssert.Contains(resultEventSet, documentEvent);
-            Assert.True(resultEventSet.Any(ideEvent => ideEvent is SolutionEvent));
-            
-            var solutionEvent = (SolutionEvent) resultEventSet.First(ideEvent => ideEvent is SolutionEvent);
-
-            Assert.AreEqual(documentEvent.Document, solutionEvent.Target);
-            Assert.AreEqual(SolutionEvent.SolutionAction.AddProjectItem, solutionEvent.Action);
-        }
-
-        private ISet<IDEEvent> ProcessEventSequence(params IDEEvent[] eventList)
-        {
-            ISet<IDEEvent> resultSet = new KaVEHashSet<IDEEvent>();
-            foreach (var ideEvent in eventList)
+            var expectedSolutionEvent = new SolutionEvent
             {
-                resultSet = _uut.Process(ideEvent);
-            }
-            return resultSet;
+                Target = documentEvent.Document,
+                Action = SolutionEvent.SolutionAction.AddProjectItem
+            };
+            CollectionAssert.AreEquivalent(new IDEEvent[] {documentEvent, expectedSolutionEvent}, actuals);
         }
     }
 }

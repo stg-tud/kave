@@ -14,11 +14,12 @@
  * limitations under the License.
  * 
  * Contributors:
- *    - 
+ *    - Sven Amann
  */
 
-using System.Collections.Generic;
 using KaVE.Commons.Model.Events;
+using KaVE.Commons.Utils.Collections;
+using KaVE.JetBrains.Annotations;
 
 namespace KaVE.FeedbackProcessor.Cleanup
 {
@@ -29,6 +30,7 @@ namespace KaVE.FeedbackProcessor.Cleanup
         /// Returns null, if the argument event is consumed by this processor.
         /// Returns another event, if this event should be replaced by the other.
         /// </summary>
-        ISet<IDEEvent> Process(IDEEvent @event);
+        [NotNull]
+        IKaVESet<IDEEvent> Process(IDEEvent @event);
     }
 }

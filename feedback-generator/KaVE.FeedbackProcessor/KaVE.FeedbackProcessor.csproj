@@ -57,6 +57,7 @@
     <Compile Include="Cleanup\Heuristics\TestVsProductionClassHeuristic.cs" />
     <Compile Include="Cleanup\IIDEEventProcessor.cs" />
     <Compile Include="Cleanup\Processors\AddFileProcessor.cs" />
+    <Compile Include="Cleanup\Processors\BaseProcessor.cs" />
     <Compile Include="Cleanup\Processors\CloseEventProcessor.cs" />
     <Compile Include="Import\FeedbackImporter.cs" />
     <Compile Include="Import\FeedbackArchiveReader.cs" />
