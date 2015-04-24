@@ -52,6 +52,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Activities\InIDEActivityDetector.cs" />
+    <Compile Include="Activities\Model\Activity.cs" />
+    <Compile Include="Activities\Model\ActivityEvent.cs" />
+    <Compile Include="Activities\Model\ActivityPhase.cs" />
     <Compile Include="Cleanup\DeveloperConsolidator.cs" />
     <Compile Include="Cleanup\EventsMapper.cs" />
     <Compile Include="Cleanup\Heuristics\TestVsProductionClassHeuristic.cs" />
