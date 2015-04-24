@@ -41,13 +41,13 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
         [Test]
         public void ShouldNotFilterOtherEvents()
         {
-            ProcessorAssert.DoesNotFilter(new TestIDEEvent(), _uut);
+            ProcessorAssert.DoesNotFilter(_uut, new TestIDEEvent());
         }
 
         [Test]
         public void ShouldNotFilterNonClosingDocumentEvents()
         {
-            ProcessorAssert.DoesNotFilter(new DocumentEvent {Action = DocumentEvent.DocumentAction.Opened}, _uut);
+            ProcessorAssert.DoesNotFilter(_uut, new DocumentEvent {Action = DocumentEvent.DocumentAction.Opened});
         }
 
         [Test]
@@ -74,7 +74,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
         [Test]
         public void ShouldNotFilterNonClosingWindowEvents()
         {
-            ProcessorAssert.DoesNotFilter(new WindowEvent {Action = WindowEvent.WindowAction.Activate}, _uut);
+            ProcessorAssert.DoesNotFilter(_uut, new WindowEvent {Action = WindowEvent.WindowAction.Activate});
         }
 
         [Test]

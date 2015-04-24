@@ -14,31 +14,20 @@
  * limitations under the License.
  * 
  * Contributors:
- *    - Markus Zimmermann
  *    - Sven Amann
  */
 
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Utils.Collections;
 using KaVE.FeedbackProcessor.Cleanup;
-using NUnit.Framework;
 
-namespace KaVE.FeedbackProcessor.Tests.TestUtils
+namespace KaVE.FeedbackProcessor.Activities
 {
-    public static class ProcessorAssert
+    internal class AlwaysDropProcessor : IIDEEventProcessor
     {
-        public static void DoesNotFilter(IIDEEventProcessor uut, IDEEvent @event)
+        public IKaVESet<IDEEvent> Process(IDEEvent @event)
         {
-            var processedEvent = uut.Process(@event);
-
-            CollectionAssert.AreEqual(new KaVEHashSet<IDEEvent> {@event}, processedEvent);
-        }
-
-        public static void Drops(IIDEEventProcessor uut, IDEEvent @event)
-        {
-            var answer = uut.Process(@event);
-
-            CollectionAssert.IsEmpty(answer);
+            return Sets.NewHashSet<IDEEvent>();
         }
     }
 }

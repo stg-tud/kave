@@ -52,6 +52,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Activities\AlwaysDropProcessorTest.cs" />
     <Compile Include="Activities\InIDEActivityDetectorTest.cs" />
     <Compile Include="Cleanup\EventsMapperTest.cs" />
     <Compile Include="Cleanup\Heuristics\TestVsProductionClassHeuristicTest.cs" />

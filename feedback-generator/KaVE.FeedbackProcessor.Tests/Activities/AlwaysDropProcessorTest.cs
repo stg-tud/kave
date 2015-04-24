@@ -14,31 +14,23 @@
  * limitations under the License.
  * 
  * Contributors:
- *    - Markus Zimmermann
  *    - Sven Amann
  */
 
-using KaVE.Commons.Model.Events;
-using KaVE.Commons.Utils.Collections;
-using KaVE.FeedbackProcessor.Cleanup;
+using KaVE.Commons.TestUtils.Model.Events;
+using KaVE.FeedbackProcessor.Activities;
+using KaVE.FeedbackProcessor.Tests.TestUtils;
 using NUnit.Framework;
 
-namespace KaVE.FeedbackProcessor.Tests.TestUtils
+namespace KaVE.FeedbackProcessor.Tests.Activities
 {
-    public static class ProcessorAssert
+    [TestFixture]
+    class AlwaysDropProcessorTest
     {
-        public static void DoesNotFilter(IIDEEventProcessor uut, IDEEvent @event)
+        [Test]
+        public void DropsEvent()
         {
-            var processedEvent = uut.Process(@event);
-
-            CollectionAssert.AreEqual(new KaVEHashSet<IDEEvent> {@event}, processedEvent);
-        }
-
-        public static void Drops(IIDEEventProcessor uut, IDEEvent @event)
-        {
-            var answer = uut.Process(@event);
-
-            CollectionAssert.IsEmpty(answer);
+            ProcessorAssert.Drops(new AlwaysDropProcessor(), IDEEventTestFactory.SomeEvent());
         }
     }
 }

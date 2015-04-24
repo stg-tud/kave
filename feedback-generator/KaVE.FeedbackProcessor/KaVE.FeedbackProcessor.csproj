@@ -52,6 +52,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Activities\AlwaysDropProcessor.cs" />
     <Compile Include="Activities\InIDEActivityDetector.cs" />
     <Compile Include="Activities\Model\Activity.cs" />
     <Compile Include="Activities\Model\ActivityEvent.cs" />

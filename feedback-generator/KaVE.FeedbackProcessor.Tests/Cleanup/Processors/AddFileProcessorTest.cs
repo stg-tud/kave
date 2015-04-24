@@ -42,19 +42,19 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
         [Test]
         public void ShouldNotFilterAnySolutionEvents()
         {
-            ProcessorAssert.DoesNotFilter(new SolutionEvent(), _uut);
+            ProcessorAssert.DoesNotFilter(_uut, new SolutionEvent());
         }
 
         [Test]
         public void ShouldNotFilterAnyDocumentEvents()
         {
-            ProcessorAssert.DoesNotFilter(new DocumentEvent(), _uut);
+            ProcessorAssert.DoesNotFilter(_uut, new DocumentEvent());
         }
 
         [Test]
         public void ShouldNotFilterAnyOtherEvents()
         {
-            ProcessorAssert.DoesNotFilter(new TestIDEEvent(), _uut);
+            ProcessorAssert.DoesNotFilter(_uut, new TestIDEEvent());
         }
 
         [TestCase("AddNewItem"),
@@ -62,7 +62,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
          TestCase("Class")]
         public void ShouldNotFilterAddNewItemCommandEvent(string commandId)
         {
-            ProcessorAssert.DoesNotFilter(new CommandEvent {CommandId = commandId}, _uut);
+            ProcessorAssert.DoesNotFilter(_uut, new CommandEvent {CommandId = commandId});
         }
 
         [TestCase("CSharp Test.cs", "AddNewItem"),
