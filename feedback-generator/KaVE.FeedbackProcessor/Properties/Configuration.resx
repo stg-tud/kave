@@ -117,11 +117,11 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="DatabaseName" xml:space="preserve">
-    <value>datev-2015-04-10</value>
-  </data>
   <data name="DatabaseUrl" xml:space="preserve">
     <value>mongodb://localhost</value>
+  </data>
+  <data name="DatasetName" xml:space="preserve">
+    <value>datev-2015-04-10</value>
   </data>
   <data name="ImportDirectory" xml:space="preserve">
     <value>C:\Users\Sven\Documents\KaVE\Feedback\DATEV 2015-04-10</value>

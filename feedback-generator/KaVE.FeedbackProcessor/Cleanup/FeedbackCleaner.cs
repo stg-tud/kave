@@ -31,12 +31,14 @@ namespace KaVE.FeedbackProcessor.Cleanup
 {
     internal class FeedbackCleaner
     {
-        private readonly IFeedbackDatabase _database;
+        private readonly IFeedbackDatabase _sourceDatabase;
+        private readonly IFeedbackDatabase _targetDatabase;
         private readonly ICollection<Type> _processors;
 
-        public FeedbackCleaner(IFeedbackDatabase database)
+        public FeedbackCleaner(IFeedbackDatabase sourceDatabase, IFeedbackDatabase targetDatabase)
         {
-            _database = database;
+            _sourceDatabase = sourceDatabase;
+            _targetDatabase = targetDatabase;
             _processors = new List<Type>();
         }
 
@@ -47,9 +49,9 @@ namespace KaVE.FeedbackProcessor.Cleanup
 
         public void ProcessFeedback()
         {
-            _database.GetCleanEventsCollection().Clear();
+            _sourceDatabase.GetCleanEventsCollection().Clear();
 
-            var developers = _database.GetDeveloperCollection().FindAll();
+            var developers = _sourceDatabase.GetDeveloperCollection().FindAll();
             foreach (var developer in developers)
             {
                 ProcessEventStreamOf(developer);
@@ -72,7 +74,7 @@ namespace KaVE.FeedbackProcessor.Cleanup
 
         private IEnumerable<IDEEvent> GetAllEventsOf(Developer developer)
         {
-            var events = _database.GetOriginalEventsCollection();
+            var events = _sourceDatabase.GetOriginalEventsCollection();
             return events.GetEventStream(developer);
         }
 
@@ -102,7 +104,7 @@ namespace KaVE.FeedbackProcessor.Cleanup
         {
             foreach (var ideEvent in resultingEventSet)
             {
-                _database.GetCleanEventsCollection().Insert(ideEvent);
+                _sourceDatabase.GetCleanEventsCollection().Insert(ideEvent);
             }
         }
 

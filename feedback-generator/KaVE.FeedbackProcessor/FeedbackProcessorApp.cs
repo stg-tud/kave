@@ -32,22 +32,32 @@ namespace KaVE.FeedbackProcessor
 
         public static void Main()
         {
-            var database = new MongoDbFeedbackDatabase(Configuration.DatabaseUrl, Configuration.DatabaseName);
-            //ImportFeedback(database);
-            //LogStatistics(database);
-            //CleanFeedback(database);
+            const string importDatabase = "import";
+            const string cleanDatabase = "clean";
+
+            ImportFeedback(OpenDatabase(importDatabase));
+
+            LogDeveloperStatistics(OpenDatabase(importDatabase));
+            LogAnonymizationStatistics(OpenDatabase(importDatabase));
+
+            CleanFeedback(OpenDatabase(importDatabase), OpenDatabase(cleanDatabase));
         }
 
-        private static void ImportFeedback(IFeedbackDatabase database)
+        private static MongoDbFeedbackDatabase OpenDatabase(string databaseSuffix)
         {
-            var feedbackImporter = new FeedbackImporter(database, Logger);
+            return new MongoDbFeedbackDatabase(
+                Configuration.DatabaseUrl,
+                string.Format("{0}_{1}", Configuration.DatasetName, databaseSuffix));
+        }
+
+        private static void ImportFeedback(IFeedbackDatabase importDatabase)
+        {
+            var feedbackImporter = new FeedbackImporter(importDatabase, Logger);
             feedbackImporter.Import();
         }
 
-        private static void LogStatistics(IFeedbackDatabase database)
+        public static void LogAnonymizationStatistics(IFeedbackDatabase database)
         {
-            LogDeveloperStatistics(database);
-
             var calculator = new AnonymizationStatisticsCalculator(database, Logger);
             calculator.LogNumberOfEventsWithoutSessionId();
             calculator.LogNumberOfEventsWithoutTriggerTime();
@@ -55,7 +65,7 @@ namespace KaVE.FeedbackProcessor
             calculator.LogNumberOfSessionsWithAnonymizedNames();
         }
 
-        private static void LogDeveloperStatistics(IFeedbackDatabase database)
+        public static void LogDeveloperStatistics(IFeedbackDatabase database)
         {
             var stats = new DeveloperStatisticsCalculator(database);
             Logger.Info("We have at most {0} participant(s).", stats.GetUpperBoundToNumberOfParticipants());
@@ -68,9 +78,9 @@ namespace KaVE.FeedbackProcessor
             }
         }
 
-        private static void CleanFeedback(IFeedbackDatabase database)
+        private static void CleanFeedback(IFeedbackDatabase sourceDatabase, IFeedbackDatabase targetDatabase)
         {
-            var cleaner = new FeedbackCleaner(database);
+            var cleaner = new FeedbackCleaner(sourceDatabase, targetDatabase);
             cleaner.ProcessFeedback();
         }
     }

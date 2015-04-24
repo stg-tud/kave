@@ -61,20 +61,20 @@ namespace KaVE.FeedbackProcessor.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to datev-2015-04-10.
-        /// </summary>
-        internal static string DatabaseName {
-            get {
-                return ResourceManager.GetString("DatabaseName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to mongodb://localhost.
         /// </summary>
         internal static string DatabaseUrl {
             get {
                 return ResourceManager.GetString("DatabaseUrl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to datev-2015-04-10.
+        /// </summary>
+        internal static string DatasetName {
+            get {
+                return ResourceManager.GetString("DatasetName", resourceCulture);
             }
         }
         

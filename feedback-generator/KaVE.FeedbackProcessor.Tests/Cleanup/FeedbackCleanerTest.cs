@@ -25,6 +25,8 @@ using KaVE.Commons.Model.Events;
 using KaVE.Commons.TestUtils.Model.Events;
 using KaVE.Commons.Utils.Collections;
 using KaVE.FeedbackProcessor.Cleanup;
+using KaVE.FeedbackProcessor.Database;
+using KaVE.FeedbackProcessor.Tests.Database;
 using NUnit.Framework;
 
 namespace KaVE.FeedbackProcessor.Tests.Cleanup
@@ -33,11 +35,13 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup
     internal class FeedbackCleanerTest : FeedbackDatabaseBasedTest
     {
         private FeedbackCleaner _uut;
+        private IFeedbackDatabase _targetFeedbackDatabase;
 
         [SetUp]
         public void SetUp()
         {
-            _uut = new FeedbackCleaner(TestFeedbackDatabase);
+            _targetFeedbackDatabase = new TestFeedbackDatabase();
+            _uut = new FeedbackCleaner(TestFeedbackDatabase, _targetFeedbackDatabase);
         }
 
         [TearDown]
