@@ -44,19 +44,19 @@ namespace KaVE.VsFeedbackGenerator.Generators
             Error(exception, null);
         }
 
-        public void Error(string content)
+        public void Error(string content, params object[] args)
         {
-            Error(null, content);
+            Error(null, content, args);
         }
 
-        public virtual void Error(Exception exception, string content)
+        public virtual void Error(Exception exception, string content, params object[] args)
         {
             var e = CreateErrorEvent();
 
             if (content != null)
             {
                 // TODO does it make sense to move this to the ErrorEvent class?
-                e.Content = ReplaceNewLineByBr(content);
+                e.Content = ReplaceNewLineByBr(string.Format(content, args));
             }
 
             if (exception != null)
@@ -96,10 +96,10 @@ namespace KaVE.VsFeedbackGenerator.Generators
             }
         }
 
-        public void Info(string info)
+        public void Info(string info, params object[] args)
         {
             var e = Create<InfoEvent>();
-            e.Info = ReplaceNewLineByBr(info);
+            e.Info = ReplaceNewLineByBr(string.Format(info, args));
             FireNow(e);
         }
 

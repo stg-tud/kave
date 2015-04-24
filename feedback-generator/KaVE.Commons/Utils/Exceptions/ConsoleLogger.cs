@@ -23,12 +23,12 @@ namespace KaVE.Commons.Utils.Exceptions
 {
     public class ConsoleLogger : ILogger
     {
-        public void Error(Exception exception, string content)
+        public void Error(Exception exception, string content, params object[] args)
         {
             Console.Write("[ERROR] ");
             Console.Write(System.DateTime.Now);
             Console.Write(" - ");
-            Console.WriteLine(content);
+            Console.WriteLine(content, args);
             Console.WriteLine(exception.ToString());
         }
 
@@ -40,20 +40,20 @@ namespace KaVE.Commons.Utils.Exceptions
             Console.WriteLine(exception.ToString());
         }
 
-        public void Error(string content)
+        public void Error(string content, params object[] args)
         {
             Console.Write("[ERROR] ");
             Console.Write(System.DateTime.Now);
             Console.Write(" - ");
-            Console.WriteLine(content);
+            Console.WriteLine(content, args);
         }
 
-        public void Info(string info)
+        public void Info(string info, params object[] args)
         {
             Console.Write("[INFO] ");
             Console.Write(System.DateTime.Now);
             Console.Write(" - ");
-            Console.WriteLine(info);
+            Console.WriteLine(info, args);
         }
     }
 }

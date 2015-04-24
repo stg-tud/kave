@@ -71,11 +71,7 @@ namespace KaVE.FeedbackProcessor.Import
                     if (currentDeveloper == null)
                     {
                         currentDeveloper = FindOrCreateCurrentDeveloper(ideSessionUUID, developerCollection);
-                        _logger.Info(
-                            string.Format(
-                                " developer {0} with {1} sessions.",
-                                currentDeveloper.Id,
-                                currentDeveloper.SessionIds.Count));
+                        _logger.Info(" developer {0} with {1} sessions.", currentDeveloper.Id, currentDeveloper.SessionIds.Count);
                     }
                     else if (ideSessionUUID != null)
                     {
@@ -116,20 +112,12 @@ namespace KaVE.FeedbackProcessor.Import
                     numberOfUniqueEvents++;
                 }
 
-                _logger.Info(string.Format(" Added {0} new sessions.", numberNewOfSessions));
-                _logger.Info(
-                    string.Format(
-                        " Inserted {0} events, filtered {1} duplicates.",
-                        numberOfUniqueEvents,
-                        numberOfDuplicatedEvents));
+                _logger.Info(" Added {0} new sessions.", numberNewOfSessions);
+                _logger.Info(" Inserted {0} events, filtered {1} duplicates.", numberOfUniqueEvents, numberOfDuplicatedEvents);
                 totalNumberOfUniqueEvents += numberOfUniqueEvents;
                 totalNumberOfDuplicatedEvents += numberOfDuplicatedEvents;
             }
-            _logger.Info(
-                string.Format(
-                    "Inserted {0} events, filtered {1} duplicates.",
-                    totalNumberOfUniqueEvents,
-                    totalNumberOfDuplicatedEvents));
+            _logger.Info("Inserted {0} events, filtered {1} duplicates.", totalNumberOfUniqueEvents, totalNumberOfDuplicatedEvents);
         }
 
         protected virtual IEnumerable<ZipFile> OpenFeedbackArchives()
@@ -163,11 +151,11 @@ namespace KaVE.FeedbackProcessor.Import
                     return candidates.First();
                 default:
                     _logger.Error("More than one developer with the same session id encountered:");
-                    _logger.Error(" - Session Id: " + ideSessionUUID);
-                    _logger.Error(string.Format(" - {0} developers with same id:", candidates.Count));
+                    _logger.Error(" - Session Id: {0}", ideSessionUUID);
+                    _logger.Error(" - {0} developers with same id:", candidates.Count);
                     foreach (var developer in candidates)
                     {
-                        _logger.Error("   - Developer: " + developer.Id);
+                        _logger.Error("   - Developer: {0}", developer.Id);
                     }
                     throw new Exception("More than one developer with the same session id encountered");
             }

@@ -50,11 +50,11 @@ namespace KaVE.FeedbackProcessor.Cleanup
 
                 if (duplicates.Count > 0)
                 {
-                    _logger.Info(string.Format("Found {0} duplicates of developer {1}, consolidating...", duplicates.Count, dev.Id));
+                    _logger.Info("Found {0} duplicates of developer {1}, consolidating...", duplicates.Count, dev.Id);
                     consolidatedSomeDevelopers = true;
                     foreach (var duplicate in duplicates)
                     {
-                        _logger.Info(string.Format(" - Merging developer {0} with {1} sessions.", duplicate.Id, duplicate.SessionIds.Count));
+                        _logger.Info(" - Merging developer {0} with {1} sessions.", duplicate.Id, duplicate.SessionIds.Count);
                         foreach (var sessionId in duplicate.SessionIds)
                         {
                             dev.SessionIds.Add(sessionId);

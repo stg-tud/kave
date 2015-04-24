@@ -60,7 +60,7 @@ namespace KaVE.SolutionAnalysis
 
         private IEnumerable<Context> AnalyzeProject(IProject project)
         {
-            _logger.Info("Analyzing project '" + project.Name + "'...");
+            _logger.Info("Analyzing project '{0}'....", project.Name);
 
             var psiModules = _solution.PsiModules();
             var primaryPsiModule = psiModules.GetPrimaryPsiModule(project).NotNull("no psi module");
@@ -75,7 +75,7 @@ namespace KaVE.SolutionAnalysis
 
         private IEnumerable<Context> AnalyzeFile(IPsiSourceFile psiSourceFile, IPsiModule primaryPsiModule)
         {
-            _logger.Info(" - Analyzing file '" + psiSourceFile.DisplayName + "'...");
+            _logger.Info(" - Analyzing file '{0}'...", psiSourceFile.DisplayName);
 
             var psiFile = ParseFile(psiSourceFile, primaryPsiModule);
             return AnalyzeTypeAndNamespaceHolder(psiFile);
@@ -105,7 +105,7 @@ namespace KaVE.SolutionAnalysis
             var contexts = new List<Context>();
             if (aType is IClassDeclaration || aType is IStructDeclaration)
             {
-                _logger.Info("   - Analyzing type '" + aType.CLRName + "'...");
+                _logger.Info("   - Analyzing type '{0}'...", aType.CLRName);
 
                 contexts.Add(ContextAnalysis.Analyze(aType, _logger));
             }

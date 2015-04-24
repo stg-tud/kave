@@ -105,7 +105,7 @@ namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
 
         private void OnTimeout()
         {
-            _logger.Error(string.Format("timeout! analysis did not finish within {0}ms", LimitInMs));
+            _logger.Error("timeout! analysis did not finish within {0}ms", LimitInMs);
         }
 
         private void OnError(Exception e)

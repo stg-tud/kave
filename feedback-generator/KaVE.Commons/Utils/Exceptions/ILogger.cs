@@ -15,6 +15,7 @@
  * 
  * Contributors:
  *    - Sebastian Proksch
+ *    - Sven Amann
  */
 
 using System;
@@ -24,9 +25,15 @@ namespace KaVE.Commons.Utils.Exceptions
 {
     public interface ILogger
     {
-        void Error(Exception exception, string content);
+        [StringFormatMethod("content")]
+        void Error(Exception exception, string content, params object[] args);
+
         void Error([NotNull] Exception exception);
-        void Error([NotNull] string content);
-        void Info([NotNull] string info);
+
+        [StringFormatMethod("content")]
+        void Error([NotNull] string content, params object[] args);
+
+        [StringFormatMethod("info")]
+        void Info([NotNull] string info, params object[] args);
     }
 }

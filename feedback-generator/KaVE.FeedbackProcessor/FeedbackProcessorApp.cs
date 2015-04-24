@@ -58,13 +58,13 @@ namespace KaVE.FeedbackProcessor
         private static void LogDeveloperStatistics(IFeedbackDatabase database)
         {
             var stats = new DeveloperStatisticsCalculator(database);
-            Logger.Info(string.Format("We have at most {0} participant(s).", stats.GetUpperBoundToNumberOfParticipants()));
-            Logger.Info(string.Format("We have at least {0} participant(s).", stats.GetLowerBoundToNumberOfParticipants()));
-            Logger.Info(string.Format("We have {0} session(s) in total.", stats.GetNumberOfSessions()));
+            Logger.Info("We have at most {0} participant(s).", stats.GetUpperBoundToNumberOfParticipants());
+            Logger.Info("We have at least {0} participant(s).", stats.GetLowerBoundToNumberOfParticipants());
+            Logger.Info("We have {0} session(s) in total.", stats.GetNumberOfSessions());
             var conflicts = stats.GetNumberOfSessionsAssignedToMultipleDevelopers();
             if (conflicts > 0)
             {
-                Logger.Error(string.Format("We have {0} session(s) assigned to more than one developer!", conflicts));
+                Logger.Error("We have {0} session(s) assigned to more than one developer!", conflicts);
             }
         }
 

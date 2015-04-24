@@ -23,12 +23,12 @@ namespace KaVE.Commons.Utils.Exceptions
 {
     public class NullLogger : ILogger
     {
-        public void Error(Exception exception, string content) {}
+        public void Error(Exception exception, string content, params object[] args) { }
 
         public void Error(Exception exception) {}
 
-        public void Error(string content) {}
+        public void Error(string content, params object[] args) { }
 
-        public void Info(string info) {}
+        public void Info(string info, params object[] args) { }
     }
 }

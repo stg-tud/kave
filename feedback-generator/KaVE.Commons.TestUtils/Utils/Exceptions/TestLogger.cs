@@ -29,9 +29,9 @@ namespace KaVE.Commons.TestUtils.Utils.Exceptions
 
         public event LogInfoHandler InfoLogged = delegate { };
 
-        public void Error(Exception exception, string content)
+        public void Error(Exception exception, string content, params object[] args)
         {
-            Assert.Fail(content + "\r\n" + exception);
+            Assert.Fail(string.Format("{0}\r\n{1}", string.Format(content, args), exception));
         }
 
         public void Error(Exception exception)
@@ -39,14 +39,14 @@ namespace KaVE.Commons.TestUtils.Utils.Exceptions
             Assert.Fail(exception.ToString());
         }
 
-        public void Error(string content)
+        public void Error(string content, params object[] args)
         {
-            Assert.Fail(content);
+            Assert.Fail(string.Format(content, args));
         }
 
-        public void Info(string info)
+        public void Info(string info, params object[] args)
         {
-            InfoLogged(info);
+            InfoLogged(string.Format(info, args));
         }
     }
 }
