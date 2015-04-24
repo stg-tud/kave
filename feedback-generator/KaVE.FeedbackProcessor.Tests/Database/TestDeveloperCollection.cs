@@ -39,15 +39,23 @@ namespace KaVE.FeedbackProcessor.Tests.Database
 
         public void Insert(Developer instance)
         {
-            Asserts.That(instance.Id == default(ObjectId), "instance already added to a collection");
-            instance.Id = new ObjectId(Convert.ToString(_nextDeveloperId).PadLeft(24, '0'));
+            if (instance.Id == default(ObjectId))
+            {
+                instance.Id = new ObjectId(Convert.ToString(_nextDeveloperId).PadLeft(24, '0'));
+            }
+            Asserts.That(!IsInCollection(instance), "dublicated object id");
             _developers.Add(instance);
             _nextDeveloperId++;
         }
 
         public void Save(Developer instance)
         {
-            Asserts.That(_developers.Contains(instance), "saving instance that's not in the database");
+            Asserts.That(IsInCollection(instance), "saving instance that's not in the collection");
+        }
+
+        private bool IsInCollection(Developer instance)
+        {
+            return _developers.Any(dev => dev.Id.Equals(instance.Id));
         }
 
         public void Clear()

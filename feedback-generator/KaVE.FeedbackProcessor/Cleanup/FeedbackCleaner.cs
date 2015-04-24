@@ -49,11 +49,13 @@ namespace KaVE.FeedbackProcessor.Cleanup
 
         public void ProcessFeedback()
         {
-            _sourceDatabase.GetCleanEventsCollection().Clear();
+            _targetDatabase.GetDeveloperCollection().Clear();
+            _targetDatabase.GetOriginalEventsCollection().Clear();
 
             var developers = _sourceDatabase.GetDeveloperCollection().FindAll();
             foreach (var developer in developers)
             {
+                _targetDatabase.GetDeveloperCollection().Insert(developer);
                 ProcessEventStreamOf(developer);
             }
         }
@@ -104,7 +106,7 @@ namespace KaVE.FeedbackProcessor.Cleanup
         {
             foreach (var ideEvent in resultingEventSet)
             {
-                _sourceDatabase.GetCleanEventsCollection().Insert(ideEvent);
+                _targetDatabase.GetOriginalEventsCollection().Insert(ideEvent);
             }
         }
 

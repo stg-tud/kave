@@ -26,6 +26,7 @@ using KaVE.Commons.TestUtils.Model.Events;
 using KaVE.Commons.Utils.Collections;
 using KaVE.FeedbackProcessor.Cleanup;
 using KaVE.FeedbackProcessor.Database;
+using KaVE.FeedbackProcessor.Model;
 using KaVE.FeedbackProcessor.Tests.Database;
 using NUnit.Framework;
 
@@ -76,6 +77,42 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup
         }
 
         [Test]
+        public void CleansTargetDatabase()
+        {
+            _targetFeedbackDatabase.GetDeveloperCollection().Insert(new Developer());
+            _targetFeedbackDatabase.GetOriginalEventsCollection().Insert(new TestIDEEvent());
+
+            _uut.ProcessFeedback();
+
+            CollectionAssert.IsEmpty(_targetFeedbackDatabase.GetDeveloperCollection().FindAll());
+            CollectionAssert.IsEmpty(_targetFeedbackDatabase.GetOriginalEventsCollection().FindAll());
+        }
+
+        [Test]
+        public void CopiesOverDevelopers()
+        {
+            var developer1 = GivenDeveloperExists("sessionA", "sessionB");
+            var developer2 = GivenDeveloperExists("sessionC");
+
+            _uut.ProcessFeedback();
+
+            var developers = _targetFeedbackDatabase.GetDeveloperCollection().FindAll();
+            CollectionAssert.AreEquivalent(new[]{developer1, developer2}, developers);
+        }
+
+        [Test]
+        public void CopyingDevelopersPreservesId()
+        {
+            var developer = GivenDeveloperExists("sessionA");
+            var originalId = developer.Id;
+
+            _uut.ProcessFeedback();
+
+            var developers = _targetFeedbackDatabase.GetDeveloperCollection().FindAll();
+            Assert.That(developers.Any(dev => dev.Id.Equals(originalId)));
+        }
+
+        [Test]
         public void PassesEventsToProcessors()
         {
             const string ideSessionUUID = "sessionA";
@@ -120,7 +157,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup
             _uut.RegisterProcessor<InactiveProcessor>();
             _uut.ProcessFeedback();
 
-            var cleanEvents = TestFeedbackDatabase.GetCleanEventsCollection().FindAll();
+            var cleanEvents = _targetFeedbackDatabase.GetOriginalEventsCollection().FindAll();
             CollectionAssert.AreEquivalent(cleanEvents, new[] {event1});
         }
 
@@ -135,7 +172,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup
             _uut.RegisterProcessor<InactiveProcessor>();
             _uut.ProcessFeedback();
 
-            var cleanEvents = TestFeedbackDatabase.GetCleanEventsCollection().FindAll();
+            var cleanEvents = _targetFeedbackDatabase.GetOriginalEventsCollection().FindAll();
             CollectionAssert.IsEmpty(cleanEvents);
         }
 
@@ -150,7 +187,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup
             _uut.RegisterProcessor<InactiveProcessor>();
             _uut.ProcessFeedback();
 
-            var cleanEvents = TestFeedbackDatabase.GetCleanEventsCollection().FindAll().ToList();
+            var cleanEvents = _targetFeedbackDatabase.GetOriginalEventsCollection().FindAll().ToList();
             Assert.AreEqual(1, cleanEvents.Count());
             CollectionAssert.DoesNotContain(cleanEvents, event1);
         }
@@ -166,7 +203,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup
             _uut.RegisterProcessor<ConsumingProcessor>();
             _uut.ProcessFeedback();
 
-            var cleanEvents = TestFeedbackDatabase.GetCleanEventsCollection().FindAll().ToList();
+            var cleanEvents = _targetFeedbackDatabase.GetOriginalEventsCollection().FindAll().ToList();
             Assert.AreEqual(1, cleanEvents.Count);
             CollectionAssert.DoesNotContain(cleanEvents, event1);
         }
@@ -182,7 +219,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup
             _uut.RegisterProcessor<ReplacingConsumer>();
             _uut.ProcessFeedback();
 
-            var cleanEvents = TestFeedbackDatabase.GetCleanEventsCollection().FindAll().ToList();
+            var cleanEvents = _targetFeedbackDatabase.GetOriginalEventsCollection().FindAll().ToList();
             Assert.AreEqual(2, cleanEvents.Count);
             CollectionAssert.DoesNotContain(cleanEvents, event1);
         }
@@ -198,7 +235,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup
             _uut.RegisterProcessor<InactiveProcessor>();
             _uut.ProcessFeedback();
 
-            var cleanEvents = TestFeedbackDatabase.GetCleanEventsCollection().FindAll().ToList();
+            var cleanEvents = _targetFeedbackDatabase.GetOriginalEventsCollection().FindAll().ToList();
             Assert.AreEqual(2,cleanEvents.Count);
         }
 
@@ -213,7 +250,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup
             _uut.RegisterProcessor<ConsumingProcessor>();
             _uut.ProcessFeedback();
 
-            var cleanEvents = TestFeedbackDatabase.GetCleanEventsCollection().FindAll().ToList();
+            var cleanEvents = _targetFeedbackDatabase.GetOriginalEventsCollection().FindAll().ToList();
             Assert.AreEqual(1,cleanEvents.Count);
             CollectionAssert.DoesNotContain(cleanEvents,event1);
         }
@@ -229,7 +266,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup
             _uut.RegisterProcessor<ReplacingConsumer>();
             _uut.ProcessFeedback();
 
-            var cleanEvents = TestFeedbackDatabase.GetCleanEventsCollection().FindAll().ToList();
+            var cleanEvents = _targetFeedbackDatabase.GetOriginalEventsCollection().FindAll().ToList();
             Assert.AreEqual(2, cleanEvents.Count);
             CollectionAssert.DoesNotContain(cleanEvents, event1);
         }
@@ -245,7 +282,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup
             _uut.RegisterProcessor<InsertingConsumer>();
             _uut.ProcessFeedback();
 
-            var cleanEvents = TestFeedbackDatabase.GetCleanEventsCollection().FindAll().ToList();
+            var cleanEvents = _targetFeedbackDatabase.GetOriginalEventsCollection().FindAll().ToList();
             Assert.AreEqual(3, cleanEvents.Count);
         }
 
