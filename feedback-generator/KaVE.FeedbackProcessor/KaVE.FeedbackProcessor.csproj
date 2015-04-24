@@ -97,6 +97,10 @@
     <None Include="Resources\DATEV-2015-04-10\commandids.log" />
     <None Include="Resources\DATEV-2015-04-10\documentnames.log" />
     <None Include="Resources\DATEV-2015-04-10\windownames.log" />
+    <None Include="Resources\commands_vs_bars_ids.de.csv" />
+    <None Include="Resources\commands_vs_click_ids.de.csv" />
+    <None Include="Resources\commands_vs_ids.csv" />
+    <None Include="Resources\windows.de.csv" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\KaVE.Commons\KaVE.Commons.csproj">
@@ -109,6 +113,9 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Configuration.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\commands_resharper_action_ids.csv" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

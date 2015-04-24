@@ -1,0 +1,1307 @@
+"$$	Ein Literal ""$"" ersetzen"
+"${pet}	Teilzeichenfolge ersetzen, die mit der benannten Gruppe ""pet"" übereinstimmt"
+"(?<pet>dog|cat)	Unterausdruck ""dog|cat"" erfassen und mit ""pet"" benennen"
+"(dog|cat)	Unterausdruck ""dog|cat"" erfassen und implizit nummerieren"
+":q		Zeichenfolge in Anführungszeichen			((\"".+?\"")|('.+?'))"
+"\k<pet>		Rückverweis auf erfassten Unterausdruck mit Namen ""pet"""
+$	Kopie der gesamten Übereinstimmung ersetzen
+$+	Letzte erfasste Gruppe ersetzen
+$1	Teilzeichenfolge ersetzen, die mit der erfassten Gruppennummer 1 übereinstimmt
+(?=\r?$)		Übereinstimmung an Zeilenende
++		Ein- oder mehrmalige Übereinstimmung mit beliebigem Zeichen (Platzhalter ?)
+.		Einmalige Übereinstimmung mit beliebigem Zeichen
+.*		Keine oder häufigere Übereinstimmung mit beliebigem Zeichen (Platzhalter *)
+1 C:\...\ToolWindowTest.cs
+1 C:\...\visual studio 2013\Projects\TestSolution\TestSolution.sln
+1 Startseite
+10 %
+10%
+100 %
+100%
+125 %
+125%
+150 %
+150%
+1x
+200 %
+200%
+25 %
+25%
+2x
+300 %
+300%
+33 %
+33%
+400 %
+400%
+50 %
+50%
+66 %
+66%
+6x
+75 %
+75%
+8x
+90 Grad drehen
+:b		Leerzeichen oder Tabstopp			[ \t]
+:d		Übereinstimmung mit beliebigem numerischen Zeichen	\d
+:h		Übereinstimmung mit einer Hexadezimalzahl	\b0[xX]([0-9a-fA-F])\b
+:i		C/C++ Bezeichner			\b(_\w+|[\w-[0-9_]]\w*)\b
+:n		Übereinstimmung mit ganzen Zahlen und Dezimalzahlen	\b[0-9]*\.*[0-9]+\b
+Abbrechen
+Abbrechen und entfernen
+Abfrage
+Abfrage bearbeiten
+Abfrage hinzufügen...
+Abfrage-Designer
+Abfrage...
+Abfragen-Generatorbereich maximieren
+Abgeleitete Typen anzeigen
+Abgerundetes Rechteck
+Abgerundetes Rechteck mit Rand
+Abgeschlossen
+Abhängige Anforderung hinzufügen
+Abhängigkeit
+Abhängigkeit(en) generieren
+Ablageordner öffnen
+Ablaufverfolgungspunkt einfügen
+About KaVE
+Abrufen...
+Absatz...
+Absatzmarken
+Absolut
+Absolut positioniert
+Abspielen
+Absteigend sortieren
+Abstract Class to Interface…
+Abstrakte Klasse
+Abstrakte Klasse implementieren
+Abstrakte Vorgänge außer Kraft setzen
+Action
+ActiveX-Steuerelement einfügen...
+ActivityDesigner-Erweiterungsbefehle
+Add Database Reference...
+Add New Aggregate Function...
+Add New Application Role...
+Add New Assembly...
+Add New Asymmetric Key...
+Add New Broker Priority...
+Add New Certificate...
+Add New Check Constraint
+Add New Contract...
+Add New Credential...
+Add New Cryptographic Provider...
+Add New Custom Error Message...
+Add New Database
+Add New Database Audit Specification...
+Add New Database Role...
+Add New Database Trigger...
+Add New Default...
+Add New Event Notification...
+Add New Event Session...
+Add New Foreign Key
+Add New Server Audit Specification...
+Add New Trigger
+Add-In-Manager...
+Add/Remove Columns...
+Aktionen...
+Aktiven Container anheften
+Aktiven Container anzeigen
+Aktivierte Tests debuggen
+Aktivierte Tests durchführen
+Aktivität hinzufügen...
+Aktualisieren beenden
+Aktuelle Seite
+Aktuelle Spalte
+Aktuelle Zeile
+Aktuelle bearbeiten
+Aktueller Text
+Alle DataTips löschen
+Alle Dateien anzeigen
+Alle Fenster
+Alle Haltepunkte deaktivieren
+Alle Haltepunkte löschen
+Alle Lesezeichen im Dokument löschen
+Alle Member hinzufügen
+Alle Ordner synchronisieren
+Alle Projektlisten neu erstellen
+Alle Rahmenlinien
+Alle Spalten auswählen
+Alle Threads bis auf diesen einfrieren
+Alle Verweise anzeigen
+Alle Verweise hinzufügen
+Alle Vorgänger anzeigen
+Alle Vorgänger hinzufügen
+Alle abgeleiteten Typen anzeigen
+Alle abgeleiteten Typen hinzufügen
+Alle anpassen
+Alle ausblenden
+Alle ausfüllen
+Alle ausgehenden Verweise anzeigen
+Alle automatisch ausblenden
+Alle beenden
+Alle eingehenden Verweise anzeigen
+Alle suchen
+Alle trennen
+Alle zurücksetzen
+Alle Überwachungen löschen
+Alles anzeigen
+Alles entsperren
+Alles sperren
+Allow SQL/CLR Debugging
+Als Bild exportieren...
+Als Bild speichern...
+Als aktiv festlegen
+Als aktuelle Sitzung festlegen
+Als neuen Stamm hinzufügen
+Am Raster
+Am größten
+Am kleinsten
+Analysieren
+Anforderung einfügen
+Anforderung hinzufügen
+Anforderung zu Bedingung hinzufügen
+Anforderung zu Schleife hinzufügen
+Anforderung zur Transaktion hinzufügen
+Anforderungs-Plug-In einfügen...
+Anforderungs-Plug-In hinzufügen...
+Anfügen/Trennen
+Anfügen/Trennen...
+Anfügen…
+Annotate Declaration Under Caret by [NotNull/CanBeNull] Attributes
+Annotate!
+Ansicht übergeordneter/untergeordneter Elemente
+Ansichten automatisch synchronisieren
+Ansichten synchronisieren
+Anstehende Eincheckvorgänge
+Anwendungsbereitstellung
+Anzeige der Protokolle beenden
+App-Manifest bearbeiten
+App-Name reservieren...
+App-Pakete hochladen…
+Append Tests to Session
+Application Debugging
+Application Insights
+Arabisch (ASMO-708)
+Arabisch (DOS)
+Arabisch (ISO)
+Arabisch (Windows)
+Arbeitsaufgabe erstellen
+Arbeitselementdetails
+Arbeitsspeicher 1
+Arbeitsspeicher 2
+Arbeitsspeicher 3
+Arbeitsspeicher 4
+Architektur überprüfen
+Assembly Explorer
+Aufgaben
+Aufgabenliste
+Aufgabenlistenverknüpfung umschalten
+Auflösung beenden
+Aufruf des Webtests einfügen...
+Aufruf zu Webtest hinzufügen...
+Aufrufbrowser
+Aufrufer/Aufgerufener
+Aufrufhierarchie
+Aufrufliste
+Aufrufsites anzeigen
+Aufrufstruktur
+Aufzeichnung einfügen...
+Aufzeichnung hinzufügen...
+Aufzählung
+Aus Datei importieren...
+Aus Quellcodeverwaltung öffnen
+Aus Quellcodeverwaltung öffnen...
+Aus Testliste entfernen
+Aus Warteschlange entfernen
+Aus aktueller Wiedergabeliste entfernen
+Aus allen Testlisten entfernen
+Aus neuesten Verweisen löschen
+Ausführen bis Rücksprung in aktuellem Prozess
+Ausgeblendete Formularfelder
+Ausgeblendete Typen und Member anzeigen
+Ausgerichtete Elemente
+Ausgewählte Elemente speichern unter...
+Ausgewählte Tests debuggen
+Ausgewählte Zeilen mit Tabstopps versehen
+Ausgewählte Zeilen nach oben verschieben
+Ausgewählte Zeilen nach unten verschieben
+Auslastungstest ausführen
+Auslastungstest hinzufügen...
+Auslastungstest-Plug-In hinzufügen...
+Auslastungstestläufe
+Ausnahmen...
+Ausrichtung zurücksetzen
+Ausstehende Änderungen
+Auswahl anordnen
+Auswahl anpassen
+Auswahl anzeigen
+Auswahl ausblenden
+Auswahl neu formatieren
+Auswahl speichern
+Auswahl sperren
+Auswahlvorschau anzeigen
+Auswertung beenden
+AutoForm formatieren...
+Automatisch ausgeblendete Fenster
+Automatische Auswahl
+Baltisch (ISO)
+Baltisch (Windows)
+Barrierefreiheit überprüfen...
+Basis für komplexe Eigenschaft hinzufügen
+Basis für skalare Eigenschaft hinzufügen
+Basistyp
+Basistypdefinition hinzufügen
+Basistypen anzeigen
+Basistypenliste erweitern/reduzieren
+Batchverarbeitung des Teamprojekts...
+Bedingung einfügen...
+Bedingung hinzufügen...
+Bedingung zu Bedingung hinzufügen...
+Bedingung zu Schleife hinzufügen...
+Bedingung zu Transaktion hinzufügen...
+Befehle
+Befehle zur Layerumgestaltung
+Befehlsfenster
+Beide verkleinern
+Beides
+Beispiele
+Benachrichtigungen
+Benutzerdefinierte Verben - Gruppe8
+Benutzerdefinierten Indikatorensatz hinzufügen
+Bereiche wiederherstellen
+Bericht hinzufügen...
+Bericht über unterbrochene Links
+Berichtsdaten
+Berichtssite anzeigen...
+Bestandene Tests
+Bestandene Tests ausführen
+Beziehung bearbeiten...
+Beziehungsbezeichnungen anzeigen
+Bild speichern unter...
+Bildschirm horizontal teilen
+Bildschirm vertikal teilen
+Bind To Data
+Binärdaten öffnen
+Blockauswahl
+Blockformat
+Bookmarks…
+Breite
+Breite zurücksetzen
+Browse Stack Trace…
+Browser debuggen
+Browserlink
+Browsermischung bearbeiten...
+Build
+Build Selection
+CSS-Eigenschaften
+Cancel Build
+Changesetdetails
+Chinesisch traditionell
+Chinesisch vereinfacht (GB18030)
+Chinesisch vereinfacht (GB2312)
+Clean
+Clean Selection
+Cleanup PSI caches
+Clear All Bookmarks
+Clear All Bookmarks in Document
+Close All
+Clusters
+Code
+Code Behind
+Code Issues in Current Project
+Code Issues in Solution
+Code Map
+Code generieren
+Code generieren...
+Code verschieben
+Codeabdeckung für alle Tests analysieren
+Codeabdeckung für ausgewählte Tests analysieren
+Codeanalyse für Projekt konfigurieren
+Codeanalyse für Projektmappe konfigurieren
+Codeausschnitt-Manager...
+Coded UI-Test hinzufügen...
+Codedefinitionsfenster
+Codemetrik für Projektmappe berechnen
+Codemetrik für ausgewählte Projekte berechnen
+Codeänderungen übernehmen
+Collect Garbage
+Comment with Block Comment
+Comment with Line Comment
+Compact LOH
+Compare
+Compare Schema
+Compare With Saved...
+Complete Statement
+Complete Symbol
+ComponentDesigner-Erweiterungsbefehle
+Configure...
+Containing Declaration
+CpMRU1
+CpMRU2
+CpMRU3
+CpMRU4
+Create Live Template from Selection…
+Create New File...
+Create New Project...
+Create New Session
+Create Shared Step Set...
+Custom Zoom...
+Data Comparison...
+Data Tools Operations
+DataContext für Entwurfszeit festlegen...
+DataSet mit Designer bearbeiten
+DataTable
+DataTips der aktuellen Datei löschen
+DataTips exportieren...
+DataTips importieren...
+Datasets...
+Datei als Text einfügen...
+Datei für Testeinstellungen auswählen
+Dateiuploadparameter einfügen
+Dateiuploadparameter hinzufügen
+Daten abrufen
+Datenbank trennen
+Datenbankbefehlstext anzeigen...
+Datenquelle bearbeiten...
+Datenquelle einfügen...
+Datenquelle hinzufügen...
+Datenquelle mit Assistenten konfigurieren...
+Datenquellen
+Datenquellen...
+Datenraster
+Debug
+Debug Function...
+Debug Procedure...
+Debug Selection
+Debug without Building
+Debug-Gerätebrowser
+Debugauswahl
+Debugging starten
+Delete Instance...
+Delete Rows
+Deselect
+Deselect All
+Detach
+Details der Testergebnisse anzeigen
+Details festlegen
+Developer Power Tools
+Diagnosekonfiguration hinzufügen
+Diagramm entfernen
+Diagramm hinzufügen...
+Diagramm umbenennen...
+Diagrammdaten...
+Dienste der Projektmappe
+Dienstvertrag aktualisieren
+DirectX-Systemsteuerung
+Direkt
+Disable sort and filter
+Disassembly
+Dokumentation anzeigen
+Drittletzte ausgewählte RunSettings-Datei
+Dump All SymbolCache
+Dump All VS Commands
+Dump AppDomain information
+Dump Change Manager
+Dump Command Bindings
+Dump CommandBars
+Dump Document Manager
+Dump Document Markup
+Dump External Sources
+Dump File System Tracker
+Dump Output Assemblies
+Dump Platforms
+Dump Project Model
+Dump Project Resolve Contexts
+Dump PsiFilesCache
+Dump ReSharper shortcuts
+Dump SymbolCache for Current File
+Dump Tool Windows
+Dump VsHierarchy
+Dump activity log
+Dump activity timing
+Dump conflicting actions
+Dump speichern unter...
+Dump tool windows state
+Duplicate
+Duplicate Text
+Dynamische Parameter höher stufen...
+Eigenschaft generieren
+Eigenschaften von Startprojekt...
+Eigenschaften-Manager
+Ein-/Ausschalten
+Einchecken...
+Einsetzen
+Einstellungen
+Einstellungen anzeigen
+Einstellungen für Führungslinien...
+Einstellungen importieren und exportieren...
+Einzelschritt in aktuellem Prozess
+Einzug vergrößern
+Einzug verkleinern
+Element hinzufügen
+Element umbenennen
+Elementdateiname
+Elemente alphabetisch sortieren
+Elemente auswählen...
+Elemente...
+Elementerweiterung
+Elementpfad
+Emulate typing space
+Emulator 8.0 herunterladen...
+Emulator 8.1 herunterladen...
+Enable Heuristics
+Entity Data Model-Browser
+Entity Data Model-Zuordnungsdetails
+Entitätsschlüssel
+Entwicklerentsperrung
+Entwicklerkonto öffnen ...
+Entwicklerlizenz abrufen...
+Entwurf
+Enumerationsmember generieren
+Ereignisse des Lebenszyklus
+Ergebnisbereich maximieren
+Ergebnisse der Codeklonanalyse
+Ergebnisse der Symbolsuche
+Ergebnisse öffnen und verwalten...
+Ersetzungsgruppenmember anzeigen
+Ersetzungsgruppenmember hinzufügen
+Erweiterte Speicheroptionen...
+Erweiterte Vervollständigungsmember ausblenden
+Erweiterung entfernen
+Erweiterung hinzufügen...
+Erweiterungen und Updates...
+Exclude
+Exclude All
+Execute Function...
+Execute Procedure...
+Explizit
+Export ContextActions
+Export Source Annotations to XML
+Extend Selection
+Extension Manager…
+External Source Information...
+Externe Tools...
+Externer Befehl 10
+Externer Befehl 11
+Externer Befehl 12
+Externer Befehl 13
+Externer Befehl 14
+Externer Befehl 15
+Externer Befehl 16
+Externer Befehl 17
+Externer Befehl 18
+Externer Befehl 19
+Externer Befehl 20
+Externer Befehl 21
+Externer Befehl 22
+Externer Befehl 23
+Externer Befehl 24
+Externer Befehl 6
+Externer Befehl 7
+Externer Befehl 8
+Externer Befehl 9
+Extract Data-tier Application...
+Extraktionsregel einfügen...
+Extraktionsregel hinzufügen...
+EzMDI-Dateiliste
+F# Interactive
+Feedback Manager
+Feedback exportieren...
+Fehler...
+Fehlerliste
+Fehlersuche
+Fehlgeschlagene Tests
+Fehlgeschlagene Tests ausführen
+Feld generieren
+Fenster hinzufügen...
+Fenster horizontal teilen
+Fenster vertikal teilen
+Fensterlayout zurücksetzen
+Feste Breite
+File Structure
+Filter anzeigen
+Filter für Markierungen hinzufügen
+Filter für Prozesse/Threads hinzufügen
+Filter für Timestamps hinzufügen
+Find Results
+Flagzustand des aktuellen Threads umschalten
+Focus Monitor
+Formatierung entfernen
+Formularbereitstellungsparameter einfügen
+Formularbereitstellungsparameter hinzufügen
+Full Text Index...
+Fully-qualify Name...
+Funktionen
+Funktionsimport hinzufügen...
+Funktionsimport...
+Funktionsindikatoren für die Ausrichtung anzeigen
+GPU-Threads
+GUID erstellen
+Gehe zu Basistyp
+Gehe zu Speicherort
+Gehe zu nächster Position
+Gehe zu referenziertem Attribut
+Gehe zu referenziertem Element
+Gehe zu referenzierter Attributgruppe
+Gehe zu referenzierter Gruppe
+Gehe zu vorheriger Position
+Gehe zu...
+Gehe zur nächsten geänderten Arbeitsaufgabe
+Gehe zur vorherigen geänderten Arbeitsaufgabe
+Gemeinsame Randbereiche...
+Generate Code…
+Generate Script
+Generischen Test hinzufügen
+Generischer Debugger
+Gerätefenster
+Give Feedback
+Globale Elemente anzeigen
+Globale Typen anzeigen
+Go To Project
+Go to Everything / Type…
+Go to File Member…
+Go to File…
+Go to PSI Viewer
+Go to Symbol…
+Griechisch (ISO)
+Griechisch (Windows)
+Group
+Große Symbole anzeigen
+Großer Kreis
+Großes Quadrat
+Gruppieren
+Gruppieren nach
+Gruppierung
+Gruppierungsfenster
+Größe ausgewählter Tabellen automatisch anpassen
+Gültigkeit des Dokuments überprüfen
+HDInsight Task List Window
+HTML-Seite hinzufügen
+HTTP
+HTTPS
+Halten bei Funktion...
+Haltepunkt umschalten
+Haltepunkte
+Haltepunkte aktivieren
+Handles anzeigen
+Header einfügen
+Header hinzufügen
+Hebräisch (DOS)
+Hebräisch (ISO)
+Hebräisch (Windows)
+Hierher verschieben
+Hierhin kopieren
+Highlight Table Column
+Highlight Table Row
+Highlight Usages in File
+Highlighter Test
+Hilfe anzeigen
+Hilfeinhalt hinzufügen und entfernen
+Hilfekontext debuggen
+Hintergrund kopieren
+Hintergrund speichern unter...
+Hinzufügen...
+Hochgestellt
+Horizontal anordnen
+Horizontal ausfüllen
+Horizontal verkleinern
+Horizontal zentrieren
+Horizontale Leerstelle löschen
+Horizontalen Abstand angleichen
+Hotspot festlegen
+Höhe
+Höhe zurücksetzen
+IPs
+Im Objekt-Explorer von SQL Server durchsuchen
+Im Verwaltungsportal öffnen
+Im Webbrowser öffnen
+Implizit
+Import Contract Assembly
+Import Symbol
+Import WinRT Assembly
+Importieren...
+In Anforderung suchen und ersetzen...
+In Auswertung nach hinten verschieben
+In Auswertung nach vorne verschieben
+In Browser starten
+In Datei exportieren...
+In Dateien ersetzen
+In Diagramm verschieben...
+In Enumeration konvertieren
+In Großbuchstaben umwandeln
+In Help Viewer starten
+In IP-Ansicht anzeigen
+In Kleinbuchstaben umwandeln
+In Stammansicht anzeigen
+In Webanwendung konvertieren
+In Zeilenansicht anzeigen
+In Zwischenablage kopieren
+In eine neue Methode aufteilen
+In neuen komplexen Typ verschieben
+Include
+Include All
+Index...
+Indikator im Diagramm anzeigen
+Indikator in Legende anzeigen
+Indikatoren hinzufügen...
+Indikatoren im Diagramm anzeigen
+Indikatoren in Legende anzeigen
+Indikatorensätze verwalten...
+Info über Microsoft Visual Studio
+Inkrementelle Suche
+Inlinemodus
+Innere horizontale Rahmenlinie
+Innere vertikale Rahmenlinie
+Insert
+Insert Live Template…
+Insert Shared Step Set After...
+Insert Shared Step Set Before...
+Insert Step After
+Insert Step Before
+Insert Table Column After
+Insert Table Column Before
+Insert Table Row After
+Insert Table Row Before
+Inspections
+Instanz
+IntelliSense-Fehler anzeigen
+IntelliTrace-Einstellungen öffnen
+IntelliTrace-Ereignisse exportieren
+IntelliTrace-Ereignisse löschen
+IntelliTrace-Sitzung speichern
+Interaktionen
+Interaktionsoperand nachher
+Interaktionsoperand vorher
+Interaktive Auswertung abbrechen
+Interaktive Sitzung zurücksetzen
+Internet Explorer für Windows Phone debuggen
+Japanisch (Automatische Auswahl)
+Japanisch (EUC)
+Japanisch (Shift-JIS)
+JavaScript Resolve Log
+JavaScript-Konsole
+Kein Rahmen
+Keine Arbeitsaufgabentypen in aktivem Teamprojekt
+Keine Befehle verfügbar
+Keine Testeinstellungen verfügbar
+Kennzeichnung aller zugewiesener Threads aufheben
+Kennzeichnung zugewiesener Threads aufheben
+Kippen
+Klasse generieren
+Klassenansicht
+Klassenansicht synchronisieren
+Klausel(n) löschen
+Kleiner Kreis
+Kleines Quadrat
+Kommentar zu Bedingung hinzufügen
+Kommentar zu Schleife hinzufügen
+Kommentar zur Transaktion hinzufügen
+Kommentare
+Komplexe Eigenschaft
+Komplexe Typen...
+Komponente hinzufügen...
+Komponenten-Designer
+Komponententest hinzufügen...
+Konflikt
+Konfliktressourcendetails anzeigen
+Konstruktor generieren
+Kontext 1
+Kontextmenü des Server-Explorers
+Kontoeinstellungen...
+Konvertieren...
+Kopie der ausgewählten Elemente speichern unter...
+Kopie einfügen...
+Koreanisch (Automatische Auswahl)
+Korrektur 1
+Korrektur 10
+Korrektur 2
+Korrektur 3
+Korrektur 4
+Korrektur 5
+Korrektur 6
+Korrektur 7
+Korrektur 8
+Korrektur 9
+Kunden-Feedbackoptionen...
+Kyrillisch (DOS)
+Kyrillisch (ISO)
+Kyrillisch (KOI8-R)
+Kyrillisch (Windows)
+Langsamsten Pfad hervorheben
+Lauf anzeigen
+Layer-Befehle
+LayerDesigner-Erweiterungsbefehle
+Lebensdauer
+Leer Erstellen...
+Leere Container
+Leere erstellen...
+Leerstelle anzeigen
+Leerzeichen
+Leistungs-Assistenten starten...
+Leistungs-Explorer
+Leistungsanalyse beenden
+Leistungsdaten aus Application Insights abrufen
+Leistungssitzung erstellen...
+Leitfaden zur App-Veröffentlichung lesen
+Lesezeichen aktivieren
+Lesezeichen einfügen...
+Lesezeichenfenster
+Letzte globale Aktion rückgängig machen
+Letzte globale Aktion wiederholen
+License Information…
+Lineal einblenden
+Linien
+Linienart
+Links diagonal (groß)
+Links diagonal (klein)
+Links diagonal (mittel)
+Links neu berechnen
+Links zu Stylesheet verwalten...
+Liste dynamischer Aktionen
+Listenansicht
+Load Saved Issues Report...
+Load Test Manager
+Local Help
+LocalRegister
+Locate in Solution Explorer
+LogicalClassDesigner-Erweiterungsbefehle
+Lokal
+Lokale Ressource generieren
+Lokaler Computer
+MRU bereitstellen
+MSDN Forum
+Manage Options…
+Manage Subscriptions...
+Markierungen
+Markup
+Masterseite hinzufügen
+Mehrere Browser
+Meldungen unterdrücken
+Mich benachrichtigen, wenn die ersten Application Insights-Ereignisse gesendet werden
+Microsoft Azure-Aktivitätsprotokoll
+Microsoft Azure-Authentifizierung aktivieren...
+Missing Index Details...
+Mit Datenbank verbinden...
+Mit Server verbinden...
+Mit Team Foundation Server verbinden...
+Mit angehaltener Profilerstellung starten
+Mit lokaler Version vergleichen
+Mitte
+Mitteleuropäisch (DOS)
+Mitteleuropäisch (ISO)
+Mitteleuropäisch (Windows)
+Mittelgroßer Kreis
+Mittelgroßes Quadrat
+Mittig ausrichten
+Modul hinzufügen...
+Move Left
+Move Right
+Nach dem Buildvorgang Tests ausführen
+Nach unten verschieben
+Name anzeigen
+Nav SubItems 1
+Navigate Backward
+Navigate Forward
+Navigate To…
+Navigationseigenschaft
+Navigieren zu
+Navigieren zu...
+Netzwerkmischung bearbeiten...
+Neue Dokumentbibliothek...
+Neue Leistungssitzung
+Neue Tabelle...
+Neue Textanmerkung
+Neue Wiedergabeliste
+Neuen Test hinzufügen...
+Neuen Typ generieren...
+Neuer Datenhaltepunkt...
+Neuer Stil...
+Neues Diagramm...
+Neueste Verweise löschen
+New Data Comparison...
+New Object...
+New Schema Comparison...
+Next
+Next Error
+Next Issue in File
+Next Member
+Nicht ausgeführte Tests
+Nicht ausgeführte Tests ausführen
+Nicht sichtbare ASP.NET-Steuerelemente
+Nicht transparenter Hintergrund
+Nichts auswählen
+Nummerierte Liste
+Nummerierung und Aufzählungszeichen...
+Nur aktuellen Prozess anzeigen
+Nur gekennzeichnete Threads anzeigen
+Nur linke Datei
+Nur rechte Datei
+Nächste Methode
+Nächster Fehler
+Nächster Kommentar
+Nächster Unterschied
+Nächster bestätigter...
+Nächstes Lesezeichen im Dokument
+Nächstes Lesezeichen im Ordner
+Oben
+Objekt entfernen
+Objektgrenzen anzeigen
+Objektkatalog
+Objektkatalog: Einstellungen
+Objektverbliste
+Obtain Permanent License
+Online Help
+Online-Datenschutzbestimmungen...
+Open Shared Step Set...
+Open in Management Portal...
+Optionen für die Rauschunterdrückung...
+Optionen und Einstellungen...
+Optionen...
+Options...
+Options…
+Ordner synchronisieren
+Originalzustand wiederherstellen
+Overlay anzeigen
+PSI Browser
+PSI Module Browser
+PSI Viewer
+Paket Schnellansicht
+Paket-Manager-Einstellungen
+Parallele Stapel
+Parallele Überwachung 1
+Parallele Überwachung 2
+Parallele Überwachung 3
+Parallele Überwachung 4
+Paralleler Modus
+Parameter Information
+Parameter...
+Paste…
+Position...
+PreEmptive Dotfuscator and Analytics
+Previous
+Previous Edit
+Previous Error
+Previous Issue in File
+Previous Member
+Product Web Page
+Produkt registrieren
+Profile Visual Studio
+Profile Visual Studio and Open Snapshot
+Profilerstellungsdaten nach Auswahl filtern
+Projekt aus vorhandenem Code...
+Projekt kopieren...
+Projekt schließen
+Projekt-Werkzeugkastenelemente aktualisieren
+Projekt...
+Projekt/Projektmappe...
+Projektausgaben hinzufügen...
+Projektdatei bearbeiten
+Projektdateiname
+Projektliste erstellen
+Projektmappe für Codeklone analysieren
+Projektmappe öffnen
+Projektmappen-Dateiname
+Projektmappen-Explorer
+Projektmappenkonfigurationen
+Projektmappenplattformen
+Projektwarnungen...
+Propagate Annotations to Interface Members (SOURCE)
+Protokoll anzeigen...
+Protokolldatei anzeigen
+Prozedurschritt in aktuellem Prozess
+Prozess:
+Publish Data-tier Application...
+Publish Selection
+Pushbenachrichtigung hinzufügen...
+Qualifizierten Namen anzeigen
+Qualifizierten Namen ausblenden
+Quellbrowserdateien entladen
+Quellcodeverwaltungs-Explorer
+Quer
+QueryString-Parameter für URL einfügen
+QueryString-Parameter für URL hinzufügen
+Quick Start
+Rahmen und Schattierung...
+Rahmenart
+Rahmenbreite
+Rahmenfarbe
+Rahmenlinie außen
+Rahmenlinie innen
+Rahmenlinie links
+Rahmenlinie oben
+Rahmenlinie rechts
+Rahmenlinie unten
+Rand zurücksetzen
+Raster umschalten
+Reanalyze Project
+Rebuild
+Rebuild Selection
+Recent Edits…
+Recent Files…
+Rechts diagonal (groß)
+Rechts diagonal (klein)
+Rechts diagonal (mittel)
+Register
+Register Data-tier Application...
+Registerkarte hinzufügen
+Registerkarte löschen
+Registerkarte umbenennen
+Relativ
+Remotecomputer
+Remoteverweise aktualisieren
+Remove ReSharper Commands
+Repeat
+Repeat Previous Run
+Replace...
+Reset Query
+Resource Value…
+Ressourcenansicht
+Ressourcendetails
+Ressourcenwörterbuch hinzufügen...
+Return Permanent License
+Ribbon testen
+Run All Tests from Solution
+Run Current Session
+Run Selection
+Run without Building
+Ränder und Abstände
+SQL Server Object Explorer
+SQL-Ablaufverfolgungsdaten...
+Samplings auflisten
+Save Execution Plan As...
+Save Issues Report...
+Schaltflächen...
+Schema
+Schema erstellen
+Schemas erneut laden
+Schemas...
+Schleife einfügen...
+Schleife hinzufügen...
+Schleife zu Bedingung hinzufügen...
+Schleife zu Schleife hinzufügen...
+Schleife zu Transaktion hinzufügen...
+Schlüssel bearbeiten...
+Schlüssel löschen
+Schnellersetzung
+Schriftart für Textanmerkung festlegen...
+Schriftart...
+Schriftartname
+Schwellenwertregel einfügen...
+Schwellenwertregel hinzufügen...
+Script to Project
+Search with Pattern…
+Seite hinzufügen...
+Seitenfuß
+Seitenkopf
+Seitenprüfung
+Seitenumbrüche anzeigen
+Seitenumbrüche neu berechnen
+Select
+Select All
+Select Source...
+Select Source/Target Database...
+Select Source/Target Schema...
+Select Target...
+Select in Solution Explorer
+Selective Xml Index...
+SequenceDesigner-Erweiterungsbefehle
+Sequenziellen Workflow hinzufügen...
+Server-Explorer
+Set Up and Manage Releases
+Set-Funktion
+SettingsStoreView
+Show All Files
+Show Dependencies
+Show Equal Objects
+Show Execution Plan XML...
+Show Log
+Show Quick Documentation…
+Show Recent Exceptions
+Show Statistics
+Show Themed Icons
+Show Tips
+Show Unsupported Actions
+Show VS References given to project
+Shrink Selection
+Sichtbare Rahmen
+Simulator
+Skalare Eigenschaft
+Skriptblocks
+Smart Code Completion
+Sort and Filter
+Spalte 1
+Spalte 10
+Spalte 2
+Spalte 3
+Spalte 4
+Spalte 5
+Spalte 6
+Spalte 7
+Spalte 8
+Spalte 9
+Spalte links einfügen
+Spalte rechts einfügen
+Speicherbelegung
+Speichern unter...
+Spy++
+Spy++ (x64)
+Stack Traces
+Stamm entfernen
+Stamm festlegen
+Stamm zurücksetzen
+Standardansicht
+Standardeinstellungen für die Codegenerierung konfigurieren...
+Stapelrahmen:
+Starten ohne Debugging
+Startprojekte
+Startpunkt mit markiertem Bereich festlegen
+Startseite
+Statisch
+StdAfx
+Stile verwalten
+Stile übernehmen
+Stile...
+Streamingprotokolle anzeigen
+Strecken
+Stub für diese Methode generieren
+Stylesheet anfügen...
+Stylesheet hinzufügen
+Submit Feedback…
+Suche beenden
+Suchergebnisse: 1
+Suchergebnisse: 2
+Suppress Static Code Analysis Message(s)
+Surround With Template…
+Symbole ausrichten
+Synchronize with File System
+Szenario einfügen...
+Szenario hinzufügen...
+Tabelle einfügen
+Tabellen anordnen
+Tabellendetails
+Tabellenfuß
+Tabellenkopf
+Tabstopps aus ausgewählten Zeilen entfernen
+Tagmarkierungen
+Tatsächliche Größe
+Team Explorer
+Team Explorer Seite 1
+Technischer Support
+Teilen
+Teilergebnis
+Templates Explorer…
+Test Controller verwalten
+Test Controller verwalten...
+Test Oeffnen
+Test-Explorer
+Testausführungsmodul weiter ausführen
+Testergebnisse
+Testlauf anhalten
+Testlauf fortsetzen
+Testlauf löschen
+Testlaufeinstellung einfügen
+Testlaufeinstellung hinzufügen
+Testläufe
+Testmischung bearbeiten...
+Testreihe hinzufügen
+Tests hinzufügen...
+Text Controls Monitor
+Text bearbeiten
+Textgröße
+Thailändisch (Windows)
+Thread:
+Threaddetails
+Threadkonfliktdetails anzeigen
+Threads
+Throw Exception
+Tiefgestellt
+Transaktion einfügen...
+Transaktion hinzufügen...
+Transaktion zu Bedingung hinzufügen...
+Transaktion zu Schleife hinzufügen...
+Transaktion zur Transaktion hinzufügen...
+Transparenter Hintergrund
+Trimmingleerzeichen ignorieren
+Try Project Transaction
+Typdefinition hinzufügen
+Type
+Type Browser
+Türkisch (ISO)
+Türkisch (Windows)
+UI-Steuerelement suchen
+UML-Modell überprüfen
+URL kopieren
+Ukrainisch (KOI8-RU)
+Umbenennen mit Vorschau...
+Unbind From Data
+Ungroup
+Unicode (UTF-8)
+Unregister Data-tier Application...
+Untertyp
+Update
+Updates Xslt Tester
+UseCaseModel-Erweiterungsbefehle
+Validierungsregel einfügen...
+Validierungsregel hinzufügen...
+Verbinden
+Verbindung mit Microsoft Azure-Abonnement herstellen...
+Verbindung mit Testlauf herstellen
+Verbindung trennen
+Verbindung ändern...
+Verbundenen Dienst hinzufügen...
+Verbundenes Gerät
+Vererbung...
+Verknüpfte Dateien schachteln
+Verknüpfte Tabellen hinzufügen
+Verknüpfungen anzeigen
+Vertical
+Vertikal anordnen
+Vertikal ausfüllen
+Vertikal verkleinern
+Vertikal zentrieren
+Vertikalen Abstand angleichen
+Verwalteter Speicher
+Verweis in Zwischenablage kopieren
+Verzweigung
+Verzweigung zur Liste der zu ignorierenden Elemente hinzufügen
+Verzögerung einfügen vor
+Veröffentlichen:
+Veröffentlichungsprofil herunterladen
+Veröffentlichungsprofile bearbeiten
+Vietnamesisch (Windows)
+View Change Manager Graph
+View Control Flow Graph
+View Data
+View Permissions
+Visibility:hidden-CSS-Elemente
+Visuelle Manager des Ribbon-Editors
+Vollständige Signatur ausblenden
+Von Team Foundation Server trennen
+Von Testlauf trennen
+Vorabrufen von Windows Store-App auslösen
+Vorhandene Website hinzufügen...
+Vorhandenen Stil wiederverwenden
+Vorherige Methode
+Vorheriger Fehler
+Vorheriger Kommentar
+Vorheriger Unterschied
+Vorheriger bestätigter...
+Vorheriges Lesezeichen im Dokument
+Vorheriges Lesezeichen im Ordner
+Vorlage exportieren...
+Vorlagenbereichsbezeichnungen
+Vorletzte ausgewählte RunSettings-Datei
+Vorschaubereich für Arbeitsaufgaben maximieren
+Vorwärts
+WCF-Dienstkonfigurations-Editor
+Wahrscheinlichste Stammelemente anzeigen
+Web Form hinzufügen
+Web veröffentlichen
+Webbenutzer-Steuerelement hinzufügen
+Webberechtigungen...
+Webbrowser
+Webdienst hinzufügen
+Webdienstanforderung einfügen
+Webdienstanforderung hinzufügen
+Webdienstanforderung zu Bedingung hinzufügen
+Webdienstanforderung zu Schleife hinzufügen
+Webdienstanforderung zur Transaktion hinzufügen
+Webleistungstest hinzufügen...
+Webserver parametrisieren...
+Webtest extrahieren...
+Webtest-Plug-In einfügen...
+Webtest-Plug-In hinzufügen...
+Webveröffentlichungsaktivität
+Weitere Emulatoren...
+Werkzeugkasten
+Werkzeugkasten zurücksetzen
+Werkzeugkastenelemente auswählen...
+Westeuropäisch (ISO)
+Westeuropäisch (Windows)
+Windows Form hinzufügen...
+XMI importieren...
+XML-Schema-Explorer
+Xml Index...
+Zeichnungsoptionen...
+Zeile oberhalb einfügen
+Zeile unterhalb einfügen
+Zeilenumbruch
+Zeilenumbrüche
+Zelle bearbeiten
+Zellen teilen
+Zellen zusammenführen
+Zielbinärdatei hinzufügen...
+Zielerweiterung
+Zielname
+Zielpfad
+Zielprojekt hinzufügen
+Zielregel:
+Zielschema für Validierung
+Zoom In
+Zoom Out
+Zoom anpassen
+Zoom to Fit
+Zoom...
+Zu Arbeitsaufgabe hinzufügen...
+Zu Aufgabe wechseln
+Zu Benutzerdetail wechseln
+Zu Designer hinzufügen
+Zu Lollipop navigieren
+Zu einem neuen Diagramm verschieben
+Zu erfassende Frames:
+Zu nächster Arbeitsaufgabe wechseln
+Zu vorheriger Arbeitsaufgabe wechseln
+Zugehörige einschließen
+Zugewiesene Threads einfrieren
+Zugewiesene Threads kennzeichnen
+Zugewiesene Threads reaktivieren
+Zuletzt ausgewählte RunSettings-Datei
+Zum Aufrufeingang wechseln
+Zum Indikatorbereich wechseln
+Zum Webtest wechseln
+Zuordnung auswählen
+Zuordnung...
+Zur Aufrufsite wechseln
+Zur Quellcodeverwaltung hinzufügen
+Zurück
+Zusammenfassung
+Zusammengeführte Verzweigungen ausblenden
+Zustandsautomatworkflow hinzufügen...
+[Aufgabe]
+[Computer]
+[MPI-Rang]
+[Nebeneinander]
+[Prozess]
+[Rekursionstiefe]
+[Thread]
+[^\S\r\n]	Übereinstimmung mit beliebigem Leerzeichen
+[a-f]		Übereinstimmung mit beliebigem Zeichen von a bis f
+[abc]		Übereinstimmung mit beliebigem Zeichen NICHT im Alphabetsatz
+[abc]		Übereinstimmung mit beliebigem Zeichen im Alphabetsatz
+\1		Rückverweis auf ersten erfassten Unterausdruck
+\b		Übereinstimmung an Wortanfang oder -ende
+\d		Übereinstimmung mit beliebiger Dezimalzahl
+\d{3}		Übereinstimmung mit drei aufeinander folgenden Dezimalzahlen
+\r?\n		Übereinstimmung mit Zeilenumbruch
+\w		Übereinstimmung mit beliebigem Wortzeichen
+^		Übereinstimmung an Zeilenanfang
+be*		Keine oder häufigere Übereinstimmung mit beliebigem Zeichen
+be+		Ein- oder mehrmalige Übereinstimmung mit beliebigem Zeichen
+be?		Keine oder einmalige Übereinstimmung mit beliebigem Zeichen
+nach oben 5
+nach unten 5
+x64
+x86
+§
+Öffnen...
+Übereinstimmende Zeile in Baselinedatei anzeigen
+Übereinstimmende Zeile in Vergleichsdatei anzeigen
+Überlappend
+Übernehmen von Codeänderungen beenden
+Überwachen 1
+Überwachen 2
+Überwachen 3
+Überwachen 4
+Überwachung bearbeiten
+Überwachungsspalte kopieren
