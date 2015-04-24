@@ -23,22 +23,16 @@ namespace KaVE.FeedbackProcessor.Tests.Database
     internal class TestFeedbackDatabase : IFeedbackDatabase
     {
         private readonly IDeveloperCollection _developerCollection = new TestDeveloperCollection();
-        private readonly IIDEEventCollection _originalIDEEventCollection = new TestIDEEventCollection();
-        private readonly IIDEEventCollection _cleanIDEEventCollection = new TestIDEEventCollection();
+        private readonly IIDEEventCollection _eventCollection = new TestIDEEventCollection();
 
         public IDeveloperCollection GetDeveloperCollection()
         {
             return _developerCollection;
         }
 
-        public IIDEEventCollection GetOriginalEventsCollection()
+        public IIDEEventCollection GetEventsCollection()
         {
-            return _originalIDEEventCollection;
-        }
-
-        public IIDEEventCollection GetCleanEventsCollection()
-        {
-            return _cleanIDEEventCollection;
+            return _eventCollection;
         }
     }
 }

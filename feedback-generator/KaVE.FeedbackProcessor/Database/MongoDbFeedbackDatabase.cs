@@ -47,15 +47,9 @@ namespace KaVE.FeedbackProcessor.Database
             return new MongoDbDeveloperCollection(GetCollection<Developer>());
         }
 
-        public IIDEEventCollection GetOriginalEventsCollection()
+        public IIDEEventCollection GetEventsCollection()
         {
             var eventsCollection = GetCollection<IDEEvent>();
-            return new MongoDbIDEEventCollection(eventsCollection);
-        }
-
-        public IIDEEventCollection GetCleanEventsCollection()
-        {
-            var eventsCollection = GetCollection<IDEEvent>("_clean");
             return new MongoDbIDEEventCollection(eventsCollection);
         }
 

@@ -22,7 +22,6 @@ namespace KaVE.FeedbackProcessor.Database
     public interface IFeedbackDatabase
     {
         IDeveloperCollection GetDeveloperCollection();
-        IIDEEventCollection GetOriginalEventsCollection();
-        IIDEEventCollection GetCleanEventsCollection();
+        IIDEEventCollection GetEventsCollection();
     }
 }

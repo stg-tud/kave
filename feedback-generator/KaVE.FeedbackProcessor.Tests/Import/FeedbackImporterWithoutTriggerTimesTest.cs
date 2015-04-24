@@ -61,7 +61,7 @@ namespace KaVE.FeedbackProcessor.Tests.Import
 
             WhenImportIsRun();
 
-            var ideEvents = TestFeedbackDatabase.GetOriginalEventsCollection().FindAll().Cast<TestIDEEvent>().OrderBy(evt => evt.TriggeredAt).ToList();
+            var ideEvents = TestFeedbackDatabase.GetEventsCollection().FindAll().Cast<TestIDEEvent>().OrderBy(evt => evt.TriggeredAt).ToList();
             Assert.AreEqual(3, ideEvents.Count);
             Assert.Less(ideEvents[0].TriggeredAt, ideEvents[1].TriggeredAt);
             Assert.Less(ideEvents[1].TriggeredAt, ideEvents[2].TriggeredAt);
@@ -69,7 +69,7 @@ namespace KaVE.FeedbackProcessor.Tests.Import
 
         private IDEEvent GetSingleEventFromDatabase()
         {
-            var ideEvents = TestFeedbackDatabase.GetOriginalEventsCollection().FindAll().ToList();
+            var ideEvents = TestFeedbackDatabase.GetEventsCollection().FindAll().ToList();
             Assert.AreEqual(1, ideEvents.Count);
             return ideEvents[0];
         }

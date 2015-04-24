@@ -80,12 +80,12 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup
         public void CleansTargetDatabase()
         {
             _targetFeedbackDatabase.GetDeveloperCollection().Insert(new Developer());
-            _targetFeedbackDatabase.GetOriginalEventsCollection().Insert(new TestIDEEvent());
+            _targetFeedbackDatabase.GetEventsCollection().Insert(new TestIDEEvent());
 
             _uut.ProcessFeedback();
 
             CollectionAssert.IsEmpty(_targetFeedbackDatabase.GetDeveloperCollection().FindAll());
-            CollectionAssert.IsEmpty(_targetFeedbackDatabase.GetOriginalEventsCollection().FindAll());
+            CollectionAssert.IsEmpty(_targetFeedbackDatabase.GetEventsCollection().FindAll());
         }
 
         [Test]
@@ -157,7 +157,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup
             _uut.RegisterProcessor<InactiveProcessor>();
             _uut.ProcessFeedback();
 
-            var cleanEvents = _targetFeedbackDatabase.GetOriginalEventsCollection().FindAll();
+            var cleanEvents = _targetFeedbackDatabase.GetEventsCollection().FindAll();
             CollectionAssert.AreEquivalent(cleanEvents, new[] {event1});
         }
 
@@ -172,7 +172,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup
             _uut.RegisterProcessor<InactiveProcessor>();
             _uut.ProcessFeedback();
 
-            var cleanEvents = _targetFeedbackDatabase.GetOriginalEventsCollection().FindAll();
+            var cleanEvents = _targetFeedbackDatabase.GetEventsCollection().FindAll();
             CollectionAssert.IsEmpty(cleanEvents);
         }
 
@@ -187,7 +187,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup
             _uut.RegisterProcessor<InactiveProcessor>();
             _uut.ProcessFeedback();
 
-            var cleanEvents = _targetFeedbackDatabase.GetOriginalEventsCollection().FindAll().ToList();
+            var cleanEvents = _targetFeedbackDatabase.GetEventsCollection().FindAll().ToList();
             Assert.AreEqual(1, cleanEvents.Count());
             CollectionAssert.DoesNotContain(cleanEvents, event1);
         }
@@ -203,7 +203,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup
             _uut.RegisterProcessor<ConsumingProcessor>();
             _uut.ProcessFeedback();
 
-            var cleanEvents = _targetFeedbackDatabase.GetOriginalEventsCollection().FindAll().ToList();
+            var cleanEvents = _targetFeedbackDatabase.GetEventsCollection().FindAll().ToList();
             Assert.AreEqual(1, cleanEvents.Count);
             CollectionAssert.DoesNotContain(cleanEvents, event1);
         }
@@ -219,7 +219,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup
             _uut.RegisterProcessor<ReplacingConsumer>();
             _uut.ProcessFeedback();
 
-            var cleanEvents = _targetFeedbackDatabase.GetOriginalEventsCollection().FindAll().ToList();
+            var cleanEvents = _targetFeedbackDatabase.GetEventsCollection().FindAll().ToList();
             Assert.AreEqual(2, cleanEvents.Count);
             CollectionAssert.DoesNotContain(cleanEvents, event1);
         }
@@ -235,7 +235,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup
             _uut.RegisterProcessor<InactiveProcessor>();
             _uut.ProcessFeedback();
 
-            var cleanEvents = _targetFeedbackDatabase.GetOriginalEventsCollection().FindAll().ToList();
+            var cleanEvents = _targetFeedbackDatabase.GetEventsCollection().FindAll().ToList();
             Assert.AreEqual(2,cleanEvents.Count);
         }
 
@@ -250,7 +250,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup
             _uut.RegisterProcessor<ConsumingProcessor>();
             _uut.ProcessFeedback();
 
-            var cleanEvents = _targetFeedbackDatabase.GetOriginalEventsCollection().FindAll().ToList();
+            var cleanEvents = _targetFeedbackDatabase.GetEventsCollection().FindAll().ToList();
             Assert.AreEqual(1,cleanEvents.Count);
             CollectionAssert.DoesNotContain(cleanEvents,event1);
         }
@@ -266,7 +266,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup
             _uut.RegisterProcessor<ReplacingConsumer>();
             _uut.ProcessFeedback();
 
-            var cleanEvents = _targetFeedbackDatabase.GetOriginalEventsCollection().FindAll().ToList();
+            var cleanEvents = _targetFeedbackDatabase.GetEventsCollection().FindAll().ToList();
             Assert.AreEqual(2, cleanEvents.Count);
             CollectionAssert.DoesNotContain(cleanEvents, event1);
         }
@@ -282,7 +282,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup
             _uut.RegisterProcessor<InsertingConsumer>();
             _uut.ProcessFeedback();
 
-            var cleanEvents = _targetFeedbackDatabase.GetOriginalEventsCollection().FindAll().ToList();
+            var cleanEvents = _targetFeedbackDatabase.GetEventsCollection().FindAll().ToList();
             Assert.AreEqual(3, cleanEvents.Count);
         }
 

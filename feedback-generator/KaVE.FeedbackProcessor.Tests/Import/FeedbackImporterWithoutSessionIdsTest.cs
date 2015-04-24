@@ -45,7 +45,7 @@ namespace KaVE.FeedbackProcessor.Tests.Import
 
             WhenImportIsRun();
 
-            var ideEvents = TestFeedbackDatabase.GetOriginalEventsCollection().FindAll().ToList();
+            var ideEvents = TestFeedbackDatabase.GetEventsCollection().FindAll().ToList();
             Assert.AreEqual(1, ideEvents.Count);
             var ideEvent = ideEvents[0];
             var developer = GetSingleDeveloperFromDatabase();

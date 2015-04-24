@@ -39,7 +39,7 @@ namespace KaVE.FeedbackProcessor.Tests
         protected TestIDEEvent GivenEventExists(String sessionId, String value = "", DateTime? triggeredAt = null)
         {
             var testIDEEvent = new TestIDEEvent { IDESessionUUID = sessionId, TestProperty = value, TriggeredAt = triggeredAt};
-            var ideEventCollection = TestFeedbackDatabase.GetOriginalEventsCollection();
+            var ideEventCollection = TestFeedbackDatabase.GetEventsCollection();
             ideEventCollection.Insert(testIDEEvent);
             return testIDEEvent;
         }

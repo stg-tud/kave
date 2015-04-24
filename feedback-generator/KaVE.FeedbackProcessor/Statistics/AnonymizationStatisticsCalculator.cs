@@ -44,7 +44,7 @@ namespace KaVE.FeedbackProcessor.Statistics
 
         private IIDEEventCollection EventsCollection
         {
-            get { return _database.GetOriginalEventsCollection(); }
+            get { return _database.GetEventsCollection(); }
         }
 
         public void LogNumberOfEventsWithoutSessionId()

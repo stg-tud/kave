@@ -43,7 +43,7 @@ namespace KaVE.FeedbackProcessor.Import
 
         public void Import()
         {
-            var eventsCollection = _database.GetOriginalEventsCollection();
+            var eventsCollection = _database.GetEventsCollection();
             var developerCollection = _database.GetDeveloperCollection();
 
             eventsCollection.Clear();

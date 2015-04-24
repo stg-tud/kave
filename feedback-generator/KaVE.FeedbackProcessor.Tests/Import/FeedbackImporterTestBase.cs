@@ -37,7 +37,7 @@ namespace KaVE.FeedbackProcessor.Tests.Import
         public void EnsureCleanDatabase()
         {
             CollectionAssert.IsEmpty(TestFeedbackDatabase.GetDeveloperCollection().FindAll());
-            CollectionAssert.IsEmpty(TestFeedbackDatabase.GetOriginalEventsCollection().FindAll());
+            CollectionAssert.IsEmpty(TestFeedbackDatabase.GetEventsCollection().FindAll());
         }
 
         [TearDown]

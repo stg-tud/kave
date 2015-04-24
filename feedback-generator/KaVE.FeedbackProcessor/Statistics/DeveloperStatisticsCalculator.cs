@@ -37,7 +37,7 @@ namespace KaVE.FeedbackProcessor.Statistics
 
         private IIDEEventCollection EventsCollection
         {
-            get { return _feedbackDatabase.GetOriginalEventsCollection(); }
+            get { return _feedbackDatabase.GetEventsCollection(); }
         }
 
         private IEnumerable<Developer> Developers

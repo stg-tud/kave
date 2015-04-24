@@ -40,7 +40,7 @@ namespace KaVE.FeedbackProcessor.Tests.Import
 
             WhenImportIsRun();
 
-            Assert.AreEqual(1, TestFeedbackDatabase.GetOriginalEventsCollection().FindAll().Count());
+            Assert.AreEqual(1, TestFeedbackDatabase.GetEventsCollection().FindAll().Count());
         }
 
         [Test]

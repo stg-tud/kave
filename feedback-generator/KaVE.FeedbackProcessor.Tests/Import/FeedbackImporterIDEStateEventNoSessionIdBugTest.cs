@@ -56,7 +56,7 @@ namespace KaVE.FeedbackProcessor.Tests.Import
                 TriggeredAt = _brokenShutdownEvent.TriggeredAt,
                 IDELifecyclePhase = _brokenShutdownEvent.IDELifecyclePhase
             };
-            CollectionAssert.Contains(TestFeedbackDatabase.GetOriginalEventsCollection().FindAll(), expected);
+            CollectionAssert.Contains(TestFeedbackDatabase.GetEventsCollection().FindAll(), expected);
         }
 
         [Test,
@@ -75,7 +75,7 @@ namespace KaVE.FeedbackProcessor.Tests.Import
                 TriggeredAt = _brokenShutdownEvent.TriggeredAt,
                 IDELifecyclePhase = _brokenShutdownEvent.IDELifecyclePhase
             };
-            CollectionAssert.Contains(TestFeedbackDatabase.GetOriginalEventsCollection().FindAll(), expected);
+            CollectionAssert.Contains(TestFeedbackDatabase.GetEventsCollection().FindAll(), expected);
         }
 
         [Test]
@@ -96,7 +96,7 @@ namespace KaVE.FeedbackProcessor.Tests.Import
                 IDELifecyclePhase = _brokenShutdownEvent.IDELifecyclePhase
             };
 
-            CollectionAssert.Contains(TestFeedbackDatabase.GetOriginalEventsCollection().FindAll(), expected);
+            CollectionAssert.Contains(TestFeedbackDatabase.GetEventsCollection().FindAll(), expected);
         }
 
         [Test]
@@ -106,7 +106,7 @@ namespace KaVE.FeedbackProcessor.Tests.Import
 
             WhenImportIsRun();
 
-            var singleEvent = TestFeedbackDatabase.GetOriginalEventsCollection().FindAll().First();
+            var singleEvent = TestFeedbackDatabase.GetEventsCollection().FindAll().First();
             Assert.AreEqual("a", singleEvent.IDESessionUUID);
         }
 
@@ -127,7 +127,7 @@ namespace KaVE.FeedbackProcessor.Tests.Import
                 IDELifecyclePhase = _brokenShutdownEvent.IDELifecyclePhase
             };
 
-            CollectionAssert.Contains(TestFeedbackDatabase.GetOriginalEventsCollection().FindAll(), expected);
+            CollectionAssert.Contains(TestFeedbackDatabase.GetEventsCollection().FindAll(), expected);
         }
     }
 }
