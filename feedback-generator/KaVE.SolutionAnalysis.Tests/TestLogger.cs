@@ -22,5 +22,8 @@ using JetBrains.Application;
 namespace KaVE.SolutionAnalysis.Tests
 {
     [ShellComponent]
-    internal class TestLogger : Commons.TestUtils.Utils.Exceptions.TestLogger {}
+    internal class TestLogger : Commons.TestUtils.Utils.Exceptions.TestLogger
+    {
+        public TestLogger() : base(true) {}
+    }
 }

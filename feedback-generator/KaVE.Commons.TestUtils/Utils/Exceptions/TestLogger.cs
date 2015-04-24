@@ -29,19 +29,31 @@ namespace KaVE.Commons.TestUtils.Utils.Exceptions
 
         public event LogInfoHandler InfoLogged = delegate { };
 
+        public delegate void LogErrorHandler(Exception e, string content);
+
+        public event LogErrorHandler ErrorLogged = delegate { };
+
+        public TestLogger(bool failOnError)
+        {
+            if (failOnError)
+            {
+                ErrorLogged += (exception, content) => Assert.Fail("{0}\r\n{1}", content, exception);
+            }
+        }
+
         public void Error(Exception exception, string content, params object[] args)
         {
-            Assert.Fail(string.Format("{0}\r\n{1}", string.Format(content, args), exception));
+            ErrorLogged(exception, string.Format(content, args));
         }
 
         public void Error(Exception exception)
         {
-            Assert.Fail(exception.ToString());
+            Error(exception, "");
         }
 
         public void Error(string content, params object[] args)
         {
-            Assert.Fail(string.Format(content, args));
+            Error(null, content, args);
         }
 
         public void Info(string info, params object[] args)

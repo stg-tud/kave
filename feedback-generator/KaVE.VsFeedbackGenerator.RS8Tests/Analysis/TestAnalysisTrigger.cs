@@ -33,7 +33,6 @@ using KaVE.Commons.Model.SSTs;
 using KaVE.Commons.Utils.Collections;
 using KaVE.Commons.Utils.Exceptions;
 using KaVE.VsFeedbackGenerator.Analysis;
-using Moq;
 
 namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
 {
@@ -69,19 +68,14 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
 
         private ILogger MockLogger()
         {
-            var mockLogger = new Mock<ILogger>();
-            mockLogger.Setup(logger => logger.Error(It.IsAny<Exception>()))
-                      .Callback<Exception>(e => LastException = NewException(e, ""));
-            mockLogger.Setup(logger => logger.Error(It.IsAny<Exception>(), It.IsAny<string>()))
-                      .Callback<Exception, string>((e, msg) => LastException = NewException(e, msg));
-            mockLogger.Setup(logger => logger.Error(It.IsAny<string>()))
-                      .Callback<string>(msg => LastException = NewException(null, msg));
-            return mockLogger.Object;
+            var logger = new Commons.TestUtils.Utils.Exceptions.TestLogger(false);
+            logger.ErrorLogged += RememberError;
+            return logger;
         }
 
-        private static Tuple<Exception, string> NewException(Exception exception, string msg)
+        private void RememberError(Exception exception, string msg)
         {
-            return new Tuple<Exception, string>(exception, msg);
+            LastException = new Tuple<Exception, string>(exception, msg);
         }
     }
 }

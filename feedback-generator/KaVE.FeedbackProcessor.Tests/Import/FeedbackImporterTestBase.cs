@@ -30,7 +30,7 @@ namespace KaVE.FeedbackProcessor.Tests.Import
 {
     internal class FeedbackImporterTestBase : FeedbackDatabaseBasedTest
     {
-        private readonly TestLogger _logger = new TestLogger();
+        private readonly TestLogger _logger = new TestLogger(true);
         private readonly ICollection<FeedbackArchiveBuilder> _inputArchiveBuilders = new List<FeedbackArchiveBuilder>();
 
         [SetUp]

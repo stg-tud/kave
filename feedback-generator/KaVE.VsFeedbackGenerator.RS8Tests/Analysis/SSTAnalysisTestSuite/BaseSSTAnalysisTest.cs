@@ -44,9 +44,9 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
         [SetUp]
         public void RegisterLogger()
         {
-            var loggerMock = new Mock<ILogger>();
-            loggerMock.Setup(l => l.Info(It.IsAny<string>())).Callback<string>(info => Log.Add(info));
-            Registry.RegisterComponent(loggerMock.Object);
+            var logger = new Commons.TestUtils.Utils.Exceptions.TestLogger(false);
+            logger.InfoLogged += Log.Add;
+            Registry.RegisterComponent<ILogger>(logger);
         }
 
         protected SST NewSST()
