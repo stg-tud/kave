@@ -49,12 +49,10 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
             }
             else
             {
-                var lastEventTime = _eventCache.Last().TriggeredAt;
-                var currentEventTime = @event.TriggeredAt;
+                var lastEventTime = GetValidEventTime(_eventCache.Last().TriggeredAt);
+                var currentEventTime = GetValidEventTime(@event.TriggeredAt);
 
-                AssertValidEventTimes(lastEventTime, currentEventTime);
-
-                if (CompareEventTimeDifference(currentEventTime, lastEventTime))
+                if (HaveSimiliarEventTime(currentEventTime, lastEventTime))
                 {
                     _eventCache.Add(@event);
                 }
@@ -64,12 +62,12 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
                     _eventCache.Clear();
                     if (MoreThanOneEventConcurredIn(concurrentEvent))
                     {
-                        return AnswerInsert(concurrentEvent);
+                        return AnswerReplace(concurrentEvent);
                     }
                 }
             }
 
-            return AnswerKeep();
+            return AnswerDrop();
         }
 
         private static bool MoreThanOneEventConcurredIn(ConcurrentEvent concurrentEvent)
@@ -77,17 +75,18 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
             return concurrentEvent.ConcurrentEventList.Count > 1;
         }
 
-        private static void AssertValidEventTimes(DateTime? lastEventTime, DateTime? currentEventTime)
+        private static DateTime GetValidEventTime(DateTime? eventTime)
         {
-            if (!lastEventTime.HasValue || !currentEventTime.HasValue)
+            if (!eventTime.HasValue)
             {
                 Asserts.Fail("Events should have a DateTime value in TriggeredAt");
             }
+            return eventTime.Value;
         }
 
-        private static bool CompareEventTimeDifference(DateTime? currentEventTime, DateTime? lastEventTime)
+        private static bool HaveSimiliarEventTime(DateTime currentEventTime, DateTime lastEventTime)
         {
-            var timeDifference = Math.Abs(currentEventTime.Value.Ticks - lastEventTime.Value.Ticks);
+            var timeDifference = Math.Abs(currentEventTime.Ticks - lastEventTime.Ticks);
             return timeDifference <= EventTimeDifference.Ticks;
         }
 

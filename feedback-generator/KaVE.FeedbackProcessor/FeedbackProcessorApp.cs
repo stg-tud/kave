@@ -23,6 +23,7 @@ using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Exceptions;
 using KaVE.FeedbackProcessor.Activities;
 using KaVE.FeedbackProcessor.Cleanup;
+using KaVE.FeedbackProcessor.Cleanup.Processors;
 using KaVE.FeedbackProcessor.Database;
 using KaVE.FeedbackProcessor.Import;
 using KaVE.FeedbackProcessor.Properties;
@@ -39,6 +40,7 @@ namespace KaVE.FeedbackProcessor
             const string importDatabase = "";
             const string cleanDatabase = "_clean";
             const string activityDatabase = "activities";
+            const string concurrentEventDatabase = "concurrent";
 
             //ImportFeedback(OpenDatabase(importDatabase));
 
@@ -51,6 +53,7 @@ namespace KaVE.FeedbackProcessor
             //CleanFeedback(OpenDatabase(importDatabase), OpenDatabase(cleanDatabase));
 
             //MapToActivities(OpenDatabase(importDatabase), OpenDatabase(activityDatabase));
+            FilterConcurrentEvents(OpenDatabase(cleanDatabase), OpenDatabase(concurrentEventDatabase));
         }
 
         private static MongoDbFeedbackDatabase OpenDatabase(string databaseSuffix)
@@ -149,7 +152,7 @@ namespace KaVE.FeedbackProcessor
         private static void CleanFeedback(IFeedbackDatabase sourceDatabase, IFeedbackDatabase targetDatabase)
         {
             var cleaner = new EventsMapper(sourceDatabase, targetDatabase);
-            // add cleanup processors here
+            cleaner.RegisterProcessor<AddFileProcessor>();
             cleaner.ProcessFeedback();
         }
 
@@ -164,6 +167,13 @@ namespace KaVE.FeedbackProcessor
             activityMapper.RegisterProcessor<DebuggerEventActivityProcessor>();
 
             activityMapper.ProcessFeedback();
+        }
+        
+        private static void FilterConcurrentEvents(IFeedbackDatabase sourceDatabase, IFeedbackDatabase targetDatabase)
+        {
+            var filter = new FeedbackCleaner(sourceDatabase, targetDatabase);
+            filter.RegisterProcessor<ConcurrentEventProcessor>();
+            filter.ProcessFeedback();
         }
     }
 }

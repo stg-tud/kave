@@ -67,7 +67,7 @@ namespace KaVE.FeedbackProcessor.Database
             return _database.GetCollection<T>(collectionName);
         }
 
-        private static void RegisterModel()
+        public static void RegisterModel()
         {
             BsonSerializer.RegisterSerializer(typeof (DateTime), new DateTimeTicksSerializer());
             BsonSerializer.RegisterGenericSerializerDefinition(typeof (IKaVESet<>), typeof (KaVECollectionSerializer<>));

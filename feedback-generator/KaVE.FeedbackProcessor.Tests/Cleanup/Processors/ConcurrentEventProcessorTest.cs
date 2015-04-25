@@ -47,7 +47,6 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
             var concurrentEventList = GenerateEvents(ConcurrentEventProcessor.EventTimeDifference.Ticks);
 
             var expectedEventSet = Sets.NewHashSet(
-                concurrentEventList.Last(),
                 new ConcurrentEvent
                 {
                     ConcurrentEventList = concurrentEventList.GetRange(0,concurrentEventList.Count-1),
@@ -63,11 +62,11 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
         }
 
         [Test]
-        public void IgnoresNotConcurrentEvents()
+        public void DropsAllEventsExceptConcurrentEvents()
         {
             var eventList = GenerateEvents(ConcurrentEventProcessor.EventTimeDifference.Ticks + 1);
 
-            eventList.ForEach(ideEvent => CollectionAssert.AreEquivalent(Sets.NewHashSet(ideEvent),_uut.Process(ideEvent)));
+            eventList.ForEach(ideEvent => CollectionAssert.AreEquivalent(new KaVEHashSet<IDEEvent>(),_uut.Process(ideEvent)));
         }
 
         private static List<IDEEvent> GenerateEvents(long eventTimeDifferenceInTicks)
