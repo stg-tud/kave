@@ -75,6 +75,7 @@
     <Compile Include="Cleanup\Processors\CloseEventProcessorTest.cs" />
     <Compile Include="Cleanup\Processors\IDECloseEventFixingProcessorTest.cs" />
     <Compile Include="Cleanup\Processors\ConcurrentEventProcessorTest.cs" />
+    <Compile Include="Cleanup\Processors\EquivalentCommandProcessorTest.cs" />
     <Compile Include="Database\TestDeveloperCollection.cs" />
     <Compile Include="Database\TestFeedbackDatabase.cs" />
     <Compile Include="Database\TestIDEEventCollection.cs" />

@@ -78,9 +78,8 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
         private static DateTime GetValidEventTime(DateTime? eventTime)
         {
             if (!eventTime.HasValue)
-            {
                 Asserts.Fail("Events should have a DateTime value in TriggeredAt");
-            }
+            
             return eventTime.Value;
         }
 

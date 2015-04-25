@@ -41,6 +41,7 @@ namespace KaVE.FeedbackProcessor
             const string cleanDatabase = "_clean";
             const string activityDatabase = "activities";
             const string concurrentEventDatabase = "concurrent";
+            const string equivalentCommandsDatabase = "equivalentCommands";
 
             //ImportFeedback(OpenDatabase(importDatabase));
 
@@ -54,6 +55,8 @@ namespace KaVE.FeedbackProcessor
 
             //MapToActivities(OpenDatabase(importDatabase), OpenDatabase(activityDatabase));
             FilterConcurrentEvents(OpenDatabase(cleanDatabase), OpenDatabase(concurrentEventDatabase));
+
+            FilterEquivalentCommandEvents(OpenDatabase(concurrentEventDatabase),OpenDatabase(equivalentCommandsDatabase));
         }
 
         private static MongoDbFeedbackDatabase OpenDatabase(string databaseSuffix)
@@ -174,6 +177,13 @@ namespace KaVE.FeedbackProcessor
             var filter = new FeedbackCleaner(sourceDatabase, targetDatabase);
             filter.RegisterProcessor<ConcurrentEventProcessor>();
             filter.ProcessFeedback();
+        }
+
+        private static void FilterEquivalentCommandEvents(IFeedbackDatabase sourceDatabase, IFeedbackDatabase targetDatabase)
+        {
+            var filter = new FeedbackCleaner(sourceDatabase, targetDatabase);
+            filter.RegisterProcessor<EquivalentCommandProcessor>();
+            filter.ProcessFeedback();            
         }
     }
 }

@@ -23,6 +23,7 @@ using System.Collections.Generic;
 using System.Linq;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.TestUtils.Model.Events;
+using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Collections;
 using KaVE.FeedbackProcessor.Cleanup.Processors;
 using KaVE.FeedbackProcessor.Model;
@@ -67,6 +68,15 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
             var eventList = GenerateEvents(ConcurrentEventProcessor.EventTimeDifference.Ticks + 1);
 
             eventList.ForEach(ideEvent => CollectionAssert.AreEquivalent(new KaVEHashSet<IDEEvent>(),_uut.Process(ideEvent)));
+        }
+
+        [Test, ExpectedException(typeof(AssertException), ExpectedMessage = "Events should have a DateTime value in TriggeredAt")]
+        public void ThrowExceptionWhenEventHasInvalidDateTime()
+        {
+            var eventList = GenerateEvents(0);
+            eventList.First().TriggeredAt = null;
+
+            eventList.ForEach(ideEvent => _uut.Process(ideEvent));
         }
 
         private static List<IDEEvent> GenerateEvents(long eventTimeDifferenceInTicks)
