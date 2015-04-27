@@ -19,10 +19,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Utils.Assertion;
-using KaVE.Commons.Utils.Collections;
-using KaVE.FeedbackProcessor.Cleanup;
 using KaVE.FeedbackProcessor.Model;
 
 namespace KaVE.FeedbackProcessor.Statistics
@@ -33,19 +32,15 @@ namespace KaVE.FeedbackProcessor.Statistics
 
         public Developer Developer
         {
-            set
-            {
-                
-            }
+            set { }
         }
 
-        public IKaVESet<IDEEvent> Process(IDEEvent @event)
+        public void Process(IDEEvent @event)
         {
             Asserts.That(@event.TriggeredAt.HasValue, "event without trigger time cannot be assigned to date");
             var day = @event.TriggeredAt.Value.Date;
             var developerDay = FindOrCreateDeveloperDay(day);
             developerDay.NumberOfEvents++;
-            return null;
         }
 
         private DeveloperDay FindOrCreateDeveloperDay(DateTime day)
