@@ -35,10 +35,13 @@ namespace KaVE.FeedbackProcessor.Statistics
 
         private IDictionary<DateTime, DeveloperDay> _currentDeveloperDays;
 
-        public void NewDeveloper(Developer developer)
+        public Developer Developer
         {
-            _developerDays[developer] = new Dictionary<DateTime, DeveloperDay>();
-            _currentDeveloperDays = _developerDays[developer];
+            set
+            {
+                _developerDays[value] = new Dictionary<DateTime, DeveloperDay>();
+                _currentDeveloperDays = _developerDays[value];
+            }
         }
 
         public IKaVESet<IDEEvent> Process(IDEEvent @event)

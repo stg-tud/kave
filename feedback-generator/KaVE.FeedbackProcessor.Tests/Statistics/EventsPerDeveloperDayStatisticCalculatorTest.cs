@@ -18,7 +18,6 @@
  */
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using KaVE.Commons.TestUtils.Model.Events;
 using KaVE.FeedbackProcessor.Model;
@@ -37,7 +36,7 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
             var uut = new EventsPerDeveloperDayStatisticCalculator();
 
             var someDeveloper = SomeDeveloper();
-            uut.NewDeveloper(someDeveloper);
+            uut.Developer = someDeveloper;
             uut.Process(new TestIDEEvent {TriggeredAt = new DateTime(2015, 4, 28, 10, 52, 13)});
             uut.Process(new TestIDEEvent {TriggeredAt = new DateTime(2015, 4, 28, 16, 06, 00)});
             uut.Process(new TestIDEEvent {TriggeredAt = new DateTime(2015, 4, 28, 23, 59, 59)});
@@ -54,7 +53,7 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
             var uut = new EventsPerDeveloperDayStatisticCalculator();
 
             var someDeveloper = SomeDeveloper();
-            uut.NewDeveloper(someDeveloper);
+            uut.Developer = someDeveloper;
             uut.Process(new TestIDEEvent {TriggeredAt = new DateTime(2015, 4, 28, 10, 52, 13)});
             uut.Process(new TestIDEEvent {TriggeredAt = new DateTime(2015, 4, 29, 16, 06, 00)});
             uut.Process(new TestIDEEvent {TriggeredAt = new DateTime(2015, 4, 30, 23, 59, 59)});
@@ -70,12 +69,12 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
             var uut = new EventsPerDeveloperDayStatisticCalculator();
 
             var developer1 = SomeDeveloper();
-            uut.NewDeveloper(developer1);
+            uut.Developer = developer1;
             uut.Process(new TestIDEEvent {TriggeredAt = new DateTime(2015, 4, 28, 10, 52, 13)});
             uut.Process(new TestIDEEvent {TriggeredAt = new DateTime(2015, 4, 29, 16, 06, 00)});
 
             var developer2 = SomeDeveloper();
-            uut.NewDeveloper(developer2);
+            uut.Developer = developer2;
             uut.Process(new TestIDEEvent {TriggeredAt = new DateTime(2015, 4, 30, 23, 59, 59)});
 
             var statistic = uut.GetStatistic();

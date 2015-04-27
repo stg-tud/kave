@@ -19,12 +19,15 @@
 
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Utils.Collections;
+using KaVE.FeedbackProcessor.Model;
 using KaVE.JetBrains.Annotations;
 
 namespace KaVE.FeedbackProcessor.Cleanup
 {
     public interface IIDEEventProcessor
     {
+        Developer Developer { set; }
+
         /// <summary>
         /// Returns the argument event, if this processor doesn't care about the event.
         /// Returns null, if the argument event is consumed by this processor.

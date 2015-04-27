@@ -23,6 +23,7 @@ using System.Linq;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Collections;
+using KaVE.FeedbackProcessor.Model;
 using KaVE.JetBrains.Annotations;
 
 namespace KaVE.FeedbackProcessor.Cleanup.Processors
@@ -47,6 +48,11 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
         {
             var et = typeof (TEvent);
             return _processors.Any(e => e.Key.IsAssignableFrom(et) || et.IsAssignableFrom(e.Key));
+        }
+
+        public virtual Developer Developer
+        {
+            set { }
         }
 
         public IKaVESet<IDEEvent> Process(IDEEvent @event)

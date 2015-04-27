@@ -98,7 +98,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup
             _uut.ProcessFeedback();
 
             var developers = _targetFeedbackDatabase.GetDeveloperCollection().FindAll();
-            CollectionAssert.AreEquivalent(new[]{developer1, developer2}, developers);
+            CollectionAssert.AreEquivalent(new[] {developer1, developer2}, developers);
         }
 
         [Test]
@@ -111,6 +111,18 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup
 
             var developers = _targetFeedbackDatabase.GetDeveloperCollection().FindAll();
             Assert.That(developers.Any(dev => dev.Id.Equals(originalId)));
+        }
+
+        [Test]
+        public void PassesDevelopersToProcessors()
+        {
+            var developer = GivenDeveloperExists("session");
+
+            _uut.RegisterProcessor<InactiveProcessor>();
+            _uut.ProcessFeedback();
+
+            var processor = TestProcessor.Instances[0];
+            Assert.AreEqual(new[] {developer}, processor.ProcessedDevelopers);
         }
 
         [Test]
@@ -237,7 +249,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup
             _uut.ProcessFeedback();
 
             var cleanEvents = _targetFeedbackDatabase.GetEventsCollection().FindAll().ToList();
-            Assert.AreEqual(2,cleanEvents.Count);
+            Assert.AreEqual(2, cleanEvents.Count);
         }
 
         [Test]
@@ -252,8 +264,8 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup
             _uut.ProcessFeedback();
 
             var cleanEvents = _targetFeedbackDatabase.GetEventsCollection().FindAll().ToList();
-            Assert.AreEqual(1,cleanEvents.Count);
-            CollectionAssert.DoesNotContain(cleanEvents,event1);
+            Assert.AreEqual(1, cleanEvents.Count);
+            CollectionAssert.DoesNotContain(cleanEvents, event1);
         }
 
         [Test]
@@ -291,11 +303,17 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup
         {
             public static readonly IList<TestProcessor> Instances = new List<TestProcessor>();
             public readonly ICollection<IDEEvent> ProcessedEvents = new List<IDEEvent>();
+            public readonly ICollection<Developer> ProcessedDevelopers = new List<Developer>();
 
             protected TestProcessor()
             {
                 Instances.Add(this);
                 RegisterFor<IDEEvent>(ProcessAnyEvent);
+            }
+
+            public override Developer Developer
+            {
+                set { ProcessedDevelopers.Add(value); }
             }
 
             public virtual IKaVESet<IDEEvent> ProcessAnyEvent(IDEEvent @event)

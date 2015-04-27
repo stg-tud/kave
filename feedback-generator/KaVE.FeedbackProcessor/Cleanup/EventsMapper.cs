@@ -56,13 +56,22 @@ namespace KaVE.FeedbackProcessor.Cleanup
             foreach (var developer in developers)
             {
                 _targetDatabase.GetDeveloperCollection().Insert(developer);
-                ProcessEventStreamOf(developer);
+                var processors = CreateProcessors();
+                SetDeveloper(developer, processors);
+                ProcessEventStreamOf(developer, processors);
             }
         }
 
-        private void ProcessEventStreamOf(Developer developer)
+        private static void SetDeveloper(Developer developer, IEnumerable<IIDEEventProcessor> processors)
         {
-            var processors = CreateProcessors();
+            foreach (var processor in processors)
+            {
+                processor.Developer = developer;
+            }
+        }
+
+        private void ProcessEventStreamOf(Developer developer, List<IIDEEventProcessor> processors)
+        {
             foreach (var ideEvent in GetAllEventsOf(developer))
             {
                 ProcessEvent(ideEvent, processors);
