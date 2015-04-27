@@ -27,5 +27,7 @@ namespace KaVE.FeedbackProcessor.Statistics
         Developer Developer { set; }
 
         void Process(IDEEvent @event);
+
+        void OnStreamEnds();
     }
 }

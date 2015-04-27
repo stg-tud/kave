@@ -43,6 +43,8 @@ namespace KaVE.FeedbackProcessor.Statistics
             developerDay.NumberOfEvents++;
         }
 
+        public void OnStreamEnds() {}
+
         private DeveloperDay FindOrCreateDeveloperDay(DateTime day)
         {
             DeveloperDay developerDay;

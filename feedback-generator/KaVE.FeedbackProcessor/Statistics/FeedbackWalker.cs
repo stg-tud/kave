@@ -14,7 +14,7 @@
  * limitations under the License.
  * 
  * Contributors:
- *    - 
+ *    - Sven Amann
  */
 
 using System;
@@ -61,6 +61,10 @@ namespace KaVE.FeedbackProcessor.Statistics
             foreach (var ideEvent in GetAllEventsOf(developer))
             {
                 ProcessEvent(ideEvent, processors);
+            }
+            foreach (var processor in processors)
+            {
+                processor.OnStreamEnds();
             }
         }
 

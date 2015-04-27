@@ -117,10 +117,25 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
             CollectionAssert.AreEqual(new[] {event1, event2}, testProcessor.ProcessedEvents);
         }
 
+        [Test]
+        public void InformsProcessorsWhenStreamEnds()
+        {
+            GivenDeveloperExists("sessionX");
+            GivenEventExists("sessionX", "A");
+            GivenEventExists("sessionX", "B");
+
+            _uut.RegisterProcessor<TestProcessor>();
+            _uut.ProcessFeedback();
+
+            var processor = TestProcessor.Instances[0];
+            Assert.IsTrue(processor.IsFinilized);
+        }
+
         private class TestProcessor : IIDEEventProcessor
         {
             public  static readonly IList<TestProcessor> Instances = new List<TestProcessor>();
             public readonly IList<IDEEvent> ProcessedEvents = new List<IDEEvent>();
+            public bool IsFinilized;
 
             public TestProcessor()
             {
@@ -128,9 +143,15 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
             }
 
             public Developer Developer { set; get; }
+
             public void Process(IDEEvent @event)
             {
                 ProcessedEvents.Add(@event);
+            }
+
+            public void OnStreamEnds()
+            {
+                IsFinilized = true;
             }
         }
     }
