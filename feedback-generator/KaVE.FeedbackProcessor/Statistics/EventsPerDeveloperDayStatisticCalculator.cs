@@ -19,7 +19,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Collections;
@@ -30,17 +29,13 @@ namespace KaVE.FeedbackProcessor.Statistics
 {
     internal class EventsPerDeveloperDayStatisticCalculator : IIDEEventProcessor
     {
-        private readonly IDictionary<Developer, IDictionary<DateTime, DeveloperDay>> _developerDays = new Dictionary
-            <Developer, IDictionary<DateTime, DeveloperDay>>();
-
-        private IDictionary<DateTime, DeveloperDay> _currentDeveloperDays;
+        private readonly IDictionary<DateTime, DeveloperDay> _developerDays = new Dictionary<DateTime, DeveloperDay>();
 
         public Developer Developer
         {
             set
             {
-                _developerDays[value] = new Dictionary<DateTime, DeveloperDay>();
-                _currentDeveloperDays = _developerDays[value];
+                
             }
         }
 
@@ -56,22 +51,17 @@ namespace KaVE.FeedbackProcessor.Statistics
         private DeveloperDay FindOrCreateDeveloperDay(DateTime day)
         {
             DeveloperDay developerDay;
-            if (!_currentDeveloperDays.TryGetValue(day, out developerDay))
+            if (!_developerDays.TryGetValue(day, out developerDay))
             {
                 developerDay = new DeveloperDay {Date = day};
-                _currentDeveloperDays.Add(day, developerDay);
+                _developerDays.Add(day, developerDay);
             }
             return developerDay;
         }
 
-        public IDictionary<Developer, IList<DeveloperDay>> GetStatistic()
+        public IList<DeveloperDay> GetStatistic()
         {
-            return
-                _developerDays
-                    .ToDictionary
-                    <KeyValuePair<Developer, IDictionary<DateTime, DeveloperDay>>, Developer, IList<DeveloperDay>>(
-                        developerDays => developerDays.Key,
-                        developerDays => developerDays.Value.Values.ToList());
+            return _developerDays.Values.ToList();
         }
 
         public class DeveloperDay

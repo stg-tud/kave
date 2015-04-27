@@ -42,8 +42,7 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
             uut.Process(new TestIDEEvent {TriggeredAt = new DateTime(2015, 4, 28, 23, 59, 59)});
 
             var statistic = uut.GetStatistic();
-            var developerDays = statistic[someDeveloper];
-            var developerDay = developerDays.First();
+            var developerDay = statistic.First();
             Assert.AreEqual(3, developerDay.NumberOfEvents);
         }
 
@@ -59,30 +58,7 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
             uut.Process(new TestIDEEvent {TriggeredAt = new DateTime(2015, 4, 30, 23, 59, 59)});
 
             var statistic = uut.GetStatistic();
-            var developerDays = statistic[someDeveloper];
-            Assert.AreEqual(3, developerDays.Count);
-        }
-
-        [Test]
-        public void CountsEventsPerDeveloper()
-        {
-            var uut = new EventsPerDeveloperDayStatisticCalculator();
-
-            var developer1 = SomeDeveloper();
-            uut.Developer = developer1;
-            uut.Process(new TestIDEEvent {TriggeredAt = new DateTime(2015, 4, 28, 10, 52, 13)});
-            uut.Process(new TestIDEEvent {TriggeredAt = new DateTime(2015, 4, 29, 16, 06, 00)});
-
-            var developer2 = SomeDeveloper();
-            uut.Developer = developer2;
-            uut.Process(new TestIDEEvent {TriggeredAt = new DateTime(2015, 4, 30, 23, 59, 59)});
-
-            var statistic = uut.GetStatistic();
-            Assert.AreEqual(2, statistic.Count);
-            var developer1Days = statistic[developer1];
-            Assert.AreEqual(2, developer1Days.Count);
-            var developer2Days = statistic[developer2];
-            Assert.AreEqual(1, developer2Days.Count);
+            Assert.AreEqual(3, statistic.Count);
         }
 
         private static int _developerId = 1;
