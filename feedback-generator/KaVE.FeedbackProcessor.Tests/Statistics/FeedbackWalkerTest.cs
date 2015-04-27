@@ -20,6 +20,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using KaVE.Commons.Model.Events;
+using KaVE.Commons.Utils.Exceptions;
 using KaVE.FeedbackProcessor.Model;
 using KaVE.FeedbackProcessor.Statistics;
 using NUnit.Framework;
@@ -34,7 +35,7 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
         [SetUp]
         public void SetUp()
         {
-            _uut = new FeedbackWalker(TestFeedbackDatabase);
+            _uut = new FeedbackWalker(TestFeedbackDatabase, new NullLogger());
         }
 
         [TearDown]
