@@ -80,7 +80,7 @@ namespace KaVE.FeedbackProcessor
 
         private static void CleanFeedback(IFeedbackDatabase sourceDatabase, IFeedbackDatabase targetDatabase)
         {
-            var cleaner = new FeedbackCleaner(sourceDatabase, targetDatabase);
+            var cleaner = new EventsMapper(sourceDatabase, targetDatabase);
             cleaner.ProcessFeedback();
         }
     }

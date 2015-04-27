@@ -34,16 +34,16 @@ using NUnit.Framework;
 namespace KaVE.FeedbackProcessor.Tests.Cleanup
 {
     [TestFixture]
-    internal class FeedbackCleanerTest : FeedbackDatabaseBasedTest
+    internal class EventsMapperTest : FeedbackDatabaseBasedTest
     {
-        private FeedbackCleaner _uut;
+        private EventsMapper _uut;
         private IFeedbackDatabase _targetFeedbackDatabase;
 
         [SetUp]
         public void SetUp()
         {
             _targetFeedbackDatabase = new TestFeedbackDatabase();
-            _uut = new FeedbackCleaner(TestFeedbackDatabase, _targetFeedbackDatabase);
+            _uut = new EventsMapper(TestFeedbackDatabase, _targetFeedbackDatabase);
         }
 
         [TearDown]

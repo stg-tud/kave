@@ -52,7 +52,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Cleanup\FeedbackCleanerTest.cs" />
+    <Compile Include="Cleanup\EventsMapperTest.cs" />
     <Compile Include="Cleanup\Heuristics\TestVsProductionClassHeuristicTest.cs" />
     <Compile Include="Cleanup\Processors\AddFileProcessorTest.cs" />
     <Compile Include="Cleanup\Processors\CloseEventProcessorTest.cs" />

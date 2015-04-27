@@ -29,13 +29,13 @@ using KaVE.FeedbackProcessor.Model;
 
 namespace KaVE.FeedbackProcessor.Cleanup
 {
-    internal class FeedbackCleaner
+    internal class EventsMapper
     {
         private readonly IFeedbackDatabase _sourceDatabase;
         private readonly IFeedbackDatabase _targetDatabase;
         private readonly ICollection<Type> _processors;
 
-        public FeedbackCleaner(IFeedbackDatabase sourceDatabase, IFeedbackDatabase targetDatabase)
+        public EventsMapper(IFeedbackDatabase sourceDatabase, IFeedbackDatabase targetDatabase)
         {
             _sourceDatabase = sourceDatabase;
             _targetDatabase = targetDatabase;
@@ -82,27 +82,27 @@ namespace KaVE.FeedbackProcessor.Cleanup
 
         private void ProcessEvent(IDEEvent originalEvent, IEnumerable<IIDEEventProcessor> processors)
         {
-            ISet<IDEEvent> resultingEventSet = new KaVEHashSet<IDEEvent>();
-            var DropOriginalEvent = false;
+            var resultingEventSet = new KaVEHashSet<IDEEvent>();
+            var dropOriginalEvent = false;
 
             foreach (var intermediateEventSet in processors.Select(processor => processor.Process(originalEvent)))
             {
-                if (IsDropOriginalEventSignal(intermediateEventSet,originalEvent))
+                if (IsDropOriginalEventSignal(intermediateEventSet, originalEvent))
                 {
-                    DropOriginalEvent = true;
+                    dropOriginalEvent = true;
                 }
                 resultingEventSet.UnionWith(intermediateEventSet);
             }
 
-            if (DropOriginalEvent)
+            if (dropOriginalEvent)
             {
                 resultingEventSet.Remove(originalEvent);
             }
-            
-            InsertEventsToCleanEventCollection(resultingEventSet);
+
+            InsertEventsToTargetEventCollection(resultingEventSet);
         }
 
-        private void InsertEventsToCleanEventCollection(ISet<IDEEvent> resultingEventSet)
+        private void InsertEventsToTargetEventCollection(IEnumerable<IDEEvent> resultingEventSet)
         {
             foreach (var ideEvent in resultingEventSet)
             {
@@ -110,10 +110,9 @@ namespace KaVE.FeedbackProcessor.Cleanup
             }
         }
 
-        private static bool IsDropOriginalEventSignal(ISet<IDEEvent> eventSet, IDEEvent originalEvent)
+        private static bool IsDropOriginalEventSignal(ICollection<IDEEvent> eventSet, IDEEvent originalEvent)
         {
             return !eventSet.Contains(originalEvent);
         }
-
     }
 }
