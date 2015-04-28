@@ -86,5 +86,14 @@ namespace KaVE.FeedbackProcessor.Properties {
                 return ResourceManager.GetString("ImportDirectory", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to C:\Users\Sven\Documents\KaVE\.
+        /// </summary>
+        internal static string StatisticsOutputPath {
+            get {
+                return ResourceManager.GetString("StatisticsOutputPath", resourceCulture);
+            }
+        }
     }
 }

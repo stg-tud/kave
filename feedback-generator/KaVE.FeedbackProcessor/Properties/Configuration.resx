@@ -126,4 +126,7 @@
   <data name="ImportDirectory" xml:space="preserve">
     <value>C:\Users\Sven\Documents\KaVE\Feedback\DATEV 2015-04-10</value>
   </data>
+  <data name="StatisticsOutputPath" xml:space="preserve">
+    <value>C:\Users\Sven\Documents\KaVE\</value>
+  </data>
 </root>

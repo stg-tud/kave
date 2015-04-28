@@ -17,6 +17,8 @@
  *    - Sven Amann
  */
 
+using System.IO;
+using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Exceptions;
 using KaVE.FeedbackProcessor.Cleanup;
 using KaVE.FeedbackProcessor.Database;
@@ -32,22 +34,23 @@ namespace KaVE.FeedbackProcessor
 
         public static void Main()
         {
-            const string importDatabase = "import";
-            const string cleanDatabase = "clean";
+            const string importDatabase = "";
+            const string cleanDatabase = "_clean";
 
-            ImportFeedback(OpenDatabase(importDatabase));
+            //ImportFeedback(OpenDatabase(importDatabase));
 
-            LogDeveloperStatistics(OpenDatabase(importDatabase));
-            LogAnonymizationStatistics(OpenDatabase(importDatabase));
+            //LogDeveloperStatistics(OpenDatabase(importDatabase));
+            //LogAnonymizationStatistics(OpenDatabase(importDatabase));
+            ComputeEventsPerDeveloperDayStatistic(OpenDatabase(importDatabase));
 
-            CleanFeedback(OpenDatabase(importDatabase), OpenDatabase(cleanDatabase));
+            //CleanFeedback(OpenDatabase(importDatabase), OpenDatabase(cleanDatabase));
         }
 
         private static MongoDbFeedbackDatabase OpenDatabase(string databaseSuffix)
         {
             return new MongoDbFeedbackDatabase(
                 Configuration.DatabaseUrl,
-                string.Format("{0}_{1}", Configuration.DatasetName, databaseSuffix));
+                string.Format("{0}{1}", Configuration.DatasetName, databaseSuffix));
         }
 
         private static void ImportFeedback(IFeedbackDatabase importDatabase)
@@ -76,6 +79,27 @@ namespace KaVE.FeedbackProcessor
             {
                 Logger.Error("We have {0} session(s) assigned to more than one developer!", conflicts);
             }
+        }
+
+        private static void ComputeEventsPerDeveloperDayStatistic(IFeedbackDatabase database)
+        {
+            var walker = new FeedbackWalker(database, Logger);
+            var calculator = new EventsPerDeveloperDayStatisticCalculator();
+            walker.Register(calculator);
+            walker.ProcessFeedback();
+
+            var statistic = calculator.Statistic;
+            var csvBuilder = new CsvBuilder();
+            foreach (var stat in statistic)
+            {
+                csvBuilder.StartRow();
+                csvBuilder["Developer"] = stat.Key.Id;
+                foreach (var day in stat.Value)
+                {
+                    csvBuilder[day.Date.ToString("MM/dd/yyyy")] = day.NumberOfEvents;
+                }
+            }
+            File.WriteAllText(Path.Combine(Configuration.StatisticsOutputPath, "developerdaystats.csv"), csvBuilder.Build());
         }
 
         private static void CleanFeedback(IFeedbackDatabase sourceDatabase, IFeedbackDatabase targetDatabase)
