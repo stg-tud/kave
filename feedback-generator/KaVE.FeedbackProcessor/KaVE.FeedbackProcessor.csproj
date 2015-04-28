@@ -94,6 +94,9 @@
       <Link>KaVE.licenseheader</Link>
     </None>
     <None Include="packages.config" />
+    <None Include="Resources\DATEV-2015-04-10\commandids.log" />
+    <None Include="Resources\DATEV-2015-04-10\documentnames.log" />
+    <None Include="Resources\DATEV-2015-04-10\windownames.log" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\KaVE.Commons\KaVE.Commons.csproj">

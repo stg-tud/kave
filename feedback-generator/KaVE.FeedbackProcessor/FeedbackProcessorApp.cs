@@ -18,6 +18,7 @@
  */
 
 using System.IO;
+using System.Linq;
 using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Exceptions;
 using KaVE.FeedbackProcessor.Cleanup;
@@ -41,7 +42,8 @@ namespace KaVE.FeedbackProcessor
 
             //LogDeveloperStatistics(OpenDatabase(importDatabase));
             //LogAnonymizationStatistics(OpenDatabase(importDatabase));
-            ComputeEventsPerDeveloperDayStatistic(OpenDatabase(importDatabase));
+            //ComputeEventsPerDeveloperDayStatistic(OpenDatabase(importDatabase));
+            CollectNames(OpenDatabase(importDatabase));
 
             //CleanFeedback(OpenDatabase(importDatabase), OpenDatabase(cleanDatabase));
         }
@@ -99,7 +101,32 @@ namespace KaVE.FeedbackProcessor
                     csvBuilder[day.Date.ToString("MM/dd/yyyy")] = day.NumberOfEvents;
                 }
             }
-            File.WriteAllText(Path.Combine(Configuration.StatisticsOutputPath, "developerdaystats.csv"), csvBuilder.Build());
+            File.WriteAllText(
+                Path.Combine(Configuration.StatisticsOutputPath, "developerdaystats.csv"),
+                csvBuilder.Build());
+        }
+
+        private static void CollectNames(IFeedbackDatabase database)
+        {
+            var walker = new FeedbackWalker(database, Logger);
+            var windowNameCollector = new WindowNameCollector();
+            walker.Register(windowNameCollector);
+            var documentNameCollector = new DocumentNameCollector();
+            walker.Register(documentNameCollector);
+            var commandIdCollector = new CommandIdCollector();
+            walker.Register(commandIdCollector);
+
+            walker.ProcessFeedback();
+
+            File.WriteAllLines(
+                Path.Combine(Configuration.StatisticsOutputPath, "windownames.log"),
+                windowNameCollector.AllWindowNames.Select(wn => wn.Identifier));
+            File.WriteAllLines(
+                Path.Combine(Configuration.StatisticsOutputPath, "documentnames.log"),
+                documentNameCollector.AllDocumentNames.Select(dn => dn.Identifier));
+            File.WriteAllLines(
+                Path.Combine(Configuration.StatisticsOutputPath, "commandids.log"),
+                commandIdCollector.AllCommandIds);
         }
 
         private static void CleanFeedback(IFeedbackDatabase sourceDatabase, IFeedbackDatabase targetDatabase)
