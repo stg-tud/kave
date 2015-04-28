@@ -24,7 +24,6 @@ using KaVE.Commons.Model.Events;
 using KaVE.Commons.Utils.Exceptions;
 using KaVE.FeedbackProcessor.Database;
 using KaVE.FeedbackProcessor.Model;
-using MongoDB.Driver.Linq;
 
 namespace KaVE.FeedbackProcessor.Statistics
 {
@@ -32,18 +31,18 @@ namespace KaVE.FeedbackProcessor.Statistics
     {
         private readonly IFeedbackDatabase _sourceDatabase;
         private readonly ILogger _logger;
-        private readonly ICollection<Type> _processors;
+        private readonly ICollection<IEventProcessor> _processors;
 
         public FeedbackWalker(IFeedbackDatabase sourceDatabase, ILogger logger)
         {
             _sourceDatabase = sourceDatabase;
             _logger = logger;
-            _processors = new List<Type>();
+            _processors = new List<IEventProcessor>();
         }
 
-        public void RegisterProcessor<TP>() where TP : IIDEEventProcessor, new()
+        public void Register(IEventProcessor processor)
         {
-            _processors.Add(typeof (TP));
+            _processors.Add(processor);
         }
 
         public void ProcessFeedback()
@@ -58,28 +57,21 @@ namespace KaVE.FeedbackProcessor.Statistics
         private void ProcessDeveloper(Developer developer)
         {
             _logger.Info("Processing developer {0}", developer.Id);
-            _logger.Info("- Creating processors...");
-            var processors = CreateProcessors();
             _logger.Info("- Initializing Processors...");
-            foreach (var processor in processors)
+            foreach (var processor in _processors)
             {
                 processor.Developer = developer;
             }
             _logger.Info("- Processing event stream...");
             foreach (var ideEvent in GetAllEventsOf(developer))
             {
-                ProcessEvent(ideEvent, processors);
+                ProcessEvent(ideEvent, _processors);
             }
             _logger.Info("- Finalizing...");
-            foreach (var processor in processors)
+            foreach (var processor in _processors)
             {
                 processor.OnStreamEnds();
             }
-        }
-
-        private List<IIDEEventProcessor> CreateProcessors()
-        {
-            return _processors.Select(Activator.CreateInstance).Cast<IIDEEventProcessor>().ToList();
         }
 
         private IEnumerable<IDEEvent> GetAllEventsOf(Developer developer)
@@ -88,7 +80,7 @@ namespace KaVE.FeedbackProcessor.Statistics
             return events.GetEventStream(developer);
         }
 
-        private static void ProcessEvent(IDEEvent originalEvent, IEnumerable<IIDEEventProcessor> processors)
+        private static void ProcessEvent(IDEEvent originalEvent, IEnumerable<IEventProcessor> processors)
         {
             foreach (var processor in processors)
             {

@@ -38,115 +38,83 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
             _uut = new FeedbackWalker(TestFeedbackDatabase, new NullLogger());
         }
 
-        [TearDown]
-        public void TearDown()
-        {
-            TestProcessor.Instances.Clear();
-        }
-
-        [Test]
-        public void InstatiatesProcessorsForEachDeveloper()
-        {
-            GivenDeveloperExists("sessionA");
-            GivenDeveloperExists("sessionB");
-
-            _uut.RegisterProcessor<TestProcessor>();
-            _uut.ProcessFeedback();
-
-            Assert.AreEqual(2, TestProcessor.Instances.Count);
-        }
-
-        [Test]
-        public void InstantiatesEachRegisteredProcessorOnce()
-        {
-            GivenDeveloperExists("sessionA");
-
-            _uut.RegisterProcessor<TestProcessor>();
-            _uut.RegisterProcessor<TestProcessor>();
-            _uut.RegisterProcessor<TestProcessor>();
-            _uut.ProcessFeedback();
-
-            Assert.AreEqual(3, TestProcessor.Instances.Count);
-        }
-
         [Test]
         public void SetsDeveloperOnProcessor()
         {
             var developer1 = GivenDeveloperExists("session1");
             var developer2 = GivenDeveloperExists("session2");
 
-            _uut.RegisterProcessor<TestProcessor>();
+            var testProcessor = new TestProcessor();
+            _uut.Register(testProcessor);
             _uut.ProcessFeedback();
 
-            var processor1 = TestProcessor.Instances[0];
-            Assert.AreEqual(developer1, processor1.Developer);
-            var processor2 = TestProcessor.Instances[1];
-            Assert.AreEqual(developer2, processor2.Developer);
+            CollectionAssert.AreEqual(new[] {developer1, developer2}, testProcessor.ProcessedDevelopers);
         }
 
         [Test]
         public void PassesEventsToProcessors()
         {
-            const string ideSessionUUID = "sessionA";
-            GivenDeveloperExists(ideSessionUUID);
-            var event1 = GivenEventExists(ideSessionUUID, "1");
-            var event2 = GivenEventExists(ideSessionUUID, "2");
+            GivenDeveloperExists("sessionA");
+            var event1 = GivenEventExists("sessionA", "1");
+            var event2 = GivenEventExists("sessionA", "2");
 
-            _uut.RegisterProcessor<TestProcessor>();
-            _uut.RegisterProcessor<TestProcessor>();
+            var testProcessor1 = new TestProcessor();
+            _uut.Register(testProcessor1);
+            var testProcessor2 = new TestProcessor();
+            _uut.Register(testProcessor2);
             _uut.ProcessFeedback();
 
-            var testProcessor1 = TestProcessor.Instances[0];
             CollectionAssert.AreEqual(new[] {event1, event2}, testProcessor1.ProcessedEvents);
-            var testProcessor2 = TestProcessor.Instances[1];
             CollectionAssert.AreEqual(new[] {event1, event2}, testProcessor2.ProcessedEvents);
         }
 
         [Test]
-        public void PassesOnlyEventsForTheSameDeveloperToOneProcessorInstance()
+        public void PassesOnlyEventsOfCurrentDeveloperToProcessor()
         {
-            const string ideSessionUUID = "sessionA";
-            GivenDeveloperExists(ideSessionUUID);
-            var event1 = GivenEventExists(ideSessionUUID, "1");
-            var event2 = GivenEventExists(ideSessionUUID, "2");
-            GivenEventExists("sessionB", "1");
+            GivenDeveloperExists("sessionA");
+            GivenEventExists("sessionA", "1");
+            GivenEventExists("sessionA", "2");
+            var isolatedEvent = GivenEventExists("sessionB", "1");
 
-            _uut.RegisterProcessor<TestProcessor>();
+            var testProcessor = new TestProcessor();
+            _uut.Register(testProcessor);
             _uut.ProcessFeedback();
 
-            var testProcessor = TestProcessor.Instances.First();
-            CollectionAssert.AreEqual(new[] {event1, event2}, testProcessor.ProcessedEvents);
+            // Asserts event belong to current developer in TestProcessor.Process()
+            CollectionAssert.DoesNotContain(testProcessor.ProcessedEvents, isolatedEvent);
         }
 
         [Test]
-        public void InformsProcessorsWhenStreamEnds()
+        public void InformsProcessorsWhenStreamForCurrentDeveloperEnds()
         {
             GivenDeveloperExists("sessionX");
             GivenEventExists("sessionX", "A");
             GivenEventExists("sessionX", "B");
 
-            _uut.RegisterProcessor<TestProcessor>();
+            var testProcessor = new TestProcessor();
+            _uut.Register(testProcessor);
             _uut.ProcessFeedback();
 
-            var processor = TestProcessor.Instances[0];
-            Assert.IsTrue(processor.IsFinilized);
+            Assert.IsTrue(testProcessor.IsFinilized);
         }
 
-        private class TestProcessor : IIDEEventProcessor
+        private class TestProcessor : IEventProcessor
         {
-            public  static readonly IList<TestProcessor> Instances = new List<TestProcessor>();
             public readonly IList<IDEEvent> ProcessedEvents = new List<IDEEvent>();
+            public readonly IList<Developer> ProcessedDevelopers = new List<Developer>();
             public bool IsFinilized;
 
-            public TestProcessor()
+            public Developer Developer
             {
-                Instances.Add(this);
+                set
+                {
+                    ProcessedDevelopers.Add(value);
+                }
             }
-
-            public Developer Developer { set; get; }
 
             public void Process(IDEEvent @event)
             {
+                CollectionAssert.Contains(ProcessedDevelopers.Last().SessionIds, @event.IDESessionUUID);
                 ProcessedEvents.Add(@event);
             }
 

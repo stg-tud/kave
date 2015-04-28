@@ -26,7 +26,7 @@ using KaVE.FeedbackProcessor.Model;
 
 namespace KaVE.FeedbackProcessor.Statistics
 {
-    internal class EventsPerDeveloperDayStatisticCalculator : IIDEEventProcessor
+    internal class EventsPerDeveloperDayStatisticCalculator : IEventProcessor
     {
         private readonly IDictionary<DateTime, DeveloperDay> _developerDays = new Dictionary<DateTime, DeveloperDay>();
 

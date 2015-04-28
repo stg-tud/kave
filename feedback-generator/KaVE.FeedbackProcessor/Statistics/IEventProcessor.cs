@@ -22,7 +22,7 @@ using KaVE.FeedbackProcessor.Model;
 
 namespace KaVE.FeedbackProcessor.Statistics
 {
-    public interface IIDEEventProcessor
+    public interface IEventProcessor
     {
         Developer Developer { set; }
 
