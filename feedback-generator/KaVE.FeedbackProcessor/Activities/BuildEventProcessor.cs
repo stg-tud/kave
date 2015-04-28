@@ -14,31 +14,25 @@
  * limitations under the License.
  * 
  * Contributors:
- *    - Sven Amann
+ *    - Sebastian Proksch
  */
 
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.VisualStudio;
 using KaVE.Commons.Utils.Collections;
-using KaVE.FeedbackProcessor.Activities.Model;
 using KaVE.FeedbackProcessor.Cleanup.Processors;
 
 namespace KaVE.FeedbackProcessor.Activities
 {
-    internal class InIDEActivityDetector : BaseProcessor
+    internal class BuildEventProcessor : BaseProcessor
     {
-        public InIDEActivityDetector()
+        public BuildEventProcessor()
         {
-            RegisterFor<WindowEvent>(ProcessIDEFocusEvents);
+            RegisterFor<BuildEvent>(ProcessIDEStateEvent);
         }
 
-        private IKaVESet<IDEEvent> ProcessIDEFocusEvents(WindowEvent @event)
+        private IKaVESet<IDEEvent> ProcessIDEStateEvent(BuildEvent @event)
         {
-            if (@event.Window.Type.Equals("vsWindowTypeMainWindow"))
-            {
-                var phase = @event.Action == WindowEvent.WindowAction.Activate ? ActivityPhase.Start : ActivityPhase.End;
-                return AnswerActivity(@event, Activity.InIDE, phase);
-            }
             return AnswerDrop();
         }
     }

@@ -14,7 +14,7 @@
  * limitations under the License.
  * 
  * Contributors:
- *    - Sven Amann
+ *    - Sebastian Proksch
  */
 
 using KaVE.Commons.Model.Events;
@@ -25,21 +25,34 @@ using KaVE.FeedbackProcessor.Cleanup.Processors;
 
 namespace KaVE.FeedbackProcessor.Activities
 {
-    internal class InIDEActivityDetector : BaseProcessor
+    internal class IDEStateEventProcessor : BaseProcessor
     {
-        public InIDEActivityDetector()
+        public IDEStateEventProcessor()
         {
-            RegisterFor<WindowEvent>(ProcessIDEFocusEvents);
+            RegisterFor<IDEStateEvent>(ProcessIDEStateEvent);
         }
 
-        private IKaVESet<IDEEvent> ProcessIDEFocusEvents(WindowEvent @event)
+        private IKaVESet<IDEEvent> ProcessIDEStateEvent(IDEStateEvent @event)
         {
-            if (@event.Window.Type.Equals("vsWindowTypeMainWindow"))
+            if (IsIntermediateRuntimeEvent(@event))
             {
-                var phase = @event.Action == WindowEvent.WindowAction.Activate ? ActivityPhase.Start : ActivityPhase.End;
-                return AnswerActivity(@event, Activity.InIDE, phase);
+                return AnswerDrop();
             }
-            return AnswerDrop();
+
+            const Activity activity = Activity.InIDE;
+            var phase = IsStartup(@event) ? ActivityPhase.Start : ActivityPhase.End;
+
+            return AnswerActivity(@event, activity, phase);
+        }
+
+        private static bool IsIntermediateRuntimeEvent(IDEStateEvent @event)
+        {
+            return @event.IDELifecyclePhase == IDEStateEvent.LifecyclePhase.Runtime;
+        }
+
+        private static bool IsStartup(IDEStateEvent @event)
+        {
+            return @event.IDELifecyclePhase == IDEStateEvent.LifecyclePhase.Startup;
         }
     }
 }

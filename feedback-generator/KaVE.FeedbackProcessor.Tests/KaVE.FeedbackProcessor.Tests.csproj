@@ -53,6 +53,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Activities\AlwaysDropProcessorTest.cs" />
+    <Compile Include="Activities\BaseEventProcessorTest.cs" />
+    <Compile Include="Activities\BuildEventProcessorTest.cs" />
+    <Compile Include="Activities\IDEStateEventProcessorTest.cs" />
     <Compile Include="Activities\InIDEActivityDetectorTest.cs" />
     <Compile Include="Cleanup\EventsMapperTest.cs" />
     <Compile Include="Cleanup\Heuristics\TestVsProductionClassHeuristicTest.cs" />

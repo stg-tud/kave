@@ -24,6 +24,7 @@ using KaVE.Commons.Model.Events;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Collections;
 using KaVE.FeedbackProcessor.Model;
+using KaVE.FeedbackProcessor.Activities.Model;
 using KaVE.JetBrains.Annotations;
 
 namespace KaVE.FeedbackProcessor.Cleanup.Processors
@@ -110,6 +111,22 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
             var answer = Sets.NewHashSet(additionalEvents);
             answer.Add(_currentEvent);
             return answer;
+        }
+
+        protected IKaVESet<IDEEvent> AnswerActivity(IDEEvent @event, Activity activity, ActivityPhase phase)
+        {
+            var activityEvent = new ActivityEvent
+            {
+                Activity = activity,
+                Phase = phase,
+                IDESessionUUID = @event.IDESessionUUID,
+                KaVEVersion = @event.KaVEVersion,
+                TriggeredAt = @event.TriggeredAt,
+                TriggeredBy = @event.TriggeredBy,
+                Duration = @event.Duration,
+                ActiveWindow = @event.ActiveWindow
+            };
+            return AnswerReplace(activityEvent);
         }
     }
 }

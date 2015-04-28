@@ -14,7 +14,6 @@
  * limitations under the License.
  * 
  * Contributors:
- *    - Sven Amann
  *    - Sebastian Proksch
  */
 
@@ -27,37 +26,45 @@ using NUnit.Framework;
 
 namespace KaVE.FeedbackProcessor.Tests.Activities
 {
-    internal class InIDEActivityDetectorTest : BaseEventProcessorTest
+    internal class IDEStateEventProcessorTest : BaseEventProcessorTest
     {
         public override IIDEEventProcessor Sut
         {
-            get { return new InIDEActivityDetector(); }
+            get { return new IDEStateEventProcessor(); }
         }
 
         [Test]
-        public void MapsMainWindowActivationToInIDEActivityStart()
+        public void ShouldMapStartupEventsToStartInIDE()
         {
-            var @event = new WindowEvent
-            {
-                Window = WindowName.Get("vsWindowTypeMainWindow Startseite - Microsoft Visual Studio"),
-                Action = WindowEvent.WindowAction.Activate
-            };
-
+            var @event = CreateArbitraryEvent();
+            @event.IDELifecyclePhase = IDEStateEvent.LifecyclePhase.Startup;
             AssertMapsToActivity(@event, Activity.InIDE, ActivityPhase.Start);
         }
 
         [Test]
-        public void MapsMainWindowDeactivationToInIDEActivityEnd()
+        public void ShouldDropRuntimeEvents()
         {
-            var @event = new WindowEvent
-            {
-                Window = WindowName.Get("vsWindowTypeMainWindow Aktueller Fenstertitel"),
-                Action = WindowEvent.WindowAction.Deactivate
-            };
+            var @event = CreateArbitraryEvent();
+            @event.IDELifecyclePhase = IDEStateEvent.LifecyclePhase.Runtime;
+            AssertDrop(@event);
+        }
 
-            var uut = new InIDEActivityDetector();
-
+        [Test]
+        public void ShouldMapShutdownEventsToEndInIDE()
+        {
+            var @event = CreateArbitraryEvent();
+            @event.IDELifecyclePhase = IDEStateEvent.LifecyclePhase.Shutdown;
             AssertMapsToActivity(@event, Activity.InIDE, ActivityPhase.End);
+        }
+
+        private static IDEStateEvent CreateArbitraryEvent()
+        {
+            var @event = new IDEStateEvent
+            {
+                OpenDocuments = {DocumentName.Get("some doc")},
+                OpenWindows = {WindowName.Get("some window")}
+            };
+            return @event;
         }
     }
 }
