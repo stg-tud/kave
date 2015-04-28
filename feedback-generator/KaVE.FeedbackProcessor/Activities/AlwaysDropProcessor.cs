@@ -20,11 +20,14 @@
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Utils.Collections;
 using KaVE.FeedbackProcessor.Cleanup;
+using KaVE.FeedbackProcessor.Model;
 
 namespace KaVE.FeedbackProcessor.Activities
 {
     internal class AlwaysDropProcessor : IIDEEventProcessor
     {
+        public Developer Developer { set; get; }
+
         public IKaVESet<IDEEvent> Process(IDEEvent @event)
         {
             return Sets.NewHashSet<IDEEvent>();
