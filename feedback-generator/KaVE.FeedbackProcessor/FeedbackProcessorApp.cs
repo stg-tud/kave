@@ -144,6 +144,7 @@ namespace KaVE.FeedbackProcessor
         {
             var activityMapper = new EventsMapper(sourceDatabase, activityDatabase);
             activityMapper.RegisterProcessor<AlwaysDropProcessor>(); // only generated events reach activity database
+            activityMapper.RegisterProcessor<AnyActivityProcessor>(); // map any event to a keep-alive
             activityMapper.RegisterProcessor<InIDEActivityDetector>();
             activityMapper.RegisterProcessor<IDEStateEventProcessor>();
             activityMapper.RegisterProcessor<BuildEventProcessor>();

@@ -53,6 +53,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Activities\AlwaysDropProcessorTest.cs" />
+    <Compile Include="Activities\AnyActivityProcessorTest.cs" />
     <Compile Include="Activities\BaseEventProcessorTest.cs" />
     <Compile Include="Activities\BuildEventProcessorTest.cs" />
     <Compile Include="Activities\IDEStateEventProcessorTest.cs" />

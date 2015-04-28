@@ -17,19 +17,17 @@
  *    - Sven Amann
  */
 
-namespace KaVE.FeedbackProcessor.Activities.Model
+using KaVE.Commons.Model.Events;
+using KaVE.FeedbackProcessor.Activities.Model;
+using KaVE.FeedbackProcessor.Cleanup.Processors;
+
+namespace KaVE.FeedbackProcessor.Activities
 {
-    public enum Activity
+    class AnyActivityProcessor : BaseProcessor
     {
-        Any,
-        Navigation,
-        Editing,
-        Understanding,
-        Testing,
-        Debugging,
-        ProjektManagement,
-        LocalConfiguration,
-        Waiting,
-        InIDE
+        public AnyActivityProcessor()
+        {
+            RegisterFor<IDEEvent>(e => AnswerActivity(e, Activity.Any, ActivityPhase.Running));
+        }
     }
 }

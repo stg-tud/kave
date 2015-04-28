@@ -17,19 +17,26 @@
  *    - Sven Amann
  */
 
-namespace KaVE.FeedbackProcessor.Activities.Model
+using KaVE.Commons.TestUtils.Model.Events;
+using KaVE.FeedbackProcessor.Activities;
+using KaVE.FeedbackProcessor.Activities.Model;
+using KaVE.FeedbackProcessor.Cleanup;
+using NUnit.Framework;
+
+namespace KaVE.FeedbackProcessor.Tests.Activities
 {
-    public enum Activity
+    [TestFixture]
+    class AnyActivityProcessorTest : BaseEventProcessorTest
     {
-        Any,
-        Navigation,
-        Editing,
-        Understanding,
-        Testing,
-        Debugging,
-        ProjektManagement,
-        LocalConfiguration,
-        Waiting,
-        InIDE
+        public override IIDEEventProcessor Sut
+        {
+            get { return new AnyActivityProcessor(); }
+        }
+
+        [Test]
+        public void ReplacesByAnyActivity()
+        {
+            AssertMapsToActivity(IDEEventTestFactory.SomeEvent(), Activity.Any, ActivityPhase.Running);
+        }
     }
 }
