@@ -14,10 +14,10 @@
  * limitations under the License.
  * 
  * Contributors:
- *    - Sven Amann
+ *    - Sebastian Proksch
  */
 
-using KaVE.Commons.TestUtils.Model.Events;
+using KaVE.Commons.Model.Events.VisualStudio;
 using KaVE.FeedbackProcessor.Activities;
 using KaVE.FeedbackProcessor.Activities.Model;
 using KaVE.FeedbackProcessor.Cleanup;
@@ -25,17 +25,23 @@ using NUnit.Framework;
 
 namespace KaVE.FeedbackProcessor.Tests.Activities
 {
-    internal class AnyActivityProcessorTest : BaseEventProcessorTest
+    internal class EditEventProcessorTest : BaseEventProcessorTest
     {
         public override IIDEEventProcessor Sut
         {
-            get { return new AnyActivityProcessor(); }
+            get { return new EditEventProcessor(); }
         }
 
         [Test]
-        public void ReplacesByAnyActivity()
+        public void ShouldAlwaysMapEditToEdit()
         {
-            AssertMapsToActivity(IDEEventTestFactory.SomeEvent(), Activity.Any, ActivityPhase.Undefined);
+            var @event = new EditEvent
+            {
+                NumberOfChanges = -1,
+                SizeOfChanges = -1
+            };
+            // TODO add more sophisticated handling, i.e. based on the current document name
+            AssertMapsToActivity(@event, Activity.Editing);
         }
     }
 }

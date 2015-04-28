@@ -14,28 +14,29 @@
  * limitations under the License.
  * 
  * Contributors:
- *    - Sven Amann
+ *    - Sebastian Proksch
  */
 
-using KaVE.Commons.TestUtils.Model.Events;
+using KaVE.Commons.Model.Events;
 using KaVE.FeedbackProcessor.Activities;
-using KaVE.FeedbackProcessor.Activities.Model;
 using KaVE.FeedbackProcessor.Cleanup;
 using NUnit.Framework;
 
 namespace KaVE.FeedbackProcessor.Tests.Activities
 {
-    internal class AnyActivityProcessorTest : BaseEventProcessorTest
+    internal class CommandEventProcessorTest : BaseEventProcessorTest
     {
         public override IIDEEventProcessor Sut
         {
-            get { return new AnyActivityProcessor(); }
+            get { return new CommandEventProcessor(); }
         }
 
         [Test]
-        public void ReplacesByAnyActivity()
+        public void ShouldAlwaysDoSomething()
         {
-            AssertMapsToActivity(IDEEventTestFactory.SomeEvent(), Activity.Any, ActivityPhase.Undefined);
+            var @event = new CommandEvent { CommandId = "xyz" };
+            // TODO we need a mapping here for the different ids
+            AssertDrop(@event);
         }
     }
 }

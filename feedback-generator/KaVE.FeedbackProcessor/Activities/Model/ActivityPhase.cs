@@ -14,7 +14,8 @@
  * limitations under the License.
  * 
  * Contributors:
- *    - 
+ *    - Sven Amann
+ *    - Sebastian Proksch
  */
 
 namespace KaVE.FeedbackProcessor.Activities.Model
@@ -23,6 +24,6 @@ namespace KaVE.FeedbackProcessor.Activities.Model
     {
         Start,
         End,
-        Running
+        Undefined
     }
 }

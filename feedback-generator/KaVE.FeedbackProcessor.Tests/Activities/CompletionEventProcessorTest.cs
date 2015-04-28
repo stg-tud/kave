@@ -14,10 +14,11 @@
  * limitations under the License.
  * 
  * Contributors:
- *    - Sven Amann
+ *    - Sebastian Proksch
  */
 
-using KaVE.Commons.TestUtils.Model.Events;
+using KaVE.Commons.Model.Events.CompletionEvents;
+using KaVE.Commons.Utils.Collections;
 using KaVE.FeedbackProcessor.Activities;
 using KaVE.FeedbackProcessor.Activities.Model;
 using KaVE.FeedbackProcessor.Cleanup;
@@ -25,17 +26,26 @@ using NUnit.Framework;
 
 namespace KaVE.FeedbackProcessor.Tests.Activities
 {
-    internal class AnyActivityProcessorTest : BaseEventProcessorTest
+    internal class CompletionEventProcessorTest : BaseEventProcessorTest
     {
         public override IIDEEventProcessor Sut
         {
-            get { return new AnyActivityProcessor(); }
+            get { return new CompletionEventProcessor(); }
         }
 
         [Test]
-        public void ReplacesByAnyActivity()
+        public void ShouldAlwaysMapToEditing()
         {
-            AssertMapsToActivity(IDEEventTestFactory.SomeEvent(), Activity.Any, ActivityPhase.Undefined);
+            var @event = new CompletionEvent
+            {
+                Selections = Lists.NewList<IProposalSelection>(),
+                ProposalCollection = new ProposalCollection(),
+                Context2 = new Context(),
+                Prefix = "",
+                TerminatedState = TerminationState.Unknown
+            };
+
+            AssertMapsToActivities(@event, Activity.Editing);
         }
     }
 }

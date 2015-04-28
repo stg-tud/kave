@@ -20,6 +20,7 @@
 using System;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Names.VisualStudio;
+using KaVE.Commons.Utils.Collections;
 using KaVE.FeedbackProcessor.Activities.Model;
 using KaVE.FeedbackProcessor.Cleanup;
 using NUnit.Framework;
@@ -39,7 +40,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
             CollectionAssert.AreEquivalent(new ActivityEvent[] {}, events);
         }
 
-        protected void AssertMapsToActivity(IDEEvent @event, Activity activity, ActivityPhase phase)
+        protected void AssertMapsToActivity(IDEEvent @event, Activity activity, ActivityPhase phase = ActivityPhase.Undefined)
         {
             FillWithBasicInformation(@event);
 
@@ -57,6 +58,31 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
                 ActiveWindow = @event.ActiveWindow
             };
             CollectionAssert.AreEquivalent(new[] {expectedEvent}, events);
+        }
+
+        protected void AssertMapsToActivities(IDEEvent @event, params Activity[] activities)
+        {
+            FillWithBasicInformation(@event);
+
+            var actuals = Sut.Process(@event);
+
+            var expecteds = Lists.NewList<ActivityEvent>();
+            foreach (var activity in activities)
+            {
+                expecteds.Add(
+                    new ActivityEvent
+                    {
+                        Activity = activity,
+                        Phase = ActivityPhase.Undefined,
+                        IDESessionUUID = @event.IDESessionUUID,
+                        KaVEVersion = @event.KaVEVersion,
+                        TriggeredAt = @event.TriggeredAt,
+                        TriggeredBy = @event.TriggeredBy,
+                        Duration = @event.Duration,
+                        ActiveWindow = @event.ActiveWindow
+                    });
+            }
+            CollectionAssert.AreEquivalent(expecteds, actuals);
         }
 
         private static void FillWithBasicInformation(IDEEvent @event)

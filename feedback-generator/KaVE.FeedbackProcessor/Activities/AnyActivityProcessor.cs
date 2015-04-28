@@ -23,11 +23,11 @@ using KaVE.FeedbackProcessor.Cleanup.Processors;
 
 namespace KaVE.FeedbackProcessor.Activities
 {
-    class AnyActivityProcessor : BaseProcessor
+    internal class AnyActivityProcessor : BaseProcessor
     {
         public AnyActivityProcessor()
         {
-            RegisterFor<IDEEvent>(e => AnswerActivity(e, Activity.Any, ActivityPhase.Running));
+            RegisterFor<IDEEvent>(e => AnswerActivity(e, Activity.Any, ActivityPhase.Undefined));
         }
     }
 }

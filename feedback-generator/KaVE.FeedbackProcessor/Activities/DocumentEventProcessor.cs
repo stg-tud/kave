@@ -14,28 +14,29 @@
  * limitations under the License.
  * 
  * Contributors:
- *    - Sven Amann
+ *    - Sebastian Proksch
  */
 
-using KaVE.Commons.TestUtils.Model.Events;
-using KaVE.FeedbackProcessor.Activities;
+using KaVE.Commons.Model.Events;
+using KaVE.Commons.Model.Events.VisualStudio;
+using KaVE.Commons.Utils.Collections;
 using KaVE.FeedbackProcessor.Activities.Model;
-using KaVE.FeedbackProcessor.Cleanup;
-using NUnit.Framework;
+using KaVE.FeedbackProcessor.Cleanup.Processors;
 
-namespace KaVE.FeedbackProcessor.Tests.Activities
+namespace KaVE.FeedbackProcessor.Activities
 {
-    internal class AnyActivityProcessorTest : BaseEventProcessorTest
+    internal class DocumentEventProcessor : BaseProcessor
     {
-        public override IIDEEventProcessor Sut
+        public DocumentEventProcessor()
         {
-            get { return new AnyActivityProcessor(); }
+            RegisterFor<DocumentEvent>(ProcessDocumentEvent);
         }
 
-        [Test]
-        public void ReplacesByAnyActivity()
+        private IKaVESet<IDEEvent> ProcessDocumentEvent(DocumentEvent @event)
         {
-            AssertMapsToActivity(IDEEventTestFactory.SomeEvent(), Activity.Any, ActivityPhase.Undefined);
+            var isSave = @event.Action == DocumentEvent.DocumentAction.Saved;
+            var actvity = isSave ? Activity.Editing : Activity.Navigation;
+            return AnswerActivity(@event, actvity);
         }
     }
 }

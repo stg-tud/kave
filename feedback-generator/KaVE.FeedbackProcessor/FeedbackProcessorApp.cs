@@ -148,6 +148,7 @@ namespace KaVE.FeedbackProcessor
             activityMapper.RegisterProcessor<InIDEActivityDetector>();
             activityMapper.RegisterProcessor<IDEStateEventProcessor>();
             activityMapper.RegisterProcessor<BuildEventProcessor>();
+            activityMapper.RegisterProcessor<DebuggerEventProcessor>();
 
             activityMapper.ProcessFeedback();
         }

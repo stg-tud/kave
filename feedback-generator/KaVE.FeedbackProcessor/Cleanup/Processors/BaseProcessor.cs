@@ -113,7 +113,7 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
             return answer;
         }
 
-        protected IKaVESet<IDEEvent> AnswerActivity(IDEEvent @event, Activity activity, ActivityPhase phase)
+        protected IKaVESet<IDEEvent> AnswerActivity(IDEEvent @event, Activity activity, ActivityPhase phase = ActivityPhase.Undefined)
         {
             var activityEvent = new ActivityEvent
             {
