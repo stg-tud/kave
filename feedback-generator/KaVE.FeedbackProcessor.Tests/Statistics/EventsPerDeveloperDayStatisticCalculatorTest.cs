@@ -18,7 +18,10 @@
  */
 
 using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using KaVE.Commons.Model.Events;
 using KaVE.Commons.TestUtils.Model.Events;
 using KaVE.FeedbackProcessor.Model;
 using KaVE.FeedbackProcessor.Statistics;
@@ -30,18 +33,25 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
     [TestFixture]
     internal class EventsPerDeveloperDayStatisticCalculatorTest
     {
+        private EventsPerDeveloperDayStatisticCalculator _uut;
+
+        [SetUp]
+        public void CreateCalculator()
+        {
+            _uut = new EventsPerDeveloperDayStatisticCalculator();
+        }
+
         [Test]
         public void CountsEventsOnSameDay()
         {
-            var uut = new EventsPerDeveloperDayStatisticCalculator();
-
             var someDeveloper = SomeDeveloper();
-            uut.OnStreamStarts(someDeveloper);
-            uut.OnEvent(new TestIDEEvent {TriggeredAt = new DateTime(2015, 4, 28, 10, 52, 13)});
-            uut.OnEvent(new TestIDEEvent {TriggeredAt = new DateTime(2015, 4, 28, 16, 06, 00)});
-            uut.OnEvent(new TestIDEEvent {TriggeredAt = new DateTime(2015, 4, 28, 23, 59, 59)});
+            _uut.OnStreamStarts(someDeveloper);
+            _uut.OnEvent(new TestIDEEvent {TriggeredAt = new DateTime(2015, 4, 28, 10, 52, 13)});
+            _uut.OnEvent(new TestIDEEvent {TriggeredAt = new DateTime(2015, 4, 28, 16, 06, 00)});
+            _uut.OnEvent(new TestIDEEvent {TriggeredAt = new DateTime(2015, 4, 28, 23, 59, 59)});
+            _uut.OnStreamEnds();
 
-            var statistic = uut.GetStatistic();
+            var statistic = _uut.Statistic[someDeveloper];
             var developerDay = statistic.First();
             Assert.AreEqual(3, developerDay.NumberOfEvents);
         }
@@ -49,24 +59,106 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
         [Test]
         public void CountsEventsPerDay()
         {
-            var uut = new EventsPerDeveloperDayStatisticCalculator();
-
             var someDeveloper = SomeDeveloper();
-            uut.OnStreamStarts(someDeveloper);
-            uut.OnEvent(new TestIDEEvent {TriggeredAt = new DateTime(2015, 4, 28, 10, 52, 13)});
-            uut.OnEvent(new TestIDEEvent {TriggeredAt = new DateTime(2015, 4, 29, 16, 06, 00)});
-            uut.OnEvent(new TestIDEEvent {TriggeredAt = new DateTime(2015, 4, 30, 23, 59, 59)});
+            _uut.OnStreamStarts(someDeveloper);
+            _uut.OnEvent(new TestIDEEvent {TriggeredAt = new DateTime(2015, 4, 29, 16, 06, 00)});
+            _uut.OnEvent(new TestIDEEvent {TriggeredAt = new DateTime(2015, 4, 28, 10, 52, 13)});
+            _uut.OnEvent(new TestIDEEvent {TriggeredAt = new DateTime(2015, 4, 30, 23, 59, 59)});
+            _uut.OnStreamEnds();
 
-            var statistic = uut.GetStatistic();
-            Assert.AreEqual(3, statistic.Count);
+            var expected = new[]
+            {
+                new EventsPerDeveloperDayStatisticCalculator.DeveloperDay
+                {
+                    Date = new DateTime(2015, 4, 28),
+                    NumberOfEvents = 1
+                },
+                new EventsPerDeveloperDayStatisticCalculator.DeveloperDay
+                {
+                    Date = new DateTime(2015, 4, 29),
+                    NumberOfEvents = 1
+                },
+                new EventsPerDeveloperDayStatisticCalculator.DeveloperDay
+                {
+                    Date = new DateTime(2015, 4, 30),
+                    NumberOfEvents = 1
+                }
+            };
+            var actual = _uut.Statistic[someDeveloper];
+            CollectionAssert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void CountsEventsPerDeveloper()
+        {
+            var developer1 = SomeDeveloper();
+            _uut.OnStreamStarts(developer1);
+            var event1 = SomeEventFor(developer1);
+            _uut.OnEvent(event1);
+            _uut.OnStreamEnds();
+            var developer2 = SomeDeveloper();
+            _uut.OnStreamStarts(developer2);
+            var event2 = SomeEventFor(developer2);
+            _uut.OnEvent(event2);
+            _uut.OnStreamEnds();
+
+            // ReSharper disable PossibleInvalidOperationException
+            var expected = new Dictionary<Developer, IList<EventsPerDeveloperDayStatisticCalculator.DeveloperDay>>
+            {
+                {
+                    developer1,
+                    new[]
+                    {
+                        new EventsPerDeveloperDayStatisticCalculator.DeveloperDay
+                        {
+                            Date = event1.TriggeredAt.Value.Date,
+                            NumberOfEvents = 1
+                        }
+                    }
+                },
+                {
+                    developer2,
+                    new[]
+                    {
+                        new EventsPerDeveloperDayStatisticCalculator.DeveloperDay
+                        {
+                            Date = event2.TriggeredAt.Value.Date,
+                            NumberOfEvents = 1
+                        }
+                    }
+                }
+            };
+            // ReSharper restore PossibleInvalidOperationException
+            var actual = _uut.Statistic;
+            CollectionAssert.AreEqual(expected, actual);
         }
 
         private static int _developerId = 1;
+
         public static Developer SomeDeveloper()
         {
-            var someDeveloper = new Developer{Id = new ObjectId(string.Format("{0:D24}", _developerId))};
+            var id = string.Format("{0:D24}", _developerId);
+            var someDeveloper = new Developer
+            {
+                Id = new ObjectId(id),
+                SessionIds = {_developerId.ToString(CultureInfo.InvariantCulture)}
+            };
             _developerId++;
             return someDeveloper;
+        }
+
+        private static int _eventValue = 1;
+
+        public static IDEEvent SomeEventFor(Developer developer)
+        {
+            var ideEvent = new TestIDEEvent
+            {
+                IDESessionUUID = developer.SessionIds.First(),
+                TriggeredAt = DateTime.Now,
+                TestProperty = _eventValue.ToString(CultureInfo.InvariantCulture)
+            };
+            _eventValue++;
+            return ideEvent;
         }
     }
 }

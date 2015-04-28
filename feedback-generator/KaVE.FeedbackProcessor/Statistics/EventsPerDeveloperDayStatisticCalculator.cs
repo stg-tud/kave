@@ -21,6 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using KaVE.Commons.Model.Events;
+using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.FeedbackProcessor.Model;
 
@@ -28,14 +29,17 @@ namespace KaVE.FeedbackProcessor.Statistics
 {
     internal class EventsPerDeveloperDayStatisticCalculator : IEventProcessor
     {
-        public static readonly IDictionary<Developer, IList<DeveloperDay>> Statistic = new Dictionary<Developer, IList<DeveloperDay>>(); 
-        private readonly IDictionary<DateTime, DeveloperDay> _developerDays = new Dictionary<DateTime, DeveloperDay>();
+        public readonly IDictionary<Developer, IList<DeveloperDay>> Statistic =
+            new Dictionary<Developer, IList<DeveloperDay>>();
 
-        private Developer _developer;
+        private IDictionary<DateTime, DeveloperDay> _currentDeveloperDays;
+
+        private Developer _currentDeveloper;
 
         public void OnStreamStarts(Developer value)
         {
-            _developer = value;
+            _currentDeveloper = value;
+            _currentDeveloperDays = new Dictionary<DateTime, DeveloperDay>();
         }
 
         public void OnEvent(IDEEvent @event)
@@ -49,28 +53,47 @@ namespace KaVE.FeedbackProcessor.Statistics
         private DeveloperDay FindOrCreateDeveloperDay(DateTime day)
         {
             DeveloperDay developerDay;
-            if (!_developerDays.TryGetValue(day, out developerDay))
+            if (!_currentDeveloperDays.TryGetValue(day, out developerDay))
             {
                 developerDay = new DeveloperDay {Date = day};
-                _developerDays.Add(day, developerDay);
+                _currentDeveloperDays.Add(day, developerDay);
             }
             return developerDay;
         }
 
-        public IList<DeveloperDay> GetStatistic()
-        {
-            return _developerDays.Values.ToList();
-        }
-
         public void OnStreamEnds()
         {
-            Statistic[_developer] = GetStatistic();
+            Statistic[_currentDeveloper] =
+                _currentDeveloperDays.OrderBy(pair => pair.Key).Select(pair => pair.Value).ToList();
         }
 
         public class DeveloperDay
         {
             public int NumberOfEvents { get; set; }
             public DateTime Date { get; set; }
+
+            protected bool Equals(DeveloperDay other)
+            {
+                return NumberOfEvents == other.NumberOfEvents && Date.Equals(other.Date);
+            }
+
+            public override bool Equals(object obj)
+            {
+                return this.Equals(obj, Equals);
+            }
+
+            public override int GetHashCode()
+            {
+                unchecked
+                {
+                    return (NumberOfEvents*397) ^ Date.GetHashCode();
+                }
+            }
+
+            public override string ToString()
+            {
+                return this.ToStringReflection();
+            }
         }
     }
 }
