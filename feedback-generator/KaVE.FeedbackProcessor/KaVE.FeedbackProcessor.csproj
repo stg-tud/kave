@@ -82,6 +82,7 @@
     <Compile Include="Statistics\AnonymizationStatisticsCalculator.cs" />
     <Compile Include="Statistics\BaseEventProcessor.cs" />
     <Compile Include="Statistics\DeveloperStatisticsCalculator.cs" />
+    <Compile Include="Statistics\DocumentNameCollector.cs" />
     <Compile Include="Statistics\FeedbackWalker.cs" />
     <Compile Include="Statistics\EventsPerDeveloperDayStatisticCalculator.cs" />
     <Compile Include="Statistics\IEventProcessor.cs" />

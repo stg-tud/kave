@@ -71,6 +71,7 @@
     <Compile Include="Model\TestFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Statistics\DeveloperStatisticsCalculatorTest.cs" />
+    <Compile Include="Statistics\DocumentNameCollectorTest.cs" />
     <Compile Include="Statistics\FeedbackWalkerTest.cs" />
     <Compile Include="Statistics\EventsPerDeveloperDayStatisticCalculatorTest.cs" />
     <Compile Include="Statistics\WindowNameCollectorTest.cs" />
