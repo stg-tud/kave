@@ -17,40 +17,32 @@
  *    - Sven Amann
  */
 
+using System.Collections.Generic;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.VisualStudio;
 using KaVE.Commons.Model.Names.VisualStudio;
 using KaVE.Commons.Utils.Collections;
-using KaVE.FeedbackProcessor.Model;
 
 namespace KaVE.FeedbackProcessor.Statistics
 {
-    internal class WindowNameCollector : IEventProcessor
+    internal class WindowNameCollector : BaseEventProcessor
     {
+        public IKaVESet<WindowName> AllWindowNames { get; set; }
+
         public WindowNameCollector()
         {
             AllWindowNames = new KaVEHashSet<WindowName>();
+
+            RegisterFor<IDEEvent>(e => AddName(e.ActiveWindow));
+            RegisterFor<WindowEvent>(we => AddName(we.Window));
+            RegisterFor<IDEStateEvent>(we => AddNames(we.OpenWindows));
         }
 
-        public void OnStreamStarts(Developer value) {}
-
-        public void OnEvent(IDEEvent @event)
+        private void AddNames(IEnumerable<WindowName> windows)
         {
-            AddName(@event.ActiveWindow);
-
-            var windowEvent = @event as WindowEvent;
-            if (windowEvent != null)
+            foreach (var name in windows)
             {
-                AddName(windowEvent.Window);
-            }
-
-            var ideStateEvent = @event as IDEStateEvent;
-            if (ideStateEvent != null)
-            {
-                foreach (var name in ideStateEvent.OpenWindows)
-                {
-                    AddName(name);
-                }
+                AddName(name);
             }
         }
 
@@ -61,9 +53,5 @@ namespace KaVE.FeedbackProcessor.Statistics
                 AllWindowNames.Add(windowName);
             }
         }
-
-        public void OnStreamEnds() {}
-
-        public IKaVESet<WindowName> AllWindowNames { get; set; }
     }
 }

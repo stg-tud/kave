@@ -80,6 +80,7 @@
     <Compile Include="Database\KaVECollectionSerializer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Statistics\AnonymizationStatisticsCalculator.cs" />
+    <Compile Include="Statistics\BaseEventProcessor.cs" />
     <Compile Include="Statistics\DeveloperStatisticsCalculator.cs" />
     <Compile Include="Statistics\FeedbackWalker.cs" />
     <Compile Include="Statistics\EventsPerDeveloperDayStatisticCalculator.cs" />
