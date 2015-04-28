@@ -27,7 +27,7 @@ namespace KaVE.FeedbackProcessor.Statistics
 {
     class DocumentNameCollector : BaseEventProcessor
     {
-        public IKaVESet<DocumentName> AllDocumentNames { get; set; }
+        public IKaVESet<DocumentName> AllDocumentNames { get; private set; }
 
         public DocumentNameCollector()
         {

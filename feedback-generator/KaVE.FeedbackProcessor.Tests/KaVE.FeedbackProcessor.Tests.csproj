@@ -70,6 +70,7 @@
     <Compile Include="Model\DeveloperTest.cs" />
     <Compile Include="Model\TestFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Statistics\CommandIdCollectorTest.cs" />
     <Compile Include="Statistics\DeveloperStatisticsCalculatorTest.cs" />
     <Compile Include="Statistics\DocumentNameCollectorTest.cs" />
     <Compile Include="Statistics\FeedbackWalkerTest.cs" />
