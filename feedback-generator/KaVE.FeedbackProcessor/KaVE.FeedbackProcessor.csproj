@@ -84,6 +84,7 @@
     <Compile Include="Statistics\FeedbackWalker.cs" />
     <Compile Include="Statistics\EventsPerDeveloperDayStatisticCalculator.cs" />
     <Compile Include="Statistics\IEventProcessor.cs" />
+    <Compile Include="Statistics\WindowNameCollector.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\KaVE.licenseheader">
