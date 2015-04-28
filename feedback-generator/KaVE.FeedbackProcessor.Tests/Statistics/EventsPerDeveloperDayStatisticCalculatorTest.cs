@@ -36,10 +36,10 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
             var uut = new EventsPerDeveloperDayStatisticCalculator();
 
             var someDeveloper = SomeDeveloper();
-            uut.Developer = someDeveloper;
-            uut.Process(new TestIDEEvent {TriggeredAt = new DateTime(2015, 4, 28, 10, 52, 13)});
-            uut.Process(new TestIDEEvent {TriggeredAt = new DateTime(2015, 4, 28, 16, 06, 00)});
-            uut.Process(new TestIDEEvent {TriggeredAt = new DateTime(2015, 4, 28, 23, 59, 59)});
+            uut.OnStreamStarts(someDeveloper);
+            uut.OnEvent(new TestIDEEvent {TriggeredAt = new DateTime(2015, 4, 28, 10, 52, 13)});
+            uut.OnEvent(new TestIDEEvent {TriggeredAt = new DateTime(2015, 4, 28, 16, 06, 00)});
+            uut.OnEvent(new TestIDEEvent {TriggeredAt = new DateTime(2015, 4, 28, 23, 59, 59)});
 
             var statistic = uut.GetStatistic();
             var developerDay = statistic.First();
@@ -52,10 +52,10 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
             var uut = new EventsPerDeveloperDayStatisticCalculator();
 
             var someDeveloper = SomeDeveloper();
-            uut.Developer = someDeveloper;
-            uut.Process(new TestIDEEvent {TriggeredAt = new DateTime(2015, 4, 28, 10, 52, 13)});
-            uut.Process(new TestIDEEvent {TriggeredAt = new DateTime(2015, 4, 29, 16, 06, 00)});
-            uut.Process(new TestIDEEvent {TriggeredAt = new DateTime(2015, 4, 30, 23, 59, 59)});
+            uut.OnStreamStarts(someDeveloper);
+            uut.OnEvent(new TestIDEEvent {TriggeredAt = new DateTime(2015, 4, 28, 10, 52, 13)});
+            uut.OnEvent(new TestIDEEvent {TriggeredAt = new DateTime(2015, 4, 29, 16, 06, 00)});
+            uut.OnEvent(new TestIDEEvent {TriggeredAt = new DateTime(2015, 4, 30, 23, 59, 59)});
 
             var statistic = uut.GetStatistic();
             Assert.AreEqual(3, statistic.Count);

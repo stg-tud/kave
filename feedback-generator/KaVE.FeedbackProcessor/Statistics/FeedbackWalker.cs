@@ -17,9 +17,7 @@
  *    - Sven Amann
  */
 
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Utils.Exceptions;
 using KaVE.FeedbackProcessor.Database;
@@ -60,7 +58,7 @@ namespace KaVE.FeedbackProcessor.Statistics
             _logger.Info("- Initializing Processors...");
             foreach (var processor in _processors)
             {
-                processor.Developer = developer;
+                processor.OnStreamStarts(developer);
             }
             _logger.Info("- Processing event stream...");
             foreach (var ideEvent in GetAllEventsOf(developer))
@@ -84,7 +82,7 @@ namespace KaVE.FeedbackProcessor.Statistics
         {
             foreach (var processor in processors)
             {
-                processor.Process(originalEvent);
+                processor.OnEvent(originalEvent);
             }
         }
     }

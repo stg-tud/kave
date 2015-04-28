@@ -80,7 +80,7 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
             _uut.Register(testProcessor);
             _uut.ProcessFeedback();
 
-            // Asserts event belong to current developer in TestProcessor.Process()
+            // Asserts event belong to current developer in TestProcessor.OnEvent()
             CollectionAssert.DoesNotContain(testProcessor.ProcessedEvents, isolatedEvent);
         }
 
@@ -104,15 +104,12 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
             public readonly IList<Developer> ProcessedDevelopers = new List<Developer>();
             public bool IsFinilized;
 
-            public Developer Developer
+            public void OnStreamStarts(Developer value)
             {
-                set
-                {
-                    ProcessedDevelopers.Add(value);
-                }
+                ProcessedDevelopers.Add(value);
             }
 
-            public void Process(IDEEvent @event)
+            public void OnEvent(IDEEvent @event)
             {
                 CollectionAssert.Contains(ProcessedDevelopers.Last().SessionIds, @event.IDESessionUUID);
                 ProcessedEvents.Add(@event);

@@ -28,22 +28,23 @@ namespace KaVE.FeedbackProcessor.Statistics
 {
     internal class EventsPerDeveloperDayStatisticCalculator : IEventProcessor
     {
+        public static readonly IDictionary<Developer, IList<DeveloperDay>> Statistic = new Dictionary<Developer, IList<DeveloperDay>>(); 
         private readonly IDictionary<DateTime, DeveloperDay> _developerDays = new Dictionary<DateTime, DeveloperDay>();
 
-        public Developer Developer
+        private Developer _developer;
+
+        public void OnStreamStarts(Developer value)
         {
-            set { }
+            _developer = value;
         }
 
-        public void Process(IDEEvent @event)
+        public void OnEvent(IDEEvent @event)
         {
             Asserts.That(@event.TriggeredAt.HasValue, "event without trigger time cannot be assigned to date");
             var day = @event.TriggeredAt.Value.Date;
             var developerDay = FindOrCreateDeveloperDay(day);
             developerDay.NumberOfEvents++;
         }
-
-        public void OnStreamEnds() {}
 
         private DeveloperDay FindOrCreateDeveloperDay(DateTime day)
         {
@@ -59,6 +60,11 @@ namespace KaVE.FeedbackProcessor.Statistics
         public IList<DeveloperDay> GetStatistic()
         {
             return _developerDays.Values.ToList();
+        }
+
+        public void OnStreamEnds()
+        {
+            Statistic[_developer] = GetStatistic();
         }
 
         public class DeveloperDay
