@@ -15,34 +15,35 @@
  * 
  * Contributors:
  *    - Mattis Manfred Kämmerer
+ *    - Sven Amann
  */
 
-using System;
-using System.Linq;
+using System.Globalization;
+using KaVE.Commons.Model.Names.VisualStudio;
+using KaVE.Commons.Utils;
 
 namespace KaVE.FeedbackProcessor.Cleanup.Heuristics
 {
-    internal static class TestVsProductionClassHeuristic
+    internal static class TestVsProductionDocumentHeuristic
     {
-        private static readonly String[] FileExtensionsOfSourceCodeItems =
+        public static bool IsTestDocument(this DocumentName document)
         {
-            ".cs",
-            ".cpp",
-            ".c"
-        };
-
-        public static bool IsTestClass(string targetIdentifier)
-        {
-            return
-                FileExtensionsOfSourceCodeItems.Any(
-                    fileExtension => targetIdentifier.EndsWith("Test" + fileExtension));
+            return NameEndsWithTest(document);
         }
 
-        public static bool IsProductionClass(string targetIdentifier)
+        private static bool NameEndsWithTest(this DocumentName document)
         {
-            return
-                FileExtensionsOfSourceCodeItems.Any(targetIdentifier.EndsWith) &&
-                !IsTestClass(targetIdentifier);
+            var filename = document.FileName;
+            if (filename != null)
+            {
+                return filename.Contains("test", CompareOptions.IgnoreCase);
+            }
+            return false;
+        }
+
+        public static bool IsProductionDocument(this DocumentName document)
+        {
+            return !IsTestDocument(document);
         }
     }
 }

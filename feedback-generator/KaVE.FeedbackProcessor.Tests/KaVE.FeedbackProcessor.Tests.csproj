@@ -69,7 +69,7 @@
     <Compile Include="Activities\UpdateEventProcessorTest.cs" />
     <Compile Include="Activities\WindowEventProcessorTest.cs" />
     <Compile Include="Cleanup\EventsMapperTest.cs" />
-    <Compile Include="Cleanup\Heuristics\TestVsProductionClassHeuristicTest.cs" />
+    <Compile Include="Cleanup\Heuristics\TestVsProductionDocumentHeuristicTest.cs" />
     <Compile Include="Cleanup\Processors\AddFileProcessorTest.cs" />
     <Compile Include="Cleanup\Processors\CloseEventProcessorTest.cs" />
     <Compile Include="Database\TestDeveloperCollection.cs" />
