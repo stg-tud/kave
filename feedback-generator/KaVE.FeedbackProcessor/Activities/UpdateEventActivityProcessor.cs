@@ -26,7 +26,7 @@ namespace KaVE.FeedbackProcessor.Activities
     {
         public UpdateEventActivityProcessor()
         {
-            RegisterFor<UpdateEvent>(e => AnswerActivity(e, Activity.LocalConfiguration));
+            RegisterFor<UpdateEvent>(e => InsertActivity(e, Activity.LocalConfiguration));
         }
     }
 }

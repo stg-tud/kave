@@ -38,7 +38,7 @@ namespace KaVE.FeedbackProcessor.Activities
             else
             {
                 var activity = IsStartup(@event) ? Activity.EnterIDE : Activity.LeaveIDE;
-                AnswerActivity(@event, activity);
+                InsertActivity(@event, activity);
             }
         }
 

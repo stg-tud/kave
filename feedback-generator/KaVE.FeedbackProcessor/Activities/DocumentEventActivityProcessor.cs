@@ -34,11 +34,11 @@ namespace KaVE.FeedbackProcessor.Activities
         {
             var isSave = @event.Action == DocumentEvent.DocumentAction.Saved;
             var activity = isSave ? Activity.Editing : Activity.Navigation;
-            AnswerActivity(@event, activity);
+            InsertActivity(@event, activity);
 
             if (@event.Document.IsTestDocument())
             {
-                AnswerActivity(@event, Activity.Testing);
+                InsertActivity(@event, Activity.Testing);
             }
         }
     }

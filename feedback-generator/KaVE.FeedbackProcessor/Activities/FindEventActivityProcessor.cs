@@ -26,7 +26,7 @@ namespace KaVE.FeedbackProcessor.Activities
     {
         public FindEventActivityProcessor()
         {
-            RegisterFor<FindEvent>(e => AnswerActivity(e, Activity.Navigation));
+            RegisterFor<FindEvent>(e => InsertActivity(e, Activity.Navigation));
         }
     }
 }

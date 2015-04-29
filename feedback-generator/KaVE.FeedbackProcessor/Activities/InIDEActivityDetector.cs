@@ -34,7 +34,7 @@ namespace KaVE.FeedbackProcessor.Activities
             if (@event.Window.Type.Equals("vsWindowTypeMainWindow"))
             {
                 var activity = ToActivity(@event.Action);
-                AnswerActivity(@event, activity);
+                InsertActivity(@event, activity);
             }
         }
 

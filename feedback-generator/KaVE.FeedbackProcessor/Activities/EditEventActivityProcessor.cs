@@ -26,7 +26,7 @@ namespace KaVE.FeedbackProcessor.Activities
     {
         public EditEventActivityProcessor()
         {
-            RegisterFor<EditEvent>(e => AnswerActivity(e, Activity.Editing));
+            RegisterFor<EditEvent>(e => InsertActivity(e, Activity.Editing));
         }
     }
 }

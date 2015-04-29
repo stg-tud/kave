@@ -28,13 +28,12 @@ namespace KaVE.FeedbackProcessor.Activities
 {
     internal abstract class BaseActivityProcessor : BaseProcessor
     {
-        protected void AnswerActivity(IDEEvent baseEvent,
-            Activity activity)
+        protected void InsertActivity(IDEEvent baseEvent, Activity activity)
         {
-            ReplaceCurrentEventWith(CreateActivityEvent(baseEvent, activity));
+            InsertActivities(baseEvent, activity);
         }
 
-        protected void AnswerActivities(IDEEvent baseEvent, params Activity[] activities)
+        protected void InsertActivities(IDEEvent baseEvent, params Activity[] activities)
         {
             var events = new HashSet<IDEEvent>();
             foreach (var activity in activities)

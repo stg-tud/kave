@@ -33,7 +33,7 @@ namespace KaVE.FeedbackProcessor.Activities
         {
             if (IsOpen(@event) || IsMove(@event) || IsClose(@event))
             {
-                AnswerActivity(@event, Activity.LocalConfiguration);
+                InsertActivity(@event, Activity.LocalConfiguration);
             }
             else if (IsActivate(@event))
             {

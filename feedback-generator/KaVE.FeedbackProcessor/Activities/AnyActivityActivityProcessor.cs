@@ -26,7 +26,7 @@ namespace KaVE.FeedbackProcessor.Activities
     {
         public AnyActivityActivityProcessor()
         {
-            RegisterFor<IDEEvent>(e => AnswerActivity(e, Activity.Any));
+            RegisterFor<IDEEvent>(e => InsertActivity(e, Activity.Any));
         }
     }
 }

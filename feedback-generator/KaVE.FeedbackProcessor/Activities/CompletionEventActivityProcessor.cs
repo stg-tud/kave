@@ -26,7 +26,7 @@ namespace KaVE.FeedbackProcessor.Activities
     {
         public CompletionEventActivityProcessor()
         {
-            RegisterFor<CompletionEvent>(e => AnswerActivity(e, Activity.Editing));
+            RegisterFor<CompletionEvent>(e => InsertActivity(e, Activity.Editing));
         }
     }
 }
