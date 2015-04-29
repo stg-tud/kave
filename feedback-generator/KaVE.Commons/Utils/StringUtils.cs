@@ -16,9 +16,11 @@
  * Contributors:
  *    - Sebastian Proksch
  *    - Dennis Albrecht
+ *    - Sven Amann
  */
 
 using System;
+using System.Globalization;
 
 namespace KaVE.Commons.Utils
 {
@@ -36,6 +38,14 @@ namespace KaVE.Commons.Utils
             var chars = new char[bytes.Length/sizeof (char)];
             Buffer.BlockCopy(bytes, 0, chars, 0, bytes.Length);
             return new string(chars);
+        }
+
+        public static Boolean Contains(this string value,
+            string needle,
+            CompareOptions compareOptions = CompareOptions.None)
+        {
+            var compareInfo = CultureInfo.InvariantCulture.CompareInfo;
+            return compareInfo.IndexOf(value, needle, compareOptions) >= 0;
         }
     }
 }

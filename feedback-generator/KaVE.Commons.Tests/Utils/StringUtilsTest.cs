@@ -16,15 +16,17 @@
  * Contributors:
  *    - Sebastian Proksch
  *    - Dennis Albrecht
+ *    - Sven Amann
  */
 
+using System.Globalization;
 using KaVE.Commons.Utils;
 using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Utils
 {
     [TestFixture]
-    class StringUtilsTest
+    internal class StringUtilsTest
     {
         [Test]
         public void SimpleRoundTrip()
@@ -32,6 +34,17 @@ namespace KaVE.Commons.Tests.Utils
             const string expected = "asd";
             var actual = expected.AsBytes().AsString();
             Assert.AreEqual(expected, actual);
+        }
+
+        [TestCase("myfoobar", true),
+         TestCase("myFoobar", true),
+         TestCase("myFOObar", true),
+         TestCase("myfOObar", true),
+         TestCase("myf00bar", false),
+         TestCase("myfobar", false)]
+        public void ContainsIgnoreCase(string value, bool expected)
+        {
+            Assert.AreEqual(expected, value.Contains("foo", CompareOptions.IgnoreCase));
         }
     }
 }
