@@ -40,12 +40,14 @@ namespace KaVE.Commons.Tests.Utils.SSTPrintingVisitorTestSuite
                 "class TestClass",
                 "{",
                 "}");
+
+            // class C<T>
+            // C'1[[?]] short for T -> ?
         }
 
         [Test]
         public void DelegateDeclaration()
         {
-            // TODO discuss with Sven: TypeName or MethodName?
             var sst = new DelegateDeclaration {Name = TypeName.Get("d:T,P")};
             AssertPrint(sst, "delegate T();");
         }
@@ -62,6 +64,17 @@ namespace KaVE.Commons.Tests.Utils.SSTPrintingVisitorTestSuite
         }
 
         [Test]
+        public void EventDeclaration_GenericEventArgsType()
+        {
+            var sst = new EventDeclaration()
+            {
+                Name = EventName.Get("[EventType`1[[T -> EventArgsType,P]],P] [DeclaringType,P].E")
+            };
+
+            AssertPrint(sst, "event EventType<EventArgsType> E;");
+        }
+
+        [Test]
         public void FieldDeclaration()
         {
             var sst = new FieldDeclaration
@@ -70,6 +83,17 @@ namespace KaVE.Commons.Tests.Utils.SSTPrintingVisitorTestSuite
             };
 
             AssertPrint(sst, "FieldType F;");
+        }
+
+        [Test]
+        public void FieldDeclaration_Static()
+        {
+            var sst = new FieldDeclaration
+            {
+                Name = FieldName.Get("static [FieldType,P] [DeclaringType,P].F")
+            };
+
+            AssertPrint(sst, "static FieldType F;");
         }
 
         [Test]
@@ -191,11 +215,70 @@ namespace KaVE.Commons.Tests.Utils.SSTPrintingVisitorTestSuite
             var sst = new MethodDeclaration
             {
                 Name = MethodName.Get("[ReturnType,P] [DeclaringType,P].M([ParameterType,P] p)")
-                
             };
 
             AssertPrint(sst,
                 "ReturnType M(ParameterType p) { }");
+        }
+
+        [Test]
+        public void MethodDeclaration_Static()
+        {
+            var sst = new MethodDeclaration
+            {
+                Name = MethodName.Get("static [ReturnType,P] [DeclaringType,P].M([ParameterType,P] p)")
+            };
+
+            AssertPrint(sst,
+                "static ReturnType M(ParameterType p) { }");
+        }
+
+        [Test]
+        public void MethodDeclaration_ParameterModifiers_PassedByReference()
+        {
+            var sst = new MethodDeclaration
+            {
+                Name = MethodName.Get("[ReturnType,P] [DeclaringType,P].M(ref [System.Int32, mscore, 4.0.0.0] p)")
+            };
+
+            AssertPrint(sst,
+                "ReturnType M(ref Int32 p) { }");
+        }
+
+        [Test]
+        public void MethodDeclaration_ParameterModifiers_Output()
+        {
+            var sst = new MethodDeclaration
+            {
+                Name = MethodName.Get("[ReturnType,P] [DeclaringType,P].M(out [ParameterType,P] p)")
+            };
+
+            AssertPrint(sst,
+                "ReturnType M(out ParameterType p) { }");
+        }
+
+        [Test]
+        public void MethodDeclaration_ParameterModifiers_Params()
+        {
+            var sst = new MethodDeclaration
+            {
+                Name = MethodName.Get("[ReturnType,P] [DeclaringType,P].M(params [ParameterType[],P] p)")
+            };
+
+            AssertPrint(sst,
+                "ReturnType M(params ParameterType[] p) { }");
+        }
+
+        [Test]
+        public void MethodDeclaration_ParameterModifiers_Optional()
+        {
+            var sst = new MethodDeclaration
+            {
+                Name = MethodName.Get("[ReturnType,P] [DeclaringType,P].M(opt [ParameterType,P] p)")
+            };
+
+            AssertPrint(sst,
+                "ReturnType M(opt ParameterType p) { }");
         }
 
         [Test]

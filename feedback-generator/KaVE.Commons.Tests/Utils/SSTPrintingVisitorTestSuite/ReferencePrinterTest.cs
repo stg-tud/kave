@@ -84,5 +84,12 @@ namespace KaVE.Commons.Tests.Utils.SSTPrintingVisitorTestSuite
 
             AssertPrint(sst, "p");
         }
+
+        [Test]
+        public void UnknownReference()
+        {
+            var sst = new UnknownReference();
+            AssertPrint(sst, "???");
+        }
     }
 }

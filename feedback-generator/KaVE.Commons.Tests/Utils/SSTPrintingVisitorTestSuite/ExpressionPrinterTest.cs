@@ -23,6 +23,8 @@ using System.Text;
 using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
+using KaVE.Commons.Model.SSTs.Impl.Expressions.LoopHeader;
+using KaVE.Commons.Model.SSTs.Impl.Statements;
 using NUnit.Framework;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
 
@@ -88,6 +90,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrintingVisitorTestSuite
         [Test]
         public void InvocationExpression()
         {
+            // TODO: parameter counts 0, 2 ...
             var sst = new InvocationExpression
             {
                 Reference = SSTUtil.VariableReference("this"),
@@ -115,7 +118,6 @@ namespace KaVE.Commons.Tests.Utils.SSTPrintingVisitorTestSuite
         [Test]
         public void ComposedExpression()
         {
-            // TODO: how would comparison with value work?
             var sst = new ComposedExpression
             {
                 References =
@@ -128,6 +130,57 @@ namespace KaVE.Commons.Tests.Utils.SSTPrintingVisitorTestSuite
 
             // TODO: maybe there is a better representation
             AssertPrint(sst, "composed(a, b, c)");
+        }
+
+        [Test]
+        public void LoopHeaderBlockExpression()
+        {
+            // TODO: empty loop header expr? --> invalid code
+            var sst = new LoopHeaderBlockExpression
+            {
+                Body =
+                {
+                    new ContinueStatement(),
+                    new BreakStatement(),
+                }
+            };
+
+            AssertPrint(
+                sst,
+                "",
+                "{",
+                "    continue;",
+                "    break;",
+                "}");
+        }
+
+        [Test]
+        public void UnknownExpression()
+        {
+            var sst = new UnknownExpression();
+            AssertPrint(sst, "???");
+        }
+
+        [Test]
+        public void CompletionExpression_OnTypeReference()
+        {
+            // TODO: check what would happen if type was generic
+            var sst = new CompletionExpression {TypeReference = TypeName.Get("T,P"), Token = "incompl"};
+            AssertPrint(sst, "T.incompl$");
+        }
+
+        [Test]
+        public void CompletionExpression_OnObjectReference()
+        {
+            var sst = new CompletionExpression {ObjectReference = SSTUtil.VariableReference("obj"), Token = "incompl"};
+            AssertPrint(sst, "obj.incompl$");
+        }
+
+        [Test]
+        public void CompletionExpression_OnNothing()
+        {
+            var sst = new CompletionExpression {Token = "incompl"};
+            AssertPrint(sst, "incompl$");
         }
     }
 }

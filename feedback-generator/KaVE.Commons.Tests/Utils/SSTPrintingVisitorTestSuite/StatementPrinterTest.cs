@@ -101,6 +101,14 @@ namespace KaVE.Commons.Tests.Utils.SSTPrintingVisitorTestSuite
             AssertPrint(sst, "return \"val\";");
         }
 
+        // TODO: Seems to be impossible within current model. Test is meant to fail until situation is cleared up.
+        [Test]
+        public void ReturnStatement_Void()
+        {
+            var sst = new ReturnStatement();
+            AssertPrint(sst, "return;");
+        }
+
         [Test]
         public void ExpressionStatement()
         {
@@ -114,6 +122,13 @@ namespace KaVE.Commons.Tests.Utils.SSTPrintingVisitorTestSuite
             var sst = new ExpressionStatement {Expression = invocation};
 
             AssertPrint(sst, "this.M(1);");
+        }
+
+        [Test]
+        public void UnknownStatement()
+        {
+            var sst = new UnknownStatement();
+            AssertPrint(sst, "???;");
         }
     }
 }

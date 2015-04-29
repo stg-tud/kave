@@ -22,11 +22,15 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using KaVE.Commons.Model.Names.CSharp;
+using KaVE.Commons.Model.SSTs;
 using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.Commons.Model.SSTs.Impl.Blocks;
 using KaVE.Commons.Model.SSTs.Impl.Declarations;
+using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
+using KaVE.Commons.Model.SSTs.Impl.Expressions.LoopHeader;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Commons.Model.SSTs.Impl.Statements;
+using KaVE.Commons.Utils.Collections;
 using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Utils.SSTPrintingVisitorTestSuite
@@ -157,7 +161,34 @@ namespace KaVE.Commons.Tests.Utils.SSTPrintingVisitorTestSuite
                 "{",
                 "    throw new ExceptionType();",
                 "}",
-                "catch (ExceptionType e)", // TODO: general catch blocks
+                "catch (ExceptionType e)",
+                "{",
+                "    break;",
+                "}");
+        }
+
+        [Test]
+        public void TryBlock_GeneralCatchBlock()
+        {
+            var sst = new TryBlock
+            {
+                Body = { new ThrowStatement { Exception = TypeName.Get("ExceptionType,P") } },
+                CatchBlocks =
+                {
+                    new CatchBlock
+                    {
+                        Exception = new VariableDeclaration(), // empty/missing!
+                        Body = {new BreakStatement()}
+                    }
+                }
+            };
+
+            AssertPrint(sst,
+                "try",
+                "{",
+                "    throw new ExceptionType();",
+                "}",
+                "catch",
                 "{",
                 "    break;",
                 "}");
@@ -252,6 +283,96 @@ namespace KaVE.Commons.Tests.Utils.SSTPrintingVisitorTestSuite
                 "lock (variable)",
                 "{",
                 "    continue;",
+                "}");
+        }
+
+        [Test]
+        public void WhileLoop()
+        {
+            var sst = new WhileLoop
+            {
+                Condition = new LoopHeaderBlockExpression
+                {
+                    Body = // TODO: could be empty
+                    {
+                        new ReturnStatement {Expression = new ConstantValueExpression {Value = "true"}}
+                    }
+                },
+                Body =
+                {
+                    new ContinueStatement(),
+                    new BreakStatement(),
+                }
+            };
+            
+            AssertPrint(sst,
+                "while (",
+                "    {",
+                "        return true;",
+                "    }",
+                ")",
+                "{",
+                "    continue;",
+                "    break;",
+                "}");
+        }
+
+        [Test]
+        public void DoLoop()
+        {
+            var sst = new DoLoop
+            {
+                Condition = new LoopHeaderBlockExpression
+                {
+                    Body = // TODO: could be empty
+                    {
+                        new ReturnStatement {Expression = new ConstantValueExpression {Value = "true"}}
+                    }
+                },
+                Body =
+                {
+                    new ContinueStatement(),
+                    new BreakStatement(),
+                }
+            };
+
+            AssertPrint(sst,
+                "do",
+                "{",
+                "    continue;",
+                "    break;",
+                "}",
+                "while (",
+                "    {",
+                "        return true;",
+                "    }",
+                ")");
+        }
+
+        [Test]
+        public void ForLoop()
+        {
+            var sst = new ForLoop()
+            {
+                Init = { SSTUtil.Declare("i", TypeName.Get("T,P")), SSTUtil.AssignmentToLocal("i", new ConstantValueExpression { Value = "0" }) },
+                Body = { new ContinueStatement(), new BreakStatement()},
+                Condition = new LoopHeaderBlockExpression { Body = { new ReturnStatement { Expression = new ConstantValueExpression { Value = "true" }}}},
+                Step = { }
+            };
+
+            AssertPrint(sst,
+                "for (",
+                "    {",
+                "        T i;",
+                "        i = 0;",
+                "    };",
+                "    {",
+                "        return true;",
+                "    }; { }",
+                ")",
+                "{",
+                "    continue;",
+                "    break;",
                 "}");
         }
     }
