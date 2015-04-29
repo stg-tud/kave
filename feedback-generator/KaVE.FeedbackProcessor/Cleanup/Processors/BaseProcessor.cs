@@ -33,8 +33,9 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
             new Dictionary<Type, Processor<IDEEvent>>();
 
         private IDEEvent _currentEvent;
+        private IKaVESet<IDEEvent> _answer;
 
-        protected delegate IKaVESet<IDEEvent> Processor<in TEvent>([NotNull] TEvent @event) where TEvent : IDEEvent;
+        protected delegate void Processor<in TEvent>([NotNull] TEvent currentEvent) where TEvent : IDEEvent;
 
         public virtual Developer Developer
         {
@@ -69,18 +70,13 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
 
         private IKaVESet<IDEEvent> GetAnswer(IDEEvent @event)
         {
-            IKaVESet<IDEEvent> answer;
+            _answer = Sets.NewHashSet(@event);
             Processor<IDEEvent> processor;
             if (TryGetProcessor(@event, out processor))
             {
-                answer = processor(@event);
-                Asserts.NotNull(answer, "answer is null");
+                processor(@event);
             }
-            else
-            {
-                answer = AnswerKeep();
-            }
-            return answer;
+            return _answer;
         }
 
         private bool TryGetProcessor(IDEEvent @event, out Processor<IDEEvent> processor)
@@ -89,26 +85,23 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
             return processor != null;
         }
 
-        protected IKaVESet<IDEEvent> AnswerDrop()
+        protected void DropCurrentEvent()
         {
-            return Sets.NewHashSet<IDEEvent>( /* no events */);
+            _answer.Remove(_currentEvent);
         }
 
-        protected IKaVESet<IDEEvent> AnswerKeep()
+        protected void ReplaceCurrentEventWith(params IDEEvent[] replacementEvents)
         {
-            return Sets.NewHashSet(_currentEvent);
+            DropCurrentEvent();
+            Insert(replacementEvents);
         }
 
-        protected IKaVESet<IDEEvent> AnswerReplace(params IDEEvent[] newEvents)
+        protected void Insert(params IDEEvent[] additionalEvents)
         {
-            return Sets.NewHashSet(newEvents);
-        }
-
-        protected IKaVESet<IDEEvent> AnswerInsert(params IDEEvent[] additionalEvents)
-        {
-            var answer = Sets.NewHashSet(additionalEvents);
-            answer.Add(_currentEvent);
-            return answer;
+            foreach (var ideEvent in additionalEvents)
+            {
+                _answer.Add(ideEvent);
+            }
         }
     }
 }

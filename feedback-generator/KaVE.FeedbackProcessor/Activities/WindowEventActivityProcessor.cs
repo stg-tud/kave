@@ -17,9 +17,7 @@
  *    - Sebastian Proksch
  */
 
-using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.VisualStudio;
-using KaVE.Commons.Utils.Collections;
 using KaVE.FeedbackProcessor.Activities.Model;
 
 namespace KaVE.FeedbackProcessor.Activities
@@ -31,18 +29,18 @@ namespace KaVE.FeedbackProcessor.Activities
             RegisterFor<WindowEvent>(ProcessWindowEvent);
         }
 
-        private IKaVESet<IDEEvent> ProcessWindowEvent(WindowEvent @event)
+        private void ProcessWindowEvent(WindowEvent @event)
         {
             if (IsOpen(@event) || IsMove(@event) || IsClose(@event))
             {
-                return AnswerActivity(@event, Activity.LocalConfiguration);
+                AnswerActivity(@event, Activity.LocalConfiguration);
             }
-            if (IsActivate(@event))
+            else if (IsActivate(@event))
             {
                 // TODO add real handling here
-                return AnswerDrop();
+                DropCurrentEvent();
             }
-            return AnswerDrop();
+            DropCurrentEvent();
         }
 
         private bool IsActivate(WindowEvent @event)

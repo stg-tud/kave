@@ -20,7 +20,6 @@
 
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.VisualStudio;
-using KaVE.Commons.Utils.Collections;
 
 namespace KaVE.FeedbackProcessor.Cleanup.Processors
 {
@@ -34,14 +33,12 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
             RegisterFor<DocumentEvent>(ProcessDocumentEvent);
         }
 
-        private IKaVESet<IDEEvent> ProcessCommandEvent(CommandEvent commandEvent)
+        private void ProcessCommandEvent(CommandEvent commandEvent)
         {
             if (commandEvent.CommandId != null)
             {
                 _addedNewItem = IsAddNewItemCommand(commandEvent.CommandId);
             }
-
-            return AnswerKeep();
         }
 
         private static bool IsAddNewItemCommand(string commandId)
@@ -51,22 +48,20 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
                    commandId.Equals("Class");
         }
 
-        private IKaVESet<IDEEvent> ProcessDocumentEvent(DocumentEvent documentEvent)
+        private void ProcessDocumentEvent(DocumentEvent documentEvent)
         {
-            if (!_addedNewItem)
+            if (_addedNewItem)
             {
-                return AnswerKeep();
+                _addedNewItem = false;
+
+                var solutionEvent = new SolutionEvent
+                {
+                    Action = SolutionEvent.SolutionAction.AddProjectItem,
+                    Target = documentEvent.Document
+                };
+                solutionEvent.CopyIDEEventPropertiesFrom(documentEvent);
+                Insert(solutionEvent);
             }
-
-            _addedNewItem = false;
-
-            var solutionEvent = new SolutionEvent
-            {
-                Action = SolutionEvent.SolutionAction.AddProjectItem,
-                Target = documentEvent.Document
-            };
-            solutionEvent.CopyIDEEventPropertiesFrom(documentEvent);
-            return AnswerInsert(solutionEvent);
         }
     }
 }

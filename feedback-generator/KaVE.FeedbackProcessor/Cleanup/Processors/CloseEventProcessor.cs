@@ -20,7 +20,6 @@
 
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.VisualStudio;
-using KaVE.Commons.Utils.Collections;
 
 namespace KaVE.FeedbackProcessor.Cleanup.Processors
 {
@@ -35,40 +34,38 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
             RegisterFor<WindowEvent>(ProcessWindowEvent);
         }
 
-        private IKaVESet<IDEEvent> ProcessCommandEvent(CommandEvent commandEvent)
+        private void ProcessCommandEvent(CommandEvent commandEvent)
         {
             if (commandEvent.CommandId == "Close")
             {
                 _filterNextDocumentEvent = true;
             }
-
-            return AnswerKeep();
         }
 
-        private IKaVESet<IDEEvent> ProcessWindowEvent(WindowEvent windowEvent)
+        private void ProcessWindowEvent(WindowEvent windowEvent)
         {
-            return windowEvent.Action == WindowEvent.WindowAction.Close ? AnswerDrop() : AnswerKeep();
+            if (windowEvent.Action == WindowEvent.WindowAction.Close) DropCurrentEvent();
         }
 
-        private IKaVESet<IDEEvent> ProcessDocumentEvent(DocumentEvent documentEvent)
+        private void ProcessDocumentEvent(DocumentEvent documentEvent)
         {
             if (_filterNextDocumentEvent)
             {
                 _filterNextDocumentEvent = false;
-                return AnswerDrop();
+                DropCurrentEvent();
             }
-
-            if (documentEvent.Action != DocumentEvent.DocumentAction.Closing)
+            else
             {
-                return AnswerKeep();
+                if (documentEvent.Action == DocumentEvent.DocumentAction.Closing)
+                {
+                    var commandEvent = new CommandEvent
+                    {
+                        CommandId = "Close"
+                    };
+                    commandEvent.CopyIDEEventPropertiesFrom(documentEvent);
+                    ReplaceCurrentEventWith(commandEvent);
+                }
             }
-
-            var commandEvent = new CommandEvent
-            {
-                CommandId = "Close"
-            };
-            commandEvent.CopyIDEEventPropertiesFrom(documentEvent);
-            return AnswerReplace(commandEvent);
         }
     }
 }

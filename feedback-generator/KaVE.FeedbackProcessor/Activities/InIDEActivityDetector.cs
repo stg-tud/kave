@@ -17,9 +17,7 @@
  *    - Sven Amann
  */
 
-using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.VisualStudio;
-using KaVE.Commons.Utils.Collections;
 using KaVE.FeedbackProcessor.Activities.Model;
 
 namespace KaVE.FeedbackProcessor.Activities
@@ -31,14 +29,13 @@ namespace KaVE.FeedbackProcessor.Activities
             RegisterFor<WindowEvent>(ProcessIDEFocusEvents);
         }
 
-        private IKaVESet<IDEEvent> ProcessIDEFocusEvents(WindowEvent @event)
+        private void ProcessIDEFocusEvents(WindowEvent @event)
         {
             if (@event.Window.Type.Equals("vsWindowTypeMainWindow"))
             {
                 var activity = ToActivity(@event.Action);
-                return AnswerActivity(@event, activity);
+                AnswerActivity(@event, activity);
             }
-            return AnswerDrop();
         }
 
         private static Activity ToActivity(WindowEvent.WindowAction action)

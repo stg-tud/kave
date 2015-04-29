@@ -17,9 +17,7 @@
  *    - Sebastian Proksch
  */
 
-using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.VisualStudio;
-using KaVE.Commons.Utils.Collections;
 
 namespace KaVE.FeedbackProcessor.Activities
 {
@@ -27,12 +25,7 @@ namespace KaVE.FeedbackProcessor.Activities
     {
         public BuildEventActivityProcessor()
         {
-            RegisterFor<BuildEvent>(ProcessIDEStateEvent);
-        }
-
-        private IKaVESet<IDEEvent> ProcessIDEStateEvent(BuildEvent @event)
-        {
-            return AnswerDrop();
+            RegisterFor<BuildEvent>(@event => DropCurrentEvent());
         }
     }
 }

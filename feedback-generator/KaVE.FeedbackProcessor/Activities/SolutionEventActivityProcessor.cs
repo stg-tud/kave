@@ -25,7 +25,7 @@ namespace KaVE.FeedbackProcessor.Activities
     {
         public SolutionEventActivityProcessor()
         {
-            RegisterFor<SolutionEvent>(e => AnswerDrop());
+            RegisterFor<SolutionEvent>(e => DropCurrentEvent());
         }
     }
 }

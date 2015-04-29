@@ -17,9 +17,7 @@
  *    - Sebastian Proksch
  */
 
-using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.VisualStudio;
-using KaVE.Commons.Utils.Collections;
 using KaVE.FeedbackProcessor.Activities.Model;
 
 namespace KaVE.FeedbackProcessor.Activities
@@ -31,16 +29,17 @@ namespace KaVE.FeedbackProcessor.Activities
             RegisterFor<IDEStateEvent>(ProcessIDEStateEvent);
         }
 
-        private IKaVESet<IDEEvent> ProcessIDEStateEvent(IDEStateEvent @event)
+        private void ProcessIDEStateEvent(IDEStateEvent @event)
         {
             if (IsIntermediateRuntimeEvent(@event))
             {
-                return AnswerDrop();
+                DropCurrentEvent();
             }
-
-            var activity = IsStartup(@event) ? Activity.EnterIDE : Activity.LeaveIDE;
-
-            return AnswerActivity(@event, activity);
+            else
+            {
+                var activity = IsStartup(@event) ? Activity.EnterIDE : Activity.LeaveIDE;
+                AnswerActivity(@event, activity);
+            }
         }
 
         private static bool IsIntermediateRuntimeEvent(IDEStateEvent @event)

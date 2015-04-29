@@ -20,7 +20,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using KaVE.Commons.Model.Events;
-using KaVE.Commons.Utils.Collections;
 using KaVE.FeedbackProcessor.Activities.Model;
 using KaVE.FeedbackProcessor.Cleanup;
 using KaVE.FeedbackProcessor.Cleanup.Processors;
@@ -29,20 +28,20 @@ namespace KaVE.FeedbackProcessor.Activities
 {
     internal abstract class BaseActivityProcessor : BaseProcessor
     {
-        protected IKaVESet<IDEEvent> AnswerActivity(IDEEvent baseEvent,
+        protected void AnswerActivity(IDEEvent baseEvent,
             Activity activity)
         {
-            return AnswerReplace(CreateActivityEvent(baseEvent, activity));
+            ReplaceCurrentEventWith(CreateActivityEvent(baseEvent, activity));
         }
 
-        protected IKaVESet<IDEEvent> AnswerActivities(IDEEvent baseEvent, params Activity[] activities)
+        protected void AnswerActivities(IDEEvent baseEvent, params Activity[] activities)
         {
             var events = new HashSet<IDEEvent>();
             foreach (var activity in activities)
             {
                 events.Add(CreateActivityEvent(baseEvent, activity));
             }
-            return AnswerReplace(events.ToArray());
+            ReplaceCurrentEventWith(events.ToArray());
         }
 
         private static ActivityEvent CreateActivityEvent(IDEEvent baseEvent, Activity activity)

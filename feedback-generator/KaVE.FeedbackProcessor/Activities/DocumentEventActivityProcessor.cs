@@ -17,9 +17,7 @@
  *    - Sebastian Proksch
  */
 
-using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.VisualStudio;
-using KaVE.Commons.Utils.Collections;
 using KaVE.FeedbackProcessor.Activities.Model;
 using KaVE.FeedbackProcessor.Cleanup.Heuristics;
 
@@ -32,15 +30,16 @@ namespace KaVE.FeedbackProcessor.Activities
             RegisterFor<DocumentEvent>(ProcessDocumentEvent);
         }
 
-        private IKaVESet<IDEEvent> ProcessDocumentEvent(DocumentEvent @event)
+        private void ProcessDocumentEvent(DocumentEvent @event)
         {
             var isSave = @event.Action == DocumentEvent.DocumentAction.Saved;
             var activity = isSave ? Activity.Editing : Activity.Navigation;
+            AnswerActivity(@event, activity);
+
             if (@event.Document.IsTestDocument())
             {
-                return AnswerActivities(@event, activity, Activity.Testing);
+                AnswerActivity(@event, Activity.Testing);
             }
-            return AnswerActivity(@event, activity);
         }
     }
 }

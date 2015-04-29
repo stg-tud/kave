@@ -23,7 +23,6 @@ using System.Collections.Generic;
 using System.Linq;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.TestUtils.Model.Events;
-using KaVE.Commons.Utils.Collections;
 using KaVE.FeedbackProcessor.Cleanup;
 using KaVE.FeedbackProcessor.Cleanup.Processors;
 using KaVE.FeedbackProcessor.Database;
@@ -181,7 +180,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup
             GivenDeveloperExists(ideSessionUUID);
             GivenEventExists(ideSessionUUID, "1");
 
-            _uut.RegisterProcessor<ConsumingProcessor>();
+            _uut.RegisterProcessor<DroppingProcessor>();
             _uut.RegisterProcessor<InactiveProcessor>();
             _uut.ProcessFeedback();
 
@@ -213,7 +212,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup
             var event1 = GivenEventExists(ideSessionUUID, "1");
 
             _uut.RegisterProcessor<ReplacingConsumer>();
-            _uut.RegisterProcessor<ConsumingProcessor>();
+            _uut.RegisterProcessor<DroppingProcessor>();
             _uut.ProcessFeedback();
 
             var cleanEvents = _targetFeedbackDatabase.GetEventsCollection().FindAll().ToList();
@@ -260,7 +259,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup
             var event1 = GivenEventExists(ideSessionUUID, "1");
 
             _uut.RegisterProcessor<InsertingConsumer>();
-            _uut.RegisterProcessor<ConsumingProcessor>();
+            _uut.RegisterProcessor<DroppingProcessor>();
             _uut.ProcessFeedback();
 
             var cleanEvents = _targetFeedbackDatabase.GetEventsCollection().FindAll().ToList();
@@ -316,54 +315,46 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup
                 set { ProcessedDevelopers.Add(value); }
             }
 
-            public virtual IKaVESet<IDEEvent> ProcessAnyEvent(IDEEvent @event)
+            public virtual void ProcessAnyEvent(IDEEvent @event)
             {
                 ProcessedEvents.Add(@event);
-                return null; // illegal return value
             }
         }
 
-        private class InactiveProcessor : TestProcessor
-        {
-            public override IKaVESet<IDEEvent> ProcessAnyEvent(IDEEvent @event)
-            {
-                base.ProcessAnyEvent(@event);
-                return AnswerKeep();
-            }
-        }
+        private class InactiveProcessor : TestProcessor {}
 
-        private class ConsumingProcessor : TestProcessor
+        private class DroppingProcessor : TestProcessor
         {
-            public override IKaVESet<IDEEvent> ProcessAnyEvent(IDEEvent @event)
+            public override void ProcessAnyEvent(IDEEvent @event)
             {
                 base.ProcessAnyEvent(@event);
-                return AnswerDrop();
+                DropCurrentEvent();
             }
         }
 
         private class ReplacingConsumer : TestProcessor
         {
-            public override IKaVESet<IDEEvent> ProcessAnyEvent(IDEEvent @event)
+            public override void ProcessAnyEvent(IDEEvent @event)
             {
                 base.ProcessAnyEvent(@event);
 
                 var newEvent = IDEEventTestFactory.SomeEvent();
                 newEvent.IDESessionUUID = @event.IDESessionUUID;
 
-                return AnswerReplace(newEvent);
+                ReplaceCurrentEventWith(newEvent);
             }
         }
 
         private class InsertingConsumer : TestProcessor
         {
-            public override IKaVESet<IDEEvent> ProcessAnyEvent(IDEEvent @event)
+            public override void ProcessAnyEvent(IDEEvent @event)
             {
                 base.ProcessAnyEvent(@event);
 
                 var newEvent = IDEEventTestFactory.SomeEvent();
                 newEvent.IDESessionUUID = @event.IDESessionUUID;
 
-                return AnswerInsert(newEvent);
+                Insert(newEvent);
             }
         }
     }
