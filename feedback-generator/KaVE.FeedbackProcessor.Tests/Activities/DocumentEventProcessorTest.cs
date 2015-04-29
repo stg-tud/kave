@@ -28,6 +28,9 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
 {
     internal class DocumentEventProcessorTest : BaseEventProcessorTest
     {
+        private static readonly DocumentName ProductionDocument = DocumentName.Get("some document");
+        private static readonly DocumentName TestDocument = DocumentName.Get("some test document");
+
         public override IIDEEventProcessor Sut
         {
             get { return new DocumentEventActivityProcessor(); }
@@ -38,7 +41,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
         {
             var @event = new DocumentEvent
             {
-                Document = DocumentName.Get("some document"),
+                Document = ProductionDocument,
                 Action = DocumentEvent.DocumentAction.Opened
             };
 
@@ -46,11 +49,23 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
         }
 
         [Test]
+        public void ShouldMapOpenTestToNavigationAndTesting()
+        {
+            var @event = new DocumentEvent
+            {
+                Document = TestDocument,
+                Action = DocumentEvent.DocumentAction.Opened
+            };
+
+            AssertMapsToActivities(@event, Activity.Navigation, Activity.Testing);
+        }
+
+        [Test]
         public void ShouldMapSaveToEdit()
         {
             var @event = new DocumentEvent
             {
-                Document = DocumentName.Get("some document"),
+                Document = ProductionDocument,
                 Action = DocumentEvent.DocumentAction.Saved
             };
 
@@ -62,7 +77,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
         {
             var @event = new DocumentEvent
             {
-                Document = DocumentName.Get("some test document"),
+                Document = TestDocument,
                 Action = DocumentEvent.DocumentAction.Saved
             };
 
@@ -74,11 +89,23 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
         {
             var @event = new DocumentEvent
             {
-                Document = DocumentName.Get("some document"),
+                Document = ProductionDocument,
                 Action = DocumentEvent.DocumentAction.Closing
             };
 
             AssertMapsToActivity(@event, Activity.Navigation);
+        }
+
+        [Test]
+        public void ShouldMapCloseTestToNavigationAndTesting()
+        {
+            var @event = new DocumentEvent
+            {
+                Document = TestDocument,
+                Action = DocumentEvent.DocumentAction.Closing
+            };
+
+            AssertMapsToActivities(@event, Activity.Navigation, Activity.Testing);
         }
     }
 }
