@@ -36,15 +36,26 @@ namespace KaVE.Commons.Model.Names.VisualStudio
 
         private DocumentName(string identifier) : base(identifier) {}
 
+        private string[] Parts()
+        {
+            if (Identifier.StartsWith("Plain Text "))
+            {
+                return new[] {"Plain Text", Identifier.Substring(11)};
+            }
+            return Identifier.Split(new[] {' '}, 2);
+        }
 
         public string Language
         {
-            get { return Identifier.Split(new[] {' '}, 2)[0]; }
+            get
+            {
+                return Parts()[0];
+            }
         }
 
         public string FileName
         {
-            get { return Identifier.Split(new[] {' '}, 2)[1]; }
+            get { return Parts()[1]; }
         }
     }
 }

@@ -25,20 +25,17 @@ namespace KaVE.Commons.Tests.Model.Names.VisualStudio
     [TestFixture]
     class DocumentNameTest
     {
-        [Test]
-        public void ShouldParseLanguage()
+        [TestCase("CSharp C:\\File.cs", "CSharp", "C:\\File.cs"),
+        TestCase(" \\File.ext", "", "\\File.ext"),
+        TestCase("Basic Code.vb", "Basic", "Code.vb"),
+        TestCase("C/C++ Code.c", "C/C++", "Code.c"),
+        TestCase("Plain Text Readme.txt", "Plain Text", "Readme.txt")]
+        public void ParsesName(string identifier, string language, string fileName)
         {
-            var uut = DocumentName.Get("CSharp C:\\File.cs");
+            var uut = DocumentName.Get(identifier);
 
-            Assert.AreEqual("CSharp", uut.Language);
-        }
-
-        [Test]
-        public void ShouldParseFileName()
-        {
-            var uut = DocumentName.Get("Language C:\\File.ext");
-
-            Assert.AreEqual("C:\\File.ext", uut.FileName);
+            Assert.AreEqual(language, uut.Language);
+            Assert.AreEqual(fileName, uut.FileName);
         }
     }
 }
