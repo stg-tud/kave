@@ -17,17 +17,26 @@
  *    - Sebastian Proksch
  */
 
+using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.VisualStudio;
+using KaVE.Commons.Utils.Collections;
 using KaVE.FeedbackProcessor.Activities.Model;
 using KaVE.FeedbackProcessor.Cleanup.Processors;
 
 namespace KaVE.FeedbackProcessor.Activities
 {
-    internal class EditEventProcessor : BaseProcessor
+    internal class DocumentEventActivityProcessor : BaseActivityProcessor
     {
-        public EditEventProcessor()
+        public DocumentEventActivityProcessor()
         {
-            RegisterFor<EditEvent>(e => AnswerActivity(e, Activity.Editing));
+            RegisterFor<DocumentEvent>(ProcessDocumentEvent);
+        }
+
+        private IKaVESet<IDEEvent> ProcessDocumentEvent(DocumentEvent @event)
+        {
+            var isSave = @event.Action == DocumentEvent.DocumentAction.Saved;
+            var actvity = isSave ? Activity.Editing : Activity.Navigation;
+            return AnswerActivity(@event, actvity);
         }
     }
 }

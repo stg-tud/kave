@@ -25,34 +25,45 @@ using KaVE.FeedbackProcessor.Cleanup.Processors;
 
 namespace KaVE.FeedbackProcessor.Activities
 {
-    internal class IDEStateEventProcessor : BaseProcessor
+    internal class WindowEventActivityProcessor : BaseActivityProcessor
     {
-        public IDEStateEventProcessor()
+        public WindowEventActivityProcessor()
         {
-            RegisterFor<IDEStateEvent>(ProcessIDEStateEvent);
+            RegisterFor<WindowEvent>(ProcessWindowEvent);
         }
 
-        private IKaVESet<IDEEvent> ProcessIDEStateEvent(IDEStateEvent @event)
+        private IKaVESet<IDEEvent> ProcessWindowEvent(WindowEvent @event)
         {
-            if (IsIntermediateRuntimeEvent(@event))
+            if (IsOpen(@event) || IsMove(@event) || IsClose(@event))
             {
+                return AnswerActivity(@event, Activity.LocalConfiguration);
+            }
+            if (IsActivate(@event))
+            {
+                // TODO add real handling here
                 return AnswerDrop();
             }
-
-            const Activity activity = Activity.InIDE;
-            var phase = IsStartup(@event) ? ActivityPhase.Start : ActivityPhase.End;
-
-            return AnswerActivity(@event, activity, phase);
+            return AnswerDrop();
         }
 
-        private static bool IsIntermediateRuntimeEvent(IDEStateEvent @event)
+        private bool IsActivate(WindowEvent @event)
         {
-            return @event.IDELifecyclePhase == IDEStateEvent.LifecyclePhase.Runtime;
+            return @event.Action == WindowEvent.WindowAction.Activate;
         }
 
-        private static bool IsStartup(IDEStateEvent @event)
+        private bool IsOpen(WindowEvent @event)
         {
-            return @event.IDELifecyclePhase == IDEStateEvent.LifecyclePhase.Startup;
+            return @event.Action == WindowEvent.WindowAction.Create;
+        }
+
+        private bool IsMove(WindowEvent @event)
+        {
+            return @event.Action == WindowEvent.WindowAction.Move;
+        }
+
+        private bool IsClose(WindowEvent @event)
+        {
+            return @event.Action == WindowEvent.WindowAction.Close;
         }
     }
 }

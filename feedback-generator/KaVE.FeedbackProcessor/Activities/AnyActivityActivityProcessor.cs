@@ -23,9 +23,9 @@ using KaVE.FeedbackProcessor.Cleanup.Processors;
 
 namespace KaVE.FeedbackProcessor.Activities
 {
-    internal class AnyActivityProcessor : BaseProcessor
+    internal class AnyActivityActivityProcessor : BaseActivityProcessor
     {
-        public AnyActivityProcessor()
+        public AnyActivityActivityProcessor()
         {
             RegisterFor<IDEEvent>(e => AnswerActivity(e, Activity.Any, ActivityPhase.Undefined));
         }

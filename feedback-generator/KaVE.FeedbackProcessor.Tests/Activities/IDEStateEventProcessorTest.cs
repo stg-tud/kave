@@ -30,7 +30,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
     {
         public override IIDEEventProcessor Sut
         {
-            get { return new IDEStateEventProcessor(); }
+            get { return new IDEStateEventActivityProcessor(); }
         }
 
         [Test]

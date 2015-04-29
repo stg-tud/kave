@@ -29,13 +29,13 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
     {
         public override IIDEEventProcessor Sut
         {
-            get { return new AnyActivityProcessor(); }
+            get { return new AnyActivityActivityProcessor(); }
         }
 
         [Test]
         public void ReplacesByAnyActivity()
         {
-            AssertMapsToActivity(IDEEventTestFactory.SomeEvent(), Activity.Any, ActivityPhase.Undefined);
+            AssertMapsToActivity(IDEEventTestFactory.SomeEvent(), Activity.Any);
         }
     }
 }

@@ -28,7 +28,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
     {
         public override IIDEEventProcessor Sut
         {
-            get { return new CommandEventProcessor(); }
+            get { return new CommandEventActivityProcessor(); }
         }
 
         [Test]

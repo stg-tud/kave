@@ -25,18 +25,34 @@ using KaVE.FeedbackProcessor.Cleanup.Processors;
 
 namespace KaVE.FeedbackProcessor.Activities
 {
-    internal class DocumentEventProcessor : BaseProcessor
+    internal class IDEStateEventActivityProcessor : BaseActivityProcessor
     {
-        public DocumentEventProcessor()
+        public IDEStateEventActivityProcessor()
         {
-            RegisterFor<DocumentEvent>(ProcessDocumentEvent);
+            RegisterFor<IDEStateEvent>(ProcessIDEStateEvent);
         }
 
-        private IKaVESet<IDEEvent> ProcessDocumentEvent(DocumentEvent @event)
+        private IKaVESet<IDEEvent> ProcessIDEStateEvent(IDEStateEvent @event)
         {
-            var isSave = @event.Action == DocumentEvent.DocumentAction.Saved;
-            var actvity = isSave ? Activity.Editing : Activity.Navigation;
-            return AnswerActivity(@event, actvity);
+            if (IsIntermediateRuntimeEvent(@event))
+            {
+                return AnswerDrop();
+            }
+
+            const Activity activity = Activity.InIDE;
+            var phase = IsStartup(@event) ? ActivityPhase.Start : ActivityPhase.End;
+
+            return AnswerActivity(@event, activity, phase);
+        }
+
+        private static bool IsIntermediateRuntimeEvent(IDEStateEvent @event)
+        {
+            return @event.IDELifecyclePhase == IDEStateEvent.LifecyclePhase.Runtime;
+        }
+
+        private static bool IsStartup(IDEStateEvent @event)
+        {
+            return @event.IDELifecyclePhase == IDEStateEvent.LifecyclePhase.Startup;
         }
     }
 }

@@ -25,7 +25,7 @@ using KaVE.FeedbackProcessor.Cleanup.Processors;
 
 namespace KaVE.FeedbackProcessor.Activities
 {
-    internal class InIDEActivityDetector : BaseProcessor
+    internal class InIDEActivityDetector : BaseActivityProcessor
     {
         public InIDEActivityDetector()
         {

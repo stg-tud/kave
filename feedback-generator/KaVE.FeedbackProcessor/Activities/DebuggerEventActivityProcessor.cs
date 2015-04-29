@@ -17,17 +17,24 @@
  *    - Sebastian Proksch
  */
 
+using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.VisualStudio;
+using KaVE.Commons.Utils.Collections;
 using KaVE.FeedbackProcessor.Activities.Model;
 using KaVE.FeedbackProcessor.Cleanup.Processors;
 
 namespace KaVE.FeedbackProcessor.Activities
 {
-    internal class FindEventProcessor : BaseProcessor
+    internal class DebuggerEventActivityProcessor : BaseActivityProcessor
     {
-        public FindEventProcessor()
+        public DebuggerEventActivityProcessor()
         {
-            RegisterFor<FindEvent>(e => AnswerActivity(e, Activity.Navigation));
+            RegisterFor<DebuggerEvent>(ProcessIDEStateEvent);
+        }
+
+        private IKaVESet<IDEEvent> ProcessIDEStateEvent(DebuggerEvent @event)
+        {
+            return AnswerActivity(@event, Activity.Debugging);
         }
     }
 }

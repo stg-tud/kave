@@ -1,5 +1,5 @@
-﻿/*
- * Copyright 2014 Technische Universität Darmstadt
+/*
+ * Copyright 2014 Technische Universit�t Darmstadt
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
  * Contributors:
  *    - Sven Amann
  */
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,19 +23,23 @@ using KaVE.Commons.Model.Events;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Collections;
 using KaVE.FeedbackProcessor.Model;
-using KaVE.FeedbackProcessor.Activities.Model;
 using KaVE.JetBrains.Annotations;
 
 namespace KaVE.FeedbackProcessor.Cleanup.Processors
 {
     internal abstract class BaseProcessor : IIDEEventProcessor
     {
-        protected delegate IKaVESet<IDEEvent> Processor<in TEvent>([NotNull] TEvent @event) where TEvent : IDEEvent;
-
         private readonly IDictionary<Type, Processor<IDEEvent>> _processors =
             new Dictionary<Type, Processor<IDEEvent>>();
 
         private IDEEvent _currentEvent;
+
+        protected delegate IKaVESet<IDEEvent> Processor<in TEvent>([NotNull] TEvent @event) where TEvent : IDEEvent;
+
+        public virtual Developer Developer
+        {
+            set { }
+        }
 
         protected void RegisterFor<TEvent>(Processor<TEvent> processor) where TEvent : IDEEvent
         {
@@ -49,11 +52,6 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
         {
             var et = typeof (TEvent);
             return _processors.Any(e => e.Key.IsAssignableFrom(et) || et.IsAssignableFrom(e.Key));
-        }
-
-        public virtual Developer Developer
-        {
-            set { }
         }
 
         public IKaVESet<IDEEvent> Process(IDEEvent @event)
@@ -111,22 +109,6 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
             var answer = Sets.NewHashSet(additionalEvents);
             answer.Add(_currentEvent);
             return answer;
-        }
-
-        protected IKaVESet<IDEEvent> AnswerActivity(IDEEvent @event, Activity activity, ActivityPhase phase = ActivityPhase.Undefined)
-        {
-            var activityEvent = new ActivityEvent
-            {
-                Activity = activity,
-                Phase = phase,
-                IDESessionUUID = @event.IDESessionUUID,
-                KaVEVersion = @event.KaVEVersion,
-                TriggeredAt = @event.TriggeredAt,
-                TriggeredBy = @event.TriggeredBy,
-                Duration = @event.Duration,
-                ActiveWindow = @event.ActiveWindow
-            };
-            return AnswerReplace(activityEvent);
         }
     }
 }

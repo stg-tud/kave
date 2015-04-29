@@ -17,23 +17,17 @@
  *    - Sebastian Proksch
  */
 
-using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.VisualStudio;
-using KaVE.Commons.Utils.Collections;
+using KaVE.FeedbackProcessor.Activities.Model;
 using KaVE.FeedbackProcessor.Cleanup.Processors;
 
 namespace KaVE.FeedbackProcessor.Activities
 {
-    internal class BuildEventProcessor : BaseProcessor
+    internal class InstallEventActivityProcessor : BaseActivityProcessor
     {
-        public BuildEventProcessor()
+        public InstallEventActivityProcessor()
         {
-            RegisterFor<BuildEvent>(ProcessIDEStateEvent);
-        }
-
-        private IKaVESet<IDEEvent> ProcessIDEStateEvent(BuildEvent @event)
-        {
-            return AnswerDrop();
+            RegisterFor<InstallEvent>(e => AnswerActivity(e, Activity.LocalConfiguration));
         }
     }
 }

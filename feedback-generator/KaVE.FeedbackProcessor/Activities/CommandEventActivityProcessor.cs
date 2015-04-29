@@ -17,17 +17,16 @@
  *    - Sebastian Proksch
  */
 
-using KaVE.Commons.Model.Events.CompletionEvents;
-using KaVE.FeedbackProcessor.Activities.Model;
+using KaVE.Commons.Model.Events;
 using KaVE.FeedbackProcessor.Cleanup.Processors;
 
 namespace KaVE.FeedbackProcessor.Activities
 {
-    internal class CompletionEventProcessor : BaseProcessor
+    internal class CommandEventActivityProcessor : BaseActivityProcessor
     {
-        public CompletionEventProcessor()
+        public CommandEventActivityProcessor()
         {
-            RegisterFor<CompletionEvent>(e => AnswerActivity(e, Activity.Editing));
+            RegisterFor<CommandEvent>(e => AnswerDrop());
         }
     }
 }

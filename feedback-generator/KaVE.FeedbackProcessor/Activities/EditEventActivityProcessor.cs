@@ -18,28 +18,16 @@
  */
 
 using KaVE.Commons.Model.Events.VisualStudio;
-using KaVE.FeedbackProcessor.Activities;
 using KaVE.FeedbackProcessor.Activities.Model;
-using KaVE.FeedbackProcessor.Cleanup;
-using NUnit.Framework;
+using KaVE.FeedbackProcessor.Cleanup.Processors;
 
-namespace KaVE.FeedbackProcessor.Tests.Activities
+namespace KaVE.FeedbackProcessor.Activities
 {
-    internal class FindEventProcessorTest : BaseEventProcessorTest
+    internal class EditEventActivityProcessor : BaseActivityProcessor
     {
-        public override IIDEEventProcessor Sut
+        public EditEventActivityProcessor()
         {
-            get { return new FindEventActivityProcessor(); }
-        }
-
-        [Test]
-        public void ShouldAlwaysMapFindToNavigation()
-        {
-            var @event = new FindEvent
-            {
-                Cancelled = true
-            };
-            AssertMapsToActivity(@event, Activity.Navigation);
+            RegisterFor<EditEvent>(e => AnswerActivity(e, Activity.Editing));
         }
     }
 }

@@ -14,20 +14,34 @@
  * limitations under the License.
  * 
  * Contributors:
- *    - Sebastian Proksch
+ *    - Sven Amann
  */
 
-using KaVE.Commons.Model.Events.VisualStudio;
+using KaVE.Commons.Model.Events;
+using KaVE.Commons.Utils.Collections;
 using KaVE.FeedbackProcessor.Activities.Model;
 using KaVE.FeedbackProcessor.Cleanup.Processors;
 
 namespace KaVE.FeedbackProcessor.Activities
 {
-    internal class InstallEventProcessor : BaseProcessor
+    internal abstract class BaseActivityProcessor : BaseProcessor
     {
-        public InstallEventProcessor()
+        protected IKaVESet<IDEEvent> AnswerActivity(IDEEvent @event,
+            Activity activity,
+            ActivityPhase phase = ActivityPhase.Undefined)
         {
-            RegisterFor<InstallEvent>(e => AnswerActivity(e, Activity.LocalConfiguration));
+            var activityEvent = new ActivityEvent
+            {
+                Activity = activity,
+                Phase = phase,
+                IDESessionUUID = @event.IDESessionUUID,
+                KaVEVersion = @event.KaVEVersion,
+                TriggeredAt = @event.TriggeredAt,
+                TriggeredBy = @event.TriggeredBy,
+                Duration = @event.Duration,
+                ActiveWindow = @event.ActiveWindow
+            };
+            return AnswerReplace(activityEvent);
         }
     }
 }

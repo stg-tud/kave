@@ -17,17 +17,17 @@
  *    - Sebastian Proksch
  */
 
-using KaVE.Commons.Model.Events.VisualStudio;
+using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.FeedbackProcessor.Activities.Model;
 using KaVE.FeedbackProcessor.Cleanup.Processors;
 
 namespace KaVE.FeedbackProcessor.Activities
 {
-    internal class UpdateEventProcessor : BaseProcessor
+    internal class CompletionEventActivityProcessor : BaseActivityProcessor
     {
-        public UpdateEventProcessor()
+        public CompletionEventActivityProcessor()
         {
-            RegisterFor<UpdateEvent>(e => AnswerActivity(e, Activity.LocalConfiguration));
+            RegisterFor<CompletionEvent>(e => AnswerActivity(e, Activity.Editing));
         }
     }
 }

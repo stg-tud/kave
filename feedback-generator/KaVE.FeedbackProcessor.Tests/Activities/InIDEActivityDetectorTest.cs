@@ -55,8 +55,6 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
                 Action = WindowEvent.WindowAction.Deactivate
             };
 
-            var uut = new InIDEActivityDetector();
-
             AssertMapsToActivity(@event, Activity.InIDE, ActivityPhase.End);
         }
     }

@@ -17,16 +17,17 @@
  *    - Sebastian Proksch
  */
 
-using KaVE.Commons.Model.Events;
+using KaVE.Commons.Model.Events.VisualStudio;
+using KaVE.FeedbackProcessor.Activities.Model;
 using KaVE.FeedbackProcessor.Cleanup.Processors;
 
 namespace KaVE.FeedbackProcessor.Activities
 {
-    internal class CommandEventProcessor : BaseProcessor
+    internal class FindEventActivityProcessor : BaseActivityProcessor
     {
-        public CommandEventProcessor()
+        public FindEventActivityProcessor()
         {
-            RegisterFor<CommandEvent>(e => AnswerDrop());
+            RegisterFor<FindEvent>(e => AnswerActivity(e, Activity.Navigation));
         }
     }
 }
