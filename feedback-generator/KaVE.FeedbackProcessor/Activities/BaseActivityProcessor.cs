@@ -17,6 +17,8 @@
  *    - Sven Amann
  */
 
+using System.Collections.Generic;
+using System.Linq;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Utils.Collections;
 using KaVE.FeedbackProcessor.Activities.Model;
@@ -30,12 +32,27 @@ namespace KaVE.FeedbackProcessor.Activities
         protected IKaVESet<IDEEvent> AnswerActivity(IDEEvent baseEvent,
             Activity activity)
         {
+            return AnswerReplace(CreateActivityEvent(baseEvent, activity));
+        }
+
+        protected IKaVESet<IDEEvent> AnswerActivities(IDEEvent baseEvent, params Activity[] activities)
+        {
+            var events = new HashSet<IDEEvent>();
+            foreach (var activity in activities)
+            {
+                events.Add(CreateActivityEvent(baseEvent, activity));
+            }
+            return AnswerReplace(events.ToArray());
+        }
+
+        private static ActivityEvent CreateActivityEvent(IDEEvent baseEvent, Activity activity)
+        {
             var activityEvent = new ActivityEvent
             {
                 Activity = activity
             };
             activityEvent.CopyIDEEventPropertiesFrom(baseEvent);
-            return AnswerReplace(activityEvent);
+            return activityEvent;
         }
     }
 }

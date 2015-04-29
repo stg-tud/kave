@@ -58,6 +58,18 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
         }
 
         [Test]
+        public void ShouldMapSaveOfTestToEditAndSave()
+        {
+            var @event = new DocumentEvent
+            {
+                Document = DocumentName.Get("some test document"),
+                Action = DocumentEvent.DocumentAction.Saved
+            };
+
+            AssertMapsToActivities(@event, Activity.Editing, Activity.Testing);
+        }
+
+        [Test]
         public void ShouldMapCloseToNavigation()
         {
             var @event = new DocumentEvent
