@@ -63,15 +63,9 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
             var solutionEvent = new SolutionEvent
             {
                 Action = SolutionEvent.SolutionAction.AddProjectItem,
-                ActiveDocument = documentEvent.ActiveDocument,
-                ActiveWindow = documentEvent.ActiveWindow,
-                Duration = documentEvent.Duration,
-                IDESessionUUID = documentEvent.IDESessionUUID,
-                TerminatedAt = documentEvent.TerminatedAt,
-                TriggeredAt = documentEvent.TriggeredAt,
-                TriggeredBy = documentEvent.TriggeredBy,
                 Target = documentEvent.Document
             };
+            solutionEvent.CopyIDEEventPropertiesFrom(documentEvent);
             return AnswerInsert(solutionEvent);
         }
     }

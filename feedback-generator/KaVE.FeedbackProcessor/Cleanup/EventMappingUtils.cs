@@ -18,24 +18,20 @@
  */
 
 using KaVE.Commons.Model.Events;
-using KaVE.Commons.Utils.Collections;
-using KaVE.FeedbackProcessor.Activities.Model;
-using KaVE.FeedbackProcessor.Cleanup;
-using KaVE.FeedbackProcessor.Cleanup.Processors;
 
-namespace KaVE.FeedbackProcessor.Activities
+namespace KaVE.FeedbackProcessor.Cleanup
 {
-    internal abstract class BaseActivityProcessor : BaseProcessor
+    static class EventMappingUtils
     {
-        protected IKaVESet<IDEEvent> AnswerActivity(IDEEvent baseEvent,
-            Activity activity)
+        public static void CopyIDEEventPropertiesFrom(this IDEEvent target, IDEEvent source)
         {
-            var activityEvent = new ActivityEvent
-            {
-                Activity = activity
-            };
-            activityEvent.CopyIDEEventPropertiesFrom(baseEvent);
-            return AnswerReplace(activityEvent);
+            target.IDESessionUUID = source.IDESessionUUID;
+            target.KaVEVersion = source.KaVEVersion;
+            target.TriggeredAt = source.TriggeredAt;
+            target.TriggeredBy = source.TriggeredBy;
+            target.Duration = source.Duration;
+            target.ActiveWindow = source.ActiveWindow;
+            target.ActiveDocument = source.ActiveDocument;
         }
     }
 }

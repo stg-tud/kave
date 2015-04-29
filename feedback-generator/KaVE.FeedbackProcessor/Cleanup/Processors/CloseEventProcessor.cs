@@ -65,16 +65,9 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
 
             var commandEvent = new CommandEvent
             {
-                ActiveDocument = documentEvent.ActiveDocument,
-                ActiveWindow = documentEvent.ActiveWindow,
-                CommandId = "Close",
-                Duration = documentEvent.Duration,
-                IDESessionUUID = documentEvent.IDESessionUUID,
-                TerminatedAt = documentEvent.TerminatedAt,
-                TriggeredAt = documentEvent.TriggeredAt,
-                TriggeredBy = documentEvent.TriggeredBy
+                CommandId = "Close"
             };
-
+            commandEvent.CopyIDEEventPropertiesFrom(documentEvent);
             return AnswerReplace(commandEvent);
         }
     }

@@ -70,6 +70,7 @@
     <Compile Include="Activities\UpdateEventActivityProcessor.cs" />
     <Compile Include="Activities\WindowEventActivityProcessor.cs" />
     <Compile Include="Cleanup\DeveloperConsolidator.cs" />
+    <Compile Include="Cleanup\EventMappingUtils.cs" />
     <Compile Include="Cleanup\EventsMapper.cs" />
     <Compile Include="Cleanup\Heuristics\TestVsProductionClassHeuristic.cs" />
     <Compile Include="Cleanup\IIDEEventProcessor.cs" />
