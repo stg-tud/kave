@@ -18,7 +18,6 @@
  */
 
 using KaVE.Commons.Model.Events.VisualStudio;
-using KaVE.Commons.Model.Names.VisualStudio;
 using KaVE.FeedbackProcessor.Activities;
 using KaVE.FeedbackProcessor.Activities.Model;
 using KaVE.FeedbackProcessor.Cleanup;
@@ -28,9 +27,6 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
 {
     internal class DocumentEventProcessorTest : BaseEventProcessorTest
     {
-        private static readonly DocumentName ProductionDocument = DocumentName.Get("some document");
-        private static readonly DocumentName TestDocument = DocumentName.Get("some test document");
-
         public override IIDEEventProcessor Sut
         {
             get { return new DocumentEventActivityProcessor(); }
@@ -41,7 +37,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
         {
             var @event = new DocumentEvent
             {
-                Document = ProductionDocument,
+                Document = TestFixtures.SomeProductionDocumentName,
                 Action = DocumentEvent.DocumentAction.Opened
             };
 
@@ -53,7 +49,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
         {
             var @event = new DocumentEvent
             {
-                Document = TestDocument,
+                Document = TestFixtures.SomeTestDocumentName,
                 Action = DocumentEvent.DocumentAction.Opened
             };
 
@@ -65,7 +61,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
         {
             var @event = new DocumentEvent
             {
-                Document = ProductionDocument,
+                Document = TestFixtures.SomeProductionDocumentName,
                 Action = DocumentEvent.DocumentAction.Saved
             };
 
@@ -77,7 +73,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
         {
             var @event = new DocumentEvent
             {
-                Document = TestDocument,
+                Document = TestFixtures.SomeTestDocumentName,
                 Action = DocumentEvent.DocumentAction.Saved
             };
 
@@ -89,7 +85,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
         {
             var @event = new DocumentEvent
             {
-                Document = ProductionDocument,
+                Document = TestFixtures.SomeProductionDocumentName,
                 Action = DocumentEvent.DocumentAction.Closing
             };
 
@@ -101,7 +97,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
         {
             var @event = new DocumentEvent
             {
-                Document = TestDocument,
+                Document = TestFixtures.SomeTestDocumentName,
                 Action = DocumentEvent.DocumentAction.Closing
             };
 

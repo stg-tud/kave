@@ -46,16 +46,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
 
             var events = Sut.Process(@event);
 
-            var expectedEvent = new ActivityEvent
-            {
-                Activity = activity,
-                IDESessionUUID = @event.IDESessionUUID,
-                KaVEVersion = @event.KaVEVersion,
-                TriggeredAt = @event.TriggeredAt,
-                TriggeredBy = @event.TriggeredBy,
-                Duration = @event.Duration,
-                ActiveWindow = @event.ActiveWindow
-            };
+            var expectedEvent = DeriveActivityDocument(@event, activity);
             CollectionAssert.AreEquivalent(new[] {expectedEvent}, events);
         }
 
@@ -68,19 +59,24 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
             var expecteds = Lists.NewList<ActivityEvent>();
             foreach (var activity in activities)
             {
-                expecteds.Add(
-                    new ActivityEvent
-                    {
-                        Activity = activity,
-                        IDESessionUUID = @event.IDESessionUUID,
-                        KaVEVersion = @event.KaVEVersion,
-                        TriggeredAt = @event.TriggeredAt,
-                        TriggeredBy = @event.TriggeredBy,
-                        Duration = @event.Duration,
-                        ActiveWindow = @event.ActiveWindow
-                    });
+                expecteds.Add(DeriveActivityDocument(@event, activity));
             }
             CollectionAssert.AreEquivalent(expecteds, actuals);
+        }
+
+        private static ActivityEvent DeriveActivityDocument(IDEEvent @event, Activity activity)
+        {
+            return new ActivityEvent
+            {
+                Activity = activity,
+                IDESessionUUID = @event.IDESessionUUID,
+                KaVEVersion = @event.KaVEVersion,
+                TriggeredAt = @event.TriggeredAt,
+                TriggeredBy = @event.TriggeredBy,
+                Duration = @event.Duration,
+                ActiveWindow = @event.ActiveWindow,
+                ActiveDocument = @event.ActiveDocument
+            };
         }
 
         private static void FillWithBasicInformation(IDEEvent @event)

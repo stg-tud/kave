@@ -14,30 +14,16 @@
  * limitations under the License.
  * 
  * Contributors:
- *    - Sebastian Proksch
+ *    - Sven Amann
  */
 
-using KaVE.Commons.Model.Events.VisualStudio;
-using KaVE.FeedbackProcessor.Activities.Model;
-using KaVE.FeedbackProcessor.Cleanup.Heuristics;
+using KaVE.Commons.Model.Names.VisualStudio;
 
-namespace KaVE.FeedbackProcessor.Activities
+namespace KaVE.FeedbackProcessor.Tests.Activities
 {
-    internal class EditEventActivityProcessor : BaseActivityProcessor
+    internal static class TestFixtures
     {
-        public EditEventActivityProcessor()
-        {
-            RegisterFor<EditEvent>(ProcessEditEvent);
-        }
-
-        private void ProcessEditEvent(EditEvent e)
-        {
-            InsertActivity(e, Activity.Editing);
-
-            if (e.ActiveDocument.IsTestDocument())
-            {
-                InsertActivity(e, Activity.Testing);
-            }
-        }
+        public static readonly DocumentName SomeProductionDocumentName = DocumentName.Get("some document");
+        public static readonly DocumentName SomeTestDocumentName = DocumentName.Get("some test document");
     }
 }

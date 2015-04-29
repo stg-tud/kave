@@ -15,6 +15,7 @@
  * 
  * Contributors:
  *    - Sebastian Proksch
+ *    - Sven Amann
  */
 
 using KaVE.Commons.Model.Events.VisualStudio;
@@ -33,15 +34,27 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
         }
 
         [Test]
-        public void ShouldAlwaysMapEditToEdit()
+        public void MapsEditToEditing()
         {
             var @event = new EditEvent
             {
+                ActiveDocument = TestFixtures.SomeProductionDocumentName,
                 NumberOfChanges = -1,
                 SizeOfChanges = -1
             };
-            // TODO add more sophisticated handling, i.e. based on the current document name
             AssertMapsToActivity(@event, Activity.Editing);
+        }
+
+        [Test]
+        public void MapsEditOfTestToEditingAndTesting()
+        {
+            var @event = new EditEvent
+            {
+                ActiveDocument = TestFixtures.SomeTestDocumentName,
+                NumberOfChanges = -1,
+                SizeOfChanges = -1
+            };
+            AssertMapsToActivities(@event, Activity.Editing, Activity.Testing);
         }
     }
 }
