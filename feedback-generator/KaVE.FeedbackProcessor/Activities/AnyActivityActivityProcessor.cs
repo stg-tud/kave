@@ -19,7 +19,6 @@
 
 using KaVE.Commons.Model.Events;
 using KaVE.FeedbackProcessor.Activities.Model;
-using KaVE.FeedbackProcessor.Cleanup.Processors;
 
 namespace KaVE.FeedbackProcessor.Activities
 {
@@ -27,7 +26,7 @@ namespace KaVE.FeedbackProcessor.Activities
     {
         public AnyActivityActivityProcessor()
         {
-            RegisterFor<IDEEvent>(e => AnswerActivity(e, Activity.Any, ActivityPhase.Undefined));
+            RegisterFor<IDEEvent>(e => AnswerActivity(e, Activity.Any));
         }
     }
 }

@@ -26,11 +26,9 @@ namespace KaVE.FeedbackProcessor.Activities.Model
     {
         public Activity Activity { get; set; }
 
-        public ActivityPhase Phase { get; set; }
-
         protected bool Equals(ActivityEvent other)
         {
-            return base.Equals(other) && Activity == other.Activity && Phase == other.Phase;
+            return base.Equals(other) && Activity == other.Activity;
         }
 
         public override bool Equals(object obj)
@@ -44,7 +42,6 @@ namespace KaVE.FeedbackProcessor.Activities.Model
             {
                 var hashCode = base.GetHashCode();
                 hashCode = (hashCode*397) ^ (int) Activity;
-                hashCode = (hashCode*397) ^ (int) Phase;
                 return hashCode;
             }
         }

@@ -30,6 +30,7 @@ namespace KaVE.FeedbackProcessor.Activities.Model
         ProjektManagement,
         LocalConfiguration,
         Waiting,
-        InIDE
+        EnterIDE,
+        LeaveIDE
     }
 }

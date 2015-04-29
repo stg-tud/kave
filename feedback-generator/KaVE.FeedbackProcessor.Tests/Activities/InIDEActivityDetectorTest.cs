@@ -35,7 +35,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
         }
 
         [Test]
-        public void MapsMainWindowActivationToInIDEActivityStart()
+        public void MapsMainWindowActivationToEnterIDEActivity()
         {
             var @event = new WindowEvent
             {
@@ -43,11 +43,11 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
                 Action = WindowEvent.WindowAction.Activate
             };
 
-            AssertMapsToActivity(@event, Activity.InIDE, ActivityPhase.Start);
+            AssertMapsToActivity(@event, Activity.EnterIDE);
         }
 
         [Test]
-        public void MapsMainWindowDeactivationToInIDEActivityEnd()
+        public void MapsMainWindowDeactivationToLeaveIDEActivity()
         {
             var @event = new WindowEvent
             {
@@ -55,7 +55,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
                 Action = WindowEvent.WindowAction.Deactivate
             };
 
-            AssertMapsToActivity(@event, Activity.InIDE, ActivityPhase.End);
+            AssertMapsToActivity(@event, Activity.LeaveIDE);
         }
     }
 }

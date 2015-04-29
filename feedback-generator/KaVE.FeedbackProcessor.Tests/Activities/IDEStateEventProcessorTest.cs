@@ -34,11 +34,11 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
         }
 
         [Test]
-        public void ShouldMapStartupEventsToStartInIDE()
+        public void ShouldMapStartupEventsToEnterIDE()
         {
             var @event = CreateArbitraryEvent();
             @event.IDELifecyclePhase = IDEStateEvent.LifecyclePhase.Startup;
-            AssertMapsToActivity(@event, Activity.InIDE, ActivityPhase.Start);
+            AssertMapsToActivity(@event, Activity.EnterIDE);
         }
 
         [Test]
@@ -50,11 +50,11 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
         }
 
         [Test]
-        public void ShouldMapShutdownEventsToEndInIDE()
+        public void ShouldMapShutdownEventsToLeaveIDE()
         {
             var @event = CreateArbitraryEvent();
             @event.IDELifecyclePhase = IDEStateEvent.LifecyclePhase.Shutdown;
-            AssertMapsToActivity(@event, Activity.InIDE, ActivityPhase.End);
+            AssertMapsToActivity(@event, Activity.LeaveIDE);
         }
 
         private static IDEStateEvent CreateArbitraryEvent()

@@ -18,7 +18,6 @@
  */
 
 using KaVE.Commons.Model.Events;
-using KaVE.FeedbackProcessor.Cleanup.Processors;
 
 namespace KaVE.FeedbackProcessor.Activities
 {

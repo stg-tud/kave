@@ -14,7 +14,7 @@
  * limitations under the License.
  * 
  * Contributors:
- *    - Sven Amann
+ *    - 
  */
 
 using KaVE.Commons.Model.Events;
@@ -26,20 +26,18 @@ namespace KaVE.FeedbackProcessor.Activities
 {
     internal abstract class BaseActivityProcessor : BaseProcessor
     {
-        protected IKaVESet<IDEEvent> AnswerActivity(IDEEvent @event,
-            Activity activity,
-            ActivityPhase phase = ActivityPhase.Undefined)
+        protected IKaVESet<IDEEvent> AnswerActivity(IDEEvent baseEvent,
+            Activity activity)
         {
             var activityEvent = new ActivityEvent
             {
                 Activity = activity,
-                Phase = phase,
-                IDESessionUUID = @event.IDESessionUUID,
-                KaVEVersion = @event.KaVEVersion,
-                TriggeredAt = @event.TriggeredAt,
-                TriggeredBy = @event.TriggeredBy,
-                Duration = @event.Duration,
-                ActiveWindow = @event.ActiveWindow
+                IDESessionUUID = baseEvent.IDESessionUUID,
+                KaVEVersion = baseEvent.KaVEVersion,
+                TriggeredAt = baseEvent.TriggeredAt,
+                TriggeredBy = baseEvent.TriggeredBy,
+                Duration = baseEvent.Duration,
+                ActiveWindow = baseEvent.ActiveWindow
             };
             return AnswerReplace(activityEvent);
         }

@@ -21,7 +21,6 @@ using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.VisualStudio;
 using KaVE.Commons.Utils.Collections;
 using KaVE.FeedbackProcessor.Activities.Model;
-using KaVE.FeedbackProcessor.Cleanup.Processors;
 
 namespace KaVE.FeedbackProcessor.Activities
 {
@@ -36,10 +35,15 @@ namespace KaVE.FeedbackProcessor.Activities
         {
             if (@event.Window.Type.Equals("vsWindowTypeMainWindow"))
             {
-                var phase = @event.Action == WindowEvent.WindowAction.Activate ? ActivityPhase.Start : ActivityPhase.End;
-                return AnswerActivity(@event, Activity.InIDE, phase);
+                var activity = ToActivity(@event.Action);
+                return AnswerActivity(@event, activity);
             }
             return AnswerDrop();
+        }
+
+        private static Activity ToActivity(WindowEvent.WindowAction action)
+        {
+            return action == WindowEvent.WindowAction.Activate ? Activity.EnterIDE : Activity.LeaveIDE;
         }
     }
 }

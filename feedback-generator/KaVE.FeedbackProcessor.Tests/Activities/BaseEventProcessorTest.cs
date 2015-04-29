@@ -40,7 +40,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
             CollectionAssert.AreEquivalent(new ActivityEvent[] {}, events);
         }
 
-        protected void AssertMapsToActivity(IDEEvent @event, Activity activity, ActivityPhase phase = ActivityPhase.Undefined)
+        protected void AssertMapsToActivity(IDEEvent @event, Activity activity)
         {
             FillWithBasicInformation(@event);
 
@@ -49,7 +49,6 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
             var expectedEvent = new ActivityEvent
             {
                 Activity = activity,
-                Phase = phase,
                 IDESessionUUID = @event.IDESessionUUID,
                 KaVEVersion = @event.KaVEVersion,
                 TriggeredAt = @event.TriggeredAt,
@@ -73,7 +72,6 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
                     new ActivityEvent
                     {
                         Activity = activity,
-                        Phase = ActivityPhase.Undefined,
                         IDESessionUUID = @event.IDESessionUUID,
                         KaVEVersion = @event.KaVEVersion,
                         TriggeredAt = @event.TriggeredAt,

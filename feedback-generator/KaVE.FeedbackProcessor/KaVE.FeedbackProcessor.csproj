@@ -66,7 +66,6 @@
     <Compile Include="Activities\InstallEventActivityProcessor.cs" />
     <Compile Include="Activities\Model\Activity.cs" />
     <Compile Include="Activities\Model\ActivityEvent.cs" />
-    <Compile Include="Activities\Model\ActivityPhase.cs" />
     <Compile Include="Activities\SolutionEventActivityProcessor.cs" />
     <Compile Include="Activities\UpdateEventActivityProcessor.cs" />
     <Compile Include="Activities\WindowEventActivityProcessor.cs" />

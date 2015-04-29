@@ -21,7 +21,6 @@ using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.VisualStudio;
 using KaVE.Commons.Utils.Collections;
 using KaVE.FeedbackProcessor.Activities.Model;
-using KaVE.FeedbackProcessor.Cleanup.Processors;
 
 namespace KaVE.FeedbackProcessor.Activities
 {
@@ -39,10 +38,9 @@ namespace KaVE.FeedbackProcessor.Activities
                 return AnswerDrop();
             }
 
-            const Activity activity = Activity.InIDE;
-            var phase = IsStartup(@event) ? ActivityPhase.Start : ActivityPhase.End;
+            var activity = IsStartup(@event) ? Activity.EnterIDE : Activity.LeaveIDE;
 
-            return AnswerActivity(@event, activity, phase);
+            return AnswerActivity(@event, activity);
         }
 
         private static bool IsIntermediateRuntimeEvent(IDEStateEvent @event)
