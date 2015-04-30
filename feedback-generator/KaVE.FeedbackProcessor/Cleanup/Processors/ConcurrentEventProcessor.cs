@@ -43,6 +43,8 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
 
         private IKaVESet<IDEEvent> ProcessIDEEvent(IDEEvent @event)
         {
+            if (@event is ErrorEvent) return AnswerDrop();
+
             if (_eventCache.Count == 0)
             {
                 _eventCache.Add(@event);

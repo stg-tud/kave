@@ -70,6 +70,19 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
             eventList.ForEach(ideEvent => CollectionAssert.AreEquivalent(new KaVEHashSet<IDEEvent>(),_uut.Process(ideEvent)));
         }
 
+        [Test]
+        public void ShouldNotAddErrorEventsToConcurrentEvents()
+        {
+            var eventList = GenerateEvents(ConcurrentEventProcessor.EventTimeDifference.Ticks);
+            var errorEvent = new ErrorEvent { TriggeredAt = eventList.Last().TriggeredAt };            
+            eventList.Add(errorEvent);
+
+            IKaVESet<IDEEvent> resultEventSet = new KaVEHashSet<IDEEvent>();
+            eventList.ForEach(ideEvent => resultEventSet = _uut.Process(ideEvent));
+
+            CollectionAssert.DoesNotContain(resultEventSet, errorEvent);
+        }
+
         [Test, ExpectedException(typeof(AssertException), ExpectedMessage = "Events should have a DateTime value in TriggeredAt")]
         public void ThrowExceptionWhenEventHasInvalidDateTime()
         {
