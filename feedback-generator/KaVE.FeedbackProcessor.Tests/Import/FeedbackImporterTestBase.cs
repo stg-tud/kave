@@ -28,7 +28,7 @@ using NUnit.Framework;
 
 namespace KaVE.FeedbackProcessor.Tests.Import
 {
-    internal class FeedbackImporterTestBase : FeedbackDatabaseBasedTest
+    internal abstract class FeedbackImporterTestBase : FeedbackDatabaseBasedTest
     {
         private readonly TestLogger _logger = new TestLogger(true);
         private readonly ICollection<FeedbackArchiveBuilder> _inputArchiveBuilders = new List<FeedbackArchiveBuilder>();

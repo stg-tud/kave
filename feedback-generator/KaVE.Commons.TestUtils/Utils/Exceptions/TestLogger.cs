@@ -37,7 +37,17 @@ namespace KaVE.Commons.TestUtils.Utils.Exceptions
         {
             if (failOnError)
             {
-                ErrorLogged += (exception, content) => Assert.Fail("{0}\r\n{1}", content, exception);
+                ErrorLogged += (exception, content) =>
+                {
+                    if (exception == null)
+                    {
+                        Assert.Fail(content);
+                    }
+                    else
+                    {
+                        Assert.Fail("{0}\r\n{1}", content, exception);
+                    }
+                };
             }
         }
 

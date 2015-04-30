@@ -18,14 +18,34 @@
  */
 
 using KaVE.Commons.Model.Events.VisualStudio;
+using KaVE.Commons.Utils;
+using KaVE.Commons.Utils.Exceptions;
 using KaVE.FeedbackProcessor.Activities.Model;
 
 namespace KaVE.FeedbackProcessor.Activities
 {
     internal class WindowEventActivityProcessor : BaseActivityProcessor
     {
-        public WindowEventActivityProcessor()
+        private readonly ILogger _logger;
+
+        private static readonly string[] WorkItemIndicators =
         {
+            "Backlog Item ",
+            "Bug ",
+            "Initiative ",
+            "Query ",
+            "Requirement ",
+            "Requirements ",
+            "Task ",
+            "User Story ",
+            ".wiq", // 'work item query' file extension
+            "[Editor]", // marker seen only in captions like "my open tasks [Editor]"
+            "[Results]" // marker seen only in captions like "my open tasks [Results]"
+        };
+
+        public WindowEventActivityProcessor(ILogger logger)
+        {
+            _logger = logger;
             RegisterFor<WindowEvent>(ProcessWindowEvent);
         }
 
@@ -37,8 +57,40 @@ namespace KaVE.FeedbackProcessor.Activities
             }
             else if (IsActivate(@event))
             {
-                // TODO add real handling here
-                DropCurrentEvent();
+                var window = @event.Window;
+                switch (window.Type)
+                {
+                    case "vsWindowTypeMainWindow":
+                        // ignore, since handled by InIDEActivityDetector
+                        break;
+                    case "vsWindowTypeBrowser":
+                    case "vsWindowTypeDocumentOutline":
+                        InsertActivities(@event, Activity.Understanding, Activity.Navigation);
+                        break;
+                    case "vsWindowTypeOutput":
+                        InsertActivities(@event, Activity.Understanding, Activity.Debugging);
+                        break;
+                    case "vsWindowTypeToolbox":
+                    case "vsWindowTypeProperties":
+                        InsertActivity(@event, Activity.Editing);
+                        break;
+                    case "vsWindowTypeSolutionExplorer":
+                        InsertActivity(@event, Activity.Navigation);
+                        break;
+                    case "vsWindowTypeTaskList":
+                        InsertActivities(@event, Activity.ProjektManagement, Activity.Navigation);
+                        break;
+                    case "vsWindowTypeDocument":
+                        if (window.Caption.ContainsAny(WorkItemIndicators))
+                        {
+                            InsertActivity(@event, Activity.ProjektManagement);
+                        }
+                        InsertActivity(@event, Activity.Navigation);
+                        break;
+                    default:
+                        _logger.Error("unknown window type '{0}'", window.Type);
+                        break;
+                }
             }
             DropCurrentEvent();
         }
