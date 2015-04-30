@@ -21,6 +21,7 @@
 
 using System;
 using System.Globalization;
+using System.Linq;
 
 namespace KaVE.Commons.Utils
 {
@@ -46,6 +47,11 @@ namespace KaVE.Commons.Utils
         {
             var compareInfo = CultureInfo.InvariantCulture.CompareInfo;
             return compareInfo.IndexOf(value, needle, compareOptions) >= 0;
+        }
+
+        public static bool ContainsAny(this string value, params string[] needles)
+        {
+            return needles.Any(value.Contains);
         }
     }
 }

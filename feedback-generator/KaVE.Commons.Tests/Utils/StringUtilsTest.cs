@@ -46,5 +46,14 @@ namespace KaVE.Commons.Tests.Utils
         {
             Assert.AreEqual(expected, value.Contains("foo", CompareOptions.IgnoreCase));
         }
+
+        [TestCase(new[] {"foo"}, true),
+         TestCase(new[] {"wut"}, false),
+         TestCase(new[] {"some", "other", "foo"}, true),
+         TestCase(new[] {"but", "not", "this", "time"}, false)]
+        public void ContainsAny(string[] needles, bool expected)
+        {
+            Assert.AreEqual(expected, "myfoobar".ContainsAny(needles));
+        }
     }
 }
