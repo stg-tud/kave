@@ -39,6 +39,10 @@ namespace KaVE.FeedbackProcessor.Database
             var client = new MongoClient(databaseUrl);
             var server = client.GetServer();
             _database = server.GetDatabase(databaseName);
+        }
+
+        static MongoDbFeedbackDatabase() 
+        {
             RegisterModel();
         }
 
