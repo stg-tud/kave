@@ -174,14 +174,14 @@ namespace KaVE.FeedbackProcessor
         
         private static void FilterConcurrentEvents(IFeedbackDatabase sourceDatabase, IFeedbackDatabase targetDatabase)
         {
-            var filter = new FeedbackCleaner(sourceDatabase, targetDatabase);
+            var filter = new EventsMapper(sourceDatabase, targetDatabase);
             filter.RegisterProcessor<ConcurrentEventProcessor>();
             filter.ProcessFeedback();
         }
 
         private static void FilterEquivalentCommandEvents(IFeedbackDatabase sourceDatabase, IFeedbackDatabase targetDatabase)
         {
-            var filter = new FeedbackCleaner(sourceDatabase, targetDatabase);
+            var filter = new EventsMapper(sourceDatabase, targetDatabase);
             filter.RegisterProcessor<EquivalentCommandProcessor>();
             filter.ProcessFeedback();            
         }
