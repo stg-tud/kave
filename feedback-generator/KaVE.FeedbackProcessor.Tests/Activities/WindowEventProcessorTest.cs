@@ -149,6 +149,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
             AssertMapsToActivities(@event, Activity.ProjektManagement, Activity.Navigation);
         }
 
+        [Test]
         public void ShouldMapActivateWiqDocumentWindowToProjectManagementAndNavigation()
         {
             var @event = new WindowEvent
@@ -157,6 +158,22 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
                 Action = WindowEvent.WindowAction.Activate
             };
             AssertMapsToActivities(@event, Activity.ProjektManagement, Activity.Navigation);
+        }
+
+        [Test]
+        public void ShouldLogNonTreatedDocumentWindowEvents()
+        {
+            string infoMessage = null;
+            _logger.InfoLogged += info => infoMessage = info;
+
+            var @event = new WindowEvent
+            {
+                Window = WindowName.Get("vsWindowTypeDocument bla"),
+                Action = WindowEvent.WindowAction.Activate
+            };
+            Sut.Process(@event);
+
+            Assert.AreEqual("document window 'bla' treated with default case", infoMessage);
         }
 
         [Test]

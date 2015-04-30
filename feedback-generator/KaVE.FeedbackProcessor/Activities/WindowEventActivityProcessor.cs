@@ -18,6 +18,7 @@
  */
 
 using KaVE.Commons.Model.Events.VisualStudio;
+using KaVE.Commons.Model.Names.VisualStudio;
 using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Exceptions;
 using KaVE.FeedbackProcessor.Activities.Model;
@@ -81,9 +82,13 @@ namespace KaVE.FeedbackProcessor.Activities
                         InsertActivities(@event, Activity.ProjektManagement, Activity.Navigation);
                         break;
                     case "vsWindowTypeDocument":
-                        if (window.Caption.ContainsAny(WorkItemIndicators))
+                        if (IsProjectManagementWindow(window))
                         {
                             InsertActivity(@event, Activity.ProjektManagement);
+                        }
+                        else
+                        {
+                            _logger.Info("document window '{0}' treated with default case", window.Caption);
                         }
                         InsertActivity(@event, Activity.Navigation);
                         break;
@@ -93,6 +98,11 @@ namespace KaVE.FeedbackProcessor.Activities
                 }
             }
             DropCurrentEvent();
+        }
+
+        private static bool IsProjectManagementWindow(WindowName window)
+        {
+            return window.Caption.ContainsAny(WorkItemIndicators);
         }
 
         private bool IsActivate(WindowEvent @event)
