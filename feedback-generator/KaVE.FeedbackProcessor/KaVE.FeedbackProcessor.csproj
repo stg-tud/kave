@@ -107,6 +107,7 @@
     <Compile Include="Statistics\AnonymizationStatisticsCalculator.cs" />
     <Compile Include="Statistics\BaseEventProcessor.cs" />
     <Compile Include="Statistics\CommandIdCollector.cs" />
+    <Compile Include="Statistics\ConcurrentSetsCalculator.cs" />
     <Compile Include="Statistics\DeveloperStatisticsCalculator.cs" />
     <Compile Include="Statistics\DocumentNameCollector.cs" />
     <Compile Include="Statistics\FeedbackWalker.cs" />
