@@ -67,7 +67,12 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
             {
                 new CompletionEvent {TerminatedState = TerminationState.Unknown},
                 "Completion -> Terminated as Unknown"
-            }
+            },
+            new object[]
+            {
+                new ErrorEvent{StackTrace = new []{"System.NullReferenceException: Test"}},
+                "Error -> System.NullReferenceException"
+            } 
         };
 
         [Test, TestCaseSource("MapsSingleEventCorrectlyTestCaseSource")]

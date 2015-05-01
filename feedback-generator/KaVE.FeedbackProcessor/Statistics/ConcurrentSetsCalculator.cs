@@ -21,6 +21,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Model.Events.VisualStudio;
@@ -75,6 +76,15 @@ namespace KaVE.FeedbackProcessor.Statistics
                 typeof (CompletionEvent),
                 (completionEvent =>
                     FormatString("Completion", ("Terminated as " + ((CompletionEvent) completionEvent).TerminatedState.ToString())))
+            },
+            {
+                typeof(ErrorEvent),
+                (errorEvent =>
+                {
+                    var stackTraceString = ((ErrorEvent) errorEvent).StackTrace.First();
+                    var index = stackTraceString.IndexOf(':');
+                    return FormatString("Error", stackTraceString.Substring(0, index));
+                })
             }
         };
 
