@@ -37,11 +37,11 @@ namespace KaVE.FeedbackProcessor
 
         public static void Main()
         {
-            const string importDatabase = "";
+            const string importDatabase = "_import";
             const string cleanDatabase = "_clean";
             const string activityDatabase = "activities";
-            const string concurrentEventDatabase = "concurrent";
-            const string equivalentCommandsDatabase = "equivalentCommands";
+            const string concurrentEventDatabase = "_concurrent";
+            const string equivalentCommandsDatabase = "_equivalentCommands";
 
             //ImportFeedback(OpenDatabase(importDatabase));
 
@@ -54,9 +54,13 @@ namespace KaVE.FeedbackProcessor
             //CleanFeedback(OpenDatabase(importDatabase), OpenDatabase(cleanDatabase));
 
             //MapToActivities(OpenDatabase(importDatabase), OpenDatabase(activityDatabase));
-            FilterConcurrentEvents(OpenDatabase(cleanDatabase), OpenDatabase(concurrentEventDatabase));
+            //FilterConcurrentEvents(OpenDatabase(importDatabase), OpenDatabase(concurrentEventDatabase));
 
-            FilterEquivalentCommandEvents(OpenDatabase(concurrentEventDatabase),OpenDatabase(equivalentCommandsDatabase));
+            //FilterEquivalentCommandEvents(OpenDatabase(concurrentEventDatabase), OpenDatabase(equivalentCommandsDatabase));
+
+            ConcurrentEventsStatistic(OpenDatabase(concurrentEventDatabase),"concurrenteventstatistic.csv");
+
+            ConcurrentEventsStatistic(OpenDatabase(equivalentCommandsDatabase),"equivalentcommandstatistic.csv");
         }
 
         private static MongoDbFeedbackDatabase OpenDatabase(string databaseSuffix)
@@ -152,6 +156,41 @@ namespace KaVE.FeedbackProcessor
             walker.ProcessFeedback();
         }
 
+
+        private static void ConcurrentEventsStatistic(IFeedbackDatabase database, string fileName)
+        {
+            var walker = new FeedbackWalker(database, Logger);
+            var calculator = new ConcurrentSetsCalculator();
+
+            walker.Register(calculator);
+            walker.ProcessFeedback();
+
+            var statistic = calculator.Statistic.OrderByDescending(keyValuePair => keyValuePair.Value);
+            var csvBuilder = new CsvBuilder();
+
+            var maximumNumberOfEventFields = statistic.Max(stat => stat.Key.Count);
+
+            foreach (var stat in statistic)
+            {
+                csvBuilder.StartRow();
+
+                var eventList = stat.Key.ToList();
+
+                for (int i = 0; i < maximumNumberOfEventFields; i++)
+                {
+                    var fieldName = "Event" + i;
+                    if (i < eventList.Count) csvBuilder[fieldName] = eventList[i];
+                    else csvBuilder[fieldName] = "";
+                }
+
+                csvBuilder["Count"] = stat.Value;
+            }
+
+            File.WriteAllText(
+                Path.Combine(Configuration.StatisticsOutputPath, fileName),
+                csvBuilder.Build());
+        }
+
         private static void CleanFeedback(IFeedbackDatabase sourceDatabase, IFeedbackDatabase targetDatabase)
         {
             var cleaner = new EventsMapper(sourceDatabase, targetDatabase);
@@ -179,11 +218,12 @@ namespace KaVE.FeedbackProcessor
             filter.ProcessFeedback();
         }
 
-        private static void FilterEquivalentCommandEvents(IFeedbackDatabase sourceDatabase, IFeedbackDatabase targetDatabase)
+        private static void FilterEquivalentCommandEvents(IFeedbackDatabase sourceDatabase,
+            IFeedbackDatabase targetDatabase)
         {
             var filter = new EventsMapper(sourceDatabase, targetDatabase);
             filter.RegisterProcessor<EquivalentCommandProcessor>();
-            filter.ProcessFeedback();            
+            filter.ProcessFeedback();
         }
     }
 }

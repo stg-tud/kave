@@ -86,6 +86,7 @@ namespace KaVE.FeedbackProcessor.Database
             {
                 BsonClassMap.LookupClassMap(type);
             }
+            BsonClassMap.LookupClassMap(typeof (ConcurrentEvent));
         }
 
         private static IEnumerable<Type> GetAllModelTypes()

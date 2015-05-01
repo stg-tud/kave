@@ -105,7 +105,7 @@ namespace KaVE.FeedbackProcessor.Statistics
             }
             else
             {
-                Statistic.Add(resultSet, 1);
+                if(resultSet.Count > 0) Statistic.Add(resultSet, 1);
             }
         }
 

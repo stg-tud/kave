@@ -126,5 +126,18 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
 
             CollectionAssert.IsEmpty(_uut.Statistic);
         }
+
+        [Test]
+        public void ShouldNotAddEmptySetToStatistic()
+        {
+            var concurrentEvent = new ConcurrentEvent
+            {
+                ConcurrentEventList = IDEEventTestFactory.SomeEvents(5)
+            };
+
+            _uut.OnEvent(concurrentEvent);
+
+            CollectionAssert.IsEmpty(_uut.Statistic);
+        }
     }
 }
