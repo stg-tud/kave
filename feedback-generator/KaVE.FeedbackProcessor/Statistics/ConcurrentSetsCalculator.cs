@@ -18,7 +18,9 @@
  *    - Markus Zimmermann
  */
 
+using System;
 using System.Collections.Generic;
+using System.Globalization;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Model.Events.VisualStudio;
@@ -34,6 +36,47 @@ namespace KaVE.FeedbackProcessor.Statistics
         public readonly IDictionary<ISet<string>, int> Statistic =
             new Dictionary<ISet<string>, int>();
 
+        private static readonly IDictionary<Type, Func<IDEEvent, string>> ToStringMappings = 
+            new Dictionary<Type, Func<IDEEvent, string>>
+        {
+            {
+                typeof (CommandEvent), 
+                (commandEvent => FormatString("Command", ((CommandEvent) commandEvent).CommandId))},
+            {
+                typeof (WindowEvent), 
+                (windowEvent => FormatString("Window", ((WindowEvent) windowEvent).Action.ToString()))
+            },
+            {
+                typeof (DocumentEvent),
+                (documentEvent => FormatString("Document", ((DocumentEvent) documentEvent).Action.ToString()))
+            },
+            {
+                typeof (BuildEvent), 
+                (buildEvent => FormatString("Build", ((BuildEvent) buildEvent).Action))
+            },
+            {
+                typeof (EditEvent),
+                (editEvent =>
+                    FormatString("Edit", ((EditEvent) editEvent).NumberOfChanges.ToString(CultureInfo.InvariantCulture) + " Changes"))
+            },
+            {
+                typeof (DebuggerEvent), 
+                (debuggerEvent => FormatString("Debugger", ((DebuggerEvent) debuggerEvent).Reason))
+            },
+            {
+                typeof (IDEStateEvent),
+                (ideStateEvent => FormatString("IDEState", ((IDEStateEvent) ideStateEvent).IDELifecyclePhase.ToString()))
+            },
+            {
+                typeof (SolutionEvent),
+                (solutionEvent => FormatString("Solution", ((SolutionEvent) solutionEvent).Action.ToString()))
+            },
+            {
+                typeof (CompletionEvent),
+                (completionEvent =>
+                    FormatString("Completion", ("Terminated as " + ((CompletionEvent) completionEvent).TerminatedState.ToString())))
+            }
+        };
 
         public void OnEvent(IDEEvent @event)
         {
@@ -47,41 +90,12 @@ namespace KaVE.FeedbackProcessor.Statistics
 
             foreach (var ideEvent in concurrentEvent.ConcurrentEventList)
             {
-                if (ideEvent is CommandEvent)
+                Func<IDEEvent, string> mapToString;
+                ToStringMappings.TryGetValue(ideEvent.GetType(), out mapToString);
+
+                if (mapToString != null)
                 {
-                    resultSet.Add(MapToString((CommandEvent) ideEvent));
-                }
-                if (ideEvent is WindowEvent)
-                {
-                    resultSet.Add(MapToString((WindowEvent) ideEvent));
-                }
-                if (ideEvent is DocumentEvent)
-                {
-                    resultSet.Add(MapToString((DocumentEvent) ideEvent));
-                }
-                if (ideEvent is BuildEvent)
-                {
-                    resultSet.Add(MapToString((BuildEvent) ideEvent));
-                }
-                if (ideEvent is EditEvent)
-                {
-                    resultSet.Add(MapToString((EditEvent) ideEvent));
-                }
-                if (ideEvent is DebuggerEvent)
-                {
-                    resultSet.Add(MapToString((DebuggerEvent) ideEvent));
-                }
-                if (ideEvent is IDEStateEvent)
-                {
-                    resultSet.Add(MapToString((IDEStateEvent) ideEvent));
-                }
-                if (ideEvent is SolutionEvent)
-                {
-                    resultSet.Add(MapToString((SolutionEvent) ideEvent));
-                }
-                if (ideEvent is CompletionEvent)
-                {
-                    resultSet.Add(MapToString((CompletionEvent) ideEvent));
+                    resultSet.Add(mapToString(ideEvent));
                 }
             }
 
@@ -95,49 +109,9 @@ namespace KaVE.FeedbackProcessor.Statistics
             }
         }
 
-        private static string MapToString(CommandEvent commandEvent)
+        private static string FormatString(string prefix, string suffix)
         {
-            return string.Format("Command{0}{1}", Separator, commandEvent.CommandId);
-        }
-
-        private static string MapToString(WindowEvent windowEvent)
-        {
-            return string.Format("Window{0}{1}", Separator, windowEvent.Action);
-        }
-
-        private static string MapToString(DocumentEvent documentEvent)
-        {
-            return string.Format("Document{0}{1}", Separator, documentEvent.Action);
-        }
-
-        private static string MapToString(BuildEvent buildEvent)
-        {
-            return string.Format("Build{0}{1}", Separator, buildEvent.Action);
-        }
-
-        private static string MapToString(EditEvent editEvent)
-        {
-            return string.Format("Edit{0}{1}", Separator, editEvent.NumberOfChanges + " Changes");
-        }
-
-        private static string MapToString(DebuggerEvent debuggerEvent)
-        {
-            return string.Format("Debugger{0}{1}", Separator, debuggerEvent.Reason);
-        }
-
-        private static string MapToString(IDEStateEvent ideStateEvent)
-        {
-            return string.Format("IDEState{0}{1}", Separator, ideStateEvent.IDELifecyclePhase);
-        }
-
-        private static string MapToString(SolutionEvent solutionEvent)
-        {
-            return string.Format("Solution{0}{1}", Separator, solutionEvent.Action);
-        }
-
-        private static string MapToString(ICompletionEvent completionEvent)
-        {
-            return string.Format("Completion{0}{1}", Separator, "Terminated as " + completionEvent.TerminatedState);
+            return string.Format("{0}{1}{2}", prefix, Separator, suffix);
         }
 
         public void OnStreamStarts(Developer value) {}
