@@ -16,21 +16,14 @@
  * Contributors:
  *    - Andreas Bauer
  */
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
+
 using KaVE.Commons.Model.Names.CSharp;
-using KaVE.Commons.Model.SSTs;
 using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.Commons.Model.SSTs.Impl.Blocks;
 using KaVE.Commons.Model.SSTs.Impl.Declarations;
-using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.LoopHeader;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Commons.Model.SSTs.Impl.Statements;
-using KaVE.Commons.Utils.Collections;
 using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Utils.SSTPrintingVisitorTestSuite
@@ -50,7 +43,8 @@ namespace KaVE.Commons.Tests.Utils.SSTPrintingVisitorTestSuite
                 }
             };
 
-            AssertPrint(sst,
+            AssertPrint(
+                sst,
                 "foreach (T e in elements)",
                 "{",
                 "    continue;",
@@ -65,13 +59,18 @@ namespace KaVE.Commons.Tests.Utils.SSTPrintingVisitorTestSuite
                 Reference = SSTUtil.VariableReference("a"),
                 Sections =
                 {
-                    new CaseBlock {Label = new ConstantValueExpression {Value = "1"}, Body = {new BreakStatement(), new BreakStatement()}},
+                    new CaseBlock
+                    {
+                        Label = new ConstantValueExpression {Value = "1"},
+                        Body = {new BreakStatement(), new BreakStatement()}
+                    },
                     new CaseBlock {Label = new ConstantValueExpression {Value = "2"}, Body = {new BreakStatement()}}
                 },
                 DefaultSection = {new BreakStatement()}
             };
 
-            AssertPrint(sst,
+            AssertPrint(
+                sst,
                 "switch (a)",
                 "{",
                 "    case 1:",
@@ -92,12 +91,17 @@ namespace KaVE.Commons.Tests.Utils.SSTPrintingVisitorTestSuite
                 Reference = SSTUtil.VariableReference("a"),
                 Sections =
                 {
-                    new CaseBlock {Label = new ConstantValueExpression {Value = "1"}, Body = {new BreakStatement(), new BreakStatement()}},
+                    new CaseBlock
+                    {
+                        Label = new ConstantValueExpression {Value = "1"},
+                        Body = {new BreakStatement(), new BreakStatement()}
+                    },
                     new CaseBlock {Label = new ConstantValueExpression {Value = "2"}, Body = {new BreakStatement()}}
                 }
             };
 
-            AssertPrint(sst,
+            AssertPrint(
+                sst,
                 "switch (a)",
                 "{",
                 "    case 1:",
@@ -125,12 +129,14 @@ namespace KaVE.Commons.Tests.Utils.SSTPrintingVisitorTestSuite
                 Finally = {new ContinueStatement()}
             };
 
-            AssertPrint(sst,
+            AssertPrint(
+                sst,
                 "try",
                 "{",
                 "    throw new ExceptionType();",
                 "}",
-                "catch (ExceptionType e)", // TODO: general catch blocks
+                "catch (ExceptionType e)",
+                // TODO: general catch blocks
                 "{",
                 "    break;",
                 "}",
@@ -156,7 +162,8 @@ namespace KaVE.Commons.Tests.Utils.SSTPrintingVisitorTestSuite
                 }
             };
 
-            AssertPrint(sst,
+            AssertPrint(
+                sst,
                 "try",
                 "{",
                 "    throw new ExceptionType();",
@@ -172,7 +179,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrintingVisitorTestSuite
         {
             var sst = new TryBlock
             {
-                Body = { new ThrowStatement { Exception = TypeName.Get("ExceptionType,P") } },
+                Body = {new ThrowStatement {Exception = TypeName.Get("ExceptionType,P")}},
                 CatchBlocks =
                 {
                     new CatchBlock
@@ -183,7 +190,8 @@ namespace KaVE.Commons.Tests.Utils.SSTPrintingVisitorTestSuite
                 }
             };
 
-            AssertPrint(sst,
+            AssertPrint(
+                sst,
                 "try",
                 "{",
                 "    throw new ExceptionType();",
@@ -202,7 +210,8 @@ namespace KaVE.Commons.Tests.Utils.SSTPrintingVisitorTestSuite
                 Body = {new BreakStatement()}
             };
 
-            AssertPrint(sst,
+            AssertPrint(
+                sst,
                 "unchecked",
                 "{",
                 "    break;",
@@ -226,7 +235,8 @@ namespace KaVE.Commons.Tests.Utils.SSTPrintingVisitorTestSuite
                 Body = {new BreakStatement()}
             };
 
-            AssertPrint(sst,
+            AssertPrint(
+                sst,
                 "using (variable)",
                 "{",
                 "    break;",
@@ -243,7 +253,8 @@ namespace KaVE.Commons.Tests.Utils.SSTPrintingVisitorTestSuite
                 Else = {new BreakStatement()},
             };
 
-            AssertPrint(sst,
+            AssertPrint(
+                sst,
                 "if (true)",
                 "{",
                 "    continue;",
@@ -259,11 +270,12 @@ namespace KaVE.Commons.Tests.Utils.SSTPrintingVisitorTestSuite
         {
             var sst = new IfElseBlock
             {
-                Condition = new ConstantValueExpression { Value = "true" },
-                Then = { new ContinueStatement() },
+                Condition = new ConstantValueExpression {Value = "true"},
+                Then = {new ContinueStatement()},
             };
 
-            AssertPrint(sst,
+            AssertPrint(
+                sst,
                 "if (true)",
                 "{",
                 "    continue;",
@@ -279,7 +291,8 @@ namespace KaVE.Commons.Tests.Utils.SSTPrintingVisitorTestSuite
                 Body = {new ContinueStatement()}
             };
 
-            AssertPrint(sst,
+            AssertPrint(
+                sst,
                 "lock (variable)",
                 "{",
                 "    continue;",
@@ -304,8 +317,9 @@ namespace KaVE.Commons.Tests.Utils.SSTPrintingVisitorTestSuite
                     new BreakStatement(),
                 }
             };
-            
-            AssertPrint(sst,
+
+            AssertPrint(
+                sst,
                 "while (",
                 "    {",
                 "        return true;",
@@ -336,7 +350,8 @@ namespace KaVE.Commons.Tests.Utils.SSTPrintingVisitorTestSuite
                 }
             };
 
-            AssertPrint(sst,
+            AssertPrint(
+                sst,
                 "do",
                 "{",
                 "    continue;",
@@ -352,15 +367,24 @@ namespace KaVE.Commons.Tests.Utils.SSTPrintingVisitorTestSuite
         [Test]
         public void ForLoop()
         {
-            var sst = new ForLoop()
+            var sst = new ForLoop
             {
-                Init = { SSTUtil.Declare("i", TypeName.Get("T,P")), SSTUtil.AssignmentToLocal("i", new ConstantValueExpression { Value = "0" }) },
-                Body = { new ContinueStatement(), new BreakStatement()},
-                Condition = new LoopHeaderBlockExpression { Body = { new ReturnStatement { Expression = new ConstantValueExpression { Value = "true" }}}},
-                Step = { }
+                Init =
+                {
+                    SSTUtil.Declare("i", TypeName.Get("T,P")),
+                    SSTUtil.AssignmentToLocal("i", new ConstantValueExpression {Value = "0"})
+                },
+                Body = {new ContinueStatement(), new BreakStatement()},
+                Condition =
+                    new LoopHeaderBlockExpression
+                    {
+                        Body = {new ReturnStatement {Expression = new ConstantValueExpression {Value = "true"}}}
+                    },
+                Step = {}
             };
 
-            AssertPrint(sst,
+            AssertPrint(
+                sst,
                 "for (",
                 "    {",
                 "        T i;",

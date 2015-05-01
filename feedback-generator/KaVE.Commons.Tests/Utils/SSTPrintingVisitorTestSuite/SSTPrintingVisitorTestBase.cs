@@ -16,8 +16,10 @@
  * Contributors:
  *    - Andreas Bauer
  */
+
 using System;
 using System.Text;
+using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.SSTs.Visitor;
 using KaVE.Commons.Utils;
 using NUnit.Framework;
@@ -41,6 +43,12 @@ namespace KaVE.Commons.Tests.Utils.SSTPrintingVisitorTestSuite
             var actual = context.ToString();
             var expected = String.Join(Environment.NewLine, expectedLines);
             Assert.AreEqual(expected, actual);
+        }
+
+        protected void AssertTypeFormat(string expected, string typeIdentifier)
+        {
+            var sb = new StringBuilder();
+            Assert.AreEqual(expected, sb.AppendTypeName(TypeName.Get(typeIdentifier)).ToString());
         }
     }
 }

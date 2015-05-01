@@ -16,10 +16,7 @@
  * Contributors:
  *    - Andreas Bauer
  */
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+
 using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.Commons.Model.SSTs.Impl.References;

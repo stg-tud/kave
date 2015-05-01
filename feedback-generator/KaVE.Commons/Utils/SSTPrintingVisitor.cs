@@ -42,17 +42,55 @@ namespace KaVE.Commons.Utils
 
         public void Visit(ISST sst, StringBuilder sb)
         {
-            // TODO: using list
-            sb.AppendFormat("class {0}", sst.EnclosingType.Name).AppendLine()
+            if (sst.EnclosingType.IsInterfaceType)
+            {
+                sb.Append("interface");
+            }
+            else if (sst.EnclosingType.IsEnumType)
+            {
+                sb.Append("enum");
+            }
+            else if (sst.EnclosingType.IsStructType)
+            {
+                sb.Append("struct");
+            }
+            else
+            {
+                sb.Append("class");
+            }
+
+            sb.Append(" ").Append(sst.EnclosingType.Name).AppendLine()
               .AppendLine("{");
 
-            // TODO: visit delegates
-            // TODO: visit events
-            // TODO: visit fields
-            // TODO: visit properties
-            // TODO: visit methods
+            _indentationLevel++;
+
+            AppendMemberDeclarationGroup(sb, sst.Delegates);
+            AppendMemberDeclarationGroup(sb, sst.Events);
+            AppendMemberDeclarationGroup(sb, sst.Fields);
+            AppendMemberDeclarationGroup(sb, sst.Properties);
+            AppendMemberDeclarationGroup(sb, sst.Methods, 2, 1);
+
+            _indentationLevel--;
 
             sb.Append("}");
+        }
+
+        private void AppendMemberDeclarationGroup(StringBuilder sb, IEnumerable<IMemberDeclaration> nodeGroup, int inBetweenNewLineCount = 1, int trailingNewLineCount = 2)
+        {
+            var sstNodes = nodeGroup.ToList();
+            foreach (var node in sstNodes)
+            {
+                node.Accept(this, sb);
+
+                int newLinesNeeded = !ReferenceEquals(node, sstNodes.Last())
+                    ? inBetweenNewLineCount
+                    : trailingNewLineCount;
+
+                for (int i = 0; i < newLinesNeeded; i++)
+                {
+                    sb.AppendLine();
+                }
+            }
         }
 
         public void Visit(IDelegateDeclaration stmt, StringBuilder sb)
@@ -60,12 +98,13 @@ namespace KaVE.Commons.Utils
             // TODO: @Sven delegate parameters
             sb.AppendIndentation(_indentationLevel)
                 .AppendFormat("delegate {0}();", stmt.Name.Name);
+            
         }
 
         public void Visit(IEventDeclaration stmt, StringBuilder sb)
         {
             sb.AppendIndentation(_indentationLevel)
-                .AppendFormat("event {0} {1};", FormatTypeName(stmt.Name.HandlerType), stmt.Name.Name);
+              .AppendFormat("event ").AppendTypeName(stmt.Name.HandlerType).Append(" ").Append(stmt.Name.Name).Append(";");
         }
 
         public void Visit(IFieldDeclaration stmt, StringBuilder sb)
@@ -77,7 +116,7 @@ namespace KaVE.Commons.Utils
                 sb.Append("static ");
             }
 
-            sb.AppendFormat("{0} {1};", FormatTypeName(stmt.Name.ValueType), stmt.Name.Name);
+            sb.AppendTypeName(stmt.Name.ValueType).Append(" ").Append(stmt.Name.Name).Append(";");
         }
 
         public void Visit(IMethodDeclaration stmt, StringBuilder sb)
@@ -89,46 +128,16 @@ namespace KaVE.Commons.Utils
                 sb.Append("static ");
             }
 
-            sb.AppendFormat("{0} {1}(", FormatTypeName(stmt.Name.ReturnType), stmt.Name.Name);
+            sb.AppendTypeName(stmt.Name.ReturnType).AppendFormat(" {0}", stmt.Name.Name);
 
-            foreach (var parameter in stmt.Name.Parameters)
-            {
-                if (parameter.IsPassedByReference && parameter.ValueType.IsValueType)
-                {
-                    sb.Append("ref ");
-                }
+            sb.AppendParameterList(stmt.Name.Parameters);
 
-                if (parameter.IsOutput)
-                {
-                    sb.Append("out ");
-                }
-
-                if (parameter.IsOptional)
-                {
-                    sb.Append("opt ");
-                }
-
-                if (parameter.IsParameterArray)
-                {
-                    sb.Append("params ");
-                }
-
-                sb.AppendFormat("{0} {1}", FormatTypeName(parameter.ValueType), parameter.Name);
-
-                if (!ReferenceEquals(parameter, stmt.Name.Parameters.Last()))
-                {
-                    sb.Append(", ");
-                }
-            }
-
-            sb.Append(")");
-
-            AppendBlock(stmt.Body, sb);
+            AppendBlock(sb, stmt.Body);
         }
 
         public void Visit(IPropertyDeclaration stmt, StringBuilder sb)
         {
-            sb.AppendIndentation(_indentationLevel).AppendFormat("{0} {1}", FormatTypeName(stmt.Name.ValueType), stmt.Name.Name);
+            sb.AppendIndentation(_indentationLevel).AppendTypeName(stmt.Name.ValueType).AppendFormat(" {0}", stmt.Name.Name);
 
             var hasBody = stmt.Get.Any() || stmt.Set.Any();
 
@@ -169,7 +178,7 @@ namespace KaVE.Commons.Utils
             if (body.Any())
             {
                 sb.AppendIndentation(_indentationLevel).Append(keyword);
-                AppendBlock(body, sb);
+                AppendBlock(sb, body);
             }
             else
             {
@@ -181,7 +190,7 @@ namespace KaVE.Commons.Utils
 
         public void Visit(IVariableDeclaration stmt, StringBuilder sb)
         {
-            sb.AppendIndentation(_indentationLevel).Append(FormatTypeName(stmt.Type)).Append(" ");
+            sb.AppendIndentation(_indentationLevel).AppendTypeName(stmt.Type).Append(" ");
             stmt.Reference.Accept(this, sb);
             sb.Append(";");
         }
@@ -225,9 +234,15 @@ namespace KaVE.Commons.Utils
 
         public void Visit(IReturnStatement stmt, StringBuilder sb)
         {
-            // TODO: Void return seems to be impossible --> stmt.Expression declared as NotNull, interpreting existing expressions as void return makes no sense
-            sb.AppendIndentation(_indentationLevel).AppendFormat("return ");
-            stmt.Expression.Accept(this, sb);
+            sb.AppendIndentation(_indentationLevel).AppendFormat("return");
+
+            // note: UnknownExpression interpreted as void return
+            if (!(stmt.Expression is IUnknownExpression))
+            {
+                sb.Append(" ");
+                stmt.Expression.Accept(this, sb);
+            }
+
             sb.Append(";");
         }
 
@@ -240,7 +255,7 @@ namespace KaVE.Commons.Utils
         {
             sb.AppendIndentation(_indentationLevel).Append("do");
 
-            AppendBlock(block.Body, sb);
+            AppendBlock(sb, block.Body);
 
             sb.AppendLine().AppendIndentation(_indentationLevel).Append("while (");
             _indentationLevel++;
@@ -254,14 +269,14 @@ namespace KaVE.Commons.Utils
         {
             sb.AppendIndentation(_indentationLevel)
               .Append("foreach (")
-              .Append(FormatTypeName(block.Declaration.Type))
+              .AppendTypeName(block.Declaration.Type)
               .Append(" ");
             block.Declaration.Reference.Accept(this, sb);
             sb.Append(" in ");
             block.LoopedReference.Accept(this, sb);
             sb.Append(")");
 
-            AppendBlock(block.Body, sb);
+            AppendBlock(sb, block.Body);
         }
 
         public void Visit(IForLoop block, StringBuilder sb)
@@ -270,17 +285,17 @@ namespace KaVE.Commons.Utils
 
             _indentationLevel++;
 
-            AppendBlock(block.Init, sb);
+            AppendBlock(sb, block.Init);
             sb.Append(";");
             block.Condition.Accept(this, sb);
             sb.Append(";");
-            AppendBlock(block.Step, sb);
+            AppendBlock(sb, block.Step);
 
             _indentationLevel--;
 
             sb.AppendLine().AppendIndentation(_indentationLevel).Append(")");
 
-            AppendBlock(block.Body, sb);
+            AppendBlock(sb, block.Body);
         }
 
         public void Visit(IIfElseBlock block, StringBuilder sb)
@@ -289,13 +304,13 @@ namespace KaVE.Commons.Utils
             block.Condition.Accept(this, sb);
             sb.Append(")");
 
-            AppendBlock(block.Then, sb);
+            AppendBlock(sb, block.Then);
 
             if (block.Else.Any())
             {
                 sb.AppendLine().AppendIndentation(_indentationLevel).Append("else");
 
-                AppendBlock(block.Else, sb);
+                AppendBlock(sb, block.Else);
             }
         }
 
@@ -305,7 +320,7 @@ namespace KaVE.Commons.Utils
             stmt.Reference.Accept(this, sb);
             sb.Append(")");
 
-            AppendBlock(stmt.Body, sb);
+            AppendBlock(sb, stmt.Body);
         }
 
         public void Visit(ISwitchBlock block, StringBuilder sb)
@@ -321,13 +336,13 @@ namespace KaVE.Commons.Utils
                 sb.AppendIndentation(_indentationLevel).AppendFormat("case ");
                 section.Label.Accept(this, sb);
                 sb.Append(":");
-                AppendBlock(section.Body, sb, false);
+                AppendBlock(sb, section.Body, false);
             }
 
             if (block.DefaultSection.Any())
             {
                 sb.AppendLine().AppendIndentation(_indentationLevel).Append("default:");
-                AppendBlock(block.DefaultSection, sb, false);
+                AppendBlock(sb, block.DefaultSection, false);
             }
 
             sb.AppendLine().AppendIndentation(--_indentationLevel).Append("}");
@@ -336,7 +351,7 @@ namespace KaVE.Commons.Utils
         public void Visit(ITryBlock block, StringBuilder sb)
         {
             sb.AppendIndentation(_indentationLevel).Append("try");
-            AppendBlock(block.Body, sb);
+            AppendBlock(sb, block.Body);
 
             foreach (var catchBlock in block.CatchBlocks)
             {
@@ -345,26 +360,26 @@ namespace KaVE.Commons.Utils
                 if (!catchBlock.Exception.IsMissing)
                 {
                     sb.Append(" (")
-                      .Append(FormatTypeName(catchBlock.Exception.Type))
+                      .AppendTypeName(catchBlock.Exception.Type)
                       .Append(" ");
                     catchBlock.Exception.Reference.Accept(this, sb);
                     sb.Append(")");
                 }
 
-                AppendBlock(catchBlock.Body, sb);
+                AppendBlock(sb, catchBlock.Body);
             }
 
             if (block.Finally.Any())
             {
                 sb.AppendLine().AppendIndentation(_indentationLevel).Append("finally");
-                AppendBlock(block.Finally, sb);
+                AppendBlock(sb, block.Finally);
             }
         }
 
         public void Visit(IUncheckedBlock block, StringBuilder sb)
         {
             sb.AppendIndentation(_indentationLevel).Append("unchecked");
-            AppendBlock(block.Body, sb);
+            AppendBlock(sb, block.Body);
         }
 
         public void Visit(IUnsafeBlock block, StringBuilder sb)
@@ -378,7 +393,7 @@ namespace KaVE.Commons.Utils
             block.Reference.Accept(this, sb);
             sb.Append(")");
 
-            AppendBlock(block.Body, sb);
+            AppendBlock(sb, block.Body);
         }
 
         public void Visit(IWhileLoop block, StringBuilder sb)
@@ -389,7 +404,7 @@ namespace KaVE.Commons.Utils
             _indentationLevel--;
             sb.AppendLine().AppendIndentation(_indentationLevel).Append(")");
 
-            AppendBlock(block.Body, sb);
+            AppendBlock(sb, block.Body);
         }
 
         public void Visit(ICompletionExpression entity, StringBuilder sb)
@@ -400,7 +415,7 @@ namespace KaVE.Commons.Utils
             }
             else if (entity.TypeReference != null)
             {
-                sb.Append(entity.TypeReference.Name).Append(".");
+                sb.AppendTypeName(entity.TypeReference).Append(".");
             }
 
             sb.Append(entity.Token).Append("$");
@@ -453,14 +468,14 @@ namespace KaVE.Commons.Utils
 
         public void Visit(ILambdaExpression expr, StringBuilder sb)
         {
-            // TODO: problem with VariableDeclaration again!
-            throw new NotImplementedException();
+            sb.AppendParameterList(expr.Name.Parameters).Append(" =>");
+            AppendBlock(sb, expr.Body);
         }
 
         // TODO: make this a bit nicer ...
         public void Visit(ILoopHeaderBlockExpression expr, StringBuilder sb)
         {
-            AppendBlock(expr.Body, sb);
+            AppendBlock(sb, expr.Body);
         }
 
         public void Visit(IConstantValueExpression expr, StringBuilder sb)
@@ -532,40 +547,13 @@ namespace KaVE.Commons.Utils
         }
 
         // TODO: write tests
-        // TODO: append to string builder instead of returning string
-        private string FormatTypeName(ITypeName typeName)
-        {
-            if (typeName.IsTypeParameter)
-            {
-                return typeName.TypeParameterType.Name;
-            }
-
-            var sb = new StringBuilder();
-            sb.Append(typeName.Name);
-
-            if (typeName.HasTypeParameters)
-            {
-                sb.Append("<");
-
-                foreach (var p in typeName.TypeParameters)
-                {
-                    sb.Append(FormatTypeName(p));
-                }
-
-                sb.Append(">");
-            }
-
-            return sb.ToString();
-        }
-
-        // TODO: write tests
         /// <summary>
         /// Appends the print result of a statement block to a string builder with correct indentation.
         /// </summary>
-        /// <param name="block"></param>
         /// <param name="sb"></param>
+        /// <param name="block"></param>
         /// <param name="withBrackets">If false, opening and closing brackets will be omitted.</param>
-        internal void AppendBlock(IKaVEList<IStatement> block, StringBuilder sb, bool withBrackets = true)
+        internal void AppendBlock(StringBuilder sb, IKaVEList<IStatement> block, bool withBrackets = true)
         {
             if (!block.Any())
             {
@@ -608,6 +596,76 @@ namespace KaVE.Commons.Utils
             for (int i = 0; i < indentationLevel; i++)
             {
                 sb.Append(IndentationToken);
+            }
+
+            return sb;
+        }
+
+        public static StringBuilder AppendParameterList(this StringBuilder sb, IList<IParameterName> parameters)
+        {
+            sb.Append("(");
+
+            foreach (var parameter in parameters)
+            {
+                if (parameter.IsPassedByReference && parameter.ValueType.IsValueType)
+                {
+                    sb.Append("ref ");
+                }
+
+                if (parameter.IsOutput)
+                {
+                    sb.Append("out ");
+                }
+
+                if (parameter.IsOptional)
+                {
+                    sb.Append("opt ");
+                }
+
+                if (parameter.IsParameterArray)
+                {
+                    sb.Append("params ");
+                }
+
+                sb.AppendTypeName(parameter.ValueType).AppendFormat(" {0}", parameter.Name);
+
+                if (!ReferenceEquals(parameter, parameters.Last()))
+                {
+                    sb.Append(", ");
+                }
+            }
+
+            sb.Append(")");
+
+            return sb;
+        }
+
+        public static StringBuilder AppendTypeName(this StringBuilder sb, ITypeName typeName)
+        {
+            sb.Append(typeName.Name);
+
+            if (typeName.HasTypeParameters)
+            {
+                sb.Append("<");
+
+                foreach (var p in typeName.TypeParameters)
+                {
+                    if (!p.IsUnknownType)
+                    {
+                        sb.AppendTypeName(p);
+                    }
+                    else
+                    {
+                        sb.Append(p.TypeParameterShortName);
+                    }
+
+                    if (!ReferenceEquals(p, typeName.TypeParameters.Last()))
+                    {
+                        sb.Append(", ");
+                    }
+                }
+
+                sb.Append(">");
             }
 
             return sb;

@@ -16,17 +16,14 @@
  * Contributors:
  *    - Andreas Bauer
  */
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+
 using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.LoopHeader;
+using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Commons.Model.SSTs.Impl.Statements;
 using NUnit.Framework;
-using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
 
 namespace KaVE.Commons.Tests.Utils.SSTPrintingVisitorTestSuite
 {
@@ -35,42 +32,42 @@ namespace KaVE.Commons.Tests.Utils.SSTPrintingVisitorTestSuite
         [Test]
         public void ConstantValueExpression_String()
         {
-            var sst = new ConstantValueExpression { Value = "val" };
+            var sst = new ConstantValueExpression {Value = "val"};
             AssertPrint(sst, "\"val\"");
         }
 
         [Test]
         public void ConstantValueExpression_Int()
         {
-            var sst = new ConstantValueExpression { Value = "1" };
+            var sst = new ConstantValueExpression {Value = "1"};
             AssertPrint(sst, "1");
         }
 
         [Test]
         public void ConstantValueExpression_Float()
         {
-            var sst = new ConstantValueExpression { Value = "-3.141592" };
+            var sst = new ConstantValueExpression {Value = "-3.141592"};
             AssertPrint(sst, "-3.141592");
         }
 
         [Test]
         public void ConstantValueExpression_BoolTrue()
         {
-            var sst = new ConstantValueExpression { Value = "true" };
+            var sst = new ConstantValueExpression {Value = "true"};
             AssertPrint(sst, "true");
         }
 
         [Test]
         public void ConstantValueExpression_BoolFalse()
         {
-            var sst = new ConstantValueExpression { Value = "false" };
+            var sst = new ConstantValueExpression {Value = "false"};
             AssertPrint(sst, "false");
         }
 
         [Test]
         public void ConstantValueExpression_Null()
         {
-            var sst = new ConstantValueExpression { Value = "null" };
+            var sst = new ConstantValueExpression {Value = "null"};
             AssertPrint(sst, "null");
         }
 
@@ -79,9 +76,9 @@ namespace KaVE.Commons.Tests.Utils.SSTPrintingVisitorTestSuite
         {
             var sst = new IfElseExpression
             {
-                Condition = new ConstantValueExpression { Value = "true" },
-                ThenExpression = new ConstantValueExpression { Value = "1" },
-                ElseExpression = new ConstantValueExpression { Value = "2" }
+                Condition = new ConstantValueExpression {Value = "true"},
+                ThenExpression = new ConstantValueExpression {Value = "1"},
+                ElseExpression = new ConstantValueExpression {Value = "2"}
             };
 
             AssertPrint(sst, "(true) ? 1 : 2");
@@ -95,7 +92,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrintingVisitorTestSuite
             {
                 Reference = SSTUtil.VariableReference("this"),
                 MethodName = MethodName.Get("[ReturnType,P] [DeclaringType,P].M([ParameterType,P] p)"),
-                Parameters = { new ConstantValueExpression { Value = "1" } }
+                Parameters = {new ConstantValueExpression {Value = "1"}}
             };
 
             AssertPrint(sst, "this.M(1)");
@@ -111,7 +108,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrintingVisitorTestSuite
         [Test]
         public void ReferenceExpression()
         {
-            var sst = new ReferenceExpression { Reference = SSTUtil.VariableReference("variable") };
+            var sst = new ReferenceExpression {Reference = SSTUtil.VariableReference("variable")};
             AssertPrint(sst, "variable");
         }
 
@@ -170,6 +167,13 @@ namespace KaVE.Commons.Tests.Utils.SSTPrintingVisitorTestSuite
         }
 
         [Test]
+        public void CompletionExpression_OnTypeReference_GenericType()
+        {
+            var sst = new CompletionExpression {TypeReference = TypeName.Get("T`1[[T1 -> A,P]],P"), Token = "incompl"};
+            AssertPrint(sst, "T<A>.incompl$");
+        }
+
+        [Test]
         public void CompletionExpression_OnObjectReference()
         {
             var sst = new CompletionExpression {ObjectReference = SSTUtil.VariableReference("obj"), Token = "incompl"};
@@ -181,6 +185,42 @@ namespace KaVE.Commons.Tests.Utils.SSTPrintingVisitorTestSuite
         {
             var sst = new CompletionExpression {Token = "incompl"};
             AssertPrint(sst, "incompl$");
+        }
+
+        [Test]
+        public void LambdaExpression()
+        {
+            var sst = new LambdaExpression
+            {
+                Name = LambdaName.Get("[System.String, mscorlib, 4.0.0.0] ([C, A] p1, [C, B] p2)"),
+                Body =
+                {
+                    new ContinueStatement(),
+                    new BreakStatement()
+                }
+            };
+
+            AssertPrint(
+                sst,
+                "(C p1, C p2) =>",
+                "{",
+                "    continue;",
+                "    break;",
+                "}");
+        }
+
+
+        [Test]
+        public void LambdaExpression_NoParametersAndEmptyBody()
+        {
+            var sst = new LambdaExpression
+            {
+                Name = LambdaName.Get("[System.String, mscorlib, 4.0.0.0] ()"),
+            };
+
+            AssertPrint(
+                sst,
+                "() => { }");
         }
     }
 }

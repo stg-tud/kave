@@ -16,16 +16,12 @@
  * Contributors:
  *    - Andreas Bauer
  */
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+
 using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Commons.Model.SSTs.Impl.Statements;
-using KaVE.Commons.Utils;
 using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Utils.SSTPrintingVisitorTestSuite
@@ -73,7 +69,8 @@ namespace KaVE.Commons.Tests.Utils.SSTPrintingVisitorTestSuite
                 Statement = new ContinueStatement()
             };
 
-            AssertPrint(sst,
+            AssertPrint(
+                sst,
                 "L:",
                 "continue;");
         }
@@ -101,7 +98,6 @@ namespace KaVE.Commons.Tests.Utils.SSTPrintingVisitorTestSuite
             AssertPrint(sst, "return \"val\";");
         }
 
-        // TODO: Seems to be impossible within current model. Test is meant to fail until situation is cleared up.
         [Test]
         public void ReturnStatement_Void()
         {
@@ -116,7 +112,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrintingVisitorTestSuite
             {
                 Reference = SSTUtil.VariableReference("this"),
                 MethodName = MethodName.Get("[ReturnType,P] [DeclaringType,P].M([ParameterType,P] p)"),
-                Parameters = { new ConstantValueExpression { Value = "1" } }
+                Parameters = {new ConstantValueExpression {Value = "1"}}
             };
 
             var sst = new ExpressionStatement {Expression = invocation};

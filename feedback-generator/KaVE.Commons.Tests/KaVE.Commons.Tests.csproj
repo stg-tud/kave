@@ -191,6 +191,7 @@
     <Compile Include="Utils\SSTPrintingVisitorTestSuite\BlockPrinterTest.cs" />
     <Compile Include="Utils\SSTPrintingVisitorTestSuite\DeclarationPrinterTest.cs" />
     <Compile Include="Utils\SSTPrintingVisitorTestSuite\ExpressionPrinterTest.cs" />
+    <Compile Include="Utils\SSTPrintingVisitorTestSuite\HelpersTest.cs" />
     <Compile Include="Utils\SSTPrintingVisitorTestSuite\ReferencePrinterTest.cs" />
     <Compile Include="Utils\SSTPrintingVisitorTestSuite\SSTPrintingVisitorTestBase.cs" />
     <Compile Include="Utils\SSTPrintingVisitorTestSuite\StatementPrinterTest.cs" />
