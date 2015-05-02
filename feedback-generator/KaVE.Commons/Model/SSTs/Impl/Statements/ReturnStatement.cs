@@ -28,6 +28,7 @@ namespace KaVE.Commons.Model.SSTs.Impl.Statements
     public class ReturnStatement : IReturnStatement
     {
         public ISimpleExpression Expression { get; set; }
+        public bool IsVoid { get; set; }
 
         public ReturnStatement()
         {
@@ -36,12 +37,12 @@ namespace KaVE.Commons.Model.SSTs.Impl.Statements
 
         public override bool Equals(object obj)
         {
-            return this.Equals(obj, other => Equals(Expression, other.Expression));
+            return this.Equals(obj, other => Equals(Expression, other.Expression) && IsVoid == other.IsVoid);
         }
 
         public override int GetHashCode()
         {
-            return unchecked (17 + Expression.GetHashCode());
+            return unchecked (13*(17 + Expression.GetHashCode() + (IsVoid ? 3 : 5)));
         }
 
         public void Accept<TContext>(ISSTNodeVisitor<TContext> visitor, TContext context)
@@ -52,6 +53,11 @@ namespace KaVE.Commons.Model.SSTs.Impl.Statements
         public TReturn Accept<TContext, TReturn>(ISSTNodeVisitor<TContext, TReturn> visitor, TContext context)
         {
             return visitor.Visit(this, context);
+        }
+
+        public override string ToString()
+        {
+            return this.ToStringReflection();
         }
     }
 }

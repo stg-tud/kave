@@ -19,6 +19,7 @@
 
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Commons.Model.SSTs.Impl.Statements;
+using KaVE.Commons.TestUtils;
 using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Model.SSTs.Impl.Statements
@@ -30,6 +31,7 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Statements
         {
             var sut = new ReturnStatement();
             Assert.AreEqual(new UnknownExpression(), sut.Expression);
+            Assert.False(sut.IsVoid);
             Assert.AreNotEqual(0, sut.GetHashCode());
             Assert.AreNotEqual(1, sut.GetHashCode());
         }
@@ -37,8 +39,13 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Statements
         [Test]
         public void SettingValues()
         {
-            var sut = new ReturnStatement {Expression = new ConstantValueExpression()};
+            var sut = new ReturnStatement
+            {
+                Expression = new ConstantValueExpression(),
+                IsVoid = true
+            };
             Assert.AreEqual(new ConstantValueExpression(), sut.Expression);
+            Assert.True(sut.IsVoid);
         }
 
         [Test]
@@ -53,17 +60,34 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Statements
         [Test]
         public void Equality_reallyTheSame()
         {
-            var a = new ReturnStatement {Expression = new ConstantValueExpression()};
-            var b = new ReturnStatement {Expression = new ConstantValueExpression()};
+            var a = new ReturnStatement
+            {
+                Expression = new ConstantValueExpression(),
+                IsVoid = true
+            };
+            var b = new ReturnStatement
+            {
+                Expression = new ConstantValueExpression(),
+                IsVoid = true
+            };
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
         }
 
         [Test]
-        public void Equality_differentIdentifier()
+        public void Equality_differentExpression()
         {
             var a = new ReturnStatement {Expression = new ConstantValueExpression()};
             var b = new ReturnStatement {Expression = new NullExpression()};
+            Assert.AreNotEqual(a, b);
+            Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
+        }
+
+        [Test]
+        public void Equality_differentKind()
+        {
+            var a = new ReturnStatement {IsVoid = true};
+            var b = new ReturnStatement();
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
         }
@@ -80,6 +104,12 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Statements
         {
             var sut = new ReturnStatement();
             sut.Accept(23).VerifyWithReturn(v => v.Visit(sut, 23));
+        }
+
+        [Test]
+        public void ReflectiveToString()
+        {
+            ToStringAssert.Reflection(new ReturnStatement());
         }
     }
 }

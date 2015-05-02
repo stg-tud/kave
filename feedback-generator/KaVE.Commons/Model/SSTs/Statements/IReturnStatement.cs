@@ -26,5 +26,7 @@ namespace KaVE.Commons.Model.SSTs.Statements
     {
         [NotNull]
         ISimpleExpression Expression { get; }
+
+        bool IsVoid { get; }
     }
 }
