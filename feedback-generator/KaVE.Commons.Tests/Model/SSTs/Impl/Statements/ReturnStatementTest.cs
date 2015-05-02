@@ -107,7 +107,7 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Statements
         }
 
         [Test]
-        public void ReflectiveToString()
+        public void ToStringReflection()
         {
             ToStringAssert.Reflection(new ReturnStatement());
         }

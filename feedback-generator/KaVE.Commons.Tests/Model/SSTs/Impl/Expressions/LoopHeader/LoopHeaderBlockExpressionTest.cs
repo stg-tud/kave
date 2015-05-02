@@ -20,12 +20,13 @@
 using KaVE.Commons.Model.SSTs;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.LoopHeader;
 using KaVE.Commons.Model.SSTs.Impl.Statements;
+using KaVE.Commons.TestUtils;
 using KaVE.Commons.Utils.Collections;
 using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Model.SSTs.Impl.Expressions.LoopHeader
 {
-    internal class BlockExpressionTest : SSTBaseTest
+    internal class LoopHeaderBlockExpressionTest : SSTBaseTest
     {
         [Test]
         public void DefaultValues()
@@ -93,6 +94,12 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Expressions.LoopHeader
         {
             var sut = new LoopHeaderBlockExpression();
             sut.Accept(23).VerifyWithReturn(v => v.Visit(sut, 23));
+        }
+
+        [Test]
+        public void ToStringReflection()
+        {
+            ToStringAssert.Reflection(new LoopHeaderBlockExpression());
         }
     }
 }

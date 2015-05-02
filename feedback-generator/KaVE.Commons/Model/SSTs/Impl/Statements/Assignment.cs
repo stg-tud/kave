@@ -66,5 +66,10 @@ namespace KaVE.Commons.Model.SSTs.Impl.Statements
         {
             return visitor.Visit(this, context);
         }
+
+        public override string ToString()
+        {
+            return this.ToStringReflection();
+        }
     }
 }

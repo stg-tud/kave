@@ -17,10 +17,11 @@
  *    - Sebastian Proksch
  */
 
+using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.SSTs;
 using KaVE.Commons.Model.SSTs.Impl.Blocks;
-using KaVE.Commons.Model.SSTs.Impl.Declarations;
 using KaVE.Commons.Model.SSTs.Impl.Statements;
+using KaVE.Commons.TestUtils;
 using KaVE.Commons.Utils.Collections;
 using NUnit.Framework;
 
@@ -32,8 +33,10 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Blocks
         public void DefaultValues()
         {
             var sut = new CatchBlock();
-            Assert.AreEqual(new VariableDeclaration(), sut.Exception);
+            Assert.AreEqual(ParameterName.UnknownName, sut.Parameter);
             Assert.AreEqual(Lists.NewList<IStatement>(), sut.Body);
+            Assert.False(sut.IsGeneral);
+            Assert.False(sut.IsUnnamed);
             Assert.AreNotEqual(0, sut.GetHashCode());
             Assert.AreNotEqual(1, sut.GetHashCode());
         }
@@ -41,11 +44,21 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Blocks
         [Test]
         public void SettingValues()
         {
-            var sut = new CatchBlock {Exception = SomeDeclaration()};
-            sut.Body.Add(new ReturnStatement());
+            var sut = new CatchBlock
+            {
+                Parameter = SomeParameter(),
+                IsGeneral = true,
+                IsUnnamed = true,
+                Body =
+                {
+                    new ReturnStatement()
+                }
+            };
 
-            Assert.AreEqual(SomeDeclaration(), sut.Exception);
+            Assert.AreEqual(SomeParameter(), sut.Parameter);
             Assert.AreEqual(Lists.NewList(new ReturnStatement()), sut.Body);
+            Assert.True(sut.IsGeneral);
+            Assert.True(sut.IsUnnamed);
         }
 
         [Test]
@@ -60,18 +73,34 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Blocks
         [Test]
         public void Equality_ReallyTheSame()
         {
-            var a = new CatchBlock {Exception = SomeDeclaration()};
-            a.Body.Add(new ReturnStatement());
-            var b = new CatchBlock {Exception = SomeDeclaration()};
-            b.Body.Add(new ReturnStatement());
+            var a = new CatchBlock
+            {
+                Parameter = SomeParameter(),
+                IsGeneral = true,
+                IsUnnamed = true,
+                Body =
+                {
+                    new ReturnStatement()
+                }
+            };
+            var b = new CatchBlock
+            {
+                Parameter = SomeParameter(),
+                IsGeneral = true,
+                IsUnnamed = true,
+                Body =
+                {
+                    new ReturnStatement()
+                }
+            };
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
         }
 
         [Test]
-        public void Equality_DifferentException()
+        public void Equality_DifferentParameter()
         {
-            var a = new CatchBlock {Exception = SomeDeclaration()};
+            var a = new CatchBlock {Parameter = SomeParameter()};
             var b = new CatchBlock();
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
@@ -80,11 +109,40 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Blocks
         [Test]
         public void Equality_DifferentBody()
         {
-            var a = new CatchBlock();
-            a.Body.Add(new ReturnStatement());
+            var a = new CatchBlock
+            {
+                Body =
+                {
+                    new ReturnStatement()
+                }
+            };
             var b = new CatchBlock();
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
+        }
+
+        [Test]
+        public void Equality_DifferentIsGeneral()
+        {
+            var a = new CatchBlock {IsGeneral = true};
+            var b = new CatchBlock();
+            Assert.AreNotEqual(a, b);
+            Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
+        }
+
+        [Test]
+        public void Equality_DifferentIsUnnamed()
+        {
+            var a = new CatchBlock {IsUnnamed = true};
+            var b = new CatchBlock();
+            Assert.AreNotEqual(a, b);
+            Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
+        }
+
+        [Test]
+        public void ToStringReflection()
+        {
+            ToStringAssert.Reflection(new CatchBlock());
         }
     }
 }

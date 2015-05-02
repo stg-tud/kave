@@ -19,6 +19,7 @@
 
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Commons.Model.SSTs.Impl.References;
+using KaVE.Commons.TestUtils;
 using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Model.SSTs.Impl.Expressions.Simple
@@ -80,6 +81,12 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Expressions.Simple
         {
             var sut = new ReferenceExpression();
             sut.Accept(23).VerifyWithReturn(v => v.Visit(sut, 23));
+        }
+
+        [Test]
+        public void ToStringReflection()
+        {
+            ToStringAssert.Reflection(new ReferenceExpression());
         }
     }
 }

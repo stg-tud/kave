@@ -20,12 +20,12 @@
 using System.Linq;
 using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.Names.CSharp;
-using KaVE.Commons.Model.SSTs.Declarations;
 using KaVE.Commons.Model.SSTs.Expressions;
-using KaVE.Commons.Model.SSTs.Impl.Declarations;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Commons.Model.SSTs.Impl.References;
+using KaVE.Commons.Model.SSTs.Impl.Statements;
 using KaVE.Commons.Model.SSTs.References;
+using KaVE.Commons.Model.SSTs.Statements;
 using KaVE.Commons.Utils.Collections;
 
 namespace KaVE.Commons.Tests.Model.SSTs.Impl
@@ -64,6 +64,11 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl
             var exprs = ids.Select<string, ISimpleExpression>(
                 id => new ReferenceExpression {Reference = new VariableReference {Identifier = id}});
             return Lists.NewListFrom(exprs);
+        }
+
+        protected IParameterName SomeParameter()
+        {
+            return ParameterName.Get("[T,P] n");
         }
     }
 }

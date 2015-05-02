@@ -17,7 +17,7 @@
  *    - Sebastian Proksch
  */
 
-using KaVE.Commons.Model.SSTs.Declarations;
+using KaVE.Commons.Model.Names;
 using KaVE.Commons.Utils.Collections;
 using KaVE.JetBrains.Annotations;
 
@@ -26,9 +26,21 @@ namespace KaVE.Commons.Model.SSTs.Blocks
     public interface ICatchBlock
     {
         [NotNull]
-        IVariableDeclaration Exception { get; }
+        IParameterName Parameter { get; }
 
         [NotNull]
         IKaVEList<IStatement> Body { get; }
+
+        /// <summary>
+        ///     catch block does not define a  specific exception type and catches everything.
+        ///     E.g., try { ... } catch { ... }
+        /// </summary>
+        bool IsGeneral { get; }
+
+        /// <summary>
+        ///     catch block defines a type, but does not introduce a name for the caught exception.
+        ///     E.g., try { ... } catch(Exception) { ... }
+        /// </summary>
+        bool IsUnnamed { get; }
     }
 }

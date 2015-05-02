@@ -19,8 +19,6 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using KaVE.Commons.Utils.Collections;
-using KaVE.JetBrains.Annotations;
 using KaVE.Commons.Model.SSTs;
 using KaVE.Commons.Model.SSTs.Blocks;
 using KaVE.Commons.Model.SSTs.Expressions;
@@ -32,6 +30,8 @@ using KaVE.Commons.Model.SSTs.Impl.Expressions.LoopHeader;
 using KaVE.Commons.Model.SSTs.Impl.Statements;
 using KaVE.Commons.Model.SSTs.Impl.Visitor;
 using KaVE.Commons.Model.SSTs.Statements;
+using KaVE.Commons.Utils.Collections;
+using KaVE.JetBrains.Annotations;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize.CompletionEvents
 {
@@ -140,7 +140,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize.CompletionEvents
         {
             return new CatchBlock
             {
-                Exception = _ref.Anonymize(stmt.Exception),
+                Parameter = stmt.Parameter.ToAnonymousName(),
                 Body = Anonymize(stmt.Body)
             };
         }
@@ -269,7 +269,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize.CompletionEvents
             {
                 return new LambdaExpression
                 {
-                    Parameters = Lists.NewListFrom(lambda.Parameters.Select(_ref.Anonymize)),
+                    Parameters = Lists.NewListFrom(lambda.Parameters.Select(p => p.ToAnonymousName())),
                     Body = Anonymize(lambda.Body)
                 };
             }

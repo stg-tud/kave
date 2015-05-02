@@ -14,14 +14,14 @@
  * limitations under the License.
  * 
  * Contributors:
- *    - 
+ *    - Sebastian Proksch
  */
 
 using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.SSTs.References;
 using KaVE.JetBrains.Annotations;
 
-namespace KaVE.Commons.Model.SSTs.Declarations
+namespace KaVE.Commons.Model.SSTs.Statements
 {
     public interface IVariableDeclaration : IStatement
     {
@@ -31,6 +31,9 @@ namespace KaVE.Commons.Model.SSTs.Declarations
         [NotNull]
         ITypeName Type { get; }
 
+        /// <summary>
+        ///     Is the reference unknown?
+        /// </summary>
         bool IsMissing { get; }
     }
 }

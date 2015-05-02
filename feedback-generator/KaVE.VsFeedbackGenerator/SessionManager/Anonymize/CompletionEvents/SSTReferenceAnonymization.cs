@@ -17,13 +17,13 @@
  *    - Sebastian Proksch
  */
 
-using KaVE.JetBrains.Annotations;
 using KaVE.Commons.Model.SSTs;
-using KaVE.Commons.Model.SSTs.Declarations;
-using KaVE.Commons.Model.SSTs.Impl.Declarations;
 using KaVE.Commons.Model.SSTs.Impl.References;
+using KaVE.Commons.Model.SSTs.Impl.Statements;
 using KaVE.Commons.Model.SSTs.Impl.Visitor;
 using KaVE.Commons.Model.SSTs.References;
+using KaVE.Commons.Model.SSTs.Statements;
+using KaVE.JetBrains.Annotations;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize.CompletionEvents
 {

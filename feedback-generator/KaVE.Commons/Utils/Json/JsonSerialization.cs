@@ -92,7 +92,10 @@ namespace KaVE.Commons.Utils.Json
         {
             var settings = CreateSerializationSettings();
             settings.Formatting = Formatting.None;
-            return JsonConvert.SerializeObject(instance, settings);
+            var json = JsonConvert.SerializeObject(instance, settings);
+            // TODO discuss this replacement (seb)
+            json = json.Replace("KaVE.Commons.Model.SSTs.Impl", "[SSTs]");
+            return json;
         }
 
         /// <summary>
@@ -125,6 +128,11 @@ namespace KaVE.Commons.Utils.Json
                 json = json.Replace("KaVE.Model.Events.CompletionEvent.", "KaVE.Model.Events.CompletionEvents.");
             }
             json = json.Replace("KaVE.Model.", "KaVE.Commons.Model.").Replace("KaVE.Model", "KaVE.Commons");
+            json = json.Replace(
+                "KaVE.Commons.Model.SSTs.Impl.Declarations.VariableDeclaration",
+                "KaVE.Commons.Model.SSTs.Impl.Statements.VariableDeclaration");
+            // TODO discuss this replacement (seb)
+            json = json.Replace("[SSTs]", "KaVE.Commons.Model.SSTs.Impl");
             settings.Converters.Add(new ProposalCollectionConverter());
             // END legacy-data handling
             return JsonConvert.DeserializeObject<T>(json, settings);

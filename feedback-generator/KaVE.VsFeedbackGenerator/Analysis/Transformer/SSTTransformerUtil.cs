@@ -19,9 +19,11 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.Util;
 using KaVE.Commons.Model.Names;
+using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.SSTs;
 using KaVE.Commons.Model.SSTs.Expressions;
 using KaVE.Commons.Model.SSTs.Impl;
@@ -33,7 +35,7 @@ using KaVE.VsFeedbackGenerator.Analysis.Transformer.Context;
 using KaVE.VsFeedbackGenerator.Analysis.Util;
 using KaVE.VsFeedbackGenerator.Utils.Names;
 using NuGet;
-using KaVEVariableDeclaration = KaVE.Commons.Model.SSTs.Impl.Declarations.VariableDeclaration;
+using KaVEVariableDeclaration = KaVE.Commons.Model.SSTs.Impl.Statements.VariableDeclaration;
 using KaVEIInvocationExpression = KaVE.Commons.Model.SSTs.Expressions.Assignable.IInvocationExpression;
 
 namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
@@ -174,9 +176,9 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
                 {
                     identifier = specificCatchClause.ExceptionDeclaration.DeclaredName;
                 }
-                catchBlock.Exception = SSTUtil.Declare(
-                    identifier,
-                    catchClauseParam.ExceptionType.GetName());
+                var declaredTypeName = catchClauseParam.ExceptionType.GetName();
+                catchBlock.Parameter =
+                    ParameterName.Get("[{0}] {1}".FormatEx(declaredTypeName, identifier));
             }
             CollectionExtensions.AddRange(catchBlock.Body, catchClauseParam.Body.GetScope(context).Body);
             return catchBlock;

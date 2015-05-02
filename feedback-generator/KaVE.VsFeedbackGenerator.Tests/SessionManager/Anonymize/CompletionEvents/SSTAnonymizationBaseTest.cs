@@ -20,17 +20,16 @@
 using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.SSTs;
-using KaVE.Commons.Model.SSTs.Declarations;
 using KaVE.Commons.Model.SSTs.Expressions;
 using KaVE.Commons.Model.SSTs.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Expressions.LoopHeader;
-using KaVE.Commons.Model.SSTs.Impl.Declarations;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.LoopHeader;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Commons.Model.SSTs.Impl.References;
 using KaVE.Commons.Model.SSTs.Impl.Statements;
 using KaVE.Commons.Model.SSTs.References;
+using KaVE.Commons.Model.SSTs.Statements;
 using KaVE.VsFeedbackGenerator.SessionManager.Anonymize;
 using KaVE.VsFeedbackGenerator.SessionManager.Anonymize.CompletionEvents;
 using NUnit.Framework;
@@ -83,12 +82,12 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize.CompletionEven
 
             AnyLambdaExpr = new LambdaExpression
             {
-                Parameters = {AnyVarDeclaration},
+                Parameters = {ParameterName.Get("[T,P] a")},
                 Body = {AnyStatement}
             };
             AnyLambdaExprAnonymized = new LambdaExpression
             {
-                Parameters = {AnyVarDeclarationAnonymized},
+                Parameters = {ParameterName.Get("[T,P] a").ToAnonymousName()},
                 Body = {AnyStatementAnonymized}
             };
 

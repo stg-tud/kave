@@ -18,6 +18,7 @@
  */
 
 using KaVE.Commons.Model.SSTs.Impl.Statements;
+using KaVE.Commons.TestUtils;
 using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Model.SSTs.Impl.Statements
@@ -90,6 +91,12 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Statements
         {
             var sut = new LabelledStatement();
             sut.Accept(23).VerifyWithReturn(v => v.Visit(sut, 23));
+        }
+
+        [Test]
+        public void ToStringReflection()
+        {
+            ToStringAssert.Reflection(new LabelledStatement());
         }
     }
 }

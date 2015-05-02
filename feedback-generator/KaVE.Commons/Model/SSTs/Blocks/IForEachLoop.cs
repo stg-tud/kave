@@ -17,8 +17,8 @@
  *    - Sebastian Proksch
  */
 
-using KaVE.Commons.Model.SSTs.Declarations;
 using KaVE.Commons.Model.SSTs.References;
+using KaVE.Commons.Model.SSTs.Statements;
 using KaVE.Commons.Utils.Collections;
 using KaVE.JetBrains.Annotations;
 

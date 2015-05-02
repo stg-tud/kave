@@ -21,6 +21,7 @@ using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.SSTs.Declarations;
 using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.Commons.Model.SSTs.Impl.Declarations;
+using KaVE.Commons.TestUtils;
 using KaVE.Commons.Utils.Collections;
 using NUnit.Framework;
 
@@ -185,6 +186,12 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl
             var newHashSet = Sets.NewHashSet(nep);
             var nonEntryPoints = sut.NonEntryPoints;
             Assert.AreEqual(newHashSet, nonEntryPoints);
+        }
+
+        [Test]
+        public void ToStringReflection()
+        {
+            ToStringAssert.Reflection(new SST());
         }
     }
 }

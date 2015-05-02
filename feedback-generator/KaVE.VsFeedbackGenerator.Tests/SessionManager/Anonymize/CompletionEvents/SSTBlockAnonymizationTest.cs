@@ -17,10 +17,12 @@
  *    - Sebastian Proksch
  */
 
+using JetBrains;
+using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.SSTs;
 using KaVE.Commons.Model.SSTs.Impl.Blocks;
-using KaVE.Commons.Model.SSTs.Impl.Declarations;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
+using KaVE.VsFeedbackGenerator.SessionManager.Anonymize;
 using KaVE.VsFeedbackGenerator.SessionManager.Anonymize.CompletionEvents;
 using NUnit.Framework;
 
@@ -237,6 +239,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize.CompletionEven
         [Test]
         public void TryBlock()
         {
+            var someParameter = ParameterName.Get("[{0}] p".FormatEx(Type("a")));
             AssertAnonymization(
                 new TryBlock
                 {
@@ -245,11 +248,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize.CompletionEven
                     {
                         new CatchBlock
                         {
-                            Exception = new VariableDeclaration
-                            {
-                                Reference = AnyVarReference,
-                                Type = Type("a")
-                            },
+                            Parameter = someParameter,
                             Body = {AnyStatement}
                         }
                     },
@@ -262,11 +261,8 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize.CompletionEven
                     {
                         new CatchBlock
                         {
-                            Exception = new VariableDeclaration
-                            {
-                                Reference = AnyVarReferenceAnonymized,
-                                Type = TypeAnonymized("a")
-                            },
+                            // ReSharper disable once AssignNullToNotNullAttribute
+                            Parameter = someParameter.ToAnonymousName(),
                             Body = {AnyStatementAnonymized}
                         }
                     },

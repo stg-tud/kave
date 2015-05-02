@@ -177,7 +177,7 @@
     <Compile Include="Model\SSTs\Declarations\IFieldDeclaration.cs" />
     <Compile Include="Model\SSTs\Declarations\IMethodDeclaration.cs" />
     <Compile Include="Model\SSTs\Declarations\IPropertyDeclaration.cs" />
-    <Compile Include="Model\SSTs\Declarations\IVariableDeclaration.cs" />
+    <Compile Include="Model\SSTs\Statements\IVariableDeclaration.cs" />
     <Compile Include="Model\SSTs\Expressions\Assignable\ICompletionExpression.cs" />
     <Compile Include="Model\SSTs\Expressions\Assignable\IComposedExpression.cs" />
     <Compile Include="Model\SSTs\Expressions\Assignable\IIfElseExpression.cs" />
@@ -211,7 +211,7 @@
     <Compile Include="Model\SSTs\Impl\Declarations\FieldDeclaration.cs" />
     <Compile Include="Model\SSTs\Impl\Declarations\MethodDeclaration.cs" />
     <Compile Include="Model\SSTs\Impl\Declarations\PropertyDeclaration.cs" />
-    <Compile Include="Model\SSTs\Impl\Declarations\VariableDeclaration.cs" />
+    <Compile Include="Model\SSTs\Impl\Statements\VariableDeclaration.cs" />
     <Compile Include="Model\SSTs\Impl\Expressions\Assignable\CompletionExpression.cs" />
     <Compile Include="Model\SSTs\Impl\Expressions\Assignable\ComposedExpression.cs" />
     <Compile Include="Model\SSTs\Impl\Expressions\Assignable\IfElseExpression.cs" />

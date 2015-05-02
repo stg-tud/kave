@@ -17,8 +17,8 @@
  *    - Sebastian Proksch
  */
 
-using KaVE.Commons.Model.SSTs.Impl.Declarations;
 using KaVE.Commons.Model.SSTs.Impl.References;
+using KaVE.Commons.Model.SSTs.Impl.Statements;
 using KaVE.Commons.Model.SSTs.References;
 using KaVE.Commons.Model.SSTs.Visitor;
 using KaVE.VsFeedbackGenerator.SessionManager.Anonymize;

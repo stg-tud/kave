@@ -17,7 +17,7 @@
  *    - Sebastian Proksch
  */
 
-using KaVE.Commons.Model.SSTs.Declarations;
+using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.SSTs.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Visitor;
 using KaVE.Commons.Utils;
@@ -27,12 +27,12 @@ namespace KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable
 {
     public class LambdaExpression : ILambdaExpression
     {
-        public IKaVEList<IVariableDeclaration> Parameters { get; set; }
+        public IKaVEList<IParameterName> Parameters { get; set; }
         public IKaVEList<IStatement> Body { get; set; }
 
         public LambdaExpression()
         {
-            Parameters = Lists.NewList<IVariableDeclaration>();
+            Parameters = Lists.NewList<IParameterName>();
             Body = Lists.NewList<IStatement>();
         }
 
@@ -61,6 +61,11 @@ namespace KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable
         public TReturn Accept<TContext, TReturn>(ISSTNodeVisitor<TContext, TReturn> visitor, TContext context)
         {
             return visitor.Visit(this, context);
+        }
+
+        public override string ToString()
+        {
+            return this.ToStringReflection();
         }
     }
 }

@@ -17,6 +17,7 @@
  *    - Sebastian Proksch
  */
 
+using JetBrains;
 using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.Commons.Model.SSTs.Impl.Blocks;
@@ -416,13 +417,13 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
                     RefExprs()));
             //tryBlock.Body.Add(new StatementCompletion());
 
-            var namedCatch = new CatchBlock {Exception = SSTUtil.Declare("e", Fix.IOException)};
+            var namedCatch = new CatchBlock {Parameter = ParameterName.Get("[{0}] e".FormatEx(Fix.IOException))};
             namedCatch.Body.Add(SSTUtil.Declare("$0", Fix.Int));
             namedCatch.Body.Add(
                 SSTUtil.AssignmentToLocal("$0", SSTUtil.InvocationExpression("e", Fix.GetHashCode(Fix.Object))));
             namedCatch.Body.Add(SSTUtil.InvocationStatement(Fix.ConsoleWrite(Fix.Int), RefExprs("$0")));
             tryBlock.CatchBlocks.Add(namedCatch);
-            var unnamedCatch = new CatchBlock {Exception = SSTUtil.Declare(null, Fix.Exception)};
+            var unnamedCatch = new CatchBlock { Parameter = ParameterName.Get("[{0}] ?".FormatEx(Fix.IOException)) };
             unnamedCatch.Body.Add(SSTUtil.Declare("$1", Fix.String));
             unnamedCatch.Body.Add(SSTUtil.AssignmentToLocal("$1", new ConstantValueExpression()));
             unnamedCatch.Body.Add(SSTUtil.InvocationStatement(Fix.ConsoleWrite(Fix.String), RefExprs("$1")));

@@ -18,10 +18,10 @@
  */
 
 using KaVE.Commons.Model.SSTs;
-using KaVE.Commons.Model.SSTs.Declarations;
-using KaVE.Commons.Model.SSTs.Impl.Declarations;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl.Statements;
+using KaVE.Commons.Model.SSTs.Statements;
+using KaVE.Commons.TestUtils;
 using KaVE.Commons.Utils.Collections;
 using NUnit.Framework;
 
@@ -42,12 +42,14 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Expressions.Assignable
         [Test]
         public void SettingValues()
         {
-            var sut = new LambdaExpression();
-            sut.Parameters.Add(new VariableDeclaration());
-            sut.Body.Add(new GotoStatement());
+            var sut = new LambdaExpression
+            {
+                Parameters = {SomeParameter()},
+                Body = {new GotoStatement()}
+            };
 
             Assert.AreEqual(Lists.NewList(new GotoStatement()), sut.Body);
-            Assert.AreEqual(Lists.NewList(new VariableDeclaration()), sut.Parameters);
+            Assert.AreEqual(Lists.NewList(SomeParameter()), sut.Parameters);
         }
 
         [Test]
@@ -63,13 +65,16 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Expressions.Assignable
         [Test]
         public void Equality_ReallyTheSame()
         {
-            var a = new LambdaExpression();
-            a.Parameters.Add(new VariableDeclaration());
-            a.Body.Add(new GotoStatement());
-
-            var b = new LambdaExpression();
-            b.Parameters.Add(new VariableDeclaration());
-            b.Body.Add(new GotoStatement());
+            var a = new LambdaExpression
+            {
+                Parameters = {SomeParameter()},
+                Body = {new GotoStatement()}
+            };
+            var b = new LambdaExpression
+            {
+                Parameters = {SomeParameter()},
+                Body = {new GotoStatement()}
+            };
 
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
@@ -78,8 +83,10 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Expressions.Assignable
         [Test]
         public void Equality_DifferentParameters()
         {
-            var a = new LambdaExpression();
-            a.Parameters.Add(new VariableDeclaration());
+            var a = new LambdaExpression
+            {
+                Parameters = {SomeParameter()},
+            };
             var b = new LambdaExpression();
 
             Assert.AreNotEqual(a, b);
@@ -89,8 +96,10 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Expressions.Assignable
         [Test]
         public void Equality_DifferentBody()
         {
-            var a = new LambdaExpression();
-            a.Body.Add(new GotoStatement());
+            var a = new LambdaExpression
+            {
+                Body = {new GotoStatement()}
+            };
             var b = new LambdaExpression();
 
             Assert.AreNotEqual(a, b);
@@ -109,6 +118,12 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Expressions.Assignable
         {
             var sut = new LambdaExpression();
             sut.Accept(23).VerifyWithReturn(v => v.Visit(sut, 23));
+        }
+
+        [Test]
+        public void ToStringReflection()
+        {
+            ToStringAssert.Reflection(new LambdaExpression());
         }
     }
 }

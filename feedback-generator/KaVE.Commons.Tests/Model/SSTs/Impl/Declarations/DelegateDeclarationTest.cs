@@ -20,6 +20,7 @@
 using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.SSTs.Impl.Declarations;
+using KaVE.Commons.TestUtils;
 using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Model.SSTs.Impl.Declarations
@@ -82,6 +83,12 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Declarations
         {
             var sut = new DelegateDeclaration();
             sut.Accept(23).VerifyWithReturn(v => v.Visit(sut, 23));
+        }
+
+        [Test]
+        public void ToStringReflection()
+        {
+            ToStringAssert.Reflection(new DelegateDeclaration());
         }
 
         private static ITypeName SomeType()

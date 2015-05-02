@@ -17,9 +17,9 @@
  *    - Sebastian Proksch
  */
 
+using KaVE.Commons.Model.Names;
+using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.SSTs.Blocks;
-using KaVE.Commons.Model.SSTs.Declarations;
-using KaVE.Commons.Model.SSTs.Impl.Declarations;
 using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Collections;
 
@@ -27,18 +27,21 @@ namespace KaVE.Commons.Model.SSTs.Impl.Blocks
 {
     public class CatchBlock : ICatchBlock
     {
-        public IVariableDeclaration Exception { get; set; }
+        public IParameterName Parameter { get; set; }
         public IKaVEList<IStatement> Body { get; set; }
+        public bool IsGeneral { get; set; }
+        public bool IsUnnamed { get; set; }
 
         public CatchBlock()
         {
-            Exception = new VariableDeclaration();
+            Parameter = ParameterName.UnknownName;
             Body = Lists.NewList<IStatement>();
         }
 
         private bool Equals(CatchBlock other)
         {
-            return Body.Equals(other.Body) && Equals(Exception, other.Exception);
+            return Body.Equals(other.Body) && Equals(Parameter, other.Parameter) && IsGeneral == other.IsGeneral &&
+                   IsUnnamed == other.IsUnnamed;
         }
 
         public override bool Equals(object obj)
@@ -50,8 +53,17 @@ namespace KaVE.Commons.Model.SSTs.Impl.Blocks
         {
             unchecked
             {
-                return 31 + (Body.GetHashCode()*397) ^ Exception.GetHashCode();
+                var hashCode = Parameter.GetHashCode();
+                hashCode = (hashCode*397) ^ Body.GetHashCode();
+                hashCode = (hashCode*397) ^ IsGeneral.GetHashCode();
+                hashCode = (hashCode*397) ^ IsUnnamed.GetHashCode();
+                return hashCode;
             }
+        }
+
+        public override string ToString()
+        {
+            return this.ToStringReflection();
         }
     }
 }

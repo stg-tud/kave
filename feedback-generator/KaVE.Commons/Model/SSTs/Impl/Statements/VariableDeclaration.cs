@@ -20,13 +20,13 @@
 using System.Runtime.Serialization;
 using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.Names.CSharp;
-using KaVE.Commons.Model.SSTs.Declarations;
 using KaVE.Commons.Model.SSTs.Impl.References;
 using KaVE.Commons.Model.SSTs.References;
+using KaVE.Commons.Model.SSTs.Statements;
 using KaVE.Commons.Model.SSTs.Visitor;
 using KaVE.Commons.Utils;
 
-namespace KaVE.Commons.Model.SSTs.Impl.Declarations
+namespace KaVE.Commons.Model.SSTs.Impl.Statements
 {
     [DataContract]
     public class VariableDeclaration : IVariableDeclaration
@@ -75,6 +75,11 @@ namespace KaVE.Commons.Model.SSTs.Impl.Declarations
         public TReturn Accept<TContext, TReturn>(ISSTNodeVisitor<TContext, TReturn> visitor, TContext context)
         {
             return visitor.Visit(this, context);
+        }
+
+        public override string ToString()
+        {
+            return this.ToStringReflection();
         }
     }
 }
