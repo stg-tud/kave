@@ -61,6 +61,10 @@
     <Compile Include="Utils\Logging\ILogWriter.cs" />
     <Compile Include="Utils\Logging\Json\JsonLogReader.cs" />
     <Compile Include="Utils\Logging\Json\JsonLogWriter.cs" />
+    <Compile Include="Utils\SSTPrinter\DefaultKeywords.cs" />
+    <Compile Include="Utils\SSTPrinter\ISSTPrintingKeywords.cs" />
+    <Compile Include="Utils\SSTPrinter\SSTPrintingContext.cs" />
+    <Compile Include="Utils\SSTPrinter\SSTPrintingVisitor.cs" />
     <Compile Include="Utils\Streams\MemoryStreamUtils.cs" />
     <Compile Include="Model\Events\CommandEvent.cs" />
     <Compile Include="Model\Events\CompletionEvents\CompletionEvent.cs" />
@@ -303,7 +307,6 @@
     <Compile Include="Utils\Reflection\PropertyChangedEx.cs" />
     <Compile Include="Utils\Reflection\TypeExtensions.cs" />
     <Compile Include="Utils\ScheduledAction.cs" />
-    <Compile Include="Utils\SSTPrintingVisitor.cs" />
     <Compile Include="Utils\StringBuilderUtils.cs" />
     <Compile Include="Utils\StringUtils.cs" />
     <Compile Include="Utils\ToStringUtils.cs" />

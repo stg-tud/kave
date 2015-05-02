@@ -18,13 +18,13 @@
  */
 
 using System;
-using System.Text;
-using KaVE.Commons.Model.Names.CSharp;
+using System.Linq;
+using KaVE.Commons.Model.SSTs;
 using KaVE.Commons.Model.SSTs.Visitor;
-using KaVE.Commons.Utils;
+using KaVE.Commons.Utils.SSTPrinter;
 using NUnit.Framework;
 
-namespace KaVE.Commons.Tests.Utils.SSTPrintingVisitorTestSuite
+namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
 {
     internal class SSTPrintingVisitorTestBase
     {
@@ -36,19 +36,27 @@ namespace KaVE.Commons.Tests.Utils.SSTPrintingVisitorTestSuite
             _sut = new SSTPrintingVisitor();
         }
 
-        protected void AssertPrint(ISSTNode sst, params string[] expectedLines)
+        private void AssertPrintHelper(ISSTNode sst, int indentationLevel, string expected)
         {
-            var context = new StringBuilder();
+            var context = new SSTPrintingContext {IndentationLevel = indentationLevel};
             sst.Accept(_sut, context);
             var actual = context.ToString();
-            var expected = String.Join(Environment.NewLine, expectedLines);
             Assert.AreEqual(expected, actual);
+            Assert.AreEqual(indentationLevel, context.IndentationLevel);
         }
 
-        protected void AssertTypeFormat(string expected, string typeIdentifier)
+        protected void AssertPrint(ISSTNode sst, params string[] expectedLines)
         {
-            var sb = new StringBuilder();
-            Assert.AreEqual(expected, sb.AppendTypeName(TypeName.Get(typeIdentifier)).ToString());
+            AssertPrintHelper(sst, 0, String.Join(Environment.NewLine, expectedLines));
+
+            // expressions and references can't be indented
+            if (sst is IExpression || sst is IReference)
+            {
+                return;
+            }
+
+            var indentedLines = expectedLines.Select(line => String.IsNullOrEmpty(line) ? line : "    " + line);
+            AssertPrintHelper(sst, 1, String.Join(Environment.NewLine, indentedLines));
         }
     }
 }

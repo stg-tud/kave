@@ -23,7 +23,7 @@ using KaVE.Commons.Model.SSTs.Impl.Declarations;
 using KaVE.Commons.Model.SSTs.Impl.Statements;
 using NUnit.Framework;
 
-namespace KaVE.Commons.Tests.Utils.SSTPrintingVisitorTestSuite
+namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
 {
     internal class DeclarationPrinterTest : SSTPrintingVisitorTestBase
     {

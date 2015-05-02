@@ -17,26 +17,34 @@
  *    - Andreas Bauer
  */
 
+using KaVE.Commons.Model.Names.CSharp;
+using KaVE.Commons.Utils.SSTPrinter;
 using NUnit.Framework;
 
-namespace KaVE.Commons.Tests.Utils.SSTPrintingVisitorTestSuite
+namespace KaVE.Commons.Tests.Utils.SSTPrinter
 {
-    internal class HelpersTest : SSTPrintingVisitorTestBase
+    internal class SSTPrintingContextTest
     {
+        private void AssertTypeFormat(string expected, string typeIdentifier)
+        {
+            var sut = new SSTPrintingContext();
+            Assert.AreEqual(expected, sut.TypeName(TypeName.Get(typeIdentifier)).ToString());
+        }
+
         [Test]
-        public void TypeName()
+        public void TypeNameFormat()
         {
             AssertTypeFormat("T", "T,P");
         }
 
         [Test]
-        public void TypeName_Generics()
+        public void TypeNameFormat_Generics()
         {
             AssertTypeFormat("EventHandler<EventArgsType>", "EventHandler`1[[T -> EventArgsType,P]],P");
         }
 
         [Test]
-        public void TypeName_UnknownGenericType()
+        public void TypeNameFormat_UnknownGenericType()
         {
             // these TypeNames are equivalent
             AssertTypeFormat("C<T>", "C`1[[T]],P");
@@ -45,13 +53,13 @@ namespace KaVE.Commons.Tests.Utils.SSTPrintingVisitorTestSuite
         }
 
         [Test]
-        public void TypeName_MultipleGenerics()
+        public void TypeNameFormat_MultipleGenerics()
         {
             AssertTypeFormat("A<B, C>", "A`2[[T1 -> B,P],[T2 -> C,P]],P");
         }
 
         [Test]
-        public void TypeName_NestedGenerics()
+        public void TypeNameFormat_NestedGenerics()
         {
             AssertTypeFormat("A<B<C>>", "A`1[[T -> B`1[[T -> C,P]],P]],P");
         }

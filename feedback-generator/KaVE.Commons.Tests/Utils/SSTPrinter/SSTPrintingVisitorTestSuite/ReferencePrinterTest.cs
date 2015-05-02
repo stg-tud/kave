@@ -22,7 +22,7 @@ using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.Commons.Model.SSTs.Impl.References;
 using NUnit.Framework;
 
-namespace KaVE.Commons.Tests.Utils.SSTPrintingVisitorTestSuite
+namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
 {
     internal class ReferencePrinterTest : SSTPrintingVisitorTestBase
     {
