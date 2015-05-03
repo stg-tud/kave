@@ -94,7 +94,7 @@ namespace KaVE.Commons.Utils.Json
             settings.Formatting = Formatting.None;
             var json = JsonConvert.SerializeObject(instance, settings);
             // TODO discuss this replacement (seb)
-            json = json.Replace("KaVE.Commons.Model.SSTs.Impl", "[SSTs]");
+            json = new SSTTypeNameShortener().RemoveDetails(json);
             return json;
         }
 
@@ -132,7 +132,7 @@ namespace KaVE.Commons.Utils.Json
                 "KaVE.Commons.Model.SSTs.Impl.Declarations.VariableDeclaration",
                 "KaVE.Commons.Model.SSTs.Impl.Statements.VariableDeclaration");
             // TODO discuss this replacement (seb)
-            json = json.Replace("[SSTs]", "KaVE.Commons.Model.SSTs.Impl");
+            json = new SSTTypeNameShortener().AddDetails(json);
             settings.Converters.Add(new ProposalCollectionConverter());
             // END legacy-data handling
             return JsonConvert.DeserializeObject<T>(json, settings);
