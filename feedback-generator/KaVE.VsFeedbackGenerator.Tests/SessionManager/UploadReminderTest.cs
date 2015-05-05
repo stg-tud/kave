@@ -41,6 +41,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
 
         private TestDateUtils _dateUtils;
         private UploadSettings _newUploadSettings;
+        private Mock<ILogManager> _mockLogManager;
 
         [SetUp]
         public void SetUp()
@@ -66,6 +67,8 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
                                         _registeredInvocationDate = nextDateTimeToInvoke;
                                         _registeredRescheduleAction = finish;
                                     });
+
+            _mockLogManager = new Mock<ILogManager>();
         }
 
         private void GivenSettingsStoreReturnsUninitializedSettings()
@@ -87,7 +90,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
         private void WhenUploadReminderIsInitialized()
         {
             // ReSharper disable once ObjectCreationAsStatement
-            new UploadReminder(_mockSettingsStore.Object, _mockTrayIcon.Object, _mockCallbackManager.Object, _dateUtils);
+            new UploadReminder(_mockSettingsStore.Object, _mockTrayIcon.Object, _mockCallbackManager.Object, _dateUtils, _mockLogManager.Object);
         }
 
         [Test]
@@ -119,6 +122,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
             _uploadSettings.LastNotificationDate = CreateDateWithDayAndHour(1, 12);
             _uploadSettings.LastUploadDate = CreateDateWithDayAndHour(1, 12);
             GivenNowIs(CreateDateWithDayAndHour(2, 14));
+            GivenLogSizeInBytesIsBigEnoughToShowReminder();
             GivenCallbackManagerInvokesCallbackImmediately();
 
             WhenUploadReminderIsInitialized();
@@ -132,11 +136,17 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
             _uploadSettings.LastNotificationDate = CreateDateWithDayAndHour(7, 12);
             _uploadSettings.LastUploadDate = CreateDateWithDayAndHour(1, 12);
             GivenNowIs(CreateDateWithDayAndHour(8, 14));
+            GivenLogSizeInBytesIsBigEnoughToShowReminder();
             GivenCallbackManagerInvokesCallbackImmediately();
 
             WhenUploadReminderIsInitialized();
 
             _mockTrayIcon.Verify(ti => ti.ShowHardBalloonPopup());
+        }
+
+        private void GivenLogSizeInBytesIsBigEnoughToShowReminder()
+        {
+            GivenLogsSizeInBytesIs(1024*1024);
         }
 
         [Test]
@@ -145,6 +155,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
             _uploadSettings.LastNotificationDate = CreateDateWithDayAndHour(9, 12);
             _uploadSettings.LastUploadDate = CreateDateWithDayAndHour(1, 12);
             GivenNowIs(CreateDateWithDayAndHour(10, 18));
+            GivenLogSizeInBytesIsBigEnoughToShowReminder();
             GivenCallbackManagerInvokesCallbackImmediately();
 
             WhenUploadReminderIsInitialized();
@@ -168,8 +179,32 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
 
             WhenUploadReminderIsInitialized();
 
+            ThenNoPopupIsOpened();
+        }
+
+        private void ThenNoPopupIsOpened()
+        {
             _mockTrayIcon.Verify(ti => ti.ShowSoftBalloonPopup(), Times.Never);
             _mockTrayIcon.Verify(ti => ti.ShowHardBalloonPopup(), Times.Never);
+        }
+
+        [Test]
+        public void ShouldNotOpenNotificationIfLogsHaveLessThan1MB()
+        {
+            _uploadSettings.LastNotificationDate = CreateDateWithDayAndHour(1, 12);
+            _uploadSettings.LastUploadDate = CreateDateWithDayAndHour(1, 12);
+            GivenNowIs(CreateDateWithDayAndHour(2, 14));
+            GivenLogsSizeInBytesIs(100 * 1024);
+            GivenCallbackManagerInvokesCallbackImmediately();
+
+            WhenUploadReminderIsInitialized();
+
+            ThenNoPopupIsOpened();
+        }
+
+        private void GivenLogsSizeInBytesIs(int logsSizeInBytes)
+        {
+            _mockLogManager.Setup(lm => lm.LogsSizeInBytes).Returns(logsSizeInBytes);
         }
 
         [Test]

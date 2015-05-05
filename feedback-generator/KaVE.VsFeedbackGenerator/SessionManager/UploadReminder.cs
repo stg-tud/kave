@@ -22,6 +22,7 @@ using JetBrains.Application;
 using JetBrains.Application.Components;
 using KaVE.VsFeedbackGenerator.TrayNotification;
 using KaVE.VsFeedbackGenerator.Utils;
+using KaVE.VsFeedbackGenerator.Utils.Logging;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager
 {
@@ -35,17 +36,16 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
         private readonly NotifyTrayIcon _taskbarIcon;
         private readonly ICallbackManager _callbackManager;
         private readonly IDateUtils _dateUtils;
+        private readonly ILogManager _logManager;
         private static readonly Random RandomGenerator = new Random();
 
-        public UploadReminder(ISettingsStore settingsStore,
-            NotifyTrayIcon notify,
-            ICallbackManager callbackManager,
-            IDateUtils dateUtils)
+        public UploadReminder(ISettingsStore settingsStore, NotifyTrayIcon notify, ICallbackManager callbackManager, IDateUtils dateUtils, ILogManager logManager)
         {
             _taskbarIcon = notify;
             _settingsStore = settingsStore;
             _callbackManager = callbackManager;
             _dateUtils = dateUtils;
+            _logManager = logManager;
 
             EnsureUploadSettingsInitialized();
             RegisterCallback();
@@ -99,6 +99,11 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
 
         private void ShowNotificationAndUpdateSettings()
         {
+            if (_logManager.LogsSizeInBytes < 1024*1024)
+            {
+                return;
+            }
+
             // at this point, lastNotification is at least one day past
             if (OneWeekSinceLastUpload())
             {
