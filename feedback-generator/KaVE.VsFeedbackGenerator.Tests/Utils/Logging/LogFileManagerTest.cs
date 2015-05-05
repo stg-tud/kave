@@ -249,21 +249,21 @@ namespace KaVE.VsFeedbackGenerator.Tests.Utils.Logging
         [Test]
         public void ShouldGetLogsSizeOfNoFile()
         {
-            Assert.AreEqual(0, _uut.LogsSize);
+            Assert.AreEqual(0, _uut.LogsSizeInBytes);
         }
 
         [Test]
         public void ShouldGetLogsSizeOfSingleFile()
         {
             GivenLogsExistWithSizeInBytes(1000);
-            Assert.AreEqual(1000, _uut.LogsSize);
+            Assert.AreEqual(1000, _uut.LogsSizeInBytes);
         }
 
         [Test]
         public void ShouldGetLogsSizeOfMultipleFiles()
         {
             GivenLogsExistWithSizeInBytes(2480, 524288, 1);
-            Assert.AreEqual(526769, _uut.LogsSize);
+            Assert.AreEqual(526769, _uut.LogsSizeInBytes);
         }
 
         [Test]

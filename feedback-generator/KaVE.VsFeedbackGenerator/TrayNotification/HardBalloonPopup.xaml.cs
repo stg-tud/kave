@@ -38,7 +38,7 @@ namespace KaVE.VsFeedbackGenerator.TrayNotification
 
         private void SetPopupMessage(ILogManager logManager)
         {
-            var size = logManager.LogsSize.FormatSizeInBytes();
+            var size = logManager.LogsSizeInBytes.FormatSizeInBytes();
             Message.Text = Properties.PopupNotification.InformationHardpopup.FormatEx(size);
         }
 

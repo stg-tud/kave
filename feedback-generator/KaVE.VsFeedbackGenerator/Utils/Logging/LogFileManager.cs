@@ -85,7 +85,7 @@ namespace KaVE.VsFeedbackGenerator.Utils.Logging
             return _logs.ContainsKey(logPath) ? _logs[logPath] : new LogFile(logPath);
         }
 
-        public long LogsSize
+        public long LogsSizeInBytes
         {
             get { return Logs.Select(log => log.SizeInBytes).Sum(); }
         }

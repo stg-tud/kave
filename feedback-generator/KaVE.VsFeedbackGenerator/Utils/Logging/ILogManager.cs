@@ -87,7 +87,7 @@ namespace KaVE.VsFeedbackGenerator.Utils.Logging
         /// </summary>
         ILog CurrentLog { get; }
 
-        long LogsSize { get; }
+        long LogsSizeInBytes { get; }
 
         void DeleteLogsOlderThan(DateTime time);
 
