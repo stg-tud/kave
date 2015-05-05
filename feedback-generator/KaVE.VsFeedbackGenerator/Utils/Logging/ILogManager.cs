@@ -92,6 +92,8 @@ namespace KaVE.VsFeedbackGenerator.Utils.Logging
         /// </summary>
         string FormatedLogsSize { get; }
 
+        long LogsSize { get; }
+
         void DeleteLogsOlderThan(DateTime time);
 
         void DeleteAllLogs();

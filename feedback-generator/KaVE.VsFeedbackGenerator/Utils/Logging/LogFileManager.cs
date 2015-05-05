@@ -23,6 +23,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using KaVE.Commons.Utils.IO;
 using KaVE.JetBrains.Annotations;
 
 namespace KaVE.VsFeedbackGenerator.Utils.Logging
@@ -88,22 +89,14 @@ namespace KaVE.VsFeedbackGenerator.Utils.Logging
         {
             get
             {
-                var sumB = Logs.Select(log => log.SizeInBytes).Sum();
-                
-                if (sumB < 1024)
-                {
-                    return sumB + " B";
-                }
-
-                var sumKb = sumB/1024f;
-
-                if (sumKb < 1024)
-                {
-                    return sumKb.ToString("0.0", CultureInfo.InvariantCulture) + " KB";
-                }
-
-                return (sumKb / 1024f).ToString("0.0", CultureInfo.InvariantCulture) + " MB";    
+                var sumB = LogsSize;
+                return sumB.FormatSizeInBytes(CultureInfo.InvariantCulture);  
             }
+        }
+
+        public long LogsSize
+        {
+            get { return Logs.Select(log => log.SizeInBytes).Sum(); }
         }
 
         public void DeleteLogsOlderThan(DateTime time)
