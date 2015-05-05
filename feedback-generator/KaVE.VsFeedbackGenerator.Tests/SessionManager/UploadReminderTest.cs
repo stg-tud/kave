@@ -62,10 +62,11 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
             _mockCallbackManager.Setup(
                 mgr => mgr.RegisterCallback(It.IsAny<Action>(), It.IsAny<DateTime>(), It.IsAny<Action>()))
                                 .Callback<Action, DateTime, Action>(
-                                    (callback, nextDateTimeToInvoke, finish) =>
+                                    (callback, date, finish) =>
                                     {
-                                        _registeredInvocationDate = nextDateTimeToInvoke;
+                                        _registeredInvocationDate = date;
                                         _registeredRescheduleAction = finish;
+                                        callback();
                                     });
 
             _mockLogManager = new Mock<ILogManager>();
@@ -76,10 +77,19 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
             _mockSettingsStore.Setup(store => store.GetSettings<UploadSettings>()).Returns(new UploadSettings());
         }
 
+        private void GivenLogSizeInBytesIsBigEnoughToShowReminder()
+        {
+            GivenLogsSizeInBytesIs(1024 * 1024);
+        }
+
+        private void GivenLogsSizeInBytesIs(int logsSizeInBytes)
+        {
+            _mockLogManager.Setup(lm => lm.LogsSizeInBytes).Returns(logsSizeInBytes);
+        }
+
         private static DateTime CreateDateWithDayAndHour(int day, int hour)
         {
-            var relativeDate = new DateTime(1970, 1, day, hour, 0, 0);
-            return relativeDate;
+            return new DateTime(1970, 1, day, hour, 0, 0);
         }
 
         public void GivenNowIs(DateTime date)
@@ -91,6 +101,12 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
         {
             // ReSharper disable once ObjectCreationAsStatement
             new UploadReminder(_mockSettingsStore.Object, _mockTrayIcon.Object, _mockCallbackManager.Object, _dateUtils, _mockLogManager.Object);
+        }
+
+        private void ThenNoPopupIsOpened()
+        {
+            _mockTrayIcon.Verify(ti => ti.ShowSoftBalloonPopup(), Times.Never);
+            _mockTrayIcon.Verify(ti => ti.ShowHardBalloonPopup(), Times.Never);
         }
 
         [Test]
@@ -123,7 +139,6 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
             _uploadSettings.LastUploadDate = CreateDateWithDayAndHour(1, 12);
             GivenNowIs(CreateDateWithDayAndHour(2, 14));
             GivenLogSizeInBytesIsBigEnoughToShowReminder();
-            GivenCallbackManagerInvokesCallbackImmediately();
 
             WhenUploadReminderIsInitialized();
 
@@ -137,16 +152,10 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
             _uploadSettings.LastUploadDate = CreateDateWithDayAndHour(1, 12);
             GivenNowIs(CreateDateWithDayAndHour(8, 14));
             GivenLogSizeInBytesIsBigEnoughToShowReminder();
-            GivenCallbackManagerInvokesCallbackImmediately();
 
             WhenUploadReminderIsInitialized();
 
             _mockTrayIcon.Verify(ti => ti.ShowHardBalloonPopup());
-        }
-
-        private void GivenLogSizeInBytesIsBigEnoughToShowReminder()
-        {
-            GivenLogsSizeInBytesIs(1024*1024);
         }
 
         [Test]
@@ -156,7 +165,6 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
             _uploadSettings.LastUploadDate = CreateDateWithDayAndHour(1, 12);
             GivenNowIs(CreateDateWithDayAndHour(10, 18));
             GivenLogSizeInBytesIsBigEnoughToShowReminder();
-            GivenCallbackManagerInvokesCallbackImmediately();
 
             WhenUploadReminderIsInitialized();
 
@@ -175,17 +183,10 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
             _uploadSettings.LastNotificationDate = CreateDateWithDayAndHour(1, 12);
             _uploadSettings.LastUploadDate = CreateDateWithDayAndHour(2, 12);
             GivenNowIs(CreateDateWithDayAndHour(2, 14));
-            GivenCallbackManagerInvokesCallbackImmediately();
 
             WhenUploadReminderIsInitialized();
 
             ThenNoPopupIsOpened();
-        }
-
-        private void ThenNoPopupIsOpened()
-        {
-            _mockTrayIcon.Verify(ti => ti.ShowSoftBalloonPopup(), Times.Never);
-            _mockTrayIcon.Verify(ti => ti.ShowHardBalloonPopup(), Times.Never);
         }
 
         [Test]
@@ -195,16 +196,10 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
             _uploadSettings.LastUploadDate = CreateDateWithDayAndHour(1, 12);
             GivenNowIs(CreateDateWithDayAndHour(2, 14));
             GivenLogsSizeInBytesIs(100 * 1024);
-            GivenCallbackManagerInvokesCallbackImmediately();
 
             WhenUploadReminderIsInitialized();
 
             ThenNoPopupIsOpened();
-        }
-
-        private void GivenLogsSizeInBytesIs(int logsSizeInBytes)
-        {
-            _mockLogManager.Setup(lm => lm.LogsSizeInBytes).Returns(logsSizeInBytes);
         }
 
         [Test]
@@ -214,7 +209,6 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
             _uploadSettings.LastUploadDate = CreateDateWithDayAndHour(2, 12);
             var expected = _uploadSettings.LastNotificationDate;
             GivenNowIs(CreateDateWithDayAndHour(2, 14));
-            GivenCallbackManagerInvokesCallbackImmediately();
 
             WhenUploadReminderIsInitialized();
 
@@ -318,19 +312,6 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
         {
             var isInRange = actual >= expectedMin && actual <= expectedMax;
             Assert.True(isInRange);
-        }
-
-        private void GivenCallbackManagerInvokesCallbackImmediately()
-        {
-            _mockCallbackManager.Setup(
-                mgr => mgr.RegisterCallback(It.IsAny<Action>(), It.IsAny<DateTime>(), It.IsAny<Action>()))
-                                .Callback<Action, DateTime, Action>(
-                                    (callback, date, finish) =>
-                                    {
-                                        _registeredInvocationDate = date;
-                                        _registeredRescheduleAction = finish;
-                                        callback();
-                                    });
         }
     }
 }
