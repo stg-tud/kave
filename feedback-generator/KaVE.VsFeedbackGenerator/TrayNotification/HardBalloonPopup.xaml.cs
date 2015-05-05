@@ -20,6 +20,7 @@
 using System.Windows;
 using System.Windows.Input;
 using JetBrains;
+using KaVE.Commons.Utils.IO;
 using KaVE.VsFeedbackGenerator.Utils.Logging;
 
 namespace KaVE.VsFeedbackGenerator.TrayNotification
@@ -37,7 +38,7 @@ namespace KaVE.VsFeedbackGenerator.TrayNotification
 
         private void SetPopupMessage(ILogManager logManager)
         {
-            var size = logManager.FormatedLogsSize;
+            var size = logManager.LogsSize.FormatSizeInBytes();
             Message.Text = Properties.PopupNotification.InformationHardpopup.FormatEx(size);
         }
 

@@ -87,11 +87,6 @@ namespace KaVE.VsFeedbackGenerator.Utils.Logging
         /// </summary>
         ILog CurrentLog { get; }
 
-        /// <summary>
-        ///     Returns a pretty-printed representation of the logs's accumulated size.
-        /// </summary>
-        string FormatedLogsSize { get; }
-
         long LogsSize { get; }
 
         void DeleteLogsOlderThan(DateTime time);
