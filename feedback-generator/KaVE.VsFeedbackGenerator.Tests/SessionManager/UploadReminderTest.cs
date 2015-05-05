@@ -33,18 +33,19 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
     {
         private Mock<ISettingsStore> _mockSettingsStore;
         private UploadSettings _uploadSettings;
-        private Mock<NotifyTrayIcon> _mockTrayIcon;
-        private Mock<ICallbackManager> _mockCallbackManager;
+        private UploadSettings _updatedUploadSettings;
 
+        private Mock<NotifyTrayIcon> _mockTrayIcon;
+
+        private Mock<ICallbackManager> _mockCallbackManager;
         private DateTime _registeredInvocationDate;
         private Action _registeredRescheduleAction;
 
         private TestDateUtils _dateUtils;
-        private UploadSettings _newUploadSettings;
         private Mock<ILogManager> _mockLogManager;
 
         [SetUp]
-        public void SetUp()
+        public void SetUpSettings()
         {
             _uploadSettings = new UploadSettings();
             _uploadSettings.Initialize();
@@ -52,12 +53,12 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
             _mockSettingsStore = new Mock<ISettingsStore>();
             _mockSettingsStore.Setup(store => store.GetSettings<UploadSettings>()).Returns(_uploadSettings);
             _mockSettingsStore.Setup(store => store.SetSettings(It.IsAny<UploadSettings>()))
-                  .Callback<UploadSettings>(settings => _newUploadSettings = settings);
+                              .Callback<UploadSettings>(settings => _updatedUploadSettings = settings);
+        }
 
-            _mockTrayIcon = new Mock<NotifyTrayIcon>(new Mock<ILogManager>().Object);
-
-            _dateUtils = new TestDateUtils();
-
+        [SetUp]
+        public void SetUpCallbackManager()
+        {
             _mockCallbackManager = new Mock<ICallbackManager>();
             _mockCallbackManager.Setup(
                 mgr => mgr.RegisterCallback(It.IsAny<Action>(), It.IsAny<DateTime>(), It.IsAny<Action>()))
@@ -68,13 +69,15 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
                                         _registeredRescheduleAction = finish;
                                         callback();
                                     });
-
-            _mockLogManager = new Mock<ILogManager>();
         }
 
-        private void GivenSettingsStoreReturnsUninitializedSettings()
+        [SetUp]
+        public void SetUp()
         {
-            _mockSettingsStore.Setup(store => store.GetSettings<UploadSettings>()).Returns(new UploadSettings());
+            _mockLogManager = new Mock<ILogManager>();
+            _mockTrayIcon = new Mock<NotifyTrayIcon>(_mockLogManager.Object);
+            _dateUtils = new TestDateUtils();
+
         }
 
         private void GivenLogSizeInBytesIsBigEnoughToShowReminder()
@@ -92,11 +95,6 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
             return new DateTime(1970, 1, day, hour, 0, 0);
         }
 
-        public void GivenNowIs(DateTime date)
-        {
-            _dateUtils.Now = date;
-        }
-
         private void WhenUploadReminderIsInitialized()
         {
             // ReSharper disable once ObjectCreationAsStatement
@@ -112,12 +110,11 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
         [Test]
         public void ShouldInitializeSettingsIfNotInitialized()
         {
-            GivenSettingsStoreReturnsUninitializedSettings();
+            _mockSettingsStore.Setup(store => store.GetSettings<UploadSettings>()).Returns(new UploadSettings());
 
             WhenUploadReminderIsInitialized();
 
-            Assert.IsTrue(_newUploadSettings.IsInitialized());
-            _mockSettingsStore.Verify(ss => ss.SetSettings(_newUploadSettings));
+            Assert.IsTrue(_updatedUploadSettings.IsInitialized());
         }
 
         [Test]
@@ -129,7 +126,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
 
             WhenUploadReminderIsInitialized();
 
-            _mockSettingsStore.Verify(ss => ss.SetSettings(_newUploadSettings), Times.Never);
+            _mockSettingsStore.Verify(ss => ss.SetSettings(_updatedUploadSettings), Times.Never);
         }
 
         [Test]
@@ -137,7 +134,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
         {
             _uploadSettings.LastNotificationDate = CreateDateWithDayAndHour(1, 12);
             _uploadSettings.LastUploadDate = CreateDateWithDayAndHour(1, 12);
-            GivenNowIs(CreateDateWithDayAndHour(2, 14));
+            _dateUtils.Now = CreateDateWithDayAndHour(2, 14);
             GivenLogSizeInBytesIsBigEnoughToShowReminder();
 
             WhenUploadReminderIsInitialized();
@@ -150,7 +147,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
         {
             _uploadSettings.LastNotificationDate = CreateDateWithDayAndHour(7, 12);
             _uploadSettings.LastUploadDate = CreateDateWithDayAndHour(1, 12);
-            GivenNowIs(CreateDateWithDayAndHour(8, 14));
+            _dateUtils.Now = CreateDateWithDayAndHour(8, 14);
             GivenLogSizeInBytesIsBigEnoughToShowReminder();
 
             WhenUploadReminderIsInitialized();
@@ -163,7 +160,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
         {
             _uploadSettings.LastNotificationDate = CreateDateWithDayAndHour(9, 12);
             _uploadSettings.LastUploadDate = CreateDateWithDayAndHour(1, 12);
-            GivenNowIs(CreateDateWithDayAndHour(10, 18));
+            _dateUtils.Now = CreateDateWithDayAndHour(10, 18);
             GivenLogSizeInBytesIsBigEnoughToShowReminder();
 
             WhenUploadReminderIsInitialized();
@@ -182,7 +179,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
         {
             _uploadSettings.LastNotificationDate = CreateDateWithDayAndHour(1, 12);
             _uploadSettings.LastUploadDate = CreateDateWithDayAndHour(2, 12);
-            GivenNowIs(CreateDateWithDayAndHour(2, 14));
+            _dateUtils.Now = CreateDateWithDayAndHour(2, 14);
 
             WhenUploadReminderIsInitialized();
 
@@ -194,7 +191,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
         {
             _uploadSettings.LastNotificationDate = CreateDateWithDayAndHour(1, 12);
             _uploadSettings.LastUploadDate = CreateDateWithDayAndHour(1, 12);
-            GivenNowIs(CreateDateWithDayAndHour(2, 14));
+            _dateUtils.Now = CreateDateWithDayAndHour(2, 14);
             GivenLogsSizeInBytesIs(100 * 1024);
 
             WhenUploadReminderIsInitialized();
@@ -208,7 +205,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
             _uploadSettings.LastNotificationDate = CreateDateWithDayAndHour(1, 12);
             _uploadSettings.LastUploadDate = CreateDateWithDayAndHour(2, 12);
             var expected = _uploadSettings.LastNotificationDate;
-            GivenNowIs(CreateDateWithDayAndHour(2, 14));
+            _dateUtils.Now = CreateDateWithDayAndHour(2, 14);
 
             WhenUploadReminderIsInitialized();
 
@@ -236,7 +233,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
         public void ShouldRegisterCorrectTime_LastNotificationOnThePreviousDayAndCurrentTimeIsBeforeWorkingHours()
         {
             _uploadSettings.LastNotificationDate = CreateDateWithDayAndHour(1, 12);
-            GivenNowIs(CreateDateWithDayAndHour(2, 8));
+            _dateUtils.Now = CreateDateWithDayAndHour(2, 8);
 
             WhenUploadReminderIsInitialized();
 
@@ -251,7 +248,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
         public void ShouldRegisterCorrectTime_LastNotificationOnThePreviousDayAndCurrentTimeIsInWorkingHours()
         {
             _uploadSettings.LastNotificationDate = CreateDateWithDayAndHour(1, 12);
-            GivenNowIs(CreateDateWithDayAndHour(2, 14));
+            _dateUtils.Now = CreateDateWithDayAndHour(2, 14);
 
             WhenUploadReminderIsInitialized();
 
@@ -266,7 +263,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
         public void ShouldRegisterCorrectTime_LastNotificationOnThePreviousDayOutSideWorkingHourAndCurrentTimeIsInWorkingHours()
         {
             _uploadSettings.LastNotificationDate = CreateDateWithDayAndHour(1, 18);
-            GivenNowIs(CreateDateWithDayAndHour(2, 13));
+            _dateUtils.Now = CreateDateWithDayAndHour(2, 13);
 
             WhenUploadReminderIsInitialized();
 
@@ -281,7 +278,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
         public void ShouldRegisterCorrectTime_LastNotificationOnThePreviousDayAndCurrentTimeIsAfterWorkingHours()
         {
             _uploadSettings.LastNotificationDate = CreateDateWithDayAndHour(1, 12);
-            GivenNowIs(CreateDateWithDayAndHour(2, 17));
+            _dateUtils.Now = CreateDateWithDayAndHour(2, 17);
 
             WhenUploadReminderIsInitialized();
 
@@ -296,7 +293,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
         public void FinishActionShouldReschedule()
         {
             _uploadSettings.LastNotificationDate = CreateDateWithDayAndHour(1, 12);
-            GivenNowIs(CreateDateWithDayAndHour(2, 8));
+            _dateUtils.Now = CreateDateWithDayAndHour(2, 8);
 
             WhenUploadReminderIsInitialized();
             _registeredRescheduleAction();
