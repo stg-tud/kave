@@ -29,12 +29,13 @@ using KaVE.Commons.Model.Events.VisualStudio;
 using KaVE.Commons.TestUtils.Model.Events;
 using KaVE.Commons.Utils.Json;
 using KaVE.Commons.Utils.Streams;
+using KaVE.VsFeedbackGenerator.Export;
 using KaVE.VsFeedbackGenerator.SessionManager.Anonymize;
 using KaVE.VsFeedbackGenerator.Utils;
 using Moq;
 using NUnit.Framework;
 
-namespace KaVE.VsFeedbackGenerator.Tests.Utils
+namespace KaVE.VsFeedbackGenerator.Tests.Export
 {
     [TestFixture]
     internal class ExporterTest

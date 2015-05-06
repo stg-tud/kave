@@ -79,6 +79,7 @@
     <Compile Include="CodeCompletion\ModelStoreTest.cs" />
     <Compile Include="CodeCompletion\UsageModelFixture.cs" />
     <Compile Include="CodeCompletion\UsageModelTest.cs" />
+    <Compile Include="Export\ExporterTest.cs" />
     <Compile Include="Generators\EventGeneratorBaseTest.cs" />
     <Compile Include="Generators\EventLoggerTest.cs" />
     <Compile Include="Generators\LogEventGeneratorTest.cs" />
@@ -140,7 +141,6 @@
     <Compile Include="Export\UploadWizardViewModelTest.cs" />
     <Compile Include="TestRSEnv.cs" />
     <Compile Include="Utils\DateTimeTest.cs" />
-    <Compile Include="Utils\ExporterTest.cs" />
     <Compile Include="Utils\GZipStreamTest.cs" />
     <Compile Include="Utils\HierarchyTest.cs" />
     <Compile Include="Utils\HttpPublisherTest.cs" />
