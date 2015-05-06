@@ -72,6 +72,7 @@ namespace KaVE.VsFeedbackGenerator.Export
         {
             using (var zipFile = new ZipFile())
             {
+                zipFile.UseZip64WhenSaving = Zip64Option.AsNecessary;
                 var i = 0;
                 ReportExportProgress(i, numberOfEvents);
                 foreach (var e in events)

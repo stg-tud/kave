@@ -159,6 +159,14 @@ namespace KaVE.VsFeedbackGenerator.Tests.Export
             Assert.AreEqual(expected, actual);
         }
 
+        [Test(Description = "Entry limit for standard ZIP file should not limit export")]
+        public void ShouldExportMoreThan65535Events()
+        {
+            var manyEvents = IDEEventTestFactory.SomeEvents(65536);
+
+            _sut.Export(manyEvents, _publisherMock.Object);
+        }
+
         [Test, Ignore("manual test that the server receives valid file - RealLifeExample part 1")]
         public void ShouldUploadValidZipToServer()
         {
