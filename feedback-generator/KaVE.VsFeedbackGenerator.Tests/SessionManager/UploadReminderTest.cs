@@ -15,6 +15,7 @@
  * 
  * Contributors:
  *    - Uli Fahrer
+ *    - Sven Amann
  */
 
 using System;
@@ -187,7 +188,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
         }
 
         [Test]
-        public void ShouldNotOpenNotificationIfLogsHaveLessThan1MB()
+        public void ShouldNotOpenNotificationIfLogsAreTooSmall()
         {
             _uploadSettings.LastNotificationDate = CreateDateWithDayAndHour(1, 12);
             _uploadSettings.LastUploadDate = CreateDateWithDayAndHour(1, 12);

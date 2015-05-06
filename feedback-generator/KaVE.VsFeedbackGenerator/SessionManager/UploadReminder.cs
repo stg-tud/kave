@@ -15,6 +15,7 @@
  * 
  * Contributors:
  *    - Uli Fahrer
+ *    - Sven Amann
  */
 
 using System;
@@ -31,6 +32,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
     {
         private const int WorkTimeStart = 10;
         private const int WorkTimeEnd = 16;
+        private const int MimimalLogsSizeInBytesRequiredToShowReminder = 500*1024;
 
         private readonly ISettingsStore _settingsStore;
         private readonly NotifyTrayIcon _taskbarIcon;
@@ -99,7 +101,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
 
         private void ShowNotificationAndUpdateSettings()
         {
-            if (_logManager.LogsSizeInBytes < 1024*1024)
+            if (_logManager.LogsSizeInBytes < MimimalLogsSizeInBytesRequiredToShowReminder)
             {
                 return;
             }
