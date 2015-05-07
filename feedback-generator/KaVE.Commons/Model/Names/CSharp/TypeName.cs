@@ -20,9 +20,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Collections;
 using KaVE.JetBrains.Annotations;
-using KaVE.Commons.Utils.Assertion;
 
 namespace KaVE.Commons.Model.Names.CSharp
 {
@@ -139,21 +139,19 @@ namespace KaVE.Commons.Model.Names.CSharp
             get { return false; }
         }
 
-        public string FullName
+        public virtual string FullName
         {
-            get { return GetFullName(Identifier); }
-        }
-
-        private static string GetFullName(string identifier)
-        {
-            var length = GetLengthOfTypeName(identifier);
-            var fullName = identifier.Substring(0, length);
-            var indexOfColon = fullName.IndexOf(":", StringComparison.Ordinal);
-            if (indexOfColon > -1)
+            get
             {
-                fullName = fullName.Substring(indexOfColon + 1);
+                var length = GetLengthOfTypeName(Identifier);
+                var fullName = Identifier.Substring(0, length);
+                var indexOfColon = fullName.IndexOf(":", StringComparison.Ordinal);
+                if (indexOfColon > -1)
+                {
+                    fullName = fullName.Substring(indexOfColon + 1);
+                }
+                return fullName;
             }
-            return fullName;
         }
 
         private static int GetLengthOfTypeName(string identifier)
@@ -172,18 +170,16 @@ namespace KaVE.Commons.Model.Names.CSharp
 
         public string RawFullName
         {
-            get { return GetRawFullName(Identifier); }
-        }
-
-        protected static string GetRawFullName(string identifier)
-        {
-            var fullName = GetFullName(identifier);
-            var indexOfGenericList = fullName.IndexOf("[[", StringComparison.Ordinal);
-            if (indexOfGenericList < 0)
+            get
             {
-                indexOfGenericList = fullName.IndexOf(", ", StringComparison.Ordinal);
+                var fullName = FullName;
+                var indexOfGenericList = fullName.IndexOf("[[", StringComparison.Ordinal);
+                if (indexOfGenericList < 0)
+                {
+                    indexOfGenericList = fullName.IndexOf(", ", StringComparison.Ordinal);
+                }
+                return indexOfGenericList < 0 ? fullName : fullName.Substring(0, indexOfGenericList);
             }
-            return indexOfGenericList < 0 ? fullName : fullName.Substring(0, indexOfGenericList);
         }
 
         public virtual IAssemblyName Assembly

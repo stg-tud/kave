@@ -43,6 +43,20 @@ namespace KaVE.Commons.Model.Names.CSharp
             get { return true; }
         }
 
+        public override string FullName
+        {
+            get
+            {
+                var baseFullName = base.FullName;
+                var indexOfParameterList = baseFullName.IndexOf('(');
+                if (indexOfParameterList > 0)
+                {
+                    return baseFullName.Substring(0, indexOfParameterList);
+                }
+                return baseFullName;
+            }
+        }
+
         public string Signature
         {
             get { throw new NotImplementedException(); }

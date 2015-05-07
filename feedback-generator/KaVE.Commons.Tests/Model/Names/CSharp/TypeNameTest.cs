@@ -249,22 +249,6 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp
             Assert.IsFalse(uut.IsArrayType);
         }
 
-        [Test]
-        public void ShouldBeDelegateType()
-        {
-            var uut = TypeName.Get("d:My.Delegate.Type, D, 1.4.7.0");
-
-            Assert.IsTrue(uut.IsDelegateType);
-        }
-
-        [Test]
-        public void ShouldNotBeDelegateType()
-        {
-            var uut = TypeName.Get("My.NonDelegate.Type, ND, 6.6.6.6");
-
-            Assert.IsFalse(uut.IsDelegateType);
-        }
-
         [TestCase(""),
          TestCase("?"),
          TestCase("T -> ?"),
@@ -297,8 +281,7 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp
         [TestCase("System.Boolean, mscorlib, 4.0.0.0"),
          TestCase("i:My.TerfaceType, Is, 2.4.6.3"),
          TestCase("Foo[], A, 5.3.6.7"),
-         TestCase("?"),
-         TestCase("d:A.DelegateType, Ds, 6.8.5.4")]
+         TestCase("?")]
         public void ShouldNotBeClassType(string identifier)
         {
             var uut = TypeName.Get(identifier);
@@ -308,8 +291,7 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp
 
         [TestCase("My.Namespace.TypeName, A, 3.5.7.9"),
          TestCase("i:My.Nterface, I, 5.3.7.1"),
-         TestCase("Vt[], A, 5.2.7.8"),
-         TestCase("d:My.Delegate, D, 5.4.3.7")]
+         TestCase("Vt[], A, 5.2.7.8")]
         public void ShouldBeReferenceType(string identifier)
         {
             var uut = TypeName.Get(identifier);
