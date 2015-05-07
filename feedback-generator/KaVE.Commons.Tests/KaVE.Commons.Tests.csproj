@@ -60,6 +60,7 @@
     <Compile Include="Model\Events\IDEEventTest.cs" />
     <Compile Include="Model\Events\InfoEventTest.cs" />
     <Compile Include="Model\Groums\GroumTest.cs" />
+    <Compile Include="Model\Names\CSharp\ArrayTypeNameTest.cs" />
     <Compile Include="Model\Names\CSharp\CSharpNameFromInfoFactoryTest.cs" />
     <Compile Include="Model\Names\CSharp\CSharpNameUtilsTest.cs" />
     <Compile Include="Model\Names\CSharp\DelegateTypeNameTest.cs" />
@@ -76,6 +77,7 @@
     <Compile Include="Model\Names\CSharp\Modularization\NamespaceNameTest.cs" />
     <Compile Include="Model\Names\CSharp\NameTest.cs" />
     <Compile Include="Model\Names\CSharp\ParameterNameTest.cs" />
+    <Compile Include="Model\Names\CSharp\NameUtilsTest.cs" />
     <Compile Include="Model\Names\CSharp\TypeNameTest.cs" />
     <Compile Include="Model\Names\VisualStudio\DocumentNameTest.cs" />
     <Compile Include="Model\Names\VisualStudio\ProjectItemNameTest.cs" />

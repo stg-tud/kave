@@ -60,7 +60,7 @@ namespace KaVE.VsFeedbackGenerator.Utils.Names
         [NotNull]
         private static ITypeName GetName(this IArrayType arrayType)
         {
-            return arrayType.ElementType.GetName().DeriveArrayTypeName(arrayType.Rank);
+            return ArrayTypeName.From(arrayType.ElementType.GetName(), arrayType.Rank);
         }
 
         [NotNull]

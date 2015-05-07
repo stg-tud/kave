@@ -182,73 +182,6 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp
             Assert.IsFalse(uut.IsInterfaceType);
         }
 
-        [TestCase("ValueType[,,], As, 9.8.7.6"),
-         TestCase("ValueType[], As, 5.4.3.2"),
-         TestCase("a.Foo`1[][[T -> int, mscore, 1.0.0.0]], Y, 4.3.6.1"),
-         TestCase("A[]"),
-         TestCase("T -> System.String[], mscorlib, 4.0.0.0"),
-         TestCase("System.Int32[], mscorlib, 4.0.0.0")]
-        public void ShouldBeArrayType(string identifier)
-        {
-            var arrayTypeName = TypeName.Get(identifier);
-
-            Assert.IsTrue(arrayTypeName.IsArrayType);
-        }
-
-        [TestCase("ValueType[,,], As, 9.8.7.6", "ValueType, As, 9.8.7.6"),
-         TestCase("ValueType[], As, 5.4.3.2", "ValueType, As, 5.4.3.2"),
-         TestCase("a.Foo`1[][[T -> int, mscore, 1.0.0.0]], A, 1.2.3.4",
-             "a.Foo`1[[T -> int, mscore, 1.0.0.0]], A, 1.2.3.4"),
-         TestCase("A[]", "A"),
-         TestCase("T -> System.String[], mscorlib, 4.0.0.0", "System.String, mscorlib, 4.0.0.0"),
-         TestCase("System.Int32[], mscorlib, 4.0.0.0", "System.Int32, mscorlib, 4.0.0.0")]
-        public void ShouldGetArrayBaseType(string identifier, string expected)
-        {
-            var arrayTypeName = TypeName.Get(identifier);
-
-            Assert.AreEqual(expected, arrayTypeName.ArrayBaseType.Identifier);
-        }
-
-        [Test]
-        public void ArrayOfNullablesShouldNotBeNullable()
-        {
-            var actual = TypeName.Get("System.Nullable`1[][[System.Int32, mscorlib, 1.2.3.4]], mscorlib, 1.2.3.4");
-
-            Assert.IsFalse(actual.IsNullableType);
-        }
-
-        [Test]
-        public void ArrayOfSimpleTypesShouldNotBeSimpleType()
-        {
-            var actual = TypeName.Get("System.Int64[], mscorlib, 1.2.3.4");
-
-            Assert.IsFalse(actual.IsSimpleType);
-        }
-
-        [Test]
-        public void ArrayOfCustomStructsShouldNotBeStruct()
-        {
-            var actual = TypeName.Get("s:My.Custom.Struct[], A, 1.2.3.4");
-
-            Assert.IsFalse(actual.IsStructType);
-        }
-
-        [Test]
-        public void ShouldHaveArrayBracesInName()
-        {
-            var uut = TypeName.Get("ValueType[,,], As, 9.8.7.6");
-
-            Assert.AreEqual("ValueType[,,]", uut.Name);
-        }
-
-        [Test]
-        public void ShouldNotBeArrayType()
-        {
-            var uut = TypeName.Get("ValueType, As, 2.5.1.6");
-
-            Assert.IsFalse(uut.IsArrayType);
-        }
-
         [TestCase(""),
          TestCase("?"),
          TestCase("T -> ?"),
@@ -500,26 +433,6 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp
             Assert.AreEqual(
                 "p.O`1+M`1[[T -> p.P1, A, 1.0.0.0],[U -> p.P2, A, 1.0.0.0]], " + TestAssemblyIdentifier,
                 typeName.DeclaringType.Identifier);
-        }
-
-        [Test]
-        public void ShouldCreateArrayTypeNameFromTypeName()
-        {
-            var arrayTypeName = TypeName.Get("SomeType, Assembly, 1.2.3.4").DeriveArrayTypeName(2);
-
-            Assert.AreEqual("SomeType[,], Assembly, 1.2.3.4", arrayTypeName.Identifier);
-        }
-
-        [Test]
-        public void ShouldCreateArrayTypeNameFromGenericTypeName()
-        {
-            var arrayTypeName =
-                TypeName.Get("SomeGenericType`1[[T -> System.Int32, mscore, 5.6.7.8]], A, 9.10.11.12")
-                        .DeriveArrayTypeName(1);
-
-            Assert.AreEqual(
-                "SomeGenericType`1[][[T -> System.Int32, mscore, 5.6.7.8]], A, 9.10.11.12",
-                arrayTypeName.Identifier);
         }
 
         [TestCase("TR -> System.Int32, mscorelib, 4.0.0.0"),

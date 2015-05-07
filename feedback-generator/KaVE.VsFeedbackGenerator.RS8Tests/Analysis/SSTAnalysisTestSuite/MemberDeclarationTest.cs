@@ -38,7 +38,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             var expected = Sets.NewHashSet(
                 new DelegateDeclaration
                 {
-                    Name = TypeName.Get("d:N.C+D, TestProject")
+                    Name = TypeName.Get("d:[System.Void, mscorlib, 4.0.0.0] [N.C+D, TestProject].([System.Object, mscorlib, 4.0.0.0] o)")
                 });
             Assert.AreEqual(expected, ResultSST.Delegates);
         }

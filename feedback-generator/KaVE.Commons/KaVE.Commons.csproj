@@ -45,7 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Model\Names\CSharp\LambdaName.cs" />
-    <Compile Include="Model\Names\CSharp\ParametersUtils.cs" />
+    <Compile Include="Model\Names\CSharp\NameUtils.cs" />
     <Compile Include="Model\Names\IDelegateTypeName.cs" />
     <Compile Include="Model\Names\ILambdaName.cs" />
     <Compile Include="Utils\CSVBuilder.cs" />

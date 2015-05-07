@@ -128,8 +128,18 @@ namespace KaVE.Commons.Model.Names.CSharp
             {
                 return UnknownTypeName.Instance;
             }
+            identifier = FixLegacyNameFormat(identifier);
 
             return Registry.GetOrCreate(identifier);
+        }
+
+        private static string FixLegacyNameFormat(string identifier)
+        {
+            if (DelegateTypeName.IsDelegateTypeIdentifier(identifier))
+            {
+                return DelegateTypeName.FixLegacyDelegateNames(identifier);
+            }
+            return identifier;
         }
 
         protected TypeName(string identifier) : base(identifier) {}
@@ -139,7 +149,7 @@ namespace KaVE.Commons.Model.Names.CSharp
             get { return false; }
         }
 
-        public virtual string FullName
+        public string FullName
         {
             get
             {

@@ -140,7 +140,14 @@ namespace KaVE.VsFeedbackGenerator.Utils.Names
         [NotNull]
         private static ITypeName GetName(this IDelegate delegateElement, ISubstitution substitution)
         {
-            return TypeName.Get("d:" + delegateElement.GetAssemblyQualifiedName(substitution));
+            var invokeMethod = delegateElement.InvokeMethod;
+            var identifier = new StringBuilder("d:");
+            identifier.AppendType(invokeMethod.ReturnType)
+                      .Append(" [")
+                      .Append(delegateElement.GetAssemblyQualifiedName(substitution))
+                      .Append("].")
+                      .AppendParameters(invokeMethod, substitution);
+            return TypeName.Get(identifier.ToString());
         }
 
         [NotNull]

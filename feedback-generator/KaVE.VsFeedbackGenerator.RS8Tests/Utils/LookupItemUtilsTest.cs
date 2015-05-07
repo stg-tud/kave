@@ -264,7 +264,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Utils
                     }
                 }");
 
-            ThenProposalCollectionContains("[d:C+Delegate, TestProject] [C, TestProject].Event");
+            ThenProposalCollectionContains("[d:[System.Void, mscorlib, 4.0.0.0] [C+Delegate, TestProject].([System.Object, mscorlib, 4.0.0.0] obj)] [C, TestProject].Event");
         }
 
         [Test]
@@ -810,7 +810,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Utils
                 }");
 
             ThenProposalCollectionContains(
-                "[System.Void, mscorlib, 4.0.0.0] [d:C+D, TestProject].Invoke([System.Int32, mscorlib, 4.0.0.0] i)");
+                "[System.Void, mscorlib, 4.0.0.0] [d:[System.Void, mscorlib, 4.0.0.0] [C+D, TestProject].([System.Int32, mscorlib, 4.0.0.0] i)].Invoke([System.Int32, mscorlib, 4.0.0.0] i)");
         }
 
         [Test]

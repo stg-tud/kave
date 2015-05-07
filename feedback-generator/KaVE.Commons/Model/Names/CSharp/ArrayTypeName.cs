@@ -18,6 +18,7 @@
  */
 
 using System.Text.RegularExpressions;
+using KaVE.Commons.Utils.Assertion;
 using KaVE.JetBrains.Annotations;
 
 namespace KaVE.Commons.Model.Names.CSharp
@@ -27,6 +28,27 @@ namespace KaVE.Commons.Model.Names.CSharp
         internal static bool IsArrayTypeIdentifier(string identifier)
         {
             return Regex.IsMatch(identifier, "\\[[,]*\\]");
+        }
+
+        /// <summary>
+        /// Derives an array-type name from this type name.
+        /// </summary>
+        /// <param name="baseType">The array's base type</param>
+        /// <param name="rank">the rank of the array; must be greater than 0</param>
+        public static ITypeName From(ITypeName baseType, int rank)
+        {
+            Asserts.That(rank > 0, "rank smaller than 1");
+            var identifier = baseType.Identifier;
+            var endOfRawType = identifier.IndexOf('[');
+            if (endOfRawType < 0)
+            {
+                endOfRawType = identifier.IndexOf(',');
+            }
+            if (endOfRawType < 0)
+            {
+                endOfRawType = identifier.Length;
+            }
+            return Get(identifier.Insert(endOfRawType, string.Format("[{0}]", new string(',', rank - 1))));
         }
 
         [UsedImplicitly]

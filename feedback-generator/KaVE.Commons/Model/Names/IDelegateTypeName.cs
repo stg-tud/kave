@@ -23,6 +23,7 @@ namespace KaVE.Commons.Model.Names
 {
     public interface IDelegateTypeName : ITypeName
     {
+        ITypeName DelegateType { get; }
         string Signature { get; }
         IList<IParameterName> Parameters { get; }
         bool HasParameters { get; }

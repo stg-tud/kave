@@ -18,6 +18,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -90,10 +91,15 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
             identifier.AppendAnonymousMemberName(method, method.ReturnType);
             identifier.AppendIf(method.HasTypeParameters, "`" + method.TypeParameters.Count);
             identifier.AppendTypeParameters(method);
-            identifier.Append("(");
-            identifier.Append(string.Join(", ", method.Parameters.Select(p => p.ToAnonymousName())));
-            identifier.Append(")");
+            identifier.AppendParameters(method.Parameters);
             return MethodName.Get(identifier.ToString());
+        }
+
+        private static void AppendParameters(this StringBuilder identifier, IEnumerable<IParameterName> parameterNames)
+        {
+            identifier.Append("(");
+            identifier.Append(string.Join(", ", parameterNames.Select(p => p.ToAnonymousName())));
+            identifier.Append(")");
         }
 
         private static IParameterName ToAnonymousName(IParameterName parameter)
@@ -168,6 +174,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
         private static ITypeName ToAnonymousName(ITypeName type)
         {
             return ToAnonymousName<UnknownTypeName, ITypeName>(type, ToAnonymousName) ??
+                   ToAnonymousName<DelegateTypeName, ITypeName>(type, ToAnonymousName) ??
                    ToAnonymousName<TypeName, ITypeName>(type, ToAnonymousName) ??
                    ToAnonymousName<TypeParameterName, ITypeName>(type, ToAnonymousName) ??
                    Asserts.Fail<ITypeName>("unknown type implementation");
@@ -176,6 +183,20 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
         private static UnknownTypeName ToAnonymousName(UnknownTypeName type)
         {
             return type;
+        }
+
+        private static DelegateTypeName ToAnonymousName(DelegateTypeName type)
+        {
+            var identifier = new StringBuilder();
+            identifier.AppendTypeKindPrefix(type);
+            identifier.Append("[");
+            identifier.Append(type.ReturnType.ToAnonymousName());
+            identifier.Append("] [");
+            identifier.Append(type.DelegateType.ToAnonymousName());
+            identifier.Append("].");
+            identifier.AppendParameters(type.Parameters);
+
+            return (DelegateTypeName) TypeName.Get(identifier.ToString());
         }
 
         private static TypeName ToAnonymousName(TypeName type)
@@ -189,7 +210,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
             return (TypeName) TypeName.Get(identifier.ToString());
         }
 
-        private static void AppendTypeKindPrefix(this StringBuilder identifier, TypeName type)
+        private static void AppendTypeKindPrefix(this StringBuilder identifier, ITypeName type)
         {
             var prefix = type.Identifier.Substring(0, 2);
             if (prefix.EndsWith(":"))

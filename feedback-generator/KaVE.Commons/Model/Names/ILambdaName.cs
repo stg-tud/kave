@@ -21,7 +21,7 @@ using System.Collections.Generic;
 
 namespace KaVE.Commons.Model.Names
 {
-    interface ILambdaName : IName
+    public interface ILambdaName : IName
     {
         string Signature { get; }
         IList<IParameterName> Parameters { get; }

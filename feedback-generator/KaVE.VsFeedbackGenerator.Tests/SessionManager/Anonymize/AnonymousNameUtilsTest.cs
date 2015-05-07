@@ -289,8 +289,26 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
         [Test]
         public void ShouldAnonymizeDelegateTypeNameFromEnclosingProject()
         {
-            var original = TypeName.Get("d:My.Delegate, EnclosingProject");
-            var expected = TypeName.Get("d:S7JFQ1Qpzr6dQZksNAcR7A==.ssIB3MfpFeOROPNn2-P9xg==, qfFVtSOtve-XEFJXWTbfXw==");
+            var original = TypeName.Get("d:[Void, CL, 4.0.0.0] [My.Delegate, EnclosingProject].()");
+            var expected = TypeName.Get("d:[Void, CL, 4.0.0.0] [S7JFQ1Qpzr6dQZksNAcR7A==.ssIB3MfpFeOROPNn2-P9xg==, qfFVtSOtve-XEFJXWTbfXw==].()");
+
+            AssertAnonymizedEquals(original, expected);
+        }
+
+        [Test]
+        public void ShouldAnonymizeDelegateParameterNameFromEnclosingProject()
+        {
+            var original = TypeName.Get("d:[Void, CL, 4.0.0.0] [D, E, 1.2.3.4].([P, A] p)");
+            var expected = TypeName.Get("d:[Void, CL, 4.0.0.0] [D, E, 1.2.3.4].([aUaDMpYpDqsiSh5nQjiWFw==, ghTRAD9op9mwNWwMvX7uGg==] xBzbwjgZ_3fD0cNcmbedKA==)");
+
+            AssertAnonymizedEquals(original, expected);
+        }
+
+        [Test]
+        public void ShouldAnonymizeDelegateReturnTypeFromEnclosingProject()
+        {
+            var original = TypeName.Get("d:[T, EP] [D, E, 1.2.3.4].()");
+            var expected = TypeName.Get("d:[TM6pgLI0nE5n0EEgAKIIFw==, vW8RYxLbF7t21szDOJMe_w==] [D, E, 1.2.3.4].()");
 
             AssertAnonymizedEquals(original, expected);
         }

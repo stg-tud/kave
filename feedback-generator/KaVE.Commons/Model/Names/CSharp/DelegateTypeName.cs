@@ -23,7 +23,7 @@ using KaVE.JetBrains.Annotations;
 
 namespace KaVE.Commons.Model.Names.CSharp
 {
-    public class DelegateTypeName : TypeName, IDelegateTypeName
+    public class DelegateTypeName : Name, IDelegateTypeName
     {
         private const string Prefix = "d:";
 
@@ -35,57 +35,179 @@ namespace KaVE.Commons.Model.Names.CSharp
         [UsedImplicitly]
         public new static IDelegateTypeName Get(string identifier)
         {
-            // fix legacy delegate names without parameters
+            return (IDelegateTypeName) TypeName.Get(identifier);
+        }
+
+        internal static string FixLegacyDelegateNames(string identifier)
+        {
+            // fix legacy delegate names
             if (!identifier.Contains("("))
             {
-                var endOfTypeName = GetLengthOfTypeName(identifier);
-                identifier = identifier.Insert(endOfTypeName, "()");
+                identifier = Prefix + "[Unknown, A] [" + identifier.Substring(Prefix.Length) + "].()";
             }
-
-            return (IDelegateTypeName) TypeName.Get(identifier);
+            return identifier;
         }
 
         internal DelegateTypeName(string identifier) : base(identifier) {}
 
-        public override bool IsDelegateType
+        private IMethodName DelegateMethod
+        {
+            get { return MethodName.Get(Identifier.Substring(Prefix.Length)); }
+        }
+
+        public ITypeName DelegateType
+        {
+            get { return DelegateMethod.DeclaringType; }
+        }
+
+        public bool IsInterfaceType
+        {
+            get { return false; }
+        }
+
+        public bool IsDelegateType
         {
             get { return true; }
         }
 
-        private String FullNameWithParameters()
+        public bool IsNestedType
         {
-            var endOfParameters = Identifier.LastIndexOf(')') + 1;
-            return Identifier.Substring(Prefix.Length, endOfParameters - Prefix.Length);
+            get { return DelegateType.IsNestedType; }
         }
 
-        public override string FullName
+        public bool IsArrayType
         {
-            get
-            {
-                var fullNameWithParameters = FullNameWithParameters();
-                var startOfParameterList = fullNameWithParameters.IndexOf('(');
-                return fullNameWithParameters.Substring(0, startOfParameterList);
-            }
+            get { return false; }
+        }
+
+        public ITypeName ArrayBaseType
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        public ITypeName DeriveArrayTypeName(int rank)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool IsTypeParameter
+        {
+            get { return false; }
+        }
+
+        public string TypeParameterShortName
+        {
+            get { return null; }
+        }
+
+        public ITypeName TypeParameterType
+        {
+            get { return null; }
+        }
+
+        public IAssemblyName Assembly
+        {
+            get { return DelegateType.Assembly; }
+        }
+
+        public INamespaceName Namespace
+        {
+            get { return DelegateType.Namespace; }
+        }
+
+        public ITypeName DeclaringType
+        {
+            get { return DelegateType.DeclaringType; }
+        }
+
+        public string FullName
+        {
+            get { return DelegateMethod.DeclaringType.FullName; }
+        }
+
+        public string Name
+        {
+            get { return DelegateType.Name; }
+        }
+
+        public bool IsUnknownType
+        {
+            get { return false; }
+        }
+
+        public bool IsVoidType
+        {
+            get { return false; }
+        }
+
+        public bool IsValueType
+        {
+            get { return false; }
+        }
+
+        public bool IsSimpleType
+        {
+            get { return false; }
+        }
+
+        public bool IsEnumType
+        {
+            get { return false; }
+        }
+
+        public bool IsStructType
+        {
+            get { return false; }
+        }
+
+        public bool IsNullableType
+        {
+            get { return false; }
+        }
+
+        public bool IsReferenceType
+        {
+            get { return true; }
+        }
+
+        public bool IsClassType
+        {
+            get { return false; }
         }
 
         public string Signature
         {
-            get { return FullNameWithParameters().Substring(Namespace.Identifier.Length + 1); }
+            get { return Name + DelegateMethod.Signature; }
         }
 
         public IList<IParameterName> Parameters
         {
-            get { return Identifier.GetParameterNames(); }
+            get { return DelegateMethod.Parameters; }
         }
 
         public bool HasParameters
         {
-            get { return Identifier.HasParameters(); }
+            get { return DelegateMethod.HasParameters; }
         }
 
         public ITypeName ReturnType
         {
-            get { throw new NotImplementedException(); }
+            get { return DelegateMethod.ReturnType; }
+        }
+
+        public bool IsGenericEntity
+        {
+            get { return DelegateType.IsGenericEntity; }
+        }
+
+        public bool HasTypeParameters
+        {
+            get { return DelegateType.HasTypeParameters; }
+        }
+
+        public IList<ITypeName> TypeParameters
+        {
+            get { return DelegateType.TypeParameters; }
         }
     }
 }

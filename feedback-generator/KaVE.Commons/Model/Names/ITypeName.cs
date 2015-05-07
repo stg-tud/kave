@@ -92,12 +92,6 @@ namespace KaVE.Commons.Model.Names
         bool IsArrayType { get; }
         ITypeName ArrayBaseType { get; }
 
-        /// <summary>
-        /// Creates an array-type name from this name.
-        /// </summary>
-        /// <param name="rank">the rank of the array; must be greater than 0</param>
-        ITypeName DeriveArrayTypeName(int rank);
-
         bool IsTypeParameter { get; }
         string TypeParameterShortName { get; }
         ITypeName TypeParameterType { get; }

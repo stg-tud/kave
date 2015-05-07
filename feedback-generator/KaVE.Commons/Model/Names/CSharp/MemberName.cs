@@ -36,10 +36,11 @@ namespace KaVE.Commons.Model.Names.CSharp
         {
             get
             {
-                var startIndexOfDeclaringTypeIdentifier = Identifier.IndexOf("] [", StringComparison.Ordinal) + 3;
-                var endIndexOfDeclaringTypeIdentifier = Identifier.IndexOf("].", StringComparison.Ordinal);
-                var lengthOfDeclaringTypeIdentifier = endIndexOfDeclaringTypeIdentifier - startIndexOfDeclaringTypeIdentifier;
-                return TypeName.Get(Identifier.Substring(startIndexOfDeclaringTypeIdentifier, lengthOfDeclaringTypeIdentifier));
+                var endOfValueType = Identifier.EndOfNextTypeIdentifier(0);
+                var startOfDecarlingType = Identifier.StartOfNextTypeIdentifier(endOfValueType) + 1;
+                var endOfDeclaringType = Identifier.EndOfNextTypeIdentifier(endOfValueType) - 1;
+                var lengthOfDeclaringType = endOfDeclaringType - startOfDecarlingType;
+                return TypeName.Get(Identifier.Substring(startOfDecarlingType, lengthOfDeclaringType));
             }
         }
 
@@ -54,10 +55,10 @@ namespace KaVE.Commons.Model.Names.CSharp
         {
             get
             {
-                var startIndexOfValueTypeIdentifier = Identifier.IndexOf('[') + 1;
-                var lastIndexOfValueTypeIdentifer = Identifier.IndexOf("] [", StringComparison.Ordinal);
-                var lengthOfValueTypeIdentifier = lastIndexOfValueTypeIdentifer - startIndexOfValueTypeIdentifier;
-                return TypeName.Get(Identifier.Substring(startIndexOfValueTypeIdentifier, lengthOfValueTypeIdentifier));
+                var startOfValueType = Identifier.StartOfNextTypeIdentifier(0) + 1;
+                var endOfValueType = Identifier.EndOfNextTypeIdentifier(0) - 1;
+                var lengthOfValueTypeIdentifier = endOfValueType - startOfValueType;
+                return TypeName.Get(Identifier.Substring(startOfValueType, lengthOfValueTypeIdentifier));
             }
         }
     }
