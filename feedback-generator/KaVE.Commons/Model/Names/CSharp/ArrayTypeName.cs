@@ -17,6 +17,7 @@
  *    - Sven Amann
  */
 
+using System.Text.RegularExpressions;
 using KaVE.JetBrains.Annotations;
 
 namespace KaVE.Commons.Model.Names.CSharp
@@ -25,12 +26,7 @@ namespace KaVE.Commons.Model.Names.CSharp
     {
         internal static bool IsArrayTypeIdentifier(string identifier)
         {
-            var startOfTypeParameters = identifier.IndexOf("[[", System.StringComparison.Ordinal);
-            if (startOfTypeParameters > 0)
-            {
-                identifier = identifier.Substring(0, startOfTypeParameters);
-            }
-            return identifier.Contains("[");
+            return Regex.IsMatch(identifier, "\\[[,]*\\]");
         }
 
         [UsedImplicitly]

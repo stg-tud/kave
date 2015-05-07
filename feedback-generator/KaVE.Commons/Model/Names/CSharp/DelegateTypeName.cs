@@ -25,15 +25,24 @@ namespace KaVE.Commons.Model.Names.CSharp
 {
     public class DelegateTypeName : TypeName, IDelegateTypeName
     {
+        private const string Prefix = "d:";
+
         internal static bool IsDelegateTypeIdentifier(string identifier)
         {
-            return identifier.StartsWith("d:");
+            return identifier.StartsWith(Prefix);
         }
 
         [UsedImplicitly]
-        internal new static ITypeName Get(string identifier)
+        public new static IDelegateTypeName Get(string identifier)
         {
-            return TypeName.Get(identifier);
+            // fix legacy delegate names without parameters
+            if (!identifier.Contains("("))
+            {
+                var endOfTypeName = GetLengthOfTypeName(identifier);
+                identifier = identifier.Insert(endOfTypeName, "()");
+            }
+
+            return (IDelegateTypeName) TypeName.Get(identifier);
         }
 
         internal DelegateTypeName(string identifier) : base(identifier) {}
@@ -43,33 +52,35 @@ namespace KaVE.Commons.Model.Names.CSharp
             get { return true; }
         }
 
+        private String FullNameWithParameters()
+        {
+            var endOfParameters = Identifier.LastIndexOf(')') + 1;
+            return Identifier.Substring(Prefix.Length, endOfParameters - Prefix.Length);
+        }
+
         public override string FullName
         {
             get
             {
-                var baseFullName = base.FullName;
-                var indexOfParameterList = baseFullName.IndexOf('(');
-                if (indexOfParameterList > 0)
-                {
-                    return baseFullName.Substring(0, indexOfParameterList);
-                }
-                return baseFullName;
+                var fullNameWithParameters = FullNameWithParameters();
+                var startOfParameterList = fullNameWithParameters.IndexOf('(');
+                return fullNameWithParameters.Substring(0, startOfParameterList);
             }
         }
 
         public string Signature
         {
-            get { throw new NotImplementedException(); }
+            get { return FullNameWithParameters().Substring(Namespace.Identifier.Length + 1); }
         }
 
         public IList<IParameterName> Parameters
         {
-            get { throw new NotImplementedException(); }
+            get { return Identifier.GetParameterNames(); }
         }
 
         public bool HasParameters
         {
-            get { throw new NotImplementedException(); }
+            get { return Identifier.HasParameters(); }
         }
 
         public ITypeName ReturnType

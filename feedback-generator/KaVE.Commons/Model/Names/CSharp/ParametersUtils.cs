@@ -43,7 +43,7 @@ namespace KaVE.Commons.Model.Names.CSharp
                         startOfParameterIdentifier,
                         StringComparison.Ordinal);
                     var endOfParameterIdentifier = nameWithParametersIdentifier.IndexOf(',', endOfParameterType);
-                    if (endOfParameterIdentifier < 0)
+                    if (endOfParameterIdentifier < 0 || endOfParameterIdentifier > endOfParameterList)
                     {
                         endOfParameterIdentifier = endOfParameterList;
                     }

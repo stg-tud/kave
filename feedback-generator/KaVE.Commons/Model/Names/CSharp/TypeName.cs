@@ -154,7 +154,7 @@ namespace KaVE.Commons.Model.Names.CSharp
             }
         }
 
-        private static int GetLengthOfTypeName(string identifier)
+        protected static int GetLengthOfTypeName(string identifier)
         {
             if (UnknownTypeName.IsUnknownTypeIdentifier(identifier))
             {
