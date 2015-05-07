@@ -548,6 +548,24 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
             AssertAnonymizedEquals(original, expected);
         }
 
+        [Test]
+        public void ShouldAnonymizeLambdaParametersIfDeclaredInEclosingProject()
+        {
+            var original = LambdaName.Get("[A, B, 1.2.3.4] ([T, EP] p)");
+            var expected = LambdaName.Get("[A, B, 1.2.3.4] ([TM6pgLI0nE5n0EEgAKIIFw==, vW8RYxLbF7t21szDOJMe_w==] xBzbwjgZ_3fD0cNcmbedKA==)");
+
+            AssertAnonymizedEquals(original, expected);
+        }
+
+        [Test]
+        public void ShouldAnonymizeLambdaReturnTypeIfDeclaredInEclosingProject()
+        {
+            var original = LambdaName.Get("[T, EP] ()");
+            var expected = LambdaName.Get("[TM6pgLI0nE5n0EEgAKIIFw==, vW8RYxLbF7t21szDOJMe_w==] ()");
+
+            AssertAnonymizedEquals(original, expected);
+        }
+
         private static void AssertAnonymizedEquals([NotNull] IName original, [NotNull] IName expected)
         {
             var actual = original.ToAnonymousName();

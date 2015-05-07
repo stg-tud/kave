@@ -67,6 +67,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
                    ToAnonymousName<IPropertyName, TName>(name, ToAnonymousName) ??
                    ToAnonymousName<IEventName, TName>(name, ToAnonymousName) ??
                    ToAnonymousName<IParameterName, TName>(name, ToAnonymousName) ??
+                   ToAnonymousName<ILambdaName, TName>(name, ToAnonymousName) ??
                    ToAnonymousName<IMethodName, TName>(name, ToAnonymousName) ??
                    ToAnonymousName<INamespaceName, TName>(name, ToAnonymousName) ??
                    ToAnonymousName<IName, TName>(name, ToAnonymousName) ??
@@ -83,6 +84,14 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
         private static INamespaceName ToAnonymousName(INamespaceName @namespace)
         {
             return NamespaceName.Get(@namespace.Identifier.ToHash());
+        }
+
+        private static ILambdaName ToAnonymousName(ILambdaName lambda)
+        {
+            var identifier = new StringBuilder();
+            identifier.AppendFormat("[{0}] ", lambda.ReturnType.ToAnonymousName())
+                      .AppendParameters(lambda.Parameters);
+            return LambdaName.Get(identifier.ToString());
         }
 
         private static IMethodName ToAnonymousName(IMethodName method)
