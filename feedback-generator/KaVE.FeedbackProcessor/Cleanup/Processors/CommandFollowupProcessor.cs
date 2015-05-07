@@ -15,6 +15,7 @@
  * 
  * Contributors:
  *    - Mattis Manfred Kämmerer
+ *    - Markus Zimmermann
  */
 
 using KaVE.Commons.Model.Events;
@@ -55,6 +56,8 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
                         TriggeredAt = _commandEvent.TriggeredAt,
                         TriggeredBy = _commandEvent.TriggeredBy
                     };
+
+                    _commandEvent = null;
 
                     return AnswerReplace(resultEvent);
                 }

@@ -15,11 +15,11 @@
  * 
  * Contributors:
  *    - Mattis Manfred Kämmerer
+ *    - Markus Zimmermann
  */
-using System;
+
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.TestUtils.Model.Events;
 using KaVE.Commons.Utils.Collections;
@@ -68,6 +68,27 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
             Assert.AreEqual(2, resultingConcurrentEvent.ConcurrentEventList.Count);
             CollectionAssert.Contains(resultingConcurrentEvent.ConcurrentEventList, expectedCommandEvent);
             CollectionAssert.Contains(resultingConcurrentEvent.ConcurrentEventList, expectedFollowupEvent);
+        }
+
+        [Test]
+        public void OnlyGeneratesOneConcurrentEventForCommandAndFollowup()
+        {
+            var expectedCommandEvent = new CommandEvent();
+            var firstFollowupEvent = IDEEventTestFactory.SomeEvent();
+            var secondFollowupEvent = IDEEventTestFactory.SomeEvent();
+
+            var expectedConcurrentEvent = new ConcurrentEvent
+            {
+                ConcurrentEventList = new List<IDEEvent>
+                {
+                    expectedCommandEvent,
+                    firstFollowupEvent
+                }
+            };
+
+            CollectionAssert.AreEquivalent(Sets.NewHashSet<IDEEvent>(),_uut.Process(expectedCommandEvent));
+            CollectionAssert.AreEquivalent(Sets.NewHashSet<IDEEvent>(expectedConcurrentEvent),_uut.Process(firstFollowupEvent));
+            CollectionAssert.AreEquivalent(Sets.NewHashSet<IDEEvent>(),_uut.Process(secondFollowupEvent));
         }
     }
 }
