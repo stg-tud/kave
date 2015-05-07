@@ -22,6 +22,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using KaVE.Commons.Model.Events;
+using KaVE.Commons.Model.Events.VisualStudio;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Collections;
 using KaVE.FeedbackProcessor.Model;
@@ -62,6 +63,7 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
                 {
                     var concurrentEvent = GenerateConcurrentEvent();
                     _eventCache.Clear();
+                    _eventCache.Add(@event);
                     if (MoreThanOneEventConcurredIn(concurrentEvent))
                     {
                         return AnswerReplace(concurrentEvent);
