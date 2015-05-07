@@ -192,7 +192,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
         {
             var sst = new LambdaExpression
             {
-                Name = LambdaName.Get("[System.String, mscorlib, 4.0.0.0] ([C, A] p1, [C, B] p2)"),
+                Parameters = {ParameterName.Get("[C, A] p1"), ParameterName.Get("[C, B] p2")},
                 Body =
                 {
                     new ContinueStatement(),
@@ -213,10 +213,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
         [Test]
         public void LambdaExpression_NoParametersAndEmptyBody()
         {
-            var sst = new LambdaExpression
-            {
-                Name = LambdaName.Get("[System.String, mscorlib, 4.0.0.0] ()"),
-            };
+            var sst = new LambdaExpression();
 
             AssertPrint(
                 sst,

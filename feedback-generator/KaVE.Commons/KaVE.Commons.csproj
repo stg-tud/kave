@@ -61,8 +61,6 @@
     <Compile Include="Utils\Logging\ILogWriter.cs" />
     <Compile Include="Utils\Logging\Json\JsonLogReader.cs" />
     <Compile Include="Utils\Logging\Json\JsonLogWriter.cs" />
-    <Compile Include="Utils\SSTPrinter\DefaultKeywords.cs" />
-    <Compile Include="Utils\SSTPrinter\ISSTPrintingKeywords.cs" />
     <Compile Include="Utils\SSTPrinter\SSTPrintingContext.cs" />
     <Compile Include="Utils\SSTPrinter\SSTPrintingVisitor.cs" />
     <Compile Include="Utils\Streams\MemoryStreamUtils.cs" />

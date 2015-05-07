@@ -30,33 +30,29 @@ namespace KaVE.Commons.Utils.SSTPrinter
     public class SSTPrintingContext
     {
         public int IndentationLevel { get; set; }
-        public ISSTPrintingKeywords Keywords { get; private set; }
 
-        private readonly StringBuilder sb;
+        private readonly StringBuilder _sb;
 
-        public SSTPrintingContext() : this(new DefaultKeywords()) {}
-
-        public SSTPrintingContext(ISSTPrintingKeywords keywords)
+        public SSTPrintingContext()
         {
-            this.sb = new StringBuilder();
-            this.Keywords = keywords;
+            _sb = new StringBuilder();
         }
 
         public SSTPrintingContext Text(string text)
         {
-            sb.Append(text);
+            _sb.Append(text);
             return this;
         }
 
         public SSTPrintingContext NewLine()
         {
-            sb.AppendLine();
+            _sb.AppendLine();
             return this;
         }
 
         public SSTPrintingContext Space()
         {
-            sb.Append(" ");
+            _sb.Append(" ");
             return this;
         }
 
@@ -64,37 +60,52 @@ namespace KaVE.Commons.Utils.SSTPrinter
         {
             for (int i = 0; i < IndentationLevel; i++)
             {
-                sb.Append(this.Keywords.IndentationToken);
+                _sb.Append("    ");
             }
             return this;
         }
 
+        public SSTPrintingContext Keyword(string keyword)
+        {
+            return Text(keyword);
+        }
+
+        public SSTPrintingContext CursorPosition()
+        {
+            return Text("$");
+        }
+
+        public SSTPrintingContext UnknownMarker()
+        {
+            return Text("???");
+        }
+
         public SSTPrintingContext TypeName(ITypeName typeName)
         {
-            sb.Append(typeName.Name);
+            _sb.Append(typeName.Name);
 
             if (typeName.HasTypeParameters)
             {
-                sb.Append("<");
+                _sb.Append("<");
 
                 foreach (var p in typeName.TypeParameters)
                 {
                     if (!p.IsUnknownType)
                     {
-                        this.TypeName(p);
+                        TypeName(p);
                     }
                     else
                     {
-                        sb.Append(p.TypeParameterShortName);
+                        _sb.Append(p.TypeParameterShortName);
                     }
 
                     if (!ReferenceEquals(p, typeName.TypeParameters.Last()))
                     {
-                        sb.Append(", ");
+                        _sb.Append(", ");
                     }
                 }
 
-                sb.Append(">");
+                _sb.Append(">");
             }
 
             return this;
@@ -102,39 +113,39 @@ namespace KaVE.Commons.Utils.SSTPrinter
 
         public SSTPrintingContext ParameterList(IList<IParameterName> parameters)
         {
-            this.Text("(");
+            Text("(");
 
             foreach (var parameter in parameters)
             {
                 if (parameter.IsPassedByReference && parameter.ValueType.IsValueType)
                 {
-                    this.Text(Keywords.RefModifier).Space();
+                    Keyword("ref").Space();
                 }
 
                 if (parameter.IsOutput)
                 {
-                    this.Text(Keywords.OutModifier).Space();
+                    Keyword("out").Space();
                 }
 
                 if (parameter.IsOptional)
                 {
-                    this.Text(Keywords.OptModifier).Space();
+                    Keyword("opt").Space();
                 }
 
                 if (parameter.IsParameterArray)
                 {
-                    this.Text(Keywords.ParamsModifier).Space();
+                    Keyword("params").Space();
                 }
 
-                this.TypeName(parameter.ValueType).Space().Text(parameter.Name);
+                TypeName(parameter.ValueType).Space().Text(parameter.Name);
 
                 if (!ReferenceEquals(parameter, parameters.Last()))
                 {
-                    this.Text(",").Space();
+                    Text(",").Space();
                 }
             }
 
-            sb.Append(")");
+            _sb.Append(")");
 
             return this;
         }
@@ -185,7 +196,7 @@ namespace KaVE.Commons.Utils.SSTPrinter
 
         public override string ToString()
         {
-            return sb.ToString();
+            return _sb.ToString();
         }
     }
 }

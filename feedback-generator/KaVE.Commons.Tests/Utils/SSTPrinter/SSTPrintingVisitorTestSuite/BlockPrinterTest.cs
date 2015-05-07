@@ -122,7 +122,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
                 {
                     new CatchBlock
                     {
-                        Exception = SSTUtil.Declare("e", TypeName.Get("ExceptionType,P")),
+                        Parameter = ParameterName.Get("[ExceptionType,P] e"),
                         Body = {new BreakStatement()}
                     }
                 },
@@ -156,7 +156,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
                 {
                     new CatchBlock
                     {
-                        Exception = SSTUtil.Declare("e", TypeName.Get("ExceptionType,P")),
+                        Parameter = ParameterName.Get("[ExceptionType,P] e"),
                         Body = {new BreakStatement()}
                     }
                 }
@@ -184,7 +184,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
                 {
                     new CatchBlock
                     {
-                        Exception = new VariableDeclaration(), // empty/missing!
+                        IsGeneral = true,
                         Body = {new BreakStatement()}
                     }
                 }
