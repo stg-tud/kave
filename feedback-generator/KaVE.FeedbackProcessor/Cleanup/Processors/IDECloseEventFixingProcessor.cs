@@ -17,17 +17,36 @@
  *    - Sven Amann
  */
 
+using System;
+using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.VisualStudio;
+using KaVE.Commons.Utils.Assertion;
 
 namespace KaVE.FeedbackProcessor.Cleanup.Processors
 {
     internal class IDECloseEventFixingProcessor : BaseProcessor
     {
         private bool _ideIsRunning;
+        private DateTime _lastEventTriggerTime;
 
         public IDECloseEventFixingProcessor()
         {
-            RegisterFor<IDEStateEvent>(ProcessIDEStateEvent);
+            RegisterFor<IDEEvent>(ProcessEvent);
+            //RegisterFor<IDEStateEvent>(ProcessIDEStateEvent);
+        }
+
+        private void ProcessEvent(IDEEvent currentevent)
+        {
+            var ideStateEvent = currentevent as IDEStateEvent;
+            if (ideStateEvent != null)
+            {
+                ProcessIDEStateEvent(ideStateEvent);
+            }
+            else
+            {
+                Asserts.That(currentevent.TriggeredAt.HasValue, "event without trigger time");
+                _lastEventTriggerTime = currentevent.TriggeredAt.Value;
+            }
         }
 
         private void ProcessIDEStateEvent(IDEStateEvent @event)
@@ -47,9 +66,13 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
             }
         }
 
-        private static IDEStateEvent CreateMissingShutdownEvent()
+        private IDEStateEvent CreateMissingShutdownEvent()
         {
-            return new IDEStateEvent {IDELifecyclePhase = IDEStateEvent.LifecyclePhase.Shutdown};
+            return new IDEStateEvent
+            {
+                IDELifecyclePhase = IDEStateEvent.LifecyclePhase.Shutdown,
+                TriggeredAt = _lastEventTriggerTime.AddSeconds(1)
+            };
         }
     }
 }

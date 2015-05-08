@@ -83,5 +83,10 @@ namespace KaVE.Commons.Model.Events.VisualStudio
                 return hashCode;
             }
         }
+
+        public override string ToString()
+        {
+            return this.ToStringReflection();
+        }
     }
 }
