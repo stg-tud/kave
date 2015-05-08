@@ -243,91 +243,42 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
         }
 
         [Test]
-        public void ShouldMapActivateToolWindowToXYZ()
+        public void ShouldMapActivateToolWindowToActivities_FullNameMatch()
         {
             var @event = new WindowEvent
             {
-                Window = WindowName.Get("vsWindowTypeToolWindow (Test,"),
+                Window = WindowName.Get("vsWindowTypeToolWindow Unit Test Explorer"),
                 Action = WindowEvent.WindowAction.Activate
             };
-            AssertMapsToActivity(@event, Activity.Navigation);
+            AssertMapsToActivities(@event, Activity.Navigation, Activity.Testing);
         }
 
-        // .NET Reflector ...       U
-        // Disassembly              U
-        // Diagram                  U
-        // UML Model Explorer       U
-        // XML Schema Explorer      U
+        [Test]
+        public void ShouldMapActivateToolWindowToActivities_PartialNameMatch()
+        {
+            var @event = new WindowEvent
+            {
+                Window = WindowName.Get("vsWindowTypeToolWindow Analyze <Some Target>"),
+                Action = WindowEvent.WindowAction.Activate
+            };
+            AssertMapsToActivities(@event, Activity.Understanding);
+        }
 
-        // Code Analysis            U
-        // Analysis ...             U
-        // Analyze ...              U
-        // Call Hierarchy           U N
-        // Hierarchy                U N
-        // Inspection Results       U N
+        [Test]
+        public void ShouldMapActivateToolWindowToActivities_Fallback()
+        {
+            string infoMessage = null;
+            _logger.InfoLogged += info => infoMessage = info;
 
-        // Code Coverage Results    T U
-        // Tests Explorer           T N
-        // Test Results             T U N
-        // Test Runs                T U
-        // Unit Test Explorer       T N
-        // Unit Test Sessions ...   T N U
-        // NCrunch Metrics          T
-        // NCrunch Tests            T
+            var @event = new WindowEvent
+            {
+                Window = WindowName.Get("vsWindowTypeToolWindow Unknown Window"),
+                Action = WindowEvent.WindowAction.Activate
+            };
+            Sut.Process(@event);
 
-        // Build Explorer
-        // Builds
-        // BuildVision
-
-        // Folder Difference
-        // History
-        // Pending Changes...
-        // Resolve Conflicts
-        // Source Control Explorer
-        // Team Explorer (more fine grained?)
-        // Tracking Changeset...
-
-        // Breakpoints              D
-        // Call Stack               D
-        // Locals                   D
-        // Watch...                 D
-        // Parallel Watch...        D
-        // Threads                  D
-        // IntelliTrace             D
-        // Modules                  D
-        // Immediate Window         D T?
-        // Python ... Interactive   D
-        // Registers                D
-
-        // Error List               D N
-        // Errors in Solution       D N
-
-        // Find and Replace         N E
-        // Find in Source Control   N
-        // Find Results             N
-        // Find Symbol Results      N
-        // Class View               N
-        // Resource View...         N
-
-        // Command Window
-        // Feedback Manager 
-        // Notifications
-        // Recommendations
-
-        // Data Sources             LC
-        // Server Explorer          LC
-        // NCrunch Configuration    LC
-        // Python Environments      LC
-        // Templates Explorer       LC
-
-        // Zeiterfassung            PM
-
-        // Source Not Available
-        // Source Not Found
-
-        // Properties               E
-        // Refactoring...           E
-        // Regex Tester             E
+            Assert.AreEqual("tool window 'Unknown Window' treated with default case", infoMessage);
+        }
 
         [Test(Description = "Only main window gets deactivated. Handled by InIDEActivityDetector.")]
         public void ShouldDropWindowDeactivations()
