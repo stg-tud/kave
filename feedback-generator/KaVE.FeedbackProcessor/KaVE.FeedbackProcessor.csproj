@@ -77,6 +77,7 @@
     <Compile Include="Cleanup\Processors\AddFileProcessor.cs" />
     <Compile Include="Cleanup\Processors\BaseProcessor.cs" />
     <Compile Include="Cleanup\Processors\CloseEventProcessor.cs" />
+    <Compile Include="Cleanup\Processors\IDECloseEventFixingProcessor.cs" />
     <Compile Include="Import\FeedbackImporter.cs" />
     <Compile Include="Import\FeedbackArchiveReader.cs" />
     <Compile Include="Model\Developer.cs" />

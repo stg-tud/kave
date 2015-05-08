@@ -73,6 +73,7 @@
     <Compile Include="Cleanup\Heuristics\TestVsProductionDocumentHeuristicTest.cs" />
     <Compile Include="Cleanup\Processors\AddFileProcessorTest.cs" />
     <Compile Include="Cleanup\Processors\CloseEventProcessorTest.cs" />
+    <Compile Include="Cleanup\Processors\IDECloseEventFixingProcessorTest.cs" />
     <Compile Include="Database\TestDeveloperCollection.cs" />
     <Compile Include="Database\TestFeedbackDatabase.cs" />
     <Compile Include="Database\TestIDEEventCollection.cs" />
