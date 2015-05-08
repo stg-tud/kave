@@ -26,6 +26,7 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
 {
     internal class IDECloseEventFixingProcessor : BaseProcessor
     {
+        private bool _firstEvent = true;
         private bool _ideIsRunning;
         private DateTime _lastEventTriggerTime;
 
@@ -42,7 +43,7 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
                 case IDEStateEvent.LifecyclePhase.Startup:
                     if (_ideIsRunning)
                     {
-                        Insert(CreateMissingShutdownEvent());
+                        Insert(CreateMissingShutdownEvent(_lastEventTriggerTime));
                     }
                     _ideIsRunning = true;
                     break;
@@ -55,14 +56,30 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
         private void ProcessAnyEvent(IDEEvent currentEvent)
         {
             _lastEventTriggerTime = currentEvent.GetTriggeredAt();
+
+            if (!_ideIsRunning && _firstEvent)
+            {
+                Insert(CreateMissingStartupEvent(_lastEventTriggerTime));
+            }
+
+            _firstEvent = false;
         }
 
-        private IDEStateEvent CreateMissingShutdownEvent()
+        private static IDEStateEvent CreateMissingStartupEvent(DateTime subsequentEventTime)
+        {
+            return new IDEStateEvent
+            {
+                IDELifecyclePhase = IDEStateEvent.LifecyclePhase.Startup,
+                TriggeredAt = subsequentEventTime.AddMilliseconds(-1)
+            };
+        }
+
+        private static IDEStateEvent CreateMissingShutdownEvent(DateTime previousEventTime)
         {
             return new IDEStateEvent
             {
                 IDELifecyclePhase = IDEStateEvent.LifecyclePhase.Shutdown,
-                TriggeredAt = _lastEventTriggerTime.AddMilliseconds(1)
+                TriggeredAt = previousEventTime.AddMilliseconds(1)
             };
         }
     }

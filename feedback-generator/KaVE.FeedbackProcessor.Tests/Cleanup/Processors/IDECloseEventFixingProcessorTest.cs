@@ -58,10 +58,22 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
         }
 
         [Test]
+        public void InsertsStartupIfFirstEventIsSomethingElse()
+        {
+            var someEvent = IDEEventTestFactory.SomeEvent();
+            someEvent.TriggeredAt = new DateTime(2015, 1, 23, 14, 7, 12);
+
+            var missingStartupEvent = CreateStartupEvent();
+            missingStartupEvent.TriggeredAt = someEvent.GetTriggeredAt().AddMilliseconds(-1);
+
+            AssertStreamTransformation(Stream(someEvent), Stream(missingStartupEvent, someEvent));
+        }
+
+        [Test]
         public void InsertsShutdownBeforeStartupPreceededByEventOtherThanShutdown()
         {
             var startupEvent = CreateStartupEvent();
-            var intermediateEvent = SomeEventAfter(startupEvent);
+            var intermediateEvent = CreateSomeEventAfter(startupEvent);
             var secondStartupEvent = CreateStartupEventAfter(intermediateEvent);
 
             var missingShutdownEvent = CreateShutdownEventAfter(intermediateEvent, 1 /* ms */);
@@ -71,7 +83,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
                 Stream(startupEvent, intermediateEvent, missingShutdownEvent, secondStartupEvent));
         }
 
-        private static TestIDEEvent SomeEventAfter(IDEEvent startupEvent)
+        private static TestIDEEvent CreateSomeEventAfter(IDEEvent startupEvent)
         {
             var subsequentEvent = IDEEventTestFactory.SomeEvent();
             SetTriggeredAtToAfter(subsequentEvent, startupEvent);
