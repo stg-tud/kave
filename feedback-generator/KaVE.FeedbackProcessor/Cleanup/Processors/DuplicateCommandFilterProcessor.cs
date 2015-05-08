@@ -51,8 +51,8 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
         {
             return _oldCommandEvent != null && _oldCommandEvent.CommandId == commandEvent.CommandId &&
                    ConcurrentEventHeuristic.HaveSimiliarEventTime(
-                       ConcurrentEventHeuristic.GetValidEventTime(_oldCommandEvent.TriggeredAt),
-                       ConcurrentEventHeuristic.GetValidEventTime(commandEvent.TriggeredAt), CommandEventTimeDifference);
+                       _oldCommandEvent.TriggeredAt,
+                       commandEvent.TriggeredAt, CommandEventTimeDifference);
         }
     }
 }

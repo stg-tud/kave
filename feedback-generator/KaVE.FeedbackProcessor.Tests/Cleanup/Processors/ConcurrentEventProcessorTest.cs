@@ -83,15 +83,6 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
             CollectionAssert.DoesNotContain(resultEventSet, errorEvent);
         }
 
-        [Test, ExpectedException(typeof(AssertException), ExpectedMessage = "Events should have a DateTime value in TriggeredAt")]
-        public void ThrowExceptionWhenEventHasInvalidDateTime()
-        {
-            var eventList = GenerateEvents(0);
-            eventList.First().TriggeredAt = null;
-
-            eventList.ForEach(ideEvent => _uut.Process(ideEvent));
-        }
-
         private static List<IDEEvent> GenerateEvents(long eventTimeDifferenceInTicks)
         {
             var eventList = IDEEventTestFactory.SomeEvents(2);

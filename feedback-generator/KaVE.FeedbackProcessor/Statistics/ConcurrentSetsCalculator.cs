@@ -30,7 +30,7 @@ using KaVE.FeedbackProcessor.Model;
 
 namespace KaVE.FeedbackProcessor.Statistics
 {
-    internal class ConcurrentSetsCalculator : IEventProcessor
+    internal class ConcurrentSetsCalculator : BaseEventProcessor
     {
         private const string Separator = " -> ";
 
@@ -88,14 +88,13 @@ namespace KaVE.FeedbackProcessor.Statistics
             }
         };
 
-        public void OnEvent(IDEEvent @event)
+        public ConcurrentSetsCalculator()
         {
-            var concurrentEvent = @event as ConcurrentEvent;
-            if (concurrentEvent == null)
-            {
-                return;
-            }
+            RegisterFor<ConcurrentEvent>(HandleConcurrentEvents);
+        }
 
+        public void HandleConcurrentEvents(ConcurrentEvent concurrentEvent)
+        {
             var resultSet = Sets.NewHashSet<string>();
 
             foreach (var ideEvent in concurrentEvent.ConcurrentEventList)
@@ -123,9 +122,5 @@ namespace KaVE.FeedbackProcessor.Statistics
         {
             return string.Format("{0}{1}{2}", prefix, Separator, suffix);
         }
-
-        public void OnStreamStarts(Developer value) {}
-
-        public void OnStreamEnds() {}
     }
 }

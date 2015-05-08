@@ -18,23 +18,16 @@
  */
 
 using System;
-using KaVE.Commons.Utils.Assertion;
 
 namespace KaVE.FeedbackProcessor.Cleanup.Heuristics
 {
     internal class ConcurrentEventHeuristic {
 
-        public static DateTime GetValidEventTime(DateTime? eventTime)
+        public static bool HaveSimiliarEventTime(DateTime? currentEventTime, DateTime? lastEventTime, TimeSpan eventTimeDifference)
         {
-            if (!eventTime.HasValue)
-                Asserts.Fail("Events should have a DateTime value in TriggeredAt");
-            
-            return eventTime.Value;
-        }
-
-        public static bool HaveSimiliarEventTime(DateTime currentEventTime, DateTime lastEventTime, TimeSpan eventTimeDifference)
-        {
-            var timeDifference = Math.Abs(currentEventTime.Ticks - lastEventTime.Ticks);
+            if (!currentEventTime.HasValue || !lastEventTime.HasValue) return false;
+            var timeDifference =
+                Math.Abs(currentEventTime.Value.Ticks - lastEventTime.Value.Ticks);
             return timeDifference <= eventTimeDifference.Ticks;
         }
     }

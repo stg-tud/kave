@@ -28,29 +28,11 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Heuristics
     class ConcurrentEventHeuristicTest
     {
         [Test]
-        public void GetValidEventTimeTest()
-        {
-            DateTime? value = new DateTime(1984, 1, 1);
-
-            Assert.AreEqual(new DateTime(1984, 1, 1),ConcurrentEventHeuristic.GetValidEventTime(value));
-        }
-
-        [Test,
-         ExpectedException(typeof (AssertException),
-             ExpectedMessage = "Events should have a DateTime value in TriggeredAt")]
-        public void ThrowsOnNonValidDateTime()
-        {
-            DateTime? value = null;
-
-            ConcurrentEventHeuristic.GetValidEventTime(value);
-        }
-
-        [Test]
         public void HaveSimiliarEventTimeTest()
         {
             TimeSpan eventTimeDifference = new TimeSpan(0, 0, 0, 0, 20);
-            DateTime eventTime1 = new DateTime(1984, 1, 1, 1, 1, 1, 1);
-            DateTime eventTime2 = new DateTime(1984, 1, 1, 1, 1, 1, 10);
+            DateTime? eventTime1 = new DateTime(1984, 1, 1, 1, 1, 1, 1);
+            DateTime? eventTime2 = new DateTime(1984, 1, 1, 1, 1, 1, 10);
 
             Assert.IsTrue(ConcurrentEventHeuristic.HaveSimiliarEventTime(eventTime1,eventTime2,eventTimeDifference));
         }

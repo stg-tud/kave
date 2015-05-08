@@ -51,8 +51,8 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
             }
             else
             {
-                var lastEventTime = ConcurrentEventHeuristic.GetValidEventTime(_eventCache.Last().TriggeredAt);
-                var currentEventTime = ConcurrentEventHeuristic.GetValidEventTime(@event.TriggeredAt);
+                var lastEventTime = _eventCache.Last().TriggeredAt;
+                var currentEventTime = @event.TriggeredAt;
 
                 if (ConcurrentEventHeuristic.HaveSimiliarEventTime(currentEventTime, lastEventTime, EventTimeDifference))
                 {
