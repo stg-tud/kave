@@ -45,7 +45,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
         {
             var startupEvent = CreateStartupEvent();
 
-            AssertStreamUnmodified(startupEvent);
+            AssertUnmodified(Stream(startupEvent));
         }
 
         [Test]
@@ -54,7 +54,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
             var startupEvent = CreateStartupEvent();
             var shutdownEvent = CreateShutdownEventAfter(startupEvent);
 
-            AssertStreamUnmodified(startupEvent, shutdownEvent);
+            AssertUnmodified(Stream(startupEvent, shutdownEvent));
         }
 
         [Test]
@@ -66,7 +66,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
             var missingStartupEvent = CreateStartupEvent();
             missingStartupEvent.TriggeredAt = someEvent.GetTriggeredAt().AddMilliseconds(-1);
 
-            AssertStreamTransformation(Stream(someEvent), Stream(missingStartupEvent, someEvent));
+            AssertTransformation(Stream(someEvent), Stream(missingStartupEvent, someEvent));
         }
 
         [Test]
@@ -78,7 +78,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
 
             var missingShutdownEvent = CreateShutdownEventAfter(intermediateEvent, 1 /* ms */);
 
-            AssertStreamTransformation(
+            AssertTransformation(
                 Stream(startupEvent, intermediateEvent, secondStartupEvent),
                 Stream(startupEvent, intermediateEvent, missingShutdownEvent, secondStartupEvent));
         }
@@ -128,12 +128,13 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
             return events;
         }
 
-        private void AssertStreamUnmodified(params IDEEvent[] original)
+        private void AssertUnmodified(IEnumerable<IDEEvent> original)
         {
-            AssertStreamTransformation(original, original);
+            var events = original.ToList();
+            AssertTransformation(events, events);
         }
 
-        private void AssertStreamTransformation(IEnumerable<IDEEvent> original, IEnumerable<IDEEvent> expected)
+        private void AssertTransformation(IEnumerable<IDEEvent> original, IEnumerable<IDEEvent> expected)
         {
             var actual = original.SelectMany(_uut.Process).OrderBy(evt => evt.TriggeredAt);
             CollectionAssert.AreEqual(expected, actual);
