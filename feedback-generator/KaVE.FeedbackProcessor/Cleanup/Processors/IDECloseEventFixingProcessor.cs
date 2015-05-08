@@ -31,21 +31,8 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
 
         public IDECloseEventFixingProcessor()
         {
-            RegisterFor<IDEEvent>(ProcessEvent);
-            //RegisterFor<IDEStateEvent>(ProcessIDEStateEvent);
-        }
-
-        private void ProcessEvent(IDEEvent currentEvent)
-        {
-            var ideStateEvent = currentEvent as IDEStateEvent;
-            if (ideStateEvent != null)
-            {
-                ProcessIDEStateEvent(ideStateEvent);
-            }
-            else
-            {
-                _lastEventTriggerTime = currentEvent.GetTriggeredAt();
-            }
+            RegisterFor<IDEStateEvent>(ProcessIDEStateEvent);
+            RegisterFor<IDEEvent>(ProcessAnyEvent);
         }
 
         private void ProcessIDEStateEvent(IDEStateEvent @event)
@@ -63,6 +50,11 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
                     _ideIsRunning = false;
                     break;
             }
+        }
+
+        private void ProcessAnyEvent(IDEEvent currentEvent)
+        {
+            _lastEventTriggerTime = currentEvent.GetTriggeredAt();
         }
 
         private IDEStateEvent CreateMissingShutdownEvent()

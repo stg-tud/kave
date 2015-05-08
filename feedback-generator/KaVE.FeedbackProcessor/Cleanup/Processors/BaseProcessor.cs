@@ -16,6 +16,7 @@
  * Contributors:
  *    - Sven Amann
  */
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,30 +30,29 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
 {
     internal abstract class BaseProcessor : IIDEEventProcessor
     {
-        private readonly IDictionary<Type, Processor<IDEEvent>> _processors =
-            new Dictionary<Type, Processor<IDEEvent>>();
+        protected delegate void Processor<in TEvent>([NotNull] TEvent currentEvent) where TEvent : IDEEvent;
+
+        private readonly IList<KeyValuePair<Type, Processor<IDEEvent>>> _processors =
+            new List<KeyValuePair<Type, Processor<IDEEvent>>>();
 
         private IDEEvent _currentEvent;
         private IKaVESet<IDEEvent> _answer;
-
-        protected delegate void Processor<in TEvent>([NotNull] TEvent currentEvent) where TEvent : IDEEvent;
 
         public virtual Developer Developer
         {
             set { }
         }
 
+        /// <summary>
+        ///     Register a sub-processor for a type. Accepts only on registration per type, but allows registrations for
+        ///     sub-/supertypes. If multiple sub-processors apply for one event, all are invoked in the order of registration.
+        /// </summary>
         protected void RegisterFor<TEvent>(Processor<TEvent> processor) where TEvent : IDEEvent
         {
-            Asserts.Not(IsProcessorForSubOrSuperTypeRegistered<TEvent>(), "multiple processors for same event type");
+            Asserts.Not(_processors.Any(pair => pair.Key == typeof (TEvent)), "multiple processors for same event type");
 
-            _processors[typeof (TEvent)] = evt => processor((TEvent) evt);
-        }
-
-        private bool IsProcessorForSubOrSuperTypeRegistered<TEvent>() where TEvent : IDEEvent
-        {
-            var et = typeof (TEvent);
-            return _processors.Any(e => e.Key.IsAssignableFrom(et) || et.IsAssignableFrom(e.Key));
+            _processors.Add(
+                new KeyValuePair<Type, Processor<IDEEvent>>(typeof (TEvent), evt => processor((TEvent) evt)));
         }
 
         public IKaVESet<IDEEvent> Process(IDEEvent @event)
@@ -71,18 +71,16 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
         private IKaVESet<IDEEvent> GetAnswer(IDEEvent @event)
         {
             _answer = Sets.NewHashSet(@event);
-            Processor<IDEEvent> processor;
-            if (TryGetProcessor(@event, out processor))
+            foreach (var processor in GetProcessorsFor(@event))
             {
                 processor(@event);
             }
             return _answer;
         }
 
-        private bool TryGetProcessor(IDEEvent @event, out Processor<IDEEvent> processor)
+        private IEnumerable<Processor<IDEEvent>> GetProcessorsFor(IDEEvent @event)
         {
-            processor = _processors.FirstOrDefault(e => e.Key.IsInstanceOfType(@event)).Value;
-            return processor != null;
+            return _processors.Where(e => e.Key.IsInstanceOfType(@event)).Select(e => e.Value);
         }
 
         protected void DropCurrentEvent()

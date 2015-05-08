@@ -31,14 +31,15 @@ namespace KaVE.FeedbackProcessor.Statistics
     {
         protected delegate void Processor<in TEvent>([NotNull] TEvent @event) where TEvent : IDEEvent;
 
-        private readonly IDictionary<Type, Processor<IDEEvent>> _processors =
-            new Dictionary<Type, Processor<IDEEvent>>();
+        private readonly IList<KeyValuePair<Type, Processor<IDEEvent>>> _processors =
+            new List<KeyValuePair<Type, Processor<IDEEvent>>>();
 
         protected void RegisterFor<TEvent>(Processor<TEvent> processor) where TEvent : IDEEvent
         {
-            Asserts.Not(_processors.ContainsKey(typeof(TEvent)), "multiple processors for same event type");
+            Asserts.Not(_processors.Any(pair => pair.Key == typeof(TEvent)), "multiple processors for same event type");
 
-            _processors[typeof(TEvent)] = evt => processor((TEvent)evt);
+            _processors.Add(
+                new KeyValuePair<Type, Processor<IDEEvent>>(typeof(TEvent), evt => processor((TEvent)evt)));
         }
 
         public virtual void OnStreamStarts(Developer value)
