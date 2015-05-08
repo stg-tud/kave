@@ -64,7 +64,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
             var intermediateEvent = SomeEventAfter(startupEvent);
             var secondStartupEvent = CreateStartupEventAfter(intermediateEvent);
 
-            var missingShutdownEvent = CreateShutdownEventAfter(intermediateEvent, 1);
+            var missingShutdownEvent = CreateShutdownEventAfter(intermediateEvent, 1 /* ms */);
 
             AssertStreamTransformation(
                 Stream(startupEvent, intermediateEvent, secondStartupEvent),
@@ -78,7 +78,9 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
             return subsequentEvent;
         }
 
-        private static void SetTriggeredAtToAfter(IDEEvent subsequentEvent, IDEEvent previousEvent, int milliseconds = 60000)
+        private static void SetTriggeredAtToAfter(IDEEvent subsequentEvent,
+            IDEEvent previousEvent,
+            int milliseconds = 60000)
         {
             subsequentEvent.TriggeredAt = previousEvent.GetTriggeredAt().AddMilliseconds(milliseconds);
         }
