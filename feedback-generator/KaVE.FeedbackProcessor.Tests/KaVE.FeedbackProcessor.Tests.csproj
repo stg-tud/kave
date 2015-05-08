@@ -74,6 +74,7 @@
     <Compile Include="Cleanup\Processors\AddFileProcessorTest.cs" />
     <Compile Include="Cleanup\Processors\CloseEventProcessorTest.cs" />
     <Compile Include="Cleanup\Processors\IDECloseEventFixingProcessorTest.cs" />
+    <Compile Include="Cleanup\Processors\CommandFilterProcessorTest.cs" />
     <Compile Include="Cleanup\Processors\CommandFollowupProcessorTest.cs" />
     <Compile Include="Cleanup\Processors\ConcurrentEventProcessorTest.cs" />
     <Compile Include="Cleanup\Processors\EquivalentCommandProcessorTest.cs" />
