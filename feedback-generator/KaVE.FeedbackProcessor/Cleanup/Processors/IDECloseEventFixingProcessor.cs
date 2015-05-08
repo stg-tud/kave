@@ -70,7 +70,7 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
             return new IDEStateEvent
             {
                 IDELifecyclePhase = IDEStateEvent.LifecyclePhase.Shutdown,
-                TriggeredAt = _lastEventTriggerTime.AddSeconds(1)
+                TriggeredAt = _lastEventTriggerTime.AddMilliseconds(1)
             };
         }
     }

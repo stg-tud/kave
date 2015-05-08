@@ -78,9 +78,9 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
             return subsequentEvent;
         }
 
-        private static void SetTriggeredAtToAfter(IDEEvent subsequentEvent, IDEEvent previousEvent, int seconds = 60)
+        private static void SetTriggeredAtToAfter(IDEEvent subsequentEvent, IDEEvent previousEvent, int milliseconds = 60000)
         {
-            subsequentEvent.TriggeredAt = previousEvent.GetTriggeredAt().AddSeconds(seconds);
+            subsequentEvent.TriggeredAt = previousEvent.GetTriggeredAt().AddMilliseconds(milliseconds);
         }
 
         private static IDEStateEvent CreateStartupEventAfter(IDEEvent previousEvent)
@@ -99,13 +99,13 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
             };
         }
 
-        private static IDEStateEvent CreateShutdownEventAfter(IDEEvent previousEvent, int seconds = 60)
+        private static IDEStateEvent CreateShutdownEventAfter(IDEEvent previousEvent, int milliseconds = 60000)
         {
             var shutdownEvent = new IDEStateEvent
             {
                 IDELifecyclePhase = IDEStateEvent.LifecyclePhase.Shutdown
             };
-            SetTriggeredAtToAfter(shutdownEvent, previousEvent, seconds);
+            SetTriggeredAtToAfter(shutdownEvent, previousEvent, milliseconds);
             return shutdownEvent;
         }
 
