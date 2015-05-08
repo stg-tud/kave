@@ -25,7 +25,8 @@ using KaVE.Commons.Model.Names.VisualStudio;
 
 namespace KaVE.FeedbackProcessor.Cleanup.Heuristics
 {
-    class MergeCommandHeuristic {
+    internal class MergeCommandHeuristic
+    {
         public static CommandEvent MergeCommandEvents(CommandEvent commandEvent1, CommandEvent commandEvent2)
         {
             return new CommandEvent
@@ -37,15 +38,17 @@ namespace KaVE.FeedbackProcessor.Cleanup.Heuristics
                 Id = GetMergedId(commandEvent1, commandEvent2),
                 IDESessionUUID = commandEvent1.IDESessionUUID,
                 KaVEVersion = commandEvent1.KaVEVersion,
-                TerminatedAt = GetMergedTerminatedAt(commandEvent1, commandEvent2),
                 TriggeredAt = GetMergedTriggeredAt(commandEvent1, commandEvent2),
+                TerminatedAt = GetMergedTerminatedAt(commandEvent1, commandEvent2),
                 TriggeredBy = GetMergedTriggeredBy(commandEvent1, commandEvent2)
             };
         }
 
         private static DocumentName GetMergedActiveDocument(CommandEvent commandEvent1, CommandEvent commandEvent2)
         {
-            return IsVisualStudioCommandEvent(commandEvent1) ? commandEvent1.ActiveDocument : commandEvent2.ActiveDocument;
+            return IsVisualStudioCommandEvent(commandEvent1)
+                ? commandEvent1.ActiveDocument
+                : commandEvent2.ActiveDocument;
         }
 
         private static WindowName GetMergedActiveWindow(CommandEvent commandEvent1, CommandEvent commandEvent2)
@@ -60,7 +63,9 @@ namespace KaVE.FeedbackProcessor.Cleanup.Heuristics
 
         private static TimeSpan? GetMergedDuration(CommandEvent commandEvent1, CommandEvent commandEvent2)
         {
-            return IsVisualStudioCommandEvent(commandEvent1) ? commandEvent1.Duration : commandEvent2.Duration;
+            var terminatedAt = GetMergedTerminatedAt(commandEvent1, commandEvent2);
+            var triggeredAt = GetMergedTriggeredAt(commandEvent1, commandEvent2);
+            return terminatedAt - triggeredAt;
         }
 
         private static string GetMergedId(CommandEvent commandEvent1, CommandEvent commandEvent2)
