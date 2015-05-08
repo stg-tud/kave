@@ -79,7 +79,8 @@
     <Compile Include="Cleanup\Processors\CloseEventProcessor.cs" />
     <Compile Include="Cleanup\Processors\IDECloseEventFixingProcessor.cs" />
     <Compile Include="Database\NullDatabase.cs" />
-    <Compile Include="Cleanup\Processors\CommandFilterProcessor.cs" />
+    <Compile Include="Cleanup\Processors\DuplicateCommandFilterProcessor.cs" />
+    <Compile Include="Cleanup\Processors\UnnamedCommandFilterProcessor.cs" />
     <Compile Include="Cleanup\Processors\CommandFollowupProcessor.cs" />
     <Compile Include="Cleanup\Processors\ConcurrentEventProcessor.cs" />
     <Compile Include="Cleanup\Processors\EquivalentCommandProcessor.cs" />

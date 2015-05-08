@@ -25,20 +25,20 @@ using NUnit.Framework;
 namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
 {
     [TestFixture]
-    internal class CommandFilterProcessorTest
+    internal class DuplicateCommandFilterProcessorTest
     {
-        private CommandFilterProcessor _uut;
+        private DuplicateCommandFilterProcessor _uut;
 
         [SetUp]
         public void Setup()
         {
-            _uut = new CommandFilterProcessor();
+            _uut = new DuplicateCommandFilterProcessor();
         }
 
         [Test]
         public void FiltersDuplicatedCommandEvents()
         {
-            var commandEvent = new CommandEvent {CommandId = "Test"};
+            var commandEvent = new CommandEvent { CommandId = "Test" };
 
             _uut.Process(commandEvent);
             Assert.AreEqual(Sets.NewHashSet<IDEEvent>(), _uut.Process(commandEvent));
@@ -48,29 +48,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
         [Test]
         public void ShouldNotFilterAnyOtherCommandEvents()
         {
-            var commandEvent = new CommandEvent{CommandId = "Test"};
-            Assert.AreEqual(Sets.NewHashSet<IDEEvent>(commandEvent), _uut.Process(commandEvent));
-        }
-
-        [Test]
-        public void FiltersUnnamedCommand()
-        {
-            var commandEvent = new CommandEvent
-            {
-                CommandId = "{5EFC7975-14BC-11CF-9B2B-00AA00573819}:331:"
-            };
-
-            Assert.AreEqual(Sets.NewHashSet<IDEEvent>(), _uut.Process(commandEvent));
-        }
-
-        [Test]
-        public void ShouldNotFilterNamedCommands()
-        {
-            var commandEvent = new CommandEvent
-            {
-                CommandId = "{5EFC7975-14BC-11CF-9B2B-00AA00573819}:26:Edit.Paste"
-            };
-
+            var commandEvent = new CommandEvent { CommandId = "Test" };
             Assert.AreEqual(Sets.NewHashSet<IDEEvent>(commandEvent), _uut.Process(commandEvent));
         }
     }

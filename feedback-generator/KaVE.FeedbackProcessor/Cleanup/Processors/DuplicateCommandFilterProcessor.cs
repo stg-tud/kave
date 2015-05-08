@@ -17,24 +17,23 @@
  *    - Mattis Manfred Kämmerer
  */
 
-using System.Text.RegularExpressions;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Utils.Collections;
 
 namespace KaVE.FeedbackProcessor.Cleanup.Processors
 {
-    internal class CommandFilterProcessor : BaseProcessor
+    internal class DuplicateCommandFilterProcessor : BaseProcessor
     {
         private CommandEvent _oldCommandEvent;
 
-        public CommandFilterProcessor()
+        public DuplicateCommandFilterProcessor()
         {
             RegisterFor<CommandEvent>(FilterCommandEvents);
         }
 
         public IKaVESet<IDEEvent> FilterCommandEvents(CommandEvent commandEvent)
         {
-            if (IsDuplicate(commandEvent) || IsNotNamed(commandEvent.CommandId))
+            if (IsDuplicate(commandEvent))
             {
                 return AnswerDrop();
             }
@@ -47,13 +46,6 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
         private bool IsDuplicate(CommandEvent commandEvent)
         {
             return _oldCommandEvent != null && _oldCommandEvent.CommandId == commandEvent.CommandId;
-        }
-
-        private static bool IsNotNamed(string commandId)
-        {
-            // example: "{5EFC7975-14BC-11CF-9B2B-00AA00573819}:331:"
-            var unnamedCommandPattern = new Regex(@"^\{.*\}:.*:$");
-            return commandId == null || unnamedCommandPattern.IsMatch(commandId);
         }
     }
 }
