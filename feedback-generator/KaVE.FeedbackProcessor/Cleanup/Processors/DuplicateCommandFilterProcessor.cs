@@ -17,13 +17,17 @@
  *    - Mattis Manfred Kämmerer
  */
 
+using System;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Utils.Collections;
+using KaVE.FeedbackProcessor.Cleanup.Heuristics;
 
 namespace KaVE.FeedbackProcessor.Cleanup.Processors
 {
     internal class DuplicateCommandFilterProcessor : BaseProcessor
     {
+        public static TimeSpan CommandEventTimeDifference = new TimeSpan(0, 0, 0, 0, 10);
+
         private CommandEvent _oldCommandEvent;
 
         public DuplicateCommandFilterProcessor()
@@ -45,7 +49,10 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
 
         private bool IsDuplicate(CommandEvent commandEvent)
         {
-            return _oldCommandEvent != null && _oldCommandEvent.CommandId == commandEvent.CommandId;
+            return _oldCommandEvent != null && _oldCommandEvent.CommandId == commandEvent.CommandId &&
+                   ConcurrentEventHeuristic.HaveSimiliarEventTime(
+                       ConcurrentEventHeuristic.GetValidEventTime(_oldCommandEvent.TriggeredAt),
+                       ConcurrentEventHeuristic.GetValidEventTime(commandEvent.TriggeredAt), CommandEventTimeDifference);
         }
     }
 }

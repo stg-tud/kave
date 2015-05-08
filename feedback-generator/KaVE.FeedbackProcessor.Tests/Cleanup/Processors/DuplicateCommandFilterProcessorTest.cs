@@ -17,6 +17,7 @@
  *    - Mattis Manfred Kämmerer
  */
 
+using System;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Utils.Collections;
 using KaVE.FeedbackProcessor.Cleanup.Processors;
@@ -38,12 +39,29 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
         [Test]
         public void FiltersDuplicatedCommandEvents()
         {
-            var commandEvent = new CommandEvent { CommandId = "Test" };
+            var firstEventTime = new DateTime(1984,2,2,1,1,1,0);
+            var commandEvent = new CommandEvent
+            {
+                CommandId = "Test",
+                TriggeredAt = firstEventTime
+            };            
+            var commandEvent2 = new CommandEvent
+            {
+                CommandId = "Test",
+                TriggeredAt = firstEventTime + DuplicateCommandFilterProcessor.CommandEventTimeDifference
+            };
+            var commandEvent3 = new CommandEvent
+            {
+                CommandId = "Test",
+                TriggeredAt = firstEventTime + DuplicateCommandFilterProcessor.CommandEventTimeDifference.Add(new TimeSpan(TimeSpan.TicksPerSecond))
+            };
 
-            _uut.Process(commandEvent);
-            Assert.AreEqual(Sets.NewHashSet<IDEEvent>(), _uut.Process(commandEvent));
-            Assert.AreEqual(Sets.NewHashSet<IDEEvent>(), _uut.Process(commandEvent));
+            Assert.AreEqual(Sets.NewHashSet<IDEEvent>(commandEvent),_uut.Process(commandEvent));
+            Assert.AreEqual(Sets.NewHashSet<IDEEvent>(), _uut.Process(commandEvent2));
+            Assert.AreEqual(Sets.NewHashSet<IDEEvent>(commandEvent3), _uut.Process(commandEvent3));
         }
+
+
 
         [Test]
         public void ShouldNotFilterAnyOtherCommandEvents()

@@ -22,9 +22,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using KaVE.Commons.Model.Events;
-using KaVE.Commons.Model.Events.VisualStudio;
-using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Collections;
+using KaVE.FeedbackProcessor.Cleanup.Heuristics;
 using KaVE.FeedbackProcessor.Model;
 
 namespace KaVE.FeedbackProcessor.Cleanup.Processors
@@ -52,10 +51,10 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
             }
             else
             {
-                var lastEventTime = GetValidEventTime(_eventCache.Last().TriggeredAt);
-                var currentEventTime = GetValidEventTime(@event.TriggeredAt);
+                var lastEventTime = ConcurrentEventHeuristic.GetValidEventTime(_eventCache.Last().TriggeredAt);
+                var currentEventTime = ConcurrentEventHeuristic.GetValidEventTime(@event.TriggeredAt);
 
-                if (HaveSimiliarEventTime(currentEventTime, lastEventTime))
+                if (ConcurrentEventHeuristic.HaveSimiliarEventTime(currentEventTime, lastEventTime, EventTimeDifference))
                 {
                     _eventCache.Add(@event);
                 }
@@ -77,20 +76,6 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
         private static bool MoreThanOneEventConcurredIn(ConcurrentEvent concurrentEvent)
         {
             return concurrentEvent.ConcurrentEventList.Count > 1;
-        }
-
-        private static DateTime GetValidEventTime(DateTime? eventTime)
-        {
-            if (!eventTime.HasValue)
-                Asserts.Fail("Events should have a DateTime value in TriggeredAt");
-            
-            return eventTime.Value;
-        }
-
-        private static bool HaveSimiliarEventTime(DateTime currentEventTime, DateTime lastEventTime)
-        {
-            var timeDifference = Math.Abs(currentEventTime.Ticks - lastEventTime.Ticks);
-            return timeDifference <= EventTimeDifference.Ticks;
         }
 
         private ConcurrentEvent GenerateConcurrentEvent()
