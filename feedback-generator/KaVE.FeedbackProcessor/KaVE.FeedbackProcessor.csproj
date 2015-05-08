@@ -81,6 +81,7 @@
     <Compile Include="Import\FeedbackImporter.cs" />
     <Compile Include="Import\FeedbackArchiveReader.cs" />
     <Compile Include="Model\Developer.cs" />
+    <Compile Include="Model\EventUtils.cs" />
     <Compile Include="Properties\Configuration.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

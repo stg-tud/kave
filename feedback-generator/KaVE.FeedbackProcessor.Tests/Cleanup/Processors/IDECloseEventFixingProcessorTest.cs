@@ -24,6 +24,7 @@ using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.VisualStudio;
 using KaVE.Commons.TestUtils.Model.Events;
 using KaVE.FeedbackProcessor.Cleanup.Processors;
+using KaVE.FeedbackProcessor.Model;
 using NUnit.Framework;
 
 namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
@@ -79,8 +80,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
 
         private static void SetTriggeredAtToAfter(IDEEvent subsequentEvent, IDEEvent previousEvent, int seconds = 60)
         {
-            Assert.IsTrue(previousEvent.TriggeredAt.HasValue);
-            subsequentEvent.TriggeredAt = previousEvent.TriggeredAt.Value.AddSeconds(seconds);
+            subsequentEvent.TriggeredAt = previousEvent.GetTriggeredAt().AddSeconds(seconds);
         }
 
         private static IDEStateEvent CreateStartupEventAfter(IDEEvent previousEvent)

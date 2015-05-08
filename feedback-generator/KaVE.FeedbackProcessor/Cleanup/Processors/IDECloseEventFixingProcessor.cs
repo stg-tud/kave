@@ -20,7 +20,7 @@
 using System;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.VisualStudio;
-using KaVE.Commons.Utils.Assertion;
+using KaVE.FeedbackProcessor.Model;
 
 namespace KaVE.FeedbackProcessor.Cleanup.Processors
 {
@@ -35,17 +35,16 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
             //RegisterFor<IDEStateEvent>(ProcessIDEStateEvent);
         }
 
-        private void ProcessEvent(IDEEvent currentevent)
+        private void ProcessEvent(IDEEvent currentEvent)
         {
-            var ideStateEvent = currentevent as IDEStateEvent;
+            var ideStateEvent = currentEvent as IDEStateEvent;
             if (ideStateEvent != null)
             {
                 ProcessIDEStateEvent(ideStateEvent);
             }
             else
             {
-                Asserts.That(currentevent.TriggeredAt.HasValue, "event without trigger time");
-                _lastEventTriggerTime = currentevent.TriggeredAt.Value;
+                _lastEventTriggerTime = currentEvent.GetTriggeredAt();
             }
         }
 
