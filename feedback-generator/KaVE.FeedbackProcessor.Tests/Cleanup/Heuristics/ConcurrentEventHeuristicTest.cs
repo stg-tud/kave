@@ -14,28 +14,27 @@
  * limitations under the License.
  * 
  * Contributors:
+ *    - Mattis Manfred Kämmerer
  *    - Markus Zimmermann
  */
 
 using System;
-using KaVE.Commons.Utils.Assertion;
 using KaVE.FeedbackProcessor.Cleanup.Heuristics;
 using NUnit.Framework;
 
 namespace KaVE.FeedbackProcessor.Tests.Cleanup.Heuristics
 {
     [TestFixture]
-    class ConcurrentEventHeuristicTest
+    internal class ConcurrentEventHeuristicTest
     {
         [Test]
         public void HaveSimiliarEventTimeTest()
         {
-            TimeSpan eventTimeDifference = new TimeSpan(0, 0, 0, 0, 20);
+            var eventTimeDifference = new TimeSpan(0, 0, 0, 0, 20);
             DateTime? eventTime1 = new DateTime(1984, 1, 1, 1, 1, 1, 1);
             DateTime? eventTime2 = new DateTime(1984, 1, 1, 1, 1, 1, 10);
 
-            Assert.IsTrue(ConcurrentEventHeuristic.HaveSimiliarEventTime(eventTime1,eventTime2,eventTimeDifference));
+            Assert.IsTrue(ConcurrentEventHeuristic.HaveSimiliarEventTime(eventTime1, eventTime2, eventTimeDifference));
         }
-
     }
 }

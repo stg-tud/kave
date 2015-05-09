@@ -117,22 +117,6 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
         }
 
         [Test]
-        public void ShouldDoNothingOnStreamStart()
-        {
-            _uut.OnStreamStarts(new Developer());
-
-            CollectionAssert.IsEmpty(_uut.Statistic);
-        }
-
-        [Test]
-        public void ShouldDoNothingOnStreamEnd()
-        {
-            _uut.OnStreamEnds();
-
-            CollectionAssert.IsEmpty(_uut.Statistic);
-        }
-
-        [Test]
         public void ShouldNotAddEmptySetToStatistic()
         {
             var concurrentEvent = new ConcurrentEvent

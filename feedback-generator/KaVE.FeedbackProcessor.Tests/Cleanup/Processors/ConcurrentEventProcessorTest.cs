@@ -23,7 +23,6 @@ using System.Collections.Generic;
 using System.Linq;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.TestUtils.Model.Events;
-using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Collections;
 using KaVE.FeedbackProcessor.Cleanup.Processors;
 using KaVE.FeedbackProcessor.Model;
@@ -50,7 +49,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
             var expectedEventSet = Sets.NewHashSet(
                 new ConcurrentEvent
                 {
-                    ConcurrentEventList = concurrentEventList.GetRange(0,concurrentEventList.Count-1),
+                    ConcurrentEventList = concurrentEventList.GetRange(0, concurrentEventList.Count - 1),
                     Duration = concurrentEventList.Last().TerminatedAt - concurrentEventList.First().TriggeredAt,
                     TriggeredAt = concurrentEventList.First().TriggeredAt
                 }
@@ -59,7 +58,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
             IKaVESet<IDEEvent> resultEventSet = new KaVEHashSet<IDEEvent>();
             concurrentEventList.ForEach(ideEvent => resultEventSet = _uut.Process(ideEvent));
 
-            CollectionAssert.AreEquivalent(expectedEventSet,resultEventSet);
+            CollectionAssert.AreEquivalent(expectedEventSet, resultEventSet);
         }
 
         [Test]
@@ -67,14 +66,15 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
         {
             var eventList = GenerateEvents(ConcurrentEventProcessor.EventTimeDifference.Ticks + 1);
 
-            eventList.ForEach(ideEvent => CollectionAssert.AreEquivalent(new KaVEHashSet<IDEEvent>(),_uut.Process(ideEvent)));
+            eventList.ForEach(
+                ideEvent => CollectionAssert.AreEquivalent(new KaVEHashSet<IDEEvent>(), _uut.Process(ideEvent)));
         }
 
         [Test]
         public void ShouldNotAddErrorEventsToConcurrentEvents()
         {
             var eventList = GenerateEvents(ConcurrentEventProcessor.EventTimeDifference.Ticks);
-            var errorEvent = new ErrorEvent { TriggeredAt = eventList.Last().TriggeredAt };            
+            var errorEvent = new ErrorEvent {TriggeredAt = eventList.Last().TriggeredAt};
             eventList.Add(errorEvent);
 
             IKaVESet<IDEEvent> resultEventSet = new KaVEHashSet<IDEEvent>();
