@@ -28,7 +28,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter
         private void AssertTypeFormat(string expected, string typeIdentifier)
         {
             var sut = new SSTPrintingContext();
-            Assert.AreEqual(expected, sut.TypeName(TypeName.Get(typeIdentifier)).ToString());
+            Assert.AreEqual(expected, sut.Type(TypeName.Get(typeIdentifier)).ToString());
         }
 
         [Test]

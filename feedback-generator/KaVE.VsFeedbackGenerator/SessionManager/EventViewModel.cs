@@ -16,12 +16,15 @@
  * Contributors:
  *    - Sven Amann
  *    - Dennis Albrecht
+ *    - Andreas Bauer
  */
 
 using System;
 using KaVE.Commons.Model.Events;
+using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Json;
+using KaVE.Commons.Utils.SSTPrinter;
 using KaVE.VsFeedbackGenerator.SessionManager.Presentation;
 using KaVE.VsFeedbackGenerator.Utils.Json;
 
@@ -75,8 +78,17 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
 
         private string GetContextAsXaml()
         {
-            //var completionEvent = Event as CompletionEvent;
-            //return completionEvent == null ? null : completionEvent.Context.ToXaml();
+            var completionEvent = Event as CompletionEvent;
+
+            if (completionEvent != null)
+            {
+                var visitor = new SSTPrintingVisitor();
+                var context = new XamlSSTPrintingContext();
+                visitor.Visit(completionEvent.Context2.SST, context);
+
+                return context.ToString();
+            }
+
             return null;
         }
 

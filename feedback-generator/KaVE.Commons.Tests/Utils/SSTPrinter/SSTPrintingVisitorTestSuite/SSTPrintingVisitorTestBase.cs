@@ -19,6 +19,7 @@
 
 using System;
 using System.Linq;
+using System.Windows.Markup;
 using KaVE.Commons.Model.SSTs;
 using KaVE.Commons.Model.SSTs.Visitor;
 using KaVE.Commons.Utils.SSTPrinter;
@@ -45,9 +46,27 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
             Assert.AreEqual(indentationLevel, context.IndentationLevel);
         }
 
+        // see KaVE.VsFeedbackGenerator.SessionManager.Presentation.XamlBindableRichTextBox
+        private const string DataTemplateBegin =
+            "<DataTemplate xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\"><TextBlock xml:space=\"preserve\">";
+
+        private const string DataTemplateEnd = "</TextBlock></DataTemplate>";
+
+        // Asserts that the syntax highlighted result is valid (and parsable) XAML
+        private void AssertPrintHighlighted(ISSTNode sst)
+        {
+            var context = new XamlSSTPrintingContext();
+            sst.Accept(_sut, context);
+            var actual = context.ToString();
+
+            // throws and fails test if markup is invalid
+            XamlReader.Parse(DataTemplateBegin + actual + DataTemplateEnd);
+        }
+
         protected void AssertPrint(ISSTNode sst, params string[] expectedLines)
         {
             AssertPrintHelper(sst, 0, String.Join(Environment.NewLine, expectedLines));
+            AssertPrintHighlighted(sst);
 
             // expressions and references can't be indented
             if (sst is IExpression || sst is IReference)

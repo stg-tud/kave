@@ -22,6 +22,7 @@ using System.Linq;
 using System.Text;
 using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.SSTs;
+using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.Commons.Model.SSTs.Visitor;
 using KaVE.Commons.Utils.Collections;
 
@@ -65,38 +66,63 @@ namespace KaVE.Commons.Utils.SSTPrinter
             return this;
         }
 
-        public SSTPrintingContext Keyword(string keyword)
+        public virtual SSTPrintingContext Keyword(string keyword)
         {
             return Text(keyword);
         }
 
-        public SSTPrintingContext CursorPosition()
+        public virtual SSTPrintingContext CursorPosition()
         {
             return Text("$");
         }
 
-        public SSTPrintingContext UnknownMarker()
+        public virtual SSTPrintingContext UnknownMarker()
         {
             return Text("???");
         }
 
-        public SSTPrintingContext TypeName(ITypeName typeName)
+        public virtual SSTPrintingContext LeftAngleBracket()
         {
-            _sb.Append(typeName.Name);
+            return Text("<");
+        }
+
+        public virtual SSTPrintingContext RightAngleBracket()
+        {
+            return Text(">");
+        }
+
+        public virtual SSTPrintingContext StringLiteral(string value)
+        {
+            return Text("\"").Text(value).Text("\"");
+        }
+
+        protected virtual SSTPrintingContext TypeName(ITypeName typeName)
+        {
+            return Text(typeName.Name);
+        }
+
+        protected virtual SSTPrintingContext TypeParameterShortName(string typeParameterShortName)
+        {
+            return Text(typeParameterShortName);
+        }
+
+        public SSTPrintingContext Type(ITypeName typeName)
+        {
+            TypeName(typeName);
 
             if (typeName.HasTypeParameters)
             {
-                _sb.Append("<");
+                LeftAngleBracket();
 
                 foreach (var p in typeName.TypeParameters)
                 {
                     if (!p.IsUnknownType)
                     {
-                        TypeName(p);
+                        Type(p);
                     }
                     else
                     {
-                        _sb.Append(p.TypeParameterShortName);
+                        TypeParameterShortName(p.TypeParameterShortName);
                     }
 
                     if (!ReferenceEquals(p, typeName.TypeParameters.Last()))
@@ -105,7 +131,7 @@ namespace KaVE.Commons.Utils.SSTPrinter
                     }
                 }
 
-                _sb.Append(">");
+                RightAngleBracket();
             }
 
             return this;
@@ -137,7 +163,7 @@ namespace KaVE.Commons.Utils.SSTPrinter
                     Keyword("params").Space();
                 }
 
-                TypeName(parameter.ValueType).Space().Text(parameter.Name);
+                Type(parameter.ValueType).Space().Text(parameter.Name);
 
                 if (!ReferenceEquals(parameter, parameters.Last()))
                 {

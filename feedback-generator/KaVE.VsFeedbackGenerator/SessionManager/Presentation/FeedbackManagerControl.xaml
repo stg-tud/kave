@@ -255,7 +255,8 @@ Contributors:
                                                                               HorizontalAlignment="Stretch"
                                                                               VerticalAlignment="Stretch"
                                                                               VerticalScrollBarVisibility="Auto"
-                                                                              HorizontalScrollBarVisibility="Auto" />
+                                                                              HorizontalScrollBarVisibility="Auto"
+                                                                              FontFamily="Consolas" />
                                     </Border>
                                 </GroupBox>
                                 <!-- DETAILS SCROLLBOX -->

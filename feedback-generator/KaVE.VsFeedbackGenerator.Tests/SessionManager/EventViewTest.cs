@@ -15,9 +15,14 @@
  * 
  * Contributors:
  *    - Sven Amann
+ *    - Andreas Bauer
  */
 
 using KaVE.Commons.Model.Events;
+using KaVE.Commons.Model.Events.CompletionEvents;
+using KaVE.Commons.Model.Names.CSharp;
+using KaVE.Commons.Model.SSTs.Impl;
+using KaVE.Commons.TestUtils.Model.Events;
 using KaVE.VsFeedbackGenerator.SessionManager;
 using NUnit.Framework;
 
@@ -37,6 +42,27 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
             var actual = view.Details;
 
             Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void FormatsCompletionEventSST()
+        {
+            var completionEvent = new CompletionEvent
+            {
+                Context2 = {SST = new SST {EnclosingType = TypeName.Get("TestClass,TestProject")}}
+            };
+
+            var view = new EventViewModel(completionEvent);
+            Assert.IsNotNullOrEmpty(view.XamlContextRepresentation);
+        }
+
+        [Test]
+        public void DoesntFormatOtherEvents()
+        {
+            var someEvent = IDEEventTestFactory.SomeEvent();
+
+            var view = new EventViewModel(someEvent);
+            Assert.IsNull(view.XamlContextRepresentation);
         }
     }
 }

@@ -39,6 +39,8 @@ namespace KaVE.Commons.Utils.SSTPrinter
         {
             c.Indentation();
 
+            // TODO: usings/namespaces
+            // TODO: super classes/interfaces
             if (sst.EnclosingType.IsInterfaceType)
             {
                 c.Keyword("interface");
@@ -56,7 +58,7 @@ namespace KaVE.Commons.Utils.SSTPrinter
                 c.Keyword("class");
             }
 
-            c.Space().Text(sst.EnclosingType.Name).NewLine()
+            c.Space().Type(sst.EnclosingType).NewLine()
              .Indentation().Text("{").NewLine();
 
             c.IndentationLevel++;
@@ -101,7 +103,7 @@ namespace KaVE.Commons.Utils.SSTPrinter
         public void Visit(IEventDeclaration stmt, SSTPrintingContext c)
         {
             c.Indentation()
-              .Keyword("event").Space().TypeName(stmt.Name.HandlerType).Space().Text(stmt.Name.Name).Text(";");
+              .Keyword("event").Space().Type(stmt.Name.HandlerType).Space().Text(stmt.Name.Name).Text(";");
         }
 
         public void Visit(IFieldDeclaration stmt, SSTPrintingContext c)
@@ -113,7 +115,7 @@ namespace KaVE.Commons.Utils.SSTPrinter
                 c.Keyword("static").Space();
             }
 
-            c.TypeName(stmt.Name.ValueType).Space().Text(stmt.Name.Name).Text(";");
+            c.Type(stmt.Name.ValueType).Space().Text(stmt.Name.Name).Text(";");
         }
 
         public void Visit(IMethodDeclaration stmt, SSTPrintingContext c)
@@ -125,7 +127,7 @@ namespace KaVE.Commons.Utils.SSTPrinter
                 c.Keyword("static").Space();
             }
 
-            c.TypeName(stmt.Name.ReturnType).Space().Text(stmt.Name.Name);
+            c.Type(stmt.Name.ReturnType).Space().Text(stmt.Name.Name);
 
             c.ParameterList(stmt.Name.Parameters);
 
@@ -134,7 +136,7 @@ namespace KaVE.Commons.Utils.SSTPrinter
 
         public void Visit(IPropertyDeclaration stmt, SSTPrintingContext c)
         {
-            c.Indentation().TypeName(stmt.Name.ValueType).Space().Text(stmt.Name.Name);
+            c.Indentation().Type(stmt.Name.ValueType).Space().Text(stmt.Name.Name);
 
             var hasBody = stmt.Get.Any() || stmt.Set.Any();
 
@@ -193,7 +195,7 @@ namespace KaVE.Commons.Utils.SSTPrinter
 
         public void Visit(IVariableDeclaration stmt, SSTPrintingContext c)
         {
-            c.Indentation().TypeName(stmt.Type).Space();
+            c.Indentation().Type(stmt.Type).Space();
             stmt.Reference.Accept(this, c);
             c.Text(";");
         }
@@ -272,7 +274,7 @@ namespace KaVE.Commons.Utils.SSTPrinter
         {
             c.Indentation()
               .Keyword("foreach").Space().Text("(")
-              .TypeName(block.Declaration.Type)
+              .Type(block.Declaration.Type)
               .Space();
             block.Declaration.Reference.Accept(this, c);
             c.Space().Keyword("in").Space();
@@ -364,7 +366,7 @@ namespace KaVE.Commons.Utils.SSTPrinter
                 if (!catchBlock.IsGeneral)
                 {
                     c.Space().Text("(")
-                      .TypeName(catchBlock.Parameter.ValueType)
+                      .Type(catchBlock.Parameter.ValueType)
                       .Space()
                       .Text(catchBlock.Parameter.Name)
                       .Text(")");
@@ -417,7 +419,7 @@ namespace KaVE.Commons.Utils.SSTPrinter
             }
             else if (entity.TypeReference != null)
             {
-                c.TypeName(entity.TypeReference).Text(".");
+                c.Type(entity.TypeReference).Text(".");
             }
 
             c.Text(entity.Token).CursorPosition();
@@ -494,7 +496,7 @@ namespace KaVE.Commons.Utils.SSTPrinter
             }
             else
             {
-                c.Text("\"").Text(value).Text("\"");
+                c.StringLiteral(value);
             }
         }
 

@@ -63,6 +63,7 @@
     <Compile Include="Utils\Logging\Json\JsonLogWriter.cs" />
     <Compile Include="Utils\SSTPrinter\SSTPrintingContext.cs" />
     <Compile Include="Utils\SSTPrinter\SSTPrintingVisitor.cs" />
+    <Compile Include="Utils\SSTPrinter\XamlSSTPrintingContext.cs" />
     <Compile Include="Utils\Streams\MemoryStreamUtils.cs" />
     <Compile Include="Model\Events\CommandEvent.cs" />
     <Compile Include="Model\Events\CompletionEvents\CompletionEvent.cs" />
