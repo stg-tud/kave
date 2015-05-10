@@ -19,6 +19,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using KaVE.Commons.Model.SSTs;
 using KaVE.Commons.Model.SSTs.Blocks;
@@ -40,7 +41,6 @@ namespace KaVE.Commons.Utils.SSTPrinter
             c.Indentation();
 
             // TODO: usings/namespaces
-            // TODO: super classes/interfaces
             if (sst.EnclosingType.IsInterfaceType)
             {
                 c.Keyword("interface");
@@ -58,7 +58,27 @@ namespace KaVE.Commons.Utils.SSTPrinter
                 c.Keyword("class");
             }
 
-            c.Space().Type(sst.EnclosingType).NewLine()
+            c.Space().Type(sst.EnclosingType);
+
+            if (c.TypeShape != null && c.TypeShape.TypeHierarchy.HasSupertypes)
+            {
+                c.Text(" : ");
+
+                if (c.TypeShape.TypeHierarchy.HasSuperclass && c.TypeShape.TypeHierarchy.Extends != null)
+                {
+                    c.Type(c.TypeShape.TypeHierarchy.Extends.Element);
+                }
+
+                if (c.TypeShape.TypeHierarchy.IsImplementingInterfaces)
+                {
+                    foreach (var i in c.TypeShape.TypeHierarchy.Implements)
+                    {
+                        c.Text(", ").Type(i.Element);
+                    }
+                }
+            }
+
+            c.NewLine()
              .Indentation().Text("{").NewLine();
 
             c.IndentationLevel++;

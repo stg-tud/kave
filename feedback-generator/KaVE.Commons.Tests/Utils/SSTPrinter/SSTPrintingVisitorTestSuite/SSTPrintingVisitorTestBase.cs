@@ -37,13 +37,18 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
             _sut = new SSTPrintingVisitor();
         }
 
-        private void AssertPrintHelper(ISSTNode sst, int indentationLevel, string expected)
+        public void AssertPrintSingle(ISSTNode sst, SSTPrintingContext context, string expected)
         {
-            var context = new SSTPrintingContext {IndentationLevel = indentationLevel};
+            var indentationLevel = context.IndentationLevel;
             sst.Accept(_sut, context);
             var actual = context.ToString();
             Assert.AreEqual(expected, actual);
             Assert.AreEqual(indentationLevel, context.IndentationLevel);
+        }
+
+        public void AssertPrintSingle(ISSTNode sst, SSTPrintingContext context, params string[] expectedLines)
+        {
+            AssertPrintSingle(sst, context, String.Join(Environment.NewLine, expectedLines));
         }
 
         // see KaVE.VsFeedbackGenerator.SessionManager.Presentation.XamlBindableRichTextBox
@@ -65,17 +70,27 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
 
         protected void AssertPrint(ISSTNode sst, params string[] expectedLines)
         {
-            AssertPrintHelper(sst, 0, String.Join(Environment.NewLine, expectedLines));
+            // Test if printing works as expected on indentation level 0
+            AssertPrintSingle(
+                sst,
+                new SSTPrintingContext {IndentationLevel = 0},
+                expectedLines);
+
+            // Test if syntax highlighting produces valid XAML
             AssertPrintHighlighted(sst);
 
-            // expressions and references can't be indented
+            // Expressions and references can't be indented
             if (sst is IExpression || sst is IReference)
             {
                 return;
             }
 
+            // Test if printing works as expected on indentation level 1
             var indentedLines = expectedLines.Select(line => String.IsNullOrEmpty(line) ? line : "    " + line);
-            AssertPrintHelper(sst, 1, String.Join(Environment.NewLine, indentedLines));
+            AssertPrintSingle(
+                sst,
+                new SSTPrintingContext {IndentationLevel = 1},
+                indentedLines.ToArray());
         }
     }
 }

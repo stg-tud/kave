@@ -83,7 +83,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             if (completionEvent != null)
             {
                 var visitor = new SSTPrintingVisitor();
-                var context = new XamlSSTPrintingContext();
+                var context = new XamlSSTPrintingContext {TypeShape = completionEvent.Context2.TypeShape};
                 visitor.Visit(completionEvent.Context2.SST, context);
 
                 return context.ToString();

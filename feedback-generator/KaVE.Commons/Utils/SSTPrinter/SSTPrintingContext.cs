@@ -22,8 +22,8 @@ using System.Linq;
 using System.Text;
 using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.SSTs;
-using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.Commons.Model.SSTs.Visitor;
+using KaVE.Commons.Model.TypeShapes;
 using KaVE.Commons.Utils.Collections;
 
 namespace KaVE.Commons.Utils.SSTPrinter
@@ -31,6 +31,12 @@ namespace KaVE.Commons.Utils.SSTPrinter
     public class SSTPrintingContext
     {
         public int IndentationLevel { get; set; }
+
+        /// <summary>
+        ///     Type shape (supertype information) of the SST. If the SST is a type and a type shape is
+        ///     provided, the supertypes will be included in the print result.
+        /// </summary>
+        public ITypeShape TypeShape { get; set; }
 
         private readonly StringBuilder _sb;
 
