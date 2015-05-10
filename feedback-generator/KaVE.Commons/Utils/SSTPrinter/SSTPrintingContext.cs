@@ -38,11 +38,21 @@ namespace KaVE.Commons.Utils.SSTPrinter
         /// </summary>
         public ITypeShape TypeShape { get; set; }
 
+        /// <summary>
+        ///     Collection of namespaces that have been seen by the context while processing an SST.
+        /// </summary>
+        public IEnumerable<INamespaceName> SeenNamespaces
+        {
+            get { return _seenNamespaces.AsEnumerable(); }
+        }
+
         private readonly StringBuilder _sb;
+        private readonly IKaVESet<INamespaceName> _seenNamespaces;
 
         public SSTPrintingContext()
         {
             _sb = new StringBuilder();
+            _seenNamespaces = Sets.NewHashSet<INamespaceName>();
         }
 
         public SSTPrintingContext Text(string text)
@@ -114,6 +124,8 @@ namespace KaVE.Commons.Utils.SSTPrinter
 
         public SSTPrintingContext Type(ITypeName typeName)
         {
+            _seenNamespaces.Add(typeName.Namespace);
+
             TypeName(typeName);
 
             if (typeName.HasTypeParameters)
@@ -182,7 +194,6 @@ namespace KaVE.Commons.Utils.SSTPrinter
             return this;
         }
 
-        // TODO: write tests
         /// <summary>
         ///     Appends the print result of a statement block to a string builder with correct indentation.
         /// </summary>

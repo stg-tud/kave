@@ -26,7 +26,6 @@ using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Json;
 using KaVE.Commons.Utils.SSTPrinter;
 using KaVE.VsFeedbackGenerator.SessionManager.Presentation;
-using KaVE.VsFeedbackGenerator.Utils.Json;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager
 {
@@ -86,7 +85,14 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
                 var context = new XamlSSTPrintingContext {TypeShape = completionEvent.Context2.TypeShape};
                 visitor.Visit(completionEvent.Context2.SST, context);
 
-                return context.ToString();
+                var usingListContext = new XamlSSTPrintingContext();
+                context.SeenNamespaces.FormatAsUsingList(usingListContext);
+
+                return String.Concat(
+                    usingListContext.ToString(),
+                    Environment.NewLine,
+                    Environment.NewLine,
+                    context.ToString());
             }
 
             return null;
@@ -94,10 +100,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
 
         public string Details
         {
-            get
-            {
-                return _xamlDetails ?? (_xamlDetails = AddSyntaxHighlightingIfNotTooLong(Event.GetDetailsAsJson()));
-            }
+            get { return _xamlDetails ?? (_xamlDetails = AddSyntaxHighlightingIfNotTooLong(Event.GetDetailsAsJson())); }
         }
 
         public string XamlRawRepresentation
@@ -106,8 +109,8 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
         }
 
         /// <summary>
-        /// Adds syntax highlighting (Xaml formatting) to the json, if the json ist not too long.
-        /// This condition is because formatting very long strings takes ages.
+        ///     Adds syntax highlighting (Xaml formatting) to the json, if the json ist not too long.
+        ///     This condition is because formatting very long strings takes ages.
         /// </summary>
         private static string AddSyntaxHighlightingIfNotTooLong(string json)
         {
