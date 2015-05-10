@@ -247,7 +247,9 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp
              "System.Nullable`1[[System.Int32, mscorlib, 4.0.0.0]]"),
          TestCase("T -> Some.Arbitrary.Type, Assembly, 5.6.4.7", "Some.Arbitrary.Type"),
          TestCase("Outer.Type+InnerType, As, 1.2.3.4", "Outer.Type+InnerType"),
-         TestCase("?", "?")]
+         TestCase("?", "?"),
+         TestCase("Task`1[[TResult -> i:IList`1[[T -> T]], mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0", 
+             "Task`1[[TResult -> i:IList`1[[T -> T]], mscorlib, 4.0.0.0]]")]
         public void ShouldDetermineFullName(string identifier, string expectedFullName)
         {
             var uut = TypeName.Get(identifier);
@@ -260,7 +262,8 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp
          TestCase("System.Nullable`1[[System.Int32, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0", "Nullable"),
          TestCase("T -> Some.Arbitrary.Type, Assembly, 5.6.4.7", "Type"),
          TestCase("Outer.Type+InnerType, As, 1.2.3.4", "InnerType"),
-         TestCase("?", "?")]
+         TestCase("?", "?"),
+         TestCase("Task`1[[TResult -> i:IList`1[[T -> T]], mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0", "Task")]
         public void ShouldDetermineName(string identifier, string expectedName)
         {
             var uut = TypeName.Get(identifier);
