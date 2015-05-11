@@ -36,9 +36,9 @@ namespace KaVE.FeedbackProcessor.Statistics
 
         private Developer _currentDeveloper;
 
-        public void OnStreamStarts(Developer value)
+        public void OnStreamStarts(Developer developer)
         {
-            _currentDeveloper = value;
+            _currentDeveloper = developer;
             _currentDeveloperDays = new Dictionary<DateTime, DeveloperDay>();
         }
 

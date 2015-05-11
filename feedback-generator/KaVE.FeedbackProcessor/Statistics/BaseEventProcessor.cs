@@ -42,7 +42,7 @@ namespace KaVE.FeedbackProcessor.Statistics
                 new KeyValuePair<Type, Processor<IDEEvent>>(typeof(TEvent), evt => processor((TEvent)evt)));
         }
 
-        public virtual void OnStreamStarts(Developer value)
+        public virtual void OnStreamStarts(Developer developer)
         { 
         }
 

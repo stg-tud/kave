@@ -104,9 +104,9 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
             public readonly IList<Developer> ProcessedDevelopers = new List<Developer>();
             public bool IsFinilized;
 
-            public void OnStreamStarts(Developer value)
+            public void OnStreamStarts(Developer developer)
             {
-                ProcessedDevelopers.Add(value);
+                ProcessedDevelopers.Add(developer);
             }
 
             public void OnEvent(IDEEvent @event)
