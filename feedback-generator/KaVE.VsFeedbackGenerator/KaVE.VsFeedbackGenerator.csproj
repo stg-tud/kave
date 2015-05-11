@@ -281,7 +281,6 @@
     <Compile Include="Utils\XamlFormattingUtil.cs" />
     <Compile Include="VsIntegration\IDESession.cs" />
     <Compile Include="VsIntegration\IIDESession.cs" />
-    <Compile Include="VsIntegration\IDESessionSettings.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Actions.xml">
