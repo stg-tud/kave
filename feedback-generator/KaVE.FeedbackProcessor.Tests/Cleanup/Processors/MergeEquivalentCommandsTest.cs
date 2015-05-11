@@ -24,14 +24,15 @@ using KaVE.Commons.Model.Events;
 using KaVE.Commons.Utils.Collections;
 using KaVE.FeedbackProcessor.Cleanup.Heuristics;
 using KaVE.FeedbackProcessor.Cleanup.Processors;
+using KaVE.FeedbackProcessor.Tests.TestUtils;
 using NUnit.Framework;
 
 namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
 {
     [TestFixture]
-    class MergeEquivalentCommandsTest
+    internal class MergeEquivalentCommandsTest
     {
-        public MergeEquivalentCommands _uut;
+        private MergeEquivalentCommands _uut;
 
         [SetUp]
         public void Setup()
@@ -42,7 +43,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
         [Test]
         public void ShouldAddMappingForTwoConcurrentCommandEvents()
         {
-            var eventTime = new DateTime(1984, 1, 1, 1, 1, 1, 10);
+            var eventTime = DateTimeFactory.SomeDateTime();
             const string expectedString1 = "Edit.Copy";
             const string expectedString2 = "Copy";
 
@@ -62,18 +63,17 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
 
             CollectionAssert.Contains(
                 _uut.Statistic,
-                new SortedSet<string>{
-                
-                    expectedString1, 
+                new SortedSet<string>
+                {
+                    expectedString1,
                     expectedString2
-                 
                 });
         }
 
         [Test]
         public void ShouldNotAddMappingForNonConcurrentCommandEvents()
         {
-            var eventTime = new DateTime(1984, 1, 1, 1, 1, 1, 10);
+            var eventTime = DateTimeFactory.SomeDateTime();
 
             var commandEvent1 = new CommandEvent
             {
@@ -83,7 +83,9 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
             var commandEvent2 = new CommandEvent
             {
                 CommandId = "Edit.Copy",
-                TriggeredAt = eventTime + MergeEquivalentCommands.EventTimeDifference + TimeSpan.FromTicks(TimeSpan.TicksPerSecond)
+                TriggeredAt =
+                    eventTime + MergeEquivalentCommands.EventTimeDifference +
+                    TimeSpan.FromTicks(TimeSpan.TicksPerSecond)
             };
 
             _uut.Process(commandEvent1);
@@ -95,7 +97,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
         [Test]
         public void ShouldDropEventsUntilNonConcurrentEvent()
         {
-            var eventTime = new DateTime(1984, 1, 1, 1, 1, 1, 10);
+            var eventTime = DateTimeFactory.SomeDateTime();
 
             var commandEvent1 = new CommandEvent
             {
@@ -107,18 +109,19 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
             };
             var commandEvent3 = new CommandEvent
             {
-                TriggeredAt = eventTime + MergeEquivalentCommands.EventTimeDifference + TimeSpan.FromTicks(TimeSpan.TicksPerSecond)
+                TriggeredAt =
+                    eventTime + MergeEquivalentCommands.EventTimeDifference +
+                    TimeSpan.FromTicks(TimeSpan.TicksPerSecond)
             };
-            
-            CollectionAssert.AreEqual(Sets.NewHashSet<IDEEvent>(),_uut.Process(commandEvent1));
-            CollectionAssert.AreEqual(Sets.NewHashSet<IDEEvent>(),_uut.Process(commandEvent2));
 
+            CollectionAssert.AreEqual(Sets.NewHashSet<IDEEvent>(), _uut.Process(commandEvent1));
+            CollectionAssert.AreEqual(Sets.NewHashSet<IDEEvent>(), _uut.Process(commandEvent2));
         }
 
         [Test]
         public void ShouldReplaceNonConcurrentEventWithLastCommandEvent()
         {
-            var eventTime = new DateTime(1984, 1, 1, 1, 1, 1, 10);
+            var eventTime = DateTimeFactory.SomeDateTime();
 
             var commandEvent1 = new CommandEvent
             {
@@ -128,19 +131,21 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
             var commandEvent2 = new CommandEvent
             {
                 CommandId = "Edit.Copy",
-                TriggeredAt = eventTime + MergeEquivalentCommands.EventTimeDifference + TimeSpan.FromTicks(TimeSpan.TicksPerSecond)
+                TriggeredAt =
+                    eventTime + MergeEquivalentCommands.EventTimeDifference +
+                    TimeSpan.FromTicks(TimeSpan.TicksPerSecond)
             };
 
             _uut.Process(commandEvent1);
             var actualSet = _uut.Process(commandEvent2);
-            
-            Assert.AreEqual(Sets.NewHashSet<IDEEvent>(commandEvent1),actualSet);
+
+            Assert.AreEqual(Sets.NewHashSet<IDEEvent>(commandEvent1), actualSet);
         }
 
         [Test]
         public void ShouldMergeTwoConcurrentCommandEvents()
         {
-            var eventTime = new DateTime(1984, 1, 1, 1, 1, 1, 10);
+            var eventTime = DateTimeFactory.SomeDateTime();
 
             var commandEvent1 = new CommandEvent
             {
@@ -158,7 +163,9 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
             {
                 CommandId = "Edit.Copy",
                 TriggeredBy = IDEEvent.Trigger.Unknown,
-                TriggeredAt = eventTime + MergeEquivalentCommands.EventTimeDifference + TimeSpan.FromTicks(TimeSpan.TicksPerSecond)
+                TriggeredAt =
+                    eventTime + MergeEquivalentCommands.EventTimeDifference +
+                    TimeSpan.FromTicks(TimeSpan.TicksPerSecond)
             };
 
             var mergedEvent = MergeCommandHeuristic.MergeCommandEvents(commandEvent1, commandEvent2);
@@ -168,7 +175,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
 
             var resultSet = _uut.Process(commandEvent3);
 
-            CollectionAssert.AreEqual(Sets.NewHashSet<IDEEvent>(mergedEvent),resultSet);
+            CollectionAssert.AreEqual(Sets.NewHashSet<IDEEvent>(mergedEvent), resultSet);
         }
     }
 }

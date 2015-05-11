@@ -21,6 +21,7 @@ using System;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Utils.Collections;
 using KaVE.FeedbackProcessor.Cleanup.Processors;
+using KaVE.FeedbackProcessor.Tests.TestUtils;
 using NUnit.Framework;
 
 namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
@@ -39,7 +40,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
         [Test]
         public void FiltersDuplicatedCommandEvents()
         {
-            var firstEventTime = new DateTime(1984,2,2,1,1,1,0);
+            var firstEventTime = DateTimeFactory.SomeDateTime();
             var commandEvent = new CommandEvent
             {
                 CommandId = "Test",

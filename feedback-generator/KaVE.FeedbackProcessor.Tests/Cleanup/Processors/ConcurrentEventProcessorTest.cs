@@ -26,6 +26,7 @@ using KaVE.Commons.TestUtils.Model.Events;
 using KaVE.Commons.Utils.Collections;
 using KaVE.FeedbackProcessor.Cleanup.Processors;
 using KaVE.FeedbackProcessor.Model;
+using KaVE.FeedbackProcessor.Tests.TestUtils;
 using NUnit.Framework;
 
 namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
@@ -44,7 +45,8 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
         [Test]
         public void GeneratesConcurrentEventForConcurrentEvents()
         {
-            var concurrentEventList = GenerateEvents(ConcurrentEventProcessor.EventTimeDifference.Ticks);
+            var concurrentEventList =
+                GenerateEvents(ConcurrentEventProcessor.EventTimeDifference.Ticks);
 
             var expectedEventSet = Sets.NewHashSet(
                 new ConcurrentEvent
@@ -53,7 +55,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
                     Duration = concurrentEventList.Last().TerminatedAt - concurrentEventList.First().TriggeredAt,
                     TriggeredAt = concurrentEventList.First().TriggeredAt
                 }
-            );
+                );
 
             IKaVESet<IDEEvent> resultEventSet = new KaVEHashSet<IDEEvent>();
             concurrentEventList.ForEach(ideEvent => resultEventSet = _uut.Process(ideEvent));
@@ -83,10 +85,10 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
             CollectionAssert.DoesNotContain(resultEventSet, errorEvent);
         }
 
-        private static List<IDEEvent> GenerateEvents(long eventTimeDifferenceInTicks)
+        public static List<IDEEvent> GenerateEvents(long eventTimeDifferenceInTicks)
         {
-            var eventList = IDEEventTestFactory.SomeEvents(2);
-            var lastEventTime = new DateTime(1984, 10, 15, 13, 0, 2);
+            var eventList = IDEEventTestFactory.SomeEvents(DateTimeFactory.Random.Next(2, 10));
+            var lastEventTime = DateTimeFactory.SomeDateTime();
             eventList.ForEach(
                 ideEvent =>
                 {

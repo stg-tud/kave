@@ -41,8 +41,8 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
         [Test]
         public void DropConcurrentEventsWithoutDuplicateCommandEvents()
         {
-            ConcurrentEvent concurrentEvent1 = GenerateConcurrentEventWithTestIDEEvents();
-            ConcurrentEvent concurrentEvent2 = GenerateConcurrentEventWithTestIDEEvents();
+            var concurrentEvent1 = GenerateConcurrentEventWithTestIDEEvents();
+            var concurrentEvent2 = GenerateConcurrentEventWithTestIDEEvents();
 
             CollectionAssert.AreEquivalent(new KaVEHashSet<IDEEvent>(),_uut.Process(concurrentEvent1));
             CollectionAssert.AreEquivalent(new KaVEHashSet<IDEEvent>(),_uut.Process(concurrentEvent2));
@@ -101,7 +101,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
             CollectionAssert.AreEquivalent(new KaVEHashSet<IDEEvent>(),_uut.Process(concurrentEvent));
         }
 
-        private ConcurrentEvent GenerateConcurrentEventWithTestIDEEvents()
+        private static ConcurrentEvent GenerateConcurrentEventWithTestIDEEvents()
         {
             var eventList = IDEEventTestFactory.SomeEvents(3);
             return new ConcurrentEvent

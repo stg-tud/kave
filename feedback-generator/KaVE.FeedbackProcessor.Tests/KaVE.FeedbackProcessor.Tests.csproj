@@ -107,6 +107,7 @@
     <Compile Include="Statistics\EventsPerDeveloperDayStatisticCalculatorTest.cs" />
     <Compile Include="Statistics\WindowNameCollectorTest.cs" />
     <Compile Include="TestUtils\ProcessorAssert.cs" />
+    <Compile Include="TestUtils\DateTimeFactory.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\KaVE.licenseheader">
