@@ -51,10 +51,9 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
 
         private void FireShutdownEvent()
         {
-            // pushing directly to logger since shutdown sometimes kills message bus too early
-            var @event = CreateIDEStateEvent(IDEStateEvent.LifecyclePhase.Shutdown);
-            @event.IDESessionUUID = _env.IDESession.UUID;
-            _logger.Log(@event);
+            var shutdownEvent = CreateIDEStateEvent(IDEStateEvent.LifecyclePhase.Shutdown);
+            shutdownEvent.IDESessionUUID = _env.IDESession.UUID;
+            _logger.Shutdown(shutdownEvent);
         }
 
         private void FireIDEStateEvent(IDEStateEvent.LifecyclePhase phase)

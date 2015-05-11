@@ -17,8 +17,10 @@
  *    - Sven Amann
  */
 
+using System;
 using System.Collections.Generic;
 using System.Threading;
+using JetBrains.Util;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.VisualStudio;
 using KaVE.Commons.TestUtils.Model.Events;
@@ -36,95 +38,107 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators
     {
         private Mock<IMessageBus> _mockMessageBus;
         private Mock<ILogManager> _mockLogManager;
+        private Action<IDEEvent> _logHandler;
+
         private AutoResetEvent _logAppendSignal;
         private List<IDEEvent> _loggedEvents;
+        private EventLogger _uut;
 
         [SetUp]
         public void SetUp()
         {
             _loggedEvents = new List<IDEEvent>();
             _mockMessageBus = new Mock<IMessageBus>();
+            _mockMessageBus.Setup(mb => mb.Subscribe(It.IsAny<Action<IDEEvent>>(), null))
+                           .Callback<Action<IDEEvent>, Func<IDEEvent, bool>>(
+                               (logHandler, dc) => _logHandler = logHandler);
+
             _logAppendSignal = new AutoResetEvent(false);
             _mockLogManager = new Mock<ILogManager>();
-            _mockLogManager.Setup(lm => lm.CurrentLog.Append(It.IsAny<IDEEvent>())).Callback<IDEEvent>(
-                e =>
-                {
-                    _loggedEvents.Add(e);
-                    _logAppendSignal.Set();
-                });
+            OnCurrentLogAppend(e =>
+            {
+                _loggedEvents.Add(e);
+                _logAppendSignal.Set();
+            });
+
+            _uut = new EventLogger(_mockMessageBus.Object, _mockLogManager.Object, null);
+        }
+
+        private void OnCurrentLogAppend(Action<IDEEvent> action)
+        {
+            _mockLogManager.Setup(lm => lm.CurrentLog.Append(It.IsAny<IDEEvent>())).Callback(action);
         }
 
         [Test]
-        public void ShouldSubscribeToMessageBus()
+        public void LogsEvent()
         {
-            var uut = new EventLogger(_mockMessageBus.Object, _mockLogManager.Object);
+            var someEvent = IDEEventTestFactory.SomeEvent();
 
-            _mockMessageBus.Verify(mb => mb.Subscribe<IDEEvent>(uut.Log, null));
+            WhenLoggerReceives(someEvent);
+
+            AssertAppendToCurrentLog(someEvent);
         }
 
         [Test]
-        public void ShouldWriteEventsWithDelayOfOne()
+        public void SupressesNullEvents()
         {
-            var anEvent = IDEEventTestFactory.SomeEvent();
+            WhenLoggerReceives((IDEEvent)null);
 
-            var uut = new EventLogger(_mockMessageBus.Object, _mockLogManager.Object);
-            uut.Log(anEvent); // this is written to the buffer
-            uut.Log(IDEEventTestFactory.SomeEvent()); // there anEvent should be appended
-            WaitForLogAppend();
-
-            CollectionAssert.AreEqual(new[] {anEvent}, _loggedEvents);
-        }
-
-        [Test]
-        public void ShouldSupressNullEvents()
-        {
-            var anEvent = IDEEventTestFactory.SomeEvent();
-
-            var uut = new EventLogger(_mockMessageBus.Object, _mockLogManager.Object);
-            uut.Log(null);
-            uut.Log(anEvent); // this is written to the buffer
-            uut.Log(IDEEventTestFactory.SomeEvent()); // there anEvent should be appended
-            WaitForLogAppend();
-
-            CollectionAssert.AreEqual(new[] {anEvent}, _loggedEvents);
+            AssertNoAppendToCurrentLog();
         }
 
         [Test]
         public void ShouldNotFailIfLoggingFails()
         {
-            var anEvent = IDEEventTestFactory.SomeEvent();
+            var failingEvent = IDEEventTestFactory.SomeEvent();
+            var someEvent = IDEEventTestFactory.SomeEvent();
 
-            _mockLogManager.Setup(lm => lm.CurrentLog.Append(It.IsAny<IDEEvent>())).Callback<IDEEvent>(
+            OnCurrentLogAppend(
                 e =>
                 {
-                    Asserts.Not(anEvent.Equals(e));
+                    Asserts.Not(failingEvent.Equals(e));
                     _loggedEvents.Add(e);
                     _logAppendSignal.Set();
                 });
 
-            var uut = new EventLogger(_mockMessageBus.Object, _mockLogManager.Object);
-            uut.Log(anEvent); // this is written to the buffer
-            uut.Log(IDEEventTestFactory.SomeEvent()); // here anEvent is appended, which fails
-            uut.Log(IDEEventTestFactory.SomeEvent()); // here an event should be appended
+            WhenLoggerReceives(failingEvent, someEvent);
 
-            WaitForLogAppend();
+            AssertAppendToCurrentLog(someEvent);
         }
 
         [Test]
-        public void ShouldFlushOnIDEShutdownEvent()
+        public void ShouldFlushOnShutdown()
         {
             var anEvent = IDEEventTestFactory.SomeEvent();
             var shutdownEvent = new IDEStateEvent {IDELifecyclePhase = IDEStateEvent.LifecyclePhase.Shutdown};
 
-            var uut = new EventLogger(_mockMessageBus.Object, _mockLogManager.Object);
-            uut.Log(anEvent); // this is written to the buffer
-            uut.Log(shutdownEvent); // here both events should be appended
-            WaitForLogAppend();
+            WhenLoggerReceives(anEvent);
+            _uut.Shutdown(shutdownEvent);
 
             CollectionAssert.AreEqual(new IDEEvent[] {anEvent, shutdownEvent}, _loggedEvents);
         }
 
         // TODO add tests for event merging logic
+
+        private void WhenLoggerReceives(params IDEEvent[] events)
+        {
+            events.ForEach(_logHandler);
+        }
+
+        private void AssertNoAppendToCurrentLog()
+        {
+            _logHandler(IDEEventTestFactory.SomeEvent()); // send another event to flush buffer
+
+            Assert.IsFalse(_logAppendSignal.WaitOne(1000), "nothing appended");
+        }
+
+        private void AssertAppendToCurrentLog(params IDEEvent[] events)
+        {
+            _logHandler(IDEEventTestFactory.SomeEvent()); // send another event to flush buffer
+            WaitForLogAppend();
+
+            CollectionAssert.AreEqual(events, _loggedEvents);
+        }
 
         private void WaitForLogAppend()
         {

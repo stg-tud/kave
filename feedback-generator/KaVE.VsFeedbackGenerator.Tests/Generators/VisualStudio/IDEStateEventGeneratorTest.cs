@@ -94,8 +94,8 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.VisualStudio
         {
             IDEStateEvent shutdownEvent = null;
             var mockLogger = new Mock<IEventLogger>();
-            mockLogger.Setup(logger => logger.Log(It.IsAny<IDEStateEvent>()))
-                      .Callback<IDEEvent>(ideEvent => shutdownEvent = (IDEStateEvent) ideEvent);
+            mockLogger.Setup(logger => logger.Shutdown(It.IsAny<IDEStateEvent>()))
+                      .Callback<IDEStateEvent>(ideEvent => shutdownEvent = ideEvent);
 
             Lifetimes.Using(
                 lt =>

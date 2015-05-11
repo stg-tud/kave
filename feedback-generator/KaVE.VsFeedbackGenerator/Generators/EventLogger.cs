@@ -20,6 +20,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Application;
+using JetBrains.DataFlow;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.VisualStudio;
 using KaVE.Commons.Utils.Collections;
@@ -32,6 +33,7 @@ namespace KaVE.VsFeedbackGenerator.Generators
 {
     public interface IEventLogger {
         void Log(IDEEvent @event);
+        void Shutdown(IDEStateEvent shutdownEvent);
     }
 
     [ShellComponent]
@@ -46,7 +48,7 @@ namespace KaVE.VsFeedbackGenerator.Generators
         private IDEEvent _lastEvent;
         private readonly ILogManager _logManager;
 
-        public EventLogger(IMessageBus messageBus, ILogManager logManager)
+        public EventLogger(IMessageBus messageBus, ILogManager logManager, Lifetime lifetime)
         {
             _logManager = logManager;
             _eventQueue = new BlockingCollection<IDEEvent>();
@@ -68,28 +70,17 @@ namespace KaVE.VsFeedbackGenerator.Generators
         {
             foreach (var @event in _eventQueue.GetConsumingEnumerable())
             {
-                if (IsShutdownEvent(@event))
-                {
-                    ProcessShutdownEvent(@event);
-                    return;
-                }
-                ProcessNormalEvent(@event);
+                ProcessEvent(@event);
             }
         }
 
-        private static bool IsShutdownEvent(IDEEvent @event)
-        {
-            var ideStateEvent = @event as IDEStateEvent;
-            return ideStateEvent != null && ideStateEvent.IDELifecyclePhase == IDEStateEvent.LifecyclePhase.Shutdown;
-        }
-
-        private void ProcessShutdownEvent(IDEEvent @event)
+        public void Shutdown(IDEStateEvent shutdownEvent)
         {
             LogEvent(_lastEvent);
-            LogEvent(@event);
+            LogEvent(shutdownEvent);
         }
 
-        private void ProcessNormalEvent(IDEEvent @event)
+        private void ProcessEvent(IDEEvent @event)
         {
             if (_lastEvent == null)
             {
