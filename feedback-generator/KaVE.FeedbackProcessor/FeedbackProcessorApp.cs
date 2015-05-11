@@ -19,6 +19,7 @@
 
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Exceptions;
 using KaVE.FeedbackProcessor.Activities;
@@ -28,6 +29,7 @@ using KaVE.FeedbackProcessor.Database;
 using KaVE.FeedbackProcessor.Import;
 using KaVE.FeedbackProcessor.Properties;
 using KaVE.FeedbackProcessor.Statistics;
+using MongoDB.Driver.Linq;
 
 namespace KaVE.FeedbackProcessor
 {
@@ -43,6 +45,7 @@ namespace KaVE.FeedbackProcessor
             const string concurrentEventDatabase = "_concurrent";
             const string equivalentCommandsDatabase = "_equivalentCommands";
             const string commandFollowupsDatabase = "_commandFollowups";
+            const string mergedCommandsDatabase = "_mergedCommands";
 
             //ImportFeedback(OpenDatabase(importDatabase));
 
@@ -55,21 +58,21 @@ namespace KaVE.FeedbackProcessor
             //CleanFeedback(OpenDatabase(importDatabase), OpenDatabase(cleanDatabase));
 
             //MapToActivities(OpenDatabase(importDatabase), OpenDatabase(activityDatabase));
+            MergeCommands(OpenDatabase(cleanDatabase),OpenDatabase(mergedCommandsDatabase));
+
             //FilterConcurrentEvents(OpenDatabase(importDatabase), OpenDatabase(concurrentEventDatabase));
 
             //FilterEquivalentCommandEvents(OpenDatabase(concurrentEventDatabase), OpenDatabase(equivalentCommandsDatabase));
 
-            FilterCommandFollowupEvents(OpenDatabase(importDatabase), OpenDatabase(commandFollowupsDatabase));
+            //FilterCommandFollowupEvents(OpenDatabase(importDatabase), OpenDatabase(commandFollowupsDatabase));
 
-            ConcurrentEventsStatistic(OpenDatabase(concurrentEventDatabase),"concurrenteventstatistic.csv");
+            //ConcurrentEventsStatistic(OpenDatabase(concurrentEventDatabase),"concurrenteventstatistic.csv");
 
-            ConcurrentEventsStatistic(OpenDatabase(equivalentCommandsDatabase),"equivalentcommandstatistic.csv");
+            //ConcurrentEventsStatistic(OpenDatabase(equivalentCommandsDatabase),"equivalentcommandstatistic.csv");
 
-            ConcurrentEventsStatistic(OpenDatabase(commandFollowupsDatabase),"commandfollowupsstatistic.csv");
+            //ConcurrentEventsStatistic(OpenDatabase(commandFollowupsDatabase),"commandfollowupsstatistic.csv");
         }
-
         
-
         private static MongoDbFeedbackDatabase OpenDatabase(string databaseSuffix)
         {
             return new MongoDbFeedbackDatabase(
@@ -202,7 +205,50 @@ namespace KaVE.FeedbackProcessor
         {
             var cleaner = new EventsMapper(sourceDatabase, targetDatabase);
             cleaner.RegisterProcessor<AddFileProcessor>();
+            cleaner.RegisterProcessor<DuplicateCommandFilterProcessor>();
+            cleaner.RegisterProcessor<ErrorFilterProcessor>();
+            cleaner.RegisterProcessor<UnnamedCommandFilterProcessor>();
             cleaner.ProcessFeedback();
+        }
+
+        private static void MergeCommands(IFeedbackDatabase sourceDatabase, IFeedbackDatabase targetDatabase)
+        {
+            var cleaner = new EventsMapper(sourceDatabase, targetDatabase);
+            cleaner.RegisterProcessor<MergeEquivalentCommands>();
+            cleaner.ProcessFeedback();
+            CreateEquivalentCommandsCsv();
+            CreateSingleClickEventCsv();
+        }
+
+        private static void CreateSingleClickEventCsv()
+        {
+            var csvBuilder = new CsvBuilder();
+            foreach (var commandEvent in MergeEquivalentCommands.SingleClickEventCache)
+            {
+                csvBuilder.StartRow();
+                csvBuilder["CommandId"] = commandEvent.CommandId;
+            }
+            File.WriteAllText(
+                Path.Combine(Configuration.StatisticsOutputPath, "singleClickEvents.csv"),
+                csvBuilder.Build());
+        }
+
+        private static void CreateEquivalentCommandsCsv()
+        {
+            var csvBuilder = new CsvBuilder();
+            foreach (var stat in MergeEquivalentCommands.Statistic)
+            {
+                csvBuilder.StartRow();
+                var statList = stat.ToList();
+                for (var i = 0; i < statList.Count; i++)
+                {
+                    var fieldName = "Command" + i;
+                    csvBuilder[fieldName] = statList[i];
+                }
+            }
+            File.WriteAllText(
+                Path.Combine(Configuration.StatisticsOutputPath, "mergeEquivalentCommands.csv"),
+                csvBuilder.Build());
         }
 
         private static void MapToActivities(IFeedbackDatabase sourceDatabase, IFeedbackDatabase activityDatabase)

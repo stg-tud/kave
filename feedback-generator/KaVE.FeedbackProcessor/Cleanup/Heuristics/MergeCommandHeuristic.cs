@@ -96,8 +96,12 @@ namespace KaVE.FeedbackProcessor.Cleanup.Heuristics
 
         private static bool IsVisualStudioCommandEvent(CommandEvent commandEvent)
         {
-            const string visualStudioCommandPattern = @"^\{.*\}:.*:";
-            return commandEvent.CommandId != null && Regex.IsMatch(commandEvent.CommandId, visualStudioCommandPattern);
+            return commandEvent.CommandId != null && IsVisualStudioCommandId(commandEvent.CommandId);
+        }
+
+        public static bool IsVisualStudioCommandId(string commandId)
+        {
+            return new Regex(@"^\{.*\}:.*:").IsMatch(commandId);
         }
     }
 }

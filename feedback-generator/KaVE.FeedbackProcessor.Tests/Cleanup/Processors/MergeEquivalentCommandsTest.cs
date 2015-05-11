@@ -19,7 +19,6 @@
  */
 
 using System;
-using System.Collections.Generic;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Utils.Collections;
 using KaVE.FeedbackProcessor.Cleanup.Heuristics;
@@ -38,6 +37,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
         public void Setup()
         {
             _uut = new MergeEquivalentCommands();
+            MergeEquivalentCommands.Statistic.Clear();
         }
 
         [Test]
@@ -62,12 +62,8 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
             _uut.Process(commandEvent2);
 
             CollectionAssert.Contains(
-                _uut.Statistic,
-                new SortedSet<string>
-                {
-                    expectedString1,
-                    expectedString2
-                });
+                MergeEquivalentCommands.Statistic,
+                Sets.NewHashSet(expectedString1, expectedString2));
         }
 
         [Test]
@@ -91,7 +87,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
             _uut.Process(commandEvent1);
             _uut.Process(commandEvent2);
 
-            CollectionAssert.IsEmpty(_uut.Statistic);
+            CollectionAssert.IsEmpty(MergeEquivalentCommands.Statistic);
         }
 
         [Test]
@@ -101,17 +97,13 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
 
             var commandEvent1 = new CommandEvent
             {
+                CommandId = "Copy",
                 TriggeredAt = eventTime
             };
             var commandEvent2 = new CommandEvent
             {
+                CommandId = "Edit.Copy",
                 TriggeredAt = eventTime + MergeEquivalentCommands.EventTimeDifference
-            };
-            var commandEvent3 = new CommandEvent
-            {
-                TriggeredAt =
-                    eventTime + MergeEquivalentCommands.EventTimeDifference +
-                    TimeSpan.FromTicks(TimeSpan.TicksPerSecond)
             };
 
             CollectionAssert.AreEqual(Sets.NewHashSet<IDEEvent>(), _uut.Process(commandEvent1));
