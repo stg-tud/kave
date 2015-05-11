@@ -243,6 +243,9 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp
 
         [TestCase("System.UInt16, mscorlib, 4.0.0.0", "System.UInt16"),
          TestCase("e:Full.Enum.Type, E, 1.2.3.4", "Full.Enum.Type"),
+         TestCase("d:Full.Delegate.Type, E, 1.2.3.4", "Full.Delegate.Type"),
+         TestCase("i:Full.Interface.Type, E, 1.2.3.4", "Full.Interface.Type"),
+         TestCase("s:Full.Struct.Type, E, 1.2.3.4", "Full.Struct.Type"),
          TestCase("System.Nullable`1[[System.Int32, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0",
              "System.Nullable`1[[System.Int32, mscorlib, 4.0.0.0]]"),
          TestCase("T -> Some.Arbitrary.Type, Assembly, 5.6.4.7", "Some.Arbitrary.Type"),
@@ -259,6 +262,9 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp
 
         [TestCase("System.UInt16, mscorlib, 4.0.0.0", "UInt16"),
          TestCase("e:Full.Enum.Type, E, 1.2.3.4", "Type"),
+         TestCase("d:Full.Delegate.Type, E, 1.2.3.4", "Type"),
+         TestCase("i:Full.Interface.Type, E, 1.2.3.4", "Type"),
+         TestCase("s:Full.Struct.Type, E, 1.2.3.4", "Type"),
          TestCase("System.Nullable`1[[System.Int32, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0", "Nullable"),
          TestCase("T -> Some.Arbitrary.Type, Assembly, 5.6.4.7", "Type"),
          TestCase("Outer.Type+InnerType, As, 1.2.3.4", "InnerType"),

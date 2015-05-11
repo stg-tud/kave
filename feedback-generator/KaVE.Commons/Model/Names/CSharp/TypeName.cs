@@ -149,19 +149,12 @@ namespace KaVE.Commons.Model.Names.CSharp
             get { return false; }
         }
 
-        public string FullName
+        public virtual string FullName
         {
             get
             {
                 var length = GetLengthOfTypeName(Identifier);
-                var fullName = Identifier.Substring(0, length);
-                var indexOfColon = fullName.IndexOf(":", StringComparison.Ordinal);
-                var indexOfAccent = fullName.IndexOf("`", StringComparison.Ordinal);
-                if (indexOfColon > -1 && (indexOfAccent == -1 || indexOfColon < indexOfAccent))
-                {
-                    fullName = fullName.Substring(indexOfColon + 1);
-                }
-                return fullName;
+                return Identifier.Substring(0, length);
             }
         }
 

@@ -24,9 +24,11 @@ namespace KaVE.Commons.Model.Names.CSharp
 {
     public class StructTypeName : TypeName
     {
+        private const string NamePrefix = "s:";
+
         internal static bool IsStructTypeIdentifier(string identifier)
         {
-            return identifier.StartsWith("s:") ||
+            return identifier.StartsWith(NamePrefix) ||
                    IsSimpleTypeIdentifier(identifier) ||
                    IsNullableTypeIdentifier(identifier) ||
                    IsVoidTypeIdentifier(identifier);
@@ -39,6 +41,19 @@ namespace KaVE.Commons.Model.Names.CSharp
         }
 
         internal StructTypeName(string identifier) : base(identifier) {}
+
+        public override string FullName
+        {
+            get
+            {
+                var fullName = base.FullName;
+                if (fullName.StartsWith(NamePrefix))
+                {
+                    fullName = fullName.Substring(NamePrefix.Length);
+                }
+                return fullName;
+            }
+        }
 
         public override bool IsUnknownType
         {

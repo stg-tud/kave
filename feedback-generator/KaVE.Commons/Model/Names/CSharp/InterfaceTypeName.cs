@@ -23,9 +23,11 @@ namespace KaVE.Commons.Model.Names.CSharp
 {
     public class InterfaceTypeName : TypeName
     {
+        private const string NamePrefix = "i:";
+
         internal static bool IsInterfaceTypeIdentifier(string identifier)
         {
-            return identifier.StartsWith("i:");
+            return identifier.StartsWith(NamePrefix);
         }
 
         [UsedImplicitly]
@@ -35,6 +37,11 @@ namespace KaVE.Commons.Model.Names.CSharp
         }
 
         internal InterfaceTypeName(string identifier) : base(identifier) {}
+
+        public override string FullName
+        {
+            get { return base.FullName.Substring(NamePrefix.Length); }
+        }
 
         public override bool IsUnknownType
         {

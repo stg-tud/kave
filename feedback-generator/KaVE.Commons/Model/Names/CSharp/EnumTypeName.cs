@@ -23,9 +23,11 @@ namespace KaVE.Commons.Model.Names.CSharp
 {
     public class EnumTypeName : TypeName
     {
+        private const string NamePrefix = "e:";
+
         internal static bool IsEnumTypeIdentifier(string identifier)
         {
-            return identifier.StartsWith("e:");
+            return identifier.StartsWith(NamePrefix);
         }
 
         [UsedImplicitly]
@@ -35,6 +37,11 @@ namespace KaVE.Commons.Model.Names.CSharp
         }
 
         internal EnumTypeName(string identifier) : base(identifier) {}
+
+        public override string FullName
+        {
+            get { return base.FullName.Substring(NamePrefix.Length); }
+        }
 
         public override bool IsEnumType
         {

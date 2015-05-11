@@ -57,6 +57,12 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp
         }
 
         [TestCaseSource("DelegateTypeNames")]
+        public void ParsesFullName(IDelegateTypeName delegateType)
+        {
+            Assert.AreEqual("Some.DelegateType", delegateType.FullName);
+        }
+
+        [TestCaseSource("DelegateTypeNames")]
         public void ParsesName(IDelegateTypeName delegateType)
         {
             Assert.AreEqual("DelegateType", delegateType.Name);
