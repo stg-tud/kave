@@ -45,11 +45,12 @@ namespace KaVE.FeedbackProcessor
             //LogDeveloperStatistics(OpenDatabase(importDatabase));
             //LogAnonymizationStatistics(OpenDatabase(importDatabase));
             //ComputeEventsPerDeveloperDayStatistic(OpenDatabase(importDatabase));
-            CollectNames(OpenDatabase(importDatabase));
+            //CollectNames(OpenDatabase(importDatabase));
+            LogIDEActivationEvents(OpenDatabase(importDatabase));
 
             //CleanFeedback(OpenDatabase(importDatabase), OpenDatabase(cleanDatabase));
 
-            MapToActivities(OpenDatabase(importDatabase), OpenDatabase(activityDatabase));
+            //MapToActivities(OpenDatabase(importDatabase), OpenDatabase(activityDatabase));
         }
 
         private static MongoDbFeedbackDatabase OpenDatabase(string databaseSuffix)
@@ -136,6 +137,13 @@ namespace KaVE.FeedbackProcessor
             File.WriteAllLines(
                 Path.Combine(Configuration.StatisticsOutputPath, "commandids.log"),
                 commandIdCollector.AllCommandIds);
+        }
+
+        private static void LogIDEActivationEvents(IFeedbackDatabase database)
+        {
+            var walker = new FeedbackWalker(database, Logger);
+            walker.Register(new ParallelIDEInstancesStatisticCalculator(new FileLogger(Path.Combine(Configuration.StatisticsOutputPath, "window-de-activation.log"))));
+            walker.ProcessFeedback();
         }
 
         private static void CleanFeedback(IFeedbackDatabase sourceDatabase, IFeedbackDatabase targetDatabase)
