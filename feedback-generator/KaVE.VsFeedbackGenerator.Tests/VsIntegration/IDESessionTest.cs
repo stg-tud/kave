@@ -29,84 +29,40 @@ namespace KaVE.VsFeedbackGenerator.Tests.VsIntegration
     [TestFixture]
     public class IDESessionTest
     {
-        private Mock<ISettingsStore> _mockSettingsStore;
-        private IDESessionSettings _settings;
         private IDESession _uut;
+        private DTE _dte;
 
         [SetUp]
         public void MockEnvironment()
         {
-            Registry.RegisterComponent<IDateUtils>(new DateUtils());
+            _dte = new Mock<DTE>().Object;
 
-            _settings = new IDESessionSettings();
-
-            _mockSettingsStore = new Mock<ISettingsStore>();
-            _mockSettingsStore.Setup(store => store.GetSettings<IDESessionSettings>()).Returns(_settings);
-
-            var dte = new Mock<DTE>().Object;
-
-            _uut = new IDESession(dte, _mockSettingsStore.Object);
-        }
-
-        [TearDown]
-        public void TearDown()
-        {
-            Registry.Clear();
+            _uut = new IDESession(_dte);
         }
 
         [Test]
-        public void ShouldCreateNewSessionUUIDAndStoreItForTodayIfNoneExisted()
+        public void ReturnsSessionUUID()
         {
-            _settings.SessionUUID = "";
+            var sessionId = _uut.UUID;
 
-            var actualSessionId = _uut.UUID;
-
-            _mockSettingsStore.Verify(store => store.SetSettings(_settings));
-            var storedSessionUUID = _settings.SessionUUID;
-            Assert.NotNull(storedSessionUUID);
-            Assert.AreEqual(storedSessionUUID, actualSessionId);
+            Assert.NotNull(sessionId);
         }
 
         [Test]
-        public void ShouldCreateNewSessionUUIDAndStoreItForTodayIfStoredOneWasGeneratedInThePast()
+        public void ReturnsNewIdForNewSession()
         {
-            _settings.SessionUUID = "OutdatedID";
-            _settings.SessionUUIDCreationDate = DateTime.Today.AddDays(-1);
+            var newSession = new IDESession(_dte);
 
-            var actualSessionId = _uut.UUID;
-
-            _mockSettingsStore.Verify(store => store.SetSettings(_settings));
-            var storedSessionUUID = _settings.SessionUUID;
-            Assert.NotNull(actualSessionId);
-            Assert.AreNotEqual("OutdatedID", actualSessionId);
-            Assert.AreEqual(storedSessionUUID, actualSessionId);
+            Assert.AreNotEqual(_uut.UUID, newSession.UUID);
         }
 
         [Test]
-        public void ShouldCreateNewSessionUUIDAndStoreItForTodayIfStoredOneWasGeneratedOnFutureDate()
+        public void ReturnsConsistentIdForSession()
         {
-            _settings.SessionUUID = "FutureID";
-            _settings.SessionUUIDCreationDate = DateTime.Today.AddDays(-1);
+            var expected = _uut.UUID;
+            var actual = _uut.UUID;
 
-            var actualSessionId = _uut.UUID;
-
-            _mockSettingsStore.Verify(store => store.SetSettings(_settings));
-            var storedSessionUUID = _settings.SessionUUID;
-            Assert.NotNull(actualSessionId);
-            Assert.AreNotEqual("FutureID", actualSessionId);
-            Assert.AreEqual(storedSessionUUID, actualSessionId);
-        }
-
-        [Test]
-        public void ShouldReturnExistingSessionUUIDIfItWasGeneratedToday()
-        {
-            _settings.SessionUUID = "CurrentID";
-            _settings.SessionUUIDCreationDate = DateTime.Today;
-
-            var actualSessionId = _uut.UUID;
-
-            _mockSettingsStore.Verify(store => store.SetSettings(It.IsAny<IDESessionSettings>()), Times.Never);
-            Assert.AreEqual("CurrentID", actualSessionId);
+            Assert.AreEqual(expected, actual);
         }
     }
 }

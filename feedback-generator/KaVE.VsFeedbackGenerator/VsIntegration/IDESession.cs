@@ -22,7 +22,6 @@ using EnvDTE;
 using JetBrains.Application;
 using JetBrains.Application.Components;
 using KaVE.JetBrains.Annotations;
-using KaVE.VsFeedbackGenerator.Utils;
 
 namespace KaVE.VsFeedbackGenerator.VsIntegration
 {
@@ -30,36 +29,22 @@ namespace KaVE.VsFeedbackGenerator.VsIntegration
     public class IDESession : IIDESession
     {
         private readonly DTE _dte;
-        private readonly ISettingsStore _settingsStore;
+        private readonly string _sessionUUID;
 
-        public IDESession([NotNull] DTE dte, ISettingsStore settingsStore)
+        public IDESession([NotNull] DTE dte)
         {
             _dte = dte;
-            _settingsStore = settingsStore;
+            _sessionUUID = Guid.NewGuid().ToString();
         }
 
         public string UUID
         {
-            get
-            {
-                var settings = _settingsStore.GetSettings<IDESessionSettings>();
-                var dateUtils = Registry.GetComponent<IDateUtils>();
-                if (settings.SessionUUIDCreationDate != dateUtils.Today)
-                {
-                    settings.SessionUUID = Guid.NewGuid().ToString();
-                    settings.SessionUUIDCreationDate = dateUtils.Today;
-                    _settingsStore.SetSettings(settings);
-                }
-                return settings.SessionUUID;
-            }
+            get { return _sessionUUID; }
         }
 
         public DTE DTE
         {
-            get
-            {
-                return _dte;
-            }
+            get { return _dte; }
         }
     }
 }
