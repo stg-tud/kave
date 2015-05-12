@@ -38,9 +38,17 @@ namespace KaVE.Commons.TestUtils.Model.Events
             return list;
         }
 
-        public static TestIDEEvent SomeEvent()
+        public static TestIDEEvent SomeEvent(DateTime? triggeredAt = null)
         {
-            return new TestIDEEvent {TestProperty = Random.Next().ToString(CultureInfo.InvariantCulture)};
+            if (triggeredAt == null)
+            {
+                triggeredAt = DateTime.Now;
+            }
+            return new TestIDEEvent
+            {
+                TestProperty = Random.Next().ToString(CultureInfo.InvariantCulture),
+                TriggeredAt = triggeredAt
+            };
         }
     }
 }

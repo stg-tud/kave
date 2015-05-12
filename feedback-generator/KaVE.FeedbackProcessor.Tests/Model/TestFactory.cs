@@ -45,12 +45,17 @@ namespace KaVE.FeedbackProcessor.Tests.Model
 
         private static int _eventValue = 1;
 
-        public static IDEEvent SomeEventFor(Developer developer)
+        public static IDEEvent SomeEventFor(Developer developer, DateTime? triggeredAt = null)
         {
+            if (triggeredAt == null)
+            {
+                triggeredAt = DateTime.Now;
+            }
+
             var ideEvent = new TestIDEEvent
             {
                 IDESessionUUID = developer.SessionIds.First(),
-                TriggeredAt = DateTime.Now,
+                TriggeredAt = triggeredAt,
                 TestProperty = _eventValue.ToString(CultureInfo.InvariantCulture)
             };
             _eventValue++;

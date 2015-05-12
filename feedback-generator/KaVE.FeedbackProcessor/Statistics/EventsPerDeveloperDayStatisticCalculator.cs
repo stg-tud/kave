@@ -45,9 +45,10 @@ namespace KaVE.FeedbackProcessor.Statistics
         public void OnEvent(IDEEvent @event)
         {
             Asserts.That(@event.TriggeredAt.HasValue, "event without trigger time cannot be assigned to date");
-            var day = @event.TriggeredAt.Value.Date;
+            var triggeredAt = @event.TriggeredAt.Value;
+            var day = triggeredAt.Date;
             var developerDay = FindOrCreateDeveloperDay(day);
-            developerDay.NumberOfEvents++;
+            developerDay.AddEvent(@event);
         }
 
         private DeveloperDay FindOrCreateDeveloperDay(DateTime day)
@@ -55,10 +56,16 @@ namespace KaVE.FeedbackProcessor.Statistics
             DeveloperDay developerDay;
             if (!_currentDeveloperDays.TryGetValue(day, out developerDay))
             {
-                developerDay = new DeveloperDay {Date = day};
+                developerDay = CreateDeveloperDay();
+                developerDay.Date = day;
                 _currentDeveloperDays.Add(day, developerDay);
             }
             return developerDay;
+        }
+
+        protected virtual DeveloperDay CreateDeveloperDay()
+        {
+            return new DeveloperDay();
         }
 
         public void OnStreamEnds()
@@ -71,10 +78,35 @@ namespace KaVE.FeedbackProcessor.Statistics
         {
             public int NumberOfEvents { get; set; }
             public DateTime Date { get; set; }
+            public DateTime FirstActivityAt { get; set; }
+            public DateTime LastActivityAt { get; set; }
+
+            public void AddEvent(IDEEvent @event)
+            {
+                Asserts.That(@event.TriggeredAt.HasValue, "event without trigger time cannot be assigned to day");
+                var triggeredAt = @event.TriggeredAt.Value;
+                MaybeUpdateFirstActivityAt(triggeredAt);
+                MaybeUpdateLastActivityAt(triggeredAt);
+                NumberOfEvents++;
+            }
+
+            private void MaybeUpdateLastActivityAt(DateTime triggeredAt)
+            {
+                LastActivityAt = triggeredAt;
+            }
+
+            private void MaybeUpdateFirstActivityAt(DateTime triggeredAt)
+            {
+                if (FirstActivityAt == default(DateTime))
+                {
+                    FirstActivityAt = triggeredAt;
+                }
+            }
 
             protected bool Equals(DeveloperDay other)
             {
-                return NumberOfEvents == other.NumberOfEvents && Date.Equals(other.Date);
+                return NumberOfEvents == other.NumberOfEvents && Date.Equals(other.Date) &&
+                       FirstActivityAt.Equals(other.FirstActivityAt) && LastActivityAt.Equals(other.LastActivityAt);
             }
 
             public override bool Equals(object obj)
@@ -86,7 +118,11 @@ namespace KaVE.FeedbackProcessor.Statistics
             {
                 unchecked
                 {
-                    return (NumberOfEvents*397) ^ Date.GetHashCode();
+                    var hashCode = NumberOfEvents;
+                    hashCode = (hashCode*397) ^ Date.GetHashCode();
+                    hashCode = (hashCode*397) ^ FirstActivityAt.GetHashCode();
+                    hashCode = (hashCode*397) ^ LastActivityAt.GetHashCode();
+                    return hashCode;
                 }
             }
 
