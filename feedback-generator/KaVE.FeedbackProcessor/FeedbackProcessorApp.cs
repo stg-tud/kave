@@ -102,7 +102,7 @@ namespace KaVE.FeedbackProcessor
                 csvBuilder["Developer"] = stat.Key.Id;
                 foreach (var day in stat.Value)
                 {
-                    var dayString = day.Date.ToString("yyyy-MM-dd");
+                    var dayString = day.Day.ToString("yyyy-MM-dd");
                     csvBuilder[dayString + " 1 Start"] = day.FirstActivityAt;
                     csvBuilder[dayString + " 2 End"] = day.LastActivityAt;
                     csvBuilder[dayString + " 3 Events"] = day.NumberOfEvents;

@@ -32,7 +32,7 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
         [SetUp]
         public void SetUp()
         {
-            _uut = new EventsPerDeveloperDayStatisticCalculator.DeveloperDay();
+            _uut = new EventsPerDeveloperDayStatisticCalculator.DeveloperDay(new DateTime(2015, 05, 12));
         }
 
         [Test]
@@ -65,6 +65,31 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
             _uut.AddEvent(IDEEventTestFactory.SomeEvent(lastActionTriggeredAt));
 
             Assert.AreEqual(lastActionTriggeredAt, _uut.LastActivityAt);
+        }
+
+        [Test]
+        public void CountsNoBreaksIfOnlySmallGapsBetweenEvents()
+        {
+            var someTriggeredAt = new DateTime(2015, 05, 12, 13, 14, 15);
+
+            _uut.AddEvent(IDEEventTestFactory.SomeEvent(someTriggeredAt));
+            _uut.AddEvent(IDEEventTestFactory.SomeEvent(someTriggeredAt.AddMinutes(1)));
+            _uut.AddEvent(IDEEventTestFactory.SomeEvent(someTriggeredAt.AddMinutes(5)));
+            _uut.AddEvent(IDEEventTestFactory.SomeEvent(someTriggeredAt.AddMinutes(7)));
+            _uut.AddEvent(IDEEventTestFactory.SomeEvent(someTriggeredAt.AddMinutes(10)));
+
+            Assert.AreEqual(0, _uut.NumberOfBreaks);
+        }
+
+        [Test]
+        public void CountsBreakIfTwoSubsequentEventsAreFarApart()
+        {
+            var someTriggeredAt = new DateTime(2015, 05, 12, 13, 14, 15);
+
+            _uut.AddEvent(IDEEventTestFactory.SomeEvent(someTriggeredAt));
+            _uut.AddEvent(IDEEventTestFactory.SomeEvent(someTriggeredAt.AddMinutes(10)));
+
+            Assert.AreEqual(1, _uut.NumberOfBreaks);
         }
     }
 }

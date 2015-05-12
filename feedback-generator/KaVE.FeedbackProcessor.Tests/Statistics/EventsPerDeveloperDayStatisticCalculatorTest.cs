@@ -66,21 +66,9 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
 
             var expected = new[]
             {
-                new EventsPerDeveloperDayStatisticCalculator.DeveloperDay
-                {
-                    Date = new DateTime(2015, 4, 28),
-                    NumberOfEvents = 1
-                },
-                new EventsPerDeveloperDayStatisticCalculator.DeveloperDay
-                {
-                    Date = new DateTime(2015, 4, 29),
-                    NumberOfEvents = 1
-                },
-                new EventsPerDeveloperDayStatisticCalculator.DeveloperDay
-                {
-                    Date = new DateTime(2015, 4, 30),
-                    NumberOfEvents = 1
-                }
+                new EventsPerDeveloperDayStatisticCalculator.DeveloperDay(new DateTime(2015, 4, 28)),
+                new EventsPerDeveloperDayStatisticCalculator.DeveloperDay(new DateTime(2015, 4, 29)),
+                new EventsPerDeveloperDayStatisticCalculator.DeveloperDay(new DateTime(2015, 4, 30))
             };
             var actual = _uut.Statistic[someDeveloper];
             CollectionAssert.AreEqual(expected, actual);
@@ -107,22 +95,14 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
                     developer1,
                     new[]
                     {
-                        new EventsPerDeveloperDayStatisticCalculator.DeveloperDay
-                        {
-                            Date = event1.TriggeredAt.Value.Date,
-                            NumberOfEvents = 1
-                        }
+                        new EventsPerDeveloperDayStatisticCalculator.DeveloperDay(event1.TriggeredAt.Value.Date)
                     }
                 },
                 {
                     developer2,
                     new[]
                     {
-                        new EventsPerDeveloperDayStatisticCalculator.DeveloperDay
-                        {
-                            Date = event2.TriggeredAt.Value.Date,
-                            NumberOfEvents = 1
-                        }
+                        new EventsPerDeveloperDayStatisticCalculator.DeveloperDay(event2.TriggeredAt.Value.Date)
                     }
                 }
             };
