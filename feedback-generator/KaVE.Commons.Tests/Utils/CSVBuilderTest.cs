@@ -95,9 +95,33 @@ namespace KaVE.Commons.Tests.Utils
             AssertCsv(_uut, new[] {"A", "2015-04-27 13:14:15"});
         }
 
-        private static void AssertCsv(CsvBuilder uut, string[] lines)
+        [Test]
+        public void SortsByFieldName()
         {
-            var actual = uut.Build();
+            _uut.StartRow();
+            _uut["B"] = 2;
+            _uut["A"] = 1;
+            _uut["Z"] = 4;
+            _uut["C"] = 3;
+
+            AssertCsv(_uut, new []{"A,B,C,Z","1,2,3,4"}, CsvBuilder.SortFields.ByName);
+        }
+
+        [Test]
+        public void SortsByFieldNameExcludeFirstField()
+        {
+            _uut.StartRow();
+            _uut["Header"] = 0;
+            _uut["A"] = 1;
+            _uut["Z"] = 3;
+            _uut["C"] = 2;
+
+            AssertCsv(_uut, new[] { "Header,A,C,Z", "0,1,2,3" }, CsvBuilder.SortFields.ByNameLeaveFirst);
+        }
+
+        private static void AssertCsv(CsvBuilder uut, string[] lines, CsvBuilder.SortFields sortFields = CsvBuilder.SortFields.ByInsertionOrder)
+        {
+            var actual = uut.Build(sortFields);
             Assert.AreEqual(string.Join(Environment.NewLine, lines) + Environment.NewLine, actual);
         }
     }

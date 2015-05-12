@@ -34,13 +34,19 @@ namespace KaVE.Commons.Utils
     ///     builder["Region"] = "Sydney \"in\" Australia";
     ///     builder["Sales"] = 50000;
     ///     builder["Date Opened"] = new DateTime(2005, 1, 1, 9, 30, 0);
-    ///     
     ///     var csv = builder.Build();
     /// </summary>
     public class CsvBuilder
     {
-        private readonly IList<string> _fields = new List<string>();
+        private readonly List<string> _fields = new List<string>();
         private readonly List<Dictionary<string, object>> _rows = new List<Dictionary<string, object>>();
+
+        public enum SortFields
+        {
+            ByInsertionOrder,
+            ByName,
+            ByNameLeaveFirst
+        }
 
         private Dictionary<string, object> CurrentRow
         {
@@ -64,12 +70,29 @@ namespace KaVE.Commons.Utils
             _rows.Add(new Dictionary<string, object>());
         }
 
-        public string Build()
+        public string Build(SortFields sortFields = SortFields.ByInsertionOrder)
         {
             var sb = new StringBuilder();
+            Sort(sortFields);
             ExportHeader(sb);
             ExportRows(sb);
             return sb.ToString();
+        }
+
+        private void Sort(SortFields sortFields)
+        {
+            switch (sortFields)
+            {
+                case SortFields.ByName:
+                    _fields.Sort();
+                    break;
+                case SortFields.ByNameLeaveFirst:
+                    var first = _fields[0];
+                    _fields.RemoveAt(0);
+                    _fields.Sort();
+                    _fields.Insert(0, first);
+                    break;
+            }
         }
 
         private void ExportHeader(StringBuilder sb)
