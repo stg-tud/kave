@@ -91,5 +91,57 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
 
             Assert.AreEqual(1, _uut.NumberOfBreaks);
         }
+
+        [Test]
+        public void CountsMultipleBreaks()
+        {
+            var someTriggeredAt = new DateTime(2015, 05, 12, 13, 14, 15);
+
+            _uut.AddEvent(IDEEventTestFactory.SomeEvent(someTriggeredAt));
+            _uut.AddEvent(IDEEventTestFactory.SomeEvent(someTriggeredAt.AddMinutes(10)));
+            _uut.AddEvent(IDEEventTestFactory.SomeEvent(someTriggeredAt.AddMinutes(11)));
+            _uut.AddEvent(IDEEventTestFactory.SomeEvent(someTriggeredAt.AddMinutes(25)));
+
+            Assert.AreEqual(2, _uut.NumberOfBreaks);
+        }
+
+        [Test]
+        public void TracksBreakDurations()
+        {
+            var someTriggeredAt = new DateTime(2015, 05, 12, 13, 14, 15);
+
+            _uut.AddEvent(IDEEventTestFactory.SomeEvent(someTriggeredAt));
+            _uut.AddEvent(IDEEventTestFactory.SomeEvent(someTriggeredAt.AddMinutes(10)));
+            _uut.AddEvent(IDEEventTestFactory.SomeEvent(someTriggeredAt.AddMinutes(11)));
+            _uut.AddEvent(IDEEventTestFactory.SomeEvent(someTriggeredAt.AddMinutes(25)));
+
+            var breaks = new[] {TimeSpan.FromMinutes(10), TimeSpan.FromMinutes(14)};
+
+            CollectionAssert.AreEqual(breaks, _uut.Breaks);
+        }
+
+        [Test]
+        public void ComputesTotalBreakTime_NoBreaks()
+        {
+            Assert.AreEqual(TimeSpan.FromMinutes(0), _uut.TotalBreakTime);
+        }
+
+        [Test]
+        public void ComputesTotalBreakTime_OneBreak()
+        {
+            _uut.Breaks.Add(TimeSpan.FromMinutes(5));
+
+            Assert.AreEqual(TimeSpan.FromMinutes(5), _uut.TotalBreakTime);
+        }
+
+        [Test]
+        public void ComputesTotalBreakTime_MultipleBreaks()
+        {
+            _uut.Breaks.Add(TimeSpan.FromMinutes(5));
+            _uut.Breaks.Add(TimeSpan.FromMinutes(20));
+            _uut.Breaks.Add(TimeSpan.FromMinutes(17));
+
+            Assert.AreEqual(TimeSpan.FromMinutes(42), _uut.TotalBreakTime);
+        }
     }
 }

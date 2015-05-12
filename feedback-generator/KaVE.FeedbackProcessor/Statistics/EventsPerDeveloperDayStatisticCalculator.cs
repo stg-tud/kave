@@ -81,7 +81,13 @@ namespace KaVE.FeedbackProcessor.Statistics
             public DateTime FirstActivityAt { get; private set; }
             public DateTime LastActivityAt { get; private set; }
             public int NumberOfEvents { get; private set; }
-            public int NumberOfBreaks { get; private set; }
+
+            public int NumberOfBreaks
+            {
+                get { return Breaks.Count; }
+            }
+
+            public readonly IList<TimeSpan> Breaks = new List<TimeSpan>();
 
             public DeveloperDay(DateTime day)
             {
@@ -95,10 +101,12 @@ namespace KaVE.FeedbackProcessor.Statistics
                 if (IsFirstEventOfDay())
                 {
                     FirstActivityAt = triggeredAt;
+                    LastActivityAt = triggeredAt;
                 }
-                else if ((triggeredAt - LastActivityAt) >= CountInactivityAsBreakThreshold)
+                var timeSinceLastEvent = triggeredAt - LastActivityAt;
+                if (timeSinceLastEvent >= CountInactivityAsBreakThreshold)
                 {
-                    NumberOfBreaks++;
+                    Breaks.Add(timeSinceLastEvent);
                 }
                 LastActivityAt = triggeredAt;
                 NumberOfEvents++;
@@ -107,6 +115,11 @@ namespace KaVE.FeedbackProcessor.Statistics
             private bool IsFirstEventOfDay()
             {
                 return FirstActivityAt == default(DateTime);
+            }
+
+            public TimeSpan TotalBreakTime
+            {
+                get { return Breaks.Count == 0 ? TimeSpan.Zero : Breaks.Aggregate((b1, b2) => b1 + b2); }
             }
 
             protected bool Equals(DeveloperDay other)

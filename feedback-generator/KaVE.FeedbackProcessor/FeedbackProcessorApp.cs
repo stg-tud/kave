@@ -106,11 +106,13 @@ namespace KaVE.FeedbackProcessor
                     csvBuilder[dayString + " 1 Start"] = day.FirstActivityAt;
                     csvBuilder[dayString + " 2 End"] = day.LastActivityAt;
                     csvBuilder[dayString + " 3 Events"] = day.NumberOfEvents;
+                    csvBuilder[dayString + " 4 Breaks"] = day.NumberOfBreaks;
+                    csvBuilder[dayString + " 5 Total Break"] = day.TotalBreakTime;
                 }
             }
             File.WriteAllText(
                 Path.Combine(Configuration.StatisticsOutputPath, "developerdaystats.csv"),
-                csvBuilder.Build());
+                csvBuilder.Build(CsvBuilder.SortFields.ByNameLeaveFirst));
         }
 
         private static void CollectNames(IFeedbackDatabase database)
