@@ -40,7 +40,6 @@ namespace KaVE.Commons.Utils.SSTPrinter
         {
             c.Indentation();
 
-            // TODO: usings/namespaces
             if (sst.EnclosingType.IsInterfaceType)
             {
                 c.Keyword("interface");
@@ -67,13 +66,20 @@ namespace KaVE.Commons.Utils.SSTPrinter
                 if (c.TypeShape.TypeHierarchy.HasSuperclass && c.TypeShape.TypeHierarchy.Extends != null)
                 {
                     c.Type(c.TypeShape.TypeHierarchy.Extends.Element);
+
+                    if (c.TypeShape.TypeHierarchy.IsImplementingInterfaces)
+                    {
+                        c.Text(", ");
+                    }
                 }
 
-                if (c.TypeShape.TypeHierarchy.IsImplementingInterfaces)
+                foreach (var i in c.TypeShape.TypeHierarchy.Implements)
                 {
-                    foreach (var i in c.TypeShape.TypeHierarchy.Implements)
+                    c.Type(i.Element);
+
+                    if (!ReferenceEquals(i, c.TypeShape.TypeHierarchy.Implements.Last()))
                     {
-                        c.Text(", ").Type(i.Element);
+                        c.Text(", ");
                     }
                 }
             }

@@ -73,6 +73,57 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
         }
 
         [Test]
+        public void SSTDeclaration_WithSupertypes_OnlyInterface()
+        {
+            var thisType = TypeName.Get("TestClass,P");
+            var interface1 = TypeName.Get("i:IDoesSomething,P");
+
+            var sst = new SST {EnclosingType = thisType};
+            var typeShape = new TypeShape
+            {
+                TypeHierarchy = new TypeHierarchy
+                {
+                    Element = thisType,
+                    Implements =
+                    {
+                        new TypeHierarchy {Element = interface1},
+                    }
+                }
+            };
+
+            AssertPrintSingle(
+                sst,
+                new SSTPrintingContext {TypeShape = typeShape},
+                "class TestClass : IDoesSomething",
+                "{",
+                "}");
+        }
+
+        [Test]
+        public void SSTDeclaration_WithSupertypes_OnlySuperclass()
+        {
+            var thisType = TypeName.Get("TestClass,P");
+            var superType = TypeName.Get("SuperClass,P");
+
+            var sst = new SST {EnclosingType = thisType};
+            var typeShape = new TypeShape
+            {
+                TypeHierarchy = new TypeHierarchy
+                {
+                    Element = thisType,
+                    Extends = new TypeHierarchy {Element = superType}
+                }
+            };
+
+            AssertPrintSingle(
+                sst,
+                new SSTPrintingContext {TypeShape = typeShape},
+                "class TestClass : SuperClass",
+                "{",
+                "}");
+        }
+
+        [Test]
         public void SSTDeclaration_FullClass()
         {
             var sst = new SST
