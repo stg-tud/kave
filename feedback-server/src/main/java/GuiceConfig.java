@@ -40,13 +40,17 @@ public class GuiceConfig extends GuiceServletContextListener {
     @Override
     protected Injector getInjector() {
         return Guice.createInjector(new JerseyServletModule() {
-            private File dataDir = new File("data");
-            private File tmpDir = new File("tmp");
+            private File dataDir;
+            private File tmpDir;
             private UniqueFileCreator tmpUfc;
             private UniqueFileCreator dataUfc;
 
             @Override
             protected void configureServlets() {
+
+                dataDir = getPath("data");
+                tmpDir = getPath("tmp");
+
                 dataDir.mkdir();
                 tmpDir.mkdir();
                 tmpUfc = new UniqueFileCreator(tmpDir, "zip");
@@ -58,6 +62,21 @@ public class GuiceConfig extends GuiceServletContextListener {
                 Map<String, String> params = new HashMap<String, String>();
                 params.put(ServletContainer.JSP_TEMPLATES_BASE_PATH, "WEB-INF/jsp");
                 filterRegex("/((?!css|js|images).)*").through(GuiceContainer.class, params);
+            }
+
+            private File getPath(String folderName) {
+                // put a file into {TOMCAT-conf}/[engine]/[host]/[app=name].xml with the content:
+                //
+                // <Context path="" docBase="[app-name]">
+                // <Parameter name="qualifier" value="[whatever you like]" override="false"/>
+                // </Context>
+
+                String qualifier = getServletContext().getInitParameter("qualifier");
+                if (qualifier == null) {
+                    return new File(folderName);
+                } else {
+                    return new File(folderName + "-" + qualifier);
+                }
             }
 
             @Provides
