@@ -39,7 +39,8 @@ namespace KaVE.FeedbackProcessor
 
         public static void Main()
         {
-            const string importDatabase = "_import";
+            const string importDatabase = "";
+            const string filteredDatabase = "_filtered";
             const string cleanDatabase = "_clean";
             const string activityDatabase = "activities";
             const string concurrentEventDatabase = "_concurrent";
@@ -55,16 +56,18 @@ namespace KaVE.FeedbackProcessor
             //CollectNames(OpenDatabase(importDatabase));
             LogIDEActivationEvents(OpenDatabase(importDatabase));
 
-            //CleanFeedback(OpenDatabase(importDatabase), OpenDatabase(cleanDatabase));
+            CleanImportDatabase(OpenDatabase(importDatabase), OpenDatabase(filteredDatabase));
 
             //MapToActivities(OpenDatabase(importDatabase), OpenDatabase(activityDatabase));
-            MergeCommands(OpenDatabase(cleanDatabase),OpenDatabase(mergedCommandsDatabase));
+            // CleanFeedback(OpenDatabase(filteredDatabase), OpenDatabase(cleanDatabase));
 
-            //FilterConcurrentEvents(OpenDatabase(importDatabase), OpenDatabase(concurrentEventDatabase));
+            // MergeCommands(OpenDatabase(cleanDatabase),OpenDatabase(mergedCommandsDatabase));
+
+            //FilterConcurrentEvents(OpenDatabase(filteredDatabase), OpenDatabase(concurrentEventDatabase));
 
             //FilterEquivalentCommandEvents(OpenDatabase(concurrentEventDatabase), OpenDatabase(equivalentCommandsDatabase));
 
-            //FilterCommandFollowupEvents(OpenDatabase(importDatabase), OpenDatabase(commandFollowupsDatabase));
+            //FilterCommandFollowupEvents(OpenDatabase(filteredDatabase), OpenDatabase(commandFollowupsDatabase));
 
             //ConcurrentEventsStatistic(OpenDatabase(concurrentEventDatabase),"concurrenteventstatistic.csv");
 
@@ -213,11 +216,13 @@ namespace KaVE.FeedbackProcessor
 
         private static void MergeCommands(IFeedbackDatabase sourceDatabase, IFeedbackDatabase targetDatabase)
         {
+            Logger.Info("Starting merging commands...");
             var cleaner = new EventsMapper(sourceDatabase, targetDatabase);
             cleaner.RegisterProcessor<MergeEquivalentCommands>();
             cleaner.ProcessFeedback();
             CreateEquivalentCommandsCsv();
             CreateSingleClickEventCsv();
+            Logger.Info("Finished merging commands.");
         }
 
         private static void CreateSingleClickEventCsv()
@@ -283,6 +288,15 @@ namespace KaVE.FeedbackProcessor
         {
             var filter = new EventsMapper(sourceDatabase, targetDatabase);
             filter.RegisterProcessor<CommandFollowupProcessor>();
+            filter.ProcessFeedback();
+        }
+
+        private static void CleanImportDatabase(IFeedbackDatabase sourceDatabase, IFeedbackDatabase targetDatabase)
+        {
+            var filter = new EventsMapper(sourceDatabase, targetDatabase);
+            filter.RegisterProcessor<ErrorFilterProcessor>();
+            filter.RegisterProcessor<EditFilterProcessor>();
+            filter.RegisterProcessor<UnnamedCommandFilterProcessor>();
             filter.ProcessFeedback();
         }
     }
