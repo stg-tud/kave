@@ -19,7 +19,6 @@
  */
 
 using System;
-using System.Text.RegularExpressions;
 using KaVE.Commons.Model.Events;
 
 namespace KaVE.FeedbackProcessor.Cleanup.Heuristics
@@ -28,7 +27,9 @@ namespace KaVE.FeedbackProcessor.Cleanup.Heuristics
     {
         public static CommandEvent MergeCommandEvents(CommandEvent commandEvent1, CommandEvent commandEvent2)
         {
-            var visualStudioEvent = IsVisualStudioCommandEvent(commandEvent1) ? commandEvent1 : commandEvent2;
+            var visualStudioEvent = CommandCompareHeurstic.IsVisualStudioCommand(commandEvent1.CommandId)
+                ? commandEvent1
+                : commandEvent2;
 
             return new CommandEvent
             {
@@ -62,22 +63,6 @@ namespace KaVE.FeedbackProcessor.Cleanup.Heuristics
             return commandEvent1.TriggeredBy != IDEEvent.Trigger.Unknown
                 ? commandEvent1.TriggeredBy
                 : commandEvent2.TriggeredBy;
-        }
-
-        private static bool IsVisualStudioCommandEvent(CommandEvent commandEvent)
-        {
-            return commandEvent.CommandId != null && IsVisualStudioCommandId(commandEvent.CommandId);
-        }
-
-        public static bool IsVisualStudioCommandId(string commandId)
-        {
-            return new Regex(@"^\{.*\}:.*:").IsMatch(commandId);
-        }
-
-        public static bool IsReSharperCommandId(string commandId)
-        {
-            // TODO
-            throw new NotImplementedException();
         }
     }
 }

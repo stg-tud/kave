@@ -100,7 +100,7 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
                                                           commandTuple =>
                                                               commandTuple.Any( commandId =>
                                                                   commandId.Equals(clickEventCopy.CommandId)) &&
-                                                              commandTuple.Any(MergeCommandHeuristic.IsVisualStudioCommandId)))
+                                                              commandTuple.Any(CommandCompareHeurstic.IsVisualStudioCommand)))
                 {
                     resultSet.Add(clickEvent.CommandId.Equals(commandTuple[0])
                         ? CreateCopyWithDifferentCommandId(clickEvent,commandTuple[1])
