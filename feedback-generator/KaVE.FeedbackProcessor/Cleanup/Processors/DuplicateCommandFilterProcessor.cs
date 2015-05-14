@@ -37,21 +37,16 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
 
         public IKaVESet<IDEEvent> FilterCommandEvents(CommandEvent commandEvent)
         {
-            if (IsDuplicate(commandEvent))
-            {
-                return AnswerDrop();
-            }
-
+            var previousCommandEvent = _oldCommandEvent;
             _oldCommandEvent = commandEvent;
-
-            return AnswerKeep();
+            return IsDuplicate(commandEvent, previousCommandEvent) ? AnswerDrop() : AnswerKeep();
         }
 
-        private bool IsDuplicate(CommandEvent commandEvent)
+        private static bool IsDuplicate(CommandEvent commandEvent, CommandEvent previousCommandEvent)
         {
-            return _oldCommandEvent != null && _oldCommandEvent.CommandId == commandEvent.CommandId &&
+            return previousCommandEvent != null && previousCommandEvent.CommandId == commandEvent.CommandId &&
                    ConcurrentEventHeuristic.HaveSimiliarEventTime(
-                       _oldCommandEvent.TriggeredAt,
+                       previousCommandEvent.TriggeredAt,
                        commandEvent.TriggeredAt, CommandEventTimeDifference);
         }
     }

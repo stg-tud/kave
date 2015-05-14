@@ -45,7 +45,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
             {
                 CommandId = "Test",
                 TriggeredAt = firstEventTime
-            };            
+            };
             var commandEvent2 = new CommandEvent
             {
                 CommandId = "Test",
@@ -54,20 +54,28 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
             var commandEvent3 = new CommandEvent
             {
                 CommandId = "Test",
-                TriggeredAt = firstEventTime + DuplicateCommandFilterProcessor.CommandEventTimeDifference.Add(new TimeSpan(TimeSpan.TicksPerSecond))
+                TriggeredAt =
+                    firstEventTime + DuplicateCommandFilterProcessor.CommandEventTimeDifference +
+                    DuplicateCommandFilterProcessor.CommandEventTimeDifference
+            };
+            var commandEvent4 = new CommandEvent
+            {
+                CommandId = "Test",
+                TriggeredAt = firstEventTime + DuplicateCommandFilterProcessor.CommandEventTimeDifference +
+                              DuplicateCommandFilterProcessor.CommandEventTimeDifference.Add(
+                                  new TimeSpan(TimeSpan.TicksPerSecond))
             };
 
-            Assert.AreEqual(Sets.NewHashSet<IDEEvent>(commandEvent),_uut.Process(commandEvent));
+            Assert.AreEqual(Sets.NewHashSet<IDEEvent>(commandEvent), _uut.Process(commandEvent));
             Assert.AreEqual(Sets.NewHashSet<IDEEvent>(), _uut.Process(commandEvent2));
-            Assert.AreEqual(Sets.NewHashSet<IDEEvent>(commandEvent3), _uut.Process(commandEvent3));
+            Assert.AreEqual(Sets.NewHashSet<IDEEvent>(), _uut.Process(commandEvent3));
+            Assert.AreEqual(Sets.NewHashSet<IDEEvent>(commandEvent4), _uut.Process(commandEvent4));
         }
-
-
 
         [Test]
         public void ShouldNotFilterAnyOtherCommandEvents()
         {
-            var commandEvent = new CommandEvent { CommandId = "Test" };
+            var commandEvent = new CommandEvent {CommandId = "Test"};
             Assert.AreEqual(Sets.NewHashSet<IDEEvent>(commandEvent), _uut.Process(commandEvent));
         }
     }
