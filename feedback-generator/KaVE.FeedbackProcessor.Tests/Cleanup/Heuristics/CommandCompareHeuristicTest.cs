@@ -24,7 +24,7 @@ using NUnit.Framework;
 namespace KaVE.FeedbackProcessor.Tests.Cleanup.Heuristics
 {
     [TestFixture]
-    internal class CommandCompareHeursticTest
+    internal class CommandCompareHeuristicTest
     {
         public const string VisualStudioCommand = "{5EFC7975-14BC-11CF-9B2B-00AA00573819}:220:Project.AddNewItem";
 
@@ -35,25 +35,25 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Heuristics
         [Test]
         public void ShouldIdentifyVisualStudioCommands()
         {
-            Assert.IsTrue(CommandCompareHeurstic.IsVisualStudioCommand(VisualStudioCommand));
-            Assert.IsFalse(CommandCompareHeurstic.IsVisualStudioCommand(ReSharperCommand));
-            Assert.IsFalse(CommandCompareHeurstic.IsVisualStudioCommand(OtherCommand));
+            Assert.IsTrue(CommandCompareHeuristic.IsVisualStudioCommand(VisualStudioCommand));
+            Assert.IsFalse(CommandCompareHeuristic.IsVisualStudioCommand(ReSharperCommand));
+            Assert.IsFalse(CommandCompareHeuristic.IsVisualStudioCommand(OtherCommand));
         }
 
         [Test]
         public void ShouldIdentifyReSharperCommand()
         {
-            Assert.IsFalse(CommandCompareHeurstic.IsReSharperCommand(VisualStudioCommand));
-            Assert.IsTrue(CommandCompareHeurstic.IsReSharperCommand(ReSharperCommand));
-            Assert.IsFalse(CommandCompareHeurstic.IsReSharperCommand(OtherCommand));
+            Assert.IsFalse(CommandCompareHeuristic.IsReSharperCommand(VisualStudioCommand));
+            Assert.IsTrue(CommandCompareHeuristic.IsReSharperCommand(ReSharperCommand));
+            Assert.IsFalse(CommandCompareHeuristic.IsReSharperCommand(OtherCommand));
         }
 
         [Test]
         public void ShouldIdentifyOtherCommands()
         {
-            Assert.IsFalse(CommandCompareHeurstic.IsOtherCommand(VisualStudioCommand));
-            Assert.IsFalse(CommandCompareHeurstic.IsOtherCommand(ReSharperCommand));
-            Assert.IsTrue(CommandCompareHeurstic.IsOtherCommand(OtherCommand));
+            Assert.IsFalse(CommandCompareHeuristic.IsOtherCommand(VisualStudioCommand));
+            Assert.IsFalse(CommandCompareHeuristic.IsOtherCommand(ReSharperCommand));
+            Assert.IsTrue(CommandCompareHeuristic.IsOtherCommand(OtherCommand));
         }
 
         [TestCase(VisualStudioCommand, VisualStudioCommand, 0)]
@@ -67,7 +67,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Heuristics
         [TestCase(OtherCommand, OtherCommand, 0)]
         public void CompareCommands(string command1, string command2, int expected)
         {
-            Assert.AreEqual(CommandCompareHeurstic.CompareCommands(command1, command2), expected);
+            Assert.AreEqual(CommandCompareHeuristic.CompareCommands(command1, command2), expected);
         }
     }
 }

@@ -27,7 +27,7 @@ namespace KaVE.FeedbackProcessor.Utils
 
         public static SortedCommandPair NewSortedPair(string command1, string command2)
         {
-            switch (CommandCompareHeurstic.CompareCommands(command1, command2))
+            switch (CommandCompareHeuristic.CompareCommands(command1, command2))
             {
                 case 1:
                     return new SortedCommandPair(command1, command2);

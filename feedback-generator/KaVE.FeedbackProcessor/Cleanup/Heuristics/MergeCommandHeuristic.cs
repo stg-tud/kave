@@ -27,7 +27,7 @@ namespace KaVE.FeedbackProcessor.Cleanup.Heuristics
     {
         public static CommandEvent MergeCommandEvents(CommandEvent commandEvent1, CommandEvent commandEvent2)
         {
-            var visualStudioEvent = CommandCompareHeurstic.IsVisualStudioCommand(commandEvent1.CommandId)
+            var visualStudioEvent = CommandCompareHeuristic.IsVisualStudioCommand(commandEvent1.CommandId)
                 ? commandEvent1
                 : commandEvent2;
 

@@ -36,7 +36,7 @@ namespace KaVE.FeedbackProcessor.Tests.Utils
         {
             Assert.AreEqual(
                 1,
-                CommandCompareHeurstic.CompareCommands(SmallerCommand, GreaterCommand),
+                CommandCompareHeuristic.CompareCommands(SmallerCommand, GreaterCommand),
                 "Commands are not compared as expected!");
         }
 

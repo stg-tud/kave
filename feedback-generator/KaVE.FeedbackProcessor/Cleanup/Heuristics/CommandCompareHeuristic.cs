@@ -22,7 +22,7 @@ using System.Text.RegularExpressions;
 
 namespace KaVE.FeedbackProcessor.Cleanup.Heuristics
 {
-    internal class CommandCompareHeurstic
+    internal class CommandCompareHeuristic
     {
         public static int CompareCommands(string command1, string command2)
         {
