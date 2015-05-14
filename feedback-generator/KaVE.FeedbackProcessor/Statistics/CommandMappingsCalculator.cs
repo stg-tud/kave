@@ -23,13 +23,14 @@ using System.Collections.Generic;
 using System.Linq;
 using KaVE.Commons.Model.Events;
 using KaVE.FeedbackProcessor.Cleanup.Heuristics;
+using KaVE.FeedbackProcessor.Model;
 using KaVE.FeedbackProcessor.Utils;
 
 namespace KaVE.FeedbackProcessor.Statistics
 {
-    internal class CommandMappingsCalculator : BaseEventProcessor
+    internal class CommandMappingsCalculator : IEventProcessor
     {
-        public readonly Dictionary<Pair<string>, int> Statistic = new Dictionary<Pair<string>, int>();
+        public static readonly Dictionary<Pair<string>, int> Statistic = new Dictionary<Pair<string>, int>();
 
         public static TimeSpan EventTimeDifference = new TimeSpan(0, 0, 0, 0, 10);
 
@@ -37,18 +38,20 @@ namespace KaVE.FeedbackProcessor.Statistics
 
         private CommandEvent _lastCommandEvent;
 
-        public CommandMappingsCalculator()
+        public void OnStreamStarts(Developer value)
         {
-            RegisterFor<CommandEvent>(HandleCommandEvent);
         }
 
-        private void HandleCommandEvent(CommandEvent commandEvent)
+        public void OnEvent(IDEEvent @event)
         {
+            var commandEvent = @event as CommandEvent;
+            if (commandEvent == null) return;
+
             if (_lastCommandEvent != null &&
                 ConcurrentEventHeuristic.HaveSimiliarEventTime(
-                    _lastCommandEvent.TriggeredAt,
-                    commandEvent.TriggeredAt,
-                    EventTimeDifference))
+                _lastCommandEvent.TriggeredAt,
+                commandEvent.TriggeredAt,
+                EventTimeDifference))
             {
                 AddEquivalentCommandsToStatistic(_lastCommandEvent.CommandId, commandEvent.CommandId);
             }
@@ -56,7 +59,7 @@ namespace KaVE.FeedbackProcessor.Statistics
             _lastCommandEvent = commandEvent;
         }
 
-        public new void OnStreamEnds()
+        public void OnStreamEnds()
         {
             Statistic.
                 Where(keyValuePair => keyValuePair.Value < FrequencyThreshold).ToList().

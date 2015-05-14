@@ -37,6 +37,7 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
         public void Setup()
         {
             _uut = new CommandMappingsCalculator();
+            CommandMappingsCalculator.Statistic.Clear();
         }
 
         [Test]
@@ -62,7 +63,7 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
 
             var expectedPair = SortedCommandPair.NewSortedPair(expectedString1, expectedString2);
             CollectionAssert.Contains(
-                _uut.Statistic,
+                CommandMappingsCalculator.Statistic,
                 new KeyValuePair<Pair<string>, int>(expectedPair, 1));
         }
 
@@ -87,7 +88,7 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
             _uut.OnEvent(commandEvent1);
             _uut.OnEvent(commandEvent2);
 
-            CollectionAssert.IsEmpty(_uut.Statistic);
+            CollectionAssert.IsEmpty(CommandMappingsCalculator.Statistic);
         }
 
         [Test]
@@ -106,7 +107,7 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
 
             var expectedPair = SortedCommandPair.NewSortedPair(command1, command2);
             CollectionAssert.Contains(
-                _uut.Statistic,
+                CommandMappingsCalculator.Statistic,
                 new KeyValuePair<Pair<string>, int>(expectedPair, frequencyThreshold));
         }
 
@@ -127,7 +128,7 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
 
             var expectedPair = SortedCommandPair.NewSortedPair(command1, command2);
             CollectionAssert.DoesNotContain(
-                _uut.Statistic,
+                CommandMappingsCalculator.Statistic,
                 new KeyValuePair<Pair<string>, int>(expectedPair, frequencyThreshold - 1));
         }
 
@@ -170,23 +171,23 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
 
             var frequentPair1 = SortedCommandPair.NewSortedPair("Copy", "Edit.Copy");
             CollectionAssert.Contains(
-                _uut.Statistic,
+                CommandMappingsCalculator.Statistic,
                 new KeyValuePair<Pair<string>, int>(frequentPair1, frequencyThreshold));
 
             var nonFrequentPair = SortedCommandPair.NewSortedPair("Left", "Textcontrol.Left");
             CollectionAssert.DoesNotContain(
-                _uut.Statistic,
+                CommandMappingsCalculator.Statistic,
                 new KeyValuePair<Pair<string>, int>(nonFrequentPair, frequencyThreshold - 1));
 
             var frequentPair2 =
                 SortedCommandPair.NewSortedPair("{5EFC7975-14BC-11CF-9B2B-00AA00573819}:224:File.SaveAll", "Save All");
             CollectionAssert.Contains(
-                _uut.Statistic,
+                CommandMappingsCalculator.Statistic,
                 new KeyValuePair<Pair<string>, int>(frequentPair2, frequencyThreshold));
 
             var nonFrequentPair2 = SortedCommandPair.NewSortedPair("Right", "Textcontrol.Right");
             CollectionAssert.DoesNotContain(
-                _uut.Statistic,
+                CommandMappingsCalculator.Statistic,
                 new KeyValuePair<Pair<string>, int>(nonFrequentPair2, frequencyThreshold - 1));
         }
 

@@ -39,7 +39,7 @@ namespace KaVE.FeedbackProcessor
 
         public static void Main()
         {
-            const string importDatabase = "";
+            const string importDatabase = "_import";
             const string filteredDatabase = "_filtered";
             const string cleanDatabase = "_clean";
             const string activityDatabase = "activities";
@@ -56,12 +56,12 @@ namespace KaVE.FeedbackProcessor
             //CollectNames(OpenDatabase(importDatabase));
             LogIDEActivationEvents(OpenDatabase(importDatabase));
 
-            CleanImportDatabase(OpenDatabase(importDatabase), OpenDatabase(filteredDatabase));
+            //CleanImportDatabase(OpenDatabase(importDatabase), OpenDatabase(filteredDatabase));
 
             //MapToActivities(OpenDatabase(importDatabase), OpenDatabase(activityDatabase));
-            // CleanFeedback(OpenDatabase(filteredDatabase), OpenDatabase(cleanDatabase));
+            CommandMappingsStatistic(OpenDatabase(filteredDatabase));
 
-            // MergeCommands(OpenDatabase(cleanDatabase),OpenDatabase(mergedCommandsDatabase));
+            //CleanFeedback(OpenDatabase(filteredDatabase), OpenDatabase(cleanDatabase));
 
             //FilterConcurrentEvents(OpenDatabase(filteredDatabase), OpenDatabase(concurrentEventDatabase));
 
@@ -75,7 +75,7 @@ namespace KaVE.FeedbackProcessor
 
             //ConcurrentEventsStatistic(OpenDatabase(commandFollowupsDatabase),"commandfollowupsstatistic.csv");
         }
-        
+
         private static MongoDbFeedbackDatabase OpenDatabase(string databaseSuffix)
         {
             return new MongoDbFeedbackDatabase(
@@ -169,6 +169,31 @@ namespace KaVE.FeedbackProcessor
             walker.ProcessFeedback();
         }
 
+        private static void CommandMappingsStatistic(IFeedbackDatabase database)
+        {
+            var walker = new FeedbackWalker(database, Logger);
+            var calculator = new CommandMappingsCalculator();
+
+            walker.Register(calculator);
+            walker.ProcessFeedback();
+
+            var statistic = CommandMappingsCalculator.Statistic.OrderByDescending(keyValuePair => keyValuePair.Value);
+
+            var csvBuilder = new CsvBuilder();
+
+            foreach (var stat in statistic)
+            {
+                csvBuilder.StartRow();
+
+                csvBuilder["FirstCommand"] = stat.Key.Item1;
+                csvBuilder["SecondCommand"] = stat.Key.Item2;
+                csvBuilder["Count"] = stat.Value;
+            }
+
+            File.WriteAllText(
+                Path.Combine(Configuration.StatisticsOutputPath, "commandMappingsStatistic.csv"),
+                csvBuilder.Build());
+        }
 
         private static void ConcurrentEventsStatistic(IFeedbackDatabase database, string fileName)
         {
@@ -214,48 +239,6 @@ namespace KaVE.FeedbackProcessor
             cleaner.ProcessFeedback();
         }
 
-        private static void MergeCommands(IFeedbackDatabase sourceDatabase, IFeedbackDatabase targetDatabase)
-        {
-            Logger.Info("Starting merging commands...");
-            var cleaner = new EventsMapper(sourceDatabase, targetDatabase);
-            cleaner.RegisterProcessor<MergeEquivalentCommands>();
-            cleaner.ProcessFeedback();
-            CreateEquivalentCommandsCsv();
-            CreateSingleClickEventCsv();
-            Logger.Info("Finished merging commands.");
-        }
-
-        private static void CreateSingleClickEventCsv()
-        {
-            var csvBuilder = new CsvBuilder();
-            foreach (var commandEvent in MergeEquivalentCommands.SingleClickEventCache)
-            {
-                csvBuilder.StartRow();
-                csvBuilder["CommandId"] = commandEvent.CommandId;
-            }
-            File.WriteAllText(
-                Path.Combine(Configuration.StatisticsOutputPath, "singleClickEvents.csv"),
-                csvBuilder.Build());
-        }
-
-        private static void CreateEquivalentCommandsCsv()
-        {
-            var csvBuilder = new CsvBuilder();
-            foreach (var stat in MergeEquivalentCommands.Statistic)
-            {
-                csvBuilder.StartRow();
-                var statList = stat.ToList();
-                for (var i = 0; i < statList.Count; i++)
-                {
-                    var fieldName = "Command" + i;
-                    csvBuilder[fieldName] = statList[i];
-                }
-            }
-            File.WriteAllText(
-                Path.Combine(Configuration.StatisticsOutputPath, "mergeEquivalentCommands.csv"),
-                csvBuilder.Build());
-        }
-
         private static void MapToActivities(IFeedbackDatabase sourceDatabase, IFeedbackDatabase activityDatabase)
         {
             var activityMapper = new EventsMapper(sourceDatabase, activityDatabase);
@@ -297,6 +280,7 @@ namespace KaVE.FeedbackProcessor
             filter.RegisterProcessor<ErrorFilterProcessor>();
             filter.RegisterProcessor<EditFilterProcessor>();
             filter.RegisterProcessor<UnnamedCommandFilterProcessor>();
+            filter.RegisterProcessor<DuplicateCommandFilterProcessor>();
             filter.ProcessFeedback();
         }
     }
