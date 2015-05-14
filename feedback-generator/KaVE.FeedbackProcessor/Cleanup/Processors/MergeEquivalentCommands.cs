@@ -46,10 +46,10 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
 
         private IKaVESet<IDEEvent> HandleCommandEvent(CommandEvent commandEvent)
         {
-            if (IsClickEvent(commandEvent))
-            {
-                SingleClickEventCache.Add(commandEvent);
-            }
+//            if (IsClickEvent(commandEvent))
+//            {
+//                SingleClickEventCache.Add(commandEvent);
+//            }
 
             var lastCommandEvent = _lastCommandEvent;
             _lastCommandEvent = commandEvent;
@@ -65,10 +65,10 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
 
                 _mergedCommandEvent = MergeCommandHeuristic.MergeCommandEvents(_mergedCommandEvent, commandEvent);
 
-                if ((IsClickEvent(_mergedCommandEvent)) && SingleClickEventCache.Count > 0)
-                {
-                    SingleClickEventCache.Remove(SingleClickEventCache.Last());
-                }
+//                if ((IsClickEvent(_mergedCommandEvent)) && SingleClickEventCache.Count > 0)
+//                {
+//                    SingleClickEventCache.Remove(SingleClickEventCache.Last());
+//                }
             }
             else
             {                
@@ -131,7 +131,6 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
                 ActiveDocument = commandEvent.ActiveDocument,
                 ActiveWindow = commandEvent.ActiveWindow,
                 CommandId = commandId,
-                Id = commandEvent.Id,
                 IDESessionUUID = commandEvent.IDESessionUUID,
                 KaVEVersion = commandEvent.KaVEVersion,
                 TriggeredAt = commandEvent.TriggeredAt,

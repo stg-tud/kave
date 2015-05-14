@@ -18,6 +18,7 @@
  *    - Markus Zimmermann
  */
 
+using System;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Utils.Collections;
 using KaVE.FeedbackProcessor.Model;
@@ -49,7 +50,6 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
                         ActiveWindow = @event.ActiveWindow,
                         Duration = @event.TerminatedAt - _commandEvent.TriggeredAt,
                         ConcurrentEventList = new KaVEList<IDEEvent> {_commandEvent, @event},
-                        Id = @event.Id,
                         IDESessionUUID = @event.IDESessionUUID,
                         KaVEVersion = @event.KaVEVersion,
                         TerminatedAt = @event.TerminatedAt,

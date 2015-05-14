@@ -94,11 +94,6 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Heuristics
                 "Duration was not merged correctly");
 
             Assert.AreEqual(
-                SomeId,
-                mergedEvent.Id,
-                "Id was not merged correctly");
-
-            Assert.AreEqual(
                 SomeIdeSessionUUID,
                 mergedEvent.IDESessionUUID,
                 "Duration was not merged correctly");

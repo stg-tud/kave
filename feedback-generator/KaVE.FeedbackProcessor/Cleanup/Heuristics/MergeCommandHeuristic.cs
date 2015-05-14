@@ -21,7 +21,6 @@
 using System;
 using System.Text.RegularExpressions;
 using KaVE.Commons.Model.Events;
-using KaVE.Commons.Model.Names.VisualStudio;
 
 namespace KaVE.FeedbackProcessor.Cleanup.Heuristics
 {
@@ -29,62 +28,33 @@ namespace KaVE.FeedbackProcessor.Cleanup.Heuristics
     {
         public static CommandEvent MergeCommandEvents(CommandEvent commandEvent1, CommandEvent commandEvent2)
         {
+            var visualStudioEvent = IsVisualStudioCommandEvent(commandEvent1) ? commandEvent1 : commandEvent2;
+
             return new CommandEvent
             {
-                ActiveDocument = GetMergedActiveDocument(commandEvent1, commandEvent2),
-                ActiveWindow = GetMergedActiveWindow(commandEvent1, commandEvent2),
-                CommandId = GetMergedCommandId(commandEvent1, commandEvent2),
-                Duration = GetMergedDuration(commandEvent1, commandEvent2),
-                Id = GetMergedId(commandEvent1, commandEvent2),
-                IDESessionUUID = commandEvent1.IDESessionUUID,
-                KaVEVersion = commandEvent1.KaVEVersion,
-                TriggeredAt = GetMergedTriggeredAt(commandEvent1, commandEvent2),
-                TerminatedAt = GetMergedTerminatedAt(commandEvent1, commandEvent2),
+                ActiveDocument = visualStudioEvent.ActiveDocument,
+                ActiveWindow = visualStudioEvent.ActiveWindow,
+                CommandId = visualStudioEvent.CommandId,
+                IDESessionUUID = visualStudioEvent.IDESessionUUID,
+                KaVEVersion = visualStudioEvent.KaVEVersion,
+                TriggeredAt = GetEarliestTriggeredAt(commandEvent1, commandEvent2),
+                TerminatedAt = GetLatestTerminatedAt(commandEvent1, commandEvent2),
                 TriggeredBy = GetMergedTriggeredBy(commandEvent1, commandEvent2)
             };
         }
 
-        private static DocumentName GetMergedActiveDocument(CommandEvent commandEvent1, CommandEvent commandEvent2)
-        {
-            return IsVisualStudioCommandEvent(commandEvent1)
-                ? commandEvent1.ActiveDocument
-                : commandEvent2.ActiveDocument;
-        }
-
-        private static WindowName GetMergedActiveWindow(CommandEvent commandEvent1, CommandEvent commandEvent2)
-        {
-            return IsVisualStudioCommandEvent(commandEvent1) ? commandEvent1.ActiveWindow : commandEvent2.ActiveWindow;
-        }
-
-        private static string GetMergedCommandId(CommandEvent commandEvent1, CommandEvent commandEvent2)
-        {
-            return IsVisualStudioCommandEvent(commandEvent1) ? commandEvent1.CommandId : commandEvent2.CommandId;
-        }
-
-        private static TimeSpan? GetMergedDuration(CommandEvent commandEvent1, CommandEvent commandEvent2)
-        {
-            var terminatedAt = GetMergedTerminatedAt(commandEvent1, commandEvent2);
-            var triggeredAt = GetMergedTriggeredAt(commandEvent1, commandEvent2);
-            return terminatedAt - triggeredAt;
-        }
-
-        private static string GetMergedId(CommandEvent commandEvent1, CommandEvent commandEvent2)
-        {
-            return IsVisualStudioCommandEvent(commandEvent1) ? commandEvent1.Id : commandEvent2.Id;
-        }
-
-        private static DateTime? GetMergedTerminatedAt(CommandEvent commandEvent1, CommandEvent commandEvent2)
-        {
-            return commandEvent1.TerminatedAt > commandEvent2.TerminatedAt
-                ? commandEvent1.TerminatedAt
-                : commandEvent2.TerminatedAt;
-        }
-
-        private static DateTime? GetMergedTriggeredAt(CommandEvent commandEvent1, CommandEvent commandEvent2)
+        private static DateTime? GetEarliestTriggeredAt(CommandEvent commandEvent1, CommandEvent commandEvent2)
         {
             return commandEvent1.TriggeredAt < commandEvent2.TriggeredAt
                 ? commandEvent1.TriggeredAt
                 : commandEvent2.TriggeredAt;
+        }
+
+        private static DateTime? GetLatestTerminatedAt(CommandEvent commandEvent1, CommandEvent commandEvent2)
+        {
+            return commandEvent1.TerminatedAt > commandEvent2.TerminatedAt
+                ? commandEvent1.TerminatedAt
+                : commandEvent2.TerminatedAt;
         }
 
         private static IDEEvent.Trigger GetMergedTriggeredBy(CommandEvent commandEvent1, CommandEvent commandEvent2)
@@ -102,6 +72,12 @@ namespace KaVE.FeedbackProcessor.Cleanup.Heuristics
         public static bool IsVisualStudioCommandId(string commandId)
         {
             return new Regex(@"^\{.*\}:.*:").IsMatch(commandId);
+        }
+
+        public static bool IsReSharperCommandId(string commandId)
+        {
+            // TODO
+            throw new NotImplementedException();
         }
     }
 }
