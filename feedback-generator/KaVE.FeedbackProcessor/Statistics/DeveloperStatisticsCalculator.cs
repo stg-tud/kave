@@ -52,8 +52,7 @@ namespace KaVE.FeedbackProcessor.Statistics
 
         private static DateTime EventDate(IDEEvent evt)
         {
-            var dateTime = evt.TriggeredAt;
-            return dateTime.HasValue ? dateTime.Value.Date : new DateTime().Date;
+            return evt.GetTriggeredAt().Date;
         }
 
         public int GetLowerBoundToNumberOfParticipants()
