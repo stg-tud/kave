@@ -58,7 +58,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
                 );
 
             IKaVESet<IDEEvent> resultEventSet = new KaVEHashSet<IDEEvent>();
-            concurrentEventList.ForEach(ideEvent => resultEventSet = _uut.Process(ideEvent));
+            concurrentEventList.ForEach(ideEvent => resultEventSet = _uut.Map(ideEvent));
 
             CollectionAssert.AreEquivalent(expectedEventSet, resultEventSet);
         }
@@ -69,7 +69,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
             var eventList = GenerateEvents(ConcurrentEventProcessor.EventTimeDifference.Ticks + 1);
 
             eventList.ForEach(
-                ideEvent => CollectionAssert.AreEquivalent(new KaVEHashSet<IDEEvent>(), _uut.Process(ideEvent)));
+                ideEvent => CollectionAssert.AreEquivalent(new KaVEHashSet<IDEEvent>(), _uut.Map(ideEvent)));
         }
 
         [Test]
@@ -80,7 +80,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
             eventList.Add(errorEvent);
 
             IKaVESet<IDEEvent> resultEventSet = new KaVEHashSet<IDEEvent>();
-            eventList.ForEach(ideEvent => resultEventSet = _uut.Process(ideEvent));
+            eventList.ForEach(ideEvent => resultEventSet = _uut.Map(ideEvent));
 
             CollectionAssert.DoesNotContain(resultEventSet, errorEvent);
         }

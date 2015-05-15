@@ -24,7 +24,7 @@ using KaVE.FeedbackProcessor.Model;
 
 namespace KaVE.FeedbackProcessor.Cleanup.Processors
 {
-    internal class IDECloseEventFixingProcessor : BaseProcessor
+    internal class IDECloseEventFixingProcessor : BaseEventMapper
     {
         private bool _firstEvent = true;
         private bool _ideIsRunning;

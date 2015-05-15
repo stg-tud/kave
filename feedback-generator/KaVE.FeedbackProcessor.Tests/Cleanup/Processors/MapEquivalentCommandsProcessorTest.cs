@@ -59,7 +59,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
         {
             var inputEvent = new CommandEvent {CommandId = _saveAllPair.Item1};
 
-            var actualSet = _uut.Process(inputEvent);
+            var actualSet = _uut.Map(inputEvent);
 
             var expectedCommandEvent = new CommandEvent {CommandId = _saveAllPair.Item2};
             CollectionAssert.AreEquivalent(actualSet, Sets.NewHashSet<IDEEvent>(expectedCommandEvent));
@@ -70,7 +70,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
         {
             var inputEvent = new CommandEvent { CommandId = "Test" };
 
-            var actualSet = _uut.Process(inputEvent);
+            var actualSet = _uut.Map(inputEvent);
 
             CollectionAssert.AreEquivalent(Sets.NewHashSet<IDEEvent>(inputEvent), actualSet);
         }
@@ -80,7 +80,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
         {
             var inputEvent = new CommandEvent { CommandId = _saveAllPair.Item2 };
 
-            var actualSet = _uut.Process(inputEvent);
+            var actualSet = _uut.Map(inputEvent);
 
             CollectionAssert.AreEquivalent(Sets.NewHashSet<IDEEvent>(), actualSet);
         }
@@ -101,8 +101,8 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
                 TriggeredAt = triggeretAt + MapEquivalentCommandsProcessor.EventTimeDifference + TimeSpan.FromSeconds(1)
             };
 
-            _uut.Process(rightSideEvent);
-            var actualSet = _uut.Process(someLateEvent);
+            _uut.Map(rightSideEvent);
+            var actualSet = _uut.Map(someLateEvent);
 
             CollectionAssert.AreEquivalent(Sets.NewHashSet<IDEEvent>(rightSideEvent, someLateEvent), actualSet);
         }
@@ -132,9 +132,9 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
                 TriggeredAt = triggeredAt
             };
 
-            _uut.Process(rightSideEvent);
-            _uut.Process(leftSideEvent);
-            var actualSet = _uut.Process(someLateEvent);
+            _uut.Map(rightSideEvent);
+            _uut.Map(leftSideEvent);
+            var actualSet = _uut.Map(someLateEvent);
 
             CollectionAssert.AreEquivalent(Sets.NewHashSet<IDEEvent>(someLateEvent), actualSet);
         }

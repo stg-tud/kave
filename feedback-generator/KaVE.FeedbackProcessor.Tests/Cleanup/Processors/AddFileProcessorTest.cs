@@ -76,8 +76,8 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
                 Document = DocumentName.Get(documentIdentifier)
             };
 
-            _uut.Process(addNewItemCommandEvent);
-            var actuals = _uut.Process(documentEvent);
+            _uut.Map(addNewItemCommandEvent);
+            var actuals = _uut.Map(documentEvent);
 
             var expectedSolutionEvent = new SolutionEvent
             {

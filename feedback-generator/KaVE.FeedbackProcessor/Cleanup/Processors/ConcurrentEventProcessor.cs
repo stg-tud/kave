@@ -27,7 +27,7 @@ using KaVE.FeedbackProcessor.Model;
 
 namespace KaVE.FeedbackProcessor.Cleanup.Processors
 {
-    internal class ConcurrentEventProcessor : BaseProcessor
+    internal class ConcurrentEventProcessor : BaseEventMapper
     {
         public static TimeSpan EventTimeDifference = new TimeSpan(0, 0, 0, 0, 1);
 

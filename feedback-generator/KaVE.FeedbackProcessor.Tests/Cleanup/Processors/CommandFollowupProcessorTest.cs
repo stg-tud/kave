@@ -44,7 +44,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
         public void ShouldDropAllEventsWithoutPrecedingCommandEvent()
         {
             var eventList = IDEEventTestFactory.SomeEvents(5);
-            eventList.ForEach(ideEvent => CollectionAssert.AreEquivalent(new KaVEHashSet<IDEEvent>(), _uut.Process(ideEvent)));
+            eventList.ForEach(ideEvent => CollectionAssert.AreEquivalent(new KaVEHashSet<IDEEvent>(), _uut.Map(ideEvent)));
         }
 
         [Test]
@@ -60,7 +60,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
             };
 
             ISet<IDEEvent> resultingSet = new HashSet<IDEEvent>();
-            eventList.ForEach(ideEvent => resultingSet = _uut.Process(ideEvent));
+            eventList.ForEach(ideEvent => resultingSet = _uut.Map(ideEvent));
 
             Assert.AreEqual(1, resultingSet.Count);
 
@@ -86,9 +86,9 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
                 }
             };
 
-            CollectionAssert.AreEquivalent(Sets.NewHashSet<IDEEvent>(),_uut.Process(expectedCommandEvent));
-            CollectionAssert.AreEquivalent(Sets.NewHashSet<IDEEvent>(expectedConcurrentEvent),_uut.Process(firstFollowupEvent));
-            CollectionAssert.AreEquivalent(Sets.NewHashSet<IDEEvent>(),_uut.Process(secondFollowupEvent));
+            CollectionAssert.AreEquivalent(Sets.NewHashSet<IDEEvent>(),_uut.Map(expectedCommandEvent));
+            CollectionAssert.AreEquivalent(Sets.NewHashSet<IDEEvent>(expectedConcurrentEvent),_uut.Map(firstFollowupEvent));
+            CollectionAssert.AreEquivalent(Sets.NewHashSet<IDEEvent>(),_uut.Map(secondFollowupEvent));
         }
     }
 }

@@ -27,18 +27,11 @@ namespace KaVE.FeedbackProcessor.Tests.TestUtils
 {
     internal static class ProcessorAssert
     {
-        public static void DoesNotFilter(IIDEEventProcessor<IKaVESet<IDEEvent>> uut, IDEEvent @event)
+        public static void DoesNotFilter(IEventMapper<IKaVESet<IDEEvent>> uut, IDEEvent @event)
         {
-            var processedEvent = uut.Process(@event);
+            var processedEvent = uut.Map(@event);
 
             CollectionAssert.AreEqual(new KaVEHashSet<IDEEvent> {@event}, processedEvent);
-        }
-
-        public static void Drops(IIDEEventProcessor<IKaVESet<IDEEvent>> uut, IDEEvent @event)
-        {
-            var answer = uut.Process(@event);
-
-            CollectionAssert.IsEmpty(answer);
         }
     }
 }

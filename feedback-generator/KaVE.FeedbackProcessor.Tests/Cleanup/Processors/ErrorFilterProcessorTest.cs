@@ -40,14 +40,14 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
         public void FiltersAllErrorEvents()
         {
             var someErrorEvent = new ErrorEvent();
-            Assert.AreEqual(Sets.NewHashSet<IDEEvent>(), _uut.Process(someErrorEvent));
+            Assert.AreEqual(Sets.NewHashSet<IDEEvent>(), _uut.Map(someErrorEvent));
         }
 
         [Test]
         public void ShouldNotFilterAnyOtherEvents()
         {
             var someOtherEvent = IDEEventTestFactory.SomeEvent();
-            Assert.AreEqual(Sets.NewHashSet<IDEEvent>(someOtherEvent), _uut.Process(someOtherEvent));
+            Assert.AreEqual(Sets.NewHashSet<IDEEvent>(someOtherEvent), _uut.Map(someOtherEvent));
         }
     }
 }

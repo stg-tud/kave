@@ -21,7 +21,7 @@ using KaVE.Commons.Model.Events;
 
 namespace KaVE.FeedbackProcessor.Cleanup.Processors
 {
-    internal class ErrorFilterProcessor : BaseProcessor
+    internal class ErrorFilterProcessor : BaseEventMapper
     {
         public ErrorFilterProcessor()
         {

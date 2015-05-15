@@ -20,10 +20,11 @@
 
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.VisualStudio;
+using KaVE.FeedbackProcessor.Utils;
 
 namespace KaVE.FeedbackProcessor.Cleanup.Processors
 {
-    internal class CloseEventProcessor : BaseProcessor
+    internal class CloseEventProcessor : BaseEventMapper
     {
         private bool _filterNextDocumentEvent;
 

@@ -19,17 +19,14 @@
 
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Exceptions;
 using KaVE.FeedbackProcessor.Activities;
-using KaVE.FeedbackProcessor.Cleanup;
 using KaVE.FeedbackProcessor.Cleanup.Processors;
 using KaVE.FeedbackProcessor.Database;
 using KaVE.FeedbackProcessor.Import;
 using KaVE.FeedbackProcessor.Properties;
 using KaVE.FeedbackProcessor.Statistics;
-using MongoDB.Driver.Linq;
 
 namespace KaVE.FeedbackProcessor
 {
@@ -91,7 +88,7 @@ namespace KaVE.FeedbackProcessor
 
         public static void LogAnonymizationStatistics(IFeedbackDatabase database)
         {
-            var calculator = new AnonymizationStatisticsCalculator(database, Logger);
+            var calculator = new AnonymizationStatisticsLogger(database, Logger);
             calculator.LogNumberOfEventsWithoutSessionId();
             calculator.LogNumberOfEventsWithoutTriggerTime();
             calculator.LogNumberOfEventsWithoutDuration();
@@ -113,7 +110,7 @@ namespace KaVE.FeedbackProcessor
 
         private static void ComputeEventsPerDeveloperDayStatistic(IFeedbackDatabase database)
         {
-            var walker = new FeedbackWalker(database, Logger);
+            var walker = new FeedbackProcessor(database, Logger);
             var calculator = new EventsPerDeveloperDayStatisticCalculator();
             walker.Register(calculator);
             walker.ProcessFeedback();
@@ -141,7 +138,7 @@ namespace KaVE.FeedbackProcessor
 
         private static void CollectNames(IFeedbackDatabase database)
         {
-            var walker = new FeedbackWalker(database, Logger);
+            var walker = new FeedbackProcessor(database, Logger);
             var windowNameCollector = new WindowNameCollector();
             walker.Register(windowNameCollector);
             var documentNameCollector = new DocumentNameCollector();
@@ -164,14 +161,14 @@ namespace KaVE.FeedbackProcessor
 
         private static void LogIDEActivationEvents(IFeedbackDatabase database)
         {
-            var walker = new FeedbackWalker(database, Logger);
+            var walker = new FeedbackProcessor(database, Logger);
             walker.Register(new ParallelIDEInstancesStatisticCalculator(new FileLogger(Path.Combine(Configuration.StatisticsOutputPath, "window-de-activation.log"))));
             walker.ProcessFeedback();
         }
 
         private static void CommandMappingsStatistic(IFeedbackDatabase database)
         {
-            var walker = new FeedbackWalker(database, Logger);
+            var walker = new FeedbackProcessor(database, Logger);
             var calculator = new CommandMappingsCalculator();
 
             walker.Register(calculator);
@@ -197,7 +194,7 @@ namespace KaVE.FeedbackProcessor
 
         private static void ConcurrentEventsStatistic(IFeedbackDatabase database, string fileName)
         {
-            var walker = new FeedbackWalker(database, Logger);
+            var walker = new FeedbackProcessor(database, Logger);
             var calculator = new ConcurrentSetsCalculator();
 
             walker.Register(calculator);
@@ -231,57 +228,57 @@ namespace KaVE.FeedbackProcessor
 
         private static void CleanFeedback(IFeedbackDatabase sourceDatabase, IFeedbackDatabase targetDatabase)
         {
-            var cleaner = new EventsMapper(sourceDatabase, targetDatabase);
-            cleaner.RegisterProcessor<AddFileProcessor>();
-            cleaner.RegisterProcessor<DuplicateCommandFilterProcessor>();
-            cleaner.RegisterProcessor<ErrorFilterProcessor>();
-            cleaner.RegisterProcessor<UnnamedCommandFilterProcessor>();
-            cleaner.ProcessFeedback();
+            var cleaner = new FeedbackMapper(sourceDatabase, targetDatabase);
+            cleaner.RegisterMapper<AddFileProcessor>();
+            cleaner.RegisterMapper<DuplicateCommandFilterProcessor>();
+            cleaner.RegisterMapper<ErrorFilterProcessor>();
+            cleaner.RegisterMapper<UnnamedCommandFilterProcessor>();
+            cleaner.MapFeedback();
         }
 
         private static void MapToActivities(IFeedbackDatabase sourceDatabase, IFeedbackDatabase activityDatabase)
         {
-            var activityMapper = new EventsMapper(sourceDatabase, activityDatabase);
-            activityMapper.RegisterProcessor<AlwaysDropProcessor>(); // only generated events reach activity database
-            activityMapper.RegisterProcessor<AnyActivityActivityProcessor>(); // map any event to a keep-alive
-            activityMapper.RegisterProcessor<InIDEActivityDetector>();
-            activityMapper.RegisterProcessor<IDEStateEventActivityProcessor>();
-            activityMapper.RegisterProcessor<BuildEventActivityProcessor>();
-            activityMapper.RegisterProcessor<DebuggerEventActivityProcessor>();
+            var activityMapper = new FeedbackMapper(sourceDatabase, activityDatabase);
+            activityMapper.RegisterMapper<AlwaysDropMapper>(); // only generated events reach activity database
+            activityMapper.RegisterMapper<AnyToActivityMapper>(); // map any event to a keep-alive
+            activityMapper.RegisterMapper<InIDEToActivityDetector>();
+            activityMapper.RegisterMapper<IDEStateEventToActivityMapper>();
+            activityMapper.RegisterMapper<BuildEventToActivityMapper>();
+            activityMapper.RegisterMapper<DebuggerEventToActivityMapper>();
 
-            activityMapper.ProcessFeedback();
+            activityMapper.MapFeedback();
         }
         
         private static void FilterConcurrentEvents(IFeedbackDatabase sourceDatabase, IFeedbackDatabase targetDatabase)
         {
-            var filter = new EventsMapper(sourceDatabase, targetDatabase);
-            filter.RegisterProcessor<ConcurrentEventProcessor>();
-            filter.ProcessFeedback();
+            var filter = new FeedbackMapper(sourceDatabase, targetDatabase);
+            filter.RegisterMapper<ConcurrentEventProcessor>();
+            filter.MapFeedback();
         }
 
         private static void FilterEquivalentCommandEvents(IFeedbackDatabase sourceDatabase,
             IFeedbackDatabase targetDatabase)
         {
-            var filter = new EventsMapper(sourceDatabase, targetDatabase);
-            filter.RegisterProcessor<EquivalentCommandProcessor>();
-            filter.ProcessFeedback();
+            var filter = new FeedbackMapper(sourceDatabase, targetDatabase);
+            filter.RegisterMapper<EquivalentCommandProcessor>();
+            filter.MapFeedback();
         }
 
         private static void FilterCommandFollowupEvents(IFeedbackDatabase sourceDatabase, IFeedbackDatabase targetDatabase)
         {
-            var filter = new EventsMapper(sourceDatabase, targetDatabase);
-            filter.RegisterProcessor<CommandFollowupProcessor>();
-            filter.ProcessFeedback();
+            var filter = new FeedbackMapper(sourceDatabase, targetDatabase);
+            filter.RegisterMapper<CommandFollowupProcessor>();
+            filter.MapFeedback();
         }
 
         private static void CleanImportDatabase(IFeedbackDatabase sourceDatabase, IFeedbackDatabase targetDatabase)
         {
-            var filter = new EventsMapper(sourceDatabase, targetDatabase);
-            filter.RegisterProcessor<ErrorFilterProcessor>();
-            filter.RegisterProcessor<EditFilterProcessor>();
-            filter.RegisterProcessor<UnnamedCommandFilterProcessor>();
-            filter.RegisterProcessor<DuplicateCommandFilterProcessor>();
-            filter.ProcessFeedback();
+            var filter = new FeedbackMapper(sourceDatabase, targetDatabase);
+            filter.RegisterMapper<ErrorFilterProcessor>();
+            filter.RegisterMapper<EditFilterProcessor>();
+            filter.RegisterMapper<UnnamedCommandFilterProcessor>();
+            filter.RegisterMapper<DuplicateCommandFilterProcessor>();
+            filter.MapFeedback();
         }
     }
 }

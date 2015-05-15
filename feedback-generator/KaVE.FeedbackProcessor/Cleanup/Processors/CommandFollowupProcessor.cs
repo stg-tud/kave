@@ -24,7 +24,7 @@ using KaVE.FeedbackProcessor.Model;
 
 namespace KaVE.FeedbackProcessor.Cleanup.Processors
 {
-    internal class CommandFollowupProcessor : BaseProcessor
+    internal class CommandFollowupProcessor : BaseEventMapper
     {
         private CommandEvent _commandEvent;
 

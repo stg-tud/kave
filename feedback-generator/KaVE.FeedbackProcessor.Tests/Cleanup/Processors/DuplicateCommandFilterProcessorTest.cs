@@ -66,17 +66,17 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
                                   new TimeSpan(TimeSpan.TicksPerSecond))
             };
 
-            Assert.AreEqual(Sets.NewHashSet<IDEEvent>(commandEvent), _uut.Process(commandEvent));
-            Assert.AreEqual(Sets.NewHashSet<IDEEvent>(), _uut.Process(commandEvent2));
-            Assert.AreEqual(Sets.NewHashSet<IDEEvent>(), _uut.Process(commandEvent3));
-            Assert.AreEqual(Sets.NewHashSet<IDEEvent>(commandEvent4), _uut.Process(commandEvent4));
+            Assert.AreEqual(Sets.NewHashSet<IDEEvent>(commandEvent), _uut.Map(commandEvent));
+            Assert.AreEqual(Sets.NewHashSet<IDEEvent>(), _uut.Map(commandEvent2));
+            Assert.AreEqual(Sets.NewHashSet<IDEEvent>(), _uut.Map(commandEvent3));
+            Assert.AreEqual(Sets.NewHashSet<IDEEvent>(commandEvent4), _uut.Map(commandEvent4));
         }
 
         [Test]
         public void ShouldNotFilterAnyOtherCommandEvents()
         {
             var commandEvent = new CommandEvent {CommandId = "Test"};
-            Assert.AreEqual(Sets.NewHashSet<IDEEvent>(commandEvent), _uut.Process(commandEvent));
+            Assert.AreEqual(Sets.NewHashSet<IDEEvent>(commandEvent), _uut.Map(commandEvent));
         }
     }
 }

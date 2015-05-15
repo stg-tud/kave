@@ -23,7 +23,7 @@ using KaVE.FeedbackProcessor.Cleanup.Heuristics;
 
 namespace KaVE.FeedbackProcessor.Cleanup.Processors
 {
-    internal class DuplicateCommandFilterProcessor : BaseProcessor
+    internal class DuplicateCommandFilterProcessor : BaseEventMapper
     {
         public static TimeSpan CommandEventTimeDifference = new TimeSpan(0, 0, 0, 0, 10);
 

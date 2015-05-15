@@ -136,7 +136,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
 
         private void AssertTransformation(IEnumerable<IDEEvent> original, IEnumerable<IDEEvent> expected)
         {
-            var actual = original.SelectMany(_uut.Process).OrderBy(evt => evt.TriggeredAt);
+            var actual = original.SelectMany(_uut.Map).OrderBy(evt => evt.TriggeredAt);
             CollectionAssert.AreEqual(expected, actual);
         }
     }

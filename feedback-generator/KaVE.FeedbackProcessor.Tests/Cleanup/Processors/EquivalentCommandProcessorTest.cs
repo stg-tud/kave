@@ -44,8 +44,8 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
             var concurrentEvent1 = GenerateConcurrentEventWithTestIDEEvents();
             var concurrentEvent2 = GenerateConcurrentEventWithTestIDEEvents();
 
-            CollectionAssert.AreEquivalent(new KaVEHashSet<IDEEvent>(),_uut.Process(concurrentEvent1));
-            CollectionAssert.AreEquivalent(new KaVEHashSet<IDEEvent>(),_uut.Process(concurrentEvent2));
+            CollectionAssert.AreEquivalent(new KaVEHashSet<IDEEvent>(),_uut.Map(concurrentEvent1));
+            CollectionAssert.AreEquivalent(new KaVEHashSet<IDEEvent>(),_uut.Map(concurrentEvent2));
         }
 
         [Test]
@@ -69,7 +69,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
                 ConcurrentEventList = eventList
             };
 
-            CollectionAssert.AreEquivalent(Sets.NewHashSet<IDEEvent>(concurrentEvent),_uut.Process(concurrentEvent));
+            CollectionAssert.AreEquivalent(Sets.NewHashSet<IDEEvent>(concurrentEvent),_uut.Map(concurrentEvent));
         }
 
         [Test]
@@ -98,7 +98,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
                 ConcurrentEventList = eventList
             };
 
-            CollectionAssert.AreEquivalent(new KaVEHashSet<IDEEvent>(),_uut.Process(concurrentEvent));
+            CollectionAssert.AreEquivalent(new KaVEHashSet<IDEEvent>(),_uut.Map(concurrentEvent));
         }
 
         private static ConcurrentEvent GenerateConcurrentEventWithTestIDEEvents()

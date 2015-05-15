@@ -43,7 +43,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
                 CommandId = "{5EFC7975-14BC-11CF-9B2B-00AA00573819}:331:"
             };
 
-            Assert.AreEqual(Sets.NewHashSet<IDEEvent>(), _uut.Process(commandEvent));
+            Assert.AreEqual(Sets.NewHashSet<IDEEvent>(), _uut.Map(commandEvent));
         }
 
         [Test]
@@ -54,7 +54,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
                 CommandId = "{5EFC7975-14BC-11CF-9B2B-00AA00573819}:26:Edit.Paste"
             };
 
-            Assert.AreEqual(Sets.NewHashSet<IDEEvent>(commandEvent), _uut.Process(commandEvent));
+            Assert.AreEqual(Sets.NewHashSet<IDEEvent>(commandEvent), _uut.Map(commandEvent));
         }
     }
 }

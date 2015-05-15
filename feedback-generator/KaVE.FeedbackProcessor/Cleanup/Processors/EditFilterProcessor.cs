@@ -21,7 +21,7 @@ using KaVE.Commons.Model.Events.VisualStudio;
 
 namespace KaVE.FeedbackProcessor.Cleanup.Processors
 {
-    internal class EditFilterProcessor : BaseProcessor
+    internal class EditFilterProcessor : BaseEventMapper
     {
         public EditFilterProcessor()
         {

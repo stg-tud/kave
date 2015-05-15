@@ -26,7 +26,7 @@ using KaVE.FeedbackProcessor.Utils;
 
 namespace KaVE.FeedbackProcessor.Cleanup.Processors
 {
-    internal class MapEquivalentCommandsProcessor : BaseProcessor
+    internal class MapEquivalentCommandsProcessor : BaseEventMapper
     {
         public static List<SortedCommandPair> Mappings = new List<SortedCommandPair>();
 

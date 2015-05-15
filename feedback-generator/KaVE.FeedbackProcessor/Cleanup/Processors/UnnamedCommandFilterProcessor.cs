@@ -22,7 +22,7 @@ using KaVE.Commons.Model.Events;
 
 namespace KaVE.FeedbackProcessor.Cleanup.Processors
 {
-    internal class UnnamedCommandFilterProcessor : BaseProcessor
+    internal class UnnamedCommandFilterProcessor : BaseEventMapper
     {
         public UnnamedCommandFilterProcessor()
         {

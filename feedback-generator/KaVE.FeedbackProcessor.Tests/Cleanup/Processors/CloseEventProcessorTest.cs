@@ -55,7 +55,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
         {
             var closingEvent = new DocumentEvent {Action = DocumentEvent.DocumentAction.Closing};
 
-            var resultSet = _uut.Process(closingEvent);
+            var resultSet = _uut.Map(closingEvent);
 
             var expected = new CommandEvent {CommandId = "Close"};
             CollectionAssert.AreEquivalent(new[] {expected}, resultSet);
@@ -66,7 +66,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
         {
             var windowClosingEvent = new WindowEvent {Action = WindowEvent.WindowAction.Close};
 
-            var processedEvent = _uut.Process(windowClosingEvent);
+            var processedEvent = _uut.Map(windowClosingEvent);
 
             CollectionAssert.IsEmpty(processedEvent);
         }
@@ -81,10 +81,10 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
         public void FiltersDocumentCloseAfterCommandClose()
         {
             var commandCloseEvent = new CommandEvent {CommandId = "Close"};
-            _uut.Process(commandCloseEvent);
+            _uut.Map(commandCloseEvent);
 
             var documentEvent = new DocumentEvent {Action = DocumentEvent.DocumentAction.Closing};
-            var processedEvent = _uut.Process(documentEvent);
+            var processedEvent = _uut.Map(documentEvent);
 
             CollectionAssert.IsEmpty(processedEvent);
         }
