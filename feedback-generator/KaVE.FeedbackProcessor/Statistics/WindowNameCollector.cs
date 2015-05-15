@@ -27,11 +27,11 @@ namespace KaVE.FeedbackProcessor.Statistics
 {
     internal class WindowNameCollector : BaseEventProcessor
     {
-        public IKaVESet<WindowName> AllWindowNames { get; private set; }
+        public IKaVESet<string> AllWindowNames { get; private set; }
 
         public WindowNameCollector()
         {
-            AllWindowNames = new KaVEHashSet<WindowName>();
+            AllWindowNames = new KaVEHashSet<string>();
 
             RegisterFor<IDEEvent>(e => AddName(e.ActiveWindow));
             RegisterFor<WindowEvent>(we => AddName(we.Window));
@@ -50,7 +50,7 @@ namespace KaVE.FeedbackProcessor.Statistics
         {
             if (windowName != null)
             {
-                AllWindowNames.Add(windowName);
+                AllWindowNames.Add(windowName.Identifier);
             }
         }
     }

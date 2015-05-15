@@ -20,9 +20,9 @@ namespace KaVE.Commons.Utils.DateTime
 {
     public class SimilarDateTimeComparer : IComparer<System.DateTime>
     {
-        private readonly uint _diffMillis;
+        private readonly int _diffMillis;
 
-        public SimilarDateTimeComparer(uint diffMillis)
+        public SimilarDateTimeComparer(int diffMillis)
         {
             _diffMillis = diffMillis;
         }

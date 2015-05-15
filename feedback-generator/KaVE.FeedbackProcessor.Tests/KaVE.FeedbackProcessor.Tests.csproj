@@ -69,7 +69,6 @@
     <Compile Include="Activities\TestFixtures.cs" />
     <Compile Include="Activities\UpdateEventMapperTest.cs" />
     <Compile Include="Activities\WindowEventMapperTest.cs" />
-    <Compile Include="Cleanup\FeedbackMapperTest.cs" />
     <Compile Include="Cleanup\Heuristics\TestVsProductionDocumentHeuristicTest.cs" />
     <Compile Include="Cleanup\Heuristics\CommandCompareHeuristicTest.cs" />
     <Compile Include="Cleanup\Heuristics\ConcurrentEventHeuristicTest.cs" />
@@ -82,13 +81,15 @@
     <Compile Include="Cleanup\Processors\MapEquivalentCommandsProcessorTest.cs" />
     <Compile Include="Cleanup\Processors\UnnamedCommandFilterProcessorTest.cs" />
     <Compile Include="Cleanup\Processors\CommandFollowupProcessorTest.cs" />
-    <Compile Include="Cleanup\Processors\ConcurrentEventProcessorTest.cs" />
+    <Compile Include="Cleanup\Processors\ToConcurrentEventMapperTest.cs" />
     <Compile Include="Cleanup\Processors\EquivalentCommandProcessorTest.cs" />
     <Compile Include="Cleanup\Processors\ErrorFilterProcessorTest.cs" />
     <Compile Include="Database\TestDeveloperCollection.cs" />
     <Compile Include="Database\TestFeedbackDatabase.cs" />
     <Compile Include="Database\TestIDEEventCollection.cs" />
     <Compile Include="FeedbackDatabaseBasedTest.cs" />
+    <Compile Include="FeedbackMapperTest.cs" />
+    <Compile Include="FeedbackProcessorTest.cs" />
     <Compile Include="Import\FeedbackArchiveBuilder.cs" />
     <Compile Include="Import\FeedbackArchiveReaderTest.cs" />
     <Compile Include="Import\FeedbackImporterFilterDuplicatesTest.cs" />
@@ -102,11 +103,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Statistics\CommandIdCollectorTest.cs" />
     <Compile Include="Statistics\DeveloperDayTest.cs" />
-    <Compile Include="Statistics\CommandMappingsCalculatorTest.cs" />
+    <Compile Include="Statistics\EquivalentCommandPairCalculatorTest.cs" />
     <Compile Include="Statistics\ConcurrentSetsCalculatorTest.cs" />
     <Compile Include="Statistics\DeveloperStatisticsCalculatorTest.cs" />
     <Compile Include="Statistics\DocumentNameCollectorTest.cs" />
-    <Compile Include="Statistics\FeedbackProcessorTest.cs" />
     <Compile Include="Statistics\EventsPerDeveloperDayStatisticCalculatorTest.cs" />
     <Compile Include="Statistics\WindowNameCollectorTest.cs" />
     <Compile Include="TestUtils\ProcessorAssert.cs" />

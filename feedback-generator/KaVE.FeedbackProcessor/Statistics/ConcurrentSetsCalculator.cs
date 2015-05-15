@@ -25,6 +25,7 @@ using System.Linq;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Model.Events.VisualStudio;
+using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Collections;
 using KaVE.FeedbackProcessor.Model;
 
@@ -39,7 +40,7 @@ namespace KaVE.FeedbackProcessor.Statistics
 
         private static readonly IDictionary<Type, Func<IDEEvent, string>> ToStringMappings = 
             new Dictionary<Type, Func<IDEEvent, string>>
-        {
+            {
             {
                 typeof (CommandEvent), 
                 (commandEvent => FormatString("Command", ((CommandEvent) commandEvent).CommandId))},
@@ -120,7 +121,26 @@ namespace KaVE.FeedbackProcessor.Statistics
 
         private static string FormatString(string prefix, string suffix)
         {
-            return string.Format("{0}{1}{2}", prefix, Separator, suffix);
+            return String.Format("{0}{1}{2}", prefix, Separator, suffix);
+        }
+
+        public string StatisticAsCsv()
+        {
+            var csvBuilder = new CsvBuilder();
+            var statistic = Statistic.OrderByDescending(keyValuePair => keyValuePair.Value);
+            foreach (var stat in statistic)
+            {
+                csvBuilder.StartRow();
+
+                var eventList = stat.Key.ToList();
+                for (var i = 0; i < eventList.Count; i++)
+                {
+                    csvBuilder["Event" + i] = eventList[i];
+                }
+                csvBuilder["Count"] = stat.Value;
+            }
+
+            return csvBuilder.Build();
         }
     }
 }

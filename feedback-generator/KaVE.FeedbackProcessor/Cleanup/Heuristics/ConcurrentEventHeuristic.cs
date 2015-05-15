@@ -15,20 +15,28 @@
  * 
  * Contributors:
  *    - Markus Zimmermann
+ *    - Sven Amann
  */
 
 using System;
+using KaVE.Commons.Model.Events;
+using KaVE.Commons.Utils.DateTime;
+using KaVE.FeedbackProcessor.Model;
 
 namespace KaVE.FeedbackProcessor.Cleanup.Heuristics
 {
-    internal class ConcurrentEventHeuristic {
+    internal class ConcurrentEventHeuristic
+    {
+        public static readonly TimeSpan EventTimeDifference = TimeSpan.FromMilliseconds(10);
 
-        public static bool HaveSimiliarEventTime(DateTime? currentEventTime, DateTime? lastEventTime, TimeSpan eventTimeDifference)
+        public static bool AreConcurrent(IDEEvent evt1, IDEEvent evt2)
         {
-            if (!currentEventTime.HasValue || !lastEventTime.HasValue) return false;
-            var timeDifference =
-                Math.Abs(currentEventTime.Value.Ticks - lastEventTime.Value.Ticks);
-            return timeDifference <= eventTimeDifference.Ticks;
+            return AreSimilar(evt1.GetTriggeredAt(), evt2.GetTriggeredAt());
+        }
+
+        public static bool AreSimilar(DateTime dateTime1, DateTime dateTime2)
+        {
+            return new SimilarDateTimeComparer(EventTimeDifference.Milliseconds).Equal(dateTime1, dateTime2);
         }
     }
 }

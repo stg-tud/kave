@@ -21,6 +21,7 @@
 using System;
 using System.Collections.Generic;
 using KaVE.Commons.Model.Events;
+using KaVE.FeedbackProcessor.Cleanup.Heuristics;
 using KaVE.FeedbackProcessor.Statistics;
 using KaVE.FeedbackProcessor.Tests.TestUtils;
 using KaVE.FeedbackProcessor.Utils;
@@ -29,15 +30,15 @@ using NUnit.Framework;
 namespace KaVE.FeedbackProcessor.Tests.Statistics
 {
     [TestFixture]
-    internal class CommandMappingsCalculatorTest
+    internal class EquivalentCommandPairCalculatorTest
     {
-        private CommandMappingsCalculator _uut;
+        private EquivalentCommandPairCalculator _uut;
 
         [SetUp]
         public void Setup()
         {
-            _uut = new CommandMappingsCalculator();
-            CommandMappingsCalculator.Statistic.Clear();
+            _uut = new EquivalentCommandPairCalculator();
+            EquivalentCommandPairCalculator.Statistic.Clear();
         }
 
         [Test]
@@ -55,7 +56,7 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
             var commandEvent2 = new CommandEvent
             {
                 CommandId = expectedString2,
-                TriggeredAt = eventTime + CommandMappingsCalculator.EventTimeDifference
+                TriggeredAt = eventTime + ConcurrentEventHeuristic.EventTimeDifference
             };
 
             _uut.OnEvent(commandEvent1);
@@ -63,7 +64,7 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
 
             var expectedPair = SortedCommandPair.NewSortedPair(expectedString1, expectedString2);
             CollectionAssert.Contains(
-                CommandMappingsCalculator.Statistic,
+                EquivalentCommandPairCalculator.Statistic,
                 new KeyValuePair<Pair<string>, int>(expectedPair, 1));
         }
 
@@ -81,14 +82,14 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
             {
                 CommandId = "Edit.Copy",
                 TriggeredAt =
-                    eventTime + CommandMappingsCalculator.EventTimeDifference +
+                    eventTime + ConcurrentEventHeuristic.EventTimeDifference +
                     TimeSpan.FromTicks(TimeSpan.TicksPerSecond)
             };
 
             _uut.OnEvent(commandEvent1);
             _uut.OnEvent(commandEvent2);
 
-            CollectionAssert.IsEmpty(CommandMappingsCalculator.Statistic);
+            CollectionAssert.IsEmpty(EquivalentCommandPairCalculator.Statistic);
         }
 
         [Test]
@@ -96,7 +97,7 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
         {
             const string command1 = "Copy";
             const string command2 = "Edit.Copy";
-            var frequencyThreshold = CommandMappingsCalculator.FrequencyThreshold;
+            var frequencyThreshold = EquivalentCommandPairCalculator.FrequencyThreshold;
             var listOfCommandEvents = GenerateCommandPairWithFrequency(
                 DateTimeFactory.SomeDateTime(),
                 command1,
@@ -107,7 +108,7 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
 
             var expectedPair = SortedCommandPair.NewSortedPair(command1, command2);
             CollectionAssert.Contains(
-                CommandMappingsCalculator.Statistic,
+                EquivalentCommandPairCalculator.Statistic,
                 new KeyValuePair<Pair<string>, int>(expectedPair, frequencyThreshold));
         }
 
@@ -116,7 +117,7 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
         {
             const string command1 = "Copy";
             const string command2 = "Edit.Copy";
-            var frequencyThreshold = CommandMappingsCalculator.FrequencyThreshold;
+            var frequencyThreshold = EquivalentCommandPairCalculator.FrequencyThreshold;
             var listOfCommandEvents = GenerateCommandPairWithFrequency(
                 DateTimeFactory.SomeDateTime(),
                 command1,
@@ -128,7 +129,7 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
 
             var expectedPair = SortedCommandPair.NewSortedPair(command1, command2);
             CollectionAssert.DoesNotContain(
-                CommandMappingsCalculator.Statistic,
+                EquivalentCommandPairCalculator.Statistic,
                 new KeyValuePair<Pair<string>, int>(expectedPair, frequencyThreshold - 1));
         }
 
@@ -137,7 +138,7 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
         {
             var someDateTime = DateTimeFactory.SomeDateTime();
 
-            var frequencyThreshold = CommandMappingsCalculator.FrequencyThreshold;
+            var frequencyThreshold = EquivalentCommandPairCalculator.FrequencyThreshold;
             var frequentEvents = GenerateCommandPairWithFrequency(
                 someDateTime,
                 "Copy",
@@ -171,23 +172,23 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
 
             var frequentPair1 = SortedCommandPair.NewSortedPair("Copy", "Edit.Copy");
             CollectionAssert.Contains(
-                CommandMappingsCalculator.Statistic,
+                EquivalentCommandPairCalculator.Statistic,
                 new KeyValuePair<Pair<string>, int>(frequentPair1, frequencyThreshold));
 
             var nonFrequentPair = SortedCommandPair.NewSortedPair("Left", "Textcontrol.Left");
             CollectionAssert.DoesNotContain(
-                CommandMappingsCalculator.Statistic,
+                EquivalentCommandPairCalculator.Statistic,
                 new KeyValuePair<Pair<string>, int>(nonFrequentPair, frequencyThreshold - 1));
 
             var frequentPair2 =
                 SortedCommandPair.NewSortedPair("{5EFC7975-14BC-11CF-9B2B-00AA00573819}:224:File.SaveAll", "Save All");
             CollectionAssert.Contains(
-                CommandMappingsCalculator.Statistic,
+                EquivalentCommandPairCalculator.Statistic,
                 new KeyValuePair<Pair<string>, int>(frequentPair2, frequencyThreshold));
 
             var nonFrequentPair2 = SortedCommandPair.NewSortedPair("Right", "Textcontrol.Right");
             CollectionAssert.DoesNotContain(
-                CommandMappingsCalculator.Statistic,
+                EquivalentCommandPairCalculator.Statistic,
                 new KeyValuePair<Pair<string>, int>(nonFrequentPair2, frequencyThreshold - 1));
         }
 
@@ -200,7 +201,7 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
             for (var i = 0; i < frequency; i++)
             {
                 returnList.AddRange(GenerateCommandPair(startTime, command1, command2));
-                startTime = startTime.Add(CommandMappingsCalculator.EventTimeDifference + TimeSpan.FromSeconds(1));
+                startTime = startTime.Add(ConcurrentEventHeuristic.EventTimeDifference + TimeSpan.FromSeconds(1));
             }
             return returnList;
         }
@@ -215,7 +216,7 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
             var commandEvent2 = new CommandEvent
             {
                 CommandId = command2,
-                TriggeredAt = startTime + CommandMappingsCalculator.EventTimeDifference
+                TriggeredAt = startTime + ConcurrentEventHeuristic.EventTimeDifference
             };
 
             return new List<CommandEvent> {commandEvent1, commandEvent2};

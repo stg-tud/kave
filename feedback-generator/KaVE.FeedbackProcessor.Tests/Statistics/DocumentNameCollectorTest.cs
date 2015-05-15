@@ -79,7 +79,7 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
         private void AssertNameCollected(params DocumentName[] expected)
         {
             var actuals = _uut.AllDocumentNames;
-            CollectionAssert.IsSubsetOf(expected, actuals);
+            CollectionAssert.IsSubsetOf(expected.Select(dn => dn.Identifier), actuals);
         }
     }
 }

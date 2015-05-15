@@ -20,6 +20,7 @@
 using System;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Utils.Collections;
+using KaVE.FeedbackProcessor.Cleanup.Heuristics;
 using KaVE.FeedbackProcessor.Cleanup.Processors;
 using KaVE.FeedbackProcessor.Tests.TestUtils;
 using NUnit.Framework;
@@ -49,20 +50,20 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
             var commandEvent2 = new CommandEvent
             {
                 CommandId = "Test",
-                TriggeredAt = firstEventTime + DuplicateCommandFilterProcessor.CommandEventTimeDifference
+                TriggeredAt = firstEventTime + ConcurrentEventHeuristic.EventTimeDifference
             };
             var commandEvent3 = new CommandEvent
             {
                 CommandId = "Test",
                 TriggeredAt =
-                    firstEventTime + DuplicateCommandFilterProcessor.CommandEventTimeDifference +
-                    DuplicateCommandFilterProcessor.CommandEventTimeDifference
+                    firstEventTime + ConcurrentEventHeuristic.EventTimeDifference +
+                    ConcurrentEventHeuristic.EventTimeDifference
             };
             var commandEvent4 = new CommandEvent
             {
                 CommandId = "Test",
-                TriggeredAt = firstEventTime + DuplicateCommandFilterProcessor.CommandEventTimeDifference +
-                              DuplicateCommandFilterProcessor.CommandEventTimeDifference.Add(
+                TriggeredAt = firstEventTime + ConcurrentEventHeuristic.EventTimeDifference +
+                              ConcurrentEventHeuristic.EventTimeDifference.Add(
                                   new TimeSpan(TimeSpan.TicksPerSecond))
             };
 

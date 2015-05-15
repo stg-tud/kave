@@ -27,11 +27,11 @@ namespace KaVE.FeedbackProcessor.Statistics
 {
     class DocumentNameCollector : BaseEventProcessor
     {
-        public IKaVESet<DocumentName> AllDocumentNames { get; private set; }
+        public IKaVESet<string> AllDocumentNames { get; private set; }
 
         public DocumentNameCollector()
         {
-            AllDocumentNames = new KaVEHashSet<DocumentName>();
+            AllDocumentNames = new KaVEHashSet<string>();
 
             RegisterFor<IDEEvent>(e => AddName(e.ActiveDocument));
             RegisterFor<DocumentEvent>(de => AddName(de.Document));
@@ -50,7 +50,7 @@ namespace KaVE.FeedbackProcessor.Statistics
         {
             if (windowName != null)
             {
-                AllDocumentNames.Add(windowName);
+                AllDocumentNames.Add(windowName.Identifier);
             }
         }
     }

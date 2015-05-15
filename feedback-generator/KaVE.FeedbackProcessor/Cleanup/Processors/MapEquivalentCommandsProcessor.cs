@@ -86,10 +86,7 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
 
         private bool IsLate(IDEEvent commandEvent)
         {
-            return !ConcurrentEventHeuristic.HaveSimiliarEventTime(
-                commandEvent.TriggeredAt,
-                _unmappedCommandEvent.TriggeredAt,
-                EventTimeDifference);
+            return !ConcurrentEventHeuristic.AreConcurrent(commandEvent, _unmappedCommandEvent);
         }
 
         private static SortedCommandPair FindMappingFromLeftSideFor(CommandEvent commandEvent)

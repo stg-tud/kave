@@ -22,36 +22,33 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using KaVE.Commons.Model.Events;
+using KaVE.Commons.Utils;
 using KaVE.FeedbackProcessor.Cleanup.Heuristics;
 using KaVE.FeedbackProcessor.Model;
 using KaVE.FeedbackProcessor.Utils;
 
 namespace KaVE.FeedbackProcessor.Statistics
 {
-    internal class CommandMappingsCalculator : IEventProcessor
+    internal class EquivalentCommandPairCalculator : IEventProcessor
     {
         public static readonly Dictionary<Pair<string>, int> Statistic = new Dictionary<Pair<string>, int>();
-
-        public static TimeSpan EventTimeDifference = new TimeSpan(0, 0, 0, 0, 10);
 
         public static int FrequencyThreshold = 10;
 
         private CommandEvent _lastCommandEvent;
 
-        public void OnStreamStarts(Developer value)
-        {
-        }
+        public void OnStreamStarts(Developer value) {}
 
         public void OnEvent(IDEEvent @event)
         {
             var commandEvent = @event as CommandEvent;
-            if (commandEvent == null) return;
+            if (commandEvent == null)
+            {
+                return;
+            }
 
             if (_lastCommandEvent != null &&
-                ConcurrentEventHeuristic.HaveSimiliarEventTime(
-                _lastCommandEvent.TriggeredAt,
-                commandEvent.TriggeredAt,
-                EventTimeDifference))
+                ConcurrentEventHeuristic.AreConcurrent(_lastCommandEvent, commandEvent))
             {
                 AddEquivalentCommandsToStatistic(_lastCommandEvent.CommandId, commandEvent.CommandId);
             }
@@ -77,6 +74,21 @@ namespace KaVE.FeedbackProcessor.Statistics
             {
                 Statistic.Add(keyPair, 1);
             }
+        }
+
+        public string StatisticAsCsv()
+        {
+            var csvBuilder = new CsvBuilder();
+            var statistic = Statistic.OrderByDescending(keyValuePair => keyValuePair.Value);
+            foreach (var stat in statistic)
+            {
+                csvBuilder.StartRow();
+
+                csvBuilder["FirstCommand"] = stat.Key.Item1;
+                csvBuilder["SecondCommand"] = stat.Key.Item2;
+                csvBuilder["Count"] = stat.Value;
+            }
+            return csvBuilder.Build();
         }
     }
 }

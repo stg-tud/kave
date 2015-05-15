@@ -30,11 +30,10 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Heuristics
         [Test]
         public void HaveSimiliarEventTimeTest()
         {
-            var eventTimeDifference = new TimeSpan(0, 0, 0, 0, 20);
-            DateTime? eventTime1 = new DateTime(1984, 1, 1, 1, 1, 1, 1);
-            DateTime? eventTime2 = new DateTime(1984, 1, 1, 1, 1, 1, 10);
+            var eventTime1 = new DateTime(1984, 1, 1, 1, 1, 1, 1);
+            var eventTime2 = new DateTime(1984, 1, 1, 1, 1, 1, 10);
 
-            Assert.IsTrue(ConcurrentEventHeuristic.HaveSimiliarEventTime(eventTime1, eventTime2, eventTimeDifference));
+            Assert.IsTrue(ConcurrentEventHeuristic.AreSimilar(eventTime1, eventTime2));
         }
     }
 }

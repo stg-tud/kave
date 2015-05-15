@@ -17,26 +17,32 @@
  *    - Sven Amann
  */
 
+using System.Collections.Generic;
 using KaVE.Commons.Model.Events.VisualStudio;
-using KaVE.Commons.Utils.Exceptions;
 using KaVE.FeedbackProcessor.Model;
+using KaVE.JetBrains.Annotations;
 
 namespace KaVE.FeedbackProcessor.Statistics
 {
     internal class ParallelIDEInstancesStatisticCalculator : BaseEventProcessor
     {
-        private readonly ILogger _logger;
+        public readonly IList<string> Statistic = new List<string>();
 
-        public ParallelIDEInstancesStatisticCalculator(ILogger logger)
+        public ParallelIDEInstancesStatisticCalculator()
         {
-            _logger = logger;
             RegisterFor<IDEStateEvent>(ProcessIDEStateEvent);
             RegisterFor<WindowEvent>(ProcessWindowEvent);
         }
 
+        [StringFormatMethod("message")]
+        private void Log(string message, params object[] args)
+        {
+            Statistic.Add(string.Format(message, args));
+        }
+
         public override void OnStreamStarts(Developer developer)
         {
-            _logger.Info("Starting stream of developer {0}", developer.Id);
+            Log("Starting stream of developer {0}", developer.Id);
         }
 
         private void ProcessIDEStateEvent(IDEStateEvent @event)
@@ -44,10 +50,10 @@ namespace KaVE.FeedbackProcessor.Statistics
             switch (@event.IDELifecyclePhase)
             {
                 case IDEStateEvent.LifecyclePhase.Startup:
-                    _logger.Info("  START at {0} - {1}", @event.GetTriggeredAt(), @event.IDESessionUUID);
+                    Log("  START at {0} - {1}", @event.GetTriggeredAt(), @event.IDESessionUUID);
                     break;
                 case IDEStateEvent.LifecyclePhase.Shutdown:
-                    _logger.Info("  STOP  at {0} - {1}", @event.GetTriggeredAt(), @event.IDESessionUUID);
+                    Log("  STOP  at {0} - {1}", @event.GetTriggeredAt(), @event.IDESessionUUID);
                     break;
             }
         }
@@ -59,10 +65,18 @@ namespace KaVE.FeedbackProcessor.Statistics
                 switch (@event.Action)
                 {
                     case WindowEvent.WindowAction.Activate:
-                        _logger.Info("  ACT   at {0} - {1} - {2}", @event.GetTriggeredAt(), @event.IDESessionUUID, @event.Window.Caption);
+                        Log(
+                            "  ACT   at {0} - {1} - {2}",
+                            @event.GetTriggeredAt(),
+                            @event.IDESessionUUID,
+                            @event.Window.Caption);
                         break;
                     case WindowEvent.WindowAction.Deactivate:
-                        _logger.Info("  DEACT at {0} - {1} - {2}", @event.GetTriggeredAt(), @event.IDESessionUUID, @event.Window.Caption);
+                        Log(
+                            "  DEACT at {0} - {1} - {2}",
+                            @event.GetTriggeredAt(),
+                            @event.IDESessionUUID,
+                            @event.Window.Caption);
                         break;
                 }
             }

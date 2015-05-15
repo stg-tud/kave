@@ -17,9 +17,8 @@
  *    - Sven Amann
  */
 
+using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Exceptions;
 using KaVE.FeedbackProcessor.Activities;
 using KaVE.FeedbackProcessor.Cleanup.Processors;
@@ -43,34 +42,26 @@ namespace KaVE.FeedbackProcessor
             const string concurrentEventDatabase = "_concurrent";
             const string equivalentCommandsDatabase = "_equivalentCommands";
             const string commandFollowupsDatabase = "_commandFollowups";
-            const string mergedCommandsDatabase = "_mergedCommands";
 
-            //ImportFeedback(OpenDatabase(importDatabase));
+            ImportFeedback(OpenDatabase(importDatabase));
+            CleanFeedback(OpenDatabase(importDatabase), OpenDatabase(cleanDatabase));
 
-            //LogDeveloperStatistics(OpenDatabase(importDatabase));
-            //LogAnonymizationStatistics(OpenDatabase(importDatabase));
-            //ComputeEventsPerDeveloperDayStatistic(OpenDatabase(importDatabase));
-            //CollectNames(OpenDatabase(importDatabase));
+            LogAnonymizationStatistics(OpenDatabase(importDatabase));
+            LogEquivalentCommandPairs(OpenDatabase(filteredDatabase));
+            LogDeveloperStatistics(OpenDatabase(importDatabase));
+            LogEventsPerDeveloperDayStatistic(OpenDatabase(importDatabase));
             LogIDEActivationEvents(OpenDatabase(importDatabase));
+            LogOccuringNames(OpenDatabase(importDatabase));
 
-            //CleanImportDatabase(OpenDatabase(importDatabase), OpenDatabase(filteredDatabase));
+            MapToActivities(OpenDatabase(importDatabase), OpenDatabase(activityDatabase));
 
-            //MapToActivities(OpenDatabase(importDatabase), OpenDatabase(activityDatabase));
-            CommandMappingsStatistic(OpenDatabase(filteredDatabase));
+            MapToConcurrentEvents(OpenDatabase(filteredDatabase), OpenDatabase(concurrentEventDatabase));
+            FilterEquivalentCommandEvents(OpenDatabase(concurrentEventDatabase), OpenDatabase(equivalentCommandsDatabase));
+            FilterCommandFollowupEvents(OpenDatabase(filteredDatabase), OpenDatabase(commandFollowupsDatabase));
 
-            //CleanFeedback(OpenDatabase(filteredDatabase), OpenDatabase(cleanDatabase));
-
-            //FilterConcurrentEvents(OpenDatabase(filteredDatabase), OpenDatabase(concurrentEventDatabase));
-
-            //FilterEquivalentCommandEvents(OpenDatabase(concurrentEventDatabase), OpenDatabase(equivalentCommandsDatabase));
-
-            //FilterCommandFollowupEvents(OpenDatabase(filteredDatabase), OpenDatabase(commandFollowupsDatabase));
-
-            //ConcurrentEventsStatistic(OpenDatabase(concurrentEventDatabase),"concurrenteventstatistic.csv");
-
-            //ConcurrentEventsStatistic(OpenDatabase(equivalentCommandsDatabase),"equivalentcommandstatistic.csv");
-
-            //ConcurrentEventsStatistic(OpenDatabase(commandFollowupsDatabase),"commandfollowupsstatistic.csv");
+            ConcurrentEventsStatistic(OpenDatabase(concurrentEventDatabase),"concurrenteventstatistic.csv");
+            ConcurrentEventsStatistic(OpenDatabase(equivalentCommandsDatabase),"equivalentcommandstatistic.csv");
+            ConcurrentEventsStatistic(OpenDatabase(commandFollowupsDatabase),"commandfollowupsstatistic.csv");
         }
 
         private static MongoDbFeedbackDatabase OpenDatabase(string databaseSuffix)
@@ -78,6 +69,21 @@ namespace KaVE.FeedbackProcessor
             return new MongoDbFeedbackDatabase(
                 Configuration.DatabaseUrl,
                 string.Format("{0}{1}", Configuration.DatasetName, databaseSuffix));
+        }
+
+        private static void Output(string outputFilename, string text)
+        {
+            File.WriteAllText(OutputFilename(outputFilename), text);
+        }
+
+        private static void Output(string outputFilename, IEnumerable<string> lines)
+        {
+            File.WriteAllLines(OutputFilename(outputFilename), lines);
+        }
+
+        private static string OutputFilename(string developerdaystatsCsv)
+        {
+            return Path.Combine(Configuration.StatisticsOutputPath, developerdaystatsCsv);
         }
 
         private static void ImportFeedback(IFeedbackDatabase importDatabase)
@@ -108,129 +114,73 @@ namespace KaVE.FeedbackProcessor
             }
         }
 
-        private static void ComputeEventsPerDeveloperDayStatistic(IFeedbackDatabase database)
+        private static void LogEventsPerDeveloperDayStatistic(IFeedbackDatabase database)
         {
-            var walker = new FeedbackProcessor(database, Logger);
             var calculator = new EventsPerDeveloperDayStatisticCalculator();
+
+            var walker = new FeedbackProcessor(database, Logger);
             walker.Register(calculator);
             walker.ProcessFeedback();
 
-            var statistic = calculator.Statistic;
-            var csvBuilder = new CsvBuilder();
-            foreach (var stat in statistic)
-            {
-                csvBuilder.StartRow();
-                csvBuilder["Developer"] = stat.Key.Id;
-                foreach (var day in stat.Value)
-                {
-                    var dayString = day.Day.ToString("yyyy-MM-dd");
-                    csvBuilder[dayString + " 1 Start"] = day.FirstActivityAt;
-                    csvBuilder[dayString + " 2 End"] = day.LastActivityAt;
-                    csvBuilder[dayString + " 3 Events"] = day.NumberOfEvents;
-                    csvBuilder[dayString + " 4 Breaks"] = day.NumberOfBreaks;
-                    csvBuilder[dayString + " 5 Total Break"] = day.TotalBreakTime;
-                }
-            }
-            File.WriteAllText(
-                Path.Combine(Configuration.StatisticsOutputPath, "developerdaystats.csv"),
-                csvBuilder.Build(CsvBuilder.SortFields.ByNameLeaveFirst));
+            Output("developerdaystats.csv", calculator.StatisticAsCsv());
         }
 
-        private static void CollectNames(IFeedbackDatabase database)
+        private static void LogOccuringNames(IFeedbackDatabase database)
         {
-            var walker = new FeedbackProcessor(database, Logger);
             var windowNameCollector = new WindowNameCollector();
-            walker.Register(windowNameCollector);
             var documentNameCollector = new DocumentNameCollector();
-            walker.Register(documentNameCollector);
             var commandIdCollector = new CommandIdCollector();
-            walker.Register(commandIdCollector);
 
+            var walker = new FeedbackProcessor(database, Logger);
+            walker.Register(windowNameCollector);
+            walker.Register(documentNameCollector);
+            walker.Register(commandIdCollector);
             walker.ProcessFeedback();
 
-            File.WriteAllLines(
-                Path.Combine(Configuration.StatisticsOutputPath, "windownames.log"),
-                windowNameCollector.AllWindowNames.Select(wn => wn.Identifier));
-            File.WriteAllLines(
-                Path.Combine(Configuration.StatisticsOutputPath, "documentnames.log"),
-                documentNameCollector.AllDocumentNames.Select(dn => dn.Identifier));
-            File.WriteAllLines(
-                Path.Combine(Configuration.StatisticsOutputPath, "commandids.log"),
-                commandIdCollector.AllCommandIds);
+            Output("windownames.log", windowNameCollector.AllWindowNames);
+            Output("documentnames.log", documentNameCollector.AllDocumentNames);
+            Output("commandids.log", commandIdCollector.AllCommandIds);
         }
 
         private static void LogIDEActivationEvents(IFeedbackDatabase database)
         {
-            var walker = new FeedbackProcessor(database, Logger);
-            walker.Register(new ParallelIDEInstancesStatisticCalculator(new FileLogger(Path.Combine(Configuration.StatisticsOutputPath, "window-de-activation.log"))));
-            walker.ProcessFeedback();
-        }
+            var calculator = new ParallelIDEInstancesStatisticCalculator();
 
-        private static void CommandMappingsStatistic(IFeedbackDatabase database)
-        {
             var walker = new FeedbackProcessor(database, Logger);
-            var calculator = new CommandMappingsCalculator();
-
             walker.Register(calculator);
             walker.ProcessFeedback();
 
-            var statistic = CommandMappingsCalculator.Statistic.OrderByDescending(keyValuePair => keyValuePair.Value);
+            Output("window-de-activation.log", calculator.Statistic);
+        }
 
-            var csvBuilder = new CsvBuilder();
+        private static void LogEquivalentCommandPairs(IFeedbackDatabase database)
+        {
+            var calculator = new EquivalentCommandPairCalculator();
 
-            foreach (var stat in statistic)
-            {
-                csvBuilder.StartRow();
+            var walker = new FeedbackProcessor(database, Logger);
+            walker.Register(calculator);
+            walker.ProcessFeedback();
 
-                csvBuilder["FirstCommand"] = stat.Key.Item1;
-                csvBuilder["SecondCommand"] = stat.Key.Item2;
-                csvBuilder["Count"] = stat.Value;
-            }
-
-            File.WriteAllText(
-                Path.Combine(Configuration.StatisticsOutputPath, "commandMappingsStatistic.csv"),
-                csvBuilder.Build());
+            Output("commandMappingsStatistic.csv", calculator.StatisticAsCsv());
         }
 
         private static void ConcurrentEventsStatistic(IFeedbackDatabase database, string fileName)
         {
-            var walker = new FeedbackProcessor(database, Logger);
             var calculator = new ConcurrentSetsCalculator();
 
+            var walker = new FeedbackProcessor(database, Logger);
             walker.Register(calculator);
             walker.ProcessFeedback();
 
-            var statistic = calculator.Statistic.OrderByDescending(keyValuePair => keyValuePair.Value);
-            var csvBuilder = new CsvBuilder();
-
-            var maximumNumberOfEventFields = statistic.Max(stat => stat.Key.Count);
-
-            foreach (var stat in statistic)
-            {
-                csvBuilder.StartRow();
-
-                var eventList = stat.Key.ToList();
-
-                for (int i = 0; i < maximumNumberOfEventFields; i++)
-                {
-                    var fieldName = "Event" + i;
-                    if (i < eventList.Count) csvBuilder[fieldName] = eventList[i];
-                    else csvBuilder[fieldName] = "";
-                }
-
-                csvBuilder["Count"] = stat.Value;
-            }
-
-            File.WriteAllText(
-                Path.Combine(Configuration.StatisticsOutputPath, fileName),
-                csvBuilder.Build());
+            Output(fileName, calculator.StatisticAsCsv());
         }
 
         private static void CleanFeedback(IFeedbackDatabase sourceDatabase, IFeedbackDatabase targetDatabase)
         {
             var cleaner = new FeedbackMapper(sourceDatabase, targetDatabase);
             cleaner.RegisterMapper<AddFileProcessor>();
-            cleaner.RegisterMapper<DuplicateCommandFilterProcessor>();
+            cleaner.RegisterMapper<DuplicateCommandFilterProcessor>(); ;
+            cleaner.RegisterMapper<EditFilterProcessor>();
             cleaner.RegisterMapper<ErrorFilterProcessor>();
             cleaner.RegisterMapper<UnnamedCommandFilterProcessor>();
             cleaner.MapFeedback();
@@ -241,18 +191,27 @@ namespace KaVE.FeedbackProcessor
             var activityMapper = new FeedbackMapper(sourceDatabase, activityDatabase);
             activityMapper.RegisterMapper<AlwaysDropMapper>(); // only generated events reach activity database
             activityMapper.RegisterMapper<AnyToActivityMapper>(); // map any event to a keep-alive
-            activityMapper.RegisterMapper<InIDEToActivityDetector>();
-            activityMapper.RegisterMapper<IDEStateEventToActivityMapper>();
             activityMapper.RegisterMapper<BuildEventToActivityMapper>();
+            activityMapper.RegisterMapper<CommandEventToActivityMapper>();
+            activityMapper.RegisterMapper<CompletionEventToActivityMapper>();
             activityMapper.RegisterMapper<DebuggerEventToActivityMapper>();
-
+            activityMapper.RegisterMapper<DocumentEventToActivityMapper>();
+            activityMapper.RegisterMapper<EditEventToActivityMapper>();
+            activityMapper.RegisterMapper<FindEventToActivityMapper>();
+            activityMapper.RegisterMapper<IDEStateEventToActivityMapper>();
+            activityMapper.RegisterMapper<InIDEToActivityDetector>();
+            activityMapper.RegisterMapper<InstallEventToActivityMapper>();
+            activityMapper.RegisterMapper<SolutionEventToActivityMapper>();
+            activityMapper.RegisterMapper<UpdateEventToActivityMapper>();
+            //activityMapper.RegisterMapper<WindowEventToActivityMapper>();
             activityMapper.MapFeedback();
         }
-        
-        private static void FilterConcurrentEvents(IFeedbackDatabase sourceDatabase, IFeedbackDatabase targetDatabase)
+
+        private static void MapToConcurrentEvents(IFeedbackDatabase sourceDatabase, IFeedbackDatabase targetDatabase)
         {
             var filter = new FeedbackMapper(sourceDatabase, targetDatabase);
-            filter.RegisterMapper<ConcurrentEventProcessor>();
+            filter.RegisterMapper<AlwaysDropMapper>();
+            filter.RegisterMapper<ToConcurrentEventMapper>();
             filter.MapFeedback();
         }
 
@@ -264,20 +223,11 @@ namespace KaVE.FeedbackProcessor
             filter.MapFeedback();
         }
 
-        private static void FilterCommandFollowupEvents(IFeedbackDatabase sourceDatabase, IFeedbackDatabase targetDatabase)
+        private static void FilterCommandFollowupEvents(IFeedbackDatabase sourceDatabase,
+            IFeedbackDatabase targetDatabase)
         {
             var filter = new FeedbackMapper(sourceDatabase, targetDatabase);
             filter.RegisterMapper<CommandFollowupProcessor>();
-            filter.MapFeedback();
-        }
-
-        private static void CleanImportDatabase(IFeedbackDatabase sourceDatabase, IFeedbackDatabase targetDatabase)
-        {
-            var filter = new FeedbackMapper(sourceDatabase, targetDatabase);
-            filter.RegisterMapper<ErrorFilterProcessor>();
-            filter.RegisterMapper<EditFilterProcessor>();
-            filter.RegisterMapper<UnnamedCommandFilterProcessor>();
-            filter.RegisterMapper<DuplicateCommandFilterProcessor>();
             filter.MapFeedback();
         }
     }

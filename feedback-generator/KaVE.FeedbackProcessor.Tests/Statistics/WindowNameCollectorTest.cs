@@ -79,7 +79,7 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
         private void AssertNameCollected(params WindowName[] expected)
         {
             var actuals = _uut.AllWindowNames;
-            CollectionAssert.IsSubsetOf(expected, actuals);
+            CollectionAssert.IsSubsetOf(expected.Select(wn => wn.Identifier), actuals);
         }
     }
 }

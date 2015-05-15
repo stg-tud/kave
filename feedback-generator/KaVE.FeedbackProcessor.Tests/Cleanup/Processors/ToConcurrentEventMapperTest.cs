@@ -24,6 +24,7 @@ using System.Linq;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.TestUtils.Model.Events;
 using KaVE.Commons.Utils.Collections;
+using KaVE.FeedbackProcessor.Cleanup.Heuristics;
 using KaVE.FeedbackProcessor.Cleanup.Processors;
 using KaVE.FeedbackProcessor.Model;
 using KaVE.FeedbackProcessor.Tests.TestUtils;
@@ -32,21 +33,21 @@ using NUnit.Framework;
 namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
 {
     [TestFixture]
-    internal class ConcurrentEventProcessorTest
+    internal class ToConcurrentEventMapperTest
     {
-        private ConcurrentEventProcessor _uut;
+        private ToConcurrentEventMapper _uut;
 
         [SetUp]
         public void SetUp()
         {
-            _uut = new ConcurrentEventProcessor();
+            _uut = new ToConcurrentEventMapper();
         }
 
         [Test]
         public void GeneratesConcurrentEventForConcurrentEvents()
         {
             var concurrentEventList =
-                GenerateEvents(ConcurrentEventProcessor.EventTimeDifference.Ticks);
+                GenerateEvents(ConcurrentEventHeuristic.EventTimeDifference.Ticks);
 
             var expectedEventSet = Sets.NewHashSet(
                 new ConcurrentEvent
@@ -61,28 +62,6 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
             concurrentEventList.ForEach(ideEvent => resultEventSet = _uut.Map(ideEvent));
 
             CollectionAssert.AreEquivalent(expectedEventSet, resultEventSet);
-        }
-
-        [Test]
-        public void DropsAllEventsExceptConcurrentEvents()
-        {
-            var eventList = GenerateEvents(ConcurrentEventProcessor.EventTimeDifference.Ticks + 1);
-
-            eventList.ForEach(
-                ideEvent => CollectionAssert.AreEquivalent(new KaVEHashSet<IDEEvent>(), _uut.Map(ideEvent)));
-        }
-
-        [Test]
-        public void ShouldNotAddErrorEventsToConcurrentEvents()
-        {
-            var eventList = GenerateEvents(ConcurrentEventProcessor.EventTimeDifference.Ticks);
-            var errorEvent = new ErrorEvent {TriggeredAt = eventList.Last().TriggeredAt};
-            eventList.Add(errorEvent);
-
-            IKaVESet<IDEEvent> resultEventSet = new KaVEHashSet<IDEEvent>();
-            eventList.ForEach(ideEvent => resultEventSet = _uut.Map(ideEvent));
-
-            CollectionAssert.DoesNotContain(resultEventSet, errorEvent);
         }
 
         public static List<IDEEvent> GenerateEvents(long eventTimeDifferenceInTicks)
