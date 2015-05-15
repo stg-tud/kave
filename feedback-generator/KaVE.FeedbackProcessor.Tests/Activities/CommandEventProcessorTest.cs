@@ -19,14 +19,13 @@
 
 using KaVE.Commons.Model.Events;
 using KaVE.FeedbackProcessor.Activities;
-using KaVE.FeedbackProcessor.Cleanup;
 using NUnit.Framework;
 
 namespace KaVE.FeedbackProcessor.Tests.Activities
 {
-    internal class CommandEventProcessorTest : BaseEventProcessorTest
+    internal class CommandEventProcessorTest : BaseActivityProcessorTest
     {
-        public override IIDEEventProcessor Sut
+        public override BaseActivityProcessor Sut
         {
             get { return new CommandEventActivityProcessor(); }
         }

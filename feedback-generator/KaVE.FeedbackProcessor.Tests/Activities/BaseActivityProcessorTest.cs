@@ -21,15 +21,15 @@ using System;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Names.VisualStudio;
 using KaVE.Commons.Utils.Collections;
+using KaVE.FeedbackProcessor.Activities;
 using KaVE.FeedbackProcessor.Activities.Model;
-using KaVE.FeedbackProcessor.Cleanup;
 using NUnit.Framework;
 
 namespace KaVE.FeedbackProcessor.Tests.Activities
 {
-    internal abstract class BaseEventProcessorTest
+    internal abstract class BaseActivityProcessorTest
     {
-        public abstract IIDEEventProcessor Sut { get; }
+        public abstract BaseActivityProcessor Sut { get; }
 
         protected void AssertDrop(IDEEvent @event)
         {

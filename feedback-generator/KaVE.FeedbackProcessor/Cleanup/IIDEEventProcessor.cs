@@ -18,18 +18,17 @@
  */
 
 using KaVE.Commons.Model.Events;
-using KaVE.Commons.Utils.Collections;
 using KaVE.FeedbackProcessor.Model;
 using KaVE.JetBrains.Annotations;
 
 namespace KaVE.FeedbackProcessor.Cleanup
 {
-    public interface IIDEEventProcessor
+    public interface IIDEEventProcessor<out TResult>
     {
         void OnStreamStarts(Developer value);
 
         [NotNull]
-        IKaVESet<IDEEvent> Process(IDEEvent @event);
+        TResult Process(IDEEvent @event);
 
         void OnStreamEnds();
     }

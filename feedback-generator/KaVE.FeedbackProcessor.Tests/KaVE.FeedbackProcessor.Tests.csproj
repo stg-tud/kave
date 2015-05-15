@@ -54,7 +54,7 @@
   <ItemGroup>
     <Compile Include="Activities\AlwaysDropProcessorTest.cs" />
     <Compile Include="Activities\AnyActivityProcessorTest.cs" />
-    <Compile Include="Activities\BaseEventProcessorTest.cs" />
+    <Compile Include="Activities\BaseActivityProcessorTest.cs" />
     <Compile Include="Activities\BuildEventProcessorTest.cs" />
     <Compile Include="Activities\CommandEventProcessorTest.cs" />
     <Compile Include="Activities\CompletionEventProcessorTest.cs" />

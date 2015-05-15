@@ -21,14 +21,13 @@ using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Utils.Collections;
 using KaVE.FeedbackProcessor.Activities;
 using KaVE.FeedbackProcessor.Activities.Model;
-using KaVE.FeedbackProcessor.Cleanup;
 using NUnit.Framework;
 
 namespace KaVE.FeedbackProcessor.Tests.Activities
 {
-    internal class CompletionEventProcessorTest : BaseEventProcessorTest
+    internal class CompletionEventProcessorTest : BaseActivityProcessorTest
     {
-        public override IIDEEventProcessor Sut
+        public override BaseActivityProcessor Sut
         {
             get { return new CompletionEventActivityProcessor(); }
         }

@@ -25,16 +25,16 @@ using NUnit.Framework;
 
 namespace KaVE.FeedbackProcessor.Tests.TestUtils
 {
-    public static class ProcessorAssert
+    internal static class ProcessorAssert
     {
-        public static void DoesNotFilter(IIDEEventProcessor uut, IDEEvent @event)
+        public static void DoesNotFilter(IIDEEventProcessor<IKaVESet<IDEEvent>> uut, IDEEvent @event)
         {
             var processedEvent = uut.Process(@event);
 
             CollectionAssert.AreEqual(new KaVEHashSet<IDEEvent> {@event}, processedEvent);
         }
 
-        public static void Drops(IIDEEventProcessor uut, IDEEvent @event)
+        public static void Drops(IIDEEventProcessor<IKaVESet<IDEEvent>> uut, IDEEvent @event)
         {
             var answer = uut.Process(@event);
 

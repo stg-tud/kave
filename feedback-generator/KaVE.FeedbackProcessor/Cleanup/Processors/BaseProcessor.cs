@@ -28,7 +28,7 @@ using KaVE.JetBrains.Annotations;
 
 namespace KaVE.FeedbackProcessor.Cleanup.Processors
 {
-    internal abstract class BaseProcessor : IIDEEventProcessor
+    internal abstract class BaseProcessor : IIDEEventProcessor<IKaVESet<IDEEvent>>
     {
         protected delegate void Processor<in TEvent>([NotNull] TEvent currentEvent) where TEvent : IDEEvent;
 

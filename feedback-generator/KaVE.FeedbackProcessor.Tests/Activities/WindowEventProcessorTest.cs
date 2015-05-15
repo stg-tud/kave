@@ -22,16 +22,15 @@ using KaVE.Commons.Model.Names.VisualStudio;
 using KaVE.Commons.TestUtils.Utils.Exceptions;
 using KaVE.FeedbackProcessor.Activities;
 using KaVE.FeedbackProcessor.Activities.Model;
-using KaVE.FeedbackProcessor.Cleanup;
 using NUnit.Framework;
 
 namespace KaVE.FeedbackProcessor.Tests.Activities
 {
-    internal class WindowEventProcessorTest : BaseEventProcessorTest
+    internal class WindowEventProcessorTest : BaseActivityProcessorTest
     {
         private readonly TestLogger _logger = new TestLogger(true);
 
-        public override IIDEEventProcessor Sut
+        public override BaseActivityProcessor Sut
         {
             get { return new WindowEventActivityProcessor(_logger); }
         }

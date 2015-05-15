@@ -24,7 +24,7 @@ using KaVE.FeedbackProcessor.Model;
 
 namespace KaVE.FeedbackProcessor.Activities
 {
-    internal class AlwaysDropProcessor : IIDEEventProcessor
+    internal class AlwaysDropProcessor : IIDEEventProcessor<IKaVESet<IDEEvent>>
     {
         public void OnStreamStarts(Developer value) {}
 

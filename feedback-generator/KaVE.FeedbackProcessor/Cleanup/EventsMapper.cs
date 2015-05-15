@@ -42,7 +42,7 @@ namespace KaVE.FeedbackProcessor.Cleanup
             _processors = new List<Type>();
         }
 
-        public void RegisterProcessor<TP>() where TP : IIDEEventProcessor, new()
+        public void RegisterProcessor<TP>() where TP : IIDEEventProcessor<IKaVESet<IDEEvent>>, new()
         {
             _processors.Add(typeof (TP));
         }
@@ -74,9 +74,9 @@ namespace KaVE.FeedbackProcessor.Cleanup
             }
         }
 
-        private List<IIDEEventProcessor> CreateProcessors()
+        private List<IIDEEventProcessor<IKaVESet<IDEEvent>>> CreateProcessors()
         {
-            return _processors.Select(Activator.CreateInstance).Cast<IIDEEventProcessor>().ToList();
+            return _processors.Select(Activator.CreateInstance).Cast<IIDEEventProcessor<IKaVESet<IDEEvent>>>().ToList();
         }
 
         private IEnumerable<IDEEvent> GetAllEventsOf(Developer developer)
@@ -85,7 +85,7 @@ namespace KaVE.FeedbackProcessor.Cleanup
             return events.GetEventStream(developer);
         }
 
-        private void ProcessEvent(IDEEvent originalEvent, IEnumerable<IIDEEventProcessor> processors)
+        private void ProcessEvent(IDEEvent originalEvent, IEnumerable<IIDEEventProcessor<IKaVESet<IDEEvent>>> processors)
         {
             var resultingEventSet = new KaVEHashSet<IDEEvent>();
             var dropOriginalEvent = false;
