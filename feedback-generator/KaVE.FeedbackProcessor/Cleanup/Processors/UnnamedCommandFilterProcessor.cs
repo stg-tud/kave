@@ -19,7 +19,6 @@
 
 using System.Text.RegularExpressions;
 using KaVE.Commons.Model.Events;
-using KaVE.Commons.Utils.Collections;
 
 namespace KaVE.FeedbackProcessor.Cleanup.Processors
 {
@@ -30,9 +29,12 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
             RegisterFor<CommandEvent>(FilterCommandEvents);
         }
 
-        public IKaVESet<IDEEvent> FilterCommandEvents(CommandEvent commandEvent)
+        public void FilterCommandEvents(CommandEvent commandEvent)
         {
-            return IsNotNamed(commandEvent.CommandId) ? AnswerDrop() : AnswerKeep();
+            if (IsNotNamed(commandEvent.CommandId))
+            {
+                DropCurrentEvent();
+            }
         }
 
         private static bool IsNotNamed(string commandId)

@@ -20,7 +20,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using KaVE.Commons.Model.Events;
-using KaVE.Commons.Utils.Collections;
 using KaVE.FeedbackProcessor.Model;
 
 namespace KaVE.FeedbackProcessor.Cleanup.Processors
@@ -32,28 +31,38 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
             RegisterFor<ConcurrentEvent>(ProcessConcurrentEvent);
         }
 
-        private IKaVESet<IDEEvent> ProcessConcurrentEvent(ConcurrentEvent @event)
+        private void ProcessConcurrentEvent(ConcurrentEvent @event)
         {
-            return HasEquivalentCommands(@event) ? AnswerKeep() : AnswerDrop();
+            if (!HasEquivalentCommands(@event))
+            {
+                DropCurrentEvent();
+            }
         }
 
         private bool HasEquivalentCommands(ConcurrentEvent concurrentEvent)
         {
             var concurrentEventList = concurrentEvent.ConcurrentEventList;
-            if (!ContainsOnlyCommandEvents(concurrentEventList)) return false;
+            if (!ContainsOnlyCommandEvents(concurrentEventList))
+            {
+                return false;
+            }
             var commandEventList = concurrentEventList.Cast<CommandEvent>().ToList();
             return ContainsEquivalentCommands(commandEventList);
         }
 
         private static bool ContainsEquivalentCommands(IList<CommandEvent> commandEventList)
         {
-            if (commandEventList.Count() != 2) return false;
+            if (commandEventList.Count() != 2)
+            {
+                return false;
+            }
             var triggerOfCommandEvent1 = commandEventList[0].TriggeredBy;
             var triggerOfCommandEvent2 = commandEventList[1].TriggeredBy;
             return HaveDifferentTrigger(triggerOfCommandEvent1, triggerOfCommandEvent2);
         }
 
-        private static bool HaveDifferentTrigger(IDEEvent.Trigger triggerOfCommandEvent1, IDEEvent.Trigger triggerOfCommandEvent2)
+        private static bool HaveDifferentTrigger(IDEEvent.Trigger triggerOfCommandEvent1,
+            IDEEvent.Trigger triggerOfCommandEvent2)
         {
             return triggerOfCommandEvent1 != triggerOfCommandEvent2;
         }

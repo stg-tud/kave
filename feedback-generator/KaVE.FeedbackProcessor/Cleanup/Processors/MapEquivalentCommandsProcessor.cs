@@ -20,9 +20,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using KaVE.Commons.Model.Events;
-using KaVE.Commons.Utils.Collections;
 using KaVE.FeedbackProcessor.Cleanup.Heuristics;
 using KaVE.FeedbackProcessor.Utils;
 
@@ -41,11 +39,8 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
             RegisterFor<CommandEvent>(MapCommandEvent);
         }
 
-        private IKaVESet<IDEEvent> MapCommandEvent(CommandEvent commandEvent)
+        private void MapCommandEvent(CommandEvent commandEvent)
         {
-            var resultSet = Sets.NewHashSet<IDEEvent>();
-            resultSet.Add(commandEvent);
-
             var mapping = FindMappingFromLeftSideFor(commandEvent);
             var isOnLeftSide = mapping != null;
             if (isOnLeftSide)
@@ -55,13 +50,13 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
                     _unmappedCommandEvent = null;
                 }
 
-                resultSet.Remove(commandEvent);
-                resultSet.Add(CopyCommandEventWithId(commandEvent, mapping.Item2));
+                DropCurrentEvent();
+                Insert(CopyCommandEventWithId(commandEvent, mapping.Item2));
             }
 
             if (_unmappedCommandEvent != null && IsLate(commandEvent))
             {
-                resultSet.Add(_unmappedCommandEvent);
+                Insert(_unmappedCommandEvent);
                 _unmappedCommandEvent = null;
             }
 
@@ -69,11 +64,9 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
             var isOnRightSide = mapping != null;
             if (isOnRightSide)
             {
-                resultSet.Remove(commandEvent);
+                DropCurrentEvent();
                 _unmappedCommandEvent = commandEvent;
             }
-
-            return resultSet;
         }
 
         private static CommandEvent CopyCommandEventWithId(IDEEvent commandEvent, string newId)

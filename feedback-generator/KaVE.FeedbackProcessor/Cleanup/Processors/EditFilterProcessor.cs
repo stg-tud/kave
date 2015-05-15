@@ -17,9 +17,7 @@
  *    - Mattis Manfred Kämmerer
  */
 
-using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.VisualStudio;
-using KaVE.Commons.Utils.Collections;
 
 namespace KaVE.FeedbackProcessor.Cleanup.Processors
 {
@@ -30,9 +28,9 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
             RegisterFor<EditEvent>(FilterEditEvents);
         }
 
-        private IKaVESet<IDEEvent> FilterEditEvents(EditEvent @event)
+        private void FilterEditEvents(EditEvent @event)
         {
-            return AnswerDrop();
+            DropCurrentEvent();
         }
     }
 }

@@ -22,7 +22,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using KaVE.Commons.Model.Events;
-using KaVE.Commons.Utils.Collections;
 using KaVE.FeedbackProcessor.Cleanup.Heuristics;
 using KaVE.FeedbackProcessor.Model;
 
@@ -41,9 +40,13 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
             RegisterFor<IDEEvent>(ProcessIDEEvent);
         }
 
-        private IKaVESet<IDEEvent> ProcessIDEEvent(IDEEvent @event)
+        private void ProcessIDEEvent(IDEEvent @event)
         {
-            if (@event is ErrorEvent) return AnswerDrop();
+            if (@event is ErrorEvent)
+            {
+                DropCurrentEvent();
+                return;
+            }
 
             if (_eventCache.Count == 0)
             {
@@ -65,12 +68,13 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
                     _eventCache.Add(@event);
                     if (MoreThanOneEventConcurredIn(concurrentEvent))
                     {
-                        return AnswerReplace(concurrentEvent);
+                        ReplaceCurrentEventWith(concurrentEvent);
+                        return;
                     }
                 }
             }
 
-            return AnswerDrop();
+            DropCurrentEvent();
         }
 
         private static bool MoreThanOneEventConcurredIn(ConcurrentEvent concurrentEvent)

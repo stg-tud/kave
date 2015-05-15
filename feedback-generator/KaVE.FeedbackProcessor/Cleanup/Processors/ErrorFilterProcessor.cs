@@ -18,7 +18,6 @@
  */
 
 using KaVE.Commons.Model.Events;
-using KaVE.Commons.Utils.Collections;
 
 namespace KaVE.FeedbackProcessor.Cleanup.Processors
 {
@@ -29,9 +28,9 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
             RegisterFor<ErrorEvent>(FilterErrorEvents);
         }
 
-        private IKaVESet<IDEEvent> FilterErrorEvents(ErrorEvent @event)
+        private void FilterErrorEvents(ErrorEvent @event)
         {
-            return AnswerDrop();
+            DropCurrentEvent();
         }
     }
 }

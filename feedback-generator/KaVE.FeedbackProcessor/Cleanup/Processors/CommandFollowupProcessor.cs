@@ -18,7 +18,6 @@
  *    - Markus Zimmermann
  */
 
-using System;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Utils.Collections;
 using KaVE.FeedbackProcessor.Model;
@@ -34,36 +33,33 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
             RegisterFor<IDEEvent>(GenerateConcurrentEvent);
         }
 
-        public IKaVESet<IDEEvent> GenerateConcurrentEvent(IDEEvent @event)
+        public void GenerateConcurrentEvent(IDEEvent @event)
         {
             if (@event is CommandEvent)
             {
                 _commandEvent = @event as CommandEvent;
             }
-            else
+            else if (_commandEvent != null)
             {
-                if (_commandEvent != null)
+                var resultEvent = new ConcurrentEvent
                 {
-                    var resultEvent = new ConcurrentEvent
-                    {
-                        ActiveDocument = @event.ActiveDocument,
-                        ActiveWindow = @event.ActiveWindow,
-                        Duration = @event.TerminatedAt - _commandEvent.TriggeredAt,
-                        ConcurrentEventList = new KaVEList<IDEEvent> {_commandEvent, @event},
-                        IDESessionUUID = @event.IDESessionUUID,
-                        KaVEVersion = @event.KaVEVersion,
-                        TerminatedAt = @event.TerminatedAt,
-                        TriggeredAt = _commandEvent.TriggeredAt,
-                        TriggeredBy = _commandEvent.TriggeredBy
-                    };
+                    ActiveDocument = @event.ActiveDocument,
+                    ActiveWindow = @event.ActiveWindow,
+                    Duration = @event.TerminatedAt - _commandEvent.TriggeredAt,
+                    ConcurrentEventList = new KaVEList<IDEEvent> {_commandEvent, @event},
+                    IDESessionUUID = @event.IDESessionUUID,
+                    KaVEVersion = @event.KaVEVersion,
+                    TerminatedAt = @event.TerminatedAt,
+                    TriggeredAt = _commandEvent.TriggeredAt,
+                    TriggeredBy = _commandEvent.TriggeredBy
+                };
 
-                    _commandEvent = null;
+                _commandEvent = null;
 
-                    return AnswerReplace(resultEvent);
-                }
+                ReplaceCurrentEventWith(resultEvent);
             }
 
-            return AnswerDrop();
+            DropCurrentEvent();
         }
     }
 }

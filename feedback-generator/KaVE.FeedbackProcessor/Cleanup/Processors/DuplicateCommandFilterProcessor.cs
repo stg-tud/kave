@@ -19,7 +19,6 @@
 
 using System;
 using KaVE.Commons.Model.Events;
-using KaVE.Commons.Utils.Collections;
 using KaVE.FeedbackProcessor.Cleanup.Heuristics;
 
 namespace KaVE.FeedbackProcessor.Cleanup.Processors
@@ -35,11 +34,14 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
             RegisterFor<CommandEvent>(FilterCommandEvents);
         }
 
-        public IKaVESet<IDEEvent> FilterCommandEvents(CommandEvent commandEvent)
+        public void FilterCommandEvents(CommandEvent commandEvent)
         {
             var previousCommandEvent = _oldCommandEvent;
             _oldCommandEvent = commandEvent;
-            return IsDuplicate(commandEvent, previousCommandEvent) ? AnswerDrop() : AnswerKeep();
+            if (IsDuplicate(commandEvent, previousCommandEvent))
+            {
+                DropCurrentEvent();
+            }
         }
 
         private static bool IsDuplicate(CommandEvent commandEvent, CommandEvent previousCommandEvent)
@@ -47,7 +49,8 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
             return previousCommandEvent != null && previousCommandEvent.CommandId == commandEvent.CommandId &&
                    ConcurrentEventHeuristic.HaveSimiliarEventTime(
                        previousCommandEvent.TriggeredAt,
-                       commandEvent.TriggeredAt, CommandEventTimeDifference);
+                       commandEvent.TriggeredAt,
+                       CommandEventTimeDifference);
         }
     }
 }
