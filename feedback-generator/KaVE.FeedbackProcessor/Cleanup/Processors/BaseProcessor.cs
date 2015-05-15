@@ -38,11 +38,6 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
         private IDEEvent _currentEvent;
         private IKaVESet<IDEEvent> _answer;
 
-        public virtual Developer Developer
-        {
-            set { }
-        }
-
         /// <summary>
         ///     Register a sub-processor for a type. Accepts only on registration per type, but allows registrations for
         ///     sub-/supertypes. If multiple sub-processors apply for one event, all are invoked in the order of registration.
@@ -54,6 +49,8 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
             _processors.Add(
                 new KeyValuePair<Type, Processor<IDEEvent>>(typeof (TEvent), evt => processor((TEvent) evt)));
         }
+
+        public virtual void OnStreamStarts(Developer value) { }
 
         public IKaVESet<IDEEvent> Process(IDEEvent @event)
         {
@@ -101,5 +98,7 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
                 _answer.Add(ideEvent);
             }
         }
+
+        public void OnStreamEnds() {}
     }
 }

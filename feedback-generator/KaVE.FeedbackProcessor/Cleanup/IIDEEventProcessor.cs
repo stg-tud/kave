@@ -26,14 +26,11 @@ namespace KaVE.FeedbackProcessor.Cleanup
 {
     public interface IIDEEventProcessor
     {
-        Developer Developer { set; }
+        void OnStreamStarts(Developer value);
 
-        /// <summary>
-        /// Returns the argument event, if this processor doesn't care about the event.
-        /// Returns null, if the argument event is consumed by this processor.
-        /// Returns another event, if this event should be replaced by the other.
-        /// </summary>
         [NotNull]
         IKaVESet<IDEEvent> Process(IDEEvent @event);
+
+        void OnStreamEnds();
     }
 }

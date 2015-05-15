@@ -66,7 +66,7 @@ namespace KaVE.FeedbackProcessor.Cleanup
             var processors = CreateProcessors();
             foreach (var processor in processors)
             {
-                processor.Developer = developer;
+                processor.OnStreamStarts(developer);
             }
             foreach (var ideEvent in GetAllEventsOf(developer))
             {

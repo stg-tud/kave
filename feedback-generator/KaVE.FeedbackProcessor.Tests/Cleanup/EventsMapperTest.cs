@@ -310,9 +310,9 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup
                 RegisterFor<IDEEvent>(ProcessAnyEvent);
             }
 
-            public override Developer Developer
+            public override void OnStreamStarts(Developer value)
             {
-                set { ProcessedDevelopers.Add(value); }
+                ProcessedDevelopers.Add(value);
             }
 
             public virtual void ProcessAnyEvent(IDEEvent @event)

@@ -26,11 +26,13 @@ namespace KaVE.FeedbackProcessor.Activities
 {
     internal class AlwaysDropProcessor : IIDEEventProcessor
     {
-        public Developer Developer { set; get; }
+        public void OnStreamStarts(Developer value) {}
 
         public IKaVESet<IDEEvent> Process(IDEEvent @event)
         {
             return Sets.NewHashSet<IDEEvent>();
         }
+
+        public void OnStreamEnds() {}
     }
 }
