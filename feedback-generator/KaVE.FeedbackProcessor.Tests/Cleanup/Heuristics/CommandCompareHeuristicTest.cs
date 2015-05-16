@@ -57,15 +57,15 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Heuristics
         }
 
         [TestCase(VisualStudioCommand, VisualStudioCommand, 0)]
-        [TestCase(VisualStudioCommand, ReSharperCommand, -1)]
-        [TestCase(ReSharperCommand, VisualStudioCommand, 1)]
-        [TestCase(VisualStudioCommand, OtherCommand, -1)]
-        [TestCase(OtherCommand, VisualStudioCommand, 1)]
         [TestCase(ReSharperCommand, ReSharperCommand, 0)]
-        [TestCase(ReSharperCommand, OtherCommand, -1)]
-        [TestCase(OtherCommand, ReSharperCommand, 1)]
         [TestCase(OtherCommand, OtherCommand, 0)]
-        public void CompareCommands(string command1, string command2, int expected)
+        [TestCase(VisualStudioCommand, ReSharperCommand, -1)]
+        [TestCase(VisualStudioCommand, OtherCommand, -1)]
+        [TestCase(ReSharperCommand, OtherCommand, -1)]
+        [TestCase(ReSharperCommand, VisualStudioCommand, 1)]
+        [TestCase(OtherCommand, VisualStudioCommand, 1)]
+        [TestCase(OtherCommand, ReSharperCommand, 1)]
+        public void CompareCommandsTest(string command1, string command2, int expected)
         {
             Assert.AreEqual(CommandCompareHeuristic.CompareCommands(command1, command2), expected);
         }

@@ -76,8 +76,22 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
         [Test]
         public void ShouldNotFilterAnyOtherCommandEvents()
         {
-            var commandEvent = new CommandEvent {CommandId = "Test"};
-            Assert.AreEqual(Sets.NewHashSet<IDEEvent>(commandEvent), _uut.Map(commandEvent));
+            var firstEventTime = DateTimeFactory.SomeDateTime();
+            var commandEvent1 = new CommandEvent
+            {
+                CommandId = "Test",
+                TriggeredAt =
+                    firstEventTime + ConcurrentEventHeuristic.EventTimeDifference
+            };
+            var commandEvent2 = new CommandEvent
+            {
+                CommandId = "Test",
+                TriggeredAt = firstEventTime + ConcurrentEventHeuristic.EventTimeDifference.Add(
+                                  new TimeSpan(TimeSpan.TicksPerSecond))
+            };
+
+            Assert.AreEqual(Sets.NewHashSet<IDEEvent>(commandEvent1), _uut.Map(commandEvent1));
+            Assert.AreEqual(Sets.NewHashSet<IDEEvent>(commandEvent2), _uut.Map(commandEvent2));
         }
     }
 }

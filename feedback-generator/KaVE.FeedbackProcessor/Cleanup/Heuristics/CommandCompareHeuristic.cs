@@ -42,14 +42,6 @@ namespace KaVE.FeedbackProcessor.Cleanup.Heuristics
             {
                 return 1;
             }
-            if (!IsOtherCommand(command1) && IsOtherCommand(command2))
-            {
-                return -1;
-            }
-            if (IsOtherCommand(command1) && !IsOtherCommand(command2))
-            {
-                return 1;
-            }
             return 0;
         }
 

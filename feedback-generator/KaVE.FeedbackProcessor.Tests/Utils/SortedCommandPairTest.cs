@@ -57,5 +57,15 @@ namespace KaVE.FeedbackProcessor.Tests.Utils
             Assert.AreEqual(SmallerCommand, sortedCommandPair.Item1);
             Assert.AreEqual(GreaterCommand, sortedCommandPair.Item2);
         }
+
+        [Test]
+        public void DoesNotSwapIfBothAreEqual()
+        {
+            const string anotherSmallerCommand = "Copy";
+            var sortedCommandPair = SortedCommandPair.NewSortedPair(SmallerCommand, anotherSmallerCommand);
+
+            Assert.AreEqual(SmallerCommand, sortedCommandPair.Item1);
+            Assert.AreEqual(anotherSmallerCommand, sortedCommandPair.Item2);
+        }
     }
 }

@@ -20,6 +20,7 @@
 
 using System;
 using KaVE.FeedbackProcessor.Cleanup.Heuristics;
+using KaVE.FeedbackProcessor.Tests.TestUtils;
 using NUnit.Framework;
 
 namespace KaVE.FeedbackProcessor.Tests.Cleanup.Heuristics
@@ -30,10 +31,19 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Heuristics
         [Test]
         public void HaveSimiliarEventTimeTest()
         {
-            var eventTime1 = new DateTime(1984, 1, 1, 1, 1, 1, 1);
-            var eventTime2 = new DateTime(1984, 1, 1, 1, 1, 1, 10);
+            var eventTime1 = DateTimeFactory.SomeDateTime();
+            var eventTime2 = eventTime1.Add(ConcurrentEventHeuristic.EventTimeDifference);
 
             Assert.IsTrue(ConcurrentEventHeuristic.AreSimilar(eventTime1, eventTime2));
+        }
+
+        [Test]
+        public void ShouldReturnFalseForNonSimilarEventTimes()
+        {
+            var eventTime1 = DateTimeFactory.SomeDateTime();
+            var eventTime2 = eventTime1.Add(ConcurrentEventHeuristic.EventTimeDifference + TimeSpan.FromTicks(1));
+
+            Assert.IsFalse(ConcurrentEventHeuristic.AreSimilar(eventTime1, eventTime2));
         }
     }
 }

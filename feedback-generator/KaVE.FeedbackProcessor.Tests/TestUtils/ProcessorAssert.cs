@@ -20,7 +20,6 @@
 
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Utils.Collections;
-using KaVE.FeedbackProcessor.Cleanup;
 using NUnit.Framework;
 
 namespace KaVE.FeedbackProcessor.Tests.TestUtils

@@ -38,7 +38,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
         }
 
         [Test]
-        public void FiltersAllErrorEvents()
+        public void FiltersAllEditEvents()
         {
             var someEditEvent = new EditEvent();
             Assert.AreEqual(Sets.NewHashSet<IDEEvent>(), _uut.Map(someEditEvent));

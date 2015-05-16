@@ -18,6 +18,7 @@
  *    - Markus Zimmermann
  */
 
+using System;
 using KaVE.FeedbackProcessor.Utils;
 using NUnit.Framework;
 
@@ -61,6 +62,12 @@ namespace KaVE.FeedbackProcessor.Tests.Utils
             var secondPair = new Pair<string>(first, second);
 
             Assert.AreEqual(firstPair, secondPair);
+        }
+
+        [Test]
+        public void ShouldThrowIfInputValueIsNotInPair()
+        {
+            Assert.Throws<ArgumentException>(() => new Pair<int>(0, 0).ReturnOther(1));
         }
     }
 }

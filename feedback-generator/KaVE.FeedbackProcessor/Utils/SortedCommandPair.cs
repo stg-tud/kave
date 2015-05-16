@@ -34,7 +34,7 @@ namespace KaVE.FeedbackProcessor.Utils
                 case -1:
                     return new SortedCommandPair(command2, command1);
                 default:
-                    return new SortedCommandPair(command1, command1);
+                    return new SortedCommandPair(command1, command2);
             }
         }
     }

@@ -56,7 +56,6 @@ namespace KaVE.FeedbackProcessor
             MapToActivities(OpenDatabase(importDatabase), OpenDatabase(activityDatabase));
 
             MapToConcurrentEvents(OpenDatabase(filteredDatabase), OpenDatabase(concurrentEventDatabase));
-            FilterEquivalentCommandEvents(OpenDatabase(concurrentEventDatabase), OpenDatabase(equivalentCommandsDatabase));
             FilterCommandFollowupEvents(OpenDatabase(filteredDatabase), OpenDatabase(commandFollowupsDatabase));
 
             ConcurrentEventsStatistic(OpenDatabase(concurrentEventDatabase),"concurrenteventstatistic.csv");
@@ -212,14 +211,6 @@ namespace KaVE.FeedbackProcessor
             var filter = new FeedbackMapper(sourceDatabase, targetDatabase);
             filter.RegisterMapper<AlwaysDropMapper>();
             filter.RegisterMapper<ToConcurrentEventMapper>();
-            filter.MapFeedback();
-        }
-
-        private static void FilterEquivalentCommandEvents(IFeedbackDatabase sourceDatabase,
-            IFeedbackDatabase targetDatabase)
-        {
-            var filter = new FeedbackMapper(sourceDatabase, targetDatabase);
-            filter.RegisterMapper<EquivalentCommandProcessor>();
             filter.MapFeedback();
         }
 

@@ -75,7 +75,6 @@
     <Compile Include="Cleanup\Heuristics\TestVsProductionDocumentHeuristic.cs" />
     <Compile Include="Cleanup\Heuristics\CommandCompareHeuristic.cs" />
     <Compile Include="Cleanup\Heuristics\ConcurrentEventHeuristic.cs" />
-    <Compile Include="Cleanup\Heuristics\MergeCommandHeuristic.cs" />
     <Compile Include="Cleanup\Processors\AddFileProcessor.cs" />
     <Compile Include="Cleanup\Processors\CloseEventProcessor.cs" />
     <Compile Include="Cleanup\Processors\IDECloseEventFixingProcessor.cs" />
@@ -86,7 +85,6 @@
     <Compile Include="Cleanup\Processors\UnnamedCommandFilterProcessor.cs" />
     <Compile Include="Cleanup\Processors\CommandFollowupProcessor.cs" />
     <Compile Include="Cleanup\Processors\ToConcurrentEventMapper.cs" />
-    <Compile Include="Cleanup\Processors\EquivalentCommandProcessor.cs" />
     <Compile Include="Cleanup\Processors\ErrorFilterProcessor.cs" />
     <Compile Include="FeedbackMapper.cs" />
     <Compile Include="FeedbackProcessor.cs" />

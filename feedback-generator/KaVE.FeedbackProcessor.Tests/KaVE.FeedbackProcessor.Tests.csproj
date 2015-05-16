@@ -72,7 +72,6 @@
     <Compile Include="Cleanup\Heuristics\TestVsProductionDocumentHeuristicTest.cs" />
     <Compile Include="Cleanup\Heuristics\CommandCompareHeuristicTest.cs" />
     <Compile Include="Cleanup\Heuristics\ConcurrentEventHeuristicTest.cs" />
-    <Compile Include="Cleanup\Heuristics\MergeCommandHeuristicTest.cs" />
     <Compile Include="Cleanup\Processors\AddFileProcessorTest.cs" />
     <Compile Include="Cleanup\Processors\CloseEventProcessorTest.cs" />
     <Compile Include="Cleanup\Processors\IDECloseEventFixingProcessorTest.cs" />
@@ -82,7 +81,6 @@
     <Compile Include="Cleanup\Processors\UnnamedCommandFilterProcessorTest.cs" />
     <Compile Include="Cleanup\Processors\CommandFollowupProcessorTest.cs" />
     <Compile Include="Cleanup\Processors\ToConcurrentEventMapperTest.cs" />
-    <Compile Include="Cleanup\Processors\EquivalentCommandProcessorTest.cs" />
     <Compile Include="Cleanup\Processors\ErrorFilterProcessorTest.cs" />
     <Compile Include="Database\TestDeveloperCollection.cs" />
     <Compile Include="Database\TestFeedbackDatabase.cs" />
