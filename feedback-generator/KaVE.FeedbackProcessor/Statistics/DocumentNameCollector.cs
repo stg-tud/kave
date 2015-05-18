@@ -27,11 +27,11 @@ namespace KaVE.FeedbackProcessor.Statistics
 {
     class DocumentNameCollector : BaseEventProcessor
     {
-        public IKaVESet<string> AllDocumentNames { get; private set; }
+        public IMultiset<string> AllDocumentNames { get; private set; }
 
         public DocumentNameCollector()
         {
-            AllDocumentNames = new KaVEHashSet<string>();
+            AllDocumentNames = new Multiset<string>();
 
             RegisterFor<IDEEvent>(e => AddName(e.ActiveDocument));
             RegisterFor<DocumentEvent>(de => AddName(de.Document));

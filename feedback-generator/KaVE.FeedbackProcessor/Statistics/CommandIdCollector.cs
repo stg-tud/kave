@@ -24,11 +24,11 @@ namespace KaVE.FeedbackProcessor.Statistics
 {
     class CommandIdCollector : BaseEventProcessor
     {
-        public IKaVESet<string> AllCommandIds { get; private set; }
+        public IMultiset<string> AllCommandIds { get; private set; }
 
         public CommandIdCollector()
         {
-            AllCommandIds = new KaVEHashSet<string>();
+            AllCommandIds = new Multiset<string>();
             RegisterFor<CommandEvent>(ce => AllCommandIds.Add(ce.CommandId));
         }
     }

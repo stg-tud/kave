@@ -138,9 +138,9 @@ namespace KaVE.FeedbackProcessor
             walker.Register(commandIdCollector);
             walker.ProcessFeedback();
 
-            Output("windownames.log", windowNameCollector.AllWindowNames);
-            Output("documentnames.log", documentNameCollector.AllDocumentNames);
-            Output("commandids.log", commandIdCollector.AllCommandIds);
+            Output("windownames.log", windowNameCollector.AllWindowNames.EntryDictionary.ToCsv());
+            Output("documentnames.log", documentNameCollector.AllDocumentNames.EntryDictionary.ToCsv());
+            Output("commandids.log", commandIdCollector.AllCommandIds.EntryDictionary.ToCsv());
         }
 
         private static void LogIDEActivationEvents(IFeedbackDatabase database)
