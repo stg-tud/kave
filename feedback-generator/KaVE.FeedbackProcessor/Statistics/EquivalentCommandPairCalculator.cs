@@ -33,7 +33,7 @@ namespace KaVE.FeedbackProcessor.Statistics
     {
         public static readonly Dictionary<Pair<string>, int> Statistic = new Dictionary<Pair<string>, int>();
 
-        public static int FrequencyThreshold = 10;
+        public static int FrequencyThreshold = 7;
 
         private CommandEvent _lastCommandEvent;
 

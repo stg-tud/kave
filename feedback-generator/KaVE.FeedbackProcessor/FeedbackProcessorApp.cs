@@ -19,6 +19,7 @@
 
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using KaVE.Commons.Utils.Exceptions;
 using KaVE.FeedbackProcessor.Activities;
 using KaVE.FeedbackProcessor.Cleanup.Processors;
@@ -26,6 +27,7 @@ using KaVE.FeedbackProcessor.Database;
 using KaVE.FeedbackProcessor.Import;
 using KaVE.FeedbackProcessor.Properties;
 using KaVE.FeedbackProcessor.Statistics;
+using KaVE.FeedbackProcessor.Utils;
 
 namespace KaVE.FeedbackProcessor
 {
@@ -40,7 +42,6 @@ namespace KaVE.FeedbackProcessor
             const string cleanDatabase = "_clean";
             const string activityDatabase = "activities";
             const string concurrentEventDatabase = "_concurrent";
-            const string equivalentCommandsDatabase = "_equivalentCommands";
             const string commandFollowupsDatabase = "_commandFollowups";
 
             ImportFeedback(OpenDatabase(importDatabase));
@@ -55,11 +56,12 @@ namespace KaVE.FeedbackProcessor
 
             MapToActivities(OpenDatabase(importDatabase), OpenDatabase(activityDatabase));
 
+            MapEquivalentCommands(OpenDatabase(filteredDatabase), OpenDatabase(cleanDatabase));
+
             MapToConcurrentEvents(OpenDatabase(filteredDatabase), OpenDatabase(concurrentEventDatabase));
             FilterCommandFollowupEvents(OpenDatabase(filteredDatabase), OpenDatabase(commandFollowupsDatabase));
 
             ConcurrentEventsStatistic(OpenDatabase(concurrentEventDatabase),"concurrenteventstatistic.csv");
-            ConcurrentEventsStatistic(OpenDatabase(equivalentCommandsDatabase),"equivalentcommandstatistic.csv");
             ConcurrentEventsStatistic(OpenDatabase(commandFollowupsDatabase),"commandfollowupsstatistic.csv");
         }
 
@@ -211,6 +213,14 @@ namespace KaVE.FeedbackProcessor
             var filter = new FeedbackMapper(sourceDatabase, targetDatabase);
             filter.RegisterMapper<AlwaysDropMapper>();
             filter.RegisterMapper<ToConcurrentEventMapper>();
+            filter.MapFeedback();
+        }
+
+        private static void MapEquivalentCommands(IFeedbackDatabase sourceDatabase, IFeedbackDatabase targetDatabase)
+        {
+            var filter = new FeedbackMapper(sourceDatabase, targetDatabase);
+            filter.RegisterMapper<MapEquivalentCommandsProcessor>();
+            MapEquivalentCommandsProcessor.Mappings = EquivalentCommandPairCalculator.Statistic.Keys.Cast<SortedCommandPair>().ToList();
             filter.MapFeedback();
         }
 
