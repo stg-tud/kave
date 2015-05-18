@@ -30,6 +30,9 @@ namespace KaVE.Commons.Utils.SSTPrinter
 {
     public class SSTPrintingContext
     {
+        /// <summary>
+        ///     Base indentation level to use while printing SST nodes.
+        /// </summary>
         public int IndentationLevel { get; set; }
 
         /// <summary>
@@ -55,24 +58,52 @@ namespace KaVE.Commons.Utils.SSTPrinter
             _seenNamespaces = Sets.NewHashSet<INamespaceName>();
         }
 
-        public SSTPrintingContext Text(string text)
+        /// <summary>
+        ///     Appends a string to the context.
+        /// </summary>
+        /// <param name="text">The string to append.</param>
+        /// <returns>The context after appending.</returns>
+        public virtual SSTPrintingContext Text(string text)
         {
             _sb.Append(text);
             return this;
         }
 
+        /// <summary>
+        ///     Appends a comment to the context. Delimiters must be provided.
+        /// </summary>
+        /// <param name="commentText">The comment to append.</param>
+        /// <returns>The context after appending.</returns>
+        public virtual SSTPrintingContext Comment(string commentText)
+        {
+            return Text(commentText);
+        }
+
+        /// <summary>
+        ///     Appends a line break to the context.
+        /// </summary>
+        /// <returns>The context after appending.</returns>
         public SSTPrintingContext NewLine()
         {
             _sb.AppendLine();
             return this;
         }
 
+        /// <summary>
+        ///     Appends a space to the context.
+        /// </summary>
+        /// <returns>The context after appending.</returns>
         public SSTPrintingContext Space()
         {
             _sb.Append(" ");
             return this;
         }
 
+        /// <summary>
+        ///     Appends the appropriate amount of indentation to the context according to the current indentation level. Should
+        ///     always be used after appending a line break.
+        /// </summary>
+        /// <returns>The context after appending.</returns>
         public SSTPrintingContext Indentation()
         {
             for (int i = 0; i < IndentationLevel; i++)
@@ -82,37 +113,68 @@ namespace KaVE.Commons.Utils.SSTPrinter
             return this;
         }
 
+        /// <summary>
+        ///     Appends a keyword (e.g. "null", "class", "static") to the context.
+        /// </summary>
+        /// <param name="keyword">The keyword to append.</param>
+        /// <returns>The context after appending.</returns>
         public virtual SSTPrintingContext Keyword(string keyword)
         {
             return Text(keyword);
         }
 
+        /// <summary>
+        ///     Appends a marker for the current cursor position to the context.
+        /// </summary>
+        /// <returns>The context after appending.</returns>
         public virtual SSTPrintingContext CursorPosition()
         {
             return Text("$");
         }
 
+        /// <summary>
+        ///     Appends a marker for an unknown entity to the context.
+        /// </summary>
+        /// <returns>The context after appending.</returns>
         public virtual SSTPrintingContext UnknownMarker()
         {
             return Text("???");
         }
 
+        /// <summary>
+        ///     Appends a left angle bracket ("<![CDATA[<]]>") to the context.
+        /// </summary>
+        /// <returns>The context after appending.</returns>
         public virtual SSTPrintingContext LeftAngleBracket()
         {
             return Text("<");
         }
 
+        /// <summary>
+        ///     Appends a right angle bracket ("("<![CDATA[>]]>") to the context.
+        /// </summary>
+        /// <returns>The context after appending.</returns>
         public virtual SSTPrintingContext RightAngleBracket()
         {
             return Text(">");
         }
 
+        /// <summary>
+        ///     Appends a string literal to the context. Quotation marks must not be provided.
+        /// </summary>
+        /// <param name="value">The string to append.</param>
+        /// <returns>The context after appending.</returns>
         public virtual SSTPrintingContext StringLiteral(string value)
         {
             return Text("\"").Text(value).Text("\"");
         }
 
-        protected virtual SSTPrintingContext TypeName(ITypeName typeName)
+        /// <summary>
+        ///     Appends the name (and only the name!) of a type to the context.
+        /// </summary>
+        /// <param name="typeName">The type name to append.</param>
+        /// <returns>The context after appending.</returns>
+        public virtual SSTPrintingContext TypeName(ITypeName typeName)
         {
             return Text(typeName.Name);
         }
@@ -122,6 +184,11 @@ namespace KaVE.Commons.Utils.SSTPrinter
             return Text(typeParameterShortName);
         }
 
+        /// <summary>
+        ///     Formats and appends a type name together with its generic types to the context.
+        /// </summary>
+        /// <param name="typeName">The type name to append.</param>
+        /// <returns>The context after appending.</returns>
         public SSTPrintingContext Type(ITypeName typeName)
         {
             _seenNamespaces.Add(typeName.Namespace);
@@ -140,7 +207,15 @@ namespace KaVE.Commons.Utils.SSTPrinter
                     }
                     else
                     {
-                        TypeParameterShortName(p.TypeParameterShortName);
+                        if (p.TypeParameterType.TypeParameterShortName == "?" || // C`1[[T -> ?]]
+                            p.TypeParameterType.TypeParameterShortName == null) // C`1[[T]]
+                        {
+                            TypeParameterShortName(p.TypeParameterShortName);
+                        }
+                        else
+                        {
+                            TypeParameterShortName(p.TypeParameterType.TypeParameterShortName);
+                        }
                     }
 
                     if (!ReferenceEquals(p, typeName.TypeParameters.Last()))
@@ -155,6 +230,11 @@ namespace KaVE.Commons.Utils.SSTPrinter
             return this;
         }
 
+        /// <summary>
+        ///     Formats and appends a parameter list to the context.
+        /// </summary>
+        /// <param name="parameters">The list of parameters to append.</param>
+        /// <returns>The context after appending.</returns>
         public SSTPrintingContext ParameterList(IList<IParameterName> parameters)
         {
             Text("(");
@@ -195,14 +275,12 @@ namespace KaVE.Commons.Utils.SSTPrinter
         }
 
         /// <summary>
-        ///     Appends the print result of a statement block to a string builder with correct indentation.
+        ///     Appends a statement block to the context with correct indentation.
         /// </summary>
-        /// <param name="c"></param>
-        /// <param name="block"></param>
-        /// <param name="visitor"></param>
+        /// <param name="block">The block to append.</param>
+        /// <param name="visitor">The visitor to use for printing each statement.</param>
         /// <param name="withBrackets">If false, opening and closing brackets will be omitted.</param>
-        internal void StatementBlock(SSTPrintingContext c,
-            IKaVEList<IStatement> block,
+        public SSTPrintingContext StatementBlock(IKaVEList<IStatement> block,
             ISSTNodeVisitor<SSTPrintingContext> visitor,
             bool withBrackets = true)
         {
@@ -210,31 +288,33 @@ namespace KaVE.Commons.Utils.SSTPrinter
             {
                 if (withBrackets)
                 {
-                    c.Text(" { }");
+                    Text(" { }");
                 }
 
-                return;
+                return this;
             }
 
             if (withBrackets)
             {
-                c.NewLine().Indentation().Text("{");
+                NewLine().Indentation().Text("{");
             }
 
-            c.IndentationLevel++;
+            this.IndentationLevel++;
 
             foreach (var statement in block)
             {
-                c.NewLine();
-                statement.Accept(visitor, c);
+                NewLine();
+                statement.Accept(visitor, this);
             }
 
-            c.IndentationLevel--;
+            this.IndentationLevel--;
 
             if (withBrackets)
             {
-                c.NewLine().Indentation().Text("}");
+                NewLine().Indentation().Text("}");
             }
+
+            return this;
         }
 
         public override string ToString()

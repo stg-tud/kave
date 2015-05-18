@@ -17,7 +17,12 @@
  *    - Andreas Bauer
  */
 
+using System;
+using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.Names.CSharp;
+using KaVE.Commons.Model.SSTs;
+using KaVE.Commons.Model.SSTs.Impl.Statements;
+using KaVE.Commons.Utils.Collections;
 using KaVE.Commons.Utils.SSTPrinter;
 using NUnit.Framework;
 
@@ -53,6 +58,12 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter
         }
 
         [Test]
+        public void TypeNameFormat_UnknownToUnknownGenericType()
+        {
+            AssertTypeFormat("Task<T>", "Task`1[[TResult -> T]], mscorlib, 4.0.0.0");
+        }
+
+        [Test]
         public void TypeNameFormat_MultipleGenerics()
         {
             AssertTypeFormat("A<B, C>", "A`2[[T1 -> B,P],[T2 -> C,P]],P");
@@ -62,6 +73,91 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter
         public void TypeNameFormat_NestedGenerics()
         {
             AssertTypeFormat("A<B<C>>", "A`1[[T -> B`1[[T -> C,P]],P]],P");
+        }
+
+        [Test]
+        public void StatementBlock_NotEmpty_WithBrackets()
+        {
+            var stmts = new KaVEList<IStatement> {new ContinueStatement(), new BreakStatement()};
+            var visitor = new SSTPrintingVisitor();
+            var sut = new SSTPrintingContext();
+
+            var expected = String.Join(
+                Environment.NewLine,
+                "",
+                "{",
+                "    continue;",
+                "    break;",
+                "}");
+
+            sut.StatementBlock(stmts, visitor, true);
+            Assert.AreEqual(expected, sut.ToString());
+        }
+
+        [Test]
+        public void StatementBlock_Empty_WithBrackets()
+        {
+            var stmts = Lists.NewList<IStatement>();
+            var visitor = new SSTPrintingVisitor();
+            var sut = new SSTPrintingContext();
+
+            sut.StatementBlock(stmts, visitor, true);
+            Assert.AreEqual(" { }", sut.ToString());
+        }
+
+        [Test]
+        public void StatementBlock_NotEmpty_WithoutBrackets()
+        {
+            var stmts = new KaVEList<IStatement> {new ContinueStatement(), new BreakStatement()};
+            var visitor = new SSTPrintingVisitor();
+            var sut = new SSTPrintingContext();
+
+            var expected = String.Join(
+                Environment.NewLine,
+                "",
+                "    continue;",
+                "    break;");
+
+            sut.StatementBlock(stmts, visitor, false);
+            Assert.AreEqual(expected, sut.ToString());
+        }
+
+        [Test]
+        public void StatementBlock_Empty_WithoutBrackets()
+        {
+            var stmts = Lists.NewList<IStatement>();
+            var visitor = new SSTPrintingVisitor();
+            var sut = new SSTPrintingContext();
+
+            sut.StatementBlock(stmts, visitor, false);
+            Assert.AreEqual("", sut.ToString());
+        }
+
+        [Test]
+        public void ParameterList_NoParameters()
+        {
+            var parameters = Lists.NewList<IParameterName>();
+            var sut = new SSTPrintingContext();
+            sut.ParameterList(parameters);
+            Assert.AreEqual("()", sut.ToString());
+        }
+
+        [Test]
+        public void ParameterList_OneParameter()
+        {
+            var parameters = new KaVEList<IParameterName> {ParameterName.Get("[A,P] p1")};
+            var sut = new SSTPrintingContext();
+            sut.ParameterList(parameters);
+            Assert.AreEqual("(A p1)", sut.ToString());
+        }
+
+        [Test]
+        public void ParameterList_MultipleParameters()
+        {
+            var parameters = new KaVEList<IParameterName> {ParameterName.Get("[A,P] p1"), ParameterName.Get("[B,P] p2")};
+            var sut = new SSTPrintingContext();
+            sut.ParameterList(parameters);
+            Assert.AreEqual("(A p1, B p2)", sut.ToString());
         }
     }
 }

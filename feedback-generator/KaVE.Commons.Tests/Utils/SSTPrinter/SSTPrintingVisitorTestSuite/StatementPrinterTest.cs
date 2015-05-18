@@ -101,7 +101,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
         [Test]
         public void ReturnStatement_Void()
         {
-            var sst = new ReturnStatement();
+            var sst = new ReturnStatement {IsVoid = true};
             AssertPrint(sst, "return;");
         }
 

@@ -20,7 +20,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using KaVE.Commons.Model.Names;
 
 namespace KaVE.Commons.Utils.SSTPrinter

@@ -20,7 +20,6 @@
 using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.Commons.Model.SSTs.Impl.Blocks;
-using KaVE.Commons.Model.SSTs.Impl.Declarations;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.LoopHeader;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Commons.Model.SSTs.Impl.Statements;
@@ -136,7 +135,6 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
                 "    throw new ExceptionType();",
                 "}",
                 "catch (ExceptionType e)",
-                // TODO: general catch blocks
                 "{",
                 "    break;",
                 "}",
@@ -197,6 +195,35 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
                 "    throw new ExceptionType();",
                 "}",
                 "catch",
+                "{",
+                "    break;",
+                "}");
+        }
+
+        [Test]
+        public void TryBlock_UnnamedCatchBlock()
+        {
+            var sst = new TryBlock
+            {
+                Body = {new ThrowStatement {Exception = TypeName.Get("ExceptionType,P")}},
+                CatchBlocks =
+                {
+                    new CatchBlock
+                    {
+                        IsUnnamed = true,
+                        Parameter = ParameterName.Get("[ExceptionType,P] e"),
+                        Body = {new BreakStatement()}
+                    }
+                }
+            };
+
+            AssertPrint(
+                sst,
+                "try",
+                "{",
+                "    throw new ExceptionType();",
+                "}",
+                "catch (ExceptionType)",
                 "{",
                 "    break;",
                 "}");
@@ -306,7 +333,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
             {
                 Condition = new LoopHeaderBlockExpression
                 {
-                    Body = // TODO: could be empty
+                    Body =
                     {
                         new ReturnStatement {Expression = new ConstantValueExpression {Value = "true"}}
                     }
@@ -338,7 +365,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
             {
                 Condition = new LoopHeaderBlockExpression
                 {
-                    Body = // TODO: could be empty
+                    Body =
                     {
                         new ReturnStatement {Expression = new ConstantValueExpression {Value = "true"}}
                     }
@@ -380,7 +407,6 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
                     {
                         Body = {new ReturnStatement {Expression = new ConstantValueExpression {Value = "true"}}}
                     },
-                Step = {}
             };
 
             AssertPrint(

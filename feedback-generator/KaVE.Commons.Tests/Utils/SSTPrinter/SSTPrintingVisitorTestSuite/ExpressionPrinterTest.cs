@@ -87,7 +87,6 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
         [Test]
         public void InvocationExpression()
         {
-            // TODO: parameter counts 0, 2 ...
             var sst = new InvocationExpression
             {
                 Reference = SSTUtil.VariableReference("this"),
@@ -125,14 +124,12 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
                 }
             };
 
-            // TODO: maybe there is a better representation
             AssertPrint(sst, "composed(a, b, c)");
         }
 
         [Test]
         public void LoopHeaderBlockExpression()
         {
-            // TODO: empty loop header expr? --> invalid code
             var sst = new LoopHeaderBlockExpression
             {
                 Body =
@@ -161,7 +158,6 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
         [Test]
         public void CompletionExpression_OnTypeReference()
         {
-            // TODO: check what would happen if type was generic
             var sst = new CompletionExpression {TypeReference = TypeName.Get("T,P"), Token = "incompl"};
             AssertPrint(sst, "T.incompl$");
         }

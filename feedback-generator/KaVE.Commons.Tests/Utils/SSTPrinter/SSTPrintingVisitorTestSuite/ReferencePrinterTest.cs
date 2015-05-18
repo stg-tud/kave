@@ -36,7 +36,6 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
         [Test]
         public void EventReference()
         {
-            // TODO: check if this is correct/how it is used (other reference types too)
             var sst = new EventReference
             {
                 EventName = EventName.Get("[EventType,P] [DeclaringType,P].E"),

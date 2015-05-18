@@ -19,8 +19,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
+using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.SSTs;
 using KaVE.Commons.Model.SSTs.Blocks;
 using KaVE.Commons.Model.SSTs.Declarations;
@@ -100,7 +100,10 @@ namespace KaVE.Commons.Utils.SSTPrinter
             c.Indentation().Text("}");
         }
 
-        private void AppendMemberDeclarationGroup(SSTPrintingContext c, IEnumerable<IMemberDeclaration> nodeGroup, int inBetweenNewLineCount = 1, int trailingNewLineCount = 2)
+        private void AppendMemberDeclarationGroup(SSTPrintingContext c,
+            IEnumerable<IMemberDeclaration> nodeGroup,
+            int inBetweenNewLineCount = 1,
+            int trailingNewLineCount = 2)
         {
             var sstNodes = nodeGroup.ToList();
             foreach (var node in sstNodes)
@@ -120,16 +123,27 @@ namespace KaVE.Commons.Utils.SSTPrinter
 
         public void Visit(IDelegateDeclaration stmt, SSTPrintingContext c)
         {
-            // TODO: @Sven delegate parameters
             c.Indentation()
-              .Keyword("delegate").Space().Text(stmt.Name.Name).Text("();");
-            
+             .Keyword("delegate").Space().Text(stmt.Name.Name);
+
+            // TODO: Type check may be removed after DelegateTypeName has been officially added to DelegateDeclaration
+            var delegateName = stmt.Name as DelegateTypeName;
+            if (delegateName == null)
+            {
+                c.Text("()");
+            }
+            else
+            {
+                c.ParameterList(delegateName.Parameters);
+            }
+
+            c.Text(";");
         }
 
         public void Visit(IEventDeclaration stmt, SSTPrintingContext c)
         {
             c.Indentation()
-              .Keyword("event").Space().Type(stmt.Name.HandlerType).Space().Text(stmt.Name.Name).Text(";");
+             .Keyword("event").Space().Type(stmt.Name.HandlerType).Space().Text(stmt.Name.Name).Text(";");
         }
 
         public void Visit(IFieldDeclaration stmt, SSTPrintingContext c)
@@ -157,7 +171,7 @@ namespace KaVE.Commons.Utils.SSTPrinter
 
             c.ParameterList(stmt.Name.Parameters);
 
-            c.StatementBlock(c, stmt.Body, this);
+            c.StatementBlock(stmt.Body, this);
         }
 
         public void Visit(IPropertyDeclaration stmt, SSTPrintingContext c)
@@ -172,7 +186,7 @@ namespace KaVE.Commons.Utils.SSTPrinter
                  .Indentation();
 
                 c.IndentationLevel++;
-                  
+
                 c.Text("{").NewLine();
 
                 if (stmt.Name.HasGetter)
@@ -209,7 +223,7 @@ namespace KaVE.Commons.Utils.SSTPrinter
             if (body.Any())
             {
                 c.Indentation().Text(keyword);
-                c.StatementBlock(c, body, this);
+                c.StatementBlock(body, this);
             }
             else
             {
@@ -230,7 +244,7 @@ namespace KaVE.Commons.Utils.SSTPrinter
         {
             c.Indentation();
             stmt.Reference.Accept(this, c);
-            c.Space().Text("=").Space();
+            c.Text(" = ");
             stmt.Expression.Accept(this, c);
             c.Text(";");
         }
@@ -259,7 +273,7 @@ namespace KaVE.Commons.Utils.SSTPrinter
 
         public void Visit(ILabelledStatement stmt, SSTPrintingContext c)
         {
-            c.Indentation().Text(stmt.Label).Text(":").NewLine();
+            c.Indentation().Keyword(stmt.Label).Text(":").NewLine();
             stmt.Statement.Accept(this, c);
         }
 
@@ -267,8 +281,7 @@ namespace KaVE.Commons.Utils.SSTPrinter
         {
             c.Indentation().Keyword("return");
 
-            // note: UnknownExpression interpreted as void return
-            if (!(stmt.Expression is IUnknownExpression))
+            if (!stmt.IsVoid)
             {
                 c.Space();
                 stmt.Expression.Accept(this, c);
@@ -286,28 +299,27 @@ namespace KaVE.Commons.Utils.SSTPrinter
         {
             c.Indentation().Keyword("do");
 
-            c.StatementBlock(c, block.Body, this);
+            c.StatementBlock(block.Body, this);
 
             c.NewLine().Indentation().Keyword("while").Space().Text("(");
             c.IndentationLevel++;
             block.Condition.Accept(this, c);
             c.IndentationLevel--;
             c.NewLine().Indentation().Text(")");
-
         }
 
         public void Visit(IForEachLoop block, SSTPrintingContext c)
         {
             c.Indentation()
-              .Keyword("foreach").Space().Text("(")
-              .Type(block.Declaration.Type)
-              .Space();
+             .Keyword("foreach").Space().Text("(")
+             .Type(block.Declaration.Type)
+             .Space();
             block.Declaration.Reference.Accept(this, c);
             c.Space().Keyword("in").Space();
             block.LoopedReference.Accept(this, c);
             c.Text(")");
 
-            c.StatementBlock(c, block.Body, this);
+            c.StatementBlock(block.Body, this);
         }
 
         public void Visit(IForLoop block, SSTPrintingContext c)
@@ -316,17 +328,17 @@ namespace KaVE.Commons.Utils.SSTPrinter
 
             c.IndentationLevel++;
 
-            c.StatementBlock(c, block.Init, this);
+            c.StatementBlock(block.Init, this);
             c.Text(";");
             block.Condition.Accept(this, c);
             c.Text(";");
-            c.StatementBlock(c, block.Step, this);
+            c.StatementBlock(block.Step, this);
 
             c.IndentationLevel--;
 
             c.NewLine().Indentation().Text(")");
 
-            c.StatementBlock(c, block.Body, this);
+            c.StatementBlock(block.Body, this);
         }
 
         public void Visit(IIfElseBlock block, SSTPrintingContext c)
@@ -335,13 +347,13 @@ namespace KaVE.Commons.Utils.SSTPrinter
             block.Condition.Accept(this, c);
             c.Text(")");
 
-            c.StatementBlock(c, block.Then, this);
+            c.StatementBlock(block.Then, this);
 
             if (block.Else.Any())
             {
                 c.NewLine().Indentation().Keyword("else");
 
-                c.StatementBlock(c, block.Else, this);
+                c.StatementBlock(block.Else, this);
             }
         }
 
@@ -351,7 +363,7 @@ namespace KaVE.Commons.Utils.SSTPrinter
             stmt.Reference.Accept(this, c);
             c.Text(")");
 
-            c.StatementBlock(c, stmt.Body, this);
+            c.StatementBlock(stmt.Body, this);
         }
 
         public void Visit(ISwitchBlock block, SSTPrintingContext c)
@@ -366,13 +378,13 @@ namespace KaVE.Commons.Utils.SSTPrinter
             {
                 c.NewLine().Indentation().Keyword("case").Space();
                 section.Label.Accept(this, c);
-                c.Text(":").StatementBlock(c, section.Body, this, false);
+                c.Text(":").StatementBlock(section.Body, this, false);
             }
 
             if (block.DefaultSection.Any())
             {
                 c.NewLine().Indentation().Keyword("default").Text(":")
-                 .StatementBlock(c, block.DefaultSection, this, false);
+                 .StatementBlock(block.DefaultSection, this, false);
             }
 
             c.NewLine();
@@ -383,7 +395,7 @@ namespace KaVE.Commons.Utils.SSTPrinter
         public void Visit(ITryBlock block, SSTPrintingContext c)
         {
             c.Indentation().Keyword("try")
-             .StatementBlock(c, block.Body, this);
+             .StatementBlock(block.Body, this);
 
             foreach (var catchBlock in block.CatchBlocks)
             {
@@ -392,38 +404,43 @@ namespace KaVE.Commons.Utils.SSTPrinter
                 if (!catchBlock.IsGeneral)
                 {
                     c.Space().Text("(")
-                      .Type(catchBlock.Parameter.ValueType)
-                      .Space()
-                      .Text(catchBlock.Parameter.Name)
-                      .Text(")");
+                     .Type(catchBlock.Parameter.ValueType);
+
+                    if (!catchBlock.IsUnnamed)
+                    {
+                        c.Space()
+                         .Text(catchBlock.Parameter.Name);
+                    }
+
+                    c.Text(")");
                 }
 
-                c.StatementBlock(c, catchBlock.Body, this);
+                c.StatementBlock(catchBlock.Body, this);
             }
 
             if (block.Finally.Any())
             {
                 c.NewLine().Indentation().Keyword("finally")
-                 .StatementBlock(c, block.Finally, this);
+                 .StatementBlock(block.Finally, this);
             }
         }
 
         public void Visit(IUncheckedBlock block, SSTPrintingContext c)
         {
             c.Indentation().Keyword("unchecked")
-             .StatementBlock(c, block.Body, this);
+             .StatementBlock(block.Body, this);
         }
 
         public void Visit(IUnsafeBlock block, SSTPrintingContext c)
         {
-            c.Indentation().Keyword("unsafe").Text(" { /* content ignored */ }");
+            c.Indentation().Keyword("unsafe").Text(" { ").Comment("/* content ignored */").Text(" }");
         }
 
         public void Visit(IUsingBlock block, SSTPrintingContext c)
         {
             c.Indentation().Keyword("using").Space().Text("(");
             block.Reference.Accept(this, c);
-            c.Text(")").StatementBlock(c, block.Body, this);
+            c.Text(")").StatementBlock(block.Body, this);
         }
 
         public void Visit(IWhileLoop block, SSTPrintingContext c)
@@ -434,7 +451,7 @@ namespace KaVE.Commons.Utils.SSTPrinter
             c.IndentationLevel--;
             c.NewLine().Indentation().Text(")");
 
-            c.StatementBlock(c, block.Body, this);
+            c.StatementBlock(block.Body, this);
         }
 
         public void Visit(ICompletionExpression entity, SSTPrintingContext c)
@@ -499,13 +516,12 @@ namespace KaVE.Commons.Utils.SSTPrinter
         public void Visit(ILambdaExpression expr, SSTPrintingContext c)
         {
             c.ParameterList(expr.Parameters).Space().Text("=>");
-            c.StatementBlock(c, expr.Body, this);
+            c.StatementBlock(expr.Body, this);
         }
 
-        // TODO: make this a bit nicer ...
         public void Visit(ILoopHeaderBlockExpression expr, SSTPrintingContext c)
         {
-            c.StatementBlock(c, expr.Body, this);
+            c.StatementBlock(expr.Body, this);
         }
 
         public void Visit(IConstantValueExpression expr, SSTPrintingContext c)

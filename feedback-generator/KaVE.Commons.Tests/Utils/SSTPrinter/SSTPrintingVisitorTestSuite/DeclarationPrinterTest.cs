@@ -212,11 +212,30 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
                 "}");
         }
 
+        // TODO: Test may be removed after DelegateTypeName has been officially added to DelegateDeclaration
         [Test]
-        public void DelegateDeclaration()
+        public void DelegateDeclaration_Legacy()
         {
             var sst = new DelegateDeclaration {Name = TypeName.Get("d:T,P")};
             AssertPrint(sst, "delegate T();");
+        }
+
+        [Test]
+        public void DelegateDeclaration_Parameterless()
+        {
+            var sst = new DelegateDeclaration {Name = DelegateTypeName.Get("d:[R, P] [Some.DelegateType, P].()")};
+            AssertPrint(sst, "delegate DelegateType();");
+        }
+
+        [Test]
+        public void DelegateDeclaration_WithParameters()
+        {
+            var sst = new DelegateDeclaration
+            {
+                Name = DelegateTypeName.Get("d:[R, P] [Some.DelegateType, P].([C, P] p1, [D, P] p2)")
+            };
+
+            AssertPrint(sst, "delegate DelegateType(C p1, D p2);");
         }
 
         [Test]

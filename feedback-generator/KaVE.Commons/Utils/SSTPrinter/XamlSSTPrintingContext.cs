@@ -58,7 +58,7 @@ namespace KaVE.Commons.Utils.SSTPrinter
             return this;
         }
 
-        protected override SSTPrintingContext TypeName(ITypeName typeName)
+        public override SSTPrintingContext TypeName(ITypeName typeName)
         {
             string color = "#2B91AF";
 
@@ -89,6 +89,14 @@ namespace KaVE.Commons.Utils.SSTPrinter
         {
             Text("<Span Foreground=\"#A31515\">");
             base.StringLiteral(value);
+            Text("</Span>");
+            return this;
+        }
+
+        public override SSTPrintingContext Comment(string commentText)
+        {
+            Text("<Span Foreground=\"#8F8F8F\">");
+            base.Comment(commentText);
             Text("</Span>");
             return this;
         }
