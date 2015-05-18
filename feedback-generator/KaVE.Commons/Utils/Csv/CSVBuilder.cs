@@ -20,7 +20,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace KaVE.Commons.Utils
+namespace KaVE.Commons.Utils.Csv
 {
     /// <summary>
     ///     Simple CSV export

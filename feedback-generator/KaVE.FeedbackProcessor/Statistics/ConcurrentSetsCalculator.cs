@@ -25,8 +25,8 @@ using System.Linq;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Model.Events.VisualStudio;
-using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Collections;
+using KaVE.Commons.Utils.Csv;
 using KaVE.FeedbackProcessor.Model;
 
 namespace KaVE.FeedbackProcessor.Statistics
@@ -38,56 +38,62 @@ namespace KaVE.FeedbackProcessor.Statistics
         public readonly IDictionary<ISet<string>, int> Statistic =
             new Dictionary<ISet<string>, int>();
 
-        private static readonly IDictionary<Type, Func<IDEEvent, string>> ToStringMappings = 
+        private static readonly IDictionary<Type, Func<IDEEvent, string>> ToStringMappings =
             new Dictionary<Type, Func<IDEEvent, string>>
             {
-            {
-                typeof (CommandEvent), 
-                (commandEvent => FormatString("Command", ((CommandEvent) commandEvent).CommandId))},
-            {
-                typeof (WindowEvent), 
-                (windowEvent => FormatString("Window", ((WindowEvent) windowEvent).Action.ToString()))
-            },
-            {
-                typeof (DocumentEvent),
-                (documentEvent => FormatString("Document", ((DocumentEvent) documentEvent).Action.ToString()))
-            },
-            {
-                typeof (BuildEvent), 
-                (buildEvent => FormatString("Build", ((BuildEvent) buildEvent).Action))
-            },
-            {
-                typeof (EditEvent),
-                (editEvent =>
-                    FormatString("Edit", ((EditEvent) editEvent).NumberOfChanges.ToString(CultureInfo.InvariantCulture) + " Changes"))
-            },
-            {
-                typeof (DebuggerEvent), 
-                (debuggerEvent => FormatString("Debugger", ((DebuggerEvent) debuggerEvent).Reason))
-            },
-            {
-                typeof (IDEStateEvent),
-                (ideStateEvent => FormatString("IDEState", ((IDEStateEvent) ideStateEvent).IDELifecyclePhase.ToString()))
-            },
-            {
-                typeof (SolutionEvent),
-                (solutionEvent => FormatString("Solution", ((SolutionEvent) solutionEvent).Action.ToString()))
-            },
-            {
-                typeof (CompletionEvent),
-                (completionEvent =>
-                    FormatString("Completion", ("Terminated as " + ((CompletionEvent) completionEvent).TerminatedState.ToString())))
-            },
-            {
-                typeof(ErrorEvent),
-                (errorEvent =>
                 {
-                    var stackTraceString = ((ErrorEvent) errorEvent).StackTrace.First();
-                    var index = stackTraceString.IndexOf(':');
-                    return FormatString("Error", stackTraceString.Substring(0, index));
-                })
-            }
-        };
+                    typeof (CommandEvent),
+                    (commandEvent => FormatString("Command", ((CommandEvent) commandEvent).CommandId))
+                },
+                {
+                    typeof (WindowEvent),
+                    (windowEvent => FormatString("Window", ((WindowEvent) windowEvent).Action.ToString()))
+                },
+                {
+                    typeof (DocumentEvent),
+                    (documentEvent => FormatString("Document", ((DocumentEvent) documentEvent).Action.ToString()))
+                },
+                {
+                    typeof (BuildEvent),
+                    (buildEvent => FormatString("Build", ((BuildEvent) buildEvent).Action))
+                },
+                {
+                    typeof (EditEvent),
+                    (editEvent =>
+                        FormatString(
+                            "Edit",
+                            ((EditEvent) editEvent).NumberOfChanges.ToString(CultureInfo.InvariantCulture) + " Changes"))
+                },
+                {
+                    typeof (DebuggerEvent),
+                    (debuggerEvent => FormatString("Debugger", ((DebuggerEvent) debuggerEvent).Reason))
+                },
+                {
+                    typeof (IDEStateEvent),
+                    (ideStateEvent =>
+                        FormatString("IDEState", ((IDEStateEvent) ideStateEvent).IDELifecyclePhase.ToString()))
+                },
+                {
+                    typeof (SolutionEvent),
+                    (solutionEvent => FormatString("Solution", ((SolutionEvent) solutionEvent).Action.ToString()))
+                },
+                {
+                    typeof (CompletionEvent),
+                    (completionEvent =>
+                        FormatString(
+                            "Completion",
+                            ("Terminated as " + ((CompletionEvent) completionEvent).TerminatedState.ToString())))
+                },
+                {
+                    typeof (ErrorEvent),
+                    (errorEvent =>
+                    {
+                        var stackTraceString = ((ErrorEvent) errorEvent).StackTrace.First();
+                        var index = stackTraceString.IndexOf(':');
+                        return FormatString("Error", stackTraceString.Substring(0, index));
+                    })
+                }
+            };
 
         public ConcurrentSetsCalculator()
         {
@@ -115,7 +121,10 @@ namespace KaVE.FeedbackProcessor.Statistics
             }
             else
             {
-                if(resultSet.Count > 0) Statistic.Add(resultSet, 1);
+                if (resultSet.Count > 0)
+                {
+                    Statistic.Add(resultSet, 1);
+                }
             }
         }
 

@@ -17,11 +17,10 @@
  *    - Sven Amann
  */
 
-using System;
-using KaVE.Commons.Utils;
+using KaVE.Commons.Utils.Csv;
 using NUnit.Framework;
 
-namespace KaVE.Commons.Tests.Utils
+namespace KaVE.Commons.Tests.Utils.Csv
 {
     [TestFixture]
     internal class CsvBuilderTest
@@ -44,7 +43,7 @@ namespace KaVE.Commons.Tests.Utils
             _uut["A"] = 3;
             _uut["B"] = 4;
 
-            AssertCsv(_uut, new[] {"A,B", "1,2", "3,4"});
+            CsvAssert.IsEqual(_uut, new[] {"A,B", "1,2", "3,4"});
         }
 
         [Test]
@@ -56,7 +55,7 @@ namespace KaVE.Commons.Tests.Utils
             _uut.StartRow();
             _uut["A"] = 3;
 
-            AssertCsv(_uut, new[] {"A,B", "1,2", "3,"});
+            CsvAssert.IsEqual(_uut, new[] {"A,B", "1,2", "3,"});
         }
 
         [Test]
@@ -65,7 +64,7 @@ namespace KaVE.Commons.Tests.Utils
             _uut.StartRow();
             _uut["A"] = "1,5";
 
-            AssertCsv(_uut, new[] {"A", @"""1,5"""});
+            CsvAssert.IsEqual(_uut, new[] {"A", @"""1,5"""});
         }
 
         [Test]
@@ -74,7 +73,7 @@ namespace KaVE.Commons.Tests.Utils
             _uut.StartRow();
             _uut["A"] = "foo\"bar";
 
-            AssertCsv(_uut, new[] {"A", @"""foo""""bar"""});
+            CsvAssert.IsEqual(_uut, new[] {"A", @"""foo""""bar"""});
         }
 
         [Test]
@@ -83,7 +82,7 @@ namespace KaVE.Commons.Tests.Utils
             _uut.StartRow();
             _uut["A"] = new System.DateTime(2015, 4, 27);
 
-            AssertCsv(_uut, new[] {"A", "2015-04-27"});
+            CsvAssert.IsEqual(_uut, new[] {"A", "2015-04-27"});
         }
 
         [Test]
@@ -92,7 +91,7 @@ namespace KaVE.Commons.Tests.Utils
             _uut.StartRow();
             _uut["A"] = new System.DateTime(2015, 4, 27, 13, 14, 15);
 
-            AssertCsv(_uut, new[] {"A", "2015-04-27 13:14:15"});
+            CsvAssert.IsEqual(_uut, new[] {"A", "2015-04-27 13:14:15"});
         }
 
         [Test]
@@ -104,7 +103,7 @@ namespace KaVE.Commons.Tests.Utils
             _uut["Z"] = 4;
             _uut["C"] = 3;
 
-            AssertCsv(_uut, new []{"A,B,C,Z","1,2,3,4"}, CsvBuilder.SortFields.ByName);
+            CsvAssert.IsEqual(_uut, new[] {"A,B,C,Z", "1,2,3,4"}, CsvBuilder.SortFields.ByName);
         }
 
         [Test]
@@ -116,13 +115,7 @@ namespace KaVE.Commons.Tests.Utils
             _uut["Z"] = 3;
             _uut["C"] = 2;
 
-            AssertCsv(_uut, new[] { "Header,A,C,Z", "0,1,2,3" }, CsvBuilder.SortFields.ByNameLeaveFirst);
-        }
-
-        private static void AssertCsv(CsvBuilder uut, string[] lines, CsvBuilder.SortFields sortFields = CsvBuilder.SortFields.ByInsertionOrder)
-        {
-            var actual = uut.Build(sortFields);
-            Assert.AreEqual(string.Join(Environment.NewLine, lines) + Environment.NewLine, actual);
+            CsvAssert.IsEqual(_uut, new[] {"Header,A,C,Z", "0,1,2,3"}, CsvBuilder.SortFields.ByNameLeaveFirst);
         }
     }
 }

@@ -18,11 +18,10 @@
  *    - Markus Zimmermann
  */
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using KaVE.Commons.Model.Events;
-using KaVE.Commons.Utils;
+using KaVE.Commons.Utils.Csv;
 using KaVE.FeedbackProcessor.Cleanup.Heuristics;
 using KaVE.FeedbackProcessor.Model;
 using KaVE.FeedbackProcessor.Utils;
