@@ -152,7 +152,9 @@
     <Compile Include="Utils\Collections\SetEqualityComparerTest.cs" />
     <Compile Include="Utils\Collections\SetsTest.cs" />
     <Compile Include="Utils\Collections\WeakReferenceDictionaryTest.cs" />
-    <Compile Include="Utils\CSVBuilderTest.cs" />
+    <Compile Include="Utils\Csv\CsvAssert.cs" />
+    <Compile Include="Utils\Csv\CsvBuilderHelperTest.cs" />
+    <Compile Include="Utils\Csv\CsvBuilderTest.cs" />
     <Compile Include="Utils\DateTime\SimilarDateTimeComparerTest.cs" />
     <Compile Include="Utils\EqualityUtilsTest.cs" />
     <Compile Include="Utils\Events\EventHandlingTest.cs" />

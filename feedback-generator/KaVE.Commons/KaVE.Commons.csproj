@@ -49,7 +49,8 @@
     <Compile Include="Model\Names\IDelegateTypeName.cs" />
     <Compile Include="Model\Names\ILambdaName.cs" />
     <Compile Include="Utils\Collections\Multiset.cs" />
-    <Compile Include="Utils\CSVBuilder.cs" />
+    <Compile Include="Utils\Csv\CsvBuilder.cs" />
+    <Compile Include="Utils\Csv\CsvBuilderEx.cs" />
     <Compile Include="Utils\Exceptions\FileLogger.cs" />
     <Compile Include="Utils\IO\FileSystemEx.cs" />
     <Compile Include="Utils\Json\EnumToStringConverter.cs" />

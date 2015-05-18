@@ -16,6 +16,7 @@
  * Contributors:
  *    - Sven Amann
  */
+
 using System.Collections.Generic;
 using KaVE.Commons.Utils.Csv;
 using NUnit.Framework;
@@ -32,7 +33,7 @@ namespace KaVE.Commons.Tests.Utils.Csv
 
             var actual = someDictionary.ToCsv();
 
-            CsvAssert.IsEqual(actual, new []{"key,value","foo,1","bar,2"});
+            CsvAssert.IsEqual(actual, new[] {"key,value", "foo,1", "bar,2"});
         }
     }
 }
