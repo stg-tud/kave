@@ -32,7 +32,7 @@ namespace KaVE.Commons.Tests.Utils.DateTime
             var firstDate = System.DateTime.Now;
             var secondDate = firstDate.AddMilliseconds(millisDifferenceToSecondDateTime);
 
-            var comparer = new SimilarDateTimeComparer((uint) equalityThreshold);
+            var comparer = new SimilarDateTimeComparer(equalityThreshold);
             Assert.AreEqual(0, comparer.Compare(firstDate, secondDate));
             Assert.IsTrue(comparer.Equal(firstDate, secondDate));
         }
@@ -45,7 +45,7 @@ namespace KaVE.Commons.Tests.Utils.DateTime
             var firstDate = System.DateTime.Now;
             var secondDate = firstDate.AddMilliseconds(millisDifferenceToSecondDateTime);
 
-            var comparer = new SimilarDateTimeComparer((uint)equalityThreshold);
+            var comparer = new SimilarDateTimeComparer(equalityThreshold);
             Assert.AreEqual(-1, comparer.Compare(firstDate, secondDate));
             Assert.IsFalse(comparer.Equal(firstDate, secondDate));
         }
@@ -58,7 +58,7 @@ namespace KaVE.Commons.Tests.Utils.DateTime
             var firstDate = System.DateTime.Now;
             var secondDate = firstDate.AddMilliseconds(millisDifferenceToSecondDateTime);
 
-            var comparer = new SimilarDateTimeComparer((uint)equalityThreshold);
+            var comparer = new SimilarDateTimeComparer(equalityThreshold);
             Assert.AreEqual(1, comparer.Compare(firstDate, secondDate));
             Assert.IsFalse(comparer.Equal(firstDate, secondDate));
         }
