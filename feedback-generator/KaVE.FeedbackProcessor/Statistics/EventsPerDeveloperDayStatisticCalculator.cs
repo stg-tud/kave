@@ -76,7 +76,7 @@ namespace KaVE.FeedbackProcessor.Statistics
 
         public class DeveloperDay
         {
-            public static readonly TimeSpan CountInactivityAsBreakThreshold = TimeSpan.FromMinutes(10);
+            public static readonly TimeSpan CountInactivityAsBreakThreshold = TimeSpan.FromMinutes(5);
 
             public DateTime Day { get; private set; }
             public DateTime FirstActivityAt { get; private set; }
@@ -162,8 +162,8 @@ namespace KaVE.FeedbackProcessor.Statistics
                 foreach (var day in stat.Value)
                 {
                     var dayString = day.Day.ToString("yyyy-MM-dd");
-                    csvBuilder[dayString + " 1 Start"] = day.FirstActivityAt;
-                    csvBuilder[dayString + " 2 End"] = day.LastActivityAt;
+                    csvBuilder[dayString + " 1 Start"] = day.FirstActivityAt.TimeOfDay;
+                    csvBuilder[dayString + " 2 End"] = day.LastActivityAt.TimeOfDay;
                     csvBuilder[dayString + " 3 Events"] = day.NumberOfEvents;
                     csvBuilder[dayString + " 4 Breaks"] = day.NumberOfBreaks;
                     csvBuilder[dayString + " 5 Total Break"] = day.TotalBreakTime;
