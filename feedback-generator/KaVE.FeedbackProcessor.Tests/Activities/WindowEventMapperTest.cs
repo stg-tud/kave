@@ -122,7 +122,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
                 Window = WindowName.Get(string.Format("vsWindowTypeDocument {0} 90210", workItemType)),
                 Action = WindowEvent.WindowAction.Activate
             };
-            AssertMapsToActivities(@event, Activity.ProjektManagement, Activity.Navigation);
+            AssertMapsToActivities(@event, Activity.ProjectManagement, Activity.Navigation);
         }
 
         [TestCaseSource("_workItemTypes")]
@@ -133,7 +133,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
                 Window = WindowName.Get(string.Format("vsWindowTypeDocument New {0} An Item", workItemType)),
                 Action = WindowEvent.WindowAction.Activate
             };
-            AssertMapsToActivities(@event, Activity.ProjektManagement, Activity.Navigation);
+            AssertMapsToActivities(@event, Activity.ProjectManagement, Activity.Navigation);
         }
 
         [TestCase("Editor"),
@@ -145,7 +145,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
                 Window = WindowName.Get(string.Format("vsWindowTypeDocument blabla [{0}]", marker)),
                 Action = WindowEvent.WindowAction.Activate
             };
-            AssertMapsToActivities(@event, Activity.ProjektManagement, Activity.Navigation);
+            AssertMapsToActivities(@event, Activity.ProjectManagement, Activity.Navigation);
         }
 
         [Test]
@@ -156,7 +156,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
                 Window = WindowName.Get("vsWindowTypeDocument something.wiq"),
                 Action = WindowEvent.WindowAction.Activate
             };
-            AssertMapsToActivities(@event, Activity.ProjektManagement, Activity.Navigation);
+            AssertMapsToActivities(@event, Activity.ProjectManagement, Activity.Navigation);
         }
 
         [Test]
@@ -227,7 +227,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
                 Window = WindowName.Get("vsWindowTypeTaskList Task List"),
                 Action = WindowEvent.WindowAction.Activate
             };
-            AssertMapsToActivities(@event, Activity.ProjektManagement, Activity.Navigation);
+            AssertMapsToActivities(@event, Activity.ProjectManagement, Activity.Navigation);
         }
 
         [Test]

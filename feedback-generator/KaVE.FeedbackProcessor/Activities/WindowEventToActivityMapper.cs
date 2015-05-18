@@ -117,7 +117,7 @@ namespace KaVE.FeedbackProcessor.Activities
             {"Python Environments", new[] {Activity.LocalConfiguration}},
             {"Templates Explorer", new[] {Activity.LocalConfiguration}},
             // time tracking
-            {"Zeiterfassung", new[] {Activity.ProjektManagement}},
+            {"Zeiterfassung", new[] {Activity.ProjectManagement}},
             // ???
             {"Source Not Available", new Activity[] {}},
             {"Source Not Found", new Activity[] {}},
@@ -162,12 +162,12 @@ namespace KaVE.FeedbackProcessor.Activities
                         InsertActivity(@event, Activity.Navigation);
                         break;
                     case "vsWindowTypeTaskList":
-                        InsertActivities(@event, Activity.ProjektManagement, Activity.Navigation);
+                        InsertActivities(@event, Activity.ProjectManagement, Activity.Navigation);
                         break;
                     case "vsWindowTypeDocument":
                         if (IsProjectManagementWindow(window))
                         {
-                            InsertActivity(@event, Activity.ProjektManagement);
+                            InsertActivity(@event, Activity.ProjectManagement);
                         }
                         else
                         {

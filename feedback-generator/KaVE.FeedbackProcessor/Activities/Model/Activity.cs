@@ -23,7 +23,7 @@ namespace KaVE.FeedbackProcessor.Activities.Model
     {
         Any,
         Away,
-        ProjektManagement,
+        ProjectManagement,
         LocalConfiguration, // e.g. window open for non-document window
         Development,
         // Editing,
