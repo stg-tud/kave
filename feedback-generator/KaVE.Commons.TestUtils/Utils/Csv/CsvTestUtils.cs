@@ -17,30 +17,15 @@
  *    - Sven Amann
  */
 
-using KaVE.Commons.TestUtils.Utils.Csv;
-using KaVE.Commons.Utils.Csv;
-using NUnit.Framework;
+using System;
 
-namespace KaVE.Commons.Tests.Utils.Csv
+namespace KaVE.Commons.TestUtils.Utils.Csv
 {
-    [TestFixture]
-    class ReadCsvTest
+    public static class CsvTestUtils
     {
-        [Test]
-        public void ReadsRows()
+        public static string ToCsv(this string[] lines)
         {
-            var actual = CsvTable.Read(new[] {"A,B", "1,2", "3,4"}.ToCsv());
-
-            Assert.AreEqual(2, actual.Rows.Count);
-        }
-
-        [Test]
-        public void UsesFieldNames()
-        {
-            var actual = CsvTable.Read(new[] {"A,B","1,2"}.ToCsv());
-
-            Assert.AreEqual("1", actual.Rows[0]["A"]);
-            Assert.AreEqual("2", actual.Rows[0]["B"]);
+            return String.Join(Environment.NewLine, lines) + Environment.NewLine;
         }
     }
 }

@@ -17,7 +17,7 @@
  *    - Sven Amann
  */
 
-using System;
+using KaVE.Commons.TestUtils.Utils.Csv;
 using KaVE.Commons.Utils.Csv;
 using NUnit.Framework;
 
@@ -36,11 +36,6 @@ namespace KaVE.Commons.Tests.Utils.Csv
         public static void IsEqual(string actualCsv, string[] expectedLines)
         {
             Assert.AreEqual(expectedLines.ToCsv(), actualCsv);
-        }
-
-        public static string ToCsv(this string[] lines)
-        {
-            return string.Join(Environment.NewLine, lines) + Environment.NewLine;
         }
     }
 }
