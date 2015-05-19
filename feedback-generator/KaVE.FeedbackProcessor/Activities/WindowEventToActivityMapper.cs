@@ -15,6 +15,7 @@
  * 
  * Contributors:
  *    - Sebastian Proksch
+ *    - Sven Amann
  */
 
 using System.Collections.Generic;
@@ -50,66 +51,66 @@ namespace KaVE.FeedbackProcessor.Activities
         private static readonly IDictionary<string, Activity[]> ToolWindowMapping = new Dictionary<string, Activity[]>
         {
             // exploration
-            {".NET Reflector .+", new[] {Activity.Understanding}},
-            {"Disassembly", new[] {Activity.Understanding}},
-            {"Diagram", new[] {Activity.Understanding}},
-            {"UML Model Explorer", new[] {Activity.Understanding}},
-            {"XML Schema Explorer", new[] {Activity.Understanding}},
+            {".NET Reflector .+", new[] {Activity.Development}},
+            {"Disassembly", new[] {Activity.Development}},
+            {"Diagram", new[] {Activity.Development}},
+            {"UML Model Explorer", new[] {Activity.Development}},
+            {"XML Schema Explorer", new[] {Activity.Development}},
             // analysis and inspection
-            {"Code Analysis", new[] {Activity.Understanding}},
-            {"Analysis .+", new[] {Activity.Understanding}},
-            {"Analyze .+", new[] {Activity.Understanding}},
-            {"Call Hierarchy", new[] {Activity.Understanding, Activity.Navigation}},
-            {"Hierarchy", new[] {Activity.Understanding, Activity.Navigation}},
-            {"Inspection Results", new[] {Activity.Understanding, Activity.Navigation}},
+            {"Code Analysis", new[] {Activity.Development}},
+            {"Analysis .+", new[] {Activity.Development}},
+            {"Analyze .+", new[] {Activity.Development}},
+            {"Call Hierarchy", new[] {Activity.Navigation}},
+            {"Hierarchy", new[] {Activity.Navigation}},
+            {"Inspection Results", new[] {Activity.Development}},
             // testing
-            {"Code Coverage Results", new[] {Activity.Testing, Activity.Understanding}},
-            {"Tests Explorer", new[] {Activity.Testing, Activity.Navigation}},
-            {"Test Results", new[] {Activity.Testing, Activity.Understanding, Activity.Navigation}},
-            {"Test Runs", new[] {Activity.Testing, Activity.Understanding}},
-            {"Unit Test Explorer", new[] {Activity.Testing, Activity.Navigation}},
-            {"Unit Test Sessions .+", new[] {Activity.Testing, Activity.Navigation, Activity.Understanding}},
-            {"NCrunch Metrics", new[] {Activity.Testing}},
-            {"NCrunch Tests", new[] {Activity.Testing}},
+            {"Code Coverage Results", new[] {Activity.Development}},
+            {"Tests Explorer", new[] {Activity.Development}},
+            {"Test Results", new[] {Activity.Development}},
+            {"Test Runs", new[] {Activity.Development}},
+            {"Unit Test Explorer", new[] {Activity.Development}},
+            {"Unit Test Sessions .+", new[] {Activity.Development}},
+            {"NCrunch Metrics", new[] {Activity.Development}},
+            {"NCrunch Tests", new[] {Activity.Development}},
             // build
-            {"Build Explorer", new Activity[] {}},
-            {"Builds", new Activity[] {}},
-            {"BuildVision", new Activity[] {}},
+            {"Build Explorer", new[] {Activity.Development}},
+            {"Builds", new[] {Activity.Development}},
+            {"BuildVision", new[] {Activity.Development}},
             // version control
-            {"Folder Difference", new Activity[] {}},
-            {"History", new Activity[] {}},
-            {"Pending Changes.+", new Activity[] {}},
-            {"Resolve Conflicts", new Activity[] {}},
-            {"Source Control Explorer", new Activity[] {}},
-            {"Team Explorer (more fine grained?)", new Activity[] {}},
-            {"Tracking Changeset.+", new Activity[] {}},
+            {"Folder Difference", new[] {Activity.ProjectManagement}},
+            {"History", new[] {Activity.ProjectManagement}},
+            {"Pending Changes.+", new[] {Activity.ProjectManagement}},
+            {"Resolve Conflicts", new[] {Activity.ProjectManagement}},
+            {"Source Control Explorer", new[] {Activity.ProjectManagement}},
+            {"Team Explorer.+", new[] {Activity.ProjectManagement}},
+            {"Tracking Changeset.+", new[] {Activity.ProjectManagement}},
             // debugging
-            {"Breakpoints", new[] {Activity.Debugging}},
-            {"Call Stack", new[] {Activity.Debugging}},
-            {"Locals", new[] {Activity.Debugging}},
-            {"Watch.+", new[] {Activity.Debugging}},
-            {"Parallel Watch.+", new[] {Activity.Debugging}},
-            {"Threads", new[] {Activity.Debugging}},
-            {"IntelliTrace", new[] {Activity.Debugging}},
-            {"Modules", new[] {Activity.Debugging}},
-            {"Immediate Window", new[] {Activity.Debugging, Activity.Testing /*?*/}},
-            {"Python .+ Interactive", new[] {Activity.Debugging}},
-            {"Registers", new[] {Activity.Debugging}},
+            {"Breakpoints", new[] {Activity.Development}},
+            {"Call Stack", new[] {Activity.Development}},
+            {"Locals", new[] {Activity.Development}},
+            {"Watch.+", new[] {Activity.Development}},
+            {"Parallel Watch.+", new[] {Activity.Development}},
+            {"Threads", new[] {Activity.Development}},
+            {"IntelliTrace", new[] {Activity.Development}},
+            {"Modules", new[] {Activity.Development}},
+            {"Immediate Window", new[] {Activity.Development}},
+            {"Python .+ Interactive", new[] {Activity.Development}},
+            {"Registers", new[] {Activity.Development}},
             // error tracking
-            {"Error List", new[] {Activity.Debugging, Activity.Navigation}},
-            {"Errors in Solution", new[] {Activity.Debugging, Activity.Navigation}},
+            {"Error List", new[] {Activity.Development}},
+            {"Errors in Solution", new[] {Activity.Development}},
             // find/replace
-            {"Find and Replace", new[] {Activity.Navigation, Activity.Editing}},
+            {"Find and Replace", new[] {Activity.Development}},
             {"Find in Source Control", new[] {Activity.Navigation}},
             {"Find Results", new[] {Activity.Navigation}},
             {"Find Symbol Results", new[] {Activity.Navigation}},
             {"Class View", new[] {Activity.Navigation}},
             {"Resource View.+", new[] {Activity.Navigation}},
             // ???
-            {"Command Window", new Activity[] {}},
-            {"Feedback Manager", new Activity[] {}},
-            {"Notifications", new Activity[] {}},
-            {"Recommendations", new Activity[] {}},
+            {"Command Window", new[] {Activity.Any}},
+            {"Feedback Manager", new[] {Activity.Any}},
+            {"Notifications", new[] {Activity.Any}},
+            {"Recommendations", new[] {Activity.Any}},
             // IDE configuration
             {"Data Sources", new[] {Activity.LocalConfiguration}},
             {"Server Explorer", new[] {Activity.LocalConfiguration}},
@@ -119,12 +120,12 @@ namespace KaVE.FeedbackProcessor.Activities
             // time tracking
             {"Zeiterfassung", new[] {Activity.ProjectManagement}},
             // ???
-            {"Source Not Available", new Activity[] {}},
-            {"Source Not Found", new Activity[] {}},
+            {"Source Not Available", new[] {Activity.Any}},
+            {"Source Not Found", new[] {Activity.Any}},
             // editing
-            {"Properties", new[] {Activity.Editing}},
-            {"Refactoring.+", new[] {Activity.Editing}},
-            {"Regex Tester", new[] {Activity.Editing}}
+            {"Properties", new[] {Activity.Development}},
+            {"Refactoring.+", new[] {Activity.Development}},
+            {"Regex Tester", new[] {Activity.Development}}
         };
 
         public WindowEventToActivityMapper(ILogger logger)
@@ -135,7 +136,12 @@ namespace KaVE.FeedbackProcessor.Activities
 
         private void ProcessWindowEvent(WindowEvent @event)
         {
-            if (IsOpen(@event) || IsMove(@event) || IsClose(@event))
+            if (IsMainWindowEvent(@event))
+            {
+                var activity = GetMainWindowActivity(@event.Action);
+                InsertActivity(@event, activity);
+            }
+            else if (IsOpen(@event) || IsMove(@event) || IsClose(@event))
             {
                 InsertActivity(@event, Activity.LocalConfiguration);
             }
@@ -144,26 +150,22 @@ namespace KaVE.FeedbackProcessor.Activities
                 var window = @event.Window;
                 switch (window.Type)
                 {
-                    case "vsWindowTypeMainWindow":
-                        var activity = GetMainWindowActivity(@event.Action);
-                         InsertActivity(@event, activity);
-                        break;
                     case "vsWindowTypeBrowser":
                     case "vsWindowTypeDocumentOutline":
-                        InsertActivities(@event, Activity.Understanding, Activity.Navigation);
+                        InsertActivities(@event, Activity.Navigation);
                         break;
                     case "vsWindowTypeOutput":
-                        InsertActivities(@event, Activity.Understanding, Activity.Debugging);
+                        InsertActivities(@event, Activity.Development);
                         break;
                     case "vsWindowTypeToolbox":
                     case "vsWindowTypeProperties":
-                        InsertActivity(@event, Activity.Editing);
+                        InsertActivity(@event, Activity.Development);
                         break;
                     case "vsWindowTypeSolutionExplorer":
                         InsertActivity(@event, Activity.Navigation);
                         break;
                     case "vsWindowTypeTaskList":
-                        InsertActivities(@event, Activity.ProjectManagement, Activity.Navigation);
+                        InsertActivities(@event, Activity.ProjectManagement);
                         break;
                     case "vsWindowTypeDocument":
                         if (IsProjectManagementWindow(window))
@@ -172,9 +174,9 @@ namespace KaVE.FeedbackProcessor.Activities
                         }
                         else
                         {
+                            InsertActivity(@event, Activity.Navigation);
                             _logger.Info("document window '{0}' treated with default case", window.Caption);
                         }
-                        InsertActivity(@event, Activity.Navigation);
                         break;
                     case "vsWindowTypeToolWindow":
                         var activities = GetToolWindowActivities(window.Caption);
@@ -193,6 +195,11 @@ namespace KaVE.FeedbackProcessor.Activities
                 }
             }
             DropCurrentEvent();
+        }
+
+        private static bool IsMainWindowEvent(WindowEvent @event)
+        {
+            return "vsWindowTypeMainWindow".Equals(@event.Window.Type);
         }
 
         private static bool IsProjectManagementWindow(WindowName window)

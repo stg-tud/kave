@@ -40,7 +40,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
         {
             var @event = new WindowEvent
             {
-                Window = WindowName.Get(""),
+                Window = WindowName.Get("Type Caption"),
                 Action = WindowEvent.WindowAction.Create
             };
             AssertMapsToActivity(@event, Activity.LocalConfiguration);
@@ -51,7 +51,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
         {
             var @event = new WindowEvent
             {
-                Window = WindowName.Get(""),
+                Window = WindowName.Get("Type Caption"),
                 Action = WindowEvent.WindowAction.Move
             };
             AssertMapsToActivity(@event, Activity.LocalConfiguration);
@@ -62,32 +62,32 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
         {
             var @event = new WindowEvent
             {
-                Window = WindowName.Get(""),
+                Window = WindowName.Get("Type Caption"),
                 Action = WindowEvent.WindowAction.Close
             };
             AssertMapsToActivity(@event, Activity.LocalConfiguration);
         }
 
         [Test]
-        public void ShouldMapActivateOutlineToUnderstandingAndNavigation()
+        public void ShouldMapActivateOutlineToNavigation()
         {
             var @event = new WindowEvent
             {
                 Window = WindowName.Get("vsWindowTypeDocumentOutline Document Outline"),
                 Action = WindowEvent.WindowAction.Activate
             };
-            AssertMapsToActivities(@event, Activity.Understanding, Activity.Navigation);
+            AssertMapsToActivities(@event, Activity.Navigation);
         }
 
         [Test]
-        public void ShouldMapActivateBrowserToUnderStandingNavigation()
+        public void ShouldMapActivateBrowserToNavigation()
         {
             var @event = new WindowEvent
             {
                 Window = WindowName.Get("vsWindowTypeBrowser Object Browser"),
                 Action = WindowEvent.WindowAction.Activate
             };
-            AssertMapsToActivities(@event, Activity.Understanding, Activity.Navigation);
+            AssertMapsToActivity(@event, Activity.Navigation);
         }
 
         [Test]
@@ -115,48 +115,48 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
         };
 
         [TestCaseSource("_workItemTypes")]
-        public void ShouldMapActivateWorkItemWindowToProjectManagementAndNavigation(string workItemType)
+        public void ShouldMapActivateWorkItemWindowToProjectManagement(string workItemType)
         {
             var @event = new WindowEvent
             {
                 Window = WindowName.Get(string.Format("vsWindowTypeDocument {0} 90210", workItemType)),
                 Action = WindowEvent.WindowAction.Activate
             };
-            AssertMapsToActivities(@event, Activity.ProjectManagement, Activity.Navigation);
+            AssertMapsToActivity(@event, Activity.ProjectManagement);
         }
 
         [TestCaseSource("_workItemTypes")]
-        public void ShouldMapActivateNewWorkItemWindowToProjectManagementAndNavigation(string workItemType)
+        public void ShouldMapActivateNewWorkItemWindowToProjectManagement(string workItemType)
         {
             var @event = new WindowEvent
             {
                 Window = WindowName.Get(string.Format("vsWindowTypeDocument New {0} An Item", workItemType)),
                 Action = WindowEvent.WindowAction.Activate
             };
-            AssertMapsToActivities(@event, Activity.ProjectManagement, Activity.Navigation);
+            AssertMapsToActivity(@event, Activity.ProjectManagement);
         }
 
         [TestCase("Editor"),
          TestCase("Results")]
-        public void ShouldMapActivateMarkedDocumentWindowToProjectManagementAndNavigation(string marker)
+        public void ShouldMapActivateMarkedDocumentWindowToProjectManagement(string marker)
         {
             var @event = new WindowEvent
             {
                 Window = WindowName.Get(string.Format("vsWindowTypeDocument blabla [{0}]", marker)),
                 Action = WindowEvent.WindowAction.Activate
             };
-            AssertMapsToActivities(@event, Activity.ProjectManagement, Activity.Navigation);
+            AssertMapsToActivity(@event, Activity.ProjectManagement);
         }
 
         [Test]
-        public void ShouldMapActivateWiqDocumentWindowToProjectManagementAndNavigation()
+        public void ShouldMapActivateWiqDocumentWindowToProjectManagement()
         {
             var @event = new WindowEvent
             {
                 Window = WindowName.Get("vsWindowTypeDocument something.wiq"),
                 Action = WindowEvent.WindowAction.Activate
             };
-            AssertMapsToActivities(@event, Activity.ProjectManagement, Activity.Navigation);
+            AssertMapsToActivity(@event, Activity.ProjectManagement);
         }
 
         [Test]
@@ -176,25 +176,25 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
         }
 
         [Test]
-        public void ShouldMapActivatePropertiesToEditing()
+        public void ShouldMapActivatePropertiesToDevelopment()
         {
             var @event = new WindowEvent
             {
                 Window = WindowName.Get("vsWindowTypeProperties Properties"),
                 Action = WindowEvent.WindowAction.Activate
             };
-            AssertMapsToActivity(@event, Activity.Editing);
+            AssertMapsToActivity(@event, Activity.Development);
         }
 
         [Test]
-        public void ShouldMapActivateOutputWindowToUnderstandingAndDebugging()
+        public void ShouldMapActivateOutputWindowToDevelopment()
         {
             var @event = new WindowEvent
             {
                 Window = WindowName.Get("vsWindowTypeOutput Output"),
                 Action = WindowEvent.WindowAction.Activate
             };
-            AssertMapsToActivities(@event, Activity.Understanding, Activity.Debugging);
+            AssertMapsToActivities(@event, Activity.Development);
         }
 
         [Test]
@@ -209,25 +209,25 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
         }
 
         [Test]
-        public void ShouldMapActivateTaskListToProjectManagementAndNavigation()
+        public void ShouldMapActivateTaskListToProjectManagement()
         {
             var @event = new WindowEvent
             {
                 Window = WindowName.Get("vsWindowTypeTaskList Task List"),
                 Action = WindowEvent.WindowAction.Activate
             };
-            AssertMapsToActivities(@event, Activity.ProjectManagement, Activity.Navigation);
+            AssertMapsToActivities(@event, Activity.ProjectManagement);
         }
 
         [Test]
-        public void ShouldMapActivateToolboxToEditing()
+        public void ShouldMapActivateToolboxToDevelopment()
         {
             var @event = new WindowEvent
             {
                 Window = WindowName.Get("vsWindowTypeToolbox Toolbox"),
                 Action = WindowEvent.WindowAction.Activate
             };
-            AssertMapsToActivity(@event, Activity.Editing);
+            AssertMapsToActivity(@event, Activity.Development);
         }
 
         [Test]
@@ -238,7 +238,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
                 Window = WindowName.Get("vsWindowTypeToolWindow Unit Test Explorer"),
                 Action = WindowEvent.WindowAction.Activate
             };
-            AssertMapsToActivities(@event, Activity.Navigation, Activity.Testing);
+            AssertMapsToActivity(@event, Activity.Development);
         }
 
         [Test]
@@ -249,7 +249,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
                 Window = WindowName.Get("vsWindowTypeToolWindow Analyze <Some Target>"),
                 Action = WindowEvent.WindowAction.Activate
             };
-            AssertMapsToActivities(@event, Activity.Understanding);
+            AssertMapsToActivity(@event, Activity.Development);
         }
 
         [Test]
