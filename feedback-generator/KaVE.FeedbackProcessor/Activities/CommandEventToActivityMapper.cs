@@ -59,7 +59,7 @@ namespace KaVE.FeedbackProcessor.Activities
                 case "LC":
                     return Activity.LocalConfiguration;
                 case "":
-                    return Activity.Any;
+                    return Activity.Other;
                 default:
                     throw new Exception("Unknown activity shorthand: " + shorthand);
             }
@@ -75,7 +75,7 @@ namespace KaVE.FeedbackProcessor.Activities
             }
             else if (!_commandIdToActivityMapping.TryGetValue(commandId, out activity))
             {
-                activity = Activity.Any;
+                activity = Activity.Other;
             }
             InsertActivity(cmd, activity);
         }

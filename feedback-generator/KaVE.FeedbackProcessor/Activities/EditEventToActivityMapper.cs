@@ -19,7 +19,6 @@
 
 using KaVE.Commons.Model.Events.VisualStudio;
 using KaVE.FeedbackProcessor.Activities.Model;
-using KaVE.FeedbackProcessor.Cleanup.Heuristics;
 
 namespace KaVE.FeedbackProcessor.Activities
 {
@@ -32,12 +31,7 @@ namespace KaVE.FeedbackProcessor.Activities
 
         private void ProcessEditEvent(EditEvent e)
         {
-            InsertActivity(e, Activity.Editing);
-
-            if (e.ActiveDocument.IsTestDocument())
-            {
-                InsertActivity(e, Activity.Testing);
-            }
+            InsertActivity(e, Activity.Development);
         }
     }
 }

@@ -46,10 +46,10 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
         }
 
         [Test]
-        public void MapsUnknownCommandToAny()
+        public void MapsUnknownCommandToOther()
         {
             var unknownCmd = new CommandEvent{CommandId = "SomeUnkownCommand"};
-            AssertMapsToActivity(unknownCmd, Activity.Any);
+            AssertMapsToActivity(unknownCmd, Activity.Other);
         }
 
         [Test]

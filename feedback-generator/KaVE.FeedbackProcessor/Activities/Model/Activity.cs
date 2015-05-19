@@ -21,25 +21,27 @@ namespace KaVE.FeedbackProcessor.Activities.Model
 {
     public enum Activity
     {
-        Any,
-        Away,
-        ProjectManagement,
-        LocalConfiguration, // e.g. window open for non-document window
-        Development,
-        // Editing,
-        // Testing,
-        // Debugging,
-        // Building,
-        // Reloading/Refreshing,
-        Understanding,
-        // Navigation
-        // Open/Close of Document, Solution, Project
+        // ACTIVITIES
 
+        /* Some activity, but no inactivity. */
+        Any,
+        /* Editing; Testing; Debugging; Building; Reloading/Refreshing; ... */
+        Development,
+        /* Version Control; Task Management; ... */
+        ProjectManagement,
+        /* Opening, rearranging, closing windows; Editing options; Configure views; ... */
+        LocalConfiguration,
+        /* Open/Close of document, solution, or project */
         Navigation,
-        Editing,
-        Testing,
-        Debugging,
+        /* An activity that belongs to no other category */
+        Other,
+
+        // INACTIVITIES
+
+        Away,
         Waiting,
+
+        // LEGACY ACTIVITIES
 
         EnterIDE,
         LeaveIDE

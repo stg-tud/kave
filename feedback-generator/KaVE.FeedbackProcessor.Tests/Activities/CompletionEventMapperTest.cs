@@ -44,7 +44,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
                 TerminatedState = TerminationState.Unknown
             };
 
-            AssertMapsToActivities(@event, Activity.Editing);
+            AssertMapsToActivities(@event, Activity.Development);
         }
     }
 }

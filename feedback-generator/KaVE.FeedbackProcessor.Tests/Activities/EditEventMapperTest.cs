@@ -33,7 +33,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
         }
 
         [Test]
-        public void MapsEditToEditing()
+        public void MapsEditToDevelopment()
         {
             var @event = new EditEvent
             {
@@ -41,19 +41,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
                 NumberOfChanges = -1,
                 SizeOfChanges = -1
             };
-            AssertMapsToActivity(@event, Activity.Editing);
-        }
-
-        [Test]
-        public void MapsEditOfTestToEditingAndTesting()
-        {
-            var @event = new EditEvent
-            {
-                ActiveDocument = TestFixtures.SomeTestDocumentName,
-                NumberOfChanges = -1,
-                SizeOfChanges = -1
-            };
-            AssertMapsToActivities(@event, Activity.Editing, Activity.Testing);
+            AssertMapsToActivity(@event, Activity.Development);
         }
     }
 }

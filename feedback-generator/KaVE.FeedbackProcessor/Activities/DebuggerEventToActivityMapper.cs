@@ -31,7 +31,7 @@ namespace KaVE.FeedbackProcessor.Activities
 
         private void ProcessIDEStateEvent(DebuggerEvent @event)
         {
-            InsertActivity(@event, Activity.Debugging);
+            InsertActivity(@event, Activity.Development);
         }
     }
 }

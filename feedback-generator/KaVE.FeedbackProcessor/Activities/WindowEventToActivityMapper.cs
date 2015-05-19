@@ -107,10 +107,10 @@ namespace KaVE.FeedbackProcessor.Activities
             {"Class View", new[] {Activity.Navigation}},
             {"Resource View.+", new[] {Activity.Navigation}},
             // ???
-            {"Command Window", new[] {Activity.Any}},
-            {"Feedback Manager", new[] {Activity.Any}},
-            {"Notifications", new[] {Activity.Any}},
-            {"Recommendations", new[] {Activity.Any}},
+            {"Command Window", new[] {Activity.Other}},
+            {"Feedback Manager", new[] {Activity.Other}},
+            {"Notifications", new[] {Activity.Other}},
+            {"Recommendations", new[] {Activity.Other}},
             // IDE configuration
             {"Data Sources", new[] {Activity.LocalConfiguration}},
             {"Server Explorer", new[] {Activity.LocalConfiguration}},
@@ -120,8 +120,8 @@ namespace KaVE.FeedbackProcessor.Activities
             // time tracking
             {"Zeiterfassung", new[] {Activity.ProjectManagement}},
             // ???
-            {"Source Not Available", new[] {Activity.Any}},
-            {"Source Not Found", new[] {Activity.Any}},
+            {"Source Not Available", new[] {Activity.Other}},
+            {"Source Not Found", new[] {Activity.Other}},
             // editing
             {"Properties", new[] {Activity.Development}},
             {"Refactoring.+", new[] {Activity.Development}},

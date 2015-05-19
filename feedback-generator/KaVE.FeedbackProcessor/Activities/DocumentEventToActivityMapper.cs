@@ -19,7 +19,6 @@
 
 using KaVE.Commons.Model.Events.VisualStudio;
 using KaVE.FeedbackProcessor.Activities.Model;
-using KaVE.FeedbackProcessor.Cleanup.Heuristics;
 
 namespace KaVE.FeedbackProcessor.Activities
 {
@@ -33,13 +32,8 @@ namespace KaVE.FeedbackProcessor.Activities
         private void ProcessDocumentEvent(DocumentEvent @event)
         {
             var isSave = @event.Action == DocumentEvent.DocumentAction.Saved;
-            var activity = isSave ? Activity.Editing : Activity.Navigation;
+            var activity = isSave ? Activity.Development : Activity.Navigation;
             InsertActivity(@event, activity);
-
-            if (@event.Document.IsTestDocument())
-            {
-                InsertActivity(@event, Activity.Testing);
-            }
         }
     }
 }

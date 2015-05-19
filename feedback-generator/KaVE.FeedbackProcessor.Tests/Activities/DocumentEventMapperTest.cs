@@ -44,19 +44,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
         }
 
         [Test]
-        public void ShouldMapOpenTestToNavigationAndTesting()
-        {
-            var @event = new DocumentEvent
-            {
-                Document = TestFixtures.SomeTestDocumentName,
-                Action = DocumentEvent.DocumentAction.Opened
-            };
-
-            AssertMapsToActivities(@event, Activity.Navigation, Activity.Testing);
-        }
-
-        [Test]
-        public void ShouldMapSaveToEdit()
+        public void ShouldMapSaveToDevelopment()
         {
             var @event = new DocumentEvent
             {
@@ -64,19 +52,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
                 Action = DocumentEvent.DocumentAction.Saved
             };
 
-            AssertMapsToActivity(@event, Activity.Editing);
-        }
-
-        [Test]
-        public void ShouldMapSaveOfTestToEditAndSave()
-        {
-            var @event = new DocumentEvent
-            {
-                Document = TestFixtures.SomeTestDocumentName,
-                Action = DocumentEvent.DocumentAction.Saved
-            };
-
-            AssertMapsToActivities(@event, Activity.Editing, Activity.Testing);
+            AssertMapsToActivity(@event, Activity.Development);
         }
 
         [Test]
@@ -89,18 +65,6 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
             };
 
             AssertMapsToActivity(@event, Activity.Navigation);
-        }
-
-        [Test]
-        public void ShouldMapCloseTestToNavigationAndTesting()
-        {
-            var @event = new DocumentEvent
-            {
-                Document = TestFixtures.SomeTestDocumentName,
-                Action = DocumentEvent.DocumentAction.Closing
-            };
-
-            AssertMapsToActivities(@event, Activity.Navigation, Activity.Testing);
         }
     }
 }
