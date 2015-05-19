@@ -41,9 +41,27 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.SlidingWindow
             var uut = new ActivityWindowProcessor(testMergeStrategy, TimeSpan.FromSeconds(1));
             uut.OnEvent(event1);
             uut.OnEvent(event2);
-            var window = testMergeStrategy.Windows.First();
+            var window = testMergeStrategy.Windows[0];
 
             CollectionAssert.AreEqual(WindowFrom(event1), window);
+        }
+
+        [Test]
+        public void ComputesSubsequentWindow()
+        {
+            var someDateTime = DateTimeFactory.SomeDateTime();
+            var event1 = GivenEventExists(someDateTime);
+            var event2 = GivenEventExists(someDateTime.AddSeconds(1));
+            var event3 = GivenEventExists(someDateTime.AddSeconds(2));
+
+            var testMergeStrategy = new TestMergeStrategy();
+            var uut = new ActivityWindowProcessor(testMergeStrategy, TimeSpan.FromSeconds(1));
+            uut.OnEvent(event1);
+            uut.OnEvent(event2);
+            uut.OnEvent(event3);
+            var window = testMergeStrategy.Windows[1];
+
+            CollectionAssert.AreEqual(WindowFrom(event2), window);
         }
 
         private static ActivityEvent GivenEventExists(DateTime triggeredAt)
