@@ -76,6 +76,7 @@ namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
         }
 
         private Window _currentWindow;
+        private Developer _currentDeveloper;
 
         public interface IActivityMergeStrategy
         {
@@ -86,7 +87,17 @@ namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
         {
             _strategy = strategy;
             _windowSpan = windowSpan;
+            ActivityStream = new Dictionary<Developer, IList<Activity>>();
             RegisterFor<ActivityEvent>(ProcessActivities);
+        }
+
+        public IDictionary<Developer, IList<Activity>> ActivityStream { get; private set; }
+
+        public override void OnStreamStarts(Developer developer)
+        {
+            _currentDeveloper = developer;
+            ActivityStream[developer] = new List<Activity>();
+            _currentWindow = null;
         }
 
         private void ProcessActivities(ActivityEvent @event)
@@ -100,7 +111,7 @@ namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
             {
                 if (_currentWindow.IsOnSameDayAs(@event) || _currentWindow.IsNotEmpty)
                 {
-                    _strategy.Merge(_currentWindow.GetActivities());
+                    AppendMergedWindowToStream();
                 }
 
                 if (_currentWindow.IsOnSameDayAs(@event))
@@ -116,6 +127,11 @@ namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
             _currentWindow.Add(@event);
         }
 
+        private void AppendMergedWindowToStream()
+        {
+            ActivityStream[_currentDeveloper].Add(_strategy.Merge(_currentWindow.GetActivities()));
+        }
+
         private Window CreateWindowStartingAt(DateTime windowStart)
         {
             return new Window(windowStart, _windowSpan);
@@ -123,7 +139,7 @@ namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
 
         public override void OnStreamEnds()
         {
-            _strategy.Merge(_currentWindow.GetActivities());
+            AppendMergedWindowToStream();
         }
     }
 }
