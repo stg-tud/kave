@@ -186,17 +186,6 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
             AssertMapsToActivity(@event, Activity.Editing);
         }
 
-        [Test(Description = "Handled by InIDEActivityDetector.")]
-        public void ShouldDropActivateMainWindow()
-        {
-            var @event = new WindowEvent
-            {
-                Window = WindowName.Get("vsWindowTypeMainWindow Microsoft Visual Studio"),
-                Action = WindowEvent.WindowAction.Activate
-            };
-            AssertDrop(@event);
-        }
-
         [Test]
         public void ShouldMapActivateOutputWindowToUnderstandingAndDebugging()
         {
@@ -279,15 +268,28 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
             Assert.AreEqual("tool window 'Unknown Window' treated with default case", infoMessage);
         }
 
-        [Test(Description = "Only main window gets deactivated. Handled by InIDEActivityDetector.")]
-        public void ShouldDropWindowDeactivations()
+        [Test]
+        public void MapsMainWindowActivationToEnterIDEActivity()
         {
             var @event = new WindowEvent
             {
-                Window = WindowName.Get(""),
+                Window = WindowName.Get("vsWindowTypeMainWindow Startseite - Microsoft Visual Studio"),
+                Action = WindowEvent.WindowAction.Activate
+            };
+
+            AssertMapsToActivity(@event, Activity.EnterIDE);
+        }
+
+        [Test]
+        public void MapsMainWindowDeactivationToLeaveIDEActivity()
+        {
+            var @event = new WindowEvent
+            {
+                Window = WindowName.Get("vsWindowTypeMainWindow Aktueller Fenstertitel"),
                 Action = WindowEvent.WindowAction.Deactivate
             };
-            AssertDrop(@event);
+
+            AssertMapsToActivity(@event, Activity.LeaveIDE);
         }
 
         [Test, ExpectedException(ExpectedMessage = "unknown window type 'unknownWindowType'")]

@@ -62,7 +62,6 @@
     <Compile Include="Activities\DocumentEventToActivityMapper.cs" />
     <Compile Include="Activities\EditEventToActivityMapper.cs" />
     <Compile Include="Activities\FindEventToActivityMapper.cs" />
-    <Compile Include="Activities\InIDEToActivityDetector.cs" />
     <Compile Include="Activities\InstallEventToActivityMapper.cs" />
     <Compile Include="Activities\Model\Activity.cs" />
     <Compile Include="Activities\Model\ActivityEvent.cs" />

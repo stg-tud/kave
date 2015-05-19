@@ -139,13 +139,14 @@ namespace KaVE.FeedbackProcessor.Activities
             {
                 InsertActivity(@event, Activity.LocalConfiguration);
             }
-            else if (IsActivate(@event))
+            else
             {
                 var window = @event.Window;
                 switch (window.Type)
                 {
                     case "vsWindowTypeMainWindow":
-                        // ignore, since handled by InIDEActivityDetector
+                        var activity = GetMainWindowActivity(@event.Action);
+                         InsertActivity(@event, activity);
                         break;
                     case "vsWindowTypeBrowser":
                     case "vsWindowTypeDocumentOutline":
@@ -176,7 +177,7 @@ namespace KaVE.FeedbackProcessor.Activities
                         InsertActivity(@event, Activity.Navigation);
                         break;
                     case "vsWindowTypeToolWindow":
-                        var activities = GetActivitiesForToolWindow(window.Caption);
+                        var activities = GetToolWindowActivities(window.Caption);
                         if (activities != null)
                         {
                             InsertActivities(@event, activities);
@@ -199,27 +200,27 @@ namespace KaVE.FeedbackProcessor.Activities
             return window.Caption.ContainsAny(WorkItemIndicators);
         }
 
-        private bool IsActivate(WindowEvent @event)
-        {
-            return @event.Action == WindowEvent.WindowAction.Activate;
-        }
-
-        private bool IsOpen(WindowEvent @event)
+        private static bool IsOpen(WindowEvent @event)
         {
             return @event.Action == WindowEvent.WindowAction.Create;
         }
 
-        private bool IsMove(WindowEvent @event)
+        private static bool IsMove(WindowEvent @event)
         {
             return @event.Action == WindowEvent.WindowAction.Move;
         }
 
-        private bool IsClose(WindowEvent @event)
+        private static bool IsClose(WindowEvent @event)
         {
             return @event.Action == WindowEvent.WindowAction.Close;
         }
 
-        private static Activity[] GetActivitiesForToolWindow(string toolWindowCaption)
+        private static Activity GetMainWindowActivity(WindowEvent.WindowAction action)
+        {
+            return action == WindowEvent.WindowAction.Activate ? Activity.EnterIDE : Activity.LeaveIDE;
+        }
+
+        private static Activity[] GetToolWindowActivities(string toolWindowCaption)
         {
             return
                 ToolWindowMapping.Where(mapping => Regex.IsMatch(toolWindowCaption, mapping.Key))
