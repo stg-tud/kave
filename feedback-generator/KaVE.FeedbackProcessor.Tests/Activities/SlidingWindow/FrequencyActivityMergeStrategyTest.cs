@@ -38,6 +38,27 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.SlidingWindow
             Assert.AreEqual(Activity.Waiting, actual);
         }
 
+        [Test]
+        public void PicksMostFrequentActivity()
+        {
+            var uut = new FrequencyActivityMergeStrategy();
+
+            var actual = uut.Merge(
+                Window(Activity.Development, Activity.Any, Activity.Development, Activity.Navigation));
+
+            Assert.AreEqual(Activity.Development, actual);
+        }
+
+        [Test]
+        public void PicksLaterActivityOnEqualsFrequence()
+        {
+            var uut = new FrequencyActivityMergeStrategy();
+
+            var actual = uut.Merge(Window(Activity.Development, Activity.Any));
+
+            Assert.AreEqual(Activity.Any, actual);
+        }
+
         private IList<Activity> EmptyWindow()
         {
             return Window( /* no activities */);

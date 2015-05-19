@@ -18,6 +18,8 @@
  */
 
 using System.Collections.Generic;
+using System.Linq;
+using KaVE.Commons.Utils.Collections;
 using KaVE.FeedbackProcessor.Activities.Model;
 
 namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
@@ -26,7 +28,15 @@ namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
     {
         public Activity Merge(IList<Activity> window)
         {
-            return Activity.Waiting;
+            if (window.Count == 0)
+            {
+                return Activity.Waiting;
+            }
+
+            var activities = new Multiset<Activity>(window);
+            var maxFrequency = activities.EntryDictionary.Max(kvp => kvp.Value);
+            var mostFrequentActivities = activities.EntryDictionary.Where(kvp => kvp.Value == maxFrequency).Select(kvp => kvp.Key);
+            return window.Last(mostFrequentActivities.Contains);
         }
     }
 }
