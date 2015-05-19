@@ -29,13 +29,17 @@ namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
         private readonly IActivityMergeStrategy _strategy;
         private readonly TimeSpan _windowSize;
 
-        private DateTime? WindowStart { get; set; }
+        private readonly IList<ActivityEvent> _window = new List<ActivityEvent>(); 
+
+        private DateTime? WindowStart
+        {
+            get { return _window.Count == 0 ? null : _window.First().TriggeredAt; }
+        }
 
         private DateTime? WindowEnd
         {
             get { return WindowStart + _windowSize; }
         }
-        private readonly IList<ActivityEvent> _window = new List<ActivityEvent>(); 
 
         public interface IActivityMergeStrategy
         {
@@ -54,14 +58,9 @@ namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
             if (WindowEnd <= @event.TriggeredAt)
             {
                 _strategy.Merge(_window.Select(e => e.Activity).ToList());
-                WindowStart = null;
                 _window.Clear();
             }
 
-            if (WindowStart == null)
-            {
-                WindowStart = @event.TriggeredAt;
-            }
             _window.Add(@event);
         }
     }
