@@ -22,6 +22,8 @@ using System.Collections.Generic;
 using System.Linq;
 using KaVE.FeedbackProcessor.Activities.Model;
 using KaVE.FeedbackProcessor.Activities.SlidingWindow;
+using KaVE.FeedbackProcessor.Model;
+using KaVE.FeedbackProcessor.Tests.Model;
 using KaVE.FeedbackProcessor.Tests.TestUtils;
 using NUnit.Framework;
 
@@ -30,63 +32,77 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.SlidingWindow
     [TestFixture]
     internal class WindowComputationTest
     {
-        [Test]
-        public void ComputesWindowFromStream()
+        private static readonly TimeSpan WindowSpan = TimeSpan.FromSeconds(1);
+
+        private ActivityWindowProcessor _uut;
+        private TestMergeStrategy _testMergeStrategy;
+        private Developer _someDeveloper;
+        private DateTime _someDateTime;
+
+        [SetUp]
+        public void SetUp()
         {
-            var someDateTime = DateTimeFactory.SomeDateTime();
-            var event1 = GivenEventExists(someDateTime);
-            var event2 = GivenEventExists(someDateTime.AddSeconds(1));
+            _testMergeStrategy = new TestMergeStrategy();
+            _uut = new ActivityWindowProcessor(_testMergeStrategy, WindowSpan);
 
-            var testMergeStrategy = new TestMergeStrategy();
-            var uut = new ActivityWindowProcessor(testMergeStrategy, TimeSpan.FromSeconds(1));
-            uut.OnEvent(event1);
-            uut.OnEvent(event2);
-            var window = testMergeStrategy.Windows[0];
+            _someDeveloper = TestFactory.SomeDeveloper();
+            _someDateTime = DateTimeFactory.SomeDateTime();
+        }
 
-            CollectionAssert.AreEqual(WindowFrom(event1), window);
+        [Test]
+        public void EndsWindowOnFirstEventAfterWindowEnd()
+        {
+            var event1 = SomeEvent(_someDateTime);
+            var event2 = SomeEvent(_someDateTime + WindowSpan);
+
+            _uut.OnStreamStarts(_someDeveloper);
+            _uut.OnEvent(event1);
+            _uut.OnEvent(event2);
+
+            AssertWindows(WindowFrom(event1));
+        }
+
+        [Test]
+        public void EndsWindowOnStreamEnd()
+        {
+            var event1 = SomeEvent(_someDateTime);
+
+            _uut.OnStreamStarts(_someDeveloper);
+            _uut.OnEvent(event1);
+            _uut.OnStreamEnds();
+
+            AssertWindows(WindowFrom(event1));
         }
 
         [Test]
         public void ComputesSubsequentWindow()
         {
-            var someDateTime = DateTimeFactory.SomeDateTime();
-            var event1 = GivenEventExists(someDateTime);
-            var event2 = GivenEventExists(someDateTime.AddSeconds(1));
-            var event3 = GivenEventExists(someDateTime.AddSeconds(2));
+            var event1 = SomeEvent(_someDateTime);
+            var event2 = SomeEvent(_someDateTime + WindowSpan);
+            var event3 = SomeEvent(_someDateTime + WindowSpan + WindowSpan);
 
-            var testMergeStrategy = new TestMergeStrategy();
-            var uut = new ActivityWindowProcessor(testMergeStrategy, TimeSpan.FromSeconds(1));
-            uut.OnEvent(event1);
-            uut.OnEvent(event2);
-            uut.OnEvent(event3);
-            var window = testMergeStrategy.Windows[1];
+            _uut.OnStreamStarts(_someDeveloper);
+            _uut.OnEvent(event1);
+            _uut.OnEvent(event2);
+            _uut.OnEvent(event3);
 
-            CollectionAssert.AreEqual(WindowFrom(event2), window);
+            AssertWindows(WindowFrom(event1), WindowFrom(event2));
         }
 
-        [Test]
-        public void FlushesLastWindowOnStreamEnd()
-        {
-            var someDateTime = DateTimeFactory.SomeDateTime();
-            var event1 = GivenEventExists(someDateTime);
-
-            var testMergeStrategy = new TestMergeStrategy();
-            var uut = new ActivityWindowProcessor(testMergeStrategy, TimeSpan.FromSeconds(1));
-            uut.OnEvent(event1);
-            uut.OnStreamEnds();
-            var window = testMergeStrategy.Windows[0];
-
-            CollectionAssert.AreEqual(WindowFrom(event1), window);
-        }
-
-        private static ActivityEvent GivenEventExists(DateTime triggeredAt)
+        private static ActivityEvent SomeEvent(DateTime triggeredAt)
         {
             return new ActivityEvent {TriggeredAt = triggeredAt};
         }
 
-        private static IEnumerable<Activity> WindowFrom(params ActivityEvent[] events)
+        private static Activity[] WindowFrom(params ActivityEvent[] events)
         {
-            return events.Select(e => e.Activity);
+            return events.Select(e => e.Activity).ToArray();
+        }
+
+        private void AssertWindows(params Activity[][] expecteds)
+        {
+            var actuals = _testMergeStrategy.Windows;
+            CollectionAssert.AreEqual(expecteds, actuals);
         }
 
         private class TestMergeStrategy : ActivityWindowProcessor.IActivityMergeStrategy

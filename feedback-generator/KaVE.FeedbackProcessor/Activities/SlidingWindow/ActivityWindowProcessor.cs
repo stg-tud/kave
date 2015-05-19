@@ -27,7 +27,7 @@ namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
     internal class ActivityWindowProcessor : BaseEventProcessor
     {
         private readonly IActivityMergeStrategy _strategy;
-        private readonly TimeSpan _windowSize;
+        private readonly TimeSpan _windowSpan;
 
         private readonly IList<ActivityEvent> _window = new List<ActivityEvent>(); 
 
@@ -38,7 +38,7 @@ namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
 
         private DateTime? WindowEnd
         {
-            get { return WindowStart + _windowSize; }
+            get { return WindowStart + _windowSpan; }
         }
 
         public interface IActivityMergeStrategy
@@ -46,10 +46,10 @@ namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
             Activity Merge(IList<Activity> window);
         }
 
-        public ActivityWindowProcessor(IActivityMergeStrategy strategy, TimeSpan windowSize)
+        public ActivityWindowProcessor(IActivityMergeStrategy strategy, TimeSpan windowSpan)
         {
             _strategy = strategy;
-            _windowSize = windowSize;
+            _windowSpan = windowSpan;
             RegisterFor<ActivityEvent>(ProcessActivities);
         }
 
