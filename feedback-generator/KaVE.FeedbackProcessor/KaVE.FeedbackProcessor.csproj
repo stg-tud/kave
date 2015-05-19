@@ -113,6 +113,11 @@
     <Compile Include="Database\KaVECollectionSerializer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Activities\IDEStateEventToActivityMapper.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Statistics\AnonymizationStatisticsLogger.cs" />
     <Compile Include="Statistics\CommandIdCollector.cs" />
     <Compile Include="Statistics\EquivalentCommandPairCalculator.cs" />
@@ -131,6 +136,11 @@
       <Link>KaVE.licenseheader</Link>
     </None>
     <None Include="packages.config" />
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="Resources\CommandIdToActivityMapping.csv" />
     <None Include="Resources\commands_vs_bars_ids.de.csv" />
     <None Include="Resources\commands_vs_click_ids.de.csv" />
     <None Include="Resources\commands_vs_ids.csv" />

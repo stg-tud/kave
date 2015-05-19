@@ -19,23 +19,44 @@
 
 using KaVE.Commons.Model.Events;
 using KaVE.FeedbackProcessor.Activities;
+using KaVE.FeedbackProcessor.Activities.Model;
 using NUnit.Framework;
 
 namespace KaVE.FeedbackProcessor.Tests.Activities
 {
     internal class CommandEventMapperTest : BaseToActivityMapperTest
     {
+        // TODO make constructor params for mappers possible and use this mapping then
+        private static readonly string[] TestMapping =
+        {
+            "Command ID,Mapping",
+            "TextControl.Paste,D"
+        };
+
         public override BaseToActivityMapper Sut
         {
             get { return new CommandEventToActivityMapper(); }
         }
 
         [Test]
-        public void ShouldAlwaysDoSomething()
+        public void MapsCommandToActivityByProvidedMapping()
         {
-            var @event = new CommandEvent { CommandId = "xyz" };
-            // TODO we need a mapping here for the different ids
-            AssertDrop(@event);
+            var @event = new CommandEvent { CommandId = "TextControl.Paste" };
+            AssertMapsToActivity(@event, Activity.Development);
+        }
+
+        [Test]
+        public void MapsUnknownCommandToAny()
+        {
+            var unknownCmd = new CommandEvent{CommandId = "SomeUnkownCommand"};
+            AssertMapsToActivity(unknownCmd, Activity.Any);
+        }
+
+        [Test]
+        public void MapsRecentFilesToNavigation()
+        {
+            var openRecentFileCmd = new CommandEvent {CommandId = "1 C:\\Some\\Path\\ToThe.File"};
+            AssertMapsToActivity(openRecentFileCmd, Activity.Navigation);
         }
     }
 }
