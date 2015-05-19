@@ -64,6 +64,7 @@
     <Compile Include="Activities\FindEventMapperTest.cs" />
     <Compile Include="Activities\IDEStateEventMapperTest.cs" />
     <Compile Include="Activities\InstallEventMapperTest.cs" />
+    <Compile Include="Activities\SlidingWindow\WindowComputationTest.cs" />
     <Compile Include="Activities\SolutionEventMapperTest.cs" />
     <Compile Include="Activities\TestFixtures.cs" />
     <Compile Include="Activities\UpdateEventMapperTest.cs" />
