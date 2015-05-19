@@ -20,6 +20,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using KaVE.Commons.Model.Events;
 using KaVE.FeedbackProcessor.Activities.Model;
 using KaVE.FeedbackProcessor.Model;
 
@@ -30,14 +31,51 @@ namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
         private readonly IActivityMergeStrategy _strategy;
         private readonly TimeSpan _windowSpan;
 
-        private IList<ActivityEvent> _window;
-
-        private DateTime WindowStart { get; set; }
-
-        private DateTime WindowEnd
+        private class Window
         {
-            get { return WindowStart + _windowSpan; }
+            private readonly TimeSpan _span;
+            private readonly IList<ActivityEvent> _events = new List<ActivityEvent>();
+
+            public Window(DateTime start, TimeSpan span)
+            {
+                _span = span;
+                Start = start;
+            }
+
+            private DateTime Start { get; set; }
+
+            public DateTime End
+            {
+                get { return Start + _span; }
+            }
+
+            public void Add(ActivityEvent activityEvent)
+            {
+                _events.Add(activityEvent);
+            }
+
+            public bool IsNotEmpty
+            {
+                get { return _events.Count > 0; }
+            }
+
+            public bool EndsBefore(IDEEvent @event)
+            {
+                return End <= @event.TriggeredAt;
+            }
+
+            public bool EndsOnSameDayAs(IDEEvent @event)
+            {
+                return End.Date == @event.GetTriggeredAt().Date;
+            }
+
+            public IList<Activity> GetActivities()
+            {
+                return _events.Select(e => e.Activity).ToList();
+            }
         }
+
+        private Window _currentWindow;
 
         public interface IActivityMergeStrategy
         {
@@ -53,37 +91,29 @@ namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
 
         private void ProcessActivities(ActivityEvent @event)
         {
-            var triggeredAt = @event.GetTriggeredAt();
-
-            if (_window == null)
+            if (_currentWindow == null)
             {
-                StartWindowAt(triggeredAt);
+                _currentWindow = CreateWindowStartingAt(@event.GetTriggeredAt());
             }
 
-            while (WindowEnd <= @event.TriggeredAt && !(_window.Count == 0 && WindowEnd.Date != triggeredAt.Date))
+            while (_currentWindow.EndsBefore(@event) && (_currentWindow.IsNotEmpty || _currentWindow.EndsOnSameDayAs(@event)))
             {
-                EndWindowAndShiftWindow();
+                _strategy.Merge(_currentWindow.GetActivities());
+
+                _currentWindow = CreateWindowStartingAt(_currentWindow.End);
             }
 
-            _window.Add(@event);
+            _currentWindow.Add(@event);
         }
 
-        private void EndWindowAndShiftWindow()
+        private Window CreateWindowStartingAt(DateTime windowStart)
         {
-            _strategy.Merge(_window.Select(e => e.Activity).ToList());
-
-            StartWindowAt(WindowEnd);
-        }
-
-        private void StartWindowAt(DateTime windowStart)
-        {
-            _window = new List<ActivityEvent>();
-            WindowStart = windowStart;
+            return new Window(windowStart, _windowSpan);
         }
 
         public override void OnStreamEnds()
         {
-            EndWindowAndShiftWindow();
+            _strategy.Merge(_currentWindow.GetActivities());
         }
     }
 }
