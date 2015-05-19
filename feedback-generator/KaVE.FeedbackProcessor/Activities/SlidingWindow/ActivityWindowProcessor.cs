@@ -64,7 +64,7 @@ namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
                 return End <= @event.TriggeredAt;
             }
 
-            public bool EndsOnSameDayAs(IDEEvent @event)
+            public bool IsOnSameDayAs(IDEEvent @event)
             {
                 return End.Date == @event.GetTriggeredAt().Date;
             }
@@ -96,11 +96,21 @@ namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
                 _currentWindow = CreateWindowStartingAt(@event.GetTriggeredAt());
             }
 
-            while (_currentWindow.EndsBefore(@event) && (_currentWindow.IsNotEmpty || _currentWindow.EndsOnSameDayAs(@event)))
+            while (_currentWindow.EndsBefore(@event))
             {
-                _strategy.Merge(_currentWindow.GetActivities());
+                if (_currentWindow.IsOnSameDayAs(@event) || _currentWindow.IsNotEmpty)
+                {
+                    _strategy.Merge(_currentWindow.GetActivities());
+                }
 
-                _currentWindow = CreateWindowStartingAt(_currentWindow.End);
+                if (_currentWindow.IsOnSameDayAs(@event))
+                {
+                    _currentWindow = CreateWindowStartingAt(_currentWindow.End);
+                }
+                else
+                {
+                    _currentWindow = CreateWindowStartingAt(@event.GetTriggeredAt());
+                }
             }
 
             _currentWindow.Add(@event);

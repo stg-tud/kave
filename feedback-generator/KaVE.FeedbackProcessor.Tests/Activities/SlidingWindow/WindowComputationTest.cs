@@ -90,6 +90,22 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.SlidingWindow
         }
 
         [Test]
+        public void ComputesWindowOnNextDay()
+        {
+            var event1 = SomeEvent(_someDateTime);
+            var event2 = SomeEvent(_someDateTime.AddDays(1));
+            var event3 = SomeEvent(_someDateTime.AddDays(1).AddMilliseconds(1));
+
+            _uut.OnStreamStarts(_someDeveloper);
+            _uut.OnEvent(event1);
+            _uut.OnEvent(event2);
+            _uut.OnEvent(event3);
+            _uut.OnStreamEnds();
+
+            AssertWindows(WindowFrom(event1), WindowFrom(event2, event3));
+        }
+
+        [Test]
         public void ComputesEmptyWindows()
         {
             var event1 = SomeEvent(_someDateTime);
