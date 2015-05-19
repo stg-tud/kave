@@ -66,6 +66,7 @@
     <Compile Include="Activities\Model\Activity.cs" />
     <Compile Include="Activities\Model\ActivityEvent.cs" />
     <Compile Include="Activities\SlidingWindow\ActivityWindowProcessor.cs" />
+    <Compile Include="Activities\SlidingWindow\FrequencyActivityMergeStrategy.cs" />
     <Compile Include="Activities\SolutionEventToActivityMapper.cs" />
     <Compile Include="Activities\UpdateEventToActivityMapper.cs" />
     <Compile Include="Activities\WindowEventToActivityMapper.cs" />
