@@ -57,11 +57,21 @@ namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
         {
             if (WindowEnd <= @event.TriggeredAt)
             {
-                _strategy.Merge(_window.Select(e => e.Activity).ToList());
-                _window.Clear();
+                MergeCurrentWindow();
             }
 
             _window.Add(@event);
+        }
+
+        private void MergeCurrentWindow()
+        {
+            _strategy.Merge(_window.Select(e => e.Activity).ToList());
+            _window.Clear();
+        }
+
+        public override void OnStreamEnds()
+        {
+            MergeCurrentWindow();
         }
     }
 }

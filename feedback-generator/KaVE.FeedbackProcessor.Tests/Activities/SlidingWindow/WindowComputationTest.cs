@@ -64,6 +64,21 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.SlidingWindow
             CollectionAssert.AreEqual(WindowFrom(event2), window);
         }
 
+        [Test]
+        public void FlushesLastWindowOnStreamEnd()
+        {
+            var someDateTime = DateTimeFactory.SomeDateTime();
+            var event1 = GivenEventExists(someDateTime);
+
+            var testMergeStrategy = new TestMergeStrategy();
+            var uut = new ActivityWindowProcessor(testMergeStrategy, TimeSpan.FromSeconds(1));
+            uut.OnEvent(event1);
+            uut.OnStreamEnds();
+            var window = testMergeStrategy.Windows[0];
+
+            CollectionAssert.AreEqual(WindowFrom(event1), window);
+        }
+
         private static ActivityEvent GivenEventExists(DateTime triggeredAt)
         {
             return new ActivityEvent {TriggeredAt = triggeredAt};

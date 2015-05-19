@@ -59,7 +59,7 @@ namespace KaVE.FeedbackProcessor
             return _processors.Where(e => e.Key.IsInstanceOfType(@event)).Select(e => e.Value);
         }
 
-        public void OnStreamEnds()
+        public virtual void OnStreamEnds()
         {
         }
     }
