@@ -36,18 +36,14 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.SlidingWindow
             var someDateTime = DateTimeFactory.SomeDateTime();
             var event1 = GivenEventExists(someDateTime);
             var event2 = GivenEventExists(someDateTime.AddSeconds(1));
-            var event3 = GivenEventExists(someDateTime.AddSeconds(2));
-            var event4 = GivenEventExists(someDateTime.AddSeconds(3));
 
             var testMergeStrategy = new TestMergeStrategy();
-            var uut = new ActivityWindowProcessor(testMergeStrategy, TimeSpan.FromSeconds(3));
+            var uut = new ActivityWindowProcessor(testMergeStrategy, TimeSpan.FromSeconds(1));
             uut.OnEvent(event1);
             uut.OnEvent(event2);
-            uut.OnEvent(event3);
-            uut.OnEvent(event4);
             var window = testMergeStrategy.Windows.First();
 
-            CollectionAssert.AreEqual(ToActivities(event1, event2, event3), window);
+            CollectionAssert.AreEqual(WindowFrom(event1), window);
         }
 
         private static ActivityEvent GivenEventExists(DateTime triggeredAt)
@@ -55,7 +51,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.SlidingWindow
             return new ActivityEvent {TriggeredAt = triggeredAt};
         }
 
-        private static IEnumerable<Activity> ToActivities(params ActivityEvent[] events)
+        private static IEnumerable<Activity> WindowFrom(params ActivityEvent[] events)
         {
             return events.Select(e => e.Activity);
         }
