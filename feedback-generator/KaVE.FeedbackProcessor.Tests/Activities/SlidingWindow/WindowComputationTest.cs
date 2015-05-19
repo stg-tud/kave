@@ -102,6 +102,19 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.SlidingWindow
             AssertWindows(WindowFrom(event1), EmptyWindow());
         }
 
+        [Test]
+        public void ComputesNoEmptyWindowsBetweenLastEventOfDayAndNextEvent()
+        {
+            var event1 = SomeEvent(_someDateTime);
+            var event2 = SomeEvent(_someDateTime.AddDays(1));
+
+            _uut.OnStreamStarts(_someDeveloper);
+            _uut.OnEvent(event1);
+            _uut.OnEvent(event2);
+
+            AssertWindows(WindowFrom(event1));
+        }
+
         private static ActivityEvent SomeEvent(DateTime triggeredAt)
         {
             return new ActivityEvent {TriggeredAt = triggeredAt};

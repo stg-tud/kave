@@ -21,6 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using KaVE.FeedbackProcessor.Activities.Model;
+using KaVE.FeedbackProcessor.Model;
 
 namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
 {
@@ -29,11 +30,11 @@ namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
         private readonly IActivityMergeStrategy _strategy;
         private readonly TimeSpan _windowSpan;
 
-        private readonly IList<ActivityEvent> _window = new List<ActivityEvent>();
+        private IList<ActivityEvent> _window;
 
-        private DateTime? WindowStart { get; set; }
+        private DateTime WindowStart { get; set; }
 
-        private DateTime? WindowEnd
+        private DateTime WindowEnd
         {
             get { return WindowStart + _windowSpan; }
         }
@@ -52,12 +53,14 @@ namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
 
         private void ProcessActivities(ActivityEvent @event)
         {
-            if (WindowStart == null)
+            var triggeredAt = @event.GetTriggeredAt();
+
+            if (_window == null)
             {
-                WindowStart = @event.TriggeredAt;
+                StartWindowAt(triggeredAt);
             }
 
-            while (WindowEnd <= @event.TriggeredAt)
+            while (WindowEnd <= @event.TriggeredAt && !(_window.Count == 0 && WindowEnd.Date != triggeredAt.Date))
             {
                 EndWindowAndShiftWindow();
             }
@@ -69,8 +72,13 @@ namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
         {
             _strategy.Merge(_window.Select(e => e.Activity).ToList());
 
-            _window.Clear();
-            WindowStart = WindowEnd;
+            StartWindowAt(WindowEnd);
+        }
+
+        private void StartWindowAt(DateTime windowStart)
+        {
+            _window = new List<ActivityEvent>();
+            WindowStart = windowStart;
         }
 
         public override void OnStreamEnds()
