@@ -87,16 +87,16 @@ namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
         {
             _strategy = strategy;
             _windowSpan = windowSpan;
-            ActivityStream = new Dictionary<Developer, IDictionary<DateTime, ActivityStream>>();
+            ActivityStreams = new Dictionary<Developer, IDictionary<DateTime, ActivityStream>>();
             RegisterFor<ActivityEvent>(ProcessActivities);
         }
 
-        public IDictionary<Developer, IDictionary<DateTime, ActivityStream>> ActivityStream { get; private set; }
+        public IDictionary<Developer, IDictionary<DateTime, ActivityStream>> ActivityStreams { get; private set; }
 
         public override void OnStreamStarts(Developer developer)
         {
             _currentDeveloper = developer;
-            ActivityStream[developer] = new Dictionary<DateTime, ActivityStream>();
+            ActivityStreams[developer] = new Dictionary<DateTime, ActivityStream>();
             _currentWindow = null;
         }
 
@@ -129,11 +129,11 @@ namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
 
         private void AppendMergedWindowToStream()
         {
-            if (!ActivityStream[_currentDeveloper].ContainsKey(_currentWindow.Start.Date))
+            if (!ActivityStreams[_currentDeveloper].ContainsKey(_currentWindow.Start.Date))
             {
-                ActivityStream[_currentDeveloper][_currentWindow.Start.Date] = new ActivityStream(_windowSpan);
+                ActivityStreams[_currentDeveloper][_currentWindow.Start.Date] = new ActivityStream(_windowSpan);
             }
-            ActivityStream[_currentDeveloper][_currentWindow.Start.Date].Add(_strategy.Merge(_currentWindow.GetActivities()));
+            ActivityStreams[_currentDeveloper][_currentWindow.Start.Date].Add(_strategy.Merge(_currentWindow.GetActivities()));
         }
 
         private Window CreateWindowStartingAt(DateTime windowStart)

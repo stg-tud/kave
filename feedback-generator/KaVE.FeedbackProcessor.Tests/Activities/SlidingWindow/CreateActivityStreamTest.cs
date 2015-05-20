@@ -99,7 +99,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.SlidingWindow
 
         private void AssertActivityStream(Developer developer, DateTime day, params Activity[] expectedStream)
         {
-            CollectionAssert.AreEqual(expectedStream, _uut.ActivityStream[developer][day]);
+            CollectionAssert.AreEqual(expectedStream, _uut.ActivityStreams[developer][day]);
         }
 
         private class TestMergeStrategy : ActivityWindowProcessor.IActivityMergeStrategy
