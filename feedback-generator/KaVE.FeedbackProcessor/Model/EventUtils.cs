@@ -34,5 +34,14 @@ namespace KaVE.FeedbackProcessor.Model
             Asserts.That(triggeredAt.HasValue, "all events should have a trigger date");
             return triggeredAt.Value;
         }
+
+
+        /// <summary>
+        /// Assumes that TriggeredAt is set.
+        /// </summary>
+        public static DateTime GetTriggerDate(this IDEEvent ideEvent)
+        {
+            return ideEvent.GetTriggeredAt().Date;
+        }
     }
 }
