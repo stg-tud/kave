@@ -33,25 +33,42 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.SlidingWindow
         [Test]
         public void CountsOccurrancesOfActivityTimesWindowSpan()
         {
-            var statistic = Evaluate(new[] {Activity.Development, Activity.Development, Activity.Development}, WindowSpan);
+            var uut = Stream(Activity.Development, Activity.Development, Activity.Development);
+
+            var statistic = uut.Evaluate(WindowSpan);
 
             Assert.AreEqual(statistic[Activity.Development], Times(WindowSpan,3));
         }
 
-        private static TimeSpan Times(TimeSpan span, int factor)
+        private static ActivityStream Stream(params Activity[] activities)
+        {
+            return new ActivityStream(activities);
+        }
+
+        public static TimeSpan Times(TimeSpan span, int factor)
         {
             return TimeSpan.FromTicks(factor*span.Ticks);
         }
 
-        private IDictionary<Activity, TimeSpan> Evaluate(IEnumerable<Activity> stream, TimeSpan windowSpan)
+        private class ActivityStream
         {
-            var activities = new Multiset<Activity>(stream);
-            var statistic = new Dictionary<Activity, TimeSpan>();
-            foreach (var kvp in activities.EntryDictionary)
+            public ActivityStream(IList<Activity> activities)
             {
-                statistic[kvp.Key] = Times(windowSpan, kvp.Value);
+                Activities = activities;
             }
-            return statistic;
+
+            public IList<Activity> Activities { get; private set; }
+
+            public IDictionary<Activity, TimeSpan> Evaluate(TimeSpan windowSpan)
+            {
+                var activities = new Multiset<Activity>(Activities);
+                var statistic = new Dictionary<Activity, TimeSpan>();
+                foreach (var kvp in activities.EntryDictionary)
+                {
+                    statistic[kvp.Key] = Times(windowSpan, kvp.Value);
+                }
+                return statistic;
+            }
         }
     }
 }
