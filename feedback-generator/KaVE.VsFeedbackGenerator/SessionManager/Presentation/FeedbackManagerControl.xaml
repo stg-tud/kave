@@ -16,6 +16,7 @@ limitations under the License.
 Contributors:
    - Uli Fahrer
    - Sven Amann
+   - Andreas Bauer
 -->
 
 <UserControl x:Class="KaVE.VsFeedbackGenerator.SessionManager.Presentation.SessionManagerControl"
@@ -189,10 +190,10 @@ Contributors:
                     </Grid.RowDefinitions>
                     <TabControl Grid.Row="0" TabStripPlacement="Bottom" Margin="0, 0, 0, 0"
                                 Visibility="{Binding Converter={StaticResource ObjectToVisibilityConverter}, Path=., FallbackValue=Collapsed}">
+                        <!-- DESIGN TAB -->
                         <TabItem Header="{x:Static root:Properties.SessionManager.DesignView}">
                             <Grid>
                                 <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
                                     <RowDefinition Height="Auto" />
                                     <RowDefinition Height="Auto" />
                                     <RowDefinition Height="Auto" />
@@ -244,23 +245,8 @@ Contributors:
                                                    Padding="1" VerticalAlignment="Stretch" TextAlignment="Left" />
                                     </Border>
                                 </Grid>
-                                <!-- CONTEXT BOX -->
-                                <GroupBox Grid.Row="4" MaxHeight="150"
-                                          Header="{x:Static root:Properties.SessionManager.EventContext}"
-                                          DataContext="{Binding XamlContextRepresentation}"
-                                          Visibility="{Binding Converter={StaticResource ObjectToVisibilityConverter}, Path=., FallbackValue=Collapsed}">
-                                    <Border BorderThickness="1" BorderBrush="DimGray" Padding="0" CornerRadius="1"
-                                            Margin="0,3,0,0" Background="White">
-                                        <presentation:XamlBindableRichTextBox Xaml="{Binding .}"
-                                                                              HorizontalAlignment="Stretch"
-                                                                              VerticalAlignment="Stretch"
-                                                                              VerticalScrollBarVisibility="Auto"
-                                                                              HorizontalScrollBarVisibility="Auto"
-                                                                              FontFamily="Consolas" />
-                                    </Border>
-                                </GroupBox>
                                 <!-- DETAILS SCROLLBOX -->
-                                <GroupBox Grid.Row="5" Header="{x:Static root:Properties.SessionManager.EventDetails}">
+                                <GroupBox Grid.Row="4" Header="{x:Static root:Properties.SessionManager.EventDetails}">
                                     <Border BorderThickness="1" BorderBrush="DimGray" Padding="0" CornerRadius="1"
                                             Margin="0,3,0,0" Background="White">
                                         <presentation:XamlBindableRichTextBox Xaml="{Binding Details}"
@@ -272,6 +258,18 @@ Contributors:
                                 </GroupBox>
                             </Grid>
                         </TabItem>
+                        <!-- CONTEXT TAB -->
+                        <TabItem Header="{x:Static root:Properties.SessionManager.EventContext}"
+                                 DataContext="{Binding XamlContextRepresentation}"
+                                 Visibility="{Binding Converter={StaticResource ObjectToVisibilityConverter}, Path=., FallbackValue=Collapsed}">
+                            <presentation:XamlBindableRichTextBox Xaml="{Binding .}"
+                                                                              HorizontalAlignment="Stretch"
+                                                                              VerticalAlignment="Stretch"
+                                                                              VerticalScrollBarVisibility="Auto"
+                                                                              HorizontalScrollBarVisibility="Auto"
+                                                                              FontFamily="Consolas" />
+                        </TabItem>
+                        <!-- RAW TAB -->
                         <TabItem Header="{x:Static root:Properties.SessionManager.RawView}">
                             <presentation:XamlBindableRichTextBox Xaml="{Binding XamlRawRepresentation}"
                                                                   HorizontalAlignment="Stretch"
