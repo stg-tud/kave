@@ -18,57 +18,61 @@
  */
 
 using System;
-using System.Collections.Generic;
-using KaVE.Commons.Utils.Collections;
 using KaVE.FeedbackProcessor.Activities.Model;
+using KaVE.FeedbackProcessor.Activities.SlidingWindow;
 using NUnit.Framework;
 
 namespace KaVE.FeedbackProcessor.Tests.Activities.SlidingWindow
 {
     [TestFixture]
-    class EvaluateActivityStreamTest
+    internal class EvaluateActivityStreamTest
     {
         private static readonly TimeSpan WindowSpan = TimeSpan.FromSeconds(2);
 
         [Test]
         public void CountsOccurrancesOfActivityTimesWindowSpan()
         {
-            var uut = Stream(Activity.Development, Activity.Development, Activity.Development);
+            var uut = new ActivityStream(new[] {Activity.Development, Activity.Development, Activity.Development});
 
-            var statistic = uut.Evaluate(WindowSpan);
+            var statistic = uut.Evaluate(WindowSpan, TimeSpan.MaxValue);
 
-            Assert.AreEqual(statistic[Activity.Development], Times(WindowSpan,3));
+            Assert.AreEqual(Times(WindowSpan, 3), statistic[Activity.Development]);
         }
 
-        private static ActivityStream Stream(params Activity[] activities)
+        [Test]
+        public void CountsShortWaitingPeriod()
         {
-            return new ActivityStream(activities);
+            var uut = new ActivityStream(new[] {Activity.Waiting, Activity.Waiting});
+
+            var statistic = uut.Evaluate(WindowSpan, Times(WindowSpan, 3));
+
+            Assert.AreEqual(Times(WindowSpan, 2), statistic[Activity.Waiting]);
+        }
+
+        [Test(Description = "A Waiting window can only occur in between other windows (see WindowComputationTest)")]
+        public void CountsAwayIfWaitingPeriodExceedsThreshold()
+        {
+            var uut = new ActivityStream(new[] {Activity.Any, Activity.Waiting, Activity.Waiting, Activity.Waiting, Activity.Any});
+
+            var statistic = uut.Evaluate(WindowSpan, Times(WindowSpan, 2));
+
+            Assert.AreEqual(Times(WindowSpan, 3), statistic[Activity.Away]);
+            Assert.AreEqual(TimeSpan.Zero, statistic[Activity.Waiting]);
+        }
+
+        [Test]
+        public void CountsWaitingIfIndividualPeriodsAreShorterThanThreshold()
+        {
+            var uut = new ActivityStream(new[] { Activity.Waiting, Activity.Waiting, Activity.Any, Activity.Waiting, Activity.Waiting });
+
+            var statistic = uut.Evaluate(WindowSpan, Times(WindowSpan, 3));
+
+            Assert.AreEqual(Times(WindowSpan, 4), statistic[Activity.Waiting]);
         }
 
         public static TimeSpan Times(TimeSpan span, int factor)
         {
             return TimeSpan.FromTicks(factor*span.Ticks);
-        }
-
-        private class ActivityStream
-        {
-            public ActivityStream(IList<Activity> activities)
-            {
-                Activities = activities;
-            }
-
-            public IList<Activity> Activities { get; private set; }
-
-            public IDictionary<Activity, TimeSpan> Evaluate(TimeSpan windowSpan)
-            {
-                var activities = new Multiset<Activity>(Activities);
-                var statistic = new Dictionary<Activity, TimeSpan>();
-                foreach (var kvp in activities.EntryDictionary)
-                {
-                    statistic[kvp.Key] = Times(windowSpan, kvp.Value);
-                }
-                return statistic;
-            }
         }
     }
 }
