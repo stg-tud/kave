@@ -55,15 +55,9 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.SlidingWindow
             var event2 = new ActivityEvent {TriggeredAt = _someDateTime + WindowSpan};
             var event3 = new ActivityEvent {TriggeredAt = _someDateTime + WindowSpan + WindowSpan};
 
-            _uut.OnStreamStarts(_someDeveloper);
-            _uut.OnEvent(event1);
-            _uut.OnEvent(event2);
-            _uut.OnEvent(event3);
-            _uut.OnStreamEnds();
+            WhenStreamIsProcessed(_someDeveloper, event1, event2, event3);
 
-            CollectionAssert.AreEqual(
-                new[] {Activity.Away, Activity.Away, Activity.Away},
-                _uut.ActivityStream[_someDeveloper][_someDateTime.Date]);
+            AssertActivityStream(_someDeveloper, _someDateTime.Date, Activity.Away, Activity.Away, Activity.Away);
         }
 
         [Test]
@@ -73,21 +67,12 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.SlidingWindow
             var event2 = new ActivityEvent {TriggeredAt = _someDateTime + WindowSpan};
             var event3 = new ActivityEvent {TriggeredAt = _someDateTime + WindowSpan + WindowSpan};
 
-            _uut.OnStreamStarts(_someDeveloper);
-            _uut.OnEvent(event1);
-            _uut.OnEvent(event2);
-            _uut.OnStreamEnds();
+            WhenStreamIsProcessed(_someDeveloper, event1, event2);
             var otherDeveloper = TestFactory.SomeDeveloper();
-            _uut.OnStreamStarts(otherDeveloper);
-            _uut.OnEvent(event1);
-            _uut.OnEvent(event2);
-            _uut.OnEvent(event3);
-            _uut.OnStreamEnds();
+            WhenStreamIsProcessed(otherDeveloper, event1, event2, event3);
 
-            CollectionAssert.AreEqual(new[] { Activity.Away, Activity.Away }, _uut.ActivityStream[_someDeveloper][_someDateTime.Date]);
-            CollectionAssert.AreEqual(
-                new[] {Activity.Away, Activity.Away, Activity.Away},
-                _uut.ActivityStream[otherDeveloper][_someDateTime.Date]);
+            AssertActivityStream(_someDeveloper, _someDateTime.Date, Activity.Away, Activity.Away);
+            AssertActivityStream(otherDeveloper, _someDateTime.Date, Activity.Away, Activity.Away, Activity.Away);
         }
 
         [Test]
@@ -96,18 +81,25 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.SlidingWindow
             var event1 = new ActivityEvent {TriggeredAt = _someDateTime};
             var event2 = new ActivityEvent {TriggeredAt = _someDateTime.AddDays(1)};
 
-            _uut.OnStreamStarts(_someDeveloper);
-            _uut.OnEvent(event1);
-            _uut.OnEvent(event2);
-            _uut.OnStreamEnds();
+            WhenStreamIsProcessed(_someDeveloper, event1, event2);
 
-            var expected = new Dictionary<DateTime, IList<Activity>>
+            AssertActivityStream(_someDeveloper, event1.GetTriggerDate(), Activity.Away);
+            AssertActivityStream(_someDeveloper, event2.GetTriggerDate(), Activity.Away);
+        }
+
+        private void WhenStreamIsProcessed(Developer developer, params ActivityEvent[] events)
+        {
+            _uut.OnStreamStarts(developer);
+            foreach (var @event in events)
             {
-                {event1.GetTriggerDate(), new List<Activity> {Activity.Away}},
-                {event2.GetTriggerDate(), new List<Activity> {Activity.Away}}
-            };
+                _uut.OnEvent(@event);
+            }
+            _uut.OnStreamEnds();
+        }
 
-            CollectionAssert.AreEqual(expected, _uut.ActivityStream[_someDeveloper]);
+        private void AssertActivityStream(Developer developer, DateTime day, params Activity[] expectedStream)
+        {
+            CollectionAssert.AreEqual(expectedStream, _uut.ActivityStream[developer][day]);
         }
 
         private class TestMergeStrategy : ActivityWindowProcessor.IActivityMergeStrategy
