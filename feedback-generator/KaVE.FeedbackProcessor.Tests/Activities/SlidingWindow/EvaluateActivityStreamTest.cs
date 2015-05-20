@@ -72,7 +72,9 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.SlidingWindow
 
         private static ActivityStream Stream(params Activity[] activities)
         {
-            return new ActivityStream(activities, WindowSpan);
+            var activityStream = new ActivityStream(WindowSpan);
+            activityStream.AddAll(activities);
+            return activityStream;
         }
 
         public static TimeSpan Times(TimeSpan span, int factor)

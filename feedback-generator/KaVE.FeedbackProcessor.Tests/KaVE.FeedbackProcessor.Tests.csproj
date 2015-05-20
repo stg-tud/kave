@@ -64,9 +64,10 @@
     <Compile Include="Activities\FindEventMapperTest.cs" />
     <Compile Include="Activities\IDEStateEventMapperTest.cs" />
     <Compile Include="Activities\InstallEventMapperTest.cs" />
-    <Compile Include="Activities\SlidingWindow\ActivityStreamCreationTest.cs" />
+    <Compile Include="Activities\SlidingWindow\CreateActivityStreamTest.cs" />
     <Compile Include="Activities\SlidingWindow\EvaluateActivityStreamTest.cs" />
     <Compile Include="Activities\SlidingWindow\FrequencyActivityMergeStrategyTest.cs" />
+    <Compile Include="Activities\SlidingWindow\IterateActivityStreamTest.cs" />
     <Compile Include="Activities\SlidingWindow\WindowComputationTest.cs" />
     <Compile Include="Activities\SolutionEventMapperTest.cs" />
     <Compile Include="Activities\TestFixtures.cs" />

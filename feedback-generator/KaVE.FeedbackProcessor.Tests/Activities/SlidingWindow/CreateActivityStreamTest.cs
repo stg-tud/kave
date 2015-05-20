@@ -29,7 +29,7 @@ using NUnit.Framework;
 namespace KaVE.FeedbackProcessor.Tests.Activities.SlidingWindow
 {
     [TestFixture]
-    internal class ActivityStreamCreationTest
+    internal class CreateActivityStreamTest
     {
         private static readonly TimeSpan WindowSpan = TimeSpan.FromSeconds(1);
 

@@ -18,28 +18,41 @@
  */
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using KaVE.FeedbackProcessor.Activities.Model;
 
 namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
 {
-    public class ActivityStream
+    public class ActivityStream : IEnumerable<Activity>
     {
         private readonly TimeSpan _windowSpan;
+        private readonly IList<Activity> _activities;
 
-        public ActivityStream(IList<Activity> activities, TimeSpan windowSpan)
+        public ActivityStream(TimeSpan windowSpan)
         {
             _windowSpan = windowSpan;
-            Activities = activities;
+            _activities = new List<Activity>();
         }
 
-        public IList<Activity> Activities { get; private set; }
+        public void Add(Activity activity)
+        {
+            _activities.Add(activity);
+        }
+
+        public void AddAll(IEnumerable<Activity> activities)
+        {
+            foreach (var activity in activities)
+            {
+                Add(activity);
+            }
+        }
 
         public IDictionary<Activity, TimeSpan> Evaluate(TimeSpan awayThreshold)
         {
             var statistic = new Dictionary<Activity, TimeSpan>();
             var waitingDuration = TimeSpan.Zero;
-            foreach (var activity in Activities)
+            foreach (var activity in _activities)
             {
                 if (activity == Activity.Waiting)
                 {
@@ -69,6 +82,16 @@ namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
             {
                 statistic[activity] = windowSpan;
             }
+        }
+
+        public IEnumerator<Activity> GetEnumerator()
+        {
+            return _activities.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
     }
 }
