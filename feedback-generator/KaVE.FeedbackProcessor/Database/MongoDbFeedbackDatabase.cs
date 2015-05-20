@@ -20,6 +20,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Utils.Collections;
@@ -41,7 +42,7 @@ namespace KaVE.FeedbackProcessor.Database
             _database = server.GetDatabase(databaseName);
         }
 
-        static MongoDbFeedbackDatabase() 
+        static MongoDbFeedbackDatabase()
         {
             RegisterModel();
         }
@@ -82,22 +83,28 @@ namespace KaVE.FeedbackProcessor.Database
                     cm.SetIdMember(cm.GetMemberMap(c => c.Id));
                     cm.IdMemberMap.SetIdGenerator(StringObjectIdGenerator.Instance);
                 });
-            foreach (var type in GetAllModelTypes())
-            {
-                BsonClassMap.LookupClassMap(type);
-            }
+            RegisterModelTypesFrom(typeof (IDEEvent).Assembly);
+            RegisterModelTypesFrom(typeof (MongoDbFeedbackDatabase).Assembly);
             BsonClassMap.LookupClassMap(typeof (ConcurrentEvent));
         }
 
-        private static IEnumerable<Type> GetAllModelTypes()
+        private static void RegisterModelTypesFrom(Assembly assembly)
         {
-            return typeof (IDEEvent).Assembly.GetTypes().Where(IsModelClass);
+            foreach (var type in GetAllModelTypes(assembly))
+            {
+                BsonClassMap.LookupClassMap(type);
+            }
+        }
+
+        private static IEnumerable<Type> GetAllModelTypes(Assembly assembly)
+        {
+            return assembly.GetTypes().Where(IsModelClass);
         }
 
         private static bool IsModelClass(Type t)
         {
             return t.IsClass && !t.IsAbstract && !t.ContainsGenericParameters &&
-                   t.Namespace != null && t.Namespace.StartsWith("KaVE.Commons.Model");
+                   t.Namespace != null && t.Namespace.Contains(".Model");
         }
     }
 }
