@@ -25,14 +25,17 @@ namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
 {
     public class ActivityStream
     {
-        public ActivityStream(IList<Activity> activities)
+        private readonly TimeSpan _windowSpan;
+
+        public ActivityStream(IList<Activity> activities, TimeSpan windowSpan)
         {
+            _windowSpan = windowSpan;
             Activities = activities;
         }
 
         public IList<Activity> Activities { get; private set; }
 
-        public IDictionary<Activity, TimeSpan> Evaluate(TimeSpan windowSpan, TimeSpan awayThreshold)
+        public IDictionary<Activity, TimeSpan> Evaluate(TimeSpan awayThreshold)
         {
             var statistic = new Dictionary<Activity, TimeSpan>();
             var waitingDuration = TimeSpan.Zero;
@@ -40,7 +43,7 @@ namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
             {
                 if (activity == Activity.Waiting)
                 {
-                    waitingDuration += windowSpan;
+                    waitingDuration += _windowSpan;
                 }
                 else if (waitingDuration > TimeSpan.Zero)
                 {
@@ -51,7 +54,7 @@ namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
                     }
                     waitingDuration = TimeSpan.Zero;
                 }
-                Add(statistic, activity, windowSpan);
+                Add(statistic, activity, _windowSpan);
             }
             return statistic;
         }

@@ -32,9 +32,9 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.SlidingWindow
         [Test]
         public void CountsOccurrancesOfActivityTimesWindowSpan()
         {
-            var uut = new ActivityStream(new[] {Activity.Development, Activity.Development, Activity.Development});
+            var uut = Stream(Activity.Development, Activity.Development, Activity.Development);
 
-            var statistic = uut.Evaluate(WindowSpan, TimeSpan.MaxValue);
+            var statistic = uut.Evaluate(TimeSpan.MaxValue);
 
             Assert.AreEqual(Times(WindowSpan, 3), statistic[Activity.Development]);
         }
@@ -42,9 +42,9 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.SlidingWindow
         [Test]
         public void CountsShortWaitingPeriod()
         {
-            var uut = new ActivityStream(new[] {Activity.Waiting, Activity.Waiting});
+            var uut = Stream(Activity.Waiting, Activity.Waiting);
 
-            var statistic = uut.Evaluate(WindowSpan, Times(WindowSpan, 3));
+            var statistic = uut.Evaluate(Times(WindowSpan, 3));
 
             Assert.AreEqual(Times(WindowSpan, 2), statistic[Activity.Waiting]);
         }
@@ -52,9 +52,9 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.SlidingWindow
         [Test(Description = "A Waiting window can only occur in between other windows (see WindowComputationTest)")]
         public void CountsAwayIfWaitingPeriodExceedsThreshold()
         {
-            var uut = new ActivityStream(new[] {Activity.Any, Activity.Waiting, Activity.Waiting, Activity.Waiting, Activity.Any});
+            var uut = Stream(Activity.Any, Activity.Waiting, Activity.Waiting, Activity.Waiting, Activity.Any);
 
-            var statistic = uut.Evaluate(WindowSpan, Times(WindowSpan, 2));
+            var statistic = uut.Evaluate(Times(WindowSpan, 2));
 
             Assert.AreEqual(Times(WindowSpan, 3), statistic[Activity.Away]);
             Assert.AreEqual(TimeSpan.Zero, statistic[Activity.Waiting]);
@@ -63,11 +63,16 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.SlidingWindow
         [Test]
         public void CountsWaitingIfIndividualPeriodsAreShorterThanThreshold()
         {
-            var uut = new ActivityStream(new[] { Activity.Waiting, Activity.Waiting, Activity.Any, Activity.Waiting, Activity.Waiting });
+            var uut = Stream(Activity.Waiting, Activity.Waiting, Activity.Any, Activity.Waiting, Activity.Waiting);
 
-            var statistic = uut.Evaluate(WindowSpan, Times(WindowSpan, 3));
+            var statistic = uut.Evaluate(Times(WindowSpan, 3));
 
             Assert.AreEqual(Times(WindowSpan, 4), statistic[Activity.Waiting]);
+        }
+
+        private static ActivityStream Stream(params Activity[] activities)
+        {
+            return new ActivityStream(activities, WindowSpan);
         }
 
         public static TimeSpan Times(TimeSpan span, int factor)
