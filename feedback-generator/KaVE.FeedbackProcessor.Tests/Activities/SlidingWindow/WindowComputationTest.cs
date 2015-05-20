@@ -131,6 +131,15 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.SlidingWindow
             AssertWindows(WindowFrom(event1));
         }
 
+        [Test]
+        public void ComputesNotWindowsForEmptyStream()
+        {
+            _uut.OnStreamStarts(_someDeveloper);
+            _uut.OnStreamEnds();
+
+            AssertWindows(/* none */);
+        }
+
         private static ActivityEvent SomeEvent(DateTime triggeredAt)
         {
             return new ActivityEvent {TriggeredAt = triggeredAt};

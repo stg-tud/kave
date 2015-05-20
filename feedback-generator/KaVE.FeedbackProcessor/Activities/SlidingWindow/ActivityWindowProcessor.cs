@@ -133,7 +133,8 @@ namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
             {
                 ActivityStreams[_currentDeveloper][_currentWindow.Start.Date] = new ActivityStream(_windowSpan);
             }
-            ActivityStreams[_currentDeveloper][_currentWindow.Start.Date].Add(_strategy.Merge(_currentWindow.GetActivities()));
+            ActivityStreams[_currentDeveloper][_currentWindow.Start.Date].Add(
+                _strategy.Merge(_currentWindow.GetActivities()));
         }
 
         private Window CreateWindowStartingAt(DateTime windowStart)
@@ -143,7 +144,10 @@ namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
 
         public override void OnStreamEnds()
         {
-            AppendMergedWindowToStream();
+            if (_currentWindow != null)
+            {
+                AppendMergedWindowToStream();
+            }
         }
     }
 }
