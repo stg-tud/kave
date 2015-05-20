@@ -22,21 +22,27 @@ using System;
 using System.Collections.Generic;
 using KaVE.Commons.Model.Events;
 using KaVE.FeedbackProcessor.Cleanup.Heuristics;
+using KaVE.FeedbackProcessor.Model;
 using KaVE.FeedbackProcessor.Utils;
 
 namespace KaVE.FeedbackProcessor.Cleanup.Processors
 {
     internal class MapEquivalentCommandsProcessor : BaseEventMapper
     {
-        public static List<SortedCommandPair> Mappings = new List<SortedCommandPair>();
-
         public static readonly TimeSpan EventTimeDifference = TimeSpan.FromMilliseconds(10);
 
+        private readonly List<SortedCommandPair> _mappings;
         private CommandEvent _unmappedCommandEvent;
 
-        public MapEquivalentCommandsProcessor()
+        public MapEquivalentCommandsProcessor(List<SortedCommandPair> mappings)
         {
+            _mappings = mappings;
             RegisterFor<CommandEvent>(MapCommandEvent);
+        }
+
+        public override void OnStreamStarts(Developer value)
+        {
+            _unmappedCommandEvent = null;
         }
 
         private void MapCommandEvent(CommandEvent commandEvent)
@@ -89,14 +95,14 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
             return !ConcurrentEventHeuristic.AreConcurrent(commandEvent, _unmappedCommandEvent);
         }
 
-        private static SortedCommandPair FindMappingFromLeftSideFor(CommandEvent commandEvent)
+        private SortedCommandPair FindMappingFromLeftSideFor(CommandEvent commandEvent)
         {
-            return Mappings.Find(pair => (pair.Item1.Equals(commandEvent.CommandId)));
+            return _mappings.Find(pair => (pair.Item1.Equals(commandEvent.CommandId)));
         }
 
-        private static SortedCommandPair FindMappingFromRightSideFor(CommandEvent commandEvent)
+        private SortedCommandPair FindMappingFromRightSideFor(CommandEvent commandEvent)
         {
-            return Mappings.Find(pair => (pair.Item2.Equals(commandEvent.CommandId)));
+            return _mappings.Find(pair => (pair.Item2.Equals(commandEvent.CommandId)));
         }
     }
 }

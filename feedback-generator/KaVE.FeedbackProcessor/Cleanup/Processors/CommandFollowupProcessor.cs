@@ -33,6 +33,11 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
             RegisterFor<IDEEvent>(GenerateConcurrentEvent);
         }
 
+        public override void OnStreamStarts(Developer value)
+        {
+            _commandEvent = null;
+        }
+
         public void GenerateConcurrentEvent(IDEEvent @event)
         {
             if (@event is CommandEvent)

@@ -20,6 +20,7 @@
 
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.VisualStudio;
+using KaVE.FeedbackProcessor.Model;
 using KaVE.FeedbackProcessor.Utils;
 
 namespace KaVE.FeedbackProcessor.Cleanup.Processors
@@ -32,6 +33,11 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
         {
             RegisterFor<CommandEvent>(ProcessCommandEvent);
             RegisterFor<DocumentEvent>(ProcessDocumentEvent);
+        }
+
+        public override void OnStreamStarts(Developer value)
+        {
+            _addedNewItem = false;
         }
 
         private void ProcessCommandEvent(CommandEvent commandEvent)

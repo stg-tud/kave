@@ -19,6 +19,7 @@
 
 using KaVE.Commons.Model.Events;
 using KaVE.FeedbackProcessor.Cleanup.Heuristics;
+using KaVE.FeedbackProcessor.Model;
 
 namespace KaVE.FeedbackProcessor.Cleanup.Processors
 {
@@ -29,6 +30,11 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
         public DuplicateCommandFilterProcessor()
         {
             RegisterFor<CommandEvent>(FilterCommandEvents);
+        }
+
+        public override void OnStreamStarts(Developer value)
+        {
+            _oldCommandEvent = null;
         }
 
         public void FilterCommandEvents(CommandEvent commandEvent)

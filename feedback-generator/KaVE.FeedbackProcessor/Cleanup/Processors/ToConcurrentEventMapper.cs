@@ -35,6 +35,11 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
             RegisterFor<IDEEvent>(ProcessIDEEvent);
         }
 
+        public override void OnStreamStarts(Developer value)
+        {
+            _eventCache.Clear();
+        }
+
         private void ProcessIDEEvent(IDEEvent @event)
         {
             var lastEvent = _eventCache.LastOrDefault();

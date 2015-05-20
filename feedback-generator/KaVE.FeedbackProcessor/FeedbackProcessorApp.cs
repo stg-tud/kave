@@ -20,6 +20,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using KaVE.Commons.Utils.Csv;
 using KaVE.Commons.Utils.Exceptions;
 using KaVE.FeedbackProcessor.Activities;
 using KaVE.FeedbackProcessor.Cleanup.Processors;
@@ -179,48 +180,46 @@ namespace KaVE.FeedbackProcessor
         private static void CleanFeedback(IFeedbackDatabase sourceDatabase, IFeedbackDatabase targetDatabase)
         {
             var cleaner = new FeedbackMapper(sourceDatabase, targetDatabase);
-            cleaner.RegisterMapper<AddFileProcessor>();
-            cleaner.RegisterMapper<DuplicateCommandFilterProcessor>(); ;
-            cleaner.RegisterMapper<EditFilterProcessor>();
-            cleaner.RegisterMapper<ErrorFilterProcessor>();
-            cleaner.RegisterMapper<UnnamedCommandFilterProcessor>();
+            cleaner.RegisterMapper(new AddFileProcessor());
+            cleaner.RegisterMapper(new DuplicateCommandFilterProcessor()); ;
+            cleaner.RegisterMapper(new EditFilterProcessor());
+            cleaner.RegisterMapper(new ErrorFilterProcessor());
+            cleaner.RegisterMapper(new UnnamedCommandFilterProcessor());
             cleaner.MapFeedback();
         }
 
         private static void MapToActivities(IFeedbackDatabase sourceDatabase, IFeedbackDatabase activityDatabase)
         {
             var activityMapper = new FeedbackMapper(sourceDatabase, activityDatabase);
-            activityMapper.RegisterMapper<AlwaysDropMapper>(); // only generated events reach activity database
-            activityMapper.RegisterMapper<AnyToActivityMapper>(); // map any event to a keep-alive
-            activityMapper.RegisterMapper<BuildEventToActivityMapper>();
-            activityMapper.RegisterMapper<CommandEventToActivityMapper>();
-            activityMapper.RegisterMapper<CompletionEventToActivityMapper>();
-            activityMapper.RegisterMapper<DebuggerEventToActivityMapper>();
-            activityMapper.RegisterMapper<DocumentEventToActivityMapper>();
-            activityMapper.RegisterMapper<EditEventToActivityMapper>();
-            activityMapper.RegisterMapper<FindEventToActivityMapper>();
-            activityMapper.RegisterMapper<IDEStateEventToActivityMapper>();
-            activityMapper.RegisterMapper<InIDEToActivityDetector>();
-            activityMapper.RegisterMapper<InstallEventToActivityMapper>();
-            activityMapper.RegisterMapper<SolutionEventToActivityMapper>();
-            activityMapper.RegisterMapper<UpdateEventToActivityMapper>();
-            //activityMapper.RegisterMapper<WindowEventToActivityMapper>();
+            activityMapper.RegisterMapper(new AlwaysDropMapper()); // only generated events reach activity database
+            activityMapper.RegisterMapper(new AnyToActivityMapper()); // map any event to a keep-alive
+            activityMapper.RegisterMapper(new BuildEventToActivityMapper());
+            activityMapper.RegisterMapper(new CommandEventToActivityMapper());
+            activityMapper.RegisterMapper(new CompletionEventToActivityMapper());
+            activityMapper.RegisterMapper(new DebuggerEventToActivityMapper());
+            activityMapper.RegisterMapper(new DocumentEventToActivityMapper());
+            activityMapper.RegisterMapper(new EditEventToActivityMapper());
+            activityMapper.RegisterMapper(new FindEventToActivityMapper());
+            activityMapper.RegisterMapper(new IDEStateEventToActivityMapper());
+            activityMapper.RegisterMapper(new InstallEventToActivityMapper());
+            activityMapper.RegisterMapper(new SolutionEventToActivityMapper());
+            activityMapper.RegisterMapper(new UpdateEventToActivityMapper());
+            activityMapper.RegisterMapper(new WindowEventToActivityMapper(Logger));
             activityMapper.MapFeedback();
         }
 
         private static void MapToConcurrentEvents(IFeedbackDatabase sourceDatabase, IFeedbackDatabase targetDatabase)
         {
             var filter = new FeedbackMapper(sourceDatabase, targetDatabase);
-            filter.RegisterMapper<AlwaysDropMapper>();
-            filter.RegisterMapper<ToConcurrentEventMapper>();
+            filter.RegisterMapper(new AlwaysDropMapper());
+            filter.RegisterMapper(new ToConcurrentEventMapper());
             filter.MapFeedback();
         }
 
         private static void MapEquivalentCommands(IFeedbackDatabase sourceDatabase, IFeedbackDatabase targetDatabase)
         {
             var filter = new FeedbackMapper(sourceDatabase, targetDatabase);
-            filter.RegisterMapper<MapEquivalentCommandsProcessor>();
-            MapEquivalentCommandsProcessor.Mappings = EquivalentCommandPairCalculator.Statistic.Keys.Cast<SortedCommandPair>().ToList();
+            filter.RegisterMapper(new MapEquivalentCommandsProcessor(EquivalentCommandPairCalculator.Statistic.Keys.Cast<SortedCommandPair>().ToList()));
             filter.MapFeedback();
         }
 
@@ -228,7 +227,7 @@ namespace KaVE.FeedbackProcessor
             IFeedbackDatabase targetDatabase)
         {
             var filter = new FeedbackMapper(sourceDatabase, targetDatabase);
-            filter.RegisterMapper<CommandFollowupProcessor>();
+            filter.RegisterMapper(new CommandFollowupProcessor());
             filter.MapFeedback();
         }
     }

@@ -23,6 +23,7 @@ using KaVE.Commons.Model.Events.VisualStudio;
 using KaVE.Commons.Model.Names.VisualStudio;
 using KaVE.Commons.TestUtils.Model.Events;
 using KaVE.FeedbackProcessor.Cleanup.Processors;
+using KaVE.FeedbackProcessor.Tests.Model;
 using KaVE.FeedbackProcessor.Tests.TestUtils;
 using NUnit.Framework;
 
@@ -85,6 +86,20 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
                 Action = SolutionEvent.SolutionAction.AddProjectItem
             };
             CollectionAssert.AreEquivalent(new IDEEvent[] {documentEvent, expectedSolutionEvent}, actuals);
+        }
+
+        [Test]
+        public void ResetsForNewDeveloper()
+        {
+            var addNewItemCommandEvent = new CommandEvent { CommandId = "AddNewItem" };
+            var documentEvent = new DocumentEvent { Document = DocumentName.Get("CSharp Test.cs") };
+
+            _uut.Map(addNewItemCommandEvent);
+            _uut.OnStreamEnds();
+            _uut.OnStreamStarts(TestFactory.SomeDeveloper());
+            var actuals = _uut.Map(documentEvent);
+
+            CollectionAssert.AreEqual(new[] {documentEvent}, actuals);
         }
     }
 }

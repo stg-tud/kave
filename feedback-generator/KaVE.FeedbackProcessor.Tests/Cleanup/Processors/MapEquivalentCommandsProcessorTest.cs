@@ -19,6 +19,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Utils.Collections;
 using KaVE.FeedbackProcessor.Cleanup.Processors;
@@ -34,8 +35,8 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
         private MapEquivalentCommandsProcessor _uut;
         private SortedCommandPair _saveAllPair;
 
-        [TestFixtureSetUp]
-        public void InitializeMappings()
+        [SetUp]
+        public void Setup()
         {
             var copyPair = SortedCommandPair.NewSortedPair("Copy", "Text.Copy");
             var leftPair = SortedCommandPair.NewSortedPair("Left", "TextControl.Left");
@@ -43,15 +44,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
                 "Save All",
                 "{5EFC7975-14BC-11CF-9B2B-00AA00573819}:224:File.SaveAll");
 
-            MapEquivalentCommandsProcessor.Mappings.Add(copyPair);
-            MapEquivalentCommandsProcessor.Mappings.Add(leftPair);
-            MapEquivalentCommandsProcessor.Mappings.Add(_saveAllPair);
-        }
-
-        [SetUp]
-        public void Setup()
-        {
-            _uut = new MapEquivalentCommandsProcessor();
+            _uut = new MapEquivalentCommandsProcessor(new List<SortedCommandPair>{copyPair,leftPair,_saveAllPair});
         }
 
         [Test]

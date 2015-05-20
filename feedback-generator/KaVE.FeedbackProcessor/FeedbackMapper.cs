@@ -33,18 +33,18 @@ namespace KaVE.FeedbackProcessor
     {
         private readonly IFeedbackDatabase _sourceDatabase;
         private readonly IFeedbackDatabase _targetDatabase;
-        private readonly ICollection<Type> _mappers;
+        private readonly ICollection<IEventMapper<IKaVESet<IDEEvent>>> _mappers;
 
         public FeedbackMapper(IFeedbackDatabase sourceDatabase, IFeedbackDatabase targetDatabase)
         {
             _sourceDatabase = sourceDatabase;
             _targetDatabase = targetDatabase;
-            _mappers = new List<Type>();
+            _mappers = new List<IEventMapper<IKaVESet<IDEEvent>>>();
         }
 
-        public void RegisterMapper<TP>() where TP : IEventMapper<IKaVESet<IDEEvent>>, new()
+        public void RegisterMapper<TP>(TP mapper) where TP : IEventMapper<IKaVESet<IDEEvent>>
         {
-            _mappers.Add(typeof (TP));
+            _mappers.Add(mapper);
         }
 
         public void MapFeedback()
@@ -63,24 +63,27 @@ namespace KaVE.FeedbackProcessor
         {
             _targetDatabase.GetDeveloperCollection().Insert(developer);
 
-            var processors = CreateMappers();
-            NotifyEventStreamStarts(processors, developer);
+            NotifyEventStreamStarts(developer);
             foreach (var ideEvent in GetEventStream(developer))
             {
-                MapEvent(processors, ideEvent);
+                MapEvent(ideEvent);
+            }
+            NotifyEventStreamEnds();
+        }
+
+        private void NotifyEventStreamStarts(Developer developer)
+        {
+            foreach (var mapper in _mappers)
+            {
+                mapper.OnStreamStarts(developer);
             }
         }
 
-        private List<IEventMapper<IKaVESet<IDEEvent>>> CreateMappers()
+        private void NotifyEventStreamEnds()
         {
-            return _mappers.Select(Activator.CreateInstance).Cast<IEventMapper<IKaVESet<IDEEvent>>>().ToList();
-        }
-
-        private static void NotifyEventStreamStarts(IEnumerable<IEventMapper<IKaVESet<IDEEvent>>> mappers, Developer developer)
-        {
-            foreach (var mapper in mappers)
+            foreach (var mapper in _mappers)
             {
-                mapper.OnStreamStarts(developer);
+                mapper.OnStreamEnds();
             }
         }
 
@@ -90,12 +93,12 @@ namespace KaVE.FeedbackProcessor
             return events.GetEventStream(developer);
         }
 
-        private void MapEvent(IEnumerable<IEventMapper<IKaVESet<IDEEvent>>> mappers, IDEEvent originalEvent)
+        private void MapEvent(IDEEvent originalEvent)
         {
             var resultingEventSet = new KaVEHashSet<IDEEvent>();
             var dropOriginalEvent = false;
 
-            foreach (var intermediateEventSet in mappers.Select(mapper => mapper.Map(originalEvent)))
+            foreach (var intermediateEventSet in _mappers.Select(mapper => mapper.Map(originalEvent)))
             {
                 if (IsDropOriginalEventSignal(intermediateEventSet, originalEvent))
                 {

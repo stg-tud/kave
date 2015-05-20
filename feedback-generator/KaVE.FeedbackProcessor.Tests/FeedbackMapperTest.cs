@@ -50,31 +50,6 @@ namespace KaVE.FeedbackProcessor.Tests
         }
 
         [Test]
-        public void InstatiatesProcessorsForEachDeveloper()
-        {
-            GivenDeveloperExists("sessionA");
-            GivenDeveloperExists("sessionB");
-
-            _uut.RegisterMapper<InactiveProcessor>();
-            _uut.MapFeedback();
-
-            Assert.AreEqual(2, TestProcessor.Instances.Count);
-        }
-
-        [Test]
-        public void InstantiatesEachRegisteredProcessorOnce()
-        {
-            GivenDeveloperExists("sessionA");
-
-            _uut.RegisterMapper<InactiveProcessor>();
-            _uut.RegisterMapper<InactiveProcessor>();
-            _uut.RegisterMapper<InactiveProcessor>();
-            _uut.MapFeedback();
-
-            Assert.AreEqual(3, TestProcessor.Instances.Count);
-        }
-
-        [Test]
         public void CleansTargetDatabase()
         {
             _targetFeedbackDatabase.GetDeveloperCollection().Insert(new Developer());
@@ -115,7 +90,7 @@ namespace KaVE.FeedbackProcessor.Tests
         {
             var developer = GivenDeveloperExists("session");
 
-            _uut.RegisterMapper<InactiveProcessor>();
+            _uut.RegisterMapper(new InactiveProcessor());
             _uut.MapFeedback();
 
             var processor = TestProcessor.Instances[0];
@@ -130,8 +105,8 @@ namespace KaVE.FeedbackProcessor.Tests
             var event1 = GivenEventExists(ideSessionUUID, "1");
             var event2 = GivenEventExists(ideSessionUUID, "2");
 
-            _uut.RegisterMapper<InactiveProcessor>();
-            _uut.RegisterMapper<InactiveProcessor>();
+            _uut.RegisterMapper(new InactiveProcessor());
+            _uut.RegisterMapper(new InactiveProcessor());
             _uut.MapFeedback();
 
             var testProcessor1 = TestProcessor.Instances[0];
@@ -149,7 +124,7 @@ namespace KaVE.FeedbackProcessor.Tests
             var event2 = GivenEventExists(ideSessionUUID, "2");
             GivenEventExists("sessionB", "1");
 
-            _uut.RegisterMapper<InactiveProcessor>();
+            _uut.RegisterMapper(new InactiveProcessor());
             _uut.MapFeedback();
 
             var testProcessor = TestProcessor.Instances.First();
@@ -163,8 +138,8 @@ namespace KaVE.FeedbackProcessor.Tests
             GivenDeveloperExists(ideSessionUUID);
             var event1 = GivenEventExists(ideSessionUUID, "1");
 
-            _uut.RegisterMapper<InactiveProcessor>();
-            _uut.RegisterMapper<InactiveProcessor>();
+            _uut.RegisterMapper(new InactiveProcessor());
+            _uut.RegisterMapper(new InactiveProcessor());
             _uut.MapFeedback();
 
             var cleanEvents = _targetFeedbackDatabase.GetEventsCollection().FindAll();
@@ -178,8 +153,8 @@ namespace KaVE.FeedbackProcessor.Tests
             GivenDeveloperExists(ideSessionUUID);
             GivenEventExists(ideSessionUUID, "1");
 
-            _uut.RegisterMapper<DroppingProcessor>();
-            _uut.RegisterMapper<InactiveProcessor>();
+            _uut.RegisterMapper(new DroppingProcessor());
+            _uut.RegisterMapper(new InactiveProcessor());
             _uut.MapFeedback();
 
             var cleanEvents = _targetFeedbackDatabase.GetEventsCollection().FindAll();
@@ -193,8 +168,8 @@ namespace KaVE.FeedbackProcessor.Tests
             GivenDeveloperExists(ideSessionUUID);
             var event1 = GivenEventExists(ideSessionUUID, "1");
 
-            _uut.RegisterMapper<ReplacingConsumer>();
-            _uut.RegisterMapper<InactiveProcessor>();
+            _uut.RegisterMapper(new ReplacingConsumer());
+            _uut.RegisterMapper(new InactiveProcessor());
             _uut.MapFeedback();
 
             var cleanEvents = _targetFeedbackDatabase.GetEventsCollection().FindAll().ToList();
@@ -209,8 +184,8 @@ namespace KaVE.FeedbackProcessor.Tests
             GivenDeveloperExists(ideSessionUUID);
             var event1 = GivenEventExists(ideSessionUUID, "1");
 
-            _uut.RegisterMapper<ReplacingConsumer>();
-            _uut.RegisterMapper<DroppingProcessor>();
+            _uut.RegisterMapper(new ReplacingConsumer());
+            _uut.RegisterMapper(new DroppingProcessor());
             _uut.MapFeedback();
 
             var cleanEvents = _targetFeedbackDatabase.GetEventsCollection().FindAll().ToList();
@@ -225,8 +200,8 @@ namespace KaVE.FeedbackProcessor.Tests
             GivenDeveloperExists(ideSessionUUID);
             var event1 = GivenEventExists(ideSessionUUID, "1");
 
-            _uut.RegisterMapper<ReplacingConsumer>();
-            _uut.RegisterMapper<ReplacingConsumer>();
+            _uut.RegisterMapper(new ReplacingConsumer());
+            _uut.RegisterMapper(new ReplacingConsumer());
             _uut.MapFeedback();
 
             var cleanEvents = _targetFeedbackDatabase.GetEventsCollection().FindAll().ToList();
@@ -241,8 +216,8 @@ namespace KaVE.FeedbackProcessor.Tests
             GivenDeveloperExists(ideSessionUUID);
             GivenEventExists(ideSessionUUID, "1");
 
-            _uut.RegisterMapper<InsertingConsumer>();
-            _uut.RegisterMapper<InactiveProcessor>();
+            _uut.RegisterMapper(new InsertingConsumer());
+            _uut.RegisterMapper(new InactiveProcessor());
             _uut.MapFeedback();
 
             var cleanEvents = _targetFeedbackDatabase.GetEventsCollection().FindAll().ToList();
@@ -256,8 +231,8 @@ namespace KaVE.FeedbackProcessor.Tests
             GivenDeveloperExists(ideSessionUUID);
             var event1 = GivenEventExists(ideSessionUUID, "1");
 
-            _uut.RegisterMapper<InsertingConsumer>();
-            _uut.RegisterMapper<DroppingProcessor>();
+            _uut.RegisterMapper(new InsertingConsumer());
+            _uut.RegisterMapper(new DroppingProcessor());
             _uut.MapFeedback();
 
             var cleanEvents = _targetFeedbackDatabase.GetEventsCollection().FindAll().ToList();
@@ -272,8 +247,8 @@ namespace KaVE.FeedbackProcessor.Tests
             GivenDeveloperExists(ideSessionUUID);
             var event1 = GivenEventExists(ideSessionUUID, "1");
 
-            _uut.RegisterMapper<InsertingConsumer>();
-            _uut.RegisterMapper<ReplacingConsumer>();
+            _uut.RegisterMapper(new InsertingConsumer());
+            _uut.RegisterMapper(new ReplacingConsumer());
             _uut.MapFeedback();
 
             var cleanEvents = _targetFeedbackDatabase.GetEventsCollection().FindAll().ToList();
@@ -288,8 +263,8 @@ namespace KaVE.FeedbackProcessor.Tests
             GivenDeveloperExists(ideSessionUUID);
             GivenEventExists(ideSessionUUID, "1");
 
-            _uut.RegisterMapper<InsertingConsumer>();
-            _uut.RegisterMapper<InsertingConsumer>();
+            _uut.RegisterMapper(new InsertingConsumer());
+            _uut.RegisterMapper(new InsertingConsumer());
             _uut.MapFeedback();
 
             var cleanEvents = _targetFeedbackDatabase.GetEventsCollection().FindAll().ToList();
