@@ -41,7 +41,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
         [Test]
         public void FiltersDuplicatedCommandEvents()
         {
-            var firstEventTime = DateTimeFactory.SomeDateTime();
+            var firstEventTime = DateTimeFactory.SomeWorkingHoursDateTime();
             var commandEvent = new CommandEvent
             {
                 CommandId = "Test",
@@ -76,7 +76,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
         [Test]
         public void ShouldNotFilterAnyOtherCommandEvents()
         {
-            var firstEventTime = DateTimeFactory.SomeDateTime();
+            var firstEventTime = DateTimeFactory.SomeWorkingHoursDateTime();
             var commandEvent1 = new CommandEvent
             {
                 CommandId = "Test",

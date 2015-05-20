@@ -15,6 +15,7 @@
  * 
  * Contributors:
  *    - Mattis Manfred Kämmerer
+ *    - Sven Amann
  */
 
 using System;
@@ -23,43 +24,19 @@ namespace KaVE.FeedbackProcessor.Tests.TestUtils
 {
     internal class DateTimeFactory
     {
+        private static readonly DateTime BaseDate = new DateTime(2014, 02, 13, 8, 0, 0);
+        private static readonly TimeSpan TenHourSpan = TimeSpan.FromHours(10);
+
         public static readonly Random Random = new Random();
 
-        public static DateTime SomeDateTime()
+        public static DateTime SomeWorkingHoursDateTime()
         {
-            try
-            {
-                return new DateTime(Random.Next());
-            }
-            catch
-            {
-                return new DateTime();
-            }
+            return BaseDate + SomeTimeSpan(TenHourSpan);
         }
 
-        public static DateTime SomeDateTime(int max)
+        private static TimeSpan SomeTimeSpan(TimeSpan max)
         {
-            try
-            {
-                return new DateTime(Random.Next(max));
-            }
-            catch
-            {
-                return new DateTime();
-            }
-            
-        }
-
-        public static DateTime SomeDateTime(int min, int max)
-        {
-            try
-            {
-                return new DateTime(Random.Next(min, max));
-            }
-            catch
-            {
-                return new DateTime();
-            }
+            return TimeSpan.FromSeconds(Random.Next(0, (int) max.TotalSeconds));
         }
     }
 }

@@ -88,7 +88,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
         [Test]
         public void ShouldInsertRightSideWhenNoLeftSideOccured()
         {
-            var triggeretAt = DateTimeFactory.SomeDateTime();
+            var triggeretAt = DateTimeFactory.SomeWorkingHoursDateTime();
 
             var rightSideEvent = new CommandEvent
             {
@@ -110,7 +110,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
         [Test]
         public void ShouldNotInsertRightSideWhenLeftSideOccured()
         {
-            var triggeredAt = DateTimeFactory.SomeDateTime();
+            var triggeredAt = DateTimeFactory.SomeWorkingHoursDateTime();
 
             var rightSideEvent = new CommandEvent
             {

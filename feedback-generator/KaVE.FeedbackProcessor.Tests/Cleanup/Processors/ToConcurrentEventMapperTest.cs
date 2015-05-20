@@ -35,6 +35,8 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
     [TestFixture]
     internal class ToConcurrentEventMapperTest
     {
+        private static readonly Random Random = new Random();
+
         private ToConcurrentEventMapper _uut;
 
         [SetUp]
@@ -66,8 +68,8 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
 
         public static List<IDEEvent> GenerateEvents(long eventTimeDifferenceInTicks)
         {
-            var eventList = IDEEventTestFactory.SomeEvents(DateTimeFactory.Random.Next(2, 10));
-            var lastEventTime = DateTimeFactory.SomeDateTime();
+            var eventList = IDEEventTestFactory.SomeEvents(Random.Next(2, 10));
+            var lastEventTime = DateTimeFactory.SomeWorkingHoursDateTime();
             eventList.ForEach(
                 ideEvent =>
                 {

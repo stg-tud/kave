@@ -44,7 +44,7 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
         [Test]
         public void ShouldAddMappingForTwoConcurrentCommandEvents()
         {
-            var eventTime = DateTimeFactory.SomeDateTime();
+            var eventTime = DateTimeFactory.SomeWorkingHoursDateTime();
             const string expectedString1 = "Edit.Copy";
             const string expectedString2 = "Copy";
 
@@ -71,7 +71,7 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
         [Test]
         public void ShouldNotAddMappingForNonConcurrentCommandEvents()
         {
-            var eventTime = DateTimeFactory.SomeDateTime();
+            var eventTime = DateTimeFactory.SomeWorkingHoursDateTime();
 
             var commandEvent1 = new CommandEvent
             {
@@ -99,7 +99,7 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
             const string command2 = "Edit.Copy";
             var frequencyThreshold = EquivalentCommandPairCalculator.FrequencyThreshold;
             var listOfCommandEvents = GenerateCommandPairWithFrequency(
-                DateTimeFactory.SomeDateTime(),
+                DateTimeFactory.SomeWorkingHoursDateTime(),
                 command1,
                 command2,
                 frequencyThreshold);
@@ -119,7 +119,7 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
             const string command2 = "Edit.Copy";
             var frequencyThreshold = EquivalentCommandPairCalculator.FrequencyThreshold;
             var listOfCommandEvents = GenerateCommandPairWithFrequency(
-                DateTimeFactory.SomeDateTime(),
+                DateTimeFactory.SomeWorkingHoursDateTime(),
                 command1,
                 command2,
                 frequencyThreshold - 1);
@@ -136,7 +136,7 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
         [Test]
         public void ShouldKeepAllFrequentAndRemoveAllNonFrequentPairsOnStreamEnd()
         {
-            var someDateTime = DateTimeFactory.SomeDateTime();
+            var someDateTime = DateTimeFactory.SomeWorkingHoursDateTime();
 
             var frequencyThreshold = EquivalentCommandPairCalculator.FrequencyThreshold;
             var frequentEvents = GenerateCommandPairWithFrequency(

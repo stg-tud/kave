@@ -45,7 +45,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.SlidingWindow
             _uut = new ActivityWindowProcessor(_testMergeStrategy, WindowSpan);
 
             _someDeveloper = TestFactory.SomeDeveloper();
-            _someDateTime = DateTimeFactory.SomeDateTime();
+            _someDateTime = DateTimeFactory.SomeWorkingHoursDateTime();
         }
 
         [Test]

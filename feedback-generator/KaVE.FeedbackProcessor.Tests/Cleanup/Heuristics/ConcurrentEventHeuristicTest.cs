@@ -31,7 +31,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Heuristics
         [Test]
         public void HaveSimiliarEventTimeTest()
         {
-            var eventTime1 = DateTimeFactory.SomeDateTime();
+            var eventTime1 = DateTimeFactory.SomeWorkingHoursDateTime();
             var eventTime2 = eventTime1.Add(ConcurrentEventHeuristic.EventTimeDifference);
 
             Assert.IsTrue(ConcurrentEventHeuristic.AreSimilar(eventTime1, eventTime2));
@@ -40,7 +40,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Heuristics
         [Test]
         public void ShouldReturnFalseForNonSimilarEventTimes()
         {
-            var eventTime1 = DateTimeFactory.SomeDateTime();
+            var eventTime1 = DateTimeFactory.SomeWorkingHoursDateTime();
             var eventTime2 = eventTime1.Add(ConcurrentEventHeuristic.EventTimeDifference + TimeSpan.FromTicks(1));
 
             Assert.IsFalse(ConcurrentEventHeuristic.AreSimilar(eventTime1, eventTime2));
