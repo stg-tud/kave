@@ -136,6 +136,7 @@ namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
             }
             ActivityStreams[_currentDeveloper][_currentWindow.Start.Date].Add(
                 _strategy.Merge(_currentWindow.GetActivities()));
+            _strategy.Reset();
         }
 
         private Window CreateWindowStartingAt(DateTime windowStart)

@@ -140,6 +140,30 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.SlidingWindow
             AssertWindows(/* none */);
         }
 
+        [Test]
+        public void ResetsMergeStrategyForNextDeveloper()
+        {
+            _uut.OnStreamStarts(_someDeveloper);
+            _uut.OnEvent(SomeEvent(_someDateTime));
+            _uut.OnStreamEnds();
+
+            Assert.AreEqual(1, _testMergeStrategy.NumberOfResets);
+        }
+
+        [Test]
+        public void ResetsMergeStrategyForNextDay()
+        {
+            var event1 = SomeEvent(_someDateTime);
+            var event2 = SomeEvent(_someDateTime.AddDays(1));
+
+            _uut.OnStreamStarts(_someDeveloper);
+            _uut.OnEvent(event1);
+            var expected = _testMergeStrategy.NumberOfResets + 1;
+            _uut.OnEvent(event2);
+
+            Assert.AreEqual(expected, _testMergeStrategy.NumberOfResets);
+        }
+
         private static ActivityEvent SomeEvent(DateTime triggeredAt)
         {
             return new ActivityEvent {TriggeredAt = triggeredAt};
@@ -164,6 +188,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.SlidingWindow
         private class TestMergeStrategy : ActivityWindowProcessor.IActivityMergeStrategy
         {
             public readonly IList<IList<Activity>> Windows = new List<IList<Activity>>();
+            public int NumberOfResets { get; private set; }
 
             public Activity Merge(IList<Activity> window)
             {
@@ -173,6 +198,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.SlidingWindow
 
             public void Reset()
             {
+                NumberOfResets++;
             }
         }
     }
