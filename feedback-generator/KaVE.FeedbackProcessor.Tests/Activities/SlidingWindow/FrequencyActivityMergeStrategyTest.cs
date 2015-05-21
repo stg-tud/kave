@@ -28,12 +28,18 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.SlidingWindow
     [TestFixture]
     internal class FrequencyActivityMergeStrategyTest
     {
+        private FrequencyActivityMergeStrategy _uut;
+
+        [SetUp]
+        public void SetUp()
+        {
+            _uut = new FrequencyActivityMergeStrategy();
+        }
+
         [Test]
         public void ReturnsWaitingForEmptyWindow()
         {
-            var uut = new FrequencyActivityMergeStrategy();
-
-            var actual = uut.Merge(EmptyWindow());
+            var actual = _uut.Merge(EmptyWindow());
 
             Assert.AreEqual(Activity.Waiting, actual);
         }
@@ -41,9 +47,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.SlidingWindow
         [Test]
         public void PicksMostFrequentActivity()
         {
-            var uut = new FrequencyActivityMergeStrategy();
-
-            var actual = uut.Merge(
+            var actual = _uut.Merge(
                 Window(Activity.Development, Activity.Any, Activity.Development, Activity.Navigation));
 
             Assert.AreEqual(Activity.Development, actual);
@@ -52,11 +56,17 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.SlidingWindow
         [Test]
         public void PicksLaterActivityOnEqualsFrequence()
         {
-            var uut = new FrequencyActivityMergeStrategy();
+            var actual = _uut.Merge(Window(Activity.Development, Activity.Navigation));
 
-            var actual = uut.Merge(Window(Activity.Development, Activity.Any));
+            Assert.AreEqual(Activity.Navigation, actual);
+        }
 
-            Assert.AreEqual(Activity.Any, actual);
+        [Test]
+        public void IgnoresAnyActivity()
+        {
+            var actual = _uut.Merge(Window(Activity.Any, Activity.Any, Activity.Navigation));
+
+            Assert.AreEqual(Activity.Navigation, actual);
         }
 
         private IList<Activity> EmptyWindow()

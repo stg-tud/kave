@@ -34,6 +34,7 @@ namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
             }
 
             var activities = new Multiset<Activity>(window);
+            activities.RemoveAll(Activity.Any);
             var maxFrequency = activities.EntryDictionary.Max(kvp => kvp.Value);
             var mostFrequentActivities = activities.EntryDictionary.Where(kvp => kvp.Value == maxFrequency).Select(kvp => kvp.Key);
             return window.Last(mostFrequentActivities.Contains);
