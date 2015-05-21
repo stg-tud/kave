@@ -48,6 +48,11 @@ namespace KaVE.Commons.Utils.Csv
             ByNameLeaveFirst
         }
 
+        public IList<string> Fields
+        {
+            get { return _fields; }
+        }
+
         private Dictionary<string, object> CurrentRow
         {
             get { return _rows[_rows.Count - 1]; }

@@ -56,6 +56,7 @@ namespace KaVE.FeedbackProcessor
             LogOccuringNames(OpenDatabase(importDatabase));
 
             MapToActivities(OpenDatabase(importDatabase), OpenDatabase(activityDatabase));
+            LogActivityStatistics(OpenDatabase(activityDatabase));
 
             MapEquivalentCommands(OpenDatabase(filteredDatabase), OpenDatabase(cleanDatabase));
 
@@ -206,6 +207,41 @@ namespace KaVE.FeedbackProcessor
             activityMapper.RegisterMapper(new UpdateEventToActivityMapper());
             activityMapper.RegisterMapper(new WindowEventToActivityMapper(Logger));
             activityMapper.MapFeedback();
+        }
+
+        private static void LogActivityStatistics(IFeedbackDatabase activityDatabase)
+        {
+            var processor = new FeedbackProcessor(activityDatabase, Logger);
+            var activityWindowProcessor = new ActivityWindowProcessor(new FrequencyActivityMergeStrategy(), TimeSpan.FromSeconds(1));
+            processor.Register(activityWindowProcessor);
+            processor.ProcessFeedback();
+
+            var builder = new CsvBuilder();
+            foreach (var developerWithStreams in activityWindowProcessor.ActivityStreams)
+            {
+                builder.StartRow();
+                builder["Developer"] = developerWithStreams.Key.Id.ToString();
+                builder["ActiveDays"] = developerWithStreams.Value.Count;
+                foreach (var dayWithStream in developerWithStreams.Value)
+                {
+                    var statistics = dayWithStream.Value.Evaluate(TimeSpan.FromMinutes(10));
+                    foreach (var activityWithDuration in statistics)
+                    {
+                        builder[dayWithStream.Key.ToString("yyyy-MM-dd") + " " + activityWithDuration.Key] = activityWithDuration.Value.TotalSeconds;
+                    }
+                }
+            }
+            builder.StartRow();
+            foreach (var field in builder.Fields.Skip(2))
+            {
+                builder[field] = field.Split(' ')[0];
+            }
+            builder.StartRow();
+            foreach (var field in builder.Fields.Skip(2))
+            {
+                builder[field] = field.Split(' ')[1];
+            }
+            Output("developer-activities.csv", builder.Build(CsvBuilder.SortFields.ByNameLeaveFirst));
         }
 
         private static void MapToConcurrentEvents(IFeedbackDatabase sourceDatabase, IFeedbackDatabase targetDatabase)
