@@ -39,6 +39,8 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
 
         public void FilterCommandEvents(CommandEvent commandEvent)
         {
+            if (ConcurrentEventHeuristic.IsIgnorableTextControlCommand(commandEvent.CommandId)) return;
+
             var previousCommandEvent = _oldCommandEvent;
             _oldCommandEvent = commandEvent;
             if (IsDuplicate(commandEvent, previousCommandEvent))

@@ -19,6 +19,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Utils.DateTime;
 using KaVE.FeedbackProcessor.Model;
@@ -29,6 +30,16 @@ namespace KaVE.FeedbackProcessor.Cleanup.Heuristics
     {
         public static readonly TimeSpan EventTimeDifference = TimeSpan.FromMilliseconds(10);
 
+        public static readonly List<string> IgnorableTextControlCommands = new List<string>
+        {
+            "TextControl.Left",
+            "TextControl.Right",
+            "TextControl.Up",
+            "TextControl.Down",
+            "TextControl.Backspace",
+            "TextControl.Enter"
+        }; 
+
         public static bool AreConcurrent(IDEEvent evt1, IDEEvent evt2)
         {
             return AreSimilar(evt1.GetTriggeredAt(), evt2.GetTriggeredAt());
@@ -37,6 +48,11 @@ namespace KaVE.FeedbackProcessor.Cleanup.Heuristics
         public static bool AreSimilar(DateTime dateTime1, DateTime dateTime2)
         {
             return new SimilarDateTimeComparer(EventTimeDifference.Milliseconds).Equal(dateTime1, dateTime2);
+        }
+
+        public static bool IsIgnorableTextControlCommand(string commandId)
+        {
+            return IgnorableTextControlCommands.Contains(commandId);
         }
     }
 }

@@ -18,6 +18,7 @@
  */
 
 using System;
+using System.Linq;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Utils.Collections;
 using KaVE.FeedbackProcessor.Cleanup.Heuristics;
@@ -92,6 +93,25 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
 
             Assert.AreEqual(Sets.NewHashSet<IDEEvent>(commandEvent1), _uut.Map(commandEvent1));
             Assert.AreEqual(Sets.NewHashSet<IDEEvent>(commandEvent2), _uut.Map(commandEvent2));
+        }
+
+        [Test]
+        public void ShouldNotFilterIgnorableTextControlCommands()
+        {
+            var firstEventTime = DateTimeFactory.SomeWorkingHoursDateTime();
+            var commandEvent = new CommandEvent
+            {
+                CommandId = ConcurrentEventHeuristic.IgnorableTextControlCommands.First(),
+                TriggeredAt = firstEventTime
+            };
+            var commandEvent2 = new CommandEvent
+            {
+                CommandId = ConcurrentEventHeuristic.IgnorableTextControlCommands.First(),
+                TriggeredAt = firstEventTime + ConcurrentEventHeuristic.EventTimeDifference
+            };
+
+            CollectionAssert.AreEquivalent(Sets.NewHashSet(commandEvent),_uut.Map(commandEvent));
+            CollectionAssert.AreEquivalent(Sets.NewHashSet(commandEvent2),_uut.Map(commandEvent2));
         }
     }
 }

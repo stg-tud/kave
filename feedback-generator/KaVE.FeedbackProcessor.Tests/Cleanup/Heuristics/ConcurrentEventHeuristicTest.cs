@@ -45,5 +45,18 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Heuristics
 
             Assert.IsFalse(ConcurrentEventHeuristic.AreSimilar(eventTime1, eventTime2));
         }
+
+        [TestCase("TextControl.Left",true)]
+        [TestCase("TextControl.Right",true)]
+        [TestCase("TextControl.Up",true)]
+        [TestCase("TextControl.Down",true)]
+        [TestCase("TextControl.Backspace",true)]
+        [TestCase("TextControl.Enter",true)]
+        [TestCase("TextControl.Cut",false)]
+        [TestCase("Cut",false)]
+        public void ShouldDetectIgnorableTextControlEvents(string commandId, bool expected)
+        {
+            Assert.AreEqual(expected,ConcurrentEventHeuristic.IsIgnorableTextControlCommand(commandId));
+        }
     }
 }

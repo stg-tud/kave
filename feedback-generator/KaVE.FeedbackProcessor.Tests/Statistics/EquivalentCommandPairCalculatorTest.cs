@@ -20,6 +20,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using KaVE.Commons.Model.Events;
 using KaVE.FeedbackProcessor.Cleanup.Heuristics;
 using KaVE.FeedbackProcessor.Statistics;
@@ -220,6 +221,30 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
             };
 
             return new List<CommandEvent> {commandEvent1, commandEvent2};
+        }
+
+        [Test]
+        public void ShouldNotAddMappingForIgnorableTextControlCommands()
+        {
+            var eventTime = DateTimeFactory.SomeWorkingHoursDateTime();
+            var expectedString1 = ConcurrentEventHeuristic.IgnorableTextControlCommands[0];
+            var expectedString2 = ConcurrentEventHeuristic.IgnorableTextControlCommands[1];
+
+            var commandEvent1 = new CommandEvent
+            {
+                CommandId = expectedString1,
+                TriggeredAt = eventTime
+            };
+            var commandEvent2 = new CommandEvent
+            {
+                CommandId = expectedString2,
+                TriggeredAt = eventTime + ConcurrentEventHeuristic.EventTimeDifference
+            };
+
+            _uut.OnEvent(commandEvent1);
+            _uut.OnEvent(commandEvent2);
+
+            CollectionAssert.IsEmpty(EquivalentCommandPairCalculator.Statistic);
         }
     }
 }

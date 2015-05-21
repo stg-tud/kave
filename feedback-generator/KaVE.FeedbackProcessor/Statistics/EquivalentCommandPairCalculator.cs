@@ -41,7 +41,7 @@ namespace KaVE.FeedbackProcessor.Statistics
         public void OnEvent(IDEEvent @event)
         {
             var commandEvent = @event as CommandEvent;
-            if (commandEvent == null)
+            if (commandEvent == null || ConcurrentEventHeuristic.IsIgnorableTextControlCommand(commandEvent.CommandId))
             {
                 return;
             }
