@@ -29,6 +29,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.SlidingWindow
     internal class EvaluateActivityStreamTest
     {
         private static readonly TimeSpan WindowSpan = TimeSpan.FromSeconds(2);
+        private static readonly TimeSpan SomeTimeSpan = TimeSpan.FromSeconds(5);
 
         [Test]
         public void CountsOccurrancesOfActivityTimesWindowSpan()
@@ -53,7 +54,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.SlidingWindow
         [Test(Description = "A Waiting window can only occur in between other windows (see WindowComputationTest)")]
         public void CountsAwayIfWaitingPeriodExceedsThreshold()
         {
-            var uut = Stream(Activity.Any, Activity.Waiting, Activity.Waiting, Activity.Waiting, Activity.Any);
+            var uut = Stream(Activity.Any, Activity.Waiting, Activity.Waiting, Activity.Waiting, Activity.Development);
 
             var statistic = uut.Evaluate(WindowSpan.Times(2));
 
@@ -64,11 +65,31 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.SlidingWindow
         [Test]
         public void CountsWaitingIfIndividualPeriodsAreShorterThanThreshold()
         {
-            var uut = Stream(Activity.Waiting, Activity.Waiting, Activity.Any, Activity.Waiting, Activity.Waiting);
+            var uut = Stream(Activity.Waiting, Activity.Waiting, Activity.Development, Activity.Waiting, Activity.Waiting);
 
             var statistic = uut.Evaluate(WindowSpan.Times(3));
 
             Assert.AreEqual(WindowSpan.Times(4), statistic[Activity.Waiting]);
+        }
+
+        [TestCase(Activity.LeaveIDE), TestCase(Activity.EnterIDE)]
+        public void CountsEnterAndLeaveAsAway(Activity enterOrLeave)
+        {
+            var uut = Stream(enterOrLeave);
+
+            var statistic = uut.Evaluate(SomeTimeSpan);
+
+            Assert.AreEqual(WindowSpan, statistic[Activity.Away]);
+        }
+
+        [Test]
+        public void CountsWaitingBetweenLeaveAndEnterAsAway()
+        {
+            var uut = Stream(Activity.LeaveIDE, Activity.Waiting, Activity.EnterIDE);
+
+            var statistic = uut.Evaluate(WindowSpan.Times(2));
+
+            Assert.AreEqual(WindowSpan.Times(3), statistic[Activity.Away]);
         }
 
         private static ActivityStream Stream(params Activity[] activities)

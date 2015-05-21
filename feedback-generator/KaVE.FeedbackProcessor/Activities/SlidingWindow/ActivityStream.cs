@@ -60,16 +60,35 @@ namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
                 }
                 else if (waitingDuration > TimeSpan.Zero)
                 {
-                    if (waitingDuration > awayThreshold)
+                    if (WasAway(activity, waitingDuration, awayThreshold))
                     {
                         Add(statistic, Activity.Waiting, -waitingDuration);
                         Add(statistic, Activity.Away, waitingDuration);
                     }
                     waitingDuration = TimeSpan.Zero;
                 }
-                Add(statistic, activity, _windowSpan);
+
+                if (IsLeaveOrEnter(activity))
+                {
+                    Add(statistic, Activity.Away, _windowSpan);
+                }
+                else
+                {
+                    Add(statistic, activity, _windowSpan);
+                }
+
             }
             return statistic;
+        }
+
+        private static bool WasAway(Activity activity, TimeSpan waitingDuration, TimeSpan awayThreshold)
+        {
+            return waitingDuration > awayThreshold || activity == Activity.EnterIDE;
+        }
+
+        private static bool IsLeaveOrEnter(Activity activity)
+        {
+            return activity == Activity.LeaveIDE || activity == Activity.EnterIDE;
         }
 
         private static void Add(IDictionary<Activity, TimeSpan> statistic, Activity activity, TimeSpan windowSpan)
