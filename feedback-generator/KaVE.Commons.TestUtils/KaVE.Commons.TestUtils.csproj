@@ -60,6 +60,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ToStringAssert.cs" />
     <Compile Include="Utils\Csv\CsvTestUtils.cs" />
+    <Compile Include="Utils\DateTimeEx.cs" />
     <Compile Include="Utils\Exceptions\TestLogger.cs" />
   </ItemGroup>
   <ItemGroup>
