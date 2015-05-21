@@ -15,6 +15,7 @@
  * 
  * Contributors:
  *    - Sebastian Proksch
+ *    - Sven Amann
  */
 
 using KaVE.Commons.Model.Names;
@@ -26,7 +27,7 @@ namespace KaVE.Commons.Model.SSTs.Expressions.Assignable
     public interface ILambdaExpression : IAssignableExpression
     {
         [NotNull]
-        IKaVEList<IParameterName> Parameters { get; }
+        ILambdaName Name { get; }
 
         [NotNull]
         IKaVEList<IStatement> Body { get; }

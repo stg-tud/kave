@@ -55,7 +55,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize.CompletionEven
         [Test]
         public void DelegateDeclarationsAreAnonymized()
         {
-            var typeName = TypeName.Get("My.Type, MyProject");
+            var typeName = DelegateTypeName.Get("d:[R,P] [My.Type, MyProject].()");
 
             var actual = _sut.Anonymize(
                 new SST

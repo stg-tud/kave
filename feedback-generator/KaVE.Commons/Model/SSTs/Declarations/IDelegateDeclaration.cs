@@ -25,6 +25,6 @@ namespace KaVE.Commons.Model.SSTs.Declarations
     public interface IDelegateDeclaration : IMemberDeclaration
     {
         [NotNull]
-        ITypeName Name { get; }
+        IDelegateTypeName Name { get; }
     }
 }

@@ -27,11 +27,11 @@ namespace KaVE.Commons.Model.SSTs.Impl.Declarations
 {
     public class DelegateDeclaration : IDelegateDeclaration
     {
-        public ITypeName Name { get; set; }
+        public IDelegateTypeName Name { get; set; }
 
         public DelegateDeclaration()
         {
-            Name = TypeName.UnknownName;
+            Name = DelegateTypeName.UnknownName;
         }
 
         private bool Equals(DelegateDeclaration other)

@@ -15,9 +15,11 @@
  * 
  * Contributors:
  *    - Sebastian Proksch
+ *    - Sven Amann
  */
 
 using KaVE.Commons.Model.Names;
+using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.SSTs.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Visitor;
 using KaVE.Commons.Utils;
@@ -27,20 +29,20 @@ namespace KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable
 {
     public class LambdaExpression : ILambdaExpression
     {
-        public IKaVEList<IParameterName> Parameters { get; set; }
+        public ILambdaName Name { get; set; }
         public IKaVEList<IStatement> Body { get; set; }
 
         public LambdaExpression()
         {
-            Parameters = Lists.NewList<IParameterName>();
+            Name = LambdaName.UnknownName;
             Body = Lists.NewList<IStatement>();
         }
 
         private bool Equals(LambdaExpression other)
         {
-            var eqParams = Equals(Parameters, other.Parameters);
+            var eqName = Equals(Name, other.Name);
             var eqBody = Equals(Body, other.Body);
-            return eqBody && eqParams;
+            return eqBody && eqName;
         }
 
         public override bool Equals(object obj)
@@ -50,7 +52,7 @@ namespace KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable
 
         public override int GetHashCode()
         {
-            return unchecked (2990306 + Body.GetHashCode()*5 + Parameters.GetHashCode()*3);
+            return unchecked (2990306 + Body.GetHashCode()*5 + Name.GetHashCode()*3);
         }
 
         public void Accept<TContext>(ISSTNodeVisitor<TContext> visitor, TContext context)

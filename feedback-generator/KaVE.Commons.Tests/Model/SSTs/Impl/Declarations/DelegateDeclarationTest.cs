@@ -31,7 +31,7 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Declarations
         public void DefaultValues()
         {
             var sut = new DelegateDeclaration();
-            Assert.AreEqual(TypeName.UnknownName, sut.Name);
+            Assert.AreEqual(DelegateTypeName.UnknownName, sut.Name);
             Assert.AreNotEqual(0, sut.GetHashCode());
             Assert.AreNotEqual(1, sut.GetHashCode());
         }
@@ -39,8 +39,8 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Declarations
         [Test]
         public void SettingValues()
         {
-            var sut = new DelegateDeclaration {Name = SomeType()};
-            Assert.AreEqual(SomeType(), sut.Name);
+            var sut = new DelegateDeclaration {Name = SomeDelegateType()};
+            Assert.AreEqual(SomeDelegateType(), sut.Name);
         }
 
         [Test]
@@ -55,8 +55,8 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Declarations
         [Test]
         public void Equality_ReallyEquals()
         {
-            var a = new DelegateDeclaration {Name = SomeType()};
-            var b = new DelegateDeclaration {Name = SomeType()};
+            var a = new DelegateDeclaration {Name = SomeDelegateType()};
+            var b = new DelegateDeclaration {Name = SomeDelegateType()};
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
         }
@@ -64,7 +64,7 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Declarations
         [Test]
         public void Equality_DifferentType()
         {
-            var a = new DelegateDeclaration {Name = SomeType()};
+            var a = new DelegateDeclaration {Name = SomeDelegateType()};
             var b = new DelegateDeclaration();
 
             Assert.AreNotEqual(a, b);
@@ -91,9 +91,9 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Declarations
             ToStringAssert.Reflection(new DelegateDeclaration());
         }
 
-        private static ITypeName SomeType()
+        private static IDelegateTypeName SomeDelegateType()
         {
-            return TypeName.Get("SoemType,P");
+            return DelegateTypeName.Get("d:[R,P] [SomeDelegateType,P].()");
         }
     }
 }

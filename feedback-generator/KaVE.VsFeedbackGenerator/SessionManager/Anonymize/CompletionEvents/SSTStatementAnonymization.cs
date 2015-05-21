@@ -269,7 +269,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize.CompletionEvents
             {
                 return new LambdaExpression
                 {
-                    Parameters = Lists.NewListFrom(lambda.Parameters.Select(p => p.ToAnonymousName())),
+                    Name = lambda.Name.ToAnonymousName(),
                     Body = Anonymize(lambda.Body)
                 };
             }

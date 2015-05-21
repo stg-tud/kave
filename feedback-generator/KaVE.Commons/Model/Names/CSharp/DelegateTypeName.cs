@@ -25,6 +25,11 @@ namespace KaVE.Commons.Model.Names.CSharp
 {
     public class DelegateTypeName : Name, IDelegateTypeName
     {
+        public static new IDelegateTypeName UnknownName
+        {
+            get { return Get("d:[?] [?].()"); }
+        }
+
         private const string Prefix = "d:";
 
         internal static bool IsDelegateTypeIdentifier(string identifier)
@@ -32,7 +37,7 @@ namespace KaVE.Commons.Model.Names.CSharp
             return identifier.StartsWith(Prefix);
         }
 
-        [UsedImplicitly]
+        [UsedImplicitly, NotNull]
         public new static IDelegateTypeName Get(string identifier)
         {
             return (IDelegateTypeName) TypeName.Get(identifier);
@@ -43,7 +48,7 @@ namespace KaVE.Commons.Model.Names.CSharp
             // fix legacy delegate names
             if (!identifier.Contains("("))
             {
-                identifier = Prefix + "[Unknown, A] [" + identifier.Substring(Prefix.Length) + "].()";
+                identifier = string.Format("{0}[Unknown, A] [{1}].()", Prefix, identifier.Substring(Prefix.Length));
             }
             return identifier;
         }

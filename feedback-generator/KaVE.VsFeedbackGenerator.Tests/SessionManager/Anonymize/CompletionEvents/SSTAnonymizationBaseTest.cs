@@ -82,12 +82,12 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize.CompletionEven
 
             AnyLambdaExpr = new LambdaExpression
             {
-                Parameters = {ParameterName.Get("[T,P] a")},
+                Name = LambdaName.Get("[V,P] ([T,P] a)"),
                 Body = {AnyStatement}
             };
             AnyLambdaExprAnonymized = new LambdaExpression
             {
-                Parameters = {ParameterName.Get("[T,P] a").ToAnonymousName()},
+                Name = AnyLambdaExpr.Name.ToAnonymousName(),
                 Body = {AnyStatementAnonymized}
             };
 

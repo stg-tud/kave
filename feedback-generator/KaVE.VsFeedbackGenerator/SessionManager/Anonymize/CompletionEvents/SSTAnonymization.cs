@@ -56,7 +56,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize.CompletionEvents
 
         public IDelegateDeclaration Anonymize(IDelegateDeclaration d)
         {
-            var defaultName = TypeName.UnknownName;
+            var defaultName = DelegateTypeName.UnknownName;
             var isDefaultName = defaultName.Equals(d.Name);
             return new DelegateDeclaration {Name = isDefaultName ? defaultName : d.Name.ToAnonymousName()};
         }
