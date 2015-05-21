@@ -38,7 +38,9 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
         [SetUp]
         public void Setup()
         {
-            var copyPair = SortedCommandPair.NewSortedPair("Copy", "Text.Copy");
+            var copyPair = SortedCommandPair.NewSortedPair("Copy", "{5EFC7975-14BC-11CF-9B2B-00AA00573819}:15:Edit.Copy");
+            var cutPair = SortedCommandPair.NewSortedPair("Cut", "{5EFC7975-14BC-11CF-9B2B-00AA00573819}:16:Edit.Cut");
+            var pastePair = SortedCommandPair.NewSortedPair("Paste", "{5EFC7975-14BC-11CF-9B2B-00AA00573819}:26:Edit.Paste");
             var leftPair = SortedCommandPair.NewSortedPair("Left", "TextControl.Left");
             _saveAllPair = SortedCommandPair.NewSortedPair(
                 "Save All",
@@ -46,7 +48,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
 
             var testResourceProvider = new TestResourceProvider
             {
-                Mappings = new List<SortedCommandPair> {copyPair, leftPair, _saveAllPair}
+                Mappings = new List<SortedCommandPair> {copyPair, cutPair, pastePair, leftPair, _saveAllPair}
             };
 
             _uut = new MapEquivalentCommandsProcessor(testResourceProvider);
@@ -137,6 +139,91 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
             CollectionAssert.AreEquivalent(Sets.NewHashSet<IDEEvent>(someLateEvent), actualSet);
         }
 
+        [TestCase("Start", "{5EFC7975-14BC-11CF-9B2B-00AA00573819}:295:Debug.Start", "Debug.Start")]
+        [TestCase("Continue", "{5EFC7975-14BC-11CF-9B2B-00AA00573819}:295:Debug.Start", "Debug.Continue")]
+        [TestCase("Start", "{6E87CFAD-6C05-4ADF-9CD7-3B7943875B7C}:257:Debug.StartDebugTarget", "Debug.Start")]
+        [TestCase("Continue", "{6E87CFAD-6C05-4ADF-9CD7-3B7943875B7C}:257:Debug.StartDebugTarget", "Debug.Continue")]
+        public void ShouldAddNewDebugAfterDebugCommandEvents(string debugClickId, string visualStudioDebugId, string expectedCommandId)
+        {
+            var triggeretAt = DateTimeFactory.SomeWorkingHoursDateTime();
+
+            var event1 = new CommandEvent
+            {
+                CommandId = debugClickId,
+                TriggeredAt = triggeretAt
+            };
+            var event2 = new CommandEvent
+            {
+                CommandId = visualStudioDebugId,
+                TriggeredAt = triggeretAt + MapEquivalentCommandsProcessor.EventTimeDifference
+            };
+            var event3 = new CommandEvent
+            {
+                CommandId = visualStudioDebugId,
+                TriggeredAt = triggeretAt + MapEquivalentCommandsProcessor.EventTimeDifference
+            };
+            var lateEvent = new CommandEvent
+            {
+                CommandId = "Test",
+                TriggeredAt =
+                    triggeretAt + MapEquivalentCommandsProcessor.EventTimeDifference.Add(TimeSpan.FromSeconds(1))
+            };
+
+            var expectedEvent = new CommandEvent
+            {
+                CommandId = expectedCommandId
+            };
+
+            expectedEvent.CopyIDEEventPropertiesFrom(event1);
+
+            CollectionAssert.IsEmpty(_uut.Map(event1));
+            CollectionAssert.IsEmpty(_uut.Map(event2));
+            CollectionAssert.IsEmpty(_uut.Map(event3));
+
+            CollectionAssert.AreEquivalent(Sets.NewHashSet(expectedEvent,lateEvent),_uut.Map(lateEvent));
+        }
+
+        [TestCase("Copy", "{5EFC7975-14BC-11CF-9B2B-00AA00573819}:15:Edit.Copy", "TextControl.Copy")]
+        [TestCase("Cut", "{5EFC7975-14BC-11CF-9B2B-00AA00573819}:16:Edit.Cut", "TextControl.Cut")]
+        [TestCase("Paste", "{5EFC7975-14BC-11CF-9B2B-00AA00573819}:26:Edit.Paste", "TextControl.Paste")]
+        public void ShouldMergeTextControlCommands(string clickCommandId,string visualStudioCommandId, string resharperCommandId)
+        {
+            var triggeretAt = DateTimeFactory.SomeWorkingHoursDateTime();
+
+            var event1 = new CommandEvent
+            {
+                CommandId = clickCommandId,
+                TriggeredAt = triggeretAt
+            };
+            var event2 = new CommandEvent
+            {
+                CommandId = visualStudioCommandId,
+                TriggeredAt = triggeretAt + MapEquivalentCommandsProcessor.EventTimeDifference
+            };
+            var event3 = new CommandEvent
+            {
+                CommandId = resharperCommandId,
+                TriggeredAt = triggeretAt + MapEquivalentCommandsProcessor.EventTimeDifference
+            };
+            var lateEvent = new CommandEvent
+            {
+                CommandId = "Test",
+                TriggeredAt =
+                    triggeretAt + MapEquivalentCommandsProcessor.EventTimeDifference.Add(TimeSpan.FromSeconds(1))
+            };
+
+            var expectedEvent = new CommandEvent
+            {
+                CommandId = visualStudioCommandId,
+                TriggeredAt = event1.TriggeredAt
+            };
+
+            CollectionAssert.AreEquivalent(Sets.NewHashSet(expectedEvent),_uut.Map(event1));
+            CollectionAssert.IsEmpty(_uut.Map(event2));
+            CollectionAssert.IsEmpty(_uut.Map(event3));
+            CollectionAssert.AreEquivalent(Sets.NewHashSet(lateEvent),_uut.Map(lateEvent));
+        }       
+          
         public class TestResourceProvider : IResourceProvider
         {
             public List<SortedCommandPair> Mappings;

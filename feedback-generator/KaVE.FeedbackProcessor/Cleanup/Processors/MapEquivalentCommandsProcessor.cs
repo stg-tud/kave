@@ -35,6 +35,10 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
 
         private CommandEvent _unmappedCommandEvent;
 
+        private CommandEvent _unmappedDebugEvent;
+
+        private CommandEvent _unmappedTextControlEvent;
+
         public MapEquivalentCommandsProcessor(IResourceProvider resourceProvider)
         {
             _mappings = resourceProvider.GetCommandMappings();
@@ -45,9 +49,20 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
         public override void OnStreamStarts(Developer value)
         {
             _unmappedCommandEvent = null;
+            _unmappedDebugEvent = null;
+            _unmappedTextControlEvent = null;
         }
 
         private void MapCommandEvent(CommandEvent commandEvent)
+        {
+            // returns true if StandardMappingProcedure should be called
+            if (!HandleDebugCommands(commandEvent)) return;
+            if (!HandleTextControlCommands(commandEvent)) return;
+
+            StandardMappingProcedure(commandEvent);
+        }
+
+        private void StandardMappingProcedure(CommandEvent commandEvent)
         {
             var mapping = FindMappingFromLeftSideFor(commandEvent);
             var isOnLeftSide = mapping != null;
@@ -77,6 +92,70 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
             }
         }
 
+        private bool HandleTextControlCommands(CommandEvent commandEvent)
+        {
+            if (_unmappedTextControlEvent != null)
+            {
+                if (ConcurrentEventHeuristic.AreConcurrent(_unmappedTextControlEvent, commandEvent))
+                {
+                    DropCurrentEvent();
+                    _unmappedTextControlEvent = commandEvent;
+                    return false;
+                }
+                _unmappedTextControlEvent = null;
+            }
+
+            if (IsTextControlClickEvent(commandEvent))
+            {
+                _unmappedTextControlEvent = commandEvent;
+            }
+            return true;
+        }
+
+        private bool HandleDebugCommands(CommandEvent commandEvent)
+        {
+            if (_unmappedDebugEvent != null)
+            {
+                if (IsFollowupDebugCommand(commandEvent))
+                {
+                    DropCurrentEvent();
+                    return false;
+                }
+                InsertMergedDebugCommand();
+                _unmappedDebugEvent = null;
+            }
+
+            if (IsDebugClickEvent(commandEvent))
+            {
+                _unmappedDebugEvent = commandEvent;
+                DropCurrentEvent();
+                return false;
+            }
+            return true;
+        }
+
+        private static bool IsDebugClickEvent(CommandEvent commandEvent)
+        {
+            return commandEvent.CommandId.Equals("Continue") || commandEvent.CommandId.Equals("Start");
+        }
+
+        private static bool IsFollowupDebugCommand(CommandEvent commandEvent)
+        {
+            return (commandEvent.CommandId.Equals("{5EFC7975-14BC-11CF-9B2B-00AA00573819}:295:Debug.Start") ||
+                    commandEvent.CommandId.Equals("{6E87CFAD-6C05-4ADF-9CD7-3B7943875B7C}:257:Debug.StartDebugTarget"));
+        }
+
+        private static bool IsTextControlClickEvent(CommandEvent commandEvent)
+        {
+            return commandEvent.CommandId.Equals("Copy") || commandEvent.CommandId.Equals("Cut") ||
+                   commandEvent.CommandId.Equals("Paste");
+        }
+
+        private bool IsLate(IDEEvent commandEvent)
+        {
+            return !ConcurrentEventHeuristic.AreConcurrent(commandEvent, _unmappedCommandEvent);
+        }
+
         private static CommandEvent CopyCommandEventWithId(IDEEvent commandEvent, string newId)
         {
             return new CommandEvent
@@ -92,9 +171,14 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
             };
         }
 
-        private bool IsLate(IDEEvent commandEvent)
+        private void InsertMergedDebugCommand()
         {
-            return !ConcurrentEventHeuristic.AreConcurrent(commandEvent, _unmappedCommandEvent);
+            var newEvent = new CommandEvent
+            {
+                CommandId = "Debug." + _unmappedDebugEvent.CommandId
+            };
+            newEvent.CopyIDEEventPropertiesFrom(_unmappedDebugEvent);
+            Insert(newEvent);
         }
 
         private SortedCommandPair FindMappingFromLeftSideFor(CommandEvent commandEvent)
