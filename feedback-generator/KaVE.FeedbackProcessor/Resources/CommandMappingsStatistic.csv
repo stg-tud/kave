@@ -1,0 +1,100 @@
+FirstCommand,SecondCommand,Count
+TextControl.Delete,{5EFC7975-14BC-11CF-9B2B-00AA00573819}:17:Edit.Delete,6395
+Step Into,{5EFC7975-14BC-11CF-9B2B-00AA00573819}:248:Debug.StepInto,4198
+TextControl.Paste,{5EFC7975-14BC-11CF-9B2B-00AA00573819}:26:Edit.Paste,1118
+Save All,{5EFC7975-14BC-11CF-9B2B-00AA00573819}:224:File.SaveAll,816
+Step Over,{5EFC7975-14BC-11CF-9B2B-00AA00573819}:249:Debug.StepOver,618
+Stop Debugging,{5EFC7975-14BC-11CF-9B2B-00AA00573819}:179:Debug.StopDebugging,549
+TextControl.Copy,{5EFC7975-14BC-11CF-9B2B-00AA00573819}:15:Edit.Copy,479
+Continue,{6E87CFAD-6C05-4ADF-9CD7-3B7943875B7C}:257:Debug.StartDebugTarget,383
+{6E87CFAD-6C05-4ADF-9CD7-3B7943875B7C}:257:Debug.StartDebugTarget,{5EFC7975-14BC-11CF-9B2B-00AA00573819}:295:Debug.Start,380
+Achievements,KaVE.BP.Achievements.AchievementWindow,244
+Build Solution,{5EFC7975-14BC-11CF-9B2B-00AA00573819}:882:Build.BuildSolution,234
+Step Out,{5EFC7975-14BC-11CF-9B2B-00AA00573819}:250:Debug.StepOut,180
+Continue,{5EFC7975-14BC-11CF-9B2B-00AA00573819}:295:Debug.Start,164
+TextControl.Cut,{5EFC7975-14BC-11CF-9B2B-00AA00573819}:16:Edit.Cut,138
+Reset,KaVE.BP.Achievements.Reset,126
+{5EFC7975-14BC-11CF-9B2B-00AA00573819}:295:Debug.Start,{6E87CFAD-6C05-4ADF-9CD7-3B7943875B7C}:257:Debug.StartDebugTarget,126
+Undo...,{57735D06-C920-4415-A2E0-7D6E6FBDFA99}:4096:Team.Git.Undo,114
+New Item...,{5EFC7975-14BC-11CF-9B2B-00AA00573819}:220:Project.AddNewItem,104
+Statistic,KaVE.BP.Achievements.StatisticWindow,104
+Log Replay,KaVE.BP.Achievements.LogCollector,93
+Run Unit Tests,ReSharper_UnitTest_RunContext,92
+Achievements anzeigen,KaVE.BP.Achievements.AchievementWindow,82
+Statistiken anzeigen,KaVE.BP.Achievements.StatisticWindow,76
+Feedback Manager,KaVE.VsFeedbackGenerator.SessionManager,69
+Delete,{5EFC7975-14BC-11CF-9B2B-00AA00573819}:17:Edit.Delete,64
+Rebuild Solution,{5EFC7975-14BC-11CF-9B2B-00AA00573819}:883:Build.RebuildSolution,62
+Properties,{5EFC7975-14BC-11CF-9B2B-00AA00573819}:397:ClassViewContextMenus.ClassViewMultiselectProjectreferencesItems.Properties,56
+Show All Files,{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:600:Project.ShowAllFiles,55
+Compare with Unmodified...,{57735D06-C920-4415-A2E0-7D6E6FBDFA99}:4097:Team.Git.CompareWithUnmodified,55
+Open Command Prompt,{57735D06-C920-4415-A2E0-7D6E6FBDFA99}:4115:Team.Git.OpenCommandPrompt,40
+Include In Project,{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:1109:Project.IncludeInProject,40
+Log Replay,KaVE.BP.Achievements.LogReplay,40
+Copy,{5EFC7975-14BC-11CF-9B2B-00AA00573819}:15:Edit.Copy,36
+Build,{5EFC7975-14BC-11CF-9B2B-00AA00573819}:892:ClassViewContextMenus.ClassViewProject.Build,33
+Display Statistic,KaVE.BP.Achievements.StatisticWindow,32
+Options...,{5EFC7975-14BC-11CF-9B2B-00AA00573819}:264:Tools.Options,28
+New Vertical Tab Group,{5EFC7975-14BC-11CF-9B2B-00AA00573819}:269:Window.NewVerticalTabGroup,27
+Manage Branches,{57735D06-C920-4415-A2E0-7D6E6FBDFA99}:4107:Team.Git.ManageBranches,26
+Save Program.cs,{5EFC7975-14BC-11CF-9B2B-00AA00573819}:331:File.SaveSelectedItems,26
+View History...,{57735D06-C920-4415-A2E0-7D6E6FBDFA99}:4101:Team.Git.ViewHistory,25
+Start,{6E87CFAD-6C05-4ADF-9CD7-3B7943875B7C}:257:Debug.StartDebugTarget,24
+Exclude,{57735D06-C920-4415-A2E0-7D6E6FBDFA99}:4100:Team.Git.Remove,23
+Paste,{5EFC7975-14BC-11CF-9B2B-00AA00573819}:26:Edit.Paste,23
+Comment Selection,{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:136:Edit.CommentSelection,22
+Find Usages,FindUsages,22
+Open File...,{5EFC7975-14BC-11CF-9B2B-00AA00573819}:222:File.OpenFile,19
+Reset data,KaVE.BP.Achievements.Reset,18
+Manage NuGet Packages for Solution...,{25FD982B-8CAE-4CBD-A440-E03FFCCDE106}:512:Tools.ManageNuGetPackagesforSolution,18
+Start Without Debugging,{5EFC7975-14BC-11CF-9B2B-00AA00573819}:368:Debug.StartWithoutDebugging,16
+Restart,{5EFC7975-14BC-11CF-9B2B-00AA00573819}:296:Debug.Restart,16
+Add,{57735D06-C920-4415-A2E0-7D6E6FBDFA99}:4100:Team.Git.Remove,16
+Go to Implementation,GotoImplementation,16
+Include,{57735D06-C920-4415-A2E0-7D6E6FBDFA99}:4100:Team.Git.Remove,15
+Project/Solution...,{5EFC7975-14BC-11CF-9B2B-00AA00573819}:217:File.OpenProject,15
+ShowOptions,KaVE.VsFeedbackGenerator.Options,14
+{C9DD4A59-47FB-11D2-83E7-00C04F9902C1}:278:Debug.LocationToolbar.ProcessCombo,{C9DD4A59-47FB-11D2-83E7-00C04F9902C1}:280:Debug.LocationToolbar.ThreadCombo,14
+Publish Branch,{57735D06-C920-4415-A2E0-7D6E6FBDFA99}:4116:Team.Git.SwitchBranchPublishState,14
+Clean Solution,{5EFC7975-14BC-11CF-9B2B-00AA00573819}:885:Build.CleanSolution,13
+Rename,{5EFC7975-14BC-11CF-9B2B-00AA00573819}:150:File.Rename,12
+Commit,{57735D06-C920-4415-A2E0-7D6E6FBDFA99}:4098:Team.Git.Commit,12
+Remove,{5EFC7975-14BC-11CF-9B2B-00AA00573819}:17:Edit.Delete,11
+Commit and Push,{57735D06-C920-4415-A2E0-7D6E6FBDFA99}:4140:Team.Git.CommitAndPush,10
+Optionen...,{5EFC7975-14BC-11CF-9B2B-00AA00573819}:264:Tools.Options,10
+New Folder,{5EFC7975-14BC-11CF-9B2B-00AA00573819}:245:Project.NewFolder,9
+Exceptions...,{5EFC7975-14BC-11CF-9B2B-00AA00573819}:339:Debug.Exceptions,9
+Manage NuGet Packages...,{25FD982B-8CAE-4CBD-A440-E03FFCCDE106}:256:Project.ManageNuGetPackages,9
+Quick Replace,{5EFC7975-14BC-11CF-9B2B-00AA00573819}:230:Edit.Replace,9
+Save Properties\FormatStrings.resx,{5EFC7975-14BC-11CF-9B2B-00AA00573819}:331:File.SaveSelectedItems,9
+Uncomment Selection,{1496A755-94DE-11D0-8C3F-00C04FC2AAE2}:137:Edit.UncommentSelection,8
+Display Achievements,KaVE.BP.Achievements.AchievementWindow,8
+File...,{5EFC7975-14BC-11CF-9B2B-00AA00573819}:221:File.NewFile,7
+Start Debugging,{5EFC7975-14BC-11CF-9B2B-00AA00573819}:295:Debug.Start,7
+Save UI\StatisticUI\StatisticWindowControl.xaml.cs,{5EFC7975-14BC-11CF-9B2B-00AA00573819}:331:File.SaveSelectedItems,7
+{C9DD4A59-47FB-11D2-83E7-00C04F9902C1}:280:Debug.LocationToolbar.ThreadCombo,{C9DD4A59-47FB-11D2-83E7-00C04F9902C1}:288:Debug.LocationToolbar.StackFrameCombo,6
+Detach All,{5EFC7975-14BC-11CF-9B2B-00AA00573819}:262:Debug.DetachAll,6
+Open,{5EFC7975-14BC-11CF-9B2B-00AA00573819}:261:View.Open,6
+Save Properties\strings.de.resx,{5EFC7975-14BC-11CF-9B2B-00AA00573819}:331:File.SaveSelectedItems,6
+New Project...,{5EFC7975-14BC-11CF-9B2B-00AA00573819}:772:File.AddNewProject,6
+TextControl.Left,TextControl.Right,6
+Unpublish Branch,{57735D06-C920-4415-A2E0-7D6E6FBDFA99}:4116:Team.Git.SwitchBranchPublishState,6
+About KaVE BP Achievements,KaVE.BP.Achievements.About,5
+Optionen,KaVE.VsFeedbackGenerator.Options,5
+Save UI\Collections\CompletionCollection.cs,{5EFC7975-14BC-11CF-9B2B-00AA00573819}:331:File.SaveSelectedItems,5
+Existing Project...,{5EFC7975-14BC-11CF-9B2B-00AA00573819}:773:File.AddExistingProject,5
+Save Util\FileHandler.cs,{5EFC7975-14BC-11CF-9B2B-00AA00573819}:331:File.SaveSelectedItems,5
+Class,Template1,5
+Save Achievements\Data\Achievements.xml,{5EFC7975-14BC-11CF-9B2B-00AA00573819}:331:File.SaveSelectedItems,4
+Save Reset\ResetData.cs,{5EFC7975-14BC-11CF-9B2B-00AA00573819}:331:File.SaveSelectedItems,4
+Attach to Process...,{5EFC7975-14BC-11CF-9B2B-00AA00573819}:213:Debug.AttachtoProcess,4
+SolBuilderDuo.Debug,{6E87CFAD-6C05-4ADF-9CD7-3B7943875B7C}:257:Debug.StartDebugTarget,4
+Condition...,{C9DD4A59-47FB-11D2-83E7-00C04F9902C1}:323:EditorContextMenus.CodeWindow.Breakpoint.BreakpointCondition,4
+Save Calculators\GlobalCalculator.cs,{5EFC7975-14BC-11CF-9B2B-00AA00573819}:331:File.SaveSelectedItems,4
+Go to Declaration,GotoDeclaration,4
+Delete All Breakpoints,{5EFC7975-14BC-11CF-9B2B-00AA00573819}:256:Debug.DeleteAllBreakpoints,4
+Save Actions.xml,{5EFC7975-14BC-11CF-9B2B-00AA00573819}:331:File.SaveSelectedItems,4
+{C9DD4A59-47FB-11D2-83E7-00C04F9902C1}:371:Debug.OptionsandSettings,{5EFC7975-14BC-11CF-9B2B-00AA00573819}:264:Tools.Options,4
+Options and Settings...,{C9DD4A59-47FB-11D2-83E7-00C04F9902C1}:371:Debug.OptionsandSettings,4
+Hierarchies,TypeHierarchy.Browse,4
+Save Statistics\Statistic.cs,{5EFC7975-14BC-11CF-9B2B-00AA00573819}:331:File.SaveSelectedItems,4

@@ -131,6 +131,7 @@
     <Compile Include="Statistics\WindowNameCollector.cs" />
     <Compile Include="Utils\EventMappingUtils.cs" />
     <Compile Include="Utils\Pair.cs" />
+    <Compile Include="Utils\ResourceProvider.cs" />
     <Compile Include="Utils\SortedCommandPair.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -143,6 +144,7 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="Resources\CommandIdToActivityMapping.csv" />
+    <None Include="Resources\CommandMappingsStatistic.csv" />
     <None Include="Resources\commands_vs_bars_ids.de.csv" />
     <None Include="Resources\commands_vs_click_ids.de.csv" />
     <None Include="Resources\commands_vs_ids.csv" />

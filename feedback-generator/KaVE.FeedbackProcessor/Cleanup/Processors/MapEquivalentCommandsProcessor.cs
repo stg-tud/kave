@@ -32,11 +32,13 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
         public static readonly TimeSpan EventTimeDifference = TimeSpan.FromMilliseconds(10);
 
         private readonly List<SortedCommandPair> _mappings;
+
         private CommandEvent _unmappedCommandEvent;
 
-        public MapEquivalentCommandsProcessor(List<SortedCommandPair> mappings)
+        public MapEquivalentCommandsProcessor(IResourceProvider resourceProvider)
         {
-            _mappings = mappings;
+            _mappings = resourceProvider.GetCommandMappings();
+
             RegisterFor<CommandEvent>(MapCommandEvent);
         }
 

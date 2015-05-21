@@ -44,7 +44,12 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
                 "Save All",
                 "{5EFC7975-14BC-11CF-9B2B-00AA00573819}:224:File.SaveAll");
 
-            _uut = new MapEquivalentCommandsProcessor(new List<SortedCommandPair>{copyPair,leftPair,_saveAllPair});
+            var testResourceProvider = new TestResourceProvider
+            {
+                Mappings = new List<SortedCommandPair> {copyPair, leftPair, _saveAllPair}
+            };
+
+            _uut = new MapEquivalentCommandsProcessor(testResourceProvider);
         }
 
         [Test]
@@ -61,7 +66,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
         [Test]
         public void ShouldKeepEventsWithoutMapping()
         {
-            var inputEvent = new CommandEvent { CommandId = "Test" };
+            var inputEvent = new CommandEvent {CommandId = "Test"};
 
             var actualSet = _uut.Map(inputEvent);
 
@@ -71,7 +76,7 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
         [Test]
         public void ShouldDropRightSide()
         {
-            var inputEvent = new CommandEvent { CommandId = _saveAllPair.Item2 };
+            var inputEvent = new CommandEvent {CommandId = _saveAllPair.Item2};
 
             var actualSet = _uut.Map(inputEvent);
 
@@ -130,6 +135,16 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
             var actualSet = _uut.Map(someLateEvent);
 
             CollectionAssert.AreEquivalent(Sets.NewHashSet<IDEEvent>(someLateEvent), actualSet);
+        }
+
+        public class TestResourceProvider : IResourceProvider
+        {
+            public List<SortedCommandPair> Mappings;
+
+            public List<SortedCommandPair> GetCommandMappings()
+            {
+                return Mappings;
+            }
         }
     }
 }

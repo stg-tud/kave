@@ -17,12 +17,14 @@
  *    - Sven Amann
  */
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using KaVE.Commons.Utils.Csv;
 using KaVE.Commons.Utils.Exceptions;
 using KaVE.FeedbackProcessor.Activities;
+using KaVE.FeedbackProcessor.Activities.SlidingWindow;
 using KaVE.FeedbackProcessor.Cleanup.Processors;
 using KaVE.FeedbackProcessor.Database;
 using KaVE.FeedbackProcessor.Import;
@@ -255,7 +257,7 @@ namespace KaVE.FeedbackProcessor
         private static void MapEquivalentCommands(IFeedbackDatabase sourceDatabase, IFeedbackDatabase targetDatabase)
         {
             var filter = new FeedbackMapper(sourceDatabase, targetDatabase);
-            filter.RegisterMapper(new MapEquivalentCommandsProcessor(EquivalentCommandPairCalculator.Statistic.Keys.Cast<SortedCommandPair>().ToList()));
+            filter.RegisterMapper(new MapEquivalentCommandsProcessor(new ResourceProvider()));
             filter.MapFeedback();
         }
 
