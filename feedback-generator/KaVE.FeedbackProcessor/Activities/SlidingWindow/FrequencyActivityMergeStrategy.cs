@@ -78,5 +78,10 @@ namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
         {
             return lastActivity == Activity.Away || lastActivity == Activity.Waiting;
         }
+
+        public void Reset()
+        {
+            _lastActivity = null;
+        }
     }
 }

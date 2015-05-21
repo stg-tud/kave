@@ -86,6 +86,16 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.SlidingWindow
             Assert.AreEqual(previous, actual);
         }
 
+        [Test]
+        public void ClearsPreviousOnReset()
+        {
+            _uut.Merge(Window(Activity.Development));
+            _uut.Reset();
+            var actual = _uut.Merge(Window(Activity.Any));
+
+            Assert.AreEqual(Activity.Other, actual);
+        }
+
         [TestCase(Activity.Waiting), TestCase(Activity.Away)]
         public void MapsOnlyAnyToOtherIfPreviousIsWaitingOrAway(Activity waitingOrAway)
         {

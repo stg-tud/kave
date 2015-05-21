@@ -108,6 +108,8 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.SlidingWindow
             {
                 return Activity.Away;
             }
+
+            public void Reset() {}
         }
     }
 }

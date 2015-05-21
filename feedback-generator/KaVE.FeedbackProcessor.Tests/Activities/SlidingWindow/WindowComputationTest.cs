@@ -170,6 +170,10 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.SlidingWindow
                 Windows.Add(window);
                 return Activity.Any;
             }
+
+            public void Reset()
+            {
+            }
         }
     }
 }

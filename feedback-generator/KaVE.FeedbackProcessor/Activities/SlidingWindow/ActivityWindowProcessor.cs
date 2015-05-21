@@ -81,6 +81,7 @@ namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
         public interface IActivityMergeStrategy
         {
             Activity Merge(IList<Activity> window);
+            void Reset();
         }
 
         public ActivityWindowProcessor(IActivityMergeStrategy strategy, TimeSpan windowSpan)
