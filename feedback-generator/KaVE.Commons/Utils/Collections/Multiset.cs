@@ -28,8 +28,10 @@ namespace KaVE.Commons.Utils.Collections
         void Add(T element, int occurences = 1);
         int Count();
         int Count(T element);
+        bool RemoveAll(T element);
+
         IKaVESet<T> ElementSet { get; }
-        IDictionary<T, int>  EntryDictionary { get; }
+        IDictionary<T, int> EntryDictionary { get; }
     }
 
     public class Multiset<T> : IMultiset<T>
@@ -51,7 +53,7 @@ namespace KaVE.Commons.Utils.Collections
             get { return Sets.NewHashSetFrom(_data.Keys); }
         }
 
-        public IDictionary<T, int>  EntryDictionary
+        public IDictionary<T, int> EntryDictionary
         {
             get { return new Dictionary<T, int>(_data); }
         }
@@ -92,6 +94,11 @@ namespace KaVE.Commons.Utils.Collections
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
+        }
+
+        public bool RemoveAll(T element)
+        {
+            return _data.Remove(element);
         }
     }
 }

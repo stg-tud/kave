@@ -69,5 +69,15 @@ namespace KaVE.Commons.Tests.Utils.Collections
             var expected = new Dictionary<string, int> {{"foo", 2}, {"bar", 2}};
             CollectionAssert.AreEqual(expected, uut.EntryDictionary);
         }
+
+        [Test]
+        public void RemovesAll()
+        {
+            var uut = new Multiset<string> {{"a", 5}};
+
+            uut.RemoveAll("a");
+
+            Assert.AreEqual(0, uut.Count("a"));
+        }
     }
 }
