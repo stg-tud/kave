@@ -26,18 +26,57 @@ namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
 {
     internal class FrequencyActivityMergeStrategy : ActivityWindowProcessor.IActivityMergeStrategy
     {
+        private Activity? _lastActivity;
+
         public Activity Merge(IList<Activity> window)
         {
-            if (window.Count == 0)
+            if (IsEmptyWindow(window))
             {
-                return Activity.Waiting;
+                _lastActivity = Activity.Waiting;
             }
+            else
+            {
+                _lastActivity = MergeNonEmptyWindow(window);
+            }
+            return _lastActivity.Value;
+        }
 
-            var activities = new Multiset<Activity>(window);
-            activities.RemoveAll(Activity.Any);
+        private static bool IsEmptyWindow(ICollection<Activity> window)
+        {
+            return window.Count == 0;
+        }
+
+        private Activity MergeNonEmptyWindow(IEnumerable<Activity> window)
+        {
+            var windowWithoutAny = WithoutAnyActivity(window);
+            if (!IsEmptyWindow(windowWithoutAny))
+            {
+                return GetLastMostFrequentActivity(windowWithoutAny);
+            }
+            if (_lastActivity == null || IsInactivity(_lastActivity))
+            {
+                return Activity.Other;
+            }
+            return _lastActivity.Value;
+        }
+
+        private static Activity GetLastMostFrequentActivity(IList<Activity> windowWithoutAny)
+        {
+            var activities = new Multiset<Activity>(windowWithoutAny);
             var maxFrequency = activities.EntryDictionary.Max(kvp => kvp.Value);
-            var mostFrequentActivities = activities.EntryDictionary.Where(kvp => kvp.Value == maxFrequency).Select(kvp => kvp.Key);
-            return window.Last(mostFrequentActivities.Contains);
+            var mostFrequentActivities =
+                activities.EntryDictionary.Where(kvp => kvp.Value == maxFrequency).Select(kvp => kvp.Key);
+            return windowWithoutAny.Last(mostFrequentActivities.Contains);
+        }
+
+        private static IList<Activity> WithoutAnyActivity(IEnumerable<Activity> window)
+        {
+            return window.Where(a => a != Activity.Any).ToList();
+        }
+
+        private static bool IsInactivity(Activity? lastActivity)
+        {
+            return lastActivity == Activity.Away || lastActivity == Activity.Waiting;
         }
     }
 }

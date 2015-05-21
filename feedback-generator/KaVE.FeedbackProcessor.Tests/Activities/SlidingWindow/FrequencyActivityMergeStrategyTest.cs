@@ -69,6 +69,32 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.SlidingWindow
             Assert.AreEqual(Activity.Navigation, actual);
         }
 
+        [Test]
+        public void MapsOnlyAnyToOtherByDefault()
+        {
+            var actual = _uut.Merge(Window(Activity.Any));
+
+            Assert.AreEqual(Activity.Other, actual);
+        }
+
+        [Test]
+        public void MapsOnlyAnyToPrevious()
+        {
+            var previous = _uut.Merge(Window(Activity.Development));
+            var actual = _uut.Merge(Window(Activity.Any));
+
+            Assert.AreEqual(previous, actual);
+        }
+
+        [TestCase(Activity.Waiting), TestCase(Activity.Away)]
+        public void MapsOnlyAnyToOtherIfPreviousIsWaitingOrAway(Activity waitingOrAway)
+        {
+            _uut.Merge(Window(waitingOrAway));
+            var actual = _uut.Merge(Window(Activity.Any));
+
+            Assert.AreEqual(Activity.Other, actual);
+        }
+
         private IList<Activity> EmptyWindow()
         {
             return Window( /* no activities */);
