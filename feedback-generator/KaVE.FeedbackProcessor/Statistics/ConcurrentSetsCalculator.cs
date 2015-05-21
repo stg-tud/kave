@@ -18,82 +18,19 @@
  *    - Markus Zimmermann
  */
 
-using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
-using KaVE.Commons.Model.Events;
-using KaVE.Commons.Model.Events.CompletionEvents;
-using KaVE.Commons.Model.Events.VisualStudio;
 using KaVE.Commons.Utils.Collections;
 using KaVE.Commons.Utils.Csv;
 using KaVE.FeedbackProcessor.Model;
+using KaVE.FeedbackProcessor.Utils;
 
 namespace KaVE.FeedbackProcessor.Statistics
 {
     internal class ConcurrentSetsCalculator : BaseEventProcessor
     {
-        private const string Separator = " -> ";
-
         public readonly IDictionary<ISet<string>, int> Statistic =
             new Dictionary<ISet<string>, int>();
-
-        private static readonly IDictionary<Type, Func<IDEEvent, string>> ToStringMappings =
-            new Dictionary<Type, Func<IDEEvent, string>>
-            {
-                {
-                    typeof (CommandEvent),
-                    (commandEvent => FormatString("Command", ((CommandEvent) commandEvent).CommandId))
-                },
-                {
-                    typeof (WindowEvent),
-                    (windowEvent => FormatString("Window", ((WindowEvent) windowEvent).Action.ToString()))
-                },
-                {
-                    typeof (DocumentEvent),
-                    (documentEvent => FormatString("Document", ((DocumentEvent) documentEvent).Action.ToString()))
-                },
-                {
-                    typeof (BuildEvent),
-                    (buildEvent => FormatString("Build", ((BuildEvent) buildEvent).Action))
-                },
-                {
-                    typeof (EditEvent),
-                    (editEvent =>
-                        FormatString(
-                            "Edit",
-                            ((EditEvent) editEvent).NumberOfChanges.ToString(CultureInfo.InvariantCulture) + " Changes"))
-                },
-                {
-                    typeof (DebuggerEvent),
-                    (debuggerEvent => FormatString("Debugger", ((DebuggerEvent) debuggerEvent).Reason))
-                },
-                {
-                    typeof (IDEStateEvent),
-                    (ideStateEvent =>
-                        FormatString("IDEState", ((IDEStateEvent) ideStateEvent).IDELifecyclePhase.ToString()))
-                },
-                {
-                    typeof (SolutionEvent),
-                    (solutionEvent => FormatString("Solution", ((SolutionEvent) solutionEvent).Action.ToString()))
-                },
-                {
-                    typeof (CompletionEvent),
-                    (completionEvent =>
-                        FormatString(
-                            "Completion",
-                            ("Terminated as " + ((CompletionEvent) completionEvent).TerminatedState.ToString())))
-                },
-                {
-                    typeof (ErrorEvent),
-                    (errorEvent =>
-                    {
-                        var stackTraceString = ((ErrorEvent) errorEvent).StackTrace.First();
-                        var index = stackTraceString.IndexOf(':');
-                        return FormatString("Error", stackTraceString.Substring(0, index));
-                    })
-                }
-            };
 
         public ConcurrentSetsCalculator()
         {
@@ -106,13 +43,7 @@ namespace KaVE.FeedbackProcessor.Statistics
 
             foreach (var ideEvent in concurrentEvent.ConcurrentEventList)
             {
-                Func<IDEEvent, string> mapToString;
-                ToStringMappings.TryGetValue(ideEvent.GetType(), out mapToString);
-
-                if (mapToString != null)
-                {
-                    resultSet.Add(mapToString(ideEvent));
-                }
+                resultSet.Add(EventMappingUtils.GetAbstractStringOf(ideEvent));
             }
 
             if (Statistic.ContainsKey(resultSet))
@@ -126,11 +57,6 @@ namespace KaVE.FeedbackProcessor.Statistics
                     Statistic.Add(resultSet, 1);
                 }
             }
-        }
-
-        private static string FormatString(string prefix, string suffix)
-        {
-            return String.Format("{0}{1}{2}", prefix, Separator, suffix);
         }
 
         public string StatisticAsCsv()

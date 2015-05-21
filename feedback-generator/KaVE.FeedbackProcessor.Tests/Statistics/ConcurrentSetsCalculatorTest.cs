@@ -20,7 +20,6 @@
 
 using System.Collections.Generic;
 using KaVE.Commons.Model.Events;
-using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Model.Events.VisualStudio;
 using KaVE.Commons.TestUtils.Model.Events;
 using KaVE.Commons.Utils.Collections;
@@ -39,55 +38,6 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
         public void Setup()
         {
             _uut = new ConcurrentSetsCalculator();
-        }
-
-        private static readonly object[] MapsSingleEventCorrectlyTestCaseSource =
-        {
-            new object[] {new CommandEvent {CommandId = "Test"}, "Command -> Test"},
-            new object[] {new WindowEvent {Action = WindowEvent.WindowAction.Deactivate}, "Window -> Deactivate"},
-            new object[] {new DocumentEvent {Action = DocumentEvent.DocumentAction.Opened}, "Document -> Opened"},
-            new object[] {new BuildEvent {Action = "vsBuildActionBuild"}, "Build -> vsBuildActionBuild"},
-            new object[] {new EditEvent {NumberOfChanges = 1984}, "Edit -> 1984 Changes"},
-            new object[]
-            {
-                new DebuggerEvent {Reason = "dbgEventReasonStopDebugging"},
-                "Debugger -> dbgEventReasonStopDebugging"
-            },
-            new object[]
-            {
-                new IDEStateEvent {IDELifecyclePhase = IDEStateEvent.LifecyclePhase.Shutdown},
-                "IDEState -> Shutdown"
-            },
-            new object[]
-            {
-                new SolutionEvent {Action = SolutionEvent.SolutionAction.RenameProject},
-                "Solution -> RenameProject"
-            },
-            new object[]
-            {
-                new CompletionEvent {TerminatedState = TerminationState.Unknown},
-                "Completion -> Terminated as Unknown"
-            },
-            new object[]
-            {
-                new ErrorEvent{StackTrace = new []{"System.NullReferenceException: Test"}},
-                "Error -> System.NullReferenceException"
-            } 
-        };
-
-        [Test, TestCaseSource("MapsSingleEventCorrectlyTestCaseSource")]
-        public void MapsSingleEventCorrectly(IDEEvent inputEvent, string expectedString)
-        {
-            var concurrentEvent = new ConcurrentEvent
-            {
-                ConcurrentEventList = new List<IDEEvent> {inputEvent}
-            };
-
-            _uut.OnEvent(concurrentEvent);
-
-            CollectionAssert.Contains(
-                _uut.Statistic,
-                new KeyValuePair<ISet<string>, int>(Sets.NewHashSet(expectedString), 1));
         }
 
         [Test]
@@ -119,10 +69,7 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
         [Test]
         public void ShouldNotAddEmptySetToStatistic()
         {
-            var concurrentEvent = new ConcurrentEvent
-            {
-                ConcurrentEventList = IDEEventTestFactory.SomeEvents(5)
-            };
+            var concurrentEvent = new ConcurrentEvent();
 
             _uut.OnEvent(concurrentEvent);
 
