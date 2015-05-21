@@ -51,28 +51,50 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
         {
             var now = DateTime.Now;
 
-            var firstEvent = new TestIDEEvent
+            var listOfEvents = new List<IDEEvent>
             {
-                TriggeredAt = now
-            };
-            var secondEvent = new TestIDEEvent
-            {
-                TriggeredAt = now + TimeSpan.FromMilliseconds(1)
-            };
-            var thirdEvent = new TestIDEEvent
-            {
-                TriggeredAt = now + TimeSpan.FromMilliseconds(4)
+                new TestIDEEvent
+                {
+                    TriggeredAt = now
+                },
+                new CommandEvent
+                {
+                    TriggeredAt = now + TimeSpan.FromSeconds(2)
+                },
+                new TestIDEEvent
+                {
+                    TriggeredAt = now + TimeSpan.FromSeconds(3)
+                },
+                new TestIDEEvent
+                {
+                    TriggeredAt = now + TimeSpan.FromSeconds(4)
+                },
+                new CommandEvent
+                {
+                    TriggeredAt = now + TimeSpan.FromSeconds(10)
+                },
+                new TestIDEEvent
+                {
+                    TriggeredAt = now + TimeSpan.FromSeconds(15)
+                }
             };
 
-            var listOfEvents = new List<IDEEvent> {firstEvent, secondEvent, thirdEvent};
+            var expectedStatistic = new Dictionary<string, Tuple<TimeSpan, int>>
+            {
+                {
+                    EventMappingUtils.GetAbstractStringOf(
+                        new TestIDEEvent()),
+                    new Tuple<TimeSpan, int>(TimeSpan.FromSeconds(3), 3)
+                },
+                {
+                    EventMappingUtils.GetAbstractStringOf(
+                        new CommandEvent()),
+                    new Tuple<TimeSpan, int>(TimeSpan.FromSeconds(3), 2)
+                }
+            };
 
             listOfEvents.ForEach(@event => _uut.OnEvent(@event));
             _uut.OnStreamEnds();
-
-            var expectedStatistic = new Dictionary<string, TimeSpan>
-            {
-                {EventMappingUtils.GetAbstractStringOf(firstEvent), TimeSpan.FromMilliseconds(2)}
-            };
 
             CollectionAssert.AreEquivalent(expectedStatistic, _uut.Statistic);
         }

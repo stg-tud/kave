@@ -29,7 +29,7 @@ namespace KaVE.FeedbackProcessor.Statistics
 {
     internal class AverageBreakAfterEventsCalculator : BaseEventProcessor
     {
-        public readonly IDictionary<string, TimeSpan> Statistic = new Dictionary<string, TimeSpan>();
+        public readonly IDictionary<string, Tuple<TimeSpan, int>> Statistic = new Dictionary<string, Tuple<TimeSpan, int>>();
 
         private readonly IDictionary<string, List<TimeSpan>> _breaks = new Dictionary<string, List<TimeSpan>>();
 
@@ -66,35 +66,42 @@ namespace KaVE.FeedbackProcessor.Statistics
 
         public override void OnStreamEnds()
         {
-            AddAverageBreaksToStatistic();
+            foreach (var @break in _breaks)
+            {
+                var key = @break.Key;
+                var averageBreakTime = GetAverageTime(@break.Value);
+                var occurences = @break.Value.Count;
+
+                if (Statistic.ContainsKey(key))
+                {
+                    averageBreakTime = GetAverageTime(new List<TimeSpan> {Statistic[key].Item1, averageBreakTime});
+                    var sumOfOccurences = Statistic[key].Item2 + occurences;
+
+                    Statistic[key] = new Tuple<TimeSpan, int>(averageBreakTime, sumOfOccurences);
+                }
+                else
+                {
+                    Statistic.Add(key, new Tuple<TimeSpan, int>(averageBreakTime, occurences));
+                }
+            }
         }
 
-        private void AddAverageBreaksToStatistic()
+        private static TimeSpan GetAverageTime(IEnumerable<TimeSpan> timeSpans)
         {
-            foreach (var averageBreakPair in from breakPair in _breaks
-                                             select new KeyValuePair<string, TimeSpan>(
-                                                 breakPair.Key,
-                                                 TimeSpan.FromTicks(
-                                                     Convert.ToInt64(Math.Round(breakPair.Value.Average(timeSpan => timeSpan.Ticks))))))
-            {
-                Statistic.Add(averageBreakPair);
-            }
+            return TimeSpan.FromTicks(Convert.ToInt64(timeSpans.Average(timeSpan => timeSpan.Ticks)));
         }
 
         public string StatisticAsCsv()
         {
             var csvBuilder = new CsvBuilder();
-            var statistic = Statistic.OrderByDescending(keyValuePair => keyValuePair.Value);
+            var statistic = Statistic.OrderByDescending(keyValuePair => keyValuePair.Value.Item1);
             foreach (var stat in statistic)
             {
                 csvBuilder.StartRow();
 
-                var eventList = stat.Key.ToList();
-                for (var i = 0; i < eventList.Count; i++)
-                {
-                    csvBuilder["Event" + i] = eventList[i];
-                }
-                csvBuilder["Count"] = stat.Value;
+                csvBuilder["Event"] = stat.Key;
+                csvBuilder["AverageTime"] = stat.Value.Item1.ToString("g");
+                csvBuilder["Occurences"] = stat.Value.Item2;
             }
 
             return csvBuilder.Build();
