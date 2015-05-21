@@ -36,6 +36,12 @@ namespace KaVE.FeedbackProcessor.Statistics
         private IDictionary<DateTime, DeveloperDay> _currentDeveloperDays;
 
         private Developer _currentDeveloper;
+        private readonly TimeSpan _minBreakSpan;
+
+        public EventsPerDeveloperDayStatisticCalculator(TimeSpan minBreakSpan)
+        {
+            _minBreakSpan = minBreakSpan;
+        }
 
         public void OnStreamStarts(Developer developer)
         {
@@ -57,15 +63,10 @@ namespace KaVE.FeedbackProcessor.Statistics
             DeveloperDay developerDay;
             if (!_currentDeveloperDays.TryGetValue(day, out developerDay))
             {
-                developerDay = CreateDeveloperDay(day);
+                developerDay = new DeveloperDay(day, _minBreakSpan);
                 _currentDeveloperDays.Add(day, developerDay);
             }
             return developerDay;
-        }
-
-        protected virtual DeveloperDay CreateDeveloperDay(DateTime day)
-        {
-            return new DeveloperDay(day);
         }
 
         public void OnStreamEnds()
@@ -76,7 +77,7 @@ namespace KaVE.FeedbackProcessor.Statistics
 
         public class DeveloperDay
         {
-            public static readonly TimeSpan CountInactivityAsBreakThreshold = TimeSpan.FromMinutes(5);
+            private readonly TimeSpan _minBreakSpan;
 
             public DateTime Day { get; private set; }
             public DateTime FirstActivityAt { get; private set; }
@@ -90,8 +91,9 @@ namespace KaVE.FeedbackProcessor.Statistics
 
             public readonly IList<TimeSpan> Breaks = new List<TimeSpan>();
 
-            public DeveloperDay(DateTime day)
+            public DeveloperDay(DateTime day, TimeSpan minBreakSpan)
             {
+                _minBreakSpan = minBreakSpan;
                 Day = day;
             }
 
@@ -105,7 +107,7 @@ namespace KaVE.FeedbackProcessor.Statistics
                     LastActivityAt = triggeredAt;
                 }
                 var timeSinceLastEvent = triggeredAt - LastActivityAt;
-                if (timeSinceLastEvent >= CountInactivityAsBreakThreshold)
+                if (timeSinceLastEvent >= _minBreakSpan)
                 {
                     Breaks.Add(timeSinceLastEvent);
                 }
@@ -166,8 +168,10 @@ namespace KaVE.FeedbackProcessor.Statistics
                     csvBuilder[dayString + " 2 End"] = day.LastActivityAt.TimeOfDay;
                     csvBuilder[dayString + " 3 Events"] = day.NumberOfEvents;
                     csvBuilder[dayString + " 4 Breaks"] = day.NumberOfBreaks;
-                    csvBuilder[dayString + " 5 Total Break"] = day.TotalBreakTime;
+                    csvBuilder[dayString + " 5 Total Break"] = (int) day.TotalBreakTime.TotalSeconds;
                 }
+                csvBuilder["#Days"] = stat.Value.Count;
+                csvBuilder["Total Break"] = stat.Value.Select(day => (int) day.TotalBreakTime.TotalSeconds).Sum();
             }
             return csvBuilder.Build(CsvBuilder.SortFields.ByNameLeaveFirst);
         }

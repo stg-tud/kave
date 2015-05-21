@@ -19,7 +19,9 @@
 
 using System;
 using KaVE.Commons.TestUtils.Model.Events;
+using KaVE.Commons.TestUtils.Utils;
 using KaVE.FeedbackProcessor.Statistics;
+using KaVE.FeedbackProcessor.Tests.TestUtils;
 using NUnit.Framework;
 
 namespace KaVE.FeedbackProcessor.Tests.Statistics
@@ -28,11 +30,12 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
     class DeveloperDayTest
     {
         private EventsPerDeveloperDayStatisticCalculator.DeveloperDay _uut;
+        private static readonly TimeSpan BreakThreshold = TimeSpan.FromMinutes(5);
 
         [SetUp]
         public void SetUp()
         {
-            _uut = new EventsPerDeveloperDayStatisticCalculator.DeveloperDay(new DateTime(2015, 05, 12));
+            _uut = new EventsPerDeveloperDayStatisticCalculator.DeveloperDay(new DateTime(2015, 05, 12), BreakThreshold);
         }
 
         [Test]
@@ -48,7 +51,7 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
         [Test]
         public void TracksFirstActivityOnDay()
         {
-            var firstActionTriggeredAt = new DateTime(2015, 05, 12, 10, 01, 00);
+            var firstActionTriggeredAt = DateTimeFactory.SomeWorkingHoursDateTime();
 
             _uut.AddEvent(IDEEventTestFactory.SomeEvent(firstActionTriggeredAt));
             _uut.AddEvent(IDEEventTestFactory.SomeEvent(firstActionTriggeredAt.AddMinutes(1)));
@@ -59,7 +62,7 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
         [Test]
         public void TracksLastActivityOnDay()
         {
-            var lastActionTriggeredAt = new DateTime(2015, 05, 12, 10, 01, 00);
+            var lastActionTriggeredAt = DateTimeFactory.SomeWorkingHoursDateTime();
 
             _uut.AddEvent(IDEEventTestFactory.SomeEvent(lastActionTriggeredAt.AddMinutes(-10)));
             _uut.AddEvent(IDEEventTestFactory.SomeEvent(lastActionTriggeredAt));
@@ -87,7 +90,7 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
             var someTriggeredAt = new DateTime(2015, 05, 12, 13, 14, 15);
 
             _uut.AddEvent(IDEEventTestFactory.SomeEvent(someTriggeredAt));
-            _uut.AddEvent(IDEEventTestFactory.SomeEvent(someTriggeredAt.AddMinutes(10)));
+            _uut.AddEvent(IDEEventTestFactory.SomeEvent(someTriggeredAt + BreakThreshold.Times(2)));
 
             Assert.AreEqual(1, _uut.NumberOfBreaks);
         }
@@ -98,9 +101,9 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
             var someTriggeredAt = new DateTime(2015, 05, 12, 13, 14, 15);
 
             _uut.AddEvent(IDEEventTestFactory.SomeEvent(someTriggeredAt));
-            _uut.AddEvent(IDEEventTestFactory.SomeEvent(someTriggeredAt.AddMinutes(10)));
-            _uut.AddEvent(IDEEventTestFactory.SomeEvent(someTriggeredAt.AddMinutes(11)));
-            _uut.AddEvent(IDEEventTestFactory.SomeEvent(someTriggeredAt.AddMinutes(25)));
+            _uut.AddEvent(IDEEventTestFactory.SomeEvent(someTriggeredAt + BreakThreshold.Times(2)));
+            _uut.AddEvent(IDEEventTestFactory.SomeEvent(someTriggeredAt + BreakThreshold.Times(2) + TimeSpan.FromMinutes(1)));
+            _uut.AddEvent(IDEEventTestFactory.SomeEvent(someTriggeredAt + BreakThreshold.Times(4) + TimeSpan.FromMinutes(5)));
 
             Assert.AreEqual(2, _uut.NumberOfBreaks);
         }
@@ -111,9 +114,9 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
             var someTriggeredAt = new DateTime(2015, 05, 12, 13, 14, 15);
 
             _uut.AddEvent(IDEEventTestFactory.SomeEvent(someTriggeredAt));
-            _uut.AddEvent(IDEEventTestFactory.SomeEvent(someTriggeredAt.AddMinutes(10)));
-            _uut.AddEvent(IDEEventTestFactory.SomeEvent(someTriggeredAt.AddMinutes(11)));
-            _uut.AddEvent(IDEEventTestFactory.SomeEvent(someTriggeredAt.AddMinutes(25)));
+            _uut.AddEvent(IDEEventTestFactory.SomeEvent(someTriggeredAt + BreakThreshold.Times(2)));
+            _uut.AddEvent(IDEEventTestFactory.SomeEvent(someTriggeredAt + BreakThreshold.Times(2) + TimeSpan.FromMinutes(1)));
+            _uut.AddEvent(IDEEventTestFactory.SomeEvent(someTriggeredAt + BreakThreshold.Times(4) + TimeSpan.FromMinutes(5)));
 
             var breaks = new[] {TimeSpan.FromMinutes(10), TimeSpan.FromMinutes(14)};
 

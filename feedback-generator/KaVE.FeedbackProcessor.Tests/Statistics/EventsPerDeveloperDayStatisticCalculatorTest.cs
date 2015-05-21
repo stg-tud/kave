@@ -34,7 +34,7 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
         [SetUp]
         public void CreateCalculator()
         {
-            _uut = new EventsPerDeveloperDayStatisticCalculator();
+            _uut = new EventsPerDeveloperDayStatisticCalculator(TimeSpan.FromMinutes(5));
         }
 
         [Test]

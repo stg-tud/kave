@@ -121,13 +121,31 @@ namespace KaVE.FeedbackProcessor
 
         private static void LogEventsPerDeveloperDayStatistic(IFeedbackDatabase database)
         {
-            var calculator = new EventsPerDeveloperDayStatisticCalculator();
+            var calculator1 = new EventsPerDeveloperDayStatisticCalculator(TimeSpan.FromMinutes(1));
+            var calculator3 = new EventsPerDeveloperDayStatisticCalculator(TimeSpan.FromMinutes(3));
+            var calculator5 = new EventsPerDeveloperDayStatisticCalculator(TimeSpan.FromMinutes(5));
+            var calculator8 = new EventsPerDeveloperDayStatisticCalculator(TimeSpan.FromMinutes(8));
+            var calculator13 = new EventsPerDeveloperDayStatisticCalculator(TimeSpan.FromMinutes(13));
+            var calculator21 = new EventsPerDeveloperDayStatisticCalculator(TimeSpan.FromMinutes(21));
+            var calculator34 = new EventsPerDeveloperDayStatisticCalculator(TimeSpan.FromMinutes(34));
 
             var walker = new FeedbackProcessor(database, Logger);
-            walker.Register(calculator);
+            walker.Register(calculator1);
+            walker.Register(calculator3);
+            walker.Register(calculator5);
+            walker.Register(calculator8);
+            walker.Register(calculator13);
+            walker.Register(calculator21);
+            walker.Register(calculator34);
             walker.ProcessFeedback();
 
-            Output("developerdaystats.csv", calculator.StatisticAsCsv());
+            Output("developerdaystats-B1.csv", calculator1.StatisticAsCsv());
+            Output("developerdaystats-B3.csv", calculator3.StatisticAsCsv());
+            Output("developerdaystats-B5.csv", calculator5.StatisticAsCsv());
+            Output("developerdaystats-B8.csv", calculator8.StatisticAsCsv());
+            Output("developerdaystats-B13.csv", calculator13.StatisticAsCsv());
+            Output("developerdaystats-B21.csv", calculator21.StatisticAsCsv());
+            Output("developerdaystats-B34.csv", calculator34.StatisticAsCsv());
         }
 
         private static void LogOccuringNames(IFeedbackDatabase database)
