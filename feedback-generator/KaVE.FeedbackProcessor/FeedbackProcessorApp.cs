@@ -246,6 +246,17 @@ namespace KaVE.FeedbackProcessor
             Output("developer-activities.csv", builder.Build(CsvBuilder.SortFields.ByNameLeaveFirst));
         }
 
+        private static void LogAverageBreakAfterEventsStatistic(IFeedbackDatabase database, string fileName)
+        {
+            var calculator = new AverageBreakAfterEventsCalculator();
+
+            var walker = new FeedbackProcessor(database, Logger);
+            walker.Register(calculator);
+            walker.ProcessFeedback();
+
+            Output(fileName, calculator.StatisticAsCsv());
+        }
+
         private static void MapToConcurrentEvents(IFeedbackDatabase sourceDatabase, IFeedbackDatabase targetDatabase)
         {
             var filter = new FeedbackMapper(sourceDatabase, targetDatabase);

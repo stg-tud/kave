@@ -121,6 +121,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Statistics\AnonymizationStatisticsLogger.cs" />
+    <Compile Include="Statistics\AverageBreakAfterEventsCalculator.cs" />
     <Compile Include="Statistics\CommandIdCollector.cs" />
     <Compile Include="Statistics\EquivalentCommandPairCalculator.cs" />
     <Compile Include="Statistics\ConcurrentSetsCalculator.cs" />
