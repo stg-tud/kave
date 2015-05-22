@@ -24,11 +24,11 @@ using KaVE.FeedbackProcessor.Activities.Model;
 
 namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
 {
-    internal class FrequencyActivityMergeStrategy : ActivityWindowProcessor.IActivityMergeStrategy
+    internal class FrequencyActivityMergeStrategy : IActivityMergeStrategy
     {
         private Activity? _lastActivity;
 
-        public Activity Merge(IList<Activity> window)
+        public Activity Merge(IList<Activity> window, IList<ActivityEvent> window2)
         {
             if (IsEmptyWindow(window))
             {

@@ -19,8 +19,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using KaVE.Commons.Model.Events;
 using KaVE.FeedbackProcessor.Activities.Model;
 using KaVE.FeedbackProcessor.Model;
 
@@ -31,58 +29,8 @@ namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
         private readonly IActivityMergeStrategy _strategy;
         private readonly TimeSpan _windowSpan;
 
-        private class Window
-        {
-            private readonly TimeSpan _span;
-            private readonly IList<ActivityEvent> _events = new List<ActivityEvent>();
-
-            public Window(DateTime start, TimeSpan span)
-            {
-                _span = span;
-                Start = start;
-            }
-
-            public DateTime Start { get; set; }
-
-            public DateTime End
-            {
-                get { return Start + _span; }
-            }
-
-            public void Add(ActivityEvent activityEvent)
-            {
-                _events.Add(activityEvent);
-            }
-
-            public bool IsNotEmpty
-            {
-                get { return _events.Count > 0; }
-            }
-
-            public bool EndsBefore(IDEEvent @event)
-            {
-                return End <= @event.TriggeredAt;
-            }
-
-            public bool IsOnSameDayAs(IDEEvent @event)
-            {
-                return End.Date == @event.GetTriggeredAt().Date;
-            }
-
-            public IList<Activity> GetActivities()
-            {
-                return _events.Select(e => e.Activity).ToList();
-            }
-        }
-
         private Window _currentWindow;
         private Developer _currentDeveloper;
-
-        public interface IActivityMergeStrategy
-        {
-            Activity Merge(IList<Activity> window);
-            void Reset();
-        }
 
         public ActivityWindowProcessor(IActivityMergeStrategy strategy, TimeSpan windowSpan)
         {
@@ -135,7 +83,7 @@ namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
                 ActivityStreams[_currentDeveloper][_currentWindow.Start.Date] = new ActivityStream(_windowSpan);
             }
             ActivityStreams[_currentDeveloper][_currentWindow.Start.Date].Add(
-                _strategy.Merge(_currentWindow.GetActivities()));
+                _strategy.Merge(_currentWindow.GetActivities(), _currentWindow.Events));
             _strategy.Reset();
         }
 

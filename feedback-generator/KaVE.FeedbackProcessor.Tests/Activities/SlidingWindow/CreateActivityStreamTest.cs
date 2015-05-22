@@ -102,9 +102,9 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.SlidingWindow
             CollectionAssert.AreEqual(expectedStream, _uut.ActivityStreams[developer][day]);
         }
 
-        private class TestMergeStrategy : ActivityWindowProcessor.IActivityMergeStrategy
+        private class TestMergeStrategy : IActivityMergeStrategy
         {
-            public Activity Merge(IList<Activity> window)
+            public Activity Merge(IList<Activity> window, IList<ActivityEvent> window2)
             {
                 return Activity.Away;
             }

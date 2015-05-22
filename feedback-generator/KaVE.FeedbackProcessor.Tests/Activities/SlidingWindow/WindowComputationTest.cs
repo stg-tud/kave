@@ -137,7 +137,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.SlidingWindow
             _uut.OnStreamStarts(_someDeveloper);
             _uut.OnStreamEnds();
 
-            AssertWindows(/* none */);
+            AssertWindows( /* none */);
         }
 
         [Test]
@@ -169,30 +169,30 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.SlidingWindow
             return new ActivityEvent {TriggeredAt = triggeredAt};
         }
 
-        private static Activity[] EmptyWindow()
+        private static ActivityEvent[] EmptyWindow()
         {
             return WindowFrom();
         }
 
-        private static Activity[] WindowFrom(params ActivityEvent[] events)
+        private static ActivityEvent[] WindowFrom(params ActivityEvent[] events)
         {
-            return events.Select(e => e.Activity).ToArray();
+            return events;
         }
 
-        private void AssertWindows(params Activity[][] expecteds)
+        private void AssertWindows(params ActivityEvent[][] expecteds)
         {
             var actuals = _testMergeStrategy.Windows;
             CollectionAssert.AreEqual(expecteds, actuals);
         }
 
-        private class TestMergeStrategy : ActivityWindowProcessor.IActivityMergeStrategy
+        private class TestMergeStrategy : IActivityMergeStrategy
         {
-            public readonly IList<IList<Activity>> Windows = new List<IList<Activity>>();
+            public readonly IList<IList<ActivityEvent>> Windows = new List<IList<ActivityEvent>>();
             public int NumberOfResets { get; private set; }
 
-            public Activity Merge(IList<Activity> window)
+            public Activity Merge(IList<Activity> window, IList<ActivityEvent> window2)
             {
-                Windows.Add(window);
+                Windows.Add(window2);
                 return Activity.Any;
             }
 
