@@ -17,10 +17,11 @@
  *    - Sven Amann
  */
 
-using System.Collections.Generic;
+using System;
 using System.Linq;
 using KaVE.FeedbackProcessor.Activities.Model;
 using KaVE.FeedbackProcessor.Activities.SlidingWindow;
+using KaVE.FeedbackProcessor.Tests.TestUtils;
 using NUnit.Framework;
 
 namespace KaVE.FeedbackProcessor.Tests.Activities.SlidingWindow
@@ -90,14 +91,19 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.SlidingWindow
             Assert.AreEqual(Activity.Other, actual);
         }
 
-        protected static IList<ActivityEvent> EmptyWindow()
+        protected static Window EmptyWindow()
         {
             return Window( /* no activities */);
         }
 
-        protected static IList<ActivityEvent> Window(params Activity[] activities)
+        protected static Window Window(params Activity[] activities)
         {
-            return activities.Select(a => new ActivityEvent{Activity = a}).ToList();
+            var window = new Window(DateTimeFactory.SomeWorkingHoursDateTime(), TimeSpan.FromSeconds(5));
+            foreach (var activityEvent in activities.Select(a => new ActivityEvent {Activity = a}))
+            {
+                window.Add(activityEvent);
+            }
+            return window;
         }
     }
 }

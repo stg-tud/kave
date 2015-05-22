@@ -19,7 +19,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using KaVE.FeedbackProcessor.Activities.Model;
 using KaVE.FeedbackProcessor.Activities.SlidingWindow;
 using KaVE.FeedbackProcessor.Model;
@@ -115,7 +114,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.SlidingWindow
             _uut.OnEvent(event1);
             _uut.OnEvent(event2);
 
-            AssertWindows(WindowFrom(event1), EmptyWindow());
+            AssertWindows(WindowFrom(event1), EmptyWindow(_someDateTime + WindowSpan));
         }
 
         [Test]
@@ -169,17 +168,22 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.SlidingWindow
             return new ActivityEvent {TriggeredAt = triggeredAt};
         }
 
-        private static ActivityEvent[] EmptyWindow()
+        private static Window EmptyWindow(DateTime windowStart)
         {
-            return WindowFrom();
+            return new Window(windowStart, WindowSpan);
         }
 
-        private static ActivityEvent[] WindowFrom(params ActivityEvent[] events)
+        private static Window WindowFrom(params ActivityEvent[] events)
         {
-            return events;
+            var window = new Window(events[0].GetTriggeredAt(), WindowSpan);
+            foreach (var activityEvent in events)
+            {
+                window.Add(activityEvent);
+            }
+            return window;
         }
 
-        private void AssertWindows(params ActivityEvent[][] expecteds)
+        private void AssertWindows(params Window[] expecteds)
         {
             var actuals = _testMergeStrategy.Windows;
             CollectionAssert.AreEqual(expecteds, actuals);
@@ -187,10 +191,10 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.SlidingWindow
 
         private class TestMergeStrategy : IActivityMergeStrategy
         {
-            public readonly IList<IList<ActivityEvent>> Windows = new List<IList<ActivityEvent>>();
+            public readonly IList<Window> Windows = new List<Window>();
             public int NumberOfResets { get; private set; }
 
-            public Activity Merge(IList<ActivityEvent> window)
+            public Activity Merge(Window window)
             {
                 Windows.Add(window);
                 return Activity.Any;

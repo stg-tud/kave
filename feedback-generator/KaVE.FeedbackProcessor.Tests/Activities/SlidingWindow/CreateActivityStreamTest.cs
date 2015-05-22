@@ -18,7 +18,6 @@
  */
 
 using System;
-using System.Collections.Generic;
 using KaVE.FeedbackProcessor.Activities.Model;
 using KaVE.FeedbackProcessor.Activities.SlidingWindow;
 using KaVE.FeedbackProcessor.Model;
@@ -104,7 +103,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.SlidingWindow
 
         private class TestMergeStrategy : IActivityMergeStrategy
         {
-            public Activity Merge(IList<ActivityEvent> window)
+            public Activity Merge(Window window)
             {
                 return Activity.Away;
             }

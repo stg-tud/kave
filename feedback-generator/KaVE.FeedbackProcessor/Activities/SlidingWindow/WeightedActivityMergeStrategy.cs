@@ -27,16 +27,9 @@ namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
     {
         private Activity? _lastActivity;
 
-        public Activity Merge(IList<ActivityEvent> window)
+        public Activity Merge(Window window)
         {
-            if (IsEmptyWindow(window))
-            {
-                _lastActivity = Activity.Waiting;
-            }
-            else
-            {
-                _lastActivity = MergeNonEmptyWindow(window);
-            }
+            _lastActivity = window.IsNotEmpty ? MergeNonEmptyWindow(window) : Activity.Waiting;
             return _lastActivity.Value;
         }
 
@@ -45,7 +38,7 @@ namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
             return window.Count == 0;
         }
 
-        private Activity MergeNonEmptyWindow(IEnumerable<ActivityEvent> window)
+        private Activity MergeNonEmptyWindow(Window window)
         {
             var windowWithoutAny = WithoutAnyActivity(window);
             if (!IsEmptyWindow(windowWithoutAny))
@@ -77,9 +70,9 @@ namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
 
         protected abstract int GetWeightOfActivity(IList<ActivityEvent> window, Activity activity);
 
-        private static IList<ActivityEvent> WithoutAnyActivity(IEnumerable<ActivityEvent> window)
+        private static IList<ActivityEvent> WithoutAnyActivity(Window window)
         {
-            return window.Where(e => e.Activity != Activity.Any).ToList();
+            return window.Events.Where(e => e.Activity != Activity.Any).ToList();
         }
 
         private static bool IsInactivity(Activity? lastActivity)

@@ -83,7 +83,7 @@ namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
                 ActivityStreams[_currentDeveloper][_currentWindow.Start.Date] = new ActivityStream(_windowSpan);
             }
             ActivityStreams[_currentDeveloper][_currentWindow.Start.Date].Add(
-                _strategy.Merge(_currentWindow.Events));
+                _strategy.Merge(_currentWindow));
             _strategy.Reset();
         }
 

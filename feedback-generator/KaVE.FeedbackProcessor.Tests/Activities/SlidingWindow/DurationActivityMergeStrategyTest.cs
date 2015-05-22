@@ -18,7 +18,6 @@
  */
 
 using System;
-using System.Collections.Generic;
 using KaVE.FeedbackProcessor.Activities.Model;
 using KaVE.FeedbackProcessor.Activities.SlidingWindow;
 using KaVE.FeedbackProcessor.Tests.TestUtils;
@@ -58,6 +57,14 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.SlidingWindow
         private static IList<ActivityEvent> Window(params ActivityEvent[] activityEvents)
         {
             return activityEvents;
+        private static Window Window(params ActivityEvent[] activityEvents)
+        {
+            var window = new Window(DateTimeFactory.SomeWorkingHoursDateTime(), TimeSpan.FromSeconds(5));
+            foreach (var activityEvent in activityEvents)
+            {
+                window.Add(activityEvent);
+            }
+            return window;
         }
 
         private static ActivityEvent Event(Activity activity, int durationInMilliseconds)

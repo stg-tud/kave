@@ -14,17 +14,16 @@
  * limitations under the License.
  * 
  * Contributors:
- *    - 
+ *    - Sven Amann
  */
 
-using System.Collections.Generic;
 using KaVE.FeedbackProcessor.Activities.Model;
 
 namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
 {
     internal interface IActivityMergeStrategy
     {
-        Activity Merge(IList<ActivityEvent> window);
+        Activity Merge(Window window);
         void Reset();
     }
 }
