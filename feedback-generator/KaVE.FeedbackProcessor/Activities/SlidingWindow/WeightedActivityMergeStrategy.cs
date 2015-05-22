@@ -23,20 +23,9 @@ using KaVE.FeedbackProcessor.Activities.Model;
 
 namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
 {
-    internal class WeightedActivityMergeStrategy : IActivityMergeStrategy
+    internal abstract class WeightedActivityMergeStrategy : IActivityMergeStrategy
     {
-        public static readonly ActivityWeighter FrequencyActivityWeighter =
-            (activity, window) => window.Count(e => e.Activity == activity);
-
-        public delegate int ActivityWeighter(Activity activity, IList<ActivityEvent> window);
-
-        private readonly ActivityWeighter _activityWeighter;
         private Activity? _lastActivity;
-
-        public WeightedActivityMergeStrategy(ActivityWeighter activityWeighter)
-        {
-            _activityWeighter = activityWeighter;
-        }
 
         public Activity Merge(IList<ActivityEvent> window)
         {
@@ -76,7 +65,7 @@ namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
             var maxActivityWeight = 0;
             foreach (var activity in window.Select(e => e.Activity))
             {
-                var weightOfActivity = _activityWeighter(activity, window);
+                var weightOfActivity = GetWeightOfActivity(window, activity);
                 if (weightOfActivity >= maxActivityWeight)
                 {
                     representativeActivity = activity;
@@ -85,6 +74,8 @@ namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
             }
             return representativeActivity;
         }
+
+        protected abstract int GetWeightOfActivity(IList<ActivityEvent> window, Activity activity);
 
         private static IList<ActivityEvent> WithoutAnyActivity(IEnumerable<ActivityEvent> window)
         {

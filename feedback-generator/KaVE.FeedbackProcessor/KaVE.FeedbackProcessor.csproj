@@ -67,6 +67,8 @@
     <Compile Include="Activities\Model\ActivityEvent.cs" />
     <Compile Include="Activities\SlidingWindow\ActivityStream.cs" />
     <Compile Include="Activities\SlidingWindow\ActivityWindowProcessor.cs" />
+    <Compile Include="Activities\SlidingWindow\DurationActivityMergingStrategy.cs" />
+    <Compile Include="Activities\SlidingWindow\FrequencyActivityMergeStrategy.cs" />
     <Compile Include="Activities\SlidingWindow\WeightedActivityMergeStrategy.cs" />
     <Compile Include="Activities\SlidingWindow\IActivityMergeStrategy.cs" />
     <Compile Include="Activities\SlidingWindow\Window.cs" />

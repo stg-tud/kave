@@ -32,11 +32,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.SlidingWindow
     {
         protected override IActivityMergeStrategy CreateStrategy()
         {
-            return
-                new WeightedActivityMergeStrategy(
-                    (activity, window) =>
-                        window.Where(e => e.Activity == activity)
-                              .Sum(a => a.Duration != null ? (int) a.Duration.Value.TotalMilliseconds : 0));
+            return new DurationActivityMergingStrategy();
         }
 
         [Test]
