@@ -166,7 +166,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.SlidingWindow
         }
 
         [Test]
-        public void SplitsEventDurationAtWindowEnd()
+        public void SplitsEventThatExceedsWindowSpan()
         {
             var event1 = SomeEvent(_someDateTime);
             var event2 = SomeEvent(_someDateTime + WindowSpan.Times(0.5), WindowSpan);
@@ -176,8 +176,9 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.SlidingWindow
             _uut.OnEvent(event2);
             _uut.OnStreamEnds();
 
-            var window = _testMergeStrategy.Windows[0];
-            Assert.AreEqual(window.End - event2.TriggeredAt, window.Events.Last().Duration);
+            var event2P1 = SomeEvent(event2.GetTriggeredAt(), WindowSpan.Times(0.5));
+            var event2P2 = SomeEvent(_someDateTime + WindowSpan, WindowSpan.Times(0.5));
+            AssertWindows(WindowFrom(event1, event2P1), WindowFrom(event2P2));
         }
 
         [Test]

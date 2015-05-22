@@ -76,8 +76,15 @@ namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
 
             if (@event.TerminatedAt > _currentWindow.End)
             {
-                @event = Clone(@event);
-                @event.TerminatedAt = _currentWindow.End;
+                var clone = Clone(@event);
+                clone.TerminatedAt = _currentWindow.End;
+                _currentWindow.Add(clone);
+                AppendMergedWindowToStream();
+                _currentWindow = CreateWindowStartingAt(_currentWindow.End);
+                var clone2 = Clone(@event);
+                clone2.Duration = @event.Duration - clone.Duration;
+                clone2.TriggeredAt = _currentWindow.Start;
+                @event = clone2;
             }
             _currentWindow.Add(@event);
         }
