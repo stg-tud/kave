@@ -180,6 +180,20 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.SlidingWindow
             Assert.AreEqual(window.End - event2.TriggeredAt, window.Events.Last().Duration);
         }
 
+        [Test]
+        public void DoesNotModifyOriginalEventWhenSplitting()
+        {
+            var event1 = SomeEvent(_someDateTime);
+            var event2 = SomeEvent(_someDateTime + WindowSpan.Times(0.5), WindowSpan);
+
+            _uut.OnStreamStarts(_someDeveloper);
+            _uut.OnEvent(event1);
+            _uut.OnEvent(event2);
+            _uut.OnStreamEnds();
+
+            Assert.AreEqual(event2.Duration, WindowSpan);
+        }
+
         private static ActivityEvent SomeEvent(DateTime triggeredAt)
         {
             return new ActivityEvent {TriggeredAt = triggeredAt};

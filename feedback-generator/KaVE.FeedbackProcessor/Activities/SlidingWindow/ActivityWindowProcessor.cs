@@ -21,6 +21,7 @@ using System;
 using System.Collections.Generic;
 using KaVE.FeedbackProcessor.Activities.Model;
 using KaVE.FeedbackProcessor.Model;
+using KaVE.FeedbackProcessor.Utils;
 
 namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
 {
@@ -75,9 +76,20 @@ namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
 
             if (@event.TerminatedAt > _currentWindow.End)
             {
+                @event = Clone(@event);
                 @event.TerminatedAt = _currentWindow.End;
             }
             _currentWindow.Add(@event);
+        }
+
+        private static ActivityEvent Clone(ActivityEvent originalEvent)
+        {
+            var clone = new ActivityEvent
+            {
+                Activity = originalEvent.Activity
+            };
+            clone.CopyIDEEventPropertiesFrom(originalEvent);
+            return clone;
         }
 
         private void AppendMergedWindowToStream()
