@@ -23,6 +23,7 @@ using System.Collections.Generic;
 using System.Linq;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.TestUtils.Model.Events;
+using KaVE.Commons.Utils.Exceptions;
 using KaVE.FeedbackProcessor.Database;
 using KaVE.FeedbackProcessor.Model;
 using KaVE.FeedbackProcessor.Tests.Database;
@@ -40,7 +41,7 @@ namespace KaVE.FeedbackProcessor.Tests
         public void SetUp()
         {
             _targetFeedbackDatabase = new TestFeedbackDatabase();
-            _uut = new FeedbackMapper(TestFeedbackDatabase, _targetFeedbackDatabase);
+            _uut = new FeedbackMapper(TestFeedbackDatabase, _targetFeedbackDatabase, new NullLogger());
         }
 
         [TearDown]

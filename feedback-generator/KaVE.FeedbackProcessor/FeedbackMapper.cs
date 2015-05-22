@@ -24,6 +24,7 @@ using System.Collections.Generic;
 using System.Linq;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Utils.Collections;
+using KaVE.Commons.Utils.Exceptions;
 using KaVE.FeedbackProcessor.Database;
 using KaVE.FeedbackProcessor.Model;
 
@@ -33,12 +34,14 @@ namespace KaVE.FeedbackProcessor
     {
         private readonly IFeedbackDatabase _sourceDatabase;
         private readonly IFeedbackDatabase _targetDatabase;
+        private readonly ILogger _logger;
         private readonly ICollection<IEventMapper<IKaVESet<IDEEvent>>> _mappers;
 
-        public FeedbackMapper(IFeedbackDatabase sourceDatabase, IFeedbackDatabase targetDatabase)
+        public FeedbackMapper(IFeedbackDatabase sourceDatabase, IFeedbackDatabase targetDatabase, ILogger logger)
         {
             _sourceDatabase = sourceDatabase;
             _targetDatabase = targetDatabase;
+            _logger = logger;
             _mappers = new List<IEventMapper<IKaVESet<IDEEvent>>>();
         }
 
@@ -61,29 +64,23 @@ namespace KaVE.FeedbackProcessor
 
         private void MapFeedbackOf(Developer developer)
         {
+            _logger.Info("Mapping feedback of developer {0}", developer.Id);
             _targetDatabase.GetDeveloperCollection().Insert(developer);
 
-            NotifyEventStreamStarts(developer);
-            foreach (var ideEvent in GetEventStream(developer))
-            {
-                MapEvent(ideEvent);
-            }
-            NotifyEventStreamEnds();
-        }
-
-        private void NotifyEventStreamStarts(Developer developer)
-        {
+            _logger.Info("- Initializing Mappers...");
             foreach (var mapper in _mappers)
             {
                 mapper.OnStreamStarts(developer);
             }
-        }
-
-        private void NotifyEventStreamEnds()
-        {
-            foreach (var mapper in _mappers)
+            _logger.Info("- Mapping event stream...");
+            foreach (var ideEvent in GetEventStream(developer))
             {
-                mapper.OnStreamEnds();
+                MapEvent(ideEvent);
+            }
+            _logger.Info("- Finalizing...");
+            foreach (var mapper1 in _mappers)
+            {
+                mapper1.OnStreamEnds();
             }
         }
 

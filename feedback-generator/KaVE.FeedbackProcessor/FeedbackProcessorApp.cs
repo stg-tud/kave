@@ -200,7 +200,7 @@ namespace KaVE.FeedbackProcessor
 
         private static void CleanFeedback(IFeedbackDatabase sourceDatabase, IFeedbackDatabase targetDatabase)
         {
-            var cleaner = new FeedbackMapper(sourceDatabase, targetDatabase);
+            var cleaner = new FeedbackMapper(sourceDatabase, targetDatabase, Logger);
             cleaner.RegisterMapper(new AddFileProcessor());
             cleaner.RegisterMapper(new DuplicateCommandFilterProcessor()); ;
             cleaner.RegisterMapper(new EditFilterProcessor());
@@ -211,7 +211,7 @@ namespace KaVE.FeedbackProcessor
 
         private static void MapToActivities(IFeedbackDatabase sourceDatabase, IFeedbackDatabase activityDatabase)
         {
-            var activityMapper = new FeedbackMapper(sourceDatabase, activityDatabase);
+            var activityMapper = new FeedbackMapper(sourceDatabase, activityDatabase, Logger);
             activityMapper.RegisterMapper(new AlwaysDropMapper()); // only generated events reach activity database
             activityMapper.RegisterMapper(new AnyToActivityMapper()); // map any event to a keep-alive
             activityMapper.RegisterMapper(new BuildEventToActivityMapper());
@@ -277,7 +277,7 @@ namespace KaVE.FeedbackProcessor
 
         private static void MapToConcurrentEvents(IFeedbackDatabase sourceDatabase, IFeedbackDatabase targetDatabase)
         {
-            var filter = new FeedbackMapper(sourceDatabase, targetDatabase);
+            var filter = new FeedbackMapper(sourceDatabase, targetDatabase, Logger);
             filter.RegisterMapper(new AlwaysDropMapper());
             filter.RegisterMapper(new ToConcurrentEventMapper());
             filter.MapFeedback();
@@ -285,7 +285,7 @@ namespace KaVE.FeedbackProcessor
 
         private static void MapEquivalentCommands(IFeedbackDatabase sourceDatabase, IFeedbackDatabase targetDatabase)
         {
-            var filter = new FeedbackMapper(sourceDatabase, targetDatabase);
+            var filter = new FeedbackMapper(sourceDatabase, targetDatabase, Logger);
             filter.RegisterMapper(new MapEquivalentCommandsProcessor(new ResourceProvider()));
             filter.MapFeedback();
         }
@@ -293,7 +293,7 @@ namespace KaVE.FeedbackProcessor
         private static void FilterCommandFollowupEvents(IFeedbackDatabase sourceDatabase,
             IFeedbackDatabase targetDatabase)
         {
-            var filter = new FeedbackMapper(sourceDatabase, targetDatabase);
+            var filter = new FeedbackMapper(sourceDatabase, targetDatabase, Logger);
             filter.RegisterMapper(new CommandFollowupProcessor());
             filter.MapFeedback();
         }
