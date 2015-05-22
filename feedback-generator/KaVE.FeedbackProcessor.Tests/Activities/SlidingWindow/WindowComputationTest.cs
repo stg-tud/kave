@@ -166,7 +166,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.SlidingWindow
         }
 
         [Test]
-        public void SplitsEventThatExceedsWindowSpan()
+        public void SplitsLongEvent()
         {
             var event1 = SomeEvent(_someDateTime);
             var event2 = SomeEvent(_someDateTime + WindowSpan.Times(0.5), WindowSpan);
@@ -179,6 +179,23 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.SlidingWindow
             var event2P1 = SomeEvent(event2.GetTriggeredAt(), WindowSpan.Times(0.5));
             var event2P2 = SomeEvent(_someDateTime + WindowSpan, WindowSpan.Times(0.5));
             AssertWindows(WindowFrom(event1, event2P1), WindowFrom(event2P2));
+        }
+
+        [Test]
+        public void SplitsLongEventToMultipleWindows()
+        {
+            var event1 = SomeEvent(_someDateTime);
+            var event2 = SomeEvent(_someDateTime + WindowSpan.Times(0.5), WindowSpan.Times(2.5));
+
+            _uut.OnStreamStarts(_someDeveloper);
+            _uut.OnEvent(event1);
+            _uut.OnEvent(event2);
+            _uut.OnStreamEnds();
+
+            var event2P1 = SomeEvent(event2.GetTriggeredAt(), WindowSpan.Times(0.5));
+            var event2P2 = SomeEvent(_someDateTime + WindowSpan, WindowSpan);
+            var event2P3 = SomeEvent(_someDateTime + WindowSpan + WindowSpan, WindowSpan);
+            AssertWindows(WindowFrom(event1, event2P1), WindowFrom(event2P2), WindowFrom(event2P3));
         }
 
         [Test]

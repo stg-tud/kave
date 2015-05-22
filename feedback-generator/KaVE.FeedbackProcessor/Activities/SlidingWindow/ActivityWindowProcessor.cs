@@ -74,7 +74,7 @@ namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
                 }
             }
 
-            if (@event.TerminatedAt > _currentWindow.End)
+            while (@event.TerminatedAt > _currentWindow.End)
             {
                 var clone = Clone(@event);
                 clone.TerminatedAt = _currentWindow.End;
