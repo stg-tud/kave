@@ -19,7 +19,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using KaVE.FeedbackProcessor.Activities.Model;
 using KaVE.FeedbackProcessor.Activities.SlidingWindow;
 using KaVE.FeedbackProcessor.Tests.TestUtils;
@@ -28,7 +27,7 @@ using NUnit.Framework;
 namespace KaVE.FeedbackProcessor.Tests.Activities.SlidingWindow
 {
     [TestFixture]
-    internal class DurationActivityMergeStrategyTest : ActivityMergeStrategyContract
+    internal class DurationActivityMergeStrategyTest : WeightedActivityMergeStrategyContract
     {
         protected override IActivityMergeStrategy CreateStrategy()
         {

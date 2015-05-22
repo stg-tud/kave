@@ -26,7 +26,7 @@ using NUnit.Framework;
 namespace KaVE.FeedbackProcessor.Tests.Activities.SlidingWindow
 {
     [TestFixture]
-    internal abstract class ActivityMergeStrategyContract
+    internal abstract class WeightedActivityMergeStrategyContract
     {
         protected IActivityMergeStrategy Strategy { get; private set; }
 

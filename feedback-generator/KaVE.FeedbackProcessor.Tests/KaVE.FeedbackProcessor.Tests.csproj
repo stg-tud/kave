@@ -64,7 +64,7 @@
     <Compile Include="Activities\FindEventMapperTest.cs" />
     <Compile Include="Activities\IDEStateEventMapperTest.cs" />
     <Compile Include="Activities\InstallEventMapperTest.cs" />
-    <Compile Include="Activities\SlidingWindow\ActivityMergeStrategyContract.cs" />
+    <Compile Include="Activities\SlidingWindow\WeightedActivityMergeStrategyContract.cs" />
     <Compile Include="Activities\SlidingWindow\CreateActivityStreamTest.cs" />
     <Compile Include="Activities\SlidingWindow\DurationActivityMergeStrategyTest.cs" />
     <Compile Include="Activities\SlidingWindow\EvaluateActivityStreamTest.cs" />
