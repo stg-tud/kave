@@ -23,9 +23,9 @@ namespace KaVE.Commons.TestUtils.Utils
 {
     public static class DateTimeEx
     {
-        public static TimeSpan Times(this TimeSpan span, int factor)
+        public static TimeSpan Times(this TimeSpan span, double factor)
         {
-            return TimeSpan.FromTicks(factor * span.Ticks);
+            return TimeSpan.FromTicks((long) (factor*span.Ticks));
         }
     }
 }
