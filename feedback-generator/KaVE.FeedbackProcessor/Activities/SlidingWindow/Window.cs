@@ -56,9 +56,14 @@ namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
             get { return Events.Count > 0; }
         }
 
-        public bool EndsBefore(IDEEvent @event)
+        public bool EndsBeforeStartOf(IDEEvent @event)
         {
             return End <= @event.TriggeredAt;
+        }
+
+        public bool EndsBeforeEndOf(IDEEvent @event)
+        {
+            return @event.TerminatedAt > End;
         }
 
         public bool IsOnSameDayAs(IDEEvent @event)

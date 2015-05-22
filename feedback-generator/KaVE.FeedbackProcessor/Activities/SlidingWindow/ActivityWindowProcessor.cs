@@ -54,39 +54,57 @@ namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
         {
             if (_currentWindow == null)
             {
-                _currentWindow = CreateWindowStartingAt(@event.GetTriggeredAt());
+                _currentWindow = CreateWindowStartingAt(@event);
             }
 
-            while (_currentWindow.EndsBefore(@event))
+            while (_currentWindow.EndsBeforeStartOf(@event))
             {
-                if (_currentWindow.IsOnSameDayAs(@event) || _currentWindow.IsNotEmpty)
-                {
-                    AppendMergedWindowToStream();
-                }
-
-                if (_currentWindow.IsOnSameDayAs(@event))
-                {
-                    _currentWindow = CreateWindowStartingAt(_currentWindow.End);
-                }
-                else
-                {
-                    _currentWindow = CreateWindowStartingAt(@event.GetTriggeredAt());
-                }
+                ProceedToNextWindow(@event);
             }
 
-            while (@event.TerminatedAt > _currentWindow.End)
+            while (_currentWindow.EndsBeforeEndOf(@event))
             {
-                var clone = Clone(@event);
-                clone.TerminatedAt = _currentWindow.End;
-                _currentWindow.Add(clone);
-                AppendMergedWindowToStream();
-                _currentWindow = CreateWindowStartingAt(_currentWindow.End);
-                var clone2 = Clone(@event);
-                clone2.Duration = @event.Duration - clone.Duration;
-                clone2.TriggeredAt = _currentWindow.Start;
-                @event = clone2;
+                var headAndTail = SplitAt(@event, _currentWindow.End);
+                _currentWindow.Add(headAndTail.Item1);
+
+                ProceedToNextWindow(@event);
+
+                @event = headAndTail.Item2;
             }
+
             _currentWindow.Add(@event);
+        }
+
+        private void ProceedToNextWindow(ActivityEvent @event)
+        {
+            if (_currentWindow.IsNotEmpty || EmptyWindowRequired(@event))
+            {
+                AppendMergedWindowToStream();
+            }
+
+            if (_currentWindow.IsOnSameDayAs(@event))
+            {
+                _currentWindow = CreateFollowingWindow();
+            }
+            else
+            {
+                _currentWindow = CreateWindowStartingAt(@event);
+            }
+        }
+
+        private bool EmptyWindowRequired(ActivityEvent @event)
+        {
+            return _currentWindow.IsOnSameDayAs(@event);
+        }
+
+        private static Pair<ActivityEvent> SplitAt(ActivityEvent activityEvent, DateTime at)
+        {
+            var head = Clone(activityEvent);
+            head.TerminatedAt = at;
+            var tail = Clone(activityEvent);
+            tail.TriggeredAt = head.TerminatedAt;
+            tail.Duration = activityEvent.Duration - head.Duration;
+            return new Pair<ActivityEvent>(head, tail);
         }
 
         private static ActivityEvent Clone(ActivityEvent originalEvent)
@@ -108,6 +126,16 @@ namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
             ActivityStreams[_currentDeveloper][_currentWindow.Start.Date].Add(
                 _strategy.Merge(_currentWindow));
             _strategy.Reset();
+        }
+
+        private Window CreateWindowStartingAt(ActivityEvent @event)
+        {
+            return CreateWindowStartingAt(@event.GetTriggeredAt());
+        }
+
+        private Window CreateFollowingWindow()
+        {
+            return CreateWindowStartingAt(_currentWindow.End);
         }
 
         private Window CreateWindowStartingAt(DateTime windowStart)
