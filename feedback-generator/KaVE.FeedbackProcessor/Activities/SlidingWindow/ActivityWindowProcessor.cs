@@ -73,6 +73,10 @@ namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
                 }
             }
 
+            if (@event.TerminatedAt > _currentWindow.End)
+            {
+                @event.TerminatedAt = _currentWindow.End;
+            }
             _currentWindow.Add(@event);
         }
 

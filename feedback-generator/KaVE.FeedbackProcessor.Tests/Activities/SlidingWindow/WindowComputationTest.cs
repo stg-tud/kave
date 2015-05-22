@@ -19,6 +19,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using KaVE.Commons.TestUtils.Utils;
 using KaVE.FeedbackProcessor.Activities.Model;
 using KaVE.FeedbackProcessor.Activities.SlidingWindow;
 using KaVE.FeedbackProcessor.Model;
@@ -163,9 +165,29 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.SlidingWindow
             Assert.AreEqual(expected, _testMergeStrategy.NumberOfResets);
         }
 
+        [Test]
+        public void SplitsEventDurationAtWindowEnd()
+        {
+            var event1 = SomeEvent(_someDateTime);
+            var event2 = SomeEvent(_someDateTime + WindowSpan.Times(0.5), WindowSpan);
+
+            _uut.OnStreamStarts(_someDeveloper);
+            _uut.OnEvent(event1);
+            _uut.OnEvent(event2);
+            _uut.OnStreamEnds();
+
+            var window = _testMergeStrategy.Windows[0];
+            Assert.AreEqual(window.End - event2.TriggeredAt, window.Events.Last().Duration);
+        }
+
         private static ActivityEvent SomeEvent(DateTime triggeredAt)
         {
             return new ActivityEvent {TriggeredAt = triggeredAt};
+        }
+
+        private static ActivityEvent SomeEvent(DateTime triggeredAt, TimeSpan duration)
+        {
+            return new ActivityEvent { TriggeredAt = triggeredAt, Duration = duration };
         }
 
         private static Window EmptyWindow(DateTime windowStart)
