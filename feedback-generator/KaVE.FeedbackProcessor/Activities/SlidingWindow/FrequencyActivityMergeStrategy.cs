@@ -28,15 +28,16 @@ namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
     {
         private Activity? _lastActivity;
 
-        public Activity Merge(IList<Activity> window, IList<ActivityEvent> window2)
+        public Activity Merge(IList<ActivityEvent> window)
         {
-            if (IsEmptyWindow(window))
+            var activities = window.Select(e => e.Activity).ToList();
+            if (IsEmptyWindow(activities))
             {
                 _lastActivity = Activity.Waiting;
             }
             else
             {
-                _lastActivity = MergeNonEmptyWindow(window);
+                _lastActivity = MergeNonEmptyWindow(activities);
             }
             return _lastActivity.Value;
         }

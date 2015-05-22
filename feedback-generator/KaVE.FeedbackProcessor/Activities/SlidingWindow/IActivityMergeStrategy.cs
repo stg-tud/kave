@@ -24,7 +24,7 @@ namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
 {
     internal interface IActivityMergeStrategy
     {
-        Activity Merge(IList<Activity> window, IList<ActivityEvent> window2);
+        Activity Merge(IList<ActivityEvent> window);
         void Reset();
     }
 }

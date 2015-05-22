@@ -104,7 +104,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.SlidingWindow
 
         private class TestMergeStrategy : IActivityMergeStrategy
         {
-            public Activity Merge(IList<Activity> window, IList<ActivityEvent> window2)
+            public Activity Merge(IList<ActivityEvent> window)
             {
                 return Activity.Away;
             }

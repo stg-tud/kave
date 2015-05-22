@@ -190,9 +190,9 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.SlidingWindow
             public readonly IList<IList<ActivityEvent>> Windows = new List<IList<ActivityEvent>>();
             public int NumberOfResets { get; private set; }
 
-            public Activity Merge(IList<Activity> window, IList<ActivityEvent> window2)
+            public Activity Merge(IList<ActivityEvent> window)
             {
-                Windows.Add(window2);
+                Windows.Add(window);
                 return Activity.Any;
             }
 

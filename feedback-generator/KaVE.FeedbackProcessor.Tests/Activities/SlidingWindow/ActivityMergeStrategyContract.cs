@@ -41,7 +41,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.SlidingWindow
         [Test]
         public void ReturnsWaitingForEmptyWindow()
         {
-            var actual = Strategy.Merge(EmptyWindow(), new List<ActivityEvent>());
+            var actual = Strategy.Merge(EmptyWindow());
 
             Assert.AreEqual(Activity.Waiting, actual);
         }
@@ -49,7 +49,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.SlidingWindow
         [Test]
         public void IgnoresAnyActivity()
         {
-            var actual = Strategy.Merge(Window(Activity.Any, Activity.Any, Activity.Navigation), new List<ActivityEvent>());
+            var actual = Strategy.Merge(Window(Activity.Any, Activity.Any, Activity.Navigation));
 
             Assert.AreEqual(Activity.Navigation, actual);
         }
@@ -57,7 +57,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.SlidingWindow
         [Test]
         public void MapsOnlyAnyToOtherByDefault()
         {
-            var actual = Strategy.Merge(Window(Activity.Any), new List<ActivityEvent>());
+            var actual = Strategy.Merge(Window(Activity.Any));
 
             Assert.AreEqual(Activity.Other, actual);
         }
@@ -65,8 +65,8 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.SlidingWindow
         [Test]
         public void MapsOnlyAnyToPrevious()
         {
-            var previous = Strategy.Merge(Window(Activity.Development), new List<ActivityEvent>());
-            var actual = Strategy.Merge(Window(Activity.Any), new List<ActivityEvent>());
+            var previous = Strategy.Merge(Window(Activity.Development));
+            var actual = Strategy.Merge(Window(Activity.Any));
 
             Assert.AreEqual(previous, actual);
         }
@@ -74,9 +74,9 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.SlidingWindow
         [Test]
         public void ClearsPreviousOnReset()
         {
-            Strategy.Merge(Window(Activity.Development), new List<ActivityEvent>());
+            Strategy.Merge(Window(Activity.Development));
             Strategy.Reset();
-            var actual = Strategy.Merge(Window(Activity.Any), new List<ActivityEvent>());
+            var actual = Strategy.Merge(Window(Activity.Any));
 
             Assert.AreEqual(Activity.Other, actual);
         }
@@ -84,20 +84,20 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.SlidingWindow
         [TestCase(Activity.Waiting), TestCase(Activity.Away)]
         public void MapsOnlyAnyToOtherIfPreviousIsWaitingOrAway(Activity waitingOrAway)
         {
-            Strategy.Merge(Window(waitingOrAway), new List<ActivityEvent>());
-            var actual = Strategy.Merge(Window(Activity.Any), new List<ActivityEvent>());
+            Strategy.Merge(Window(waitingOrAway));
+            var actual = Strategy.Merge(Window(Activity.Any));
 
             Assert.AreEqual(Activity.Other, actual);
         }
 
-        protected static IList<Activity> EmptyWindow()
+        protected static IList<ActivityEvent> EmptyWindow()
         {
             return Window( /* no activities */);
         }
 
-        protected static IList<Activity> Window(params Activity[] activities)
+        protected static IList<ActivityEvent> Window(params Activity[] activities)
         {
-            return activities.ToList();
+            return activities.Select(a => new ActivityEvent{Activity = a}).ToList();
         }
     }
 }

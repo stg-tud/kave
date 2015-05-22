@@ -17,7 +17,6 @@
  *    - Sven Amann
  */
 
-using System.Collections.Generic;
 using KaVE.FeedbackProcessor.Activities.Model;
 using KaVE.FeedbackProcessor.Activities.SlidingWindow;
 using NUnit.Framework;
@@ -35,8 +34,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.SlidingWindow
         [Test]
         public void PicksMostFrequentActivity()
         {
-            var actual = Strategy.Merge(
-                Window(Activity.Development, Activity.Any, Activity.Development, Activity.Navigation), new List<ActivityEvent>());
+            var actual = Strategy.Merge(Window(Activity.Development, Activity.Any, Activity.Development, Activity.Navigation));
 
             Assert.AreEqual(Activity.Development, actual);
         }
@@ -44,7 +42,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.SlidingWindow
         [Test]
         public void PicksLaterActivityOnEqualsFrequence()
         {
-            var actual = Strategy.Merge(Window(Activity.Development, Activity.Navigation), new List<ActivityEvent>());
+            var actual = Strategy.Merge(Window(Activity.Development, Activity.Navigation));
 
             Assert.AreEqual(Activity.Navigation, actual);
         }
