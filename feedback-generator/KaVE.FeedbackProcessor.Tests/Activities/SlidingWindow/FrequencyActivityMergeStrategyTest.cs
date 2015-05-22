@@ -28,7 +28,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.SlidingWindow
     {
         protected override IActivityMergeStrategy CreateStrategy()
         {
-            return new FrequencyActivityMergeStrategy();
+            return new WeightedActivityMergeStrategy(WeightedActivityMergeStrategy.FrequencyActivityWeighter);
         }
 
         [Test]

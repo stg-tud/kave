@@ -232,7 +232,7 @@ namespace KaVE.FeedbackProcessor
         private static void LogActivityStatistics(IFeedbackDatabase activityDatabase)
         {
             var processor = new FeedbackProcessor(activityDatabase, Logger);
-            var activityWindowProcessor = new ActivityWindowProcessor(new FrequencyActivityMergeStrategy(), TimeSpan.FromSeconds(1));
+            var activityWindowProcessor = new ActivityWindowProcessor(new WeightedActivityMergeStrategy(WeightedActivityMergeStrategy.FrequencyActivityWeighter), TimeSpan.FromSeconds(1));
             processor.Register(activityWindowProcessor);
             processor.ProcessFeedback();
 

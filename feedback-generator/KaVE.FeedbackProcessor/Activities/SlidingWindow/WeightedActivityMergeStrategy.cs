@@ -19,40 +19,49 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using KaVE.Commons.Utils.Collections;
 using KaVE.FeedbackProcessor.Activities.Model;
 
 namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
 {
-    internal class FrequencyActivityMergeStrategy : IActivityMergeStrategy
+    internal class WeightedActivityMergeStrategy : IActivityMergeStrategy
     {
+        public static readonly ActivityWeighter FrequencyActivityWeighter =
+            (activity, window) => window.Count(e => e.Activity == activity);
+
+        public delegate int ActivityWeighter(Activity activity, IList<ActivityEvent> window);
+
+        private readonly ActivityWeighter _activityWeighter;
         private Activity? _lastActivity;
+
+        public WeightedActivityMergeStrategy(ActivityWeighter activityWeighter)
+        {
+            _activityWeighter = activityWeighter;
+        }
 
         public Activity Merge(IList<ActivityEvent> window)
         {
-            var activities = window.Select(e => e.Activity).ToList();
-            if (IsEmptyWindow(activities))
+            if (IsEmptyWindow(window))
             {
                 _lastActivity = Activity.Waiting;
             }
             else
             {
-                _lastActivity = MergeNonEmptyWindow(activities);
+                _lastActivity = MergeNonEmptyWindow(window);
             }
             return _lastActivity.Value;
         }
 
-        private static bool IsEmptyWindow(ICollection<Activity> window)
+        private static bool IsEmptyWindow(ICollection<ActivityEvent> window)
         {
             return window.Count == 0;
         }
 
-        private Activity MergeNonEmptyWindow(IEnumerable<Activity> window)
+        private Activity MergeNonEmptyWindow(IEnumerable<ActivityEvent> window)
         {
             var windowWithoutAny = WithoutAnyActivity(window);
             if (!IsEmptyWindow(windowWithoutAny))
             {
-                return GetLastMostFrequentActivity(windowWithoutAny);
+                return SelectsRepresentativeActivity(windowWithoutAny);
             }
             if (_lastActivity == null || IsInactivity(_lastActivity))
             {
@@ -61,18 +70,25 @@ namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
             return _lastActivity.Value;
         }
 
-        private static Activity GetLastMostFrequentActivity(IList<Activity> windowWithoutAny)
+        private Activity SelectsRepresentativeActivity(IList<ActivityEvent> window)
         {
-            var activities = new Multiset<Activity>(windowWithoutAny);
-            var maxFrequency = activities.EntryDictionary.Max(kvp => kvp.Value);
-            var mostFrequentActivities =
-                activities.EntryDictionary.Where(kvp => kvp.Value == maxFrequency).Select(kvp => kvp.Key);
-            return windowWithoutAny.Last(mostFrequentActivities.Contains);
+            var representativeActivity = Activity.Any;
+            var maxActivityWeight = 0;
+            foreach (var activity in window.Select(e => e.Activity))
+            {
+                var weightOfActivity = _activityWeighter(activity, window);
+                if (weightOfActivity >= maxActivityWeight)
+                {
+                    representativeActivity = activity;
+                    maxActivityWeight = weightOfActivity;
+                }
+            }
+            return representativeActivity;
         }
 
-        private static IList<Activity> WithoutAnyActivity(IEnumerable<Activity> window)
+        private static IList<ActivityEvent> WithoutAnyActivity(IEnumerable<ActivityEvent> window)
         {
-            return window.Where(a => a != Activity.Any).ToList();
+            return window.Where(e => e.Activity != Activity.Any).ToList();
         }
 
         private static bool IsInactivity(Activity? lastActivity)
