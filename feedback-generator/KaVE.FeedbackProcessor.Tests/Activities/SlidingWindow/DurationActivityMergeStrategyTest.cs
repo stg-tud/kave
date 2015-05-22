@@ -36,7 +36,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.SlidingWindow
         [Test]
         public void SelectsLongestActivity()
         {
-            var actual = Strategy.Merge(Window(Event(Activity.Development, 50), Event(Activity.Navigation, 10)));
+            var actual = Strategy.Merge(Window(Event(Activity.Development, 1000), Event(Activity.Navigation, 900)));
 
             Assert.AreEqual(Activity.Development, actual);
         }
@@ -47,16 +47,34 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.SlidingWindow
             var actual =
                 Strategy.Merge(
                     Window(
-                        Event(Activity.Development, 5),
-                        Event(Activity.Navigation, 10),
-                        Event(Activity.Development, 8)));
+                        Event(Activity.Development, 800),
+                        Event(Activity.Navigation, 1000),
+                        Event(Activity.Development, 900)));
 
             Assert.AreEqual(Activity.Development, actual);
         }
 
-        private static IList<ActivityEvent> Window(params ActivityEvent[] activityEvents)
+        [Test(Description = "We assume that every activity de facto needs some minimal amount of a developer's time")]
+        public void UsesMinimalDurationForEventsWithoutDuration()
         {
-            return activityEvents;
+            var actual = Strategy.Merge(
+                Window(
+                    Event(Activity.Navigation, 0),
+                    Event(Activity.Navigation, 0),
+                    Event(Activity.Other, 200),
+                    Event(Activity.Navigation, 0)));
+
+            Assert.AreEqual(Activity.Navigation, actual);
+        }
+
+        [Test]
+        public void SelectsLaterActivityOnEqualDuration()
+        {
+            var actual = Strategy.Merge(Window(Activity.Development, Activity.Navigation));
+
+            Assert.AreEqual(Activity.Navigation, actual);
+        }
+
         private static Window Window(params ActivityEvent[] activityEvents)
         {
             var window = new Window(DateTimeFactory.SomeWorkingHoursDateTime(), TimeSpan.FromSeconds(5));

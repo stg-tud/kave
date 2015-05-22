@@ -17,18 +17,34 @@
  *    - Sven Amann
  */
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using KaVE.FeedbackProcessor.Activities.Model;
 
 namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
 {
-    class DurationActivityMergingStrategy : WeightedActivityMergeStrategy
+    internal class DurationActivityMergingStrategy : WeightedActivityMergeStrategy
     {
+        private static readonly TimeSpan MinimalActivityDuration = TimeSpan.FromMilliseconds(100);
+
         protected override int GetWeightOfActivity(IList<ActivityEvent> window, Activity activity)
         {
-            return window.Where(e => e.Activity == activity)
-                         .Sum(a => a.Duration != null ? (int) a.Duration.Value.TotalMilliseconds : 0);
+            return window.Where(e => e.Activity == activity).Sum(a => GetDuration(a));
+        }
+
+        private static int GetDuration(ActivityEvent a)
+        {
+            TimeSpan duration;
+            if (a.Duration == null || a.Duration < MinimalActivityDuration)
+            {
+                duration = MinimalActivityDuration;
+            }
+            else
+            {
+                duration = a.Duration.Value;
+            }
+            return (int) duration.TotalMilliseconds;
         }
     }
 }
