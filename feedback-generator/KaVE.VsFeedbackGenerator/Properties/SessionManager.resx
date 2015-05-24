@@ -300,4 +300,7 @@
   <data name="EventProposals" xml:space="preserve">
     <value>Vorschläge</value>
   </data>
+  <data name="EventSelection" xml:space="preserve">
+    <value>Ausgewählt</value>
+  </data>
 </root>

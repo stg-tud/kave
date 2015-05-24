@@ -283,6 +283,17 @@ Contributors:
                                                                   VerticalScrollBarVisibility="Auto"
                                                                   HorizontalScrollBarVisibility="Auto" />
                         </TabItem>
+                        <!-- SELECTIONS TAB -->
+                        <TabItem Header="{x:Static root:Properties.SessionManager.EventSelection}"
+                                 DataContext="{Binding XamlSelectionsRepresentation}"
+                                 Visibility="{Binding Converter={StaticResource ObjectToVisibilityConverter}, Path=., FallbackValue=Collapsed}">
+                            <presentation:XamlBindableRichTextBox Xaml="{Binding .}"
+                                                                  BorderThickness="0"
+                                                                  HorizontalAlignment="Stretch"
+                                                                  VerticalAlignment="Stretch"
+                                                                  VerticalScrollBarVisibility="Auto"
+                                                                  HorizontalScrollBarVisibility="Auto" />
+                        </TabItem>
                         <!-- RAW TAB -->
                         <TabItem Header="{x:Static root:Properties.SessionManager.RawView}">
                             <presentation:XamlBindableRichTextBox Xaml="{Binding XamlRawRepresentation}"

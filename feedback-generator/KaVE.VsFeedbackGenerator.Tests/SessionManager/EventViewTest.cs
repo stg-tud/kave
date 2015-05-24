@@ -18,6 +18,7 @@
  *    - Andreas Bauer
  */
 
+using System;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Model.Names.CSharp;
@@ -108,6 +109,47 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
 
             var view = new EventViewModel(someEvent);
             Assert.IsNull(view.XamlProposalsRepresentation);
+        }
+
+        [Test]
+        public void FormatsCompletionEventSelections()
+        {
+            var completionEvent = new CompletionEvent
+            {
+                ProposalCollection =
+                {
+                    new Proposal { Name = FieldName.Get("[FieldType,P] [TestClass,P].SomeField") },
+                    new Proposal { Name = EventName.Get("[EventType`1[[T -> EventArgsType,P]],P] [DeclaringType,P].E") },
+                    new Proposal { Name = MethodName.Get("[ReturnType,P] [DeclaringType,P].M([ParameterType,P] p)") }
+                },
+                Selections =
+                {
+                    new ProposalSelection { 
+                        Proposal = new Proposal { Name = FieldName.Get("[FieldType,P] [TestClass,P].SomeField") },
+                        SelectedAfter = TimeSpan.FromSeconds(1)
+                    },
+                    new ProposalSelection { 
+                        Proposal = new Proposal { Name = EventName.Get("[EventType`1[[T -> EventArgsType,P]],P] [DeclaringType,P].E") },
+                        SelectedAfter = TimeSpan.FromSeconds(2)
+                    },
+                    new ProposalSelection { 
+                        Proposal = new Proposal { Name = MethodName.Get("[ReturnType,P] [DeclaringType,P].M([ParameterType,P] p)") },
+                        SelectedAfter = TimeSpan.FromSeconds(3)
+                    }
+                }
+            };
+
+            var view = new EventViewModel(completionEvent);
+            Assert.IsNotNullOrEmpty(view.XamlSelectionsRepresentation);
+        }
+
+        [Test]
+        public void DoesntFormatSelectionsForOtherEvents()
+        {
+            var someEvent = IDEEventTestFactory.SomeEvent();
+
+            var view = new EventViewModel(someEvent);
+            Assert.IsNull(view.XamlSelectionsRepresentation);
         }
     }
 }

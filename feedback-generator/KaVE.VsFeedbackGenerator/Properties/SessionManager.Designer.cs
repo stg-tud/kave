@@ -205,6 +205,15 @@ namespace KaVE.VsFeedbackGenerator.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Ausgewählt.
+        /// </summary>
+        public static string EventSelection {
+            get {
+                return ResourceManager.GetString("EventSelection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Startzeit.
         /// </summary>
         public static string EventTime {

@@ -20,6 +20,7 @@
  */
 
 using System;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using KaVE.Commons.Model.Events;
@@ -37,6 +38,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
         private string _xamlDetails;
         private string _xamlRaw;
         private string _xamlProposals;
+        private string _xamlSelections;
 
         public EventViewModel(IDEEvent evt)
         {
@@ -90,21 +92,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
                 {
                     proposalRepresentation.Append("• ");
 
-                    if (proposal.Name != null)
-                    {
-                        var identifier = proposal.Name.Identifier;
-
-                        if (!String.IsNullOrEmpty(completionEvent.Prefix))
-                        {
-                            identifier = Regex.Replace(identifier, completionEvent.Prefix, "<Bold>$0</Bold>", RegexOptions.IgnoreCase);
-                        }
-
-                        proposalRepresentation.Append(identifier);
-                    }
-                    else
-                    {
-                        proposalRepresentation.Append("???");
-                    }
+                    AppendProposalName(proposalRepresentation, proposal, completionEvent.Prefix);
 
                     proposalRepresentation.AppendLine();
                 }
@@ -113,6 +101,58 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             }
 
             return null;
+        }
+
+        public string XamlSelectionsRepresentation
+        {
+            get { return _xamlSelections ?? (_xamlSelections = GetFormattedSelections()); }
+        }
+
+        private string GetFormattedSelections()
+        {
+            var completionEvent = Event as CompletionEvent;
+
+            if (completionEvent != null && completionEvent.Selections.Any())
+            {
+                var proposalRepresentation = new StringBuilder();
+
+                foreach (var selection in completionEvent.Selections)
+                {
+                    proposalRepresentation.Append("• ");
+
+                    if (selection.SelectedAfter != null)
+                    {
+                        proposalRepresentation.Append("<Bold>").Append(selection.SelectedAfter).Append("</Bold> ");
+                    }
+
+                    AppendProposalName(proposalRepresentation, selection.Proposal, completionEvent.Prefix);
+
+                    proposalRepresentation.AppendLine();
+                }
+
+                return proposalRepresentation.ToString();
+            }
+
+            return null;
+        }
+
+        private static void AppendProposalName(StringBuilder proposalRepresentation, IProposal proposal, string prefix)
+        {
+            if (proposal.Name != null)
+            {
+                var identifier = proposal.Name.Identifier;
+
+                if (!String.IsNullOrEmpty(prefix))
+                {
+                    identifier = Regex.Replace(identifier, prefix, "<Bold>$0</Bold>", RegexOptions.IgnoreCase);
+                }
+
+                proposalRepresentation.Append(identifier);
+            }
+            else
+            {
+                proposalRepresentation.Append("???");
+            }
         }
 
         public string XamlContextRepresentation
