@@ -20,6 +20,8 @@
  */
 
 using System;
+using System.Text;
+using System.Text.RegularExpressions;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Utils;
@@ -34,6 +36,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
         private string _xamlContext;
         private string _xamlDetails;
         private string _xamlRaw;
+        private string _xamlProposals;
 
         public EventViewModel(IDEEvent evt)
         {
@@ -68,6 +71,48 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
         public double DurationInMilliseconds
         {
             get { return Event.Duration.HasValue ? Event.Duration.Value.TotalMilliseconds : 0; }
+        }
+
+        public string XamlProposalsRepresentation
+        {
+            get { return _xamlProposals ?? (_xamlProposals = GetProposalsFormattedAsBulletList()); }
+        }
+
+        private string GetProposalsFormattedAsBulletList()
+        {
+            var completionEvent = Event as CompletionEvent;
+
+            if (completionEvent != null)
+            {
+                var proposalRepresentation = new StringBuilder();
+
+                foreach (var proposal in completionEvent.ProposalCollection)
+                {
+                    proposalRepresentation.Append("• ");
+
+                    if (proposal.Name != null)
+                    {
+                        var identifier = proposal.Name.Identifier;
+
+                        if (!String.IsNullOrEmpty(completionEvent.Prefix))
+                        {
+                            identifier = Regex.Replace(identifier, completionEvent.Prefix, "<Bold>$0</Bold>", RegexOptions.IgnoreCase);
+                        }
+
+                        proposalRepresentation.Append(identifier);
+                    }
+                    else
+                    {
+                        proposalRepresentation.Append("???");
+                    }
+
+                    proposalRepresentation.AppendLine();
+                }
+
+                return proposalRepresentation.ToString();
+            }
+
+            return null;
         }
 
         public string XamlContextRepresentation
@@ -107,6 +152,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
         {
             get { return _xamlRaw ?? (_xamlRaw = AddSyntaxHighlightingIfNotTooLong(Event.ToFormattedJson())); }
         }
+
 
         /// <summary>
         ///     Adds syntax highlighting (Xaml formatting) to the json, if the json ist not too long.

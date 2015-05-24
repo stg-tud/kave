@@ -45,7 +45,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
         }
 
         [Test]
-        public void FormatsCompletionEventSST()
+        public void FormatsCompletionEventContext()
         {
             var completionEvent = new CompletionEvent
             {
@@ -57,12 +57,57 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
         }
 
         [Test]
-        public void DoesntFormatOtherEvents()
+        public void DoesntDisplayContextForOtherEvents()
         {
             var someEvent = IDEEventTestFactory.SomeEvent();
 
             var view = new EventViewModel(someEvent);
             Assert.IsNull(view.XamlContextRepresentation);
+        }
+
+        [Test]
+        public void FormatsCompletionEventProposals()
+        {
+            var completionEvent = new CompletionEvent
+            {
+                ProposalCollection =
+                {
+                    new Proposal { Name = FieldName.Get("[FieldType,P] [TestClass,P].SomeField") },
+                    new Proposal { Name = EventName.Get("[EventType`1[[T -> EventArgsType,P]],P] [DeclaringType,P].E") },
+                    new Proposal { Name = MethodName.Get("[ReturnType,P] [DeclaringType,P].M([ParameterType,P] p)") }
+                }
+            };
+
+            var view = new EventViewModel(completionEvent);
+            Assert.IsNotNullOrEmpty(view.XamlProposalsRepresentation);
+        }
+
+        [Test]
+        public void HighlightsPrefixInProposalBox()
+        {
+            var completionEvent = new CompletionEvent
+            {
+                ProposalCollection =
+                {
+                    new Proposal { Name = FieldName.Get("[FieldType,P] [TestClass,P].SomeField") },
+                    new Proposal { Name = EventName.Get("[EventType`1[[T -> EventArgsType,P]],P] [DeclaringType,P].SomeEvent") },
+                    new Proposal { Name = MethodName.Get("[ReturnType,P] [DeclaringType,P].SomeMethod([ParameterType,P] p)") }
+                },
+                Prefix = "Some"
+            };
+
+            var view = new EventViewModel(completionEvent);
+            Assert.IsNotNullOrEmpty(view.XamlProposalsRepresentation);
+            StringAssert.Contains("<Bold>Some</Bold>", view.XamlProposalsRepresentation);
+        }
+
+        [Test]
+        public void DoesntDisplayProposalsForOtherEvents()
+        {
+            var someEvent = IDEEventTestFactory.SomeEvent();
+
+            var view = new EventViewModel(someEvent);
+            Assert.IsNull(view.XamlProposalsRepresentation);
         }
     }
 }

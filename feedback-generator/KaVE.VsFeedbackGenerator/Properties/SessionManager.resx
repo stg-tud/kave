@@ -297,4 +297,7 @@
   <data name="VisitUploadPage_Button" xml:space="preserve">
     <value>Webseite für manuelles Hochladen</value>
   </data>
+  <data name="EventProposals" xml:space="preserve">
+    <value>Vorschläge</value>
+  </data>
 </root>

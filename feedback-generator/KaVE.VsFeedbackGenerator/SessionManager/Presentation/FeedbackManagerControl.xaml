@@ -84,7 +84,8 @@ Contributors:
                         Click="VisitUploadPageButton_OnClick">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="/KaVE.VsFeedbackGenerator;Component/Resources/website.png" />
-                        <TextBlock Text="{x:Static root:Properties.SessionManager.VisitUploadPage_Button}" Margin="3,0,0,0" />
+                        <TextBlock Text="{x:Static root:Properties.SessionManager.VisitUploadPage_Button}"
+                                   Margin="3,0,0,0" />
                     </StackPanel>
                 </Button>
                 <Button ToolTip="{x:Static root:Properties.SessionManager.Options}"
@@ -98,7 +99,8 @@ Contributors:
                         Click="VisitHomepageButton_OnClick">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="/KaVE.VsFeedbackGenerator;Component/Resources/website.png" />
-                        <TextBlock Text="{x:Static root:Properties.SessionManager.VisitHomepage_Button}" Margin="3,0,0,0" />
+                        <TextBlock Text="{x:Static root:Properties.SessionManager.VisitHomepage_Button}"
+                                   Margin="3,0,0,0" />
                     </StackPanel>
                 </Button>
             </ToolBar>
@@ -262,16 +264,29 @@ Contributors:
                         <TabItem Header="{x:Static root:Properties.SessionManager.EventContext}"
                                  DataContext="{Binding XamlContextRepresentation}"
                                  Visibility="{Binding Converter={StaticResource ObjectToVisibilityConverter}, Path=., FallbackValue=Collapsed}">
+                            <presentation:XamlBindableRichTextBox Xaml="{Binding .}" 
+                                                                  BorderThickness="0"
+                                                                  HorizontalAlignment="Stretch"
+                                                                  VerticalAlignment="Stretch"
+                                                                  VerticalScrollBarVisibility="Auto"
+                                                                  HorizontalScrollBarVisibility="Auto"
+                                                                  FontFamily="Consolas" />
+                        </TabItem>
+                        <!-- PROPOSALS TAB -->
+                        <TabItem Header="{x:Static root:Properties.SessionManager.EventProposals}"
+                                 DataContext="{Binding XamlProposalsRepresentation}"
+                                 Visibility="{Binding Converter={StaticResource ObjectToVisibilityConverter}, Path=., FallbackValue=Collapsed}">
                             <presentation:XamlBindableRichTextBox Xaml="{Binding .}"
-                                                                              HorizontalAlignment="Stretch"
-                                                                              VerticalAlignment="Stretch"
-                                                                              VerticalScrollBarVisibility="Auto"
-                                                                              HorizontalScrollBarVisibility="Auto"
-                                                                              FontFamily="Consolas" />
+                                                                  BorderThickness="0"
+                                                                  HorizontalAlignment="Stretch"
+                                                                  VerticalAlignment="Stretch"
+                                                                  VerticalScrollBarVisibility="Auto"
+                                                                  HorizontalScrollBarVisibility="Auto" />
                         </TabItem>
                         <!-- RAW TAB -->
                         <TabItem Header="{x:Static root:Properties.SessionManager.RawView}">
                             <presentation:XamlBindableRichTextBox Xaml="{Binding XamlRawRepresentation}"
+                                                                  BorderThickness="0"
                                                                   HorizontalAlignment="Stretch"
                                                                   VerticalAlignment="Stretch"
                                                                   VerticalScrollBarVisibility="Auto"
