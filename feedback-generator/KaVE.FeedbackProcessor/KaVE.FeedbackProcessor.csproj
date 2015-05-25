@@ -135,6 +135,7 @@
     <Compile Include="Statistics\ParallelIDEInstancesStatisticCalculator.cs" />
     <Compile Include="Statistics\WindowNameCollector.cs" />
     <Compile Include="Utils\EventMappingUtils.cs" />
+    <Compile Include="Utils\FixedSizeQueue.cs" />
     <Compile Include="Utils\Pair.cs" />
     <Compile Include="Utils\ResourceProvider.cs" />
     <Compile Include="Utils\SortedCommandPair.cs" />

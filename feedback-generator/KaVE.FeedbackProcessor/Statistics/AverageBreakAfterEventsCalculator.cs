@@ -20,6 +20,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Utils.Csv;
 using KaVE.FeedbackProcessor.Model;
@@ -29,39 +30,35 @@ namespace KaVE.FeedbackProcessor.Statistics
 {
     internal class AverageBreakAfterEventsCalculator : BaseEventProcessor
     {
-        public readonly IDictionary<string, Tuple<TimeSpan, int>> Statistic = new Dictionary<string, Tuple<TimeSpan, int>>();
+        public const char StatisticStringSeparator = ';';
+        public const string EventAfterBreakSeparator = " || Next Event: ";
+
+        public static int MaxEventsBeforeBreak = 5;
+
+        public static TimeSpan MinBreakTime = TimeSpan.FromSeconds(30);
+
+        public static bool AddEventAfterBreakToStatistic = true;
+
+        public readonly IDictionary<string, Tuple<TimeSpan, int>> Statistic =
+            new Dictionary<string, Tuple<TimeSpan, int>>();
 
         private readonly IDictionary<string, List<TimeSpan>> _breaks = new Dictionary<string, List<TimeSpan>>();
 
-        private IDEEvent _lastEvent;
+        private readonly FixedSizeQueue<IDEEvent> _eventCache = new FixedSizeQueue<IDEEvent>(MaxEventsBeforeBreak);
 
         public AverageBreakAfterEventsCalculator()
         {
             RegisterFor<IDEEvent>(HandleEvent);
         }
 
-        public void HandleEvent(IDEEvent @event)
+        public override void OnStreamStarts(Developer developer)
         {
-            if (_lastEvent != null)
-            {
-                var breakAfterLastEvent = @event.GetTriggeredAt() - _lastEvent.GetTriggeredAt();
-                var lastEventString = EventMappingUtils.GetAbstractStringOf(_lastEvent);
-                AddToBreaks(lastEventString, breakAfterLastEvent);
-            }
+            _breaks.Clear();
 
-            _lastEvent = @event;
-        }
+            _eventCache.Limit = MaxEventsBeforeBreak;
+            _eventCache.Clear();
 
-        private void AddToBreaks(string lastEventString, TimeSpan breakAfterLastEvent)
-        {
-            if (_breaks.ContainsKey(lastEventString))
-            {
-                _breaks[lastEventString].Add(breakAfterLastEvent);
-            }
-            else
-            {
-                _breaks.Add(lastEventString, new List<TimeSpan> {breakAfterLastEvent});
-            }
+            base.OnStreamStarts(developer);
         }
 
         public override void OnStreamEnds()
@@ -84,6 +81,61 @@ namespace KaVE.FeedbackProcessor.Statistics
                     Statistic.Add(key, new Tuple<TimeSpan, int>(averageBreakTime, occurences));
                 }
             }
+        }
+
+        public void HandleEvent(IDEEvent @event)
+        {
+            if (_eventCache.Count > 0 && BreakOccured(@event))
+            {
+                AddCacheToBreaks(@event);
+                _eventCache.Clear();
+            }
+
+            _eventCache.Enqueue(@event);
+        }
+
+        private bool BreakOccured(IDEEvent nextEvent)
+        {
+            return (nextEvent.GetTriggeredAt() - _eventCache.Last().GetTriggeredAt()) >= MinBreakTime;
+        }
+
+        private void AddCacheToBreaks(IDEEvent lateEvent)
+        {
+            var breakAfterLastEvent = lateEvent.GetTriggeredAt() - _eventCache.Last().GetTriggeredAt();
+
+            var lastEventsString = GenerateLastEventsString(lateEvent);
+
+            if (_breaks.ContainsKey(lastEventsString))
+            {
+                _breaks[lastEventsString].Add(breakAfterLastEvent);
+            }
+            else
+            {
+                _breaks.Add(lastEventsString, new List<TimeSpan> {breakAfterLastEvent});
+            }
+        }
+
+        private string GenerateLastEventsString(IDEEvent lateEvent)
+        {
+            return AddEventAfterBreakToStatistic
+                ? String.Format(
+                    "{0}{1}{2}",
+                    GenerateStringFromCache(),
+                    EventAfterBreakSeparator,
+                    EventMappingUtils.GetAbstractStringOf(lateEvent))
+                : GenerateStringFromCache();
+        }
+
+        private string GenerateStringFromCache()
+        {
+            var cacheStringBuilder = new StringBuilder();
+
+            _eventCache.ToList().ForEach(
+                ideEvent =>
+                    cacheStringBuilder.Append(
+                        EventMappingUtils.GetAbstractStringOf(ideEvent) + StatisticStringSeparator));
+
+            return cacheStringBuilder.ToString().TrimEnd(StatisticStringSeparator);
         }
 
         private static TimeSpan GetAverageTime(IEnumerable<TimeSpan> timeSpans)

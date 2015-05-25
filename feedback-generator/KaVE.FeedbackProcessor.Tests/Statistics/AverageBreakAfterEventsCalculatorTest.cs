@@ -21,7 +21,9 @@ using System;
 using System.Collections.Generic;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.TestUtils.Model.Events;
+using KaVE.FeedbackProcessor.Model;
 using KaVE.FeedbackProcessor.Statistics;
+using KaVE.FeedbackProcessor.Tests.TestUtils;
 using KaVE.FeedbackProcessor.Utils;
 using NUnit.Framework;
 
@@ -36,6 +38,9 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
         public void Setup()
         {
             _uut = new AverageBreakAfterEventsCalculator();
+            AverageBreakAfterEventsCalculator.MinBreakTime = TimeSpan.FromSeconds(1);
+            AverageBreakAfterEventsCalculator.MaxEventsBeforeBreak = 2;
+            AverageBreakAfterEventsCalculator.AddEventAfterBreakToStatistic = false;
         }
 
         [Test]
@@ -49,6 +54,9 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
         [Test]
         public void ShouldFillStatisticAtStreamEnds()
         {
+            AverageBreakAfterEventsCalculator.MaxEventsBeforeBreak = 1;
+            AverageBreakAfterEventsCalculator.MinBreakTime = TimeSpan.Zero;
+
             var now = DateTime.Now;
 
             var listOfEvents = new List<IDEEvent>
@@ -96,6 +104,179 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
             listOfEvents.ForEach(@event => _uut.OnEvent(@event));
             _uut.OnStreamEnds();
 
+            CollectionAssert.AreEquivalent(expectedStatistic, _uut.Statistic);
+        }
+
+        [Test]
+        public void ShouldUseMultipleEventsWhenMaxEventsBeforeBreakIsGreaterThanOne()
+        {
+            AverageBreakAfterEventsCalculator.MaxEventsBeforeBreak = 2;
+
+            var triggeredAt = DateTimeFactory.SomeWorkingHoursDateTime();
+
+            var firstEvent = new TestIDEEvent
+            {
+                TriggeredAt = triggeredAt
+            };
+            var secondEvent = new CommandEvent
+            {
+                TriggeredAt = triggeredAt
+            };
+            var lateEvent = new TestIDEEvent
+            {
+                TriggeredAt = triggeredAt + AverageBreakAfterEventsCalculator.MinBreakTime
+            };
+
+
+            var listOfEvents = new List<IDEEvent>
+            {
+                firstEvent,
+                secondEvent,
+                lateEvent
+            };
+
+            _uut.OnStreamStarts(new Developer());
+            listOfEvents.ForEach(@event => _uut.OnEvent(@event));
+            _uut.OnStreamEnds();
+
+
+            var expectedStatistic = new Dictionary<string, Tuple<TimeSpan, int>>
+            {
+                {
+                    String.Format(
+                        "{0}{1}{2}",
+                        EventMappingUtils.GetAbstractStringOf(new TestIDEEvent()),
+                        AverageBreakAfterEventsCalculator.StatisticStringSeparator,
+                        EventMappingUtils.GetAbstractStringOf(new CommandEvent())),
+                    new Tuple<TimeSpan, int>(AverageBreakAfterEventsCalculator.MinBreakTime, 1)
+                }
+            };
+            CollectionAssert.AreEquivalent(expectedStatistic, _uut.Statistic);
+        }
+
+        [Test]
+        public void ShouldNotUseMoreThanMaximumEventsBeforeBreakForStatistic()
+        {
+            AverageBreakAfterEventsCalculator.MaxEventsBeforeBreak = 1;
+
+            var triggeredAt = DateTimeFactory.SomeWorkingHoursDateTime();
+
+            var firstEvent = new TestIDEEvent
+            {
+                TriggeredAt = triggeredAt
+            };
+            var secondEvent = new CommandEvent
+            {
+                TriggeredAt = triggeredAt
+            };
+            var lateEvent = new TestIDEEvent
+            {
+                TriggeredAt = triggeredAt + AverageBreakAfterEventsCalculator.MinBreakTime
+            };
+
+            var listOfEvents = new List<IDEEvent>
+            {
+                firstEvent,
+                secondEvent,
+                lateEvent
+            };
+
+            _uut.OnStreamStarts(new Developer());
+            listOfEvents.ForEach(@event => _uut.OnEvent(@event));
+            _uut.OnStreamEnds();
+
+            var expectedStatistic = new Dictionary<string, Tuple<TimeSpan, int>>
+            {
+                {
+                    EventMappingUtils.GetAbstractStringOf(new CommandEvent()),
+                    new Tuple<TimeSpan, int>(AverageBreakAfterEventsCalculator.MinBreakTime, 1)
+                }
+            };
+            CollectionAssert.AreEquivalent(expectedStatistic, _uut.Statistic);
+        }
+
+        [Test]
+        public void ShouldCombineResultsForMultipleDeveloperStreams()
+        {
+            AverageBreakAfterEventsCalculator.MaxEventsBeforeBreak = 2;
+
+            var triggeredAt = DateTimeFactory.SomeWorkingHoursDateTime();
+
+            var firstEvent = new TestIDEEvent
+            {
+                TriggeredAt = triggeredAt
+            };
+            var secondEvent = new CommandEvent
+            {
+                TriggeredAt = triggeredAt
+            };
+            var lateEvent = new TestIDEEvent
+            {
+                TriggeredAt = triggeredAt + AverageBreakAfterEventsCalculator.MinBreakTime
+            };
+            
+            var listOfEvents = new List<IDEEvent>
+            {
+                firstEvent,
+                secondEvent,
+                lateEvent
+            };
+
+            _uut.OnStreamStarts(new Developer());
+            listOfEvents.ForEach(@event => _uut.OnEvent(@event));
+            _uut.OnStreamEnds();
+
+            _uut.OnStreamStarts(new Developer());
+            listOfEvents.ForEach(@event => _uut.OnEvent(@event));
+            _uut.OnStreamEnds();
+
+
+            var expectedStatistic = new Dictionary<string, Tuple<TimeSpan, int>>
+            {
+                {
+                    String.Format(
+                        "{0}{1}{2}",
+                        EventMappingUtils.GetAbstractStringOf(new TestIDEEvent()),
+                        AverageBreakAfterEventsCalculator.StatisticStringSeparator,
+                        EventMappingUtils.GetAbstractStringOf(new CommandEvent())),
+                    new Tuple<TimeSpan, int>(AverageBreakAfterEventsCalculator.MinBreakTime, 2)
+                }
+            };
+            CollectionAssert.AreEquivalent(expectedStatistic, _uut.Statistic);
+        }
+
+        [Test]
+        public void ShouldAddNextEventWhenEnabled()
+        {
+            AverageBreakAfterEventsCalculator.AddEventAfterBreakToStatistic = true;
+            
+            var triggeredAt = DateTimeFactory.SomeWorkingHoursDateTime();
+
+            var someEvent = new TestIDEEvent
+            {
+                TriggeredAt = triggeredAt
+            };
+            var eventAfterBreak = new CommandEvent
+            {
+                TriggeredAt = triggeredAt + AverageBreakAfterEventsCalculator.MinBreakTime
+            };
+
+            _uut.OnStreamStarts(new Developer());
+            _uut.OnEvent(someEvent);
+            _uut.OnEvent(eventAfterBreak);
+            _uut.OnStreamEnds();
+
+            var expectedStatistic = new Dictionary<string, Tuple<TimeSpan, int>>
+            {
+                {
+                    String.Format(
+                        "{0}{1}{2}",
+                        EventMappingUtils.GetAbstractStringOf(new TestIDEEvent()),
+                        AverageBreakAfterEventsCalculator.EventAfterBreakSeparator,
+                        EventMappingUtils.GetAbstractStringOf(new CommandEvent())),
+                    new Tuple<TimeSpan, int>(AverageBreakAfterEventsCalculator.MinBreakTime, 1)
+                }
+            };
             CollectionAssert.AreEquivalent(expectedStatistic, _uut.Statistic);
         }
     }

@@ -117,6 +117,7 @@
     <Compile Include="TestUtils\ProcessorAssert.cs" />
     <Compile Include="TestUtils\DateTimeFactory.cs" />
     <Compile Include="Utils\EventMappingUtilsTest.cs" />
+    <Compile Include="Utils\FixedSizeQueueTest.cs" />
     <Compile Include="Utils\PairTest.cs" />
     <Compile Include="Utils\SortedCommandPairTest.cs" />
   </ItemGroup>

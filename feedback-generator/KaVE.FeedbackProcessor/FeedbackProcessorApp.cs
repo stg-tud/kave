@@ -268,6 +268,10 @@ namespace KaVE.FeedbackProcessor
         {
             var calculator = new AverageBreakAfterEventsCalculator();
 
+            AverageBreakAfterEventsCalculator.MaxEventsBeforeBreak = 5;
+            AverageBreakAfterEventsCalculator.MinBreakTime = TimeSpan.FromSeconds(30);
+            AverageBreakAfterEventsCalculator.AddEventAfterBreakToStatistic = true;
+
             var walker = new FeedbackProcessor(database, Logger);
             walker.Register(calculator);
             walker.ProcessFeedback();
