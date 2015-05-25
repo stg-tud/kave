@@ -12,35 +12,41 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * 
+ * Contributors:
+ *    - Andreas Bauer
  */
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using JetBrains.Util;
 using KaVE.Commons.Model.Events;
+using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Utils.Json;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
 {
     internal static class IDEEventDetailsToJsonConverter
     {
-        private static readonly String[] IDEEventPropertyKeys =
-            typeof (IDEEvent).GetProperties().Select(JsonKey).ToArray();
-
-        private static string JsonKey(PropertyInfo property)
-        {
-            return string.Format("\"{0}\"", property.Name);
-        }
+        private static readonly IList<string> IDEEventPropertyNames =
+            typeof (IDEEvent).GetProperties().Select(p => p.Name).ToList();
 
         private static readonly string NewLine = Environment.NewLine;
 
         public static string GetDetailsAsJson(this IDEEvent ideEvent)
         {
-            return ideEvent.ToPrettyPrintJson()
+            var hiddenProperties = new List<string>(IDEEventPropertyNames);
+
+            if (ideEvent is CompletionEvent)
+            {
+                hiddenProperties.Add("Context2");
+                hiddenProperties.Add("Selections");
+                hiddenProperties.Add("ProposalCollection");
+            }
+
+            return ideEvent.ToPrettyPrintJson(hiddenProperties)
                            .GetContentLines()
-                           .Where(IsSpecializedEventInformation)
                            .Select(WithoutComma)
                            .Join(NewLine);
         }
@@ -50,15 +56,6 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
             var lines = details.Split(NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
             // remove first opening and last closing brace
             return lines.Skip(1).Take(lines.Length - 2);
-        }
-
-        /// <summary>
-        ///     A line is considered to contain specialized information, if it does not contain the name of the property of
-        ///     the <see cref="IDEEvent" /> type, like, for example, "  'IDESessionUUID': '0xDEADBEEF'" does.
-        /// </summary>
-        private static bool IsSpecializedEventInformation(string detailLine)
-        {
-            return IDEEventPropertyKeys.All(key => !detailLine.Contains(key));
         }
 
         private static string WithoutComma(string arg)

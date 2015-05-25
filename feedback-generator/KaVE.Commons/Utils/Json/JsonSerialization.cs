@@ -15,6 +15,7 @@
  * 
  * Contributors:
  *    - Sven Amann
+ *    - Andreas Bauer
  */
 
 using System;
@@ -59,17 +60,20 @@ namespace KaVE.Commons.Utils.Json
 
         public static readonly Encoding Encoding = new UTF8Encoding(false);
 
-        private static readonly JsonSerializerSettings PrettyPrintSettings = new JsonSerializerSettings
+        private static JsonSerializerSettings CreatePrettyPrintSettings()
         {
-            Converters =
+            return new JsonSerializerSettings
             {
-                new NameToIdentifierConverter(),
-                new EnumToStringConverter()
-            },
-            Formatting = Formatting.Indented,
-            NullValueHandling = NullValueHandling.Ignore,
-            TypeNameHandling = TypeNameHandling.None
-        };
+                Converters =
+                {
+                    new NameToIdentifierConverter(),
+                    new EnumToStringConverter()
+                },
+                Formatting = Formatting.Indented,
+                NullValueHandling = NullValueHandling.Ignore,
+                TypeNameHandling = TypeNameHandling.None
+            };
+        }
 
         private static JsonSerializerSettings CreateSerializationSettings()
         {
@@ -134,9 +138,16 @@ namespace KaVE.Commons.Utils.Json
         ///     Pretty-print serialization cannot generally be deserialized, because information is lost during serialization.
         /// </remarks>
         [NotNull]
-        public static string ToPrettyPrintJson([CanBeNull] this object instance)
+        public static string ToPrettyPrintJson([CanBeNull] this object instance, IEnumerable<string> hiddenProperties = null)
         {
-            return SerializeWithCustomIndentationDepth(instance, PrettyPrintSettings);
+            var settings = CreatePrettyPrintSettings();
+
+            if (hiddenProperties != null)
+            {
+                settings.ContractResolver = new PropertyHidingContractResolver(hiddenProperties);    
+            }
+
+            return SerializeWithCustomIndentationDepth(instance, settings);
         }
 
         private static string SerializeWithCustomIndentationDepth(object instance,

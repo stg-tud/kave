@@ -56,6 +56,7 @@
     <Compile Include="Utils\Json\LegacyDataUtils.cs" />
     <Compile Include="Utils\Json\NameToIdentifierConverter.cs" />
     <Compile Include="Utils\Json\NameToJsonConverter.cs" />
+    <Compile Include="Utils\Json\PropertyHidingContractResolver.cs" />
     <Compile Include="Utils\Json\ProposalCollectionConverter.cs" />
     <Compile Include="Utils\Json\SSTTypeNameShortener.cs" />
     <Compile Include="Utils\Logging\ILogReader.cs" />

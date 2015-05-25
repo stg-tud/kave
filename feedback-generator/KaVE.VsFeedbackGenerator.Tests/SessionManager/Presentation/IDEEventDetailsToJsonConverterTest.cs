@@ -15,28 +15,89 @@
  * 
  * Contributors:
  *    - Sven Amann
+ *    - Andreas Bauer
  */
 
 using System;
 using KaVE.Commons.Model.Events;
+using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Model.Events.VisualStudio;
+using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.Names.VisualStudio;
+using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.VsFeedbackGenerator.SessionManager.Presentation;
 using NUnit.Framework;
-using CommandEvent = KaVE.Commons.Model.Events.CommandEvent;
 
 namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
 {
     [TestFixture]
-    class IDEEventDetailsToJsonConverterTest
+    internal class IDEEventDetailsToJsonConverterTest
     {
         [Test]
         public void ShouldConvertActionEventDetailsToXaml()
         {
-            var actionEvent = new WindowEvent{Window = WindowName.Get("MyWindow"), Action = WindowEvent.WindowAction.Create};
-            const string expected = "    \"Window\": \"MyWindow\"\r\n" +
-                                    "    \"Action\": \"Create\"";
+            var actionEvent = new WindowEvent
+            {
+                Window = WindowName.Get("MyWindow"),
+                Action = WindowEvent.WindowAction.Create
+            };
+            string expected = String.Join(
+                Environment.NewLine,
+                "    \"Window\": \"MyWindow\"",
+                "    \"Action\": \"Create\"");
             var actual = actionEvent.GetDetailsAsJson();
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void ShouldConvertCompletionEventWhileHidingProperties()
+        {
+            var completionEvent = new CompletionEvent
+            {
+                Context2 = new Context {SST = new SST {EnclosingType = TypeName.Get("TestClass,TestProject")}},
+                ProposalCollection =
+                {
+                    new Proposal {Name = FieldName.Get("[FieldType,P] [TestClass,P].SomeField")},
+                    new Proposal {Name = EventName.Get("[EventType`1[[T -> EventArgsType,P]],P] [DeclaringType,P].E")},
+                    new Proposal {Name = MethodName.Get("[ReturnType,P] [DeclaringType,P].M([ParameterType,P] p)")}
+                },
+                Selections =
+                {
+                    new ProposalSelection
+                    {
+                        Proposal = new Proposal {Name = FieldName.Get("[FieldType,P] [TestClass,P].SomeField")},
+                        SelectedAfter = TimeSpan.FromSeconds(1)
+                    },
+                    new ProposalSelection
+                    {
+                        Proposal =
+                            new Proposal
+                            {
+                                Name = EventName.Get("[EventType`1[[T -> EventArgsType,P]],P] [DeclaringType,P].E")
+                            },
+                        SelectedAfter = TimeSpan.FromSeconds(2)
+                    },
+                    new ProposalSelection
+                    {
+                        Proposal =
+                            new Proposal
+                            {
+                                Name = MethodName.Get("[ReturnType,P] [DeclaringType,P].M([ParameterType,P] p)")
+                            },
+                        SelectedAfter = TimeSpan.FromSeconds(3)
+                    }
+                },
+                Prefix = "Some",
+                TerminatedBy = IDEEvent.Trigger.Typing,
+                TerminatedState = TerminationState.Cancelled
+            };
+
+            var expected = String.Join(
+                Environment.NewLine,
+                "    \"Prefix\": \"Some\"",
+                "    \"TerminatedBy\": \"Typing\"",
+                "    \"TerminatedState\": \"Cancelled\"");
+            var actual = completionEvent.GetDetailsAsJson();
             Assert.AreEqual(expected, actual);
         }
 

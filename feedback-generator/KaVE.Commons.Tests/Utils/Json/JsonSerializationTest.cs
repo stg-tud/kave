@@ -15,8 +15,10 @@
  * 
  * Contributors:
  *    - Sven Amann
+ *    - Andreas Bauer
  */
 
+using System;
 using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Utils.Json;
 using Newtonsoft.Json;
@@ -154,6 +156,23 @@ namespace KaVE.Commons.Tests.Utils.Json
                                     "    \"Id\": \"Foo\"\r\n" +
                                     "}";
             var actual = target.ToPrettyPrintJson();
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void ShouldPrettyPrintObject_HiddenProperties()
+        {
+            var target = new
+            {
+                Id = "Foo",
+                Name = "Mr. What Zit Tooya"
+            };
+
+            const string expected = "{\r\n" +
+                        "    \"Id\": \"Foo\"\r\n" +
+                        "}";
+
+            var actual = target.ToPrettyPrintJson(new String[] { "Name" });
             Assert.AreEqual(expected, actual);
         }
 
