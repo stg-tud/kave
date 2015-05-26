@@ -19,6 +19,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using KaVE.FeedbackProcessor.Activities.Model;
 using KaVE.FeedbackProcessor.Model;
 using KaVE.FeedbackProcessor.Utils;
@@ -29,6 +30,8 @@ namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
     {
         private readonly IActivityMergeStrategy _strategy;
         private readonly TimeSpan _windowSpan;
+
+        private readonly Queue<ActivityEvent> _queue = new Queue<ActivityEvent>();
 
         private Window _currentWindow;
         private Developer _currentDeveloper;
@@ -52,9 +55,11 @@ namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
 
         private void ProcessActivities(ActivityEvent @event)
         {
-            if (_currentWindow == null)
+            EnsureInitialized(@event);
+
+            while (FirstQueuedEventStartsBefore(@event))
             {
-                _currentWindow = CreateWindowStartingAt(@event);
+                ProcessActivities(_queue.Dequeue());
             }
 
             while (_currentWindow.EndsBeforeStartOf(@event))
@@ -62,22 +67,34 @@ namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
                 ProceedToNextWindow(@event);
             }
 
-            while (_currentWindow.EndsBeforeEndOf(@event))
+            if (_currentWindow.EndsBeforeEndOf(@event))
             {
-                var headAndTail = SplitAt(@event, _currentWindow.End);
+                var headAndTail = @event.SplitAt(_currentWindow.End);
                 _currentWindow.Add(headAndTail.Item1);
-
-                ProceedToNextWindow(@event);
-
-                @event = headAndTail.Item2;
+                _queue.Enqueue(headAndTail.Item2);
             }
+            else
+            {
+                _currentWindow.Add(@event);
+            }
+        }
 
-            _currentWindow.Add(@event);
+        private void EnsureInitialized(ActivityEvent @event)
+        {
+            if (_currentWindow == null)
+            {
+                _currentWindow = CreateWindowStartingAt(@event);
+            }
+        }
+
+        private bool FirstQueuedEventStartsBefore(ActivityEvent @event)
+        {
+            return _queue.Any() && _queue.Peek().GetTriggeredAt() < @event.GetTriggeredAt();
         }
 
         private void ProceedToNextWindow(ActivityEvent @event)
         {
-            if (_currentWindow.IsNotEmpty || EmptyWindowRequired(@event))
+            if (_currentWindow.IsNotEmpty || IsEmptyWindowRequired(@event))
             {
                 AppendMergedWindowToStream();
             }
@@ -92,29 +109,9 @@ namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
             }
         }
 
-        private bool EmptyWindowRequired(ActivityEvent @event)
+        private bool IsEmptyWindowRequired(ActivityEvent @event)
         {
             return _currentWindow.IsOnSameDayAs(@event);
-        }
-
-        private static Pair<ActivityEvent> SplitAt(ActivityEvent activityEvent, DateTime at)
-        {
-            var head = Clone(activityEvent);
-            head.TerminatedAt = at;
-            var tail = Clone(activityEvent);
-            tail.TriggeredAt = head.TerminatedAt;
-            tail.Duration = activityEvent.Duration - head.Duration;
-            return new Pair<ActivityEvent>(head, tail);
-        }
-
-        private static ActivityEvent Clone(ActivityEvent originalEvent)
-        {
-            var clone = new ActivityEvent
-            {
-                Activity = originalEvent.Activity
-            };
-            clone.CopyIDEEventPropertiesFrom(originalEvent);
-            return clone;
         }
 
         private void AppendMergedWindowToStream()
@@ -130,25 +127,48 @@ namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
 
         private Window CreateWindowStartingAt(ActivityEvent @event)
         {
-            return CreateWindowStartingAt(@event.GetTriggeredAt());
+            return new Window(@event.GetTriggeredAt(), _windowSpan);
         }
 
         private Window CreateFollowingWindow()
         {
-            return CreateWindowStartingAt(_currentWindow.End);
-        }
-
-        private Window CreateWindowStartingAt(DateTime windowStart)
-        {
-            return new Window(windowStart, _windowSpan);
+            return new Window(_currentWindow.End, _windowSpan);
         }
 
         public override void OnStreamEnds()
         {
+            while (_queue.Any())
+            {
+                ProcessActivities(_queue.Dequeue());
+            }
+
             if (_currentWindow != null)
             {
                 AppendMergedWindowToStream();
             }
+        }
+    }
+
+    internal static class ActivityEventEx
+    {
+        internal static Pair<ActivityEvent> SplitAt(this ActivityEvent activityEvent, DateTime at)
+        {
+            var head = activityEvent.Clone();
+            head.TerminatedAt = at;
+            var tail = activityEvent.Clone();
+            tail.TriggeredAt = head.TerminatedAt;
+            tail.Duration = activityEvent.Duration - head.Duration;
+            return new Pair<ActivityEvent>(head, tail);
+        }
+
+        private static ActivityEvent Clone(this ActivityEvent originalEvent)
+        {
+            var clone = new ActivityEvent
+            {
+                Activity = originalEvent.Activity
+            };
+            clone.CopyIDEEventPropertiesFrom(originalEvent);
+            return clone;
         }
     }
 }

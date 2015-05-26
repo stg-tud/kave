@@ -199,6 +199,68 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.SlidingWindow
         }
 
         [Test]
+        public void AssignsParrallelEventToRightWindow()
+        {
+            var event1 = SomeEvent(_someDateTime);
+            var event2 = SomeEvent(_someDateTime + WindowSpan.Times(0.5), WindowSpan.Times(2.5));
+            var parallelEvent = SomeEvent(_someDateTime + WindowSpan.Times(0.7));
+
+            _uut.OnStreamStarts(_someDeveloper);
+            _uut.OnEvent(event1);
+            _uut.OnEvent(event2);
+            _uut.OnEvent(parallelEvent);
+            _uut.OnStreamEnds();
+
+            var event2P1 = SomeEvent(event2.GetTriggeredAt(), WindowSpan.Times(0.5));
+            var event2P2 = SomeEvent(_someDateTime + WindowSpan, WindowSpan);
+            var event2P3 = SomeEvent(_someDateTime + WindowSpan + WindowSpan, WindowSpan);
+            AssertWindows(WindowFrom(event1, event2P1, parallelEvent), WindowFrom(event2P2), WindowFrom(event2P3));
+        }
+
+        [Test]
+        public void SplitsParallelEventToRightWindows()
+        {
+            var event1 = SomeEvent(_someDateTime);
+            var event2 = SomeEvent(_someDateTime + WindowSpan.Times(0.5), WindowSpan.Times(2.5));
+            var parallelEvent = SomeEvent(_someDateTime + WindowSpan.Times(0.7), WindowSpan.Times(0.6));
+
+            _uut.OnStreamStarts(_someDeveloper);
+            _uut.OnEvent(event1);
+            _uut.OnEvent(event2);
+            _uut.OnEvent(parallelEvent);
+            _uut.OnStreamEnds();
+
+            var event2P1 = SomeEvent(event2.GetTriggeredAt(), WindowSpan.Times(0.5));
+            var event2P2 = SomeEvent(_someDateTime + WindowSpan, WindowSpan);
+            var event2P3 = SomeEvent(_someDateTime + WindowSpan + WindowSpan, WindowSpan);
+            var parallelEventP1 = SomeEvent(parallelEvent.GetTriggeredAt(), WindowSpan.Times(0.3));
+            var parallelEventP2 = SomeEvent(_someDateTime + WindowSpan, WindowSpan.Times(0.3));
+            AssertWindows(WindowFrom(event1, event2P1, parallelEventP1), WindowFrom(event2P2, parallelEventP2), WindowFrom(event2P3));
+        }
+
+        [Test]
+        public void SplitsAndAssignsMultipleParallelEventsRight()
+        {
+            var event1 = SomeEvent(_someDateTime);
+            var event2 = SomeEvent(_someDateTime + WindowSpan.Times(0.5), WindowSpan);
+            var event3 = SomeEvent(_someDateTime + WindowSpan.Times(0.7), WindowSpan);
+            var event4 = SomeEvent(_someDateTime + WindowSpan.Times(1.8));
+
+            _uut.OnStreamStarts(_someDeveloper);
+            _uut.OnEvent(event1);
+            _uut.OnEvent(event2);
+            _uut.OnEvent(event3);
+            _uut.OnEvent(event4);
+            _uut.OnStreamEnds();
+
+            var event2P1 = SomeEvent(event2.GetTriggeredAt(), WindowSpan.Times(0.5));
+            var event2P2 = SomeEvent(_someDateTime + WindowSpan, WindowSpan.Times(0.5));
+            var event3P1 = SomeEvent(event3.GetTriggeredAt(), WindowSpan.Times(0.3));
+            var event3P2 = SomeEvent(_someDateTime + WindowSpan, WindowSpan.Times(0.7));
+            AssertWindows(WindowFrom(event1, event2P1, event3P1), WindowFrom(event2P2, event3P2, event4));
+        }
+
+        [Test]
         public void DoesNotModifyOriginalEventWhenSplitting()
         {
             var event1 = SomeEvent(_someDateTime);
