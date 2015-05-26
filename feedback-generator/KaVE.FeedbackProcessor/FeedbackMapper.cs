@@ -19,7 +19,6 @@
  *    - Markus Zimmermann
  */
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using KaVE.Commons.Model.Events;
