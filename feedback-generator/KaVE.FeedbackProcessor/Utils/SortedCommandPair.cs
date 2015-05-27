@@ -17,6 +17,7 @@
  *    - Mattis Manfred Kämmerer
  */
 
+using System;
 using KaVE.FeedbackProcessor.Cleanup.Heuristics;
 
 namespace KaVE.FeedbackProcessor.Utils
@@ -34,7 +35,9 @@ namespace KaVE.FeedbackProcessor.Utils
                 case -1:
                     return new SortedCommandPair(command2, command1);
                 default:
-                    return new SortedCommandPair(command1, command2);
+                    return String.Compare(command1, command2) == 1
+                        ? new SortedCommandPair(command2, command1)
+                        : new SortedCommandPair(command1, command2);
             }
         }
     }

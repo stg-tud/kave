@@ -18,6 +18,7 @@
  *    - Markus Zimmermann
  */
 
+using System.Runtime.InteropServices;
 using KaVE.FeedbackProcessor.Cleanup.Heuristics;
 using KaVE.FeedbackProcessor.Utils;
 using NUnit.Framework;
@@ -29,7 +30,7 @@ namespace KaVE.FeedbackProcessor.Tests.Utils
     {
         public const string GreaterCommand = "{5EFC7975-14BC-11CF-9B2B-00AA00573819}:220:Project.AddNewItem";
 
-        public const string SmallerCommand = "New Item...";
+        public const string SmallerCommand = "Copy";
 
         [SetUp]
         public void CheckForValidInputs()
@@ -61,11 +62,25 @@ namespace KaVE.FeedbackProcessor.Tests.Utils
         [Test]
         public void DoesNotSwapIfBothAreEqual()
         {
-            const string anotherSmallerCommand = "Copy";
+            const string anotherSmallerCommand = "New Item...";
             var sortedCommandPair = SortedCommandPair.NewSortedPair(SmallerCommand, anotherSmallerCommand);
 
             Assert.AreEqual(SmallerCommand, sortedCommandPair.Item1);
             Assert.AreEqual(anotherSmallerCommand, sortedCommandPair.Item2);
+        }
+
+        [Test]
+        [TestCase("zbc", "abc", true)]
+        [TestCase("abc", "zbc", false)]
+        public void ShouldSortAlphabeticallyForEqualCommandTypes(string command1, string command2, bool shouldSwap)
+        {
+            var sortedCommandPair = SortedCommandPair.NewSortedPair(command1, command2);
+
+            var expectedItem1 = shouldSwap ? command2 : command1;
+            var expectedItem2 = shouldSwap ? command1 : command2;
+
+            Assert.AreEqual(expectedItem1, sortedCommandPair.Item1);
+            Assert.AreEqual(expectedItem2, sortedCommandPair.Item2);
         }
     }
 }
