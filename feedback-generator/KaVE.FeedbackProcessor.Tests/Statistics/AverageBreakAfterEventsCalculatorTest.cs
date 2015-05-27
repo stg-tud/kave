@@ -20,6 +20,7 @@
 using System;
 using System.Collections.Generic;
 using KaVE.Commons.Model.Events;
+using KaVE.Commons.Model.Events.VisualStudio;
 using KaVE.Commons.TestUtils.Model.Events;
 using KaVE.FeedbackProcessor.Model;
 using KaVE.FeedbackProcessor.Statistics;
@@ -274,6 +275,67 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
                         EventMappingUtils.GetAbstractStringOf(new TestIDEEvent()),
                         AverageBreakAfterEventsCalculator.EventAfterBreakSeparator,
                         EventMappingUtils.GetAbstractStringOf(new CommandEvent())),
+                    new Tuple<TimeSpan, int>(AverageBreakAfterEventsCalculator.MinBreakTime, 1)
+                }
+            };
+            CollectionAssert.AreEquivalent(expectedStatistic, _uut.Statistic);
+        }
+
+        [Test]
+        public void ShouldIgnoreWindowMoveEvents()
+        {
+            AverageBreakAfterEventsCalculator.AddEventAfterBreakToStatistic = true;
+
+            var triggeredAt = DateTimeFactory.SomeWorkingHoursDateTime();
+
+            var someEvent = new WindowEvent
+            {
+                TriggeredAt = triggeredAt,
+                Action = WindowEvent.WindowAction.Move
+            };
+            var eventAfterBreak = new CommandEvent
+            {
+                TriggeredAt = triggeredAt + AverageBreakAfterEventsCalculator.MinBreakTime
+            };
+
+            _uut.OnStreamStarts(new Developer());
+            _uut.OnEvent(someEvent);
+            _uut.OnEvent(eventAfterBreak);
+            _uut.OnStreamEnds();
+
+            CollectionAssert.IsEmpty(_uut.Statistic);
+        }
+
+        [Test]
+        public void ShouldNotIgnoreOtherWindowEvents()
+        {
+            AverageBreakAfterEventsCalculator.AddEventAfterBreakToStatistic = true;
+
+            var triggeredAt = DateTimeFactory.SomeWorkingHoursDateTime();
+
+            var someEvent = new WindowEvent
+            {
+                TriggeredAt = triggeredAt,
+                Action = WindowEvent.WindowAction.Activate
+            };
+            var eventAfterBreak = new CommandEvent
+            {
+                TriggeredAt = triggeredAt + AverageBreakAfterEventsCalculator.MinBreakTime
+            };
+
+            _uut.OnStreamStarts(new Developer());
+            _uut.OnEvent(someEvent);
+            _uut.OnEvent(eventAfterBreak);
+            _uut.OnStreamEnds();
+
+            var expectedStatistic = new Dictionary<string, Tuple<TimeSpan, int>>
+            {
+                {
+                    String.Format(
+                        "{0}{1}{2}",
+                        EventMappingUtils.GetAbstractStringOf(someEvent),
+                        AverageBreakAfterEventsCalculator.EventAfterBreakSeparator,
+                        EventMappingUtils.GetAbstractStringOf(eventAfterBreak)),
                     new Tuple<TimeSpan, int>(AverageBreakAfterEventsCalculator.MinBreakTime, 1)
                 }
             };

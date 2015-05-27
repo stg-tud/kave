@@ -22,6 +22,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using KaVE.Commons.Model.Events;
+using KaVE.Commons.Model.Events.VisualStudio;
 using KaVE.Commons.Utils.Csv;
 using KaVE.FeedbackProcessor.Model;
 using KaVE.FeedbackProcessor.Utils;
@@ -85,6 +86,12 @@ namespace KaVE.FeedbackProcessor.Statistics
 
         public void HandleEvent(IDEEvent @event)
         {
+            var windowEvent = @event as WindowEvent;
+            if (windowEvent != null && windowEvent.Action.Equals(WindowEvent.WindowAction.Move))
+            {
+                return;
+            }
+
             if (_eventCache.Count > 0 && BreakOccured(@event))
             {
                 AddCacheToBreaks(@event);
