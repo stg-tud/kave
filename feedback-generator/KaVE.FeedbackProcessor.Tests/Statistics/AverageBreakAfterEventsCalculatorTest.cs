@@ -38,10 +38,7 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
         [SetUp]
         public void Setup()
         {
-            _uut = new AverageBreakAfterEventsCalculator();
-            AverageBreakAfterEventsCalculator.MinBreakTime = TimeSpan.FromSeconds(1);
-            AverageBreakAfterEventsCalculator.MaxEventsBeforeBreak = 2;
-            AverageBreakAfterEventsCalculator.AddEventAfterBreakToStatistic = false;
+            _uut = new AverageBreakAfterEventsCalculator(2, TimeSpan.FromSeconds(1), false);
         }
 
         [Test]
@@ -55,8 +52,8 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
         [Test]
         public void ShouldFillStatisticAtStreamEnds()
         {
-            AverageBreakAfterEventsCalculator.MaxEventsBeforeBreak = 1;
-            AverageBreakAfterEventsCalculator.MinBreakTime = TimeSpan.Zero;
+            _uut.MaxEventsBeforeBreak = 1;
+            _uut.MinBreakTime = TimeSpan.Zero;
 
             var now = DateTime.Now;
 
@@ -91,17 +88,16 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
             var expectedStatistic = new Dictionary<string, Tuple<TimeSpan, int>>
             {
                 {
-                    EventMappingUtils.GetAbstractStringOf(
-                        new TestIDEEvent()),
+                    EventMappingUtils.GetAbstractStringOf(new TestIDEEvent()),
                     new Tuple<TimeSpan, int>(TimeSpan.FromSeconds(3), 3)
                 },
                 {
-                    EventMappingUtils.GetAbstractStringOf(
-                        new CommandEvent()),
+                    EventMappingUtils.GetAbstractStringOf(new CommandEvent()),
                     new Tuple<TimeSpan, int>(TimeSpan.FromSeconds(3), 2)
                 }
             };
 
+            _uut.OnStreamStarts(new Developer());
             listOfEvents.ForEach(@event => _uut.OnEvent(@event));
             _uut.OnStreamEnds();
 
@@ -111,7 +107,7 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
         [Test]
         public void ShouldUseMultipleEventsWhenMaxEventsBeforeBreakIsGreaterThanOne()
         {
-            AverageBreakAfterEventsCalculator.MaxEventsBeforeBreak = 2;
+            _uut.MaxEventsBeforeBreak = 2;
 
             var triggeredAt = DateTimeFactory.SomeWorkingHoursDateTime();
 
@@ -125,7 +121,7 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
             };
             var lateEvent = new TestIDEEvent
             {
-                TriggeredAt = triggeredAt + AverageBreakAfterEventsCalculator.MinBreakTime
+                TriggeredAt = triggeredAt + _uut.MinBreakTime
             };
 
 
@@ -149,7 +145,7 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
                         EventMappingUtils.GetAbstractStringOf(new TestIDEEvent()),
                         AverageBreakAfterEventsCalculator.StatisticStringSeparator,
                         EventMappingUtils.GetAbstractStringOf(new CommandEvent())),
-                    new Tuple<TimeSpan, int>(AverageBreakAfterEventsCalculator.MinBreakTime, 1)
+                    new Tuple<TimeSpan, int>(_uut.MinBreakTime, 1)
                 }
             };
             CollectionAssert.AreEquivalent(expectedStatistic, _uut.Statistic);
@@ -158,7 +154,7 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
         [Test]
         public void ShouldNotUseMoreThanMaximumEventsBeforeBreakForStatistic()
         {
-            AverageBreakAfterEventsCalculator.MaxEventsBeforeBreak = 1;
+            _uut.MaxEventsBeforeBreak = 1;
 
             var triggeredAt = DateTimeFactory.SomeWorkingHoursDateTime();
 
@@ -172,7 +168,7 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
             };
             var lateEvent = new TestIDEEvent
             {
-                TriggeredAt = triggeredAt + AverageBreakAfterEventsCalculator.MinBreakTime
+                TriggeredAt = triggeredAt + _uut.MinBreakTime
             };
 
             var listOfEvents = new List<IDEEvent>
@@ -190,7 +186,7 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
             {
                 {
                     EventMappingUtils.GetAbstractStringOf(new CommandEvent()),
-                    new Tuple<TimeSpan, int>(AverageBreakAfterEventsCalculator.MinBreakTime, 1)
+                    new Tuple<TimeSpan, int>(_uut.MinBreakTime, 1)
                 }
             };
             CollectionAssert.AreEquivalent(expectedStatistic, _uut.Statistic);
@@ -199,7 +195,7 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
         [Test]
         public void ShouldCombineResultsForMultipleDeveloperStreams()
         {
-            AverageBreakAfterEventsCalculator.MaxEventsBeforeBreak = 2;
+            _uut.MaxEventsBeforeBreak = 2;
 
             var triggeredAt = DateTimeFactory.SomeWorkingHoursDateTime();
 
@@ -213,7 +209,7 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
             };
             var lateEvent = new TestIDEEvent
             {
-                TriggeredAt = triggeredAt + AverageBreakAfterEventsCalculator.MinBreakTime
+                TriggeredAt = triggeredAt + _uut.MinBreakTime
             };
             
             var listOfEvents = new List<IDEEvent>
@@ -240,7 +236,7 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
                         EventMappingUtils.GetAbstractStringOf(new TestIDEEvent()),
                         AverageBreakAfterEventsCalculator.StatisticStringSeparator,
                         EventMappingUtils.GetAbstractStringOf(new CommandEvent())),
-                    new Tuple<TimeSpan, int>(AverageBreakAfterEventsCalculator.MinBreakTime, 2)
+                    new Tuple<TimeSpan, int>(_uut.MinBreakTime, 2)
                 }
             };
             CollectionAssert.AreEquivalent(expectedStatistic, _uut.Statistic);
@@ -249,7 +245,7 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
         [Test]
         public void ShouldAddNextEventWhenEnabled()
         {
-            AverageBreakAfterEventsCalculator.AddEventAfterBreakToStatistic = true;
+            _uut.AddEventAfterBreakToStatistic = true;
             
             var triggeredAt = DateTimeFactory.SomeWorkingHoursDateTime();
 
@@ -259,7 +255,7 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
             };
             var eventAfterBreak = new CommandEvent
             {
-                TriggeredAt = triggeredAt + AverageBreakAfterEventsCalculator.MinBreakTime
+                TriggeredAt = triggeredAt + _uut.MinBreakTime
             };
 
             _uut.OnStreamStarts(new Developer());
@@ -275,7 +271,7 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
                         EventMappingUtils.GetAbstractStringOf(new TestIDEEvent()),
                         AverageBreakAfterEventsCalculator.EventAfterBreakSeparator,
                         EventMappingUtils.GetAbstractStringOf(new CommandEvent())),
-                    new Tuple<TimeSpan, int>(AverageBreakAfterEventsCalculator.MinBreakTime, 1)
+                    new Tuple<TimeSpan, int>(_uut.MinBreakTime, 1)
                 }
             };
             CollectionAssert.AreEquivalent(expectedStatistic, _uut.Statistic);
@@ -284,7 +280,7 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
         [Test]
         public void ShouldIgnoreWindowMoveEvents()
         {
-            AverageBreakAfterEventsCalculator.AddEventAfterBreakToStatistic = true;
+            _uut.AddEventAfterBreakToStatistic = true;
 
             var triggeredAt = DateTimeFactory.SomeWorkingHoursDateTime();
 
@@ -295,7 +291,7 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
             };
             var eventAfterBreak = new CommandEvent
             {
-                TriggeredAt = triggeredAt + AverageBreakAfterEventsCalculator.MinBreakTime
+                TriggeredAt = triggeredAt + _uut.MinBreakTime
             };
 
             _uut.OnStreamStarts(new Developer());
@@ -309,7 +305,7 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
         [Test]
         public void ShouldNotIgnoreOtherWindowEvents()
         {
-            AverageBreakAfterEventsCalculator.AddEventAfterBreakToStatistic = true;
+            _uut.AddEventAfterBreakToStatistic = false;
 
             var triggeredAt = DateTimeFactory.SomeWorkingHoursDateTime();
 
@@ -320,7 +316,7 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
             };
             var eventAfterBreak = new CommandEvent
             {
-                TriggeredAt = triggeredAt + AverageBreakAfterEventsCalculator.MinBreakTime
+                TriggeredAt = triggeredAt + _uut.MinBreakTime
             };
 
             _uut.OnStreamStarts(new Developer());
@@ -331,12 +327,8 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
             var expectedStatistic = new Dictionary<string, Tuple<TimeSpan, int>>
             {
                 {
-                    String.Format(
-                        "{0}{1}{2}",
-                        EventMappingUtils.GetAbstractStringOf(someEvent),
-                        AverageBreakAfterEventsCalculator.EventAfterBreakSeparator,
-                        EventMappingUtils.GetAbstractStringOf(eventAfterBreak)),
-                    new Tuple<TimeSpan, int>(AverageBreakAfterEventsCalculator.MinBreakTime, 1)
+                    EventMappingUtils.GetAbstractStringOf(someEvent),
+                    new Tuple<TimeSpan, int>(_uut.MinBreakTime, 1)
                 }
             };
             CollectionAssert.AreEquivalent(expectedStatistic, _uut.Statistic);

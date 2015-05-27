@@ -34,21 +34,25 @@ namespace KaVE.FeedbackProcessor.Statistics
         public const char StatisticStringSeparator = ';';
         public const string EventAfterBreakSeparator = " || Next Event: ";
 
-        public static int MaxEventsBeforeBreak = 5;
+        public int MaxEventsBeforeBreak;
 
-        public static TimeSpan MinBreakTime = TimeSpan.FromSeconds(30);
+        public TimeSpan MinBreakTime;
 
-        public static bool AddEventAfterBreakToStatistic = true;
+        public bool AddEventAfterBreakToStatistic;
 
         public readonly IDictionary<string, Tuple<TimeSpan, int>> Statistic =
             new Dictionary<string, Tuple<TimeSpan, int>>();
 
         private readonly IDictionary<string, List<TimeSpan>> _breaks = new Dictionary<string, List<TimeSpan>>();
 
-        private readonly FixedSizeQueue<IDEEvent> _eventCache = new FixedSizeQueue<IDEEvent>(MaxEventsBeforeBreak);
+        private readonly FixedSizeQueue<IDEEvent> _eventCache = new FixedSizeQueue<IDEEvent>(0);
 
-        public AverageBreakAfterEventsCalculator()
+        public AverageBreakAfterEventsCalculator(int maxEventsBeforeBreak, TimeSpan minBreakTime, bool addEventAfterBreakToStatistic = true)
         {
+            MaxEventsBeforeBreak = maxEventsBeforeBreak;
+            MinBreakTime = minBreakTime;
+            AddEventAfterBreakToStatistic = addEventAfterBreakToStatistic;
+
             RegisterFor<IDEEvent>(HandleEvent);
         }
 
