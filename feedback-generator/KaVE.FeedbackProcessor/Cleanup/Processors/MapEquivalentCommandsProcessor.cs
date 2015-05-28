@@ -33,11 +33,14 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
 
         private readonly List<SortedCommandPair> _mappings;
 
-        private CommandEvent _unmappedCommandEvent;
+        private CommandEvent _unmappedLeftSideEvent;
+
+        private CommandEvent _unmappedRightSideEvent;
 
         private CommandEvent _unmappedDebugEvent;
 
         private CommandEvent _unmappedTextControlEvent;
+
 
         public MapEquivalentCommandsProcessor(IResourceProvider resourceProvider)
         {
@@ -48,7 +51,7 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
 
         public override void OnStreamStarts(Developer value)
         {
-            _unmappedCommandEvent = null;
+            _unmappedRightSideEvent = null;
             _unmappedDebugEvent = null;
             _unmappedTextControlEvent = null;
         }
@@ -79,27 +82,42 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
             var isOnLeftSide = mapping != null;
             if (isOnLeftSide)
             {
-                if (_unmappedCommandEvent != null && _unmappedCommandEvent.CommandId.Equals(mapping.Item2))
+                if (commandEvent.TriggeredBy == IDEEvent.Trigger.Unknown)
                 {
-                    _unmappedCommandEvent = null;
+                    _unmappedLeftSideEvent = commandEvent;
+                    DropCurrentEvent();
+                    if (_unmappedRightSideEvent != null) Insert(_unmappedRightSideEvent);
                 }
+                else 
+                {
+                    if (_unmappedRightSideEvent != null && _unmappedRightSideEvent.CommandId.Equals(mapping.Item2))
+                    {
+                        _unmappedRightSideEvent = null;
+                    }
 
-                DropCurrentEvent();
-                Insert(CopyCommandEventWithId(commandEvent, mapping.Item2));
+                    ReplaceCurrentEventWith(ChangeCommandId(commandEvent, mapping.Item2));
+                }
             }
 
-            if (_unmappedCommandEvent != null && IsLate(commandEvent))
+            if (_unmappedRightSideEvent != null && IsLate(commandEvent))
             {
-                Insert(_unmappedCommandEvent);
-                _unmappedCommandEvent = null;
+                Insert(_unmappedRightSideEvent);
+                _unmappedRightSideEvent = null;
             }
 
             mapping = FindMappingFromRightSideFor(commandEvent);
             var isOnRightSide = mapping != null;
             if (isOnRightSide)
             {
-                DropCurrentEvent();
-                _unmappedCommandEvent = commandEvent;
+                if (_unmappedLeftSideEvent == null)
+                {
+                    _unmappedRightSideEvent = commandEvent;
+                    DropCurrentEvent();
+                }
+                else
+                {
+                    _unmappedLeftSideEvent = null;
+                }
             }
         }
 
@@ -164,10 +182,10 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
 
         private bool IsLate(IDEEvent commandEvent)
         {
-            return !ConcurrentEventHeuristic.AreConcurrent(commandEvent, _unmappedCommandEvent);
+            return !ConcurrentEventHeuristic.AreConcurrent(commandEvent, _unmappedRightSideEvent);
         }
 
-        private static CommandEvent CopyCommandEventWithId(IDEEvent commandEvent, string newId)
+        private static CommandEvent ChangeCommandId(IDEEvent commandEvent, string newId)
         {
             return new CommandEvent
             {
