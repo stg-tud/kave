@@ -74,12 +74,16 @@ namespace KaVE.FeedbackProcessor
         private static void LogCompletionStatistics(IFeedbackDatabase database)
         {
             var invocations = new CompletionInvocationStatistic();
+            var durations = new CompletionDurationStatistic();
 
             var processor = new FeedbackProcessor(database, Logger);
             processor.Register(invocations);
+            processor.Register(durations);
             processor.ProcessFeedback();
 
             Logger.Info("Found {0} completion invocations.", invocations.CompletionInvocations);
+            Output("completion-durations.csv", durations.StatisticAsCsv());
+            Logger.Info("Found {0} developer days with completion usage.", durations.NumberOfDeveloperDaysWithCompletionUsage);
         }
 
         private static void LogDevelopersPerDay(IFeedbackDatabase database)

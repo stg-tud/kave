@@ -127,6 +127,7 @@
     <Compile Include="Statistics\AnonymizationStatisticsLogger.cs" />
     <Compile Include="Statistics\AverageBreakAfterEventsCalculator.cs" />
     <Compile Include="Statistics\CommandIdCollector.cs" />
+    <Compile Include="Statistics\CompletionDurationStatistic.cs" />
     <Compile Include="Statistics\CompletionInvocationStatistic.cs" />
     <Compile Include="Statistics\DevelopersPerDayCalculator.cs" />
     <Compile Include="Statistics\EquivalentCommandPairCalculator.cs" />
