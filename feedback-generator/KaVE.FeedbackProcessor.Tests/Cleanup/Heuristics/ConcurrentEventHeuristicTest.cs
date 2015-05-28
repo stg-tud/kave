@@ -52,6 +52,10 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Heuristics
         [TestCase("TextControl.Down",true)]
         [TestCase("TextControl.Backspace",true)]
         [TestCase("TextControl.Enter",true)]
+        [TestCase("TextControl.Up.Selection", true)]
+        [TestCase("TextControl.Down.Selection", true)]
+        [TestCase("TextControl.Left.Selection", true)]
+        [TestCase("TextControl.Right.Selection", true)]
         [TestCase("TextControl.Cut",false)]
         [TestCase("Cut",false)]
         public void ShouldDetectIgnorableTextControlEvents(string commandId, bool expected)

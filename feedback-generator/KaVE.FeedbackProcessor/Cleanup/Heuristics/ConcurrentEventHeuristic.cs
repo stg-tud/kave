@@ -37,7 +37,11 @@ namespace KaVE.FeedbackProcessor.Cleanup.Heuristics
             "TextControl.Up",
             "TextControl.Down",
             "TextControl.Backspace",
-            "TextControl.Enter"
+            "TextControl.Enter",
+            "TextControl.Up.Selection",
+            "TextControl.Down.Selection",
+            "TextControl.Left.Selection",
+            "TextControl.Right.Selection"
         }; 
 
         public static bool AreConcurrent(IDEEvent evt1, IDEEvent evt2)
