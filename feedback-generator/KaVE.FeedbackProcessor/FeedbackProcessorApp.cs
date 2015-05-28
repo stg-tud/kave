@@ -43,7 +43,7 @@ namespace KaVE.FeedbackProcessor
             const string importDatabase = "_import";
             const string filteredDatabase = "_filtered";
             const string cleanDatabase = "_clean";
-            const string activityDatabase = "activities";
+            const string activityDatabase = "_activities";
             const string concurrentEventDatabase = "_concurrent";
             const string commandFollowupsDatabase = "_commandFollowups";
 
@@ -191,9 +191,9 @@ namespace KaVE.FeedbackProcessor
             walker.Register(commandIdCollector);
             walker.ProcessFeedback();
 
-            Output("windownames.log", windowNameCollector.AllWindowNames.EntryDictionary.ToCsv());
-            Output("documentnames.log", documentNameCollector.AllDocumentNames.EntryDictionary.ToCsv());
-            Output("commandids.log", commandIdCollector.AllCommandIds.EntryDictionary.ToCsv());
+            Output("windownames.csv", windowNameCollector.AllWindowNames.EntryDictionary.ToCsv());
+            Output("documentnames.csv", documentNameCollector.AllDocumentNames.EntryDictionary.ToCsv());
+            Output("commandids.csv", commandIdCollector.AllCommandIds.EntryDictionary.ToCsv());
         }
 
         private static void LogIDEActivationEvents(IFeedbackDatabase database)
