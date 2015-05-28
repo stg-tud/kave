@@ -20,7 +20,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.CompletionEvents;
@@ -37,55 +36,48 @@ namespace KaVE.FeedbackProcessor.Utils
             {
                 {
                     typeof (CommandEvent),
-                    (commandEvent => FormatString("Command", ((CommandEvent) commandEvent).CommandId))
+                    (commandEvent => ((CommandEvent) commandEvent).CommandId)
                 },
                 {
                     typeof (WindowEvent),
-                    (windowEvent => FormatString("Window", ((WindowEvent) windowEvent).Action.ToString()))
+                    (windowEvent => ((WindowEvent) windowEvent).Action.ToString())
                 },
                 {
                     typeof (DocumentEvent),
-                    (documentEvent => FormatString("Document", ((DocumentEvent) documentEvent).Action.ToString()))
+                    (documentEvent => ((DocumentEvent) documentEvent).Action.ToString())
                 },
                 {
                     typeof (BuildEvent),
-                    (buildEvent => FormatString("Build", ((BuildEvent) buildEvent).Action))
+                    (buildEvent => ((BuildEvent) buildEvent).Action)
                 },
                 {
                     typeof (EditEvent),
-                    (editEvent =>
-                        FormatString(
-                            "Edit",
-                            ((EditEvent) editEvent).NumberOfChanges.ToString(CultureInfo.InvariantCulture) + " Changes"))
+                    (editEvent => "")
                 },
                 {
                     typeof (DebuggerEvent),
-                    (debuggerEvent => FormatString("Debugger", ((DebuggerEvent) debuggerEvent).Reason))
+                    (debuggerEvent => ((DebuggerEvent) debuggerEvent).Reason)
                 },
                 {
                     typeof (IDEStateEvent),
-                    (ideStateEvent =>
-                        FormatString("IDEState", ((IDEStateEvent) ideStateEvent).IDELifecyclePhase.ToString()))
+                    (ideStateEvent => ((IDEStateEvent) ideStateEvent).IDELifecyclePhase.ToString())
                 },
                 {
                     typeof (SolutionEvent),
-                    (solutionEvent => FormatString("Solution", ((SolutionEvent) solutionEvent).Action.ToString()))
+                    (solutionEvent => ((SolutionEvent) solutionEvent).Action.ToString())
                 },
                 {
                     typeof (CompletionEvent),
                     (completionEvent =>
-                        FormatString(
-                            "Completion",
-                            ("Terminated as " + ((CompletionEvent) completionEvent).TerminatedState.ToString())))
+                        ("Terminated as " + ((CompletionEvent) completionEvent).TerminatedState.ToString()))
                 },
                 {
                     typeof (ErrorEvent),
                     (errorEvent =>
-                    {
-                        var stackTraceString = ((ErrorEvent) errorEvent).StackTrace.First();
-                        var index = stackTraceString.IndexOf(':');
-                        return FormatString("Error", stackTraceString.Substring(0, index));
-                    })
+                        ((ErrorEvent) errorEvent).StackTrace.First()
+                                                 .Substring(
+                                                     0,
+                                                     ((ErrorEvent) errorEvent).StackTrace.First().IndexOf(':')))
                 }
             };
 
@@ -104,8 +96,8 @@ namespace KaVE.FeedbackProcessor.Utils
         {
             Func<IDEEvent, string> mapToString;
             return ToStringMappings.TryGetValue(@event.GetType(), out mapToString)
-                ? mapToString(@event)
-                : FormatString(@event.GetType().ToString(), "no mapping found");
+                ? FormatString(@event.GetType().Name, mapToString(@event))
+                : FormatString(@event.GetType().Name, "no mapping found");
         }
 
         private static string FormatString(string prefix, string suffix)

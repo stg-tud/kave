@@ -31,35 +31,35 @@ namespace KaVE.FeedbackProcessor.Tests.Utils
     {
         private static readonly object[] MapsSingleEventCorrectlyTestCaseSource =
         {
-            new object[] {new CommandEvent {CommandId = "Test"}, "Command -> Test"},
-            new object[] {new WindowEvent {Action = WindowEvent.WindowAction.Deactivate}, "Window -> Deactivate"},
-            new object[] {new DocumentEvent {Action = DocumentEvent.DocumentAction.Opened}, "Document -> Opened"},
-            new object[] {new BuildEvent {Action = "vsBuildActionBuild"}, "Build -> vsBuildActionBuild"},
-            new object[] {new EditEvent {NumberOfChanges = 1984}, "Edit -> 1984 Changes"},
+            new object[] {new CommandEvent {CommandId = "Test"}, "CommandEvent -> Test"},
+            new object[] {new WindowEvent {Action = WindowEvent.WindowAction.Deactivate}, "WindowEvent -> Deactivate"},
+            new object[] {new DocumentEvent {Action = DocumentEvent.DocumentAction.Opened}, "DocumentEvent -> Opened"},
+            new object[] {new BuildEvent {Action = "vsBuildActionBuild"}, "BuildEvent -> vsBuildActionBuild"},
+            new object[] {new EditEvent(), "EditEvent -> "},
             new object[]
             {
                 new DebuggerEvent {Reason = "dbgEventReasonStopDebugging"},
-                "Debugger -> dbgEventReasonStopDebugging"
+                "DebuggerEvent -> dbgEventReasonStopDebugging"
             },
             new object[]
             {
                 new IDEStateEvent {IDELifecyclePhase = IDEStateEvent.LifecyclePhase.Shutdown},
-                "IDEState -> Shutdown"
+                "IDEStateEvent -> Shutdown"
             },
             new object[]
             {
                 new SolutionEvent {Action = SolutionEvent.SolutionAction.RenameProject},
-                "Solution -> RenameProject"
+                "SolutionEvent -> RenameProject"
             },
             new object[]
             {
                 new CompletionEvent {TerminatedState = TerminationState.Unknown},
-                "Completion -> Terminated as Unknown"
+                "CompletionEvent -> Terminated as Unknown"
             },
             new object[]
             {
                 new ErrorEvent {StackTrace = new[] {"System.NullReferenceException: Test"}},
-                "Error -> System.NullReferenceException"
+                "ErrorEvent -> System.NullReferenceException"
             }
         };
 
