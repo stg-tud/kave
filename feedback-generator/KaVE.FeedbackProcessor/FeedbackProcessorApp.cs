@@ -56,6 +56,7 @@ namespace KaVE.FeedbackProcessor
             LogEventsPerDeveloperDayStatistic(OpenDatabase(importDatabase));
             LogIDEActivationEvents(OpenDatabase(importDatabase));
             LogOccuringNames(OpenDatabase(importDatabase));
+            LogDevelopersPerDay(OpenDatabase(importDatabase));
 
             MapToActivities(OpenDatabase(importDatabase), OpenDatabase(activityDatabase));
             LogActivityStatistics(OpenDatabase(activityDatabase));
@@ -67,6 +68,17 @@ namespace KaVE.FeedbackProcessor
 
             ConcurrentEventsStatistic(OpenDatabase(concurrentEventDatabase),"concurrenteventstatistic.csv");
             ConcurrentEventsStatistic(OpenDatabase(commandFollowupsDatabase),"commandfollowupsstatistic.csv");
+        }
+
+        private static void LogDevelopersPerDay(IFeedbackDatabase database)
+        {
+            var calculator = new DevelopersPerDayCalculator();
+
+            var feedbackProcessor = new FeedbackProcessor(database, Logger);
+            feedbackProcessor.Register(calculator);
+            feedbackProcessor.ProcessFeedback();
+
+            Output("developers-per-day.csv", calculator.GetStatisticAsCsv());
         }
 
         private static MongoDbFeedbackDatabase OpenDatabase(string databaseSuffix)
