@@ -23,6 +23,7 @@ using System.IO;
 using System.Reflection;
 using System.Runtime.Serialization.Formatters;
 using System.Text;
+using System.Text.RegularExpressions;
 using KaVE.Commons.Model.Names;
 using KaVE.JetBrains.Annotations;
 using Newtonsoft.Json;
@@ -122,19 +123,7 @@ namespace KaVE.Commons.Utils.Json
         {
             var settings = CreateSerializationSettings();
             // TODO get rid of this special case handling
-            // BEGIN legacy-data hanlding
-            if (json.StartsWith("{\"$type\":\"KaVE.Model.Events.CompletionEvent.CompletionEvent, KaVE.Model\""))
-            {
-                json = json.Replace("KaVE.Model.Events.CompletionEvent.", "KaVE.Model.Events.CompletionEvents.");
-            }
-            json = json.Replace("KaVE.Model.", "KaVE.Commons.Model.").Replace("KaVE.Model", "KaVE.Commons");
-            json = json.Replace(
-                "KaVE.Commons.Model.SSTs.Impl.Declarations.VariableDeclaration",
-                "KaVE.Commons.Model.SSTs.Impl.Statements.VariableDeclaration");
-            // TODO discuss this replacement (seb)
-            json = new SSTTypeNameShortener().AddDetails(json);
-            settings.Converters.Add(new ProposalCollectionConverter());
-            // END legacy-data handling
+            json = LegacyDataUtils.UpdateLegacyDataFormats(json, settings);
             return JsonConvert.DeserializeObject<T>(json, settings);
         }
 

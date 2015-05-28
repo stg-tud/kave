@@ -139,6 +139,14 @@ namespace KaVE.Commons.Tests.Utils.Json.JsonSerializationSuite
         }
 
         [Test]
+        public void ShouldDeserializeJaggedArrayToMultidimensional()
+        {
+            JsonAssert.DeserializesTo("\"CSharp.ArrayTypeName:A[], B\"", TypeName.Get("A[], B"));
+            JsonAssert.DeserializesTo("\"CSharp.ArrayTypeName:A[][], B\"", TypeName.Get("A[,], B"));
+            JsonAssert.DeserializesTo("\"CSharp.ArrayTypeName:A[][][][], B\"", TypeName.Get("A[,,,], B"));
+        }
+
+        [Test]
         public void ShouldSerializeNameToStringContainingTypeAndIdentifier()
         {
             var name = TypeName.Get("My.Custom.Type, AnAssembly, 1.5.2.4");
