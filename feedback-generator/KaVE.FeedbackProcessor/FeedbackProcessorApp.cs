@@ -56,6 +56,7 @@ namespace KaVE.FeedbackProcessor
             LogEventsPerDeveloperDayStatistic(OpenDatabase(importDatabase));
             LogIDEActivationEvents(OpenDatabase(importDatabase));
             LogOccuringNames(OpenDatabase(importDatabase));
+            LogCompletionStatistics(OpenDatabase(importDatabase));
             LogDevelopersPerDay(OpenDatabase(importDatabase));
 
             MapToActivities(OpenDatabase(importDatabase), OpenDatabase(activityDatabase));
@@ -68,6 +69,17 @@ namespace KaVE.FeedbackProcessor
 
             ConcurrentEventsStatistic(OpenDatabase(concurrentEventDatabase),"concurrenteventstatistic.csv");
             ConcurrentEventsStatistic(OpenDatabase(commandFollowupsDatabase),"commandfollowupsstatistic.csv");
+        }
+
+        private static void LogCompletionStatistics(IFeedbackDatabase database)
+        {
+            var invocations = new CompletionInvocationStatistic();
+
+            var processor = new FeedbackProcessor(database, Logger);
+            processor.Register(invocations);
+            processor.ProcessFeedback();
+
+            Logger.Info("Found {0} completion invocations.", invocations.CompletionInvocations);
         }
 
         private static void LogDevelopersPerDay(IFeedbackDatabase database)
