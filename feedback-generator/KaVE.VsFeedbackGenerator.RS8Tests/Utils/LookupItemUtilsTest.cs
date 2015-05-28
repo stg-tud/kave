@@ -669,7 +669,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Utils
                 }");
 
             ThenProposalCollectionContains(
-                "[System.Object[][][], mscorlib, 4.0.0.0] [C, TestProject].myJaggedArray",
+                "[System.Object[,,], mscorlib, 4.0.0.0] [C, TestProject].myJaggedArray",
                 "[System.Void, mscorlib, 4.0.0.0] [C, TestProject].myMethod`1[[R -> R]]([R[]] p)",
                 "[System.Object[,,], mscorlib, 4.0.0.0] [C, TestProject].myMultidimensionalArray",
                 "[System.String[], mscorlib, 4.0.0.0] [C, TestProject].myStringArray");
