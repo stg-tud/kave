@@ -135,6 +135,7 @@
     <Compile Include="Statistics\DeveloperStatisticsCalculator.cs" />
     <Compile Include="Statistics\DocumentNameCollector.cs" />
     <Compile Include="Statistics\EventsPerDeveloperDayStatisticCalculator.cs" />
+    <Compile Include="Statistics\ManualCompletionDurationStatistic.cs" />
     <Compile Include="Statistics\ParallelIDEInstancesStatisticCalculator.cs" />
     <Compile Include="Statistics\WindowNameCollector.cs" />
     <Compile Include="Utils\EventMappingUtils.cs" />
