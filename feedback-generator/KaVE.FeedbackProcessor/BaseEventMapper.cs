@@ -99,6 +99,9 @@ namespace KaVE.FeedbackProcessor
             }
         }
 
-        public virtual void OnStreamEnds() {}
+        public virtual IKaVESet<IDEEvent> OnStreamEnds()
+        {
+            return Sets.NewHashSet<IDEEvent>();
+        }
     }
 }

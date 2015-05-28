@@ -79,7 +79,7 @@ namespace KaVE.FeedbackProcessor
             _logger.Info("- Finalizing...");
             foreach (var mapper1 in _mappers)
             {
-                mapper1.OnStreamEnds();
+                InsertEventsToTargetEventCollection(mapper1.OnStreamEnds());
             }
         }
 

@@ -21,6 +21,7 @@
 using System;
 using System.Collections.Generic;
 using KaVE.Commons.Model.Events;
+using KaVE.Commons.Utils.Collections;
 using KaVE.FeedbackProcessor.Cleanup.Heuristics;
 using KaVE.FeedbackProcessor.Model;
 using KaVE.FeedbackProcessor.Utils;
@@ -100,9 +101,11 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
             _unmappedDebugEvent = null;
         }
 
-        public override void OnStreamEnds()
+        public override IKaVESet<IDEEvent> OnStreamEnds()
         {
-            // TODO: implement a way to insert the cached event on stream end.
+            return _unmappedRightSideEvent != null
+                ? Sets.NewHashSet<IDEEvent>(_unmappedRightSideEvent)
+                : base.OnStreamEnds();
         }
 
         private void MapCommandEvent(CommandEvent commandEvent)
@@ -193,7 +196,7 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
                 }
                 if (_unmappedTripleMapping.Item2.Equals(commandEvent.CommandId))
                 {
-                    DropCurrentEvent(); 
+                    DropCurrentEvent();
                     _unmappedTripleMappingEvent = null;
                     return;
                 }
@@ -203,7 +206,8 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
             }
             _unmappedTripleMapping = SpecialTripleMappings[commandEvent.CommandId];
             _unmappedTripleMappingEvent = commandEvent;
-            ReplaceCurrentEventWith(ChangeCommandId(_unmappedTripleMappingEvent, _unmappedTripleMapping.Item3)); ;
+            ReplaceCurrentEventWith(ChangeCommandId(_unmappedTripleMappingEvent, _unmappedTripleMapping.Item3));
+            ;
         }
 
         private void HandleSpecialPairMappings(CommandEvent commandEvent)

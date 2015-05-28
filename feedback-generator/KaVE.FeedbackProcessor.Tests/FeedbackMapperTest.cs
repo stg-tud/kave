@@ -23,6 +23,7 @@ using System.Collections.Generic;
 using System.Linq;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.TestUtils.Model.Events;
+using KaVE.Commons.Utils.Collections;
 using KaVE.Commons.Utils.Exceptions;
 using KaVE.FeedbackProcessor.Database;
 using KaVE.FeedbackProcessor.Model;
@@ -272,6 +273,19 @@ namespace KaVE.FeedbackProcessor.Tests
             Assert.AreEqual(3, cleanEvents.Count);
         }
 
+        [Test]
+        public void InsertEventsOnStreamEnd()
+        {
+            const string ideSessionUUID = "sessionA";
+            GivenDeveloperExists(ideSessionUUID);
+
+            _uut.RegisterMapper(new OnStreamEndsInsertingConsumer());
+            _uut.MapFeedback();
+
+            var cleanEvents = _targetFeedbackDatabase.GetEventsCollection().FindAll().ToList();
+            Assert.AreEqual(1,cleanEvents.Count);
+        }
+
         private abstract class TestProcessor : BaseEventMapper
         {
             public static readonly IList<TestProcessor> Instances = new List<TestProcessor>();
@@ -329,6 +343,14 @@ namespace KaVE.FeedbackProcessor.Tests
                 newEvent.IDESessionUUID = @event.IDESessionUUID;
 
                 Insert(newEvent);
+            }
+        }
+
+        private class OnStreamEndsInsertingConsumer : TestProcessor
+        {
+            public override IKaVESet<IDEEvent> OnStreamEnds()
+            {
+                return Sets.NewHashSet<IDEEvent>(IDEEventTestFactory.SomeEvent());
             }
         }
     }

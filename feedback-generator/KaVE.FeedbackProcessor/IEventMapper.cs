@@ -30,6 +30,6 @@ namespace KaVE.FeedbackProcessor
         [NotNull]
         TResult Map(IDEEvent @event);
 
-        void OnStreamEnds();
+        TResult OnStreamEnds();
     }
 }

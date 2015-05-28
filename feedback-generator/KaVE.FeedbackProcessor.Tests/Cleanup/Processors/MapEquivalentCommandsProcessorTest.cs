@@ -140,10 +140,9 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
             };
 
             _uut.Map(rightSideEvent);
-            _uut.OnStreamEnds();
+            var actualSet = _uut.OnStreamEnds();
 
-            // TODO: Add assertion when inserting events at stream end is possible
-            throw new NotImplementedException("Event can not yet be inserted on stream ends.");
+            CollectionAssert.AreEquivalent(Sets.NewHashSet(rightSideEvent),actualSet);
         }
 
         [Test]
