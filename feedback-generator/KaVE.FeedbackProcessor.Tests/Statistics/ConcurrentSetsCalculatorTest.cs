@@ -25,6 +25,7 @@ using KaVE.Commons.TestUtils.Model.Events;
 using KaVE.Commons.Utils.Collections;
 using KaVE.FeedbackProcessor.Model;
 using KaVE.FeedbackProcessor.Statistics;
+using KaVE.FeedbackProcessor.Utils;
 using NUnit.Framework;
 
 namespace KaVE.FeedbackProcessor.Tests.Statistics
@@ -43,19 +44,21 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
         [Test]
         public void CountsEqualSetsCorrectly()
         {
+            var commandEvent = new CommandEvent {CommandId = "Test"};
+            var documentEvent = new DocumentEvent {Action = DocumentEvent.DocumentAction.Saved};
             var concurrentEvent = new ConcurrentEvent
             {
                 ConcurrentEventList = new List<IDEEvent>
                 {
-                    new CommandEvent {CommandId = "Test"},
-                    new DocumentEvent {Action = DocumentEvent.DocumentAction.Saved}
+                    commandEvent,
+                    documentEvent
                 }
             };
 
             _uut.OnEvent(concurrentEvent);
             _uut.OnEvent(concurrentEvent);
 
-            Assert.AreEqual(2, _uut.Statistic[Sets.NewHashSet("Document -> Saved", "Command -> Test")]);
+            Assert.AreEqual(2, _uut.Statistic[Sets.NewHashSet(EventMappingUtils.GetAbstractStringOf(documentEvent), EventMappingUtils.GetAbstractStringOf(commandEvent))]);
         }
 
         [Test]
