@@ -35,7 +35,7 @@ namespace KaVE.FeedbackProcessor.Utils
                 case -1:
                     return new SortedCommandPair(command2, command1);
                 default:
-                    return String.Compare(command1, command2) == 1
+                    return String.Compare(command1, command2, StringComparison.InvariantCulture) > 0
                         ? new SortedCommandPair(command2, command1)
                         : new SortedCommandPair(command1, command2);
             }
