@@ -53,11 +53,22 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
             _unmappedTextControlEvent = null;
         }
 
+        public override void OnStreamEnds()
+        {
+            // TODO: implement a way to insert the cached event on stream end.
+        }
+
         private void MapCommandEvent(CommandEvent commandEvent)
         {
             // returns true if StandardMappingProcedure should be called
-            if (!HandleDebugCommands(commandEvent)) return;
-            if (!HandleTextControlCommands(commandEvent)) return;
+            if (!HandleDebugCommands(commandEvent))
+            {
+                return;
+            }
+            if (!HandleTextControlCommands(commandEvent))
+            {
+                return;
+            }
 
             StandardMappingProcedure(commandEvent);
         }

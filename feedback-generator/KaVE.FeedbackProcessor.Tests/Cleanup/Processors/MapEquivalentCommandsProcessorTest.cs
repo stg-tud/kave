@@ -108,6 +108,24 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
         }
 
         [Test]
+        public void ShouldInsertCachedEventOnStreamEnds()
+        {
+            var triggeretAt = DateTimeFactory.SomeWorkingHoursDateTime();
+
+            var rightSideEvent = new CommandEvent
+            {
+                CommandId = _saveAllPair.Item2,
+                TriggeredAt = triggeretAt
+            };
+
+            _uut.Map(rightSideEvent);
+            _uut.OnStreamEnds();
+
+            // TODO: Add assertion when inserting events at stream end is possible
+            throw new NotImplementedException("Event can not yet be inserted on stream ends.");
+        }
+
+        [Test]
         public void ShouldNotInsertRightSideWhenLeftSideOccured()
         {
             var triggeredAt = DateTimeFactory.SomeWorkingHoursDateTime();
