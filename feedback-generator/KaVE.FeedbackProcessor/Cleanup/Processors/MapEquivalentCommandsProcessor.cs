@@ -78,46 +78,40 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
 
         private void StandardMappingProcedure(CommandEvent commandEvent)
         {
-            var mapping = FindMappingFromLeftSideFor(commandEvent);
-            var isOnLeftSide = mapping != null;
-            if (isOnLeftSide)
-            {
-                if (commandEvent.TriggeredBy == IDEEvent.Trigger.Unknown)
-                {
-                    _unmappedLeftSideEvent = commandEvent;
-                    DropCurrentEvent();
-                    if (_unmappedRightSideEvent != null) Insert(_unmappedRightSideEvent);
-                }
-                else 
-                {
-                    if (_unmappedRightSideEvent != null && _unmappedRightSideEvent.CommandId.Equals(mapping.Item2))
-                    {
-                        _unmappedRightSideEvent = null;
-                    }
-
-                    ReplaceCurrentEventWith(ChangeCommandId(commandEvent, mapping.Item2));
-                }
-            }
-
             if (_unmappedRightSideEvent != null && IsLate(commandEvent))
             {
                 Insert(_unmappedRightSideEvent);
                 _unmappedRightSideEvent = null;
             }
 
-            mapping = FindMappingFromRightSideFor(commandEvent);
-            var isOnRightSide = mapping != null;
-            if (isOnRightSide)
+            if (FindMappingFromLeftSideFor(commandEvent) != null)
+            {
+                if (commandEvent.TriggeredBy != IDEEvent.Trigger.Unknown)
+                {
+                    ReplaceCurrentEventWith(ChangeCommandId(commandEvent, FindMappingFromLeftSideFor(commandEvent).Item2));
+                }
+                else
+                {
+                    _unmappedLeftSideEvent = commandEvent;
+                    DropCurrentEvent();
+                    if (_unmappedRightSideEvent != null)
+                    {
+                        Insert(_unmappedRightSideEvent);
+                    }
+                }
+
+                _unmappedRightSideEvent = null;
+            }
+
+            if (FindMappingFromRightSideFor(commandEvent) != null)
             {
                 if (_unmappedLeftSideEvent == null)
                 {
                     _unmappedRightSideEvent = commandEvent;
                     DropCurrentEvent();
                 }
-                else
-                {
-                    _unmappedLeftSideEvent = null;
-                }
+
+                _unmappedLeftSideEvent = null;
             }
         }
 
