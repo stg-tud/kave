@@ -23,7 +23,7 @@ namespace KaVE.Commons.Utils.Csv
 {
     public static class CsvBuilderEx
     {
-        public static string ToCsv<TKey, TValue>(this IDictionary<TKey, TValue> dictionary)
+        public static string ToCsv<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> dictionary)
         {
             var builder = new CsvBuilder();
             foreach (var keyValuePair in dictionary)
