@@ -61,10 +61,5 @@ namespace KaVE.Commons.Model.Names.CSharp
         }
 
         private FieldName(string identifier) : base(identifier) {}
-
-        public override string Name
-        {
-            get { return Identifier.Substring(Identifier.IndexOf("].", StringComparison.Ordinal) + 2); }
-        }
     }
 }

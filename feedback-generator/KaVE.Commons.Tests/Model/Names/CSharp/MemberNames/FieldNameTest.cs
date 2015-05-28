@@ -73,5 +73,14 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp.MemberNames
             Assert.AreSame(TypeName.UnknownName, FieldName.UnknownName.DeclaringType);
             Assert.AreEqual("???", FieldName.UnknownName.Name);
         }
+
+        [Test]
+        public void HandlesDelegateValueType()
+        {
+            var fieldName = FieldName.Get("[d:[V,A] [D,A].()] [D,A].fieldName");
+
+            Assert.AreEqual("fieldName", fieldName.Name);
+            Assert.AreEqual("d:[V,A] [D,A].()", fieldName.ValueType.Identifier);
+        }
     }
 }

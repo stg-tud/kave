@@ -25,12 +25,20 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp
     [TestFixture]
     internal class ArrayTypeNameTest
     {
-        [Test]
-        public void DerivesFromSimpleType()
+        [TestCase("T, P", "T[], P"),
+         TestCase("A, B, 1.2.3.4", "A[], B, 1.2.3.4"),
+         TestCase("GT`1[[T -> PT, A]], A", "GT`1[][[T -> PT, A]], A"),
+         TestCase("T", "T[]"),
+         TestCase("s:S, P", "s:S[], P"),
+         TestCase("d:[RT, A] [DT, A].()", "d:[RT, A] [DT, A].()[]"),
+         TestCase("d:[RT[], A] [DT, A].([PT[], A] p)", "d:[RT[], A] [DT, A].([PT[], A] p)[]"),
+         TestCase("A[], B", "A[,], B"),
+         TestCase("A[,,], B", "A[,,,], B")]
+        public void DerivesFrom(string baseTypeIdentifer, string expectedDerivedNameIdentifier)
         {
-            var arrayTypeName = ArrayTypeName.From(TypeName.Get("T, P"), 1);
+            var arrayTypeName = ArrayTypeName.From(TypeName.Get(baseTypeIdentifer), 1);
 
-            Assert.AreSame(TypeName.Get("T[], P"), arrayTypeName);
+            Assert.AreSame(TypeName.Get(expectedDerivedNameIdentifier), arrayTypeName);
         }
 
         [Test]
@@ -41,42 +49,13 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp
             Assert.AreSame(TypeName.Get("SomeType[,], Assembly, 1.2.3.4"), arrayTypeName);
         }
 
-        [Test]
-        public void DerivesFromGenericType()
-        {
-            var arrayTypeName =
-                ArrayTypeName.From(
-                    TypeName.Get("SomeGenericType`1[[T -> System.Int32, mscore, 5.6.7.8]], A, 9.10.11.12"),
-                    1);
-
-            Assert.AreSame(
-                TypeName.Get("SomeGenericType`1[][[T -> System.Int32, mscore, 5.6.7.8]], A, 9.10.11.12"),
-                arrayTypeName);
-        }
-
-        [Test]
-        public void DerivesFromUnknownGenericType()
-        {
-            var arrayTypeName = ArrayTypeName.From(TypeName.Get("T"), 1);
-
-            Assert.AreSame(TypeName.Get("T[]"), arrayTypeName);
-        }
-
-        [Test]
-        public void DerivesFromPrefixedType()
-        {
-            var arrayTypeName = ArrayTypeName.From(TypeName.Get("s:S, P"), 1);
-
-            Assert.AreSame(TypeName.Get("s:S[], P"), arrayTypeName);
-        }
-
-
         [TestCase("ValueType[,,], As, 9.8.7.6"),
          TestCase("ValueType[], As, 5.4.3.2"),
          TestCase("a.Foo`1[][[T -> int, mscore, 1.0.0.0]], Y, 4.3.6.1"),
          TestCase("A[]"),
          TestCase("T -> System.String[], mscorlib, 4.0.0.0"),
-         TestCase("System.Int32[], mscorlib, 4.0.0.0")]
+         TestCase("System.Int32[], mscorlib, 4.0.0.0"),
+         TestCase("d:[RT, A] [DT, A].()[]")]
         public void ShouldBeArrayType(string identifier)
         {
             var arrayTypeName = TypeName.Get(identifier);
@@ -90,7 +69,9 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp
              "a.Foo`1[[T -> int, mscore, 1.0.0.0]], A, 1.2.3.4"),
          TestCase("A[]", "A"),
          TestCase("T -> System.String[], mscorlib, 4.0.0.0", "System.String, mscorlib, 4.0.0.0"),
-         TestCase("System.Int32[], mscorlib, 4.0.0.0", "System.Int32, mscorlib, 4.0.0.0")]
+         TestCase("System.Int32[], mscorlib, 4.0.0.0", "System.Int32, mscorlib, 4.0.0.0"),
+         TestCase("d:[RT, A] [DT, A].()[]", "d:[RT, A] [DT, A].()"),
+         TestCase("d:[RT[], A] [DT, A].([PT[], A] p)[]", "d:[RT[], A] [DT, A].([PT[], A] p)")]
         public void ShouldGetArrayBaseType(string identifier, string expected)
         {
             var arrayTypeName = TypeName.Get(identifier);
@@ -136,6 +117,27 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp
             var uut = TypeName.Get("ValueType, As, 2.5.1.6");
 
             Assert.IsFalse(uut.IsArrayType);
+        }
+
+        [Test]
+        public void HandlesDelegateBaseType()
+        {
+            var uut = TypeName.Get("d:[RT, A] [N.O+DT, AA, 1.2.3.4].()[]");
+
+            Assert.AreEqual("N.O+DT[]", uut.FullName);
+            Assert.AreEqual("N", uut.Namespace.Identifier);
+            Assert.AreEqual("DT[]", uut.Name);
+            Assert.AreEqual("AA, 1.2.3.4", uut.Assembly.Identifier);
+            Assert.AreEqual("N.O, AA, 1.2.3.4", uut.DeclaringType.Identifier);
+        }
+
+        [Test]
+        public void HandlesGenericDelegateBaseType()
+        {
+            var uut = TypeName.Get("d:[T] [DT`1[[T -> String, mscorlib]]].([T] p)[]");
+
+            Assert.IsTrue(uut.HasTypeParameters);
+            CollectionAssert.AreEqual(new[] { TypeParameterName.Get("T -> String, mscorlib") }, uut.TypeParameters);
         }
     }
 }

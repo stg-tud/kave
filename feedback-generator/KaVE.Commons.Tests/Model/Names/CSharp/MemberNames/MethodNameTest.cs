@@ -107,9 +107,9 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp.MemberNames
         [Test]
         public void ShouldIncludeTypeParametersInSignature()
         {
-            var methodName = MethodName.Get("[R, R, 1.2.3.4] [D, D, 5.6.7.8].M[[T]]([T] p)");
+            var methodName = MethodName.Get("[R, R, 1.2.3.4] [D, D, 5.6.7.8].M`1[[T]]([T] p)");
 
-            Assert.AreEqual("M[[T]]([T] p)", methodName.Signature);
+            Assert.AreEqual("M`1[[T]]([T] p)", methodName.Signature);
         }
 
         [Test]
@@ -212,6 +212,24 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp.MemberNames
             Assert.AreSame(TypeName.UnknownName, MethodName.UnknownName.DeclaringType);
             Assert.AreEqual("???", MethodName.UnknownName.Name);
             Assert.IsFalse(MethodName.UnknownName.HasParameters);
+        }
+
+        [Test]
+        public void ShouldHandleDelegateReturnType()
+        {
+            var methodName = MethodName.Get("[d:[R,A] [D,A].()] [D,B].M([P,B] p)");
+
+            Assert.AreEqual("M([P,B] p)", methodName.Signature);
+            Assert.AreEqual("M", methodName.Name);
+        }
+
+        [Test]
+        public void ShouldHandleDelegateParameterType()
+        {
+            var methodName = MethodName.Get("[R,B] [D,B].M([d:[R,A] [D,A].()] p)");
+
+            Assert.AreEqual("M([d:[R,A] [D,A].()] p)", methodName.Signature);
+            Assert.AreEqual("M", methodName.Name);
         }
     }
 }

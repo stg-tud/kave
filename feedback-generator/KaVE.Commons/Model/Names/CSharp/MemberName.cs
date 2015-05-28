@@ -17,8 +17,6 @@
  *    - Sven Amann
  */
 
-using System;
-
 namespace KaVE.Commons.Model.Names.CSharp
 {
     public abstract class MemberName : Name, IMemberName
@@ -49,7 +47,13 @@ namespace KaVE.Commons.Model.Names.CSharp
             get { return Modifiers.Contains(StaticModifier); }
         }
 
-        public abstract string Name { get; }
+        public virtual string Name
+        {
+            get
+            {
+                return Identifier.Substring(Identifier.LastIndexOf('.') + 1);
+            }
+        }
 
         public ITypeName ValueType
         {

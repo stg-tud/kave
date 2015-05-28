@@ -82,12 +82,12 @@ namespace KaVE.Commons.Model.Names.CSharp
 
         public ITypeName ArrayBaseType
         {
-            get { throw new NotImplementedException(); }
+            get { return null; }
         }
 
         public ITypeName DeriveArrayTypeName(int rank)
         {
-            throw new NotImplementedException();
+            return ArrayTypeName.From(this, rank);
         }
 
         public bool IsTypeParameter
@@ -177,7 +177,12 @@ namespace KaVE.Commons.Model.Names.CSharp
 
         public string Signature
         {
-            get { return Name + DelegateMethod.Signature; }
+            get
+            {
+                var endOfValueType = Identifier.EndOfNextTypeIdentifier(2);
+                var endOfDelegateType = Identifier.EndOfNextTypeIdentifier(endOfValueType);
+                return Name + Identifier.Substring(endOfDelegateType + 1);
+            }
         }
 
         public IList<IParameterName> Parameters

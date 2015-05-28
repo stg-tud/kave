@@ -336,10 +336,7 @@ namespace KaVE.Commons.Model.Names.CSharp
 
         public ITypeName DeriveArrayTypeName(int rank)
         {
-            Asserts.That(rank > 0, "rank smaller than 1");
-            var rawFullName = RawFullName;
-            var suffix = Identifier.Substring(rawFullName.Length);
-            return Get(string.Format("{0}[{1}]{2}", rawFullName, new string(',', rank - 1), suffix));
+            return ArrayTypeName.From(this, rank);
         }
 
         public virtual bool IsDelegateType

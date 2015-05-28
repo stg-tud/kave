@@ -17,6 +17,7 @@
  *    - Sven Amann
  */
 
+using System.Linq;
 using System.Text.RegularExpressions;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.JetBrains.Annotations;
@@ -25,30 +26,70 @@ namespace KaVE.Commons.Model.Names.CSharp
 {
     public class ArrayTypeName : TypeName
     {
+        private static readonly Regex ArrayTypeNameSuffix = new Regex("(\\[[,]*\\])([^()]*)$");
+
         internal static bool IsArrayTypeIdentifier(string identifier)
         {
-            return Regex.IsMatch(identifier, "\\[[,]*\\]");
+            return ArrayTypeNameSuffix.IsMatch(identifier);
         }
 
         /// <summary>
-        /// Derives an array-type name from this type name.
+        ///     Derives an array-type name from this type name.
         /// </summary>
         /// <param name="baseType">The array's base type</param>
         /// <param name="rank">the rank of the array; must be greater than 0</param>
-        public static ITypeName From(ITypeName baseType, int rank)
+        public static ArrayTypeName From(ITypeName baseType, int rank)
         {
             Asserts.That(rank > 0, "rank smaller than 1");
+
+            return (ArrayTypeName) Get(DeriveArrayTypeNameIdentifier(baseType, rank));
+        }
+
+        private static string DeriveArrayTypeNameIdentifier(ITypeName baseType, int rank)
+        {
+            if (baseType.IsArrayType)
+            {
+                rank += GetArrayRank(baseType);
+                baseType = baseType.ArrayBaseType;
+            }
+
             var identifier = baseType.Identifier;
-            var endOfRawType = identifier.IndexOf('[');
-            if (endOfRawType < 0)
+            var arrayMarker = CreateArrayMarker(rank);
+
+            string derivedIdentifier;
+            if (baseType.IsDelegateType)
             {
-                endOfRawType = identifier.IndexOf(',');
+                derivedIdentifier = identifier + arrayMarker;
             }
-            if (endOfRawType < 0)
+            else
             {
-                endOfRawType = identifier.Length;
+                derivedIdentifier = InsertMarkerAfterRawName(identifier, arrayMarker);
             }
-            return Get(identifier.Insert(endOfRawType, string.Format("[{0}]", new string(',', rank - 1))));
+            return derivedIdentifier;
+        }
+
+        private static int GetArrayRank(ITypeName arrayTypeName)
+        {
+            return ArrayTypeNameSuffix.Match(arrayTypeName.Identifier).Groups[1].Value.Count(c => c == ',') + 1;
+        }
+
+        private static string CreateArrayMarker(int rank)
+        {
+            return string.Format("[{0}]", new string(',', rank - 1));
+        }
+
+        private static string InsertMarkerAfterRawName(string identifier, string arrayMarker)
+        {
+            var endOfRawName = identifier.IndexOf('[');
+            if (endOfRawName < 0)
+            {
+                endOfRawName = identifier.IndexOf(',');
+            }
+            if (endOfRawName < 0)
+            {
+                endOfRawName = identifier.Length;
+            }
+            return identifier.Insert(endOfRawName, arrayMarker);
         }
 
         [UsedImplicitly]
@@ -66,28 +107,22 @@ namespace KaVE.Commons.Model.Names.CSharp
 
         public override ITypeName ArrayBaseType
         {
-            get
-            {
-                if (!IsArrayType)
-                {
-                    return null;
-                }
+            get { return TypeName.Get(ArrayTypeNameSuffix.Replace(Identifier, "$2")); }
+        }
 
-                var fullName = FullName;
-                var rawFullName = RawFullName;
-                var startOfArrayBraces = rawFullName.IndexOf('[');
-                if (startOfArrayBraces > -1)
-                {
-                    var start = rawFullName.Substring(0, startOfArrayBraces);
-                    var end = fullName.Substring(rawFullName.Length);
-                    fullName = start + end;
-                }
-                if (Assembly.Identifier.Length > 0)
-                {
-                    fullName += ", " + Assembly;
-                }
-                return TypeName.Get(fullName);
-            }
+        public int Rank
+        {
+            get { return GetArrayRank(this); }
+        }
+
+        public override string FullName
+        {
+            get { return ArrayBaseType.FullName + CreateArrayMarker(Rank); }
+        }
+
+        public override IAssemblyName Assembly
+        {
+            get { return ArrayBaseType.Assembly; }
         }
     }
 }

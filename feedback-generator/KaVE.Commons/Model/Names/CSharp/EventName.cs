@@ -56,11 +56,6 @@ namespace KaVE.Commons.Model.Names.CSharp
 
         private EventName(string identifier) : base(identifier) {}
 
-        public override string Name
-        {
-            get { return Identifier.Substring(Identifier.LastIndexOf('.') + 1); }
-        }
-
         public ITypeName HandlerType
         {
             get { return ValueType; }

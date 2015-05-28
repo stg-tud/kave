@@ -183,6 +183,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
         private static ITypeName ToAnonymousName(ITypeName type)
         {
             return ToAnonymousName<UnknownTypeName, ITypeName>(type, ToAnonymousName) ??
+                   ToAnonymousName<ArrayTypeName, ITypeName>(type, ToAnonymousName) ??
                    ToAnonymousName<DelegateTypeName, ITypeName>(type, ToAnonymousName) ??
                    ToAnonymousName<TypeName, ITypeName>(type, ToAnonymousName) ??
                    ToAnonymousName<TypeParameterName, ITypeName>(type, ToAnonymousName) ??
@@ -192,6 +193,13 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
         private static UnknownTypeName ToAnonymousName(UnknownTypeName type)
         {
             return type;
+        }
+
+        private static ArrayTypeName ToAnonymousName(ArrayTypeName type)
+        {
+            var rank = type.Rank;
+            var anonymousBaseName = type.ArrayBaseType.ToAnonymousName();
+            return ArrayTypeName.From(anonymousBaseName, rank);
         }
 
         private static DelegateTypeName ToAnonymousName(DelegateTypeName type)

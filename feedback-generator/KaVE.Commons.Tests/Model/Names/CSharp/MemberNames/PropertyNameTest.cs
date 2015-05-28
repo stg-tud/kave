@@ -64,5 +64,13 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp.MemberNames
 
             Assert.IsTrue(propertyName.IsStatic);
         }
+
+        [Test]
+        public void HandlesDelegateValueType()
+        {
+            var propertyName = PropertyName.Get("[d:[R,A] [D,A].()] [D,B].P");
+
+            Assert.AreEqual("P", propertyName.Name);
+        }
     }
 }

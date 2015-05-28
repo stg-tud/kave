@@ -283,6 +283,14 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
         }
 
         [Test]
+        public void FieldDeclaration_Array()
+        {
+            var sst = new FieldDeclaration{Name = FieldName.Get("[d:[V, A] [N.TD, A].()[]] [DT, A]._delegatesField")};
+
+            AssertPrint(sst, "TD[] _delegatesField;");
+        }
+
+        [Test]
         public void PropertyDeclaration_GetterOnly()
         {
             var sst = new PropertyDeclaration

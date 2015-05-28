@@ -19,6 +19,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using KaVE.Commons.Utils.Collections;
 using KaVE.JetBrains.Annotations;
 
@@ -73,6 +74,8 @@ namespace KaVE.Commons.Model.Names.CSharp
             return Registry.GetOrCreate(identifier);
         }
 
+        private static readonly Regex SignatureSyntax = new Regex("\\]\\.((([^([]+)(?:`[0-9]+\\[[^(]+\\]){0,1})\\(.*\\))$");
+
         private MethodName(string identifier)
             : base(identifier) {}
 
@@ -80,9 +83,7 @@ namespace KaVE.Commons.Model.Names.CSharp
         {
             get
             {
-                var fullName = FullName;
-                var startOfTypeParameters = fullName.LastIndexOf('`');
-                return startOfTypeParameters > -1 ? fullName.Substring(0, startOfTypeParameters) : FullName;
+                return SignatureSyntax.Match(Identifier).Groups[3].Value;
             }
         }
 
@@ -90,11 +91,7 @@ namespace KaVE.Commons.Model.Names.CSharp
         {
             get
             {
-                var endIndexOfMethodName = Identifier.IndexOf('(');
-                var startIndexOfMethodName =
-                    Identifier.LastIndexOf("].", endIndexOfMethodName, StringComparison.Ordinal) + 2;
-                var lengthOfMethodName = endIndexOfMethodName - startIndexOfMethodName;
-                return Identifier.Substring(startIndexOfMethodName, lengthOfMethodName);
+                return SignatureSyntax.Match(Identifier).Groups[2].Value;
             }
         }
 
@@ -137,8 +134,7 @@ namespace KaVE.Commons.Model.Names.CSharp
         {
             get
             {
-                var startOfSignature = Identifier.IndexOf("].", StringComparison.Ordinal) + 2;
-                return Identifier.Substring(startOfSignature);
+                return SignatureSyntax.Match(Identifier).Groups[1].Value;
             }
         }
     }

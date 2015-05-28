@@ -73,11 +73,6 @@ namespace KaVE.Commons.Model.Names.CSharp
         private PropertyName(string identifier)
             : base(identifier) {}
 
-        public override string Name
-        {
-            get { return Identifier.Substring(Identifier.IndexOf("].", System.StringComparison.Ordinal) + 2); }
-        }
-
         public bool HasSetter
         {
             get { return Modifiers.Contains(SetterModifier); }

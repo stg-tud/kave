@@ -145,5 +145,21 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp
             var eventName = EventName.Get("[d:[System.Void, mscorlib, 4.0.0.0] [C+Delegate, TestProject].([System.Object, mscorlib, 4.0.0.0] obj)] [C, TestProject].Event");
             Assert.AreSame(TypeName.Get("d:[System.Void, mscorlib, 4.0.0.0] [C+Delegate, TestProject].([System.Object, mscorlib, 4.0.0.0] obj)"), eventName.HandlerType);
         }
+
+        [Test]
+        public void IsDelegateTypeName()
+        {
+            var typeName = TypeName.Get("d:[System.Void, mscorlib, 4.0.0.0] [System.AppDomainInitializer, mscorlib, 4.0.0.0].([System.String[], mscorlib, 4.0.0.0] args)");
+            Assert.IsInstanceOf<DelegateTypeName>(typeName);
+        }
+
+        [Test]
+        public void ParsesTypeParameters()
+        {
+            var typeName = TypeName.Get("d:[T] [DT`1[[T -> String, mscorlib]]].([T] p)");
+
+            Assert.IsTrue(typeName.HasTypeParameters);
+            CollectionAssert.AreEqual(new[] { TypeParameterName.Get("T -> String, mscorlib") }, typeName.TypeParameters);
+        }
     }
 }
