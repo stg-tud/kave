@@ -75,7 +75,7 @@ namespace KaVE.FeedbackProcessor
         {
             var invocations = new CompletionInvocationStatistic();
             var durations = new CompletionDurationStatistic();
-            var manualDurations = new ManualCompletionDurationStatistic();
+            var manualDurations = new ManualCompletionsStatistic();
 
             var processor = new FeedbackProcessor(database, Logger);
             processor.Register(invocations);
@@ -86,7 +86,12 @@ namespace KaVE.FeedbackProcessor
             Logger.Info("Found {0} completion invocations.", invocations.CompletionInvocations);
             Output("completion-durations.csv", durations.StatisticAsCsv());
             Logger.Info("Found {0} developer days with completion usage.", durations.NumberOfDeveloperDaysWithCompletionUsage);
+
             Logger.Info("Found {0} milliseconds of manual completion usage.", manualDurations.DurationInManualCompletion.TotalMilliseconds);
+            Logger.Info("Found {0} manual completion usages.", manualDurations.NumberOfManualCompletions);
+            Logger.Info("Found {0} applied manual completion usages.", manualDurations.NumberOfAppliedCompletions);
+            Logger.Info("Found {0} cancelled manual completion usages.", manualDurations.NumberOfCancelledCompletions);
+            Logger.Info("Found manual completion usages on {0} developer days.", manualDurations.NumberOfDeveloperDaysWithManualCompletionUsage);
         }
 
         private static void LogDevelopersPerDay(IFeedbackDatabase database)

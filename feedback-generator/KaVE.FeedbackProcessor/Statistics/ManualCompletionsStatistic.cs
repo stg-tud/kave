@@ -24,7 +24,7 @@ using KaVE.FeedbackProcessor.Model;
 
 namespace KaVE.FeedbackProcessor.Statistics
 {
-    internal class ManualCompletionDurationStatistic : BaseEventProcessor
+    internal class ManualCompletionsStatistic : BaseEventProcessor
     {
         private static readonly CommandEvent NoTrigger = new CommandEvent {TriggeredAt = new DateTime()};
         private static readonly CompletionEvent NoCompletion = new CompletionEvent {TriggeredAt = new DateTime()};
@@ -32,12 +32,25 @@ namespace KaVE.FeedbackProcessor.Statistics
         private CommandEvent _manualCodeCompletionTrigger = NoTrigger;
         private CompletionEvent _filteredCompletion = NoCompletion;
 
+        public int NumberOfManualCompletions { get; private set; }
         public TimeSpan DurationInManualCompletion = TimeSpan.Zero;
+        public int NumberOfDeveloperDaysWithManualCompletionUsage { get; private set; }
+        public int NumberOfAppliedCompletions { get; private set; }
+        public int NumberOfCancelledCompletions { get; private set; }
 
-        public ManualCompletionDurationStatistic()
+        private DateTime _today;
+        private bool _developerCountedToday;
+
+        public ManualCompletionsStatistic()
         {
             RegisterFor<CommandEvent>(OnCommandEvent);
             RegisterFor<CompletionEvent>(OnCompletionEvent);
+        }
+
+        public override void OnStreamStarts(Developer developer)
+        {
+            _today = new DateTime();
+            _developerCountedToday = false;
         }
 
         private void OnCompletionEvent(CompletionEvent @event)
@@ -47,12 +60,21 @@ namespace KaVE.FeedbackProcessor.Statistics
             {
                 // ReSharper disable once PossibleInvalidOperationException
                 DurationInManualCompletion += @event.Duration.Value;
+
                 if (@event.TerminatedState == TerminationState.Filtered)
                 {
                     _filteredCompletion = @event;
                 }
                 else
                 {
+                    if (@event.TerminatedState == TerminationState.Applied)
+                    {
+                        NumberOfAppliedCompletions++;
+                    }
+                    else if (@event.TerminatedState == TerminationState.Cancelled)
+                    {
+                        NumberOfCancelledCompletions++;
+                    }
                     _filteredCompletion = NoCompletion;
                 }
                 _manualCodeCompletionTrigger = NoTrigger;
@@ -68,7 +90,15 @@ namespace KaVE.FeedbackProcessor.Statistics
         {
             if ("CompleteCodeBasic".Equals(@event.CommandId))
             {
+                NumberOfManualCompletions++;
                 _manualCodeCompletionTrigger = @event;
+
+                var date = @event.GetTriggerDate();
+                if (!_developerCountedToday && date != _today)
+                {
+                    _today = date;
+                    NumberOfDeveloperDaysWithManualCompletionUsage++;
+                }
             }
         }
     }
