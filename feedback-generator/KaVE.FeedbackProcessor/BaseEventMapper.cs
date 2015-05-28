@@ -99,6 +99,6 @@ namespace KaVE.FeedbackProcessor
             }
         }
 
-        public void OnStreamEnds() {}
+        public virtual void OnStreamEnds() {}
     }
 }
