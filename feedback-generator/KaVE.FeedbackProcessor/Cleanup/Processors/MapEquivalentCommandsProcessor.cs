@@ -39,8 +39,50 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
 
         private CommandEvent _unmappedDebugEvent;
 
-        private CommandEvent _unmappedTextControlEvent;
+        private CommandEvent _unmappedTripleMappingEvent;
 
+        private CommandEvent _unmappedPairMappingEvent;
+
+        private Tuple<string, string, string> _unmappedTripleMapping;
+
+        private Tuple<string, string> _unmappedPairMapping;
+
+        // Key - First Event in Mapping; Value - Tuple of (Second Event in Mapping, Third Event in Mapping, Merged Command ID)
+        protected readonly Dictionary<string, Tuple<string, string, string>> SpecialTripleMappings = new Dictionary
+            <string, Tuple<string, string, string>>
+        {
+            {
+                "Copy",
+                Tuple.Create(
+                    "{5EFC7975-14BC-11CF-9B2B-00AA00573819}:15:Edit.Copy",
+                    "TextControl.Copy",
+                    "{5EFC7975-14BC-11CF-9B2B-00AA00573819}:15:Edit.Copy")
+            },
+            {
+                "Cut",
+                Tuple.Create(
+                    "{5EFC7975-14BC-11CF-9B2B-00AA00573819}:16:Edit.Cut",
+                    "TextControl.Cut",
+                    "{5EFC7975-14BC-11CF-9B2B-00AA00573819}:16:Edit.Cut")
+            },
+            {
+                "Paste",
+                Tuple.Create(
+                    "{5EFC7975-14BC-11CF-9B2B-00AA00573819}:26:Edit.Paste",
+                    "TextControl.Paste",
+                    "{5EFC7975-14BC-11CF-9B2B-00AA00573819}:26:Edit.Paste")
+            },
+        };
+
+        // Key - First Event in Mapping; Value - Tuple of (Second Event in Mapping, Merged Command ID)
+        protected readonly Dictionary<string, Tuple<string, string>> SpecialPairMappings = new Dictionary
+            <string, Tuple<string, string>>
+        {
+            {"Start Debugging", Tuple.Create("{5EFC7975-14BC-11CF-9B2B-00AA00573819}:295:Debug.Start", "Debug.Start")},
+            {"Add", Tuple.Create("{57735D06-C920-4415-A2E0-7D6E6FBDFA99}:4100:Team.Git.Remove", "Git.Add")},
+            {"Exclude", Tuple.Create("{57735D06-C920-4415-A2E0-7D6E6FBDFA99}:4100:Team.Git.Remove", "Git.Exclude")},
+            {"Include", Tuple.Create("{57735D06-C920-4415-A2E0-7D6E6FBDFA99}:4100:Team.Git.Remove", "Git.Include")}
+        };
 
         public MapEquivalentCommandsProcessor(IResourceProvider resourceProvider)
         {
@@ -51,9 +93,11 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
 
         public override void OnStreamStarts(Developer value)
         {
+            _unmappedLeftSideEvent = null;
             _unmappedRightSideEvent = null;
+            _unmappedTripleMappingEvent = null;
+            _unmappedPairMappingEvent = null;
             _unmappedDebugEvent = null;
-            _unmappedTextControlEvent = null;
         }
 
         public override void OnStreamEnds()
@@ -63,17 +107,22 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
 
         private void MapCommandEvent(CommandEvent commandEvent)
         {
-            // returns true if StandardMappingProcedure should be called
-            if (!HandleDebugCommands(commandEvent))
+            if (IsDebugClickEvent(commandEvent) || _unmappedDebugEvent != null)
             {
-                return;
+                HandleDebugCommands(commandEvent);
             }
-            if (!HandleTextControlCommands(commandEvent))
+            else if (SpecialTripleMappings.ContainsKey(commandEvent.CommandId) || _unmappedTripleMappingEvent != null)
             {
-                return;
+                HandleSpecialTripleMappings(commandEvent);
             }
-
-            StandardMappingProcedure(commandEvent);
+            else if (SpecialPairMappings.ContainsKey(commandEvent.CommandId) || _unmappedPairMappingEvent != null)
+            {
+                HandleSpecialPairMappings(commandEvent);
+            }
+            else
+            {
+                StandardMappingProcedure(commandEvent);
+            }
         }
 
         private void StandardMappingProcedure(CommandEvent commandEvent)
@@ -88,7 +137,8 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
             {
                 if (commandEvent.TriggeredBy != IDEEvent.Trigger.Unknown)
                 {
-                    ReplaceCurrentEventWith(ChangeCommandId(commandEvent, FindMappingFromLeftSideFor(commandEvent).Item2));
+                    ReplaceCurrentEventWith(
+                        ChangeCommandId(commandEvent, FindMappingFromLeftSideFor(commandEvent).Item2));
                 }
                 else
                 {
@@ -115,46 +165,64 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
             }
         }
 
-        private bool HandleTextControlCommands(CommandEvent commandEvent)
-        {
-            if (_unmappedTextControlEvent != null)
-            {
-                if (ConcurrentEventHeuristic.AreConcurrent(_unmappedTextControlEvent, commandEvent))
-                {
-                    DropCurrentEvent();
-                    _unmappedTextControlEvent = commandEvent;
-                    return false;
-                }
-                _unmappedTextControlEvent = null;
-            }
-
-            if (IsTextControlClickEvent(commandEvent))
-            {
-                _unmappedTextControlEvent = commandEvent;
-            }
-            return true;
-        }
-
-        private bool HandleDebugCommands(CommandEvent commandEvent)
+        private void HandleDebugCommands(CommandEvent commandEvent)
         {
             if (_unmappedDebugEvent != null)
             {
                 if (IsFollowupDebugCommand(commandEvent))
                 {
                     DropCurrentEvent();
-                    return false;
+                    return;
                 }
-                InsertMergedDebugCommand();
                 _unmappedDebugEvent = null;
+                MapCommandEvent(commandEvent);
+                return;
             }
+            _unmappedDebugEvent = commandEvent;
+            ReplaceCurrentEventWith(CreateMergedCommand(commandEvent));
+        }
 
-            if (IsDebugClickEvent(commandEvent))
+        private void HandleSpecialTripleMappings(CommandEvent commandEvent)
+        {
+            if (_unmappedTripleMappingEvent != null)
             {
-                _unmappedDebugEvent = commandEvent;
-                DropCurrentEvent();
-                return false;
+                if (_unmappedTripleMapping.Item1.Equals(commandEvent.CommandId))
+                {
+                    DropCurrentEvent();
+                    return;
+                }
+                if (_unmappedTripleMapping.Item2.Equals(commandEvent.CommandId))
+                {
+                    DropCurrentEvent(); 
+                    _unmappedTripleMappingEvent = null;
+                    return;
+                }
+                _unmappedTripleMappingEvent = null;
+                MapCommandEvent(commandEvent);
+                return;
             }
-            return true;
+            _unmappedTripleMapping = SpecialTripleMappings[commandEvent.CommandId];
+            _unmappedTripleMappingEvent = commandEvent;
+            ReplaceCurrentEventWith(ChangeCommandId(_unmappedTripleMappingEvent, _unmappedTripleMapping.Item3)); ;
+        }
+
+        private void HandleSpecialPairMappings(CommandEvent commandEvent)
+        {
+            if (_unmappedPairMappingEvent != null)
+            {
+                if (_unmappedPairMapping.Item1.Equals(commandEvent.CommandId))
+                {
+                    DropCurrentEvent();
+                    _unmappedPairMappingEvent = null;
+                    return;
+                }
+                _unmappedPairMappingEvent = null;
+                MapCommandEvent(commandEvent);
+                return;
+            }
+            _unmappedPairMapping = SpecialPairMappings[commandEvent.CommandId];
+            _unmappedPairMappingEvent = commandEvent;
+            ReplaceCurrentEventWith(ChangeCommandId(_unmappedPairMappingEvent, _unmappedPairMapping.Item2));
         }
 
         private static bool IsDebugClickEvent(CommandEvent commandEvent)
@@ -168,10 +236,14 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
                     commandEvent.CommandId.Equals("{6E87CFAD-6C05-4ADF-9CD7-3B7943875B7C}:257:Debug.StartDebugTarget"));
         }
 
-        private static bool IsTextControlClickEvent(CommandEvent commandEvent)
+        private static CommandEvent CreateMergedCommand(CommandEvent commandEvent)
         {
-            return commandEvent.CommandId.Equals("Copy") || commandEvent.CommandId.Equals("Cut") ||
-                   commandEvent.CommandId.Equals("Paste");
+            var newEvent = new CommandEvent
+            {
+                CommandId = "Debug." + commandEvent.CommandId
+            };
+            newEvent.CopyIDEEventPropertiesFrom(commandEvent);
+            return newEvent;
         }
 
         private bool IsLate(IDEEvent commandEvent)
@@ -192,16 +264,6 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
                 TerminatedAt = commandEvent.TerminatedAt,
                 TriggeredBy = commandEvent.TriggeredBy
             };
-        }
-
-        private void InsertMergedDebugCommand()
-        {
-            var newEvent = new CommandEvent
-            {
-                CommandId = "Debug." + _unmappedDebugEvent.CommandId
-            };
-            newEvent.CopyIDEEventPropertiesFrom(_unmappedDebugEvent);
-            Insert(newEvent);
         }
 
         private SortedCommandPair FindMappingFromLeftSideFor(CommandEvent commandEvent)

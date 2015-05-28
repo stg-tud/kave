@@ -242,12 +242,13 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
             CollectionAssert.AreEquivalent(Sets.NewHashSet<IDEEvent>(someLateEvent), actualSet);
         }
 
-        [TestCase("Start", "{5EFC7975-14BC-11CF-9B2B-00AA00573819}:295:Debug.Start", "Debug.Start"),
-         TestCase("Continue", "{5EFC7975-14BC-11CF-9B2B-00AA00573819}:295:Debug.Start", "Debug.Continue"),
-         TestCase("Start", "{6E87CFAD-6C05-4ADF-9CD7-3B7943875B7C}:257:Debug.StartDebugTarget", "Debug.Start"),
-         TestCase("Continue", "{6E87CFAD-6C05-4ADF-9CD7-3B7943875B7C}:257:Debug.StartDebugTarget", "Debug.Continue")]
-        public void ShouldAddNewDebugAfterDebugCommandEvents(string debugClickId,
+        [TestCase("Start", "{6E87CFAD-6C05-4ADF-9CD7-3B7943875B7C}:257:Debug.StartDebugTarget",
+            "{5EFC7975-14BC-11CF-9B2B-00AA00573819}:295:Debug.Start", "Debug.Start"),
+         TestCase("Continue", "{5EFC7975-14BC-11CF-9B2B-00AA00573819}:295:Debug.Start",
+             "{6E87CFAD-6C05-4ADF-9CD7-3B7943875B7C}:257:Debug.StartDebugTarget", "Debug.Continue")]
+        public void ShouldInsertNewDebugEventWhenTwoDebugEventsFollows(string debugClickId,
             string visualStudioDebugId,
+            string secondVisualStudioDebugId,
             string expectedCommandId)
         {
             var triggeretAt = DateTimeFactory.SomeWorkingHoursDateTime();
@@ -263,6 +264,46 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
                 TriggeredAt = triggeretAt + MapEquivalentCommandsProcessor.EventTimeDifference
             };
             var event3 = new CommandEvent
+            {
+                CommandId = secondVisualStudioDebugId,
+                TriggeredAt = triggeretAt + MapEquivalentCommandsProcessor.EventTimeDifference
+            };
+            var lateEvent = new CommandEvent
+            {
+                CommandId = "Test",
+                TriggeredAt =
+                    triggeretAt + MapEquivalentCommandsProcessor.EventTimeDifference.Add(TimeSpan.FromSeconds(1))
+            };
+
+            var expectedEvent = new CommandEvent
+            {
+                CommandId = expectedCommandId,
+            };
+
+            expectedEvent.CopyIDEEventPropertiesFrom(event1);
+
+            CollectionAssert.AreEquivalent(Sets.NewHashSet(expectedEvent), _uut.Map(event1));
+            CollectionAssert.IsEmpty(_uut.Map(event2));
+            CollectionAssert.IsEmpty(_uut.Map(event3));
+            CollectionAssert.AreEquivalent(Sets.NewHashSet(lateEvent), _uut.Map(lateEvent));
+        }
+
+        [TestCase("Start", "{5EFC7975-14BC-11CF-9B2B-00AA00573819}:295:Debug.Start", "Debug.Start"),
+         TestCase("Continue", "{5EFC7975-14BC-11CF-9B2B-00AA00573819}:295:Debug.Start", "Debug.Continue"),
+         TestCase("Start", "{6E87CFAD-6C05-4ADF-9CD7-3B7943875B7C}:257:Debug.StartDebugTarget", "Debug.Start"),
+         TestCase("Continue", "{6E87CFAD-6C05-4ADF-9CD7-3B7943875B7C}:257:Debug.StartDebugTarget", "Debug.Continue")]
+        public void ShouldAddNewDebugEventWhenOneDebugEventFollows(string debugClickId,
+            string visualStudioDebugId,
+            string expectedCommandId)
+        {
+            var triggeretAt = DateTimeFactory.SomeWorkingHoursDateTime();
+
+            var event1 = new CommandEvent
+            {
+                CommandId = debugClickId,
+                TriggeredAt = triggeretAt
+            };
+            var event2 = new CommandEvent
             {
                 CommandId = visualStudioDebugId,
                 TriggeredAt = triggeretAt + MapEquivalentCommandsProcessor.EventTimeDifference
@@ -281,11 +322,10 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
 
             expectedEvent.CopyIDEEventPropertiesFrom(event1);
 
-            CollectionAssert.IsEmpty(_uut.Map(event1));
+            CollectionAssert.AreEquivalent(Sets.NewHashSet(expectedEvent), _uut.Map(event1));
             CollectionAssert.IsEmpty(_uut.Map(event2));
-            CollectionAssert.IsEmpty(_uut.Map(event3));
 
-            CollectionAssert.AreEquivalent(Sets.NewHashSet(expectedEvent, lateEvent), _uut.Map(lateEvent));
+            CollectionAssert.AreEquivalent(Sets.NewHashSet(lateEvent), _uut.Map(lateEvent));
         }
 
         [TestCase("Copy", "{5EFC7975-14BC-11CF-9B2B-00AA00573819}:15:Edit.Copy", "TextControl.Copy"),
@@ -330,6 +370,44 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
             CollectionAssert.AreEquivalent(Sets.NewHashSet(expectedEvent), _uut.Map(event1));
             CollectionAssert.IsEmpty(_uut.Map(event2));
             CollectionAssert.IsEmpty(_uut.Map(event3));
+            CollectionAssert.AreEquivalent(Sets.NewHashSet(lateEvent), _uut.Map(lateEvent));
+        }
+
+        [TestCase("Start Debugging", "{5EFC7975-14BC-11CF-9B2B-00AA00573819}:295:Debug.Start", "Debug.Start"),
+         TestCase("Add", "{57735D06-C920-4415-A2E0-7D6E6FBDFA99}:4100:Team.Git.Remove", "Git.Add"),
+         TestCase("Exclude", "{57735D06-C920-4415-A2E0-7D6E6FBDFA99}:4100:Team.Git.Remove", "Git.Exclude"),
+         TestCase("Include", "{57735D06-C920-4415-A2E0-7D6E6FBDFA99}:4100:Team.Git.Remove", "Git.Include")]
+        public void ShouldInsertNewEventForSpecialMappings(string firstEvent, string secondEvent, string expectedString)
+        {
+            var triggeretAt = DateTimeFactory.SomeWorkingHoursDateTime();
+
+            var event1 = new CommandEvent
+            {
+                CommandId = firstEvent,
+                TriggeredBy = IDEEvent.Trigger.Click,
+                TriggeredAt = triggeretAt
+            };
+            var event2 = new CommandEvent
+            {
+                CommandId = secondEvent,
+                TriggeredAt = triggeretAt + MapEquivalentCommandsProcessor.EventTimeDifference
+            };
+            var lateEvent = new CommandEvent
+            {
+                CommandId = "Test",
+                TriggeredAt =
+                    triggeretAt + MapEquivalentCommandsProcessor.EventTimeDifference.Add(TimeSpan.FromSeconds(1))
+            };
+
+            var expectedEvent = new CommandEvent
+            {
+                CommandId = expectedString,
+                TriggeredBy = IDEEvent.Trigger.Click,
+                TriggeredAt = event1.TriggeredAt
+            };
+
+            CollectionAssert.AreEquivalent(Sets.NewHashSet(expectedEvent), _uut.Map(event1));
+            CollectionAssert.IsEmpty(_uut.Map(event2));
             CollectionAssert.AreEquivalent(Sets.NewHashSet(lateEvent), _uut.Map(lateEvent));
         }
 
