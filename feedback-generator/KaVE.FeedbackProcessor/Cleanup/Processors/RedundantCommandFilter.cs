@@ -31,8 +31,7 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
             "TextControl.Paste",
             "TextControl.Delete",
             "{6E87CFAD-6C05-4ADF-9CD7-3B7943875B7C}:257:Debug.StartDebugTarget",
-            "{57735D06-C920-4415-A2E0-7D6E6FBDFA99}:4100:Team.Git.Remove",
-            "{5EFC7975-14BC-11CF-9B2B-00AA00573819}:295:Debug.Start"
+            "{57735D06-C920-4415-A2E0-7D6E6FBDFA99}:4100:Team.Git.Remove"
         };
 
         public RedundantCommandFilter()
