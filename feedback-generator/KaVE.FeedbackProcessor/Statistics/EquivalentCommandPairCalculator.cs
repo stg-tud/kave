@@ -29,7 +29,7 @@ namespace KaVE.FeedbackProcessor.Statistics
 {
     internal class EquivalentCommandPairCalculator : BaseEventProcessor
     {
-        public static readonly Dictionary<Pair<string>, int> Statistic = new Dictionary<Pair<string>, int>();
+        public readonly Dictionary<SortedCommandPair, int> Statistic = new Dictionary<SortedCommandPair, int>();
 
         public static int FrequencyThreshold;
 
@@ -66,7 +66,7 @@ namespace KaVE.FeedbackProcessor.Statistics
                 ForEach(keyValuePair => Statistic.Remove(keyValuePair.Key));
         }
 
-        private static void AddEquivalentCommandsToStatistic(string command1, string command2)
+        private void AddEquivalentCommandsToStatistic(string command1, string command2)
         {
             var keyPair = SortedCommandPair.NewSortedPair(command1, command2);
             if (Statistic.ContainsKey(keyPair))
