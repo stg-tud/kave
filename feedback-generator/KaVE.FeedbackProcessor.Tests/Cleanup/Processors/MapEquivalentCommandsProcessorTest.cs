@@ -18,12 +18,10 @@
  *    - Markus Zimmermann
  */
 
-using System;
 using System.Collections.Generic;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Utils.Collections;
 using KaVE.FeedbackProcessor.Cleanup.Processors;
-using KaVE.FeedbackProcessor.Tests.TestUtils;
 using KaVE.FeedbackProcessor.Utils;
 using NUnit.Framework;
 
@@ -87,74 +85,12 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
         }
 
         [Test]
-        public void ShouldKeepEventsWithoutMapping()
-        {
-            var inputEvent = new CommandEvent {CommandId = "Test"};
-
-            var actualSet = _uut.Map(inputEvent);
-
-            CollectionAssert.AreEquivalent(Sets.NewHashSet<IDEEvent>(inputEvent), actualSet);
-        }
-
-        [Test]
-        public void ShouldDropRightSideIfNoLeftSideWithUnknownTriggerOccured()
-        {
-            var inputEvent = new CommandEvent {CommandId = _saveAllPair.Item2};
-
-            var actualSet = _uut.Map(inputEvent);
-
-            CollectionAssert.AreEquivalent(Sets.NewHashSet<IDEEvent>(), actualSet);
-        }
-
-        [Test]
-        public void ShouldInsertRightSideWhenNoLeftSideOccured()
-        {
-            var triggeretAt = DateTimeFactory.SomeWorkingHoursDateTime();
-
-            var rightSideEvent = new CommandEvent
-            {
-                CommandId = _saveAllPair.Item2,
-                TriggeredAt = triggeretAt
-            };
-            var someLateEvent = new CommandEvent
-            {
-                CommandId = "Test",
-                TriggeredAt = triggeretAt + MapEquivalentCommandsProcessor.EventTimeDifference + TimeSpan.FromSeconds(1)
-            };
-
-            _uut.Map(rightSideEvent);
-            var actualSet = _uut.Map(someLateEvent);
-
-            CollectionAssert.AreEquivalent(Sets.NewHashSet<IDEEvent>(rightSideEvent, someLateEvent), actualSet);
-        }
-
-        [Test]
-        public void ShouldInsertCachedEventOnStreamEnds()
-        {
-            var triggeretAt = DateTimeFactory.SomeWorkingHoursDateTime();
-
-            var rightSideEvent = new CommandEvent
-            {
-                CommandId = _saveAllPair.Item2,
-                TriggeredAt = triggeretAt
-            };
-
-            _uut.Map(rightSideEvent);
-            var actualSet = _uut.OnStreamEnds();
-
-            CollectionAssert.AreEquivalent(Sets.NewHashSet(rightSideEvent),actualSet);
-        }
-
-        [Test]
         public void ShouldDropLeftSideIfItHasAnUnknownTrigger()
         {
-            var triggeretAt = DateTimeFactory.SomeWorkingHoursDateTime();
-
             var leftSideEvent = new CommandEvent
             {
                 CommandId = _reSharperToVsPair.Item1,
-                TriggeredBy = IDEEvent.Trigger.Unknown,
-                TriggeredAt = triggeretAt
+                TriggeredBy = IDEEvent.Trigger.Unknown
             };
 
             var actualSet = _uut.Map(leftSideEvent);
@@ -163,206 +99,41 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
         }
 
         [Test]
-        public void ShouldKeepRightSideWhenLeftSideWithUnknownTriggerOccured()
+        public void ShouldDropRightSideIfItHasAnUnknownTrigger()
         {
-            var triggeretAt = DateTimeFactory.SomeWorkingHoursDateTime();
-
             var leftSideEvent = new CommandEvent
             {
-                CommandId = _reSharperToVsPair.Item1,
-                TriggeredBy = IDEEvent.Trigger.Unknown,
-                TriggeredAt = triggeretAt
-            };
-            var rightSideEvent = new CommandEvent
-            {
                 CommandId = _reSharperToVsPair.Item2,
-                TriggeredAt = triggeretAt + MapEquivalentCommandsProcessor.EventTimeDifference
+                TriggeredBy = IDEEvent.Trigger.Unknown
             };
 
-            _uut.Map(leftSideEvent);
-            var actualSet = _uut.Map(rightSideEvent);
-
-            CollectionAssert.AreEquivalent(Sets.NewHashSet<IDEEvent>(rightSideEvent), actualSet);
-        }
-
-        [Test]
-        public void ShouldInsertRightSideWhenLeftSideWithUnknownTriggerOccurs()
-        {
-            var triggeretAt = DateTimeFactory.SomeWorkingHoursDateTime();
-
-            var leftSideEvent = new CommandEvent
-            {
-                CommandId = _reSharperToVsPair.Item1,
-                TriggeredBy = IDEEvent.Trigger.Unknown,
-                TriggeredAt = triggeretAt
-            };
-            var rightSideEvent = new CommandEvent
-            {
-                CommandId = _reSharperToVsPair.Item2,
-                TriggeredAt = triggeretAt + MapEquivalentCommandsProcessor.EventTimeDifference
-            };
-
-            _uut.Map(rightSideEvent);
             var actualSet = _uut.Map(leftSideEvent);
 
-            CollectionAssert.AreEquivalent(Sets.NewHashSet<IDEEvent>(rightSideEvent), actualSet);
+            CollectionAssert.IsEmpty(actualSet);
         }
 
         [Test]
-        public void ShouldNotInsertRightSideWhenLeftSideOccuredAndWasNotTriggeredByUnknown()
+        public void ShouldKeepRightSideIfItDoesNotHaveAnUnknownTrigger()
         {
-            var triggeredAt = DateTimeFactory.SomeWorkingHoursDateTime();
-
-            var rightSideEvent = new CommandEvent
+            var inputEvent = new CommandEvent
             {
                 CommandId = _saveAllPair.Item2,
-                TriggeredAt = triggeredAt
+                TriggeredBy = IDEEvent.Trigger.Shortcut
             };
 
-            triggeredAt = triggeredAt + MapEquivalentCommandsProcessor.EventTimeDifference;
-            var leftSideEvent = new CommandEvent
-            {
-                CommandId = _saveAllPair.Item1,
-                TriggeredBy = IDEEvent.Trigger.Click,
-                TriggeredAt = triggeredAt
-            };
+            var actualSet = _uut.Map(inputEvent);
 
-            triggeredAt = triggeredAt + MapEquivalentCommandsProcessor.EventTimeDifference + TimeSpan.FromSeconds(1);
-            var someLateEvent = new CommandEvent
-            {
-                CommandId = "Test",
-                TriggeredAt = triggeredAt
-            };
-
-            _uut.Map(rightSideEvent);
-            _uut.Map(leftSideEvent);
-            var actualSet = _uut.Map(someLateEvent);
-
-            CollectionAssert.AreEquivalent(Sets.NewHashSet<IDEEvent>(someLateEvent), actualSet);
+            CollectionAssert.AreEquivalent(Sets.NewHashSet<IDEEvent>(inputEvent), actualSet);
         }
 
-        [TestCase("Start", "{6E87CFAD-6C05-4ADF-9CD7-3B7943875B7C}:257:Debug.StartDebugTarget",
-            "{5EFC7975-14BC-11CF-9B2B-00AA00573819}:295:Debug.Start", "Debug.Start"),
-         TestCase("Continue", "{5EFC7975-14BC-11CF-9B2B-00AA00573819}:295:Debug.Start",
-             "{6E87CFAD-6C05-4ADF-9CD7-3B7943875B7C}:257:Debug.StartDebugTarget", "Debug.Continue")]
-        public void ShouldInsertNewDebugEventWhenTwoDebugEventsFollows(string debugClickId,
-            string visualStudioDebugId,
-            string secondVisualStudioDebugId,
-            string expectedCommandId)
+        [Test]
+        public void ShouldKeepEventsWithoutMapping()
         {
-            var triggeretAt = DateTimeFactory.SomeWorkingHoursDateTime();
+            var inputEvent = new CommandEvent {CommandId = "Test"};
 
-            var event1 = new CommandEvent
-            {
-                CommandId = debugClickId,
-                TriggeredAt = triggeretAt
-            };
-            var event2 = new CommandEvent
-            {
-                CommandId = visualStudioDebugId,
-                TriggeredAt = triggeretAt + MapEquivalentCommandsProcessor.EventTimeDifference
-            };
-            var event3 = new CommandEvent
-            {
-                CommandId = secondVisualStudioDebugId,
-                TriggeredAt = triggeretAt + MapEquivalentCommandsProcessor.EventTimeDifference
-            };
-            var lateEvent = new CommandEvent
-            {
-                CommandId = "Test",
-                TriggeredAt =
-                    triggeretAt + MapEquivalentCommandsProcessor.EventTimeDifference.Add(TimeSpan.FromSeconds(1))
-            };
+            var actualSet = _uut.Map(inputEvent);
 
-            var expectedEvent = new CommandEvent
-            {
-                CommandId = expectedCommandId,
-            };
-
-            expectedEvent.CopyIDEEventPropertiesFrom(event1);
-
-            CollectionAssert.AreEquivalent(Sets.NewHashSet(expectedEvent), _uut.Map(event1));
-            CollectionAssert.IsEmpty(_uut.Map(event2));
-            CollectionAssert.IsEmpty(_uut.Map(event3));
-            CollectionAssert.AreEquivalent(Sets.NewHashSet(lateEvent), _uut.Map(lateEvent));
-        }
-
-        [TestCase("Start", "{5EFC7975-14BC-11CF-9B2B-00AA00573819}:295:Debug.Start", "Debug.Start"),
-         TestCase("Continue", "{5EFC7975-14BC-11CF-9B2B-00AA00573819}:295:Debug.Start", "Debug.Continue"),
-         TestCase("Start", "{6E87CFAD-6C05-4ADF-9CD7-3B7943875B7C}:257:Debug.StartDebugTarget", "Debug.Start"),
-         TestCase("Continue", "{6E87CFAD-6C05-4ADF-9CD7-3B7943875B7C}:257:Debug.StartDebugTarget", "Debug.Continue")]
-        public void ShouldAddNewDebugEventWhenOneDebugEventFollows(string debugClickId,
-            string visualStudioDebugId,
-            string expectedCommandId)
-        {
-            var triggeretAt = DateTimeFactory.SomeWorkingHoursDateTime();
-
-            var event1 = new CommandEvent
-            {
-                CommandId = debugClickId,
-                TriggeredAt = triggeretAt
-            };
-            var event2 = new CommandEvent
-            {
-                CommandId = visualStudioDebugId,
-                TriggeredAt = triggeretAt + MapEquivalentCommandsProcessor.EventTimeDifference
-            };
-            var lateEvent = new CommandEvent
-            {
-                CommandId = "Test",
-                TriggeredAt =
-                    triggeretAt + MapEquivalentCommandsProcessor.EventTimeDifference.Add(TimeSpan.FromSeconds(1))
-            };
-
-            var expectedEvent = new CommandEvent
-            {
-                CommandId = expectedCommandId
-            };
-
-            expectedEvent.CopyIDEEventPropertiesFrom(event1);
-
-            CollectionAssert.AreEquivalent(Sets.NewHashSet(expectedEvent), _uut.Map(event1));
-            CollectionAssert.IsEmpty(_uut.Map(event2));
-
-            CollectionAssert.AreEquivalent(Sets.NewHashSet(lateEvent), _uut.Map(lateEvent));
-        }
-
-        [TestCase("Start Debugging", "{5EFC7975-14BC-11CF-9B2B-00AA00573819}:295:Debug.Start", "Debug.Start"),
-         TestCase("Add", "{57735D06-C920-4415-A2E0-7D6E6FBDFA99}:4100:Team.Git.Remove", "Git.Add"),
-         TestCase("Exclude", "{57735D06-C920-4415-A2E0-7D6E6FBDFA99}:4100:Team.Git.Remove", "Git.Exclude"),
-         TestCase("Include", "{57735D06-C920-4415-A2E0-7D6E6FBDFA99}:4100:Team.Git.Remove", "Git.Include")]
-        public void ShouldInsertNewEventForSpecialMappings(string firstEvent, string secondEvent, string expectedString)
-        {
-            var triggeretAt = DateTimeFactory.SomeWorkingHoursDateTime();
-
-            var event1 = new CommandEvent
-            {
-                CommandId = firstEvent,
-                TriggeredBy = IDEEvent.Trigger.Click,
-                TriggeredAt = triggeretAt
-            };
-            var event2 = new CommandEvent
-            {
-                CommandId = secondEvent,
-                TriggeredAt = triggeretAt + MapEquivalentCommandsProcessor.EventTimeDifference
-            };
-            var lateEvent = new CommandEvent
-            {
-                CommandId = "Test",
-                TriggeredAt =
-                    triggeretAt + MapEquivalentCommandsProcessor.EventTimeDifference.Add(TimeSpan.FromSeconds(1))
-            };
-
-            var expectedEvent = new CommandEvent
-            {
-                CommandId = expectedString,
-                TriggeredBy = IDEEvent.Trigger.Click,
-                TriggeredAt = event1.TriggeredAt
-            };
-
-            CollectionAssert.AreEquivalent(Sets.NewHashSet(expectedEvent), _uut.Map(event1));
-            CollectionAssert.IsEmpty(_uut.Map(event2));
-            CollectionAssert.AreEquivalent(Sets.NewHashSet(lateEvent), _uut.Map(lateEvent));
+            CollectionAssert.AreEquivalent(Sets.NewHashSet<IDEEvent>(inputEvent), actualSet);
         }
 
         public class TestResourceProvider : IResourceProvider

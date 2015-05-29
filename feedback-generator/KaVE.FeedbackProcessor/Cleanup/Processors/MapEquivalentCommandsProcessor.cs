@@ -20,9 +20,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using KaVE.Commons.Model.Events;
-using KaVE.Commons.Utils.Collections;
-using KaVE.FeedbackProcessor.Cleanup.Heuristics;
 using KaVE.FeedbackProcessor.Model;
 using KaVE.FeedbackProcessor.Utils;
 
@@ -34,26 +33,6 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
 
         private readonly List<SortedCommandPair> _mappings;
 
-        private CommandEvent _unmappedLeftSideEvent;
-
-        private CommandEvent _unmappedRightSideEvent;
-
-        private CommandEvent _unmappedDebugEvent;
-
-        private CommandEvent _unmappedPairMappingEvent;
-
-        private Tuple<string, string> _unmappedPairMapping;
-
-        // Key - First Event in Mapping; Value - Tuple of (Second Event in Mapping, Merged Command ID)
-        protected readonly Dictionary<string, Tuple<string, string>> SpecialPairMappings = new Dictionary
-            <string, Tuple<string, string>>
-        {
-            {"Start Debugging", Tuple.Create("{5EFC7975-14BC-11CF-9B2B-00AA00573819}:295:Debug.Start", "Debug.Start")},
-            {"Add", Tuple.Create("{57735D06-C920-4415-A2E0-7D6E6FBDFA99}:4100:Team.Git.Remove", "Git.Add")},
-            {"Exclude", Tuple.Create("{57735D06-C920-4415-A2E0-7D6E6FBDFA99}:4100:Team.Git.Remove", "Git.Exclude")},
-            {"Include", Tuple.Create("{57735D06-C920-4415-A2E0-7D6E6FBDFA99}:4100:Team.Git.Remove", "Git.Include")}
-        };
-
         public MapEquivalentCommandsProcessor(IResourceProvider resourceProvider)
         {
             _mappings = resourceProvider.GetCommandMappings();
@@ -61,137 +40,44 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
             RegisterFor<CommandEvent>(MapCommandEvent);
         }
 
-        public override void OnStreamStarts(Developer value)
-        {
-            _unmappedLeftSideEvent = null;
-            _unmappedRightSideEvent = null;
-            _unmappedPairMappingEvent = null;
-            _unmappedDebugEvent = null;
-        }
-
-        public override IKaVESet<IDEEvent> OnStreamEnds()
-        {
-            return _unmappedRightSideEvent != null
-                ? Sets.NewHashSet<IDEEvent>(_unmappedRightSideEvent)
-                : base.OnStreamEnds();
-        }
-
         private void MapCommandEvent(CommandEvent commandEvent)
         {
-            if (IsDebugClickEvent(commandEvent) || _unmappedDebugEvent != null)
-            {
-                HandleDebugCommands(commandEvent);
-            }
-            else if (SpecialPairMappings.ContainsKey(commandEvent.CommandId) || _unmappedPairMappingEvent != null)
-            {
-                HandleSpecialPairMappings(commandEvent);
-            }
-            else
-            {
-                StandardMappingProcedure(commandEvent);
-            }
-        }
+            /*
+             This approach only works under the following assumptions:
+             * - Exactly one of two corresponding CommandEvents (left side or right side) must have a not-unknown trigger type
+             *      (Neither none, nor both!)
+             * - None of the right-side events may occur without its left side and with an unknown trigger
+             */
 
-        private void StandardMappingProcedure(CommandEvent commandEvent)
-        {
-            if (_unmappedRightSideEvent != null && IsLate(commandEvent))
+            if (IsOnAnySide(commandEvent) && commandEvent.TriggeredBy == IDEEvent.Trigger.Unknown)
             {
-                Insert(_unmappedRightSideEvent);
-                _unmappedRightSideEvent = null;
+                DropCurrentEvent();
             }
-
-            if (FindMappingFromLeftSideFor(commandEvent) != null)
+            else if (IsOnLeftSide(commandEvent))
             {
-                if (commandEvent.TriggeredBy != IDEEvent.Trigger.Unknown)
-                {
-                    ReplaceCurrentEventWith(
-                        ChangeCommandId(commandEvent, FindMappingFromLeftSideFor(commandEvent).Item2));
-                }
-                else
-                {
-                    _unmappedLeftSideEvent = commandEvent;
-                    DropCurrentEvent();
-                    if (_unmappedRightSideEvent != null)
-                    {
-                        Insert(_unmappedRightSideEvent);
-                    }
-                }
-
-                _unmappedRightSideEvent = null;
-            }
-
-            if (FindMappingFromRightSideFor(commandEvent) != null)
-            {
-                if (_unmappedLeftSideEvent == null)
-                {
-                    _unmappedRightSideEvent = commandEvent;
-                    DropCurrentEvent();
-                }
-
-                _unmappedLeftSideEvent = null;
+                ReplaceCurrentEventWith(
+                    ChangeCommandId(commandEvent, MapCommand(commandEvent.CommandId)));
             }
         }
 
-        private void HandleDebugCommands(CommandEvent commandEvent)
+        private bool IsOnAnySide(CommandEvent commandEvent)
         {
-            if (_unmappedDebugEvent != null)
-            {
-                if (IsFollowupDebugCommand(commandEvent))
-                {
-                    DropCurrentEvent();
-                    return;
-                }
-                _unmappedDebugEvent = null;
-                MapCommandEvent(commandEvent);
-                return;
-            }
-            _unmappedDebugEvent = commandEvent;
-            ReplaceCurrentEventWith(CreateMergedCommand(commandEvent));
+            return (IsOnLeftSide(commandEvent) || IsOnRightSide(commandEvent));
         }
 
-        private void HandleSpecialPairMappings(CommandEvent commandEvent)
+        private bool IsOnLeftSide(CommandEvent commandEvent)
         {
-            if (_unmappedPairMappingEvent != null)
-            {
-                if (_unmappedPairMapping.Item1.Equals(commandEvent.CommandId))
-                {
-                    DropCurrentEvent();
-                    _unmappedPairMappingEvent = null;
-                    return;
-                }
-                _unmappedPairMappingEvent = null;
-                MapCommandEvent(commandEvent);
-                return;
-            }
-            _unmappedPairMapping = SpecialPairMappings[commandEvent.CommandId];
-            _unmappedPairMappingEvent = commandEvent;
-            ReplaceCurrentEventWith(ChangeCommandId(_unmappedPairMappingEvent, _unmappedPairMapping.Item2));
+            return _mappings.Any(pair => (pair.Item1.Equals(commandEvent.CommandId)));
         }
 
-        private static bool IsDebugClickEvent(CommandEvent commandEvent)
+        private bool IsOnRightSide(CommandEvent commandEvent)
         {
-            return commandEvent.CommandId.Equals("Continue") || commandEvent.CommandId.Equals("Start");
+            return _mappings.Any(pair => (pair.Item2.Equals(commandEvent.CommandId)));
         }
 
-        private static bool IsFollowupDebugCommand(CommandEvent commandEvent)
+        private string MapCommand(string commandId)
         {
-            return (commandEvent.CommandId.Equals("{5EFC7975-14BC-11CF-9B2B-00AA00573819}:295:Debug.Start") ||
-                    commandEvent.CommandId.Equals("{6E87CFAD-6C05-4ADF-9CD7-3B7943875B7C}:257:Debug.StartDebugTarget"));
-        }
-
-        private static CommandEvent CreateMergedCommand(CommandEvent commandEvent)
-        {
-            var newEvent = new CommandEvent
-            {
-                CommandId = "Debug." + commandEvent.CommandId
-            };
-            newEvent.CopyIDEEventPropertiesFrom(commandEvent);
-            return newEvent;
-        }
-
-        private bool IsLate(IDEEvent commandEvent)
-        {
-            return !ConcurrentEventHeuristic.AreConcurrent(commandEvent, _unmappedRightSideEvent);
+            return _mappings.Find(pair => (pair.Item1.Equals(commandId))).Item2;
         }
 
         private static CommandEvent ChangeCommandId(IDEEvent commandEvent, string newId)
@@ -207,16 +93,6 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
                 TerminatedAt = commandEvent.TerminatedAt,
                 TriggeredBy = commandEvent.TriggeredBy
             };
-        }
-
-        private SortedCommandPair FindMappingFromLeftSideFor(CommandEvent commandEvent)
-        {
-            return _mappings.Find(pair => (pair.Item1.Equals(commandEvent.CommandId)));
-        }
-
-        private SortedCommandPair FindMappingFromRightSideFor(CommandEvent commandEvent)
-        {
-            return _mappings.Find(pair => (pair.Item2.Equals(commandEvent.CommandId)));
         }
     }
 }

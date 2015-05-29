@@ -31,7 +31,10 @@ namespace KaVE.FeedbackProcessor.Statistics
     {
         public readonly Dictionary<SortedCommandPair, int> Statistic = new Dictionary<SortedCommandPair, int>();
 
-        public static int FrequencyThreshold;
+        public readonly Dictionary<SortedCommandPair, int> UnknownTriggerMappings =
+            new Dictionary<SortedCommandPair, int>();
+
+        public int FrequencyThreshold;
 
         private CommandEvent _lastCommandEvent;
 
@@ -53,7 +56,19 @@ namespace KaVE.FeedbackProcessor.Statistics
                 ConcurrentEventHeuristic.AreConcurrent(_lastCommandEvent, commandEvent) &&
                 _lastCommandEvent.CommandId != commandEvent.CommandId)
             {
-                AddEquivalentCommandsToStatistic(_lastCommandEvent.CommandId, commandEvent.CommandId);
+                if (_lastCommandEvent.TriggeredBy != IDEEvent.Trigger.Unknown ||
+                    commandEvent.TriggeredBy != IDEEvent.Trigger.Unknown)
+                {
+                    AddEquivalentCommandsToStatistic(
+                        _lastCommandEvent.CommandId,
+                        commandEvent.CommandId);
+                }
+                else
+                {
+                    AddEquivalentCommandsToUnknownTriggerMappings(
+                        _lastCommandEvent.CommandId,
+                        commandEvent.CommandId);
+                }
             }
 
             _lastCommandEvent = commandEvent;
@@ -61,6 +76,10 @@ namespace KaVE.FeedbackProcessor.Statistics
 
         public override void OnStreamEnds()
         {
+            var newStatistic = MappingCleaner.GetCleanMappings(Statistic, FrequencyThreshold);
+            Statistic.Clear();
+            newStatistic.ToList().ForEach(newMapping => Statistic.Add(newMapping.Key, newMapping.Value));
+
             Statistic.
                 Where(keyValuePair => keyValuePair.Value < FrequencyThreshold).ToList().
                 ForEach(keyValuePair => Statistic.Remove(keyValuePair.Key));
@@ -79,6 +98,19 @@ namespace KaVE.FeedbackProcessor.Statistics
             }
         }
 
+        private void AddEquivalentCommandsToUnknownTriggerMappings(string command1, string command2)
+        {
+            var keyPair = SortedCommandPair.NewSortedPair(command1, command2);
+            if (UnknownTriggerMappings.ContainsKey(keyPair))
+            {
+                UnknownTriggerMappings[keyPair]++;
+            }
+            else
+            {
+                UnknownTriggerMappings.Add(keyPair, 1);
+            }
+        }
+
         public string StatisticAsCsv()
         {
             var csvBuilder = new CsvBuilder();
@@ -92,6 +124,66 @@ namespace KaVE.FeedbackProcessor.Statistics
                 csvBuilder["Count"] = stat.Value;
             }
             return csvBuilder.Build();
+        }
+    }
+
+    internal static class MappingCleaner
+    {
+        public static readonly Dictionary<SortedCommandPair, SortedCommandPair> SpecialMappings = new Dictionary
+            <SortedCommandPair, SortedCommandPair>
+        {
+            {
+                SortedCommandPair.NewSortedPair(
+                    "Continue",
+                    "{5EFC7975-14BC-11CF-9B2B-00AA00573819}:295:Debug.Start"),
+                SortedCommandPair.NewSortedPair("Continue", "Debug.Continue")
+            },
+            {
+                SortedCommandPair.NewSortedPair(
+                    "Add",
+                    "{57735D06-C920-4415-A2E0-7D6E6FBDFA99}:4100:Team.Git.Remove"),
+                SortedCommandPair.NewSortedPair("Add", "Git.Add")
+            },
+            {
+                SortedCommandPair.NewSortedPair(
+                    "Exclude",
+                    "{57735D06-C920-4415-A2E0-7D6E6FBDFA99}:4100:Team.Git.Remove"),
+                SortedCommandPair.NewSortedPair("Exclude", "Git.Exclude")
+            },
+            {
+                SortedCommandPair.NewSortedPair(
+                    "Include",
+                    "{57735D06-C920-4415-A2E0-7D6E6FBDFA99}:4100:Team.Git.Remove"),
+                SortedCommandPair.NewSortedPair("Include", "Git.Include")
+            },
+        };
+
+        public static Dictionary<SortedCommandPair, int> GetCleanMappings(Dictionary<SortedCommandPair, int> mappings,
+            int frequencyThreshold)
+        {
+            var cleanMappings = new Dictionary<SortedCommandPair, int>();
+
+            foreach (var mapping in mappings)
+            {
+                if (SpecialMappings.Any(specialMapping => mapping.Key.Equals(specialMapping.Key)))
+                {
+                    var currentMapping = mapping;
+                    foreach (
+                        var swappedSpecialMapping in
+                            SpecialMappings.Where(
+                                swappedSpecialMapping => currentMapping.Key.Equals(swappedSpecialMapping.Key)))
+                    {
+                        cleanMappings.Add(swappedSpecialMapping.Value, mappings[mapping.Key]);
+                    }
+                }
+                else
+                {
+                    cleanMappings.Add(mapping.Key, mapping.Value);
+                }
+            }
+
+
+            return cleanMappings;
         }
     }
 }
