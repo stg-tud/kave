@@ -216,6 +216,29 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
             CollectionAssert.IsEmpty(EquivalentCommandPairCalculator.Statistic);
         }
 
+        [Test]
+        public void ShouldNotMapEventsOnThemselves()
+        {
+            var eventTime = DateTimeFactory.SomeWorkingHoursDateTime();
+
+            const string sameId = "Test";
+            var commandEvent1 = new CommandEvent
+            {
+                CommandId = sameId,
+                TriggeredAt = eventTime
+            };
+            var commandEvent2 = new CommandEvent
+            {
+                CommandId = sameId,
+                TriggeredAt = eventTime + ConcurrentEventHeuristic.EventTimeDifference
+            };
+
+            _uut.OnEvent(commandEvent1);
+            _uut.OnEvent(commandEvent2);
+
+            CollectionAssert.IsEmpty(EquivalentCommandPairCalculator.Statistic);
+        }
+
         private static List<CommandEvent> GenerateCommandPairWithFrequency(DateTime startTime,
             string command1,
             string command2,

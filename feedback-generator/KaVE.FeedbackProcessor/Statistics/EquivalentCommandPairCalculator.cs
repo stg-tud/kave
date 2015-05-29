@@ -47,7 +47,8 @@ namespace KaVE.FeedbackProcessor.Statistics
             }
 
             if (_lastCommandEvent != null &&
-                ConcurrentEventHeuristic.AreConcurrent(_lastCommandEvent, commandEvent))
+                ConcurrentEventHeuristic.AreConcurrent(_lastCommandEvent, commandEvent) &&
+                _lastCommandEvent.CommandId != commandEvent.CommandId)
             {
                 AddEquivalentCommandsToStatistic(_lastCommandEvent.CommandId, commandEvent.CommandId);
             }
