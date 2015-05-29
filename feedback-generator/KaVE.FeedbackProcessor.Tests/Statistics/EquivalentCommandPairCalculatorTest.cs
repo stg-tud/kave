@@ -192,7 +192,31 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
                 new KeyValuePair<Pair<string>, int>(nonFrequentPair2, frequencyThreshold - 1));
         }
 
-        private List<CommandEvent> GenerateCommandPairWithFrequency(DateTime startTime,
+        [Test]
+        public void ShouldNotAddMappingForIgnorableTextControlCommands()
+        {
+            var eventTime = DateTimeFactory.SomeWorkingHoursDateTime();
+            var ignorableCommand1 = ConcurrentEventHeuristic.IgnorableTextControlCommands[0];
+            var ignorableCommand2 = ConcurrentEventHeuristic.IgnorableTextControlCommands[1];
+
+            var commandEvent1 = new CommandEvent
+            {
+                CommandId = ignorableCommand1,
+                TriggeredAt = eventTime
+            };
+            var commandEvent2 = new CommandEvent
+            {
+                CommandId = ignorableCommand2,
+                TriggeredAt = eventTime + ConcurrentEventHeuristic.EventTimeDifference
+            };
+
+            _uut.OnEvent(commandEvent1);
+            _uut.OnEvent(commandEvent2);
+
+            CollectionAssert.IsEmpty(EquivalentCommandPairCalculator.Statistic);
+        }
+
+        private static List<CommandEvent> GenerateCommandPairWithFrequency(DateTime startTime,
             string command1,
             string command2,
             int frequency)
@@ -206,7 +230,7 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
             return returnList;
         }
 
-        private IEnumerable<CommandEvent> GenerateCommandPair(DateTime startTime, string command1, string command2)
+        private static IEnumerable<CommandEvent> GenerateCommandPair(DateTime startTime, string command1, string command2)
         {
             var commandEvent1 = new CommandEvent
             {
@@ -220,30 +244,6 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
             };
 
             return new List<CommandEvent> {commandEvent1, commandEvent2};
-        }
-
-        [Test]
-        public void ShouldNotAddMappingForIgnorableTextControlCommands()
-        {
-            var eventTime = DateTimeFactory.SomeWorkingHoursDateTime();
-            var expectedString1 = ConcurrentEventHeuristic.IgnorableTextControlCommands[0];
-            var expectedString2 = ConcurrentEventHeuristic.IgnorableTextControlCommands[1];
-
-            var commandEvent1 = new CommandEvent
-            {
-                CommandId = expectedString1,
-                TriggeredAt = eventTime
-            };
-            var commandEvent2 = new CommandEvent
-            {
-                CommandId = expectedString2,
-                TriggeredAt = eventTime + ConcurrentEventHeuristic.EventTimeDifference
-            };
-
-            _uut.OnEvent(commandEvent1);
-            _uut.OnEvent(commandEvent2);
-
-            CollectionAssert.IsEmpty(EquivalentCommandPairCalculator.Statistic);
         }
     }
 }
