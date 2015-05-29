@@ -87,6 +87,7 @@
     <Compile Include="Database\NullDatabase.cs" />
     <Compile Include="Cleanup\Processors\DuplicateCommandFilterProcessor.cs" />
     <Compile Include="Cleanup\Processors\EditFilterProcessor.cs" />
+    <Compile Include="Cleanup\Processors\RedundantCommandFilter.cs" />
     <Compile Include="Cleanup\Processors\MapEquivalentCommandsProcessor.cs" />
     <Compile Include="Cleanup\Processors\UnnamedCommandFilterProcessor.cs" />
     <Compile Include="Cleanup\Processors\CommandFollowupProcessor.cs" />

@@ -238,10 +238,11 @@ namespace KaVE.FeedbackProcessor
         {
             var cleaner = new FeedbackMapper(sourceDatabase, targetDatabase, Logger);
             cleaner.RegisterMapper(new AddFileProcessor());
-            cleaner.RegisterMapper(new DuplicateCommandFilterProcessor()); ;
+            cleaner.RegisterMapper(new DuplicateCommandFilterProcessor());
             cleaner.RegisterMapper(new EditFilterProcessor());
             cleaner.RegisterMapper(new ErrorFilterProcessor());
             cleaner.RegisterMapper(new UnnamedCommandFilterProcessor());
+            cleaner.RegisterMapper(new RedundantCommandFilter());
             cleaner.MapFeedback();
         }
 

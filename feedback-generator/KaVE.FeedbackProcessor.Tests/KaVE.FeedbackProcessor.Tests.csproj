@@ -83,6 +83,7 @@
     <Compile Include="Cleanup\Processors\IDECloseEventFixingProcessorTest.cs" />
     <Compile Include="Cleanup\Processors\DuplicateCommandFilterProcessorTest.cs" />
     <Compile Include="Cleanup\Processors\EditFilterProcessorTest.cs" />
+    <Compile Include="Cleanup\Processors\RedundantCommandFilterTest.cs" />
     <Compile Include="Cleanup\Processors\MapEquivalentCommandsProcessorTest.cs" />
     <Compile Include="Cleanup\Processors\UnnamedCommandFilterProcessorTest.cs" />
     <Compile Include="Cleanup\Processors\CommandFollowupProcessorTest.cs" />
