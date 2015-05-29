@@ -38,7 +38,6 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
         public void Setup()
         {
             _uut = new EquivalentCommandPairCalculator(10);
-            EquivalentCommandPairCalculator.Statistic.Clear();
         }
 
         [Test]
@@ -64,8 +63,8 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
 
             var expectedPair = SortedCommandPair.NewSortedPair(expectedString1, expectedString2);
             CollectionAssert.Contains(
-                EquivalentCommandPairCalculator.Statistic,
-                new KeyValuePair<Pair<string>, int>(expectedPair, 1));
+                _uut.Statistic,
+                new KeyValuePair<SortedCommandPair, int>(expectedPair, 1));
         }
 
         [Test]
@@ -89,7 +88,7 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
             _uut.OnEvent(commandEvent1);
             _uut.OnEvent(commandEvent2);
 
-            CollectionAssert.IsEmpty(EquivalentCommandPairCalculator.Statistic);
+            CollectionAssert.IsEmpty(_uut.Statistic);
         }
 
         [Test]
@@ -108,8 +107,8 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
 
             var expectedPair = SortedCommandPair.NewSortedPair(command1, command2);
             CollectionAssert.Contains(
-                EquivalentCommandPairCalculator.Statistic,
-                new KeyValuePair<Pair<string>, int>(expectedPair, frequencyThreshold));
+                _uut.Statistic,
+                new KeyValuePair<SortedCommandPair, int>(expectedPair, frequencyThreshold));
         }
 
         [Test]
@@ -129,8 +128,8 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
 
             var expectedPair = SortedCommandPair.NewSortedPair(command1, command2);
             CollectionAssert.DoesNotContain(
-                EquivalentCommandPairCalculator.Statistic,
-                new KeyValuePair<Pair<string>, int>(expectedPair, frequencyThreshold - 1));
+                _uut.Statistic,
+                new KeyValuePair<SortedCommandPair, int>(expectedPair, frequencyThreshold - 1));
         }
 
         [Test]
@@ -172,24 +171,24 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
 
             var frequentPair1 = SortedCommandPair.NewSortedPair("Copy", "Edit.Copy");
             CollectionAssert.Contains(
-                EquivalentCommandPairCalculator.Statistic,
-                new KeyValuePair<Pair<string>, int>(frequentPair1, frequencyThreshold));
+                _uut.Statistic,
+                new KeyValuePair<SortedCommandPair, int>(frequentPair1, frequencyThreshold));
 
             var nonFrequentPair = SortedCommandPair.NewSortedPair("Left", "Textcontrol.Left");
             CollectionAssert.DoesNotContain(
-                EquivalentCommandPairCalculator.Statistic,
-                new KeyValuePair<Pair<string>, int>(nonFrequentPair, frequencyThreshold - 1));
+                _uut.Statistic,
+                new KeyValuePair<SortedCommandPair, int>(nonFrequentPair, frequencyThreshold - 1));
 
             var frequentPair2 =
                 SortedCommandPair.NewSortedPair("{5EFC7975-14BC-11CF-9B2B-00AA00573819}:224:File.SaveAll", "Save All");
             CollectionAssert.Contains(
-                EquivalentCommandPairCalculator.Statistic,
-                new KeyValuePair<Pair<string>, int>(frequentPair2, frequencyThreshold));
+                _uut.Statistic,
+                new KeyValuePair<SortedCommandPair, int>(frequentPair2, frequencyThreshold));
 
             var nonFrequentPair2 = SortedCommandPair.NewSortedPair("Right", "Textcontrol.Right");
             CollectionAssert.DoesNotContain(
-                EquivalentCommandPairCalculator.Statistic,
-                new KeyValuePair<Pair<string>, int>(nonFrequentPair2, frequencyThreshold - 1));
+                _uut.Statistic,
+                new KeyValuePair<SortedCommandPair, int>(nonFrequentPair2, frequencyThreshold - 1));
         }
 
         [Test]
@@ -213,7 +212,7 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
             _uut.OnEvent(commandEvent1);
             _uut.OnEvent(commandEvent2);
 
-            CollectionAssert.IsEmpty(EquivalentCommandPairCalculator.Statistic);
+            CollectionAssert.IsEmpty(_uut.Statistic);
         }
 
         [Test]
@@ -236,7 +235,7 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
             _uut.OnEvent(commandEvent1);
             _uut.OnEvent(commandEvent2);
 
-            CollectionAssert.IsEmpty(EquivalentCommandPairCalculator.Statistic);
+            CollectionAssert.IsEmpty(_uut.Statistic);
         }
 
         private static List<CommandEvent> GenerateCommandPairWithFrequency(DateTime startTime,

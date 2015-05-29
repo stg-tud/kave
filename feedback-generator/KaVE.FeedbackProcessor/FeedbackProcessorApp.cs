@@ -214,7 +214,7 @@ namespace KaVE.FeedbackProcessor
 
         private static void LogEquivalentCommandPairs(IFeedbackDatabase database)
         {
-            var calculator = new EquivalentCommandPairCalculator();
+            var calculator = new EquivalentCommandPairCalculator(0);
 
             var walker = new FeedbackProcessor(database, Logger);
             walker.Register(calculator);
