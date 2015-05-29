@@ -37,7 +37,7 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
         [SetUp]
         public void Setup()
         {
-            _uut = new EquivalentCommandPairCalculator();
+            _uut = new EquivalentCommandPairCalculator(10);
             EquivalentCommandPairCalculator.Statistic.Clear();
         }
 

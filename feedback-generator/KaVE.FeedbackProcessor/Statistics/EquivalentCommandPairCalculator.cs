@@ -23,25 +23,28 @@ using System.Linq;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Utils.Csv;
 using KaVE.FeedbackProcessor.Cleanup.Heuristics;
-using KaVE.FeedbackProcessor.Model;
 using KaVE.FeedbackProcessor.Utils;
 
 namespace KaVE.FeedbackProcessor.Statistics
 {
-    internal class EquivalentCommandPairCalculator : IEventProcessor
+    internal class EquivalentCommandPairCalculator : BaseEventProcessor
     {
         public static readonly Dictionary<Pair<string>, int> Statistic = new Dictionary<Pair<string>, int>();
 
-        public static int FrequencyThreshold = 7;
+        public static int FrequencyThreshold;
 
         private CommandEvent _lastCommandEvent;
 
-        public void OnStreamStarts(Developer value) {}
-
-        public void OnEvent(IDEEvent @event)
+        public EquivalentCommandPairCalculator(int frequencyThreshold)
         {
-            var commandEvent = @event as CommandEvent;
-            if (commandEvent == null || ConcurrentEventHeuristic.IsIgnorableTextControlCommand(commandEvent.CommandId))
+            FrequencyThreshold = frequencyThreshold;
+
+            RegisterFor<CommandEvent>(CalculateEquivalentPairs);
+        }
+
+        public void CalculateEquivalentPairs(CommandEvent commandEvent)
+        {
+            if (ConcurrentEventHeuristic.IsIgnorableTextControlCommand(commandEvent.CommandId))
             {
                 return;
             }
@@ -56,14 +59,14 @@ namespace KaVE.FeedbackProcessor.Statistics
             _lastCommandEvent = commandEvent;
         }
 
-        public void OnStreamEnds()
+        public override void OnStreamEnds()
         {
             Statistic.
                 Where(keyValuePair => keyValuePair.Value < FrequencyThreshold).ToList().
                 ForEach(keyValuePair => Statistic.Remove(keyValuePair.Key));
         }
 
-        private void AddEquivalentCommandsToStatistic(string command1, string command2)
+        private static void AddEquivalentCommandsToStatistic(string command1, string command2)
         {
             var keyPair = SortedCommandPair.NewSortedPair(command1, command2);
             if (Statistic.ContainsKey(keyPair))
