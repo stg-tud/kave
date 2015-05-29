@@ -40,40 +40,9 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
 
         private CommandEvent _unmappedDebugEvent;
 
-        private CommandEvent _unmappedTripleMappingEvent;
-
         private CommandEvent _unmappedPairMappingEvent;
 
-        private Tuple<string, string, string> _unmappedTripleMapping;
-
         private Tuple<string, string> _unmappedPairMapping;
-
-        // Key - First Event in Mapping; Value - Tuple of (Second Event in Mapping, Third Event in Mapping, Merged Command ID)
-        protected readonly Dictionary<string, Tuple<string, string, string>> SpecialTripleMappings = new Dictionary
-            <string, Tuple<string, string, string>>
-        {
-            {
-                "Copy",
-                Tuple.Create(
-                    "{5EFC7975-14BC-11CF-9B2B-00AA00573819}:15:Edit.Copy",
-                    "TextControl.Copy",
-                    "{5EFC7975-14BC-11CF-9B2B-00AA00573819}:15:Edit.Copy")
-            },
-            {
-                "Cut",
-                Tuple.Create(
-                    "{5EFC7975-14BC-11CF-9B2B-00AA00573819}:16:Edit.Cut",
-                    "TextControl.Cut",
-                    "{5EFC7975-14BC-11CF-9B2B-00AA00573819}:16:Edit.Cut")
-            },
-            {
-                "Paste",
-                Tuple.Create(
-                    "{5EFC7975-14BC-11CF-9B2B-00AA00573819}:26:Edit.Paste",
-                    "TextControl.Paste",
-                    "{5EFC7975-14BC-11CF-9B2B-00AA00573819}:26:Edit.Paste")
-            },
-        };
 
         // Key - First Event in Mapping; Value - Tuple of (Second Event in Mapping, Merged Command ID)
         protected readonly Dictionary<string, Tuple<string, string>> SpecialPairMappings = new Dictionary
@@ -96,7 +65,6 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
         {
             _unmappedLeftSideEvent = null;
             _unmappedRightSideEvent = null;
-            _unmappedTripleMappingEvent = null;
             _unmappedPairMappingEvent = null;
             _unmappedDebugEvent = null;
         }
@@ -113,10 +81,6 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
             if (IsDebugClickEvent(commandEvent) || _unmappedDebugEvent != null)
             {
                 HandleDebugCommands(commandEvent);
-            }
-            else if (SpecialTripleMappings.ContainsKey(commandEvent.CommandId) || _unmappedTripleMappingEvent != null)
-            {
-                HandleSpecialTripleMappings(commandEvent);
             }
             else if (SpecialPairMappings.ContainsKey(commandEvent.CommandId) || _unmappedPairMappingEvent != null)
             {
@@ -183,31 +147,6 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
             }
             _unmappedDebugEvent = commandEvent;
             ReplaceCurrentEventWith(CreateMergedCommand(commandEvent));
-        }
-
-        private void HandleSpecialTripleMappings(CommandEvent commandEvent)
-        {
-            if (_unmappedTripleMappingEvent != null)
-            {
-                if (_unmappedTripleMapping.Item1.Equals(commandEvent.CommandId))
-                {
-                    DropCurrentEvent();
-                    return;
-                }
-                if (_unmappedTripleMapping.Item2.Equals(commandEvent.CommandId))
-                {
-                    DropCurrentEvent();
-                    _unmappedTripleMappingEvent = null;
-                    return;
-                }
-                _unmappedTripleMappingEvent = null;
-                MapCommandEvent(commandEvent);
-                return;
-            }
-            _unmappedTripleMapping = SpecialTripleMappings[commandEvent.CommandId];
-            _unmappedTripleMappingEvent = commandEvent;
-            ReplaceCurrentEventWith(ChangeCommandId(_unmappedTripleMappingEvent, _unmappedTripleMapping.Item3));
-            ;
         }
 
         private void HandleSpecialPairMappings(CommandEvent commandEvent)

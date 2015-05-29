@@ -327,51 +327,6 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
             CollectionAssert.AreEquivalent(Sets.NewHashSet(lateEvent), _uut.Map(lateEvent));
         }
 
-        [TestCase("Copy", "{5EFC7975-14BC-11CF-9B2B-00AA00573819}:15:Edit.Copy", "TextControl.Copy"),
-         TestCase("Cut", "{5EFC7975-14BC-11CF-9B2B-00AA00573819}:16:Edit.Cut", "TextControl.Cut"),
-         TestCase("Paste", "{5EFC7975-14BC-11CF-9B2B-00AA00573819}:26:Edit.Paste", "TextControl.Paste")]
-        public void ShouldMergeTextControlCommands(string clickCommandId,
-            string visualStudioCommandId,
-            string resharperCommandId)
-        {
-            var triggeretAt = DateTimeFactory.SomeWorkingHoursDateTime();
-
-            var event1 = new CommandEvent
-            {
-                CommandId = clickCommandId,
-                TriggeredBy = IDEEvent.Trigger.Click,
-                TriggeredAt = triggeretAt
-            };
-            var event2 = new CommandEvent
-            {
-                CommandId = visualStudioCommandId,
-                TriggeredAt = triggeretAt + MapEquivalentCommandsProcessor.EventTimeDifference
-            };
-            var event3 = new CommandEvent
-            {
-                CommandId = resharperCommandId,
-                TriggeredAt = triggeretAt + MapEquivalentCommandsProcessor.EventTimeDifference
-            };
-            var lateEvent = new CommandEvent
-            {
-                CommandId = "Test",
-                TriggeredAt =
-                    triggeretAt + MapEquivalentCommandsProcessor.EventTimeDifference.Add(TimeSpan.FromSeconds(1))
-            };
-
-            var expectedEvent = new CommandEvent
-            {
-                CommandId = visualStudioCommandId,
-                TriggeredBy = IDEEvent.Trigger.Click,
-                TriggeredAt = event1.TriggeredAt
-            };
-
-            CollectionAssert.AreEquivalent(Sets.NewHashSet(expectedEvent), _uut.Map(event1));
-            CollectionAssert.IsEmpty(_uut.Map(event2));
-            CollectionAssert.IsEmpty(_uut.Map(event3));
-            CollectionAssert.AreEquivalent(Sets.NewHashSet(lateEvent), _uut.Map(lateEvent));
-        }
-
         [TestCase("Start Debugging", "{5EFC7975-14BC-11CF-9B2B-00AA00573819}:295:Debug.Start", "Debug.Start"),
          TestCase("Add", "{57735D06-C920-4415-A2E0-7D6E6FBDFA99}:4100:Team.Git.Remove", "Git.Add"),
          TestCase("Exclude", "{57735D06-C920-4415-A2E0-7D6E6FBDFA99}:4100:Team.Git.Remove", "Git.Exclude"),
