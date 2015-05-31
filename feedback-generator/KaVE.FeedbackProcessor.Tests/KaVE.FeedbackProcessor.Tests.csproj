@@ -83,6 +83,7 @@
     <Compile Include="Cleanup\Processors\IDECloseEventFixingProcessorTest.cs" />
     <Compile Include="Cleanup\Processors\DuplicateCommandFilterProcessorTest.cs" />
     <Compile Include="Cleanup\Processors\EditFilterProcessorTest.cs" />
+    <Compile Include="Cleanup\Processors\IsolatedEventBlockFilterTest.cs" />
     <Compile Include="Cleanup\Processors\RedundantCommandFilterTest.cs" />
     <Compile Include="Cleanup\Processors\MapEquivalentCommandsProcessorTest.cs" />
     <Compile Include="Cleanup\Processors\UnnamedCommandFilterProcessorTest.cs" />
@@ -114,6 +115,7 @@
     <Compile Include="Statistics\DeveloperStatisticsCalculatorTest.cs" />
     <Compile Include="Statistics\DocumentNameCollectorTest.cs" />
     <Compile Include="Statistics\EventsPerDeveloperDayStatisticCalculatorTest.cs" />
+    <Compile Include="Statistics\IsolatedEventBlocksCalculatorTest.cs" />
     <Compile Include="Statistics\WindowNameCollectorTest.cs" />
     <Compile Include="TestUtils\ProcessorAssert.cs" />
     <Compile Include="TestUtils\DateTimeFactory.cs" />

@@ -58,6 +58,7 @@ namespace KaVE.FeedbackProcessor
             LogOccuringNames(OpenDatabase(importDatabase));
             LogCompletionStatistics(OpenDatabase(importDatabase));
             LogDevelopersPerDay(OpenDatabase(importDatabase));
+            LogIsolatedEventBlocks(OpenDatabase(cleanDatabase), "isolatedEventBlocks");
 
             MapToActivities(OpenDatabase(importDatabase), OpenDatabase(activityDatabase));
             LogActivityStatistics(OpenDatabase(activityDatabase));
@@ -66,6 +67,7 @@ namespace KaVE.FeedbackProcessor
 
             MapToConcurrentEvents(OpenDatabase(filteredDatabase), OpenDatabase(concurrentEventDatabase));
             FilterCommandFollowupEvents(OpenDatabase(filteredDatabase), OpenDatabase(commandFollowupsDatabase));
+            FilterIsolatedEventBlocks(OpenDatabase(cleanDatabase), OpenDatabase(filteredDatabase));
 
             ConcurrentEventsStatistic(OpenDatabase(concurrentEventDatabase),"concurrenteventstatistic.csv");
             ConcurrentEventsStatistic(OpenDatabase(commandFollowupsDatabase),"commandfollowupsstatistic.csv");
@@ -333,6 +335,24 @@ namespace KaVE.FeedbackProcessor
             var filter = new FeedbackMapper(sourceDatabase, targetDatabase, Logger);
             filter.RegisterMapper(new CommandFollowupProcessor());
             filter.MapFeedback();
+        }
+
+        private static void FilterIsolatedEventBlocks(IFeedbackDatabase sourceDatabase, IFeedbackDatabase targetDatabase)
+        {
+            var mapper = new FeedbackMapper(sourceDatabase, targetDatabase, Logger);
+            mapper.RegisterMapper(new IsolatedEventBlockFilter(TimeSpan.FromMinutes(30), TimeSpan.FromSeconds(1)));
+            mapper.MapFeedback();
+        }
+
+        private static void LogIsolatedEventBlocks(IFeedbackDatabase sourceDatabase, string fileName)
+        {
+            var isolatedEventBlocksCalculator = new IsolatedEventBlocksCalculator(TimeSpan.FromMinutes(30), TimeSpan.FromSeconds(1));
+
+            var walker = new FeedbackProcessor(sourceDatabase, Logger);
+            walker.Register(isolatedEventBlocksCalculator);
+            walker.ProcessFeedback();
+
+            Output(fileName + ".txt", isolatedEventBlocksCalculator.LoggedIsolatedBlocksToTxt());
         }
     }
 }

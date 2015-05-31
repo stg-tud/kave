@@ -87,6 +87,7 @@
     <Compile Include="Database\NullDatabase.cs" />
     <Compile Include="Cleanup\Processors\DuplicateCommandFilterProcessor.cs" />
     <Compile Include="Cleanup\Processors\EditFilterProcessor.cs" />
+    <Compile Include="Cleanup\Processors\IsolatedEventBlockFilter.cs" />
     <Compile Include="Cleanup\Processors\RedundantCommandFilter.cs" />
     <Compile Include="Cleanup\Processors\MapEquivalentCommandsProcessor.cs" />
     <Compile Include="Cleanup\Processors\UnnamedCommandFilterProcessor.cs" />
@@ -136,6 +137,7 @@
     <Compile Include="Statistics\DeveloperStatisticsCalculator.cs" />
     <Compile Include="Statistics\DocumentNameCollector.cs" />
     <Compile Include="Statistics\EventsPerDeveloperDayStatisticCalculator.cs" />
+    <Compile Include="Statistics\IsolatedEventBlocksCalculator.cs" />
     <Compile Include="Statistics\ManualCompletionsStatistic.cs" />
     <Compile Include="Statistics\ParallelIDEInstancesStatisticCalculator.cs" />
     <Compile Include="Statistics\WindowNameCollector.cs" />
