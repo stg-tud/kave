@@ -390,6 +390,14 @@ namespace KaVE.Commons.Tests.Utils
             Assert.AreEqual(expected, actual);
         }
 
+        [Test]
+        public void AnonymousDelegatesAreNotPrinted()
+        {
+            var actual = new ClassWithAnonymousDelegate().ToStringReflection();
+            var expected = "ClassWithAnonymousDelegate@1 {\n}";
+            Assert.AreEqual(expected, actual);
+        }
+
         public class ClassWithDifferentVisibilities
         {
             // ReSharper disable once UnusedField.Compiler
@@ -536,6 +544,18 @@ namespace KaVE.Commons.Tests.Utils
             public override int GetHashCode()
             {
                 return HashCode;
+            }
+        }
+        public class ClassWithAnonymousDelegate
+        {
+            public void M()
+            {
+                Action<int> d = i => { };
+            }
+
+            public override int GetHashCode()
+            {
+                return 1;
             }
         }
     }

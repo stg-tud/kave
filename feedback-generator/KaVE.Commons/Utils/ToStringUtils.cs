@@ -20,6 +20,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 using KaVE.JetBrains.Annotations;
@@ -90,6 +91,12 @@ namespace KaVE.Commons.Utils
 
             foreach (var member in GetMembers(type, obj))
             {
+                var isLambdaExpr = member.Key.Name.Contains("CachedAnonymousMethodDelegate");
+                if (isLambdaExpr)
+                {
+                    continue;
+                }
+
                 sb.Append("   ").Append(member.Key.Name).Append(" = ");
                 if (obj.Equals(member.Value))
                 {
