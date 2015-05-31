@@ -59,15 +59,22 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
         public override IAssignableExpression VisitReferenceExpression(IReferenceExpression expr,
             IList<IStatement> context)
         {
-            var refName = expr.NameIdentifier.Name;
-            if (expr == _marker.AffectedNode)
+            var hasName = expr.NameIdentifier != null;
+            var hasQualifier = expr.QualifierExpression != null;
+
+            if (hasName)
             {
-                return new CompletionExpression
+                var refName = expr.NameIdentifier.Name;
+                if (expr == _marker.AffectedNode)
                 {
-                    Token = refName
-                };
+                    return new CompletionExpression
+                    {
+                        Token = refName
+                    };
+                }
+                return new ReferenceExpression {Reference = new VariableReference {Identifier = refName}};
             }
-            return new ReferenceExpression {Reference = new VariableReference {Identifier = refName}};
+            return new UnknownExpression();
         }
     }
 }

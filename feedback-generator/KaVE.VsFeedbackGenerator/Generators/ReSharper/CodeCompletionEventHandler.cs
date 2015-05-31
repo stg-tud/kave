@@ -57,7 +57,7 @@ namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
     {
         // TODO get rid of this ugly flag... currently necessary for successful test execution
         public static bool Disabled = false;
-        private const int LimitInMs = 1000;
+        public const int LimitInMs = 1000;
 
         private readonly CodeCompletionEventHandler _handler;
         private readonly ILogger _logger;
