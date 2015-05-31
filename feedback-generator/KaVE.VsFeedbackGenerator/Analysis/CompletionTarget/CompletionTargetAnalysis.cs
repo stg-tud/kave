@@ -165,12 +165,13 @@ namespace KaVE.VsFeedbackGenerator.Analysis.CompletionTarget
                 var block = parent as IBlock;
                 if (block != null)
                 {
-                    var ifBlock = block.Parent as IIfStatement;
-                    if (ifBlock != null)
+                    var parentStatement = block.Parent as ICSharpStatement;
+                    if (parentStatement != null)
                     {
-                        return ifBlock;
+                        return parentStatement;
                     }
 
+                    // TODO: why is the following needed?
                     FindAvailableTarget(block);
                     return Result.AffectedNode;
                 }

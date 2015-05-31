@@ -63,7 +63,8 @@
     <Compile Include="Analysis\SmokeTests\CodeCompletionWithMissingTokensSmokeTest.cs" />
     <Compile Include="Analysis\SmokeTests\CodeCompletionWithUnresolvableReferencesSmokeTest.cs" />
     <Compile Include="Analysis\SSTAnalysisTestSuite\ArrayTest.cs" />
-    <Compile Include="Analysis\SSTAnalysisTestSuite\AssignmentTest.cs" />
+    <Compile Include="Analysis\SSTAnalysisTestSuite\Blocks\WhileLoopAnalysisTest.cs" />
+    <Compile Include="Analysis\SSTAnalysisTestSuite\ComposedExpressionAnalysisTest.cs" />
     <Compile Include="Analysis\SSTAnalysisTestSuite\BaseSSTAnalysisTest.cs" />
     <Compile Include="Analysis\SSTAnalysisTestSuite\BasicTest.cs" />
     <Compile Include="Analysis\SSTAnalysisTestSuite\Casting.cs" />
@@ -71,6 +72,7 @@
     <Compile Include="Analysis\SSTAnalysisTestSuite\DebuggingTest.cs" />
     <Compile Include="Analysis\SSTAnalysisTestSuite\DeclarationTest.cs" />
     <Compile Include="Analysis\SSTAnalysisTestSuite\EntrypointsTest.cs" />
+    <Compile Include="Analysis\SSTAnalysisTestSuite\Expressions\ConstantValueExpressionTest.cs" />
     <Compile Include="Analysis\SSTAnalysisTestSuite\IncompleteCodeTest.cs" />
     <Compile Include="Analysis\SSTAnalysisTestSuite\InvocationTest.cs" />
     <Compile Include="Analysis\SSTAnalysisTestSuite\MemberAccessTest.cs" />
@@ -78,6 +80,8 @@
     <Compile Include="Analysis\SSTAnalysisTestSuite\ReferencesTest.cs" />
     <Compile Include="Analysis\SSTAnalysisTestSuite\SingleAssignmentTest.cs" />
     <Compile Include="Analysis\SSTAnalysisTestSuite\SSTAnalysisFixture.cs" />
+    <Compile Include="Analysis\SSTAnalysisTestSuite\Statements\AssignmentAnalysisTest.cs" />
+    <Compile Include="Analysis\SSTAnalysisTestSuite\Statements\BreakStatementAnalysisTest.cs" />
     <Compile Include="Analysis\SSTAnalysisTestSuite\TriggerLocationsTest.cs" />
     <Compile Include="Analysis\SSTAnalysisTestSuite\TriggerPoint\CompletionTargetMarkerTest.cs" />
     <Compile Include="Analysis\SSTAnalysisTestSuite\TriggerPoint\TriggerPointAnalysisTest.cs" />

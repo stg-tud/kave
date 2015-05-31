@@ -20,6 +20,9 @@
 using JetBrains;
 using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.Names.CSharp;
+using KaVE.Commons.Model.SSTs;
+using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
+using KaVE.Commons.Model.SSTs.Impl.Statements;
 
 namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 {
@@ -92,6 +95,17 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
         public static IFieldName Field(ITypeName valueType, ITypeName declType, string name)
         {
             return FieldName.Get("[{0}] [{1}].{2}".FormatEx(valueType, declType, name));
+        }
+
+        public static IStatement EmptyCompletion
+        {
+            get
+            {
+                return new ExpressionStatement
+                {
+                    Expression = new CompletionExpression()
+                };
+            }
         }
     }
 }

@@ -99,8 +99,10 @@
     <Compile Include="Analysis\Transformer\Context\ScopeTransformerContext.cs" />
     <Compile Include="Analysis\Transformer\BlockVisitor.cs" />
     <Compile Include="Analysis\Transformer\DeclarationVisitor.cs" />
+    <Compile Include="Analysis\Transformer\ExpressionVisitor.cs" />
     <Compile Include="Analysis\Transformer\JetbrainsTreeDebugger.cs" />
     <Compile Include="Analysis\Transformer\ToArgumentList.cs" />
+    <Compile Include="Analysis\Transformer\ToArgumentRef.cs" />
     <Compile Include="Analysis\Transformer\ToAssignableReference.cs" />
     <Compile Include="Analysis\Transformer\ToBlockReducer.cs" />
     <Compile Include="Analysis\Transformer\ToAssignableExpression.cs" />

@@ -18,12 +18,9 @@
  */
 
 using System.Collections.Generic;
-using System.Linq;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.Util;
-using KaVE.Commons.Model.Names;
-using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.SSTs.Expressions;
 using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.Commons.Model.SSTs.Impl.Blocks;
@@ -31,7 +28,6 @@ using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Commons.Model.SSTs.Impl.References;
 using KaVE.Commons.Model.SSTs.Impl.Statements;
-using KaVE.Commons.Utils.Collections;
 using KaVE.VsFeedbackGenerator.Analysis.CompletionTarget;
 using KaVE.VsFeedbackGenerator.Analysis.Util;
 using KaVE.VsFeedbackGenerator.Utils.Names;
@@ -41,21 +37,25 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
 {
     public class BodyVisitor : TreeNodeVisitor<IList<IStatement>>
     {
-        private readonly ToAssignableExpression _toAssignableExpr;
-        private readonly ToAssignableReference _toAssignableRef;
-
         private readonly CompletionTargetMarker _marker;
+        private readonly ExpressionVisitor _exprVisitor;
 
         public BodyVisitor(CompletionTargetMarker marker)
         {
             _marker = marker;
-            _toAssignableExpr = new ToAssignableExpression(new UniqueVariableNameGenerator(), marker);
-            _toAssignableRef = new ToAssignableReference(new UniqueVariableNameGenerator());
+            _exprVisitor = new ExpressionVisitor(new UniqueVariableNameGenerator(), marker);
         }
 
         public override void VisitNode(ITreeNode node, IList<IStatement> context)
         {
             node.Children<ICSharpTreeNode>().ForEach(child => child.Accept(this, context));
+        }
+
+        #region statements
+
+        public override void VisitBreakStatement(IBreakStatement stmt, IList<IStatement> body)
+        {
+            body.Add(new BreakStatement());
         }
 
         public override void VisitLocalVariableDeclaration(ILocalVariableDeclaration decl, IList<IStatement> body)
@@ -72,7 +72,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
             IAssignableExpression initializer = null;
             if (decl.Initial != null)
             {
-                initializer = decl.Initial.Accept(_toAssignableExpr, body);
+                initializer = _exprVisitor.ToAssignableExpr(decl.Initial, body);
             }
             else if (_marker.AffectedNode == decl && _marker.Case == CompletionCase.Undefined)
             {
@@ -97,21 +97,43 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
             body.Add(
                 new Assignment
                 {
-                    Reference = expr.Dest != null ? expr.Dest.Accept(_toAssignableRef, body) : new UnknownReference(),
+                    Reference =
+                        expr.Dest != null ? _exprVisitor.ToAssignableRef(expr.Dest, body) : new UnknownReference(),
                     Expression =
                         isTarget
                             ? new CompletionExpression()
-                            : expr.Source != null
-                                ? expr.Source.Accept(_toAssignableExpr, body)
-                                : new UnknownExpression()
+                            : _exprVisitor.ToAssignableExpr(expr.Source, body)
                 });
         }
 
+        public override void VisitExpressionStatement(IExpressionStatement stmt, IList<IStatement> body)
+        {
+            if (stmt.Expression != null)
+            {
+                var isAssignment = stmt.Expression is IAssignmentExpression;
+                if (isAssignment)
+                {
+                    stmt.Expression.Accept(this, body);
+                    // TODO repeat the same trick for invocation expressions
+                }
+                else
+                {
+                    body.Add(
+                        new ExpressionStatement
+                        {
+                            Expression = stmt.Expression.Accept(_exprVisitor, body) ?? new UnknownExpression()
+                        });
+                }
+            }
+        }
+
+        #endregion
+
+        #region blocks
+
         public override void VisitIfStatement(IIfStatement stmt, IList<IStatement> body)
         {
-            var condition = stmt.Condition == null
-                ? new UnknownExpression()
-                : (ISimpleExpression) stmt.Condition.Accept(_toAssignableExpr, body);
+            var condition = _exprVisitor.ToSimpleExpression(stmt.Condition, body);
             var ifElseBlock = new IfElseBlock
             {
                 // TODO introduce new visitor for ISimpleExpressions
@@ -121,7 +143,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
             {
                 ifElseBlock.Then.Add(new ExpressionStatement {Expression = new CompletionExpression()});
             }
-            //if (_marker.AffectedNode == stmt && _marker.Case == CompletionCase.InElse)
+            //if (_marker.AffectedNode == rsLoop && _marker.Case == CompletionCase.InElse)
             //{
             //    ifElseBlock.Else.Add(new ExpressionStatement { Expression = new CompletionExpression() });
             //}
@@ -137,114 +159,33 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
             body.Add(ifElseBlock);
         }
 
-        public override void VisitInvocationExpression(IInvocationExpression inv, IList<IStatement> body)
+        public override void VisitWhileStatement(IWhileStatement rsLoop, IList<IStatement> body)
         {
-            var invokedExpression = inv.InvokedExpression as IReferenceExpression;
-            if (inv.Reference != null && invokedExpression != null)
+            if (_marker.AffectedNode == rsLoop && _marker.Case == CompletionCase.EmptyCompletionBefore)
             {
-                var resolvedMethod = inv.Reference.ResolveMethod();
-                if (resolvedMethod != null)
-                {
-                    var methodName = resolvedMethod.GetName<IMethodName>();
-                    string callee = null;
-                    if (invokedExpression.QualifierExpression == null ||
-                        invokedExpression.QualifierExpression is IThisExpression)
-                    {
-                        callee = "this";
-                    }
-                    else if (invokedExpression.QualifierExpression is IBaseExpression)
-                    {
-                        callee = "base";
-                    }
-                    else if (invokedExpression.QualifierExpression is IReferenceExpression)
-                    {
-                        var referenceExpression = invokedExpression.QualifierExpression as IReferenceExpression;
-                        if (referenceExpression.IsClassifiedAsVariable)
-                        {
-                            callee = referenceExpression.NameIdentifier.Name;
-                        }
-                    }
-                    else if (invokedExpression.QualifierExpression is IInvocationExpression)
-                    {
-                        callee = invokedExpression.QualifierExpression.GetReference(null);
-                    }
-                    else
-                    {
-                        return;
-                    }
-                    var args =
-                        GetArgumentList(inv.ArgumentList, body)
-                            .Select<string, ISimpleExpression>(
-                                id => new ReferenceExpression {Reference = new VariableReference {Identifier = id}})
-                            .AsArray();
-                    body.Add(
-                        new ExpressionStatement {Expression = SSTUtil.InvocationExpression(callee, methodName, args)});
-                }
+                body.Add(new ExpressionStatement {Expression = new CompletionExpression()});
+            }
+
+            var loop = new WhileLoop
+            {
+                Condition = _exprVisitor.ToLoopHeaderExpression(rsLoop.Condition, body)
+            };
+
+            body.Add(loop);
+
+            rsLoop.Body.Accept(this, loop.Body);
+
+            if (_marker.AffectedNode == rsLoop && _marker.Case == CompletionCase.InBody)
+            {
+                loop.Body.Add(new ExpressionStatement {Expression = new CompletionExpression()});
+            }
+
+            if (_marker.AffectedNode == rsLoop && _marker.Case == CompletionCase.EmptyCompletionAfter)
+            {
+                body.Add(new ExpressionStatement {Expression = new CompletionExpression()});
             }
         }
 
-        public IList<string> GetArgumentList(IArgumentList argumentListParam, IList<IStatement> body)
-        {
-            var args = Lists.NewList<string>();
-            foreach (var arg in argumentListParam.Arguments)
-            {
-                var toArgumentRef = new ToArgumentRef();
-                var id = arg.Value.Accept(toArgumentRef, body);
-                // TODO: fix this hacky solution!
-                args.Add(id ?? "%UNRESOLVED%");
-            }
-            return args;
-        }
-    }
-
-    public class ToArgumentRef : TreeNodeVisitor<IList<IStatement>, string>
-    {
-        public override string VisitInvocationExpression(IInvocationExpression expr, IList<IStatement> body)
-        {
-            var invoked = expr.InvokedExpression as IReferenceExpression;
-
-            if (invoked != null && expr.Reference != null)
-            {
-                var returnType = TypeName.UnknownName;
-                var resolvedMethod = expr.Reference.ResolveMethod();
-                if (resolvedMethod != null)
-                {
-                    var methodName = resolvedMethod.GetName<IMethodName>();
-                    returnType = methodName.ReturnType;
-                }
-
-                var varName = "%UNKNOWN_VAR_NAME%";
-                var qualifier = invoked.QualifierExpression as IReferenceExpression;
-                if (qualifier != null)
-                {
-                    varName = qualifier.NameIdentifier.Name;
-                }
-
-                body.Add(
-                    new VariableDeclaration
-                    {
-                        Type = returnType,
-                        Reference = new VariableReference {Identifier = varName}
-                    });
-                body.Add(
-                    new Assignment
-                    {
-                        Reference = new VariableReference {Identifier = varName},
-                        Expression = new InvocationExpression()
-                    });
-                return varName;
-            }
-            return "%ERROR%";
-        }
-
-        public override string VisitReferenceExpression(IReferenceExpression expr, IList<IStatement> body)
-        {
-            return expr.NameIdentifier.Name;
-        }
-
-        public override string VisitThisExpression(IThisExpression thisExpressionParam, IList<IStatement> context)
-        {
-            return "this";
-        }
+        #endregion
     }
 }
