@@ -28,7 +28,9 @@ using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.Commons.Model.SSTs.Impl.Declarations;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Commons.Model.SSTs.Impl.References;
+using KaVE.Commons.Model.SSTs.Impl.Statements;
 using KaVE.Commons.Model.SSTs.References;
+using KaVE.Commons.Model.SSTs.Statements;
 using KaVE.Commons.Utils.Collections;
 using KaVE.Commons.Utils.Exceptions;
 using KaVE.VsFeedbackGenerator.Analysis.CompletionTarget;
@@ -149,6 +151,15 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             return new VariableReference {Identifier = id};
         }
 
+        protected IVariableDeclaration VarDecl(string varName, ITypeName type)
+        {
+            return new VariableDeclaration
+            {
+                Reference = VarRef(varName),
+                Type = type
+            };
+        }
+
         protected static void AssertNodeIsMethodDeclaration(string simpleMethodName, RS.ICSharpTreeNode node)
         {
             var decl = node as RS.IMethodDeclaration;
@@ -195,6 +206,12 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             Assert.NotNull(call);
             var actualName = call.InvocationExpressionReference.GetName();
             Assert.AreEqual(expectedName, actualName);
+        }
+
+        protected void AssertCompletionMarker<TNodeType>(CompletionCase expectedCase)
+        {
+            Assert.That(LastCompletionMarker.AffectedNode is TNodeType);
+            Assert.AreEqual(expectedCase, LastCompletionMarker.Case);
         }
     }
 }

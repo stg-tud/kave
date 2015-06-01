@@ -139,8 +139,8 @@ namespace KaVE.VsFeedbackGenerator.Analysis.CompletionTarget
                 }
                 else
                 {
-                    Result.AffectedNode = FindNonBlockParent(target);
                     Result.Case = CompletionCase.InBody;
+                    Result.AffectedNode = FindNonBlockParent(target);
                 }
             }
 
@@ -168,6 +168,11 @@ namespace KaVE.VsFeedbackGenerator.Analysis.CompletionTarget
                     var parentStatement = block.Parent as ICSharpStatement;
                     if (parentStatement != null)
                     {
+                        if (IsElseBlock(block, parentStatement))
+                        {
+                            Result.Case = CompletionCase.InElse;
+                        }
+
                         return parentStatement;
                     }
 
@@ -176,6 +181,19 @@ namespace KaVE.VsFeedbackGenerator.Analysis.CompletionTarget
                     return Result.AffectedNode;
                 }
                 return parent;
+            }
+
+            private bool IsElseBlock(IBlock block, ICSharpStatement parentStatement)
+            {
+                var ifBlock = parentStatement as IIfStatement;
+                if (ifBlock != null)
+                {
+                    if (ifBlock.Else == block)
+                    {
+                        return true;
+                    }
+                }
+                return false;
             }
 
             private static ICSharpTreeNode FindNextNonWhitespaceNode(ITreeNode node)

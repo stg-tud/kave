@@ -47,12 +47,6 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite.Blocks
                 Fix.EmptyCompletion);
         }
 
-        private void AssertCompletionMarker<TNodeType>(CompletionCase expectedCase)
-        {
-            Assert.That(LastCompletionMarker.AffectedNode is TNodeType);
-            Assert.AreEqual(expectedCase, LastCompletionMarker.Case);
-        }
-
         [Test]
         public void BasicWithCompletionBefore()
         {

@@ -40,6 +40,11 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
         private readonly CompletionTargetMarker _marker;
         private readonly ExpressionVisitor _exprVisitor;
 
+        private static ExpressionStatement EmptyCompletionExpression
+        {
+            get { return new ExpressionStatement {Expression = new CompletionExpression()}; }
+        }
+
         public BodyVisitor(CompletionTargetMarker marker)
         {
             _marker = marker;
@@ -60,9 +65,9 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
 
         public override void VisitLocalVariableDeclaration(ILocalVariableDeclaration decl, IList<IStatement> body)
         {
-            if (decl == _marker.AffectedNode && _marker.Case == CompletionCase.EmptyCompletionBefore)
+            if (IsTargetMatch(decl, CompletionCase.EmptyCompletionBefore))
             {
-                body.Add(new ExpressionStatement {Expression = new CompletionExpression()});
+                body.Add(EmptyCompletionExpression);
             }
 
             var id = decl.DeclaredName;
@@ -86,8 +91,13 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
 
             if (decl == _marker.AffectedNode && _marker.Case == CompletionCase.EmptyCompletionAfter)
             {
-                body.Add(new ExpressionStatement {Expression = new CompletionExpression()});
+                body.Add(EmptyCompletionExpression);
             }
+        }
+
+        private bool IsTargetMatch(ICSharpTreeNode o, CompletionCase completionCase)
+        {
+            return o == _marker.AffectedNode && _marker.Case == completionCase;
         }
 
         public override void VisitAssignmentExpression(IAssignmentExpression expr, IList<IStatement> body)
@@ -133,20 +143,22 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
 
         public override void VisitIfStatement(IIfStatement stmt, IList<IStatement> body)
         {
-            var condition = _exprVisitor.ToSimpleExpression(stmt.Condition, body);
+            if (IsTargetMatch(stmt, CompletionCase.EmptyCompletionBefore))
+            {
+                body.Add(EmptyCompletionExpression);
+            }
             var ifElseBlock = new IfElseBlock
             {
-                // TODO introduce new visitor for ISimpleExpressions
-                Condition = condition
+                Condition = _exprVisitor.ToSimpleExpression(stmt.Condition, body) ?? new UnknownExpression()
             };
-            if (_marker.AffectedNode == stmt && _marker.Case == CompletionCase.InBody)
+            if (IsTargetMatch(stmt, CompletionCase.InBody))
             {
-                ifElseBlock.Then.Add(new ExpressionStatement {Expression = new CompletionExpression()});
+                ifElseBlock.Then.Add(EmptyCompletionExpression);
             }
-            //if (_marker.AffectedNode == rsLoop && _marker.Case == CompletionCase.InElse)
-            //{
-            //    ifElseBlock.Else.Add(new ExpressionStatement { Expression = new CompletionExpression() });
-            //}
+            if (IsTargetMatch(stmt, CompletionCase.InElse))
+            {
+                ifElseBlock.Else.Add(EmptyCompletionExpression);
+            }
             if (stmt.Then != null)
             {
                 stmt.Then.Accept(this, ifElseBlock.Then);
@@ -157,13 +169,18 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
             }
 
             body.Add(ifElseBlock);
+
+            if (IsTargetMatch(stmt, CompletionCase.EmptyCompletionAfter))
+            {
+                body.Add(EmptyCompletionExpression);
+            }
         }
 
         public override void VisitWhileStatement(IWhileStatement rsLoop, IList<IStatement> body)
         {
             if (_marker.AffectedNode == rsLoop && _marker.Case == CompletionCase.EmptyCompletionBefore)
             {
-                body.Add(new ExpressionStatement {Expression = new CompletionExpression()});
+                body.Add(EmptyCompletionExpression);
             }
 
             var loop = new WhileLoop
@@ -177,12 +194,12 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
 
             if (_marker.AffectedNode == rsLoop && _marker.Case == CompletionCase.InBody)
             {
-                loop.Body.Add(new ExpressionStatement {Expression = new CompletionExpression()});
+                loop.Body.Add(EmptyCompletionExpression);
             }
 
             if (_marker.AffectedNode == rsLoop && _marker.Case == CompletionCase.EmptyCompletionAfter)
             {
-                body.Add(new ExpressionStatement {Expression = new CompletionExpression()});
+                body.Add(EmptyCompletionExpression);
             }
         }
 

@@ -32,6 +32,7 @@ namespace KaVE.VsFeedbackGenerator.Analysis.CompletionTarget
         Undefined,
         EmptyCompletionBefore,
         EmptyCompletionAfter,
-        InBody
+        InBody,
+        InElse
     }
 }
