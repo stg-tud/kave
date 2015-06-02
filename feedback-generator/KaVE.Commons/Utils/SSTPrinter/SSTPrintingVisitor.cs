@@ -515,7 +515,7 @@ namespace KaVE.Commons.Utils.SSTPrinter
 
         public void Visit(ILambdaExpression expr, SSTPrintingContext c)
         {
-            c.ParameterList(expr.Parameters).Space().Text("=>");
+            c.ParameterList(expr.Name.Parameters).Space().Text("=>");
             c.StatementBlock(expr.Body, this);
         }
 

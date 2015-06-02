@@ -188,7 +188,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
         {
             var sst = new LambdaExpression
             {
-                Parameters = {ParameterName.Get("[C, A] p1"), ParameterName.Get("[C, B] p2")},
+                Name = LambdaName.Get("[T,P]([C, A] p1, [C, B] p2)"),
                 Body =
                 {
                     new ContinueStatement(),

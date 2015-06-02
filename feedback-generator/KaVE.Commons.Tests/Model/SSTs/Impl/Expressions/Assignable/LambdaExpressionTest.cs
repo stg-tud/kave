@@ -17,10 +17,10 @@
  *    - Sebastian Proksch
  */
 
+using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.SSTs;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl.Statements;
-using KaVE.Commons.Model.SSTs.Statements;
 using KaVE.Commons.TestUtils;
 using KaVE.Commons.Utils.Collections;
 using NUnit.Framework;
@@ -33,7 +33,7 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Expressions.Assignable
         public void DefaultValues()
         {
             var sut = new LambdaExpression();
-            Assert.AreEqual(Lists.NewList<IVariableDeclaration>(), sut.Parameters);
+            Assert.AreEqual(LambdaName.UnknownName, sut.Name);
             Assert.AreEqual(Lists.NewList<IStatement>(), sut.Body);
             Assert.AreNotEqual(0, sut.GetHashCode());
             Assert.AreNotEqual(1, sut.GetHashCode());
@@ -44,12 +44,12 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Expressions.Assignable
         {
             var sut = new LambdaExpression
             {
-                Parameters = {SomeParameter()},
+                Name = SomeLambdaName(),
                 Body = {new GotoStatement()}
             };
 
             Assert.AreEqual(Lists.NewList(new GotoStatement()), sut.Body);
-            Assert.AreEqual(Lists.NewList(SomeParameter()), sut.Parameters);
+            Assert.AreEqual(SomeLambdaName(), sut.Name);
         }
 
         [Test]
@@ -67,12 +67,12 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Expressions.Assignable
         {
             var a = new LambdaExpression
             {
-                Parameters = {SomeParameter()},
+                Name = SomeLambdaName(),
                 Body = {new GotoStatement()}
             };
             var b = new LambdaExpression
             {
-                Parameters = {SomeParameter()},
+                Name = SomeLambdaName(),
                 Body = {new GotoStatement()}
             };
 
@@ -85,7 +85,7 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Expressions.Assignable
         {
             var a = new LambdaExpression
             {
-                Parameters = {SomeParameter()},
+                Name = SomeLambdaName(),
             };
             var b = new LambdaExpression();
 

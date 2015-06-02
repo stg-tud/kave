@@ -129,7 +129,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
             var sst = new SST
             {
                 EnclosingType = TypeName.Get("TestClass,P"),
-                Delegates = {new DelegateDeclaration {Name = TypeName.Get("d:TestDelegate,P")}},
+                Delegates = {new DelegateDeclaration {Name = DelegateTypeName.Get("d:[T,P][TestDelegate,P].()")}},
                 Events = {new EventDeclaration {Name = EventName.Get("[EventType,P] [TestClass,P].SomethingHappened")}},
                 Fields =
                 {
@@ -212,14 +212,6 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
                 "}");
         }
 
-        // TODO: Test may be removed after DelegateTypeName has been officially added to DelegateDeclaration
-        [Test]
-        public void DelegateDeclaration_Legacy()
-        {
-            var sst = new DelegateDeclaration {Name = TypeName.Get("d:T,P")};
-            AssertPrint(sst, "delegate T();");
-        }
-
         [Test]
         public void DelegateDeclaration_Parameterless()
         {
@@ -285,7 +277,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
         [Test]
         public void FieldDeclaration_Array()
         {
-            var sst = new FieldDeclaration{Name = FieldName.Get("[d:[V, A] [N.TD, A].()[]] [DT, A]._delegatesField")};
+            var sst = new FieldDeclaration {Name = FieldName.Get("[d:[V, A] [N.TD, A].()[]] [DT, A]._delegatesField")};
 
             AssertPrint(sst, "TD[] _delegatesField;");
         }

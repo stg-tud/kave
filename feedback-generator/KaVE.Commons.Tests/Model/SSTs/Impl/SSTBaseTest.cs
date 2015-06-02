@@ -70,5 +70,10 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl
         {
             return ParameterName.Get("[T,P] n");
         }
+
+        protected ILambdaName SomeLambdaName()
+        {
+            return LambdaName.Get("[T,P] ([T2,P2] p)");
+        }
     }
 }
