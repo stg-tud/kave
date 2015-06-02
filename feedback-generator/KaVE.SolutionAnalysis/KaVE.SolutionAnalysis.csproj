@@ -40,7 +40,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="JetBrains.CommandLine.InspectCode.Unattended">
-      <HintPath>..\..\..\..\..\..\..\ProgramData\chocolatey\lib\resharper-clt.portable.8.2.0.2151\tools\JetBrains.CommandLine.InspectCode.Unattended.dll</HintPath>
+      <HintPath>C:\ProgramData\chocolatey\lib\resharper-clt.portable\tools\JetBrains.CommandLine.InspectCode.Unattended.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="System" />

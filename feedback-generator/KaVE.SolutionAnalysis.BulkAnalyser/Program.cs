@@ -1,0 +1,200 @@
+﻿/*
+ * Copyright 2014 Technische Universität Darmstadt
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * 
+ * Contributors:
+ *    - Andreas Bauer
+ */
+
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using KaVE.Commons.Utils.Assertion;
+using System.Threading.Tasks;
+
+namespace KaVE.SolutionAnalysis.BulkAnalyser
+{
+    internal class Program
+    {
+        private static readonly DirectoryInfo TargetDirectory =
+            new DirectoryInfo(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "output"));
+
+        private static void Main(string[] args)
+        {
+            if (!TargetDirectory.Exists)
+            {
+                TargetDirectory.Create();
+            }
+
+            var repo = new Uri("https://github.com/restsharp/RestSharp.git");
+
+            Console.WriteLine("Cloning {0} to {1} ...", repo, TargetDirectory);
+
+            var repoRoot = CloneRepository(repo, TargetDirectory.FullName);
+
+            Console.WriteLine("Finished cloning {0}!", repo);
+
+            var slnFiles = FindSolutionFiles(repoRoot.FullName).ToList();
+
+            Console.WriteLine("Found solution files:");
+            slnFiles.ForEach(f => Console.WriteLine("- {0}", f.Name));
+
+            foreach (var slnFile in slnFiles)
+            {
+                if (SolutionIsAlreadyAnalysed(slnFile))
+                {
+                    Console.WriteLine("Solution {0} is already analysed. Skipping ...", slnFile.Name);
+                    continue;
+                }
+
+                Console.WriteLine("Now analysing {0} ...", slnFile.Name);
+                try
+                {
+                    var syntaxTrees = GenerateSyntaxTrees(slnFile);
+
+                    File.WriteAllText(Path.Combine(TargetDirectory.FullName, slnFile.Name + "_Analysis.log"), syntaxTrees.AnalysisLog);
+
+                    if (syntaxTrees.SyntaxTrees != null)
+                    {
+                        File.WriteAllLines(
+                            Path.Combine(TargetDirectory.FullName, slnFile.Name + "_SyntaxTrees.log"),
+                            syntaxTrees.SyntaxTrees);
+                    }
+
+                    if (syntaxTrees.SerializationErrorLog != null)
+                    {
+                        File.WriteAllText(
+                            Path.Combine(TargetDirectory.FullName, slnFile.Name + "_FailedSerializations.log"),
+                            syntaxTrees.SerializationErrorLog);
+                    }
+                    Console.WriteLine("Finished analysing {0}!", slnFile);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Analysis failed: {0}", e);
+                }
+            }
+
+            Console.WriteLine("All done!");
+            Console.ReadKey();
+        }
+
+        private static bool SolutionIsAlreadyAnalysed(FileInfo slnFile)
+        {
+            return File.Exists(Path.Combine(TargetDirectory.FullName, slnFile.Name + "_Analysis.log"));
+        }
+
+        private static DirectoryInfo CloneRepository(Uri uri, string location)
+        {
+            var folderName = uri.Segments.Last();
+            var git = new Process
+            {
+                StartInfo =
+                {
+                    FileName = "git.exe",
+                    Arguments = String.Format("clone {0} --depth=1 {1}", uri, folderName),
+                    WorkingDirectory = location,
+                    CreateNoWindow = true,
+                    WindowStyle = ProcessWindowStyle.Hidden
+                }
+            };
+
+            git.Start();
+            git.WaitForExit();
+
+            return new DirectoryInfo(Path.Combine(location, folderName));
+        }
+
+        private static IEnumerable<FileInfo> FindSolutionFiles(string searchRoot)
+        {
+            return
+                Directory.GetFiles(searchRoot, "*.sln", SearchOption.AllDirectories)
+                         .Select(fileName => new FileInfo(fileName));
+        }
+
+        private static DirectoryInfo CreateTemporaryDirectory()
+        {
+            string tempPath = Path.GetTempPath();
+            string tempDir;
+            do
+            {
+                tempDir = Path.Combine(tempPath, Path.GetRandomFileName());
+            } while (Directory.Exists(tempDir));
+            return Directory.CreateDirectory(tempDir);
+        }
+
+        private class SyntaxTreeGeneratorResult
+        {
+            public IEnumerable<string> SyntaxTrees { get; set; }
+            public string AnalysisLog { get; set; }
+            public string SerializationErrorLog { get; set; }
+        }
+
+        private static SyntaxTreeGeneratorResult GenerateSyntaxTrees(FileInfo solutionFile)
+        {
+            var solutionAnalysisPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "KaVE.SolutionAnalysis.dll");
+            Asserts.That(
+                File.Exists(solutionAnalysisPath),
+                String.Format("KaVE solution analyser not found in {0}.", solutionAnalysisPath));
+
+            var workingDirectory = CreateTemporaryDirectory();
+
+            var inspectCode = new Process
+            {
+                StartInfo =
+                {
+                    FileName = "cmd.exe",
+                    Arguments =
+                        String.Format(
+                            "/c inspectcode.exe \"{0}\" /o=tmp.xml /plugin=\"{1}\" > Analysis.log 2>&1",
+                            solutionFile,
+                            solutionAnalysisPath),
+                    WorkingDirectory = workingDirectory.FullName,
+                    CreateNoWindow = true,
+                    WindowStyle = ProcessWindowStyle.Hidden
+                }
+            };
+
+            inspectCode.Start();
+            inspectCode.WaitForExit();
+
+            var result = new SyntaxTreeGeneratorResult();
+
+            var resultsFile = new FileInfo(Path.Combine(workingDirectory.FullName, "SyntaxTrees.log"));
+            var errorsFile = new FileInfo(Path.Combine(workingDirectory.FullName, "SerializationErrors.log"));
+            var analysisLogFile = new FileInfo(Path.Combine(workingDirectory.FullName, "Analysis.log"));
+
+            if (resultsFile.Exists)
+            {
+                result.SyntaxTrees = File.ReadAllLines(resultsFile.FullName);
+            }
+
+            if (errorsFile.Exists)
+            {
+                result.SerializationErrorLog = File.ReadAllText(errorsFile.FullName);
+            }
+
+            if (analysisLogFile.Exists)
+            {
+                result.AnalysisLog = File.ReadAllText(analysisLogFile.FullName);
+            }
+
+            workingDirectory.Delete(true);
+
+            return result;
+        }
+    }
+}

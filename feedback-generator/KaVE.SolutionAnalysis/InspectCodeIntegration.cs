@@ -17,6 +17,7 @@
  *    - Sven Amann
  */
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using JetBrains.Application;
@@ -26,6 +27,7 @@ using JetBrains.ReSharper.Daemon.SolutionAnalysis;
 using JetBrains.Threading;
 using JetBrains.Util;
 using KaVE.Commons.Model.Events.CompletionEvents;
+using KaVE.Commons.Utils.Json;
 using KaVE.Commons.Utils.Logging.Json;
 using ILogger = KaVE.Commons.Utils.Exceptions.ILogger;
 
@@ -34,7 +36,8 @@ namespace KaVE.SolutionAnalysis
     [SolutionComponent]
     public class InspectCodeIntegrator : IInspectCodeConsumerFactory
     {
-        private const string LogFileName = "SolutionAnalysis.log";
+        private const string LogFileName = "SyntaxTrees.log";
+        private const string ErrorsFileName = "SerializationErrors.log";
 
         private readonly ISolution _solution;
         private readonly ILogger _logger;
@@ -58,7 +61,24 @@ namespace KaVE.SolutionAnalysis
         {
             using (var writer = new JsonLogWriter<Context>(new FileStream(LogFileName, FileMode.OpenOrCreate)))
             {
-                results.ForEach(writer.Write);
+                foreach (var result in results)
+                {
+                    try
+                    {
+                        writer.Write(result);
+                    }
+                    catch (Exception e)
+                    {
+                        using (var file = File.AppendText(ErrorsFileName))
+                        {
+                            file.WriteLine("{{{0}}}", result.SST.EnclosingType.FullName);
+                            file.Write(e.ToString());
+                            file.WriteLine();
+                            file.WriteLine();
+                        }
+                        
+                    }
+                }
             }
         }
 
