@@ -76,6 +76,12 @@ namespace KaVE.VsFeedbackGenerator.Analysis.CompletionTarget
                     Result.AffectedNode = target.Parent as ICSharpTreeNode;
                     Result.Case = CompletionCase.Undefined;
                 }
+
+                var exprStatement = Result.AffectedNode as IExpressionStatement;
+                if (exprStatement != null && exprStatement.Expression != null)
+                {
+                    Result.AffectedNode = exprStatement.Expression;
+                }
             }
 
             private void FindAvailableTarget(ICSharpTreeNode target)

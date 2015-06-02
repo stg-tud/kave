@@ -28,6 +28,7 @@ using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Commons.Model.SSTs.Impl.References;
 using KaVE.Commons.Model.SSTs.Impl.Statements;
+using KaVE.Commons.Utils.Collections;
 using KaVE.VsFeedbackGenerator.Analysis.CompletionTarget;
 using KaVE.VsFeedbackGenerator.Analysis.Util;
 using KaVE.VsFeedbackGenerator.Utils.Names;
@@ -120,11 +121,21 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
         {
             if (stmt.Expression != null)
             {
-                var isAssignment = stmt.Expression is IAssignmentExpression;
-                if (isAssignment)
+                var assignment = stmt.Expression as IAssignmentExpression;
+                var prefix = stmt.Expression as IPrefixOperatorExpression;
+                var postfix = stmt.Expression as IPostfixOperatorExpression;
+                if (assignment != null)
                 {
-                    stmt.Expression.Accept(this, body);
+                    assignment.Accept(this, body);
                     // TODO repeat the same trick for invocation expressions
+                }
+                else if (prefix != null)
+                {
+                    prefix.Accept(this, body);
+                }
+                else if (postfix != null)
+                {
+                    postfix.Accept(this, body);
                 }
                 else
                 {
@@ -134,6 +145,50 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
                             Expression = stmt.Expression.Accept(_exprVisitor, body) ?? new UnknownExpression()
                         });
                 }
+            }
+        }
+
+        public override void VisitPrefixOperatorExpression(IPrefixOperatorExpression expr, IList<IStatement> body)
+        {
+            if (IsTargetMatch(expr, CompletionCase.EmptyCompletionBefore))
+            {
+                body.Add(EmptyCompletionExpression);
+            }
+            var varRef = _exprVisitor.ToVariableRef(expr.Operand, body);
+            body.Add(
+                new Assignment
+                {
+                    Reference = varRef,
+                    Expression = new ComposedExpression
+                    {
+                        References = {varRef}
+                    }
+                });
+            if (IsTargetMatch(expr, CompletionCase.EmptyCompletionAfter))
+            {
+                body.Add(EmptyCompletionExpression);
+            }
+        }
+
+        public override void VisitPostfixOperatorExpression(IPostfixOperatorExpression expr, IList<IStatement> body)
+        {
+            if (IsTargetMatch(expr, CompletionCase.EmptyCompletionBefore))
+            {
+                body.Add(EmptyCompletionExpression);
+            }
+            var varRef = _exprVisitor.ToVariableRef(expr.Operand, body);
+            body.Add(
+                new Assignment
+                {
+                    Reference = varRef,
+                    Expression = new ComposedExpression
+                    {
+                        References = {varRef}
+                    }
+                });
+            if (IsTargetMatch(expr, CompletionCase.EmptyCompletionAfter))
+            {
+                body.Add(EmptyCompletionExpression);
             }
         }
 
@@ -200,6 +255,65 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
             if (_marker.AffectedNode == rsLoop && _marker.Case == CompletionCase.EmptyCompletionAfter)
             {
                 body.Add(EmptyCompletionExpression);
+            }
+        }
+
+        public override void VisitForStatement(IForStatement stmt, IList<IStatement> body)
+        {
+            if (IsTargetMatch(stmt, CompletionCase.EmptyCompletionBefore))
+            {
+                body.Add(EmptyCompletionExpression);
+            }
+
+            var forLoop = new ForLoop();
+            body.Add(forLoop);
+
+            if (IsTargetMatch(stmt, CompletionCase.InBody))
+            {
+                forLoop.Body.Add(EmptyCompletionExpression);
+            }
+
+            VisitForStatement_Init(stmt.Initializer, forLoop.Init, body);
+            forLoop.Condition = _exprVisitor.ToLoopHeaderExpression(stmt.Condition, body);
+            foreach (var expr in stmt.IteratorExpressionsEnumerable)
+            {
+                expr.Accept(this, forLoop.Step);
+            }
+
+            if (stmt.Body != null)
+            {
+                stmt.Body.Accept(this, forLoop.Body);
+            }
+
+            if (IsTargetMatch(stmt, CompletionCase.EmptyCompletionAfter))
+            {
+                body.Add(EmptyCompletionExpression);
+            }
+        }
+
+        private void VisitForStatement_Init(IForInitializer init, IKaVEList<IStatement> forInit, IList<IStatement> body)
+        {
+            if (init == null)
+            {
+                return;
+            }
+
+            // case 1: single declaration
+            var isDeclaration = init.Declaration != null;
+            if (isDeclaration)
+            {
+                var decl = init.Declaration.Declarators[0];
+                decl.Accept(this, forInit);
+            }
+
+            // case 2: multiple statements
+            var hasStatements = init.Expressions.Count > 0;
+            if (hasStatements)
+            {
+                foreach (var expr in init.ExpressionsEnumerable)
+                {
+                    expr.Accept(this, forInit);
+                }
             }
         }
 

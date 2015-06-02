@@ -79,7 +79,18 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
         {
             return csExpr == null
                 ? new UnknownExpression()
-                : (ILoopHeaderExpression) csExpr.Accept(_toAssignableExpr, body);
+                : (ILoopHeaderExpression) csExpr.Accept(_toAssignableExpr, body) ?? new UnknownExpression();
+        }
+
+        public IVariableReference ToVariableRef(IUnaryExpression csExpr, IList<IStatement> body)
+        {
+            var refExpr = csExpr as IReferenceExpression;
+            if (refExpr != null && refExpr.NameIdentifier != null)
+            {
+                return new VariableReference {Identifier = refExpr.NameIdentifier.Name};
+            }
+
+            return new VariableReference();
         }
 
         public override IAssignableExpression VisitDefaultExpression(IDefaultExpression expr, IList<IStatement> body)

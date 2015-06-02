@@ -17,12 +17,17 @@
  *    - Sebastian Proksch
  */
 
+using System.Linq;
 using JetBrains;
 using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.SSTs;
+using KaVE.Commons.Model.SSTs.Expressions;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
+using KaVE.Commons.Model.SSTs.Impl.References;
 using KaVE.Commons.Model.SSTs.Impl.Statements;
+using KaVE.Commons.Model.SSTs.References;
+using KaVE.Commons.Utils.Collections;
 
 namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 {
@@ -106,6 +111,15 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
                     Expression = new CompletionExpression()
                 };
             }
+        }
+
+        public static IAssignableExpression ComposedExpr(params string[] varNames)
+        {
+            var varRefs = varNames.Select<string, IVariableReference>(n => new VariableReference {Identifier = n});
+            return new ComposedExpression
+            {
+                References = Lists.NewListFrom(varRefs)
+            };
         }
     }
 }

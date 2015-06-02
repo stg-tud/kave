@@ -213,5 +213,10 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             Assert.That(LastCompletionMarker.AffectedNode is TNodeType);
             Assert.AreEqual(expectedCase, LastCompletionMarker.Case);
         }
+
+        protected static Assignment VarAssign(string varName, IAssignableExpression expr)
+        {
+            return new Assignment {Reference = VarRef(varName), Expression = expr};
+        }
     }
 }

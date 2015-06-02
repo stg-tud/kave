@@ -63,6 +63,7 @@
     <Compile Include="Analysis\SmokeTests\CodeCompletionWithMissingTokensSmokeTest.cs" />
     <Compile Include="Analysis\SmokeTests\CodeCompletionWithUnresolvableReferencesSmokeTest.cs" />
     <Compile Include="Analysis\SSTAnalysisTestSuite\ArrayTest.cs" />
+    <Compile Include="Analysis\SSTAnalysisTestSuite\Blocks\ForLoopAnalysisTest.cs" />
     <Compile Include="Analysis\SSTAnalysisTestSuite\Blocks\IfElseBlockAnalysisTest.cs" />
     <Compile Include="Analysis\SSTAnalysisTestSuite\Blocks\WhileLoopAnalysisTest.cs" />
     <Compile Include="Analysis\SSTAnalysisTestSuite\ComposedExpressionAnalysisTest.cs" />
@@ -83,6 +84,7 @@
     <Compile Include="Analysis\SSTAnalysisTestSuite\SSTAnalysisFixture.cs" />
     <Compile Include="Analysis\SSTAnalysisTestSuite\Statements\AssignmentAnalysisTest.cs" />
     <Compile Include="Analysis\SSTAnalysisTestSuite\Statements\BreakStatementAnalysisTest.cs" />
+    <Compile Include="Analysis\SSTAnalysisTestSuite\Statements\PostAndPrefixOperatorAnalysisTest.cs" />
     <Compile Include="Analysis\SSTAnalysisTestSuite\TriggerLocationsTest.cs" />
     <Compile Include="Analysis\SSTAnalysisTestSuite\TriggerPoint\CompletionTargetMarkerTest.cs" />
     <Compile Include="Analysis\SSTAnalysisTestSuite\TriggerPoint\TriggerPointAnalysisTest.cs" />
