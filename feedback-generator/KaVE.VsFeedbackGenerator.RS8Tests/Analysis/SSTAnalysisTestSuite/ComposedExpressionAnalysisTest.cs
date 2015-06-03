@@ -17,7 +17,6 @@
  *    - Sebastian Proksch
  */
 
-using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
 using NUnit.Framework;

@@ -19,7 +19,6 @@ using KaVE.Commons.Utils.Logging;
 using KaVE.CompletionTraceGenerator.Model;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.CompletionEvents;
-using KaVE.VsFeedbackGenerator.Utils.Logging;
 using Moq;
 using NUnit.Framework;
 using TestFactory = KaVE.Commons.TestUtils.Model.Events.CompletionEvent.CompletionEventTestFactory;

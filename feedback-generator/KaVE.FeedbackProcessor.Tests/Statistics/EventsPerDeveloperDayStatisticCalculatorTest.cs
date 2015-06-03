@@ -18,10 +18,8 @@
  */
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using KaVE.Commons.TestUtils.Model.Events;
-using KaVE.FeedbackProcessor.Model;
 using KaVE.FeedbackProcessor.Statistics;
 using KaVE.FeedbackProcessor.Tests.Model;
 using NUnit.Framework;

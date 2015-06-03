@@ -21,7 +21,6 @@ using System.Collections;
 using System.Collections.Generic;
 using EnvDTE;
 using JetBrains.DataFlow;
-using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.VisualStudio;
 using KaVE.VsFeedbackGenerator.Generators;
 using KaVE.VsFeedbackGenerator.Generators.VisualStudio;

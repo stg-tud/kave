@@ -22,7 +22,6 @@ using KaVE.VsFeedbackGenerator.SessionManager;
 using KaVE.VsFeedbackGenerator.SessionManager.Presentation;
 using KaVE.VsFeedbackGenerator.Utils;
 using KaVE.VsFeedbackGenerator.Utils.Logging;
-using KaVE.VsFeedbackGenerator.VsIntegration;
 using Moq;
 using NUnit.Framework;
 

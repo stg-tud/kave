@@ -27,7 +27,6 @@ using KaVE.Commons.Utils.Json;
 using KaVE.VsFeedbackGenerator.SessionManager.Anonymize.CompletionEvents;
 using KaVE.VsFeedbackGenerator.SessionManager.Presentation;
 using KaVE.VsFeedbackGenerator.Utils;
-using KaVE.VsFeedbackGenerator.Utils.Json;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
 {

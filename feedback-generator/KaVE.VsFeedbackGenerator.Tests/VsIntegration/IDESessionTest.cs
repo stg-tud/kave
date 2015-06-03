@@ -17,9 +17,7 @@
  *    - Sven Amann
  */
 
-using System;
 using EnvDTE;
-using KaVE.VsFeedbackGenerator.Utils;
 using KaVE.VsFeedbackGenerator.VsIntegration;
 using Moq;
 using NUnit.Framework;

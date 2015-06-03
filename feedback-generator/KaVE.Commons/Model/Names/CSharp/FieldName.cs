@@ -17,7 +17,6 @@
  *    - Sven Amann
  */
 
-using System;
 using KaVE.Commons.Utils.Collections;
 using KaVE.JetBrains.Annotations;
 

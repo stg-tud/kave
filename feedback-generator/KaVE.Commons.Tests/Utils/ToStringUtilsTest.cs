@@ -550,6 +550,7 @@ namespace KaVE.Commons.Tests.Utils
         {
             public void M()
             {
+                // ReSharper disable once UnusedVariable
                 Action<int> d = i => { };
             }
 

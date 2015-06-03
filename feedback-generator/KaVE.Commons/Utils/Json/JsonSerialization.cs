@@ -24,7 +24,6 @@ using System.IO;
 using System.Reflection;
 using System.Runtime.Serialization.Formatters;
 using System.Text;
-using System.Text.RegularExpressions;
 using KaVE.Commons.Model.Names;
 using KaVE.JetBrains.Annotations;
 using Newtonsoft.Json;

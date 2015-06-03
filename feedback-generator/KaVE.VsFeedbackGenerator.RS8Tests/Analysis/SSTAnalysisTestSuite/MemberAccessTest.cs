@@ -20,7 +20,6 @@
 using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.SSTs;
 using KaVE.Commons.Model.SSTs.Impl;
-using KaVE.Commons.Model.SSTs.Impl.Declarations;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Commons.Model.SSTs.Impl.References;

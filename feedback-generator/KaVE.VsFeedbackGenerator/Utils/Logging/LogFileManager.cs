@@ -20,10 +20,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
-using KaVE.Commons.Utils.IO;
 using KaVE.JetBrains.Annotations;
 
 namespace KaVE.VsFeedbackGenerator.Utils.Logging

@@ -17,7 +17,6 @@
  *    - Sven Amann
  */
 
-using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using KaVE.Commons.Utils.Collections;
