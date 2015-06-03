@@ -161,5 +161,11 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp
             Assert.IsTrue(typeName.HasTypeParameters);
             CollectionAssert.AreEqual(new[] { TypeParameterName.Get("T -> String, mscorlib") }, typeName.TypeParameters);
         }
+
+        [Test]
+        public void FixesLegacyDelegateTypeNameFormat()
+        {
+            Assert.AreEqual("d:[?] [Some.DelegateType, A, 1.0.0.0].()", LegacyDelegateName.Identifier);
+        }
     }
 }
