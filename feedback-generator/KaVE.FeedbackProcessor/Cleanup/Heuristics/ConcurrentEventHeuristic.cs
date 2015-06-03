@@ -38,6 +38,7 @@ namespace KaVE.FeedbackProcessor.Cleanup.Heuristics
             "TextControl.Down",
             "TextControl.Backspace",
             "TextControl.Enter",
+            "TextControl.Delete",
             "TextControl.Up.Selection",
             "TextControl.Down.Selection",
             "TextControl.Left.Selection",
