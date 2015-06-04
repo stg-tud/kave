@@ -99,11 +99,6 @@
     <Compile Include="Generators\VisualStudio\WindowEventGeneratorTest.cs" />
     <Compile Include="Interactivity\InteractionRequestTest.cs" />
     <Compile Include="MessageBus\TinyMessengerMessageChannelTest.cs" />
-    <Compile Include="ObjectUsageExporterTestSuite\ObjectUsageCreationTest.cs" />
-    <Compile Include="ObjectUsageExporterTestSuite\BaseObjectUsageExporterTest.cs" />
-    <Compile Include="ObjectUsageExporterTestSuite\ObjectUsageExporterTestFixture.cs" />
-    <Compile Include="ObjectUsageExporterTestSuite\ObjectUsageWithDefinitionSite.cs" />
-    <Compile Include="ObjectUsageExporterTestSuite\SupportForAllStatementTest.cs" />
     <Compile Include="SessionManager\Anonymize\AnonymousNameUtilsTest.cs" />
     <Compile Include="SessionManager\Anonymize\BuildEventAnonymizerTest.cs" />
     <Compile Include="SessionManager\Anonymize\CompletionEvents\SSTAnonymizationBaseTest.cs" />

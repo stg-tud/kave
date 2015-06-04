@@ -19,7 +19,6 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using JetBrains;
 using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.Names.CSharp;
@@ -30,10 +29,10 @@ using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.Commons.Model.SSTs.Impl.Declarations;
 using KaVE.Commons.Model.SSTs.Impl.References;
 using KaVE.Commons.Model.SSTs.References;
-using KaVE.VsFeedbackGenerator.ObjectUsageExport;
+using KaVE.Commons.Utils.ObjectUsageExport;
 using NUnit.Framework;
 
-namespace KaVE.VsFeedbackGenerator.Tests.ObjectUsageExporterTestSuite
+namespace KaVE.Commons.Tests.Utils.ObjectUsageExporterTestSuite
 {
     public class BaseObjectUsageExporterTest
     {
@@ -52,7 +51,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.ObjectUsageExporterTestSuite
             string simpleName,
             params IParameterName[] parameters)
         {
-            var methodStart = "[{0}] [{1}].{2}(".FormatEx(retType, declType, simpleName);
+            var methodStart = string.Format("[{0}] [{1}].{2}(", retType, declType, simpleName);
 
             var firstIteration = true;
             foreach (var parameterName in parameters)
@@ -75,13 +74,13 @@ namespace KaVE.VsFeedbackGenerator.Tests.ObjectUsageExporterTestSuite
             ITypeName declType,
             string fieldName)
         {
-            var field = "[{0}] [{1}].{2}".FormatEx(valType, declType, fieldName);
+            var field = string.Format("[{0}] [{1}].{2}", valType, declType, fieldName);
             return FieldName.Get(field);
         }
 
         protected static IParameterName Parameter(ITypeName valType, string paramName)
         {
-            var param = "[{0}] {1}".FormatEx(valType, paramName);
+            var param = string.Format("[{0}] {1}", valType, paramName);
             return ParameterName.Get(param);
         }
 
@@ -94,7 +93,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.ObjectUsageExporterTestSuite
             ITypeName declType,
             string propertyName)
         {
-            var property = "[{0}] [{1}].{2}".FormatEx(valType, declType, propertyName);
+            var property = string.Format("[{0}] [{1}].{2}", valType, declType, propertyName);
             return PropertyName.Get(property);
         }
 

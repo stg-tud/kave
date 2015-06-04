@@ -25,7 +25,7 @@ using KaVE.Commons.Model.SSTs.Impl.Expressions.LoopHeader;
 using KaVE.Commons.Model.SSTs.Impl.Statements;
 using NUnit.Framework;
 
-namespace KaVE.VsFeedbackGenerator.Tests.ObjectUsageExporterTestSuite
+namespace KaVE.Commons.Tests.Utils.ObjectUsageExporterTestSuite
 {
     internal class SupportForAllStatementTest : BaseObjectUsageExporterTest
     {

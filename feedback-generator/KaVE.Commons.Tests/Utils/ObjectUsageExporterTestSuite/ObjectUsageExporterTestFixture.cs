@@ -20,7 +20,7 @@
 using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.Names.CSharp;
 
-namespace KaVE.VsFeedbackGenerator.Tests.ObjectUsageExporterTestSuite
+namespace KaVE.Commons.Tests.Utils.ObjectUsageExporterTestSuite
 {
     internal class ObjectUsageExporterTestFixture
     {

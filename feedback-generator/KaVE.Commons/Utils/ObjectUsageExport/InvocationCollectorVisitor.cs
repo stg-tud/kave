@@ -18,7 +18,6 @@
  */
 
 using System.Collections.Generic;
-using JetBrains;
 using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.ObjectUsage;
@@ -31,7 +30,7 @@ using KaVE.Commons.Model.SSTs.Impl.Visitor;
 using KaVE.Commons.Model.SSTs.References;
 using KaVE.Commons.Model.SSTs.Statements;
 
-namespace KaVE.VsFeedbackGenerator.ObjectUsageExport
+namespace KaVE.Commons.Utils.ObjectUsageExport
 {
     internal class InvocationCollectorVisitor : AbstractNodeVisitor<InvocationCollectorVisitor.QueryContext>
     {
@@ -357,7 +356,8 @@ namespace KaVE.VsFeedbackGenerator.ObjectUsageExport
 
         public static IFieldName PropertyToFieldName(IPropertyName property)
         {
-            var field = "[{0}] [{1}]._{2}".FormatEx(
+            var field = string.Format(
+                "[{0}] [{1}]._{2}",
                 property.ValueType,
                 property.DeclaringType,
                 property.Name);

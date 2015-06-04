@@ -137,9 +137,6 @@
     <Compile Include="Interactivity\LinkNotificationRequestHandler.cs" />
     <Compile Include="Interactivity\Notification.cs" />
     <Compile Include="Interactivity\NotificationRequestHandler.cs" />
-    <Compile Include="ObjectUsageExport\DefinitionSiteEvaluatorVisitor.cs" />
-    <Compile Include="ObjectUsageExport\InvocationCollectorVisitor.cs" />
-    <Compile Include="ObjectUsageExport\ObjectUsageExporter.cs" />
     <Compile Include="PluginUnloadBehavior.cs" />
     <Compile Include="Properties\XamlBindableRichTextBox.Designer.cs">
       <DependentUpon>XamlBindableRichTextBox.resx</DependentUpon>

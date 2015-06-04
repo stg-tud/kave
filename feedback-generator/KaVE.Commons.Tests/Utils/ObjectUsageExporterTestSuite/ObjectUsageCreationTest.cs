@@ -15,7 +15,6 @@
  * 
  * Contributors:
  *    - Roman Fojtik
- *    - Sebastian Proksch
  */
 
 using KaVE.Commons.Model.ObjectUsage;
@@ -29,11 +28,10 @@ using KaVE.Commons.Model.SSTs.Impl.References;
 using KaVE.Commons.Model.SSTs.Impl.Statements;
 using KaVE.Commons.Model.TypeShapes;
 using NUnit.Framework;
-using Fix = KaVE.VsFeedbackGenerator.Tests.ObjectUsageExporterTestSuite.ObjectUsageExporterTestFixture;
 
 //TODO property is treated as field, implement property correctly
 
-namespace KaVE.VsFeedbackGenerator.Tests.ObjectUsageExporterTestSuite
+namespace KaVE.Commons.Tests.Utils.ObjectUsageExporterTestSuite
 {
     public class ObjectUsageCreationTest : BaseObjectUsageExporterTest
     {
@@ -52,7 +50,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.ObjectUsageExporterTestSuite
                     Reference = VarRef("a"),
                     Expression = new InvocationExpression
                     {
-                        MethodName = Method(Fix.Void, Type("A"), ".ctor"),
+                        MethodName = Method(ObjectUsageExporterTestFixture.Void, Type("A"), ".ctor"),
                     }
                 }
                 );
@@ -67,7 +65,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.ObjectUsageExporterTestSuite
         [Test]
         public void CreatesQueryForVariableDeclarationNotUsingRightHandTypeByConstructor()
         {
-            var calledMethodName = Method(Fix.Void, Type("A"), "Method");
+            var calledMethodName = Method(ObjectUsageExporterTestFixture.Void, Type("A"), "Method");
 
             SetupDefaultEnclosingMethod(
                 new VariableDeclaration
@@ -80,7 +78,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.ObjectUsageExporterTestSuite
                     Reference = VarRef("a"),
                     Expression = new InvocationExpression
                     {
-                        MethodName = Method(Fix.Void, Type("B"), ".ctor")
+                        MethodName = Method(ObjectUsageExporterTestFixture.Void, Type("B"), ".ctor")
                     }
                 },
                 new ExpressionStatement
@@ -111,7 +109,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.ObjectUsageExporterTestSuite
         [Test]
         public void CollectsReceiverCallsiteForDeclaredVariableType()
         {
-            var calledMethodName = Method(Fix.Void, Type("A"), "Method");
+            var calledMethodName = Method(ObjectUsageExporterTestFixture.Void, Type("A"), "Method");
             SetupDefaultEnclosingMethod(
                 new VariableDeclaration
                 {
@@ -142,7 +140,12 @@ namespace KaVE.VsFeedbackGenerator.Tests.ObjectUsageExporterTestSuite
         [Test]
         public void CreatesQueryForParameterDeclaration()
         {
-            var enclosingMethod = Method(Fix.Void, Type("C"), "Method", Fix.IntParam, Parameter(Type("PType"), "param"));
+            var enclosingMethod = Method(
+                ObjectUsageExporterTestFixture.Void,
+                Type("C"),
+                "Method",
+                ObjectUsageExporterTestFixture.IntParam,
+                Parameter(Type("PType"), "param"));
 
             SetupEnclosingMethod(enclosingMethod);
 
@@ -151,7 +154,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.ObjectUsageExporterTestSuite
                 true,
                 new Query
                 {
-                    type = Fix.IntType.ToCoReName(),
+                    type = ObjectUsageExporterTestFixture.IntType.ToCoReName(),
                 },
                 new Query
                 {
@@ -162,7 +165,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.ObjectUsageExporterTestSuite
         [Test]
         public void CollectsReceiverCallsiteForVariableInitializedBySubtype()
         {
-            var calledMethodName = Method(Fix.Void, Type("A"), "Method");
+            var calledMethodName = Method(ObjectUsageExporterTestFixture.Void, Type("A"), "Method");
 
             SetupDefaultEnclosingMethod(
                 new VariableDeclaration
@@ -175,7 +178,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.ObjectUsageExporterTestSuite
                     Reference = VarRef("a"),
                     Expression = new InvocationExpression
                     {
-                        MethodName = Method(Fix.Void, Type("B"), ".ctor")
+                        MethodName = Method(ObjectUsageExporterTestFixture.Void, Type("B"), ".ctor")
                     }
                 },
                 new ExpressionStatement
@@ -207,7 +210,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.ObjectUsageExporterTestSuite
         [Test]
         public void CreatesQueryForVariableDeclarationNotUsingRightHandTypeByVariableReferenceWithCallsite()
         {
-            var calledMethodName = Method(Fix.Void, Type("A"), "m");
+            var calledMethodName = Method(ObjectUsageExporterTestFixture.Void, Type("A"), "m");
 
             SetupDefaultEnclosingMethod(
                 new VariableDeclaration
@@ -255,7 +258,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.ObjectUsageExporterTestSuite
         [Test]
         public void CreatesQueryForVariableDeclarationNotUsingRightHandTypeByFieldReferenceWithCallsite()
         {
-            var calledMethodName = Method(Fix.Void, Type("A"), "Method");
+            var calledMethodName = Method(ObjectUsageExporterTestFixture.Void, Type("A"), "Method");
 
             SetupDefaultEnclosingMethodWithFields(
                 new IFieldDeclaration[]
@@ -413,7 +416,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.ObjectUsageExporterTestSuite
         public void CreatesQueryForPropertyDeclarationWithCallsite()
         {
             // Treating property as field
-            var calledMethodName = Method(Fix.Void, Type("A"), "Method");
+            var calledMethodName = Method(ObjectUsageExporterTestFixture.Void, Type("A"), "Method");
 
             SetupDefaultEnclosingMethodWithProperties(
                 new IPropertyDeclaration[]
@@ -466,7 +469,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.ObjectUsageExporterTestSuite
         [Test]
         public void CreatesQueryForFieldDeclarationWithCallsite()
         {
-            var calledMethodName = Method(Fix.Void, Type("A"), "Method");
+            var calledMethodName = Method(ObjectUsageExporterTestFixture.Void, Type("A"), "Method");
 
             SetupDefaultEnclosingMethodWithFields(
                 new IFieldDeclaration[]
@@ -500,7 +503,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.ObjectUsageExporterTestSuite
         [Test]
         public void CreatesQueryForFieldDeclarationByAssigningToVariableWithoutCallsite()
         {
-            var calledMethodName = Method(Fix.Void, Type("B"), "Method");
+            var calledMethodName = Method(ObjectUsageExporterTestFixture.Void, Type("B"), "Method");
 
             SetupDefaultEnclosingMethodWithFields(
                 new IFieldDeclaration[]
@@ -565,7 +568,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.ObjectUsageExporterTestSuite
                 {
                     Expression = new InvocationExpression
                     {
-                        MethodName = Method(Fix.Void, Type("B"), "MethodTB"),
+                        MethodName = Method(ObjectUsageExporterTestFixture.Void, Type("B"), "MethodTB"),
                         Reference = VarRef("a")
                     }
                 },
@@ -573,7 +576,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.ObjectUsageExporterTestSuite
                 {
                     Expression = new InvocationExpression
                     {
-                        MethodName = Method(Fix.Void, Type("A"), "MethodTA"),
+                        MethodName = Method(ObjectUsageExporterTestFixture.Void, Type("A"), "MethodTA"),
                         Reference = VarRef("a")
                     }
                 }
@@ -585,8 +588,10 @@ namespace KaVE.VsFeedbackGenerator.Tests.ObjectUsageExporterTestSuite
                     type = Type("A").ToCoReName(),
                     sites =
                     {
-                        CallSites.CreateReceiverCallSite(Method(Fix.Void, Type("B"), "MethodTB")),
-                        CallSites.CreateReceiverCallSite(Method(Fix.Void, Type("A"), "MethodTA"))
+                        CallSites.CreateReceiverCallSite(
+                            Method(ObjectUsageExporterTestFixture.Void, Type("B"), "MethodTB")),
+                        CallSites.CreateReceiverCallSite(
+                            Method(ObjectUsageExporterTestFixture.Void, Type("A"), "MethodTA"))
                     }
                 });
         }

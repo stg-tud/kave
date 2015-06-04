@@ -15,7 +15,6 @@
  * 
  * Contributors:
  *    - Roman Fojtik
- *    - Sebastian Proksch
  */
 
 using System.Collections.Generic;
@@ -23,7 +22,7 @@ using System.Collections.ObjectModel;
 using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Model.ObjectUsage;
 
-namespace KaVE.VsFeedbackGenerator.ObjectUsageExport
+namespace KaVE.Commons.Utils.ObjectUsageExport
 {
     public class ObjectUsageExporter
     {

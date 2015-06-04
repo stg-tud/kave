@@ -24,13 +24,12 @@ using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Commons.Model.SSTs.Impl.References;
 using KaVE.Commons.Model.SSTs.Impl.Statements;
+using KaVE.Commons.Utils.ObjectUsageExport;
 using NUnit.Framework;
-using Fix = KaVE.VsFeedbackGenerator.Tests.ObjectUsageExporterTestSuite.ObjectUsageExporterTestFixture;
-using ICV = KaVE.VsFeedbackGenerator.ObjectUsageExport.InvocationCollectorVisitor;
 
 // TODO implement property right
 
-namespace KaVE.VsFeedbackGenerator.Tests.ObjectUsageExporterTestSuite
+namespace KaVE.Commons.Tests.Utils.ObjectUsageExporterTestSuite
 {
     internal class ObjectUsageWithDefinitionSite : BaseObjectUsageExporterTest
     {
@@ -87,7 +86,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.ObjectUsageExporterTestSuite
                     Reference = VarRef("a"),
                     Expression = new InvocationExpression
                     {
-                        MethodName = Method(Fix.Void, Type("B"), ".ctor"),
+                        MethodName = Method(ObjectUsageExporterTestFixture.Void, Type("B"), ".ctor"),
                     }
                 }
                 );
@@ -95,20 +94,24 @@ namespace KaVE.VsFeedbackGenerator.Tests.ObjectUsageExporterTestSuite
             AssertQueriesInDefaultWithDefSite(
                 new Query
                 {
-                    definition = DefinitionSites.CreateDefinitionByConstructor(Method(Fix.Void, Type("B"), ".ctor")),
+                    definition =
+                        DefinitionSites.CreateDefinitionByConstructor(
+                            Method(ObjectUsageExporterTestFixture.Void, Type("B"), ".ctor")),
                     type = Type("A").ToCoReName()
                 },
                 new Query
                 {
                     type = Type("B").ToCoReName(),
-                    definition = DefinitionSites.CreateDefinitionByConstructor(Method(Fix.Void, Type("B"), ".ctor"))
+                    definition =
+                        DefinitionSites.CreateDefinitionByConstructor(
+                            Method(ObjectUsageExporterTestFixture.Void, Type("B"), ".ctor"))
                 });
         }
 
         [Test]
         public void DefinitionAsFieldWithCallsite()
         {
-            var calledMethodName = Method(Fix.Void, Type("A"), "Method");
+            var calledMethodName = Method(ObjectUsageExporterTestFixture.Void, Type("A"), "Method");
 
             SetupDefaultEnclosingMethodWithFields(
                 new IFieldDeclaration[]
@@ -143,7 +146,11 @@ namespace KaVE.VsFeedbackGenerator.Tests.ObjectUsageExporterTestSuite
         [Test]
         public void DefinitionAsParam()
         {
-            var enclosingMethod = Method(Fix.Void, Type("C"), "Method", Fix.IntParam);
+            var enclosingMethod = Method(
+                ObjectUsageExporterTestFixture.Void,
+                Type("C"),
+                "Method",
+                ObjectUsageExporterTestFixture.IntParam);
 
             SetupEnclosingMethod(enclosingMethod);
 
@@ -152,9 +159,15 @@ namespace KaVE.VsFeedbackGenerator.Tests.ObjectUsageExporterTestSuite
                 false,
                 new Query
                 {
-                    type = Fix.IntType.ToCoReName(),
+                    type = ObjectUsageExporterTestFixture.IntType.ToCoReName(),
                     definition =
-                        DefinitionSites.CreateDefinitionByParam(Method(Fix.Void, Type("C"), "Method", Fix.IntParam), 0)
+                        DefinitionSites.CreateDefinitionByParam(
+                            Method(
+                                ObjectUsageExporterTestFixture.Void,
+                                Type("C"),
+                                "Method",
+                                ObjectUsageExporterTestFixture.IntParam),
+                            0)
                 });
         }
 
@@ -162,7 +175,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.ObjectUsageExporterTestSuite
         public void DefinitionAsPropertyWithCallsite()
         {
             var enclosingMethod = Method(Type("A"), Type("TDecl"), "M");
-            var calledMethodName = Method(Fix.Void, Type("A"), "Method");
+            var calledMethodName = Method(ObjectUsageExporterTestFixture.Void, Type("A"), "Method");
 
             SetupDefaultEnclosingMethodWithProperties(
                 new IPropertyDeclaration[]
@@ -323,7 +336,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.ObjectUsageExporterTestSuite
                     Expression = new InvocationExpression
                     {
                         Reference = VarRef("PropName"),
-                        MethodName = Method(Fix.Void, Type("B"), "calledMethod")
+                        MethodName = Method(ObjectUsageExporterTestFixture.Void, Type("B"), "calledMethod")
                     }
                 }
                 );
@@ -336,7 +349,8 @@ namespace KaVE.VsFeedbackGenerator.Tests.ObjectUsageExporterTestSuite
                         DefinitionSites.CreateDefinitionByField(Field(Type("TValue"), Type("TDecl"), "_PropName")),
                     sites =
                     {
-                        CallSites.CreateReceiverCallSite(Method(Fix.Void, Type("B"), "calledMethod"))
+                        CallSites.CreateReceiverCallSite(
+                            Method(ObjectUsageExporterTestFixture.Void, Type("B"), "calledMethod"))
                     }
                 });
         }
@@ -357,7 +371,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.ObjectUsageExporterTestSuite
                     Expression = new InvocationExpression
                     {
                         Reference = VarRef("_fieldA"),
-                        MethodName = Method(Fix.Void, Type("B"), "calledMethod")
+                        MethodName = Method(ObjectUsageExporterTestFixture.Void, Type("B"), "calledMethod")
                     }
                 }
                 );
@@ -370,7 +384,8 @@ namespace KaVE.VsFeedbackGenerator.Tests.ObjectUsageExporterTestSuite
                         DefinitionSites.CreateDefinitionByField(Field(Type("TValue"), Type("TDecl"), "_fieldA")),
                     sites =
                     {
-                        CallSites.CreateReceiverCallSite(Method(Fix.Void, Type("B"), "calledMethod"))
+                        CallSites.CreateReceiverCallSite(
+                            Method(ObjectUsageExporterTestFixture.Void, Type("B"), "calledMethod"))
                     }
                 });
         }
@@ -551,7 +566,8 @@ namespace KaVE.VsFeedbackGenerator.Tests.ObjectUsageExporterTestSuite
                 {
                     type = Type("A").ToCoReName(),
                     definition =
-                        DefinitionSites.CreateDefinitionByField(ICV.PropertyToFieldName(propertyA))
+                        DefinitionSites.CreateDefinitionByField(
+                            InvocationCollectorVisitor.PropertyToFieldName(propertyA))
                 },
                 new Query
                 {
@@ -595,13 +611,16 @@ namespace KaVE.VsFeedbackGenerator.Tests.ObjectUsageExporterTestSuite
                 new Query
                 {
                     type = Type("A").ToCoReName(),
-                    definition = DefinitionSites.CreateDefinitionByField(ICV.PropertyToFieldName(propertyA))
+                    definition =
+                        DefinitionSites.CreateDefinitionByField(
+                            InvocationCollectorVisitor.PropertyToFieldName(propertyA))
                 },
                 new Query
                 {
                     type = Type("A").ToCoReName(),
                     definition =
-                        DefinitionSites.CreateDefinitionByField(ICV.PropertyToFieldName(propertyA))
+                        DefinitionSites.CreateDefinitionByField(
+                            InvocationCollectorVisitor.PropertyToFieldName(propertyA))
                 });
         }
     }
