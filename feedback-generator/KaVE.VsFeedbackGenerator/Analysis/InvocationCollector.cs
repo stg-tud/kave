@@ -49,22 +49,26 @@ namespace KaVE.VsFeedbackGenerator.Analysis
             var invocationRef = invocation.Reference;
             if (invocationRef != null)
             {
-                var method = invocationRef.ResolveMethod();
-                if (method != null)
+                var resolvedRef = invocationRef.Resolve();
+                if (resolvedRef.IsValid() && resolvedRef.DeclaredElement is IMethod)
                 {
-                    var methodName = method.GetName<IMethodName>();
-                    MethodRef entryPoint;
+                    var method = invocationRef.ResolveMethod();
+                    if (method != null)
+                    {
+                        var methodName = method.GetName<IMethodName>();
+                        MethodRef entryPoint;
 
-                    if (IsFromAssembly(method))
-                    {
-                        entryPoint = MethodRef.CreateAssemblyReference(methodName, method.Element);
+                        if (IsFromAssembly(method))
+                        {
+                            entryPoint = MethodRef.CreateAssemblyReference(methodName, method.Element);
+                        }
+                        else
+                        {
+                            var methodDeclaration = method.Element.GetDeclaration();
+                            entryPoint = MethodRef.CreateLocalReference(methodName, method.Element, methodDeclaration);
+                        }
+                        context.Add(entryPoint);
                     }
-                    else
-                    {
-                        var methodDeclaration = method.Element.GetDeclaration();
-                        entryPoint = MethodRef.CreateLocalReference(methodName, method.Element, methodDeclaration);
-                    }
-                    context.Add(entryPoint);
                 }
             }
         }

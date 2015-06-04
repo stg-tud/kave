@@ -89,6 +89,10 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
         /// </summary>
         public static string GetReference(this ICSharpTreeNode node, ITransformerContext context)
         {
+            if (context == null)
+            {
+                return "%% NULL REFERENCE %%";
+            }
             var refCollectorContext = new ReferenceCollectorContext(context);
             node.Accept(context.Factory.ReferenceCollector(), refCollectorContext);
             Asserts.That(refCollectorContext.References.Count == 1);

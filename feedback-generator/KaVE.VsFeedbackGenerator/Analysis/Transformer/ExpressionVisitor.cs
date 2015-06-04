@@ -23,7 +23,6 @@ using JetBrains.ReSharper.Psi.CSharp.Tree;
 using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.SSTs;
 using KaVE.Commons.Model.SSTs.Expressions;
-using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Commons.Model.SSTs.Impl.References;
@@ -62,17 +61,23 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
 
         public IAssignableExpression ToAssignableExpr(ICSharpExpression csExpr, IList<IStatement> body)
         {
-            return csExpr == null ? new UnknownExpression() : csExpr.Accept(_toAssignableExpr, body);
+            return csExpr == null
+                ? new UnknownExpression()
+                : csExpr.Accept(_toAssignableExpr, body) ?? new UnknownExpression();
         }
 
         public IAssignableReference ToAssignableRef(ICSharpExpression csExpr, IList<IStatement> body)
         {
-            return csExpr == null ? new UnknownReference() : csExpr.Accept(_toAssignableRef, body);
+            return csExpr == null
+                ? new UnknownReference()
+                : csExpr.Accept(_toAssignableRef, body) ?? new UnknownReference();
         }
 
         public ISimpleExpression ToSimpleExpression(ICSharpExpression csExpr, IList<IStatement> body)
         {
-            return csExpr == null ? new UnknownExpression() : (ISimpleExpression) csExpr.Accept(_toAssignableExpr, body);
+            return csExpr == null
+                ? new UnknownExpression()
+                : (ISimpleExpression) csExpr.Accept(_toAssignableExpr, body) ?? new UnknownExpression();
         }
 
         public ILoopHeaderExpression ToLoopHeaderExpression(ICSharpExpression csExpr, IList<IStatement> body)
@@ -146,20 +151,25 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
                         return new UnknownExpression();
                     }
                     var args = GetArgumentList(inv.ArgumentList, body);
-                    return SSTUtil.InvocationExpression(callee, methodName, args);
+                    return new InvocationExpression
+                    {
+                        Reference = new VariableReference {Identifier = callee ?? ""},
+                        MethodName = methodName,
+                        Parameters = args
+                    };
                 }
             }
 
             return new UnknownExpression();
         }
 
-        public IList<ISimpleExpression> GetArgumentList(IArgumentList argumentListParam, IList<IStatement> body)
+        public IKaVEList<ISimpleExpression> GetArgumentList(IArgumentList argumentListParam, IList<IStatement> body)
         {
             var args = Lists.NewList<ISimpleExpression>();
             foreach (var arg in argumentListParam.Arguments)
             {
                 var toArgumentRef = new ToArgumentRef();
-                var id = arg.Value.Accept(toArgumentRef, body);
+                var id = arg.Value.Accept(toArgumentRef, body) ?? new UnknownExpression();
                 args.Add(id);
             }
             return args;

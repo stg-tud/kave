@@ -30,7 +30,8 @@ namespace KaVE.Commons.Model.ObjectUsage
 
         private static string ValidationPattern()
         {
-            return string.Format(@"{0}\.([a-zA-Z0-9]+|(\<init\>))\(({0};)*\){0};", CoReTypeName.ValidationPattern());
+            // TODO @seb: add tests for more complex names (diff chars)
+            return string.Format(@"{0}\.([a-zA-Z0-9_]+|(\<init\>))\(({0};)*\){0};", CoReTypeName.ValidationPattern());
         }
     }
 }

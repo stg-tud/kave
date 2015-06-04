@@ -17,7 +17,9 @@
  *    - Sven Amann
  */
 
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace KaVE.Commons.Model.Names.CSharp
 {
@@ -32,31 +34,137 @@ namespace KaVE.Commons.Model.Names.CSharp
         public static IList<IParameterName> GetParameterNames(this string identifierWithParameters)
         {
             var parameters = new List<IParameterName>();
-            if (identifierWithParameters.HasParameters())
+            var endOfParameters = identifierWithParameters.LastIndexOf(')');
+            var hasNoBrackets = endOfParameters == -1;
+            if (hasNoBrackets)
             {
-                var endOfParameters = identifierWithParameters.LastIndexOf(')');
-                var startOfParameter = identifierWithParameters.IndexOf('(') + 1;
-                int endOfParameter;
-                for (; startOfParameter < endOfParameters; startOfParameter = endOfParameter + 1)
-                {
-                    endOfParameter = EndOfParameter(identifierWithParameters, startOfParameter, endOfParameters);
-                    var lengthOfParameter = endOfParameter - startOfParameter;
-                    var identifier = identifierWithParameters.Substring(startOfParameter, lengthOfParameter).Trim();
-                    parameters.Add(ParameterName.Get(identifier));
-                }
+                return parameters;
             }
+
+            var startOfParameters = identifierWithParameters.FindCorrespondingOpenBracket(endOfParameters);
+            var current = startOfParameters;
+
+            var hasNoParams = startOfParameters == (endOfParameters - 1);
+            if (hasNoParams)
+            {
+                return parameters;
+            }
+
+            while (current != endOfParameters)
+            {
+                var startOfParam = ++current;
+                
+                if (identifierWithParameters[current] != '[')
+                {
+                    current = identifierWithParameters.FindNext(current, '[');
+                }
+                current = identifierWithParameters.FindCorrespondingCloseBracket(current);
+                current = identifierWithParameters.FindNext(current, ',', ')');
+                var endOfParam = current;
+
+                var lengthOfSubstring = endOfParam - startOfParam;
+                var paramSubstring = identifierWithParameters.Substring(startOfParam, lengthOfSubstring);
+                parameters.Add(ParameterName.Get(paramSubstring.Trim()));
+            }
+
             return parameters;
         }
 
-        private static int EndOfParameter(string identifierWithParameters, int startOfParameter, int endOfParameters)
+
+        public static int FindNext(this string str, int currentIndex, params char[] characters)
         {
-            var endOfParameterType = EndOfNextTypeIdentifier(identifierWithParameters, startOfParameter);
-            var endOfParameter = identifierWithParameters.IndexOf(',', endOfParameterType);
-            if (0 <= endOfParameter && endOfParameter <= endOfParameters)
+            for (var i = currentIndex; i < str.Length; i++)
             {
-                return endOfParameter;
+                if (characters.Contains(str[i]))
+                {
+                    return i;
+                }
             }
-            return endOfParameters;
+            return -1;
+        }
+
+        public static int FindPrevious(this string str, int currentIndex, char character)
+        {
+            for (var i = currentIndex; i >= 0; i--)
+            {
+                if (str[i] == character)
+                {
+                    return i;
+                }
+            }
+            return -1;
+        }
+
+        public static int FindCorrespondingOpenBracket(this string str, int currentIndex)
+        {
+            var open = str[currentIndex];
+            var close = open.GetCorresponding();
+
+            var depth = 0;
+            for (var i = currentIndex; i > 0; i--)
+            {
+                depth = UpdateDepth(depth, open, close, str[i]);
+                if (depth == 0)
+                {
+                    return i;
+                }
+            }
+            return -1;
+        }
+
+        private static int UpdateDepth(int depth, char open, char close, char current)
+        {
+            if (current == open)
+            {
+                return depth + 1;
+            }
+            if (current == close)
+            {
+                return depth - 1;
+            }
+            return depth;
+        }
+
+        public static int FindCorrespondingCloseBracket(this string str, int currentIndex)
+        {
+            var open = str[currentIndex];
+            var close = open.GetCorresponding();
+
+            var depth = 0;
+            for (var i = currentIndex; i < str.Length; i++)
+            {
+                depth = UpdateDepth(depth, open, close, str[i]);
+                if (depth == 0)
+                {
+                    return i;
+                }
+            }
+            return -1;
+        }
+
+        public static char GetCorresponding(this char c)
+        {
+            switch (c)
+            {
+                case '(':
+                    return ')';
+                case ')':
+                    return '(';
+                case '{':
+                    return '}';
+                case '}':
+                    return '{';
+                case '[':
+                    return ']';
+                case ']':
+                    return '[';
+                case '<':
+                    return '>';
+                case '>':
+                    return '<';
+                default:
+                    throw new ArgumentException(string.Format("no supported bracket type: {0}", c));
+            }
         }
 
         /// <summary>
@@ -82,7 +190,7 @@ namespace KaVE.Commons.Model.Names.CSharp
         }
 
         /// <summary>
-        /// Returns the index of the next '[' in the identifier, starting at the given offset.
+        ///     Returns the index of the next '[' in the identifier, starting at the given offset.
         /// </summary>
         public static int StartOfNextTypeIdentifier(this string identifier, int offset)
         {

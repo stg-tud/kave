@@ -25,7 +25,8 @@ namespace KaVE.Commons.Model.ObjectUsage
 
         internal static string ValidationPattern()
         {
-            return @"\[*L([a-zA-Z0-9]+/)*[a-zA-Z0-9$]+";
+            // TODO @seb: add tests for more complex names (diff chars)
+            return @"\[*L([a-zA-Z0-9_]+/)*[a-zA-Z0-9_$]+";
         }
     }
 }

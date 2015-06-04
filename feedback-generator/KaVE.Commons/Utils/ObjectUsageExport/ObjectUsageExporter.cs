@@ -17,10 +17,13 @@
  *    - Roman Fojtik
  */
 
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using KaVE.Commons.Model.Events.CompletionEvents;
+using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.ObjectUsage;
+using KaVE.Commons.Utils.Assertion;
 
 namespace KaVE.Commons.Utils.ObjectUsageExport
 {
@@ -61,17 +64,26 @@ namespace KaVE.Commons.Utils.ObjectUsageExport
         {
             foreach (var methodHierarchy in ctx.TypeShape.MethodHierarchies)
             {
-                var methodCtx = methodHierarchy.Element.ToCoReName();
-                if (methodCtx.Equals(query.methodCtx))
+                try
                 {
-                    if (methodHierarchy.First != null)
+                    var methodCtx = methodHierarchy.Element.ToCoReName();
+                    if (methodCtx.Equals(query.methodCtx))
                     {
-                        return methodHierarchy.First.ToCoReName();
+                        if (methodHierarchy.First != null)
+                        {
+                            return methodHierarchy.First.ToCoReName();
+                        }
+                        if (methodHierarchy.Super != null)
+                        {
+                            return methodHierarchy.Super.ToCoReName();
+                        }
                     }
-                    if (methodHierarchy.Super != null)
-                    {
-                        return methodHierarchy.Super.ToCoReName();
-                    }
+                }
+                catch (AssertException e)
+                {
+                    // TODO test and proper handling
+                    Console.WriteLine("error getting methog context:\n{0}", e);
+                    return MethodName.UnknownName.ToCoReName();
                 }
             }
 

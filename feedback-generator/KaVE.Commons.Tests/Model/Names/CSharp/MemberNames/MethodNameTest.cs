@@ -20,6 +20,7 @@
 using System.Collections.Generic;
 using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.Names.CSharp;
+using KaVE.Commons.Model.ObjectUsage;
 using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Model.Names.CSharp.MemberNames
@@ -231,5 +232,15 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp.MemberNames
             Assert.AreEqual("M([d:[R,A] [D,A].()] p)", methodName.Signature);
             Assert.AreEqual("M", methodName.Name);
         }
+
+        [Test]
+        public void ShouldFindParametersOfMethodNamesEvenWithDelegateNames()
+        {
+            var methodName = MethodName.Get("[A,P] [d:[B,P] [C,P].([D,P] args)].M([E,P] p)");
+
+            var ps = methodName.Parameters;
+        }
+
+        // TODO @seb: add more tests for delegates
     }
 }

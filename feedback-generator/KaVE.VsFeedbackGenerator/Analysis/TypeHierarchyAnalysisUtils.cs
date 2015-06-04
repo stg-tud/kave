@@ -18,6 +18,7 @@ using System;
 using System.Linq;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.Util;
+using KaVE.Commons.Model.Names.CSharp;
 using KaVE.JetBrains.Annotations;
 using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.TypeShapes;
@@ -57,7 +58,12 @@ namespace KaVE.VsFeedbackGenerator.Analysis
             foreach (var superType in typeDeclaration.GetSuperTypes())
             {
                 var superTypeElement = superType.GetTypeElement();
-                Asserts.NotNull(superTypeElement);
+                //Asserts.NotNull(superTypeElement);
+                if (superTypeElement == null)
+                {
+                    // TODO add test for this (unresolvable super method?)
+                    return MethodName.UnknownName;
+                }
 
                 if (superType.IsInterfaceType() || enclosingMethod.IsOverride)
                 {
@@ -99,8 +105,12 @@ namespace KaVE.VsFeedbackGenerator.Analysis
             foreach (var superType in typeDeclaration.GetSuperTypes())
             {
                 var superTypeElement = superType.GetTypeElement();
-                Asserts.NotNull(superTypeElement);
-
+                //Asserts.NotNull(superTypeElement);
+                if (superTypeElement == null)
+                {
+                    // TODO add test for this (unresolvable super method?)
+                    return MethodName.UnknownName;
+                }
                 if (superType.IsClassType())
                 {
                     foreach (var method in superTypeElement.Methods)

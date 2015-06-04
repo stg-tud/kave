@@ -17,11 +17,13 @@
  *    - Roman Fojtik
  */
 
+using System;
 using KaVE.Commons.Model.ObjectUsage;
 using KaVE.Commons.Model.SSTs.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Expressions.Simple;
 using KaVE.Commons.Model.SSTs.Impl.Visitor;
 using KaVE.Commons.Model.SSTs.References;
+using KaVE.Commons.Utils.Assertion;
 
 namespace KaVE.Commons.Utils.ObjectUsageExport
 {
@@ -38,7 +40,16 @@ namespace KaVE.Commons.Utils.ObjectUsageExport
             }
             else
             {
-                defSite = DefinitionSites.CreateDefinitionByReturn(entity.MethodName);
+                try
+                {
+                    defSite = DefinitionSites.CreateDefinitionByReturn(entity.MethodName);
+                }
+                catch (AssertException e)
+                {
+                    // TODO @seb: test and proper handling
+                    Console.WriteLine("error creating definition site:\n{0}", e);
+                    defSite = DefinitionSites.CreateUnknownDefinitionSite();
+                }
             }
 
             return defSite;

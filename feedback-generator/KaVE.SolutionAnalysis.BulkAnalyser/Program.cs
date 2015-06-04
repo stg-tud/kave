@@ -22,8 +22,13 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using KaVE.Commons.Model.Events.CompletionEvents;
+using KaVE.Commons.Model.ObjectUsage;
 using KaVE.Commons.Utils.Assertion;
-using System.Threading.Tasks;
+using KaVE.Commons.Utils.Collections;
+using KaVE.Commons.Utils.Exceptions;
+using KaVE.Commons.Utils.Logging.Json;
+using KaVE.Commons.Utils.ObjectUsageExport;
 
 namespace KaVE.SolutionAnalysis.BulkAnalyser
 {
@@ -32,7 +37,62 @@ namespace KaVE.SolutionAnalysis.BulkAnalyser
         private static readonly DirectoryInfo TargetDirectory =
             new DirectoryInfo(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "output"));
 
+        private static readonly ObjectUsageExporter Exporter = new ObjectUsageExporter();
+
         private static void Main(string[] args)
+        {
+            var usages = Lists.NewList<Query>();
+
+            //AnalyzeProjects();
+            var ssts = ReadContexts();
+            Console.WriteLine("found {0} contexts", ssts.Count);
+
+            foreach (var ctx in ssts)
+            {
+                var u2 = Exporter.Export(ctx);
+                Console.WriteLine("- {0} usages", u2.Count);
+                foreach (var u in u2)
+                {
+                    usages.Add(u);
+                }
+            }
+
+            Console.WriteLine("extracted {0} usages", usages.Count);
+
+        }
+
+        private static IKaVEList<Context> ReadContexts()
+        {
+            var contexts = Lists.NewList<Context>();
+            var logs = FindSSTLogs();
+
+            foreach (var log in logs)
+            {
+                Console.WriteLine("reading {0}...", log.Name);
+                var reader = new JsonLogReader<Context>(new FileStream(log.FullName, FileMode.Open), new NullLogger());
+
+                var allCtxs = reader.ReadAll();
+                foreach (var ctx in allCtxs)
+                {
+                    contexts.Add(ctx);
+                }
+            }
+
+            return contexts;
+        }
+
+        private static IEnumerable<FileInfo> FindSSTLogs()
+        {
+            var logs = TargetDirectory.GetFiles("*_SyntaxTrees.log", SearchOption.TopDirectoryOnly);
+            Console.WriteLine("available logs:");
+            foreach (var log in logs)
+            {
+                Console.WriteLine("\t* {0}", log);
+            }
+            return logs;
+        }
+
+        private static void AnalyzeProjects()
         {
             if (!TargetDirectory.Exists)
             {
@@ -43,7 +103,7 @@ namespace KaVE.SolutionAnalysis.BulkAnalyser
 
             Console.WriteLine("Cloning {0} to {1} ...", repo, TargetDirectory);
 
-            var repoRoot = CloneRepository(repo, TargetDirectory.FullName);
+            var repoRoot = TargetDirectory; //CloneRepository(repo, TargetDirectory.FullName);
 
             Console.WriteLine("Finished cloning {0}!", repo);
 
@@ -65,7 +125,9 @@ namespace KaVE.SolutionAnalysis.BulkAnalyser
                 {
                     var syntaxTrees = GenerateSyntaxTrees(slnFile);
 
-                    File.WriteAllText(Path.Combine(TargetDirectory.FullName, slnFile.Name + "_Analysis.log"), syntaxTrees.AnalysisLog);
+                    File.WriteAllText(
+                        Path.Combine(TargetDirectory.FullName, slnFile.Name + "_Analysis.log"),
+                        syntaxTrees.AnalysisLog);
 
                     if (syntaxTrees.SyntaxTrees != null)
                     {
@@ -112,10 +174,11 @@ namespace KaVE.SolutionAnalysis.BulkAnalyser
                 }
             };
 
-            git.Start();
-            git.WaitForExit();
+            //git.Start();
+            //git.WaitForExit();
 
-            return new DirectoryInfo(Path.Combine(location, folderName));
+            var slnRoot = new DirectoryInfo(Path.Combine(location, folderName));
+            return slnRoot;
         }
 
         private static IEnumerable<FileInfo> FindSolutionFiles(string searchRoot)

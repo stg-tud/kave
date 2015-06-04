@@ -41,8 +41,13 @@ namespace KaVE.VsFeedbackGenerator.Analysis
             ISubstitution substitution = null;
             if (resolvedRef.DeclaredElement != null)
             {
-                declaration = (IMethod) resolvedRef.DeclaredElement;
+                declaration = resolvedRef.DeclaredElement as IMethod;
                 substitution = resolvedRef.Substitution;
+
+                if (declaration == null)
+                {
+                    var prop = resolvedRef.DeclaredElement as IProperty;
+                }
             }
             else if (!resolvedRef.Candidates.IsEmpty())
             {

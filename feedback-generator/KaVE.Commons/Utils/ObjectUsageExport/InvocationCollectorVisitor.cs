@@ -17,6 +17,7 @@
  *    - Roman Fojtik
  */
 
+using System;
 using System.Collections.Generic;
 using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.Names.CSharp;
@@ -29,6 +30,7 @@ using KaVE.Commons.Model.SSTs.Expressions.LoopHeader;
 using KaVE.Commons.Model.SSTs.Impl.Visitor;
 using KaVE.Commons.Model.SSTs.References;
 using KaVE.Commons.Model.SSTs.Statements;
+using KaVE.Commons.Utils.Assertion;
 
 namespace KaVE.Commons.Utils.ObjectUsageExport
 {
@@ -59,25 +61,41 @@ namespace KaVE.Commons.Utils.ObjectUsageExport
         public override void Visit(IMethodDeclaration stmt, QueryContext context)
         {
             // set query for this and base
-            var usage = new Query
+            try
             {
-                type = context.EnclosingType.ToCoReName(),
-                classCtx = context.EnclosingType.ToCoReName(),
-                methodCtx = context.EnclosingMethod.ToCoReName(),
-                definition = new DefinitionSite
+                var usage = new Query
                 {
-                    kind = DefinitionSiteKind.THIS,
-                }
-            };
-            context.TypeNameQueryDictionary[context.EnclosingType] = usage;
+                    type = context.EnclosingType.ToCoReName(),
+                    classCtx = context.EnclosingType.ToCoReName(),
+                    methodCtx = context.EnclosingMethod.ToCoReName(),
+                    definition = new DefinitionSite
+                    {
+                        kind = DefinitionSiteKind.THIS,
+                    }
+                };
+                context.TypeNameQueryDictionary[context.EnclosingType] = usage;
+            }
+            catch (AssertException e)
+            {
+                // TODO test ad proper handling
+                Console.WriteLine("error creating usage:\n{0}", e);
+            }
 
             foreach (var param in stmt.Name.Parameters)
             {
-                CreateQuery(
-                    context,
-                    param.Name,
-                    param.ValueType,
-                    DefinitionSites.CreateDefinitionByParam(stmt.Name, stmt.Name.Parameters.IndexOf(param)));
+                try
+                {
+                    CreateQuery(
+                        context,
+                        param.Name,
+                        param.ValueType,
+                        DefinitionSites.CreateDefinitionByParam(stmt.Name, stmt.Name.Parameters.IndexOf(param)));
+                }
+                catch (AssertException e)
+                {
+                    // TODO test ad proper handling
+                    Console.WriteLine("error creating usage:\n{0}", e);
+                }
             }
 
             foreach (var s in stmt.Body)
@@ -256,31 +274,55 @@ namespace KaVE.Commons.Utils.ObjectUsageExport
         {
             if (!stmt.IsMissing)
             {
-                CreateQuery(
-                    context,
-                    stmt.Reference.Identifier,
-                    stmt.Type,
-                    DefinitionSites.CreateUnknownDefinitionSite());
+                try
+                {
+                    CreateQuery(
+                        context,
+                        stmt.Reference.Identifier,
+                        stmt.Type,
+                        DefinitionSites.CreateUnknownDefinitionSite());
+                }
+                catch (AssertException e)
+                {
+                    // TODO test and proper handling
+                    Console.WriteLine("error creating query:\n{0}", e);
+                }
             }
         }
 
         public override void Visit(IFieldDeclaration stmt, QueryContext context)
         {
-            CreateQuery(
-                context,
-                stmt.Name.Name,
-                stmt.Name.ValueType,
-                DefinitionSites.CreateDefinitionByField(stmt.Name));
+            try
+            {
+                CreateQuery(
+                    context,
+                    stmt.Name.Name,
+                    stmt.Name.ValueType,
+                    DefinitionSites.CreateDefinitionByField(stmt.Name));
+            }
+            catch (AssertException e)
+            {
+                // TODO test and proper handling
+                Console.WriteLine("error creating query:\n{0}", e);
+            }
         }
 
         // treating property as field
         public override void Visit(IPropertyDeclaration stmt, QueryContext context)
         {
-            CreateQuery(
-                context,
-                stmt.Name.Name,
-                stmt.Name.ValueType,
-                DefinitionSites.CreateDefinitionByField(PropertyToFieldName(stmt.Name)));
+            try
+            {
+                CreateQuery(
+                    context,
+                    stmt.Name.Name,
+                    stmt.Name.ValueType,
+                    DefinitionSites.CreateDefinitionByField(PropertyToFieldName(stmt.Name)));
+            }
+            catch (AssertException e)
+            {
+                // TODO test and proper handling
+                Console.WriteLine("error creating query:\n{0}", e);
+            }
         }
 
         public override void Visit(IAssignment stmt, QueryContext context)
@@ -293,8 +335,16 @@ namespace KaVE.Commons.Utils.ObjectUsageExport
                 var expressionValueTypeVisitor = new DefinitionSiteEvaluatorVisitor();
                 var newDefinitionSite = stmt.Expression.Accept(expressionValueTypeVisitor, context);
 
-                var type = context.IdentifierTypeNameDictionary[variableReference.Identifier];
-                context.TypeNameQueryDictionary[type].definition = newDefinitionSite;
+                // TODO @seb: test and proper handling
+                if (context.IdentifierTypeNameDictionary.ContainsKey(variableReference.Identifier))
+                {
+                    var type = context.IdentifierTypeNameDictionary[variableReference.Identifier];
+                    // TODO @seb: test and proper handling
+                    if (context.TypeNameQueryDictionary.ContainsKey(type))
+                    {
+                        context.TypeNameQueryDictionary[type].definition = newDefinitionSite;
+                    }
+                }
             }
         }
 
@@ -314,10 +364,26 @@ namespace KaVE.Commons.Utils.ObjectUsageExport
             else
             {
                 var identifier = entity.Reference.Identifier;
+
+                // TODO @seb: test and proper handling
+                if (!context.IdentifierTypeNameDictionary.ContainsKey(identifier))
+                {
+                    Console.WriteLine("no query found for identifier: {0}", identifier);
+                    return;
+                }
+
                 var type = context.IdentifierTypeNameDictionary[identifier];
                 var usage = FindOrCreateUsage(type, context);
 
-                usage.sites.Add(CallSites.CreateReceiverCallSite(entity.MethodName.ToCoReName().Name));
+                try
+                {
+                    usage.sites.Add(CallSites.CreateReceiverCallSite(entity.MethodName.ToCoReName().Name));
+                }
+                catch (AssertException e)
+                {
+                    // TODO test and proper handling
+                    Console.WriteLine("error creating ReceiverCallSite:\n{0}", e);
+                }
             }
         }
 
@@ -326,16 +392,33 @@ namespace KaVE.Commons.Utils.ObjectUsageExport
             ITypeName type,
             DefinitionSite definition)
         {
-            context.IdentifierTypeNameDictionary.Add(identifier, type);
-            context.TypeNameQueryDictionary.Add(
-                type,
-                new Query
-                {
-                    classCtx = context.EnclosingType.ToCoReName(),
-                    definition = definition,
-                    methodCtx = context.EnclosingMethod.ToCoReName(),
-                    type = type.ToCoReName()
-                });
+            // TODO @seb: test and proper handling
+            if (context.IdentifierTypeNameDictionary.ContainsKey(identifier))
+            {
+                Console.WriteLine("identifier exists in IdentifierTypeNameDictionary: {0}", identifier);
+            }
+            else
+            {
+                context.IdentifierTypeNameDictionary.Add(identifier, type);
+            }
+
+            // TODO @seb: test and proper handling
+            if (context.TypeNameQueryDictionary.ContainsKey(type))
+            {
+                Console.WriteLine("type exists in TypeNameQueryDictionary: {0}", identifier);
+            }
+            else
+            {
+                context.TypeNameQueryDictionary.Add(
+                    type,
+                    new Query
+                    {
+                        classCtx = context.EnclosingType.ToCoReName(),
+                        definition = definition,
+                        methodCtx = context.EnclosingMethod.ToCoReName(),
+                        type = type.ToCoReName()
+                    });
+            }
         }
 
         private static Query FindOrCreateUsage(ITypeName type, QueryContext context)
@@ -344,14 +427,22 @@ namespace KaVE.Commons.Utils.ObjectUsageExport
             {
                 return context.TypeNameQueryDictionary[type];
             }
-            var query = new Query
+            try
             {
-                type = type.ToCoReName(),
-                classCtx = context.EnclosingType.ToCoReName(),
-                methodCtx = context.EnclosingMethod.ToCoReName(),
-            };
-            context.TypeNameQueryDictionary[type] = query;
-            return query;
+                var query = new Query
+                {
+                    type = type.ToCoReName(),
+                    classCtx = context.EnclosingType.ToCoReName(),
+                    methodCtx = context.EnclosingMethod.ToCoReName(),
+                };
+                context.TypeNameQueryDictionary[type] = query;
+                return query;
+            }
+            catch (AssertException e)
+            {
+                // TODO @seb: test and proper handling
+                 return new Query();
+            }
         }
 
         public static IFieldName PropertyToFieldName(IPropertyName property)

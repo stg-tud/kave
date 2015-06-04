@@ -28,7 +28,11 @@ namespace KaVE.Commons.Model.ObjectUsage
         protected CoReName(string name, string validationPattern)
         {
             var regex = new Regex("^" + validationPattern + "$");
-            Asserts.That(regex.IsMatch(name));
+            var isMatch = regex.IsMatch(name);
+            if (!isMatch)
+            {
+                Asserts.Fail("core name cannot be validated: {0}", name);
+            }
             Name = name;
         }
 

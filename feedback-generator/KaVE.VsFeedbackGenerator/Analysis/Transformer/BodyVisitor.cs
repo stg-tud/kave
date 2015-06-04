@@ -21,6 +21,8 @@ using System.Collections.Generic;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.Util;
+using KaVE.Commons.Model.Names;
+using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.SSTs.Expressions;
 using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.Commons.Model.SSTs.Impl.Blocks;
@@ -28,6 +30,7 @@ using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Commons.Model.SSTs.Impl.References;
 using KaVE.Commons.Model.SSTs.Impl.Statements;
+using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Collections;
 using KaVE.VsFeedbackGenerator.Analysis.CompletionTarget;
 using KaVE.VsFeedbackGenerator.Analysis.Util;
@@ -72,7 +75,16 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
             }
 
             var id = decl.DeclaredName;
-            var type = decl.Type.GetName();
+            ITypeName type;
+            try
+            {
+                type = decl.Type.GetName();
+            }
+            catch (AssertException)
+            {
+                // TODO this is an intermediate "fix"... the analysis sometimes fails here ("cannot create name for anonymous type")
+                type = TypeName.UnknownName;
+            }
             body.Add(SSTUtil.Declare(id, type));
 
             IAssignableExpression initializer = null;
