@@ -15,6 +15,7 @@
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <UploadUrl Condition="'$(UploadUrl)'==''">DATEV</UploadUrl>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -249,7 +250,6 @@
     <Compile Include="SessionManager\Presentation\OptionPage.xaml.cs">
       <DependentUpon>OptionPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SessionManager\Presentation\ExportSettings.cs" />
     <Compile Include="SessionManager\SessionViewModel.cs" />
     <Compile Include="SessionManager\EventViewModel.cs" />
     <Compile Include="SessionManager\FeedbackViewModel.cs" />
@@ -283,6 +283,20 @@
     <Compile Include="VsIntegration\IDESession.cs" />
     <Compile Include="VsIntegration\IIDESession.cs" />
   </ItemGroup>
+  <Choose>
+    <When Condition="'$(UploadUrl)' == 'DATEV'">
+      <ItemGroup>
+        <Compile Include="SessionManager\Presentation\ExportSettings.cs" />
+        <None Include="SessionManager\Presentation\ExportSettingsKave.cs"/>
+      </ItemGroup>
+    </When>
+    <Otherwise>
+      <ItemGroup>
+        <None Include="SessionManager\Presentation\ExportSettings.cs" />
+        <Compile Include="SessionManager\Presentation\ExportSettingsKave.cs"/>
+      </ItemGroup>
+    </Otherwise>
+  </Choose>
   <ItemGroup>
     <EmbeddedResource Include="Actions.xml">
       <SubType>Designer</SubType>
