@@ -15,19 +15,23 @@
  * 
  * Contributors:
  *    - Roman Fojtik
+ *    - Sebastian Proksch
  */
 
-using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.ObjectUsage;
 using KaVE.Commons.Model.SSTs.Impl.Blocks;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.LoopHeader;
 using KaVE.Commons.Model.SSTs.Impl.Statements;
 using NUnit.Framework;
+using Fix = KaVE.Commons.Tests.Utils.ObjectUsageExporterTestSuite.ObjectUsageExporterTestFixture;
 
 namespace KaVE.Commons.Tests.Utils.ObjectUsageExporterTestSuite
 {
-    internal class SupportForAllStatementTest : BaseObjectUsageExporterTest
+    /// <summary>
+    ///     tests if all statement types are covered in the call site collection
+    /// </summary>
+    internal class InvocationCollectionInAllStatementsTest : BaseObjectUsageExporterTest
     {
         //// statements
         //void Visit(IAssignment stmt, TContext context);           x
@@ -54,41 +58,38 @@ namespace KaVE.Commons.Tests.Utils.ObjectUsageExporterTestSuite
         public void AssignmentTest()
         {
             SetupDefaultEnclosingMethod(
-                new VariableDeclaration
-                {
-                    Reference = VarRef("i"),
-                    Type = Type("I")
-                },
-                new Assignment
-                {
-                    Reference = VarRef("i"),
-                    Expression = new InvocationExpression
-                    {
-                        MethodName = Method(Type("R"), Type("Decl"), "Method"),
-                        Reference = VarRef("i")
-                    }
-                });
+                VarDecl("i", Type("I")),
+                Assign("i", Invoke("this", Method(Type("I"), DefaultClassContext, "M"))),
+                InvokeStmt("i", SomeMethodOnType("I")));
+
 
             AssertQueriesInDefault(
                 new Query
                 {
-                    type = Type("I").ToCoReName(),
+                    type = DefaultClassContext.ToCoReName(),
+                    definition = new DefinitionSite {kind = DefinitionSiteKind.THIS},
                     sites =
                     {
-                        CallSites.CreateReceiverCallSite(Method(Type("R"), Type("Decl"), "Method"))
+                        SomeCallSiteOnType("I"),
                     }
-                });
+                },
+                new Query
+                {
+                    type = Type("I").ToCoReName(),
+                    definition = DefinitionSites.CreateDefinitionByReturn(Method(Type("I"), DefaultClassContext, "M")),
+                    sites =
+                    {
+                        CallSites.CreateReceiverCallSite(Method(Fix.Void, Type("I"), "M2"))
+                    }
+                }
+                );
         }
 
         [Test]
         public void ExpressionTest()
         {
             SetupDefaultEnclosingMethod(
-                new VariableDeclaration
-                {
-                    Reference = VarRef("a"),
-                    Type = Type("A")
-                },
+                VarDecl("a", Type("A")),
                 new ExpressionStatement
                 {
                     Expression = new InvocationExpression
@@ -113,11 +114,7 @@ namespace KaVE.Commons.Tests.Utils.ObjectUsageExporterTestSuite
         public void LabelledStatementTest()
         {
             SetupDefaultEnclosingMethod(
-                new VariableDeclaration
-                {
-                    Reference = VarRef("a"),
-                    Type = Type("A")
-                },
+                VarDecl("a", Type("A")),
                 new LabelledStatement
                 {
                     Statement = new ExpressionStatement
@@ -145,11 +142,7 @@ namespace KaVE.Commons.Tests.Utils.ObjectUsageExporterTestSuite
         public void DoLoopCondition()
         {
             SetupDefaultEnclosingMethod(
-                new VariableDeclaration
-                {
-                    Reference = VarRef("a"),
-                    Type = Type("A")
-                },
+                VarDecl("a", Type("A")),
                 new DoLoop
                 {
                     Condition = new LoopHeaderBlockExpression
@@ -184,11 +177,7 @@ namespace KaVE.Commons.Tests.Utils.ObjectUsageExporterTestSuite
         public void DoLoopBody()
         {
             SetupDefaultEnclosingMethod(
-                new VariableDeclaration
-                {
-                    Reference = VarRef("b"),
-                    Type = Type("B")
-                },
+                VarDecl("b", Type("B")),
                 new DoLoop
                 {
                     Body =
@@ -220,11 +209,7 @@ namespace KaVE.Commons.Tests.Utils.ObjectUsageExporterTestSuite
         public void WhileLoopCondition()
         {
             SetupDefaultEnclosingMethod(
-                new VariableDeclaration
-                {
-                    Reference = VarRef("a"),
-                    Type = Type("A")
-                },
+                VarDecl("a", Type("A")),
                 new WhileLoop
                 {
                     Condition = new LoopHeaderBlockExpression
@@ -259,11 +244,7 @@ namespace KaVE.Commons.Tests.Utils.ObjectUsageExporterTestSuite
         public void WhileLoopAndBody()
         {
             SetupDefaultEnclosingMethod(
-                new VariableDeclaration
-                {
-                    Reference = VarRef("b"),
-                    Type = Type("B")
-                },
+                VarDecl("b", Type("B")),
                 new WhileLoop
                 {
                     Body =
@@ -297,10 +278,10 @@ namespace KaVE.Commons.Tests.Utils.ObjectUsageExporterTestSuite
             SetupDefaultEnclosingMethod(
                 new ForEachLoop
                 {
-                    Declaration = new VariableDeclaration
+                    Declaration = VarDecl("b", Type("B")),
+                    Body =
                     {
-                        Reference = VarRef("b"),
-                        Type = Type("B")
+                        InvokeStmt("b", Method(Fix.Void, Type("B"), "M"))
                     }
                 }
                 );
@@ -308,7 +289,11 @@ namespace KaVE.Commons.Tests.Utils.ObjectUsageExporterTestSuite
             AssertQueriesInDefault(
                 new Query
                 {
-                    type = Type("B").ToCoReName()
+                    type = Type("B").ToCoReName(),
+                    sites =
+                    {
+                        CallSites.CreateReceiverCallSite(Method(Fix.Void, Type("B"), "M"))
+                    }
                 });
         }
 
@@ -320,11 +305,7 @@ namespace KaVE.Commons.Tests.Utils.ObjectUsageExporterTestSuite
                 {
                     Body =
                     {
-                        new VariableDeclaration
-                        {
-                            Reference = VarRef("b"),
-                            Type = Type("B")
-                        },
+                        VarDecl("b", Type("B")),
                         new ExpressionStatement
                         {
                             Expression = new InvocationExpression
@@ -352,11 +333,7 @@ namespace KaVE.Commons.Tests.Utils.ObjectUsageExporterTestSuite
         public void ForLoopCondition()
         {
             SetupDefaultEnclosingMethod(
-                new VariableDeclaration
-                {
-                    Reference = VarRef("a"),
-                    Type = Type("A")
-                },
+                VarDecl("a", Type("A")),
                 new ForLoop
                 {
                     Condition = new LoopHeaderBlockExpression
@@ -391,11 +368,7 @@ namespace KaVE.Commons.Tests.Utils.ObjectUsageExporterTestSuite
         public void ForLoopBody()
         {
             SetupDefaultEnclosingMethod(
-                new VariableDeclaration
-                {
-                    Reference = VarRef("b"),
-                    Type = Type("B")
-                },
+                VarDecl("b", Type("B")),
                 new ForLoop
                 {
                     Body =
@@ -431,11 +404,7 @@ namespace KaVE.Commons.Tests.Utils.ObjectUsageExporterTestSuite
                 {
                     Init =
                     {
-                        new VariableDeclaration
-                        {
-                            Reference = VarRef("a"),
-                            Type = Type("A")
-                        },
+                        VarDecl("a", Type("A")),
                         new ExpressionStatement
                         {
                             Expression = new InvocationExpression
@@ -467,11 +436,7 @@ namespace KaVE.Commons.Tests.Utils.ObjectUsageExporterTestSuite
                 {
                     Step =
                     {
-                        new VariableDeclaration
-                        {
-                            Reference = VarRef("b"),
-                            Type = Type("B")
-                        },
+                        VarDecl("b", Type("B")),
                         new ExpressionStatement
                         {
                             Expression = new InvocationExpression
@@ -503,11 +468,7 @@ namespace KaVE.Commons.Tests.Utils.ObjectUsageExporterTestSuite
                 {
                     Then =
                     {
-                        new VariableDeclaration
-                        {
-                            Reference = VarRef("a"),
-                            Type = Type("A")
-                        },
+                        VarDecl("a", Type("A")),
                         new ExpressionStatement
                         {
                             Expression = new InvocationExpression
@@ -539,11 +500,7 @@ namespace KaVE.Commons.Tests.Utils.ObjectUsageExporterTestSuite
                 {
                     Else =
                     {
-                        new VariableDeclaration
-                        {
-                            Reference = VarRef("b"),
-                            Type = Type("B")
-                        },
+                        VarDecl("b", Type("B")),
                         new ExpressionStatement
                         {
                             Expression = new InvocationExpression
@@ -571,11 +528,7 @@ namespace KaVE.Commons.Tests.Utils.ObjectUsageExporterTestSuite
         public void LockBlock()
         {
             SetupDefaultEnclosingMethod(
-                new VariableDeclaration
-                {
-                    Reference = VarRef("b"),
-                    Type = Type("B")
-                },
+                VarDecl("b", Type("B")),
                 new LockBlock
                 {
                     Reference = VarRef("a"),
@@ -608,11 +561,7 @@ namespace KaVE.Commons.Tests.Utils.ObjectUsageExporterTestSuite
         public void SwitchBlockSections()
         {
             SetupDefaultEnclosingMethod(
-                new VariableDeclaration
-                {
-                    Reference = VarRef("a"),
-                    Type = Type("A")
-                },
+                VarDecl("a", Type("A")),
                 new SwitchBlock
                 {
                     Reference = VarRef("a"),
@@ -651,11 +600,7 @@ namespace KaVE.Commons.Tests.Utils.ObjectUsageExporterTestSuite
         public void SwitchBlockDefaultSection()
         {
             SetupDefaultEnclosingMethod(
-                new VariableDeclaration
-                {
-                    Reference = VarRef("b"),
-                    Type = Type("B")
-                },
+                VarDecl("b", Type("B")),
                 new SwitchBlock
                 {
                     Reference = VarRef("a"),
@@ -692,11 +637,7 @@ namespace KaVE.Commons.Tests.Utils.ObjectUsageExporterTestSuite
                 {
                     Body =
                     {
-                        new VariableDeclaration
-                        {
-                            Reference = VarRef("a"),
-                            Type = Type("A")
-                        },
+                        VarDecl("a", Type("A")),
                         new ExpressionStatement
                         {
                             Expression = new InvocationExpression
@@ -728,11 +669,7 @@ namespace KaVE.Commons.Tests.Utils.ObjectUsageExporterTestSuite
                 {
                     Finally =
                     {
-                        new VariableDeclaration
-                        {
-                            Reference = VarRef("b"),
-                            Type = Type("B")
-                        },
+                        VarDecl("b", Type("B")),
                         new ExpressionStatement
                         {
                             Expression = new InvocationExpression
@@ -760,6 +697,7 @@ namespace KaVE.Commons.Tests.Utils.ObjectUsageExporterTestSuite
         public void TryBlockCatchBlockBody()
         {
             SetupDefaultEnclosingMethod(
+                VarDecl("a", Type("A")),
                 new TryBlock
                 {
                     CatchBlocks =
@@ -768,19 +706,7 @@ namespace KaVE.Commons.Tests.Utils.ObjectUsageExporterTestSuite
                         {
                             Body =
                             {
-                                new VariableDeclaration
-                                {
-                                    Reference = VarRef("a"),
-                                    Type = Type("A")
-                                },
-                                new ExpressionStatement
-                                {
-                                    Expression = new InvocationExpression
-                                    {
-                                        MethodName = Method(Type("R"), Type("A"), "methodA"),
-                                        Reference = VarRef("a")
-                                    }
-                                }
+                                InvokeStmt("a", Method(Fix.Void, Type("A"), "M"))
                             }
                         }
                     }
@@ -791,15 +717,11 @@ namespace KaVE.Commons.Tests.Utils.ObjectUsageExporterTestSuite
                 new Query
                 {
                     type = Type("A").ToCoReName(),
+                    definition = DefinitionSites.CreateUnknownDefinitionSite(),
                     sites =
                     {
-                        CallSites.CreateReceiverCallSite(Method(Type("R"), Type("A"), "methodA"))
+                        CallSites.CreateReceiverCallSite(Method(Fix.Void, Type("A"), "M"))
                     }
-                },
-                // query for unknown parameter
-                new Query
-                {
-                    type = TypeName.UnknownName.ToCoReName()
                 });
         }
 
@@ -813,7 +735,11 @@ namespace KaVE.Commons.Tests.Utils.ObjectUsageExporterTestSuite
                     {
                         new CatchBlock
                         {
-                            Parameter = Parameter(Type("TParam"), "param")
+                            Parameter = Parameter(Type("T"), "p"),
+                            Body =
+                            {
+                                InvokeStmt("p", Method(Fix.Void, Type("T"), "M"))
+                            }
                         }
                     }
                 }
@@ -822,7 +748,12 @@ namespace KaVE.Commons.Tests.Utils.ObjectUsageExporterTestSuite
             AssertQueriesInDefault(
                 new Query
                 {
-                    type = Type("TParam").ToCoReName()
+                    type = Type("T").ToCoReName(),
+                    definition = DefinitionSites.CreateUnknownDefinitionSite(),
+                    sites =
+                    {
+                        CallSites.CreateReceiverCallSite(Method(Fix.Void, Type("T"), "M"))
+                    }
                 });
         }
 
@@ -831,11 +762,7 @@ namespace KaVE.Commons.Tests.Utils.ObjectUsageExporterTestSuite
         public void UncheckedBlock()
         {
             SetupDefaultEnclosingMethod(
-                new VariableDeclaration
-                {
-                    Reference = VarRef("b"),
-                    Type = Type("B")
-                },
+                VarDecl("b", Type("B")),
                 new UncheckedBlock
                 {
                     Body =
@@ -867,11 +794,7 @@ namespace KaVE.Commons.Tests.Utils.ObjectUsageExporterTestSuite
         public void UsingBlock()
         {
             SetupDefaultEnclosingMethod(
-                new VariableDeclaration
-                {
-                    Reference = VarRef("b"),
-                    Type = Type("B")
-                },
+                VarDecl("b", Type("B")),
                 new UsingBlock
                 {
                     Body =

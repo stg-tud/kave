@@ -16,8 +16,10 @@
  * Contributors:
  *    - Dennis Albrecht
  */
-using KaVE.JetBrains.Annotations;
+
+using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Utils;
+using KaVE.JetBrains.Annotations;
 
 namespace KaVE.Commons.Model.ObjectUsage
 {
@@ -31,6 +33,13 @@ namespace KaVE.Commons.Model.ObjectUsage
         public CoReMethodName method { get; set; }
 
         public int argIndex { get; set; }
+
+        public CallSite()
+        {
+            kind = CallSiteKind.RECEIVER;
+            argIndex = 0;
+            method = MethodName.UnknownName.ToCoReName();
+        }
 
         /// <summary>
         ///     This method is used by the serialization to determine if the property should be serialized or not.
@@ -58,6 +67,11 @@ namespace KaVE.Commons.Model.ObjectUsage
             hashCode = (hashCode*397) ^ method.GetHashCode();
             hashCode = (hashCode*397) ^ argIndex.GetHashCode();
             return hashCode;
+        }
+
+        public override string ToString()
+        {
+            return this.ToStringReflection();
         }
     }
 }

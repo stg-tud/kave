@@ -149,5 +149,29 @@ namespace KaVE.Commons.Tests.Model.ObjectUsage
 
             Assert.AreEqual(expected, actual);
         }
+
+        [Test]
+        public void DefinitionByConstantIsCorrectInitialized()
+        {
+            var actual = DefinitionSites.CreateDefinitionByConstant();
+            var expected = new DefinitionSite
+            {
+                kind = DefinitionSiteKind.CONSTANT
+            };
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void DefinitionByThisIsCorrectInitialized()
+        {
+            var actual = DefinitionSites.CreateDefinitionByThis();
+            var expected = new DefinitionSite
+            {
+                kind = DefinitionSiteKind.THIS
+            };
+
+            Assert.AreEqual(expected, actual);
+        }
     }
 }

@@ -15,6 +15,7 @@
  * 
  * Contributors:
  *    - Roman Fojtik
+ *    - Sebastian Proksch
  */
 
 using KaVE.Commons.Model.Names;
@@ -25,7 +26,15 @@ namespace KaVE.Commons.Tests.Utils.ObjectUsageExporterTestSuite
     internal class ObjectUsageExporterTestFixture
     {
         public static ITypeName Void = TypeName.Get("System.Void, mscorlib, 4.0.0.0");
-        public static ITypeName IntType = TypeName.Get("System.Int32, mscore, 4.0.0.0");
-        public static IParameterName IntParam = ParameterName.Get("[" + IntType + "] paramName");
+        public static ITypeName Int = TypeName.Get("System.Int32, mscore, 4.0.0.0");
+
+        public static IParameterName IntParam(string paramName)
+        {
+            return ParameterName.Get("[" + Int + "] " + paramName);
+        }
+
+        // ReSharper disable once InconsistentNaming
+        public static IMethodName M_GetHashCode =
+            MethodName.Get("[System.Int32, mscorlib, 4.0.0.0] [System.Object, mscorlib, 4.0.0.0].GetHashCode()");
     }
 }

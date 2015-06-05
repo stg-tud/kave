@@ -118,5 +118,21 @@ namespace KaVE.Commons.Model.ObjectUsage
 
             return definitionSite;
         }
+
+        public static DefinitionSite CreateDefinitionByConstant()
+        {
+            return new DefinitionSite
+            {
+                kind = DefinitionSiteKind.CONSTANT
+            };
+        }
+
+        public static DefinitionSite CreateDefinitionByThis()
+        {
+            return new DefinitionSite
+            {
+                kind = DefinitionSiteKind.THIS
+            };
+        }
     }
 }

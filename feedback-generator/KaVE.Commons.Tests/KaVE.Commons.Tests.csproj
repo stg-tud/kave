@@ -193,10 +193,11 @@
     <Compile Include="Utils\Logging\Json\JsonLogWriterTest.cs" />
     <Compile Include="Utils\Json\SerializationTestTarget.cs" />
     <Compile Include="Utils\ObjectUsageExporterTestSuite\BaseObjectUsageExporterTest.cs" />
-    <Compile Include="Utils\ObjectUsageExporterTestSuite\ObjectUsageCreationTest.cs" />
+    <Compile Include="Utils\ObjectUsageExporterTestSuite\ContextIdentificationTest.cs" />
+    <Compile Include="Utils\ObjectUsageExporterTestSuite\InvocationCollectionTest.cs" />
     <Compile Include="Utils\ObjectUsageExporterTestSuite\ObjectUsageExporterTestFixture.cs" />
-    <Compile Include="Utils\ObjectUsageExporterTestSuite\ObjectUsageWithDefinitionSite.cs" />
-    <Compile Include="Utils\ObjectUsageExporterTestSuite\SupportForAllStatementTest.cs" />
+    <Compile Include="Utils\ObjectUsageExporterTestSuite\DefinitionSiteDetectionTest.cs" />
+    <Compile Include="Utils\ObjectUsageExporterTestSuite\InvocationCollectionInAllStatementsTest.cs" />
     <Compile Include="Utils\Reflection\TypeExtensionsTest.cs" />
     <Compile Include="Utils\SSTPrinter\SSTPrintingUtilsTest.cs" />
     <Compile Include="Utils\SSTPrinter\SSTPrintingVisitorTestSuite\BlockPrinterTest.cs" />

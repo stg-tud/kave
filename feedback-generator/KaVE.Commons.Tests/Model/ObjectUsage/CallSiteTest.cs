@@ -17,19 +17,52 @@
  *    - Dennis Albrecht
  */
 
+using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.ObjectUsage;
+using KaVE.Commons.TestUtils;
 using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Model.ObjectUsage
 {
-    class CallSiteTest
+    internal class CallSiteTest
     {
+        [Test]
+        public void DefaultValues()
+        {
+            var sut = new CallSite();
+            Assert.AreEqual(CallSiteKind.RECEIVER, sut.kind);
+            Assert.AreEqual(0, sut.argIndex);
+            Assert.AreEqual(MethodName.UnknownName.ToCoReName(), sut.method);
+            Assert.AreNotEqual(0, sut.GetHashCode());
+            Assert.AreNotEqual(1, sut.GetHashCode());
+        }
+
+        [Test]
+        public void SettingValues()
+        {
+            var sut = new CallSite
+            {
+                kind = CallSiteKind.PARAMETER,
+                argIndex = 3,
+                method = MethodName.Get("[T1,P] [T2,P].M()").ToCoReName()
+            };
+            Assert.AreEqual(CallSiteKind.PARAMETER, sut.kind);
+            Assert.AreEqual(3, sut.argIndex);
+            Assert.AreEqual(MethodName.Get("[T1,P] [T2,P].M()").ToCoReName(), sut.method);
+        }
+
         [Test]
         public void ShouldRecognizeEqualCallSites()
         {
             Assert.AreEqual(
                 CallSites.CreateParameterCallSite("LReceiver.method(LArgument;)LReturn;", 2),
                 CallSites.CreateParameterCallSite("LReceiver.method(LArgument;)LReturn;", 2));
+        }
+
+        [Test]
+        public void ToStringReflection()
+        {
+            ToStringAssert.Reflection(new CallSite());
         }
     }
 }

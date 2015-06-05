@@ -77,8 +77,8 @@ namespace KaVE.Commons.Utils.ObjectUsageExport
             }
             catch (AssertException e)
             {
-                // TODO test ad proper handling
-                Console.WriteLine("error creating usage:\n{0}", e);
+                // TODO @seb: test ad proper handling
+                Console.WriteLine("error creating usage:\n", e);
             }
 
             foreach (var param in stmt.Name.Parameters)
@@ -93,8 +93,8 @@ namespace KaVE.Commons.Utils.ObjectUsageExport
                 }
                 catch (AssertException e)
                 {
-                    // TODO test ad proper handling
-                    Console.WriteLine("error creating usage:\n{0}", e);
+                    // TODO @seb: test ad proper handling
+                    Console.WriteLine("error creating usage:\n", e);
                 }
             }
 
@@ -284,8 +284,8 @@ namespace KaVE.Commons.Utils.ObjectUsageExport
                 }
                 catch (AssertException e)
                 {
-                    // TODO test and proper handling
-                    Console.WriteLine("error creating query:\n{0}", e);
+                    // TODO @seb: test and proper handling
+                    Console.WriteLine("error creating query:\n", e);
                 }
             }
         }
@@ -302,8 +302,8 @@ namespace KaVE.Commons.Utils.ObjectUsageExport
             }
             catch (AssertException e)
             {
-                // TODO test and proper handling
-                Console.WriteLine("error creating query:\n{0}", e);
+                // TODO @seb: test and proper handling
+                Console.WriteLine("error creating query:\n", e);
             }
         }
 
@@ -320,8 +320,8 @@ namespace KaVE.Commons.Utils.ObjectUsageExport
             }
             catch (AssertException e)
             {
-                // TODO test and proper handling
-                Console.WriteLine("error creating query:\n{0}", e);
+                // TODO @seb: test and proper handling
+                Console.WriteLine("error creating query:\n", e);
             }
         }
 
@@ -381,8 +381,8 @@ namespace KaVE.Commons.Utils.ObjectUsageExport
                 }
                 catch (AssertException e)
                 {
-                    // TODO test and proper handling
-                    Console.WriteLine("error creating ReceiverCallSite:\n{0}", e);
+                    // TODO @seb: test and proper handling
+                    Console.WriteLine("error creating ReceiverCallSite:\n", e);
                 }
             }
         }
@@ -395,7 +395,7 @@ namespace KaVE.Commons.Utils.ObjectUsageExport
             // TODO @seb: test and proper handling
             if (context.IdentifierTypeNameDictionary.ContainsKey(identifier))
             {
-                Console.WriteLine("identifier exists in IdentifierTypeNameDictionary: {0}", identifier);
+                Console.WriteLine("identifier exists in IdentifierTypeNameDictionary:", identifier);
             }
             else
             {
@@ -405,7 +405,7 @@ namespace KaVE.Commons.Utils.ObjectUsageExport
             // TODO @seb: test and proper handling
             if (context.TypeNameQueryDictionary.ContainsKey(type))
             {
-                Console.WriteLine("type exists in TypeNameQueryDictionary: {0}", identifier);
+                Console.WriteLine("type exists in TypeNameQueryDictionary:", identifier);
             }
             else
             {

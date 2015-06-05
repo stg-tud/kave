@@ -45,7 +45,9 @@ namespace KaVE.Commons.Tests.Model.ObjectUsage
         }
 
         [TestCase("LType.method(LArgument;)LReturn;"),
-         TestCase("LSystem/Console.WriteLine()LSystem/Void;")]
+         TestCase("LSystem/Console.WriteLine()LSystem/Void;"),
+         TestCase("LP/T._M()LQ/T;"),
+         TestCase("LP/T.M_N()LQ/T;")]
         public void ShouldAcceptValidMethodNames(string methodName)
         {
             // ReSharper disable once ObjectCreationAsStatement

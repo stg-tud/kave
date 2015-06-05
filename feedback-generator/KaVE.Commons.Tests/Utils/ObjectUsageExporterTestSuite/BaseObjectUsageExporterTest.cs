@@ -15,59 +15,141 @@
  * 
  * Contributors:
  *    - Roman Fojtik
+ *    - Sebastian Proksch
  */
 
-using System.Collections.Generic;
 using System.Linq;
 using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.ObjectUsage;
 using KaVE.Commons.Model.SSTs;
-using KaVE.Commons.Model.SSTs.Declarations;
+using KaVE.Commons.Model.SSTs.Expressions;
+using KaVE.Commons.Model.SSTs.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.Commons.Model.SSTs.Impl.Declarations;
+using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl.References;
+using KaVE.Commons.Model.SSTs.Impl.Statements;
 using KaVE.Commons.Model.SSTs.References;
+using KaVE.Commons.Model.SSTs.Statements;
+using KaVE.Commons.Model.TypeShapes;
+using KaVE.Commons.Utils.Collections;
 using KaVE.Commons.Utils.ObjectUsageExport;
 using NUnit.Framework;
+using Fix = KaVE.Commons.Tests.Utils.ObjectUsageExporterTestSuite.ObjectUsageExporterTestFixture;
 
 namespace KaVE.Commons.Tests.Utils.ObjectUsageExporterTestSuite
 {
     public class BaseObjectUsageExporterTest
     {
-        protected Context Ctx;
+        protected Context Context;
         protected ObjectUsageExporter Sut;
+
+        protected static ITypeName DefaultClassContext
+        {
+            get { return Type("TDecl"); }
+        }
+
+        protected static IMethodName DefaultMethodContext
+        {
+            get { return Method(Type("A"), DefaultClassContext, "M"); }
+        }
 
         [SetUp]
         public void SetUp()
         {
-            Ctx = new Context();
+            Context = new Context();
             Sut = new ObjectUsageExporter();
         }
+
+        protected void SetupDefaultEnclosingMethod(params IStatement[] statements)
+        {
+            SetupEnclosingMethod(
+                DefaultMethodContext,
+                statements);
+        }
+
+        protected void SetupEnclosingMethod(IMethodName enclosingMethod, params IStatement[] statements)
+        {
+            Context.TypeShape.TypeHierarchy = new TypeHierarchy
+            {
+                Element = DefaultClassContext
+            };
+
+            Context.TypeShape.MethodHierarchies.Add(
+                new MethodHierarchy
+                {
+                    Element = enclosingMethod
+                });
+
+            Context.SST = new SST
+            {
+                EnclosingType = enclosingMethod.DeclaringType,
+                Methods =
+                {
+                    new MethodDeclaration
+                    {
+                        Name = enclosingMethod,
+                        Body = Lists.NewListFrom(statements)
+                    }
+                }
+            };
+        }
+
+        protected void ResetMethodHierarchies(params MethodHierarchy[] methodHierarchies)
+        {
+            Context.TypeShape.MethodHierarchies.Clear();
+            foreach (var methodHierarchy in methodHierarchies)
+            {
+                Context.TypeShape.MethodHierarchies.Add(methodHierarchy);
+            }
+        }
+
+        protected void AssertQueriesInDefault(params Query[] expecteds)
+        {
+            AssertQueries(DefaultMethodContext, expecteds);
+        }
+
+        protected void AssertQueries(IMethodName enclosingMethod, params Query[] expecteds)
+        {
+            AssertQueries(enclosingMethod.DeclaringType, enclosingMethod, expecteds);
+        }
+
+        protected void AssertQueries(ITypeName enclosingClass, IMethodName enclosingMethod, params Query[] expecteds)
+        {
+            foreach (var expected in expecteds)
+            {
+                expected.classCtx = enclosingClass.ToCoReName();
+                expected.methodCtx = enclosingMethod.ToCoReName();
+            }
+            AssertQueriesWithoutSettingContexts(expecteds);
+        }
+
+        protected void AssertQueriesWithoutSettingContexts(params Query[] expectedsArr)
+        {
+            var actuals = Sut.Export(Context);
+            var expecteds = Lists.NewList(expectedsArr);
+            CollectionAssert.AreEqual(expecteds, actuals);
+        }
+
+        protected Query AssertSingleQuery()
+        {
+            var actuals = Sut.Export(Context);
+            Assert.AreEqual(1, actuals.Count);
+            return actuals[0];
+        }
+
+        #region instantiation helpers
 
         protected static IMethodName Method(ITypeName retType,
             ITypeName declType,
             string simpleName,
             params IParameterName[] parameters)
         {
-            var methodStart = string.Format("[{0}] [{1}].{2}(", retType, declType, simpleName);
-
-            var firstIteration = true;
-            foreach (var parameterName in parameters)
-            {
-                if (firstIteration)
-                {
-                    firstIteration = false;
-                }
-                else
-                {
-                    methodStart += ", ";
-                }
-                methodStart += parameterName.Identifier;
-            }
-
-            return MethodName.Get(methodStart + ")");
+            var parameterStr = string.Join(", ", parameters.Select(p => p.Identifier));
+            var methodStart = string.Format("[{0}] [{1}].{2}({3})", retType, declType, simpleName, parameterStr);
+            return MethodName.Get(methodStart);
         }
 
         protected static IFieldName Field(ITypeName valType,
@@ -105,176 +187,65 @@ namespace KaVE.Commons.Tests.Utils.ObjectUsageExporterTestSuite
             };
         }
 
-        public void SetupSST(IMethodName enclosingMethod,
-            IFieldDeclaration[] fields,
-            IPropertyDeclaration[] properties,
-            params IStatement[] statements)
+        protected static IInvocationExpression Constructor(ITypeName type)
         {
-            var methodDeclaration = new MethodDeclaration
+            // TODO @seb: is Void return correct for constructor calls?
+            return InvokeStatic(Method(Fix.Void, type, ".ctor"));
+        }
+
+        protected static IAssignment Assign(string varName, IAssignableExpression expr)
+        {
+            return new Assignment
             {
-                Name = enclosingMethod
+                Reference = VarRef(varName),
+                Expression = expr
             };
-            Ctx.SST = new SST
+        }
+
+        protected static IInvocationExpression Invoke(string varName, IMethodName method)
+        {
+            return new InvocationExpression
             {
-                EnclosingType = enclosingMethod.DeclaringType,
-                Methods =
-                {
-                    methodDeclaration
-                }
+                Reference = VarRef(varName),
+                MethodName = method
             };
+        }
 
-            foreach (var propertyDeclaration in properties)
+        private static IInvocationExpression InvokeStatic(IMethodName method)
+        {
+            return new InvocationExpression
             {
-                Ctx.SST.Properties.Add(propertyDeclaration);
-            }
+                MethodName = method
+            };
+        }
 
-            foreach (var fieldDeclaration in fields)
+        protected static IExpressionStatement InvokeStmt(string varName, IMethodName method)
+        {
+            return new ExpressionStatement
             {
-                Ctx.SST.Fields.Add(fieldDeclaration);
-            }
+                Expression = Invoke(varName, method)
+            };
+        }
 
-            foreach (var statement in statements)
+        protected static IVariableDeclaration VarDecl(string name, ITypeName type)
+        {
+            return new VariableDeclaration
             {
-                methodDeclaration.Body.Add(statement);
-            }
+                Reference = VarRef(name),
+                Type = type
+            };
         }
 
-        protected void SetupEnclosingMethod(IMethodName enclosingMethod, params IStatement[] statements)
+        protected static CallSite SomeCallSiteOnType(string typeName)
         {
-            SetupSST(enclosingMethod, new IFieldDeclaration[] {}, new IPropertyDeclaration[] {}, statements);
+            return CallSites.CreateReceiverCallSite(Method(Fix.Void, Type(typeName), "M"));
         }
 
-        protected void AssertQueriesWithMethodCtx(IMethodName enclosingMethod,
-            IMethodName methodCtx,
-            params Query[] expecteds)
+        protected static IMethodName SomeMethodOnType(string typeName)
         {
-            var actuals = ExportAndPreprocess(true, expecteds);
-
-            Assert.AreEqual(expecteds.Length, actuals.Count);
-
-            foreach (var actual in actuals)
-            {
-                actual.definition = DefinitionSites.CreateUnknownDefinitionSite();
-            }
-
-            foreach (var expected in expecteds)
-            {
-                expected.definition = DefinitionSites.CreateUnknownDefinitionSite();
-                expected.classCtx = enclosingMethod.DeclaringType.ToCoReName();
-                expected.methodCtx = methodCtx.ToCoReName();
-                CollectionAssert.Contains(actuals, expected);
-            }
+            return Method(Fix.Void, Type(typeName), "M");
         }
 
-        protected void AssertQueries(IMethodName enclosingMethod,
-            bool isIgnoringDefinitionSite,
-            params Query[] expecteds)
-        {
-            var actuals = ExportAndPreprocess(isIgnoringDefinitionSite, expecteds);
-
-            Assert.AreEqual(expecteds.Length, actuals.Count);
-
-            foreach (var expected in expecteds)
-            {
-                if (isIgnoringDefinitionSite)
-                {
-                    expected.definition = DefinitionSites.CreateUnknownDefinitionSite();
-                }
-                expected.classCtx = enclosingMethod.DeclaringType.ToCoReName();
-                expected.methodCtx = enclosingMethod.ToCoReName();
-                CollectionAssert.Contains(actuals, expected);
-            }
-        }
-
-        private ICollection<Query> ExportAndPreprocess(bool isIgnoringDefinitionSite, IEnumerable<Query> expecteds)
-        {
-            var actuals = Sut.Export(Ctx);
-
-            actuals = Preprocess(isIgnoringDefinitionSite, expecteds, actuals);
-            return actuals;
-        }
-
-        private static ICollection<Query> Preprocess(bool isIgnoringDefinitionSite,
-            IEnumerable<Query> expecteds,
-            ICollection<Query> actuals)
-        {
-            var isInterestedInThisQueries = false;
-            foreach (var expected in expecteds)
-            {
-                if (expected.definition.kind == DefinitionSiteKind.THIS)
-                {
-                    isInterestedInThisQueries = true;
-                }
-            }
-            if (!isInterestedInThisQueries)
-            {
-                actuals = actuals.Where(query => query.definition.kind != DefinitionSiteKind.THIS).ToList();
-            }
-
-
-            if (isIgnoringDefinitionSite)
-            {
-                foreach (var actual in actuals)
-                {
-                    actual.definition = DefinitionSites.CreateUnknownDefinitionSite();
-                }
-            }
-            return actuals;
-        }
-
-        protected void AssertQueriesInDefault(params Query[] expecteds)
-        {
-            AssertQueries(Method(Type("A"), Type("TDecl"), "M"), true, expecteds);
-        }
-
-        protected void AssertQueriesCleanInDefault(params Query[] expecteds)
-        {
-            var enclosingMethod = Method(Type("A"), Type("TDecl"), "M");
-
-            var actuals = Sut.CleanExport(Ctx);
-
-            actuals = Preprocess(true, expecteds, actuals);
-
-            Assert.AreEqual(expecteds.Length, actuals.Count);
-
-            foreach (var expected in expecteds)
-            {
-                expected.definition = DefinitionSites.CreateUnknownDefinitionSite();
-                expected.classCtx = enclosingMethod.DeclaringType.ToCoReName();
-                expected.methodCtx = enclosingMethod.ToCoReName();
-                CollectionAssert.Contains(actuals, expected);
-            }
-        }
-
-        protected void AssertQueriesInDefaultWithDefSite(params Query[] expecteds)
-        {
-            AssertQueries(Method(Type("A"), Type("TDecl"), "M"), false, expecteds);
-        }
-
-        protected void SetupDefaultEnclosingMethod(params IStatement[] statements)
-        {
-            SetupEnclosingMethod(
-                Method(Type("A"), Type("TDecl"), "M"),
-                statements);
-        }
-
-        protected void SetupDefaultEnclosingMethodWithFields(IFieldDeclaration[] fields, params IStatement[] statements)
-        {
-            SetupSST(
-                Method(Type("A"), Type("TDecl"), "M"),
-                fields,
-                new IPropertyDeclaration[] {},
-                statements);
-        }
-
-        protected void SetupDefaultEnclosingMethodWithProperties(IPropertyDeclaration[] properties,
-            params IStatement[] statements)
-        {
-            SetupSST(
-                Method(Type("A"), Type("TDecl"), "M"),
-                new IFieldDeclaration[] {},
-                properties,
-                statements);
-        }
+        #endregion
     }
 }

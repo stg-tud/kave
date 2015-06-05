@@ -19,17 +19,23 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
+using System.Linq;
 using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.ObjectUsage;
 using KaVE.Commons.Utils.Assertion;
+using KaVE.Commons.Utils.Collections;
 
 namespace KaVE.Commons.Utils.ObjectUsageExport
 {
     public class ObjectUsageExporter
     {
-        public ICollection<Query> Export(Context ctx)
+        public IKaVEList<Query> Export(Context ctx)
+        {
+            return Lists.NewListFrom(ExportInternal(ctx).Where(q => q.sites.Count > 0));
+        }
+
+        private IEnumerable<Query> ExportInternal(Context ctx)
         {
             var collectorVisitor = new InvocationCollectorVisitor();
             var queryContext = new InvocationCollectorVisitor.QueryContext();
@@ -42,22 +48,6 @@ namespace KaVE.Commons.Utils.ObjectUsageExport
             }
 
             return queries;
-        }
-
-        public ICollection<Query> CleanExport(Context ctx)
-        {
-            var queries = Export(ctx);
-            var cleanedQueries = new Collection<Query>();
-
-            foreach (var query in queries)
-            {
-                if (!query.sites.Count.Equals(0))
-                {
-                    cleanedQueries.Add(query);
-                }
-            }
-
-            return cleanedQueries;
         }
 
         private CoReMethodName GetMethodContext(Context ctx, Query query)
