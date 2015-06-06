@@ -22,8 +22,8 @@ using System.Text;
 using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.Names.CSharp;
-using KaVE.JetBrains.Annotations;
 using KaVE.Commons.Utils;
+using KaVE.JetBrains.Annotations;
 
 namespace KaVE.Commons.Model.ObjectUsage
 {
@@ -80,7 +80,13 @@ namespace KaVE.Commons.Model.ObjectUsage
                 builder.Append(name.DeclaringType.ToName(), ".");
                 builder.Append(name.IsUnknown ? "unknown" : name.Name);
                 builder.Append("(");
-                StringBuilderUtils.Append(builder, name.Parameters.Select(n => n.ValueType.ToName() + ";").ToArray());
+                // TODO @seb: fix analysis and remove check;
+                if (name.Parameters != null)
+                {
+                    StringBuilderUtils.Append(
+                        builder,
+                        name.Parameters.Select(n => n.ValueType.ToName() + ";").ToArray());
+                }
                 builder.Append(")", name.ReturnType.ToName(), ";");
             }
             return new CoReMethodName(builder.ToString());
@@ -98,7 +104,16 @@ namespace KaVE.Commons.Model.ObjectUsage
 
         private static string ToName(this INamespaceName name)
         {
-            return name.IsGlobalNamespace ? "" : string.Format("{0}{1}/", name.ParentNamespace.ToName(), name.Name);
+            if (name.IsGlobalNamespace)
+            {
+                return "";
+            }
+            // TODO @seb: fix analysis and remove this check then
+            if (name.ParentNamespace == null)
+            {
+                return "";
+            }
+            return string.Format("{0}{1}/", name.ParentNamespace.ToName(), name.Name);
         }
 
         private static string ToName(this ITypeName name)

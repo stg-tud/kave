@@ -24,9 +24,9 @@ using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.LoopHeader;
 using KaVE.Commons.Model.SSTs.Impl.Statements;
 using NUnit.Framework;
-using Fix = KaVE.Commons.Tests.Utils.ObjectUsageExporterTestSuite.ObjectUsageExporterTestFixture;
+using Fix = KaVE.Commons.Tests.Utils.ObjectUsageExport.ObjectUsageExporterTestSuite.ObjectUsageExporterTestFixture;
 
-namespace KaVE.Commons.Tests.Utils.ObjectUsageExporterTestSuite
+namespace KaVE.Commons.Tests.Utils.ObjectUsageExport.ObjectUsageExporterTestSuite
 {
     /// <summary>
     ///     tests if all statement types are covered in the call site collection
@@ -67,10 +67,10 @@ namespace KaVE.Commons.Tests.Utils.ObjectUsageExporterTestSuite
                 new Query
                 {
                     type = DefaultClassContext.ToCoReName(),
-                    definition = new DefinitionSite {kind = DefinitionSiteKind.THIS},
+                    definition = DefinitionSites.CreateDefinitionByThis(),
                     sites =
                     {
-                        SomeCallSiteOnType("I"),
+                        CallSites.CreateReceiverCallSite(Method(Type("I"), DefaultClassContext, "M"))
                     }
                 },
                 new Query
@@ -79,7 +79,7 @@ namespace KaVE.Commons.Tests.Utils.ObjectUsageExporterTestSuite
                     definition = DefinitionSites.CreateDefinitionByReturn(Method(Type("I"), DefaultClassContext, "M")),
                     sites =
                     {
-                        CallSites.CreateReceiverCallSite(Method(Fix.Void, Type("I"), "M2"))
+                        SomeCallSiteOnType("I")
                     }
                 }
                 );

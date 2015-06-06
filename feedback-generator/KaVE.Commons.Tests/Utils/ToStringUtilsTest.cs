@@ -145,7 +145,7 @@ namespace KaVE.Commons.Tests.Utils
                 Nested = new ClassWithToString()
             }.ToStringReflection();
             const string expected = "ClassWithNesting@1 {\n" +
-                                    "   M_GetHashCode = 1,\n" +
+                                    "   HashCode = 1,\n" +
                                     "   Nested = {\n" +
                                     "      XYZ\n" +
                                     "   },\n" +
@@ -175,7 +175,7 @@ namespace KaVE.Commons.Tests.Utils
                 Nested = new ClassWithNesting {HashCode = 2}
             }.ToStringReflection();
             const string expected = "ClassWithNesting@1 {\n" +
-                                    "   M_GetHashCode = 1,\n" +
+                                    "   HashCode = 1,\n" +
                                     "   Nested = KaVE.Commons.Tests.Utils.ToStringUtilsTest+ClassWithNesting,\n" +
                                     "}";
             Assert.AreEqual(expected, actual);
@@ -190,7 +190,7 @@ namespace KaVE.Commons.Tests.Utils
                 Nested = null
             }.ToStringReflection();
             const string expected = "ClassWithNesting@1 {\n" +
-                                    "   M_GetHashCode = 1,\n" +
+                                    "   HashCode = 1,\n" +
                                     "   Nested = null,\n" +
                                     "}";
             Assert.AreEqual(expected, actual);
@@ -205,7 +205,7 @@ namespace KaVE.Commons.Tests.Utils
                 Nested = new[] {1, 2, 3}
             }.ToStringReflection();
             const string expected = "ClassWithNesting@1 {\n" +
-                                    "   M_GetHashCode = 1,\n" +
+                                    "   HashCode = 1,\n" +
                                     "   Nested = [\n" +
                                     "      1,\n" +
                                     "      2,\n" +
@@ -224,7 +224,7 @@ namespace KaVE.Commons.Tests.Utils
                 Nested = new SomeList<int> {1, 2, 3}
             }.ToStringReflection();
             const string expected = "ClassWithNesting@1 {\n" +
-                                    "   M_GetHashCode = 1,\n" +
+                                    "   HashCode = 1,\n" +
                                     "   Nested = SomeList`1@16 [\n" +
                                     "      1,\n" +
                                     "      2,\n" +
@@ -243,7 +243,7 @@ namespace KaVE.Commons.Tests.Utils
                 Nested = new SomeList<object> {new ClassWithToString(), null}
             }.ToStringReflection();
             const string expected = "ClassWithNesting@1 {\n" +
-                                    "   M_GetHashCode = 1,\n" +
+                                    "   HashCode = 1,\n" +
                                     "   Nested = SomeList`1@16 [\n" +
                                     "      {\n" +
                                     "         XYZ\n" +
@@ -263,7 +263,7 @@ namespace KaVE.Commons.Tests.Utils
                 Nested = new SomeStruct()
             }.ToStringReflection();
             const string expected = "ClassWithNesting@1 {\n" +
-                                    "   M_GetHashCode = 1,\n" +
+                                    "   HashCode = 1,\n" +
                                     "   Nested = KaVE.Commons.Tests.Utils.ToStringUtilsTest+SomeStruct,\n" +
                                     "}";
             Assert.AreEqual(expected, actual);
@@ -276,7 +276,7 @@ namespace KaVE.Commons.Tests.Utils
             sut.Nested = sut;
             var actual = sut.ToStringReflection();
             const string expected = "ClassWithNesting@1 {\n" +
-                                    "   M_GetHashCode = 1,\n" +
+                                    "   HashCode = 1,\n" +
                                     "   Nested = {--> ClassWithNesting@1},\n" +
                                     "}";
             Assert.AreEqual(expected, actual);
@@ -290,7 +290,7 @@ namespace KaVE.Commons.Tests.Utils
             someList.Add(sut);
             var actual = sut.ToStringReflection();
             const string expected = "ClassWithNesting@1 {\n" +
-                                    "   M_GetHashCode = 1,\n" +
+                                    "   HashCode = 1,\n" +
                                     "   Nested = SomeList`1@16 [\n" +
                                     "      {--> ClassWithNesting@1},\n" +
                                     "   ],\n" +
@@ -312,7 +312,7 @@ namespace KaVE.Commons.Tests.Utils
             };
             var actual = sut.ToStringReflection();
             const string expected = "ClassWithNesting@1 {\n" +
-                                    "   M_GetHashCode = 1,\n" +
+                                    "   HashCode = 1,\n" +
                                     "   Nested = SomeList`1@16 [\n" +
                                     "      SomeStruct@1 {\n" +
                                     "         Num = 1,\n" +
@@ -340,7 +340,7 @@ namespace KaVE.Commons.Tests.Utils
                 Nested = "a"
             }.ToStringReflection();
             const string expected = "ClassWithNesting@1 {\n" +
-                                    "   M_GetHashCode = 1,\n" +
+                                    "   HashCode = 1,\n" +
                                     "   Nested = \"a\",\n" +
                                     "}";
             Assert.AreEqual(expected, actual);
@@ -355,7 +355,7 @@ namespace KaVE.Commons.Tests.Utils
                 Nested = new SomeList<object> {"a"}
             }.ToStringReflection();
             const string expected = "ClassWithNesting@1 {\n" +
-                                    "   M_GetHashCode = 1,\n" +
+                                    "   HashCode = 1,\n" +
                                     "   Nested = SomeList`1@16 [\n" +
                                     "      \"a\",\n" +
                                     "   ],\n" +
@@ -373,7 +373,7 @@ namespace KaVE.Commons.Tests.Utils
             }.ToStringReflection();
             var expected = string.Format(
                 "ClassWithNesting@1 {{\n" +
-                "   M_GetHashCode = 1,\n" +
+                "   HashCode = 1,\n" +
                 "   Nested = \"{0}... (cut)\",\n" +
                 "}}",
                 new string('x', 128));

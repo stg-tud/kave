@@ -23,10 +23,11 @@ using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Model.ObjectUsage;
 using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.Commons.Model.SSTs.Impl.Declarations;
+using KaVE.Commons.Model.TypeShapes;
 using NUnit.Framework;
-using Fix = KaVE.Commons.Tests.Utils.ObjectUsageExporterTestSuite.ObjectUsageExporterTestFixture;
+using Fix = KaVE.Commons.Tests.Utils.ObjectUsageExport.ObjectUsageExporterTestSuite.ObjectUsageExporterTestFixture;
 
-namespace KaVE.Commons.Tests.Utils.ObjectUsageExporterTestSuite
+namespace KaVE.Commons.Tests.Utils.ObjectUsageExport.ObjectUsageExporterTestSuite
 {
     /// <summary>
     ///     tests variable name look-ups, call registration on correct types, etc.
@@ -34,15 +35,11 @@ namespace KaVE.Commons.Tests.Utils.ObjectUsageExporterTestSuite
     public class InvocationCollectionTest : BaseObjectUsageExporterTest
     {
         [Test]
-        public void AmbiguousCallsOnUndeclaredVariable() {}
-
-        [Test]
-        public void CallOnSubtypeIsRegisteredForVariableType()
+        public void AmbiguousCallsOnUndeclaredVariable()
         {
             SetupDefaultEnclosingMethod(
-                VarDecl("a", Type("A")),
-                InvokeStmt("a", Method(Fix.Void, Type("A"), "M1")),
-                InvokeStmt("a", Method(Fix.Void, Type("B"), "M2")));
+                InvokeStmt("a", Method(Fix.Void, Type("A"), "MA")),
+                InvokeStmt("a", Method(Fix.Void, Type("B"), "MB")));
 
             AssertQueriesInDefault(
                 new Query
@@ -51,21 +48,74 @@ namespace KaVE.Commons.Tests.Utils.ObjectUsageExporterTestSuite
                     sites =
                     {
                         CallSites.CreateReceiverCallSite(
-                            Method(Fix.Void, Type("B"), "MethodTB")),
+                            Method(Fix.Void, Type("A"), "MA"))
+                    }
+                },
+                new Query
+                {
+                    type = Type("B").ToCoReName(),
+                    sites =
+                    {
                         CallSites.CreateReceiverCallSite(
-                            Method(Fix.Void, Type("A"), "MethodTA"))
+                            Method(Fix.Void, Type("B"), "MB"))
                     }
                 });
         }
 
         [Test]
-        public void CallOnSubtypeIsRegisteredForSuperType_EvenWhenTypeExists() {}
+        public void CallOnSubtypeIsRegisteredForVariableType()
+        {
+            SetupDefaultEnclosingMethod(
+                VarDecl("a", Type("A")),
+                InvokeStmt("a", Method(Fix.Void, Type("A"), "MA")),
+                InvokeStmt("a", Method(Fix.Void, Type("B"), "MB")));
+
+            AssertQueriesInDefault(
+                new Query
+                {
+                    type = Type("A").ToCoReName(),
+                    sites =
+                    {
+                        CallSites.CreateReceiverCallSite(
+                            Method(Fix.Void, Type("A"), "MA")),
+                        CallSites.CreateReceiverCallSite(
+                            Method(Fix.Void, Type("B"), "MB"))
+                    }
+                });
+        }
+
+        [Test]
+        public void CallOnSubtypeIsRegisteredForSuperType_EvenWhenTypeExists()
+        {
+            SetupDefaultEnclosingMethod(
+                VarDecl("a", Type("A")),
+                VarDecl("b", Type("B")),
+                InvokeStmt("a", Method(Fix.Void, Type("B"), "M")));
+
+            AssertQueriesInDefault(
+                new Query
+                {
+                    type = Type("A").ToCoReName(),
+                    sites =
+                    {
+                        CallSites.CreateReceiverCallSite(
+                            Method(Fix.Void, Type("B"), "M"))
+                    }
+                });
+        }
 
         [Test]
         public void AnalysisOfMultipleMethods()
         {
             Context = new Context
             {
+                TypeShape = new TypeShape
+                {
+                    TypeHierarchy = new TypeHierarchy
+                    {
+                        Element = Type("Test")
+                    }
+                },
                 SST = new SST
                 {
                     EnclosingType = Type("Test"),
@@ -127,9 +177,59 @@ namespace KaVE.Commons.Tests.Utils.ObjectUsageExporterTestSuite
         }
 
         [Test]
-        public void TypeOfThisUsages_SuperTypeIfAvailable() {}
+        public void TypeOfThisUsages_ElementTypeIfNoSuperIsAvailable()
+        {
+            SetupDefaultEnclosingMethod(
+                InvokeStmt("this", Method(Fix.Void, DefaultClassContext, "M")));
+
+            Context.TypeShape.TypeHierarchy = new TypeHierarchy
+            {
+                Element = DefaultClassContext
+            };
+
+            AssertQueriesWithoutSettingContexts(
+                new Query
+                {
+                    type = DefaultClassContext.ToCoReName(),
+                    classCtx = DefaultClassContext.ToCoReName(),
+                    methodCtx = DefaultMethodContext.ToCoReName(),
+                    definition = DefinitionSites.CreateDefinitionByThis(),
+                    sites =
+                    {
+                        CallSites.CreateReceiverCallSite(
+                            Method(Fix.Void, DefaultClassContext, "M"))
+                    }
+                });
+        }
 
         [Test]
-        public void TypeOfThisUsages_ElementTypeIfNoSuperIsAvailable() {}
+        public void TypeOfThisUsages_SuperTypeIfAvailable()
+        {
+            SetupDefaultEnclosingMethod(
+                InvokeStmt("this", Method(Fix.Void, DefaultClassContext, "M")));
+
+            Context.TypeShape.TypeHierarchy = new TypeHierarchy
+            {
+                Element = DefaultClassContext,
+                Extends = new TypeHierarchy
+                {
+                    Element = Type("TSuper")
+                }
+            };
+
+            AssertQueriesWithoutSettingContexts(
+                new Query
+                {
+                    type = Type("TSuper").ToCoReName(),
+                    classCtx = Type("TSuper").ToCoReName(),
+                    methodCtx = DefaultMethodContext.ToCoReName(),
+                    definition = DefinitionSites.CreateDefinitionByThis(),
+                    sites =
+                    {
+                        CallSites.CreateReceiverCallSite(
+                            Method(Fix.Void, DefaultClassContext, "M"))
+                    }
+                });
+        }
     }
 }

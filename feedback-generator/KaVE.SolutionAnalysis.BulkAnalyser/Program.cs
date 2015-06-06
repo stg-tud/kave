@@ -44,41 +44,32 @@ namespace KaVE.SolutionAnalysis.BulkAnalyser
             var usages = Lists.NewList<Query>();
 
             //AnalyzeProjects();
-            var ssts = ReadContexts();
-            Console.WriteLine("found {0} contexts", ssts.Count);
-
-            foreach (var ctx in ssts)
-            {
-                var u2 = Exporter.Export(ctx);
-                Console.WriteLine("- {0} usages", u2.Count);
-                foreach (var u in u2)
-                {
-                    usages.Add(u);
-                }
-            }
-
-            Console.WriteLine("extracted {0} usages", usages.Count);
-
-        }
-
-        private static IKaVEList<Context> ReadContexts()
-        {
-            var contexts = Lists.NewList<Context>();
             var logs = FindSSTLogs();
 
             foreach (var log in logs)
             {
+                Console.WriteLine("##################################################");
                 Console.WriteLine("reading {0}...", log.Name);
                 var reader = new JsonLogReader<Context>(new FileStream(log.FullName, FileMode.Open), new NullLogger());
 
-                var allCtxs = reader.ReadAll();
-                foreach (var ctx in allCtxs)
-                {
-                    contexts.Add(ctx);
-                }
-            }
+                var ctxs = reader.ReadAll().ToList();
+                Console.WriteLine("\tFound {0} contexts", ctxs.Count);
 
-            return contexts;
+                Console.Write("\tExtracting usages... ");
+                int usageCounter = 0;
+                foreach (var ctx in ctxs)
+                {
+                    var u2 = Exporter.Export(ctx);
+                    //Console.Write("{0}, ", u2.Count);
+                    foreach (var u in u2)
+                    {
+                        usages.Add(u);
+                        usageCounter++;
+                    }
+                }
+                Console.WriteLine("done\n\t--> {0} usages with calls", usageCounter);
+            }
+            Console.WriteLine("=======\nextracted {0} usages that contain calls", usages.Count);
         }
 
         private static IEnumerable<FileInfo> FindSSTLogs()

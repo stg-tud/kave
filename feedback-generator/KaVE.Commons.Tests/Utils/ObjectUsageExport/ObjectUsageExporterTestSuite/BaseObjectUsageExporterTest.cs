@@ -37,9 +37,9 @@ using KaVE.Commons.Model.TypeShapes;
 using KaVE.Commons.Utils.Collections;
 using KaVE.Commons.Utils.ObjectUsageExport;
 using NUnit.Framework;
-using Fix = KaVE.Commons.Tests.Utils.ObjectUsageExporterTestSuite.ObjectUsageExporterTestFixture;
+using Fix = KaVE.Commons.Tests.Utils.ObjectUsageExport.ObjectUsageExporterTestSuite.ObjectUsageExporterTestFixture;
 
-namespace KaVE.Commons.Tests.Utils.ObjectUsageExporterTestSuite
+namespace KaVE.Commons.Tests.Utils.ObjectUsageExport.ObjectUsageExporterTestSuite
 {
     public class BaseObjectUsageExporterTest
     {
@@ -133,11 +133,44 @@ namespace KaVE.Commons.Tests.Utils.ObjectUsageExporterTestSuite
             CollectionAssert.AreEqual(expecteds, actuals);
         }
 
+        protected Query FindQueryWith(ITypeName type)
+        {
+            var actuals = Sut.Export(Context);
+            foreach (Query actual in actuals)
+            {
+                if (Equals(actual.type, type.ToCoReName()))
+                {
+                    return actual;
+                }
+            }
+            Assert.Fail("no query found for type {0}", type);
+            return null;
+        }
+
+        protected void AssertQueriesExistFor(params ITypeName[] expecteds)
+        {
+            var expectedsCore = expecteds.Select(t => t.ToCoReName());
+            var actuals = Sut.Export(Context).Select(q => q.type);
+            CollectionAssert.AreEquivalent(expectedsCore, actuals);
+        }
+
         protected Query AssertSingleQuery()
         {
             var actuals = Sut.Export(Context);
             Assert.AreEqual(1, actuals.Count);
             return actuals[0];
+        }
+
+        protected void AssertSingleQueryWithType(ITypeName expected)
+        {
+            var actual = AssertSingleQuery().type;
+            Assert.AreEqual(expected.ToCoReName(), actual);
+        }
+
+        protected void AssertSingleQueryWithDefinition(DefinitionSite expected)
+        {
+            var actual = AssertSingleQuery().definition;
+            Assert.AreEqual(expected, actual);
         }
 
         #region instantiation helpers

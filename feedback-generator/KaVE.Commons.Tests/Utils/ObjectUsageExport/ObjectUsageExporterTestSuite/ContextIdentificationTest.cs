@@ -21,9 +21,9 @@
 using KaVE.Commons.Model.ObjectUsage;
 using KaVE.Commons.Model.TypeShapes;
 using NUnit.Framework;
-using Fix = KaVE.Commons.Tests.Utils.ObjectUsageExporterTestSuite.ObjectUsageExporterTestFixture;
+using Fix = KaVE.Commons.Tests.Utils.ObjectUsageExport.ObjectUsageExporterTestSuite.ObjectUsageExporterTestFixture;
 
-namespace KaVE.Commons.Tests.Utils.ObjectUsageExporterTestSuite
+namespace KaVE.Commons.Tests.Utils.ObjectUsageExport.ObjectUsageExporterTestSuite
 {
     /// <summary>
     ///     tests the correct identification of contexts for the queries

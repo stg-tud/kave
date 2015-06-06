@@ -17,67 +17,165 @@
  *    - Roman Fojtik
  */
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.ObjectUsage;
-using KaVE.Commons.Utils.Assertion;
+using KaVE.Commons.Model.SSTs;
+using KaVE.Commons.Model.SSTs.Declarations;
+using KaVE.Commons.Model.TypeShapes;
 using KaVE.Commons.Utils.Collections;
 
 namespace KaVE.Commons.Utils.ObjectUsageExport
 {
     public class ObjectUsageExporter
     {
+        private readonly InvocationCollectorVisitor _collectorVisitor = new InvocationCollectorVisitor();
+
         public IKaVEList<Query> Export(Context ctx)
         {
-            return Lists.NewListFrom(ExportInternal(ctx).Where(q => q.sites.Count > 0));
+            var allQueries = Extract(ctx.SST);
+            var queriesWithCalls = Lists.NewListFrom(allQueries.Where(q => q.sites.Count > 0));
+            RewriteContexts(queriesWithCalls, ctx.TypeShape);
+            RewriteThisType(queriesWithCalls, ctx.TypeShape);
+            return queriesWithCalls;
         }
 
-        private IEnumerable<Query> ExportInternal(Context ctx)
-        {
-            var collectorVisitor = new InvocationCollectorVisitor();
-            var queryContext = new InvocationCollectorVisitor.QueryContext();
-            ctx.SST.Accept(collectorVisitor, queryContext);
 
-            var queries = queryContext.GetQueries();
-            foreach (var query in queries)
+        public IList<Query> Extract(ISST sst)
+        {
+            var queries = Lists.NewList<Query>();
+
+            foreach (var method in sst.Methods)
             {
-                query.methodCtx = GetMethodContext(ctx, query);
+                var context = new QueryContext
+                {
+                    EnclosingType = sst.EnclosingType,
+                    EnclosingMethod = method.Name
+                };
+                AddDefaultQueries(sst, context);
+
+                Extract(method, context);
+
+                foreach (var query in context.AllQueries)
+                {
+                    queries.Add(query);
+                }
             }
 
             return queries;
         }
 
-        private CoReMethodName GetMethodContext(Context ctx, Query query)
+        private static void AddDefaultQueries(ISST sst, QueryContext context)
         {
-            foreach (var methodHierarchy in ctx.TypeShape.MethodHierarchies)
+            context.DefineVariable("this", sst.EnclosingType, DefinitionSites.CreateDefinitionByThis());
+            context.DefineVariable("base", sst.EnclosingType, DefinitionSites.CreateDefinitionByThis());
+
+            foreach (var field in sst.Fields)
             {
-                try
+                var id = field.Name.Name;
+                var type = field.Name.ValueType;
+                var definition = DefinitionSites.CreateDefinitionByField(field.Name);
+                context.DefineVariable(id, type, definition);
+            }
+
+            foreach (var property in sst.Properties)
+            {
+                var id = property.Name.Name;
+                var type = property.Name.ValueType;
+                var definition = DefinitionSites.CreateDefinitionByField(FieldName.UnknownName);
+                context.DefineVariable(id, type, definition);
+            }
+        }
+
+        private void Extract(IMethodDeclaration methodDecl, QueryContext context)
+        {
+            context.EnterNewScope();
+
+            var parameters = methodDecl.Name.Parameters;
+            for (var argIndex = 0; argIndex < parameters.Count; argIndex++)
+            {
+                var parameter = parameters[argIndex];
+
+                var id = parameter.Name;
+                var type = parameter.ValueType;
+                var def = DefinitionSites.CreateDefinitionByParam(methodDecl.Name, argIndex);
+
+                context.DefineVariable(id, type, def);
+            }
+
+            foreach (var stmt in methodDecl.Body)
+            {
+                stmt.Accept(_collectorVisitor, context);
+            }
+
+            context.LeaveCurrentScope();
+        }
+
+        private void RewriteContexts(IEnumerable<Query> queries, ITypeShape typeShape)
+        {
+            foreach (var query in queries)
+            {
+                query.classCtx = GetClassContext(typeShape.TypeHierarchy);
+                query.methodCtx = GetMethodContext(query.methodCtx, typeShape.MethodHierarchies);
+            }
+        }
+
+        private void RewriteThisType(IEnumerable<Query> queries, ITypeShape typeShape)
+        {
+            var hasSuper = typeShape.TypeHierarchy.Extends != null;
+            if (hasSuper)
+            {
+                var superType = typeShape.TypeHierarchy.Extends.Element;
+                var allThisQueries = queries.Where(q => q.definition.kind == DefinitionSiteKind.THIS);
+                foreach (var q in allThisQueries)
                 {
-                    var methodCtx = methodHierarchy.Element.ToCoReName();
-                    if (methodCtx.Equals(query.methodCtx))
-                    {
-                        if (methodHierarchy.First != null)
-                        {
-                            return methodHierarchy.First.ToCoReName();
-                        }
-                        if (methodHierarchy.Super != null)
-                        {
-                            return methodHierarchy.Super.ToCoReName();
-                        }
-                    }
+                    q.type = superType.ToCoReName();
                 }
-                catch (AssertException e)
+            }
+        }
+
+        private static CoReTypeName GetClassContext(ITypeHierarchy typeHierarchy)
+        {
+            if (typeHierarchy.Extends != null)
+            {
+                // TODO @seb: fix analysis and remove check
+                // ReSharper disable once ConditionIsAlwaysTrueOrFalse
+                if (typeHierarchy.Extends.Element != null)
                 {
-                    // TODO test and proper handling
-                    Console.WriteLine("error getting methog context:\n{0}", e);
-                    return MethodName.UnknownName.ToCoReName();
+                    return typeHierarchy.Extends.Element.ToCoReName();
+                }
+            }
+            return typeHierarchy.Element.ToCoReName();
+        }
+
+        private static CoReMethodName GetMethodContext(CoReMethodName method, IEnumerable<IMethodHierarchy> hierarchies)
+        {
+            foreach (var methodHierarchy in hierarchies)
+            {
+                // TODO @seb: fix analysis and then remove this check
+                // ReSharper disable once ConditionIsAlwaysTrueOrFalse
+                if (methodHierarchy.Element == null)
+                {
+                    continue;
+                }
+
+                var elem = methodHierarchy.Element.ToCoReName();
+                if (elem.Equals(method))
+                {
+                    if (methodHierarchy.First != null)
+                    {
+                        return methodHierarchy.First.ToCoReName();
+                    }
+                    if (methodHierarchy.Super != null)
+                    {
+                        return methodHierarchy.Super.ToCoReName();
+                    }
                 }
             }
 
-            return query.methodCtx;
+            return method;
         }
     }
 }

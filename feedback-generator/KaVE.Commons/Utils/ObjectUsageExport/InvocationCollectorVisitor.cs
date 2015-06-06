@@ -15,122 +15,22 @@
  * 
  * Contributors:
  *    - Roman Fojtik
+ *    - Sebastian Proksch
  */
 
-using System;
-using System.Collections.Generic;
-using KaVE.Commons.Model.Names;
-using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.ObjectUsage;
-using KaVE.Commons.Model.SSTs;
 using KaVE.Commons.Model.SSTs.Blocks;
-using KaVE.Commons.Model.SSTs.Declarations;
 using KaVE.Commons.Model.SSTs.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Expressions.LoopHeader;
 using KaVE.Commons.Model.SSTs.Impl.Visitor;
 using KaVE.Commons.Model.SSTs.References;
 using KaVE.Commons.Model.SSTs.Statements;
-using KaVE.Commons.Utils.Assertion;
 
 namespace KaVE.Commons.Utils.ObjectUsageExport
 {
-    internal class InvocationCollectorVisitor : AbstractNodeVisitor<InvocationCollectorVisitor.QueryContext>
+    internal class InvocationCollectorVisitor : AbstractNodeVisitor<QueryContext>
     {
-        public class QueryContext
-        {
-            public QueryContext()
-            {
-                TypeNameQueryDictionary = new Dictionary<ITypeName, Query>();
-                IdentifierTypeNameDictionary = new Dictionary<string, ITypeName>();
-            }
-
-            internal ITypeName EnclosingType { get; set; }
-
-            internal IMethodName EnclosingMethod { get; set; }
-
-            internal IDictionary<ITypeName, Query> TypeNameQueryDictionary { get; private set; }
-
-            internal IDictionary<string, ITypeName> IdentifierTypeNameDictionary { get; private set; }
-
-            public ICollection<Query> GetQueries()
-            {
-                return TypeNameQueryDictionary.Values;
-            }
-        }
-
-        public override void Visit(IMethodDeclaration stmt, QueryContext context)
-        {
-            // set query for this and base
-            try
-            {
-                var usage = new Query
-                {
-                    type = context.EnclosingType.ToCoReName(),
-                    classCtx = context.EnclosingType.ToCoReName(),
-                    methodCtx = context.EnclosingMethod.ToCoReName(),
-                    definition = new DefinitionSite
-                    {
-                        kind = DefinitionSiteKind.THIS,
-                    }
-                };
-                context.TypeNameQueryDictionary[context.EnclosingType] = usage;
-            }
-            catch (AssertException e)
-            {
-                // TODO @seb: test ad proper handling
-                Console.WriteLine("error creating usage:\n", e);
-            }
-
-            foreach (var param in stmt.Name.Parameters)
-            {
-                try
-                {
-                    CreateQuery(
-                        context,
-                        param.Name,
-                        param.ValueType,
-                        DefinitionSites.CreateDefinitionByParam(stmt.Name, stmt.Name.Parameters.IndexOf(param)));
-                }
-                catch (AssertException e)
-                {
-                    // TODO @seb: test ad proper handling
-                    Console.WriteLine("error creating usage:\n", e);
-                }
-            }
-
-            foreach (var s in stmt.Body)
-            {
-                s.Accept(this, context);
-            }
-        }
-
-        public override void Visit(ISST sst, QueryContext context)
-        {
-            context.EnclosingType = sst.EnclosingType;
-
-
-            var type = sst.EnclosingType;
-
-            context.IdentifierTypeNameDictionary.Add("this", type);
-            context.IdentifierTypeNameDictionary.Add("base", type);
-            //CreateQuery();
-
-            foreach (var method in sst.Methods)
-            {
-                context.EnclosingMethod = method.Name;
-                foreach (var field in sst.Fields)
-                {
-                    field.Accept(this, context);
-                }
-
-                foreach (var property in sst.Properties)
-                {
-                    property.Accept(this, context);
-                }
-
-                method.Accept(this, context);
-            }
-        }
+        private readonly DefinitionSiteEvaluatorVisitor _defSiteVisitor = new DefinitionSiteEvaluatorVisitor();
 
         public override void Visit(IForEachLoop block, QueryContext context)
         {
@@ -205,17 +105,19 @@ namespace KaVE.Commons.Utils.ObjectUsageExport
             }
             foreach (var catchBlock in block.CatchBlocks)
             {
-                // TODO: Create query for params in catchblock
-                CreateQuery(
-                    context,
-                    catchBlock.Parameter.Name,
-                    catchBlock.Parameter.ValueType,
-                    DefinitionSites.CreateUnknownDefinitionSite());
+                context.EnterNewScope();
+
+                var id = catchBlock.Parameter.Name;
+                var type = catchBlock.Parameter.ValueType;
+                var def = DefinitionSites.CreateUnknownDefinitionSite();
+                context.DefineVariable(id, type, def);
 
                 foreach (var statement in catchBlock.Body)
                 {
                     statement.Accept(this, context);
                 }
+
+                context.LeaveCurrentScope();
             }
             foreach (var statement in block.Finally)
             {
@@ -274,54 +176,10 @@ namespace KaVE.Commons.Utils.ObjectUsageExport
         {
             if (!stmt.IsMissing)
             {
-                try
-                {
-                    CreateQuery(
-                        context,
-                        stmt.Reference.Identifier,
-                        stmt.Type,
-                        DefinitionSites.CreateUnknownDefinitionSite());
-                }
-                catch (AssertException e)
-                {
-                    // TODO @seb: test and proper handling
-                    Console.WriteLine("error creating query:\n", e);
-                }
-            }
-        }
-
-        public override void Visit(IFieldDeclaration stmt, QueryContext context)
-        {
-            try
-            {
-                CreateQuery(
-                    context,
-                    stmt.Name.Name,
-                    stmt.Name.ValueType,
-                    DefinitionSites.CreateDefinitionByField(stmt.Name));
-            }
-            catch (AssertException e)
-            {
-                // TODO @seb: test and proper handling
-                Console.WriteLine("error creating query:\n", e);
-            }
-        }
-
-        // treating property as field
-        public override void Visit(IPropertyDeclaration stmt, QueryContext context)
-        {
-            try
-            {
-                CreateQuery(
-                    context,
-                    stmt.Name.Name,
-                    stmt.Name.ValueType,
-                    DefinitionSites.CreateDefinitionByField(PropertyToFieldName(stmt.Name)));
-            }
-            catch (AssertException e)
-            {
-                // TODO @seb: test and proper handling
-                Console.WriteLine("error creating query:\n", e);
+                var id = stmt.Reference.Identifier;
+                var type = stmt.Type;
+                var def = DefinitionSites.CreateUnknownDefinitionSite();
+                context.DefineVariable(id, type, def);
             }
         }
 
@@ -329,23 +187,15 @@ namespace KaVE.Commons.Utils.ObjectUsageExport
         {
             stmt.Expression.Accept(this, context);
 
-            var variableReference = stmt.Reference as IVariableReference;
-            if (variableReference != null)
+            var varRef = stmt.Reference as IVariableReference;
+            if (varRef != null)
             {
-                var expressionValueTypeVisitor = new DefinitionSiteEvaluatorVisitor();
-                var newDefinitionSite = stmt.Expression.Accept(expressionValueTypeVisitor, context);
-
-                // TODO @seb: test and proper handling
-                if (context.IdentifierTypeNameDictionary.ContainsKey(variableReference.Identifier))
-                {
-                    var type = context.IdentifierTypeNameDictionary[variableReference.Identifier];
-                    // TODO @seb: test and proper handling
-                    if (context.TypeNameQueryDictionary.ContainsKey(type))
-                    {
-                        context.TypeNameQueryDictionary[type].definition = newDefinitionSite;
-                    }
-                }
+                var id = varRef.Identifier;
+                var def = stmt.Expression.Accept(_defSiteVisitor, context);
+                context.RegisterDefinition(id, def ?? DefinitionSites.CreateUnknownDefinitionSite());
             }
+
+            // TODO @seb: field refs, etc.
         }
 
         public override void Visit(IExpressionStatement stmt, QueryContext context)
@@ -353,106 +203,16 @@ namespace KaVE.Commons.Utils.ObjectUsageExport
             stmt.Expression.Accept(this, context);
         }
 
-        public override void Visit(IInvocationExpression entity, QueryContext context)
+        public override void Visit(IInvocationExpression expr, QueryContext context)
         {
-            if (entity.MethodName.IsConstructor)
+            if (expr.MethodName.IsConstructor)
             {
-                var type = entity.MethodName.DeclaringType;
-                var usage = FindOrCreateUsage(type, context);
-                usage.definition = DefinitionSites.CreateDefinitionByConstructor(entity.MethodName);
-            }
-            else
-            {
-                var identifier = entity.Reference.Identifier;
-
-                // TODO @seb: test and proper handling
-                if (!context.IdentifierTypeNameDictionary.ContainsKey(identifier))
-                {
-                    Console.WriteLine("no query found for identifier: {0}", identifier);
-                    return;
-                }
-
-                var type = context.IdentifierTypeNameDictionary[identifier];
-                var usage = FindOrCreateUsage(type, context);
-
-                try
-                {
-                    usage.sites.Add(CallSites.CreateReceiverCallSite(entity.MethodName.ToCoReName().Name));
-                }
-                catch (AssertException e)
-                {
-                    // TODO @seb: test and proper handling
-                    Console.WriteLine("error creating ReceiverCallSite:\n", e);
-                }
-            }
-        }
-
-        private static void CreateQuery(QueryContext context,
-            string identifier,
-            ITypeName type,
-            DefinitionSite definition)
-        {
-            // TODO @seb: test and proper handling
-            if (context.IdentifierTypeNameDictionary.ContainsKey(identifier))
-            {
-                Console.WriteLine("identifier exists in IdentifierTypeNameDictionary:", identifier);
-            }
-            else
-            {
-                context.IdentifierTypeNameDictionary.Add(identifier, type);
+                return;
             }
 
-            // TODO @seb: test and proper handling
-            if (context.TypeNameQueryDictionary.ContainsKey(type))
-            {
-                Console.WriteLine("type exists in TypeNameQueryDictionary:", identifier);
-            }
-            else
-            {
-                context.TypeNameQueryDictionary.Add(
-                    type,
-                    new Query
-                    {
-                        classCtx = context.EnclosingType.ToCoReName(),
-                        definition = definition,
-                        methodCtx = context.EnclosingMethod.ToCoReName(),
-                        type = type.ToCoReName()
-                    });
-            }
-        }
-
-        private static Query FindOrCreateUsage(ITypeName type, QueryContext context)
-        {
-            if (context.TypeNameQueryDictionary.ContainsKey(type))
-            {
-                return context.TypeNameQueryDictionary[type];
-            }
-            try
-            {
-                var query = new Query
-                {
-                    type = type.ToCoReName(),
-                    classCtx = context.EnclosingType.ToCoReName(),
-                    methodCtx = context.EnclosingMethod.ToCoReName(),
-                };
-                context.TypeNameQueryDictionary[type] = query;
-                return query;
-            }
-            catch (AssertException e)
-            {
-                // TODO @seb: test and proper handling
-                 return new Query();
-            }
-        }
-
-        public static IFieldName PropertyToFieldName(IPropertyName property)
-        {
-            var field = string.Format(
-                "[{0}] [{1}]._{2}",
-                property.ValueType,
-                property.DeclaringType,
-                property.Name);
-            return FieldName.Get(field);
+            var id = expr.Reference.Identifier;
+            var method = expr.MethodName;
+            context.RegisterCallsite(id, method);
         }
     }
 }
