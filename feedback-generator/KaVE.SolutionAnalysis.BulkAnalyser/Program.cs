@@ -22,11 +22,13 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using Ionic.Zip;
 using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Model.ObjectUsage;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Collections;
 using KaVE.Commons.Utils.Exceptions;
+using KaVE.Commons.Utils.Json;
 using KaVE.Commons.Utils.Logging.Json;
 using KaVE.Commons.Utils.ObjectUsageExport;
 
@@ -41,9 +43,34 @@ namespace KaVE.SolutionAnalysis.BulkAnalyser
 
         private static void Main(string[] args)
         {
-            var usages = Lists.NewList<Query>();
-
             //AnalyzeProjects();
+            var usages = ExtractUsages();
+
+
+            var outFile = Path.Combine(TargetDirectory.FullName, "usages.zip");
+
+            using (var outStream = new FileStream(outFile, FileMode.Create))
+            {
+                using (var zipFile = new ZipFile())
+                {
+                    zipFile.UseZip64WhenSaving = Zip64Option.AsNecessary;
+                    var i = 0;
+                    foreach (var u in usages)
+                    {
+                        var fileName = (i++) + ".json";
+                        var json = u.ToFormattedJson();
+                        zipFile.AddEntry(fileName, json);
+                    }
+                    zipFile.Save(outStream);
+                }
+            }
+        }
+
+        private static IKaVEList<Query> ExtractUsages()
+        {
+            var usages = Lists.NewList<Query>();
+            int contextCounter = 0;
+
             var logs = FindSSTLogs();
 
             foreach (var log in logs)
@@ -54,6 +81,7 @@ namespace KaVE.SolutionAnalysis.BulkAnalyser
 
                 var ctxs = reader.ReadAll().ToList();
                 Console.WriteLine("\tFound {0} contexts", ctxs.Count);
+                contextCounter += ctxs.Count;
 
                 Console.Write("\tExtracting usages... ");
                 int usageCounter = 0;
@@ -69,7 +97,9 @@ namespace KaVE.SolutionAnalysis.BulkAnalyser
                 }
                 Console.WriteLine("done\n\t--> {0} usages with calls", usageCounter);
             }
-            Console.WriteLine("=======\nextracted {0} usages that contain calls", usages.Count);
+            Console.WriteLine("=======\nfound {0} contexts, extracted {1} usages that contain calls", contextCounter, usages.Count);
+
+            return usages;
         }
 
         private static IEnumerable<FileInfo> FindSSTLogs()

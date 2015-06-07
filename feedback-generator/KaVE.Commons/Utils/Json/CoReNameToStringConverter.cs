@@ -85,10 +85,16 @@ namespace KaVE.Commons.Utils.Json
 
             writer.WritePropertyName("kind");
             writer.WriteValue(defSite.kind.ToString());
-            writer.WritePropertyName("field");
-            Write(writer, defSite.field);
-            writer.WritePropertyName("method");
-            Write(writer, defSite.method);
+            if (defSite.field != null)
+            {
+                writer.WritePropertyName("field");
+                Write(writer, defSite.field);
+            }
+            if (defSite.method != null)
+            {
+                writer.WritePropertyName("method");
+                Write(writer, defSite.method);
+            }
             if (defSite.argIndex != 0)
             {
                 writer.WritePropertyName("argIndex");
@@ -191,18 +197,24 @@ namespace KaVE.Commons.Utils.Json
 
             // field
             var fieldToken = obj.GetValue("field");
-            var fieldStr = fieldToken.Value<string>();
-            if (fieldStr != null)
+            if (fieldToken != null)
             {
-                ds.field = new CoReFieldName(fieldStr);
+                var fieldStr = fieldToken.Value<string>();
+                if (fieldStr != null)
+                {
+                    ds.field = new CoReFieldName(fieldStr);
+                }
             }
 
             // method
             var methodToken = obj.GetValue("method");
-            var methodStr = methodToken.Value<string>();
-            if (methodStr != null)
+            if (methodToken != null)
             {
-                ds.method = new CoReMethodName(methodStr);
+                var methodStr = methodToken.Value<string>();
+                if (methodStr != null)
+                {
+                    ds.method = new CoReMethodName(methodStr);
+                }
             }
 
             // argIndex

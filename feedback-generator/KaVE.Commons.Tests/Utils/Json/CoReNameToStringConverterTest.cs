@@ -170,6 +170,26 @@ namespace KaVE.Commons.Tests.Utils.Json
         }
 
         [Test]
+        public void DefinitionSiteSerialization_NullValues()
+        {
+            var obj = new DefinitionSite
+            {
+                kind = DefinitionSiteKind.THIS,
+                field = null,
+                method = null,
+            };
+
+            var json = "{" + Environment.NewLine +
+                       "    \"kind\": \"THIS\"" + Environment.NewLine +
+                       "}";
+
+            var actualJson = obj.ToFormattedJson();
+            Assert.AreEqual(json, actualJson);
+            var other = json.ParseJsonTo<DefinitionSite>();
+            Assert.AreEqual(obj, other);
+        }
+
+        [Test]
         public void DefinitionSiteSerialization_DefaultArgIndexIsNotSerialized()
         {
             var obj = new DefinitionSite
