@@ -165,6 +165,7 @@
     <Compile Include="Utils\InvokeTest.cs" />
     <Compile Include="Utils\IO\FileSystemExTest.cs" />
     <Compile Include="Utils\IO\KeyUtilsTest.cs" />
+    <Compile Include="Utils\Json\CoReNameToStringConverterTest.cs" />
     <Compile Include="Utils\Json\JsonAssert.cs" />
     <Compile Include="Utils\Json\JsonSerializationSuite\BuildEventSerializationTest.cs" />
     <Compile Include="Utils\Json\JsonSerializationSuite\CommandEventSerializationTest.cs" />

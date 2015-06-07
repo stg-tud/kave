@@ -14,7 +14,8 @@
  * limitations under the License.
  * 
  * Contributors:
- *    - 
+ *    - Sebastian Proksch
+ *    - Dennis Albrecht
  */
 
 namespace KaVE.Commons.Model.ObjectUsage

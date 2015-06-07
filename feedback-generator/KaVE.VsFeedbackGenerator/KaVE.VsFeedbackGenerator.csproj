@@ -269,8 +269,6 @@
     <Compile Include="Utils\IoUtils.cs" />
     <Compile Include="Utils\IPublisher.cs" />
     <Compile Include="SessionManager\UploadSettings.cs" />
-    <Compile Include="Utils\Json\CoReNameToStringConverter.cs" />
-    <Compile Include="Utils\Json\QueryJsonSerialization.cs" />
     <Compile Include="Utils\Logging\ILogManager.cs" />
     <Compile Include="Utils\Json\JsonLogFileManager.cs" />
     <Compile Include="Utils\Logging\LogFile.cs" />

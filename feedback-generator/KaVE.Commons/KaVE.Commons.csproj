@@ -54,6 +54,7 @@
     <Compile Include="Utils\Csv\CsvTable.cs" />
     <Compile Include="Utils\Exceptions\FileLogger.cs" />
     <Compile Include="Utils\IO\FileSystemEx.cs" />
+    <Compile Include="Utils\Json\CoReNameToStringConverter.cs" />
     <Compile Include="Utils\Json\EnumToStringConverter.cs" />
     <Compile Include="Utils\Json\JsonSerialization.cs" />
     <Compile Include="Utils\Json\LegacyDataUtils.cs" />

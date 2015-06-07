@@ -148,7 +148,6 @@
     <Compile Include="Utils\InverseBoolConverterTest.cs" />
     <Compile Include="Utils\IoUtilsTest.cs" />
     <Compile Include="Utils\FilePublisherTest.cs" />
-    <Compile Include="Utils\Json\QueryJsonSerializationTest.cs" />
     <Compile Include="Utils\Logging\LogFileManagerTest.cs" />
     <Compile Include="Utils\Logging\LogFileTest.cs" />
     <Compile Include="Utils\Names\ReSharperDeclaredElementNameFactoryTest.cs" />

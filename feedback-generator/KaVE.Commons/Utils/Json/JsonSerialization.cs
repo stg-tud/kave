@@ -80,7 +80,8 @@ namespace KaVE.Commons.Utils.Json
             {
                 Converters =
                 {
-                    new NameToJsonConverter()
+                    new NameToJsonConverter(),
+                    new CoReNameToStringConverter()
                 },
                 NullValueHandling = NullValueHandling.Ignore,
                 TypeNameHandling = TypeNameHandling.Objects,
@@ -137,13 +138,14 @@ namespace KaVE.Commons.Utils.Json
         ///     Pretty-print serialization cannot generally be deserialized, because information is lost during serialization.
         /// </remarks>
         [NotNull]
-        public static string ToPrettyPrintJson([CanBeNull] this object instance, IEnumerable<string> hiddenProperties = null)
+        public static string ToPrettyPrintJson([CanBeNull] this object instance,
+            IEnumerable<string> hiddenProperties = null)
         {
             var settings = CreatePrettyPrintSettings();
 
             if (hiddenProperties != null)
             {
-                settings.ContractResolver = new PropertyHidingContractResolver(hiddenProperties);    
+                settings.ContractResolver = new PropertyHidingContractResolver(hiddenProperties);
             }
 
             return SerializeWithCustomIndentationDepth(instance, settings);

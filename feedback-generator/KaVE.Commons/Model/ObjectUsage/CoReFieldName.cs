@@ -14,14 +14,14 @@
  * limitations under the License.
  * 
  * Contributors:
- *    - 
+ *    - Dennis Albrecht
  */
 
 namespace KaVE.Commons.Model.ObjectUsage
 {
     public class CoReFieldName : CoReName
     {
-        public CoReFieldName(string name) : base(name, ValidationPattern()) { }
+        public CoReFieldName(string name) : base(name, ValidationPattern()) {}
 
         private static string ValidationPattern()
         {
