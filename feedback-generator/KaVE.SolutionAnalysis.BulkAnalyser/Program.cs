@@ -39,7 +39,7 @@ namespace KaVE.SolutionAnalysis.BulkAnalyser
         private static readonly DirectoryInfo TargetDirectory =
             new DirectoryInfo(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "output"));
 
-        private static readonly ObjectUsageExporter Exporter = new ObjectUsageExporter();
+        private static readonly UsageExtractor Exporter = new UsageExtractor();
 
         private static void Main(string[] args)
         {

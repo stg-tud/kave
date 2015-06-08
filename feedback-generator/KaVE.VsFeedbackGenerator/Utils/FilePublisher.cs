@@ -21,6 +21,7 @@
 using System;
 using System.IO;
 using JetBrains.Util;
+using KaVE.Commons.Utils.IO;
 using KaVE.JetBrains.Annotations;
 using KaVE.Commons.Utils.Assertion;
 using Messages = KaVE.VsFeedbackGenerator.Properties.SessionManager;

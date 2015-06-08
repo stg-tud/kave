@@ -24,7 +24,7 @@
     <DefineConstants>JET_MODE_ASSERT;DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -55,9 +55,6 @@
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-    <Reference Include="smileNet">
-      <HintPath>..\3rd-party\smileNet.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
@@ -117,12 +114,9 @@
     <Compile Include="Analysis\Util\UniqueVariableNameGenerator.cs" />
     <Compile Include="Analysis\TypeHierarchyAnalysisUtils.cs" />
     <Compile Include="Analysis\TypeShapeAnalysis.cs" />
-    <Compile Include="CodeCompletion\LookupItemWrapper.cs" />
-    <Compile Include="CodeCompletion\ExampleNetwork.cs" />
-    <Compile Include="CodeCompletion\ExemplaryProposalProvider.cs" />
-    <Compile Include="CodeCompletion\ModelConstants.cs" />
-    <Compile Include="CodeCompletion\ModelStore.cs" />
-    <Compile Include="CodeCompletion\UsageModel.cs" />
+    <Compile Include="CodeCompletion\PBNProposalWrappedLookupItem.cs" />
+    <Compile Include="CodeCompletion\PBNProposalItemsProvider.cs" />
+    <Compile Include="CodeCompletion\InjectablePBNRecommenderStore.cs" />
     <Compile Include="Export\Exporter.cs" />
     <Compile Include="Generators\LogEventGenerator.cs" />
     <Compile Include="Generators\ReSharper\CommandEventGeneratorBase.cs" />
@@ -264,9 +258,9 @@
     <Compile Include="Utils\FilePublisher.cs" />
     <Compile Include="Utils\HttpPublisher.cs" />
     <Compile Include="Utils\IDateUtils.cs" />
+    <Compile Include="Utils\InjectableIoUtils.cs" />
     <Compile Include="Utils\InvalidResponseException.cs" />
     <Compile Include="Utils\InverseObjectToVisibilityConverter.cs" />
-    <Compile Include="Utils\IoUtils.cs" />
     <Compile Include="Utils\IPublisher.cs" />
     <Compile Include="SessionManager\UploadSettings.cs" />
     <Compile Include="Utils\Logging\ILogManager.cs" />

@@ -23,6 +23,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using KaVE.Commons.Utils;
+using KaVE.Commons.Utils.IO;
 using KaVE.JetBrains.Annotations;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.VsFeedbackGenerator.Utils;

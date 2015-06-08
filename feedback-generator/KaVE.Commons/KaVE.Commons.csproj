@@ -21,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -31,14 +32,24 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Ionic.Zip.Reduced">
+      <HintPath>..\packages\DotNetZip.Reduced.1.9.1.8\lib\net20\Ionic.Zip.Reduced.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft.Json.6.0.3\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="smileNet">
+      <HintPath>..\3rd-party\smileNet.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Net.Http, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\3rd-party\System.Net.Http.dll</HintPath>
+    </Reference>
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xaml" />
     <Reference Include="WindowsBase" />
@@ -48,12 +59,22 @@
     <Compile Include="Model\Names\CSharp\NameUtils.cs" />
     <Compile Include="Model\Names\IDelegateTypeName.cs" />
     <Compile Include="Model\Names\ILambdaName.cs" />
+    <Compile Include="Utils\CodeCompletion\Impl\ExamplePBNRecommender.cs" />
+    <Compile Include="Utils\CodeCompletion\Impl\SmileNetworkUtils.cs" />
+    <Compile Include="Utils\CodeCompletion\IPBNRecommenderStore.cs" />
+    <Compile Include="Utils\CodeCompletion\IPBNRecommender.cs" />
+    <Compile Include="Utils\CodeCompletion\Impl\SmilePBNRecommenderConstants.cs" />
+    <Compile Include="Utils\CodeCompletion\Impl\SmilePBNRecommenderStore.cs" />
+    <Compile Include="Utils\CodeCompletion\Impl\SmilePBNRecommender.cs" />
+    <Compile Include="Utils\Collections\ComparisonResult.cs" />
     <Compile Include="Utils\Collections\Multiset.cs" />
     <Compile Include="Utils\Csv\CsvBuilder.cs" />
     <Compile Include="Utils\Csv\CsvBuilderEx.cs" />
     <Compile Include="Utils\Csv\CsvTable.cs" />
     <Compile Include="Utils\Exceptions\FileLogger.cs" />
     <Compile Include="Utils\IO\FileSystemEx.cs" />
+    <Compile Include="Utils\IO\IIoUtils.cs" />
+    <Compile Include="Utils\IO\IoUtils.cs" />
     <Compile Include="Utils\Json\CoReNameToStringConverter.cs" />
     <Compile Include="Utils\Json\EnumToStringConverter.cs" />
     <Compile Include="Utils\Json\JsonSerialization.cs" />
@@ -67,11 +88,12 @@
     <Compile Include="Utils\Logging\ILogWriter.cs" />
     <Compile Include="Utils\Logging\Json\JsonLogReader.cs" />
     <Compile Include="Utils\Logging\Json\JsonLogWriter.cs" />
-    <Compile Include="Utils\ObjectUsageExport\DefinitionSiteEvaluatorVisitor.cs" />
-    <Compile Include="Utils\ObjectUsageExport\InvocationCollectorVisitor.cs" />
-    <Compile Include="Utils\ObjectUsageExport\ObjectUsageExporter.cs" />
-    <Compile Include="Utils\ObjectUsageExport\QueryContext.cs" />
-    <Compile Include="Utils\ObjectUsageExport\QueryScope.cs" />
+    <Compile Include="Utils\ObjectUsageExport\UsageDefinitionVisitor.cs" />
+    <Compile Include="Utils\ObjectUsageExport\UsageExtractionVisitor.cs" />
+    <Compile Include="Utils\ObjectUsageExport\UsageExtractor.cs" />
+    <Compile Include="Utils\ObjectUsageExport\UsageContext.cs" />
+    <Compile Include="Utils\ObjectUsageExport\QueryExtractor.cs" />
+    <Compile Include="Utils\ObjectUsageExport\ScopedNameResolver.cs" />
     <Compile Include="Utils\SSTPrinter\SSTPrintingContext.cs" />
     <Compile Include="Utils\SSTPrinter\SSTPrintingUtils.cs" />
     <Compile Include="Utils\SSTPrinter\SSTPrintingVisitor.cs" />

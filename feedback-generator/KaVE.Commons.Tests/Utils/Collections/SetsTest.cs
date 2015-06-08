@@ -17,6 +17,7 @@
  *    - Sebastian Proksch
  */
 
+using System;
 using System.Collections.Generic;
 using KaVE.Commons.Model.SSTs.Impl.Statements;
 using KaVE.Commons.TestUtils;
@@ -157,6 +158,104 @@ namespace KaVE.Commons.Tests.Utils.Collections
         public void ToStringReflection()
         {
             ToStringAssert.Reflection(new KaVEHashSet<int>());
+        }
+
+        [Test]
+        public void SortedSet_OrderingWorks()
+        {
+            var sut = Sets.NewSortedSet(GetIntComparer());
+            sut.Add(1);
+            sut.Add(3);
+            sut.Add(2);
+            var expecteds = new[] {1, 2, 3};
+
+            Assert.AreEqual(expecteds.Length, sut.Count, "lengths do not match");
+
+            var actualsEnum = sut.GetEnumerator();
+            var expectedsEnum = expecteds.GetEnumerator();
+            while (actualsEnum.MoveNext())
+            {
+                Assert.True(expectedsEnum.MoveNext());
+                Assert.AreEqual(expectedsEnum.Current, actualsEnum.Current, "items to not match");
+            }
+            Assert.False(expectedsEnum.MoveNext());
+        }
+
+        [Test]
+        public void SortedSet_EqualityDefault()
+        {
+            var a = Sets.NewSortedSet(GetIntComparer());
+            var b = Sets.NewSortedSet(GetIntComparer());
+            Assert.AreEqual(a, b);
+            Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
+        }
+
+        [Test]
+        public void SortedSet_EqualityWithValues()
+        {
+            var a = Sets.NewSortedSet(GetIntComparer());
+            a.Add(13);
+            var b = Sets.NewSortedSet(GetIntComparer());
+            b.Add(13);
+            Assert.AreEqual(a, b);
+            Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
+        }
+
+        [Test]
+        public void SortedSet_EqualityDifferentOrder()
+        {
+            var a = Sets.NewSortedSet(GetIntComparer());
+            a.Add(1);
+            a.Add(2);
+            var b = Sets.NewSortedSet(GetIntComparer());
+            b.Add(2);
+            b.Add(1);
+            Assert.AreEqual(a, b);
+            Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
+        }
+
+        [Test]
+        public void SortedSet_EqualityDifferentValues()
+        {
+            var a = Sets.NewSortedSet(GetIntComparer());
+            a.Add(1);
+            var b = Sets.NewSortedSet(GetIntComparer());
+            Assert.AreNotEqual(a, b);
+            Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
+        }
+
+        // TODO @seb: think again about equality guarantees...  eq/hc is currently broken when KaVEHashSet and KaVESortedSet is used together
+        [Test, Ignore]
+        public void Equality_MixOfHashAndSorted()
+        {
+            var a = Sets.NewSortedSet(GetIntComparer());
+            a.Add(1);
+            a.Add(2);
+            var b = Sets.NewHashSet<int>();
+            b.Add(2);
+            b.Add(1);
+            Assert.AreEqual(a, b);
+            Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
+        }
+
+        [Test]
+        public void SortedSet_ToStringReflection()
+        {
+            ToStringAssert.Reflection(new KaVESortedSet<int>((a, b) => ComparisonResult.Smaller));
+        }
+
+        [Test, ExpectedException(typeof (AssertException))]
+        public void SortedSet_NullCannotBeAdded()
+        {
+            var sut = Sets.NewSortedSet<string>((a, b) => ComparisonResult.Smaller);
+            // ReSharper disable once AssignNullToNotNullAttribute
+            sut.Add(null);
+        }
+
+        private static Func<int, int, ComparisonResult> GetIntComparer()
+        {
+            return
+                (a, b) => a > b ? ComparisonResult.Greater : a == b ? ComparisonResult.Equal : ComparisonResult.Smaller;
         }
     }
 }

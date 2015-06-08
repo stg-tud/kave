@@ -35,7 +35,7 @@ namespace KaVE.Commons.Model.ObjectUsage
 
         public string FormattedProbability
         {
-            get { return string.Format("{0}%", (int) (Probability*100)); }
+            get { return string.Format("{0:n1}%", (int) (Probability*100)); }
         }
 
         private bool Equals(CoReProposal other)
@@ -58,7 +58,7 @@ namespace KaVE.Commons.Model.ObjectUsage
 
         public override string ToString()
         {
-            return string.Format("Proposal: {0}, Probability: {1}", Name, FormattedProbability);
+            return string.Format("Proposal: {0} ({1})", Name, FormattedProbability);
         }
     }
 }

@@ -28,6 +28,7 @@ using KaVE.Commons.TestUtils;
 using KaVE.Commons.TestUtils.Model.Events;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Exceptions;
+using KaVE.Commons.Utils.IO;
 using KaVE.VsFeedbackGenerator.Export;
 using KaVE.VsFeedbackGenerator.Interactivity;
 using KaVE.VsFeedbackGenerator.SessionManager;

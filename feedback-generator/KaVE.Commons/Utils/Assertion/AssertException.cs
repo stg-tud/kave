@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 using System;
 using KaVE.JetBrains.Annotations;
 
@@ -20,8 +21,10 @@ namespace KaVE.Commons.Utils.Assertion
 {
     public class AssertException : Exception
     {
-        public AssertException([NotNull] string message) : base(message)
-        {
-        }
+        public AssertException([NotNull] string message)
+            : base(message) {}
+
+        public AssertException([NotNull] string message, [NotNull] Exception innerException)
+            : base(message, innerException) {}
     }
 }

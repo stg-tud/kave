@@ -21,6 +21,7 @@
 using System;
 using System.IO;
 using KaVE.Commons.Utils.Assertion;
+using KaVE.Commons.Utils.IO;
 using KaVE.VsFeedbackGenerator.Utils;
 using Moq;
 using NUnit.Framework;

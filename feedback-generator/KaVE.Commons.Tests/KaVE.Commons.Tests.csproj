@@ -21,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -31,6 +32,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Ionic.Zip.Reduced">
+      <HintPath>..\packages\DotNetZip.Reduced.1.9.1.8\lib\net20\Ionic.Zip.Reduced.dll</HintPath>
+    </Reference>
     <Reference Include="Moq">
       <HintPath>..\packages\Moq.4.2.1408.0619\lib\net40\Moq.dll</HintPath>
     </Reference>
@@ -42,8 +46,15 @@
       <HintPath>..\packages\NUnit.2.6.3\lib\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="PresentationFramework" />
+    <Reference Include="smileNet">
+      <HintPath>..\3rd-party\smileNet.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Net.Http, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\3rd-party\System.Net.Http.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -147,6 +158,12 @@
     <Compile Include="Model\TypeShapes\TypeHierarchyTest.cs" />
     <Compile Include="Model\TypeShapes\TypeShapeTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utils\CodeCompletion\Impl\ExamplePBNRecommenderTest.cs" />
+    <Compile Include="Utils\CodeCompletion\Impl\SmileNetworkUtilsTest.cs" />
+    <Compile Include="Utils\CodeCompletion\Impl\SmilePBNRecommenderConstantsTest.cs" />
+    <Compile Include="Utils\CodeCompletion\Impl\SmilePBNRecommenderStoreTest.cs" />
+    <Compile Include="Utils\CodeCompletion\Impl\SmilePBNRecommenderFixture.cs" />
+    <Compile Include="Utils\CodeCompletion\Impl\SmilePBNRecommenderTest.cs" />
     <Compile Include="Utils\Collections\ListsTest.cs" />
     <Compile Include="Utils\Collections\MultisetTest.cs" />
     <Compile Include="Utils\Collections\SetEqualityComparerTest.cs" />
@@ -164,6 +181,7 @@
     <Compile Include="Utils\HashCodeUtilsTest.cs" />
     <Compile Include="Utils\InvokeTest.cs" />
     <Compile Include="Utils\IO\FileSystemExTest.cs" />
+    <Compile Include="Utils\IO\IoUtilsTest.cs" />
     <Compile Include="Utils\IO\KeyUtilsTest.cs" />
     <Compile Include="Utils\Json\CoReNameToStringConverterTest.cs" />
     <Compile Include="Utils\Json\JsonAssert.cs" />
@@ -193,16 +211,18 @@
     <Compile Include="Utils\Logging\Json\JsonLogReaderTest.cs" />
     <Compile Include="Utils\Logging\Json\JsonLogWriterTest.cs" />
     <Compile Include="Utils\Json\SerializationTestTarget.cs" />
-    <Compile Include="Utils\ObjectUsageExport\ObjectUsageExporterTestSuite\BaseObjectUsageExporterTest.cs" />
-    <Compile Include="Utils\ObjectUsageExport\ObjectUsageExporterTestSuite\ContextIdentificationTest.cs" />
-    <Compile Include="Utils\ObjectUsageExport\ObjectUsageExporterTestSuite\InvocationCollectionTest.cs" />
-    <Compile Include="Utils\ObjectUsageExport\ObjectUsageExporterTestSuite\MissingInformationTest.cs" />
-    <Compile Include="Utils\ObjectUsageExport\ObjectUsageExporterTestSuite\ObjectUsageExporterTestFixture.cs" />
-    <Compile Include="Utils\ObjectUsageExport\ObjectUsageExporterTestSuite\DefinitionSiteDetectionTest.cs" />
-    <Compile Include="Utils\ObjectUsageExport\ObjectUsageExporterTestSuite\InvocationCollectionInAllStatementsTest.cs" />
-    <Compile Include="Utils\ObjectUsageExport\ObjectUsageExporterTestSuite\ScopingTest.cs" />
-    <Compile Include="Utils\ObjectUsageExport\QueryContextTest.cs" />
-    <Compile Include="Utils\ObjectUsageExport\QueryScopeTest.cs" />
+    <Compile Include="Utils\ObjectUsageExport\QueryExtractorTest.cs" />
+    <Compile Include="Utils\ObjectUsageExport\UsageExtractorTestSuite\BaseObjectUsageExporterTest.cs" />
+    <Compile Include="Utils\ObjectUsageExport\UsageExtractorTestSuite\ContextIdentificationTest.cs" />
+    <Compile Include="Utils\ObjectUsageExport\UsageExtractorTestSuite\InvocationCollectionTest.cs" />
+    <Compile Include="Utils\ObjectUsageExport\UsageExtractorTestSuite\MissingInformationTest.cs" />
+    <Compile Include="Utils\ObjectUsageExport\UsageExtractorTestSuite\ObjectUsageExporterTestFixture.cs" />
+    <Compile Include="Utils\ObjectUsageExport\UsageExtractorTestSuite\DefinitionSiteDetectionTest.cs" />
+    <Compile Include="Utils\ObjectUsageExport\UsageExtractorTestSuite\InvocationCollectionInAllStatementsTest.cs" />
+    <Compile Include="Utils\ObjectUsageExport\UsageExtractorTestSuite\ScopingTest.cs" />
+    <Compile Include="Utils\ObjectUsageExport\UsageContextTest.cs" />
+    <Compile Include="Utils\ObjectUsageExport\ScopedNameResolverTest.cs" />
+    <Compile Include="Utils\ObjectUsageExport\UsageExtractorTestSuite\TargetTypeTest.cs" />
     <Compile Include="Utils\Reflection\TypeExtensionsTest.cs" />
     <Compile Include="Utils\SSTPrinter\SSTPrintingUtilsTest.cs" />
     <Compile Include="Utils\SSTPrinter\SSTPrintingVisitorTestSuite\BlockPrinterTest.cs" />
@@ -233,6 +253,7 @@
       <Name>KaVE.Commons.TestUtils</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

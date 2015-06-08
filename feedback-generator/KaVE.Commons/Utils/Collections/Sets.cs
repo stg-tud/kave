@@ -17,6 +17,7 @@
  *    - Sebastian Proksch
  */
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using KaVE.Commons.Utils.Assertion;
@@ -45,6 +46,11 @@ namespace KaVE.Commons.Utils.Collections
                 s.Add(t);
             }
             return s;
+        }
+
+        public static IKaVESet<T> NewSortedSet<T>(Func<T, T, ComparisonResult> comparer)
+        {
+            return new KaVESortedSet<T>(comparer);
         }
     }
 
@@ -77,6 +83,64 @@ namespace KaVE.Commons.Utils.Collections
         public override string ToString()
         {
             return this.ToStringReflection();
+        }
+    }
+
+    public class KaVESortedSet<T> : SortedSet<T>, IKaVESet<T>
+    {
+        private const int Seed = 1368;
+
+        public KaVESortedSet(Func<T, T, ComparisonResult> comparer) : base(new SetComparer<T>(comparer)) {}
+
+        public new bool Add(T item)
+        {
+            Asserts.NotNull(item);
+            return base.Add(item);
+        }
+
+        public override bool Equals(object obj)
+        {
+            return this.Equals(obj, Equals);
+        }
+
+        private bool Equals(KaVESortedSet<T> other)
+        {
+            return GetHashCode() == other.GetHashCode();
+        }
+
+        public override int GetHashCode()
+        {
+            var init = typeof (T).GetHashCode();
+            return Seed*this.Aggregate(init, (current, e) => current + e.GetHashCode());
+        }
+
+        public override string ToString()
+        {
+            return this.ToStringReflection();
+        }
+
+        private class SetComparer<T2> : IComparer<T2>
+        {
+            private readonly Func<T2, T2, ComparisonResult> _comparer;
+
+            public SetComparer(Func<T2, T2, ComparisonResult> comparer)
+            {
+                _comparer = comparer;
+            }
+
+            public int Compare(T2 x, T2 y)
+            {
+                switch (_comparer(x, y))
+                {
+                    case ComparisonResult.Greater:
+                        return 1;
+                    case ComparisonResult.Equal:
+                        return 0;
+                    case ComparisonResult.Smaller:
+                        return -1;
+                }
+                throw new AssertException("impossible path");
+            }
         }
     }
 

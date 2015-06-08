@@ -73,12 +73,7 @@
   <ItemGroup>
     <Compile Include="Assertion\NameAssert.cs" />
     <Compile Include="CodeCompletion\CodeCompletionLifecycleManagerTest.cs" />
-    <Compile Include="CodeCompletion\ExampleNetworkTest.cs" />
-    <Compile Include="CodeCompletion\ExemplaryProposalProviderTest.cs" />
-    <Compile Include="CodeCompletion\ModelConstantsTest.cs" />
-    <Compile Include="CodeCompletion\ModelStoreTest.cs" />
-    <Compile Include="CodeCompletion\UsageModelFixture.cs" />
-    <Compile Include="CodeCompletion\UsageModelTest.cs" />
+    <Compile Include="CodeCompletion\PBNProposalItemsProviderTest.cs" />
     <Compile Include="Export\ExporterTest.cs" />
     <Compile Include="Generators\EventGeneratorBaseTest.cs" />
     <Compile Include="Generators\EventLoggerTest.cs" />
@@ -145,8 +140,8 @@
     <Compile Include="Utils\GZipStreamTest.cs" />
     <Compile Include="Utils\HierarchyTest.cs" />
     <Compile Include="Utils\HttpPublisherTest.cs" />
+    <Compile Include="Utils\InjectableIoUtilsTest.cs" />
     <Compile Include="Utils\InverseBoolConverterTest.cs" />
-    <Compile Include="Utils\IoUtilsTest.cs" />
     <Compile Include="Utils\FilePublisherTest.cs" />
     <Compile Include="Utils\Logging\LogFileManagerTest.cs" />
     <Compile Include="Utils\Logging\LogFileTest.cs" />
