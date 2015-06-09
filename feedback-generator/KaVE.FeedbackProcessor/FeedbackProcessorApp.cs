@@ -47,32 +47,75 @@ namespace KaVE.FeedbackProcessor
             const string concurrentEventDatabase = "_concurrent";
             const string commandFollowupsDatabase = "_commandFollowups";
 
-            ImportFeedback(OpenDatabase(importDatabase));
-            CleanFeedback(OpenDatabase(importDatabase), OpenDatabase(cleanDatabase));
+            //ImportFeedback(OpenDatabase(importDatabase));
 
-            LogAnonymizationStatistics(OpenDatabase(importDatabase));
-            LogEquivalentCommandPairs(OpenDatabase(filteredDatabase));
-            LogDeveloperStatistics(OpenDatabase(importDatabase));
-            LogEventsPerDeveloperDayStatistic(OpenDatabase(importDatabase));
-            LogIDEActivationEvents(OpenDatabase(importDatabase));
-            LogOccuringNames(OpenDatabase(importDatabase));
-            LogCompletionStatistics(OpenDatabase(importDatabase));
-            LogDevelopersPerDay(OpenDatabase(importDatabase));
-            LogIsolatedEventBlocks(OpenDatabase(cleanDatabase), "isolatedEventBlocks");
-            LogAverageBreakAfterEventsStatistic(OpenDatabase(cleanDatabase), "averageBreakAfterEvents.csv");
+            CleanupFeedback(OpenDatabase(importDatabase), OpenDatabase(cleanDatabase));
 
-            MapToActivities(OpenDatabase(importDatabase), OpenDatabase(activityDatabase));
-            LogActivityStatistics(OpenDatabase(activityDatabase));
+            //SelectConcurrentEvents(OpenDatabase(filteredDatabase), OpenDatabase(concurrentEventDatabase));
+            //ConcurrentEventsStatistic(OpenDatabase(concurrentEventDatabase),"concurrenteventstatistic.csv");
+            //SelectCommandFollowupPairs(OpenDatabase(filteredDatabase), OpenDatabase(commandFollowupsDatabase));
+            //ConcurrentEventsStatistic(OpenDatabase(commandFollowupsDatabase),"commandfollowupsstatistic.csv");
 
-            MapEquivalentCommands(OpenDatabase(filteredDatabase), OpenDatabase(cleanDatabase));
+            //LogAnonymizationStatistics(OpenDatabase(importDatabase));
+            //LogDeveloperStatistics(OpenDatabase(importDatabase));
+            //LogEventsPerDeveloperDayStatistic(OpenDatabase(importDatabase));
+            //LogIDEActivationEvents(OpenDatabase(importDatabase));
+            //LogOccuringNames(OpenDatabase(importDatabase));
+            //LogCompletionStatistics(OpenDatabase(importDatabase));
+            //LogDevelopersPerDay(OpenDatabase(importDatabase));
+            //LogAverageBreakAfterEventsStatistic(OpenDatabase(cleanDatabase), "averageBreakAfterEvents.csv");
 
-            MapToConcurrentEvents(OpenDatabase(filteredDatabase), OpenDatabase(concurrentEventDatabase));
-            FilterCommandFollowupEvents(OpenDatabase(filteredDatabase), OpenDatabase(commandFollowupsDatabase));
-            FilterIsolatedEventBlocks(OpenDatabase(cleanDatabase), OpenDatabase(filteredDatabase));
-
-            ConcurrentEventsStatistic(OpenDatabase(concurrentEventDatabase),"concurrenteventstatistic.csv");
-            ConcurrentEventsStatistic(OpenDatabase(commandFollowupsDatabase),"commandfollowupsstatistic.csv");
+            //MapToActivities(OpenDatabase(importDatabase), OpenDatabase(activityDatabase));
+            //LogActivityStatistics(OpenDatabase(activityDatabase));
         }
+
+        # region Cleanup Feedback
+        private static void CleanupFeedback(IFeedbackDatabase importDatabase, IFeedbackDatabase cleanDatabase)
+        {
+            var tmpDatabase = OpenDatabase("_tmp");
+
+            DoSimpleCleanup(importDatabase, tmpDatabase);
+            // NOTE: Statistics need to be cleaned before advanced cleanup is performed!
+            ComputeAdvancedCleanupStatistics(tmpDatabase);
+            //DoAdvancedCleanup(cleanDatabase, tmpDatabase);
+        }
+
+        private static void DoSimpleCleanup(IFeedbackDatabase importDatabase, IFeedbackDatabase tmpDatabase)
+        {
+            var cleaner = new FeedbackMapper(importDatabase, tmpDatabase, Logger);
+            cleaner.RegisterMapper(new ErrorFilterProcessor());
+            cleaner.RegisterMapper(new UnnamedCommandFilterProcessor());
+            cleaner.RegisterMapper(new DuplicateCommandFilterProcessor());
+            cleaner.RegisterMapper(new RedundantCommandFilter());
+            //cleaner.RegisterMapper(new AddFileProcessor());
+            //cleaner.RegisterMapper(new EditFilterProcessor());
+            cleaner.MapFeedback();
+        }
+
+        private static void ComputeAdvancedCleanupStatistics(IFeedbackDatabase tmpDatabase)
+        {
+            var isolatedEventBlocksCalculator = new IsolatedEventBlocksCalculator(
+                TimeSpan.FromMinutes(30),
+                TimeSpan.FromSeconds(1));
+            var equivalentCommandPairCalculator = new EquivalentCommandPairCalculator(0);
+
+            var walker = new FeedbackProcessor(tmpDatabase, Logger);
+            walker.Register(isolatedEventBlocksCalculator);
+            walker.Register(equivalentCommandPairCalculator);
+            walker.ProcessFeedback();
+
+            Output("isolatedEventBlocks.txt", isolatedEventBlocksCalculator.LoggedIsolatedBlocksToTxt());
+            Output("equivalentCommandPairs.csv", equivalentCommandPairCalculator.StatisticAsCsv());
+        }
+
+        private static void DoAdvancedCleanup(IFeedbackDatabase cleanDatabase, IFeedbackDatabase tmpDatabase)
+        {
+            var mapper = new FeedbackMapper(tmpDatabase, cleanDatabase, Logger);
+            mapper.RegisterMapper(new IsolatedEventBlockFilter(TimeSpan.FromMinutes(30), TimeSpan.FromSeconds(1)));
+            mapper.RegisterMapper(new MapEquivalentCommandsProcessor(new ResourceProvider()));
+            mapper.MapFeedback();
+        }
+        # endregion
 
         private static void LogCompletionStatistics(IFeedbackDatabase database)
         {
@@ -215,17 +258,6 @@ namespace KaVE.FeedbackProcessor
             Output("window-de-activation.log", calculator.Statistic);
         }
 
-        private static void LogEquivalentCommandPairs(IFeedbackDatabase database)
-        {
-            var calculator = new EquivalentCommandPairCalculator(0);
-
-            var walker = new FeedbackProcessor(database, Logger);
-            walker.Register(calculator);
-            walker.ProcessFeedback();
-
-            Output("commandMappingsStatistic.csv", calculator.StatisticAsCsv());
-        }
-
         private static void ConcurrentEventsStatistic(IFeedbackDatabase database, string fileName)
         {
             var calculator = new ConcurrentSetsCalculator();
@@ -235,18 +267,6 @@ namespace KaVE.FeedbackProcessor
             walker.ProcessFeedback();
 
             Output(fileName, calculator.StatisticAsCsv());
-        }
-
-        private static void CleanFeedback(IFeedbackDatabase sourceDatabase, IFeedbackDatabase targetDatabase)
-        {
-            var cleaner = new FeedbackMapper(sourceDatabase, targetDatabase, Logger);
-            cleaner.RegisterMapper(new AddFileProcessor());
-            cleaner.RegisterMapper(new DuplicateCommandFilterProcessor());
-            cleaner.RegisterMapper(new EditFilterProcessor());
-            cleaner.RegisterMapper(new ErrorFilterProcessor());
-            cleaner.RegisterMapper(new UnnamedCommandFilterProcessor());
-            cleaner.RegisterMapper(new RedundantCommandFilter());
-            cleaner.MapFeedback();
         }
 
         private static void MapToActivities(IFeedbackDatabase sourceDatabase, IFeedbackDatabase activityDatabase)
@@ -315,7 +335,7 @@ namespace KaVE.FeedbackProcessor
             Output(fileName, calculator.StatisticAsCsv());
         }
 
-        private static void MapToConcurrentEvents(IFeedbackDatabase sourceDatabase, IFeedbackDatabase targetDatabase)
+        private static void SelectConcurrentEvents(IFeedbackDatabase sourceDatabase, IFeedbackDatabase targetDatabase)
         {
             var filter = new FeedbackMapper(sourceDatabase, targetDatabase, Logger);
             filter.RegisterMapper(new AlwaysDropMapper());
@@ -323,37 +343,12 @@ namespace KaVE.FeedbackProcessor
             filter.MapFeedback();
         }
 
-        private static void MapEquivalentCommands(IFeedbackDatabase sourceDatabase, IFeedbackDatabase targetDatabase)
-        {
-            var filter = new FeedbackMapper(sourceDatabase, targetDatabase, Logger);
-            filter.RegisterMapper(new MapEquivalentCommandsProcessor(new ResourceProvider()));
-            filter.MapFeedback();
-        }
-
-        private static void FilterCommandFollowupEvents(IFeedbackDatabase sourceDatabase,
+        private static void SelectCommandFollowupPairs(IFeedbackDatabase sourceDatabase,
             IFeedbackDatabase targetDatabase)
         {
             var filter = new FeedbackMapper(sourceDatabase, targetDatabase, Logger);
             filter.RegisterMapper(new CommandFollowupProcessor());
             filter.MapFeedback();
-        }
-
-        private static void FilterIsolatedEventBlocks(IFeedbackDatabase sourceDatabase, IFeedbackDatabase targetDatabase)
-        {
-            var mapper = new FeedbackMapper(sourceDatabase, targetDatabase, Logger);
-            mapper.RegisterMapper(new IsolatedEventBlockFilter(TimeSpan.FromMinutes(30), TimeSpan.FromSeconds(1)));
-            mapper.MapFeedback();
-        }
-
-        private static void LogIsolatedEventBlocks(IFeedbackDatabase sourceDatabase, string fileName)
-        {
-            var isolatedEventBlocksCalculator = new IsolatedEventBlocksCalculator(TimeSpan.FromMinutes(30), TimeSpan.FromSeconds(1));
-
-            var walker = new FeedbackProcessor(sourceDatabase, Logger);
-            walker.Register(isolatedEventBlocksCalculator);
-            walker.ProcessFeedback();
-
-            Output(fileName + ".txt", isolatedEventBlocksCalculator.LoggedIsolatedBlocksToTxt());
         }
     }
 }

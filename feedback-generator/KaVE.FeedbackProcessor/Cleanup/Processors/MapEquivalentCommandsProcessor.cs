@@ -22,7 +22,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using KaVE.Commons.Model.Events;
-using KaVE.FeedbackProcessor.Model;
 using KaVE.FeedbackProcessor.Utils;
 
 namespace KaVE.FeedbackProcessor.Cleanup.Processors
