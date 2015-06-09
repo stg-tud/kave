@@ -23,13 +23,14 @@ using System.Linq;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Utils.Csv;
 using KaVE.FeedbackProcessor.Cleanup.Heuristics;
+using KaVE.FeedbackProcessor.Model;
 using KaVE.FeedbackProcessor.Utils;
 
 namespace KaVE.FeedbackProcessor.Statistics
 {
     internal class EquivalentCommandPairCalculator : BaseEventProcessor
     {
-        public readonly Dictionary<SortedCommandPair, int> Statistic = new Dictionary<SortedCommandPair, int>();
+        public Dictionary<SortedCommandPair, int> Statistic { get; private set; }
 
         public readonly Dictionary<SortedCommandPair, int> UnknownTriggerMappings =
             new Dictionary<SortedCommandPair, int>();
@@ -43,6 +44,11 @@ namespace KaVE.FeedbackProcessor.Statistics
             FrequencyThreshold = frequencyThreshold;
 
             RegisterFor<CommandEvent>(CalculateEquivalentPairs);
+        }
+
+        public override void OnStreamStarts(Developer developer)
+        {
+            Statistic = new Dictionary<SortedCommandPair, int>();
         }
 
         public void CalculateEquivalentPairs(CommandEvent commandEvent)
@@ -80,6 +86,11 @@ namespace KaVE.FeedbackProcessor.Statistics
             Statistic.Clear();
             newStatistic.ToList().ForEach(newMapping => Statistic.Add(newMapping.Key, newMapping.Value));
 
+            RemoveInfrequentMappingsFromStatistic();
+        }
+
+        private void RemoveInfrequentMappingsFromStatistic()
+        {
             Statistic.
                 Where(keyValuePair => keyValuePair.Value < FrequencyThreshold).ToList().
                 ForEach(keyValuePair => Statistic.Remove(keyValuePair.Key));
@@ -165,15 +176,12 @@ namespace KaVE.FeedbackProcessor.Statistics
 
             foreach (var mapping in mappings)
             {
-                if (SpecialMappings.Any(specialMapping => mapping.Key.Equals(specialMapping.Key)))
+                var specialMappings = GetSpecialMappings(mapping);
+                if (specialMappings.Any())
                 {
-                    var currentMapping = mapping;
-                    foreach (
-                        var swappedSpecialMapping in
-                            SpecialMappings.Where(
-                                swappedSpecialMapping => currentMapping.Key.Equals(swappedSpecialMapping.Key)))
+                    foreach (var specialMapping in specialMappings)
                     {
-                        cleanMappings.Add(swappedSpecialMapping.Value, mappings[mapping.Key]);
+                        cleanMappings.Add(specialMapping.Value, mapping.Value);
                     }
                 }
                 else
@@ -184,6 +192,11 @@ namespace KaVE.FeedbackProcessor.Statistics
 
 
             return cleanMappings;
+        }
+
+        private static IList<KeyValuePair<SortedCommandPair, SortedCommandPair>> GetSpecialMappings(KeyValuePair<SortedCommandPair, int> mapping)
+        {
+            return SpecialMappings.Where(specialMapping => mapping.Key.Equals(specialMapping.Key)).ToList();
         }
     }
 }

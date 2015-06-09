@@ -24,6 +24,7 @@ using System.Linq;
 using KaVE.Commons.Model.Events;
 using KaVE.FeedbackProcessor.Cleanup.Heuristics;
 using KaVE.FeedbackProcessor.Statistics;
+using KaVE.FeedbackProcessor.Tests.Model;
 using KaVE.FeedbackProcessor.Tests.TestUtils;
 using KaVE.FeedbackProcessor.Utils;
 using NUnit.Framework;
@@ -58,6 +59,7 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
                 TriggeredAt = eventTime + ConcurrentEventHeuristic.EventTimeDifference
             };
 
+            _uut.OnStreamStarts(TestFactory.SomeDeveloper());
             _uut.OnEvent(commandEvent1);
             _uut.OnEvent(commandEvent2);
 
@@ -86,6 +88,7 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
                     TimeSpan.FromTicks(TimeSpan.TicksPerSecond)
             };
 
+            _uut.OnStreamStarts(TestFactory.SomeDeveloper());
             _uut.OnEvent(commandEvent1);
             _uut.OnEvent(commandEvent2);
 
@@ -104,6 +107,7 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
                 command2,
                 frequencyThreshold);
 
+            _uut.OnStreamStarts(TestFactory.SomeDeveloper());
             listOfCommandEvents.ForEach(commandEvent => _uut.OnEvent(commandEvent));
 
             var expectedPair = SortedCommandPair.NewSortedPair(command1, command2);
@@ -124,6 +128,7 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
                 command2,
                 frequencyThreshold - 1);
 
+            _uut.OnStreamStarts(TestFactory.SomeDeveloper());
             listOfCommandEvents.ForEach(commandEvent => _uut.OnEvent(commandEvent));
             _uut.OnStreamEnds();
 
@@ -142,6 +147,7 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
             var frequentPair2 =
                 SortedCommandPair.NewSortedPair("{5EFC7975-14BC-11CF-9B2B-00AA00573819}:224:File.SaveAll", "Save All");
 
+            _uut.OnStreamStarts(TestFactory.SomeDeveloper());
             _uut.Statistic.Add(frequentPair1, frequencyThreshold);
             _uut.Statistic.Add(SortedCommandPair.NewSortedPair("Left", "Textcontrol.Left"), frequencyThreshold - 1);
             _uut.Statistic.Add(frequentPair2, frequencyThreshold);
@@ -176,6 +182,7 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
                 TriggeredAt = eventTime + ConcurrentEventHeuristic.EventTimeDifference
             };
 
+            _uut.OnStreamStarts(TestFactory.SomeDeveloper());
             _uut.OnEvent(commandEvent1);
             _uut.OnEvent(commandEvent2);
 
@@ -199,6 +206,7 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
                 TriggeredAt = eventTime + ConcurrentEventHeuristic.EventTimeDifference
             };
 
+            _uut.OnStreamStarts(TestFactory.SomeDeveloper());
             _uut.OnEvent(commandEvent1);
             _uut.OnEvent(commandEvent2);
 
@@ -208,6 +216,7 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
         [Test]
         public void ShouldReplaceMappingsWithMappingsFromMappingCleanerOnStreamEnds()
         {
+            _uut.OnStreamStarts(TestFactory.SomeDeveloper());
             MappingCleaner.SpecialMappings.Keys.ToList()
                           .ForEach(mappingToReplace => _uut.Statistic.Add(mappingToReplace, _uut.FrequencyThreshold));
 
@@ -248,6 +257,7 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
                                         ConcurrentEventHeuristic.EventTimeDifference
             };
 
+            _uut.OnStreamStarts(TestFactory.SomeDeveloper());
             _uut.OnEvent(commandEvent1);
             _uut.OnEvent(commandEvent2);
 
@@ -261,6 +271,17 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
                     {expectedPair, 2}
                 },
                 _uut.UnknownTriggerMappings);
+
+            CollectionAssert.IsEmpty(_uut.Statistic);
+        }
+
+        [Test]
+        public void CleansStatisticForNewDeveloper()
+        {
+            _uut.OnStreamStarts(TestFactory.SomeDeveloper());
+            _uut.Statistic.Add(SortedCommandPair.NewSortedPair("1", "2"), 3);
+            _uut.OnStreamEnds();
+            _uut.OnStreamStarts(TestFactory.SomeDeveloper());
 
             CollectionAssert.IsEmpty(_uut.Statistic);
         }
