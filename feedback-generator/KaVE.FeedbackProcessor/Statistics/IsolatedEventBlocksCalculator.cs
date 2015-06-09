@@ -16,6 +16,7 @@
  * Contributors:
  *    - Mattis Manfred Kämmerer
  */
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,10 +28,9 @@ using KaVE.FeedbackProcessor.Utils;
 
 namespace KaVE.FeedbackProcessor.Statistics
 {
-    class IsolatedEventBlocksCalculator : BaseEventProcessor
+    internal class IsolatedEventBlocksCalculator : BaseEventProcessor
     {
         public readonly TimeSpan MaximumBlockSpan;
-
         public readonly TimeSpan LongBreak;
 
         public readonly IKaVEList<IKaVEList<IDEEvent>> LoggedIsolatedBlocks = Lists.NewList<IKaVEList<IDEEvent>>();
@@ -47,6 +47,14 @@ namespace KaVE.FeedbackProcessor.Statistics
             MaximumBlockSpan = maximumBlockSpan;
 
             RegisterFor<IDEEvent>(LogIsolatedEventBlocks);
+        }
+
+        public override void OnStreamStarts(Developer developer)
+        {
+            LoggedIsolatedBlocks.Clear();
+            _lastEvent = null;
+            _weMightBeInAnIsolatedBlock = false;
+            _loggedEvents.Clear();
         }
 
         private void LogIsolatedEventBlocks(IDEEvent currentEvent)
