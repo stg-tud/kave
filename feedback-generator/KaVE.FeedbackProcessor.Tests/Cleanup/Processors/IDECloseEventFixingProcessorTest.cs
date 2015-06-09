@@ -25,6 +25,7 @@ using KaVE.Commons.Model.Events.VisualStudio;
 using KaVE.Commons.TestUtils.Model.Events;
 using KaVE.FeedbackProcessor.Cleanup.Processors;
 using KaVE.FeedbackProcessor.Model;
+using KaVE.FeedbackProcessor.Tests.Model;
 using NUnit.Framework;
 
 namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
@@ -83,6 +84,16 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
                 Stream(startupEvent, intermediateEvent, missingShutdownEvent, secondStartupEvent));
         }
 
+        [Test]
+        public void ResetsForNewDeveloper()
+        {
+            var startupEvent = CreateStartupEvent();
+            var intermediateEvent = CreateSomeEventAfter(startupEvent);
+
+            AssertUnmodified(Stream(startupEvent, intermediateEvent));
+            AssertUnmodified(Stream(startupEvent, intermediateEvent));
+        }
+
         private static TestIDEEvent CreateSomeEventAfter(IDEEvent startupEvent)
         {
             var subsequentEvent = IDEEventTestFactory.SomeEvent();
@@ -136,7 +147,9 @@ namespace KaVE.FeedbackProcessor.Tests.Cleanup.Processors
 
         private void AssertTransformation(IEnumerable<IDEEvent> original, IEnumerable<IDEEvent> expected)
         {
+            _uut.OnStreamStarts(TestFactory.SomeDeveloper());
             var actual = original.SelectMany(_uut.Map).OrderBy(evt => evt.TriggeredAt);
+            _uut.OnStreamEnds();
             CollectionAssert.AreEqual(expected, actual);
         }
     }

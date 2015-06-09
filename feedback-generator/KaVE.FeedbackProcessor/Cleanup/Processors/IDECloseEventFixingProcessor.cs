@@ -26,7 +26,7 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
 {
     internal class IDECloseEventFixingProcessor : BaseEventMapper
     {
-        private bool _firstEvent = true;
+        private bool _firstEvent;
         private bool _ideIsRunning;
         private DateTime _lastEventTriggerTime;
 
@@ -34,6 +34,13 @@ namespace KaVE.FeedbackProcessor.Cleanup.Processors
         {
             RegisterFor<IDEStateEvent>(ProcessIDEStateEvent);
             RegisterFor<IDEEvent>(ProcessAnyEvent);
+        }
+
+        public override void OnStreamStarts(Developer value)
+        {
+            _firstEvent = true;
+            _ideIsRunning = false;
+            _lastEventTriggerTime = default (DateTime);
         }
 
         private void ProcessIDEStateEvent(IDEStateEvent @event)
