@@ -39,6 +39,8 @@ namespace KaVE.FeedbackProcessor.Activities.Model
         // INACTIVITIES
 
         Away,
+        Inactive,
+        InactiveLong,
         Waiting,
 
         // LEGACY ACTIVITIES

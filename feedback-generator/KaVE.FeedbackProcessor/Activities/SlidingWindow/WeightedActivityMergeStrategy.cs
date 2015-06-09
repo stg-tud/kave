@@ -25,12 +25,33 @@ namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
 {
     internal abstract class WeightedActivityMergeStrategy : IActivityMergeStrategy
     {
+        private static readonly Activity[] SpecialActivities = {Activity.Any, Activity.LeaveIDE, Activity.EnterIDE};
+
         private Activity? _lastActivity;
+        private bool _leftIDE;
 
         public Activity Merge(Window window)
         {
-            _lastActivity = window.IsNotEmpty ? MergeNonEmptyWindow(window) : Activity.Waiting;
+            if (window.IsNotEmpty)
+            {
+                _lastActivity = MergeNonEmptyWindow(window);
+                _leftIDE = ContainsLeaveIDEActivity(window);
+            }
+            else
+            {
+                _lastActivity = EmptyWindowReplacement();
+            }
             return _lastActivity.Value;
+        }
+
+        private static bool ContainsLeaveIDEActivity(Window window)
+        {
+            return window.Events.Any(e => e.Activity == Activity.LeaveIDE);
+        }
+
+        private Activity EmptyWindowReplacement()
+        {
+            return _leftIDE ? Activity.Away : Activity.Inactive;
         }
 
         private static bool IsEmptyWindow(ICollection<ActivityEvent> window)
@@ -40,7 +61,7 @@ namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
 
         private Activity MergeNonEmptyWindow(Window window)
         {
-            var windowWithoutAny = WithoutAnyActivity(window);
+            var windowWithoutAny = WithoutSpecialActivities(window);
             if (!IsEmptyWindow(windowWithoutAny))
             {
                 return SelectsRepresentativeActivity(windowWithoutAny);
@@ -70,19 +91,20 @@ namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
 
         protected abstract int GetWeightOfActivity(IList<ActivityEvent> window, Activity activity);
 
-        private static IList<ActivityEvent> WithoutAnyActivity(Window window)
+        private static IList<ActivityEvent> WithoutSpecialActivities(Window window)
         {
-            return window.Events.Where(e => e.Activity != Activity.Any).ToList();
+            return window.Events.Where(e => !SpecialActivities.Contains(e.Activity)).ToList();
         }
 
         private static bool IsInactivity(Activity? lastActivity)
         {
-            return lastActivity == Activity.Away || lastActivity == Activity.Waiting;
+            return lastActivity == Activity.Away || lastActivity == Activity.Inactive;
         }
 
         public void Reset()
         {
             _lastActivity = null;
+            _leftIDE = false;
         }
     }
 }

@@ -40,34 +40,59 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.SlidingWindow
         protected abstract IActivityMergeStrategy CreateStrategy();
 
         [Test]
-        public void ReturnsWaitingForEmptyWindow()
+        public void MapEmptyWindowToInactive()
         {
             var actual = Strategy.Merge(EmptyWindow());
 
-            Assert.AreEqual(Activity.Waiting, actual);
+            Assert.AreEqual(Activity.Inactive, actual);
         }
 
         [Test]
-        public void IgnoresAnyActivity()
+        public void MapsEmptyWindowToAwayAfterLeaveIDEOccurance()
         {
-            var actual = Strategy.Merge(Window(Activity.Any, Activity.Any, Activity.Navigation));
+            Strategy.Merge(Window(Activity.LeaveIDE));
+            var actual = Strategy.Merge(EmptyWindow());
+
+            Assert.AreEqual(Activity.Away, actual);
+        }
+
+        [Test]
+        public void AssumesBackInIDEIfAnyActivityOccurs()
+        {
+            Strategy.Merge(Window(Activity.LeaveIDE));
+            Strategy.Merge(Window(Activity.Any));
+            var actual = Strategy.Merge(EmptyWindow());
+
+            Assert.AreEqual(Activity.Inactive, actual);
+        }
+
+        [TestCase(Activity.Any),
+         TestCase(Activity.EnterIDE),
+         TestCase(Activity.LeaveIDE)]
+        public void IgnoresSpecialActivity(Activity specialActivity)
+        {
+            var actual = Strategy.Merge(Window(specialActivity, specialActivity, Activity.Navigation));
 
             Assert.AreEqual(Activity.Navigation, actual);
         }
 
-        [Test]
-        public void MapsOnlyAnyToOtherByDefault()
+        [TestCase(Activity.Any),
+         TestCase(Activity.EnterIDE),
+         TestCase(Activity.LeaveIDE)]
+        public void MapsOnlySpecialActivityToOtherByDefault(Activity specialActivity)
         {
-            var actual = Strategy.Merge(Window(Activity.Any));
+            var actual = Strategy.Merge(Window(specialActivity));
 
             Assert.AreEqual(Activity.Other, actual);
         }
 
-        [Test]
-        public void MapsOnlyAnyToPrevious()
+        [TestCase(Activity.Any),
+         TestCase(Activity.EnterIDE),
+         TestCase(Activity.LeaveIDE)]
+        public void MapsOnlySpecialActivityToPrevious(Activity specialActivity)
         {
             var previous = Strategy.Merge(Window(Activity.Development));
-            var actual = Strategy.Merge(Window(Activity.Any));
+            var actual = Strategy.Merge(Window(specialActivity));
 
             Assert.AreEqual(previous, actual);
         }
@@ -82,10 +107,20 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.SlidingWindow
             Assert.AreEqual(Activity.Other, actual);
         }
 
-        [TestCase(Activity.Waiting), TestCase(Activity.Away)]
-        public void MapsOnlyAnyToOtherIfPreviousIsWaitingOrAway(Activity waitingOrAway)
+        [Test]
+        public void ClearsOutsideIDEOnReset()
         {
-            Strategy.Merge(Window(waitingOrAway));
+            Strategy.Merge(Window(Activity.LeaveIDE));
+            Strategy.Reset();
+            var actual = Strategy.Merge(EmptyWindow());
+
+            Assert.AreEqual(Activity.Inactive, actual);
+        }
+
+        [TestCase(Activity.Inactive), TestCase(Activity.Away)]
+        public void MapsOnlyAnyToOtherIfPreviousIsInactivity(Activity inactivity)
+        {
+            Strategy.Merge(Window(inactivity));
             var actual = Strategy.Merge(Window(Activity.Any));
 
             Assert.AreEqual(Activity.Other, actual);

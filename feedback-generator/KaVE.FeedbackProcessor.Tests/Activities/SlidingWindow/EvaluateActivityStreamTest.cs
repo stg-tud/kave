@@ -42,54 +42,34 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.SlidingWindow
         }
 
         [Test]
-        public void CountsShortWaitingPeriod()
+        public void CountsShortInactivePeriod()
         {
-            var uut = Stream(Activity.Waiting, Activity.Waiting);
+            var uut = Stream(Activity.Inactive, Activity.Inactive);
 
             var statistic = uut.Evaluate(WindowSpan.Times(3));
 
-            Assert.AreEqual(WindowSpan.Times(2), statistic[Activity.Waiting]);
+            Assert.AreEqual(WindowSpan.Times(2), statistic[Activity.Inactive]);
         }
 
-        [Test(Description = "A Waiting window can only occur in between other windows (see WindowComputationTest)")]
-        public void CountsAwayIfWaitingPeriodExceedsThreshold()
+        [Test(Description = "A Inactive window can only occur in between other windows (see WindowComputationTest)")]
+        public void CountsLongInactiveIfInactivePeriodExceedsThreshold()
         {
-            var uut = Stream(Activity.Any, Activity.Waiting, Activity.Waiting, Activity.Waiting, Activity.Development);
+            var uut = Stream(Activity.Any, Activity.Inactive, Activity.Inactive, Activity.Inactive, Activity.Development);
 
             var statistic = uut.Evaluate(WindowSpan.Times(2));
 
-            Assert.AreEqual(WindowSpan.Times(3), statistic[Activity.Away]);
-            Assert.AreEqual(TimeSpan.Zero, statistic[Activity.Waiting]);
+            Assert.AreEqual(WindowSpan.Times(3), statistic[Activity.InactiveLong]);
+            Assert.AreEqual(TimeSpan.Zero, statistic[Activity.Inactive]);
         }
 
         [Test]
-        public void CountsWaitingIfIndividualPeriodsAreShorterThanThreshold()
+        public void CountsInactiveIfIndividualPeriodsAreShorterThanThreshold()
         {
-            var uut = Stream(Activity.Waiting, Activity.Waiting, Activity.Development, Activity.Waiting, Activity.Waiting);
+            var uut = Stream(Activity.Inactive, Activity.Inactive, Activity.Development, Activity.Inactive, Activity.Inactive);
 
             var statistic = uut.Evaluate(WindowSpan.Times(3));
 
-            Assert.AreEqual(WindowSpan.Times(4), statistic[Activity.Waiting]);
-        }
-
-        [TestCase(Activity.LeaveIDE), TestCase(Activity.EnterIDE)]
-        public void CountsEnterAndLeaveAsAway(Activity enterOrLeave)
-        {
-            var uut = Stream(enterOrLeave);
-
-            var statistic = uut.Evaluate(SomeTimeSpan);
-
-            Assert.AreEqual(WindowSpan, statistic[Activity.Away]);
-        }
-
-        [Test]
-        public void CountsWaitingBetweenLeaveAndEnterAsAway()
-        {
-            var uut = Stream(Activity.LeaveIDE, Activity.Waiting, Activity.EnterIDE);
-
-            var statistic = uut.Evaluate(WindowSpan.Times(2));
-
-            Assert.AreEqual(WindowSpan.Times(3), statistic[Activity.Away]);
+            Assert.AreEqual(WindowSpan.Times(4), statistic[Activity.Inactive]);
         }
 
         private static ActivityStream Stream(params Activity[] activities)

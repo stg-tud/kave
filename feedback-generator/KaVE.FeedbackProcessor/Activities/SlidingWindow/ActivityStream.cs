@@ -51,21 +51,21 @@ namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
         public IDictionary<Activity, TimeSpan> Evaluate(TimeSpan awayThreshold)
         {
             var statistic = new Dictionary<Activity, TimeSpan>();
-            var waitingDuration = TimeSpan.Zero;
+            var inactiveDuration = TimeSpan.Zero;
             foreach (var activity in _activities)
             {
-                if (activity == Activity.Waiting)
+                if (activity == Activity.Inactive)
                 {
-                    waitingDuration += _windowSpan;
+                    inactiveDuration += _windowSpan;
                 }
-                else if (waitingDuration > TimeSpan.Zero)
+                else if (inactiveDuration > TimeSpan.Zero)
                 {
-                    if (WasAway(activity, waitingDuration, awayThreshold))
+                    if (WasAway(activity, inactiveDuration, awayThreshold))
                     {
-                        Add(statistic, Activity.Waiting, -waitingDuration);
-                        Add(statistic, Activity.Away, waitingDuration);
+                        Add(statistic, Activity.Inactive, -inactiveDuration);
+                        Add(statistic, Activity.InactiveLong, inactiveDuration);
                     }
-                    waitingDuration = TimeSpan.Zero;
+                    inactiveDuration = TimeSpan.Zero;
                 }
 
                 if (IsLeaveOrEnter(activity))
