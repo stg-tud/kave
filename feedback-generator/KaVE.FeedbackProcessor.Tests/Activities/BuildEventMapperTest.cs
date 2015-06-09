@@ -19,6 +19,7 @@
 
 using KaVE.Commons.Model.Events.VisualStudio;
 using KaVE.FeedbackProcessor.Activities;
+using KaVE.FeedbackProcessor.Activities.Model;
 using NUnit.Framework;
 
 namespace KaVE.FeedbackProcessor.Tests.Activities
@@ -31,10 +32,11 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
         }
 
         [Test]
-        public void ShouldAlwaysDropBuildEvents()
+        public void MapsBuildEventsToWaiting()
         {
             var @event = new BuildEvent();
-            AssertDrop(@event);
+
+            AssertMapsToActivity(@event, Activity.Waiting);
         }
     }
 }

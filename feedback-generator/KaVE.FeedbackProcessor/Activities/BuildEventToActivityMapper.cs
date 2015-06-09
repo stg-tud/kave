@@ -18,6 +18,7 @@
  */
 
 using KaVE.Commons.Model.Events.VisualStudio;
+using KaVE.FeedbackProcessor.Activities.Model;
 
 namespace KaVE.FeedbackProcessor.Activities
 {
@@ -25,7 +26,7 @@ namespace KaVE.FeedbackProcessor.Activities
     {
         public BuildEventToActivityMapper()
         {
-            RegisterFor<BuildEvent>(@event => DropCurrentEvent());
+            RegisterFor<BuildEvent>(@event => InsertActivity(@event, Activity.Waiting));
         }
     }
 }
