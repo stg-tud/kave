@@ -131,6 +131,7 @@
     <Compile Include="Statistics\CommandIdCollector.cs" />
     <Compile Include="Statistics\CompletionDurationStatistic.cs" />
     <Compile Include="Statistics\CompletionInvocationStatistic.cs" />
+    <Compile Include="Statistics\DeveloperEventCounter.cs" />
     <Compile Include="Statistics\DevelopersPerDayCalculator.cs" />
     <Compile Include="Statistics\EquivalentCommandPairCalculator.cs" />
     <Compile Include="Statistics\ConcurrentSetsCalculator.cs" />
