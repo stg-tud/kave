@@ -145,6 +145,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.SlidingWindow
         {
             _uut.OnStreamStarts(_someDeveloper);
             _uut.OnEvent(SomeEvent(_someDateTime));
+            _uut.OnEvent(SomeEvent(_someDateTime.AddMinutes(1)));
             _uut.OnStreamEnds();
 
             Assert.AreEqual(1, _testMergeStrategy.NumberOfResets);

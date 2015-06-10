@@ -105,6 +105,7 @@ namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
             }
             else
             {
+                _strategy.Reset();
                 _currentWindow = CreateWindowStartingAt(@event);
             }
         }
@@ -122,7 +123,6 @@ namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
             }
             ActivityStreams[_currentDeveloper][_currentWindow.Start.Date].Add(
                 _strategy.Merge(_currentWindow));
-            _strategy.Reset();
         }
 
         private Window CreateWindowStartingAt(ActivityEvent @event)
@@ -146,6 +146,7 @@ namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
             {
                 AppendMergedWindowToStream();
             }
+            _strategy.Reset();
         }
     }
 
