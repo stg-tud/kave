@@ -17,6 +17,7 @@
  *    - Sebastian Proksch
  */
 
+using System;
 using System.Collections.Generic;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
@@ -57,7 +58,16 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
 
         public override void VisitNode(ITreeNode node, IList<IStatement> context)
         {
-            node.Children<ICSharpTreeNode>().ForEach(child => child.Accept(this, context));
+            node.Children<ICSharpTreeNode>().ForEach(
+                child =>
+                {
+                    try
+                    {
+                        child.Accept(this, context);
+                    }
+                    catch (NullReferenceException nre) {}
+                    catch (AssertException ae) {}
+                });
         }
 
         #region statements
@@ -139,7 +149,6 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
                 if (assignment != null)
                 {
                     assignment.Accept(this, body);
-                    // TODO repeat the same trick for invocation expressions
                 }
                 else if (prefix != null)
                 {
@@ -156,6 +165,15 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
                         {
                             Expression = stmt.Expression.Accept(_exprVisitor, body) ?? new UnknownExpression()
                         });
+
+                    if (IsTargetMatch(stmt.Expression, CompletionCase.EmptyCompletionAfter))
+                    {
+                        body.Add(
+                            new ExpressionStatement
+                            {
+                                Expression = new CompletionExpression()
+                            });
+                    }
                 }
             }
         }

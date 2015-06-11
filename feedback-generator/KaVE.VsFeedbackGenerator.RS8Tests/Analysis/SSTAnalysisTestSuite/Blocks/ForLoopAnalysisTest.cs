@@ -148,7 +148,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite.Blocks
                 {
                     Step =
                     {
-                        VarAssign("i", new ComposedExpression {References = {VarRef("i")}})
+                        VarAssign("i", new ComposedExpression {References = {BaseSSTAnalysisTest.VarRef("i")}})
                     }
                 },
                 Fix.EmptyCompletion);
@@ -172,8 +172,8 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite.Blocks
                 {
                     Step =
                     {
-                        VarAssign("i", new ComposedExpression {References = {VarRef("i")}}),
-                        VarAssign("i", new ComposedExpression {References = {VarRef("i")}})
+                        VarAssign("i", new ComposedExpression {References = {BaseSSTAnalysisTest.VarRef("i")}}),
+                        VarAssign("i", new ComposedExpression {References = {BaseSSTAnalysisTest.VarRef("i")}})
                     }
                 },
                 Fix.EmptyCompletion);

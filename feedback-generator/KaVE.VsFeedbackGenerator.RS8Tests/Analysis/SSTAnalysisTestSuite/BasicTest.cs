@@ -17,10 +17,10 @@
  *    - Sebastian Proksch
  */
 
+using JetBrains.ReSharper.Psi.CSharp.Tree;
 using KaVE.Commons.Model.SSTs.Impl.Blocks;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
-using KaVE.Commons.Model.SSTs.Impl.Statements;
 using KaVE.VsFeedbackGenerator.Analysis.CompletionTarget;
 using NUnit.Framework;
 using Fix = KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite.SSTAnalysisFixture;
@@ -42,15 +42,8 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             AssertCompletionCase(CompletionCase.EmptyCompletionAfter);
 
             AssertBody(
-                new VariableDeclaration
-                {
-                    Reference = VarRef("i"),
-                    Type = Fix.Int
-                },
-                new ExpressionStatement
-                {
-                    Expression = new CompletionExpression()
-                });
+                VarDecl("i", Fix.Int),
+                ExprStmt(new CompletionExpression()));
         }
 
         [Test]
@@ -65,20 +58,9 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             AssertCompletionCase(CompletionCase.EmptyCompletionAfter);
 
             AssertBody(
-                new VariableDeclaration
-                {
-                    Reference = VarRef("i"),
-                    Type = Fix.Int
-                },
-                new Assignment
-                {
-                    Reference = VarRef("i"),
-                    Expression = new ConstantValueExpression()
-                },
-                new ExpressionStatement
-                {
-                    Expression = new CompletionExpression()
-                });
+                VarDecl("i", Fix.Int),
+                Assign("i", new ConstantValueExpression()),
+                ExprStmt(new CompletionExpression()));
         }
 
         [Test]
@@ -94,10 +76,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             AssertCompletionCase(CompletionCase.InBody);
 
             AssertBody(
-                new ExpressionStatement
-                {
-                    Expression = new CompletionExpression()
-                });
+                ExprStmt(new CompletionExpression()));
         }
 
         [Test]
@@ -112,15 +91,8 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             AssertCompletionCase(CompletionCase.EmptyCompletionBefore);
 
             AssertBody(
-                new ExpressionStatement
-                {
-                    Expression = new CompletionExpression()
-                },
-                new VariableDeclaration
-                {
-                    Reference = VarRef("i"),
-                    Type = Fix.Int
-                });
+                ExprStmt(new CompletionExpression()),
+                VarDecl("i", Fix.Int));
         }
 
         [Test]
@@ -135,15 +107,8 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             AssertCompletionCase(CompletionCase.EmptyCompletionAfter);
 
             AssertBody(
-                new VariableDeclaration
-                {
-                    Reference = VarRef("i"),
-                    Type = Fix.Int
-                },
-                new ExpressionStatement
-                {
-                    Expression = new CompletionExpression()
-                });
+                VarDecl("i", Fix.Int),
+                ExprStmt(new CompletionExpression()));
         }
 
         [Test]
@@ -159,20 +124,9 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             AssertCompletionCase(CompletionCase.EmptyCompletionAfter);
 
             AssertBody(
-                new VariableDeclaration
-                {
-                    Reference = VarRef("i"),
-                    Type = Fix.Int
-                },
-                new ExpressionStatement
-                {
-                    Expression = new CompletionExpression()
-                },
-                new VariableDeclaration
-                {
-                    Reference = VarRef("j"),
-                    Type = Fix.Int
-                });
+                VarDecl("i", Fix.Int),
+                ExprStmt(new CompletionExpression()),
+                VarDecl("j", Fix.Int));
         }
 
         [Test]
@@ -187,20 +141,9 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             AssertCompletionCase(CompletionCase.EmptyCompletionBefore);
 
             AssertBody(
-                new ExpressionStatement
-                {
-                    Expression = new CompletionExpression()
-                },
-                new VariableDeclaration
-                {
-                    Reference = VarRef("i"),
-                    Type = Fix.Int
-                },
-                new Assignment
-                {
-                    Reference = VarRef("i"),
-                    Expression = new ConstantValueExpression()
-                });
+                ExprStmt(new CompletionExpression()),
+                VarDecl("i", Fix.Int),
+                Assign("i", new ConstantValueExpression()));
         }
 
         [Test]
@@ -215,20 +158,9 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             AssertCompletionCase(CompletionCase.EmptyCompletionAfter);
 
             AssertBody(
-                new VariableDeclaration
-                {
-                    Reference = VarRef("i"),
-                    Type = Fix.Int
-                },
-                new Assignment
-                {
-                    Reference = VarRef("i"),
-                    Expression = new ConstantValueExpression()
-                },
-                new ExpressionStatement
-                {
-                    Expression = new CompletionExpression()
-                });
+                VarDecl("i", Fix.Int),
+                Assign("i", new ConstantValueExpression()),
+                ExprStmt(new CompletionExpression()));
         }
 
         [Test]
@@ -242,16 +174,8 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             AssertCompletionCase(CompletionCase.Undefined);
 
             AssertBody(
-                new VariableDeclaration
-                {
-                    Reference = VarRef("i"),
-                    Type = Fix.Int
-                },
-                new Assignment
-                {
-                    Reference = VarRef("i"),
-                    Expression = new CompletionExpression()
-                });
+                VarDecl("i", Fix.Int),
+                Assign("i", new CompletionExpression()));
         }
 
         [Test]
@@ -267,16 +191,8 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             AssertCompletionCase(CompletionCase.Undefined);
 
             AssertBody(
-                new VariableDeclaration
-                {
-                    Reference = VarRef("i"),
-                    Type = Fix.Int
-                },
-                new Assignment
-                {
-                    Reference = VarRef("i"),
-                    Expression = new CompletionExpression()
-                });
+                VarDecl("i", Fix.Int),
+                Assign("i", new CompletionExpression()));
         }
 
         [Test]
@@ -290,19 +206,13 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             AssertCompletionCase(CompletionCase.Undefined);
 
             AssertBody(
-                new VariableDeclaration
-                {
-                    Reference = VarRef("i"),
-                    Type = Fix.Int
-                },
-                new Assignment
-                {
-                    Reference = VarRef("i"),
-                    Expression = new CompletionExpression
+                VarDecl("i", Fix.Int),
+                Assign(
+                    "i",
+                    new CompletionExpression
                     {
                         Token = "t"
-                    }
-                });
+                    }));
         }
 
         [Test]
@@ -317,16 +227,8 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             AssertCompletionCase(CompletionCase.EmptyCompletionAfter);
 
             AssertBody(
-                new VariableDeclaration
-                {
-                    Reference = VarRef("i"),
-                    Type = Fix.Int
-                },
-                new Assignment
-                {
-                    Reference = VarRef("i"),
-                    Expression = new CompletionExpression()
-                });
+                VarDecl("i", Fix.Int),
+                Assign("i", new CompletionExpression()));
         }
 
         [Test]
@@ -348,10 +250,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
                     Condition = new ConstantValueExpression(),
                     Then =
                     {
-                        new ExpressionStatement
-                        {
-                            Expression = new CompletionExpression()
-                        }
+                        ExprStmt(new CompletionExpression())
                     }
                 });
         }
@@ -364,18 +263,11 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
                 $
             ");
 
-            AssertNodeIsCall("GetHashCode", LastCompletionMarker.AffectedNode);
-            AssertCompletionCase(CompletionCase.EmptyCompletionAfter);
+            AssertCompletionMarker<IInvocationExpression>(CompletionCase.EmptyCompletionAfter);
 
             AssertBody(
-                new ExpressionStatement
-                {
-                    Expression = new InvocationExpression
-                    {
-                        Reference = VarRef("this"),
-                        MethodName = Fix.Object_GetHashCode,
-                    }
-                });
+                InvokeStmt("this", Fix.Object_GetHashCode),
+                ExprStmt(new CompletionExpression()));
         }
 
         [Test]

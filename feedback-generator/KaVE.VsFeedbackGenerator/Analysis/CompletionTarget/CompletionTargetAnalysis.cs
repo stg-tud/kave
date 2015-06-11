@@ -58,6 +58,15 @@ namespace KaVE.VsFeedbackGenerator.Analysis.CompletionTarget
                     // TODO handle?!
                     return;
                 }
+                var parent = tNode.Parent as ICSharpTreeNode;
+
+                var isDot = CSharpTokenType.DOT == tNode.GetTokenType();
+                if (isDot && tNode.Parent != null && parent is IReferenceExpression)
+                {
+                    Result.AffectedNode = parent;
+                    Result.Case = CompletionCase.Undefined;
+                    return;
+                }
 
                 var isAssign = CSharpTokenType.EQ == tNode.GetTokenType();
 

@@ -19,6 +19,7 @@
 
 using System.Collections.Generic;
 using JetBrains.Util;
+using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.TypeShapes;
 using NUnit.Framework;
@@ -394,6 +395,53 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
             Assert.AreEqual(expected, actual);
         }
 
+        [Test]
+        public void TryingToEmulateAnStackOverflowExample()
+        {
+            CompleteInCSharpFile(@"
+                namespace N
+                {
+                    class G1 {}
+                    class G2 : G1 {}
+
+                    class T1 {}
+                    class T2<TG> : T1 where TG : G1 {}
+                    class T3 : T2<G2> {}
+                    class T4 : T3
+                    {
+                        void M()
+                        {
+                            object.$
+
+                            GetHashCode();
+                        }
+                    }
+                }");
+
+            var actual = ResultContext.TypeShape.TypeHierarchy;
+            var expected = new TypeHierarchy
+            {
+                Element = Type("T4"),
+                Extends = new TypeHierarchy
+                {
+                    Element = Type("T3"),
+                    Extends = new TypeHierarchy
+                    {
+                        Element = Type("T2`1[[TG -> " + Type("G2") + "]]"),
+                        Extends = new TypeHierarchy
+                        {
+                            Element = Type("T1")
+                        }
+                    }
+                }
+            };
+            Assert.AreEqual(expected, actual);
+        }
+
+        private static ITypeName Type(string typeName)
+        {
+            return TypeName.Get("N." + typeName + ", TestProject");
+        }
 
         private static MethodHierarchy Decl(string encType, string superType, string firstType)
         {

@@ -37,12 +37,12 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite.Expres
             AssertBody(
                 new VariableDeclaration
                 {
-                    Reference = VarRef("i"),
+                    Reference = BaseSSTAnalysisTest.VarRef("i"),
                     Type = Fix.Int
                 },
                 new Assignment
                 {
-                    Reference = VarRef("i"),
+                    Reference = BaseSSTAnalysisTest.VarRef("i"),
                     Expression = new ConstantValueExpression()
                 },
                 Fix.EmptyCompletion);
@@ -59,12 +59,12 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite.Expres
             AssertBody(
                 new VariableDeclaration
                 {
-                    Reference = VarRef("i"),
+                    Reference = BaseSSTAnalysisTest.VarRef("i"),
                     Type = Fix.Int
                 },
                 new Assignment
                 {
-                    Reference = VarRef("i"),
+                    Reference = BaseSSTAnalysisTest.VarRef("i"),
                     Expression = new ConstantValueExpression()
                 },
                 Fix.EmptyCompletion);

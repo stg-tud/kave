@@ -59,6 +59,23 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
         internal static IMethodName ListOfInt_Init =
             MethodName.Get("[System.Void, mscorlib, 4.0.0.0] [System.Object, mscorlib, 4.0.0.0]..ctor()");
 
+        // ReSharper disable once InconsistentNaming
+        internal static readonly IMethodName String_Format =
+            MethodName.Get(
+                "static [System.String, mscorlib, 4.0.0.0] [System.String, mscorlib, 4.0.0.0].Format([System.String, mscorlib, 4.0.0.0] format)");
+
+        // ReSharper disable once InconsistentNaming
+        internal static readonly IMethodName Object_Equals =
+            MethodName.Get(string.Format("static [{0}] [{1}].Equals([{1}] objA, [{1}] objB)", Bool, Object));
+
+        // ReSharper disable once InconsistentNaming
+        public static readonly IMethodName Object_ctor =
+            MethodName.Get(string.Format("[{0}] [{1}]..ctor()", Void, Object));
+
+        // ReSharper disable once InconsistentNaming
+        public static readonly IMethodName Exception_ctor =
+            MethodName.Get(string.Format("[{0}] [{1}]..ctor([{2}] message)", Void, Exception, String));
+
         internal static IMethodName GetHashCode(ITypeName declaringType)
         {
             return MethodName.Get(string.Format("[{0}] [{1}].GetHashCode()", Int, declaringType));

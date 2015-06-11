@@ -17,7 +17,6 @@
  *    - Dennis Albrecht
  */
 
-using JetBrains.Application;
 using KaVE.VsFeedbackGenerator.Analysis.Transformer;
 
 namespace KaVE.VsFeedbackGenerator.Analysis.Util
@@ -25,59 +24,29 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Util
     public interface ISSTFactory
     {
         /// <summary>
-        /// ArgumentCollector are used for the arguments of a invocation.
-        /// For every argument a reference is created (if the argument isn't a reference itself).
+        ///     ArgumentCollector are used for the arguments of a invocation.
+        ///     For every argument a reference is created (if the argument isn't a reference itself).
         /// </summary>
         SSTArgumentCollector ArgumentCollector();
+
         /// <summary>
-        /// ReferenceCollector are used for the elements of a primitive operation (like arithmethic operations).
-        /// Every constant value is ignored.
+        ///     ReferenceCollector are used for the elements of a primitive operation (like arithmethic operations).
+        ///     Every constant value is ignored.
         /// </summary>
         SSTReferenceCollector ReferenceCollector();
+
         /// <summary>
-        /// AssignmentGenerator analyses the right-hand side of a assignment to determine die assignment's source.
+        ///     AssignmentGenerator analyses the right-hand side of a assignment to determine die assignment's source.
         /// </summary>
         SSTAssignmentGenerator AssignmentGenerator();
+
         /// <summary>
-        /// ScopeTransformer analyses statements and blocks of statements.
-        /// Such scopes can be a whole method or the body of a loop etc.
+        ///     ScopeTransformer analyses statements and blocks of statements.
+        ///     Such scopes can be a whole method or the body of a loop etc.
         /// </summary>
         SSTScopeTransformer ScopeTransformer();
+
         IScope Scope();
         IUniqueVariableNameGenerator TempVariableGenerator();
-    }
-
-    [ShellComponent]
-    public class SSTFactory : ISSTFactory
-    {
-        public SSTArgumentCollector ArgumentCollector()
-        {
-            return new SSTArgumentCollector();
-        }
-
-        public SSTReferenceCollector ReferenceCollector()
-        {
-            return new SSTReferenceCollector();
-        }
-
-        public SSTAssignmentGenerator AssignmentGenerator()
-        {
-            return new SSTAssignmentGenerator();
-        }
-
-        public SSTScopeTransformer ScopeTransformer()
-        {
-            return new SSTScopeTransformer();
-        }
-
-        public IScope Scope()
-        {
-            return new Scope();
-        }
-
-        public IUniqueVariableNameGenerator TempVariableGenerator()
-        {
-            return new UniqueVariableNameGenerator();
-        }
     }
 }

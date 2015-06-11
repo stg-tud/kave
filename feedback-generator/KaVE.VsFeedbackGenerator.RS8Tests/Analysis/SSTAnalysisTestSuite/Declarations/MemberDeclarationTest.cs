@@ -23,7 +23,7 @@ using KaVE.Commons.Utils.Collections;
 using NUnit.Framework;
 using Fix = KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite.SSTAnalysisFixture;
 
-namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
+namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite.Declarations
 {
     internal class MemberDeclarationTest : BaseSSTAnalysisTest
     {

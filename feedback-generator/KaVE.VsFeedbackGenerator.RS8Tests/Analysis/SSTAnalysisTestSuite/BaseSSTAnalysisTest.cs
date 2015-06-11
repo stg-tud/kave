@@ -26,11 +26,12 @@ using KaVE.Commons.Model.SSTs.Declarations;
 using KaVE.Commons.Model.SSTs.Expressions;
 using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.Commons.Model.SSTs.Impl.Declarations;
+using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Commons.Model.SSTs.Impl.References;
 using KaVE.Commons.Model.SSTs.Impl.Statements;
-using KaVE.Commons.Model.SSTs.References;
 using KaVE.Commons.Model.SSTs.Statements;
+using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Collections;
 using KaVE.Commons.Utils.Exceptions;
 using KaVE.VsFeedbackGenerator.Analysis.CompletionTarget;
@@ -50,6 +51,16 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             var logger = new Commons.TestUtils.Utils.Exceptions.TestLogger(false);
             logger.InfoLogged += Log.Add;
             Registry.RegisterComponent<ILogger>(logger);
+        }
+
+        [TearDown]
+        public void ClearRegistry()
+        {
+            Registry.Clear();
+            var logCopy = new List<string>(Log);
+            Log.Clear();
+            Assert.IsEmpty(logCopy);
+            TestAnalysisTrigger.IsPrintingType = false;
         }
 
         protected SST NewSST()
@@ -106,10 +117,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             return new ReferenceExpression {Reference = new VariableReference {Identifier = id}};
         }
 
-        protected IVariableReference Ref(string id)
-        {
-            return new VariableReference {Identifier = id};
-        }
+        #region custom asserts
 
         protected void AssertAllMethods(params IMethodDeclaration[] expectedDecls)
         {
@@ -133,31 +141,6 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
         protected void AssertBody(params IStatement[] bodyArr)
         {
             AssertBody(Lists.NewListFrom(bodyArr));
-        }
-
-
-        [TearDown]
-        public void ClearRegistry()
-        {
-            Registry.Clear();
-            var logCopy = new List<string>(Log);
-            Log.Clear();
-            Assert.IsEmpty(logCopy);
-            TestAnalysisTrigger.IsPrintingType = false;
-        }
-
-        protected static VariableReference VarRef(string id)
-        {
-            return new VariableReference {Identifier = id};
-        }
-
-        protected IVariableDeclaration VarDecl(string varName, ITypeName type)
-        {
-            return new VariableDeclaration
-            {
-                Reference = VarRef(varName),
-                Type = type
-            };
         }
 
         protected static void AssertNodeIsMethodDeclaration(string simpleMethodName, RS.ICSharpTreeNode node)
@@ -214,9 +197,102 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             Assert.AreEqual(expectedCase, LastCompletionMarker.Case);
         }
 
+        #endregion
+
+        #region instantiation helper
+
+        protected static VariableReference VarRef(string id)
+        {
+            return new VariableReference {Identifier = id};
+        }
+
+        protected IVariableDeclaration VarDecl(string varName, ITypeName type)
+        {
+            return new VariableDeclaration
+            {
+                Reference = VarRef(varName),
+                Type = type
+            };
+        }
+
         protected static Assignment VarAssign(string varName, IAssignableExpression expr)
         {
             return new Assignment {Reference = VarRef(varName), Expression = expr};
         }
+
+        protected static IAssignment Assign(string id, IAssignableExpression expr)
+        {
+            return new Assignment
+            {
+                Reference = VarRef(id),
+                Expression = expr
+            };
+        }
+
+        protected static IStatement InvokeStmt(string id, IMethodName methodName, params ISimpleExpression[] parameters)
+        {
+            Asserts.That(!methodName.IsStatic);
+            return ExprStmt(
+                new InvocationExpression
+                {
+                    Reference = VarRef(id),
+                    MethodName = methodName,
+                    Parameters = Lists.NewList(parameters)
+                });
+        }
+
+        protected static IStatement InvokeStaticStmt(IMethodName methodName, params ISimpleExpression[] parameters)
+        {
+            Asserts.That(methodName.IsStatic);
+            return ExprStmt(
+                new InvocationExpression
+                {
+                    MethodName = methodName,
+                    Parameters = Lists.NewList(parameters)
+                });
+        }
+
+        protected static IExpressionStatement ExprStmt(IAssignableExpression expr)
+        {
+            return new ExpressionStatement
+            {
+                Expression = expr
+            };
+        }
+
+        public static InvocationExpression Invoke(string id,
+            IMethodName methodName,
+            params ISimpleExpression[] parameters)
+        {
+            Assert.False(methodName.IsStatic);
+            return new InvocationExpression
+            {
+                Reference = VarRef(id),
+                MethodName = methodName,
+                Parameters = Lists.NewList(parameters)
+            };
+        }
+
+        public static InvocationExpression InvokeStatic(IMethodName methodName, params ISimpleExpression[] parameters)
+        {
+            Assert.True(methodName.IsStatic);
+            return new InvocationExpression
+            {
+                MethodName = methodName,
+                Parameters = Lists.NewList(parameters)
+            };
+        }
+
+        protected InvocationExpression InvokeCtor(IMethodName methodName, params ISimpleExpression[] parameters)
+        {
+            Assert.That(methodName.IsConstructor);
+            return new InvocationExpression
+            {
+                MethodName = methodName,
+                Parameters = Lists.NewList(parameters)
+            };
+        }
+
+        #endregion
     }
 }

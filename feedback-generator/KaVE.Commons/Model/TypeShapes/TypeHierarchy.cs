@@ -85,5 +85,10 @@ namespace KaVE.Commons.Model.TypeShapes
                 return hashCode;
             }
         }
+
+        public override string ToString()
+        {
+            return this.ToStringReflection();
+        }
     }
 }

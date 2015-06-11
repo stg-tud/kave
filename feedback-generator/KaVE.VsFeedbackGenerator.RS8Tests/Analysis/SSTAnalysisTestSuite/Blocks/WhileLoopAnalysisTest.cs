@@ -108,7 +108,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite.Blocks
                     {
                         new VariableDeclaration
                         {
-                            Reference = VarRef("i"),
+                            Reference = BaseSSTAnalysisTest.VarRef("i"),
                             Type = Fix.Int
                         }
                     }

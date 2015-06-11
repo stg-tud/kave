@@ -17,11 +17,18 @@
  *    - 
  */
 
-using System.Collections.Generic;
-using JetBrains.ReSharper.Psi.CSharp.Tree;
-using KaVE.Commons.Model.SSTs;
-
-namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
+namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 {
-    public class ToArgumentList : TreeNodeVisitor<IList<IStatement>, string[]> {}
+    internal class inimalBeispiel
+    {
+        public void MinimalExample()
+        {
+            object.
+              
+            GetHashCode();
+
+            /*AssertBody(
+                Assign("s", InvokeStatic(Fix.String_Format, new ConstantValueExpression())));*/
+        }
+    }
 }

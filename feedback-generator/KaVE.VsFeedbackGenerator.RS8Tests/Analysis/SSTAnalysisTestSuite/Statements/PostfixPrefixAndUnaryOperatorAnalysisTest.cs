@@ -24,7 +24,7 @@ using Fix = KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite.SSTA
 
 namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite.Statements
 {
-    internal class PostAndPrefixOperatorAnalysisTest : BaseSSTAnalysisTest
+    internal class PostfixPrefixAndUnaryOperatorAnalysisTest : BaseSSTAnalysisTest
     {
         [Test]
         public void PostfixPlusPlus_Before()
@@ -84,6 +84,29 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite.Statem
             AssertBody(
                 VarAssign("i", Fix.ComposedExpr("i")),
                 Fix.EmptyCompletion);
+        }
+
+        [Test, Ignore]
+        public void Unary_Minus()
+        {
+            CompleteInMethod(@"
+                var i = 1;
+                var j = -i;
+                $
+            ");
+
+            Assert.Fail();
+        }
+
+        [Test, Ignore]
+        public void Unary_Not()
+        {
+            CompleteInMethod(@"
+                var b = !true;
+                $
+            ");
+
+            Assert.Fail();
         }
     }
 }
