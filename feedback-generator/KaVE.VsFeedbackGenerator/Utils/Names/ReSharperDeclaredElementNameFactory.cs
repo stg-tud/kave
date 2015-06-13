@@ -25,6 +25,7 @@ using System.Text;
 using JetBrains.Metadata.Utils;
 using JetBrains.ProjectModel;
 using JetBrains.ProjectModel.Model2.Assemblies.Interfaces;
+using JetBrains.Reflection;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.DeclaredElements;
 using JetBrains.ReSharper.Psi.ExtensionsAPI;
@@ -166,9 +167,9 @@ namespace KaVE.VsFeedbackGenerator.Utils.Names
             var identifier = new StringBuilder("d:");
             identifier.AppendType(invokeMethod.ReturnType, seenElements)
                       .Append(" [")
-                      .Append(delegateElement.GetAssemblyQualifiedName(substitution, seenElements))
+                        .Append(delegateElement.GetAssemblyQualifiedName(substitution, seenElements))
                       .Append("].")
-                      .AppendParameters(invokeMethod, substitution, seenElements);
+                       .AppendParameters(invokeMethod, substitution, seenElements);
             return TypeName.Get(identifier.ToString());
         }
 
@@ -205,9 +206,12 @@ namespace KaVE.VsFeedbackGenerator.Utils.Names
         private static string GetAssemblyQualifiedNameFromActualType(this ITypeParameter typeParameter,
             ISubstitution substitution, IDictionary<IDeclaredElement, IName> seenElements)
         {
-            return substitution.Domain.Contains(typeParameter)
-                ? substitution[typeParameter].GetName(seenElements).Identifier
-                : UnknownTypeName.Identifier;
+            if (substitution.Domain.Contains(typeParameter))
+            {
+                var type = substitution[typeParameter];
+                return type.GetName(seenElements).Identifier;
+            }
+            return UnknownTypeName.Identifier;
         }
 
         [NotNull]
@@ -332,17 +336,17 @@ namespace KaVE.VsFeedbackGenerator.Utils.Names
         private static String GetTypeParametersList(this ITypeParametersOwner typeParametersOwner,
             ISubstitution substitution, IDictionary<IDeclaredElement, IName> seenElements)
         {
-            var stackTrace = new StackTrace();
-            if (stackTrace.FrameCount > 500)
+            if (typeParametersOwner.TypeParameters.IsEmpty())
             {
-                
+                return "";
             }
-
-            return typeParametersOwner.TypeParameters.IsEmpty()
-                ? ""
-                : "[[" +
-                  typeParametersOwner.TypeParameters.Select(tp => tp.GetName(substitution, seenElements).Identifier).Join("],[") +
-                  "]]";
+            var tps = new List<string>();
+            foreach (var tp in typeParametersOwner.TypeParameters)
+            {
+                var name = tp.GetName(substitution, seenElements);
+                tps.Add(name.Identifier);
+            }
+            return "[[" + tps.Join("],[") + "]]";
         }
 
         /// <summary>
