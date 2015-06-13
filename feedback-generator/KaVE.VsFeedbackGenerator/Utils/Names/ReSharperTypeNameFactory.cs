@@ -33,11 +33,11 @@ namespace KaVE.VsFeedbackGenerator.Utils.Names
         [NotNull]
         public static ITypeName GetName(this IType type)
         {
-            return type.GetName(new List<IDeclaredElement>());
+            return type.GetName(new Dictionary<IDeclaredElement, IName>());
         }
 
         [NotNull]
-        internal static ITypeName GetName(this IType type, IList<IDeclaredElement> seenElements)
+        internal static ITypeName GetName(this IType type, IDictionary<IDeclaredElement, IName> seenElements)
         {
             return IfTypeIs<IDeclaredType>(type, GetName, seenElements) ??
                    IfTypeIs<IArrayType>(type, GetName, seenElements) ??
@@ -47,14 +47,14 @@ namespace KaVE.VsFeedbackGenerator.Utils.Names
                    Asserts.Fail<ITypeName>("unknown IType case: {0}", type.GetType());
         }
 
-        private static ITypeName IfTypeIs<TE>(IType element, Func<TE, IList<IDeclaredElement>, ITypeName> map, IList<IDeclaredElement> seenElements) where TE : class, IType
+        private static ITypeName IfTypeIs<TE>(IType element, Func<TE, IDictionary<IDeclaredElement, IName>, ITypeName> map, IDictionary<IDeclaredElement, IName> seenElements) where TE : class, IType
         {
             var specificElement = element as TE;
             return specificElement != null ? map(specificElement, seenElements) : null;
         }
 
         [NotNull]
-        private static ITypeName GetName(this IDeclaredType type, IList<IDeclaredElement> seenElements)
+        private static ITypeName GetName(this IDeclaredType type, IDictionary<IDeclaredElement, IName> seenElements)
         {
             var typeElement = type.GetTypeElement();
             // typeElement can be null, for example when resolving the second
@@ -66,27 +66,27 @@ namespace KaVE.VsFeedbackGenerator.Utils.Names
         }
 
         [NotNull]
-        private static ITypeName GetName(this IArrayType arrayType, IList<IDeclaredElement> seenElements)
+        private static ITypeName GetName(this IArrayType arrayType, IDictionary<IDeclaredElement, IName> seenElements)
         {
             return ArrayTypeName.From(arrayType.ElementType.GetName(seenElements), arrayType.Rank);
         }
 
         [NotNull]
-        private static ITypeName GetName(this IAnonymousType type, IList<IDeclaredElement> seenElements)
+        private static ITypeName GetName(this IAnonymousType type, IDictionary<IDeclaredElement, IName> seenElements)
         {
             Asserts.Fail("cannot create name for anonymous type");
             return null;
         }
 
         [NotNull]
-        private static ITypeName GetName(this IMultitype type, IList<IDeclaredElement> seenElements)
+        private static ITypeName GetName(this IMultitype type, IDictionary<IDeclaredElement, IName> seenElements)
         {
             Asserts.Fail("cannot create name for multitype");
             return null;
         }
 
         [NotNull]
-        private static ITypeName GetName(this IPointerType type, IList<IDeclaredElement> seenElements)
+        private static ITypeName GetName(this IPointerType type, IDictionary<IDeclaredElement, IName> seenElements)
         {
             return type.ElementType.GetName(seenElements);
         }
