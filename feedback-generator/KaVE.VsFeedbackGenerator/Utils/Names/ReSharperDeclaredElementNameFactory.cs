@@ -148,10 +148,15 @@ namespace KaVE.VsFeedbackGenerator.Utils.Names
 
         private static ITypeName IfElementIs<TE>(ITypeElement typeElement,
             DeclaredElementToName<ITypeName, TE> map,
-            ISubstitution substitution, IDictionary<IDeclaredElement, IName> seenElements, ITypeName unknowName)
+            ISubstitution substitution, IDictionary<IDeclaredElement, IName> seenElements, ITypeName unknownName)
             where TE : class, IDeclaredElement
         {
-            return IfElementIs(typeElement, map, substitution, unknowName, seenElements);
+            var specificElement = typeElement as TE;
+            if (specificElement == null)
+            {
+                return null;
+            }
+            return IsMissingDeclaration(specificElement) ? unknownName : map(specificElement, substitution, seenElements);
         }
 
         [NotNull]
