@@ -17,6 +17,7 @@
  *    - Sven Amann
  */
 
+using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 
@@ -845,6 +846,17 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Utils
             TestProposalProvider.Enabled = true;
 
             CompleteInMethod("$");
+        }
+
+        [Test]
+        public void ShouldNotCrash()
+        {
+            CompleteInClass(@"
+                public delegate IEnumerable<D> D();
+                $
+            ");
+
+            ThenProposalCollectionContains("d:[System.Collections.Generic.IEnumberable`1[[T]], mscorlib, 4.0.0.0] [N.C.D, TestProject].()");
         }
 
         [TearDown]

@@ -19,6 +19,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using JetBrains.Metadata.Utils;
@@ -73,17 +74,23 @@ namespace KaVE.VsFeedbackGenerator.Utils.Names
         [NotNull]
         public static IName GetName([NotNull] this IDeclaredElement element, [NotNull] ISubstitution substitution)
         {
-            return IfElementIs<INamespaceName, INamespace>(element, GetName, substitution, NamespaceName.UnknownName) ??
-                   IfElementIs<ITypeName, ITypeParameter>(element, GetName, substitution, TypeName.UnknownName) ??
-                   IfElementIs<ITypeName, ITypeElement>(element, GetName, substitution, TypeName.UnknownName) ??
-                   IfElementIs<IMethodName, IFunction>(element, GetName, substitution, MethodName.UnknownName) ??
-                   IfElementIs<IParameterName, IParameter>(element, GetName, substitution, ParameterName.UnknownName) ??
-                   IfElementIs<IFieldName, IField>(element, GetName, substitution, FieldName.UnknownName) ??
-                   IfElementIs<IPropertyName, IProperty>(element, GetName, substitution, PropertyName.UnknownName) ??
-                   IfElementIs<IEventName, IEvent>(element, GetName, substitution, EventName.UnknownName) ??
-                   IfElementIs<IName, ITypeOwner>(element, GetName, substitution, LocalVariableName.UnknownName) ??
-                   IfElementIs<IName, IAlias>(element, GetName, substitution, AliasName.UnknownName) ??
-                   IfElementIs<IName, IDeclaredElement>(element, (e, s) => null, substitution, Name.UnknownName) ??
+            return element.GetName(substitution, new List<IDeclaredElement>());
+        }
+    
+        [NotNull]
+        internal static IName GetName([NotNull] this IDeclaredElement element, [NotNull] ISubstitution substitution, IList<IDeclaredElement> seenElements)
+        {
+            return IfElementIs<INamespaceName, INamespace>(element, GetName, substitution, NamespaceName.UnknownName, seenElements) ??
+                   IfElementIs<ITypeName, ITypeParameter>(element, GetName, substitution, TypeName.UnknownName, seenElements) ??
+                   IfElementIs<ITypeName, ITypeElement>(element, GetName, substitution, TypeName.UnknownName, seenElements) ??
+                   IfElementIs<IMethodName, IFunction>(element, GetName, substitution, MethodName.UnknownName, seenElements) ??
+                   IfElementIs<IParameterName, IParameter>(element, GetName, substitution, ParameterName.UnknownName, seenElements) ??
+                   IfElementIs<IFieldName, IField>(element, GetName, substitution, FieldName.UnknownName, seenElements) ??
+                   IfElementIs<IPropertyName, IProperty>(element, GetName, substitution, PropertyName.UnknownName, seenElements) ??
+                   IfElementIs<IEventName, IEvent>(element, GetName, substitution, EventName.UnknownName, seenElements) ??
+                   IfElementIs<IName, ITypeOwner>(element, GetName, substitution, LocalVariableName.UnknownName, seenElements) ??
+                   IfElementIs<IName, IAlias>(element, GetName, substitution, AliasName.UnknownName, seenElements) ??
+                   IfElementIs<IName, IDeclaredElement>(element, (e, s, a) => null, substitution, Name.UnknownName, seenElements) ??
                    FallbackHandler(element, substitution);
         }
 
@@ -103,7 +110,8 @@ namespace KaVE.VsFeedbackGenerator.Utils.Names
         private static TN IfElementIs<TN, TE>(IDeclaredElement element,
             DeclaredElementToName<TN, TE> map,
             ISubstitution substitution,
-            TN unknownName)
+            TN unknownName,
+            IList<IDeclaredElement> seenElements)
             where TE : class, IDeclaredElement
             where TN : class, IName
         {
@@ -112,60 +120,65 @@ namespace KaVE.VsFeedbackGenerator.Utils.Names
             {
                 return null;
             }
-            return IsMissingDeclaration(specificElement) ? unknownName : map(specificElement, substitution);
+            if (seenElements.Contains(element))
+            {
+                return unknownName;
+            }
+            seenElements.Add(element);
+            return IsMissingDeclaration(specificElement) ? unknownName : map(specificElement, substitution, seenElements);
         }
 
-        private delegate TN DeclaredElementToName<out TN, in TE>(TE element, ISubstitution substitution)
+        private delegate TN DeclaredElementToName<out TN, in TE>(TE element, ISubstitution substitution, IList<IDeclaredElement> seenElements)
             where TE : class, IDeclaredElement
             where TN : class, IName;
 
         [NotNull]
-        private static ITypeName GetName(this ITypeElement typeElement, ISubstitution substitution)
+        private static ITypeName GetName(this ITypeElement typeElement, ISubstitution substitution, IList<IDeclaredElement> seenElements)
         {
-            return IfElementIs<IDelegate>(typeElement, GetName, substitution) ??
-                   IfElementIs<IEnum>(typeElement, GetName, substitution) ??
-                   IfElementIs<IInterface>(typeElement, GetName, substitution) ??
-                   IfElementIs<IStruct>(typeElement, GetName, substitution) ??
-                   TypeName.Get(typeElement.GetAssemblyQualifiedName(substitution));
+            return IfElementIs<IDelegate>(typeElement, GetName, substitution, seenElements) ??
+                   IfElementIs<IEnum>(typeElement, GetName, substitution, seenElements) ??
+                   IfElementIs<IInterface>(typeElement, GetName, substitution, seenElements) ??
+                   IfElementIs<IStruct>(typeElement, GetName, substitution, seenElements) ??
+                   TypeName.Get(typeElement.GetAssemblyQualifiedName(substitution, seenElements));
         }
 
         private static ITypeName IfElementIs<TE>(ITypeElement typeElement,
             DeclaredElementToName<ITypeName, TE> map,
-            ISubstitution substitution)
+            ISubstitution substitution, IList<IDeclaredElement> seenElements)
             where TE : class, IDeclaredElement
         {
-            return IfElementIs(typeElement, map, substitution, TypeName.UnknownName);
+            return IfElementIs(typeElement, map, substitution, TypeName.UnknownName, seenElements);
         }
 
         [NotNull]
-        private static ITypeName GetName(this IDelegate delegateElement, ISubstitution substitution)
+        private static ITypeName GetName(this IDelegate delegateElement, ISubstitution substitution, IList<IDeclaredElement> seenElements)
         {
             var invokeMethod = delegateElement.InvokeMethod;
             var identifier = new StringBuilder("d:");
-            identifier.AppendType(invokeMethod.ReturnType)
+            identifier.AppendType(invokeMethod.ReturnType, seenElements)
                       .Append(" [")
-                      .Append(delegateElement.GetAssemblyQualifiedName(substitution))
+                      .Append(delegateElement.GetAssemblyQualifiedName(substitution, seenElements))
                       .Append("].")
-                      .AppendParameters(invokeMethod, substitution);
+                      .AppendParameters(invokeMethod, substitution, seenElements);
             return TypeName.Get(identifier.ToString());
         }
 
         [NotNull]
-        private static ITypeName GetName(this IEnum enumElement, ISubstitution substitution)
+        private static ITypeName GetName(this IEnum enumElement, ISubstitution substitution, IList<IDeclaredElement> seenElements)
         {
-            return TypeName.Get("e:" + enumElement.GetAssemblyQualifiedName(substitution));
+            return TypeName.Get("e:" + enumElement.GetAssemblyQualifiedName(substitution, seenElements));
         }
 
         [NotNull]
-        private static ITypeName GetName(this IInterface interfaceElement, ISubstitution substitution)
+        private static ITypeName GetName(this IInterface interfaceElement, ISubstitution substitution, IList<IDeclaredElement> seenElements)
         {
-            return TypeName.Get("i:" + interfaceElement.GetAssemblyQualifiedName(substitution));
+            return TypeName.Get("i:" + interfaceElement.GetAssemblyQualifiedName(substitution, seenElements));
         }
 
         [NotNull]
-        private static ITypeName GetName(this IStruct structElement, ISubstitution substitution)
+        private static ITypeName GetName(this IStruct structElement, ISubstitution substitution, IList<IDeclaredElement> seenElements)
         {
-            var structName = structElement.GetAssemblyQualifiedName(substitution);
+            var structName = structElement.GetAssemblyQualifiedName(substitution, seenElements);
             var typeNameCandidate = TypeName.Get(structName);
             // predefined structs are recognized as such without flagging them
             var isPredefinedStruct = typeNameCandidate.IsStructType;
@@ -173,95 +186,95 @@ namespace KaVE.VsFeedbackGenerator.Utils.Names
         }
 
         [NotNull]
-        private static ITypeName GetName(this ITypeParameter typeParameter, ISubstitution substitution)
+        private static ITypeName GetName(this ITypeParameter typeParameter, ISubstitution substitution, IList<IDeclaredElement> seenElements)
         {
             return TypeParameterName.Get(
                 typeParameter.ShortName,
-                typeParameter.GetAssemblyQualifiedNameFromActualType(substitution));
+                typeParameter.GetAssemblyQualifiedNameFromActualType(substitution, seenElements));
         }
 
         private static string GetAssemblyQualifiedNameFromActualType(this ITypeParameter typeParameter,
-            ISubstitution substitution)
+            ISubstitution substitution, IList<IDeclaredElement> seenElements)
         {
             return substitution.Domain.Contains(typeParameter)
-                ? substitution[typeParameter].GetName().Identifier
+                ? substitution[typeParameter].GetName(seenElements).Identifier
                 : UnknownTypeName.Identifier;
         }
 
         [NotNull]
-        private static INamespaceName GetName(this INamespace ns, ISubstitution substitution)
+        private static INamespaceName GetName(this INamespace ns, ISubstitution substitution, IList<IDeclaredElement> seenElements)
         {
             return NamespaceName.Get(ns.QualifiedName);
         }
 
         [NotNull]
-        private static IParameterName GetName(this IParameter parameter, ISubstitution substitution)
+        private static IParameterName GetName(this IParameter parameter, ISubstitution substitution, IList<IDeclaredElement> seenElements)
         {
             var identifier = new StringBuilder();
             identifier.AppendIf(parameter.IsParameterArray, ParameterName.VarArgsModifier + " ");
             identifier.AppendIf(parameter.Kind == ParameterKind.OUTPUT, ParameterName.OutputModifier + " ");
             identifier.AppendIf(parameter.IsOptional, ParameterName.OptionalModifier + " ");
             identifier.AppendIf(parameter.Kind == ParameterKind.REFERENCE, ParameterName.PassByReferenceModifier + " ");
-            identifier.AppendType(parameter.Type).Append(" ").Append(parameter.ShortName);
+            identifier.AppendType(parameter.Type, seenElements).Append(" ").Append(parameter.ShortName);
             return ParameterName.Get(identifier.ToString());
         }
 
         [NotNull]
-        private static IMethodName GetName(this IFunction function, ISubstitution substitution)
+        private static IMethodName GetName(this IFunction function, ISubstitution substitution, IList<IDeclaredElement> seenElements)
         {
             var identifier = new StringBuilder();
-            identifier.Append(function.GetMemberIdentifier(substitution, function.ReturnType));
+            identifier.Append(function.GetMemberIdentifier(substitution, function.ReturnType,seenElements));
             var typeParametersOwner = function as ITypeParametersOwner;
             if (typeParametersOwner != null && typeParametersOwner.TypeParameters.Any())
             {
                 identifier.Append('`').Append(typeParametersOwner.TypeParameters.Count);
-                identifier.Append(typeParametersOwner.GetTypeParametersList(substitution));
+                identifier.Append(typeParametersOwner.GetTypeParametersList(substitution, seenElements));
             }
-            identifier.AppendParameters(function, substitution);
+            identifier.AppendParameters(function, substitution, seenElements);
             return MethodName.Get(identifier.ToString());
         }
 
         [NotNull]
-        private static IFieldName GetName(this IField field, ISubstitution substitution)
+        private static IFieldName GetName(this IField field, ISubstitution substitution, IList<IDeclaredElement> seenElements)
         {
-            return FieldName.Get(field.GetMemberIdentifier(substitution, field.Type));
+            return FieldName.Get(field.GetMemberIdentifier(substitution, field.Type, seenElements));
         }
 
         [NotNull]
-        private static IEventName GetName(this IEvent evt, ISubstitution substitution)
+        private static IEventName GetName(this IEvent evt, ISubstitution substitution, IList<IDeclaredElement> seenElements)
         {
-            return EventName.Get(evt.GetMemberIdentifier(substitution, evt.Type));
+            return EventName.Get(evt.GetMemberIdentifier(substitution, evt.Type,seenElements));
         }
 
         [NotNull]
-        private static IPropertyName GetName(this IProperty property, ISubstitution substitution)
+        private static IPropertyName GetName(this IProperty property, ISubstitution substitution, IList<IDeclaredElement> seenElements)
         {
             var identifier = new StringBuilder();
             identifier.AppendIf(property.IsWritable, PropertyName.SetterModifier + " ");
             identifier.AppendIf(property.IsReadable, PropertyName.GetterModifier + " ");
-            identifier.Append(property.GetMemberIdentifier(substitution, property.ReturnType));
-            identifier.AppendParameters(property, substitution);
+            identifier.Append(property.GetMemberIdentifier(substitution, property.ReturnType, seenElements));
+            identifier.AppendParameters(property, substitution, seenElements);
             return PropertyName.Get(identifier.ToString());
         }
 
-        private static string GetMemberIdentifier(this ITypeMember member, ISubstitution substitution, IType valueType)
+        private static string GetMemberIdentifier(this ITypeMember member, ISubstitution substitution, IType valueType, IList<IDeclaredElement> seenElements)
         {
             var identifier = new StringBuilder();
             identifier.AppendIf(member.IsStatic, MemberName.StaticModifier + " ");
-            identifier.AppendMemberBase(member, substitution, valueType);
+            identifier.AppendMemberBase(member, substitution, valueType, seenElements);
             return identifier.ToString();
         }
 
         [NotNull]
-        private static LocalVariableName GetName(this ITypeOwner variable, ISubstitution substitution)
+        private static LocalVariableName GetName(this ITypeOwner variable, ISubstitution substitution, IList<IDeclaredElement> seenElements)
         {
             var identifier = new StringBuilder();
-            identifier.AppendType(variable.Type).Append(' ').Append(variable.ShortName);
+            identifier.AppendType(variable.Type, seenElements).Append(' ').Append(variable.ShortName);
             return LocalVariableName.Get(identifier.ToString());
         }
 
         [NotNull]
-        private static IName GetName(this IAlias alias, ISubstitution substitution)
+        private static IName GetName(this IAlias alias, ISubstitution substitution, IList<IDeclaredElement> seenElements)
         {
             return AliasName.Get(alias.ShortName);
         }
@@ -269,30 +282,30 @@ namespace KaVE.VsFeedbackGenerator.Utils.Names
         private static void AppendMemberBase(this StringBuilder identifier,
             IClrDeclaredElement member,
             ISubstitution substitution,
-            IType valueType)
+            IType valueType, IList<IDeclaredElement> seenElements)
         {
-            identifier.AppendType(valueType)
+            identifier.AppendType(valueType, seenElements)
                       .Append(' ')
-                      .AppendType(member.GetContainingType(), substitution)
+                      .AppendType(member.GetContainingType(), substitution, seenElements)
                       .Append('.')
                       .Append(member.ShortName);
         }
 
-        private static StringBuilder AppendType(this StringBuilder identifier, IType type)
+        private static StringBuilder AppendType(this StringBuilder identifier, IType type, IList<IDeclaredElement> seenElements)
         {
-            return identifier.Append('[').Append(type.GetName().Identifier).Append(']');
+            return identifier.Append('[').Append(type.GetName(seenElements).Identifier).Append(']');
         }
 
         [NotNull]
         private static StringBuilder AppendType(this StringBuilder identifier,
             ITypeElement type,
-            ISubstitution substitution)
+            ISubstitution substitution, IList<IDeclaredElement> seenElements)
         {
-            return identifier.Append('[').Append(type.GetName(substitution).Identifier).Append(']');
+            return identifier.Append('[').Append(type.GetName(substitution, seenElements).Identifier).Append(']');
         }
 
         [NotNull]
-        private static String GetAssemblyQualifiedName(this ITypeElement type, ISubstitution substitution)
+        private static String GetAssemblyQualifiedName(this ITypeElement type, ISubstitution substitution, IList<IDeclaredElement> seenElements)
         {
             if (type == null)
             {
@@ -303,17 +316,23 @@ namespace KaVE.VsFeedbackGenerator.Utils.Names
             return String.Format(
                 "{0}{1}, {2}",
                 type.GetClrName().FullName,
-                type.GetTypeParametersList(substitution),
+                type.GetTypeParametersList(substitution, seenElements),
                 containingModule.GetQualifiedName());
         }
 
         private static String GetTypeParametersList(this ITypeParametersOwner typeParametersOwner,
-            ISubstitution substitution)
+            ISubstitution substitution, IList<IDeclaredElement> seenElements)
         {
+            var stackTrace = new StackTrace();
+            if (stackTrace.FrameCount > 500)
+            {
+                
+            }
+
             return typeParametersOwner.TypeParameters.IsEmpty()
                 ? ""
                 : "[[" +
-                  typeParametersOwner.TypeParameters.Select(tp => tp.GetName(substitution).Identifier).Join("],[") +
+                  typeParametersOwner.TypeParameters.Select(tp => tp.GetName(substitution, seenElements).Identifier).Join("],[") +
                   "]]";
         }
 
@@ -353,18 +372,18 @@ namespace KaVE.VsFeedbackGenerator.Utils.Names
 
         private static void AppendParameters(this StringBuilder identifier,
             IParametersOwner parametersOwner,
-            ISubstitution substitution)
+            ISubstitution substitution, IList<IDeclaredElement> seenElements)
         {
             identifier.Append('(')
-                      .Append(parametersOwner.Parameters.GetNames(substitution).Select(p => p.Identifier).Join(", "))
+                      .Append(parametersOwner.Parameters.GetNames(substitution, seenElements).Select(p => p.Identifier).Join(", "))
                       .Append(')');
         }
 
         [NotNull]
         private static IEnumerable<IParameterName> GetNames(this IEnumerable<IParameter> parameters,
-            ISubstitution substitution)
+            ISubstitution substitution, IList<IDeclaredElement> seenElements)
         {
-            return parameters.Select(param => param.GetName(substitution));
+            return parameters.Select(param => param.GetName(substitution, seenElements));
         }
     }
 }
