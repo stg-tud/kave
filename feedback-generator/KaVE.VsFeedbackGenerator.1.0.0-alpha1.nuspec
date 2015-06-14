@@ -3,12 +3,12 @@
     <metadata>
         <id>KaVE.VsFeedbackGenerator</id>
         <version>1.0.0-alpha1</version>
-        <title>KaVE Projekt</title>
-        <authors>Sebastian Proksch,Sven Amann,Uli Fahrer,Dennis Albrecht</authors>
+        <title>KaVE Projekt (DATEV)</title>
+        <authors>KaVE Team</authors>
         <owners>Technische Universitaet Darmstadt</owners>
         <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0.txt</licenseUrl>
         <projectUrl>http://kave.cc/</projectUrl>
-        <iconUrl>http://kave.cc/icon.png</iconUrl>
+        <iconUrl>https://lh3.googleusercontent.com/uTdXAD8tJddqz3SjqKunsWYhXOHW8yyWzVys4HxbaklTkI_gugIkGev2KXMhC_6C6g_y2uVV=w1329-h818</iconUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>Observes how you use Visual Studio and creates usage feedback.</description>
         <releaseNotes></releaseNotes>
