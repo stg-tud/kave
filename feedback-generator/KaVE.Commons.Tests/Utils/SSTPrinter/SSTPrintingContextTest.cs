@@ -30,7 +30,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter
 {
     internal class SSTPrintingContextTest
     {
-        private void AssertTypeFormat(string expected, string typeIdentifier)
+        private static void AssertTypeFormat(string expected, string typeIdentifier)
         {
             var sut = new SSTPrintingContext();
             Assert.AreEqual(expected, sut.Type(TypeName.Get(typeIdentifier)).ToString());
@@ -90,7 +90,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter
                 "    break;",
                 "}");
 
-            sut.StatementBlock(stmts, visitor, true);
+            sut.StatementBlock(stmts, visitor);
             Assert.AreEqual(expected, sut.ToString());
         }
 
@@ -101,7 +101,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter
             var visitor = new SSTPrintingVisitor();
             var sut = new SSTPrintingContext();
 
-            sut.StatementBlock(stmts, visitor, true);
+            sut.StatementBlock(stmts, visitor);
             Assert.AreEqual(" { }", sut.ToString());
         }
 

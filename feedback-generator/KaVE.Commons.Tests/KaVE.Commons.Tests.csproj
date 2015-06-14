@@ -232,6 +232,7 @@
     <Compile Include="Utils\SSTPrinter\SSTPrintingVisitorTestSuite\ReferencePrinterTest.cs" />
     <Compile Include="Utils\SSTPrinter\SSTPrintingVisitorTestSuite\SSTPrintingVisitorTestBase.cs" />
     <Compile Include="Utils\SSTPrinter\SSTPrintingVisitorTestSuite\StatementPrinterTest.cs" />
+    <Compile Include="Utils\SSTPrinter\XamlSSTPrintingContextTest.cs" />
     <Compile Include="Utils\StringBuilderUtilsTest.cs" />
     <Compile Include="Utils\StringUtilsTest.cs" />
     <Compile Include="Utils\ToStringUtilsTest.cs" />

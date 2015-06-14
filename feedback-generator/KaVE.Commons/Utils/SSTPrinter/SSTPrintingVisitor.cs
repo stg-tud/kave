@@ -497,7 +497,15 @@ namespace KaVE.Commons.Utils.SSTPrinter
 
         public void Visit(IInvocationExpression expr, SSTPrintingContext c)
         {
-            expr.Reference.Accept(this, c);
+            if (expr.MethodName.IsStatic)
+            {
+                c.Text(expr.MethodName.DeclaringType.Name);
+            }
+            else
+            {
+                expr.Reference.Accept(this, c);
+            }
+
             c.Text(".").Text(expr.MethodName.Name).Text("(");
 
             foreach (var parameter in expr.Parameters)
@@ -526,13 +534,12 @@ namespace KaVE.Commons.Utils.SSTPrinter
 
         public void Visit(IConstantValueExpression expr, SSTPrintingContext c)
         {
-            string value = expr.Value ?? "null";
+            string value = expr.Value ?? "...";
 
             double parsed;
             if (Double.TryParse(expr.Value, out parsed)
                 || value.Equals("false", StringComparison.Ordinal)
-                || value.Equals("true", StringComparison.Ordinal)
-                || value.Equals("null", StringComparison.Ordinal))
+                || value.Equals("true", StringComparison.Ordinal))
             {
                 c.Keyword(value);
             }

@@ -45,7 +45,7 @@ namespace KaVE.Commons.Utils.SSTPrinter
         public override SSTPrintingContext UnknownMarker()
         {
             Text("<Span Foreground=\"Blue\">");
-            base.CursorPosition();
+            base.UnknownMarker();
             Text("</Span>");
             return this;
         }
@@ -58,9 +58,9 @@ namespace KaVE.Commons.Utils.SSTPrinter
             return this;
         }
 
-        public override SSTPrintingContext TypeName(ITypeName typeName)
+        public override SSTPrintingContext TypeNameOnly(ITypeName typeName)
         {
-            string color = "#2B91AF";
+            var color = "#2B91AF";
 
             if (typeName.IsInterfaceType)
             {
@@ -72,7 +72,7 @@ namespace KaVE.Commons.Utils.SSTPrinter
             }
 
             Text(String.Format("<Span Foreground=\"{0}\">", color));
-            base.TypeName(typeName);
+            base.TypeNameOnly(typeName);
             Text("</Span>");
             return this;
         }

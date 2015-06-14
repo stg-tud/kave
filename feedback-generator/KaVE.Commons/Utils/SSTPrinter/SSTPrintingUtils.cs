@@ -21,6 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using KaVE.Commons.Model.Names;
+using KaVE.Commons.Model.Names.CSharp;
 
 namespace KaVE.Commons.Utils.SSTPrinter
 {
@@ -28,7 +29,8 @@ namespace KaVE.Commons.Utils.SSTPrinter
     {
         public static void FormatAsUsingList(this IEnumerable<INamespaceName> namespaces, SSTPrintingContext context)
         {
-            var filteredNamespaceStrings = namespaces.Select(n => n.Identifier.Trim())
+            var filteredNamespaceStrings = namespaces.Where(n => NamespaceName.UnknownName != n)
+                                                     .Select(n => n.Identifier.Trim())
                                                      .Where(n => !String.IsNullOrWhiteSpace(n))
                                                      .OrderBy(n => n, StringComparer.OrdinalIgnoreCase);
 

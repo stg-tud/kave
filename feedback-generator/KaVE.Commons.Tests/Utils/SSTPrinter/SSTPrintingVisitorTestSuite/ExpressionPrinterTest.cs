@@ -18,11 +18,14 @@
  */
 
 using KaVE.Commons.Model.Names.CSharp;
+using KaVE.Commons.Model.SSTs.Expressions.Simple;
 using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.LoopHeader;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
+using KaVE.Commons.Model.SSTs.Impl.References;
 using KaVE.Commons.Model.SSTs.Impl.Statements;
+using KaVE.Commons.Model.SSTs.References;
 using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
@@ -30,45 +33,90 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
     internal class ExpressionPrinterTest : SSTPrintingVisitorTestBase
     {
         [Test]
-        public void ConstantValueExpression_String()
+        public void NullExpression()
         {
-            var sst = new ConstantValueExpression {Value = "val"};
-            AssertPrint(sst, "\"val\"");
+            AssertPrint(Null(), "null");
         }
 
         [Test]
-        public void ConstantValueExpression_Int()
+        public void ConstantValueExpression_WithoutValue()
         {
-            var sst = new ConstantValueExpression {Value = "1"};
-            AssertPrint(sst, "1");
+            AssertPrint(Constant(), "\"...\"");
         }
 
         [Test]
-        public void ConstantValueExpression_Float()
+        public void ConstantValueExpression_WithString()
         {
-            var sst = new ConstantValueExpression {Value = "-3.141592"};
-            AssertPrint(sst, "-3.141592");
+            AssertPrint(Constant("val"), "\"val\"");
         }
 
         [Test]
-        public void ConstantValueExpression_BoolTrue()
+        public void ConstantValueExpression_NullLiteralIsUsedAsString()
         {
-            var sst = new ConstantValueExpression {Value = "true"};
-            AssertPrint(sst, "true");
+            AssertPrint(Constant("null"), "\"null\"");
         }
 
         [Test]
-        public void ConstantValueExpression_BoolFalse()
+        public void ConstantValueExpression_WithInt()
         {
-            var sst = new ConstantValueExpression {Value = "false"};
-            AssertPrint(sst, "false");
+            AssertPrint(Constant("1"), "1");
         }
 
         [Test]
-        public void ConstantValueExpression_Null()
+        public void ConstantValueExpression_WithFloat()
         {
-            var sst = new ConstantValueExpression {Value = "null"};
-            AssertPrint(sst, "null");
+            AssertPrint(Constant("0.123"), "0.123");
+        }
+
+        [Test]
+        public void ConstantValueExpression_WithBoolTrue()
+        {
+            AssertPrint(Constant("true"), "true");
+        }
+
+        [Test]
+        public void ConstantValueExpression_WithBoolFalse()
+        {
+            AssertPrint(Constant("false"), "false");
+        }
+
+        [Test]
+        public void InvocationExpression_ConstantValue()
+        {
+            var sst = new InvocationExpression
+            {
+                Reference = VarRef("this"),
+                MethodName = MethodName.Get("[R,P] [D,P].M([T,P] p)"),
+                Parameters = {Constant("1")}
+            };
+
+            AssertPrint(sst, "this.M(1)");
+        }
+
+        [Test]
+        public void InvocationExpression_NullValue()
+        {
+            var sst = new InvocationExpression
+            {
+                Reference = SSTUtil.VariableReference("this"),
+                MethodName = MethodName.Get("[R,P] [D,P].M([T,P] p)"),
+                Parameters = {Null()}
+            };
+
+            AssertPrint(sst, "this.M(null)");
+        }
+
+        [Test]
+        public void InvocationExpression_Static()
+        {
+            var sst = new InvocationExpression
+            {
+                Reference = VarRef("should be ignored anyways"),
+                MethodName = MethodName.Get("static [R,P] [D,P].M([T,P] p)"),
+                Parameters = {Null()}
+            };
+
+            AssertPrint(sst, "D.M(null)");
         }
 
         [Test]
@@ -82,26 +130,6 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
             };
 
             AssertPrint(sst, "(true) ? 1 : 2");
-        }
-
-        [Test]
-        public void InvocationExpression()
-        {
-            var sst = new InvocationExpression
-            {
-                Reference = SSTUtil.VariableReference("this"),
-                MethodName = MethodName.Get("[ReturnType,P] [DeclaringType,P].M([ParameterType,P] p)"),
-                Parameters = {new ConstantValueExpression {Value = "1"}}
-            };
-
-            AssertPrint(sst, "this.M(1)");
-        }
-
-        [Test]
-        public void NullExpression()
-        {
-            var sst = new NullExpression();
-            AssertPrint(sst, "null");
         }
 
         [Test]
@@ -156,31 +184,79 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
         }
 
         [Test]
+        public void CompletionExpression_OnNothing()
+        {
+            var sst = new CompletionExpression();
+            AssertPrint(sst, "$");
+        }
+
+        [Test]
+        public void CompletionExpression_OnToken()
+        {
+            var sst = new CompletionExpression {Token = "t"};
+            AssertPrint(sst, "t$");
+        }
+
+        [Test]
+        public void CompletionExpression_OnVariableReference()
+        {
+            var sst = new CompletionExpression
+            {
+                VariableReference = VarRef("o"),
+            };
+            AssertPrint(sst, "o.$");
+        }
+
+        [Test]
+        public void CompletionExpression_OnVariableReferenceWithToken()
+        {
+            var sst = new CompletionExpression
+            {
+                VariableReference = VarRef("o"),
+                Token = "t"
+            };
+            AssertPrint(sst, "o.t$");
+        }
+
+        [Test]
         public void CompletionExpression_OnTypeReference()
         {
-            var sst = new CompletionExpression {TypeReference = TypeName.Get("T,P"), Token = "incompl"};
-            AssertPrint(sst, "T.incompl$");
+            var sst = new CompletionExpression
+            {
+                TypeReference = TypeName.Get("T,P")
+            };
+            AssertPrint(sst, "T.$");
+        }
+
+        [Test]
+        public void CompletionExpression_OnTypeReferenceWithToken()
+        {
+            var sst = new CompletionExpression
+            {
+                TypeReference = TypeName.Get("T,P"),
+                Token = "t"
+            };
+            AssertPrint(sst, "T.t$");
         }
 
         [Test]
         public void CompletionExpression_OnTypeReference_GenericType()
         {
-            var sst = new CompletionExpression {TypeReference = TypeName.Get("T`1[[T1 -> A,P]],P"), Token = "incompl"};
-            AssertPrint(sst, "T<A>.incompl$");
+            var sst = new CompletionExpression
+            {
+                TypeReference = TypeName.Get("T`1[[G -> A,P]],P")
+            };
+            AssertPrint(sst, "T<A>.$");
         }
 
         [Test]
-        public void CompletionExpression_OnObjectReference()
+        public void CompletionExpression_OnTypeReference_UnresolvedGenericType()
         {
-            var sst = new CompletionExpression {VariableReference = SSTUtil.VariableReference("obj"), Token = "incompl"};
-            AssertPrint(sst, "obj.incompl$");
-        }
-
-        [Test]
-        public void CompletionExpression_OnNothing()
-        {
-            var sst = new CompletionExpression {Token = "incompl"};
-            AssertPrint(sst, "incompl$");
+            var sst = new CompletionExpression
+            {
+                TypeReference = TypeName.Get("T`1[[G]],P")
+            };
+            AssertPrint(sst, "T<?>.$");
         }
 
         [Test]
@@ -214,6 +290,27 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
             AssertPrint(
                 sst,
                 "() => { }");
+        }
+
+        private static INullExpression Null()
+        {
+            return new NullExpression();
+        }
+
+        private static IConstantValueExpression Constant(string value = null)
+        {
+            return new ConstantValueExpression
+            {
+                Value = value
+            };
+        }
+
+        private static IVariableReference VarRef(string id)
+        {
+            return new VariableReference
+            {
+                Identifier = id
+            };
         }
     }
 }

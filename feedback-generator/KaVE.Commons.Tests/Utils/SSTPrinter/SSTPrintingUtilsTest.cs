@@ -49,5 +49,18 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter
                 "using Z;");
             Assert.AreEqual(expected, context.ToString());
         }
+
+        [Test]
+        public void UnknownNameIsNotAddedToList()
+        {
+            var namespaces = Sets.NewHashSet<INamespaceName>();
+            namespaces.Add(NamespaceName.UnknownName);
+            namespaces.Add(NamespaceName.GlobalNamespace);
+
+            var context = new SSTPrintingContext();
+            namespaces.FormatAsUsingList(context);
+            const string expected = "";
+            Assert.AreEqual(expected, context.ToString());
+        }
     }
 }

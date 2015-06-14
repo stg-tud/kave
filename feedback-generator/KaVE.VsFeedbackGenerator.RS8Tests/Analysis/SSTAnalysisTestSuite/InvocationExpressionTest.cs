@@ -241,12 +241,5 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             // TODO @seb: implement test
             Assert.Fail();
         }
-
-        public void MinimalExample()
-        {
-            //object.Equals()
-
-            GetHashCode();
-        }
     }
 }

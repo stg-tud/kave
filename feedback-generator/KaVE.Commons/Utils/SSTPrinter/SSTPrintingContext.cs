@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using KaVE.Commons.Model.Names;
+using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.SSTs;
 using KaVE.Commons.Model.SSTs.Visitor;
 using KaVE.Commons.Model.TypeShapes;
@@ -174,7 +175,7 @@ namespace KaVE.Commons.Utils.SSTPrinter
         /// </summary>
         /// <param name="typeName">The type name to append.</param>
         /// <returns>The context after appending.</returns>
-        public virtual SSTPrintingContext TypeName(ITypeName typeName)
+        public virtual SSTPrintingContext TypeNameOnly(ITypeName typeName)
         {
             return Text(typeName.Name);
         }
@@ -193,7 +194,7 @@ namespace KaVE.Commons.Utils.SSTPrinter
         {
             _seenNamespaces.Add(typeName.Namespace);
 
-            TypeName(typeName);
+            TypeNameOnly(typeName);
 
             if (typeName.HasTypeParameters)
             {
@@ -207,10 +208,9 @@ namespace KaVE.Commons.Utils.SSTPrinter
                     }
                     else
                     {
-                        if (p.TypeParameterType.TypeParameterShortName == "?" || // C`1[[T -> ?]]
-                            p.TypeParameterType.TypeParameterShortName == null) // C`1[[T]]
+                        if (p.TypeParameterType.TypeParameterShortName == null) // e.g., C`1[[T]]
                         {
-                            TypeParameterShortName(p.TypeParameterShortName);
+                            TypeParameterShortName(TypeName.UnknownName.Identifier);
                         }
                         else
                         {
@@ -299,7 +299,7 @@ namespace KaVE.Commons.Utils.SSTPrinter
                 NewLine().Indentation().Text("{");
             }
 
-            this.IndentationLevel++;
+            IndentationLevel++;
 
             foreach (var statement in block)
             {
@@ -307,7 +307,7 @@ namespace KaVE.Commons.Utils.SSTPrinter
                 statement.Accept(visitor, this);
             }
 
-            this.IndentationLevel--;
+            IndentationLevel--;
 
             if (withBrackets)
             {
@@ -317,6 +317,7 @@ namespace KaVE.Commons.Utils.SSTPrinter
             return this;
         }
 
+        // TODO: rename method and adapt all usages
         public override string ToString()
         {
             return _sb.ToString();
