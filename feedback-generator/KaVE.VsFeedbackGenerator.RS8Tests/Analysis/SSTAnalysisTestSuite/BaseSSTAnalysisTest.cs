@@ -117,6 +117,11 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
             return new ReferenceExpression {Reference = new VariableReference {Identifier = id}};
         }
 
+        protected ISimpleExpression RefExpr(IReference reference)
+        {
+            return new ReferenceExpression {Reference = reference};
+        }
+
         #region custom asserts
 
         protected void AssertAllMethods(params IMethodDeclaration[] expectedDecls)
@@ -291,6 +296,16 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
                 MethodName = methodName,
                 Parameters = Lists.NewList(parameters)
             };
+        }
+
+        protected static IMethodName Method(string methodDef, params object[] args)
+        {
+            return MethodName.Get(string.Format(methodDef, args));
+        }
+
+        protected static ITypeName Type(string shortName)
+        {
+            return TypeName.Get("N." + shortName + ", TestProject");
         }
 
         #endregion

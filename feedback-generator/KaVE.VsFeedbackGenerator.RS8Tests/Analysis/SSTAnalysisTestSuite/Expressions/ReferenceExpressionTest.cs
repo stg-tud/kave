@@ -17,10 +17,13 @@
  *    - Sebastian Proksch
  */
 
+using System.Linq;
 using KaVE.Commons.Model.Names.CSharp;
+using KaVE.Commons.Model.SSTs;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Commons.Model.SSTs.Impl.References;
+using KaVE.Commons.Utils.Collections;
 using NUnit.Framework;
 using Fix = KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite.SSTAnalysisFixture;
 
@@ -98,35 +101,108 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite.Expres
                     }));
         }
 
+        public void SetupReferenceExample(string lineWithReference)
+        {
+            CompleteInCSharpFile(@"
+                namespace N
+                {
+                    public class C
+                    {
+                        public C c;
+                        public static C s;
+                        public C f;
+                        public C P { get { return this; } }
+                        public C GetC()
+                        {
+                            return this;
+                        }
+                    }
+
+                    internal class C2
+                    {
+                        private void M(C c)
+                        {
+                            " + lineWithReference + @"
+                        }
+                    }
+                }
+            ");
+        }
+
+        public void AssertReferenceExampleBody(params IStatement[] stmts)
+        {
+            var m = ResultSST.Methods.First();
+            Assert.AreEqual(Lists.NewList(stmts), m.Body);
+        }
+
         [Test]
         public void Reference_OnReference()
         {
-            CompleteInMethod(@"
-                object o = null;
-                o.f.g$
-            ");
+            SetupReferenceExample("c.c.f$");
 
-            AssertBody(
-                VarDecl("o", Fix.Object),
-                Assign("o", new NullExpression()),
-                VarDecl("$0", Fix.Unknown),
+            AssertReferenceExampleBody(
+                VarDecl("$0", TypeName.Get("N.C, TestProject")),
                 Assign(
                     "$0",
-                    new ReferenceExpression
-                    {
-                        // TODO @seb: extend the implementation here and add valid fieldname!
-                        Reference = new FieldReference
+                    RefExpr(
+                        new FieldReference
                         {
-                            Reference = VarRef("o"),
-                            FieldName = FieldName.Get(string.Format("[{0}] [{0}].f", Fix.Unknown))
-                        }
-                    }),
+                            Reference = VarRef("c"),
+                            FieldName = FieldName.Get(string.Format("[{0}] [{0}].c", TypeName.UnknownName)),
+                        })),
                 ExprStmt(
                     new CompletionExpression
                     {
                         VariableReference = VarRef("$0"),
-                        Token = "g"
+                        Token = "f"
                     }));
+        }
+
+        [Test]
+        public void Reference_OnInvocation()
+        {
+            SetupReferenceExample("c.GetC().f$");
+
+            AssertReferenceExampleBody(
+                VarDecl("$0", Type("C")),
+                Assign(
+                    "$0",
+                    Invoke("c", Method("[{0}] [{0}].GetC()", Type("C")))),
+                ExprStmt(
+                    new CompletionExpression
+                    {
+                        VariableReference = VarRef("$0"),
+                        Token = "f"
+                    }));
+        }
+    }
+}
+
+namespace N
+{
+    public class C
+    {
+        public C c;
+        public static C s;
+        public int f;
+
+        public int P
+        {
+            get { return f; }
+        }
+
+        public int GetF()
+        {
+            return f;
+        }
+    }
+
+    internal class C2
+    {
+        private void M(C c)
+        {
+            // c.c.f
+            // C.s.
         }
     }
 }

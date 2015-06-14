@@ -65,8 +65,8 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
                     {
                         child.Accept(this, context);
                     }
-                    catch (NullReferenceException nre) {}
-                    catch (AssertException ae) {}
+                    catch (NullReferenceException) {}
+                    catch (AssertException) {}
                 });
         }
 
@@ -217,6 +217,36 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
                     }
                 });
             if (IsTargetMatch(expr, CompletionCase.EmptyCompletionAfter))
+            {
+                body.Add(EmptyCompletionExpression);
+            }
+        }
+
+        public override void VisitReturnStatement(IReturnStatement stmt, IList<IStatement> body)
+        {
+            if (IsTargetMatch(stmt, CompletionCase.EmptyCompletionBefore))
+            {
+                body.Add(EmptyCompletionExpression);
+            }
+
+            if (stmt.Value == null)
+            {
+                body.Add(
+                    new ReturnStatement
+                    {
+                        IsVoid = true
+                    });
+            }
+            else
+            {
+                body.Add(
+                    new ReturnStatement
+                    {
+                        Expression = _exprVisitor.ToSimpleExpression(stmt.Value, body) ?? new UnknownExpression()
+                    });
+            }
+
+            if (IsTargetMatch(stmt, CompletionCase.EmptyCompletionAfter))
             {
                 body.Add(EmptyCompletionExpression);
             }

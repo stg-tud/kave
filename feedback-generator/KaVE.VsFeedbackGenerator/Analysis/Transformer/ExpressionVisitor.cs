@@ -42,12 +42,14 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
         private readonly UniqueVariableNameGenerator _nameGen;
         private readonly CompletionTargetMarker _marker;
         private readonly ToAssignableReference _toAssignableRef;
+        private readonly TypeDetectionVisitor _typeDetector;
 
         public ExpressionVisitor(UniqueVariableNameGenerator nameGen, CompletionTargetMarker marker)
         {
             _nameGen = nameGen;
             _marker = marker;
             _toAssignableRef = new ToAssignableReference(nameGen);
+            _typeDetector = new TypeDetectionVisitor();
         }
 
         public IAssignableExpression ToAssignableExpr(IVariableInitializer csExpr, IList<IStatement> body)
@@ -107,17 +109,22 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
             }
 
             var expr = ToAssignableExpr(csExpr, body);
-            var assigneeId = _nameGen.GetNextVariableName();
-            var assigneeRef = VarRef(assigneeId);
-            body.Add(new VariableDeclaration {Reference = assigneeRef, Type = TypeName.UnknownName});
+            var tmpType = csExpr.Accept(_typeDetector, null) ?? TypeName.UnknownName;
+            var tmpVar = VarRef(_nameGen.GetNextVariableName());
+            body.Add(
+                new VariableDeclaration
+                {
+                    Reference = tmpVar,
+                    Type = tmpType
+                });
             body.Add(
                 new Assignment
                 {
-                    Reference = assigneeRef,
+                    Reference = tmpVar,
                     Expression = expr
                 });
 
-            return assigneeRef;
+            return tmpVar;
         }
 
         private static IVariableReference VarRef(string id)
