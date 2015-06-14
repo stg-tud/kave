@@ -60,7 +60,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter
         [Test]
         public void TypeNameFormat_UnknownToUnknownGenericType()
         {
-            AssertTypeFormat("Task<T>", "Task`1[[TResult -> T]], mscorlib, 4.0.0.0");
+            AssertTypeFormat("Task<?>", "Task`1[[TResult -> T]], mscorlib, 4.0.0.0");
         }
 
         [Test]

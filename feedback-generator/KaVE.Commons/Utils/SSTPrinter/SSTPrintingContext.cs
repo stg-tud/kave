@@ -202,13 +202,13 @@ namespace KaVE.Commons.Utils.SSTPrinter
 
                 foreach (var p in typeName.TypeParameters)
                 {
-                    if (!p.IsUnknownType || p.TypeParameterType.IsUnknownType)
+                    if (p.IsUnknownType || p.TypeParameterType.IsUnknownType)
                     {
                         TypeParameterShortName(TypeName.UnknownName.Identifier);
                     }
                     else
                     {
-                        TypeParameterShortName(p.TypeParameterType.TypeParameterShortName);
+                        Type(p.TypeParameterType);
                     }
 
                     if (!ReferenceEquals(p, typeName.TypeParameters.Last()))
