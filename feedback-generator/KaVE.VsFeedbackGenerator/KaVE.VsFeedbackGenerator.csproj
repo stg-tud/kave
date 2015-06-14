@@ -278,14 +278,14 @@
   <Choose>
     <When Condition="'$(UploadUrl)' == 'DATEV'">
       <ItemGroup>
-        <Compile Include="SessionManager\Presentation\ExportSettings.cs" />
-        <None Include="SessionManager\Presentation\ExportSettingsKave.cs"/>
+        <Compile Include="SessionManager\Presentation\ExportSettingsDATEV.cs" />
+        <None Include="SessionManager\Presentation\ExportSettings.cs" />
       </ItemGroup>
     </When>
     <Otherwise>
       <ItemGroup>
-        <None Include="SessionManager\Presentation\ExportSettings.cs" />
-        <Compile Include="SessionManager\Presentation\ExportSettingsKave.cs"/>
+        <None Include="SessionManager\Presentation\ExportSettingsDATEV.cs" />
+        <Compile Include="SessionManager\Presentation\ExportSettings.cs" />
       </ItemGroup>
     </Otherwise>
   </Choose>

@@ -8,7 +8,8 @@
  *    http://www.apache.org/licenses/LICENSE-2.0
  * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
+ * distributed und
+ * er the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
@@ -23,7 +24,7 @@ using JetBrains.Application.Settings;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
 {
-    [SettingsKey(typeof (FeedbackSettings), "Kave Feedback-Export Settings")]
+    [SettingsKey(typeof(FeedbackSettings), "Kave Feedback-Export Settings")]
     // WARNING: Do not change classname, as it is used to identify settings
     internal class ExportSettings
     {
@@ -39,12 +40,10 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
         [SettingsEntry(false, "KaVE FeedbackGenerator RemoveSessionIDs")]
         public bool RemoveSessionIDs;
 
-        [SettingsEntry("https://licsrv1.zd.datev.de/feedback-server/", "KaVE FeedbackGenerator UploadUrl")]
-        //[SettingsEntry("http://kave.st.informatik.tu-darmstadt.de:80/", "KaVE FeedbackGenerator UploadUrl")]
+        [SettingsEntry("http://kave.st.informatik.tu-darmstadt.de/", "KaVE FeedbackGenerator UploadUrl")]
         public string UploadUrl;
 
-        [SettingsEntry("http://www3.bk.datev.de/eprtl/dyn.ica?", "KaVE FeedbackGenerator WebAccessPrefix")]
-        //[SettingsEntry("", "KaVE FeedbackGenerator WebAccessPrefix")]
+        [SettingsEntry("", "KaVE FeedbackGenerator WebAccessPrefix")]
         public string WebAccessPrefix;
     }
 }
