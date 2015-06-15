@@ -20,9 +20,11 @@
 
 using System;
 using System.Collections.Generic;
-using JetBrains.Application;
+using JetBrains.Application.Settings;
 using JetBrains.ReSharper.Feature.Services.CodeCompletion;
 using JetBrains.ReSharper.Feature.Services.Lookup;
+using JetBrains.ReSharper.FeaturesTestFramework.Completion;
+using JetBrains.ReSharper.Resources.Shell;
 using JetBrains.TextControl;
 using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Model.Names;
@@ -34,6 +36,12 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests
 {
     internal abstract class BaseCSharpCodeCompletionTest : BaseCodeCompletionTest
     {
+        protected override CodeCompletionTestType TestType
+        {
+            // TODO RS9
+            get { return CodeCompletionTestType.Selection; }
+        }
+
         protected void CompleteInMethod(string methodBody)
         {
             CompleteInClass(string.Format(@"
@@ -71,9 +79,10 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests
             ITextControl textControl,
             IntellisenseManager intellisenseManager,
             bool automatic,
-            string documentText)
+            string documentText,
+            IContextBoundSettingsStore settingsStore)
         {
-            base.ExecuteCodeCompletion(suffix, textControl, intellisenseManager, automatic, documentText);
+            base.ExecuteCodeCompletion(suffix, textControl, intellisenseManager, automatic, documentText, settingsStore);
 
             if (TestAnalysisComponent.HasFailed)
             {

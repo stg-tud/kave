@@ -26,7 +26,8 @@ namespace KaVE.VsFeedbackGenerator.Tests.TestFactories.Actions
     {
         public static void SetupExecutableAction(this Mock<IActionManager> manager, string actionId)
         {
-            manager.Setup(m => m.GetExecutableAction(actionId)).Returns(new MockExecutableAction(actionId));
+            // RS9
+            //manager.Setup(m => m.GetExecutableAction(actionId)).Returns(new MockExecutableAction(actionId));
         }
     }
 }

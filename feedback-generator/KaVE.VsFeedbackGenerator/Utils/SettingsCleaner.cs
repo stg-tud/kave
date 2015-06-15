@@ -19,14 +19,15 @@
 
 using JetBrains.ActionManagement;
 using JetBrains.Application.DataContext;
+using JetBrains.UI.ActionsRevised;
 using KaVE.VsFeedbackGenerator.SessionManager;
 using KaVE.VsFeedbackGenerator.SessionManager.Presentation;
 using KaVE.VsFeedbackGenerator.Utils.Logging;
 
 namespace KaVE.VsFeedbackGenerator.Utils
 {
-    [ActionHandler(ActionId)]
-    public class SettingsCleaner : IActionHandler
+    [Action(ActionId)]
+    public class SettingsCleaner : IExecutableAction
     {
         public const string ActionId = "KaVE.VsFeedbackGenerator.ResetAll";
 

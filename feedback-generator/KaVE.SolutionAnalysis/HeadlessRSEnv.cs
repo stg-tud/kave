@@ -18,16 +18,23 @@
  */
 
 using JetBrains.Application;
-using JetBrains.Application.Extensions;
 using KaVE.VsFeedbackGenerator;
 using KaVE.VsFeedbackGenerator.VsIntegration;
+using NuGet;
 
 namespace KaVE.SolutionAnalysis
 {
     [ShellComponent]
-    class HeadlessRSEnv : IRSEnv
+    internal class HeadlessRSEnv : IRSEnv
     {
-        public IExtension KaVEExtension { get { return null; } }
-        public IIDESession IDESession { get { return null; } }
+        public IIDESession IDESession
+        {
+            get { return null; }
+        }
+
+        public SemanticVersion KaVEVersion
+        {
+            get { return null; }
+        }
     }
 }

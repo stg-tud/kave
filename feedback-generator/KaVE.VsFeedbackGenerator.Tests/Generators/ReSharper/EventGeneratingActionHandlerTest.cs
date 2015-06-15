@@ -20,6 +20,7 @@
 using System;
 using JetBrains.ActionManagement;
 using JetBrains.Application.DataContext;
+using JetBrains.UI.ActionsRevised;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.TestUtils;
 using KaVE.VsFeedbackGenerator.Generators.ReSharper;
@@ -32,16 +33,17 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.ReSharper
     internal class EventGeneratingActionHandlerTest : EventGeneratorTestBase
     {
         private const string TestActionId = "TestActionId";
-        private Mock<IUpdatableAction> _mockTestAction;
+        private Mock<IExecutableAction> _mockTestAction;
         private EventGeneratingActionHandler _uut;
         private IDataContext _testDataContext;
 
         [SetUp]
         public void SetUp()
         {
-            _mockTestAction = new Mock<IUpdatableAction>();
-            _mockTestAction.Setup(a => a.Id).Returns(TestActionId);
-            _uut = new EventGeneratingActionHandler(_mockTestAction.Object, TestRSEnv, TestMessageBus, TestDateUtils);
+            _mockTestAction = new Mock<IExecutableAction>();
+            // TODO RS9
+            //_mockTestAction.Setup(a => a.Id).Returns(TestActionId);
+            //_uut = new EventGeneratingActionHandler(_mockTestAction.Object, TestRSEnv, TestMessageBus, TestDateUtils);
             _testDataContext = new Mock<IDataContext>().Object;
         }
 

@@ -19,7 +19,8 @@
 
 using System;
 using System.Reflection;
-using JetBrains.ReSharper.Intentions.Extensibility;
+using JetBrains.ReSharper.Feature.Services.Bulbs;
+using JetBrains.ReSharper.Feature.Services.Intentions;
 using JetBrains.UI.BulbMenu;
 using KaVE.VsFeedbackGenerator.MessageBus;
 using KaVE.VsFeedbackGenerator.Utils;

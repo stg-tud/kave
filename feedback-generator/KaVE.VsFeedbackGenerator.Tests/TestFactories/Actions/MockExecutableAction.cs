@@ -17,13 +17,15 @@ using System;
 using JetBrains.ActionManagement;
 using JetBrains.Application.DataContext;
 using JetBrains.DataFlow;
+using JetBrains.UI.ActionsRevised;
 using JetBrains.Util.Logging;
 
 namespace KaVE.VsFeedbackGenerator.Tests.TestFactories.Actions
 {
     internal class MockExecutableAction : IExecutableAction
     {
-        private readonly HandlersList _handlers;
+        // TODO RS9
+       // private readonly HandlersList _handlers;
 
         public IDataContext DataContext { get; private set; }
 
@@ -32,25 +34,25 @@ namespace KaVE.VsFeedbackGenerator.Tests.TestFactories.Actions
         public MockExecutableAction(string id)
         {
             Id = id;
-            _handlers = new HandlersList(id);
+            //_handlers = new HandlersList(id);
             ShowConflict = true;
         }
 
-        internal IActionHandler GetNextHandler(ref int i)
+        internal IExecutableAction GetNextHandler(ref int i)
         {
             while (i >= 0)
             {
-                var handler = _handlers.GetHandler(i);
-                if (!_handlers.IsRemoved(handler))
-                    return handler;
+               // var handler = _handlers.GetHandler(i);
+              //  if (!_handlers.IsRemoved(handler))
+              //      return handler;
                 --i;
             }
             return null;
         }
 
-        public void Execute(IDataContext context)
+        public void Execute(IDataContext context, DelegateExecute nextExecute)
         {
-            using (new HandlersList.Cookie(_handlers))
+            /*using (new HandlersList.Cookie(_handlers))
             {
                 DataContext = context;
                 var i = _handlers.Count - 1;
@@ -67,20 +69,20 @@ namespace KaVE.VsFeedbackGenerator.Tests.TestFactories.Actions
                 {
                     DataContext = null;
                 }
-            }
+            }*/
         }
 
-        public void AddHandler(Lifetime lifetime, IActionHandler handler)
+        public void AddHandler(Lifetime lifetime, IExecutableAction handler)
         {
-            _handlers.AddHandler(handler);
+           // _handlers.AddHandler(handler);
         }
 
-        public void RemoveHandler(IActionHandler handler)
+        public void RemoveHandler(IExecutableAction handler)
         {
-            _handlers.RemoveHandler(handler);
+            //_handlers.RemoveHandler(handler);
         }
 
-        public bool Update(IDataContext context)
+        public bool Update(IDataContext context, ActionPresentation presentation, DelegateUpdate nextUpdate)
         {
             throw new NotImplementedException();
         }

@@ -19,16 +19,15 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using JetBrains.ReSharper.Feature.Services.CSharp.CodeCompletion;
+using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure.LookupItems;
+using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure.LookupItems.Impl;
+using JetBrains.ReSharper.Feature.Services.LiveTemplates.Templates;
 using JetBrains.ReSharper.Feature.Services.LiveTemplates.Util;
-using JetBrains.ReSharper.Feature.Services.Lookup;
-using JetBrains.ReSharper.LiveTemplates.Templates;
-using KaVE.JetBrains.Annotations;
 using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.Names.ReSharper;
+using KaVE.JetBrains.Annotations;
 using KaVE.VsFeedbackGenerator.Utils.Names;
 
 namespace KaVE.VsFeedbackGenerator.Utils
@@ -67,12 +66,19 @@ namespace KaVE.VsFeedbackGenerator.Utils
             // Only the lookup-item type tells whether this is a proposal for a constructor call or not.
             // In fact, ConstructorLookupItem is derived from TypeLookupItem and the additional interface
             // IConstructorLookupItem does not provide anything new. Hence, the special treatment.
+
+            // TODO RS9
+            return declaredElementLookupItem.PreferredDeclaredElement.GetName();
+            /*
             var constructorLookupItem = declaredElementLookupItem as ConstructorLookupItem;
             return constructorLookupItem != null
                 ? constructorLookupItem.GetName()
                 : declaredElementLookupItem.PreferredDeclaredElement.GetName();
+             */
         }
 
+        // TODO RS9
+        /*
         private static IMethodName GetName(this ConstructorLookupItem constructor)
         {
             var typeName = constructor.PreferredDeclaredElement.GetName();
@@ -84,6 +90,7 @@ namespace KaVE.VsFeedbackGenerator.Utils
                       .Append("]..ctor()");
             return MethodName.Get(identifier.ToString());
         }
+         * */
 
         private static IName TryGetNameFromWrappedLookupItem(ILookupItem lookupItem)
         {
@@ -98,6 +105,7 @@ namespace KaVE.VsFeedbackGenerator.Utils
         private static IName TryGetNameFromKeywordOrTextualLookupItem(ILookupItem lookupItem)
         {
             // TODO implement specific name subclasses?
+            // TODO RS9
             return (lookupItem is IKeywordLookupItem || lookupItem is ITextualLookupItem)
                 ? Name.Get(lookupItem.GetType().Name + ":" + lookupItem.DisplayName)
                 : null;

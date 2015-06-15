@@ -18,7 +18,7 @@
  */
 
 using JetBrains.Application;
-using JetBrains.Application.Extensions;
+using JetBrains.UI.Resources;
 using KaVE.VsFeedbackGenerator.VsIntegration;
 
 namespace KaVE.VsFeedbackGenerator.RS8Tests
@@ -26,6 +26,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests
     [ShellComponent]
     internal class TestRSEnv : RSEnv
     {
-        public TestRSEnv(ExtensionManager extensionManager, IIDESession ideSession) : base(extensionManager, ideSession) {}
+        public TestRSEnv(OptionsThemedIcons.ExtensionManager extensionManager, IIDESession ideSession)
+            : base(extensionManager, ideSession) {}
     }
 }

@@ -18,22 +18,21 @@
  *    - Uli Fahrer
  */
 
-using System.Collections.Generic;
 using JetBrains.Application;
 using JetBrains.Application.Components;
-using JetBrains.Application.Extensions;
-using JetBrains.DataFlow;
-using JetBrains.Util;
+using JetBrains.UI.Resources;
 using KaVE.JetBrains.Annotations;
 using KaVE.VsFeedbackGenerator.VsIntegration;
+using NuGet;
 
 namespace KaVE.VsFeedbackGenerator
 {
     public interface IRSEnv
     {
-        IExtension KaVEExtension { get; }
+        // TODO RS9: included an "IExtension" before... access to meta info like the version. add version again
 
         IIDESession IDESession { get; }
+        SemanticVersion KaVEVersion { get; }
     }
 
     [ShellComponent(ProgramConfigurations.VS_ADDIN)]
@@ -41,23 +40,13 @@ namespace KaVE.VsFeedbackGenerator
     {
         public const string ExtensionId = "KaVE.VsFeedbackGenerator";
 
-        private readonly ExtensionManager _extensionManager;
+        private readonly OptionsThemedIcons.ExtensionManager _extensionManager;
         private readonly IIDESession _ideSession;
 
-        public RSEnv(ExtensionManager extensionManager, IIDESession ideSession)
+        public RSEnv(OptionsThemedIcons.ExtensionManager extensionManager, IIDESession ideSession)
         {
             _extensionManager = extensionManager;
             _ideSession = ideSession;
-        }
-
-        [NotNull]
-        public IExtension KaVEExtension
-        {
-            get
-            {
-                var extension = _extensionManager.GetExtension(ExtensionId);
-                return extension ?? new DevExtension();
-            }
         }
 
         [NotNull]
@@ -66,62 +55,10 @@ namespace KaVE.VsFeedbackGenerator
             get { return _ideSession; }
         }
 
-        private class DevExtension : IExtension
+        // TODO RS9
+        public SemanticVersion KaVEVersion
         {
-            public void PutData<T>(Key<T> key, T val) where T : class
-            {
-                throw new System.NotImplementedException();
-            }
-
-            public T GetData<T>(Key<T> key) where T : class
-            {
-                throw new System.NotImplementedException();
-            }
-
-            public IEnumerable<KeyValuePair<object, object>> EnumerateData()
-            {
-                throw new System.NotImplementedException();
-            }
-
-            public IEnumerable<FileSystemPath> GetFiles(string fileType)
-            {
-                throw new System.NotImplementedException();
-            }
-
-            public string Id
-            {
-                get { return ExtensionId; }
-            }
-
-            public SemanticVersion Version
-            {
-                get { return SemanticVersion.Parse("1.0-dev"); }
-            }
-
-            public IExtensionMetadata Metadata
-            {
-                get { throw new System.NotImplementedException(); }
-            }
-
-            public bool Supported
-            {
-                get { throw new System.NotImplementedException(); }
-            }
-
-            public IProperty<bool?> Enabled
-            {
-                get { throw new System.NotImplementedException(); }
-            }
-
-            public ListEvents<ExtensionRecord> RuntimeInfoRecords
-            {
-                get { throw new System.NotImplementedException(); }
-            }
-
-            public IExtensionProvider Source
-            {
-                get { throw new System.NotImplementedException(); }
-            }
+            get { return new SemanticVersion(0, 0, 0, "XYZ"); }
         }
     }
 }

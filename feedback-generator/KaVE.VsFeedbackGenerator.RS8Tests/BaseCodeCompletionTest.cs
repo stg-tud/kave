@@ -20,10 +20,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using JetBrains.Application.Settings;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Feature.Services.CodeCompletion;
 using JetBrains.ReSharper.Feature.Services.Lookup;
-using JetBrains.ReSharper.Feature.Services.Tests.CSharp.FeatureServices.CodeCompletion;
+using JetBrains.ReSharper.FeaturesTestFramework.Completion;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.TestFramework;
 using JetBrains.TextControl;
@@ -67,19 +68,15 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests
                 return Path.Combine(basePath.Split('.'));
             }
         }
-
-        protected override bool ExecuteAction
-        {
-            get { return false; }
-        }
-
+        
         protected ProposalCollection ResultProposalCollection { get; private set; }
 
         protected override void ExecuteCodeCompletion(Suffix suffix,
             ITextControl textControl,
             IntellisenseManager intellisenseManager,
             bool automatic,
-            string documentText)
+            string documentText,
+            IContextBoundSettingsStore settingsStore)
         {
             var psiSourceFile = textControl.Document.GetPsiSourceFile(Solution);
             Assert.IsNotNull(psiSourceFile, "psiSourceFile == null");
@@ -88,13 +85,16 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests
             var service =
                 Solution.GetComponent<ILanguageManager>()
                         .TryGetService<CodeCompletionModifierProvider>(psiSourceFile.PrimaryPsiLanguage);
+            // TODO RS9: meaning of (now necessary) variable?
+            var importItemsInBasic = true;
             var parameters = service != null
-                ? service.GetModifier(_myCodeCompletionTypes)
+                ? service.GetModifier(_myCodeCompletionTypes, automatic, settingsStore)
                 : CodeCompletionModifierProvider.GetModifierBasic(
                     _myCodeCompletionTypes.Take(_myCodeCompletionTypes.Count - 1).ToList(),
-                    _myCodeCompletionTypes[_myCodeCompletionTypes.Count - 1]);
+                    _myCodeCompletionTypes[_myCodeCompletionTypes.Count - 1], automatic, importItemsInBasic);
 
-            var codeCompletionResult = intellisenseManager.GetCompletionResult(parameters, textControl);
+            // TODO RS9
+            /*var codeCompletionResult = intellisenseManager.GetCompletionResult(parameters, textControl);
             if (codeCompletionResult != null)
             {
                 var best =
@@ -103,9 +103,9 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests
                 ResultProposalCollection = GetItemsFromResult(codeCompletionResult, best).ToProposalCollection();
             }
             else
-            {
+            {*/
                 ResultProposalCollection = new ProposalCollection();
-            }
+            //}
         }
 
         [TearDown]

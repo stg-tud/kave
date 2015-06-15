@@ -18,8 +18,9 @@
  */
 
 using System;
+using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure.LookupItems;
 using JetBrains.ReSharper.Feature.Services.CSharp.CodeCompletion.Infrastructure;
-using JetBrains.ReSharper.Feature.Services.Lookup;
+using JetBrains.ReSharper.Features.Intellisense.CodeCompletion.CSharp.Rules;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.Xaml.DeclaredElements;
@@ -40,7 +41,8 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Utils
 
         protected override bool AddLookupItems(CSharpCodeCompletionContext context, GroupedItemsCollector collector)
         {
-            collector.AddToTop(CreateXamlLookupItem());
+            // TODO RS9: was "AddToTop"
+            collector.Add(CreateXamlLookupItem());
             return true;
         }
 

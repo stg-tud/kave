@@ -23,6 +23,7 @@ using KaVE.Commons.TestUtils.Model.Events;
 using KaVE.VsFeedbackGenerator.Generators;
 using KaVE.VsFeedbackGenerator.MessageBus;
 using KaVE.VsFeedbackGenerator.Utils;
+using NuGet;
 using NUnit.Framework;
 
 namespace KaVE.VsFeedbackGenerator.Tests.Generators
@@ -58,7 +59,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators
         [Test]
         public void ShouldSetExtensionVersion()
         {
-            TestRSEnv.MockExtension.Setup(ex => ex.Version).Returns(SemanticVersion.Parse("1.0-test"));
+            TestRSEnv.KaVEVersion = SemanticVersion.Parse("1.0-test");
 
             _uut.FireTestIDEEvent();
 

@@ -13,14 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using JetBrains.ActionManagement;
+using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure.LookupItems;
+using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure.Match;
 using JetBrains.ReSharper.Feature.Services.Lookup;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
-using JetBrains.TextControl.Actions;
+using JetBrains.UI.ActionSystem.Text;
 using JetBrains.Util;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Utils;
@@ -66,36 +69,37 @@ namespace KaVE.VsFeedbackGenerator.CodeCompletion
         public delegate void TriggeredHandler(string initialPrefix, IEnumerable<ILookupItem> displayedItems);
 
         /// <summary>
-        /// Fired when the code completion is about to be opened.
+        ///     Fired when the code completion is about to be opened.
         /// </summary>
         public event TriggeredHandler OnTriggered = delegate { };
 
         private void RegisterToLookupEvents(IExtendedLookup lookup)
         {
-            var lifetime = lookup.Lifetime;
-
             // Event handlers are registered in order of the actual events's occurence.
 
             lookup.BeforeShownItemsUpdated += OnBeforeShownItemsUpdated;
             lookup.CurrentItemChanged += HandleCurrentItemChanged;
 
             // R# actions that lead to the completion being finished
-            _actionManager.GetExecutableAction("ForceCompleteItem")
-                .AddHandler(lifetime, new DelegateActionHandler(() => _terminationTrigger = IDEEvent.Trigger.Typing));
-            _actionManager.GetExecutableAction(TextControlActions.ENTER_ACTION_ID)
-                .AddHandler(lifetime, new DelegateActionHandler(() => _terminationTrigger = IDEEvent.Trigger.Shortcut));
-            _actionManager.GetExecutableAction(TextControlActions.TAB_ACTION_ID)
-                .AddHandler(lifetime, new DelegateActionHandler(() => _terminationTrigger = IDEEvent.Trigger.Shortcut));
+            RegisterAction("ForceCompleteItem", () => _terminationTrigger = IDEEvent.Trigger.Typing);
+            RegisterAction(TextControlActions.ENTER_ACTION_ID, () => _terminationTrigger = IDEEvent.Trigger.Shortcut);
+            RegisterAction(TextControlActions.TAB_ACTION_ID, () => _terminationTrigger = IDEEvent.Trigger.Shortcut);
             lookup.MouseDown += HandleMouseDown;
 
             lookup.Closed += HandleClosed;
             lookup.ItemCompleted += HandleItemCompleted;
         }
 
+        private void RegisterAction(string forcecompleteitem, Action action)
+        {
+            var forceCompleteItemAction = _actionManager.Defs.GetActionDefById(forcecompleteitem);
+            _actionManager.Handlers.AddHandler(forceCompleteItemAction, new DelegateActionHandler(action));
+        }
+
         /// <summary>
-        /// Invoked when new lookup items have been computed, before they are shown.
+        ///     Invoked when new lookup items have been computed, before they are shown.
         /// </summary>
-        private void OnBeforeShownItemsUpdated(object sender, IList<Pair<ILookupItem, MatchingResult>> items)
+        private void OnBeforeShownItemsUpdated(object sender, IEnumerable<Pair<ILookupItem, MatchingResult>> items)
         {
             DisplayedItemsUpdated(items.Select(pair => pair.First));
         }
@@ -104,14 +108,14 @@ namespace KaVE.VsFeedbackGenerator.CodeCompletion
         public delegate void DisplayedItemsUpdatedHandler(IEnumerable<ILookupItem> displayedItems);
 
         /// <summary>
-        /// Fired after new items have been computed and are now added to the lookup.
+        ///     Fired after new items have been computed and are now added to the lookup.
         /// </summary>
-        public event DisplayedItemsUpdatedHandler DisplayedItemsUpdated = delegate {};
+        public event DisplayedItemsUpdatedHandler DisplayedItemsUpdated = delegate { };
 
         /// <summary>
-        /// Invoked when the selection changes, either by pressing the arrow keys, or as a result of filtering, or
-        /// because the user clicked an item (in which case the completion is closed and completed immediately
-        /// after the selection change).
+        ///     Invoked when the selection changes, either by pressing the arrow keys, or as a result of filtering, or
+        ///     because the user clicked an item (in which case the completion is closed and completed immediately
+        ///     after the selection change).
         /// </summary>
         private void HandleCurrentItemChanged(object sender, EventArgs eventArgs)
         {
@@ -138,9 +142,9 @@ namespace KaVE.VsFeedbackGenerator.CodeCompletion
         public delegate void PrefixChangedHandler(string newPrefix, IEnumerable<ILookupItem> displayedLookupItems);
 
         /// <summary>
-        /// Fired when the prefix changes (typing or deletion of a character).
+        ///     Fired when the prefix changes (typing or deletion of a character).
         /// </summary>
-        public event PrefixChangedHandler OnPrefixChanged = delegate { }; 
+        public event PrefixChangedHandler OnPrefixChanged = delegate { };
 
         private void MaybeHandleSelectionChange()
         {
@@ -157,19 +161,19 @@ namespace KaVE.VsFeedbackGenerator.CodeCompletion
         public delegate void SelectionChangedHandler(ILookupItem selectedItem);
 
         /// <summary>
-        /// Fired for the initial selection, any manual selection change (using the arrow keys), selection changes
-        /// caused by filtering, and when an unselected item is clicked (which immediately applies the selected
-        /// completion). Fired exactly once per selection, i.e., for two subsequent calls the lookup item passed to
-        /// the handler are always different.
+        ///     Fired for the initial selection, any manual selection change (using the arrow keys), selection changes
+        ///     caused by filtering, and when an unselected item is clicked (which immediately applies the selected
+        ///     completion). Fired exactly once per selection, i.e., for two subsequent calls the lookup item passed to
+        ///     the handler are always different.
         /// </summary>
-        public event SelectionChangedHandler OnSelectionChanged = delegate { }; 
+        public event SelectionChangedHandler OnSelectionChanged = delegate { };
 
         /// <summary>
-        /// MouseDown is fired before Closed, as opposed to Click. Therefore, we listen on MouseDown here and assume
-        /// that it will be followed by a MouseUp and, thereby, terminate the completion. This assumption leads to the
-        /// following scenario where termination-trigger detection fails: When the mouse is pressed over the lookup,
-        /// moved to somewhere else, and released there, and before any other interaction with the lookup the same is
-        /// cancelled by something else than a click or the escape button (focus change or ?), the trigger says "Click".
+        ///     MouseDown is fired before Closed, as opposed to Click. Therefore, we listen on MouseDown here and assume
+        ///     that it will be followed by a MouseUp and, thereby, terminate the completion. This assumption leads to the
+        ///     following scenario where termination-trigger detection fails: When the mouse is pressed over the lookup,
+        ///     moved to somewhere else, and released there, and before any other interaction with the lookup the same is
+        ///     cancelled by something else than a click or the escape button (focus change or ?), the trigger says "Click".
         /// </summary>
         private void HandleMouseDown(object sender, EventArgs eventArgs)
         {
@@ -177,10 +181,10 @@ namespace KaVE.VsFeedbackGenerator.CodeCompletion
         }
 
         /// <summary>
-        /// Invoked when the completion is closed, regardless of whether an item was applied or the completion was
-        /// cancelled. In the former case, invocation occurs before that of <see cref="HandleItemCompleted"/>. Therefore,
-        /// it defers the notification of the handler(s) for some time, to make sure any <see cref="HandleItemCompleted"/>
-        /// event arives first.
+        ///     Invoked when the completion is closed, regardless of whether an item was applied or the completion was
+        ///     cancelled. In the former case, invocation occurs before that of <see cref="HandleItemCompleted" />. Therefore,
+        ///     it defers the notification of the handler(s) for some time, to make sure any <see cref="HandleItemCompleted" />
+        ///     event arives first.
         /// </summary>
         private void HandleClosed(object sender, EventArgs eventArgs)
         {
@@ -200,9 +204,9 @@ namespace KaVE.VsFeedbackGenerator.CodeCompletion
         public delegate void ClosedHandler();
 
         /// <summary>
-        /// Invoked when the completion is closed. This happens for every completion, regardless of whether is is
-        /// applied or cancelled. One of <see cref="OnApplied"/> or <see cref="OnCancelled"/> is fired afterwards,
-        /// depending on how the completion was actually closed.
+        ///     Invoked when the completion is closed. This happens for every completion, regardless of whether is is
+        ///     applied or cancelled. One of <see cref="OnApplied" /> or <see cref="OnCancelled" /> is fired afterwards,
+        ///     depending on how the completion was actually closed.
         /// </summary>
         public event ClosedHandler OnClosed = delegate { };
 
@@ -215,9 +219,8 @@ namespace KaVE.VsFeedbackGenerator.CodeCompletion
         public delegate void CancelledHandler(IDEEvent.Trigger trigger);
 
         /// <summary>
-        /// Fired when the code completion is cancelled.
-        /// 
-        /// Attention: This may be far later than the call to <see cref="OnClosed"/>.
+        ///     Fired when the code completion is cancelled.
+        ///     Attention: This may be far later than the call to <see cref="OnClosed" />.
         /// </summary>
         public event CancelledHandler OnCancelled = delegate { };
 
@@ -235,7 +238,7 @@ namespace KaVE.VsFeedbackGenerator.CodeCompletion
         public delegate void AppliedHandler(IDEEvent.Trigger trigger, ILookupItem appliedItem);
 
         /// <summary>
-        /// Fired when the code completion is closed due to the application of an item.
+        ///     Fired when the code completion is closed due to the application of an item.
         /// </summary>
         public event AppliedHandler OnApplied = delegate { };
 

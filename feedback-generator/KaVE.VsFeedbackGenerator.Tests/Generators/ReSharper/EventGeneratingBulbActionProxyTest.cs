@@ -19,7 +19,7 @@
 
 using System;
 using JetBrains.ProjectModel;
-using JetBrains.ReSharper.Intentions.Extensibility;
+using JetBrains.ReSharper.Feature.Services.Bulbs;
 using JetBrains.TextControl;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.TestUtils;

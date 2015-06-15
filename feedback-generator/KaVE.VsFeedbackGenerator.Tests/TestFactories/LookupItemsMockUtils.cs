@@ -13,30 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using JetBrains.ReSharper.Feature.Services.Lookup;
+using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure.LookupItems;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.Impl.Resolve;
 using Moq;
 
 namespace KaVE.VsFeedbackGenerator.Tests.TestFactories
 {
-    static class LookupItemsMockUtils
+    internal static class LookupItemsMockUtils
     {
         private static readonly Random Random = new Random();
 
         private static char GetRandomUpperCaseLetter()
         {
             var offset = Random.Next(0, 26);
-            return (char)('A' + offset);
+            return (char) ('A' + offset);
         }
 
         private static char GetRandomLowerCaseLetter()
         {
             var offset = Random.Next(0, 26);
-            return (char)('a' + offset);
+            return (char) ('a' + offset);
         }
 
         private static string GetRandomName()
@@ -65,7 +66,10 @@ namespace KaVE.VsFeedbackGenerator.Tests.TestFactories
             var lookupItem = new Mock<IDeclaredElementLookupItem>();
             var typeName = GetRandomName();
             var assemblyName = GetRandomName();
-            var declaredElementInstance = new DeclaredElementInstance(TypeMockUtils.MockTypeElement(typeName, assemblyName, "1.2.3.4"), new SubstitutionImpl());
+            var declaredElementInstance =
+                new DeclaredElementInstance(
+                    TypeMockUtils.MockTypeElement(typeName, assemblyName, "1.2.3.4"),
+                    new SubstitutionImpl());
             lookupItem.Setup(i => i.PreferredDeclaredElement).Returns(declaredElementInstance);
             return lookupItem.Object;
         }

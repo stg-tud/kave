@@ -17,28 +17,22 @@
  *    - Sven Amann
  */
 
-using JetBrains.Application.Extensions;
-using JetBrains.Util;
 using KaVE.VsFeedbackGenerator.VsIntegration;
-using Moq;
+using NuGet;
 
 namespace KaVE.VsFeedbackGenerator.Tests
 {
     internal class TestRSEnv : IRSEnv
     {
         private readonly IIDESession _session;
-        private const string KaVEVersion = "1.0-test";
 
         public TestRSEnv(IIDESession session)
         {
             _session = session;
-            MockExtension = new Mock<IExtension>();
-            MockExtension.Setup(ex => ex.Version).Returns(SemanticVersion.Parse(KaVEVersion));
-            KaVEExtension = MockExtension.Object;
+            KaVEVersion = new SemanticVersion("XYZ");
         }
 
-        public Mock<IExtension> MockExtension { get; private set; }
-        public IExtension KaVEExtension { get; private set; }
+        public SemanticVersion KaVEVersion { get; set; }
 
         public IIDESession IDESession
         {

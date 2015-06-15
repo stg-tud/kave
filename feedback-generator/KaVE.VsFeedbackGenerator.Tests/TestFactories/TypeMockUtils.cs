@@ -16,6 +16,8 @@
 using System;
 using System.Collections.Generic;
 using JetBrains.Application;
+using JetBrains.Application.changes;
+using JetBrains.Metadata.Reader.API;
 using JetBrains.Metadata.Utils;
 using JetBrains.ProjectModel;
 using JetBrains.ProjectModel.Impl;
@@ -125,7 +127,8 @@ namespace KaVE.VsFeedbackGenerator.Tests.TestFactories
 
         private static AssemblyNameInfo MockAssemblyNameInfo(string name, string version)
         {
-            return new AssemblyNameInfo {Name = name, Version = new Version(version)};
+            // TODO RS9
+            return AssemblyNameInfo.Parse(name);// was object init in which name and version were set
         }
 
         internal static IProject MockUncompilableProject(string name)
@@ -137,7 +140,10 @@ namespace KaVE.VsFeedbackGenerator.Tests.TestFactories
         {
             var fileSystemPath = FileSystemPath.TryParse(".");
             var mockLocks = new Mock<IShellLocks>();
-            var mockSolutionElement = new SolutionElement(
+            
+            // TODO RS9
+            return null;
+            /*var mockSolutionElement = new SolutionElement(
                 fileSystemPath,
                 new Mock<ISolutionOwner>().Object,
                 new Mock<ChangeManager>().Object,
@@ -152,7 +158,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.TestFactories
                 null,
                 fileSystemPath,
                 fileSystemPath,
-                name);
+                name);*/
         }
     }
 }

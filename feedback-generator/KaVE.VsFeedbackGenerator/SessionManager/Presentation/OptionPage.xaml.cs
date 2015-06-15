@@ -26,13 +26,12 @@ using System.Windows.Media;
 using JetBrains.ActionManagement;
 using JetBrains.Application.Settings;
 using JetBrains.DataFlow;
-using JetBrains.ReSharper.Features.Common.Options;
-using JetBrains.ReSharper.Features.Finding.Resources;
+using JetBrains.ReSharper.Features.Navigation.Resources;
 using JetBrains.UI.CrossFramework;
 using JetBrains.UI.Options;
+using JetBrains.UI.Options.OptionPages.ToolsPages;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.VsFeedbackGenerator.Interactivity;
-using KaVE.VsFeedbackGenerator.Utils;
 using MessageBox = JetBrains.Util.MessageBox;
 using Ressource = KaVE.VsFeedbackGenerator.Properties;
 
@@ -79,7 +78,8 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
 
             if (result)
             {
-                _actionManager.ExecuteActionGuarded(SettingsCleaner.ActionId, "reset-all");
+                // TODO RS9
+                //_actionManager.ExecuteActionGuarded(SettingsCleaner.ActionId, "reset-all");
                 CloseWindow();
             }
         }
@@ -93,7 +93,9 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
 
         public bool OnOk()
         {
-            var uploadInformationVerification = _optionPageViewModel.ValidateUploadInformation(UploadUrlTextBox.Text, WebPraefixTextBox.Text);
+            var uploadInformationVerification = _optionPageViewModel.ValidateUploadInformation(
+                UploadUrlTextBox.Text,
+                WebPraefixTextBox.Text);
 
             UploadUrlTextBox.Background = !uploadInformationVerification.IsUrlValid ? Brushes.Pink : Brushes.White;
             WebPraefixTextBox.Background = !uploadInformationVerification.IsPrefixValid ? Brushes.Pink : Brushes.White;

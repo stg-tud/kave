@@ -20,6 +20,8 @@ using System.Reflection;
 using System.Windows.Forms;
 using JetBrains.Application;
 using JetBrains.DataFlow;
+using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure.LookupItems;
+using JetBrains.ReSharper.Feature.Services.CodeCompletion.Lookup;
 using JetBrains.ReSharper.Feature.Services.Lookup;
 using JetBrains.UI.Controls;
 using KaVE.JetBrains.Annotations;
@@ -35,7 +37,8 @@ namespace KaVE.VsFeedbackGenerator.CodeCompletion
     public class ExtendedLookupWindowManager : IExtendedLookupWindowManager
     {
         private static readonly FieldInfo LookupWindowField =
-            typeof (LookupWindowManagerImpl).GetField(
+            // TODO RS9: was "LookupWindowManagerImpl"
+            typeof (LookupWindowManager).GetField(
                 "myCachedLookupWindow",
                 BindingFlags.NonPublic | BindingFlags.Instance);
 
@@ -56,9 +59,9 @@ namespace KaVE.VsFeedbackGenerator.CodeCompletion
             }
         }
 
-        internal LookupWindow CurrentLookupWindow
+        internal ILookupWindow CurrentLookupWindow
         {
-            get { return (LookupWindow) LookupWindowField.GetValue(_manager); }
+            get { return (ILookupWindow) LookupWindowField.GetValue(_manager); }
         }
 
         public event EventHandler BeforeLookupWindowShown = delegate { };
@@ -82,7 +85,7 @@ namespace KaVE.VsFeedbackGenerator.CodeCompletion
             typeof (Lookup).GetField("myLifetime", BindingFlags.NonPublic | BindingFlags.Instance);
 
         private static readonly FieldInfo LookupListBox =
-            typeof (LookupWindow).GetField("myListBox", BindingFlags.NonPublic | BindingFlags.Instance);
+            typeof (ILookupWindow).GetField("myListBox", BindingFlags.NonPublic | BindingFlags.Instance);
 
         private readonly Lookup _baseLookup;
         private readonly ExtendedLookupWindowManager _manager;
@@ -124,7 +127,11 @@ namespace KaVE.VsFeedbackGenerator.CodeCompletion
 
         public ILookupItem SelectedItem
         {
-            get { return _baseLookup.Selection.Item; }
+            get
+            {
+                // TODO RS9
+                return null;//_baseLookup.Selection.Item;
+            }
         }
 
         public event ItemsHandler BeforeShownItemsUpdated = delegate { };

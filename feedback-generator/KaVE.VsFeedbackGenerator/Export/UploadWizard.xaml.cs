@@ -52,7 +52,8 @@ namespace KaVE.VsFeedbackGenerator.Export
         private void On_Review_Click(object sender, RoutedEventArgs e)
         {
             Close();
-            _actionManager.ExecuteActionGuarded(SessionManagerWindowActionHandler.ActionId, "AgentAction");
+            // TODO RS9
+            //_actionManager.ExecuteActionGuarded(SessionManagerWindowActionHandler.ActionId, "AgentAction");
         }
 
         private void UploadButtonClicked(object sender, RoutedEventArgs e)

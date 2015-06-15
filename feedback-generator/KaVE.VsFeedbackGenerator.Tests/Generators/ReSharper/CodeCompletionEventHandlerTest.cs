@@ -18,7 +18,7 @@
  */
 
 using System.Collections.Generic;
-using JetBrains.ReSharper.Feature.Services.Lookup;
+using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure.LookupItems;
 using JetBrains.Util;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.CompletionEvents;

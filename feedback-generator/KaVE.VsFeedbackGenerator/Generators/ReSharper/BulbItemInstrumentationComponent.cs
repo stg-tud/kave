@@ -17,12 +17,13 @@
  *    - Sven Amann
  */
 
+using System;
 using System.Linq;
 using JetBrains.Application.Components;
 using JetBrains.DataFlow;
 using JetBrains.ProjectModel;
+using JetBrains.ReSharper.Feature.Services.Intentions;
 using JetBrains.ReSharper.Intentions.Bulbs;
-using JetBrains.ReSharper.Intentions.Extensibility;
 using JetBrains.ReSharper.Psi;
 using JetBrains.TextControl;
 using JetBrains.UI.BulbMenu;
@@ -46,6 +47,11 @@ namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
             _dateUtils = dateUtils;
         }
 
+        public void CollectSyncResults(object data, IntentionsBulbItems intentionsBulbItems, ITextControl textControl)
+        {
+            throw new NotImplementedException();
+        }
+
         public int Priority
         {
             get
@@ -56,9 +62,15 @@ namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
             }
         }
 
+        // TODO RS9
         public object PreExecute(ITextControl textControl)
         {
             return null;
+        }
+
+        public void WaitRoslynTasks(object data)
+        {
+            throw new NotImplementedException();
         }
 
         public void CollectActions(IntentionsBulbItems intentionsBulbItems,

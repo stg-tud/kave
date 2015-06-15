@@ -13,7 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using JetBrains.ActionManagement;
+
+using JetBrains.UI.ActionsRevised;
 
 namespace KaVE.VsFeedbackGenerator.Tests.TestFactories.Actions
 {
@@ -22,20 +23,14 @@ namespace KaVE.VsFeedbackGenerator.Tests.TestFactories.Actions
         private readonly MockExecutableAction _action;
         private int _nextIndex;
 
-        private IActionHandler NextHandler
+        private IExecutableAction NextHandler
         {
-            get
-            {
-                return _action.GetNextHandler(ref _nextIndex);
-            }
+            get { return _action.GetNextHandler(ref _nextIndex); }
         }
 
         private MockNextActionHandler MockNext
         {
-            get
-            {
-                return new MockNextActionHandler(_action, _nextIndex);
-            }
+            get { return new MockNextActionHandler(_action, _nextIndex); }
         }
 
         public MockNextActionHandler(MockExecutableAction action, int index)

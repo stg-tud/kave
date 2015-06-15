@@ -27,9 +27,11 @@ using System.Windows.Media;
 using JetBrains.Util;
 using KaVE.JetBrains.Annotations;
 using KaVE.Commons.Model.Events;
+using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Reflection;
 using KaVE.VsFeedbackGenerator.MessageBus;
 using KaVE.VsFeedbackGenerator.Utils;
+using Microsoft.WindowsAPICodePack.Shell.PropertySystem;
 using ILogger = KaVE.Commons.Utils.Exceptions.ILogger;
 using Window = EnvDTE.Window;
 
@@ -159,11 +161,12 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
             {
                 return stringContent;
             }
-            var xmlContent = wpfContent as System.Xml.XmlElement;
+            // TODO @RS9
+            /*var xmlContent = wpfContent as SystemProperties.System.Xml.XmlElement;
             if (xmlContent != null)
             {
                 return xmlContent.InnerText;
-            }
+            }*/
             // Don't fall back on ToString(), because it sometimes throws!
             return null;
         }

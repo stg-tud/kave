@@ -20,6 +20,7 @@
 using System.Linq;
 using JetBrains.ActionManagement;
 using JetBrains.Application.DataContext;
+using JetBrains.UI.ActionsRevised;
 using JetBrains.Util;
 using KaVE.VsFeedbackGenerator.Utils;
 using KaVE.VsFeedbackGenerator.Utils.Logging;
@@ -28,8 +29,8 @@ using ILogger = KaVE.Commons.Utils.Exceptions.ILogger;
 
 namespace KaVE.VsFeedbackGenerator.Export
 {
-    [ActionHandler(ActionId)]
-    public class UploadWizardActionHandler : IActionHandler
+    [Action(ActionId)]
+    public class UploadWizardActionHandler : IExecutableAction
     {
         internal const string ActionId = "KaVE.VsFeedbackGenerator.UploadWizard";
 
@@ -42,7 +43,8 @@ namespace KaVE.VsFeedbackGenerator.Export
 
         public static void Execute(IActionManager actionManager)
         {
-            actionManager.ExecuteActionGuarded(ActionId, "KaVE.Feedback.Export");
+            // TODO RS9
+            //actionManager.ExecuteActionGuarded(ActionId, "KaVE.Feedback.Export");
         }
 
         public UploadWizardActionHandler()

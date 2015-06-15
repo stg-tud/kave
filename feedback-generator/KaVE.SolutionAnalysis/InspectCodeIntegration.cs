@@ -18,23 +18,23 @@
  */
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using JetBrains.Application;
 using JetBrains.CommandLine.InspectCode;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Daemon.SolutionAnalysis;
+using JetBrains.ReSharper.Resources.Shell;
 using JetBrains.Threading;
 using JetBrains.Util;
 using KaVE.Commons.Model.Events.CompletionEvents;
-using KaVE.Commons.Utils.Json;
 using KaVE.Commons.Utils.Logging.Json;
 using ILogger = KaVE.Commons.Utils.Exceptions.ILogger;
 
 namespace KaVE.SolutionAnalysis
 {
     [SolutionComponent]
-    public class InspectCodeIntegrator : IInspectCodeConsumerFactory
+    public class InspectCodeIntegrator // TODO RS9: IInspectCodeConsumerFactory
     {
         private const string LogFileName = "SyntaxTrees.log";
         private const string ErrorsFileName = "SerializationErrors.log";
@@ -48,7 +48,7 @@ namespace KaVE.SolutionAnalysis
             _logger = logger;
         }
 
-        public IInspectCodeConsumer CreateConsumer(IEnumerable<IProjectModelElement> inspectScope,
+        public IInspectCodeConsumer CreateConsumer2(IEnumerable<IProjectModelElement> inspectScope,
             FileSystemPath outputFile = null)
         {
             var results = RunAnalysis();

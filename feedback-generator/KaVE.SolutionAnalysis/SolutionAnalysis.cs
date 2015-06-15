@@ -19,6 +19,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Metadata.Reader.API;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
@@ -63,7 +64,8 @@ namespace KaVE.SolutionAnalysis
             _logger.Info("Analyzing project '{0}'....", project.Name);
 
             var psiModules = _solution.PsiModules();
-            var primaryPsiModule = psiModules.GetPrimaryPsiModule(project).NotNull("no psi module");
+            // TODO RS9: make sure "Default" is the right framework id
+            var primaryPsiModule = psiModules.GetPrimaryPsiModule(project, TargetFrameworkId.Default).NotNull("no psi module");
             var csharpSourceFiles = primaryPsiModule.SourceFiles.Where(IsCSharpFile);
             return csharpSourceFiles.SelectMany(file => AnalyzeFile(file, primaryPsiModule));
         }

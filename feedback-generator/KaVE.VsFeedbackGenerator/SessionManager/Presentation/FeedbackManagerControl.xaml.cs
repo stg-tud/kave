@@ -106,7 +106,8 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
 
         private void OpenOptionPage_OnClick(object sender, RoutedEventArgs e)
         {
-            _actionManager.ExecuteActionGuarded("ShowOptions", "AgentAction");
+            // TODO RS9
+            //_actionManager.ExecuteActionGuarded("ShowOptions", "AgentAction");
         }
     }
 }

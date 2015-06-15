@@ -38,13 +38,22 @@ namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
             IMessageBus messageBus,
             IDateUtils dateUtils)
         {
-            foreach (var action in GetInstrumentableActions(actionManager))
+            foreach (var actionId in GetInstrumentableActionIds(actionManager))
             {
-                var handler = new EventGeneratingActionHandler(action, env, messageBus, dateUtils);
-                action.AddHandler(lifetime, handler);
+                var handler = new EventGeneratingActionHandler(actionId, env, messageBus, dateUtils);
+                // TODO RS9
+                //action.AddHandler(lifetime, handler);
             }
         }
 
+        private IEnumerable<string> GetInstrumentableActionIds(IActionManager actionManager)
+        {
+            var allIds = actionManager.Defs.GetAllActionDefs().Select(d => d.ActionId);
+            return allIds.Where(id => id != SettingsCleaner.ActionId && id != UploadWizardActionHandler.ActionId);
+        }
+
+        //TODO RS9
+        /*
         private static IEnumerable<IUpdatableAction> GetInstrumentableActions(IActionManager actionManager)
         {
             return actionManager.GetAllActions().OfType<IUpdatableAction>().Where(IsNoPrivateAction);
@@ -54,6 +63,6 @@ namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
         {
             var id = updatableAction.Id;
             return id != SettingsCleaner.ActionId && id != UploadWizardActionHandler.ActionId;
-        }
+        }*/
     }
 }

@@ -13,16 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 using System;
 using JetBrains.ActionManagement;
 using JetBrains.Application.DataContext;
+using JetBrains.UI.ActionsRevised;
 
 namespace KaVE.VsFeedbackGenerator.CodeCompletion
 {
     /// <summary>
-    /// An action handler that executes its own action before it invokes the delegate execution.
+    ///     An action handler that executes its own action before it invokes the delegate execution.
     /// </summary>
-    internal class DelegateActionHandler : IActionHandler
+    internal class DelegateActionHandler : IExecutableAction
     {
         private readonly Action _action;
 

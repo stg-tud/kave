@@ -102,6 +102,10 @@
     <Reference Include="MsgBox">
       <HintPath>..\3rd-party\MsgBox.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Newtonsoft35.Json.7.0.1\lib\net35\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="NuGet.Core, Version=2.8.60318.667, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\NuGet.Core.2.8.5\lib\net40-Client\NuGet.Core.dll</HintPath>
@@ -204,7 +208,6 @@
     <Compile Include="Interactivity\LinkNotificationRequestHandler.cs" />
     <Compile Include="Interactivity\Notification.cs" />
     <Compile Include="Interactivity\NotificationRequestHandler.cs" />
-    <Compile Include="PluginUnloadBehavior.cs" />
     <Compile Include="Properties\XamlBindableRichTextBox.Designer.cs">
       <DependentUpon>XamlBindableRichTextBox.resx</DependentUpon>
       <AutoGen>True</AutoGen>
@@ -241,7 +244,6 @@
     <Compile Include="SessionManager\Anonymize\WindowEventAnonymizer.cs" />
     <Compile Include="SessionManager\FeedbackSettings.cs" />
     <Compile Include="KaVESettings.cs" />
-    <Compile Include="SessionManager\PluginVersionChangeObserver.cs" />
     <Compile Include="SessionManager\Presentation\DelegateCommand.cs" />
     <Compile Include="SessionManager\Presentation\IDEEventDetailsToJsonConverter.cs" />
     <Compile Include="SessionManager\Presentation\JsonSyntaxHighlighter.cs" />

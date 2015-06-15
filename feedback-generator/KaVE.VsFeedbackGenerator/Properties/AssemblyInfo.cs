@@ -19,33 +19,34 @@
 
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using JetBrains.ActionManagement;
-using JetBrains.Application.PluginSupport;
-
+using KaVE.VsFeedbackGenerator;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-using KaVE.VsFeedbackGenerator;
 
 [assembly: AssemblyTitle(RSEnv.ExtensionId)]
-[assembly: AssemblyDescription("Generates IDE events from the interaction of developers with VisualStudio and ReSharper 8 features.")]
+[assembly:
+    AssemblyDescription(
+        "Generates IDE events from the interaction of developers with VisualStudio and ReSharper 8 features.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("TU Darmstadt")]
 [assembly: AssemblyProduct(RSEnv.ExtensionId)]
 [assembly: AssemblyCopyright("Copyright © TU Darmstadt, 2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
-
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
 
-[assembly: ActionsXml("KaVE.VsFeedbackGenerator.Actions.xml")]
+// TODO RS9
+/*[assembly: ActionsXml("KaVE.VsFeedbackGenerator.Actions.xml")]
 
 // The following information is displayed by ReSharper in the Plugins dialog
 [assembly: PluginTitle(RSEnv.ExtensionId)]
 [assembly: PluginDescription("Generates IDE events from the interaction of developers with VisualStudio and ReSharper 8 features.")]
 [assembly: PluginVendor("TU Darmstadt")]
+*/
 
 // Allow internal access for test projects
+
 [assembly: InternalsVisibleTo("KaVE.VsFeedbackGenerator.Tests")]
 [assembly: InternalsVisibleTo("KaVE.VsFeedbackGenerator.RS8Tests")]

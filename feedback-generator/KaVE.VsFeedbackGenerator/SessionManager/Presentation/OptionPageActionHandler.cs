@@ -19,12 +19,13 @@
 
 using JetBrains.ActionManagement;
 using JetBrains.Application.DataContext;
+using JetBrains.UI.ActionsRevised;
 using KaVE.VsFeedbackGenerator.Utils;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
 {
-    [ActionHandler(ActionId)]
-    internal class OptionPageActionHandler : IActionHandler
+    [Action(ActionId)]
+    internal class OptionPageActionHandler : IExecutableAction
     {
         internal const string ActionId = "KaVE.VsFeedbackGenerator.Options";
         private readonly IActionManager _actionManager;
@@ -41,7 +42,8 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
 
         public void Execute(IDataContext context, DelegateExecute nextExecute)
         {
-            _actionManager.ExecuteActionGuarded("ShowOptions", "AgentAction");
+            // TODO RS9
+            //_actionManager.ExecuteActionGuarded("ShowOptions", "AgentAction");
         }
     }
 }

@@ -19,6 +19,7 @@
 
 using JetBrains.ActionManagement;
 using JetBrains.Application.DataContext;
+using JetBrains.UI.ActionsRevised;
 using KaVE.Commons.Model.Events;
 using KaVE.VsFeedbackGenerator.MessageBus;
 using KaVE.VsFeedbackGenerator.Utils;
@@ -29,17 +30,17 @@ namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
     ///     Fires an <see cref="CommandEvent" /> on execution of a ReSharper action. Passes handling of the action on the
     ///     the default handler.
     /// </summary>
-    internal class EventGeneratingActionHandler : CommandEventGeneratorBase<DelegateExecute>, IActionHandler
+    internal class EventGeneratingActionHandler : CommandEventGeneratorBase<DelegateExecute>, IExecutableAction
     {
-        private readonly IUpdatableAction _updatableAction;
+        private readonly string _actionId;
 
-        public EventGeneratingActionHandler(IUpdatableAction updatableAction,
+        public EventGeneratingActionHandler(string actionId,
             IRSEnv env,
             IMessageBus messageBus,
             IDateUtils dateUtils)
             : base(env, messageBus, dateUtils)
         {
-            _updatableAction = updatableAction;
+            _actionId = actionId;
         }
 
         public bool Update(IDataContext context, ActionPresentation presentation, DelegateUpdate nextUpdate)
@@ -54,7 +55,7 @@ namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
 
         protected override string GetCommandId()
         {
-            return _updatableAction.Id;
+            return _actionId;
         }
 
         protected override void InvokeOriginalCommand(DelegateExecute nextExecute)

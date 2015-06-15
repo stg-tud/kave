@@ -20,8 +20,9 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure.LookupItems;
 using JetBrains.ReSharper.Feature.Services.CSharp.CodeCompletion.Infrastructure;
-using JetBrains.ReSharper.Feature.Services.Lookup;
+using JetBrains.ReSharper.Features.Intellisense.CodeCompletion.CSharp.Rules;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using KaVE.Commons.Model.Events.CompletionEvents;
@@ -68,7 +69,7 @@ namespace KaVE.VsFeedbackGenerator.CodeCompletion
 
         protected override bool AddLookupItems(CSharpCodeCompletionContext context, GroupedItemsCollector collector)
         {
-            Context kaveContext = ContextAnalysis.Analyze(context, _logger).Context;
+            var kaveContext = ContextAnalysis.Analyze(context, _logger).Context;
             _currentQuery = _queryGen.Extract(kaveContext);
             if (_currentQuery != null && IsAvailable())
             {
@@ -140,7 +141,8 @@ namespace KaVE.VsFeedbackGenerator.CodeCompletion
                 var matchingProposal = proposals.FirstOrDefault(p => p.Name.Equals(representation));
                 if (matchingProposal != null)
                 {
-                    collector.AddToTop(new PBNProposalWrappedLookupItem(candidate, matchingProposal.Probability));
+                    // TODO RS9: was "AddToTop"
+                    collector.Add(new PBNProposalWrappedLookupItem(candidate, matchingProposal.Probability));
                 }
             }
         }

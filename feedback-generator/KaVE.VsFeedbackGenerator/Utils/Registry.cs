@@ -18,7 +18,7 @@
  */
 
 using System.Collections.Generic;
-using JetBrains.Application;
+using JetBrains.ReSharper.Resources.Shell;
 
 namespace KaVE.VsFeedbackGenerator.Utils
 {

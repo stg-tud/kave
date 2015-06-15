@@ -20,8 +20,11 @@ using System.Linq;
 using System.Threading;
 using JetBrains.ActionManagement;
 using JetBrains.Application.DataContext;
+using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure.LookupItems;
+using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure.Match;
 using JetBrains.ReSharper.Feature.Services.Lookup;
 using JetBrains.TextControl.Actions;
+using JetBrains.UI.ActionSystem.Text;
 using JetBrains.Util;
 using KaVE.Commons.Model.Events;
 using KaVE.VsFeedbackGenerator.CodeCompletion;
@@ -353,7 +356,8 @@ namespace KaVE.VsFeedbackGenerator.Tests.CodeCompletion
 
         private void WhenActionIsExecuted(string actionId)
         {
-            _mockActionManager.Object.GetExecutableAction(actionId).Execute(new Mock<IDataContext>().Object);
+            // TODO RS9
+            //_mockActionManager.Object.GetExecutableAction(actionId).Execute(new Mock<IDataContext>().Object);
         }
 
         private void WhenItemCompletedIsRaised(ILookupItem appliedItem)

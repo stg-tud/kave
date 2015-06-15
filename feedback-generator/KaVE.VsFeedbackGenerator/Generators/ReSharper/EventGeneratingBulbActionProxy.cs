@@ -18,7 +18,7 @@
  */
 
 using JetBrains.ProjectModel;
-using JetBrains.ReSharper.Intentions.Extensibility;
+using JetBrains.ReSharper.Feature.Services.Bulbs;
 using JetBrains.TextControl;
 using KaVE.VsFeedbackGenerator.MessageBus;
 using KaVE.VsFeedbackGenerator.Utils;

@@ -21,19 +21,20 @@ using JetBrains.ActionManagement;
 using JetBrains.Application.DataContext;
 using JetBrains.DataFlow;
 using JetBrains.Threading;
+using KaVE.JetBrains.Annotations;
 
 namespace KaVE.VsFeedbackGenerator.Utils
 {
     public static class ActionManagerExtensions
     {
-        public static bool ExecuteActionGuarded(this IActionManager actionManager, string actionId, string executeName, IDataContext dataContext = null)
+        public static bool ExecuteActionGuarded(this IActionManager actionManager, string actionId, string executeName, [NotNull] IDataContext dataContext)
         {
             var threading = Registry.GetComponent<IThreading>();
-            var action = actionManager.GetExecutableAction(actionId);
+            var action = actionManager.Defs.TryGetActionDefById(actionId);
             if (action != null)
             {
                 return threading.ReentrancyGuard.ExecuteOrQueue(EternalLifetime.Instance, executeName,
-                    () => actionManager.ExecuteActionIfAvailable(action, dataContext));
+                    () => actionManager.Handlers.Evaluate(action, dataContext));
             }
             return false;
         }

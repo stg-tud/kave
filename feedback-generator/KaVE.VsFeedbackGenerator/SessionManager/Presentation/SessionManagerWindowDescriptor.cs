@@ -18,7 +18,7 @@
  */
 
 using JetBrains.Application;
-using JetBrains.ReSharper.Features.Finding.Resources;
+using JetBrains.ReSharper.Features.Navigation.Resources;
 using JetBrains.UI.ToolWindowManagement;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
@@ -35,7 +35,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
         )]
     public class SessionManagerWindowDescriptor : ToolWindowDescriptor
     {
-        public SessionManagerWindowDescriptor(IApplicationDescriptor applicationDescriptor)
-            : base(applicationDescriptor) {}
+        public SessionManagerWindowDescriptor(IApplicationHost applicationHost)
+            : base(applicationHost) {}
     }
 }

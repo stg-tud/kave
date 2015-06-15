@@ -16,12 +16,13 @@
 using System.Windows.Forms;
 using JetBrains.ActionManagement;
 using JetBrains.Application.DataContext;
+using JetBrains.UI.ActionsRevised;
 using KaVE.VsFeedbackGenerator.Properties;
 
 namespace KaVE.VsFeedbackGenerator
 {
-    [ActionHandler("KaVE.VsFeedbackGenerator.About")]
-    public class AboutAction : IActionHandler
+    [Action("KaVE.VsFeedbackGenerator.About")]
+    public class AboutAction : IExecutableAction
     {
         public bool Update(IDataContext context, ActionPresentation presentation, DelegateUpdate nextUpdate)
         {

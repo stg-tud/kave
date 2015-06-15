@@ -20,6 +20,9 @@
 
 using System.Drawing;
 using JetBrains.ProjectModel;
+using JetBrains.ReSharper.Feature.Services.CodeCompletion;
+using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure.LookupItems;
+using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure.Match;
 using JetBrains.ReSharper.Feature.Services.Lookup;
 using JetBrains.TextControl;
 using JetBrains.UI.Icons;
@@ -53,6 +56,8 @@ namespace KaVE.VsFeedbackGenerator.CodeCompletion
             }
         }
 
+        // TODO RS9
+        /*
         public string OrderingString
         {
             get
@@ -70,6 +75,7 @@ namespace KaVE.VsFeedbackGenerator.CodeCompletion
                 return orderingPrefix + inverseProbability + _wrappedItem.OrderingString;
             }
         }
+        */
 
         public IconId Image
         {
@@ -81,9 +87,9 @@ namespace KaVE.VsFeedbackGenerator.CodeCompletion
             return _wrappedItem.AcceptIfOnlyMatched(itemAcceptanceContext);
         }
 
-        public MatchingResult Match(string prefix, ITextControl textControl)
+        public MatchingResult Match(PrefixMatcher prefixMatcher, ITextControl textControl)
         {
-            return _wrappedItem.Match(prefix, textControl);
+            return _wrappedItem.Match(prefixMatcher, textControl);
         }
 
         public void Accept(ITextControl textControl,
@@ -111,6 +117,8 @@ namespace KaVE.VsFeedbackGenerator.CodeCompletion
             _wrappedItem.Unshrink();
         }
 
+        public LookupItemPlacement Placement { get; set; }
+
         public RichText DisplayTypeName
         {
             get { return _wrappedItem.DisplayTypeName; }
@@ -127,6 +135,8 @@ namespace KaVE.VsFeedbackGenerator.CodeCompletion
             set { _wrappedItem.Multiplier = value; }
         }
 
+        public EvaluationMode Mode { get; set; }
+
         public bool IsDynamic
         {
             get { return _wrappedItem.IsDynamic; }
@@ -137,6 +147,8 @@ namespace KaVE.VsFeedbackGenerator.CodeCompletion
             get { return _wrappedItem.IgnoreSoftOnSpace; }
             set { _wrappedItem.IgnoreSoftOnSpace = value; }
         }
+
+        public bool IsStable { get; set; }
 
         public string Identity
         {
