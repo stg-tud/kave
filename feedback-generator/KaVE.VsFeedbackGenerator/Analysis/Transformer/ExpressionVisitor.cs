@@ -31,6 +31,7 @@ using KaVE.Commons.Model.SSTs.Impl.Statements;
 using KaVE.Commons.Model.SSTs.References;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Collections;
+using KaVE.JetBrains.Annotations;
 using KaVE.VsFeedbackGenerator.Analysis.CompletionTarget;
 using KaVE.VsFeedbackGenerator.Analysis.Util;
 using KaVE.VsFeedbackGenerator.Utils.Names;
@@ -42,14 +43,12 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
         private readonly UniqueVariableNameGenerator _nameGen;
         private readonly CompletionTargetMarker _marker;
         private readonly ToAssignableReference _toAssignableRef;
-        private readonly TypeDetectionVisitor _typeDetector;
 
         public ExpressionVisitor(UniqueVariableNameGenerator nameGen, CompletionTargetMarker marker)
         {
             _nameGen = nameGen;
             _marker = marker;
             _toAssignableRef = new ToAssignableReference(nameGen);
-            _typeDetector = new TypeDetectionVisitor();
         }
 
         public IAssignableExpression ToAssignableExpr(IVariableInitializer csExpr, IList<IStatement> body)
@@ -109,13 +108,13 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
             }
 
             var expr = ToAssignableExpr(csExpr, body);
-            var tmpType = csExpr.Accept(_typeDetector, null) ?? TypeName.UnknownName;
+
             var tmpVar = VarRef(_nameGen.GetNextVariableName());
             body.Add(
                 new VariableDeclaration
                 {
                     Reference = tmpVar,
-                    Type = tmpType
+                    Type = GetTypeName(csExpr)
                 });
             body.Add(
                 new Assignment
@@ -125,6 +124,12 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
                 });
 
             return tmpVar;
+        }
+
+        private static ITypeName GetTypeName([NotNull] ICSharpExpression csExpr)
+        {
+            var type = csExpr.GetExpressionType().ToIType();
+            return type != null ? type.GetName() : TypeName.UnknownName;
         }
 
         private static IVariableReference VarRef(string id)

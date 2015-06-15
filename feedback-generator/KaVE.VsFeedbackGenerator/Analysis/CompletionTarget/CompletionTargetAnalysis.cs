@@ -221,6 +221,10 @@ namespace KaVE.VsFeedbackGenerator.Analysis.CompletionTarget
                 {
                     node = FindNextNonWhitespaceNode(node.NextSibling);
                 }
+                if (node.IsCommentToken())
+                {
+                    node = FindNextNonWhitespaceNode(node.NextSibling);
+                }
                 return node as ICSharpTreeNode;
             }
 
@@ -231,6 +235,10 @@ namespace KaVE.VsFeedbackGenerator.Analysis.CompletionTarget
                     return null;
                 }
                 if (node.IsWhitespaceToken())
+                {
+                    node = FindPrevNonWhitespaceNode(node.PrevSibling);
+                }
+                if (node.IsCommentToken())
                 {
                     node = FindPrevNonWhitespaceNode(node.PrevSibling);
                 }

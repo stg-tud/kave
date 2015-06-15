@@ -63,6 +63,7 @@
     <Compile Include="Analysis\SmokeTests\CodeCompletionWithMissingTokensSmokeTest.cs" />
     <Compile Include="Analysis\SmokeTests\CodeCompletionWithUnresolvableReferencesSmokeTest.cs" />
     <Compile Include="Analysis\SSTAnalysisTestSuite\ArrayTest.cs" />
+    <Compile Include="Analysis\SSTAnalysisTestSuite\Blocks\ForEachLoopAnalysisTest.cs" />
     <Compile Include="Analysis\SSTAnalysisTestSuite\Blocks\ForLoopAnalysisTest.cs" />
     <Compile Include="Analysis\SSTAnalysisTestSuite\Blocks\IfElseBlockAnalysisTest.cs" />
     <Compile Include="Analysis\SSTAnalysisTestSuite\Blocks\WhileLoopAnalysisTest.cs" />

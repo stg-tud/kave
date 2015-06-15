@@ -206,7 +206,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
 
         #region instantiation helper
 
-        protected static VariableReference VarRef(string id)
+        protected static VariableReference VarRef(string id = "")
         {
             return new VariableReference {Identifier = id};
         }

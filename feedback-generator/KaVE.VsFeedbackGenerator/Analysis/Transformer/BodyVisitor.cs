@@ -377,6 +377,46 @@ namespace KaVE.VsFeedbackGenerator.Analysis.Transformer
             }
         }
 
+        public override void VisitForeachStatement(IForeachStatement stmt, IList<IStatement> body)
+        {
+            if (IsTargetMatch(stmt, CompletionCase.EmptyCompletionBefore))
+            {
+                body.Add(EmptyCompletionExpression);
+            }
+
+            var loop = new ForEachLoop
+            {
+                LoopedReference = _exprVisitor.ToVariableRef(stmt.Collection, body)
+            };
+            body.Add(loop);
+
+            if (stmt.IteratorDeclaration != null && stmt.IteratorDeclaration.DeclaredElement != null)
+            {
+                var localVar = stmt.IteratorDeclaration.DeclaredElement.GetName<LocalVariableName>();
+                loop.Declaration = new VariableDeclaration
+                {
+                    Reference = new VariableReference {Identifier = localVar.Name},
+                    Type = localVar.ValueType
+                };
+            }
+
+            if (IsTargetMatch(stmt, CompletionCase.InBody))
+            {
+                loop.Body.Add(EmptyCompletionExpression);
+            }
+
+            if (stmt.Body != null)
+            {
+                stmt.Body.Accept(this, loop.Body);
+            }
+
+
+            if (IsTargetMatch(stmt, CompletionCase.EmptyCompletionAfter))
+            {
+                body.Add(EmptyCompletionExpression);
+            }
+        }
+
         #endregion
     }
 }
