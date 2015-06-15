@@ -51,6 +51,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Xaml" />
     <Reference Include="System.Net.Http, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\3rd-party\System.Net.Http.dll</HintPath>
@@ -237,6 +238,7 @@
     <Compile Include="Utils\StringUtilsTest.cs" />
     <Compile Include="Utils\ToStringUtilsTest.cs" />
     <Compile Include="Utils\WeakReferenceTest.cs" />
+    <Compile Include="Utils\XamlUtilsTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\KaVE.licenseheader">

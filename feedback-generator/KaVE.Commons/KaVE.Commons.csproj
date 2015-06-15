@@ -344,6 +344,7 @@
     <Compile Include="Utils\StringUtils.cs" />
     <Compile Include="Utils\ToStringUtils.cs" />
     <Compile Include="Utils\WeakReference.cs" />
+    <Compile Include="Utils\XamlUtils.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\KaVE.licenseheader">

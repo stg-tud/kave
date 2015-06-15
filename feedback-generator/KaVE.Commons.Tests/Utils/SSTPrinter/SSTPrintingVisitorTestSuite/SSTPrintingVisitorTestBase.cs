@@ -20,9 +20,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Markup;
 using KaVE.Commons.Model.SSTs;
 using KaVE.Commons.Model.SSTs.Visitor;
+using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.SSTPrinter;
 using NUnit.Framework;
 
@@ -72,12 +72,6 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
                 expectedLines);
         }
 
-        // see KaVE.VsFeedbackGenerator.SessionManager.Presentation.XamlBindableRichTextBox
-        private const string DataTemplateBegin =
-            "<DataTemplate xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\"><TextBlock xml:space=\"preserve\">";
-
-        private const string DataTemplateEnd = "</TextBlock></DataTemplate>";
-
         private void TestPrintingWithHighlightingProducesValidXaml(ISSTNode sst)
         {
             var context = new XamlSSTPrintingContext();
@@ -85,7 +79,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
             var actual = context.ToString();
 
             // throws and fails test if markup is invalid
-            XamlReader.Parse(DataTemplateBegin + actual + DataTemplateEnd);
+            XamlUtils.CreateDataTemplateFromXaml(actual);
         }
 
         private void TestPrintingWithIndentation(ISSTNode sst, IEnumerable<string> expectedLines)

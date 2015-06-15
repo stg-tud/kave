@@ -16,12 +16,11 @@
 
 using System;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
-using System.Windows.Markup;
 using System.Windows.Threading;
+using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Exceptions;
 using KaVE.VsFeedbackGenerator.Utils;
 using Msg = KaVE.VsFeedbackGenerator.Properties.XamlBindableRichTextBox;
@@ -30,13 +29,6 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
 {
     internal class XamlBindableRichTextBox : RichTextBox
     {
-        private const string DataTemplateBegin =
-            "<DataTemplate xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\"><TextBlock xml:space=\"preserve\">";
-
-        private const string DataTemplateEnd = "</TextBlock></DataTemplate>";
-
-        private static readonly Regex NodeRegex = new Regex("<.*?>", RegexOptions.Compiled);
-
         public XamlBindableRichTextBox()
         {
             IsReadOnly = true;
@@ -68,7 +60,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
                     {
                         if (ContainsTooManyNodesForDisplay(xaml))
                         {
-                            xaml = RemoveXamlFormatting(xaml);
+                            xaml = XamlUtils.EncodeSpecialChars(XamlUtils.StripTags(xaml));
                             par = new Paragraph(new Run(xaml));
                         }
                         else
@@ -92,17 +84,12 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
             return xaml.Length > 40000;
         }
 
-        private static string RemoveXamlFormatting(string xaml)
-        {
-            return NodeRegex.Replace(xaml, string.Empty).Replace("&lt;", "<").Replace("&gt;", ">").Replace("&amp;", "&");
-        }
-
         private static Paragraph CreateParagraphFromXaml(string xaml)
         {
             try
             {
-                var template = (DataTemplate) XamlReader.Parse(DataTemplateBegin + xaml + DataTemplateEnd);
-                var textBlock = (TextBlock) template.LoadContent();
+                var template = XamlUtils.CreateDataTemplateFromXaml(xaml);
+                var textBlock = (TextBlock)template.LoadContent();
 
                 var par = new Paragraph();
                 par.Inlines.AddRange(textBlock.Inlines.ToList());
