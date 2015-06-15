@@ -20,7 +20,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.SSTs;
 using KaVE.Commons.Model.SSTs.Blocks;
 using KaVE.Commons.Model.SSTs.Declarations;
@@ -124,20 +123,9 @@ namespace KaVE.Commons.Utils.SSTPrinter
         public void Visit(IDelegateDeclaration stmt, SSTPrintingContext c)
         {
             c.Indentation()
-             .Keyword("delegate").Space().Type(stmt.Name);
-
-            // TODO: Type check may be removed after DelegateTypeName has been officially added to DelegateDeclaration
-            var delegateName = stmt.Name as DelegateTypeName;
-            if (delegateName == null)
-            {
-                c.Text("()");
-            }
-            else
-            {
-                c.ParameterList(delegateName.Parameters);
-            }
-
-            c.Text(";");
+             .Keyword("delegate").Space().Type(stmt.Name)
+             .ParameterList(stmt.Name.Parameters)
+             .Text(";");
         }
 
         public void Visit(IEventDeclaration stmt, SSTPrintingContext c)
