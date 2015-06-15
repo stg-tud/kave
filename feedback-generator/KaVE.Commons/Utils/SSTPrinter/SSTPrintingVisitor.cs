@@ -124,7 +124,7 @@ namespace KaVE.Commons.Utils.SSTPrinter
         public void Visit(IDelegateDeclaration stmt, SSTPrintingContext c)
         {
             c.Indentation()
-             .Keyword("delegate").Space().Text(stmt.Name.Name);
+             .Keyword("delegate").Space().Type(stmt.Name);
 
             // TODO: Type check may be removed after DelegateTypeName has been officially added to DelegateDeclaration
             var delegateName = stmt.Name as DelegateTypeName;
@@ -168,6 +168,11 @@ namespace KaVE.Commons.Utils.SSTPrinter
             }
 
             c.Type(stmt.Name.ReturnType).Space().Text(stmt.Name.Name);
+            
+            if (stmt.Name.HasTypeParameters)
+            {
+                c.TypeParameters(stmt.Name.TypeParameters);
+            }
 
             c.ParameterList(stmt.Name.Parameters);
 

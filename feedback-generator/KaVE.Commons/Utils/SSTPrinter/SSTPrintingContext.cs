@@ -198,27 +198,34 @@ namespace KaVE.Commons.Utils.SSTPrinter
 
             if (typeName.HasTypeParameters)
             {
-                LeftAngleBracket();
+                TypeParameters(typeName.TypeParameters);
+            }
 
-                foreach (var p in typeName.TypeParameters)
+            return this;
+        }
+
+        public SSTPrintingContext TypeParameters(IList<ITypeName> typeParameters)
+        {
+            LeftAngleBracket();
+
+            foreach (var p in typeParameters)
+            {
+                if (p.IsUnknownType || p.TypeParameterType.IsUnknownType)
                 {
-                    if (p.IsUnknownType || p.TypeParameterType.IsUnknownType)
-                    {
-                        TypeParameterShortName(TypeName.UnknownName.Identifier);
-                    }
-                    else
-                    {
-                        Type(p.TypeParameterType);
-                    }
-
-                    if (!ReferenceEquals(p, typeName.TypeParameters.Last()))
-                    {
-                        _sb.Append(", ");
-                    }
+                    TypeParameterShortName(TypeName.UnknownName.Identifier);
+                }
+                else
+                {
+                    Type(p.TypeParameterType);
                 }
 
-                RightAngleBracket();
+                if (!ReferenceEquals(p, typeParameters.Last()))
+                {
+                    _sb.Append(", ");
+                }
             }
+
+            RightAngleBracket();
 
             return this;
         }
