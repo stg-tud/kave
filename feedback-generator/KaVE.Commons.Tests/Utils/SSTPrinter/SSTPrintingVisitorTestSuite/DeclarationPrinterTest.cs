@@ -64,7 +64,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
                 }
             };
 
-            AssertPrintSingle(
+            AssertPrintWithCustomContext(
                 sst,
                 new SSTPrintingContext {TypeShape = typeShape},
                 "class TestClass : SuperClass, IDoesSomething, IDoesSomethingElse",
@@ -91,7 +91,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
                 }
             };
 
-            AssertPrintSingle(
+            AssertPrintWithCustomContext(
                 sst,
                 new SSTPrintingContext {TypeShape = typeShape},
                 "class TestClass : IDoesSomething",
@@ -115,7 +115,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
                 }
             };
 
-            AssertPrintSingle(
+            AssertPrintWithCustomContext(
                 sst,
                 new SSTPrintingContext {TypeShape = typeShape},
                 "class TestClass : SuperClass",

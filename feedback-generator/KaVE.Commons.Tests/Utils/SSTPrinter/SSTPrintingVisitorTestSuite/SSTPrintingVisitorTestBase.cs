@@ -18,6 +18,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Markup;
 using KaVE.Commons.Model.SSTs;
@@ -37,7 +38,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
             _sut = new SSTPrintingVisitor();
         }
 
-        public void AssertPrintSingle(ISSTNode sst, SSTPrintingContext context, string expected)
+        protected void AssertPrintWithCustomContext(ISSTNode sst, SSTPrintingContext context, string expected)
         {
             var indentationLevel = context.IndentationLevel;
             sst.Accept(_sut, context);
@@ -46,9 +47,29 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
             Assert.AreEqual(indentationLevel, context.IndentationLevel);
         }
 
-        public void AssertPrintSingle(ISSTNode sst, SSTPrintingContext context, params string[] expectedLines)
+        protected void AssertPrintWithCustomContext(ISSTNode sst, SSTPrintingContext context, params string[] expectedLines)
         {
-            AssertPrintSingle(sst, context, String.Join(Environment.NewLine, expectedLines));
+            AssertPrintWithCustomContext(sst, context, String.Join(Environment.NewLine, expectedLines));
+        }
+
+        protected void AssertPrint(ISSTNode sst, params string[] expectedLines)
+        {
+            TestPrintingWithoutIndentation(sst, expectedLines);
+            TestPrintingWithHighlightingProducesValidXaml(sst);
+
+            // Expressions and references can't be indented
+            if (!(sst is IExpression || sst is IReference))
+            {
+                TestPrintingWithIndentation(sst, expectedLines);
+            }
+        }
+
+        private void TestPrintingWithoutIndentation(ISSTNode sst, string[] expectedLines)
+        {
+            AssertPrintWithCustomContext(
+                sst,
+                new SSTPrintingContext {IndentationLevel = 0},
+                expectedLines);
         }
 
         // see KaVE.VsFeedbackGenerator.SessionManager.Presentation.XamlBindableRichTextBox
@@ -57,8 +78,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
 
         private const string DataTemplateEnd = "</TextBlock></DataTemplate>";
 
-        // Asserts that the syntax highlighted result is valid (and parsable) XAML
-        private void AssertPrintHighlighted(ISSTNode sst)
+        private void TestPrintingWithHighlightingProducesValidXaml(ISSTNode sst)
         {
             var context = new XamlSSTPrintingContext();
             sst.Accept(_sut, context);
@@ -68,28 +88,12 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
             XamlReader.Parse(DataTemplateBegin + actual + DataTemplateEnd);
         }
 
-        protected void AssertPrint(ISSTNode sst, params string[] expectedLines)
+        private void TestPrintingWithIndentation(ISSTNode sst, IEnumerable<string> expectedLines)
         {
-            // Test if printing works as expected on indentation level 0
-            AssertPrintSingle(
-                sst,
-                new SSTPrintingContext {IndentationLevel = 0},
-                expectedLines);
-
-            // Test if syntax highlighting produces valid XAML
-            AssertPrintHighlighted(sst);
-
-            // Expressions and references can't be indented
-            if (sst is IExpression || sst is IReference)
-            {
-                return;
-            }
-
-            // Test if printing works as expected on indentation level 1
             var indentedLines = expectedLines.Select(line => String.IsNullOrEmpty(line) ? line : "    " + line);
-            AssertPrintSingle(
+            AssertPrintWithCustomContext(
                 sst,
-                new SSTPrintingContext {IndentationLevel = 1},
+                new SSTPrintingContext { IndentationLevel = 1 },
                 indentedLines.ToArray());
         }
     }
