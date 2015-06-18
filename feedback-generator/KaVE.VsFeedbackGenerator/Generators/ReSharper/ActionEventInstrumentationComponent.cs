@@ -24,6 +24,7 @@ using JetBrains.Application;
 using JetBrains.Application.Components;
 using JetBrains.DataFlow;
 using KaVE.VsFeedbackGenerator.Export;
+using KaVE.VsFeedbackGenerator.Menu;
 using KaVE.VsFeedbackGenerator.MessageBus;
 using KaVE.VsFeedbackGenerator.Utils;
 
@@ -49,7 +50,7 @@ namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
         private IEnumerable<string> GetInstrumentableActionIds(IActionManager actionManager)
         {
             var allIds = actionManager.Defs.GetAllActionDefs().Select(d => d.ActionId);
-            return allIds.Where(id => id != SettingsCleaner.ActionId && id != UploadWizardActionHandler.ActionId);
+            return allIds.Where(id => id != SettingsCleaner.ActionId && id != UploadWizardAction.Id);
         }
 
         //TODO RS9

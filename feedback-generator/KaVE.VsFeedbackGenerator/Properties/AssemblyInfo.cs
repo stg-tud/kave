@@ -20,6 +20,7 @@
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using KaVE.VsFeedbackGenerator;
+
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
@@ -37,9 +38,9 @@ using KaVE.VsFeedbackGenerator;
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
 
-// TODO RS9
-/*[assembly: ActionsXml("KaVE.VsFeedbackGenerator.Actions.xml")]
 
+// TODO RS9
+/*
 // The following information is displayed by ReSharper in the Plugins dialog
 [assembly: PluginTitle(RSEnv.ExtensionId)]
 [assembly: PluginDescription("Generates IDE events from the interaction of developers with VisualStudio and ReSharper 8 features.")]

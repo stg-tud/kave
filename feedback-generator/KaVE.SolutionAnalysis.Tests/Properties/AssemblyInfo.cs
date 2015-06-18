@@ -24,6 +24,7 @@ using JetBrains.ReSharper.Resources.Shell;
 using JetBrains.TestFramework;
 using JetBrains.TestFramework.Application.Zones;
 using JetBrains.Threading;
+using KaVE.VsFeedbackGenerator.Menu;
 using NUnit.Framework;
 
 /// <summary>
@@ -41,7 +42,7 @@ public class SolutionAnalysisTestEnvironmentAssembly : TestEnvironmentAssembly<S
     {
         // Test assembly
         yield return Assembly.GetExecutingAssembly();
-        yield return typeof (KaVE.VsFeedbackGenerator.AboutAction).Assembly;
+        yield return typeof (AboutAction).Assembly;
         yield return typeof (KaVE.SolutionAnalysis.SolutionAnalysis).Assembly;
     }
 

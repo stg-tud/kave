@@ -49,7 +49,7 @@ namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
 
         public void CollectSyncResults(object data, IntentionsBulbItems intentionsBulbItems, ITextControl textControl)
         {
-            throw new NotImplementedException();
+            // TODO RS9
         }
 
         public int Priority
@@ -70,7 +70,7 @@ namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
 
         public void WaitRoslynTasks(object data)
         {
-            throw new NotImplementedException();
+            // TODO RS9
         }
 
         public void CollectActions(IntentionsBulbItems intentionsBulbItems,

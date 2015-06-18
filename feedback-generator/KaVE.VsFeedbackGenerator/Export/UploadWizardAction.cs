@@ -29,10 +29,10 @@ using ILogger = KaVE.Commons.Utils.Exceptions.ILogger;
 
 namespace KaVE.VsFeedbackGenerator.Export
 {
-    [Action(ActionId)]
-    public class UploadWizardActionHandler : IExecutableAction
+    [Action(Id, "Export Feedback...", Id = 12193486)]
+    public class UploadWizardAction : IExecutableAction
     {
-        internal const string ActionId = "KaVE.VsFeedbackGenerator.UploadWizard";
+        internal const string Id = "KaVE.VsFeedbackGenerator.UploadWizard";
 
         private readonly ISettingsStore _settingsStore;
         private readonly IExporter _exporter;
@@ -41,13 +41,7 @@ namespace KaVE.VsFeedbackGenerator.Export
         private readonly IDateUtils _dateUtils;
         private readonly IActionManager _actionManager;
 
-        public static void Execute(IActionManager actionManager)
-        {
-            // TODO RS9
-            //actionManager.ExecuteActionGuarded(ActionId, "KaVE.Feedback.Export");
-        }
-
-        public UploadWizardActionHandler()
+        public UploadWizardAction()
         {
             _actionManager = Registry.GetComponent<IActionManager>();
             _settingsStore = Registry.GetComponent<ISettingsStore>();

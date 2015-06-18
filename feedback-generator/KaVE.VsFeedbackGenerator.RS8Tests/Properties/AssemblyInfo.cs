@@ -17,12 +17,15 @@
 using System.Collections.Generic;
 using System.Reflection;
 using JetBrains.Application;
+using JetBrains.Application.BuildScript.Application.Zones;
 using JetBrains.ReSharper.Resources.Shell;
 using JetBrains.TestFramework;
 using JetBrains.TestFramework.Application.Zones;
 using JetBrains.Threading;
 using KaVE.VsFeedbackGenerator;
 using KaVE.VsFeedbackGenerator.Generators.ReSharper;
+using KaVE.VsFeedbackGenerator.Menu;
+using KaVE.VsFeedbackGenerator.RS8Tests;
 using NUnit.Framework;
 
 [assembly: RequiresSTA]
@@ -33,7 +36,7 @@ using NUnit.Framework;
 [SetUpFixture]
 // ReSharper disable once CheckNamespace
 // ReSharper disable once InconsistentNaming
-public class KaVE_VsFeedbackGenerator_Rs8TestsAssembly : TestEnvironmentAssembly<VsFeedbackGeneratorRS8Zone>
+public class AssemblyInfo : TestEnvironmentAssembly<VsFeedbackGeneratorRS8Zone>
 {
     /// <summary>
     ///     Gets the assemblies to load into test environment.
@@ -69,5 +72,9 @@ public class KaVE_VsFeedbackGenerator_Rs8TestsAssembly : TestEnvironmentAssembly
     }
 }
 
-// TODO RS9: zones?
-public class VsFeedbackGeneratorRS8Zone : ITestsZone {}
+namespace KaVE.VsFeedbackGenerator.RS8Tests
+{
+    // TODO RS9: zones?
+    [ZoneDefinition]
+    public class VsFeedbackGeneratorRS8Zone : ITestsZone {}
+}

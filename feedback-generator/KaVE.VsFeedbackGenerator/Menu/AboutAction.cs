@@ -13,17 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 using System.Windows.Forms;
 using JetBrains.ActionManagement;
 using JetBrains.Application.DataContext;
 using JetBrains.UI.ActionsRevised;
 using KaVE.VsFeedbackGenerator.Properties;
 
-namespace KaVE.VsFeedbackGenerator
+namespace KaVE.VsFeedbackGenerator.Menu
 {
-    [Action("KaVE.VsFeedbackGenerator.About")]
+    [Action(Id, "About KaVE", Id = 21394587)]
     public class AboutAction : IExecutableAction
     {
+        public const string Id = "KaVE.VsFeedbackGenerator.About";
+
         public bool Update(IDataContext context, ActionPresentation presentation, DelegateUpdate nextUpdate)
         {
             // return true or false to enable/disable this action

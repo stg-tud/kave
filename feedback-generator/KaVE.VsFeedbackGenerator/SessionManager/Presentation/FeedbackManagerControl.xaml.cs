@@ -22,6 +22,7 @@ using System.Windows;
 using System.Windows.Controls;
 using JetBrains.ActionManagement;
 using JetBrains.DataFlow;
+using JetBrains.UI.Options;
 using KaVE.VsFeedbackGenerator.Export;
 using KaVE.VsFeedbackGenerator.Interactivity;
 using KaVE.VsFeedbackGenerator.Utils;
@@ -87,7 +88,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
 
         public void Export_OnClick(object sender, RoutedEventArgs e)
         {
-            UploadWizardActionHandler.Execute(_actionManager);
+            _actionManager.ExecuteActionGuarded<UploadWizardAction>(SessionManagerWindowRegistrar._lifetime);
         }
 
         private void VisitUploadPageButton_OnClick(object sender, RoutedEventArgs e)
@@ -106,8 +107,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
 
         private void OpenOptionPage_OnClick(object sender, RoutedEventArgs e)
         {
-            // TODO RS9
-            //_actionManager.ExecuteActionGuarded("ShowOptions", "AgentAction");
+            _actionManager.ExecuteActionGuarded<ShowOptionsAction>(SessionManagerWindowRegistrar._lifetime);
         }
     }
 }

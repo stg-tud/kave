@@ -14,31 +14,21 @@
  * limitations under the License.
  * 
  * Contributors:
- *    - Uli Fahrer
+ *    - 
  */
 
-using System.Windows.Controls;
-using Hardcodet.Wpf.TaskbarNotification;
-using JetBrains.ActionManagement;
+using JetBrains.UI.ActionsRevised;
+using JetBrains.UI.MenuGroups;
 using KaVE.VsFeedbackGenerator.Export;
 using KaVE.VsFeedbackGenerator.SessionManager.Presentation;
-using KaVE.VsFeedbackGenerator.Utils;
 
-namespace KaVE.VsFeedbackGenerator.TrayNotification
+namespace KaVE.VsFeedbackGenerator.Menu
 {
-    public abstract class BalloonPopupBase : UserControl
+    [ActionGroup(Id, ActionGroupInsertStyles.Submenu, Id = 12345678, Text = "&KaVE")]
+    public class KaVEMenu : IAction, IInsertLast<VsMainMenuGroup>
     {
-        protected void OpenUploadWizard()
-        {
-            ClosePopup();
-            var actionManager = Registry.GetComponent<IActionManager>();
-            actionManager.ExecuteActionGuarded<UploadWizardAction>(SessionManagerWindowRegistrar._lifetime);
-        }
+        public const string Id = "KaVE.Menu";
 
-        protected void ClosePopup()
-        {
-            var taskbarIcon = TaskbarIcon.GetParentTaskbarIcon(this);
-            taskbarIcon.CloseBalloon();
-        }
+        public KaVEMenu(SessionManagerWindowAction b, UploadWizardAction d, OptionPageAction c, AboutAction a) {}
     }
 }
