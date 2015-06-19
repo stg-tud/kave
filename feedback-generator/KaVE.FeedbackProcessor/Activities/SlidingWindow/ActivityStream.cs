@@ -45,9 +45,9 @@ namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
             }
         }
 
-        public AcitivtyStreamStatistic Evaluate(TimeSpan shortInactivityLimit, TimeSpan longInactivityThreshold)
+        public ActivityStreamStatistic Evaluate(TimeSpan shortInactivityLimit, TimeSpan longInactivityThreshold)
         {
-            var statistic = new AcitivtyStreamStatistic();
+            var statistic = new ActivityStreamStatistic();
             var inactivityDuration = TimeSpan.Zero;
             var previousActivity = Activity.Other;
             foreach (var activity in _activities)
@@ -62,17 +62,14 @@ namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
                 }
                 else
                 {
-                    if (inactivityDuration > TimeSpan.Zero)
-                    {
-                        ApplyInactivityHeuristics(
-                            statistic,
-                            shortInactivityLimit,
-                            longInactivityThreshold,
-                            inactivityDuration,
-                            previousActivity,
-                            activity);
-                        inactivityDuration = TimeSpan.Zero;
-                    }
+                    ApplyInactivityHeuristics(
+                        statistic,
+                        shortInactivityLimit,
+                        longInactivityThreshold,
+                        inactivityDuration,
+                        previousActivity,
+                        activity);
+                    inactivityDuration = TimeSpan.Zero;
                     previousActivity = activity;
                 }
 
@@ -88,7 +85,7 @@ namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
             return statistic;
         }
 
-        private static void ApplyInactivityHeuristics(AcitivtyStreamStatistic statistic,
+        private static void ApplyInactivityHeuristics(ActivityStreamStatistic statistic,
             TimeSpan shortInactivityLimit,
             TimeSpan longInactivityThreshold,
             TimeSpan inactivityDuration,
@@ -112,7 +109,7 @@ namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
 
         private static bool WasShortInactivity(TimeSpan inactivityDuration, TimeSpan shortInactivityLimit)
         {
-            return inactivityDuration <= shortInactivityLimit;
+            return inactivityDuration > TimeSpan.Zero && inactivityDuration <= shortInactivityLimit;
         }
 
         private static bool WasLongInactivity(Activity activity,
@@ -150,7 +147,7 @@ namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
         }
     }
 
-    public class AcitivtyStreamStatistic : Dictionary<Activity, TimeSpan>
+    public class ActivityStreamStatistic : Dictionary<Activity, TimeSpan>
     {
         public int NumberOfInactivityPeriods { get; set; }
         public int NumberOfLongInactivityPeriods { get; set; }
