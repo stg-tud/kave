@@ -25,6 +25,7 @@ using System.Linq;
 using Ionic.Zip;
 using JetBrains;
 using KaVE.Commons.Model.Events;
+using KaVE.Commons.Model.Events.Export;
 using KaVE.Commons.Model.Events.VisualStudio;
 using KaVE.Commons.TestUtils.Model.Events;
 using KaVE.Commons.Utils.IO;
@@ -32,6 +33,7 @@ using KaVE.Commons.Utils.Json;
 using KaVE.Commons.Utils.Streams;
 using KaVE.RS.Commons.Utils;
 using KaVE.VS.FeedbackGenerator.Export;
+using KaVE.VS.FeedbackGenerator.Generators.Export;
 using KaVE.VS.FeedbackGenerator.SessionManager.Anonymize;
 using Moq;
 using NUnit.Framework;
@@ -50,6 +52,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Export
         private Exporter _sut;
         private MemoryStream _lastPublishedStream;
         private Mock<IDataExportAnonymizer> _anonymizerMock;
+        private Mock<IExportEventGenerator> _exportEventGeneratorMock;
 
         [SetUp]
         public void SetUp()
@@ -61,7 +64,13 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Export
             _anonymizerMock = new Mock<IDataExportAnonymizer>();
             _anonymizerMock.Setup(a => a.Anonymize(It.IsAny<IDEEvent>())).Returns<IDEEvent>(ideEvent => ideEvent);
 
-            _sut = new Exporter(_anonymizerMock.Object);
+            _exportEventGeneratorMock = new Mock<IExportEventGenerator>();
+            _exportEventGeneratorMock.Setup(expEventGen => expEventGen.CreateExportEvent()).Returns(new ExportEvent());
+
+            _sut = new Exporter(_anonymizerMock.Object, _exportEventGeneratorMock.Object)
+            {
+                EnableExportEvent = false
+            };
         }
 
         [Test]
@@ -165,6 +174,25 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Export
             var manyEvents = IDEEventTestFactory.SomeEvents(65536);
 
             _sut.Export(manyEvents, _publisherMock.Object);
+        }
+
+        [Test]
+        public void ShouldAddExportEventWhenEnabled()
+        {
+            var someEvents = IDEEventTestFactory.SomeEvents(10);
+            var expectedEvent = new ExportEvent
+            {
+                UserName = "Some developer",
+                Feedback = "this tool is awesome!",
+                Number = 42
+            };
+            _exportEventGeneratorMock.Setup(expEvGen => expEvGen.CreateExportEvent()).Returns(expectedEvent);
+            _sut.EnableExportEvent = true;
+            
+            _sut.Export(someEvents, _publisherMock.Object);
+
+            var exportedEvents = GetExportedEvents();
+            CollectionAssert.Contains(exportedEvents, expectedEvent);
         }
 
         [Test, Ignore("manual test that the server receives valid file - RealLifeExample part 1")]

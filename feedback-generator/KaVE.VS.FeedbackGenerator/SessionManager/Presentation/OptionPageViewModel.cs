@@ -12,13 +12,9 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
- * Contributors:
- *    - Uli Fahrer
- *    - Sebastian Proksch
  */
 
-using System;
+using System.Globalization;
 using KaVE.VS.FeedbackGenerator.Interactivity;
 
 namespace KaVE.VS.FeedbackGenerator.SessionManager.Presentation
@@ -43,29 +39,50 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager.Presentation
     public class OptionPageViewModel : ViewModelBase<OptionPageViewModel>
     {
         private readonly InteractionRequest<Notification> _errorNotificationRequest;
+        private readonly UploadUrlValidationRule _uploadUrlValidationRule;
+        private readonly WebAccessPrefixValidationRule _webAccessPrefixValidationRule;
 
         public IInteractionRequest<Notification> ErrorNotificationRequest
         {
             get { return _errorNotificationRequest; }
         }
 
+        public ExportSettings ExportSettings
+        {
+            get; set; 
+        }
+
+        public string UploadUrl
+        {
+            get { return ExportSettings.UploadUrl; }
+            set { ExportSettings.UploadUrl = value; }
+
+        }
+
+        public string WebAccessPrefix
+        {
+            get { return ExportSettings.WebAccessPrefix; }
+            set { ExportSettings.WebAccessPrefix = value; }
+        }
+
         public OptionPageViewModel()
         {
             _errorNotificationRequest = new InteractionRequest<Notification>();
+            _uploadUrlValidationRule = new UploadUrlValidationRule();
+            _webAccessPrefixValidationRule = new WebAccessPrefixValidationRule();
         }
 
         public UploadValidation ValidateUploadInformation(string url, string prefix)
         {
-            var uriIsValid = ValidateUri(url);
-            var prefixIsEmpty = prefix.Length == 0;
-            var prefixIsValid = prefixIsEmpty || ValidateUri(prefix);
+            var uriIsValid = _uploadUrlValidationRule.Validate(url,CultureInfo.CurrentUICulture);
+            var prefixIsValid = _webAccessPrefixValidationRule.Validate(prefix,CultureInfo.CurrentUICulture);
 
-            if (!uriIsValid || !prefixIsValid)
+            if (!uriIsValid.IsValid || !prefixIsValid.IsValid)
             {
                 ShowInformationInvalidMessage();
             }
 
-            return new UploadValidation(uriIsValid, prefixIsValid);
+            return new UploadValidation(uriIsValid.IsValid, prefixIsValid.IsValid);
         }
 
         private void ShowInformationInvalidMessage()
@@ -78,15 +95,5 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager.Presentation
                 });
         }
 
-        private static bool ValidateUri(string url)
-        {
-            Uri uri;
-            return Uri.TryCreate(url, UriKind.Absolute, out uri) && HasSupportedScheme(uri);
-        }
-
-        private static bool HasSupportedScheme(Uri uri)
-        {
-            return (uri.Scheme == Uri.UriSchemeHttp || uri.Scheme == Uri.UriSchemeHttps);
-        }
     }
 }

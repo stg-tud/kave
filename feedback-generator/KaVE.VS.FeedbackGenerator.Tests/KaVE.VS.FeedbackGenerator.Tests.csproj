@@ -159,8 +159,10 @@
     <Compile Include="CodeCompletion\CodeCompletionLifecycleManagerTest.cs" />
     <Compile Include="CodeCompletion\PBNProposalItemsProviderTest.cs" />
     <Compile Include="Export\ExporterTest.cs" />
+    <Compile Include="Export\MailValidationRuleTest.cs" />
     <Compile Include="Generators\EventGeneratorBaseTest.cs" />
     <Compile Include="Generators\EventLoggerTest.cs" />
+    <Compile Include="Generators\Export\ExportEventGeneratorTest.cs" />
     <Compile Include="Generators\LogEventGeneratorTest.cs" />
     <Compile Include="Generators\EventGeneratorTestBase.cs" />
     <Compile Include="Generators\Merging\CompletionEventMergingStrategyTest.cs" />
@@ -206,6 +208,7 @@
     <Compile Include="SessionManager\Presentation\JsonSyntaxHighlighterTest.cs" />
     <Compile Include="SessionManager\Presentation\MultiSelectionTest.cs" />
     <Compile Include="SessionManager\Presentation\OptionPageViewModelTest.cs" />
+    <Compile Include="SessionManager\Presentation\UserSetting\UserSettingsViewModelTest.cs" />
     <Compile Include="SessionManager\Presentation\XamlBindableRichTextBoxTest.cs" />
     <Compile Include="SessionManager\UploadReminderTest.cs" />
     <Compile Include="SessionManager\UploadSettingsTest.cs" />

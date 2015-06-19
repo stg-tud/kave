@@ -30,6 +30,7 @@ using JetBrains.Util;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Utils.Json;
 using KaVE.RS.Commons.Utils;
+using KaVE.VS.FeedbackGenerator.Generators.Export;
 using KaVE.VS.FeedbackGenerator.SessionManager.Anonymize;
 
 namespace KaVE.VS.FeedbackGenerator.Export
@@ -43,10 +44,14 @@ namespace KaVE.VS.FeedbackGenerator.Export
     [ShellComponent]
     public class Exporter : IExporter
     {
-        private readonly IDataExportAnonymizer _anonymizer;
+        public bool EnableExportEvent = true;
 
-        public Exporter(IDataExportAnonymizer anonymizer)
+        private readonly IDataExportAnonymizer _anonymizer;
+        private readonly IExportEventGenerator _exportEventGenerator;
+
+        public Exporter(IDataExportAnonymizer anonymizer, IExportEventGenerator exportEventGenerator)
         {
+            _exportEventGenerator = exportEventGenerator;
             _anonymizer = anonymizer;
         }
 
@@ -61,7 +66,14 @@ namespace KaVE.VS.FeedbackGenerator.Export
 
             using (var stream = new MemoryStream())
             {
-                var anonymousEvents = events.Select(_anonymizer.Anonymize);
+                var anonymousEvents = events.Select(_anonymizer.Anonymize).ToList();
+
+                if (EnableExportEvent)
+                {
+                    var exportEvent = _exportEventGenerator.CreateExportEvent(); 
+                    anonymousEvents.Add(exportEvent);
+                }
+
                 WriteEventsToZipStream(anonymousEvents, events.Count, stream);
                 StatusChanged(Properties.UploadWizard.PublishingEvents);
                 publisher.Publish(stream);

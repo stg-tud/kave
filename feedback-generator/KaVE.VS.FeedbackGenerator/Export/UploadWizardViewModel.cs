@@ -12,10 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
- * Contributors:
- *    - Sven Amann
- *    - Uli Fahrer
  */
 
 using System;
@@ -31,6 +27,7 @@ using KaVE.RS.Commons.Utils;
 using KaVE.VS.FeedbackGenerator.Interactivity;
 using KaVE.VS.FeedbackGenerator.SessionManager;
 using KaVE.VS.FeedbackGenerator.SessionManager.Presentation;
+using KaVE.VS.FeedbackGenerator.SessionManager.Presentation.UserSetting;
 using KaVE.VS.FeedbackGenerator.Utils;
 using KaVE.VS.FeedbackGenerator.Utils.Logging;
 
@@ -88,33 +85,44 @@ namespace KaVE.VS.FeedbackGenerator.Export
                 progressChangedEventArgs.UserState);
         }
 
-        private ExportSettings ExportSettings
-        {
-            get { return _settingsStore.GetSettings<ExportSettings>(); }
-        }
+        public ExportSettings ExportSettings { get; set; }
+
+        public UserSettings UserSettings { get; set; }
 
         public bool RemoveCodeNames
         {
             get { return ExportSettings.RemoveCodeNames; }
-            set { _settingsStore.UpdateSettings<ExportSettings>(s => s.RemoveCodeNames = value); }
+            set { ExportSettings.RemoveCodeNames = value; }
         }
 
         public bool RemoveDurations
         {
             get { return ExportSettings.RemoveDurations; }
-            set { _settingsStore.UpdateSettings<ExportSettings>(s => s.RemoveDurations = value); }
+            set { ExportSettings.RemoveDurations = value; }
         }
 
         public bool RemoveSessionIDs
         {
             get { return ExportSettings.RemoveSessionIDs; }
-            set { _settingsStore.UpdateSettings<ExportSettings>(s => s.RemoveSessionIDs = value); }
+            set { ExportSettings.RemoveSessionIDs = value; }
         }
 
         public bool RemoveStartTimes
         {
             get { return ExportSettings.RemoveStartTimes; }
-            set { _settingsStore.UpdateSettings<ExportSettings>(s => s.RemoveStartTimes = value); }
+            set { ExportSettings.RemoveStartTimes = value; }
+        }
+
+        public string FeedbackText
+        {
+            get { return UserSettings.Feedback; }
+            set { UserSettings.Feedback = value; }
+        }
+
+        public void SetSettings()
+        {
+            _settingsStore.UpdateSettings<UserSettings>(s => s.Feedback = UserSettings.Feedback);
+            _settingsStore.SetSettings(ExportSettings);
         }
 
         public void Export(UploadWizard.ExportType exportType)

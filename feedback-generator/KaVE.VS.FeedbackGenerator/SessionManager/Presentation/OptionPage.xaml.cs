@@ -12,9 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
- * Contributors:
- *    - Uli Fahrer
  */
 
 using System;
@@ -22,7 +19,7 @@ using System.Linq.Expressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
-using System.Windows.Media;
+using System.Windows.Data;
 using JetBrains.ActionManagement;
 using JetBrains.Application.Settings;
 using JetBrains.DataFlow;
@@ -32,7 +29,9 @@ using JetBrains.UI.Options;
 using JetBrains.UI.Options.OptionPages.ToolsPages;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.VS.FeedbackGenerator.Interactivity;
+using KaVE.VS.FeedbackGenerator.SessionManager.Presentation.UserSetting;
 using KaVE.VS.FeedbackGenerator.Utils;
+using ISettingsStore = KaVE.VS.FeedbackGenerator.Utils.ISettingsStore;
 using MessageBox = JetBrains.Util.MessageBox;
 
 namespace KaVE.VS.FeedbackGenerator.SessionManager.Presentation
@@ -44,18 +43,30 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager.Presentation
         private readonly OptionPageViewModel _optionPageViewModel;
         private readonly Lifetime _lifetime;
         private readonly IActionManager _actionManager;
+        private readonly UserSettingsViewModel _userSettingsViewModel;
         private const string PID = "FeedbackGenerator.OptionPage";
 
         public OptionPage(Lifetime lifetime,
             OptionsSettingsSmartContext ctx,
-            IActionManager actionManager)
+            IActionManager actionManager,
+            ISettingsStore settingsStore)
         {
-            _optionPageViewModel = new OptionPageViewModel();
+            _optionPageViewModel = new OptionPageViewModel
+            {
+                ExportSettings = settingsStore.GetSettings<ExportSettings>()
+            };
             _optionPageViewModel.ErrorNotificationRequest.Raised += new NotificationRequestHandler(this).Handle;
+
+            DataContext = _optionPageViewModel;
 
             _lifetime = lifetime;
             _actionManager = actionManager;
+
             InitializeComponent();
+
+            _userSettingsViewModel = (UserSettingsViewModel) UserSettingsGrid.DataContext;
+            _userSettingsViewModel.UserSettings = settingsStore.GetSettings<UserSettings>();
+            _userSettingsViewModel.ErrorNotificationRequest.Raised += new NotificationRequestHandler(this).Handle;
 
             SetToggleButtonBinding(ctx, lifetime, s => (bool?) s.RemoveCodeNames, RemoveCodeNamesCheckBox);
             SetToggleButtonBinding(ctx, lifetime, s => (bool?) s.RemoveStartTimes, RemoveStartTimesCheckBox);
@@ -63,6 +74,23 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager.Presentation
             SetToggleButtonBinding(ctx, lifetime, s => (bool?) s.RemoveSessionIDs, RemoveSessionUUIDCheckBox);
             ctx.SetBinding(lifetime, (ExportSettings s) => s.UploadUrl, UploadUrlTextBox, TextBox.TextProperty);
             ctx.SetBinding(lifetime, (ExportSettings s) => s.WebAccessPrefix, WebPraefixTextBox, TextBox.TextProperty);
+
+            ctx.SetBinding(lifetime, (UserSettings s) => (bool?) s.ProvideUserInformation, UserSettingsGrid.ProvideUserInformationCheckBox, ToggleButton.IsCheckedProperty);
+            ctx.SetBinding(lifetime, (UserSettings s) => s.Username, UserSettingsGrid.UsernameTextBox, TextBox.TextProperty);
+            ctx.SetBinding(lifetime, (UserSettings s) => s.Mail, UserSettingsGrid.EmailTextBox, TextBox.TextProperty);
+            ctx.SetBinding(lifetime, (UserSettings s) => s.NumberField, UserSettingsGrid.NumberTextBox, TextBox.TextProperty);
+            ctx.SetBinding(lifetime, (UserSettings s) => s.Category, _userSettingsViewModel, UserSettingsViewModel.SelectedCategoryOptionProperty);
+            ctx.SetBinding(lifetime, (UserSettings s) => s.Valuation, _userSettingsViewModel, UserSettingsViewModel.SelectedValuationOptionProperty);
+
+            var exportSettings = settingsStore.GetSettings<ExportSettings>();
+            if (exportSettings.IsDatev)
+            {
+                UserSettingsGrid.ProvideUserInformationCheckBox.IsEnabled = false;
+                UserSettingsGrid.DatevDeactivationLabel.Visibility = Visibility.Visible;
+            }
+
+            UserSettingsGrid.CategoryComboBox.SetBinding(Selector.SelectedItemProperty, new Binding("SelectedCategoryOption"));
+            UserSettingsGrid.RadioButtonListBox.SetBinding(Selector.SelectedItemProperty, new Binding("SelectedValuationOption"));
         }
 
         private static void SetToggleButtonBinding(IContextBoundSettingsStore ctx,
@@ -98,10 +126,9 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager.Presentation
                 UploadUrlTextBox.Text,
                 WebPraefixTextBox.Text);
 
-            UploadUrlTextBox.Background = !uploadInformationVerification.IsUrlValid ? Brushes.Pink : Brushes.White;
-            WebPraefixTextBox.Background = !uploadInformationVerification.IsPrefixValid ? Brushes.Pink : Brushes.White;
+            var isValidEmail = _userSettingsViewModel.ValidateEmail(UserSettingsGrid.EmailTextBox.Text);
 
-            return uploadInformationVerification.IsValidUploadInformation;
+            return uploadInformationVerification.IsValidUploadInformation && isValidEmail;
         }
 
         public bool ValidatePage()
@@ -118,5 +145,6 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager.Presentation
         {
             get { return PID; }
         }
+
     }
 }

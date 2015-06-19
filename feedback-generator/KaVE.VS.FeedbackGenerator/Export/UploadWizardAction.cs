@@ -15,6 +15,7 @@
  * 
  * Contributors:
  *    - Sven Amann
+ *    - Markus Zimmermann
  */
 
 using System.Linq;
@@ -63,7 +64,7 @@ namespace KaVE.VS.FeedbackGenerator.Export
             if (HasContentToExport())
             {
                 var viewModel = new UploadWizardViewModel(_exporter, _logManager, _settingsStore, _dateUtils, _logger);
-                new UploadWizard(_actionManager, viewModel).ShowDialog();
+                new UploadWizard(_actionManager, viewModel,_settingsStore).ShowDialog();
             }
             else
             {

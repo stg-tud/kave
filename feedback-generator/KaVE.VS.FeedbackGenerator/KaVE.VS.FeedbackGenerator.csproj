@@ -167,6 +167,8 @@
     <Compile Include="CodeCompletion\PBNProposalWrappedLookupItem.cs" />
     <Compile Include="CodeCompletion\PBNProposalItemsProvider.cs" />
     <Compile Include="Export\Exporter.cs" />
+    <Compile Include="Export\MailValidationRule.cs" />
+    <Compile Include="Generators\Export\ExportEventGenerator.cs" />
     <Compile Include="Generators\LogEventGenerator.cs" />
     <Compile Include="Generators\ReSharper\CommandEventGeneratorBase.cs" />
     <Compile Include="Generators\VisualStudio\CommandBarEventGenerator.cs" />
@@ -184,6 +186,11 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>SessionManager.en.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\UserSetting.Designer.cs">
+      <DependentUpon>UserSetting.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="Properties\XamlBindableRichTextBox.Designer.cs">
       <DependentUpon>XamlBindableRichTextBox.resx</DependentUpon>
@@ -229,6 +236,14 @@
     <Compile Include="Menu\OptionPageAction.cs" />
     <Compile Include="SessionManager\Presentation\OptionPageViewModel.cs" />
     <Compile Include="SessionManager\Presentation\SortableListView.cs" />
+    <Compile Include="SessionManager\Presentation\UriValidation.cs" />
+    <Compile Include="SessionManager\Presentation\UserSetting\UserSettingsGrid.xaml.cs">
+      <DependentUpon>UserSettingsGrid.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SessionManager\Presentation\UserSetting\UserSettingsViewModel.cs" />
+    <Compile Include="SessionManager\Presentation\UserSetting\UserSettings.cs" />
+    <Compile Include="SessionManager\Presentation\UploadUrlValidationRule.cs" />
+    <Compile Include="SessionManager\Presentation\WebAccessPrefixValidationRule.cs" />
     <Compile Include="SessionManager\ViewModelBase.cs" />
     <Compile Include="TrayNotification\BalloonPopupBase.cs" />
     <Compile Include="TrayNotification\HardBalloonPopup.xaml.cs">
@@ -338,6 +353,10 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>General.en.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+   <EmbeddedResource Include="Properties\UserSetting.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>UserSetting.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\XamlBindableRichTextBox.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>XamlBindableRichTextBox.Designer.cs</LastGenOutput>
@@ -374,6 +393,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="SessionManager\Presentation\UserSetting\UserSettingsGrid.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="TrayNotification\HardBalloonPopup.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

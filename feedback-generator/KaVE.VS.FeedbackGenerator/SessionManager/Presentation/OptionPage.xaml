@@ -12,12 +12,6 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
-
-Contributors:
-   - Uli Fahrer
-   - Sven Amann
-   - Sebastian Proksch
-   - Dennis Albrecht
 -->
 
 <UserControl x:Class="KaVE.VS.FeedbackGenerator.SessionManager.Presentation.OptionPage"
@@ -27,54 +21,74 @@ Contributors:
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300"
-             xmlns:root="clr-namespace:KaVE.VS.FeedbackGenerator">
+             xmlns:root="clr-namespace:KaVE.VS.FeedbackGenerator"
+             xmlns:userSetting="clr-namespace:KaVE.VS.FeedbackGenerator.SessionManager.Presentation.UserSetting"
+             xmlns:presentation="clr-namespace:KaVE.VS.FeedbackGenerator.SessionManager.Presentation"
+             d:DataContext="{d:DesignInstance Type=presentation:OptionPageViewModel, IsDesignTimeCreatable=False}">
     <Grid>
-        <GroupBox Header="{x:Static root:Properties.SessionManager.Options_Export_Title}">
-            <StackPanel>
-                <TextBlock Text="{x:Static root:Properties.SessionManager.Options_Export_Disclaimer}"
-                           TextWrapping="Wrap" Margin="10,6,10,6" TextAlignment="Justify" />
-                <CheckBox Name="RemoveCodeNamesCheckBox"
-                          Content="{x:Static root:Properties.SessionManager.Options_Export_RemoveCodeNames}"
-                          VerticalAlignment="Top" HorizontalAlignment="Left" Margin="25,6,0,0"
-                          x:FieldModifier="private" />
-                <CheckBox Name="RemoveStartTimesCheckBox"
-                          Content="{x:Static root:Properties.SessionManager.Options_Export_RemoveStartTimes}"
-                          VerticalAlignment="Top" HorizontalAlignment="Left" Margin="25,6,0,0"
-                          x:FieldModifier="private" />
-                <CheckBox Name="RemoveDurationsCheckBox"
-                          Content="{x:Static root:Properties.SessionManager.Options_Export_RemoveDurations}"
-                          VerticalAlignment="Top" HorizontalAlignment="Left" Margin="25,6,0,0"
-                          x:FieldModifier="private" />
-                <CheckBox Name="RemoveSessionUUIDCheckBox"
-                          Content="{x:Static root:Properties.SessionManager.Options_Export_RemoveSessionIDs}"
-                          VerticalAlignment="Top" HorizontalAlignment="Left" Margin="25,6,0,0"
-                          x:FieldModifier="private" />
-                <Grid Margin="5,15,10,0">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="auto" />
-                        <RowDefinition Height="auto" />
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="125" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-                    <Label Grid.Column="0" Grid.Row="0"
-                           Content="{x:Static root:Properties.SessionManager.Options_Export_UploadUrl}"
-                           Margin="0,0,0,0" />
-                    <TextBox Grid.Column="1" Grid.Row="0" Name="UploadUrlTextBox"
-                             VerticalAlignment="Top" HorizontalAlignment="Stretch" Margin="10,0,0,0"
-                             x:FieldModifier="private" />
-                    <Label Grid.Column="0" Grid.Row="1"
-                           Content="{x:Static root:Properties.SessionManager.Options_Export_WebAccessPraefix}"
-                           Margin="0,0,0,0" />
-                    <TextBox Grid.Column="1" Grid.Row="1" Name="WebPraefixTextBox"
-                             VerticalAlignment="Top" HorizontalAlignment="Stretch" Margin="10,0,0,0"
-                             x:FieldModifier="private" />
-                </Grid>
-                <DockPanel Margin="10,45,10,6">
-                    <Button Padding="15,3,15,3" HorizontalAlignment="Right" Click="RestoreSettings_OnClick">Reset Settings</Button>
-                </DockPanel>
-            </StackPanel>
-        </GroupBox>
+        <StackPanel>
+            <GroupBox Header="{x:Static root:Properties.SessionManager.Options_Export_Title}">
+                <StackPanel>
+                    <TextBlock Text="{x:Static root:Properties.SessionManager.Options_Export_Disclaimer}"
+                               TextWrapping="Wrap" Margin="10,6,10,6" TextAlignment="Justify" />
+                    <CheckBox Name="RemoveCodeNamesCheckBox"
+                              Content="{x:Static root:Properties.SessionManager.Options_Export_RemoveCodeNames}"
+                              VerticalAlignment="Top" HorizontalAlignment="Left" Margin="25,6,0,0"
+                              x:FieldModifier="private" />
+                    <CheckBox Name="RemoveStartTimesCheckBox"
+                              Content="{x:Static root:Properties.SessionManager.Options_Export_RemoveStartTimes}"
+                              VerticalAlignment="Top" HorizontalAlignment="Left" Margin="25,6,0,0"
+                              x:FieldModifier="private" />
+                    <CheckBox Name="RemoveDurationsCheckBox"
+                              Content="{x:Static root:Properties.SessionManager.Options_Export_RemoveDurations}"
+                              VerticalAlignment="Top" HorizontalAlignment="Left" Margin="25,6,0,0"
+                              x:FieldModifier="private" />
+                    <CheckBox Name="RemoveSessionUUIDCheckBox"
+                              Content="{x:Static root:Properties.SessionManager.Options_Export_RemoveSessionIDs}"
+                              VerticalAlignment="Top" HorizontalAlignment="Left" Margin="25,6,0,0"
+                              x:FieldModifier="private" />
+                    <Grid Margin="5,15,10,0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="125" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Label Grid.Column="0" Grid.Row="0"
+                               Content="{x:Static root:Properties.SessionManager.Options_Export_UploadUrl}"
+                               Margin="0,0,0,0" />
+                        <TextBox Grid.Column="1" Grid.Row="0" Name="UploadUrlTextBox"
+                                 VerticalAlignment="Top" HorizontalAlignment="Stretch" Margin="10,0,0,0"
+                                 x:FieldModifier="private">
+                            <Binding Path="UploadUrl" UpdateSourceTrigger="PropertyChanged">
+                                <Binding.ValidationRules>
+                                    <presentation:UploadUrlValidationRule/>
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </TextBox>
+                        <Label Grid.Column="0" Grid.Row="1"
+                               Content="{x:Static root:Properties.SessionManager.Options_Export_WebAccessPraefix}"
+                               Margin="0,0,0,0" />
+                        <TextBox Grid.Column="1" Grid.Row="1" Name="WebPraefixTextBox"
+                                 VerticalAlignment="Top" HorizontalAlignment="Stretch" Margin="10,0,0,0"
+                                 x:FieldModifier="private">
+                            <Binding Path="WebAccessPrefix" UpdateSourceTrigger="PropertyChanged">
+                                <Binding.ValidationRules>
+                                    <presentation:WebAccessPrefixValidationRule/>
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </TextBox>
+                    </Grid>
+                </StackPanel>
+            </GroupBox>
+            <GroupBox Header="{x:Static root:Properties.UserSetting.Title}" Name="ProfileOptionsGroupBox">
+                <userSetting:UserSettingsGrid x:Name="UserSettingsGrid"/>
+            </GroupBox>
+            <DockPanel Margin="10,45,10,6">
+                <Button Padding="15,3,15,3" HorizontalAlignment="Right" Click="RestoreSettings_OnClick">Reset Settings</Button>
+            </DockPanel>
+        </StackPanel>
     </Grid>
 </UserControl>

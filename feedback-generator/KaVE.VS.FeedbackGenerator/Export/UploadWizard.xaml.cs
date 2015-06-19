@@ -13,17 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * 
- * Contributors:
- *    - Uli Fahrer
  */
 
 using System.ComponentModel;
 using System.Windows;
+using System.Windows.Controls.Primitives;
+using System.Windows.Data;
 using JetBrains.ActionManagement;
 using KaVE.RS.Commons;
 using KaVE.RS.Commons.Utils;
 using KaVE.VS.FeedbackGenerator.Interactivity;
 using KaVE.VS.FeedbackGenerator.SessionManager.Presentation;
+using KaVE.VS.FeedbackGenerator.SessionManager.Presentation.UserSetting;
+using KaVE.VS.FeedbackGenerator.Utils;
+using MessageBox = JetBrains.Util.MessageBox;
 
 namespace KaVE.VS.FeedbackGenerator.Export
 {
@@ -37,34 +40,60 @@ namespace KaVE.VS.FeedbackGenerator.Export
 
         private readonly IActionManager _actionManager;
         private readonly UploadWizardViewModel _uploadWizardViewModel;
+        private readonly UserSettingsViewModel _userSettingsViewModel;
 
-        public UploadWizard(IActionManager actionManager, UploadWizardViewModel uploadWizardViewModel)
+        public UploadWizard(IActionManager actionManager,
+            UploadWizardViewModel uploadWizardViewModel,
+            ISettingsStore settingsStore)
         {
             _actionManager = actionManager;
             DataContext = uploadWizardViewModel;
             _uploadWizardViewModel = uploadWizardViewModel;
+            _uploadWizardViewModel.ExportSettings = settingsStore.GetSettings<ExportSettings>();
+            _uploadWizardViewModel.UserSettings = settingsStore.GetSettings<UserSettings>();
             _uploadWizardViewModel.PropertyChanged += OnViewModelPropertyChanged;
             _uploadWizardViewModel.ErrorNotificationRequest.Raised += new NotificationRequestHandler(this).Handle;
             _uploadWizardViewModel.SuccessNotificationRequest.Raised += new LinkNotificationRequestHandler(this).Handle;
 
             InitializeComponent();
+
+            var exportSettings = settingsStore.GetSettings<ExportSettings>();
+            if (exportSettings.IsDatev)
+            {
+                UserSettingsGrid.ProvideUserInformationCheckBox.IsEnabled = false;
+                UserSettingsGrid.DatevDeactivationLabel.Visibility = Visibility.Visible;
+            }
+
+            _userSettingsViewModel = (UserSettingsViewModel) UserSettingsGrid.DataContext;
+            _userSettingsViewModel.UserSettings = settingsStore.GetSettings<UserSettings>();
+            _userSettingsViewModel.ErrorNotificationRequest.Raised += new NotificationRequestHandler(this).Handle;
+
+            UserSettingsGrid.CategoryComboBox.SetBinding(Selector.SelectedItemProperty, new Binding("Category"));
+            UserSettingsGrid.RadioButtonListBox.SetBinding(Selector.SelectedItemProperty, new Binding("Valuation"));
+            
         }
 
         private void On_Review_Click(object sender, RoutedEventArgs e)
         {
-            Close();
-            Registry.GetComponent<ActionExecutor>().ExecuteActionGuarded<SessionManagerWindowAction>();
+            var isValidEmail = _userSettingsViewModel.ValidateEmail(UserSettingsGrid.EmailTextBox.Text);
+            if (isValidEmail)
+            {
+                _userSettingsViewModel.SetUserSettings();
+                _uploadWizardViewModel.SetSettings();
+                Close();
+                Registry.GetComponent<ActionExecutor>().ExecuteActionGuarded<SessionManagerWindowAction>();
+            }
         }
 
         private void UploadButtonClicked(object sender, RoutedEventArgs e)
         {
-            _uploadWizardViewModel.Export(ExportType.HttpUpload);
+            ExportAndUpdateSettings(ExportType.HttpUpload);
             // keep window open until processing finshes (see OnViewModelPropertyChanged)
         }
 
         private void ZipButtonClicked(object sender, RoutedEventArgs e)
         {
-            _uploadWizardViewModel.Export(ExportType.ZipFile);
+            ExportAndUpdateSettings(ExportType.ZipFile);
             // keep window open until processing finshes (see OnViewModelPropertyChanged)
         }
 
@@ -81,9 +110,20 @@ namespace KaVE.VS.FeedbackGenerator.Export
             base.OnClosing(e);
             if (_uploadWizardViewModel.IsBusy)
             {
-                global::JetBrains.Util.MessageBox.ShowInfo(
+                MessageBox.ShowInfo(
                     Properties.UploadWizard.ContinueInBackground,
                     Properties.UploadWizard.window_title);
+            }
+        }
+
+        private void ExportAndUpdateSettings(ExportType exportType)
+        {
+            var isValidEmail = _userSettingsViewModel.ValidateEmail(UserSettingsGrid.EmailTextBox.Text);
+            if (isValidEmail)
+            {
+                _userSettingsViewModel.SetUserSettings();
+                _uploadWizardViewModel.SetSettings();
+                _uploadWizardViewModel.Export(exportType);
             }
         }
     }

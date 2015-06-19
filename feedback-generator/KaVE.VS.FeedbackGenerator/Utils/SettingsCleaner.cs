@@ -20,6 +20,7 @@ using JetBrains.UI.ActionsRevised;
 using KaVE.RS.Commons.Utils;
 using KaVE.VS.FeedbackGenerator.SessionManager;
 using KaVE.VS.FeedbackGenerator.SessionManager.Presentation;
+using KaVE.VS.FeedbackGenerator.SessionManager.Presentation.UserSetting;
 using KaVE.VS.FeedbackGenerator.Utils.Logging;
 
 namespace KaVE.VS.FeedbackGenerator.Utils
@@ -53,6 +54,7 @@ namespace KaVE.VS.FeedbackGenerator.Utils
             // WARNING: Do not reset FeedbackSettings, as it is used to store entries that have to be consistent over time
             _settings.ResetSettings<UploadSettings>();
             _settings.ResetSettings<ExportSettings>();
+            _settings.ResetSettings<UserSettings>();
 
             _logManager.DeleteAllLogs();
         }

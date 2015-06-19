@@ -18,6 +18,7 @@ using JetBrains.Application.DataContext;
 using KaVE.RS.Commons.Utils;
 using KaVE.VS.FeedbackGenerator.SessionManager;
 using KaVE.VS.FeedbackGenerator.SessionManager.Presentation;
+using KaVE.VS.FeedbackGenerator.SessionManager.Presentation.UserSetting;
 using KaVE.VS.FeedbackGenerator.Utils;
 using KaVE.VS.FeedbackGenerator.Utils.Logging;
 using Moq;
@@ -55,6 +56,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Utils
 
             _mockSettingsStore.Verify(s => s.ResetSettings<UploadSettings>());
             _mockSettingsStore.Verify(s => s.ResetSettings<ExportSettings>());
+            _mockSettingsStore.Verify(s => s.ResetSettings<UserSettings>());
             _mockSettingsStore.Verify(s => s.ResetSettings<FeedbackSettings>(), Times.Never);
 
             _mockLogFileManager.Verify(s => s.DeleteAllLogs());

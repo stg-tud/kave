@@ -12,9 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
- * Contributors:
- *    - Sven Amann
  */
 
 using System;
@@ -35,6 +32,7 @@ using KaVE.VS.FeedbackGenerator.Export;
 using KaVE.VS.FeedbackGenerator.Interactivity;
 using KaVE.VS.FeedbackGenerator.SessionManager;
 using KaVE.VS.FeedbackGenerator.SessionManager.Presentation;
+using KaVE.VS.FeedbackGenerator.SessionManager.Presentation.UserSetting;
 using KaVE.VS.FeedbackGenerator.Tests.Interactivity;
 using KaVE.VS.FeedbackGenerator.Utils;
 using KaVE.VS.FeedbackGenerator.Utils.Logging;
@@ -58,6 +56,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Export
         private Mock<IIoUtils> _mockIoUtils;
         private Mock<ILogger> _mockLogger;
         private ExportSettings _exportSettings;
+        private UserSettings _userSettings;
 
         [SetUp]
         public void SetUp()
@@ -77,6 +76,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Export
             _mockSettingStore = new Mock<ISettingsStore>();
             _mockSettingStore.Setup(store => store.GetSettings<UploadSettings>()).Returns(new UploadSettings());
             _exportSettings = new ExportSettings {UploadUrl = TestUploadUrl};
+            _userSettings = new UserSettings();
             _mockSettingStore.Setup(store => store.GetSettings<ExportSettings>()).Returns(_exportSettings);
             _mockSettingStore.Setup(store => store.UpdateSettings(It.IsAny<Action<ExportSettings>>()))
                              .Callback<Action<ExportSettings>>(update => update(_exportSettings));
@@ -87,7 +87,11 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Export
                 _mockLogFileManager.Object,
                 _mockSettingStore.Object,
                 _testDateUtils,
-                _mockLogger.Object);
+                _mockLogger.Object)
+            {
+                ExportSettings = _exportSettings,
+                UserSettings = _userSettings
+            };
 
             _notificationHelper = _uut.ErrorNotificationRequest.NewTestHelper();
             _linkNotificationHelper = _uut.SuccessNotificationRequest.NewTestHelper();
@@ -110,11 +114,12 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Export
         }
 
         [TestCase(true), TestCase(false)]
-        public void ShouldSetExportSettingsRemoveCodeNames(bool expected)
+        public void ShouldSetExportSettingsRemoveCodeNamesAfterSetSettingsIsCalled(bool expected)
         {
             _uut.RemoveCodeNames = expected;
+            _uut.SetSettings();
 
-            _mockSettingStore.Verify(ss => ss.UpdateSettings(It.IsAny<Action<ExportSettings>>()));
+            _mockSettingStore.Verify(ss => ss.SetSettings(It.IsAny<ExportSettings>()));
             Assert.AreEqual(expected, _exportSettings.RemoveCodeNames);
         }
 
@@ -129,11 +134,13 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Export
         }
 
         [TestCase(true), TestCase(false)]
-        public void ShouldSetExportSettingsRemoveDurations(bool expected)
+        public void ShouldSetExportSettingsRemoveDurationsAfterSetSettingsIsCalled(bool expected)
         {
             _uut.RemoveDurations = expected;
 
-            _mockSettingStore.Verify(ss => ss.UpdateSettings(It.IsAny<Action<ExportSettings>>()));
+            _uut.SetSettings();
+
+            _mockSettingStore.Verify(ss => ss.SetSettings(It.IsAny<ExportSettings>()));
             Assert.AreEqual(expected, _exportSettings.RemoveDurations);
         }
 
@@ -148,11 +155,13 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Export
         }
 
         [TestCase(true), TestCase(false)]
-        public void ShouldSetExportSettingsRemoveSessionIDs(bool expected)
+        public void ShouldSetExportSettingsRemoveSessionIDsAfterSetSettingsIsCalled(bool expected)
         {
             _uut.RemoveSessionIDs = expected;
 
-            _mockSettingStore.Verify(ss => ss.UpdateSettings(It.IsAny<Action<ExportSettings>>()));
+            _uut.SetSettings();
+
+            _mockSettingStore.Verify(ss => ss.SetSettings(It.IsAny<ExportSettings>()));
             Assert.AreEqual(expected, _exportSettings.RemoveSessionIDs);
         }
 
@@ -167,14 +176,39 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Export
         }
 
         [TestCase(true), TestCase(false)]
-        public void ShouldSetExportSettingsRemoveStartTimes(bool expected)
+        public void ShouldSetExportSettingsRemoveStartTimesAfterSetSettingsIsCalled(bool expected)
         {
             _uut.RemoveStartTimes = expected;
 
-            _mockSettingStore.Verify(ss => ss.UpdateSettings(It.IsAny<Action<ExportSettings>>()));
+            _uut.SetSettings();
+
+            _mockSettingStore.Verify(ss => ss.SetSettings(It.IsAny<ExportSettings>()));
             Assert.AreEqual(expected, _exportSettings.RemoveStartTimes);
         }
 
+        [Test]
+        public void ShouldGetUserSettingsFeedback()
+        {
+            var expected = "Good Feedback";
+            _userSettings.Feedback = expected;
+
+            var actual = _uut.FeedbackText;
+
+            Assert.AreEqual(expected,actual);
+        }
+
+        [Test]
+        public void ShouldSetUserSettingsFeedbackAfterSetSettingsIsCalled()
+        {
+            var expected = "Good Feedback";
+            _userSettings.Feedback = expected;
+
+            _uut.SetSettings();
+
+            _mockSettingStore.Verify(ss => ss.UpdateSettings(It.IsAny<Action<UserSettings>>()));
+            Assert.AreEqual(expected, _userSettings.Feedback);
+        }
+    
         [Test]
         public void ShouldSetExportBusyMessage()
         {

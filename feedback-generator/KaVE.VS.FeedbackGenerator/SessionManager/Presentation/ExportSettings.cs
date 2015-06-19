@@ -34,6 +34,9 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager.Presentation
         [SettingsEntry(false, "KaVE FeedbackGenerator RemoveSessionIDs")]
         public bool RemoveSessionIDs;
 
+        [SettingsEntry(false, "KaVE FeedbackGenerator IsDatev")]
+        public bool IsDatev;
+
         [SettingsEntry("http://kave.st.informatik.tu-darmstadt.de/", "KaVE FeedbackGenerator UploadUrl")]
         public string UploadUrl;
 
