@@ -45,24 +45,40 @@ namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
             }
         }
 
-        public IDictionary<Activity, TimeSpan> Evaluate(TimeSpan awayThreshold)
+        public AcitivtyStreamStatistic Evaluate(TimeSpan longInactivityThreshold)
         {
-            var statistic = new Dictionary<Activity, TimeSpan>();
-            var inactiveDuration = TimeSpan.Zero;
+            return Evaluate(TimeSpan.Zero, longInactivityThreshold);
+        }
+
+        public AcitivtyStreamStatistic Evaluate(TimeSpan shortInactivityLimit, TimeSpan longInactivityThreshold)
+        {
+            var statistic = new AcitivtyStreamStatistic();
+            var inactivityDuration = TimeSpan.Zero;
+            var previousActivity = Activity.Other;
             foreach (var activity in _activities)
             {
                 if (activity == Activity.Inactive)
                 {
-                    inactiveDuration += _windowSpan;
-                }
-                else if (inactiveDuration > TimeSpan.Zero)
-                {
-                    if (WasAway(activity, inactiveDuration, awayThreshold))
+                    if (inactivityDuration == TimeSpan.Zero)
                     {
-                        Add(statistic, Activity.Inactive, -inactiveDuration);
-                        Add(statistic, Activity.InactiveLong, inactiveDuration);
+                        statistic.NumberOfInactivityPeriods++;
                     }
-                    inactiveDuration = TimeSpan.Zero;
+                    inactivityDuration += _windowSpan;
+                }
+                else
+                {
+                    if (inactivityDuration > TimeSpan.Zero)
+                    {
+                        ApplyInactivityHeuristics(
+                            statistic,
+                            shortInactivityLimit,
+                            longInactivityThreshold,
+                            inactivityDuration,
+                            previousActivity,
+                            activity);
+                        inactivityDuration = TimeSpan.Zero;
+                    }
+                    previousActivity = activity;
                 }
 
                 if (IsLeaveOrEnter(activity))
@@ -73,14 +89,42 @@ namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
                 {
                     Add(statistic, activity, _windowSpan);
                 }
-
             }
             return statistic;
         }
 
-        private static bool WasAway(Activity activity, TimeSpan waitingDuration, TimeSpan awayThreshold)
+        private static void ApplyInactivityHeuristics(AcitivtyStreamStatistic statistic,
+            TimeSpan shortInactivityLimit,
+            TimeSpan longInactivityThreshold,
+            TimeSpan inactivityDuration,
+            Activity previousActivity,
+            Activity followingActivity)
         {
-            return waitingDuration > awayThreshold || activity == Activity.EnterIDE;
+            if (WasShortInactivity(inactivityDuration, shortInactivityLimit))
+            {
+                Add(statistic, Activity.Inactive, -inactivityDuration);
+                statistic.NumberOfInactivityPeriods--;
+                Add(statistic, previousActivity, inactivityDuration);
+            }
+            else if (WasLongInactivity(followingActivity, inactivityDuration, longInactivityThreshold))
+            {
+                Add(statistic, Activity.Inactive, -inactivityDuration);
+                statistic.NumberOfInactivityPeriods--;
+                Add(statistic, Activity.InactiveLong, inactivityDuration);
+                statistic.NumberOfLongInactivityPeriods++;
+            }
+        }
+
+        private static bool WasShortInactivity(TimeSpan inactivityDuration, TimeSpan shortInactivityLimit)
+        {
+            return inactivityDuration <= shortInactivityLimit;
+        }
+
+        private static bool WasLongInactivity(Activity activity,
+            TimeSpan inactivityDuration,
+            TimeSpan longInactivityThreshold)
+        {
+            return inactivityDuration > longInactivityThreshold || activity == Activity.EnterIDE;
         }
 
         private static bool IsLeaveOrEnter(Activity activity)
@@ -109,5 +153,11 @@ namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
         {
             return GetEnumerator();
         }
+    }
+
+    public class AcitivtyStreamStatistic : Dictionary<Activity, TimeSpan>
+    {
+        public int NumberOfInactivityPeriods { get; set; }
+        public int NumberOfLongInactivityPeriods { get; set; }
     }
 }

@@ -26,7 +26,6 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.SlidingWindow
     internal class EvaluateActivityStreamTest
     {
         private static readonly TimeSpan WindowSpan = TimeSpan.FromSeconds(2);
-        private static readonly TimeSpan SomeTimeSpan = TimeSpan.FromSeconds(5);
 
         [Test]
         public void CountsOccurrancesOfActivityTimesWindowSpan()
@@ -46,6 +45,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.SlidingWindow
             var statistic = uut.Evaluate(WindowSpan.Times(3));
 
             Assert.AreEqual(WindowSpan.Times(2), statistic[Activity.Inactive]);
+            Assert.AreEqual(1, statistic.NumberOfInactivityPeriods);
         }
 
         [Test(Description = "A Inactive window can only occur in between other windows (see WindowComputationTest)")]
@@ -56,7 +56,9 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.SlidingWindow
             var statistic = uut.Evaluate(WindowSpan.Times(2));
 
             Assert.AreEqual(WindowSpan.Times(3), statistic[Activity.InactiveLong]);
+            Assert.AreEqual(1, statistic.NumberOfLongInactivityPeriods);
             Assert.AreEqual(TimeSpan.Zero, statistic[Activity.Inactive]);
+            Assert.AreEqual(0, statistic.NumberOfInactivityPeriods);
         }
 
         [Test]
@@ -67,6 +69,28 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.SlidingWindow
             var statistic = uut.Evaluate(WindowSpan.Times(3));
 
             Assert.AreEqual(WindowSpan.Times(4), statistic[Activity.Inactive]);
+            Assert.AreEqual(2, statistic.NumberOfInactivityPeriods);
+        }
+
+        [Test]
+        public void AddsShortInactivityToPreviousActivity()
+        {
+            var uut = Stream(Activity.Development, Activity.Inactive, Activity.Any);
+
+            var statistic = uut.Evaluate(WindowSpan.Times(2), WindowSpan);
+
+            Assert.AreEqual(WindowSpan.Times(2), statistic[Activity.Development]);
+        }
+
+        [Test]
+        public void DoesNotCountShortInactvityAsBreak()
+        {
+            var uut = Stream(Activity.Development, Activity.Inactive, Activity.Navigation);
+
+            var statistic = uut.Evaluate(WindowSpan.Times(2), WindowSpan);
+
+            Assert.AreEqual(TimeSpan.Zero, statistic[Activity.Inactive]);
+            Assert.AreEqual(0, statistic.NumberOfInactivityPeriods);
         }
 
         private static ActivityStream Stream(params Activity[] activities)
