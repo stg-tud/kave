@@ -32,7 +32,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.SlidingWindow
         {
             var uut = Stream(Activity.Development, Activity.Development, Activity.Development);
 
-            var statistic = uut.Evaluate(TimeSpan.MaxValue);
+            var statistic = uut.Evaluate(TimeSpan.Zero, TimeSpan.MaxValue);
 
             Assert.AreEqual(WindowSpan.Times(3), statistic[Activity.Development]);
         }
@@ -42,7 +42,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.SlidingWindow
         {
             var uut = Stream(Activity.Inactive, Activity.Inactive);
 
-            var statistic = uut.Evaluate(WindowSpan.Times(3));
+            var statistic = uut.Evaluate(TimeSpan.Zero, WindowSpan.Times(3));
 
             Assert.AreEqual(WindowSpan.Times(2), statistic[Activity.Inactive]);
             Assert.AreEqual(1, statistic.NumberOfInactivityPeriods);
@@ -53,7 +53,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.SlidingWindow
         {
             var uut = Stream(Activity.Any, Activity.Inactive, Activity.Inactive, Activity.Inactive, Activity.Development);
 
-            var statistic = uut.Evaluate(WindowSpan.Times(2));
+            var statistic = uut.Evaluate(TimeSpan.Zero, WindowSpan.Times(2));
 
             Assert.AreEqual(WindowSpan.Times(3), statistic[Activity.InactiveLong]);
             Assert.AreEqual(1, statistic.NumberOfLongInactivityPeriods);
@@ -66,7 +66,7 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.SlidingWindow
         {
             var uut = Stream(Activity.Inactive, Activity.Inactive, Activity.Development, Activity.Inactive, Activity.Inactive);
 
-            var statistic = uut.Evaluate(WindowSpan.Times(3));
+            var statistic = uut.Evaluate(TimeSpan.Zero, WindowSpan.Times(3));
 
             Assert.AreEqual(WindowSpan.Times(4), statistic[Activity.Inactive]);
             Assert.AreEqual(2, statistic.NumberOfInactivityPeriods);

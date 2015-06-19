@@ -45,11 +45,6 @@ namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
             }
         }
 
-        public AcitivtyStreamStatistic Evaluate(TimeSpan longInactivityThreshold)
-        {
-            return Evaluate(TimeSpan.Zero, longInactivityThreshold);
-        }
-
         public AcitivtyStreamStatistic Evaluate(TimeSpan shortInactivityLimit, TimeSpan longInactivityThreshold)
         {
             var statistic = new AcitivtyStreamStatistic();

@@ -292,18 +292,20 @@ namespace KaVE.FeedbackProcessor
         {
             var activityWindowProcessor1 = new ActivityWindowProcessor(
                 new FrequencyActivityMergeStrategy(),
-                TimeSpan.FromSeconds(15));
+                TimeSpan.FromMilliseconds(1000));
+
             var processor = new FeedbackProcessor(activityDatabase, Logger);
             processor.Register(activityWindowProcessor1);
             processor.ProcessFeedback();
 
             Output(
-                "developer-activities-15.csv",
-                activityWindowProcessor1.ActivityStreamsToCsv(TimeSpan.FromMinutes(5)));
+                "developer-activities-1.csv",
+                activityWindowProcessor1.ActivityStreamsToCsv(TimeSpan.FromSeconds(15), TimeSpan.FromMinutes(5)));
 
             Output(
                 "inactivity-separation-1000.csv",
-                activityWindowProcessor3.InactivityStatisticToCsv(
+                activityWindowProcessor1.InactivityStatisticToCsv(
+                    TimeSpan.FromSeconds(15), 
                     TimeSpan.FromSeconds(4),
                     TimeSpan.FromSeconds(5),
                     TimeSpan.FromSeconds(6),

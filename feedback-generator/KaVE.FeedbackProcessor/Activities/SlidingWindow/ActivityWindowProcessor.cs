@@ -147,7 +147,7 @@ namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
             _strategy.Reset();
         }
 
-        public string ActivityStreamsToCsv(TimeSpan longInactvityThreshold)
+        public string ActivityStreamsToCsv(TimeSpan shortInactivityLimit, TimeSpan longInactivityThreshold)
         {
             var builder = new CsvBuilder();
             foreach (var developerWithStreams in ActivityStreams)
@@ -157,7 +157,7 @@ namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
                 builder["ActiveDays"] = developerWithStreams.Value.Count;
                 foreach (var dayWithStream in developerWithStreams.Value)
                 {
-                    var statistics = dayWithStream.Value.Evaluate(longInactvityThreshold);
+                    var statistics = dayWithStream.Value.Evaluate(shortInactivityLimit, longInactivityThreshold);
                     foreach (var activityWithDuration in statistics)
                     {
                         builder[dayWithStream.Key.ToString("yyyy-MM-dd") + " " + activityWithDuration.Key] =
@@ -178,13 +178,13 @@ namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
             return builder.Build(CsvBuilder.SortFields.ByNameLeaveFirst);
         }
 
-        public string InactivityStatisticToCsv(params TimeSpan[] longInactivityThresholds)
+        public string InactivityStatisticToCsv(TimeSpan shortInactivityLimit, params TimeSpan[] longInactivityThresholds)
         {
             var builder = new CsvBuilder();
             foreach (var longInactivityThreshold in longInactivityThresholds)
             {
-                var shortInactivity = TimeSpan.Zero;
-                var numberOfShortInactivityPeriods = 0;
+                var inactivity = TimeSpan.Zero;
+                var numberOfInactivityPeriods = 0;
                 var longInactivity = TimeSpan.Zero;
                 var numberOfLongInactivityPeriods = 0;
                 var days = 0;
@@ -193,11 +193,11 @@ namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
                     foreach (var dayWithStream in developerWithStreams.Value)
                     {
                         days++;
-                        var statistic = dayWithStream.Value.Evaluate(longInactivityThreshold);
-                        numberOfShortInactivityPeriods += statistic.NumberOfInactivityPeriods;
+                        var statistic = dayWithStream.Value.Evaluate(shortInactivityLimit, longInactivityThreshold);
+                        numberOfInactivityPeriods += statistic.NumberOfInactivityPeriods;
                         if (statistic.NumberOfInactivityPeriods > 0)
                         {
-                            shortInactivity += statistic[Activity.Inactive];
+                            inactivity += statistic[Activity.Inactive];
                         }
                         numberOfLongInactivityPeriods += statistic.NumberOfLongInactivityPeriods;
                         if (statistic.NumberOfLongInactivityPeriods > 0)
@@ -208,8 +208,8 @@ namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
                 }
                 builder.StartRow();
                 builder["Threshold (ms)"] = longInactivityThreshold.TotalSeconds;
-                builder["Inactivity (ms)"] = shortInactivity.TotalSeconds;
-                builder["# of Inactivities"] = numberOfShortInactivityPeriods;
+                builder["Inactivity (ms)"] = inactivity.TotalSeconds;
+                builder["# of Inactivities"] = numberOfInactivityPeriods;
                 builder["Long Inactivity (ms)"] = longInactivity.TotalSeconds;
                 builder["# of Long Inactivities"] = numberOfLongInactivityPeriods;
                 builder["Days"] = days;
