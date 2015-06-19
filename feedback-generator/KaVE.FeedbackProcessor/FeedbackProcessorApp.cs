@@ -290,37 +290,31 @@ namespace KaVE.FeedbackProcessor
 
         private static void LogActivityStatistics(IFeedbackDatabase activityDatabase)
         {
+            var activityWindowProcessor1 = new ActivityWindowProcessor(
+                new FrequencyActivityMergeStrategy(),
+                TimeSpan.FromSeconds(15));
             var processor = new FeedbackProcessor(activityDatabase, Logger);
-            var activityWindowProcessor = new ActivityWindowProcessor(new FrequencyActivityMergeStrategy(), TimeSpan.FromSeconds(1));
-            processor.Register(activityWindowProcessor);
+            processor.Register(activityWindowProcessor1);
             processor.ProcessFeedback();
 
-            var builder = new CsvBuilder();
-            foreach (var developerWithStreams in activityWindowProcessor.ActivityStreams)
-            {
-                builder.StartRow();
-                builder["Developer"] = developerWithStreams.Key.Id.ToString();
-                builder["ActiveDays"] = developerWithStreams.Value.Count;
-                foreach (var dayWithStream in developerWithStreams.Value)
-                {
-                    var statistics = dayWithStream.Value.Evaluate(TimeSpan.FromMinutes(10));
-                    foreach (var activityWithDuration in statistics)
-                    {
-                        builder[dayWithStream.Key.ToString("yyyy-MM-dd") + " " + activityWithDuration.Key] = activityWithDuration.Value.TotalSeconds;
-                    }
-                }
-            }
-            builder.StartRow();
-            foreach (var field in builder.Fields.Skip(2))
-            {
-                builder[field] = field.Split(' ')[0];
-            }
-            builder.StartRow();
-            foreach (var field in builder.Fields.Skip(2))
-            {
-                builder[field] = field.Split(' ')[1];
-            }
-            Output("developer-activities.csv", builder.Build(CsvBuilder.SortFields.ByNameLeaveFirst));
+            Output(
+                "developer-activities-15.csv",
+                activityWindowProcessor1.ActivityStreamsToCsv(TimeSpan.FromMinutes(5)));
+
+            Output(
+                "inactivity-separation-1000.csv",
+                activityWindowProcessor3.InactivityStatisticToCsv(
+                    TimeSpan.FromSeconds(4),
+                    TimeSpan.FromSeconds(5),
+                    TimeSpan.FromSeconds(6),
+                    TimeSpan.FromSeconds(7),
+                    TimeSpan.FromSeconds(8),
+                    TimeSpan.FromSeconds(9),
+                    TimeSpan.FromSeconds(10),
+                    TimeSpan.FromSeconds(11),
+                    TimeSpan.FromMinutes(1),
+                    TimeSpan.FromMinutes(2)
+                    ));
         }
 
         private static void LogAverageBreakAfterEventsStatistic(IFeedbackDatabase database, string fileName)

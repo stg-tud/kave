@@ -17,6 +17,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using KaVE.Commons.Utils.Csv;
 using KaVE.FeedbackProcessor.Activities.Model;
 using KaVE.FeedbackProcessor.Model;
 using KaVE.FeedbackProcessor.Utils;
@@ -144,6 +145,76 @@ namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
                 AppendMergedWindowToStream();
             }
             _strategy.Reset();
+        }
+
+        public string ActivityStreamsToCsv(TimeSpan longInactvityThreshold)
+        {
+            var builder = new CsvBuilder();
+            foreach (var developerWithStreams in ActivityStreams)
+            {
+                builder.StartRow();
+                builder["Developer"] = developerWithStreams.Key.Id.ToString();
+                builder["ActiveDays"] = developerWithStreams.Value.Count;
+                foreach (var dayWithStream in developerWithStreams.Value)
+                {
+                    var statistics = dayWithStream.Value.Evaluate(longInactvityThreshold);
+                    foreach (var activityWithDuration in statistics)
+                    {
+                        builder[dayWithStream.Key.ToString("yyyy-MM-dd") + " " + activityWithDuration.Key] =
+                            activityWithDuration.Value.TotalSeconds;
+                    }
+                }
+            }
+            builder.StartRow();
+            foreach (var field in builder.Fields.Skip(2))
+            {
+                builder[field] = field.Split(' ')[0];
+            }
+            builder.StartRow();
+            foreach (var field in builder.Fields.Skip(2))
+            {
+                builder[field] = field.Split(' ')[1];
+            }
+            return builder.Build(CsvBuilder.SortFields.ByNameLeaveFirst);
+        }
+
+        public string InactivityStatisticToCsv(params TimeSpan[] longInactivityThresholds)
+        {
+            var builder = new CsvBuilder();
+            foreach (var longInactivityThreshold in longInactivityThresholds)
+            {
+                var shortInactivity = TimeSpan.Zero;
+                var numberOfShortInactivityPeriods = 0;
+                var longInactivity = TimeSpan.Zero;
+                var numberOfLongInactivityPeriods = 0;
+                var days = 0;
+                foreach (var developerWithStreams in ActivityStreams)
+                {
+                    foreach (var dayWithStream in developerWithStreams.Value)
+                    {
+                        days++;
+                        var statistic = dayWithStream.Value.Evaluate(longInactivityThreshold);
+                        numberOfShortInactivityPeriods += statistic.NumberOfInactivityPeriods;
+                        if (statistic.NumberOfInactivityPeriods > 0)
+                        {
+                            shortInactivity += statistic[Activity.Inactive];
+                        }
+                        numberOfLongInactivityPeriods += statistic.NumberOfLongInactivityPeriods;
+                        if (statistic.NumberOfLongInactivityPeriods > 0)
+                        {
+                            longInactivity += statistic[Activity.InactiveLong];
+                        }
+                    }
+                }
+                builder.StartRow();
+                builder["Threshold (ms)"] = longInactivityThreshold.TotalSeconds;
+                builder["Inactivity (ms)"] = shortInactivity.TotalSeconds;
+                builder["# of Inactivities"] = numberOfShortInactivityPeriods;
+                builder["Long Inactivity (ms)"] = longInactivity.TotalSeconds;
+                builder["# of Long Inactivities"] = numberOfLongInactivityPeriods;
+                builder["Days"] = days;
+            }
+            return builder.Build();
         }
     }
 
