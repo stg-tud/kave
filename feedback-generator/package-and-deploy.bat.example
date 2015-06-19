@@ -1,4 +1,9 @@
 @echo off
+::
+::
+:: this is the example, copy it and name the copy "package-and-deploy.bat"
+::
+::
 
 :: this picks the first .csproj or .nuspec file in the working directory and builds a .nupkg from it
 :: to package a specific project or file, add the .csproj or .nupkg file name after the pack option
@@ -15,7 +20,7 @@ set DATE1=%date:~-4,4%%date:~-10,2%%date:~-7,2%
 set TIMESTAMP=%DATE1%-%TIME3%
 echo Building KaVE Feedback Generator @ %TIMESTAMP%...
 
-set TARGET=C:\Users\seb\Desktop\KaVE-Debug-Feed\
+set TARGET=<select local folder>
 
 ::C:\Users\Sven\Downloads\
 nuget.exe pack KaVE.Bundle.1.0.0-alpha1.nuspec -Verbosity detailed -NoPackageAnalysis -Version 1.0.0-v%TIMESTAMP%
