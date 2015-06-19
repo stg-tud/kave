@@ -155,6 +155,9 @@ namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
                 builder.StartRow();
                 builder["Developer"] = developerWithStreams.Key.Id.ToString();
                 builder["ActiveDays"] = developerWithStreams.Value.Count;
+                var numberOfInactivities = 0;
+                var inactivityTime = TimeSpan.Zero;
+                var numberOfActivitySprees = 0;
                 foreach (var dayWithStream in developerWithStreams.Value)
                 {
                     var statistics = dayWithStream.Value.Evaluate(shortInactivityLimit, longInactivityThreshold);
@@ -163,7 +166,14 @@ namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
                         builder[dayWithStream.Key.ToString("yyyy-MM-dd") + " " + activityWithDuration.Key] =
                             activityWithDuration.Value.TotalSeconds;
                     }
+                    numberOfInactivities += statistics.NumberOfInactivityPeriods;
+                    inactivityTime += statistics[Activity.Inactive];
+                    numberOfActivitySprees += statistics.NumberOfInactivityPeriods +
+                                              statistics.NumberOfLongInactivityPeriods + 1;
                 }
+                builder["# of Inactivities"] = numberOfInactivities;
+                builder["inactivity duration"] = inactivityTime.TotalSeconds;
+                builder["# of activity sprees"] = numberOfActivitySprees;
             }
             builder.StartRow();
             foreach (var field in builder.Fields.Skip(2))
