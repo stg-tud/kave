@@ -6,20 +6,22 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{35FCB52A-CCD2-49C7-AD6D-78A71164A324}</ProjectGuid>
+    <ProjectGuid>{4979D8EC-B49B-4578-BDC3-D4015C493A98}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>KaVE.RS.Commons.Tests_Unit</RootNamespace>
-    <AssemblyName>KaVE.RS.Commons.Tests_Unit</AssemblyName>
+    <RootNamespace>KaVE.RS.Commons.Tests_Integration</RootNamespace>
+    <AssemblyName>KaVE.RS.Commons.Tests_Integration</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>JET_MODE_ASSERT;DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>x86</PlatformTarget>
@@ -72,6 +74,9 @@
     <Reference Include="Microsoft.Deployment.WindowsInstaller">
       <HintPath>..\packages\JetBrains.Platform.Lib.Microsoft.Deployment.WindowsInstaller.2.0.20140821.0\lib\Microsoft.Deployment.WindowsInstaller.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.VisualStudio.CommandBars, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
     <Reference Include="Microsoft.VisualStudio.Shell.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <Private>True</Private>
       <HintPath>..\packages\JetBrains.Platform.Lib.VisualStudio.AnyVs.ShellInterop.PrivateBuild.2.0.20140304.0\lib\Microsoft.VisualStudio.Shell.Interop.dll</HintPath>
@@ -91,7 +96,6 @@
       <HintPath>..\packages\Moq.4.2.1502.0911\lib\net40\Moq.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft35.Json.7.0.1\lib\net35\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="NuGet.Core, Version=2.8.60318.667, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -119,10 +123,6 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Net.Http, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\3rd-party\System.Net.Http.dll</HintPath>
-    </Reference>
     <Reference Include="System.Threading">
       <HintPath>..\packages\TaskParallelLibrary.1.0.2856.0\lib\Net35\System.Threading.dll</HintPath>
     </Reference>
@@ -130,48 +130,82 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\JetBrains.Platform.Lib.System.Windows.Interactivity.2.0.20140318.0\lib\System.Windows.Interactivity.dll</HintPath>
     </Reference>
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
+    <Reference Include="System.XML" />
     <Reference Include="Vestris.ResourceLib">
       <HintPath>..\packages\Vestris.ResourceLib.JetBrains.1.4.20150303.0\lib\Net\Vestris.ResourceLib.dll</HintPath>
     </Reference>
+    <Reference Include="WindowsBase" />
     <Reference Include="WpfContrib, Version=1.1.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
       <HintPath>..\packages\JetBrains.Platform.Lib.WpfContrib.2.0.20140304.0\lib\WpfContrib.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Analysis\EntryPointSelectorTest.cs" />
+    <Compile Include="Analysis\MethodRefTest.cs" />
+    <Compile Include="Analysis\SmokeTests\CodeCompletionInIncompleteDeclarationsSmokeTest.cs" />
+    <Compile Include="Analysis\ContextAnalysisEnclosingMethodTest.cs" />
+    <Compile Include="Analysis\ContextAnalysisCompletionTargetTest.cs" />
+    <Compile Include="Analysis\ContextAnalysisTest.cs" />
+    <Compile Include="Analysis\ContextAnalysisTypeShapeTest.cs" />
+    <Compile Include="Analysis\SmokeTests\CodeCompletionWithIncompleteReferenceSmokeTest.cs" />
+    <Compile Include="Analysis\SmokeTests\CodeCompletionWithMissingTokensSmokeTest.cs" />
+    <Compile Include="Analysis\SmokeTests\CodeCompletionWithUnresolvableReferencesSmokeTest.cs" />
+    <Compile Include="Analysis\SSTAnalysisTestSuite\ArrayTest.cs" />
+    <Compile Include="Analysis\SSTAnalysisTestSuite\Blocks\ForEachLoopAnalysisTest.cs" />
+    <Compile Include="Analysis\SSTAnalysisTestSuite\Blocks\ForLoopAnalysisTest.cs" />
+    <Compile Include="Analysis\SSTAnalysisTestSuite\Blocks\IfElseBlockAnalysisTest.cs" />
+    <Compile Include="Analysis\SSTAnalysisTestSuite\Blocks\WhileLoopAnalysisTest.cs" />
+    <Compile Include="Analysis\SSTAnalysisTestSuite\Expressions\ComposedExpressionAnalysisTest.cs" />
+    <Compile Include="Analysis\SSTAnalysisTestSuite\BaseSSTAnalysisTest.cs" />
+    <Compile Include="Analysis\SSTAnalysisTestSuite\BasicTest.cs" />
+    <Compile Include="Analysis\SSTAnalysisTestSuite\CastingAndTypeCheckingTest.cs" />
+    <Compile Include="Analysis\SSTAnalysisTestSuite\DebuggingTest.cs" />
+    <Compile Include="Analysis\SSTAnalysisTestSuite\Statements\ReturnAnalysisTest.cs" />
+    <Compile Include="Analysis\SSTAnalysisTestSuite\Statements\VariableDeclarationTest.cs" />
+    <Compile Include="Analysis\SSTAnalysisTestSuite\EntrypointsTest.cs" />
+    <Compile Include="Analysis\SSTAnalysisTestSuite\Expressions\ConstantValueExpressionTest.cs" />
+    <Compile Include="Analysis\SSTAnalysisTestSuite\Expressions\ReferenceExpressionTest.cs" />
+    <Compile Include="Analysis\SSTAnalysisTestSuite\IncompleteCodeTest.cs" />
+    <Compile Include="Analysis\SSTAnalysisTestSuite\InvocationExpressionTest.cs" />
+    <Compile Include="Analysis\SSTAnalysisTestSuite\Declarations\MemberDeclarationTest.cs" />
+    <Compile Include="Analysis\SSTAnalysisTestSuite\SingleAssignmentTest.cs" />
+    <Compile Include="Analysis\SSTAnalysisTestSuite\SSTAnalysisFixture.cs" />
+    <Compile Include="Analysis\SSTAnalysisTestSuite\Statements\AssignmentAnalysisTest.cs" />
+    <Compile Include="Analysis\SSTAnalysisTestSuite\Statements\BreakStatementAnalysisTest.cs" />
+    <Compile Include="Analysis\SSTAnalysisTestSuite\Statements\PostfixPrefixAndUnaryOperatorAnalysisTest.cs" />
+    <Compile Include="Analysis\SSTAnalysisTestSuite\TriggerPoint\CompletionTargetMarkerTest.cs" />
+    <Compile Include="Analysis\SSTAnalysisTestSuite\TriggerPoint\TriggerPointAnalysisTest.cs" />
+    <Compile Include="Analysis\SSTAnalysisTestSuite\UncheckedTest.cs" />
+    <Compile Include="Analysis\TestAnalysisTrigger.cs" />
+    <Compile Include="BaseCodeCompletionTest.cs" />
+    <Compile Include="BaseCSharpCodeCompletionTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TestFactories\TypeMockUtils.cs" />
-    <Compile Include="Utils\DateTimeTest.cs" />
-    <Compile Include="Utils\FilePublisherTest.cs" />
-    <Compile Include="Utils\GZipStreamTest.cs" />
-    <Compile Include="Utils\HierarchyTest.cs" />
-    <Compile Include="Utils\HttpPublisherTest.cs" />
-    <Compile Include="Utils\InjectableIoUtilsTest.cs" />
-    <Compile Include="Utils\Names\ReSharperDeclaredElementNameFactoryTest.cs" />
-    <Compile Include="Utils\Names\ReSharperTypeNameFactoryTest.cs" />
-    <Compile Include="Utils\XamlFormattingUtilTest.cs" />
+    <Compile Include="TestLogger.cs" />
+    <Compile Include="Utils\LookupItemUtilsTest.cs" />
+    <Compile Include="Utils\RegistryTest.cs" />
+    <Compile Include="Utils\TestProposalProvider.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\KaVE.Commons.TestUtils\KaVE.Commons.TestUtils.csproj">
+      <Project>{126607DB-1F9F-4E2C-A39E-7B707874EAFC}</Project>
+      <Name>KaVE.Commons.TestUtils</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\KaVE.Commons\KaVE.Commons.csproj">
+      <Project>{17FC7725-AC2E-47E5-8F24-D2107171A854}</Project>
+      <Name>KaVE.Commons</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\KaVE.RS.Commons\KaVE.RS.Commons.csproj">
+      <Project>{B2235734-D3E5-498F-87E2-E9780DBE0D8D}</Project>
+      <Name>KaVE.RS.Commons</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\KaVE.licenseheader">
       <Link>KaVE.licenseheader</Link>
     </None>
-    <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\KaVE.Commons\KaVE.Commons.csproj">
-      <Project>{17FC7725-AC2E-47E5-8F24-D2107171A854}</Project>
-      <Name>KaVE.Commons</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\KaVE.ReSharper.Commons\KaVE.RS.Commons.csproj">
-      <Project>{B2235734-D3E5-498F-87E2-E9780DBE0D8D}</Project>
-      <Name>KaVE.RS.Commons</Name>
-    </ProjectReference>
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\JetBrains.Platform.Core.Shell.102.0.20150522.70022\build\JetBrains.Platform.Core.Shell.Targets" Condition="Exists('..\packages\JetBrains.Platform.Core.Shell.102.0.20150522.70022\build\JetBrains.Platform.Core.Shell.Targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
@@ -211,11 +245,4 @@
   <Import Project="..\packages\JetBrains.Psi.Features.test.Framework.102.0.20150522.71619\build\JetBrains.Psi.Features.test.Framework.Targets" Condition="Exists('..\packages\JetBrains.Psi.Features.test.Framework.102.0.20150522.71619\build\JetBrains.Psi.Features.test.Framework.Targets')" />
   <Import Project="..\packages\JetBrains.Build.Platform.Tasks.ThemedIconsPacker.2.0.20141124.0\build\JetBrains.Build.Platform.Tasks.ThemedIconsPacker.Targets" Condition="Exists('..\packages\JetBrains.Build.Platform.Tasks.ThemedIconsPacker.2.0.20141124.0\build\JetBrains.Build.Platform.Tasks.ThemedIconsPacker.Targets')" />
   <Import Project="..\packages\JetBrains.ReSharper.SDK.9.1.20150522.81235\build\JetBrains.ReSharper.SDK.Targets" Condition="Exists('..\packages\JetBrains.ReSharper.SDK.9.1.20150522.81235\build\JetBrains.ReSharper.SDK.Targets')" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>

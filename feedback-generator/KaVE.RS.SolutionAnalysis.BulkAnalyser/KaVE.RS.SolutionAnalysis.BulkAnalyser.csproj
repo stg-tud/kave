@@ -61,7 +61,7 @@
       <Project>{17FC7725-AC2E-47E5-8F24-D2107171A854}</Project>
       <Name>KaVE.Commons</Name>
     </ProjectReference>
-    <ProjectReference Include="..\KaVE.SolutionAnalysis\KaVE.RS.SolutionAnalysis.csproj">
+    <ProjectReference Include="..\KaVE.RS.SolutionAnalysis\KaVE.RS.SolutionAnalysis.csproj">
       <Project>{30CCA081-2DAD-46E5-982A-32C3600A29E2}</Project>
       <Name>KaVE.RS.SolutionAnalysis</Name>
     </ProjectReference>
