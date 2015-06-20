@@ -31,10 +31,9 @@ using JetBrains.TextControl;
 using JetBrains.Util;
 using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Utils.Assertion;
-using KaVE.VsFeedbackGenerator.Utils;
 using NUnit.Framework;
 
-namespace KaVE.VsFeedbackGenerator.RS8Tests
+namespace KaVE.ReSharper.Commons.Tests_Integration
 {
     [TestNetFramework4]
     internal abstract class BaseCodeCompletionTest : CodeCompletionTestBase

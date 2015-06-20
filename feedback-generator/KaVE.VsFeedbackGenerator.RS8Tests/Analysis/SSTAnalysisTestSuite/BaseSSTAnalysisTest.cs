@@ -22,7 +22,6 @@ using System.Linq;
 using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.SSTs;
-using KaVE.Commons.Model.SSTs.Declarations;
 using KaVE.Commons.Model.SSTs.Expressions;
 using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.Commons.Model.SSTs.Impl.Declarations;
@@ -37,9 +36,12 @@ using KaVE.Commons.Utils.Exceptions;
 using KaVE.VsFeedbackGenerator.Analysis.CompletionTarget;
 using KaVE.VsFeedbackGenerator.Utils;
 using NUnit.Framework;
+using IExpressionStatement = KaVE.Commons.Model.SSTs.Statements.IExpressionStatement;
+using IMethodDeclaration = KaVE.Commons.Model.SSTs.Declarations.IMethodDeclaration;
+using IVariableDeclaration = KaVE.Commons.Model.SSTs.Statements.IVariableDeclaration;
 using RS = JetBrains.ReSharper.Psi.CSharp.Tree;
 
-namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
+namespace KaVE.ReSharper.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
 {
     internal abstract class BaseSSTAnalysisTest : BaseCSharpCodeCompletionTest
     {
@@ -48,7 +50,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
         [SetUp]
         public void RegisterLogger()
         {
-            var logger = new Commons.TestUtils.Utils.Exceptions.TestLogger(false);
+            var logger = new KaVE.Commons.TestUtils.Utils.Exceptions.TestLogger(false);
             logger.InfoLogged += Log.Add;
             Registry.RegisterComponent<ILogger>(logger);
         }

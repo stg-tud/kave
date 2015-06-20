@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 using NUnit.Framework;
 
-namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SmokeTests
+namespace KaVE.ReSharper.Commons.Tests_Integration.Analysis.SmokeTests
 {
     [TestFixture]
     internal class CodeCompletionWithIncompleteReferenceSmokeTest : BaseCSharpCodeCompletionTest

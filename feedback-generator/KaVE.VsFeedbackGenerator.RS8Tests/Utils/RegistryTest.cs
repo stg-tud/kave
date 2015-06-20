@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 using JetBrains.Application;
 using KaVE.VsFeedbackGenerator.Utils;
 using Moq;
 using NUnit.Framework;
 
-namespace KaVE.VsFeedbackGenerator.RS8Tests.Utils
+namespace KaVE.ReSharper.Commons.Tests_Integration.Utils
 {
     [TestFixture]
     internal class RegistryTest

@@ -23,7 +23,6 @@ using System.Collections.Generic;
 using JetBrains.Application;
 using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure.LookupItems;
 using JetBrains.ReSharper.Feature.Services.CSharp.CodeCompletion.Infrastructure;
-using JetBrains.ReSharper.Feature.Services.Lookup;
 using JetBrains.ReSharper.Features.Intellisense.CodeCompletion.CSharp.Rules;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
@@ -36,7 +35,7 @@ using KaVE.VsFeedbackGenerator.Analysis;
 using KaVE.VsFeedbackGenerator.Analysis.CompletionTarget;
 using KaVE.VsFeedbackGenerator.Analysis.Transformer;
 
-namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
+namespace KaVE.ReSharper.Commons.Tests_Integration.Analysis
 {
     [ShellComponent, Language(typeof (CSharpLanguage))]
     public class TestAnalysisTrigger : CSharpItemsProviderBase<CSharpCodeCompletionContext>
@@ -88,7 +87,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
 
         private ILogger MockLogger()
         {
-            var logger = new Commons.TestUtils.Utils.Exceptions.TestLogger(false);
+            var logger = new KaVE.Commons.TestUtils.Utils.Exceptions.TestLogger(false);
             logger.ErrorLogged += RememberError;
             return logger;
         }

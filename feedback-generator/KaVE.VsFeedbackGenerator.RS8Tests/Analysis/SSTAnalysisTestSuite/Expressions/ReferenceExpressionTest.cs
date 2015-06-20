@@ -25,9 +25,8 @@ using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Commons.Model.SSTs.Impl.References;
 using KaVE.Commons.Utils.Collections;
 using NUnit.Framework;
-using Fix = KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite.SSTAnalysisFixture;
 
-namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite.Expressions
+namespace KaVE.ReSharper.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expressions
 {
     internal class ReferenceExpressionTest : BaseSSTAnalysisTest
     {
@@ -40,9 +39,9 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite.Expres
             ");
 
             AssertBody(
-                VarDecl("o", Fix.Object),
+                VarDecl("o", SSTAnalysisFixture.Object),
                 Assign("o", new NullExpression()),
-                Fix.EmptyCompletion);
+                SSTAnalysisFixture.EmptyCompletion);
         }
 
         [Test]
@@ -54,7 +53,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite.Expres
             ");
 
             AssertBody(
-                VarDecl("o", Fix.Object),
+                VarDecl("o", SSTAnalysisFixture.Object),
                 Assign("o", new NullExpression()),
                 ExprStmt(
                     new CompletionExpression
@@ -72,7 +71,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite.Expres
             ");
 
             AssertBody(
-                VarDecl("o", Fix.Object),
+                VarDecl("o", SSTAnalysisFixture.Object),
                 Assign("o", new NullExpression()),
                 ExprStmt(
                     new CompletionExpression
@@ -91,7 +90,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite.Expres
             ");
 
             AssertBody(
-                VarDecl("o", Fix.Object),
+                VarDecl("o", SSTAnalysisFixture.Object),
                 Assign("o", new NullExpression()),
                 ExprStmt(
                     new CompletionExpression
@@ -176,10 +175,7 @@ namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite.Expres
                     }));
         }
     }
-}
 
-namespace N
-{
     public class C
     {
         public C c;

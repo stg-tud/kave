@@ -23,9 +23,9 @@ using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.VsFeedbackGenerator.Analysis.CompletionTarget;
 using NUnit.Framework;
-using Fix = KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite.SSTAnalysisFixture;
+using Fix = KaVE.ReSharper.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.SSTAnalysisFixture;
 
-namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite
+namespace KaVE.ReSharper.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
 {
     // only covers basic cases of declarations, assignments, constant int values, and different completion points
     internal class BasicTest : BaseSSTAnalysisTest

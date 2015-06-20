@@ -22,7 +22,7 @@ using System.Linq;
 using KaVE.Commons.Model.Names.CSharp;
 using NUnit.Framework;
 
-namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
+namespace KaVE.ReSharper.Commons.Tests_Integration.Analysis
 {
     [TestFixture]
     internal class EntryPointSelectorTest : BaseCSharpCodeCompletionTest

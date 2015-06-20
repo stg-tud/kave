@@ -24,7 +24,7 @@ using KaVE.VsFeedbackGenerator.Analysis;
 using Moq;
 using NUnit.Framework;
 
-namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
+namespace KaVE.ReSharper.Commons.Tests_Integration.Analysis
 {
     [TestFixture]
     public class MethodRefTest

@@ -17,7 +17,7 @@
  *    - 
  */
 
-namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite.TriggerPoint
+namespace KaVE.ReSharper.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.TriggerPoint
 {
     class TriggerPointAnalysisTest
     {

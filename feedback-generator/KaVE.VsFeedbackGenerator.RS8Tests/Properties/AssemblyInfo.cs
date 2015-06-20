@@ -25,55 +25,54 @@ using JetBrains.Threading;
 using KaVE.VsFeedbackGenerator;
 using KaVE.VsFeedbackGenerator.Generators.ReSharper;
 using KaVE.VsFeedbackGenerator.Menu;
-using KaVE.VsFeedbackGenerator.RS8Tests;
 using NUnit.Framework;
 
 [assembly: RequiresSTA]
 
-/// <summary>
-///     Test environment. Must be in the global namespace.
-/// </summary>
-[SetUpFixture]
-// ReSharper disable once CheckNamespace
-// ReSharper disable once InconsistentNaming
-public class AssemblyInfo : TestEnvironmentAssembly<VsFeedbackGeneratorRS8Zone>
+namespace KaVE.ReSharper.Commons.Tests_Integration.Properties
 {
     /// <summary>
-    ///     Gets the assemblies to load into test environment.
-    ///     Should include all assemblies which contain components.
+    ///     Test environment. Must be in the global namespace.
     /// </summary>
-    private static IEnumerable<Assembly> GetAssembliesToLoad()
+    [SetUpFixture]
+    // ReSharper disable once CheckNamespace
+    // ReSharper disable once InconsistentNaming
+    public class AssemblyInfo : TestEnvironmentAssembly<VsFeedbackGeneratorRS8Zone>
     {
-        // Test assembly
-        yield return Assembly.GetExecutingAssembly();
+        /// <summary>
+        ///     Gets the assemblies to load into test environment.
+        ///     Should include all assemblies which contain components.
+        /// </summary>
+        private static IEnumerable<Assembly> GetAssembliesToLoad()
+        {
+            // Test assembly
+            yield return Assembly.GetExecutingAssembly();
 
-        yield return typeof (AboutAction).Assembly;
+            yield return typeof (AboutAction).Assembly;
+        }
+
+        public override void SetUp()
+        {
+            CodeCompletionContextAnalysisTrigger.Disabled = true;
+            base.SetUp();
+            ReentrancyGuard.Current.Execute(
+                "LoadAssemblies",
+                () => Shell.Instance.GetComponent<AssemblyManager>().LoadAssemblies(
+                    GetType().Name,
+                    GetAssembliesToLoad()));
+        }
+
+        public override void TearDown()
+        {
+            ReentrancyGuard.Current.Execute(
+                "UnloadAssemblies",
+                () => Shell.Instance.GetComponent<AssemblyManager>().UnloadAssemblies(
+                    GetType().Name,
+                    GetAssembliesToLoad()));
+            base.TearDown();
+        }
     }
 
-    public override void SetUp()
-    {
-        CodeCompletionContextAnalysisTrigger.Disabled = true;
-        base.SetUp();
-        ReentrancyGuard.Current.Execute(
-            "LoadAssemblies",
-            () => Shell.Instance.GetComponent<AssemblyManager>().LoadAssemblies(
-                GetType().Name,
-                GetAssembliesToLoad()));
-    }
-
-    public override void TearDown()
-    {
-        ReentrancyGuard.Current.Execute(
-            "UnloadAssemblies",
-            () => Shell.Instance.GetComponent<AssemblyManager>().UnloadAssemblies(
-                GetType().Name,
-                GetAssembliesToLoad()));
-        base.TearDown();
-    }
-}
-
-namespace KaVE.VsFeedbackGenerator.RS8Tests
-{
     // TODO RS9: zones?
     [ZoneDefinition]
     public class VsFeedbackGeneratorRS8Zone : ITestsZone {}

@@ -21,7 +21,7 @@ using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.TypeShapes;
 using NUnit.Framework;
 
-namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
+namespace KaVE.ReSharper.Commons.Tests_Integration.Analysis
 {
     // TODO split this into enclosingMethod and methodHierarchy tests
     [TestFixture, Ignore]

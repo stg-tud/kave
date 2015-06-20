@@ -5,7 +5,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KaVE.VsFeedbackGenerator", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KaVE.VsFeedbackGenerator.Tests", "KaVE.VsFeedbackGenerator.Tests\KaVE.VsFeedbackGenerator.Tests.csproj", "{61231FF9-BF33-4210-89AA-6C9973FA00A0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KaVE.VsFeedbackGenerator.RS8Tests", "KaVE.VsFeedbackGenerator.RS8Tests\KaVE.VsFeedbackGenerator.RS8Tests.csproj", "{4979D8EC-B49B-4578-BDC3-D4015C493A98}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KaVE.ReSharper.Commons.Tests_Integration", "KaVE.VsFeedbackGenerator.RS8Tests\KaVE.ReSharper.Commons.Tests_Integration.csproj", "{4979D8EC-B49B-4578-BDC3-D4015C493A98}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KaVE.CompletionTraceGenerator", "KaVE.CompletionTraceGenerator\KaVE.CompletionTraceGenerator.csproj", "{9A656780-6292-4CE3-BA13-D6CBB797AABA}"
 EndProject

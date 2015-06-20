@@ -19,7 +19,7 @@
 
 using KaVE.VsFeedbackGenerator.Analysis.CompletionTarget;
 
-namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis.SSTAnalysisTestSuite.TriggerPoint
+namespace KaVE.ReSharper.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.TriggerPoint
 {
     internal class CompletionTargetMarkerTest
     {

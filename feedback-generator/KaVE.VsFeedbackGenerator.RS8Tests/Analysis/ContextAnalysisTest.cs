@@ -19,7 +19,7 @@
 
 using NUnit.Framework;
 
-namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
+namespace KaVE.ReSharper.Commons.Tests_Integration.Analysis
 {
     internal class ContextAnalysisTest : BaseCSharpCodeCompletionTest
     {

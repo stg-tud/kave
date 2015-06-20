@@ -21,7 +21,7 @@ using JetBrains.Application;
 using JetBrains.UI.Resources;
 using KaVE.VsFeedbackGenerator.VsIntegration;
 
-namespace KaVE.VsFeedbackGenerator.RS8Tests
+namespace KaVE.ReSharper.Commons.Tests_Integration
 {
     [ShellComponent]
     internal class TestRSEnv : RSEnv

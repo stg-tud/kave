@@ -22,7 +22,7 @@ using JetBrains.Application;
 using KaVE.VsFeedbackGenerator.VsIntegration;
 using Moq;
 
-namespace KaVE.VsFeedbackGenerator.RS8Tests.VsIntegrationMocks
+namespace KaVE.ReSharper.Commons.Tests_Integration.VsIntegrationMocks
 {
     [ShellComponent]
     public class TestIDESession : IIDESession
