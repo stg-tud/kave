@@ -22,7 +22,7 @@ using System.Windows.Documents;
 using System.Windows.Threading;
 using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Exceptions;
-using KaVE.VsFeedbackGenerator.Utils;
+using KaVE.ReSharper.Commons.Utils;
 using Msg = KaVE.VsFeedbackGenerator.Properties.XamlBindableRichTextBox;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation

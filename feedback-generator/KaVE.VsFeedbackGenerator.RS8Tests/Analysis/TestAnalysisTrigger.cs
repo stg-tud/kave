@@ -31,9 +31,9 @@ using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.SSTs;
 using KaVE.Commons.Utils.Exceptions;
-using KaVE.VsFeedbackGenerator.Analysis;
-using KaVE.VsFeedbackGenerator.Analysis.CompletionTarget;
-using KaVE.VsFeedbackGenerator.Analysis.Transformer;
+using KaVE.ReSharper.Commons.Analysis;
+using KaVE.ReSharper.Commons.Analysis.CompletionTarget;
+using KaVE.ReSharper.Commons.Analysis.Transformer;
 
 namespace KaVE.ReSharper.Commons.Tests_Integration.Analysis
 {

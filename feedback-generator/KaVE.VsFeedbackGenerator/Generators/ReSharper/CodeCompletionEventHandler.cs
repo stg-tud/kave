@@ -32,10 +32,10 @@ using JetBrains.ReSharper.Resources.Shell;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Utils.Exceptions;
-using KaVE.VsFeedbackGenerator.Analysis;
+using KaVE.ReSharper.Commons.Analysis;
+using KaVE.ReSharper.Commons.Utils;
 using KaVE.VsFeedbackGenerator.CodeCompletion;
 using KaVE.VsFeedbackGenerator.MessageBus;
-using KaVE.VsFeedbackGenerator.Utils;
 
 namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
 {

@@ -27,7 +27,6 @@ Contributors:
              xmlns:sessionManager="clr-namespace:KaVE.VsFeedbackGenerator.SessionManager"
              xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
              xmlns:root="clr-namespace:KaVE.VsFeedbackGenerator"
-             xmlns:util="clr-namespace:KaVE.VsFeedbackGenerator.Utils"
              xmlns:presentation="clr-namespace:KaVE.VsFeedbackGenerator.SessionManager.Presentation"
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="1000"

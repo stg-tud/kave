@@ -128,7 +128,62 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Analysis\CompletionTarget\CompletionTargetAnalysis.cs" />
+    <Compile Include="Analysis\CompletionTarget\CompletionTargetMarker.cs" />
+    <Compile Include="Analysis\ContextAnalysis.cs" />
+    <Compile Include="Analysis\EntryPointSelector.cs" />
+    <Compile Include="Analysis\InvocationCollector.cs" />
+    <Compile Include="Analysis\MethodRef.cs" />
+    <Compile Include="Analysis\ReSharperUtils.cs" />
+    <Compile Include="Analysis\Transformer\BaseSSTTransformer.cs" />
+    <Compile Include="Analysis\Transformer\BodyVisitor.cs" />
+    <Compile Include="Analysis\Transformer\Context\ArgumentCollectorContext.cs" />
+    <Compile Include="Analysis\Transformer\Context\AssignmentGeneratorContext.cs" />
+    <Compile Include="Analysis\Transformer\Context\ITransformerContext.cs" />
+    <Compile Include="Analysis\Transformer\Context\ReferenceCollectorContext.cs" />
+    <Compile Include="Analysis\Transformer\Context\ScopeTransformerContext.cs" />
+    <Compile Include="Analysis\Transformer\DeclarationVisitor.cs" />
+    <Compile Include="Analysis\Transformer\ExpressionVisitor.cs" />
+    <Compile Include="Analysis\Transformer\JetbrainsTreeDebugger.cs" />
+    <Compile Include="Analysis\Transformer\SSTArgumentCollector.cs" />
+    <Compile Include="Analysis\Transformer\SSTAssignmentGenerator.cs" />
+    <Compile Include="Analysis\Transformer\SSTReferenceCollector.cs" />
+    <Compile Include="Analysis\Transformer\SSTScopeTransformer.cs" />
+    <Compile Include="Analysis\Transformer\SSTTransformerUtil.cs" />
+    <Compile Include="Analysis\Transformer\ToAssignableReference.cs" />
+    <Compile Include="Analysis\TypeHierarchyAnalysisUtils.cs" />
+    <Compile Include="Analysis\TypeShapeAnalysis.cs" />
+    <Compile Include="Analysis\Util\Scope.cs" />
+    <Compile Include="Analysis\Util\SSTFactory.cs" />
+    <Compile Include="Analysis\Util\UniqueVariableNameGenerator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utils\ActionManagerExtensions.cs" />
+    <Compile Include="Utils\BackgroundWorker.cs" />
+    <Compile Include="Utils\CallbackManager.cs" />
+    <Compile Include="Utils\DateUtils.cs" />
+    <Compile Include="Utils\FilePublisher.cs" />
+    <Compile Include="Utils\HttpPublisher.cs" />
+    <Compile Include="Utils\IDateUtils.cs" />
+    <Compile Include="Utils\InjectableIoUtils.cs" />
+    <Compile Include="Utils\InvalidResponseException.cs" />
+    <Compile Include="Utils\InverseBoolConverter.cs" />
+    <Compile Include="Utils\InverseObjectToVisibilityConverter.cs" />
+    <Compile Include="Utils\IPublisher.cs" />
+    <Compile Include="Utils\Json\JsonLogFileManager.cs" />
+    <Compile Include="Utils\Logging\ILogManager.cs" />
+    <Compile Include="Utils\Logging\LogFile.cs" />
+    <Compile Include="Utils\Logging\LogFileManager.cs" />
+    <Compile Include="Utils\LookupItemUtils.cs" />
+    <Compile Include="Utils\Names\ReSharperDeclarationNameFactory.cs" />
+    <Compile Include="Utils\Names\ReSharperDeclaredElementNameFactory.cs" />
+    <Compile Include="Utils\Names\ReSharperTypeNameFactory.cs" />
+    <Compile Include="Utils\Names\VsComponentNameFactory.cs" />
+    <Compile Include="Utils\ObjectToVisibilityConverter.cs" />
+    <Compile Include="Utils\Registry.cs" />
+    <Compile Include="Utils\SettingsCleaner.cs" />
+    <Compile Include="Utils\SettingsStore.cs" />
+    <Compile Include="Utils\TypeNameExtensions.cs" />
+    <Compile Include="Utils\XamlFormattingUtil.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\KaVE.licenseheader">

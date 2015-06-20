@@ -29,7 +29,7 @@ using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.Names.VisualStudio;
 using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Assertion;
-using KaVE.VsFeedbackGenerator.Utils.Names;
+using KaVE.ReSharper.Commons.Utils.Names;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
 {

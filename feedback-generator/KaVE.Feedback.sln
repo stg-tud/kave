@@ -23,7 +23,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KaVE.Commons.Tests", "KaVE.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KaVE.ReSharper.Commons", "KaVE.ReSharper.Commons\KaVE.ReSharper.Commons.csproj", "{B2235734-D3E5-498F-87E2-E9780DBE0D8D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KaVE.ReSharper.Commons.Tests", "KaVE.ReSharper.Commons.Tests\KaVE.ReSharper.Commons.Tests.csproj", "{35FCB52A-CCD2-49C7-AD6D-78A71164A324}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KaVE.ReSharper.Commons.Tests_Unit", "KaVE.ReSharper.Commons.Tests\KaVE.ReSharper.Commons.Tests_Unit.csproj", "{35FCB52A-CCD2-49C7-AD6D-78A71164A324}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KaVE.FeedbackProcessor", "KaVE.FeedbackProcessor\KaVE.FeedbackProcessor.csproj", "{7B7AEA61-25F5-4938-BEE7-ED26AE7BE477}"
 EndProject

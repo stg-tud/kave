@@ -23,10 +23,10 @@ using JetBrains.ActionManagement;
 using JetBrains.Application;
 using JetBrains.Application.Components;
 using JetBrains.DataFlow;
+using KaVE.ReSharper.Commons.Utils;
 using KaVE.VsFeedbackGenerator.Export;
 using KaVE.VsFeedbackGenerator.Menu;
 using KaVE.VsFeedbackGenerator.MessageBus;
-using KaVE.VsFeedbackGenerator.Utils;
 
 namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
 {

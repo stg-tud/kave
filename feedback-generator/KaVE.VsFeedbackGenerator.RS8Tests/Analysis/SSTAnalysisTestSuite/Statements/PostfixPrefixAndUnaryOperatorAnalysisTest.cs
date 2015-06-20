@@ -18,7 +18,7 @@
  */
 
 using JetBrains.ReSharper.Psi.CSharp.Tree;
-using KaVE.VsFeedbackGenerator.Analysis.CompletionTarget;
+using KaVE.ReSharper.Commons.Analysis.CompletionTarget;
 using NUnit.Framework;
 using Fix = KaVE.ReSharper.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.SSTAnalysisFixture;
 

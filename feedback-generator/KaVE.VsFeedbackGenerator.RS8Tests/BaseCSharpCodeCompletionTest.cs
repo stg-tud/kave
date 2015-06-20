@@ -29,8 +29,8 @@ using JetBrains.TextControl;
 using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.SSTs;
+using KaVE.ReSharper.Commons.Analysis.CompletionTarget;
 using KaVE.ReSharper.Commons.Tests_Integration.Analysis;
-using KaVE.VsFeedbackGenerator.Analysis.CompletionTarget;
 
 namespace KaVE.ReSharper.Commons.Tests_Integration
 {

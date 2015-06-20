@@ -20,9 +20,9 @@
 using System.Windows.Controls;
 using Hardcodet.Wpf.TaskbarNotification;
 using JetBrains.ActionManagement;
+using KaVE.ReSharper.Commons.Utils;
 using KaVE.VsFeedbackGenerator.Export;
 using KaVE.VsFeedbackGenerator.SessionManager.Presentation;
-using KaVE.VsFeedbackGenerator.Utils;
 
 namespace KaVE.VsFeedbackGenerator.TrayNotification
 {

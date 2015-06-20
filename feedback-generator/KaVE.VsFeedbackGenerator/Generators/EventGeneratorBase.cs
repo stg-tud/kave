@@ -23,9 +23,8 @@ using EnvDTE;
 using KaVE.Commons.Utils.Json;
 using KaVE.JetBrains.Annotations;
 using KaVE.Commons.Model.Events;
+using KaVE.ReSharper.Commons.Utils;
 using KaVE.VsFeedbackGenerator.MessageBus;
-using KaVE.VsFeedbackGenerator.Utils;
-using KaVE.VsFeedbackGenerator.Utils.Names;
 using KaVE.VsFeedbackGenerator.VsIntegration;
 
 namespace KaVE.VsFeedbackGenerator.Generators

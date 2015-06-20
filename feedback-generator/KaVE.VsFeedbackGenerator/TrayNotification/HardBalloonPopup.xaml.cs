@@ -21,7 +21,7 @@ using System.Windows;
 using System.Windows.Input;
 using JetBrains;
 using KaVE.Commons.Utils.IO;
-using KaVE.VsFeedbackGenerator.Utils.Logging;
+using KaVE.ReSharper.Commons.Utils.Logging;
 
 namespace KaVE.VsFeedbackGenerator.TrayNotification
 {

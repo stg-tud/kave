@@ -17,7 +17,7 @@
  *    - Sebastian Proksch
  */
 
-using KaVE.VsFeedbackGenerator.Analysis.CompletionTarget;
+using KaVE.ReSharper.Commons.Analysis.CompletionTarget;
 
 namespace KaVE.ReSharper.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.TriggerPoint
 {

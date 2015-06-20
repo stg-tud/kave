@@ -23,9 +23,9 @@ using System.Windows.Controls;
 using JetBrains.ActionManagement;
 using JetBrains.DataFlow;
 using JetBrains.UI.Options;
+using KaVE.ReSharper.Commons.Utils;
 using KaVE.VsFeedbackGenerator.Export;
 using KaVE.VsFeedbackGenerator.Interactivity;
-using KaVE.VsFeedbackGenerator.Utils;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
 {

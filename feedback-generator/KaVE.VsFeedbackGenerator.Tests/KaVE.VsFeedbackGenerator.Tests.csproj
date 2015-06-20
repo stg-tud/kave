@@ -219,24 +219,7 @@
     <Compile Include="SessionManager\EventViewTest.cs" />
     <Compile Include="Export\UploadWizardViewModelTest.cs" />
     <Compile Include="TestRSEnv.cs" />
-    <Compile Include="Utils\DateTimeTest.cs" />
-    <Compile Include="Utils\GZipStreamTest.cs" />
-    <Compile Include="Utils\HierarchyTest.cs" />
-    <Compile Include="Utils\HttpPublisherTest.cs" />
-    <Compile Include="Utils\InjectableIoUtilsTest.cs" />
-    <Compile Include="Utils\InverseBoolConverterTest.cs" />
-    <Compile Include="Utils\FilePublisherTest.cs" />
-    <Compile Include="Utils\Logging\LogFileManagerTest.cs" />
-    <Compile Include="Utils\Logging\LogFileTest.cs" />
-    <Compile Include="Utils\Names\ReSharperDeclaredElementNameFactoryTest.cs" />
-    <Compile Include="Utils\Names\ReSharperTypeNameFactoryTest.cs" />
     <Compile Include="TestFactories\TypeMockUtils.cs" />
-    <Compile Include="Utils\Names\VsComponentNameFactoryTest.cs" />
-    <Compile Include="Utils\ObjectToVisibilityConverterTest.cs" />
-    <Compile Include="Utils\SettingsCleanerTest.cs" />
-    <Compile Include="Utils\SettingsStoreTest.cs" />
-    <Compile Include="Utils\TestDateUtils.cs" />
-    <Compile Include="Utils\XamlFormattingUtilTest.cs" />
     <Compile Include="VsIntegration\IDESessionTest.cs" />
   </ItemGroup>
   <ItemGroup>

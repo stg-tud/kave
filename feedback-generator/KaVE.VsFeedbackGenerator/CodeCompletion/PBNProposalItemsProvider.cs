@@ -31,8 +31,8 @@ using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.CodeCompletion;
 using KaVE.Commons.Utils.Exceptions;
 using KaVE.Commons.Utils.ObjectUsageExport;
-using KaVE.VsFeedbackGenerator.Analysis;
-using KaVE.VsFeedbackGenerator.Utils;
+using KaVE.ReSharper.Commons.Analysis;
+using KaVE.ReSharper.Commons.Utils;
 
 //using KaVELogger = KaVE.Commons.Utils.Exceptions.ILogger;
 

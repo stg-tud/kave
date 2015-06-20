@@ -15,7 +15,7 @@
  */
 
 using JetBrains.Application;
-using KaVE.VsFeedbackGenerator.Utils;
+using KaVE.ReSharper.Commons.Utils;
 using Moq;
 using NUnit.Framework;
 

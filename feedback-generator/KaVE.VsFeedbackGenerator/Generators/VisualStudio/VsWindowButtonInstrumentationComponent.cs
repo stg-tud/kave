@@ -24,8 +24,8 @@ using JetBrains.Application;
 using JetBrains.Application.Components;
 using KaVE.JetBrains.Annotations;
 using KaVE.Commons.Utils.Exceptions;
+using KaVE.ReSharper.Commons.Utils;
 using KaVE.VsFeedbackGenerator.MessageBus;
-using KaVE.VsFeedbackGenerator.Utils;
 
 namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
 {
