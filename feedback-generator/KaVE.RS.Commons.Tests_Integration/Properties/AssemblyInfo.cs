@@ -14,61 +14,36 @@
  * limitations under the License.
  */
 
+using System;
 using JetBrains.Application.BuildScript.Application.Zones;
+using JetBrains.ReSharper.TestFramework;
 using JetBrains.TestFramework;
 using JetBrains.TestFramework.Application.Zones;
 using NUnit.Framework;
 
-[assembly: RequiresSTA]
+// ReSharper disable once CheckNamespace
 
-namespace KaVE.RS.Commons.Tests_Integration.Properties
+namespace KaVE.RS.Commons.Tests_Integration
 {
-    /// <summary>
-    ///     Test environment. Must be in the global namespace.
-    /// </summary>
+    [ZoneDefinition]
+    public interface IThisTestZone : ITestsZone, IRequire<PsiFeatureTestZone> {}
+
     [SetUpFixture]
-    // ReSharper disable once CheckNamespace
-    // ReSharper disable once InconsistentNaming
-    public class AssemblyInfo : TestEnvironmentAssembly<VsFeedbackGeneratorRS8Zone>
+    public class TestEnvironmentAssembly : ExtensionTestEnvironmentAssembly<IThisTestZone>
     {
-        // TODO RS9
-        /*
-        /// <summary>
-        ///     Gets the assemblies to load into test environment.
-        ///     Should include all assemblies which contain components.
-        /// </summary>
-        private static IEnumerable<Assembly> GetAssembliesToLoad()
-        {
-            // Test assembly
-            yield return Assembly.GetExecutingAssembly();
-
-            yield return typeof (AboutAction).Assembly;
-        }
-
-        public override void SetUp()
-        {
-            CodeCompletionContextAnalysisTrigger.Disabled = true;
-            base.SetUp();
-            ReentrancyGuard.Current.Execute(
-                "LoadAssemblies",
-                () => Shell.Instance.GetComponent<AssemblyManager>().LoadAssemblies(
-                    GetType().Name,
-                    GetAssembliesToLoad()));
-        }
-
         public override void TearDown()
         {
-            ReentrancyGuard.Current.Execute(
-                "UnloadAssemblies",
-                () => Shell.Instance.GetComponent<AssemblyManager>().UnloadAssemblies(
-                    GetType().Name,
-                    GetAssembliesToLoad()));
-            base.TearDown();
+            try
+            {
+                base.TearDown();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
-         * */
     }
 
-    // TODO RS9: zones?
-    [ZoneDefinition]
-    public class VsFeedbackGeneratorRS8Zone : ITestsZone {}
+    [ZoneMarker]
+    public class ZoneMarker {}
 }

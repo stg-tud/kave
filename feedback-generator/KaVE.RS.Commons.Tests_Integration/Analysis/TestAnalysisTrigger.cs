@@ -20,6 +20,7 @@
 
 using System;
 using System.Collections.Generic;
+using JetBrains.Application;
 using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure.LookupItems;
 using JetBrains.ReSharper.Feature.Services.CSharp.CodeCompletion.Infrastructure;
 using JetBrains.ReSharper.Features.Intellisense.CodeCompletion.CSharp.Rules;
@@ -33,12 +34,12 @@ using KaVE.Commons.Utils.Exceptions;
 using KaVE.RS.Commons.Analysis;
 using KaVE.RS.Commons.Analysis.CompletionTarget;
 using KaVE.RS.Commons.Analysis.Transformer;
+using KaVE.RS.Commons.Utils;
 
 namespace KaVE.RS.Commons.Tests_Integration.Analysis
 {
-    // TODO RS9: removed [ShellComponent] make sure that is correct
-    [Language(typeof (CSharpLanguage))]
-    public class TestAnalysisTrigger : CSharpItemsProviderBase<CSharpCodeCompletionContext>
+    [ShellComponent, Language(typeof (CSharpLanguage))]
+    public class TestAnalysisTrigger : CSharpItemsProviderBasic
     {
         public static bool IsPrintingType = false;
 
@@ -48,9 +49,19 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis
         public ISST LastSST { get; private set; }
         public Tuple<Exception, string> LastException { get; private set; }
 
+        public TestAnalysisTrigger()
+        {
+            //Registry.RegisterComponent(this);
+        }
+
         public bool HasFailed
         {
             get { return LastException != null; }
+        }
+
+        protected override bool IsAvailable(CSharpCodeCompletionContext context)
+        {
+            return true;
         }
 
         protected override bool AddLookupItems(CSharpCodeCompletionContext context, GroupedItemsCollector collector)

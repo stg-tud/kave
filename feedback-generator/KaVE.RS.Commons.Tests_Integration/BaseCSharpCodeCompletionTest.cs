@@ -24,13 +24,13 @@ using JetBrains.Application.Settings;
 using JetBrains.ReSharper.Feature.Services.CodeCompletion;
 using JetBrains.ReSharper.Feature.Services.Lookup;
 using JetBrains.ReSharper.FeaturesTestFramework.Completion;
-using JetBrains.ReSharper.Resources.Shell;
 using JetBrains.TextControl;
 using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.SSTs;
 using KaVE.RS.Commons.Analysis.CompletionTarget;
 using KaVE.RS.Commons.Tests_Integration.Analysis;
+using KaVE.RS.Commons.Utils;
 
 namespace KaVE.RS.Commons.Tests_Integration
 {
@@ -38,8 +38,7 @@ namespace KaVE.RS.Commons.Tests_Integration
     {
         protected override CodeCompletionTestType TestType
         {
-            // TODO RS9
-            get { return CodeCompletionTestType.Selection; }
+            get { return CodeCompletionTestType.List; }
         }
 
         protected void CompleteInMethod(string methodBody)
@@ -114,7 +113,7 @@ namespace KaVE.RS.Commons.Tests_Integration
 
         private static TestAnalysisTrigger TestAnalysisComponent
         {
-            get { return Shell.Instance.GetComponent<TestAnalysisTrigger>(); }
+            get { return Registry.GetComponent<TestAnalysisTrigger>(); }
         }
     }
 }

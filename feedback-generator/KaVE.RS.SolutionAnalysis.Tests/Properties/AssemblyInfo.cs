@@ -12,60 +12,38 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
- * Contributors:
- *    - Sven Amann
  */
 
+using System;
+using JetBrains.Application.BuildScript.Application.Zones;
+using JetBrains.ReSharper.TestFramework;
 using JetBrains.TestFramework;
 using JetBrains.TestFramework.Application.Zones;
 using NUnit.Framework;
 
-namespace KaVE.RS.SolutionAnalysis.Tests.Properties
+// ReSharper disable once CheckNamespace
+
+namespace KaVE.RS.SolutionAnalysis.Tests
 {
-    /// <summary>
-    ///     Test environment. Must be in the global namespace.
-    /// </summary>
+    [ZoneDefinition]
+    public interface IThisTestZone : ITestsZone, IRequire<PsiFeatureTestZone> {}
+
     [SetUpFixture]
-    // ReSharper disable once CheckNamespace
-    public class SolutionAnalysisTestEnvironmentAssembly : TestEnvironmentAssembly<SolutionAnalysisZone>
+    public class TestEnvironmentAssembly : ExtensionTestEnvironmentAssembly<IThisTestZone>
     {
-        // TODO RS9
-        /*
-    /// <summary>
-    ///     Gets the assemblies to load into test environment.
-    ///     Should include all assemblies which contain components.
-    /// </summary>
-    private static IEnumerable<Assembly> GetAssembliesToLoad()
-    {
-        // Test assembly
-        yield return Assembly.GetExecutingAssembly();
-        yield return typeof (AboutAction).Assembly;
-        yield return typeof (KaVE.SolutionAnalysis.SolutionAnalysis).Assembly;
+        public override void TearDown()
+        {
+            try
+            {
+                base.TearDown();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+        }
     }
 
-    public override void SetUp()
-    {
-        base.SetUp();
-        ReentrancyGuard.Current.Execute(
-            "LoadAssemblies",
-            () => Shell.Instance.GetComponent<AssemblyManager>().LoadAssemblies(
-                GetType().Name,
-                GetAssembliesToLoad()));
-    }
-
-    public override void TearDown()
-    {
-        ReentrancyGuard.Current.Execute(
-            "UnloadAssemblies",
-            () => Shell.Instance.GetComponent<AssemblyManager>().UnloadAssemblies(
-                GetType().Name,
-                GetAssembliesToLoad()));
-        base.TearDown();
-    }
-     * */
-    }
-
-    // TODO RS9
-    public class SolutionAnalysisZone : ITestsZone {}
+    [ZoneMarker]
+    public class ZoneMarker {}
 }
