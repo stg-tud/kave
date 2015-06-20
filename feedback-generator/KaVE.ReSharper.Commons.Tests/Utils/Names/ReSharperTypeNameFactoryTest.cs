@@ -16,6 +16,8 @@
 
 using System.Collections.Generic;
 using JetBrains.ReSharper.Psi;
+using KaVE.ReSharper.Commons.Tests_Unit.TestFactories;
+using KaVE.ReSharper.Commons.Utils.Names;
 using NUnit.Framework;
 
 namespace KaVE.ReSharper.Commons.Tests_Unit.Utils.Names

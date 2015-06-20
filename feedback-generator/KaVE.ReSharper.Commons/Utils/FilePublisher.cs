@@ -16,7 +16,11 @@
 
 using System;
 using System.IO;
+using JetBrains.Annotations;
 using JetBrains.Util;
+using KaVE.Commons.Utils.Assertion;
+using KaVE.Commons.Utils.IO;
+using KaVE.ReSharper.Commons.Properties;
 
 namespace KaVE.ReSharper.Commons.Utils
 {

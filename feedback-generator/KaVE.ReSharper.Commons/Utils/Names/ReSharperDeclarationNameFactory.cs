@@ -14,7 +14,10 @@
  * limitations under the License.
  */
 
+using JetBrains.Annotations;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
+using KaVE.Commons.Model.Names;
+using KaVE.Commons.Utils.Assertion;
 
 namespace KaVE.ReSharper.Commons.Utils.Names
 {

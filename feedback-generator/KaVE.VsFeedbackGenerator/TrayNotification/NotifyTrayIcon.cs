@@ -24,8 +24,8 @@ using Hardcodet.Wpf.TaskbarNotification;
 using JetBrains.Application;
 using JetBrains.Application.Components;
 using KaVE.Commons.Utils;
-using KaVE.ReSharper.Commons.Utils.Logging;
 using KaVE.VsFeedbackGenerator.Properties;
+using KaVE.VsFeedbackGenerator.Utils.Logging;
 
 namespace KaVE.VsFeedbackGenerator.TrayNotification
 {

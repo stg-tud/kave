@@ -16,6 +16,8 @@
 
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
+using KaVE.Commons.Model.Names;
+using KaVE.Commons.Utils;
 
 namespace KaVE.ReSharper.Commons.Analysis
 {

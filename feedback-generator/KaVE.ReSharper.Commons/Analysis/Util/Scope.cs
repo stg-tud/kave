@@ -15,6 +15,7 @@
  */
 
 using System.Collections.Generic;
+using KaVE.Commons.Model.SSTs;
 
 namespace KaVE.ReSharper.Commons.Analysis.Util
 {

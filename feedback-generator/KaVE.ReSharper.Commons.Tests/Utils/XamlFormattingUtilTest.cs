@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
+using KaVE.ReSharper.Commons.Utils;
 using NUnit.Framework;
 
 namespace KaVE.ReSharper.Commons.Tests_Unit.Utils
 {
-    [TestFixture]
     internal class XamlFormattingUtilTest
     {
         private const string Content = "This is GOOD content";

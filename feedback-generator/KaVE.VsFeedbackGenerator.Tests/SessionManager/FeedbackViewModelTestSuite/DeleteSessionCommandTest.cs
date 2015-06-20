@@ -23,17 +23,16 @@ using System.Linq;
 using System.Threading;
 using JetBrains;
 using KaVE.Commons.Utils.IO;
+using KaVE.ReSharper.Commons.Utils;
 using KaVE.VsFeedbackGenerator.Interactivity;
 using KaVE.VsFeedbackGenerator.SessionManager;
 using KaVE.VsFeedbackGenerator.Tests.Interactivity;
-using KaVE.VsFeedbackGenerator.Utils;
 using KaVE.VsFeedbackGenerator.Utils.Logging;
 using Moq;
 using NUnit.Framework;
 
 namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModelTestSuite
 {
-    [TestFixture]
     internal class DeleteSessionCommandTest
     {
         private FeedbackViewModel _uut;

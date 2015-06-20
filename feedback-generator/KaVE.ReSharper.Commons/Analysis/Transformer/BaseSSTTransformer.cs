@@ -17,7 +17,9 @@
 using System;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
+using KaVE.Commons.Model.Names;
 using KaVE.ReSharper.Commons.Analysis.Transformer.Context;
+using KaVE.ReSharper.Commons.Utils.Names;
 
 namespace KaVE.ReSharper.Commons.Analysis.Transformer
 {

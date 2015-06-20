@@ -19,17 +19,17 @@
  */
 
 using System;
+using KaVE.Commons.TestUtils.Utils;
+using KaVE.ReSharper.Commons.Utils;
 using KaVE.VsFeedbackGenerator.SessionManager;
 using KaVE.VsFeedbackGenerator.TrayNotification;
-using KaVE.VsFeedbackGenerator.Utils;
 using KaVE.VsFeedbackGenerator.Utils.Logging;
 using Moq;
 using NUnit.Framework;
-using TestDateUtils = KaVE.VsFeedbackGenerator.Tests.Utils.TestDateUtils;
 
 namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
 {
-    [TestFixture, RequiresSTA]
+    [RequiresSTA]
     internal class UploadReminderTest
     {
         private Mock<ISettingsStore> _mockSettingsStore;
@@ -78,12 +78,11 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
             _mockLogManager = new Mock<ILogManager>();
             _mockTrayIcon = new Mock<NotifyTrayIcon>(_mockLogManager.Object);
             _dateUtils = new TestDateUtils();
-
         }
 
         private void GivenLogSizeInBytesIsBigEnoughToShowReminder()
         {
-            GivenLogsSizeInBytesIs(1024 * 1024);
+            GivenLogsSizeInBytesIs(1024*1024);
         }
 
         private void GivenLogsSizeInBytesIs(int logsSizeInBytes)
@@ -99,7 +98,12 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
         private void WhenUploadReminderIsInitialized()
         {
             // ReSharper disable once ObjectCreationAsStatement
-            new UploadReminder(_mockSettingsStore.Object, _mockTrayIcon.Object, _mockCallbackManager.Object, _dateUtils, _mockLogManager.Object);
+            new UploadReminder(
+                _mockSettingsStore.Object,
+                _mockTrayIcon.Object,
+                _mockCallbackManager.Object,
+                _dateUtils,
+                _mockLogManager.Object);
         }
 
         private void ThenNoPopupIsOpened()
@@ -193,7 +197,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
             _uploadSettings.LastNotificationDate = CreateDateWithDayAndHour(1, 12);
             _uploadSettings.LastUploadDate = CreateDateWithDayAndHour(1, 12);
             _dateUtils.Now = CreateDateWithDayAndHour(2, 14);
-            GivenLogsSizeInBytesIs(100 * 1024);
+            GivenLogsSizeInBytesIs(100*1024);
 
             WhenUploadReminderIsInitialized();
 
@@ -261,7 +265,8 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
         }
 
         [Test]
-        public void ShouldRegisterCorrectTime_LastNotificationOnThePreviousDayOutSideWorkingHourAndCurrentTimeIsInWorkingHours()
+        public void
+            ShouldRegisterCorrectTime_LastNotificationOnThePreviousDayOutSideWorkingHourAndCurrentTimeIsInWorkingHours()
         {
             _uploadSettings.LastNotificationDate = CreateDateWithDayAndHour(1, 18);
             _dateUtils.Now = CreateDateWithDayAndHour(2, 13);

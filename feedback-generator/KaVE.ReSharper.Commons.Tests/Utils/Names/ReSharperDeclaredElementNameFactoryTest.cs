@@ -21,6 +21,10 @@ using JetBrains.ReSharper.Psi.CSharp.DeclaredElements;
 using JetBrains.ReSharper.Psi.ExtensionsAPI;
 using JetBrains.ReSharper.Psi.Impl.Resolve;
 using JetBrains.ReSharper.Psi.Resolve;
+using KaVE.Commons.Model.Names;
+using KaVE.Commons.Model.Names.CSharp;
+using KaVE.ReSharper.Commons.Tests_Unit.TestFactories;
+using KaVE.ReSharper.Commons.Utils.Names;
 using Moq;
 using NUnit.Framework;
 

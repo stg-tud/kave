@@ -22,6 +22,7 @@ using System.Reflection;
 using JetBrains.ReSharper.Feature.Services.Bulbs;
 using JetBrains.ReSharper.Feature.Services.Intentions;
 using JetBrains.UI.BulbMenu;
+using KaVE.Commons.Utils;
 using KaVE.ReSharper.Commons.Utils;
 using KaVE.VsFeedbackGenerator.MessageBus;
 

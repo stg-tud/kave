@@ -20,12 +20,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using KaVE.JetBrains.Annotations;
 using KaVE.Commons.Model.Events;
+using KaVE.Commons.TestUtils.Utils;
+using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Exceptions;
+using KaVE.JetBrains.Annotations;
+using KaVE.ReSharper.Commons.Utils;
 using KaVE.VsFeedbackGenerator.MessageBus;
-using KaVE.VsFeedbackGenerator.Tests.Utils;
-using KaVE.VsFeedbackGenerator.Utils;
 using Moq;
 using NUnit.Framework;
 

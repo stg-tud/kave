@@ -16,6 +16,9 @@
 
 using System;
 using System.IO;
+using KaVE.Commons.Utils.Assertion;
+using KaVE.Commons.Utils.IO;
+using KaVE.ReSharper.Commons.Utils;
 using Moq;
 using NUnit.Framework;
 

@@ -16,6 +16,7 @@
 
 using System;
 using JetBrains.Application;
+using KaVE.Commons.Utils;
 
 namespace KaVE.ReSharper.Commons.Utils
 {
@@ -33,7 +34,9 @@ namespace KaVE.ReSharper.Commons.Utils
             return Invoke.Later(callback, delayInMillisecond);
         }
 
-        public ScheduledAction RegisterCallback(Action callback, DateTime timeForCallbackInvocation, Action finishedAction)
+        public ScheduledAction RegisterCallback(Action callback,
+            DateTime timeForCallbackInvocation,
+            Action finishedAction)
         {
             return Invoke.Later(callback, timeForCallbackInvocation, finishedAction);
         }

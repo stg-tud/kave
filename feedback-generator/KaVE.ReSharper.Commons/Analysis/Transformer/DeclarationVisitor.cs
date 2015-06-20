@@ -18,7 +18,14 @@ using System.Collections.Generic;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.Util;
+using KaVE.Commons.Model.Names;
+using KaVE.Commons.Model.Names.CSharp;
+using KaVE.Commons.Model.SSTs.Impl;
+using KaVE.Commons.Model.SSTs.Impl.Declarations;
+using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
+using KaVE.Commons.Model.SSTs.Impl.Statements;
 using KaVE.ReSharper.Commons.Analysis.CompletionTarget;
+using KaVE.ReSharper.Commons.Utils.Names;
 
 namespace KaVE.ReSharper.Commons.Analysis.Transformer
 {

@@ -19,8 +19,20 @@ using System.Collections.Generic;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.Util;
+using KaVE.Commons.Model.Names;
+using KaVE.Commons.Model.Names.CSharp;
+using KaVE.Commons.Model.SSTs.Expressions;
+using KaVE.Commons.Model.SSTs.Impl;
+using KaVE.Commons.Model.SSTs.Impl.Blocks;
+using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
+using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
+using KaVE.Commons.Model.SSTs.Impl.References;
+using KaVE.Commons.Model.SSTs.Impl.Statements;
+using KaVE.Commons.Utils.Assertion;
+using KaVE.Commons.Utils.Collections;
 using KaVE.ReSharper.Commons.Analysis.CompletionTarget;
 using KaVE.ReSharper.Commons.Analysis.Util;
+using KaVE.ReSharper.Commons.Utils.Names;
 using IStatement = KaVE.Commons.Model.SSTs.IStatement;
 
 namespace KaVE.ReSharper.Commons.Analysis.Transformer

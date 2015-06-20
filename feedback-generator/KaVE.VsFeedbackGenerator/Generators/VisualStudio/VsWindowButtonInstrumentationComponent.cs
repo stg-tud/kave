@@ -22,6 +22,7 @@ using System.Collections.Generic;
 using EnvDTE;
 using JetBrains.Application;
 using JetBrains.Application.Components;
+using KaVE.Commons.Utils;
 using KaVE.JetBrains.Annotations;
 using KaVE.Commons.Utils.Exceptions;
 using KaVE.ReSharper.Commons.Utils;

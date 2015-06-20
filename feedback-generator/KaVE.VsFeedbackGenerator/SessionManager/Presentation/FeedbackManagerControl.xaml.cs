@@ -26,6 +26,7 @@ using JetBrains.UI.Options;
 using KaVE.ReSharper.Commons.Utils;
 using KaVE.VsFeedbackGenerator.Export;
 using KaVE.VsFeedbackGenerator.Interactivity;
+using KaVE.VsFeedbackGenerator.Utils;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
 {
@@ -47,6 +48,13 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
             _settingsStore = settingsStore;
 
             InitializeComponent();
+
+            // TODO RS9 -- unrelated to RS9, but this was previously part of the XAML and did not parse anymore after the refactoring
+            // see: http://stackoverflow.com/questions/27106277/valueconverter-with-multiple-arguments
+            Resources.Add("ObjectToVisibilityConverter", new ObjectToVisibilityConverter());
+            Resources.Add("InverseObjectToVisibilityConverter", new InverseObjectToVisibilityConverter());
+            Resources.Add("BooleanToVisibilityConverter", new BooleanToVisibilityConverter());
+            Resources.Add("InverseBoolConverter", new InverseBoolConverter());
         }
 
         public void OnVisibilityChanged(PropertyChangedEventArgs<bool> e)

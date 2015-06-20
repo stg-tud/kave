@@ -24,6 +24,7 @@ using JetBrains.Application.Components;
 using JetBrains.Util;
 using KaVE.JetBrains.Annotations;
 using KaVE.Commons.Model.Events;
+using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.ReSharper.Commons.Utils;
 using KaVE.VsFeedbackGenerator.MessageBus;

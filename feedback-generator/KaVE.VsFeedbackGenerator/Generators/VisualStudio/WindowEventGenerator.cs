@@ -27,6 +27,7 @@ using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Collections;
 using KaVE.ReSharper.Commons.Utils;
 using KaVE.VsFeedbackGenerator.MessageBus;
+using KaVE.VsFeedbackGenerator.Utils.Names;
 
 namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
 {
@@ -53,7 +54,10 @@ namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
         // ReSharper disable once PrivateFieldCanBeConvertedToLocalVariable
         private readonly WindowEvents _windowEvents;
 
-        public WindowEventGenerator(IRSEnv env, IMessageBus messageBus, ICallbackManager callbackManager, IDateUtils dateUtils)
+        public WindowEventGenerator(IRSEnv env,
+            IMessageBus messageBus,
+            ICallbackManager callbackManager,
+            IDateUtils dateUtils)
             : base(env, messageBus, dateUtils)
         {
             _callbackManager = callbackManager;

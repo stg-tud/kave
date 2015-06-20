@@ -16,8 +16,13 @@
 
 using System;
 using System.Linq;
+using JetBrains.Annotations;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.Util;
+using KaVE.Commons.Model.Names;
+using KaVE.Commons.Model.Names.CSharp;
+using KaVE.Commons.Model.TypeShapes;
+using KaVE.ReSharper.Commons.Utils.Names;
 
 namespace KaVE.ReSharper.Commons.Analysis
 {

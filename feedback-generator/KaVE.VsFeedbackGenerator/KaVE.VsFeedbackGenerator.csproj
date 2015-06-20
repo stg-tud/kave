@@ -161,7 +161,6 @@
     <Compile Include="Menu\AboutAction.cs" />
     <Compile Include="CodeCompletion\PBNProposalWrappedLookupItem.cs" />
     <Compile Include="CodeCompletion\PBNProposalItemsProvider.cs" />
-    <Compile Include="CodeCompletion\InjectablePBNRecommenderStore.cs" />
     <Compile Include="Export\Exporter.cs" />
     <Compile Include="Generators\LogEventGenerator.cs" />
     <Compile Include="Generators\ReSharper\CommandEventGeneratorBase.cs" />
@@ -296,6 +295,16 @@
     <Compile Include="MessageBus\TinyMessenger.cs" />
     <Compile Include="SessionManager\UploadSettings.cs" />
     <Compile Include="SessionManager\UploadReminder.cs" />
+    <Compile Include="Utils\InverseBoolConverter.cs" />
+    <Compile Include="Utils\InverseObjectToVisibilityConverter.cs" />
+    <Compile Include="Utils\Json\JsonLogFileManager.cs" />
+    <Compile Include="Utils\Logging\ILogManager.cs" />
+    <Compile Include="Utils\Logging\LogFile.cs" />
+    <Compile Include="Utils\Logging\LogFileManager.cs" />
+    <Compile Include="Utils\Names\VsComponentNameFactory.cs" />
+    <Compile Include="Utils\ObjectToVisibilityConverter.cs" />
+    <Compile Include="Utils\SettingsCleaner.cs" />
+    <Compile Include="Utils\SettingsStore.cs" />
     <Compile Include="VsIntegration\IDESession.cs" />
     <Compile Include="VsIntegration\IIDESession.cs" />
     <Compile Include="ZoneMarker.cs" />

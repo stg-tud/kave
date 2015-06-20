@@ -15,6 +15,7 @@
  */
 
 using JetBrains.ActionManagement;
+using JetBrains.Annotations;
 using JetBrains.Application.DataContext;
 using JetBrains.DataFlow;
 using JetBrains.Threading;

@@ -16,8 +16,14 @@
 
 using System;
 using System.IO;
+using System.Net.Http;
+using JetBrains;
+using JetBrains.Annotations;
+using JetBrains.Util;
+using KaVE.Commons.Utils.Assertion;
+using KaVE.Commons.Utils.IO;
+using KaVE.ReSharper.Commons.Properties;
 using Newtonsoft.Json;
-using CollectionUtil = JetBrains.Util.CollectionUtil;
 
 namespace KaVE.ReSharper.Commons.Utils
 {
@@ -39,7 +45,7 @@ namespace KaVE.ReSharper.Commons.Utils
             var response = _ioUtils.TransferByHttp(content, _hostAddress);
             var json = response.Content.ReadAsStringAsync().Result;
 
-            Asserts.Not(CollectionUtil.IsNullOrEmpty(json), Messages.ServerResponseEmpty);
+            Asserts.Not(json.IsNullOrEmpty(), Messages.ServerResponseEmpty);
 
             ExportResult res;
             try

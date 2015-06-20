@@ -20,6 +20,8 @@
 using JetBrains.Util;
 using KaVE.JetBrains.Annotations;
 using KaVE.Commons.TestUtils.Model.Events;
+using KaVE.Commons.Utils;
+using KaVE.ReSharper.Commons.Utils;
 using KaVE.VsFeedbackGenerator.Generators;
 using KaVE.VsFeedbackGenerator.MessageBus;
 using KaVE.VsFeedbackGenerator.Utils;

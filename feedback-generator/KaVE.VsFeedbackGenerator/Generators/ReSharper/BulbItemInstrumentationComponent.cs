@@ -27,6 +27,7 @@ using JetBrains.ReSharper.Intentions.Bulbs;
 using JetBrains.ReSharper.Psi;
 using JetBrains.TextControl;
 using JetBrains.UI.BulbMenu;
+using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.ReSharper.Commons.Utils;
 using KaVE.VsFeedbackGenerator.MessageBus;

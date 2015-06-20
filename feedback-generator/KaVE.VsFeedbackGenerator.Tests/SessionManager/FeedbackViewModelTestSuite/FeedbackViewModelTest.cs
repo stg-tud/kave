@@ -25,8 +25,8 @@ using KaVE.Commons.TestUtils.Model.Events;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Exceptions;
 using KaVE.Commons.Utils.Reflection;
+using KaVE.ReSharper.Commons.Utils;
 using KaVE.VsFeedbackGenerator.SessionManager;
-using KaVE.VsFeedbackGenerator.Utils;
 using KaVE.VsFeedbackGenerator.Utils.Logging;
 using Moq;
 using NUnit.Framework;
@@ -34,7 +34,6 @@ using Fix = KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModelTestS
 
 namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModelTestSuite
 {
-    [TestFixture]
     internal class FeedbackViewModelTest
     {
         private Mock<ILogManager> _mockLogManager;

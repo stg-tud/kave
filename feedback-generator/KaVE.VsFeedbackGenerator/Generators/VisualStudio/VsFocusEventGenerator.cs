@@ -23,10 +23,12 @@ using System.Runtime.InteropServices;
 using System.Timers;
 using JetBrains.Application;
 using JetBrains.Application.Components;
-using KaVE.JetBrains.Annotations;
 using KaVE.Commons.Model.Events.VisualStudio;
+using KaVE.Commons.Utils;
+using KaVE.JetBrains.Annotations;
 using KaVE.ReSharper.Commons.Utils;
 using KaVE.VsFeedbackGenerator.MessageBus;
+using KaVE.VsFeedbackGenerator.Utils.Names;
 
 namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
 {

@@ -219,7 +219,14 @@
     <Compile Include="SessionManager\EventViewTest.cs" />
     <Compile Include="Export\UploadWizardViewModelTest.cs" />
     <Compile Include="TestRSEnv.cs" />
-    <Compile Include="TestFactories\TypeMockUtils.cs" />
+    <Compile Include="Utils\InverseBoolConverterTest.cs" />
+    <Compile Include="Utils\Logging\LogFileManagerTest.cs" />
+    <Compile Include="Utils\Logging\LogFileTest.cs" />
+    <Compile Include="Utils\Names\VsComponentNameFactoryTest.cs" />
+    <Compile Include="Utils\ObjectToVisibilityConverterTest.cs" />
+    <Compile Include="Utils\SettingsCleanerTest.cs" />
+    <Compile Include="Utils\SettingsStoreTest.cs" />
+    <Compile Include="VsIntegrationMocks\TestDTE.cs" />
     <Compile Include="VsIntegration\IDESessionTest.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -230,6 +237,14 @@
     <ProjectReference Include="..\KaVE.Commons.TestUtils\KaVE.Commons.TestUtils.csproj">
       <Project>{126607DB-1F9F-4E2C-A39E-7B707874EAFC}</Project>
       <Name>KaVE.Commons.TestUtils</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\KaVE.ReSharper.Commons.Tests\KaVE.ReSharper.Commons.Tests_Unit.csproj">
+      <Project>{35FCB52A-CCD2-49C7-AD6D-78A71164A324}</Project>
+      <Name>KaVE.ReSharper.Commons.Tests_Unit</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\KaVE.ReSharper.Commons\KaVE.ReSharper.Commons.csproj">
+      <Project>{B2235734-D3E5-498F-87E2-E9780DBE0D8D}</Project>
+      <Name>KaVE.ReSharper.Commons</Name>
     </ProjectReference>
     <ProjectReference Include="..\KaVE.VsFeedbackGenerator\KaVE.VsFeedbackGenerator.csproj">
       <Project>{42CE1875-DF5B-4D9E-ADC4-47A96C06EF66}</Project>

@@ -19,7 +19,7 @@
 
 using System.Text.RegularExpressions;
 using KaVE.JetBrains.Annotations;
-using Util = KaVE.VsFeedbackGenerator.Utils.XamlFormattingUtil;
+using KaVE.ReSharper.Commons.Utils;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
 {
@@ -66,7 +66,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
 
         private static string FormatPropertyKey(string match)
         {
-            return Util.Bold(match);
+            return XamlFormattingUtil.Bold(match);
         }
 
         private static string FormatBooleanConstant(string match)

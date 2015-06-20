@@ -37,7 +37,8 @@ using KaVE.ReSharper.Commons.Analysis.Transformer;
 
 namespace KaVE.ReSharper.Commons.Tests_Integration.Analysis
 {
-    [ShellComponent, Language(typeof (CSharpLanguage))]
+    // TODO RS9: removed [ShellComponent] make sure that is correct
+    [Language(typeof (CSharpLanguage))]
     public class TestAnalysisTrigger : CSharpItemsProviderBase<CSharpCodeCompletionContext>
     {
         public static bool IsPrintingType = false;

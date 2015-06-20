@@ -15,12 +15,16 @@
  */
 
 using System;
+using JetBrains.Annotations;
+using KaVE.Commons.Model.Names;
+using KaVE.Commons.Model.Names.CSharp;
 
 namespace KaVE.ReSharper.Commons.Utils
 {
     internal static class TypeNameExtensions
     {
         // TODO @Dennis: testen oder raus
+        // TODO @seb: unused code?
         public static string ToTypeCategory([NotNull] this ITypeName elem)
         {
             if (elem.IsReferenceType)

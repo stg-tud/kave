@@ -21,9 +21,10 @@
 using System;
 using JetBrains.Application;
 using JetBrains.Application.Components;
+using KaVE.Commons.Utils;
 using KaVE.ReSharper.Commons.Utils;
-using KaVE.ReSharper.Commons.Utils.Logging;
 using KaVE.VsFeedbackGenerator.TrayNotification;
+using KaVE.VsFeedbackGenerator.Utils.Logging;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager
 {

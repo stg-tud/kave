@@ -63,6 +63,7 @@
     <Compile Include="Utils\Csv\CsvTestUtils.cs" />
     <Compile Include="Utils\DateTimeEx.cs" />
     <Compile Include="Utils\Exceptions\TestLogger.cs" />
+    <Compile Include="Utils\TestDateUtils.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\KaVE.Commons\KaVE.Commons.csproj">

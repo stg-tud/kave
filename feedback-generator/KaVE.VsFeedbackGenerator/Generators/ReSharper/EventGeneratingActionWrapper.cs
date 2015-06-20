@@ -18,6 +18,7 @@
  */
 
 using System;
+using KaVE.Commons.Utils;
 using KaVE.ReSharper.Commons.Utils;
 using KaVE.VsFeedbackGenerator.MessageBus;
 

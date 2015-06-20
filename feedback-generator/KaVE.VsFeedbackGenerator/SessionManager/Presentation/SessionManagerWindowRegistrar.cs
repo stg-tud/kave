@@ -24,7 +24,7 @@ using JetBrains.UI.CrossFramework;
 using JetBrains.UI.ToolWindowManagement;
 using KaVE.JetBrains.Annotations;
 using KaVE.ReSharper.Commons.Utils;
-using KaVE.ReSharper.Commons.Utils.Logging;
+using KaVE.VsFeedbackGenerator.Utils.Logging;
 
 namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
 {

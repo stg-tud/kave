@@ -32,10 +32,6 @@ Contributors:
              d:DesignHeight="450" d:DesignWidth="1000"
              d:DataContext="{d:DesignInstance Type=sessionManager:FeedbackViewModel, IsDesignTimeCreatable=False}">
     <UserControl.Resources>
-        <util:ObjectToVisibilityConverter x:Key="ObjectToVisibilityConverter" />
-        <util:InverseObjectToVisibilityConverter x:Key="InverseObjectToVisibilityConverter" />
-        <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
-        <util:InverseBoolConverter x:Key="InverseBoolConverter" />
         <Style TargetType="{x:Type Button}" x:Key="DefaultDisabledButton">
             <Style.Triggers>
                 <Trigger Property="Command" Value="{x:Null}">

@@ -20,9 +20,9 @@
 using System;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Names.VisualStudio;
+using KaVE.ReSharper.Commons.Utils;
 using KaVE.VsFeedbackGenerator.SessionManager.Anonymize;
 using KaVE.VsFeedbackGenerator.SessionManager.Presentation;
-using KaVE.VsFeedbackGenerator.Utils;
 using Moq;
 using NUnit.Framework;
 

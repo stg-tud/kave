@@ -70,7 +70,9 @@
     <Compile Include="Utils\Csv\CsvBuilder.cs" />
     <Compile Include="Utils\Csv\CsvBuilderEx.cs" />
     <Compile Include="Utils\Csv\CsvTable.cs" />
+    <Compile Include="Utils\DateUtils.cs" />
     <Compile Include="Utils\Exceptions\FileLogger.cs" />
+    <Compile Include="Utils\IDateUtils.cs" />
     <Compile Include="Utils\IO\FileSystemEx.cs" />
     <Compile Include="Utils\IO\IIoUtils.cs" />
     <Compile Include="Utils\IO\IoUtils.cs" />

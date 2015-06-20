@@ -18,7 +18,7 @@ using System.Linq;
 
 namespace KaVE.ReSharper.Commons.Utils
 {
-    internal static class XamlFormattingUtil
+    public static class XamlFormattingUtil
     {
         private const string BoldTag = "Bold";
         private const string ItalicTag = "Italic";

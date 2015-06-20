@@ -26,23 +26,22 @@ using JetBrains;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.TestUtils;
 using KaVE.Commons.TestUtils.Model.Events;
+using KaVE.Commons.TestUtils.Utils;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Exceptions;
 using KaVE.Commons.Utils.IO;
+using KaVE.ReSharper.Commons.Utils;
 using KaVE.VsFeedbackGenerator.Export;
 using KaVE.VsFeedbackGenerator.Interactivity;
 using KaVE.VsFeedbackGenerator.SessionManager;
 using KaVE.VsFeedbackGenerator.SessionManager.Presentation;
 using KaVE.VsFeedbackGenerator.Tests.Interactivity;
-using KaVE.VsFeedbackGenerator.Tests.Utils;
-using KaVE.VsFeedbackGenerator.Utils;
 using KaVE.VsFeedbackGenerator.Utils.Logging;
 using Moq;
 using NUnit.Framework;
 
 namespace KaVE.VsFeedbackGenerator.Tests.Export
 {
-    [TestFixture]
     internal class UploadWizardViewModelTest
     {
         private const string TestUploadUrl = "http://foo.bar/";
@@ -311,7 +310,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Export
             var expected = new Notification
             {
                 Caption = Properties.UploadWizard.window_title,
-                Message = Properties.UploadWizard.ExportSuccess.FormatEx(0),
+                Message = Properties.UploadWizard.ExportSuccess.FormatEx(0)
             };
             Assert.AreEqual(expected, actual);
         }
@@ -341,7 +340,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Export
             var expected = new Notification
             {
                 Caption = Properties.UploadWizard.window_title,
-                Message = Properties.UploadWizard.ExportFail + ":\nTEST",
+                Message = Properties.UploadWizard.ExportFail + ":\nTEST"
             };
             Assert.AreEqual(expected, actual);
         }

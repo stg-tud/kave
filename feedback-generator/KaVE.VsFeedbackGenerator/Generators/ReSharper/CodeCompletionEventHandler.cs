@@ -31,6 +31,7 @@ using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Resources.Shell;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.CompletionEvents;
+using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Exceptions;
 using KaVE.ReSharper.Commons.Analysis;
 using KaVE.ReSharper.Commons.Utils;
@@ -58,7 +59,7 @@ namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
     [Language(typeof (CSharpLanguage))]
     internal class CodeCompletionContextAnalysisTrigger : CSharpItemsProviderBase<CSharpCodeCompletionContext>
     {
-        // TODO get rid of this ugly flag... currently necessary for successful test execution
+        // TODO RS9: get rid of this ugly flag... currently necessary for successful test execution (should be solved with RS9 automatically)
         public static bool Disabled = false;
         public const int LimitInMs = 1000;
 

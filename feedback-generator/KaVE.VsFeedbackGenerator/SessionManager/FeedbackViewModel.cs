@@ -27,9 +27,9 @@ using JetBrains;
 using JetBrains.Annotations;
 using KaVE.Commons.Utils.Collections;
 using KaVE.ReSharper.Commons.Utils;
-using KaVE.ReSharper.Commons.Utils.Logging;
 using KaVE.VsFeedbackGenerator.Interactivity;
 using KaVE.VsFeedbackGenerator.SessionManager.Presentation;
+using KaVE.VsFeedbackGenerator.Utils.Logging;
 using NuGet;
 using Messages = KaVE.VsFeedbackGenerator.Properties.SessionManager;
 

@@ -16,6 +16,13 @@
 
 using System;
 using System.IO;
+using System.Linq;
+using System.Net.Http;
+using JetBrains.Annotations;
+using KaVE.Commons.Utils;
+using KaVE.Commons.Utils.Assertion;
+using KaVE.Commons.Utils.IO;
+using KaVE.ReSharper.Commons.Utils;
 using Moq;
 using NUnit.Framework;
 
@@ -171,7 +178,6 @@ namespace KaVE.ReSharper.Commons.Tests_Unit.Utils
             var byteArrayContent = element as ByteArrayContent;
             Assert.IsNotNull(byteArrayContent);
 
-            // ReSharper disable once PossibleNullReferenceException
             Assert.AreEqual("file", byteArrayContent.Headers.ContentDisposition.Name);
             Assert.AreEqual("tmp.zip", byteArrayContent.Headers.ContentDisposition.FileName);
 

@@ -143,7 +143,6 @@
     <Compile Include="CommandLineLogger.cs" />
     <Compile Include="InspectCodeIntegration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="HeadlessRSEnv.cs" />
     <Compile Include="SolutionAnalysis.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -157,9 +156,9 @@
       <Project>{17FC7725-AC2E-47E5-8F24-D2107171A854}</Project>
       <Name>KaVE.Commons</Name>
     </ProjectReference>
-    <ProjectReference Include="..\KaVE.VsFeedbackGenerator\KaVE.VsFeedbackGenerator.csproj">
-      <Project>{42CE1875-DF5B-4D9E-ADC4-47A96C06EF66}</Project>
-      <Name>KaVE.VsFeedbackGenerator</Name>
+    <ProjectReference Include="..\KaVE.ReSharper.Commons\KaVE.ReSharper.Commons.csproj">
+      <Project>{B2235734-D3E5-498F-87E2-E9780DBE0D8D}</Project>
+      <Name>KaVE.ReSharper.Commons</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

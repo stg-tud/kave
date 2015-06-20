@@ -14,17 +14,9 @@
  * limitations under the License.
  */
 
-using System.Collections.Generic;
-using System.Reflection;
-using JetBrains.Application;
 using JetBrains.Application.BuildScript.Application.Zones;
-using JetBrains.ReSharper.Resources.Shell;
 using JetBrains.TestFramework;
 using JetBrains.TestFramework.Application.Zones;
-using JetBrains.Threading;
-using KaVE.VsFeedbackGenerator;
-using KaVE.VsFeedbackGenerator.Generators.ReSharper;
-using KaVE.VsFeedbackGenerator.Menu;
 using NUnit.Framework;
 
 [assembly: RequiresSTA]
@@ -39,6 +31,8 @@ namespace KaVE.ReSharper.Commons.Tests_Integration.Properties
     // ReSharper disable once InconsistentNaming
     public class AssemblyInfo : TestEnvironmentAssembly<VsFeedbackGeneratorRS8Zone>
     {
+        // TODO RS9
+        /*
         /// <summary>
         ///     Gets the assemblies to load into test environment.
         ///     Should include all assemblies which contain components.
@@ -71,6 +65,7 @@ namespace KaVE.ReSharper.Commons.Tests_Integration.Properties
                     GetAssembliesToLoad()));
             base.TearDown();
         }
+         * */
     }
 
     // TODO RS9: zones?

@@ -23,6 +23,7 @@ using JetBrains.ActionManagement;
 using JetBrains.Application;
 using JetBrains.Application.Components;
 using JetBrains.DataFlow;
+using KaVE.Commons.Utils;
 using KaVE.ReSharper.Commons.Utils;
 using KaVE.VsFeedbackGenerator.Export;
 using KaVE.VsFeedbackGenerator.Menu;

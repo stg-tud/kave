@@ -15,11 +15,19 @@
  */
 
 using System.Linq;
+using JetBrains.Annotations;
 using JetBrains.ReSharper.Feature.Services.CSharp.CodeCompletion.Infrastructure;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
+using KaVE.Commons.Model.Events.CompletionEvents;
+using KaVE.Commons.Model.Names;
+using KaVE.Commons.Model.Names.CSharp;
+using KaVE.Commons.Model.SSTs.Impl;
+using KaVE.Commons.Utils.Collections;
+using KaVE.Commons.Utils.Exceptions;
 using KaVE.ReSharper.Commons.Analysis.CompletionTarget;
 using KaVE.ReSharper.Commons.Analysis.Transformer;
+using KaVE.ReSharper.Commons.Utils.Names;
 
 namespace KaVE.ReSharper.Commons.Analysis
 {

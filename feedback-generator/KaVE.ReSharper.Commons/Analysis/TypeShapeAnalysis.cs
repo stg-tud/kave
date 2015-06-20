@@ -18,6 +18,9 @@ using System.Collections.Generic;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.Resolve;
 using JetBrains.ReSharper.Psi.Tree;
+using KaVE.Commons.Model.Names;
+using KaVE.Commons.Model.TypeShapes;
+using KaVE.ReSharper.Commons.Utils.Names;
 
 namespace KaVE.ReSharper.Commons.Analysis
 {

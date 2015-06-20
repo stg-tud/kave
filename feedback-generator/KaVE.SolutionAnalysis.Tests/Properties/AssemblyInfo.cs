@@ -17,14 +17,8 @@
  *    - Sven Amann
  */
 
-using System.Collections.Generic;
-using System.Reflection;
-using JetBrains.Application;
-using JetBrains.ReSharper.Resources.Shell;
 using JetBrains.TestFramework;
 using JetBrains.TestFramework.Application.Zones;
-using JetBrains.Threading;
-using KaVE.VsFeedbackGenerator.Menu;
 using NUnit.Framework;
 
 /// <summary>
@@ -34,6 +28,8 @@ using NUnit.Framework;
 // ReSharper disable once CheckNamespace
 public class SolutionAnalysisTestEnvironmentAssembly : TestEnvironmentAssembly<SolutionAnalysisZone>
 {
+    // TODO RS9
+    /*
     /// <summary>
     ///     Gets the assemblies to load into test environment.
     ///     Should include all assemblies which contain components.
@@ -65,6 +61,7 @@ public class SolutionAnalysisTestEnvironmentAssembly : TestEnvironmentAssembly<S
                 GetAssembliesToLoad()));
         base.TearDown();
     }
+     * */
 }
 
 // TODO RS9

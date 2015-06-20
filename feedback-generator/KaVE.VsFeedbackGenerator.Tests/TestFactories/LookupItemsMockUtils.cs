@@ -20,6 +20,7 @@ using System.Globalization;
 using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure.LookupItems;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.Impl.Resolve;
+using KaVE.ReSharper.Commons.Tests_Unit.TestFactories;
 using Moq;
 
 namespace KaVE.VsFeedbackGenerator.Tests.TestFactories

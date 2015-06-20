@@ -23,9 +23,9 @@ using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Model.Names.VisualStudio;
 using KaVE.Commons.TestUtils.Model.Events.CompletionEvent;
+using KaVE.ReSharper.Commons.Utils;
 using KaVE.VsFeedbackGenerator.Generators.Merging;
 using KaVE.VsFeedbackGenerator.Tests.TestFactories;
-using KaVE.VsFeedbackGenerator.Utils;
 using NUnit.Framework;
 
 namespace KaVE.VsFeedbackGenerator.Tests.Generators.Merging
@@ -58,7 +58,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.Merging
                 TriggeredAt = now,
                 Prefix = "",
                 ProposalCollection = _proposalCollection,
-                TerminatedAt = now.AddMilliseconds(100),
+                TerminatedAt = now.AddMilliseconds(100)
             };
 
             _subsequentEvent = new CompletionEvent
@@ -71,7 +71,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.Merging
                 ProposalCollection = new ProposalCollection(_proposalCollection.Proposals.Take(3).ToList()),
                 TerminatedAt = now.AddMilliseconds(300),
                 TerminatedState = TerminationState.Applied,
-                TerminatedBy = IDEEvent.Trigger.Shortcut,
+                TerminatedBy = IDEEvent.Trigger.Shortcut
             };
         }
 

@@ -222,23 +222,6 @@
   <data name="RawView" xml:space="preserve">
     <value>JSON</value>
   </data>
-  <data name="PublishingFileFailed" xml:space="preserve">
-    <value>Datei-Export fehlgeschlagen: {0}</value>
-  </data>
-  <data name="ServerResponseEmpty" xml:space="preserve">
-    <value>Antwort des Servers enthält keine verwertbaren Informationen</value>
-  </data>
-  <data name="ServerResponseIncompatible" xml:space="preserve">
-    <value>Inkompatible Antwort des Server</value>
-  </data>
-  <data name="ServerResponseIncorrentFormat" xml:space="preserve">
-    <value>Antwort des Servers entspricht nicht dem erwarteten Format:
-{0}</value>
-  </data>
-  <data name="ServerResponseRequestFailure" xml:space="preserve">
-    <value>Server meldet eine fehlerhafte Anfrage:
-{0}</value>
-  </data>
   <data name="ServerRequestNotAvailable" xml:space="preserve">
     <value>Der Server ist nicht erreichbar ("{0}")</value>
   </data>
@@ -254,9 +237,6 @@
   </data>
   <data name="Options_Export_Title" xml:space="preserve">
     <value>Exportoptionen</value>
-  </data>
-  <data name="NoFileGiven" xml:space="preserve">
-    <value>Keine Datei angegeben</value>
   </data>
   <data name="Option_SettingsCleaner_Dialog" xml:space="preserve">
     <value>Sind Sie sicher, dass Sie die Einstellungen zurücksetzen und das lokal gesammelte Feedback löschen wollen?</value>

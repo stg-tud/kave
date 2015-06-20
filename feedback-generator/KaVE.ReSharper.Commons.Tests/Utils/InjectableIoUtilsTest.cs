@@ -15,6 +15,10 @@
  */
 
 using System;
+using System.Net.Http;
+using KaVE.Commons.Utils.Assertion;
+using KaVE.ReSharper.Commons.Injectables;
+using KaVE.ReSharper.Commons.Utils;
 using Moq;
 using NUnit.Framework;
 

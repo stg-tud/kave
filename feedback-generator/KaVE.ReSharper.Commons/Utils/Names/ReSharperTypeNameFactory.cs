@@ -16,7 +16,11 @@
 
 using System;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using JetBrains.ReSharper.Psi;
+using KaVE.Commons.Model.Names;
+using KaVE.Commons.Model.Names.CSharp;
+using KaVE.Commons.Utils.Assertion;
 
 namespace KaVE.ReSharper.Commons.Utils.Names
 {
@@ -40,7 +44,9 @@ namespace KaVE.ReSharper.Commons.Utils.Names
                    Asserts.Fail<ITypeName>("unknown IType case: {0}", type.GetType());
         }
 
-        private static ITypeName IfTypeIs<TE>(IType element, Func<TE, IDictionary<IDeclaredElement, IName>, ITypeName> map, IDictionary<IDeclaredElement, IName> seenElements) where TE : class, IType
+        private static ITypeName IfTypeIs<TE>(IType element,
+            Func<TE, IDictionary<IDeclaredElement, IName>, ITypeName> map,
+            IDictionary<IDeclaredElement, IName> seenElements) where TE : class, IType
         {
             var specificElement = element as TE;
             return specificElement != null ? map(specificElement, seenElements) : null;

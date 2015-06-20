@@ -24,7 +24,7 @@ using JetBrains.Util;
 using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.SSTs.Impl.Declarations;
-using KaVE.VsFeedbackGenerator.Utils;
+using KaVE.ReSharper.Commons.Utils;
 using NUnit.Framework;
 
 namespace KaVE.SolutionAnalysis.Tests

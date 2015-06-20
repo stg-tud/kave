@@ -21,17 +21,16 @@ using System;
 using System.Text;
 using System.Windows.Documents;
 using System.Windows.Threading;
-using KaVE.JetBrains.Annotations;
 using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Exceptions;
+using KaVE.JetBrains.Annotations;
+using KaVE.ReSharper.Commons.Utils;
 using KaVE.VsFeedbackGenerator.SessionManager.Presentation;
-using KaVE.VsFeedbackGenerator.Utils;
 using Moq;
 using NUnit.Framework;
 
 namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
 {
-    [TestFixture]
     internal class XamlBindableRichTextBoxTest
     {
         [SetUp]

@@ -24,12 +24,14 @@ using System.Linq;
 using EnvDTE;
 using JetBrains.Application;
 using JetBrains.Application.Components;
-using KaVE.JetBrains.Annotations;
 using KaVE.Commons.Model.Events;
+using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.IO;
+using KaVE.JetBrains.Annotations;
 using KaVE.ReSharper.Commons.Utils;
 using KaVE.VsFeedbackGenerator.MessageBus;
+using KaVE.VsFeedbackGenerator.Utils.Names;
 
 namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
 {

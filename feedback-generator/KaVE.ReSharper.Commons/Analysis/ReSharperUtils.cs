@@ -22,6 +22,8 @@ using JetBrains.ReSharper.Psi.CSharp.Resolve;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Resolve;
 using JetBrains.Util;
+using KaVE.Commons.Model.Names;
+using KaVE.Commons.Utils.Assertion;
 
 namespace KaVE.ReSharper.Commons.Analysis
 {

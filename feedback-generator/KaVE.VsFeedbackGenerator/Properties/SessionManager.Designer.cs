@@ -268,15 +268,6 @@ namespace KaVE.VsFeedbackGenerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Keine Datei angegeben.
-        /// </summary>
-        public static string NoFileGiven {
-            get {
-                return ResourceManager.GetString("NoFileGiven", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Sind Sie sicher, dass Sie die Einstellungen zurücksetzen und das lokal gesammelte Feedback löschen wollen?.
         /// </summary>
         public static string Option_SettingsCleaner_Dialog {
@@ -394,15 +385,6 @@ namespace KaVE.VsFeedbackGenerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Datei-Export fehlgeschlagen: {0}.
-        /// </summary>
-        public static string PublishingFileFailed {
-            get {
-                return ResourceManager.GetString("PublishingFileFailed", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to JSON.
         /// </summary>
         public static string RawView {
@@ -475,50 +457,12 @@ namespace KaVE.VsFeedbackGenerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Antwort des Servers enthält keine verwertbaren Informationen.
-        /// </summary>
-        public static string ServerResponseEmpty {
-            get {
-                return ResourceManager.GetString("ServerResponseEmpty", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Fehler bei der Anfrage an den Server &quot;{0}&quot;:
         ///{1}.
         /// </summary>
         public static string ServerResponseFailure {
             get {
                 return ResourceManager.GetString("ServerResponseFailure", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Inkompatible Antwort des Server.
-        /// </summary>
-        public static string ServerResponseIncompatible {
-            get {
-                return ResourceManager.GetString("ServerResponseIncompatible", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Antwort des Servers entspricht nicht dem erwarteten Format:
-        ///{0}.
-        /// </summary>
-        public static string ServerResponseIncorrentFormat {
-            get {
-                return ResourceManager.GetString("ServerResponseIncorrentFormat", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Server meldet eine fehlerhafte Anfrage:
-        ///{0}.
-        /// </summary>
-        public static string ServerResponseRequestFailure {
-            get {
-                return ResourceManager.GetString("ServerResponseRequestFailure", resourceCulture);
             }
         }
         

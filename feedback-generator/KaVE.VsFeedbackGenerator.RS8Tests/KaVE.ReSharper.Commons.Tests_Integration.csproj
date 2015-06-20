@@ -181,11 +181,9 @@
     <Compile Include="BaseCSharpCodeCompletionTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestLogger.cs" />
-    <Compile Include="TestRSEnv.cs" />
     <Compile Include="Utils\LookupItemUtilsTest.cs" />
     <Compile Include="Utils\RegistryTest.cs" />
     <Compile Include="Utils\TestProposalProvider.cs" />
-    <Compile Include="VsIntegrationMocks\TestDTE.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\KaVE.Commons.TestUtils\KaVE.Commons.TestUtils.csproj">

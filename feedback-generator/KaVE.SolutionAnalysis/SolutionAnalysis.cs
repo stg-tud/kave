@@ -31,7 +31,7 @@ using JetBrains.ReSharper.Psi.Parsing;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.Util;
 using KaVE.Commons.Model.Events.CompletionEvents;
-using KaVE.VsFeedbackGenerator.Analysis;
+using KaVE.ReSharper.Commons.Analysis;
 using ILogger = KaVE.Commons.Utils.Exceptions.ILogger;
 
 namespace KaVE.SolutionAnalysis
@@ -48,7 +48,7 @@ namespace KaVE.SolutionAnalysis
         }
 
         /// <summary>
-        /// Requires re-entrency guard (ReentrancyGuard.Current.Execute) and read lock (ReadLockCookie.Execute).
+        ///     Requires re-entrency guard (ReentrancyGuard.Current.Execute) and read lock (ReadLockCookie.Execute).
         /// </summary>
         public IList<Context> AnalyzeAllProjects()
         {
@@ -65,7 +65,8 @@ namespace KaVE.SolutionAnalysis
 
             var psiModules = _solution.PsiModules();
             // TODO RS9: make sure "Default" is the right framework id
-            var primaryPsiModule = psiModules.GetPrimaryPsiModule(project, TargetFrameworkId.Default).NotNull("no psi module");
+            var primaryPsiModule =
+                psiModules.GetPrimaryPsiModule(project, TargetFrameworkId.Default).NotNull("no psi module");
             var csharpSourceFiles = primaryPsiModule.SourceFiles.Where(IsCSharpFile);
             return csharpSourceFiles.SelectMany(file => AnalyzeFile(file, primaryPsiModule));
         }
@@ -85,7 +86,8 @@ namespace KaVE.SolutionAnalysis
 
         private static ICSharpFile ParseFile(IPsiSourceFile psiSourceFile, IPsiModule primaryPsiModule)
         {
-            var languageService = CSharpLanguage.Instance.LanguageService().NotNull("CSharp language service not available");
+            var languageService =
+                CSharpLanguage.Instance.LanguageService().NotNull("CSharp language service not available");
             ILexer lexer = languageService.CreateCachingLexer(psiSourceFile.Document.Buffer);
             var csharpParser = (ICSharpParser) languageService.CreateParser(lexer, primaryPsiModule, psiSourceFile);
             csharpParser.ExpandChameleons = csharpParser.OpenChameleonStrategy;

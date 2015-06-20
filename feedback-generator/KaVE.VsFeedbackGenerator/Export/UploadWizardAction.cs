@@ -22,8 +22,9 @@ using JetBrains.ActionManagement;
 using JetBrains.Application.DataContext;
 using JetBrains.UI.ActionsRevised;
 using JetBrains.Util;
+using KaVE.Commons.Utils;
 using KaVE.ReSharper.Commons.Utils;
-using KaVE.ReSharper.Commons.Utils.Logging;
+using KaVE.VsFeedbackGenerator.Utils.Logging;
 using NuGet;
 using ILogger = KaVE.Commons.Utils.Exceptions.ILogger;
 
