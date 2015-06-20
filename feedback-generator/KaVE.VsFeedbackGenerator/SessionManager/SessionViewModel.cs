@@ -26,15 +26,14 @@ using JetBrains.Util;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Collections;
-using KaVE.ReSharper.Commons.Utils;
-using KaVE.VsFeedbackGenerator.Interactivity;
-using KaVE.VsFeedbackGenerator.SessionManager.Presentation;
-using KaVE.VsFeedbackGenerator.Utils.Logging;
+using KaVE.RS.Commons.Utils;
+using KaVE.VS.FeedbackGenerator.Interactivity;
+using KaVE.VS.FeedbackGenerator.SessionManager.Presentation;
+using KaVE.VS.FeedbackGenerator.Utils.Logging;
 using NuGet;
 using ILogger = KaVE.Commons.Utils.Exceptions.ILogger;
-using Messages = KaVE.VsFeedbackGenerator.Properties.SessionManager;
 
-namespace KaVE.VsFeedbackGenerator.SessionManager
+namespace KaVE.VS.FeedbackGenerator.SessionManager
 {
     public class SessionViewModel : ViewModelBase<SessionViewModel>
     {
@@ -91,7 +90,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             {
                 if (!_isLoaded)
                 {
-                    SetBusy(Messages.Loading);
+                    SetBusy(Properties.SessionManager.Loading);
                     _isLoaded = true;
                     _logLoader.RunWorkerAsync();
                 }
@@ -163,7 +162,11 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
 
         public DelegateCommand DeleteEventsCommand
         {
-            get { return _deleteEventsCommand ?? (_deleteEventsCommand = new DelegateCommand(DeleteSelectedEvents, () => HasSelection)); }
+            get
+            {
+                return _deleteEventsCommand ??
+                       (_deleteEventsCommand = new DelegateCommand(DeleteSelectedEvents, () => HasSelection));
+            }
         }
 
         public bool HasSelection
@@ -177,10 +180,10 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             _confirmationRequest.Raise(
                 new Confirmation
                 {
-                    Caption = Messages.EventDeleteConfirmTitle,
+                    Caption = Properties.SessionManager.EventDeleteConfirmTitle,
                     Message = numberOfEvents == 1
-                        ? Messages.EventDeleteConfirmSingular
-                        : Messages.EventDeleteConfirmPlural.FormatEx(numberOfEvents)
+                        ? Properties.SessionManager.EventDeleteConfirmSingular
+                        : Properties.SessionManager.EventDeleteConfirmPlural.FormatEx(numberOfEvents)
                 },
                 DoDeleteSelectedEvents);
         }

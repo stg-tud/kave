@@ -18,12 +18,12 @@
  *    - Sebastian Proksch
  */
 
-using KaVE.VsFeedbackGenerator.Interactivity;
-using KaVE.VsFeedbackGenerator.SessionManager.Presentation;
-using KaVE.VsFeedbackGenerator.Tests.Interactivity;
+using KaVE.VS.FeedbackGenerator.Interactivity;
+using KaVE.VS.FeedbackGenerator.SessionManager.Presentation;
+using KaVE.VS.FeedbackGenerator.Tests.Interactivity;
 using NUnit.Framework;
 
-namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
+namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Presentation
 {
     [TestFixture]
     internal class OptionPageViewModelTest

@@ -17,7 +17,7 @@
 using System.Collections.Generic;
 using KaVE.Commons.Model.SSTs;
 
-namespace KaVE.ReSharper.Commons.Analysis.Util
+namespace KaVE.RS.Commons.Analysis.Util
 {
     public interface IScope
     {

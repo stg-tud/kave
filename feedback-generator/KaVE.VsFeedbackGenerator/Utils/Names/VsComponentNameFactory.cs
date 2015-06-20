@@ -24,7 +24,7 @@ using KaVE.Commons.Model.Names.VisualStudio;
 using KaVE.Commons.Utils.Assertion;
 using Microsoft.VisualStudio.CommandBars;
 
-namespace KaVE.VsFeedbackGenerator.Utils.Names
+namespace KaVE.VS.FeedbackGenerator.Utils.Names
 {
     public static class VsComponentNameFactory
     {

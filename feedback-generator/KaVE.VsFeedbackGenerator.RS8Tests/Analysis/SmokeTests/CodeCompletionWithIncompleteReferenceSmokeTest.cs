@@ -16,7 +16,7 @@
 
 using NUnit.Framework;
 
-namespace KaVE.ReSharper.Commons.Tests_Integration.Analysis.SmokeTests
+namespace KaVE.RS.Commons.Tests_Integration.Analysis.SmokeTests
 {
     [TestFixture]
     internal class CodeCompletionWithIncompleteReferenceSmokeTest : BaseCSharpCodeCompletionTest

@@ -21,15 +21,17 @@ using JetBrains.TestFramework;
 using JetBrains.TestFramework.Application.Zones;
 using NUnit.Framework;
 
-/// <summary>
-///     Test environment. Must be in the global namespace.
-/// </summary>
-[SetUpFixture]
-// ReSharper disable once CheckNamespace
-public class SolutionAnalysisTestEnvironmentAssembly : TestEnvironmentAssembly<SolutionAnalysisZone>
+namespace KaVE.RS.SolutionAnalysis.Tests.Properties
 {
-    // TODO RS9
-    /*
+    /// <summary>
+    ///     Test environment. Must be in the global namespace.
+    /// </summary>
+    [SetUpFixture]
+    // ReSharper disable once CheckNamespace
+    public class SolutionAnalysisTestEnvironmentAssembly : TestEnvironmentAssembly<SolutionAnalysisZone>
+    {
+        // TODO RS9
+        /*
     /// <summary>
     ///     Gets the assemblies to load into test environment.
     ///     Should include all assemblies which contain components.
@@ -62,7 +64,8 @@ public class SolutionAnalysisTestEnvironmentAssembly : TestEnvironmentAssembly<S
         base.TearDown();
     }
      * */
-}
+    }
 
-// TODO RS9
-public class SolutionAnalysisZone : ITestsZone {}
+    // TODO RS9
+    public class SolutionAnalysisZone : ITestsZone {}
+}

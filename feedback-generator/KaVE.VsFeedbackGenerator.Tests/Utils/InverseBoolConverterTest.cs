@@ -15,10 +15,10 @@
  */
 
 using KaVE.Commons.Utils.Assertion;
-using KaVE.VsFeedbackGenerator.Utils;
+using KaVE.VS.FeedbackGenerator.Utils;
 using NUnit.Framework;
 
-namespace KaVE.VsFeedbackGenerator.Tests.Utils
+namespace KaVE.VS.FeedbackGenerator.Tests.Utils
 {
     internal class InverseBoolConverterTest
     {

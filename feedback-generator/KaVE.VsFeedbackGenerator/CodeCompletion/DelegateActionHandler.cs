@@ -19,7 +19,7 @@ using JetBrains.ActionManagement;
 using JetBrains.Application.DataContext;
 using JetBrains.UI.ActionsRevised;
 
-namespace KaVE.VsFeedbackGenerator.CodeCompletion
+namespace KaVE.VS.FeedbackGenerator.CodeCompletion
 {
     /// <summary>
     ///     An action handler that executes its own action before it invokes the delegate execution.

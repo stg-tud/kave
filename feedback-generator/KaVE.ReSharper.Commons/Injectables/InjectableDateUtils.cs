@@ -17,7 +17,7 @@
 using JetBrains.Application;
 using KaVE.Commons.Utils;
 
-namespace KaVE.ReSharper.Commons.Injectables
+namespace KaVE.RS.Commons.Injectables
 {
     [ShellComponent]
     public class InjectableDateUtils : DateUtils {}

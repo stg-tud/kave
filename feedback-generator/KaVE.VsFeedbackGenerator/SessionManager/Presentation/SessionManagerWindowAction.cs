@@ -20,7 +20,7 @@
 using JetBrains.UI.ActionsRevised;
 using JetBrains.UI.ToolWindowManagement;
 
-namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
+namespace KaVE.VS.FeedbackGenerator.SessionManager.Presentation
 {
     [Action(Id, "Feedback Manager", Id = 21340987)]
     public class SessionManagerWindowAction : ActivateToolWindowActionHandler<SessionManagerWindowDescriptor>

@@ -21,7 +21,7 @@ using NUnit.Framework;
 
 [assembly: RequiresSTA]
 
-namespace KaVE.ReSharper.Commons.Tests_Integration.Properties
+namespace KaVE.RS.Commons.Tests_Integration.Properties
 {
     /// <summary>
     ///     Test environment. Must be in the global namespace.

@@ -21,10 +21,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using KaVE.Commons.Model.Events;
-using KaVE.VsFeedbackGenerator.Utils.Logging;
+using KaVE.VS.FeedbackGenerator.Utils.Logging;
 using Moq;
 
-namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModelTestSuite
+namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.FeedbackViewModelTestSuite
 {
     static class LogTestHelper
     {

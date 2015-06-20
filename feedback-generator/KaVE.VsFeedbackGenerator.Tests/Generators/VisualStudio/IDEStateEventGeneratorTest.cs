@@ -22,15 +22,14 @@ using System.Collections.Generic;
 using EnvDTE;
 using JetBrains.DataFlow;
 using KaVE.Commons.Model.Events.VisualStudio;
-using KaVE.VsFeedbackGenerator.Generators;
-using KaVE.VsFeedbackGenerator.Generators.VisualStudio;
-using KaVE.VsFeedbackGenerator.Utils.Names;
+using KaVE.VS.FeedbackGenerator.Generators;
+using KaVE.VS.FeedbackGenerator.Generators.VisualStudio;
+using KaVE.VS.FeedbackGenerator.Utils.Names;
 using Moq;
 using NUnit.Framework;
 
-namespace KaVE.VsFeedbackGenerator.Tests.Generators.VisualStudio
+namespace KaVE.VS.FeedbackGenerator.Tests.Generators.VisualStudio
 {
-    [TestFixture]
     internal class IDEStateEventGeneratorTest : EventGeneratorTestBase
     {
         /// <summary>

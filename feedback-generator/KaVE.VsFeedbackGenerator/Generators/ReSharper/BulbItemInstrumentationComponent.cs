@@ -17,7 +17,6 @@
  *    - Sven Amann
  */
 
-using System;
 using System.Linq;
 using JetBrains.Application.Components;
 using JetBrains.DataFlow;
@@ -29,10 +28,9 @@ using JetBrains.TextControl;
 using JetBrains.UI.BulbMenu;
 using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Assertion;
-using KaVE.ReSharper.Commons.Utils;
-using KaVE.VsFeedbackGenerator.MessageBus;
+using KaVE.VS.FeedbackGenerator.MessageBus;
 
-namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
+namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
 {
     [SolutionComponent(ProgramConfigurations.VS_ADDIN)]
     internal class BulbItemInstrumentationComponent : IBulbItemsProvider

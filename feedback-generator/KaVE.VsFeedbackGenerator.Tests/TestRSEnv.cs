@@ -17,10 +17,10 @@
  *    - Sven Amann
  */
 
-using KaVE.VsFeedbackGenerator.VsIntegration;
+using KaVE.VS.FeedbackGenerator.VsIntegration;
 using NuGet;
 
-namespace KaVE.VsFeedbackGenerator.Tests
+namespace KaVE.VS.FeedbackGenerator.Tests
 {
     internal class TestRSEnv : IRSEnv
     {

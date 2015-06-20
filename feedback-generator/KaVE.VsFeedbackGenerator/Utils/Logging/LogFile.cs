@@ -26,10 +26,10 @@ using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.IO;
 using KaVE.Commons.Utils.Logging;
 using KaVE.Commons.Utils.Logging.Json;
-using KaVE.ReSharper.Commons.Utils;
+using KaVE.RS.Commons.Utils;
 using ILogger = KaVE.Commons.Utils.Exceptions.ILogger;
 
-namespace KaVE.VsFeedbackGenerator.Utils.Logging
+namespace KaVE.VS.FeedbackGenerator.Utils.Logging
 {
     public class LogFile : ILog
     {

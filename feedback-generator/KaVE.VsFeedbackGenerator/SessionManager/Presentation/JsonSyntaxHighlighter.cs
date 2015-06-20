@@ -19,14 +19,14 @@
 
 using System.Text.RegularExpressions;
 using KaVE.JetBrains.Annotations;
-using KaVE.ReSharper.Commons.Utils;
+using KaVE.RS.Commons.Utils;
 
-namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
+namespace KaVE.VS.FeedbackGenerator.SessionManager.Presentation
 {
     public static class JsonSyntaxHighlighter
     {
         [NotNull]
-        internal static string AddJsonSyntaxHighlightingWithXaml([NotNull] this string json)
+        public static string AddJsonSyntaxHighlightingWithXaml([NotNull] this string json)
         {
             var escapedJson = json.EscapeXamlCharacters();
             return Regex.Replace(

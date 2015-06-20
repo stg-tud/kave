@@ -27,7 +27,7 @@ using JetBrains.ReSharper.Psi.Xaml.DeclaredElements;
 using JetBrains.UI.RichText;
 using Moq;
 
-namespace KaVE.ReSharper.Commons.Tests_Integration.Utils
+namespace KaVE.RS.Commons.Tests_Integration.Utils
 {
     [Language(typeof (CSharpLanguage))]
     public class TestProposalProvider : CSharpItemsProviderBasic

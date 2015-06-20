@@ -20,7 +20,7 @@
 
 using KaVE.Commons.Utils;
 
-namespace KaVE.VsFeedbackGenerator.Interactivity
+namespace KaVE.VS.FeedbackGenerator.Interactivity
 {
     public class Notification
     {

@@ -19,7 +19,7 @@
 
 using KaVE.Commons.Model.Events;
 
-namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
+namespace KaVE.VS.FeedbackGenerator.SessionManager.Anonymize
 {
     internal class ErrorEventAnonymizer : IDEEventAnonymizer
     {

@@ -25,19 +25,20 @@ using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.VisualStudio;
 using KaVE.Commons.Utils.Collections;
 using KaVE.Commons.Utils.Concurrent;
-using KaVE.VsFeedbackGenerator.Generators.Merging;
-using KaVE.VsFeedbackGenerator.MessageBus;
-using KaVE.VsFeedbackGenerator.Utils.Logging;
+using KaVE.VS.FeedbackGenerator.Generators.Merging;
+using KaVE.VS.FeedbackGenerator.MessageBus;
+using KaVE.VS.FeedbackGenerator.Utils.Logging;
 
-namespace KaVE.VsFeedbackGenerator.Generators
+namespace KaVE.VS.FeedbackGenerator.Generators
 {
-    public interface IEventLogger {
+    public interface IEventLogger
+    {
         void Log(IDEEvent @event);
         void Shutdown(IDEStateEvent shutdownEvent);
     }
 
     [ShellComponent]
-    internal class EventLogger : IEventLogger
+    public class EventLogger : IEventLogger
     {
         private static readonly IList<IEventMergeStrategy> MergeStrategies = new List<IEventMergeStrategy>
         {

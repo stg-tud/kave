@@ -15,14 +15,15 @@
  */
 
 using JetBrains.Application.DataContext;
-using KaVE.ReSharper.Commons.Utils;
-using KaVE.VsFeedbackGenerator.SessionManager;
-using KaVE.VsFeedbackGenerator.SessionManager.Presentation;
-using KaVE.VsFeedbackGenerator.Utils.Logging;
+using KaVE.RS.Commons.Utils;
+using KaVE.VS.FeedbackGenerator.SessionManager;
+using KaVE.VS.FeedbackGenerator.SessionManager.Presentation;
+using KaVE.VS.FeedbackGenerator.Utils;
+using KaVE.VS.FeedbackGenerator.Utils.Logging;
 using Moq;
 using NUnit.Framework;
 
-namespace KaVE.VsFeedbackGenerator.Tests.Utils
+namespace KaVE.VS.FeedbackGenerator.Tests.Utils
 {
     internal class SettingsCleanerTest
     {

@@ -20,14 +20,15 @@
 
 using System;
 using KaVE.Commons.TestUtils.Utils;
-using KaVE.ReSharper.Commons.Utils;
-using KaVE.VsFeedbackGenerator.SessionManager;
-using KaVE.VsFeedbackGenerator.TrayNotification;
-using KaVE.VsFeedbackGenerator.Utils.Logging;
+using KaVE.RS.Commons.Utils;
+using KaVE.VS.FeedbackGenerator.SessionManager;
+using KaVE.VS.FeedbackGenerator.TrayNotification;
+using KaVE.VS.FeedbackGenerator.Utils;
+using KaVE.VS.FeedbackGenerator.Utils.Logging;
 using Moq;
 using NUnit.Framework;
 
-namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
+namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager
 {
     [RequiresSTA]
     internal class UploadReminderTest

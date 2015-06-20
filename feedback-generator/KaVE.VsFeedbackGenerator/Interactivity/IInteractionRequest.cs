@@ -19,7 +19,7 @@
 
 using System;
 
-namespace KaVE.VsFeedbackGenerator.Interactivity
+namespace KaVE.VS.FeedbackGenerator.Interactivity
 {
     public interface IInteractionRequest<TNotification> where TNotification : Notification
     {

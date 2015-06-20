@@ -20,9 +20,9 @@ using JetBrains.ReSharper.Psi.Resolve;
 using JetBrains.ReSharper.Psi.Tree;
 using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.TypeShapes;
-using KaVE.ReSharper.Commons.Utils.Names;
+using KaVE.RS.Commons.Utils.Names;
 
-namespace KaVE.ReSharper.Commons.Analysis
+namespace KaVE.RS.Commons.Analysis
 {
     internal class TypeShapeAnalysis
     {

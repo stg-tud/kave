@@ -16,7 +16,7 @@
 
 using JetBrains.UI.ActionsRevised;
 
-namespace KaVE.VsFeedbackGenerator.Tests.TestFactories.Actions
+namespace KaVE.VS.FeedbackGenerator.Tests.TestFactories.Actions
 {
     internal class MockNextActionHandler
     {

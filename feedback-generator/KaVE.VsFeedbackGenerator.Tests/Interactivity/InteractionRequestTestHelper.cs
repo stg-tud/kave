@@ -18,9 +18,9 @@
  */
 
 using System;
-using KaVE.VsFeedbackGenerator.Interactivity;
+using KaVE.VS.FeedbackGenerator.Interactivity;
 
-namespace KaVE.VsFeedbackGenerator.Tests.Interactivity
+namespace KaVE.VS.FeedbackGenerator.Tests.Interactivity
 {
     /// <summary>
     ///     Captures a single interaction request.

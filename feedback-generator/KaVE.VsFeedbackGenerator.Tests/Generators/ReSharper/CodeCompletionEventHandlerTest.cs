@@ -22,12 +22,12 @@ using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure.LookupI
 using JetBrains.Util;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.CompletionEvents;
-using KaVE.ReSharper.Commons.Utils;
-using KaVE.VsFeedbackGenerator.Generators.ReSharper;
-using KaVE.VsFeedbackGenerator.Tests.TestFactories;
+using KaVE.RS.Commons.Utils;
+using KaVE.VS.FeedbackGenerator.Generators.ReSharper;
+using KaVE.VS.FeedbackGenerator.Tests.TestFactories;
 using NUnit.Framework;
 
-namespace KaVE.VsFeedbackGenerator.Tests.Generators.ReSharper
+namespace KaVE.VS.FeedbackGenerator.Tests.Generators.ReSharper
 {
     internal class CodeCompletionEventHandlerTest : EventGeneratorTestBase
     {

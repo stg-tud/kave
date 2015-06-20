@@ -30,17 +30,18 @@ using KaVE.Commons.TestUtils.Utils;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Exceptions;
 using KaVE.Commons.Utils.IO;
-using KaVE.ReSharper.Commons.Utils;
-using KaVE.VsFeedbackGenerator.Export;
-using KaVE.VsFeedbackGenerator.Interactivity;
-using KaVE.VsFeedbackGenerator.SessionManager;
-using KaVE.VsFeedbackGenerator.SessionManager.Presentation;
-using KaVE.VsFeedbackGenerator.Tests.Interactivity;
-using KaVE.VsFeedbackGenerator.Utils.Logging;
+using KaVE.RS.Commons.Utils;
+using KaVE.VS.FeedbackGenerator.Export;
+using KaVE.VS.FeedbackGenerator.Interactivity;
+using KaVE.VS.FeedbackGenerator.SessionManager;
+using KaVE.VS.FeedbackGenerator.SessionManager.Presentation;
+using KaVE.VS.FeedbackGenerator.Tests.Interactivity;
+using KaVE.VS.FeedbackGenerator.Utils;
+using KaVE.VS.FeedbackGenerator.Utils.Logging;
 using Moq;
 using NUnit.Framework;
 
-namespace KaVE.VsFeedbackGenerator.Tests.Export
+namespace KaVE.VS.FeedbackGenerator.Tests.Export
 {
     internal class UploadWizardViewModelTest
     {

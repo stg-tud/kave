@@ -19,7 +19,7 @@ using JetBrains.ReSharper.Psi.CSharp.Tree;
 using KaVE.Commons.Model.Names;
 using KaVE.Commons.Utils.Assertion;
 
-namespace KaVE.ReSharper.Commons.Utils.Names
+namespace KaVE.RS.Commons.Utils.Names
 {
     public static class ReSharperDeclarationNameFactory
     {

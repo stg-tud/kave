@@ -30,7 +30,7 @@ using JetBrains.Util;
 using KaVE.Commons.Model.Names.CSharp;
 using Moq;
 
-namespace KaVE.ReSharper.Commons.Tests_Unit.TestFactories
+namespace KaVE.RS.Commons.Tests_Unit.TestFactories
 {
     public static class TypeMockUtils
     {

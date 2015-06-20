@@ -23,12 +23,12 @@ using JetBrains.ReSharper.Psi.Impl.Resolve;
 using JetBrains.ReSharper.Psi.Resolve;
 using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.Names.CSharp;
-using KaVE.ReSharper.Commons.Tests_Unit.TestFactories;
-using KaVE.ReSharper.Commons.Utils.Names;
+using KaVE.RS.Commons.Tests_Unit.TestFactories;
+using KaVE.RS.Commons.Utils.Names;
 using Moq;
 using NUnit.Framework;
 
-namespace KaVE.ReSharper.Commons.Tests_Unit.Utils.Names
+namespace KaVE.RS.Commons.Tests_Unit.Utils.Names
 {
     [TestFixture]
     public class ReSharperDeclaredElementNameFactoryTest

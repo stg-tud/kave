@@ -20,7 +20,7 @@
 using System.Windows;
 using MsgBox;
 
-namespace KaVE.VsFeedbackGenerator.Interactivity
+namespace KaVE.VS.FeedbackGenerator.Interactivity
 {
     internal class LinkNotificationRequestHandler
     {

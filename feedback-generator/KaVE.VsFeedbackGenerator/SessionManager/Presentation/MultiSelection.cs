@@ -23,7 +23,7 @@ using System.Collections.Specialized;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
+namespace KaVE.VS.FeedbackGenerator.SessionManager.Presentation
 {
     public static class MultiSelection
     {

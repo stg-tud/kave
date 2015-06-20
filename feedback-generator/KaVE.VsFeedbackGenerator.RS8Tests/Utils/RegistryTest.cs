@@ -15,11 +15,11 @@
  */
 
 using JetBrains.Application;
-using KaVE.ReSharper.Commons.Utils;
+using KaVE.RS.Commons.Utils;
 using Moq;
 using NUnit.Framework;
 
-namespace KaVE.ReSharper.Commons.Tests_Integration.Utils
+namespace KaVE.RS.Commons.Tests_Integration.Utils
 {
     [TestFixture]
     internal class RegistryTest

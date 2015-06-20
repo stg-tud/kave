@@ -17,7 +17,7 @@
 using JetBrains.Application;
 using KaVE.Commons.Utils.IO;
 
-namespace KaVE.ReSharper.Commons.Injectables
+namespace KaVE.RS.Commons.Injectables
 {
     [ShellComponent]
     public class InjectableIoUtils : IoUtils

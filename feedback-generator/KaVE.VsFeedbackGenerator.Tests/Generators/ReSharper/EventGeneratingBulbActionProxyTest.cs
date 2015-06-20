@@ -23,13 +23,12 @@ using JetBrains.ReSharper.Feature.Services.Bulbs;
 using JetBrains.TextControl;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.TestUtils;
-using KaVE.VsFeedbackGenerator.Generators.ReSharper;
+using KaVE.VS.FeedbackGenerator.Generators.ReSharper;
 using Moq;
 using NUnit.Framework;
 
-namespace KaVE.VsFeedbackGenerator.Tests.Generators.ReSharper
+namespace KaVE.VS.FeedbackGenerator.Tests.Generators.ReSharper
 {
-    [TestFixture]
     internal class EventGeneratingBulbActionProxyTest : EventGeneratorTestBase
     {
         private Mock<IBulbAction> _mockTestAction;

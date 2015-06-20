@@ -23,14 +23,14 @@ using JetBrains;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.TestUtils;
 using KaVE.Commons.TestUtils.Model.Events;
-using KaVE.VsFeedbackGenerator.Interactivity;
-using KaVE.VsFeedbackGenerator.SessionManager;
-using KaVE.VsFeedbackGenerator.Tests.Interactivity;
-using KaVE.VsFeedbackGenerator.Utils.Logging;
+using KaVE.VS.FeedbackGenerator.Interactivity;
+using KaVE.VS.FeedbackGenerator.SessionManager;
+using KaVE.VS.FeedbackGenerator.Tests.Interactivity;
+using KaVE.VS.FeedbackGenerator.Utils.Logging;
 using Moq;
 using NUnit.Framework;
 
-namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModelTestSuite
+namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.FeedbackViewModelTestSuite
 {
     [TestFixture]
     internal class DeleteEventCommandTest

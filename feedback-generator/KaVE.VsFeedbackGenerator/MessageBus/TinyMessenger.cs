@@ -17,7 +17,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 // ReSharper disable All
-namespace TinyMessenger
+namespace KaVE.VS.FeedbackGenerator.MessageBus
 {
     #region Message Types / Interfaces
     /// <summary>

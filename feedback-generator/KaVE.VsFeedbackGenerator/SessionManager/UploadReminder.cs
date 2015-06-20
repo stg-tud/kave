@@ -22,11 +22,12 @@ using System;
 using JetBrains.Application;
 using JetBrains.Application.Components;
 using KaVE.Commons.Utils;
-using KaVE.ReSharper.Commons.Utils;
-using KaVE.VsFeedbackGenerator.TrayNotification;
-using KaVE.VsFeedbackGenerator.Utils.Logging;
+using KaVE.RS.Commons.Utils;
+using KaVE.VS.FeedbackGenerator.TrayNotification;
+using KaVE.VS.FeedbackGenerator.Utils;
+using KaVE.VS.FeedbackGenerator.Utils.Logging;
 
-namespace KaVE.VsFeedbackGenerator.SessionManager
+namespace KaVE.VS.FeedbackGenerator.SessionManager
 {
     [ShellComponent(ProgramConfigurations.VS_ADDIN)]
     public class UploadReminder

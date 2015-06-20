@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KaVE.VsFeedbackGenerator", "KaVE.VsFeedbackGenerator\KaVE.VsFeedbackGenerator.csproj", "{42CE1875-DF5B-4D9E-ADC4-47A96C06EF66}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KaVE.VS.FeedbackGenerator", "KaVE.VsFeedbackGenerator\KaVE.VS.FeedbackGenerator.csproj", "{42CE1875-DF5B-4D9E-ADC4-47A96C06EF66}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KaVE.VsFeedbackGenerator.Tests", "KaVE.VsFeedbackGenerator.Tests\KaVE.VsFeedbackGenerator.Tests.csproj", "{61231FF9-BF33-4210-89AA-6C9973FA00A0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KaVE.VS.FeedbackGenerator.Tests", "KaVE.VsFeedbackGenerator.Tests\KaVE.VS.FeedbackGenerator.Tests.csproj", "{61231FF9-BF33-4210-89AA-6C9973FA00A0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KaVE.ReSharper.Commons.Tests_Integration", "KaVE.VsFeedbackGenerator.RS8Tests\KaVE.ReSharper.Commons.Tests_Integration.csproj", "{4979D8EC-B49B-4578-BDC3-D4015C493A98}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KaVE.RS.Commons.Tests_Integration", "KaVE.VsFeedbackGenerator.RS8Tests\KaVE.RS.Commons.Tests_Integration.csproj", "{4979D8EC-B49B-4578-BDC3-D4015C493A98}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KaVE.CompletionTraceGenerator", "KaVE.CompletionTraceGenerator\KaVE.CompletionTraceGenerator.csproj", "{9A656780-6292-4CE3-BA13-D6CBB797AABA}"
 EndProject
@@ -13,23 +13,23 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KaVE.CompletionTraceGenerat
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KaVE.Commons.TestUtils", "KaVE.Commons.TestUtils\KaVE.Commons.TestUtils.csproj", "{126607DB-1F9F-4E2C-A39E-7B707874EAFC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KaVE.SolutionAnalysis", "KaVE.SolutionAnalysis\KaVE.SolutionAnalysis.csproj", "{30CCA081-2DAD-46E5-982A-32C3600A29E2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KaVE.RS.SolutionAnalysis", "KaVE.SolutionAnalysis\KaVE.RS.SolutionAnalysis.csproj", "{30CCA081-2DAD-46E5-982A-32C3600A29E2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KaVE.SolutionAnalysis.Tests", "KaVE.SolutionAnalysis.Tests\KaVE.SolutionAnalysis.Tests.csproj", "{CA830A75-61BC-412E-A4B0-EE1FA71EFDD7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KaVE.RS.SolutionAnalysis.Tests", "KaVE.SolutionAnalysis.Tests\KaVE.RS.SolutionAnalysis.Tests.csproj", "{CA830A75-61BC-412E-A4B0-EE1FA71EFDD7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KaVE.Commons", "KaVE.Commons\KaVE.Commons.csproj", "{17FC7725-AC2E-47E5-8F24-D2107171A854}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KaVE.Commons.Tests", "KaVE.Commons.Tests\KaVE.Commons.Tests.csproj", "{FC829D87-127A-498B-965C-9778D223792E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KaVE.ReSharper.Commons", "KaVE.ReSharper.Commons\KaVE.ReSharper.Commons.csproj", "{B2235734-D3E5-498F-87E2-E9780DBE0D8D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KaVE.RS.Commons", "KaVE.ReSharper.Commons\KaVE.RS.Commons.csproj", "{B2235734-D3E5-498F-87E2-E9780DBE0D8D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KaVE.ReSharper.Commons.Tests_Unit", "KaVE.ReSharper.Commons.Tests\KaVE.ReSharper.Commons.Tests_Unit.csproj", "{35FCB52A-CCD2-49C7-AD6D-78A71164A324}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KaVE.RS.Commons.Tests_Unit", "KaVE.ReSharper.Commons.Tests\KaVE.RS.Commons.Tests_Unit.csproj", "{35FCB52A-CCD2-49C7-AD6D-78A71164A324}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KaVE.FeedbackProcessor", "KaVE.FeedbackProcessor\KaVE.FeedbackProcessor.csproj", "{7B7AEA61-25F5-4938-BEE7-ED26AE7BE477}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KaVE.FeedbackProcessor.Tests", "KaVE.FeedbackProcessor.Tests\KaVE.FeedbackProcessor.Tests.csproj", "{FCAAFB9E-BDFC-42C0-9AEA-FBDC55F65355}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KaVE.SolutionAnalysis.BulkAnalyser", "KaVE.SolutionAnalysis.BulkAnalyser\KaVE.SolutionAnalysis.BulkAnalyser.csproj", "{7DF9E84C-3A3A-4F61-A3A1-182B2CA26A2D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KaVE.RS.SolutionAnalysis.BulkAnalyser", "KaVE.SolutionAnalysis.BulkAnalyser\KaVE.RS.SolutionAnalysis.BulkAnalyser.csproj", "{7DF9E84C-3A3A-4F61-A3A1-182B2CA26A2D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

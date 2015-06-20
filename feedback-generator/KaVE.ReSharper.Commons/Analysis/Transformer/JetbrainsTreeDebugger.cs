@@ -18,9 +18,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using JetBrains.ReSharper.Psi.Tree;
-using KaVE.ReSharper.Commons.Analysis.CompletionTarget;
+using KaVE.RS.Commons.Analysis.CompletionTarget;
 
-namespace KaVE.ReSharper.Commons.Analysis.Transformer
+namespace KaVE.RS.Commons.Analysis.Transformer
 {
     public static class JetbrainsTreeDebugger
     {

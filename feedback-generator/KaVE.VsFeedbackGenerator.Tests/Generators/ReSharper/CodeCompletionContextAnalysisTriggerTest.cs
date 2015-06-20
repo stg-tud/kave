@@ -17,10 +17,10 @@
  *    - Sebastian Proksch
  */
 
-using KaVE.VsFeedbackGenerator.Generators.ReSharper;
+using KaVE.VS.FeedbackGenerator.Generators.ReSharper;
 using NUnit.Framework;
 
-namespace KaVE.VsFeedbackGenerator.Tests.Generators.ReSharper
+namespace KaVE.VS.FeedbackGenerator.Tests.Generators.ReSharper
 {
     internal class CodeCompletionContextAnalysisTriggerTest
     {

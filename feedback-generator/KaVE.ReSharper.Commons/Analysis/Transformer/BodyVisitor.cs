@@ -30,12 +30,12 @@ using KaVE.Commons.Model.SSTs.Impl.References;
 using KaVE.Commons.Model.SSTs.Impl.Statements;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Collections;
-using KaVE.ReSharper.Commons.Analysis.CompletionTarget;
-using KaVE.ReSharper.Commons.Analysis.Util;
-using KaVE.ReSharper.Commons.Utils.Names;
+using KaVE.RS.Commons.Analysis.CompletionTarget;
+using KaVE.RS.Commons.Analysis.Util;
+using KaVE.RS.Commons.Utils.Names;
 using IStatement = KaVE.Commons.Model.SSTs.IStatement;
 
-namespace KaVE.ReSharper.Commons.Analysis.Transformer
+namespace KaVE.RS.Commons.Analysis.Transformer
 {
     public class BodyVisitor : TreeNodeVisitor<IList<IStatement>>
     {

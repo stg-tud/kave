@@ -19,7 +19,7 @@ using JetBrains.ReSharper.Psi.CSharp.Parsing;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
 
-namespace KaVE.ReSharper.Commons.Analysis.CompletionTarget
+namespace KaVE.RS.Commons.Analysis.CompletionTarget
 {
     public class CompletionTargetAnalysis
     {

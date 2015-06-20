@@ -18,10 +18,10 @@
  */
 
 using JetBrains.ReSharper.Psi;
-using KaVE.VsFeedbackGenerator.CodeCompletion;
+using KaVE.VS.FeedbackGenerator.CodeCompletion;
 using NUnit.Framework;
 
-namespace KaVE.VsFeedbackGenerator.Tests.CodeCompletion
+namespace KaVE.VS.FeedbackGenerator.Tests.CodeCompletion
 {
     public class PBNProposalItemsProviderTest
     {

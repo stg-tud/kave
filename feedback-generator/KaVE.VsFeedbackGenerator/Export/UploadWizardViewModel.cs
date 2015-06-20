@@ -27,13 +27,14 @@ using KaVE.Commons.Model.Events;
 using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Exceptions;
-using KaVE.ReSharper.Commons.Utils;
-using KaVE.VsFeedbackGenerator.Interactivity;
-using KaVE.VsFeedbackGenerator.SessionManager;
-using KaVE.VsFeedbackGenerator.SessionManager.Presentation;
-using KaVE.VsFeedbackGenerator.Utils.Logging;
+using KaVE.RS.Commons.Utils;
+using KaVE.VS.FeedbackGenerator.Interactivity;
+using KaVE.VS.FeedbackGenerator.SessionManager;
+using KaVE.VS.FeedbackGenerator.SessionManager.Presentation;
+using KaVE.VS.FeedbackGenerator.Utils;
+using KaVE.VS.FeedbackGenerator.Utils.Logging;
 
-namespace KaVE.VsFeedbackGenerator.Export
+namespace KaVE.VS.FeedbackGenerator.Export
 {
     public class UploadWizardViewModel : ViewModelBase<UploadWizardViewModel>
     {
@@ -59,7 +60,11 @@ namespace KaVE.VsFeedbackGenerator.Export
             get { return _successNotificationRequest; }
         }
 
-        public UploadWizardViewModel(IExporter exporter, ILogManager logManager, ISettingsStore settingsStore, IDateUtils dateUtils, ILogger logger)
+        public UploadWizardViewModel(IExporter exporter,
+            ILogManager logManager,
+            ISettingsStore settingsStore,
+            IDateUtils dateUtils,
+            ILogger logger)
         {
             _exporter = exporter;
             _logManager = logManager;
@@ -112,7 +117,7 @@ namespace KaVE.VsFeedbackGenerator.Export
             set { _settingsStore.UpdateSettings<ExportSettings>(s => s.RemoveStartTimes = value); }
         }
 
-        internal void Export(UploadWizard.ExportType exportType)
+        public void Export(UploadWizard.ExportType exportType)
         {
             SetBusy(Properties.UploadWizard.Export_BusyMessage);
             _exportTime = _dateUtils.Now;
@@ -227,7 +232,7 @@ namespace KaVE.VsFeedbackGenerator.Export
                 new Notification
                 {
                     Caption = Properties.UploadWizard.window_title,
-                    Message = text,
+                    Message = text
                 });
         }
 
@@ -239,7 +244,7 @@ namespace KaVE.VsFeedbackGenerator.Export
                     Caption = Properties.UploadWizard.window_title,
                     Message = text,
                     LinkDescription = Properties.UploadWizard.ExportSuccessLinkDescription,
-                    Link = url,
+                    Link = url
                 });
         }
     }

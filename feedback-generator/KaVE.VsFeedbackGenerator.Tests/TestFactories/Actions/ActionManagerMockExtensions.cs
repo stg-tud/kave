@@ -20,7 +20,7 @@
 using JetBrains.ActionManagement;
 using Moq;
 
-namespace KaVE.VsFeedbackGenerator.Tests.TestFactories.Actions
+namespace KaVE.VS.FeedbackGenerator.Tests.TestFactories.Actions
 {
     internal static class ActionManagerMockExtensions
     {

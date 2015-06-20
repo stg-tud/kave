@@ -19,11 +19,11 @@
 
 using System;
 using KaVE.Commons.Model.Events;
-using KaVE.VsFeedbackGenerator.Generators;
+using KaVE.VS.FeedbackGenerator.Generators;
 using Moq;
 using NUnit.Framework;
 
-namespace KaVE.VsFeedbackGenerator.Tests.Generators
+namespace KaVE.VS.FeedbackGenerator.Tests.Generators
 {
     [TestFixture]
     internal class LogEventGeneratorTest : EventGeneratorTestBase

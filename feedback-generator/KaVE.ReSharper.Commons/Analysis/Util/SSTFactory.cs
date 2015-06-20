@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-using KaVE.ReSharper.Commons.Analysis.Transformer;
+using KaVE.RS.Commons.Analysis.Transformer;
 
-namespace KaVE.ReSharper.Commons.Analysis.Util
+namespace KaVE.RS.Commons.Analysis.Util
 {
     public interface ISSTFactory
     {

@@ -18,7 +18,7 @@ using JetBrains.Application;
 using KaVE.Commons.Utils.CodeCompletion.Impl;
 using KaVE.Commons.Utils.IO;
 
-namespace KaVE.ReSharper.Commons.Injectables
+namespace KaVE.RS.Commons.Injectables
 {
     [ShellComponent]
     public class InjectablePBNRecommenderStore : SmilePBNRecommenderStore

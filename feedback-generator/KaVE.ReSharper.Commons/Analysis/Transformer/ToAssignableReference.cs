@@ -21,9 +21,9 @@ using JetBrains.ReSharper.Psi.Resolve;
 using KaVE.Commons.Model.SSTs;
 using KaVE.Commons.Model.SSTs.Impl.References;
 using KaVE.Commons.Model.SSTs.References;
-using KaVE.ReSharper.Commons.Analysis.Util;
+using KaVE.RS.Commons.Analysis.Util;
 
-namespace KaVE.ReSharper.Commons.Analysis.Transformer
+namespace KaVE.RS.Commons.Analysis.Transformer
 {
     public class ToAssignableReference : TreeNodeVisitor<IList<IStatement>, IAssignableReference>
     {

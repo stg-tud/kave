@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace KaVE.ReSharper.Commons.Properties {
+namespace KaVE.RS.Commons.Properties {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace KaVE.ReSharper.Commons.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("KaVE.ReSharper.Commons.Properties.Messages", typeof(Messages).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("KaVE.RS.Commons.Properties.Messages", typeof(Messages).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

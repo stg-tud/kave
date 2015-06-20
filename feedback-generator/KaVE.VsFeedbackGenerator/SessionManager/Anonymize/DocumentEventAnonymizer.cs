@@ -20,7 +20,7 @@
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.VisualStudio;
 
-namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
+namespace KaVE.VS.FeedbackGenerator.SessionManager.Anonymize
 {
     internal class DocumentEventAnonymizer : IDEEventAnonymizer
     {

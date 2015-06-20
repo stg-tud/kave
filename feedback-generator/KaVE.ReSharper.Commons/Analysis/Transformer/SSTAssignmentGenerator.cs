@@ -17,9 +17,9 @@
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
-using KaVE.ReSharper.Commons.Analysis.Transformer.Context;
+using KaVE.RS.Commons.Analysis.Transformer.Context;
 
-namespace KaVE.ReSharper.Commons.Analysis.Transformer
+namespace KaVE.RS.Commons.Analysis.Transformer
 {
     public class SSTAssignmentGenerator : BaseSSTTransformer<AssignmentGeneratorContext>
     {

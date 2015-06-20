@@ -32,7 +32,7 @@ using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Assertion;
 
-namespace KaVE.ReSharper.Commons.Utils.Names
+namespace KaVE.RS.Commons.Utils.Names
 {
     public static class ReSharperDeclaredElementNameFactory
     {

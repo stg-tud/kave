@@ -16,11 +16,11 @@
 
 using System.Collections.Generic;
 using JetBrains.ReSharper.Psi;
-using KaVE.ReSharper.Commons.Tests_Unit.TestFactories;
-using KaVE.ReSharper.Commons.Utils.Names;
+using KaVE.RS.Commons.Tests_Unit.TestFactories;
+using KaVE.RS.Commons.Utils.Names;
 using NUnit.Framework;
 
-namespace KaVE.ReSharper.Commons.Tests_Unit.Utils.Names
+namespace KaVE.RS.Commons.Tests_Unit.Utils.Names
 {
     [TestFixture]
     public class ReSharperTypeNameFactoryTest

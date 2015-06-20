@@ -22,10 +22,10 @@ using JetBrains.Annotations;
 using JetBrains.Util;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.IO;
-using KaVE.ReSharper.Commons.Properties;
+using KaVE.RS.Commons.Properties;
 using Newtonsoft.Json;
 
-namespace KaVE.ReSharper.Commons.Utils
+namespace KaVE.RS.Commons.Utils
 {
     public class HttpPublisher : IPublisher
     {

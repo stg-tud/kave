@@ -23,12 +23,11 @@ using EnvDTE;
 using JetBrains.Application;
 using JetBrains.Application.Components;
 using KaVE.Commons.Utils;
-using KaVE.JetBrains.Annotations;
 using KaVE.Commons.Utils.Exceptions;
-using KaVE.ReSharper.Commons.Utils;
-using KaVE.VsFeedbackGenerator.MessageBus;
+using KaVE.JetBrains.Annotations;
+using KaVE.VS.FeedbackGenerator.MessageBus;
 
-namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
+namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio
 {
     [ShellComponent(ProgramConfigurations.VS_ADDIN)]
     internal class VsWindowButtonInstrumentationComponent

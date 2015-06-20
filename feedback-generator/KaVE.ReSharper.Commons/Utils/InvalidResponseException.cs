@@ -17,7 +17,7 @@
 using System;
 using KaVE.Commons.Utils.Exceptions;
 
-namespace KaVE.ReSharper.Commons.Utils
+namespace KaVE.RS.Commons.Utils
 {
     public class InvalidResponseException : KaVEException
     {

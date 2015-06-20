@@ -30,7 +30,7 @@ using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.IO;
 using Key = System.Windows.Input.Key;
 
-namespace KaVE.VsFeedbackGenerator.CodeCompletion
+namespace KaVE.VS.FeedbackGenerator.CodeCompletion
 {
     [Language(typeof (CSharpLanguage))]
     public class CodeCompletionLifecycleManager : IDisposable

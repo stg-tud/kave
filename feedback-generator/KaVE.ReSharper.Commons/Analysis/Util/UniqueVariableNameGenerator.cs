@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-namespace KaVE.ReSharper.Commons.Analysis.Util
+namespace KaVE.RS.Commons.Analysis.Util
 {
     public interface IUniqueVariableNameGenerator
     {

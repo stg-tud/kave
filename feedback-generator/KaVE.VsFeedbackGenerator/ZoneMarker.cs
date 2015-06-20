@@ -19,7 +19,7 @@
 
 using JetBrains.Application.BuildScript.Application.Zones;
 
-namespace KaVE.VsFeedbackGenerator
+namespace KaVE.VS.FeedbackGenerator
 {
     [ZoneMarker]
     public class ZoneMarker // : IRequire<ILanguageCSharpZone>, IRequire<ICodeEditingZone>

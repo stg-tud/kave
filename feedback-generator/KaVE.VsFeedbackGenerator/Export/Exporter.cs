@@ -29,10 +29,10 @@ using JetBrains.Application;
 using JetBrains.Util;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Utils.Json;
-using KaVE.ReSharper.Commons.Utils;
-using KaVE.VsFeedbackGenerator.SessionManager.Anonymize;
+using KaVE.RS.Commons.Utils;
+using KaVE.VS.FeedbackGenerator.SessionManager.Anonymize;
 
-namespace KaVE.VsFeedbackGenerator.Export
+namespace KaVE.VS.FeedbackGenerator.Export
 {
     public interface IExporter
     {
@@ -41,7 +41,7 @@ namespace KaVE.VsFeedbackGenerator.Export
     }
 
     [ShellComponent]
-    internal class Exporter : IExporter
+    public class Exporter : IExporter
     {
         private readonly IDataExportAnonymizer _anonymizer;
 

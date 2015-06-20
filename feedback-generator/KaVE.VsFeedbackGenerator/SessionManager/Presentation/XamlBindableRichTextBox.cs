@@ -22,12 +22,11 @@ using System.Windows.Documents;
 using System.Windows.Threading;
 using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Exceptions;
-using KaVE.ReSharper.Commons.Utils;
-using Msg = KaVE.VsFeedbackGenerator.Properties.XamlBindableRichTextBox;
+using KaVE.RS.Commons.Utils;
 
-namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
+namespace KaVE.VS.FeedbackGenerator.SessionManager.Presentation
 {
-    internal class XamlBindableRichTextBox : RichTextBox
+    public class XamlBindableRichTextBox : RichTextBox
     {
         public XamlBindableRichTextBox()
         {
@@ -49,7 +48,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
         private static void OnXamlChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var richTextBox = (XamlBindableRichTextBox) d;
-            richTextBox.Document = new FlowDocument(new Paragraph(new Run(Msg.Loading)));
+            richTextBox.Document = new FlowDocument(new Paragraph(new Run(Properties.SessionManager.Loading)));
             // defer parsing Xaml till after loading message is displayed
             richTextBox.Dispatcher.BeginInvoke(
                 (Action) (() =>
@@ -73,7 +72,8 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
                         par = new Paragraph();
                     }
                     richTextBox.Document = new FlowDocument(par);
-                }), DispatcherPriority.Loaded);
+                }),
+                DispatcherPriority.Loaded);
         }
 
         private static bool ContainsTooManyNodesForDisplay(string xaml)
@@ -89,7 +89,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
             try
             {
                 var template = XamlUtils.CreateDataTemplateFromXaml(xaml);
-                var textBlock = (TextBlock)template.LoadContent();
+                var textBlock = (TextBlock) template.LoadContent();
 
                 var par = new Paragraph();
                 par.Inlines.AddRange(textBlock.Inlines.ToList());

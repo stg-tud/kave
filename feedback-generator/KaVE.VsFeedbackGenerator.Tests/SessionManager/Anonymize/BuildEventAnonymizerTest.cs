@@ -22,7 +22,7 @@ using JetBrains.Util;
 using KaVE.Commons.Model.Events.VisualStudio;
 using NUnit.Framework;
 
-namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
+namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
 {
     [TestFixture]
     internal class BuildEventAnonymizerTest : IDEEventAnonymizerTestBase<BuildEvent>

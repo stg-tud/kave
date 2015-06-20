@@ -25,7 +25,7 @@ using KaVE.Commons.Model.SSTs.References;
 using KaVE.Commons.Model.SSTs.Statements;
 using KaVE.JetBrains.Annotations;
 
-namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize.CompletionEvents
+namespace KaVE.VS.FeedbackGenerator.SessionManager.Anonymize.CompletionEvents
 {
     public class SSTReferenceAnonymization : AbstractNodeVisitor<int, IReference>
     {

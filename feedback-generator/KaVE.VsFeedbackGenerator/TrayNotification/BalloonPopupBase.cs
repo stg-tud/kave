@@ -20,11 +20,11 @@
 using System.Windows.Controls;
 using Hardcodet.Wpf.TaskbarNotification;
 using JetBrains.ActionManagement;
-using KaVE.ReSharper.Commons.Utils;
-using KaVE.VsFeedbackGenerator.Export;
-using KaVE.VsFeedbackGenerator.SessionManager.Presentation;
+using KaVE.RS.Commons.Utils;
+using KaVE.VS.FeedbackGenerator.Export;
+using KaVE.VS.FeedbackGenerator.SessionManager.Presentation;
 
-namespace KaVE.VsFeedbackGenerator.TrayNotification
+namespace KaVE.VS.FeedbackGenerator.TrayNotification
 {
     public abstract class BalloonPopupBase : UserControl
     {

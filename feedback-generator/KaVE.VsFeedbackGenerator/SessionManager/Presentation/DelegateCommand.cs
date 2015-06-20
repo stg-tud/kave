@@ -21,7 +21,7 @@ using System;
 using System.Windows.Input;
 using KaVE.JetBrains.Annotations;
 
-namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
+namespace KaVE.VS.FeedbackGenerator.SessionManager.Presentation
 {
     public class DelegateCommand : ICommand
     {

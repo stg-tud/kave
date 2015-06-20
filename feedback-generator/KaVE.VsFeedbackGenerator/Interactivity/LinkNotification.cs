@@ -17,7 +17,7 @@
  *    - Uli Fahrer
  */
 
-namespace KaVE.VsFeedbackGenerator.Interactivity
+namespace KaVE.VS.FeedbackGenerator.Interactivity
 {
     public class LinkNotification : Notification
     {

@@ -25,12 +25,12 @@ using KaVE.Commons.TestUtils.Utils;
 using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Exceptions;
 using KaVE.JetBrains.Annotations;
-using KaVE.ReSharper.Commons.Utils;
-using KaVE.VsFeedbackGenerator.MessageBus;
+using KaVE.RS.Commons.Utils;
+using KaVE.VS.FeedbackGenerator.MessageBus;
 using Moq;
 using NUnit.Framework;
 
-namespace KaVE.VsFeedbackGenerator.Tests.Generators
+namespace KaVE.VS.FeedbackGenerator.Tests.Generators
 {
     internal abstract class EventGeneratorTestBase
     {

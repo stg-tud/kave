@@ -19,9 +19,8 @@
 
 using System;
 using JetBrains.Application;
-using TinyMessenger;
 
-namespace KaVE.VsFeedbackGenerator.MessageBus
+namespace KaVE.VS.FeedbackGenerator.MessageBus
 {
     [ShellComponent]
     public class TinyMessengerMessageBus : IMessageBus

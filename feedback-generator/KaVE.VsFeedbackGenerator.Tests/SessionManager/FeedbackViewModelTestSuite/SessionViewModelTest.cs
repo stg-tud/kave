@@ -25,16 +25,14 @@ using KaVE.Commons.TestUtils;
 using KaVE.Commons.TestUtils.Model.Events;
 using KaVE.Commons.Utils.Exceptions;
 using KaVE.Commons.Utils.Reflection;
-using KaVE.ReSharper.Commons.Utils;
-using KaVE.VsFeedbackGenerator.SessionManager;
-using KaVE.VsFeedbackGenerator.Utils.Logging;
+using KaVE.RS.Commons.Utils;
+using KaVE.VS.FeedbackGenerator.SessionManager;
+using KaVE.VS.FeedbackGenerator.Utils.Logging;
 using Moq;
 using NUnit.Framework;
-using Messages = KaVE.VsFeedbackGenerator.Properties.SessionManager;
 
-namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModelTestSuite
+namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.FeedbackViewModelTestSuite
 {
-    [TestFixture]
     internal class SessionViewModelTest
     {
         private Mock<ILog> _mockLog;
@@ -91,7 +89,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModelTestSui
             // ReSharper disable once UnusedVariable
             var tmp = _uut.Events;
 
-            Assert.IsTrue(_uut.BusyMessage.StartsWith(Messages.Loading));
+            Assert.IsTrue(_uut.BusyMessage.StartsWith(Properties.SessionManager.Loading));
         }
 
         [Test]

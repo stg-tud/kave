@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 using System;
 using System.Threading;
-using KaVE.VsFeedbackGenerator.MessageBus;
+using KaVE.VS.FeedbackGenerator.MessageBus;
 using NUnit.Framework;
 
-namespace KaVE.VsFeedbackGenerator.Tests.MessageBus
+namespace KaVE.VS.FeedbackGenerator.Tests.MessageBus
 {
     [TestFixture]
     public class TinyMessengerMessageChannelTest

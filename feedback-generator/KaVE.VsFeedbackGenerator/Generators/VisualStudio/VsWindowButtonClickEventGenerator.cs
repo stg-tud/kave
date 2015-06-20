@@ -25,17 +25,15 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using JetBrains.Util;
-using KaVE.JetBrains.Annotations;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Reflection;
-using KaVE.ReSharper.Commons.Utils;
-using KaVE.VsFeedbackGenerator.MessageBus;
-using Microsoft.WindowsAPICodePack.Shell.PropertySystem;
+using KaVE.JetBrains.Annotations;
+using KaVE.VS.FeedbackGenerator.MessageBus;
 using ILogger = KaVE.Commons.Utils.Exceptions.ILogger;
 using Window = EnvDTE.Window;
 
-namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
+namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio
 {
     internal class VsWindowButtonClickEventGenerator : EventGeneratorBase
     {

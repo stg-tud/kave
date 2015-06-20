@@ -19,7 +19,7 @@ using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
 
-namespace KaVE.VsFeedbackGenerator.Utils
+namespace KaVE.VS.FeedbackGenerator.Utils
 {
     public sealed class InverseObjectToVisibilityConverter : IValueConverter
     {

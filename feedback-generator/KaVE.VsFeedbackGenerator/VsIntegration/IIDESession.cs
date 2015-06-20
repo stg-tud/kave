@@ -19,7 +19,7 @@
 
 using EnvDTE;
 
-namespace KaVE.VsFeedbackGenerator.VsIntegration
+namespace KaVE.VS.FeedbackGenerator.VsIntegration
 {
     public interface IIDESession
     {

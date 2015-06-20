@@ -18,11 +18,11 @@
  */
 
 using EnvDTE;
-using KaVE.VsFeedbackGenerator.VsIntegration;
+using KaVE.VS.FeedbackGenerator.VsIntegration;
 using Moq;
 using NUnit.Framework;
 
-namespace KaVE.VsFeedbackGenerator.Tests.VsIntegration
+namespace KaVE.VS.FeedbackGenerator.Tests.VsIntegration
 {
     [TestFixture]
     public class IDESessionTest

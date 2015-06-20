@@ -20,11 +20,11 @@
 using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.TypeShapes;
-using KaVE.VsFeedbackGenerator.SessionManager.Anonymize;
-using KaVE.VsFeedbackGenerator.SessionManager.Anonymize.CompletionEvents;
+using KaVE.VS.FeedbackGenerator.SessionManager.Anonymize;
+using KaVE.VS.FeedbackGenerator.SessionManager.Anonymize.CompletionEvents;
 using NUnit.Framework;
 
-namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize.CompletionEvents
+namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize.CompletionEvents
 {
     internal class TypeShapeAnonymizerTest
     {

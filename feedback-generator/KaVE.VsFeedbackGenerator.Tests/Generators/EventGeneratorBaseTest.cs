@@ -17,18 +17,15 @@
  *    - Sven Amann
  */
 
-using JetBrains.Util;
-using KaVE.JetBrains.Annotations;
 using KaVE.Commons.TestUtils.Model.Events;
 using KaVE.Commons.Utils;
-using KaVE.ReSharper.Commons.Utils;
-using KaVE.VsFeedbackGenerator.Generators;
-using KaVE.VsFeedbackGenerator.MessageBus;
-using KaVE.VsFeedbackGenerator.Utils;
+using KaVE.JetBrains.Annotations;
+using KaVE.VS.FeedbackGenerator.Generators;
+using KaVE.VS.FeedbackGenerator.MessageBus;
 using NuGet;
 using NUnit.Framework;
 
-namespace KaVE.VsFeedbackGenerator.Tests.Generators
+namespace KaVE.VS.FeedbackGenerator.Tests.Generators
 {
     [TestFixture]
     internal class EventGeneratorBaseTest : EventGeneratorTestBase

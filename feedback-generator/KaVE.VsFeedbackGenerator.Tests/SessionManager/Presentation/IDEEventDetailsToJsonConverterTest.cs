@@ -25,12 +25,11 @@ using KaVE.Commons.Model.Events.VisualStudio;
 using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.Names.VisualStudio;
 using KaVE.Commons.Model.SSTs.Impl;
-using KaVE.VsFeedbackGenerator.SessionManager.Presentation;
+using KaVE.VS.FeedbackGenerator.SessionManager.Presentation;
 using NUnit.Framework;
 
-namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
+namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Presentation
 {
-    [TestFixture]
     internal class IDEEventDetailsToJsonConverterTest
     {
         [Test]

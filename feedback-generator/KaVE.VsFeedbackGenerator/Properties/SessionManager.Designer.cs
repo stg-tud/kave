@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace KaVE.VsFeedbackGenerator.Properties {
+namespace KaVE.VS.FeedbackGenerator.Properties {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace KaVE.VsFeedbackGenerator.Properties {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("KaVE.VsFeedbackGenerator.Properties.SessionManager", typeof(SessionManager).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("KaVE.VS.FeedbackGenerator.Properties.SessionManager", typeof(SessionManager).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

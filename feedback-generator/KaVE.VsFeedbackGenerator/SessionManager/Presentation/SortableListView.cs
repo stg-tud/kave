@@ -30,7 +30,7 @@ using System.Windows.Markup;
 using JetBrains.Util;
 using KaVE.Commons.Utils.Reflection;
 
-namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
+namespace KaVE.VS.FeedbackGenerator.SessionManager.Presentation
 {
     public class SortableListView : ListView
     {

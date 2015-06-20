@@ -18,13 +18,12 @@
  */
 
 using EnvDTE;
-using KaVE.VsFeedbackGenerator.Generators.VisualStudio;
+using KaVE.VS.FeedbackGenerator.Generators.VisualStudio;
 using Moq;
 using NUnit.Framework;
 
-namespace KaVE.VsFeedbackGenerator.Tests.Generators.VisualStudio
+namespace KaVE.VS.FeedbackGenerator.Tests.Generators.VisualStudio
 {
-    [TestFixture]
     internal class SolutionEventGeneratorTest : VisualStudioEventGeneratorTestBase
     {
         private Mock<SolutionEvents> _mockSolutionEvents;

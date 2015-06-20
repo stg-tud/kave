@@ -16,10 +16,10 @@
 
 using EnvDTE;
 using JetBrains.Application;
-using KaVE.VsFeedbackGenerator.VsIntegration;
+using KaVE.VS.FeedbackGenerator.VsIntegration;
 using Moq;
 
-namespace KaVE.VsFeedbackGenerator.Tests.VsIntegrationMocks
+namespace KaVE.VS.FeedbackGenerator.Tests.VsIntegrationMocks
 {
     [ShellComponent]
     public class TestIDESession : IIDESession

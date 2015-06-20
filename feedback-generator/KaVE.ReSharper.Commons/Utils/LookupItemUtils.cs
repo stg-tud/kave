@@ -25,9 +25,9 @@ using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.Names.ReSharper;
-using KaVE.ReSharper.Commons.Utils.Names;
+using KaVE.RS.Commons.Utils.Names;
 
-namespace KaVE.ReSharper.Commons.Utils
+namespace KaVE.RS.Commons.Utils
 {
     public static class LookupItemUtils
     {

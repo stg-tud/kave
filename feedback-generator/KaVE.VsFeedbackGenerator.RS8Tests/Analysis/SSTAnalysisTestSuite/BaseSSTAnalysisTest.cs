@@ -22,6 +22,7 @@ using System.Linq;
 using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.SSTs;
+using KaVE.Commons.Model.SSTs.Declarations;
 using KaVE.Commons.Model.SSTs.Expressions;
 using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.Commons.Model.SSTs.Impl.Declarations;
@@ -33,15 +34,12 @@ using KaVE.Commons.Model.SSTs.Statements;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Collections;
 using KaVE.Commons.Utils.Exceptions;
-using KaVE.ReSharper.Commons.Analysis.CompletionTarget;
-using KaVE.ReSharper.Commons.Utils;
+using KaVE.RS.Commons.Analysis.CompletionTarget;
+using KaVE.RS.Commons.Utils;
 using NUnit.Framework;
-using IExpressionStatement = KaVE.Commons.Model.SSTs.Statements.IExpressionStatement;
-using IMethodDeclaration = KaVE.Commons.Model.SSTs.Declarations.IMethodDeclaration;
-using IVariableDeclaration = KaVE.Commons.Model.SSTs.Statements.IVariableDeclaration;
-using RS = JetBrains.ReSharper.Psi.CSharp.Tree;
+using JB = JetBrains.ReSharper.Psi.CSharp.Tree;
 
-namespace KaVE.ReSharper.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
+namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
 {
     internal abstract class BaseSSTAnalysisTest : BaseCSharpCodeCompletionTest
     {
@@ -150,32 +148,32 @@ namespace KaVE.ReSharper.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
             AssertBody(Lists.NewListFrom(bodyArr));
         }
 
-        protected static void AssertNodeIsMethodDeclaration(string simpleMethodName, RS.ICSharpTreeNode node)
+        protected static void AssertNodeIsMethodDeclaration(string simpleMethodName, JB.ICSharpTreeNode node)
         {
-            var decl = node as RS.IMethodDeclaration;
+            var decl = node as JB.IMethodDeclaration;
             Assert.NotNull(decl);
             Assert.AreEqual(simpleMethodName, decl.NameIdentifier.Name);
         }
 
-        protected static void AssertNodeIsVariableDeclaration(string varName, RS.ICSharpTreeNode node)
+        protected static void AssertNodeIsVariableDeclaration(string varName, JB.ICSharpTreeNode node)
         {
-            var decl = node as RS.ILocalVariableDeclaration;
+            var decl = node as JB.ILocalVariableDeclaration;
             Assert.NotNull(decl);
             Assert.AreEqual(varName, decl.NameIdentifier.Name);
         }
 
-        protected static void AssertNodeIsReference(string refName, RS.ICSharpTreeNode node)
+        protected static void AssertNodeIsReference(string refName, JB.ICSharpTreeNode node)
         {
-            var expr = node as RS.IReferenceExpression;
+            var expr = node as JB.IReferenceExpression;
             Assert.NotNull(expr);
             Assert.AreEqual(refName, expr.NameIdentifier.Name);
         }
 
-        protected static void AssertNodeIsAssignment(string varName, RS.ICSharpTreeNode node)
+        protected static void AssertNodeIsAssignment(string varName, JB.ICSharpTreeNode node)
         {
-            var ass = node as RS.IAssignmentExpression;
+            var ass = node as JB.IAssignmentExpression;
             Assert.NotNull(ass);
-            var dest = ass.Dest as RS.IReferenceExpression;
+            var dest = ass.Dest as JB.IReferenceExpression;
             Assert.NotNull(dest);
             Assert.AreEqual(varName, dest.NameIdentifier.Name);
         }
@@ -185,14 +183,14 @@ namespace KaVE.ReSharper.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
             Assert.AreEqual(expectedCase, LastCompletionMarker.Case);
         }
 
-        protected void AssertNodeIsIf(RS.ICSharpTreeNode node)
+        protected void AssertNodeIsIf(JB.ICSharpTreeNode node)
         {
-            Assert.True(node is RS.IIfStatement);
+            Assert.True(node is JB.IIfStatement);
         }
 
-        protected void AssertNodeIsCall(string expectedName, RS.ICSharpTreeNode node)
+        protected void AssertNodeIsCall(string expectedName, JB.ICSharpTreeNode node)
         {
-            var call = node as RS.IInvocationExpression;
+            var call = node as JB.IInvocationExpression;
             Assert.NotNull(call);
             var actualName = call.InvocationExpressionReference.GetName();
             Assert.AreEqual(expectedName, actualName);

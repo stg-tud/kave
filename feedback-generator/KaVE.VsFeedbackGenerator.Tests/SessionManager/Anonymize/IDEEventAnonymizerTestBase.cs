@@ -20,13 +20,13 @@
 using System;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Names.VisualStudio;
-using KaVE.ReSharper.Commons.Utils;
-using KaVE.VsFeedbackGenerator.SessionManager.Anonymize;
-using KaVE.VsFeedbackGenerator.SessionManager.Presentation;
+using KaVE.VS.FeedbackGenerator.SessionManager.Anonymize;
+using KaVE.VS.FeedbackGenerator.SessionManager.Presentation;
+using KaVE.VS.FeedbackGenerator.Utils;
 using Moq;
 using NUnit.Framework;
 
-namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
+namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
 {
     internal abstract class IDEEventAnonymizerTestBase<TEvent> where TEvent : IDEEvent
     {

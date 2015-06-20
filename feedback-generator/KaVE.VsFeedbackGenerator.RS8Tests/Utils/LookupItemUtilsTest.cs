@@ -20,7 +20,7 @@
 using System.Linq;
 using NUnit.Framework;
 
-namespace KaVE.ReSharper.Commons.Tests_Integration.Utils
+namespace KaVE.RS.Commons.Tests_Integration.Utils
 {
     [TestFixture]
     internal class LookupItemUtilsTest : BaseCSharpCodeCompletionTest

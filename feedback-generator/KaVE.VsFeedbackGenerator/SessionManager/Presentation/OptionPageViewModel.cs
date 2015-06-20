@@ -19,9 +19,9 @@
  */
 
 using System;
-using KaVE.VsFeedbackGenerator.Interactivity;
+using KaVE.VS.FeedbackGenerator.Interactivity;
 
-namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
+namespace KaVE.VS.FeedbackGenerator.SessionManager.Presentation
 {
     public class UploadValidation
     {

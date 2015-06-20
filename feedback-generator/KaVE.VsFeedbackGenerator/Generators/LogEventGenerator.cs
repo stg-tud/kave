@@ -24,10 +24,9 @@ using JetBrains.Application.Components;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Exceptions;
-using KaVE.ReSharper.Commons.Utils;
-using KaVE.VsFeedbackGenerator.MessageBus;
+using KaVE.VS.FeedbackGenerator.MessageBus;
 
-namespace KaVE.VsFeedbackGenerator.Generators
+namespace KaVE.VS.FeedbackGenerator.Generators
 {
     [ShellComponent(ProgramConfigurations.VS_ADDIN)]
     public class LogEventGenerator : EventGeneratorBase, ILogger

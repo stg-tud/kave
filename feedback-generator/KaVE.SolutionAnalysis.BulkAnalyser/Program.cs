@@ -32,7 +32,7 @@ using KaVE.Commons.Utils.Json;
 using KaVE.Commons.Utils.Logging.Json;
 using KaVE.Commons.Utils.ObjectUsageExport;
 
-namespace KaVE.SolutionAnalysis.BulkAnalyser
+namespace KaVE.RS.SolutionAnalysis.BulkAnalyser
 {
     internal class Program
     {

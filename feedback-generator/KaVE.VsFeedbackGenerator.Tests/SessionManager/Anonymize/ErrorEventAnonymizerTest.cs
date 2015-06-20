@@ -20,7 +20,7 @@
 using KaVE.Commons.Model.Events;
 using NUnit.Framework;
 
-namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
+namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
 {
     [TestFixture]
     internal class ErrorEventAnonymizerTest : IDEEventAnonymizerTestBase<ErrorEvent>

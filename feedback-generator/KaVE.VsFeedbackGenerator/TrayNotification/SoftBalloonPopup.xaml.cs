@@ -21,7 +21,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media.Animation;
 
-namespace KaVE.VsFeedbackGenerator.TrayNotification
+namespace KaVE.VS.FeedbackGenerator.TrayNotification
 {
     /// <summary>
     /// Interaction logic for SoftBalloonPopup.xaml

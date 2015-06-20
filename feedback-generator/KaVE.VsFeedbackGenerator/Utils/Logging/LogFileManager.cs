@@ -20,9 +20,9 @@ using System.IO;
 using System.Linq;
 using JetBrains.Annotations;
 using KaVE.Commons.Utils.IO;
-using KaVE.ReSharper.Commons.Utils;
+using KaVE.RS.Commons.Utils;
 
-namespace KaVE.VsFeedbackGenerator.Utils.Logging
+namespace KaVE.VS.FeedbackGenerator.Utils.Logging
 {
     public class LogFileManager : ILogManager
     {

@@ -17,7 +17,7 @@
 using System.Collections.Generic;
 using JetBrains.ReSharper.Resources.Shell;
 
-namespace KaVE.ReSharper.Commons.Utils
+namespace KaVE.RS.Commons.Utils
 {
     /// <summary>
     ///     The registry should be used to access R# components, if injection is not possible or appropriate.

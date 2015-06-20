@@ -22,7 +22,7 @@ using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
 using NUnit.Framework;
 
-namespace KaVE.ReSharper.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
+namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
 {
     internal class CastingAndTypeCheckingTest : BaseSSTAnalysisTest
     {

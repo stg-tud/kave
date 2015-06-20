@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 using System;
 
-namespace KaVE.VsFeedbackGenerator.Interactivity
+namespace KaVE.VS.FeedbackGenerator.Interactivity
 {
     public class InteractionRequestedEventArgs<TNotification> : EventArgs where TNotification : Notification
     {

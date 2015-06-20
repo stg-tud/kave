@@ -18,9 +18,9 @@ using System.Windows.Forms;
 using JetBrains.ActionManagement;
 using JetBrains.Application.DataContext;
 using JetBrains.UI.ActionsRevised;
-using KaVE.VsFeedbackGenerator.Properties;
+using KaVE.VS.FeedbackGenerator.Properties;
 
-namespace KaVE.VsFeedbackGenerator.Menu
+namespace KaVE.VS.FeedbackGenerator.Menu
 {
     [Action(Id, "About KaVE", Id = 21394587)]
     public class AboutAction : IExecutableAction

@@ -23,12 +23,12 @@ using System.Windows.Controls;
 using JetBrains.ActionManagement;
 using JetBrains.DataFlow;
 using JetBrains.UI.Options;
-using KaVE.ReSharper.Commons.Utils;
-using KaVE.VsFeedbackGenerator.Export;
-using KaVE.VsFeedbackGenerator.Interactivity;
-using KaVE.VsFeedbackGenerator.Utils;
+using KaVE.RS.Commons.Utils;
+using KaVE.VS.FeedbackGenerator.Export;
+using KaVE.VS.FeedbackGenerator.Interactivity;
+using KaVE.VS.FeedbackGenerator.Utils;
 
-namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
+namespace KaVE.VS.FeedbackGenerator.SessionManager.Presentation
 {
     public partial class SessionManagerControl
     {

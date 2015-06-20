@@ -18,12 +18,13 @@
  */
 
 using JetBrains.Application;
+using KaVE.Commons.TestUtils.Utils.Exceptions;
 
-namespace KaVE.SolutionAnalysis.Tests
+namespace KaVE.RS.SolutionAnalysis.Tests
 {
     [ShellComponent]
-    internal class TestLogger : Commons.TestUtils.Utils.Exceptions.TestLogger
+    internal class InjectableTestLogger : TestLogger
     {
-        public TestLogger() : base(true) {}
+        public InjectableTestLogger() : base(true) {}
     }
 }

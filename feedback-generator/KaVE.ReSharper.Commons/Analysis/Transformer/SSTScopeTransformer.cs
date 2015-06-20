@@ -24,10 +24,10 @@ using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Commons.Model.SSTs.Impl.References;
 using KaVE.Commons.Model.SSTs.Impl.Statements;
 using KaVE.Commons.Model.SSTs.References;
-using KaVE.ReSharper.Commons.Analysis.Transformer.Context;
-using KaVE.ReSharper.Commons.Utils.Names;
+using KaVE.RS.Commons.Analysis.Transformer.Context;
+using KaVE.RS.Commons.Utils.Names;
 
-namespace KaVE.ReSharper.Commons.Analysis.Transformer
+namespace KaVE.RS.Commons.Analysis.Transformer
 {
     public class SSTScopeTransformer : BaseSSTTransformer<ScopeTransformerContext>
     {

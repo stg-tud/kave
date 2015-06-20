@@ -25,7 +25,7 @@ using JetBrains.Util;
 using KaVE.Commons.Model.Names;
 using KaVE.Commons.Utils.Assertion;
 
-namespace KaVE.ReSharper.Commons.Analysis
+namespace KaVE.RS.Commons.Analysis
 {
     public static class ReSharperUtils
     {

@@ -19,10 +19,10 @@
 
 using System;
 using KaVE.Commons.Utils.DateTime;
-using KaVE.VsFeedbackGenerator.SessionManager;
+using KaVE.VS.FeedbackGenerator.SessionManager;
 using NUnit.Framework;
 
-namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
+namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager
 {
     [TestFixture]
     internal class UploadSettingsTest

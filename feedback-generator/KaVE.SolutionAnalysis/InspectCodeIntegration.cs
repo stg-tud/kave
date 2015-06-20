@@ -18,7 +18,6 @@
  */
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using JetBrains.CommandLine.InspectCode;
@@ -31,7 +30,7 @@ using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Utils.Logging.Json;
 using ILogger = KaVE.Commons.Utils.Exceptions.ILogger;
 
-namespace KaVE.SolutionAnalysis
+namespace KaVE.RS.SolutionAnalysis
 {
     [SolutionComponent]
     public class InspectCodeIntegrator // TODO RS9: IInspectCodeConsumerFactory

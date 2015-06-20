@@ -1,20 +1,20 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\JetBrains.ReSharper.SDK.Tests.9.1.20150522.81235\build\JetBrains.ReSharper.SDK.Tests.props" Condition="Exists('..\packages\JetBrains.ReSharper.SDK.Tests.9.1.20150522.81235\build\JetBrains.ReSharper.SDK.Tests.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{42CE1875-DF5B-4D9E-ADC4-47A96C06EF66}</ProjectGuid>
+    <ProjectGuid>{4979D8EC-B49B-4578-BDC3-D4015C493A98}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>KaVE.VsFeedbackGenerator</RootNamespace>
-    <AssemblyName>KaVE.VsFeedbackGenerator</AssemblyName>
+    <RootNamespace>KaVE.RS.Commons.Tests_Integration</RootNamespace>
+    <AssemblyName>KaVE.RS.Commons.Tests_Integration</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
-    <UploadUrl Condition="'$(UploadUrl)'==''">DATEV</UploadUrl>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -33,51 +33,42 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <RegisterForComInterop>false</RegisterForComInterop>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="antlr.runtime">
       <HintPath>..\packages\Antlr2.Runtime.2.7.7.02\lib\antlr.runtime.dll</HintPath>
     </Reference>
-    <Reference Include="AsyncBridge.Net35">
+    <Reference Include="AsyncBridge.Net35, Version=0.0.0.0, Culture=neutral, PublicKeyToken=b3b1c0202c0d6a87, processorArchitecture=MSIL">
       <HintPath>..\packages\AsyncBridge.Net35.0.2.0\lib\net35-Client\AsyncBridge.Net35.dll</HintPath>
     </Reference>
-    <Reference Include="CookComputing.XmlRpcV2">
+    <Reference Include="CookComputing.XmlRpcV2, Version=2.5.0.0, Culture=neutral, PublicKeyToken=a7d6e17aa302004d, processorArchitecture=MSIL">
       <HintPath>..\packages\xmlrpcnet.2.5.0\lib\net20\CookComputing.XmlRpcV2.dll</HintPath>
     </Reference>
-    <Reference Include="DevExpress.Data.v7.1">
+    <Reference Include="DevExpress.Data.v7.1, Version=7.1.3.0, Culture=neutral, PublicKeyToken=ac81f19954537d54, processorArchitecture=MSIL">
       <HintPath>..\packages\JetBrains.Platform.Lib.DevExpress.2.0.20140304.0\lib\DevExpress.Data.v7.1.dll</HintPath>
     </Reference>
-    <Reference Include="DevExpress.Utils.v7.1">
+    <Reference Include="DevExpress.Utils.v7.1, Version=7.1.3.0, Culture=neutral, PublicKeyToken=ac81f19954537d54, processorArchitecture=MSIL">
       <HintPath>..\packages\JetBrains.Platform.Lib.DevExpress.2.0.20140304.0\lib\DevExpress.Utils.v7.1.dll</HintPath>
     </Reference>
-    <Reference Include="DevExpress.XtraEditors.v7.1">
+    <Reference Include="DevExpress.XtraEditors.v7.1, Version=7.1.3.0, Culture=neutral, PublicKeyToken=ac81f19954537d54, processorArchitecture=MSIL">
       <HintPath>..\packages\JetBrains.Platform.Lib.DevExpress.2.0.20140304.0\lib\DevExpress.XtraEditors.v7.1.dll</HintPath>
     </Reference>
-    <Reference Include="DevExpress.XtraTreeList.v7.1">
+    <Reference Include="DevExpress.XtraTreeList.v7.1, Version=7.1.3.0, Culture=neutral, PublicKeyToken=ac81f19954537d54, processorArchitecture=MSIL">
       <HintPath>..\packages\JetBrains.Platform.Lib.DevExpress.2.0.20140304.0\lib\DevExpress.XtraTreeList.v7.1.dll</HintPath>
-    </Reference>
-    <Reference Include="envdte, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-      <EmbedInteropTypes>False</EmbedInteropTypes>
-    </Reference>
-    <Reference Include="Hardcodet.Wpf.TaskbarNotification">
-      <HintPath>..\packages\Hardcodet.NotifyIcon.Wpf.1.0.5\lib\net40\Hardcodet.Wpf.TaskbarNotification.dll</HintPath>
     </Reference>
     <Reference Include="ICSharpCode.SharpZipLib">
       <HintPath>..\packages\SharpZipLib.JetBrains.Stripped.0.86.20150204.1\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
-    <Reference Include="Ionic.Zip.Reduced">
+    <Reference Include="Ionic.Zip.Reduced, Version=1.9.1.8, Culture=neutral, PublicKeyToken=edbe51ad942a3f5c, processorArchitecture=MSIL">
       <HintPath>..\packages\DotNetZip.Reduced.1.9.1.8\lib\net20\Ionic.Zip.Reduced.dll</HintPath>
     </Reference>
     <Reference Include="JetBrains.Annotations">
       <HintPath>..\packages\JetBrains.Annotations.9.1.1\lib\net20\JetBrains.Annotations.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Microsoft.Deployment.Compression">
+    <Reference Include="Microsoft.Deployment.Compression, Version=3.0.0.0, Culture=neutral, PublicKeyToken=ce35f76fcda82bad, processorArchitecture=MSIL">
       <HintPath>..\packages\JetBrains.Platform.Lib.Microsoft.Deployment.Compression.Cab.2.0.20140304.0\lib\Microsoft.Deployment.Compression.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Deployment.Compression.Cab">
+    <Reference Include="Microsoft.Deployment.Compression.Cab, Version=3.0.0.0, Culture=neutral, PublicKeyToken=ce35f76fcda82bad, processorArchitecture=MSIL">
       <HintPath>..\packages\JetBrains.Platform.Lib.Microsoft.Deployment.Compression.Cab.2.0.20140304.0\lib\Microsoft.Deployment.Compression.Cab.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Deployment.WindowsInstaller">
@@ -90,51 +81,48 @@
       <Private>True</Private>
       <HintPath>..\packages\JetBrains.Platform.Lib.VisualStudio.AnyVs.ShellInterop.PrivateBuild.2.0.20140304.0\lib\Microsoft.VisualStudio.Shell.Interop.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Web.XmlTransform">
+    <Reference Include="Microsoft.Web.XmlTransform, Version=2.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Microsoft.Web.Xdt.2.1.1\lib\net40\Microsoft.Web.XmlTransform.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.WindowsAPICodePack">
+    <Reference Include="Microsoft.WindowsAPICodePack, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Windows7APICodePack-Core.1.1.0.0\lib\Microsoft.WindowsAPICodePack.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.WindowsAPICodePack.Shell">
+    <Reference Include="Microsoft.WindowsAPICodePack.Shell, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Windows7APICodePack-Shell.1.1.0.0\lib\Microsoft.WindowsAPICodePack.Shell.dll</HintPath>
     </Reference>
-    <Reference Include="MsgBox">
-      <HintPath>..\3rd-party\MsgBox.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+    <Reference Include="Moq, Version=4.2.1502.911, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Moq.4.2.1502.0911\lib\net40\Moq.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft35.Json.7.0.1\lib\net35\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="NuGet.Core, Version=2.8.60318.667, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\NuGet.Core.2.8.5\lib\net40-Client\NuGet.Core.dll</HintPath>
     </Reference>
-    <Reference Include="nunit.core">
+    <Reference Include="nunit.core, Version=2.6.4.14350, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\NUnit.Core.2.6.4\lib\nunit.core.dll</HintPath>
     </Reference>
-    <Reference Include="nunit.core.interfaces">
+    <Reference Include="nunit.core.interfaces, Version=2.6.4.14350, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\NUnit.Core.2.6.4\lib\nunit.core.interfaces.dll</HintPath>
     </Reference>
-    <Reference Include="nunit.framework">
+    <Reference Include="nunit.framework, Version=2.6.4.14350, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
     </Reference>
-    <Reference Include="nunit.util">
+    <Reference Include="nunit.util, Version=2.6.4.14350, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\NUnit.Core.2.6.4\lib\nunit.util.dll</HintPath>
     </Reference>
     <Reference Include="NVelocity">
       <HintPath>..\packages\NVelocity.1.0.3\lib\NVelocity.dll</HintPath>
     </Reference>
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Net.Http, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\3rd-party\System.Net.Http.dll</HintPath>
-    </Reference>
     <Reference Include="System.Threading">
       <HintPath>..\packages\TaskParallelLibrary.1.0.2856.0\lib\Net35\System.Threading.dll</HintPath>
     </Reference>
@@ -142,292 +130,80 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\JetBrains.Platform.Lib.System.Windows.Interactivity.2.0.20140318.0\lib\System.Windows.Interactivity.dll</HintPath>
     </Reference>
-    <Reference Include="System.Xaml" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="UserNotification">
-      <HintPath>..\3rd-party\UserNotification.dll</HintPath>
-    </Reference>
+    <Reference Include="System.XML" />
     <Reference Include="Vestris.ResourceLib">
       <HintPath>..\packages\Vestris.ResourceLib.JetBrains.1.4.20150303.0\lib\Net\Vestris.ResourceLib.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
-    <Reference Include="WpfContrib">
+    <Reference Include="WpfContrib, Version=1.1.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
       <HintPath>..\packages\JetBrains.Platform.Lib.WpfContrib.2.0.20140304.0\lib\WpfContrib.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Menu\AboutAction.cs" />
-    <Compile Include="CodeCompletion\PBNProposalWrappedLookupItem.cs" />
-    <Compile Include="CodeCompletion\PBNProposalItemsProvider.cs" />
-    <Compile Include="Export\Exporter.cs" />
-    <Compile Include="Generators\LogEventGenerator.cs" />
-    <Compile Include="Generators\ReSharper\CommandEventGeneratorBase.cs" />
-    <Compile Include="Generators\VisualStudio\CommandBarEventGenerator.cs" />
-    <Compile Include="Generators\VisualStudio\VsWindowButtonClickEventGenerator.cs" />
-    <Compile Include="Generators\VisualStudio\VsFocusEventGenerator.cs" />
-    <Compile Include="Generators\VisualStudio\VsWindowButtonInstrumentationComponent.cs" />
-    <Compile Include="Interactivity\Confirmation.cs" />
-    <Compile Include="Interactivity\IInteractionRequest.cs" />
-    <Compile Include="Interactivity\InteractionRequestedEventArgs.cs" />
-    <Compile Include="Interactivity\LinkNotification.cs" />
-    <Compile Include="Interactivity\LinkNotificationRequestHandler.cs" />
-    <Compile Include="Interactivity\Notification.cs" />
-    <Compile Include="Interactivity\NotificationRequestHandler.cs" />
-    <Compile Include="Properties\XamlBindableRichTextBox.Designer.cs">
-      <DependentUpon>XamlBindableRichTextBox.resx</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <Compile Include="Properties\PopupNotification.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>PopupNotification.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Properties\PopupAbortConfirmationDialog.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>PopupAbortConfirmationDialog.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Interactivity\InteractionRequest.cs" />
-    <Compile Include="Interactivity\ConfirmationRequestHandler.cs" />
-    <Compile Include="RSEnv.cs" />
-    <Compile Include="SessionManager\Anonymize\CompletionEvents\SSTAnonymization.cs" />
-    <Compile Include="SessionManager\Anonymize\BuildEventAnonymizer.cs" />
-    <Compile Include="SessionManager\Anonymize\CompletionEvents\CompletionEventAnonymizer.cs" />
-    <Compile Include="SessionManager\Anonymize\DataExportAnonymizer.cs" />
-    <Compile Include="SessionManager\Anonymize\DocumentEventAnonymizer.cs" />
-    <Compile Include="SessionManager\Anonymize\ErrorEventAnonymizer.cs" />
-    <Compile Include="SessionManager\Anonymize\IDEEventAnonymizer.cs" />
-    <Compile Include="SessionManager\Anonymize\IDEStateEventAnonymizer.cs" />
-    <Compile Include="SessionManager\Anonymize\InfoEventAnonymizer.cs" />
-    <Compile Include="SessionManager\Anonymize\AnonymousNameUtils.cs" />
-    <Compile Include="SessionManager\Anonymize\SolutionEventAnonymizer.cs" />
-    <Compile Include="SessionManager\Anonymize\CompletionEvents\SSTExpressionAnonymization.cs" />
-    <Compile Include="SessionManager\Anonymize\CompletionEvents\SSTReferenceAnonymization.cs" />
-    <Compile Include="SessionManager\Anonymize\CompletionEvents\SSTStatementAnonymization.cs" />
-    <Compile Include="SessionManager\Anonymize\CompletionEvents\TypeShapeAnonymizer.cs" />
-    <Compile Include="SessionManager\Anonymize\WindowEventAnonymizer.cs" />
-    <Compile Include="SessionManager\FeedbackSettings.cs" />
-    <Compile Include="KaVESettings.cs" />
-    <Compile Include="Menu\KaVEMenu.cs" />
-    <Compile Include="SessionManager\Presentation\DelegateCommand.cs" />
-    <Compile Include="SessionManager\Presentation\IDEEventDetailsToJsonConverter.cs" />
-    <Compile Include="SessionManager\Presentation\JsonSyntaxHighlighter.cs" />
-    <Compile Include="SessionManager\Presentation\MultiSelection.cs" />
-    <Compile Include="Menu\OptionPageAction.cs" />
-    <Compile Include="SessionManager\Presentation\OptionPageViewModel.cs" />
-    <Compile Include="SessionManager\Presentation\SortableListView.cs" />
-    <Compile Include="SessionManager\ViewModelBase.cs" />
-    <Compile Include="TrayNotification\BalloonPopupBase.cs" />
-    <Compile Include="TrayNotification\HardBalloonPopup.xaml.cs">
-      <DependentUpon>HardBalloonPopup.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Properties\UploadWizard.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>UploadWizard.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Export\UploadWizard.xaml.cs">
-      <DependentUpon>UploadWizard.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Export\UploadWizardAction.cs" />
-    <Compile Include="Export\UploadWizardViewModel.cs" />
-    <Compile Include="TrayNotification\NotifyTrayIcon.cs" />
-    <Compile Include="TrayNotification\SoftBalloonPopup.xaml.cs">
-      <DependentUpon>SoftBalloonPopup.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="CodeCompletion\CodeCompletionLifecycleManager.cs" />
-    <Compile Include="CodeCompletion\DelegateActionHandler.cs" />
-    <Compile Include="CodeCompletion\ExtendedLookupWindowManager.cs" />
-    <Compile Include="Properties\General.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>General.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Generators\EventLogger.cs" />
-    <Compile Include="Generators\IEventMergeStrategy.cs" />
-    <Compile Include="Generators\Merging\CompletionEventMergingStrategy.cs" />
-    <Compile Include="Generators\ReSharper\ActionEventInstrumentationComponent.cs" />
-    <Compile Include="Generators\ReSharper\BulbItemInstrumentationComponent.cs" />
-    <Compile Include="Generators\ReSharper\BulbItemInstrumentationExtensions.cs" />
-    <Compile Include="Generators\ReSharper\CodeCompletionEventHandler.cs" />
-    <Compile Include="Generators\ReSharper\EventGeneratingActionHandler.cs" />
-    <Compile Include="Generators\ReSharper\EventGeneratingActionWrapper.cs" />
-    <Compile Include="Generators\ReSharper\EventGeneratingBulbActionProxy.cs" />
-    <Compile Include="Generators\EventGeneratorBase.cs" />
-    <Compile Include="Generators\VisualStudio\BuildEventGenerator.cs" />
-    <Compile Include="Generators\VisualStudio\DTECommandEventGenerator.cs" />
-    <Compile Include="Generators\VisualStudio\DebuggerEventGenerator.cs" />
-    <Compile Include="Generators\VisualStudio\DocumentEventGenerator.cs" />
-    <Compile Include="Generators\VisualStudio\FindEventGenerator.cs" />
-    <Compile Include="Generators\VisualStudio\IDEStateEventGenerator.cs" />
-    <Compile Include="Generators\VisualStudio\SolutionEventGenerator.cs" />
-    <Compile Include="Generators\VisualStudio\TextEditorEventGenerator.cs" />
-    <Compile Include="Generators\VisualStudio\WindowEventGenerator.cs" />
-    <Compile Include="MessageBus\IMessageBus.cs" />
-    <Compile Include="MessageBus\TinyMessengerMessageBus.cs" />
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Properties\SessionManager.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>SessionManager.resx</DependentUpon>
-    </Compile>
+    <Compile Include="Analysis\EntryPointSelectorTest.cs" />
+    <Compile Include="Analysis\MethodRefTest.cs" />
+    <Compile Include="Analysis\SmokeTests\CodeCompletionInIncompleteDeclarationsSmokeTest.cs" />
+    <Compile Include="Analysis\ContextAnalysisEnclosingMethodTest.cs" />
+    <Compile Include="Analysis\ContextAnalysisCompletionTargetTest.cs" />
+    <Compile Include="Analysis\ContextAnalysisTest.cs" />
+    <Compile Include="Analysis\ContextAnalysisTypeShapeTest.cs" />
+    <Compile Include="Analysis\SmokeTests\CodeCompletionWithIncompleteReferenceSmokeTest.cs" />
+    <Compile Include="Analysis\SmokeTests\CodeCompletionWithMissingTokensSmokeTest.cs" />
+    <Compile Include="Analysis\SmokeTests\CodeCompletionWithUnresolvableReferencesSmokeTest.cs" />
+    <Compile Include="Analysis\SSTAnalysisTestSuite\ArrayTest.cs" />
+    <Compile Include="Analysis\SSTAnalysisTestSuite\Blocks\ForEachLoopAnalysisTest.cs" />
+    <Compile Include="Analysis\SSTAnalysisTestSuite\Blocks\ForLoopAnalysisTest.cs" />
+    <Compile Include="Analysis\SSTAnalysisTestSuite\Blocks\IfElseBlockAnalysisTest.cs" />
+    <Compile Include="Analysis\SSTAnalysisTestSuite\Blocks\WhileLoopAnalysisTest.cs" />
+    <Compile Include="Analysis\SSTAnalysisTestSuite\Expressions\ComposedExpressionAnalysisTest.cs" />
+    <Compile Include="Analysis\SSTAnalysisTestSuite\BaseSSTAnalysisTest.cs" />
+    <Compile Include="Analysis\SSTAnalysisTestSuite\BasicTest.cs" />
+    <Compile Include="Analysis\SSTAnalysisTestSuite\CastingAndTypeCheckingTest.cs" />
+    <Compile Include="Analysis\SSTAnalysisTestSuite\DebuggingTest.cs" />
+    <Compile Include="Analysis\SSTAnalysisTestSuite\Statements\ReturnAnalysisTest.cs" />
+    <Compile Include="Analysis\SSTAnalysisTestSuite\Statements\VariableDeclarationTest.cs" />
+    <Compile Include="Analysis\SSTAnalysisTestSuite\EntrypointsTest.cs" />
+    <Compile Include="Analysis\SSTAnalysisTestSuite\Expressions\ConstantValueExpressionTest.cs" />
+    <Compile Include="Analysis\SSTAnalysisTestSuite\Expressions\ReferenceExpressionTest.cs" />
+    <Compile Include="Analysis\SSTAnalysisTestSuite\IncompleteCodeTest.cs" />
+    <Compile Include="Analysis\SSTAnalysisTestSuite\InvocationExpressionTest.cs" />
+    <Compile Include="Analysis\SSTAnalysisTestSuite\Declarations\MemberDeclarationTest.cs" />
+    <Compile Include="Analysis\SSTAnalysisTestSuite\SingleAssignmentTest.cs" />
+    <Compile Include="Analysis\SSTAnalysisTestSuite\SSTAnalysisFixture.cs" />
+    <Compile Include="Analysis\SSTAnalysisTestSuite\Statements\AssignmentAnalysisTest.cs" />
+    <Compile Include="Analysis\SSTAnalysisTestSuite\Statements\BreakStatementAnalysisTest.cs" />
+    <Compile Include="Analysis\SSTAnalysisTestSuite\Statements\PostfixPrefixAndUnaryOperatorAnalysisTest.cs" />
+    <Compile Include="Analysis\SSTAnalysisTestSuite\TriggerPoint\CompletionTargetMarkerTest.cs" />
+    <Compile Include="Analysis\SSTAnalysisTestSuite\TriggerPoint\TriggerPointAnalysisTest.cs" />
+    <Compile Include="Analysis\SSTAnalysisTestSuite\UncheckedTest.cs" />
+    <Compile Include="Analysis\TestAnalysisTrigger.cs" />
+    <Compile Include="BaseCodeCompletionTest.cs" />
+    <Compile Include="BaseCSharpCodeCompletionTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SessionManager\Presentation\XamlBindableRichTextBox.cs" />
-    <Compile Include="SessionManager\Presentation\SessionManagerWindowAction.cs" />
-    <Compile Include="SessionManager\Presentation\FeedbackManagerControl.xaml.cs">
-      <DependentUpon>FeedbackManagerControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="SessionManager\Presentation\SessionManagerWindowDescriptor.cs" />
-    <Compile Include="SessionManager\Presentation\SessionManagerWindowRegistrar.cs" />
-    <Compile Include="SessionManager\Presentation\OptionPage.xaml.cs">
-      <DependentUpon>OptionPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="SessionManager\SessionViewModel.cs" />
-    <Compile Include="SessionManager\EventViewModel.cs" />
-    <Compile Include="SessionManager\FeedbackViewModel.cs" />
-    <Compile Include="MessageBus\TinyMessenger.cs" />
-    <Compile Include="SessionManager\UploadSettings.cs" />
-    <Compile Include="SessionManager\UploadReminder.cs" />
-    <Compile Include="Utils\InverseBoolConverter.cs" />
-    <Compile Include="Utils\InverseObjectToVisibilityConverter.cs" />
-    <Compile Include="Utils\Json\JsonLogFileManager.cs" />
-    <Compile Include="Utils\Logging\ILogManager.cs" />
-    <Compile Include="Utils\Logging\LogFile.cs" />
-    <Compile Include="Utils\Logging\LogFileManager.cs" />
-    <Compile Include="Utils\Names\VsComponentNameFactory.cs" />
-    <Compile Include="Utils\ObjectToVisibilityConverter.cs" />
-    <Compile Include="Utils\SettingsCleaner.cs" />
-    <Compile Include="Utils\SettingsStore.cs" />
-    <Compile Include="VsIntegration\IDESession.cs" />
-    <Compile Include="VsIntegration\IIDESession.cs" />
-    <Compile Include="ZoneMarker.cs" />
-  </ItemGroup>
-  <Choose>
-    <When Condition="'$(UploadUrl)' == 'DATEV'">
-      <ItemGroup>
-        <Compile Include="SessionManager\Presentation\ExportSettingsDATEV.cs" />
-        <None Include="SessionManager\Presentation\ExportSettings.cs" />
-      </ItemGroup>
-    </When>
-    <Otherwise>
-      <ItemGroup>
-        <None Include="SessionManager\Presentation\ExportSettingsDATEV.cs" />
-        <Compile Include="SessionManager\Presentation\ExportSettings.cs" />
-      </ItemGroup>
-    </Otherwise>
-  </Choose>
-  <ItemGroup>
-    <EmbeddedResource Include="Properties\XamlBindableRichTextBox.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>XamlBindableRichTextBox.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Properties\PopupNotification.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>PopupNotification.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Properties\PopupAbortConfirmationDialog.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>PopupAbortConfirmationDialog.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Properties\General.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>General.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Properties\SessionManager.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>SessionManager.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Properties\UploadWizard.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>UploadWizard.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
+    <Compile Include="TestLogger.cs" />
+    <Compile Include="Utils\LookupItemUtilsTest.cs" />
+    <Compile Include="Utils\RegistryTest.cs" />
+    <Compile Include="Utils\TestProposalProvider.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="TrayNotification\HardBalloonPopup.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="TrayNotification\SoftBalloonPopup.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="SessionManager\Presentation\FeedbackManagerControl.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="SessionManager\Presentation\OptionPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Export\UploadWizard.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
+    <ProjectReference Include="..\KaVE.Commons.TestUtils\KaVE.Commons.TestUtils.csproj">
+      <Project>{126607DB-1F9F-4E2C-A39E-7B707874EAFC}</Project>
+      <Name>KaVE.Commons.TestUtils</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\KaVE.Commons\KaVE.Commons.csproj">
+      <Project>{17FC7725-AC2E-47E5-8F24-D2107171A854}</Project>
+      <Name>KaVE.Commons</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\KaVE.ReSharper.Commons\KaVE.RS.Commons.csproj">
+      <Project>{B2235734-D3E5-498F-87E2-E9780DBE0D8D}</Project>
+      <Name>KaVE.RS.Commons</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\KaVE.licenseheader">
       <Link>KaVE.licenseheader</Link>
     </None>
-    <None Include="app.config" />
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\refresh.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\options.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\export.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\delete.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\send.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\website.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\KaVE.Commons\KaVE.Commons.csproj">
-      <Project>{17FC7725-AC2E-47E5-8F24-D2107171A854}</Project>
-      <Name>KaVE.Commons</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\KaVE.ReSharper.Commons\KaVE.ReSharper.Commons.csproj">
-      <Project>{B2235734-D3E5-498F-87E2-E9780DBE0D8D}</Project>
-      <Name>KaVE.ReSharper.Commons</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\loading.gif">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\arrow.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Content Include="Resources\Bulb.ico">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Resource Include="Resources\question.png" />
-    <Resource Include="Resources\close.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
@@ -452,6 +228,7 @@
     <Error Condition="!Exists('..\packages\JetBrains.Psi.Features.test.Framework.102.0.20150522.71619\build\JetBrains.Psi.Features.test.Framework.Targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\JetBrains.Psi.Features.test.Framework.102.0.20150522.71619\build\JetBrains.Psi.Features.test.Framework.Targets'))" />
     <Error Condition="!Exists('..\packages\JetBrains.Build.Platform.Tasks.ThemedIconsPacker.2.0.20141124.0\build\JetBrains.Build.Platform.Tasks.ThemedIconsPacker.Targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\JetBrains.Build.Platform.Tasks.ThemedIconsPacker.2.0.20141124.0\build\JetBrains.Build.Platform.Tasks.ThemedIconsPacker.Targets'))" />
     <Error Condition="!Exists('..\packages\JetBrains.ReSharper.SDK.9.1.20150522.81235\build\JetBrains.ReSharper.SDK.Targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\JetBrains.ReSharper.SDK.9.1.20150522.81235\build\JetBrains.ReSharper.SDK.Targets'))" />
+    <Error Condition="!Exists('..\packages\JetBrains.ReSharper.SDK.Tests.9.1.20150522.81235\build\JetBrains.ReSharper.SDK.Tests.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\JetBrains.ReSharper.SDK.Tests.9.1.20150522.81235\build\JetBrains.ReSharper.SDK.Tests.props'))" />
   </Target>
   <Import Project="..\packages\JetBrains.Platform.Core.Text.102.0.20150522.70700\build\JetBrains.Platform.Core.Text.Targets" Condition="Exists('..\packages\JetBrains.Platform.Core.Text.102.0.20150522.70700\build\JetBrains.Platform.Core.Text.Targets')" />
   <Import Project="..\packages\JetBrains.Platform.Core.Ide.102.0.20150522.70700\build\JetBrains.Platform.Core.Ide.Targets" Condition="Exists('..\packages\JetBrains.Platform.Core.Ide.102.0.20150522.70700\build\JetBrains.Platform.Core.Ide.Targets')" />

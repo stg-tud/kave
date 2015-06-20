@@ -31,7 +31,7 @@ using JetBrains.UI.Icons.ComposedIcons;
 using JetBrains.UI.RichText;
 using JetBrains.Util;
 
-namespace KaVE.VsFeedbackGenerator.CodeCompletion
+namespace KaVE.VS.FeedbackGenerator.CodeCompletion
 {
     internal class PBNProposalWrappedLookupItem : IWrappedLookupItem
     {

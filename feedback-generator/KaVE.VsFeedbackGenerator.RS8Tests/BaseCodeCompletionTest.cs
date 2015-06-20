@@ -33,7 +33,7 @@ using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Utils.Assertion;
 using NUnit.Framework;
 
-namespace KaVE.ReSharper.Commons.Tests_Integration
+namespace KaVE.RS.Commons.Tests_Integration
 {
     [TestNetFramework4]
     internal abstract class BaseCodeCompletionTest : CodeCompletionTestBase

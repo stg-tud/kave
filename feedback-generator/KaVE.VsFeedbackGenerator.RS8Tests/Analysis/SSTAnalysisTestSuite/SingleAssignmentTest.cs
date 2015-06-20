@@ -23,9 +23,9 @@ using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.LoopHeader;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
 using NUnit.Framework;
-using Fix = KaVE.ReSharper.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.SSTAnalysisFixture;
+using Fix = KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.SSTAnalysisFixture;
 
-namespace KaVE.ReSharper.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
+namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
 {
     internal class SingleAssignmentTest : BaseSSTAnalysisTest
     {

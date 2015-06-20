@@ -19,7 +19,7 @@ using JetBrains.Annotations;
 using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.Names.CSharp;
 
-namespace KaVE.ReSharper.Commons.Utils
+namespace KaVE.RS.Commons.Utils
 {
     internal static class TypeNameExtensions
     {

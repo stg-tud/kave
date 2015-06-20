@@ -28,13 +28,13 @@ using KaVE.Commons.Model.SSTs.Impl.Blocks;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.LoopHeader;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Commons.Utils.Assertion;
-using KaVE.ReSharper.Commons.Analysis.Transformer.Context;
-using KaVE.ReSharper.Commons.Analysis.Util;
-using KaVE.ReSharper.Commons.Utils.Names;
+using KaVE.RS.Commons.Analysis.Transformer.Context;
+using KaVE.RS.Commons.Analysis.Util;
+using KaVE.RS.Commons.Utils.Names;
 using NuGet;
 using KaVEIInvocationExpression = KaVE.Commons.Model.SSTs.Expressions.Assignable.IInvocationExpression;
 
-namespace KaVE.ReSharper.Commons.Analysis.Transformer
+namespace KaVE.RS.Commons.Analysis.Transformer
 {
     public static class SSTTransformerUtil
     {

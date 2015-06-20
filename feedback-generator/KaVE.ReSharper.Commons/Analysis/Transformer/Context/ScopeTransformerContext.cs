@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-using KaVE.ReSharper.Commons.Analysis.Util;
+using KaVE.RS.Commons.Analysis.Util;
 
-namespace KaVE.ReSharper.Commons.Analysis.Transformer.Context
+namespace KaVE.RS.Commons.Analysis.Transformer.Context
 {
     public class ScopeTransformerContext : ITransformerContext
     {

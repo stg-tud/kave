@@ -19,12 +19,11 @@
 
 using System;
 using KaVE.Commons.Utils;
-using KaVE.ReSharper.Commons.Utils;
-using KaVE.VsFeedbackGenerator.MessageBus;
+using KaVE.VS.FeedbackGenerator.MessageBus;
 
-namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
+namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
 {
-    internal class EventGeneratingActionWrapper : CommandEventGeneratorBase
+    public class EventGeneratingActionWrapper : CommandEventGeneratorBase
     {
         private readonly Action _originalAction;
 

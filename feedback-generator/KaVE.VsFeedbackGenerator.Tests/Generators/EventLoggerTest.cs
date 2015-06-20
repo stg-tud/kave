@@ -25,13 +25,13 @@ using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.VisualStudio;
 using KaVE.Commons.TestUtils.Model.Events;
 using KaVE.Commons.Utils.Assertion;
-using KaVE.VsFeedbackGenerator.Generators;
-using KaVE.VsFeedbackGenerator.MessageBus;
-using KaVE.VsFeedbackGenerator.Utils.Logging;
+using KaVE.VS.FeedbackGenerator.Generators;
+using KaVE.VS.FeedbackGenerator.MessageBus;
+using KaVE.VS.FeedbackGenerator.Utils.Logging;
 using Moq;
 using NUnit.Framework;
 
-namespace KaVE.VsFeedbackGenerator.Tests.Generators
+namespace KaVE.VS.FeedbackGenerator.Tests.Generators
 {
     [TestFixture]
     internal class EventLoggerTest
@@ -55,11 +55,12 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators
 
             _logAppendSignal = new AutoResetEvent(false);
             _mockLogManager = new Mock<ILogManager>();
-            OnCurrentLogAppend(e =>
-            {
-                _loggedEvents.Add(e);
-                _logAppendSignal.Set();
-            });
+            OnCurrentLogAppend(
+                e =>
+                {
+                    _loggedEvents.Add(e);
+                    _logAppendSignal.Set();
+                });
 
             _uut = new EventLogger(_mockMessageBus.Object, _mockLogManager.Object, null);
         }
@@ -82,7 +83,7 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators
         [Test]
         public void SupressesNullEvents()
         {
-            WhenLoggerReceives((IDEEvent)null);
+            WhenLoggerReceives((IDEEvent) null);
 
             AssertNoAppendToCurrentLog();
         }

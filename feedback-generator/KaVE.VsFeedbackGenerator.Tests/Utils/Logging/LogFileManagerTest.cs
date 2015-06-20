@@ -21,13 +21,13 @@ using System.Linq;
 using JetBrains.Util;
 using KaVE.Commons.Utils.Exceptions;
 using KaVE.Commons.Utils.IO;
-using KaVE.ReSharper.Commons.Utils;
-using KaVE.VsFeedbackGenerator.Utils.Logging;
+using KaVE.RS.Commons.Utils;
+using KaVE.VS.FeedbackGenerator.Utils.Logging;
 using Moq;
 using NUnit.Framework;
 using ILogger = KaVE.Commons.Utils.Exceptions.ILogger;
 
-namespace KaVE.VsFeedbackGenerator.Tests.Utils.Logging
+namespace KaVE.VS.FeedbackGenerator.Tests.Utils.Logging
 {
     [TestFixture]
     internal class LogFileManagerTest

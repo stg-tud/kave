@@ -25,14 +25,14 @@ using KaVE.Commons.TestUtils.Model.Events;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Exceptions;
 using KaVE.Commons.Utils.Reflection;
-using KaVE.ReSharper.Commons.Utils;
-using KaVE.VsFeedbackGenerator.SessionManager;
-using KaVE.VsFeedbackGenerator.Utils.Logging;
+using KaVE.RS.Commons.Utils;
+using KaVE.VS.FeedbackGenerator.SessionManager;
+using KaVE.VS.FeedbackGenerator.Utils.Logging;
 using Moq;
 using NUnit.Framework;
-using Fix = KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModelTestSuite.LogTestHelper;
+using Fix = KaVE.VS.FeedbackGenerator.Tests.SessionManager.FeedbackViewModelTestSuite.LogTestHelper;
 
-namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.FeedbackViewModelTestSuite
+namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.FeedbackViewModelTestSuite
 {
     internal class FeedbackViewModelTest
     {

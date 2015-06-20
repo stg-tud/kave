@@ -18,7 +18,7 @@ using System;
 using System.Collections.Generic;
 using KaVE.Commons.Model.Events;
 
-namespace KaVE.VsFeedbackGenerator.Utils.Logging
+namespace KaVE.VS.FeedbackGenerator.Utils.Logging
 {
     public delegate void LogEventHandler(ILog log);
 

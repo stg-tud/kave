@@ -18,7 +18,7 @@ using System;
 using System.Globalization;
 using NUnit.Framework;
 
-namespace KaVE.ReSharper.Commons.Tests_Unit.Utils
+namespace KaVE.RS.Commons.Tests_Unit.Utils
 {
     [TestFixture]
     class DateTimeTest

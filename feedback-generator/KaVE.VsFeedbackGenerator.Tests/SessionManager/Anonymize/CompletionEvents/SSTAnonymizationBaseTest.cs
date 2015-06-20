@@ -30,11 +30,11 @@ using KaVE.Commons.Model.SSTs.Impl.References;
 using KaVE.Commons.Model.SSTs.Impl.Statements;
 using KaVE.Commons.Model.SSTs.References;
 using KaVE.Commons.Model.SSTs.Statements;
-using KaVE.VsFeedbackGenerator.SessionManager.Anonymize;
-using KaVE.VsFeedbackGenerator.SessionManager.Anonymize.CompletionEvents;
+using KaVE.VS.FeedbackGenerator.SessionManager.Anonymize;
+using KaVE.VS.FeedbackGenerator.SessionManager.Anonymize.CompletionEvents;
 using NUnit.Framework;
 
-namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize.CompletionEvents
+namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize.CompletionEvents
 {
     public abstract class SSTAnonymizationBaseTest
     {

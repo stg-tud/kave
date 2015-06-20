@@ -19,10 +19,10 @@
 
 using KaVE.Commons.TestUtils;
 using KaVE.Commons.Utils.Reflection;
-using KaVE.VsFeedbackGenerator.SessionManager;
+using KaVE.VS.FeedbackGenerator.SessionManager;
 using NUnit.Framework;
 
-namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
+namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager
 {
     class ViewModelBaseTest
     {

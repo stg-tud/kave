@@ -22,15 +22,14 @@ using EnvDTE;
 using KaVE.Commons.Model.Events.VisualStudio;
 using KaVE.Commons.Model.Names.VisualStudio;
 using KaVE.Commons.Utils;
-using KaVE.ReSharper.Commons.Utils;
-using KaVE.VsFeedbackGenerator.Generators.VisualStudio;
-using KaVE.VsFeedbackGenerator.Utils.Names;
+using KaVE.RS.Commons.Utils;
+using KaVE.VS.FeedbackGenerator.Generators.VisualStudio;
+using KaVE.VS.FeedbackGenerator.Utils.Names;
 using Moq;
 using NUnit.Framework;
 
-namespace KaVE.VsFeedbackGenerator.Tests.Generators.VisualStudio
+namespace KaVE.VS.FeedbackGenerator.Tests.Generators.VisualStudio
 {
-    [TestFixture]
     internal class WindowEventGeneratorTest : VisualStudioEventGeneratorTestBase
     {
         private Mock<WindowEvents> _mockWindowEvents;

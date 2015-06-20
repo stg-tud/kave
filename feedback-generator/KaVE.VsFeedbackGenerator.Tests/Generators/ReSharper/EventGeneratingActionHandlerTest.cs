@@ -23,13 +23,12 @@ using JetBrains.Application.DataContext;
 using JetBrains.UI.ActionsRevised;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.TestUtils;
-using KaVE.VsFeedbackGenerator.Generators.ReSharper;
+using KaVE.VS.FeedbackGenerator.Generators.ReSharper;
 using Moq;
 using NUnit.Framework;
 
-namespace KaVE.VsFeedbackGenerator.Tests.Generators.ReSharper
+namespace KaVE.VS.FeedbackGenerator.Tests.Generators.ReSharper
 {
-    [TestFixture]
     internal class EventGeneratingActionHandlerTest : EventGeneratorTestBase
     {
         private const string TestActionId = "TestActionId";

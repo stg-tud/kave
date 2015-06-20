@@ -21,12 +21,12 @@ using System;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Exceptions;
-using KaVE.ReSharper.Commons.Utils;
-using KaVE.VsFeedbackGenerator.MessageBus;
+using KaVE.RS.Commons.Utils;
+using KaVE.VS.FeedbackGenerator.MessageBus;
 
-namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
+namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
 {
-    internal abstract class CommandEventGeneratorBase : CommandEventGeneratorBase<object>
+    public abstract class CommandEventGeneratorBase : CommandEventGeneratorBase<object>
     {
         protected CommandEventGeneratorBase(IRSEnv env, IMessageBus messageBus, IDateUtils dateUtils)
             : base(env, messageBus, dateUtils) {}
@@ -44,7 +44,7 @@ namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
         protected abstract void InvokeOriginalCommand();
     }
 
-    internal abstract class CommandEventGeneratorBase<TC> : EventGeneratorBase where TC : class
+    public abstract class CommandEventGeneratorBase<TC> : EventGeneratorBase where TC : class
     {
         protected CommandEventGeneratorBase(IRSEnv env, IMessageBus messageBus, IDateUtils dateUtils)
             : base(env, messageBus, dateUtils) {}

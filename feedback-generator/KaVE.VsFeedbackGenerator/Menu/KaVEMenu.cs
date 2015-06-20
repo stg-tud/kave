@@ -19,10 +19,10 @@
 
 using JetBrains.UI.ActionsRevised;
 using JetBrains.UI.MenuGroups;
-using KaVE.VsFeedbackGenerator.Export;
-using KaVE.VsFeedbackGenerator.SessionManager.Presentation;
+using KaVE.VS.FeedbackGenerator.Export;
+using KaVE.VS.FeedbackGenerator.SessionManager.Presentation;
 
-namespace KaVE.VsFeedbackGenerator.Menu
+namespace KaVE.VS.FeedbackGenerator.Menu
 {
     [ActionGroup(Id, ActionGroupInsertStyles.Submenu, Id = 12345678, Text = "&KaVE")]
     public class KaVEMenu : IAction, IInsertLast<VsMainMenuGroup>

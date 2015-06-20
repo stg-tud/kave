@@ -22,13 +22,12 @@ using EnvDTE;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Names.VisualStudio;
 using KaVE.Commons.Utils.Assertion;
-using KaVE.VsFeedbackGenerator.Generators.VisualStudio;
+using KaVE.VS.FeedbackGenerator.Generators.VisualStudio;
 using Moq;
 using NUnit.Framework;
 
-namespace KaVE.VsFeedbackGenerator.Tests.Generators.VisualStudio
+namespace KaVE.VS.FeedbackGenerator.Tests.Generators.VisualStudio
 {
-    [TestFixture]
     internal class DTECommandEventGeneratorTest : VisualStudioEventGeneratorTestBase
     {
         private Mock<CommandEvents> _mockCommandEvents;
@@ -153,7 +152,10 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.VisualStudio
             AssertNoEvent();
         }
 
-        [Test(Description = "BUGFIX: Superfluous events weren't removed from queue, which caused 'executing same event twice at a time' exception")]
+        [Test(
+            Description =
+                "BUGFIX: Superfluous events weren't removed from queue, which caused 'executing same event twice at a time' exception"
+            )]
         public void ShouldNotFailIfSuperfluousEventIsFiredTwice()
         {
             var command = GetCommand("{5EFC7975-14BC-11CF-9B2B-00AA00573819}", 337, "Edit.GoToFindCombo");
@@ -224,7 +226,10 @@ namespace KaVE.VsFeedbackGenerator.Tests.Generators.VisualStudio
         [Test]
         public void ShouldNotFailIfReSharperCorrespondentCommandEndsWithoutStarting()
         {
-            var command = GetCommand("{E272D1BE-8216-4919-AFA3-EEB57FAB3537}", 42, "ReSharper_KaVE_VsFeedbackGenerator_SessionManager");
+            var command = GetCommand(
+                "{E272D1BE-8216-4919-AFA3-EEB57FAB3537}",
+                42,
+                "ReSharper_KaVE_VsFeedbackGenerator_SessionManager");
             GivenCommandIsDefined(command);
 
             WhenCommandEnds(command);

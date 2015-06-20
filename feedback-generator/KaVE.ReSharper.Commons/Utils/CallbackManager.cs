@@ -18,7 +18,7 @@ using System;
 using JetBrains.Application;
 using KaVE.Commons.Utils;
 
-namespace KaVE.ReSharper.Commons.Utils
+namespace KaVE.RS.Commons.Utils
 {
     public interface ICallbackManager
     {

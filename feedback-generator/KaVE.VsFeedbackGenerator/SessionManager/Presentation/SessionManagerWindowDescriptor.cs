@@ -21,7 +21,7 @@ using JetBrains.Application;
 using JetBrains.ReSharper.Features.Navigation.Resources;
 using JetBrains.UI.ToolWindowManagement;
 
-namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
+namespace KaVE.VS.FeedbackGenerator.SessionManager.Presentation
 {
     [ToolWindowDescriptor(
         ProductNeutralId = "SessionManagerFeedbackWindow",

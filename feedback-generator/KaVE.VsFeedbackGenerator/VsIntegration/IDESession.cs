@@ -23,7 +23,7 @@ using JetBrains.Application;
 using JetBrains.Application.Components;
 using KaVE.JetBrains.Annotations;
 
-namespace KaVE.VsFeedbackGenerator.VsIntegration
+namespace KaVE.VS.FeedbackGenerator.VsIntegration
 {
     [ShellComponent(ProgramConfigurations.VS_ADDIN)]
     public class IDESession : IIDESession

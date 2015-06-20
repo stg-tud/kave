@@ -20,10 +20,9 @@
 using System.ComponentModel;
 using System.Windows;
 using JetBrains.ActionManagement;
-using KaVE.VsFeedbackGenerator.Interactivity;
-using KaVE.VsFeedbackGenerator.SessionManager.Presentation;
+using KaVE.VS.FeedbackGenerator.Interactivity;
 
-namespace KaVE.VsFeedbackGenerator.Export
+namespace KaVE.VS.FeedbackGenerator.Export
 {
     public partial class UploadWizard
     {

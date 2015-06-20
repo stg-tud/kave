@@ -22,7 +22,7 @@ using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.Util;
 using NUnit.Framework;
 
-namespace KaVE.ReSharper.Commons.Tests_Unit.Utils
+namespace KaVE.RS.Commons.Tests_Unit.Utils
 {
     [Ignore]
     internal class HierarchyTest

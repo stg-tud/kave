@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using KaVE.VsFeedbackGenerator.Interactivity;
+
+using KaVE.VS.FeedbackGenerator.Interactivity;
 using NUnit.Framework;
 
-namespace KaVE.VsFeedbackGenerator.Tests.Interactivity
+namespace KaVE.VS.FeedbackGenerator.Tests.Interactivity
 {
-    [TestFixture]
     internal class InteractionRequestTest
     {
         private InteractionRequest<Notification> _uut;

@@ -23,14 +23,13 @@ using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Model.Names.VisualStudio;
 using KaVE.Commons.TestUtils.Model.Events.CompletionEvent;
-using KaVE.ReSharper.Commons.Utils;
-using KaVE.VsFeedbackGenerator.Generators.Merging;
-using KaVE.VsFeedbackGenerator.Tests.TestFactories;
+using KaVE.RS.Commons.Utils;
+using KaVE.VS.FeedbackGenerator.Generators.Merging;
+using KaVE.VS.FeedbackGenerator.Tests.TestFactories;
 using NUnit.Framework;
 
-namespace KaVE.VsFeedbackGenerator.Tests.Generators.Merging
+namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Merging
 {
-    [TestFixture]
     internal class CompletionEventMergingStrategyTest
     {
         private CompletionEventMergingStrategy _strategy;

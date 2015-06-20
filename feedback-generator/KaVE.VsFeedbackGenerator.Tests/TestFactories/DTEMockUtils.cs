@@ -13,11 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 using EnvDTE;
 using KaVE.JetBrains.Annotations;
 using Moq;
 
-namespace KaVE.VsFeedbackGenerator.Tests.TestFactories
+namespace KaVE.VS.FeedbackGenerator.Tests.TestFactories
 {
     static class DTEMockUtils
     {

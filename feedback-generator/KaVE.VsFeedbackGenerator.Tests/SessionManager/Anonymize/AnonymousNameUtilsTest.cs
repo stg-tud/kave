@@ -22,10 +22,10 @@ using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.Names.VisualStudio;
 using KaVE.JetBrains.Annotations;
-using KaVE.VsFeedbackGenerator.SessionManager.Anonymize;
+using KaVE.VS.FeedbackGenerator.SessionManager.Anonymize;
 using NUnit.Framework;
 
-namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
+namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
 {
     internal class AnonymousNameUtilsTest
     {

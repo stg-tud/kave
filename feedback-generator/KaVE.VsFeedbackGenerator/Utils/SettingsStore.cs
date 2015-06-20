@@ -24,7 +24,7 @@ using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Reflection;
 using RSISettingsStore = JetBrains.Application.Settings.ISettingsStore;
 
-namespace KaVE.ReSharper.Commons.Utils
+namespace KaVE.VS.FeedbackGenerator.Utils
 {
     public interface ISettingsStore
     {
@@ -82,7 +82,7 @@ namespace KaVE.ReSharper.Commons.Utils
             SetSettings(defaultInstance);
         }
 
-        internal static TSettings CreateDefaultInstance<TSettings>() where TSettings : class, new()
+        public static TSettings CreateDefaultInstance<TSettings>() where TSettings : class, new()
         {
             var settings = new TSettings();
             var settingsEntryMembers =

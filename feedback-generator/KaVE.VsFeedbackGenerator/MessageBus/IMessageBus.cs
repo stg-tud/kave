@@ -19,7 +19,7 @@
 
 using System;
 
-namespace KaVE.VsFeedbackGenerator.MessageBus
+namespace KaVE.VS.FeedbackGenerator.MessageBus
 {
     /// <summary>
     ///     A bus for exchanging messages.

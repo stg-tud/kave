@@ -16,7 +16,7 @@
 
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 
-namespace KaVE.ReSharper.Commons.Analysis.CompletionTarget
+namespace KaVE.RS.Commons.Analysis.CompletionTarget
 {
     public class CompletionTargetMarker
     {

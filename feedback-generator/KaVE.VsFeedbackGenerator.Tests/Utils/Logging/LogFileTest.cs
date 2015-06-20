@@ -24,12 +24,12 @@ using KaVE.Commons.TestUtils.Model.Events;
 using KaVE.Commons.Utils.Exceptions;
 using KaVE.Commons.Utils.IO;
 using KaVE.Commons.Utils.Json;
-using KaVE.ReSharper.Commons.Utils;
-using KaVE.VsFeedbackGenerator.Utils.Logging;
+using KaVE.RS.Commons.Utils;
+using KaVE.VS.FeedbackGenerator.Utils.Logging;
 using Moq;
 using NUnit.Framework;
 
-namespace KaVE.VsFeedbackGenerator.Tests.Utils.Logging
+namespace KaVE.VS.FeedbackGenerator.Tests.Utils.Logging
 {
     internal class LogFileTest
     {

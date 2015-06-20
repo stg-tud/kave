@@ -24,7 +24,7 @@ using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.TypeShapes;
 using NUnit.Framework;
 
-namespace KaVE.ReSharper.Commons.Tests_Integration.Analysis
+namespace KaVE.RS.Commons.Tests_Integration.Analysis
 {
     internal class ContextAnalysisTypeShapeTest : BaseCSharpCodeCompletionTest
     {

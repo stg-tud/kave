@@ -21,7 +21,7 @@ using EnvDTE;
 using Moq;
 using NUnit.Framework;
 
-namespace KaVE.VsFeedbackGenerator.Tests.Generators.VisualStudio
+namespace KaVE.VS.FeedbackGenerator.Tests.Generators.VisualStudio
 {
     [TestFixture]
     internal abstract class VisualStudioEventGeneratorTestBase : EventGeneratorTestBase

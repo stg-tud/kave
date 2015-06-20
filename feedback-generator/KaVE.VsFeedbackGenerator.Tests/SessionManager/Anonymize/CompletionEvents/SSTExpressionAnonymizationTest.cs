@@ -22,11 +22,11 @@ using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.LoopHeader;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Commons.Utils.Assertion;
-using KaVE.VsFeedbackGenerator.SessionManager.Anonymize;
-using KaVE.VsFeedbackGenerator.SessionManager.Anonymize.CompletionEvents;
+using KaVE.VS.FeedbackGenerator.SessionManager.Anonymize;
+using KaVE.VS.FeedbackGenerator.SessionManager.Anonymize.CompletionEvents;
 using NUnit.Framework;
 
-namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize.CompletionEvents
+namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize.CompletionEvents
 {
     public class SSTExpressionAnonymizationTest : SSTAnonymizationBaseTest
     {

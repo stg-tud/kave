@@ -21,7 +21,7 @@ using KaVE.Commons.Model.Events.VisualStudio;
 using KaVE.Commons.Model.Names.VisualStudio;
 using NUnit.Framework;
 
-namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
+namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
 {
     [TestFixture]
     internal class SolutionEventAnonymizerTest : IDEEventAnonymizerTestBase<SolutionEvent>

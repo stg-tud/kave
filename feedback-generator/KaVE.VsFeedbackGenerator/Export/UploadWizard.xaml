@@ -17,14 +17,14 @@ Contributors:
    - Uli Fahrer
    - Sven Amann
 -->
-<Window x:Class="KaVE.VsFeedbackGenerator.Export.UploadWizard"
+<Window x:Class="KaVE.VS.FeedbackGenerator.Export.UploadWizard"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:properties="clr-namespace:KaVE.VsFeedbackGenerator.Properties"
-        xmlns:root="clr-namespace:KaVE.VsFeedbackGenerator"
-        xmlns:export="clr-namespace:KaVE.VsFeedbackGenerator.Export"
+        xmlns:properties="clr-namespace:KaVE.VS.FeedbackGenerator.Properties"
+        xmlns:root="clr-namespace:KaVE.VS.FeedbackGenerator"
+        xmlns:export="clr-namespace:KaVE.VS.FeedbackGenerator.Export"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
         SizeToContent="WidthAndHeight"
@@ -36,7 +36,7 @@ Contributors:
         Title="{x:Static root:Properties.UploadWizard.window_title}">
     <Window.Resources>
         <ResourceDictionary>
-            <BitmapImage x:Key="Icon" UriSource="/KaVE.VsFeedbackGenerator;Component/Resources/question.png" />
+            <BitmapImage x:Key="Icon" UriSource="/KaVE.VS.FeedbackGenerator;Component/Resources/question.png" />
             <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
         </ResourceDictionary>
     </Window.Resources>
@@ -77,12 +77,12 @@ Contributors:
                     <Button ToolTip="{x:Static properties:SessionManager.Export}" Margin="5" MinWidth="93"
                             Content="{x:Static root:Properties.UploadWizard.export_zip_button}"
                             Click="ZipButtonClicked">
-                        <!--<Image Source="/KaVE.VsFeedbackGenerator;Component/Resources/export.png" />-->
+                        <!--<Image Source="/KaVE.VS.FeedbackGenerator;Component/Resources/export.png" />-->
                     </Button>
                     <Button ToolTip="{x:Static properties:SessionManager.Send}" Margin="5" MinWidth="93"
                             Content="{x:Static root:Properties.UploadWizard.export_upload_button}"
                             Click="UploadButtonClicked">
-                        <!--<Image Source="/KaVE.VsFeedbackGenerator;Component/Resources/send.png" /> -->
+                        <!--<Image Source="/KaVE.VS.FeedbackGenerator;Component/Resources/send.png" /> -->
                     </Button>
                 </StackPanel>
             </Grid>

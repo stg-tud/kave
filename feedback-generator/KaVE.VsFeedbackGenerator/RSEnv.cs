@@ -22,10 +22,10 @@ using JetBrains.Application;
 using JetBrains.Application.Components;
 using JetBrains.UI.Resources;
 using KaVE.JetBrains.Annotations;
-using KaVE.VsFeedbackGenerator.VsIntegration;
+using KaVE.VS.FeedbackGenerator.VsIntegration;
 using NuGet;
 
-namespace KaVE.VsFeedbackGenerator
+namespace KaVE.VS.FeedbackGenerator
 {
     public interface IRSEnv
     {

@@ -6,14 +6,13 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{4979D8EC-B49B-4578-BDC3-D4015C493A98}</ProjectGuid>
+    <ProjectGuid>{61231FF9-BF33-4210-89AA-6C9973FA00A0}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>KaVE.ReSharper.Commons.Tests_Integration</RootNamespace>
-    <AssemblyName>KaVE.ReSharper.Commons.Tests_Integration</AssemblyName>
+    <RootNamespace>KaVE.VS.FeedbackGenerator.Tests</RootNamespace>
+    <AssemblyName>KaVE.VS.FeedbackGenerator.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -21,7 +20,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>JET_MODE_ASSERT;DEBUG;TRACE</DefineConstants>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>x86</PlatformTarget>
@@ -55,6 +54,12 @@
     </Reference>
     <Reference Include="DevExpress.XtraTreeList.v7.1, Version=7.1.3.0, Culture=neutral, PublicKeyToken=ac81f19954537d54, processorArchitecture=MSIL">
       <HintPath>..\packages\JetBrains.Platform.Lib.DevExpress.2.0.20140304.0\lib\DevExpress.XtraTreeList.v7.1.dll</HintPath>
+    </Reference>
+    <Reference Include="envdte, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Hardcodet.Wpf.TaskbarNotification, Version=1.0.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Hardcodet.NotifyIcon.Wpf.1.0.5\lib\net40\Hardcodet.Wpf.TaskbarNotification.dll</HintPath>
     </Reference>
     <Reference Include="ICSharpCode.SharpZipLib">
       <HintPath>..\packages\SharpZipLib.JetBrains.Stripped.0.86.20150204.1\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
@@ -95,9 +100,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Moq.4.2.1502.0911\lib\net40\Moq.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft35.Json.7.0.1\lib\net35\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="NuGet.Core, Version=2.8.60318.667, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\NuGet.Core.2.8.5\lib\net40-Client\NuGet.Core.dll</HintPath>
@@ -121,15 +123,28 @@
     <Reference Include="NVelocity">
       <HintPath>..\packages\NVelocity.1.0.3\lib\NVelocity.dll</HintPath>
     </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="smileNet, Version=1.1.4431.20499, Culture=neutral">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\3rd-party\smileNet.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\3rd-party\System.Net.Http.dll</HintPath>
+    </Reference>
     <Reference Include="System.Threading">
       <HintPath>..\packages\TaskParallelLibrary.1.0.2856.0\lib\Net35\System.Threading.dll</HintPath>
     </Reference>
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Interactivity, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\JetBrains.Platform.Lib.System.Windows.Interactivity.2.0.20140318.0\lib\System.Windows.Interactivity.dll</HintPath>
     </Reference>
+    <Reference Include="System.Xaml" />
     <Reference Include="System.XML" />
     <Reference Include="Vestris.ResourceLib">
       <HintPath>..\packages\Vestris.ResourceLib.JetBrains.1.4.20150303.0\lib\Net\Vestris.ResourceLib.dll</HintPath>
@@ -140,69 +155,107 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Analysis\EntryPointSelectorTest.cs" />
-    <Compile Include="Analysis\MethodRefTest.cs" />
-    <Compile Include="Analysis\SmokeTests\CodeCompletionInIncompleteDeclarationsSmokeTest.cs" />
-    <Compile Include="Analysis\ContextAnalysisEnclosingMethodTest.cs" />
-    <Compile Include="Analysis\ContextAnalysisCompletionTargetTest.cs" />
-    <Compile Include="Analysis\ContextAnalysisTest.cs" />
-    <Compile Include="Analysis\ContextAnalysisTypeShapeTest.cs" />
-    <Compile Include="Analysis\SmokeTests\CodeCompletionWithIncompleteReferenceSmokeTest.cs" />
-    <Compile Include="Analysis\SmokeTests\CodeCompletionWithMissingTokensSmokeTest.cs" />
-    <Compile Include="Analysis\SmokeTests\CodeCompletionWithUnresolvableReferencesSmokeTest.cs" />
-    <Compile Include="Analysis\SSTAnalysisTestSuite\ArrayTest.cs" />
-    <Compile Include="Analysis\SSTAnalysisTestSuite\Blocks\ForEachLoopAnalysisTest.cs" />
-    <Compile Include="Analysis\SSTAnalysisTestSuite\Blocks\ForLoopAnalysisTest.cs" />
-    <Compile Include="Analysis\SSTAnalysisTestSuite\Blocks\IfElseBlockAnalysisTest.cs" />
-    <Compile Include="Analysis\SSTAnalysisTestSuite\Blocks\WhileLoopAnalysisTest.cs" />
-    <Compile Include="Analysis\SSTAnalysisTestSuite\Expressions\ComposedExpressionAnalysisTest.cs" />
-    <Compile Include="Analysis\SSTAnalysisTestSuite\BaseSSTAnalysisTest.cs" />
-    <Compile Include="Analysis\SSTAnalysisTestSuite\BasicTest.cs" />
-    <Compile Include="Analysis\SSTAnalysisTestSuite\CastingAndTypeCheckingTest.cs" />
-    <Compile Include="Analysis\SSTAnalysisTestSuite\DebuggingTest.cs" />
-    <Compile Include="Analysis\SSTAnalysisTestSuite\Statements\ReturnAnalysisTest.cs" />
-    <Compile Include="Analysis\SSTAnalysisTestSuite\Statements\VariableDeclarationTest.cs" />
-    <Compile Include="Analysis\SSTAnalysisTestSuite\EntrypointsTest.cs" />
-    <Compile Include="Analysis\SSTAnalysisTestSuite\Expressions\ConstantValueExpressionTest.cs" />
-    <Compile Include="Analysis\SSTAnalysisTestSuite\Expressions\ReferenceExpressionTest.cs" />
-    <Compile Include="Analysis\SSTAnalysisTestSuite\IncompleteCodeTest.cs" />
-    <Compile Include="Analysis\SSTAnalysisTestSuite\InvocationExpressionTest.cs" />
-    <Compile Include="Analysis\SSTAnalysisTestSuite\Declarations\MemberDeclarationTest.cs" />
-    <Compile Include="Analysis\SSTAnalysisTestSuite\SingleAssignmentTest.cs" />
-    <Compile Include="Analysis\SSTAnalysisTestSuite\SSTAnalysisFixture.cs" />
-    <Compile Include="Analysis\SSTAnalysisTestSuite\Statements\AssignmentAnalysisTest.cs" />
-    <Compile Include="Analysis\SSTAnalysisTestSuite\Statements\BreakStatementAnalysisTest.cs" />
-    <Compile Include="Analysis\SSTAnalysisTestSuite\Statements\PostfixPrefixAndUnaryOperatorAnalysisTest.cs" />
-    <Compile Include="Analysis\SSTAnalysisTestSuite\TriggerPoint\CompletionTargetMarkerTest.cs" />
-    <Compile Include="Analysis\SSTAnalysisTestSuite\TriggerPoint\TriggerPointAnalysisTest.cs" />
-    <Compile Include="Analysis\SSTAnalysisTestSuite\UncheckedTest.cs" />
-    <Compile Include="Analysis\TestAnalysisTrigger.cs" />
-    <Compile Include="BaseCodeCompletionTest.cs" />
-    <Compile Include="BaseCSharpCodeCompletionTest.cs" />
+    <Compile Include="Assertion\NameAssert.cs" />
+    <Compile Include="CodeCompletion\CodeCompletionLifecycleManagerTest.cs" />
+    <Compile Include="CodeCompletion\PBNProposalItemsProviderTest.cs" />
+    <Compile Include="Export\ExporterTest.cs" />
+    <Compile Include="Generators\EventGeneratorBaseTest.cs" />
+    <Compile Include="Generators\EventLoggerTest.cs" />
+    <Compile Include="Generators\LogEventGeneratorTest.cs" />
+    <Compile Include="Generators\EventGeneratorTestBase.cs" />
+    <Compile Include="Generators\Merging\CompletionEventMergingStrategyTest.cs" />
+    <Compile Include="Generators\ReSharper\CodeCompletionContextAnalysisTriggerTest.cs" />
+    <Compile Include="Generators\ReSharper\CodeCompletionEventHandlerTest.cs" />
+    <Compile Include="Generators\ReSharper\EventGeneratingActionWrapperTest.cs" />
+    <Compile Include="Generators\ReSharper\EventGeneratingBulbActionProxyTest.cs" />
+    <Compile Include="Generators\ReSharper\EventGeneratingActionHandlerTest.cs" />
+    <Compile Include="Generators\TestIDESession.cs" />
+    <Compile Include="Generators\VisualStudio\CommandBarEventGeneratorTest.cs" />
+    <Compile Include="Generators\VisualStudio\DTECommandEventGeneratorTest.cs" />
+    <Compile Include="Generators\VisualStudio\IDEStateEventGeneratorTest.cs" />
+    <Compile Include="Generators\VisualStudio\SolutionEventGeneratorTest.cs" />
+    <Compile Include="Generators\VisualStudio\VisualStudioEventGeneratorTestBase.cs" />
+    <Compile Include="Generators\VisualStudio\WindowEventGeneratorTest.cs" />
+    <Compile Include="Interactivity\InteractionRequestTest.cs" />
+    <Compile Include="MessageBus\TinyMessengerMessageChannelTest.cs" />
+    <Compile Include="SessionManager\Anonymize\AnonymousNameUtilsTest.cs" />
+    <Compile Include="SessionManager\Anonymize\BuildEventAnonymizerTest.cs" />
+    <Compile Include="SessionManager\Anonymize\CompletionEvents\SSTAnonymizationBaseTest.cs" />
+    <Compile Include="SessionManager\Anonymize\CompletionEvents\CompletionEventAnonymizerTest.cs" />
+    <Compile Include="SessionManager\Anonymize\DocumentEventAnonymizerTest.cs" />
+    <Compile Include="SessionManager\Anonymize\ErrorEventAnonymizerTest.cs" />
+    <Compile Include="SessionManager\Anonymize\IDEStateEventAnonymizerTest.cs" />
+    <Compile Include="SessionManager\Anonymize\InfoEventAnonymizerTest.cs" />
+    <Compile Include="SessionManager\Anonymize\SolutionEventAnonymizerTest.cs" />
+    <Compile Include="SessionManager\Anonymize\CompletionEvents\SSTAnonymizationTest.cs" />
+    <Compile Include="SessionManager\Anonymize\CompletionEvents\SSTBlockAnonymizationTest.cs" />
+    <Compile Include="SessionManager\Anonymize\CompletionEvents\SSTExpressionAnonymizationTest.cs" />
+    <Compile Include="SessionManager\Anonymize\CompletionEvents\SSTReferenceAnonymizationTest.cs" />
+    <Compile Include="SessionManager\Anonymize\CompletionEvents\SSTStatementAnonymizationTest.cs" />
+    <Compile Include="SessionManager\Anonymize\CompletionEvents\TypeShapeAnonymizerTest.cs" />
+    <Compile Include="SessionManager\Anonymize\WindowEventAnonymizerTest.cs" />
+    <Compile Include="SessionManager\FeedbackViewModelTestSuite\DeleteEventCommandTest.cs" />
+    <Compile Include="SessionManager\FeedbackViewModelTestSuite\DeleteSessionCommandTest.cs" />
+    <Compile Include="Interactivity\InteractionRequestTestHelper.cs" />
+    <Compile Include="SessionManager\Anonymize\IDEEventAnonymizerTest.cs" />
+    <Compile Include="SessionManager\Anonymize\IDEEventAnonymizerTestBase.cs" />
+    <Compile Include="SessionManager\FeedbackViewModelTestSuite\FeedbackViewModelTest.cs" />
+    <Compile Include="SessionManager\FeedbackViewModelTestSuite\LogTestHelper.cs" />
+    <Compile Include="SessionManager\FeedbackViewModelTestSuite\SessionViewModelTest.cs" />
+    <Compile Include="SessionManager\Presentation\IDEEventDetailsToJsonConverterTest.cs" />
+    <Compile Include="SessionManager\Presentation\JsonSyntaxHighlighterTest.cs" />
+    <Compile Include="SessionManager\Presentation\MultiSelectionTest.cs" />
+    <Compile Include="SessionManager\Presentation\OptionPageViewModelTest.cs" />
+    <Compile Include="SessionManager\Presentation\XamlBindableRichTextBoxTest.cs" />
+    <Compile Include="SessionManager\UploadReminderTest.cs" />
+    <Compile Include="SessionManager\UploadSettingsTest.cs" />
+    <Compile Include="SessionManager\ViewModelBaseTest.cs" />
+    <Compile Include="TestFactories\Actions\ActionManagerMockExtensions.cs" />
+    <Compile Include="TestFactories\Actions\MockExecutableAction.cs" />
+    <Compile Include="TestFactories\Actions\MockNextActionHandler.cs" />
+    <Compile Include="TestFactories\DTEMockUtils.cs" />
+    <Compile Include="TestFactories\LookupItemsMockUtils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TestLogger.cs" />
-    <Compile Include="Utils\LookupItemUtilsTest.cs" />
-    <Compile Include="Utils\RegistryTest.cs" />
-    <Compile Include="Utils\TestProposalProvider.cs" />
+    <Compile Include="SessionManager\EventViewTest.cs" />
+    <Compile Include="Export\UploadWizardViewModelTest.cs" />
+    <Compile Include="TestRSEnv.cs" />
+    <Compile Include="Utils\InverseBoolConverterTest.cs" />
+    <Compile Include="Utils\Logging\LogFileManagerTest.cs" />
+    <Compile Include="Utils\Logging\LogFileTest.cs" />
+    <Compile Include="Utils\Names\VsComponentNameFactoryTest.cs" />
+    <Compile Include="Utils\ObjectToVisibilityConverterTest.cs" />
+    <Compile Include="Utils\SettingsCleanerTest.cs" />
+    <Compile Include="Utils\SettingsStoreTest.cs" />
+    <Compile Include="VsIntegrationMocks\TestDTE.cs" />
+    <Compile Include="VsIntegration\IDESessionTest.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\KaVE.Commons.TestUtils\KaVE.Commons.TestUtils.csproj">
-      <Project>{126607DB-1F9F-4E2C-A39E-7B707874EAFC}</Project>
-      <Name>KaVE.Commons.TestUtils</Name>
-    </ProjectReference>
     <ProjectReference Include="..\KaVE.Commons\KaVE.Commons.csproj">
       <Project>{17FC7725-AC2E-47E5-8F24-D2107171A854}</Project>
       <Name>KaVE.Commons</Name>
     </ProjectReference>
-    <ProjectReference Include="..\KaVE.ReSharper.Commons\KaVE.ReSharper.Commons.csproj">
+    <ProjectReference Include="..\KaVE.Commons.TestUtils\KaVE.Commons.TestUtils.csproj">
+      <Project>{126607DB-1F9F-4E2C-A39E-7B707874EAFC}</Project>
+      <Name>KaVE.Commons.TestUtils</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\KaVE.ReSharper.Commons.Tests\KaVE.RS.Commons.Tests_Unit.csproj">
+      <Project>{35FCB52A-CCD2-49C7-AD6D-78A71164A324}</Project>
+      <Name>KaVE.RS.Commons.Tests_Unit</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\KaVE.ReSharper.Commons\KaVE.RS.Commons.csproj">
       <Project>{B2235734-D3E5-498F-87E2-E9780DBE0D8D}</Project>
-      <Name>KaVE.ReSharper.Commons</Name>
+      <Name>KaVE.RS.Commons</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\KaVE.VsFeedbackGenerator\KaVE.VS.FeedbackGenerator.csproj">
+      <Project>{42CE1875-DF5B-4D9E-ADC4-47A96C06EF66}</Project>
+      <Name>KaVE.VS.FeedbackGenerator</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\KaVE.licenseheader">
       <Link>KaVE.licenseheader</Link>
     </None>
+    <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup />

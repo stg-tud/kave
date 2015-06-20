@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 using KaVE.Commons.Model.Names;
 using NUnit.Framework;
 
-namespace KaVE.VsFeedbackGenerator.Tests.Assertion
+namespace KaVE.VS.FeedbackGenerator.Tests.Assertion
 {
     static class NameAssert
     {

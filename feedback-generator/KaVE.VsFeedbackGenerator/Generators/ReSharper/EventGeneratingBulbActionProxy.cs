@@ -21,15 +21,14 @@ using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Feature.Services.Bulbs;
 using JetBrains.TextControl;
 using KaVE.Commons.Utils;
-using KaVE.ReSharper.Commons.Utils;
-using KaVE.VsFeedbackGenerator.MessageBus;
+using KaVE.VS.FeedbackGenerator.MessageBus;
 
-namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
+namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
 {
-    internal class EventGeneratingBulbActionProxy :
+    public class EventGeneratingBulbActionProxy :
         CommandEventGeneratorBase<EventGeneratingBulbActionProxy.BulbActionContext>, IBulbAction
     {
-        internal class BulbActionContext
+        public class BulbActionContext
         {
             public ISolution Solution { get; set; }
             public ITextControl TextControl { get; set; }

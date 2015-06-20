@@ -18,11 +18,11 @@ using System;
 using System.IO;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.IO;
-using KaVE.ReSharper.Commons.Utils;
+using KaVE.RS.Commons.Utils;
 using Moq;
 using NUnit.Framework;
 
-namespace KaVE.ReSharper.Commons.Tests_Unit.Utils
+namespace KaVE.RS.Commons.Tests_Unit.Utils
 {
     [TestFixture]
     internal class FilePublisherTest

@@ -20,7 +20,7 @@ using JetBrains.Application.DataContext;
 using JetBrains.DataFlow;
 using JetBrains.Threading;
 
-namespace KaVE.ReSharper.Commons.Utils
+namespace KaVE.RS.Commons.Utils
 {
     public static class ActionManagerExtensions
     {

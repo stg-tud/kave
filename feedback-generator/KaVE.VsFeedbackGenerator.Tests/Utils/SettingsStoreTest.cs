@@ -16,10 +16,10 @@
 
 using System;
 using JetBrains.Application.Settings;
-using KaVE.ReSharper.Commons.Utils;
+using KaVE.VS.FeedbackGenerator.Utils;
 using NUnit.Framework;
 
-namespace KaVE.VsFeedbackGenerator.Tests.Utils
+namespace KaVE.VS.FeedbackGenerator.Tests.Utils
 {
     [SettingsKey(typeof (EnvironmentSettings), "Test Settings")]
     internal class TestSettings

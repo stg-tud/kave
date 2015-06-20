@@ -19,10 +19,10 @@
 
 using KaVE.Commons.Model.SSTs;
 using KaVE.Commons.Model.SSTs.Impl.Statements;
-using KaVE.VsFeedbackGenerator.SessionManager.Anonymize.CompletionEvents;
+using KaVE.VS.FeedbackGenerator.SessionManager.Anonymize.CompletionEvents;
 using NUnit.Framework;
 
-namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize.CompletionEvents
+namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize.CompletionEvents
 {
     public class SSTStatementAnonymizationTest : SSTAnonymizationBaseTest
     {

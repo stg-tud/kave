@@ -19,15 +19,14 @@ Contributors:
    - Andreas Bauer
 -->
 
-<UserControl x:Class="KaVE.VsFeedbackGenerator.SessionManager.Presentation.SessionManagerControl"
+<UserControl x:Class="KaVE.VS.FeedbackGenerator.SessionManager.Presentation.SessionManagerControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:sessionManager="clr-namespace:KaVE.VsFeedbackGenerator.SessionManager"
              xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
-             xmlns:root="clr-namespace:KaVE.VsFeedbackGenerator"
-             xmlns:presentation="clr-namespace:KaVE.VsFeedbackGenerator.SessionManager.Presentation"
+             xmlns:presentation="clr-namespace:KaVE.VS.FeedbackGenerator.SessionManager.Presentation"
+             xmlns:root="clr-namespace:KaVE.VS.FeedbackGenerator"
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="1000"
              d:DataContext="{d:DesignInstance Type=sessionManager:FeedbackViewModel, IsDesignTimeCreatable=False}">
@@ -64,21 +63,21 @@ Contributors:
                 <Button ToolTip="{x:Static root:Properties.SessionManager.Refresh}"
                         Click="RefreshButton_OnClick">
                     <StackPanel Orientation="Horizontal">
-                        <Image Source="/KaVE.VsFeedbackGenerator;Component/Resources/refresh.png" />
+                        <Image Source="/KaVE.VS.FeedbackGenerator;Component/Resources/refresh.png" />
                         <TextBlock Text="{x:Static root:Properties.SessionManager.Refresh_Button}" Margin="3,0,0,0" />
                     </StackPanel>
                 </Button>
                 <Button ToolTip="{x:Static root:Properties.SessionManager.Export}"
                         Click="Export_OnClick">
                     <StackPanel Orientation="Horizontal">
-                        <Image Source="/KaVE.VsFeedbackGenerator;Component/Resources/send.png" />
+                        <Image Source="/KaVE.VS.FeedbackGenerator;Component/Resources/send.png" />
                         <TextBlock Text="{x:Static root:Properties.SessionManager.Export_Button}" Margin="3,0,0,0" />
                     </StackPanel>
                 </Button>
                 <Button ToolTip="{x:Static root:Properties.SessionManager.VisitUploadPage}"
                         Click="VisitUploadPageButton_OnClick">
                     <StackPanel Orientation="Horizontal">
-                        <Image Source="/KaVE.VsFeedbackGenerator;Component/Resources/website.png" />
+                        <Image Source="/KaVE.VS.FeedbackGenerator;Component/Resources/website.png" />
                         <TextBlock Text="{x:Static root:Properties.SessionManager.VisitUploadPage_Button}"
                                    Margin="3,0,0,0" />
                     </StackPanel>
@@ -86,14 +85,14 @@ Contributors:
                 <Button ToolTip="{x:Static root:Properties.SessionManager.Options}"
                         Click="OpenOptionPage_OnClick">
                     <StackPanel Orientation="Horizontal">
-                        <Image Source="/KaVE.VsFeedbackGenerator;Component/Resources/options.png" />
+                        <Image Source="/KaVE.VS.FeedbackGenerator;Component/Resources/options.png" />
                         <TextBlock Text="{x:Static root:Properties.SessionManager.Options_Button}" Margin="3,0,0,0" />
                     </StackPanel>
                 </Button>
                 <Button ToolTip="{x:Static root:Properties.SessionManager.VisitHomepage}"
                         Click="VisitHomepageButton_OnClick">
                     <StackPanel Orientation="Horizontal">
-                        <Image Source="/KaVE.VsFeedbackGenerator;Component/Resources/website.png" />
+                        <Image Source="/KaVE.VS.FeedbackGenerator;Component/Resources/website.png" />
                         <TextBlock Text="{x:Static root:Properties.SessionManager.VisitHomepage_Button}"
                                    Margin="3,0,0,0" />
                     </StackPanel>
@@ -118,7 +117,7 @@ Contributors:
                         <Button ToolTip="{x:Static root:Properties.SessionManager.SessionDelete}"
                                 Command="{Binding Path=DeleteSessionsCommand, FallbackValue={x:Null}}"
                                 Style="{StaticResource DefaultDisabledButton}">
-                            <Image Source="/KaVE.VsFeedbackGenerator;Component/Resources/delete.png" />
+                            <Image Source="/KaVE.VS.FeedbackGenerator;Component/Resources/delete.png" />
                         </Button>
                     </StackPanel>
                     <presentation:SortableListView Grid.Row="1"
@@ -150,7 +149,7 @@ Contributors:
                         <Button ToolTip="{x:Static root:Properties.SessionManager.EventDelete}"
                                 Style="{StaticResource DefaultDisabledButton}"
                                 Command="{Binding Path=DeleteEventsCommand}">
-                            <Image Source="/KaVE.VsFeedbackGenerator;Component/Resources/delete.png" />
+                            <Image Source="/KaVE.VS.FeedbackGenerator;Component/Resources/delete.png" />
                         </Button>
                     </StackPanel>
                     <presentation:SortableListView Grid.Row="1"

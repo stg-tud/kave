@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 using System;
 using JetBrains.ActionManagement;
 using JetBrains.Application.DataContext;
 using JetBrains.DataFlow;
 using JetBrains.UI.ActionsRevised;
-using JetBrains.Util.Logging;
 
-namespace KaVE.VsFeedbackGenerator.Tests.TestFactories.Actions
+namespace KaVE.VS.FeedbackGenerator.Tests.TestFactories.Actions
 {
     internal class MockExecutableAction : IExecutableAction
     {

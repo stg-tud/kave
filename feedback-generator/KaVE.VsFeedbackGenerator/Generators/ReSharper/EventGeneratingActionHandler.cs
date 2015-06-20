@@ -22,16 +22,15 @@ using JetBrains.Application.DataContext;
 using JetBrains.UI.ActionsRevised;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Utils;
-using KaVE.ReSharper.Commons.Utils;
-using KaVE.VsFeedbackGenerator.MessageBus;
+using KaVE.VS.FeedbackGenerator.MessageBus;
 
-namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
+namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
 {
     /// <summary>
     ///     Fires an <see cref="CommandEvent" /> on execution of a ReSharper action. Passes handling of the action on the
     ///     the default handler.
     /// </summary>
-    internal class EventGeneratingActionHandler : CommandEventGeneratorBase<DelegateExecute>, IExecutableAction
+    public class EventGeneratingActionHandler : CommandEventGeneratorBase<DelegateExecute>, IExecutableAction
     {
         private readonly string _actionId;
 

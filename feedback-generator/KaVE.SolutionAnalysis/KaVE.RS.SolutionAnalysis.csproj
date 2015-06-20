@@ -5,20 +5,21 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{B2235734-D3E5-498F-87E2-E9780DBE0D8D}</ProjectGuid>
+    <ProjectGuid>{30CCA081-2DAD-46E5-982A-32C3600A29E2}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>KaVE.ReSharper.Commons</RootNamespace>
-    <AssemblyName>KaVE.ReSharper.Commons</AssemblyName>
+    <RootNamespace>KaVE.RS.SolutionAnalysis</RootNamespace>
+    <AssemblyName>KaVE.RS.SolutionAnalysis</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>JET_MODE_ASSERT;DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -29,6 +30,12 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <StartAction>Program</StartAction>
+    <StartProgram>$(VsInstallDir)devenv.exe</StartProgram>
+    <StartArguments>/ReSharper.Plugin $(AssemblyName).dll /ReSharper.Internal</StartArguments>
+    <StartWorkingDirectory>$(MSBuildProjectDirectory)\$(OutputPath)</StartWorkingDirectory>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="antlr.runtime">
@@ -61,6 +68,9 @@
     <Reference Include="JetBrains.Annotations">
       <HintPath>..\packages\JetBrains.Annotations.9.1.1\lib\net20\JetBrains.Annotations.dll</HintPath>
     </Reference>
+    <Reference Include="JetBrains.CommandLine.InspectCode.Unattended">
+      <HintPath>..\3rd-party\JetBrains.CommandLine.InspectCode.Unattended.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Deployment.Compression">
       <HintPath>..\packages\JetBrains.Platform.Lib.Microsoft.Deployment.Compression.Cab.2.0.20140304.0\lib\Microsoft.Deployment.Compression.dll</HintPath>
     </Reference>
@@ -84,7 +94,6 @@
       <HintPath>..\packages\Windows7APICodePack-Shell.1.1.0.0\lib\Microsoft.WindowsAPICodePack.Shell.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft35.Json.7.0.1\lib\net35\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="NuGet.Core, Version=2.8.60318.667, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -106,12 +115,10 @@
     <Reference Include="NVelocity">
       <HintPath>..\packages\NVelocity.1.0.3\lib\NVelocity.dll</HintPath>
     </Reference>
+    <Reference Include="PresentationCore" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Net.Http, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\3rd-party\System.Net.Http.dll</HintPath>
-    </Reference>
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Threading">
       <HintPath>..\packages\TaskParallelLibrary.1.0.2856.0\lib\Net35\System.Threading.dll</HintPath>
     </Reference>
@@ -121,68 +128,22 @@
     </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Vestris.ResourceLib">
       <HintPath>..\packages\Vestris.ResourceLib.JetBrains.1.4.20150303.0\lib\Net\Vestris.ResourceLib.dll</HintPath>
     </Reference>
+    <Reference Include="WindowsBase" />
     <Reference Include="WpfContrib">
       <HintPath>..\packages\JetBrains.Platform.Lib.WpfContrib.2.0.20140304.0\lib\WpfContrib.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Analysis\CompletionTarget\CompletionTargetAnalysis.cs" />
-    <Compile Include="Analysis\CompletionTarget\CompletionTargetMarker.cs" />
-    <Compile Include="Analysis\ContextAnalysis.cs" />
-    <Compile Include="Analysis\EntryPointSelector.cs" />
-    <Compile Include="Analysis\InvocationCollector.cs" />
-    <Compile Include="Analysis\MethodRef.cs" />
-    <Compile Include="Analysis\ReSharperUtils.cs" />
-    <Compile Include="Analysis\Transformer\BaseSSTTransformer.cs" />
-    <Compile Include="Analysis\Transformer\BodyVisitor.cs" />
-    <Compile Include="Analysis\Transformer\Context\ArgumentCollectorContext.cs" />
-    <Compile Include="Analysis\Transformer\Context\AssignmentGeneratorContext.cs" />
-    <Compile Include="Analysis\Transformer\Context\ITransformerContext.cs" />
-    <Compile Include="Analysis\Transformer\Context\ReferenceCollectorContext.cs" />
-    <Compile Include="Analysis\Transformer\Context\ScopeTransformerContext.cs" />
-    <Compile Include="Analysis\Transformer\DeclarationVisitor.cs" />
-    <Compile Include="Analysis\Transformer\ExpressionVisitor.cs" />
-    <Compile Include="Analysis\Transformer\JetbrainsTreeDebugger.cs" />
-    <Compile Include="Analysis\Transformer\SSTArgumentCollector.cs" />
-    <Compile Include="Analysis\Transformer\SSTAssignmentGenerator.cs" />
-    <Compile Include="Analysis\Transformer\SSTReferenceCollector.cs" />
-    <Compile Include="Analysis\Transformer\SSTScopeTransformer.cs" />
-    <Compile Include="Analysis\Transformer\SSTTransformerUtil.cs" />
-    <Compile Include="Analysis\Transformer\ToAssignableReference.cs" />
-    <Compile Include="Analysis\TypeHierarchyAnalysisUtils.cs" />
-    <Compile Include="Analysis\TypeShapeAnalysis.cs" />
-    <Compile Include="Analysis\Util\Scope.cs" />
-    <Compile Include="Analysis\Util\SSTFactory.cs" />
-    <Compile Include="Analysis\Util\UniqueVariableNameGenerator.cs" />
-    <Compile Include="Injectables\InjectablePBNRecommenderStore.cs" />
-    <Compile Include="Properties\Messages.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Messages.resx</DependentUpon>
-    </Compile>
+    <Compile Include="CommandLineLogger.cs" />
+    <Compile Include="InspectCodeIntegration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Utils\ActionManagerExtensions.cs" />
-    <Compile Include="Utils\BackgroundWorker.cs" />
-    <Compile Include="Utils\CallbackManager.cs" />
-    <Compile Include="Utils\FilePublisher.cs" />
-    <Compile Include="Utils\HttpPublisher.cs" />
-    <Compile Include="Injectables\InjectableDateUtils.cs" />
-    <Compile Include="Injectables\InjectableIoUtils.cs" />
-    <Compile Include="Utils\InvalidResponseException.cs" />
-    <Compile Include="Utils\IPublisher.cs" />
-    <Compile Include="Utils\LookupItemUtils.cs" />
-    <Compile Include="Utils\Names\ReSharperDeclarationNameFactory.cs" />
-    <Compile Include="Utils\Names\ReSharperDeclaredElementNameFactory.cs" />
-    <Compile Include="Utils\Names\ReSharperTypeNameFactory.cs" />
-    <Compile Include="Utils\Registry.cs" />
-    <Compile Include="Utils\TypeNameExtensions.cs" />
-    <Compile Include="Utils\XamlFormattingUtil.cs" />
+    <Compile Include="SolutionAnalysis.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\KaVE.licenseheader">
@@ -195,12 +156,10 @@
       <Project>{17FC7725-AC2E-47E5-8F24-D2107171A854}</Project>
       <Name>KaVE.Commons</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Properties\Messages.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Messages.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
+    <ProjectReference Include="..\KaVE.ReSharper.Commons\KaVE.RS.Commons.csproj">
+      <Project>{B2235734-D3E5-498F-87E2-E9780DBE0D8D}</Project>
+      <Name>KaVE.RS.Commons</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\JetBrains.Platform.Core.Shell.102.0.20150522.70022\build\JetBrains.Platform.Core.Shell.Targets" Condition="Exists('..\packages\JetBrains.Platform.Core.Shell.102.0.20150522.70022\build\JetBrains.Platform.Core.Shell.Targets')" />
@@ -240,11 +199,4 @@
   <Import Project="..\packages\JetBrains.Psi.Features.test.Framework.102.0.20150522.71619\build\JetBrains.Psi.Features.test.Framework.Targets" Condition="Exists('..\packages\JetBrains.Psi.Features.test.Framework.102.0.20150522.71619\build\JetBrains.Psi.Features.test.Framework.Targets')" />
   <Import Project="..\packages\JetBrains.Build.Platform.Tasks.ThemedIconsPacker.2.0.20141124.0\build\JetBrains.Build.Platform.Tasks.ThemedIconsPacker.Targets" Condition="Exists('..\packages\JetBrains.Build.Platform.Tasks.ThemedIconsPacker.2.0.20141124.0\build\JetBrains.Build.Platform.Tasks.ThemedIconsPacker.Targets')" />
   <Import Project="..\packages\JetBrains.ReSharper.SDK.9.1.20150522.81235\build\JetBrains.ReSharper.SDK.Targets" Condition="Exists('..\packages\JetBrains.ReSharper.SDK.9.1.20150522.81235\build\JetBrains.ReSharper.SDK.Targets')" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>

@@ -25,18 +25,17 @@ using JetBrains.ReSharper.Feature.Services.CSharp.CodeCompletion.Infrastructure;
 using JetBrains.ReSharper.Features.Intellisense.CodeCompletion.CSharp.Rules;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
-using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Model.ObjectUsage;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.CodeCompletion;
 using KaVE.Commons.Utils.Exceptions;
 using KaVE.Commons.Utils.ObjectUsageExport;
-using KaVE.ReSharper.Commons.Analysis;
-using KaVE.ReSharper.Commons.Utils;
+using KaVE.RS.Commons.Analysis;
+using KaVE.RS.Commons.Utils;
 
 //using KaVELogger = KaVE.Commons.Utils.Exceptions.ILogger;
 
-namespace KaVE.VsFeedbackGenerator.CodeCompletion
+namespace KaVE.VS.FeedbackGenerator.CodeCompletion
 {
     [Language(typeof (CSharpLanguage))]
     public class PBNProposalItemsProvider : CSharpItemsProviderBasic

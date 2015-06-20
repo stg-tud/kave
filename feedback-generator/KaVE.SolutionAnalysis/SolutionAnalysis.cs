@@ -31,10 +31,10 @@ using JetBrains.ReSharper.Psi.Parsing;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.Util;
 using KaVE.Commons.Model.Events.CompletionEvents;
-using KaVE.ReSharper.Commons.Analysis;
+using KaVE.RS.Commons.Analysis;
 using ILogger = KaVE.Commons.Utils.Exceptions.ILogger;
 
-namespace KaVE.SolutionAnalysis
+namespace KaVE.RS.SolutionAnalysis
 {
     public class SolutionAnalysis
     {

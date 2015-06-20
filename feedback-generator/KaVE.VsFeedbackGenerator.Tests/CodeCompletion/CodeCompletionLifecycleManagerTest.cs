@@ -19,21 +19,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using JetBrains.ActionManagement;
-using JetBrains.Application.DataContext;
 using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure.LookupItems;
 using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure.Match;
-using JetBrains.ReSharper.Feature.Services.Lookup;
-using JetBrains.TextControl.Actions;
 using JetBrains.UI.ActionSystem.Text;
 using JetBrains.Util;
 using KaVE.Commons.Model.Events;
-using KaVE.VsFeedbackGenerator.CodeCompletion;
-using KaVE.VsFeedbackGenerator.Tests.TestFactories;
-using KaVE.VsFeedbackGenerator.Tests.TestFactories.Actions;
+using KaVE.VS.FeedbackGenerator.CodeCompletion;
+using KaVE.VS.FeedbackGenerator.Tests.TestFactories;
+using KaVE.VS.FeedbackGenerator.Tests.TestFactories.Actions;
 using Moq;
 using NUnit.Framework;
 
-namespace KaVE.VsFeedbackGenerator.Tests.CodeCompletion
+namespace KaVE.VS.FeedbackGenerator.Tests.CodeCompletion
 {
     [TestFixture]
     internal class CodeCompletionLifecycleManagerTest

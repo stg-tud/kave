@@ -23,7 +23,7 @@ using System.Linq.Expressions;
 using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Reflection;
 
-namespace KaVE.VsFeedbackGenerator.SessionManager
+namespace KaVE.VS.FeedbackGenerator.SessionManager
 {
     public abstract class ViewModelBase<T> : INotifyPropertyChanged where T : ViewModelBase<T>
     {

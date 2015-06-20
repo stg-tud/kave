@@ -24,10 +24,10 @@ using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.Commons.Model.SSTs.Impl.Declarations;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl.Statements;
-using KaVE.ReSharper.Commons.Analysis.CompletionTarget;
-using KaVE.ReSharper.Commons.Utils.Names;
+using KaVE.RS.Commons.Analysis.CompletionTarget;
+using KaVE.RS.Commons.Utils.Names;
 
-namespace KaVE.ReSharper.Commons.Analysis.Transformer
+namespace KaVE.RS.Commons.Analysis.Transformer
 {
     public class DeclarationVisitor : TreeNodeVisitor<SST>
     {

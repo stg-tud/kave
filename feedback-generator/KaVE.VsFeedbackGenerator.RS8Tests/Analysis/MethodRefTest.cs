@@ -20,11 +20,11 @@
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using KaVE.Commons.Model.Names;
-using KaVE.ReSharper.Commons.Analysis;
+using KaVE.RS.Commons.Analysis;
 using Moq;
 using NUnit.Framework;
 
-namespace KaVE.ReSharper.Commons.Tests_Integration.Analysis
+namespace KaVE.RS.Commons.Tests_Integration.Analysis
 {
     [TestFixture]
     public class MethodRefTest

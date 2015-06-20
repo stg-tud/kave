@@ -19,12 +19,13 @@
 
 using JetBrains.Application.Settings;
 
-namespace KaVE.VsFeedbackGenerator.SessionManager
+namespace KaVE.VS.FeedbackGenerator.SessionManager
 {
     [SettingsKey(typeof (KaVESettings), "Root node of all settings of the KaVE feedback extension")]
     // WARNING: Do not change classname, as it is used to identify settings
-    internal class FeedbackSettings
+    public class FeedbackSettings
     {
+        // TODO RS9 might be obsolete to store settings for the version now!
         [SettingsEntry("", "The version of the currently installed KaVE-Plugin")]
         public string PluginVersion;
     }

@@ -21,7 +21,7 @@ using JetBrains.Util;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.CompletionEvents;
 
-namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize.CompletionEvents
+namespace KaVE.VS.FeedbackGenerator.SessionManager.Anonymize.CompletionEvents
 {
     internal class CompletionEventAnonymizer : IDEEventAnonymizer
     {

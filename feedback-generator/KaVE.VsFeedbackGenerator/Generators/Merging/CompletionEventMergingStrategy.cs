@@ -23,7 +23,7 @@ using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Utils.Collections;
 
-namespace KaVE.VsFeedbackGenerator.Generators.Merging
+namespace KaVE.VS.FeedbackGenerator.Generators.Merging
 {
     /// <summary>
     ///     Merges intermediate filtering events with the subsequent completion event. An intermediate filtering event, is
@@ -33,7 +33,7 @@ namespace KaVE.VsFeedbackGenerator.Generators.Merging
     ///     strategy merges them down to one event.
     /// </summary>
     /// TODO strategy currently erases information: when the user types something and then deletes (part of) it, only the final prefix is kept.
-    internal class CompletionEventMergingStrategy : IEventMergeStrategy
+    public class CompletionEventMergingStrategy : IEventMergeStrategy
     {
         public bool AreMergable(IDEEvent @event, IDEEvent subsequentEvent)
         {
@@ -83,7 +83,7 @@ namespace KaVE.VsFeedbackGenerator.Generators.Merging
                 Selections = GetRebasedSelections(evt2, evt1.TriggeredAt, evt2.TriggeredAt),
                 TerminatedState = evt2.TerminatedState,
                 TerminatedAt = evt2.TerminatedAt,
-                TerminatedBy = evt2.TerminatedBy,
+                TerminatedBy = evt2.TerminatedBy
             };
         }
 

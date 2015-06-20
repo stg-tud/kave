@@ -18,10 +18,10 @@
  */
 
 using EnvDTE;
-using KaVE.VsFeedbackGenerator.VsIntegration;
+using KaVE.VS.FeedbackGenerator.VsIntegration;
 using Moq;
 
-namespace KaVE.VsFeedbackGenerator.Tests.Generators
+namespace KaVE.VS.FeedbackGenerator.Tests.Generators
 {
     internal class TestIDESession : IIDESession
     {

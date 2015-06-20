@@ -19,7 +19,7 @@
 
 using System.Windows;
 
-namespace KaVE.VsFeedbackGenerator.Interactivity
+namespace KaVE.VS.FeedbackGenerator.Interactivity
 {
     public class ConfirmationRequestHandler
     {

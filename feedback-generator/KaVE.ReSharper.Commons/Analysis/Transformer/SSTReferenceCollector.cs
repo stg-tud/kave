@@ -18,10 +18,10 @@ using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.Util;
 using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.Commons.Utils.Assertion;
-using KaVE.ReSharper.Commons.Analysis.Transformer.Context;
-using KaVE.ReSharper.Commons.Utils.Names;
+using KaVE.RS.Commons.Analysis.Transformer.Context;
+using KaVE.RS.Commons.Utils.Names;
 
-namespace KaVE.ReSharper.Commons.Analysis.Transformer
+namespace KaVE.RS.Commons.Analysis.Transformer
 {
     public class SSTReferenceCollector : BaseSSTTransformer<ReferenceCollectorContext>
     {

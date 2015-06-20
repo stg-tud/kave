@@ -24,10 +24,10 @@ using Hardcodet.Wpf.TaskbarNotification;
 using JetBrains.Application;
 using JetBrains.Application.Components;
 using KaVE.Commons.Utils;
-using KaVE.VsFeedbackGenerator.Properties;
-using KaVE.VsFeedbackGenerator.Utils.Logging;
+using KaVE.VS.FeedbackGenerator.Properties;
+using KaVE.VS.FeedbackGenerator.Utils.Logging;
 
-namespace KaVE.VsFeedbackGenerator.TrayNotification
+namespace KaVE.VS.FeedbackGenerator.TrayNotification
 {
     [ShellComponent(ProgramConfigurations.VS_ADDIN)]
     public class NotifyTrayIcon

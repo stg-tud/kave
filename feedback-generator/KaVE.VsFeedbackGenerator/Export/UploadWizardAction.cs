@@ -23,12 +23,13 @@ using JetBrains.Application.DataContext;
 using JetBrains.UI.ActionsRevised;
 using JetBrains.Util;
 using KaVE.Commons.Utils;
-using KaVE.ReSharper.Commons.Utils;
-using KaVE.VsFeedbackGenerator.Utils.Logging;
+using KaVE.RS.Commons.Utils;
+using KaVE.VS.FeedbackGenerator.Utils;
+using KaVE.VS.FeedbackGenerator.Utils.Logging;
 using NuGet;
 using ILogger = KaVE.Commons.Utils.Exceptions.ILogger;
 
-namespace KaVE.VsFeedbackGenerator.Export
+namespace KaVE.VS.FeedbackGenerator.Export
 {
     [Action(Id, "Export Feedback...", Id = 12193486)]
     public class UploadWizardAction : IExecutableAction

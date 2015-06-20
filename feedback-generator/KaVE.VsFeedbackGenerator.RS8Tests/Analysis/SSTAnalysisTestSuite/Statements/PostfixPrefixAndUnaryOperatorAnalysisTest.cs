@@ -18,11 +18,11 @@
  */
 
 using JetBrains.ReSharper.Psi.CSharp.Tree;
-using KaVE.ReSharper.Commons.Analysis.CompletionTarget;
+using KaVE.RS.Commons.Analysis.CompletionTarget;
 using NUnit.Framework;
-using Fix = KaVE.ReSharper.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.SSTAnalysisFixture;
+using Fix = KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.SSTAnalysisFixture;
 
-namespace KaVE.ReSharper.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Statements
+namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Statements
 {
     internal class PostfixPrefixAndUnaryOperatorAnalysisTest : BaseSSTAnalysisTest
     {

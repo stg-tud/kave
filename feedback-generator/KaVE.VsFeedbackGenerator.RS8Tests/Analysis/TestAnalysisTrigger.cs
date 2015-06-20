@@ -20,7 +20,6 @@
 
 using System;
 using System.Collections.Generic;
-using JetBrains.Application;
 using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure.LookupItems;
 using JetBrains.ReSharper.Feature.Services.CSharp.CodeCompletion.Infrastructure;
 using JetBrains.ReSharper.Features.Intellisense.CodeCompletion.CSharp.Rules;
@@ -31,11 +30,11 @@ using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.SSTs;
 using KaVE.Commons.Utils.Exceptions;
-using KaVE.ReSharper.Commons.Analysis;
-using KaVE.ReSharper.Commons.Analysis.CompletionTarget;
-using KaVE.ReSharper.Commons.Analysis.Transformer;
+using KaVE.RS.Commons.Analysis;
+using KaVE.RS.Commons.Analysis.CompletionTarget;
+using KaVE.RS.Commons.Analysis.Transformer;
 
-namespace KaVE.ReSharper.Commons.Tests_Integration.Analysis
+namespace KaVE.RS.Commons.Tests_Integration.Analysis
 {
     // TODO RS9: removed [ShellComponent] make sure that is correct
     [Language(typeof (CSharpLanguage))]

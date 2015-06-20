@@ -21,12 +21,12 @@ using System;
 using System.Collections;
 using EnvDTE;
 using KaVE.Commons.Model.Events;
-using KaVE.VsFeedbackGenerator.Generators.VisualStudio;
+using KaVE.VS.FeedbackGenerator.Generators.VisualStudio;
 using Microsoft.VisualStudio.CommandBars;
 using Moq;
 using NUnit.Framework;
 
-namespace KaVE.VsFeedbackGenerator.Tests.Generators.VisualStudio
+namespace KaVE.VS.FeedbackGenerator.Tests.Generators.VisualStudio
 {
     class CommandBarEventGeneratorTest : VisualStudioEventGeneratorTestBase
     {

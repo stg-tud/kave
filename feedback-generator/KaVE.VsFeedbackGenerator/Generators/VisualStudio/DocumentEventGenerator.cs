@@ -22,11 +22,10 @@ using JetBrains.Application;
 using JetBrains.Application.Components;
 using KaVE.Commons.Model.Events.VisualStudio;
 using KaVE.Commons.Utils;
-using KaVE.ReSharper.Commons.Utils;
-using KaVE.VsFeedbackGenerator.MessageBus;
-using KaVE.VsFeedbackGenerator.Utils.Names;
+using KaVE.VS.FeedbackGenerator.MessageBus;
+using KaVE.VS.FeedbackGenerator.Utils.Names;
 
-namespace KaVE.VsFeedbackGenerator.Generators.VisualStudio
+namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio
 {
     [ShellComponent(ProgramConfigurations.VS_ADDIN)]
     internal class DocumentEventGenerator : EventGeneratorBase

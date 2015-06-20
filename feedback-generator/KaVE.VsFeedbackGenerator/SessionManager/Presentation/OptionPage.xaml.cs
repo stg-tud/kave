@@ -31,11 +31,10 @@ using JetBrains.UI.CrossFramework;
 using JetBrains.UI.Options;
 using JetBrains.UI.Options.OptionPages.ToolsPages;
 using KaVE.Commons.Utils.Assertion;
-using KaVE.VsFeedbackGenerator.Interactivity;
+using KaVE.VS.FeedbackGenerator.Interactivity;
 using MessageBox = JetBrains.Util.MessageBox;
-using Ressource = KaVE.VsFeedbackGenerator.Properties;
 
-namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
+namespace KaVE.VS.FeedbackGenerator.SessionManager.Presentation
 {
     [OptionsPage(PID, "KaVE Feedback", typeof (FeaturesFindingThemedIcons.SearchOptionsPage),
         ParentId = ToolsPage.PID)]
@@ -73,7 +72,7 @@ namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
 
         private void RestoreSettings_OnClick(object sender, RoutedEventArgs e)
         {
-            var message = Ressource.SessionManager.ResourceManager.GetString("Option_SettingsCleaner_Dialog");
+            var message = Properties.SessionManager.ResourceManager.GetString("Option_SettingsCleaner_Dialog");
             var result = MessageBox.ShowYesNo(message);
 
             if (result)

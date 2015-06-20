@@ -19,7 +19,7 @@
 
 using KaVE.Commons.Model.Events;
 
-namespace KaVE.VsFeedbackGenerator.Generators
+namespace KaVE.VS.FeedbackGenerator.Generators
 {
     interface IEventMergeStrategy
     {

@@ -25,9 +25,9 @@ using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Utils.Json;
 
-namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
+namespace KaVE.VS.FeedbackGenerator.SessionManager.Presentation
 {
-    internal static class IDEEventDetailsToJsonConverter
+    public static class IDEEventDetailsToJsonConverter
     {
         private static readonly IList<string> IDEEventPropertyNames =
             typeof (IDEEvent).GetProperties().Select(p => p.Name).ToList();

@@ -16,7 +16,7 @@
 
 using System.IO;
 
-namespace KaVE.ReSharper.Commons.Utils
+namespace KaVE.RS.Commons.Utils
 {
     public interface IPublisher
     {

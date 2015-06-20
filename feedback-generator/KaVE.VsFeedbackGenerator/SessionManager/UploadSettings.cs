@@ -21,11 +21,11 @@
 using System;
 using JetBrains.Application.Settings;
 
-namespace KaVE.VsFeedbackGenerator.SessionManager
+namespace KaVE.VS.FeedbackGenerator.SessionManager
 {
     [SettingsKey(typeof(FeedbackSettings), "KaVE Feedback-Upload Settings")]
     // WARNING: Do not change classname, as it is used to identify settings
-    internal class UploadSettings
+    public class UploadSettings
     {
         private const string DateTimeMinValue = "0001-01-01T00:00:00";
 

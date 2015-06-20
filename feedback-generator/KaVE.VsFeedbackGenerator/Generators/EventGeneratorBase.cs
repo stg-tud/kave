@@ -20,16 +20,15 @@
 using System;
 using System.Diagnostics;
 using EnvDTE;
-using KaVE.Commons.Utils.Json;
-using KaVE.JetBrains.Annotations;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Utils;
-using KaVE.ReSharper.Commons.Utils;
-using KaVE.VsFeedbackGenerator.MessageBus;
-using KaVE.VsFeedbackGenerator.Utils.Names;
-using KaVE.VsFeedbackGenerator.VsIntegration;
+using KaVE.Commons.Utils.Json;
+using KaVE.JetBrains.Annotations;
+using KaVE.VS.FeedbackGenerator.MessageBus;
+using KaVE.VS.FeedbackGenerator.Utils.Names;
+using KaVE.VS.FeedbackGenerator.VsIntegration;
 
-namespace KaVE.VsFeedbackGenerator.Generators
+namespace KaVE.VS.FeedbackGenerator.Generators
 {
     public abstract class EventGeneratorBase
     {

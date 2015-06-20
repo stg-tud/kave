@@ -21,7 +21,7 @@ using JetBrains.Application;
 using JetBrains.Application.Components;
 using KaVE.Commons.Utils.Exceptions;
 
-namespace KaVE.SolutionAnalysis
+namespace KaVE.RS.SolutionAnalysis
 {
     [ShellComponent(ProgramConfigurations.COMMAND_LINE)]
     public class CommandLineLogger : ConsoleLogger {}

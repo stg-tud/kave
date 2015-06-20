@@ -21,9 +21,9 @@ using System.Windows;
 using System.Windows.Input;
 using JetBrains;
 using KaVE.Commons.Utils.IO;
-using KaVE.VsFeedbackGenerator.Utils.Logging;
+using KaVE.VS.FeedbackGenerator.Utils.Logging;
 
-namespace KaVE.VsFeedbackGenerator.TrayNotification
+namespace KaVE.VS.FeedbackGenerator.TrayNotification
 {
     /// <summary>
     /// Interaction logic for HardBalloonPopup.xaml

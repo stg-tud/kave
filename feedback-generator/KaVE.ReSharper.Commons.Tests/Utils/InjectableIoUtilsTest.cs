@@ -17,12 +17,11 @@
 using System;
 using System.Net.Http;
 using KaVE.Commons.Utils.Assertion;
-using KaVE.ReSharper.Commons.Injectables;
-using KaVE.ReSharper.Commons.Utils;
+using KaVE.RS.Commons.Injectables;
 using Moq;
 using NUnit.Framework;
 
-namespace KaVE.ReSharper.Commons.Tests_Unit.Utils
+namespace KaVE.RS.Commons.Tests_Unit.Utils
 {
     internal class InjectableIoUtilsTest
     {

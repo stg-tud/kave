@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-using KaVE.ReSharper.Commons.Utils;
+using KaVE.RS.Commons.Utils;
 using NUnit.Framework;
 
-namespace KaVE.ReSharper.Commons.Tests_Unit.Utils
+namespace KaVE.RS.Commons.Tests_Unit.Utils
 {
     internal class XamlFormattingUtilTest
     {

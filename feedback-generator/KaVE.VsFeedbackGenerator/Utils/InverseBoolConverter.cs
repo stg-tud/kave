@@ -19,9 +19,9 @@ using System.Globalization;
 using System.Windows.Data;
 using KaVE.Commons.Utils.Assertion;
 
-namespace KaVE.VsFeedbackGenerator.Utils
+namespace KaVE.VS.FeedbackGenerator.Utils
 {
-    internal class InverseBoolConverter : IValueConverter
+    public class InverseBoolConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

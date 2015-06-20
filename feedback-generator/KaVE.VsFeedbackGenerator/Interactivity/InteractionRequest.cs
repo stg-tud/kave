@@ -20,9 +20,9 @@
 using System;
 using KaVE.Commons.Utils.Assertion;
 
-namespace KaVE.VsFeedbackGenerator.Interactivity
+namespace KaVE.VS.FeedbackGenerator.Interactivity
 {
-    internal class InteractionRequest<TNotification> : IInteractionRequest<TNotification> where TNotification : Notification
+    public class InteractionRequest<TNotification> : IInteractionRequest<TNotification> where TNotification : Notification
     {
         public event EventHandler<InteractionRequestedEventArgs<TNotification>> Raised = null;
 

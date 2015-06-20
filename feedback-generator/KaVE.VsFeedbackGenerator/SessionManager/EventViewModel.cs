@@ -28,9 +28,9 @@ using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Json;
 using KaVE.Commons.Utils.SSTPrinter;
-using KaVE.VsFeedbackGenerator.SessionManager.Presentation;
+using KaVE.VS.FeedbackGenerator.SessionManager.Presentation;
 
-namespace KaVE.VsFeedbackGenerator.SessionManager
+namespace KaVE.VS.FeedbackGenerator.SessionManager
 {
     public class EventViewModel : ViewModelBase<EventViewModel>
     {

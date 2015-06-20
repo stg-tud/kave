@@ -19,7 +19,7 @@
 
 using NUnit.Framework;
 
-namespace KaVE.ReSharper.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expressions
+namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expressions
 {
     internal class ComposedExpressionAnalysisTest : BaseSSTAnalysisTest
     {

@@ -17,9 +17,9 @@
 using System;
 using System.IO;
 using JetBrains.Application;
-using KaVE.VsFeedbackGenerator.Utils.Logging;
+using KaVE.VS.FeedbackGenerator.Utils.Logging;
 
-namespace KaVE.VsFeedbackGenerator.Utils.Json
+namespace KaVE.VS.FeedbackGenerator.Utils.Json
 {
     [ShellComponent]
     public class IDEEventLogFileManager : LogFileManager

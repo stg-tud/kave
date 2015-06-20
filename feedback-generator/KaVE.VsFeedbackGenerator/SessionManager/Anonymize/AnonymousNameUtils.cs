@@ -29,11 +29,11 @@ using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.Names.VisualStudio;
 using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Assertion;
-using KaVE.VsFeedbackGenerator.Utils.Names;
+using KaVE.VS.FeedbackGenerator.Utils.Names;
 
-namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize
+namespace KaVE.VS.FeedbackGenerator.SessionManager.Anonymize
 {
-    internal static class AnonymousNameUtils
+    public static class AnonymousNameUtils
     {
         [ContractAnnotation("notnull => notnull")]
         public static string ToHash(this string value)

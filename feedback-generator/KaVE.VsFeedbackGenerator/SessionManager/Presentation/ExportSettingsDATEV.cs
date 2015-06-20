@@ -21,11 +21,11 @@
 
 using JetBrains.Application.Settings;
 
-namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
+namespace KaVE.VS.FeedbackGenerator.SessionManager.Presentation
 {
     [SettingsKey(typeof (FeedbackSettings), "Kave Feedback-Export Settings")]
     // WARNING: Do not change classname, as it is used to identify settings
-    internal class ExportSettings
+    public class ExportSettings
     {
         [SettingsEntry(false, "KaVE FeedbackGeneration RemoveCodeNames")]
         public bool RemoveCodeNames;

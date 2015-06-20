@@ -24,10 +24,10 @@ using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.Commons.Model.TypeShapes;
-using KaVE.VsFeedbackGenerator.SessionManager.Anonymize;
+using KaVE.VS.FeedbackGenerator.SessionManager.Anonymize;
 using NUnit.Framework;
 
-namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize.CompletionEvents
+namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize.CompletionEvents
 {
     internal class CompletionEventAnonymizerTest : IDEEventAnonymizerTestBase<CompletionEvent>
     {

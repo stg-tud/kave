@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using KaVE.VsFeedbackGenerator.SessionManager.Presentation;
+
+using KaVE.VS.FeedbackGenerator.SessionManager.Presentation;
 using NUnit.Framework;
 
-namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Presentation
+namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Presentation
 {
-    [TestFixture]
     internal class JsonSyntaxHighlighterTest
     {
         [Test]

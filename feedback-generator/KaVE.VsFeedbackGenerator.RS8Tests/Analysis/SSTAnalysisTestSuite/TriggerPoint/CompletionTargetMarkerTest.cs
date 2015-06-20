@@ -17,9 +17,9 @@
  *    - Sebastian Proksch
  */
 
-using KaVE.ReSharper.Commons.Analysis.CompletionTarget;
+using KaVE.RS.Commons.Analysis.CompletionTarget;
 
-namespace KaVE.ReSharper.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.TriggerPoint
+namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.TriggerPoint
 {
     internal class CompletionTargetMarkerTest
     {

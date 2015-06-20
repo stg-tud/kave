@@ -17,11 +17,12 @@
 using JetBrains.ActionManagement;
 using JetBrains.Application.DataContext;
 using JetBrains.UI.ActionsRevised;
-using KaVE.VsFeedbackGenerator.SessionManager;
-using KaVE.VsFeedbackGenerator.SessionManager.Presentation;
-using KaVE.VsFeedbackGenerator.Utils.Logging;
+using KaVE.RS.Commons.Utils;
+using KaVE.VS.FeedbackGenerator.SessionManager;
+using KaVE.VS.FeedbackGenerator.SessionManager.Presentation;
+using KaVE.VS.FeedbackGenerator.Utils.Logging;
 
-namespace KaVE.ReSharper.Commons.Utils
+namespace KaVE.VS.FeedbackGenerator.Utils
 {
     [Action(ActionId)]
     public class SettingsCleaner : IExecutableAction

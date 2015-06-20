@@ -26,14 +26,13 @@ using System.Linq;
 using JetBrains;
 using JetBrains.Annotations;
 using KaVE.Commons.Utils.Collections;
-using KaVE.ReSharper.Commons.Utils;
-using KaVE.VsFeedbackGenerator.Interactivity;
-using KaVE.VsFeedbackGenerator.SessionManager.Presentation;
-using KaVE.VsFeedbackGenerator.Utils.Logging;
+using KaVE.RS.Commons.Utils;
+using KaVE.VS.FeedbackGenerator.Interactivity;
+using KaVE.VS.FeedbackGenerator.SessionManager.Presentation;
+using KaVE.VS.FeedbackGenerator.Utils.Logging;
 using NuGet;
-using Messages = KaVE.VsFeedbackGenerator.Properties.SessionManager;
 
-namespace KaVE.VsFeedbackGenerator.SessionManager
+namespace KaVE.VS.FeedbackGenerator.SessionManager
 {
     public sealed class FeedbackViewModel : ViewModelBase<FeedbackViewModel>
     {
@@ -199,10 +198,10 @@ namespace KaVE.VsFeedbackGenerator.SessionManager
             _confirmationRequest.Raise(
                 new Confirmation
                 {
-                    Caption = Messages.SessionDeleteConfirmTitle,
+                    Caption = Properties.SessionManager.SessionDeleteConfirmTitle,
                     Message = numberOfSessions == 1
-                        ? Messages.SessionDeleteConfirmSingular
-                        : Messages.SessionDeleteConfirmPlural.FormatEx(numberOfSessions)
+                        ? Properties.SessionManager.SessionDeleteConfirmSingular
+                        : Properties.SessionManager.SessionDeleteConfirmPlural.FormatEx(numberOfSessions)
                 },
                 DeleteSessions);
         }

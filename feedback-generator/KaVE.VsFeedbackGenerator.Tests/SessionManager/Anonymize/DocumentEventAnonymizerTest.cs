@@ -18,10 +18,10 @@
  */
 
 using KaVE.Commons.Model.Events.VisualStudio;
-using KaVE.VsFeedbackGenerator.Utils.Names;
+using KaVE.VS.FeedbackGenerator.Utils.Names;
 using NUnit.Framework;
 
-namespace KaVE.VsFeedbackGenerator.Tests.SessionManager.Anonymize
+namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
 {
     internal class DocumentEventAnonymizerTest : IDEEventAnonymizerTestBase<DocumentEvent>
     {

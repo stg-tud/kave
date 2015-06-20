@@ -24,10 +24,10 @@ using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.Commons.TestUtils.Model.Events;
-using KaVE.VsFeedbackGenerator.SessionManager;
+using KaVE.VS.FeedbackGenerator.SessionManager;
 using NUnit.Framework;
 
-namespace KaVE.VsFeedbackGenerator.Tests.SessionManager
+namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager
 {
     [TestFixture]
     internal class EventViewTest

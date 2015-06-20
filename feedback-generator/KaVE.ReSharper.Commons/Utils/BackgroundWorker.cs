@@ -17,7 +17,7 @@
 using System;
 using System.ComponentModel;
 
-namespace KaVE.ReSharper.Commons.Utils
+namespace KaVE.RS.Commons.Utils
 {
     public class BackgroundWorker<TResult> : BackgroundWorkerBase<object, TResult>
     {

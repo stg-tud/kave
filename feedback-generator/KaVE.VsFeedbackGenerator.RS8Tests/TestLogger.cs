@@ -20,7 +20,7 @@
 using JetBrains.Application;
 using KaVE.Commons.Utils.Exceptions;
 
-namespace KaVE.ReSharper.Commons.Tests_Integration
+namespace KaVE.RS.Commons.Tests_Integration
 {
     [ShellComponent]
     public class TestLogger : ConsoleLogger {}

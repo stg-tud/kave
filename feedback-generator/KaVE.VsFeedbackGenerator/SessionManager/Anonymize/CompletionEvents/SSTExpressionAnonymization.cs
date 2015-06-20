@@ -19,8 +19,6 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using KaVE.Commons.Utils.Collections;
-using KaVE.JetBrains.Annotations;
 using KaVE.Commons.Model.SSTs;
 using KaVE.Commons.Model.SSTs.Expressions;
 using KaVE.Commons.Model.SSTs.Expressions.Assignable;
@@ -31,8 +29,10 @@ using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Commons.Model.SSTs.Impl.Visitor;
 using KaVE.Commons.Model.SSTs.References;
 using KaVE.Commons.Utils.Assertion;
+using KaVE.Commons.Utils.Collections;
+using KaVE.JetBrains.Annotations;
 
-namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize.CompletionEvents
+namespace KaVE.VS.FeedbackGenerator.SessionManager.Anonymize.CompletionEvents
 {
     public class SSTExpressionAnonymization : AbstractNodeVisitor<int, IExpression>
     {

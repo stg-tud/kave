@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,7 +27,7 @@ using JetBrains.ReSharper.Feature.Services.Lookup;
 using JetBrains.UI.Controls;
 using KaVE.JetBrains.Annotations;
 
-namespace KaVE.VsFeedbackGenerator.CodeCompletion
+namespace KaVE.VS.FeedbackGenerator.CodeCompletion
 {
     public interface IExtendedLookupWindowManager {
         IExtendedLookup CurrentLookup { get; }

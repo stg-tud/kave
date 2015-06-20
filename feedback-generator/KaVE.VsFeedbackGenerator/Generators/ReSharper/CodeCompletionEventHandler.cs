@@ -24,7 +24,6 @@ using System.Linq;
 using JetBrains.Application;
 using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure.LookupItems;
 using JetBrains.ReSharper.Feature.Services.CSharp.CodeCompletion.Infrastructure;
-using JetBrains.ReSharper.Feature.Services.Lookup;
 using JetBrains.ReSharper.Features.Intellisense.CodeCompletion.CSharp.Rules;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
@@ -33,12 +32,12 @@ using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Exceptions;
-using KaVE.ReSharper.Commons.Analysis;
-using KaVE.ReSharper.Commons.Utils;
-using KaVE.VsFeedbackGenerator.CodeCompletion;
-using KaVE.VsFeedbackGenerator.MessageBus;
+using KaVE.RS.Commons.Analysis;
+using KaVE.RS.Commons.Utils;
+using KaVE.VS.FeedbackGenerator.CodeCompletion;
+using KaVE.VS.FeedbackGenerator.MessageBus;
 
-namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
+namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
 {
     [Language(typeof (CSharpLanguage))]
     internal class CodeCompletionEventGeneratorRegistration
@@ -57,7 +56,7 @@ namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
     }
 
     [Language(typeof (CSharpLanguage))]
-    internal class CodeCompletionContextAnalysisTrigger : CSharpItemsProviderBase<CSharpCodeCompletionContext>
+    public class CodeCompletionContextAnalysisTrigger : CSharpItemsProviderBase<CSharpCodeCompletionContext>
     {
         // TODO RS9: get rid of this ugly flag... currently necessary for successful test execution (should be solved with RS9 automatically)
         public static bool Disabled = false;
@@ -119,7 +118,7 @@ namespace KaVE.VsFeedbackGenerator.Generators.ReSharper
     }
 
     [ShellComponent]
-    internal class CodeCompletionEventHandler : EventGeneratorBase
+    public class CodeCompletionEventHandler : EventGeneratorBase
     {
         private CompletionEvent _event;
         private Context _context;

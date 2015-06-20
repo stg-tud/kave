@@ -24,10 +24,11 @@ using JetBrains.Util;
 using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.SSTs.Impl.Declarations;
-using KaVE.ReSharper.Commons.Utils;
+using KaVE.Commons.TestUtils.Utils.Exceptions;
+using KaVE.RS.Commons.Utils;
 using NUnit.Framework;
 
-namespace KaVE.SolutionAnalysis.Tests
+namespace KaVE.RS.SolutionAnalysis.Tests
 {
     [TestFixture, TestNetFramework4]
     internal class SolutionAnalysisTest : BaseTestWithExistingSolution

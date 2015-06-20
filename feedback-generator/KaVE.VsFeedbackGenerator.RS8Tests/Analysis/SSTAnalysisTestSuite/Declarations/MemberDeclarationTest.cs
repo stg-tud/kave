@@ -22,7 +22,7 @@ using KaVE.Commons.Model.SSTs.Impl.Declarations;
 using KaVE.Commons.Utils.Collections;
 using NUnit.Framework;
 
-namespace KaVE.ReSharper.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Declarations
+namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Declarations
 {
     internal class MemberDeclarationTest : BaseSSTAnalysisTest
     {

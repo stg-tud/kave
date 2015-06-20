@@ -21,7 +21,7 @@ using System.Linq;
 using KaVE.Commons.Model.TypeShapes;
 using KaVE.Commons.Utils.Collections;
 
-namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize.CompletionEvents
+namespace KaVE.VS.FeedbackGenerator.SessionManager.Anonymize.CompletionEvents
 {
     public class TypeShapeAnonymizer
     {

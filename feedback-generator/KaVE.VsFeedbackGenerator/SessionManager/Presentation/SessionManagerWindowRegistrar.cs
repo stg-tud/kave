@@ -23,10 +23,10 @@ using JetBrains.DataFlow;
 using JetBrains.UI.CrossFramework;
 using JetBrains.UI.ToolWindowManagement;
 using KaVE.JetBrains.Annotations;
-using KaVE.ReSharper.Commons.Utils;
-using KaVE.VsFeedbackGenerator.Utils.Logging;
+using KaVE.VS.FeedbackGenerator.Utils;
+using KaVE.VS.FeedbackGenerator.Utils.Logging;
 
-namespace KaVE.VsFeedbackGenerator.SessionManager.Presentation
+namespace KaVE.VS.FeedbackGenerator.SessionManager.Presentation
 {
     [ShellComponent]
     public class SessionManagerWindowRegistrar

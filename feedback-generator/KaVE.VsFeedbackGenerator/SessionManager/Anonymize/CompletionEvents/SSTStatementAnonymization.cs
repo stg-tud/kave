@@ -33,7 +33,7 @@ using KaVE.Commons.Model.SSTs.Statements;
 using KaVE.Commons.Utils.Collections;
 using KaVE.JetBrains.Annotations;
 
-namespace KaVE.VsFeedbackGenerator.SessionManager.Anonymize.CompletionEvents
+namespace KaVE.VS.FeedbackGenerator.SessionManager.Anonymize.CompletionEvents
 {
     public class SSTStatementAnonymization : AbstractNodeVisitor<int, IStatement>
     {
