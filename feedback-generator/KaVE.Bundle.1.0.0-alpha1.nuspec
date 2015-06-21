@@ -22,12 +22,12 @@
 		
 		<!-- Plugin for ReSharper 8.2 -->
 			<!-- KaVE Assemblies -->
-				<file src="KaVE.VsFeedbackGenerator\bin\Debug\KaVE.Commons.dll" target="DotFiles\KaVE.Commons.dll" />
-				<file src="KaVE.VsFeedbackGenerator\bin\Debug\KaVE.ReSharper.Commons.dll" target="DotFiles\KaVE.ReSharper.Commons.dll" />
-				<file src="KaVE.VsFeedbackGenerator\bin\Debug\KaVE.VsFeedbackGenerator.dll" target="DotFiles\KaVE.VsFeedbackGenerator.dll" />
+				<file src="KaVE.VS.FeedbackGenerator\bin\Debug\KaVE.Commons.dll" target="DotFiles\KaVE.Commons.dll" />
+				<file src="KaVE.VS.FeedbackGenerator\bin\Debug\KaVE.RS.Commons.dll" target="DotFiles\KaVE.RS.Commons.dll" />
+				<file src="KaVE.VS.FeedbackGenerator\bin\Debug\KaVE.VS.FeedbackGenerator.dll" target="DotFiles\KaVE.VS.FeedbackGenerator.dll" />
 			<!-- 3rd-Party Dependencies -->
-				<file src="KaVE.VsFeedbackGenerator\bin\Debug\Newtonsoft.Json.dll" target="DotFiles\Newtonsoft.Json.dll" />
-				<file src="KaVE.VsFeedbackGenerator\bin\Debug\Hardcodet.Wpf.TaskbarNotification.dll" target="DotFiles\Hardcodet.Wpf.TaskbarNotification.dll" />
+				<file src="KaVE.VS.FeedbackGenerator\bin\Debug\Newtonsoft.Json.dll" target="DotFiles\Newtonsoft.Json.dll" />
+				<file src="KaVE.VS.FeedbackGenerator\bin\Debug\Hardcodet.Wpf.TaskbarNotification.dll" target="DotFiles\Hardcodet.Wpf.TaskbarNotification.dll" />
         <file src="3rd-party\MsgBox.dll" target="DotFiles\MsgBox.dll" />
         <file src="3rd-party\UserNotification.dll" target="DotFiles\UserNotification.dll" />
         <file src="3rd-party\smileNet.dll" target="DotFiles\smileNet.dll" />
