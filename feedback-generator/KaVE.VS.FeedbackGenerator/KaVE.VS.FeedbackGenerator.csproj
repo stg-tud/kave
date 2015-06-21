@@ -239,7 +239,7 @@
       <DependentUpon>SoftBalloonPopup.xaml</DependentUpon>
     </Compile>
     <Compile Include="CodeCompletion\CodeCompletionLifecycleManager.cs" />
-    <Compile Include="CodeCompletion\DelegateActionHandler.cs" />
+    <Compile Include="CodeCompletion\KaVEDelegateActionHandler.cs" />
     <Compile Include="CodeCompletion\ExtendedLookupWindowManager.cs" />
     <Compile Include="Properties\General.Designer.cs">
       <AutoGen>True</AutoGen>

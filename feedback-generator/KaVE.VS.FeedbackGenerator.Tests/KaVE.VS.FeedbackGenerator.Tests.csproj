@@ -210,7 +210,6 @@
     <Compile Include="SessionManager\UploadReminderTest.cs" />
     <Compile Include="SessionManager\UploadSettingsTest.cs" />
     <Compile Include="SessionManager\ViewModelBaseTest.cs" />
-    <Compile Include="TestFactories\Actions\ActionManagerMockExtensions.cs" />
     <Compile Include="TestFactories\Actions\MockExecutableAction.cs" />
     <Compile Include="TestFactories\Actions\MockNextActionHandler.cs" />
     <Compile Include="TestFactories\DTEMockUtils.cs" />

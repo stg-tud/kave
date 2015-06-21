@@ -123,8 +123,18 @@
   <data name="PublishingFileFailed" xml:space="preserve">
     <value>Datei-Export fehlgeschlagen: {0}</value>
   </data>
+  <data name="ServerRequestNotAvailable" xml:space="preserve">
+    <value>Der Server ist nicht erreichbar ("{0}")</value>
+  </data>
+  <data name="ServerRequestWrongScheme" xml:space="preserve">
+    <value>Http-Upload erwartet Http- oder Https-Adresse</value>
+  </data>
   <data name="ServerResponseEmpty" xml:space="preserve">
     <value>Antwort des Servers enthält keine verwertbaren Informationen</value>
+  </data>
+  <data name="ServerResponseFailure" xml:space="preserve">
+    <value>Fehler bei der Anfrage an den Server "{0}":
+{1}</value>
   </data>
   <data name="ServerResponseIncompatible" xml:space="preserve">
     <value>Inkompatible Antwort des Server</value>

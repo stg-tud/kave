@@ -14,21 +14,24 @@
  * limitations under the License.
  */
 
+using System;
+using System.Net;
+using System.Net.Http;
 using JetBrains.Application;
+using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.IO;
+using KaVE.RS.Commons.Properties;
 
 namespace KaVE.RS.Commons.Injectables
 {
     [ShellComponent]
     public class InjectableIoUtils : IoUtils
     {
-        // TODO RS9: move implementation to commons.utils
-        /*
         public override HttpResponseMessage TransferByHttp(HttpContent content, Uri targetUri)
         {
             var isHttp = targetUri.Scheme == Uri.UriSchemeHttp;
             var isHttps = targetUri.Scheme == Uri.UriSchemeHttps;
-            Asserts.That(isHttp || isHttps, Properties.SessionManager.ServerRequestWrongScheme);
+            Asserts.That(isHttp || isHttps, Messages.ServerRequestWrongScheme);
 
             using (var client = new HttpClient())
             {
@@ -39,7 +42,7 @@ namespace KaVE.RS.Commons.Injectables
                     var response = client.PostAsync(targetUri, content).Result;
                     Asserts.That(
                         response.IsSuccessStatusCode,
-                        Properties.SessionManager.ServerResponseFailure,
+                        Messages.ServerResponseFailure,
                         targetUri,
                         response.StatusCode);
                     return response;
@@ -53,16 +56,15 @@ namespace KaVE.RS.Commons.Injectables
                         if (we != null)
                         {
                             throw new Exception(
-                                string.Format(Properties.SessionManager.ServerResponseFailure, targetUri, we.Message),
+                                string.Format(Messages.ServerResponseFailure, targetUri, we.Message),
                                 e);
                         }
                     }
                     throw new Exception(
-                        string.Format(Properties.SessionManager.ServerRequestNotAvailable, targetUri),
+                        string.Format(Messages.ServerRequestNotAvailable, targetUri),
                         e);
                 }
             }
         }
-         * */
     }
 }

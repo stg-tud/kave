@@ -24,13 +24,13 @@ namespace KaVE.VS.FeedbackGenerator.CodeCompletion
     /// <summary>
     ///     An action handler that executes its own action before it invokes the delegate execution.
     /// </summary>
-    internal class DelegateActionHandler : IExecutableAction
+    public class KaVEDelegateActionHandler : IExecutableAction
     {
-        private readonly Action _action;
+        public readonly Action Action;
 
-        public DelegateActionHandler(Action action)
+        public KaVEDelegateActionHandler(Action action)
         {
-            _action = action;
+            Action = action;
         }
 
         public bool Update(IDataContext context, ActionPresentation presentation, DelegateUpdate nextUpdate)
@@ -40,7 +40,7 @@ namespace KaVE.VS.FeedbackGenerator.CodeCompletion
 
         public void Execute(IDataContext context, DelegateExecute nextExecute)
         {
-            _action();
+            Action();
             nextExecute();
         }
     }

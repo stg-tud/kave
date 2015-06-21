@@ -79,11 +79,39 @@ namespace KaVE.RS.Commons.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Der Server ist nicht erreichbar (&quot;{0}&quot;).
+        /// </summary>
+        internal static string ServerRequestNotAvailable {
+            get {
+                return ResourceManager.GetString("ServerRequestNotAvailable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Http-Upload erwartet Http- oder Https-Adresse.
+        /// </summary>
+        internal static string ServerRequestWrongScheme {
+            get {
+                return ResourceManager.GetString("ServerRequestWrongScheme", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Antwort des Servers enthält keine verwertbaren Informationen.
         /// </summary>
         internal static string ServerResponseEmpty {
             get {
                 return ResourceManager.GetString("ServerResponseEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Fehler bei der Anfrage an den Server &quot;{0}&quot;:
+        ///{1}.
+        /// </summary>
+        internal static string ServerResponseFailure {
+            get {
+                return ResourceManager.GetString("ServerResponseFailure", resourceCulture);
             }
         }
         

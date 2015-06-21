@@ -439,34 +439,6 @@ namespace KaVE.VS.FeedbackGenerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Der Server ist nicht erreichbar (&quot;{0}&quot;).
-        /// </summary>
-        public static string ServerRequestNotAvailable {
-            get {
-                return ResourceManager.GetString("ServerRequestNotAvailable", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Http-Upload erwartet Http- oder Https-Adresse.
-        /// </summary>
-        public static string ServerRequestWrongScheme {
-            get {
-                return ResourceManager.GetString("ServerRequestWrongScheme", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Fehler bei der Anfrage an den Server &quot;{0}&quot;:
-        ///{1}.
-        /// </summary>
-        public static string ServerResponseFailure {
-            get {
-                return ResourceManager.GetString("ServerResponseFailure", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Tag der Session.
         /// </summary>
         public static string SessionDay {

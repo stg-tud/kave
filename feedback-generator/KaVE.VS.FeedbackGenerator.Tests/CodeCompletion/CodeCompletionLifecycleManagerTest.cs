@@ -19,14 +19,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using JetBrains.ActionManagement;
+using JetBrains.Application.DataContext;
 using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure.LookupItems;
 using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure.Match;
+using JetBrains.UI.ActionsRevised;
+using JetBrains.UI.ActionsRevised.Handlers;
+using JetBrains.UI.ActionsRevised.Loader;
 using JetBrains.UI.ActionSystem.Text;
 using JetBrains.Util;
 using KaVE.Commons.Model.Events;
 using KaVE.VS.FeedbackGenerator.CodeCompletion;
 using KaVE.VS.FeedbackGenerator.Tests.TestFactories;
-using KaVE.VS.FeedbackGenerator.Tests.TestFactories.Actions;
 using Moq;
 using NUnit.Framework;
 
@@ -43,6 +46,8 @@ namespace KaVE.VS.FeedbackGenerator.Tests.CodeCompletion
         private Mock<IExtendedLookupWindowManager> _mockLookupWindowManager;
         private CodeCompletionLifecycleManager _manager;
         private Mock<IActionManager> _mockActionManager;
+        private IActionDefs _actionDefs;
+        private IActionHandlers _actionHandlers;
 
         [SetUp]
         public void SetUpLookupEnvironment()
@@ -60,13 +65,50 @@ namespace KaVE.VS.FeedbackGenerator.Tests.CodeCompletion
             _mockLookupWindowManager.Setup(m => m.CurrentLookup).Returns(_mockLookup.Object);
         }
 
-        private static Mock<IActionManager> SetUpActionManager()
+        private Mock<IActionManager> SetUpActionManager()
         {
-            var mockActionManager = new Mock<IActionManager>();
-            mockActionManager.SetupExecutableAction(ForceCompleteActionId);
-            mockActionManager.SetupExecutableAction(EnterActionId);
-            mockActionManager.SetupExecutableAction(TabActionId);
+            var am = Mock.Of<IActionManager>();
+            var mockActionManager = Mock.Get(am);
+            _actionDefs = Mock.Of<IActionDefs>();
+            _actionHandlers = Mock.Of<IActionHandlers>();
+
+            mockActionManager.Setup(m => m.Defs).Returns(_actionDefs);
+            mockActionManager.Setup(m => m.Handlers).Returns(_actionHandlers);
+
+            Dictionary<IActionDefWithId, IAction> registeredHandlers = new Dictionary<IActionDefWithId, IAction>();
+
+            // store new handlers in handlers dictionary together with their actions
+            Mock.Get(_actionHandlers)
+                .Setup(ah => ah.AddHandler(It.IsAny<IActionDefWithId>(), It.IsAny<IAction>()))
+                .Callback<IActionDefWithId, IAction>(
+                    (id, action) => { registeredHandlers.Add(id, action); });
+            
+            // mock the execution of registered actions
+            Mock.Get(_actionHandlers)
+                .Setup(ah => ah.Evaluate(It.IsAny<IActionDefWithId>(), It.IsAny<IDataContext>()))
+                .Callback<IActionDefWithId, IDataContext>(
+                    (id, context) =>
+                    {
+                        var action = registeredHandlers[id];
+                        var delAction = action as KaVEDelegateActionHandler;
+                        if (delAction != null)
+                        {
+                            // TODO RS9: use "Execute" and make Action private again... no idea how to mock the "chaining" to the next delegate though
+                            delAction.Action();
+                        }
+                    });
+
+            SetupExecutableAction(am, _actionDefs, ForceCompleteActionId);
+            SetupExecutableAction(am, _actionDefs, EnterActionId);
+            SetupExecutableAction(am, _actionDefs, TabActionId);
+
             return mockActionManager;
+        }
+
+        public void SetupExecutableAction(IActionManager manager, IActionDefs defs, string actionId)
+        {
+            var actionDef = Mock.Of<IActionDefWithId>();
+            Mock.Get(defs).Setup(d => d.GetActionDefById(actionId)).Returns(actionDef);
         }
 
         [Test]
@@ -209,7 +251,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.CodeCompletion
         {
             var lookupItems = LookupItemsMockUtils.MockLookupItemList(4);
             var invocations = 0;
-            var detectedTrigger = default (IDEEvent.Trigger);
+            var detectedTrigger = default(IDEEvent.Trigger);
             _manager.OnCancelled += trigger =>
             {
                 invocations++;
@@ -353,8 +395,8 @@ namespace KaVE.VS.FeedbackGenerator.Tests.CodeCompletion
 
         private void WhenActionIsExecuted(string actionId)
         {
-            // TODO RS9
-            //_mockActionManager.Object.GetExecutableAction(actionId).Execute(new Mock<IDataContext>().Object);
+            var def = _mockActionManager.Object.Defs.GetActionDefById(actionId);
+            _mockActionManager.Object.Handlers.Evaluate(def, Mock.Of<IDataContext>());
         }
 
         private void WhenItemCompletedIsRaised(ILookupItem appliedItem)

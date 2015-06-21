@@ -93,7 +93,7 @@ namespace KaVE.VS.FeedbackGenerator.CodeCompletion
         private void RegisterAction(string forcecompleteitem, Action action)
         {
             var forceCompleteItemAction = _actionManager.Defs.GetActionDefById(forcecompleteitem);
-            _actionManager.Handlers.AddHandler(forceCompleteItemAction, new DelegateActionHandler(action));
+            _actionManager.Handlers.AddHandler(forceCompleteItemAction, new KaVEDelegateActionHandler(action));
         }
 
         /// <summary>
