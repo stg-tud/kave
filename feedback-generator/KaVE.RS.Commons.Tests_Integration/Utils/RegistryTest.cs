@@ -61,6 +61,14 @@ namespace KaVE.RS.Commons.Tests_Integration.Utils
             Assert.IsTrue(component.IsReadDeal);
         }
 
+        [Test]
+        public void RegistrationsCanBeChecked()
+        {
+            Assert.IsFalse(Registry.IsRegistered<ITestShellComponent>());
+            Registry.RegisterComponent(CreateMockComponent());
+            Assert.IsTrue(Registry.IsRegistered<ITestShellComponent>());
+        }
+
         private static ITestShellComponent CreateMockComponent()
         {
             var mock = new Mock<ITestShellComponent>();

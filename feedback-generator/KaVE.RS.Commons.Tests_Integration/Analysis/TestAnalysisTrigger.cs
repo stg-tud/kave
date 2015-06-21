@@ -38,7 +38,7 @@ using KaVE.RS.Commons.Utils;
 
 namespace KaVE.RS.Commons.Tests_Integration.Analysis
 {
-    [ShellComponent, Language(typeof (CSharpLanguage))]
+    [Language(typeof (CSharpLanguage))]
     public class TestAnalysisTrigger : CSharpItemsProviderBasic
     {
         public static bool IsPrintingType = false;
@@ -49,19 +49,29 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis
         public ISST LastSST { get; private set; }
         public Tuple<Exception, string> LastException { get; private set; }
 
-        public TestAnalysisTrigger()
-        {
-            //Registry.RegisterComponent(this);
-        }
-
         public bool HasFailed
         {
             get { return LastException != null; }
         }
 
+        public TestAnalysisTrigger()
+        {
+            RefreshRegistration();
+        }
+
         protected override bool IsAvailable(CSharpCodeCompletionContext context)
         {
+            // necessary to cope wth Registry.Clear() in some test tear downs
+            RefreshRegistration();
             return true;
+        }
+
+        private void RefreshRegistration()
+        {
+            if (!Registry.IsRegistered<TestAnalysisTrigger>())
+            {
+                Registry.RegisterComponent(this);
+            }
         }
 
         protected override bool AddLookupItems(CSharpCodeCompletionContext context, GroupedItemsCollector collector)
@@ -76,8 +86,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis
                 PrintType(context, LastCompletionMarker);
             }
 
-            
-            
+
             LastSST = LastContext.SST;
 
             return false;

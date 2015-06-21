@@ -51,5 +51,10 @@ namespace KaVE.RS.Commons.Utils
         {
             ComponentDictionary.Clear();
         }
+
+        public static bool IsRegistered<T>()
+        {
+            return ComponentDictionary.ContainsKey(typeof (T));
+        }
     }
 }

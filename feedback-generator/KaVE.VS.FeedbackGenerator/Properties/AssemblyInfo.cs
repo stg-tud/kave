@@ -12,18 +12,11 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
- * Contributors:
- *    - Sven Amann
  */
 
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using KaVE.VS.FeedbackGenerator;
-
-// General Information about an assembly is controlled through the following 
-// set of attributes. Change these attribute values to modify the information
-// associated with an assembly.
 
 [assembly: AssemblyTitle(RSEnv.ExtensionId)]
 [assembly:
@@ -37,17 +30,5 @@ using KaVE.VS.FeedbackGenerator;
 [assembly: AssemblyCulture("")]
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
-
-
-// TODO RS9
-/*
-// The following information is displayed by ReSharper in the Plugins dialog
-[assembly: PluginTitle(RSEnv.ExtensionId)]
-[assembly: PluginDescription("Generates IDE events from the interaction of developers with VisualStudio and ReSharper 8 features.")]
-[assembly: PluginVendor("TU Darmstadt")]
-*/
-
-// Allow internal access for test projects
-
 [assembly: InternalsVisibleTo("KaVE.VsFeedbackGenerator.Tests")]
 [assembly: InternalsVisibleTo("KaVE.VsFeedbackGenerator.RS8Tests")]
