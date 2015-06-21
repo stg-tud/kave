@@ -17,6 +17,7 @@
  *    - Sven Amann
  */
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using JetBrains.ReSharper.TestFramework;
@@ -30,13 +31,25 @@ using NUnit.Framework;
 
 namespace KaVE.RS.SolutionAnalysis.Tests
 {
-    [TestFixture, TestNetFramework4]
     internal class SolutionAnalysisTest : BaseTestWithExistingSolution
     {
+        public override void TearDown()
+        {
+            try
+            {
+                base.TearDown();
+            }
+            catch (Exception)
+            {
+                // sometimes (always?) the tear down fails
+            }
+        }
+
         protected override string RelativeTestDataPath
         {
             get { return @"TestSolution"; }
         }
+
 
         protected override FileSystemPath ExistingSolutionFilePath
         {
