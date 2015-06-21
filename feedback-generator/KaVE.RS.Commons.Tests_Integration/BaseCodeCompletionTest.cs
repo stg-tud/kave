@@ -37,6 +37,7 @@ using JetBrains.TextControl;
 using JetBrains.Util;
 using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Utils.Assertion;
+using KaVE.RS.Commons.Utils;
 using NUnit.Framework;
 
 namespace KaVE.RS.Commons.Tests_Integration
@@ -132,8 +133,8 @@ namespace KaVE.RS.Commons.Tests_Integration
             var codeCompletionResult = intellisenseManager.GetCompletionResult(parameters, textControl);
             if (codeCompletionResult != null)
             {
-                var lis = codeCompletionResult.LookupItems;
-                /*
+                /* var lis = codeCompletionResult.LookupItems;
+                
                 var best =
                     ((SelectionStrategyWithPreferences) codeCompletionResult.SelectionStrategy).GetAllPreferredItems(
                         codeCompletionResult.GetFilteredLookupItems()).ToHashSet();
@@ -173,7 +174,7 @@ namespace KaVE.RS.Commons.Tests_Integration
         {
             // TODO RS9
             ResultProposalCollection = new ProposalCollection();
-              //
+            //
 
             IPsiSourceFile psiSourceFile = textControl.Document.GetPsiSourceFile(Solution);
             Assert.IsNotNull(psiSourceFile, "psiSourceFile == null");
@@ -240,6 +241,26 @@ namespace KaVE.RS.Commons.Tests_Integration
                 parameters,
                 sorting,
                 out filteredItems);
+
+            //
+            string setting1 = BaseTest.GetSetting(documentText, "FILTERS");
+            JetHashSet<string> jetHashSet;
+            if (string.IsNullOrEmpty(setting1))
+            {
+                jetHashSet = null;
+            }
+            else
+            {
+                jetHashSet = setting1.Split(';').ToHashSet();
+            }
+            JetHashSet<string> filterIds = jetHashSet;
+
+            var res = intellisenseManager.GetCompletionResult(parameters, textControl);
+            // var itemsFromResult = GetItemsFromResult(listResult, filterIds, filteredItems);
+
+            ResultProposalCollection = res == null ? new ProposalCollection() : res.LookupItems.ToProposalCollection();
+            //
+
             /*ExecuteWithGold(
                 projectFile,
                 writer =>

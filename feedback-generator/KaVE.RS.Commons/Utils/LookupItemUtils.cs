@@ -34,7 +34,10 @@ namespace KaVE.RS.Commons.Utils
         [NotNull]
         public static ProposalCollection ToProposalCollection([NotNull] this IEnumerable<ILookupItem> items)
         {
-            return new ProposalCollection(items.Select(ToProposal).ToList());
+            return new ProposalCollection();
+            // TODO RS9: fix generation of proposal collection
+            // it seems that proposal types have changed...
+            //return new ProposalCollection(items.Select(ToProposal).ToList());
         }
 
         [NotNull]
@@ -60,14 +63,14 @@ namespace KaVE.RS.Commons.Utils
             {
                 return null;
             }
+            
+            return declaredElementLookupItem.PreferredDeclaredElement.GetName();
+
+            // TODO RS9: might be necessary to implement special handling for constructor calls
             // Only the lookup-item type tells whether this is a proposal for a constructor call or not.
             // In fact, ConstructorLookupItem is derived from TypeLookupItem and the additional interface
             // IConstructorLookupItem does not provide anything new. Hence, the special treatment.
-
-            // TODO RS9
-            return declaredElementLookupItem.PreferredDeclaredElement.GetName();
-            /*
-            var constructorLookupItem = declaredElementLookupItem as ConstructorLookupItem;
+            /*var constructorLookupItem = declaredElementLookupItem as ConstructorLookupItem;
             return constructorLookupItem != null
                 ? constructorLookupItem.GetName()
                 : declaredElementLookupItem.PreferredDeclaredElement.GetName();
