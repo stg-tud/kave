@@ -12,9 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
- * Contributors:
- *    - Uli Fahrer
  */
 
 using System.Windows.Controls;
@@ -22,7 +19,6 @@ using Hardcodet.Wpf.TaskbarNotification;
 using JetBrains.ActionManagement;
 using KaVE.RS.Commons.Utils;
 using KaVE.VS.FeedbackGenerator.Export;
-using KaVE.VS.FeedbackGenerator.SessionManager.Presentation;
 
 namespace KaVE.VS.FeedbackGenerator.TrayNotification
 {
@@ -32,7 +28,7 @@ namespace KaVE.VS.FeedbackGenerator.TrayNotification
         {
             ClosePopup();
             var actionManager = Registry.GetComponent<IActionManager>();
-            actionManager.ExecuteActionGuarded<UploadWizardAction>(SessionManagerWindowRegistrar._lifetime);
+            actionManager.ExecuteAction<UploadWizardAction>();
         }
 
         protected void ClosePopup()

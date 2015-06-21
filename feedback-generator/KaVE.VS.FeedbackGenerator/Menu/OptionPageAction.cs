@@ -12,9 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
- * Contributors:
- *    - Uli Fahrer
  */
 
 using JetBrains.ActionManagement;
@@ -22,7 +19,6 @@ using JetBrains.Application.DataContext;
 using JetBrains.UI.ActionsRevised;
 using JetBrains.UI.Options;
 using KaVE.RS.Commons.Utils;
-using KaVE.VS.FeedbackGenerator.SessionManager.Presentation;
 
 namespace KaVE.VS.FeedbackGenerator.Menu
 {
@@ -44,7 +40,7 @@ namespace KaVE.VS.FeedbackGenerator.Menu
 
         public void Execute(IDataContext context, DelegateExecute nextExecute)
         {
-            _actionManager.ExecuteActionGuarded<ShowOptionsAction>(SessionManagerWindowRegistrar._lifetime);
+            _actionManager.ExecuteAction<ShowOptionsAction>();
         }
     }
 }

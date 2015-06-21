@@ -58,8 +58,6 @@ namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
     [Language(typeof (CSharpLanguage))]
     public class CodeCompletionContextAnalysisTrigger : CSharpItemsProviderBase<CSharpCodeCompletionContext>
     {
-        // TODO RS9: get rid of this ugly flag... currently necessary for successful test execution (should be solved with RS9 automatically)
-        public static bool Disabled = false;
         public const int LimitInMs = 1000;
 
         private readonly CodeCompletionEventHandler _handler;
@@ -76,7 +74,7 @@ namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
 
         protected override bool IsAvailable(CSharpCodeCompletionContext context)
         {
-            return !Disabled;
+            return true;
         }
 
         protected override bool AddLookupItems(CSharpCodeCompletionContext context, GroupedItemsCollector collector)

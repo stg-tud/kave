@@ -29,7 +29,8 @@ using KaVE.JetBrains.Annotations;
 
 namespace KaVE.VS.FeedbackGenerator.CodeCompletion
 {
-    public interface IExtendedLookupWindowManager {
+    public interface IExtendedLookupWindowManager
+    {
         IExtendedLookup CurrentLookup { get; }
         event EventHandler BeforeLookupWindowShown;
     }
@@ -38,7 +39,6 @@ namespace KaVE.VS.FeedbackGenerator.CodeCompletion
     public class ExtendedLookupWindowManager : IExtendedLookupWindowManager
     {
         private static readonly FieldInfo LookupWindowField =
-            // TODO RS9: was "LookupWindowManagerImpl"
             typeof (LookupWindowManager).GetField(
                 "myCachedLookupWindow",
                 BindingFlags.NonPublic | BindingFlags.Instance);
@@ -68,7 +68,8 @@ namespace KaVE.VS.FeedbackGenerator.CodeCompletion
         public event EventHandler BeforeLookupWindowShown = delegate { };
     }
 
-    public interface IExtendedLookup {
+    public interface IExtendedLookup
+    {
         Lifetime Lifetime { get; }
         string Prefix { get; }
         IEnumerable<ILookupItem> DisplayedItems { get; }
@@ -128,11 +129,7 @@ namespace KaVE.VS.FeedbackGenerator.CodeCompletion
 
         public ILookupItem SelectedItem
         {
-            get
-            {
-                // TODO RS9
-                return null;//_baseLookup.Selection.Item;
-            }
+            get { return _baseLookup.GetSelection().Item; }
         }
 
         public event ItemsHandler BeforeShownItemsUpdated = delegate { };

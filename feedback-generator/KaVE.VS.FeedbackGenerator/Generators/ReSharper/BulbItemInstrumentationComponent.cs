@@ -46,11 +46,6 @@ namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
             _dateUtils = dateUtils;
         }
 
-        public void CollectSyncResults(object data, IntentionsBulbItems intentionsBulbItems, ITextControl textControl)
-        {
-            // TODO RS9
-        }
-
         public int Priority
         {
             get
@@ -61,15 +56,10 @@ namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
             }
         }
 
-        // TODO RS9
         public object PreExecute(ITextControl textControl)
         {
+            // the returned object will be passed to "CollectActions" as the last parameter
             return null;
-        }
-
-        public void WaitRoslynTasks(object data)
-        {
-            // TODO RS9
         }
 
         public void CollectActions(IntentionsBulbItems intentionsBulbItems,
@@ -99,5 +89,11 @@ namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
                 Asserts.Fail("unexpected item type: {0}", executableItem.GetType().FullName);
             }
         }
+
+        // unused
+        public void CollectSyncResults(object data, IntentionsBulbItems intentionsBulbItems, ITextControl textControl) {}
+
+        // unused
+        public void WaitRoslynTasks(object data) {}
     }
 }

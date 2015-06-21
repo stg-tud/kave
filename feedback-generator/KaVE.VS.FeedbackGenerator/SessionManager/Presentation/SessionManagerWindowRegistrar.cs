@@ -32,10 +32,6 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager.Presentation
     public class SessionManagerWindowRegistrar
     {
         [UsedImplicitly]
-        // TODO RS9: was private and non static.. this is most likely not the best way to do propagate a lifetime xD
-        public static Lifetime _lifetime;
-
-        [UsedImplicitly]
         private readonly ToolWindowClass _toolWindowClass;
 
         public SessionManagerWindowRegistrar(Lifetime lifetime,
@@ -46,7 +42,6 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager.Presentation
             ISettingsStore settingsStore)
         {
             // objects are kept in fields to prevent garbage collection
-            _lifetime = lifetime;
             _toolWindowClass = toolWindowManager.Classes[descriptor];
             _toolWindowClass.RegisterEmptyContent(
                 lifetime,

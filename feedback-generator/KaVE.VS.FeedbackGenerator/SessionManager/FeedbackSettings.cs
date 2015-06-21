@@ -12,9 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
- * Contributors:
- *    - Sven Amann
  */
 
 using JetBrains.Application.Settings;
@@ -25,7 +22,7 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager
     // WARNING: Do not change classname, as it is used to identify settings
     public class FeedbackSettings
     {
-        // TODO RS9 might be obsolete to store settings for the version now!
+        // TODO: might be obsolete to store settings for the version now?!
         [SettingsEntry("", "The version of the currently installed KaVE-Plugin")]
         public string PluginVersion;
     }

@@ -33,7 +33,7 @@ using ILogger = KaVE.Commons.Utils.Exceptions.ILogger;
 namespace KaVE.RS.SolutionAnalysis
 {
     [SolutionComponent]
-    public class InspectCodeIntegrator // TODO RS9: IInspectCodeConsumerFactory
+    public class InspectCodeIntegrator // TODO RS9: strange dependency error when extending IInspectCodeConsumerFactory
     {
         private const string LogFileName = "SyntaxTrees.log";
         private const string ErrorsFileName = "SerializationErrors.log";
@@ -75,7 +75,6 @@ namespace KaVE.RS.SolutionAnalysis
                             file.WriteLine();
                             file.WriteLine();
                         }
-                        
                     }
                 }
             }

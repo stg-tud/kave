@@ -34,10 +34,7 @@ namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
     {
         private readonly string _actionId;
 
-        public EventGeneratingActionHandler(string actionId,
-            IRSEnv env,
-            IMessageBus messageBus,
-            IDateUtils dateUtils)
+        public EventGeneratingActionHandler(string actionId, IRSEnv env, IMessageBus messageBus, IDateUtils dateUtils)
             : base(env, messageBus, dateUtils)
         {
             _actionId = actionId;

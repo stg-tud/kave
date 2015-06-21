@@ -15,7 +15,6 @@
  */
 
 using System.Collections.Generic;
-using System.Linq;
 using JetBrains.Annotations;
 using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure.LookupItems;
 using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure.LookupItems.Impl;
@@ -63,7 +62,7 @@ namespace KaVE.RS.Commons.Utils
             {
                 return null;
             }
-            
+
             return declaredElementLookupItem.PreferredDeclaredElement.GetName();
 
             // TODO RS9: might be necessary to implement special handling for constructor calls
@@ -77,7 +76,6 @@ namespace KaVE.RS.Commons.Utils
              */
         }
 
-        // TODO RS9
         /*
         private static IMethodName GetName(this ConstructorLookupItem constructor)
         {
@@ -105,7 +103,6 @@ namespace KaVE.RS.Commons.Utils
         private static IName TryGetNameFromKeywordOrTextualLookupItem(ILookupItem lookupItem)
         {
             // TODO implement specific name subclasses?
-            // TODO RS9
             return (lookupItem is IKeywordLookupItem || lookupItem is ITextualLookupItem)
                 ? Name.Get(lookupItem.GetType().Name + ":" + lookupItem.DisplayName)
                 : null;

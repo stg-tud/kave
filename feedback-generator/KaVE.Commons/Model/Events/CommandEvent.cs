@@ -45,5 +45,10 @@ namespace KaVE.Commons.Model.Events
                 return (base.GetHashCode()*397) ^ (CommandId != null ? CommandId.GetHashCode() : 0);
             }
         }
+
+        public override string ToString()
+        {
+            return this.ToStringReflection();
+        }
     }
 }

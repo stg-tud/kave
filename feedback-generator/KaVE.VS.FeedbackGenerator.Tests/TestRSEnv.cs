@@ -24,12 +24,17 @@ namespace KaVE.VS.FeedbackGenerator.Tests
 {
     internal class TestRSEnv : IRSEnv
     {
+        public SemanticVersion DefaultVersion
+        {
+            get { return new SemanticVersion(0, 0, 1, "test"); }
+        }
+
         private readonly IIDESession _session;
 
         public TestRSEnv(IIDESession session)
         {
             _session = session;
-            KaVEVersion = new SemanticVersion("XYZ");
+            KaVEVersion = DefaultVersion;
         }
 
         public SemanticVersion KaVEVersion { get; set; }

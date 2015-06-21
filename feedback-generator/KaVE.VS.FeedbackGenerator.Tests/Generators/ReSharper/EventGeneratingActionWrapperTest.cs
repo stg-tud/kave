@@ -22,6 +22,7 @@ using KaVE.Commons.Model.Events;
 using KaVE.Commons.TestUtils;
 using KaVE.VS.FeedbackGenerator.Generators.ReSharper;
 using Moq;
+using NuGet;
 using NUnit.Framework;
 
 namespace KaVE.VS.FeedbackGenerator.Tests.Generators.ReSharper
@@ -47,8 +48,9 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.ReSharper
 
             var expected = new CommandEvent
             {
+                KaVEVersion = TestRSEnv.DefaultVersion.ToString(),
                 IDESessionUUID = TestIDESession.UUID,
-                CommandId = "KaVE.VsFeedbackGenerator.Tests.Generators.ReSharper.EventGeneratingActionWrapperTest",
+                CommandId = "KaVE.VS.FeedbackGenerator.Tests.Generators.ReSharper.EventGeneratingActionWrapperTest",
                 TriggeredAt = TestDateUtils.Now,
                 Duration = TimeSpan.FromSeconds(0)
             };

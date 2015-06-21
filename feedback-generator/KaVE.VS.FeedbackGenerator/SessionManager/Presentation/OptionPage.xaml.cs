@@ -32,6 +32,7 @@ using JetBrains.UI.Options;
 using JetBrains.UI.Options.OptionPages.ToolsPages;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.VS.FeedbackGenerator.Interactivity;
+using KaVE.VS.FeedbackGenerator.Utils;
 using MessageBox = JetBrains.Util.MessageBox;
 
 namespace KaVE.VS.FeedbackGenerator.SessionManager.Presentation
@@ -41,6 +42,7 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager.Presentation
     public partial class OptionPage : IOptionsPage
     {
         private readonly OptionPageViewModel _optionPageViewModel;
+        private readonly Lifetime _lifetime;
         private readonly IActionManager _actionManager;
         private const string PID = "FeedbackGenerator.OptionPage";
 
@@ -51,6 +53,7 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager.Presentation
             _optionPageViewModel = new OptionPageViewModel();
             _optionPageViewModel.ErrorNotificationRequest.Raised += new NotificationRequestHandler(this).Handle;
 
+            _lifetime = lifetime;
             _actionManager = actionManager;
             InitializeComponent();
 
@@ -77,8 +80,7 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager.Presentation
 
             if (result)
             {
-                // TODO RS9
-                //_actionManager.ExecuteActionGuarded(SettingsCleaner.ActionId, "reset-all");
+                _actionManager.ExecuteActionGuarded<SettingsCleaner>(_lifetime);
                 CloseWindow();
             }
         }

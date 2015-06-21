@@ -21,6 +21,7 @@ using System.ComponentModel;
 using System.Windows;
 using JetBrains.ActionManagement;
 using KaVE.VS.FeedbackGenerator.Interactivity;
+using KaVE.VS.FeedbackGenerator.SessionManager.Presentation;
 
 namespace KaVE.VS.FeedbackGenerator.Export
 {
@@ -50,8 +51,7 @@ namespace KaVE.VS.FeedbackGenerator.Export
         private void On_Review_Click(object sender, RoutedEventArgs e)
         {
             Close();
-            // TODO RS9
-            //_actionManager.ExecuteActionGuarded(SessionManagerWindowActionHandler.ActionId, "AgentAction");
+            _actionManager.ExecuteAction<SessionManagerWindowAction>();
         }
 
         private void UploadButtonClicked(object sender, RoutedEventArgs e)
@@ -74,7 +74,7 @@ namespace KaVE.VS.FeedbackGenerator.Export
             }
         }
 
-       protected override void OnClosing(CancelEventArgs e)
+        protected override void OnClosing(CancelEventArgs e)
         {
             base.OnClosing(e);
             if (_uploadWizardViewModel.IsBusy)
@@ -84,5 +84,5 @@ namespace KaVE.VS.FeedbackGenerator.Export
                     Properties.UploadWizard.window_title);
             }
         }
-   }
+    }
 }

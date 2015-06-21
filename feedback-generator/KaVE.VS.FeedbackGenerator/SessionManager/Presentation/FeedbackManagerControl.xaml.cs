@@ -49,8 +49,6 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager.Presentation
 
             InitializeComponent();
 
-            // TODO RS9 -- unrelated to RS9, but this was previously part of the XAML and did not parse anymore after the refactoring
-            // see: http://stackoverflow.com/questions/27106277/valueconverter-with-multiple-arguments
             Resources.Add("ObjectToVisibilityConverter", new ObjectToVisibilityConverter());
             Resources.Add("InverseObjectToVisibilityConverter", new InverseObjectToVisibilityConverter());
             Resources.Add("BooleanToVisibilityConverter", new BooleanToVisibilityConverter());
@@ -96,7 +94,7 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager.Presentation
 
         public void Export_OnClick(object sender, RoutedEventArgs e)
         {
-            _actionManager.ExecuteActionGuarded<UploadWizardAction>(SessionManagerWindowRegistrar._lifetime);
+            _actionManager.ExecuteAction<UploadWizardAction>();
         }
 
         private void VisitUploadPageButton_OnClick(object sender, RoutedEventArgs e)
@@ -115,7 +113,7 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager.Presentation
 
         private void OpenOptionPage_OnClick(object sender, RoutedEventArgs e)
         {
-            _actionManager.ExecuteActionGuarded<ShowOptionsAction>(SessionManagerWindowRegistrar._lifetime);
+            _actionManager.ExecuteAction<ShowOptionsAction>();
         }
     }
 }

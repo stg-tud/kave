@@ -56,7 +56,7 @@ namespace KaVE.VS.FeedbackGenerator.CodeCompletion
             }
         }
 
-        // TODO RS9
+        // TODO RS9: fix for stable release
         /*
         public string OrderingString
         {

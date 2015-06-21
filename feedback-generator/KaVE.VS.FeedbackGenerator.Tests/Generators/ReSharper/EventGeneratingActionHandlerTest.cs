@@ -29,6 +29,7 @@ using NUnit.Framework;
 
 namespace KaVE.VS.FeedbackGenerator.Tests.Generators.ReSharper
 {
+    // TODO RS9
     internal class EventGeneratingActionHandlerTest : EventGeneratorTestBase
     {
         private const string TestActionId = "TestActionId";
@@ -40,9 +41,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.ReSharper
         public void SetUp()
         {
             _mockTestAction = new Mock<IExecutableAction>();
-            // TODO RS9
-            //_mockTestAction.Setup(a => a.Id).Returns(TestActionId);
-            //_uut = new EventGeneratingActionHandler(_mockTestAction.Object, TestRSEnv, TestMessageBus, TestDateUtils);
+            _uut = new EventGeneratingActionHandler(TestActionId, TestRSEnv, TestMessageBus, TestDateUtils);
             _testDataContext = new Mock<IDataContext>().Object;
         }
 
