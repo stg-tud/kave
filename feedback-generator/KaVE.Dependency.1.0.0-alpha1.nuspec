@@ -20,9 +20,9 @@
         </dependencies>
     </metadata>
     <files>
-		<file src="KaVE.VsFeedbackGenerator\bin\Debug\KaVE.Commons.dll" target="lib\net40\KaVE.Commons.dll" />
-		<file src="KaVE.VsFeedbackGenerator\bin\Debug\KaVE.ReSharper.Commons.dll" target="lib\net40\KaVE.ReSharper.Commons.dll" />
-		<file src="KaVE.VsFeedbackGenerator\bin\Debug\KaVE.VsFeedbackGenerator.dll" target="lib\net40\KaVE.VsFeedbackGenerator.dll" />
+		<file src="KaVE.VS.FeedbackGenerator\bin\Debug\KaVE.Commons.dll" target="lib\net40\KaVE.Commons.dll" />
+		<file src="KaVE.VS.FeedbackGenerator\bin\Debug\KaVE.RS.Commons.dll" target="lib\net40\KaVE.RS.Commons.dll" />
+		<file src="KaVE.VS.FeedbackGenerator\bin\Debug\KaVE.VS.FeedbackGenerator.dll" target="lib\net40\KaVE.VS.FeedbackGenerator.dll" />
         <file src="3rd-party\MsgBox.dll" target="lib\net40\MsgBox.dll" />
         <file src="3rd-party\smileNet.dll" target="lib\net40\smileNet.dll" />
         <file src="3rd-party\System.Net.Http.dll" target="lib\net40\System.Net.Http.dll" />
