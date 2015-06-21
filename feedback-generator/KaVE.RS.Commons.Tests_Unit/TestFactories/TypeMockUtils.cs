@@ -17,10 +17,13 @@
 using System;
 using System.Collections.Generic;
 using JetBrains.Application;
+using JetBrains.Application.changes;
 using JetBrains.Metadata.Reader.API;
 using JetBrains.Metadata.Utils;
 using JetBrains.ProjectModel;
+using JetBrains.ProjectModel.Impl;
 using JetBrains.ProjectModel.Model2.Assemblies.Interfaces;
+using JetBrains.ProjectModel.Properties;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.Impl.Resolve;
@@ -125,8 +128,7 @@ namespace KaVE.RS.Commons.Tests_Unit.TestFactories
 
         private static AssemblyNameInfo MockAssemblyNameInfo(string name, string version)
         {
-            // TODO RS9
-            return AssemblyNameInfo.Parse(name); // was object init in which name and version were set
+            return AssemblyNameInfo.Create(name, new Version(version));
         }
 
         public static IProject MockUncompilableProject(string name)
@@ -134,29 +136,29 @@ namespace KaVE.RS.Commons.Tests_Unit.TestFactories
             return MockProjectImpl(name);
         }
 
+        // TODO RS9: this fails since the upgrade and it is not mockable
         private static ProjectImpl MockProjectImpl(string name)
         {
             var fileSystemPath = FileSystemPath.TryParse(".");
-            var mockLocks = new Mock<IShellLocks>();
+            var locks = Mock.Of<IShellLocks>();
 
-            // TODO RS9
-            return null;
-            /*var mockSolutionElement = new SolutionElement(
+            var solutionElement = new SolutionElement(
                 fileSystemPath,
-                new Mock<ISolutionOwner>().Object,
-                new Mock<ChangeManager>().Object,
-                mockLocks.Object,
-                null,
+                Mock.Of<ISolutionOwner>(),
+                Mock.Of<ChangeManager>(),
+                locks,
                 null);
-            return ProjectImpl.CreateProjectImpl(
-                mockSolutionElement,
-                new Mock<IProjectProperties>().Object,
-                mockLocks.Object,
+
+            var projectElement = ProjectImpl.CreateProjectImpl(
+                solutionElement,
+                Mock.Of<IProjectProperties>(),
                 Guid.NewGuid(),
                 null,
                 fileSystemPath,
                 fileSystemPath,
-                name);*/
+                name);
+
+            return projectElement;
         }
     }
 }

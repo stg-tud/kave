@@ -74,58 +74,23 @@ namespace KaVE.RS.Commons.Utils.Names
         }
 
         [NotNull]
-        internal static IName GetName([NotNull] this IDeclaredElement element,
+        internal static IName GetName([NotNull] this IDeclaredElement elem,
             [NotNull] ISubstitution substitution,
-            IDictionary<IDeclaredElement, IName> seenElements)
+            IDictionary<IDeclaredElement, IName> seen)
         {
             return
-                IfElementIs<INamespaceName, INamespace>(
-                    element,
-                    GetName,
-                    substitution,
-                    NamespaceName.UnknownName,
-                    seenElements) ??
-                IfElementIs<ITypeName, ITypeParameter>(
-                    element,
-                    GetName,
-                    substitution,
-                    TypeName.UnknownName,
-                    seenElements) ??
-                IfElementIs<ITypeName, ITypeElement>(element, GetName, substitution, TypeName.UnknownName, seenElements) ??
-                IfElementIs<IMethodName, IFunction>(
-                    element,
-                    GetName,
-                    substitution,
-                    MethodName.UnknownName,
-                    seenElements) ??
-                IfElementIs<IParameterName, IParameter>(
-                    element,
-                    GetName,
-                    substitution,
-                    ParameterName.UnknownName,
-                    seenElements) ??
-                IfElementIs<IFieldName, IField>(element, GetName, substitution, FieldName.UnknownName, seenElements) ??
-                IfElementIs<IPropertyName, IProperty>(
-                    element,
-                    GetName,
-                    substitution,
-                    PropertyName.UnknownName,
-                    seenElements) ??
-                IfElementIs<IEventName, IEvent>(element, GetName, substitution, EventName.UnknownName, seenElements) ??
-                IfElementIs<IName, ITypeOwner>(
-                    element,
-                    GetName,
-                    substitution,
-                    LocalVariableName.UnknownName,
-                    seenElements) ??
-                IfElementIs<IName, IAlias>(element, GetName, substitution, AliasName.UnknownName, seenElements) ??
-                IfElementIs<IName, IDeclaredElement>(
-                    element,
-                    (e, s, a) => null,
-                    substitution,
-                    Name.UnknownName,
-                    seenElements) ??
-                FallbackHandler(element, substitution);
+                IfElementIs<INamespaceName, INamespace>(elem, GetName, substitution, NamespaceName.UnknownName, seen) ??
+                IfElementIs<ITypeName, ITypeParameter>(elem, GetName, substitution, TypeName.UnknownName, seen) ??
+                IfElementIs<ITypeName, ITypeElement>(elem, GetName, substitution, TypeName.UnknownName, seen) ??
+                IfElementIs<IMethodName, IFunction>(elem, GetName, substitution, MethodName.UnknownName, seen) ??
+                IfElementIs<IParameterName, IParameter>(elem, GetName, substitution, ParameterName.UnknownName, seen) ??
+                IfElementIs<IFieldName, IField>(elem, GetName, substitution, FieldName.UnknownName, seen) ??
+                IfElementIs<IPropertyName, IProperty>(elem, GetName, substitution, PropertyName.UnknownName, seen) ??
+                IfElementIs<IEventName, IEvent>(elem, GetName, substitution, EventName.UnknownName, seen) ??
+                IfElementIs<IName, ITypeOwner>(elem, GetName, substitution, LocalVariableName.UnknownName, seen) ??
+                IfElementIs<IName, IAlias>(elem, GetName, substitution, AliasName.UnknownName, seen) ??
+                IfElementIs<IName, IDeclaredElement>(elem, (e, s, a) => null, substitution, Name.UnknownName, seen) ??
+                FallbackHandler(elem, substitution);
         }
 
         private static IName FallbackHandler(IDeclaredElement element, ISubstitution substitution)

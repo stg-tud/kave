@@ -64,7 +64,8 @@ namespace KaVE.RS.Commons.Tests_Unit.Utils.Names
             AssertName(typeElement, TypeName.Get("Full.Qualified.TypeName, AssemblyName, 0.9.8.7"));
         }
 
-        [Test]
+        // TODO RS9: it is not longer possible to mock solutions/projects... migrate this test to a "code completion test", where these exist
+        [Test, Ignore]
         public void SouldGetQualifiedNameForTypeElementInProject()
         {
             var typeElement = TypeMockUtils.MockTypeElement("TypeName", TypeMockUtils.MockProject("Project", "1.0.0.0"));
@@ -72,7 +73,8 @@ namespace KaVE.RS.Commons.Tests_Unit.Utils.Names
             AssertName(typeElement, TypeName.Get("TypeName, Project, 1.0.0.0"));
         }
 
-        [Test]
+        // TODO RS9: it is not longer possible to mock solutions/projects... migrate this test to a "code completion test", where these exist
+        [Test, Ignore]
         public void SouldGetQualifiedNameForTypeElementInUncompilableProject()
         {
             var typeElement = TypeMockUtils.MockTypeElement(
