@@ -2,9 +2,6 @@
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="..\packages\JetBrains.ReSharper.SDK.Tests.9.1.20150522.81235\build\JetBrains.ReSharper.SDK.Tests.props" Condition="Exists('..\packages\JetBrains.ReSharper.SDK.Tests.9.1.20150522.81235\build\JetBrains.ReSharper.SDK.Tests.props')" />
   <PropertyGroup>
-    <ReSharperSdkMode>Tests</ReSharperSdkMode>
-  </PropertyGroup>
-  <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
@@ -167,7 +164,6 @@
     <None Include="..\KaVE.licenseheader">
       <Link>KaVE.licenseheader</Link>
     </None>
-    <None Include="app.config" />
     <None Include="packages.config" />
     <None Include="test\data\nuget.config" />
   </ItemGroup>
