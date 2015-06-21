@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2011/10/nuspec.xsd">
     <metadata>
-        <id>KaVE.Bundle</id>
-        <version>1.0.0-alpha1</version>
+        <id>KaVE.Project</id>
+        <version>0.0.1-alpha1</version>
         <title>KaVE Project</title>
         <authors>KaVE Team</authors>
         <owners>Technische Universitaet Darmstadt</owners>
