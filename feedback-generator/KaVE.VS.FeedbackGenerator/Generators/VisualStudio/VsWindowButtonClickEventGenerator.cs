@@ -159,7 +159,7 @@ namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio
             {
                 return stringContent;
             }
-            // TODO @RS9
+            // TODO RS9
             /*var xmlContent = wpfContent as SystemProperties.System.Xml.XmlElement;
             if (xmlContent != null)
             {

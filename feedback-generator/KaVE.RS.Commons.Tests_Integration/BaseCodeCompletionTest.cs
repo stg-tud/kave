@@ -121,7 +121,6 @@ namespace KaVE.RS.Commons.Tests_Integration
             //CodeCompletionParameters parameters = completionParameters;
 
 
-            // TODO RS9: meaning of (now necessary) variable?
             var parameters = service != null
                 ? service.GetModifier(_myCodeCompletionTypes, automatic, settingsStore)
                 : CodeCompletionModifierProvider.GetModifierBasic(
@@ -140,7 +139,6 @@ namespace KaVE.RS.Commons.Tests_Integration
                         codeCompletionResult.GetFilteredLookupItems()).ToHashSet();
                 ResultProposalCollection = GetItemsFromResult(codeCompletionResult, best).ToProposalCollection();
                  * */
-                // TODO RS9
                 ResultProposalCollection = new ProposalCollection();
             }
             else
