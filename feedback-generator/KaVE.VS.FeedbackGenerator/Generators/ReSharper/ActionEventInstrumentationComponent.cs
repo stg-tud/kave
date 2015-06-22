@@ -17,16 +17,19 @@
  *    - Sven Amann
  */
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using JetBrains.ActionManagement;
 using JetBrains.Application;
 using JetBrains.Application.Components;
 using JetBrains.UI.ActionsRevised.Loader;
+using JetBrains.Util;
 using KaVE.Commons.Utils;
 using KaVE.VS.FeedbackGenerator.Export;
 using KaVE.VS.FeedbackGenerator.MessageBus;
 using KaVE.VS.FeedbackGenerator.Utils;
+using ILogger = KaVE.Commons.Utils.Exceptions.ILogger;
 
 namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
 {
@@ -36,12 +39,25 @@ namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
         public ActionEventInstrumentationComponent(IActionManager actionManager,
             IRSEnv env,
             IMessageBus messageBus,
-            IDateUtils dateUtils)
+            IDateUtils dateUtils,
+            ILogger logger)
         {
-            foreach (var action in GetInstrumentableActions(actionManager))
+            var instrumentableActions = GetInstrumentableActions(actionManager);
+            foreach (var action in instrumentableActions)
             {
                 var handler = new EventGeneratingActionHandler(action.ActionId, env, messageBus, dateUtils);
-                actionManager.Handlers.AddHandler(action, handler);
+                try
+                {
+                    actionManager.Handlers.AddHandler(action, handler);
+                }
+                catch (InvalidOperationException e)
+                {
+                    logger.Error(e, "exception while adding handler for actionId '{0}'", action.ActionId);
+                }
+                catch (Assertion.AssertionException e)
+                {
+                    logger.Error(e, "exception while adding handler for actionId '{0}'", action.ActionId);
+                }
             }
         }
 
@@ -51,9 +67,9 @@ namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
             return actionManager.Defs.GetAllActionDefs().Where(IsNoPrivateAction);
         }
 
-        private static bool IsNoPrivateAction(IActionDefWithId updatableAction)
+        private static bool IsNoPrivateAction(IActionDefWithId actionDef)
         {
-            var id = updatableAction.ActionId;
+            var id = actionDef.ActionId;
             return id != SettingsCleaner.ActionId && id != UploadWizardAction.Id;
         }
     }

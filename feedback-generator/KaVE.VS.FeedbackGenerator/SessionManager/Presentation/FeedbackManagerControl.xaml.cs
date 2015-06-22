@@ -48,11 +48,6 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager.Presentation
             _settingsStore = settingsStore;
 
             InitializeComponent();
-
-            Resources.Add("ObjectToVisibilityConverter", new ObjectToVisibilityConverter());
-            Resources.Add("InverseObjectToVisibilityConverter", new InverseObjectToVisibilityConverter());
-            Resources.Add("BooleanToVisibilityConverter", new BooleanToVisibilityConverter());
-            Resources.Add("InverseBoolConverter", new InverseBoolConverter());
         }
 
         public void OnVisibilityChanged(PropertyChangedEventArgs<bool> e)

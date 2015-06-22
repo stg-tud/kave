@@ -16,15 +16,14 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
 using JetBrains.Application;
-using JetBrains.DataFlow;
 using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure.LookupItems;
+using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure.Match;
 using JetBrains.ReSharper.Feature.Services.CodeCompletion.Lookup;
 using JetBrains.ReSharper.Feature.Services.Lookup;
-using JetBrains.UI.Controls;
+using JetBrains.Util;
 using KaVE.JetBrains.Annotations;
 
 namespace KaVE.VS.FeedbackGenerator.CodeCompletion
@@ -43,7 +42,8 @@ namespace KaVE.VS.FeedbackGenerator.CodeCompletion
                 "myCachedLookupWindow",
                 BindingFlags.NonPublic | BindingFlags.Instance);
 
-        private readonly ILookupWindowManager _manager;
+        // TODO RS9: was private
+        public readonly ILookupWindowManager _manager;
 
         public ExtendedLookupWindowManager(ILookupWindowManager manager)
         {
@@ -70,7 +70,7 @@ namespace KaVE.VS.FeedbackGenerator.CodeCompletion
 
     public interface IExtendedLookup
     {
-        Lifetime Lifetime { get; }
+        //Lifetime Lifetime { get; }
         string Prefix { get; }
         IEnumerable<ILookupItem> DisplayedItems { get; }
         ILookupItem SelectedItem { get; }
@@ -83,11 +83,12 @@ namespace KaVE.VS.FeedbackGenerator.CodeCompletion
 
     public class ExtendedLookup : IExtendedLookup
     {
-        private static readonly FieldInfo LookupLifetime =
+        /*private static readonly FieldInfo LookupLifetime =
             typeof (Lookup).GetField("myLifetime", BindingFlags.NonPublic | BindingFlags.Instance);
 
         private static readonly FieldInfo LookupListBox =
             typeof (ILookupWindow).GetField("myListBox", BindingFlags.NonPublic | BindingFlags.Instance);
+        */
 
         private readonly Lookup _baseLookup;
         private readonly ExtendedLookupWindowManager _manager;
@@ -96,26 +97,47 @@ namespace KaVE.VS.FeedbackGenerator.CodeCompletion
         {
             _baseLookup = baseLookup;
             _manager = manager;
-            _baseLookup.BeforeShownItemsUpdated += (sender, items) => BeforeShownItemsUpdated(sender, items);
+            _baseLookup.BeforeShownItemsUpdated += BaseLookupOnBeforeShownItemsUpdated;
             _baseLookup.CurrentItemChanged += (sender, args) => CurrentItemChanged(sender, args);
             _baseLookup.ItemCompleted += (sender, item, suffix, type) => ItemCompleted(sender, item, suffix, type);
             _baseLookup.Closed += (sender, args) => Closed(sender, args);
-            ListBoxControl.MouseDown += (sender, args) => MouseDown(sender, args);
+            // TODO RS9
+            //ListBoxControl.MouseDown += (sender, args) => MouseDown(sender, args);
         }
 
-        public Lifetime Lifetime
+        // TODO RS9: ugly hack to prevent stack overflow, access to DisplayItems seems to trigger event
+        private object _currentSender;
+        private IEnumerable<Pair<ILookupItem, MatchingResult>> _currentItems;
+
+        private void BaseLookupOnBeforeShownItemsUpdated(object sender,
+            IEnumerable<Pair<ILookupItem, MatchingResult>> items)
+        {
+            // ReSharper disable once PossibleUnintendedReferenceComparison
+            if (_currentItems == items && _currentSender == sender)
+            {
+                return;
+            }
+            _currentSender = sender;
+            _currentItems = items;
+            BeforeShownItemsUpdated(_currentSender, _currentItems);
+        }
+
+        /*
+         public Lifetime Lifetime
         {
             get { return (Lifetime) LookupLifetime.GetValue(_baseLookup); }
         }
 
-        private CustomListBoxControl<LookupListItem> ListBoxControl
+       private CustomListBoxControl<LookupListItem> ListBoxControl
         {
             get
             {
                 var lookupWindow = _manager.CurrentLookupWindow;
-                return (CustomListBoxControl<LookupListItem>) LookupListBox.GetValue(lookupWindow);
+                _manager.CurrentLookup.
+                var o = LookupListBox.GetValue(lookupWindow);
+                return (CustomListBoxControl<LookupListItem>) o;
             }
-        }
+        }*/
 
         public string Prefix
         {
@@ -124,7 +146,21 @@ namespace KaVE.VS.FeedbackGenerator.CodeCompletion
 
         public IEnumerable<ILookupItem> DisplayedItems
         {
-            get { return ListBoxControl.Items.Cast<LookupListItem>().Select(lli => lli.LookupItem); }
+            get
+            {
+                Debug_CheckStack();
+                return _manager._manager.CurrentLookup.Items;
+            }
+        }
+
+        private static void Debug_CheckStack()
+        {
+            System.Diagnostics.StackTrace t = new System.Diagnostics.StackTrace();
+
+            if (t.FrameCount > 300)
+            {
+                // nothing
+            }
         }
 
         public ILookupItem SelectedItem

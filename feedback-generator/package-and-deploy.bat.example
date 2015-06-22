@@ -20,10 +20,13 @@ set DATE1=%date:~-4,4%%date:~-10,2%%date:~-7,2%
 set TIMESTAMP=%DATE1%-%TIME3%
 echo Building KaVE Feedback Generator @ %TIMESTAMP%...
 
+:: uncomment the following to build as part of the script
+::msbuild /consoleloggerparameters:NoItemAndPropertyList KaVE.Feedback.sln
+
 set TARGET=<select local folder>
 
 ::C:\Users\Sven\Downloads\
-nuget.exe pack KaVE.Project.0.0.1-alpha1.nuspec -Verbosity detailed -NoPackageAnalysis -Version 1.0.0-v%TIMESTAMP%
+nuget.exe pack KaVE.Project.0.0.1-alpha1.nuspec -Verbosity detailed -NoPackageAnalysis -Version 0.0.1-v%TIMESTAMP%
 
 
 echo Deploying into: %TARGET%
