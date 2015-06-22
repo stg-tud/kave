@@ -20,6 +20,8 @@
 using System.ComponentModel;
 using System.Windows;
 using JetBrains.ActionManagement;
+using KaVE.RS.Commons;
+using KaVE.RS.Commons.Utils;
 using KaVE.VS.FeedbackGenerator.Interactivity;
 using KaVE.VS.FeedbackGenerator.SessionManager.Presentation;
 
@@ -51,7 +53,7 @@ namespace KaVE.VS.FeedbackGenerator.Export
         private void On_Review_Click(object sender, RoutedEventArgs e)
         {
             Close();
-            _actionManager.ExecuteAction<SessionManagerWindowAction>();
+            Registry.GetComponent<ActionExecutor>().ExecuteActionGuarded<SessionManagerWindowAction>();
         }
 
         private void UploadButtonClicked(object sender, RoutedEventArgs e)

@@ -132,6 +132,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ActionExecutor.cs" />
     <Compile Include="Analysis\CompletionTarget\CompletionTargetAnalysis.cs" />
     <Compile Include="Analysis\CompletionTarget\CompletionTargetMarker.cs" />
     <Compile Include="Analysis\ContextAnalysis.cs" />

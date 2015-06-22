@@ -17,12 +17,12 @@
  *    - Uli Fahrer
  */
 
-using JetBrains.ActionManagement;
 using JetBrains.Application;
 using JetBrains.DataFlow;
 using JetBrains.UI.CrossFramework;
 using JetBrains.UI.ToolWindowManagement;
 using KaVE.JetBrains.Annotations;
+using KaVE.RS.Commons;
 using KaVE.VS.FeedbackGenerator.Utils;
 using KaVE.VS.FeedbackGenerator.Utils.Logging;
 
@@ -37,7 +37,7 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager.Presentation
         public SessionManagerWindowRegistrar(Lifetime lifetime,
             ToolWindowManager toolWindowManager,
             SessionManagerWindowDescriptor descriptor,
-            IActionManager actionManager,
+            ActionExecutor actionExecutor,
             ILogManager logManager,
             ISettingsStore settingsStore)
         {
@@ -50,7 +50,7 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager.Presentation
                     var visibilitySignal = _toolWindowClass.Visible.Change;
                     var control = new SessionManagerControl(
                         new FeedbackViewModel(logManager),
-                        actionManager,
+                        actionExecutor,
                         settingsStore);
                     visibilitySignal.Advise(lt, control.OnVisibilityChanged);
                     var wrapper = new EitherControl(control);

@@ -14,16 +14,18 @@
  * limitations under the License.
  */
 
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using JetBrains.Annotations;
+using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure.AspectLookupItems.BaseInfrastructure;
+using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure.AspectLookupItems.Info;
 using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure.LookupItems;
-using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure.LookupItems.Impl;
-using JetBrains.ReSharper.Feature.Services.LiveTemplates.Templates;
-using JetBrains.ReSharper.Feature.Services.LiveTemplates.Util;
+using JetBrains.ReSharper.Features.Intellisense.CodeCompletion.CSharp.AspectLookupItems;
 using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.Names.CSharp;
-using KaVE.Commons.Model.Names.ReSharper;
 using KaVE.RS.Commons.Utils.Names;
 
 namespace KaVE.RS.Commons.Utils
@@ -33,10 +35,7 @@ namespace KaVE.RS.Commons.Utils
         [NotNull]
         public static ProposalCollection ToProposalCollection([NotNull] this IEnumerable<ILookupItem> items)
         {
-            return new ProposalCollection();
-            // TODO RS9: fix generation of proposal collection
-            // it seems that proposal types have changed...
-            //return new ProposalCollection(items.Select(ToProposal).ToList());
+            return new ProposalCollection(items.Select(ToProposal).ToList());
         }
 
         [NotNull]
@@ -49,33 +48,35 @@ namespace KaVE.RS.Commons.Utils
         private static IName GetName([NotNull] this ILookupItem lookupItem)
         {
             return TryGetNameFromDeclaredElementLookupItem(lookupItem) ??
-                   TryGetNameFromWrappedLookupItem(lookupItem) ??
+                   //TryGetNameFromWrappedLookupItem(lookupItem) ??
                    TryGetNameFromKeywordOrTextualLookupItem(lookupItem) ??
-                   TryGetNameFromTemplateLookupItem(lookupItem) ??
+                   //TryGetNameFromTemplateLookupItem(lookupItem) ??
                    GetNameFromLookupItemIdentity(lookupItem);
         }
 
         private static IName TryGetNameFromDeclaredElementLookupItem(ILookupItem lookupItem)
         {
-            var declaredElementLookupItem = lookupItem as IDeclaredElementLookupItem;
-            if (declaredElementLookupItem == null || declaredElementLookupItem.PreferredDeclaredElement == null)
+            var deli = lookupItem as LookupItem<CSharpDeclaredElementInfo>;
+            if (deli == null || deli.Info == null)
+            {
+                return null;
+            }
+            var de = deli.GetAllDeclaredElements().FirstOrDefault();
+            return de == null ? null : de.GetName();
+        }
+
+        private static IName TryGetNameFromKeywordOrTextualLookupItem(ILookupItem lookupItem)
+        {
+            var tli = lookupItem as LookupItem<TextualInfo>;
+            if (tli == null || tli.Info == null)
             {
                 return null;
             }
 
-            return declaredElementLookupItem.PreferredDeclaredElement.GetName();
-
-            // TODO RS9: might be necessary to implement special handling for constructor calls
-            // Only the lookup-item type tells whether this is a proposal for a constructor call or not.
-            // In fact, ConstructorLookupItem is derived from TypeLookupItem and the additional interface
-            // IConstructorLookupItem does not provide anything new. Hence, the special treatment.
-            /*var constructorLookupItem = declaredElementLookupItem as ConstructorLookupItem;
-            return constructorLookupItem != null
-                ? constructorLookupItem.GetName()
-                : declaredElementLookupItem.PreferredDeclaredElement.GetName();
-             */
+            return Name.Get(GetPossiblyGenericTypeName(tli) + ":" + tli.DisplayName);
         }
 
+        // TODO RS9: I doubt that all of them are obsolete... review that later
         /*
         private static IMethodName GetName(this ConstructorLookupItem constructor)
         {
@@ -88,7 +89,7 @@ namespace KaVE.RS.Commons.Utils
                       .Append("]..ctor()");
             return MethodName.Get(identifier.ToString());
         }
-         * */
+         * 
 
         private static IName TryGetNameFromWrappedLookupItem(ILookupItem lookupItem)
         {
@@ -100,13 +101,7 @@ namespace KaVE.RS.Commons.Utils
             return null;
         }
 
-        private static IName TryGetNameFromKeywordOrTextualLookupItem(ILookupItem lookupItem)
-        {
-            // TODO implement specific name subclasses?
-            return (lookupItem is IKeywordLookupItem || lookupItem is ITextualLookupItem)
-                ? Name.Get(lookupItem.GetType().Name + ":" + lookupItem.DisplayName)
-                : null;
-        }
+       
 
         private static IName TryGetNameFromTemplateLookupItem(ILookupItem lookupItem)
         {
@@ -118,10 +113,33 @@ namespace KaVE.RS.Commons.Utils
         {
             return LiveTemplateName.Get(template.Shortcut + ":" + template.Description);
         }
+        */
 
         private static IName GetNameFromLookupItemIdentity(ILookupItem item)
         {
-            return Name.Get(item.GetType().Name + ":" + item.Identity);
+            return Name.Get(GetPossiblyGenericTypeName(item) + ":" + item.Identity);
+        }
+
+        private static string GetPossiblyGenericTypeName(ILookupItem item)
+        {
+            var type = item.GetType();
+
+            return CreateName(type);
+        }
+
+        private static string CreateName(Type type)
+        {
+            var sb = new StringBuilder();
+            sb.Append(type.Name);
+            if (type.IsGenericType)
+            {
+                sb.Append('[');
+                var argTypes = type.GetGenericArguments().Select(t => "[" + CreateName(t) + "]");
+                sb.Append(string.Join(", ", argTypes));
+                sb.Append(']');
+            }
+
+            return sb.ToString();
         }
     }
 }

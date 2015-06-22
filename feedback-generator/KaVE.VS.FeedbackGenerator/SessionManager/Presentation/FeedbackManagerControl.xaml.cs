@@ -20,9 +20,9 @@
 
 using System.Windows;
 using System.Windows.Controls;
-using JetBrains.ActionManagement;
 using JetBrains.DataFlow;
 using JetBrains.UI.Options;
+using KaVE.RS.Commons;
 using KaVE.RS.Commons.Utils;
 using KaVE.VS.FeedbackGenerator.Export;
 using KaVE.VS.FeedbackGenerator.Interactivity;
@@ -33,18 +33,18 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager.Presentation
     public partial class SessionManagerControl
     {
         private readonly FeedbackViewModel _feedbackViewModel;
-        private readonly IActionManager _actionManager;
+        private readonly ActionExecutor _actionExec;
         private readonly ISettingsStore _settingsStore;
 
         public SessionManagerControl(FeedbackViewModel feedbackViewModel,
-            IActionManager actionManager,
+            ActionExecutor actionExec,
             ISettingsStore settingsStore)
         {
             DataContext = feedbackViewModel;
             _feedbackViewModel = feedbackViewModel;
+            _actionExec = actionExec;
             _feedbackViewModel.ConfirmationRequest.Raised += new ConfirmationRequestHandler(this).Handle;
 
-            _actionManager = actionManager;
             _settingsStore = settingsStore;
 
             InitializeComponent();
@@ -89,7 +89,7 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager.Presentation
 
         public void Export_OnClick(object sender, RoutedEventArgs e)
         {
-            _actionManager.ExecuteAction<UploadWizardAction>();
+            _actionExec.ExecuteActionGuarded<UploadWizardAction>();
         }
 
         private void VisitUploadPageButton_OnClick(object sender, RoutedEventArgs e)
@@ -108,7 +108,7 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager.Presentation
 
         private void OpenOptionPage_OnClick(object sender, RoutedEventArgs e)
         {
-            _actionManager.ExecuteAction<ShowOptionsAction>();
+            _actionExec.ExecuteActionGuarded<ShowOptionsAction>();
         }
     }
 }
