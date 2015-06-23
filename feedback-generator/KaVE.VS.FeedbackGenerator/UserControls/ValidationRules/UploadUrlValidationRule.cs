@@ -16,19 +16,20 @@
 
 using System.Globalization;
 using System.Windows.Controls;
+using KaVE.VS.FeedbackGenerator.SessionManager.Presentation;
 
-namespace KaVE.VS.FeedbackGenerator.SessionManager.Presentation
+namespace KaVE.VS.FeedbackGenerator.UserControls.ValidationRules
 {
-    public class UploadUrlValidationRule : ValidationRule 
+    public class UploadUrlValidationRule : ValidationRule
     {
         public override ValidationResult Validate(object value, CultureInfo cultureInfo)
         {
             if (value != null && !value.Equals(""))
             {
                 var uriIsValid = UriValidation.ValidateUri(value.ToString());
-                return new ValidationResult(uriIsValid,null);
+                return new ValidationResult(uriIsValid, null);
             }
-            return new ValidationResult(false,null);
+            return new ValidationResult(false, null);
         }
     }
 }

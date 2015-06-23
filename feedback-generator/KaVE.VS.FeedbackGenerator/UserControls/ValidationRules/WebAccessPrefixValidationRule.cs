@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-using System;
 using System.Globalization;
 using System.Windows.Controls;
+using KaVE.VS.FeedbackGenerator.SessionManager.Presentation;
 
-namespace KaVE.VS.FeedbackGenerator.SessionManager.Presentation
+namespace KaVE.VS.FeedbackGenerator.UserControls.ValidationRules
 {
     public class WebAccessPrefixValidationRule : ValidationRule
     {
@@ -29,9 +29,9 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager.Presentation
                 var prefix = value.ToString();
                 var prefixIsEmpty = prefix.Length == 0;
                 var prefixIsValid = prefixIsEmpty || UriValidation.ValidateUri(prefix);
-                return new ValidationResult(prefixIsValid,null);
+                return new ValidationResult(prefixIsValid, null);
             }
-            return new ValidationResult(false,null);
+            return new ValidationResult(false, null);
         }
     }
 }

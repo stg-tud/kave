@@ -20,8 +20,8 @@ limitations under the License.
             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
             xmlns:properties="clr-namespace:KaVE.VS.FeedbackGenerator.Properties"
-            xmlns:export="clr-namespace:KaVE.VS.FeedbackGenerator.UserControls.Export"
             xmlns:userProfile="clr-namespace:KaVE.VS.FeedbackGenerator.UserControls.UserProfile"
+            xmlns:validationRules="clr-namespace:KaVE.VS.FeedbackGenerator.UserControls.ValidationRules"
             mc:Ignorable="d"
             d:DesignHeight="300" d:DesignWidth="300"
             d:DataContext="{d:DesignInstance Type=userProfile:UserProfileViewModel, IsDesignTimeCreatable=False}">
@@ -89,7 +89,7 @@ limitations under the License.
             <TextBox.Text>
                 <Binding Path="Mail" UpdateSourceTrigger="PropertyChanged">
                     <Binding.ValidationRules>
-                        <export:MailValidationRule />
+                        <validationRules:MailValidationRule />
                     </Binding.ValidationRules>
                 </Binding>
             </TextBox.Text>

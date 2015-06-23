@@ -15,9 +15,11 @@
  * 
  * Contributors:
  *    - Sven Amann
+ *    - Mattis Manfred Kämmerer
  */
 
 using System.Runtime.Serialization;
+using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Utils;
 
 namespace KaVE.Commons.Model.Events.VisualStudio
@@ -25,6 +27,9 @@ namespace KaVE.Commons.Model.Events.VisualStudio
     [DataContract]
     public class EditEvent : IDEEvent
     {
+        [DataMember]
+        public Context Context2 { get; set; }
+
         [DataMember]
         public int NumberOfChanges { get; set; }
 

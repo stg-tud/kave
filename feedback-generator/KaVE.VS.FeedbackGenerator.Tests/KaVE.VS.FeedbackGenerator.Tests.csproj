@@ -158,7 +158,7 @@
     <Compile Include="CodeCompletion\CodeCompletionLifecycleManagerTest.cs" />
     <Compile Include="CodeCompletion\PBNProposalItemsProviderTest.cs" />
     <Compile Include="UserControls\Export\ExporterTest.cs" />
-    <Compile Include="UserControls\Export\MailValidationRuleTest.cs" />
+    <Compile Include="UserControls\ValidationRules\MailValidationRuleTest.cs" />
     <Compile Include="Generators\EventGeneratorBaseTest.cs" />
     <Compile Include="Generators\EventLoggerTest.cs" />
     <Compile Include="Generators\UserProfileEventGeneratorTest.cs" />
@@ -173,6 +173,8 @@
     <Compile Include="Generators\TestIDESession.cs" />
     <Compile Include="Generators\VisualStudio\CommandBarEventGeneratorTest.cs" />
     <Compile Include="Generators\VisualStudio\DTECommandEventGeneratorTest.cs" />
+    <Compile Include="Generators\VisualStudio\EditEventGenerators\DelayedEventGeneratorTest.cs" />
+    <Compile Include="Generators\VisualStudio\EditEventGenerators\RetryRunnerTest.cs" />
     <Compile Include="Generators\VisualStudio\IDEStateEventGeneratorTest.cs" />
     <Compile Include="Generators\VisualStudio\SolutionEventGeneratorTest.cs" />
     <Compile Include="Generators\VisualStudio\VisualStudioEventGeneratorTestBase.cs" />

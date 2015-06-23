@@ -12,10 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
- * Contributors:
- *    - Sven Amann
- *    - Markus Zimmermann
  */
 
 using System.Linq;
@@ -25,7 +21,7 @@ using JetBrains.UI.ActionsRevised;
 using JetBrains.Util;
 using KaVE.Commons.Utils;
 using KaVE.RS.Commons.Utils;
-using KaVE.VS.FeedbackGenerator.Utils;
+using KaVE.VS.FeedbackGenerator.Settings;
 using KaVE.VS.FeedbackGenerator.Utils.Logging;
 using NuGet;
 using ILogger = KaVE.Commons.Utils.Exceptions.ILogger;
@@ -64,7 +60,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.Export
             if (HasContentToExport())
             {
                 var viewModel = new UploadWizardViewModel(_exporter, _logManager, _settingsStore, _dateUtils, _logger);
-                new UploadWizard(_actionManager, viewModel,_settingsStore).ShowDialog();
+                new UploadWizard(_actionManager, viewModel, _settingsStore).ShowDialog();
             }
             else
             {

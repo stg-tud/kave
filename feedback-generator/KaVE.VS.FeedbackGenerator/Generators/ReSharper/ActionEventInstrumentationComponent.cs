@@ -27,8 +27,8 @@ using JetBrains.UI.ActionsRevised.Loader;
 using JetBrains.Util;
 using KaVE.Commons.Utils;
 using KaVE.VS.FeedbackGenerator.MessageBus;
+using KaVE.VS.FeedbackGenerator.Settings;
 using KaVE.VS.FeedbackGenerator.UserControls.Export;
-using KaVE.VS.FeedbackGenerator.Utils;
 using ILogger = KaVE.Commons.Utils.Exceptions.ILogger;
 
 namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper

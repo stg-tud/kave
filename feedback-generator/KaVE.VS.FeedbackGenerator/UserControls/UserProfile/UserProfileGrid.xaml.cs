@@ -17,7 +17,7 @@
 using System.Text.RegularExpressions;
 using System.Windows.Input;
 using KaVE.RS.Commons.Utils;
-using KaVE.VS.FeedbackGenerator.Utils;
+using KaVE.VS.FeedbackGenerator.Settings;
 
 namespace KaVE.VS.FeedbackGenerator.UserControls.UserProfile
 {

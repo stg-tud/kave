@@ -12,20 +12,15 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
- * Contributors:
- *    - Uli Fahrer
- *    - Sebastian Proksch
  */
 
 using KaVE.VS.FeedbackGenerator.Interactivity;
-using KaVE.VS.FeedbackGenerator.SessionManager.Presentation;
 using KaVE.VS.FeedbackGenerator.Tests.Interactivity;
+using KaVE.VS.FeedbackGenerator.UserControls.OptionPage;
 using NUnit.Framework;
 
 namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage
 {
-    [TestFixture]
     internal class OptionPageViewModelTest
     {
         private const string TestUploadUrl = "http://foo.bar/";

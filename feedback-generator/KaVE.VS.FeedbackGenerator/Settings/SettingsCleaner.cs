@@ -18,12 +18,9 @@ using JetBrains.ActionManagement;
 using JetBrains.Application.DataContext;
 using JetBrains.UI.ActionsRevised;
 using KaVE.RS.Commons.Utils;
-using KaVE.VS.FeedbackGenerator.SessionManager;
-using KaVE.VS.FeedbackGenerator.SessionManager.Presentation;
-using KaVE.VS.FeedbackGenerator.Settings;
 using KaVE.VS.FeedbackGenerator.Utils.Logging;
 
-namespace KaVE.VS.FeedbackGenerator.Utils
+namespace KaVE.VS.FeedbackGenerator.Settings
 {
     [Action(ActionId)]
     public class SettingsCleaner : IExecutableAction

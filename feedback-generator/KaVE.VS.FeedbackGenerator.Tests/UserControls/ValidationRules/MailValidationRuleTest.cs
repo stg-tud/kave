@@ -15,10 +15,10 @@
  */
 
 using System.Globalization;
-using KaVE.VS.FeedbackGenerator.UserControls.Export;
+using KaVE.VS.FeedbackGenerator.UserControls.ValidationRules;
 using NUnit.Framework;
 
-namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.Export
+namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.ValidationRules
 {
     internal class MailValidationRuleTest
     {

@@ -20,7 +20,7 @@ using System.Windows;
 using KaVE.Commons.Model.Events;
 using KaVE.VS.FeedbackGenerator.Interactivity;
 using KaVE.VS.FeedbackGenerator.Settings;
-using KaVE.VS.FeedbackGenerator.UserControls.Export;
+using KaVE.VS.FeedbackGenerator.UserControls.ValidationRules;
 using KaVE.VS.FeedbackGenerator.Utils;
 
 namespace KaVE.VS.FeedbackGenerator.UserControls.UserProfile

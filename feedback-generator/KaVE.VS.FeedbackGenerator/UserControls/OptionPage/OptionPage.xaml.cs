@@ -29,11 +29,9 @@ using JetBrains.UI.Options;
 using JetBrains.UI.Options.OptionPages.ToolsPages;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.VS.FeedbackGenerator.Interactivity;
-using KaVE.VS.FeedbackGenerator.SessionManager.Presentation;
 using KaVE.VS.FeedbackGenerator.Settings;
 using KaVE.VS.FeedbackGenerator.UserControls.UserProfile;
-using KaVE.VS.FeedbackGenerator.Utils;
-using ISettingsStore = KaVE.VS.FeedbackGenerator.Utils.ISettingsStore;
+using ISettingsStore = KaVE.VS.FeedbackGenerator.Settings.ISettingsStore;
 using MessageBox = JetBrains.Util.MessageBox;
 
 namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage
@@ -77,9 +75,21 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage
             ctx.SetBinding(lifetime, (ExportSettings s) => s.UploadUrl, UploadUrlTextBox, TextBox.TextProperty);
             ctx.SetBinding(lifetime, (ExportSettings s) => s.WebAccessPrefix, WebPraefixTextBox, TextBox.TextProperty);
 
-            ctx.SetBinding(lifetime, (UserProfileSettings s) => (bool?) s.ProvideUserInformation, UserProfileGrid.ProvideUserInformationCheckBox, ToggleButton.IsCheckedProperty);
-            ctx.SetBinding(lifetime, (UserProfileSettings s) => s.Name, UserProfileGrid.UsernameTextBox, TextBox.TextProperty);
-            ctx.SetBinding(lifetime, (UserProfileSettings s) => s.Email, UserProfileGrid.EmailTextBox, TextBox.TextProperty);
+            ctx.SetBinding(
+                lifetime,
+                (UserProfileSettings s) => (bool?) s.ProvideUserInformation,
+                UserProfileGrid.ProvideUserInformationCheckBox,
+                ToggleButton.IsCheckedProperty);
+            ctx.SetBinding(
+                lifetime,
+                (UserProfileSettings s) => s.Name,
+                UserProfileGrid.UsernameTextBox,
+                TextBox.TextProperty);
+            ctx.SetBinding(
+                lifetime,
+                (UserProfileSettings s) => s.Email,
+                UserProfileGrid.EmailTextBox,
+                TextBox.TextProperty);
             //ctx.SetBinding(lifetime, (UserProfileSettings s) => s.NumberField, UserProfileGrid.NumberTextBox, TextBox.TextProperty);
             //ctx.SetBinding(lifetime, (UserSettings s) => s.Category, _userSettingsViewModel, UserSettingsViewModel.SelectedCategoryOptionProperty);
             //ctx.SetBinding(lifetime, (UserSettings s) => s.Valuation, _userSettingsViewModel, UserSettingsViewModel.SelectedValuationOptionProperty);
@@ -91,8 +101,12 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage
                 UserProfileGrid.DatevDeactivationLabel.Visibility = Visibility.Visible;
             }
 
-            UserProfileGrid.CategoryComboBox.SetBinding(Selector.SelectedItemProperty, new Binding("SelectedCategoryOption"));
-            UserProfileGrid.RadioButtonListBox.SetBinding(Selector.SelectedItemProperty, new Binding("SelectedValuationOption"));
+            UserProfileGrid.CategoryComboBox.SetBinding(
+                Selector.SelectedItemProperty,
+                new Binding("SelectedCategoryOption"));
+            UserProfileGrid.RadioButtonListBox.SetBinding(
+                Selector.SelectedItemProperty,
+                new Binding("SelectedValuationOption"));
         }
 
         private static void SetToggleButtonBinding(IContextBoundSettingsStore ctx,
@@ -147,6 +161,5 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage
         {
             get { return PID; }
         }
-
     }
 }

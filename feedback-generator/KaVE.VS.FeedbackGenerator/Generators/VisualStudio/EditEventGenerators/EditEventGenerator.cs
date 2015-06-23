@@ -15,6 +15,8 @@
  * 
  * Contributors:
  *    - Sven Amann
+ *    - Mattis Manfred Kämmerer
+ *    - Markus Zimmermann
  */
 
 using System;
@@ -24,15 +26,18 @@ using JetBrains.Application;
 using JetBrains.Application.Components;
 using KaVE.Commons.Model.Events.VisualStudio;
 using KaVE.Commons.Utils;
+using KaVE.VS.FeedbackGenerator.Generators.VisualStudio.EditEventGenerators.EventContext;
 using KaVE.VS.FeedbackGenerator.MessageBus;
 
-namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio
+namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio.EditEventGenerators
 {
     [ShellComponent(ProgramConfigurations.VS_ADDIN)]
-    internal class TextEditorEventGenerator : EventGeneratorBase, IDisposable
+    internal class EditEventGenerator : EventGeneratorBase, IDisposable
     {
         // TODO evaluate good threshold value
         private const int InactivityPeriodToCompleteEditAction = 2000;
+
+        private readonly IContextProvider _contextProvider;
 
         // ReSharper disable once PrivateFieldCanBeConvertedToLocalVariable
         private readonly TextEditorEvents _textEditorEvents;
@@ -40,16 +45,21 @@ namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio
 
         private readonly Timer _eventSendingTimer = new Timer(InactivityPeriodToCompleteEditAction);
         private readonly object _eventLock = new object();
+        private TextPoint _currentStartPoint;
 
-        public TextEditorEventGenerator(IRSEnv env, IMessageBus messageBus, IDateUtils dateUtils)
+        public EditEventGenerator(IRSEnv env,
+            IMessageBus messageBus,
+            IDateUtils dateUtils,
+            IContextProvider contextProvider)
             : base(env, messageBus, dateUtils)
         {
+            _contextProvider = contextProvider;
             _textEditorEvents = DTE.Events.TextEditorEvents;
             _textEditorEvents.LineChanged += TextEditorEvents_LineChanged;
             _eventSendingTimer.Elapsed += (source, e) => FireCurrentEditEvent();
         }
 
-        void TextEditorEvents_LineChanged(TextPoint startPoint, TextPoint endPoint, int hint)
+        private void TextEditorEvents_LineChanged(TextPoint startPoint, TextPoint endPoint, int hint)
         {
             _eventSendingTimer.Stop();
             lock (_eventLock)
@@ -58,15 +68,17 @@ namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio
                 _currentEditEvent.NumberOfChanges += 1;
                 // TODO subtract whitespaces from change size
                 _currentEditEvent.SizeOfChanges += endPoint.AbsoluteCharOffset - startPoint.AbsoluteCharOffset;
+                _currentStartPoint = startPoint;
             }
             _eventSendingTimer.Start();
         }
 
-        void FireCurrentEditEvent()
+        private void FireCurrentEditEvent()
         {
             _eventSendingTimer.Stop();
             lock (_eventLock)
             {
+                _currentEditEvent.Context2 = _contextProvider.GetCurrentContext(_currentStartPoint);
                 FireNow(_currentEditEvent);
                 _currentEditEvent = null;
             }

@@ -159,27 +159,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Generators\UserProfileEventGenerator.cs" />
+    <Compile Include="Generators\VisualStudio\EditEventGenerators\DelayedEditEventGenerator.cs" />
+    <Compile Include="Generators\VisualStudio\EditEventGenerators\EditEventGenerator.cs" />
+    <Compile Include="Generators\VisualStudio\EditEventGenerators\EventContext\ContextGenerator.cs" />
+    <Compile Include="Generators\VisualStudio\EditEventGenerators\EventContext\ContextProvider.cs" />
+    <Compile Include="Generators\VisualStudio\EditEventGenerators\RetryRunner.cs" />
     <Compile Include="Menu\AboutAction.cs" />
     <Compile Include="CodeCompletion\PBNProposalWrappedLookupItem.cs" />
     <Compile Include="CodeCompletion\PBNProposalItemsProvider.cs" />
-    <Compile Include="SessionManager\Anonymize\AnonymousNameUtils.cs" />
-    <Compile Include="SessionManager\Anonymize\BuildEventAnonymizer.cs" />
-    <Compile Include="SessionManager\Anonymize\CompletionEvents\CompletionEventAnonymizer.cs" />
-    <Compile Include="SessionManager\Anonymize\CompletionEvents\SSTAnonymization.cs" />
-    <Compile Include="SessionManager\Anonymize\CompletionEvents\SSTExpressionAnonymization.cs" />
-    <Compile Include="SessionManager\Anonymize\CompletionEvents\SSTReferenceAnonymization.cs" />
-    <Compile Include="SessionManager\Anonymize\CompletionEvents\SSTStatementAnonymization.cs" />
-    <Compile Include="SessionManager\Anonymize\CompletionEvents\TypeShapeAnonymizer.cs" />
-    <Compile Include="SessionManager\Anonymize\DataExportAnonymizer.cs" />
-    <Compile Include="SessionManager\Anonymize\DocumentEventAnonymizer.cs" />
-    <Compile Include="SessionManager\Anonymize\ErrorEventAnonymizer.cs" />
-    <Compile Include="SessionManager\Anonymize\IDEEventAnonymizer.cs" />
-    <Compile Include="SessionManager\Anonymize\IDEStateEventAnonymizer.cs" />
-    <Compile Include="SessionManager\Anonymize\InfoEventAnonymizer.cs" />
-    <Compile Include="SessionManager\Anonymize\SolutionEventAnonymizer.cs" />
-    <Compile Include="SessionManager\Anonymize\WindowEventAnonymizer.cs" />
-    <Compile Include="UserControls\Export\Exporter.cs" />
-    <Compile Include="UserControls\ValidationRules\MailValidationRule.cs" />
     <Compile Include="Generators\LogEventGenerator.cs" />
     <Compile Include="Generators\ReSharper\CommandEventGeneratorBase.cs" />
     <Compile Include="Generators\VisualStudio\CommandBarEventGenerator.cs" />
@@ -223,12 +210,29 @@
     <Compile Include="RSEnv.cs" />
     <Compile Include="Settings\FeedbackSettings.cs" />
     <Compile Include="Settings\KaVESettings.cs" />
+    <Compile Include="SessionManager\Anonymize\CompletionEvents\SSTAnonymization.cs" />
+    <Compile Include="SessionManager\Anonymize\BuildEventAnonymizer.cs" />
+    <Compile Include="SessionManager\Anonymize\CompletionEvents\CompletionEventAnonymizer.cs" />
+    <Compile Include="SessionManager\Anonymize\DataExportAnonymizer.cs" />
+    <Compile Include="SessionManager\Anonymize\DocumentEventAnonymizer.cs" />
+    <Compile Include="SessionManager\Anonymize\ErrorEventAnonymizer.cs" />
+    <Compile Include="SessionManager\Anonymize\IDEEventAnonymizer.cs" />
+    <Compile Include="SessionManager\Anonymize\IDEStateEventAnonymizer.cs" />
+    <Compile Include="SessionManager\Anonymize\InfoEventAnonymizer.cs" />
+    <Compile Include="SessionManager\Anonymize\AnonymousNameUtils.cs" />
+    <Compile Include="SessionManager\Anonymize\SolutionEventAnonymizer.cs" />
+    <Compile Include="SessionManager\Anonymize\CompletionEvents\SSTExpressionAnonymization.cs" />
+    <Compile Include="SessionManager\Anonymize\CompletionEvents\SSTReferenceAnonymization.cs" />
+    <Compile Include="SessionManager\Anonymize\CompletionEvents\SSTStatementAnonymization.cs" />
+    <Compile Include="SessionManager\Anonymize\CompletionEvents\TypeShapeAnonymizer.cs" />
+    <Compile Include="SessionManager\Anonymize\WindowEventAnonymizer.cs" />
     <Compile Include="Menu\KaVEMenu.cs" />
     <Compile Include="SessionManager\Presentation\DelegateCommand.cs" />
     <Compile Include="SessionManager\Presentation\IDEEventDetailsToJsonConverter.cs" />
     <Compile Include="SessionManager\Presentation\JsonSyntaxHighlighter.cs" />
     <Compile Include="SessionManager\Presentation\MultiSelection.cs" />
     <Compile Include="Menu\OptionPageAction.cs" />
+    <Compile Include="UserControls\Export\Exporter.cs" />
     <Compile Include="UserControls\OptionPage\OptionPageViewModel.cs" />
     <Compile Include="SessionManager\Presentation\SortableListView.cs" />
     <Compile Include="SessionManager\Presentation\UriValidation.cs" />
@@ -237,6 +241,7 @@
     </Compile>
     <Compile Include="UserControls\UserProfile\UserProfileViewModel.cs" />
     <Compile Include="Settings\UserProfileSettings.cs" />
+    <Compile Include="UserControls\ValidationRules\MailValidationRule.cs" />
     <Compile Include="UserControls\ValidationRules\UploadUrlValidationRule.cs" />
     <Compile Include="UserControls\ValidationRules\WebAccessPrefixValidationRule.cs" />
     <Compile Include="SessionManager\ViewModelBase.cs" />
@@ -284,7 +289,6 @@
     <Compile Include="Generators\VisualStudio\FindEventGenerator.cs" />
     <Compile Include="Generators\VisualStudio\IDEStateEventGenerator.cs" />
     <Compile Include="Generators\VisualStudio\SolutionEventGenerator.cs" />
-    <Compile Include="Generators\VisualStudio\TextEditorEventGenerator.cs" />
     <Compile Include="Generators\VisualStudio\WindowEventGenerator.cs" />
     <Compile Include="MessageBus\IMessageBus.cs" />
     <Compile Include="MessageBus\TinyMessengerMessageBus.cs" />
@@ -332,8 +336,8 @@
   <Choose>
     <When Condition="'$(UploadUrl)' == 'DATEV'">
       <ItemGroup>
-        <Compile Include="SessionManager\Presentation\ExportSettingsDATEV.cs" />
-        <None Include="SessionManager\Presentation\ExportSettings.cs" />
+        <Compile Include="Settings\ExportSettingsDATEV.cs" />
+        <None Include="Settings\ExportSettings.cs" />
       </ItemGroup>
     </When>
     <Otherwise>

@@ -12,9 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
- * Contributors:
- *    - Mattis Manfred Kämmerer
  */
 
 using System;
@@ -22,7 +19,7 @@ using System.Globalization;
 using System.Net.Mail;
 using System.Windows.Controls;
 
-namespace KaVE.VS.FeedbackGenerator.UserControls.Export
+namespace KaVE.VS.FeedbackGenerator.UserControls.ValidationRules
 {
     public class MailValidationRule : ValidationRule
     {

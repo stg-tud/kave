@@ -22,9 +22,10 @@ limitations under the License.
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300"
              xmlns:root="clr-namespace:KaVE.VS.FeedbackGenerator"
-             xmlns:presentation="clr-namespace:KaVE.VS.FeedbackGenerator.SessionManager.Presentation"
              xmlns:userProfile="clr-namespace:KaVE.VS.FeedbackGenerator.UserControls.UserProfile"
-             d:DataContext="{d:DesignInstance Type=presentation:OptionPageViewModel, IsDesignTimeCreatable=False}">
+             xmlns:validationRules="clr-namespace:KaVE.VS.FeedbackGenerator.UserControls.ValidationRules"
+             xmlns:optionPage="clr-namespace:KaVE.VS.FeedbackGenerator.UserControls.OptionPage"
+             d:DataContext="{d:DesignInstance Type=optionPage:OptionPageViewModel, IsDesignTimeCreatable=False}">
     <Grid>
         <StackPanel>
             <GroupBox Header="{x:Static root:Properties.SessionManager.Options_Export_Title}">
@@ -64,7 +65,7 @@ limitations under the License.
                                  x:FieldModifier="private">
                             <Binding Path="UploadUrl" UpdateSourceTrigger="PropertyChanged">
                                 <Binding.ValidationRules>
-                                    <presentation:UploadUrlValidationRule />
+                                    <validationRules:UploadUrlValidationRule />
                                 </Binding.ValidationRules>
                             </Binding>
                         </TextBox>
@@ -76,7 +77,7 @@ limitations under the License.
                                  x:FieldModifier="private">
                             <Binding Path="WebAccessPrefix" UpdateSourceTrigger="PropertyChanged">
                                 <Binding.ValidationRules>
-                                    <presentation:WebAccessPrefixValidationRule />
+                                    <validationRules:WebAccessPrefixValidationRule />
                                 </Binding.ValidationRules>
                             </Binding>
                         </TextBox>

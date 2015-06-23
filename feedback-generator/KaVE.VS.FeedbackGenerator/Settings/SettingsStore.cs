@@ -24,7 +24,7 @@ using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Reflection;
 using RSISettingsStore = JetBrains.Application.Settings.ISettingsStore;
 
-namespace KaVE.VS.FeedbackGenerator.Utils
+namespace KaVE.VS.FeedbackGenerator.Settings
 {
     public interface ISettingsStore
     {

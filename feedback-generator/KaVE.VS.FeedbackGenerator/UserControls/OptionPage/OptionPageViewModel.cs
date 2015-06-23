@@ -16,9 +16,11 @@
 
 using System.Globalization;
 using KaVE.VS.FeedbackGenerator.Interactivity;
+using KaVE.VS.FeedbackGenerator.SessionManager;
 using KaVE.VS.FeedbackGenerator.Settings;
+using KaVE.VS.FeedbackGenerator.UserControls.ValidationRules;
 
-namespace KaVE.VS.FeedbackGenerator.SessionManager.Presentation
+namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage
 {
     public class UploadValidation
     {
@@ -48,16 +50,12 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager.Presentation
             get { return _errorNotificationRequest; }
         }
 
-        public ExportSettings ExportSettings
-        {
-            get; set; 
-        }
+        public ExportSettings ExportSettings { get; set; }
 
         public string UploadUrl
         {
             get { return ExportSettings.UploadUrl; }
             set { ExportSettings.UploadUrl = value; }
-
         }
 
         public string WebAccessPrefix
@@ -75,8 +73,8 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager.Presentation
 
         public UploadValidation ValidateUploadInformation(string url, string prefix)
         {
-            var uriIsValid = _uploadUrlValidationRule.Validate(url,CultureInfo.CurrentUICulture);
-            var prefixIsValid = _webAccessPrefixValidationRule.Validate(prefix,CultureInfo.CurrentUICulture);
+            var uriIsValid = _uploadUrlValidationRule.Validate(url, CultureInfo.CurrentUICulture);
+            var prefixIsValid = _webAccessPrefixValidationRule.Validate(prefix, CultureInfo.CurrentUICulture);
 
             if (!uriIsValid.IsValid || !prefixIsValid.IsValid)
             {
@@ -92,9 +90,8 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager.Presentation
                 new Notification
                 {
                     Caption = Properties.SessionManager.Options_Title,
-                    Message = Properties.SessionManager.OptionPageErrorMessage,
+                    Message = Properties.SessionManager.OptionPageErrorMessage
                 });
         }
-
     }
 }

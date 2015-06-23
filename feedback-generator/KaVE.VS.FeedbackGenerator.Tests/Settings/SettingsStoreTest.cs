@@ -16,7 +16,7 @@
 
 using System;
 using JetBrains.Application.Settings;
-using KaVE.VS.FeedbackGenerator.Utils;
+using KaVE.VS.FeedbackGenerator.Settings;
 using NUnit.Framework;
 
 namespace KaVE.VS.FeedbackGenerator.Tests.Settings
