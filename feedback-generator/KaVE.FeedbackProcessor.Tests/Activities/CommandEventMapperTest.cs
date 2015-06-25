@@ -55,5 +55,12 @@ namespace KaVE.FeedbackProcessor.Tests.Activities
             var openRecentFileCmd = new CommandEvent {CommandId = "1 C:\\Some\\Path\\ToThe.File"};
             AssertMapsToActivity(openRecentFileCmd, Activity.Navigation);
         }
+
+        [Test]
+        public void MapsTfsCommandsToProjectManagement()
+        {
+            var tfsCommand = new CommandEvent{CommandId = "something.TfsFoo"};
+            AssertMapsToActivity(tfsCommand, Activity.ProjectManagement);
+        }
     }
 }

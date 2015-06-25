@@ -16,8 +16,10 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text.RegularExpressions;
 using KaVE.Commons.Model.Events;
+using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Csv;
 using KaVE.FeedbackProcessor.Activities.Model;
 using KaVE.FeedbackProcessor.Properties;
@@ -71,7 +73,14 @@ namespace KaVE.FeedbackProcessor.Activities
             }
             else if (!_commandIdToActivityMapping.TryGetValue(commandId, out activity))
             {
-                activity = Activity.Other;
+                if (cmd.CommandId.Contains("tfs", CompareOptions.IgnoreCase))
+                {
+                    activity = Activity.ProjectManagement;
+                }
+                else
+                {
+                    activity = Activity.Other;
+                }
             }
             InsertActivity(cmd, activity);
         }
