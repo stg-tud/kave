@@ -48,7 +48,6 @@ namespace KaVE.FeedbackProcessor.Statistics
 
         public override void OnStreamStarts(Developer developer)
         {
-            LoggedIsolatedBlocks.Clear();
             _lastEvent = null;
             _weMightBeInAnIsolatedBlock = false;
             _loggedEvents.Clear();
