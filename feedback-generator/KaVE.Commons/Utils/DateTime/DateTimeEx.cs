@@ -16,7 +16,7 @@
 
 using System;
 
-namespace KaVE.Commons.TestUtils.Utils
+namespace KaVE.Commons.Utils.DateTime
 {
     public static class DateTimeEx
     {

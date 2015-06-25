@@ -16,7 +16,7 @@
 
 using System;
 using KaVE.Commons.TestUtils.Model.Events;
-using KaVE.Commons.TestUtils.Utils;
+using KaVE.Commons.Utils.DateTime;
 using KaVE.FeedbackProcessor.Statistics;
 using KaVE.FeedbackProcessor.Tests.TestUtils;
 using NUnit.Framework;

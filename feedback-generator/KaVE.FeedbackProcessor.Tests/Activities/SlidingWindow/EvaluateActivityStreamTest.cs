@@ -15,7 +15,7 @@
  */
 
 using System;
-using KaVE.Commons.TestUtils.Utils;
+using KaVE.Commons.Utils.DateTime;
 using KaVE.FeedbackProcessor.Activities.Model;
 using KaVE.FeedbackProcessor.Activities.SlidingWindow;
 using NUnit.Framework;
