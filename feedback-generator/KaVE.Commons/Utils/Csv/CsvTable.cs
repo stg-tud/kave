@@ -23,9 +23,9 @@ namespace KaVE.Commons.Utils.Csv
     public class CsvTable
     {
 
-        public static CsvTable Read(string csv)
+        public static CsvTable Read(string csv, char delimiter = ',')
         {
-            return new CsvTable(SplitLines(RemoveTrailingNewline(csv)));
+            return new CsvTable(SplitLines(RemoveTrailingNewline(csv)), delimiter);
         }
 
         private static string RemoveTrailingNewline(string csv)
@@ -38,17 +38,19 @@ namespace KaVE.Commons.Utils.Csv
             return Regex.Split(removeTrailingNewline, "\r\n|\r|\n");
         }
 
-        private static string[] SplitFields(string row)
+        private static string[] SplitFields(string row, char delimiter)
         {
-            return row.Split(',');
+            return row.Split(delimiter);
         }
 
         private readonly string[] _fields;
         private readonly string[] _rows;
+        private readonly char _delimiter;
 
-        private CsvTable(IList<string> lines)
+        private CsvTable(IList<string> lines, char delimiter)
         {
-            _fields = SplitFields(lines.First());
+            _delimiter = delimiter;
+            _fields = SplitFields(lines.First(), _delimiter);
             _rows = lines.Skip(1).ToArray();
         }
 
@@ -56,7 +58,7 @@ namespace KaVE.Commons.Utils.Csv
         {
             get
             {
-                return _rows.Select(row => new CsvRow(_fields, SplitFields(row))).ToList();
+                return _rows.Select(row => new CsvRow(_fields, SplitFields(row, _delimiter))).ToList();
             }
         }
     }

@@ -39,5 +39,14 @@ namespace KaVE.Commons.Tests.Utils.Csv
             Assert.AreEqual("1", actual.Rows[0]["A"]);
             Assert.AreEqual("2", actual.Rows[0]["B"]);
         }
+
+        [Test]
+        public void UsesSpecifiedFieldDelimiter()
+        {
+            var actual = CsvTable.Read(new[] {"A;B","1;2"}.ToCsv(), ';');
+
+            Assert.AreEqual("1", actual.Rows[0]["A"]);
+            Assert.AreEqual("2", actual.Rows[0]["B"]);
+        }
     }
 }
