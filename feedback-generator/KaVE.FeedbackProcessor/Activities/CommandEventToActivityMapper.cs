@@ -28,6 +28,35 @@ namespace KaVE.FeedbackProcessor.Activities
 {
     internal class CommandEventToActivityMapper : BaseToActivityMapper
     {
+        private static readonly ISet<string> WaitingCommands = new HashSet<string>
+        {
+            "{BC6F0E30-528C-4EEA-BC2E-C6B35E589068}:265:FortifyToolMenu.ExportAuditProject",
+            "{5EFC7975-14BC-11CF-9B2B-00AA00573819}:331:File.SaveSelectedItems",
+            "{5EFC7975-14BC-11CF-9B2B-00AA00573819}:882:Build.BuildSolution",
+            "{5BF14E63-E267-4787-B20B-B814FD043B38}:21014:File.TfsCheckIn",
+            "{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:6200:TeamFoundationContextMenus.SourceControlExplorer.TfsContextExplorerCloak",
+            "{5BF14E63-E267-4787-B20B-B814FD043B38}:21009:ClassViewContextMenus.ClassViewProject.SourceControl.TfsContextUndoCheckout",
+            "{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:6356:TeamFoundationContextMenus.PendingChangesPageChangestoInclude.TfsContextPendingChangesPageUndo",
+            "{5BF14E63-E267-4787-B20B-B814FD043B38}:21008:File.TfsUndoCheckout",
+            "{FFE1131C-8EA1-4D05-9728-34AD4611BDA9}:4653:File.TfsFindChangesets",
+            "{5BF14E63-E267-4787-B20B-B814FD043B38}:21010:File.TfsGetLatestVersion",
+            "{15061D55-E726-4E3C-97D3-1B871D9B5AE9}:20483:Team.GotoWorkItem",
+            "{BC6F0E30-528C-4EEA-BC2E-C6B35E589068}:260:FortifyToolMenu.GenerateReport",
+            "{5EFC7975-14BC-11CF-9B2B-00AA00573819}:295:Debug.Start",
+            "{5EFC7975-14BC-11CF-9B2B-00AA00573819}:249:Debug.StepOver",
+            "{5EFC7975-14BC-11CF-9B2B-00AA00573819}:213:Debug.AttachtoProcess",
+            "{3A680C5B-F815-414B-AA4A-0BE57DADB1AF}:512:Debug.ReAttach",
+            "{5EFC7975-14BC-11CF-9B2B-00AA00573819}:179:Debug.StopDebugging",
+            "CleanupCode",
+            "Generate",
+            "AnalyzeReferences",
+            "FindUsages",
+            "Template1",
+            "SilentCleanupCode",
+            "RefactorThis",
+            "GotoDeclarationShort",
+        };
+
         private readonly IDictionary<string, Activity> _commandIdToActivityMapping = new Dictionary<string, Activity>();
 
         public CommandEventToActivityMapper()
@@ -76,6 +105,10 @@ namespace KaVE.FeedbackProcessor.Activities
                 if (cmd.CommandId.Contains("tfs", CompareOptions.IgnoreCase))
                 {
                     activity = Activity.ProjectManagement;
+                }
+                else if (WaitingCommands.Contains(cmd.CommandId))
+                {
+                    activity = Activity.Waiting;
                 }
                 else
                 {
