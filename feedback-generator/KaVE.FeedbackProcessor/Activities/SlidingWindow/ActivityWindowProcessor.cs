@@ -167,7 +167,10 @@ namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
                             activityWithDuration.Value.TotalSeconds;
                     }
                     numberOfInactivities += statistics.NumberOfInactivityPeriods;
-                    inactivityTime += statistics[Activity.Inactive];
+                    if (statistics.NumberOfInactivityPeriods > 0)
+                    {
+                        inactivityTime += statistics[Activity.Inactive];
+                    }
                     numberOfActivitySprees += statistics.NumberOfInactivityPeriods +
                                               statistics.NumberOfLongInactivityPeriods + 1;
                 }
