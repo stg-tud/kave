@@ -1,4 +1,9 @@
-﻿
+﻿// count number of unique command ids
+
+{ $match : { CommandId : { $exists : true } } },
+{ $group : { _id : "$CommandId" } }
+
+
 // aggregate duration per event type
 
 
