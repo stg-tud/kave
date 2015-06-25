@@ -27,6 +27,7 @@ namespace KaVE.FeedbackProcessor.Statistics
     internal class EquivalentCommandPairCalculator : BaseEventProcessor
     {
         public Dictionary<SortedCommandPair, int> Statistic { get; private set; }
+        private IDictionary<SortedCommandPair, int> _currentDeveloperStatistic; 
 
         public readonly Dictionary<SortedCommandPair, int> UnknownTriggerMappings =
             new Dictionary<SortedCommandPair, int>();
@@ -38,13 +39,13 @@ namespace KaVE.FeedbackProcessor.Statistics
         public EquivalentCommandPairCalculator(int frequencyThreshold)
         {
             FrequencyThreshold = frequencyThreshold;
-
+            Statistic = new Dictionary<SortedCommandPair, int>();
             RegisterFor<CommandEvent>(CalculateEquivalentPairs);
         }
 
         public override void OnStreamStarts(Developer developer)
         {
-            Statistic = new Dictionary<SortedCommandPair, int>();
+            _currentDeveloperStatistic = new Dictionary<SortedCommandPair, int>();
         }
 
         public void CalculateEquivalentPairs(CommandEvent commandEvent)
@@ -78,30 +79,32 @@ namespace KaVE.FeedbackProcessor.Statistics
 
         public override void OnStreamEnds()
         {
-            var newStatistic = MappingCleaner.GetCleanMappings(Statistic, FrequencyThreshold);
-            Statistic.Clear();
-            newStatistic.ToList().ForEach(newMapping => Statistic.Add(newMapping.Key, newMapping.Value));
-
-            RemoveInfrequentMappingsFromStatistic();
+            var cleanStats = MappingCleaner.GetCleanMappings(_currentDeveloperStatistic, FrequencyThreshold);
+            cleanStats.ToList().ForEach(newMapping => AddOrUpdate(Statistic, newMapping));
         }
 
-        private void RemoveInfrequentMappingsFromStatistic()
+        private static void AddOrUpdate(IDictionary<SortedCommandPair, int> statistic, KeyValuePair<SortedCommandPair, int> entry)
         {
-            Statistic.
-                Where(keyValuePair => keyValuePair.Value < FrequencyThreshold).ToList().
-                ForEach(keyValuePair => Statistic.Remove(keyValuePair.Key));
+            if (statistic.ContainsKey(entry.Key))
+            {
+                statistic[entry.Key] += entry.Value;
+            }
+            else
+            {
+                statistic.Add(entry.Key, entry.Value);
+            }
         }
 
         private void AddEquivalentCommandsToStatistic(string command1, string command2)
         {
             var keyPair = SortedCommandPair.NewSortedPair(command1, command2);
-            if (Statistic.ContainsKey(keyPair))
+            if (_currentDeveloperStatistic.ContainsKey(keyPair))
             {
-                Statistic[keyPair]++;
+                _currentDeveloperStatistic[keyPair]++;
             }
             else
             {
-                Statistic.Add(keyPair, 1);
+                _currentDeveloperStatistic.Add(keyPair, 1);
             }
         }
 
@@ -120,6 +123,8 @@ namespace KaVE.FeedbackProcessor.Statistics
 
         public string StatisticAsCsv()
         {
+            RemoveInfrequentMappingsFromStatistic();
+
             var csvBuilder = new CsvBuilder();
             var statistic = Statistic.OrderByDescending(keyValuePair => keyValuePair.Value);
             foreach (var stat in statistic)
@@ -131,6 +136,13 @@ namespace KaVE.FeedbackProcessor.Statistics
                 csvBuilder["Count"] = stat.Value;
             }
             return csvBuilder.Build();
+        }
+
+        private void RemoveInfrequentMappingsFromStatistic()
+        {
+            Statistic.
+                Where(keyValuePair => keyValuePair.Value < FrequencyThreshold).ToList().
+                ForEach(keyValuePair => Statistic.Remove(keyValuePair.Key));
         }
     }
 
@@ -165,7 +177,7 @@ namespace KaVE.FeedbackProcessor.Statistics
             },
         };
 
-        public static Dictionary<SortedCommandPair, int> GetCleanMappings(Dictionary<SortedCommandPair, int> mappings,
+        public static Dictionary<SortedCommandPair, int> GetCleanMappings(IDictionary<SortedCommandPair, int> mappings,
             int frequencyThreshold)
         {
             var cleanMappings = new Dictionary<SortedCommandPair, int>();
