@@ -43,30 +43,30 @@ namespace KaVE.FeedbackProcessor
         public void ProcessFeedback()
         {
             var developers = _database.GetDeveloperCollection().FindAll();
+            var index = 1;
             foreach (var developer in developers)
             {
-                ProcessDeveloper(developer);
+                ProcessDeveloper(developer, index);
+                index++;
             }
         }
 
-        private void ProcessDeveloper(Developer developer)
+        private void ProcessDeveloper(Developer developer, int index)
         {
-            _logger.Info("Processing developer {0}", developer.Id);
-            _logger.Info("- Initializing Processors...");
+            _logger.Info("Processing developer {0} ({1})", index, developer.Id);
             foreach (var processor in _processors)
             {
                 processor.OnStreamStarts(developer);
             }
-            _logger.Info("- Processing event stream...");
             foreach (var ideEvent in GetEventStream(developer))
             {
                 ProcessEvent(ideEvent, _processors);
             }
-            _logger.Info("- Finalizing...");
             foreach (var processor in _processors)
             {
                 processor.OnStreamEnds();
             }
+            _logger.Info("- Finalizing...");
         }
 
         private IEnumerable<IDEEvent> GetEventStream(Developer developer)

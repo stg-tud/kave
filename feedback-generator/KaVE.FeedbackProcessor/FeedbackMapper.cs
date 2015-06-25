@@ -50,32 +50,32 @@ namespace KaVE.FeedbackProcessor
             _targetDatabase.GetEventsCollection().Clear();
 
             var developers = _sourceDatabase.GetDeveloperCollection().FindAll();
+            var index = 1;
             foreach (var developer in developers)
             {
-                MapFeedbackOf(developer);
+                MapFeedbackOf(developer, index);
+                index++;
             }
         }
 
-        private void MapFeedbackOf(Developer developer)
+        private void MapFeedbackOf(Developer developer, int index)
         {
-            _logger.Info("Mapping feedback of developer {0}", developer.Id);
+            _logger.Info("Mapping feedback of developer {0} ({1})", index, developer.Id);
             _targetDatabase.GetDeveloperCollection().Insert(developer);
 
-            _logger.Info("- Initializing Mappers...");
             foreach (var mapper in _mappers)
             {
                 mapper.OnStreamStarts(developer);
             }
-            _logger.Info("- Mapping event stream...");
             foreach (var ideEvent in GetEventStream(developer))
             {
                 MapEvent(ideEvent);
             }
-            _logger.Info("- Finalizing...");
             foreach (var mapper1 in _mappers)
             {
                 InsertEventsToTargetEventCollection(mapper1.OnStreamEnds());
             }
+            _logger.Info("- Finalizing...");
         }
 
         private IEnumerable<IDEEvent> GetEventStream(Developer developer)
