@@ -191,6 +191,29 @@ namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
             return builder.Build(CsvBuilder.SortFields.ByNameLeaveFirst);
         }
 
+        public string DeveloperDayStatisticToCsv(TimeSpan shortInactivityLimit, TimeSpan longInactivityThreshold)
+        {
+            var builder = new CsvBuilder();
+
+            foreach (var developerWithStreams in ActivityStreams)
+            {
+                foreach (var dayWithStream in developerWithStreams.Value)
+                {
+                    builder.StartRow();
+                    var statistic = dayWithStream.Value.Evaluate(shortInactivityLimit, longInactivityThreshold);
+                    builder["DevDay"] = dayWithStream.Key.ToString("yyyy-MM-dd") + "_" + developerWithStreams.Key.Id;
+                    foreach (var activityWithDuration in statistic)
+                    {
+                        builder[activityWithDuration.Key.ToString()] = activityWithDuration.Value.TotalSeconds;
+                    }
+                    builder["Inactivities"] = statistic.NumberOfInactivityPeriods;
+                    builder["LongInactivities"] = statistic.NumberOfLongInactivityPeriods;
+                }
+            }
+
+            return builder.Build();
+        }
+
         public string InactivityStatisticToCsv(TimeSpan shortInactivityLimit, params TimeSpan[] longInactivityThresholds)
         {
             var builder = new CsvBuilder();
