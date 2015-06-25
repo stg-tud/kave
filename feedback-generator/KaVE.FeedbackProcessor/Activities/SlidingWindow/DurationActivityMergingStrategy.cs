@@ -15,8 +15,8 @@
  */
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
+using KaVE.Commons.Utils.DateTime;
 using KaVE.FeedbackProcessor.Activities.Model;
 
 namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
@@ -25,23 +25,30 @@ namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
     {
         private static readonly TimeSpan MinimalActivityDuration = TimeSpan.FromMilliseconds(100);
 
-        protected override int GetWeightOfActivity(IList<ActivityEvent> window, Activity activity)
+        protected override int GetWeightOfActivity(Window window, Activity activity)
         {
-            return window.Where(e => e.Activity == activity).Sum(a => GetDuration(a));
+            return window.Events.Where(e => e.Activity == activity).Sum(a => GetDuration(a, window));
         }
 
-        private static int GetDuration(ActivityEvent a)
+        private static int GetDuration(ActivityEvent a, Window window)
         {
             TimeSpan duration;
-            if (a.Duration == null || a.Duration < MinimalActivityDuration)
+            var minimalDuration = GetMinimalDuration(window);
+            if (a.Duration == null || a.Duration < minimalDuration)
             {
-                duration = MinimalActivityDuration;
+                duration = minimalDuration;
             }
             else
             {
                 duration = a.Duration.Value;
             }
             return (int) duration.TotalMilliseconds;
+        }
+
+        private static TimeSpan GetMinimalDuration(Window window)
+        {
+            var relativeMinimum = window.Span.Times(1.0 / window.Events.Count);
+            return relativeMinimum < MinimalActivityDuration ? relativeMinimum : MinimalActivityDuration;
         }
     }
 }

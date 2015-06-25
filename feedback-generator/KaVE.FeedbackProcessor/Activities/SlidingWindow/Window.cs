@@ -27,12 +27,12 @@ namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
 {
     internal class Window
     {
-        private readonly TimeSpan _span;
+        public readonly TimeSpan Span;
         public readonly IList<ActivityEvent> Events = new KaVEList<ActivityEvent>();
 
         public Window(DateTime start, TimeSpan span)
         {
-            _span = span;
+            Span = span;
             Start = start;
         }
 
@@ -40,7 +40,7 @@ namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
 
         public DateTime End
         {
-            get { return Start + _span; }
+            get { return Start + Span; }
         }
 
         public void Add(ActivityEvent activityEvent)
@@ -75,7 +75,7 @@ namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
 
         protected bool Equals(Window other)
         {
-            return _span.Equals(other._span) && Equals(Events, other.Events) && Start.Equals(other.Start);
+            return Span.Equals(other.Span) && Equals(Events, other.Events) && Start.Equals(other.Start);
         }
 
         public override bool Equals(object obj)
@@ -87,7 +87,7 @@ namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
         {
             unchecked
             {
-                var hashCode = _span.GetHashCode();
+                var hashCode = Span.GetHashCode();
                 hashCode = (hashCode*397) ^ (Events != null ? Events.GetHashCode() : 0);
                 hashCode = (hashCode*397) ^ Start.GetHashCode();
                 return hashCode;

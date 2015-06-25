@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-using System.Collections.Generic;
 using System.Linq;
 using KaVE.FeedbackProcessor.Activities.Model;
 
@@ -22,9 +21,9 @@ namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
 {
     internal class FrequencyActivityMergeStrategy : WeightedActivityMergeStrategy
     {
-        protected override int GetWeightOfActivity(IList<ActivityEvent> window, Activity activity)
+        protected override int GetWeightOfActivity(Window window, Activity activity)
         {
-            return window.Count(e => e.Activity == activity);
+            return window.Events.Count(e => e.Activity == activity);
         }
     }
 }

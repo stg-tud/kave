@@ -51,15 +51,10 @@ namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
             return _leftIDE ? Activity.Away : Activity.Inactive;
         }
 
-        private static bool IsEmptyWindow(ICollection<ActivityEvent> window)
-        {
-            return window.Count == 0;
-        }
-
         private Activity MergeNonEmptyWindow(Window window)
         {
             var windowWithoutAny = WithoutSpecialActivities(window);
-            if (!IsEmptyWindow(windowWithoutAny))
+            if (windowWithoutAny.IsNotEmpty)
             {
                 return SelectsRepresentativeActivity(windowWithoutAny);
             }
@@ -70,11 +65,11 @@ namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
             return _lastActivity.Value;
         }
 
-        private Activity SelectsRepresentativeActivity(IList<ActivityEvent> window)
+        private Activity SelectsRepresentativeActivity(Window window)
         {
             var representativeActivity = Activity.Any;
             var maxActivityWeight = 0;
-            foreach (var activity in window.Select(e => e.Activity))
+            foreach (var activity in window.Events.Select(e => e.Activity))
             {
                 var weightOfActivity = GetWeightOfActivity(window, activity);
                 if (weightOfActivity >= maxActivityWeight)
@@ -86,11 +81,16 @@ namespace KaVE.FeedbackProcessor.Activities.SlidingWindow
             return representativeActivity;
         }
 
-        protected abstract int GetWeightOfActivity(IList<ActivityEvent> window, Activity activity);
+        protected abstract int GetWeightOfActivity(Window window, Activity activity);
 
-        private static IList<ActivityEvent> WithoutSpecialActivities(Window window)
+        private static Window WithoutSpecialActivities(Window window)
         {
-            return window.Events.Where(e => !SpecialActivities.Contains(e.Activity)).ToList();
+            var newWindow = new Window(window.Start, window.Span);
+            foreach (var activity in window.Events.Where(e => !SpecialActivities.Contains(e.Activity)))
+            {
+                newWindow.Add(activity);
+            }
+            return newWindow;
         }
 
         private static bool IsInactivity(Activity? lastActivity)
