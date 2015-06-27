@@ -13,15 +13,122 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 using System;
-using KaVE.Commons.TestUtils.Model.Events;
+using KaVE.Commons.Model.Events;
+using KaVE.Commons.Model.Names.VisualStudio;
+using KaVE.Commons.TestUtils;
 using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Model.Events
 {
-    [TestFixture]
-    class IDEEventTest
+    internal class IDEEventTest
     {
+        #region default values and equality
+
+        [Test]
+        public void DefaultValues()
+        {
+            var sut = new TestIDEEvent();
+            Assert.AreEqual(null, sut.Id);
+            Assert.AreEqual(null, sut.ActiveDocument);
+            Assert.AreEqual(null, sut.ActiveWindow);
+            Assert.AreEqual(null, sut.Duration);
+            Assert.AreEqual(null, sut.IDESessionUUID);
+            Assert.AreEqual(null, sut.KaVEVersion);
+            Assert.AreEqual(null, sut.TerminatedAt);
+            Assert.AreEqual(null, sut.TriggeredAt);
+            Assert.AreEqual(IDEEvent.Trigger.Unknown, sut.TriggeredBy);
+        }
+
+        [Test]
+        public void SettingValues()
+        {
+            var sut = new TestIDEEvent
+            {
+                Id = "1",
+                ActiveDocument = DocumentName.Get("d"),
+                ActiveWindow = WindowName.Get("w"),
+                // Duration is automatically set
+                IDESessionUUID = "2",
+                KaVEVersion = "3",
+                TriggeredAt = DateTime.Today.AddDays(-1),
+                TerminatedAt = DateTime.Today,
+                TriggeredBy = IDEEvent.Trigger.Click
+            };
+            Assert.AreEqual("1", sut.Id);
+            Assert.AreEqual(DocumentName.Get("d"), sut.ActiveDocument);
+            Assert.AreEqual(WindowName.Get("w"), sut.ActiveWindow);
+            Assert.AreEqual(TimeSpan.FromDays(1), sut.Duration);
+            Assert.AreEqual("2", sut.IDESessionUUID);
+            Assert.AreEqual("3", sut.KaVEVersion);
+            Assert.AreEqual(DateTime.Today, sut.TerminatedAt);
+            Assert.AreEqual(DateTime.Today.AddDays(-1), sut.TriggeredAt);
+            Assert.AreEqual(IDEEvent.Trigger.Click, sut.TriggeredBy);
+        }
+
+        [Test]
+        public void Equality_Default()
+        {
+            var a = new TestIDEEvent();
+            var b = new TestIDEEvent();
+            Assert.AreEqual(a, b);
+            Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
+        }
+
+        [Test]
+        public void Equality_ReallyTheSame()
+        {
+            var a = new TestIDEEvent
+            {
+                Id = "1",
+                ActiveDocument = DocumentName.Get("d"),
+                ActiveWindow = WindowName.Get("w"),
+                // Duration is automatically set
+                IDESessionUUID = "2",
+                KaVEVersion = "3",
+                TriggeredAt = DateTime.Today.AddDays(-1),
+                TerminatedAt = DateTime.Today,
+                TriggeredBy = IDEEvent.Trigger.Click
+            };
+            var b = new TestIDEEvent
+            {
+                Id = "1",
+                ActiveDocument = DocumentName.Get("d"),
+                ActiveWindow = WindowName.Get("w"),
+                // Duration is automatically set
+                IDESessionUUID = "2",
+                KaVEVersion = "3",
+                TriggeredAt = DateTime.Today.AddDays(-1),
+                TerminatedAt = DateTime.Today,
+                TriggeredBy = IDEEvent.Trigger.Click
+            };
+            Assert.AreEqual(a, b);
+            Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
+        }
+
+        [Test]
+        public void Equality_DifferentId()
+        {
+            var a = new TestIDEEvent
+            {
+                Id = "1"
+            };
+            var b = new TestIDEEvent();
+            Assert.AreNotEqual(a, b);
+            Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
+        }
+
+        [Test]
+        public void ToStringReflection()
+        {
+            ToStringAssert.Reflection(new TestIDEEvent());
+        }
+
+        // TODO implement remaining equality tests
+
+        #endregion
+
         [Test]
         public void ShouldDeriveDurationFromStartAndEndTime()
         {
@@ -73,5 +180,7 @@ namespace KaVE.Commons.Tests.Model.Events
 
             Assert.IsNull(ideEvent.TerminatedAt);
         }
+
+        private class TestIDEEvent : IDEEvent {}
     }
 }

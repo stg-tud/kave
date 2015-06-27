@@ -22,6 +22,7 @@ using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Names.VisualStudio;
 using KaVE.VS.FeedbackGenerator.SessionManager.Anonymize;
 using KaVE.VS.FeedbackGenerator.SessionManager.Presentation;
+using KaVE.VS.FeedbackGenerator.Settings;
 using KaVE.VS.FeedbackGenerator.Utils;
 using Moq;
 using NUnit.Framework;

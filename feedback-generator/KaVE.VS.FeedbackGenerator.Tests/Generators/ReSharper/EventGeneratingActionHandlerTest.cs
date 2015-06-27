@@ -65,6 +65,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.ReSharper
             var expected = new CommandEvent
             {
                 IDESessionUUID = TestIDESession.UUID,
+                KaVEVersion = TestRSEnv.DefaultVersion.ToString(),
                 CommandId = TestActionId,
                 TriggeredAt = TestDateUtils.Now,
                 Duration = TimeSpan.FromSeconds(0)

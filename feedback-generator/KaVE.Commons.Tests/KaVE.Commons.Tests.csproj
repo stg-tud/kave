@@ -73,11 +73,13 @@
     <Compile Include="Model\Events\ErrorEventTest.cs" />
     <Compile Include="Model\Events\IDEEventTest.cs" />
     <Compile Include="Model\Events\InfoEventTest.cs" />
+    <Compile Include="Model\Events\UserProfileEventTest.cs" />
     <Compile Include="Model\Groums\GroumTest.cs" />
     <Compile Include="Model\Names\CSharp\ArrayTypeNameTest.cs" />
     <Compile Include="Model\Names\CSharp\CSharpNameFromInfoFactoryTest.cs" />
     <Compile Include="Model\Names\CSharp\CSharpNameUtilsTest.cs" />
     <Compile Include="Model\Names\CSharp\DelegateTypeNameTest.cs" />
+    <Compile Include="Model\Names\CSharp\GenericType.cs" />
     <Compile Include="Model\Names\CSharp\GlobalNamespaceTest.cs" />
     <Compile Include="Model\Names\CSharp\LambdaNameTest.cs" />
     <Compile Include="Model\Names\CSharp\LocalVariableNameTest.cs" />
@@ -92,6 +94,7 @@
     <Compile Include="Model\Names\CSharp\NameTest.cs" />
     <Compile Include="Model\Names\CSharp\ParameterNameTest.cs" />
     <Compile Include="Model\Names\CSharp\NameUtilsTest.cs" />
+    <Compile Include="Model\Names\CSharp\SimpleType.cs" />
     <Compile Include="Model\Names\CSharp\TypeNameTest.cs" />
     <Compile Include="Model\Names\VisualStudio\DocumentNameTest.cs" />
     <Compile Include="Model\Names\VisualStudio\ProjectItemNameTest.cs" />
@@ -257,7 +260,9 @@
       <Name>KaVE.Commons.TestUtils</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Model\Events\UserProfile\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

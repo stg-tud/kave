@@ -275,7 +275,7 @@
     <comment>Einstellungen</comment>
   </data>
   <data name="Refresh_Button" xml:space="preserve">
-    <value>Aktualisieren</value>
+    <value>Refresh</value>
   </data>
   <data name="VisitUploadPage_Button" xml:space="preserve">
     <value>Website for Manual Upload</value>

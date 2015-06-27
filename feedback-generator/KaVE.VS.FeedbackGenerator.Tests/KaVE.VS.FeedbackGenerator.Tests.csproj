@@ -155,14 +155,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assertion\NameAssert.cs" />
     <Compile Include="CodeCompletion\CodeCompletionLifecycleManagerTest.cs" />
     <Compile Include="CodeCompletion\PBNProposalItemsProviderTest.cs" />
-    <Compile Include="Export\ExporterTest.cs" />
-    <Compile Include="Export\MailValidationRuleTest.cs" />
+    <Compile Include="UserControls\Export\ExporterTest.cs" />
+    <Compile Include="UserControls\Export\MailValidationRuleTest.cs" />
     <Compile Include="Generators\EventGeneratorBaseTest.cs" />
     <Compile Include="Generators\EventLoggerTest.cs" />
-    <Compile Include="Generators\Export\ExportEventGeneratorTest.cs" />
+    <Compile Include="Generators\UserProfileEventGeneratorTest.cs" />
     <Compile Include="Generators\LogEventGeneratorTest.cs" />
     <Compile Include="Generators\EventGeneratorTestBase.cs" />
     <Compile Include="Generators\Merging\CompletionEventMergingStrategyTest.cs" />
@@ -207,11 +206,11 @@
     <Compile Include="SessionManager\Presentation\IDEEventDetailsToJsonConverterTest.cs" />
     <Compile Include="SessionManager\Presentation\JsonSyntaxHighlighterTest.cs" />
     <Compile Include="SessionManager\Presentation\MultiSelectionTest.cs" />
-    <Compile Include="SessionManager\Presentation\OptionPageViewModelTest.cs" />
-    <Compile Include="SessionManager\Presentation\UserSetting\UserSettingsViewModelTest.cs" />
+    <Compile Include="UserControls\OptionPage\OptionPageViewModelTest.cs" />
+    <Compile Include="UserControls\UserProfile\UserProfileViewModelTest.cs" />
     <Compile Include="SessionManager\Presentation\XamlBindableRichTextBoxTest.cs" />
     <Compile Include="SessionManager\UploadReminderTest.cs" />
-    <Compile Include="SessionManager\UploadSettingsTest.cs" />
+    <Compile Include="Settings\UploadSettingsTest.cs" />
     <Compile Include="SessionManager\ViewModelBaseTest.cs" />
     <Compile Include="TestFactories\Actions\MockExecutableAction.cs" />
     <Compile Include="TestFactories\Actions\MockNextActionHandler.cs" />
@@ -219,15 +218,15 @@
     <Compile Include="TestFactories\LookupItemsMockUtils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SessionManager\EventViewTest.cs" />
-    <Compile Include="Export\UploadWizardViewModelTest.cs" />
+    <Compile Include="UserControls\Export\UploadWizardViewModelTest.cs" />
     <Compile Include="TestRSEnv.cs" />
     <Compile Include="Utils\InverseBoolConverterTest.cs" />
     <Compile Include="Utils\Logging\LogFileManagerTest.cs" />
     <Compile Include="Utils\Logging\LogFileTest.cs" />
     <Compile Include="Utils\Names\VsComponentNameFactoryTest.cs" />
     <Compile Include="Utils\ObjectToVisibilityConverterTest.cs" />
-    <Compile Include="Utils\SettingsCleanerTest.cs" />
-    <Compile Include="Utils\SettingsStoreTest.cs" />
+    <Compile Include="Settings\SettingsCleanerTest.cs" />
+    <Compile Include="Settings\SettingsStoreTest.cs" />
     <Compile Include="VsIntegrationMocks\TestDTE.cs" />
     <Compile Include="VsIntegration\IDESessionTest.cs" />
   </ItemGroup>

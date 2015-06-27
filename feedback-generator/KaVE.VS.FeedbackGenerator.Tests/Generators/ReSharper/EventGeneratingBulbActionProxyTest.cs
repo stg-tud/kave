@@ -57,6 +57,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.ReSharper
             var expected = new CommandEvent
             {
                 IDESessionUUID = TestIDESession.UUID,
+                KaVEVersion = TestRSEnv.DefaultVersion.ToString(),
                 CommandId = "Castle.Proxies.IBulbActionProxy",
                 TriggeredAt = TestDateUtils.Now,
                 Duration = TimeSpan.FromSeconds(0)

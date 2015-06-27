@@ -17,20 +17,23 @@
             <dependency id="Wave" version="[2.0]" />
         </dependencies>
     </metadata>
-     <files>
+    <files>
         <!-- WARNING: We cannot have shared DLLs in vAny. All required DLLs need to be in v8.x in order for the plugin to load correctly. -->
         
         <!-- Plugin for ReSharper 8.2 -->
             <!-- KaVE Assemblies -->
-                <file src="KaVE.VS.FeedbackGenerator\bin\Debug\KaVE.Commons.dll" target="DotFiles\KaVE.Commons.dll" />
-                <file src="KaVE.VS.FeedbackGenerator\bin\Debug\KaVE.RS.Commons.dll" target="DotFiles\KaVE.RS.Commons.dll" />
-                <file src="KaVE.VS.FeedbackGenerator\bin\Debug\KaVE.VS.FeedbackGenerator.dll" target="DotFiles\KaVE.VS.FeedbackGenerator.dll" />
+                <file src="KaVE.VS.FeedbackGenerator\bin\Debug\KaVE.Commons.dll" target="DotFiles" />
+                <file src="KaVE.VS.FeedbackGenerator\bin\Debug\KaVE.RS.Commons.dll" target="DotFiles" />
+                <file src="KaVE.VS.FeedbackGenerator\bin\Debug\KaVE.VS.FeedbackGenerator.dll" target="DotFiles" />
             <!-- 3rd-Party Dependencies -->
-                <file src="KaVE.VS.FeedbackGenerator\bin\Debug\Newtonsoft.Json.dll" target="DotFiles\Newtonsoft.Json.dll" />
-                <file src="KaVE.VS.FeedbackGenerator\bin\Debug\Hardcodet.Wpf.TaskbarNotification.dll" target="DotFiles\Hardcodet.Wpf.TaskbarNotification.dll" />
-        <file src="3rd-party\MsgBox.dll" target="DotFiles\MsgBox.dll" />
-        <file src="3rd-party\UserNotification.dll" target="DotFiles\UserNotification.dll" />
-        <file src="3rd-party\smileNet.dll" target="DotFiles\smileNet.dll" />
-        <file src="3rd-party\System.Net.Http.dll" target="DotFiles\System.Net.Http.dll" />
+                <file src="KaVE.VS.FeedbackGenerator\bin\Debug\Newtonsoft.Json.dll" target="DotFiles" />
+                <file src="KaVE.VS.FeedbackGenerator\bin\Debug\Hardcodet.Wpf.TaskbarNotification.dll" target="DotFiles" />
+        <file src="3rd-party\MsgBox.dll" target="DotFiles" />
+        <file src="3rd-party\UserNotification.dll" target="DotFiles" />
+        <file src="3rd-party\smileNet.dll" target="DotFiles" />
+        <file src="3rd-party\System.Net.Http.dll" target="DotFiles" />
+
+        <!-- Localization -->
+        <file src="KaVE.VS.FeedbackGenerator\bin\Debug\de\*.resources.dll" target="DotFiles\de" />
     </files>
 </package>

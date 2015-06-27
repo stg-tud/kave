@@ -12,9 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
- * Contributors:
- *    - Sven Amann
  */
 
 using System;
@@ -26,6 +23,7 @@ using KaVE.Commons.Model.Events.VisualStudio;
 using KaVE.Commons.Utils.Json;
 using KaVE.VS.FeedbackGenerator.SessionManager.Anonymize.CompletionEvents;
 using KaVE.VS.FeedbackGenerator.SessionManager.Presentation;
+using KaVE.VS.FeedbackGenerator.Settings;
 using KaVE.VS.FeedbackGenerator.Utils;
 
 namespace KaVE.VS.FeedbackGenerator.SessionManager.Anonymize

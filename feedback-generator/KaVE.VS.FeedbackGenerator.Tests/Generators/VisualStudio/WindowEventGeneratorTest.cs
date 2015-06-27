@@ -74,6 +74,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.VisualStudio
             _expected = new WindowEvent
             {
                 IDESessionUUID = TestIDESession.UUID,
+                KaVEVersion = TestRSEnv.DefaultVersion.ToString(),
                 Window = _testWindowName,
                 TriggeredAt = TestDateUtils.Now,
                 TerminatedAt = TestDateUtils.Now

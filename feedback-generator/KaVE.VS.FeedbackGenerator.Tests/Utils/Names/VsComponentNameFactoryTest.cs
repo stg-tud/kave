@@ -15,7 +15,7 @@
  */
 
 using EnvDTE;
-using KaVE.VS.FeedbackGenerator.Tests.Assertion;
+using KaVE.Commons.TestUtils.Model.Names;
 using KaVE.VS.FeedbackGenerator.Tests.TestFactories;
 using KaVE.VS.FeedbackGenerator.Utils.Names;
 using Moq;
@@ -23,7 +23,6 @@ using NUnit.Framework;
 
 namespace KaVE.VS.FeedbackGenerator.Tests.Utils.Names
 {
-    [TestFixture]
     internal class VsComponentNameFactoryTest
     {
         [Test]

@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-using System;
 using KaVE.Commons.Model.Names.CSharp;
 using NUnit.Framework;
 using Test.Targets;
@@ -226,10 +225,7 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp
             Assert.AreEqual("Test.Targets.SimpleType[,,,,,]", typeName.FullName);
         }
     }
-}
 
-namespace Test.Targets
-{
     // ReSharper disable UnusedMember.Global
     // ReSharper disable UnusedParameter.Global
     // ReSharper disable ConvertToConstant.Local
@@ -238,62 +234,6 @@ namespace Test.Targets
     // ReSharper disable UnusedAutoPropertyAccessor.Local
     // ReSharper disable EventNeverInvoked
     // ReSharper disable EventNeverSubscribedTo.Global
-    internal class SimpleType
-    {
-        public static string _staticField = "";
-
-        public static int StaticProperty { get; set; }
-
-        public static void StaticMethod() {}
-
-        public readonly int _simpleTypedField = 0;
-
-        public string SimpleProperty { get; set; }
-
-        public int GetOnlyProperty
-        {
-            get { return 0; }
-        }
-
-        public int SetOnlyProperty
-        {
-            // ReSharper disable once ValueParameterNotUsed
-            set { }
-        }
-
-        public int PrivateSetProperty { get; private set; }
-
-        public int SimpleMethod()
-        {
-            return 0;
-        }
-
-        public void ParameterizedMethod(int firstParam, Object secondParam) {}
-
-        public void ParamsMethod(params int[] varArgs) {}
-
-        public void RefParamMethod(ref int primitiveInOut) {}
-
-        public void OutParamMethod(out int primitiveOut)
-        {
-            primitiveOut = 0;
-        }
-
-        public void OptionalParamMethod(int optional = 0) {}
-
-        public delegate void SomeEventHandler(int param);
-
-        public event SomeEventHandler SomeEvent;
-
-        public static event SomeEventHandler StaticEvent;
-    }
-
-    internal class GenericType<TA>
-    {
-        public TA _genericTypedField;
-
-        public interface IInnerType {}
-    }
 
     // ReSharper restore EventNeverSubscribedTo.Global
     // ReSharper restore EventNeverInvoked

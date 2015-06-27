@@ -118,6 +118,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.VisualStudio
             var expected = new CommandEvent
             {
                 IDESessionUUID = TestIDESession.UUID,
+                KaVEVersion = TestRSEnv.DefaultVersion.ToString(),
                 TriggeredAt = TestDateUtils.Now,
                 TriggeredBy = IDEEvent.Trigger.Click,
                 CommandId = "testButton"
@@ -139,6 +140,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.VisualStudio
             var expected = new CommandEvent
             {
                 IDESessionUUID = TestIDESession.UUID,
+                KaVEVersion = TestRSEnv.DefaultVersion.ToString(),
                 TriggeredAt = TestDateUtils.Now,
                 TriggeredBy = IDEEvent.Trigger.Click,
                 CommandId = "testComboBox"
@@ -161,6 +163,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.VisualStudio
             var expected = new CommandEvent
             {
                 IDESessionUUID = TestIDESession.UUID,
+                KaVEVersion = TestRSEnv.DefaultVersion.ToString(),
                 TriggeredAt = TestDateUtils.Now,
                 TriggeredBy = IDEEvent.Trigger.Click,
                 CommandId = "menuButton"
@@ -184,6 +187,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.VisualStudio
             var expected = new CommandEvent
             {
                 IDESessionUUID = TestIDESession.UUID,
+                KaVEVersion = TestRSEnv.DefaultVersion.ToString(),
                 TriggeredAt = TestDateUtils.Now,
                 TriggeredBy = IDEEvent.Trigger.Click,
                 CommandId = "nestedMenuButton"
@@ -191,7 +195,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.VisualStudio
             Assert.AreEqual(expected, actual);
         }
 
-        [Test]
+        [Test, Ignore]
         public void ShouldFireEventIfToolWindowButtonIsClicked()
         {
             // cannot mock ToolWindow as we need an instance of EnvDTE.WindowBase, which is non-public and we cannot mock the reflective access

@@ -403,7 +403,7 @@ namespace KaVE.VS.FeedbackGenerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Aktualisieren.
+        ///   Looks up a localized string similar to Refresh.
         /// </summary>
         public static string Refresh_Button {
             get {

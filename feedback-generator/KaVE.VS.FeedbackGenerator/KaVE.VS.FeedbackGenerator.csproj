@@ -158,17 +158,28 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Properties\General.en.Designer.cs">
-      <DependentUpon>General.en.resx</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </Compile>
+    <Compile Include="Generators\UserProfileEventGenerator.cs" />
     <Compile Include="Menu\AboutAction.cs" />
     <Compile Include="CodeCompletion\PBNProposalWrappedLookupItem.cs" />
     <Compile Include="CodeCompletion\PBNProposalItemsProvider.cs" />
-    <Compile Include="Export\Exporter.cs" />
-    <Compile Include="Export\MailValidationRule.cs" />
-    <Compile Include="Generators\Export\ExportEventGenerator.cs" />
+    <Compile Include="SessionManager\Anonymize\AnonymousNameUtils.cs" />
+    <Compile Include="SessionManager\Anonymize\BuildEventAnonymizer.cs" />
+    <Compile Include="SessionManager\Anonymize\CompletionEvents\CompletionEventAnonymizer.cs" />
+    <Compile Include="SessionManager\Anonymize\CompletionEvents\SSTAnonymization.cs" />
+    <Compile Include="SessionManager\Anonymize\CompletionEvents\SSTExpressionAnonymization.cs" />
+    <Compile Include="SessionManager\Anonymize\CompletionEvents\SSTReferenceAnonymization.cs" />
+    <Compile Include="SessionManager\Anonymize\CompletionEvents\SSTStatementAnonymization.cs" />
+    <Compile Include="SessionManager\Anonymize\CompletionEvents\TypeShapeAnonymizer.cs" />
+    <Compile Include="SessionManager\Anonymize\DataExportAnonymizer.cs" />
+    <Compile Include="SessionManager\Anonymize\DocumentEventAnonymizer.cs" />
+    <Compile Include="SessionManager\Anonymize\ErrorEventAnonymizer.cs" />
+    <Compile Include="SessionManager\Anonymize\IDEEventAnonymizer.cs" />
+    <Compile Include="SessionManager\Anonymize\IDEStateEventAnonymizer.cs" />
+    <Compile Include="SessionManager\Anonymize\InfoEventAnonymizer.cs" />
+    <Compile Include="SessionManager\Anonymize\SolutionEventAnonymizer.cs" />
+    <Compile Include="SessionManager\Anonymize\WindowEventAnonymizer.cs" />
+    <Compile Include="UserControls\Export\Exporter.cs" />
+    <Compile Include="UserControls\ValidationRules\MailValidationRule.cs" />
     <Compile Include="Generators\LogEventGenerator.cs" />
     <Compile Include="Generators\ReSharper\CommandEventGeneratorBase.cs" />
     <Compile Include="Generators\VisualStudio\CommandBarEventGenerator.cs" />
@@ -182,13 +193,13 @@
     <Compile Include="Interactivity\LinkNotificationRequestHandler.cs" />
     <Compile Include="Interactivity\Notification.cs" />
     <Compile Include="Interactivity\NotificationRequestHandler.cs" />
-    <Compile Include="Properties\SessionManager.en.Designer.cs">
+    <Compile Include="Properties\SessionManager.de.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>SessionManager.en.resx</DependentUpon>
+      <DependentUpon>SessionManager.de.resx</DependentUpon>
     </Compile>
-    <Compile Include="Properties\UserSetting.Designer.cs">
-      <DependentUpon>UserSetting.resx</DependentUpon>
+    <Compile Include="Properties\UserProfileMessages.Designer.cs">
+      <DependentUpon>UserProfileMessages.resx</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
@@ -210,43 +221,27 @@
     <Compile Include="Interactivity\InteractionRequest.cs" />
     <Compile Include="Interactivity\ConfirmationRequestHandler.cs" />
     <Compile Include="RSEnv.cs" />
-    <Compile Include="SessionManager\Anonymize\CompletionEvents\SSTAnonymization.cs" />
-    <Compile Include="SessionManager\Anonymize\BuildEventAnonymizer.cs" />
-    <Compile Include="SessionManager\Anonymize\CompletionEvents\CompletionEventAnonymizer.cs" />
-    <Compile Include="SessionManager\Anonymize\DataExportAnonymizer.cs" />
-    <Compile Include="SessionManager\Anonymize\DocumentEventAnonymizer.cs" />
-    <Compile Include="SessionManager\Anonymize\ErrorEventAnonymizer.cs" />
-    <Compile Include="SessionManager\Anonymize\IDEEventAnonymizer.cs" />
-    <Compile Include="SessionManager\Anonymize\IDEStateEventAnonymizer.cs" />
-    <Compile Include="SessionManager\Anonymize\InfoEventAnonymizer.cs" />
-    <Compile Include="SessionManager\Anonymize\AnonymousNameUtils.cs" />
-    <Compile Include="SessionManager\Anonymize\SolutionEventAnonymizer.cs" />
-    <Compile Include="SessionManager\Anonymize\CompletionEvents\SSTExpressionAnonymization.cs" />
-    <Compile Include="SessionManager\Anonymize\CompletionEvents\SSTReferenceAnonymization.cs" />
-    <Compile Include="SessionManager\Anonymize\CompletionEvents\SSTStatementAnonymization.cs" />
-    <Compile Include="SessionManager\Anonymize\CompletionEvents\TypeShapeAnonymizer.cs" />
-    <Compile Include="SessionManager\Anonymize\WindowEventAnonymizer.cs" />
-    <Compile Include="SessionManager\FeedbackSettings.cs" />
-    <Compile Include="KaVESettings.cs" />
+    <Compile Include="Settings\FeedbackSettings.cs" />
+    <Compile Include="Settings\KaVESettings.cs" />
     <Compile Include="Menu\KaVEMenu.cs" />
     <Compile Include="SessionManager\Presentation\DelegateCommand.cs" />
     <Compile Include="SessionManager\Presentation\IDEEventDetailsToJsonConverter.cs" />
     <Compile Include="SessionManager\Presentation\JsonSyntaxHighlighter.cs" />
     <Compile Include="SessionManager\Presentation\MultiSelection.cs" />
     <Compile Include="Menu\OptionPageAction.cs" />
-    <Compile Include="SessionManager\Presentation\OptionPageViewModel.cs" />
+    <Compile Include="UserControls\OptionPage\OptionPageViewModel.cs" />
     <Compile Include="SessionManager\Presentation\SortableListView.cs" />
     <Compile Include="SessionManager\Presentation\UriValidation.cs" />
-    <Compile Include="SessionManager\Presentation\UserSetting\UserSettingsGrid.xaml.cs">
-      <DependentUpon>UserSettingsGrid.xaml</DependentUpon>
+    <Compile Include="UserControls\UserProfile\UserProfileGrid.xaml.cs">
+      <DependentUpon>UserProfileGrid.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SessionManager\Presentation\UserSetting\UserSettingsViewModel.cs" />
-    <Compile Include="SessionManager\Presentation\UserSetting\UserSettings.cs" />
-    <Compile Include="SessionManager\Presentation\UploadUrlValidationRule.cs" />
-    <Compile Include="SessionManager\Presentation\WebAccessPrefixValidationRule.cs" />
+    <Compile Include="UserControls\UserProfile\UserProfileViewModel.cs" />
+    <Compile Include="Settings\UserProfileSettings.cs" />
+    <Compile Include="UserControls\ValidationRules\UploadUrlValidationRule.cs" />
+    <Compile Include="UserControls\ValidationRules\WebAccessPrefixValidationRule.cs" />
     <Compile Include="SessionManager\ViewModelBase.cs" />
-    <Compile Include="TrayNotification\BalloonPopupBase.cs" />
-    <Compile Include="TrayNotification\HardBalloonPopup.xaml.cs">
+    <Compile Include="UserControls\TrayNotification\BalloonPopupBase.cs" />
+    <Compile Include="UserControls\TrayNotification\HardBalloonPopup.xaml.cs">
       <DependentUpon>HardBalloonPopup.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\UploadWizard.Designer.cs">
@@ -254,13 +249,13 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>UploadWizard.resx</DependentUpon>
     </Compile>
-    <Compile Include="Export\UploadWizard.xaml.cs">
+    <Compile Include="UserControls\Export\UploadWizard.xaml.cs">
       <DependentUpon>UploadWizard.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Export\UploadWizardAction.cs" />
-    <Compile Include="Export\UploadWizardViewModel.cs" />
-    <Compile Include="TrayNotification\NotifyTrayIcon.cs" />
-    <Compile Include="TrayNotification\SoftBalloonPopup.xaml.cs">
+    <Compile Include="UserControls\Export\UploadWizardAction.cs" />
+    <Compile Include="UserControls\Export\UploadWizardViewModel.cs" />
+    <Compile Include="UserControls\TrayNotification\NotifyTrayIcon.cs" />
+    <Compile Include="UserControls\TrayNotification\SoftBalloonPopup.xaml.cs">
       <DependentUpon>SoftBalloonPopup.xaml</DependentUpon>
     </Compile>
     <Compile Include="CodeCompletion\CodeCompletionLifecycleManager.cs" />
@@ -311,25 +306,25 @@
     </Compile>
     <Compile Include="SessionManager\Presentation\SessionManagerWindowDescriptor.cs" />
     <Compile Include="SessionManager\Presentation\SessionManagerWindowRegistrar.cs" />
-    <Compile Include="SessionManager\Presentation\OptionPage.xaml.cs">
+    <Compile Include="UserControls\OptionPage\OptionPage.xaml.cs">
       <DependentUpon>OptionPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="SessionManager\SessionViewModel.cs" />
     <Compile Include="SessionManager\EventViewModel.cs" />
     <Compile Include="SessionManager\FeedbackViewModel.cs" />
     <Compile Include="MessageBus\TinyMessenger.cs" />
-    <Compile Include="SessionManager\UploadSettings.cs" />
+    <Compile Include="Settings\UploadSettings.cs" />
     <Compile Include="SessionManager\UploadReminder.cs" />
     <Compile Include="Utils\InverseBoolConverter.cs" />
     <Compile Include="Utils\InverseObjectToVisibilityConverter.cs" />
-    <Compile Include="Utils\Json\JsonLogFileManager.cs" />
+    <Compile Include="Utils\Logging\JsonLogFileManager.cs" />
     <Compile Include="Utils\Logging\ILogManager.cs" />
     <Compile Include="Utils\Logging\LogFile.cs" />
     <Compile Include="Utils\Logging\LogFileManager.cs" />
     <Compile Include="Utils\Names\VsComponentNameFactory.cs" />
     <Compile Include="Utils\ObjectToVisibilityConverter.cs" />
-    <Compile Include="Utils\SettingsCleaner.cs" />
-    <Compile Include="Utils\SettingsStore.cs" />
+    <Compile Include="Settings\SettingsCleaner.cs" />
+    <Compile Include="Settings\SettingsStore.cs" />
     <Compile Include="VsIntegration\IDESession.cs" />
     <Compile Include="VsIntegration\IIDESession.cs" />
     <Compile Include="ZoneMarker.cs" />
@@ -343,19 +338,15 @@
     </When>
     <Otherwise>
       <ItemGroup>
-        <None Include="SessionManager\Presentation\ExportSettingsDATEV.cs" />
-        <Compile Include="SessionManager\Presentation\ExportSettings.cs" />
+        <None Include="Settings\ExportSettingsDATEV.cs" />
+        <Compile Include="Settings\ExportSettings.cs" />
       </ItemGroup>
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <EmbeddedResource Include="Properties\General.en.resx">
+    <EmbeddedResource Include="Properties\UserProfileMessages.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>General.en.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-   <EmbeddedResource Include="Properties\UserSetting.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>UserSetting.Designer.cs</LastGenOutput>
+      <LastGenOutput>UserProfileMessages.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\XamlBindableRichTextBox.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
@@ -387,21 +378,21 @@
       <LastGenOutput>UploadWizard.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Properties\SessionManager.en.resx">
+    <EmbeddedResource Include="Properties\SessionManager.de.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>SessionManager.en.Designer.cs</LastGenOutput>
+      <LastGenOutput>SessionManager.de.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="SessionManager\Presentation\UserSetting\UserSettingsGrid.xaml">
+    <Page Include="UserControls\UserProfile\UserProfileGrid.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="TrayNotification\HardBalloonPopup.xaml">
+    <Page Include="UserControls\TrayNotification\HardBalloonPopup.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="TrayNotification\SoftBalloonPopup.xaml">
+    <Page Include="UserControls\TrayNotification\SoftBalloonPopup.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -409,11 +400,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="SessionManager\Presentation\OptionPage.xaml">
+    <Page Include="UserControls\OptionPage\OptionPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Export\UploadWizard.xaml">
+    <Page Include="UserControls\Export\UploadWizard.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

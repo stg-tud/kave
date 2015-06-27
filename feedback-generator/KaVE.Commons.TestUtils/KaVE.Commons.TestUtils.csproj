@@ -50,6 +50,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Model\Names\NameAssert.cs" />
     <Compile Include="AsyncTestHelper.cs" />
     <Compile Include="ItIsException.cs" />
     <Compile Include="MemoryFile.cs" />

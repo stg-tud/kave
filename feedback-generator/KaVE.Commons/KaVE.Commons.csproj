@@ -54,9 +54,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Model\Events\Export\Category.cs" />
-    <Compile Include="Model\Events\Export\ExportEvent.cs" />
-    <Compile Include="Model\Events\Export\Valuation.cs" />
+    <Compile Include="Model\Events\UserProfileEvent.cs" />
     <Compile Include="Model\Names\CSharp\LambdaName.cs" />
     <Compile Include="Model\Names\CSharp\NameUtils.cs" />
     <Compile Include="Model\Names\IDelegateTypeName.cs" />

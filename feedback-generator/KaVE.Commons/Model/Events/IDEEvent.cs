@@ -12,9 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
- * Contributors:
- *    - Sven Amann
  */
 
 using System;
@@ -58,11 +55,11 @@ namespace KaVE.Commons.Model.Events
             /// <summary>
             ///     The event has been implicitly triggered by some other event or an action.
             /// </summary>
-            Automatic,
+            Automatic
         }
 
         /// <summary>
-        /// Unique id of this event, used for tracking in feedback processing.
+        ///     Unique id of this event, used for tracking in feedback processing.
         /// </summary>
         public string Id { get; set; }
 
@@ -124,10 +121,11 @@ namespace KaVE.Commons.Model.Events
         [DataMember]
         public DocumentName ActiveDocument { get; set; }
 
-        protected bool Equals(IDEEvent other)
+        private bool Equals(IDEEvent other)
         {
-            return string.Equals(IDESessionUUID, other.IDESessionUUID) && TriggeredAt.Equals(other.TriggeredAt) &&
-                   TriggeredBy == other.TriggeredBy && TerminatedAt.Equals(other.TerminatedAt) &&
+            return string.Equals(Id, other.Id) && string.Equals(IDESessionUUID, other.IDESessionUUID) &&
+                   string.Equals(KaVEVersion, other.KaVEVersion) && TriggeredAt.Equals(other.TriggeredAt) &&
+                   TriggeredBy == other.TriggeredBy && Duration.Equals(other.Duration) &&
                    Equals(ActiveWindow, other.ActiveWindow) && Equals(ActiveDocument, other.ActiveDocument);
         }
 
@@ -140,14 +138,21 @@ namespace KaVE.Commons.Model.Events
         {
             unchecked
             {
-                var hashCode = (IDESessionUUID != null ? IDESessionUUID.GetHashCode() : 0);
+                var hashCode = (Id != null ? Id.GetHashCode() : 0);
+                hashCode = (hashCode*397) ^ (IDESessionUUID != null ? IDESessionUUID.GetHashCode() : 0);
+                hashCode = (hashCode*397) ^ (KaVEVersion != null ? KaVEVersion.GetHashCode() : 0);
                 hashCode = (hashCode*397) ^ TriggeredAt.GetHashCode();
                 hashCode = (hashCode*397) ^ (int) TriggeredBy;
-                hashCode = (hashCode*397) ^ TerminatedAt.GetHashCode();
+                hashCode = (hashCode*397) ^ Duration.GetHashCode();
                 hashCode = (hashCode*397) ^ (ActiveWindow != null ? ActiveWindow.GetHashCode() : 0);
                 hashCode = (hashCode*397) ^ (ActiveDocument != null ? ActiveDocument.GetHashCode() : 0);
                 return hashCode;
             }
+        }
+
+        public override string ToString()
+        {
+            return this.ToStringReflection();
         }
     }
 }

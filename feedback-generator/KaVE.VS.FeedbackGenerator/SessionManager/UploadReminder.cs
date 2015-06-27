@@ -23,7 +23,8 @@ using JetBrains.Application;
 using JetBrains.Application.Components;
 using KaVE.Commons.Utils;
 using KaVE.RS.Commons.Utils;
-using KaVE.VS.FeedbackGenerator.TrayNotification;
+using KaVE.VS.FeedbackGenerator.Settings;
+using KaVE.VS.FeedbackGenerator.UserControls.TrayNotification;
 using KaVE.VS.FeedbackGenerator.Utils;
 using KaVE.VS.FeedbackGenerator.Utils.Logging;
 

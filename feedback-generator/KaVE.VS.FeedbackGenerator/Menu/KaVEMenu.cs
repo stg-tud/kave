@@ -19,8 +19,8 @@
 
 using JetBrains.UI.ActionsRevised;
 using JetBrains.UI.MenuGroups;
-using KaVE.VS.FeedbackGenerator.Export;
 using KaVE.VS.FeedbackGenerator.SessionManager.Presentation;
+using KaVE.VS.FeedbackGenerator.UserControls.Export;
 
 namespace KaVE.VS.FeedbackGenerator.Menu
 {

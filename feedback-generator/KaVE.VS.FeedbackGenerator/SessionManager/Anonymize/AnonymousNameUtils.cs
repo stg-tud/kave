@@ -12,9 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
- * Contributors:
- *    - Sven Amann
  */
 
 using System;
@@ -22,13 +19,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using JetBrains.Annotations;
-using JetBrains.Util;
 using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.Names.VisualStudio;
 using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Assertion;
+using KaVE.JetBrains.Annotations;
 using KaVE.VS.FeedbackGenerator.Utils.Names;
 
 namespace KaVE.VS.FeedbackGenerator.SessionManager.Anonymize
@@ -38,7 +34,7 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager.Anonymize
         [ContractAnnotation("notnull => notnull")]
         public static string ToHash(this string value)
         {
-            if (value.IsEmpty())
+            if (value == null || "".Equals(value))
             {
                 return value;
             }
@@ -258,7 +254,7 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager.Anonymize
             var baseNameParts = baseName.Split('+');
             if (baseNameParts.Length > 0)
             {
-                baseName = baseNameParts.Select(ToHash).Join("+");
+                baseName = string.Join("+", baseNameParts.Select(ToHash));
             }
             else
             {
