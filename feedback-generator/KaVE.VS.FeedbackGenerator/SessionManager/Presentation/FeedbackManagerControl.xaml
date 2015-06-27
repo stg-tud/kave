@@ -12,11 +12,6 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
-
-Contributors:
-   - Uli Fahrer
-   - Sven Amann
-   - Andreas Bauer
 -->
 
 <UserControl x:Class="KaVE.VS.FeedbackGenerator.SessionManager.Presentation.SessionManagerControl"
@@ -28,6 +23,7 @@ Contributors:
              xmlns:presentation="clr-namespace:KaVE.VS.FeedbackGenerator.SessionManager.Presentation"
              xmlns:root="clr-namespace:KaVE.VS.FeedbackGenerator"
              xmlns:util="clr-namespace:KaVE.VS.FeedbackGenerator.Utils"
+             xmlns:sessionManager="clr-namespace:KaVE.VS.FeedbackGenerator.SessionManager"
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="1000"
              d:DataContext="{d:DesignInstance Type=sessionManager:FeedbackViewModel, IsDesignTimeCreatable=False}">
@@ -133,7 +129,7 @@ Contributors:
                             <GridView>
                                 <GridViewColumn
                                     DisplayMemberBinding="{Binding StartDate, StringFormat=\{0:dd.MM.yyyy\}}"
-                                    Header="{x:Static root:Properties.SessionManager.Sessions}"
+                                    Header="{x:Static root:Properties.SessionManager.Session}"
                                     Width="80" />
                             </GridView>
                         </presentation:SortableListView.View>
@@ -263,7 +259,7 @@ Contributors:
                         <TabItem Header="{x:Static root:Properties.SessionManager.EventContext}"
                                  DataContext="{Binding XamlContextRepresentation}"
                                  Visibility="{Binding Converter={StaticResource ObjectToVisibilityConverter}, Path=., FallbackValue=Collapsed}">
-                            <presentation:XamlBindableRichTextBox Xaml="{Binding .}" 
+                            <presentation:XamlBindableRichTextBox Xaml="{Binding .}"
                                                                   BorderThickness="0"
                                                                   HorizontalAlignment="Stretch"
                                                                   VerticalAlignment="Stretch"

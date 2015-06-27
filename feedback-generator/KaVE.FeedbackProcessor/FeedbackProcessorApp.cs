@@ -47,9 +47,11 @@ namespace KaVE.FeedbackProcessor
             const string concurrentEventDatabase = "_concurrent";
             const string commandFollowupsDatabase = "_commandFollowups";
 
+            new SanityCheckApp().Run();
+
             //ImportFeedback(OpenDatabase(importDatabase));
 
-            CleanupFeedback(OpenDatabase(importDatabase), OpenDatabase(cleanDatabase));
+            //CleanupFeedback(OpenDatabase(importDatabase), OpenDatabase(cleanDatabase));
 
             //SelectConcurrentEvents(OpenDatabase(filteredDatabase), OpenDatabase(concurrentEventDatabase));
             //ConcurrentEventsStatistic(OpenDatabase(concurrentEventDatabase),"concurrenteventstatistic.csv");

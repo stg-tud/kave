@@ -73,7 +73,7 @@ namespace KaVE.VS.FeedbackGenerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to About KaVE.
+        ///   Looks up a localized string similar to Ueber KaVE.
         /// </summary>
         public static string About_Title {
             get {

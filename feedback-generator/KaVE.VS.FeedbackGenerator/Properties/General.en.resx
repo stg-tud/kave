@@ -117,16 +117,24 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="DatabaseUrl" xml:space="preserve">
-    <value>mongodb://localhost</value>
+  <data name="About_Text" xml:space="preserve">
+    <value>KaVE Feedback
+TU Darmstadt
+
+</value>
   </data>
-  <data name="DatasetName" xml:space="preserve">
-    <value>datev-2015-04-10</value>
+  <data name="About_Title" xml:space="preserve">
+    <value>About KaVE</value>
   </data>
-  <data name="ImportDirectory" xml:space="preserve">
-    <value>C:\Users\seb\Desktop\datev-unpacked</value>
+  <data name="Confirmation_Cancel" xml:space="preserve">
+    <value>Nein</value>
   </data>
-  <data name="StatisticsOutputPath" xml:space="preserve">
-    <value>C:\Users\Sven\Documents\KaVE\</value>
+  <data name="Confirmation_OK" xml:space="preserve">
+    <value>Ja</value>
+  </data>
+  <data name="DisableWarning" xml:space="preserve">
+    <value>Das Deaktivieren des Plugins wird aktuell nicht unterstützt. Um Fehlverhalten zu vermeiden, starten Sie bitte Ihre IDE neu.
+
+ACHTUNG: Das Deaktivieren des Plugin benötigt einige Zeit, bitte haben Sie einen Moment Geduld.</value>
   </data>
 </root>

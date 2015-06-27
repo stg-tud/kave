@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System.Threading;
 using System.Windows.Forms;
 using JetBrains.ActionManagement;
 using JetBrains.Application.DataContext;
@@ -35,8 +36,14 @@ namespace KaVE.VS.FeedbackGenerator.Menu
 
         public void Execute(IDataContext context, DelegateExecute nextExecute)
         {
-            MessageBox.Show(
+            var msg = string.Format(
+                "{0} ({1}, {2})",
                 General.About_Text,
+                Thread.CurrentThread.CurrentCulture,
+                Thread.CurrentThread.CurrentUICulture);
+
+            MessageBox.Show(
+                msg,
                 General.About_Title,
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Information);

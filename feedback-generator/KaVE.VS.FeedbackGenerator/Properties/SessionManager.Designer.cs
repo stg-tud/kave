@@ -88,7 +88,7 @@ namespace KaVE.VS.FeedbackGenerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Aktives Dokument.
+        ///   Looks up a localized string similar to Active Document.
         /// </summary>
         public static string EventActiveDocument {
             get {
@@ -97,7 +97,7 @@ namespace KaVE.VS.FeedbackGenerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Aktives Fenster.
+        ///   Looks up a localized string similar to Active Window.
         /// </summary>
         public static string EventActiveWindow {
             get {
@@ -115,7 +115,7 @@ namespace KaVE.VS.FeedbackGenerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Eventdaten.
+        ///   Looks up a localized string similar to Event Data.
         /// </summary>
         public static string EventData {
             get {
@@ -169,7 +169,7 @@ namespace KaVE.VS.FeedbackGenerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Dauer.
+        ///   Looks up a localized string similar to Duration.
         /// </summary>
         public static string EventDuration {
             get {
@@ -214,7 +214,7 @@ namespace KaVE.VS.FeedbackGenerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Startzeit.
+        ///   Looks up a localized string similar to Start.
         /// </summary>
         public static string EventTime {
             get {
@@ -223,7 +223,7 @@ namespace KaVE.VS.FeedbackGenerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Auslöser.
+        ///   Looks up a localized string similar to Event Trigger.
         /// </summary>
         public static string EventTrigger {
             get {
@@ -232,7 +232,7 @@ namespace KaVE.VS.FeedbackGenerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Art.
+        ///   Looks up a localized string similar to Type.
         /// </summary>
         public static string EventType {
             get {
@@ -241,7 +241,7 @@ namespace KaVE.VS.FeedbackGenerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Export-Wizard starten....
+        ///   Looks up a localized string similar to Starts the Export Wizard....
         /// </summary>
         public static string Export {
             get {
@@ -250,7 +250,7 @@ namespace KaVE.VS.FeedbackGenerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Export-Wizard.
+        ///   Looks up a localized string similar to Export Wizard.
         /// </summary>
         public static string Export_Button {
             get {
@@ -286,7 +286,7 @@ namespace KaVE.VS.FeedbackGenerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Einstellungen....
+        ///   Looks up a localized string similar to Opens the options page....
         /// </summary>
         public static string Options {
             get {
@@ -295,7 +295,7 @@ namespace KaVE.VS.FeedbackGenerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Einstellungen.
+        ///   Looks up a localized string similar to Options.
         /// </summary>
         public static string Options_Button {
             get {
@@ -394,7 +394,7 @@ namespace KaVE.VS.FeedbackGenerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Feedback-Anzeige aktualisieren.
+        ///   Looks up a localized string similar to Refreshes the list of sessions.
         /// </summary>
         public static string Refresh {
             get {
@@ -435,6 +435,15 @@ namespace KaVE.VS.FeedbackGenerator.Properties {
         public static string Send {
             get {
                 return ResourceManager.GetString("Send", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Day.
+        /// </summary>
+        public static string Session {
+            get {
+                return ResourceManager.GetString("Session", resourceCulture);
             }
         }
         
@@ -484,7 +493,7 @@ namespace KaVE.VS.FeedbackGenerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Tage.
+        ///   Looks up a localized string similar to Sessions.
         /// </summary>
         public static string Sessions {
             get {
@@ -493,7 +502,7 @@ namespace KaVE.VS.FeedbackGenerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Die offizielle Webseite des Projekts öffnen....
+        ///   Looks up a localized string similar to Open the official website of the project.
         /// </summary>
         public static string VisitHomepage {
             get {
@@ -502,7 +511,7 @@ namespace KaVE.VS.FeedbackGenerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Offizielle Webseite.
+        ///   Looks up a localized string similar to Project Website.
         /// </summary>
         public static string VisitHomepage_Button {
             get {
@@ -520,7 +529,7 @@ namespace KaVE.VS.FeedbackGenerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Webseite für manuelles Hochladen.
+        ///   Looks up a localized string similar to Website for Manual Upload.
         /// </summary>
         public static string VisitUploadPage_Button {
             get {

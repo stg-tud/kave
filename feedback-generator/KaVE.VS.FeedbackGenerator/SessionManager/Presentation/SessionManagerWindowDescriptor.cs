@@ -25,7 +25,7 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager.Presentation
 {
     [ToolWindowDescriptor(
         ProductNeutralId = "SessionManagerFeedbackWindow",
-        Text = "Feedback Manager",
+        Text = "Event Manager",
         Type = ToolWindowType.SingleInstance,
         VisibilityPersistenceScope = ToolWindowVisibilityPersistenceScope.Global,
         Icon = typeof (FeaturesFindingThemedIcons.SearchOptionsPage), // TODO Replace with own icon

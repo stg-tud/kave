@@ -22,7 +22,7 @@ using JetBrains.UI.ToolWindowManagement;
 
 namespace KaVE.VS.FeedbackGenerator.SessionManager.Presentation
 {
-    [Action(Id, "Feedback Manager", Id = 21340987)]
+    [Action(Id, "Event Manager", Id = 21340987)]
     public class SessionManagerWindowAction : ActivateToolWindowActionHandler<SessionManagerWindowDescriptor>
     {
         public const string Id = "KaVE.SessionManager";

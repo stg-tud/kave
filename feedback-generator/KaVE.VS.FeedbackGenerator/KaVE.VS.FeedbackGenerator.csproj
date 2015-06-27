@@ -158,6 +158,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Properties\General.en.Designer.cs">
+      <DependentUpon>General.en.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
     <Compile Include="Menu\AboutAction.cs" />
     <Compile Include="CodeCompletion\PBNProposalWrappedLookupItem.cs" />
     <Compile Include="CodeCompletion\PBNProposalItemsProvider.cs" />
@@ -175,6 +180,11 @@
     <Compile Include="Interactivity\LinkNotificationRequestHandler.cs" />
     <Compile Include="Interactivity\Notification.cs" />
     <Compile Include="Interactivity\NotificationRequestHandler.cs" />
+    <Compile Include="Properties\SessionManager.en.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SessionManager.en.resx</DependentUpon>
+    </Compile>
     <Compile Include="Properties\XamlBindableRichTextBox.Designer.cs">
       <DependentUpon>XamlBindableRichTextBox.resx</DependentUpon>
       <AutoGen>True</AutoGen>
@@ -324,6 +334,10 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <EmbeddedResource Include="Properties\General.en.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>General.en.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\XamlBindableRichTextBox.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>XamlBindableRichTextBox.Designer.cs</LastGenOutput>
@@ -353,6 +367,10 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>UploadWizard.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\SessionManager.en.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>SessionManager.en.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
