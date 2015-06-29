@@ -17,9 +17,9 @@
 using System;
 using System.Linq.Expressions;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
-using System.Windows.Data;
+using System.Windows.Forms;
+using System.Windows.Media;
 using JetBrains.ActionManagement;
 using JetBrains.Application.Settings;
 using JetBrains.DataFlow;
@@ -28,11 +28,13 @@ using JetBrains.UI.CrossFramework;
 using JetBrains.UI.Options;
 using JetBrains.UI.Options.OptionPages.ToolsPages;
 using KaVE.Commons.Utils.Assertion;
+using KaVE.RS.Commons.Settings.KaVE.RS.Commons.Settings;
 using KaVE.VS.FeedbackGenerator.Interactivity;
 using KaVE.VS.FeedbackGenerator.Settings;
 using KaVE.VS.FeedbackGenerator.UserControls.UserProfile;
-using ISettingsStore = KaVE.VS.FeedbackGenerator.Settings.ISettingsStore;
+using KaVEISettingsStore = KaVE.RS.Commons.Settings.ISettingsStore;
 using MessageBox = JetBrains.Util.MessageBox;
+using TextBox = System.Windows.Controls.TextBox;
 
 namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage
 {
@@ -49,7 +51,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage
         public OptionPage(Lifetime lifetime,
             OptionsSettingsSmartContext ctx,
             IActionManager actionManager,
-            ISettingsStore settingsStore)
+            KaVEISettingsStore settingsStore)
         {
             _optionPageViewModel = new OptionPageViewModel
             {
@@ -93,6 +95,11 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage
             //ctx.SetBinding(lifetime, (UserProfileSettings s) => s.NumberField, UserProfileGrid.NumberTextBox, TextBox.TextProperty);
             //ctx.SetBinding(lifetime, (UserSettings s) => s.Category, _userSettingsViewModel, UserSettingsViewModel.SelectedCategoryOptionProperty);
             //ctx.SetBinding(lifetime, (UserSettings s) => s.Valuation, _userSettingsViewModel, UserSettingsViewModel.SelectedValuationOptionProperty);
+            ctx.SetBinding(
+                lifetime,
+                (ModelStoreSettings s) => s.ModelStorePath,
+                ModelStorePathTextBox,
+                TextBox.TextProperty);
 
             var exportSettings = settingsStore.GetSettings<ExportSettings>();
             if (exportSettings.IsDatev)
@@ -101,12 +108,12 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage
                 UserProfileGrid.DatevDeactivationLabel.Visibility = Visibility.Visible;
             }
 
-            UserProfileGrid.CategoryComboBox.SetBinding(
+            /*UserProfileGrid.CategoryComboBox.SetBinding(
                 Selector.SelectedItemProperty,
                 new Binding("SelectedCategoryOption"));
             UserProfileGrid.RadioButtonListBox.SetBinding(
                 Selector.SelectedItemProperty,
-                new Binding("SelectedValuationOption"));
+                new Binding("SelectedValuationOption"));*/
         }
 
         private static void SetToggleButtonBinding(IContextBoundSettingsStore ctx,
@@ -129,6 +136,17 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage
             }
         }
 
+        private void ModelStorePathBrowseButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            var dialog = new FolderBrowserDialog();
+            var result = dialog.ShowDialog();
+
+            if (result == DialogResult.OK)
+            {
+                ModelStorePathTextBox.Text = dialog.SelectedPath;
+            }
+        }
+
         private void CloseWindow()
         {
             var window = Window.GetWindow(this);
@@ -142,9 +160,16 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage
                 UploadUrlTextBox.Text,
                 WebPraefixTextBox.Text);
 
-            var isValidEmail = _userSettingsViewModel.ValidateEmail(UserProfileGrid.EmailTextBox.Text);
+            var modelStoreInformationVerification =
+                _optionPageViewModel.ValidateModelStoreInformation(ModelStorePathTextBox.Text);
 
-            return uploadInformationVerification.IsValidUploadInformation && isValidEmail;
+            var isValidEmail = _userSettingsViewModel.ValidateEmail(UserProfileGrid.EmailTextBox.Text);
+            ModelStorePathTextBox.Background = !modelStoreInformationVerification.IsPathValid
+                ? Brushes.Pink
+                : Brushes.White;
+
+            return uploadInformationVerification.IsValidUploadInformation &&
+                   modelStoreInformationVerification.IsValidModelStoreInformation;
         }
 
         public bool ValidatePage()

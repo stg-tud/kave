@@ -328,7 +328,6 @@
     <Compile Include="Utils\Names\VsComponentNameFactory.cs" />
     <Compile Include="Utils\ObjectToVisibilityConverter.cs" />
     <Compile Include="Settings\SettingsCleaner.cs" />
-    <Compile Include="Settings\SettingsStore.cs" />
     <Compile Include="VsIntegration\IDESession.cs" />
     <Compile Include="VsIntegration\IIDESession.cs" />
     <Compile Include="ZoneMarker.cs" />

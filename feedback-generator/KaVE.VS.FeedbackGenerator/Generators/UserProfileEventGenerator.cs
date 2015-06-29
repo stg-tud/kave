@@ -20,9 +20,9 @@ using JetBrains.Application;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Utils;
 using KaVE.JetBrains.Annotations;
+using KaVE.RS.Commons.Settings;
 using KaVE.VS.FeedbackGenerator.MessageBus;
 using KaVE.VS.FeedbackGenerator.Settings;
-using KaVE.VS.FeedbackGenerator.Utils;
 
 namespace KaVE.VS.FeedbackGenerator.Generators
 {

@@ -12,33 +12,20 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
- * Contributors:
- *    - Sebastian Proksch
  */
 
-using NUnit.Framework;
+using JetBrains.Application.Settings;
+using JetBrains.UsageStatistics;
 
-namespace KaVE.VsFeedbackGenerator.RS8Tests.Analysis
+namespace KaVE.RS.Commons.Settings
 {
-    internal class ContextAnalysisTest : BaseCSharpCodeCompletionTest
+    namespace KaVE.RS.Commons.Settings
     {
-        [Test]
-        public void ShouldRetrieveContext()
+        [SettingsKey(typeof (FeedbackSettings), "KaVE model store settings")]
+        public class ModelStoreSettings
         {
-            CompleteInFile(@"
-                namespace N
-                {
-                    public class C
-                    {
-                        public void M()
-                        {
-                            $
-                        }
-                    }
-                }
-            ");
-            Assert.IsNotNull(ResultContext);
+            [SettingsEntry(@"c:\kave-models\", "Path to KaVE models")]
+            public string ModelStorePath;
         }
     }
 }

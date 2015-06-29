@@ -27,14 +27,12 @@ using KaVE.Commons.TestUtils.Utils;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Exceptions;
 using KaVE.Commons.Utils.IO;
+using KaVE.RS.Commons.Settings;
 using KaVE.RS.Commons.Utils;
 using KaVE.VS.FeedbackGenerator.Interactivity;
-using KaVE.VS.FeedbackGenerator.SessionManager;
-using KaVE.VS.FeedbackGenerator.SessionManager.Presentation;
 using KaVE.VS.FeedbackGenerator.Settings;
 using KaVE.VS.FeedbackGenerator.Tests.Interactivity;
 using KaVE.VS.FeedbackGenerator.UserControls.Export;
-using KaVE.VS.FeedbackGenerator.Utils;
 using KaVE.VS.FeedbackGenerator.Utils.Logging;
 using Moq;
 using NUnit.Framework;
@@ -194,7 +192,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.Export
 
             var actual = _uut.FeedbackText;
 
-            Assert.AreEqual(expected,actual);
+            Assert.AreEqual(expected, actual);
         }
 
         [Test]
@@ -208,7 +206,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.Export
             _mockSettingStore.Verify(ss => ss.UpdateSettings(It.IsAny<Action<UserProfileSettings>>()));
             Assert.AreEqual(expected, _userSettings.Feedback);
         }
-    
+
         [Test]
         public void ShouldSetExportBusyMessage()
         {

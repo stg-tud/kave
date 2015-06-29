@@ -17,12 +17,24 @@
 using JetBrains.Application;
 using KaVE.Commons.Utils.CodeCompletion.Impl;
 using KaVE.Commons.Utils.IO;
+using KaVE.RS.Commons.Settings;
+using KaVE.RS.Commons.Settings.KaVE.RS.Commons.Settings;
 
 namespace KaVE.RS.Commons.Injectables
 {
     [ShellComponent]
     public class InjectablePBNRecommenderStore : SmilePBNRecommenderStore
     {
-        public InjectablePBNRecommenderStore(IIoUtils io) : base(@"c:\kave-models\", io) {}
+        public InjectablePBNRecommenderStore(IIoUtils io, ISettingsStore store)
+            : base(store.GetSettings<ModelStoreSettings>().ModelStorePath, io)
+        {
+            store.SettingsChanged += (sender, args) =>
+            {
+                if (args.SettingsType == typeof (ModelStoreSettings))
+                {
+                    BasePath = store.GetSettings<ModelStoreSettings>().ModelStorePath;
+                }
+            };
+        }
     }
 }

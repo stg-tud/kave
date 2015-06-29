@@ -52,6 +52,8 @@ limitations under the License.
                         <Grid.RowDefinitions>
                             <RowDefinition Height="auto" />
                             <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="125" />
@@ -81,6 +83,21 @@ limitations under the License.
                                 </Binding.ValidationRules>
                             </Binding>
                         </TextBox>
+
+                        <Label Grid.Column="0" Grid.Row="2"
+                           Content="{x:Static root:Properties.SessionManager.Options_ModelPath}"
+                           Margin="0,0,0,0" />
+                        <Grid Grid.Column="1" Grid.Row="2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="100" />
+                            </Grid.ColumnDefinitions>
+                            <TextBox Grid.Column="0" Grid.Row="0" Name="ModelStorePathTextBox"
+                                 VerticalAlignment="Top" HorizontalAlignment="Stretch" Margin="10,0,10,0"
+                                 x:FieldModifier="private" />
+                            <Button Grid.Column="1" Grid.Row="0" Name="ModelStorePathBrowseButton"
+                                Click="ModelStorePathBrowseButton_OnClick" Padding="15,3,15,3" Content="Browse ..." />
+                        </Grid>
                     </Grid>
                 </StackPanel>
             </GroupBox>

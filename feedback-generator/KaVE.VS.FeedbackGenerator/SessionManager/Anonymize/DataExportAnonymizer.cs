@@ -21,10 +21,9 @@ using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Model.Events.VisualStudio;
 using KaVE.Commons.Utils.Json;
+using KaVE.RS.Commons.Settings;
 using KaVE.VS.FeedbackGenerator.SessionManager.Anonymize.CompletionEvents;
-using KaVE.VS.FeedbackGenerator.SessionManager.Presentation;
 using KaVE.VS.FeedbackGenerator.Settings;
-using KaVE.VS.FeedbackGenerator.Utils;
 
 namespace KaVE.VS.FeedbackGenerator.SessionManager.Anonymize
 {

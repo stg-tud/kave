@@ -15,11 +15,15 @@
  */
 
 using System;
+using JetBrains.Application.DataContext;
 using JetBrains.Application.Settings;
-using KaVE.VS.FeedbackGenerator.Settings;
+using KaVE.RS.Commons.Settings;
+using Moq;
 using NUnit.Framework;
+using RSISettingsStore = JetBrains.Application.Settings.ISettingsStore;
+using KaVEISettingsStore = KaVE.RS.Commons.Settings.ISettingsStore;
 
-namespace KaVE.VS.FeedbackGenerator.Tests.Settings
+namespace KaVE.RS.Commons.Tests_Unit.Settings
 {
     [SettingsKey(typeof (EnvironmentSettings), "Test Settings")]
     internal class TestSettings
@@ -52,6 +56,32 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Settings
             Assert.AreEqual(DateTime.MinValue, actual.DateTimeSetting);
             Assert.AreEqual(TimeSpan.FromSeconds(42), actual.TimeSpanSetting);
             Assert.IsNull(actual.DefaultNullSetting);
+        }
+
+        [Ignore, Test]
+        public void ShouldRaiseEventWhenSettingsAreChanged()
+        {
+            // TODO: find a way to deal with DataContexts
+            var dataContexts = Mock.Of<DataContexts>();
+            var settingsStore = new SettingsStore(
+                Mock.Of<RSISettingsStore>(),
+                dataContexts,
+                Mock.Of<ISettingsOptimization>());
+            var settings = SettingsStore.CreateDefaultInstance<TestSettings>();
+
+            int count = 0;
+            SettingsChangedEventArgs eventArgs = null;
+            settingsStore.SettingsChanged += (sender, args) =>
+            {
+                count++;
+                eventArgs = args;
+            };
+
+            settingsStore.SetSettings(settings);
+
+            Assert.AreEqual(1, count);
+            Assert.NotNull(eventArgs);
+            Assert.AreEqual(typeof (TestSettings), eventArgs.SettingsType);
         }
     }
 }

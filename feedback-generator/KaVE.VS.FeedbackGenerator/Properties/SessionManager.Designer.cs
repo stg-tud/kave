@@ -277,11 +277,20 @@ namespace KaVE.VS.FeedbackGenerator.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Der angegebene Ordner existiert nicht..
+        /// </summary>
+        public static string OptionPageInvalidModelStorePathMessage {
+            get {
+                return ResourceManager.GetString("OptionPageInvalidModelStorePathMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Bitte geben Sie ein gültige HTTP- oder HTTPS-URL ein..
         /// </summary>
-        public static string OptionPageErrorMessage {
+        public static string OptionPageInvalidUploadInfoMessage {
             get {
-                return ResourceManager.GetString("OptionPageErrorMessage", resourceCulture);
+                return ResourceManager.GetString("OptionPageInvalidUploadInfoMessage", resourceCulture);
             }
         }
         
@@ -372,6 +381,15 @@ namespace KaVE.VS.FeedbackGenerator.Properties {
         public static string Options_Export_WebAccessPraefix {
             get {
                 return ResourceManager.GetString("Options_Export_WebAccessPraefix", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pfad zu Modellen.
+        /// </summary>
+        public static string Options_ModelPath {
+            get {
+                return ResourceManager.GetString("Options_ModelPath", resourceCulture);
             }
         }
         

@@ -228,7 +228,6 @@
     <Compile Include="Utils\Names\VsComponentNameFactoryTest.cs" />
     <Compile Include="Utils\ObjectToVisibilityConverterTest.cs" />
     <Compile Include="Settings\SettingsCleanerTest.cs" />
-    <Compile Include="Settings\SettingsStoreTest.cs" />
     <Compile Include="VsIntegrationMocks\TestDTE.cs" />
     <Compile Include="VsIntegration\IDESessionTest.cs" />
   </ItemGroup>

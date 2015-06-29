@@ -17,6 +17,8 @@
 using JetBrains.ActionManagement;
 using JetBrains.Application.DataContext;
 using JetBrains.UI.ActionsRevised;
+using KaVE.RS.Commons.Settings;
+using KaVE.RS.Commons.Settings.KaVE.RS.Commons.Settings;
 using KaVE.RS.Commons.Utils;
 using KaVE.VS.FeedbackGenerator.Utils.Logging;
 
@@ -52,6 +54,7 @@ namespace KaVE.VS.FeedbackGenerator.Settings
             _settings.ResetSettings<UploadSettings>();
             _settings.ResetSettings<ExportSettings>();
             _settings.ResetSettings<UserProfileSettings>();
+            _settings.ResetSettings<ModelStoreSettings>();
 
             _logManager.DeleteAllLogs();
         }

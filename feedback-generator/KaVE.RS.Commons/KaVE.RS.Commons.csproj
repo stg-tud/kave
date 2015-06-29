@@ -168,6 +168,8 @@
       <DependentUpon>Messages.resx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Settings\ModelStoreSettings.cs" />
+    <Compile Include="Settings\SettingsStore.cs" />
     <Compile Include="Utils\BackgroundWorker.cs" />
     <Compile Include="Utils\CallbackManager.cs" />
     <Compile Include="Utils\FilePublisher.cs" />

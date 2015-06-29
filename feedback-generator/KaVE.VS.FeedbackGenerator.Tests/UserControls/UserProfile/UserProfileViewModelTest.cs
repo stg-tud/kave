@@ -15,11 +15,11 @@
  */
 
 using System;
+using KaVE.RS.Commons.Settings;
 using KaVE.VS.FeedbackGenerator.Interactivity;
 using KaVE.VS.FeedbackGenerator.Settings;
 using KaVE.VS.FeedbackGenerator.Tests.Interactivity;
 using KaVE.VS.FeedbackGenerator.UserControls.UserProfile;
-using KaVE.VS.FeedbackGenerator.Utils;
 using Moq;
 using NUnit.Framework;
 

@@ -15,9 +15,9 @@
  */
 
 using System.Net.Mail;
+using KaVE.RS.Commons.Settings;
 using KaVE.VS.FeedbackGenerator.Generators;
 using KaVE.VS.FeedbackGenerator.Settings;
-using KaVE.VS.FeedbackGenerator.Utils;
 using Moq;
 using NUnit.Framework;
 

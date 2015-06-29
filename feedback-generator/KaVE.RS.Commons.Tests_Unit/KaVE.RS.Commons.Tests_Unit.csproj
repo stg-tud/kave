@@ -143,7 +143,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Injectables\InjectablePBNRecommenderStoreTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Settings\SettingsStoreTest.cs" />
     <Compile Include="TestFactories\TypeMockUtils.cs" />
     <Compile Include="Utils\DateTimeTest.cs" />
     <Compile Include="Utils\FilePublisherTest.cs" />

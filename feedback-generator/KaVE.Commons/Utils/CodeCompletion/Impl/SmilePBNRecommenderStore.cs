@@ -27,24 +27,26 @@ namespace KaVE.Commons.Utils.CodeCompletion.Impl
 {
     public class SmilePBNRecommenderStore : IPBNRecommenderStore
     {
-        private readonly string _basePath;
+        // TODO change to setter that checks existence!
+        public string BasePath { get; set; }
         private readonly IIoUtils _io;
 
         public SmilePBNRecommenderStore(string basePath, IIoUtils io)
         {
-            _basePath = basePath;
+            BasePath = basePath;
             _io = io;
         }
 
+
         public bool IsAvailable(CoReTypeName type)
         {
-            var fileName = GetFileName(_basePath, type, "zip");
+            var fileName = GetFileName(BasePath, type, "zip");
             return _io.FileExists(fileName);
         }
 
         public IPBNRecommender Load(CoReTypeName type)
         {
-            var zipFileName = GetFileName(_basePath, type, "zip");
+            var zipFileName = GetFileName(BasePath, type, "zip");
             Asserts.That(_io.FileExists(zipFileName));
 
             var tmpFolder = _io.UnzipToTempFolder(zipFileName);

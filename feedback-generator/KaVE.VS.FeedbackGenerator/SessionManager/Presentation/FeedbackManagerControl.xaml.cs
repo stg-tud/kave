@@ -12,10 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
- * Contributors:
- *    - Uli Fahrer
- *    - Sven Amann
  */
 
 using System.Windows;
@@ -23,11 +19,11 @@ using System.Windows.Controls;
 using JetBrains.DataFlow;
 using JetBrains.UI.Options;
 using KaVE.RS.Commons;
+using KaVE.RS.Commons.Settings;
 using KaVE.RS.Commons.Utils;
 using KaVE.VS.FeedbackGenerator.Interactivity;
 using KaVE.VS.FeedbackGenerator.Settings;
 using KaVE.VS.FeedbackGenerator.UserControls.Export;
-using KaVE.VS.FeedbackGenerator.Utils;
 
 namespace KaVE.VS.FeedbackGenerator.SessionManager.Presentation
 {

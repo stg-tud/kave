@@ -24,10 +24,21 @@ using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Reflection;
 using RSISettingsStore = JetBrains.Application.Settings.ISettingsStore;
 
-namespace KaVE.VS.FeedbackGenerator.Settings
+namespace KaVE.RS.Commons.Settings
 {
+    public class SettingsChangedEventArgs : EventArgs
+    {
+        public Type SettingsType { get; private set; }
+
+        public SettingsChangedEventArgs(Type settingsType)
+        {
+            SettingsType = settingsType;
+        }
+    }
+
     public interface ISettingsStore
     {
+        event EventHandler<SettingsChangedEventArgs> SettingsChanged;
         TSettingsType GetSettings<TSettingsType>() where TSettingsType : class, new();
         void SetSettings<TSettingsType>(TSettingsType settingsInstance) where TSettingsType : class, new();
         void UpdateSettings<TSettingsType>(Action<TSettingsType> update) where TSettingsType : class, new();
@@ -37,6 +48,8 @@ namespace KaVE.VS.FeedbackGenerator.Settings
     [ShellComponent]
     public class SettingsStore : ISettingsStore
     {
+        public event EventHandler<SettingsChangedEventArgs> SettingsChanged;
+
         private readonly RSISettingsStore _settingsStore;
         private readonly DataContexts _dataContexts;
         private readonly ISettingsOptimization _optimization;
@@ -67,6 +80,16 @@ namespace KaVE.VS.FeedbackGenerator.Settings
         public void SetSettings<TSettingsType>(TSettingsType settingsInstance) where TSettingsType : class, new()
         {
             ContextStore.SetKey(settingsInstance, _optimization);
+            OnSettingsChanged(typeof (TSettingsType));
+        }
+
+        private void OnSettingsChanged(Type type)
+        {
+            var handler = SettingsChanged;
+            if (handler != null)
+            {
+                handler.Invoke(this, new SettingsChangedEventArgs(type));
+            }
         }
 
         public void UpdateSettings<TSettingsType>(Action<TSettingsType> update) where TSettingsType : class, new()

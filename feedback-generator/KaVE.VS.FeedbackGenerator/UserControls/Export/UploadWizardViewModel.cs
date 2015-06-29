@@ -23,11 +23,11 @@ using KaVE.Commons.Model.Events;
 using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Exceptions;
+using KaVE.RS.Commons.Settings;
 using KaVE.RS.Commons.Utils;
 using KaVE.VS.FeedbackGenerator.Interactivity;
 using KaVE.VS.FeedbackGenerator.SessionManager;
 using KaVE.VS.FeedbackGenerator.Settings;
-using KaVE.VS.FeedbackGenerator.Utils;
 using KaVE.VS.FeedbackGenerator.Utils.Logging;
 
 namespace KaVE.VS.FeedbackGenerator.UserControls.Export

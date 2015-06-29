@@ -23,7 +23,7 @@ using JetBrains.UI.CrossFramework;
 using JetBrains.UI.ToolWindowManagement;
 using KaVE.JetBrains.Annotations;
 using KaVE.RS.Commons;
-using KaVE.VS.FeedbackGenerator.Settings;
+using KaVE.RS.Commons.Settings;
 using KaVE.VS.FeedbackGenerator.Utils.Logging;
 
 namespace KaVE.VS.FeedbackGenerator.SessionManager.Presentation

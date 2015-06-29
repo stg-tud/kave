@@ -15,6 +15,7 @@
  */
 
 using System.Globalization;
+using System.IO;
 using KaVE.VS.FeedbackGenerator.Interactivity;
 using KaVE.VS.FeedbackGenerator.SessionManager;
 using KaVE.VS.FeedbackGenerator.Settings;
@@ -36,6 +37,21 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage
         public bool IsValidUploadInformation
         {
             get { return IsUrlValid && IsPrefixValid; }
+        }
+    }
+
+    public class ModelStoreValidation
+    {
+        public ModelStoreValidation(bool isPathValid)
+        {
+            IsPathValid = isPathValid;
+        }
+
+        public bool IsPathValid { get; private set; }
+
+        public bool IsValidModelStoreInformation
+        {
+            get { return IsPathValid; }
         }
     }
 
@@ -78,20 +94,44 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage
 
             if (!uriIsValid.IsValid || !prefixIsValid.IsValid)
             {
-                ShowInformationInvalidMessage();
+                ShowInformationInvalidMessage(Properties.SessionManager.OptionPageInvalidUploadInfoMessage);
             }
 
             return new UploadValidation(uriIsValid.IsValid, prefixIsValid.IsValid);
         }
 
-        private void ShowInformationInvalidMessage()
+        private void ShowInformationInvalidMessage(string message)
         {
             _errorNotificationRequest.Raise(
                 new Notification
                 {
                     Caption = Properties.SessionManager.Options_Title,
-                    Message = Properties.SessionManager.OptionPageErrorMessage
+                    Message = message
                 });
+        }
+
+        public ModelStoreValidation ValidateModelStoreInformation(string path)
+        {
+            var pathIsValid = ValidatePath(path);
+
+            if (!pathIsValid)
+            {
+                ShowInformationInvalidMessage(Properties.SessionManager.OptionPageInvalidModelStorePathMessage);
+            }
+
+            return new ModelStoreValidation(pathIsValid);
+        }
+
+        private static bool ValidatePath(string path)
+        {
+            try
+            {
+                return new DirectoryInfo(path).Exists;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }

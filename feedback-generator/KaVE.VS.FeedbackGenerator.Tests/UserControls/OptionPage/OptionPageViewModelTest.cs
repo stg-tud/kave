@@ -29,6 +29,9 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage
         private const string TestUploadPrefix = "http://pre";
         private const string InvalidUploadPrefix = "ht5tp://";
 
+        private const string TestModelStorePath = @"c:/";
+        private const string InvalidModelStorePath = @"c:/some/folder/that/surely/does/not/exist";
+
         private OptionPageViewModel _uut;
         private InteractionRequestTestHelper<Notification> _notificationHelper;
 
@@ -92,7 +95,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage
             var expected = new Notification
             {
                 Caption = Properties.SessionManager.Options_Title,
-                Message = Properties.SessionManager.OptionPageErrorMessage
+                Message = Properties.SessionManager.OptionPageInvalidUploadInfoMessage
             };
 
             Assert.AreEqual(expected, actual);
@@ -107,7 +110,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage
             var expected = new Notification
             {
                 Caption = Properties.SessionManager.Options_Title,
-                Message = Properties.SessionManager.OptionPageErrorMessage
+                Message = Properties.SessionManager.OptionPageInvalidUploadInfoMessage
             };
 
             Assert.AreEqual(expected, actual);
@@ -118,6 +121,37 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage
         {
             _uut.ValidateUploadInformation(InvalidUploadPrefix, InvalidUploadPrefix);
             Assert.AreEqual(1, _notificationHelper.NumberOfRequests);
+        }
+
+        [Test]
+        public void ValidModelStoreInformationRaisesNoErrorNotification()
+        {
+            var info = _uut.ValidateModelStoreInformation(TestModelStorePath);
+            Assert.IsFalse(_notificationHelper.IsRequestRaised);
+            Assert.IsTrue(info.IsPathValid);
+        }
+
+        [Test]
+        public void InvalidModelStorePathRaisesErrorNotification()
+        {
+            var info = _uut.ValidateModelStoreInformation(InvalidModelStorePath);
+            Assert.IsTrue(_notificationHelper.IsRequestRaised);
+            Assert.IsFalse(info.IsPathValid);
+        }
+
+        [Test]
+        public void InvalidModelStorePathErrorHasCorrectMessage()
+        {
+            _uut.ValidateModelStoreInformation(InvalidModelStorePath);
+
+            var actual = _notificationHelper.Context;
+            var expected = new Notification
+            {
+                Caption = Properties.SessionManager.Options_Title,
+                Message = Properties.SessionManager.OptionPageInvalidModelStorePathMessage
+            };
+
+            Assert.AreEqual(expected, actual);
         }
     }
 }

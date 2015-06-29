@@ -260,7 +260,7 @@
   <data name="Loading" xml:space="preserve">
     <value>Lade Feedback</value>
   </data>
-  <data name="OptionPageErrorMessage" xml:space="preserve">
+  <data name="OptionPageInvalidUploadInfoMessage" xml:space="preserve">
     <value>Bitte geben Sie ein gültige HTTP- oder HTTPS-URL ein.</value>
   </data>
   <data name="VisitHomepage_Button" xml:space="preserve">
@@ -289,5 +289,11 @@
   </data>
   <data name="Session" xml:space="preserve">
     <value>Day</value>
+  </data>
+  <data name="OptionPageInvalidModelStorePathMessage" xml:space="preserve">
+    <value>Der angegebene Ordner existiert nicht.</value>
+  </data>
+  <data name="Options_ModelPath" xml:space="preserve">
+    <value>Pfad zu Modellen</value>
   </data>
 </root>

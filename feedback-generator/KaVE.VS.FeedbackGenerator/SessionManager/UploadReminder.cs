@@ -12,20 +12,16 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
- * Contributors:
- *    - Uli Fahrer
- *    - Sven Amann
  */
 
 using System;
 using JetBrains.Application;
 using JetBrains.Application.Components;
 using KaVE.Commons.Utils;
+using KaVE.RS.Commons.Settings;
 using KaVE.RS.Commons.Utils;
 using KaVE.VS.FeedbackGenerator.Settings;
 using KaVE.VS.FeedbackGenerator.UserControls.TrayNotification;
-using KaVE.VS.FeedbackGenerator.Utils;
 using KaVE.VS.FeedbackGenerator.Utils.Logging;
 
 namespace KaVE.VS.FeedbackGenerator.SessionManager
@@ -44,7 +40,11 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager
         private readonly ILogManager _logManager;
         private static readonly Random RandomGenerator = new Random();
 
-        public UploadReminder(ISettingsStore settingsStore, NotifyTrayIcon notify, ICallbackManager callbackManager, IDateUtils dateUtils, ILogManager logManager)
+        public UploadReminder(ISettingsStore settingsStore,
+            NotifyTrayIcon notify,
+            ICallbackManager callbackManager,
+            IDateUtils dateUtils,
+            ILogManager logManager)
         {
             _taskbarIcon = notify;
             _settingsStore = settingsStore;

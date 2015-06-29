@@ -21,12 +21,12 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using JetBrains.ActionManagement;
 using KaVE.RS.Commons;
+using KaVE.RS.Commons.Settings;
 using KaVE.RS.Commons.Utils;
 using KaVE.VS.FeedbackGenerator.Interactivity;
 using KaVE.VS.FeedbackGenerator.SessionManager.Presentation;
 using KaVE.VS.FeedbackGenerator.Settings;
 using KaVE.VS.FeedbackGenerator.UserControls.UserProfile;
-using KaVE.VS.FeedbackGenerator.Utils;
 using MessageBox = JetBrains.Util.MessageBox;
 
 namespace KaVE.VS.FeedbackGenerator.UserControls.Export
@@ -69,7 +69,6 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.Export
 
             UserSettingsGrid.CategoryComboBox.SetBinding(Selector.SelectedItemProperty, new Binding("Category"));
             UserSettingsGrid.RadioButtonListBox.SetBinding(Selector.SelectedItemProperty, new Binding("Valuation"));
-            
         }
 
         private void On_Review_Click(object sender, RoutedEventArgs e)
