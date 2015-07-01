@@ -52,12 +52,12 @@ namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio
 
         private void HandleDocumentOpened(Document document)
         {
+            _delayedEditEventGenerator.TryFireWithContext(document);
             Fire(document, DocumentEvent.DocumentAction.Opened);
         }
 
         private void HandleDocumentSaved(Document document)
         {
-            _delayedEditEventGenerator.TryFireWithContext(document);
             Fire(document, DocumentEvent.DocumentAction.Saved);
         }
 
