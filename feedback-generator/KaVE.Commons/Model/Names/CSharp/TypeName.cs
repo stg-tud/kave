@@ -243,35 +243,46 @@ namespace KaVE.Commons.Model.Names.CSharp
         {
             get
             {
-                if (!IsNestedType)
+                try
                 {
-                    return null;
-                }
-
-                var fullName = FullName;
-                var endOfDeclaringTypeName = fullName.LastIndexOf('+');
-                var declaringTypeName = fullName.Substring(0, endOfDeclaringTypeName);
-                if (declaringTypeName.IndexOf('`') > -1 && HasTypeParameters)
-                {
-                    var startIndex = 0;
-                    var numberOfParameters = 0;
-                    while ((startIndex = declaringTypeName.IndexOf('`', startIndex) + 1) > 0)
+                    if (!IsNestedType)
                     {
-                        var endIndex = declaringTypeName.IndexOf('+', startIndex);
-                        if (endIndex > -1)
-                        {
-                            numberOfParameters +=
-                                int.Parse(declaringTypeName.Substring(startIndex, endIndex - startIndex));
-                        }
-                        else
-                        {
-                            numberOfParameters += int.Parse(declaringTypeName.Substring(startIndex));
-                        }
+                        return null;
                     }
-                    var outerTypeParameters = TypeParameters.Take(numberOfParameters).ToList();
-                    declaringTypeName += "[[" + String.Join("],[", outerTypeParameters.Select(t => t.Identifier)) + "]]";
+
+                    var fullName = FullName;
+                    var endOfDeclaringTypeName = fullName.LastIndexOf('+');
+                    var declaringTypeName = fullName.Substring(0, endOfDeclaringTypeName);
+                    if (declaringTypeName.IndexOf('`') > -1 && HasTypeParameters)
+                    {
+                        var startIndex = 0;
+                        var numberOfParameters = 0;
+                        while ((startIndex = declaringTypeName.IndexOf('`', startIndex) + 1) > 0)
+                        {
+                            var endIndex = declaringTypeName.IndexOf('+', startIndex);
+                            if (endIndex > -1)
+                            {
+                                numberOfParameters +=
+                                    int.Parse(declaringTypeName.Substring(startIndex, endIndex - startIndex));
+                            }
+                            else
+                            {
+                                numberOfParameters += int.Parse(declaringTypeName.Substring(startIndex));
+                            }
+                        }
+                        var outerTypeParameters = TypeParameters.Take(numberOfParameters).ToList();
+                        declaringTypeName += "[[" + String.Join("],[", outerTypeParameters.Select(t => t.Identifier)) +
+                                             "]]";
+                    }
+                    return Get(declaringTypeName + ", " + Assembly);
                 }
-                return Get(declaringTypeName + ", " + Assembly);
+                catch(Exception e)
+                {
+                    // TODO @seb: fix analyse and remove try/catch
+                    Console.WriteLine("TypeName.DeclaringType: exception caught, falling back to unknown TypeName");
+                    Console.WriteLine(e);
+                    return UnknownName;
+                }
             }
         }
 

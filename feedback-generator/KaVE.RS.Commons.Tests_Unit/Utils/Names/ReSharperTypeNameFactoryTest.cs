@@ -22,7 +22,6 @@ using NUnit.Framework;
 
 namespace KaVE.RS.Commons.Tests_Unit.Utils.Names
 {
-    [TestFixture]
     public class ReSharperTypeNameFactoryTest
     {
         [TestCase("System.String", "mscore", "4.0.0.0", "System.String, mscore, 4.0.0.0"),

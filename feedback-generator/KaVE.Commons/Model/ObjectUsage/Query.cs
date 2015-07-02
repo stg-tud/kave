@@ -17,9 +17,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using KaVE.Commons.Model.Names.CSharp;
+using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Collections;
 using KaVE.JetBrains.Annotations;
-using KaVE.Commons.Utils;
 
 namespace KaVE.Commons.Model.ObjectUsage
 {
@@ -41,10 +41,13 @@ namespace KaVE.Commons.Model.ObjectUsage
         [NotNull]
         public IList<CallSite> sites { get; private set; }
 
-        public Query()
-            : this(Lists.NewList<CallSite>())
+        public bool HasReceiverCallSites
         {
+            get { return sites.Any(c => c.kind == CallSiteKind.RECEIVER); }
         }
+
+        public Query()
+            : this(Lists.NewList<CallSite>()) {}
 
         public Query(IEnumerable<CallSite> callSites)
         {
@@ -53,7 +56,6 @@ namespace KaVE.Commons.Model.ObjectUsage
             classCtx = TypeName.UnknownName.ToCoReName();
             definition = DefinitionSites.CreateUnknownDefinitionSite();
             sites = Lists.NewList(callSites.ToArray());
-
         }
 
         public override bool Equals(object obj)

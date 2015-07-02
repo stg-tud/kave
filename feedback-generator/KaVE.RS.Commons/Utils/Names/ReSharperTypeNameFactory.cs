@@ -26,7 +26,6 @@ namespace KaVE.RS.Commons.Utils.Names
 {
     public static class ReSharperTypeNameFactory
     {
-        // TODO @Seb: See if this method is used from anywhere "external"
         [NotNull]
         public static ITypeName GetName(this IType type)
         {
@@ -53,7 +52,8 @@ namespace KaVE.RS.Commons.Utils.Names
         }
 
         [NotNull]
-        private static ITypeName GetName(this IDeclaredType type, IDictionary<DeclaredElementInstance, IName> seenElements)
+        private static ITypeName GetName(this IDeclaredType type,
+            IDictionary<DeclaredElementInstance, IName> seenElements)
         {
             var typeElement = type.GetTypeElement();
             // typeElement can be null, for example when resolving the second
@@ -65,27 +65,28 @@ namespace KaVE.RS.Commons.Utils.Names
         }
 
         [NotNull]
-        private static ITypeName GetName(this IArrayType arrayType, IDictionary<DeclaredElementInstance, IName> seenElements)
+        private static ITypeName GetName(this IArrayType arrayType,
+            IDictionary<DeclaredElementInstance, IName> seenElements)
         {
             return ArrayTypeName.From(arrayType.ElementType.GetName(seenElements), arrayType.Rank);
         }
 
         [NotNull]
-        private static ITypeName GetName(this IAnonymousType type, IDictionary<DeclaredElementInstance, IName> seenElements)
+        private static ITypeName GetName(this IAnonymousType type,
+            IDictionary<DeclaredElementInstance, IName> seenElements)
         {
-            Asserts.Fail("cannot create name for anonymous type");
-            return null;
+            return TypeName.UnknownName;
         }
 
         [NotNull]
         private static ITypeName GetName(this IMultitype type, IDictionary<DeclaredElementInstance, IName> seenElements)
         {
-            Asserts.Fail("cannot create name for multitype");
-            return null;
+            return TypeName.UnknownName;
         }
 
         [NotNull]
-        private static ITypeName GetName(this IPointerType type, IDictionary<DeclaredElementInstance, IName> seenElements)
+        private static ITypeName GetName(this IPointerType type,
+            IDictionary<DeclaredElementInstance, IName> seenElements)
         {
             return type.ElementType.GetName(seenElements);
         }

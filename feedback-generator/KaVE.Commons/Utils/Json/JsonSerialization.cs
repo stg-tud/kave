@@ -110,7 +110,10 @@ namespace KaVE.Commons.Utils.Json
         {
             var settings = CreateSerializationSettings();
             settings.Formatting = Formatting.Indented;
-            return SerializeWithCustomIndentationDepth(instance, settings);
+            var json = SerializeWithCustomIndentationDepth(instance, settings);
+            // TODO discuss this replacement (seb)
+            json = new SSTTypeNameShortener().RemoveDetails(json);
+            return json;
         }
 
         /// <summary>

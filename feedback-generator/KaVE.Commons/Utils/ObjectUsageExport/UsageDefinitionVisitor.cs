@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System;
 using KaVE.Commons.Model.ObjectUsage;
 using KaVE.Commons.Model.SSTs.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Expressions.Simple;
@@ -26,18 +27,27 @@ namespace KaVE.Commons.Utils.ObjectUsageExport
         public override DefinitionSite Visit(IInvocationExpression entity,
             UsageContext context)
         {
-            // TODO @seb: fix analysis and then remove this fix
-            if (Equals("", entity.MethodName.Name))
+            try
             {
+                // TODO @seb: fix analysis and then remove this fix
+                if (Equals("", entity.MethodName.Name))
+                {
+                    return DefinitionSites.CreateUnknownDefinitionSite();
+                }
+
+                if (entity.MethodName.IsConstructor)
+                {
+                    return DefinitionSites.CreateDefinitionByConstructor(entity.MethodName);
+                }
+
+                return DefinitionSites.CreateDefinitionByReturn(entity.MethodName);
+            }
+            catch (Exception e)
+            {
+                // TODO @seb: untested!
+                Console.WriteLine("UsageDefinitionVisitor: caught exception, falling back to unknown DefinitionSite");
                 return DefinitionSites.CreateUnknownDefinitionSite();
             }
-
-            if (entity.MethodName.IsConstructor)
-            {
-                return DefinitionSites.CreateDefinitionByConstructor(entity.MethodName);
-            }
-
-            return DefinitionSites.CreateDefinitionByReturn(entity.MethodName);
         }
 
         public override DefinitionSite Visit(IConstantValueExpression expr,

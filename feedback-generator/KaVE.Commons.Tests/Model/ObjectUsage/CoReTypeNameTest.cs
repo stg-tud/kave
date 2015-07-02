@@ -40,7 +40,7 @@ namespace KaVE.Commons.Tests.Model.ObjectUsage
         }
 
         [TestCase("LType"), TestCase("LKaVE/Model/ObjectUsage/Query"), TestCase("LT1"), TestCase("LT$"),
-         TestCase("LN1/T"), TestCase("[LType"), TestCase("[[[LType")]
+         TestCase("LN1/T"), TestCase("[LType"), TestCase("[[[LType"), TestCase("LT")]
         public void ShouldAcceptValidTypeNames(string typeName)
         {
             // ReSharper disable once ObjectCreationAsStatement

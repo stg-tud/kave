@@ -28,8 +28,9 @@ using KaVE.Commons.Utils.Exceptions;
 using KaVE.Commons.Utils.Json;
 using KaVE.Commons.Utils.Logging.Json;
 using KaVE.Commons.Utils.ObjectUsageExport;
+using KaVE.FeedbackProcessor.Episodes;
 
-namespace KaVE.RS.SolutionAnalysis.BulkAnalyser
+namespace KaVE.RS.SolutionAnalysis
 {
     internal class Program
     {
@@ -40,10 +41,88 @@ namespace KaVE.RS.SolutionAnalysis.BulkAnalyser
 
         private static void Main(string[] args)
         {
-            AnalyzeProjects();
-            var usages = ExtractUsages();
+            Console.WriteLine("{0} start", DateTime.Now);
 
+            //new AnalysisStatsPrinter(@"C:\Users\seb\Desktop\Analysis\Contexts\").Run();
+            new EditLocationRunner(@"C:\Users\seb\Desktop\datev-unpacked3\").Run();
+            //AnalyzeProjects();
+            //var usages = ExtractUsages();
+            //WriteUsages(usages);
 
+            //var events = Lists.NewList<Event>();
+            //ExtractEvents(events);
+            //WriteEvents(events);
+            Console.WriteLine("{0} finish", DateTime.Now);
+        }
+
+        private static void ExtractEvents(IKaVEList<Event> events)
+        {
+            var logs = FindSSTLogs();
+            var generator = new EventStreamGenerator();
+
+            foreach (var log in logs)
+            {
+                Console.WriteLine("##################################################");
+                Console.WriteLine("reading {0}...", log.Name);
+                var reader = new JsonLogReader<Context>(new FileStream(log.FullName, FileMode.Open), new NullLogger());
+
+                var ctxs = reader.ReadAll().ToList();
+                Console.WriteLine("\tFound {0} contexts", ctxs.Count);
+                Console.Write("\tExtracting events... ");
+                foreach (var ctx in ctxs)
+                {
+                    ctx.SST.Accept(generator, events);
+                    Console.Write('.');
+                }
+                Console.WriteLine(" done");
+            }
+        }
+
+        private static void WriteEvents(IKaVEList<Event> events)
+        {
+            var streamFileName = Path.Combine(TargetDirectory.FullName, "eventstream.txt");
+            var streamFile = new StreamWriter(streamFileName, false);
+            var setFileName = Path.Combine(TargetDirectory.FullName, "eventMapping.txt");
+            var setFile = new StreamWriter(setFileName, false);
+
+            Console.WriteLine("stream contains {0} events", events.Count);
+            var uniqueEvents = new HashSet<Event>();
+            var eventList = new List<Event>();
+
+            var time = 0.000;
+            var delta = 0.001;
+
+            foreach (var e in events)
+            {
+                if (!uniqueEvents.Contains(e))
+                {
+                    uniqueEvents.Add(e);
+                    eventList.Add(e);
+                }
+
+                int idx = eventList.IndexOf(e) + 1;
+
+                streamFile.Write("{0},{1:0.000}\n", idx, time);
+                time += delta;
+            }
+
+            streamFile.Close();
+
+            int idx2 = 1;
+            foreach (var e in eventList)
+            {
+                setFile.WriteLine(@"{0}, {1}", idx2++, e.ToCompactJson());
+            }
+
+            // -> write eventList
+
+            setFile.Close();
+
+            Console.WriteLine("finished");
+        }
+
+        private static void WriteUsages(IKaVEList<Query> usages)
+        {
             var outFile = Path.Combine(TargetDirectory.FullName, "usages.zip");
 
             using (var outStream = new FileStream(outFile, FileMode.Create))
@@ -115,18 +194,18 @@ namespace KaVE.RS.SolutionAnalysis.BulkAnalyser
 
         private static void AnalyzeProjects()
         {
-            if (!TargetDirectory.Exists)
-            {
-                TargetDirectory.Create();
-            }
+            //if (!TargetDirectory.Exists)
+            //{
+            //    TargetDirectory.Create();
+            //}
 
-            var repo = new Uri("https://github.com/restsharp/RestSharp.git");
+            //var repo = new Uri("https://github.com/restsharp/RestSharp.git");
 
-            Console.WriteLine("Cloning {0} to {1} ...", repo, TargetDirectory);
+            //Console.WriteLine("Cloning {0} to {1} ...", repo, TargetDirectory);
 
             var repoRoot = TargetDirectory; //CloneRepository(repo, TargetDirectory.FullName);
 
-            Console.WriteLine("Finished cloning {0}!", repo);
+            //Console.WriteLine("Finished cloning {0}!", repo);
 
             var slnFiles = FindSolutionFiles(repoRoot.FullName).ToList();
 
@@ -229,23 +308,25 @@ namespace KaVE.RS.SolutionAnalysis.BulkAnalyser
 
         private static SyntaxTreeGeneratorResult GenerateSyntaxTrees(FileInfo solutionFile)
         {
-            var solutionAnalysisPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "KaVE.SolutionAnalysis.dll");
+            var solutionAnalysisPath = Path.Combine(
+                AppDomain.CurrentDomain.BaseDirectory,
+                "KaVE.RS.SolutionAnalysis.dll");
             Asserts.That(
                 File.Exists(solutionAnalysisPath),
                 String.Format("KaVE solution analyser not found in {0}.", solutionAnalysisPath));
 
             var workingDirectory = CreateTemporaryDirectory();
 
+            var cmd = String.Format(
+                "/c inspectcode.exe \"{0}\" /o=tmp.xml /plugin=\"{1}\" > Analysis.log 2>&1",
+                solutionFile,
+                solutionAnalysisPath);
             var inspectCode = new Process
             {
                 StartInfo =
                 {
                     FileName = "cmd.exe",
-                    Arguments =
-                        String.Format(
-                            "/c inspectcode.exe \"{0}\" /o=tmp.xml /plugin=\"{1}\" > Analysis.log 2>&1",
-                            solutionFile,
-                            solutionAnalysisPath),
+                    Arguments = cmd,
                     WorkingDirectory = workingDirectory.FullName,
                     CreateNoWindow = true,
                     WindowStyle = ProcessWindowStyle.Hidden
