@@ -209,7 +209,6 @@
     <Compile Include="Interactivity\ConfirmationRequestHandler.cs" />
     <Compile Include="RSEnv.cs" />
     <Compile Include="Settings\FeedbackSettings.cs" />
-    <Compile Include="Settings\KaVESettings.cs" />
     <Compile Include="SessionManager\Anonymize\CompletionEvents\SSTAnonymization.cs" />
     <Compile Include="SessionManager\Anonymize\BuildEventAnonymizer.cs" />
     <Compile Include="SessionManager\Anonymize\CompletionEvents\CompletionEventAnonymizer.cs" />
@@ -232,14 +231,29 @@
     <Compile Include="SessionManager\Presentation\JsonSyntaxHighlighter.cs" />
     <Compile Include="SessionManager\Presentation\MultiSelection.cs" />
     <Compile Include="Menu\OptionPageAction.cs" />
-    <Compile Include="UserControls\Export\Exporter.cs" />
+    <Compile Include="Settings\SettingsCleaner.cs" />
+    <Compile Include="UserControls\Anonymization\AnonymizationContext.cs" />
+    <Compile Include="UserControls\Anonymization\AnonymizationControl.xaml.cs">
+      <DependentUpon>AnonymizationControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\Anonymization\AnonymizationMessages.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>AnonymizationMessages.resx</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\OptionPage\OptionPageMessages.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>OptionPageMessages.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Utils\Export\Exporter.cs" />
     <Compile Include="UserControls\OptionPage\OptionPageViewModel.cs" />
     <Compile Include="SessionManager\Presentation\SortableListView.cs" />
     <Compile Include="SessionManager\Presentation\UriValidation.cs" />
-    <Compile Include="UserControls\UserProfile\UserProfileGrid.xaml.cs">
-      <DependentUpon>UserProfileGrid.xaml</DependentUpon>
+    <Compile Include="UserControls\UserProfile\UserProfileControl.xaml.cs">
+      <DependentUpon>UserProfileControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UserControls\UserProfile\UserProfileViewModel.cs" />
+    <Compile Include="UserControls\UserProfile\UserProfileContext.cs" />
     <Compile Include="Settings\UserProfileSettings.cs" />
     <Compile Include="UserControls\ValidationRules\MailValidationRule.cs" />
     <Compile Include="UserControls\ValidationRules\UploadUrlValidationRule.cs" />
@@ -254,11 +268,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>UploadWizard.resx</DependentUpon>
     </Compile>
-    <Compile Include="UserControls\Export\UploadWizard.xaml.cs">
-      <DependentUpon>UploadWizard.xaml</DependentUpon>
+    <Compile Include="UserControls\UploadWizard\UploadWizardControl.xaml.cs">
+      <DependentUpon>UploadWizardControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UserControls\Export\UploadWizardAction.cs" />
-    <Compile Include="UserControls\Export\UploadWizardViewModel.cs" />
+    <Compile Include="Menu\UploadWizardAction.cs" />
+    <Compile Include="UserControls\UploadWizard\UploadWizardViewModel.cs" />
     <Compile Include="UserControls\TrayNotification\NotifyTrayIcon.cs" />
     <Compile Include="UserControls\TrayNotification\SoftBalloonPopup.xaml.cs">
       <DependentUpon>SoftBalloonPopup.xaml</DependentUpon>
@@ -310,8 +324,8 @@
     </Compile>
     <Compile Include="SessionManager\Presentation\SessionManagerWindowDescriptor.cs" />
     <Compile Include="SessionManager\Presentation\SessionManagerWindowRegistrar.cs" />
-    <Compile Include="UserControls\OptionPage\OptionPage.xaml.cs">
-      <DependentUpon>OptionPage.xaml</DependentUpon>
+    <Compile Include="UserControls\OptionPage\OptionPageControl.xaml.cs">
+      <DependentUpon>OptionPageControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="SessionManager\SessionViewModel.cs" />
     <Compile Include="SessionManager\EventViewModel.cs" />
@@ -327,7 +341,6 @@
     <Compile Include="Utils\Logging\LogFileManager.cs" />
     <Compile Include="Utils\Names\VsComponentNameFactory.cs" />
     <Compile Include="Utils\ObjectToVisibilityConverter.cs" />
-    <Compile Include="Settings\SettingsCleaner.cs" />
     <Compile Include="VsIntegration\IDESession.cs" />
     <Compile Include="VsIntegration\IIDESession.cs" />
     <Compile Include="ZoneMarker.cs" />
@@ -385,9 +398,21 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>SessionManager.de.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\Anonymization\AnonymizationMessages.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>AnonymizationMessages.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\OptionPage\OptionPageMessages.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>OptionPageMessages.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="UserControls\UserProfile\UserProfileGrid.xaml">
+    <Page Include="UserControls\Anonymization\AnonymizationControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\UserProfile\UserProfileControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -403,11 +428,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="UserControls\OptionPage\OptionPage.xaml">
+    <Page Include="UserControls\OptionPage\OptionPageControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="UserControls\Export\UploadWizard.xaml">
+    <Page Include="UserControls\UploadWizard\UploadWizardControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

@@ -31,7 +31,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UserProfile
 
         private UserProfileSettings _userSettings;
 
-        private UserProfileViewModel _uut;
+        private UserProfileContext _uut;
         private InteractionRequestTestHelper<Notification> _notificationHelper;
 
         [SetUp]
@@ -41,9 +41,9 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UserProfile
             _mockSettingStore = new Mock<ISettingsStore>();
             _mockSettingStore.Setup(store => store.GetSettings<ExportSettings>()).Returns(new ExportSettings());
 
-            _uut = new UserProfileViewModel(_mockSettingStore.Object) {UserSettings = _userSettings};
+            //_uut = new UserProfileContext(_mockSettingStore.Object) {UserProfileSettings = _userSettings};
 
-            _notificationHelper = _uut.ErrorNotificationRequest.NewTestHelper();
+            //  _notificationHelper = _uut.ErrorNotificationRequest.NewTestHelper();
         }
 
         [TestCase(true), TestCase(false)]
@@ -114,7 +114,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UserProfile
         public void ShouldGetUserSettingsNumberField()
         {
             var expected = "42";
-            _userSettings.ExperienceYears = expected;
+            _userSettings.ExperienceYears = 42;
 
             var actual = _uut.NumberText;
 
@@ -213,7 +213,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UserProfile
             var exportSettings = new ExportSettings {IsDatev = true};
             _mockSettingStore.Setup(store => store.GetSettings<ExportSettings>()).Returns(exportSettings);
 
-            _uut = new UserProfileViewModel(_mockSettingStore.Object) {UserSettings = _userSettings};
+            //  _uut = new UserProfileContext(_mockSettingStore.Object) {UserProfileSettings = _userSettings};
 
             _mockSettingStore.Verify(ss => ss.UpdateSettings(It.IsAny<Action<UserProfileSettings>>()));
 

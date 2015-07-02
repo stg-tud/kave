@@ -16,20 +16,25 @@
 
 using System.Text.RegularExpressions;
 using System.Windows.Input;
-using KaVE.RS.Commons.Settings;
-using KaVE.RS.Commons.Utils;
 
 namespace KaVE.VS.FeedbackGenerator.UserControls.UserProfile
 {
-    /// <summary>
-    ///     Interaction logic for UserSettingsGrid.xaml
-    /// </summary>
-    public partial class UserProfileGrid
+    public partial class UserProfileControl
     {
-        public UserProfileGrid()
+        private UserProfileContext MyDataContext
+        {
+            get { return (UserProfileContext) DataContext; }
+        }
+
+        public UserProfileControl()
         {
             InitializeComponent();
-            DataContext = new UserProfileViewModel(Registry.GetComponent<ISettingsStore>());
+
+            DataContextChanged += (sender, e) =>
+            {
+                //  UserName = MyDataContext.UserName;
+                // Email = MyDataContext.Email;
+            };
         }
 
         private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)

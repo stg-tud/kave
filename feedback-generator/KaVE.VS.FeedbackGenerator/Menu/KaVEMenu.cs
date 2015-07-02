@@ -12,15 +12,12 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
- * Contributors:
- *    - 
  */
 
 using JetBrains.UI.ActionsRevised;
 using JetBrains.UI.MenuGroups;
 using KaVE.VS.FeedbackGenerator.SessionManager.Presentation;
-using KaVE.VS.FeedbackGenerator.UserControls.Export;
+using KaVE.VS.FeedbackGenerator.UserControls.UploadWizard;
 
 namespace KaVE.VS.FeedbackGenerator.Menu
 {

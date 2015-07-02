@@ -28,9 +28,11 @@ using KaVE.RS.Commons.Utils;
 using KaVE.VS.FeedbackGenerator.Interactivity;
 using KaVE.VS.FeedbackGenerator.SessionManager;
 using KaVE.VS.FeedbackGenerator.Settings;
+using KaVE.VS.FeedbackGenerator.UserControls.Anonymization;
+using KaVE.VS.FeedbackGenerator.UserControls.Export;
 using KaVE.VS.FeedbackGenerator.Utils.Logging;
 
-namespace KaVE.VS.FeedbackGenerator.UserControls.Export
+namespace KaVE.VS.FeedbackGenerator.UserControls.UploadWizard
 {
     public class UploadWizardViewModel : ViewModelBase<UploadWizardViewModel>
     {
@@ -41,7 +43,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.Export
         private readonly ILogger _logger;
         private readonly BackgroundWorker _exportWorker;
         private DateTime _exportTime;
-        private UploadWizard.ExportType _exportType;
+        private UploadWizardControl.ExportType _exportType;
 
         private readonly InteractionRequest<Notification> _errorNotificationRequest;
         private readonly InteractionRequest<LinkNotification> _successNotificationRequest;
@@ -85,6 +87,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.Export
         }
 
         public ExportSettings ExportSettings { get; set; }
+        public AnonymizationContext AnonymizationContext { get; set; }
 
         public UserProfileSettings UserSettings { get; set; }
 
@@ -124,7 +127,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.Export
             _settingsStore.SetSettings(ExportSettings);
         }
 
-        public void Export(UploadWizard.ExportType exportType)
+        public void Export(UploadWizardControl.ExportType exportType)
         {
             SetBusy(Properties.UploadWizard.Export_BusyMessage);
             _exportTime = _dateUtils.Now;
@@ -134,7 +137,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.Export
         private void OnExport(object sender, DoWorkEventArgs args)
         {
             var worker = (BackgroundWorker) sender;
-            _exportType = (UploadWizard.ExportType) args.Argument;
+            _exportType = (UploadWizardControl.ExportType) args.Argument;
             Action<string> reportExportStatusChange = exportStatus => worker.ReportProgress(0, exportStatus);
 
             reportExportStatusChange(Properties.UploadWizard.FetchingEvents);
@@ -143,7 +146,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.Export
             try
             {
                 _exporter.StatusChanged += reportExportStatusChange;
-                if (_exportType == UploadWizard.ExportType.ZipFile)
+                if (_exportType == UploadWizardControl.ExportType.ZipFile)
                 {
                     _exporter.Export(events, new FilePublisher(AskForExportLocation));
                 }
@@ -216,11 +219,11 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.Export
 
             switch (_exportType)
             {
-                case UploadWizard.ExportType.ZipFile:
+                case UploadWizardControl.ExportType.ZipFile:
                     var export = _settingsStore.GetSettings<ExportSettings>();
                     RaiseLinkNotificationRequest(message, export.UploadUrl);
                     break;
-                case UploadWizard.ExportType.HttpUpload:
+                case UploadWizardControl.ExportType.HttpUpload:
                     RaiseNotificationRequest(message);
                     break;
             }

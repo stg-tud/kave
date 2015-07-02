@@ -46,7 +46,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators
                 //      Category = TestCategory,
                 Email = TestMailAddress.ToString(),
                 Feedback = TestFeedback,
-                ExperienceYears = TestNumber.ToString(),
+                ExperienceYears = TestNumber,
                 ProvideUserInformation = true,
                 Name = TestUserName
                 //     Valuation = TestValuation
@@ -105,7 +105,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators
             //   _testUserSettings.Category = Category.Unknown;
             _testUserSettings.Email = "";
             _testUserSettings.Feedback = "";
-            _testUserSettings.ExperienceYears = "";
+            _testUserSettings.ExperienceYears = 0;
             _testUserSettings.Name = "";
             //  _testUserSettings.Valuation = Valuation.Unknown;
 

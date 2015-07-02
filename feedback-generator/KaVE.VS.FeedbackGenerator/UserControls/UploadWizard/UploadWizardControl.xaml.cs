@@ -17,8 +17,6 @@
 
 using System.ComponentModel;
 using System.Windows;
-using System.Windows.Controls.Primitives;
-using System.Windows.Data;
 using JetBrains.ActionManagement;
 using KaVE.RS.Commons;
 using KaVE.RS.Commons.Settings;
@@ -29,9 +27,9 @@ using KaVE.VS.FeedbackGenerator.Settings;
 using KaVE.VS.FeedbackGenerator.UserControls.UserProfile;
 using MessageBox = JetBrains.Util.MessageBox;
 
-namespace KaVE.VS.FeedbackGenerator.UserControls.Export
+namespace KaVE.VS.FeedbackGenerator.UserControls.UploadWizard
 {
-    public partial class UploadWizard
+    public partial class UploadWizardControl
     {
         public enum ExportType
         {
@@ -40,12 +38,14 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.Export
         }
 
         private readonly UploadWizardViewModel _uploadWizardViewModel;
-        private readonly UserProfileViewModel _userSettingsViewModel;
+        private readonly UserProfileContext _userSettingsViewModel;
 
-        public UploadWizard(IActionManager actionManager,
+        public UploadWizardControl(IActionManager actionManager,
             UploadWizardViewModel uploadWizardViewModel,
             ISettingsStore settingsStore)
         {
+            InitializeComponent();
+
             DataContext = uploadWizardViewModel;
             _uploadWizardViewModel = uploadWizardViewModel;
             _uploadWizardViewModel.ExportSettings = settingsStore.GetSettings<ExportSettings>();
@@ -54,8 +54,6 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.Export
             _uploadWizardViewModel.ErrorNotificationRequest.Raised += new NotificationRequestHandler(this).Handle;
             _uploadWizardViewModel.SuccessNotificationRequest.Raised += new LinkNotificationRequestHandler(this).Handle;
 
-            InitializeComponent();
-
             var exportSettings = settingsStore.GetSettings<ExportSettings>();
             if (exportSettings.IsDatev)
             {
@@ -63,12 +61,12 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.Export
                 UserSettingsGrid.DatevDeactivationLabel.Visibility = Visibility.Visible;
             }
 
-            _userSettingsViewModel = (UserProfileViewModel) UserSettingsGrid.DataContext;
-            _userSettingsViewModel.UserSettings = settingsStore.GetSettings<UserProfileSettings>();
-            _userSettingsViewModel.ErrorNotificationRequest.Raised += new NotificationRequestHandler(this).Handle;
+            //_userSettingsViewModel = (UserProfileContext) UserSettingsGrid.DataContext;
+            // _userSettingsViewModel.UserProfile = settingsStore.GetSettings<UserProfileSettings>();
+            //_userSettingsViewModel.ErrorNotificationRequest.Raised += new NotificationRequestHandler(this).Handle;
 
-            UserSettingsGrid.CategoryComboBox.SetBinding(Selector.SelectedItemProperty, new Binding("Category"));
-            UserSettingsGrid.RadioButtonListBox.SetBinding(Selector.SelectedItemProperty, new Binding("Valuation"));
+            //UserSettingsGrid.CategoryComboBox.SetBinding(Selector.SelectedItemProperty, new Binding("Category"));
+            //UserSettingsGrid.RadioButtonListBox.SetBinding(Selector.SelectedItemProperty, new Binding("Valuation"));
         }
 
         private void On_Review_Click(object sender, RoutedEventArgs e)

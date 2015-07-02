@@ -33,6 +33,7 @@ using KaVE.VS.FeedbackGenerator.Interactivity;
 using KaVE.VS.FeedbackGenerator.Settings;
 using KaVE.VS.FeedbackGenerator.Tests.Interactivity;
 using KaVE.VS.FeedbackGenerator.UserControls.Export;
+using KaVE.VS.FeedbackGenerator.UserControls.UploadWizard;
 using KaVE.VS.FeedbackGenerator.Utils.Logging;
 using Moq;
 using NUnit.Framework;
@@ -210,7 +211,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.Export
         [Test]
         public void ShouldSetExportBusyMessage()
         {
-            _uut.Export(UploadWizard.ExportType.ZipFile);
+            _uut.Export(UploadWizardControl.ExportType.ZipFile);
 
             Assert.IsTrue(_uut.BusyMessage.StartsWith(Properties.UploadWizard.Export_BusyMessage));
         }
@@ -257,7 +258,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.Export
         [Test]
         public void SelectingZipExportInvokesZipExport()
         {
-            WhenExportIsExecuted(UploadWizard.ExportType.ZipFile);
+            WhenExportIsExecuted(UploadWizardControl.ExportType.ZipFile);
 
             _mockExporter.Verify(
                 exporter =>
@@ -267,7 +268,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.Export
         [Test]
         public void SelectingHttpExportInvokesHttpExport()
         {
-            WhenExportIsExecuted(UploadWizard.ExportType.HttpUpload);
+            WhenExportIsExecuted(UploadWizardControl.ExportType.HttpUpload);
 
             _mockExporter.Verify(
                 exporter =>
@@ -284,7 +285,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.Export
                          .Callback<IEnumerable<IDEEvent>, IPublisher>(
                              (evts, publisher) => httpPublisher = (HttpPublisher) publisher);
 
-            WhenExportIsExecuted(UploadWizard.ExportType.HttpUpload);
+            WhenExportIsExecuted(UploadWizardControl.ExportType.HttpUpload);
             try
             {
                 // There's currently no clean way to find out what Url is passed to the publisher. Therefore, we
@@ -309,7 +310,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.Export
         [Test]
         public void SuccessfulZipExportCreatesNotification()
         {
-            WhenExportIsExecuted(UploadWizard.ExportType.ZipFile);
+            WhenExportIsExecuted(UploadWizardControl.ExportType.ZipFile);
 
             Assert.IsTrue(_linkNotificationHelper.IsRequestRaised);
         }
@@ -317,7 +318,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.Export
         [Test]
         public void SuccessfulZipExportNotificationHasCorrectMessage()
         {
-            WhenExportIsExecuted(UploadWizard.ExportType.ZipFile);
+            WhenExportIsExecuted(UploadWizardControl.ExportType.ZipFile);
 
             var actual = _linkNotificationHelper.Context;
             // TODO @Sven: extend setup to include some events that are exported here
@@ -429,7 +430,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.Export
         private void WhenExportIsExecuted()
         {
             // ReSharper disable once IntroduceOptionalParameters.Local
-            WhenExportIsExecuted(UploadWizard.ExportType.HttpUpload);
+            WhenExportIsExecuted(UploadWizardControl.ExportType.HttpUpload);
         }
 
         private void WaitUntilViewModelIsIdle()
@@ -437,7 +438,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.Export
             AsyncTestHelper.WaitForCondition(() => !_uut.IsBusy);
         }
 
-        private void WhenExportIsExecuted(UploadWizard.ExportType exportType)
+        private void WhenExportIsExecuted(UploadWizardControl.ExportType exportType)
         {
             _uut.Export(exportType);
             WaitUntilViewModelIsIdle();

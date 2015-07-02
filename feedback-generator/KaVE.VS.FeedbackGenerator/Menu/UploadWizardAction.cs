@@ -22,11 +22,15 @@ using JetBrains.Util;
 using KaVE.Commons.Utils;
 using KaVE.RS.Commons.Settings;
 using KaVE.RS.Commons.Utils;
+using KaVE.VS.FeedbackGenerator.Settings;
+using KaVE.VS.FeedbackGenerator.UserControls.Anonymization;
+using KaVE.VS.FeedbackGenerator.UserControls.Export;
+using KaVE.VS.FeedbackGenerator.UserControls.UploadWizard;
 using KaVE.VS.FeedbackGenerator.Utils.Logging;
 using NuGet;
 using ILogger = KaVE.Commons.Utils.Exceptions.ILogger;
 
-namespace KaVE.VS.FeedbackGenerator.UserControls.Export
+namespace KaVE.VS.FeedbackGenerator.Menu
 {
     [Action(Id, "Export Feedback...", Id = 12193486)]
     public class UploadWizardAction : IExecutableAction
@@ -60,7 +64,8 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.Export
             if (HasContentToExport())
             {
                 var viewModel = new UploadWizardViewModel(_exporter, _logManager, _settingsStore, _dateUtils, _logger);
-                new UploadWizard(_actionManager, viewModel, _settingsStore).ShowDialog();
+                viewModel.AnonymizationContext = new AnonymizationContext(_settingsStore.GetSettings<ExportSettings>());
+                new UploadWizardControl(_actionManager, viewModel, _settingsStore).ShowDialog();
             }
             else
             {

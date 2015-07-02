@@ -20,6 +20,7 @@ using KaVE.Commons.Model.Events;
 namespace KaVE.VS.FeedbackGenerator.Settings
 {
     [SettingsKey(typeof (FeedbackSettings), "KaVE UserProfile Settings")]
+    // WARNING: Do not change classname, as it is used to identify settings
     public class UserProfileSettings
     {
         [SettingsEntry(false, "UserProfile: ProvideUserInformation")]
@@ -35,12 +36,12 @@ namespace KaVE.VS.FeedbackGenerator.Settings
         public WorkPosition Position;
 
         [SettingsEntry(0, "UserProfile: Numbers")]
-        public string ExperienceYears;
+        public int ExperienceYears;
 
-        [SettingsEntry(ProjectExperience.Unknown, "UserProfile: Category")]
+        [SettingsEntry(ProjectExperience.Unknown, "UserProfile: ProjectExperience")]
         public ProjectExperience ProjectExperience;
 
-        [SettingsEntry(SelfEstimatedExperience.Unknown, "UserProfile: Category")]
+        [SettingsEntry(SelfEstimatedExperience.Unknown, "UserProfile: SelfEstimatedExperience")]
         public SelfEstimatedExperience SelfEstimatedExperience;
 
         [SettingsEntry("", "UserProfile: Feedback")]

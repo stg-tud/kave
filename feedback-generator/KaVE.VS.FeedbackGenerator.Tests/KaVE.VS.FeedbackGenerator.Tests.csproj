@@ -157,6 +157,7 @@
   <ItemGroup>
     <Compile Include="CodeCompletion\CodeCompletionLifecycleManagerTest.cs" />
     <Compile Include="CodeCompletion\PBNProposalItemsProviderTest.cs" />
+    <Compile Include="Settings\SettingsCleanerTest.cs" />
     <Compile Include="UserControls\Export\ExporterTest.cs" />
     <Compile Include="UserControls\ValidationRules\MailValidationRuleTest.cs" />
     <Compile Include="Generators\EventGeneratorBaseTest.cs" />
@@ -227,7 +228,6 @@
     <Compile Include="Utils\Logging\LogFileTest.cs" />
     <Compile Include="Utils\Names\VsComponentNameFactoryTest.cs" />
     <Compile Include="Utils\ObjectToVisibilityConverterTest.cs" />
-    <Compile Include="Settings\SettingsCleanerTest.cs" />
     <Compile Include="VsIntegrationMocks\TestDTE.cs" />
     <Compile Include="VsIntegration\IDESessionTest.cs" />
   </ItemGroup>

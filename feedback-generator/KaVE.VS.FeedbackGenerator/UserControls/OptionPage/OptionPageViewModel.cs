@@ -19,6 +19,8 @@ using System.IO;
 using KaVE.VS.FeedbackGenerator.Interactivity;
 using KaVE.VS.FeedbackGenerator.SessionManager;
 using KaVE.VS.FeedbackGenerator.Settings;
+using KaVE.VS.FeedbackGenerator.UserControls.Anonymization;
+using KaVE.VS.FeedbackGenerator.UserControls.UserProfile;
 using KaVE.VS.FeedbackGenerator.UserControls.ValidationRules;
 
 namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage
@@ -68,6 +70,8 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage
 
         public ExportSettings ExportSettings { get; set; }
 
+        public UserProfileContext UserProfileContext { get; set; }
+
         public string UploadUrl
         {
             get { return ExportSettings.UploadUrl; }
@@ -79,6 +83,8 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage
             get { return ExportSettings.WebAccessPrefix; }
             set { ExportSettings.WebAccessPrefix = value; }
         }
+
+        public AnonymizationContext AnonymizationContext { get; set; }
 
         public OptionPageViewModel()
         {

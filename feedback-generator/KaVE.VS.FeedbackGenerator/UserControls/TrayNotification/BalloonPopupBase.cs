@@ -18,7 +18,8 @@ using System.Windows.Controls;
 using Hardcodet.Wpf.TaskbarNotification;
 using JetBrains.ActionManagement;
 using KaVE.RS.Commons.Utils;
-using KaVE.VS.FeedbackGenerator.UserControls.Export;
+using KaVE.VS.FeedbackGenerator.Menu;
+using KaVE.VS.FeedbackGenerator.UserControls.UploadWizard;
 
 namespace KaVE.VS.FeedbackGenerator.UserControls.TrayNotification
 {

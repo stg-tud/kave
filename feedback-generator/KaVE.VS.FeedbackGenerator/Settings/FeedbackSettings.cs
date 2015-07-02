@@ -15,6 +15,7 @@
  */
 
 using JetBrains.Application.Settings;
+using KaVE.RS.Commons.Settings;
 
 namespace KaVE.VS.FeedbackGenerator.Settings
 {

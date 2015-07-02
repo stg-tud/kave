@@ -61,6 +61,15 @@ namespace KaVE.VS.FeedbackGenerator.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Die Exportoptionen bestimmen, welche Feedback-Details Ihren Rechner beim Export verlassen. Lokal wird das Feedback immer vollständig aufgenommen, um Ihnen die Einsicht zu erleichtern. Wenn Sie die Wirkung der Exportoptionen prüfen wollen, exportieren Sie einfach in ein ZIP-Archiv zum manuellen Hochladen. Diese Archive enthalten alle exportierten Informationen im Klartext..
+        /// </summary>
+        public static string Desc_AnonymizationDisclaimer {
+            get {
+                return ResourceManager.GetString("Desc_AnonymizationDisclaimer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Design.
         /// </summary>
         public static string DesignView {
@@ -309,51 +318,6 @@ namespace KaVE.VS.FeedbackGenerator.Properties {
         public static string Options_Button {
             get {
                 return ResourceManager.GetString("Options_Button", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Die Exportoptionen bestimmen, welche Feedback-Details Ihren Rechner beim Export verlassen. Lokal wird das Feedback immer vollständig aufgenommen, um Ihnen die Einsicht zu erleichtern. Wenn Sie die Wirkung der Exportoptionen prüfen wollen, exportieren Sie einfach in ein ZIP-Archiv zum manuellen Hochladen. Diese Archive enthalten alle exportierten Informationen im Klartext..
-        /// </summary>
-        public static string Options_Export_Disclaimer {
-            get {
-                return ResourceManager.GetString("Options_Export_Disclaimer", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Projektzugehörige Code-Bezeichner aus Events entfernen.
-        /// </summary>
-        public static string Options_Export_RemoveCodeNames {
-            get {
-                return ResourceManager.GetString("Options_Export_RemoveCodeNames", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Dauer von Events entfernen.
-        /// </summary>
-        public static string Options_Export_RemoveDurations {
-            get {
-                return ResourceManager.GetString("Options_Export_RemoveDurations", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Sessionzuordnung aus Events entfernen.
-        /// </summary>
-        public static string Options_Export_RemoveSessionIDs {
-            get {
-                return ResourceManager.GetString("Options_Export_RemoveSessionIDs", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Startzeit von Events entfernen.
-        /// </summary>
-        public static string Options_Export_RemoveStartTimes {
-            get {
-                return ResourceManager.GetString("Options_Export_RemoveStartTimes", resourceCulture);
             }
         }
         

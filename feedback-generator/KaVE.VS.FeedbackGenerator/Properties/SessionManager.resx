@@ -184,18 +184,6 @@
   <data name="Options_Title" xml:space="preserve">
     <value>KaVE Feedback</value>
   </data>
-  <data name="Options_Export_RemoveDurations" xml:space="preserve">
-    <value>Dauer von Events entfernen</value>
-  </data>
-  <data name="Options_Export_RemoveCodeNames" xml:space="preserve">
-    <value>Projektzugehörige Code-Bezeichner aus Events entfernen</value>
-  </data>
-  <data name="Options_Export_RemoveSessionIDs" xml:space="preserve">
-    <value>Sessionzuordnung aus Events entfernen</value>
-  </data>
-  <data name="Options_Export_RemoveStartTimes" xml:space="preserve">
-    <value>Startzeit von Events entfernen</value>
-  </data>
   <data name="EventActiveDocument" xml:space="preserve">
     <value>Active Document</value>
     <comment>Aktives Dokument</comment>
@@ -232,9 +220,6 @@
   </data>
   <data name="RawView" xml:space="preserve">
     <value>JSON</value>
-  </data>
-  <data name="Options_Export_Disclaimer" xml:space="preserve">
-    <value>Die Exportoptionen bestimmen, welche Feedback-Details Ihren Rechner beim Export verlassen. Lokal wird das Feedback immer vollständig aufgenommen, um Ihnen die Einsicht zu erleichtern. Wenn Sie die Wirkung der Exportoptionen prüfen wollen, exportieren Sie einfach in ein ZIP-Archiv zum manuellen Hochladen. Diese Archive enthalten alle exportierten Informationen im Klartext.</value>
   </data>
   <data name="Options_Export_Title" xml:space="preserve">
     <value>Exportoptionen</value>
@@ -295,5 +280,8 @@
   </data>
   <data name="Options_ModelPath" xml:space="preserve">
     <value>Pfad zu Modellen</value>
+  </data>
+  <data name="Desc_AnonymizationDisclaimer" xml:space="preserve">
+    <value>Die Exportoptionen bestimmen, welche Feedback-Details Ihren Rechner beim Export verlassen. Lokal wird das Feedback immer vollständig aufgenommen, um Ihnen die Einsicht zu erleichtern. Wenn Sie die Wirkung der Exportoptionen prüfen wollen, exportieren Sie einfach in ein ZIP-Archiv zum manuellen Hochladen. Diese Archive enthalten alle exportierten Informationen im Klartext.</value>
   </data>
 </root>
