@@ -30,7 +30,7 @@ namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
     ///     Fires an <see cref="CommandEvent" /> on execution of a ReSharper action. Passes handling of the action on the
     ///     the default handler.
     /// </summary>
-    public class EventGeneratingActionHandler : CommandEventGeneratorBase<DelegateExecute>, IExecutableAction
+    public class EventGeneratingActionHandler : CommandEventGeneratorBase<DelegateExecute>, IExecutableAction, ICheckableAction, IPresentableAction
     {
         private readonly string _actionId;
 
@@ -45,9 +45,24 @@ namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
             return nextUpdate.Invoke();
         }
 
+        public bool Update(IDataContext context, CheckedActionPresentation presentation)
+        {
+            return true;
+        }
+
+        public bool Update(IDataContext context, ActionPresentation actionPresentation)
+        {
+            return true;
+        }
+
         public void Execute(IDataContext context, DelegateExecute nextExecute)
         {
             Execute(nextExecute);
+        }
+
+        public void Execute(IDataContext context)
+        {
+            // do nothing
         }
 
         protected override string GetCommandId()

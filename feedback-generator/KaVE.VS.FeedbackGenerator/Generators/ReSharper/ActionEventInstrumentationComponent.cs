@@ -52,6 +52,11 @@ namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
                 }
                 catch (InvalidOperationException e)
                 {
+                    if (e.Message.Equals("Cannot add handlers to a StaticBound action."))
+                    {
+                        // There's no way for us the check whether the action is static bound, beforehand.
+                        continue;
+                    }
                     logger.Error(e, "exception while adding handler for actionId '{0}'", action.ActionId);
                 }
                 catch (Assertion.AssertionException e)
@@ -63,7 +68,6 @@ namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
 
         private static IEnumerable<IActionDefWithId> GetInstrumentableActions(IActionManager actionManager)
         {
-            // TODO @seb/@sven: there are two implementations of IActionManager, one offers access to VS actions... might be interesting to look at
             return actionManager.Defs.GetAllActionDefs().Where(IsNoPrivateAction);
         }
 
