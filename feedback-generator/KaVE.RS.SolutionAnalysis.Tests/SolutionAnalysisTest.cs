@@ -28,8 +28,6 @@ using NUnit.Framework;
 
 namespace KaVE.RS.SolutionAnalysis.Tests
 {
-    // TODO RS9: the test run locally, but the buildserver cannot execute them... I don't know why
-    [Ignore]
     internal class SolutionAnalysisTest : BaseTestWithExistingSolution
     {
         public override void TearDown()
@@ -179,7 +177,7 @@ namespace KaVE.RS.SolutionAnalysis.Tests
             CollectionAssert.Contains(context.SST.Fields, expectedDeclaration);
         }
 
-        [Test, Ignore("This test runs on my machine, but not on the build server. I have no idea why...")]
+        [Test]
         public void AnalysisResolvesNuGetDependencies()
         {
             var results = RunAnalysis();
