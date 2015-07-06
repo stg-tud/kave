@@ -52,7 +52,7 @@ limitations under the License.
             </Expander>
 
             <Expander Header="{x:Static root:Properties.UserProfileMessages.Title}" Name="UserInformationExpander">
-                <profile:UserProfileControl x:Name="UserSettingsGrid" />
+                <profile:UserProfileControl x:Name="UserSettingsGrid" DataContext="{Binding UserProfileContext}" />
             </Expander>
 
             <GroupBox Header="{x:Static root:Properties.UserProfileMessages.FeedbackBox}">

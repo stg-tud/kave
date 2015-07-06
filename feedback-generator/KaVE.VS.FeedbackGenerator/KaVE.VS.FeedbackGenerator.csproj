@@ -246,6 +246,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>OptionPageMessages.resx</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\ValueConverter\EnumToBooleanConverter.cs" />
     <Compile Include="Utils\Export\Exporter.cs" />
     <Compile Include="UserControls\OptionPage\OptionPageViewModel.cs" />
     <Compile Include="SessionManager\Presentation\SortableListView.cs" />

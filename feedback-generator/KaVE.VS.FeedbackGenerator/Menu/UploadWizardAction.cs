@@ -26,6 +26,7 @@ using KaVE.VS.FeedbackGenerator.Settings;
 using KaVE.VS.FeedbackGenerator.UserControls.Anonymization;
 using KaVE.VS.FeedbackGenerator.UserControls.Export;
 using KaVE.VS.FeedbackGenerator.UserControls.UploadWizard;
+using KaVE.VS.FeedbackGenerator.UserControls.UserProfile;
 using KaVE.VS.FeedbackGenerator.Utils.Logging;
 using NuGet;
 using ILogger = KaVE.Commons.Utils.Exceptions.ILogger;
@@ -64,8 +65,7 @@ namespace KaVE.VS.FeedbackGenerator.Menu
             if (HasContentToExport())
             {
                 var viewModel = new UploadWizardViewModel(_exporter, _logManager, _settingsStore, _dateUtils, _logger);
-                viewModel.AnonymizationContext = new AnonymizationContext(_settingsStore.GetSettings<ExportSettings>());
-                new UploadWizardControl(_actionManager, viewModel, _settingsStore).ShowDialog();
+                new UploadWizardControl(viewModel, _settingsStore).ShowDialog();
             }
             else
             {

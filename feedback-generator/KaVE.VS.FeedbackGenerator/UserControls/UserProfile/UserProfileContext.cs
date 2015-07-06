@@ -15,106 +15,213 @@
  */
 
 using System;
-using System.Windows;
-using KaVE.Commons.Model.Events;
+using System.Collections;
+using System.ComponentModel;
+using KaVE.Commons.Model.Events.UserProfiles;
+using KaVE.JetBrains.Annotations;
 using KaVE.VS.FeedbackGenerator.Settings;
 
 namespace KaVE.VS.FeedbackGenerator.UserControls.UserProfile
 {
-    public class UserProfileContext
+    public class UserProfileContext : INotifyPropertyChanged
     {
-        private ExportSettings ExportSettings { get; set; }
-        private UserProfileSettings UserProfileSettings { get; set; }
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private readonly ExportSettings _exportSettings;
+        private readonly UserProfileSettings _userProfileSettings;
 
         public UserProfileContext(ExportSettings exportSettings, UserProfileSettings userProfileSettings)
         {
-            ExportSettings = exportSettings;
-            UserProfileSettings = userProfileSettings;
+            _exportSettings = exportSettings;
+            _userProfileSettings = userProfileSettings;
         }
 
         public bool IsDatev
         {
-            get { return ExportSettings.IsDatev; }
+            get { return _exportSettings.IsDatev; }
         }
 
-        public Array ValuationOptions
+        public bool IsProvidingProfile
         {
-            get { return Enum.GetValues(typeof (WorkPosition)); }
+            get { return _userProfileSettings.IsProvidingProfile && !_exportSettings.IsDatev; }
+            set
+            {
+                _userProfileSettings.IsProvidingProfile = value;
+                OnPropertyChanged("IsProvidingProfile");
+            }
         }
 
-        public Array CategoryOptions
+        public string ProfileId
         {
-            get { return Enum.GetValues(typeof (SelfEstimatedExperience)); }
+            get { return _userProfileSettings.ProfileId; }
+            set
+            {
+                _userProfileSettings.ProfileId = value;
+                OnPropertyChanged("ProfileId");
+            }
         }
 
-        public UserProfileSettings UserProfile { get; set; }
-
-        /*   public Valuation Valuation
+        public Educations Education
         {
-            get { return UserSettings.Valuation; }
-            set { UserSettings.Valuation = value; }
+            get { return _userProfileSettings.Education; }
+            set
+            {
+                _userProfileSettings.Education = value;
+                OnPropertyChanged("Education");
+            }
         }
 
-        public Category Category
+        public Positions Position
         {
-            get { return UserSettings.Category; }
-            set { UserSettings.Category = value; }
-        }*/
-
-        public string SelectedValuationOption
-        {
-            get { return ""; } // ( Valuation) GetValue(SelectedValuationOptionProperty); }
-            set { }
-            //SetValue(SelectedValuationOptionProperty, value); }
+            get { return _userProfileSettings.Position; }
+            set
+            {
+                _userProfileSettings.Position = value;
+                OnPropertyChanged("Position");
+            }
         }
 
-        /*
-        public Category SelectedCategoryOption
+        public bool ProjectsNoAnswer
         {
-            get { return (Category) GetValue(SelectedCategoryOptionProperty); }
-            set { SetValue(SelectedCategoryOptionProperty, value); }
-        }*/
-
-        public bool ProvideUserInformation
-        {
-            get { return UserProfile.ProvideUserInformation; }
-            set { UserProfile.ProvideUserInformation = value; }
+            get { return _userProfileSettings.ProjectsNoAnswer; }
+            set
+            {
+                if (value)
+                {
+                    _userProfileSettings.ProjectsNoAnswer = true;
+                    _userProfileSettings.ProjectsCourses = false;
+                    _userProfileSettings.ProjectsPrivate = false;
+                    _userProfileSettings.ProjectsTeamSmall = false;
+                    _userProfileSettings.ProjectsTeamLarge = false;
+                    _userProfileSettings.ProjectsCommercial = false;
+                }
+                OnPropertyChanged("ProjectsNoAnswer");
+                OnPropertyChanged("ProjectsCourses");
+                OnPropertyChanged("ProjectsPrivate");
+                OnPropertyChanged("ProjectsTeamSmall");
+                OnPropertyChanged("ProjectsTeamLarge");
+                OnPropertyChanged("ProjectsCommercial");
+            }
         }
 
-        public string Username
+        public bool ProjectsCourses
         {
-            get { return UserProfile.Name; }
-            set { UserProfile.Name = value; }
+            get { return _userProfileSettings.ProjectsCourses; }
+            set
+            {
+                _userProfileSettings.ProjectsCourses = value;
+                OnPropertyChanged("ProjectsCourses");
+                if (value)
+                {
+                    _userProfileSettings.ProjectsNoAnswer = false;
+                    OnPropertyChanged("ProjectsNoAnswer");
+                }
+            }
         }
 
-        public string Mail
+        public bool ProjectsPrivate
         {
-            get { return UserProfile.Email; }
-            set { UserProfile.Email = value; }
+            get { return _userProfileSettings.ProjectsPrivate; }
+            set
+            {
+                _userProfileSettings.ProjectsPrivate = value;
+                OnPropertyChanged("ProjectsPrivate");
+                if (value)
+                {
+                    _userProfileSettings.ProjectsNoAnswer = false;
+                    OnPropertyChanged("ProjectsNoAnswer");
+                }
+            }
         }
 
-        public string NumberText
+        public bool ProjectsTeamSmall
         {
-            get { return UserProfile.ExperienceYears.ToString(); }
-            set { UserProfile.ExperienceYears = int.Parse(value); }
+            get { return _userProfileSettings.ProjectsTeamSmall; }
+            set
+            {
+                _userProfileSettings.ProjectsTeamSmall = value;
+                OnPropertyChanged("ProjectsTeamSmall");
+                if (value)
+                {
+                    _userProfileSettings.ProjectsNoAnswer = false;
+                    OnPropertyChanged("ProjectsNoAnswer");
+                }
+            }
         }
 
-        public WorkPosition Position
+        public bool ProjectsTeamLarge
         {
-            get { return UserProfile.Position; }
-            set { UserProfile.Position = value; }
+            get { return _userProfileSettings.ProjectsTeamLarge; }
+            set
+            {
+                _userProfileSettings.ProjectsTeamLarge = value;
+                OnPropertyChanged("ProjectsTeamLarge");
+                if (value)
+                {
+                    _userProfileSettings.ProjectsNoAnswer = false;
+                    OnPropertyChanged("ProjectsNoAnswer");
+                }
+            }
         }
 
-        public static readonly DependencyProperty PositionProperty = DependencyProperty.Register(
-            "SelectedPosition",
-            typeof (WorkPosition),
-            typeof (UserProfileContext));
-
-        public void SetUserSettings() {}
-
-        public bool ValidateEmail(string email)
+        public bool ProjectsCommercial
         {
-            return false;
+            get { return _userProfileSettings.ProjectsCommercial; }
+            set
+            {
+                _userProfileSettings.ProjectsCommercial = value;
+                OnPropertyChanged("ProjectsCommercial");
+                if (value)
+                {
+                    _userProfileSettings.ProjectsNoAnswer = false;
+                    OnPropertyChanged("ProjectsNoAnswer");
+                }
+            }
+        }
+
+        public Likert7Point ProgrammingGeneral
+        {
+            get { return _userProfileSettings.ProgrammingGeneral; }
+            set
+            {
+                _userProfileSettings.ProgrammingGeneral = value;
+                OnPropertyChanged("ProgrammingGeneral");
+            }
+        }
+
+        public Likert7Point ProgrammingCSharp
+        {
+            get { return _userProfileSettings.ProgrammingCSharp; }
+            set
+            {
+                _userProfileSettings.ProgrammingCSharp = value;
+                OnPropertyChanged("ProgrammingCSharp");
+            }
+        }
+
+        public IEnumerable EducationOptions
+        {
+            get { return Enum.GetValues(typeof (Educations)); }
+        }
+
+        public IEnumerable PositionOptions
+        {
+            get { return Enum.GetValues(typeof (Positions)); }
+        }
+
+        public IEnumerable LikertOptions
+        {
+            get { return Enum.GetValues(typeof (Likert7Point)); }
+        }
+
+        [NotifyPropertyChangedInvocator]
+        protected virtual void OnPropertyChanged(string propertyName)
+        {
+            var handler = PropertyChanged;
+            if (handler != null)
+            {
+                handler(this, new PropertyChangedEventArgs(propertyName));
+            }
         }
     }
 }

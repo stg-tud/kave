@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
+using System;
 using System.Text.RegularExpressions;
+using System.Windows;
 using System.Windows.Input;
 
 namespace KaVE.VS.FeedbackGenerator.UserControls.UserProfile
@@ -29,18 +31,47 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UserProfile
         public UserProfileControl()
         {
             InitializeComponent();
-
-            DataContextChanged += (sender, e) =>
+            DataContextChanged += (sender, args) =>
             {
-                //  UserName = MyDataContext.UserName;
-                // Email = MyDataContext.Email;
+                // ReSharper disable once ConditionIsAlwaysTrueOrFalse
+                if (true || MyDataContext.IsDatev)
+                {
+                    IsProvidingProfileCheckBox.IsEnabled = false;
+                    ProfilePanel.Visibility = Visibility.Collapsed;
+                    DatevLabel.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    CheckVisibilityOfProfilePane();
+
+                    MyDataContext.PropertyChanged += (sender2, args2) =>
+                    {
+                        if (args2.PropertyName == "IsProvidingProfile")
+                        {
+                            CheckVisibilityOfProfilePane();
+                        }
+                    };
+                }
             };
+        }
+
+
+        private void CheckVisibilityOfProfilePane()
+        {
+            ProfilePanel.Visibility = MyDataContext.IsProvidingProfile
+                ? Visibility.Visible
+                : Visibility.Collapsed;
         }
 
         private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
         {
             var numberRegex = new Regex("[^0-9]+");
             e.Handled = numberRegex.IsMatch(e.Text);
+        }
+
+        private void OnClick_RefreshProfileId(object sender, RoutedEventArgs e)
+        {
+            MyDataContext.ProfileId = Guid.NewGuid().ToString();
         }
     }
 }

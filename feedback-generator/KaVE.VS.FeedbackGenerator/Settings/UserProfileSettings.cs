@@ -15,7 +15,7 @@
  */
 
 using JetBrains.Application.Settings;
-using KaVE.Commons.Model.Events;
+using KaVE.Commons.Model.Events.UserProfiles;
 
 namespace KaVE.VS.FeedbackGenerator.Settings
 {
@@ -23,26 +23,41 @@ namespace KaVE.VS.FeedbackGenerator.Settings
     // WARNING: Do not change classname, as it is used to identify settings
     public class UserProfileSettings
     {
-        [SettingsEntry(false, "UserProfile: ProvideUserInformation")]
-        public bool ProvideUserInformation;
+        [SettingsEntry(false, "UserProfile: IsProvidingProfile")]
+        public bool IsProvidingProfile;
 
-        [SettingsEntry("", "UserProfile: Name")]
-        public string Name;
+        [SettingsEntry("", "UserProfile: ProfileId")]
+        public string ProfileId;
 
-        [SettingsEntry("", "UserProfile: Email")]
-        public string Email;
+        [SettingsEntry(Educations.Unknown, "UserProfile: Education")]
+        public Educations Education;
 
-        [SettingsEntry(WorkPosition.Unknown, "UserProfile: Position")]
-        public WorkPosition Position;
+        [SettingsEntry(Positions.Unknown, "UserProfile: Position")]
+        public Positions Position;
 
-        [SettingsEntry(0, "UserProfile: Numbers")]
-        public int ExperienceYears;
+        [SettingsEntry(true, "UserProfile: ProjectsNoAnswer")]
+        public bool ProjectsNoAnswer;
 
-        [SettingsEntry(ProjectExperience.Unknown, "UserProfile: ProjectExperience")]
-        public ProjectExperience ProjectExperience;
+        [SettingsEntry(false, "UserProfile: ProjectsCourses")]
+        public bool ProjectsCourses;
 
-        [SettingsEntry(SelfEstimatedExperience.Unknown, "UserProfile: SelfEstimatedExperience")]
-        public SelfEstimatedExperience SelfEstimatedExperience;
+        [SettingsEntry(false, "UserProfile: ProjectsPrivate")]
+        public bool ProjectsPrivate;
+
+        [SettingsEntry(false, "UserProfile: ProjectsTeamInsignificant")]
+        public bool ProjectsTeamSmall;
+
+        [SettingsEntry(false, "UserProfile: ProjectsTeamSignificant")]
+        public bool ProjectsTeamLarge;
+
+        [SettingsEntry(false, "UserProfile: ProjectsCommercial")]
+        public bool ProjectsCommercial;
+
+        [SettingsEntry(Likert7Point.Unknown, "UserProfile: ProgrammingGeneral")]
+        public Likert7Point ProgrammingGeneral;
+
+        [SettingsEntry(Likert7Point.Unknown, "UserProfile: ProgrammingCSharp")]
+        public Likert7Point ProgrammingCSharp;
 
         [SettingsEntry("", "UserProfile: Feedback")]
         public string Feedback;

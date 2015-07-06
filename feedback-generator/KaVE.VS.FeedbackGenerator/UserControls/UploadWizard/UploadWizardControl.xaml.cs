@@ -12,73 +12,61 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
  */
 
 using System.ComponentModel;
 using System.Windows;
-using JetBrains.ActionManagement;
-using KaVE.RS.Commons;
 using KaVE.RS.Commons.Settings;
-using KaVE.RS.Commons.Utils;
 using KaVE.VS.FeedbackGenerator.Interactivity;
-using KaVE.VS.FeedbackGenerator.SessionManager.Presentation;
-using KaVE.VS.FeedbackGenerator.Settings;
-using KaVE.VS.FeedbackGenerator.UserControls.UserProfile;
 using MessageBox = JetBrains.Util.MessageBox;
 
 namespace KaVE.VS.FeedbackGenerator.UserControls.UploadWizard
 {
     public partial class UploadWizardControl
     {
+        private UploadWizardViewModel MyDataContext
+        {
+            get { return (UploadWizardViewModel) DataContext; }
+        }
+
         public enum ExportType
         {
             ZipFile,
             HttpUpload
         }
 
-        private readonly UploadWizardViewModel _uploadWizardViewModel;
-        private readonly UserProfileContext _userSettingsViewModel;
+        private readonly ISettingsStore _settingsStore;
 
-        public UploadWizardControl(IActionManager actionManager,
-            UploadWizardViewModel uploadWizardViewModel,
-            ISettingsStore settingsStore)
+        public UploadWizardControl(UploadWizardViewModel uploadWizardViewModel, ISettingsStore settingsStore)
         {
             InitializeComponent();
 
+            _settingsStore = settingsStore;
+
             DataContext = uploadWizardViewModel;
-            _uploadWizardViewModel = uploadWizardViewModel;
-            _uploadWizardViewModel.ExportSettings = settingsStore.GetSettings<ExportSettings>();
-            _uploadWizardViewModel.UserSettings = settingsStore.GetSettings<UserProfileSettings>();
-            _uploadWizardViewModel.PropertyChanged += OnViewModelPropertyChanged;
-            _uploadWizardViewModel.ErrorNotificationRequest.Raised += new NotificationRequestHandler(this).Handle;
-            _uploadWizardViewModel.SuccessNotificationRequest.Raised += new LinkNotificationRequestHandler(this).Handle;
-
-            var exportSettings = settingsStore.GetSettings<ExportSettings>();
-            if (exportSettings.IsDatev)
-            {
-                UserSettingsGrid.ProvideUserInformationCheckBox.IsEnabled = false;
-                UserSettingsGrid.DatevDeactivationLabel.Visibility = Visibility.Visible;
-            }
-
-            //_userSettingsViewModel = (UserProfileContext) UserSettingsGrid.DataContext;
-            // _userSettingsViewModel.UserProfile = settingsStore.GetSettings<UserProfileSettings>();
-            //_userSettingsViewModel.ErrorNotificationRequest.Raised += new NotificationRequestHandler(this).Handle;
-
-            //UserSettingsGrid.CategoryComboBox.SetBinding(Selector.SelectedItemProperty, new Binding("Category"));
-            //UserSettingsGrid.RadioButtonListBox.SetBinding(Selector.SelectedItemProperty, new Binding("Valuation"));
+            MyDataContext.PropertyChanged += OnViewModelPropertyChanged;
+            MyDataContext.ErrorNotificationRequest.Raised += new NotificationRequestHandler(this).Handle;
+            MyDataContext.SuccessNotificationRequest.Raised += new LinkNotificationRequestHandler(this).Handle;
         }
 
         private void On_Review_Click(object sender, RoutedEventArgs e)
         {
-            var isValidEmail = _userSettingsViewModel.ValidateEmail(UserSettingsGrid.EmailTextBox.Text);
+            StoreSettings();
+
+            /* var isValidEmail = _userSettingsViewModel.ValidateEmail(UserSettingsGrid.EmailTextBox.Text);
             if (isValidEmail)
             {
                 _userSettingsViewModel.SetUserSettings();
                 _uploadWizardViewModel.SetSettings();
                 Close();
                 Registry.GetComponent<ActionExecutor>().ExecuteActionGuarded<SessionManagerWindowAction>();
-            }
+            }*/
+        }
+
+        private void StoreSettings()
+        {
+            _settingsStore.SetSettings(MyDataContext.ExportSettings);
+            _settingsStore.SetSettings(MyDataContext.UserProfileSettings);
         }
 
         private void UploadButtonClicked(object sender, RoutedEventArgs e)
@@ -93,9 +81,21 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UploadWizard
             // keep window open until processing finshes (see OnViewModelPropertyChanged)
         }
 
+        private void ExportAndUpdateSettings(ExportType exportType)
+        {
+            StoreSettings();
+            /*var isValidEmail = _userSettingsViewModel.ValidateEmail(UserSettingsGrid.EmailTextBox.Text);
+                      if (isValidEmail)
+                      {
+                          _userSettingsViewModel.SetUserSettings();
+                          _uploadWizardViewModel.SetSettings();*/
+            MyDataContext.Export(exportType);
+            //}
+        }
+
         private void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName.Equals("IsBusy") && !_uploadWizardViewModel.IsBusy)
+            if (e.PropertyName.Equals("IsBusy") && !MyDataContext.IsBusy)
             {
                 Close();
             }
@@ -104,22 +104,11 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UploadWizard
         protected override void OnClosing(CancelEventArgs e)
         {
             base.OnClosing(e);
-            if (_uploadWizardViewModel.IsBusy)
+            if (MyDataContext.IsBusy)
             {
                 MessageBox.ShowInfo(
                     Properties.UploadWizard.ContinueInBackground,
                     Properties.UploadWizard.window_title);
-            }
-        }
-
-        private void ExportAndUpdateSettings(ExportType exportType)
-        {
-            var isValidEmail = _userSettingsViewModel.ValidateEmail(UserSettingsGrid.EmailTextBox.Text);
-            if (isValidEmail)
-            {
-                _userSettingsViewModel.SetUserSettings();
-                _uploadWizardViewModel.SetSettings();
-                _uploadWizardViewModel.Export(exportType);
             }
         }
     }

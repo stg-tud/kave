@@ -101,7 +101,7 @@ limitations under the License.
             <TextBlock Text="{x:Static optionPage:OptionPageMessages.Desc_UserProfile}"
                        TextWrapping="Wrap" Margin="10,6,10,6" TextAlignment="Justify" />
 
-            <userProfile:UserProfileControl x:Name="UserProfile" />
+            <userProfile:UserProfileControl x:Name="UserProfile" DataContext="{Binding UserProfileContext}" />
 
             <DockPanel Margin="10,45,10,6">
                 <Button Padding="15,3,15,3" HorizontalAlignment="Right" Click="OnReset"

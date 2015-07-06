@@ -30,6 +30,7 @@ using KaVE.VS.FeedbackGenerator.SessionManager;
 using KaVE.VS.FeedbackGenerator.Settings;
 using KaVE.VS.FeedbackGenerator.UserControls.Anonymization;
 using KaVE.VS.FeedbackGenerator.UserControls.Export;
+using KaVE.VS.FeedbackGenerator.UserControls.UserProfile;
 using KaVE.VS.FeedbackGenerator.Utils.Logging;
 
 namespace KaVE.VS.FeedbackGenerator.UserControls.UploadWizard
@@ -47,6 +48,12 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UploadWizard
 
         private readonly InteractionRequest<Notification> _errorNotificationRequest;
         private readonly InteractionRequest<LinkNotification> _successNotificationRequest;
+
+        public ExportSettings ExportSettings { get; private set; }
+        public UserProfileSettings UserProfileSettings { get; private set; }
+
+        public AnonymizationContext AnonymizationContext { get; private set; }
+        public UserProfileContext UserProfileContext { get; private set; }
 
         public IInteractionRequest<Notification> ErrorNotificationRequest
         {
@@ -75,6 +82,12 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UploadWizard
             _exportWorker.DoWork += OnExport;
             _exportWorker.ProgressChanged += OnProgressChanged;
             _exportWorker.RunWorkerCompleted += OnExportCompleted;
+
+            ExportSettings = _settingsStore.GetSettings<ExportSettings>();
+            UserProfileSettings = _settingsStore.GetSettings<UserProfileSettings>();
+
+            AnonymizationContext = new AnonymizationContext(ExportSettings);
+            UserProfileContext = new UserProfileContext(ExportSettings, UserProfileSettings);
         }
 
         private void OnProgressChanged(object sender, ProgressChangedEventArgs progressChangedEventArgs)
@@ -85,11 +98,6 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UploadWizard
                 Properties.UploadWizard.Export_BusyMessage,
                 progressChangedEventArgs.UserState);
         }
-
-        public ExportSettings ExportSettings { get; set; }
-        public AnonymizationContext AnonymizationContext { get; set; }
-
-        public UserProfileSettings UserSettings { get; set; }
 
         public bool RemoveCodeNames
         {
@@ -117,13 +125,13 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UploadWizard
 
         public string FeedbackText
         {
-            get { return UserSettings.Feedback; }
-            set { UserSettings.Feedback = value; }
+            get { return UserProfileSettings.Feedback; }
+            set { UserProfileSettings.Feedback = value; }
         }
 
         public void SetSettings()
         {
-            _settingsStore.UpdateSettings<UserProfileSettings>(s => s.Feedback = UserSettings.Feedback);
+            _settingsStore.UpdateSettings<UserProfileSettings>(s => s.Feedback = UserProfileSettings.Feedback);
             _settingsStore.SetSettings(ExportSettings);
         }
 

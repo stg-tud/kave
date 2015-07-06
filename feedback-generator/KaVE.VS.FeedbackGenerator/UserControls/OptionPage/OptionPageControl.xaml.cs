@@ -39,6 +39,11 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage
     {
         private const string PID = "KaVE.OptionPageControl";
 
+        private OptionPageViewModel MyDataContext
+        {
+            get { return (OptionPageViewModel) DataContext; }
+        }
+
         private readonly Lifetime _lifetime;
         private readonly IActionManager _actionManager;
         private readonly KaVEISettingsStore _settingsStore;
@@ -50,7 +55,6 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage
             IActionManager actionManager,
             KaVEISettingsStore settingsStore)
         {
-            ;
             _lifetime = lifetime;
             _actionManager = actionManager;
             _settingsStore = settingsStore;
@@ -65,17 +69,10 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage
                 AnonymizationContext = new AnonymizationContext(_exportSettings),
                 UserProfileContext = new UserProfileContext(_exportSettings, _userProfileSettings)
             };
-            //optionPageViewModel.ErrorNotificationRequest.Raised += new NotificationRequestHandler(this).Handle;
 
             BindChangesToAnonymization(lifetime, ctx);
             BindToUserProfileChanges(lifetime, ctx);
             BindToGeneralChanges(lifetime, ctx);
-
-            if (_exportSettings.IsDatev)
-            {
-                UserProfile.ProvideUserInformationCheckBox.IsEnabled = false;
-                UserProfile.DatevDeactivationLabel.Visibility = Visibility.Visible;
-            }
         }
 
         #region jetbrains smart-context bindings
@@ -129,9 +126,9 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage
 
         private void BindToUserProfileChanges(Lifetime lifetime, IContextBoundSettingsStore ctx)
         {
-            ctx.SetBinding(
+            /*ctx.SetBinding(
                 lifetime,
-                (UserProfileSettings s) => (bool?) s.ProvideUserInformation,
+                (UserProfileSettings s) => (bool?) s.IsProvidingProfile,
                 UserProfile.ProvideUserInformationCheckBox,
                 ToggleButton.IsCheckedProperty);
             ctx.SetBinding(
@@ -143,7 +140,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage
                 lifetime,
                 (UserProfileSettings s) => s.Email,
                 UserProfile.EmailTextBox,
-                System.Windows.Controls.TextBox.TextProperty);
+                System.Windows.Controls.TextBox.TextProperty);*/
         }
 
         #endregion
@@ -179,6 +176,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage
             // TODO: validation
 
             _settingsStore.SetSettings(_exportSettings);
+            _settingsStore.SetSettings(_userProfileSettings);
 
 
             return true;

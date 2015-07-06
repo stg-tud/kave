@@ -210,7 +210,7 @@
     <Compile Include="SessionManager\Presentation\JsonSyntaxHighlighterTest.cs" />
     <Compile Include="SessionManager\Presentation\MultiSelectionTest.cs" />
     <Compile Include="UserControls\OptionPage\OptionPageViewModelTest.cs" />
-    <Compile Include="UserControls\UserProfile\UserProfileViewModelTest.cs" />
+    <Compile Include="UserControls\UserProfile\UserProfileContextTest.cs" />
     <Compile Include="SessionManager\Presentation\XamlBindableRichTextBoxTest.cs" />
     <Compile Include="SessionManager\UploadReminderTest.cs" />
     <Compile Include="Settings\UploadSettingsTest.cs" />

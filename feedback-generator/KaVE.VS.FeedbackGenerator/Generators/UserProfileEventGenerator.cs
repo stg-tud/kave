@@ -18,6 +18,7 @@ using System;
 using System.Net.Mail;
 using JetBrains.Application;
 using KaVE.Commons.Model.Events;
+using KaVE.Commons.Model.Events.UserProfiles;
 using KaVE.Commons.Utils;
 using KaVE.JetBrains.Annotations;
 using KaVE.RS.Commons.Settings;
@@ -53,7 +54,7 @@ namespace KaVE.VS.FeedbackGenerator.Generators
         {
             var exportEvent = Create<UserProfileEvent>();
 
-            if (Settings.ProvideUserInformation)
+            if (Settings.IsProvidingProfile)
             {
                 AddUserInformationTo(exportEvent);
             }
@@ -65,17 +66,17 @@ namespace KaVE.VS.FeedbackGenerator.Generators
 
         private void AddUserInformationTo(UserProfileEvent exportEvent)
         {
-            exportEvent.Name = Settings.Name;
+            //exportEvent.Name = Settings.Name;
             //exportEvent.Category = Settings.Category;
             //exportEvent.Valuation = Settings.Valuation;
 
             try
             {
-                exportEvent.Email = new MailAddress(Settings.Email);
+                //exportEvent.Email = new MailAddress(Settings.Email);
             }
             catch
             {
-                exportEvent.Email = null;
+                //exportEvent.Email = null;
             }
 
             try

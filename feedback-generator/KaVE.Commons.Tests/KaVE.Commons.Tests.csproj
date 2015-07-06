@@ -73,7 +73,7 @@
     <Compile Include="Model\Events\ErrorEventTest.cs" />
     <Compile Include="Model\Events\IDEEventTest.cs" />
     <Compile Include="Model\Events\InfoEventTest.cs" />
-    <Compile Include="Model\Events\UserProfileEventTest.cs" />
+    <Compile Include="Model\Events\UserProfiles\UserProfileEventTest.cs" />
     <Compile Include="Model\Groums\GroumTest.cs" />
     <Compile Include="Model\Names\CSharp\ArrayTypeNameTest.cs" />
     <Compile Include="Model\Names\CSharp\CSharpNameFromInfoFactoryTest.cs" />
@@ -260,9 +260,7 @@
       <Name>KaVE.Commons.TestUtils</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Model\Events\UserProfile\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
