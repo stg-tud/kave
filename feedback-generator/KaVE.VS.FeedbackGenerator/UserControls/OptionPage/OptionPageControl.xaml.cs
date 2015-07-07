@@ -67,6 +67,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage
 
             DataContext = new OptionPageViewModel
             {
+                ExportSettings = _exportSettings,
                 AnonymizationContext = new AnonymizationContext(_exportSettings),
                 UserProfileContext = new UserProfileContext(_exportSettings, _userProfileSettings)
             };

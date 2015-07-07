@@ -43,7 +43,7 @@ namespace KaVE.Commons.Tests.Utils.VersionUtilTestSuite
         public void CurrentVariant()
         {
             var actual = new VersionUtil().GetCurrentVariant();
-            var expected = VersionUtil.Variant.Default;
+            var expected = VersionUtil.Variant.Datev;
             Assert.AreEqual(expected, actual);
         }
 
