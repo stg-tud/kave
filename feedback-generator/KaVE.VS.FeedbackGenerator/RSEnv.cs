@@ -21,9 +21,9 @@
 using JetBrains.Application;
 using JetBrains.Application.Components;
 using JetBrains.UI.Resources;
+using KaVE.Commons.Utils;
 using KaVE.JetBrains.Annotations;
 using KaVE.VS.FeedbackGenerator.VsIntegration;
-using NuGet;
 
 namespace KaVE.VS.FeedbackGenerator
 {
@@ -32,7 +32,8 @@ namespace KaVE.VS.FeedbackGenerator
         // TODO RS9: included an "IExtension" before... access to meta info like the version. add version again
 
         IIDESession IDESession { get; }
-        SemanticVersion KaVEVersion { get; }
+
+        string KaVEVersion { get; }
     }
 
     [ShellComponent(ProgramConfigurations.VS_ADDIN)]
@@ -42,11 +43,15 @@ namespace KaVE.VS.FeedbackGenerator
 
         private readonly OptionsThemedIcons.ExtensionManager _extensionManager;
         private readonly IIDESession _ideSession;
+        private readonly VersionUtil _versionUtil;
 
-        public RSEnv(OptionsThemedIcons.ExtensionManager extensionManager, IIDESession ideSession)
+        public RSEnv(OptionsThemedIcons.ExtensionManager extensionManager,
+            IIDESession ideSession,
+            VersionUtil versionUtil)
         {
             _extensionManager = extensionManager;
             _ideSession = ideSession;
+            _versionUtil = versionUtil;
         }
 
         [NotNull]
@@ -55,10 +60,9 @@ namespace KaVE.VS.FeedbackGenerator
             get { return _ideSession; }
         }
 
-        // TODO RS9
-        public SemanticVersion KaVEVersion
+        public string KaVEVersion
         {
-            get { return new SemanticVersion(0, 0, 0, "XYZ"); }
+            get { return _versionUtil.GetCurrentInformalVersion(); }
         }
     }
 }

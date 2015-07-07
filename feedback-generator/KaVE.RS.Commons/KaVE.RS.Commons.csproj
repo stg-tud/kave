@@ -163,6 +163,7 @@
     <Compile Include="Analysis\Util\SSTFactory.cs" />
     <Compile Include="Analysis\Util\UniqueVariableNameGenerator.cs" />
     <Compile Include="Injectables\InjectablePBNRecommenderStore.cs" />
+    <Compile Include="Injectables\InjectableVersionUtil.cs" />
     <Compile Include="Properties\Messages.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

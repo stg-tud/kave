@@ -12,35 +12,13 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
- * Contributors:
- *    - Sven Amann
  */
 
-using KaVE.VS.FeedbackGenerator.VsIntegration;
+using JetBrains.Application;
+using KaVE.Commons.Utils;
 
-namespace KaVE.VS.FeedbackGenerator.Tests
+namespace KaVE.RS.Commons.Injectables
 {
-    internal class TestRSEnv : IRSEnv
-    {
-        public string DefaultVersion
-        {
-            get { return "1.2-test"; }
-        }
-
-        private readonly IIDESession _session;
-
-        public TestRSEnv(IIDESession session)
-        {
-            _session = session;
-            KaVEVersion = DefaultVersion;
-        }
-
-        public string KaVEVersion { get; set; }
-
-        public IIDESession IDESession
-        {
-            get { return _session; }
-        }
-    }
+    [ShellComponent]
+    public class InjectableVersionUtil : VersionUtil {}
 }

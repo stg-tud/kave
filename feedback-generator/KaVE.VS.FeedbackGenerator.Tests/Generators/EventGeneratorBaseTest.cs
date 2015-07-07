@@ -22,7 +22,6 @@ using KaVE.Commons.Utils;
 using KaVE.JetBrains.Annotations;
 using KaVE.VS.FeedbackGenerator.Generators;
 using KaVE.VS.FeedbackGenerator.MessageBus;
-using NuGet;
 using NUnit.Framework;
 
 namespace KaVE.VS.FeedbackGenerator.Tests.Generators
@@ -58,7 +57,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators
         [Test]
         public void ShouldSetExtensionVersion()
         {
-            TestRSEnv.KaVEVersion = SemanticVersion.Parse("1.0-test");
+            TestRSEnv.KaVEVersion = "1.0-test";
 
             _uut.FireTestIDEEvent();
 

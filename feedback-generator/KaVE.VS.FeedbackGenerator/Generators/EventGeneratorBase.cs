@@ -55,7 +55,7 @@ namespace KaVE.VS.FeedbackGenerator.Generators
         {
             return new TIDEEvent
             {
-                KaVEVersion = _env.KaVEVersion.ToString(),
+                KaVEVersion = _env.KaVEVersion,
                 ActiveWindow = DTEActiveWindow.GetName(),
                 ActiveDocument = DTEActiveDocument.GetName(),
                 TriggeredBy = CurrentTrigger,
