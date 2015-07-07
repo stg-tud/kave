@@ -117,6 +117,12 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Desc_After" xml:space="preserve">
+    <value>The information will be removed in the export process.</value>
+  </data>
+  <data name="Desc_Before" xml:space="preserve">
+    <value>If you don't want to provide all generated information, you can remove specific parts of it.</value>
+  </data>
   <data name="Label_RemoveCodeNames" xml:space="preserve">
     <value>Remove identifier that originate in the project</value>
   </data>

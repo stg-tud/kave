@@ -117,47 +117,19 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="ContinueInBackground" xml:space="preserve">
-    <value>Der Export wird im Hintergrund fortgührt.</value>
+  <data name="Intro" xml:space="preserve">
+    <value>Thank you very much for being an active user of the KaVE project and for providing feedback about your usage of Visual Studio.
+
+You have two options now to provide your feedback:
+- ZIP-Export: the feedback is locally exported to a compressed file. You can review the contents of the file before you manually upload it to the URL that is presented to you after the successful export.
+- Direct upload: your feedback is directly send to our server. It is more convenient, because you don't need to manually upload a file. The upload contains the same content as in the manual case.
+
+Is there something else that you would like to tell us (e.g., bug reports; feature requests; some friendly words; ...)? You can use the following form to provide your comment or suggestion.</value>
   </data>
-  <data name="Export_BusyMessage" xml:space="preserve">
-    <value>Exportiere Events</value>
+  <data name="Label_CommentHeader" xml:space="preserve">
+    <value>Comment (optional)</value>
   </data>
-  <data name="export_upload_button" xml:space="preserve">
-    <value>Direktupload</value>
-  </data>
-  <data name="export_zip_button" xml:space="preserve">
-    <value>ZIP-Export...</value>
-  </data>
-  <data name="NothingToExport" xml:space="preserve">
-    <value>Es gibt nichts zu exportieren.</value>
-  </data>
-  <data name="review_link" xml:space="preserve">
-    <value>Feedback einsehen</value>
-  </data>
-  <data name="ExportFail" xml:space="preserve">
-    <value>Beim Exportieren/Versenden des Feedbacks ist ein Fehler aufgetreten!</value>
-  </data>
-  <data name="ExportSuccess" xml:space="preserve">
-    <value>Das Exportieren/Versenden von {0} Events war erfolgreich.</value>
-  </data>
-  <data name="ExportSuccessLinkDescription" xml:space="preserve">
-    <value>Zum Hochladen des Feedbacks besuchen Sie bitte die folgende Seite:</value>
-  </data>
-  <data name="CompressingEvents" xml:space="preserve">
-    <value>3/4: Komprimieren</value>
-  </data>
-  <data name="FetchingEvents" xml:space="preserve">
-    <value>1/4: Laden</value>
-  </data>
-  <data name="PublishingEvents" xml:space="preserve">
-    <value>4/4: Speichern</value>
-  </data>
-  <data name="WritingEvents" xml:space="preserve">
-    <value>2/4: Schreiben - {0}%</value>
-  </data>
-  <data name="CloseWizardDuringExportHint" xml:space="preserve">
-    <value>Sie können den Dialog jederzeit schließen.
-Der Export wird im Hintergrund fortgesetzt.</value>
+  <data name="Title" xml:space="preserve">
+    <value>Providing Feedback</value>
   </data>
 </root>

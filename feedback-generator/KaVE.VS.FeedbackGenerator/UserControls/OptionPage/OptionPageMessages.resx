@@ -120,12 +120,6 @@
   <data name="Button_Reset" xml:space="preserve">
     <value>Reset...</value>
   </data>
-  <data name="Desc_Anonymization" xml:space="preserve">
-    <value>Description of Anonymization ...</value>
-  </data>
-  <data name="Desc_UserProfile" xml:space="preserve">
-    <value>Description of User Profile ...</value>
-  </data>
   <data name="Title_Anonymization" xml:space="preserve">
     <value>Anonymization Settings</value>
   </data>

@@ -117,47 +117,46 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="ContinueInBackground" xml:space="preserve">
-    <value>Der Export wird im Hintergrund fortgührt.</value>
+  <data name="Educations_Apprenticeship" xml:space="preserve">
+    <value>Apprenticeship</value>
   </data>
-  <data name="Export_BusyMessage" xml:space="preserve">
-    <value>Exportiere Events</value>
+  <data name="Educations_Autodidact" xml:space="preserve">
+    <value>Self-taught / Autodidact</value>
   </data>
-  <data name="export_upload_button" xml:space="preserve">
-    <value>Direktupload</value>
+  <data name="Educations_Bachelor" xml:space="preserve">
+    <value>Bachelor</value>
   </data>
-  <data name="export_zip_button" xml:space="preserve">
-    <value>ZIP-Export...</value>
+  <data name="Educations_Master" xml:space="preserve">
+    <value>Master</value>
   </data>
-  <data name="NothingToExport" xml:space="preserve">
-    <value>Es gibt nichts zu exportieren.</value>
+  <data name="Educations_None" xml:space="preserve">
+    <value>None</value>
   </data>
-  <data name="review_link" xml:space="preserve">
-    <value>Feedback einsehen</value>
+  <data name="Educations_PhD" xml:space="preserve">
+    <value>Ph.D.</value>
   </data>
-  <data name="ExportFail" xml:space="preserve">
-    <value>Beim Exportieren/Versenden des Feedbacks ist ein Fehler aufgetreten!</value>
+  <data name="Educations_Professor" xml:space="preserve">
+    <value>Professor</value>
   </data>
-  <data name="ExportSuccess" xml:space="preserve">
-    <value>Das Exportieren/Versenden von {0} Events war erfolgreich.</value>
+  <data name="Educations_Unknown" xml:space="preserve">
+    <value>No Answer</value>
   </data>
-  <data name="ExportSuccessLinkDescription" xml:space="preserve">
-    <value>Zum Hochladen des Feedbacks besuchen Sie bitte die folgende Seite:</value>
+  <data name="Positions_HobbyProgrammer" xml:space="preserve">
+    <value>Hobby Programmer</value>
   </data>
-  <data name="CompressingEvents" xml:space="preserve">
-    <value>3/4: Komprimieren</value>
+  <data name="Positions_ResearcherAcademic" xml:space="preserve">
+    <value>Researcher (academic)</value>
   </data>
-  <data name="FetchingEvents" xml:space="preserve">
-    <value>1/4: Laden</value>
+  <data name="Positions_ResearcherIndustry" xml:space="preserve">
+    <value>Researcher (industry)</value>
   </data>
-  <data name="PublishingEvents" xml:space="preserve">
-    <value>4/4: Speichern</value>
+  <data name="Positions_SoftwareEngineer" xml:space="preserve">
+    <value>Software Engineer</value>
   </data>
-  <data name="WritingEvents" xml:space="preserve">
-    <value>2/4: Schreiben - {0}%</value>
+  <data name="Positions_Student" xml:space="preserve">
+    <value>Student</value>
   </data>
-  <data name="CloseWizardDuringExportHint" xml:space="preserve">
-    <value>Sie können den Dialog jederzeit schließen.
-Der Export wird im Hintergrund fortgesetzt.</value>
+  <data name="Positions_Unknown" xml:space="preserve">
+    <value>No Answer</value>
   </data>
 </root>

@@ -32,8 +32,8 @@ using KaVE.RS.Commons.Utils;
 using KaVE.VS.FeedbackGenerator.Interactivity;
 using KaVE.VS.FeedbackGenerator.Settings;
 using KaVE.VS.FeedbackGenerator.Tests.Interactivity;
-using KaVE.VS.FeedbackGenerator.UserControls.Export;
 using KaVE.VS.FeedbackGenerator.UserControls.UploadWizard;
+using KaVE.VS.FeedbackGenerator.Utils.Export;
 using KaVE.VS.FeedbackGenerator.Utils.Logging;
 using Moq;
 using NUnit.Framework;
@@ -186,9 +186,9 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.Export
         public void ShouldGetUserSettingsFeedback()
         {
             var expected = "Good Feedback";
-            _userSettings.Feedback = expected;
+            _userSettings.Comment = expected;
 
-            var actual = _uut.FeedbackText;
+            var actual = _uut.Comment;
 
             Assert.AreEqual(expected, actual);
         }
@@ -197,12 +197,12 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.Export
         public void ShouldSetUserSettingsFeedbackAfterSetSettingsIsCalled()
         {
             var expected = "Good Feedback";
-            _userSettings.Feedback = expected;
+            _userSettings.Comment = expected;
 
             _uut.SetSettings();
 
             _mockSettingStore.Verify(ss => ss.UpdateSettings(It.IsAny<Action<UserProfileSettings>>()));
-            Assert.AreEqual(expected, _userSettings.Feedback);
+            Assert.AreEqual(expected, _userSettings.Comment);
         }
 
         [Test]
@@ -322,7 +322,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.Export
             // TODO @Seb: help sven with above task
             var expected = new LinkNotification
             {
-                Caption = Properties.UploadWizard.window_title,
+                Caption = UploadWizardMessages.Title,
                 Message = Properties.UploadWizard.ExportSuccess.FormatEx(0),
                 LinkDescription = Properties.UploadWizard.ExportSuccessLinkDescription,
                 Link = TestUploadUrl
@@ -340,7 +340,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.Export
             // TODO @Seb: help sven with above task
             var expected = new Notification
             {
-                Caption = Properties.UploadWizard.window_title,
+                Caption = UploadWizardMessages.Title,
                 Message = Properties.UploadWizard.ExportSuccess.FormatEx(0)
             };
             Assert.AreEqual(expected, actual);
@@ -370,7 +370,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.Export
             var actual = _notificationHelper.Context;
             var expected = new Notification
             {
-                Caption = Properties.UploadWizard.window_title,
+                Caption = UploadWizardMessages.Title,
                 Message = Properties.UploadWizard.ExportFail + ":\nTEST"
             };
             Assert.AreEqual(expected, actual);

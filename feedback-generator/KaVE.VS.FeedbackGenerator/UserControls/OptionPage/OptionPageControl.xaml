@@ -90,19 +90,15 @@ limitations under the License.
             <!-- anonymization-->
             <Label Content="{x:Static optionPage:OptionPageMessages.Title_Anonymization}"
                    FontWeight="Bold" FontSize="12" Margin="0,5,0,0" />
-            <TextBlock Text="{x:Static optionPage:OptionPageMessages.Desc_Anonymization}"
-                       TextWrapping="Wrap" Margin="10,6,10,6" TextAlignment="Justify" />
             <anonymization:AnonymizationControl x:Name="Anonymization"
                                                 DataContext="{Binding AnonymizationContext}" />
 
             <!-- user profile-->
             <Label Content="{x:Static optionPage:OptionPageMessages.Title_UserProfile}"
                    FontWeight="Bold" FontSize="12" Margin="0,5,0,0" />
-            <TextBlock Text="{x:Static optionPage:OptionPageMessages.Desc_UserProfile}"
-                       TextWrapping="Wrap" Margin="10,6,10,6" TextAlignment="Justify" />
-
             <userProfile:UserProfileControl x:Name="UserProfile" DataContext="{Binding UserProfileContext}" />
 
+            <!-- reset button-->
             <DockPanel Margin="10,45,10,6">
                 <Button Padding="15,3,15,3" HorizontalAlignment="Right" Click="OnReset"
                         Content="{x:Static optionPage:OptionPageMessages.Button_Reset}" />

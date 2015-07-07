@@ -36,7 +36,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UserProfile
         {
             _userSettings = new UserProfileSettings();
             _userSettings.ProfileId = "";
-            _userSettings.Feedback = "";
+            _userSettings.Comment = "";
             _userSettings.ProjectsNoAnswer = true;
             _exportSettings = new ExportSettings();
             _updatedProperties = new List<string>();

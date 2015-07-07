@@ -44,10 +44,10 @@ namespace KaVE.VS.FeedbackGenerator.Settings
         [SettingsEntry(false, "UserProfile: ProjectsPrivate")]
         public bool ProjectsPrivate;
 
-        [SettingsEntry(false, "UserProfile: ProjectsTeamInsignificant")]
+        [SettingsEntry(false, "UserProfile: ProjectsTeamSmall")]
         public bool ProjectsTeamSmall;
 
-        [SettingsEntry(false, "UserProfile: ProjectsTeamSignificant")]
+        [SettingsEntry(false, "UserProfile: ProjectsTeamLarge")]
         public bool ProjectsTeamLarge;
 
         [SettingsEntry(false, "UserProfile: ProjectsCommercial")]
@@ -59,7 +59,7 @@ namespace KaVE.VS.FeedbackGenerator.Settings
         [SettingsEntry(Likert7Point.Unknown, "UserProfile: ProgrammingCSharp")]
         public Likert7Point ProgrammingCSharp;
 
-        [SettingsEntry("", "UserProfile: Feedback")]
-        public string Feedback;
+        [SettingsEntry("", "UserProfile: Comment")]
+        public string Comment;
     }
 }

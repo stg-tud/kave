@@ -29,8 +29,8 @@ using KaVE.VS.FeedbackGenerator.Interactivity;
 using KaVE.VS.FeedbackGenerator.SessionManager;
 using KaVE.VS.FeedbackGenerator.Settings;
 using KaVE.VS.FeedbackGenerator.UserControls.Anonymization;
-using KaVE.VS.FeedbackGenerator.UserControls.Export;
 using KaVE.VS.FeedbackGenerator.UserControls.UserProfile;
+using KaVE.VS.FeedbackGenerator.Utils.Export;
 using KaVE.VS.FeedbackGenerator.Utils.Logging;
 
 namespace KaVE.VS.FeedbackGenerator.UserControls.UploadWizard
@@ -123,15 +123,15 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UploadWizard
             set { ExportSettings.RemoveStartTimes = value; }
         }
 
-        public string FeedbackText
+        public string Comment
         {
-            get { return UserProfileSettings.Feedback; }
-            set { UserProfileSettings.Feedback = value; }
+            get { return UserProfileSettings.Comment; }
+            set { UserProfileSettings.Comment = value; }
         }
 
         public void SetSettings()
         {
-            _settingsStore.UpdateSettings<UserProfileSettings>(s => s.Feedback = UserProfileSettings.Feedback);
+            _settingsStore.UpdateSettings<UserProfileSettings>(s => s.Comment = UserProfileSettings.Comment);
             _settingsStore.SetSettings(ExportSettings);
         }
 
@@ -165,6 +165,9 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UploadWizard
 
                 _logManager.DeleteLogsOlderThan(_exportTime);
                 args.Result = events.Count;
+
+                UserProfileSettings.Comment = "";
+                _settingsStore.SetSettings(UserProfileSettings);
             }
             finally
             {
@@ -249,7 +252,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UploadWizard
             _errorNotificationRequest.Raise(
                 new Notification
                 {
-                    Caption = Properties.UploadWizard.window_title,
+                    Caption = UploadWizardMessages.Title,
                     Message = text
                 });
         }
@@ -259,7 +262,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UploadWizard
             _successNotificationRequest.Raise(
                 new LinkNotification
                 {
-                    Caption = Properties.UploadWizard.window_title,
+                    Caption = UploadWizardMessages.Title,
                     Message = text,
                     LinkDescription = Properties.UploadWizard.ExportSuccessLinkDescription,
                     Link = url

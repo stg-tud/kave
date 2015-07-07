@@ -22,11 +22,8 @@ using JetBrains.Util;
 using KaVE.Commons.Utils;
 using KaVE.RS.Commons.Settings;
 using KaVE.RS.Commons.Utils;
-using KaVE.VS.FeedbackGenerator.Settings;
-using KaVE.VS.FeedbackGenerator.UserControls.Anonymization;
-using KaVE.VS.FeedbackGenerator.UserControls.Export;
 using KaVE.VS.FeedbackGenerator.UserControls.UploadWizard;
-using KaVE.VS.FeedbackGenerator.UserControls.UserProfile;
+using KaVE.VS.FeedbackGenerator.Utils.Export;
 using KaVE.VS.FeedbackGenerator.Utils.Logging;
 using NuGet;
 using ILogger = KaVE.Commons.Utils.Exceptions.ILogger;
@@ -69,7 +66,7 @@ namespace KaVE.VS.FeedbackGenerator.Menu
             }
             else
             {
-                MessageBox.ShowInfo(Properties.UploadWizard.NothingToExport, Properties.UploadWizard.window_title);
+                MessageBox.ShowInfo(Properties.UploadWizard.NothingToExport, UploadWizardMessages.Title);
             }
         }
 

@@ -45,7 +45,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators
             {
                 //      Category = TestCategory,
                 //Email = TestMailAddress.ToString(),
-                Feedback = TestFeedback,
+                Comment = TestFeedback,
                 //ExperienceYears = TestNumber,
                 IsProvidingProfile = true,
                 //Name = TestUserName
@@ -81,7 +81,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators
             //   Assert.AreEqual(TestCategory, actualEvent.Category);
             //        Assert.AreEqual(TestNumber, actualEvent.Number);
             //  Assert.AreEqual(TestValuation, actualEvent.Valuation);
-            Assert.AreEqual(TestFeedback, actualEvent.Feedback);
+            Assert.AreEqual(TestFeedback, actualEvent.Comment);
         }
 
         [Test]
@@ -104,7 +104,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators
             _testUserSettings.IsProvidingProfile = true;
             //   _testUserSettings.Category = Category.Unknown;
            // _testUserSettings.Email = "";
-            _testUserSettings.Feedback = "";
+            _testUserSettings.Comment = "";
            // _testUserSettings.ExperienceYears = 0;
           //  _testUserSettings.Name = "";
             //  _testUserSettings.Valuation = Valuation.Unknown;

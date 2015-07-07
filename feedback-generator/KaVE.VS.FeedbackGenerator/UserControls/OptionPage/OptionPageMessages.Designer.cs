@@ -70,24 +70,6 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Description of Anonymization ....
-        /// </summary>
-        public static string Desc_Anonymization {
-            get {
-                return ResourceManager.GetString("Desc_Anonymization", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Description of User Profile ....
-        /// </summary>
-        public static string Desc_UserProfile {
-            get {
-                return ResourceManager.GetString("Desc_UserProfile", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Anonymization Settings.
         /// </summary>
         public static string Title_Anonymization {

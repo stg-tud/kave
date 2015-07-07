@@ -14,10 +14,7 @@
  * limitations under the License.
  */
 
-using System;
-using System.Net.Mail;
 using JetBrains.Application;
-using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.UserProfiles;
 using KaVE.Commons.Utils;
 using KaVE.JetBrains.Annotations;
@@ -59,34 +56,27 @@ namespace KaVE.VS.FeedbackGenerator.Generators
                 AddUserInformationTo(exportEvent);
             }
 
-            exportEvent.Feedback = Settings.Feedback;
+            exportEvent.Comment = Settings.Comment;
 
             return exportEvent;
         }
 
         private void AddUserInformationTo(UserProfileEvent exportEvent)
         {
-            //exportEvent.Name = Settings.Name;
-            //exportEvent.Category = Settings.Category;
-            //exportEvent.Valuation = Settings.Valuation;
+            exportEvent.ProfileId = Settings.ProfileId;
 
-            try
-            {
-                //exportEvent.Email = new MailAddress(Settings.Email);
-            }
-            catch
-            {
-                //exportEvent.Email = null;
-            }
+            exportEvent.Education = Settings.Education;
+            exportEvent.Position = Settings.Position;
 
-            try
-            {
-                // exportEvent.Number = long.Parse(Settings.NumberField);
-            }
-            catch (Exception)
-            {
-                //  exportEvent.Number = null;
-            }
+            exportEvent.ProjectsNoAnswer = Settings.ProjectsNoAnswer;
+            exportEvent.ProjectsCourses = Settings.ProjectsCourses;
+            exportEvent.ProjectsPrivate = Settings.ProjectsPrivate;
+            exportEvent.ProjectsTeamSmall = Settings.ProjectsTeamSmall;
+            exportEvent.ProjectsTeamLarge = Settings.ProjectsTeamLarge;
+            exportEvent.ProjectsCommercial = Settings.ProjectsCommercial;
+
+            exportEvent.ProgrammingGeneral = Settings.ProgrammingGeneral;
+            exportEvent.ProgrammingCSharp = Settings.ProgrammingCSharp;
         }
     }
 }

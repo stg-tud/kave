@@ -31,7 +31,7 @@ using KaVE.Commons.Utils.Streams;
 using KaVE.RS.Commons.Utils;
 using KaVE.VS.FeedbackGenerator.Generators;
 using KaVE.VS.FeedbackGenerator.SessionManager.Anonymize;
-using KaVE.VS.FeedbackGenerator.UserControls.Export;
+using KaVE.VS.FeedbackGenerator.Utils.Export;
 using Moq;
 using NUnit.Framework;
 

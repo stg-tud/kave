@@ -32,12 +32,12 @@ namespace KaVE.Commons.Tests.Model.Events.UserProfiles
             Assert.True(sut.ProjectsNoAnswer);
             Assert.False(sut.ProjectsCourses);
             Assert.False(sut.ProjectsPrivate);
-            Assert.False(sut.ProjectsTeamInsignificant);
-            Assert.False(sut.ProjectsTeamSignificant);
+            Assert.False(sut.ProjectsTeamSmall);
+            Assert.False(sut.ProjectsTeamLarge);
             Assert.False(sut.ProjectsCommercial);
             Assert.AreEqual(Likert7Point.Unknown, sut.ProgrammingGeneral);
             Assert.AreEqual(Likert7Point.Unknown, sut.ProgrammingCSharp);
-            Assert.AreEqual("", sut.Feedback);
+            Assert.AreEqual("", sut.Comment);
         }
 
         [Test]
@@ -66,12 +66,12 @@ namespace KaVE.Commons.Tests.Model.Events.UserProfiles
                 ProjectsNoAnswer = true,
                 ProjectsCourses = true,
                 ProjectsPrivate = true,
-                ProjectsTeamInsignificant = true,
-                ProjectsTeamSignificant = true,
+                ProjectsTeamSmall = true,
+                ProjectsTeamLarge = true,
                 ProjectsCommercial = true,
                 ProgrammingGeneral = Likert7Point.Negative1,
                 ProgrammingCSharp = Likert7Point.Negative2,
-                Feedback = "f"
+                Comment = "f"
             };
             var b = new UserProfileEvent
             {
@@ -81,12 +81,12 @@ namespace KaVE.Commons.Tests.Model.Events.UserProfiles
                 ProjectsNoAnswer = true,
                 ProjectsCourses = true,
                 ProjectsPrivate = true,
-                ProjectsTeamInsignificant = true,
-                ProjectsTeamSignificant = true,
+                ProjectsTeamSmall = true,
+                ProjectsTeamLarge = true,
                 ProjectsCommercial = true,
                 ProgrammingGeneral = Likert7Point.Negative1,
                 ProgrammingCSharp = Likert7Point.Negative2,
-                Feedback = "f"
+                Comment = "f"
             };
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
@@ -169,7 +169,7 @@ namespace KaVE.Commons.Tests.Model.Events.UserProfiles
         {
             var a = new UserProfileEvent
             {
-                ProjectsTeamInsignificant = true
+                ProjectsTeamSmall = true
             };
             var b = new UserProfileEvent();
             Assert.AreNotEqual(a, b);
@@ -181,7 +181,7 @@ namespace KaVE.Commons.Tests.Model.Events.UserProfiles
         {
             var a = new UserProfileEvent
             {
-                ProjectsTeamSignificant = true
+                ProjectsTeamLarge = true
             };
             var b = new UserProfileEvent();
             Assert.AreNotEqual(a, b);
@@ -229,7 +229,7 @@ namespace KaVE.Commons.Tests.Model.Events.UserProfiles
         {
             var a = new UserProfileEvent
             {
-                Feedback = "f"
+                Comment = "f"
             };
             var b = new UserProfileEvent();
             Assert.AreNotEqual(a, b);

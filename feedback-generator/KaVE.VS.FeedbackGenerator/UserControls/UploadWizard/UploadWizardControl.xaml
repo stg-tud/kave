@@ -22,17 +22,15 @@ limitations under the License.
         xmlns:properties="clr-namespace:KaVE.VS.FeedbackGenerator.Properties"
         xmlns:root="clr-namespace:KaVE.VS.FeedbackGenerator"
         xmlns:profile="clr-namespace:KaVE.VS.FeedbackGenerator.UserControls.UserProfile"
-        xmlns:export="clr-namespace:KaVE.VS.FeedbackGenerator.UserControls.Export"
         xmlns:anonymization="clr-namespace:KaVE.VS.FeedbackGenerator.UserControls.Anonymization"
         xmlns:uploadWizard="clr-namespace:KaVE.VS.FeedbackGenerator.UserControls.UploadWizard"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
-        SizeToContent="WidthAndHeight"
-        MinWidth="400"
-        MinHeight="100"
-        WindowStyle="SingleBorderWindow"
+        SizeToContent="Height"
+        Width="550"
         ResizeMode="NoResize"
-        Title="{x:Static root:Properties.UploadWizard.window_title}">
+        WindowStyle="SingleBorderWindow"
+        Title="{x:Static uploadWizard:UploadWizardMessages.Title}">
 
     <Window.Resources>
         <ResourceDictionary>
@@ -44,24 +42,31 @@ limitations under the License.
     <Grid>
         <StackPanel Margin="5" Grid.Column="0">
 
-            <TextBlock Text="{x:Static root:Properties.UploadWizard.description}" />
-
-            <Expander Header="{x:Static root:Properties.SessionManager.Options_Export_Title}">
-                <anonymization:AnonymizationControl x:Name="AnonymizationControl"
-                                                    DataContext="{Binding AnonymizationContext}" />
-            </Expander>
-
-            <Expander Header="{x:Static root:Properties.UserProfileMessages.Title}" Name="UserInformationExpander">
-                <profile:UserProfileControl x:Name="UserSettingsGrid" DataContext="{Binding UserProfileContext}" />
-            </Expander>
-
-            <GroupBox Header="{x:Static root:Properties.UserProfileMessages.FeedbackBox}">
+            <!-- intro and feedback box-->
+            <TextBlock TextWrapping="Wrap" Text="{x:Static uploadWizard:UploadWizardMessages.Intro}" />
+            <GroupBox Margin="0,5,0,10" Header="{x:Static uploadWizard:UploadWizardMessages.Label_CommentHeader}">
                 <Grid>
                     <TextBox AcceptsReturn="True" TextWrapping="Wrap" MaxLines="3" MinLines="3"
-                             VerticalScrollBarVisibility="Visible" Text="{Binding FeedbackText}" />
+                             VerticalScrollBarVisibility="Visible" Text="{Binding Comment}" />
                 </Grid>
             </GroupBox>
 
+            <!-- anonymization -->
+            <Expander Header="{x:Static root:Properties.SessionManager.Options_Export_Title}">
+                <anonymization:AnonymizationControl x:Name="AnonymizationControl"
+                                                    Margin="0,0,0,10"
+                                                    DataContext="{Binding AnonymizationContext}" />
+            </Expander>
+
+            <!-- user profile-->
+            <Expander Header="{x:Static root:Properties.UserProfileMessages.Title}" Name="UserInformationExpander">
+                <ScrollViewer MaxHeight="170px">
+                    <profile:UserProfileControl x:Name="UserSettingsGrid"
+                                                DataContext="{Binding UserProfileContext}" />
+                </ScrollViewer>
+            </Expander>
+
+            <!-- buttons-->
             <Grid HorizontalAlignment="Stretch">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
@@ -90,6 +95,7 @@ limitations under the License.
                 </StackPanel>
             </Grid>
         </StackPanel>
+
         <!-- EXPORT OVERLAY -->
         <Border Background="LightGray" Opacity=".9"
                 Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibilityConverter}}"

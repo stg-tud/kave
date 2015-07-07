@@ -25,6 +25,9 @@ limitations under the License.
              d:DesignHeight="300" d:DesignWidth="300">
 
     <StackPanel>
+        <TextBlock TextWrapping="Wrap" Text="{x:Static anonymization:AnonymizationMessages.Desc_Before}"
+                   Margin="0,0,0,5" />
+
         <CheckBox Name="RemoveCodeNamesCheckBox"
                   IsChecked="{Binding Path=RemoveCodeNames2}"
                   Content="{x:Static anonymization:AnonymizationMessages.Label_RemoveCodeNames}"
@@ -44,5 +47,8 @@ limitations under the License.
                   IsChecked="{Binding Path=RemoveSessionIDs, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                   Content="{x:Static anonymization:AnonymizationMessages.Label_RemoveSessionIDs}"
                   VerticalAlignment="Top" HorizontalAlignment="Left" Margin="25,6,0,0" />
+
+        <TextBlock TextWrapping="Wrap" Text="{x:Static anonymization:AnonymizationMessages.Desc_After}"
+                   Margin="0,5,0,0" />
     </StackPanel>
 </UserControl>

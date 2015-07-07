@@ -25,31 +25,32 @@ limitations under the License.
 
     <UserControl.Resources>
         <converters:EnumToBooleanConverter x:Key="EnumToBooleanConverter" />
+        <converters:EnumLocalizationConverter x:Key="EnumLocalizationConverter" />
     </UserControl.Resources>
 
     <StackPanel>
         <TextBlock TextWrapping="Wrap">
             Doing research on anonymous data is hard.
             You would help us greatly by providing some information about yourself.
-            We will not use the data to identify you personally!
+            We promise that we will not use the data to identify you personally!
         </TextBlock>
 
         <CheckBox Name="IsProvidingProfileCheckBox"
-                  Content="Yes, I would like to provide additional information."
+                  Content="Yes, I would like to help and provide additional information."
                   IsChecked="{Binding Path=IsProvidingProfile, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                   Margin="15,5" />
         <Label Name="DatevLabel" Content="(this option is deactivated for DATEV)" Visibility="Collapsed" Padding="0" />
 
         <StackPanel Name="ProfilePanel" Visibility="Collapsed">
             <!-- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% -->
-            <GroupBox Header="Profile ID" Margin="0,5">
+            <GroupBox Header="Profile ID" Margin="0,10,0,0">
                 <StackPanel>
                     <TextBlock TextWrapping="Wrap">
-                        We would like to add an ID to all your events that allows us to correlate more than just work days (sessions).
-                        Providing the ID helps to greatly improve the precision of the results of our research.
-                        We will not use it to identify you personally!
+                        We would like to add a unique but anonymous ID to all your events to correlate more than just work days (sessions).
+                        This would greatly improve the precision of our results and findings.
+                        We will not use the ID to identify you personally!
                     </TextBlock>
-                    <Grid>
+                    <Grid Margin="3">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="24px" />
@@ -71,7 +72,7 @@ limitations under the License.
             </GroupBox>
 
             <!-- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% -->
-            <GroupBox Header="Demographic">
+            <GroupBox Header="Demographic" Margin="0,10,0,0">
                 <StackPanel>
                     <TextBlock TextWrapping="Wrap">
                         We would like to learn more about our users.
@@ -80,38 +81,53 @@ limitations under the License.
                     </TextBlock>
 
                     <!-- %%%%%-->
-                    <TextBlock TextWrapping="Wrap">
+                    <TextBlock TextWrapping="Wrap" Margin="0,10,0,0" FontStyle="Italic">
                         What is the highest degree that you currently hold and that is related to software engineering?
                     </TextBlock>
                     <ComboBox ItemsSource="{Binding EducationOptions}"
-                              SelectedItem="{Binding Education}" />
+                              SelectedItem="{Binding Education}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Converter={StaticResource EnumLocalizationConverter}}" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
 
                     <!-- %%%%%-->
-                    <TextBlock TextWrapping="Wrap">
+                    <TextBlock TextWrapping="Wrap" Margin="0,10,0,0" FontStyle="Italic">
                         Which of the following best describes your current situation when it comes to programming?
                     </TextBlock>
                     <ComboBox ItemsSource="{Binding PositionOptions}"
-                              SelectedItem="{Binding Position}" />
+                              SelectedItem="{Binding Position}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Converter={StaticResource EnumLocalizationConverter}}" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
 
                     <!-- %%%%%-->
-                    <Label Content="On which kind of projects did you regularly work over the last year?"
-                           Margin="0,5,0,0" />
+                    <TextBlock TextWrapping="Wrap" Margin="0,10,0,0" FontStyle="Italic">
+                        On which kind of projects did you regularly work over the last year?
+                    </TextBlock>
                     <CheckBox VerticalAlignment="Center" Content="No Answer"
                               IsChecked="{Binding Path=ProjectsNoAnswer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                    <CheckBox VerticalAlignment="Center" Content="ProjectCourses"
+                    <CheckBox VerticalAlignment="Center" Content="Assignments from classes or online courses"
                               IsChecked="{Binding Path=ProjectsCourses, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                    <CheckBox VerticalAlignment="Center" Content="ProjectPrivate"
+                    <CheckBox VerticalAlignment="Center" Content="Private projects with me as the only committer"
                               IsChecked="{Binding Path=ProjectsPrivate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                    <CheckBox VerticalAlignment="Center" Content="ProjectTeamSmall"
+                    <CheckBox VerticalAlignment="Center" Content="Team projects of insignificant size(*)"
                               IsChecked="{Binding Path=ProjectsTeamSmall, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                    <CheckBox VerticalAlignment="Center" Content="ProjectTeamLarge"
+                    <CheckBox VerticalAlignment="Center" Content="Team projects of significant size(*)"
                               IsChecked="{Binding Path=ProjectsTeamLarge, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                    <CheckBox VerticalAlignment="Center" Content="ProjectCommercial"
+                    <CheckBox VerticalAlignment="Center" Content="Commercial projects"
                               IsChecked="{Binding Path=ProjectsCommercial, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                    <Label Content="* Use your own judgment" />
+                    <Label Content="* Use your own judgment to distinguish both" />
 
                     <!-- %%%%%-->
-                    <Label Content="How would you rate your *general* programming skills?" Margin="0,5,0,0" />
+                    <TextBlock TextWrapping="Wrap" Margin="0,10,0,0" FontStyle="Italic">
+                        How would you rate your general programming skills?
+                    </TextBlock>
                     <StackPanel Orientation="Horizontal">
                         <Label Content="Very poor" Padding="0" Margin="0,0,5,0" />
                         <RadioButton Margin="2,3"
@@ -136,7 +152,9 @@ limitations under the License.
                     </StackPanel>
 
                     <!-- %%%%%-->
-                    <Label Content="How would you rate your programming skills in *C#*?" Margin="0,5,0,0" />
+                    <TextBlock TextWrapping="Wrap" Margin="0,10,0,0" FontStyle="Italic">
+                        How would you rate your programming skills in C#?
+                    </TextBlock>
                     <StackPanel Orientation="Horizontal">
                         <Label Content="Very poor" Padding="0" Margin="0,0,5,0" />
                         <RadioButton Margin="2,3"

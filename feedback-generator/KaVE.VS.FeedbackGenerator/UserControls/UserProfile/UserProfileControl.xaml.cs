@@ -33,8 +33,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UserProfile
             InitializeComponent();
             DataContextChanged += (sender, args) =>
             {
-                // ReSharper disable once ConditionIsAlwaysTrueOrFalse
-                if (true || MyDataContext.IsDatev)
+                if (MyDataContext.IsDatev)
                 {
                     IsProvidingProfileCheckBox.IsEnabled = false;
                     ProfilePanel.Visibility = Visibility.Collapsed;

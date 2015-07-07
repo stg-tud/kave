@@ -28,7 +28,7 @@ using KaVE.RS.Commons.Utils;
 using KaVE.VS.FeedbackGenerator.Generators;
 using KaVE.VS.FeedbackGenerator.SessionManager.Anonymize;
 
-namespace KaVE.VS.FeedbackGenerator.UserControls.Export
+namespace KaVE.VS.FeedbackGenerator.Utils.Export
 {
     public interface IExporter
     {

@@ -84,6 +84,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UploadWizard
         private void ExportAndUpdateSettings(ExportType exportType)
         {
             StoreSettings();
+            
             /*var isValidEmail = _userSettingsViewModel.ValidateEmail(UserSettingsGrid.EmailTextBox.Text);
                       if (isValidEmail)
                       {
@@ -108,7 +109,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UploadWizard
             {
                 MessageBox.ShowInfo(
                     Properties.UploadWizard.ContinueInBackground,
-                    Properties.UploadWizard.window_title);
+                    UploadWizardMessages.Title);
             }
         }
     }

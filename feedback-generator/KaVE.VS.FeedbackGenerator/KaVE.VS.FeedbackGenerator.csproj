@@ -246,6 +246,17 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>OptionPageMessages.resx</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\UploadWizard\UploadWizardMessages.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>UploadWizardMessages.resx</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\ValueConverter\EnumLocalizationConverter.cs" />
+    <Compile Include="Properties\EnumLocalization.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EnumLocalization.resx</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\ValueConverter\EnumToBooleanConverter.cs" />
     <Compile Include="Utils\Export\Exporter.cs" />
     <Compile Include="UserControls\OptionPage\OptionPageViewModel.cs" />
@@ -406,6 +417,14 @@
     <EmbeddedResource Include="UserControls\OptionPage\OptionPageMessages.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>OptionPageMessages.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\EnumLocalization.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>EnumLocalization.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\UploadWizard\UploadWizardMessages.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>UploadWizardMessages.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

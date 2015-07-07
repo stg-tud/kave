@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace KaVE.VS.FeedbackGenerator.UserControls.Anonymization {
+namespace KaVE.VS.FeedbackGenerator.UserControls.UploadWizard {
     using System;
     
     
@@ -22,14 +22,14 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.Anonymization {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public class AnonymizationMessages {
+    public class UploadWizardMessages {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal AnonymizationMessages() {
+        internal UploadWizardMessages() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.Anonymization {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("KaVE.VS.FeedbackGenerator.UserControls.Anonymization.AnonymizationMessages", typeof(AnonymizationMessages).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("KaVE.VS.FeedbackGenerator.UserControls.UploadWizard.UploadWizardMessages", typeof(UploadWizardMessages).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,56 +61,33 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.Anonymization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The information will be removed in the export process..
+        ///   Looks up a localized string similar to Thank you very much for being an active user of the KaVE project and for providing feedback about your usage of Visual Studio.
+        ///
+        ///You have two options now to provide your feedback:
+        ///- ZIP-Export: the feedback is locally exported to a compressed file. You can review the contents of the file before you manually upload it to the URL that is presented to you after the successful export.
+        ///- Direct upload: your feedback is directly send to our server. It is more convenient, because you don&apos;t need to manually uplo [rest of string was truncated]&quot;;.
         /// </summary>
-        public static string Desc_After {
+        public static string Intro {
             get {
-                return ResourceManager.GetString("Desc_After", resourceCulture);
+                return ResourceManager.GetString("Intro", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to If you don&apos;t want to provide all generated information, you can remove specific parts of it..
+        ///   Looks up a localized string similar to Comment (optional).
         /// </summary>
-        public static string Desc_Before {
+        public static string Label_CommentHeader {
             get {
-                return ResourceManager.GetString("Desc_Before", resourceCulture);
+                return ResourceManager.GetString("Label_CommentHeader", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Remove identifier that originate in the project.
+        ///   Looks up a localized string similar to Providing Feedback.
         /// </summary>
-        public static string Label_RemoveCodeNames {
+        public static string Title {
             get {
-                return ResourceManager.GetString("Label_RemoveCodeNames", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Remove duration of events.
-        /// </summary>
-        public static string Label_RemoveDurations {
-            get {
-                return ResourceManager.GetString("Label_RemoveDurations", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Remove session ids.
-        /// </summary>
-        public static string Label_RemoveSessionIDs {
-            get {
-                return ResourceManager.GetString("Label_RemoveSessionIDs", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Remove start time of events.
-        /// </summary>
-        public static string Label_RemoveStartTimes {
-            get {
-                return ResourceManager.GetString("Label_RemoveStartTimes", resourceCulture);
+                return ResourceManager.GetString("Title", resourceCulture);
             }
         }
     }

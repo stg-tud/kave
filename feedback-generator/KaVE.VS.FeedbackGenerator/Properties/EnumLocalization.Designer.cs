@@ -22,14 +22,14 @@ namespace KaVE.VS.FeedbackGenerator.Properties {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public class UploadWizard {
+    public class EnumLocalization {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal UploadWizard() {
+        internal EnumLocalization() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace KaVE.VS.FeedbackGenerator.Properties {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("KaVE.VS.FeedbackGenerator.Properties.UploadWizard", typeof(UploadWizard).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("KaVE.VS.FeedbackGenerator.Properties.EnumLocalization", typeof(EnumLocalization).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,129 +61,128 @@ namespace KaVE.VS.FeedbackGenerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Sie können den Dialog jederzeit schließen.
-        ///Der Export wird im Hintergrund fortgesetzt..
+        ///   Looks up a localized string similar to Apprenticeship.
         /// </summary>
-        public static string CloseWizardDuringExportHint {
+        public static string Educations_Apprenticeship {
             get {
-                return ResourceManager.GetString("CloseWizardDuringExportHint", resourceCulture);
+                return ResourceManager.GetString("Educations_Apprenticeship", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 3/4: Komprimieren.
+        ///   Looks up a localized string similar to Self-taught / Autodidact.
         /// </summary>
-        public static string CompressingEvents {
+        public static string Educations_Autodidact {
             get {
-                return ResourceManager.GetString("CompressingEvents", resourceCulture);
+                return ResourceManager.GetString("Educations_Autodidact", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Der Export wird im Hintergrund fortgührt..
+        ///   Looks up a localized string similar to Bachelor.
         /// </summary>
-        public static string ContinueInBackground {
+        public static string Educations_Bachelor {
             get {
-                return ResourceManager.GetString("ContinueInBackground", resourceCulture);
+                return ResourceManager.GetString("Educations_Bachelor", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Exportiere Events.
+        ///   Looks up a localized string similar to Master.
         /// </summary>
-        public static string Export_BusyMessage {
+        public static string Educations_Master {
             get {
-                return ResourceManager.GetString("Export_BusyMessage", resourceCulture);
+                return ResourceManager.GetString("Educations_Master", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Direktupload.
+        ///   Looks up a localized string similar to None.
         /// </summary>
-        public static string export_upload_button {
+        public static string Educations_None {
             get {
-                return ResourceManager.GetString("export_upload_button", resourceCulture);
+                return ResourceManager.GetString("Educations_None", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ZIP-Export....
+        ///   Looks up a localized string similar to Ph.D..
         /// </summary>
-        public static string export_zip_button {
+        public static string Educations_PhD {
             get {
-                return ResourceManager.GetString("export_zip_button", resourceCulture);
+                return ResourceManager.GetString("Educations_PhD", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Beim Exportieren/Versenden des Feedbacks ist ein Fehler aufgetreten!.
+        ///   Looks up a localized string similar to Professor.
         /// </summary>
-        public static string ExportFail {
+        public static string Educations_Professor {
             get {
-                return ResourceManager.GetString("ExportFail", resourceCulture);
+                return ResourceManager.GetString("Educations_Professor", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Das Exportieren/Versenden von {0} Events war erfolgreich..
+        ///   Looks up a localized string similar to No Answer.
         /// </summary>
-        public static string ExportSuccess {
+        public static string Educations_Unknown {
             get {
-                return ResourceManager.GetString("ExportSuccess", resourceCulture);
+                return ResourceManager.GetString("Educations_Unknown", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Zum Hochladen des Feedbacks besuchen Sie bitte die folgende Seite:.
+        ///   Looks up a localized string similar to Hobby Programmer.
         /// </summary>
-        public static string ExportSuccessLinkDescription {
+        public static string Positions_HobbyProgrammer {
             get {
-                return ResourceManager.GetString("ExportSuccessLinkDescription", resourceCulture);
+                return ResourceManager.GetString("Positions_HobbyProgrammer", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 1/4: Laden.
+        ///   Looks up a localized string similar to Researcher (academic).
         /// </summary>
-        public static string FetchingEvents {
+        public static string Positions_ResearcherAcademic {
             get {
-                return ResourceManager.GetString("FetchingEvents", resourceCulture);
+                return ResourceManager.GetString("Positions_ResearcherAcademic", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Es gibt nichts zu exportieren..
+        ///   Looks up a localized string similar to Researcher (industry).
         /// </summary>
-        public static string NothingToExport {
+        public static string Positions_ResearcherIndustry {
             get {
-                return ResourceManager.GetString("NothingToExport", resourceCulture);
+                return ResourceManager.GetString("Positions_ResearcherIndustry", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 4/4: Speichern.
+        ///   Looks up a localized string similar to Software Engineer.
         /// </summary>
-        public static string PublishingEvents {
+        public static string Positions_SoftwareEngineer {
             get {
-                return ResourceManager.GetString("PublishingEvents", resourceCulture);
+                return ResourceManager.GetString("Positions_SoftwareEngineer", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Feedback einsehen.
+        ///   Looks up a localized string similar to Student.
         /// </summary>
-        public static string review_link {
+        public static string Positions_Student {
             get {
-                return ResourceManager.GetString("review_link", resourceCulture);
+                return ResourceManager.GetString("Positions_Student", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 2/4: Schreiben - {0}%.
+        ///   Looks up a localized string similar to No Answer.
         /// </summary>
-        public static string WritingEvents {
+        public static string Positions_Unknown {
             get {
-                return ResourceManager.GetString("WritingEvents", resourceCulture);
+                return ResourceManager.GetString("Positions_Unknown", resourceCulture);
             }
         }
     }

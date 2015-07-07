@@ -32,8 +32,8 @@ namespace KaVE.Commons.Model.Events.UserProfiles
         bool ProjectsNoAnswer { get; }
         bool ProjectsCourses { get; }
         bool ProjectsPrivate { get; }
-        bool ProjectsTeamInsignificant { get; }
-        bool ProjectsTeamSignificant { get; }
+        bool ProjectsTeamSmall { get; }
+        bool ProjectsTeamLarge { get; }
         bool ProjectsCommercial { get; }
 
         Likert7Point ProgrammingGeneral { get; }
@@ -41,7 +41,7 @@ namespace KaVE.Commons.Model.Events.UserProfiles
         Likert7Point ProgrammingCSharp { get; }
 
         [NotNull]
-        string Feedback { get; }
+        string Comment { get; }
     }
 
     // TODO @seb: write (de-) serialization tests!!
@@ -67,10 +67,10 @@ namespace KaVE.Commons.Model.Events.UserProfiles
         public bool ProjectsPrivate { get; set; }
 
         [DataMember]
-        public bool ProjectsTeamInsignificant { get; set; }
+        public bool ProjectsTeamSmall { get; set; }
 
         [DataMember]
-        public bool ProjectsTeamSignificant { get; set; }
+        public bool ProjectsTeamLarge { get; set; }
 
         [DataMember]
         public bool ProjectsCommercial { get; set; }
@@ -82,12 +82,12 @@ namespace KaVE.Commons.Model.Events.UserProfiles
         public Likert7Point ProgrammingCSharp { get; set; }
 
         [DataMember]
-        public string Feedback { get; set; }
+        public string Comment { get; set; }
 
         public UserProfileEvent()
         {
             ProfileId = "";
-            Feedback = "";
+            Comment = "";
             ProjectsNoAnswer = true;
         }
 
@@ -96,10 +96,10 @@ namespace KaVE.Commons.Model.Events.UserProfiles
             return base.Equals(other) && string.Equals(ProfileId, other.ProfileId) && Education == other.Education &&
                    Position == other.Position && ProjectsNoAnswer == other.ProjectsNoAnswer &&
                    ProjectsCourses == other.ProjectsCourses && ProjectsPrivate == other.ProjectsPrivate &&
-                   ProjectsTeamInsignificant == other.ProjectsTeamInsignificant &&
-                   ProjectsTeamSignificant == other.ProjectsTeamSignificant &&
+                   ProjectsTeamSmall == other.ProjectsTeamSmall &&
+                   ProjectsTeamLarge == other.ProjectsTeamLarge &&
                    ProjectsCommercial == other.ProjectsCommercial && ProgrammingGeneral == other.ProgrammingGeneral &&
-                   ProgrammingCSharp == other.ProgrammingCSharp && string.Equals(Feedback, other.Feedback);
+                   ProgrammingCSharp == other.ProgrammingCSharp && string.Equals(Comment, other.Comment);
         }
 
         public override bool Equals(object obj)
@@ -118,12 +118,12 @@ namespace KaVE.Commons.Model.Events.UserProfiles
                 hashCode = (hashCode*397) ^ ProjectsNoAnswer.GetHashCode();
                 hashCode = (hashCode*397) ^ ProjectsCourses.GetHashCode();
                 hashCode = (hashCode*397) ^ ProjectsPrivate.GetHashCode();
-                hashCode = (hashCode*397) ^ ProjectsTeamInsignificant.GetHashCode();
-                hashCode = (hashCode*397) ^ ProjectsTeamSignificant.GetHashCode();
+                hashCode = (hashCode*397) ^ ProjectsTeamSmall.GetHashCode();
+                hashCode = (hashCode*397) ^ ProjectsTeamLarge.GetHashCode();
                 hashCode = (hashCode*397) ^ ProjectsCommercial.GetHashCode();
                 hashCode = (hashCode*397) ^ (int) ProgrammingGeneral;
                 hashCode = (hashCode*397) ^ (int) ProgrammingCSharp;
-                hashCode = (hashCode*397) ^ Feedback.GetHashCode();
+                hashCode = (hashCode*397) ^ Comment.GetHashCode();
                 return hashCode;
             }
         }
