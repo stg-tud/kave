@@ -37,7 +37,7 @@ namespace KaVE.VS.FeedbackGenerator.Settings.ExportSettingsSuite
         [SettingsEntry(false, "KaVE FeedbackGenerator IsDatev")]
         public bool IsDatev;
 
-        [SettingsEntry("http://kave.st.informatik.tu-darmstadt.de/", "KaVE FeedbackGenerator UploadUrl")]
+        [SettingsEntry("http://kave.st.informatik.tu-darmstadt.de/test/", "KaVE FeedbackGenerator UploadUrl")]
         public string UploadUrl;
 
         [SettingsEntry("", "KaVE FeedbackGenerator WebAccessPrefix")]

@@ -14,28 +14,28 @@
  * limitations under the License.
  */
 
-using System;
 using KaVE.Commons.Utils;
 using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Utils.VersionUtilTestSuite
 {
+    // TODO @seb: create abstract super class for the three different product version tests
     internal class DevelopmentTest
     {
         [Test]
         public void CurrentVersion()
         {
-            var actual = new VersionUtil().GetCurrentVersion();
-            var expected = new Version("0.0.0.0");
-            Assert.AreEqual(expected, actual);
+            var actual = new VersionUtil().GetCurrentVersion().ToString();
+            Assert.True(actual.StartsWith("0."));
+            Assert.True(actual.EndsWith(".0.0"));
         }
 
         [Test]
         public void CurrentInformalVersion()
         {
             var actual = new VersionUtil().GetCurrentInformalVersion();
-            var expected = "0.0-Development";
-            Assert.AreEqual(expected, actual);
+            Assert.True(actual.StartsWith("0."));
+            Assert.True(actual.EndsWith("-Development"));
         }
 
         [Test]
@@ -50,8 +50,8 @@ namespace KaVE.Commons.Tests.Utils.VersionUtilTestSuite
         public void AlsoWorksForOverwrittenClasses()
         {
             var actual = new ExtendedVersionUtilInAssemblyWithoutVersion().GetCurrentInformalVersion();
-            var expected = "0.0-Development";
-            Assert.AreEqual(expected, actual);
+            Assert.True(actual.StartsWith("0."));
+            Assert.True(actual.EndsWith("-Development"));
         }
 
         private class ExtendedVersionUtilInAssemblyWithoutVersion : VersionUtil {}

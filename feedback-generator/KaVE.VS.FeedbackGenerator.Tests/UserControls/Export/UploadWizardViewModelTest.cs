@@ -78,6 +78,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.Export
             _exportSettings = new ExportSettings {UploadUrl = TestUploadUrl};
             _userSettings = new UserProfileSettings();
             _mockSettingStore.Setup(store => store.GetSettings<ExportSettings>()).Returns(_exportSettings);
+            _mockSettingStore.Setup(store => store.GetSettings<UserProfileSettings>()).Returns(_userSettings);
             _mockSettingStore.Setup(store => store.UpdateSettings(It.IsAny<Action<ExportSettings>>()))
                              .Callback<Action<ExportSettings>>(update => update(_exportSettings));
 
