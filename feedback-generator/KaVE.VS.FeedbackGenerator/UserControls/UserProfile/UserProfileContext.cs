@@ -20,6 +20,7 @@ using System.ComponentModel;
 using KaVE.Commons.Model.Events.UserProfiles;
 using KaVE.JetBrains.Annotations;
 using KaVE.VS.FeedbackGenerator.Settings;
+using KaVE.VS.FeedbackGenerator.Settings.ExportSettingsSuite;
 
 namespace KaVE.VS.FeedbackGenerator.UserControls.UserProfile
 {

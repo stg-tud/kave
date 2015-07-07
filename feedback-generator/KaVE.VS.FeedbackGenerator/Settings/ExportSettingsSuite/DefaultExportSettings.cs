@@ -16,7 +16,7 @@
 
 using JetBrains.Application.Settings;
 
-namespace KaVE.VS.FeedbackGenerator.Settings
+namespace KaVE.VS.FeedbackGenerator.Settings.ExportSettingsSuite
 {
     [SettingsKey(typeof (FeedbackSettings), "Kave Feedback-Export Settings")]
     // WARNING: Do not change classname, as it is used to identify settings
@@ -34,13 +34,13 @@ namespace KaVE.VS.FeedbackGenerator.Settings
         [SettingsEntry(false, "KaVE FeedbackGenerator RemoveSessionIDs")]
         public bool RemoveSessionIDs;
 
-        [SettingsEntry(true,"KaVE FeedbackGenerator IsDatev")]
+        [SettingsEntry(false, "KaVE FeedbackGenerator IsDatev")]
         public bool IsDatev;
 
-        [SettingsEntry("https://licsrv1.zd.datev.de/feedback-server/", "KaVE FeedbackGenerator UploadUrl")]
+        [SettingsEntry("http://kave.st.informatik.tu-darmstadt.de/", "KaVE FeedbackGenerator UploadUrl")]
         public string UploadUrl;
 
-        [SettingsEntry("http://www3.bk.datev.de/eprtl/dyn.ica?", "KaVE FeedbackGenerator WebAccessPrefix")]
+        [SettingsEntry("", "KaVE FeedbackGenerator WebAccessPrefix")]
         public string WebAccessPrefix;
     }
 }

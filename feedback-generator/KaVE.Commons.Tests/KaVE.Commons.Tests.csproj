@@ -1,6 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
+    <KaVEProduct Condition=" '$(KaVEProduct)' == '' ">Development</KaVEProduct>
+  </PropertyGroup>
+  <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
@@ -12,7 +15,7 @@
     <AssemblyName>KaVE.Commons.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-  </PropertyGroup>
+ </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
@@ -240,7 +243,7 @@
     <Compile Include="Utils\StringBuilderUtilsTest.cs" />
     <Compile Include="Utils\StringUtilsTest.cs" />
     <Compile Include="Utils\ToStringUtilsTest.cs" />
-    <Compile Include="Utils\VersionUtilTest.cs" />
+    <Compile Include="Utils\VersionUtilTestSuite\$(KaVEProduct)Test.cs" />
     <Compile Include="Utils\WeakReferenceTest.cs" />
     <Compile Include="Utils\XamlUtilsTest.cs" />
   </ItemGroup>

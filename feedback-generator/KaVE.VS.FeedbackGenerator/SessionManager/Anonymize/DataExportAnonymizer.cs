@@ -23,7 +23,7 @@ using KaVE.Commons.Model.Events.VisualStudio;
 using KaVE.Commons.Utils.Json;
 using KaVE.RS.Commons.Settings;
 using KaVE.VS.FeedbackGenerator.SessionManager.Anonymize.CompletionEvents;
-using KaVE.VS.FeedbackGenerator.Settings;
+using KaVE.VS.FeedbackGenerator.Settings.ExportSettingsSuite;
 
 namespace KaVE.VS.FeedbackGenerator.SessionManager.Anonymize
 {

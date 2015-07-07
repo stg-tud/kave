@@ -26,6 +26,7 @@ using JetBrains.UI.Options;
 using JetBrains.UI.Options.OptionPages.ToolsPages;
 using KaVE.RS.Commons.Settings.KaVE.RS.Commons.Settings;
 using KaVE.VS.FeedbackGenerator.Settings;
+using KaVE.VS.FeedbackGenerator.Settings.ExportSettingsSuite;
 using KaVE.VS.FeedbackGenerator.UserControls.Anonymization;
 using KaVE.VS.FeedbackGenerator.UserControls.UserProfile;
 using KaVEISettingsStore = KaVE.RS.Commons.Settings.ISettingsStore;

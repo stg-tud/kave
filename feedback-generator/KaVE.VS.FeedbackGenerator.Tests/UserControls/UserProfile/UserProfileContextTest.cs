@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using KaVE.Commons.Model.Events.UserProfiles;
 using KaVE.VS.FeedbackGenerator.Settings;
+using KaVE.VS.FeedbackGenerator.Settings.ExportSettingsSuite;
 using KaVE.VS.FeedbackGenerator.UserControls.UserProfile;
 using NUnit.Framework;
 

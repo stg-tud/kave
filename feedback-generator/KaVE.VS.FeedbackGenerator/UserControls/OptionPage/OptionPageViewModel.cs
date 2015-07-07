@@ -18,7 +18,7 @@ using System.Globalization;
 using System.IO;
 using KaVE.VS.FeedbackGenerator.Interactivity;
 using KaVE.VS.FeedbackGenerator.SessionManager;
-using KaVE.VS.FeedbackGenerator.Settings;
+using KaVE.VS.FeedbackGenerator.Settings.ExportSettingsSuite;
 using KaVE.VS.FeedbackGenerator.UserControls.Anonymization;
 using KaVE.VS.FeedbackGenerator.UserControls.UserProfile;
 using KaVE.VS.FeedbackGenerator.UserControls.ValidationRules;

@@ -1,6 +1,5 @@
 using System;
 using System.Reflection;
-using KaVE.Commons.Model.SSTs;
 
 namespace KaVE.Commons.Utils
 {
@@ -8,7 +7,7 @@ namespace KaVE.Commons.Utils
     {
         private Assembly GetAssembly()
         {
-            return typeof (ISST).Assembly;
+            return typeof (VersionUtil).Assembly;
         }
 
         public virtual Version GetCurrentVersion()

@@ -1,6 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
+    <KaVEProduct Condition=" '$(KaVEProduct)' == '' ">Development</KaVEProduct>
+  </PropertyGroup>
+  <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
@@ -14,7 +17,6 @@
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
-    <UploadUrl Condition="'$(UploadUrl)'==''">KaVE-URL</UploadUrl>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -344,6 +346,7 @@
     <Compile Include="SessionManager\FeedbackViewModel.cs" />
     <Compile Include="MessageBus\TinyMessenger.cs" />
     <Compile Include="Settings\UploadSettings.cs" />
+    <Compile Include="Settings\ExportSettingsSuite\$(KaVEProduct)ExportSettings.cs" />
     <Compile Include="SessionManager\UploadReminder.cs" />
     <Compile Include="Utils\InverseBoolConverter.cs" />
     <Compile Include="Utils\InverseObjectToVisibilityConverter.cs" />
@@ -357,20 +360,6 @@
     <Compile Include="VsIntegration\IIDESession.cs" />
     <Compile Include="ZoneMarker.cs" />
   </ItemGroup>
-  <Choose>
-    <When Condition="'$(UploadUrl)' == 'DATEV'">
-      <ItemGroup>
-        <Compile Include="Settings\ExportSettingsDATEV.cs" />
-        <None Include="Settings\ExportSettings.cs" />
-      </ItemGroup>
-    </When>
-    <Otherwise>
-      <ItemGroup>
-        <None Include="Settings\ExportSettingsDATEV.cs" />
-        <Compile Include="Settings\ExportSettings.cs" />
-      </ItemGroup>
-    </Otherwise>
-  </Choose>
   <ItemGroup>
     <EmbeddedResource Include="Properties\UserProfileMessages.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>

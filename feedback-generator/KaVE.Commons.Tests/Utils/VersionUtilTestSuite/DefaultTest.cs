@@ -14,35 +14,36 @@
  * limitations under the License.
  */
 
-using System;
 using KaVE.Commons.Utils;
 using NUnit.Framework;
 
-namespace KaVE.Commons.Tests.Utils
+namespace KaVE.Commons.Tests.Utils.VersionUtilTestSuite
 {
-    internal class VersionUtilTest
+    internal class DefaultTest
     {
         [Test]
         public void CurrentVersion()
         {
-            var actual = new VersionUtil().GetCurrentVersion();
-            var expected = new Version("0.0.0.0");
-            Assert.AreEqual(expected, actual);
+            var actual = new VersionUtil().GetCurrentVersion().ToString();
+            Assert.AreNotEqual("0.0.0.0", actual);
+            Assert.True(actual.StartsWith("0."));
+            Assert.True(actual.EndsWith(".0.0"));
         }
 
         [Test]
         public void CurrentInformalVersion()
         {
             var actual = new VersionUtil().GetCurrentInformalVersion();
-            var expected = "0.0-Development";
-            Assert.AreEqual(expected, actual);
+            Assert.AreNotEqual("0.0-Development", actual);
+            Assert.True(actual.StartsWith("0."));
+            Assert.True(actual.EndsWith("-Default"));
         }
 
         [Test]
         public void CurrentVariant()
         {
             var actual = new VersionUtil().GetCurrentVariant();
-            var expected = VersionUtil.Variant.Development;
+            var expected = VersionUtil.Variant.Default;
             Assert.AreEqual(expected, actual);
         }
 
@@ -50,8 +51,9 @@ namespace KaVE.Commons.Tests.Utils
         public void AlsoWorksForOverwrittenClasses()
         {
             var actual = new ExtendedVersionUtilInAssemblyWithoutVersion().GetCurrentInformalVersion();
-            var expected = "0.0-Development";
-            Assert.AreEqual(expected, actual);
+            Assert.AreNotEqual("0.0-Development", actual);
+            Assert.True(actual.StartsWith("0."));
+            Assert.True(actual.EndsWith("-Default"));
         }
 
         private class ExtendedVersionUtilInAssemblyWithoutVersion : VersionUtil {}

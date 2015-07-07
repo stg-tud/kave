@@ -20,6 +20,7 @@ using JetBrains.UI.ActionsRevised;
 using KaVE.RS.Commons.Settings;
 using KaVE.RS.Commons.Settings.KaVE.RS.Commons.Settings;
 using KaVE.RS.Commons.Utils;
+using KaVE.VS.FeedbackGenerator.Settings.ExportSettingsSuite;
 using KaVE.VS.FeedbackGenerator.Utils.Logging;
 
 namespace KaVE.VS.FeedbackGenerator.Settings

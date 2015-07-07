@@ -31,6 +31,7 @@ using KaVE.RS.Commons.Settings;
 using KaVE.RS.Commons.Utils;
 using KaVE.VS.FeedbackGenerator.Interactivity;
 using KaVE.VS.FeedbackGenerator.Settings;
+using KaVE.VS.FeedbackGenerator.Settings.ExportSettingsSuite;
 using KaVE.VS.FeedbackGenerator.Tests.Interactivity;
 using KaVE.VS.FeedbackGenerator.UserControls.UploadWizard;
 using KaVE.VS.FeedbackGenerator.Utils.Export;
