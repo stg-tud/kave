@@ -56,7 +56,7 @@ namespace KaVE.RS.Commons.Utils
 
         private static IName TryGetNameFromDeclaredElementLookupItem(ILookupItem lookupItem)
         {
-            var deli = lookupItem as LookupItem<CSharpDeclaredElementInfo>;
+            var deli = lookupItem as LookupItem<DeclaredElementInfo>;
             if (deli == null || deli.Info == null)
             {
                 return null;
