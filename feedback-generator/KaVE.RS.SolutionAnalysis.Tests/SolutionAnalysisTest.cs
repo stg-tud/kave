@@ -153,7 +153,7 @@ namespace KaVE.RS.SolutionAnalysis.Tests
         }
 
         // TODO RS9: temporary problem with mocking of projects/solutions
-        [Test, Ignore]
+        [Test]
         public void AnalysisResolvesLocalTypes()
         {
             var results = RunAnalysis();
@@ -163,7 +163,7 @@ namespace KaVE.RS.SolutionAnalysis.Tests
         }
 
         // TODO RS9: temporary problem with mocking of projects/solutions
-        [Test, Ignore]
+        [Test]
         public void AnalysisResolvesCoreDependencies()
         {
             var results = RunAnalysis();
