@@ -18,6 +18,7 @@
  *    - Sebastian Proksch
  */
 
+using System;
 using System.Drawing;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Feature.Services.CodeCompletion;
@@ -55,27 +56,6 @@ namespace KaVE.VS.FeedbackGenerator.CodeCompletion
                 return original.Append(" (" + _probability + "%)", probStyle);
             }
         }
-
-        // TODO RS9: fix for stable release
-        /*
-        public string OrderingString
-        {
-            get
-            {
-                var inverseProbability = 100 - _probability;
-                var orderingPrefix = "0";
-                if (inverseProbability < 100)
-                {
-                    orderingPrefix = "00";
-                }
-                else if (inverseProbability < 10)
-                {
-                    orderingPrefix = "000";
-                }
-                return orderingPrefix + inverseProbability + _wrappedItem.OrderingString;
-            }
-        }
-        */
 
         public IconId Image
         {
@@ -117,7 +97,40 @@ namespace KaVE.VS.FeedbackGenerator.CodeCompletion
             _wrappedItem.Unshrink();
         }
 
-        public LookupItemPlacement Placement { get; set; }
+        public LookupItemPlacement Placement
+        {
+            get
+            {
+                var p = new LookupItemPlacement(
+                    RevisedOrderString,
+                    PlacementLocation.Top,
+                    SelectionPriority.High)
+                {
+                    Relevance = _wrappedItem.Placement.Relevance,
+                    Rank = _wrappedItem.Placement.Rank
+                };
+                return p;
+            }
+            set { throw new NotImplementedException(); }
+        }
+
+        private string RevisedOrderString
+        {
+            get
+            {
+                var inverseProbability = 100 - _probability;
+                var orderingPrefix = "0";
+                if (inverseProbability < 100)
+                {
+                    orderingPrefix = "00";
+                }
+                else if (inverseProbability < 10)
+                {
+                    orderingPrefix = "000";
+                }
+                return orderingPrefix + inverseProbability + _wrappedItem.Placement.OrderString;
+            }
+        }
 
         public RichText DisplayTypeName
         {

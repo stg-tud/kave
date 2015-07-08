@@ -140,7 +140,6 @@ namespace KaVE.VS.FeedbackGenerator.CodeCompletion
                 var matchingProposal = proposals.FirstOrDefault(p => p.Name.Equals(representation));
                 if (matchingProposal != null)
                 {
-                    // TODO RS9: was "AddToTop"
                     collector.Add(new PBNProposalWrappedLookupItem(candidate, matchingProposal.Probability));
                 }
             }
