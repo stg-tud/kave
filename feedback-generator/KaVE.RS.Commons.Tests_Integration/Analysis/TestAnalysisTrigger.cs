@@ -16,7 +16,6 @@
 
 using System;
 using System.Collections.Generic;
-using JetBrains.Application;
 using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure.LookupItems;
 using JetBrains.ReSharper.Feature.Services.CSharp.CodeCompletion.Infrastructure;
 using JetBrains.ReSharper.Features.Intellisense.CodeCompletion.CSharp.Rules;
@@ -85,7 +84,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis
 
             LastSST = LastContext.SST;
 
-            return false;
+            return base.AddLookupItems(context, collector);
         }
 
         private static void PrintType(CSharpCodeCompletionContext context, CompletionTargetMarker marker)
