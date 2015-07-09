@@ -46,6 +46,21 @@ namespace KaVE.RS.Commons.Utils
             return new Proposal {Name = name};
         }
 
+        [NotNull]
+        public static IEnumerable<Proposal> ToProposals([CanBeNull] this LookupItem<MethodsInfo> lookupItem)
+        {
+            var result = new List<Proposal>();
+
+            if (lookupItem != null)
+            {
+                lookupItem.Info.Candidates.ToList()
+                          .ForEach(
+                              candidate => result.Add(new Proposal {Name = candidate.GetName()}));
+            }
+
+            return result;
+        }
+
         private static IName GetName([NotNull] this ILookupItem lookupItem)
         {
             return TryGetNameFromLookupItem<CSharpDeclaredElementInfo>(lookupItem) ??

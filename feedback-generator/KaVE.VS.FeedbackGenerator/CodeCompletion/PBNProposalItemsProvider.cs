@@ -16,6 +16,8 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure.AspectLookupItems.BaseInfrastructure;
+using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure.AspectLookupItems.Info;
 using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure.LookupItems;
 using JetBrains.ReSharper.Feature.Services.CSharp.CodeCompletion.Infrastructure;
 using JetBrains.ReSharper.Features.Intellisense.CodeCompletion.CSharp.Rules;
@@ -26,6 +28,7 @@ using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.CodeCompletion;
 using KaVE.Commons.Utils.Exceptions;
 using KaVE.Commons.Utils.ObjectUsageExport;
+using KaVE.JetBrains.Annotations;
 using KaVE.RS.Commons.Analysis;
 using KaVE.RS.Commons.Utils;
 
@@ -130,15 +133,49 @@ namespace KaVE.VS.FeedbackGenerator.CodeCompletion
             {
                 return;
             }
+
+            var methodCandidate = candidate as LookupItem<MethodsInfo>;
+            var wrappedLookupItem = methodCandidate != null
+                ? TryGetWrappedLookupItemForMethods(methodCandidate, proposals)
+                : TryGetWrappedLookupItem(candidate, proposals);
+
+            if (wrappedLookupItem != null)
+            {
+                collector.Add(wrappedLookupItem);
+            }
+        }
+
+        [CanBeNull]
+        private static PBNProposalWrappedLookupItem TryGetWrappedLookupItemForMethods(LookupItem<MethodsInfo> candidate,
+            IEnumerable<CoReProposal> proposals)
+        {
+            return
+                candidate.ToProposals()
+                         .Select(
+                             overloadRepresentation =>
+                                 proposals.FirstOrDefault(p => p.Name.Equals(overloadRepresentation.ToCoReName())))
+                         .Where(matchingProposal => matchingProposal != null)
+                         .Select(
+                             matchingProposal =>
+                                 new PBNProposalWrappedLookupItem(candidate, matchingProposal.Probability))
+                         .FirstOrDefault();
+        }
+
+        [CanBeNull]
+        private static PBNProposalWrappedLookupItem TryGetWrappedLookupItem(ILookupItem candidate,
+            IEnumerable<CoReProposal> proposals)
+        {
             var representation = candidate.ToProposal().ToCoReName();
             if (representation != null)
             {
                 var matchingProposal = proposals.FirstOrDefault(p => p.Name.Equals(representation));
                 if (matchingProposal != null)
                 {
-                    collector.Add(new PBNProposalWrappedLookupItem(candidate, matchingProposal.Probability));
+                    return new PBNProposalWrappedLookupItem(candidate, matchingProposal.Probability);
                 }
             }
+
+            return null;
         }
     }
 }
