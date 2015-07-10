@@ -39,7 +39,9 @@ namespace KaVE.RS.Commons.Tests_Integration.Utils
         protected override bool AddLookupItems(CSharpCodeCompletionContext context, GroupedItemsCollector collector)
         {
             // TODO RS9: was "AddToTop"
-            collector.Add(CreateXamlLookupItem());
+            // TODO RS9: adding this element causes "ShouldHandleUnknownLookupItemType" to fail. probably some property is accessed within Resharper code that is not mocked and therefore null.
+            var declaredElementLookupItem = CreateXamlLookupItem();
+            collector.Add(declaredElementLookupItem);
             return true;
         }
 
@@ -50,6 +52,12 @@ namespace KaVE.RS.Commons.Tests_Integration.Utils
             var xamlLookupItem = new Mock<IDeclaredElementLookupItem>();
             xamlLookupItem.Setup(li => li.DisplayName).Returns(new RichText("XamlLookupItem"));
             xamlLookupItem.Setup(li => li.PreferredDeclaredElement).Returns(xamlDeclaredElementInstance);
+
+            //xamlLookupItem.Setup(li => li.Identity).Returns("XamlLookupItem");
+            //xamlLookupItem.Setup(li => li.LanguageType).Returns(CSharpLanguage.Instance);
+
+            //xamlLookupItem.SetupAllProperties();
+
             return xamlLookupItem.Object;
         }
     }

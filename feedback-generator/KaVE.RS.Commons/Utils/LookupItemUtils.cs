@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using JetBrains.Annotations;
+using JetBrains.ReSharper.Feature.Services.CodeCompletion;
 using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure.AspectLookupItems.BaseInfrastructure;
 using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure.AspectLookupItems.Info;
 using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure.LookupItems;
@@ -47,40 +48,41 @@ namespace KaVE.RS.Commons.Utils
 
         private static IName GetName([NotNull] this ILookupItem lookupItem)
         {
-            return TryGetNameFromDeclaredElementLookupItem(lookupItem) ??
-                   //TryGetNameFromWrappedLookupItem(lookupItem) ??
-                   TryGetNameFromKeywordOrTextualLookupItem(lookupItem) ??
-                   //TryGetNameFromTemplateLookupItem(lookupItem) ??
+            return TryGetNameFromLookupItem<CSharpDeclaredElementInfo>(lookupItem) ??
+                   TryGetNameFromLookupItem<DeclaredElementInfo>(lookupItem) ??
+                   TryGetNameFromLookupItem<MethodsInfo>(lookupItem) ??
+                   TryGetNameFromConstructorInfoLookupItem(lookupItem) ??
+                   TryGetNameFromCombinedLookupItem(lookupItem) ??
                    GetNameFromLookupItemIdentity(lookupItem);
         }
 
-        private static IName TryGetNameFromDeclaredElementLookupItem(ILookupItem lookupItem)
+        private static IName TryGetNameFromLookupItem<T>(ILookupItem lookupItem) where T : class, ILookupItemInfo
         {
-            var deli = lookupItem as LookupItem<DeclaredElementInfo>;
-            if (deli == null || deli.Info == null)
+            var li = lookupItem as LookupItem<T>;
+            if (li == null || li.Info == null)
             {
                 return null;
             }
-            var de = deli.GetAllDeclaredElements().FirstOrDefault();
+            var de = li.GetAllDeclaredElements().FirstOrDefault();
             return de == null ? null : de.GetName();
         }
 
-        private static IName TryGetNameFromKeywordOrTextualLookupItem(ILookupItem lookupItem)
+        private static IName TryGetNameFromConstructorInfoLookupItem(ILookupItem lookupItem)
         {
-            var tli = lookupItem as LookupItem<TextualInfo>;
-            if (tli == null || tli.Info == null)
+            var li = lookupItem as LookupItem<ConstructorInfo>;
+            if (li == null || li.Info == null)
             {
                 return null;
             }
 
-            return Name.Get(GetPossiblyGenericTypeName(tli) + ":" + tli.DisplayName);
-        }
+            var de = li.GetAllDeclaredElements().FirstOrDefault();
+            if (de == null)
+            {
+                return null;
+            }
 
-        // TODO RS9: I doubt that all of them are obsolete... review that later
-        /*
-        private static IMethodName GetName(this ConstructorLookupItem constructor)
-        {
-            var typeName = constructor.PreferredDeclaredElement.GetName();
+            var typeName = de.GetName();
+
             var identifier = new StringBuilder();
             identifier.Append('[')
                       .Append(typeName.Identifier)
@@ -89,31 +91,62 @@ namespace KaVE.RS.Commons.Utils
                       .Append("]..ctor()");
             return MethodName.Get(identifier.ToString());
         }
-         * 
 
-        private static IName TryGetNameFromWrappedLookupItem(ILookupItem lookupItem)
+        private static IName TryGetNameFromCombinedLookupItem(ILookupItem lookupItem)
         {
-            var wrappedLookupItem = lookupItem as IWrappedLookupItem;
-            if (wrappedLookupItem != null)
+            var cli = lookupItem as CombinedLookupItem;
+            if (cli == null)
             {
-                return Name.Get(wrappedLookupItem.GetType().Name + ":" + wrappedLookupItem.Item.GetName());
+                return null;
             }
-            return null;
+            return Name.Get(String.Format("CombinedLookupItem:{0}", cli.DisplayName.Text));
         }
 
-       
+        // TODO RS9: I doubt that all of them are obsolete... review that later
+        // TODO RS9: ^ not needed by any tests, so probably obsolete
+        //private static IMethodName GetName(this ConstructorLookupItem constructor)
+        //{
+        //    var typeName = constructor.PreferredDeclaredElement.GetName();
+        //    var identifier = new StringBuilder();
+        //    identifier.Append('[')
+        //              .Append(typeName.Identifier)
+        //              .Append("] [")
+        //              .Append(typeName.Identifier)
+        //              .Append("]..ctor()");
+        //    return MethodName.Get(identifier.ToString());
+        //}
 
-        private static IName TryGetNameFromTemplateLookupItem(ILookupItem lookupItem)
-        {
-            var templateLookupItem = lookupItem as TemplateLookupItem;
-            return templateLookupItem == null ? null : templateLookupItem.Template.GetName();
-        }
+        //private static IName TryGetNameFromWrappedLookupItem(ILookupItem lookupItem)
+        //{
+        //    var wrappedLookupItem = lookupItem as IWrappedLookupItem;
+        //    if (wrappedLookupItem != null)
+        //    {
+        //        return Name.Get(wrappedLookupItem.GetType().Name + ":" + wrappedLookupItem.Item.GetName());
+        //    }
+        //    return null;
+        //}
 
-        private static LiveTemplateName GetName(this Template template)
-        {
-            return LiveTemplateName.Get(template.Shortcut + ":" + template.Description);
-        }
-        */
+        //private static IName TryGetNameFromTemplateLookupItem(ILookupItem lookupItem)
+        //{
+        //    var templateLookupItem = lookupItem as TemplateLookupItem;
+        //    return templateLookupItem == null ? null : templateLookupItem.Template.GetName();
+        //}
+
+        //private static LiveTemplateName GetName(this Template template)
+        //{
+        //    return LiveTemplateName.Get(template.Shortcut + ":" + template.Description);
+        //}
+
+        //private static IName TryGetNameFromKeywordOrTextualLookupItem(ILookupItem lookupItem)
+        //{
+        //    var tli = lookupItem as LookupItem<TextualInfo>;
+        //    if (tli == null || tli.Info == null)
+        //    {
+        //        return null;
+        //    }
+
+        //    return Name.Get(GetPossiblyGenericTypeName(tli) + ":" + tli.DisplayName);
+        //}
 
         private static IName GetNameFromLookupItemIdentity(ILookupItem item)
         {

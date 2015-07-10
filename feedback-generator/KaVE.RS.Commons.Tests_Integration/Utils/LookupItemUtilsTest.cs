@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 
@@ -432,6 +433,9 @@ namespace KaVE.RS.Commons.Tests_Integration.Utils
                 dict.$
             ");
 
+            // TODO RS9: last one doesn't appear in result with translated type params. result is instead:
+            // set get [TValue] [i:System.Collections.Generic.IDictionary`2[[TKey -> TKey],[TValue -> TValue]], mscorlib, 4.0.0.0].Item([TKey] key)
+
             ThenProposalCollectionContains(
                 "[System.Void, mscorlib, 4.0.0.0] [i:System.Collections.Generic.IDictionary`2[[TKey -> System.String, mscorlib, 4.0.0.0],[TValue -> System.Object, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0].Add([TKey] key, [TValue] value)",
                 "get [System.Int32, mscorlib, 4.0.0.0] [i:System.Collections.Generic.ICollection`1[[T -> s:System.Collections.Generic.KeyValuePair`2[[TKey -> System.String, mscorlib, 4.0.0.0],[TValue -> System.Object, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0].Count()",
@@ -589,6 +593,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Utils
                     }
                 }");
 
+            // TODO RS9: this test fails because we get a constructor instead: [MyTestClass`1[[T -> T]], TestProject] [MyTestClass`1[[T -> T]], TestProject]..ctor()
             // completion proposes the generic type instead of the constructor in this case
             ThenProposalCollectionContains("MyTestClass`1[[T -> T]], TestProject");
         }
@@ -854,7 +859,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Utils
                         public delegate IEnumerable<D> D();
                     }
                     class C2{
-                        void M(D$){}
+                        void M(C1.D$){}
                     }   
                 }
             ");
