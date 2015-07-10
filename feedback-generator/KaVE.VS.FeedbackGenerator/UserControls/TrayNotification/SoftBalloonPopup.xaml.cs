@@ -31,8 +31,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.TrayNotification
 
             StartFadeInAndOutAnimation();
         }
-
-        // TODO @Uli: Move to xaml 
+ 
         private void StartFadeInAndOutAnimation()
         {
             var storyboard = TryFindResource("FadeInAndOut") as Storyboard;
