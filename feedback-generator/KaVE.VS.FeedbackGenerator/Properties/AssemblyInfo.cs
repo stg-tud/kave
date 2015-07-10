@@ -16,6 +16,7 @@
 
 using System.Reflection;
 using System.Resources;
+using System.Runtime.CompilerServices;
 using KaVE.VS.FeedbackGenerator;
 
 [assembly: AssemblyTitle(RSEnv.ExtensionId)]
@@ -31,3 +32,4 @@ using KaVE.VS.FeedbackGenerator;
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
 [assembly: NeutralResourcesLanguage("en-US", UltimateResourceFallbackLocation.MainAssembly)]
+[assembly: InternalsVisibleTo("KaVE.VS.FeedbackGenerator.Tests")]

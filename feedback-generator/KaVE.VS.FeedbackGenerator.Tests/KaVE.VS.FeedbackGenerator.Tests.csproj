@@ -159,6 +159,8 @@
     <Compile Include="CodeCompletion\PBNProposalItemsProviderTest.cs" />
     <Compile Include="Settings\SettingsCleanerTest.cs" />
     <Compile Include="UserControls\Export\ExporterTest.cs" />
+    <Compile Include="UserControls\BaseUserControlTest.cs" />
+    <Compile Include="UserControls\UserProfile\UserProfileControlTest.cs" />
     <Compile Include="UserControls\ValidationRules\MailValidationRuleTest.cs" />
     <Compile Include="Generators\EventGeneratorBaseTest.cs" />
     <Compile Include="Generators\EventLoggerTest.cs" />
