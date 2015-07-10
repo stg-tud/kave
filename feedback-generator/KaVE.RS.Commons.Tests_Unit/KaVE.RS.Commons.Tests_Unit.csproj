@@ -155,6 +155,7 @@
     <Compile Include="Utils\InjectableIoUtilsTest.cs" />
     <Compile Include="Utils\Names\ReSharperDeclaredElementNameFactoryTest.cs" />
     <Compile Include="Utils\Names\ReSharperTypeNameFactoryTest.cs" />
+    <Compile Include="Utils\ProposalProbabilityUtilsTest.cs" />
     <Compile Include="Utils\XamlFormattingUtilTest.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -186,6 +186,7 @@
     <Compile Include="Utils\Names\ReSharperDeclarationNameFactory.cs" />
     <Compile Include="Utils\Names\ReSharperDeclaredElementNameFactory.cs" />
     <Compile Include="Utils\Names\ReSharperTypeNameFactory.cs" />
+    <Compile Include="Utils\ProposalProbabilityUtils.cs" />
     <Compile Include="Utils\Registry.cs" />
     <Compile Include="Utils\XamlFormattingUtil.cs" />
   </ItemGroup>
