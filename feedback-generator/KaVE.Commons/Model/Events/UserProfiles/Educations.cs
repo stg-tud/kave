@@ -21,10 +21,9 @@ namespace KaVE.Commons.Model.Events.UserProfiles
         Unknown,
         None,
         Autodidact,
-        Apprenticeship,
+        Training,
         Bachelor,
         Master,
-        PhD,
-        Professor
+        PhD
     }
 }

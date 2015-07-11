@@ -61,15 +61,6 @@ namespace KaVE.VS.FeedbackGenerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Apprenticeship.
-        /// </summary>
-        public static string Educations_Apprenticeship {
-            get {
-                return ResourceManager.GetString("Educations_Apprenticeship", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Self-taught / Autodidact.
         /// </summary>
         public static string Educations_Autodidact {
@@ -115,11 +106,11 @@ namespace KaVE.VS.FeedbackGenerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Professor.
+        ///   Looks up a localized string similar to Apprenticeship.
         /// </summary>
-        public static string Educations_Professor {
+        public static string Educations_Training {
             get {
-                return ResourceManager.GetString("Educations_Professor", resourceCulture);
+                return ResourceManager.GetString("Educations_Training", resourceCulture);
             }
         }
         
@@ -142,7 +133,7 @@ namespace KaVE.VS.FeedbackGenerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Researcher (academic).
+        ///   Looks up a localized string similar to Researcher (Academia).
         /// </summary>
         public static string Positions_ResearcherAcademic {
             get {
@@ -151,7 +142,7 @@ namespace KaVE.VS.FeedbackGenerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Researcher (industry).
+        ///   Looks up a localized string similar to Researcher (Industry).
         /// </summary>
         public static string Positions_ResearcherIndustry {
             get {
@@ -160,7 +151,7 @@ namespace KaVE.VS.FeedbackGenerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Software Engineer.
+        ///   Looks up a localized string similar to Professional Software Engineer.
         /// </summary>
         public static string Positions_SoftwareEngineer {
             get {
@@ -183,6 +174,15 @@ namespace KaVE.VS.FeedbackGenerator.Properties {
         public static string Positions_Unknown {
             get {
                 return ResourceManager.GetString("Positions_Unknown", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Localization.
+        /// </summary>
+        public static string TestEnum_ExistingKey {
+            get {
+                return ResourceManager.GetString("TestEnum_ExistingKey", resourceCulture);
             }
         }
     }

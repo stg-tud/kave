@@ -17,19 +17,9 @@
 using System.Reflection;
 using System.Resources;
 using System.Runtime.CompilerServices;
-using KaVE.VS.FeedbackGenerator;
 
-[assembly: AssemblyTitle(RSEnv.ExtensionId)]
-[assembly:
-    AssemblyDescription(
-        "Generates IDE events from the interaction of developers with VisualStudio and ReSharper 8 features.")]
-[assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("TU Darmstadt")]
-[assembly: AssemblyProduct(RSEnv.ExtensionId)]
-[assembly: AssemblyCopyright("Copyright © TU Darmstadt, 2014")]
-[assembly: AssemblyTrademark("")]
-[assembly: AssemblyCulture("")]
-[assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.0.0.0")]
+[assembly: AssemblyTitle("KaVE.VS.FeedbackGenerator")]
+[assembly: AssemblyVersion("0.0")]
+[assembly: AssemblyInformationalVersion("0.0-Development")]
 [assembly: NeutralResourcesLanguage("en-US", UltimateResourceFallbackLocation.MainAssembly)]
 [assembly: InternalsVisibleTo("KaVE.VS.FeedbackGenerator.Tests")]

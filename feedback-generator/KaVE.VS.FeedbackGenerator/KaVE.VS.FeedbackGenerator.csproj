@@ -410,6 +410,7 @@
     <EmbeddedResource Include="Properties\EnumLocalization.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>EnumLocalization.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="UserControls\UploadWizard\UploadWizardMessages.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>

@@ -117,9 +117,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Educations_Apprenticeship" xml:space="preserve">
-    <value>Apprenticeship</value>
-  </data>
   <data name="Educations_Autodidact" xml:space="preserve">
     <value>Self-taught / Autodidact</value>
   </data>
@@ -135,8 +132,8 @@
   <data name="Educations_PhD" xml:space="preserve">
     <value>Ph.D.</value>
   </data>
-  <data name="Educations_Professor" xml:space="preserve">
-    <value>Professor</value>
+  <data name="Educations_Training" xml:space="preserve">
+    <value>Apprenticeship</value>
   </data>
   <data name="Educations_Unknown" xml:space="preserve">
     <value>No Answer</value>
@@ -145,18 +142,21 @@
     <value>Hobby Programmer</value>
   </data>
   <data name="Positions_ResearcherAcademic" xml:space="preserve">
-    <value>Researcher (academic)</value>
+    <value>Researcher (Academia)</value>
   </data>
   <data name="Positions_ResearcherIndustry" xml:space="preserve">
-    <value>Researcher (industry)</value>
+    <value>Researcher (Industry)</value>
   </data>
   <data name="Positions_SoftwareEngineer" xml:space="preserve">
-    <value>Software Engineer</value>
+    <value>Professional Software Engineer</value>
   </data>
   <data name="Positions_Student" xml:space="preserve">
     <value>Student</value>
   </data>
   <data name="Positions_Unknown" xml:space="preserve">
     <value>No Answer</value>
+  </data>
+  <data name="TestEnum_ExistingKey" xml:space="preserve">
+    <value>Localization</value>
   </data>
 </root>

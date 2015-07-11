@@ -61,7 +61,7 @@ namespace KaVE.Commons.Tests.Model.Events.UserProfiles
             var a = new UserProfileEvent
             {
                 ProfileId = "p",
-                Education = Educations.Apprenticeship,
+                Education = Educations.Training,
                 Position = Positions.HobbyProgrammer,
                 ProjectsNoAnswer = true,
                 ProjectsCourses = true,
@@ -76,7 +76,7 @@ namespace KaVE.Commons.Tests.Model.Events.UserProfiles
             var b = new UserProfileEvent
             {
                 ProfileId = "p",
-                Education = Educations.Apprenticeship,
+                Education = Educations.Training,
                 Position = Positions.HobbyProgrammer,
                 ProjectsNoAnswer = true,
                 ProjectsCourses = true,
@@ -109,7 +109,7 @@ namespace KaVE.Commons.Tests.Model.Events.UserProfiles
         {
             var a = new UserProfileEvent
             {
-                Education = Educations.Apprenticeship
+                Education = Educations.Training
             };
             var b = new UserProfileEvent();
             Assert.AreNotEqual(a, b);

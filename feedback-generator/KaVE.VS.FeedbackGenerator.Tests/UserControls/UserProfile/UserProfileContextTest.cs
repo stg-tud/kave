@@ -117,21 +117,21 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UserProfile
         [Test]
         public void Education_PropagationFromCode()
         {
-            _userSettings.Education = Educations.Apprenticeship;
-            Assert.AreEqual(Educations.Apprenticeship, _sut.Education);
+            _userSettings.Education = Educations.Training;
+            Assert.AreEqual(Educations.Training, _sut.Education);
         }
 
         [Test]
         public void Education_PropagationToCode()
         {
-            _sut.Education = Educations.Apprenticeship;
-            Assert.AreEqual(Educations.Apprenticeship, _userSettings.Education);
+            _sut.Education = Educations.Training;
+            Assert.AreEqual(Educations.Training, _userSettings.Education);
         }
 
         [Test]
         public void Education_PropertyChange()
         {
-            _sut.Education = Educations.Apprenticeship;
+            _sut.Education = Educations.Training;
             AssertNotifications("Education");
         }
 
