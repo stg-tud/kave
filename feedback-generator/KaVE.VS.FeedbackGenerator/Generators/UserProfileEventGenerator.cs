@@ -68,12 +68,10 @@ namespace KaVE.VS.FeedbackGenerator.Generators
             exportEvent.Education = Settings.Education;
             exportEvent.Position = Settings.Position;
 
+            // TODO RS9: UserProfile
             exportEvent.ProjectsNoAnswer = Settings.ProjectsNoAnswer;
             exportEvent.ProjectsCourses = Settings.ProjectsCourses;
-            exportEvent.ProjectsPrivate = Settings.ProjectsPrivate;
-            exportEvent.ProjectsTeamSmall = Settings.ProjectsTeamSmall;
-            exportEvent.ProjectsTeamLarge = Settings.ProjectsTeamLarge;
-            exportEvent.ProjectsCommercial = Settings.ProjectsCommercial;
+           // exportEvent.ProjectsPersonal = Settings.ProjectsPrivate;
 
             exportEvent.ProgrammingGeneral = Settings.ProgrammingGeneral;
             exportEvent.ProgrammingCSharp = Settings.ProgrammingCSharp;

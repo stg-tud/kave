@@ -18,6 +18,7 @@ using System;
 using System.Collections;
 using System.ComponentModel;
 using KaVE.Commons.Model.Events.UserProfiles;
+using KaVE.Commons.Utils;
 using KaVE.JetBrains.Annotations;
 using KaVE.VS.FeedbackGenerator.Settings;
 using KaVE.VS.FeedbackGenerator.Settings.ExportSettingsSuite;
@@ -30,11 +31,15 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UserProfile
 
         private readonly ExportSettings _exportSettings;
         private readonly UserProfileSettings _userProfileSettings;
+        private readonly IRandomizationUtils _rnd;
 
-        public UserProfileContext(ExportSettings exportSettings, UserProfileSettings userProfileSettings)
+        public UserProfileContext(ExportSettings exportSettings,
+            UserProfileSettings userProfileSettings,
+            IRandomizationUtils rnd)
         {
             _exportSettings = exportSettings;
             _userProfileSettings = userProfileSettings;
+            _rnd = rnd;
         }
 
         public bool IsDatev
@@ -47,6 +52,12 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UserProfile
             get { return _userProfileSettings.IsProvidingProfile && !_exportSettings.IsDatev; }
             set
             {
+                if (!_userProfileSettings.HasBeenAskedtoProvideProfile)
+                {
+                    _userProfileSettings.ProfileId = _rnd.GetRandomGuid().ToString();
+                    _userProfileSettings.HasBeenAskedtoProvideProfile = true;
+                    OnPropertyChanged("ProfileId");
+                }
                 _userProfileSettings.IsProvidingProfile = value;
                 OnPropertyChanged("IsProvidingProfile");
             }
@@ -91,17 +102,27 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UserProfile
                 {
                     _userProfileSettings.ProjectsNoAnswer = true;
                     _userProfileSettings.ProjectsCourses = false;
-                    _userProfileSettings.ProjectsPrivate = false;
-                    _userProfileSettings.ProjectsTeamSmall = false;
-                    _userProfileSettings.ProjectsTeamLarge = false;
-                    _userProfileSettings.ProjectsCommercial = false;
+                    _userProfileSettings.ProjectsPersonal = false;
+                    _userProfileSettings.ProjectsSharedSmall = false;
+                    _userProfileSettings.ProjectsSharedLarge = false;
                 }
                 OnPropertyChanged("ProjectsNoAnswer");
                 OnPropertyChanged("ProjectsCourses");
-                OnPropertyChanged("ProjectsPrivate");
-                OnPropertyChanged("ProjectsTeamSmall");
-                OnPropertyChanged("ProjectsTeamLarge");
-                OnPropertyChanged("ProjectsCommercial");
+                OnPropertyChanged("ProjectsPersonal");
+                OnPropertyChanged("ProjectsSharedSmall");
+                OnPropertyChanged("ProjectsSharedLarge");
+            }
+        }
+
+        private void CheckProjectsNoAnswer()
+        {
+            var s = _userProfileSettings;
+            var isSomeThingChecked = s.ProjectsCourses || s.ProjectsPersonal || s.ProjectsSharedSmall ||
+                                     s.ProjectsSharedLarge;
+            if (!isSomeThingChecked)
+            {
+                _userProfileSettings.ProjectsNoAnswer = true;
+                OnPropertyChanged("ProjectsNoAnswer");
             }
         }
 
@@ -117,65 +138,175 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UserProfile
                     _userProfileSettings.ProjectsNoAnswer = false;
                     OnPropertyChanged("ProjectsNoAnswer");
                 }
+                else
+                {
+                    CheckProjectsNoAnswer();
+                }
             }
         }
 
-        public bool ProjectsPrivate
+        public bool ProjectsPersonal
         {
-            get { return _userProfileSettings.ProjectsPrivate; }
+            get { return _userProfileSettings.ProjectsPersonal; }
             set
             {
-                _userProfileSettings.ProjectsPrivate = value;
-                OnPropertyChanged("ProjectsPrivate");
+                _userProfileSettings.ProjectsPersonal = value;
+                OnPropertyChanged("ProjectsPersonal");
                 if (value)
                 {
                     _userProfileSettings.ProjectsNoAnswer = false;
                     OnPropertyChanged("ProjectsNoAnswer");
                 }
+                else
+                {
+                    CheckProjectsNoAnswer();
+                }
             }
         }
 
-        public bool ProjectsTeamSmall
+        public bool ProjectsSharedSmall
         {
-            get { return _userProfileSettings.ProjectsTeamSmall; }
+            get { return _userProfileSettings.ProjectsSharedSmall; }
             set
             {
-                _userProfileSettings.ProjectsTeamSmall = value;
-                OnPropertyChanged("ProjectsTeamSmall");
+                _userProfileSettings.ProjectsSharedSmall = value;
+                OnPropertyChanged("ProjectsSharedSmall");
                 if (value)
                 {
                     _userProfileSettings.ProjectsNoAnswer = false;
                     OnPropertyChanged("ProjectsNoAnswer");
                 }
+                else
+                {
+                    CheckProjectsNoAnswer();
+                }
             }
         }
 
-        public bool ProjectsTeamLarge
+        public bool ProjectsSharedLarge
         {
-            get { return _userProfileSettings.ProjectsTeamLarge; }
+            get { return _userProfileSettings.ProjectsSharedLarge; }
             set
             {
-                _userProfileSettings.ProjectsTeamLarge = value;
-                OnPropertyChanged("ProjectsTeamLarge");
+                _userProfileSettings.ProjectsSharedLarge = value;
+                OnPropertyChanged("ProjectsSharedLarge");
                 if (value)
                 {
                     _userProfileSettings.ProjectsNoAnswer = false;
                     OnPropertyChanged("ProjectsNoAnswer");
                 }
+                else
+                {
+                    CheckProjectsNoAnswer();
+                }
             }
         }
 
-        public bool ProjectsCommercial
+        public bool TeamsNoAnswer
         {
-            get { return _userProfileSettings.ProjectsCommercial; }
+            get { return _userProfileSettings.TeamsNoAnswer; }
             set
             {
-                _userProfileSettings.ProjectsCommercial = value;
-                OnPropertyChanged("ProjectsCommercial");
                 if (value)
                 {
-                    _userProfileSettings.ProjectsNoAnswer = false;
-                    OnPropertyChanged("ProjectsNoAnswer");
+                    _userProfileSettings.TeamsNoAnswer = true;
+                    _userProfileSettings.TeamsSolo = false;
+                    _userProfileSettings.TeamsSmall = false;
+                    _userProfileSettings.TeamsMedium = false;
+                    _userProfileSettings.TeamsLarge = false;
+                }
+                OnPropertyChanged("TeamsNoAnswer");
+                OnPropertyChanged("TeamsSolo");
+                OnPropertyChanged("TeamsSmall");
+                OnPropertyChanged("TeamsMedium");
+                OnPropertyChanged("TeamsLarge");
+            }
+        }
+
+        private void CheckTeamNoAnswer()
+        {
+            var s = _userProfileSettings;
+            var isSomeThingChecked = s.TeamsSolo || s.TeamsSmall || s.TeamsMedium ||
+                                     s.TeamsLarge;
+            if (!isSomeThingChecked)
+            {
+                _userProfileSettings.TeamsNoAnswer = true;
+                OnPropertyChanged("TeamsNoAnswer");
+            }
+        }
+
+        public bool TeamsSolo
+        {
+            get { return _userProfileSettings.TeamsSolo; }
+            set
+            {
+                _userProfileSettings.TeamsSolo = value;
+                OnPropertyChanged("TeamsSolo");
+                if (value)
+                {
+                    _userProfileSettings.TeamsNoAnswer = false;
+                    OnPropertyChanged("TeamsNoAnswer");
+                }
+                else
+                {
+                    CheckTeamNoAnswer();
+                }
+            }
+        }
+
+        public bool TeamsSmall
+        {
+            get { return _userProfileSettings.TeamsSmall; }
+            set
+            {
+                _userProfileSettings.TeamsSmall = value;
+                OnPropertyChanged("TeamsSmall");
+                if (value)
+                {
+                    _userProfileSettings.TeamsNoAnswer = false;
+                    OnPropertyChanged("TeamsNoAnswer");
+                }
+                else
+                {
+                    CheckTeamNoAnswer();
+                }
+            }
+        }
+
+        public bool TeamsMedium
+        {
+            get { return _userProfileSettings.TeamsMedium; }
+            set
+            {
+                _userProfileSettings.TeamsMedium = value;
+                OnPropertyChanged("TeamsMedium");
+                if (value)
+                {
+                    _userProfileSettings.TeamsNoAnswer = false;
+                    OnPropertyChanged("TeamsNoAnswer");
+                }
+                else
+                {
+                    CheckTeamNoAnswer();
+                }
+            }
+        }
+
+        public bool TeamsLarge
+        {
+            get { return _userProfileSettings.TeamsLarge; }
+            set
+            {
+                _userProfileSettings.TeamsLarge = value;
+                OnPropertyChanged("TeamsLarge");
+                if (value)
+                {
+                    _userProfileSettings.TeamsNoAnswer = false;
+                    OnPropertyChanged("TeamsNoAnswer");
+                }
+                else
+                {
+                    CheckTeamNoAnswer();
                 }
             }
         }

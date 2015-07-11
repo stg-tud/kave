@@ -24,6 +24,7 @@ using KaVE.Commons.Model.Events;
 using KaVE.Commons.TestUtils;
 using KaVE.Commons.TestUtils.Model.Events;
 using KaVE.Commons.TestUtils.Utils;
+using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Exceptions;
 using KaVE.Commons.Utils.IO;
@@ -88,7 +89,8 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.Export
                 _mockLogFileManager.Object,
                 _mockSettingStore.Object,
                 _testDateUtils,
-                _mockLogger.Object);
+                _mockLogger.Object,
+                new RandomizationUtils());
 
             _notificationHelper = _uut.ErrorNotificationRequest.NewTestHelper();
             _linkNotificationHelper = _uut.SuccessNotificationRequest.NewTestHelper();

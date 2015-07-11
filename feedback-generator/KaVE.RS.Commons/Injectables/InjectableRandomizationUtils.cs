@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-namespace KaVE.Commons.Utils
+using JetBrains.Application;
+using KaVE.Commons.Utils;
+
+namespace KaVE.RS.Commons.Injectables
 {
-    public interface IDateUtils
-    {
-        System.DateTime Now { get; }
-        System.DateTime Today { get; }
-    }
+    [ShellComponent]
+    public class InjectableRandomizationUtils : RandomizationUtils {}
 }

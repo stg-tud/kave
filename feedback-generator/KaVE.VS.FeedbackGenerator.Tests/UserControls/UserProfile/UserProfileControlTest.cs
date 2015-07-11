@@ -16,6 +16,7 @@
 
 using System.Windows;
 using KaVE.Commons.TestUtils.UserControls;
+using KaVE.Commons.Utils;
 using KaVE.VS.FeedbackGenerator.Settings;
 using KaVE.VS.FeedbackGenerator.Settings.ExportSettingsSuite;
 using KaVE.VS.FeedbackGenerator.UserControls.UserProfile;
@@ -34,7 +35,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UserProfile
         {
             _exportSettings = new ExportSettings();
             _userProfileSettings = new UserProfileSettings();
-            _dataContext = new UserProfileContext(_exportSettings, _userProfileSettings);
+            _dataContext = new UserProfileContext(_exportSettings, _userProfileSettings, new RandomizationUtils());
         }
 
         private UserProfileControl Create()

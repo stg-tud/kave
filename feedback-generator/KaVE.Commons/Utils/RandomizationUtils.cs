@@ -14,24 +14,20 @@
  * limitations under the License.
  */
 
+using System;
+
 namespace KaVE.Commons.Utils
 {
-    public interface IDateUtils
+    public interface IRandomizationUtils
     {
-        System.DateTime Now { get; }
-        System.DateTime Today { get; }
+        Guid GetRandomGuid();
     }
 
-    public class DateUtils : IDateUtils
+    public class RandomizationUtils : IRandomizationUtils
     {
-        public System.DateTime Now
+        public Guid GetRandomGuid()
         {
-            get { return System.DateTime.Now; }
-        }
-
-        public System.DateTime Today
-        {
-            get { return System.DateTime.Today; }
+            return Guid.NewGuid();
         }
     }
 }

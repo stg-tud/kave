@@ -15,7 +15,7 @@
     <AssemblyName>KaVE.Commons.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
- </PropertyGroup>
+  </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
@@ -211,6 +211,7 @@
     <Compile Include="Utils\Json\JsonSerializationSuite\SerializationTestBase.cs" />
     <Compile Include="Utils\Json\JsonSerializationSuite\SolutionEventSerializationTest.cs" />
     <Compile Include="Utils\Json\JsonSerializationSuite\UpdateEventSerializationTest.cs" />
+    <Compile Include="Utils\Json\JsonSerializationSuite\UserProvileEventSerializationTest.cs" />
     <Compile Include="Utils\Json\JsonSerializationSuite\WindowEventSerializationTest.cs" />
     <Compile Include="Utils\Json\JsonSerializationTest.cs" />
     <Compile Include="Utils\JsonUtilsTest.cs" />
@@ -230,6 +231,7 @@
     <Compile Include="Utils\ObjectUsageExport\UsageContextTest.cs" />
     <Compile Include="Utils\ObjectUsageExport\ScopedNameResolverTest.cs" />
     <Compile Include="Utils\ObjectUsageExport\UsageExtractorTestSuite\TargetTypeTest.cs" />
+    <Compile Include="Utils\RandomizationUtilsTest.cs" />
     <Compile Include="Utils\Reflection\TypeExtensionsTest.cs" />
     <Compile Include="Utils\SSTPrinter\SSTPrintingUtilsTest.cs" />
     <Compile Include="Utils\SSTPrinter\SSTPrintingVisitorTestSuite\BlockPrinterTest.cs" />

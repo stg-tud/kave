@@ -14,24 +14,35 @@
  * limitations under the License.
  */
 
-namespace KaVE.Commons.Utils
-{
-    public interface IDateUtils
-    {
-        System.DateTime Now { get; }
-        System.DateTime Today { get; }
-    }
+using System;
+using KaVE.Commons.Utils;
+using NUnit.Framework;
 
-    public class DateUtils : IDateUtils
+namespace KaVE.Commons.Tests.Utils
+{
+    internal class RandomizationUtilsTest
     {
-        public System.DateTime Now
+        private RandomizationUtils _sut;
+
+        [SetUp]
+        public void SetUp()
         {
-            get { return System.DateTime.Now; }
+            _sut = new RandomizationUtils();
         }
 
-        public System.DateTime Today
+        [Test]
+        public void GuidIsNotEmpty()
         {
-            get { return System.DateTime.Today; }
+            var a = _sut.GetRandomGuid();
+            Assert.AreNotEqual(Guid.Empty, a);
+        }
+
+        [Test]
+        public void DifferntGuidsAreCreated()
+        {
+            var a = _sut.GetRandomGuid();
+            var b = _sut.GetRandomGuid();
+            Assert.AreNotEqual(a, b);
         }
     }
 }

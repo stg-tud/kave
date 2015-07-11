@@ -24,6 +24,7 @@ using JetBrains.ReSharper.Features.Navigation.Resources;
 using JetBrains.UI.CrossFramework;
 using JetBrains.UI.Options;
 using JetBrains.UI.Options.OptionPages.ToolsPages;
+using KaVE.Commons.Utils;
 using KaVE.RS.Commons.Settings.KaVE.RS.Commons.Settings;
 using KaVE.VS.FeedbackGenerator.Settings;
 using KaVE.VS.FeedbackGenerator.Settings.ExportSettingsSuite;
@@ -54,7 +55,8 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage
         public OptionPageControl(Lifetime lifetime,
             OptionsSettingsSmartContext ctx,
             IActionManager actionManager,
-            KaVEISettingsStore settingsStore)
+            KaVEISettingsStore settingsStore,
+            IRandomizationUtils rnd)
         {
             _lifetime = lifetime;
             _actionManager = actionManager;
@@ -69,7 +71,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage
             {
                 ExportSettings = _exportSettings,
                 AnonymizationContext = new AnonymizationContext(_exportSettings),
-                UserProfileContext = new UserProfileContext(_exportSettings, _userProfileSettings)
+                UserProfileContext = new UserProfileContext(_exportSettings, _userProfileSettings, rnd)
             };
 
             BindChangesToAnonymization(lifetime, ctx);

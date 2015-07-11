@@ -61,7 +61,13 @@ namespace KaVE.VS.FeedbackGenerator.Menu
         {
             if (HasContentToExport())
             {
-                var viewModel = new UploadWizardViewModel(_exporter, _logManager, _settingsStore, _dateUtils, _logger);
+                var viewModel = new UploadWizardViewModel(
+                    _exporter,
+                    _logManager,
+                    _settingsStore,
+                    _dateUtils,
+                    _logger,
+                    new RandomizationUtils());
                 new UploadWizardControl(viewModel, _settingsStore).ShowDialog();
             }
             else

@@ -234,6 +234,7 @@
     <Compile Include="SessionManager\Presentation\MultiSelection.cs" />
     <Compile Include="Menu\OptionPageAction.cs" />
     <Compile Include="Settings\SettingsCleaner.cs" />
+    <Compile Include="Settings\UserProfileSettings.cs" />
     <Compile Include="UserControls\Anonymization\AnonymizationContext.cs" />
     <Compile Include="UserControls\Anonymization\AnonymizationControl.xaml.cs">
       <DependentUpon>AnonymizationControl.xaml</DependentUpon>
@@ -268,7 +269,6 @@
       <DependentUpon>UserProfileControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="UserControls\UserProfile\UserProfileContext.cs" />
-    <Compile Include="Settings\UserProfileSettings.cs" />
     <Compile Include="UserControls\ValidationRules\MailValidationRule.cs" />
     <Compile Include="UserControls\ValidationRules\UploadUrlValidationRule.cs" />
     <Compile Include="UserControls\ValidationRules\WebAccessPrefixValidationRule.cs" />

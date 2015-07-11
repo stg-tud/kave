@@ -70,7 +70,8 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UploadWizard
             ILogManager logManager,
             ISettingsStore settingsStore,
             IDateUtils dateUtils,
-            ILogger logger)
+            ILogger logger,
+            IRandomizationUtils rnd)
         {
             _exporter = exporter;
             _logManager = logManager;
@@ -88,7 +89,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UploadWizard
             UserProfileSettings = _settingsStore.GetSettings<UserProfileSettings>();
 
             AnonymizationContext = new AnonymizationContext(ExportSettings);
-            UserProfileContext = new UserProfileContext(ExportSettings, UserProfileSettings);
+            UserProfileContext = new UserProfileContext(ExportSettings, UserProfileSettings, rnd);
         }
 
         private void OnProgressChanged(object sender, ProgressChangedEventArgs progressChangedEventArgs)

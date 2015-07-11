@@ -31,10 +31,14 @@ namespace KaVE.Commons.Tests.Model.Events.UserProfiles
             Assert.AreEqual(Positions.Unknown, sut.Position);
             Assert.True(sut.ProjectsNoAnswer);
             Assert.False(sut.ProjectsCourses);
-            Assert.False(sut.ProjectsPrivate);
-            Assert.False(sut.ProjectsTeamSmall);
-            Assert.False(sut.ProjectsTeamLarge);
-            Assert.False(sut.ProjectsCommercial);
+            Assert.False(sut.ProjectsPersonal);
+            Assert.False(sut.ProjectsSharedSmall);
+            Assert.False(sut.ProjectsSharedLarge);
+            Assert.True(sut.TeamsNoAnswer);
+            Assert.False(sut.TeamsSolo);
+            Assert.False(sut.TeamsSmall);
+            Assert.False(sut.TeamsMedium);
+            Assert.False(sut.TeamsLarge);
             Assert.AreEqual(Likert7Point.Unknown, sut.ProgrammingGeneral);
             Assert.AreEqual(Likert7Point.Unknown, sut.ProgrammingCSharp);
             Assert.AreEqual("", sut.Comment);
@@ -63,12 +67,16 @@ namespace KaVE.Commons.Tests.Model.Events.UserProfiles
                 ProfileId = "p",
                 Education = Educations.Training,
                 Position = Positions.HobbyProgrammer,
-                ProjectsNoAnswer = true,
+                ProjectsNoAnswer = false,
                 ProjectsCourses = true,
-                ProjectsPrivate = true,
-                ProjectsTeamSmall = true,
-                ProjectsTeamLarge = true,
-                ProjectsCommercial = true,
+                ProjectsPersonal = true,
+                ProjectsSharedSmall = true,
+                ProjectsSharedLarge = true,
+                TeamsNoAnswer = false,
+                TeamsSolo = true,
+                TeamsSmall = true,
+                TeamsMedium = true,
+                TeamsLarge = true,
                 ProgrammingGeneral = Likert7Point.Negative1,
                 ProgrammingCSharp = Likert7Point.Negative2,
                 Comment = "f"
@@ -78,12 +86,16 @@ namespace KaVE.Commons.Tests.Model.Events.UserProfiles
                 ProfileId = "p",
                 Education = Educations.Training,
                 Position = Positions.HobbyProgrammer,
-                ProjectsNoAnswer = true,
+                ProjectsNoAnswer = false,
                 ProjectsCourses = true,
-                ProjectsPrivate = true,
-                ProjectsTeamSmall = true,
-                ProjectsTeamLarge = true,
-                ProjectsCommercial = true,
+                ProjectsPersonal = true,
+                ProjectsSharedSmall = true,
+                ProjectsSharedLarge = true,
+                TeamsNoAnswer = false,
+                TeamsSolo = true,
+                TeamsSmall = true,
+                TeamsMedium = true,
+                TeamsLarge = true,
                 ProgrammingGeneral = Likert7Point.Negative1,
                 ProgrammingCSharp = Likert7Point.Negative2,
                 Comment = "f"
@@ -153,11 +165,11 @@ namespace KaVE.Commons.Tests.Model.Events.UserProfiles
         }
 
         [Test]
-        public void Equality_DifferentProjects_Private()
+        public void Equality_DifferentProjects_Personal()
         {
             var a = new UserProfileEvent
             {
-                ProjectsPrivate = true
+                ProjectsPersonal = true
             };
             var b = new UserProfileEvent();
             Assert.AreNotEqual(a, b);
@@ -165,11 +177,11 @@ namespace KaVE.Commons.Tests.Model.Events.UserProfiles
         }
 
         [Test]
-        public void Equality_DifferentProjects_TeamInsignificant()
+        public void Equality_DifferentProjects_SharedSmall()
         {
             var a = new UserProfileEvent
             {
-                ProjectsTeamSmall = true
+                ProjectsSharedSmall = true
             };
             var b = new UserProfileEvent();
             Assert.AreNotEqual(a, b);
@@ -177,11 +189,11 @@ namespace KaVE.Commons.Tests.Model.Events.UserProfiles
         }
 
         [Test]
-        public void Equality_DifferentProjects_TeamSignificant()
+        public void Equality_DifferentProjects_SharedLarge()
         {
             var a = new UserProfileEvent
             {
-                ProjectsTeamLarge = true
+                ProjectsSharedLarge = true
             };
             var b = new UserProfileEvent();
             Assert.AreNotEqual(a, b);
@@ -189,11 +201,59 @@ namespace KaVE.Commons.Tests.Model.Events.UserProfiles
         }
 
         [Test]
-        public void Equality_DifferentProjects_Commercial()
+        public void Equality_DifferentTeam_NoAnswer()
         {
             var a = new UserProfileEvent
             {
-                ProjectsCommercial = true
+                TeamsNoAnswer = false
+            };
+            var b = new UserProfileEvent();
+            Assert.AreNotEqual(a, b);
+            Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
+        }
+
+        [Test]
+        public void Equality_DifferentTeam_Solo()
+        {
+            var a = new UserProfileEvent
+            {
+                TeamsSolo = true
+            };
+            var b = new UserProfileEvent();
+            Assert.AreNotEqual(a, b);
+            Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
+        }
+
+        [Test]
+        public void Equality_DifferentTeam_Small()
+        {
+            var a = new UserProfileEvent
+            {
+                TeamsSmall = true
+            };
+            var b = new UserProfileEvent();
+            Assert.AreNotEqual(a, b);
+            Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
+        }
+
+        [Test]
+        public void Equality_DifferentTeam_Medium()
+        {
+            var a = new UserProfileEvent
+            {
+                TeamsMedium = true
+            };
+            var b = new UserProfileEvent();
+            Assert.AreNotEqual(a, b);
+            Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
+        }
+
+        [Test]
+        public void Equality_DifferentTeam_Large()
+        {
+            var a = new UserProfileEvent
+            {
+                TeamsLarge = true
             };
             var b = new UserProfileEvent();
             Assert.AreNotEqual(a, b);
@@ -225,7 +285,7 @@ namespace KaVE.Commons.Tests.Model.Events.UserProfiles
         }
 
         [Test]
-        public void Equality_DifferentFeedback()
+        public void Equality_DifferentComment()
         {
             var a = new UserProfileEvent
             {

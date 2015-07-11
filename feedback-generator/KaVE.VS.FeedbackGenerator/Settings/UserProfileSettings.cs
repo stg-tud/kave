@@ -16,13 +16,17 @@
 
 using JetBrains.Application.Settings;
 using KaVE.Commons.Model.Events.UserProfiles;
+using KaVE.RS.Commons.Settings;
 
 namespace KaVE.VS.FeedbackGenerator.Settings
 {
-    [SettingsKey(typeof (FeedbackSettings), "KaVE UserProfile Settings")]
+    [SettingsKey(typeof (KaVESettings), "KaVE UserProfile Settings")]
     // WARNING: Do not change classname, as it is used to identify settings
     public class UserProfileSettings
     {
+        [SettingsEntry(false, "UserProfile: HasBeenAskedtoProvideProfile")]
+        public bool HasBeenAskedtoProvideProfile;
+
         [SettingsEntry(false, "UserProfile: IsProvidingProfile")]
         public bool IsProvidingProfile;
 
@@ -41,17 +45,29 @@ namespace KaVE.VS.FeedbackGenerator.Settings
         [SettingsEntry(false, "UserProfile: ProjectsCourses")]
         public bool ProjectsCourses;
 
-        [SettingsEntry(false, "UserProfile: ProjectsPrivate")]
-        public bool ProjectsPrivate;
+        [SettingsEntry(false, "UserProfile: ProjectsPersonal")]
+        public bool ProjectsPersonal;
 
-        [SettingsEntry(false, "UserProfile: ProjectsTeamSmall")]
-        public bool ProjectsTeamSmall;
+        [SettingsEntry(false, "UserProfile: ProjectsSharedSmall")]
+        public bool ProjectsSharedSmall;
 
-        [SettingsEntry(false, "UserProfile: ProjectsTeamLarge")]
-        public bool ProjectsTeamLarge;
+        [SettingsEntry(false, "UserProfile: ProjectsSharedLarge")]
+        public bool ProjectsSharedLarge;
 
-        [SettingsEntry(false, "UserProfile: ProjectsCommercial")]
-        public bool ProjectsCommercial;
+        [SettingsEntry(true, "UserProfile: TeamNoAnswer")]
+        public bool TeamsNoAnswer;
+
+        [SettingsEntry(false, "UserProfile: TeamSolo")]
+        public bool TeamsSolo;
+
+        [SettingsEntry(false, "UserProfile: TeamSmall")]
+        public bool TeamsSmall;
+
+        [SettingsEntry(false, "UserProfile: TeamMedium")]
+        public bool TeamsMedium;
+
+        [SettingsEntry(false, "UserProfile: TeamLarge")]
+        public bool TeamsLarge;
 
         [SettingsEntry(Likert7Point.Unknown, "UserProfile: ProgrammingGeneral")]
         public Likert7Point ProgrammingGeneral;
