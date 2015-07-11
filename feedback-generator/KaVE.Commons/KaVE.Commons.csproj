@@ -62,6 +62,7 @@
     <Compile Include="Model\Names\CSharp\NameUtils.cs" />
     <Compile Include="Model\Names\IDelegateTypeName.cs" />
     <Compile Include="Model\Names\ILambdaName.cs" />
+    <Compile Include="Model\SSTs\Expressions\Assignable\IBooleanExpression.cs" />
     <Compile Include="Properties\JetBrainsAnnotations.cs" />
     <Compile Include="Utils\CodeCompletion\Impl\ExamplePBNRecommender.cs" />
     <Compile Include="Utils\CodeCompletion\Impl\SmileNetworkUtils.cs" />
