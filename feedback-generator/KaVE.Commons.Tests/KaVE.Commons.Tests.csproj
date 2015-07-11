@@ -77,7 +77,6 @@
     <Compile Include="Model\Events\IDEEventTest.cs" />
     <Compile Include="Model\Events\InfoEventTest.cs" />
     <Compile Include="Model\Events\UserProfiles\UserProfileEventTest.cs" />
-    <Compile Include="Model\Groums\GroumTest.cs" />
     <Compile Include="Model\Names\CSharp\ArrayTypeNameTest.cs" />
     <Compile Include="Model\Names\CSharp\CSharpNameFromInfoFactoryTest.cs" />
     <Compile Include="Model\Names\CSharp\CSharpNameUtilsTest.cs" />
