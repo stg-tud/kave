@@ -53,6 +53,7 @@ namespace KaVE.VS.FeedbackGenerator.Generators
             return new TIDEEvent
             {
                 KaVEVersion = _env.KaVEVersion,
+                IDESessionUUID = _env.IDESession.UUID,
                 ActiveWindow = DTEActiveWindow.GetName(),
                 ActiveDocument = DTEActiveDocument.GetName(),
                 TriggeredBy = CurrentTrigger,
@@ -119,6 +120,7 @@ namespace KaVE.VS.FeedbackGenerator.Generators
         /// </summary>
         protected void Fire<TEvent>([NotNull] TEvent @event) where TEvent : IDEEvent
         {
+            // TODO @Sven: why is it set here and not with the other information "on create"?
             @event.IDESessionUUID = _env.IDESession.UUID;
             _messageBus.Publish<IDEEvent>(@event);
             WriteToDebugConsole(@event);

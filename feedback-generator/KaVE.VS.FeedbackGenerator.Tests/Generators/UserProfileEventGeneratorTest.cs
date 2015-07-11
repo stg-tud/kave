@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-using System.Net.Mail;
+using KaVE.Commons.Model.Events;
+using KaVE.Commons.Model.Events.UserProfiles;
 using KaVE.RS.Commons.Settings;
 using KaVE.VS.FeedbackGenerator.Generators;
 using KaVE.VS.FeedbackGenerator.Settings;
@@ -25,91 +26,245 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators
 {
     internal class UserProfileEventGeneratorTest : EventGeneratorTestBase
     {
-        private const string TestUserName = "Some Name";
-        private static readonly MailAddress TestMailAddress = new MailAddress("test@mail.com");
-        private const int TestNumber = 42;
-        /*    private const Category TestCategory = Category.Category2;
-        private const Valuation TestValuation = Valuation.Valuation2; */
-        private const string TestFeedback = "this tool is awesome!";
-
-        private UserProfileSettings _testUserSettings;
-
-        private Mock<ISettingsStore> _testSettingsStore;
+        private UserProfileSettings _userSettings;
+        private ISettingsStore _settingsStore;
 
         private UserProfileEventGenerator _uut;
 
         [SetUp]
         public void Setup()
         {
-            _testUserSettings = new UserProfileSettings
+            _userSettings = new UserProfileSettings
             {
-                //      Category = TestCategory,
-                //Email = TestMailAddress.ToString(),
-                Comment = TestFeedback,
-                //ExperienceYears = TestNumber,
-                IsProvidingProfile = true,
-                //Name = TestUserName
-                //     Valuation = TestValuation
+                HasBeenAskedtoProvideProfile = false,
+                IsProvidingProfile = false,
+                ProfileId = "",
+                Education = Educations.Unknown,
+                Position = Positions.Unknown,
+                ProjectsNoAnswer = true,
+                ProjectsCourses = false,
+                ProjectsPersonal = false,
+                ProjectsSharedSmall = false,
+                ProjectsSharedLarge = false,
+                TeamsNoAnswer = true,
+                TeamsSolo = false,
+                TeamsSmall = false,
+                TeamsMedium = false,
+                TeamsLarge = false,
+                ProgrammingGeneral = Likert7Point.Unknown,
+                ProgrammingCSharp = Likert7Point.Unknown,
+                Comment = ""
             };
 
-            _testSettingsStore = new Mock<ISettingsStore>();
-            _testSettingsStore.Setup(settingsStore => settingsStore.GetSettings<UserProfileSettings>())
-                              .Returns(_testUserSettings);
+            _settingsStore = Mock.Of<ISettingsStore>();
+            Mock.Get(_settingsStore).Setup(s => s.GetSettings<UserProfileSettings>()).Returns(_userSettings);
 
-            _uut = new UserProfileEventGenerator(TestRSEnv, TestMessageBus, TestDateUtils, _testSettingsStore.Object);
+            _uut = new UserProfileEventGenerator(TestRSEnv, TestMessageBus, TestDateUtils, _settingsStore);
+        }
+
+        private void AssertEvent(UserProfileEvent expected)
+        {
+            var actual = _uut.CreateEvent();
+
+            // remove information from base event...
+            actual.KaVEVersion = null;
+            actual.TriggeredAt = null;
+            actual.TriggeredBy = IDEEvent.Trigger.Unknown;
+            actual.Duration = null;
+            actual.ActiveWindow = null;
+            actual.ActiveDocument = null;
+
+            // .. but keep one to make sure it was actually invoked
+            expected.IDESessionUUID = TestRSEnv.IDESession.UUID;
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void UserSettingsAreNotReadOnInit()
+        {
+            Mock.Get(_settingsStore).Verify(s => s.GetSettings<UserProfileSettings>(), Times.Never);
         }
 
         [Test]
         public void ShouldNotPublishAnyEvents()
         {
-            _testUserSettings.IsProvidingProfile = true;
-
-            //_uut.CreateExportEvent();
-
+            _uut.CreateEvent();
             AssertNoEvent();
         }
 
         [Test]
-        public void ShouldSetUserProfileIfEnabled()
+        public void CopiesProfileId()
         {
-            _testUserSettings.IsProvidingProfile = true;
-
-            var actualEvent = _uut.CreateExportEvent();
-
-          //  Assert.AreEqual(TestUserName, actualEvent.Name);
-          //  Assert.AreEqual(TestMailAddress, actualEvent.Email);
-            //   Assert.AreEqual(TestCategory, actualEvent.Category);
-            //        Assert.AreEqual(TestNumber, actualEvent.Number);
-            //  Assert.AreEqual(TestValuation, actualEvent.Valuation);
-            Assert.AreEqual(TestFeedback, actualEvent.Comment);
+            _userSettings.ProfileId = "P";
+            AssertEvent(
+                new UserProfileEvent
+                {
+                    ProfileId = "P"
+                });
         }
 
         [Test]
-        public void ShouldNotSetUserProfileIfDisabled()
+        public void CopiesEducation()
         {
-            _testUserSettings.IsProvidingProfile = false;
-
-            var actualEvent = _uut.CreateExportEvent();
-
-         //   Assert.AreNotEqual(TestUserName, actualEvent.Name);
-          //  Assert.AreNotEqual(TestMailAddress, actualEvent.Email);
-            //  Assert.AreNotEqual(TestCategory, actualEvent.Category);
-            //   Assert.AreNotEqual(TestNumber, actualEvent.Number);
-            //  Assert.AreNotEqual(TestValuation, actualEvent.Valuation);
+            _userSettings.Education = Educations.Autodidact;
+            AssertEvent(
+                new UserProfileEvent
+                {
+                    Education = Educations.Autodidact
+                });
         }
 
         [Test]
-        public void ShouldAcceptEmptyFields()
+        public void CopiesPosition()
         {
-            _testUserSettings.IsProvidingProfile = true;
-            //   _testUserSettings.Category = Category.Unknown;
-           // _testUserSettings.Email = "";
-            _testUserSettings.Comment = "";
-           // _testUserSettings.ExperienceYears = 0;
-          //  _testUserSettings.Name = "";
-            //  _testUserSettings.Valuation = Valuation.Unknown;
+            _userSettings.Position = Positions.HobbyProgrammer;
+            AssertEvent(
+                new UserProfileEvent
+                {
+                    Position = Positions.HobbyProgrammer
+                });
+        }
 
-            _uut.CreateExportEvent();
+        [Test]
+        public void CopiesProjectsNoAnswer()
+        {
+            _userSettings.ProjectsNoAnswer = false;
+            AssertEvent(
+                new UserProfileEvent
+                {
+                    ProjectsNoAnswer = false
+                });
+        }
+
+        [Test]
+        public void CopiesProjectsCourses()
+        {
+            _userSettings.ProjectsCourses = true;
+            AssertEvent(
+                new UserProfileEvent
+                {
+                    ProjectsCourses = true
+                });
+        }
+
+        [Test]
+        public void CopiesProjectsPersonal()
+        {
+            _userSettings.ProjectsPersonal = true;
+            AssertEvent(
+                new UserProfileEvent
+                {
+                    ProjectsPersonal = true
+                });
+        }
+
+        [Test]
+        public void CopiesProjectsSharedSmall()
+        {
+            _userSettings.ProjectsSharedSmall = true;
+            AssertEvent(
+                new UserProfileEvent
+                {
+                    ProjectsSharedSmall = true
+                });
+        }
+
+        [Test]
+        public void CopiesTeamsNoAnswer()
+        {
+            _userSettings.TeamsNoAnswer = false;
+            AssertEvent(
+                new UserProfileEvent
+                {
+                    TeamsNoAnswer = false
+                });
+        }
+
+        [Test]
+        public void CopiesTeamsSolo()
+        {
+            _userSettings.TeamsSolo = true;
+            AssertEvent(
+                new UserProfileEvent
+                {
+                    TeamsSolo = true
+                });
+        }
+
+        [Test]
+        public void CopiesTeamsSmall()
+        {
+            _userSettings.TeamsSmall = true;
+            AssertEvent(
+                new UserProfileEvent
+                {
+                    TeamsSmall = true
+                });
+        }
+
+        [Test]
+        public void CopiesTeamsMedium()
+        {
+            _userSettings.TeamsMedium = true;
+            AssertEvent(
+                new UserProfileEvent
+                {
+                    TeamsMedium = true
+                });
+        }
+
+        [Test]
+        public void CopiesTeamsLarge()
+        {
+            _userSettings.TeamsLarge = true;
+            AssertEvent(
+                new UserProfileEvent
+                {
+                    TeamsLarge = true
+                });
+        }
+
+        [Test]
+        public void CopiesProgrammingGeneral()
+        {
+            _userSettings.ProgrammingGeneral = Likert7Point.Neutral;
+            AssertEvent(
+                new UserProfileEvent
+                {
+                    ProgrammingGeneral = Likert7Point.Neutral
+                });
+        }
+
+        [Test]
+        public void CopiesProgrammingCSharp()
+        {
+            _userSettings.ProgrammingCSharp = Likert7Point.Negative1;
+            AssertEvent(
+                new UserProfileEvent
+                {
+                    ProgrammingCSharp = Likert7Point.Negative1
+                });
+        }
+
+        [Test]
+        public void CopiesComment()
+        {
+            _userSettings.Comment = "C";
+            AssertEvent(
+                new UserProfileEvent
+                {
+                    Comment = "C"
+                });
+        }
+
+        [Test]
+        public void CommentIsReset()
+        {
+            _userSettings.Comment = "C";
+            _uut.ResetComment();
+            _userSettings.Comment = "";
+            Mock.Get(_settingsStore).Verify(s => s.SetSettings(_userSettings));
         }
     }
 }

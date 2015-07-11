@@ -26,18 +26,14 @@ namespace KaVE.VS.FeedbackGenerator.Generators
 {
     public interface IUserProfileEventGenerator
     {
-        UserProfileEvent CreateExportEvent();
+        UserProfileEvent CreateEvent();
+        void ResetComment();
     }
 
     [ShellComponent]
     public class UserProfileEventGenerator : EventGeneratorBase, IUserProfileEventGenerator
     {
         private readonly ISettingsStore _settingsStore;
-
-        private UserProfileSettings Settings
-        {
-            get { return _settingsStore.GetSettings<UserProfileSettings>(); }
-        }
 
         public UserProfileEventGenerator([NotNull] IRSEnv env,
             [NotNull] IMessageBus messageBus,
@@ -47,34 +43,41 @@ namespace KaVE.VS.FeedbackGenerator.Generators
             _settingsStore = settingsStore;
         }
 
-        public UserProfileEvent CreateExportEvent()
+        public UserProfileEvent CreateEvent()
         {
             var exportEvent = Create<UserProfileEvent>();
+            var s = _settingsStore.GetSettings<UserProfileSettings>();
 
-            if (Settings.IsProvidingProfile)
-            {
-                AddUserInformationTo(exportEvent);
-            }
+            exportEvent.ProfileId = s.ProfileId;
 
-            exportEvent.Comment = Settings.Comment;
+            exportEvent.Education = s.Education;
+            exportEvent.Position = s.Position;
+
+            exportEvent.ProjectsNoAnswer = s.ProjectsNoAnswer;
+            exportEvent.ProjectsCourses = s.ProjectsCourses;
+            exportEvent.ProjectsPersonal = s.ProjectsPersonal;
+            exportEvent.ProjectsSharedSmall = s.ProjectsSharedSmall;
+            exportEvent.ProjectsSharedLarge = s.ProjectsSharedLarge;
+
+            exportEvent.TeamsNoAnswer = s.TeamsNoAnswer;
+            exportEvent.TeamsSolo = s.TeamsSolo;
+            exportEvent.TeamsSmall = s.TeamsSmall;
+            exportEvent.TeamsMedium = s.TeamsMedium;
+            exportEvent.TeamsLarge = s.TeamsLarge;
+
+            exportEvent.ProgrammingGeneral = s.ProgrammingGeneral;
+            exportEvent.ProgrammingCSharp = s.ProgrammingCSharp;
+
+            exportEvent.Comment = s.Comment;
 
             return exportEvent;
         }
 
-        private void AddUserInformationTo(UserProfileEvent exportEvent)
+        public void ResetComment()
         {
-            exportEvent.ProfileId = Settings.ProfileId;
-
-            exportEvent.Education = Settings.Education;
-            exportEvent.Position = Settings.Position;
-
-            // TODO RS9: UserProfile
-            exportEvent.ProjectsNoAnswer = Settings.ProjectsNoAnswer;
-            exportEvent.ProjectsCourses = Settings.ProjectsCourses;
-           // exportEvent.ProjectsPersonal = Settings.ProjectsPrivate;
-
-            exportEvent.ProgrammingGeneral = Settings.ProgrammingGeneral;
-            exportEvent.ProgrammingCSharp = Settings.ProgrammingCSharp;
+            var s = _settingsStore.GetSettings<UserProfileSettings>();
+            s.Comment = "";
+            _settingsStore.SetSettings(s);
         }
     }
 }

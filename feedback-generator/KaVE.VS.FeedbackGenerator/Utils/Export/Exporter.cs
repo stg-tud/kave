@@ -58,7 +58,7 @@ namespace KaVE.VS.FeedbackGenerator.Utils.Export
             }
 
             // TODO: only add event if either profile or feedback is provided
-            events.Add(_exportEventGenerator.CreateExportEvent());
+            events.Add(_exportEventGenerator.CreateEvent());
 
             using (var stream = new MemoryStream())
             {
