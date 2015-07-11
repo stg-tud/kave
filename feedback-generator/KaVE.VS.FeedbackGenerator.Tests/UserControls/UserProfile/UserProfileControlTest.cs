@@ -24,6 +24,7 @@ using NUnit.Framework;
 
 namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UserProfile
 {
+    [RequiresSTA]
     internal class UserProfileControlTest : BaseUserControlTest
     {
         private ExportSettings _exportSettings;

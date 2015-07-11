@@ -81,7 +81,8 @@ limitations under the License.
                         <ColumnDefinition Width="100" />
                     </Grid.ColumnDefinitions>
                     <TextBox Grid.Column="0" Grid.Row="0" Name="ModelStorePathTextBox"
-                             VerticalAlignment="Top" HorizontalAlignment="Stretch" Margin="10,0,10,0" />
+                             VerticalAlignment="Top" HorizontalAlignment="Stretch" Margin="10,0,10,0"
+                             Text="{Binding ModelPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                     <Button Grid.Column="1" Grid.Row="0" Name="ModelStorePathBrowseButton"
                             Click="OnBrowse" Padding="15,3,15,3" Content="Browse ..." />
                 </Grid>

@@ -24,8 +24,7 @@ namespace KaVE.Commons.Utils.CodeCompletion.Impl
 {
     public class SmilePBNRecommenderStore : IPBNRecommenderStore
     {
-        // TODO change to setter that checks existence!
-        public string BasePath { get; set; }
+        public string BasePath { get; protected set; }
         private readonly IIoUtils _io;
 
         public SmilePBNRecommenderStore(string basePath, IIoUtils io)
@@ -33,7 +32,6 @@ namespace KaVE.Commons.Utils.CodeCompletion.Impl
             BasePath = basePath;
             _io = io;
         }
-
 
         public bool IsAvailable(CoReTypeName type)
         {

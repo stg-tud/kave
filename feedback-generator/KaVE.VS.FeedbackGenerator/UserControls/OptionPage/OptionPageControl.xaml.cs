@@ -51,6 +51,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage
         private readonly KaVEISettingsStore _settingsStore;
         private readonly ExportSettings _exportSettings;
         private readonly UserProfileSettings _userProfileSettings;
+        private readonly ModelStoreSettings _modelStoreSettings;
 
         public OptionPageControl(Lifetime lifetime,
             OptionsSettingsSmartContext ctx,
@@ -66,10 +67,12 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage
 
             _exportSettings = settingsStore.GetSettings<ExportSettings>();
             _userProfileSettings = settingsStore.GetSettings<UserProfileSettings>();
+            _modelStoreSettings = settingsStore.GetSettings<ModelStoreSettings>();
 
             DataContext = new OptionPageViewModel
             {
                 ExportSettings = _exportSettings,
+                ModelStoreSettings = _modelStoreSettings,
                 AnonymizationContext = new AnonymizationContext(_exportSettings),
                 UserProfileContext = new UserProfileContext(_exportSettings, _userProfileSettings, rnd)
             };
@@ -178,11 +181,9 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage
         public bool OnOk()
         {
             // TODO: validation
-
             _settingsStore.SetSettings(_exportSettings);
             _settingsStore.SetSettings(_userProfileSettings);
-
-
+            _settingsStore.SetSettings(_modelStoreSettings);
             return true;
         }
 

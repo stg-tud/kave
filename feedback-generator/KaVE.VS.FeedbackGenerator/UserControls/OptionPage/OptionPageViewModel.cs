@@ -16,6 +16,7 @@
 
 using System.Globalization;
 using System.IO;
+using KaVE.RS.Commons.Settings.KaVE.RS.Commons.Settings;
 using KaVE.VS.FeedbackGenerator.Interactivity;
 using KaVE.VS.FeedbackGenerator.SessionManager;
 using KaVE.VS.FeedbackGenerator.Settings.ExportSettingsSuite;
@@ -72,6 +73,8 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage
 
         public UserProfileContext UserProfileContext { get; set; }
 
+        public ModelStoreSettings ModelStoreSettings { get; set; }
+
         public string UploadUrl
         {
             get { return ExportSettings.UploadUrl; }
@@ -82,6 +85,16 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage
         {
             get { return ExportSettings.WebAccessPrefix; }
             set { ExportSettings.WebAccessPrefix = value; }
+        }
+
+        public string ModelPath
+        {
+            get { return ModelStoreSettings.ModelStorePath; }
+            set
+            {
+                ModelStoreSettings.ModelStorePath = value;
+                RaisePropertyChanged(self => self.ModelPath);
+            }
         }
 
         public AnonymizationContext AnonymizationContext { get; set; }
