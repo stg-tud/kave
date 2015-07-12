@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-using System;
 using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure.LookupItems;
 using JetBrains.ReSharper.Feature.Services.CSharp.CodeCompletion.Infrastructure;
 using JetBrains.ReSharper.Features.Intellisense.CodeCompletion.CSharp.Rules;
@@ -29,7 +28,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Utils
     [Language(typeof (CSharpLanguage))]
     public class TestProposalProvider : CSharpItemsProviderBasic
     {
-        public static Boolean Enabled { get; set; }
+        public static bool Enabled { get; set; }
 
         protected override bool IsAvailable(CSharpCodeCompletionContext context)
         {
@@ -38,10 +37,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Utils
 
         protected override bool AddLookupItems(CSharpCodeCompletionContext context, GroupedItemsCollector collector)
         {
-            // TODO RS9: was "AddToTop"
-            // TODO RS9: adding this element causes "ShouldHandleUnknownLookupItemType" to fail. probably some property is accessed within Resharper code that is not mocked and therefore null.
-            var declaredElementLookupItem = CreateXamlLookupItem();
-            collector.Add(declaredElementLookupItem);
+            collector.Add(CreateXamlLookupItem());
             return true;
         }
 
@@ -52,11 +48,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Utils
             var xamlLookupItem = new Mock<IDeclaredElementLookupItem>();
             xamlLookupItem.Setup(li => li.DisplayName).Returns(new RichText("XamlLookupItem"));
             xamlLookupItem.Setup(li => li.PreferredDeclaredElement).Returns(xamlDeclaredElementInstance);
-
-            //xamlLookupItem.Setup(li => li.Identity).Returns("XamlLookupItem");
-            //xamlLookupItem.Setup(li => li.LanguageType).Returns(CSharpLanguage.Instance);
-
-            //xamlLookupItem.SetupAllProperties();
+            xamlLookupItem.Setup(li => li.Placement).Returns(new LookupItemPlacement(""));
 
             return xamlLookupItem.Object;
         }
