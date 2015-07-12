@@ -35,7 +35,7 @@ using KaVE.VS.FeedbackGenerator.Utils.Export;
 using Moq;
 using NUnit.Framework;
 
-namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.Export
+namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UploadWizard
 {
     internal class ExporterTest
     {

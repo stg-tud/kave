@@ -161,7 +161,7 @@
     <Compile Include="Settings\SettingsCleanerTest.cs" />
     <Compile Include="UserControls\Anonymization\AnonymizationContextTest.cs" />
     <Compile Include="UserControls\Anonymization\AnonymizationControlTest.cs" />
-    <Compile Include="UserControls\Export\ExporterTest.cs" />
+    <Compile Include="UserControls\UploadWizard\ExporterTest.cs" />
     <Compile Include="UserControls\BaseUserControlTest.cs" />
     <Compile Include="UserControls\UserProfile\UserProfileControlTest.cs" />
     <Compile Include="UserControls\ValidationRules\MailValidationRuleTest.cs" />
@@ -225,7 +225,7 @@
     <Compile Include="TestFactories\DTEMockUtils.cs" />
     <Compile Include="TestFactories\LookupItemsMockUtils.cs" />
     <Compile Include="SessionManager\EventViewTest.cs" />
-    <Compile Include="UserControls\Export\UploadWizardViewModelTest.cs" />
+    <Compile Include="UserControls\UploadWizard\UploadWizardContextTest.cs" />
     <Compile Include="TestRSEnv.cs" />
     <Compile Include="UserControls\ValueConverter\EnumLocalizationConverterTest.cs" />
     <Compile Include="Utils\InverseBoolConverterTest.cs" />

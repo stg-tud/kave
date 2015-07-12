@@ -36,7 +36,7 @@ using KaVE.VS.FeedbackGenerator.Utils.Logging;
 
 namespace KaVE.VS.FeedbackGenerator.UserControls.UploadWizard
 {
-    public class UploadWizardViewModel : ViewModelBase<UploadWizardViewModel>
+    public class UploadWizardContext : ViewModelBase<UploadWizardContext>
     {
         private readonly IExporter _exporter;
         private readonly ILogManager _logManager;
@@ -66,7 +66,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UploadWizard
             get { return _successNotificationRequest; }
         }
 
-        public UploadWizardViewModel(IExporter exporter,
+        public UploadWizardContext(IExporter exporter,
             ILogManager logManager,
             ISettingsStore settingsStore,
             IDateUtils dateUtils,

@@ -286,7 +286,7 @@
       <DependentUpon>UploadWizardControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Menu\UploadWizardAction.cs" />
-    <Compile Include="UserControls\UploadWizard\UploadWizardViewModel.cs" />
+    <Compile Include="UserControls\UploadWizard\UploadWizardContext.cs" />
     <Compile Include="UserControls\TrayNotification\NotifyTrayIcon.cs" />
     <Compile Include="UserControls\TrayNotification\SoftBalloonPopup.xaml.cs">
       <DependentUpon>SoftBalloonPopup.xaml</DependentUpon>

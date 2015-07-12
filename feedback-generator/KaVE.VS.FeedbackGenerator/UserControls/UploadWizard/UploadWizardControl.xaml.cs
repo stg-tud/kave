@@ -16,17 +16,20 @@
 
 using System.ComponentModel;
 using System.Windows;
+using KaVE.RS.Commons;
 using KaVE.RS.Commons.Settings;
+using KaVE.RS.Commons.Utils;
 using KaVE.VS.FeedbackGenerator.Interactivity;
+using KaVE.VS.FeedbackGenerator.SessionManager.Presentation;
 using MessageBox = JetBrains.Util.MessageBox;
 
 namespace KaVE.VS.FeedbackGenerator.UserControls.UploadWizard
 {
     public partial class UploadWizardControl
     {
-        private UploadWizardViewModel MyDataContext
+        private UploadWizardContext MyDataContext
         {
-            get { return (UploadWizardViewModel) DataContext; }
+            get { return (UploadWizardContext) DataContext; }
         }
 
         public enum ExportType
@@ -37,13 +40,13 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UploadWizard
 
         private readonly ISettingsStore _settingsStore;
 
-        public UploadWizardControl(UploadWizardViewModel uploadWizardViewModel, ISettingsStore settingsStore)
+        public UploadWizardControl(UploadWizardContext dataContext, ISettingsStore settingsStore)
         {
             InitializeComponent();
 
             _settingsStore = settingsStore;
 
-            DataContext = uploadWizardViewModel;
+            DataContext = dataContext;
             MyDataContext.PropertyChanged += OnViewModelPropertyChanged;
             MyDataContext.ErrorNotificationRequest.Raised += new NotificationRequestHandler(this).Handle;
             MyDataContext.SuccessNotificationRequest.Raised += new LinkNotificationRequestHandler(this).Handle;
@@ -52,15 +55,8 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UploadWizard
         private void On_Review_Click(object sender, RoutedEventArgs e)
         {
             StoreSettings();
-
-            /* var isValidEmail = _userSettingsViewModel.ValidateEmail(UserSettingsGrid.EmailTextBox.Text);
-            if (isValidEmail)
-            {
-                _userSettingsViewModel.SetUserSettings();
-                _uploadWizardViewModel.SetSettings();
-                Close();
-                Registry.GetComponent<ActionExecutor>().ExecuteActionGuarded<SessionManagerWindowAction>();
-            }*/
+            Close();
+            Registry.GetComponent<ActionExecutor>().ExecuteActionGuarded<SessionManagerWindowAction>();
         }
 
         private void StoreSettings()
@@ -84,14 +80,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UploadWizard
         private void ExportAndUpdateSettings(ExportType exportType)
         {
             StoreSettings();
-            
-            /*var isValidEmail = _userSettingsViewModel.ValidateEmail(UserSettingsGrid.EmailTextBox.Text);
-                      if (isValidEmail)
-                      {
-                          _userSettingsViewModel.SetUserSettings();
-                          _uploadWizardViewModel.SetSettings();*/
             MyDataContext.Export(exportType);
-            //}
         }
 
         private void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)

@@ -40,15 +40,15 @@ using KaVE.VS.FeedbackGenerator.Utils.Logging;
 using Moq;
 using NUnit.Framework;
 
-namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.Export
+namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UploadWizard
 {
-    internal class UploadWizardViewModelTest
+    internal class UploadWizardContextTest
     {
         private const string TestUploadUrl = "http://foo.bar/";
 
         private Mock<ILogManager> _mockLogFileManager;
         private List<Mock<ILog>> _mockLogs;
-        private UploadWizardViewModel _uut;
+        private UploadWizardContext _uut;
         private Mock<IExporter> _mockExporter;
         private Mock<ISettingsStore> _mockSettingStore;
         private InteractionRequestTestHelper<Notification> _notificationHelper;
@@ -84,7 +84,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.Export
                              .Callback<Action<ExportSettings>>(update => update(_exportSettings));
 
             _testDateUtils = new TestDateUtils();
-            _uut = new UploadWizardViewModel(
+            _uut = new UploadWizardContext(
                 _mockExporter.Object,
                 _mockLogFileManager.Object,
                 _mockSettingStore.Object,
