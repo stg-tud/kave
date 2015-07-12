@@ -14,9 +14,11 @@
  * limitations under the License.
  */
 
+using System.Windows;
 using System.Windows.Automation.Peers;
 using System.Windows.Automation.Provider;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 
 namespace KaVE.Commons.TestUtils.UserControls
 {
@@ -30,6 +32,11 @@ namespace KaVE.Commons.TestUtils.UserControls
             {
                 tpattern.Toggle();
             }
+        }
+
+        public static void Click(ButtonBase button)
+        {
+            button.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
         }
     }
 }

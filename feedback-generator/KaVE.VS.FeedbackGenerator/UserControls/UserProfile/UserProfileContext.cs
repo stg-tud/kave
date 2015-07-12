@@ -73,6 +73,11 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UserProfile
             }
         }
 
+        public void GenerateNewProfileId()
+        {
+            ProfileId = _rnd.GetRandomGuid().ToString();
+        }
+
         public Educations Education
         {
             get { return _userProfileSettings.Education; }

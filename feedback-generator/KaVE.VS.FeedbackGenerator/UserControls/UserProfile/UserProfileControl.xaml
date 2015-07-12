@@ -192,6 +192,7 @@ limitations under the License.
                              Name="ProfileIdTextBox"
                              Text="{Binding Path=ProfileId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                     <Button Grid.Column="1" Content="&#8634;" Padding="0,0,0,0"
+                            Name="RefreshProfileIdButton"
                             Width="20px" Height="20px" Margin="0,0,0,0"
                             VerticalAlignment="Center" HorizontalAlignment="Right"
                             ToolTip="Generate new profile ID"

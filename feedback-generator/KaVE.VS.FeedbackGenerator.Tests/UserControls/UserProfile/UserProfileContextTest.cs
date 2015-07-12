@@ -631,6 +631,14 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UserProfile
             Assert.AreEqual(expecteds, actuals);
         }
 
+        [Test]
+        public void GenerateNewProfileId()
+        {
+            _sut.ProfileId = "";
+            _sut.GenerateNewProfileId();
+            Assert.AreEqual(_someGuid, _sut.ProfileId);
+        }
+
         private void AssertNotifications(params string[] expecteds)
         {
             CollectionAssert.AreEqual(expecteds, _updatedProperties);

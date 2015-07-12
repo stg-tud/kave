@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System.Windows;
 using System.Windows.Controls;
 using NUnit.Framework;
 
@@ -45,6 +46,26 @@ namespace KaVE.Commons.TestUtils.UserControls
             {
                 Assert.Fail();
             }
+        }
+
+        public static void IsVisible(UIElement element)
+        {
+            Assert.AreEqual(Visibility.Visible, element.Visibility);
+        }
+
+        public static void IsNotVisible(UIElement element, Visibility expectedvisibility = Visibility.Collapsed)
+        {
+            Assert.AreEqual(expectedvisibility, element.Visibility);
+        }
+
+        public static void IsDisabled(UIElement element)
+        {
+            Assert.False(element.IsEnabled);
+        }
+
+        public static void IsEnabled(UIElement element)
+        {
+            Assert.False(element.IsEnabled);
         }
     }
 }

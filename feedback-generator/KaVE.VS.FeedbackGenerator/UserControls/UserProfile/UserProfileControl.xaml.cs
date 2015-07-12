@@ -14,10 +14,7 @@
  * limitations under the License.
  */
 
-using System;
-using System.Text.RegularExpressions;
 using System.Windows;
-using System.Windows.Input;
 
 namespace KaVE.VS.FeedbackGenerator.UserControls.UserProfile
 {
@@ -62,15 +59,9 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UserProfile
                 : Visibility.Collapsed;
         }
 
-        private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
-        {
-            var numberRegex = new Regex("[^0-9]+");
-            e.Handled = numberRegex.IsMatch(e.Text);
-        }
-
         private void OnClick_RefreshProfileId(object sender, RoutedEventArgs e)
         {
-            MyDataContext.ProfileId = Guid.NewGuid().ToString();
+            MyDataContext.GenerateNewProfileId();
         }
     }
 }
