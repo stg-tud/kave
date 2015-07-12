@@ -15,7 +15,9 @@
  */
 
 using KaVE.Commons.Model.SSTs;
+using KaVE.Commons.Model.SSTs.Impl.References;
 using KaVE.Commons.Model.SSTs.Impl.Statements;
+using KaVE.VS.FeedbackGenerator.SessionManager.Anonymize;
 using KaVE.VS.FeedbackGenerator.SessionManager.Anonymize.CompletionEvents;
 using NUnit.Framework;
 
@@ -203,6 +205,32 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize.CompletionEve
         public void ThrowStatement_DefaultSafe()
         {
             AssertAnonymization(new ThrowStatement(), new ThrowStatement());
+        }
+
+        [Test]
+        public void VariableDeclaration()
+        {
+            AssertAnonymization(
+                new VariableDeclaration
+                {
+                    Reference = new VariableReference
+                    {
+                        Identifier = "a"
+                    }
+                },
+                new VariableDeclaration
+                {
+                    Reference = new VariableReference
+                    {
+                        Identifier = "a".ToHash()
+                    }
+                });
+        }
+
+        [Test]
+        public void VariableDeclaration_DefaultSafe()
+        {
+            AssertAnonymization(new VariableDeclaration(), new VariableDeclaration());
         }
 
         [Test]

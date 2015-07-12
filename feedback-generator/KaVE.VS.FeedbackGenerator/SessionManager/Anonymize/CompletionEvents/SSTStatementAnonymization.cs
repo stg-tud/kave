@@ -234,6 +234,14 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager.Anonymize.CompletionEvents
             };
         }
 
+        public override IStatement Visit(IVariableDeclaration stmt, int context)
+        {
+            return new VariableDeclaration
+            {
+                Reference = _ref.Anonymize(stmt.Reference)
+            };
+        }
+
         public override IStatement Visit(IUnknownStatement stmt, int context)
         {
             return new UnknownStatement();
