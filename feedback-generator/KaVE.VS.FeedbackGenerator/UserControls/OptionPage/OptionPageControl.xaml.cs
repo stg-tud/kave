@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -25,6 +26,7 @@ using JetBrains.ReSharper.Features.Navigation.Resources;
 using JetBrains.UI.CrossFramework;
 using JetBrains.UI.Options;
 using JetBrains.UI.Options.OptionPages.ToolsPages;
+using KaVE.Commons.Model.Events.UserProfiles;
 using KaVE.Commons.Utils;
 using KaVE.RS.Commons.Settings.KaVE.RS.Commons.Settings;
 using KaVE.VS.FeedbackGenerator.Settings;
@@ -49,6 +51,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage
         private readonly ExportSettings _exportSettings;
         private readonly UserProfileSettings _userProfileSettings;
         private readonly ModelStoreSettings _modelStoreSettings;
+        private readonly UserProfileContext _userProfileContext;
 
         public OptionPageControl(Lifetime lifetime,
             OptionsSettingsSmartContext ctx,
@@ -67,12 +70,15 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage
             _userProfileSettings = settingsStore.GetSettings<UserProfileSettings>();
             _modelStoreSettings = settingsStore.GetSettings<ModelStoreSettings>();
 
+            _userProfileContext = new UserProfileContext(_exportSettings, _userProfileSettings, rnd);
+            _userProfileContext.PropertyChanged += UserProfileContextOnPropertyChanged;
+
             DataContext = new OptionPageViewModel
             {
                 ExportSettings = _exportSettings,
                 ModelStoreSettings = _modelStoreSettings,
                 AnonymizationContext = new AnonymizationContext(_exportSettings),
-                UserProfileContext = new UserProfileContext(_exportSettings, _userProfileSettings, rnd)
+                UserProfileContext = _userProfileContext
             };
 
             if (_ctx != null)
@@ -148,27 +154,32 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage
                 UserProfile.ProfileIdTextBox,
                 TextBox.TextProperty);
 
-            // TODO: Education
-            /*_ctx.SetBinding(
+            _ctx.SetBinding(
                 _lifetime,
                 (UserProfileSettings s) => s.Education,
-                UserProfile.EducationComboBox,
-                Selector.SelectedItemProperty);*/
+                this,
+                EducationProperty);
 
-            // TODO: Position
-            /*_ctx.SetBinding(
+            _ctx.SetBinding(
                 _lifetime,
                 (UserProfileSettings s) => s.Position,
-                UserProfile.PositionComboBox,
-                Selector.SelectedItemProperty);*/
+                this,
+                PositionProperty);
 
             BindingForProjects();
             BindingForTeams();
 
-            // TODO: ProgrammingGeneral
-            // TODO: ProgrammingCSharp
-            // I would like to keep all logic that is related to the fancy JetBrains context in
-            // this class -if possible-. I'd like to keep this ugly hack as local as possible...
+            _ctx.SetBinding(
+                _lifetime,
+                (UserProfileSettings s) => s.ProgrammingGeneral,
+                this,
+                ProgrammingGeneralProperty);
+
+            _ctx.SetBinding(
+                _lifetime,
+                (UserProfileSettings s) => s.ProgrammingCSharp,
+                this,
+                ProgrammingCSharpProperty);
         }
 
         private void BindingForProjects()
@@ -278,6 +289,75 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage
         public string Id
         {
             get { return PID; }
+        }
+
+        private void UserProfileContextOnPropertyChanged(object sender,
+            PropertyChangedEventArgs propertyChangedEventArgs)
+        {
+            var propertyName = propertyChangedEventArgs.PropertyName;
+            switch (propertyName)
+            {
+                case "Education":
+                    Education = _userProfileContext.Education;
+                    break;
+                case "Position":
+                    Position = _userProfileContext.Position;
+                    break;
+                case "ProgrammingGeneral":
+                    ProgrammingGeneral = _userProfileContext.ProgrammingGeneral;
+                    break;
+                case "ProgrammingCSharp":
+                    ProgrammingCSharp = _userProfileContext.ProgrammingCSharp;
+                    break;
+            }
+        }
+
+        public static readonly DependencyProperty EducationProperty = DependencyProperty.Register(
+            "Education",
+            typeof (Educations),
+            typeof (OptionPageControl)
+            );
+
+        public static readonly DependencyProperty PositionProperty = DependencyProperty.Register(
+            "Position",
+            typeof (Positions),
+            typeof (OptionPageControl)
+            );
+
+        public static readonly DependencyProperty ProgrammingGeneralProperty = DependencyProperty.Register(
+            "ProgrammingGeneral",
+            typeof (Likert7Point),
+            typeof (OptionPageControl)
+            );
+
+        public static readonly DependencyProperty ProgrammingCSharpProperty = DependencyProperty.Register(
+            "ProgrammingCSharp",
+            typeof (Likert7Point),
+            typeof (OptionPageControl)
+            );
+
+        public Educations Education
+        {
+            get { return (Educations) GetValue(EducationProperty); }
+            set { SetValue(EducationProperty, value); }
+        }
+
+        public Positions Position
+        {
+            get { return (Positions) GetValue(PositionProperty); }
+            set { SetValue(PositionProperty, value); }
+        }
+
+        public Likert7Point ProgrammingGeneral
+        {
+            get { return (Likert7Point) GetValue(ProgrammingGeneralProperty); }
+            set { SetValue(ProgrammingGeneralProperty, value); }
+        }
+
+        public Likert7Point ProgrammingCSharp
+        {
+            get { return (Likert7Point) GetValue(ProgrammingCSharpProperty); }
+            set { SetValue(ProgrammingCSharpProperty, value); }
         }
     }
 }
