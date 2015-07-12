@@ -37,8 +37,6 @@ using NUnit.Framework;
 
 namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.Export
 {
-    // TODO @Seb: Re-enable
-    [Ignore]
     internal class ExporterTest
     {
         private readonly IList<IDEEvent> _eventsForRealLifeExample = new List<IDEEvent>
@@ -47,51 +45,72 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.Export
             new WindowEvent {TriggeredAt = new DateTime(2014, 1, 2)}
         };
 
-        private Mock<IPublisher> _publisherMock;
+        private IPublisher _publisher;
         private Exporter _sut;
         private MemoryStream _lastPublishedStream;
-        private Mock<IDataExportAnonymizer> _anonymizerMock;
-        private Mock<IUserProfileEventGenerator> _exportEventGeneratorMock;
+        private IDataExportAnonymizer _anonymizer;
+        private IUserProfileEventGenerator _exportEventGenerator;
+        private UserProfileEvent _userProfileEvent;
 
         [SetUp]
         public void SetUp()
         {
-            _publisherMock = new Mock<IPublisher>();
-            _publisherMock.Setup(p => p.Publish(It.IsAny<MemoryStream>())).Callback<MemoryStream>(
+            _publisher = Mock.Of<IPublisher>();
+            Mock.Get(_publisher).Setup(p => p.Publish(It.IsAny<MemoryStream>())).Callback<MemoryStream>(
                 stream => { _lastPublishedStream = new MemoryStream(stream.ToArray()); });
 
-            _anonymizerMock = new Mock<IDataExportAnonymizer>();
-            _anonymizerMock.Setup(a => a.Anonymize(It.IsAny<IDEEvent>())).Returns<IDEEvent>(ideEvent => ideEvent);
+            _anonymizer = Mock.Of<IDataExportAnonymizer>();
+            Mock.Get(_anonymizer).Setup(a => a.Anonymize(It.IsAny<IDEEvent>())).Returns<IDEEvent>(ideEvent => ideEvent);
 
-            _exportEventGeneratorMock = new Mock<IUserProfileEventGenerator>();
-            //_exportEventGeneratorMock.Setup(expEventGen => expEventGen.CreateExportEvent())
-            //                        .Returns(new UserProfileEvent());
+            _userProfileEvent = new UserProfileEvent {ProfileId = "p"};
 
-            _sut = new Exporter(_anonymizerMock.Object, _exportEventGeneratorMock.Object);
+            _exportEventGenerator = Mock.Of<IUserProfileEventGenerator>();
+            Mock.Get(_exportEventGenerator).Setup(e => e.ShouldCreateEvent()).Returns(false);
+            Mock.Get(_exportEventGenerator).Setup(e => e.CreateEvent()).Returns(_userProfileEvent);
+
+            _sut = new Exporter(_anonymizer, _exportEventGenerator);
         }
 
         [Test]
         public void ShouldSilentlySkipPublishingOfEmptyEventList()
         {
-            _sut.Export(new IDEEvent[0], _publisherMock.Object);
-            _publisherMock.Verify(p => p.Publish(It.IsAny<MemoryStream>()), Times.Never);
+            _sut.Export(new IDEEvent[0], _publisher);
+            Mock.Get(_publisher).Verify(p => p.Publish(It.IsAny<MemoryStream>()), Times.Never);
+        }
+
+        [Test]
+        public void ShouldNotSilentlySkipEmptyEventListIfProfileIsProvided()
+        {
+            Mock.Get(_exportEventGenerator).Setup(g => g.ShouldCreateEvent()).Returns(true);
+            _sut.Export(new List<IDEEvent>(), _publisher);
+            Mock.Get(_publisher).Verify(p => p.Publish(It.IsAny<MemoryStream>()));
         }
 
         [Test]
         public void ShouldInvokePublisher()
         {
             var events = IDEEventTestFactory.SomeEvents(25);
-            _sut.Export(events, _publisherMock.Object);
-            _publisherMock.Verify(p => p.Publish(It.IsAny<MemoryStream>()));
+            _sut.Export(events, _publisher);
+            Mock.Get(_publisher).Verify(p => p.Publish(It.IsAny<MemoryStream>()));
         }
 
         [Test]
         public void ShouldCreateOneFilePerEvent()
         {
             var events = IDEEventTestFactory.SomeEvents(25);
-            _sut.Export(events, _publisherMock.Object);
+            _sut.Export(events, _publisher);
             var zipFile = GetZipFileFromExport();
-            Assert.AreEqual(25 + 1, zipFile.Entries.Count); // + UserProfile
+            Assert.AreEqual(25, zipFile.Entries.Count);
+        }
+
+        [Test]
+        public void ShouldCreateOneFilePerEvent_PlusOneIfUserProfileIsEnabled()
+        {
+            Mock.Get(_exportEventGenerator).Setup(g => g.ShouldCreateEvent()).Returns(true);
+            var events = IDEEventTestFactory.SomeEvents(25);
+            _sut.Export(events, _publisher);
+            var zipFile = GetZipFileFromExport();
+            Assert.AreEqual(25 + 1, zipFile.Entries.Count);
         }
 
         [Test]
@@ -99,16 +118,36 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.Export
         {
             var expecteds = IDEEventTestFactory.SomeEvents(25);
 
-            _sut.Export(expecteds, _publisherMock.Object);
+            _sut.Export(expecteds, _publisher);
             var actuals = GetExportedEvents().ToList();
 
-            // TODO proper handling of user profile events!
-            Assert.AreEqual(26, expecteds.Count);
-            expecteds.RemoveAt(25);
-            Assert.AreEqual(26, actuals.Count);
-            actuals.RemoveAt(25);
+            CollectionAssert.AreEquivalent(expecteds, actuals);
+        }
+
+        [Test]
+        public void ShouldPersistAllProvidedEvents_PlusUserProfileIfEnabled()
+        {
+            Mock.Get(_exportEventGenerator).Setup(g => g.ShouldCreateEvent()).Returns(true);
+
+            var expecteds = IDEEventTestFactory.SomeEvents(25);
+            expecteds.Add(_userProfileEvent);
+
+            _sut.Export(expecteds, _publisher);
+            var actuals = GetExportedEvents().ToList();
 
             CollectionAssert.AreEquivalent(expecteds, actuals);
+        }
+
+        [Test]
+        public void ExportShouldContainCorrectUserProfileEvent()
+        {
+            Mock.Get(_exportEventGenerator).Setup(g => g.ShouldCreateEvent()).Returns(true);
+
+            var someEvents = IDEEventTestFactory.SomeEvents(1);
+            _sut.Export(someEvents, _publisher);
+
+            var exportedEvents = GetExportedEvents();
+            CollectionAssert.Contains(exportedEvents, _userProfileEvent);
         }
 
         [Test]
@@ -119,11 +158,31 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.Export
             {
                 "0-EditEvent.json",
                 "1-ErrorEvent.json",
+                "2-WindowEvent.json"
+            };
+
+            _sut.Export(events, _publisher);
+
+            var zipFile = GetZipFileFromExport();
+            var actual = zipFile.EntryFileNames;
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void ShouldCreateFileNamesFromEventIndexAndType_PlusUserProfileIfEnabled()
+        {
+            Mock.Get(_exportEventGenerator).Setup(g => g.ShouldCreateEvent()).Returns(true);
+
+            var events = Lists.NewList<IDEEvent>(new EditEvent(), new ErrorEvent(), new WindowEvent());
+            var expected = new[]
+            {
+                "0-EditEvent.json",
+                "1-ErrorEvent.json",
                 "2-WindowEvent.json",
                 "3-UserProfileEvent.json"
             };
 
-            _sut.Export(events, _publisherMock.Object);
+            _sut.Export(events, _publisher);
 
             var zipFile = GetZipFileFromExport();
             var actual = zipFile.EntryFileNames;
@@ -135,11 +194,11 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.Export
         {
             var expected = IDEEventTestFactory.SomeEvents(13);
             var actual = new List<IDEEvent>();
-            _anonymizerMock.Setup(a => a.Anonymize(It.IsAny<IDEEvent>()))
-                           .Callback<IDEEvent>(actual.Add)
-                           .Returns<IDEEvent>(ideEvent => ideEvent);
+            Mock.Get(_anonymizer).Setup(a => a.Anonymize(It.IsAny<IDEEvent>()))
+                .Callback<IDEEvent>(actual.Add)
+                .Returns<IDEEvent>(ideEvent => ideEvent);
 
-            _sut.Export(expected, _publisherMock.Object);
+            _sut.Export(expected, _publisher);
 
             CollectionAssert.AreEqual(expected, actual);
         }
@@ -149,14 +208,13 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.Export
         {
             var original = IDEEventTestFactory.SomeEvents(3);
             var anonymousEvent = new TestIDEEvent {TestProperty = "It's me!"};
-            _anonymizerMock.Setup(a => a.Anonymize(It.IsAny<IDEEvent>())).Returns(anonymousEvent);
+            Mock.Get(_anonymizer).Setup(a => a.Anonymize(It.IsAny<IDEEvent>())).Returns(anonymousEvent);
 
-            _sut.Export(original, _publisherMock.Object);
+            _sut.Export(original, _publisher);
 
             var actuals = GetExportedEvents().ToList();
 
-            Assert.AreEqual(4, actuals.Count);
-            actuals.RemoveAt(3); // UserProfileEvent
+            Assert.AreEqual(3, actuals.Count);
 
             var expected = new IDEEvent[] {anonymousEvent, anonymousEvent, anonymousEvent};
             CollectionAssert.AreEqual(expected, actuals);
@@ -165,10 +223,8 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.Export
         [Test]
         public void ShouldReportProgress()
         {
-            var events = IDEEventTestFactory.SomeEvents(24);
+            var events = IDEEventTestFactory.SomeEvents(25);
             var expected = events.Select((e, i) => Properties.UploadWizard.WritingEvents.FormatEx(i*4)).ToList();
-            // + UserProfileEvent
-            expected.Add(Properties.UploadWizard.WritingEvents.FormatEx(96));
             expected.Add(Properties.UploadWizard.WritingEvents.FormatEx(100));
             expected.Add(Properties.UploadWizard.CompressingEvents);
             expected.Add(Properties.UploadWizard.PublishingEvents);
@@ -177,7 +233,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.Export
 
             Action<string> eventProcessed = actual.Add;
             _sut.StatusChanged += eventProcessed;
-            _sut.Export(events, _publisherMock.Object);
+            _sut.Export(events, _publisher);
             _sut.StatusChanged -= eventProcessed;
 
             Assert.AreEqual(expected, actual);
@@ -188,23 +244,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.Export
         {
             var manyEvents = IDEEventTestFactory.SomeEvents(65536);
 
-            _sut.Export(manyEvents, _publisherMock.Object);
-        }
-
-        [Test]
-        public void ShouldAddExportEventWhenEnabled()
-        {
-            var someEvents = IDEEventTestFactory.SomeEvents(10);
-            var expectedEvent = new UserProfileEvent
-            {
-                ProfileId = "a"
-            };
-            //_exportEventGeneratorMock.Setup(expEvGen => expEvGen.CreateExportEvent()).Returns(expectedEvent);
-
-            _sut.Export(someEvents, _publisherMock.Object);
-
-            var exportedEvents = GetExportedEvents();
-            CollectionAssert.Contains(exportedEvents, expectedEvent);
+            _sut.Export(manyEvents, _publisher);
         }
 
         [Test, Ignore("manual test that the server receives valid file - RealLifeExample part 1")]
@@ -213,7 +253,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.Export
             Registry.RegisterComponent<IIoUtils>(new IoUtils());
             _sut.Export(
                 _eventsForRealLifeExample,
-                new HttpPublisher(new Uri("http://kave.st.informatik.tu-darmstadt.de:667/upload")));
+                new HttpPublisher(new Uri("http://kave.st.informatik.tu-darmstadt.de/test/upload")));
             Registry.Clear();
         }
 

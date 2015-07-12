@@ -52,13 +52,17 @@ namespace KaVE.VS.FeedbackGenerator.Utils.Export
 
         public void Export(IList<IDEEvent> events, IPublisher publisher)
         {
-            if (events.IsEmpty())
+            var isEmptyEventList = events.IsEmpty();
+            var shouldCreateUserProfileEvent = _exportEventGenerator.ShouldCreateEvent();
+            if (isEmptyEventList && !shouldCreateUserProfileEvent)
             {
                 return;
             }
 
-            // TODO: only add event if either profile or feedback is provided
-            events.Add(_exportEventGenerator.CreateEvent());
+            if (shouldCreateUserProfileEvent)
+            {
+                events.Add(_exportEventGenerator.CreateEvent());
+            }
 
             using (var stream = new MemoryStream())
             {
