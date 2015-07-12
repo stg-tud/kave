@@ -50,7 +50,8 @@ limitations under the License.
                     What is the highest degree that you currently hold and that is related to software engineering?
                 </TextBlock>
                 <ComboBox ItemsSource="{Binding EducationOptions}"
-                          SelectedItem="{Binding Education}">
+                          SelectedItem="{Binding Education}"
+                          Name="EducationComboBox">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding Converter={StaticResource EnumLocalizationConverter}}" />
@@ -63,7 +64,8 @@ limitations under the License.
                     Which of the following best describes your current situation when it comes to programming?
                 </TextBlock>
                 <ComboBox ItemsSource="{Binding PositionOptions}"
-                          SelectedItem="{Binding Position}">
+                          SelectedItem="{Binding Position}"
+                          Name="PositionComboBox">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding Converter={StaticResource EnumLocalizationConverter}}" />
@@ -76,16 +78,21 @@ limitations under the License.
                     On which kind of projects did you regularly work over the last year?
                 </TextBlock>
                 <CheckBox VerticalAlignment="Center" Content="No Answer"
+                          Name="ProjectsNoAnswerCheckBox"
                           IsChecked="{Binding Path=ProjectsNoAnswer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 <CheckBox VerticalAlignment="Center" Content="Assignments from classes or online courses"
+                          Name="ProjectsCoursesCheckBox"
                           IsChecked="{Binding Path=ProjectsCourses, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 <CheckBox VerticalAlignment="Center"
+                          Name="ProjectsPersonalCheckBox"
                           Content="Personal projects used for learning, exploration, or personal use"
                           IsChecked="{Binding Path=ProjectsPersonal, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 <CheckBox VerticalAlignment="Center" Content="Small projects ?that create value for others? (*)"
-                          IsChecked="{Binding Path=ProjectsTeamSmall, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                          Name="ProjectsSharedSmallCheckBox"
+                          IsChecked="{Binding Path=ProjectsSharedSmall, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 <CheckBox VerticalAlignment="Center" Content="Large projects that create value for others (*)"
-                          IsChecked="{Binding Path=ProjectsTeamLarge, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                          Name="ProjectsSharedLargeCheckBox"
+                          IsChecked="{Binding Path=ProjectsSharedLarge, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 <TextBlock TextWrapping="Wrap" Margin="0,3,0,0">
                     (*) This can be both open-source or commercial projects. Use a boundary of 50.000 lines of code to distinguish both.
                 </TextBlock>
@@ -95,15 +102,20 @@ limitations under the License.
                     In which kind of teams did you regularly work on a project in the last year:
                 </TextBlock>
                 <CheckBox VerticalAlignment="Center" Content="No Answer"
+                          Name="TeamsNoAnswerCheckBox"
                           IsChecked="{Binding Path=TeamsNoAnswer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 <CheckBox VerticalAlignment="Center" Content="Projects with me as the only committer"
+                          Name="TeamsSoloCheckBox"
                           IsChecked="{Binding Path=TeamsSolo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 <CheckBox VerticalAlignment="Center" Content="Small teams (&lt;=3 active* committers in the last year)"
+                          Name="TeamsSmallCheckBox"
                           IsChecked="{Binding Path=TeamsSmall, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 <CheckBox VerticalAlignment="Center"
                           Content="Medium teams (&gt;3 and &lt;=10 active* committers in the last year)"
+                          Name="TeamsMediumCheckBox"
                           IsChecked="{Binding Path=TeamsMedium, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 <CheckBox VerticalAlignment="Center" Content="Large teams (&gt;10 active* committers in the last year)"
+                          Name="TeamsLargeCheckBox"
                           IsChecked="{Binding Path=TeamsLarge, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 <TextBlock TextWrapping="Wrap" Margin="0,3,0,0">
                     (*) An active committer has on average more than one commit ?per week/month?.

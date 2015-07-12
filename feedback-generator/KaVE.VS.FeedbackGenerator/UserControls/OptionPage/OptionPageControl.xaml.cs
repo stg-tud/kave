@@ -15,8 +15,9 @@
  */
 
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
-using System.Windows.Forms;
+using Avalon.Windows.Dialogs;
 using JetBrains.ActionManagement;
 using JetBrains.Application.Settings;
 using JetBrains.DataFlow;
@@ -39,14 +40,10 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage
         ParentId = ToolsPage.PID)]
     public partial class OptionPageControl : IOptionsPage
     {
-        private const string PID = "KaVE.OptionPageControl";
-
-        private OptionPageViewModel MyDataContext
-        {
-            get { return (OptionPageViewModel) DataContext; }
-        }
+        private const string PID = "KaVE.VS.FeedbackGenerator.UserControls.OptionPage.OptionPageControl";
 
         private readonly Lifetime _lifetime;
+        private readonly OptionsSettingsSmartContext _ctx;
         private readonly IActionManager _actionManager;
         private readonly KaVEISettingsStore _settingsStore;
         private readonly ExportSettings _exportSettings;
@@ -60,6 +57,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage
             IRandomizationUtils rnd)
         {
             _lifetime = lifetime;
+            _ctx = ctx;
             _actionManager = actionManager;
             _settingsStore = settingsStore;
 
@@ -77,77 +75,158 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage
                 UserProfileContext = new UserProfileContext(_exportSettings, _userProfileSettings, rnd)
             };
 
-            BindChangesToAnonymization(lifetime, ctx);
-            BindToUserProfileChanges(lifetime, ctx);
-            BindToGeneralChanges(lifetime, ctx);
+            if (_ctx != null)
+            {
+                BindToGeneralChanges();
+                BindChangesToAnonymization();
+                BindToUserProfileChanges();
+            }
         }
 
         #region jetbrains smart-context bindings
 
-        private void BindToGeneralChanges(Lifetime lifetime, OptionsSettingsSmartContext ctx)
+        private void BindToGeneralChanges()
         {
-            ctx.SetBinding(
-                lifetime,
+            _ctx.SetBinding(
+                _lifetime,
                 (ExportSettings s) => s.UploadUrl,
                 UploadUrlTextBox,
-                System.Windows.Controls.TextBox.TextProperty);
-            ctx.SetBinding(
-                lifetime,
+                TextBox.TextProperty);
+            _ctx.SetBinding(
+                _lifetime,
                 (ExportSettings s) => s.WebAccessPrefix,
                 WebPraefixTextBox,
-                System.Windows.Controls.TextBox.TextProperty);
+                TextBox.TextProperty);
 
-            ctx.SetBinding(
-                lifetime,
+            _ctx.SetBinding(
+                _lifetime,
                 (ModelStoreSettings s) => s.ModelStorePath,
                 ModelStorePathTextBox,
-                System.Windows.Controls.TextBox.TextProperty);
+                TextBox.TextProperty);
         }
 
-        private void BindChangesToAnonymization(Lifetime lifetime, IContextBoundSettingsStore ctx)
+        private void BindChangesToAnonymization()
         {
-            ctx.SetBinding(
-                lifetime,
+            _ctx.SetBinding(
+                _lifetime,
                 (ExportSettings s) => (bool?) s.RemoveCodeNames,
                 Anonymization.RemoveCodeNamesCheckBox,
                 ToggleButton.IsCheckedProperty);
 
-            ctx.SetBinding(
-                lifetime,
+            _ctx.SetBinding(
+                _lifetime,
                 (ExportSettings s) => (bool?) s.RemoveDurations,
                 Anonymization.RemoveDurationsCheckBox,
                 ToggleButton.IsCheckedProperty);
 
-            ctx.SetBinding(
-                lifetime,
+            _ctx.SetBinding(
+                _lifetime,
                 (ExportSettings s) => (bool?) s.RemoveSessionIDs,
                 Anonymization.RemoveSessionIDsCheckBox,
                 ToggleButton.IsCheckedProperty);
 
-            ctx.SetBinding(
-                lifetime,
+            _ctx.SetBinding(
+                _lifetime,
                 (ExportSettings s) => (bool?) s.RemoveStartTimes,
                 Anonymization.RemoveStartTimesCheckBox,
                 ToggleButton.IsCheckedProperty);
         }
 
-        private void BindToUserProfileChanges(Lifetime lifetime, IContextBoundSettingsStore ctx)
+        private void BindToUserProfileChanges()
         {
-            /*ctx.SetBinding(
-                lifetime,
+            // IsProviding
+            _ctx.SetBinding(
+                _lifetime,
                 (UserProfileSettings s) => (bool?) s.IsProvidingProfile,
-                UserProfile.ProvideUserInformationCheckBox,
+                UserProfile.IsProvidingProfileCheckBox,
                 ToggleButton.IsCheckedProperty);
-            ctx.SetBinding(
-                lifetime,
-                (UserProfileSettings s) => s.Name,
-                UserProfile.UsernameTextBox,
-                System.Windows.Controls.TextBox.TextProperty);
-            ctx.SetBinding(
-                lifetime,
-                (UserProfileSettings s) => s.Email,
-                UserProfile.EmailTextBox,
-                System.Windows.Controls.TextBox.TextProperty);*/
+
+            // ProfileId
+            _ctx.SetBinding(
+                _lifetime,
+                (UserProfileSettings s) => s.ProfileId,
+                UserProfile.ProfileIdTextBox,
+                TextBox.TextProperty);
+
+            // TODO: Education
+            /*_ctx.SetBinding(
+                _lifetime,
+                (UserProfileSettings s) => s.Education,
+                UserProfile.EducationComboBox,
+                Selector.SelectedItemProperty);*/
+
+            // TODO: Position
+            /*_ctx.SetBinding(
+                _lifetime,
+                (UserProfileSettings s) => s.Position,
+                UserProfile.PositionComboBox,
+                Selector.SelectedItemProperty);*/
+
+            BindingForProjects();
+            BindingForTeams();
+
+            // TODO: ProgrammingGeneral
+            // TODO: ProgrammingCSharp
+            // I would like to keep all logic that is related to the fancy JetBrains context in
+            // this class -if possible-. I'd like to keep this ugly hack as local as possible...
+        }
+
+        private void BindingForProjects()
+        {
+            _ctx.SetBinding(
+                _lifetime,
+                (UserProfileSettings s) => (bool?) s.ProjectsNoAnswer,
+                UserProfile.ProjectsNoAnswerCheckBox,
+                ToggleButton.IsCheckedProperty);
+            _ctx.SetBinding(
+                _lifetime,
+                (UserProfileSettings s) => (bool?) s.ProjectsCourses,
+                UserProfile.ProjectsCoursesCheckBox,
+                ToggleButton.IsCheckedProperty);
+            _ctx.SetBinding(
+                _lifetime,
+                (UserProfileSettings s) => (bool?) s.ProjectsPersonal,
+                UserProfile.ProjectsPersonalCheckBox,
+                ToggleButton.IsCheckedProperty);
+            _ctx.SetBinding(
+                _lifetime,
+                (UserProfileSettings s) => (bool?) s.ProjectsSharedSmall,
+                UserProfile.ProjectsSharedSmallCheckBox,
+                ToggleButton.IsCheckedProperty);
+            _ctx.SetBinding(
+                _lifetime,
+                (UserProfileSettings s) => (bool?) s.ProjectsSharedLarge,
+                UserProfile.ProjectsSharedLargeCheckBox,
+                ToggleButton.IsCheckedProperty);
+        }
+
+        private void BindingForTeams()
+        {
+            _ctx.SetBinding(
+                _lifetime,
+                (UserProfileSettings s) => (bool?) s.TeamsNoAnswer,
+                UserProfile.TeamsNoAnswerCheckBox,
+                ToggleButton.IsCheckedProperty);
+            _ctx.SetBinding(
+                _lifetime,
+                (UserProfileSettings s) => (bool?) s.TeamsSolo,
+                UserProfile.TeamsSoloCheckBox,
+                ToggleButton.IsCheckedProperty);
+            _ctx.SetBinding(
+                _lifetime,
+                (UserProfileSettings s) => (bool?) s.TeamsSmall,
+                UserProfile.TeamsSmallCheckBox,
+                ToggleButton.IsCheckedProperty);
+            _ctx.SetBinding(
+                _lifetime,
+                (UserProfileSettings s) => (bool?) s.TeamsMedium,
+                UserProfile.TeamsMediumCheckBox,
+                ToggleButton.IsCheckedProperty);
+            _ctx.SetBinding(
+                _lifetime,
+                (UserProfileSettings s) => (bool?) s.TeamsLarge,
+                UserProfile.TeamsLargeCheckBox,
+                ToggleButton.IsCheckedProperty);
         }
 
         #endregion
@@ -156,8 +235,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage
         {
             var dialog = new FolderBrowserDialog();
             var result = dialog.ShowDialog();
-
-            if (result == DialogResult.OK)
+            if (result.HasValue && result.Value)
             {
                 ModelStorePathTextBox.Text = dialog.SelectedPath;
             }
