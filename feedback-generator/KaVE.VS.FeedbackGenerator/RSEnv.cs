@@ -25,8 +25,6 @@ namespace KaVE.VS.FeedbackGenerator
 {
     public interface IRSEnv
     {
-        // TODO RS9: included an "IExtension" before... access to meta info like the version. add version again
-
         IIDESession IDESession { get; }
 
         string KaVEVersion { get; }

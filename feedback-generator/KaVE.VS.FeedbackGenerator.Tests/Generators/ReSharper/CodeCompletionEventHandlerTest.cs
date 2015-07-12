@@ -110,8 +110,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.ReSharper
             Assert.AreEqual("a", ce.Prefix);
         }
 
-        // TODO RS9: reactivate test as soon as proposal collection in lookup item utils is fixed
-        [Test, Ignore]
+        [Test]
         public void ShouldDuplicateLastSelectionToFollowupEventOnFiltering()
         {
             var lookupItems = LookupItemsMockUtils.MockLookupItemList(1);
