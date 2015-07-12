@@ -41,7 +41,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UserProfile
 
         private UserProfileControl Create()
         {
-            return Create(new UserProfileControl {DataContext = _dataContext});
+            return OpenWindow(new UserProfileControl {DataContext = _dataContext});
         }
 
         [Test]

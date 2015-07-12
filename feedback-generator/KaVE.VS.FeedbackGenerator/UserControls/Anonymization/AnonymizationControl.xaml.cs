@@ -18,22 +18,9 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.Anonymization
 {
     public partial class AnonymizationControl
     {
-        private AnonymizationContext MyDataContext
-        {
-            get { return (AnonymizationContext) DataContext; }
-        }
-
         public AnonymizationControl()
         {
             InitializeComponent();
-
-            DataContextChanged += (sender, e) =>
-            {
-                /*   RemoveCodeNames2 = MyDataContext.RemoveCodeNames;
-                RemoveDurations = MyDataContext.RemoveDurations;
-                RemoveSessionIDs = MyDataContext.RemoveSessionIDs;
-                RemoveStartTimes = MyDataContext.RemoveStartTimes;*/
-            };
         }
     }
 }

@@ -30,7 +30,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls
             Window = null;
         }
 
-        protected T Create<T>(T sut)
+        protected T OpenWindow<T>(T sut)
         {
             Window = new Window
             {

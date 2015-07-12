@@ -35,13 +35,13 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.Anonymization
             }
         }
 
-        public bool RemoveCodeNames2
+        public bool RemoveCodeNames
         {
             get { return _exportSettings.RemoveCodeNames; }
             set
             {
                 _exportSettings.RemoveCodeNames = value;
-                OnPropertyChanged("RemoveCodeNames2");
+                OnPropertyChanged("RemoveCodeNames");
             }
         }
 
