@@ -29,7 +29,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators
         private UserProfileSettings _userSettings;
         private ISettingsStore _settingsStore;
 
-        private UserProfileEventGenerator _uut;
+        private UserProfileEventGenerator _sut;
 
         [SetUp]
         public void Setup()
@@ -37,7 +37,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators
             _userSettings = new UserProfileSettings
             {
                 HasBeenAskedtoProvideProfile = false,
-                IsProvidingProfile = false,
+                IsProvidingProfile = true,
                 ProfileId = "",
                 Education = Educations.Unknown,
                 Position = Positions.Unknown,
@@ -59,12 +59,12 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators
             _settingsStore = Mock.Of<ISettingsStore>();
             Mock.Get(_settingsStore).Setup(s => s.GetSettings<UserProfileSettings>()).Returns(_userSettings);
 
-            _uut = new UserProfileEventGenerator(TestRSEnv, TestMessageBus, TestDateUtils, _settingsStore);
+            _sut = new UserProfileEventGenerator(TestRSEnv, TestMessageBus, TestDateUtils, _settingsStore);
         }
 
         private void AssertEvent(UserProfileEvent expected)
         {
-            var actual = _uut.CreateEvent();
+            var actual = _sut.CreateEvent();
 
             // remove information from base event...
             actual.KaVEVersion = null;
@@ -81,7 +81,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators
         }
 
         [Test]
-        public void UserSettingsAreNotReadOnInit()
+        public void SettingsAreNotReadOnInit()
         {
             Mock.Get(_settingsStore).Verify(s => s.GetSettings<UserProfileSettings>(), Times.Never);
         }
@@ -89,7 +89,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators
         [Test]
         public void ShouldNotPublishAnyEvents()
         {
-            _uut.CreateEvent();
+            _sut.CreateEvent();
             AssertNoEvent();
         }
 
@@ -259,10 +259,79 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators
         }
 
         [Test]
+        public void OnlyCommentIsCopiedIfNotEnabled()
+        {
+            // all non-default values, except "IsProviding" which is disabled
+            _userSettings.HasBeenAskedtoProvideProfile = false;
+            _userSettings.IsProvidingProfile = false;
+            _userSettings.ProfileId = "p";
+            _userSettings.Education = Educations.Autodidact;
+            _userSettings.Position = Positions.ResearcherAcademic;
+            _userSettings.ProjectsNoAnswer = false;
+            _userSettings.ProjectsCourses = true;
+            _userSettings.ProjectsPersonal = true;
+            _userSettings.ProjectsSharedSmall = true;
+            _userSettings.ProjectsSharedLarge = true;
+            _userSettings.TeamsNoAnswer = false;
+            _userSettings.TeamsSolo = true;
+            _userSettings.TeamsSmall = true;
+            _userSettings.TeamsMedium = true;
+            _userSettings.TeamsLarge = true;
+            _userSettings.ProgrammingGeneral = Likert7Point.Positive1;
+            _userSettings.ProgrammingCSharp = Likert7Point.Negative1;
+            _userSettings.Comment = "C";
+
+            AssertEvent(
+                new UserProfileEvent
+                {
+                    Comment = "C"
+                });
+        }
+
+        [Test]
+        public void ShouldNotCreateEvent_DisabledAndNoComment()
+        {
+            _userSettings.IsProvidingProfile = false;
+            _userSettings.Comment = "";
+            Assert.False(_sut.ShouldCreateEvent());
+        }
+
+        [Test]
+        public void ShouldNotCreateEvent_DisabledAndComment()
+        {
+            _userSettings.IsProvidingProfile = false;
+            _userSettings.Comment = "c";
+            Assert.True(_sut.ShouldCreateEvent());
+        }
+
+        [Test]
+        public void ShouldCreateEvent_EnabledAndNoComment()
+        {
+            _userSettings.IsProvidingProfile = true;
+            _userSettings.Comment = "";
+            Assert.True(_sut.ShouldCreateEvent());
+        }
+
+        [Test]
+        public void ShouldNotCreateEvent_EnabledAndComment()
+        {
+            _userSettings.IsProvidingProfile = true;
+            _userSettings.Comment = "c";
+            Assert.True(_sut.ShouldCreateEvent());
+        }
+
+        [Test]
+        public void ShouldCreateEvent_ChecksUserProfileSettings()
+        {
+            _sut.ShouldCreateEvent();
+            Mock.Get(_settingsStore).Verify(s => s.GetSettings<UserProfileSettings>());
+        }
+
+        [Test]
         public void CommentIsReset()
         {
             _userSettings.Comment = "C";
-            _uut.ResetComment();
+            _sut.ResetComment();
             _userSettings.Comment = "";
             Mock.Get(_settingsStore).Verify(s => s.SetSettings(_userSettings));
         }

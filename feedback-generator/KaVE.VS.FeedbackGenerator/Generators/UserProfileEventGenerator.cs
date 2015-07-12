@@ -26,6 +26,7 @@ namespace KaVE.VS.FeedbackGenerator.Generators
 {
     public interface IUserProfileEventGenerator
     {
+        bool ShouldCreateEvent();
         UserProfileEvent CreateEvent();
         void ResetComment();
     }
@@ -45,32 +46,35 @@ namespace KaVE.VS.FeedbackGenerator.Generators
 
         public UserProfileEvent CreateEvent()
         {
-            var exportEvent = Create<UserProfileEvent>();
+            var @event = Create<UserProfileEvent>();
             var s = _settingsStore.GetSettings<UserProfileSettings>();
 
-            exportEvent.ProfileId = s.ProfileId;
+            if (s.IsProvidingProfile)
+            {
+                @event.ProfileId = s.ProfileId;
 
-            exportEvent.Education = s.Education;
-            exportEvent.Position = s.Position;
+                @event.Education = s.Education;
+                @event.Position = s.Position;
 
-            exportEvent.ProjectsNoAnswer = s.ProjectsNoAnswer;
-            exportEvent.ProjectsCourses = s.ProjectsCourses;
-            exportEvent.ProjectsPersonal = s.ProjectsPersonal;
-            exportEvent.ProjectsSharedSmall = s.ProjectsSharedSmall;
-            exportEvent.ProjectsSharedLarge = s.ProjectsSharedLarge;
+                @event.ProjectsNoAnswer = s.ProjectsNoAnswer;
+                @event.ProjectsCourses = s.ProjectsCourses;
+                @event.ProjectsPersonal = s.ProjectsPersonal;
+                @event.ProjectsSharedSmall = s.ProjectsSharedSmall;
+                @event.ProjectsSharedLarge = s.ProjectsSharedLarge;
 
-            exportEvent.TeamsNoAnswer = s.TeamsNoAnswer;
-            exportEvent.TeamsSolo = s.TeamsSolo;
-            exportEvent.TeamsSmall = s.TeamsSmall;
-            exportEvent.TeamsMedium = s.TeamsMedium;
-            exportEvent.TeamsLarge = s.TeamsLarge;
+                @event.TeamsNoAnswer = s.TeamsNoAnswer;
+                @event.TeamsSolo = s.TeamsSolo;
+                @event.TeamsSmall = s.TeamsSmall;
+                @event.TeamsMedium = s.TeamsMedium;
+                @event.TeamsLarge = s.TeamsLarge;
 
-            exportEvent.ProgrammingGeneral = s.ProgrammingGeneral;
-            exportEvent.ProgrammingCSharp = s.ProgrammingCSharp;
+                @event.ProgrammingGeneral = s.ProgrammingGeneral;
+                @event.ProgrammingCSharp = s.ProgrammingCSharp;
+            }
 
-            exportEvent.Comment = s.Comment;
+            @event.Comment = s.Comment;
 
-            return exportEvent;
+            return @event;
         }
 
         public void ResetComment()
@@ -78,6 +82,14 @@ namespace KaVE.VS.FeedbackGenerator.Generators
             var s = _settingsStore.GetSettings<UserProfileSettings>();
             s.Comment = "";
             _settingsStore.SetSettings(s);
+        }
+
+        public bool ShouldCreateEvent()
+        {
+            var s = _settingsStore.GetSettings<UserProfileSettings>();
+            var isProviding = s.IsProvidingProfile;
+            var hasComment = s.Comment.Length > 0;
+            return isProviding || hasComment;
         }
     }
 }
