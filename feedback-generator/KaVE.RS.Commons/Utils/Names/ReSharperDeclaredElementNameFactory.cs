@@ -398,24 +398,14 @@ namespace KaVE.RS.Commons.Utils.Names
 
         /// <summary>
         ///     Retrieves the module's assembly-qualified name (including the assembly name and version). If the module
-        ///     is a project and that project is currently not compilable (and has not been compiled ever or since the
-        ///     last clear) the returned name will only contain the project's name and not its version. According to
-        ///     http://devnet.jetbrains.com/message/5503864#5503864 this is a restriction of ReSharper. Note that the
-        ///     project's name may differ from the project's output-assembly name.
+        ///     is a project returned name will only contain the project's name and not its version. According to
+        ///     http://devnet.jetbrains.com/message/5503864#5503864 it is not generally possibly to retrieve the version
+        ///     for projects. Therefore, we decided for this consistent solution.
         /// </summary>
         [NotNull]
         private static string GetQualifiedName([NotNull] this IModule module)
         {
             AssemblyNameInfo assembly = null;
-            var containingProject = module as IProject;
-            if (containingProject != null)
-            {
-                var assemblyInfo = containingProject.GetOutputAssemblyInfo();
-                if (assemblyInfo != null)
-                {
-                    assembly = assemblyInfo.AssemblyNameInfo;
-                }
-            }
             var containingAssembly = module as IAssembly;
             if (containingAssembly != null)
             {

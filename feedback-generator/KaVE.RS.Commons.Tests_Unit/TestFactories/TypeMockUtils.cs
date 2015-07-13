@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using JetBrains.Application;
 using JetBrains.Application.changes;
+using JetBrains.Application.platforms;
 using JetBrains.Metadata.Reader.API;
 using JetBrains.Metadata.Utils;
 using JetBrains.ProjectModel;
@@ -31,6 +32,8 @@ using JetBrains.ReSharper.Psi.Modules;
 using JetBrains.ReSharper.Psi.Resolve;
 using JetBrains.Util;
 using KaVE.Commons.Model.Names.CSharp;
+using KaVE.JetBrains.Annotations;
+using KaVE.RS.Commons.Utils;
 using Moq;
 
 namespace KaVE.RS.Commons.Tests_Unit.TestFactories
@@ -118,47 +121,16 @@ namespace KaVE.RS.Commons.Tests_Unit.TestFactories
             return mockAssembly.Object;
         }
 
-        public static IProject MockProject(string name, string version)
+        public static IProject MockProject(string name)
         {
-            var mockProject = MockProjectImpl(name);
-            var mockAssemblyInfo = new OutputAssemblyInfo(Guid.NewGuid(), MockAssemblyNameInfo(name, version), null);
-            mockProject.OutputAssemblyInfo = mockAssemblyInfo;
-            return mockProject;
+            var project = Mock.Of<IProject>();
+            Mock.Get(project).Setup(p => p.Name).Returns(name);
+            return project;
         }
 
         private static AssemblyNameInfo MockAssemblyNameInfo(string name, string version)
         {
             return AssemblyNameInfo.Create(name, new Version(version));
-        }
-
-        public static IProject MockUncompilableProject(string name)
-        {
-            return MockProjectImpl(name);
-        }
-
-        // TODO RS9: this fails since the upgrade and it is not mockable
-        private static ProjectImpl MockProjectImpl(string name)
-        {
-            var fileSystemPath = FileSystemPath.TryParse(".");
-            var locks = Mock.Of<IShellLocks>();
-
-            var solutionElement = new SolutionElement(
-                fileSystemPath,
-                Mock.Of<ISolutionOwner>(),
-                Mock.Of<ChangeManager>(),
-                locks,
-                null);
-
-            var projectElement = ProjectImpl.CreateProjectImpl(
-                solutionElement,
-                Mock.Of<IProjectProperties>(),
-                Guid.NewGuid(),
-                null,
-                fileSystemPath,
-                fileSystemPath,
-                name);
-
-            return projectElement;
         }
     }
 }

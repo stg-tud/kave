@@ -152,8 +152,7 @@ namespace KaVE.RS.SolutionAnalysis.Tests
             CollectionAssert.DoesNotContain(results.AnalyzedTypesNames, "Project1.SomeDelegate");
         }
 
-        // TODO RS9: temporary problem with mocking of projects/solutions
-        [Test, Ignore]
+        [Test]
         public void AnalysisResolvesLocalTypes()
         {
             var results = RunAnalysis();
@@ -162,8 +161,7 @@ namespace KaVE.RS.SolutionAnalysis.Tests
             CollectionAssert.Contains(analyzedTypes, TypeName.Get("Project1.ClassInNamespace, Project1"));
         }
 
-        // TODO RS9: temporary problem with mocking of projects/solutions
-        [Test, Ignore]
+        [Test]
         public void AnalysisResolvesCoreDependencies()
         {
             var results = RunAnalysis();
@@ -177,8 +175,7 @@ namespace KaVE.RS.SolutionAnalysis.Tests
             CollectionAssert.Contains(context.SST.Fields, expectedDeclaration);
         }
 
-        // TODO RS9: temporary problem with mocking of projects/solutions
-        [Test, Ignore]
+        [Test, Ignore("This test runs on my machine, but not on the build server. I have no idea why... - Sven")]
         public void AnalysisResolvesNuGetDependencies()
         {
             var results = RunAnalysis();
