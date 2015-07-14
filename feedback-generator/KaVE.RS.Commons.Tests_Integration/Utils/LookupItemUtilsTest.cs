@@ -354,7 +354,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Utils
             ThenProposalCollectionContains("[System.Void, mscorlib, 4.0.0.0] [C, TestProject].M`1[[T -> T]]([T] p)");
         }
 
-        [Test, Ignore]
+        [Test]
         public void ShouldTranslateTypeWithNestedTypeParameters()
         {
             CompleteInCSharpFile(@"
@@ -365,9 +365,10 @@ namespace KaVE.RS.Commons.Tests_Integration.Utils
                         M$
                     }
                 }");
-            // TODO @Sven: fix translation of types with nested type parameters
+
             ThenProposalCollectionContains(
-                "[C`1[[T -> C`1[[T -> System.String, mscorlib, 4.0.0.0]], TestProject]], TestProject]] l");
+                "[C`1[[T -> C`1[[T -> System.String, mscorlib, 4.0.0.0]], TestProject]], TestProject] l");
+
         }
 
         [Test]
