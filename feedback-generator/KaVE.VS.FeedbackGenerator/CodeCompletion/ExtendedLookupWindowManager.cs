@@ -19,10 +19,12 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Windows.Forms;
 using JetBrains.Application;
+using JetBrains.DataFlow;
 using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure.LookupItems;
 using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure.Match;
 using JetBrains.ReSharper.Feature.Services.CodeCompletion.Lookup;
 using JetBrains.ReSharper.Feature.Services.Lookup;
+using JetBrains.UI.Controls;
 using JetBrains.Util;
 using KaVE.JetBrains.Annotations;
 
@@ -83,12 +85,11 @@ namespace KaVE.VS.FeedbackGenerator.CodeCompletion
 
     public class ExtendedLookup : IExtendedLookup
     {
-        /*private static readonly FieldInfo LookupLifetime =
+        private static readonly FieldInfo LookupLifetime =
             typeof (Lookup).GetField("myLifetime", BindingFlags.NonPublic | BindingFlags.Instance);
 
         private static readonly FieldInfo LookupListBox =
-            typeof (ILookupWindow).GetField("myListBox", BindingFlags.NonPublic | BindingFlags.Instance);
-        */
+            typeof (VirtualLookupWindow).GetField("myListBox", BindingFlags.NonPublic | BindingFlags.Instance);
 
         private readonly Lookup _baseLookup;
         private readonly ExtendedLookupWindowManager _manager;
@@ -101,17 +102,17 @@ namespace KaVE.VS.FeedbackGenerator.CodeCompletion
             _baseLookup.CurrentItemChanged += (sender, args) => CurrentItemChanged(sender, args);
             _baseLookup.ItemCompleted += (sender, item, suffix, type) => ItemCompleted(sender, item, suffix, type);
             _baseLookup.Closed += (sender, args) => Closed(sender, args);
-            // TODO RS9
-            //ListBoxControl.MouseDown += (sender, args) => MouseDown(sender, args);
+            ListBoxControl.MouseDown += (sender, args) => MouseDown(sender, args);
         }
 
-        // TODO RS9: ugly hack to prevent stack overflow, access to DisplayItems seems to trigger event
         private object _currentSender;
         private IEnumerable<Pair<ILookupItem, MatchingResult>> _currentItems;
 
         private void BaseLookupOnBeforeShownItemsUpdated(object sender,
             IEnumerable<Pair<ILookupItem, MatchingResult>> items)
         {
+            // TODO RS9: ugly hack to prevent stack overflow, access to DisplayItems seems to trigger event
+            // is it possible to use "this" as sender and use that for identifying the loop?
             // ReSharper disable once PossibleUnintendedReferenceComparison
             if (_currentItems == items && _currentSender == sender)
             {
@@ -122,22 +123,20 @@ namespace KaVE.VS.FeedbackGenerator.CodeCompletion
             BeforeShownItemsUpdated(_currentSender, _currentItems);
         }
 
-        /*
-         public Lifetime Lifetime
+        public Lifetime Lifetime
         {
             get { return (Lifetime) LookupLifetime.GetValue(_baseLookup); }
         }
 
-       private CustomListBoxControl<LookupListItem> ListBoxControl
+        private LookupListViewControl<LookupListItem, ILookupItem> ListBoxControl
         {
             get
             {
                 var lookupWindow = _manager.CurrentLookupWindow;
-                _manager.CurrentLookup.
                 var o = LookupListBox.GetValue(lookupWindow);
-                return (CustomListBoxControl<LookupListItem>) o;
+                return (LookupListViewControl<LookupListItem, ILookupItem>)o;
             }
-        }*/
+        }
 
         public string Prefix
         {
@@ -146,21 +145,7 @@ namespace KaVE.VS.FeedbackGenerator.CodeCompletion
 
         public IEnumerable<ILookupItem> DisplayedItems
         {
-            get
-            {
-                Debug_CheckStack();
-                return _manager._manager.CurrentLookup.Items;
-            }
-        }
-
-        private static void Debug_CheckStack()
-        {
-            System.Diagnostics.StackTrace t = new System.Diagnostics.StackTrace();
-
-            if (t.FrameCount > 300)
-            {
-                // nothing
-            }
+            get { return _manager._manager.CurrentLookup.Items; }
         }
 
         public ILookupItem SelectedItem
