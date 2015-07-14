@@ -360,15 +360,33 @@ namespace KaVE.RS.Commons.Tests_Integration.Utils
             CompleteInCSharpFile(@"
                 class C<T>
                 {
-                    void M(C<C<string>> l)
+                    void M(C<C<string>> ccs)
+                    {
+                        cc$
+                    }
+                }");
+
+            ThenProposalCollectionContains(
+                "[C`1[[T -> C`1[[T -> System.String, mscorlib, 4.0.0.0]], TestProject]], TestProject] ccs");
+
+        }
+
+        [Test]
+        public void ShouldCaptureMultipleSubstitutionsForSameType()
+        {
+            CompleteInCSharpFile(@"
+                interface I<T> {}
+
+                class C
+                {
+                    void M(I<string> ls, I<int> li)
                     {
                         M$
                     }
                 }");
 
             ThenProposalCollectionContains(
-                "[C`1[[T -> C`1[[T -> System.String, mscorlib, 4.0.0.0]], TestProject]], TestProject] l");
-
+                "[System.Void, mscorlib, 4.0.0.0] [C, TestProject].M([i:I`1[[T -> System.String, mscorlib, 4.0.0.0]], TestProject] ls, [i:I`1[[T -> System.Int32, mscorlib, 4.0.0.0]], TestProject] li)");
         }
 
         [Test]
