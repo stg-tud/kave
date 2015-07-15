@@ -160,6 +160,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CodeCompletion\AbstractWrappedLookupItem.cs" />
     <Compile Include="Generators\UserProfileEventGenerator.cs" />
     <Compile Include="Generators\VisualStudio\EditEventGenerators\DelayedEditEventGenerator.cs" />
     <Compile Include="Generators\VisualStudio\EditEventGenerators\EditEventGenerator.cs" />
