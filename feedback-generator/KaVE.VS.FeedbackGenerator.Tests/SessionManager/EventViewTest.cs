@@ -20,7 +20,6 @@ using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.Commons.TestUtils.Model.Events;
-using KaVE.Commons.Utils.Json;
 using KaVE.VS.FeedbackGenerator.SessionManager;
 using NUnit.Framework;
 
@@ -51,7 +50,9 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager
             };
 
             var view = new EventViewModel(completionEvent);
-            Assert.IsNotNullOrEmpty(view.XamlContextRepresentation);
+            Assert.AreEqual(
+                "\r\n\r\n<Span Foreground=\"Blue\">class</Span> <Span Foreground=\"#2B91AF\">TestClass</Span>\r\n{\r\n}",
+                view.XamlContextRepresentation);
         }
 
         [Test]
@@ -70,9 +71,9 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager
             {
                 ProposalCollection =
                 {
-                    new Proposal { Name = FieldName.Get("[FieldType,P] [TestClass,P].SomeField") },
-                    new Proposal { Name = EventName.Get("[EventType`1[[T -> EventArgsType,P]],P] [DeclaringType,P].E") },
-                    new Proposal { Name = MethodName.Get("[ReturnType,P] [DeclaringType,P].M([ParameterType,P] p)") }
+                    new Proposal {Name = FieldName.Get("[FieldType,P] [TestClass,P].SomeField")},
+                    new Proposal {Name = EventName.Get("[EventType`1[[T -> EventArgsType,P]],P] [DeclaringType,P].E")},
+                    new Proposal {Name = MethodName.Get("[ReturnType,P] [DeclaringType,P].M([ParameterType,P] p)")}
                 }
             };
 
@@ -87,9 +88,15 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager
             {
                 ProposalCollection =
                 {
-                    new Proposal { Name = FieldName.Get("[FieldType,P] [TestClass,P].SomeField") },
-                    new Proposal { Name = EventName.Get("[EventType`1[[T -> EventArgsType,P]],P] [DeclaringType,P].SomeEvent") },
-                    new Proposal { Name = MethodName.Get("[ReturnType,P] [DeclaringType,P].SomeMethod([ParameterType,P] p)") }
+                    new Proposal {Name = FieldName.Get("[FieldType,P] [TestClass,P].SomeField")},
+                    new Proposal
+                    {
+                        Name = EventName.Get("[EventType`1[[T -> EventArgsType,P]],P] [DeclaringType,P].SomeEvent")
+                    },
+                    new Proposal
+                    {
+                        Name = MethodName.Get("[ReturnType,P] [DeclaringType,P].SomeMethod([ParameterType,P] p)")
+                    }
                 },
                 Prefix = "Some"
             };
@@ -115,22 +122,33 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager
             {
                 ProposalCollection =
                 {
-                    new Proposal { Name = FieldName.Get("[FieldType,P] [TestClass,P].SomeField") },
-                    new Proposal { Name = EventName.Get("[EventType`1[[T -> EventArgsType,P]],P] [DeclaringType,P].E") },
-                    new Proposal { Name = MethodName.Get("[ReturnType,P] [DeclaringType,P].M([ParameterType,P] p)") }
+                    new Proposal {Name = FieldName.Get("[FieldType,P] [TestClass,P].SomeField")},
+                    new Proposal {Name = EventName.Get("[EventType`1[[T -> EventArgsType,P]],P] [DeclaringType,P].E")},
+                    new Proposal {Name = MethodName.Get("[ReturnType,P] [DeclaringType,P].M([ParameterType,P] p)")}
                 },
                 Selections =
                 {
-                    new ProposalSelection { 
-                        Proposal = new Proposal { Name = FieldName.Get("[FieldType,P] [TestClass,P].SomeField") },
+                    new ProposalSelection
+                    {
+                        Proposal = new Proposal {Name = FieldName.Get("[FieldType,P] [TestClass,P].SomeField")},
                         SelectedAfter = TimeSpan.FromSeconds(1)
                     },
-                    new ProposalSelection { 
-                        Proposal = new Proposal { Name = EventName.Get("[EventType`1[[T -> EventArgsType,P]],P] [DeclaringType,P].E") },
+                    new ProposalSelection
+                    {
+                        Proposal =
+                            new Proposal
+                            {
+                                Name = EventName.Get("[EventType`1[[T -> EventArgsType,P]],P] [DeclaringType,P].E")
+                            },
                         SelectedAfter = TimeSpan.FromSeconds(2)
                     },
-                    new ProposalSelection { 
-                        Proposal = new Proposal { Name = MethodName.Get("[ReturnType,P] [DeclaringType,P].M([ParameterType,P] p)") },
+                    new ProposalSelection
+                    {
+                        Proposal =
+                            new Proposal
+                            {
+                                Name = MethodName.Get("[ReturnType,P] [DeclaringType,P].M([ParameterType,P] p)")
+                            },
                         SelectedAfter = TimeSpan.FromSeconds(3)
                     }
                 }
@@ -156,15 +174,18 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager
             {
                 Selections =
                 {
-                    new ProposalSelection { 
-                        Proposal = new Proposal { Name = Name.Get("TypeLookupItem:TestDelegate<string>[]") },
+                    new ProposalSelection
+                    {
+                        Proposal = new Proposal {Name = Name.Get("TypeLookupItem:TestDelegate<string>[]")},
                         SelectedAfter = TimeSpan.FromSeconds(1)
                     }
                 }
             };
 
             var view = new EventViewModel(completionEvent);
-            Assert.AreEqual("• <Bold>00:00:01</Bold> TypeLookupItem:TestDelegate&lt;string&gt;[]\r\n", view.XamlSelectionsRepresentation);
+            Assert.AreEqual(
+                "• <Bold>00:00:01</Bold> TypeLookupItem:TestDelegate&lt;string&gt;[]\r\n",
+                view.XamlSelectionsRepresentation);
         }
 
         [Test]
@@ -172,9 +193,9 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager
         {
             var completionEvent = new CompletionEvent
             {
-                ProposalCollection = 
+                ProposalCollection =
                 {
-                    new Proposal { Name = Name.Get("TypeLookupItem:TestDelegate<string>[]") }
+                    new Proposal {Name = Name.Get("TypeLookupItem:TestDelegate<string>[]")}
                 }
             };
 
@@ -187,9 +208,9 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager
         {
             var completionEvent = new CompletionEvent
             {
-                ProposalCollection = 
+                ProposalCollection =
                 {
-                    new Proposal { Name = Name.Get("TypeLookupItem:TestDelegate<string>[]") }
+                    new Proposal {Name = Name.Get("TypeLookupItem:TestDelegate<string>[]")}
                 }
             };
 
@@ -202,16 +223,30 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager
         {
             var completionEvent = new CompletionEvent
             {
-                ProposalCollection = 
+                ProposalCollection =
                 {
-                    new Proposal { Name = Name.Get("TypeLookupItem:TestDelegate<string>[]") },
+                    new Proposal {Name = Name.Get("TypeLookupItem:TestDelegate<string>[]")},
                     // filler to make the overall serialization longer than 50000 characters
-                    new Proposal { Name = Name.Get(new string('a', 50000)) }
+                    new Proposal {Name = Name.Get(new string('a', 50000))}
                 }
             };
 
             var view = new EventViewModel(completionEvent);
             StringAssert.Contains("TestDelegate&lt;string&gt;[]", view.XamlRawRepresentation);
+        }
+
+        [Test]
+        public void EscapesSpecialCharsInCodeCompletionContext()
+        {
+            var completionEvent = new CompletionEvent
+            {
+                Context2 = {SST = new SST {EnclosingType = TypeName.Get("C`1[[T]],TestProject")}}
+            };
+
+            var view = new EventViewModel(completionEvent);
+            Assert.AreEqual(
+                "\r\n\r\n<Span Foreground=\"Blue\">class</Span> <Span Foreground=\"#2B91AF\">C</Span>&lt;<Bold>?</Bold>&gt;\r\n{\r\n}",
+                view.XamlContextRepresentation);
         }
     }
 }
