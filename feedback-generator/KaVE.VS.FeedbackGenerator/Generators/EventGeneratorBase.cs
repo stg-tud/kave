@@ -121,6 +121,7 @@ namespace KaVE.VS.FeedbackGenerator.Generators
         protected void Fire<TEvent>([NotNull] TEvent @event) where TEvent : IDEEvent
         {
             // TODO @Sven: why is it set here and not with the other information "on create"?
+            // TODO @Seb: good question... if we always use Create it shouldn't make a difference...
             @event.IDESessionUUID = _env.IDESession.UUID;
             _messageBus.Publish<IDEEvent>(@event);
             WriteToDebugConsole(@event);
