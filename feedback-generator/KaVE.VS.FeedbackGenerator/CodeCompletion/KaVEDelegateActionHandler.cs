@@ -26,11 +26,11 @@ namespace KaVE.VS.FeedbackGenerator.CodeCompletion
     /// </summary>
     public class KaVEDelegateActionHandler : IExecutableAction
     {
-        public readonly Action Action;
+        private readonly Action _action;
 
         public KaVEDelegateActionHandler(Action action)
         {
-            Action = action;
+            _action = action;
         }
 
         public bool Update(IDataContext context, ActionPresentation presentation, DelegateUpdate nextUpdate)
@@ -40,7 +40,7 @@ namespace KaVE.VS.FeedbackGenerator.CodeCompletion
 
         public void Execute(IDataContext context, DelegateExecute nextExecute)
         {
-            Action();
+            _action();
             nextExecute();
         }
     }

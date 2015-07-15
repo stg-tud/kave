@@ -24,7 +24,6 @@ using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure.LookupI
 using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure.Match;
 using JetBrains.ReSharper.Feature.Services.CodeCompletion.Lookup;
 using JetBrains.ReSharper.Feature.Services.Lookup;
-using JetBrains.UI.Controls;
 using JetBrains.Util;
 using KaVE.JetBrains.Annotations;
 
@@ -72,7 +71,6 @@ namespace KaVE.VS.FeedbackGenerator.CodeCompletion
 
     public interface IExtendedLookup
     {
-        //Lifetime Lifetime { get; }
         string Prefix { get; }
         IEnumerable<ILookupItem> DisplayedItems { get; }
         ILookupItem SelectedItem { get; }
@@ -134,7 +132,7 @@ namespace KaVE.VS.FeedbackGenerator.CodeCompletion
             {
                 var lookupWindow = _manager.CurrentLookupWindow;
                 var o = LookupListBox.GetValue(lookupWindow);
-                return (LookupListViewControl<LookupListItem, ILookupItem>)o;
+                return (LookupListViewControl<LookupListItem, ILookupItem>) o;
             }
         }
 
@@ -145,6 +143,7 @@ namespace KaVE.VS.FeedbackGenerator.CodeCompletion
 
         public IEnumerable<ILookupItem> DisplayedItems
         {
+            // strange solution but was necessary during RS9 upgrade. Better use result of "ListBoxControl"?
             get { return _manager._manager.CurrentLookup.Items; }
         }
 

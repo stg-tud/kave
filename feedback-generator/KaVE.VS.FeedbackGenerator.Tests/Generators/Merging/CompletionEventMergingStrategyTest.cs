@@ -27,8 +27,6 @@ using NUnit.Framework;
 
 namespace KaVE.VS.FeedbackGenerator.Tests.Generators.Merging
 {
-    // TODO RS9: re-enable tests, as soon as proposal collection / lookup item utils is fixed
-    [Ignore]
     internal class CompletionEventMergingStrategyTest
     {
         private CompletionEventMergingStrategy _strategy;

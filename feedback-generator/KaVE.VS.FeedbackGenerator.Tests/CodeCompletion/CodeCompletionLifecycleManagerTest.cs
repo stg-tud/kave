@@ -35,7 +35,6 @@ using NUnit.Framework;
 
 namespace KaVE.VS.FeedbackGenerator.Tests.CodeCompletion
 {
-    [TestFixture]
     internal class CodeCompletionLifecycleManagerTest
     {
         private const string EnterActionId = TextControlActions.ENTER_ACTION_ID;
@@ -82,7 +81,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.CodeCompletion
                 .Setup(ah => ah.AddHandler(It.IsAny<IActionDefWithId>(), It.IsAny<IAction>()))
                 .Callback<IActionDefWithId, IAction>(
                     (id, action) => { registeredHandlers.Add(id, action); });
-            
+
             // mock the execution of registered actions
             Mock.Get(_actionHandlers)
                 .Setup(ah => ah.Evaluate(It.IsAny<IActionDefWithId>(), It.IsAny<IDataContext>()))
@@ -93,8 +92,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.CodeCompletion
                         var delAction = action as KaVEDelegateActionHandler;
                         if (delAction != null)
                         {
-                            // TODO RS9: use "Execute" and make Action private again... no idea how to mock the "chaining" to the next delegate though
-                            delAction.Action();
+                            delAction.Execute(context, () => { });
                         }
                     });
 
