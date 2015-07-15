@@ -41,16 +41,16 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators
                 ProfileId = "",
                 Education = Educations.Unknown,
                 Position = Positions.Unknown,
-                ProjectsNoAnswer = true,
                 ProjectsCourses = false,
                 ProjectsPersonal = false,
                 ProjectsSharedSmall = false,
+                ProjectsSharedMedium = false,
                 ProjectsSharedLarge = false,
-                TeamsNoAnswer = true,
                 TeamsSolo = false,
                 TeamsSmall = false,
                 TeamsMedium = false,
                 TeamsLarge = false,
+                CodeReviews = YesNoUnknown.Unknown,
                 ProgrammingGeneral = Likert7Point.Unknown,
                 ProgrammingCSharp = Likert7Point.Unknown,
                 Comment = ""
@@ -127,17 +127,6 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators
         }
 
         [Test]
-        public void CopiesProjectsNoAnswer()
-        {
-            _userSettings.ProjectsNoAnswer = false;
-            AssertEvent(
-                new UserProfileEvent
-                {
-                    ProjectsNoAnswer = false
-                });
-        }
-
-        [Test]
         public void CopiesProjectsCourses()
         {
             _userSettings.ProjectsCourses = true;
@@ -171,13 +160,24 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators
         }
 
         [Test]
-        public void CopiesTeamsNoAnswer()
+        public void CopiesProjectsSharedMedium()
         {
-            _userSettings.TeamsNoAnswer = false;
+            _userSettings.ProjectsSharedMedium = true;
             AssertEvent(
                 new UserProfileEvent
                 {
-                    TeamsNoAnswer = false
+                    ProjectsSharedMedium = true
+                });
+        }
+
+        [Test]
+        public void CopiesProjectsSharedLarge()
+        {
+            _userSettings.ProjectsSharedLarge = true;
+            AssertEvent(
+                new UserProfileEvent
+                {
+                    ProjectsSharedLarge = true
                 });
         }
 
@@ -226,6 +226,17 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators
         }
 
         [Test]
+        public void CopiesCodeReviews()
+        {
+            _userSettings.CodeReviews = YesNoUnknown.Yes;
+            AssertEvent(
+                new UserProfileEvent
+                {
+                    CodeReviews = YesNoUnknown.Yes
+                });
+        }
+
+        [Test]
         public void CopiesProgrammingGeneral()
         {
             _userSettings.ProgrammingGeneral = Likert7Point.Neutral;
@@ -267,16 +278,16 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators
             _userSettings.ProfileId = "p";
             _userSettings.Education = Educations.Autodidact;
             _userSettings.Position = Positions.ResearcherAcademic;
-            _userSettings.ProjectsNoAnswer = false;
             _userSettings.ProjectsCourses = true;
             _userSettings.ProjectsPersonal = true;
             _userSettings.ProjectsSharedSmall = true;
+            _userSettings.ProjectsSharedMedium = true;
             _userSettings.ProjectsSharedLarge = true;
-            _userSettings.TeamsNoAnswer = false;
             _userSettings.TeamsSolo = true;
             _userSettings.TeamsSmall = true;
             _userSettings.TeamsMedium = true;
             _userSettings.TeamsLarge = true;
+            _userSettings.CodeReviews = YesNoUnknown.Yes;
             _userSettings.ProgrammingGeneral = Likert7Point.Positive1;
             _userSettings.ProgrammingCSharp = Likert7Point.Negative1;
             _userSettings.Comment = "C";

@@ -29,17 +29,18 @@ namespace KaVE.Commons.Model.Events.UserProfiles
 
         Positions Position { get; }
 
-        bool ProjectsNoAnswer { get; }
         bool ProjectsCourses { get; }
         bool ProjectsPersonal { get; }
         bool ProjectsSharedSmall { get; }
+        bool ProjectsSharedMedium { get; }
         bool ProjectsSharedLarge { get; }
 
-        bool TeamsNoAnswer { get; }
         bool TeamsSolo { get; }
         bool TeamsSmall { get; }
         bool TeamsMedium { get; }
         bool TeamsLarge { get; }
+
+        YesNoUnknown CodeReviews { get; }
 
         Likert7Point ProgrammingGeneral { get; }
 
@@ -62,9 +63,6 @@ namespace KaVE.Commons.Model.Events.UserProfiles
         public Positions Position { get; set; }
 
         [DataMember]
-        public bool ProjectsNoAnswer { get; set; }
-
-        [DataMember]
         public bool ProjectsCourses { get; set; }
 
         [DataMember]
@@ -74,10 +72,10 @@ namespace KaVE.Commons.Model.Events.UserProfiles
         public bool ProjectsSharedSmall { get; set; }
 
         [DataMember]
-        public bool ProjectsSharedLarge { get; set; }
+        public bool ProjectsSharedMedium { get; set; }
 
         [DataMember]
-        public bool TeamsNoAnswer { get; set; }
+        public bool ProjectsSharedLarge { get; set; }
 
         [DataMember]
         public bool TeamsSolo { get; set; }
@@ -92,6 +90,9 @@ namespace KaVE.Commons.Model.Events.UserProfiles
         public bool TeamsLarge { get; set; }
 
         [DataMember]
+        public YesNoUnknown CodeReviews { get; set; }
+
+        [DataMember]
         public Likert7Point ProgrammingGeneral { get; set; }
 
         [DataMember]
@@ -104,8 +105,6 @@ namespace KaVE.Commons.Model.Events.UserProfiles
         {
             ProfileId = "";
             Comment = "";
-            ProjectsNoAnswer = true;
-            TeamsNoAnswer = true;
         }
 
         public override bool Equals(object obj)
@@ -116,36 +115,35 @@ namespace KaVE.Commons.Model.Events.UserProfiles
         private bool Equals(UserProfileEvent other)
         {
             return base.Equals(other) && string.Equals(ProfileId, other.ProfileId) && Education == other.Education &&
-                   Position == other.Position && ProjectsNoAnswer == other.ProjectsNoAnswer &&
-                   ProjectsCourses == other.ProjectsCourses && ProjectsPersonal == other.ProjectsPersonal &&
-                   ProjectsSharedSmall == other.ProjectsSharedSmall && ProjectsSharedLarge == other.ProjectsSharedLarge &&
-                   TeamsNoAnswer == other.TeamsNoAnswer && TeamsSolo == other.TeamsSolo &&
-                   TeamsSmall == other.TeamsSmall &&
-                   TeamsMedium == other.TeamsMedium && TeamsLarge == other.TeamsLarge &&
-                   ProgrammingCSharp == other.ProgrammingCSharp && ProgrammingGeneral == other.ProgrammingGeneral &&
-                   string.Equals(Comment, other.Comment);
+                   Position == other.Position && ProjectsCourses == other.ProjectsCourses &&
+                   ProjectsPersonal == other.ProjectsPersonal && ProjectsSharedSmall == other.ProjectsSharedSmall &&
+                   ProjectsSharedMedium == other.ProjectsSharedMedium &&
+                   ProjectsSharedLarge == other.ProjectsSharedLarge && TeamsSolo == other.TeamsSolo &&
+                   TeamsSmall == other.TeamsSmall && TeamsMedium == other.TeamsMedium && TeamsLarge == other.TeamsLarge &&
+                   CodeReviews == other.CodeReviews && ProgrammingGeneral == other.ProgrammingGeneral &&
+                   ProgrammingCSharp == other.ProgrammingCSharp && string.Equals(Comment, other.Comment);
         }
 
         public override int GetHashCode()
         {
             unchecked
             {
-                int hashCode = base.GetHashCode();
+                var hashCode = base.GetHashCode();
                 hashCode = (hashCode*397) ^ ProfileId.GetHashCode();
                 hashCode = (hashCode*397) ^ (int) Education;
                 hashCode = (hashCode*397) ^ (int) Position;
-                hashCode = (hashCode*397) ^ ProjectsNoAnswer.GetHashCode();
                 hashCode = (hashCode*397) ^ ProjectsCourses.GetHashCode();
                 hashCode = (hashCode*397) ^ ProjectsPersonal.GetHashCode();
                 hashCode = (hashCode*397) ^ ProjectsSharedSmall.GetHashCode();
+                hashCode = (hashCode*397) ^ ProjectsSharedMedium.GetHashCode();
                 hashCode = (hashCode*397) ^ ProjectsSharedLarge.GetHashCode();
-                hashCode = (hashCode*397) ^ TeamsNoAnswer.GetHashCode();
                 hashCode = (hashCode*397) ^ TeamsSolo.GetHashCode();
                 hashCode = (hashCode*397) ^ TeamsSmall.GetHashCode();
                 hashCode = (hashCode*397) ^ TeamsMedium.GetHashCode();
                 hashCode = (hashCode*397) ^ TeamsLarge.GetHashCode();
-                hashCode = (hashCode*397) ^ (int) ProgrammingCSharp;
+                hashCode = (hashCode*397) ^ (int) CodeReviews;
                 hashCode = (hashCode*397) ^ (int) ProgrammingGeneral;
+                hashCode = (hashCode*397) ^ (int) ProgrammingCSharp;
                 hashCode = (hashCode*397) ^ Comment.GetHashCode();
                 return hashCode;
             }

@@ -39,11 +39,12 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UserProfile
         [SetUp]
         public void SetUp()
         {
-            _userSettings = new UserProfileSettings();
-            _userSettings.ProfileId = "";
-            _userSettings.Comment = "";
-            _userSettings.ProjectsNoAnswer = true;
-            _userSettings.HasBeenAskedtoProvideProfile = true;
+            _userSettings = new UserProfileSettings
+            {
+                ProfileId = "",
+                Comment = "",
+                HasBeenAskedtoProvideProfile = true
+            };
             _exportSettings = new ExportSettings();
             _updatedProperties = new List<string>();
 
@@ -187,54 +188,6 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UserProfile
         }
 
         [Test]
-        public void ProjectsNoAnswer_PropagationFromCode()
-        {
-            _userSettings.ProjectsNoAnswer = true;
-            Assert.True(_sut.ProjectsNoAnswer);
-            _userSettings.ProjectsNoAnswer = false;
-            Assert.False(_sut.ProjectsNoAnswer);
-        }
-
-        [Test]
-        public void ProjectsNoAnswer_PropagationToCode()
-        {
-            _sut.ProjectsCourses = true;
-            _sut.ProjectsNoAnswer = true;
-            Assert.True(_userSettings.ProjectsNoAnswer);
-
-            // Cannot Be Disabled Directly
-            _sut.ProjectsNoAnswer = false;
-            Assert.True(_userSettings.ProjectsNoAnswer);
-        }
-
-        [Test]
-        public void ProjectsNoAnswer_DisablesEverythingElse()
-        {
-            _sut.ProjectsCourses = true;
-            _sut.ProjectsPersonal = true;
-            _sut.ProjectsSharedSmall = true;
-            _sut.ProjectsSharedLarge = true;
-            _sut.ProjectsNoAnswer = true;
-            Assert.False(_userSettings.ProjectsCourses);
-            Assert.False(_userSettings.ProjectsPersonal);
-            Assert.False(_userSettings.ProjectsSharedSmall);
-            Assert.False(_userSettings.ProjectsSharedLarge);
-            Assert.True(_userSettings.ProjectsNoAnswer);
-        }
-
-        [Test]
-        public void ProjectsNoAnswer_PropertyChange()
-        {
-            _sut.ProjectsNoAnswer = true;
-            AssertNotifications(
-                "ProjectsNoAnswer",
-                "ProjectsCourses",
-                "ProjectsPersonal",
-                "ProjectsSharedSmall",
-                "ProjectsSharedLarge");
-        }
-
-        [Test]
         public void ProjectsCourses_PropagationFromCode()
         {
             _userSettings.ProjectsCourses = true;
@@ -253,29 +206,10 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UserProfile
         }
 
         [Test]
-        public void ProjectsCourses_DisablesNoAnswer()
-        {
-            _sut.ProjectsCourses = true;
-            Assert.False(_userSettings.ProjectsNoAnswer);
-            _sut.ProjectsCourses = false;
-            Assert.True(_userSettings.ProjectsNoAnswer);
-        }
-
-        [Test]
-        public void ProjectsCourses_DisablesNoAnswer_CheckingPrivateHelperOnce()
-        {
-            _sut.ProjectsCourses = true;
-            _sut.ProjectsPersonal = true;
-            Assert.False(_userSettings.ProjectsNoAnswer);
-            _sut.ProjectsCourses = false;
-            Assert.False(_userSettings.ProjectsNoAnswer);
-        }
-
-        [Test]
         public void ProjectsCourses_PropertyChange()
         {
             _sut.ProjectsCourses = true;
-            AssertNotifications("ProjectsCourses", "ProjectsNoAnswer");
+            AssertNotifications("ProjectsCourses");
         }
 
         [Test]
@@ -297,19 +231,10 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UserProfile
         }
 
         [Test]
-        public void ProjectsPersonal_DisablesNoAnswer()
-        {
-            _sut.ProjectsPersonal = true;
-            Assert.False(_userSettings.ProjectsNoAnswer);
-            _sut.ProjectsPersonal = false;
-            Assert.True(_userSettings.ProjectsNoAnswer);
-        }
-
-        [Test]
         public void ProjectsPersonal_PropertyChange()
         {
             _sut.ProjectsPersonal = true;
-            AssertNotifications("ProjectsPersonal", "ProjectsNoAnswer");
+            AssertNotifications("ProjectsPersonal");
         }
 
         [Test]
@@ -331,19 +256,35 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UserProfile
         }
 
         [Test]
-        public void ProjectsSharedSmall_DisablesNoAnswer()
-        {
-            _sut.ProjectsSharedSmall = true;
-            Assert.False(_userSettings.ProjectsNoAnswer);
-            _sut.ProjectsSharedSmall = false;
-            Assert.True(_userSettings.ProjectsNoAnswer);
-        }
-
-        [Test]
         public void ProjectsSharedSmall_PropertyChange()
         {
             _sut.ProjectsSharedSmall = true;
-            AssertNotifications("ProjectsSharedSmall", "ProjectsNoAnswer");
+            AssertNotifications("ProjectsSharedSmall");
+        }
+
+        [Test]
+        public void ProjectsSharedMedium_PropagationFromCode()
+        {
+            _userSettings.ProjectsSharedMedium = true;
+            Assert.True(_sut.ProjectsSharedMedium);
+            _userSettings.ProjectsSharedMedium = false;
+            Assert.False(_sut.ProjectsSharedMedium);
+        }
+
+        [Test]
+        public void ProjectsSharedMedium_PropagationToCode()
+        {
+            _sut.ProjectsSharedMedium = true;
+            Assert.True(_userSettings.ProjectsSharedMedium);
+            _sut.ProjectsSharedMedium = false;
+            Assert.False(_userSettings.ProjectsSharedMedium);
+        }
+
+        [Test]
+        public void ProjectsSharedMedium_PropertyChange()
+        {
+            _sut.ProjectsSharedMedium = true;
+            AssertNotifications("ProjectsSharedMedium");
         }
 
         [Test]
@@ -365,67 +306,10 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UserProfile
         }
 
         [Test]
-        public void ProjectsSharedLarge_DisablesNoAnswer()
-        {
-            _sut.ProjectsSharedLarge = true;
-            Assert.False(_userSettings.ProjectsNoAnswer);
-            _sut.ProjectsSharedLarge = false;
-            Assert.True(_userSettings.ProjectsNoAnswer);
-        }
-
-        [Test]
         public void ProjectsSharedLarge_PropertyChange()
         {
             _sut.ProjectsSharedLarge = true;
-            AssertNotifications("ProjectsSharedLarge", "ProjectsNoAnswer");
-        }
-
-        [Test]
-        public void TeamNoAnswer_PropagationFromCode()
-        {
-            _userSettings.TeamsNoAnswer = true;
-            Assert.True(_sut.TeamsNoAnswer);
-            _userSettings.TeamsNoAnswer = false;
-            Assert.False(_sut.TeamsNoAnswer);
-        }
-
-        [Test]
-        public void TeamNoAnswer_PropagationToCode()
-        {
-            _sut.TeamsMedium = true;
-            _sut.TeamsNoAnswer = true;
-            Assert.True(_userSettings.TeamsNoAnswer);
-
-            // Cannot Be Disabled Directly
-            _sut.TeamsNoAnswer = false;
-            Assert.True(_userSettings.TeamsNoAnswer);
-        }
-
-        [Test]
-        public void TeamNoAnswer_DisablesEverythingElse()
-        {
-            _sut.TeamsSolo = true;
-            _sut.TeamsSmall = true;
-            _sut.TeamsMedium = true;
-            _sut.TeamsLarge = true;
-            _sut.TeamsNoAnswer = true;
-            Assert.False(_userSettings.TeamsSolo);
-            Assert.False(_userSettings.TeamsSmall);
-            Assert.False(_userSettings.TeamsMedium);
-            Assert.False(_userSettings.TeamsLarge);
-            Assert.True(_userSettings.TeamsNoAnswer);
-        }
-
-        [Test]
-        public void TeamNoAnswer_PropertyChange()
-        {
-            _sut.TeamsNoAnswer = true;
-            AssertNotifications(
-                "TeamsNoAnswer",
-                "TeamsSolo",
-                "TeamsSmall",
-                "TeamsMedium",
-                "TeamsLarge");
+            AssertNotifications("ProjectsSharedLarge");
         }
 
         [Test]
@@ -447,19 +331,10 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UserProfile
         }
 
         [Test]
-        public void TeamSolo_DisablesNoAnswer()
-        {
-            _sut.TeamsSolo = true;
-            Assert.False(_userSettings.TeamsNoAnswer);
-            _sut.TeamsSolo = false;
-            Assert.True(_userSettings.TeamsNoAnswer);
-        }
-
-        [Test]
         public void TeamSolo_PropertyChange()
         {
             _sut.TeamsSolo = true;
-            AssertNotifications("TeamsSolo", "TeamsNoAnswer");
+            AssertNotifications("TeamsSolo");
         }
 
         [Test]
@@ -481,19 +356,10 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UserProfile
         }
 
         [Test]
-        public void TeamSmall_DisablesNoAnswer()
-        {
-            _sut.TeamsSmall = true;
-            Assert.False(_userSettings.TeamsNoAnswer);
-            _sut.TeamsSmall = false;
-            Assert.True(_userSettings.TeamsNoAnswer);
-        }
-
-        [Test]
         public void TeamSmall_PropertyChange()
         {
             _sut.TeamsSmall = true;
-            AssertNotifications("TeamsSmall", "TeamsNoAnswer");
+            AssertNotifications("TeamsSmall");
         }
 
         [Test]
@@ -515,19 +381,10 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UserProfile
         }
 
         [Test]
-        public void TeamMedium_DisablesNoAnswer()
-        {
-            _sut.TeamsMedium = true;
-            Assert.False(_userSettings.TeamsNoAnswer);
-            _sut.TeamsMedium = false;
-            Assert.True(_userSettings.TeamsNoAnswer);
-        }
-
-        [Test]
         public void TeamMedium_PropertyChange()
         {
             _sut.TeamsMedium = true;
-            AssertNotifications("TeamsMedium", "TeamsNoAnswer");
+            AssertNotifications("TeamsMedium");
         }
 
         [Test]
@@ -549,19 +406,31 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UserProfile
         }
 
         [Test]
-        public void TeamLarge_DisablesNoAnswer()
-        {
-            _sut.TeamsLarge = true;
-            Assert.False(_userSettings.TeamsNoAnswer);
-            _sut.TeamsLarge = false;
-            Assert.True(_userSettings.TeamsNoAnswer);
-        }
-
-        [Test]
         public void TeamLarge_PropertyChange()
         {
             _sut.TeamsLarge = true;
-            AssertNotifications("TeamsLarge", "TeamsNoAnswer");
+            AssertNotifications("TeamsLarge");
+        }
+
+        [Test]
+        public void CodeReviews_PropagationFromCode()
+        {
+            _userSettings.CodeReviews = YesNoUnknown.Yes;
+            Assert.AreEqual(YesNoUnknown.Yes, _sut.CodeReviews);
+        }
+
+        [Test]
+        public void CodeReviews_PropagationToCode()
+        {
+            _sut.CodeReviews = YesNoUnknown.Yes;
+            Assert.AreEqual(YesNoUnknown.Yes, _userSettings.CodeReviews);
+        }
+
+        [Test]
+        public void CodeReviews_PropertyChange()
+        {
+            _sut.CodeReviews = YesNoUnknown.Yes;
+            AssertNotifications("CodeReviews");
         }
 
 
@@ -628,6 +497,14 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UserProfile
         {
             var actuals = _sut.LikertOptions;
             var expecteds = Enum.GetValues(typeof (Likert7Point));
+            Assert.AreEqual(expecteds, actuals);
+        }
+
+        [Test]
+        public void YesNoOptions()
+        {
+            var actuals = _sut.YesNoOptions;
+            var expecteds = Enum.GetValues(typeof (YesNoUnknown));
             Assert.AreEqual(expecteds, actuals);
         }
 

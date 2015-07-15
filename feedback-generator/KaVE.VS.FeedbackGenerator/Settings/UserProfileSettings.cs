@@ -39,9 +39,6 @@ namespace KaVE.VS.FeedbackGenerator.Settings
         [SettingsEntry(Positions.Unknown, "UserProfile: Position")]
         public Positions Position;
 
-        [SettingsEntry(true, "UserProfile: ProjectsNoAnswer")]
-        public bool ProjectsNoAnswer;
-
         [SettingsEntry(false, "UserProfile: ProjectsCourses")]
         public bool ProjectsCourses;
 
@@ -51,11 +48,11 @@ namespace KaVE.VS.FeedbackGenerator.Settings
         [SettingsEntry(false, "UserProfile: ProjectsSharedSmall")]
         public bool ProjectsSharedSmall;
 
+        [SettingsEntry(false, "UserProfile: ProjectsSharedMedium")]
+        public bool ProjectsSharedMedium;
+
         [SettingsEntry(false, "UserProfile: ProjectsSharedLarge")]
         public bool ProjectsSharedLarge;
-
-        [SettingsEntry(true, "UserProfile: TeamNoAnswer")]
-        public bool TeamsNoAnswer;
 
         [SettingsEntry(false, "UserProfile: TeamSolo")]
         public bool TeamsSolo;
@@ -68,6 +65,9 @@ namespace KaVE.VS.FeedbackGenerator.Settings
 
         [SettingsEntry(false, "UserProfile: TeamLarge")]
         public bool TeamsLarge;
+
+        [SettingsEntry(YesNoUnknown.Unknown, "UserProfile: CodeReviews")]
+        public YesNoUnknown CodeReviews;
 
         [SettingsEntry(Likert7Point.Unknown, "UserProfile: ProgrammingGeneral")]
         public Likert7Point ProgrammingGeneral;

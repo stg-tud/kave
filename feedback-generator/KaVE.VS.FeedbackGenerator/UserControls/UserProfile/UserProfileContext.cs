@@ -98,39 +98,6 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UserProfile
             }
         }
 
-        public bool ProjectsNoAnswer
-        {
-            get { return _userProfileSettings.ProjectsNoAnswer; }
-            set
-            {
-                if (value)
-                {
-                    _userProfileSettings.ProjectsNoAnswer = true;
-                    _userProfileSettings.ProjectsCourses = false;
-                    _userProfileSettings.ProjectsPersonal = false;
-                    _userProfileSettings.ProjectsSharedSmall = false;
-                    _userProfileSettings.ProjectsSharedLarge = false;
-                }
-                OnPropertyChanged("ProjectsNoAnswer");
-                OnPropertyChanged("ProjectsCourses");
-                OnPropertyChanged("ProjectsPersonal");
-                OnPropertyChanged("ProjectsSharedSmall");
-                OnPropertyChanged("ProjectsSharedLarge");
-            }
-        }
-
-        private void CheckProjectsNoAnswer()
-        {
-            var s = _userProfileSettings;
-            var isSomeThingChecked = s.ProjectsCourses || s.ProjectsPersonal || s.ProjectsSharedSmall ||
-                                     s.ProjectsSharedLarge;
-            if (!isSomeThingChecked)
-            {
-                _userProfileSettings.ProjectsNoAnswer = true;
-                OnPropertyChanged("ProjectsNoAnswer");
-            }
-        }
-
         public bool ProjectsCourses
         {
             get { return _userProfileSettings.ProjectsCourses; }
@@ -138,15 +105,6 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UserProfile
             {
                 _userProfileSettings.ProjectsCourses = value;
                 OnPropertyChanged("ProjectsCourses");
-                if (value)
-                {
-                    _userProfileSettings.ProjectsNoAnswer = false;
-                    OnPropertyChanged("ProjectsNoAnswer");
-                }
-                else
-                {
-                    CheckProjectsNoAnswer();
-                }
             }
         }
 
@@ -157,15 +115,6 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UserProfile
             {
                 _userProfileSettings.ProjectsPersonal = value;
                 OnPropertyChanged("ProjectsPersonal");
-                if (value)
-                {
-                    _userProfileSettings.ProjectsNoAnswer = false;
-                    OnPropertyChanged("ProjectsNoAnswer");
-                }
-                else
-                {
-                    CheckProjectsNoAnswer();
-                }
             }
         }
 
@@ -176,15 +125,16 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UserProfile
             {
                 _userProfileSettings.ProjectsSharedSmall = value;
                 OnPropertyChanged("ProjectsSharedSmall");
-                if (value)
-                {
-                    _userProfileSettings.ProjectsNoAnswer = false;
-                    OnPropertyChanged("ProjectsNoAnswer");
-                }
-                else
-                {
-                    CheckProjectsNoAnswer();
-                }
+            }
+        }
+
+        public bool ProjectsSharedMedium
+        {
+            get { return _userProfileSettings.ProjectsSharedMedium; }
+            set
+            {
+                _userProfileSettings.ProjectsSharedMedium = value;
+                OnPropertyChanged("ProjectsSharedMedium");
             }
         }
 
@@ -195,48 +145,6 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UserProfile
             {
                 _userProfileSettings.ProjectsSharedLarge = value;
                 OnPropertyChanged("ProjectsSharedLarge");
-                if (value)
-                {
-                    _userProfileSettings.ProjectsNoAnswer = false;
-                    OnPropertyChanged("ProjectsNoAnswer");
-                }
-                else
-                {
-                    CheckProjectsNoAnswer();
-                }
-            }
-        }
-
-        public bool TeamsNoAnswer
-        {
-            get { return _userProfileSettings.TeamsNoAnswer; }
-            set
-            {
-                if (value)
-                {
-                    _userProfileSettings.TeamsNoAnswer = true;
-                    _userProfileSettings.TeamsSolo = false;
-                    _userProfileSettings.TeamsSmall = false;
-                    _userProfileSettings.TeamsMedium = false;
-                    _userProfileSettings.TeamsLarge = false;
-                }
-                OnPropertyChanged("TeamsNoAnswer");
-                OnPropertyChanged("TeamsSolo");
-                OnPropertyChanged("TeamsSmall");
-                OnPropertyChanged("TeamsMedium");
-                OnPropertyChanged("TeamsLarge");
-            }
-        }
-
-        private void CheckTeamNoAnswer()
-        {
-            var s = _userProfileSettings;
-            var isSomeThingChecked = s.TeamsSolo || s.TeamsSmall || s.TeamsMedium ||
-                                     s.TeamsLarge;
-            if (!isSomeThingChecked)
-            {
-                _userProfileSettings.TeamsNoAnswer = true;
-                OnPropertyChanged("TeamsNoAnswer");
             }
         }
 
@@ -247,15 +155,6 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UserProfile
             {
                 _userProfileSettings.TeamsSolo = value;
                 OnPropertyChanged("TeamsSolo");
-                if (value)
-                {
-                    _userProfileSettings.TeamsNoAnswer = false;
-                    OnPropertyChanged("TeamsNoAnswer");
-                }
-                else
-                {
-                    CheckTeamNoAnswer();
-                }
             }
         }
 
@@ -266,15 +165,6 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UserProfile
             {
                 _userProfileSettings.TeamsSmall = value;
                 OnPropertyChanged("TeamsSmall");
-                if (value)
-                {
-                    _userProfileSettings.TeamsNoAnswer = false;
-                    OnPropertyChanged("TeamsNoAnswer");
-                }
-                else
-                {
-                    CheckTeamNoAnswer();
-                }
             }
         }
 
@@ -285,15 +175,6 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UserProfile
             {
                 _userProfileSettings.TeamsMedium = value;
                 OnPropertyChanged("TeamsMedium");
-                if (value)
-                {
-                    _userProfileSettings.TeamsNoAnswer = false;
-                    OnPropertyChanged("TeamsNoAnswer");
-                }
-                else
-                {
-                    CheckTeamNoAnswer();
-                }
             }
         }
 
@@ -304,15 +185,16 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UserProfile
             {
                 _userProfileSettings.TeamsLarge = value;
                 OnPropertyChanged("TeamsLarge");
-                if (value)
-                {
-                    _userProfileSettings.TeamsNoAnswer = false;
-                    OnPropertyChanged("TeamsNoAnswer");
-                }
-                else
-                {
-                    CheckTeamNoAnswer();
-                }
+            }
+        }
+
+        public YesNoUnknown CodeReviews
+        {
+            get { return _userProfileSettings.CodeReviews; }
+            set
+            {
+                _userProfileSettings.CodeReviews = value;
+                OnPropertyChanged("CodeReviews");
             }
         }
 
@@ -344,6 +226,11 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UserProfile
         public IEnumerable PositionOptions
         {
             get { return Enum.GetValues(typeof (Positions)); }
+        }
+
+        public IEnumerable YesNoOptions
+        {
+            get { return Enum.GetValues(typeof (YesNoUnknown)); }
         }
 
         public IEnumerable LikertOptions

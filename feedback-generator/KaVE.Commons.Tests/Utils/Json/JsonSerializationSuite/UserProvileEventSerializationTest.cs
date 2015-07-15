@@ -46,33 +46,33 @@ namespace KaVE.Commons.Tests.Utils.Json.JsonSerializationSuite
             Assert.AreEqual(expected, actual);
         }
 
-        private UserProfileEvent CurrentObject()
+        private static UserProfileEvent CurrentObject()
         {
             return new UserProfileEvent
             {
                 ProfileId = "p",
                 Education = Educations.Training,
                 Position = Positions.HobbyProgrammer,
-                ProjectsNoAnswer = false,
                 ProjectsCourses = true,
                 ProjectsPersonal = true,
                 ProjectsSharedSmall = true,
+                ProjectsSharedMedium = true,
                 ProjectsSharedLarge = true,
-                TeamsNoAnswer = false,
                 TeamsSolo = true,
                 TeamsSmall = true,
                 TeamsMedium = true,
                 TeamsLarge = true,
+                CodeReviews = YesNoUnknown.Yes,
                 ProgrammingGeneral = Likert7Point.Negative1,
                 ProgrammingCSharp = Likert7Point.Negative2,
                 Comment = "c"
             };
         }
 
-        private string CurrentJson()
+        private static string CurrentJson()
         {
             return
-                "{\"$type\":\"KaVE.Commons.Model.Events.UserProfiles.UserProfileEvent, KaVE.Commons\",\"ProfileId\":\"p\",\"Education\":3,\"Position\":1,\"ProjectsNoAnswer\":false,\"ProjectsCourses\":true,\"ProjectsPersonal\":true,\"ProjectsSharedSmall\":true,\"ProjectsSharedLarge\":true,\"TeamsNoAnswer\":false,\"TeamsSolo\":true,\"TeamsSmall\":true,\"TeamsMedium\":true,\"TeamsLarge\":true,\"ProgrammingGeneral\":3,\"ProgrammingCSharp\":2,\"Comment\":\"c\",\"TriggeredBy\":0}";
+                "{\"$type\":\"KaVE.Commons.Model.Events.UserProfiles.UserProfileEvent, KaVE.Commons\",\"ProfileId\":\"p\",\"Education\":3,\"Position\":1,\"ProjectsCourses\":true,\"ProjectsPersonal\":true,\"ProjectsSharedSmall\":true,\"ProjectsSharedMedium\":true,\"ProjectsSharedLarge\":true,\"TeamsSolo\":true,\"TeamsSmall\":true,\"TeamsMedium\":true,\"TeamsLarge\":true,\"CodeReviews\":1,\"ProgrammingGeneral\":3,\"ProgrammingCSharp\":2,\"Comment\":\"c\",\"TriggeredBy\":0}";
         }
     }
 }

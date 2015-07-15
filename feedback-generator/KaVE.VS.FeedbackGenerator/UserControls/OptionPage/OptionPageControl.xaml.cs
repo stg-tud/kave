@@ -89,6 +89,55 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage
             }
         }
 
+        private void OnBrowse(object sender, RoutedEventArgs e)
+        {
+            var dialog = new FolderBrowserDialog();
+            var result = dialog.ShowDialog();
+            if (result.HasValue && result.Value)
+            {
+                ModelStorePathTextBox.Text = dialog.SelectedPath;
+            }
+        }
+
+        private void OnReset(object sender, RoutedEventArgs e)
+        {
+            var result = MessageBox.ShowYesNo(Properties.SessionManager.Option_SettingsCleaner_Dialog);
+            if (result)
+            {
+                _actionManager.ExecuteActionGuarded<SettingsCleaner>(_lifetime);
+
+                var window = Window.GetWindow(this);
+                if (window != null)
+                {
+                    window.Close();
+                }
+            }
+        }
+
+        public bool OnOk()
+        {
+            // TODO: validation
+            _settingsStore.SetSettings(_exportSettings);
+            _settingsStore.SetSettings(_userProfileSettings);
+            _settingsStore.SetSettings(_modelStoreSettings);
+            return true;
+        }
+
+        public bool ValidatePage()
+        {
+            return true;
+        }
+
+        public EitherControl Control
+        {
+            get { return this; }
+        }
+
+        public string Id
+        {
+            get { return PID; }
+        }
+
         #region jetbrains smart-context bindings
 
         private void BindToGeneralChanges()
@@ -171,6 +220,12 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage
 
             _ctx.SetBinding(
                 _lifetime,
+                (UserProfileSettings s) => s.CodeReviews,
+                this,
+                CodeReviewsProperty);
+
+            _ctx.SetBinding(
+                _lifetime,
                 (UserProfileSettings s) => s.ProgrammingGeneral,
                 this,
                 ProgrammingGeneralProperty);
@@ -184,11 +239,6 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage
 
         private void BindingForProjects()
         {
-            _ctx.SetBinding(
-                _lifetime,
-                (UserProfileSettings s) => (bool?) s.ProjectsNoAnswer,
-                UserProfile.ProjectsNoAnswerCheckBox,
-                ToggleButton.IsCheckedProperty);
             _ctx.SetBinding(
                 _lifetime,
                 (UserProfileSettings s) => (bool?) s.ProjectsCourses,
@@ -206,6 +256,11 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage
                 ToggleButton.IsCheckedProperty);
             _ctx.SetBinding(
                 _lifetime,
+                (UserProfileSettings s) => (bool?) s.ProjectsSharedMedium,
+                UserProfile.ProjectsSharedMediumCheckBox,
+                ToggleButton.IsCheckedProperty);
+            _ctx.SetBinding(
+                _lifetime,
                 (UserProfileSettings s) => (bool?) s.ProjectsSharedLarge,
                 UserProfile.ProjectsSharedLargeCheckBox,
                 ToggleButton.IsCheckedProperty);
@@ -213,11 +268,6 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage
 
         private void BindingForTeams()
         {
-            _ctx.SetBinding(
-                _lifetime,
-                (UserProfileSettings s) => (bool?) s.TeamsNoAnswer,
-                UserProfile.TeamsNoAnswerCheckBox,
-                ToggleButton.IsCheckedProperty);
             _ctx.SetBinding(
                 _lifetime,
                 (UserProfileSettings s) => (bool?) s.TeamsSolo,
@@ -242,54 +292,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage
 
         #endregion
 
-        private void OnBrowse(object sender, RoutedEventArgs e)
-        {
-            var dialog = new FolderBrowserDialog();
-            var result = dialog.ShowDialog();
-            if (result.HasValue && result.Value)
-            {
-                ModelStorePathTextBox.Text = dialog.SelectedPath;
-            }
-        }
-
-        private void OnReset(object sender, RoutedEventArgs e)
-        {
-            var result = MessageBox.ShowYesNo(Properties.SessionManager.Option_SettingsCleaner_Dialog);
-            if (result)
-            {
-                _actionManager.ExecuteActionGuarded<SettingsCleaner>(_lifetime);
-
-                var window = Window.GetWindow(this);
-                if (window != null)
-                {
-                    window.Close();
-                }
-            }
-        }
-
-        public bool OnOk()
-        {
-            // TODO: validation
-            _settingsStore.SetSettings(_exportSettings);
-            _settingsStore.SetSettings(_userProfileSettings);
-            _settingsStore.SetSettings(_modelStoreSettings);
-            return true;
-        }
-
-        public bool ValidatePage()
-        {
-            return true;
-        }
-
-        public EitherControl Control
-        {
-            get { return this; }
-        }
-
-        public string Id
-        {
-            get { return PID; }
-        }
+        #region ugly dependency property hack for JetBrains smart context
 
         private void UserProfileContextOnPropertyChanged(object sender,
             PropertyChangedEventArgs propertyChangedEventArgs)
@@ -302,6 +305,9 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage
                     break;
                 case "Position":
                     Position = _userProfileContext.Position;
+                    break;
+                case "CodeReviews":
+                    CodeReviews = _userProfileContext.CodeReviews;
                     break;
                 case "ProgrammingGeneral":
                     ProgrammingGeneral = _userProfileContext.ProgrammingGeneral;
@@ -321,6 +327,12 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage
         public static readonly DependencyProperty PositionProperty = DependencyProperty.Register(
             "Position",
             typeof (Positions),
+            typeof (OptionPageControl)
+            );
+
+        public static readonly DependencyProperty CodeReviewsProperty = DependencyProperty.Register(
+            "CodeReviews",
+            typeof (YesNoUnknown),
             typeof (OptionPageControl)
             );
 
@@ -348,6 +360,12 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage
             set { SetValue(PositionProperty, value); }
         }
 
+        public YesNoUnknown CodeReviews
+        {
+            get { return (YesNoUnknown) GetValue(CodeReviewsProperty); }
+            set { SetValue(CodeReviewsProperty, value); }
+        }
+
         public Likert7Point ProgrammingGeneral
         {
             get { return (Likert7Point) GetValue(ProgrammingGeneralProperty); }
@@ -359,5 +377,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage
             get { return (Likert7Point) GetValue(ProgrammingCSharpProperty); }
             set { SetValue(ProgrammingCSharpProperty, value); }
         }
+
+        #endregion
     }
 }

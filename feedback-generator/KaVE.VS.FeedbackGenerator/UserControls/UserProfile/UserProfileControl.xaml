@@ -77,9 +77,6 @@ limitations under the License.
                 <TextBlock TextWrapping="Wrap" Margin="0,15,0,5" FontSize="12" FontStyle="Italic">
                     On which kind of projects did you regularly work over the last year?
                 </TextBlock>
-                <CheckBox VerticalAlignment="Center" Content="No Answer"
-                          Name="ProjectsNoAnswerCheckBox"
-                          IsChecked="{Binding Path=ProjectsNoAnswer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 <CheckBox VerticalAlignment="Center" Content="Assignments from classes or online courses"
                           Name="ProjectsCoursesCheckBox"
                           IsChecked="{Binding Path=ProjectsCourses, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
@@ -90,6 +87,9 @@ limitations under the License.
                 <CheckBox VerticalAlignment="Center" Content="Small projects ?that create value for others? (*)"
                           Name="ProjectsSharedSmallCheckBox"
                           IsChecked="{Binding Path=ProjectsSharedSmall, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <CheckBox VerticalAlignment="Center" Content="Medium projects ?that create value for others? (*)"
+                          Name="ProjectsSharedMediumCheckBox"
+                          IsChecked="{Binding Path=ProjectsSharedMedium, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 <CheckBox VerticalAlignment="Center" Content="Large projects that create value for others (*)"
                           Name="ProjectsSharedLargeCheckBox"
                           IsChecked="{Binding Path=ProjectsSharedLarge, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
@@ -101,25 +101,33 @@ limitations under the License.
                 <TextBlock TextWrapping="Wrap" Margin="0,15,0,5" FontSize="12" FontStyle="Italic">
                     In which kind of teams did you regularly work on a project in the last year:
                 </TextBlock>
-                <CheckBox VerticalAlignment="Center" Content="No Answer"
-                          Name="TeamsNoAnswerCheckBox"
-                          IsChecked="{Binding Path=TeamsNoAnswer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                <CheckBox VerticalAlignment="Center" Content="Projects with me as the only committer"
+                <CheckBox VerticalAlignment="Center" Content="Projects with me as the only regular committer"
                           Name="TeamsSoloCheckBox"
                           IsChecked="{Binding Path=TeamsSolo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                <CheckBox VerticalAlignment="Center" Content="Small teams (&lt;=3 active* committers in the last year)"
+                <CheckBox VerticalAlignment="Center" Content="Small teams (&lt;=3 regular committers in the last year)"
                           Name="TeamsSmallCheckBox"
                           IsChecked="{Binding Path=TeamsSmall, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 <CheckBox VerticalAlignment="Center"
-                          Content="Medium teams (&gt;3 and &lt;=10 active* committers in the last year)"
+                          Content="Medium teams (&gt;3 and &lt;10 regular committers in the last year)"
                           Name="TeamsMediumCheckBox"
                           IsChecked="{Binding Path=TeamsMedium, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                <CheckBox VerticalAlignment="Center" Content="Large teams (&gt;10 active* committers in the last year)"
+                <CheckBox VerticalAlignment="Center" Content="Large teams (&gt;10 regular committers in the last year)"
                           Name="TeamsLargeCheckBox"
                           IsChecked="{Binding Path=TeamsLarge, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                <TextBlock TextWrapping="Wrap" Margin="0,3,0,0">
-                    (*) An active committer has on average more than one commit ?per week/month?.
+
+                <!-- %%%%%-->
+                <TextBlock TextWrapping="Wrap" Margin="0,15,0,5" FontSize="12" FontStyle="Italic">
+                    Code Reviews?
                 </TextBlock>
+                <ComboBox ItemsSource="{Binding YesNoOptions}"
+                          SelectedItem="{Binding CodeReviews}"
+                          Name="CodeReviewComboBox">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Converter={StaticResource EnumLocalizationConverter}}" />
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
 
                 <!-- %%%%%-->
                 <TextBlock TextWrapping="Wrap" Margin="0,15,0,5" FontSize="12" FontStyle="Italic">

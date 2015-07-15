@@ -56,17 +56,18 @@ namespace KaVE.VS.FeedbackGenerator.Generators
                 @event.Education = s.Education;
                 @event.Position = s.Position;
 
-                @event.ProjectsNoAnswer = s.ProjectsNoAnswer;
                 @event.ProjectsCourses = s.ProjectsCourses;
                 @event.ProjectsPersonal = s.ProjectsPersonal;
                 @event.ProjectsSharedSmall = s.ProjectsSharedSmall;
+                @event.ProjectsSharedMedium = s.ProjectsSharedMedium;
                 @event.ProjectsSharedLarge = s.ProjectsSharedLarge;
 
-                @event.TeamsNoAnswer = s.TeamsNoAnswer;
                 @event.TeamsSolo = s.TeamsSolo;
                 @event.TeamsSmall = s.TeamsSmall;
                 @event.TeamsMedium = s.TeamsMedium;
                 @event.TeamsLarge = s.TeamsLarge;
+
+                @event.CodeReviews = s.CodeReviews;
 
                 @event.ProgrammingGeneral = s.ProgrammingGeneral;
                 @event.ProgrammingCSharp = s.ProgrammingCSharp;

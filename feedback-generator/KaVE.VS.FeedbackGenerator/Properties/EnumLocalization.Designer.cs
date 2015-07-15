@@ -185,5 +185,32 @@ namespace KaVE.VS.FeedbackGenerator.Properties {
                 return ResourceManager.GetString("TestEnum_ExistingKey", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No.
+        /// </summary>
+        public static string YesNoUnknown_No {
+            get {
+                return ResourceManager.GetString("YesNoUnknown_No", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No Answer.
+        /// </summary>
+        public static string YesNoUnknown_Unknown {
+            get {
+                return ResourceManager.GetString("YesNoUnknown_Unknown", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Yes.
+        /// </summary>
+        public static string YesNoUnknown_Yes {
+            get {
+                return ResourceManager.GetString("YesNoUnknown_Yes", resourceCulture);
+            }
+        }
     }
 }

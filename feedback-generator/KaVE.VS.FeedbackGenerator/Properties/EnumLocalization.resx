@@ -159,4 +159,13 @@
   <data name="TestEnum_ExistingKey" xml:space="preserve">
     <value>Localization</value>
   </data>
+  <data name="YesNoUnknown_No" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="YesNoUnknown_Unknown" xml:space="preserve">
+    <value>No Answer</value>
+  </data>
+  <data name="YesNoUnknown_Yes" xml:space="preserve">
+    <value>Yes</value>
+  </data>
 </root>

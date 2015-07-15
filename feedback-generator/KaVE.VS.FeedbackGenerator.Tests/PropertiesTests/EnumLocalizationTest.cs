@@ -37,6 +37,12 @@ namespace KaVE.VS.FeedbackGenerator.Tests.PropertiesTests
             CheckEnumLocalization<Positions>();
         }
 
+        [Test]
+        public void LocalizationOfYesNo()
+        {
+            CheckEnumLocalization<YesNoUnknown>();
+        }
+
         private static void CheckEnumLocalization<T>()
         {
             var enumType = typeof (T);
