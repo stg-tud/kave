@@ -34,15 +34,16 @@ namespace KaVE.Commons.Tests.Utils
         public void ShouldStripTagsCorrectly()
         {
             const string xaml = "<Span Foreground=\"#123456\">Some <Bold>text</Bold></Span>";
-            var actual = XamlUtils.StripTags(xaml);
+            var actual = xaml.StripTags();
             Assert.AreEqual("Some text", actual);
         }
 
         [Test]
         public void ShouldEncodeSpecialCharsCorrectly()
         {
+            // Quotes are not encoded, because they cause no problems in Xaml.
             const string xaml = "\"<>&";
-            Assert.AreEqual("&quot;&lt;&gt;&amp;", XamlUtils.EncodeSpecialChars(xaml));
+            Assert.AreEqual("\"&lt;&gt;&amp;", xaml.EncodeSpecialChars());
         }
     }
 }
