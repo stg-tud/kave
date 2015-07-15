@@ -36,14 +36,16 @@ namespace KaVE.Commons.Utils
 
         private static readonly Regex NodeRegex = new Regex("<.*?>", RegexOptions.Compiled);
 
-        public static string StripTags(string xaml)
+        public static string StripTags(this string xaml)
         {
             return NodeRegex.Replace(xaml, String.Empty);
         }
 
-        public static string EncodeSpecialChars(string xaml)
+        public static string EncodeSpecialChars(this string xaml)
         {
-            return xaml.Replace("&", "&amp;").Replace("\"", "&quot;").Replace("<", "&lt;").Replace(">", "&gt;");
+            // the order of the replacements are importent, so be careful while reordering the existing or adding new replacements
+            // We don't replace \" and ' because both characters work well with Xaml
+            return xaml.Replace("&", "&amp;").Replace("<", "&lt;").Replace(">", "&gt;");
         }
     }
 }

@@ -24,6 +24,7 @@ using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Json;
 using KaVE.Commons.Utils.SSTPrinter;
 using KaVE.VS.FeedbackGenerator.SessionManager.Presentation;
+using KaVE.VS.FeedbackGenerator.Utils;
 
 namespace KaVE.VS.FeedbackGenerator.SessionManager
 {
@@ -135,7 +136,7 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager
         {
             if (proposal.Name != null)
             {
-                var identifier = proposal.Name.Identifier;
+                var identifier = proposal.Name.Identifier.EncodeSpecialChars();
 
                 if (!String.IsNullOrEmpty(prefix))
                 {
@@ -195,7 +196,7 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager
         /// </summary>
         private static string AddSyntaxHighlightingIfNotTooLong(string json)
         {
-            return json.Length > 50000 ? json : json.AddJsonSyntaxHighlightingWithXaml();
+            return json.Length > 50000 ? json.EncodeSpecialChars() : json.AddJsonSyntaxHighlightingWithXaml();
         }
 
         protected bool Equals(EventViewModel other)

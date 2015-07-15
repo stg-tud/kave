@@ -58,20 +58,39 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Presentation
         [Test(Description = "Xaml with more than 65534 nodes cannot be parsed")]
         public void ShouldDisplayXamlWithMoreThan65534NodesWithoutSyntaxHighlighting()
         {
-            var xaml = new StringBuilder();
-            for (var i = 0; i < 65535; i++)
-            {
-                xaml.Append("<Bold>Text</Bold>\n");
-            }
+            var xaml = CreateXamlWithMoreThan65534NodesStartingWith("<Bold>A</Bold>\n<Bold>B</Bold>\n");
 
             TestDisplayXaml(
-                xaml.ToString(),
+                xaml,
                 par =>
                 {
                     var text = GetFirstChild<Run>(par);
-                    Assert.AreEqual(65535*5, text.Text.Length);
-                    Assert.IsTrue(text.Text.StartsWith("Text\nText\nText\n"));
+                    StringAssert.StartsWith("A\nB\n", text.Text);
                 });
+        }
+
+        [Test]
+        public void KeepsEscapedSpecialCharacterWhenStrippingSyntaxHighlighting()
+        {
+            var xaml = CreateXamlWithMoreThan65534NodesStartingWith("A&lt;B&gt;");
+
+            TestDisplayXaml(
+                xaml,
+                par =>
+                {
+                    var text = GetFirstChild<Run>(par);
+                    StringAssert.StartsWith("A&lt;B&gt;", text.Text);
+                });
+        }
+
+        private static string CreateXamlWithMoreThan65534NodesStartingWith(string prefix)
+        {
+            var xaml = new StringBuilder(prefix);
+            for (var i = 0; i < 65535; i++)
+            {
+                xaml.Append("<Bold>A</Bold>");
+            }
+            return xaml.ToString();
         }
 
         [NotNull]

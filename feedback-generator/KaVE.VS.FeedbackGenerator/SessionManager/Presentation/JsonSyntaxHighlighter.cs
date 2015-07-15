@@ -15,6 +15,7 @@
  */
 
 using System.Text.RegularExpressions;
+using KaVE.Commons.Utils;
 using KaVE.JetBrains.Annotations;
 using KaVE.RS.Commons.Utils;
 
@@ -25,18 +26,11 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager.Presentation
         [NotNull]
         public static string AddJsonSyntaxHighlightingWithXaml([NotNull] this string json)
         {
-            var escapedJson = json.EscapeXamlCharacters();
+            var escapedJson = json.EncodeSpecialChars();
             return Regex.Replace(
                 escapedJson,
                 @"(""(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\""])*""(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)",
                 match => CreateReplacement(match.Value));
-        }
-
-        private static string EscapeXamlCharacters(this string raw)
-        {
-            // the order of the replacements are importent, so be careful while reordering the existing or adding new replacements
-            // We don't replace \" and ' because both characters work well with Xaml
-            return raw.Replace("&", "&amp;").Replace("<", "&lt;").Replace(">", "&gt;");
         }
 
         private static string CreateReplacement(string match)

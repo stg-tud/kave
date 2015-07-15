@@ -20,6 +20,7 @@ using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.Commons.TestUtils.Model.Events;
+using KaVE.Commons.Utils.Json;
 using KaVE.VS.FeedbackGenerator.SessionManager;
 using NUnit.Framework;
 
@@ -146,6 +147,71 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager
 
             var view = new EventViewModel(someEvent);
             Assert.IsNull(view.XamlSelectionsRepresentation);
+        }
+
+        [Test]
+        public void EscapesSpecialCharsInSelections()
+        {
+            var completionEvent = new CompletionEvent
+            {
+                Selections =
+                {
+                    new ProposalSelection { 
+                        Proposal = new Proposal { Name = Name.Get("TypeLookupItem:TestDelegate<string>[]") },
+                        SelectedAfter = TimeSpan.FromSeconds(1)
+                    }
+                }
+            };
+
+            var view = new EventViewModel(completionEvent);
+            Assert.AreEqual("• <Bold>00:00:01</Bold> TypeLookupItem:TestDelegate&lt;string&gt;[]\r\n", view.XamlSelectionsRepresentation);
+        }
+
+        [Test]
+        public void EscapesSpecialCharsInProposals()
+        {
+            var completionEvent = new CompletionEvent
+            {
+                ProposalCollection = 
+                {
+                    new Proposal { Name = Name.Get("TypeLookupItem:TestDelegate<string>[]") }
+                }
+            };
+
+            var view = new EventViewModel(completionEvent);
+            Assert.AreEqual("• TypeLookupItem:TestDelegate&lt;string&gt;[]\r\n", view.XamlProposalsRepresentation);
+        }
+
+        [Test]
+        public void EscapesSpecialCharsInRawView()
+        {
+            var completionEvent = new CompletionEvent
+            {
+                ProposalCollection = 
+                {
+                    new Proposal { Name = Name.Get("TypeLookupItem:TestDelegate<string>[]") }
+                }
+            };
+
+            var view = new EventViewModel(completionEvent);
+            StringAssert.Contains("TestDelegate&lt;string&gt;[]", view.XamlRawRepresentation);
+        }
+
+        [Test]
+        public void EscapesSpecialCharsInLongRawView()
+        {
+            var completionEvent = new CompletionEvent
+            {
+                ProposalCollection = 
+                {
+                    new Proposal { Name = Name.Get("TypeLookupItem:TestDelegate<string>[]") },
+                    // filler to make the overall serialization longer than 50000 characters
+                    new Proposal { Name = Name.Get(new string('a', 50000)) }
+                }
+            };
+
+            var view = new EventViewModel(completionEvent);
+            StringAssert.Contains("TestDelegate&lt;string&gt;[]", view.XamlRawRepresentation);
         }
     }
 }

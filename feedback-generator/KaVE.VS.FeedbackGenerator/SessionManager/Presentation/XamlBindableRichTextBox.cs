@@ -59,8 +59,7 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager.Presentation
                     {
                         if (ContainsTooManyNodesForDisplay(xaml))
                         {
-                            xaml = XamlUtils.EncodeSpecialChars(XamlUtils.StripTags(xaml));
-                            par = new Paragraph(new Run(xaml));
+                            par = CreateParagraphFromText(xaml.StripTags());
                         }
                         else
                         {
@@ -82,6 +81,11 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager.Presentation
             // line and 80 characters per line (on average), a xaml with more
             // than 500 * 80 = 40000 characters takes too long.
             return xaml.Length > 40000;
+        }
+
+        private static Paragraph CreateParagraphFromText(string text)
+        {
+            return new Paragraph(new Run(text));
         }
 
         private static Paragraph CreateParagraphFromXaml(string xaml)
