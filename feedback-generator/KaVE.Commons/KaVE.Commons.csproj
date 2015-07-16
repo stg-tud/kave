@@ -77,6 +77,7 @@
     <Compile Include="Utils\Csv\CsvBuilder.cs" />
     <Compile Include="Utils\Csv\CsvBuilderEx.cs" />
     <Compile Include="Utils\Csv\CsvTable.cs" />
+    <Compile Include="Utils\DateTime\DateTimeEx.cs" />
     <Compile Include="Utils\DateUtils.cs" />
     <Compile Include="Utils\Exceptions\FileLogger.cs" />
     <Compile Include="Utils\IO\FileSystemEx.cs" />
