@@ -30,6 +30,11 @@ namespace KaVE.FeedbackProcessor.Database
 {
     internal class MongoDbFeedbackDatabase : IFeedbackDatabase
     {
+        public static IFeedbackDatabase Open(string url, string baseName, string nameSuffix)
+        {
+            return new MongoDbFeedbackDatabase(url, string.Format("{0}{1}", baseName, nameSuffix));
+        }
+
         private readonly MongoDatabase _database;
 
         public MongoDbFeedbackDatabase(string databaseUrl, string databaseName)

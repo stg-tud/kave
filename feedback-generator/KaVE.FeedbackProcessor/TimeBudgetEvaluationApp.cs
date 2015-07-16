@@ -154,11 +154,9 @@ namespace KaVE.FeedbackProcessor
             Output("developers-per-day.csv", calculator.GetStatisticAsCsv());
         }
 
-        private MongoDbFeedbackDatabase OpenDatabase(string databaseSuffix)
+        private IFeedbackDatabase OpenDatabase(string databaseSuffix)
         {
-            return new MongoDbFeedbackDatabase(
-                Configuration.DatabaseUrl,
-                string.Format("{0}{1}", Configuration.DatasetName, databaseSuffix));
+            return MongoDbFeedbackDatabase.Open(Configuration.DatabaseUrl, Configuration.DatasetName, databaseSuffix);
         }
 
         private void Output(string outputFilename, string text)
