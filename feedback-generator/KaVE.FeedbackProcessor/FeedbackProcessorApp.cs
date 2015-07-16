@@ -204,31 +204,16 @@ namespace KaVE.FeedbackProcessor
 
         private static void LogEventsPerDeveloperDayStatistic(IFeedbackDatabase database)
         {
-            var calculator1 = new EventsPerDeveloperDayStatisticCalculator(TimeSpan.FromMinutes(1));
-            var calculator3 = new EventsPerDeveloperDayStatisticCalculator(TimeSpan.FromMinutes(3));
             var calculator5 = new EventsPerDeveloperDayStatisticCalculator(TimeSpan.FromMinutes(5));
-            var calculator8 = new EventsPerDeveloperDayStatisticCalculator(TimeSpan.FromMinutes(8));
-            var calculator13 = new EventsPerDeveloperDayStatisticCalculator(TimeSpan.FromMinutes(13));
-            var calculator21 = new EventsPerDeveloperDayStatisticCalculator(TimeSpan.FromMinutes(21));
-            var calculator34 = new EventsPerDeveloperDayStatisticCalculator(TimeSpan.FromMinutes(34));
+            var calculator10 = new EventsPerDeveloperDayStatisticCalculator(TimeSpan.FromMinutes(10));
 
             var walker = new FeedbackProcessor(database, Logger);
-            walker.Register(calculator1);
-            walker.Register(calculator3);
             walker.Register(calculator5);
-            walker.Register(calculator8);
-            walker.Register(calculator13);
-            walker.Register(calculator21);
-            walker.Register(calculator34);
+            walker.Register(calculator10);
             walker.ProcessFeedback();
 
-            Output("developerdaystats-B1.csv", calculator1.StatisticAsCsv());
-            Output("developerdaystats-B3.csv", calculator3.StatisticAsCsv());
-            Output("developerdaystats-B5.csv", calculator5.StatisticAsCsv());
-            Output("developerdaystats-B8.csv", calculator8.StatisticAsCsv());
-            Output("developerdaystats-B13.csv", calculator13.StatisticAsCsv());
-            Output("developerdaystats-B21.csv", calculator21.StatisticAsCsv());
-            Output("developerdaystats-B34.csv", calculator34.StatisticAsCsv());
+            Output("events-per-developer.csv", calculator5.EventsPerDeveloperStatisticAsCsv());
+            //Output("event-per-developer-day.csv", calculator5.EventsPerDeveloperDayStatisticAsCsv());
         }
 
         private static void LogOccuringNames(IFeedbackDatabase database)
@@ -300,14 +285,16 @@ namespace KaVE.FeedbackProcessor
             processor.Register(activityWindowProcessor1);
             processor.ProcessFeedback();
 
-            Output(
-                "developer-activities-1.csv",
-                activityWindowProcessor1.ActivityStreamsToCsv(TimeSpan.FromSeconds(15), TimeSpan.FromMinutes(5)));
+            Output("developer-activities-1-B5-S15.csv", activityWindowProcessor1.ActivityStreamsToCsv(TimeSpan.FromSeconds(15), TimeSpan.FromMinutes(5)));
+            Output("devday-activities-1-B5-S15.csv", activityWindowProcessor1.DeveloperDayStatisticToCsv(TimeSpan.FromSeconds(15), TimeSpan.FromMinutes(5)));
 
             Output(
-                "inactivity-separation-1000.csv",
+                "inactivity-separation-1000-0.csv",
                 activityWindowProcessor1.InactivityStatisticToCsv(
-                    TimeSpan.FromSeconds(15), 
+                    TimeSpan.Zero,
+                    TimeSpan.FromSeconds(1),
+                    TimeSpan.FromSeconds(2),
+                    TimeSpan.FromSeconds(3),
                     TimeSpan.FromSeconds(4),
                     TimeSpan.FromSeconds(5),
                     TimeSpan.FromSeconds(6),
@@ -316,9 +303,35 @@ namespace KaVE.FeedbackProcessor
                     TimeSpan.FromSeconds(9),
                     TimeSpan.FromSeconds(10),
                     TimeSpan.FromSeconds(11),
-                    TimeSpan.FromMinutes(1),
-                    TimeSpan.FromMinutes(2)
-                    ));
+                    TimeSpan.FromSeconds(12),
+                    TimeSpan.FromSeconds(13),
+                    TimeSpan.FromSeconds(14),
+                    TimeSpan.FromSeconds(15),
+                    TimeSpan.FromSeconds(16),
+                    TimeSpan.FromSeconds(17),
+                    TimeSpan.FromSeconds(18),
+                    TimeSpan.FromSeconds(19),
+                    TimeSpan.FromSeconds(20)));
+
+            Output(
+                "inactivity-separation-1000-15.csv",
+                activityWindowProcessor1.InactivityStatisticToCsv(
+                    TimeSpan.FromSeconds(15), 
+                    TimeSpan.FromMinutes(1), 
+                    TimeSpan.FromMinutes(2), 
+                    TimeSpan.FromMinutes(3), 
+                    TimeSpan.FromMinutes(4), 
+                    TimeSpan.FromMinutes(5), 
+                    TimeSpan.FromMinutes(6), 
+                    TimeSpan.FromMinutes(7), 
+                    TimeSpan.FromMinutes(8), 
+                    TimeSpan.FromMinutes(9), 
+                    TimeSpan.FromMinutes(10), 
+                    TimeSpan.FromMinutes(11), 
+                    TimeSpan.FromMinutes(13), 
+                    TimeSpan.FromMinutes(15),
+                    TimeSpan.FromMinutes(17),
+                    TimeSpan.FromMinutes(19)));
         }
 
         private static void LogAverageBreakAfterEventsStatistic(IFeedbackDatabase database, string fileName)
