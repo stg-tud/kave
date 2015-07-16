@@ -26,6 +26,7 @@ using JetBrains.ReSharper.Psi.CSharp;
 using KaVE.Commons.Model.ObjectUsage;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.CodeCompletion;
+using KaVE.Commons.Utils.Concurrent;
 using KaVE.Commons.Utils.Exceptions;
 using KaVE.Commons.Utils.ObjectUsageExport;
 using KaVE.JetBrains.Annotations;
@@ -67,7 +68,12 @@ namespace KaVE.VS.FeedbackGenerator.CodeCompletion
 
         protected override bool AddLookupItems(CSharpCodeCompletionContext context, GroupedItemsCollector collector)
         {
-            var kaveContext = ContextAnalysis.Analyze(context, _logger).Context;
+            _logger.Info("PBNProposalItemsProvider: Before analysis");
+            var task = ContextAnalysis.AnalyseAsync(context, _logger);
+            _logger.Info("PBNProposalItemsProvider: Analysis started");
+            var kaveContext = task.Result.Context;
+            _logger.Info("PBNProposalItemsProvider: After analysis");
+
             _currentQuery = _queryGen.Extract(kaveContext);
             if (_currentQuery != null && IsAvailable())
             {

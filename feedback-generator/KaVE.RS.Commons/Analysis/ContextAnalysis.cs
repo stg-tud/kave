@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System;
 using System.Linq;
 using JetBrains.Annotations;
 using JetBrains.ReSharper.Feature.Services.CSharp.CodeCompletion.Infrastructure;
@@ -24,6 +25,7 @@ using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.Commons.Utils.Collections;
+using KaVE.Commons.Utils.Concurrent;
 using KaVE.Commons.Utils.Exceptions;
 using KaVE.RS.Commons.Analysis.CompletionTarget;
 using KaVE.RS.Commons.Analysis.Transformer;
@@ -52,6 +54,28 @@ namespace KaVE.RS.Commons.Analysis
             return new ContextAnalysis(logger).AnalyzeInternal(node);
         }
 
+        private static readonly ConcurrentDictionary<CSharpCodeCompletionContext, Task<ContextAnalysisResult>>
+            CurrentTasks =
+                new ConcurrentDictionary<CSharpCodeCompletionContext, Task<ContextAnalysisResult>>();
+
+        public static Task<ContextAnalysisResult> AnalyseAsync(CSharpCodeCompletionContext rsContext, ILogger logger)
+        {
+            Task<ContextAnalysisResult> task;
+            if (!CurrentTasks.TryGetValue(rsContext, out task))
+            {
+                task = new Task<ContextAnalysisResult>(
+                    () =>
+                    {
+                        logger.Info("ContextAnalysis: analysis started");
+                        return Analyze(rsContext, logger);
+                    });
+                CurrentTasks.TryAdd(rsContext, task);
+                task.Start();
+            }
+            
+            return task;
+        }
+
         private ContextAnalysisResult AnalyzeInternal(ITreeNode type)
         {
             var res = new ContextAnalysisResult
@@ -66,6 +90,11 @@ namespace KaVE.RS.Commons.Analysis
 
         private void AnalyzeInternal(ITreeNode nodeInFile, ContextAnalysisResult res)
         {
+            for (int i = 0; i < Int32.MaxValue; i++)
+            {
+
+            }
+
             var context = res.Context;
             var sst = new SST();
             context.SST = sst;

@@ -54,7 +54,7 @@ namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
     [Language(typeof (CSharpLanguage))]
     public class CodeCompletionContextAnalysisTrigger : CSharpItemsProviderBase<CSharpCodeCompletionContext>
     {
-        public const int LimitInMs = 1000;
+        public const int LimitInMs = 1000000;
 
         private readonly CodeCompletionEventHandler _handler;
         private readonly ILogger _logger;
@@ -80,7 +80,15 @@ namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
             Func<Context> analysis = () =>
             {
                 Context result = null;
-                ReadLockCookie.Execute(() => result = ContextAnalysis.Analyze(context, _logger).Context);
+                ReadLockCookie.Execute(
+                    () =>
+                    {
+                        _logger.Info("CodeCompletionEventHandler: Before analysis");
+                        var task = ContextAnalysis.AnalyseAsync(context, _logger);
+                        _logger.Info("CodeCompletionEventHandler: Analysis started");
+                        result = task.Result.Context;
+                        _logger.Info("CodeCompletionEventHandler: After analysis");
+                    });
                 return result;
             };
 

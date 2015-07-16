@@ -53,4 +53,16 @@ namespace KaVE.Commons.Utils.Concurrent
             Factory.StartNew(action, TaskCreationOptions.LongRunning);
         }
     }
+
+    public class Task<T> : System.Threading.Tasks.Task<T>
+    {
+        public Task(Func<T> function) : base(function) {}
+        public Task(Func<T> function, CancellationToken cancellationToken) : base(function, cancellationToken) {}
+        public Task(Func<T> function, TaskCreationOptions creationOptions) : base(function, creationOptions) {}
+        public Task(Func<T> function, CancellationToken cancellationToken, TaskCreationOptions creationOptions) : base(function, cancellationToken, creationOptions) {}
+        public Task(Func<object, T> function, object state) : base(function, state) {}
+        public Task(Func<object, T> function, object state, CancellationToken cancellationToken) : base(function, state, cancellationToken) {}
+        public Task(Func<object, T> function, object state, TaskCreationOptions creationOptions) : base(function, state, creationOptions) {}
+        public Task(Func<object, T> function, object state, CancellationToken cancellationToken, TaskCreationOptions creationOptions) : base(function, state, cancellationToken, creationOptions) {}
+    }
 }
