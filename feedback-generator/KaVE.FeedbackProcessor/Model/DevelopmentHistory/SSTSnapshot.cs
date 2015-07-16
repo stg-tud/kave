@@ -14,20 +14,25 @@
  * limitations under the License.
  */
 
-using KaVE.Commons.Utils.Exceptions;
+using System;
+using KaVE.Commons.Model.Events.CompletionEvents;
+using KaVE.Commons.Model.ObjectUsage;
+using KaVE.Commons.Utils.ObjectUsageExport;
 
-namespace KaVE.FeedbackProcessor
+namespace KaVE.FeedbackProcessor.Model.DevelopmentHistory
 {
-    internal class FeedbackProcessorApp
+    public class SSTSnapshot
     {
-        private static readonly ILogger Logger = new ConsoleLogger();
+        public string WorkPeriodId { get; set; }
+        public DateTime Timestamp { get; set; }
+        public Context Context { get; set; }
 
-        public static void Main()
+        public CoReTypeName TargetType
         {
-            new SanityCheckApp().Run();
-
-            new TimeBudgetEvaluationApp(Logger).Run();
-            new SSTSequenceExtractor(Logger).Run();
+            get
+            {
+                return new QueryExtractor().Extract(Context).type;
+            }
         }
     }
 }
