@@ -24,7 +24,7 @@ namespace KaVE.FeedbackProcessor.Cleanup.Heuristics
 {
     internal class ConcurrentEventHeuristic
     {
-        public static readonly TimeSpan EventTimeDifference = TimeSpan.FromMilliseconds(10);
+        public static readonly TimeSpan EventTimeDifference = TimeSpan.FromMilliseconds(100);
 
         public static readonly List<string> IgnorableTextControlCommands = new List<string>
         {
