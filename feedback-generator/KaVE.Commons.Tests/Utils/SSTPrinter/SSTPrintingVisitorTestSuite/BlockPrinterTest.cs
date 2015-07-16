@@ -15,6 +15,7 @@
  */
 
 using KaVE.Commons.Model.Names.CSharp;
+using KaVE.Commons.Model.SSTs.Blocks;
 using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.Commons.Model.SSTs.Impl.Blocks;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.LoopHeader;
@@ -179,7 +180,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
                 {
                     new CatchBlock
                     {
-                        IsGeneral = true,
+                        Kind = CatchBlockKind.General,
                         Body = {new BreakStatement()}
                     }
                 }
@@ -207,7 +208,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
                 {
                     new CatchBlock
                     {
-                        IsUnnamed = true,
+                        Kind = CatchBlockKind.Unnamed,
                         Parameter = ParameterName.Get("[ExceptionType,P] e"),
                         Body = {new BreakStatement()}
                     }
@@ -274,7 +275,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
             {
                 Condition = new ConstantValueExpression {Value = "true"},
                 Then = {new ContinueStatement()},
-                Else = {new BreakStatement()},
+                Else = {new BreakStatement()}
             };
 
             AssertPrint(
@@ -295,7 +296,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
             var sst = new IfElseBlock
             {
                 Condition = new ConstantValueExpression {Value = "true"},
-                Then = {new ContinueStatement()},
+                Then = {new ContinueStatement()}
             };
 
             AssertPrint(
@@ -338,7 +339,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
                 Body =
                 {
                     new ContinueStatement(),
-                    new BreakStatement(),
+                    new BreakStatement()
                 }
             };
 
@@ -370,7 +371,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
                 Body =
                 {
                     new ContinueStatement(),
-                    new BreakStatement(),
+                    new BreakStatement()
                 }
             };
 
@@ -403,7 +404,7 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
                     new LoopHeaderBlockExpression
                     {
                         Body = {new ReturnStatement {Expression = new ConstantValueExpression {Value = "true"}}}
-                    },
+                    }
             };
 
             AssertPrint(

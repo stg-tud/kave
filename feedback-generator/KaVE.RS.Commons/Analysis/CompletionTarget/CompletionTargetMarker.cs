@@ -30,6 +30,7 @@ namespace KaVE.RS.Commons.Analysis.CompletionTarget
         EmptyCompletionBefore,
         EmptyCompletionAfter,
         InBody,
-        InElse
+        InElse,
+        InFinally
     }
 }

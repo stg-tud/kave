@@ -16,6 +16,7 @@
 
 using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.SSTs;
+using KaVE.Commons.Model.SSTs.Blocks;
 using KaVE.Commons.Model.SSTs.Impl.Blocks;
 using KaVE.Commons.Model.SSTs.Impl.Statements;
 using KaVE.Commons.TestUtils;
@@ -32,8 +33,7 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Blocks
             var sut = new CatchBlock();
             Assert.AreEqual(ParameterName.UnknownName, sut.Parameter);
             Assert.AreEqual(Lists.NewList<IStatement>(), sut.Body);
-            Assert.False(sut.IsGeneral);
-            Assert.False(sut.IsUnnamed);
+            Assert.AreEqual(CatchBlockKind.Default, sut.Kind);
             Assert.AreNotEqual(0, sut.GetHashCode());
             Assert.AreNotEqual(1, sut.GetHashCode());
         }
@@ -43,9 +43,8 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Blocks
         {
             var sut = new CatchBlock
             {
+                Kind = CatchBlockKind.General,
                 Parameter = SomeParameter(),
-                IsGeneral = true,
-                IsUnnamed = true,
                 Body =
                 {
                     new ReturnStatement()
@@ -54,8 +53,7 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Blocks
 
             Assert.AreEqual(SomeParameter(), sut.Parameter);
             Assert.AreEqual(Lists.NewList(new ReturnStatement()), sut.Body);
-            Assert.True(sut.IsGeneral);
-            Assert.True(sut.IsUnnamed);
+            Assert.AreEqual(CatchBlockKind.General, sut.Kind);
         }
 
         [Test]
@@ -72,9 +70,8 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Blocks
         {
             var a = new CatchBlock
             {
+                Kind = CatchBlockKind.General,
                 Parameter = SomeParameter(),
-                IsGeneral = true,
-                IsUnnamed = true,
                 Body =
                 {
                     new ReturnStatement()
@@ -82,9 +79,8 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Blocks
             };
             var b = new CatchBlock
             {
+                Kind = CatchBlockKind.General,
                 Parameter = SomeParameter(),
-                IsGeneral = true,
-                IsUnnamed = true,
                 Body =
                 {
                     new ReturnStatement()
@@ -92,6 +88,15 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Blocks
             };
             Assert.AreEqual(a, b);
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
+        }
+
+        [Test]
+        public void Equality_DifferentKind()
+        {
+            var a = new CatchBlock {Kind = CatchBlockKind.General};
+            var b = new CatchBlock();
+            Assert.AreNotEqual(a, b);
+            Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
         }
 
         [Test]
@@ -113,24 +118,6 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Blocks
                     new ReturnStatement()
                 }
             };
-            var b = new CatchBlock();
-            Assert.AreNotEqual(a, b);
-            Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
-        }
-
-        [Test]
-        public void Equality_DifferentIsGeneral()
-        {
-            var a = new CatchBlock {IsGeneral = true};
-            var b = new CatchBlock();
-            Assert.AreNotEqual(a, b);
-            Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());
-        }
-
-        [Test]
-        public void Equality_DifferentIsUnnamed()
-        {
-            var a = new CatchBlock {IsUnnamed = true};
             var b = new CatchBlock();
             Assert.AreNotEqual(a, b);
             Assert.AreNotEqual(a.GetHashCode(), b.GetHashCode());

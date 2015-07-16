@@ -48,7 +48,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
             ");
 
             AssertBody(
-                InvokeStaticStmt(Fix.Object_Equals, new NullExpression(), new NullExpression()),
+                InvokeStaticStmt(Fix.Object_static_Equals, new NullExpression(), new NullExpression()),
                 ExprStmt(new CompletionExpression()));
         }
 
@@ -118,7 +118,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
                 VarDecl("b", Fix.Bool),
                 Assign(
                     "b",
-                    InvokeStatic(Fix.Object_Equals, new NullExpression(), new NullExpression())),
+                    InvokeStatic(Fix.Object_static_Equals, new NullExpression(), new NullExpression())),
                 ExprStmt(new CompletionExpression()));
         }
 

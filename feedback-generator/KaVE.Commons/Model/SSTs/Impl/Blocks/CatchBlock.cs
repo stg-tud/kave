@@ -24,10 +24,9 @@ namespace KaVE.Commons.Model.SSTs.Impl.Blocks
 {
     public class CatchBlock : ICatchBlock
     {
+        public CatchBlockKind Kind { get; set; }
         public IParameterName Parameter { get; set; }
         public IKaVEList<IStatement> Body { get; set; }
-        public bool IsGeneral { get; set; }
-        public bool IsUnnamed { get; set; }
 
         public CatchBlock()
         {
@@ -35,25 +34,23 @@ namespace KaVE.Commons.Model.SSTs.Impl.Blocks
             Body = Lists.NewList<IStatement>();
         }
 
-        private bool Equals(CatchBlock other)
-        {
-            return Body.Equals(other.Body) && Equals(Parameter, other.Parameter) && IsGeneral == other.IsGeneral &&
-                   IsUnnamed == other.IsUnnamed;
-        }
-
         public override bool Equals(object obj)
         {
             return this.Equals(obj, Equals);
+        }
+
+        private bool Equals(ICatchBlock other)
+        {
+            return Kind == other.Kind && Parameter.Equals(other.Parameter) && Body.Equals(other.Body);
         }
 
         public override int GetHashCode()
         {
             unchecked
             {
-                var hashCode = Parameter.GetHashCode();
+                var hashCode = (int) Kind;
+                hashCode = (hashCode*397) ^ Parameter.GetHashCode();
                 hashCode = (hashCode*397) ^ Body.GetHashCode();
-                hashCode = (hashCode*397) ^ IsGeneral.GetHashCode();
-                hashCode = (hashCode*397) ^ IsUnnamed.GetHashCode();
                 return hashCode;
             }
         }

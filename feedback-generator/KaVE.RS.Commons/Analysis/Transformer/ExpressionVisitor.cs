@@ -74,13 +74,41 @@ namespace KaVE.RS.Commons.Analysis.Transformer
 
         public ISimpleExpression ToSimpleExpression(ICSharpExpression csExpr, IList<IStatement> body)
         {
-            return csExpr == null
-                ? new UnknownExpression()
-                : csExpr.Accept(this, body) as ISimpleExpression ?? new UnknownExpression();
+            if (csExpr == null)
+            {
+                return new UnknownExpression();
+            }
+
+            var expr = csExpr.Accept(this, body);
+            if (expr == null)
+            {
+                return new UnknownExpression();
+            }
+
+            if (expr is ISimpleExpression)
+            {
+                return expr as ISimpleExpression;
+            }
+
+            var newRef = new VariableReference {Identifier = _nameGen.GetNextVariableName()};
+            body.Add(
+                new VariableDeclaration
+                {
+                    Reference = newRef,
+                    Type = csExpr.GetExpressionType().ToIType().GetName()
+                });
+            body.Add(
+                new Assignment
+                {
+                    Reference = newRef,
+                    Expression = expr
+                });
+            return new ReferenceExpression {Reference = newRef};
         }
 
         public ILoopHeaderExpression ToLoopHeaderExpression(ICSharpExpression csExpr, IList<IStatement> body)
         {
+            // TODO Loopheader testcases and proper handling
             return csExpr == null
                 ? new UnknownExpression()
                 : csExpr.Accept(this, body) as ILoopHeaderExpression ?? new UnknownExpression();
@@ -148,6 +176,11 @@ namespace KaVE.RS.Commons.Analysis.Transformer
                 return new NullExpression();
             }
             return new ConstantValueExpression();
+        }
+
+        public override IAssignableExpression VisitThisExpression(IThisExpression expr, IList<IStatement> body)
+        {
+            return new ReferenceExpression {Reference = new VariableReference {Identifier = "this"}};
         }
 
         public override IAssignableExpression VisitExpressionInitializer(IExpressionInitializer exprInit,
@@ -273,7 +306,7 @@ namespace KaVE.RS.Commons.Analysis.Transformer
                     Reference = new VariableReference
                     {
                         Identifier = name
-                    },
+                    }
                 };
             }
             return new ReferenceExpression

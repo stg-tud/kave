@@ -391,12 +391,12 @@ namespace KaVE.Commons.Utils.SSTPrinter
             {
                 c.NewLine().Indentation().Keyword("catch");
 
-                if (!catchBlock.IsGeneral)
+                if (catchBlock.Kind != CatchBlockKind.General)
                 {
                     c.Space().Text("(")
                      .Type(catchBlock.Parameter.ValueType);
 
-                    if (!catchBlock.IsUnnamed)
+                    if (catchBlock.Kind != CatchBlockKind.Unnamed)
                     {
                         c.Space()
                          .Text(catchBlock.Parameter.Name);

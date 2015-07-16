@@ -22,6 +22,7 @@ using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Commons.Model.SSTs.Impl.References;
 using KaVE.Commons.Utils.Collections;
 using NUnit.Framework;
+using Fix = KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.SSTAnalysisFixture;
 
 namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expressions
 {
@@ -144,7 +145,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
                         new FieldReference
                         {
                             Reference = VarRef("c"),
-                            FieldName = FieldName.Get(string.Format("[{0}] [{0}].c", TypeName.UnknownName)),
+                            FieldName = FieldName.Get(string.Format("[{0}] [{0}].c", TypeName.UnknownName))
                         })),
                 ExprStmt(
                     new CompletionExpression
@@ -171,31 +172,20 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
                         Token = "f"
                     }));
         }
-    }
 
-    public class C
-    {
-        public C c;
-        public static C s;
-        public int f;
-
-        public int P
+        [Test]
+        public void NestedVariableReferencesExpressions()
         {
-            get { return f; }
-        }
+            CompleteInMethod(@"
+                object o;
+                Equals(o, this);
+                $
+            ");
 
-        public int GetF()
-        {
-            return f;
-        }
-    }
-
-    internal class C2
-    {
-        private void M(C c)
-        {
-            // c.c.f
-            // C.s.
+            AssertBody(
+                VarDecl("o", Fix.Object),
+                InvokeStaticStmt(Fix.Object_static_Equals, RefExpr("o"), RefExpr("this")),
+                ExprStmt(new CompletionExpression()));
         }
     }
 }

@@ -22,22 +22,19 @@ namespace KaVE.Commons.Model.SSTs.Blocks
 {
     public interface ICatchBlock
     {
+        CatchBlockKind Kind { get; }
+
         [NotNull]
         IParameterName Parameter { get; }
 
         [NotNull]
         IKaVEList<IStatement> Body { get; }
+    }
 
-        /// <summary>
-        ///     catch block does not define a  specific exception type and catches everything.
-        ///     E.g., try { ... } catch { ... }
-        /// </summary>
-        bool IsGeneral { get; }
-
-        /// <summary>
-        ///     catch block defines a type, but does not introduce a name for the caught exception.
-        ///     E.g., try { ... } catch(Exception) { ... }
-        /// </summary>
-        bool IsUnnamed { get; }
+    public enum CatchBlockKind
+    {
+        Default, // E.g., try { ... } catch(Exception e) { ... }
+        Unnamed, // E.g., try { ... } catch(Exception) { ... }
+        General // E.g., try { ... } catch { ... }
     }
 }

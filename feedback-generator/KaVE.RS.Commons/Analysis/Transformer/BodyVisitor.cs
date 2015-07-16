@@ -21,6 +21,7 @@ using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.Util;
 using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.Names.CSharp;
+using KaVE.Commons.Model.SSTs.Blocks;
 using KaVE.Commons.Model.SSTs.Expressions;
 using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.Commons.Model.SSTs.Impl.Blocks;
@@ -411,6 +412,76 @@ namespace KaVE.RS.Commons.Analysis.Transformer
             if (IsTargetMatch(stmt, CompletionCase.EmptyCompletionAfter))
             {
                 body.Add(EmptyCompletionExpression);
+            }
+        }
+
+        public override void VisitTryStatement(ITryStatement block, IList<IStatement> body)
+        {
+            AddIf(block, CompletionCase.EmptyCompletionBefore, body);
+
+            var tryBlock = new TryBlock();
+            body.Add(tryBlock);
+
+            AddIf(block, CompletionCase.InBody, tryBlock.Body);
+            AddIf(block, CompletionCase.InFinally, tryBlock.Finally);
+            Visit(block.Try, tryBlock.Body);
+            Visit(block.FinallyBlock, tryBlock.Finally);
+
+            foreach (var clause in block.Catches)
+            {
+                var catchBlock = new CatchBlock();
+                tryBlock.CatchBlocks.Add(catchBlock);
+
+                AddIf(clause, CompletionCase.InBody, catchBlock.Body);
+
+                Visit(clause.Body, catchBlock.Body);
+
+                var generalClause = clause as IGeneralCatchClause;
+                if (generalClause != null)
+                {
+                    catchBlock.Kind = CatchBlockKind.General;
+                    continue;
+                }
+
+                var specificClause = clause as ISpecificCatchClause;
+                if (specificClause != null)
+                {
+                    var varDecl = specificClause.ExceptionDeclaration;
+                    var isUnnamed = varDecl == null;
+
+                    var typeName = specificClause.ExceptionType.GetName();
+                    var varName = isUnnamed ? "?" : varDecl.DeclaredName;
+                    catchBlock.Parameter = ParameterName.Get(string.Format("[{0}] {1}", typeName, varName));
+                    catchBlock.Kind = isUnnamed ? CatchBlockKind.Unnamed : CatchBlockKind.Default;
+                }
+            }
+
+            AddIf(block, CompletionCase.EmptyCompletionAfter, body);
+        }
+
+        private void AddIf(ICSharpTreeNode node, CompletionCase completionCase, IList<IStatement> body)
+        {
+            if (IsTargetMatch(node, completionCase))
+            {
+                body.Add(EmptyCompletionExpression);
+            }
+        }
+
+        public override void VisitGeneralCatchClause(IGeneralCatchClause generalCatchClauseParam,
+            IList<IStatement> context)
+        {
+            base.VisitGeneralCatchClause(generalCatchClauseParam, context);
+        }
+
+        private void Visit(IBlock block, IKaVEList<IStatement> body)
+        {
+            if (block == null)
+            {
+                return;
+            }
+            foreach (var stmt in block.Statements)
+            {
+                stmt.Accept(this, body);
             }
         }
 

@@ -40,7 +40,7 @@ namespace KaVE.RS.SolutionAnalysis.BulkAnalyser
 
         private static void Main(string[] args)
         {
-            //AnalyzeProjects();
+            AnalyzeProjects();
             var usages = ExtractUsages();
 
 
@@ -94,7 +94,10 @@ namespace KaVE.RS.SolutionAnalysis.BulkAnalyser
                 }
                 Console.WriteLine("done\n\t--> {0} usages with calls", usageCounter);
             }
-            Console.WriteLine("=======\nfound {0} contexts, extracted {1} usages that contain calls", contextCounter, usages.Count);
+            Console.WriteLine(
+                "=======\nfound {0} contexts, extracted {1} usages that contain calls",
+                contextCounter,
+                usages.Count);
 
             return usages;
         }

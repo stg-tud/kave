@@ -30,23 +30,46 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
 {
     internal class SSTAnalysisFixture
     {
-        internal static readonly ITypeName Int = TypeName.Get("System.Int32, mscorlib, 4.0.0.0");
-        internal static readonly ITypeName Byte = TypeName.Get("System.Byte, mscorlib, 4.0.0.0");
-        internal static readonly ITypeName IntArray = TypeName.Get("System.Int32[], mscorlib, 4.0.0.0");
-        internal static readonly ITypeName Void = TypeName.Get("System.Void, mscorlib, 4.0.0.0");
+        internal static readonly ITypeName Int =
+            KaVE.Commons.Model.Names.CSharp.TypeName.Get("System.Int32, mscorlib, 4.0.0.0");
+
+        internal static readonly ITypeName Byte =
+            KaVE.Commons.Model.Names.CSharp.TypeName.Get("System.Byte, mscorlib, 4.0.0.0");
+
+        internal static readonly ITypeName IntArray =
+            KaVE.Commons.Model.Names.CSharp.TypeName.Get("System.Int32[], mscorlib, 4.0.0.0");
+
+        internal static readonly ITypeName Void =
+            KaVE.Commons.Model.Names.CSharp.TypeName.Get("System.Void, mscorlib, 4.0.0.0");
+
         internal static readonly ITypeName Unknown = UnknownTypeName.Instance;
-        internal static readonly ITypeName String = TypeName.Get("System.String, mscorlib, 4.0.0.0");
-        internal static readonly ITypeName Bool = TypeName.Get("System.Boolean, mscorlib, 4.0.0.0");
-        internal static readonly ITypeName Object = TypeName.Get("System.Object, mscorlib, 4.0.0.0");
-        internal static readonly ITypeName Exception = TypeName.Get("System.Exception, mscorlib, 4.0.0.0");
-        internal static readonly ITypeName IOException = TypeName.Get("System.IO.IOException, mscorlib, 4.0.0.0");
+
+        internal static readonly ITypeName String =
+            KaVE.Commons.Model.Names.CSharp.TypeName.Get("System.String, mscorlib, 4.0.0.0");
+
+        internal static readonly ITypeName Bool =
+            KaVE.Commons.Model.Names.CSharp.TypeName.Get("System.Boolean, mscorlib, 4.0.0.0");
+
+        internal static readonly ITypeName Object =
+            KaVE.Commons.Model.Names.CSharp.TypeName.Get("System.Object, mscorlib, 4.0.0.0");
+
+        internal static readonly ITypeName Exception =
+            KaVE.Commons.Model.Names.CSharp.TypeName.Get("System.Exception, mscorlib, 4.0.0.0");
+
+        internal static readonly ITypeName IOException =
+            KaVE.Commons.Model.Names.CSharp.TypeName.Get("System.IO.IOException, mscorlib, 4.0.0.0");
+
+        internal static readonly ITypeName Type =
+            KaVE.Commons.Model.Names.CSharp.TypeName.Get("System.Type, mscorlib, 4.0.0.0");
 
         internal static readonly ITypeName ListOfInt =
-            TypeName.Get("System.Collections.Generic.List`1[[T -> System.Int32, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0");
+            KaVE.Commons.Model.Names.CSharp.TypeName.Get(
+                "System.Collections.Generic.List`1[[T -> System.Int32, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0");
 
         // ReSharper disable once InconsistentNaming
         internal static readonly IMethodName Object_GetHashCode =
             MethodName.Get("[System.Int32, mscorlib, 4.0.0.0] [System.Object, mscorlib, 4.0.0.0].GetHashCode()");
+
         // ReSharper disable once InconsistentNaming
         internal static readonly IMethodName Int_GetHashCode =
             MethodName.Get("[System.Int32, mscorlib, 4.0.0.0] [System.Int32, mscorlib, 4.0.0.0].GetHashCode()");
@@ -66,8 +89,16 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
                 "static [System.String, mscorlib, 4.0.0.0] [System.String, mscorlib, 4.0.0.0].Format([System.String, mscorlib, 4.0.0.0] format)");
 
         // ReSharper disable once InconsistentNaming
-        internal static readonly IMethodName Object_Equals =
+        internal static readonly IMethodName Object_static_Equals =
             MethodName.Get(string.Format("static [{0}] [{1}].Equals([{1}] objA, [{1}] objB)", Bool, Object));
+
+        // ReSharper disable once InconsistentNaming
+        internal static readonly IMethodName Object_Equals =
+            MethodName.Get(string.Format("[{0}] [{1}].Equals([{1}] obj)", Bool, Object));
+
+        // ReSharper disable once InconsistentNaming
+        internal static readonly IMethodName Object_GetType =
+            MethodName.Get(string.Format("[{0}] [{1}].GetType()", Type, Object));
 
         // ReSharper disable once InconsistentNaming
         public static readonly IMethodName Object_ctor =
@@ -104,9 +135,9 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
             return MethodName.Get(cGet);
         }
 
-        public static ITypeName Type(string simpleName)
+        public static ITypeName TypeName(string simpleName)
         {
-            return TypeName.Get(simpleName + ", TestProject");
+            return KaVE.Commons.Model.Names.CSharp.TypeName.Get(simpleName + ", TestProject");
         }
 
         public static IMethodName Method(ITypeName returnType, ITypeName declType, string name)

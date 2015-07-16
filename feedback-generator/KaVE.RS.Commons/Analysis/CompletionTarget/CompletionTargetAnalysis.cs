@@ -184,6 +184,10 @@ namespace KaVE.RS.Commons.Analysis.CompletionTarget
                         {
                             Result.Case = CompletionCase.InElse;
                         }
+                        if (IsFinallyBlock(block, parentStatement))
+                        {
+                            Result.Case = CompletionCase.InFinally;
+                        }
 
                         return parentStatement;
                     }
@@ -201,6 +205,19 @@ namespace KaVE.RS.Commons.Analysis.CompletionTarget
                 if (ifBlock != null)
                 {
                     if (ifBlock.Else == block)
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            }
+
+            private bool IsFinallyBlock(IBlock block, ICSharpStatement parentStatement)
+            {
+                var tryBlock = parentStatement as ITryStatement;
+                if (tryBlock != null)
+                {
+                    if (tryBlock.FinallyBlock == block)
                     {
                         return true;
                     }
