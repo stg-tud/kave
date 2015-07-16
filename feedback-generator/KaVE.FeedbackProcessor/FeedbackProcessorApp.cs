@@ -59,12 +59,12 @@ namespace KaVE.FeedbackProcessor
             //LogDeveloperStatistics(OpenDatabase(importDatabase));
             //LogEventsPerDeveloperDayStatistic(OpenDatabase(importDatabase));
             //LogIDEActivationEvents(OpenDatabase(importDatabase));
-            //LogOccuringNames(OpenDatabase(importDatabase));
+            //LogOccuringNames(OpenDatabase(cleanDatabase));
             //LogCompletionStatistics(OpenDatabase(importDatabase));
             //LogDevelopersPerDay(OpenDatabase(importDatabase));
             //LogAverageBreakAfterEventsStatistic(OpenDatabase(cleanDatabase), "averageBreakAfterEvents.csv");
 
-            //MapToActivities(OpenDatabase(importDatabase), OpenDatabase(activityDatabase));
+            //MapToActivities(OpenDatabase(cleanDatabase), OpenDatabase(activityDatabase));
             //LogActivityStatistics(OpenDatabase(activityDatabase));
         }
 
