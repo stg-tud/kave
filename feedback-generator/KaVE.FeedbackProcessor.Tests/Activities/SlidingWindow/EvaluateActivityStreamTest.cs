@@ -77,17 +77,17 @@ namespace KaVE.FeedbackProcessor.Tests.Activities.SlidingWindow
         {
             var uut = Stream(Activity.Development, Activity.Inactive, Activity.Any);
 
-            var statistic = uut.Evaluate(WindowSpan.Times(2), WindowSpan);
+            var statistic = uut.Evaluate(WindowSpan, WindowSpan);
 
             Assert.AreEqual(WindowSpan.Times(2), statistic[Activity.Development]);
         }
 
         [Test]
-        public void DoesNotCountShortInactvityAsBreak()
+        public void DoesNotCountShortInactivityAsBreak()
         {
             var uut = Stream(Activity.Development, Activity.Inactive, Activity.Navigation);
 
-            var statistic = uut.Evaluate(WindowSpan.Times(2), WindowSpan);
+            var statistic = uut.Evaluate(WindowSpan, WindowSpan);
 
             Assert.AreEqual(TimeSpan.Zero, statistic[Activity.Inactive]);
             Assert.AreEqual(0, statistic.NumberOfInactivityPeriods);
