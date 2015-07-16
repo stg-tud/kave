@@ -69,14 +69,15 @@ namespace KaVE.FeedbackProcessor
         }
 
         # region Cleanup Feedback
+
         private static void CleanupFeedback(IFeedbackDatabase importDatabase, IFeedbackDatabase cleanDatabase)
         {
             var tmpDatabase = OpenDatabase("_tmp");
 
-            DoSimpleCleanup(importDatabase, tmpDatabase);
+            //DoSimpleCleanup(importDatabase, tmpDatabase);
             // NOTE: Statistics need to be cleaned before advanced cleanup is performed!
-            ComputeAdvancedCleanupStatistics(tmpDatabase);
-            //DoAdvancedCleanup(cleanDatabase, tmpDatabase);
+            //ComputeAdvancedCleanupStatistics(tmpDatabase);
+            DoAdvancedCleanup(tmpDatabase, cleanDatabase);
         }
 
         private static void DoSimpleCleanup(IFeedbackDatabase importDatabase, IFeedbackDatabase tmpDatabase)
@@ -107,13 +108,14 @@ namespace KaVE.FeedbackProcessor
             Output("equivalentCommandPairs.csv", equivalentCommandPairCalculator.StatisticAsCsv());
         }
 
-        private static void DoAdvancedCleanup(IFeedbackDatabase cleanDatabase, IFeedbackDatabase tmpDatabase)
+        private static void DoAdvancedCleanup(IFeedbackDatabase tmpDatabase, IFeedbackDatabase cleanDatabase)
         {
             var mapper = new FeedbackMapper(tmpDatabase, cleanDatabase, Logger);
             mapper.RegisterMapper(new IsolatedEventBlockFilter(TimeSpan.FromMinutes(30), TimeSpan.FromSeconds(1)));
             mapper.RegisterMapper(new MapEquivalentCommandsProcessor(new ResourceProvider()));
             mapper.MapFeedback();
         }
+
         # endregion
 
         private static void LogCompletionStatistics(IFeedbackDatabase database)
