@@ -68,6 +68,10 @@ namespace KaVE.FeedbackProcessor.Statistics
 
         public void OnStreamEnds()
         {
+            foreach (var developerDay in _currentDeveloperDays)
+            {
+                developerDay.Value.EndDay();
+            }
             Statistic[_currentDeveloper] =
                 _currentDeveloperDays.OrderBy(pair => pair.Key).Select(pair => pair.Value).ToList();
         }
@@ -80,6 +84,9 @@ namespace KaVE.FeedbackProcessor.Statistics
             public DateTime FirstActivityAt { get; private set; }
             public DateTime LastActivityAt { get; private set; }
             public int NumberOfEvents { get; private set; }
+
+            public DateTime _startOfSpree;
+            public IList<TimeSpan> _sprees = new List<TimeSpan>();
 
             public int NumberOfBreaks
             {
@@ -102,14 +109,22 @@ namespace KaVE.FeedbackProcessor.Statistics
                 {
                     FirstActivityAt = triggeredAt;
                     LastActivityAt = triggeredAt;
+                    _startOfSpree = triggeredAt;
                 }
                 var timeSinceLastEvent = triggeredAt - LastActivityAt;
                 if (timeSinceLastEvent >= _minBreakSpan)
                 {
                     Breaks.Add(timeSinceLastEvent);
+                    _sprees.Add(LastActivityAt - _startOfSpree);
+                    _startOfSpree = triggeredAt;
                 }
                 LastActivityAt = triggeredAt;
                 NumberOfEvents++;
+            }
+
+            public void EndDay()
+            {
+                _sprees.Add(LastActivityAt - _startOfSpree);
             }
 
             private bool IsFirstEventOfDay()
@@ -120,6 +135,34 @@ namespace KaVE.FeedbackProcessor.Statistics
             public TimeSpan TotalBreakTime
             {
                 get { return Breaks.Count == 0 ? TimeSpan.Zero : Breaks.Aggregate((b1, b2) => b1 + b2); }
+            }
+
+            public TimeSpan AverageSpreeTime
+            {
+                get
+                {
+                    if (!_sprees.Any())
+                    {
+                        return TimeSpan.Zero;
+                    }
+                    var doubleAverageTicks = _sprees.Average(timeSpan => timeSpan.TotalSeconds);
+                    var longAverageTicks = Convert.ToInt64(doubleAverageTicks);
+                    return TimeSpan.FromSeconds(longAverageTicks);
+                }
+            }
+
+            public TimeSpan AverageBreakTime
+            {
+                get
+                {
+                    if (!Breaks.Any())
+                    {
+                        return TimeSpan.Zero;
+                    }
+                    var doubleAverageTicks = Breaks.Average(timeSpan => timeSpan.TotalSeconds);
+                    var longAverageTicks = Convert.ToInt64(doubleAverageTicks);
+                    return TimeSpan.FromSeconds(longAverageTicks);
+                }
             }
 
             protected bool Equals(DeveloperDay other)
@@ -151,6 +194,26 @@ namespace KaVE.FeedbackProcessor.Statistics
             }
         }
 
+        public string BreakAndSpreeStatisticAsCsv()
+        {
+            var csvBuilder = new CsvBuilder();
+            foreach (var stat in Statistic)
+            {
+                csvBuilder.StartRow();
+                csvBuilder["Developer"] = stat.Key.Id;
+
+                if (stat.Value.Count > 0)
+                {
+                    var avgBreakTime = stat.Value.Average(day => day.AverageBreakTime.TotalSeconds);
+                    var avgSpreeTime = stat.Value.Average(day => day.AverageSpreeTime.TotalSeconds);
+
+                    csvBuilder["break"] = avgBreakTime;
+                    csvBuilder["spree"] = avgSpreeTime;
+                }
+            }
+            return csvBuilder.Build(CsvBuilder.SortFields.ByNameLeaveFirst);
+        }
+
         public string StatisticAsCsv()
         {
             var csvBuilder = new CsvBuilder();
@@ -171,6 +234,33 @@ namespace KaVE.FeedbackProcessor.Statistics
                 csvBuilder["Total Break"] = stat.Value.Select(day => (int) day.TotalBreakTime.TotalSeconds).Sum();
             }
             return csvBuilder.Build(CsvBuilder.SortFields.ByNameLeaveFirst);
+        }
+
+        public string EventsPerDeveloperStatisticAsCsv()
+        {
+            var csvBuilder = new CsvBuilder();
+            foreach (var stat in Statistic)
+            {
+                csvBuilder.StartRow();
+                csvBuilder["Developer"] = stat.Key.Id;
+                csvBuilder["Events"] = stat.Value.Sum(day => day.NumberOfEvents);
+            }
+            return csvBuilder.Build();
+        }
+
+        public string EventsPerDeveloperDayStatisticAsCsv()
+        {
+            var csvBuilder = new CsvBuilder();
+            foreach (var stat in Statistic)
+            {
+                foreach (var developerDay in stat.Value)
+                {
+                    csvBuilder.StartRow();
+                    csvBuilder["DevDay"] = developerDay.Day.ToString("yyyy-MM-dd") + "_" + stat.Key.Id;
+                    csvBuilder["Events"] = developerDay.NumberOfEvents;
+                }
+            }
+            return csvBuilder.Build();
         }
     }
 }

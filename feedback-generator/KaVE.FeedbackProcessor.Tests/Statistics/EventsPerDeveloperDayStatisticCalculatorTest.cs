@@ -26,12 +26,14 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
     [TestFixture]
     internal class EventsPerDeveloperDayStatisticCalculatorTest
     {
+        private static readonly TimeSpan MinBreakSpan = TimeSpan.FromMinutes(5);
+
         private EventsPerDeveloperDayStatisticCalculator _uut;
 
         [SetUp]
         public void CreateCalculator()
         {
-            _uut = new EventsPerDeveloperDayStatisticCalculator(TimeSpan.FromMinutes(5));
+            _uut = new EventsPerDeveloperDayStatisticCalculator(MinBreakSpan);
         }
 
         [Test]
@@ -83,6 +85,35 @@ namespace KaVE.FeedbackProcessor.Tests.Statistics
             var actual = _uut.Statistic;
             CollectionAssert.IsNotEmpty(actual[developer1]);
             CollectionAssert.IsNotEmpty(actual[developer2]);
+        }
+
+        [Test]
+        public void ComputesSpreeLength()
+        {
+            var someDeveloper = TestFactory.SomeDeveloper();
+
+            _uut.OnStreamStarts(someDeveloper);
+            _uut.OnEvent(new TestIDEEvent { TriggeredAt = new DateTime(2015, 4, 1, 16, 06, 00) });
+            _uut.OnEvent(new TestIDEEvent { TriggeredAt = new DateTime(2015, 4, 1, 16, 07, 00) });
+            _uut.OnEvent(new TestIDEEvent { TriggeredAt = new DateTime(2015, 4, 1, 16, 08, 00) });
+            _uut.OnStreamEnds();
+
+            Assert.AreEqual(TimeSpan.FromMinutes(2), _uut.Statistic[someDeveloper][0].AverageSpreeTime);
+        }
+
+        [Test]
+        public void ComputesAverageSpreeLength()
+        {
+            var someDeveloper = TestFactory.SomeDeveloper();
+
+            _uut.OnStreamStarts(someDeveloper);
+            _uut.OnEvent(new TestIDEEvent { TriggeredAt = new DateTime(2015, 4, 1, 16, 06, 00) });
+            _uut.OnEvent(new TestIDEEvent { TriggeredAt = new DateTime(2015, 4, 1, 16, 07, 00) });
+            _uut.OnEvent(new TestIDEEvent { TriggeredAt = new DateTime(2015, 4, 1, 16, 12, 00) });
+            _uut.OnEvent(new TestIDEEvent { TriggeredAt = new DateTime(2015, 4, 1, 16, 15, 00) });
+            _uut.OnStreamEnds();
+
+            Assert.AreEqual(TimeSpan.FromMinutes(2), _uut.Statistic[someDeveloper][0].AverageSpreeTime);
         }
     }
 }
