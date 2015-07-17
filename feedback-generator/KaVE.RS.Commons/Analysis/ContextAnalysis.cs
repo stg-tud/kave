@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 
-using System;
+using System.Collections.Concurrent;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using JetBrains.Annotations;
 using JetBrains.ReSharper.Feature.Services.CSharp.CodeCompletion.Infrastructure;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
@@ -25,7 +27,6 @@ using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.Commons.Utils.Collections;
-using KaVE.Commons.Utils.Concurrent;
 using KaVE.Commons.Utils.Exceptions;
 using KaVE.RS.Commons.Analysis.CompletionTarget;
 using KaVE.RS.Commons.Analysis.Transformer;
@@ -54,25 +55,35 @@ namespace KaVE.RS.Commons.Analysis
             return new ContextAnalysis(logger).AnalyzeInternal(node);
         }
 
-        private static readonly ConcurrentDictionary<CSharpCodeCompletionContext, Task<ContextAnalysisResult>>
+        private static readonly ConcurrentDictionary<int, Task<ContextAnalysisResult>>
             CurrentTasks =
-                new ConcurrentDictionary<CSharpCodeCompletionContext, Task<ContextAnalysisResult>>();
+                new ConcurrentDictionary<int, Task<ContextAnalysisResult>>();
 
         public static Task<ContextAnalysisResult> AnalyseAsync(CSharpCodeCompletionContext rsContext, ILogger logger)
         {
             Task<ContextAnalysisResult> task;
-            if (!CurrentTasks.TryGetValue(rsContext, out task))
+            if (!CurrentTasks.TryGetValue(rsContext.GetHashCode(), out task))
             {
                 task = new Task<ContextAnalysisResult>(
                     () =>
                     {
-                        logger.Info("ContextAnalysis: analysis started");
+                        //logger.Info("Context analysis: analysing context with hash {0}", rsContext.GetHashCode());
                         return Analyze(rsContext, logger);
                     });
-                CurrentTasks.TryAdd(rsContext, task);
+
+                task.ContinueWith(
+                    _ =>
+                    {
+                        Thread.Sleep(30000);
+                        //logger.Info("Context analysis: deleting task with hash {0} after 30 seconds", rsContext.GetHashCode());
+                        Task<ContextAnalysisResult> t;
+                        CurrentTasks.TryRemove(rsContext.GetHashCode(), out t);
+                    });
+
+                CurrentTasks.TryAdd(rsContext.GetHashCode(), task);
                 task.Start();
             }
-            
+
             return task;
         }
 
@@ -90,11 +101,6 @@ namespace KaVE.RS.Commons.Analysis
 
         private void AnalyzeInternal(ITreeNode nodeInFile, ContextAnalysisResult res)
         {
-            for (int i = 0; i < Int32.MaxValue; i++)
-            {
-
-            }
-
             var context = res.Context;
             var sst = new SST();
             context.SST = sst;

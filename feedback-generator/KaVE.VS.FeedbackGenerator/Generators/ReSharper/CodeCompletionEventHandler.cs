@@ -83,11 +83,8 @@ namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
                 ReadLockCookie.Execute(
                     () =>
                     {
-                        _logger.Info("CodeCompletionEventHandler: Before analysis");
                         var task = ContextAnalysis.AnalyseAsync(context, _logger);
-                        _logger.Info("CodeCompletionEventHandler: Analysis started");
                         result = task.Result.Context;
-                        _logger.Info("CodeCompletionEventHandler: After analysis");
                     });
                 return result;
             };
