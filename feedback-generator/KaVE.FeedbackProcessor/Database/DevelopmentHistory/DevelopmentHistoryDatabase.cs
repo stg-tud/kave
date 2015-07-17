@@ -55,17 +55,15 @@ namespace KaVE.FeedbackProcessor.Database.DevelopmentHistory
             new SQLiteCommand(commandText, _connection).ExecuteNonQuery();
         }
 
-        public void Insert(string wp, DateTime timestamp, Context context)
+        public void Insert(string wp, DateTime timestamp, Context context, Query query)
         {
-            var snapshot = new SSTSnapshot {WorkPeriodId = wp, Timestamp = timestamp, Context = context};
-
             var command = new SQLiteCommand(
                 "INSERT INTO ContextHistories (WorkPeriod, Timestamp, TargetType, Context) VALUES (@wp, @timestamp, @targetType, @ctx)",
                 _connection);
-            command.Parameters.AddWithValue("@wp", snapshot.WorkPeriodId);
-            command.Parameters.AddWithValue("@timestamp", snapshot.Timestamp);
-            command.Parameters.AddWithValue("@targetType", snapshot.TargetType);
-            command.Parameters.AddWithValue("@ctx", snapshot.Context.ToCompactJson());
+            command.Parameters.AddWithValue("@wp", wp);
+            command.Parameters.AddWithValue("@timestamp", timestamp);
+            command.Parameters.AddWithValue("@targetType", query.type);
+            command.Parameters.AddWithValue("@ctx", context.ToCompactJson());
             command.ExecuteNonQuery();
         }
 

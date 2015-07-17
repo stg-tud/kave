@@ -26,13 +26,5 @@ namespace KaVE.FeedbackProcessor.Model.DevelopmentHistory
         public string WorkPeriodId { get; set; }
         public DateTime Timestamp { get; set; }
         public Context Context { get; set; }
-
-        public CoReTypeName TargetType
-        {
-            get
-            {
-                return new QueryExtractor().Extract(Context).type;
-            }
-        }
     }
 }
