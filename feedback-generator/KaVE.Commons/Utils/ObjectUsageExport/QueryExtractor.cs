@@ -42,7 +42,9 @@ namespace KaVE.Commons.Utils.ObjectUsageExport
             RewriteContexts(new[] {_matchingQuery}, ctx.TypeShape);
             RewriteThisType(new[] {_matchingQuery}, ctx.TypeShape);
 
-            return _matchingQuery;
+            var matchingQuery = _matchingQuery;
+            _matchingQuery = null;
+            return matchingQuery;
         }
 
         protected override void ProcessMethodBody(IMethodDeclaration methodDecl, UsageContext context)

@@ -105,6 +105,43 @@ namespace KaVE.Commons.Tests.Utils.ObjectUsageExport
         }
 
         [Test]
+        public void ReuseWithNoCompletionFound()
+        {
+            var context = NewContextWithDefaults(
+                new TypeHierarchy
+                {
+                    Element = DefaultClassContext
+                },
+                new MethodHierarchy
+                {
+                    Element = DefaultMethodContext
+                },
+                VarDecl("A", "a"),
+                InvokeStmt("a", Method("R", "A", "M")),
+                Completion("a")
+                );
+
+            _sut.Extract(context);
+
+            context = NewContextWithDefaults(
+                 new TypeHierarchy
+                 {
+                     Element = DefaultClassContext
+                 },
+                 new MethodHierarchy
+                 {
+                     Element = DefaultMethodContext
+                 },
+                 VarDecl("A", "a"),
+                 InvokeStmt("a", Method("R", "A", "M"))
+                 );
+
+            var actual = _sut.Extract(context);
+
+            Assert.IsNull(actual);
+        }
+
+        [Test]
         public void ContextRewrite()
         {
             // exemplary test, this is extensively tested for usage export
