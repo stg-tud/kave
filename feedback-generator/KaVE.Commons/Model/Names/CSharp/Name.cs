@@ -24,8 +24,7 @@ namespace KaVE.Commons.Model.Names.CSharp
     {
         protected const string UnknownNameIdentifier = "???";
 
-        private static readonly WeakReferenceDictionary<string, Name> NameRegistry =
-            new WeakReferenceDictionary<string, Name>();
+        private static readonly WeakNameCache<Name> NameRegistry = WeakNameCache<Name>.Get(id => new Name(id));
 
         public static IName UnknownName
         {
@@ -39,11 +38,7 @@ namespace KaVE.Commons.Model.Names.CSharp
 
         public static Name Get(string identifier)
         {
-            if (!NameRegistry.ContainsKey(identifier))
-            {
-                NameRegistry.Add(identifier, new Name(identifier));
-            }
-            return NameRegistry[identifier];
+            return NameRegistry.GetOrCreate(identifier);
         }
 
         [DataMember(Order = 1)]

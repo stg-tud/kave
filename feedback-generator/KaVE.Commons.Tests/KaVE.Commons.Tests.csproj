@@ -174,7 +174,7 @@
     <Compile Include="Utils\Collections\MultisetTest.cs" />
     <Compile Include="Utils\Collections\SetEqualityComparerTest.cs" />
     <Compile Include="Utils\Collections\SetsTest.cs" />
-    <Compile Include="Utils\Collections\WeakReferenceDictionaryTest.cs" />
+    <Compile Include="Utils\Collections\WeakNameCacheTest.cs" />
     <Compile Include="Utils\Csv\CsvAssert.cs" />
     <Compile Include="Utils\Csv\CsvBuilderHelperTest.cs" />
     <Compile Include="Utils\Csv\CsvBuilderTest.cs" />

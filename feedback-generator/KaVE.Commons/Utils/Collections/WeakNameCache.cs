@@ -14,29 +14,37 @@
  * limitations under the License.
  */
 
-using System;
 using System.Runtime.CompilerServices;
+using KaVE.JetBrains.Annotations;
 
 namespace KaVE.Commons.Utils.Collections
 {
     internal class WeakNameCache<TName> where TName : class
     {
-        private static readonly WeakReferenceDictionary<Type, WeakNameCache<TName>> CacheRegistry = new WeakReferenceDictionary<Type, WeakNameCache<TName>>();
+        private static WeakNameCache<TName> _cacheRegistry;
 
-        [MethodImpl(MethodImplOptions.Synchronized)]
+        // ReSharper disable once StaticMemberInGenericType
+        private static readonly object StaticLock = new object();
+
+        private readonly object _lock = new object();
+
         public static WeakNameCache<TName> Get(NameFactory factory)
         {
-            WeakNameCache<TName> cache;
-            var cacheType = typeof (TName);
-            if (!CacheRegistry.TryGetValue(cacheType, out cache))
+            lock (StaticLock)
             {
-                cache = new WeakNameCache<TName>(factory);
-                CacheRegistry.Add(cacheType, cache);
+                return _cacheRegistry ?? (_cacheRegistry = new WeakNameCache<TName>(factory));
             }
-            return cache;
         }
 
-        private readonly WeakReferenceDictionary<string, TName> _nameRegistry = new WeakReferenceDictionary<string, TName>();
+        private readonly ConditionalWeakTable<string, Data<TName>> _nameCache2 =
+            new ConditionalWeakTable<string, Data<TName>>();
+
+        [UsedImplicitly]
+        private class Data<T>
+        {
+            public T Value;
+        }
+
         private readonly NameFactory _factory;
 
         public delegate TName NameFactory(string identifier);
@@ -46,16 +54,13 @@ namespace KaVE.Commons.Utils.Collections
             _factory = factory;
         }
 
-        [MethodImpl(MethodImplOptions.Synchronized)]
         public TName GetOrCreate(string identifier)
         {
-            TName name;
-            if (!_nameRegistry.TryGetValue(identifier, out name))
+            lock (_lock)
             {
-                name = _factory.Invoke(identifier);
-                _nameRegistry.Add(identifier, name);
+                var data = _nameCache2.GetOrCreateValue(identifier);
+                return data.Value ?? (data.Value = _factory(identifier));
             }
-            return name;
         }
     }
 }

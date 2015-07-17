@@ -309,7 +309,6 @@
     <Compile Include="Utils\Collections\Sets.cs" />
     <Compile Include="Utils\Collections\ThreadSafeDictionary.cs" />
     <Compile Include="Utils\Collections\WeakNameCache.cs" />
-    <Compile Include="Utils\Collections\WeakReferenceDictionary.cs" />
     <Compile Include="Utils\Concurrent\Task.cs" />
     <Compile Include="Utils\DateTime\SimilarDateTimeComparer.cs" />
     <Compile Include="Utils\EqualityUtils.cs" />
