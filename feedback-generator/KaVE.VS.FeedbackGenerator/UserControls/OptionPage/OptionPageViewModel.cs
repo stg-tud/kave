@@ -16,6 +16,7 @@
 
 using System.Globalization;
 using System.IO;
+using JetBrains.Application;
 using KaVE.RS.Commons.Settings.KaVE.RS.Commons.Settings;
 using KaVE.VS.FeedbackGenerator.Interactivity;
 using KaVE.VS.FeedbackGenerator.SessionManager;
@@ -58,6 +59,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage
         }
     }
 
+    [ShellComponent]
     public class OptionPageViewModel : ViewModelBase<OptionPageViewModel>
     {
         private readonly InteractionRequest<Notification> _errorNotificationRequest;

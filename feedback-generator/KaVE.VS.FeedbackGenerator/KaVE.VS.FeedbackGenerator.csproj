@@ -246,10 +246,17 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>AnonymizationMessages.resx</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\OptionPage\AnonymizationOptionsControl.xaml.cs">
+      <DependentUpon>AnonymizationOptionsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\OptionPage\RootOptionPage.cs" />
     <Compile Include="UserControls\OptionPage\OptionPageMessages.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>OptionPageMessages.resx</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\OptionPage\UserProfileOptionsControl.xaml.cs">
+      <DependentUpon>UserProfileOptionsControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="UserControls\UploadWizard\UploadWizardMessages.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -345,8 +352,8 @@
     </Compile>
     <Compile Include="SessionManager\Presentation\SessionManagerWindowDescriptor.cs" />
     <Compile Include="SessionManager\Presentation\SessionManagerWindowRegistrar.cs" />
-    <Compile Include="UserControls\OptionPage\OptionPageControl.xaml.cs">
-      <DependentUpon>OptionPageControl.xaml</DependentUpon>
+    <Compile Include="UserControls\OptionPage\GeneralOptionsControl.xaml.cs">
+      <DependentUpon>GeneralOptionsControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="SessionManager\SessionViewModel.cs" />
     <Compile Include="SessionManager\EventViewModel.cs" />
@@ -413,6 +420,7 @@
     <EmbeddedResource Include="UserControls\OptionPage\OptionPageMessages.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>OptionPageMessages.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\EnumLocalization.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
@@ -433,6 +441,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="UserControls\OptionPage\AnonymizationOptionsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\OptionPage\UserProfileOptionsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="UserControls\UserProfile\UserProfileControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -449,7 +465,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="UserControls\OptionPage\OptionPageControl.xaml">
+    <Page Include="UserControls\OptionPage\GeneralOptionsControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
