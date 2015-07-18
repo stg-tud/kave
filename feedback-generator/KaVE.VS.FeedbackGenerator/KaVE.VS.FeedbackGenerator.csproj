@@ -258,6 +258,9 @@
     <Compile Include="UserControls\OptionPage\UserProfileOptionsControl.xaml.cs">
       <DependentUpon>UserProfileOptionsControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\UploadWizard\AnonymizationWindow.xaml.cs">
+      <DependentUpon>AnonymizationWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\UploadWizard\UploadWizardMessages.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -446,6 +449,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UserControls\OptionPage\UserProfileOptionsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\UploadWizard\AnonymizationWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\UploadWizard\UserProfileWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

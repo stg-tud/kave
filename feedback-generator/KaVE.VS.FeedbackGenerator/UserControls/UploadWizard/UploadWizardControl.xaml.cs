@@ -101,5 +101,17 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UploadWizard
                     UploadWizardMessages.Title);
             }
         }
+
+        private void On_UserProfile_Click(object sender, RoutedEventArgs e)
+        {
+            var userProfileWindow = new UserProfileWindow(MyDataContext);
+            userProfileWindow.Show();
+        }
+
+        private void On_Anonymization_Click(object sender, RoutedEventArgs e)
+        {
+            var anonymizationWindow = new AnonymizationWindow(MyDataContext);
+            anonymizationWindow.Show();
+        }
     }
 }

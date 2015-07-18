@@ -160,4 +160,10 @@
     <value>Sie können den Dialog jederzeit schließen.
 Der Export wird im Hintergrund fortgesetzt.</value>
   </data>
+  <data name="anonymization_link" xml:space="preserve">
+    <value>Anonymization</value>
+  </data>
+  <data name="userprofile_link" xml:space="preserve">
+    <value>User Profile</value>
+  </data>
 </root>

@@ -21,7 +21,6 @@ limitations under the License.
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:properties="clr-namespace:KaVE.VS.FeedbackGenerator.Properties"
         xmlns:root="clr-namespace:KaVE.VS.FeedbackGenerator"
-        xmlns:profile="clr-namespace:KaVE.VS.FeedbackGenerator.UserControls.UserProfile"
         xmlns:anonymization="clr-namespace:KaVE.VS.FeedbackGenerator.UserControls.Anonymization"
         xmlns:uploadWizard="clr-namespace:KaVE.VS.FeedbackGenerator.UserControls.UploadWizard"
         mc:Ignorable="d"
@@ -51,22 +50,23 @@ limitations under the License.
                 </Grid>
             </GroupBox>
 
-            <!-- anonymization -->
+            <!-- settings windows -->
             <Expander Header="{x:Static root:Properties.SessionManager.Options_Export_Title}">
-                <anonymization:AnonymizationControl x:Name="AnonymizationControl"
-                                                    Margin="0,0,0,10"
-                                                    DataContext="{Binding AnonymizationContext}" />
+              <StackPanel Margin="5">
+                <TextBlock VerticalAlignment="Center">
+                  <Hyperlink Click="On_Anonymization_Click">
+                    <TextBlock Text="{x:Static root:Properties.UploadWizard.anonymization_link}" />
+                  </Hyperlink>
+                </TextBlock>
+                <TextBlock VerticalAlignment="Center">
+                  <Hyperlink Click="On_UserProfile_Click">
+                    <TextBlock Text="{x:Static root:Properties.UploadWizard.userprofile_link}" />
+                  </Hyperlink>
+                </TextBlock>
+              </StackPanel>
             </Expander>
-
-            <!-- user profile-->
-            <Expander Header="{x:Static root:Properties.UserProfileMessages.Title}" Name="UserInformationExpander">
-                <ScrollViewer MaxHeight="170px">
-                    <profile:UserProfileControl x:Name="UserSettingsGrid"
-                                                DataContext="{Binding UserProfileContext}" />
-                </ScrollViewer>
-            </Expander>
-
-            <!-- buttons-->
+          
+          <!-- buttons-->
             <Grid HorizontalAlignment="Stretch">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
