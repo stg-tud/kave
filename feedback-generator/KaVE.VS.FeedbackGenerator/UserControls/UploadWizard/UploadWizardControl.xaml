@@ -21,7 +21,6 @@ limitations under the License.
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:properties="clr-namespace:KaVE.VS.FeedbackGenerator.Properties"
         xmlns:root="clr-namespace:KaVE.VS.FeedbackGenerator"
-        xmlns:anonymization="clr-namespace:KaVE.VS.FeedbackGenerator.UserControls.Anonymization"
         xmlns:uploadWizard="clr-namespace:KaVE.VS.FeedbackGenerator.UserControls.UploadWizard"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"

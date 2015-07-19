@@ -19,14 +19,15 @@ limitations under the License.
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:userProfile="clr-namespace:KaVE.VS.FeedbackGenerator.UserControls.UserProfile"
+        xmlns:uploadWizard="clr-namespace:KaVE.VS.FeedbackGenerator.UserControls.UploadWizard"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
         SizeToContent="Height"
         WindowStyle="SingleBorderWindow"
         ResizeMode="NoResize"
         Width="550"
-        d:DesignHeight="300" d:DesignWidth="300">
-    <Grid>
+        Title="{x:Static uploadWizard:UploadWizardMessages.UserProfileWindow_Title}">
+    <Grid Margin="5,5,5,5">
         <userProfile:UserProfileControl x:Name="UserSettingsGrid"
                                         DataContext="{Binding UserProfileContext}" />
 

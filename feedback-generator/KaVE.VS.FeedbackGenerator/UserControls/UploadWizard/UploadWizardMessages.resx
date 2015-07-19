@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AnonymizationWindow_Title" xml:space="preserve">
+    <value>Anonymization Settings</value>
+  </data>
   <data name="Intro" xml:space="preserve">
     <value>Thank you very much for being an active user of the KaVE project and for providing feedback about your usage of Visual Studio.
 
@@ -131,5 +134,8 @@ Is there something else that you would like to tell us (e.g., bug reports; featu
   </data>
   <data name="Title" xml:space="preserve">
     <value>Providing Feedback</value>
+  </data>
+  <data name="UserProfileWindow_Title" xml:space="preserve">
+    <value>User Profile Settings</value>
   </data>
 </root>
