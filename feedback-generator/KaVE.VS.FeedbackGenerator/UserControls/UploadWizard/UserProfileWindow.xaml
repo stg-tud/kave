@@ -28,8 +28,10 @@ limitations under the License.
         Width="550"
         Title="{x:Static uploadWizard:UploadWizardMessages.UserProfileWindow_Title}">
     <Grid Margin="5,5,5,5">
-        <userProfile:UserProfileControl x:Name="UserSettingsGrid"
-                                        DataContext="{Binding UserProfileContext}" />
-
+      <StackPanel>
+        <userProfile:CheckedUserProfileControl x:Name="UserSettingsGrid"
+                      DataContext="{Binding UserProfileContext}" />
+        <Button Click="On_Ok_Click" HorizontalAlignment="Center" Margin="0,5,0,5" Content="{x:Static uploadWizard:UploadWizardMessages.WindowOkButton_Content}" MinWidth="93"/>
+      </StackPanel>
     </Grid>
 </Window>

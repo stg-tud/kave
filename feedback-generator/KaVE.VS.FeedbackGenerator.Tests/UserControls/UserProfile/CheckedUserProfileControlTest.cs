@@ -15,6 +15,7 @@
  */
 
 using System;
+using System.Windows;
 using KaVE.Commons.TestUtils.UserControls;
 using KaVE.Commons.Utils;
 using KaVE.VS.FeedbackGenerator.Settings;
@@ -26,7 +27,7 @@ using NUnit.Framework;
 namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UserProfile
 {
     [RequiresSTA]
-    internal class UserProfileControlTest : BaseUserControlTest
+    internal class CheckedUserProfileControlTest : BaseUserControlTest
     {
         private ExportSettings _exportSettings;
         private UserProfileSettings _userProfileSettings;
@@ -46,34 +47,57 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UserProfile
             _dataContext = new UserProfileContext(_exportSettings, _userProfileSettings, _randomizationUtils);
         }
 
-        private UserProfileControl Open()
+        private CheckedUserProfileControl Open()
         {
-            return OpenWindow(new UserProfileControl { DataContext = _dataContext });
+            return OpenWindow(new CheckedUserProfileControl {DataContext = _dataContext});
         }
 
         [Test]
-        public void Binding_ProfileId()
+        public void Startup_ProfilePanelIsNotVisibleByDefault()
         {
             var sut = Open();
-
-            sut.ProfileIdTextBox.Text = "p";
-            Assert.AreEqual("p", _userProfileSettings.ProfileId);
-
-            _dataContext.ProfileId = "q";
-            Assert.AreEqual("q", sut.ProfileIdTextBox.Text);
+            Assert.AreEqual(Visibility.Collapsed, sut.ProfilePanel.Visibility);
         }
 
         [Test]
-        public void Binding_ProfileIdCanBeGeneratedOnClick()
+        public void Startup_ProfilePanelIsVisibleIfActivated()
         {
+            _userProfileSettings.IsProvidingProfile = true;
             var sut = Open();
-            UserControlTestUtils.Click(sut.RefreshProfileIdButton);
-
-            var expected = _rndGuid.ToString();
-            Assert.AreEqual(expected, sut.ProfileIdTextBox.Text);
-            Assert.AreEqual(expected, _userProfileSettings.ProfileId);
+            Assert.AreEqual(Visibility.Visible, sut.ProfilePanel.Visibility);
         }
 
-        // TODO add binding tests for the remaining properties 
+        [Test]
+        public void Startup_ProfilePanelIsNotVisibleAndCheckboxisDisabledForDatev()
+        {
+            _exportSettings.IsDatev = true;
+            var sut = Open();
+
+            UserControlAssert.IsNotVisible(sut.ProfilePanel);
+            UserControlAssert.IsVisible(sut.DatevLabel);
+            UserControlAssert.IsDisabled(sut.IsProvidingProfileCheckBox);
+        }
+
+        [Test]
+        public void ProfilePanelGetsVisibleOnActivation()
+        {
+            var sut = Open();
+            sut.IsProvidingProfileCheckBox.Toggle();
+            UserControlAssert.IsVisible(sut.ProfilePanel);
+        }
+
+        [Test]
+        public void Binding_IsProviding()
+        {
+            var sut = Open();
+
+            sut.IsProvidingProfileCheckBox.Toggle();
+            Assert.True(_userProfileSettings.IsProvidingProfile);
+
+            _dataContext.IsProvidingProfile = false;
+            UserControlAssert.IsNotChecked(sut.IsProvidingProfileCheckBox);
+            UserControlAssert.IsNotVisible(sut.ProfilePanel);
+        }
+
     }
 }

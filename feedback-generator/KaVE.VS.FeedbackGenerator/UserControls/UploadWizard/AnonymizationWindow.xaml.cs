@@ -26,5 +26,10 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UploadWizard
 
             DataContext = dataContext;
         }
+
+        private void On_Ok_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
     }
 }

@@ -92,6 +92,15 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UploadWizard {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Don&apos;t participate.
+        /// </summary>
+        public static string NoParticipationButton_Content {
+            get {
+                return ResourceManager.GetString("NoParticipationButton_Content", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Providing Feedback.
         /// </summary>
         public static string Title {
@@ -101,11 +110,40 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UploadWizard {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to We would like to learn more about our users, please help us by answering several simple questions about yourself. You can leave out any question, if you do not want to answer it. Your answers will be attached to your uploaded feedback.
+        ///
+        ///Thank You!.
+        /// </summary>
+        public static string UserProfileReminderWindow_Text {
+            get {
+                return ResourceManager.GetString("UserProfileReminderWindow_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User Profile.
+        /// </summary>
+        public static string UserProfileReminderWindow_Title {
+            get {
+                return ResourceManager.GetString("UserProfileReminderWindow_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to User Profile Settings.
         /// </summary>
         public static string UserProfileWindow_Title {
             get {
                 return ResourceManager.GetString("UserProfileWindow_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to OK.
+        /// </summary>
+        public static string WindowOkButton_Content {
+            get {
+                return ResourceManager.GetString("WindowOkButton_Content", resourceCulture);
             }
         }
     }

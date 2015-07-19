@@ -15,50 +15,22 @@
  */
 
 using System.Windows;
+using System.Windows.Controls;
 
 namespace KaVE.VS.FeedbackGenerator.UserControls.UserProfile
 {
-    public partial class UserProfileControl
+    public partial class UserProfileControl : UserControl
     {
         private UserProfileContext MyDataContext
         {
-            get { return (UserProfileContext) DataContext; }
+            get { return (UserProfileContext)DataContext; }
         }
 
         public UserProfileControl()
         {
             InitializeComponent();
-            DataContextChanged += (sender, args) =>
-            {
-                if (MyDataContext.IsDatev)
-                {
-                    IsProvidingProfileCheckBox.IsEnabled = false;
-                    ProfilePanel.Visibility = Visibility.Collapsed;
-                    DatevLabel.Visibility = Visibility.Visible;
-                }
-                else
-                {
-                    CheckVisibilityOfProfilePane();
-
-                    MyDataContext.PropertyChanged += (sender2, args2) =>
-                    {
-                        if (args2.PropertyName == "IsProvidingProfile")
-                        {
-                            CheckVisibilityOfProfilePane();
-                        }
-                    };
-                }
-            };
         }
-
-
-        private void CheckVisibilityOfProfilePane()
-        {
-            ProfilePanel.Visibility = MyDataContext.IsProvidingProfile
-                ? Visibility.Visible
-                : Visibility.Collapsed;
-        }
-
+        
         private void OnClick_RefreshProfileId(object sender, RoutedEventArgs e)
         {
             MyDataContext.GenerateNewProfileId();

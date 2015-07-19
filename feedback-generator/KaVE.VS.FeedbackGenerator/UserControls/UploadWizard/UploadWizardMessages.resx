@@ -132,10 +132,24 @@ Is there something else that you would like to tell us (e.g., bug reports; featu
   <data name="Label_CommentHeader" xml:space="preserve">
     <value>Comment (optional)</value>
   </data>
+  <data name="NoParticipationButton_Content" xml:space="preserve">
+    <value>Don't participate</value>
+  </data>
   <data name="Title" xml:space="preserve">
     <value>Providing Feedback</value>
   </data>
+  <data name="UserProfileReminderWindow_Text" xml:space="preserve">
+    <value>We would like to learn more about our users, please help us by answering several simple questions about yourself. You can leave out any question, if you do not want to answer it. Your answers will be attached to your uploaded feedback.
+
+Thank You!</value>
+  </data>
+  <data name="UserProfileReminderWindow_Title" xml:space="preserve">
+    <value>User Profile</value>
+  </data>
   <data name="UserProfileWindow_Title" xml:space="preserve">
     <value>User Profile Settings</value>
+  </data>
+  <data name="WindowOkButton_Content" xml:space="preserve">
+    <value>OK</value>
   </data>
 </root>

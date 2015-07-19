@@ -163,6 +163,7 @@
     <Compile Include="UserControls\Anonymization\AnonymizationControlTest.cs" />
     <Compile Include="UserControls\UploadWizard\ExporterTest.cs" />
     <Compile Include="UserControls\BaseUserControlTest.cs" />
+    <Compile Include="UserControls\UserProfile\CheckedUserProfileControlTest.cs" />
     <Compile Include="UserControls\UserProfile\UserProfileControlTest.cs" />
     <Compile Include="UserControls\ValidationRules\MailValidationRuleTest.cs" />
     <Compile Include="Generators\EventGeneratorBaseTest.cs" />

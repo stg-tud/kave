@@ -26,10 +26,6 @@ limitations under the License.
              xmlns:optionPage="clr-namespace:KaVE.VS.FeedbackGenerator.UserControls.OptionPage">
     <ScrollViewer>
         <StackPanel Margin="5,5,5,5">
-
-            <!-- general-->
-            <Label Content="{x:Static optionPage:OptionPageMessages.Title_General}"
-                   FontWeight="Bold" FontSize="12" Margin="0,0,0,0" />
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto" />

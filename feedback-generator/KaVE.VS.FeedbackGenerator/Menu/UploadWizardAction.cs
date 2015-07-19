@@ -23,6 +23,9 @@ using JetBrains.Util;
 using KaVE.Commons.Utils;
 using KaVE.RS.Commons.Settings;
 using KaVE.RS.Commons.Utils;
+using KaVE.VS.FeedbackGenerator.Properties;
+using KaVE.VS.FeedbackGenerator.Settings;
+using KaVE.VS.FeedbackGenerator.Settings.ExportSettingsSuite;
 using KaVE.VS.FeedbackGenerator.UserControls.UploadWizard;
 using KaVE.VS.FeedbackGenerator.Utils.Export;
 using KaVE.VS.FeedbackGenerator.Utils.Logging;
@@ -58,20 +61,27 @@ namespace KaVE.VS.FeedbackGenerator.Menu
 
         public void Execute(IDataContext context, DelegateExecute nextExecute)
         {
-            if (HasContentToExport())
+            if (ShouldShowUserProfileReminder())
             {
-                var viewModel = new UploadWizardContext(
-                    _exporter,
-                    _logManager,
-                    _settingsStore,
-                    _dateUtils,
-                    _logger,
-                    new RandomizationUtils());
-                new UploadWizardControl(viewModel, _settingsStore).ShowDialog();
+                new UserProfileReminderWindow(_actionManager,_settingsStore).Show();
             }
             else
             {
-                MessageBox.ShowInfo(Properties.UploadWizard.NothingToExport, UploadWizardMessages.Title);
+                if (HasContentToExport())
+                {
+                    var viewModel = new UploadWizardContext(
+                        _exporter,
+                        _logManager,
+                        _settingsStore,
+                        _dateUtils,
+                        _logger,
+                        new RandomizationUtils());
+                    new UploadWizardControl(viewModel, _settingsStore).ShowDialog();
+                }
+                else
+                {
+                    MessageBox.ShowInfo(UploadWizard.NothingToExport, UploadWizardMessages.Title);
+                }
             }
         }
 
@@ -89,6 +99,13 @@ namespace KaVE.VS.FeedbackGenerator.Menu
                 // directly after the reset, before any event is generated
                 return false;
             }
+        }
+
+        private bool ShouldShowUserProfileReminder()
+        {
+            var userProfileSettings = _settingsStore.GetSettings<UserProfileSettings>();
+            var exportSettings= _settingsStore.GetSettings<ExportSettings>();
+            return !userProfileSettings.HasBeenAskedtoProvideProfile && !userProfileSettings.IsProvidingProfile && !exportSettings.IsDatev;
         }
     }
 }

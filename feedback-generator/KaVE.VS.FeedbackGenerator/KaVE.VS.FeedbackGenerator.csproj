@@ -271,6 +271,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>UserProfileMessages.resx</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\UserProfile\UserProfileControl.xaml.cs">
+      <DependentUpon>UserProfileControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\ValueConverter\EnumLocalizationConverter.cs" />
     <Compile Include="Properties\EnumLocalization.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -282,8 +285,8 @@
     <Compile Include="UserControls\OptionPage\OptionPageViewModel.cs" />
     <Compile Include="SessionManager\Presentation\SortableListView.cs" />
     <Compile Include="SessionManager\Presentation\UriValidation.cs" />
-    <Compile Include="UserControls\UserProfile\UserProfileControl.xaml.cs">
-      <DependentUpon>UserProfileControl.xaml</DependentUpon>
+    <Compile Include="UserControls\UserProfile\CheckedUserProfileControl.xaml.cs">
+      <DependentUpon>CheckedUserProfileControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="UserControls\UserProfile\UserProfileContext.cs" />
     <Compile Include="UserControls\ValidationRules\MailValidationRule.cs" />
@@ -456,11 +459,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="UserControls\UploadWizard\UserProfileReminderWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="UserControls\UploadWizard\UserProfileWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UserControls\UserProfile\UserProfileControl.xaml">
+    <Page Include="UserControls\UserProfile\CheckedUserProfileControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -483,6 +490,10 @@
     <Page Include="UserControls\UploadWizard\UploadWizardControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserControls\UserProfile\UserProfileControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>

@@ -18,17 +18,11 @@ limitations under the License.
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:optionPage="clr-namespace:KaVE.VS.FeedbackGenerator.UserControls.OptionPage"
              xmlns:anonymization="clr-namespace:KaVE.VS.FeedbackGenerator.UserControls.Anonymization"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-    <Grid>
-      <StackPanel Margin="5,5,5,5">
-        <!-- anonymization-->
-        <Label Content="{x:Static optionPage:OptionPageMessages.Title_Anonymization}"
-               FontWeight="Bold" FontSize="12" Margin="0,5,0,0" />
-        <anonymization:AnonymizationControl x:Name="Anonymization"
-                                            DataContext="{Binding AnonymizationContext}" />
-      </StackPanel>
+    <Grid Margin="5,5,5,5">
+      <anonymization:AnonymizationControl x:Name="Anonymization"
+                                          DataContext="{Binding AnonymizationContext}" />
     </Grid>
   </UserControl>
