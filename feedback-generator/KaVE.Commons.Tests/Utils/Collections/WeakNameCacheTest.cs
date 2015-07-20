@@ -14,6 +14,9 @@
  * limitations under the License.
  */
 
+using System;
+using KaVE.Commons.Model;
+using KaVE.Commons.Model.Names;
 using KaVE.Commons.Utils.Collections;
 using NUnit.Framework;
 
@@ -22,22 +25,81 @@ namespace KaVE.Commons.Tests.Utils.Collections
     [TestFixture]
     class WeakNameCacheTest
     {
-        [Test]
-        public void EnsuresObjectIdentity()
-        {
-            var cache1 = WeakNameCache<object>.Get(id => null);
-            var cache2 = WeakNameCache<object>.Get(id => null);
+        private int _numberOfFactoryCalls;
+        private WeakNameCache<TestName> _uut;
 
-            Assert.AreSame(cache1, cache2);
+        [SetUp]
+        public void SetUp()
+        {
+            _numberOfFactoryCalls = 0;
+            _uut = WeakNameCache<TestName>.Get(
+                id =>
+                {
+                    _numberOfFactoryCalls++;
+                    return new TestName{Identifier = id};
+                });
         }
 
         [Test]
-        public void CreatesCachePerType()
+        public void EnsuresNameIdentity()
         {
-            var cache1 = WeakNameCache<object>.Get(id => null);
-            var cache2 = WeakNameCache<string>.Get(id => null);
+            var instance1 = _uut.GetOrCreate(FreshKey('a'));
+            GC.Collect();
+            var instance2 = _uut.GetOrCreate(FreshKey('a'));
 
-            Assert.AreNotSame(cache1, cache2);
+            Assert.AreSame(instance1, instance2);
+        }
+
+        [Test]
+        public void EnsuresKeyIdentity()
+        {
+            var key = FreshKey('a');
+            _uut.GetOrCreate(key);
+            GC.Collect();
+            _uut.GetOrCreate(key);
+
+            // name was kept alive by strong reference to key
+            Assert.AreEqual(1, _numberOfFactoryCalls);
+        }
+
+        [Test]
+        public void EnsuresNameIdentityByKeyValueEquality()
+        {
+            var instance1 = _uut.GetOrCreate(FreshKey('a'));
+            var instance2 = _uut.GetOrCreate(FreshKey('a'));
+
+            Assert.AreSame(instance1, instance2);
+        }
+
+        [Test]
+        public void CreatesNamePerIdentifier()
+        {
+            var instance1 = _uut.GetOrCreate(FreshKey('a'));
+            var instance2 = _uut.GetOrCreate(FreshKey('b'));
+
+            Assert.AreNotSame(instance1, instance2);
+        }
+
+        [Test]
+        public void RemovesNonReferencedNames()
+        {
+            _uut.GetOrCreate(FreshKey('a'));
+            GC.Collect();
+            _uut.GetOrCreate(FreshKey('a'));
+
+            // recreates name on second access
+            Assert.AreEqual(2, _numberOfFactoryCalls);
+        }
+
+        private string FreshKey(params char[] chars)
+        {
+            return new string(chars);
+        }
+
+        private class TestName : IName
+        {
+            public string Identifier { get; set; }
+            public bool IsUnknown { get { return false; } }
         }
     }
 }

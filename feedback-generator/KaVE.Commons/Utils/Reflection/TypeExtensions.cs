@@ -60,7 +60,7 @@ namespace KaVE.Commons.Utils.Reflection
         }
     }
 
-    public static class TypeExceptions
+    public static class TypeExtensions
     {
         public static IEnumerable<MemberInfo> GetMembersWithCustomAttributeNoInherit<TAttribute>(this Type self)
         {
@@ -106,6 +106,15 @@ namespace KaVE.Commons.Utils.Reflection
                 eventInfo,
                 string.Format("Event '{0}' doesn't exist on '{1}'.", eventName, type.FullName));
             eventInfo.AddEventHandler(self, handler);
+        }
+
+        public static TResult InvokeNonPublic<TResult>(this object self, String methodName, params object[] args)
+        {
+            var type = self.GetType();
+            var methodInfo = type.GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Instance);
+            Asserts.NotNull(methodInfo,
+                string.Format("Method '{0}' doesn't exist on '{1}'.", methodName, type.FullName));
+            return (TResult) methodInfo.Invoke(self, args);
         }
     }
 }

@@ -15,35 +15,20 @@
  */
 
 using System.Runtime.CompilerServices;
-using KaVE.JetBrains.Annotations;
+using KaVE.Commons.Model.Names;
+using KaVE.Commons.Utils.Reflection;
 
 namespace KaVE.Commons.Utils.Collections
 {
-    internal class WeakNameCache<TName> where TName : class
+    internal class WeakNameCache<TName> where TName : class, IName
     {
-        private static WeakNameCache<TName> _cacheRegistry;
-
-        // ReSharper disable once StaticMemberInGenericType
-        private static readonly object StaticLock = new object();
-
-        private readonly object _lock = new object();
-
         public static WeakNameCache<TName> Get(NameFactory factory)
         {
-            lock (StaticLock)
-            {
-                return _cacheRegistry ?? (_cacheRegistry = new WeakNameCache<TName>(factory));
-            }
+            return new WeakNameCache<TName>(factory);
         }
 
-        private readonly ConditionalWeakTable<string, Data<TName>> _nameCache2 =
-            new ConditionalWeakTable<string, Data<TName>>();
-
-        [UsedImplicitly]
-        private class Data<T>
-        {
-            public T Value;
-        }
+        private readonly ConditionalWeakTable<string, TName> _cache =
+            new ConditionalWeakTable<string, TName>();
 
         private readonly NameFactory _factory;
 
@@ -56,11 +41,12 @@ namespace KaVE.Commons.Utils.Collections
 
         public TName GetOrCreate(string identifier)
         {
-            lock (_lock)
-            {
-                var data = _nameCache2.GetOrCreateValue(identifier);
-                return data.Value ?? (data.Value = _factory(identifier));
-            }
+            // ConditionalWeakTable performs lookup with ReferenceEquals, hence, we first find the right key instance
+            // by value equality and then do the lookup. This is might turn out problematic in terms of performance,
+            // once many lookups are performed and many names are cached. In that case, we might want to have a close
+            // look at https://github.com/nesterovsky-bros/WeakTable/.
+            identifier = _cache.InvokeNonPublic<string>("FindEquivalentKeyUnsafe", identifier, null) ?? identifier;
+            return _cache.GetValue(identifier, key => _factory(key));
         }
     }
 }
