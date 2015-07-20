@@ -39,7 +39,7 @@ namespace KaVE.FeedbackProcessor.Database.DevelopmentHistory
             CreateTable(
                 "CREATE TABLE IF NOT EXISTS ContextHistories (WorkPeriod VARCHAR(255), Timestamp DATETIME, TargetType VARCHAR(255), Context TEXT)");
             CreateTable(
-                "CREATE TABLE IF NOT EXISTS OUHistories (WorkPeriod VARCHAR(255), Timestamp DATETIME, TargetType VARCHAR(255), ObjectUsage TEXT, IsQuery BOOLEAN)");
+                "CREATE TABLE IF NOT EXISTS OUHistories (WorkPeriod VARCHAR(255), Timestamp DATETIME, EnclosingMethod VARCHAR(255), TargetType VARCHAR(255), ObjectUsage TEXT, IsQuery BOOLEAN)");
         }
 
         private static void EnsureDatabaseExists(string databaseFileName)
@@ -70,10 +70,11 @@ namespace KaVE.FeedbackProcessor.Database.DevelopmentHistory
         public void Insert(string wp, DateTime timestamp, Query objectUsage, bool isQuery)
         {
             var command = new SQLiteCommand(
-                "INSERT INTO OUHistories (WorkPeriod, Timestamp, TargetType, ObjectUsage, IsQuery) VALUES (@wp, @timestamp, @targetType, @ou, @isQuery)",
+                "INSERT INTO OUHistories (WorkPeriod, Timestamp, EnclosingMethod, TargetType, ObjectUsage, IsQuery) VALUES (@wp, @timestamp, @em, @targetType, @ou, @isQuery)",
                 _connection);
             command.Parameters.AddWithValue("@wp", wp);
             command.Parameters.AddWithValue("@timestamp", timestamp);
+            command.Parameters.AddWithValue("@em", objectUsage.methodCtx.Name);
             command.Parameters.AddWithValue("@targetType", objectUsage.type.Name);
             command.Parameters.AddWithValue("@ou", objectUsage.ToCompactJson());
             command.Parameters.AddWithValue("@isQuery", isQuery);
