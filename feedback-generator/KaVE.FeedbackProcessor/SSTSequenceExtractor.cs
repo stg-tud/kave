@@ -51,7 +51,7 @@ namespace KaVE.FeedbackProcessor
 
         public void Run()
         {
-            using (var db = new DevelopmentHistoryDatabase(Configuration.StatisticsOutputPath + "\\test-database"))
+            using (var db = new DevelopmentHistoryDatabase(Configuration.StatisticsOutputPath + "\\histories"))
             {
                 var feedbackDatabase = OpenDatabase("_import");
                 var developerCollection = feedbackDatabase.GetDeveloperCollection();
