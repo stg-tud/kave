@@ -16,6 +16,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Collections;
@@ -24,21 +25,22 @@ using KaVE.JetBrains.Annotations;
 namespace KaVE.Commons.Model.ObjectUsage
 {
     // ReSharper disable InconsistentNaming
+    [DataContract]
     public class Query
     {
-        [NotNull]
+        [NotNull, DataMember]
         public CoReTypeName type { get; set; }
 
-        [NotNull]
+        [NotNull, DataMember]
         public CoReTypeName classCtx { get; set; }
 
-        [NotNull]
+        [NotNull, DataMember]
         public CoReMethodName methodCtx { get; set; }
 
-        [NotNull]
+        [NotNull, DataMember]
         public DefinitionSite definition { get; set; }
 
-        [NotNull]
+        [NotNull, DataMember]
         public IList<CallSite> sites { get; private set; }
 
         public bool HasReceiverCallSites
