@@ -87,11 +87,17 @@ namespace KaVE.FeedbackProcessor
         private void Insert(DevelopmentHistoryDatabase db, string workPeriod, DateTime timestamp, Context ctx)
         {
             var query = GetQuery(ctx);
+            var usages = GetObjectUsages(ctx);
+
+            if (!usages.Any())
+            {
+                // No need to blow up the dataset with SST that don't contain any code. Most likely our
+                // analysis failed to extract the context in these cases.
+                return;
+            }
 
             db.Insert(workPeriod, timestamp, ctx, query);
             _numberOfSSTs++;
-
-            var usages = GetObjectUsages(ctx);
 
             foreach (var usage in usages)
             {
