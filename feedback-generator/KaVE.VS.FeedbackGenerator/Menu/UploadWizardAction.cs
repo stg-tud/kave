@@ -21,6 +21,7 @@ using JetBrains.Application.DataContext;
 using JetBrains.UI.ActionsRevised;
 using JetBrains.Util;
 using KaVE.Commons.Utils;
+using KaVE.RS.Commons;
 using KaVE.RS.Commons.Settings;
 using KaVE.RS.Commons.Utils;
 using KaVE.VS.FeedbackGenerator.Properties;
@@ -44,6 +45,8 @@ namespace KaVE.VS.FeedbackGenerator.Menu
         private readonly ILogManager _logManager;
         private readonly ILogger _logger;
         private readonly IDateUtils _dateUtils;
+        private readonly ActionExecutor _actionExec;
+
 
         public UploadWizardAction()
         {
@@ -52,6 +55,7 @@ namespace KaVE.VS.FeedbackGenerator.Menu
             _logManager = Registry.GetComponent<ILogManager>();
             _logger = Registry.GetComponent<ILogger>();
             _dateUtils = Registry.GetComponent<IDateUtils>();
+            _actionExec = Registry.GetComponent<ActionExecutor>();
         }
 
         public bool Update(IDataContext context, ActionPresentation presentation, DelegateUpdate nextUpdate)
@@ -63,7 +67,7 @@ namespace KaVE.VS.FeedbackGenerator.Menu
         {
             if (ShouldShowUserProfileReminder())
             {
-                new UserProfileReminderWindow(_actionManager,_settingsStore).Show();
+                new UserProfileReminderWindow(_actionExec,_settingsStore).Show();
             }
             else
             {

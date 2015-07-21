@@ -16,8 +16,8 @@
 
 using System;
 using System.Windows;
-using JetBrains.ActionManagement;
 using KaVE.Commons.Utils;
+using KaVE.RS.Commons;
 using KaVE.VS.FeedbackGenerator.Menu;
 using KaVE.VS.FeedbackGenerator.Settings;
 using KaVE.VS.FeedbackGenerator.Settings.ExportSettingsSuite;
@@ -27,20 +27,20 @@ using KaVEISettingsStore = KaVE.RS.Commons.Settings.ISettingsStore;
 
 namespace KaVE.VS.FeedbackGenerator.UserControls.UploadWizard
 {
-
     public partial class UserProfileReminderWindow : Window
     {
-        private readonly IActionManager _actionManager;
         private readonly UserProfileSettings _userProfileSettings;
+        private readonly ActionExecutor _actionExec;
         private readonly KaVEISettingsStore _settingsStore;
 
-        public UserProfileReminderWindow(IActionManager actionManager, KaVEISettingsStore settingsStore)
+        public UserProfileReminderWindow(ActionExecutor actionExec,
+            KaVEISettingsStore settingsStore)
         {
+            _actionExec = actionExec;
             _settingsStore = settingsStore;
-            _actionManager = actionManager;
 
             InitializeComponent();
-            
+
             _userProfileSettings = settingsStore.GetSettings<UserProfileSettings>();
 
             var userProfileContext = new UserProfileContext(
@@ -61,7 +61,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UploadWizard
         private void On_Participation_Click(object sender, RoutedEventArgs e)
         {
             _userProfileSettings.IsProvidingProfile = true;
-           Close();
+            Close();
         }
 
         private void UserProfileReminderWindow_OnClosed(object sender, EventArgs e)
@@ -73,7 +73,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UploadWizard
         private void OpenUploadWizard()
         {
             _settingsStore.SetSettings(_userProfileSettings);
-            _actionManager.ExecuteAction<UploadWizardAction>();
+            _actionExec.ExecuteActionGuarded<UploadWizardAction>();
         }
     }
 }
