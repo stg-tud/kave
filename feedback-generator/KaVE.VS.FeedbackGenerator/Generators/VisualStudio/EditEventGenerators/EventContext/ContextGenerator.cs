@@ -62,7 +62,10 @@ namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio.EditEventGenerators.
 
             _tokenSource = new KaVECancellationTokenSource();
 
-            NewContextProvider(this);
+            if (NewContextProvider != null)
+            {
+                NewContextProvider(this);
+            }
         }
 
         public delegate void ContextProviderChangedHandler(object sender);
@@ -95,8 +98,15 @@ namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio.EditEventGenerators.
 
         public void ComputeNewContext([NotNull] IDocument document)
         {
+            ReadLockCookie.Execute(() => { ComputeNewContextGuarded(document); });
+        }
+
+        private void ComputeNewContextGuarded(IDocument document)
+        {
             var textControl =
-                _textControlManager.TextControls.FirstOrDefault(tc => tc.Document.Moniker.Equals(document.Moniker));
+                _textControlManager.TextControls.FirstOrDefault(
+                    tc => tc.Document.Moniker.Equals(document.Moniker));
+
             if (textControl != null)
             {
                 var psiFile = TextControlToPsi.GetElement<ITreeNode>(_solution, textControl);

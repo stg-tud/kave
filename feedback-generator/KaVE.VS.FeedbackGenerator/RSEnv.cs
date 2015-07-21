@@ -16,7 +16,6 @@
 
 using JetBrains.Application;
 using JetBrains.Application.Components;
-using JetBrains.UI.Resources;
 using KaVE.Commons.Utils;
 using KaVE.JetBrains.Annotations;
 using KaVE.VS.FeedbackGenerator.VsIntegration;
@@ -35,15 +34,11 @@ namespace KaVE.VS.FeedbackGenerator
     {
         public const string ExtensionId = "KaVE.VsFeedbackGenerator";
 
-        private readonly OptionsThemedIcons.ExtensionManager _extensionManager;
         private readonly IIDESession _ideSession;
         private readonly VersionUtil _versionUtil;
 
-        public RSEnv(OptionsThemedIcons.ExtensionManager extensionManager,
-            IIDESession ideSession,
-            VersionUtil versionUtil)
+        public RSEnv(IIDESession ideSession, VersionUtil versionUtil)
         {
-            _extensionManager = extensionManager;
             _ideSession = ideSession;
             _versionUtil = versionUtil;
         }
