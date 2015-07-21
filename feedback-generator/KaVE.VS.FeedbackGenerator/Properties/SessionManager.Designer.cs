@@ -79,7 +79,7 @@ namespace KaVE.VS.FeedbackGenerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Selektiere Event für mehr Details.
+        ///   Looks up a localized string similar to Select event for more details.
         /// </summary>
         public static string DetailsForSingleSelectedEvent {
             get {
@@ -88,7 +88,7 @@ namespace KaVE.VS.FeedbackGenerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Selektiere Session für mehr Details.
+        ///   Looks up a localized string similar to Select session for more details.
         /// </summary>
         public static string DetailsForSingleSelectedSession {
             get {
@@ -115,7 +115,7 @@ namespace KaVE.VS.FeedbackGenerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Kontext.
+        ///   Looks up a localized string similar to Context.
         /// </summary>
         public static string EventContext {
             get {
@@ -133,7 +133,7 @@ namespace KaVE.VS.FeedbackGenerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Gewählte Event(s) löschen.
+        ///   Looks up a localized string similar to Delete selected event(s).
         /// </summary>
         public static string EventDelete {
             get {
@@ -142,7 +142,7 @@ namespace KaVE.VS.FeedbackGenerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Sind Sie sicher, dass Sie die gewählten {0} Events löschen wollen?.
+        ///   Looks up a localized string similar to Delete the {0} selected events?.
         /// </summary>
         public static string EventDeleteConfirmPlural {
             get {
@@ -151,7 +151,7 @@ namespace KaVE.VS.FeedbackGenerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Sind Sie sicher, dass Sie das gewählte Event löschen wollen?.
+        ///   Looks up a localized string similar to Delete the selected event?.
         /// </summary>
         public static string EventDeleteConfirmSingular {
             get {
@@ -160,7 +160,7 @@ namespace KaVE.VS.FeedbackGenerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Event(s) löschen.
+        ///   Looks up a localized string similar to Delete event(s).
         /// </summary>
         public static string EventDeleteConfirmTitle {
             get {
@@ -196,7 +196,7 @@ namespace KaVE.VS.FeedbackGenerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Vorschläge.
+        ///   Looks up a localized string similar to Proposals.
         /// </summary>
         public static string EventProposals {
             get {
@@ -232,7 +232,7 @@ namespace KaVE.VS.FeedbackGenerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Event Trigger.
+        ///   Looks up a localized string similar to Trigger.
         /// </summary>
         public static string EventTrigger {
             get {
@@ -277,7 +277,7 @@ namespace KaVE.VS.FeedbackGenerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Sind Sie sicher, dass Sie die Einstellungen zurücksetzen und das lokal gesammelte Feedback löschen wollen?.
+        ///   Looks up a localized string similar to Settings will be reset and the locally generated feedback will be deleted. Are you sure?.
         /// </summary>
         public static string Option_SettingsCleaner_Dialog {
             get {
@@ -286,7 +286,7 @@ namespace KaVE.VS.FeedbackGenerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Der angegebene Ordner existiert nicht..
+        ///   Looks up a localized string similar to Folder does not exist.
         /// </summary>
         public static string OptionPageInvalidModelStorePathMessage {
             get {
@@ -295,7 +295,7 @@ namespace KaVE.VS.FeedbackGenerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Bitte geben Sie ein gültige HTTP- oder HTTPS-URL ein..
+        ///   Looks up a localized string similar to Invalid url, only HTTP- oder HTTPS are supported..
         /// </summary>
         public static string OptionPageInvalidUploadInfoMessage {
             get {
@@ -322,7 +322,7 @@ namespace KaVE.VS.FeedbackGenerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Exportoptionen.
+        ///   Looks up a localized string similar to Exportoptions.
         /// </summary>
         public static string Options_Export_Title {
             get {
@@ -340,7 +340,7 @@ namespace KaVE.VS.FeedbackGenerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Präfix für Web-Zugriff.
+        ///   Looks up a localized string similar to Prefix for Web-Access.
         /// </summary>
         public static string Options_Export_WebAccessPraefix {
             get {
@@ -349,7 +349,7 @@ namespace KaVE.VS.FeedbackGenerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Pfad zu Modellen.
+        ///   Looks up a localized string similar to Path to Usage Models.
         /// </summary>
         public static string Options_ModelPath {
             get {
@@ -394,7 +394,7 @@ namespace KaVE.VS.FeedbackGenerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Lade Feedback.
+        ///   Looks up a localized string similar to Loading Events.
         /// </summary>
         public static string Refreshing {
             get {
@@ -412,7 +412,7 @@ namespace KaVE.VS.FeedbackGenerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Feedback versenden.
+        ///   Looks up a localized string similar to Provide Feedback.
         /// </summary>
         public static string Send {
             get {
@@ -430,7 +430,7 @@ namespace KaVE.VS.FeedbackGenerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Tag der Session.
+        ///   Looks up a localized string similar to Day of the session.
         /// </summary>
         public static string SessionDay {
             get {
@@ -439,7 +439,7 @@ namespace KaVE.VS.FeedbackGenerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Gewählte Session(s) löschen.
+        ///   Looks up a localized string similar to Delete selected session(s).
         /// </summary>
         public static string SessionDelete {
             get {
@@ -448,7 +448,7 @@ namespace KaVE.VS.FeedbackGenerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Sind Sie sicher, dass Sie die gewählten {0} Sessions löschen wollen?.
+        ///   Looks up a localized string similar to Delete the {0} selected sessions?.
         /// </summary>
         public static string SessionDeleteConfirmPlural {
             get {
@@ -457,7 +457,7 @@ namespace KaVE.VS.FeedbackGenerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Sind Sie sicher, dass Sie die gewählte Session löschen wollen?.
+        ///   Looks up a localized string similar to Delete the selected session?.
         /// </summary>
         public static string SessionDeleteConfirmSingular {
             get {
@@ -466,7 +466,7 @@ namespace KaVE.VS.FeedbackGenerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Session(s) löschen.
+        ///   Looks up a localized string similar to Delete sessions.
         /// </summary>
         public static string SessionDeleteConfirmTitle {
             get {
@@ -502,7 +502,7 @@ namespace KaVE.VS.FeedbackGenerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Die Webseite zum manuellen Hochladen von Feedback öffnen....
+        ///   Looks up a localized string similar to Open website for manual upload of feedback....
         /// </summary>
         public static string VisitUploadPage {
             get {
