@@ -61,7 +61,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Reset all Settings....
+        ///   Looks up a localized string similar to Reset.
         /// </summary>
         public static string Button_Reset {
             get {

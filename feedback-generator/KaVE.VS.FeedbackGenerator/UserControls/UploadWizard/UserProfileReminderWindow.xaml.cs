@@ -58,7 +58,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UploadWizard
             Close();
         }
 
-        private void On_Ok_Click(object sender, RoutedEventArgs e)
+        private void On_Participation_Click(object sender, RoutedEventArgs e)
         {
             _userProfileSettings.IsProvidingProfile = true;
            Close();

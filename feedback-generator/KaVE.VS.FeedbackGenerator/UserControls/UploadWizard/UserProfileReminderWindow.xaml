@@ -28,16 +28,20 @@ limitations under the License.
         ResizeMode="NoResize"
         Title="{x:Static uploadWizard:UploadWizardMessages.UserProfileReminderWindow_Title}">
     <Grid Margin="5,5,5,5">
-      <StackPanel>
-        <TextBlock TextWrapping="Wrap" Text="{x:Static uploadWizard:UploadWizardMessages.UserProfileReminderWindow_Text}" FontSize="14" />
-        <userProfile:UserProfileControl x:Name="UserSettingsGrid" Margin="0,5,0,5" />
-        <DockPanel Margin="0,5,0,5" HorizontalAlignment="Right">
-          <Button Click="On_No_Participation_Click" HorizontalAlignment="Center"
-                  Content="{x:Static uploadWizard:UploadWizardMessages.NoParticipationButton_Content}"
-                  MinWidth="93" />
-          <Button Click="On_Ok_Click" HorizontalAlignment="Center"
-                  Content="{x:Static uploadWizard:UploadWizardMessages.WindowOkButton_Content}" MinWidth="93" Margin="5,0,5,0" />
-        </DockPanel>
-      </StackPanel>
+        <StackPanel>
+            <TextBlock TextWrapping="Wrap"
+                       Text="{x:Static uploadWizard:UploadWizardMessages.UserProfileReminderWindow_Text}" FontSize="14" />
+            <userProfile:UserProfileControl x:Name="UserSettingsGrid" Margin="0,5,0,5" />
+            <DockPanel Margin="0,5,0,5" HorizontalAlignment="Right">
+                <TextBlock VerticalAlignment="Center" Margin="0,5,0,0">
+                    <Hyperlink Click="On_No_Participation_Click">
+                        <TextBlock Text="{x:Static uploadWizard:UploadWizardMessages.NoParticipationButton_Content}" />
+                    </Hyperlink>
+                </TextBlock>
+                <Button Click="On_Participation_Click" HorizontalAlignment="Center"
+                        Content="{x:Static uploadWizard:UploadWizardMessages.ParticipationButton_Content}"
+                        MinWidth="93" Margin="5,0,5,0" MinHeight="30" />
+            </DockPanel>
+        </StackPanel>
     </Grid>
 </Window>

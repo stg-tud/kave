@@ -101,6 +101,15 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UploadWizard {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Participate.
+        /// </summary>
+        public static string ParticipationButton_Content {
+            get {
+                return ResourceManager.GetString("ParticipationButton_Content", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Providing Feedback.
         /// </summary>
         public static string Title {
@@ -139,11 +148,11 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UploadWizard {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to OK.
+        ///   Looks up a localized string similar to Close.
         /// </summary>
-        public static string WindowOkButton_Content {
+        public static string WindowCloseButton_Content {
             get {
-                return ResourceManager.GetString("WindowOkButton_Content", resourceCulture);
+                return ResourceManager.GetString("WindowCloseButton_Content", resourceCulture);
             }
         }
     }

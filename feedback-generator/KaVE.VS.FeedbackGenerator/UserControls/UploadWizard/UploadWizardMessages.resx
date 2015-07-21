@@ -135,6 +135,9 @@ Is there something else that you would like to tell us (e.g., bug reports; featu
   <data name="NoParticipationButton_Content" xml:space="preserve">
     <value>Don't participate</value>
   </data>
+  <data name="ParticipationButton_Content" xml:space="preserve">
+    <value>Participate</value>
+  </data>
   <data name="Title" xml:space="preserve">
     <value>Providing Feedback</value>
   </data>
@@ -149,7 +152,7 @@ Thank You!</value>
   <data name="UserProfileWindow_Title" xml:space="preserve">
     <value>User Profile Settings</value>
   </data>
-  <data name="WindowOkButton_Content" xml:space="preserve">
-    <value>OK</value>
+  <data name="WindowCloseButton_Content" xml:space="preserve">
+    <value>Close</value>
   </data>
 </root>
