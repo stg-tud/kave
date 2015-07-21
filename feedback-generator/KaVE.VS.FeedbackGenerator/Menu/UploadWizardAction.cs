@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System.IO;
 using System.Linq;
 using JetBrains.ActionManagement;
 using JetBrains.Application.DataContext;
@@ -33,18 +34,16 @@ namespace KaVE.VS.FeedbackGenerator.Menu
     [Action(Id, "Export Feedback...", Id = 12193486)]
     public class UploadWizardAction : IExecutableAction
     {
-        internal const string Id = "KaVE.VsFeedbackGenerator.UploadWizard";
+        internal const string Id = "KaVE.VS.FeedbackGenerator.UploadWizard";
 
         private readonly ISettingsStore _settingsStore;
         private readonly IExporter _exporter;
         private readonly ILogManager _logManager;
         private readonly ILogger _logger;
         private readonly IDateUtils _dateUtils;
-        private readonly IActionManager _actionManager;
 
         public UploadWizardAction()
         {
-            _actionManager = Registry.GetComponent<IActionManager>();
             _settingsStore = Registry.GetComponent<ISettingsStore>();
             _exporter = Registry.GetComponent<IExporter>();
             _logManager = Registry.GetComponent<ILogManager>();
@@ -78,10 +77,18 @@ namespace KaVE.VS.FeedbackGenerator.Menu
 
         private bool HasContentToExport()
         {
-            var logs = _logManager.Logs.ToList();
-            var noLogs = EnumerableExtensions.IsEmpty(logs);
-            var singleEmptyLog = logs.Count == 1 && logs[0].IsEmpty();
-            return !noLogs && !singleEmptyLog;
+            try
+            {
+                var logs = _logManager.Logs.ToList();
+                var noLogs = EnumerableExtensions.IsEmpty(logs);
+                var singleEmptyLog = logs.Count == 1 && logs[0].IsEmpty();
+                return !noLogs && !singleEmptyLog;
+            }
+            catch (DirectoryNotFoundException)
+            {
+                // directly after the reset, before any event is generated
+                return false;
+            }
         }
     }
 }
