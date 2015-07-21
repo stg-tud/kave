@@ -17,9 +17,9 @@
 using System;
 using System.IO;
 using JetBrains.Application;
-using KaVE.VS.FeedbackGenerator.Utils.Logging;
+using KaVE.Commons.Utils;
 
-namespace KaVE.VS.FeedbackGenerator.Utils.Json
+namespace KaVE.VS.FeedbackGenerator.Utils.Logging
 {
     [ShellComponent]
     public class IDEEventLogFileManager : LogFileManager
@@ -31,13 +31,14 @@ namespace KaVE.VS.FeedbackGenerator.Utils.Json
             Environment.SpecialFolder.ApplicationData);
 
         private const string ProjectName = "KaVE";
-        private static readonly string EventLogsScope = typeof(IDEEventLogFileManager).Assembly.GetName().Name;
+        private static readonly string EventLogsScope = typeof (IDEEventLogFileManager).Assembly.GetName().Name;
 
         /// <summary>
-        ///     E.g., "C:\Users\%USERNAME%\AppData\Roaming\KaVE\KaVE.VsFeedbackGenerator\"
+        ///     E.g., "C:\Users\%USERNAME%\AppData\Roaming\KaVE\KaVE.VS.FeedbackGenerator\%VARIANT%\"
         /// </summary>
         private static readonly string EventLogsPath = Path.Combine(AppDataPath, ProjectName, EventLogsScope);
 
-        public IDEEventLogFileManager() : base(EventLogsPath) { }
+        public IDEEventLogFileManager(VersionUtil versionUtil)
+            : base(Path.Combine(EventLogsPath, versionUtil.GetCurrentVariant().ToString())) {}
     }
 }
