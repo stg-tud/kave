@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-using System;
 using System.Collections.Generic;
 using KaVE.Commons.Utils.Assertion;
 using NUnit.Framework;
@@ -42,7 +41,7 @@ namespace KaVE.RS.SolutionAnalysis.Tests
             CollectionAssert.AreEquivalent(_(0, 1, 0, 0), h.Values);
         }
 
-        [Test, ExpectedException(typeof(AssertException))]
+        [Test, ExpectedException(typeof (AssertException))]
         public void AddingTooSmallValues()
         {
             var h = new Histogram(1);
