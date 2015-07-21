@@ -890,6 +890,23 @@ namespace KaVE.RS.Commons.Tests_Integration.Utils
                 "d:[i:System.Collections.Generic.IEnumerable`1[[T]], mscorlib, 4.0.0.0] [N.C1+D, TestProject].()");
         }
 
+        [Test]
+        public void TranslatesArrayOfGenericType()
+        {
+            CompleteInFile(@"
+                class C
+                {
+                    public System.Collections.Generic.IList<string>[] M() { return null; }
+
+                    public void N()
+                    {
+                        $
+                    }
+                }");
+
+            ThenProposalCollectionContains("[i:System.Collections.Generic.IList`1[][[T -> System.String, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0] [C, TestProject].M()");
+        }
+
         [TearDown]
         public void DisableTestProposalProvider()
         {
