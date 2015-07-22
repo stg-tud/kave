@@ -21,7 +21,7 @@ using JetBrains.DataFlow;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.VisualStudio;
 using KaVE.Commons.Utils.Collections;
-using KaVE.Commons.Utils.Concurrent;
+using KaVE.Commons.Utils.Concurrency;
 using KaVE.VS.FeedbackGenerator.Generators.Merging;
 using KaVE.VS.FeedbackGenerator.MessageBus;
 using KaVE.VS.FeedbackGenerator.Utils.Logging;

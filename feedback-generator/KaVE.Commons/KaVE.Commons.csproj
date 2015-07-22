@@ -74,7 +74,7 @@
     <Compile Include="Utils\CodeCompletion\Impl\SmilePBNRecommender.cs" />
     <Compile Include="Utils\Collections\ComparisonResult.cs" />
     <Compile Include="Utils\Collections\Multiset.cs" />
-    <Compile Include="Utils\Concurrent\Collections.cs" />
+    <Compile Include="Utils\Concurrency\TaskUtils.cs" />
     <Compile Include="Utils\Csv\CsvBuilder.cs" />
     <Compile Include="Utils\Csv\CsvBuilderEx.cs" />
     <Compile Include="Utils\Csv\CsvTable.cs" />
@@ -310,7 +310,7 @@
     <Compile Include="Utils\Collections\Sets.cs" />
     <Compile Include="Utils\Collections\ThreadSafeDictionary.cs" />
     <Compile Include="Utils\Collections\WeakNameCache.cs" />
-    <Compile Include="Utils\Concurrent\Task.cs" />
+    <Compile Include="Utils\Concurrency\Task.cs" />
     <Compile Include="Utils\DateTime\SimilarDateTimeComparer.cs" />
     <Compile Include="Utils\EqualityUtils.cs" />
     <Compile Include="Utils\Exceptions\ConsoleLogger.cs" />
@@ -319,7 +319,6 @@
     <Compile Include="Utils\Exceptions\KaVECancellationTokenSource.cs" />
     <Compile Include="Utils\Exceptions\KaVEException.cs" />
     <Compile Include="Utils\Exceptions\NullLogger.cs" />
-    <Compile Include="Utils\Exceptions\TimeLimitRunner.cs" />
     <Compile Include="Utils\HashCodeUtils.cs" />
     <Compile Include="Utils\Invoke.cs" />
     <Compile Include="Utils\IO\IoTestHelper.cs" />

@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure.AspectLookupItems.BaseInfrastructure;
@@ -23,6 +24,7 @@ using JetBrains.ReSharper.Feature.Services.CSharp.CodeCompletion.Infrastructure;
 using JetBrains.ReSharper.Features.Intellisense.CodeCompletion.CSharp.Rules;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
+using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Model.ObjectUsage;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.CodeCompletion;
@@ -31,8 +33,6 @@ using KaVE.Commons.Utils.ObjectUsageExport;
 using KaVE.JetBrains.Annotations;
 using KaVE.RS.Commons.Analysis;
 using KaVE.RS.Commons.Utils;
-
-//using KaVELogger = KaVE.Commons.Utils.Exceptions.ILogger;
 
 namespace KaVE.VS.FeedbackGenerator.CodeCompletion
 {
@@ -67,32 +67,39 @@ namespace KaVE.VS.FeedbackGenerator.CodeCompletion
 
         protected override bool AddLookupItems(CSharpCodeCompletionContext context, GroupedItemsCollector collector)
         {
-            var task = ContextAnalysis.AnalyseAsync(context, _logger);
-            var kaveContext = task.Result.Context;
-
-            _currentQuery = _queryGen.Extract(kaveContext);
-            if (_currentQuery != null && IsAvailable())
+            Action<Context> onSuccess = kaveContext =>
             {
-                var rec = LoadIfAvailable();
-                if (rec != null)
+                _currentQuery = _queryGen.Extract(kaveContext);
+                if (_currentQuery != null && IsAvailable())
                 {
-                    try
+                    var rec = LoadIfAvailable();
+                    if (rec != null)
                     {
-                        var proposals = rec.Query(_currentQuery);
+                        try
+                        {
+                            var proposals = rec.Query(_currentQuery);
 
-                        WrapExistingItems(collector, proposals);
-                        WrapNewItems(collector, proposals);
+                            WrapExistingItems(collector, proposals);
+                            WrapNewItems(collector, proposals);
+                        }
+                        catch (AssertException e)
+                        {
+                            _logger.Error(e);
+                        }
                     }
-                    catch (AssertException e)
+                    else
                     {
-                        _logger.Error(e);
+                        _logger.Info("no recommender model found for {0}", _currentQuery.type);
                     }
                 }
-                else
-                {
-                    _logger.Info("no recommender model found for {0}", _currentQuery.type);
-                }
-            }
+            };
+
+            ContextAnalysis.AnalyseAsync(
+                context.NodeInFile,
+                _logger,
+                onSuccess,
+                delegate { },
+                delegate { });
 
             return base.AddLookupItems(context, collector);
         }

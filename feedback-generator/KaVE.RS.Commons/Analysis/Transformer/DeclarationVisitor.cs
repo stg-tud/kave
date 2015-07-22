@@ -15,6 +15,7 @@
  */
 
 using System.Collections.Generic;
+using System.Threading;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.Util;
@@ -26,22 +27,31 @@ using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl.Statements;
 using KaVE.RS.Commons.Analysis.CompletionTarget;
 using KaVE.RS.Commons.Utils.Names;
+using KaVELogger = KaVE.Commons.Utils.Exceptions.ILogger;
 
 namespace KaVE.RS.Commons.Analysis.Transformer
 {
     public class DeclarationVisitor : TreeNodeVisitor<SST>
     {
+        private readonly KaVELogger _logger;
         private readonly ISet<IMethodName> _entryPoints;
         private readonly CompletionTargetMarker _marker;
+        private readonly CancellationToken _cancellationToken;
 
-        public DeclarationVisitor(ISet<IMethodName> entryPoints, CompletionTargetMarker marker)
+        public DeclarationVisitor(KaVELogger logger,
+            ISet<IMethodName> entryPoints,
+            CompletionTargetMarker marker,
+            CancellationToken cancellationToken)
         {
+            _logger = logger;
             _entryPoints = entryPoints;
             _marker = marker;
+            _cancellationToken = cancellationToken;
         }
 
         public override void VisitNode(ITreeNode node, SST context)
         {
+            _cancellationToken.ThrowIfCancellationRequested();
             node.Children<ICSharpTreeNode>().ForEach(child => child.Accept(this, context));
         }
 
@@ -49,7 +59,7 @@ namespace KaVE.RS.Commons.Analysis.Transformer
         {
             if (decl.DeclaredElement != null)
             {
-                var sstDecl = new DelegateDeclaration {Name = decl.DeclaredElement.GetName<DelegateTypeName>()};
+                var sstDecl = new DelegateDeclaration { Name = decl.DeclaredElement.GetName<DelegateTypeName>() };
                 context.Delegates.Add(sstDecl);
             }
         }
@@ -59,7 +69,7 @@ namespace KaVE.RS.Commons.Analysis.Transformer
         {
             if (decl.DeclaredElement != null)
             {
-                var sstDecl = new EventDeclaration {Name = decl.DeclaredElement.GetName<IEventName>()};
+                var sstDecl = new EventDeclaration { Name = decl.DeclaredElement.GetName<IEventName>() };
                 context.Events.Add(sstDecl);
             }
         }
@@ -70,7 +80,7 @@ namespace KaVE.RS.Commons.Analysis.Transformer
         {
             if (decl.DeclaredElement != null)
             {
-                var sstDecl = new FieldDeclaration {Name = decl.DeclaredElement.GetName<IFieldName>()};
+                var sstDecl = new FieldDeclaration { Name = decl.DeclaredElement.GetName<IFieldName>() };
                 context.Fields.Add(sstDecl);
             }
         }
@@ -80,6 +90,12 @@ namespace KaVE.RS.Commons.Analysis.Transformer
             if (decl.DeclaredElement != null)
             {
                 var methodName = decl.DeclaredElement.GetName<IMethodName>();
+                // TODO @seb: remove this!
+                //for (int i = 0; i < 1000000; i++) { }
+
+                //_logger.Info("VisitMethodDeclaration: " + methodName);
+                _cancellationToken.ThrowIfCancellationRequested();
+
                 var sstDecl = new MethodDeclaration
                 {
                     Name = methodName,
@@ -89,7 +105,7 @@ namespace KaVE.RS.Commons.Analysis.Transformer
 
                 if (decl == _marker.AffectedNode)
                 {
-                    sstDecl.Body.Add(new ExpressionStatement {Expression = new CompletionExpression()});
+                    sstDecl.Body.Add(new ExpressionStatement { Expression = new CompletionExpression() });
                 }
 
                 if (!decl.IsAbstract)

@@ -175,6 +175,7 @@
     <Compile Include="Utils\Collections\SetEqualityComparerTest.cs" />
     <Compile Include="Utils\Collections\SetsTest.cs" />
     <Compile Include="Utils\Collections\WeakNameCacheTest.cs" />
+    <Compile Include="Utils\Concurrency\TaskUtilsTest.cs" />
     <Compile Include="Utils\Csv\CsvAssert.cs" />
     <Compile Include="Utils\Csv\CsvBuilderHelperTest.cs" />
     <Compile Include="Utils\Csv\CsvBuilderTest.cs" />
@@ -183,7 +184,6 @@
     <Compile Include="Utils\EqualityUtilsTest.cs" />
     <Compile Include="Utils\Events\EventHandlingTest.cs" />
     <Compile Include="Utils\Exceptions\ExecuteTest.cs" />
-    <Compile Include="Utils\Exceptions\TimeLimitRunnerTest.cs" />
     <Compile Include="Utils\HashCodeUtilsTest.cs" />
     <Compile Include="Utils\InvokeTest.cs" />
     <Compile Include="Utils\IO\FileSystemExTest.cs" />

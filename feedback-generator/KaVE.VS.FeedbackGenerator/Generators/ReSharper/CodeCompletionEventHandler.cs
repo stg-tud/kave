@@ -23,15 +23,16 @@ using JetBrains.ReSharper.Feature.Services.CSharp.CodeCompletion.Infrastructure;
 using JetBrains.ReSharper.Features.Intellisense.CodeCompletion.CSharp.Rules;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
-using JetBrains.ReSharper.Resources.Shell;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Utils;
+using KaVE.Commons.Utils.Concurrency;
 using KaVE.Commons.Utils.Exceptions;
 using KaVE.RS.Commons.Analysis;
 using KaVE.RS.Commons.Utils;
 using KaVE.VS.FeedbackGenerator.CodeCompletion;
 using KaVE.VS.FeedbackGenerator.MessageBus;
+using Task = System.Threading.Tasks.Task;
 
 namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
 {
@@ -54,18 +55,13 @@ namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
     [Language(typeof (CSharpLanguage))]
     public class CodeCompletionContextAnalysisTrigger : CSharpItemsProviderBase<CSharpCodeCompletionContext>
     {
-        public const int LimitInMs = 1000000;
-
         private readonly CodeCompletionEventHandler _handler;
         private readonly ILogger _logger;
-
-        private readonly KaVECancellationTokenSource _tokenSource;
 
         public CodeCompletionContextAnalysisTrigger(CodeCompletionEventHandler handler, ILogger logger)
         {
             _handler = handler;
             _logger = logger;
-            _tokenSource = new KaVECancellationTokenSource();
         }
 
         protected override bool IsAvailable(CSharpCodeCompletionContext context)
@@ -75,44 +71,18 @@ namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
 
         protected override bool AddLookupItems(CSharpCodeCompletionContext context, GroupedItemsCollector collector)
         {
-            var token = _tokenSource.CancelAndCreate();
-
-            Func<Context> analysis = () =>
-            {
-                Context result = null;
-                ReadLockCookie.Execute(
-                    () =>
-                    {
-                        var task = ContextAnalysis.AnalyseAsync(context, _logger);
-                        result = task.Result.Context;
-                    });
-                return result;
-            };
-
-            TimeLimitRunner.Run(
-                analysis,
-                LimitInMs,
-                token,
+            ContextAnalysis.AnalyseAsync(
+                context.NodeInFile,
+                _logger,
                 OnSuccess,
-                OnTimeout,
-                OnError);
-
+                delegate { },
+                delegate { });
             return false;
         }
 
-        private void OnSuccess(Context ctx)
+        private void OnSuccess(Context context)
         {
-            _handler.SetContext(ctx);
-        }
-
-        private void OnTimeout()
-        {
-            _logger.Error("timeout! analysis did not finish within {0}ms", LimitInMs);
-        }
-
-        private void OnError(Exception e)
-        {
-            _logger.Error(e, "analysis error!");
+            _handler.SetContext(context);
         }
     }
 

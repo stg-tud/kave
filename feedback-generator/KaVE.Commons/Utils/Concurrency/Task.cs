@@ -19,7 +19,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using KaVE.JetBrains.Annotations;
 
-namespace KaVE.Commons.Utils.Concurrent
+namespace KaVE.Commons.Utils.Concurrency
 {
     public class Task : System.Threading.Tasks.Task
     {

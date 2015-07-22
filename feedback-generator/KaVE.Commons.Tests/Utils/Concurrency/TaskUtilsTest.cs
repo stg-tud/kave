@@ -14,17 +14,25 @@
  * limitations under the License.
  */
 
-using KaVE.VS.FeedbackGenerator.Generators.ReSharper;
+using System.Diagnostics;
+using KaVE.Commons.Utils.Concurrency;
 using NUnit.Framework;
 
-namespace KaVE.VS.FeedbackGenerator.Tests.Generators.ReSharper
+namespace KaVE.Commons.Tests.Utils.Concurrency
 {
-    internal class CodeCompletionContextAnalysisTriggerTest
+    internal class TaskUtilsTest
     {
-        [Test]
-        public void LimitForAnalysisAbortIs1000MS()
+        [TestCase(100)]
+        public void DelayWorksAsExpected(int milliseconds)
         {
-            Assert.AreEqual(1000, CodeCompletionContextAnalysisTrigger.LimitInMs);
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
+            TaskUtils.Delay(milliseconds).Wait();
+            stopwatch.Stop();
+
+            // Delay should be at least as long as expected, but should also not be significantly longer.
+            Assert.Less(milliseconds, stopwatch.ElapsedMilliseconds);
+            Assert.Greater(2 * milliseconds, stopwatch.ElapsedMilliseconds);
         }
     }
 }

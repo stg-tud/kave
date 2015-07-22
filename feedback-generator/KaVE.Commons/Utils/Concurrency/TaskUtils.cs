@@ -14,9 +14,23 @@
  * limitations under the License.
  */
 
-namespace KaVE.Commons.Utils.Concurrent
-{
-    public class ConcurrentDictionary<TKey, TValue> : System.Collections.Concurrent.ConcurrentDictionary<TKey, TValue> {}
+using System.Threading;
+using System.Threading.Tasks;
 
-    public class ConcurrentQueue<T> : System.Collections.Concurrent.ConcurrentQueue<T> {}
+namespace KaVE.Commons.Utils.Concurrency
+{
+    public static class TaskUtils
+    {
+        /// <summary>
+        /// Task.Delay for .NET 4.
+        /// </summary>
+        /// <param name="milliseconds"></param>
+        /// <returns></returns>
+        public static System.Threading.Tasks.Task Delay(int milliseconds)
+        {
+            var tcs = new TaskCompletionSource<object>();
+            new Timer(_ => tcs.SetResult(null)).Change(milliseconds, -1);
+            return tcs.Task;
+        }
+    }
 }

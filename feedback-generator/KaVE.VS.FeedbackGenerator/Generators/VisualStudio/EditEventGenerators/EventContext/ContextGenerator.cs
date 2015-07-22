@@ -29,7 +29,6 @@ using JetBrains.ReSharper.Resources.Shell;
 using JetBrains.TextControl;
 using JetBrains.Util;
 using KaVE.Commons.Model.Events.CompletionEvents;
-using KaVE.Commons.Utils.Exceptions;
 using KaVE.JetBrains.Annotations;
 using KaVE.RS.Commons.Analysis;
 using ILogger = KaVE.Commons.Utils.Exceptions.ILogger;
@@ -39,15 +38,12 @@ namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio.EditEventGenerators.
     [SolutionComponent(ProgramConfigurations.VS_ADDIN)]
     internal class ContextGenerator
     {
-        public const int LimitInMs = 1000;
-
         private Context CurrentContext { get; set; }
 
         private readonly TextControlManager _textControlManager;
         private readonly DocumentManager _documentManager;
         private readonly ISolution _solution;
         private readonly ILogger _logger;
-        private readonly KaVECancellationTokenSource _tokenSource;
 
         public ContextGenerator(TextControlManager textControlManager,
             IntellisenseManager intellisenseManager,
@@ -59,8 +55,6 @@ namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio.EditEventGenerators.
             _documentManager = intellisenseManager.DocumentManager;
             _logger = logger;
             _solution = intellisenseManager.Solution;
-
-            _tokenSource = new KaVECancellationTokenSource();
 
             if (NewContextProvider != null)
             {
@@ -135,48 +129,24 @@ namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio.EditEventGenerators.
             }
         }
 
-        private void RunAnalysis(ITreeNode psiFile)
+        private void RunAnalysis(ITreeNode node)
         {
-            var token = _tokenSource.CancelAndCreate();
-
-            Func<Context> analysis = () =>
-            {
-                Context result = null;
-                ReadLockCookie.Execute(
-                    () =>
-                    {
-                        result =
-                            ContextAnalysis.Analyze(
-                                psiFile,
-                                _logger).Context;
-                    });
-                return result;
-            };
-
-            TimeLimitRunner.Run(
-                analysis,
-                LimitInMs,
-                token,
-                OnSuccess,
-                OnTimeout,
-                OnError);
+            ContextAnalysis.AnalyseAsync(node, _logger, OnSuccess, OnFailure, OnTimeout);
         }
 
-        public void OnSuccess(Context newContext)
+        private void OnSuccess(Context context)
         {
-            CurrentContext = newContext;
+            CurrentContext = context;
         }
 
-        public void OnTimeout()
+        private void OnFailure(Exception e)
         {
             CurrentContext = new Context();
-            _logger.Error("timeout! analysis did not finish within {0}ms", LimitInMs);
         }
 
-        public void OnError(Exception exception)
+        private void OnTimeout()
         {
             CurrentContext = new Context();
-            _logger.Error(exception);
         }
     }
 }

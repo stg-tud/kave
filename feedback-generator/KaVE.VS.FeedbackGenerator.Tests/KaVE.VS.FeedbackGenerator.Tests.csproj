@@ -171,7 +171,6 @@
     <Compile Include="Generators\LogEventGeneratorTest.cs" />
     <Compile Include="Generators\EventGeneratorTestBase.cs" />
     <Compile Include="Generators\Merging\CompletionEventMergingStrategyTest.cs" />
-    <Compile Include="Generators\ReSharper\CodeCompletionContextAnalysisTriggerTest.cs" />
     <Compile Include="Generators\ReSharper\CodeCompletionEventHandlerTest.cs" />
     <Compile Include="Generators\ReSharper\EventGeneratingActionWrapperTest.cs" />
     <Compile Include="Generators\ReSharper\EventGeneratingBulbActionProxyTest.cs" />

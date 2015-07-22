@@ -14,132 +14,114 @@
  * limitations under the License.
  */
 
+using System;
 using System.Collections.Concurrent;
 using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
 using JetBrains.Annotations;
-using JetBrains.ReSharper.Feature.Services.CSharp.CodeCompletion.Infrastructure;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
+using JetBrains.ReSharper.Resources.Shell;
 using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.Commons.Utils.Collections;
+using KaVE.Commons.Utils.Concurrency;
 using KaVE.Commons.Utils.Exceptions;
 using KaVE.RS.Commons.Analysis.CompletionTarget;
 using KaVE.RS.Commons.Analysis.Transformer;
 using KaVE.RS.Commons.Utils.Names;
+using Task = System.Threading.Tasks.Task;
 
 namespace KaVE.RS.Commons.Analysis
 {
     public class ContextAnalysis
     {
-        private readonly ILogger _logger;
-        private readonly TypeShapeAnalysis _typeShapeAnalysis = new TypeShapeAnalysis();
-        private readonly CompletionTargetAnalysis _completionTargetAnalysis = new CompletionTargetAnalysis();
+        public const int DefaultTimeLimitInMs = 1000;
 
-        private ContextAnalysis(ILogger logger)
-        {
-            _logger = logger;
-        }
+        private static readonly KaVECancellationTokenSource TokenSource = new KaVECancellationTokenSource();
 
-        public static ContextAnalysisResult Analyze(CSharpCodeCompletionContext rsContext, ILogger logger)
-        {
-            return Analyze(rsContext.NodeInFile, logger);
-        }
+        private static readonly ConcurrentDictionary<int, System.Threading.Tasks.Task<ContextAnalysisResult>>
+            CurrentTasks =
+                new ConcurrentDictionary<int, System.Threading.Tasks.Task<ContextAnalysisResult>>();
 
         public static ContextAnalysisResult Analyze(ITreeNode node, ILogger logger)
         {
-            return new ContextAnalysis(logger).AnalyzeInternal(node);
+            var analysisTask = AnalyseAsyncInternal(node, logger, CancellationToken.None);
+            analysisTask.Wait();
+            return analysisTask.Result;
         }
 
-        private static readonly ConcurrentDictionary<int, Task<ContextAnalysisResult>>
-            CurrentTasks =
-                new ConcurrentDictionary<int, Task<ContextAnalysisResult>>();
-
-        public static Task<ContextAnalysisResult> AnalyseAsync(CSharpCodeCompletionContext rsContext, ILogger logger)
+        public static void AnalyseAsync(ITreeNode node,
+            ILogger logger,
+            Action<Context> onSuccess,
+            Action<Exception> onFailure,
+            Action onTimeout,
+            int timeLimitInMs = DefaultTimeLimitInMs)
         {
-            Task<ContextAnalysisResult> task;
-            if (!CurrentTasks.TryGetValue(rsContext.GetHashCode(), out task))
+            var analysisTask = AnalyseAsyncWithCache(node, logger);
+            var timeLimit = TaskUtils.Delay(timeLimitInMs);
+
+            Task.WaitAny(analysisTask, timeLimit);
+
+            if (analysisTask.IsCompleted)
             {
-                task = new Task<ContextAnalysisResult>(
-                    () =>
-                    {
-                        //logger.Info("Context analysis: analysing context with hash {0}", rsContext.GetHashCode());
-                        return Analyze(rsContext, logger);
-                    });
+                onSuccess(analysisTask.Result.Context);
+            }
+            else if (analysisTask.IsFaulted)
+            {
+                onFailure(analysisTask.Exception);
+                logger.Error(analysisTask.Exception, "analysis error!");
+            }
+            else if (timeLimit.IsCompleted)
+            {
+                onTimeout();
+                logger.Error("timeout! analysis did not finish within {0}ms", timeLimitInMs);
+            }
+        }
 
-                task.ContinueWith(
-                    _ =>
-                    {
-                        Thread.Sleep(30000);
-                        //logger.Info("Context analysis: deleting task with hash {0} after 30 seconds", rsContext.GetHashCode());
-                        Task<ContextAnalysisResult> t;
-                        CurrentTasks.TryRemove(rsContext.GetHashCode(), out t);
-                    });
+        private static System.Threading.Tasks.Task<ContextAnalysisResult> AnalyseAsyncInternal(ITreeNode node,
+            ILogger logger,
+            CancellationToken token)
+        {
+            return Task.Factory.StartNew(
+                () =>
+                {
+                    var analysis = new ContextAnalysisInternal(logger, token);
+                    ContextAnalysisResult result = null;
+                    ReadLockCookie.Execute(() => { result = analysis.AnalyzeInternal(node); });
+                    return result;
+                });
+        }
 
-                CurrentTasks.TryAdd(rsContext.GetHashCode(), task);
-                task.Start();
+        private static System.Threading.Tasks.Task<ContextAnalysisResult> AnalyseAsyncWithCache(ITreeNode node,
+            ILogger logger)
+        {
+            System.Threading.Tasks.Task<ContextAnalysisResult> task;
+            if (!CurrentTasks.TryGetValue(node.GetHashCode(), out task))
+            {
+                var token = TokenSource.CancelAndCreate();
+                task = AnalyseAsyncInternal(node, logger, token);
+                CurrentTasks.TryAdd(node.GetHashCode(), task);
+
+                task.ContinueWith(RemoveOldContextAnalysisResultAfterTimeout(node.GetHashCode(), 30000));
             }
 
             return task;
         }
 
-        private ContextAnalysisResult AnalyzeInternal(ITreeNode type)
+        private static Action<System.Threading.Tasks.Task<ContextAnalysisResult>>
+            RemoveOldContextAnalysisResultAfterTimeout(int hashCode, int timeout)
         {
-            var res = new ContextAnalysisResult
+            return _ =>
             {
-                Context = new Context()
+                Thread.Sleep(timeout);
+                System.Threading.Tasks.Task<ContextAnalysisResult> t;
+                CurrentTasks.TryRemove(hashCode, out t);
             };
-
-            Execute.WithExceptionLogging(_logger, () => AnalyzeInternal(type, res));
-
-            return res;
         }
 
-        private void AnalyzeInternal(ITreeNode nodeInFile, ContextAnalysisResult res)
-        {
-            var context = res.Context;
-            var sst = new SST();
-            context.SST = sst;
-
-            var classDeclaration = FindEnclosing<IClassDeclaration>(nodeInFile);
-            if (classDeclaration != null && classDeclaration.DeclaredElement != null)
-            {
-                context.TypeShape = _typeShapeAnalysis.Analyze(classDeclaration);
-
-                var entryPointRefs = new EntryPointSelector(classDeclaration, context.TypeShape).GetEntryPoints();
-                res.EntryPoints = Sets.NewHashSetFrom(entryPointRefs.Select(epr => epr.Name));
-
-                sst.EnclosingType = classDeclaration.DeclaredElement.GetName<ITypeName>();
-                res.CompletionMarker = _completionTargetAnalysis.Analyze(nodeInFile);
-                classDeclaration.Accept(new DeclarationVisitor(res.EntryPoints, res.CompletionMarker), sst);
-            }
-            else
-            {
-                sst.EnclosingType = TypeName.UnknownName;
-            }
-        }
-
-        [CanBeNull]
-        public static TIDeclaration FindEnclosing<TIDeclaration>(ITreeNode node)
-            where TIDeclaration : class, IDeclaration
-        {
-            while (node != null)
-            {
-                var declaration = node as TIDeclaration;
-                if (declaration != null)
-                {
-                    return declaration;
-                }
-                node = node.Parent;
-            }
-            return null;
-        }
-
-        // TODO discuss change in return values
         public class ContextAnalysisResult
         {
             [NotNull]
@@ -147,6 +129,79 @@ namespace KaVE.RS.Commons.Analysis
 
             public CompletionTargetMarker CompletionMarker { get; set; }
             public IKaVESet<IMethodName> EntryPoints { get; set; }
+
+            public ContextAnalysisResult()
+            {
+                Context = new Context();
+            }
+        }
+
+        private class ContextAnalysisInternal
+        {
+            private readonly ILogger _logger;
+            private readonly TypeShapeAnalysis _typeShapeAnalysis = new TypeShapeAnalysis();
+            private readonly CompletionTargetAnalysis _completionTargetAnalysis = new CompletionTargetAnalysis();
+            private readonly CancellationToken _token;
+
+            public ContextAnalysisInternal(ILogger logger, CancellationToken token)
+            {
+                _token = token;
+                _logger = logger;
+            }
+
+            public ContextAnalysisResult AnalyzeInternal(ITreeNode type)
+            {
+                var res = new ContextAnalysisResult
+                {
+                    Context = new Context()
+                };
+
+                Execute.WithExceptionLogging(_logger, () => AnalyzeInternal(type, res));
+
+                return res;
+            }
+
+            private void AnalyzeInternal(ITreeNode nodeInFile, ContextAnalysisResult res)
+            {
+                var context = res.Context;
+                var sst = new SST();
+                context.SST = sst;
+
+                var classDeclaration = FindEnclosing<IClassDeclaration>(nodeInFile);
+                if (classDeclaration != null && classDeclaration.DeclaredElement != null)
+                {
+                    context.TypeShape = _typeShapeAnalysis.Analyze(classDeclaration);
+
+                    var entryPointRefs = new EntryPointSelector(classDeclaration, context.TypeShape).GetEntryPoints();
+                    res.EntryPoints = Sets.NewHashSetFrom(entryPointRefs.Select(epr => epr.Name));
+
+                    sst.EnclosingType = classDeclaration.DeclaredElement.GetName<ITypeName>();
+                    res.CompletionMarker = _completionTargetAnalysis.Analyze(nodeInFile);
+                    classDeclaration.Accept(
+                        new DeclarationVisitor(_logger, res.EntryPoints, res.CompletionMarker, _token),
+                        sst);
+                }
+                else
+                {
+                    sst.EnclosingType = TypeName.UnknownName;
+                }
+            }
+
+            [CanBeNull]
+            private static TIDeclaration FindEnclosing<TIDeclaration>(ITreeNode node)
+                where TIDeclaration : class, IDeclaration
+            {
+                while (node != null)
+                {
+                    var declaration = node as TIDeclaration;
+                    if (declaration != null)
+                    {
+                        return declaration;
+                    }
+                    node = node.Parent;
+                }
+                return null;
+            }
         }
     }
 }
