@@ -1,0 +1,354 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Description_1" xml:space="preserve">
+    <value>Successfully finish 5 Codecompletions</value>
+  </data>
+  <data name="Description_10" xml:space="preserve">
+    <value>Successfully create 250 TestClasses</value>
+  </data>
+  <data name="Description_11" xml:space="preserve">
+    <value>Successfully create 500 TestClasses</value>
+  </data>
+  <data name="Description_12" xml:space="preserve">
+    <value>Successfully compile 10 times</value>
+  </data>
+  <data name="Description_13" xml:space="preserve">
+    <value>Successfully compile 100 times</value>
+  </data>
+  <data name="Description_14" xml:space="preserve">
+    <value>Successfully compile 1000 times</value>
+  </data>
+  <data name="Description_15" xml:space="preserve">
+    <value>Work between 10 pm and 4am</value>
+  </data>
+  <data name="Description_16" xml:space="preserve">
+    <value>Use the Resharper Alt+Enter Quickfix 1 times</value>
+  </data>
+  <data name="Description_17" xml:space="preserve">
+    <value>Use the Resharper Alt+Enter Quickfix 100 times</value>
+  </data>
+  <data name="Description_18" xml:space="preserve">
+    <value>Use the Resharper Alt+Enter Quickfix 1000 times</value>
+  </data>
+  <data name="Description_19" xml:space="preserve">
+    <value>Use the Resharper CleanUp 1 time</value>
+  </data>
+  <data name="Description_2" xml:space="preserve">
+    <value>Successfully finish 50 Codecompletions</value>
+  </data>
+  <data name="Description_20" xml:space="preserve">
+    <value>Use the Resharper CleanUp 100 times</value>
+  </data>
+  <data name="Description_21" xml:space="preserve">
+    <value>Use the Resharper CleanUp 1000 times</value>
+  </data>
+  <data name="Description_22" xml:space="preserve">
+    <value>Have a compile fail 10 times</value>
+  </data>
+  <data name="Description_23" xml:space="preserve">
+    <value>Have a compile fail 100 times</value>
+  </data>
+  <data name="Description_24" xml:space="preserve">
+    <value>Have a compile fail 1000 times</value>
+  </data>
+  <data name="Description_25" xml:space="preserve">
+    <value>Do 100 code changes between commits</value>
+  </data>
+  <data name="Description_26" xml:space="preserve">
+    <value>Do 500 code changes between commits</value>
+  </data>
+  <data name="Description_27" xml:space="preserve">
+    <value>Do 1000 code changes between commits</value>
+  </data>
+  <data name="Description_28" xml:space="preserve">
+    <value>Do 5000 code changes between commits</value>
+  </data>
+  <data name="Description_29" xml:space="preserve">
+    <value>Do 10000 code changes between commits</value>
+  </data>
+  <data name="Description_3" xml:space="preserve">
+    <value>Successfully finish 100 Codecompletions</value>
+  </data>
+  <data name="Description_30" xml:space="preserve">
+    <value>Create 5 Commits</value>
+  </data>
+  <data name="Description_31" xml:space="preserve">
+    <value>Create 50 Commits</value>
+  </data>
+  <data name="Description_32" xml:space="preserve">
+    <value>Create 100 Commits</value>
+  </data>
+  <data name="Description_33" xml:space="preserve">
+    <value>Create 500 Commits</value>
+  </data>
+  <data name="Description_34" xml:space="preserve">
+    <value>Create 1000 Commits</value>
+  </data>
+  <data name="Description_35" xml:space="preserve">
+    <value>Debug your Code 1 minute</value>
+  </data>
+  <data name="Description_36" xml:space="preserve">
+    <value>Debug your Code 5 minutes</value>
+  </data>
+  <data name="Description_37" xml:space="preserve">
+    <value>Debug your Code 15 minutes</value>
+  </data>
+  <data name="Description_38" xml:space="preserve">
+    <value>Debug your Code 30 minutes</value>
+  </data>
+  <data name="Description_39" xml:space="preserve">
+    <value>Debug your Code 1 hour</value>
+  </data>
+  <data name="Description_4" xml:space="preserve">
+    <value>Successfully finish 500 Codecompletions</value>
+  </data>
+  <data name="Description_5" xml:space="preserve">
+    <value>Successfully finish 1000 Codecompletions</value>
+  </data>
+  <data name="Description_6" xml:space="preserve">
+    <value>Congratulations! You Have Successfully installed the KaVE Achievements Plugin</value>
+  </data>
+  <data name="Description_7" xml:space="preserve">
+    <value>Successfully create 5 TestClasses</value>
+  </data>
+  <data name="Description_8" xml:space="preserve">
+    <value>Successfully create 20 TestClasses</value>
+  </data>
+  <data name="Description_9" xml:space="preserve">
+    <value>Successfully create 100 TestClasses</value>
+  </data>
+  <data name="Title_1" xml:space="preserve">
+    <value>Completion Tutorial Complete</value>
+  </data>
+  <data name="Title_10" xml:space="preserve">
+    <value>Test-a-holic</value>
+  </data>
+  <data name="Title_11" xml:space="preserve">
+    <value>TEST-osterone</value>
+  </data>
+  <data name="Title_12" xml:space="preserve">
+    <value>So Far, So Good</value>
+  </data>
+  <data name="Title_13" xml:space="preserve">
+    <value>Let's Hope It Doesn't Crash</value>
+  </data>
+  <data name="Title_14" xml:space="preserve">
+    <value>Error Free</value>
+  </data>
+  <data name="Title_15" xml:space="preserve">
+    <value>Nightworker</value>
+  </data>
+  <data name="Title_16" xml:space="preserve">
+    <value>I Did A Quick Fix</value>
+  </data>
+  <data name="Title_17" xml:space="preserve">
+    <value>Magic Fix</value>
+  </data>
+  <data name="Title_18" xml:space="preserve">
+    <value>QuickFix Master</value>
+  </data>
+  <data name="Title_19" xml:space="preserve">
+    <value>Apprentice Janitor</value>
+  </data>
+  <data name="Title_2" xml:space="preserve">
+    <value>Could You Complete This For Me?</value>
+  </data>
+  <data name="Title_20" xml:space="preserve">
+    <value>Janitor in Chief</value>
+  </data>
+  <data name="Title_21" xml:space="preserve">
+    <value>Mr. Clean</value>
+  </data>
+  <data name="Title_22" xml:space="preserve">
+    <value>Oops</value>
+  </data>
+  <data name="Title_23" xml:space="preserve">
+    <value>I Have 99 Errors, But A Semicolon Ain't One</value>
+  </data>
+  <data name="Title_24" xml:space="preserve">
+    <value>Aww, Maaan</value>
+  </data>
+  <data name="Title_25" xml:space="preserve">
+    <value>A Little Change</value>
+  </data>
+  <data name="Title_26" xml:space="preserve">
+    <value>You Can Keep The Change</value>
+  </data>
+  <data name="Title_27" xml:space="preserve">
+    <value>Time For A Change</value>
+  </data>
+  <data name="Title_28" xml:space="preserve">
+    <value>Rearrangement</value>
+  </data>
+  <data name="Title_29" xml:space="preserve">
+    <value>Complete Make Over</value>
+  </data>
+  <data name="Title_3" xml:space="preserve">
+    <value>CodeCompletion Is My Favorite Feature</value>
+  </data>
+  <data name="Title_30" xml:space="preserve">
+    <value>Show Some Commitment</value>
+  </data>
+  <data name="Title_31" xml:space="preserve">
+    <value>Source Control</value>
+  </data>
+  <data name="Title_32" xml:space="preserve">
+    <value>I Commit Regularly</value>
+  </data>
+  <data name="Title_33" xml:space="preserve">
+    <value>Commit Fanatic</value>
+  </data>
+  <data name="Title_34" xml:space="preserve">
+    <value>Full Commitment</value>
+  </data>
+  <data name="Title_35" xml:space="preserve">
+    <value>Bug Squasher</value>
+  </data>
+  <data name="Title_36" xml:space="preserve">
+    <value>Bug Spray</value>
+  </data>
+  <data name="Title_37" xml:space="preserve">
+    <value>Bug Phobia</value>
+  </data>
+  <data name="Title_38" xml:space="preserve">
+    <value>Insecticide</value>
+  </data>
+  <data name="Title_39" xml:space="preserve">
+    <value>Pest Control</value>
+  </data>
+  <data name="Title_4" xml:space="preserve">
+    <value>I Leave Nothing Uncompleted</value>
+  </data>
+  <data name="Title_5" xml:space="preserve">
+    <value>Ultimate Completionist</value>
+  </data>
+  <data name="Title_6" xml:space="preserve">
+    <value>Plugin Achiever</value>
+  </data>
+  <data name="Title_7" xml:space="preserve">
+    <value>Did Some Testing</value>
+  </data>
+  <data name="Title_8" xml:space="preserve">
+    <value>Better Make Sure This Works!</value>
+  </data>
+  <data name="Title_9" xml:space="preserve">
+    <value>I'm Sure It Works! I Tested It!</value>
+  </data>
+</root>
