@@ -15,12 +15,14 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using KaVE.Commons.Utils.IO;
 using KaVE.VS.Achievements.Statistics.Listing;
 using KaVE.VS.Achievements.Statistics.Statistics;
 using KaVE.VS.Achievements.Tests.Statistics.Calculators;
+using KaVE.VS.Achievements.UI.StatisticUI;
 using KaVE.VS.Achievements.Util;
 using Moq;
 using NUnit.Framework;
@@ -54,8 +56,15 @@ namespace KaVE.VS.Achievements.Tests.Statistics
 
         private IStatistic _statistic;
 
-        private const string DictionaryString =
-            "{\"$type\":\"System.Collections.Generic.Dictionary`2[[System.Type, mscorlib],[KaVE.BP.Achievements.Statistics.Statistics.IStatistic, KaVE.BP.Achievements]], mscorlib\",\"KaVE.BP.Achievements.Statistics.Statistics.BuildStatistic, KaVE.BP.Achievements, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\":{\"$type\":\"KaVE.BP.Achievements.Statistics.Statistics.BuildStatistic, KaVE.BP.Achievements\",\"FailedBuilds\":0,\"SuccessfulBuilds\":0}}";
+        private readonly Dictionary<Type, IStatistic> _testDictionary = new Dictionary<Type, IStatistic>
+        {
+            {typeof (TestStatistic), new TestStatistic()}
+        };
+
+        private string SerializedTestDictionary
+        {
+            get { return JsonSerialization.JsonSerializeObject(_testDictionary); }
+        }
 
         public class ObserverTestImplementation : IObserver<IStatistic>
         {
@@ -137,7 +146,7 @@ namespace KaVE.VS.Achievements.Tests.Statistics
         [Test]
         public void FileIsRecreatedOnExceptionWhileInitializing()
         {
-            _ioUtilMock.Setup(x => x.FileExists(It.IsAny<string>())).Returns(true);
+            SetFileExists(true);
             _ioUtilMock.Setup(x => x.ReadFile(It.IsAny<string>())).Throws<Exception>();
 
             _statisticListing = new StatisticListing();
@@ -190,13 +199,12 @@ namespace KaVE.VS.Achievements.Tests.Statistics
         [Test]
         public void ReadStatisticsFromFileOnInitalize()
         {
-            _ioUtilMock.Setup(x => x.FileExists(It.IsAny<string>())).Returns(true);
-
-            _ioUtilMock.Setup(x => x.ReadFile(It.IsAny<string>())).Returns(DictionaryString);
+            SetFileExists(true);
+            _ioUtilMock.Setup(x => x.ReadFile(It.IsAny<string>())).Returns(SerializedTestDictionary);
 
             _statisticListing = new StatisticListing();
 
-            Assert.AreEqual(1, _statisticListing.StatisticDictionary.Count);
+            CollectionAssert.AreEquivalent(_testDictionary, _statisticListing.StatisticDictionary);
         }
 
         [Test]
@@ -219,7 +227,7 @@ namespace KaVE.VS.Achievements.Tests.Statistics
         [Test]
         public void UpdateCreatesFileWhenFileDoesNotExist()
         {
-            _ioUtilMock.Setup(x => x.FileExists(It.IsAny<string>())).Returns(false);
+            SetFileExists(false);
 
             _statisticListing.Update(_statistic);
 
@@ -235,5 +243,46 @@ namespace KaVE.VS.Achievements.Tests.Statistics
 
             _ioUtilMock.Verify(x => x.OpenFile(It.IsAny<string>(), FileMode.Create, FileAccess.Write));
         }
+
+        private void SetFileExists(bool fileExists)
+        {
+            _ioUtilMock.Setup(x => x.FileExists(It.IsAny<string>())).Returns(fileExists);
+        }
+    }
+
+    internal class TestStatistic : IStatistic
+    {
+        private static readonly Random Rng = new Random();
+
+        public int TestValue;
+
+        public TestStatistic()
+        {
+            TestValue = Rng.Next();
+        }
+
+        public List<StatisticElement> GetCollection()
+        {
+            return new List<StatisticElement>
+            {
+                new StatisticElement
+                {
+                    Name = "TestValue",
+                    Value = TestValue.ToString()
+                }
+            };
+        }
+
+        private bool Equals(TestStatistic other)
+        {
+            return TestValue.Equals(other.TestValue);
+        }
+
+#pragma warning disable 659
+        public override bool Equals(object other)
+        {
+            return other is TestStatistic && Equals((TestStatistic) other);
+        }
+#pragma warning restore 659
     }
 }
