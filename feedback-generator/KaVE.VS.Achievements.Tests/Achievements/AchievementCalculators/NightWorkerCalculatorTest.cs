@@ -17,7 +17,7 @@
 using System;
 using KaVE.VS.Achievements.Achievements.Calculators;
 using KaVE.VS.Achievements.Statistics.Statistics;
-using KaVE.VS.Achievements.Tests.Statistics.Calculators;
+using KaVE.VS.Achievements.Tests.TestUtils;
 using NUnit.Framework;
 
 namespace KaVE.VS.Achievements.Tests.Achievements.AchievementCalculators
@@ -72,7 +72,7 @@ namespace KaVE.VS.Achievements.Tests.Achievements.AchievementCalculators
         [Test]
         public void ResetTest()
         {
-            var testStatistic = new StatisticCalculatorTest.TestStatistic();
+            var testStatistic = new TestStatistic();
             SetTimeTo(new DateTime(1984, 1, 1, 0, 0, 0));
 
             _uut.OnNext(testStatistic);

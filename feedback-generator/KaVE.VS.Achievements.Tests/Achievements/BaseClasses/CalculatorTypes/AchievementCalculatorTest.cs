@@ -21,6 +21,7 @@ using KaVE.VS.Achievements.Achievements.Listing;
 using KaVE.VS.Achievements.Statistics.Listing;
 using KaVE.VS.Achievements.Statistics.Statistics;
 using KaVE.VS.Achievements.Tests.Achievements.AchievementCalculators;
+using KaVE.VS.Achievements.Tests.TestUtils;
 using Moq;
 using NUnit.Framework;
 
@@ -102,7 +103,7 @@ namespace KaVE.VS.Achievements.Tests.Achievements.BaseClasses.CalculatorTypes
                 StatisticListingMock.Object,
                 ObservableMock.Object);
 
-            calculator.OnNext(new TestStatistic(int.MaxValue));
+            calculator.OnNext(new TestStatistic());
 
             calculator.ResetAchievement();
 
@@ -114,7 +115,7 @@ namespace KaVE.VS.Achievements.Tests.Achievements.BaseClasses.CalculatorTypes
         [Test]
         public void UpdatesAchievementListingTest()
         {
-            _uut.OnNext(new TestStatistic(int.MaxValue));
+            _uut.OnNext(new TestStatistic());
 
             AchievementListingMock.Verify(l => l.Update(_testAchievement));
         }

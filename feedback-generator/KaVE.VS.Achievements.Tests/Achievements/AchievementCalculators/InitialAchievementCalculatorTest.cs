@@ -17,7 +17,7 @@
 using KaVE.VS.Achievements.Achievements.BaseClasses.AchievementTypes;
 using KaVE.VS.Achievements.Achievements.Calculators;
 using KaVE.VS.Achievements.Statistics.Statistics;
-using KaVE.VS.Achievements.Tests.Statistics.Calculators;
+using KaVE.VS.Achievements.Tests.TestUtils;
 using Moq;
 using NUnit.Framework;
 
@@ -42,7 +42,7 @@ namespace KaVE.VS.Achievements.Tests.Achievements.AchievementCalculators
         [Test]
         public void DoesNotReset()
         {
-            var testStatistic = new StatisticCalculatorTest.TestStatistic();
+            var testStatistic = new TestStatistic();
 
             _uut.OnNext(testStatistic);
 
@@ -74,7 +74,7 @@ namespace KaVE.VS.Achievements.Tests.Achievements.AchievementCalculators
         [Test]
         public void SetsCompletedCorrectly()
         {
-            var testStatistic = new StatisticCalculatorTest.TestStatistic();
+            var testStatistic = new TestStatistic();
 
             _uut.OnNext(testStatistic);
 

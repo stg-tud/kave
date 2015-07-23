@@ -21,6 +21,7 @@ using KaVE.VS.Achievements.Achievements.Listing;
 using KaVE.VS.Achievements.Statistics.Listing;
 using KaVE.VS.Achievements.Statistics.Statistics;
 using KaVE.VS.Achievements.Tests.Achievements.AchievementCalculators;
+using KaVE.VS.Achievements.Tests.TestUtils;
 using NUnit.Framework;
 
 namespace KaVE.VS.Achievements.Tests.Achievements.BaseClasses.CalculatorTypes
@@ -70,7 +71,7 @@ namespace KaVE.VS.Achievements.Tests.Achievements.BaseClasses.CalculatorTypes
         [Test]
         public void ResetsAchievementCorrectly()
         {
-            _uut.OnNext(new TestStatistic(int.MaxValue));
+            _uut.OnNext(new TestStatistic {TestValue = int.MaxValue});
 
             _uut.ResetAchievement();
 
@@ -98,7 +99,7 @@ namespace KaVE.VS.Achievements.Tests.Achievements.BaseClasses.CalculatorTypes
                 StatisticListingMock.Object,
                 ObservableMock.Object);
 
-            calculator.OnNext(new TestStatistic(250));
+            calculator.OnNext(new TestStatistic {TestValue = 250});
 
             Assert.AreEqual(100, stagedAchievement.Stages[0].CurrentProgress);
             Assert.AreEqual(100, stagedAchievement.Stages[TestId].CurrentProgress);
@@ -108,7 +109,7 @@ namespace KaVE.VS.Achievements.Tests.Achievements.BaseClasses.CalculatorTypes
 
             Assert.AreEqual(3, stagedAchievement.CurrentStage);
 
-            calculator.OnNext(new TestStatistic(1200));
+            calculator.OnNext(new TestStatistic {TestValue = 1200});
 
             Assert.AreEqual(100, stagedAchievement.Stages[3].CurrentProgress);
             Assert.AreEqual(100, stagedAchievement.Stages[4].CurrentProgress);

@@ -16,6 +16,7 @@
 
 using JetBrains.Util;
 using KaVE.Commons.Model.Events;
+using KaVE.Commons.TestUtils.Model.Events;
 using KaVE.VS.Achievements.Statistics.Calculators;
 using KaVE.VS.Achievements.Statistics.Listing;
 using KaVE.VS.Achievements.Statistics.Statistics;
@@ -104,7 +105,7 @@ namespace KaVE.VS.Achievements.Tests.Statistics.Calculators
         [Test]
         public void EventCallWithWrongEventTypeExceptionHandlingTest()
         {
-            Publish(new StatisticCalculatorTest.TestEvent());
+            Publish(new TestIDEEvent());
 
             ListingMock.Verify(l => l.Update(It.IsAny<IStatistic>()), Times.Never);
         }

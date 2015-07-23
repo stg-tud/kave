@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-using System.Collections;
 using System.Collections.Generic;
 using KaVE.VS.Achievements.Util;
 using NUnit.Framework;
@@ -30,7 +29,7 @@ namespace KaVE.VS.Achievements.Tests.Util
 
             uut.Enqueue(0);
 
-            Assert.AreEqual((int) 0, (int) uut.Dequeue());
+            Assert.AreEqual(0, uut.Dequeue());
         }
 
         [Test]
@@ -41,7 +40,7 @@ namespace KaVE.VS.Achievements.Tests.Util
             uut.Enqueue(0);
             uut.Enqueue(1);
 
-            Assert.AreEqual((int) 1, (int) uut.Dequeue());
+            Assert.AreEqual(1, uut.Dequeue());
         }
 
         [Test]
@@ -57,7 +56,7 @@ namespace KaVE.VS.Achievements.Tests.Util
             uut.Enqueue(higherValue);
             uut.Enqueue(lowerValue);
 
-            Assert.AreEqual((int) lowerValue, (int) uut.Dequeue());
+            Assert.AreEqual(lowerValue, uut.Dequeue());
         }
 
         [Test]
@@ -68,7 +67,7 @@ namespace KaVE.VS.Achievements.Tests.Util
             uut.Enqueue(0);
             uut.Clear();
 
-            Assert.IsEmpty((IEnumerable) uut.Items);
+            Assert.IsEmpty(uut.Items);
         }
 
         private class TestIntegerComparer : IComparer<int>

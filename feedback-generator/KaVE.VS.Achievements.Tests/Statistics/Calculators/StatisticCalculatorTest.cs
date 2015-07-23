@@ -17,10 +17,12 @@
 using System;
 using System.Collections.Generic;
 using KaVE.Commons.Model.Events;
+using KaVE.Commons.TestUtils.Model.Events;
 using KaVE.VS.Achievements.Statistics.Calculators.BaseClasses;
 using KaVE.VS.Achievements.Statistics.Filters;
 using KaVE.VS.Achievements.Statistics.Listing;
 using KaVE.VS.Achievements.Statistics.Statistics;
+using KaVE.VS.Achievements.Tests.TestUtils;
 using KaVE.VS.Achievements.UI.StatisticUI;
 using KaVE.VS.Achievements.Util;
 using KaVE.VS.FeedbackGenerator.MessageBus;
@@ -32,16 +34,13 @@ namespace KaVE.VS.Achievements.Tests.Statistics.Calculators
     [TestFixture]
     internal class StatisticCalculatorTest : CalculatorTest
     {
-        public StatisticCalculatorTest() : base(typeof (TestCalculator), typeof (TestStatistic), new TestEvent()) {}
+        public StatisticCalculatorTest() : base(typeof (TestCalculator), typeof (TestStatistic), new TestIDEEvent()) {}
 
         protected override bool IsNewStatistic(IStatistic statistic)
         {
             return statistic is TestStatistic;
         }
 
-        /// <summary>
-        ///     Basic implementation of StatisticCalculator
-        /// </summary>
         internal class TestCalculator : StatisticCalculator
         {
             public TestCalculator(IStatisticListing statisticListing, IMessageBus messageBus, IErrorHandler errorHandler)
@@ -80,30 +79,11 @@ namespace KaVE.VS.Achievements.Tests.Statistics.Calculators
             }
         }
 
-        /// <summary>
-        ///     Basic Implementation of IEventFilter
-        /// </summary>
         internal class TestFilter : IEventFilter
         {
             public IDEEvent Process(IDEEvent @event)
             {
                 return @event;
-            }
-        }
-
-        /// <summary>
-        ///     Basic Implementation of IDEEvent
-        /// </summary>
-        internal class TestEvent : IDEEvent {}
-
-        /// <summary>
-        ///     Basic Implementation of IStatistic
-        /// </summary>
-        internal class TestStatistic : IStatistic
-        {
-            public List<StatisticElement> GetCollection()
-            {
-                return new List<StatisticElement>();
             }
         }
 
@@ -160,7 +140,7 @@ namespace KaVE.VS.Achievements.Tests.Statistics.Calculators
                 MessageBus.Object,
                 ErrorHandlerMock.Object);
 
-            uut.Event(new TestEvent());
+            uut.Event(new TestIDEEvent());
 
             ListingMock.Verify(l => l.Update(It.IsAny<IStatistic>()), Times.Never);
         }

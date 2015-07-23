@@ -20,7 +20,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using KaVE.VS.Achievements.Statistics.Listing;
 using KaVE.VS.Achievements.Statistics.Statistics;
-using KaVE.VS.Achievements.Tests.Statistics.Calculators;
+using KaVE.VS.Achievements.Tests.TestUtils;
 using KaVE.VS.Achievements.UI;
 using KaVE.VS.Achievements.UI.StatisticUI;
 using KaVE.VS.Achievements.Util;
@@ -183,7 +183,7 @@ namespace KaVE.VS.Achievements.Tests.UI.StatisticUI
         [Test]
         public void SendErrorMessageWhenNoCollectionForStatisticOnUpdate()
         {
-            _uut.OnNext(new StatisticCalculatorTest.TestStatistic());
+            _uut.OnNext(new TestStatistic());
 
             _errorHandlerMock.Verify(
                 errorHandler =>

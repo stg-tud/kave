@@ -21,8 +21,7 @@ using System.IO;
 using KaVE.Commons.Utils.IO;
 using KaVE.VS.Achievements.Statistics.Listing;
 using KaVE.VS.Achievements.Statistics.Statistics;
-using KaVE.VS.Achievements.Tests.Statistics.Calculators;
-using KaVE.VS.Achievements.UI.StatisticUI;
+using KaVE.VS.Achievements.Tests.TestUtils;
 using KaVE.VS.Achievements.Util;
 using Moq;
 using NUnit.Framework;
@@ -39,7 +38,7 @@ namespace KaVE.VS.Achievements.Tests.Statistics
             Registry.RegisterComponent(_ioUtilMock.Object);
             Registry.RegisterComponent(new Mock<IErrorHandler>().Object);
             _statisticListing = new StatisticListing();
-            _statistic = new StatisticCalculatorTest.TestStatistic();
+            _statistic = new TestStatistic();
         }
 
         [TearDown]
@@ -66,31 +65,6 @@ namespace KaVE.VS.Achievements.Tests.Statistics
             get { return JsonSerialization.JsonSerializeObject(_testDictionary); }
         }
 
-        public class ObserverTestImplementation : IObserver<IStatistic>
-        {
-            private readonly IDisposable _unsubscriber;
-
-            public ObserverTestImplementation(IObservable<IStatistic> observable)
-            {
-                _unsubscriber = observable.Subscribe(this);
-            }
-
-            public void OnNext(IStatistic value)
-            {
-                _unsubscriber.Dispose();
-            }
-
-            public void OnError(Exception error)
-            {
-                // nothing
-            }
-
-            public void OnCompleted()
-            {
-                // nothing
-            }
-        }
-
 
         [Test]
         public void AddNewObjectToDictionaryAndGetStatisticSuccess()
@@ -104,7 +78,7 @@ namespace KaVE.VS.Achievements.Tests.Statistics
         [Test]
         public void CreateFileOnFirstUpdateWhenFileDoesNotExist()
         {
-            _statisticListing.Update(new StatisticCalculatorTest.TestStatistic());
+            _statisticListing.Update(new TestStatistic());
 
             _ioUtilMock.Verify(x => x.CreateFile(It.IsAny<string>()));
         }
@@ -248,41 +222,30 @@ namespace KaVE.VS.Achievements.Tests.Statistics
         {
             _ioUtilMock.Setup(x => x.FileExists(It.IsAny<string>())).Returns(fileExists);
         }
-    }
 
-    internal class TestStatistic : IStatistic
-    {
-        private static readonly Random Rng = new Random();
-
-        public int TestValue;
-
-        public TestStatistic()
+        public class ObserverTestImplementation : IObserver<IStatistic>
         {
-            TestValue = Rng.Next();
-        }
+            private readonly IDisposable _unsubscriber;
 
-        public List<StatisticElement> GetCollection()
-        {
-            return new List<StatisticElement>
+            public ObserverTestImplementation(IObservable<IStatistic> observable)
             {
-                new StatisticElement
-                {
-                    Name = "TestValue",
-                    Value = TestValue.ToString()
-                }
-            };
-        }
+                _unsubscriber = observable.Subscribe(this);
+            }
 
-        private bool Equals(TestStatistic other)
-        {
-            return TestValue.Equals(other.TestValue);
-        }
+            public void OnNext(IStatistic value)
+            {
+                _unsubscriber.Dispose();
+            }
 
-#pragma warning disable 659
-        public override bool Equals(object other)
-        {
-            return other is TestStatistic && Equals((TestStatistic) other);
+            public void OnError(Exception error)
+            {
+                // nothing
+            }
+
+            public void OnCompleted()
+            {
+                // nothing
+            }
         }
-#pragma warning restore 659
     }
 }

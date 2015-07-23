@@ -21,6 +21,7 @@ using KaVE.VS.Achievements.Achievements.Listing;
 using KaVE.VS.Achievements.Statistics.Listing;
 using KaVE.VS.Achievements.Statistics.Statistics;
 using KaVE.VS.Achievements.Tests.Achievements.AchievementCalculators;
+using KaVE.VS.Achievements.Tests.TestUtils;
 using NUnit.Framework;
 
 namespace KaVE.VS.Achievements.Tests.Achievements.BaseClasses.CalculatorTypes
@@ -76,7 +77,7 @@ namespace KaVE.VS.Achievements.Tests.Achievements.BaseClasses.CalculatorTypes
                     StatisticListingMock.Object,
                     ObservableMock.Object);
 
-            calculatorWithWrongTargetValueType.OnNext(new TestStatistic(0));
+            calculatorWithWrongTargetValueType.OnNext(new TestStatistic());
         }
 
         [Test]

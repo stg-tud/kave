@@ -15,14 +15,12 @@
  */
 
 using System;
-using System.Collections.Generic;
 using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.IO;
 using KaVE.VS.Achievements.Achievements.BaseClasses.AchievementTypes;
 using KaVE.VS.Achievements.Achievements.Listing;
 using KaVE.VS.Achievements.Statistics.Listing;
 using KaVE.VS.Achievements.Statistics.Statistics;
-using KaVE.VS.Achievements.UI.StatisticUI;
 using KaVE.VS.Achievements.Util;
 using Moq;
 using NUnit.Framework;
@@ -140,21 +138,6 @@ namespace KaVE.VS.Achievements.Tests.Achievements.AchievementCalculators
                             actualAchievement =>
                                 actualAchievement.Id == AchievementId &&
                                 actualAchievement.IsCompleted)));
-        }
-
-        public class TestStatistic : IStatistic
-        {
-            public int TestValue;
-
-            public TestStatistic(int testValue)
-            {
-                TestValue = testValue;
-            }
-
-            public List<StatisticElement> GetCollection()
-            {
-                throw new NotImplementedException();
-            }
         }
     }
 }

@@ -18,6 +18,7 @@ using System;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Model.Names.CSharp;
+using KaVE.Commons.TestUtils.Model.Events;
 using KaVE.Commons.Utils.Collections;
 using KaVE.VS.Achievements.Statistics.Calculators;
 using KaVE.VS.Achievements.Statistics.Listing;
@@ -134,15 +135,19 @@ namespace KaVE.VS.Achievements.Tests.Statistics.Calculators
             Assert.AreEqual(expectedTotalTimeCancelled, actualStatistic.TotalTimeCancelled);
         }
 
-        [TestCase("var", "[value-type-identifier] variablename", 9)]
-        [TestCase("", "set get static [System.Object, mscorlib, 4.0.0.0] [TestProject.Class1, TestProject, 0.0.0.0].Foo()", 3)]
-        [TestCase("Name", "[value-type-identifier] Name.varName", 8)]
-        [TestCase("Gen", "static [System.Collections.Generic.List`1[[T -> System.Int32, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0] [Katas.PrimeFactors, Katas, 1.0.0.0].Generate([System.Int32, mscorlib, 4.0.0.0] i)", 7)]
-        [TestCase("Re", "[TestProject.Tests.RegexTest, TestProject, 0.0.0.0] [TestProject.Tests.RegexTest, TestProject, 0.0.0.0]..ctor()", 9)]
-        [TestCase("Li", "System.Collections.Generic.List`1[[T -> T]], mscorlib, 4.0.0.0", 4)]
-        [TestCase("Co", "get [System.Int32, mscore, 4.0.0.0] [MyClass, MyAssembly, 1.2.3.4].Count", 3)]
-        [TestCase("CodeCompletion.Model.N", "CodeCompletion.Model.Names, 1.0.0.0", 4)]
-        [TestCase("ref", "ref [System.Int32, mscore, 4.0.0.0] referenceParameter", 15)]
+        [TestCase("var", "[value-type-identifier] variablename", 9),
+         TestCase("",
+             "set get static [System.Object, mscorlib, 4.0.0.0] [TestProject.Class1, TestProject, 0.0.0.0].Foo()", 3),
+         TestCase("Name", "[value-type-identifier] Name.varName", 8),
+         TestCase("Gen",
+             "static [System.Collections.Generic.List`1[[T -> System.Int32, mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0] [Katas.PrimeFactors, Katas, 1.0.0.0].Generate([System.Int32, mscorlib, 4.0.0.0] i)",
+             7),
+         TestCase("Re",
+             "[TestProject.Tests.RegexTest, TestProject, 0.0.0.0] [TestProject.Tests.RegexTest, TestProject, 0.0.0.0]..ctor()",
+             9), TestCase("Li", "System.Collections.Generic.List`1[[T -> T]], mscorlib, 4.0.0.0", 4),
+         TestCase("Co", "get [System.Int32, mscore, 4.0.0.0] [MyClass, MyAssembly, 1.2.3.4].Count", 3),
+         TestCase("CodeCompletion.Model.N", "CodeCompletion.Model.Names, 1.0.0.0", 4),
+         TestCase("ref", "ref [System.Int32, mscore, 4.0.0.0] referenceParameter", 15)]
         public void ShouldCalculateSavedKeystrokesCorrectly(string prefix,
             string fullIdentifier,
             int expectedTotal)
@@ -166,7 +171,7 @@ namespace KaVE.VS.Achievements.Tests.Statistics.Calculators
         [Test]
         public void EventCallWithWrongEventTypeExceptionHandlingTest()
         {
-            Publish(new StatisticCalculatorTest.TestEvent());
+            Publish(new TestIDEEvent());
 
             ListingMock.Verify(l => l.Update(It.IsAny<IStatistic>()), Times.Never);
         }

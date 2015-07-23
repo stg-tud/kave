@@ -255,6 +255,7 @@
     <Compile Include="Achievements\BaseClasses\CalculatorTypes\IntegerStagedAchievementCalculatorTest.cs" />
     <Compile Include="Achievements\BaseClasses\CalculatorTypes\StagedAchievementCalculatorTest.cs" />
     <Compile Include="Achievements\Listing\AchievementListingTest.cs" />
+    <Compile Include="TestUtils\TestStatistic.cs" />
     <Compile Include="Util\FixedSizePriorityQueueTest.cs" />
     <Compile Include="LogCollector\LogReplayTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -294,6 +295,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\KaVE.Commons.TestUtils\KaVE.Commons.TestUtils.csproj">
+      <Project>{126607db-1f9f-4e2c-a39e-7b707874eafc}</Project>
+      <Name>KaVE.Commons.TestUtils</Name>
+    </ProjectReference>
     <ProjectReference Include="..\KaVE.VS.Achievements\KaVE.VS.Achievements.csproj">
       <Project>{77f8f9c7-17d7-46a2-a91a-d18d034e0607}</Project>
       <Name>KaVE.Achievements</Name>
