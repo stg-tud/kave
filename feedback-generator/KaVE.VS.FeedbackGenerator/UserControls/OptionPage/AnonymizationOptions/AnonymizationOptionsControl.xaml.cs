@@ -24,13 +24,13 @@ using KaVE.VS.FeedbackGenerator.Settings.ExportSettingsSuite;
 using KaVE.VS.FeedbackGenerator.UserControls.Anonymization;
 using KaVEISettingsStore = KaVE.RS.Commons.Settings.ISettingsStore;
 
-namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage
+namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.AnonymizationOptions
 {
     [OptionsPage(PID, "Anonymization Settings", typeof (OptionsThemedIcons.ExportLayer),
         ParentId = RootOptionPage.PID, Sequence = 2.0)]
     public partial class AnonymizationOptionsControl : IOptionsPage
     {
-        private const string PID = "KaVE.VS.FeedbackGenerator.UserControls.OptionPage.AnonymizatioOptionsControl";
+        private const string PID = "KaVE.VS.FeedbackGenerator.UserControls.OptionPage.AnonymizationOptions.AnonymizationOptionsControl";
 
         private readonly Lifetime _lifetime;
         private readonly OptionsSettingsSmartContext _ctx;
@@ -45,8 +45,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage
 
         public AnonymizationOptionsControl(Lifetime lifetime,
             OptionsSettingsSmartContext ctx,
-            KaVEISettingsStore settingsStore,
-            OptionPageViewModel optionPageViewModel)
+            KaVEISettingsStore settingsStore)
         {
             _lifetime = lifetime;
             _ctx = ctx;
@@ -56,9 +55,9 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage
 
             _exportSettings = settingsStore.GetSettings<ExportSettings>();
 
-            optionPageViewModel.AnonymizationContext = new AnonymizationContext(_exportSettings);
+            var anonymizationContext = new AnonymizationContext(_exportSettings);
 
-            DataContext = optionPageViewModel;
+            DataContext = anonymizationContext;
 
             if (_ctx != null)
             {

@@ -16,41 +16,35 @@
 
 using System.Windows;
 using System.Windows.Controls;
-using Avalon.Windows.Dialogs;
 using JetBrains.ActionManagement;
 using JetBrains.Application.Settings;
 using JetBrains.DataFlow;
 using JetBrains.ReSharper.Features.Navigation.Resources;
 using JetBrains.UI.CrossFramework;
 using JetBrains.UI.Options;
-using KaVE.Commons.Utils;
-using KaVE.RS.Commons.Settings.KaVE.RS.Commons.Settings;
 using KaVE.VS.FeedbackGenerator.Settings;
 using KaVE.VS.FeedbackGenerator.Settings.ExportSettingsSuite;
 using KaVEISettingsStore = KaVE.RS.Commons.Settings.ISettingsStore;
 using MessageBox = JetBrains.Util.MessageBox;
 
-namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage
+namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.GeneralOptions
 {
     [OptionsPage(PID, "General Settings", typeof (FeaturesFindingThemedIcons.SearchOptionsPage),
         ParentId = RootOptionPage.PID, Sequence = 1.0)]
     public partial class GeneralOptionsControl : IOptionsPage
     {
-        private const string PID = "KaVE.VS.FeedbackGenerator.UserControls.OptionPage.GeneralOptionsControl";
+        private const string PID = "KaVE.VS.FeedbackGenerator.UserControls.OptionPage.GeneralOptions.GeneralOptionsControl";
 
         private readonly Lifetime _lifetime;
         private readonly OptionsSettingsSmartContext _ctx;
         private readonly IActionManager _actionManager;
         private readonly KaVEISettingsStore _settingsStore;
         private readonly ExportSettings _exportSettings;
-        private readonly ModelStoreSettings _modelStoreSettings;
 
         public GeneralOptionsControl(Lifetime lifetime,
             OptionsSettingsSmartContext ctx,
             IActionManager actionManager,
-            KaVEISettingsStore settingsStore,
-            IRandomizationUtils rnd,
-            OptionPageViewModel optionPageViewModel)
+            KaVEISettingsStore settingsStore)
         {
             _lifetime = lifetime;
             _ctx = ctx;
@@ -60,29 +54,18 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage
             InitializeComponent();
 
             _exportSettings = settingsStore.GetSettings<ExportSettings>();
-            _modelStoreSettings = settingsStore.GetSettings<ModelStoreSettings>();
 
-            optionPageViewModel.ModelStoreSettings = _modelStoreSettings;
-            optionPageViewModel.ExportSettings = _exportSettings;
-
-            DataContext = optionPageViewModel;
+            DataContext = new GeneralOptionsViewModel()
+            {
+                ExportSettings = _exportSettings,
+            };
 
             if (_ctx != null)
             {
                 BindToGeneralChanges();
             }
         }
-
-        private void OnBrowse(object sender, RoutedEventArgs e)
-        {
-            var dialog = new FolderBrowserDialog();
-            var result = dialog.ShowDialog();
-            if (result.HasValue && result.Value)
-            {
-                ModelStorePathTextBox.Text = dialog.SelectedPath;
-            }
-        }
-
+        
         private void OnReset(object sender, RoutedEventArgs e)
         {
             var result = MessageBox.ShowYesNo(Properties.SessionManager.Option_SettingsCleaner_Dialog);
@@ -102,7 +85,6 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage
         {
             // TODO: validation
             _settingsStore.SetSettings(_exportSettings);
-            _settingsStore.SetSettings(_modelStoreSettings);
             return true;
         }
 
@@ -134,12 +116,6 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage
                 _lifetime,
                 (ExportSettings s) => s.WebAccessPrefix,
                 WebPraefixTextBox,
-                TextBox.TextProperty);
-
-            _ctx.SetBinding(
-                _lifetime,
-                (ModelStoreSettings s) => s.ModelStorePath,
-                ModelStorePathTextBox,
                 TextBox.TextProperty);
         }
 

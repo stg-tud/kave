@@ -27,17 +27,18 @@ using KaVE.Commons.Model.Events.UserProfiles;
 using KaVE.Commons.Utils;
 using KaVE.VS.FeedbackGenerator.Settings;
 using KaVE.VS.FeedbackGenerator.Settings.ExportSettingsSuite;
+using KaVE.VS.FeedbackGenerator.UserControls.OptionPage.GeneralOptions;
 using KaVE.VS.FeedbackGenerator.UserControls.UserProfile;
 using KaVEISettingsStore = KaVE.RS.Commons.Settings.ISettingsStore;
 
 
-namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage
+namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UserProfileOptions
 {
     [OptionsPage(PID, "User Profile", typeof (OptionsThemedIcons.EnvironmentGeneral),
         ParentId = RootOptionPage.PID, Sequence = 3.0)]
     public partial class UserProfileOptionsControl : IOptionsPage
     {
-        private const string PID = "KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UserProfileOptionsControl";
+        private const string PID = "KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UserProfileOptions.UserProfileOptionsControl";
 
         private readonly Lifetime _lifetime;
         private readonly OptionsSettingsSmartContext _ctx;
@@ -48,7 +49,6 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage
         public UserProfileOptionsControl(Lifetime lifetime,
             OptionsSettingsSmartContext ctx,
             KaVEISettingsStore settingsStore,
-            OptionPageViewModel optionPageViewModel,
             IRandomizationUtils rnd)
         {
             _lifetime = lifetime;
@@ -63,9 +63,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage
             _userProfileContext = new UserProfileContext(exportSettings, _userProfileSettings, rnd);
             _userProfileContext.PropertyChanged += UserProfileContextOnPropertyChanged;
 
-            optionPageViewModel.UserProfileContext = _userProfileContext;
-
-            DataContext = optionPageViewModel;
+            DataContext = _userProfileContext;
             
             if (_ctx != null)
             {
@@ -75,7 +73,6 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage
 
         public bool OnOk()
         {
-            // TODO: validation
             _settingsStore.SetSettings(_userProfileSettings);
             return true;
         }

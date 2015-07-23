@@ -15,17 +15,12 @@
  */
 
 using System.Globalization;
-using System.IO;
-using JetBrains.Application;
-using KaVE.RS.Commons.Settings.KaVE.RS.Commons.Settings;
 using KaVE.VS.FeedbackGenerator.Interactivity;
 using KaVE.VS.FeedbackGenerator.SessionManager;
 using KaVE.VS.FeedbackGenerator.Settings.ExportSettingsSuite;
-using KaVE.VS.FeedbackGenerator.UserControls.Anonymization;
-using KaVE.VS.FeedbackGenerator.UserControls.UserProfile;
 using KaVE.VS.FeedbackGenerator.UserControls.ValidationRules;
 
-namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage
+namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.GeneralOptions
 {
     public class UploadValidation
     {
@@ -43,24 +38,8 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage
             get { return IsUrlValid && IsPrefixValid; }
         }
     }
-
-    public class ModelStoreValidation
-    {
-        public ModelStoreValidation(bool isPathValid)
-        {
-            IsPathValid = isPathValid;
-        }
-
-        public bool IsPathValid { get; private set; }
-
-        public bool IsValidModelStoreInformation
-        {
-            get { return IsPathValid; }
-        }
-    }
-
-    [ShellComponent]
-    public class OptionPageViewModel : ViewModelBase<OptionPageViewModel>
+    
+    public class GeneralOptionsViewModel : ViewModelBase<GeneralOptionsViewModel>
     {
         private readonly InteractionRequest<Notification> _errorNotificationRequest;
         private readonly UploadUrlValidationRule _uploadUrlValidationRule;
@@ -73,10 +52,6 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage
 
         public ExportSettings ExportSettings { get; set; }
 
-        public UserProfileContext UserProfileContext { get; set; }
-
-        public ModelStoreSettings ModelStoreSettings { get; set; }
-
         public string UploadUrl
         {
             get { return ExportSettings.UploadUrl; }
@@ -88,20 +63,8 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage
             get { return ExportSettings.WebAccessPrefix; }
             set { ExportSettings.WebAccessPrefix = value; }
         }
-
-        public string ModelPath
-        {
-            get { return ModelStoreSettings.ModelStorePath; }
-            set
-            {
-                ModelStoreSettings.ModelStorePath = value;
-                RaisePropertyChanged(self => self.ModelPath);
-            }
-        }
-
-        public AnonymizationContext AnonymizationContext { get; set; }
-
-        public OptionPageViewModel()
+        
+        public GeneralOptionsViewModel()
         {
             _errorNotificationRequest = new InteractionRequest<Notification>();
             _uploadUrlValidationRule = new UploadUrlValidationRule();
@@ -130,29 +93,6 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage
                     Message = message
                 });
         }
-
-        public ModelStoreValidation ValidateModelStoreInformation(string path)
-        {
-            var pathIsValid = ValidatePath(path);
-
-            if (!pathIsValid)
-            {
-                ShowInformationInvalidMessage(Properties.SessionManager.OptionPageInvalidModelStorePathMessage);
-            }
-
-            return new ModelStoreValidation(pathIsValid);
-        }
-
-        private static bool ValidatePath(string path)
-        {
-            try
-            {
-                return new DirectoryInfo(path).Exists;
-            }
-            catch
-            {
-                return false;
-            }
-        }
+        
     }
 }

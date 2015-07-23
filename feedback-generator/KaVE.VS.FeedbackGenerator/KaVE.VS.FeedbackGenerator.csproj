@@ -246,7 +246,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>AnonymizationMessages.resx</DependentUpon>
     </Compile>
-    <Compile Include="UserControls\OptionPage\AnonymizationOptionsControl.xaml.cs">
+    <Compile Include="UserControls\OptionPage\AnonymizationOptions\AnonymizationOptionsControl.xaml.cs">
       <DependentUpon>AnonymizationOptionsControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="UserControls\OptionPage\RootOptionPage.cs" />
@@ -255,7 +255,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>OptionPageMessages.resx</DependentUpon>
     </Compile>
-    <Compile Include="UserControls\OptionPage\UserProfileOptionsControl.xaml.cs">
+    <Compile Include="UserControls\OptionPage\UsageModelOptions\UsageModelOptionsControl.xaml.cs">
+      <DependentUpon>UsageModelOptionsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\OptionPage\UsageModelOptions\UsageModelOptionsViewModel.cs" />
+    <Compile Include="UserControls\OptionPage\UserProfileOptions\UserProfileOptionsControl.xaml.cs">
       <DependentUpon>UserProfileOptionsControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="UserControls\UploadWizard\AnonymizationWindow.xaml.cs">
@@ -282,7 +286,7 @@
     </Compile>
     <Compile Include="UserControls\ValueConverter\EnumToBooleanConverter.cs" />
     <Compile Include="Utils\Export\Exporter.cs" />
-    <Compile Include="UserControls\OptionPage\OptionPageViewModel.cs" />
+    <Compile Include="UserControls\OptionPage\GeneralOptions\GeneralOptionsViewModel.cs" />
     <Compile Include="SessionManager\Presentation\SortableListView.cs" />
     <Compile Include="SessionManager\Presentation\UriValidation.cs" />
     <Compile Include="UserControls\UserProfile\CheckedUserProfileControl.xaml.cs">
@@ -358,7 +362,7 @@
     </Compile>
     <Compile Include="SessionManager\Presentation\SessionManagerWindowDescriptor.cs" />
     <Compile Include="SessionManager\Presentation\SessionManagerWindowRegistrar.cs" />
-    <Compile Include="UserControls\OptionPage\GeneralOptionsControl.xaml.cs">
+    <Compile Include="UserControls\OptionPage\GeneralOptions\GeneralOptionsControl.xaml.cs">
       <DependentUpon>GeneralOptionsControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="SessionManager\SessionViewModel.cs" />
@@ -447,11 +451,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UserControls\OptionPage\AnonymizationOptionsControl.xaml">
+    <Page Include="UserControls\OptionPage\AnonymizationOptions\AnonymizationOptionsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UserControls\OptionPage\UserProfileOptionsControl.xaml">
+    <Page Include="UserControls\OptionPage\UsageModelOptions\UsageModelOptionsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\OptionPage\UserProfileOptions\UserProfileOptionsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -483,7 +491,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="UserControls\OptionPage\GeneralOptionsControl.xaml">
+    <Page Include="UserControls\OptionPage\GeneralOptions\GeneralOptionsControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
