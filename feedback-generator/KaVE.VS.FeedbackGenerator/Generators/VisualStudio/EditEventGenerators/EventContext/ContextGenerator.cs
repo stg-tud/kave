@@ -25,6 +25,7 @@ using JetBrains.ReSharper.Feature.Services.CodeCompletion;
 using JetBrains.ReSharper.Feature.Services.Util;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
+using JetBrains.ReSharper.Resources.Shell;
 using JetBrains.TextControl;
 using JetBrains.Util;
 using KaVE.Commons.Model.Events.CompletionEvents;
@@ -82,7 +83,8 @@ namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio.EditEventGenerators.
             var document = GetDocument(filePath);
             if (document != null)
             {
-                ComputeNewContext(document);
+                // TODO RS9
+                //ComputeNewContext(document);
             }
         }
 
@@ -102,18 +104,31 @@ namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio.EditEventGenerators.
 
         public void ComputeNewContext([NotNull] IDocument document)
         {
-            var node = FindCurrentTreeNode(document);
-            if (node == null)
+            var node = FindTreeNode(document);
+            if (node != null)
             {
-                return;
+                RunAnalysis(node);
             }
+        }
 
-            if (!HasSourroundingMethod(node))
-            {
-                node = FindSourroundingClassDeclaration(node);
-            }
+        private ITreeNode FindTreeNode(IDocument document)
+        {
+            ITreeNode node = null;
+            ReadLockCookie.Execute(
+                () =>
+                {
+                    node = FindCurrentTreeNode(document);
+                    if (node == null)
+                    {
+                        return;
+                    }
 
-            RunAnalysis(node);
+                    if (!HasSourroundingMethod(node))
+                    {
+                        node = FindSourroundingClassDeclaration(node);
+                    }
+                });
+            return node;
         }
 
         private ITreeNode FindCurrentTreeNode(IDocument document)

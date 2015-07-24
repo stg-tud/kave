@@ -26,7 +26,7 @@ echo Building KaVE Feedback Generator @ %TIMESTAMP%...
 set TARGET=<select local folder>
 
 ::C:\Users\Sven\Downloads\
-nuget.exe pack KaVE.Project.0.0.1-alpha1.nuspec -Verbosity detailed -NoPackageAnalysis -Version 0.0.1-v%TIMESTAMP%
+nuget.exe pack KaVE.Project.0.0.1-alpha1.nuspec -Verbosity detailed -NoPackageAnalysis -Version 1.0.0-v%TIMESTAMP%
 
 
 echo Deploying into: %TARGET%

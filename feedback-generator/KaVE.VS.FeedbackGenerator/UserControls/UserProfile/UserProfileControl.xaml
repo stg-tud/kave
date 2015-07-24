@@ -32,7 +32,6 @@ limitations under the License.
     <StackPanel>
         <TextBlock TextWrapping="Wrap" Text="{x:Static userProfile:UserProfileMessages.Intro}" />
 
-
         <CheckBox Name="IsProvidingProfileCheckBox"
                   Content="Yes, I would like to help and provide additional information."
                   IsChecked="{Binding Path=IsProvidingProfile, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -121,9 +120,9 @@ limitations under the License.
                           IsChecked="{Binding Path=TeamsLarge, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
                 <!-- %%%%%-->
-                <TextBlock TextWrapping="Wrap" Margin="0,15,0,5" FontSize="12" FontStyle="Italic">
-                    Code Reviews?
-                </TextBlock>
+                <TextBlock TextWrapping="Wrap" Margin="0,15,0,5" FontSize="12" FontStyle="Italic"
+                           Text="{x:Static userProfile:UserProfileMessages.CodeReviews_Question}" />
+
                 <ComboBox ItemsSource="{Binding YesNoOptions}"
                           SelectedItem="{Binding CodeReviews}"
                           Name="CodeReviewComboBox">

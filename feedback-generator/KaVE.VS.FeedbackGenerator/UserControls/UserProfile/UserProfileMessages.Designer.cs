@@ -22,7 +22,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UserProfile {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class UserProfileMessages {
+    public class UserProfileMessages {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -36,7 +36,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UserProfile {
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("KaVE.VS.FeedbackGenerator.UserControls.UserProfile.UserProfileMessages", typeof(UserProfileMessages).Assembly);
@@ -51,7 +51,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UserProfile {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -61,9 +61,18 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UserProfile {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to If you work in a team, did you regularly participate in structured code reviews in the last year to provide and receive feedback about source code?.
+        /// </summary>
+        public static string CodeReviews_Question {
+            get {
+                return ResourceManager.GetString("CodeReviews_Question", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to We would like to learn more about our users, please help us by answering several simple questions about yourself.You can leave out any question, if you do not want to answer it. Your answers will be attached to your uploaded feedback..
         /// </summary>
-        internal static string Intro {
+        public static string Intro {
             get {
                 return ResourceManager.GetString("Intro", resourceCulture);
             }
@@ -72,7 +81,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UserProfile {
         /// <summary>
         ///   Looks up a localized string similar to On which kind of projects did you regularly work over the last year?.
         /// </summary>
-        internal static string Projects_Question {
+        public static string Projects_Question {
             get {
                 return ResourceManager.GetString("Projects_Question", resourceCulture);
             }
@@ -81,7 +90,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UserProfile {
         /// <summary>
         ///   Looks up a localized string similar to Assignments from classes or online courses.
         /// </summary>
-        internal static string ProjectsCourses {
+        public static string ProjectsCourses {
             get {
                 return ResourceManager.GetString("ProjectsCourses", resourceCulture);
             }
@@ -90,7 +99,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UserProfile {
         /// <summary>
         ///   Looks up a localized string similar to Personal projects used for learning and exploration that might be publicly available, but exist mainly for personal use.
         /// </summary>
-        internal static string ProjectsPersonal {
+        public static string ProjectsPersonal {
             get {
                 return ResourceManager.GetString("ProjectsPersonal", resourceCulture);
             }
@@ -99,7 +108,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UserProfile {
         /// <summary>
         ///   Looks up a localized string similar to Large open-source or commercial projects with &gt;=50,000 lines of code that are used by others.
         /// </summary>
-        internal static string ProjectsSharedLarge {
+        public static string ProjectsSharedLarge {
             get {
                 return ResourceManager.GetString("ProjectsSharedLarge", resourceCulture);
             }
@@ -108,7 +117,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UserProfile {
         /// <summary>
         ///   Looks up a localized string similar to Medium open-source or commercial projects with &gt;2,000 and &lt;50,000 lines of code that are used by others.
         /// </summary>
-        internal static string ProjectsSharedMedium {
+        public static string ProjectsSharedMedium {
             get {
                 return ResourceManager.GetString("ProjectsSharedMedium", resourceCulture);
             }
@@ -117,7 +126,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UserProfile {
         /// <summary>
         ///   Looks up a localized string similar to Small open-source or commercial projects with &lt;=2,000 lines of code that are used by others.
         /// </summary>
-        internal static string ProjectsSharedSmall {
+        public static string ProjectsSharedSmall {
             get {
                 return ResourceManager.GetString("ProjectsSharedSmall", resourceCulture);
             }
@@ -126,7 +135,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UserProfile {
         /// <summary>
         ///   Looks up a localized string similar to In which kind of teams did you regularly work on a project in the last year:.
         /// </summary>
-        internal static string Teams_Question {
+        public static string Teams_Question {
             get {
                 return ResourceManager.GetString("Teams_Question", resourceCulture);
             }
@@ -135,7 +144,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UserProfile {
         /// <summary>
         ///   Looks up a localized string similar to Large teams (&gt;=10 regular committers in the last year).
         /// </summary>
-        internal static string TeamsLarge {
+        public static string TeamsLarge {
             get {
                 return ResourceManager.GetString("TeamsLarge", resourceCulture);
             }
@@ -144,7 +153,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UserProfile {
         /// <summary>
         ///   Looks up a localized string similar to Medium teams (&gt;3 and &lt;10 regular committers in the last year).
         /// </summary>
-        internal static string TeamsMedium {
+        public static string TeamsMedium {
             get {
                 return ResourceManager.GetString("TeamsMedium", resourceCulture);
             }
@@ -153,7 +162,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UserProfile {
         /// <summary>
         ///   Looks up a localized string similar to Small teams (&lt;=3 regular committers in the last year).
         /// </summary>
-        internal static string TeamsSmall {
+        public static string TeamsSmall {
             get {
                 return ResourceManager.GetString("TeamsSmall", resourceCulture);
             }
@@ -162,7 +171,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UserProfile {
         /// <summary>
         ///   Looks up a localized string similar to Projects with me as the only regular committer.
         /// </summary>
-        internal static string TeamsSolo {
+        public static string TeamsSolo {
             get {
                 return ResourceManager.GetString("TeamsSolo", resourceCulture);
             }

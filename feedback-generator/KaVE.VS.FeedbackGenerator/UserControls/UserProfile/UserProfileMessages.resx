@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="CodeReviews_Question" xml:space="preserve">
+    <value>If you work in a team, did you regularly participate in structured code reviews in the last year to provide and receive feedback about source code?</value>
+  </data>
   <data name="Intro" xml:space="preserve">
     <value>We would like to learn more about our users, please help us by answering several simple questions about yourself.You can leave out any question, if you do not want to answer it. Your answers will be attached to your uploaded feedback.</value>
   </data>

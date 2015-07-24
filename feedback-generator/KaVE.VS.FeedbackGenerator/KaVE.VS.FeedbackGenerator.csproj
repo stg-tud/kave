@@ -424,7 +424,7 @@
       <LastGenOutput>UploadWizardMessages.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="UserControls\UserProfile\UserProfileMessages.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>UserProfileMessages.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
