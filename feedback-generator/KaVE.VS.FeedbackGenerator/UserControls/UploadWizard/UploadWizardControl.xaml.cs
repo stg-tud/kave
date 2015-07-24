@@ -54,32 +54,24 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UploadWizard
 
         private void On_Review_Click(object sender, RoutedEventArgs e)
         {
-            StoreSettings();
             Close();
             Registry.GetComponent<ActionExecutor>().ExecuteActionGuarded<SessionManagerWindowAction>();
         }
 
-        private void StoreSettings()
-        {
-            _settingsStore.SetSettings(MyDataContext.AnonymizationSettings);
-            _settingsStore.SetSettings(MyDataContext.UserProfileSettings);
-        }
-
         private void UploadButtonClicked(object sender, RoutedEventArgs e)
         {
-            ExportAndUpdateSettings(ExportType.HttpUpload);
+            Export(ExportType.HttpUpload);
             // keep window open until processing finshes (see OnViewModelPropertyChanged)
         }
 
         private void ZipButtonClicked(object sender, RoutedEventArgs e)
         {
-            ExportAndUpdateSettings(ExportType.ZipFile);
+            Export(ExportType.ZipFile);
             // keep window open until processing finshes (see OnViewModelPropertyChanged)
         }
 
-        private void ExportAndUpdateSettings(ExportType exportType)
+        private void Export(ExportType exportType)
         {
-            StoreSettings();
             MyDataContext.Export(exportType);
         }
 
@@ -104,13 +96,13 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UploadWizard
 
         private void On_UserProfile_Click(object sender, RoutedEventArgs e)
         {
-            var userProfileWindow = new UserProfileWindow(MyDataContext);
+            var userProfileWindow = new UserProfileWindow(MyDataContext,_settingsStore);
             userProfileWindow.Show();
         }
 
         private void On_Anonymization_Click(object sender, RoutedEventArgs e)
         {
-            var anonymizationWindow = new AnonymizationWindow(MyDataContext);
+            var anonymizationWindow = new AnonymizationWindow(MyDataContext,_settingsStore);
             anonymizationWindow.Show();
         }
     }

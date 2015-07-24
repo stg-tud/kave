@@ -15,19 +15,32 @@
  */
 
 using System.Windows;
+using KaVE.RS.Commons.Settings;
+using KaVE.VS.FeedbackGenerator.Settings;
 
 namespace KaVE.VS.FeedbackGenerator.UserControls.UploadWizard
 {
     public partial class UserProfileWindow : Window
     {
-        public UserProfileWindow(UploadWizardContext dataContext)
-        {
-            InitializeComponent();
+        private readonly ISettingsStore _settingsStore;
+        private readonly UploadWizardContext _uploadWizardContext;
 
-            DataContext = dataContext;
+        public UserProfileWindow(UploadWizardContext uploadWizardContext, ISettingsStore settingsStore)
+        {
+            _settingsStore = settingsStore;
+            _uploadWizardContext = uploadWizardContext;
+            InitializeComponent();
+                
+            DataContext = uploadWizardContext;
         }
 
         private void On_Ok_Click(object sender, RoutedEventArgs e)
+        {
+            _settingsStore.SetSettings(_uploadWizardContext.UserProfileSettings);
+            Close();
+        }
+
+        private void On_Abort_Click(object sender, RoutedEventArgs e)
         {
             Close();
         }

@@ -152,7 +152,10 @@ Thank You!</value>
   <data name="UserProfileWindow_Title" xml:space="preserve">
     <value>User Profile Settings</value>
   </data>
-  <data name="WindowCloseButton_Content" xml:space="preserve">
-    <value>Close</value>
+  <data name="WindowAbortButton" xml:space="preserve">
+    <value>Abort</value>
+  </data>
+  <data name="WindowOkButton" xml:space="preserve">
+    <value>OK</value>
   </data>
 </root>

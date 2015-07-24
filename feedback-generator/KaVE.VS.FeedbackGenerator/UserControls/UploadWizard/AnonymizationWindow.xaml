@@ -32,7 +32,12 @@ limitations under the License.
         <anonymization:AnonymizationControl x:Name="AnonymizationControl"
                           Margin="0,0,0,10"
                           DataContext="{Binding AnonymizationContext}" />
-        <Button Click="On_Close_Click" HorizontalAlignment="Center" Margin="0,5,0,5" Content="{x:Static uploadWizard:UploadWizardMessages.WindowCloseButton_Content}" MinWidth="93"/>
+        <DockPanel HorizontalAlignment="Right">
+          <Button Click="On_Ok_Click" HorizontalAlignment="Right" Margin="5"
+                  Content="{x:Static uploadWizard:UploadWizardMessages.WindowOkButton}" MinWidth="93" />
+          <Button Click="On_Abort_Click" HorizontalAlignment="Right" Margin="5"
+                  Content="{x:Static uploadWizard:UploadWizardMessages.WindowAbortButton}" MinWidth="93" />
+        </DockPanel>
       </StackPanel>
     </Grid>
 </Window>

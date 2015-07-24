@@ -148,11 +148,20 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UploadWizard {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Close.
+        ///   Looks up a localized string similar to Abort.
         /// </summary>
-        public static string WindowCloseButton_Content {
+        public static string WindowAbortButton {
             get {
-                return ResourceManager.GetString("WindowCloseButton_Content", resourceCulture);
+                return ResourceManager.GetString("WindowAbortButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to OK.
+        /// </summary>
+        public static string WindowOkButton {
+            get {
+                return ResourceManager.GetString("WindowOkButton", resourceCulture);
             }
         }
     }

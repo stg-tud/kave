@@ -15,19 +15,31 @@
  */
 
 using System.Windows;
+using KaVE.RS.Commons.Settings;
 
 namespace KaVE.VS.FeedbackGenerator.UserControls.UploadWizard
 {
     public partial class AnonymizationWindow : Window
     {
-        public AnonymizationWindow(UploadWizardContext dataContext)
+        private readonly ISettingsStore _settingsStore;
+        private readonly UploadWizardContext _uploadWizardContext;
+
+        public AnonymizationWindow(UploadWizardContext uploadWizardContext, ISettingsStore settingsStore)
         {
+            _settingsStore = settingsStore;
+            _uploadWizardContext = uploadWizardContext;
             InitializeComponent();
 
-            DataContext = dataContext;
+            DataContext = uploadWizardContext;
         }
 
-        private void On_Close_Click(object sender, RoutedEventArgs e)
+        private void On_Ok_Click(object sender, RoutedEventArgs e)
+        {
+            _settingsStore.SetSettings(_uploadWizardContext.AnonymizationSettings);
+            Close();
+        }
+
+        private void On_Abort_Click(object sender, RoutedEventArgs e)
         {
             Close();
         }
