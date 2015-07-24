@@ -25,7 +25,6 @@ using JetBrains.ReSharper.Feature.Services.CodeCompletion;
 using JetBrains.ReSharper.Feature.Services.Util;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
-using JetBrains.ReSharper.Resources.Shell;
 using JetBrains.TextControl;
 using JetBrains.Util;
 using KaVE.Commons.Model.Events.CompletionEvents;
@@ -49,8 +48,6 @@ namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio.EditEventGenerators.
             IntellisenseManager intellisenseManager,
             ILogger logger)
         {
-            CurrentContext = new Context();
-
             _textControlManager = textControlManager;
             _documentManager = intellisenseManager.DocumentManager;
             _logger = logger;
@@ -80,73 +77,72 @@ namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio.EditEventGenerators.
 
         private void ComputeNewContextByFilePath([NotNull] string filePath)
         {
+            CurrentContext = new Context();
+
+            var document = GetDocument(filePath);
+            if (document != null)
+            {
+                ComputeNewContext(document);
+            }
+        }
+
+        private IDocument GetDocument(string filePath)
+        {
             try
             {
-                ComputeNewContext(_documentManager.GetOrCreateDocument(FileSystemPath.Parse(filePath)));
+                var path = FileSystemPath.Parse(filePath);
+                return _documentManager.GetOrCreateDocument(path);
             }
             catch (Exception exception)
             {
-                _logger.Error(exception, "parsing file path for generating new context failed");
+                _logger.Error(exception, "failed to access the current document");
             }
+            return null;
         }
 
         public void ComputeNewContext([NotNull] IDocument document)
         {
-            ReadLockCookie.Execute(() => { ComputeNewContextGuarded(document); });
+            var node = FindCurrentTreeNode(document);
+            if (node == null)
+            {
+                return;
+            }
+
+            if (!HasSourroundingMethod(node))
+            {
+                node = FindSourroundingClassDeclaration(node);
+            }
+
+            RunAnalysis(node);
         }
 
-        private void ComputeNewContextGuarded(IDocument document)
+        private ITreeNode FindCurrentTreeNode(IDocument document)
         {
             var textControl =
                 _textControlManager.TextControls.FirstOrDefault(
                     tc => tc.Document.Moniker.Equals(document.Moniker));
-
-            if (textControl != null)
-            {
-                var psiFile = TextControlToPsi.GetElement<ITreeNode>(_solution, textControl);
-                if (psiFile != null)
-                {
-                    RunAnalysis(psiFile);
-
-                    if (CurrentContext.Equals(new Context()))
-                    {
-                        FallbackAnalysisOnClassDeclaration(psiFile);
-                    }
-
-                    return;
-                }
-            }
-
-            CurrentContext = new Context();
+            return textControl == null ? null : TextControlToPsi.GetElement<ITreeNode>(_solution, textControl);
         }
 
-        private void FallbackAnalysisOnClassDeclaration(ITreeNode psiFile)
+        private static bool HasSourroundingMethod(ITreeNode node)
         {
-            var classDeclaration = psiFile.GetContainingNode<IClassDeclaration>(true);
-            if (classDeclaration != null)
-            {
-                RunAnalysis(classDeclaration);
-            }
+            var method = node.GetContainingNode<IMethodDeclaration>(true);
+            return method != null;
+        }
+
+        private static IClassDeclaration FindSourroundingClassDeclaration(ITreeNode psiFile)
+        {
+            return psiFile.GetContainingNode<IClassDeclaration>(true);
         }
 
         private void RunAnalysis(ITreeNode node)
         {
-            ContextAnalysis.AnalyseAsync(node, _logger, OnSuccess, OnFailure, OnTimeout);
-        }
-
-        private void OnSuccess(Context context)
-        {
-            CurrentContext = context;
-        }
-
-        private void OnFailure(Exception e)
-        {
-            CurrentContext = new Context();
-        }
-
-        private void OnTimeout()
-        {
-            CurrentContext = new Context();
+            ContextAnalysis.AnalyseAsync(
+                node,
+                _logger,
+                context => { CurrentContext = context; },
+                delegate { },
+                delegate { });
         }
     }
 }
