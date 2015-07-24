@@ -256,6 +256,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>UploadWizardMessages.resx</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\UserProfile\UserProfileMessages.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>UserProfileMessages.resx</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\ValueConverter\EnumLocalizationConverter.cs" />
     <Compile Include="Properties\EnumLocalization.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -417,6 +422,10 @@
     <EmbeddedResource Include="UserControls\UploadWizard\UploadWizardMessages.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>UploadWizardMessages.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\UserProfile\UserProfileMessages.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>UserProfileMessages.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

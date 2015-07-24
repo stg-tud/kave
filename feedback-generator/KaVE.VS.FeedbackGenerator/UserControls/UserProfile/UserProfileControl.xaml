@@ -18,6 +18,7 @@ limitations under the License.
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:userProfile="clr-namespace:KaVE.VS.FeedbackGenerator.UserControls.UserProfile"
              xmlns:model="clr-namespace:KaVE.Commons.Model.Events.UserProfiles;assembly=KaVE.Commons"
              xmlns:converters="clr-namespace:KaVE.VS.FeedbackGenerator.UserControls.ValueConverter"
              mc:Ignorable="d"
@@ -29,11 +30,8 @@ limitations under the License.
     </UserControl.Resources>
 
     <StackPanel>
-        <TextBlock TextWrapping="Wrap">
-            We would like to learn more about our users, please help us by answering several simple questions about yourself.
-            You can leave out any question, if you do not want to answer it.
-            Your answers will be attached to your uploaded feedback.
-        </TextBlock>
+        <TextBlock TextWrapping="Wrap" Text="{x:Static userProfile:UserProfileMessages.Intro}" />
+
 
         <CheckBox Name="IsProvidingProfileCheckBox"
                   Content="Yes, I would like to help and provide additional information."
@@ -74,45 +72,52 @@ limitations under the License.
                 </ComboBox>
 
                 <!-- %%%%%-->
-                <TextBlock TextWrapping="Wrap" Margin="0,15,0,5" FontSize="12" FontStyle="Italic">
-                    On which kind of projects did you regularly work over the last year?
-                </TextBlock>
-                <CheckBox VerticalAlignment="Center" Content="Assignments from classes or online courses"
-                          Name="ProjectsCoursesCheckBox"
+                <TextBlock TextWrapping="Wrap" Margin="0,15,0,5" FontSize="12" FontStyle="Italic"
+                           Text="{x:Static userProfile:UserProfileMessages.Projects_Question}" />
+
+                <CheckBox Name="ProjectsCoursesCheckBox"
+                          VerticalAlignment="Center"
+                          Content="{x:Static userProfile:UserProfileMessages.ProjectsCourses}"
                           IsChecked="{Binding Path=ProjectsCourses, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                <CheckBox VerticalAlignment="Center"
-                          Name="ProjectsPersonalCheckBox"
-                          Content="Personal projects used for learning, exploration, or personal use"
+
+                <CheckBox Name="ProjectsPersonalCheckBox"
+                          VerticalAlignment="Center"
+                          Content="{x:Static userProfile:UserProfileMessages.ProjectsPersonal}"
                           IsChecked="{Binding Path=ProjectsPersonal, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                <CheckBox VerticalAlignment="Center" Content="Small projects ?that create value for others? (*)"
-                          Name="ProjectsSharedSmallCheckBox"
+
+                <CheckBox Name="ProjectsSharedSmallCheckBox"
+                          VerticalAlignment="Center"
+                          Content="{x:Static userProfile:UserProfileMessages.ProjectsSharedSmall}"
                           IsChecked="{Binding Path=ProjectsSharedSmall, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                <CheckBox VerticalAlignment="Center" Content="Medium projects ?that create value for others? (*)"
-                          Name="ProjectsSharedMediumCheckBox"
+
+                <CheckBox Name="ProjectsSharedMediumCheckBox"
+                          VerticalAlignment="Center"
+                          Content="{x:Static userProfile:UserProfileMessages.ProjectsSharedMedium}"
                           IsChecked="{Binding Path=ProjectsSharedMedium, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                <CheckBox VerticalAlignment="Center" Content="Large projects that create value for others (*)"
-                          Name="ProjectsSharedLargeCheckBox"
+
+                <CheckBox Name="ProjectsSharedLargeCheckBox"
+                          VerticalAlignment="Center"
+                          Content="{x:Static userProfile:UserProfileMessages.ProjectsSharedLarge}"
                           IsChecked="{Binding Path=ProjectsSharedLarge, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                <TextBlock TextWrapping="Wrap" Margin="0,3,0,0">
-                    (*) This can be both open-source or commercial projects. Use a boundary of 50.000 lines of code to distinguish both.
-                </TextBlock>
 
                 <!-- %%%%%-->
-                <TextBlock TextWrapping="Wrap" Margin="0,15,0,5" FontSize="12" FontStyle="Italic">
-                    In which kind of teams did you regularly work on a project in the last year:
-                </TextBlock>
-                <CheckBox VerticalAlignment="Center" Content="Projects with me as the only regular committer"
-                          Name="TeamsSoloCheckBox"
+                <TextBlock TextWrapping="Wrap" Margin="0,15,0,5" FontSize="12" FontStyle="Italic"
+                           Text="{x:Static userProfile:UserProfileMessages.Projects_Question}" />
+
+                <CheckBox Name="TeamsSoloCheckBox"
+                          VerticalAlignment="Center" Content="{x:Static userProfile:UserProfileMessages.TeamsSolo}"
                           IsChecked="{Binding Path=TeamsSolo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                <CheckBox VerticalAlignment="Center" Content="Small teams (&lt;=3 regular committers in the last year)"
-                          Name="TeamsSmallCheckBox"
+
+                <CheckBox Name="TeamsSmallCheckBox"
+                          VerticalAlignment="Center" Content="{x:Static userProfile:UserProfileMessages.TeamsSmall}"
                           IsChecked="{Binding Path=TeamsSmall, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                <CheckBox VerticalAlignment="Center"
-                          Content="Medium teams (&gt;3 and &lt;10 regular committers in the last year)"
-                          Name="TeamsMediumCheckBox"
+
+                <CheckBox Name="TeamsMediumCheckBox"
+                          VerticalAlignment="Center" Content="{x:Static userProfile:UserProfileMessages.TeamsMedium}"
                           IsChecked="{Binding Path=TeamsMedium, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                <CheckBox VerticalAlignment="Center" Content="Large teams (&gt;10 regular committers in the last year)"
-                          Name="TeamsLargeCheckBox"
+
+                <CheckBox Name="TeamsLargeCheckBox"
+                          VerticalAlignment="Center" Content="{x:Static userProfile:UserProfileMessages.TeamsLarge}"
                           IsChecked="{Binding Path=TeamsLarge, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
                 <!-- %%%%%-->
