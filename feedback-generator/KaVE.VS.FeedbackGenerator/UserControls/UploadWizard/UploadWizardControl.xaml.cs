@@ -61,7 +61,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UploadWizard
 
         private void StoreSettings()
         {
-            _settingsStore.SetSettings(MyDataContext.ExportSettings);
+            _settingsStore.SetSettings(MyDataContext.AnonymizationSettings);
             _settingsStore.SetSettings(MyDataContext.UserProfileSettings);
         }
 

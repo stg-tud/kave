@@ -23,7 +23,7 @@ limitations under the License.
              d:DesignHeight="300" d:DesignWidth="300"
              xmlns:root="clr-namespace:KaVE.VS.FeedbackGenerator"
              xmlns:validationRules="clr-namespace:KaVE.VS.FeedbackGenerator.UserControls.ValidationRules"
-             xmlns:optionPage="clr-namespace:KaVE.VS.FeedbackGenerator.UserControls.OptionPage">
+             xmlns:generalOptions="clr-namespace:KaVE.VS.FeedbackGenerator.UserControls.OptionPage.GeneralOptions">
     <ScrollViewer>
         <StackPanel Margin="5,5,5,5">
             <Grid>
@@ -62,12 +62,14 @@ limitations under the License.
                     </Binding>
                 </TextBox>
             </Grid>
-          
+
             <!-- reset button-->
-            <DockPanel Margin="10,45,10,6">
-                <Button Padding="15,3,15,3" HorizontalAlignment="Right" Click="OnReset"
-                        Content="{x:Static optionPage:OptionPageMessages.Button_Reset}" />
-            </DockPanel>
+            <StackPanel HorizontalAlignment="Right" Margin="10,45,10,6">
+                <Button Padding="15,3,15,3" Click="OnResetSettings"
+                        Content="{x:Static generalOptions:GeneralOptionsMessages.SettingResetButton}" Margin="0,5,0,5" />
+                <Button Padding="15,3,15,3" Click="OnResetFeedback"
+                        Content="{x:Static generalOptions:GeneralOptionsMessages.FeedbackResetButton}" Margin="0,5,0,5" />
+            </StackPanel>
         </StackPanel>
     </ScrollViewer>
 </UserControl>

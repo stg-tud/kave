@@ -15,6 +15,7 @@
  */
 
 using KaVE.Commons.TestUtils.UserControls;
+using KaVE.VS.FeedbackGenerator.Settings;
 using KaVE.VS.FeedbackGenerator.Settings.ExportSettingsSuite;
 using KaVE.VS.FeedbackGenerator.UserControls.Anonymization;
 using NUnit.Framework;
@@ -25,19 +26,19 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.Anonymization
     internal class AnonymizationControlTest : BaseUserControlTest
     {
         private AnonymizationContext _context;
-        private ExportSettings _exportSettings;
+        private AnonymizationSettings _anonymizationSettings;
 
         [SetUp]
         public void SetUp()
         {
-            _exportSettings = new ExportSettings
+            _anonymizationSettings = new AnonymizationSettings
             {
                 RemoveStartTimes = false,
                 RemoveDurations = false,
                 RemoveSessionIDs = false,
                 RemoveCodeNames = false
             };
-            _context = new AnonymizationContext(_exportSettings);
+            _context = new AnonymizationContext(_anonymizationSettings);
         }
 
         public AnonymizationControl OpenWindow()
@@ -58,10 +59,10 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.Anonymization
         [Test]
         public void CheckboxesReflectContext_Activated()
         {
-            _exportSettings.RemoveStartTimes = true;
-            _exportSettings.RemoveDurations = true;
-            _exportSettings.RemoveSessionIDs = true;
-            _exportSettings.RemoveCodeNames = true;
+            _anonymizationSettings.RemoveStartTimes = true;
+            _anonymizationSettings.RemoveDurations = true;
+            _anonymizationSettings.RemoveSessionIDs = true;
+            _anonymizationSettings.RemoveCodeNames = true;
             var sut = OpenWindow();
             UserControlAssert.IsChecked(sut.RemoveStartTimesCheckBox);
             UserControlAssert.IsChecked(sut.RemoveDurationsCheckBox);
@@ -118,10 +119,10 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.Anonymization
         {
             var sut = OpenWindow();
             sut.RemoveStartTimesCheckBox.Toggle();
-            Assert.True(_exportSettings.RemoveStartTimes);
-            Assert.False(_exportSettings.RemoveDurations);
-            Assert.False(_exportSettings.RemoveSessionIDs);
-            Assert.False(_exportSettings.RemoveCodeNames);
+            Assert.True(_anonymizationSettings.RemoveStartTimes);
+            Assert.False(_anonymizationSettings.RemoveDurations);
+            Assert.False(_anonymizationSettings.RemoveSessionIDs);
+            Assert.False(_anonymizationSettings.RemoveCodeNames);
         }
 
         [Test]
@@ -129,10 +130,10 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.Anonymization
         {
             var sut = OpenWindow();
             sut.RemoveDurationsCheckBox.Toggle();
-            Assert.False(_exportSettings.RemoveStartTimes);
-            Assert.True(_exportSettings.RemoveDurations);
-            Assert.False(_exportSettings.RemoveSessionIDs);
-            Assert.False(_exportSettings.RemoveCodeNames);
+            Assert.False(_anonymizationSettings.RemoveStartTimes);
+            Assert.True(_anonymizationSettings.RemoveDurations);
+            Assert.False(_anonymizationSettings.RemoveSessionIDs);
+            Assert.False(_anonymizationSettings.RemoveCodeNames);
         }
 
         [Test]
@@ -140,10 +141,10 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.Anonymization
         {
             var sut = OpenWindow();
             sut.RemoveSessionIDsCheckBox.Toggle();
-            Assert.False(_exportSettings.RemoveStartTimes);
-            Assert.False(_exportSettings.RemoveDurations);
-            Assert.True(_exportSettings.RemoveSessionIDs);
-            Assert.False(_exportSettings.RemoveCodeNames);
+            Assert.False(_anonymizationSettings.RemoveStartTimes);
+            Assert.False(_anonymizationSettings.RemoveDurations);
+            Assert.True(_anonymizationSettings.RemoveSessionIDs);
+            Assert.False(_anonymizationSettings.RemoveCodeNames);
         }
 
         [Test]
@@ -151,10 +152,10 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.Anonymization
         {
             var sut = OpenWindow();
             sut.RemoveCodeNamesCheckBox.Toggle();
-            Assert.False(_exportSettings.RemoveStartTimes);
-            Assert.False(_exportSettings.RemoveDurations);
-            Assert.False(_exportSettings.RemoveSessionIDs);
-            Assert.True(_exportSettings.RemoveCodeNames);
+            Assert.False(_anonymizationSettings.RemoveStartTimes);
+            Assert.False(_anonymizationSettings.RemoveDurations);
+            Assert.False(_anonymizationSettings.RemoveSessionIDs);
+            Assert.True(_anonymizationSettings.RemoveCodeNames);
         }
     }
 }

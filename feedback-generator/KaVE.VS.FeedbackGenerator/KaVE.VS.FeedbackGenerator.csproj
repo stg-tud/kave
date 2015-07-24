@@ -212,6 +212,7 @@
     <Compile Include="Interactivity\InteractionRequest.cs" />
     <Compile Include="Interactivity\ConfirmationRequestHandler.cs" />
     <Compile Include="RSEnv.cs" />
+    <Compile Include="Settings\AnonymizationSettings.cs" />
     <Compile Include="Settings\FeedbackSettings.cs" />
     <Compile Include="SessionManager\Anonymize\CompletionEvents\SSTAnonymization.cs" />
     <Compile Include="SessionManager\Anonymize\BuildEventAnonymizer.cs" />
@@ -235,6 +236,7 @@
     <Compile Include="SessionManager\Presentation\JsonSyntaxHighlighter.cs" />
     <Compile Include="SessionManager\Presentation\MultiSelection.cs" />
     <Compile Include="Menu\OptionPageAction.cs" />
+    <Compile Include="Settings\SettingDataConstants.cs" />
     <Compile Include="Settings\SettingsCleaner.cs" />
     <Compile Include="Settings\UserProfileSettings.cs" />
     <Compile Include="UserControls\Anonymization\AnonymizationContext.cs" />
@@ -249,18 +251,33 @@
     <Compile Include="UserControls\OptionPage\AnonymizationOptions\AnonymizationOptionsControl.xaml.cs">
       <DependentUpon>AnonymizationOptionsControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UserControls\OptionPage\RootOptionPage.cs" />
-    <Compile Include="UserControls\OptionPage\OptionPageMessages.Designer.cs">
+    <Compile Include="UserControls\OptionPage\AnonymizationOptions\AnonymizationOptionsMessages.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>OptionPageMessages.resx</DependentUpon>
+      <DependentUpon>AnonymizationOptionsMessages.resx</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\OptionPage\GeneralOptions\GeneralOptionsMessages.Designer.cs">
+      <DependentUpon>GeneralOptionsMessages.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="UserControls\OptionPage\RootOptionPage.cs" />
     <Compile Include="UserControls\OptionPage\UsageModelOptions\UsageModelOptionsControl.xaml.cs">
       <DependentUpon>UsageModelOptionsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\OptionPage\UsageModelOptions\UsageModelOptionsMessages.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>UsageModelOptionsMessages.resx</DependentUpon>
     </Compile>
     <Compile Include="UserControls\OptionPage\UsageModelOptions\UsageModelOptionsViewModel.cs" />
     <Compile Include="UserControls\OptionPage\UserProfileOptions\UserProfileOptionsControl.xaml.cs">
       <DependentUpon>UserProfileOptionsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\OptionPage\UserProfileOptions\UserProfileOptionsMessages.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>UserProfileOptionsMessages.resx</DependentUpon>
     </Compile>
     <Compile Include="UserControls\UploadWizard\AnonymizationWindow.xaml.cs">
       <DependentUpon>AnonymizationWindow.xaml</DependentUpon>
@@ -427,15 +444,27 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>AnonymizationMessages.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="UserControls\OptionPage\OptionPageMessages.resx">
+    <EmbeddedResource Include="UserControls\OptionPage\AnonymizationOptions\AnonymizationOptionsMessages.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>OptionPageMessages.Designer.cs</LastGenOutput>
+      <LastGenOutput>AnonymizationOptionsMessages.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\OptionPage\GeneralOptions\GeneralOptionsMessages.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>GeneralOptionsMessages.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\EnumLocalization.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>EnumLocalization.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\OptionPage\UsageModelOptions\UsageModelOptionsMessages.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>UsageModelOptionsMessages.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\OptionPage\UserProfileOptions\UserProfileOptionsMessages.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>UserProfileOptionsMessages.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="UserControls\UploadWizard\UploadWizardMessages.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>

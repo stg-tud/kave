@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage {
+namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UserProfileOptions {
     using System;
     
     
@@ -22,14 +22,14 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public class OptionPageMessages {
+    public class UserProfileOptionsMessages {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal OptionPageMessages() {
+        internal UserProfileOptionsMessages() {
         }
         
         /// <summary>
@@ -39,7 +39,8 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("KaVE.VS.FeedbackGenerator.UserControls.OptionPage.OptionPageMessages", typeof(OptionPageMessages).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UserProfileOptions.UserProfileO" +
+                            "ptionsMessages", typeof(UserProfileOptionsMessages).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,47 +62,20 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Reset.
+        ///   Looks up a localized string similar to Reset User Profile.
         /// </summary>
-        public static string Button_Reset {
+        public static string SettingResetButton {
             get {
-                return ResourceManager.GetString("Button_Reset", resourceCulture);
+                return ResourceManager.GetString("SettingResetButton", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Anonymization Settings.
+        ///   Looks up a localized string similar to User Profile will be reset. Are you sure?.
         /// </summary>
-        public static string Title_Anonymization {
+        public static string SettingResetDialog {
             get {
-                return ResourceManager.GetString("Title_Anonymization", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to General Settings.
-        /// </summary>
-        public static string Title_General {
-            get {
-                return ResourceManager.GetString("Title_General", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to User Profile.
-        /// </summary>
-        public static string Title_UserProfile {
-            get {
-                return ResourceManager.GetString("Title_UserProfile", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Inhalte umziehen!.
-        /// </summary>
-        public static string TODO {
-            get {
-                return ResourceManager.GetString("TODO", resourceCulture);
+                return ResourceManager.GetString("SettingResetDialog", resourceCulture);
             }
         }
     }

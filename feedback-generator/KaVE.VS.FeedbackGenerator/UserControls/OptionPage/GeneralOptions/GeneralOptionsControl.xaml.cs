@@ -16,12 +16,13 @@
 
 using System.Windows;
 using System.Windows.Controls;
-using JetBrains.ActionManagement;
+using JetBrains.Application.DataContext;
 using JetBrains.Application.Settings;
 using JetBrains.DataFlow;
 using JetBrains.ReSharper.Features.Navigation.Resources;
 using JetBrains.UI.CrossFramework;
 using JetBrains.UI.Options;
+using KaVE.RS.Commons;
 using KaVE.VS.FeedbackGenerator.Settings;
 using KaVE.VS.FeedbackGenerator.Settings.ExportSettingsSuite;
 using KaVEISettingsStore = KaVE.RS.Commons.Settings.ISettingsStore;
@@ -37,19 +38,22 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.GeneralOptions
 
         private readonly Lifetime _lifetime;
         private readonly OptionsSettingsSmartContext _ctx;
-        private readonly IActionManager _actionManager;
+        private readonly ActionExecutor _actionExecutor;
         private readonly KaVEISettingsStore _settingsStore;
+        private readonly DataContexts _dataContexts;
         private readonly ExportSettings _exportSettings;
 
         public GeneralOptionsControl(Lifetime lifetime,
             OptionsSettingsSmartContext ctx,
-            IActionManager actionManager,
-            KaVEISettingsStore settingsStore)
+            ActionExecutor actionExecutor,
+            KaVEISettingsStore settingsStore,
+            DataContexts dataContexts)
         {
             _lifetime = lifetime;
             _ctx = ctx;
-            _actionManager = actionManager;
+            _actionExecutor = actionExecutor;
             _settingsStore = settingsStore;
+            _dataContexts = dataContexts;
 
             InitializeComponent();
 
@@ -66,12 +70,31 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.GeneralOptions
             }
         }
         
-        private void OnReset(object sender, RoutedEventArgs e)
+        private void OnResetSettings(object sender, RoutedEventArgs e)
         {
-            var result = MessageBox.ShowYesNo(Properties.SessionManager.Option_SettingsCleaner_Dialog);
+            var result = MessageBox.ShowYesNo(GeneralOptionsMessages.SettingResetDialog);
             if (result)
             {
-                _actionManager.ExecuteActionGuarded<SettingsCleaner>(_lifetime);
+                _dataContexts.RegisterDataRule(_lifetime, new DataRule<string>(SettingDataConstants.StandardDataRuleName, SettingDataConstants.DataConstant, "GeneralSettings"));
+
+                _actionExecutor.ExecuteActionGuarded<SettingsCleaner>(_dataContexts.CreateWithDataRules(_lifetime));
+                
+                var window = Window.GetWindow(this);
+                if (window != null)
+                {
+                    window.Close();
+                }
+            }
+        }
+
+        private void OnResetFeedback(object sender, RoutedEventArgs e)
+        {
+            var result = MessageBox.ShowYesNo(GeneralOptionsMessages.FeedbackResetDialog);
+            if (result)
+            {
+                _dataContexts.RegisterDataRule(_lifetime, new DataRule<string>(SettingDataConstants.StandardDataRuleName, SettingDataConstants.DataConstant, "Feedback"));
+
+                _actionExecutor.ExecuteActionGuarded<SettingsCleaner>(_dataContexts.CreateWithDataRules(_lifetime));
 
                 var window = Window.GetWindow(this);
                 if (window != null)

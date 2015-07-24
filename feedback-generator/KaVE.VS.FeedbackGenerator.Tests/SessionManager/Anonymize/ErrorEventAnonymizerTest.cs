@@ -39,7 +39,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
         [Test]
         public void ShouldRemoveContentWhenRemoveNamesIsSet()
         {
-            ExportSettings.RemoveCodeNames = true;
+            AnonymizationSettings.RemoveCodeNames = true;
 
             var actual = WhenEventIsAnonymized();
 

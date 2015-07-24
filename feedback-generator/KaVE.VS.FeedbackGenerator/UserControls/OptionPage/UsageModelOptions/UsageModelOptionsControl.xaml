@@ -16,34 +16,42 @@ limitations under the License.
 <UserControl x:Class="KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions.UsageModelOptionsControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:properties="clr-namespace:KaVE.VS.FeedbackGenerator.Properties"
-             mc:Ignorable="d" 
+             xmlns:usageModelOptions="clr-namespace:KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions"
+             mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid Margin="5,5,5,5">
-      <Grid.RowDefinitions>
-        <RowDefinition Height="auto" />
-      </Grid.RowDefinitions>
-      <Grid.ColumnDefinitions>
-        <ColumnDefinition Width="125" />
-        <ColumnDefinition Width="*" />
-      </Grid.ColumnDefinitions>
-      
-      <!-- model path-->
-      <Label Grid.Column="0"
-             Content="{x:Static properties:SessionManager.Options_ModelPath}"
-             Margin="0,0,0,0" />
-      <Grid Grid.Column="1" >
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+        </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-          <ColumnDefinition Width="*" />
-          <ColumnDefinition Width="100" />
+            <ColumnDefinition Width="125" />
+            <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <TextBox Grid.Column="0" Grid.Row="0" Name="ModelStorePathTextBox"
-                 VerticalAlignment="Top" HorizontalAlignment="Stretch" Margin="10,0,10,0"
-                 Text="{Binding ModelPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-        <Button Grid.Column="1" Grid.Row="0" Name="ModelStorePathBrowseButton"
-                Click="OnBrowse" Padding="15,3,15,3" Content="Browse ..." />
-      </Grid>
+
+        <!-- model path-->
+        <Label Grid.Row="0" Grid.Column="0"
+               Content="{x:Static properties:SessionManager.Options_ModelPath}"
+               Margin="0,0,0,0" />
+        <Grid Grid.Row="0" Grid.Column="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="100" />
+            </Grid.ColumnDefinitions>
+            <TextBox Grid.Column="0" Grid.Row="0" Name="ModelStorePathTextBox"
+                     VerticalAlignment="Top" HorizontalAlignment="Stretch" Margin="10,0,10,0"
+                     Text="{Binding ModelPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <Button Grid.Column="1" Grid.Row="0" Name="ModelStorePathBrowseButton"
+                    Click="OnBrowse" Padding="15,3,15,3" Content="Browse ..." />
+        </Grid>
+      
+        <DockPanel Grid.Column="1" Grid.Row="1" Margin="10,45,10,6">
+            <Button Padding="15,3,15,3" HorizontalAlignment="Right" Click="OnResetSettings"
+                    Content="{x:Static usageModelOptions:UsageModelOptionsMessages.SettingResetButton}" />
+        </DockPanel>
+
     </Grid>
 </UserControl>

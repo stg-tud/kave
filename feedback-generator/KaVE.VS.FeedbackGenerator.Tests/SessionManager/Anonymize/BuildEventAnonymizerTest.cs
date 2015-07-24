@@ -63,7 +63,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
         [Test]
         public void ShouldRemoveBuildTargetStartTimesWhenRemovingStartTimes()
         {
-            ExportSettings.RemoveStartTimes = true;
+            AnonymizationSettings.RemoveStartTimes = true;
 
             var actual = WhenEventIsAnonymized();
 
@@ -73,7 +73,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
         [Test]
         public void ShouldRemoveBuildTargetDurationsWhenRemovingDurations()
         {
-            ExportSettings.RemoveDurations = true;
+            AnonymizationSettings.RemoveDurations = true;
 
             var actual = WhenEventIsAnonymized();
 
@@ -83,7 +83,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
         [Test]
         public void ShouldAnonymizeProjectNameFromBuildTargetsWhenRemovingNames()
         {
-            ExportSettings.RemoveCodeNames = true;
+            AnonymizationSettings.RemoveCodeNames = true;
 
             var actual = WhenEventIsAnonymized();
 

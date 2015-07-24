@@ -16,13 +16,14 @@
 
 using System.ComponentModel;
 using KaVE.JetBrains.Annotations;
+using KaVE.VS.FeedbackGenerator.Settings;
 using KaVE.VS.FeedbackGenerator.Settings.ExportSettingsSuite;
 
 namespace KaVE.VS.FeedbackGenerator.UserControls.Anonymization
 {
     public class AnonymizationContext : INotifyPropertyChanged
     {
-        private readonly ExportSettings _exportSettings;
+        private readonly AnonymizationSettings _anonymizationSettings;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -37,47 +38,47 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.Anonymization
 
         public bool RemoveCodeNames
         {
-            get { return _exportSettings.RemoveCodeNames; }
+            get { return _anonymizationSettings.RemoveCodeNames; }
             set
             {
-                _exportSettings.RemoveCodeNames = value;
+                _anonymizationSettings.RemoveCodeNames = value;
                 OnPropertyChanged("RemoveCodeNames");
             }
         }
 
         public bool RemoveDurations
         {
-            get { return _exportSettings.RemoveDurations; }
+            get { return _anonymizationSettings.RemoveDurations; }
             set
             {
-                _exportSettings.RemoveDurations = value;
+                _anonymizationSettings.RemoveDurations = value;
                 OnPropertyChanged("RemoveDurations");
             }
         }
 
         public bool RemoveStartTimes
         {
-            get { return _exportSettings.RemoveStartTimes; }
+            get { return _anonymizationSettings.RemoveStartTimes; }
             set
             {
-                _exportSettings.RemoveStartTimes = value;
+                _anonymizationSettings.RemoveStartTimes = value;
                 OnPropertyChanged("RemoveStartTimes");
             }
         }
 
         public bool RemoveSessionIDs
         {
-            get { return _exportSettings.RemoveSessionIDs; }
+            get { return _anonymizationSettings.RemoveSessionIDs; }
             set
             {
-                _exportSettings.RemoveSessionIDs = value;
+                _anonymizationSettings.RemoveSessionIDs = value;
                 OnPropertyChanged("RemoveSessionIDs");
             }
         }
 
-        public AnonymizationContext(ExportSettings exportSettings)
+        public AnonymizationContext(AnonymizationSettings anonymizationSettings)
         {
-            _exportSettings = exportSettings;
+            _anonymizationSettings = anonymizationSettings;
         }
     }
 }

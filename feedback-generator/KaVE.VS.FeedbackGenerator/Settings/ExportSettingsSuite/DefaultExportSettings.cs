@@ -22,18 +22,6 @@ namespace KaVE.VS.FeedbackGenerator.Settings.ExportSettingsSuite
     // WARNING: Do not change classname, as it is used to identify settings
     public class ExportSettings
     {
-        [SettingsEntry(false, "KaVE FeedbackGeneration RemoveCodeNames")]
-        public bool RemoveCodeNames;
-
-        [SettingsEntry(false, "KaVE FeedbackGenerator RemoveDurations")]
-        public bool RemoveDurations;
-
-        [SettingsEntry(false, "KaVE FeedbackGenerator RemoveStartTimes")]
-        public bool RemoveStartTimes;
-
-        [SettingsEntry(false, "KaVE FeedbackGenerator RemoveSessionIDs")]
-        public bool RemoveSessionIDs;
-
         [SettingsEntry(false, "KaVE FeedbackGenerator IsDatev")]
         public bool IsDatev;
 

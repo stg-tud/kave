@@ -17,13 +17,19 @@
 using System.Windows;
 using System.Windows.Controls;
 using Avalon.Windows.Dialogs;
+using JetBrains.ActionManagement;
+using JetBrains.Application.DataContext;
 using JetBrains.Application.Settings;
 using JetBrains.DataFlow;
+using JetBrains.UI.Actions.ActionManager;
 using JetBrains.UI.CrossFramework;
 using JetBrains.UI.Options;
 using JetBrains.UI.Resources;
+using KaVE.RS.Commons;
 using KaVE.RS.Commons.Settings.KaVE.RS.Commons.Settings;
+using KaVE.VS.FeedbackGenerator.Settings;
 using KaVEISettingsStore = KaVE.RS.Commons.Settings.ISettingsStore;
+using MessageBox = JetBrains.Util.MessageBox;
 
 namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
 {
@@ -31,7 +37,10 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
         ParentId = RootOptionPage.PID, Sequence = 4.0)]
     public partial class UsageModelOptionsControl : IOptionsPage
     {
+        private readonly Lifetime _lifetime;
         private readonly KaVEISettingsStore _settingsStore;
+        private readonly ActionExecutor _actionExecutor;
+        private readonly DataContexts _dataContexts;
         private readonly ModelStoreSettings _modelStoreSettings;
 
         private const string PID =
@@ -39,9 +48,14 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
         
         public UsageModelOptionsControl(Lifetime lifetime,
             OptionsSettingsSmartContext ctx,
-            KaVEISettingsStore settingsStore)
+            KaVEISettingsStore settingsStore,
+            ActionExecutor actionExecutor,
+            DataContexts dataContexts)
         {
+            _lifetime = lifetime;
             _settingsStore = settingsStore;
+            _actionExecutor = actionExecutor;
+            _dataContexts = dataContexts;
             InitializeComponent();
 
             _modelStoreSettings = settingsStore.GetSettings<ModelStoreSettings>();
@@ -69,6 +83,23 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
             if (result.HasValue && result.Value)
             {
                 ModelStorePathTextBox.Text = dialog.SelectedPath;
+            }
+        }
+
+        private void OnResetSettings(object sender, RoutedEventArgs e)
+        {
+            var result = MessageBox.ShowYesNo(UsageModelOptionsMessages.SettingResetDialog);
+            if (result)
+            {
+                _dataContexts.RegisterDataRule(_lifetime, new DataRule<string>(SettingDataConstants.StandardDataRuleName, SettingDataConstants.DataConstant, "ModelStoreSettings"));
+
+                _actionExecutor.ExecuteActionGuarded<SettingsCleaner>(_dataContexts.CreateWithDataRules(_lifetime));
+
+                var window = Window.GetWindow(this);
+                if (window != null)
+                {
+                    window.Close();
+                }
             }
         }
         

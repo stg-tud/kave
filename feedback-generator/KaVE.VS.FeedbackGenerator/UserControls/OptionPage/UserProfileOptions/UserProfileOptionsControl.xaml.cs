@@ -18,6 +18,7 @@ using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using JetBrains.Application.DataContext;
 using JetBrains.Application.Settings;
 using JetBrains.DataFlow;
 using JetBrains.UI.CrossFramework;
@@ -25,11 +26,13 @@ using JetBrains.UI.Options;
 using JetBrains.UI.Resources;
 using KaVE.Commons.Model.Events.UserProfiles;
 using KaVE.Commons.Utils;
+using KaVE.RS.Commons;
 using KaVE.VS.FeedbackGenerator.Settings;
 using KaVE.VS.FeedbackGenerator.Settings.ExportSettingsSuite;
 using KaVE.VS.FeedbackGenerator.UserControls.OptionPage.GeneralOptions;
 using KaVE.VS.FeedbackGenerator.UserControls.UserProfile;
 using KaVEISettingsStore = KaVE.RS.Commons.Settings.ISettingsStore;
+using MessageBox = JetBrains.Util.MessageBox;
 
 
 namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UserProfileOptions
@@ -43,17 +46,23 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UserProfileOptions
         private readonly Lifetime _lifetime;
         private readonly OptionsSettingsSmartContext _ctx;
         private readonly KaVEISettingsStore _settingsStore;
+        private readonly ActionExecutor _actionExecutor;
+        private readonly DataContexts _dataContexts;
         private readonly UserProfileSettings _userProfileSettings;
         private readonly UserProfileContext _userProfileContext;
 
         public UserProfileOptionsControl(Lifetime lifetime,
             OptionsSettingsSmartContext ctx,
             KaVEISettingsStore settingsStore,
+            ActionExecutor actionExecutor,
+            DataContexts dataContexts,
             IRandomizationUtils rnd)
         {
             _lifetime = lifetime;
             _ctx = ctx;
             _settingsStore = settingsStore;
+            _actionExecutor = actionExecutor;
+            _dataContexts = dataContexts;
 
             InitializeComponent();
 
@@ -90,6 +99,23 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UserProfileOptions
         public string Id
         {
             get { return PID; }
+        }
+
+        private void OnResetSettings(object sender, RoutedEventArgs e)
+        {
+            var result = MessageBox.ShowYesNo(UserProfileOptionsMessages.SettingResetDialog);
+            if (result)
+            {
+                _dataContexts.RegisterDataRule(_lifetime, new DataRule<string>(SettingDataConstants.StandardDataRuleName, SettingDataConstants.DataConstant, "UserProfileSettings"));
+
+                _actionExecutor.ExecuteActionGuarded<SettingsCleaner>(_dataContexts.CreateWithDataRules(_lifetime));
+
+                var window = Window.GetWindow(this);
+                if (window != null)
+                {
+                    window.Close();
+                }
+            }
         }
 
         #region jetbrains smart-context bindings

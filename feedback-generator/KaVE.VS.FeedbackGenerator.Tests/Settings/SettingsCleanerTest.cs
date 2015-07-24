@@ -22,6 +22,7 @@ using KaVE.VS.FeedbackGenerator.Settings;
 using KaVE.VS.FeedbackGenerator.Settings.ExportSettingsSuite;
 using KaVE.VS.FeedbackGenerator.Utils.Logging;
 using Moq;
+using Moq.Language.Flow;
 using NUnit.Framework;
 
 namespace KaVE.VS.FeedbackGenerator.Tests.Settings
@@ -50,17 +51,66 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Settings
         }
 
         [Test]
-        public void SettingsWillBeRestoredToDefaultValue()
+        public void GeneralSettingsWillBeRestored()
         {
-            _uut.Execute(new Mock<IDataContext>().Object, null);
+            var dataContext = new Mock<IDataContext>();
+            dataContext.Setup(datacontext => datacontext.GetData(It.Is<DataConstant<string>>(dataConstant => dataConstant.Id.Equals("SettingOrFeedbackReset"))))
+                       .Returns("GeneralSettings");
+            _uut.Execute(dataContext.Object, null);
 
             _mockSettingsStore.Verify(s => s.ResetSettings<UploadSettings>());
             _mockSettingsStore.Verify(s => s.ResetSettings<ExportSettings>());
+            _mockSettingsStore.Verify(s => s.ResetSettings<FeedbackSettings>(), Times.Never);
+        }
+
+        [Test]
+        public void AnonymizationSettingsWillBeRestored()
+        {
+            var dataContext = new Mock<IDataContext>();
+            dataContext.Setup(datacontext => datacontext.GetData(It.Is<DataConstant<string>>(dataConstant => dataConstant.Id.Equals("SettingOrFeedbackReset"))))
+                       .Returns("AnonymizationSettings");
+            _uut.Execute(dataContext.Object, null);
+
+            _mockSettingsStore.Verify(s => s.ResetSettings<AnonymizationSettings>());
+            _mockSettingsStore.Verify(s => s.ResetSettings<FeedbackSettings>(), Times.Never);
+        }
+
+        [Test]
+        public void ModelStoreSettingsWillBeRestored()
+        {
+            var dataContext = new Mock<IDataContext>();
+            dataContext.Setup(datacontext => datacontext.GetData(It.Is<DataConstant<string>>(dataConstant => dataConstant.Id.Equals("SettingOrFeedbackReset"))))
+                       .Returns("ModelStoreSettings");
+            _uut.Execute(dataContext.Object, null);
+
             _mockSettingsStore.Verify(s => s.ResetSettings<ModelStoreSettings>());
+            _mockSettingsStore.Verify(s => s.ResetSettings<FeedbackSettings>(), Times.Never);
+        }
+
+        [Test]
+        public void UserProfileSettingsWillBeRestored()
+        {
+            var dataContext = new Mock<IDataContext>();
+            dataContext.Setup(datacontext => datacontext.GetData(It.Is<DataConstant<string>>(dataConstant => dataConstant.Id.Equals("SettingOrFeedbackReset"))))
+                       .Returns("UserProfileSettings");
+            _uut.Execute(dataContext.Object, null);
+
             _mockSettingsStore.Verify(s => s.ResetSettings<UserProfileSettings>());
+            _mockSettingsStore.Verify(s => s.ResetSettings<FeedbackSettings>(), Times.Never);
+        }
+
+        [Test]
+        public void FeedbackWillBeDeleted()
+        {
+            var dataContext = new Mock<IDataContext>();
+            dataContext.Setup(datacontext => datacontext.GetData(It.Is<DataConstant<string>>(dataConstant => dataConstant.Id.Equals("SettingOrFeedbackReset"))))
+                       .Returns("Feedback");
+            _uut.Execute(dataContext.Object, null);
+
             _mockSettingsStore.Verify(s => s.ResetSettings<FeedbackSettings>(), Times.Never);
 
             _mockLogFileManager.Verify(s => s.DeleteAllLogs());
         }
+
     }
 }

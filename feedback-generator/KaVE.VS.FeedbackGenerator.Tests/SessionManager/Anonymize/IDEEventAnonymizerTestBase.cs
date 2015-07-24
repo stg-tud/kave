@@ -19,7 +19,7 @@ using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Names.VisualStudio;
 using KaVE.RS.Commons.Settings;
 using KaVE.VS.FeedbackGenerator.SessionManager.Anonymize;
-using KaVE.VS.FeedbackGenerator.Settings.ExportSettingsSuite;
+using KaVE.VS.FeedbackGenerator.Settings;
 using Moq;
 using NUnit.Framework;
 
@@ -28,16 +28,16 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
     internal abstract class IDEEventAnonymizerTestBase<TEvent> where TEvent : IDEEvent
     {
         private DataExportAnonymizer _uut;
-        protected ExportSettings ExportSettings { get; private set; }
+        protected AnonymizationSettings AnonymizationSettings { get; private set; }
         protected TEvent OriginalEvent { get; private set; }
 
         [SetUp]
         public void SetUp()
         {
-            ExportSettings = new ExportSettings();
+            AnonymizationSettings = new AnonymizationSettings();
 
             var mockSettingsStore = new Mock<ISettingsStore>();
-            mockSettingsStore.Setup(store => store.GetSettings<ExportSettings>()).Returns(ExportSettings);
+            mockSettingsStore.Setup(store => store.GetSettings<AnonymizationSettings>()).Returns(AnonymizationSettings);
 
             _uut = new DataExportAnonymizer(mockSettingsStore.Object);
 
@@ -74,7 +74,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
         [Test]
         public void ShouldRemoveStartTimeWhenRespectiveOptionIsSet()
         {
-            ExportSettings.RemoveStartTimes = true;
+            AnonymizationSettings.RemoveStartTimes = true;
 
             var actual = WhenEventIsAnonymized();
 
@@ -84,7 +84,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
         [Test]
         public void ShouldRemoveDurationWhenRespectiveOptionIsSet()
         {
-            ExportSettings.RemoveDurations = true;
+            AnonymizationSettings.RemoveDurations = true;
 
             var actual = WhenEventIsAnonymized();
 
@@ -94,7 +94,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
         [Test]
         public void ShouldRemoveSessionUUIDWhenRespectiveOptionIsSet()
         {
-            ExportSettings.RemoveSessionIDs = true;
+            AnonymizationSettings.RemoveSessionIDs = true;
 
             var actual = WhenEventIsAnonymized();
 
@@ -104,7 +104,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
         [Test]
         public void ShouldRemovePathFromActiveDocumentNameWhenRemoveNamesIsSet()
         {
-            ExportSettings.RemoveCodeNames = true;
+            AnonymizationSettings.RemoveCodeNames = true;
 
             var actual = WhenEventIsAnonymized();
 
@@ -115,7 +115,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
         public void ShouldNotFailWhenActiveDocumentIsNullAndRemoveNamesIsSet()
         {
             OriginalEvent.ActiveDocument = null;
-            ExportSettings.RemoveCodeNames = true;
+            AnonymizationSettings.RemoveCodeNames = true;
 
             var actual = WhenEventIsAnonymized();
 
@@ -125,7 +125,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
         [Test]
         public void ShouldRemovePathFromActiveWindowNameWhenRemoveNamesIsSet()
         {
-            ExportSettings.RemoveCodeNames = true;
+            AnonymizationSettings.RemoveCodeNames = true;
 
             var actual = WhenEventIsAnonymized();
 
@@ -136,7 +136,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
         public void ShouldNotChangeActiveWindowNameWhenRemoveNamesIsSetButWindowNameContainsNoPath()
         {
             OriginalEvent.ActiveWindow = WindowName.Get("vsWindowTypeToolWindow Start Page");
-            ExportSettings.RemoveCodeNames = true;
+            AnonymizationSettings.RemoveCodeNames = true;
 
             var actual = WhenEventIsAnonymized();
 
@@ -147,7 +147,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
         public void ShouldNotFailWhenActiveWindowIsNullAndRemoveNamesIsSet()
         {
             OriginalEvent.ActiveWindow = null;
-            ExportSettings.RemoveCodeNames = true;
+            AnonymizationSettings.RemoveCodeNames = true;
 
             var actual = WhenEventIsAnonymized();
 
@@ -157,10 +157,10 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
         [Test]
         public void ShouldNotTouchFieldsThatDontNeedToBeAnonymized()
         {
-            ExportSettings.RemoveStartTimes = true;
-            ExportSettings.RemoveSessionIDs = true;
-            ExportSettings.RemoveDurations = true;
-            ExportSettings.RemoveCodeNames = true;
+            AnonymizationSettings.RemoveStartTimes = true;
+            AnonymizationSettings.RemoveSessionIDs = true;
+            AnonymizationSettings.RemoveDurations = true;
+            AnonymizationSettings.RemoveCodeNames = true;
 
             var actual = WhenEventIsAnonymized();
 

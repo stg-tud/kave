@@ -47,7 +47,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
         [Test]
         public void ShouldAnonymizeOpenDocumentWhenRemoveNamesIsSet()
         {
-            ExportSettings.RemoveCodeNames = true;
+            AnonymizationSettings.RemoveCodeNames = true;
 
             var actual = WhenEventIsAnonymized();
 
@@ -58,7 +58,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
         [Test]
         public void ShouldAnonymizeOpenWindowsWhenRemoveNamesIsSetAndWindowCaptionContainsFileName()
         {
-            ExportSettings.RemoveCodeNames = true;
+            AnonymizationSettings.RemoveCodeNames = true;
 
             var actual = WhenEventIsAnonymized();
 

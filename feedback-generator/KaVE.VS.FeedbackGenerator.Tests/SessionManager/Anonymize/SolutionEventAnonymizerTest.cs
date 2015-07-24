@@ -36,7 +36,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
         public void ShouldRemovePathFromTargetSolutionIfRemoveNamesIsSet()
         {
             OriginalEvent.Target = SolutionName.Get("\\Solution.sln");
-            ExportSettings.RemoveCodeNames = true;
+            AnonymizationSettings.RemoveCodeNames = true;
 
             var actual = WhenEventIsAnonymized();
 
@@ -47,7 +47,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
         public void ShouldRemovePathFromTargetProjectIfRemoveNamesIsSet()
         {
             OriginalEvent.Target = ProjectName.Get("Folder \\A\\B\\C");
-            ExportSettings.RemoveCodeNames = true;
+            AnonymizationSettings.RemoveCodeNames = true;
 
             var actual = WhenEventIsAnonymized();
 
@@ -58,7 +58,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
         public void ShouldRemovePathFromTargetProjectItemIfRemoveNamesIsSet()
         {
             OriginalEvent.Target = ProjectItemName.Get("CSharp \\A\\B\\Class.cs");
-            ExportSettings.RemoveCodeNames = true;
+            AnonymizationSettings.RemoveCodeNames = true;
 
             var actual = WhenEventIsAnonymized();
 

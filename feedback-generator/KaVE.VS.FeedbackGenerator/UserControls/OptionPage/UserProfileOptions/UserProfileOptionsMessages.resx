@@ -117,19 +117,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Button_Reset" xml:space="preserve">
-    <value>Reset</value>
+  <data name="SettingResetButton" xml:space="preserve">
+    <value>Reset User Profile</value>
   </data>
-  <data name="Title_Anonymization" xml:space="preserve">
-    <value>Anonymization Settings</value>
-  </data>
-  <data name="Title_General" xml:space="preserve">
-    <value>General Settings</value>
-  </data>
-  <data name="Title_UserProfile" xml:space="preserve">
-    <value>User Profile</value>
-  </data>
-  <data name="TODO" xml:space="preserve">
-    <value>Inhalte umziehen!</value>
+  <data name="SettingResetDialog" xml:space="preserve">
+    <value>User Profile will be reset. Are you sure?</value>
   </data>
 </root>

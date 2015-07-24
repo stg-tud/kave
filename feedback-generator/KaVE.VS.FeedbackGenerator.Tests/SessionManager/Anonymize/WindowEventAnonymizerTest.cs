@@ -35,7 +35,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
         public void ShouldAnonymizeWindowNameIfRemoveNamesIsSetAndCaptionContainsFileName()
         {
             OriginalEvent.Window = VsComponentNameFactory.GetWindowName("vsSomeWindowType", "\\Contains\\File.Name");
-            ExportSettings.RemoveCodeNames = true;
+            AnonymizationSettings.RemoveCodeNames = true;
 
             var actual = WhenEventIsAnonymized();
 
@@ -48,7 +48,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize
             OriginalEvent.Window = VsComponentNameFactory.GetWindowName(
                 "vsToolWindow",
                 "Unit Test Sessions - DocumentEventAnonymizerTest");
-            ExportSettings.RemoveCodeNames = true;
+            AnonymizationSettings.RemoveCodeNames = true;
 
             var actual = WhenEventIsAnonymized();
 

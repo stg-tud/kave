@@ -19,9 +19,19 @@ limitations under the License.
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:userProfile="clr-namespace:KaVE.VS.FeedbackGenerator.UserControls.UserProfile"
+             xmlns:userProfileOptions="clr-namespace:KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UserProfileOptions"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid Margin="5,5,5,5">
-      <userProfile:CheckedUserProfileControl x:Name="UserProfile"/>
+     <Grid.RowDefinitions>
+       <RowDefinition Height="auto" />
+       <RowDefinition Height="auto" />
+     </Grid.RowDefinitions>
+      <userProfile:CheckedUserProfileControl x:Name="UserProfile" Grid.Row="0"/>
+      <!-- reset button-->
+      <DockPanel Margin="10,45,10,6" Grid.Row="1">
+        <Button Padding="15,3,15,3" HorizontalAlignment="Right" Click="OnResetSettings"
+                Content="{x:Static userProfileOptions:UserProfileOptionsMessages.SettingResetButton}" />
+      </DockPanel>
     </Grid>
 </UserControl>

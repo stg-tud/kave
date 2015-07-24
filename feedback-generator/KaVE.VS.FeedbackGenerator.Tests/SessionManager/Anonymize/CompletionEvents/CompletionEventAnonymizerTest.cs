@@ -66,7 +66,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize.CompletionEve
         [Test]
         public void ShouldRemoveSelectionOffsetWhenRemoveDurationsIsSet()
         {
-            ExportSettings.RemoveDurations = true;
+            AnonymizationSettings.RemoveDurations = true;
 
             var actual = WhenEventIsAnonymized();
 
@@ -76,7 +76,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize.CompletionEve
         [Test]
         public void ShouldAnonymizeProposalNamesWhenRemoveNamesIsSet()
         {
-            ExportSettings.RemoveCodeNames = true;
+            AnonymizationSettings.RemoveCodeNames = true;
             var expected = new[]
             {
                 new Proposal {Name = TypeName.Get("Q-vTVCo_g8yayGGoDdH7BA==, qfFVtSOtve-XEFJXWTbfXw==")},
@@ -92,7 +92,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize.CompletionEve
         [Test]
         public void ShouldAnonymizeProposalNamesInSelectionsWhenRemoveNamesIsSet()
         {
-            ExportSettings.RemoveCodeNames = true;
+            AnonymizationSettings.RemoveCodeNames = true;
             var expected = new[]
             {
                 new ProposalSelection(
@@ -114,7 +114,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize.CompletionEve
         [Test]
         public void ShouldAnonymizeContext()
         {
-            ExportSettings.RemoveCodeNames = true;
+            AnonymizationSettings.RemoveCodeNames = true;
             var expected = new Context
             {
                 TypeShape = new TypeShape
@@ -135,9 +135,9 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.Anonymize.CompletionEve
         [Test]
         public void ShouldNotFailIfPropertiesAreNotSet()
         {
-            ExportSettings.RemoveCodeNames = true;
-            ExportSettings.RemoveDurations = true;
-            ExportSettings.RemoveStartTimes = true;
+            AnonymizationSettings.RemoveCodeNames = true;
+            AnonymizationSettings.RemoveDurations = true;
+            AnonymizationSettings.RemoveStartTimes = true;
 
             WhenEventIsAnonymized();
         }

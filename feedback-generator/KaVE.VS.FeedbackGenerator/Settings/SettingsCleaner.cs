@@ -21,6 +21,7 @@ using KaVE.RS.Commons.Settings;
 using KaVE.RS.Commons.Settings.KaVE.RS.Commons.Settings;
 using KaVE.RS.Commons.Utils;
 using KaVE.VS.FeedbackGenerator.Settings.ExportSettingsSuite;
+using KaVE.VS.FeedbackGenerator.UserControls.OptionPage.AnonymizationOptions;
 using KaVE.VS.FeedbackGenerator.Utils.Logging;
 
 namespace KaVE.VS.FeedbackGenerator.Settings
@@ -46,18 +47,41 @@ namespace KaVE.VS.FeedbackGenerator.Settings
 
         public void Execute(IDataContext context, DelegateExecute nextExecute)
         {
-            RestoreDefaultSettings();
+            var restoreType = context.GetData(SettingDataConstants.DataConstant);
+            if (restoreType != null)
+            {
+                if (restoreType.Equals("Feedback"))
+                {
+                    RestoreFeedback();
+                }
+                RestoreSettings(restoreType);
+            }
         }
 
-        private void RestoreDefaultSettings()
+        private void RestoreFeedback()
+        {
+            _logManager.DeleteAllLogs();
+        }
+
+        private void RestoreSettings(string settingType)
         {
             // WARNING: Do not reset FeedbackSettings, as it is used to store entries that have to be consistent over time
-            _settings.ResetSettings<UploadSettings>();
-            _settings.ResetSettings<ExportSettings>();
-            _settings.ResetSettings<UserProfileSettings>();
-            _settings.ResetSettings<ModelStoreSettings>();
-
-            _logManager.DeleteAllLogs();
+            switch (settingType)
+            {
+                case "GeneralSettings":
+                    _settings.ResetSettings<UploadSettings>();
+                    _settings.ResetSettings<ExportSettings>();
+                    break;
+                case "UserProfileSettings":
+                    _settings.ResetSettings<UserProfileSettings>();
+                    break;
+                case "AnonymizationSettings":
+                    _settings.ResetSettings<AnonymizationSettings>();
+                    break;
+                case "ModelStoreSettings":
+                    _settings.ResetSettings<ModelStoreSettings>();
+                    break;
+            }
         }
     }
 }

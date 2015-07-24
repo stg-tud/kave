@@ -58,6 +58,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UploadWizard
         private Mock<ILogger> _mockLogger;
         private ExportSettings _exportSettings;
         private UserProfileSettings _userSettings;
+        private AnonymizationSettings _anonymizationSettings;
 
         [SetUp]
         public void SetUp()
@@ -78,8 +79,10 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UploadWizard
             _mockSettingStore.Setup(store => store.GetSettings<UploadSettings>()).Returns(new UploadSettings());
             _exportSettings = new ExportSettings {UploadUrl = TestUploadUrl};
             _userSettings = new UserProfileSettings();
+            _anonymizationSettings = new AnonymizationSettings();
             _mockSettingStore.Setup(store => store.GetSettings<ExportSettings>()).Returns(_exportSettings);
             _mockSettingStore.Setup(store => store.GetSettings<UserProfileSettings>()).Returns(_userSettings);
+            _mockSettingStore.Setup(store => store.GetSettings<AnonymizationSettings>()).Returns(_anonymizationSettings);
             _mockSettingStore.Setup(store => store.UpdateSettings(It.IsAny<Action<ExportSettings>>()))
                              .Callback<Action<ExportSettings>>(update => update(_exportSettings));
 
@@ -105,7 +108,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UploadWizard
         [TestCase(true), TestCase(false)]
         public void ShouldGetExportSettingRemoveCodeNames(bool expected)
         {
-            _exportSettings.RemoveCodeNames = expected;
+            _anonymizationSettings.RemoveCodeNames = expected;
 
             var actual = _uut.RemoveCodeNames;
 
@@ -118,14 +121,14 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UploadWizard
             _uut.RemoveCodeNames = expected;
             _uut.SetSettings();
 
-            _mockSettingStore.Verify(ss => ss.SetSettings(It.IsAny<ExportSettings>()));
-            Assert.AreEqual(expected, _exportSettings.RemoveCodeNames);
+            _mockSettingStore.Verify(ss => ss.SetSettings(It.IsAny<AnonymizationSettings>()));
+            Assert.AreEqual(expected, _anonymizationSettings.RemoveCodeNames);
         }
 
         [TestCase(true), TestCase(false)]
         public void ShouldGetExportSettingRemoveDurations(bool expected)
         {
-            _exportSettings.RemoveDurations = expected;
+            _anonymizationSettings.RemoveDurations = expected;
 
             var actual = _uut.RemoveDurations;
 
@@ -139,14 +142,14 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UploadWizard
 
             _uut.SetSettings();
 
-            _mockSettingStore.Verify(ss => ss.SetSettings(It.IsAny<ExportSettings>()));
-            Assert.AreEqual(expected, _exportSettings.RemoveDurations);
+            _mockSettingStore.Verify(ss => ss.SetSettings(It.IsAny<AnonymizationSettings>()));
+            Assert.AreEqual(expected, _anonymizationSettings.RemoveDurations);
         }
 
         [TestCase(true), TestCase(false)]
         public void ShouldGetExportSettingRemoveSessionIDs(bool expected)
         {
-            _exportSettings.RemoveSessionIDs = expected;
+            _anonymizationSettings.RemoveSessionIDs = expected;
 
             var actual = _uut.RemoveSessionIDs;
 
@@ -160,14 +163,14 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UploadWizard
 
             _uut.SetSettings();
 
-            _mockSettingStore.Verify(ss => ss.SetSettings(It.IsAny<ExportSettings>()));
-            Assert.AreEqual(expected, _exportSettings.RemoveSessionIDs);
+            _mockSettingStore.Verify(ss => ss.SetSettings(It.IsAny<AnonymizationSettings>()));
+            Assert.AreEqual(expected, _anonymizationSettings.RemoveSessionIDs);
         }
 
         [TestCase(true), TestCase(false)]
         public void ShouldGetExportSettingRemoveStarTimes(bool expected)
         {
-            _exportSettings.RemoveStartTimes = expected;
+            _anonymizationSettings.RemoveStartTimes = expected;
 
             var actual = _uut.RemoveStartTimes;
 
@@ -181,8 +184,8 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UploadWizard
 
             _uut.SetSettings();
 
-            _mockSettingStore.Verify(ss => ss.SetSettings(It.IsAny<ExportSettings>()));
-            Assert.AreEqual(expected, _exportSettings.RemoveStartTimes);
+            _mockSettingStore.Verify(ss => ss.SetSettings(It.IsAny<AnonymizationSettings>()));
+            Assert.AreEqual(expected, _anonymizationSettings.RemoveStartTimes);
         }
 
         // TODO @Seb: re-enable

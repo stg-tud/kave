@@ -23,7 +23,7 @@ using KaVE.Commons.Model.Events.VisualStudio;
 using KaVE.Commons.Utils.Json;
 using KaVE.RS.Commons.Settings;
 using KaVE.VS.FeedbackGenerator.SessionManager.Anonymize.CompletionEvents;
-using KaVE.VS.FeedbackGenerator.Settings.ExportSettingsSuite;
+using KaVE.VS.FeedbackGenerator.Settings;
 
 namespace KaVE.VS.FeedbackGenerator.SessionManager.Anonymize
 {
@@ -58,7 +58,7 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager.Anonymize
         public IDEEvent Anonymize(IDEEvent ideEvent)
         {
             var clone = ideEvent.ToCompactJson().ParseJsonTo<IDEEvent>();
-            var settings = _settingsStore.GetSettings<ExportSettings>();
+            var settings = _settingsStore.GetSettings<AnonymizationSettings>();
             var anonymizer = GetAnonymizerFor(ideEvent.GetType());
             if (settings.RemoveSessionIDs)
             {

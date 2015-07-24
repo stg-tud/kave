@@ -14,15 +14,21 @@
  * limitations under the License.
  */
 
+using System.Windows;
 using System.Windows.Controls.Primitives;
+using JetBrains.ActionManagement;
+using JetBrains.Application.DataContext;
 using JetBrains.Application.Settings;
 using JetBrains.DataFlow;
+using JetBrains.UI.Actions.ActionManager;
 using JetBrains.UI.CrossFramework;
 using JetBrains.UI.Options;
 using JetBrains.UI.Resources;
-using KaVE.VS.FeedbackGenerator.Settings.ExportSettingsSuite;
+using KaVE.RS.Commons;
+using KaVE.VS.FeedbackGenerator.Settings;
 using KaVE.VS.FeedbackGenerator.UserControls.Anonymization;
 using KaVEISettingsStore = KaVE.RS.Commons.Settings.ISettingsStore;
+using MessageBox = JetBrains.Util.MessageBox;
 
 namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.AnonymizationOptions
 {
@@ -35,27 +41,33 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.AnonymizationOptions
         private readonly Lifetime _lifetime;
         private readonly OptionsSettingsSmartContext _ctx;
         private readonly KaVEISettingsStore _settingsStore;
-        private readonly ExportSettings _exportSettings;
+        private readonly ActionExecutor _actionExecutor;
+        private readonly DataContexts _dataContexts;
+        private readonly AnonymizationSettings _anonymizationSettings;
 
         public bool OnOk()
         {
-            _settingsStore.SetSettings(_exportSettings);
+            _settingsStore.SetSettings(_anonymizationSettings);
             return true;
         }
 
         public AnonymizationOptionsControl(Lifetime lifetime,
             OptionsSettingsSmartContext ctx,
-            KaVEISettingsStore settingsStore)
+            KaVEISettingsStore settingsStore,
+            ActionExecutor actionExecutor,
+            DataContexts dataContexts)
         {
             _lifetime = lifetime;
             _ctx = ctx;
             _settingsStore = settingsStore;
+            _actionExecutor = actionExecutor;
+            _dataContexts = dataContexts;
 
             InitializeComponent();
 
-            _exportSettings = settingsStore.GetSettings<ExportSettings>();
+            _anonymizationSettings = settingsStore.GetSettings<AnonymizationSettings>();
 
-            var anonymizationContext = new AnonymizationContext(_exportSettings);
+            var anonymizationContext = new AnonymizationContext(_anonymizationSettings);
 
             DataContext = anonymizationContext;
 
@@ -80,31 +92,48 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.AnonymizationOptions
             get { return PID; }
         }
 
+        private void OnResetSettings(object sender, RoutedEventArgs e)
+        {
+            var result = MessageBox.ShowYesNo(AnonymizationOptionsMessages.ResetSettingDialog);
+            if (result)
+            {
+                _dataContexts.RegisterDataRule(_lifetime, new DataRule<string>(SettingDataConstants.StandardDataRuleName, SettingDataConstants.DataConstant, "AnonymizationSettings"));
+
+                _actionExecutor.ExecuteActionGuarded<SettingsCleaner>(_dataContexts.CreateWithDataRules(_lifetime));
+
+                var window = Window.GetWindow(this);
+                if (window != null)
+                {
+                    window.Close();
+                }
+            }
+        }
+
         #region jetbrains smart-context bindings
 
         private void BindChangesToAnonymization()
         {
             _ctx.SetBinding(
                 _lifetime,
-                (ExportSettings s) => (bool?) s.RemoveCodeNames,
+                (AnonymizationSettings s) => (bool?)s.RemoveCodeNames,
                 Anonymization.RemoveCodeNamesCheckBox,
                 ToggleButton.IsCheckedProperty);
 
             _ctx.SetBinding(
                 _lifetime,
-                (ExportSettings s) => (bool?) s.RemoveDurations,
+                (AnonymizationSettings s) => (bool?)s.RemoveDurations,
                 Anonymization.RemoveDurationsCheckBox,
                 ToggleButton.IsCheckedProperty);
 
             _ctx.SetBinding(
                 _lifetime,
-                (ExportSettings s) => (bool?) s.RemoveSessionIDs,
+                (AnonymizationSettings s) => (bool?)s.RemoveSessionIDs,
                 Anonymization.RemoveSessionIDsCheckBox,
                 ToggleButton.IsCheckedProperty);
 
             _ctx.SetBinding(
                 _lifetime,
-                (ExportSettings s) => (bool?) s.RemoveStartTimes,
+                (AnonymizationSettings s) => (bool?)s.RemoveStartTimes,
                 Anonymization.RemoveStartTimesCheckBox,
                 ToggleButton.IsCheckedProperty);
         }

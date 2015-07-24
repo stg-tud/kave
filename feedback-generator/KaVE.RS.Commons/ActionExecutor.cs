@@ -16,6 +16,7 @@
 
 using JetBrains.ActionManagement;
 using JetBrains.Application;
+using JetBrains.Application.DataContext;
 using JetBrains.DataFlow;
 using JetBrains.UI.ActionsRevised;
 
@@ -37,6 +38,11 @@ namespace KaVE.RS.Commons
         public void ExecuteActionGuarded<T>() where T : IExecutableAction
         {
             _manager.ExecuteActionGuarded<T>(_lifetime);
+        }
+
+        public void ExecuteActionGuarded<T>(IDataContext dataContext) where T : IExecutableAction
+        {
+            _manager.ExecuteActionGuarded<T>(_lifetime,dataContext:dataContext);
         }
     }
 }

@@ -14,21 +14,14 @@
  * limitations under the License.
  */
 
-using JetBrains.Application.Settings;
+using JetBrains.Application.DataContext;
 
-namespace KaVE.VS.FeedbackGenerator.Settings.ExportSettingsSuite
+namespace KaVE.VS.FeedbackGenerator.Settings
 {
-    [SettingsKey(typeof (FeedbackSettings), "Kave Feedback-Export Settings")]
-    // WARNING: Do not change classname, as it is used to identify settings
-    public class ExportSettings
+    public static class SettingDataConstants
     {
-        [SettingsEntry(false, "KaVE FeedbackGenerator IsDatev")]
-        public bool IsDatev;
+        public static DataConstant<string> DataConstant = new DataConstant<string>("SettingOrFeedbackReset");
 
-        [SettingsEntry("http://kave.st.informatik.tu-darmstadt.de/test/", "KaVE FeedbackGenerator UploadUrl")]
-        public string UploadUrl;
-
-        [SettingsEntry("", "KaVE FeedbackGenerator WebAccessPrefix")]
-        public string WebAccessPrefix;
+        public static string StandardDataRuleName = "SettingOrFeedbackReset";
     }
 }

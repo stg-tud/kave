@@ -15,6 +15,7 @@
  */
 
 using System.Collections.Generic;
+using KaVE.VS.FeedbackGenerator.Settings;
 using KaVE.VS.FeedbackGenerator.Settings.ExportSettingsSuite;
 using KaVE.VS.FeedbackGenerator.UserControls.Anonymization;
 using NUnit.Framework;
@@ -23,7 +24,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.Anonymization
 {
     internal class AnonymizationContextTest
     {
-        private ExportSettings _exportSettings;
+        private AnonymizationSettings _anonymizationSettings;
         private List<string> _updatedProperties;
 
         private AnonymizationContext _sut;
@@ -32,23 +33,23 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.Anonymization
         public void SetUp()
         {
             _updatedProperties = new List<string>();
-            _exportSettings = new ExportSettings
+            _anonymizationSettings = new AnonymizationSettings
             {
                 RemoveCodeNames = false,
                 RemoveSessionIDs = false,
                 RemoveDurations = false,
                 RemoveStartTimes = false
             };
-            _sut = new AnonymizationContext(_exportSettings);
+            _sut = new AnonymizationContext(_anonymizationSettings);
             _sut.PropertyChanged += (sender, args) => { _updatedProperties.Add(args.PropertyName); };
         }
 
         [Test]
         public void RemoveCodeNames_PropagationFromCode()
         {
-            _exportSettings.RemoveCodeNames = false;
+            _anonymizationSettings.RemoveCodeNames = false;
             Assert.False(_sut.RemoveCodeNames);
-            _exportSettings.RemoveCodeNames = true;
+            _anonymizationSettings.RemoveCodeNames = true;
             Assert.True(_sut.RemoveCodeNames);
         }
 
@@ -56,9 +57,9 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.Anonymization
         public void RemoveCodeNames_PropagationToCode()
         {
             _sut.RemoveCodeNames = false;
-            Assert.False(_exportSettings.RemoveCodeNames);
+            Assert.False(_anonymizationSettings.RemoveCodeNames);
             _sut.RemoveCodeNames = true;
-            Assert.True(_exportSettings.RemoveCodeNames);
+            Assert.True(_anonymizationSettings.RemoveCodeNames);
         }
 
         [Test]
@@ -71,9 +72,9 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.Anonymization
         [Test]
         public void RemoveSessionIDs_PropagationFromCode()
         {
-            _exportSettings.RemoveSessionIDs = false;
+            _anonymizationSettings.RemoveSessionIDs = false;
             Assert.False(_sut.RemoveSessionIDs);
-            _exportSettings.RemoveSessionIDs = true;
+            _anonymizationSettings.RemoveSessionIDs = true;
             Assert.True(_sut.RemoveSessionIDs);
         }
 
@@ -81,9 +82,9 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.Anonymization
         public void RemoveSessionIDs_PropagationToCode()
         {
             _sut.RemoveSessionIDs = false;
-            Assert.False(_exportSettings.RemoveSessionIDs);
+            Assert.False(_anonymizationSettings.RemoveSessionIDs);
             _sut.RemoveSessionIDs = true;
-            Assert.True(_exportSettings.RemoveSessionIDs);
+            Assert.True(_anonymizationSettings.RemoveSessionIDs);
         }
 
         [Test]
@@ -96,9 +97,9 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.Anonymization
         [Test]
         public void RemoveDurations_PropagationFromCode()
         {
-            _exportSettings.RemoveDurations = false;
+            _anonymizationSettings.RemoveDurations = false;
             Assert.False(_sut.RemoveDurations);
-            _exportSettings.RemoveDurations = true;
+            _anonymizationSettings.RemoveDurations = true;
             Assert.True(_sut.RemoveDurations);
         }
 
@@ -106,9 +107,9 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.Anonymization
         public void RemoveDurationss_PropagationToCode()
         {
             _sut.RemoveDurations = false;
-            Assert.False(_exportSettings.RemoveDurations);
+            Assert.False(_anonymizationSettings.RemoveDurations);
             _sut.RemoveDurations = true;
-            Assert.True(_exportSettings.RemoveDurations);
+            Assert.True(_anonymizationSettings.RemoveDurations);
         }
 
         [Test]
@@ -121,9 +122,9 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.Anonymization
         [Test]
         public void RemoveStartTimes_PropagationFromCode()
         {
-            _exportSettings.RemoveStartTimes = false;
+            _anonymizationSettings.RemoveStartTimes = false;
             Assert.False(_sut.RemoveStartTimes);
-            _exportSettings.RemoveStartTimes = true;
+            _anonymizationSettings.RemoveStartTimes = true;
             Assert.True(_sut.RemoveStartTimes);
         }
 
@@ -131,9 +132,9 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.Anonymization
         public void RemoveStartTimes_PropagationToCode()
         {
             _sut.RemoveStartTimes = false;
-            Assert.False(_exportSettings.RemoveStartTimes);
+            Assert.False(_anonymizationSettings.RemoveStartTimes);
             _sut.RemoveStartTimes = true;
-            Assert.True(_exportSettings.RemoveStartTimes);
+            Assert.True(_anonymizationSettings.RemoveStartTimes);
         }
 
         [Test]

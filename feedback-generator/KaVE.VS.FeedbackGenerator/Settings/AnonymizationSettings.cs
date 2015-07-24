@@ -16,19 +16,21 @@
 
 using JetBrains.Application.Settings;
 
-namespace KaVE.VS.FeedbackGenerator.Settings.ExportSettingsSuite
+namespace KaVE.VS.FeedbackGenerator.Settings
 {
-    [SettingsKey(typeof (FeedbackSettings), "Kave Feedback-Export Settings")]
-    // WARNING: Do not change classname, as it is used to identify settings
-    public class ExportSettings
+    [SettingsKey(typeof(FeedbackSettings), "Kave Feedback-Anonymization Settings")]
+    public class AnonymizationSettings
     {
-        [SettingsEntry(true,"KaVE FeedbackGenerator IsDatev")]
-        public bool IsDatev;
+        [SettingsEntry(false, "KaVE FeedbackGenerator RemoveCodeNames")]
+        public bool RemoveCodeNames;
 
-        [SettingsEntry("https://licsrv1.zd.datev.de/feedback-server/", "KaVE FeedbackGenerator UploadUrl")]
-        public string UploadUrl;
+        [SettingsEntry(false, "KaVE FeedbackGenerator RemoveDurations")]
+        public bool RemoveDurations;
 
-        [SettingsEntry("http://www3.bk.datev.de/eprtl/dyn.ica?", "KaVE FeedbackGenerator WebAccessPrefix")]
-        public string WebAccessPrefix;
+        [SettingsEntry(false, "KaVE FeedbackGenerator RemoveStartTimes")]
+        public bool RemoveStartTimes;
+
+        [SettingsEntry(false, "KaVE FeedbackGenerator RemoveSessionIDs")]
+        public bool RemoveSessionIDs;
     }
 }
