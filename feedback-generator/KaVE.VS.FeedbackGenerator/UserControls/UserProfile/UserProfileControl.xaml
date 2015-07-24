@@ -101,7 +101,7 @@ limitations under the License.
 
                 <!-- %%%%%-->
                 <TextBlock TextWrapping="Wrap" Margin="0,15,0,5" FontSize="12" FontStyle="Italic"
-                           Text="{x:Static userProfile:UserProfileMessages.Projects_Question}" />
+                           Text="{x:Static userProfile:UserProfileMessages.Teams_Question}" />
 
                 <CheckBox Name="TeamsSoloCheckBox"
                           VerticalAlignment="Center" Content="{x:Static userProfile:UserProfileMessages.TeamsSolo}"
