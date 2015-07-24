@@ -15,6 +15,7 @@
  */
 
 using System.Collections.Generic;
+using KaVE.Commons.Utils.Assertion;
 using KaVE.VS.Achievements.Util;
 using NUnit.Framework;
 
@@ -68,6 +69,13 @@ namespace KaVE.VS.Achievements.Tests.Util
             uut.Clear();
 
             Assert.IsEmpty(uut.Items);
+        }
+
+        [Test]
+        public void ShouldThrowAnExceptionWhenLimitIsSmallerThanZero()
+        {
+            var uut = new FixedSizePriorityQueue<int>(0, new TestIntegerComparer());
+            Assert.Throws<AssertException>(() => uut.Limit = -1);
         }
 
         private class TestIntegerComparer : IComparer<int>

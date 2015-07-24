@@ -17,7 +17,7 @@
 using System;
 using System.IO;
 using KaVE.Commons.Utils.Collections;
-using KaVE.Commons.Utils.Concurrent;
+using KaVE.Commons.Utils.Concurrency;
 using KaVE.Commons.Utils.IO;
 using Newtonsoft.Json;
 

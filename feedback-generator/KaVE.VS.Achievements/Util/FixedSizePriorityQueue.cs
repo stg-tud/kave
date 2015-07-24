@@ -17,6 +17,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Util.src.dataStructures;
+using KaVE.Commons.Utils.Assertion;
 
 namespace KaVE.VS.Achievements.Util
 {
@@ -27,6 +28,8 @@ namespace KaVE.VS.Achievements.Util
             get { return _limit; }
             set
             {
+                Asserts.That(value >= 0, "Limit cannot be smaller than zero!");
+
                 _limit = value;
                 _queue = new PriorityQueue<T>(_limit, _comparer);
                 while (_queue.Count > _limit)
@@ -49,8 +52,8 @@ namespace KaVE.VS.Achievements.Util
 
         public FixedSizePriorityQueue(int limit, IComparer<T> comparer)
         {
-            _comparer = comparer;
             Limit = limit;
+            _comparer = comparer;
         }
 
         public void Enqueue(T obj)
@@ -65,9 +68,7 @@ namespace KaVE.VS.Achievements.Util
 
         public T Dequeue()
         {
-            var currentItem = _queue.GetMin();
-            _queue.Remove(currentItem);
-            return currentItem;
+            return _queue.ExtractMin();
         }
 
         public void Clear()
