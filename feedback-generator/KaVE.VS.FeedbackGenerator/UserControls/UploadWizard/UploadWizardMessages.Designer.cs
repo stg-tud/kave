@@ -123,9 +123,9 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UploadWizard {
         ///
         ///Thank You!.
         /// </summary>
-        public static string UserProfileReminderWindow_Text {
+        public static string UserProfileReminderDialog_Text {
             get {
-                return ResourceManager.GetString("UserProfileReminderWindow_Text", resourceCulture);
+                return ResourceManager.GetString("UserProfileReminderDialog_Text", resourceCulture);
             }
         }
         

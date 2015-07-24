@@ -280,7 +280,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>UserProfileOptionsMessages.resx</DependentUpon>
     </Compile>
-    <Compile Include="UserControls\UploadWizard\AnonymizationWindow.xaml.cs">
+    <Compile Include="UserControls\UploadWizard\Anonymization\AnonymizationWindow.xaml.cs">
       <DependentUpon>AnonymizationWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="UserControls\UploadWizard\UploadWizardMessages.Designer.cs">
@@ -292,6 +292,15 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>UserProfileMessages.resx</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\UploadWizard\UserProfileReminder\UserProfileReminderDialog.xaml.cs">
+      <DependentUpon>UserProfileReminderDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\UploadWizard\UserProfileReminder\UserProfileReminderWindow.xaml.cs">
+      <DependentUpon>UserProfileReminderWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\UploadWizard\UserProfile\UserProfileWindow.xaml.cs">
+      <DependentUpon>UserProfileWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="UserControls\UserProfile\UserProfileControl.xaml.cs">
       <DependentUpon>UserProfileControl.xaml</DependentUpon>
@@ -470,6 +479,7 @@
     <EmbeddedResource Include="UserControls\UploadWizard\UploadWizardMessages.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>UploadWizardMessages.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="UserControls\UserProfile\UserProfileMessages.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
@@ -493,17 +503,21 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UserControls\UploadWizard\AnonymizationWindow.xaml">
+    <Page Include="UserControls\UploadWizard\Anonymization\AnonymizationWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserControls\UploadWizard\UserProfileReminder\UserProfileReminderDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UserControls\UploadWizard\UserProfileReminderWindow.xaml">
-      <SubType>Designer</SubType>
+    <Page Include="UserControls\UploadWizard\UserProfileReminder\UserProfileReminderWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
-    <Page Include="UserControls\UploadWizard\UserProfileWindow.xaml">
-      <SubType>Designer</SubType>
+    <Page Include="UserControls\UploadWizard\UserProfile\UserProfileWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="UserControls\UserProfile\CheckedUserProfileControl.xaml">
       <SubType>Designer</SubType>

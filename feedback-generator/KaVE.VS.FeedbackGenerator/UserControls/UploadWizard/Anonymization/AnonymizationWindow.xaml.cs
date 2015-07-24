@@ -17,7 +17,7 @@
 using System.Windows;
 using KaVE.RS.Commons.Settings;
 
-namespace KaVE.VS.FeedbackGenerator.UserControls.UploadWizard
+namespace KaVE.VS.FeedbackGenerator.UserControls.UploadWizard.Anonymization
 {
     public partial class AnonymizationWindow : Window
     {

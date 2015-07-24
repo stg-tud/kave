@@ -96,13 +96,13 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UploadWizard
 
         private void On_UserProfile_Click(object sender, RoutedEventArgs e)
         {
-            var userProfileWindow = new UserProfileWindow(MyDataContext,_settingsStore);
+            var userProfileWindow = new UserProfile.UserProfileWindow(MyDataContext,_settingsStore);
             userProfileWindow.Show();
         }
 
         private void On_Anonymization_Click(object sender, RoutedEventArgs e)
         {
-            var anonymizationWindow = new AnonymizationWindow(MyDataContext,_settingsStore);
+            var anonymizationWindow = new Anonymization.AnonymizationWindow(MyDataContext,_settingsStore);
             anonymizationWindow.Show();
         }
     }

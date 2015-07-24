@@ -28,10 +28,12 @@ using KaVE.VS.FeedbackGenerator.Properties;
 using KaVE.VS.FeedbackGenerator.Settings;
 using KaVE.VS.FeedbackGenerator.Settings.ExportSettingsSuite;
 using KaVE.VS.FeedbackGenerator.UserControls.UploadWizard;
+using KaVE.VS.FeedbackGenerator.UserControls.UploadWizard.UserProfileReminder;
 using KaVE.VS.FeedbackGenerator.Utils.Export;
 using KaVE.VS.FeedbackGenerator.Utils.Logging;
 using NuGet;
 using ILogger = KaVE.Commons.Utils.Exceptions.ILogger;
+using UserProfileReminderWindow = KaVE.VS.FeedbackGenerator.UserControls.UploadWizard.UserProfileReminder.UserProfileReminderWindow;
 
 namespace KaVE.VS.FeedbackGenerator.Menu
 {
@@ -67,7 +69,7 @@ namespace KaVE.VS.FeedbackGenerator.Menu
         {
             if (ShouldShowUserProfileReminder())
             {
-                new UserProfileReminderWindow(_actionExec,_settingsStore).Show();
+                new UserProfileReminderDialog(_actionExec,_settingsStore).Show();
             }
             else
             {

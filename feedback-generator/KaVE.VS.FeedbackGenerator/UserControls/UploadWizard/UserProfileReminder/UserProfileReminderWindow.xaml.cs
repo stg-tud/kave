@@ -25,7 +25,7 @@ using KaVE.VS.FeedbackGenerator.UserControls.UserProfile;
 using KaVEISettingsStore = KaVE.RS.Commons.Settings.ISettingsStore;
 
 
-namespace KaVE.VS.FeedbackGenerator.UserControls.UploadWizard
+namespace KaVE.VS.FeedbackGenerator.UserControls.UploadWizard.UserProfileReminder
 {
     public partial class UserProfileReminderWindow : Window
     {

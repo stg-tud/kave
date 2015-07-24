@@ -15,34 +15,28 @@
  */
 
 using System.Windows;
-using KaVE.RS.Commons.Settings;
-using KaVE.VS.FeedbackGenerator.Settings;
+using KaVE.RS.Commons;
+using KaVEISettingsStore = KaVE.RS.Commons.Settings.ISettingsStore;
 
-namespace KaVE.VS.FeedbackGenerator.UserControls.UploadWizard
+
+namespace KaVE.VS.FeedbackGenerator.UserControls.UploadWizard.UserProfileReminder
 {
-    public partial class UserProfileWindow : Window
+    public partial class UserProfileReminderDialog
     {
-        private readonly ISettingsStore _settingsStore;
-        private readonly UploadWizardContext _uploadWizardContext;
+        private readonly ActionExecutor _actionExecutor;
+        private readonly KaVEISettingsStore _settingsStore;
 
-        public UserProfileWindow(UploadWizardContext uploadWizardContext, ISettingsStore settingsStore)
+        public UserProfileReminderDialog(ActionExecutor actionExecutor, KaVEISettingsStore settingsStore)
         {
+            _actionExecutor = actionExecutor;
             _settingsStore = settingsStore;
-            _uploadWizardContext = uploadWizardContext;
             InitializeComponent();
-                
-            DataContext = uploadWizardContext;
         }
 
         private void On_Ok_Click(object sender, RoutedEventArgs e)
         {
-            _settingsStore.SetSettings(_uploadWizardContext.UserProfileSettings);
             Close();
-        }
-
-        private void On_Abort_Click(object sender, RoutedEventArgs e)
-        {
-            Close();
+            new UserProfileReminderWindow(_actionExecutor, _settingsStore).Show();
         }
     }
 }
