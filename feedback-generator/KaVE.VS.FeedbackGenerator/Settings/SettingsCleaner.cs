@@ -21,7 +21,6 @@ using KaVE.RS.Commons.Settings;
 using KaVE.RS.Commons.Settings.KaVE.RS.Commons.Settings;
 using KaVE.RS.Commons.Utils;
 using KaVE.VS.FeedbackGenerator.Settings.ExportSettingsSuite;
-using KaVE.VS.FeedbackGenerator.UserControls.OptionPage.AnonymizationOptions;
 using KaVE.VS.FeedbackGenerator.Utils.Logging;
 
 namespace KaVE.VS.FeedbackGenerator.Settings
@@ -47,14 +46,17 @@ namespace KaVE.VS.FeedbackGenerator.Settings
 
         public void Execute(IDataContext context, DelegateExecute nextExecute)
         {
-            var restoreType = context.GetData(SettingDataConstants.DataConstant);
+            var restoreType = context.GetData(SettingDataContextCreator.DataConstant);
             if (restoreType != null)
             {
-                if (restoreType.Equals("Feedback"))
+                if (restoreType.ResetType == ResetTypes.Feedback)
                 {
                     RestoreFeedback();
                 }
-                RestoreSettings(restoreType);
+                else
+                {
+                    RestoreSettings(restoreType.ResetType);
+                }
             }
         }
 
@@ -63,22 +65,22 @@ namespace KaVE.VS.FeedbackGenerator.Settings
             _logManager.DeleteAllLogs();
         }
 
-        private void RestoreSettings(string settingType)
+        private void RestoreSettings(ResetTypes settingType)
         {
             // WARNING: Do not reset FeedbackSettings, as it is used to store entries that have to be consistent over time
             switch (settingType)
             {
-                case "GeneralSettings":
+                case ResetTypes.GeneralSettings:
                     _settings.ResetSettings<UploadSettings>();
                     _settings.ResetSettings<ExportSettings>();
                     break;
-                case "UserProfileSettings":
+                case ResetTypes.UserProfileSettings:
                     _settings.ResetSettings<UserProfileSettings>();
                     break;
-                case "AnonymizationSettings":
+                case ResetTypes.AnonymizationSettings:
                     _settings.ResetSettings<AnonymizationSettings>();
                     break;
-                case "ModelStoreSettings":
+                case ResetTypes.ModelStoreSettings:
                     _settings.ResetSettings<ModelStoreSettings>();
                     break;
             }

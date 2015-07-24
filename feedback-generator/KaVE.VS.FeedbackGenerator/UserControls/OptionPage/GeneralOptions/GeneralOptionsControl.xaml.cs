@@ -75,9 +75,8 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.GeneralOptions
             var result = MessageBox.ShowYesNo(GeneralOptionsMessages.SettingResetDialog);
             if (result)
             {
-                _dataContexts.RegisterDataRule(_lifetime, new DataRule<string>(SettingDataConstants.StandardDataRuleName, SettingDataConstants.DataConstant, "GeneralSettings"));
-
-                _actionExecutor.ExecuteActionGuarded<SettingsCleaner>(_dataContexts.CreateWithDataRules(_lifetime));
+                var settingResetType = new SettingResetType() {ResetType = ResetTypes.GeneralSettings};
+                _actionExecutor.ExecuteActionGuarded<SettingsCleaner>(settingResetType.GetDataContextForSettingResultType(_dataContexts,_lifetime));
                 
                 var window = Window.GetWindow(this);
                 if (window != null)
@@ -92,9 +91,8 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.GeneralOptions
             var result = MessageBox.ShowYesNo(GeneralOptionsMessages.FeedbackResetDialog);
             if (result)
             {
-                _dataContexts.RegisterDataRule(_lifetime, new DataRule<string>(SettingDataConstants.StandardDataRuleName, SettingDataConstants.DataConstant, "Feedback"));
-
-                _actionExecutor.ExecuteActionGuarded<SettingsCleaner>(_dataContexts.CreateWithDataRules(_lifetime));
+                var settingResetType = new SettingResetType() { ResetType = ResetTypes.Feedback };
+                _actionExecutor.ExecuteActionGuarded<SettingsCleaner>(settingResetType.GetDataContextForSettingResultType(_dataContexts, _lifetime));
 
                 var window = Window.GetWindow(this);
                 if (window != null)

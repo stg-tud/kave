@@ -106,9 +106,8 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UserProfileOptions
             var result = MessageBox.ShowYesNo(UserProfileOptionsMessages.SettingResetDialog);
             if (result)
             {
-                _dataContexts.RegisterDataRule(_lifetime, new DataRule<string>(SettingDataConstants.StandardDataRuleName, SettingDataConstants.DataConstant, "UserProfileSettings"));
-
-                _actionExecutor.ExecuteActionGuarded<SettingsCleaner>(_dataContexts.CreateWithDataRules(_lifetime));
+                var settingResetType = new SettingResetType() { ResetType = ResetTypes.UserProfileSettings };
+                _actionExecutor.ExecuteActionGuarded<SettingsCleaner>(settingResetType.GetDataContextForSettingResultType(_dataContexts, _lifetime));
 
                 var window = Window.GetWindow(this);
                 if (window != null)

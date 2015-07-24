@@ -97,9 +97,8 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.AnonymizationOptions
             var result = MessageBox.ShowYesNo(AnonymizationOptionsMessages.ResetSettingDialog);
             if (result)
             {
-                _dataContexts.RegisterDataRule(_lifetime, new DataRule<string>(SettingDataConstants.StandardDataRuleName, SettingDataConstants.DataConstant, "AnonymizationSettings"));
-
-                _actionExecutor.ExecuteActionGuarded<SettingsCleaner>(_dataContexts.CreateWithDataRules(_lifetime));
+                var settingResetType = new SettingResetType {ResetType = ResetTypes.AnonymizationSettings};
+                _actionExecutor.ExecuteActionGuarded<SettingsCleaner>(settingResetType.GetDataContextForSettingResultType(_dataContexts,_lifetime));
 
                 var window = Window.GetWindow(this);
                 if (window != null)

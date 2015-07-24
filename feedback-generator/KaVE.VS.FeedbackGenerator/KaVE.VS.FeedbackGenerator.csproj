@@ -236,7 +236,8 @@
     <Compile Include="SessionManager\Presentation\JsonSyntaxHighlighter.cs" />
     <Compile Include="SessionManager\Presentation\MultiSelection.cs" />
     <Compile Include="Menu\OptionPageAction.cs" />
-    <Compile Include="Settings\SettingDataConstants.cs" />
+    <Compile Include="Settings\SettingDataContextCreator.cs" />
+    <Compile Include="Settings\SettingResetType.cs" />
     <Compile Include="Settings\SettingsCleaner.cs" />
     <Compile Include="Settings\UserProfileSettings.cs" />
     <Compile Include="UserControls\Anonymization\AnonymizationContext.cs" />

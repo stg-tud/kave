@@ -14,14 +14,19 @@
  * limitations under the License.
  */
 
-using JetBrains.Application.DataContext;
-
 namespace KaVE.VS.FeedbackGenerator.Settings
 {
-    public static class SettingDataConstants
+    public class SettingResetType
     {
-        public static DataConstant<string> DataConstant = new DataConstant<string>("SettingOrFeedbackReset");
+        public ResetTypes ResetType { get; set; }
+    }
 
-        public static string StandardDataRuleName = "SettingOrFeedbackReset";
+    public enum ResetTypes
+    {
+        Feedback,
+        GeneralSettings,
+        AnonymizationSettings,
+        UserProfileSettings,
+        ModelStoreSettings
     }
 }

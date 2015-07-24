@@ -17,11 +17,9 @@
 using System.Windows;
 using System.Windows.Controls;
 using Avalon.Windows.Dialogs;
-using JetBrains.ActionManagement;
 using JetBrains.Application.DataContext;
 using JetBrains.Application.Settings;
 using JetBrains.DataFlow;
-using JetBrains.UI.Actions.ActionManager;
 using JetBrains.UI.CrossFramework;
 using JetBrains.UI.Options;
 using JetBrains.UI.Resources;
@@ -91,9 +89,8 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
             var result = MessageBox.ShowYesNo(UsageModelOptionsMessages.SettingResetDialog);
             if (result)
             {
-                _dataContexts.RegisterDataRule(_lifetime, new DataRule<string>(SettingDataConstants.StandardDataRuleName, SettingDataConstants.DataConstant, "ModelStoreSettings"));
-
-                _actionExecutor.ExecuteActionGuarded<SettingsCleaner>(_dataContexts.CreateWithDataRules(_lifetime));
+                var settingResetType = new SettingResetType() { ResetType = ResetTypes.ModelStoreSettings };
+                _actionExecutor.ExecuteActionGuarded<SettingsCleaner>(settingResetType.GetDataContextForSettingResultType(_dataContexts, _lifetime));
 
                 var window = Window.GetWindow(this);
                 if (window != null)
