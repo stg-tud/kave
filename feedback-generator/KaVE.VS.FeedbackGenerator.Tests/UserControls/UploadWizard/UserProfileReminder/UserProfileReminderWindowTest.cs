@@ -41,7 +41,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UploadWizard.UserProfileR
 
             _mockSettingsStore = new Mock<ISettingsStore>();
             _mockSettingsStore.Setup(settingStore => settingStore.GetSettings<ExportSettings>())
-                  .Returns(new ExportSettings());
+                              .Returns(new ExportSettings());
             _mockSettingsStore.Setup(settingStore => settingStore.GetSettings<UserProfileSettings>())
                               .Returns(_userProfileSettings);
 
@@ -51,7 +51,9 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UploadWizard.UserProfileR
         private UserProfileReminderWindow Open()
         {
             _mockActionExecutor = new Mock<IActionExecutor>();
-            var userProfileReminderWindow = new UserProfileReminderWindow(_mockActionExecutor.Object,_mockSettingsStore.Object);
+            var userProfileReminderWindow = new UserProfileReminderWindow(
+                _mockActionExecutor.Object,
+                _mockSettingsStore.Object);
             userProfileReminderWindow.Show();
             return userProfileReminderWindow;
         }
@@ -76,6 +78,14 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UploadWizard.UserProfileR
             Click(_sut.NoParticipationHyperlink);
 
             Assert.False(_userProfileSettings.IsProvidingProfile);
+        }
+
+        [Test]
+        public void ShouldSaveSettingsOnClose()
+        {
+            _sut.Close();
+
+            _mockSettingsStore.Verify(settingsStore => settingsStore.SetSettings(_userProfileSettings));
         }
 
         [Test]
