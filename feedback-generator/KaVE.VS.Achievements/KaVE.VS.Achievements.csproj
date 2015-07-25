@@ -423,12 +423,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\Icons\blau.png" />
-    <Content Include="Resources\Icons\Build\Build1Completed.png" />
-    <Content Include="Resources\Icons\Build\Build1Uncompleted.png" />
-    <Content Include="Resources\Icons\Build\Build2Completed.png" />
-    <Content Include="Resources\Icons\Build\Build2Uncompleted.png" />
-    <Content Include="Resources\Icons\Build\Build3Completed.png" />
-    <Content Include="Resources\Icons\Build\Build3Uncompleted.png" />
+    <Content Include="Resources\Icons\AllBuilds\Build1Completed.png" />
+    <Content Include="Resources\Icons\AllBuilds\Build1Uncompleted.png" />
+    <Content Include="Resources\Icons\AllBuilds\Build2Completed.png" />
+    <Content Include="Resources\Icons\AllBuilds\Build2Uncompleted.png" />
+    <Content Include="Resources\Icons\AllBuilds\Build3Completed.png" />
+    <Content Include="Resources\Icons\AllBuilds\Build3Uncompleted.png" />
     <Content Include="Resources\Icons\CodeCompletion\CodeCompletions1Completed.png" />
     <Content Include="Resources\Icons\CodeCompletion\CodeCompletions1Uncompleted.png" />
     <Content Include="Resources\Icons\CodeCompletion\CodeCompletions2Completed.png" />
