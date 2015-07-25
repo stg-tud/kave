@@ -30,7 +30,8 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp
          TestCase("d:[RT, A] [DT, A].()", "d:[RT, A] [DT, A].()[]"),
          TestCase("d:[RT[], A] [DT, A].([PT[], A] p)", "d:[RT[], A] [DT, A].([PT[], A] p)[]"),
          TestCase("A[], B", "A[,], B"),
-         TestCase("A[,,], B", "A[,,,], B")]
+         TestCase("A[,,], B", "A[,,,], B"),
+         TestCase("T`1[[T -> d:[TR] [T2, P2].([T] arg)]], P", "T`1[][[T -> d:[TR] [T2, P2].([T] arg)]], P")]
         public void DerivesFrom(string baseTypeIdentifer, string expectedDerivedNameIdentifier)
         {
             var arrayTypeName = ArrayTypeName.From(TypeName.Get(baseTypeIdentifer), 1);
@@ -52,7 +53,8 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp
          TestCase("A[]"),
          TestCase("T -> System.String[], mscorlib, 4.0.0.0"),
          TestCase("System.Int32[], mscorlib, 4.0.0.0"),
-         TestCase("d:[RT, A] [DT, A].()[]")]
+         TestCase("d:[RT, A] [DT, A].()[]"),
+         TestCase("T`1[][[T -> d:[TR] [T2, P2].([T] arg)]], P")]
         public void ShouldBeArrayType(string identifier)
         {
             var arrayTypeName = TypeName.Get(identifier);
@@ -68,12 +70,22 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp
          TestCase("T -> System.String[], mscorlib, 4.0.0.0", "System.String, mscorlib, 4.0.0.0"),
          TestCase("System.Int32[], mscorlib, 4.0.0.0", "System.Int32, mscorlib, 4.0.0.0"),
          TestCase("d:[RT, A] [DT, A].()[]", "d:[RT, A] [DT, A].()"),
-         TestCase("d:[RT[], A] [DT, A].([PT[], A] p)[]", "d:[RT[], A] [DT, A].([PT[], A] p)")]
+         TestCase("d:[RT[], A] [DT, A].([PT[], A] p)[]", "d:[RT[], A] [DT, A].([PT[], A] p)"),
+         TestCase("T`1[][[T -> d:[TR] [T2, P2].([T] arg)]], P", "T`1[[T -> d:[TR] [T2, P2].([T] arg)]], P")]
         public void ShouldGetArrayBaseType(string identifier, string expected)
         {
             var arrayTypeName = TypeName.Get(identifier);
 
             Assert.AreEqual(expected, arrayTypeName.ArrayBaseType.Identifier);
+        }
+
+        [TestCase("ValueType[,,], As, 9.8.7.6", 3),
+         TestCase("T`1[][[T -> d:[TR] [T2, P2].([T] arg)]], P", 1)]
+        public void ShouldIdentifyRank(string id, int expectedRank)
+        {
+            var arrayTypeName = TypeName.Get(id);
+
+            Assert.AreEqual(expectedRank, ArrayTypeName.GetArrayRank(arrayTypeName));
         }
 
         [Test]
@@ -134,7 +146,7 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp
             var uut = TypeName.Get("d:[T] [DT`1[[T -> String, mscorlib]]].([T] p)[]");
 
             Assert.IsTrue(uut.HasTypeParameters);
-            CollectionAssert.AreEqual(new[] { TypeParameterName.Get("T -> String, mscorlib") }, uut.TypeParameters);
+            CollectionAssert.AreEqual(new[] {TypeParameterName.Get("T -> String, mscorlib")}, uut.TypeParameters);
         }
     }
 }

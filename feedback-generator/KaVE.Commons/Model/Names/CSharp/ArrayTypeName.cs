@@ -25,9 +25,31 @@ namespace KaVE.Commons.Model.Names.CSharp
     {
         private static readonly Regex ArrayTypeNameSuffix = new Regex("(\\[[,]*\\])([^()]*)$");
 
-        internal static bool IsArrayTypeIdentifier(string identifier)
+        internal static bool IsArrayTypeIdentifier(string id)
         {
-            return ArrayTypeNameSuffix.IsMatch(identifier);
+            if (id.StartsWith("d:"))
+            {
+                var idx = id.LastIndexOf(')');
+                if (id.Length > (idx + 1) && id[idx + 1] == '[')
+                {
+                    return true;
+                }
+            }
+            else
+            {
+                var idx = id.IndexOf('[');
+                if (idx == -1)
+                {
+                    return false;
+                }
+                while ((idx + 1) < id.Length && id[++idx] == ',') {}
+                if (id[idx] == ']')
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         /// <summary>
@@ -38,8 +60,8 @@ namespace KaVE.Commons.Model.Names.CSharp
         public static ArrayTypeName From(ITypeName baseType, int rank)
         {
             Asserts.That(rank > 0, "rank smaller than 1");
-
-            return (ArrayTypeName) Get(DeriveArrayTypeNameIdentifier(baseType, rank));
+            var typeName = Get(DeriveArrayTypeNameIdentifier(baseType, rank));
+            return (ArrayTypeName) typeName;
         }
 
         private static string DeriveArrayTypeNameIdentifier(ITypeName baseType, int rank)
@@ -65,7 +87,7 @@ namespace KaVE.Commons.Model.Names.CSharp
             return derivedIdentifier;
         }
 
-        private static int GetArrayRank(ITypeName arrayTypeName)
+        public static int GetArrayRank(ITypeName arrayTypeName)
         {
             return ArrayTypeNameSuffix.Match(arrayTypeName.Identifier).Groups[1].Value.Count(c => c == ',') + 1;
         }
@@ -104,7 +126,23 @@ namespace KaVE.Commons.Model.Names.CSharp
 
         public override ITypeName ArrayBaseType
         {
-            get { return TypeName.Get(ArrayTypeNameSuffix.Replace(Identifier, "$2")); }
+            get
+            {
+                var id = Identifier;
+                int startIdx = -1;
+                int endIdx = -1;
+
+                var idx = id.StartsWith("d:")
+                    ? id.LastIndexOf(')') + 1
+                    : id.IndexOf('[');
+
+                startIdx = idx;
+                while (id[++idx] == ',') {}
+                endIdx = idx;
+
+                var newId = id.Substring(0, startIdx) + id.Substring(endIdx+1);
+                return TypeName.Get(newId);
+            }
         }
 
         public int Rank
