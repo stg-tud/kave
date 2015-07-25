@@ -157,6 +157,7 @@
   <ItemGroup>
     <Compile Include="CodeCompletion\CodeCompletionLifecycleManagerTest.cs" />
     <Compile Include="CodeCompletion\PBNProposalItemsProviderTest.cs" />
+    <Compile Include="Menu\UploadWizardActionTest.cs" />
     <Compile Include="PropertiesTests\EnumLocalizationTest.cs" />
     <Compile Include="Settings\SettingsCleanerTest.cs" />
     <Compile Include="UserControls\Anonymization\AnonymizationContextTest.cs" />

@@ -184,6 +184,7 @@
     <Compile Include="Interactivity\LinkNotificationRequestHandler.cs" />
     <Compile Include="Interactivity\Notification.cs" />
     <Compile Include="Interactivity\NotificationRequestHandler.cs" />
+    <Compile Include="Menu\UploadWizardWindowCreator.cs" />
     <Compile Include="Properties\SessionManager.de.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
