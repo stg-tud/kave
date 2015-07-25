@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-using JetBrains.DataFlow;
-using KaVE.RS.Commons.Settings;
+using KaVE.VS.FeedbackGenerator.Settings;
 using KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions;
 using Moq;
 using NUnit.Framework;
@@ -23,15 +22,14 @@ using NUnit.Framework;
 namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOptions
 {
     [RequiresSTA]
-    internal class UsageModelOptionsControlTest : BaseUserControlTest
+    internal class UsageModelOptionsControlTest : BaseOptionPageUserControlTest
     {
-        private Mock<ISettingsStore> _mockSettingsStore;
-        private readonly Lifetime _lifetime = EternalLifetime.Instance;
+        private UsageModelOptionsControl _sut;
 
         [SetUp]
-        public void SetUp()
+        public void Setup()
         {
-            _mockSettingsStore = new Mock<ISettingsStore>();
+            _sut = Open();
         }
 
         private UsageModelOptionsControl Open()
@@ -39,18 +37,44 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UsageModelOpti
             return
                 OpenWindow(
                     new UsageModelOptionsControl(
-                        _lifetime,
-                        null,
-                        _mockSettingsStore.Object,
-                        null,
-                        null));
+                        TestLifetime,
+                        TestOptionsSettingsSmartContext,
+                        MockSettingsStore.Object,
+                        MockActionExecutor.Object,
+                        TestDataContexts,
+                        MockMessageBoxCreator.Object));
         }
 
         [Test]
         public void DataContextIsSetCorrectly()
         {
-            var sut = Open();
-            Assert.IsInstanceOf<UsageModelOptionsViewModel>(sut.DataContext);
+            Assert.IsInstanceOf<UsageModelOptionsViewModel>(_sut.DataContext);
+        }
+
+        [Test]
+        public void ShouldExecuteActionOnResetClick()
+        {
+            SetConfirmationAnswerTo(true);
+
+            Click(_sut.ResetButton);
+
+            VerifyActionExecuted(Times.Once);
+        }
+
+        [Test]
+        public void ShouldNotExecuteActionOnAbort()
+        {
+            SetConfirmationAnswerTo(false);
+
+            Click(_sut.ResetButton);
+
+            VerifyActionExecuted(Times.Never);
+        }
+
+        [Test]
+        public void IsUsingModelStoreSettingsResetType()
+        {
+            Assert.AreEqual(ResetTypes.ModelStoreSettings, UsageModelOptionsControl.ResetType);
         }
     }
 }

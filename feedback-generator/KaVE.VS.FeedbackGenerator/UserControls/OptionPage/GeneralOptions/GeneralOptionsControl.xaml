@@ -65,9 +65,9 @@ limitations under the License.
 
             <!-- reset button-->
             <StackPanel HorizontalAlignment="Right" Margin="10,45,10,6">
-                <Button Padding="15,3,15,3" Click="OnResetSettings"
+                <Button Name="ResetGeneralSettingsButton" Padding="15,3,15,3" Click="OnResetSettings"
                         Content="{x:Static generalOptions:GeneralOptionsMessages.SettingResetButton}" Margin="0,5,0,5" />
-                <Button Padding="15,3,15,3" Click="OnResetFeedback"
+                <Button Name="ResetFeedbackSettingsButton" Padding="15,3,15,3" Click="OnResetFeedback"
                         Content="{x:Static generalOptions:GeneralOptionsMessages.FeedbackResetButton}" Margin="0,5,0,5" />
             </StackPanel>
         </StackPanel>

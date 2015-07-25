@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-using JetBrains.DataFlow;
-using KaVE.RS.Commons.Settings;
+using KaVE.Commons.Utils;
 using KaVE.VS.FeedbackGenerator.Settings;
 using KaVE.VS.FeedbackGenerator.Settings.ExportSettingsSuite;
 using KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UserProfileOptions;
@@ -26,19 +25,19 @@ using NUnit.Framework;
 namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UserProfileOptions
 {
     [RequiresSTA]
-    internal class UserProfileOptionsControlTest : BaseUserControlTest
+    internal class UserProfileOptionsControlTest : BaseOptionPageUserControlTest
     {
-        private Mock<ISettingsStore> _mockSettingsStore;
-        private readonly Lifetime _lifetime = EternalLifetime.Instance;
+        private UserProfileOptionsControl _sut;
 
         [SetUp]
-        public void SetUp()
+        public void Setup()
         {
-            _mockSettingsStore = new Mock<ISettingsStore>();
-            _mockSettingsStore.Setup(settingStore => settingStore.GetSettings<ExportSettings>())
+            MockSettingsStore.Setup(settingStore => settingStore.GetSettings<ExportSettings>())
                               .Returns(new ExportSettings());
-            _mockSettingsStore.Setup(settingStore => settingStore.GetSettings<UserProfileSettings>())
+            MockSettingsStore.Setup(settingStore => settingStore.GetSettings<UserProfileSettings>())
                               .Returns(new UserProfileSettings());
+            
+            _sut = Open();
         }
 
         private UserProfileOptionsControl Open()
@@ -46,19 +45,45 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.UserProfileOpt
             return
                 OpenWindow(
                     new UserProfileOptionsControl(
-                        _lifetime,
-                        null,
-                        _mockSettingsStore.Object,
-                        null,
-                        null,
-                        null));
+                        TestLifetime,
+                        TestOptionsSettingsSmartContext,
+                        MockSettingsStore.Object,
+                        MockActionExecutor.Object,
+                        TestDataContexts,
+                        MockMessageBoxCreator.Object,
+                        new RandomizationUtils()));
         }
 
         [Test]
         public void DataContextIsSetCorrectly()
         {
-            var sut = Open();
-            Assert.IsInstanceOf<UserProfileContext>(sut.DataContext);
+            Assert.IsInstanceOf<UserProfileContext>(_sut.DataContext);
+        }
+
+        [Test]
+        public void ShouldExecuteActionOnResetClick()
+        {
+            SetConfirmationAnswerTo(true);
+
+            Click(_sut.ResetButton);
+
+            VerifyActionExecuted(Times.Once);
+        }
+
+        [Test]
+        public void ShouldNotExecuteActionOnAbort()
+        {
+            SetConfirmationAnswerTo(false);
+
+            Click(_sut.ResetButton);
+
+            VerifyActionExecuted(Times.Never);
+        }
+
+        [Test]
+        public void IsUsingUserProfileSettingsResetType()
+        {
+            Assert.AreEqual(ResetTypes.UserProfileSettings, UserProfileOptionsControl.ResetType);
         }
     }
 }

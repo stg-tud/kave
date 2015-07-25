@@ -30,7 +30,7 @@ limitations under the License.
       <userProfile:CheckedUserProfileControl x:Name="UserProfile" Grid.Row="0"/>
       <!-- reset button-->
       <DockPanel Margin="10,45,10,6" Grid.Row="1">
-        <Button Padding="15,3,15,3" HorizontalAlignment="Right" Click="OnResetSettings"
+        <Button Name="ResetButton" Padding="15,3,15,3" HorizontalAlignment="Right" Click="OnResetSettings"
                 Content="{x:Static userProfileOptions:UserProfileOptionsMessages.SettingResetButton}" />
       </DockPanel>
     </Grid>

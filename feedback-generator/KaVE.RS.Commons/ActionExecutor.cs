@@ -24,7 +24,7 @@ namespace KaVE.RS.Commons
 {
     // TODO RS9: TESTEN!!!
     [ShellComponent]
-    public class ActionExecutor
+    public class ActionExecutor : IActionExecutor
     {
         private readonly IActionManager _manager;
         private readonly Lifetime _lifetime;
@@ -42,7 +42,13 @@ namespace KaVE.RS.Commons
 
         public void ExecuteActionGuarded<T>(IDataContext dataContext) where T : IExecutableAction
         {
-            _manager.ExecuteActionGuarded<T>(_lifetime,dataContext:dataContext);
+            _manager.ExecuteActionGuarded<T>(_lifetime, dataContext: dataContext);
         }
+    }
+
+    public interface IActionExecutor
+    {
+        void ExecuteActionGuarded<T>() where T : IExecutableAction;
+        void ExecuteActionGuarded<T>(IDataContext dataContext) where T : IExecutableAction;
     }
 }

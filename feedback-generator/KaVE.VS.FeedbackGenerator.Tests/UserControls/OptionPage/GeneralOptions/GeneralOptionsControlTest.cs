@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-using JetBrains.DataFlow;
-using KaVE.RS.Commons.Settings;
+using KaVE.VS.FeedbackGenerator.Settings;
 using KaVE.VS.FeedbackGenerator.UserControls.OptionPage.GeneralOptions;
 using Moq;
 using NUnit.Framework;
@@ -23,34 +22,85 @@ using NUnit.Framework;
 namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.GeneralOptions
 {
     [RequiresSTA]
-    internal class GeneralOptionsControlTest : BaseUserControlTest
+    internal class GeneralOptionsControlTest : BaseOptionPageUserControlTest
     {
-        private Mock<ISettingsStore> _mockSettingsStore;
-        private readonly Lifetime _lifetime = EternalLifetime.Instance;
-
-        [SetUp]
-        public void SetUp()
-        {
-            _mockSettingsStore = new Mock<ISettingsStore>();
-        }
+        private GeneralOptionsControl _sut;
 
         private GeneralOptionsControl Open()
         {
             return
                 OpenWindow(
                     new GeneralOptionsControl(
-                        _lifetime,
-                        null,
-                        null,
-                        _mockSettingsStore.Object,
-                        null));
+                        TestLifetime,
+                        TestOptionsSettingsSmartContext,
+                        MockActionExecutor.Object,
+                        MockSettingsStore.Object,
+                        TestDataContexts,
+                        MockMessageBoxCreator.Object));
+        }
+
+        [SetUp]
+        public void Setup()
+        {
+            _sut = Open();
         }
 
         [Test]
         public void DataContextIsSetCorrectly()
         {
-            var sut = Open();
-            Assert.IsInstanceOf<GeneralOptionsViewModel>(sut.DataContext);
+            Assert.IsInstanceOf<GeneralOptionsViewModel>(_sut.DataContext);
+        }
+
+        [Test]
+        public void ShouldResetGeneralSettingsOnClick()
+        {
+            SetConfirmationAnswerTo(true);
+
+            Click(_sut.ResetGeneralSettingsButton);
+
+            VerifyActionExecuted(Times.Once);
+        }
+
+        [Test]
+        public void ShouldNotResetGeneralSettingsOnAbort()
+        {
+            SetConfirmationAnswerTo(false);
+
+            Click(_sut.ResetGeneralSettingsButton);
+
+            VerifyActionExecuted(Times.Never);
+        }
+
+        [Test]
+        public void IsUsingCorrectResetTypeForGeneralSettings()
+        {
+            Assert.AreEqual(ResetTypes.GeneralSettings, GeneralOptionsControl.GeneralSettingsResetType);
+        }
+
+        [Test]
+        public void ShouldResetFeedbackSettingsOnClick()
+        {
+            SetConfirmationAnswerTo(true);
+
+            Click(_sut.ResetFeedbackSettingsButton);
+
+            VerifyActionExecuted(Times.Once);
+        }
+
+        [Test]
+        public void ShouldNotResetFeedbackSettingsOnAbort()
+        {
+            SetConfirmationAnswerTo(false);
+
+            Click(_sut.ResetFeedbackSettingsButton);
+
+            VerifyActionExecuted(Times.Never);
+        }
+
+        [Test]
+        public void IsUsingCorrectResetTypeForFeedbackSettings()
+        {
+            Assert.AreEqual(ResetTypes.Feedback, GeneralOptionsControl.FeedbackResetType);
         }
     }
 }

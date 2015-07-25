@@ -26,8 +26,8 @@ using JetBrains.UI.Resources;
 using KaVE.RS.Commons;
 using KaVE.RS.Commons.Settings.KaVE.RS.Commons.Settings;
 using KaVE.VS.FeedbackGenerator.Settings;
+using KaVE.VS.FeedbackGenerator.Utils;
 using KaVEISettingsStore = KaVE.RS.Commons.Settings.ISettingsStore;
-using MessageBox = JetBrains.Util.MessageBox;
 
 namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
 {
@@ -35,21 +35,26 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
         ParentId = RootOptionPage.PID, Sequence = 4.0)]
     public partial class UsageModelOptionsControl : IOptionsPage
     {
-        private readonly Lifetime _lifetime;
-        private readonly KaVEISettingsStore _settingsStore;
-        private readonly ActionExecutor _actionExecutor;
-        private readonly DataContexts _dataContexts;
-        private readonly ModelStoreSettings _modelStoreSettings;
-
         private const string PID =
             "KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions.UsageModelOptionsControl";
-        
+
+        public const ResetTypes ResetType = ResetTypes.ModelStoreSettings;
+
+        private readonly Lifetime _lifetime;
+        private readonly KaVEISettingsStore _settingsStore;
+        private readonly IActionExecutor _actionExecutor;
+        private readonly DataContexts _dataContexts;
+        private readonly ModelStoreSettings _modelStoreSettings;
+        private readonly IMessageBoxCreator _messageBoxCreator;
+
         public UsageModelOptionsControl(Lifetime lifetime,
             OptionsSettingsSmartContext ctx,
             KaVEISettingsStore settingsStore,
-            ActionExecutor actionExecutor,
-            DataContexts dataContexts)
+            IActionExecutor actionExecutor,
+            DataContexts dataContexts,
+            IMessageBoxCreator messageBoxCreator)
         {
+            _messageBoxCreator = messageBoxCreator;
             _lifetime = lifetime;
             _settingsStore = settingsStore;
             _actionExecutor = actionExecutor;
@@ -58,7 +63,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
 
             _modelStoreSettings = settingsStore.GetSettings<ModelStoreSettings>();
 
-            DataContext = new UsageModelOptionsViewModel()
+            DataContext = new UsageModelOptionsViewModel
             {
                 ModelStoreSettings = _modelStoreSettings
             };
@@ -86,11 +91,12 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
 
         private void OnResetSettings(object sender, RoutedEventArgs e)
         {
-            var result = MessageBox.ShowYesNo(UsageModelOptionsMessages.SettingResetDialog);
+            var result = _messageBoxCreator.ShowYesNo(UsageModelOptionsMessages.SettingResetDialog);
             if (result)
             {
-                var settingResetType = new SettingResetType() { ResetType = ResetTypes.ModelStoreSettings };
-                _actionExecutor.ExecuteActionGuarded<SettingsCleaner>(settingResetType.GetDataContextForSettingResultType(_dataContexts, _lifetime));
+                var settingResetType = new SettingResetType {ResetType = ResetType};
+                _actionExecutor.ExecuteActionGuarded<SettingsCleaner>(
+                    settingResetType.GetDataContextForSettingResultType(_dataContexts, _lifetime));
 
                 var window = Window.GetWindow(this);
                 if (window != null)
@@ -99,7 +105,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UsageModelOptions
                 }
             }
         }
-        
+
         public bool OnOk()
         {
             // TODO: validation

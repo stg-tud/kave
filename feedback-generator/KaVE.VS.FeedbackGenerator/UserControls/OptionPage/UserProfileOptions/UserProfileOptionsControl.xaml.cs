@@ -31,8 +31,8 @@ using KaVE.VS.FeedbackGenerator.Settings;
 using KaVE.VS.FeedbackGenerator.Settings.ExportSettingsSuite;
 using KaVE.VS.FeedbackGenerator.UserControls.OptionPage.GeneralOptions;
 using KaVE.VS.FeedbackGenerator.UserControls.UserProfile;
+using KaVE.VS.FeedbackGenerator.Utils;
 using KaVEISettingsStore = KaVE.RS.Commons.Settings.ISettingsStore;
-using MessageBox = JetBrains.Util.MessageBox;
 
 
 namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UserProfileOptions
@@ -41,12 +41,15 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UserProfileOptions
         ParentId = RootOptionPage.PID, Sequence = 3.0)]
     public partial class UserProfileOptionsControl : IOptionsPage
     {
-        private const string PID = "KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UserProfileOptions.UserProfileOptionsControl";
+        private const string PID =
+            "KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UserProfileOptions.UserProfileOptionsControl";
+
+        public const ResetTypes ResetType = ResetTypes.UserProfileSettings;
 
         private readonly Lifetime _lifetime;
         private readonly OptionsSettingsSmartContext _ctx;
         private readonly KaVEISettingsStore _settingsStore;
-        private readonly ActionExecutor _actionExecutor;
+        private readonly IActionExecutor _actionExecutor;
         private readonly DataContexts _dataContexts;
         private readonly UserProfileSettings _userProfileSettings;
         private readonly UserProfileContext _userProfileContext;
@@ -54,10 +57,12 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UserProfileOptions
         public UserProfileOptionsControl(Lifetime lifetime,
             OptionsSettingsSmartContext ctx,
             KaVEISettingsStore settingsStore,
-            ActionExecutor actionExecutor,
+            IActionExecutor actionExecutor,
             DataContexts dataContexts,
+            IMessageBoxCreator messageBoxCreator,
             IRandomizationUtils rnd)
         {
+            _messageBoxCreator = messageBoxCreator;
             _lifetime = lifetime;
             _ctx = ctx;
             _settingsStore = settingsStore;
@@ -73,7 +78,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UserProfileOptions
             _userProfileContext.PropertyChanged += UserProfileContextOnPropertyChanged;
 
             DataContext = _userProfileContext;
-            
+
             if (_ctx != null)
             {
                 BindToUserProfileChanges();
@@ -103,11 +108,12 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UserProfileOptions
 
         private void OnResetSettings(object sender, RoutedEventArgs e)
         {
-            var result = MessageBox.ShowYesNo(UserProfileOptionsMessages.SettingResetDialog);
+            var result = _messageBoxCreator.ShowYesNo(UserProfileOptionsMessages.SettingResetDialog);
             if (result)
             {
-                var settingResetType = new SettingResetType() { ResetType = ResetTypes.UserProfileSettings };
-                _actionExecutor.ExecuteActionGuarded<SettingsCleaner>(settingResetType.GetDataContextForSettingResultType(_dataContexts, _lifetime));
+                var settingResetType = new SettingResetType {ResetType = ResetType};
+                _actionExecutor.ExecuteActionGuarded<SettingsCleaner>(
+                    settingResetType.GetDataContextForSettingResultType(_dataContexts, _lifetime));
 
                 var window = Window.GetWindow(this);
                 if (window != null)
@@ -279,6 +285,8 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.OptionPage.UserProfileOptions
             typeof (Likert7Point),
             typeof (GeneralOptionsControl)
             );
+
+        private readonly IMessageBoxCreator _messageBoxCreator;
 
         public Educations Education
         {

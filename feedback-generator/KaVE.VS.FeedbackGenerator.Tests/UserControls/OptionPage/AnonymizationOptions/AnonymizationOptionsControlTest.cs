@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-using JetBrains.DataFlow;
-using KaVE.RS.Commons.Settings;
 using KaVE.VS.FeedbackGenerator.Settings;
 using KaVE.VS.FeedbackGenerator.UserControls.Anonymization;
 using KaVE.VS.FeedbackGenerator.UserControls.OptionPage.AnonymizationOptions;
@@ -25,34 +23,59 @@ using NUnit.Framework;
 namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.AnonymizationOptions
 {
     [RequiresSTA]
-    internal class AnonymizationOptionsControlTest : BaseUserControlTest
+    internal class AnonymizationOptionsControlTest : BaseOptionPageUserControlTest
     {
-        private Mock<ISettingsStore> _mockSettingsStore;
-        private readonly Lifetime _lifetime = EternalLifetime.Instance;
-        
-        [SetUp]
-        public void SetUp()
-        {
-            _mockSettingsStore = new Mock<ISettingsStore>();
-        }
+        private AnonymizationOptionsControl _sut;
 
         private AnonymizationOptionsControl Open()
         {
             return
                 OpenWindow(
                     new AnonymizationOptionsControl(
-                        _lifetime,
-                        null,
-                        _mockSettingsStore.Object,
-                        null,
-                        null));
+                        TestLifetime,
+                        TestOptionsSettingsSmartContext,
+                        MockSettingsStore.Object,
+                        MockActionExecutor.Object,
+                        TestDataContexts,
+                        MockMessageBoxCreator.Object));
+        }
+
+        [SetUp]
+        public void Setup()
+        {
+            _sut = Open();
         }
 
         [Test]
         public void DataContextIsSetCorrectly()
         {
-            var sut = Open();
-            Assert.IsInstanceOf<AnonymizationContext>(sut.DataContext);
+            Assert.IsInstanceOf<AnonymizationContext>(_sut.DataContext);
+        }
+
+        [Test]
+        public void ShouldExecuteResetOnClick()
+        {
+            SetConfirmationAnswerTo(true);
+
+            Click(_sut.ResetButton);
+
+            VerifyActionExecuted(Times.Once);
+        }
+
+        [Test]
+        public void ShouldNotResetOnAbort()
+        {
+            SetConfirmationAnswerTo(false);
+
+            Click(_sut.ResetButton);
+
+            VerifyActionExecuted(Times.Never);
+        }
+
+        [Test]
+        public void IsUsingAnonymizationResetType()
+        {
+            Assert.AreEqual(ResetTypes.AnonymizationSettings, AnonymizationOptionsControl.ResetType);
         }
     }
 }

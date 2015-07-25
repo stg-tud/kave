@@ -258,6 +258,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>AnonymizationOptionsMessages.resx</DependentUpon>
     </Compile>
+    <Compile Include="Utils\MessageBoxCreator.cs" />
     <Compile Include="UserControls\OptionPage\GeneralOptions\GeneralOptionsMessages.Designer.cs">
       <DependentUpon>GeneralOptionsMessages.resx</DependentUpon>
       <AutoGen>True</AutoGen>
