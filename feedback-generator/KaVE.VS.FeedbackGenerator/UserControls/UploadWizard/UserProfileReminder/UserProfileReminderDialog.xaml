@@ -25,11 +25,12 @@ limitations under the License.
     SizeToContent="Height"
     WindowStyle="SingleBorderWindow"
     ResizeMode="NoResize"
+    MaxWidth="600"
     Title="{x:Static uploadWizard:UploadWizardMessages.UserProfileReminderWindow_Title}">
     <Grid Margin="5,5,5,5">
       <StackPanel>
         <TextBlock TextWrapping="Wrap"
-                   Text="{x:Static uploadWizard:UploadWizardMessages.UserProfileReminderDialog_Text}" FontSize="14" />
+                   Text="{x:Static uploadWizard:UploadWizardMessages.UserProfileReminderDialog_Text}" FontSize="13" />
         <Button Click="On_Ok_Click" HorizontalAlignment="Right" Margin="5"
                 Content="{x:Static uploadWizard:UploadWizardMessages.WindowOkButton}" MinWidth="93" />
       </StackPanel>

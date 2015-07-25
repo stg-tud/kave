@@ -15,27 +15,35 @@
  */
 
 using System.Windows;
+using KaVE.Commons.Utils;
 using KaVE.RS.Commons.Settings;
+using KaVE.VS.FeedbackGenerator.Settings;
+using KaVE.VS.FeedbackGenerator.Settings.ExportSettingsSuite;
+using KaVE.VS.FeedbackGenerator.UserControls.UserProfile;
 
 namespace KaVE.VS.FeedbackGenerator.UserControls.UploadWizard.UserProfile
 {
     public partial class UserProfileWindow : Window
     {
         private readonly ISettingsStore _settingsStore;
-        private readonly UploadWizardContext _uploadWizardContext;
+        private readonly UserProfileSettings _userProfileSettings;
 
-        public UserProfileWindow(UploadWizardContext uploadWizardContext, ISettingsStore settingsStore)
+        public UserProfileWindow(ISettingsStore settingsStore)
         {
             _settingsStore = settingsStore;
-            _uploadWizardContext = uploadWizardContext;
             InitializeComponent();
+
+            var exportSettings = settingsStore.GetSettings<ExportSettings>();
+            _userProfileSettings = settingsStore.GetSettings<UserProfileSettings>();
+
+            var userProfileContext = new UserProfileContext(exportSettings, _userProfileSettings, new RandomizationUtils());
                 
-            DataContext = uploadWizardContext;
+            DataContext = userProfileContext;
         }
 
         private void On_Ok_Click(object sender, RoutedEventArgs e)
         {
-            _settingsStore.SetSettings(_uploadWizardContext.UserProfileSettings);
+            _settingsStore.SetSettings(_userProfileSettings);
             Close();
         }
 

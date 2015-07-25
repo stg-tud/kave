@@ -16,11 +16,9 @@
 
 using System.Windows;
 using System.Windows.Controls.Primitives;
-using JetBrains.ActionManagement;
 using JetBrains.Application.DataContext;
 using JetBrains.Application.Settings;
 using JetBrains.DataFlow;
-using JetBrains.UI.Actions.ActionManager;
 using JetBrains.UI.CrossFramework;
 using JetBrains.UI.Options;
 using JetBrains.UI.Resources;

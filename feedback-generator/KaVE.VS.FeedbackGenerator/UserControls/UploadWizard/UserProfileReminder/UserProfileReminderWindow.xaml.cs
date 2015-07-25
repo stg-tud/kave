@@ -47,7 +47,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UploadWizard.UserProfileReminde
                 settingsStore.GetSettings<ExportSettings>(),
                 _userProfileSettings,
                 new RandomizationUtils());
-            UserSettingsGrid.DataContext = userProfileContext;
+            DataContext = userProfileContext;
 
             userProfileContext.GenerateNewProfileId();
         }

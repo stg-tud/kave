@@ -24,7 +24,6 @@ using KaVE.Commons.Model.Events;
 using KaVE.Commons.TestUtils;
 using KaVE.Commons.TestUtils.Model.Events;
 using KaVE.Commons.TestUtils.Utils;
-using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Exceptions;
 using KaVE.Commons.Utils.IO;
@@ -92,8 +91,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UploadWizard
                 _mockLogFileManager.Object,
                 _mockSettingStore.Object,
                 _testDateUtils,
-                _mockLogger.Object,
-                new RandomizationUtils());
+                _mockLogger.Object);
 
             _notificationHelper = _uut.ErrorNotificationRequest.NewTestHelper();
             _linkNotificationHelper = _uut.SuccessNotificationRequest.NewTestHelper();
@@ -104,90 +102,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UploadWizard
         {
             Registry.Clear();
         }
-
-        [TestCase(true), TestCase(false)]
-        public void ShouldGetExportSettingRemoveCodeNames(bool expected)
-        {
-            _anonymizationSettings.RemoveCodeNames = expected;
-
-            var actual = _uut.RemoveCodeNames;
-
-            Assert.AreEqual(expected, actual);
-        }
-
-        [TestCase(true), TestCase(false)]
-        public void ShouldSetExportSettingsRemoveCodeNamesAfterSetSettingsIsCalled(bool expected)
-        {
-            _uut.RemoveCodeNames = expected;
-            _uut.SetSettings();
-
-            _mockSettingStore.Verify(ss => ss.SetSettings(It.IsAny<AnonymizationSettings>()));
-            Assert.AreEqual(expected, _anonymizationSettings.RemoveCodeNames);
-        }
-
-        [TestCase(true), TestCase(false)]
-        public void ShouldGetExportSettingRemoveDurations(bool expected)
-        {
-            _anonymizationSettings.RemoveDurations = expected;
-
-            var actual = _uut.RemoveDurations;
-
-            Assert.AreEqual(expected, actual);
-        }
-
-        [TestCase(true), TestCase(false)]
-        public void ShouldSetExportSettingsRemoveDurationsAfterSetSettingsIsCalled(bool expected)
-        {
-            _uut.RemoveDurations = expected;
-
-            _uut.SetSettings();
-
-            _mockSettingStore.Verify(ss => ss.SetSettings(It.IsAny<AnonymizationSettings>()));
-            Assert.AreEqual(expected, _anonymizationSettings.RemoveDurations);
-        }
-
-        [TestCase(true), TestCase(false)]
-        public void ShouldGetExportSettingRemoveSessionIDs(bool expected)
-        {
-            _anonymizationSettings.RemoveSessionIDs = expected;
-
-            var actual = _uut.RemoveSessionIDs;
-
-            Assert.AreEqual(expected, actual);
-        }
-
-        [TestCase(true), TestCase(false)]
-        public void ShouldSetExportSettingsRemoveSessionIDsAfterSetSettingsIsCalled(bool expected)
-        {
-            _uut.RemoveSessionIDs = expected;
-
-            _uut.SetSettings();
-
-            _mockSettingStore.Verify(ss => ss.SetSettings(It.IsAny<AnonymizationSettings>()));
-            Assert.AreEqual(expected, _anonymizationSettings.RemoveSessionIDs);
-        }
-
-        [TestCase(true), TestCase(false)]
-        public void ShouldGetExportSettingRemoveStarTimes(bool expected)
-        {
-            _anonymizationSettings.RemoveStartTimes = expected;
-
-            var actual = _uut.RemoveStartTimes;
-
-            Assert.AreEqual(expected, actual);
-        }
-
-        [TestCase(true), TestCase(false)]
-        public void ShouldSetExportSettingsRemoveStartTimesAfterSetSettingsIsCalled(bool expected)
-        {
-            _uut.RemoveStartTimes = expected;
-
-            _uut.SetSettings();
-
-            _mockSettingStore.Verify(ss => ss.SetSettings(It.IsAny<AnonymizationSettings>()));
-            Assert.AreEqual(expected, _anonymizationSettings.RemoveStartTimes);
-        }
-
+        
         // TODO @Seb: re-enable
         [Test, Ignore]
         public void ShouldGetUserSettingsFeedback()

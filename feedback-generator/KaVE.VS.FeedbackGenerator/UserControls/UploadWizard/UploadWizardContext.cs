@@ -29,8 +29,6 @@ using KaVE.VS.FeedbackGenerator.Interactivity;
 using KaVE.VS.FeedbackGenerator.SessionManager;
 using KaVE.VS.FeedbackGenerator.Settings;
 using KaVE.VS.FeedbackGenerator.Settings.ExportSettingsSuite;
-using KaVE.VS.FeedbackGenerator.UserControls.Anonymization;
-using KaVE.VS.FeedbackGenerator.UserControls.UserProfile;
 using KaVE.VS.FeedbackGenerator.Utils.Export;
 using KaVE.VS.FeedbackGenerator.Utils.Logging;
 
@@ -51,10 +49,6 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UploadWizard
         private readonly InteractionRequest<LinkNotification> _successNotificationRequest;
 
         public UserProfileSettings UserProfileSettings { get; private set; }
-        public AnonymizationSettings AnonymizationSettings { get; private set; }
-
-        public AnonymizationContext AnonymizationContext { get; private set; }
-        public UserProfileContext UserProfileContext { get; private set; }
 
         public IInteractionRequest<Notification> ErrorNotificationRequest
         {
@@ -70,8 +64,7 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UploadWizard
             ILogManager logManager,
             ISettingsStore settingsStore,
             IDateUtils dateUtils,
-            ILogger logger,
-            IRandomizationUtils rnd)
+            ILogger logger)
         {
             _exporter = exporter;
             _logManager = logManager;
@@ -85,12 +78,8 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UploadWizard
             _exportWorker.ProgressChanged += OnProgressChanged;
             _exportWorker.RunWorkerCompleted += OnExportCompleted;
 
-            var exportSettings = _settingsStore.GetSettings<ExportSettings>();
             UserProfileSettings = _settingsStore.GetSettings<UserProfileSettings>();
-            AnonymizationSettings = _settingsStore.GetSettings<AnonymizationSettings>();
 
-            AnonymizationContext = new AnonymizationContext(AnonymizationSettings);
-            UserProfileContext = new UserProfileContext(exportSettings, UserProfileSettings, rnd);
         }
 
         private void OnProgressChanged(object sender, ProgressChangedEventArgs progressChangedEventArgs)
@@ -102,30 +91,6 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UploadWizard
                 progressChangedEventArgs.UserState);
         }
 
-        public bool RemoveCodeNames
-        {
-            get { return AnonymizationSettings.RemoveCodeNames; }
-            set { AnonymizationSettings.RemoveCodeNames = value; }
-        }
-
-        public bool RemoveDurations
-        {
-            get { return AnonymizationSettings.RemoveDurations; }
-            set { AnonymizationSettings.RemoveDurations = value; }
-        }
-
-        public bool RemoveSessionIDs
-        {
-            get { return AnonymizationSettings.RemoveSessionIDs; }
-            set { AnonymizationSettings.RemoveSessionIDs = value; }
-        }
-
-        public bool RemoveStartTimes
-        {
-            get { return AnonymizationSettings.RemoveStartTimes; }
-            set { AnonymizationSettings.RemoveStartTimes = value; }
-        }
-
         public string Comment
         {
             get { return UserProfileSettings.Comment; }
@@ -135,7 +100,6 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UploadWizard
         public void SetSettings()
         {
             _settingsStore.UpdateSettings<UserProfileSettings>(s => s.Comment = UserProfileSettings.Comment);
-            _settingsStore.SetSettings(AnonymizationSettings);
         }
 
         public void Export(UploadWizardControl.ExportType exportType)

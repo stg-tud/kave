@@ -17,7 +17,6 @@
 using System.ComponentModel;
 using KaVE.JetBrains.Annotations;
 using KaVE.VS.FeedbackGenerator.Settings;
-using KaVE.VS.FeedbackGenerator.Settings.ExportSettingsSuite;
 
 namespace KaVE.VS.FeedbackGenerator.UserControls.Anonymization
 {

@@ -14,10 +14,6 @@
  * limitations under the License.
  */
 
-using JetBrains.DataFlow;
-using JetBrains.ReSharper.Features.Navigation.Resources;
-using JetBrains.UI.Application;
-using JetBrains.UI.Icons.CompiledIcons;
 using JetBrains.UI.Options;
 using JetBrains.UI.Options.Helpers;
 using JetBrains.UI.Options.OptionPages.ToolsPages;

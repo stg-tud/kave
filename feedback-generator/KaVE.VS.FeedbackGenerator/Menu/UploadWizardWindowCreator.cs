@@ -70,8 +70,7 @@ namespace KaVE.VS.FeedbackGenerator.Menu
                         _logManager,
                         _settingsStore,
                         _dateUtils,
-                        _logger,
-                        new RandomizationUtils());
+                        _logger);
             new UploadWizardControl(viewModel, _settingsStore).ShowDialog();
         }
 

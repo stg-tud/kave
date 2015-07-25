@@ -162,9 +162,16 @@
     <Compile Include="Settings\SettingsCleanerTest.cs" />
     <Compile Include="UserControls\Anonymization\AnonymizationContextTest.cs" />
     <Compile Include="UserControls\Anonymization\AnonymizationControlTest.cs" />
+    <Compile Include="UserControls\OptionPage\AnonymizationOptions\AnonymizationOptionsControlTest.cs" />
+    <Compile Include="UserControls\OptionPage\GeneralOptions\GeneralOptionsControlTest.cs" />
+    <Compile Include="UserControls\OptionPage\UsageModelOptions\UsageModelOptionsControlTest.cs" />
     <Compile Include="UserControls\OptionPage\UsageModelOptions\UsageModelOptionsViewModelTest.cs" />
+    <Compile Include="UserControls\OptionPage\UserProfileOptions\UserProfileOptionsControlTest.cs" />
+    <Compile Include="UserControls\UploadWizard\Anonymization\AnonymizationWindowTest.cs" />
     <Compile Include="UserControls\UploadWizard\ExporterTest.cs" />
     <Compile Include="UserControls\BaseUserControlTest.cs" />
+    <Compile Include="UserControls\UploadWizard\UserProfileReminder\UserProfileReminderWindowTest.cs" />
+    <Compile Include="UserControls\UploadWizard\UserProfile\UserProfileWindowTest.cs" />
     <Compile Include="UserControls\UserProfile\CheckedUserProfileControlTest.cs" />
     <Compile Include="UserControls\UserProfile\UserProfileControlTest.cs" />
     <Compile Include="UserControls\ValidationRules\MailValidationRuleTest.cs" />

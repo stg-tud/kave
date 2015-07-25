@@ -120,7 +120,6 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UploadWizard {
         
         /// <summary>
         ///   Looks up a localized string similar to We would like to learn more about our users, please help us by answering several simple questions about yourself. You can leave out any question, if you do not want to answer it. Your answers will be attached to your uploaded feedback.
-        ///
         ///Thank You!.
         /// </summary>
         public static string UserProfileReminderDialog_Text {

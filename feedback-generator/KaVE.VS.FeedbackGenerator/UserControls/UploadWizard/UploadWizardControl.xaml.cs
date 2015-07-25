@@ -21,6 +21,8 @@ using KaVE.RS.Commons.Settings;
 using KaVE.RS.Commons.Utils;
 using KaVE.VS.FeedbackGenerator.Interactivity;
 using KaVE.VS.FeedbackGenerator.SessionManager.Presentation;
+using KaVE.VS.FeedbackGenerator.UserControls.UploadWizard.Anonymization;
+using KaVE.VS.FeedbackGenerator.UserControls.UploadWizard.UserProfile;
 using MessageBox = JetBrains.Util.MessageBox;
 
 namespace KaVE.VS.FeedbackGenerator.UserControls.UploadWizard
@@ -52,26 +54,33 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UploadWizard
             MyDataContext.SuccessNotificationRequest.Raised += new LinkNotificationRequestHandler(this).Handle;
         }
 
+        private void StoreSettings()		
+        {		
+            MyDataContext.SetSettings();		
+        }
+
         private void On_Review_Click(object sender, RoutedEventArgs e)
         {
+            StoreSettings();
             Close();
             Registry.GetComponent<ActionExecutor>().ExecuteActionGuarded<SessionManagerWindowAction>();
         }
 
         private void UploadButtonClicked(object sender, RoutedEventArgs e)
         {
-            Export(ExportType.HttpUpload);
+            ExportAndUpdateSettings(ExportType.HttpUpload);
             // keep window open until processing finshes (see OnViewModelPropertyChanged)
         }
 
         private void ZipButtonClicked(object sender, RoutedEventArgs e)
         {
-            Export(ExportType.ZipFile);
+            ExportAndUpdateSettings(ExportType.ZipFile);
             // keep window open until processing finshes (see OnViewModelPropertyChanged)
         }
 
-        private void Export(ExportType exportType)
+        private void ExportAndUpdateSettings(ExportType exportType)
         {
+            StoreSettings();
             MyDataContext.Export(exportType);
         }
 
@@ -96,13 +105,13 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.UploadWizard
 
         private void On_UserProfile_Click(object sender, RoutedEventArgs e)
         {
-            var userProfileWindow = new UserProfile.UserProfileWindow(MyDataContext,_settingsStore);
+            var userProfileWindow = new UserProfileWindow(_settingsStore);
             userProfileWindow.Show();
         }
 
         private void On_Anonymization_Click(object sender, RoutedEventArgs e)
         {
-            var anonymizationWindow = new Anonymization.AnonymizationWindow(MyDataContext,_settingsStore);
+            var anonymizationWindow = new AnonymizationWindow(_settingsStore);
             anonymizationWindow.Show();
         }
     }
