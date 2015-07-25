@@ -19,8 +19,6 @@ using System.Collections.Concurrent;
 using System.Linq;
 using System.Threading;
 using JetBrains.Annotations;
-using JetBrains.DocumentModel;
-using JetBrains.ReSharper.Feature.Services.Util;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.ReSharper.Resources.Shell;
@@ -42,7 +40,6 @@ namespace KaVE.RS.Commons.Analysis
     {
         public const int DefaultTimeLimitInMs = 1000;
 
-        private static readonly object Lock = new object();
         private static readonly KaVECancellationTokenSource TokenSource = new KaVECancellationTokenSource();
 
         private static readonly ConcurrentDictionary<int, System.Threading.Tasks.Task<ContextAnalysisResult>>
@@ -51,12 +48,9 @@ namespace KaVE.RS.Commons.Analysis
 
         public static ContextAnalysisResult Analyze(ITreeNode node, ILogger logger)
         {
-            lock (Lock)
-            {
-                var analysisTask = AnalyseAsyncInternal(node, logger, CancellationToken.None);
-                analysisTask.Wait();
-                return analysisTask.Result;
-            }
+            var analysisTask = AnalyseAsyncInternal(node, logger, CancellationToken.None);
+            analysisTask.Wait();
+            return analysisTask.Result;
         }
 
         public static void AnalyseAsync(ITreeNode node,
@@ -104,22 +98,19 @@ namespace KaVE.RS.Commons.Analysis
         private static System.Threading.Tasks.Task<ContextAnalysisResult> AnalyseAsyncWithCache(ITreeNode node,
             ILogger logger)
         {
-            lock (Lock)
+            var hashCode = node.GetHashCode();
+
+            System.Threading.Tasks.Task<ContextAnalysisResult> task;
+            if (!CurrentTasks.TryGetValue(hashCode, out task))
             {
-                var hashCode = node.GetHashCode();
+                var token = TokenSource.CancelAndCreate();
+                task = AnalyseAsyncInternal(node, logger, token);
+                CurrentTasks.TryAdd(hashCode, task);
 
-                System.Threading.Tasks.Task<ContextAnalysisResult> task;
-                if (!CurrentTasks.TryGetValue(hashCode, out task))
-                {
-                    var token = TokenSource.CancelAndCreate();
-                    task = AnalyseAsyncInternal(node, logger, token);
-                    CurrentTasks.TryAdd(hashCode, task);
-
-                    task.ContinueWith(RemoveOldContextAnalysisResultAfterTimeout(hashCode, 30000));
-                }
-
-                return task;
+                task.ContinueWith(RemoveOldContextAnalysisResultAfterTimeout(hashCode, 30000));
             }
+
+            return task;
         }
 
         private static Action<System.Threading.Tasks.Task<ContextAnalysisResult>>
@@ -131,41 +122,6 @@ namespace KaVE.RS.Commons.Analysis
                 System.Threading.Tasks.Task<ContextAnalysisResult> t;
                 CurrentTasks.TryRemove(hashCode, out t);
             };
-        }
-
-        public static ITreeNode FindEntryNode(Func<ITreeNode> getTreeNode)
-        {
-            lock (Lock)
-            {
-                ITreeNode node = null;
-                ReadLockCookie.Execute(
-                    () =>
-                    {
-                        node = getTreeNode();
-
-                        if (node == null)
-                        {
-                            return;
-                        }
-
-                        if (!HasSourroundingMethod(node))
-                        {
-                            node = FindSourroundingClassDeclaration(node);
-                        }
-                    });
-                return node;
-            }
-        }
-
-        private static bool HasSourroundingMethod(ITreeNode node)
-        {
-            var method = node.GetContainingNode<IMethodDeclaration>(true);
-            return method != null;
-        }
-
-        private static IClassDeclaration FindSourroundingClassDeclaration(ITreeNode psiFile)
-        {
-            return psiFile.GetContainingNode<IClassDeclaration>(true);
         }
 
         public class ContextAnalysisResult

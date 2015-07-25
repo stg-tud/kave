@@ -57,26 +57,20 @@ namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio.EditEventGenerators
         private void TextEditorEvents_LineChanged(TextPoint startPoint, TextPoint endPoint, int hint)
         {
             _eventSendingTimer.Stop();
-            lock (_eventLock)
-            {
-                _currentEditEvent = _currentEditEvent ?? Create<EditEvent>();
-                _currentEditEvent.NumberOfChanges += 1;
-                // TODO subtract whitespaces from change size
-                _currentEditEvent.SizeOfChanges += endPoint.AbsoluteCharOffset - startPoint.AbsoluteCharOffset;
-                _currentStartPoint = startPoint;
-            }
+            _currentEditEvent = _currentEditEvent ?? Create<EditEvent>();
+            _currentEditEvent.NumberOfChanges += 1;
+            // TODO subtract whitespaces from change size
+            _currentEditEvent.SizeOfChanges += endPoint.AbsoluteCharOffset - startPoint.AbsoluteCharOffset;
+            _currentStartPoint = startPoint;
             _eventSendingTimer.Start();
         }
 
         private void FireCurrentEditEvent()
         {
             _eventSendingTimer.Stop();
-            lock (_eventLock)
-            {
-                _currentEditEvent.Context2 = _contextProvider.GetCurrentContext(_currentStartPoint);
-                FireNow(_currentEditEvent);
-                _currentEditEvent = null;
-            }
+            _currentEditEvent.Context2 = _contextProvider.GetCurrentContext(_currentStartPoint);
+            FireNow(_currentEditEvent);
+            _currentEditEvent = null;
         }
 
         public void Dispose()

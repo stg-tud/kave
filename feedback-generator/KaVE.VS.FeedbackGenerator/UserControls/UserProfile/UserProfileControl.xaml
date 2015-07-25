@@ -76,48 +76,68 @@ limitations under the License.
 
                 <CheckBox Name="ProjectsCoursesCheckBox"
                           VerticalAlignment="Center"
-                          Content="{x:Static userProfile:UserProfileMessages.ProjectsCourses}"
-                          IsChecked="{Binding Path=ProjectsCourses, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                          IsChecked="{Binding Path=ProjectsCourses, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                    <TextBlock TextWrapping="Wrap" Text="{x:Static userProfile:UserProfileMessages.ProjectsCourses}" />
+                </CheckBox>
 
                 <CheckBox Name="ProjectsPersonalCheckBox"
                           VerticalAlignment="Center"
-                          Content="{x:Static userProfile:UserProfileMessages.ProjectsPersonal}"
-                          IsChecked="{Binding Path=ProjectsPersonal, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                          IsChecked="{Binding Path=ProjectsPersonal, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                    <TextBlock TextWrapping="Wrap" Text="{x:Static userProfile:UserProfileMessages.ProjectsPersonal}" />
+                </CheckBox>
 
                 <CheckBox Name="ProjectsSharedSmallCheckBox"
                           VerticalAlignment="Center"
-                          Content="{x:Static userProfile:UserProfileMessages.ProjectsSharedSmall}"
-                          IsChecked="{Binding Path=ProjectsSharedSmall, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                          IsChecked="{Binding Path=ProjectsSharedSmall, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                    <TextBlock TextWrapping="Wrap"
+                               Text="{x:Static userProfile:UserProfileMessages.ProjectsSharedSmall}" />
+                </CheckBox>
 
                 <CheckBox Name="ProjectsSharedMediumCheckBox"
                           VerticalAlignment="Center"
-                          Content="{x:Static userProfile:UserProfileMessages.ProjectsSharedMedium}"
-                          IsChecked="{Binding Path=ProjectsSharedMedium, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                          IsChecked="{Binding Path=ProjectsSharedMedium, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                    <TextBlock TextWrapping="Wrap"
+                               Text="{x:Static userProfile:UserProfileMessages.ProjectsSharedMedium}" />
+                </CheckBox>
 
                 <CheckBox Name="ProjectsSharedLargeCheckBox"
                           VerticalAlignment="Center"
-                          Content="{x:Static userProfile:UserProfileMessages.ProjectsSharedLarge}"
-                          IsChecked="{Binding Path=ProjectsSharedLarge, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                          IsChecked="{Binding Path=ProjectsSharedLarge, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                    <TextBlock TextWrapping="Wrap"
+                               Text="{x:Static userProfile:UserProfileMessages.ProjectsSharedLarge}" />
+                </CheckBox>
 
                 <!-- %%%%%-->
                 <TextBlock TextWrapping="Wrap" Margin="0,15,0,5" FontSize="12" FontStyle="Italic"
                            Text="{x:Static userProfile:UserProfileMessages.Teams_Question}" />
 
                 <CheckBox Name="TeamsSoloCheckBox"
-                          VerticalAlignment="Center" Content="{x:Static userProfile:UserProfileMessages.TeamsSolo}"
-                          IsChecked="{Binding Path=TeamsSolo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                          VerticalAlignment="Center"
+                          IsChecked="{Binding Path=TeamsSolo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                    <TextBlock TextWrapping="Wrap"
+                               Text="{x:Static userProfile:UserProfileMessages.TeamsSolo}" />
+                </CheckBox>
 
                 <CheckBox Name="TeamsSmallCheckBox"
-                          VerticalAlignment="Center" Content="{x:Static userProfile:UserProfileMessages.TeamsSmall}"
-                          IsChecked="{Binding Path=TeamsSmall, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                          VerticalAlignment="Center"
+                          IsChecked="{Binding Path=TeamsSmall, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                    <TextBlock TextWrapping="Wrap"
+                               Text="{x:Static userProfile:UserProfileMessages.TeamsSmall}" />
+                </CheckBox>
 
                 <CheckBox Name="TeamsMediumCheckBox"
-                          VerticalAlignment="Center" Content="{x:Static userProfile:UserProfileMessages.TeamsMedium}"
-                          IsChecked="{Binding Path=TeamsMedium, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                          VerticalAlignment="Center"
+                          IsChecked="{Binding Path=TeamsMedium, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                    <TextBlock TextWrapping="Wrap"
+                               Text="{x:Static userProfile:UserProfileMessages.TeamsMedium}" />
+                </CheckBox>
 
                 <CheckBox Name="TeamsLargeCheckBox"
-                          VerticalAlignment="Center" Content="{x:Static userProfile:UserProfileMessages.TeamsLarge}"
-                          IsChecked="{Binding Path=TeamsLarge, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                          VerticalAlignment="Center"
+                          IsChecked="{Binding Path=TeamsLarge, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                    <TextBlock TextWrapping="Wrap"
+                               Text="{x:Static userProfile:UserProfileMessages.TeamsLarge}" />
+                </CheckBox>
 
                 <!-- %%%%%-->
                 <TextBlock TextWrapping="Wrap" Margin="0,15,0,5" FontSize="12" FontStyle="Italic"

@@ -44,7 +44,7 @@ namespace KaVE.RS.SolutionAnalysis
             Console.WriteLine("{0} start", DateTime.Now);
 
             //new AnalysisStatsPrinter(@"C:\Users\seb\Desktop\Analysis\Contexts\").Run();
-            new EditLocationRunner(@"C:\Users\seb\Desktop\datev-unpacked3\").Run();
+            //new EditLocationRunner(@"C:\Users\seb\Desktop\datev-unpacked3\").Run();
             //AnalyzeProjects();
             //var usages = ExtractUsages();
             //WriteUsages(usages);

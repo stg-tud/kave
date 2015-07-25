@@ -23,7 +23,9 @@ using JetBrains.DocumentModel;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Feature.Services.CodeCompletion;
 using JetBrains.ReSharper.Feature.Services.Util;
+using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
+using JetBrains.ReSharper.Resources.Shell;
 using JetBrains.TextControl;
 using JetBrains.Util;
 using KaVE.Commons.Model.Events.CompletionEvents;
@@ -81,7 +83,7 @@ namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio.EditEventGenerators.
             var document = GetDocument(filePath);
             if (document != null)
             {
-                var node = ContextAnalysis.FindEntryNode(() => FindCurrentTreeNode(document));
+                var node = FindEntryNode(document);
                 if (node != null)
                 {
                     RunAnalysis(node);
@@ -103,12 +105,44 @@ namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio.EditEventGenerators.
             return null;
         }
 
+        public ITreeNode FindEntryNode(IDocument document)
+        {
+            ITreeNode node = null;
+            ReadLockCookie.Execute(
+                () =>
+                {
+                    node = FindCurrentTreeNode(document);
+
+                    if (node == null)
+                    {
+                        return;
+                    }
+
+                    if (!HasSourroundingMethod(node))
+                    {
+                        node = FindSourroundingClassDeclaration(node);
+                    }
+                });
+            return node;
+        }
+
         private ITreeNode FindCurrentTreeNode(IDocument document)
         {
             var textControl =
                 _textControlManager.TextControls.FirstOrDefault(
                     tc => tc.Document.Moniker.Equals(document.Moniker));
             return textControl == null ? null : TextControlToPsi.GetElement<ITreeNode>(_solution, textControl);
+        }
+
+        private static bool HasSourroundingMethod(ITreeNode node)
+        {
+            var method = node.GetContainingNode<IMethodDeclaration>(true);
+            return method != null;
+        }
+
+        private static IClassDeclaration FindSourroundingClassDeclaration(ITreeNode psiFile)
+        {
+            return psiFile.GetContainingNode<IClassDeclaration>(true);
         }
 
         private void RunAnalysis(ITreeNode node)
