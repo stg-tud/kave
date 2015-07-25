@@ -14,10 +14,12 @@
  * limitations under the License.
  */
 
+using JetBrains.Application;
 using JetBrains.Util;
 
 namespace KaVE.VS.FeedbackGenerator.Utils
 {
+    [ShellComponent]
     public class MessageBoxCreator : IMessageBoxCreator
     {
         public bool ShowYesNo(string message)
