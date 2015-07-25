@@ -156,6 +156,7 @@
     <Compile Include="RelativeEditLocation.cs" />
     <Compile Include="RelativeEditLocationAnalysis.cs" />
     <Compile Include="SolutionAnalysis.cs" />
+    <Compile Include="UsageExportRunner.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\KaVE.licenseheader">

@@ -68,6 +68,7 @@
     <Compile Include="Model\Names\TestNameFactory.cs" />
     <Compile Include="Model\Names\VsComponentNameTestFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestRunnerLogger.cs" />
     <Compile Include="ToStringAssert.cs" />
     <Compile Include="UserControls\UserControlAssert.cs" />
     <Compile Include="UserControls\UserControlTestUtils.cs" />

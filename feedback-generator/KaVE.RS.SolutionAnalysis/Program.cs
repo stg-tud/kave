@@ -43,7 +43,11 @@ namespace KaVE.RS.SolutionAnalysis
         {
             Console.WriteLine("{0} start", DateTime.Now);
 
-            //new AnalysisStatsPrinter(@"C:\Users\seb\Desktop\Analysis\Contexts\").Run();
+            const string dirContexts = @"C:\Users\seb\Desktop\Analysis\all\Contexts\";
+            const string dirUsages = @"C:\Users\seb\Desktop\Analysis\all\Usages\";
+
+            //new AnalysisStatsPrinter(dirContexts).Run();
+            //new UsageExportRunner(dirContexts, dirUsages).Run();
             //new EditLocationRunner(@"C:\Users\seb\Desktop\datev-unpacked3\").Run();
             //AnalyzeProjects();
             //var usages = ExtractUsages();
