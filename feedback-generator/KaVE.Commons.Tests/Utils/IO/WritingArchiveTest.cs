@@ -16,6 +16,7 @@
 
 using System.Collections.Generic;
 using System.IO;
+using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.IO;
 using NUnit.Framework;
 
@@ -37,6 +38,12 @@ namespace KaVE.Commons.Tests.Utils.IO
             File.Delete(_zipPath);
         }
 
+        [Test, ExpectedException(typeof (AssertException))]
+        public void DirectoryHastoExist()
+        {
+            new WritingArchive(@"c:\does\not\exist.zip");
+        }
+
         [Test]
         public void WriteEmptyDoesNotCreateFile()
         {
@@ -49,6 +56,18 @@ namespace KaVE.Commons.Tests.Utils.IO
         {
             var expected = new[] {"a", "b", "c"};
             Write(expected);
+            var actual = ReadZip();
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void WriteAll()
+        {
+            var expected = new[] {"a", "b", "c"};
+            using (var sut = new WritingArchive(_zipPath))
+            {
+                sut.AddAll(expected);
+            }
             var actual = ReadZip();
             Assert.AreEqual(expected, actual);
         }

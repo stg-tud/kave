@@ -16,7 +16,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using Ionic.Zip;
+using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Json;
 
 namespace KaVE.Commons.Utils.IO
@@ -33,12 +35,23 @@ namespace KaVE.Commons.Utils.IO
 
         public WritingArchive(string path)
         {
+            var parent = Path.GetDirectoryName(path);
+            Asserts.NotNull(parent);
+            Asserts.That(Directory.Exists(parent));
             _path = path;
         }
 
         public void Add<T>(T obj)
         {
             _entries.Add(obj.ToFormattedJson());
+        }
+
+        public void AddAll<T>(IEnumerable<T> entries)
+        {
+            foreach (var entry in entries)
+            {
+                Add(entry);
+            }
         }
 
         public void Dispose()
