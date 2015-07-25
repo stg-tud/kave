@@ -84,6 +84,8 @@
     <Compile Include="Utils\IO\FileSystemEx.cs" />
     <Compile Include="Utils\IO\IIoUtils.cs" />
     <Compile Include="Utils\IO\IoUtils.cs" />
+    <Compile Include="Utils\IO\ReadingArchive.cs" />
+    <Compile Include="Utils\IO\WritingArchive.cs" />
     <Compile Include="Utils\Json\CoReNameToStringConverter.cs" />
     <Compile Include="Utils\Json\EnumToStringConverter.cs" />
     <Compile Include="Utils\Json\JsonSerialization.cs" />

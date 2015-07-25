@@ -189,6 +189,8 @@
     <Compile Include="Utils\IO\FileSystemExTest.cs" />
     <Compile Include="Utils\IO\IoUtilsTest.cs" />
     <Compile Include="Utils\IO\KeyUtilsTest.cs" />
+    <Compile Include="Utils\IO\ReadingArchiveTest.cs" />
+    <Compile Include="Utils\IO\WritingArchiveTest.cs" />
     <Compile Include="Utils\Json\CoReNameToStringConverterTest.cs" />
     <Compile Include="Utils\Json\JsonAssert.cs" />
     <Compile Include="Utils\Json\JsonSerializationSuite\BuildEventSerializationTest.cs" />
