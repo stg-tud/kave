@@ -31,9 +31,9 @@ limitations under the License.
         <StackPanel>
             <userProfile:CheckedUserProfileControl x:Name="UserSettingsGrid"/>
             <DockPanel HorizontalAlignment="Right">
-                <Button Click="On_Ok_Click" HorizontalAlignment="Right" Margin="5"
+                <Button Name="OkButton" Click="On_Ok_Click" HorizontalAlignment="Right" Margin="5"
                         Content="{x:Static uploadWizard:UploadWizardMessages.WindowOkButton}" MinWidth="93" />
-                <Button Click="On_Abort_Click" HorizontalAlignment="Right" Margin="5"
+                <Button Name="CloseButton" Click="On_Abort_Click" HorizontalAlignment="Right" Margin="5"
                         Content="{x:Static uploadWizard:UploadWizardMessages.WindowAbortButton}" MinWidth="93" />
             </DockPanel>
         </StackPanel>

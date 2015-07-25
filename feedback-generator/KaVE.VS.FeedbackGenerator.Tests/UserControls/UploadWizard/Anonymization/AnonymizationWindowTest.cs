@@ -15,6 +15,7 @@
  */
 
 using KaVE.RS.Commons.Settings;
+using KaVE.VS.FeedbackGenerator.Settings;
 using KaVE.VS.FeedbackGenerator.UserControls.Anonymization;
 using KaVE.VS.FeedbackGenerator.UserControls.UploadWizard.Anonymization;
 using Moq;
@@ -45,6 +46,26 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UploadWizard.Anonymizatio
         {
             var sut = Open();
             Assert.IsInstanceOf<AnonymizationContext>(sut.DataContext);
+        }
+
+        [Test]
+        public void ShouldSaveSettingsOnOkButton()
+        {
+            var sut = Open();
+
+            Click(sut.OkButton);
+
+            _mockSettingsStore.Verify(settingStore => settingStore.SetSettings(It.IsAny<AnonymizationSettings>()));
+        }
+
+        [Test]
+        public void ShouldNotSaveSettingsOnCloseButton()
+        {
+            var sut = Open();
+
+            Click(sut.CloseButton);
+
+            _mockSettingsStore.Verify(settingStore => settingStore.SetSettings(It.IsAny<AnonymizationSettings>()), Times.Never);
         }
     }
 }

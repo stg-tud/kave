@@ -52,5 +52,25 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UploadWizard.UserProfile
             var sut = Open();
             Assert.IsInstanceOf<UserProfileContext>(sut.DataContext);
         }
+
+        [Test]
+        public void ShouldSaveSettingsOnOkButton()
+        {
+            var sut = Open();
+
+            Click(sut.OkButton);
+
+            _mockSettingsStore.Verify(settingStore => settingStore.SetSettings(It.IsAny<UserProfileSettings>()));
+        }
+
+        [Test]
+        public void ShouldNotSaveSettingsOnCloseButton()
+        {
+            var sut = Open();
+
+            Click(sut.CloseButton);
+
+            _mockSettingsStore.Verify(settingStore => settingStore.SetSettings(It.IsAny<UserProfileSettings>()), Times.Never);
+        }
     }
 }
