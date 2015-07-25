@@ -27,13 +27,13 @@ using KaVEISettingsStore = KaVE.RS.Commons.Settings.ISettingsStore;
 
 namespace KaVE.VS.FeedbackGenerator.UserControls.UploadWizard.UserProfileReminder
 {
-    public partial class UserProfileReminderWindow : Window
+    public partial class UserProfileReminderWindow
     {
         private readonly UserProfileSettings _userProfileSettings;
-        private readonly ActionExecutor _actionExec;
+        private readonly IActionExecutor _actionExec;
         private readonly KaVEISettingsStore _settingsStore;
 
-        public UserProfileReminderWindow(ActionExecutor actionExec,
+        public UserProfileReminderWindow(IActionExecutor actionExec,
             KaVEISettingsStore settingsStore)
         {
             _actionExec = actionExec;

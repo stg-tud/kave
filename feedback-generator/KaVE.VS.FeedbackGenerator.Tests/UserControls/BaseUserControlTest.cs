@@ -17,6 +17,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Documents;
 using NUnit.Framework;
 
 namespace KaVE.VS.FeedbackGenerator.Tests.UserControls
@@ -45,6 +46,11 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls
         protected void Click(Button button)
         {
             button.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
+        }
+
+        protected void Click(Hyperlink hyperlink)
+        {
+            hyperlink.RaiseEvent(new RoutedEventArgs(Hyperlink.ClickEvent));
         }
     }
 }

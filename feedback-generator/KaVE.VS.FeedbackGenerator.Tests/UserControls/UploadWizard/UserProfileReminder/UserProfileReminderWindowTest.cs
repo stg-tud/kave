@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
+using KaVE.RS.Commons;
 using KaVE.RS.Commons.Settings;
+using KaVE.VS.FeedbackGenerator.Menu;
 using KaVE.VS.FeedbackGenerator.Settings;
 using KaVE.VS.FeedbackGenerator.Settings.ExportSettingsSuite;
 using KaVE.VS.FeedbackGenerator.UserControls.UploadWizard.UserProfileReminder;
@@ -28,20 +30,28 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UploadWizard.UserProfileR
     internal class UserProfileReminderWindowTest : BaseUserControlTest
     {
         private Mock<ISettingsStore> _mockSettingsStore;
+        private UserProfileReminderWindow _sut;
+        private UserProfileSettings _userProfileSettings;
+        private Mock<IActionExecutor> _mockActionExecutor;
 
         [SetUp]
         public void SetUp()
         {
+            _userProfileSettings = new UserProfileSettings();
+
             _mockSettingsStore = new Mock<ISettingsStore>();
             _mockSettingsStore.Setup(settingStore => settingStore.GetSettings<ExportSettings>())
                   .Returns(new ExportSettings());
             _mockSettingsStore.Setup(settingStore => settingStore.GetSettings<UserProfileSettings>())
-                              .Returns(new UserProfileSettings());
+                              .Returns(_userProfileSettings);
+
+            _sut = Open();
         }
 
         private UserProfileReminderWindow Open()
         {
-            var userProfileReminderWindow = new UserProfileReminderWindow(null,_mockSettingsStore.Object);
+            _mockActionExecutor = new Mock<IActionExecutor>();
+            var userProfileReminderWindow = new UserProfileReminderWindow(_mockActionExecutor.Object,_mockSettingsStore.Object);
             userProfileReminderWindow.Show();
             return userProfileReminderWindow;
         }
@@ -49,8 +59,39 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UploadWizard.UserProfileR
         [Test]
         public void DataContextIsSetCorrectly()
         {
-            var sut = Open();
-            Assert.IsInstanceOf<UserProfileContext>(sut.DataContext);
+            Assert.IsInstanceOf<UserProfileContext>(_sut.DataContext);
+        }
+
+        [Test]
+        public void ShouldSetIsProvidingProfileTrueOnParticipationClick()
+        {
+            Click(_sut.ParticipationButton);
+
+            Assert.True(_userProfileSettings.IsProvidingProfile);
+        }
+
+        [Test]
+        public void ShouldSetIsProvidingProfileFalseOnNoParticipationClick()
+        {
+            Click(_sut.NoParticipationHyperlink);
+
+            Assert.False(_userProfileSettings.IsProvidingProfile);
+        }
+
+        [Test]
+        public void ShouldSetHasBeenAskedtoProvideProfileOnClose()
+        {
+            _sut.Close();
+
+            Assert.True(_userProfileSettings.HasBeenAskedtoProvideProfile);
+        }
+
+        [Test]
+        public void ShouldOpenUploadWizardOnClose()
+        {
+            _sut.Close();
+
+            _mockActionExecutor.Verify(actionExecutor => actionExecutor.ExecuteActionGuarded<UploadWizardAction>());
         }
     }
 }
