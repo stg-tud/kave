@@ -237,13 +237,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-	<None Include="..\KaVE.licenseheader">
-      <Link>KaVE.licenseheader</Link>
-    </None>
-    <None Include="app.config" />
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
     <Folder Include="Properties\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
