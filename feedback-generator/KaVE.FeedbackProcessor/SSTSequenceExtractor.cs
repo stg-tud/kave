@@ -51,7 +51,7 @@ namespace KaVE.FeedbackProcessor
 
         public void Run()
         {
-            using (var db = new DevelopmentHistoryDatabase(Configuration.StatisticsOutputPath + "\\histories"))
+            using (var db = new DevelopmentHistoryDatabase("G:\\DATEV-269-histories.sqlite"))
             {
                 var feedbackDatabase = OpenDatabase("_import");
                 var developerCollection = feedbackDatabase.GetDeveloperCollection();

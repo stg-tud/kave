@@ -31,9 +31,8 @@ namespace KaVE.FeedbackProcessor.Database.DevelopmentHistory
 
         public DevelopmentHistoryDatabase(string name)
         {
-            var databaseFileName = string.Format("{0}.sqlite", name);
-            EnsureDatabaseExists(databaseFileName);
-            _connection = new SQLiteConnection(string.Format("Data Source={0};Version=3", databaseFileName));
+            EnsureDatabaseExists(name);
+            _connection = new SQLiteConnection(string.Format("Data Source={0};Version=3", name));
             _connection.Open();
 
             CreateTable(
