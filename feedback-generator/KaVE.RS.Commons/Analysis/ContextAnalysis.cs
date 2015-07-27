@@ -15,13 +15,12 @@
  */
 
 using System;
-using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using JetBrains.Annotations;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
-using JetBrains.ReSharper.Resources.Shell;
 using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.Names.CSharp;
@@ -32,7 +31,6 @@ using KaVE.Commons.Utils.Exceptions;
 using KaVE.RS.Commons.Analysis.CompletionTarget;
 using KaVE.RS.Commons.Analysis.Transformer;
 using KaVE.RS.Commons.Utils.Names;
-using Task = System.Threading.Tasks.Task;
 
 namespace KaVE.RS.Commons.Analysis
 {
@@ -40,17 +38,18 @@ namespace KaVE.RS.Commons.Analysis
     {
         public const int DefaultTimeLimitInMs = 1000;
 
+        private static readonly object Lock = new object();
         private static readonly KaVECancellationTokenSource TokenSource = new KaVECancellationTokenSource();
 
-        private static readonly ConcurrentDictionary<int, System.Threading.Tasks.Task<ContextAnalysisResult>>
-            CurrentTasks =
-                new ConcurrentDictionary<int, System.Threading.Tasks.Task<ContextAnalysisResult>>();
+        private static readonly Dictionary<int, Context> ResultCache = new Dictionary<int, Context>();
 
         public static ContextAnalysisResult Analyze(ITreeNode node, ILogger logger)
         {
-            var analysisTask = AnalyseAsyncInternal(node, logger, CancellationToken.None);
-            analysisTask.Wait();
-            return analysisTask.Result;
+            lock (Lock)
+            {
+                var res = AnalyseAsyncInternal(node, logger, CancellationToken.None);
+                return res;
+            }
         }
 
         public static void AnalyseAsync(ITreeNode node,
@@ -60,68 +59,57 @@ namespace KaVE.RS.Commons.Analysis
             Action onTimeout,
             int timeLimitInMs = DefaultTimeLimitInMs)
         {
-            var analysisTask = AnalyseAsyncWithCache(node, logger);
-            var timeLimit = TaskUtils.Delay(timeLimitInMs);
-
-            Task.WaitAny(analysisTask, timeLimit);
-
-            if (analysisTask.IsCompleted)
-            {
-                onSuccess(analysisTask.Result.Context);
-            }
-            else if (analysisTask.IsFaulted)
-            {
-                onFailure(analysisTask.Exception);
-                logger.Error(analysisTask.Exception, "analysis error!");
-            }
-            else if (timeLimit.IsCompleted)
-            {
-                onTimeout();
-                logger.Error("timeout! analysis did not finish within {0}ms", timeLimitInMs);
-            }
+            var context = AnalyseAsyncWithCache(node, logger);
+            onSuccess(context);
         }
 
-        private static System.Threading.Tasks.Task<ContextAnalysisResult> AnalyseAsyncInternal(ITreeNode node,
+        private static ContextAnalysisResult AnalyseAsyncInternal(ITreeNode node,
             ILogger logger,
             CancellationToken token)
         {
-            return Task.Factory.StartNew(
-                () =>
-                {
-                    var analysis = new ContextAnalysisInternal(logger, token);
-                    ContextAnalysisResult result = null;
-                    ReadLockCookie.Execute(() => { result = analysis.AnalyzeInternal(node); });
-                    return result;
-                });
+            var analysis = new ContextAnalysisInternal(logger, token);
+            var result = analysis.AnalyzeInternal(node);
+            return result;
         }
 
-        private static System.Threading.Tasks.Task<ContextAnalysisResult> AnalyseAsyncWithCache(ITreeNode node,
+        private static Context AnalyseAsyncWithCache(ITreeNode node,
             ILogger logger)
         {
-            var hashCode = node.GetHashCode();
-
-            System.Threading.Tasks.Task<ContextAnalysisResult> task;
-            if (!CurrentTasks.TryGetValue(hashCode, out task))
+            lock (Lock)
             {
                 var token = TokenSource.CancelAndCreate();
-                task = AnalyseAsyncInternal(node, logger, token);
-                CurrentTasks.TryAdd(hashCode, task);
+                var hashCode = node.GetHashCode();
 
-                task.ContinueWith(RemoveOldContextAnalysisResultAfterTimeout(hashCode, 30000));
+                if (ResultCache.ContainsKey(hashCode))
+                {
+                    logger.Info("cache hit ({0})", hashCode);
+                    return ResultCache[hashCode];
+                }
+                logger.Info("cache miss ({0})", hashCode);
+
+                var res = AnalyseAsyncInternal(node, logger, token);
+                ResultCache[hashCode] = res.Context;
+                logger.Info("cache set ({0})", hashCode);
+
+                RemoveFromCacheAfterTimeout(hashCode, 5000, logger);
+                return res.Context;
             }
-
-            return task;
         }
 
-        private static Action<System.Threading.Tasks.Task<ContextAnalysisResult>>
-            RemoveOldContextAnalysisResultAfterTimeout(int hashCode, int timeout)
+        private static void RemoveFromCacheAfterTimeout(int hashCode,
+            int timeout,
+            ILogger logger)
         {
-            return _ =>
-            {
-                Thread.Sleep(timeout);
-                System.Threading.Tasks.Task<ContextAnalysisResult> t;
-                CurrentTasks.TryRemove(hashCode, out t);
-            };
+            Task.Factory.StartNew(
+                () =>
+                {
+                    Thread.Sleep(timeout);
+                    lock (Lock)
+                    {
+                        ResultCache.Remove(hashCode);
+                        logger.Info("cache cleanup ({0})", hashCode);
+                    }
+                });
         }
 
         public class ContextAnalysisResult
