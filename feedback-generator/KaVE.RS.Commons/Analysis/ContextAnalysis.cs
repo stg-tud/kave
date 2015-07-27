@@ -37,7 +37,7 @@ namespace KaVE.RS.Commons.Analysis
     public class ContextAnalysis
     {
         public const int DefaultTimeLimitInMs = 1000;
-        public const int CacheTimeout = 5000;
+        public const int CacheTimeout = 10000;
 
         private static readonly object Lock = new object();
         private static readonly KaVECancellationTokenSource TokenSource = new KaVECancellationTokenSource();
