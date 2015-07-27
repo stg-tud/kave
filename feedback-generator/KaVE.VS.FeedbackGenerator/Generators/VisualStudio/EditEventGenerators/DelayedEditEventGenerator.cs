@@ -47,18 +47,18 @@ namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio.EditEventGenerators
             _retryRunner = retryRunner;
             _contextProvider = contextProvider;
 
-            Task.StartNewLongRunning(FireDelayedEvents);
+          //  Task.StartNewLongRunning(FireDelayedEvents);
         }
 
         public void TryFireWithContext(Document document)
         {
             // ReSharper disable once ObjectCreationAsStatement
-            new DelayedEditEventHandler(
+         /*   new DelayedEditEventHandler(
                 _retryRunner,
                 _contextProvider,
                 Create<EditEvent>(),
                 document,
-                _delayedEditEvents);
+                _delayedEditEvents);*/
         }
 
         private void FireDelayedEvents()
