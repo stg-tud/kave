@@ -26,13 +26,11 @@ using JetBrains.ReSharper.Psi.CSharp;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Utils;
-using KaVE.Commons.Utils.Concurrency;
 using KaVE.Commons.Utils.Exceptions;
 using KaVE.RS.Commons.Analysis;
 using KaVE.RS.Commons.Utils;
 using KaVE.VS.FeedbackGenerator.CodeCompletion;
 using KaVE.VS.FeedbackGenerator.MessageBus;
-using Task = System.Threading.Tasks.Task;
 
 namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
 {

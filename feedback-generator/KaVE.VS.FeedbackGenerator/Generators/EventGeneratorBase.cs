@@ -18,6 +18,7 @@ using System;
 using System.Diagnostics;
 using EnvDTE;
 using KaVE.Commons.Model.Events;
+using KaVE.Commons.Model.Names.VisualStudio;
 using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Json;
 using KaVE.JetBrains.Annotations;
@@ -54,8 +55,8 @@ namespace KaVE.VS.FeedbackGenerator.Generators
             {
                 KaVEVersion = _env.KaVEVersion,
                 IDESessionUUID = _env.IDESession.UUID,
-                ActiveWindow = DTEActiveWindow.GetName(),
-                ActiveDocument = DTEActiveDocument.GetName(),
+                ActiveWindow = DTEActiveWindowName,
+                ActiveDocument = DTEActiveDocumentName,
                 TriggeredBy = CurrentTrigger,
                 TriggeredAt = _dateUtils.Now
             };
@@ -71,13 +72,13 @@ namespace KaVE.VS.FeedbackGenerator.Generators
             }
         }
 
-        private Window DTEActiveWindow
+        private WindowName DTEActiveWindowName
         {
             get
             {
                 try
                 {
-                    return DTE.ActiveWindow;
+                    return DTE.ActiveWindow.GetName();
                 }
                 catch (NullReferenceException)
                 {
@@ -88,13 +89,13 @@ namespace KaVE.VS.FeedbackGenerator.Generators
             }
         }
 
-        private Document DTEActiveDocument
+        private DocumentName DTEActiveDocumentName
         {
             get
             {
                 try
                 {
-                    return DTE.ActiveDocument;
+                    return DTE.ActiveDocument.GetName();
                 }
                 catch (ArgumentException)
                 {

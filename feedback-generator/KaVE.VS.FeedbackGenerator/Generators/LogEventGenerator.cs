@@ -71,8 +71,7 @@ namespace KaVE.VS.FeedbackGenerator.Generators
         private ErrorEvent CreateErrorEvent()
         {
             // Do not use Create<ErrorEvent>() here, because retrieving the
-            // active window/document might freeze the UI, depending on the
-            // current error state.
+            // active window/document might create a deadlock
             var e = new ErrorEvent
             {
                 TriggeredAt = _dateUtils.Now
@@ -82,7 +81,6 @@ namespace KaVE.VS.FeedbackGenerator.Generators
 
         private void FireNow(ErrorEvent e)
         {
-            // ReSharper disable once EmptyGeneralCatchClause
             try
             {
                 FireNow<ErrorEvent>(e);
@@ -95,8 +93,14 @@ namespace KaVE.VS.FeedbackGenerator.Generators
 
         public void Info(string info, params object[] args)
         {
-            var e = Create<InfoEvent>();
-            e.Info = ReplaceNewLineByBr(string.Format(info, args));
+            // Do not use Create<InfoEvent>() here, because retrieving the
+            // active window/document might create a deadlock
+            var e = new InfoEvent
+            {
+                TriggeredAt = _dateUtils.Now,
+                TriggeredBy = IDEEvent.Trigger.Automatic,
+                Info = ReplaceNewLineByBr(string.Format(info, args))
+            };
             FireNow(e);
         }
 
