@@ -18,15 +18,21 @@ using System.Collections.Generic;
 using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.SSTs;
+using KaVE.Commons.Model.SSTs.Blocks;
 using KaVE.Commons.Model.SSTs.Declarations;
 using KaVE.Commons.Model.SSTs.Expressions.Assignable;
+using KaVE.Commons.Model.SSTs.Expressions.LoopHeader;
 using KaVE.Commons.Model.SSTs.Impl.Visitor;
 using KaVE.Commons.Model.SSTs.Statements;
+using KaVE.Commons.Utils.Collections;
+using KaVE.FeedbackProcessor.Episodes;
 
-namespace KaVE.FeedbackProcessor.Episodes
+namespace KaVE.RS.SolutionAnalysis.Episodes
 {
     internal class EventStreamGenerator : AbstractNodeVisitor<IList<Event>>
     {
+        private IMethodName currentName;
+
         public override void Visit(ISST sst, IList<Event> events)
         {
             foreach (var method in sst.Methods)
@@ -35,10 +41,19 @@ namespace KaVE.FeedbackProcessor.Episodes
             }
         }
 
+        private void AddMethodIf(IList<Event> events)
+        {
+            if (currentName != null)
+            {
+                events.Add(Events.NewStopEvent());
+                events.Add(Events.NewMethodEvent(currentName));
+                currentName = null;
+            }
+        }
+
         public override void Visit(IMethodDeclaration method, IList<Event> events)
         {
-            events.Add(Events.NewStopEvent());
-            events.Add(Events.NewMethodEvent(method.Name));
+            currentName = method.Name;
 
             foreach (var stmt in method.Body)
             {
@@ -46,15 +61,62 @@ namespace KaVE.FeedbackProcessor.Episodes
             }
         }
 
+        public override void Visit(IForEachLoop stmt, IList<Event> events)
+        {
+            VisitBody(stmt.Body, events);
+        }
+
+        public override void Visit(IForLoop stmt, IList<Event> events)
+        {
+            VisitBody(stmt.Init, events);
+            stmt.Condition.Accept(this, events);
+            VisitBody(stmt.Step, events);
+            VisitBody(stmt.Body, events);
+        }
+
+        public override void Visit(IIfElseBlock stmt, IList<Event> events)
+        {
+            stmt.Condition.Accept(this, events);
+            VisitBody(stmt.Else, events);
+            VisitBody(stmt.Then, events);
+        }
+
+        private void VisitBody(IKaVEList<IStatement> body, IList<Event> events)
+        {
+            foreach (var stmt in body)
+            {
+                stmt.Accept(this, events);
+            }
+        }
+
+        #region stmt
+
+        public override void Visit(IAssignment stmt, IList<Event> events)
+        {
+            stmt.Expression.Accept(this, events);
+        }
+
         public override void Visit(IExpressionStatement stmt, IList<Event> events)
         {
             stmt.Expression.Accept(this, events);
         }
 
+        #endregion
+
+        #region expr
+
         public override void Visit(IInvocationExpression inv, IList<Event> events)
         {
+            AddMethodIf(events);
             events.Add(Events.NewInvocation(inv.MethodName));
         }
+
+        public override void Visit(ILoopHeaderBlockExpression expr, IList<Event> events)
+        {
+            VisitBody(expr.Body, events);
+        }
+
+        #endregion
     }
 
     internal class Events

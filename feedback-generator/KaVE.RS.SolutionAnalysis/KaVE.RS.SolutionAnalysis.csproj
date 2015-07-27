@@ -148,6 +148,7 @@
     <Compile Include="EditLocationRunner.cs" />
     <Compile Include="Episodes\Event.cs" />
     <Compile Include="Episodes\EventStreamGenerator.cs" />
+    <Compile Include="EventsExportRunner.cs" />
     <Compile Include="Histogram.cs" />
     <Compile Include="InspectCodeIntegration.cs" />
     <Compile Include="MergingHistogram.cs" />

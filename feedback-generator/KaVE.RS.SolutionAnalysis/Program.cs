@@ -25,6 +25,7 @@ using KaVE.Commons.Model.ObjectUsage;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Collections;
 using KaVE.Commons.Utils.Exceptions;
+using KaVE.Commons.Utils.IO;
 using KaVE.Commons.Utils.Json;
 using KaVE.Commons.Utils.Logging.Json;
 using KaVE.Commons.Utils.ObjectUsageExport;
@@ -43,86 +44,20 @@ namespace KaVE.RS.SolutionAnalysis
         {
             Console.WriteLine("{0} start", DateTime.Now);
 
-            const string dirContexts = @"C:\Users\seb\Desktop\Analysis\all\Contexts\";
+            const string dirContexts = @"C:\Users\seb\Desktop\Analysis\test\Contexts\";
             const string dirUsages = @"C:\Users\seb\Desktop\Analysis\all\Usages\";
+            const string dirEvents = @"C:\Users\seb\Desktop\Episodes\";
 
             //new AnalysisStatsPrinter(dirContexts).Run();
             //new UsageExportRunner(dirContexts, dirUsages).Run();
             //new EditLocationRunner(@"C:\Users\seb\Desktop\datev-unpacked3\").Run();
             //AnalyzeProjects();
-            //var usages = ExtractUsages();
+            //var usages = ExtractUsages(dirContexts);
             //WriteUsages(usages);
 
-            //var events = Lists.NewList<Event>();
-            //ExtractEvents(events);
-            //WriteEvents(events);
+            new EventsExportRunner(dirContexts, dirEvents).Run();
+
             Console.WriteLine("{0} finish", DateTime.Now);
-        }
-
-        private static void ExtractEvents(IKaVEList<Event> events)
-        {
-            var logs = FindSSTLogs();
-            var generator = new EventStreamGenerator();
-
-            foreach (var log in logs)
-            {
-                Console.WriteLine("##################################################");
-                Console.WriteLine("reading {0}...", log.Name);
-                var reader = new JsonLogReader<Context>(new FileStream(log.FullName, FileMode.Open), new NullLogger());
-
-                var ctxs = reader.ReadAll().ToList();
-                Console.WriteLine("\tFound {0} contexts", ctxs.Count);
-                Console.Write("\tExtracting events... ");
-                foreach (var ctx in ctxs)
-                {
-                    ctx.SST.Accept(generator, events);
-                    Console.Write('.');
-                }
-                Console.WriteLine(" done");
-            }
-        }
-
-        private static void WriteEvents(IKaVEList<Event> events)
-        {
-            var streamFileName = Path.Combine(TargetDirectory.FullName, "eventstream.txt");
-            var streamFile = new StreamWriter(streamFileName, false);
-            var setFileName = Path.Combine(TargetDirectory.FullName, "eventMapping.txt");
-            var setFile = new StreamWriter(setFileName, false);
-
-            Console.WriteLine("stream contains {0} events", events.Count);
-            var uniqueEvents = new HashSet<Event>();
-            var eventList = new List<Event>();
-
-            var time = 0.000;
-            var delta = 0.001;
-
-            foreach (var e in events)
-            {
-                if (!uniqueEvents.Contains(e))
-                {
-                    uniqueEvents.Add(e);
-                    eventList.Add(e);
-                }
-
-                int idx = eventList.IndexOf(e) + 1;
-
-                streamFile.Write("{0},{1:0.000}\n", idx, time);
-                time += delta;
-            }
-
-            streamFile.Close();
-
-            int idx2 = 1;
-            foreach (var e in eventList)
-            {
-                setFile.WriteLine(@"{0}, {1}", idx2++, e.ToCompactJson());
-            }
-
-            // -> write eventList
-
-            setFile.Close();
-
-            Console.WriteLine("finished");
         }
 
         private static void WriteUsages(IKaVEList<Query> usages)
@@ -146,18 +81,18 @@ namespace KaVE.RS.SolutionAnalysis
             }
         }
 
-        private static IKaVEList<Query> ExtractUsages()
+        private static IKaVEList<Query> ExtractUsages(string root)
         {
             var usages = Lists.NewList<Query>();
             int contextCounter = 0;
 
-            var logs = FindSSTLogs();
+            var logs = FindSSTLogs(root);
 
             foreach (var log in logs)
             {
                 Console.WriteLine("##################################################");
-                Console.WriteLine("reading {0}...", log.Name);
-                var reader = new JsonLogReader<Context>(new FileStream(log.FullName, FileMode.Open), new NullLogger());
+                Console.WriteLine("reading {0}...", Path.GetFileName(log));
+                var reader = new JsonLogReader<Context>(new FileStream(log, FileMode.Open), new NullLogger());
 
                 var ctxs = reader.ReadAll().ToList();
                 Console.WriteLine("\tFound {0} contexts", ctxs.Count);
@@ -185,9 +120,9 @@ namespace KaVE.RS.SolutionAnalysis
             return usages;
         }
 
-        private static IEnumerable<FileInfo> FindSSTLogs()
+        private static string[] FindSSTLogs(string root)
         {
-            var logs = TargetDirectory.GetFiles("*_SyntaxTrees.log", SearchOption.TopDirectoryOnly);
+            var logs = Directory.GetFiles(root, "*_contexts.zip", SearchOption.TopDirectoryOnly);
             Console.WriteLine("available logs:");
             foreach (var log in logs)
             {
