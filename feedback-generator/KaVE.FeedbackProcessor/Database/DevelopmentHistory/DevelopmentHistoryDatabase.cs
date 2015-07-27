@@ -37,9 +37,9 @@ namespace KaVE.FeedbackProcessor.Database.DevelopmentHistory
             _connection.Open();
 
             CreateTable(
-                "CREATE TABLE IF NOT EXISTS ContextHistories (WorkPeriod VARCHAR(255), Timestamp DATETIME, TargetType VARCHAR(255), Context TEXT)");
+                "CREATE TABLE IF NOT EXISTS ContextHistories (Id INTEGER PRIMARY KEY, WorkPeriod VARCHAR(255), Timestamp DATETIME, TargetType VARCHAR(255), Context TEXT)");
             CreateTable(
-                "CREATE TABLE IF NOT EXISTS OUHistories (WorkPeriod VARCHAR(255), Timestamp DATETIME, EnclosingMethod VARCHAR(255), TargetType VARCHAR(255), ObjectUsage TEXT, IsQuery BOOLEAN)");
+                "CREATE TABLE IF NOT EXISTS OUHistories (Id INTEGER PRIMARY KEY, WorkPeriod VARCHAR(255), Timestamp DATETIME, EnclosingMethod VARCHAR(255), TargetType VARCHAR(255), ObjectUsage TEXT, IsQuery BOOLEAN)");
         }
 
         private static void EnsureDatabaseExists(string databaseFileName)
