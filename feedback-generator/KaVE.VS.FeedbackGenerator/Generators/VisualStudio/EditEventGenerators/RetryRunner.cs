@@ -21,75 +21,87 @@ using JetBrains.Application;
 
 namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio.EditEventGenerators
 {
-    internal class RetryRunner<TResult>
+    [ShellComponent]
+    public class RetryRunner : IRetryRunner
     {
-        private readonly Func<TResult> _tryComputeResult;
-        private readonly TimeSpan _retryInterval;
-        private readonly int _numberOfTries;
-        private TResult _result;
-
-        public RetryRunner(Func<TResult> tryComputeResult,
+        public void Try<TResult>(Func<TResult> onTry,
             TimeSpan retryInterval,
             int numberOfTries,
-            Action<TResult> onCompleted)
+            Action<TResult> onSuccess,
+            Action onFailure,
+            Action<Exception> onError)
         {
-            _numberOfTries = numberOfTries;
-            _retryInterval = retryInterval;
-            _tryComputeResult = tryComputeResult;
-
-            var backgroundWorker = new BackgroundWorker();
-            backgroundWorker.DoWork += delegate { Run(); };
-            backgroundWorker.RunWorkerCompleted += delegate { onCompleted(_result); };
-
-            backgroundWorker.RunWorkerAsync();
+            // ReSharper disable once ObjectCreationAsStatement
+            new InternalRetryRunner<TResult>(onTry, retryInterval, numberOfTries, onSuccess, onFailure, onError);
         }
 
-        private void Run()
+        private class InternalRetryRunner<TResult>
         {
-            for (var tries = 0; tries < _numberOfTries; tries++)
+            private readonly Func<TResult> _tryComputeResult;
+            private readonly Action<TResult> _onSuccess;
+            private readonly Action _onFailure;
+            private readonly Action<Exception> _onError;
+            private readonly TimeSpan _retryInterval;
+            private readonly int _numberOfTries;
+            private TResult _result;
+
+            public InternalRetryRunner(Func<TResult> tryComputeResult,
+                TimeSpan retryInterval,
+                int numberOfTries,
+                Action<TResult> onSuccess,
+                Action onFailure,
+                Action<Exception> onError)
             {
-                try
+                _onFailure = onFailure;
+                _onSuccess = onSuccess;
+                _onError = onError ?? (e => { throw e; });
+                _numberOfTries = numberOfTries;
+                _retryInterval = retryInterval;
+                _tryComputeResult = tryComputeResult;
+
+                var backgroundWorker = new BackgroundWorker();
+                backgroundWorker.DoWork += delegate { Run(); };
+
+                backgroundWorker.RunWorkerAsync();
+            }
+
+            private void Run()
+            {
+                for (var tries = 0; tries < _numberOfTries; tries++)
                 {
-                    _result = _tryComputeResult();
-                    return;
+                    try
+                    {
+                        _result = _tryComputeResult();
+                        _onSuccess(_result);
+                        return;
+                    }
+                    catch (RetryException)
+                    {
+                        Thread.Sleep(_retryInterval);
+                    }
+                    catch (Exception exception)
+                    {
+                        _onError(exception);
+                        return;
+                    }
                 }
-                catch
-                {
-                    Thread.Sleep(_retryInterval);
-                }
+                _onFailure();
             }
         }
     }
 
-    [ShellComponent]
-    public class RetryRunner : IRetryRunner
+    public interface IRetryRunner
     {
         /// <summary>
-        ///     Repeats <paramref name="onTry" /> (starting instantly)
-        ///     with the interval <paramref name="retryInterval" />
-        ///     for <paramref name="numberOfTries" /> times OR until <paramref name="onTry" /> does not throw an exception.
-        ///     <para>Calls <paramref name="onDone" /> when finished</para>
-        /// </summary>
-        public void Try<TResult>(Func<TResult> onTry,
-            TimeSpan retryInterval,
-            int numberOfTries,
-            Action<TResult> onDone)
-        {
-            // ReSharper disable once ObjectCreationAsStatement
-            new RetryRunner<TResult>(onTry, retryInterval, numberOfTries, onDone);
-        }
-    }
-
-    public interface IRetryRunner {
-        /// <summary>
-        ///     Repeats <paramref name="onTry" /> (starting instantly)
-        ///     with the interval <paramref name="retryInterval" />
-        ///     for <paramref name="numberOfTries" /> times OR until <paramref name="onTry" /> does not throw an exception.
-        ///     <para>Calls <paramref name="onDone" /> when finished</para>
+        ///     Throw <code>RetryException</code> to cancel a try
         /// </summary>
         void Try<TResult>(Func<TResult> onTry,
             TimeSpan retryInterval,
             int numberOfTries,
-            Action<TResult> onDone);
+            Action<TResult> onSuccess,
+            Action onFailure,
+            Action<Exception> onError = null);
     }
+
+    public class RetryException : Exception { }
 }

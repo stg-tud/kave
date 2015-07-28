@@ -33,11 +33,21 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.VisualStudio.EditEventGener
         }
 
         [Test, MaxTime(1100)]
-        public void ShouldCallOnCompleted()
+        public void ShouldCallOnSuccess()
         {
             var wasSet = false;
 
-            _uut.Try(() => true, TimeSpan.Zero, 0, result => wasSet = true);
+            _uut.Try(() => false, TimeSpan.Zero, 1, result => wasSet = true, () => {});
+
+            Assert.That(() => wasSet, Is.True.After(1000, 100));
+        }
+
+        [Test, MaxTime(1100)]
+        public void ShouldCallOnFailure()
+        {
+            var wasSet = false;
+
+            _uut.Try<object>(() => { throw new RetryException(); }, TimeSpan.Zero, 1, result => { }, () => wasSet = true);
 
             Assert.That(() => wasSet, Is.True.After(1000, 100));
         }
@@ -57,11 +67,12 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.VisualStudio.EditEventGener
                     {
                         return true;
                     }
-                    throw new Exception();
+                    throw new RetryException();
                 },
                 retryInterval,
                 numberOfTries,
-                result => { didNotWaitLongEnough = result; });
+                result => { didNotWaitLongEnough = result; },
+                () => {});
 
             Assert.That(() => didNotWaitLongEnough, Is.False.After(1000, 100));
         }
@@ -76,11 +87,12 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.VisualStudio.EditEventGener
                 () =>
                 {
                     actualNumberOfTries++;
-                    throw new Exception();
+                    throw new RetryException();
                 },
                 TimeSpan.Zero,
                 numberOfTries,
-                result => { });
+                result => { },
+                () => { });
 
             Assert.That(() => actualNumberOfTries, Is.EqualTo(numberOfTries).After(1000, 100));
         }

@@ -20,7 +20,6 @@ using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Model.Events.VisualStudio;
 using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.SSTs.Impl;
-using KaVE.Commons.Utils.Assertion;
 using KaVE.VS.FeedbackGenerator.Generators.VisualStudio.EditEventGenerators;
 using KaVE.VS.FeedbackGenerator.Generators.VisualStudio.EditEventGenerators.EventContext;
 using KaVE.VS.FeedbackGenerator.Tests.TestFactories;
@@ -82,7 +81,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.VisualStudio.EditEventGener
             Assert.AreEqual(1, _contextProvider.NumberOfCalls);
         }
 
-        [Test, ExpectedException(typeof (AssertException))]
+        [Test, ExpectedException(typeof (RetryException))]
         public void TryShouldFailIfContextIsInvalid()
         {
             _contextProvider.ReturnValidContext = false;
@@ -105,11 +104,23 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.VisualStudio.EditEventGener
             Assert.AreEqual(publishedEvent.ActiveDocument, TestDocument.GetName());
             Assert.AreEqual(publishedEvent.TriggeredAt, TestDateUtils.Now);
         }
+
+        [Test]
+        public void ShouldNotFireWhenNoValidContextIsAvailableInTime()
+        {
+            _uut.TryFireWithContext(TestDocument);
+
+            _retryRunner.OnFailure();
+
+            System.Threading.Thread.Sleep(100);
+
+            AssertNoEvent();
+        }
     }
 
     internal class RetryRunnerTestImpl : IRetryRunner
     {
-        public Object Result;
+        public object Result;
 
         public Func<Context> OnTry
         {
@@ -118,17 +129,28 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.VisualStudio.EditEventGener
 
         public Action<Context> OnDone
         {
-            get { return (Action<Context>) _onDone; }
+            get { return (Action<Context>) _onSuccess; }
+        }
+
+        public Action OnFailure
+        {
+            get { return (Action) _onFailure; }
         }
 
         private object _onTry;
-        private object _onDone;
+        private object _onSuccess;
+        private object _onFailure;
 
-        // ReSharper disable once CSharpWarnings::CS0693
-        public void Try<TResult>(Func<TResult> onTry, TimeSpan retryInterval, int numberOfTries, Action<TResult> onDone)
+        public void Try<TResult>(Func<TResult> onTry,
+            TimeSpan retryInterval,
+            int numberOfTries,
+            Action<TResult> onSuccess,
+            Action onFailure,
+            Action<Exception> onError = null)
         {
             _onTry = onTry;
-            _onDone = onDone;
+            _onSuccess = onSuccess;
+            _onFailure = onFailure;
         }
     }
 

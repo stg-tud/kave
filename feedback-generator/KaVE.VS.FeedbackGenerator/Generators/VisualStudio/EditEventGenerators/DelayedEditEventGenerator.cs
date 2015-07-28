@@ -94,13 +94,23 @@ namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio.EditEventGenerators
                     TryGetContext,
                     RetryInterval,
                     NumberOfTries,
-                    AddDelayedEventToQueue);
+                    AddDelayedEventToQueue,
+                    () => {});
             }
 
             private Context TryGetContext()
             {
                 var currentContext = _contextProvider.GetCurrentContext(_document);
-                Asserts.Not(currentContext.Equals(new Context()), "context is not yet valid");
+
+                try
+                {
+                    Asserts.Not(currentContext.Equals(new Context()), "context is not yet valid");
+                }
+                catch (AssertException)
+                {
+                    throw new RetryException();
+                }
+
                 return currentContext;
             }
 
