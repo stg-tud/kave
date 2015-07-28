@@ -30,6 +30,7 @@ using NUnit.Framework;
 
 namespace KaVE.VS.FeedbackGenerator.Tests.Generators.VisualStudio.EditEventGenerators
 {
+    [Ignore]
     internal class DelayedEventGeneratorTest : EventGeneratorTestBase
     {
         public static Context ValidContext

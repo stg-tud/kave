@@ -98,7 +98,6 @@ namespace KaVE.VS.FeedbackGenerator.Generators
             var e = new InfoEvent
             {
                 TriggeredAt = _dateUtils.Now,
-                TriggeredBy = IDEEvent.Trigger.Automatic,
                 Info = ReplaceNewLineByBr(string.Format(info, args))
             };
             FireNow(e);
