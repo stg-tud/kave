@@ -15,7 +15,6 @@
  */
 
 using System;
-using KaVE.Commons.Model;
 using KaVE.Commons.Model.Names;
 using KaVE.Commons.Utils.Collections;
 using NUnit.Framework;
@@ -23,7 +22,7 @@ using NUnit.Framework;
 namespace KaVE.Commons.Tests.Utils.Collections
 {
     [TestFixture]
-    class WeakNameCacheTest
+    internal class WeakNameCacheTest
     {
         private int _numberOfFactoryCalls;
         private WeakNameCache<TestName> _uut;
@@ -36,7 +35,7 @@ namespace KaVE.Commons.Tests.Utils.Collections
                 id =>
                 {
                     _numberOfFactoryCalls++;
-                    return new TestName{Identifier = id};
+                    return new TestName {Identifier = id};
                 });
         }
 
@@ -50,7 +49,8 @@ namespace KaVE.Commons.Tests.Utils.Collections
             Assert.AreSame(instance1, instance2);
         }
 
-        [Test]
+        // TODO discuss problem case
+        [Test, Ignore("old solution (temporarily?) replaced")]
         public void EnsuresKeyIdentity()
         {
             var key = FreshKey('a');
@@ -99,7 +99,11 @@ namespace KaVE.Commons.Tests.Utils.Collections
         private class TestName : IName
         {
             public string Identifier { get; set; }
-            public bool IsUnknown { get { return false; } }
+
+            public bool IsUnknown
+            {
+                get { return false; }
+            }
         }
     }
 }

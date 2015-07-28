@@ -14,23 +14,30 @@
  * limitations under the License.
  */
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime;
 using System.Runtime.CompilerServices;
 using KaVE.Commons.Model.Names;
-using KaVE.Commons.Utils.Reflection;
 
 namespace KaVE.Commons.Utils.Collections
 {
     internal class WeakNameCache<TName> where TName : class, IName
     {
+        private const int NumberOfRequestsBeforeMaintenance = 1000;
+
         public static WeakNameCache<TName> Get(NameFactory factory)
         {
             return new WeakNameCache<TName>(factory);
         }
 
-        private readonly ConditionalWeakTable<string, TName> _cache =
-            new ConditionalWeakTable<string, TName>();
+        private readonly Dictionary<string, WeakReference<TName>> _cache =
+            new Dictionary<string, WeakReference<TName>>();
 
+        private readonly object _lock = new object();
         private readonly NameFactory _factory;
+        private int _requestCounter;
 
         public delegate TName NameFactory(string identifier);
 
@@ -41,12 +48,71 @@ namespace KaVE.Commons.Utils.Collections
 
         public TName GetOrCreate(string identifier)
         {
-            // ConditionalWeakTable performs lookup with ReferenceEquals, hence, we first find the right key instance
-            // by value equality and then do the lookup. This is might turn out problematic in terms of performance,
-            // once many lookups are performed and many names are cached. In that case, we might want to have a close
-            // look at https://github.com/nesterovsky-bros/WeakTable/.
-            identifier = _cache.InvokeNonPublic<string>("FindEquivalentKeyUnsafe", identifier, null) ?? identifier;
-            return _cache.GetValue(identifier, key => _factory(key));
+            lock (_lock)
+            {
+                RunOccasionalMaintenance();
+
+                TName name = null;
+                RunWithReducedProbabilityOfGarbageCollection(
+                    () =>
+                    {
+                        if (_cache.ContainsKey(identifier))
+                        {
+                            var weakRef = _cache[identifier];
+                            if (weakRef.IsAlive())
+                            {
+                                name = weakRef.Target;
+                            }
+                        }
+                    });
+
+                if (name == null)
+                {
+                    name = _factory(identifier);
+                    _cache[identifier] = new WeakReference<TName>(name);
+                }
+
+                return name;
+            }
+        }
+
+        private void RunOccasionalMaintenance()
+        {
+            _requestCounter++;
+            if (_requestCounter > NumberOfRequestsBeforeMaintenance)
+            {
+                _requestCounter = 0;
+                RemoveKeysOfDeadValues();
+            }
+        }
+
+        private void RemoveKeysOfDeadValues()
+        {
+            // .ToList is necessary to prevent concurrent modification
+            foreach (var k in _cache.Keys.ToList())
+            {
+                if (!_cache[k].IsAlive())
+                {
+                    _cache.Remove(k);
+                }
+            }
+        }
+
+        // adaptation of GC taken from:
+        // http://stackoverflow.com/questions/6005865/prevent-net-garbage-collection-for-short-period-of-time
+        private static void RunWithReducedProbabilityOfGarbageCollection(Action action)
+        {
+            var oldLatencyMode = GCSettings.LatencyMode;
+            RuntimeHelpers.PrepareConstrainedRegions();
+            try
+            {
+                GCSettings.LatencyMode = GCLatencyMode.LowLatency;
+                action();
+            }
+            finally
+            {
+                GCSettings.LatencyMode = oldLatencyMode;
+            }
         }
     }
 }
