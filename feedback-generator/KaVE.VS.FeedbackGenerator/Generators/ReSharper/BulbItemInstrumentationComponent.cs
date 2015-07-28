@@ -90,7 +90,10 @@ namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
         // unused
         public void CollectSyncResults(object data, IntentionsBulbItems intentionsBulbItems, ITextControl textControl) {}
 
-        // unused
+        // unused (<= ReSharper 9.1.2), can be removed?
         public void WaitRoslynTasks(object data) {}
+
+        // unused (>= ReSharper 9.1.3)
+        public void WaitRoslynTasks<T>(object data) {}
     }
 }
