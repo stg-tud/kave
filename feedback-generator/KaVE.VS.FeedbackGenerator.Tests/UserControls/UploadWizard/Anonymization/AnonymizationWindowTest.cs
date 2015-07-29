@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using KaVE.Commons.TestUtils.UserControls;
 using KaVE.RS.Commons.Settings;
 using KaVE.VS.FeedbackGenerator.Settings;
 using KaVE.VS.FeedbackGenerator.UserControls.Anonymization;
@@ -53,7 +54,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UploadWizard.Anonymizatio
         {
             var sut = Open();
 
-            Click(sut.OkButton);
+            UserControlTestUtils.Click(sut.OkButton);
 
             _mockSettingsStore.Verify(settingStore => settingStore.SetSettings(It.IsAny<AnonymizationSettings>()));
         }
@@ -63,7 +64,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UploadWizard.Anonymizatio
         {
             var sut = Open();
 
-            Click(sut.CloseButton);
+            UserControlTestUtils.Click(sut.CloseButton);
 
             _mockSettingsStore.Verify(settingStore => settingStore.SetSettings(It.IsAny<AnonymizationSettings>()), Times.Never);
         }

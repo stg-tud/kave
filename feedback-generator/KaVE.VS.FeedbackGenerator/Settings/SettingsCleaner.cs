@@ -51,7 +51,7 @@ namespace KaVE.VS.FeedbackGenerator.Settings
             {
                 if (restoreType.ResetType == ResetTypes.Feedback)
                 {
-                    RestoreFeedback();
+                    ResetFeedback();
                 }
                 else
                 {
@@ -60,7 +60,7 @@ namespace KaVE.VS.FeedbackGenerator.Settings
             }
         }
 
-        private void RestoreFeedback()
+        private void ResetFeedback()
         {
             _logManager.DeleteAllLogs();
         }

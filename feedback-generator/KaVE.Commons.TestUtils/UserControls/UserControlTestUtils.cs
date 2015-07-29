@@ -19,6 +19,7 @@ using System.Windows.Automation.Peers;
 using System.Windows.Automation.Provider;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Documents;
 
 namespace KaVE.Commons.TestUtils.UserControls
 {
@@ -37,6 +38,11 @@ namespace KaVE.Commons.TestUtils.UserControls
         public static void Click(ButtonBase button)
         {
             button.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
+        }
+
+        public static void Click(Hyperlink hyperlink)
+        {
+            hyperlink.RaiseEvent(new RoutedEventArgs(Hyperlink.ClickEvent));
         }
     }
 }

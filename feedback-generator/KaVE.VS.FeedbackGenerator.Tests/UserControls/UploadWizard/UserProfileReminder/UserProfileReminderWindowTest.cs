@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using KaVE.Commons.TestUtils.UserControls;
 using KaVE.RS.Commons;
 using KaVE.RS.Commons.Settings;
 using KaVE.VS.FeedbackGenerator.Menu;
@@ -67,7 +68,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UploadWizard.UserProfileR
         [Test]
         public void ShouldSetIsProvidingProfileTrueOnParticipationClick()
         {
-            Click(_sut.ParticipationButton);
+            UserControlTestUtils.Click(_sut.ParticipationButton);
 
             Assert.True(_userProfileSettings.IsProvidingProfile);
         }
@@ -75,7 +76,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UploadWizard.UserProfileR
         [Test]
         public void ShouldSetIsProvidingProfileFalseOnNoParticipationClick()
         {
-            Click(_sut.NoParticipationHyperlink);
+            UserControlTestUtils.Click(_sut.NoParticipationHyperlink);
 
             Assert.False(_userProfileSettings.IsProvidingProfile);
         }

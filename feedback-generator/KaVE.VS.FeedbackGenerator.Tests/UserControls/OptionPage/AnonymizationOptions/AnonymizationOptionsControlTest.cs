@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using KaVE.Commons.TestUtils.UserControls;
 using KaVE.VS.FeedbackGenerator.Settings;
 using KaVE.VS.FeedbackGenerator.UserControls.Anonymization;
 using KaVE.VS.FeedbackGenerator.UserControls.OptionPage.AnonymizationOptions;
@@ -57,7 +58,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.AnonymizationO
         {
             SetConfirmationAnswerTo(true);
 
-            Click(_sut.ResetButton);
+            UserControlTestUtils.Click(_sut.ResetButton);
 
             VerifyActionExecuted(Times.Once);
         }
@@ -67,7 +68,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.AnonymizationO
         {
             SetConfirmationAnswerTo(false);
 
-            Click(_sut.ResetButton);
+            UserControlTestUtils.Click(_sut.ResetButton);
 
             VerifyActionExecuted(Times.Never);
         }

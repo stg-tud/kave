@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using KaVE.Commons.TestUtils.UserControls;
 using KaVE.VS.FeedbackGenerator.Settings;
 using KaVE.VS.FeedbackGenerator.UserControls.OptionPage.GeneralOptions;
 using Moq;
@@ -56,7 +57,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.GeneralOptions
         {
             SetConfirmationAnswerTo(true);
 
-            Click(_sut.ResetGeneralSettingsButton);
+            UserControlTestUtils.Click(_sut.ResetGeneralSettingsButton);
 
             VerifyActionExecuted(Times.Once);
         }
@@ -66,7 +67,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.GeneralOptions
         {
             SetConfirmationAnswerTo(false);
 
-            Click(_sut.ResetGeneralSettingsButton);
+            UserControlTestUtils.Click(_sut.ResetGeneralSettingsButton);
 
             VerifyActionExecuted(Times.Never);
         }
@@ -82,7 +83,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.GeneralOptions
         {
             SetConfirmationAnswerTo(true);
 
-            Click(_sut.ResetFeedbackSettingsButton);
+            UserControlTestUtils.Click(_sut.ResetFeedbackSettingsButton);
 
             VerifyActionExecuted(Times.Once);
         }
@@ -92,7 +93,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.OptionPage.GeneralOptions
         {
             SetConfirmationAnswerTo(false);
 
-            Click(_sut.ResetFeedbackSettingsButton);
+            UserControlTestUtils.Click(_sut.ResetFeedbackSettingsButton);
 
             VerifyActionExecuted(Times.Never);
         }
