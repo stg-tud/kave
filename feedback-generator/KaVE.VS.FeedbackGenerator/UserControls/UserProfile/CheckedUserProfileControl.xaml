@@ -23,13 +23,9 @@ limitations under the License.
              d:DesignHeight="700" d:DesignWidth="500">
 
     <StackPanel>
-        <TextBlock TextWrapping="Wrap">
-            We would like to learn more about our users, please help us by answering several simple questions about yourself.
-            You can leave out any question, if you do not want to answer it.
-            Your answers will be attached to your uploaded feedback.
-        </TextBlock>
+      <TextBlock TextWrapping="Wrap" Text="{x:Static userProfile:UserProfileMessages.Intro}" />
 
-        <CheckBox Name="IsProvidingProfileCheckBox"
+      <CheckBox Name="IsProvidingProfileCheckBox"
                   Content="Yes, I would like to help and provide additional information."
                   IsChecked="{Binding Path=IsProvidingProfile, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                   Margin="15,5" />
