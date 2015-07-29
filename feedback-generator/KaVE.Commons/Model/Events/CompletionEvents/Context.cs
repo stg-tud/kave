@@ -18,8 +18,8 @@ using System.Runtime.Serialization;
 using KaVE.Commons.Model.SSTs;
 using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.Commons.Model.TypeShapes;
-using KaVE.JetBrains.Annotations;
 using KaVE.Commons.Utils;
+using KaVE.JetBrains.Annotations;
 
 namespace KaVE.Commons.Model.Events.CompletionEvents
 {
@@ -36,10 +36,21 @@ namespace KaVE.Commons.Model.Events.CompletionEvents
         [DataMember, NotNull]
         public ISST SST { get; set; }
 
+        [NotNull]
+        public static Context Default
+        {
+            get { return new Context(); }
+        }
+
         public Context()
         {
             TypeShape = new TypeShape();
             SST = new SST();
+        }
+
+        public bool IsDefault()
+        {
+            return Equals(Default);
         }
 
         public override bool Equals(object obj)

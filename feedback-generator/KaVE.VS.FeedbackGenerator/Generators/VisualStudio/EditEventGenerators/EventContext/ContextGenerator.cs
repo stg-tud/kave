@@ -17,7 +17,6 @@
 using System;
 using System.Linq;
 using EnvDTE;
-using JetBrains.Application.Components;
 using JetBrains.DocumentManagers;
 using JetBrains.DocumentModel;
 using JetBrains.ProjectModel;
@@ -35,7 +34,7 @@ using ILogger = KaVE.Commons.Utils.Exceptions.ILogger;
 
 namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio.EditEventGenerators.EventContext
 {
-    [SolutionComponent(ProgramConfigurations.VS_ADDIN)]
+    [SolutionComponent]
     internal class ContextGenerator
     {
         private Context CurrentContext { get; set; }
@@ -78,7 +77,7 @@ namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio.EditEventGenerators.
 
         private void ComputeNewContextByFilePath([NotNull] string filePath)
         {
-            CurrentContext = new Context();
+            CurrentContext = Context.Default;
 
             var document = GetDocument(filePath);
             if (document != null)

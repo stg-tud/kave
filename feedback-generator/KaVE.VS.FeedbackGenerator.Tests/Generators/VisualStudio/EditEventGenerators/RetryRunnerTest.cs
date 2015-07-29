@@ -33,76 +33,45 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.VisualStudio.EditEventGener
         }
 
         [Test, MaxTime(1100)]
-        public void ShouldCallOnSuccess()
-        {
-            var wasSet = false;
-
-            _uut.Try(() => false, TimeSpan.Zero, 1, result => wasSet = true, () => {});
-
-            Assert.That(() => wasSet, Is.True.After(1000, 100));
-        }
-
-        [Test, MaxTime(1100)]
-        public void ShouldCallOnFailure()
-        {
-            var wasSet = false;
-
-            _uut.Try<object>(() => { throw new RetryException(); }, TimeSpan.Zero, 1, result => { }, () => wasSet = true);
-
-            Assert.That(() => wasSet, Is.True.After(1000, 100));
-        }
-
-        [Test, MaxTime(1100)]
         public void ShouldAtLeastWaitForRetryInterval()
         {
-            var retryInterval = TimeSpan.FromMilliseconds(1);
-            const int numberOfTries = 42;
-
             var didNotWaitLongEnough = false;
 
             _uut.Try(
                 () =>
                 {
-                    if (DidNotWaitForInterval(DateTime.Now, retryInterval))
+                    if (DidNotWaitForInterval(DateTime.Now))
                     {
-                        return true;
+                        didNotWaitLongEnough = true;
                     }
-                    throw new RetryException();
-                },
-                retryInterval,
-                numberOfTries,
-                result => { didNotWaitLongEnough = result; },
-                () => {});
+                    return false;
+                });
 
+            // ReSharper disable once ImplicitlyCapturedClosure
             Assert.That(() => didNotWaitLongEnough, Is.False.After(1000, 100));
         }
 
-        [Test, MaxTime(1100)]
+        [Test, MaxTime(11000)]
         public void ShouldTryExactlyNumberOfTriesTimes()
         {
-            const int numberOfTries = 42;
             var actualNumberOfTries = 0;
 
-            _uut.Try<int>(
+            _uut.Try(
                 () =>
                 {
                     actualNumberOfTries++;
-                    throw new RetryException();
-                },
-                TimeSpan.Zero,
-                numberOfTries,
-                result => { },
-                () => { });
+                    return false;
+                });
 
-            Assert.That(() => actualNumberOfTries, Is.EqualTo(numberOfTries).After(1000, 100));
+            Assert.That(() => actualNumberOfTries, Is.EqualTo(RetryRunner.NumberOfTries).After(10000, 100));
         }
 
-        public bool DidNotWaitForInterval(DateTime now, TimeSpan minDifference)
+        public bool DidNotWaitForInterval(DateTime now)
         {
             if (_lastTime != null)
             {
                 var difference = now - _lastTime.Value;
-                return difference < minDifference;
+                return difference < RetryRunner.RetryInterval;
             }
             _lastTime = now;
             return false;

@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-using System;
+using System.IO;
 using EnvDTE;
 using JetBrains.Application;
 using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Model.Events.VisualStudio;
 using KaVE.Commons.Utils;
-using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Collections;
 using KaVE.Commons.Utils.Concurrency;
 using KaVE.VS.FeedbackGenerator.Generators.VisualStudio.EditEventGenerators.EventContext;
@@ -47,18 +46,32 @@ namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio.EditEventGenerators
             _retryRunner = retryRunner;
             _contextProvider = contextProvider;
 
-          //  Task.StartNewLongRunning(FireDelayedEvents);
+            Task.StartNewLongRunning(FireDelayedEvents);
         }
 
         public void TryFireWithContext(Document document)
         {
-            // ReSharper disable once ObjectCreationAsStatement
-         /*   new DelayedEditEventHandler(
-                _retryRunner,
-                _contextProvider,
-                Create<EditEvent>(),
-                document,
-                _delayedEditEvents);*/
+            // TODO: trigger only for CSharp code files
+            //if (IsCSharpFile(document))
+            {
+                // ReSharper disable once ObjectCreationAsStatement
+                new DelayedEditEventHandler(
+                    _retryRunner,
+                    _contextProvider,
+                    Create<EditEvent>(),
+                    document,
+                    _delayedEditEvents);
+            }
+        }
+
+        private static bool IsCSharpFile(Document document)
+        {
+            // TODO: this doesn't seem to work yet
+
+            var fullname = document.FullName;
+            var extension = Path.GetExtension(fullname);
+
+            return "cs".Equals(extension);
         }
 
         private void FireDelayedEvents()
@@ -71,9 +84,6 @@ namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio.EditEventGenerators
 
         private class DelayedEditEventHandler
         {
-            private static readonly TimeSpan RetryInterval = TimeSpan.FromMilliseconds(500);
-            private const int NumberOfTries = 10;
-
             private readonly IContextProvider _contextProvider;
             private readonly EditEvent _editEvent;
             private readonly Document _document;
@@ -90,35 +100,22 @@ namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio.EditEventGenerators
                 _document = document;
                 _delayedEventQueue = delayedEventQueue;
 
-                retryRunner.Try(
-                    TryGetContext,
-                    RetryInterval,
-                    NumberOfTries,
-                    AddDelayedEventToQueue,
-                    () => {});
+                retryRunner.Try(AddDelayedEventToQueue);
             }
 
-            private Context TryGetContext()
+            private bool AddDelayedEventToQueue()
             {
                 var currentContext = _contextProvider.GetCurrentContext(_document);
 
-                try
+                if (currentContext.IsDefault())
                 {
-                    Asserts.Not(currentContext.Equals(new Context()), "context is not yet valid");
-                }
-                catch (AssertException)
-                {
-                    throw new RetryException();
+                    return false;
                 }
 
-                return currentContext;
-            }
-
-            private void AddDelayedEventToQueue(Context context)
-            {
-                _editEvent.Context2 = context;
+                _editEvent.Context2 = currentContext;
                 _editEvent.ActiveDocument = _document.GetName();
                 _delayedEventQueue.Add(_editEvent);
+                return true;
             }
         }
     }

@@ -29,7 +29,6 @@ using NUnit.Framework;
 
 namespace KaVE.VS.FeedbackGenerator.Tests.Generators.VisualStudio.EditEventGenerators
 {
-    [Ignore]
     internal class DelayedEventGeneratorTest : EventGeneratorTestBase
     {
         public static Context ValidContext
@@ -37,120 +36,113 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.VisualStudio.EditEventGener
             get { return new Context {SST = new SST {EnclosingType = TypeName.Get("TestType")}}; }
         }
 
-        private static Document TestDocument
-        {
-            get
-            {
-                var documentMock = new Mock<Document>();
-                documentMock.Setup(doc => doc.Language).Returns("Project");
-                documentMock.Setup(doc => doc.FullName).Returns(@"C:\Project.csproj");
-                documentMock.Setup(doc => doc.DTE).Returns(DTEMockUtils.MockSolution(@"C:\Solution.sln").DTE);
-                return documentMock.Object;
-            }
-        }
+        private static Mock<Document> _testDocumentMock;
 
         private DelayedEditEventGenerator _uut;
 
-        private RetryRunnerTestImpl _retryRunner;
+        private RetryRunnerTestImpl _testRetryRunner;
 
         private ContextProviderTestImpl _contextProvider;
 
         [SetUp]
         public void Setup()
         {
+            _testDocumentMock = new Mock<Document>();
+            _testDocumentMock.Setup(doc => doc.Language).Returns("SomeLanguage");
+            _testDocumentMock.Setup(doc => doc.FullName).Returns(@"C:\SomeCSharpFile.cs");
+            _testDocumentMock.Setup(doc => doc.DTE).Returns(DTEMockUtils.MockSolution(@"C:\Solution.sln").DTE);
+            
             TestDateUtils.Now = DateTime.Now;
 
-            _retryRunner = new RetryRunnerTestImpl();
+            _testRetryRunner = new RetryRunnerTestImpl();
             _contextProvider = new ContextProviderTestImpl();
             _uut = new DelayedEditEventGenerator(
                 TestRSEnv,
                 MockTestMessageBus.Object,
                 TestDateUtils,
-                _retryRunner,
+                _testRetryRunner,
                 _contextProvider);
         }
 
         [Test]
         public void ShouldTryToGetContext()
         {
-            _contextProvider.ReturnValidContext = true;
-            _uut.TryFireWithContext(TestDocument);
+            _uut.TryFireWithContext(_testDocumentMock.Object);
 
-            _retryRunner.OnTry();
+            _testRetryRunner.OnTry();
 
             Assert.AreEqual(1, _contextProvider.NumberOfCalls);
         }
 
-        [Test, ExpectedException(typeof (RetryException))]
+        [Test]
+        public void TryShouldBeSuccessfulIfContextIsValid()
+        {
+            _contextProvider.CurrentContext = ValidContext;
+            _uut.TryFireWithContext(_testDocumentMock.Object);
+
+            Assert.True(_testRetryRunner.OnTry());
+        }
+
+        [Test]
         public void TryShouldFailIfContextIsInvalid()
         {
-            _contextProvider.ReturnValidContext = false;
-            _uut.TryFireWithContext(TestDocument);
+            _contextProvider.CurrentContext = Context.Default;
+            _uut.TryFireWithContext(_testDocumentMock.Object);
 
-            _retryRunner.OnTry();
+            Assert.False(_testRetryRunner.OnTry());
         }
 
         [Test]
         public void ShouldFireEventWhenContextIsReady()
         {
-            _uut.TryFireWithContext(TestDocument);
+            _contextProvider.CurrentContext = ValidContext;
+            _uut.TryFireWithContext(_testDocumentMock.Object);
 
-            _retryRunner.OnDone(ValidContext);
+           _testRetryRunner.OnTry();
 
             System.Threading.Thread.Sleep(100);
 
             var publishedEvent = GetSinglePublished<EditEvent>();
             Assert.AreNotEqual(publishedEvent.Context2, new Context());
-            Assert.AreEqual(publishedEvent.ActiveDocument, TestDocument.GetName());
+            Assert.AreEqual(publishedEvent.ActiveDocument, _testDocumentMock.Object.GetName());
             Assert.AreEqual(publishedEvent.TriggeredAt, TestDateUtils.Now);
         }
 
         [Test]
-        public void ShouldNotFireWhenNoValidContextIsAvailableInTime()
+        public void ShouldNotFireWhenNoValidContextIsAvailable()
         {
-            _uut.TryFireWithContext(TestDocument);
+            _contextProvider.CurrentContext = Context.Default;
+            _uut.TryFireWithContext(_testDocumentMock.Object);
 
-            _retryRunner.OnFailure();
+            _testRetryRunner.OnTry();
 
             System.Threading.Thread.Sleep(100);
 
             AssertNoEvent();
         }
+
+        [Test, Ignore("not yet implemented")]
+        public void ShouldDoNothingForNonCSharpFiles()
+        {
+            _testDocumentMock.Setup(doc => doc.FullName).Returns(@"C:\NoCSharpFile.xaml");
+            _uut.TryFireWithContext(_testDocumentMock.Object);
+            
+            Assert.False(_testRetryRunner.WasCalled);
+        }
     }
 
     internal class RetryRunnerTestImpl : IRetryRunner
     {
+        public bool WasCalled;
+
         public object Result;
 
-        public Func<Context> OnTry
-        {
-            get { return (Func<Context>) _onTry; }
-        }
+        public Func<bool> OnTry;
 
-        public Action<Context> OnDone
+        public void Try(Func<bool> onTry)
         {
-            get { return (Action<Context>) _onSuccess; }
-        }
-
-        public Action OnFailure
-        {
-            get { return (Action) _onFailure; }
-        }
-
-        private object _onTry;
-        private object _onSuccess;
-        private object _onFailure;
-
-        public void Try<TResult>(Func<TResult> onTry,
-            TimeSpan retryInterval,
-            int numberOfTries,
-            Action<TResult> onSuccess,
-            Action onFailure,
-            Action<Exception> onError = null)
-        {
-            _onTry = onTry;
-            _onSuccess = onSuccess;
-            _onFailure = onFailure;
+            WasCalled = true;
+            OnTry = onTry;
         }
     }
 
@@ -158,19 +150,17 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.VisualStudio.EditEventGener
     {
         public int NumberOfCalls;
 
-        public bool ReturnValidContext;
+        public Context CurrentContext = Context.Default;
 
         public Context GetCurrentContext(Document document)
         {
             NumberOfCalls++;
-            return ReturnValidContext
-                ? DelayedEventGeneratorTest.ValidContext
-                : new Context();
+            return CurrentContext;
         }
-
+        
         public Context GetCurrentContext(TextPoint startPoint)
         {
-            throw new NotImplementedException("shouldn't call this method!");
+            throw new NotImplementedException();
         }
     }
 }

@@ -34,12 +34,12 @@ namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio.EditEventGenerators.
 
         public Context GetCurrentContext(Document document)
         {
-            return _contextGenerator != null ? _contextGenerator.GetCurrentContext(document) : new Context();
+            return _contextGenerator != null ? _contextGenerator.GetCurrentContext(document) : Context.Default;
         }
 
         public Context GetCurrentContext(TextPoint startPoint)
         {
-            return _contextGenerator != null ? _contextGenerator.GetCurrentContext(startPoint) : new Context();
+            return _contextGenerator != null ? _contextGenerator.GetCurrentContext(startPoint) : Context.Default;
         }
     }
 

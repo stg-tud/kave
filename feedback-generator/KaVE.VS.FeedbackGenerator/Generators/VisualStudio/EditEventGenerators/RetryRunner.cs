@@ -21,87 +21,47 @@ using JetBrains.Application;
 
 namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio.EditEventGenerators
 {
+    public interface IRetryRunner
+    {
+        void Try(Func<bool> onTry);
+    }
+
     [ShellComponent]
     public class RetryRunner : IRetryRunner
     {
-        public void Try<TResult>(Func<TResult> onTry,
-            TimeSpan retryInterval,
-            int numberOfTries,
-            Action<TResult> onSuccess,
-            Action onFailure,
-            Action<Exception> onError)
+        public const int NumberOfTries = 10;
+        public static TimeSpan RetryInterval = TimeSpan.FromMilliseconds(500);
+
+        public void Try(Func<bool> onTry)
         {
-            // ReSharper disable once ObjectCreationAsStatement
-            new InternalRetryRunner<TResult>(onTry, retryInterval, numberOfTries, onSuccess, onFailure, onError);
+            new InternalRetryRunner().Run(onTry);
         }
 
-        private class InternalRetryRunner<TResult>
+        private class InternalRetryRunner
         {
-            private readonly Func<TResult> _tryComputeResult;
-            private readonly Action<TResult> _onSuccess;
-            private readonly Action _onFailure;
-            private readonly Action<Exception> _onError;
-            private readonly TimeSpan _retryInterval;
-            private readonly int _numberOfTries;
-            private TResult _result;
+            private Func<bool> _onTry;
 
-            public InternalRetryRunner(Func<TResult> tryComputeResult,
-                TimeSpan retryInterval,
-                int numberOfTries,
-                Action<TResult> onSuccess,
-                Action onFailure,
-                Action<Exception> onError)
+            public void Run(Func<bool> onTry)
             {
-                _onFailure = onFailure;
-                _onSuccess = onSuccess;
-                _onError = onError ?? (e => { throw e; });
-                _numberOfTries = numberOfTries;
-                _retryInterval = retryInterval;
-                _tryComputeResult = tryComputeResult;
+                _onTry = onTry;
 
                 var backgroundWorker = new BackgroundWorker();
-                backgroundWorker.DoWork += delegate { Run(); };
-
+                backgroundWorker.DoWork += delegate { Retry(); };
                 backgroundWorker.RunWorkerAsync();
             }
 
-            private void Run()
+            private void Retry()
             {
-                for (var tries = 0; tries < _numberOfTries; tries++)
+                for (var tries = 0; tries < NumberOfTries; tries++)
                 {
-                    try
+                    if (_onTry())
                     {
-                        _result = _tryComputeResult();
-                        _onSuccess(_result);
                         return;
                     }
-                    catch (RetryException)
-                    {
-                        Thread.Sleep(_retryInterval);
-                    }
-                    catch (Exception exception)
-                    {
-                        _onError(exception);
-                        return;
-                    }
+
+                    Thread.Sleep(RetryInterval);
                 }
-                _onFailure();
             }
         }
     }
-
-    public interface IRetryRunner
-    {
-        /// <summary>
-        ///     Throw <code>RetryException</code> to cancel a try
-        /// </summary>
-        void Try<TResult>(Func<TResult> onTry,
-            TimeSpan retryInterval,
-            int numberOfTries,
-            Action<TResult> onSuccess,
-            Action onFailure,
-            Action<Exception> onError = null);
-    }
-
-    public class RetryException : Exception { }
 }
