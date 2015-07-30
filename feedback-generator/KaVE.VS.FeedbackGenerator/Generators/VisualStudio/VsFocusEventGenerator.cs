@@ -47,6 +47,7 @@ namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio
 
         private void OnTimerElapsed(object sender, ElapsedEventArgs elapsedEventArgs)
         {
+            _timer.Enabled = false;
             var isActive = IsCurrentApplicationActive();
             if (isActive != _wasActive)
             {
@@ -56,6 +57,7 @@ namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio
                 FireNow(windowEvent);
             }
             _wasActive = isActive;
+            _timer.Enabled = true;
         }
 
         public static bool IsCurrentApplicationActive()
