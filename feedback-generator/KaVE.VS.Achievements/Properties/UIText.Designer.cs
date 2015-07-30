@@ -61,26 +61,6 @@ namespace KaVE.VS.Achievements.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to KaVE Achievements
-        ///KaVE Project
-        ///Icons made by Delapouite, Lorc, sbed. Available on http://game-icons.net.
-        /// </summary>
-        public static string AboutAction_Text {
-            get {
-                return ResourceManager.GetString("AboutAction_Text", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to About KaVE Achievements.
-        /// </summary>
-        public static string AboutAction_Title {
-            get {
-                return ResourceManager.GetString("AboutAction_Title", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Not Completed.
         /// </summary>
         public static string Achievement_NotCompleted {
@@ -162,15 +142,6 @@ namespace KaVE.VS.Achievements.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Build.
-        /// </summary>
-        public static string BuildStatistic {
-            get {
-                return ResourceManager.GetString("BuildStatistic", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to All.
         /// </summary>
         public static string Category_1 {
@@ -221,114 +192,6 @@ namespace KaVE.VS.Achievements.Properties {
         public static string Category_6 {
             get {
                 return ResourceManager.GetString("Category_6", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Commands.
-        /// </summary>
-        public static string CommandStatistic {
-            get {
-                return ResourceManager.GetString("CommandStatistic", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Code Completions.
-        /// </summary>
-        public static string CompletionStatistic {
-            get {
-                return ResourceManager.GetString("CompletionStatistic", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Global.
-        /// </summary>
-        public static string GlobalStatistic {
-            get {
-                return ResourceManager.GetString("GlobalStatistic", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Log Replay finished.
-        /// </summary>
-        public static string LogCollectorAction_Finished {
-            get {
-                return ResourceManager.GetString("LogCollectorAction_Finished", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Log Replay is already running.
-        /// </summary>
-        public static string LogCollectorAction_IsBusy {
-            get {
-                return ResourceManager.GetString("LogCollectorAction_IsBusy", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Do you want to read Logs out?.
-        /// </summary>
-        public static string LogCollectorAction_ReadDialog {
-            get {
-                return ResourceManager.GetString("LogCollectorAction_ReadDialog", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Log Replay.
-        /// </summary>
-        public static string LogCollectorAction_Title {
-            get {
-                return ResourceManager.GetString("LogCollectorAction_Title", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Name.
-        /// </summary>
-        public static string Name {
-            get {
-                return ResourceManager.GetString("Name", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Do you want to reset all data?.
-        /// </summary>
-        public static string ResetData_Dialog {
-            get {
-                return ResourceManager.GetString("ResetData_Dialog", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Reset data.
-        /// </summary>
-        public static string ResetData_Title {
-            get {
-                return ResourceManager.GetString("ResetData_Title", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Solution.
-        /// </summary>
-        public static string SolutionStatistic {
-            get {
-                return ResourceManager.GetString("SolutionStatistic", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Value.
-        /// </summary>
-        public static string Value {
-            get {
-                return ResourceManager.GetString("Value", resourceCulture);
             }
         }
     }

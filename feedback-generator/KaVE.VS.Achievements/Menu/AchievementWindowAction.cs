@@ -16,7 +16,8 @@
 
 using JetBrains.UI.ActionsRevised;
 using JetBrains.UI.ToolWindowManagement;
-using KaVE.VS.Achievements.UI.AchievementGUI;
+using KaVE.VS.Achievements.UI;
+using KaVE.VS.Achievements.UI.MainWindow;
 
 namespace KaVE.VS.Achievements.Menu
 {

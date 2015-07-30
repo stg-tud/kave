@@ -16,8 +16,8 @@
 
 using System;
 using System.Collections.Generic;
-using KaVE.VS.Achievements.Statistics.Statistics;
-using KaVE.VS.Achievements.UI.StatisticUI;
+using KaVE.VS.Statistics.Statistics;
+using KaVE.VS.Statistics.UI;
 
 namespace KaVE.VS.Achievements.Tests.TestUtils
 {

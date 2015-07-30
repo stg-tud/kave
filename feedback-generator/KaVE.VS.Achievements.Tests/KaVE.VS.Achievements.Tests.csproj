@@ -24,7 +24,7 @@
     <DefineConstants>TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-	<PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -90,7 +90,7 @@
       <HintPath>..\packages\Windows7APICodePack-Shell.1.1.0.0\lib\Microsoft.WindowsAPICodePack.Shell.dll</HintPath>
     </Reference>
     <Reference Include="Moq, Version=4.2.1507.0118, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
-	  <HintPath>..\packages\Moq.4.2.1507.0118\lib\net40\Moq.dll</HintPath>
+      <HintPath>..\packages\Moq.4.2.1507.0118\lib\net40\Moq.dll</HintPath>
     </Reference>
     <Reference Include="MsgBox">
       <HintPath>..\3rd-party\MsgBox.dll</HintPath>
@@ -101,23 +101,23 @@
     </Reference>
     <Reference Include="NuGet.Core, Version=2.8.60318.667, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\packages\NuGet.Core.2.8.5\lib\net40-Client\NuGet.Core.dll</HintPath>
+      <HintPath>..\packages\NuGet.Core.2.8.5\lib\net40-Client\NuGet.Core.dll</HintPath>
     </Reference>
     <Reference Include="nunit.core, Version=2.6.4.14350, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\packages\NUnit.Core.2.6.4\lib\nunit.core.dll</HintPath>
+      <HintPath>..\packages\NUnit.Core.2.6.4\lib\nunit.core.dll</HintPath>
     </Reference>
     <Reference Include="nunit.core.interfaces, Version=2.6.4.14350, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\packages\NUnit.Core.2.6.4\lib\nunit.core.interfaces.dll</HintPath>
+      <HintPath>..\packages\NUnit.Core.2.6.4\lib\nunit.core.interfaces.dll</HintPath>
     </Reference>
     <Reference Include="nunit.framework, Version=2.6.4.14350, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
+      <HintPath>..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="nunit.util, Version=2.6.4.14350, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\packages\NUnit.Core.2.6.4\lib\nunit.util.dll</HintPath>
+      <HintPath>..\packages\NUnit.Core.2.6.4\lib\nunit.util.dll</HintPath>
     </Reference>
     <Reference Include="NVelocity, Version=1.0.3.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <HintPath>..\packages\NVelocity.1.0.3\lib\NVelocity.dll</HintPath>
@@ -159,55 +159,33 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Achievements\AchievementCalculators\CalculatorTestBase.cs" />
-    <Compile Include="Achievements\AchievementCalculators\CleanUpCodeCalculatorTest.cs" />
-    <Compile Include="Achievements\AchievementCalculators\EditsBetweenCommitsCalculatorTest.cs" />
-    <Compile Include="Achievements\AchievementCalculators\FailedCompileCalculatorTest.cs" />
-    <Compile Include="Achievements\AchievementCalculators\InitialAchievementCalculatorTest.cs" />
-    <Compile Include="Achievements\AchievementCalculators\NightWorkerCalculatorTest.cs" />
-    <Compile Include="Achievements\AchievementCalculators\QuickFixCalculatorTest.cs" />
-    <Compile Include="Achievements\AchievementCalculators\TestClassCalculatorTest.cs" />
-    <Compile Include="Achievements\AchievementCalculators\TimeInDebugCalculatorTest.cs" />
-    <Compile Include="Achievements\AchievementCalculators\TotalCommitsCalculatorTest.cs" />
-    <Compile Include="Achievements\AchievementCalculators\TotalCompletionCalculatorTest.cs" />
-    <Compile Include="Achievements\AchievementCalculators\CompileCalculatorTest.cs" />
-    <Compile Include="Achievements\BaseClasses\AchievementTypes\AchievementTestBase.cs" />
-    <Compile Include="Achievements\BaseClasses\AchievementTypes\BaseAchievementTest.cs" />
-    <Compile Include="Achievements\BaseClasses\AchievementTypes\ProgressAchievementTest.cs" />
-    <Compile Include="Achievements\BaseClasses\AchievementTypes\StagedAchievementTest.cs" />
-    <Compile Include="Achievements\BaseClasses\CalculatorTypes\AchievementCalculatorTest.cs" />
-    <Compile Include="Achievements\BaseClasses\CalculatorTypes\IntegerStagedAchievementCalculatorTest.cs" />
-    <Compile Include="Achievements\BaseClasses\CalculatorTypes\StagedAchievementCalculatorTest.cs" />
-    <Compile Include="Achievements\Listing\AchievementListingTest.cs" />
+    <Compile Include="AchievementCalculators\CalculatorTestBase.cs" />
+    <Compile Include="AchievementCalculators\CleanUpCodeCalculatorTest.cs" />
+    <Compile Include="AchievementCalculators\EditsBetweenCommitsCalculatorTest.cs" />
+    <Compile Include="AchievementCalculators\FailedCompileCalculatorTest.cs" />
+    <Compile Include="AchievementCalculators\InitialAchievementCalculatorTest.cs" />
+    <Compile Include="AchievementCalculators\NightWorkerCalculatorTest.cs" />
+    <Compile Include="AchievementCalculators\QuickFixCalculatorTest.cs" />
+    <Compile Include="AchievementCalculators\TestClassCalculatorTest.cs" />
+    <Compile Include="AchievementCalculators\TimeInDebugCalculatorTest.cs" />
+    <Compile Include="AchievementCalculators\TotalCommitsCalculatorTest.cs" />
+    <Compile Include="AchievementCalculators\TotalCompletionCalculatorTest.cs" />
+    <Compile Include="AchievementCalculators\CompileCalculatorTest.cs" />
+    <Compile Include="BaseClasses\AchievementTypes\AchievementTestBase.cs" />
+    <Compile Include="BaseClasses\AchievementTypes\BaseAchievementTest.cs" />
+    <Compile Include="BaseClasses\AchievementTypes\ProgressAchievementTest.cs" />
+    <Compile Include="BaseClasses\AchievementTypes\StagedAchievementTest.cs" />
+    <Compile Include="BaseClasses\CalculatorTypes\AchievementCalculatorTest.cs" />
+    <Compile Include="BaseClasses\CalculatorTypes\IntegerStagedAchievementCalculatorTest.cs" />
+    <Compile Include="BaseClasses\CalculatorTypes\StagedAchievementCalculatorTest.cs" />
+    <Compile Include="AchievementListingTest.cs" />
     <Compile Include="TestUtils\TestStatistic.cs" />
-    <Compile Include="Util\FixedSizePriorityQueueTest.cs" />
-    <Compile Include="LogCollector\LogReplayTest.cs" />
+    <Compile Include="Utils\FixedSizePriorityQueueTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Statistics\Calculators\BuildCalculatorTest.cs" />
-    <Compile Include="Statistics\Calculators\CalculatorTest.cs" />
-    <Compile Include="Statistics\Calculators\CommandCalculatorTest.cs" />
-    <Compile Include="Statistics\Calculators\CompletionCalculatorTest.cs" />
-    <Compile Include="Statistics\Calculators\GlobalCalculatorTest.cs" />
-    <Compile Include="Statistics\Calculators\SolutionCalculatorTest.cs" />
-    <Compile Include="Statistics\Calculators\StatisticCalculatorTest.cs" />
-    <Compile Include="Statistics\Filters\CommandFilterTest.cs" />
-    <Compile Include="Statistics\Filters\CompletionFilterTest.cs" />
-    <Compile Include="Statistics\Filters\SolutionFilterTest.cs" />
-    <Compile Include="Statistics\StatisticListingTest.cs" />
-    <Compile Include="Statistics\Statistics\BuildStatisticTest.cs" />
-    <Compile Include="Statistics\Statistics\CommandStatisticTest.cs" />
-    <Compile Include="Statistics\Statistics\CompletionStatisticTest.cs" />
-    <Compile Include="Statistics\Statistics\GlobalStatisticTest.cs" />
-    <Compile Include="Statistics\Statistics\SolutionStatisticTest.cs" />
-    <Compile Include="UI\AchievementGUI\LiveSortingTest.cs" />
-    <Compile Include="UI\AchievementGUI\SortableStackPanelTest.cs" />
-    <Compile Include="UI\StatisticUI\StatisticElementTest.cs" />
-    <Compile Include="UI\StatisticUI\StatisticViewModelTest.cs" />
-    <Compile Include="Util\FileHandlerTest.cs" />
-    <Compile Include="Util\ToStringFormatterTest.cs" />
-    <Compile Include="Util\StatisticElementComparerTest.cs" />
-    <Compile Include="Util\TargetValueProviderTest.cs" />
-    <Compile Include="Util\TestMessageBus.cs" />
+    <Compile Include="UI\Utils\LiveSortingTest.cs" />
+    <Compile Include="UI\Utils\SortableStackPanelTest.cs" />
+    <Compile Include="Utils\AchievementsFormatterTest.cs" />
+    <Compile Include="Utils\TargetValueProviderTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\KaVE.licenseheader">
@@ -235,10 +213,16 @@
       <Project>{42CE1875-DF5B-4D9E-ADC4-47A96C06EF66}</Project>
       <Name>KaVE.VS.FeedbackGenerator</Name>
     </ProjectReference>
+    <ProjectReference Include="..\KaVE.VS.Statistics.Tests\KaVE.VS.Statistics.Tests.csproj">
+      <Project>{1f3c5d5c-31cc-45bc-a690-6829bebc64a8}</Project>
+      <Name>KaVE.VS.Statistics.Tests</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\KaVE.VS.Statistics\KaVE.VS.Statistics.csproj">
+      <Project>{56cbbae9-59eb-4e9c-bde6-5a214ab64ce5}</Project>
+      <Name>KaVE.VS.Statistics</Name>
+    </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Properties\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

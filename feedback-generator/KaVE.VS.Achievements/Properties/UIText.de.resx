@@ -117,14 +117,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AboutAction_Text" xml:space="preserve">
-    <value>KaVE Achievements
-KaVE Project
-Icons erstellt von Delapouite, Lorc, sbed. Verfügbar auf http://game-icons.net</value>
-  </data>
-  <data name="AboutAction_Title" xml:space="preserve">
-    <value>About KaVE Achievements</value>
-  </data>
   <data name="AchievementWindow_FilterBox_All" xml:space="preserve">
     <value>Alle</value>
   </data>
@@ -152,9 +144,6 @@ Icons erstellt von Delapouite, Lorc, sbed. Verfügbar auf http://game-icons.net<
   <data name="Achievement_NotCompleted" xml:space="preserve">
     <value>Nicht vollständig</value>
   </data>
-  <data name="BuildStatistic" xml:space="preserve">
-    <value>Build-Prozess</value>
-  </data>
   <data name="Category_1" xml:space="preserve">
     <value>Alle</value>
   </data>
@@ -172,41 +161,5 @@ Icons erstellt von Delapouite, Lorc, sbed. Verfügbar auf http://game-icons.net<
   </data>
   <data name="Category_6" xml:space="preserve">
     <value>Heldentaten</value>
-  </data>
-  <data name="CommandStatistic" xml:space="preserve">
-    <value>Kommandos</value>
-  </data>
-  <data name="CompletionStatistic" xml:space="preserve">
-    <value>Codevervollständigungen</value>
-  </data>
-  <data name="GlobalStatistic" xml:space="preserve">
-    <value>Globale Statistik</value>
-  </data>
-  <data name="LogCollectorAction_Finished" xml:space="preserve">
-    <value>Log Replay erfolgreich abgeschlossen</value>
-  </data>
-  <data name="LogCollectorAction_IsBusy" xml:space="preserve">
-    <value>Log Replay läuft bereits</value>
-  </data>
-  <data name="LogCollectorAction_ReadDialog" xml:space="preserve">
-    <value>Möchten sie Logs auslesen?</value>
-  </data>
-  <data name="LogCollectorAction_Title" xml:space="preserve">
-    <value>Log Replay</value>
-  </data>
-  <data name="Name" xml:space="preserve">
-    <value>Name</value>
-  </data>
-  <data name="ResetData_Dialog" xml:space="preserve">
-    <value>Möchten sie alle Daten zurücksetzen?</value>
-  </data>
-  <data name="ResetData_Title" xml:space="preserve">
-    <value>Daten zurücksetzen</value>
-  </data>
-  <data name="SolutionStatistic" xml:space="preserve">
-    <value>Projektmappen Statistik</value>
-  </data>
-  <data name="Value" xml:space="preserve">
-    <value>Wert</value>
   </data>
 </root>

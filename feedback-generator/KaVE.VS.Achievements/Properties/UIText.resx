@@ -144,9 +144,6 @@
   <data name="Achievement_NotCompleted" xml:space="preserve">
     <value>Not Completed</value>
   </data>
-  <data name="BuildStatistic" xml:space="preserve">
-    <value>Build</value>
-  </data>
   <data name="Category_1" xml:space="preserve">
     <value>All</value>
   </data>
@@ -164,49 +161,5 @@
   </data>
   <data name="Category_6" xml:space="preserve">
     <value>Feats of Strength</value>
-  </data>
-  <data name="CommandStatistic" xml:space="preserve">
-    <value>Commands</value>
-  </data>
-  <data name="CompletionStatistic" xml:space="preserve">
-    <value>Code Completions</value>
-  </data>
-  <data name="GlobalStatistic" xml:space="preserve">
-    <value>Global</value>
-  </data>
-  <data name="LogCollectorAction_Finished" xml:space="preserve">
-    <value>Log Replay finished</value>
-  </data>
-  <data name="LogCollectorAction_IsBusy" xml:space="preserve">
-    <value>Log Replay is already running</value>
-  </data>
-  <data name="LogCollectorAction_ReadDialog" xml:space="preserve">
-    <value>Do you want to read Logs out?</value>
-  </data>
-  <data name="LogCollectorAction_Title" xml:space="preserve">
-    <value>Log Replay</value>
-  </data>
-  <data name="Name" xml:space="preserve">
-    <value>Name</value>
-  </data>
-  <data name="ResetData_Dialog" xml:space="preserve">
-    <value>Do you want to reset all data?</value>
-  </data>
-  <data name="ResetData_Title" xml:space="preserve">
-    <value>Reset data</value>
-  </data>
-  <data name="SolutionStatistic" xml:space="preserve">
-    <value>Solution</value>
-  </data>
-  <data name="Value" xml:space="preserve">
-    <value>Value</value>
-  </data>
-  <data name="AboutAction_Text" xml:space="preserve">
-    <value>KaVE Achievements
-KaVE Project
-Icons made by Delapouite, Lorc, sbed. Available on http://game-icons.net</value>
-  </data>
-  <data name="AboutAction_Title" xml:space="preserve">
-    <value>About KaVE Achievements</value>
   </data>
 </root>

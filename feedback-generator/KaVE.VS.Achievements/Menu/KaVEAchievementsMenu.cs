@@ -17,24 +17,18 @@
 using System.Diagnostics.CodeAnalysis;
 using JetBrains.UI.ActionsRevised;
 using JetBrains.UI.MenuGroups;
-using KaVE.VS.Achievements.Menu.Reset;
+using KaVE.VS.Statistics.Menu;
 
 namespace KaVE.VS.Achievements.Menu
 {
     [ActionGroup(Id, ActionGroupInsertStyles.Submenu, Id = 8645700, Text = "KaVE Achievements")]
-    public class KaVEAchievementsMenu : IAction, IInsertLast<VsMainMenuGroup>
+    public class KaVEAchievementsMenu : IAction, IInsertAfter<VsMainMenuGroup, KaVEStatisticsMenu>
     {
         public const string Id = "KaVE.BP.Achievements";
 
         [SuppressMessage("ReSharper", "SuggestBaseTypeForParameter")]
         public KaVEAchievementsMenu(
-            AchievementWindowAction achievementWindowAction,
-            StatisticWindowAction statisticWindowAction,
-            Separator separator0,
-            LogReplayAction logReplayAction,
-            ResetData resetAction,
-            Separator separator1,
-            AboutAction aboutAction
+            AchievementWindowAction achievementWindowAction
             ) {}
     }
 }

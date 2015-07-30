@@ -26,7 +26,7 @@
     <DefineConstants>JET_MODE_ASSERT;DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-	<PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -100,7 +100,7 @@
     </Reference>
     <Reference Include="NuGet.Core, Version=2.8.60318.667, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\packages\NuGet.Core.2.8.5\lib\net40-Client\NuGet.Core.dll</HintPath>
+      <HintPath>..\packages\NuGet.Core.2.8.5\lib\net40-Client\NuGet.Core.dll</HintPath>
     </Reference>
     <Reference Include="nunit.core">
       <HintPath>..\packages\NUnit.Core.2.6.4\lib\nunit.core.dll</HintPath>
@@ -132,7 +132,7 @@
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Threading">
       <HintPath>..\packages\TaskParallelLibrary.1.0.2856.0\lib\Net35\System.Threading.dll</HintPath>
-	  <Aliases>jetbrains</Aliases>
+      <Aliases>jetbrains</Aliases>
     </Reference>
     <Reference Include="System.Windows.Interactivity, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\JetBrains.Platform.Lib.System.Windows.Interactivity.2.0.20140318.0\lib\System.Windows.Interactivity.dll</HintPath>
@@ -155,53 +155,36 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Achievements\BaseClasses\AchievementTypes\BaseAchievement.cs" />
-    <Compile Include="Achievements\BaseClasses\AchievementTypes\ProgressAchievement.cs" />
-    <Compile Include="Achievements\BaseClasses\AchievementTypes\StagedAchievement.cs" />
-    <Compile Include="Achievements\BaseClasses\CalculatorTypes\AchievementCalculator.cs" />
-    <Compile Include="Achievements\BaseClasses\CalculatorTypes\IAchievementCalculator.cs" />
-    <Compile Include="Achievements\BaseClasses\CalculatorTypes\IntegerStagedAchievementCalculator.cs" />
-    <Compile Include="Achievements\BaseClasses\CalculatorTypes\StagedAchievementCalculator.cs" />
-    <Compile Include="Achievements\Calculators\CleanUpCodeCalculator.cs" />
-    <Compile Include="Achievements\Calculators\CompileCalculator.cs" />
-    <Compile Include="Achievements\Calculators\EditsBetweenCommitsCalculator.cs" />
-    <Compile Include="Achievements\Calculators\FailedCompileCalculator.cs" />
-    <Compile Include="Achievements\Calculators\InitialAchievementCalculator.cs" />
-    <Compile Include="Achievements\Calculators\NightWorkerCalculator.cs" />
-    <Compile Include="Achievements\Calculators\QuickFixCalculator.cs" />
-    <Compile Include="Achievements\Calculators\TestClassCalculator.cs" />
-    <Compile Include="Achievements\Calculators\TimeInDebugCalculator.cs" />
-    <Compile Include="Achievements\Calculators\TotalCommitsCalculator.cs" />
-    <Compile Include="Achievements\Calculators\TotalCompletionCalculator.cs" />
-    <Compile Include="Achievements\Listing\AchievementListing.cs" />
-    <Compile Include="Achievements\Listing\IAchievementListing.cs" />
-    <Compile Include="LogCollector\LogReplay.cs" />
-    <Compile Include="Menu\LogReplayAction.cs" />
-    <Compile Include="LogCollector\LogReplayWindow.xaml.cs">
-      <DependentUpon>LogReplayWindow.xaml</DependentUpon>
-    </Compile>
+    <Compile Include="BaseClasses\AchievementTypes\BaseAchievement.cs" />
+    <Compile Include="BaseClasses\AchievementTypes\ProgressAchievement.cs" />
+    <Compile Include="BaseClasses\AchievementTypes\StagedAchievement.cs" />
+    <Compile Include="BaseClasses\CalculatorTypes\AchievementCalculator.cs" />
+    <Compile Include="BaseClasses\CalculatorTypes\IAchievementCalculator.cs" />
+    <Compile Include="BaseClasses\CalculatorTypes\IntegerStagedAchievementCalculator.cs" />
+    <Compile Include="BaseClasses\CalculatorTypes\StagedAchievementCalculator.cs" />
+    <Compile Include="Calculators\CleanUpCodeCalculator.cs" />
+    <Compile Include="Calculators\CompileCalculator.cs" />
+    <Compile Include="Calculators\EditsBetweenCommitsCalculator.cs" />
+    <Compile Include="Calculators\FailedCompileCalculator.cs" />
+    <Compile Include="Calculators\InitialAchievementCalculator.cs" />
+    <Compile Include="Calculators\NightWorkerCalculator.cs" />
+    <Compile Include="Calculators\QuickFixCalculator.cs" />
+    <Compile Include="Calculators\TestClassCalculator.cs" />
+    <Compile Include="Calculators\TimeInDebugCalculator.cs" />
+    <Compile Include="Calculators\TotalCommitsCalculator.cs" />
+    <Compile Include="Calculators\TotalCompletionCalculator.cs" />
+    <Compile Include="AchievementListing.cs" />
     <Compile Include="Menu\KaVEAchievementsMenu.cs" />
     <Compile Include="Properties\icons.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>icons.resx</DependentUpon>
     </Compile>
-    <Compile Include="Properties\TimeUnits.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>TimeUnits.resx</DependentUpon>
-    </Compile>
     <Compile Include="Properties\AchievementText.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>AchievementText.resx</DependentUpon>
     </Compile>
-    <Compile Include="Properties\FormatStrings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>FormatStrings.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Menu\Reset\ResetData.cs" />
     <Compile Include="Properties\targets.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
@@ -212,81 +195,39 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>categories.resx</DependentUpon>
     </Compile>
-    <Compile Include="Properties\StatisticPropertyNames.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>StatisticPropertyNames.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Statistics\Calculators\BuildCalculator.cs" />
-    <Compile Include="Statistics\Calculators\CommandCalculator.cs" />
-    <Compile Include="Statistics\Calculators\CompletionCalculator.cs" />
-    <Compile Include="Statistics\Calculators\GlobalCalculator.cs" />
-    <Compile Include="Statistics\Calculators\SolutionCalculator.cs" />
-    <Compile Include="Statistics\Calculators\BaseClasses\StatisticCalculator.cs" />
-    <Compile Include="Statistics\Filters\CommandFilter.cs" />
-    <Compile Include="Statistics\Filters\CompletionFilter.cs" />
-    <Compile Include="Statistics\Filters\IEventFilter.cs" />
-    <Compile Include="Statistics\Filters\SolutionFilter.cs" />
-    <Compile Include="Statistics\Listing\IStatisticListing.cs" />
-    <Compile Include="Statistics\Listing\StatisticListing.cs" />
-    <Compile Include="Statistics\Statistics\BuildStatistic.cs" />
-    <Compile Include="Statistics\Statistics\CommandStatistic.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Menu\AboutAction.cs" />
-    <Compile Include="Statistics\Statistics\CompletionStatistic.cs" />
-    <Compile Include="Statistics\Statistics\GlobalStatistic.cs" />
-    <Compile Include="Statistics\Statistics\IStatistic.cs" />
-    <Compile Include="Statistics\Statistics\Statistic.cs" />
-    <Compile Include="Statistics\Statistics\SolutionStatistic.cs" />
     <Compile Include="Properties\UIText.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>UIText.resx</DependentUpon>
     </Compile>
-    <Compile Include="UI\AchievementGUI\BaseAchievementGrid.xaml.cs">
+    <Compile Include="UI\AchievementGrids\BaseAchievementGrid.xaml.cs">
       <DependentUpon>BaseAchievementGrid.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\AchievementGUI\AchievementComparer.cs" />
-    <Compile Include="UI\AchievementGUI\AchievementGrid.cs" />
+    <Compile Include="UI\Utils\AchievementComparer.cs" />
+    <Compile Include="UI\AchievementGrids\AchievementGrid.cs" />
     <Compile Include="Menu\AchievementWindowAction.cs" />
-    <Compile Include="UI\AchievementGUI\AchievementWindowControl.xaml.cs">
+    <Compile Include="UI\MainWindow\AchievementWindowControl.xaml.cs">
       <DependentUpon>AchievementWindowControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\AchievementGUI\AchievementWindowDescriptor.cs" />
-    <Compile Include="UI\AchievementGUI\AchievementWindowRegistrar.cs" />
-    <Compile Include="UI\AchievementGUI\PopUpControl.cs" />
-    <Compile Include="UI\AchievementGUI\PopUpGrid.xaml.cs">
+    <Compile Include="UI\MainWindow\AchievementWindowDescriptor.cs" />
+    <Compile Include="UI\MainWindow\AchievementWindowRegistrar.cs" />
+    <Compile Include="UI\PopUp\PopUpControl.cs" />
+    <Compile Include="UI\PopUp\PopUpGrid.xaml.cs">
       <DependentUpon>PopUpGrid.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\AchievementGUI\ProgressAchievementGrid.xaml.cs">
+    <Compile Include="UI\AchievementGrids\ProgressAchievementGrid.xaml.cs">
       <DependentUpon>ProgressAchievementGrid.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\AchievementGUI\SortableStackPanel.cs" />
-    <Compile Include="UI\AchievementGUI\StagedAchievementGrid.xaml.cs">
+    <Compile Include="UI\Utils\SortableStackPanel.cs" />
+    <Compile Include="UI\AchievementGrids\StagedAchievementGrid.xaml.cs">
       <DependentUpon>StagedAchievementGrid.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\StatisticUI\StatisticElement.cs" />
-    <Compile Include="UI\StatisticUI\StatisticViewModel.cs" />
-    <Compile Include="Util\FixedSizePriorityQueue.cs" />
-    <Compile Include="Util\ToStringFormatting\AchievementFormatting\AchievementFormatter.cs" />
-    <Compile Include="Util\FileHandler.cs" />
-    <Compile Include="Util\ToStringFormatting\ToStringFormatter.cs" />
-    <Compile Include="Util\IconProvider.cs" />
-    <Compile Include="Util\JsonSerialization.cs" />
-    <Compile Include="Util\Listing.cs" />
-    <Compile Include="Util\ToStringFormatting\StatisticFormatting\StatisticFormatter.cs" />
-    <Compile Include="Util\Registry.cs" />
-    <Compile Include="Util\ErrorHandler.cs" />
-    <Compile Include="Util\StatisticElementComparer.cs" />
-    <Compile Include="UI\StatisticUI\SortableListView.cs" />
-    <Compile Include="UI\StatisticUI\StatisticWindowControl.xaml.cs">
-      <DependentUpon>StatisticWindowControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="UI\StatisticUI\StatisticWindowRegistrar.cs" />
-    <Compile Include="Menu\StatisticWindowAction.cs" />
-    <Compile Include="UI\StatisticUI\StatisticWindowDescriptor.cs" />
-    <Compile Include="UI\UIDelegator.cs" />
-    <Compile Include="Util\TargetValueProvider.cs" />
+    <Compile Include="UI\Utils\AchievementsUiDelegator.cs" />
+    <Compile Include="Utils\AchievementFormatter.cs" />
+    <Compile Include="Utils\FixedSizePriorityQueue.cs" />
+    <Compile Include="Utils\IconProvider.cs" />
+    <Compile Include="Utils\TargetValueProvider.cs" />
     <Compile Include="ZoneMarker.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -305,19 +246,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Properties\TimeUnits.de.resx" />
-    <EmbeddedResource Include="Properties\TimeUnits.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>TimeUnits.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
     <EmbeddedResource Include="Properties\AchievementText.de.resx" />
     <EmbeddedResource Include="Properties\AchievementText.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>AchievementText.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Properties\FormatStrings.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>FormatStrings.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\icons.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -332,39 +264,26 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>UIText.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Properties\StatisticPropertyNames.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>StatisticPropertyNames.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
     <EmbeddedResource Include="Properties\UIText.de.resx" />
-    <EmbeddedResource Include="Properties\StatisticPropertyNames.de.resx" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="LogCollector\LogReplayWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="UI\AchievementGUI\BaseAchievementGrid.xaml">
+    <Page Include="UI\AchievementGrids\BaseAchievementGrid.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UI\AchievementGUI\AchievementWindowControl.xaml">
+    <Page Include="UI\MainWindow\AchievementWindowControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="UI\AchievementGUI\PopUpGrid.xaml">
+    <Page Include="UI\PopUp\PopUpGrid.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UI\AchievementGUI\ProgressAchievementGrid.xaml">
+    <Page Include="UI\AchievementGrids\ProgressAchievementGrid.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UI\AchievementGUI\StagedAchievementGrid.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="UI\StatisticUI\StatisticWindowControl.xaml">
+    <Page Include="UI\AchievementGrids\StagedAchievementGrid.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -461,7 +380,12 @@
       <Project>{42CE1875-DF5B-4D9E-ADC4-47A96C06EF66}</Project>
       <Name>KaVE.VS.FeedbackGenerator</Name>
     </ProjectReference>
+    <ProjectReference Include="..\KaVE.VS.Statistics\KaVE.VS.Statistics.csproj">
+      <Project>{56cbbae9-59eb-4e9c-bde6-5a214ab64ce5}</Project>
+      <Name>KaVE.VS.Statistics</Name>
+    </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\JetBrains.Platform.Core.Shell.102.0.20150522.70022\build\JetBrains.Platform.Core.Shell.Targets" Condition="Exists('..\packages\JetBrains.Platform.Core.Shell.102.0.20150522.70022\build\JetBrains.Platform.Core.Shell.Targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

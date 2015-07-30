@@ -23,14 +23,7 @@ using System.Runtime.CompilerServices;
 // associated with an assembly.
 
 [assembly: AssemblyTitle("KaVE.VS.Achievements")]
-[assembly: AssemblyDescription("Achievements for Visual Studio")]
-[assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("KaVE")]
-[assembly: AssemblyProduct("KaVE.VS.Achievements")]
-[assembly: AssemblyCopyright("Copyright © KaVE, 2014")]
-[assembly: AssemblyTrademark("")]
-[assembly: AssemblyCulture("")]
-[assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.0.0.0")]
-[assembly: NeutralResourcesLanguage("en")]
+[assembly: AssemblyVersion("0.0")]
+[assembly: AssemblyInformationalVersion("0.0-Development")]
+[assembly: NeutralResourcesLanguage("en-US", UltimateResourceFallbackLocation.MainAssembly)]
 [assembly: InternalsVisibleTo("KaVE.VS.Achievements.Tests")]
