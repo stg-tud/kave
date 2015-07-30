@@ -29,7 +29,7 @@ using NUnit.Framework;
 
 namespace KaVE.VS.FeedbackGenerator.Tests.Generators.VisualStudio.EditEventGenerators
 {
-    internal class DelayedEventGeneratorTest : EventGeneratorTestBase
+    internal class DelayedEditEventGeneratorTest : EventGeneratorTestBase
     {
         public static Context ValidContext
         {
@@ -121,10 +121,10 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.VisualStudio.EditEventGener
             AssertNoEvent();
         }
 
-        [Test, Ignore("not yet implemented")]
+        [Test]
         public void ShouldDoNothingForNonCSharpFiles()
         {
-            _testDocumentMock.Setup(doc => doc.FullName).Returns(@"C:\NoCSharpFile.xaml");
+            _testDocumentMock.Setup(doc => doc.FullName).Returns(@"C://NoCSharpFile.xaml");
             _uut.TryFireWithContext(_testDocumentMock.Object);
             
             Assert.False(_testRetryRunner.WasCalled);

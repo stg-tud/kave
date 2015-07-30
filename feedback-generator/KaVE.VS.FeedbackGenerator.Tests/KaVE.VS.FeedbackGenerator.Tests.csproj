@@ -189,7 +189,7 @@
     <Compile Include="Generators\TestIDESession.cs" />
     <Compile Include="Generators\VisualStudio\CommandBarEventGeneratorTest.cs" />
     <Compile Include="Generators\VisualStudio\DTECommandEventGeneratorTest.cs" />
-    <Compile Include="Generators\VisualStudio\EditEventGenerators\DelayedEventGeneratorTest.cs" />
+    <Compile Include="Generators\VisualStudio\EditEventGenerators\DelayedEditEventGeneratorTest.cs" />
     <Compile Include="Generators\VisualStudio\EditEventGenerators\RetryRunnerTest.cs" />
     <Compile Include="Generators\VisualStudio\IDEStateEventGeneratorTest.cs" />
     <Compile Include="Generators\VisualStudio\SolutionEventGeneratorTest.cs" />

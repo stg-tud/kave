@@ -51,8 +51,7 @@ namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio.EditEventGenerators
 
         public void TryFireWithContext(Document document)
         {
-            // TODO: trigger only for CSharp code files
-            //if (IsCSharpFile(document))
+            if (IsCSharpFile(document))
             {
                 // ReSharper disable once ObjectCreationAsStatement
                 new DelayedEditEventHandler(
@@ -66,12 +65,10 @@ namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio.EditEventGenerators
 
         private static bool IsCSharpFile(Document document)
         {
-            // TODO: this doesn't seem to work yet
-
             var fullname = document.FullName;
             var extension = Path.GetExtension(fullname);
 
-            return "cs".Equals(extension);
+            return ".cs".Equals(extension);
         }
 
         private void FireDelayedEvents()
