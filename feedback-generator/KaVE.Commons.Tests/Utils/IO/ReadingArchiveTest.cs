@@ -77,6 +77,27 @@ namespace KaVE.Commons.Tests.Utils.IO
         }
 
         [Test]
+        public void Count_Empty()
+        {
+            PrepareZip();
+            Assert.AreEqual(0, _sut.Count);
+        }
+
+        [Test]
+        public void Count_1()
+        {
+            PrepareZip("a");
+            Assert.AreEqual(1, _sut.Count);
+        }
+
+        [Test]
+        public void Count_2()
+        {
+            PrepareZip("a", "b");
+            Assert.AreEqual(2, _sut.Count);
+        }
+
+        [Test]
         public void GetAll()
         {
             PrepareZip("a", "b", "c");

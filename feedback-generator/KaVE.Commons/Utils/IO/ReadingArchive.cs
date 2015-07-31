@@ -26,6 +26,7 @@ namespace KaVE.Commons.Utils.IO
 {
     public interface IReadingArchive : IDisposable
     {
+        int Count { get; }
         bool HasNext();
 
         T GetNext<T>();
@@ -46,6 +47,11 @@ namespace KaVE.Commons.Utils.IO
                 zipFile.ExtractAll(_tempDir);
             }
             _files = Directory.EnumerateFiles(_tempDir, "*.json").ToArray();
+        }
+
+        public int Count
+        {
+            get { return _files.Length; }
         }
 
         public bool HasNext()
