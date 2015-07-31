@@ -17,10 +17,9 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Ionic.Zip;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.CompletionEvents;
-using KaVE.Commons.Utils.Json;
+using KaVE.Commons.Utils.IO;
 
 namespace KaVE.RS.SolutionAnalysis
 {
@@ -32,103 +31,110 @@ namespace KaVE.RS.SolutionAnalysis
         private readonly Histogram _histogram2 = new Histogram(2);
         private readonly Histogram _histogram3 = new Histogram(3);
         private readonly Histogram _histogram4 = new Histogram(4);
-        private readonly MergingHistogram _histogram5P = new MergingHistogram(5);
+        private readonly Histogram _histogram5 = new Histogram(5);
+        private readonly Histogram _histogram6 = new Histogram(6);
+        private readonly MergingHistogram _histogram7P = new MergingHistogram(7);
 
         public EditLocationRunner(string root)
         {
             _root = root;
         }
 
+        private static void Log(string message, params object[] args)
+        {
+            Console.Write(@"{0} | ", DateTime.Now);
+            Console.WriteLine(message, args);
+        }
+
         public void Run()
         {
             var zips = FindFeedbackZips();
-            int numEvents = 0;
-            int numCompletionEvents = 0;
-            int numTotal = zips.Count;
-            int numCurrent = 1;
-            Console.WriteLine(@"found {0} zips:", numTotal);
+            Log(@"found {0} zips:", zips.Count);
             foreach (var zip in zips)
             {
-                Console.WriteLine(@"- {0}", zip);
+                Log(@"- {0}", zip);
             }
 
+            int numTotal = zips.Count;
+            int numEvents = 0;
+            int numCompletionEvents = 0;
+            int numCurrent = 1;
 
             foreach (var zip in zips)
             {
-                var tmp = GetTemporaryDirectory();
+                Log(
+                    @"####### reading {0}/{1} #######################################",
+                    numCurrent++,
+                    numTotal);
+                Log(@"zip: {0}", zip);
 
-                try
+                using (var ra = new ReadingArchive(zip))
                 {
-                    Console.WriteLine(
-                        @"####### reading {0}/{1} #######################################",
-                        numCurrent++,
-                        numTotal);
-                    Console.WriteLine(@"[{1}] zip: {0}", zip, DateTime.Now);
-
-
-                    using (var zipFile = ZipFile.Read(zip))
+                    Log(@"{0} events: ", ra.Count);
+                    while (ra.HasNext())
                     {
-                        zipFile.ExtractAll(tmp);
+                        var @event = ra.GetNext<IDEEvent>();
+                        numEvents++;
 
-                        var jsonFiles = FindJsonFiles(tmp);
-                        Console.Write(@"{0} events: ", jsonFiles.Count);
-
-                        foreach (var f in jsonFiles)
+                        var complEvent = @event as CompletionEvent;
+                        if (complEvent == null)
                         {
                             Console.Write('.');
-                            var json = File.ReadAllText(f);
-                            var @event = json.ParseJsonTo<IDEEvent>();
-                            numEvents++;
+                            continue;
+                        }
 
-                            var complEvent = @event as CompletionEvent;
-                            if (complEvent == null)
-                            {
-                                Console.Write('.');
-                                continue;
-                            }
-                            numCompletionEvents++;
+                        var fileName = complEvent.ActiveDocument.FileName;
+                        if (fileName != null && !fileName.EndsWith(".cs"))
+                        {
+                            Console.Write(':');
+                            continue;
+                        }
 
-                            var loc = _locationAnalysis.Analyze(complEvent.Context2.SST);
-                            if (!loc.HasEditLocation || loc.Size < 2)
-                            {
-                                Console.Write('o');
-                                continue;
-                            }
+                        numCompletionEvents++;
 
-                            Console.Write('x');
+                        var loc = _locationAnalysis.Analyze(complEvent.Context2.SST);
+                        if (!loc.HasEditLocation || loc.Size < 2)
+                        {
+                            Console.Write('o');
+                            continue;
+                        }
 
-                            switch (loc.Size)
-                            {
-                                case 2:
-                                    _histogram2.Add(loc.Location);
-                                    break;
-                                case 3:
-                                    _histogram3.Add(loc.Location);
-                                    break;
-                                case 4:
-                                    _histogram4.Add(loc.Location);
-                                    break;
-                                default:
-                                    _histogram5P.AddRatio(loc.Location, loc.Size);
-                                    break;
-                            }
+                        Console.Write('x');
+
+                        switch (loc.Size)
+                        {
+                            case 2:
+                                _histogram2.Add(loc.Location);
+                                break;
+                            case 3:
+                                _histogram3.Add(loc.Location);
+                                break;
+                            case 4:
+                                _histogram4.Add(loc.Location);
+                                break;
+                            case 5:
+                                _histogram4.Add(loc.Location);
+                                break;
+                            case 6:
+                                _histogram4.Add(loc.Location);
+                                break;
+                            default:
+                                _histogram7P.AddRatio(loc.Location, loc.Size);
+                                break;
                         }
                         Console.WriteLine(@" done!");
                     }
                 }
-                finally
-                {
-                    Directory.Delete(tmp, true);
-                }
             }
 
-
-            Console.WriteLine("finished analyzing {0} events ({1} completion events)", numEvents, numCompletionEvents);
+            Log("finished analyzing {0} events ({1} completion events)", numEvents, numCompletionEvents);
 
             Print("histogram 2:", _histogram2);
             Print("histogram 3:", _histogram3);
             Print("histogram 4:", _histogram4);
-            Print("histogram 5+:", _histogram5P);
+            Print("histogram 5:", _histogram5);
+            Print("histogram 6:", _histogram6);
+            Print("histogram 7+:", _histogram7P);
         }
 
         private void Print(string title, Histogram h)
@@ -146,7 +152,7 @@ namespace KaVE.RS.SolutionAnalysis
 
         private IList<string> FindFeedbackZips()
         {
-            return Directory.GetFiles(_root, "*.zip", SearchOption.TopDirectoryOnly);
+            return Directory.GetFiles(_root, "*.zip", SearchOption.AllDirectories);
         }
 
         private IList<string> FindJsonFiles(string tmp)
