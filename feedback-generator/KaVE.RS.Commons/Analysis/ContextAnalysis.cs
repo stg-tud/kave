@@ -83,23 +83,19 @@ namespace KaVE.RS.Commons.Analysis
 
                 if (ResultCache.ContainsKey(hashCode))
                 {
-                    logger.Info("cache hit ({0})", hashCode);
                     return ResultCache[hashCode];
                 }
-                logger.Info("cache miss ({0})", hashCode);
 
                 var res = AnalyseAsyncInternal(node, logger, token);
                 ResultCache[hashCode] = res.Context;
-                logger.Info("cache set ({0})", hashCode);
 
-                RemoveFromCacheAfterTimeout(hashCode, CacheTimeout, logger);
+                RemoveFromCacheAfterTimeout(hashCode, CacheTimeout);
                 return res.Context;
             }
         }
 
         private static void RemoveFromCacheAfterTimeout(int hashCode,
-            int timeout,
-            ILogger logger)
+            int timeout)
         {
             Task.Factory.StartNew(
                 () =>
@@ -108,7 +104,6 @@ namespace KaVE.RS.Commons.Analysis
                     lock (Lock)
                     {
                         ResultCache.Remove(hashCode);
-                        logger.Info("cache cleanup ({0})", hashCode);
                     }
                 });
         }
