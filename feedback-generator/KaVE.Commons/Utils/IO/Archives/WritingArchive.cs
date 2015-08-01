@@ -22,7 +22,7 @@ using ICSharpCode.SharpZipLib.Zip;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Json;
 
-namespace KaVE.Commons.Utils.IO
+namespace KaVE.Commons.Utils.IO.Archives
 {
     public interface IWritingArchive : IDisposable
     {
@@ -73,7 +73,7 @@ namespace KaVE.Commons.Utils.IO
                     var fileName = string.Format("{0}.json", num++);
                     s.PutNextEntry(new ZipEntry(fileName));
 
-                    var bytes = Encoding.Unicode.GetBytes(entry);
+                    var bytes = Encoding.UTF8.GetBytes(entry);
                     s.Write(bytes, 0, bytes.Length);
                 }
                 s.Finish();

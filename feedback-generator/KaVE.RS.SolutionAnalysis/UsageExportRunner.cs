@@ -19,8 +19,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using KaVE.Commons.Model.Events.CompletionEvents;
-using KaVE.Commons.Utils.Assertion;
-using KaVE.Commons.Utils.IO;
+using KaVE.Commons.Model.ObjectUsage;
+using KaVE.Commons.Utils.IO.Archives;
 using KaVE.Commons.Utils.ObjectUsageExport;
 
 namespace KaVE.RS.SolutionAnalysis
@@ -51,58 +51,54 @@ namespace KaVE.RS.SolutionAnalysis
             {
                 Log("### processing zip {0}/{1}: {2}", currentZip++, numZips, fileName);
 
-                var numLocalCtxs = 0;
-                var numLocalUsages = 0;
-
-                var fullFileIn = _dirIn + fileName;
-                var fullFileOut = _dirOut + fileName.Replace("-contexts.", "-usages.");
-
-                var ra = new ReadingArchive(fullFileIn);
-                Log("reading contexts...");
-                var ctxs = ra.GetAll<Context>();
-                var numCtxs = ctxs.Count;
-                Log("found {0} contexts", numCtxs);
-
-                EnsureParentExists(fullFileOut);
-
-                using (var wa = new WritingArchive(fullFileOut))
+                using (var cache = new ZipFolderLRUCache<CoReTypeName>(_dirOut, 1000))
                 {
+                    var numLocalCtxs = 0;
+                    var numLocalUsages = 0;
+
+                    var fullFileIn = _dirIn + fileName;
+
+                    var ra = new ReadingArchive(fullFileIn);
+                    Log("reading contexts...");
+                    var ctxs = ra.GetAll<Context>();
+                    var numCtxs = ctxs.Count;
+                    Log("found {0} contexts", numCtxs);
+
                     var currentCtx = 1;
                     foreach (var ctx in ctxs)
                     {
                         Log("    {0}/{1}", currentCtx++, numCtxs);
                         var usages = _usageExtractor.Export(ctx);
-                        Append(" --> {0} usages", usages.Count);
-                        wa.AddAll(usages);
+                        Append(" --> {0} usages, writing... ", usages.Count);
+                        foreach (var u in usages)
+                        {
+                            cache.GetArchive(u.type).Add(u);
+                        }
 
                         numLocalCtxs++;
                         numLocalUsages += usages.Count;
                     }
+
+                    Log(
+                        "--> {0} contexts, {1} usages\n\n",
+                        numLocalCtxs,
+                        numLocalUsages);
+
+                    numTotalCtxs += numLocalCtxs;
+                    numTotalUsages += numLocalUsages;
                 }
-
-                Log("--> {0} contexts, {1} usages\n\n", numLocalCtxs, numLocalUsages);
-
-                numTotalCtxs += numLocalCtxs;
-                numTotalUsages += numLocalUsages;
             }
 
             Log("finished!");
-            Log("found a total of {0} contexts and extracted {1} usages\n\n", numTotalCtxs, numTotalUsages);
-        }
-
-        private static void EnsureParentExists(string filePath)
-        {
-            var parent = Path.GetDirectoryName(filePath);
-            Asserts.NotNull(parent);
-            if (!Directory.Exists(parent))
-            {
-                Directory.CreateDirectory(parent);
-            }
+            Log(
+                "found a total of {0} contexts and extracted {1} usages\n\n",
+                numTotalCtxs,
+                numTotalUsages);
         }
 
         private static void Log(string msg, params object[] args)
         {
-            Console.Write("\n[{0}] ", DateTime.Now);
+            Console.Write(Environment.NewLine + @"[{0}] ", DateTime.Now);
             Console.Write(msg, args);
         }
 

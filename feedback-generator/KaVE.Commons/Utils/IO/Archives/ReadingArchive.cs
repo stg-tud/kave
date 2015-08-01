@@ -22,7 +22,7 @@ using ICSharpCode.SharpZipLib.Zip;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Json;
 
-namespace KaVE.Commons.Utils.IO
+namespace KaVE.Commons.Utils.IO.Archives
 {
     public interface IReadingArchive
     {
@@ -66,7 +66,7 @@ namespace KaVE.Commons.Utils.IO
                         var size = s.Read(data, 0, data.Length);
                         while (size > 0)
                         {
-                            sb.Append(Encoding.Unicode.GetString(data, 0, size));
+                            sb.Append(Encoding.UTF8.GetString(data, 0, size));
                             size = s.Read(data, 0, data.Length);
                         }
                         events.Add(sb.ToString());

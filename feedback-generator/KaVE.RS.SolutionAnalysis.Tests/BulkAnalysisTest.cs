@@ -24,6 +24,7 @@ using JetBrains.ReSharper.TestFramework;
 using JetBrains.Util;
 using KaVE.Commons.TestUtils;
 using KaVE.Commons.Utils.IO;
+using KaVE.Commons.Utils.IO.Archives;
 using NUnit.Framework;
 
 namespace KaVE.RS.SolutionAnalysis.Tests

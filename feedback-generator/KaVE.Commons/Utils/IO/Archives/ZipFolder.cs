@@ -18,16 +18,15 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using KaVE.Commons.Utils.Assertion;
-using KaVE.Commons.Utils.IO;
 
-namespace KaVE.RS.SolutionAnalysis
+namespace KaVE.Commons.Utils.IO.Archives
 {
-    public class TypeZipFolder
+    public class ZipFolder
     {
         private readonly string _root;
         private int _fileCounter;
 
-        public TypeZipFolder(string root)
+        public ZipFolder(string root)
         {
             Asserts.That(Directory.Exists(root));
             _root = root;

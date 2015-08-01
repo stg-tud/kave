@@ -16,22 +16,23 @@
 
 using System.IO;
 using KaVE.Commons.Utils.Assertion;
+using KaVE.Commons.Utils.IO.Archives;
 using NUnit.Framework;
 
-namespace KaVE.RS.SolutionAnalysis.Tests
+namespace KaVE.Commons.Tests.Utils.IO.Archives
 {
     // ReSharper disable ObjectCreationAsStatement
-    internal class TypeZipFolderTest
+    internal class ZipFolderTest
     {
         private string _root;
-        private TypeZipFolder _sut;
+        private ZipFolder _sut;
 
         [SetUp]
         public void SetUp()
         {
             _root = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
             Directory.CreateDirectory(_root);
-            _sut = new TypeZipFolder(_root);
+            _sut = new ZipFolder(_root);
         }
 
         [TearDown]
@@ -116,13 +117,13 @@ namespace KaVE.RS.SolutionAnalysis.Tests
         [Test, ExpectedException(typeof (AssertException))]
         public void DirectoryHasToExist()
         {
-            new TypeZipFolder(@"c:\does\not\exist\");
+            new ZipFolder(@"c:\does\not\exist\");
         }
 
         [Test, ExpectedException(typeof (AssertException))]
         public void DirectoryMustNotBeAFile()
         {
-            new TypeZipFolder(@"c:\Windows\notepad.exe");
+            new ZipFolder(@"c:\Windows\notepad.exe");
         }
     }
 }

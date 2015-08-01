@@ -16,22 +16,23 @@
 
 using System.IO;
 using KaVE.Commons.Utils.Assertion;
+using KaVE.Commons.Utils.IO.Archives;
 using NUnit.Framework;
 
-namespace KaVE.RS.SolutionAnalysis.Tests
+namespace KaVE.Commons.Tests.Utils.IO.Archives
 {
     // ReSharper disable ObjectCreationAsStatement
-    internal class TypeZipLRUCacheTest
+    internal class ZipFolderLRUCacheTest
     {
         private string _root;
-        private TypeZipLRUCache<string> _sut;
+        private ZipFolderLRUCache<string> _sut;
 
         [SetUp]
         public void SetUp()
         {
             _root = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
             Directory.CreateDirectory(_root);
-            _sut = new TypeZipLRUCache<string>(_root, 2);
+            _sut = new ZipFolderLRUCache<string>(_root, 2);
         }
 
         [TearDown]
@@ -55,20 +56,32 @@ namespace KaVE.RS.SolutionAnalysis.Tests
         [Test]
         public void FilesAreCreatedInCorrectSubfolders()
         {
-            using (var wa = _sut.GetArchive("a"))
-            {
-                wa.Add("something");
-            }
+            var wa = _sut.GetArchive("La");
+            wa.Add("something");
+
+            var wb = _sut.GetArchive("Lb/b");
+            wb.Add("something");
+
+            var wc = _sut.GetArchive("Lc/c/c");
+            wc.Add("something");
+
+            var wd = _sut.GetArchive("Ld/d/d/d");
+            wd.Add("something");
+
+            _sut.Dispose();
 
             Assert.True(Directory.Exists(_root));
-            Assert.True(File.Exists(Path.Combine(_root, "a/0.zip")));
+            Assert.True(File.Exists(Path.Combine(_root, "a/$content/0.zip")));
+            Assert.True(File.Exists(Path.Combine(_root, "b/b/$content/0.zip")));
+            Assert.True(File.Exists(Path.Combine(_root, "c/c/c/0.zip")));
+            Assert.True(File.Exists(Path.Combine(_root, "d/d/d.d/0.zip")));
         }
 
         [Test]
         public void ReplacementInKeysWorks()
         {
-            var a = @"aA1._!";
-            var e = @"aA1.__\0.zip";
+            var a = @"aA1_!";
+            var e = @"aA1__\$content\0.zip";
             using (var wa = _sut.GetArchive(a))
             {
                 wa.Add("something");
@@ -116,9 +129,9 @@ namespace KaVE.RS.SolutionAnalysis.Tests
         [Test]
         public void CacheRemoveClosesOpenArchive()
         {
-            var expectedFileName = Path.Combine(_root, "a/0.zip");
+            var expectedFileName = Path.Combine(_root, "a/a/a/0.zip");
 
-            var wa = _sut.GetArchive("a");
+            var wa = _sut.GetArchive("La/a/a");
             wa.Add("something");
             _sut.GetArchive("b");
 
@@ -137,26 +150,26 @@ namespace KaVE.RS.SolutionAnalysis.Tests
 
             Assert.False(_sut.IsCached("a"));
             Assert.AreEqual(0, _sut.Size);
-            Assert.True(File.Exists(Path.Combine(_root, "a/0.zip")));
+            Assert.True(File.Exists(Path.Combine(_root, "a/$content/0.zip")));
         }
 
 
         [Test, ExpectedException(typeof (AssertException))]
         public void DirectoryHasToExist()
         {
-            new TypeZipLRUCache<string>(@"c:\does\not\exist\", 10);
+            new ZipFolderLRUCache<string>(@"c:\does\not\exist\", 10);
         }
 
         [Test, ExpectedException(typeof (AssertException))]
         public void DirectoryMustNotBeAFile()
         {
-            new TypeZipLRUCache<string>(@"c:\Windows\notepad.exe", 10);
+            new ZipFolderLRUCache<string>(@"c:\Windows\notepad.exe", 10);
         }
 
         [Test, ExpectedException(typeof (AssertException))]
         public void CapacityMustBeLargerThanZero()
         {
-            new TypeZipLRUCache<string>(Path.GetTempPath(), 0);
+            new ZipFolderLRUCache<string>(Path.GetTempPath(), 0);
         }
     }
 }

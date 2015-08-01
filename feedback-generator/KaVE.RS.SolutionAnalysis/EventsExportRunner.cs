@@ -20,6 +20,7 @@ using System.IO;
 using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Utils.Collections;
 using KaVE.Commons.Utils.IO;
+using KaVE.Commons.Utils.IO.Archives;
 using KaVE.Commons.Utils.Json;
 using KaVE.FeedbackProcessor.Episodes;
 using KaVE.RS.SolutionAnalysis.Episodes;

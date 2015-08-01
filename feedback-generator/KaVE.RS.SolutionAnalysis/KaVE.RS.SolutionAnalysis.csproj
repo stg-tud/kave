@@ -158,8 +158,6 @@
     <Compile Include="RelativeEditLocation.cs" />
     <Compile Include="RelativeEditLocationAnalysis.cs" />
     <Compile Include="SolutionAnalysis.cs" />
-    <Compile Include="TypeZipFolder.cs" />
-    <Compile Include="TypeZipLRUCache.cs" />
     <Compile Include="UsageExportRunner.cs" />
   </ItemGroup>
   <ItemGroup>

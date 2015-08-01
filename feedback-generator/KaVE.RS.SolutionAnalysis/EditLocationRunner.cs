@@ -20,6 +20,7 @@ using System.IO;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Utils.IO;
+using KaVE.Commons.Utils.IO.Archives;
 
 namespace KaVE.RS.SolutionAnalysis
 {

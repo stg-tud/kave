@@ -17,10 +17,10 @@
 using System.Collections.Generic;
 using System.IO;
 using KaVE.Commons.Utils.Assertion;
-using KaVE.Commons.Utils.IO;
+using KaVE.Commons.Utils.IO.Archives;
 using NUnit.Framework;
 
-namespace KaVE.Commons.Tests.Utils.IO
+namespace KaVE.Commons.Tests.Utils.IO.Archives
 {
     internal class WritingArchiveTest
     {
