@@ -79,6 +79,8 @@ namespace KaVE.Commons.Utils.IO
                 s.Finish();
                 s.Close();
             }
+
+            _entries.Clear();
         }
     }
 }

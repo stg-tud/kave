@@ -72,6 +72,21 @@ namespace KaVE.Commons.Tests.Utils.IO
             Assert.AreEqual(expected, actual);
         }
 
+        [Test]
+        public void NothingHappensOnSecondDispose()
+        {
+            var sut = new WritingArchive(_zipPath);
+            sut.Add("x");
+
+            Assert.False(File.Exists(_zipPath));
+            sut.Dispose();
+            Assert.True(File.Exists(_zipPath));
+
+            File.Delete(_zipPath);
+            sut.Dispose();
+            Assert.False(File.Exists(_zipPath));
+        }
+
         private void Write(params string[] entries)
         {
             using (var sut = new WritingArchive(_zipPath))
