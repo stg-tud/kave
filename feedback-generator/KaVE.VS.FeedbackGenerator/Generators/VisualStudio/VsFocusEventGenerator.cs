@@ -18,8 +18,6 @@ using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Timers;
-using JetBrains.Application;
-using JetBrains.Application.Components;
 using KaVE.Commons.Model.Events.VisualStudio;
 using KaVE.Commons.Utils;
 using KaVE.JetBrains.Annotations;
@@ -28,7 +26,8 @@ using KaVE.VS.FeedbackGenerator.Utils.Names;
 
 namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio
 {
-    [ShellComponent(ProgramConfigurations.VS_ADDIN)]
+    // TODO RS9: disabled for now
+    //[ShellComponent(ProgramConfigurations.VS_ADDIN)]
     internal class VsFocusEventGenerator : EventGeneratorBase
     {
         [UsedImplicitly]
