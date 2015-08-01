@@ -149,6 +149,8 @@
     <Compile Include="RelativeEditLocationTest.cs" />
     <Compile Include="SolutionAnalysisTest.cs" />
     <Compile Include="InjectableTestLogger.cs" />
+    <Compile Include="TypeZipFolderTest.cs" />
+    <Compile Include="TypeZipLRUCacheTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\KaVE.Commons\KaVE.Commons.csproj">
