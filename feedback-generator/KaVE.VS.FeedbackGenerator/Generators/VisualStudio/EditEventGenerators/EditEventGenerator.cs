@@ -48,10 +48,13 @@ namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio.EditEventGenerators
             IContextProvider contextProvider)
             : base(env, messageBus, dateUtils)
         {
+            // TODO RS9 deactivated for now
+            /*
             _contextProvider = contextProvider;
             _textEditorEvents = DTE.Events.TextEditorEvents;
             _textEditorEvents.LineChanged += TextEditorEvents_LineChanged;
             _eventSendingTimer.Elapsed += (source, e) => FireCurrentEditEvent();
+             */
         }
 
         private void TextEditorEvents_LineChanged(TextPoint startPoint, TextPoint endPoint, int hint)

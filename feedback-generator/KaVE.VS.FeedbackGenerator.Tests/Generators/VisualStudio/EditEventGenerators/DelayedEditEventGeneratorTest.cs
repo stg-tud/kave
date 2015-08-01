@@ -51,7 +51,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.VisualStudio.EditEventGener
             _testDocumentMock.Setup(doc => doc.Language).Returns("SomeLanguage");
             _testDocumentMock.Setup(doc => doc.FullName).Returns(@"C:\SomeCSharpFile.cs");
             _testDocumentMock.Setup(doc => doc.DTE).Returns(DTEMockUtils.MockSolution(@"C:\Solution.sln").DTE);
-            
+
             TestDateUtils.Now = DateTime.Now;
 
             _testRetryRunner = new RetryRunnerTestImpl();
@@ -92,13 +92,14 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.VisualStudio.EditEventGener
             Assert.False(_testRetryRunner.OnTry());
         }
 
-        [Test]
+        // TODO RS9: generator is disabled for now
+        [Test, Ignore]
         public void ShouldFireEventWhenContextIsReady()
         {
             _contextProvider.CurrentContext = ValidContext;
             _uut.TryFireWithContext(_testDocumentMock.Object);
 
-           _testRetryRunner.OnTry();
+            _testRetryRunner.OnTry();
 
             System.Threading.Thread.Sleep(100);
 
@@ -126,7 +127,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.VisualStudio.EditEventGener
         {
             _testDocumentMock.Setup(doc => doc.FullName).Returns(@"C://NoCSharpFile.xaml");
             _uut.TryFireWithContext(_testDocumentMock.Object);
-            
+
             Assert.False(_testRetryRunner.WasCalled);
         }
     }
@@ -157,7 +158,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.VisualStudio.EditEventGener
             NumberOfCalls++;
             return CurrentContext;
         }
-        
+
         public Context GetCurrentContext(TextPoint startPoint)
         {
             throw new NotImplementedException();

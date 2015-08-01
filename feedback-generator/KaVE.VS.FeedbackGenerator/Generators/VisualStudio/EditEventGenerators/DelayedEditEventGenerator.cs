@@ -17,11 +17,9 @@
 using System.IO;
 using EnvDTE;
 using JetBrains.Application;
-using KaVE.Commons.Model.Events.CompletionEvents;
 using KaVE.Commons.Model.Events.VisualStudio;
 using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Collections;
-using KaVE.Commons.Utils.Concurrency;
 using KaVE.VS.FeedbackGenerator.Generators.VisualStudio.EditEventGenerators.EventContext;
 using KaVE.VS.FeedbackGenerator.MessageBus;
 using KaVE.VS.FeedbackGenerator.Utils.Names;
@@ -46,7 +44,8 @@ namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio.EditEventGenerators
             _retryRunner = retryRunner;
             _contextProvider = contextProvider;
 
-            Task.StartNewLongRunning(FireDelayedEvents);
+            //TODO RS9 deactivated for now
+            //   Task.StartNewLongRunning(FireDelayedEvents);
         }
 
         public void TryFireWithContext(Document document)
