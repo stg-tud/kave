@@ -73,7 +73,7 @@ namespace KaVE.Commons.Utils.IO
                     var fileName = string.Format("{0}.json", num++);
                     s.PutNextEntry(new ZipEntry(fileName));
 
-                    var bytes = Encoding.UTF8.GetBytes(entry);
+                    var bytes = Encoding.Unicode.GetBytes(entry);
                     s.Write(bytes, 0, bytes.Length);
                 }
                 s.Finish();

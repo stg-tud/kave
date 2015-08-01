@@ -28,8 +28,8 @@ namespace KaVE.Commons.Utils.IO
     {
         int Count { get; }
         bool HasNext();
-
         T GetNext<T>();
+        IList<T> GetAll<T>();
     }
 
     public class ReadingArchive : IReadingArchive
@@ -66,7 +66,7 @@ namespace KaVE.Commons.Utils.IO
                         var size = s.Read(data, 0, data.Length);
                         while (size > 0)
                         {
-                            sb.Append(Encoding.ASCII.GetString(data, 0, size));
+                            sb.Append(Encoding.Unicode.GetString(data, 0, size));
                             size = s.Read(data, 0, data.Length);
                         }
                         events.Add(sb.ToString());
