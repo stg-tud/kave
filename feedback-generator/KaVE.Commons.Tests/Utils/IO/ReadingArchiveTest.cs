@@ -39,10 +39,6 @@ namespace KaVE.Commons.Tests.Utils.IO
         [TearDown]
         public void TearDown()
         {
-            if (_sut != null)
-            {
-                _sut.Dispose();
-            }
             if (File.Exists(_zipPath))
             {
                 File.Delete(_zipPath);

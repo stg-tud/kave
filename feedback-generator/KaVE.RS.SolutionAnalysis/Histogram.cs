@@ -51,7 +51,7 @@ namespace KaVE.RS.SolutionAnalysis
         public void Add(int slot)
         {
             Asserts.That(slot > 0);
-            Asserts.That(slot <= _slots.Keys.Count);
+            Asserts.That(slot <= _numSlots);
             NumValues++;
             _slots[slot]++;
         }

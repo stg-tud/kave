@@ -145,6 +145,7 @@
   <ItemGroup>
     <Compile Include="AnalysisStatsPrinter.cs" />
     <Compile Include="CommandLineLogger.cs" />
+    <Compile Include="CompletionEventToUsageHistoryRunner.cs" />
     <Compile Include="EditLocationRunner.cs" />
     <Compile Include="Episodes\Event.cs" />
     <Compile Include="Episodes\EventStreamGenerator.cs" />

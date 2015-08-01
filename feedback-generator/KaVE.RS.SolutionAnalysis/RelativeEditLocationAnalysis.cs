@@ -111,6 +111,16 @@ namespace KaVE.RS.SolutionAnalysis
                 loc.Size++;
             }
 
+            public override void Visit(IUnknownStatement stmt, RelativeEditLocation loc)
+            {
+                loc.Size++;
+            }
+
+            public override void Visit(IVariableDeclaration stmt, RelativeEditLocation loc)
+            {
+                loc.Size++;
+            }
+
             #endregion
 
             #region blocks

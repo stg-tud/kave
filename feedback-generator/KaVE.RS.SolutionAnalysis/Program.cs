@@ -25,11 +25,9 @@ using KaVE.Commons.Model.ObjectUsage;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Collections;
 using KaVE.Commons.Utils.Exceptions;
-using KaVE.Commons.Utils.IO;
 using KaVE.Commons.Utils.Json;
 using KaVE.Commons.Utils.Logging.Json;
 using KaVE.Commons.Utils.ObjectUsageExport;
-using KaVE.FeedbackProcessor.Episodes;
 
 namespace KaVE.RS.SolutionAnalysis
 {
@@ -44,18 +42,21 @@ namespace KaVE.RS.SolutionAnalysis
         {
             Console.WriteLine("{0} start", DateTime.Now);
 
+            const string dirEvents = @"C:\Users\seb\Desktop\Events\";
+            const string dirHistories = @"C:\Users\seb\Desktop\Histories\";
             const string dirContexts = @"C:\Users\seb\Desktop\Analysis\test\Contexts\";
             const string dirUsages = @"C:\Users\seb\Desktop\Analysis\all\Usages\";
-            const string dirEvents = @"C:\Users\seb\Desktop\Episodes\";
+            const string dirEpisodes = @"C:\Users\seb\Desktop\Episodes\";
 
             //new AnalysisStatsPrinter(dirContexts).Run();
             //new UsageExportRunner(dirContexts, dirUsages).Run();
-            //new EditLocationRunner(@"C:\Users\seb\Desktop\datev-unpacked3\").Run();
+            new EditLocationRunner(dirEvents).Run();
             //AnalyzeProjects();
             //var usages = ExtractUsages(dirContexts);
             //WriteUsages(usages);
 
-            new EventsExportRunner(dirContexts, dirEvents).Run();
+            //new EventsExportRunner(dirContexts, dirEpisodes).Run();
+            //new CompletionEventToUsageHistoryRunner(dirEvents, dirHistories).Run();
 
             Console.WriteLine("{0} finish", DateTime.Now);
         }

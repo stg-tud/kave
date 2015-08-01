@@ -53,18 +53,16 @@ namespace KaVE.RS.SolutionAnalysis
             {
                 Console.WriteLine("##################################################");
                 Console.WriteLine("reading {0}...", Path.GetFileName(log));
-                using (var ra = new ReadingArchive(log))
+                var ra = new ReadingArchive(log);
+                var ctxs = ra.GetAll<Context>();
+                Console.WriteLine("\tFound {0} contexts", ctxs.Count);
+                Console.Write("\tExtracting events... ");
+                foreach (var ctx in ctxs)
                 {
-                    var ctxs = ra.GetAll<Context>();
-                    Console.WriteLine("\tFound {0} contexts", ctxs.Count);
-                    Console.Write("\tExtracting events... ");
-                    foreach (var ctx in ctxs)
-                    {
-                        ctx.SST.Accept(generator, events);
-                        Console.Write('.');
-                    }
-                    Console.WriteLine(" done");
+                    ctx.SST.Accept(generator, events);
+                    Console.Write('.');
                 }
+                Console.WriteLine(" done");
             }
         }
 

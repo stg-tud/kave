@@ -85,10 +85,8 @@ namespace KaVE.Commons.Tests.Utils.IO
 
         private IEnumerable<string> ReadZip()
         {
-            using (var ra = new ReadingArchive(_zipPath))
-            {
-                return ra.GetAll<string>();
-            }
+            var ra = new ReadingArchive(_zipPath);
+            return ra.GetAll<string>();
         }
     }
 }

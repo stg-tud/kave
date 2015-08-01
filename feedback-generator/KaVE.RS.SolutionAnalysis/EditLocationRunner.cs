@@ -27,13 +27,17 @@ namespace KaVE.RS.SolutionAnalysis
     {
         private readonly RelativeEditLocationAnalysis _locationAnalysis = new RelativeEditLocationAnalysis();
         private readonly string _root;
+        private DateTime startedAt;
 
         private readonly Histogram _histogram2 = new Histogram(2);
         private readonly Histogram _histogram3 = new Histogram(3);
         private readonly Histogram _histogram4 = new Histogram(4);
         private readonly Histogram _histogram5 = new Histogram(5);
         private readonly Histogram _histogram6 = new Histogram(6);
-        private readonly MergingHistogram _histogram7P = new MergingHistogram(7);
+        private readonly Histogram _histogram7 = new Histogram(7);
+        private readonly Histogram _histogram8 = new Histogram(8);
+        private readonly Histogram _histogram9 = new Histogram(9);
+        private readonly MergingHistogram _histogram10P = new MergingHistogram(10);
 
         public EditLocationRunner(string root)
         {
@@ -48,6 +52,8 @@ namespace KaVE.RS.SolutionAnalysis
 
         public void Run()
         {
+            startedAt = DateTime.Now;
+
             var zips = FindFeedbackZips();
             Log(@"found {0} zips:", zips.Count);
             foreach (var zip in zips)
@@ -58,6 +64,7 @@ namespace KaVE.RS.SolutionAnalysis
             int numTotal = zips.Count;
             int numEvents = 0;
             int numCompletionEvents = 0;
+            int numHistoryTuples = 0;
             int numCurrent = 1;
 
             foreach (var zip in zips)
@@ -68,73 +75,92 @@ namespace KaVE.RS.SolutionAnalysis
                     numTotal);
                 Log(@"zip: {0}", zip);
 
-                using (var ra = new ReadingArchive(zip))
+                var ra = new ReadingArchive(zip);
+                Log(@"{0} events: ", ra.Count);
+                while (ra.HasNext())
                 {
-                    Log(@"{0} events: ", ra.Count);
-                    while (ra.HasNext())
+                    var @event = ra.GetNext<IDEEvent>();
+                    numEvents++;
+
+                    var complEvent = @event as CompletionEvent;
+                    if (complEvent == null)
                     {
-                        var @event = ra.GetNext<IDEEvent>();
-                        numEvents++;
+                        Console.Write('.');
+                        continue;
+                    }
 
-                        var complEvent = @event as CompletionEvent;
-                        if (complEvent == null)
-                        {
-                            Console.Write('.');
-                            continue;
-                        }
+                    var fileName = complEvent.ActiveDocument.FileName;
+                    if (fileName != null && !fileName.EndsWith(".cs"))
+                    {
+                        Console.Write(':');
+                        continue;
+                    }
 
-                        var fileName = complEvent.ActiveDocument.FileName;
-                        if (fileName != null && !fileName.EndsWith(".cs"))
-                        {
-                            Console.Write(':');
-                            continue;
-                        }
+                    numCompletionEvents++;
 
-                        numCompletionEvents++;
+                    var loc = _locationAnalysis.Analyze(complEvent.Context2.SST);
+                    if (!loc.HasEditLocation || loc.Size < 2)
+                    {
+                        Console.Write('o');
+                        continue;
+                    }
 
-                        var loc = _locationAnalysis.Analyze(complEvent.Context2.SST);
-                        if (!loc.HasEditLocation || loc.Size < 2)
-                        {
-                            Console.Write('o');
-                            continue;
-                        }
+                    numHistoryTuples++;
 
-                        Console.Write('x');
+                    Console.Write('x');
 
-                        switch (loc.Size)
-                        {
-                            case 2:
-                                _histogram2.Add(loc.Location);
-                                break;
-                            case 3:
-                                _histogram3.Add(loc.Location);
-                                break;
-                            case 4:
-                                _histogram4.Add(loc.Location);
-                                break;
-                            case 5:
-                                _histogram4.Add(loc.Location);
-                                break;
-                            case 6:
-                                _histogram4.Add(loc.Location);
-                                break;
-                            default:
-                                _histogram7P.AddRatio(loc.Location, loc.Size);
-                                break;
-                        }
-                        Console.WriteLine(@" done!");
+                    switch (loc.Size)
+                    {
+                        case 2:
+                            _histogram2.Add(loc.Location);
+                            break;
+                        case 3:
+                            _histogram3.Add(loc.Location);
+                            break;
+                        case 4:
+                            _histogram4.Add(loc.Location);
+                            break;
+                        case 5:
+                            _histogram5.Add(loc.Location);
+                            break;
+                        case 6:
+                            _histogram6.Add(loc.Location);
+                            break;
+                        case 7:
+                            _histogram7.Add(loc.Location);
+                            break;
+                        case 8:
+                            _histogram8.Add(loc.Location);
+                            break;
+                        case 9:
+                            _histogram9.Add(loc.Location);
+                            break;
+                        default:
+                            _histogram10P.AddRatio(loc.Location, loc.Size);
+                            break;
                     }
                 }
+                Log(@" done!");
             }
 
-            Log("finished analyzing {0} events ({1} completion events)", numEvents, numCompletionEvents);
+            Log("");
+            Log("started at {0}", startedAt);
+            Log(
+                "finished analyzing {0} events ({1} completion events, {2} with location)",
+                numEvents,
+                numCompletionEvents,
+                numHistoryTuples);
+            Log("");
 
             Print("histogram 2:", _histogram2);
             Print("histogram 3:", _histogram3);
             Print("histogram 4:", _histogram4);
             Print("histogram 5:", _histogram5);
             Print("histogram 6:", _histogram6);
-            Print("histogram 7+:", _histogram7P);
+            Print("histogram 7:", _histogram7);
+            Print("histogram 8:", _histogram8);
+            Print("histogram 9:", _histogram9);
+            Print("histogram 10+:", _histogram10P);
         }
 
         private void Print(string title, Histogram h)
@@ -153,11 +179,6 @@ namespace KaVE.RS.SolutionAnalysis
         private IList<string> FindFeedbackZips()
         {
             return Directory.GetFiles(_root, "*.zip", SearchOption.AllDirectories);
-        }
-
-        private IList<string> FindJsonFiles(string tmp)
-        {
-            return Directory.GetFiles(tmp, "*.json", SearchOption.TopDirectoryOnly);
         }
 
         public static string GetTemporaryDirectory()

@@ -17,14 +17,14 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using Ionic.Zip;
+using System.Text;
+using ICSharpCode.SharpZipLib.Zip;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Json;
 
 namespace KaVE.Commons.Utils.IO
 {
-    public interface IReadingArchive : IDisposable
+    public interface IReadingArchive
     {
         int Count { get; }
         bool HasNext();
@@ -34,36 +34,64 @@ namespace KaVE.Commons.Utils.IO
 
     public class ReadingArchive : IReadingArchive
     {
-        private readonly string _tempDir;
-        private readonly string[] _files;
-        private int _currentIndex;
+        private List<string>.Enumerator _eventEnumerator;
 
         public ReadingArchive(string zipPath)
         {
+            Count = 0;
             Asserts.That(File.Exists(zipPath));
-            _tempDir = GetTemporaryDirectory();
-            using (var zipFile = ZipFile.Read(zipPath))
+
+            using (var s = new ZipInputStream(File.OpenRead(zipPath)))
             {
-                zipFile.ExtractAll(_tempDir);
+                ZipEntry theEntry;
+                while ((theEntry = s.GetNextEntry()) != null)
+                {
+                    if (theEntry.IsFile)
+                    {
+                        Count++;
+                    }
+                }
             }
-            _files = Directory.EnumerateFiles(_tempDir, "*.json").ToArray();
+
+            var events = new List<string>();
+            var data = new byte[4096];
+            using (var s = new ZipInputStream(File.OpenRead(zipPath)))
+            {
+                ZipEntry theEntry;
+                while ((theEntry = s.GetNextEntry()) != null)
+                {
+                    if (theEntry.IsFile)
+                    {
+                        var sb = new StringBuilder();
+                        var size = s.Read(data, 0, data.Length);
+                        while (size > 0)
+                        {
+                            sb.Append(Encoding.ASCII.GetString(data, 0, size));
+                            size = s.Read(data, 0, data.Length);
+                        }
+                        events.Add(sb.ToString());
+                    }
+                }
+            }
+
+            _eventEnumerator = events.GetEnumerator();
         }
 
-        public int Count
-        {
-            get { return _files.Length; }
-        }
+        public int Count { get; private set; }
 
         public bool HasNext()
         {
-            return _currentIndex < _files.Length;
+            return _eventEnumerator.MoveNext();
         }
 
         public T GetNext<T>()
         {
-            var json = File.ReadAllText(_files[_currentIndex++]);
-            var obj = json.ParseJsonTo<T>();
-            return obj;
+            if (_eventEnumerator.Current != null)
+            {
+                var obj = _eventEnumerator.Current.ParseJsonTo<T>();
+                return obj;
+            }
+            throw new ArgumentOutOfRangeException();
         }
 
         public IList<T> GetAll<T>()
@@ -74,21 +102,6 @@ namespace KaVE.Commons.Utils.IO
                 all.Add(GetNext<T>());
             }
             return all;
-        }
-
-        public void Dispose()
-        {
-            if (Directory.Exists(_tempDir))
-            {
-                Directory.Delete(_tempDir, true);
-            }
-        }
-
-        private static string GetTemporaryDirectory()
-        {
-            string tempDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
-            Directory.CreateDirectory(tempDirectory);
-            return tempDirectory;
         }
     }
 }

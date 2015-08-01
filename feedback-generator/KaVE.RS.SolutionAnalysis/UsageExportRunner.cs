@@ -57,28 +57,26 @@ namespace KaVE.RS.SolutionAnalysis
                 var fullFileIn = _dirIn + fileName;
                 var fullFileOut = _dirOut + fileName.Replace("-contexts.", "-usages.");
 
-                using (var ra = new ReadingArchive(fullFileIn))
+                var ra = new ReadingArchive(fullFileIn);
+                Log("reading contexts...");
+                var ctxs = ra.GetAll<Context>();
+                var numCtxs = ctxs.Count;
+                Log("found {0} contexts", numCtxs);
+
+                EnsureParentExists(fullFileOut);
+
+                using (var wa = new WritingArchive(fullFileOut))
                 {
-                    Log("reading contexts...");
-                    var ctxs = ra.GetAll<Context>();
-                    var numCtxs = ctxs.Count;
-                    Log("found {0} contexts", numCtxs);
-
-                    EnsureParentExists(fullFileOut);
-
-                    using (var wa = new WritingArchive(fullFileOut))
+                    var currentCtx = 1;
+                    foreach (var ctx in ctxs)
                     {
-                        var currentCtx = 1;
-                        foreach (var ctx in ctxs)
-                        {
-                            Log("    {0}/{1}", currentCtx++, numCtxs);
-                            var usages = _usageExtractor.Export(ctx);
-                            Append(" --> {0} usages", usages.Count);
-                            wa.AddAll(usages);
+                        Log("    {0}/{1}", currentCtx++, numCtxs);
+                        var usages = _usageExtractor.Export(ctx);
+                        Append(" --> {0} usages", usages.Count);
+                        wa.AddAll(usages);
 
-                            numLocalCtxs++;
-                            numLocalUsages += usages.Count;
-                        }
+                        numLocalCtxs++;
+                        numLocalUsages += usages.Count;
                     }
                 }
 

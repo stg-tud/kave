@@ -14,12 +14,15 @@
  * limitations under the License.
  */
 
+using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.SSTs;
 using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.Commons.Model.SSTs.Impl.Blocks;
 using KaVE.Commons.Model.SSTs.Impl.Declarations;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.LoopHeader;
+using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
+using KaVE.Commons.Model.SSTs.Impl.References;
 using KaVE.Commons.Model.SSTs.Impl.Statements;
 using KaVE.Commons.Utils.Collections;
 using NUnit.Framework;
@@ -288,6 +291,91 @@ namespace KaVE.RS.SolutionAnalysis.Tests
         public void Statements_ThrowStatement()
         {
             AssertSupportForStatement(new ThrowStatement());
+        }
+
+        [Test]
+        public void Statements_UnknownStatement()
+        {
+            AssertSupportForStatement(new UnknownStatement());
+        }
+
+        [Test]
+        public void Statements_VariableDeclarationStatement()
+        {
+            AssertSupportForStatement(new VariableDeclaration());
+        }
+
+        #endregion
+
+        #region integration
+
+        [Test]
+        public void IntegrationTest1()
+        {
+            var sst = new SST
+            {
+                Methods =
+                {
+                    new MethodDeclaration
+                    {
+                        Body =
+                        {
+                            new VariableDeclaration
+                            {
+                                Reference = new VariableReference {Identifier = "coreName"},
+                                Type = TypeName.Get("KaVE.Commons.Model.ObjectUsage.CoReName, KaVE.Commons, 1.0.0.0")
+                            },
+                            new Assignment
+                            {
+                                Reference = new VariableReference {Identifier = "coreName"},
+                                Expression = new UnknownExpression()
+                            },
+                            new IfElseBlock
+                            {
+                                Condition = new UnknownExpression(),
+                                Then =
+                                {
+                                    new ExpressionStatement
+                                    {
+                                        Expression = new InvocationExpression
+                                        {
+                                            Reference = new VariableReference {Identifier = "writer"},
+                                            MethodName =
+                                                MethodName.Get(
+                                                    "[System.Void, mscorlib, 4.0.0.0] [Newtonsoft.Json.JsonWriter, Newtonsoft.Json, 6.0.0.0].WriteValue([System.String, mscorlib, 4.0.0.0] value)"),
+                                            Parameters =
+                                            {
+                                                new ReferenceExpression
+                                                {
+                                                    Reference = new VariableReference {Identifier = "Name"}
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            new VariableDeclaration
+                            {
+                                Reference = new VariableReference {Identifier = "callSite"},
+                                Type = TypeName.Get("KaVE.Commons.Model.ObjectUsage.CallSite, KaVE.Commons, 1.0.0.0")
+                            },
+                            new Assignment
+                            {
+                                Reference = new VariableReference {Identifier = "callSite"},
+                                Expression = new UnknownExpression()
+                            },
+                            new ExpressionStatement
+                            {
+                                Expression = new CompletionExpression {Token = "i"}
+                            }
+                        }
+                    }
+                }
+            };
+
+            var actual = _sut.Analyze(sst);
+            var expected = new RelativeEditLocation {Size = 7, Location = 7};
+            Assert.AreEqual(expected, actual);
         }
 
         #endregion
