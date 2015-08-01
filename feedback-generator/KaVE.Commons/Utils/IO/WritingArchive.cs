@@ -17,7 +17,8 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Ionic.Zip;
+using System.Text;
+using ICSharpCode.SharpZipLib.Zip;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Json;
 
@@ -61,16 +62,22 @@ namespace KaVE.Commons.Utils.IO
                 return;
             }
 
-            using (var zipFile = new ZipFile())
+            var num = 0;
+            using (var s = new ZipOutputStream(File.Create(_path)))
             {
-                zipFile.UseZip64WhenSaving = Zip64Option.AsNecessary;
-                var i = 0;
+                s.UseZip64 = UseZip64.Dynamic;
+                s.SetLevel(9); // 0 - store only to 9 - means best compression
+
                 foreach (var entry in _entries)
                 {
-                    var fileName = (i++) + ".json";
-                    zipFile.AddEntry(fileName, entry);
+                    var fileName = string.Format("{0}.json", num++);
+                    s.PutNextEntry(new ZipEntry(fileName));
+
+                    var bytes = Encoding.UTF8.GetBytes(entry);
+                    s.Write(bytes, 0, bytes.Length);
                 }
-                zipFile.Save(_path);
+                s.Finish();
+                s.Close();
             }
         }
     }
