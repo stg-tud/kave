@@ -20,6 +20,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using KaVE.Commons.Utils.Assertion;
+using KaVE.Commons.Utils.Json;
 
 namespace KaVE.Commons.Utils.IO.Archives
 {
@@ -91,7 +92,7 @@ namespace KaVE.Commons.Utils.IO.Archives
             {
                 Directory.CreateDirectory(folderName);
             }
-            var folderUtil = new ZipFolder(folderName, key.ToString());
+            var folderUtil = new ZipFolder(folderName, key.ToFormattedJson());
 
             _folders[key] = folderUtil;
 
@@ -100,9 +101,12 @@ namespace KaVE.Commons.Utils.IO.Archives
 
         private string GetTargetFolder(T key)
         {
-            var regex = new Regex(@"[^a-zA-Z0-9.\-_/\\+$(){}[\]]");
+            var regex = new Regex(@"[^a-zA-Z0-9,\-_/+$(){}[\]]");
 
-            var relName = key.ToString().Replace('.', '/');
+            var relName = key.ToCompactJson();
+            relName = relName.Replace('.', '/');
+            relName = relName.Replace("\\\"", "\""); // quotes inside json
+            relName = relName.Replace("\"", ""); // surrounding quotes
             relName = relName.Replace('\\', '/');
             relName = regex.Replace(relName, "_");
 

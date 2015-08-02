@@ -14,9 +14,11 @@
  * limitations under the License.
  */
 
+using System.Collections.Generic;
 using System.IO;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.IO.Archives;
+using KaVE.Commons.Utils.Json;
 using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Utils.IO.Archives
@@ -91,14 +93,29 @@ namespace KaVE.Commons.Tests.Utils.IO.Archives
 
             var metaFile = Path.Combine(_root, "La/A/1/__/.zipfolder");
             var actual = File.ReadAllText(metaFile);
-            Assert.AreEqual(key, actual);
+            Assert.AreEqual(key.ToFormattedJson(), actual);
+        }
+
+        [Test]
+        public void ComplexKeysArePossibleThoughNotRecommended()
+        {
+            var sut = new ZipFolderLRUCache<List<string>>(_root, 2);
+            var key = new List<string> {"a", "b"};
+
+            sut.GetArchive(key);
+            sut.Dispose();
+
+            var metaFile = Path.Combine(_root, "[a,b]\\.zipfolder");
+            var actual = File.ReadAllText(metaFile);
+            var expected = key.ToFormattedJson();
+            Assert.AreEqual(expected, actual);
         }
 
         [Test]
         public void ReplacementInKeysWorks()
         {
-            var a = @"a.+-\_$()[]{}:*?""<>|";
-            var e = @"a\+-\_$()[]{}_______\0.zip";
+            var a = @"a,.+-\_$()[]{}:*?""<>|";
+            var e = @"a,\+-\_$()[]{}______\0.zip";
             using (var wa = _sut.GetArchive(a))
             {
                 wa.Add("something");
