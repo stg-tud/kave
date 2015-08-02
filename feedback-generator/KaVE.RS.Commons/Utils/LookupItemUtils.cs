@@ -42,6 +42,7 @@ namespace KaVE.RS.Commons.Utils
         [NotNull]
         public static Proposal ToProposal([CanBeNull] this ILookupItem lookupItem)
         {
+            //return new Proposal {Name = Name.Get("deactivated")};
             var name = lookupItem == null ? Name.UnknownName : lookupItem.GetName();
             return new Proposal {Name = name};
         }

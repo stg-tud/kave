@@ -16,6 +16,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using JetBrains.Application;
 using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure.LookupItems;
@@ -90,6 +92,13 @@ namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
         private CompletionEvent _event;
         private Context _context;
 
+        private Stopwatch _stopwatch = new Stopwatch();
+
+        private void Log(string line)
+        {
+            File.AppendAllLines("C:/Users/Andreas/Desktop/completionlog.txt", new[] { String.Format("{0}ms  {1}", _stopwatch.Elapsed.TotalMilliseconds, line) });
+        }
+
         public CodeCompletionEventHandler(IRSEnv env, IMessageBus messageBus, IDateUtils dateUtils)
             : base(env, messageBus, dateUtils)
         {
@@ -103,6 +112,10 @@ namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
 
         public void HandleTriggered(string prefix, IEnumerable<ILookupItem> displayedItems)
         {
+            _stopwatch.Restart();
+            Log("");
+            Log(String.Format("Start logging new completion event. Prefix {0}", prefix));
+
             _event = Create<CompletionEvent>();
             _event.Context2 = _context;
             _event.Prefix = prefix;
@@ -111,40 +124,55 @@ namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
 
         public void HandleDisplayedItemsChanged(IEnumerable<ILookupItem> displayedItems)
         {
-            _event.ProposalCollection = displayedItems.ToProposalCollection();
+            var lookupItems = displayedItems as ILookupItem[] ?? displayedItems.ToArray();
+            Log(String.Format("Display items changed -> Transform {0} new items.",lookupItems.Count()));
+            _event.ProposalCollection = lookupItems.ToProposalCollection();
+            Log("Finished transforming new items.");
         }
 
         public void HandleSelectionChanged(ILookupItem selectedItem)
         {
+            Log(String.Format("Selection changed to {0}", selectedItem.ToProposal().Name));
             _event.AddSelection(selectedItem.ToProposal());
         }
 
         public void HandlePrefixChanged(string newPrefix, IEnumerable<ILookupItem> displayedLookupItems)
         {
+            var lookupItems = displayedLookupItems as ILookupItem[] ?? displayedLookupItems.ToArray();
+            Log(String.Format("Prefix changed to {0}. {1} new lookup items.", newPrefix, lookupItems.Count()));
+
             _event.TerminatedState = TerminationState.Filtered;
             _event.TerminatedAt = DateTime.Now;
             _event.TerminatedBy = IDEEvent.Trigger.Automatic;
             var lastSelection = _event.Selections.LastOrDefault();
             Fire(_event);
 
+            _stopwatch.Restart();
+            Log("");
+            Log(String.Format("Start logging new completion event. Prefix {0}", newPrefix));
+
             _event = Create<CompletionEvent>();
             _event.Context2 = _context;
             _event.Prefix = newPrefix;
-            _event.ProposalCollection = displayedLookupItems.ToProposalCollection();
+            _event.ProposalCollection = lookupItems.ToProposalCollection();
             if (lastSelection != null && _event.ProposalCollection.Proposals.Contains(lastSelection.Proposal))
             {
                 _event.Selections.Add(lastSelection);
             }
             _event.TriggeredBy = IDEEvent.Trigger.Automatic;
+
+            Log("Finished transforming new items.");
         }
 
         public void HandleClosed()
         {
+            Log("Closed.");
             _event.TerminatedAt = DateTime.Now;
         }
 
         public void HandleApplied(IDEEvent.Trigger trigger, ILookupItem appliedItem)
         {
+            Log("Applied.");
             _event.TerminatedState = TerminationState.Applied;
             _event.TerminatedBy = trigger;
             Fire(_event);
@@ -152,6 +180,7 @@ namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
 
         public void HandleCancelled(IDEEvent.Trigger trigger)
         {
+            Log("Cancelled.");
             _event.TerminatedState = TerminationState.Cancelled;
             _event.TerminatedBy = trigger;
             Fire(_event);
