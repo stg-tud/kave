@@ -97,8 +97,8 @@ namespace KaVE.Commons.Tests.Utils.IO.Archives
         [Test]
         public void ReplacementInKeysWorks()
         {
-            var a = @"aA1_!";
-            var e = @"aA1__\0.zip";
+            var a = @"a.+-\_$()[]{}:*?""<>|";
+            var e = @"a\+-\_$()[]{}_______\0.zip";
             using (var wa = _sut.GetArchive(a))
             {
                 wa.Add("something");

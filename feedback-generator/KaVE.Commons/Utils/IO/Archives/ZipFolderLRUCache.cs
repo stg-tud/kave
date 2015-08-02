@@ -100,9 +100,10 @@ namespace KaVE.Commons.Utils.IO.Archives
 
         private string GetTargetFolder(T key)
         {
-            var regex = new Regex(@"[^a-zA-Z0-9._/]");
+            var regex = new Regex(@"[^a-zA-Z0-9.\-_/\\+$(){}[\]]");
 
             var relName = key.ToString().Replace('.', '/');
+            relName = relName.Replace('\\', '/');
             relName = regex.Replace(relName, "_");
 
             return Path.Combine(_root, relName);
