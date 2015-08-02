@@ -136,6 +136,47 @@ namespace KaVE.Commons.Tests.Utils.IO.Archives
         }
 
         [Test]
+        public void ExistingFilesAreNotOverwritten()
+        {
+            _sut.Dispose();
+
+            Directory.CreateDirectory(Path.Combine(_root, "a"));
+            var metaFile = Path.Combine(_root, @"a\.zipfolder");
+            var zip0 = Path.Combine(_root, @"a\0.zip");
+            var zip1 = Path.Combine(_root, @"a\1.zip");
+
+            // setup fake data from previous run
+            File.WriteAllText(metaFile, "test");
+            using (var testZip = new WritingArchive(zip0))
+            {
+                testZip.Add("test");
+            }
+
+            // new initialization
+            _sut = new ZipFolderLRUCache<string>(_root, 2);
+            var a = _sut.GetArchive("a");
+            a.Add("x");
+            _sut.Dispose();
+
+            Assert.True(File.Exists(metaFile));
+            Assert.True(File.Exists(zip0));
+            Assert.True(File.Exists(zip1));
+
+            Assert.AreEqual("test", File.ReadAllText(metaFile));
+            AssertZipContent(zip0, "test");
+            AssertZipContent(zip1, "x");
+        }
+
+        private void AssertZipContent(string fileName, params string[] expectedsArr)
+        {
+            var ra = new ReadingArchive(fileName);
+            var expecteds = new List<string>();
+            expecteds.AddRange(expectedsArr);
+            var actuals = ra.GetAll<string>();
+            Assert.AreEqual(expecteds, actuals);
+        }
+
+        [Test]
         public void LeastRecentlyUsedKeyIsRemoved()
         {
             _sut.GetArchive("a");
