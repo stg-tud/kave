@@ -23,6 +23,8 @@ namespace KaVE.Commons.Utils.IO.Archives
 {
     public class ZipFolder
     {
+        public const string MarkerFileName = ".zipfolder";
+
         private readonly string _root;
         private int _fileCounter;
 
@@ -34,8 +36,18 @@ namespace KaVE.Commons.Utils.IO.Archives
 
         public IWritingArchive CreateNewArchive()
         {
+            CreateMarker();
             var fileName = CreateNextUnusedFileName();
             return new WritingArchive(fileName);
+        }
+
+        private void CreateMarker()
+        {
+            var markerName = Path.Combine(_root, MarkerFileName);
+            if (!File.Exists(markerName))
+            {
+                using (File.Create(markerName)) {}
+            }
         }
 
         private string CreateNextUnusedFileName()

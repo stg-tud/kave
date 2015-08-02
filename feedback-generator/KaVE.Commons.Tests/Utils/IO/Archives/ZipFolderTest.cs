@@ -42,6 +42,17 @@ namespace KaVE.Commons.Tests.Utils.IO.Archives
         }
 
         [Test]
+        public void FoldersAreMarkedOnCreationOfArchive()
+        {
+            var markerFile = Path.Combine(_root, ZipFolder.MarkerFileName);
+            Assert.False(File.Exists(markerFile));
+
+            _sut.CreateNewArchive();
+
+            Assert.True(File.Exists(markerFile));
+        }
+
+        [Test]
         public void ArchivesAreCreatedOnRequest()
         {
             Assert.AreEqual(0, _sut.NumArchives());
