@@ -56,32 +56,49 @@ namespace KaVE.Commons.Tests.Utils.IO.Archives
         [Test]
         public void FilesAreCreatedInCorrectSubfolders()
         {
-            var wa = _sut.GetArchive("La");
-            wa.Add("something");
-
-            var wb = _sut.GetArchive("Lb/b");
-            wb.Add("something");
-
-            var wc = _sut.GetArchive("Lc/c/c");
-            wc.Add("something");
-
-            var wd = _sut.GetArchive("Ld/d/d/d");
-            wd.Add("something");
+            _sut.GetArchive("a");
+            _sut.GetArchive("b/b");
+            _sut.GetArchive("c/c/c");
+            _sut.GetArchive("d/d/d/d");
 
             _sut.Dispose();
 
             Assert.True(Directory.Exists(_root));
-            Assert.True(File.Exists(Path.Combine(_root, "a/$content/0.zip")));
-            Assert.True(File.Exists(Path.Combine(_root, "b/b/$content/0.zip")));
-            Assert.True(File.Exists(Path.Combine(_root, "c/c/c/0.zip")));
-            Assert.True(File.Exists(Path.Combine(_root, "d/d/d.d/0.zip")));
+            Assert.True(File.Exists(Path.Combine(_root, "a/.zipfolder")));
+            Assert.True(File.Exists(Path.Combine(_root, "b/b/.zipfolder")));
+            Assert.True(File.Exists(Path.Combine(_root, "c/c/c/.zipfolder")));
+            Assert.True(File.Exists(Path.Combine(_root, "d/d/d/d/.zipfolder")));
+        }
+
+        [Test]
+        public void DoubleSlashIsNotAnIssue()
+        {
+            _sut.GetArchive("La//a");
+
+            _sut.Dispose();
+
+            Assert.True(Directory.Exists(_root));
+            Assert.True(File.Exists(Path.Combine(_root, "La/a/.zipfolder")));
+        }
+
+        [Test]
+        public void KeyIsPassedAsMetaDataWithoutReplacement()
+        {
+            const string key = "La/A.1/_!";
+
+            _sut.GetArchive(key);
+            _sut.Dispose();
+
+            var metaFile = Path.Combine(_root, "La/A/1/__/.zipfolder");
+            var actual = File.ReadAllText(metaFile);
+            Assert.AreEqual(key, actual);
         }
 
         [Test]
         public void ReplacementInKeysWorks()
         {
             var a = @"aA1_!";
-            var e = @"aA1__\$content\0.zip";
+            var e = @"aA1__\0.zip";
             using (var wa = _sut.GetArchive(a))
             {
                 wa.Add("something");
@@ -129,9 +146,9 @@ namespace KaVE.Commons.Tests.Utils.IO.Archives
         [Test]
         public void CacheRemoveClosesOpenArchive()
         {
-            var expectedFileName = Path.Combine(_root, "a/a/a/0.zip");
+            var expectedFileName = Path.Combine(_root, "a/0.zip");
 
-            var wa = _sut.GetArchive("La/a/a");
+            var wa = _sut.GetArchive("a");
             wa.Add("something");
             _sut.GetArchive("b");
 
@@ -150,7 +167,7 @@ namespace KaVE.Commons.Tests.Utils.IO.Archives
 
             Assert.False(_sut.IsCached("a"));
             Assert.AreEqual(0, _sut.Size);
-            Assert.True(File.Exists(Path.Combine(_root, "a/$content/0.zip")));
+            Assert.True(File.Exists(Path.Combine(_root, "a/0.zip")));
         }
 
 

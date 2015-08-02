@@ -26,12 +26,15 @@ namespace KaVE.Commons.Utils.IO.Archives
         public const string MarkerFileName = ".zipfolder";
 
         private readonly string _root;
+        private readonly string _metaData;
+
         private int _fileCounter;
 
-        public ZipFolder(string root)
+        public ZipFolder(string root, string metaData = "")
         {
             Asserts.That(Directory.Exists(root));
             _root = root;
+            _metaData = metaData;
         }
 
         public IWritingArchive CreateNewArchive()
@@ -46,7 +49,7 @@ namespace KaVE.Commons.Utils.IO.Archives
             var markerName = Path.Combine(_root, MarkerFileName);
             if (!File.Exists(markerName))
             {
-                using (File.Create(markerName)) {}
+                File.WriteAllText(markerName, _metaData);
             }
         }
 

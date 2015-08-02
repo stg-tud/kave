@@ -91,7 +91,7 @@ namespace KaVE.Commons.Utils.IO.Archives
             {
                 Directory.CreateDirectory(folderName);
             }
-            var folderUtil = new ZipFolder(folderName);
+            var folderUtil = new ZipFolder(folderName, key.ToString());
 
             _folders[key] = folderUtil;
 
@@ -100,38 +100,12 @@ namespace KaVE.Commons.Utils.IO.Archives
 
         private string GetTargetFolder(T key)
         {
-            var regex = new Regex(@"[^a-zA-Z0-9._]");
+            var regex = new Regex(@"[^a-zA-Z0-9._/]");
 
-            var relName = key.ToString().Replace('/', '.');
+            var relName = key.ToString().Replace('.', '/');
             relName = regex.Replace(relName, "_");
 
-            if (relName.StartsWith("L"))
-            {
-                relName = relName.Substring(1);
-            }
-
-            var packageDepth = relName.Count(c => c == '.') + 1;
-            switch (packageDepth)
-            {
-                case 1:
-                    relName = relName + @"\$content";
-                    break;
-                case 2:
-                    relName = ReplaceIndexWith(relName, relName.IndexOf('.'), "\\");
-                    relName += @"\$content";
-                    break;
-                default:
-                    relName = ReplaceIndexWith(relName, relName.IndexOf('.'), "\\");
-                    relName = ReplaceIndexWith(relName, relName.IndexOf('.'), "\\");
-                    break;
-            }
-
             return Path.Combine(_root, relName);
-        }
-
-        private static string ReplaceIndexWith(string input, int index, string replacement)
-        {
-            return input.Substring(0, index) + replacement + input.Substring(index + 1);
         }
 
         public bool IsCached(T key)

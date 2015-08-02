@@ -53,6 +53,16 @@ namespace KaVE.Commons.Tests.Utils.IO.Archives
         }
 
         [Test]
+        public void FolderMarkersContainMetaData()
+        {
+            _sut = new ZipFolder(_root, "xyz");
+            _sut.CreateNewArchive();
+
+            var actual = File.ReadAllText(Path.Combine(_root, ZipFolder.MarkerFileName));
+            Assert.AreEqual("xyz", actual);
+        }
+
+        [Test]
         public void ArchivesAreCreatedOnRequest()
         {
             Assert.AreEqual(0, _sut.NumArchives());
