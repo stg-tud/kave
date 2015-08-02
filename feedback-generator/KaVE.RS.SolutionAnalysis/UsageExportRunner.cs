@@ -39,6 +39,7 @@ namespace KaVE.RS.SolutionAnalysis
 
         public void Run()
         {
+            var startTime = DateTime.Now;
             var ctxZips = FindInputFiles();
 
             var numZips = ctxZips.Count();
@@ -62,14 +63,23 @@ namespace KaVE.RS.SolutionAnalysis
                     Log("reading contexts...");
                     var ctxs = ra.GetAll<Context>();
                     var numCtxs = ctxs.Count;
-                    Log("found {0} contexts", numCtxs);
+                    Log("found {0} contexts, exporting usages...\n\n", numCtxs);
 
-                    var currentCtx = 1;
+                    var colCounter = 0;
                     foreach (var ctx in ctxs)
                     {
-                        Log("    {0}/{1}", currentCtx++, numCtxs);
+                        if (colCounter == 25)
+                        {
+                            Console.WriteLine();
+                            colCounter = 0;
+                        }
+                        colCounter++;
                         var usages = _usageExtractor.Export(ctx);
-                        Append(" --> {0} usages, writing... ", usages.Count);
+                        var msg = usages.Count == 0
+                            ? "."
+                            : string.Format("{0}", usages.Count);
+                        Console.Write(msg.PadLeft(5));
+
                         foreach (var u in usages)
                         {
                             cache.GetArchive(u.type).Add(u);
@@ -79,6 +89,7 @@ namespace KaVE.RS.SolutionAnalysis
                         numLocalUsages += usages.Count;
                     }
 
+                    Append("\n");
                     Log(
                         "--> {0} contexts, {1} usages\n\n",
                         numLocalCtxs,
@@ -89,7 +100,7 @@ namespace KaVE.RS.SolutionAnalysis
                 }
             }
 
-            Log("finished!");
+            Log("finished! (started at {0})", startTime);
             Log(
                 "found a total of {0} contexts and extracted {1} usages\n\n",
                 numTotalCtxs,
