@@ -100,13 +100,6 @@ namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
         private Context _context;
         private ILookupItem[] _lastDisplayedItems; 
 
-        private Stopwatch _stopwatch = new Stopwatch();
-
-        private void Log(string line)
-        {
-            File.AppendAllLines("C:/Users/Andreas/Desktop/completionlog.txt", new[] { String.Format("{0}ms  {1}", _stopwatch.Elapsed.TotalMilliseconds, line) });
-        }
-
         public CodeCompletionEventHandler(IRSEnv env, IMessageBus messageBus, IDateUtils dateUtils)
             : base(env, messageBus, dateUtils)
         {
@@ -120,10 +113,6 @@ namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
 
         public void HandleTriggered(string prefix, IEnumerable<ILookupItem> displayedItems)
         {
-            _stopwatch.Restart();
-            Log("");
-            Log(String.Format("Start logging new completion event. Prefix {0}", prefix));
-
             _event = Create<CompletionEvent>();
             _event.Context2 = _context;
             _event.Prefix = prefix;
@@ -132,37 +121,27 @@ namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
 
         public void HandleDisplayedItemsChanged(IEnumerable<ILookupItem> displayedItems)
         {
-            Log("Before cast to array");
             _lastDisplayedItems = displayedItems.Take(ProposalTransformationLimit).ToArray();
-            Log("After cast to array");
         }
 
         public void HandleSelectionChanged(ILookupItem selectedItem)
         {
-            Log(String.Format("Selection changed to {0}", selectedItem.ToProposal().Name));
             _event.AddSelection(selectedItem.ToProposal());
         }
 
         public void HandlePrefixChanged(string newPrefix, IEnumerable<ILookupItem> displayedLookupItems)
         {
-            var lookupItems = displayedLookupItems as ILookupItem[] ?? displayedLookupItems.ToArray();
-            Log(String.Format("Prefix changed to {0}. {1} new lookup items.", newPrefix, lookupItems.Count()));
-
             _event.TerminatedState = TerminationState.Filtered;
             _event.TerminatedAt = DateTime.Now;
             _event.TerminatedBy = IDEEvent.Trigger.Automatic;
             var lastSelection = _event.Selections.LastOrDefault();
             Fire(_event);
 
-            _stopwatch.Restart();
-            Log("");
-            Log(String.Format("Start logging new completion event. Prefix {0}", newPrefix));
-
             _event = Create<CompletionEvent>();
             _event.Context2 = _context;
             _event.Prefix = newPrefix;
             HandleDisplayedItemsChanged(displayedLookupItems);
-            if (lastSelection != null && lookupItems.Any(l => l != null && l.ToProposal().Equals(lastSelection.Proposal)))
+            if (lastSelection != null && _lastDisplayedItems.Any(l => l != null && l.ToProposal().Equals(lastSelection.Proposal)))
             {
                 _event.Selections.Add(lastSelection);
             }
@@ -172,13 +151,11 @@ namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
 
         public void HandleClosed()
         {
-            Log("Closed.");
             _event.TerminatedAt = DateTime.Now;
         }
 
         public void HandleApplied(IDEEvent.Trigger trigger, ILookupItem appliedItem)
         {
-            Log("Applied.");
             _event.TerminatedState = TerminationState.Applied;
             _event.TerminatedBy = trigger;
             Fire(_event);
@@ -186,7 +163,6 @@ namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
 
         public void HandleCancelled(IDEEvent.Trigger trigger)
         {
-            Log("Cancelled.");
             _event.TerminatedState = TerminationState.Cancelled;
             _event.TerminatedBy = trigger;
             Fire(_event);
@@ -194,16 +170,7 @@ namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
 
         protected void Fire(CompletionEvent @event)
         {
-            Log("Before transformation.");
-            try
-            {
-                @event.ProposalCollection = _lastDisplayedItems.ToProposalCollection();
-            }
-            catch (NullReferenceException e)
-            {
-                Log("NullRef!");
-            }
-            Log("After transformation.");
+            @event.ProposalCollection = _lastDisplayedItems.ToProposalCollection();
             base.Fire(@event);
         }
     }
