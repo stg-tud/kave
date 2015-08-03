@@ -89,11 +89,16 @@ namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
     [ShellComponent]
     public class CodeCompletionEventHandler : EventGeneratorBase
     {
+        /// <summary>
+        /// Transforming a large amount of lookup items to proposals takes a considerable amount of time.
+        /// In some cases, autocompletion will propose the entire class library, thus freezing up the
+        /// UI for several seconds.
+        /// </summary>
         private static readonly int ProposalTransformationLimit = 250;
 
         private CompletionEvent _event;
         private Context _context;
-        private IEnumerable<ILookupItem> _lastDisplayedItems; 
+        private ILookupItem[] _lastDisplayedItems; 
 
         private Stopwatch _stopwatch = new Stopwatch();
 
@@ -127,7 +132,9 @@ namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
 
         public void HandleDisplayedItemsChanged(IEnumerable<ILookupItem> displayedItems)
         {
-            _lastDisplayedItems = displayedItems;
+            Log("Before cast to array");
+            _lastDisplayedItems = displayedItems.Take(ProposalTransformationLimit).ToArray();
+            Log("After cast to array");
         }
 
         public void HandleSelectionChanged(ILookupItem selectedItem)
@@ -154,7 +161,7 @@ namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
             _event = Create<CompletionEvent>();
             _event.Context2 = _context;
             _event.Prefix = newPrefix;
-            _lastDisplayedItems = lookupItems;
+            HandleDisplayedItemsChanged(displayedLookupItems);
             if (lastSelection != null && lookupItems.Any(l => l != null && l.ToProposal().Equals(lastSelection.Proposal)))
             {
                 _event.Selections.Add(lastSelection);
@@ -188,7 +195,14 @@ namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
         protected void Fire(CompletionEvent @event)
         {
             Log("Before transformation.");
-            @event.ProposalCollection = _lastDisplayedItems.Take(ProposalTransformationLimit).ToProposalCollection();
+            try
+            {
+                @event.ProposalCollection = _lastDisplayedItems.ToProposalCollection();
+            }
+            catch (NullReferenceException e)
+            {
+                Log("NullRef!");
+            }
             Log("After transformation.");
             base.Fire(@event);
         }
