@@ -89,8 +89,11 @@ namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
     [ShellComponent]
     public class CodeCompletionEventHandler : EventGeneratorBase
     {
+        private static readonly int ProposalTransformationLimit = 250;
+
         private CompletionEvent _event;
         private Context _context;
+        private IEnumerable<ILookupItem> _lastDisplayedItems; 
 
         private Stopwatch _stopwatch = new Stopwatch();
 
@@ -124,10 +127,7 @@ namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
 
         public void HandleDisplayedItemsChanged(IEnumerable<ILookupItem> displayedItems)
         {
-            var lookupItems = displayedItems as ILookupItem[] ?? displayedItems.ToArray();
-            Log(String.Format("Display items changed -> Transform {0} new items.",lookupItems.Count()));
-            _event.ProposalCollection = lookupItems.ToProposalCollection();
-            Log("Finished transforming new items.");
+            _lastDisplayedItems = displayedItems;
         }
 
         public void HandleSelectionChanged(ILookupItem selectedItem)
@@ -154,14 +154,13 @@ namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
             _event = Create<CompletionEvent>();
             _event.Context2 = _context;
             _event.Prefix = newPrefix;
-            _event.ProposalCollection = lookupItems.ToProposalCollection();
-            if (lastSelection != null && _event.ProposalCollection.Proposals.Contains(lastSelection.Proposal))
+            _lastDisplayedItems = lookupItems;
+            if (lastSelection != null && lookupItems.Any(l => l != null && l.ToProposal().Equals(lastSelection.Proposal)))
             {
                 _event.Selections.Add(lastSelection);
             }
             _event.TriggeredBy = IDEEvent.Trigger.Automatic;
 
-            Log("Finished transforming new items.");
         }
 
         public void HandleClosed()
@@ -184,6 +183,14 @@ namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
             _event.TerminatedState = TerminationState.Cancelled;
             _event.TerminatedBy = trigger;
             Fire(_event);
+        }
+
+        protected void Fire(CompletionEvent @event)
+        {
+            Log("Before transformation.");
+            @event.ProposalCollection = _lastDisplayedItems.Take(ProposalTransformationLimit).ToProposalCollection();
+            Log("After transformation.");
+            base.Fire(@event);
         }
     }
 }
