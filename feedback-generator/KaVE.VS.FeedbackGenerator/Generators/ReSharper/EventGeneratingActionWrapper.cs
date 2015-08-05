@@ -33,7 +33,13 @@ namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
             _originalAction = originalAction;
         }
 
-        protected override void InvokeOriginalCommand()
+        public new void Execute()
+        {
+            base.FireActionEvent();
+            InvokeOriginalCommand();
+        }
+
+        protected void InvokeOriginalCommand()
         {
             _originalAction.Invoke();
         }

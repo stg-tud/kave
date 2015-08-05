@@ -27,18 +27,6 @@ namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
     {
         protected CommandEventGeneratorBase(IRSEnv env, IMessageBus messageBus, IDateUtils dateUtils)
             : base(env, messageBus, dateUtils) {}
-
-        public void Execute()
-        {
-            Execute(null);
-        }
-
-        protected override void InvokeOriginalCommand(object context)
-        {
-            InvokeOriginalCommand();
-        }
-
-        protected abstract void InvokeOriginalCommand();
     }
 
     public abstract class CommandEventGeneratorBase<TC> : EventGeneratorBase where TC : class
@@ -46,10 +34,9 @@ namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
         protected CommandEventGeneratorBase(IRSEnv env, IMessageBus messageBus, IDateUtils dateUtils)
             : base(env, messageBus, dateUtils) {}
 
-        protected void Execute(TC context)
+        protected void FireActionEvent()
         {
             var actionEvent = CreateActionEvent();
-            InvokeOriginalCommand(context);
             FireActionEventNow(actionEvent);
         }
 
@@ -61,8 +48,6 @@ namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
         }
 
         protected abstract string GetCommandId();
-
-        protected abstract void InvokeOriginalCommand(TC context);
 
         private void FireActionEventNow(CommandEvent actionEvent)
         {

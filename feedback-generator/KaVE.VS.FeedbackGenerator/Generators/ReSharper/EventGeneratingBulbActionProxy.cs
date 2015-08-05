@@ -44,7 +44,8 @@ namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
 
         public void Execute(ISolution solution, ITextControl textControl)
         {
-            Execute(new BulbActionContext {Solution = solution, TextControl = textControl});
+            FireActionEvent();
+            ExecuteOriginalAction(solution, textControl);
         }
 
         public string Text
@@ -57,9 +58,9 @@ namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
             return _target.GetType().FullName;
         }
 
-        protected override void InvokeOriginalCommand(BulbActionContext context)
+        protected void ExecuteOriginalAction(ISolution solution, ITextControl textControl)
         {
-            _target.Execute(context.Solution, context.TextControl);
+            _target.Execute(solution, textControl);
         }
     }
 }

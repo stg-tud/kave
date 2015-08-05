@@ -39,7 +39,7 @@ namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
 
         public bool Update(IDataContext context, ActionPresentation presentation, DelegateUpdate nextUpdate)
         {
-            return nextUpdate.Invoke();
+            return true;
         }
 
         public bool Update(IDataContext context, CheckedActionPresentation presentation)
@@ -54,22 +54,18 @@ namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
 
         public void Execute(IDataContext context, DelegateExecute nextExecute)
         {
-            Execute(nextExecute);
+            FireActionEvent();
+            nextExecute.Invoke();
         }
 
         public void Execute(IDataContext context)
         {
-            // do nothing
+            FireActionEvent();
         }
 
         protected override string GetCommandId()
         {
             return _actionId;
-        }
-
-        protected override void InvokeOriginalCommand(DelegateExecute nextExecute)
-        {
-            nextExecute.Invoke();
         }
     }
 }
