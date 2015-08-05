@@ -43,16 +43,23 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.ReSharper
         }
 
         [Test]
-        public void ShouldForceUpdate()
+        public void ShouldAcceptUpdate()
+        {
+            var acceptsUpdate = _uut.Update(_testDataContext, new ActionPresentation(), () => false);
+            Assert.IsTrue(acceptsUpdate);
+        }
+
+        [Test]
+        public void ShouldInvokeNextUpdate()
         {
             var invoked = false;
-            var value = _uut.Update(
+
+            _uut.Update(
                 _testDataContext,
                 new ActionPresentation(),
                 () => invoked = true);
 
-            Assert.IsFalse(invoked);
-            Assert.IsTrue(value);
+            Assert.IsTrue(invoked);
         }
 
         [Test]

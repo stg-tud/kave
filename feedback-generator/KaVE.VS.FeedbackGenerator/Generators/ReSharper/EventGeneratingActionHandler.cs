@@ -27,7 +27,8 @@ namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
     ///     Fires an <see cref="CommandEvent" /> on execution of a ReSharper action. Passes handling of the action on the
     ///     the default handler.
     /// </summary>
-    public class EventGeneratingActionHandler : CommandEventGeneratorBase<DelegateExecute>, IExecutableAction, ICheckableAction, IPresentableAction
+    public class EventGeneratingActionHandler : CommandEventGeneratorBase<DelegateExecute>, IExecutableAction,
+        ICheckableAction, IPresentableAction
     {
         private readonly string _actionId;
 
@@ -39,6 +40,8 @@ namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
 
         public bool Update(IDataContext context, ActionPresentation presentation, DelegateUpdate nextUpdate)
         {
+            // TODO: It seems like nextUpdate disables some ReSharper Actions that can still be used (e.g. CodeCleanup), disabling our Events for them.
+            nextUpdate.Invoke();
             return true;
         }
 
