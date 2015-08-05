@@ -43,15 +43,16 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.ReSharper
         }
 
         [Test]
-        public void ShouldInvokeUpdate()
+        public void ShouldForceUpdate()
         {
             var invoked = false;
-            _uut.Update(
+            var value = _uut.Update(
                 _testDataContext,
                 new ActionPresentation(),
                 () => invoked = true);
 
-            Assert.IsTrue(invoked);
+            Assert.IsFalse(invoked);
+            Assert.IsTrue(value);
         }
 
         [Test]
@@ -62,7 +63,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Generators.ReSharper
             var expected = new CommandEvent
             {
                 IDESessionUUID = TestIDESession.UUID,
-                KaVEVersion = TestRSEnv.DefaultVersion.ToString(),
+                KaVEVersion = TestRSEnv.DefaultVersion,
                 CommandId = TestActionId,
                 TriggeredAt = TestDateUtils.Now,
                 Duration = TimeSpan.FromSeconds(0)
