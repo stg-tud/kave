@@ -56,7 +56,7 @@ namespace KaVE.Commons.Tests.Utils.CodeCompletion.Impl
             Mock.Get(_io).Setup(io => io.UnzipToTempFolder(fullZipFileName)).Returns(_tmpPath);
             Mock.Get(_io).Setup(io => io.FileExists(fullXdslFileName)).Returns(() => _shouldXdslBeFound);
 
-            _sut = new SmilePBNRecommenderStore(_basePath, _io);
+            _sut = new SmilePBNRecommenderStore(_basePath, _io, new TypePathUtil());
         }
 
         [TearDown]
@@ -74,7 +74,7 @@ namespace KaVE.Commons.Tests.Utils.CodeCompletion.Impl
         [Test]
         public void IsAvailable_NoRootFolder()
         {
-            _sut = new SmilePBNRecommenderStore("non existing path", _io);
+            _sut = new SmilePBNRecommenderStore("non existing path", _io, new TypePathUtil());
             Assert.False(_sut.IsAvailable(SomeType()));
             // verify non unzip
         }
@@ -102,7 +102,7 @@ namespace KaVE.Commons.Tests.Utils.CodeCompletion.Impl
         [Test, ExpectedException(typeof (AssertException))]
         public void Load_NoRootFolder()
         {
-            _sut = new SmilePBNRecommenderStore("non existing path", _io);
+            _sut = new SmilePBNRecommenderStore("non existing path", _io, new TypePathUtil());
             _sut.Load(SomeType());
         }
 
@@ -138,7 +138,7 @@ namespace KaVE.Commons.Tests.Utils.CodeCompletion.Impl
 
         private string ZipFileForSomeType()
         {
-            return "LSomePackage_SomeType.zip";
+            return "LSomePackage/SomeType.zip";
         }
 
         private string XdslFileForSomeType()

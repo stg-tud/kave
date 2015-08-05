@@ -26,26 +26,28 @@ namespace KaVE.Commons.Utils.CodeCompletion.Impl
     {
         public string BasePath { get; protected set; }
         private readonly IIoUtils _io;
+        private readonly TypePathUtil _typePath;
 
-        public SmilePBNRecommenderStore(string basePath, IIoUtils io)
+        public SmilePBNRecommenderStore(string basePath, IIoUtils io, TypePathUtil typePath)
         {
             BasePath = basePath;
             _io = io;
+            _typePath = typePath;
         }
 
         public bool IsAvailable(CoReTypeName type)
         {
-            var fileName = GetFileName(BasePath, type, "zip");
+            var fileName = GetNestedFileName(BasePath, type, "zip");
             return _io.FileExists(fileName);
         }
 
         public IPBNRecommender Load(CoReTypeName type)
         {
-            var zipFileName = GetFileName(BasePath, type, "zip");
+            var zipFileName = GetNestedFileName(BasePath, type, "zip");
             Asserts.That(_io.FileExists(zipFileName));
 
             var tmpFolder = _io.UnzipToTempFolder(zipFileName);
-            var xdslFileName = GetFileName(tmpFolder, type, "xdsl");
+            var xdslFileName = GetFlatFileName(tmpFolder, type, "xdsl");
             Asserts.That(_io.FileExists(xdslFileName));
 
             var network = ReadNetwork(xdslFileName);
@@ -66,9 +68,16 @@ namespace KaVE.Commons.Utils.CodeCompletion.Impl
             }
         }
 
-        private static string GetFileName(string basePath, CoReTypeName typeName, string extension)
+        private string GetNestedFileName(string basePath, CoReTypeName typeName, string extension)
         {
-            var typePart = typeName.ToString().Replace('/', '_');
+            var typePart = _typePath.ToNestedPath(typeName);
+            var fileName = Path.Combine(basePath, typePart + '.' + extension);
+            return fileName;
+        }
+
+        private string GetFlatFileName(string basePath, CoReTypeName typeName, string extension)
+        {
+            var typePart = _typePath.ToFlatPath(typeName);
             var fileName = Path.Combine(basePath, typePart + '.' + extension);
             return fileName;
         }

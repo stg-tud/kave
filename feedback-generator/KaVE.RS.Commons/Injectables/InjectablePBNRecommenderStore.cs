@@ -25,8 +25,8 @@ namespace KaVE.RS.Commons.Injectables
     [ShellComponent]
     public class InjectablePBNRecommenderStore : SmilePBNRecommenderStore
     {
-        public InjectablePBNRecommenderStore(IIoUtils io, ISettingsStore store)
-            : base(store.GetSettings<ModelStoreSettings>().ModelStorePath, io)
+        public InjectablePBNRecommenderStore(IIoUtils io, ISettingsStore store, TypePathUtil typePathUtil)
+            : base(store.GetSettings<ModelStoreSettings>().ModelStorePath, io, typePathUtil)
         {
             store.SettingsChanged += (sender, args) =>
             {

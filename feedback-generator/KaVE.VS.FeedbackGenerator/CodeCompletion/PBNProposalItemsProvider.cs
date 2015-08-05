@@ -116,7 +116,9 @@ namespace KaVE.VS.FeedbackGenerator.CodeCompletion
             {
                 return _models[type];
             }
-            return _store.Load(type);
+            var model = _store.Load(type);
+            _models[type] = model;
+            return model;
         }
 
         private static void WrapExistingItems(GroupedItemsCollector collector, CoReProposal[] proposals)
