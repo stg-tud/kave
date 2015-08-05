@@ -44,19 +44,19 @@ namespace KaVE.RS.SolutionAnalysis
 
             const string dirEvents = @"C:\Users\seb\Desktop\Events\";
             const string dirHistories = @"C:\Users\seb\Desktop\Histories\";
-            const string dirContexts = @"C:\Users\seb\Desktop\Analysis\test\Contexts\";
+            const string dirContexts = @"C:\Users\seb\Desktop\Analysis\all\Contexts\";
             const string dirUsages = @"C:\Users\seb\Desktop\Analysis\all\Usages\";
             const string dirEpisodes = @"C:\Users\seb\Desktop\Episodes\";
 
             //new AnalysisStatsPrinter(dirContexts).Run();
             //new UsageExportRunner(dirContexts, dirUsages).Run();
-            new EditLocationRunner(dirEvents).Run();
+            //new EditLocationRunner(dirEvents).Run();
             //AnalyzeProjects();
             //var usages = ExtractUsages(dirContexts);
             //WriteUsages(usages);
 
             //new EventsExportRunner(dirContexts, dirEpisodes).Run();
-            //new CompletionEventToUsageHistoryRunner(dirEvents, dirHistories).Run();
+            new CompletionEventToUsageHistoryRunner(dirEvents, dirHistories).Run();
 
             Console.WriteLine("{0} finish", DateTime.Now);
         }

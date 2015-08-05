@@ -20,9 +20,9 @@ using System.IO;
 using System.Linq;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Model.Events.CompletionEvents;
+using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.ObjectUsage;
 using KaVE.Commons.Utils.Collections;
-using KaVE.Commons.Utils.IO;
 using KaVE.Commons.Utils.IO.Archives;
 using KaVE.Commons.Utils.ObjectUsageExport;
 
@@ -42,9 +42,16 @@ namespace KaVE.RS.SolutionAnalysis
             _dirHistories = dirHistories;
         }
 
+        private static void Log(string message, params object[] args)
+        {
+            Console.Write(@"{0} | ", DateTime.Now);
+            Console.WriteLine(message, args);
+        }
+
         public void Run()
         {
-            var i = 0;
+            var startedAt = DateTime.Now;
+
             var exports = FindExports();
 
             Log("found {0} exports:", exports.Count);
@@ -54,15 +61,16 @@ namespace KaVE.RS.SolutionAnalysis
             }
             Log("");
 
+            var current = 1;
+            var total = exports.Count;
             foreach (var exportFile in exports)
             {
-                Log("Processing {0}", exportFile);
-                var targetZip = Path.Combine(_dirHistories, (i++) + ".zip");
-                using (var wa = new WritingArchive(targetZip))
+                Log("Processing {0}/{1}: {2}", current++, total, exportFile);
+                using (var cache = new ZipFolderLRUCache<CoReTypeName>(_dirHistories, 1000))
                 {
                     try
                     {
-                        Run(exportFile, wa);
+                        Run(exportFile, cache);
                     }
                     catch (Exception e)
                     {
@@ -72,13 +80,8 @@ namespace KaVE.RS.SolutionAnalysis
             }
 
             Log("");
+            Log("finished! (started at {0})", startedAt);
             Log("found {0} events in total, extracted {1} tuples in total", _numTotalEvents, _numTotalTuples);
-        }
-
-        private static void Log(string message, params object[] args)
-        {
-            Console.Write(@"{0} | ", DateTime.Now);
-            Console.WriteLine(message, args);
         }
 
         private IList<string> FindExports()
@@ -86,23 +89,23 @@ namespace KaVE.RS.SolutionAnalysis
             return Directory.EnumerateFiles(_dirEvents, "*.zip", SearchOption.AllDirectories).ToList();
         }
 
-        private void Run(string exportFile, WritingArchive wa)
+        private void Run(string exportFile, ZipFolderLRUCache<CoReTypeName> cache)
         {
             var numEvents = 0;
             var numTuples = 0;
+
             Dictionary<string, List<CompletionEvent>> @events = new Dictionary<string, List<CompletionEvent>>();
             foreach (var @event in ReadCompletionEvents(exportFile))
             {
-                if (@event.TriggeredAt.HasValue)
+                if (!@event.TriggeredAt.HasValue)
                 {
-                    var idx = GetIndex(@event);
-                    if (!@events.ContainsKey(idx))
-                    {
-                        @events[idx] = new List<CompletionEvent>();
-                    }
-                    @events[idx].Add(@event);
-                    numEvents++;
+                    continue;
                 }
+
+                var idx = GetIndex(@event);
+                GetOrCreate(events, idx).Add(@event);
+
+                numEvents++;
             }
             _numTotalEvents += numEvents;
             Log("\tfound {0} completion events over {1} days", numEvents, @events.Keys.Count);
@@ -118,10 +121,19 @@ namespace KaVE.RS.SolutionAnalysis
 
                 var tuple = FindFirstAndLast(eventsPerFileOnThatDay);
 
-                numTuples += GenerateAndStoreTuples(tuple.Item1, tuple.Item2, wa);
+                numTuples += GenerateAndStoreTuples(tuple.Item1, tuple.Item2, cache);
             }
             _numTotalTuples += numTuples;
             Log("\textracted {0} tuples", numTuples);
+        }
+
+        private static List<CompletionEvent> GetOrCreate(IDictionary<string, List<CompletionEvent>> @events, string idx)
+        {
+            if (!@events.ContainsKey(idx))
+            {
+                @events[idx] = new List<CompletionEvent>();
+            }
+            return @events[idx];
         }
 
         private static IList<CompletionEvent> ReadCompletionEvents(string exportFile)
@@ -183,7 +195,7 @@ namespace KaVE.RS.SolutionAnalysis
             return Tuple.Create(earliestCtx, latestCtx);
         }
 
-        private int GenerateAndStoreTuples(Context first, Context last, WritingArchive wa)
+        private int GenerateAndStoreTuples(Context first, Context last, ZipFolderLRUCache<CoReTypeName> cache)
         {
             var numTuples = 0;
             var usageExtractor = new UsageExtractor();
@@ -192,6 +204,8 @@ namespace KaVE.RS.SolutionAnalysis
             var usagesLast = usageExtractor.Export(last);
 
             var keys = GetKeys(usagesFirst, usagesLast);
+
+            var unknownType = TypeName.UnknownName.ToCoReName();
 
             foreach (var key in keys)
             {
@@ -209,8 +223,13 @@ namespace KaVE.RS.SolutionAnalysis
                     continue;
                 }
 
+                if (unknownType.Equals(a.type))
+                {
+                    continue;
+                }
+
                 numTuples++;
-                wa.Add(Tuple.Create(a, b));
+                cache.GetArchive(a.type).Add(Tuple.Create(a, b));
             }
 
             return numTuples;
