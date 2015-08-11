@@ -187,7 +187,7 @@ namespace KaVE.Commons.Model.Names.CSharp
             get
             {
                 var endOfTypeName = GetLengthOfTypeName(Identifier);
-                var assemblyIdentifier = Identifier.Substring(endOfTypeName).Trim(new[] {' ', ','});
+                var assemblyIdentifier = Identifier.Substring(endOfTypeName).Trim(' ', ',');
                 return AssemblyName.Get(assemblyIdentifier);
             }
         }
@@ -256,6 +256,11 @@ namespace KaVE.Commons.Model.Names.CSharp
                         fullName = fullName.Substring(0, fullName.IndexOf('`'));
                     }
                     var endOfDeclaringTypeName = fullName.LastIndexOf('+');
+                    if (endOfDeclaringTypeName == -1)
+                    {
+                        return UnknownName;
+                    }
+
                     var declaringTypeName = fullName.Substring(0, endOfDeclaringTypeName);
                     if (declaringTypeName.IndexOf('`') > -1 && HasTypeParameters)
                     {
@@ -280,7 +285,7 @@ namespace KaVE.Commons.Model.Names.CSharp
                     }
                     return Get(declaringTypeName + ", " + Assembly);
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     // TODO @seb: fix analyse and remove try/catch
                     Console.WriteLine("TypeName.DeclaringType: exception caught, falling back to unknown TypeName");
