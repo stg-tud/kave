@@ -41,6 +41,7 @@ namespace KaVE.Commons.Tests.Utils.IO.Archives
         [Test, ExpectedException(typeof (AssertException))]
         public void DirectoryHastoExist()
         {
+            // ReSharper disable once ObjectCreationAsStatement
             new WritingArchive(@"c:\does\not\exist.zip");
         }
 
@@ -52,11 +53,28 @@ namespace KaVE.Commons.Tests.Utils.IO.Archives
         }
 
         [Test]
+        public void WritingOnlyNullDoesNotCreateFile()
+        {
+            Write(new string[] {null});
+            Assert.False(File.Exists(_zipPath));
+        }
+
+        [Test]
         public void WriteSomething()
         {
             var expected = new[] {"a", "b", "c"};
             Write(expected);
             var actual = ReadZip();
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void WriteNullsAreIgnored()
+        {
+            var input = new[] {null, "a", null, "b", null};
+            Write(input);
+            var actual = ReadZip();
+            var expected = new[] {"a", "b"};
             Assert.AreEqual(expected, actual);
         }
 

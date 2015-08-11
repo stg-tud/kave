@@ -26,6 +26,8 @@ namespace KaVE.Commons.Tests.Utils.IO.Archives
 {
     internal class ReadingArchiveTest
     {
+        private const string EmptyString = "EMPTY_STRING";
+
         private string _zipPath;
 
         private ReadingArchive _sut;
@@ -73,6 +75,31 @@ namespace KaVE.Commons.Tests.Utils.IO.Archives
         }
 
         [Test]
+        public void NonEmptyZip_WithNull()
+        {
+            PrepareZip(null, "a", null, "b", null);
+
+            Assert.True(_sut.HasNext());
+            Assert.AreEqual("a", _sut.GetNext<string>());
+            Assert.True(_sut.HasNext());
+            Assert.AreEqual("b", _sut.GetNext<string>());
+            Assert.False(_sut.HasNext());
+        }
+
+        [Test]
+        public void NonEmptyZip_WithEmpty()
+        {
+            // used as a marker to prevent json serialization into empty string later
+            PrepareZip(EmptyString, "a", EmptyString, "b", EmptyString);
+
+            Assert.True(_sut.HasNext());
+            Assert.AreEqual("a", _sut.GetNext<string>());
+            Assert.True(_sut.HasNext());
+            Assert.AreEqual("b", _sut.GetNext<string>());
+            Assert.False(_sut.HasNext());
+        }
+
+        [Test]
         public void Count_Empty()
         {
             PrepareZip();
@@ -103,6 +130,16 @@ namespace KaVE.Commons.Tests.Utils.IO.Archives
             Assert.AreEqual(expected, actual);
         }
 
+        [Test]
+        public void GetAllRemovesNullValues()
+        {
+            PrepareZip("a", null, "b");
+
+            var actual = _sut.GetAll<string>();
+            var expected = new List<string> {"a", "b"};
+            Assert.AreEqual(expected, actual);
+        }
+
         private void PrepareZip(params string[] entries)
         {
             using (var zipFile = new ZipFile())
@@ -111,7 +148,8 @@ namespace KaVE.Commons.Tests.Utils.IO.Archives
                 foreach (var entry in entries)
                 {
                     var fileName = (i++) + ".json";
-                    zipFile.AddEntry(fileName, entry.ToCompactJson());
+                    var content = entry == EmptyString ? "" : entry.ToCompactJson();
+                    zipFile.AddEntry(fileName, content);
                 }
                 zipFile.Save(_zipPath);
             }

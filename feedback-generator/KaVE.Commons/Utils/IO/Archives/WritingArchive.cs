@@ -44,7 +44,10 @@ namespace KaVE.Commons.Utils.IO.Archives
 
         public void Add<T>(T obj)
         {
-            _entries.Add(obj.ToFormattedJson());
+            if (obj != null)
+            {
+                _entries.Add(obj.ToFormattedJson());
+            }
         }
 
         public void AddAll<T>(IEnumerable<T> entries)

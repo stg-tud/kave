@@ -81,7 +81,19 @@ namespace KaVE.Commons.Utils.IO.Archives
 
         public bool HasNext()
         {
-            return _eventEnumerator.MoveNext();
+            var hasMoved = _eventEnumerator.MoveNext();
+            while (hasMoved && ShouldMoveFurther(_eventEnumerator.Current))
+            {
+                hasMoved = _eventEnumerator.MoveNext();
+            }
+            return hasMoved;
+        }
+
+        private static bool ShouldMoveFurther(string current)
+        {
+            var isNullJson = current == "null";
+            var isEmptyJson = string.IsNullOrEmpty(current);
+            return isNullJson || isEmptyJson;
         }
 
         public T GetNext<T>()
