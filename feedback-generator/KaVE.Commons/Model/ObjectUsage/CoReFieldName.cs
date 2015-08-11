@@ -22,7 +22,7 @@ namespace KaVE.Commons.Model.ObjectUsage
 
         private static string ValidationPattern()
         {
-            return string.Format(@"{0}\.[_a-zA-Z0-9]+;{0}", CoReTypeName.ValidationPattern());
+            return string.Format(@"{0}\.[_a-zA-Z0-9äöüßÄÖÜ]+;{0}", CoReTypeName.ValidationPattern());
         }
     }
 }
