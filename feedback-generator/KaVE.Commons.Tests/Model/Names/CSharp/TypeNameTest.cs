@@ -248,7 +248,7 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp
          TestCase("T -> Some.Arbitrary.Type, Assembly, 5.6.4.7", "Some.Arbitrary.Type"),
          TestCase("Outer.Type+InnerType, As, 1.2.3.4", "Outer.Type+InnerType"),
          TestCase("?", "?"),
-         TestCase("Task`1[[TResult -> i:IList`1[[T -> T]], mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0", 
+         TestCase("Task`1[[TResult -> i:IList`1[[T -> T]], mscorlib, 4.0.0.0]], mscorlib, 4.0.0.0",
              "Task`1[[TResult -> i:IList`1[[T -> T]], mscorlib, 4.0.0.0]]")]
         public void ShouldDetermineFullName(string identifier, string expectedFullName)
         {
@@ -354,7 +354,8 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp
         }
 
         [TestCase("a.p.T+N", "a.p.T"),
-         TestCase("N.O+M+I", "N.O+M")]
+         TestCase("N.O+M+I", "N.O+M"),
+         TestCase("n.T+A`1[[T1 -> e:n.T+B, P]], P", "n.T, P")]
         public void ShouldBeNestedType(string nestedTypeFullName, string expectedDeclaringTypeFullName)
         {
             var expected = TypeName.Get(expectedDeclaringTypeFullName + ", " + TestAssemblyIdentifier);

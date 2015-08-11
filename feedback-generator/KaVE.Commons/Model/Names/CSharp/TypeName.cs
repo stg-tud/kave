@@ -251,6 +251,10 @@ namespace KaVE.Commons.Model.Names.CSharp
                     }
 
                     var fullName = FullName;
+                    if (HasTypeParameters)
+                    {
+                        fullName = fullName.Substring(0, fullName.IndexOf('`'));
+                    }
                     var endOfDeclaringTypeName = fullName.LastIndexOf('+');
                     var declaringTypeName = fullName.Substring(0, endOfDeclaringTypeName);
                     if (declaringTypeName.IndexOf('`') > -1 && HasTypeParameters)
