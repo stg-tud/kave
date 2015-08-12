@@ -14,7 +14,7 @@ set TIME2=%TIME1: =0%
 set TIME3=%TIME2:~0,-3%
 ::echo %TIME2%
 
-set DATE1=%date:~-4,4%%date:~-10,2%%date:~-7,2%
+set DATE1=%date:~-4,4%%date:~-7,2%%date:~-10,2%
 ::echo %DATE1%
 
 set TIMESTAMP=%DATE1%-%TIME3%
