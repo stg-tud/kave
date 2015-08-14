@@ -23,7 +23,7 @@ namespace KaVE.Commons.Model.ObjectUsage
         internal static string ValidationPattern()
         {
             // TODO @seb: add tests for more complex names (diff chars)
-            return @"\[*L([a-zA-Z0-9_äöüßÄÖÜ]+/)*[a-zA-Z0-9_$äöüßÄÖÜ]+";
+            return @"\[*L([^\[\]{{}}<>'`!?.,:;]+/)*[^\[\]{{}}<>'`!?.,:;]+";
         }
     }
 }

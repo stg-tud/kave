@@ -45,7 +45,8 @@ namespace KaVE.Commons.Tests.Model.ObjectUsage
          TestCase("LT.m(LA;)LU;"),
          TestCase("LSystem/Console.WriteLine()LSystem/Void;"),
          TestCase("LP/T._M()LQ/T;"),
-         TestCase("LP/T.M_N()LQ/T;")]
+         TestCase("LP/T.M_N()LQ/T;"),
+         TestCase("LICSharpCode/NRefactory/CSharp/CodeIssues/ConvertIfStatementToSwitchStatementIssueTests.TestτooSimpleCase1()LSystem/Void;")]
         public void ShouldAcceptValidMethodNames(string methodName)
         {
             // ReSharper disable once ObjectCreationAsStatement
