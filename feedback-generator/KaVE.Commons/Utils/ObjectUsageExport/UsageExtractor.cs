@@ -26,7 +26,12 @@ using KaVE.Commons.Utils.Collections;
 
 namespace KaVE.Commons.Utils.ObjectUsageExport
 {
-    public class UsageExtractor
+    public interface IUsageExtractor
+    {
+        IKaVEList<Query> Export(Context ctx);
+    }
+
+    public class UsageExtractor : IUsageExtractor
     {
         private readonly UsageExtractionVisitor _collectorVisitor = new UsageExtractionVisitor();
 
