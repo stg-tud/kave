@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 using System;
 using KaVE.JetBrains.Annotations;
 
@@ -85,6 +86,11 @@ namespace KaVE.Commons.Utils.Assertion
         {
             Fail(message, messageArgs);
             return default(TR);
+        }
+
+        public static void NotSame(object a, object b)
+        {
+            Not(a == b, "same objects");
         }
     }
 }
