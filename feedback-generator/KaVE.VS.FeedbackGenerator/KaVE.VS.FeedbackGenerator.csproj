@@ -196,6 +196,7 @@
     <Compile Include="Generators\VisualStudio\EditEventGenerators\EventContext\ContextGenerator.cs" />
     <Compile Include="Generators\VisualStudio\EditEventGenerators\EventContext\ContextProvider.cs" />
     <Compile Include="Generators\VisualStudio\EditEventGenerators\RetryRunner.cs" />
+    <Compile Include="Generators\OldEventLogAutoResubmitter.cs" />
     <Compile Include="Menu\AboutAction.cs" />
     <Compile Include="CodeCompletion\PBNProposalWrappedLookupItem.cs" />
     <Compile Include="CodeCompletion\PBNProposalItemsProvider.cs" />
@@ -286,6 +287,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>AnonymizationOptionsMessages.resx</DependentUpon>
     </Compile>
+    <Compile Include="Utils\Logging\LogFileUtils.cs" />
     <Compile Include="Utils\MessageBoxCreator.cs" />
     <Compile Include="UserControls\OptionPage\GeneralOptions\GeneralOptionsMessages.Designer.cs">
       <DependentUpon>GeneralOptionsMessages.resx</DependentUpon>
