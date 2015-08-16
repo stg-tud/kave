@@ -28,11 +28,27 @@ using KaVE.Commons.Utils.Exceptions;
 using KaVE.Commons.Utils.Json;
 using KaVE.Commons.Utils.Logging.Json;
 using KaVE.Commons.Utils.ObjectUsageExport;
+using KaVE.RS.SolutionAnalysis.CompletionEventToUsageHistory;
 
 namespace KaVE.RS.SolutionAnalysis
 {
+    public class Test
+    {
+        private Test _t;
+
+        public void M() {}
+    }
+
     internal class Program
     {
+        private const string DirRoot = @"C:\Users\seb\Desktop\Data\";
+        private const string DirEvents = DirRoot + @"Events\";
+        private const string DirHistories = DirRoot + @"Histories\";
+        private const string DirContextsAll = DirRoot + @"Contexts\";
+        private const string DirContextsGithub = DirRoot + @"Contexts\Github\";
+        private const string DirUsages = DirRoot + @"Usages\";
+        private const string DirEpisodes = DirRoot + @"Episodes\";
+
         private static readonly DirectoryInfo TargetDirectory =
             new DirectoryInfo(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "output"));
 
@@ -42,23 +58,26 @@ namespace KaVE.RS.SolutionAnalysis
         {
             Console.WriteLine("{0} start", DateTime.Now);
 
-            const string dirEvents = @"C:\Users\seb\Desktop\Events\";
-            const string dirHistories = @"C:\Users\seb\Desktop\Histories\";
-            const string dirContexts = @"C:\Users\seb\Desktop\Analysis\all\Contexts\";
-            const string dirUsages = @"C:\Users\seb\Desktop\Analysis\all\Usages\";
-            const string dirEpisodes = @"C:\Users\seb\Desktop\Episodes\";
 
             //new AnalysisStatsPrinter(dirContexts).Run();
-            //new UsageExportRunner(dirContexts, dirUsages).Run();
+            new UsageExportRunner(DirContextsAll, DirUsages).Run();
             //new EditLocationRunner(dirEvents).Run();
             //AnalyzeProjects();
             //var usages = ExtractUsages(dirContexts);
             //WriteUsages(usages);
 
             //new EventsExportRunner(dirContexts, dirEpisodes).Run();
-            new CompletionEventToUsageHistoryRunner(dirEvents, dirHistories).Run();
+            //CreateCompletionEventToUsageHistoryRunner().Run();
 
             Console.WriteLine("{0} finish", DateTime.Now);
+        }
+
+        private static CompletionEventToUsageHistoryRunner CreateCompletionEventToUsageHistoryRunner()
+        {
+            var usageExtractor = new UsageExtractor();
+            var tupleGenerator = new TupleGenerator(usageExtractor);
+            var ioHelper = new IoHelper(DirEvents, DirHistories);
+            return new CompletionEventToUsageHistoryRunner(tupleGenerator, ioHelper);
         }
 
         private static void WriteUsages(IKaVEList<Query> usages)

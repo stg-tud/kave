@@ -23,7 +23,6 @@ using JetBrains.ProjectModel;
 using JetBrains.ReSharper.TestFramework;
 using JetBrains.Util;
 using KaVE.Commons.TestUtils;
-using KaVE.Commons.Utils.IO;
 using KaVE.Commons.Utils.IO.Archives;
 using NUnit.Framework;
 
@@ -31,11 +30,10 @@ namespace KaVE.RS.SolutionAnalysis.Tests
 {
     internal class BulkAnalysisTest : BaseTestWithExistingSolution
     {
-        private const string Qualifier = @"test\";
-        private const string Root = @"C:\Users\seb\Desktop\Analysis\" + Qualifier;
+        private const string Root = @"C:\Users\seb\Desktop\Data\";
         //private const string RepositoryRoot = Root + @"Repositories-Test\";
         private const string RepositoryRoot = Root + @"Repositories\";
-        private const string ContextRoot = Root + @"Contexts\";
+        private const string ContextRoot = Root + @"Contexts\Github\";
         private const string LogRoot = Root + @"Logs\";
 
         private string _currentSolution;
