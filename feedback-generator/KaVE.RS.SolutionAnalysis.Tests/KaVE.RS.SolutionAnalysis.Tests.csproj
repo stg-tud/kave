@@ -141,6 +141,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CompletionEventToUsageHistory\CompletionEventToUsageHistoryRunnerTest.cs" />
+    <Compile Include="CompletionEventToUsageHistory\IoHelperTest.cs" />
+    <Compile Include="CompletionEventToUsageHistory\TupleGeneratorTest.cs" />
     <Compile Include="HistogramTest.cs" />
     <Compile Include="MergingHistogramTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
