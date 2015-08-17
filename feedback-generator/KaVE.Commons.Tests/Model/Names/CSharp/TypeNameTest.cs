@@ -356,7 +356,8 @@ namespace KaVE.Commons.Tests.Model.Names.CSharp
         [TestCase("a.p.T+N", "a.p.T"),
          TestCase("N.O+M+I", "N.O+M"),
          TestCase("n.T+A`1[[T1 -> e:n.T+B, P]], P", "n.T, P"),
-         TestCase("n.T`1+U`1[[T2 -> T2]], P", "?")] // obviously an error in the analysis, second typeparam missing
+         TestCase("n.T`1+U`1[[T2 -> T2]], P", "n.T`1[[T2 -> T2]], P")]
+        // obviously an error in the analysis, second typeparam missing
         public void ShouldBeNestedType(string nestedTypeFullName, string expectedDeclaringTypeFullName)
         {
             var expected = expectedDeclaringTypeFullName.Equals("?")

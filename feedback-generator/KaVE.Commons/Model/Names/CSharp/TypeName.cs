@@ -253,7 +253,7 @@ namespace KaVE.Commons.Model.Names.CSharp
                     var fullName = FullName;
                     if (HasTypeParameters)
                     {
-                        fullName = fullName.Substring(0, fullName.IndexOf('`'));
+                        fullName = TakeUntilChar(fullName, new[] {'[', ','});
                     }
                     var endOfDeclaringTypeName = fullName.LastIndexOf('+');
                     if (endOfDeclaringTypeName == -1)
@@ -293,6 +293,21 @@ namespace KaVE.Commons.Model.Names.CSharp
                     return UnknownName;
                 }
             }
+        }
+
+        private string TakeUntilChar(string fullName, char[] stopChars)
+        {
+            var i = 0;
+            foreach (var c in fullName)
+            {
+                if (stopChars.Contains(c))
+                {
+                    break;
+                }
+                i++;
+            }
+
+            return fullName.Substring(0, i);
         }
 
         public virtual bool IsVoidType
