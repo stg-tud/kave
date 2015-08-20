@@ -29,6 +29,7 @@ namespace KaVE.Commons.Utils.IO
         string GetTempFileName();
         string GetTempFileName(string extension);
         string[] GetFiles(string path, string searchPattern);
+        string[] GetFilesRecursive(string path, string searchPattern);
         long GetFileSize(string fileName);
 
         /// <summary>

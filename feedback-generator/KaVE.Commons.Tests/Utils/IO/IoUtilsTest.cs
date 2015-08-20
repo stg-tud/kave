@@ -251,9 +251,15 @@ namespace KaVE.Commons.Tests.Utils.IO
         }
 
         [Test]
-        public void ShouldFindAllFiles()
+        public void ShouldFindAllFilesRecursively()
         {
             var dir = IoTestHelper.GetTempDirectoryName();
+            File.Create(Path.Combine(dir, "a")).Close();
+            File.Create(Path.Combine(dir, "b")).Close();
+
+            Directory.CreateDirectory(Path.Combine(dir, "b"));
+
+            File.Create(Path.Combine(dir, "b", "b")).Close();
             var expected = new List<string> {"ABC", "DEF", "XYZ"};
             expected.ForEach(f => { using (File.Create(Path.Combine(dir, f))) {} });
 
@@ -311,6 +317,35 @@ namespace KaVE.Commons.Tests.Utils.IO
 
                 var actuals = _sut.GetFiles(folder, "*");
                 var expecteds = new[] {Path.Combine(folder, "a"), Path.Combine(folder, "b")};
+                Assert.AreEqual(expecteds, actuals);
+            }
+            finally
+            {
+                Directory.Delete(folder, true);
+            }
+        }
+
+        [Test]
+        public void GetFilesRecursive()
+        {
+            var folder = Path.Combine(Path.GetTempPath(), "TempFolder_For_IOUtilsTest.GetFilesRecursive");
+            try
+            {
+                Assert.False(Directory.Exists(folder), "test folder is preexisting");
+
+                Directory.CreateDirectory(folder);
+                Assert.AreEqual(new string[0], _sut.GetFilesRecursive(folder, "*"));
+
+                File.Create(Path.Combine(folder, "a.txt")).Close();
+                File.Create(Path.Combine(folder, "a.zip")).Close();
+
+                Directory.CreateDirectory(Path.Combine(folder, "b"));
+                File.Create(Path.Combine(folder, "b", "b.zip")).Close();
+
+                Directory.CreateDirectory(Path.Combine(folder, "c"));
+
+                var actuals = _sut.GetFilesRecursive(folder, "*.zip");
+                var expecteds = new[] {Path.Combine(folder, "a.zip"), Path.Combine(folder, "b", "b.zip")};
                 Assert.AreEqual(expecteds, actuals);
             }
             finally

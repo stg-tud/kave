@@ -133,6 +133,11 @@ namespace KaVE.Commons.Utils.IO
             return Directory.GetFiles(path, searchPattern);
         }
 
+        public string[] GetFilesRecursive(string path, string searchPattern)
+        {
+            return Directory.GetFiles(path, searchPattern, SearchOption.AllDirectories);
+        }
+
         public string UnzipToTempFolder(string zipFile)
         {
             var tmp = Path.GetTempPath();
