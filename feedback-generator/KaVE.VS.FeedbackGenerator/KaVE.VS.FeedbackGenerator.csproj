@@ -185,6 +185,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="UserControls\AboutWindow\AboutWindowControl.xaml.cs">
+      <DependentUpon>AboutWindowControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="CodeCompletion\AbstractWrappedLookupItem.cs" />
     <Compile Include="Generators\ReSharper\ActionEventGenerator.cs" />
     <Compile Include="Generators\UserProfileEventGenerator.cs" />
@@ -512,6 +515,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="UserControls\AboutWindow\AboutWindowControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="UserControls\Anonymization\AnonymizationControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

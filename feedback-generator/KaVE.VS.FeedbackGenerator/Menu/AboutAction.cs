@@ -14,14 +14,12 @@
  * limitations under the License.
  */
 
-using System.Threading;
-using System.Windows.Forms;
 using JetBrains.ActionManagement;
 using JetBrains.Application.DataContext;
 using JetBrains.UI.ActionsRevised;
 using KaVE.Commons.Utils;
 using KaVE.RS.Commons.Utils;
-using KaVE.VS.FeedbackGenerator.Properties;
+using KaVE.VS.FeedbackGenerator.UserControls.AboutWindow;
 
 namespace KaVE.VS.FeedbackGenerator.Menu
 {
@@ -40,18 +38,7 @@ namespace KaVE.VS.FeedbackGenerator.Menu
         {
             var versionUtil = Registry.GetComponent<VersionUtil>();
 
-            var msg = string.Format(
-                "{0} (Current Culture: {1}, Current UI Culture: {2}, Current KaVE Version: {3})",
-                General.About_Text,
-                Thread.CurrentThread.CurrentCulture,
-                Thread.CurrentThread.CurrentUICulture,
-                versionUtil.GetCurrentInformalVersion());
-
-            MessageBox.Show(
-                msg,
-                General.About_Title,
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Information);
+            new AboutWindowControl(versionUtil).Show();
         }
     }
 }
