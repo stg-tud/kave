@@ -23,6 +23,14 @@ namespace KaVE.RS.SolutionAnalysis.Tests
         private CompletionEventFilter _sut;
         private IReadingArchive _ra;
         private IWritingArchive _wa;
+        private IDEEvent _e1;
+        private IDEEvent _e2;
+        private IDEEvent _e3;
+        private IDEEvent _e4;
+        private IDEEvent _e5;
+        private IDEEvent _e6;
+        private IDEEvent _e7;
+        private List<IDEEvent> _storedEvents;
 
         [SetUp]
         public void SetUp()
@@ -40,20 +48,14 @@ namespace KaVE.RS.SolutionAnalysis.Tests
             Mock.Get(_io).Setup(io => io.CreateArchive(@"C:\to\a\a.zip")).Returns(_wa);
 
             _logger = Mock.Of<CompletionEventFilterLogger>();
-            _sut = new CompletionEventFilter(@"C:\from\", @"C:\to\", _io, _logger);
-        }
 
-
-        [Test]
-        public void HappyPath()
-        {
-            var e1 = CreateNonCompletionEvent();
-            var e2 = CreateCompletionEvent();
-            var e3 = CreateCompletionEvent_NoCSharpFile();
-            var e4 = CreateCompletionEvent_Incomplete_NoSessionId();
-            var e5 = CreateCompletionEvent_Incomplete_NoTriggerTime();
-            var e6 = CreateCompletionEvent_NoMethodDeclarations();
-            var e7 = CreateCompletionEvent_NoTriggerPoint();
+            _e1 = CreateNonCompletionEvent();
+            _e2 = CreateCompletionEvent();
+            _e3 = CreateCompletionEvent_NoCSharpFile();
+            _e4 = CreateCompletionEvent_Incomplete_NoSessionId();
+            _e5 = CreateCompletionEvent_Incomplete_NoTriggerTime();
+            _e6 = CreateCompletionEvent_NoMethodDeclarations();
+            _e7 = CreateCompletionEvent_NoTriggerPoint();
 
             Mock.Get(_ra).Setup(ra => ra.Count).Returns(7);
             Mock.Get(_ra)
@@ -68,29 +70,67 @@ namespace KaVE.RS.SolutionAnalysis.Tests
                 .Returns(false);
             Mock.Get(_ra)
                 .SetupSequence(ra => ra.GetNext<IDEEvent>())
-                .Returns(e1)
-                .Returns(e2)
-                .Returns(e3)
-                .Returns(e4)
-                .Returns(e5)
-                .Returns(e6)
-                .Returns(e7);
+                .Returns(_e1)
+                .Returns(_e2)
+                .Returns(_e3)
+                .Returns(_e4)
+                .Returns(_e5)
+                .Returns(_e6)
+                .Returns(_e7);
 
-            var output = new List<IDEEvent>();
-            Mock.Get(_wa).Setup(wa => wa.Add(It.IsAny<IDEEvent>())).Callback<IDEEvent>(e => output.Add(e));
+            _storedEvents = new List<IDEEvent>();
+            Mock.Get(_wa).Setup(wa => wa.Add(It.IsAny<IDEEvent>())).Callback<IDEEvent>(e => _storedEvents.Add(e));
+        }
 
-            _sut.Run();
+        [Test]
+        public void HappyPath_KeepsNoTrigger()
+        {
+            var option = CompletionEventFilter.NoTriggerPointOption.Keep;
+            CreateSut(option);
 
-            Mock.Get(_io).Verify(io => io.GetFilesRecursive(@"C:\from\", "*.zip"));
-            Mock.Get(_io).Verify(io => io.ReadArchive(@"C:\from\a\a.zip"));
-            Mock.Get(_io).Verify(io => io.CreateDirectory(@"C:\to\a"));
-            Mock.Get(_io).Verify(io => io.CreateArchive(@"C:\to\a\a.zip"));
+            VerifyIo();
+            VerifyGeneralLogger();
 
-            Assert.AreEqual(1, output.Count);
-            Assert.AreEqual(e2, output[0]);
+            Assert.AreEqual(2, _storedEvents.Count);
+            Assert.AreEqual(_e2, _storedEvents[0]);
+            Assert.AreEqual(_e7, _storedEvents[1]);
             Mock.Get(_wa).Verify(wa => wa.Dispose());
 
-            Mock.Get(_logger).Verify(l => l.FoundZips(1));
+            Mock.Get(_logger).Verify(l => l.FoundZips(1, option));
+            Mock.Get(_logger).Verify(l => l.Finish(7, 3, 1, 1, 1, 2, option));
+        }
+
+        [Test]
+        public void HappyPath_RemovesNoTrigger()
+        {
+            var option = CompletionEventFilter.NoTriggerPointOption.Remove;
+            CreateSut(option);
+
+            VerifyIo();
+            VerifyGeneralLogger();
+
+            Assert.AreEqual(1, _storedEvents.Count);
+            Assert.AreEqual(_e2, _storedEvents[0]);
+            Mock.Get(_wa).Verify(wa => wa.Dispose());
+
+            Mock.Get(_logger).Verify(l => l.FoundZips(1, option));
+            Mock.Get(_logger).Verify(l => l.Finish(7, 3, 1, 1, 1, 1, option));
+        }
+
+        private void CreateSut(CompletionEventFilter.NoTriggerPointOption noTriggerPointOption)
+        {
+            _sut = new CompletionEventFilter(
+                @"C:\from\",
+                @"C:\to\",
+                noTriggerPointOption,
+                _io,
+                _logger);
+
+            _sut.Run();
+        }
+
+        private void VerifyGeneralLogger()
+        {
             Mock.Get(_logger).Verify(l => l.ProgressZip(1, 1, @"C:\from\a\a.zip", @"C:\to\a\a.zip"));
             Mock.Get(_logger).Verify(l => l.FoundEvents(7));
             Mock.Get(_logger).Verify(l => l.ProgressEvent('.'), Times.Exactly(1));
@@ -98,7 +138,14 @@ namespace KaVE.RS.SolutionAnalysis.Tests
             Mock.Get(_logger).Verify(l => l.ProgressEvent('|'), Times.Exactly(1));
             Mock.Get(_logger).Verify(l => l.ProgressEvent('o'), Times.Exactly(1));
             Mock.Get(_logger).Verify(l => l.ProgressEvent('x'), Times.Exactly(1));
-            Mock.Get(_logger).Verify(l => l.Finish(7, 3, 1, 1, 1));
+        }
+
+        private void VerifyIo()
+        {
+            Mock.Get(_io).Verify(io => io.GetFilesRecursive(@"C:\from\", "*.zip"));
+            Mock.Get(_io).Verify(io => io.ReadArchive(@"C:\from\a\a.zip"));
+            Mock.Get(_io).Verify(io => io.CreateDirectory(@"C:\to\a"));
+            Mock.Get(_io).Verify(io => io.CreateArchive(@"C:\to\a\a.zip"));
         }
 
         private IDEEvent CreateNonCompletionEvent()

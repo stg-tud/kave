@@ -44,7 +44,8 @@ namespace KaVE.RS.SolutionAnalysis
     {
         private const string DirRoot = @"C:\Users\seb\Desktop\Data\";
         private const string DirEventsAll = DirRoot + @"Events\All\";
-        private const string DirEventsCompletion = DirRoot + @"Events\OnlyCompletion\";
+        private const string DirEventsCompletion_KeepNoTrigger = DirRoot + @"Events\OnlyCompletion\";
+        private const string DirEventsCompletion_RemoveNoTrigger = DirRoot + @"Events\OnlyCompletionWithTriggerPoint\";
         private const string DirHistories = DirRoot + @"Histories\";
         private const string DirContextsAll = DirRoot + @"Contexts\";
         private const string DirContextsGithub = DirRoot + @"Contexts\Github\";
@@ -58,7 +59,7 @@ namespace KaVE.RS.SolutionAnalysis
 
         private static void Main(string[] args)
         {
-            Console.WriteLine("{0} start", DateTime.Now);
+            Console.WriteLine(@"{0} start", DateTime.Now);
 
 
             //new AnalysisStatsPrinter(dirContexts).Run();
@@ -70,16 +71,17 @@ namespace KaVE.RS.SolutionAnalysis
 
             //new EventsExportRunner(dirContexts, dirEpisodes).Run();
             //CreateCompletionEventToUsageHistoryRunner().Run();
-            CreateCompletionEventFilter().Run();
+            CreateCompletionEventFilter_Keep().Run();
 
-            Console.WriteLine("{0} finish", DateTime.Now);
+            Console.WriteLine(@"{0} finish", DateTime.Now);
         }
 
-        private static CompletionEventFilter CreateCompletionEventFilter()
+        private static CompletionEventFilter CreateCompletionEventFilter_Keep()
         {
             return new CompletionEventFilter(
                 DirEventsAll,
-                DirEventsCompletion,
+                DirEventsCompletion_KeepNoTrigger,
+                CompletionEventFilter.NoTriggerPointOption.Keep,
                 new IoUtils(),
                 new CompletionEventFilterLogger());
         }

@@ -33,17 +33,21 @@ namespace KaVE.RS.SolutionAnalysis
 
         private readonly string _dirAll;
         private readonly string _dirCompletion;
+        private readonly NoTriggerPointOption _noTriggerPointOption;
 
         private int _numTotal;
+        private int _numAdded;
         private readonly Dictionary<UseCase, int> _nums = new Dictionary<UseCase, int>();
 
         public CompletionEventFilter(string dirAll,
             string dirCompletion,
+            NoTriggerPointOption noTriggerPointOption,
             IIoUtils io,
             CompletionEventFilterLogger logger)
         {
             _dirAll = dirAll;
             _dirCompletion = dirCompletion;
+            _noTriggerPointOption = noTriggerPointOption;
             _io = io;
             _logger = logger;
 
@@ -61,7 +65,7 @@ namespace KaVE.RS.SolutionAnalysis
         public void Run()
         {
             var zips = _io.GetFilesRecursive(_dirAll, "*.zip");
-            _logger.FoundZips(zips.Length);
+            _logger.FoundZips(zips.Length, _noTriggerPointOption);
             var current = 1;
             foreach (var inZip in zips)
             {
@@ -83,8 +87,12 @@ namespace KaVE.RS.SolutionAnalysis
                         _nums[useCase]++;
 
                         _logger.ProgressEvent((char) useCase);
-                        if (useCase == UseCase.Ok)
+                        var isOk = useCase == UseCase.Ok;
+                        var shouldKeepNoTrigger = useCase == UseCase.NoTrigger &&
+                                                  _noTriggerPointOption == NoTriggerPointOption.Keep;
+                        if (isOk || shouldKeepNoTrigger)
                         {
+                            _numAdded++;
                             wa.Add(e);
                         }
                     }
@@ -96,7 +104,9 @@ namespace KaVE.RS.SolutionAnalysis
                 _nums[UseCase.Invalid],
                 _nums[UseCase.Empty],
                 _nums[UseCase.NoTrigger],
-                _nums[UseCase.Ok]);
+                _nums[UseCase.Ok],
+                _numAdded,
+                _noTriggerPointOption);
         }
 
         private string GetTargetName(string inZip)
@@ -108,9 +118,9 @@ namespace KaVE.RS.SolutionAnalysis
             return outZip;
         }
 
-        private UseCase Categorize(IDEEvent e)
+        private static UseCase Categorize(IDEEvent e)
         {
-            var ce = e as CompletionEvent;
+            var ce = e as ICompletionEvent;
             if (ce == null)
             {
                 return UseCase.OtherEvent;
@@ -145,7 +155,13 @@ namespace KaVE.RS.SolutionAnalysis
             return counter.HasCompletionExpression;
         }
 
-        private enum UseCase
+        public enum NoTriggerPointOption
+        {
+            Keep,
+            Remove
+        }
+
+        protected enum UseCase
         {
             OtherEvent = '.',
             Invalid = ':',
@@ -157,9 +173,12 @@ namespace KaVE.RS.SolutionAnalysis
 
     public class CompletionEventFilterLogger
     {
-        public virtual void FoundZips(int num)
+        private DateTime _startedAt;
+
+        public virtual void FoundZips(int num, CompletionEventFilter.NoTriggerPointOption noTriggerOption)
         {
-            Log("found {0} zips...", num);
+            _startedAt = DateTime.Now;
+            Log("processing {0} zips... (NoTrigger: {1})", num, noTriggerOption);
         }
 
         public virtual void ProgressZip(int current, int total, string inZip, string outZip)
@@ -184,34 +203,38 @@ namespace KaVE.RS.SolutionAnalysis
 
         public virtual void ProgressEvent(char c)
         {
-            if (++_currentEvent%200 == 0)
+            Append("{0}", c);
+            if (++_currentEvent%220 == 0)
             {
                 Log("");
             }
-            Append("{0}", c);
         }
 
         public virtual void Finish(int numEvents,
             int numInvalid,
             int numEmpty,
             int numNoTrigger,
-            int numOk)
+            int numOk,
+            int numAdded,
+            CompletionEventFilter.NoTriggerPointOption option)
         {
             var numCompletionEvents = numInvalid + numEmpty + numNoTrigger + numOk;
             Log("");
+            Log("finished (started at: {0})", _startedAt);
             Log("");
-            Log("we found {0} CompletionEvents in the {0} IDEEvents", numCompletionEvents, numEvents);
-            Log("-{0} invalid (e.g., missing timestamp, in .xml files, etc.)", numInvalid);
-            Log("-{0} empty SSTs (e.g., no method declarations)", numEmpty);
-            Log("-{0} contain no trigger information", numNoTrigger);
-            Log("= {0} are ok and can be used", numOk);
+            Log("we found {0} CompletionEvents in the {1} IDEEvents", numCompletionEvents, numEvents);
+            Log("{0} are invalid (e.g., missing timestamp, not in .cs files, etc.)", numInvalid);
+            Log("{0} contain empty SSTs (e.g., no method declarations)", numEmpty);
+            Log("{0} contain no trigger information (NoTrigger: {1})", numNoTrigger, option);
+            Log("{0} are 'ok'", numOk);
+            Log("--> {0} are kept for further processing", numAdded);
             Log("");
         }
 
         private void Log(string msg, params object[] args)
         {
             Console.Write('\n');
-            Console.Write(@"{0} | ", DateTime.Now);
+            Console.Write(@"{0:yyMMddHHmmss} ", DateTime.Now);
             Console.Write(msg, args);
         }
 
