@@ -161,6 +161,7 @@
     <Compile Include="Model\SSTs\Impl\Statements\UnknownStatementTest.cs" />
     <Compile Include="Model\SSTs\Impl\Visitor\AbstractNodeVisitorTestSuite\Context.cs" />
     <Compile Include="Model\SSTs\Impl\Visitor\AbstractNodeVisitorTestSuite\ContextAndReturn.cs" />
+    <Compile Include="Model\SSTs\Impl\Visitor\HasCompletionExpressionVisitorTest.cs" />
     <Compile Include="Model\SSTs\Impl\Visitor\ToStringVisitorTest.cs" />
     <Compile Include="Model\TypeShapes\MethodHierarchyTest.cs" />
     <Compile Include="Model\TypeShapes\TypeHierarchyTest.cs" />
