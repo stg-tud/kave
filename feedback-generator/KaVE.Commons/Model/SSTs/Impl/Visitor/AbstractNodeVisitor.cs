@@ -22,284 +22,546 @@ using KaVE.Commons.Model.SSTs.Expressions.Simple;
 using KaVE.Commons.Model.SSTs.References;
 using KaVE.Commons.Model.SSTs.Statements;
 using KaVE.Commons.Model.SSTs.Visitor;
+using KaVE.Commons.Utils.Collections;
 
 namespace KaVE.Commons.Model.SSTs.Impl.Visitor
 {
-    public class AbstractNodeVisitor<TContext> : ISSTNodeVisitor<TContext>
+    public abstract class AbstractNodeVisitor<TContext> : ISSTNodeVisitor<TContext>
     {
-        public virtual void Visit(ISST sst, TContext context) {}
+        public virtual void Visit(ISST sst, TContext context)
+        {
+            foreach (var d in sst.Delegates)
+            {
+                d.Accept(this, context);
+            }
+            foreach (var e in sst.Events)
+            {
+                e.Accept(this, context);
+            }
+            foreach (var f in sst.Fields)
+            {
+                f.Accept(this, context);
+            }
+            foreach (var m in sst.Methods)
+            {
+                m.Accept(this, context);
+            }
+            foreach (var p in sst.Properties)
+            {
+                p.Accept(this, context);
+            }
+        }
 
-        // declarations
+        private void Visit(IKaVEList<IStatement> stmts, TContext context)
+        {
+            foreach (var stmt in stmts)
+            {
+                stmt.Accept(this, context);
+            }
+        }
+
         public virtual void Visit(IDelegateDeclaration stmt, TContext context) {}
-        public virtual void Visit(IEventDeclaration stmt, TContext context) {}
-        public virtual void Visit(IFieldDeclaration stmt, TContext context) {}
-        public virtual void Visit(IMethodDeclaration stmt, TContext context) {}
-        public virtual void Visit(IPropertyDeclaration stmt, TContext context) {}
-        public virtual void Visit(IVariableDeclaration stmt, TContext context) {}
 
-        // statements
-        public virtual void Visit(IAssignment stmt, TContext context) {}
+        public virtual void Visit(IEventDeclaration stmt, TContext context) {}
+
+        public virtual void Visit(IFieldDeclaration stmt, TContext context) {}
+
+        public virtual void Visit(IMethodDeclaration stmt, TContext context)
+        {
+            Visit(stmt.Body, context);
+        }
+
+        public virtual void Visit(IPropertyDeclaration stmt, TContext context)
+        {
+            Visit(stmt.Get, context);
+            Visit(stmt.Set, context);
+        }
+
+        public virtual void Visit(IVariableDeclaration stmt, TContext context)
+        {
+            stmt.Reference.Accept(this, context);
+        }
+
+        public virtual void Visit(IAssignment stmt, TContext context)
+        {
+            stmt.Reference.Accept(this, context);
+            stmt.Expression.Accept(this, context);
+        }
+
         public virtual void Visit(IBreakStatement stmt, TContext context) {}
+
         public virtual void Visit(IContinueStatement stmt, TContext context) {}
-        public virtual void Visit(IExpressionStatement stmt, TContext context) {}
+
+        public virtual void Visit(IExpressionStatement stmt, TContext context)
+        {
+            stmt.Expression.Accept(this, context);
+        }
+
         public virtual void Visit(IGotoStatement stmt, TContext context) {}
-        public virtual void Visit(ILabelledStatement stmt, TContext context) {}
-        public virtual void Visit(IReturnStatement stmt, TContext context) {}
+
+        public virtual void Visit(ILabelledStatement stmt, TContext context)
+        {
+            stmt.Statement.Accept(this, context);
+        }
+
+        public virtual void Visit(IReturnStatement stmt, TContext context)
+        {
+            stmt.Expression.Accept(this, context);
+        }
+
         public virtual void Visit(IThrowStatement stmt, TContext context) {}
 
-        // blocks
-        public virtual void Visit(IDoLoop block, TContext context) {}
-        public virtual void Visit(IForEachLoop block, TContext context) {}
-        public virtual void Visit(IForLoop block, TContext context) {}
-        public virtual void Visit(IIfElseBlock block, TContext context) {}
-        public virtual void Visit(ILockBlock stmt, TContext context) {}
-        public virtual void Visit(ISwitchBlock block, TContext context) {}
-        public virtual void Visit(ITryBlock block, TContext context) {}
-        public virtual void Visit(IUncheckedBlock block, TContext context) {}
+        public virtual void Visit(IDoLoop block, TContext context)
+        {
+            block.Condition.Accept(this, context);
+            Visit(block.Body, context);
+        }
+
+        public virtual void Visit(IForEachLoop block, TContext context)
+        {
+            block.Declaration.Accept(this, context);
+            block.LoopedReference.Accept(this, context);
+            Visit(block.Body, context);
+        }
+
+        public virtual void Visit(IForLoop block, TContext context)
+        {
+            Visit(block.Init, context);
+            block.Condition.Accept(this, context);
+            Visit(block.Step, context);
+            Visit(block.Body, context);
+        }
+
+        public virtual void Visit(IIfElseBlock block, TContext context)
+        {
+            block.Condition.Accept(this, context);
+            Visit(block.Then, context);
+            Visit(block.Else, context);
+        }
+
+        public virtual void Visit(ILockBlock block, TContext context)
+        {
+            block.Reference.Accept(this, context);
+            Visit(block.Body, context);
+        }
+
+        public virtual void Visit(ISwitchBlock block, TContext context)
+        {
+            block.Reference.Accept(this, context);
+            foreach (var caseBlock in block.Sections)
+            {
+                caseBlock.Label.Accept(this, context);
+                Visit(caseBlock.Body, context);
+            }
+            Visit(block.DefaultSection, context);
+        }
+
+        public virtual void Visit(ITryBlock block, TContext context)
+        {
+            Visit(block.Body, context);
+            foreach (var catchBlock in block.CatchBlocks)
+            {
+                Visit(catchBlock.Body, context);
+            }
+            Visit(block.Finally, context);
+        }
+
+        public virtual void Visit(IUncheckedBlock block, TContext context)
+        {
+            Visit(block.Body, context);
+        }
+
         public virtual void Visit(IUnsafeBlock block, TContext context) {}
-        public virtual void Visit(IUsingBlock block, TContext context) {}
-        public virtual void Visit(IWhileLoop block, TContext context) {}
 
-        // Expressions
+        public virtual void Visit(IUsingBlock block, TContext context)
+        {
+            block.Reference.Accept(this, context);
+            Visit(block.Body, context);
+        }
+
+        public virtual void Visit(IWhileLoop block, TContext context)
+        {
+            block.Condition.Accept(this, context);
+            Visit(block.Body, context);
+        }
+
         public virtual void Visit(ICompletionExpression entity, TContext context) {}
-        public virtual void Visit(IComposedExpression expr, TContext context) {}
-        public virtual void Visit(IIfElseExpression expr, TContext context) {}
-        public virtual void Visit(IInvocationExpression entity, TContext context) {}
-        public virtual void Visit(ILambdaExpression expr, TContext context) {}
-        public virtual void Visit(ILoopHeaderBlockExpression expr, TContext context) {}
-        public virtual void Visit(IConstantValueExpression expr, TContext context) {}
-        public virtual void Visit(INullExpression expr, TContext context) {}
-        public virtual void Visit(IReferenceExpression expr, TContext context) {}
 
-        // References
-        public virtual void Visit(IEventReference eventRef, TContext context) {}
-        public virtual void Visit(IFieldReference fieldRef, TContext context) {}
-        public virtual void Visit(IMethodReference methodRef, TContext context) {}
-        public virtual void Visit(IPropertyReference methodRef, TContext context) {}
+        public virtual void Visit(IComposedExpression expr, TContext context)
+        {
+            foreach (var r in expr.References)
+            {
+                r.Accept(this, context);
+            }
+        }
+
+        public virtual void Visit(IIfElseExpression expr, TContext context)
+        {
+            expr.Condition.Accept(this, context);
+            expr.ThenExpression.Accept(this, context);
+            expr.ElseExpression.Accept(this, context);
+        }
+
+        public virtual void Visit(IInvocationExpression entity, TContext context)
+        {
+            entity.Reference.Accept(this, context);
+            foreach (var p in entity.Parameters)
+            {
+                p.Accept(this, context);
+            }
+        }
+
+        public virtual void Visit(ILambdaExpression expr, TContext context)
+        {
+            Visit(expr.Body, context);
+        }
+
+        public virtual void Visit(ILoopHeaderBlockExpression expr, TContext context)
+        {
+            Visit(expr.Body, context);
+        }
+
+        public virtual void Visit(IConstantValueExpression expr, TContext context) {}
+
+        public virtual void Visit(INullExpression expr, TContext context) {}
+
+        public virtual void Visit(IReferenceExpression expr, TContext context)
+        {
+            expr.Reference.Accept(this, context);
+        }
+
+        public virtual void Visit(IEventReference eventRef, TContext context)
+        {
+            eventRef.Reference.Accept(this, context);
+        }
+
+        public virtual void Visit(IFieldReference fieldRef, TContext context)
+        {
+            fieldRef.Reference.Accept(this, context);
+        }
+
+        public virtual void Visit(IMethodReference methodRef, TContext context)
+        {
+            methodRef.Reference.Accept(this, context);
+        }
+
+        public virtual void Visit(IPropertyReference propertyRef, TContext context)
+        {
+            propertyRef.Reference.Accept(this, context);
+        }
+
         public virtual void Visit(IVariableReference varRef, TContext context) {}
 
-        // References
         public virtual void Visit(IUnknownReference unknownRef, TContext context) {}
+
         public virtual void Visit(IUnknownExpression unknownExpr, TContext context) {}
+
         public virtual void Visit(IUnknownStatement unknownStmt, TContext context) {}
     }
 
-    public class AbstractNodeVisitor<TContext, TReturn> : ISSTNodeVisitor<TContext, TReturn>
-        where TReturn : class
+    public abstract class AbstractNodeVisitor<TContext, TReturn> : ISSTNodeVisitor<TContext, TReturn>
     {
         public virtual TReturn Visit(ISST sst, TContext context)
         {
-            return null;
+            foreach (var d in sst.Delegates)
+            {
+                d.Accept(this, context);
+            }
+            foreach (var e in sst.Events)
+            {
+                e.Accept(this, context);
+            }
+            foreach (var f in sst.Fields)
+            {
+                f.Accept(this, context);
+            }
+            foreach (var m in sst.Methods)
+            {
+                m.Accept(this, context);
+            }
+            foreach (var p in sst.Properties)
+            {
+                p.Accept(this, context);
+            }
+            return default(TReturn);
+        }
+
+        private void Visit(IKaVEList<IStatement> stmts, TContext context)
+        {
+            foreach (var stmt in stmts)
+            {
+                stmt.Accept(this, context);
+            }
         }
 
         public virtual TReturn Visit(IDelegateDeclaration stmt, TContext context)
         {
-            return null;
+            return default(TReturn);
         }
 
         public virtual TReturn Visit(IEventDeclaration stmt, TContext context)
         {
-            return null;
+            return default(TReturn);
         }
 
         public virtual TReturn Visit(IFieldDeclaration stmt, TContext context)
         {
-            return null;
+            return default(TReturn);
         }
 
         public virtual TReturn Visit(IMethodDeclaration stmt, TContext context)
         {
-            return null;
+            Visit(stmt.Body, context);
+            return default(TReturn);
         }
 
         public virtual TReturn Visit(IPropertyDeclaration stmt, TContext context)
         {
-            return null;
+            Visit(stmt.Get, context);
+            Visit(stmt.Set, context);
+            return default(TReturn);
         }
 
         public virtual TReturn Visit(IVariableDeclaration stmt, TContext context)
         {
-            return null;
+            stmt.Reference.Accept(this, context);
+            return default(TReturn);
         }
 
         public virtual TReturn Visit(IAssignment stmt, TContext context)
         {
-            return null;
+            stmt.Reference.Accept(this, context);
+            stmt.Expression.Accept(this, context);
+            return default(TReturn);
         }
 
         public virtual TReturn Visit(IBreakStatement stmt, TContext context)
         {
-            return null;
+            return default(TReturn);
         }
 
         public virtual TReturn Visit(IContinueStatement stmt, TContext context)
         {
-            return null;
+            return default(TReturn);
         }
 
         public virtual TReturn Visit(IExpressionStatement stmt, TContext context)
         {
-            return null;
+            stmt.Expression.Accept(this, context);
+            return default(TReturn);
         }
 
         public virtual TReturn Visit(IGotoStatement stmt, TContext context)
         {
-            return null;
+            return default(TReturn);
         }
 
         public virtual TReturn Visit(ILabelledStatement stmt, TContext context)
         {
-            return null;
+            stmt.Statement.Accept(this, context);
+            return default(TReturn);
         }
 
         public virtual TReturn Visit(IReturnStatement stmt, TContext context)
         {
-            return null;
+            stmt.Expression.Accept(this, context);
+            return default(TReturn);
         }
 
         public virtual TReturn Visit(IThrowStatement stmt, TContext context)
         {
-            return null;
+            return default(TReturn);
         }
 
         public virtual TReturn Visit(IDoLoop block, TContext context)
         {
-            return null;
+            block.Condition.Accept(this, context);
+            Visit(block.Body, context);
+            return default(TReturn);
         }
 
         public virtual TReturn Visit(IForEachLoop block, TContext context)
         {
-            return null;
+            block.Declaration.Accept(this, context);
+            block.LoopedReference.Accept(this, context);
+            Visit(block.Body, context);
+            return default(TReturn);
         }
 
         public virtual TReturn Visit(IForLoop block, TContext context)
         {
-            return null;
+            Visit(block.Init, context);
+            block.Condition.Accept(this, context);
+            Visit(block.Step, context);
+            Visit(block.Body, context);
+            return default(TReturn);
         }
 
         public virtual TReturn Visit(IIfElseBlock block, TContext context)
         {
-            return null;
+            block.Condition.Accept(this, context);
+            Visit(block.Then, context);
+            Visit(block.Else, context);
+            return default(TReturn);
         }
 
-        public virtual TReturn Visit(ILockBlock stmt, TContext context)
+        public virtual TReturn Visit(ILockBlock block, TContext context)
         {
-            return null;
+            block.Reference.Accept(this, context);
+            Visit(block.Body, context);
+            return default(TReturn);
         }
 
         public virtual TReturn Visit(ISwitchBlock block, TContext context)
         {
-            return null;
+            block.Reference.Accept(this, context);
+            foreach (var caseBlock in block.Sections)
+            {
+                caseBlock.Label.Accept(this, context);
+                Visit(caseBlock.Body, context);
+            }
+            Visit(block.DefaultSection, context);
+            return default(TReturn);
         }
 
         public virtual TReturn Visit(ITryBlock block, TContext context)
         {
-            return null;
+            Visit(block.Body, context);
+            foreach (var catchBlock in block.CatchBlocks)
+            {
+                Visit(catchBlock.Body, context);
+            }
+            Visit(block.Finally, context);
+            return default(TReturn);
         }
 
         public virtual TReturn Visit(IUncheckedBlock block, TContext context)
         {
-            return null;
+            Visit(block.Body, context);
+            return default(TReturn);
         }
 
         public virtual TReturn Visit(IUnsafeBlock block, TContext context)
         {
-            return null;
+            return default(TReturn);
         }
 
         public virtual TReturn Visit(IUsingBlock block, TContext context)
         {
-            return null;
+            block.Reference.Accept(this, context);
+            Visit(block.Body, context);
+            return default(TReturn);
         }
 
         public virtual TReturn Visit(IWhileLoop block, TContext context)
         {
-            return null;
+            block.Condition.Accept(this, context);
+            Visit(block.Body, context);
+            return default(TReturn);
         }
 
         public virtual TReturn Visit(ICompletionExpression entity, TContext context)
         {
-            return null;
+            return default(TReturn);
         }
 
         public virtual TReturn Visit(IComposedExpression expr, TContext context)
         {
-            return null;
+            foreach (var r in expr.References)
+            {
+                r.Accept(this, context);
+            }
+            return default(TReturn);
         }
 
         public virtual TReturn Visit(IIfElseExpression expr, TContext context)
         {
-            return null;
+            expr.Condition.Accept(this, context);
+            expr.ThenExpression.Accept(this, context);
+            expr.ElseExpression.Accept(this, context);
+            return default(TReturn);
         }
 
         public virtual TReturn Visit(IInvocationExpression entity, TContext context)
         {
-            return null;
+            entity.Reference.Accept(this, context);
+            foreach (var p in entity.Parameters)
+            {
+                p.Accept(this, context);
+            }
+            return default(TReturn);
         }
 
         public virtual TReturn Visit(ILambdaExpression expr, TContext context)
         {
-            return null;
+            Visit(expr.Body, context);
+            return default(TReturn);
         }
 
         public virtual TReturn Visit(ILoopHeaderBlockExpression expr, TContext context)
         {
-            return null;
+            Visit(expr.Body, context);
+            return default(TReturn);
         }
 
         public virtual TReturn Visit(IConstantValueExpression expr, TContext context)
         {
-            return null;
+            return default(TReturn);
         }
 
         public virtual TReturn Visit(INullExpression expr, TContext context)
         {
-            return null;
+            return default(TReturn);
         }
 
         public virtual TReturn Visit(IReferenceExpression expr, TContext context)
         {
-            return null;
+            expr.Reference.Accept(this, context);
+            return default(TReturn);
         }
 
         public virtual TReturn Visit(IEventReference eventRef, TContext context)
         {
-            return null;
+            eventRef.Reference.Accept(this, context);
+            return default(TReturn);
         }
 
         public virtual TReturn Visit(IFieldReference fieldRef, TContext context)
         {
-            return null;
+            fieldRef.Reference.Accept(this, context);
+            return default(TReturn);
         }
 
         public virtual TReturn Visit(IMethodReference methodRef, TContext context)
         {
-            return null;
+            methodRef.Reference.Accept(this, context);
+            return default(TReturn);
         }
 
-        public virtual TReturn Visit(IPropertyReference methodRef, TContext context)
+        public virtual TReturn Visit(IPropertyReference propertyRef, TContext context)
         {
-            return null;
+            propertyRef.Reference.Accept(this, context);
+            return default(TReturn);
         }
 
         public virtual TReturn Visit(IVariableReference varRef, TContext context)
         {
-            return null;
+            return default(TReturn);
         }
 
         public virtual TReturn Visit(IUnknownReference unknownRef, TContext context)
         {
-            return null;
+            return default(TReturn);
         }
 
         public virtual TReturn Visit(IUnknownExpression unknownExpr, TContext context)
         {
-            return null;
+            return default(TReturn);
         }
 
         public virtual TReturn Visit(IUnknownStatement unknownStmt, TContext context)
         {
-            return null;
+            return default(TReturn);
         }
     }
 }

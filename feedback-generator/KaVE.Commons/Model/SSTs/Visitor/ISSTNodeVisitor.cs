@@ -29,12 +29,12 @@ namespace KaVE.Commons.Model.SSTs.Visitor
         void Visit(ISST sst, TContext context);
 
         // declarations
-        void Visit(IDelegateDeclaration stmt, TContext context);
-        void Visit(IEventDeclaration stmt, TContext context);
-        void Visit(IFieldDeclaration stmt, TContext context);
-        void Visit(IMethodDeclaration stmt, TContext context);
-        void Visit(IPropertyDeclaration stmt, TContext context);
-        void Visit(IVariableDeclaration stmt, TContext context);
+        void Visit(IDelegateDeclaration decl, TContext context);
+        void Visit(IEventDeclaration decl, TContext context);
+        void Visit(IFieldDeclaration decl, TContext context);
+        void Visit(IMethodDeclaration decl, TContext context);
+        void Visit(IPropertyDeclaration decl, TContext context);
+        void Visit(IVariableDeclaration decl, TContext context);
 
         // statements
         void Visit(IAssignment stmt, TContext context);
@@ -51,7 +51,7 @@ namespace KaVE.Commons.Model.SSTs.Visitor
         void Visit(IForEachLoop block, TContext context);
         void Visit(IForLoop block, TContext context);
         void Visit(IIfElseBlock block, TContext context);
-        void Visit(ILockBlock stmt, TContext context);
+        void Visit(ILockBlock block, TContext context);
         void Visit(ISwitchBlock block, TContext context);
         void Visit(ITryBlock block, TContext context);
         void Visit(IUncheckedBlock block, TContext context);
@@ -60,10 +60,10 @@ namespace KaVE.Commons.Model.SSTs.Visitor
         void Visit(IWhileLoop block, TContext context);
 
         // Expressions
-        void Visit(ICompletionExpression entity, TContext context);
+        void Visit(ICompletionExpression expr, TContext context);
         void Visit(IComposedExpression expr, TContext context);
         void Visit(IIfElseExpression expr, TContext context);
-        void Visit(IInvocationExpression entity, TContext context);
+        void Visit(IInvocationExpression expr, TContext context);
         void Visit(ILambdaExpression expr, TContext context);
         void Visit(ILoopHeaderBlockExpression expr, TContext context);
         void Visit(IConstantValueExpression expr, TContext context);
@@ -74,7 +74,7 @@ namespace KaVE.Commons.Model.SSTs.Visitor
         void Visit(IEventReference eventRef, TContext context);
         void Visit(IFieldReference fieldRef, TContext context);
         void Visit(IMethodReference methodRef, TContext context);
-        void Visit(IPropertyReference methodRef, TContext context);
+        void Visit(IPropertyReference propertyRef, TContext context);
         void Visit(IVariableReference varRef, TContext context);
 
         // unknowns
@@ -88,12 +88,12 @@ namespace KaVE.Commons.Model.SSTs.Visitor
         TReturn Visit(ISST sst, TContext context);
 
         // declarations
-        TReturn Visit(IDelegateDeclaration stmt, TContext context);
-        TReturn Visit(IEventDeclaration stmt, TContext context);
-        TReturn Visit(IFieldDeclaration stmt, TContext context);
-        TReturn Visit(IMethodDeclaration stmt, TContext context);
-        TReturn Visit(IPropertyDeclaration stmt, TContext context);
-        TReturn Visit(IVariableDeclaration stmt, TContext context);
+        TReturn Visit(IDelegateDeclaration decl, TContext context);
+        TReturn Visit(IEventDeclaration decl, TContext context);
+        TReturn Visit(IFieldDeclaration decl, TContext context);
+        TReturn Visit(IMethodDeclaration decl, TContext context);
+        TReturn Visit(IPropertyDeclaration decl, TContext context);
+        TReturn Visit(IVariableDeclaration decl, TContext context);
 
         // statements
         TReturn Visit(IAssignment stmt, TContext context);
@@ -110,7 +110,7 @@ namespace KaVE.Commons.Model.SSTs.Visitor
         TReturn Visit(IForEachLoop block, TContext context);
         TReturn Visit(IForLoop block, TContext context);
         TReturn Visit(IIfElseBlock block, TContext context);
-        TReturn Visit(ILockBlock stmt, TContext context);
+        TReturn Visit(ILockBlock block, TContext context);
         TReturn Visit(ISwitchBlock block, TContext context);
         TReturn Visit(ITryBlock block, TContext context);
         TReturn Visit(IUncheckedBlock block, TContext context);
@@ -119,10 +119,10 @@ namespace KaVE.Commons.Model.SSTs.Visitor
         TReturn Visit(IWhileLoop block, TContext context);
 
         // Expressions
-        TReturn Visit(ICompletionExpression entity, TContext context);
+        TReturn Visit(ICompletionExpression expr, TContext context);
         TReturn Visit(IComposedExpression expr, TContext context);
         TReturn Visit(IIfElseExpression expr, TContext context);
-        TReturn Visit(IInvocationExpression entity, TContext context);
+        TReturn Visit(IInvocationExpression expr, TContext context);
         TReturn Visit(ILambdaExpression expr, TContext context);
         TReturn Visit(ILoopHeaderBlockExpression expr, TContext context);
         TReturn Visit(IConstantValueExpression expr, TContext context);
@@ -133,7 +133,7 @@ namespace KaVE.Commons.Model.SSTs.Visitor
         TReturn Visit(IEventReference eventRef, TContext context);
         TReturn Visit(IFieldReference fieldRef, TContext context);
         TReturn Visit(IMethodReference methodRef, TContext context);
-        TReturn Visit(IPropertyReference methodRef, TContext context);
+        TReturn Visit(IPropertyReference propertyRef, TContext context);
         TReturn Visit(IVariableReference varRef, TContext context);
 
         // unknowns
