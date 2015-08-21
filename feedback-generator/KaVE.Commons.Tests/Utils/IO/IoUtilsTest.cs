@@ -17,12 +17,13 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net.Http;
 using System.Text;
 using Ionic.Zip;
 using KaVE.Commons.Utils;
+using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.IO;
+using KaVE.Commons.Utils.IO.Archives;
 using Moq;
 using NUnit.Framework;
 
@@ -32,11 +33,24 @@ namespace KaVE.Commons.Tests.Utils.IO
     {
         private const string Extension = "ext";
         private IoUtils _sut;
+        private string _testRoot;
 
         [SetUp]
         public void SetUp()
         {
+            _testRoot = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            Directory.CreateDirectory(_testRoot);
+
             _sut = new IoUtils();
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            if (Directory.Exists(_testRoot))
+            {
+                Directory.Delete(_testRoot, true);
+            }
         }
 
         [Test, ExpectedException(typeof (NotImplementedException))]
@@ -251,23 +265,6 @@ namespace KaVE.Commons.Tests.Utils.IO
         }
 
         [Test]
-        public void ShouldFindAllFilesRecursively()
-        {
-            var dir = IoTestHelper.GetTempDirectoryName();
-            File.Create(Path.Combine(dir, "a")).Close();
-            File.Create(Path.Combine(dir, "b")).Close();
-
-            Directory.CreateDirectory(Path.Combine(dir, "b"));
-
-            File.Create(Path.Combine(dir, "b", "b")).Close();
-            var expected = new List<string> {"ABC", "DEF", "XYZ"};
-            expected.ForEach(f => { using (File.Create(Path.Combine(dir, f))) {} });
-
-            var actual = _sut.EnumerateFiles(dir).Select(Path.GetFileName);
-            Assert.AreEqual(expected, actual);
-        }
-
-        [Test]
         public void ShouldWriteBytes()
         {
             var file = Path.GetTempFileName();
@@ -282,113 +279,129 @@ namespace KaVE.Commons.Tests.Utils.IO
         [Test]
         public void DirectoryExists()
         {
-            var tempFolder = Path.GetTempPath();
-            var nonExistingFolder = Path.Combine(tempFolder, "TempFolder_For_IOUtilsTest.DirectoryExists");
-            Assert.False(Directory.Exists(nonExistingFolder));
-            try
-            {
-                Assert.False(_sut.DirectoryExists(nonExistingFolder));
+            Assert.True(_sut.DirectoryExists(_testRoot));
 
-                Directory.CreateDirectory(nonExistingFolder);
-                Assert.True(Directory.Exists(nonExistingFolder));
-
-                Assert.True(_sut.DirectoryExists(nonExistingFolder));
-            }
-            finally
-            {
-                Directory.Delete(nonExistingFolder);
-            }
+            Directory.Delete(_testRoot, true);
+            Assert.False(_sut.DirectoryExists(_testRoot));
         }
 
         [Test]
         public void GetFiles()
         {
-            var folder = Path.Combine(Path.GetTempPath(), "TempFolder_For_IOUtilsTest.GetFiles");
-            try
-            {
-                Assert.False(Directory.Exists(folder), "test folder is preexisting");
+            Assert.AreEqual(new string[0], _sut.GetFiles(_testRoot, "*"));
 
-                Directory.CreateDirectory(folder);
-                Assert.AreEqual(new string[0], _sut.GetFiles(folder, "*"));
+            File.Create(Path.Combine(_testRoot, "a")).Close();
+            File.Create(Path.Combine(_testRoot, "b")).Close();
+            Directory.CreateDirectory(Path.Combine(_testRoot, "C"));
 
-                File.Create(Path.Combine(folder, "a")).Close();
-                File.Create(Path.Combine(folder, "b")).Close();
-                Directory.CreateDirectory(Path.Combine(folder, "C"));
-
-                var actuals = _sut.GetFiles(folder, "*");
-                var expecteds = new[] {Path.Combine(folder, "a"), Path.Combine(folder, "b")};
-                Assert.AreEqual(expecteds, actuals);
-            }
-            finally
-            {
-                Directory.Delete(folder, true);
-            }
+            var actuals = _sut.GetFiles(_testRoot, "*");
+            var expecteds = new[] {Path.Combine(_testRoot, "a"), Path.Combine(_testRoot, "b")};
+            Assert.AreEqual(expecteds, actuals);
         }
 
         [Test]
         public void GetFilesRecursive()
         {
-            var folder = Path.Combine(Path.GetTempPath(), "TempFolder_For_IOUtilsTest.GetFilesRecursive");
-            try
-            {
-                Assert.False(Directory.Exists(folder), "test folder is preexisting");
+            Assert.AreEqual(new string[0], _sut.GetFilesRecursive(_testRoot, "*"));
 
-                Directory.CreateDirectory(folder);
-                Assert.AreEqual(new string[0], _sut.GetFilesRecursive(folder, "*"));
+            File.Create(Path.Combine(_testRoot, "a.txt")).Close();
+            File.Create(Path.Combine(_testRoot, "a.zip")).Close();
 
-                File.Create(Path.Combine(folder, "a.txt")).Close();
-                File.Create(Path.Combine(folder, "a.zip")).Close();
+            Directory.CreateDirectory(Path.Combine(_testRoot, "b"));
+            File.Create(Path.Combine(_testRoot, "b", "b.zip")).Close();
 
-                Directory.CreateDirectory(Path.Combine(folder, "b"));
-                File.Create(Path.Combine(folder, "b", "b.zip")).Close();
+            Directory.CreateDirectory(Path.Combine(_testRoot, "c"));
 
-                Directory.CreateDirectory(Path.Combine(folder, "c"));
-
-                var actuals = _sut.GetFilesRecursive(folder, "*.zip");
-                var expecteds = new[] {Path.Combine(folder, "a.zip"), Path.Combine(folder, "b", "b.zip")};
-                Assert.AreEqual(expecteds, actuals);
-            }
-            finally
-            {
-                Directory.Delete(folder, true);
-            }
+            var actuals = _sut.GetFilesRecursive(_testRoot, "*.zip");
+            var expecteds = new[] {Path.Combine(_testRoot, "a.zip"), Path.Combine(_testRoot, "b", "b.zip")};
+            Assert.AreEqual(expecteds, actuals);
         }
 
         [Test]
         public void UnzipToTempFolder()
         {
-            var temp = Path.GetTempPath();
-            var zipFileName = Path.Combine(temp, "ZipFile_for_IoUtilsTest.UnzipToTempFolder.zip");
+            var zipFileName = Path.Combine(_testRoot, "IoUtilsTest.UnzipToTempFolder.zip");
+
+            var expectedA = "a" + new Random().Next();
+            var expectedB = "b" + new Random().Next();
+
+            CreateZipFileWithContents(zipFileName, expectedA, expectedB);
+
+            var unzipFolder = _sut.UnzipToTempFolder(zipFileName);
 
             try
             {
-                var expectedA = "a" + new Random().Next();
-                var expectedB = "b" + new Random().Next();
+                var isExtractedInTempFolder = unzipFolder.StartsWith(Path.GetTempPath());
+                Assert.True(isExtractedInTempFolder);
 
-                CreateZipFileWithContents(zipFileName, expectedA, expectedB);
+                var actualA = AssertExistsAndRead(unzipFolder, "file0.txt");
+                Assert.AreEqual(expectedA, actualA);
 
-                var unzipFolder = _sut.UnzipToTempFolder(zipFileName);
-
-                try
-                {
-                    var isExtractedInTempFolder = unzipFolder.StartsWith(temp);
-                    Assert.True(isExtractedInTempFolder);
-
-                    var actualA = AssertExistsAndRead(unzipFolder, "file0.txt");
-                    Assert.AreEqual(expectedA, actualA);
-
-                    var actualB = AssertExistsAndRead(unzipFolder, "file1.txt");
-                    Assert.AreEqual(expectedA, actualA);
-                }
-                finally
-                {
-                    Directory.Delete(unzipFolder, true);
-                }
+                var actualB = AssertExistsAndRead(unzipFolder, "file1.txt");
+                Assert.AreEqual(expectedA, actualA);
             }
             finally
             {
-                File.Delete(zipFileName);
+                Directory.Delete(unzipFolder, true);
             }
+        }
+
+        [Test]
+        public void ReadArchive_HappyPath()
+        {
+            var zipFileName = Path.Combine(_testRoot, "a.zip");
+            var expecteds = new List<string> {"a", "b"};
+            using (var wa = new WritingArchive(zipFileName))
+            {
+                foreach (var c in expecteds)
+                {
+                    wa.Add(c);
+                }
+            }
+            var ra = _sut.ReadArchive(zipFileName);
+            var actuals = ra.GetAll<string>();
+            CollectionAssert.AreEquivalent(expecteds, actuals);
+        }
+
+        [Test, ExpectedException(typeof (AssertException))]
+        public void ReadArchive_NonExisting()
+        {
+            var zipFileName = Path.Combine(_testRoot, "NonExisting.zip");
+            _sut.ReadArchive(zipFileName);
+        }
+
+        [Test]
+        public void CreateArchive_HappyPath()
+        {
+            var expecteds = new List<string> {"a", "b"};
+
+            var zipFileName = Path.Combine(_testRoot, "a.zip");
+            using (var wa = _sut.CreateArchive(zipFileName))
+            {
+                foreach (var c in expecteds)
+                {
+                    wa.Add(c);
+                }
+            }
+
+            Assert.True(File.Exists(zipFileName));
+            var actuals = new ReadingArchive(zipFileName).GetAll<string>();
+            CollectionAssert.AreEquivalent(expecteds, actuals);
+        }
+
+        [Test, ExpectedException(typeof (AssertException))]
+        public void CreateArchive_FileExists()
+        {
+            var zipFileName = Path.Combine(_testRoot, "Existing.zip");
+            File.Create(zipFileName).Close();
+            _sut.CreateArchive(zipFileName);
+        }
+
+        [Test, ExpectedException(typeof (AssertException))]
+        public void CreateArchive_NonExistingParent()
+        {
+            var zipFileName = Path.Combine(_testRoot, "NonExistingParent", "a.zip");
+            _sut.CreateArchive(zipFileName);
         }
 
         private object AssertExistsAndRead(string folder, string fileName)

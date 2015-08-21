@@ -19,6 +19,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using Ionic.Zip;
+using KaVE.Commons.Utils.Assertion;
+using KaVE.Commons.Utils.IO.Archives;
 
 namespace KaVE.Commons.Utils.IO
 {
@@ -147,6 +149,19 @@ namespace KaVE.Commons.Utils.IO
                 zf.ExtractAll(outFolder);
             }
             return outFolder;
+        }
+
+        public IReadingArchive ReadArchive(string fileName)
+        {
+            Asserts.That(File.Exists(fileName));
+            return new ReadingArchive(fileName);
+        }
+
+        public IWritingArchive CreateArchive(string fileName)
+        {
+            Asserts.Not(File.Exists(fileName));
+            Asserts.That(Directory.GetParent(fileName).Exists);
+            return new WritingArchive(fileName);
         }
     }
 }

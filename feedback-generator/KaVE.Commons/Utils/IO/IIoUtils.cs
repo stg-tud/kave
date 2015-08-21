@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
+using KaVE.Commons.Utils.IO.Archives;
 using KaVE.JetBrains.Annotations;
 
 namespace KaVE.Commons.Utils.IO
@@ -57,5 +58,8 @@ namespace KaVE.Commons.Utils.IO
         ///     unzips the given file to a temporary folder and returns its path
         /// </summary>
         string UnzipToTempFolder(string input);
+
+        IReadingArchive ReadArchive(string fileName);
+        IWritingArchive CreateArchive(string fileName);
     }
 }
