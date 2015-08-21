@@ -25,6 +25,7 @@ using KaVE.Commons.Model.ObjectUsage;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Collections;
 using KaVE.Commons.Utils.Exceptions;
+using KaVE.Commons.Utils.IO;
 using KaVE.Commons.Utils.Json;
 using KaVE.Commons.Utils.Logging.Json;
 using KaVE.Commons.Utils.ObjectUsageExport;
@@ -42,7 +43,8 @@ namespace KaVE.RS.SolutionAnalysis
     internal class Program
     {
         private const string DirRoot = @"C:\Users\seb\Desktop\Data\";
-        private const string DirEvents = DirRoot + @"Events\";
+        private const string DirEventsAll = DirRoot + @"Events\All\";
+        private const string DirEventsCompletion = DirRoot + @"Events\OnlyCompletion\";
         private const string DirHistories = DirRoot + @"Histories\";
         private const string DirContextsAll = DirRoot + @"Contexts\";
         private const string DirContextsGithub = DirRoot + @"Contexts\Github\";
@@ -60,7 +62,7 @@ namespace KaVE.RS.SolutionAnalysis
 
 
             //new AnalysisStatsPrinter(dirContexts).Run();
-            new UsageExportRunner(DirContextsAll, DirUsages).Run();
+            //new UsageExportRunner(DirContextsAll, DirUsages).Run();
             //new EditLocationRunner(dirEvents).Run();
             //AnalyzeProjects();
             //var usages = ExtractUsages(dirContexts);
@@ -68,15 +70,25 @@ namespace KaVE.RS.SolutionAnalysis
 
             //new EventsExportRunner(dirContexts, dirEpisodes).Run();
             //CreateCompletionEventToUsageHistoryRunner().Run();
+            CreateCompletionEventFilter().Run();
 
             Console.WriteLine("{0} finish", DateTime.Now);
+        }
+
+        private static CompletionEventFilter CreateCompletionEventFilter()
+        {
+            return new CompletionEventFilter(
+                DirEventsAll,
+                DirEventsCompletion,
+                new IoUtils(),
+                new CompletionEventFilterLogger());
         }
 
         private static CompletionEventToUsageHistoryRunner CreateCompletionEventToUsageHistoryRunner()
         {
             var usageExtractor = new UsageExtractor();
             var tupleGenerator = new TupleGenerator(usageExtractor);
-            var ioHelper = new IoHelper(DirEvents, DirHistories);
+            var ioHelper = new IoHelper(DirEventsAll, DirHistories);
             return new CompletionEventToUsageHistoryRunner(tupleGenerator, ioHelper);
         }
 

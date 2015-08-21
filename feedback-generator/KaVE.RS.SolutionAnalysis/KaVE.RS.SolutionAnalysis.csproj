@@ -145,6 +145,7 @@
   <ItemGroup>
     <Compile Include="AnalysisStatsPrinter.cs" />
     <Compile Include="CommandLineLogger.cs" />
+    <Compile Include="CompletionEventFilter.cs" />
     <Compile Include="CompletionEventToUsageHistory\CompletionEventToUsageHistoryRunner.cs" />
     <Compile Include="CompletionEventToUsageHistory\IoHelper.cs" />
     <Compile Include="CompletionEventToUsageHistory\TupleGenerator.cs" />
