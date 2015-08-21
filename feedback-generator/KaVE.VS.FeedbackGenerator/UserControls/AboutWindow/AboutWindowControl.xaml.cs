@@ -17,18 +17,28 @@
 using KaVE.Commons.Utils;
 using System.IO;
 using System.Threading;
+using System.Windows.Navigation;
+using KaVE.RS.Commons.Settings;
+using KaVE.RS.Commons.Utils;
+using KaVE.VS.FeedbackGenerator.Settings.ExportSettingsSuite;
 
 namespace KaVE.VS.FeedbackGenerator.UserControls.AboutWindow
 {
     public partial class AboutWindowControl
     {
+        private string _linkPrefix;
+
         public string VersionString { get; private set; }
         public string DebugInfoString { get; private set; }
+        public string LogoLink { get; private set; }
 
-        public AboutWindowControl(VersionUtil versionUtil)
+        public AboutWindowControl()
         {
             InitializeComponent();
             DataContext = this;
+
+            var versionUtil = Registry.GetComponent<VersionUtil>();
+            _linkPrefix = Registry.GetComponent<SettingsStore>().GetSettings<ExportSettings>().WebAccessPrefix;
 
             VersionString = string.Format(
                 "{0} ({1:s})",
@@ -39,11 +49,15 @@ namespace KaVE.VS.FeedbackGenerator.UserControls.AboutWindow
                 "Current Culture: {0}, Current UI Culture: {1}",
                 Thread.CurrentThread.CurrentCulture,
                 Thread.CurrentThread.CurrentUICulture);
+
+            LogoLink = string.Concat(
+                _linkPrefix,
+                "http://www.kave.cc/_/rsrc/1398356839176/config/kave-logoe-with-title.png.1398356838759.png");
         }
 
-        private void Hyperlink_RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
+        private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
         {
-            System.Diagnostics.Process.Start(e.Uri.ToString());
+            System.Diagnostics.Process.Start(string.Concat(_linkPrefix, e.Uri.ToString()));
         }
     }
 }

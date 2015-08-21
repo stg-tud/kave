@@ -34,7 +34,7 @@ limitations under the License.
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <Image Grid.Row="0" Stretch="None" Source="http://www.kave.cc/_/rsrc/1398356839176/config/kave-logoe-with-title.png.1398356838759.png"></Image>
+        <Image Grid.Row="0" Stretch="None" Source="{Binding LogoLink}"></Image>
 
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>

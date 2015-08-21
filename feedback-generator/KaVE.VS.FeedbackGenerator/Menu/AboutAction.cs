@@ -17,8 +17,6 @@
 using JetBrains.ActionManagement;
 using JetBrains.Application.DataContext;
 using JetBrains.UI.ActionsRevised;
-using KaVE.Commons.Utils;
-using KaVE.RS.Commons.Utils;
 using KaVE.VS.FeedbackGenerator.UserControls.AboutWindow;
 
 namespace KaVE.VS.FeedbackGenerator.Menu
@@ -36,9 +34,7 @@ namespace KaVE.VS.FeedbackGenerator.Menu
 
         public void Execute(IDataContext context, DelegateExecute nextExecute)
         {
-            var versionUtil = Registry.GetComponent<VersionUtil>();
-
-            new AboutWindowControl(versionUtil).Show();
+            new AboutWindowControl().Show();
         }
     }
 }
