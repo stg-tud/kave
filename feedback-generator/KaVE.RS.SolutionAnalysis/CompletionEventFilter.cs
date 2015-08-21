@@ -120,11 +120,12 @@ namespace KaVE.RS.SolutionAnalysis
 
         private static UseCase Categorize(IDEEvent e)
         {
-            var ce = e as ICompletionEvent;
+            var ce = e as CompletionEvent;
             if (ce == null)
             {
                 return UseCase.OtherEvent;
             }
+            ce.ProposalCollection = new ProposalCollection();
             if (!e.ActiveDocument.FileName.EndsWith(".cs"))
             {
                 return UseCase.Invalid;

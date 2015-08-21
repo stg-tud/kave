@@ -8,6 +8,7 @@ using KaVE.Commons.Model.SSTs.Impl;
 using KaVE.Commons.Model.SSTs.Impl.Declarations;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl.Statements;
+using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Collections;
 using KaVE.Commons.Utils.IO;
 using KaVE.Commons.Utils.IO.Archives;
@@ -92,8 +93,8 @@ namespace KaVE.RS.SolutionAnalysis.Tests
             VerifyGeneralLogger();
 
             Assert.AreEqual(2, _storedEvents.Count);
-            Assert.AreEqual(_e2, _storedEvents[0]);
-            Assert.AreEqual(_e7, _storedEvents[1]);
+            Assert.AreEqual(RemoveProposals(_e2), _storedEvents[0]);
+            Assert.AreEqual(RemoveProposals(_e7), _storedEvents[1]);
             Mock.Get(_wa).Verify(wa => wa.Dispose());
 
             Mock.Get(_logger).Verify(l => l.FoundZips(1, option));
@@ -110,7 +111,7 @@ namespace KaVE.RS.SolutionAnalysis.Tests
             VerifyGeneralLogger();
 
             Assert.AreEqual(1, _storedEvents.Count);
-            Assert.AreEqual(_e2, _storedEvents[0]);
+            Assert.AreEqual(RemoveProposals(_e2), _storedEvents[0]);
             Mock.Get(_wa).Verify(wa => wa.Dispose());
 
             Mock.Get(_logger).Verify(l => l.FoundZips(1, option));
@@ -148,25 +149,28 @@ namespace KaVE.RS.SolutionAnalysis.Tests
             Mock.Get(_io).Verify(io => io.CreateArchive(@"C:\to\a\a.zip"));
         }
 
-        private IDEEvent CreateNonCompletionEvent()
+        private static IDEEvent CreateNonCompletionEvent()
         {
             var e = new CommandEvent();
             AddBasicInformation(e);
             return e;
         }
 
-
-        private CompletionEvent CreateCompletionEvent()
+        private static CompletionEvent CreateCompletionEvent()
         {
             var e = new CompletionEvent();
             AddBasicInformation(e);
             e.Context2 = CreateContext(
                 new ContinueStatement(),
                 new ExpressionStatement {Expression = new CompletionExpression()});
+            e.ProposalCollection = new ProposalCollection
+            {
+                new Proposal()
+            };
             return e;
         }
 
-        private IDEEvent CreateCompletionEvent_NoCSharpFile()
+        private static IDEEvent CreateCompletionEvent_NoCSharpFile()
         {
             var e = CreateCompletionEvent();
             e.ActiveDocument = DocumentName.Get("... blabla.xml");
@@ -197,32 +201,46 @@ namespace KaVE.RS.SolutionAnalysis.Tests
             };
         }
 
-        private IDEEvent CreateCompletionEvent_Incomplete_NoSessionId()
+        private static IDEEvent CreateCompletionEvent_Incomplete_NoSessionId()
         {
             var ce = CreateCompletionEvent();
             ce.IDESessionUUID = null;
             return ce;
         }
 
-        private IDEEvent CreateCompletionEvent_Incomplete_NoTriggerTime()
+        private static IDEEvent CreateCompletionEvent_Incomplete_NoTriggerTime()
         {
             var ce = CreateCompletionEvent();
             ce.TriggeredAt = null;
             return ce;
         }
 
-        private IDEEvent CreateCompletionEvent_NoMethodDeclarations()
+        private static IDEEvent CreateCompletionEvent_NoMethodDeclarations()
         {
             var ce = CreateCompletionEvent();
             ce.Context2 = new Context();
             return ce;
         }
 
-        private IDEEvent CreateCompletionEvent_NoTriggerPoint()
+        private static IDEEvent CreateCompletionEvent_NoTriggerPoint()
         {
             var ce = CreateCompletionEvent();
             ce.Context2 = CreateContext(new ContinueStatement());
             return ce;
+        }
+
+        private static IDEEvent RemoveProposals(IDEEvent e)
+        {
+            var ince = e as CompletionEvent;
+            Asserts.NotNull(ince);
+
+            return new CompletionEvent
+            {
+                IDESessionUUID = e.IDESessionUUID,
+                ActiveDocument = e.ActiveDocument,
+                TriggeredAt = e.TriggeredAt,
+                Context2 = ince.Context2
+            };
         }
     }
 }
