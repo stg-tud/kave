@@ -18,7 +18,6 @@ using System;
 using System.Timers;
 using EnvDTE;
 using JetBrains.Application;
-using JetBrains.Application.Components;
 using KaVE.Commons.Model.Events.VisualStudio;
 using KaVE.Commons.Utils;
 using KaVE.VS.FeedbackGenerator.Generators.VisualStudio.EditEventGenerators.EventContext;
@@ -26,7 +25,7 @@ using KaVE.VS.FeedbackGenerator.MessageBus;
 
 namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio.EditEventGenerators
 {
-    [ShellComponent(ProgramConfigurations.VS_ADDIN)]
+    [ShellComponent]
     internal class EditEventGenerator : EventGeneratorBase, IDisposable
     {
         // TODO evaluate good threshold value

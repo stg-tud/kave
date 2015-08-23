@@ -17,7 +17,6 @@
 using System.Linq;
 using EnvDTE;
 using JetBrains.Application;
-using JetBrains.Application.Components;
 using KaVE.Commons.Model.Events.VisualStudio;
 using KaVE.Commons.Model.Names.VisualStudio;
 using KaVE.Commons.Utils;
@@ -26,7 +25,7 @@ using KaVE.VS.FeedbackGenerator.Utils.Names;
 
 namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio
 {
-    [ShellComponent(ProgramConfigurations.VS_ADDIN)]
+    [ShellComponent]
     public class SolutionEventGenerator : EventGeneratorBase
     {
         private static readonly string[] ManagedProjectUniqueNames = {"<MiscFiles>"};

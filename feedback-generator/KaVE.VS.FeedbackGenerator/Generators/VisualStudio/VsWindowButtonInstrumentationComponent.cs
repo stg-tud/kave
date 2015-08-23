@@ -18,7 +18,6 @@ using System;
 using System.Collections.Generic;
 using EnvDTE;
 using JetBrains.Application;
-using JetBrains.Application.Components;
 using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Exceptions;
 using KaVE.JetBrains.Annotations;
@@ -26,7 +25,7 @@ using KaVE.VS.FeedbackGenerator.MessageBus;
 
 namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio
 {
-    [ShellComponent(ProgramConfigurations.VS_ADDIN)]
+    [ShellComponent]
     internal class VsWindowButtonInstrumentationComponent
     {
         private static readonly IDictionary<Window, VsWindowButtonClickEventGenerator> WindowRegistry =

@@ -120,7 +120,7 @@ namespace KaVE.VS.FeedbackGenerator.CodeCompletion
             set { Item.IsStable = value; }
         }
 
-        public string Identity
+        public int Identity
         {
             get { return Item.Identity; }
         }

@@ -20,7 +20,6 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using EnvDTE;
 using JetBrains.Application;
-using JetBrains.Application.Components;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Assertion;
@@ -31,7 +30,7 @@ using KaVE.VS.FeedbackGenerator.Utils.Names;
 
 namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio
 {
-    [ShellComponent(ProgramConfigurations.VS_ADDIN)]
+    [ShellComponent]
     public class DTECommandEventGenerator : EventGeneratorBase
     {
         private static readonly ICollection<string> EventsDuplicatedByReSharper = new Collection<string>

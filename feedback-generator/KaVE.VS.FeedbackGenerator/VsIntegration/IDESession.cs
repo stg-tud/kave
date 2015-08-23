@@ -17,12 +17,11 @@
 using System;
 using EnvDTE;
 using JetBrains.Application;
-using JetBrains.Application.Components;
 using KaVE.JetBrains.Annotations;
 
 namespace KaVE.VS.FeedbackGenerator.VsIntegration
 {
-    [ShellComponent(ProgramConfigurations.VS_ADDIN)]
+    [ShellComponent]
     public class IDESession : IIDESession
     {
         private readonly DTE _dte;

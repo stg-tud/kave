@@ -19,19 +19,17 @@ using System.Collections.Generic;
 using System.Linq;
 using JetBrains.ActionManagement;
 using JetBrains.Application;
-using JetBrains.Application.Components;
 using JetBrains.UI.ActionsRevised.Loader;
 using JetBrains.Util;
 using KaVE.Commons.Utils;
 using KaVE.VS.FeedbackGenerator.Menu;
 using KaVE.VS.FeedbackGenerator.MessageBus;
 using KaVE.VS.FeedbackGenerator.Settings;
-using KaVE.VS.FeedbackGenerator.UserControls.UploadWizard;
 using ILogger = KaVE.Commons.Utils.Exceptions.ILogger;
 
 namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
 {
-    [ShellComponent(ProgramConfigurations.VS_ADDIN)]
+    [ShellComponent]
     internal class ActionEventInstrumentationComponent
     {
         public ActionEventInstrumentationComponent(IActionManager actionManager,

@@ -17,7 +17,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Application;
-using JetBrains.Application.Components;
 using JetBrains.Util;
 using KaVE.Commons.Model.Events;
 using KaVE.Commons.Utils;
@@ -28,7 +27,7 @@ using Microsoft.VisualStudio.CommandBars;
 
 namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio
 {
-    [ShellComponent(ProgramConfigurations.VS_ADDIN)]
+    [ShellComponent]
     public class CommandBarEventGenerator : EventGeneratorBase
     {
         private IEnumerable<CommandBar> _commandBars;

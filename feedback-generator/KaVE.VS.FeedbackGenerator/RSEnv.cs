@@ -15,7 +15,6 @@
  */
 
 using JetBrains.Application;
-using JetBrains.Application.Components;
 using KaVE.Commons.Utils;
 using KaVE.JetBrains.Annotations;
 using KaVE.VS.FeedbackGenerator.VsIntegration;
@@ -29,7 +28,7 @@ namespace KaVE.VS.FeedbackGenerator
         string KaVEVersion { get; }
     }
 
-    [ShellComponent(ProgramConfigurations.VS_ADDIN)]
+    [ShellComponent]
     internal class RSEnv : IRSEnv
     {
         public const string ExtensionId = "KaVE.VsFeedbackGenerator";

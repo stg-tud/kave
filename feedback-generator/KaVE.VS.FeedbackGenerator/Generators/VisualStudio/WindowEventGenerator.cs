@@ -18,7 +18,6 @@ using System;
 using System.Collections.Generic;
 using EnvDTE;
 using JetBrains.Application;
-using JetBrains.Application.Components;
 using KaVE.Commons.Model.Events.VisualStudio;
 using KaVE.Commons.Utils;
 using KaVE.Commons.Utils.Collections;
@@ -28,7 +27,7 @@ using KaVE.VS.FeedbackGenerator.Utils.Names;
 
 namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio
 {
-    [ShellComponent(ProgramConfigurations.VS_ADDIN)]
+    [ShellComponent]
     public class WindowEventGenerator : EventGeneratorBase
     {
         private const int SignificantMoveDistanceLowerBound = 25;

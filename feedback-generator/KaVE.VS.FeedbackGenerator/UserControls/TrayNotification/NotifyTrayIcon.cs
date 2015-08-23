@@ -19,14 +19,13 @@ using System.Windows;
 using System.Windows.Controls.Primitives;
 using Hardcodet.Wpf.TaskbarNotification;
 using JetBrains.Application;
-using JetBrains.Application.Components;
 using KaVE.Commons.Utils;
 using KaVE.VS.FeedbackGenerator.Properties;
 using KaVE.VS.FeedbackGenerator.Utils.Logging;
 
 namespace KaVE.VS.FeedbackGenerator.UserControls.TrayNotification
 {
-    [ShellComponent(ProgramConfigurations.VS_ADDIN)]
+    [ShellComponent]
     public class NotifyTrayIcon
     {
         private readonly ILogManager _logManager;

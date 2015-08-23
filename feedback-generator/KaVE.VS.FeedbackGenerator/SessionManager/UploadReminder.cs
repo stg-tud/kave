@@ -16,7 +16,6 @@
 
 using System;
 using JetBrains.Application;
-using JetBrains.Application.Components;
 using KaVE.Commons.Utils;
 using KaVE.RS.Commons.Settings;
 using KaVE.RS.Commons.Utils;
@@ -26,7 +25,7 @@ using KaVE.VS.FeedbackGenerator.Utils.Logging;
 
 namespace KaVE.VS.FeedbackGenerator.SessionManager
 {
-    [ShellComponent(ProgramConfigurations.VS_ADDIN)]
+    [ShellComponent]
     public class UploadReminder
     {
         private const int WorkTimeStart = 10;

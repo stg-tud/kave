@@ -18,7 +18,6 @@ using System.Collections.Generic;
 using System.Linq;
 using EnvDTE;
 using JetBrains.Application;
-using JetBrains.Application.Components;
 using JetBrains.DataFlow;
 using KaVE.Commons.Model.Events.VisualStudio;
 using KaVE.Commons.Utils;
@@ -27,7 +26,7 @@ using KaVE.VS.FeedbackGenerator.Utils.Names;
 
 namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio
 {
-    [ShellComponent(ProgramConfigurations.VS_ADDIN)]
+    [ShellComponent]
     public class IDEStateEventGenerator : EventGeneratorBase
     {
         private readonly IRSEnv _env;

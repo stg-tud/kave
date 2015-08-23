@@ -16,7 +16,6 @@
 
 using EnvDTE;
 using JetBrains.Application;
-using JetBrains.Application.Components;
 using KaVE.Commons.Model.Events.VisualStudio;
 using KaVE.Commons.Utils;
 using KaVE.VS.FeedbackGenerator.Generators.VisualStudio.EditEventGenerators;
@@ -25,7 +24,7 @@ using KaVE.VS.FeedbackGenerator.Utils.Names;
 
 namespace KaVE.VS.FeedbackGenerator.Generators.VisualStudio
 {
-    [ShellComponent(ProgramConfigurations.VS_ADDIN)]
+    [ShellComponent]
     internal class DocumentEventGenerator : EventGeneratorBase
     {
         // ReSharper disable once PrivateFieldCanBeConvertedToLocalVariable
