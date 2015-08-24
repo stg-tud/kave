@@ -36,10 +36,10 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
             var sst = new EventReference
             {
                 EventName = EventName.Get("[EventType,P] [DeclaringType,P].E"),
-                Reference = SSTUtil.VariableReference("e")
+                Reference = SSTUtil.VariableReference("o")
             };
 
-            AssertPrint(sst, "e");
+            AssertPrint(sst, "o.E");
         }
 
         [Test]
@@ -48,10 +48,10 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
             var sst = new FieldReference
             {
                 FieldName = FieldName.Get("[FieldType,P] [DeclaringType,P].F"),
-                Reference = SSTUtil.VariableReference("f")
+                Reference = SSTUtil.VariableReference("o")
             };
 
-            AssertPrint(sst, "f");
+            AssertPrint(sst, "o.F");
         }
 
         [Test]
@@ -60,10 +60,10 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
             var sst = new MethodReference
             {
                 MethodName = MethodName.Get("[ReturnType,P] [DeclaringType,P].M([ParameterType,P] p)"),
-                Reference = SSTUtil.VariableReference("m")
+                Reference = SSTUtil.VariableReference("o")
             };
 
-            AssertPrint(sst, "m");
+            AssertPrint(sst, "o.M");
         }
 
         [Test]
@@ -72,10 +72,10 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
             var sst = new PropertyReference
             {
                 PropertyName = PropertyName.Get("get set [PropertyType,P] [DeclaringType,P].P"),
-                Reference = SSTUtil.VariableReference("p")
+                Reference = SSTUtil.VariableReference("o")
             };
 
-            AssertPrint(sst, "p");
+            AssertPrint(sst, "o.P");
         }
 
         [Test]
