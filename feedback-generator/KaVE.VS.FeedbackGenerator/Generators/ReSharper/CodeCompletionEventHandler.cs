@@ -35,7 +35,7 @@ using KaVE.VS.FeedbackGenerator.MessageBus;
 
 namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
 {
-    [SolutionComponent]
+    [SolutionComponent, Language(typeof(CSharpLanguage))]
     internal class CodeCompletionEventGeneratorRegistration
     {
         public CodeCompletionEventGeneratorRegistration(CodeCompletionLifecycleManager manager,
