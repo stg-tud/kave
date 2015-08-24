@@ -117,6 +117,19 @@ namespace KaVE.Commons.Tests.Utils.SSTPrinter.SSTPrintingVisitorTestSuite
         }
 
         [Test]
+        public void InvocationExpression_Constructor()
+        {
+            var sst = new InvocationExpression()
+            {
+                Reference = VarRef("should be ignored anyways"),
+                MethodName = MethodName.Get("[System.Void, mscorlib, 4.0.0.0] [C,P]..ctor()"),
+                Parameters = {Constant("1")}
+            };
+
+            AssertPrint(sst, "new C(1)");
+        }
+
+        [Test]
         public void IfElseExpression()
         {
             var sst = new IfElseExpression

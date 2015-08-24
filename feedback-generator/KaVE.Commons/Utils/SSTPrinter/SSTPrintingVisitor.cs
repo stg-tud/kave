@@ -487,17 +487,26 @@ namespace KaVE.Commons.Utils.SSTPrinter
 
         public void Visit(IInvocationExpression expr, SSTPrintingContext c)
         {
-            if (expr.MethodName.IsStatic)
+            if (expr.MethodName.IsConstructor)
             {
-                c.Text(expr.MethodName.DeclaringType.Name);
+                c.Keyword("new").Space().Type(expr.MethodName.DeclaringType);
             }
             else
             {
-                expr.Reference.Accept(this, c);
+                if (expr.MethodName.IsStatic)
+                {
+                    c.Text(expr.MethodName.DeclaringType.Name);
+                }
+                else
+                {
+                    expr.Reference.Accept(this, c);
+                }
+
+                c.Text(".").Text(expr.MethodName.Name);
             }
 
-            c.Text(".").Text(expr.MethodName.Name).Text("(");
-
+            c.Text("(");
+            
             foreach (var parameter in expr.Parameters)
             {
                 parameter.Accept(this, c);
