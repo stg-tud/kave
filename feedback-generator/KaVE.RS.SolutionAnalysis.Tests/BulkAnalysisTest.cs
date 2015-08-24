@@ -32,7 +32,8 @@ namespace KaVE.RS.SolutionAnalysis.Tests
     {
         private const string Root = @"C:\Users\seb\Desktop\Data\";
         //private const string RepositoryRoot = Root + @"Repositories-Test\";
-        private const string RepositoryRoot = Root + @"Repositories\";
+        private const string RepositoryRoot = @"C:\Users\seb\versioned_code\AnalysisTestCases\";
+        //private const string RepositoryRoot = Root + @"Repositories\";
         private const string ContextRoot = Root + @"Contexts\Github\";
         private const string LogRoot = Root + @"Logs\";
 

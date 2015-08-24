@@ -81,9 +81,15 @@ namespace KaVE.RS.SolutionAnalysis.CompletionEventToUsageHistory
 
             foreach (var @event in _ioHelper.ReadCompletionEvents(exportFile))
             {
-                var idx = _tupleGenerator.GetTemporalIndex(@event);
-                keys.Add(idx);
-                SortedEvents(idx).Add(@event);
+                var key = _tupleGenerator.GetTemporalIndex(@event);
+                if ("065cbaef-993a-465a-acce-56c8bc03fc9c_20150617_1965740628".Equals(key))
+                {
+                    Console.WriteLine("############################");
+                    Console.WriteLine("found key in: {0} ({1}/{2})", exportFile, current, total);
+                    Console.WriteLine("############################");
+                }
+                keys.Add(key);
+                SortedEvents(key).Add(@event);
                 numEvents++;
             }
 

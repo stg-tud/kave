@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System;
 using KaVE.Commons.Model.Names;
 using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.ObjectUsage;
@@ -112,15 +113,21 @@ namespace KaVE.Commons.Utils.ObjectUsageExport
 
         private Query NewQueryFor(ITypeName type, DefinitionSite defSite)
         {
-            var q = new Query
-            {
-                type = type.ToCoReName(),
-                classCtx = EnclosingType.ToCoReName(),
-                methodCtx = EnclosingMethod.ToCoReName(),
-                definition = defSite
-            };
+            var q = new Query();
             AllQueries.Add(q);
-            return q;
+            try
+            {
+                q.definition = defSite;
+                q.type = type.ToCoReName();
+                q.classCtx = EnclosingType.ToCoReName();
+                q.methodCtx = EnclosingMethod.ToCoReName();
+                return q;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("failed to create new Query, falling back to Unknown");
+                return q;
+            }
         }
     }
 }

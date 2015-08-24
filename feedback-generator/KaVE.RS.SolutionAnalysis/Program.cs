@@ -45,6 +45,7 @@ namespace KaVE.RS.SolutionAnalysis
         private const string DirRoot = @"C:\Users\seb\Desktop\Data\";
         private const string DirEventsAll = DirRoot + @"Events\All\";
         private const string DirEventsCompletion_KeepNoTrigger = DirRoot + @"Events\OnlyCompletion\";
+        private const string DirEventsCompletion_KeepNoTriggerInlined = DirRoot + @"Events\OnlyCompletion-inlined\";
         private const string DirEventsCompletion_RemoveNoTrigger = DirRoot + @"Events\OnlyCompletionWithTriggerPoint\";
         private const string DirHistories = DirRoot + @"Histories\";
         private const string DirContextsAll = DirRoot + @"Contexts\";
@@ -70,8 +71,9 @@ namespace KaVE.RS.SolutionAnalysis
             //WriteUsages(usages);
 
             //new EventsExportRunner(dirContexts, dirEpisodes).Run();
-            //CreateCompletionEventToUsageHistoryRunner().Run();
-            CreateCompletionEventFilter_Keep().Run();
+            //CreateCompletionEventToUsageHistoryRunner(DirEventsCompletion_KeepNoTrigger).Run();
+            CreateCompletionEventToUsageHistoryRunner(DirEventsCompletion_KeepNoTriggerInlined).Run();
+            //CreateCompletionEventFilter_Keep().Run();
 
             Console.WriteLine(@"{0} finish", DateTime.Now);
         }
@@ -86,11 +88,13 @@ namespace KaVE.RS.SolutionAnalysis
                 new CompletionEventFilterLogger());
         }
 
-        private static CompletionEventToUsageHistoryRunner CreateCompletionEventToUsageHistoryRunner()
+        private static CompletionEventToUsageHistoryRunner CreateCompletionEventToUsageHistoryRunner(string eventDir)
         {
+            CleanDirs(DirHistories);
+            Console.WriteLine("reading from: " + eventDir);
             var usageExtractor = new UsageExtractor();
             var tupleGenerator = new TupleGenerator(usageExtractor);
-            var ioHelper = new IoHelper(DirEventsAll, DirHistories);
+            var ioHelper = new IoHelper(eventDir, DirHistories);
             return new CompletionEventToUsageHistoryRunner(tupleGenerator, ioHelper);
         }
 
@@ -333,6 +337,18 @@ namespace KaVE.RS.SolutionAnalysis
             workingDirectory.Delete(true);
 
             return result;
+        }
+
+        private static void CleanDirs(params string[] dirs)
+        {
+            foreach (var dir in dirs)
+            {
+                if (Directory.Exists(dir))
+                {
+                    Directory.Delete(dir, true);
+                }
+                Directory.CreateDirectory(dir);
+            }
         }
     }
 }
