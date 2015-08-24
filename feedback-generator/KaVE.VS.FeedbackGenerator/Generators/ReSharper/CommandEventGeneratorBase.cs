@@ -23,31 +23,23 @@ using KaVE.VS.FeedbackGenerator.MessageBus;
 
 namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
 {
-    public abstract class CommandEventGeneratorBase : CommandEventGeneratorBase<object>
-    {
-        protected CommandEventGeneratorBase(IRSEnv env, IMessageBus messageBus, IDateUtils dateUtils)
-            : base(env, messageBus, dateUtils) {}
-    }
-
-    public abstract class CommandEventGeneratorBase<TC> : EventGeneratorBase where TC : class
+    public abstract class CommandEventGeneratorBase : EventGeneratorBase
     {
         protected CommandEventGeneratorBase(IRSEnv env, IMessageBus messageBus, IDateUtils dateUtils)
             : base(env, messageBus, dateUtils) {}
 
-        protected void FireActionEvent()
+        protected void FireActionEvent(string actionId)
         {
-            var actionEvent = CreateActionEvent();
+            var actionEvent = CreateActionEvent(actionId);
             FireActionEventNow(actionEvent);
         }
 
-        private CommandEvent CreateActionEvent()
+        private CommandEvent CreateActionEvent(string actionId)
         {
             var actionEvent = Create<CommandEvent>();
-            actionEvent.CommandId = GetCommandId();
+            actionEvent.CommandId = actionId;
             return actionEvent;
         }
-
-        protected abstract string GetCommandId();
 
         private void FireActionEventNow(CommandEvent actionEvent)
         {

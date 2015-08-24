@@ -14,35 +14,29 @@
  * limitations under the License.
  */
 
-using System;
+using JetBrains.Application;
+using JetBrains.Application.ActivityTrackingNew;
 using KaVE.Commons.Utils;
+using KaVE.JetBrains.Annotations;
 using KaVE.VS.FeedbackGenerator.MessageBus;
 
 namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
 {
-    public class EventGeneratingActionWrapper : CommandEventGeneratorBase
+    [ShellComponent]
+    internal class ActionEventGenerator : CommandEventGeneratorBase, IActivityTracking
     {
-        private readonly Action _originalAction;
+        public ActionEventGenerator([NotNull] IRSEnv env,
+            [NotNull] IMessageBus messageBus,
+            [NotNull] IDateUtils dateUtils) : base(env, messageBus, dateUtils) {}
 
-        public EventGeneratingActionWrapper(Action originalAction,
-            IRSEnv env,
-            IMessageBus messageBus,
-            IDateUtils dateUtils)
-            : base(env, messageBus, dateUtils)
+        public void TrackAction(string actionId)
         {
-            _originalAction = originalAction;
+            FireActionEvent(actionId);
         }
 
-        public void Execute()
+        public void TrackActivity(string activityGroup, string activityId, int count = 1)
         {
-            var commandId = _originalAction.Target.ToString();
-            FireActionEvent(commandId);
-            InvokeOriginalCommand();
-        }
-
-        protected void InvokeOriginalCommand()
-        {
-            _originalAction.Invoke();
+            FireActionEvent(activityId);
         }
     }
 }

@@ -186,6 +186,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CodeCompletion\AbstractWrappedLookupItem.cs" />
+    <Compile Include="Generators\ReSharper\ActionEventGenerator.cs" />
     <Compile Include="Generators\UserProfileEventGenerator.cs" />
     <Compile Include="Generators\VisualStudio\EditEventGenerators\DelayedEditEventGenerator.cs" />
     <Compile Include="Generators\VisualStudio\EditEventGenerators\EditEventGenerator.cs" />
@@ -379,11 +380,9 @@
     <Compile Include="Generators\EventLogger.cs" />
     <Compile Include="Generators\IEventMergeStrategy.cs" />
     <Compile Include="Generators\Merging\CompletionEventMergingStrategy.cs" />
-    <Compile Include="Generators\ReSharper\ActionEventInstrumentationComponent.cs" />
     <Compile Include="Generators\ReSharper\BulbItemInstrumentationComponent.cs" />
     <Compile Include="Generators\ReSharper\BulbItemInstrumentationExtensions.cs" />
     <Compile Include="Generators\ReSharper\CodeCompletionEventHandler.cs" />
-    <Compile Include="Generators\ReSharper\EventGeneratingActionHandler.cs" />
     <Compile Include="Generators\ReSharper\EventGeneratingActionWrapper.cs" />
     <Compile Include="Generators\ReSharper\EventGeneratingBulbActionProxy.cs" />
     <Compile Include="Generators\EventGeneratorBase.cs" />

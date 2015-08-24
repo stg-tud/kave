@@ -22,8 +22,7 @@ using KaVE.VS.FeedbackGenerator.MessageBus;
 
 namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
 {
-    public class EventGeneratingBulbActionProxy :
-        CommandEventGeneratorBase<EventGeneratingBulbActionProxy.BulbActionContext>, IBulbAction
+    public class EventGeneratingBulbActionProxy : CommandEventGeneratorBase, IBulbAction
     {
         public class BulbActionContext
         {
@@ -44,18 +43,14 @@ namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
 
         public void Execute(ISolution solution, ITextControl textControl)
         {
-            FireActionEvent();
+            var commandId = _target.GetType().FullName;
+            FireActionEvent(commandId);
             ExecuteOriginalAction(solution, textControl);
         }
 
         public string Text
         {
             get { return _target.Text; }
-        }
-
-        protected override string GetCommandId()
-        {
-            return _target.GetType().FullName;
         }
 
         protected void ExecuteOriginalAction(ISolution solution, ITextControl textControl)
