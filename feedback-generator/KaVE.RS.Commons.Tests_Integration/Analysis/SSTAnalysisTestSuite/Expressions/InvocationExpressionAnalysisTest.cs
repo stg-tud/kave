@@ -107,5 +107,55 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
                 InvokeStmt("this", Fix.Object_Equals, RefExpr("$0")),
                 ExprStmt(new CompletionExpression()));
         }
+
+        [Test]
+        public void CallChainInAssignment()
+        {
+            CompleteInMethod(@"
+                var i = GetType().GetHashCode();
+                $
+            ");
+
+            AssertBody();
+        }
+
+        [Test]
+        public void LongerCallChain()
+        {
+            CompleteInMethod(@"
+                GetType().GetHashCode().ToString();
+                $
+            ");
+
+            AssertBody();
+        }
+
+        [Test]
+        public void InvocationOnThisField()
+        {
+            CompleteInClass(@"
+                private int i;
+                public void M() {
+                    i.GetHashCode();
+                    $
+                }
+            ");
+
+            AssertBody();
+        }
+
+        [Test]
+        public void InvocationOnThisProperty()
+        {
+            CompleteInClass(@"
+                private int I { get; set; }
+                public void M() {
+                    I.GetHashCode();
+                    $
+                }
+            ");
+
+            AssertBody();
+        }
     }
 }
