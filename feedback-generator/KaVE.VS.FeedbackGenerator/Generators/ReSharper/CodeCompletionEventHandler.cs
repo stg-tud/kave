@@ -16,10 +16,9 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using JetBrains.Application;
+using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure.LookupItems;
 using JetBrains.ReSharper.Feature.Services.CSharp.CodeCompletion.Infrastructure;
 using JetBrains.ReSharper.Features.Intellisense.CodeCompletion.CSharp.Rules;
@@ -36,7 +35,7 @@ using KaVE.VS.FeedbackGenerator.MessageBus;
 
 namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
 {
-    [Language(typeof (CSharpLanguage))]
+    [SolutionComponent]
     internal class CodeCompletionEventGeneratorRegistration
     {
         public CodeCompletionEventGeneratorRegistration(CodeCompletionLifecycleManager manager,
@@ -172,6 +171,14 @@ namespace KaVE.VS.FeedbackGenerator.Generators.ReSharper
         {
             @event.ProposalCollection = _lastDisplayedItems.ToProposalCollection();
             base.Fire(@event);
+        }
+
+        public void FireInfo(string info)
+        {
+            var infoEvent = Create<InfoEvent>();
+            infoEvent.Info = info;
+
+            base.Fire(infoEvent);
         }
     }
 }

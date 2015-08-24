@@ -18,11 +18,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using JetBrains.ActionManagement;
+using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure.LookupItems;
 using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure.Match;
 using JetBrains.ReSharper.Feature.Services.Lookup;
-using JetBrains.ReSharper.Psi;
-using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.UI.ActionSystem.Text;
 using JetBrains.Util;
 using KaVE.Commons.Model.Events;
@@ -32,7 +31,7 @@ using Key = System.Windows.Input.Key;
 
 namespace KaVE.VS.FeedbackGenerator.CodeCompletion
 {
-    [Language(typeof (CSharpLanguage))]
+    [SolutionComponent]
     public class CodeCompletionLifecycleManager : IDisposable
     {
         private readonly IExtendedLookupWindowManager _lookupWindowManager;

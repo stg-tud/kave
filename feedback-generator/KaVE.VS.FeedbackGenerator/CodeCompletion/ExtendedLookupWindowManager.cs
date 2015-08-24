@@ -18,8 +18,8 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Windows.Forms;
-using JetBrains.Application;
 using JetBrains.DataFlow;
+using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure.LookupItems;
 using JetBrains.ReSharper.Feature.Services.CodeCompletion.Infrastructure.Match;
 using JetBrains.ReSharper.Feature.Services.CodeCompletion.Lookup;
@@ -35,7 +35,7 @@ namespace KaVE.VS.FeedbackGenerator.CodeCompletion
         event EventHandler BeforeLookupWindowShown;
     }
 
-    [ShellComponent]
+    [SolutionComponent]
     public class ExtendedLookupWindowManager : IExtendedLookupWindowManager
     {
         private static readonly FieldInfo LookupWindowField =
