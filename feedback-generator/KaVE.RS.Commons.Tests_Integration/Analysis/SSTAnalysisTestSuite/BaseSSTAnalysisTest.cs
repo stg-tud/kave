@@ -28,6 +28,7 @@ using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
 using KaVE.Commons.Model.SSTs.Impl.References;
 using KaVE.Commons.Model.SSTs.Impl.Statements;
+using KaVE.Commons.Model.SSTs.References;
 using KaVE.Commons.Model.SSTs.Statements;
 using KaVE.Commons.Utils.Assertion;
 using KaVE.Commons.Utils.Collections;
@@ -235,6 +236,11 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
             return string.Format("[{0}] [N.C, TestProject].{1}", type, name);
         }
 
+        protected static FieldReference FieldRef(IFieldName fieldName, IVariableReference declaringTypeRef)
+        {
+            return new FieldReference {FieldName = fieldName, Reference = declaringTypeRef};
+        }
+
         protected IVariableDeclaration VarDecl(string varName, ITypeName type)
         {
             return new VariableDeclaration
@@ -256,6 +262,11 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
                 Reference = VarRef(id),
                 Expression = expr
             };
+        }
+
+        protected static IAssignment Assign(IAssignableReference reference, IAssignableExpression expr)
+        {
+            return new Assignment {Reference = reference, Expression = expr};
         }
 
         protected static IStatement InvokeStmt(string id, IMethodName methodName, params ISimpleExpression[] parameters)

@@ -177,6 +177,7 @@
     <Compile Include="Analysis\SSTAnalysisTestSuite\Blocks\IfElseBlockAnalysisTest.cs" />
     <Compile Include="Analysis\SSTAnalysisTestSuite\Blocks\TryBlockAnalysisTest.cs" />
     <Compile Include="Analysis\SSTAnalysisTestSuite\Blocks\WhileLoopAnalysisTest.cs" />
+    <Compile Include="Analysis\SSTAnalysisTestSuite\CurrentlyBrokenTests.cs" />
     <Compile Include="Analysis\SSTAnalysisTestSuite\Expressions\ComposedExpressionAnalysisTest.cs" />
     <Compile Include="Analysis\SSTAnalysisTestSuite\BaseSSTAnalysisTest.cs" />
     <Compile Include="Analysis\SSTAnalysisTestSuite\BasicTest.cs" />
