@@ -44,7 +44,7 @@ namespace KaVE.Commons.Model.SSTs.Impl.Expressions.Simple
 
         public override string ToString()
         {
-            return this.ToStringReflection();
+            return GetType().Name;
         }
     }
 }

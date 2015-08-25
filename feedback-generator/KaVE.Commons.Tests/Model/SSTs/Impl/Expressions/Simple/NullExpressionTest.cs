@@ -15,7 +15,6 @@
  */
 
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
-using KaVE.Commons.TestUtils;
 using NUnit.Framework;
 
 namespace KaVE.Commons.Tests.Model.SSTs.Impl.Expressions.Simple
@@ -54,9 +53,11 @@ namespace KaVE.Commons.Tests.Model.SSTs.Impl.Expressions.Simple
         }
 
         [Test]
-        public void ToStringReflection()
+        public void ToStringIsImplemented()
         {
-            ToStringAssert.Reflection(new NullExpression());
+            var actual = new NullExpression().ToString();
+            var expected = "NullExpression";
+            Assert.AreEqual(expected, actual);
         }
     }
 }
