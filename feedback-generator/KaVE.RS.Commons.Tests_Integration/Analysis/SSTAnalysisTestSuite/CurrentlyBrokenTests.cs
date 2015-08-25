@@ -119,7 +119,9 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
             //        ]
 
             AssertBody(
-                Assign(FieldRef(Fix.Field(Fix.Bool, Type("C"), "b"), VarRef("this")), new ConstantValueExpression { Value = "true" }),
+                Assign(
+                    FieldRef(Fix.Field(Fix.Bool, Type("C"), "b"), VarRef("this")),
+                    new ConstantValueExpression {Value = "true"}),
                 ExprStmt(new CompletionExpression()));
         }
 
@@ -152,8 +154,165 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
             // Same as above. Implicit this should be added back to SST during analysis since its not possible
             // to have a FieldReference without a reference to its declaring type.
             AssertBody(
-                Assign(FieldRef(Fix.Field(Fix.Bool, Type("C"), "b"), VarRef("this")), new ConstantValueExpression { Value = "true" }),
+                Assign(
+                    FieldRef(Fix.Field(Fix.Bool, Type("C"), "b"), VarRef("this")),
+                    new ConstantValueExpression {Value = "true"}),
                 ExprStmt(new CompletionExpression()));
+        }
+
+        [Test, Ignore]
+        public void AddingEventHandler()
+        {
+            CompleteInClass(@"        
+                public event EventHandler SomethingHappened;
+
+                public void M()
+                {
+                    this.SomethingHappened += OnSomethingHappened;
+                }
+
+                private void OnSomethingHappened(object sender, EventArgs eventArgs) { $ }");
+
+            //"Body": [
+            //            {
+            //                "$type": "[SST:Statements.Assignment]",
+            //                "Reference": {
+            //                    "$type": "[SST:References.FieldReference]",
+            //                    "Reference": {
+            //                        "$type": "[SST:References.VariableReference]",
+            //                        "Identifier": ""
+            //                    },
+            //                    "FieldName": "CSharp.FieldName:[?] [?].???"
+            //                },
+            //                "Expression": {
+            //                    "$type": "[SST:Expressions.Simple.ReferenceExpression]",
+            //                    "Reference": {
+            //                        "$type": "[SST:References.VariableReference]",
+            //                        "Identifier": "OnSomethingHappened"
+            //                    }
+            //                }
+            //            }
+            //        ]
+
+            var handlerMethod = Fix.Method(
+                Fix.Void,
+                Type("C"),
+                "OnSomethingHappened",
+                Fix.Parameter(Fix.Object, "sender"),
+                Fix.Parameter(Fix.EventArgs, "eventArgs"));
+
+            // note: not sure if MethodReference is correct in this case
+            // TODO: can only use "=" operator, other operators not supported yet
+            AssertBody(
+                Assign(
+                    EventRef(Fix.Event(Type("C"), "SomethingHappened"), VarRef("this")),
+                    RefExpr(MethodRef(handlerMethod, VarRef("this")))));
+        }
+
+        [Test, Ignore]
+        public void CallingMethodWithProperty()
+        {
+            CompleteInClass(@"        
+                public string Name { get; set; }
+
+                public void M()
+                {
+                    N(this.Name);
+                }
+
+                public void N(string s)
+                {
+                    s.$
+                }");
+
+            var nMethod = Fix.Method(Fix.Void, Type("C"), "N", Fix.Parameter(Fix.String, "s"));
+            var namePropertyRef = PropertyRef(Fix.Property(Fix.String, Type("C"), "Name"), VarRef("this"));
+
+            // TODO: introduce way to assert certain method bodies
+            // METHOD M
+            // This is closer to the current analysis result:
+            AssertBody(
+                VarDecl("$0", Fix.String),
+                VarAssign("$0", RefExpr(namePropertyRef)),
+                ExprStmt(Invoke("this", nMethod, RefExpr(VarRef("$0")))));
+
+            // Could also be represented this way:
+            AssertBody(
+                ExprStmt(Invoke("this", nMethod, RefExpr(namePropertyRef))));
+
+            // METHOD N
+            AssertBody(
+                ExprStmt(new CompletionExpression {VariableReference = VarRef("s"), Token = ""}));
+
+            //"Methods": [
+            //    {
+            //        "$type": "[SST:Declarations.MethodDeclaration]",
+            //        "Name": "CSharp.MethodName:[System.Void, mscorlib, 4.0.0.0] [AnalysisTests.C1, AnalysisTests].M()",
+            //        "IsEntryPoint": true,
+            //        "Body": [
+            //            {
+            //                "$type": "[SST:Statements.VariableDeclaration]",
+            //                "Reference": {
+            //                    "$type": "[SST:References.VariableReference]",
+            //                    "Identifier": "$0"
+            //                },
+            //                "Type": "CSharp.TypeName:AnalysisTests.C1, AnalysisTests"
+            //            },
+            //            {
+            //                "$type": "[SST:Statements.Assignment]",
+            //                "Reference": {
+            //                    "$type": "[SST:References.VariableReference]",
+            //                    "Identifier": "$0"
+            //                },
+            //                "Expression": {
+            //                    "$type": "[SST:Expressions.Simple.ReferenceExpression]",
+            //                    "Reference": {
+            //                        "$type": "[SST:References.VariableReference]",
+            //                        "Identifier": "this"
+            //                    }
+            //                }
+            //            },
+            //            {
+            //                "$type": "[SST:Statements.ExpressionStatement]",
+            //                "Expression": {
+            //                    "$type": "[SST:Expressions.Assignable.InvocationExpression]",
+            //                    "Reference": {
+            //                        "$type": "[SST:References.VariableReference]",
+            //                        "Identifier": "this"
+            //                    },
+            //                    "MethodName": "CSharp.MethodName:[System.Void, mscorlib, 4.0.0.0] [AnalysisTests.C1, AnalysisTests].N([System.String, mscorlib, 4.0.0.0] s)",
+            //                    "Parameters": [
+            //                        {
+            //                            "$type": "[SST:Expressions.Simple.ReferenceExpression]",
+            //                            "Reference": {
+            //                                "$type": "[SST:References.FieldReference]",
+            //                                "Reference": {
+            //                                    "$type": "[SST:References.VariableReference]",
+            //                                    "Identifier": "$0"
+            //                                },
+            //                                "FieldName": "CSharp.FieldName:[?] [?].Name"
+            //                            }
+            //                        }
+            //                    ]
+            //                }
+            //            }
+            //        ]
+            //    },
+            //    {
+            //        "$type": "[SST:Declarations.MethodDeclaration]",
+            //        "Name": "CSharp.MethodName:[System.Void, mscorlib, 4.0.0.0] [AnalysisTests.C1, AnalysisTests].N([System.String, mscorlib, 4.0.0.0] s)",
+            //        "IsEntryPoint": false,
+            //        "Body": [
+            //            {
+            //                "$type": "[SST:Statements.ExpressionStatement]",
+            //                "Expression": {
+            //                    "$type": "[SST:Expressions.Assignable.CompletionExpression]",
+            //                    "Token": ""
+            //                }
+            //            }
+            //        ]
+            //    }
+            //],
         }
     }
 }

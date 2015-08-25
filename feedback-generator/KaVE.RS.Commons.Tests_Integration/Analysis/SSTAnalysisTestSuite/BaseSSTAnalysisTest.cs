@@ -236,9 +236,24 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
             return string.Format("[{0}] [N.C, TestProject].{1}", type, name);
         }
 
-        protected static FieldReference FieldRef(IFieldName fieldName, IVariableReference declaringTypeRef)
+        protected static FieldReference FieldRef(IFieldName fieldName, IVariableReference declTypeRef)
         {
-            return new FieldReference {FieldName = fieldName, Reference = declaringTypeRef};
+            return new FieldReference {FieldName = fieldName, Reference = declTypeRef};
+        }
+
+        protected static EventReference EventRef(IEventName eventName, IVariableReference declTypeRef)
+        {
+            return new EventReference {EventName = eventName, Reference = declTypeRef};
+        }
+
+        protected static PropertyReference PropertyRef(IPropertyName propertyName, IVariableReference declTypeRef)
+        {
+            return new PropertyReference {PropertyName = propertyName, Reference = declTypeRef};
+        }
+
+        protected static MethodReference MethodRef(IMethodName methodName, IVariableReference declTypeRef)
+        {
+            return new MethodReference {MethodName = methodName, Reference = declTypeRef};
         }
 
         protected IVariableDeclaration VarDecl(string varName, ITypeName type)
