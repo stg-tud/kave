@@ -134,26 +134,34 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
             }
         }
 
-        protected void AssertBody(IKaVEList<IStatement> body)
+        protected void AssertBody(IMethodDeclaration method, IKaVEList<IStatement> body)
         {
-            Assert.AreEqual(1, ResultSST.Methods.Count);
-            var m = ResultSST.Methods.First();
-
-            if (!body.Equals(m.Body))
+            if (!body.Equals(method.Body))
             {
                 Console.WriteLine("AssertBody failed!");
                 Console.WriteLine("\n-- expected body --\n");
                 Console.WriteLine(body.ToString());
                 Console.WriteLine("\n-- actual body --\n");
-                Console.WriteLine(m.Body.ToString());
+                Console.WriteLine(method.Body.ToString());
                 Assert.Fail();
             }
         }
 
+        protected void AssertBody(IKaVEList<IStatement> body)
+        {
+            Assert.AreEqual(1, ResultSST.Methods.Count);
+            var m = ResultSST.Methods.First();
+            AssertBody(m, body);
+        }
 
         protected void AssertBody(params IStatement[] bodyArr)
         {
             AssertBody(Lists.NewListFrom(bodyArr));
+        }
+
+        protected void AssertBody(string methodName, params IStatement[] bodyArr)
+        {
+            AssertBody(ResultSST.Methods.Single(m => m.Name.Name == methodName), Lists.NewListFrom(bodyArr));
         }
 
         protected static void AssertNodeIsMethodDeclaration(string simpleMethodName, JB.ICSharpTreeNode node)

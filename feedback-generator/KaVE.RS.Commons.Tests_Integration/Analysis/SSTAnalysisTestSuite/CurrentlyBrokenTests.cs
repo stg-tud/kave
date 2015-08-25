@@ -63,7 +63,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
             //    $0.$;
             //}
 
-            AssertBody(
+            AssertBody("M",
                 VarDecl("$0", Fix.String),
                 VarAssign("$0", Invoke("this", Fix.Method(Fix.String, Type("C"), "SomeString"))),
                 VarDecl("$1", Fix.String),
@@ -86,6 +86,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
             //}
 
             // TODO: define expected body
+            Assert.Fail();
         }
 
         [Test, Ignore]
@@ -203,7 +204,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
 
             // note: not sure if MethodReference is correct in this case
             // TODO: can only use "=" operator, other operators not supported yet
-            AssertBody(
+            AssertBody("M",
                 Assign(
                     EventRef(Fix.Event(Type("C"), "SomethingHappened"), VarRef("this")),
                     RefExpr(MethodRef(handlerMethod, VarRef("this")))));
@@ -228,20 +229,19 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
             var nMethod = Fix.Method(Fix.Void, Type("C"), "N", Fix.Parameter(Fix.String, "s"));
             var namePropertyRef = PropertyRef(Fix.Property(Fix.String, Type("C"), "Name"), VarRef("this"));
 
-            // TODO: introduce way to assert certain method bodies
             // METHOD M
             // This is closer to the current analysis result:
-            AssertBody(
+            AssertBody("M",
                 VarDecl("$0", Fix.String),
                 VarAssign("$0", RefExpr(namePropertyRef)),
                 ExprStmt(Invoke("this", nMethod, RefExpr(VarRef("$0")))));
 
             // Could also be represented this way:
-            AssertBody(
+            AssertBody("M",
                 ExprStmt(Invoke("this", nMethod, RefExpr(namePropertyRef))));
 
             // METHOD N
-            AssertBody(
+            AssertBody("N",
                 ExprStmt(new CompletionExpression {VariableReference = VarRef("s"), Token = ""}));
 
             //"Methods": [
