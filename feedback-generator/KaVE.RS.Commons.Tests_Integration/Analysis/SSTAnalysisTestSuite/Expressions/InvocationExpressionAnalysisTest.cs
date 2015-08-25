@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 
+using KaVE.Commons.Model.Names.CSharp;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Assignable;
 using KaVE.Commons.Model.SSTs.Impl.Expressions.Simple;
+using KaVE.Commons.Model.SSTs.Impl.References;
 using NUnit.Framework;
 using Fix = KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.SSTAnalysisFixture;
 
@@ -24,7 +26,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
     internal class InvocationExpressionAnalysisTest : BaseSSTAnalysisTest
     {
         [Test]
-        public void RegularCall()
+        public void InvocationOnVariable()
         {
             CompleteInMethod(@"
                 var o = new object();
@@ -40,7 +42,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
         }
 
         [Test]
-        public void ImpliciteThisCall()
+        public void InvocationOnVariable_ImplicitThis()
         {
             CompleteInMethod(@"
                 GetHashCode();
@@ -53,7 +55,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
         }
 
         [Test]
-        public void ExpliciteThisCall()
+        public void InvocationOnVariable_ExplicitThis()
         {
             CompleteInMethod(@"
                 this.GetHashCode();
@@ -66,7 +68,223 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
         }
 
         [Test]
-        public void ImpliciteStaticCall()
+        public void InvocationOnVariable_Unresolved()
+        {
+            CompleteInMethod(@"
+                o.GetHashCode();
+                $
+            ");
+
+            AssertBody(
+                ExprStmt(
+                    new InvocationExpression
+                    {
+                        Reference = new VariableReference(),
+                        MethodName = MethodName.UnknownName
+                    }),
+                ExprStmt(new CompletionExpression()));
+        }
+
+        [Test]
+        public void InvocationOnField()
+        {
+            CompleteInClass(@"
+                private int i;
+                public void M(C c) {
+                    c.i.GetHashCode();
+                    $
+                }
+            ");
+
+            AssertBody(
+                VarDecl("$0", Fix.Int),
+                Assign("$0", RefExpr(FieldRef("i", Fix.Int, "c"))),
+                InvokeStmt("$0", Fix.GetHashCode(Fix.Int)),
+                ExprStmt(new CompletionExpression()));
+        }
+
+        [Test]
+        public void InvocationOnField_ExplicitThis()
+        {
+            CompleteInClass(@"
+                private int i;
+                public void M() {
+                    this.i.GetHashCode();
+                    $
+                }
+            ");
+
+            AssertBody(
+                VarDecl("$0", Fix.Int),
+                Assign("$0", RefExpr(FieldRef("i", Fix.Int))),
+                InvokeStmt("$0", Fix.GetHashCode(Fix.Int)),
+                ExprStmt(new CompletionExpression()));
+        }
+
+        [Test]
+        public void InvocationOnField_ImplicitThis()
+        {
+            CompleteInClass(@"
+                private int i;
+                public void M() {
+                    i.GetHashCode();
+                    $
+                }
+            ");
+
+            AssertBody(
+                VarDecl("$0", Fix.Int),
+                Assign("$0", RefExpr(FieldRef("i", Fix.Int))),
+                InvokeStmt("$0", Fix.GetHashCode(Fix.Int)),
+                ExprStmt(new CompletionExpression()));
+        }
+
+        [Test]
+        public void InvocationOnField_Base()
+        {
+            CompleteInCSharpFile(@"
+                namespace N {
+                    class C {
+                        protected int i;
+                    }
+                    class S : C {
+                        protected int i;
+                        public void M() {
+                            base.i.GetHashCode();
+                            $
+                        }
+                    }
+                }
+            ");
+
+            AssertBody(
+                VarDecl("$0", Fix.Int),
+                Assign("$0", RefExpr(FieldRef("i", Fix.Int, "base"))),
+                InvokeStmt("$0", Fix.GetHashCode(Fix.Int)),
+                ExprStmt(new CompletionExpression()));
+        }
+
+        [Test]
+        public void InvocationOnField_Unresolved()
+        {
+            CompleteInClass(@"
+                public void M(C c) {
+                    c.u.GetHashCode();
+                    $
+                }
+            ");
+
+            AssertBody(
+                ExprStmt(
+                    new InvocationExpression
+                    {
+                        Reference = new VariableReference(),
+                        MethodName = MethodName.UnknownName
+                    }),
+                ExprStmt(new CompletionExpression()));
+        }
+
+        [Test]
+        public void InvocationOnProperty()
+        {
+            CompleteInClass(@"
+                private int I { get; set; }
+                public void M(C c) {
+                    c.I.GetHashCode();
+                    $
+                }
+            ");
+
+            AssertBody(
+                VarDecl("$0", Fix.Int),
+                Assign("$0", RefExpr(PropRef("I", Fix.Int, "c"))),
+                InvokeStmt("$0", Fix.GetHashCode(Fix.Int)),
+                ExprStmt(new CompletionExpression()));
+        }
+
+        [Test]
+        public void InvocationOnProperty_ExplicitThis()
+        {
+            CompleteInClass(@"
+                private int I { get; set; }
+                public void M() {
+                    this.I.GetHashCode();
+                    $
+                }
+            ");
+
+            AssertBody(
+                VarDecl("$0", Fix.Int),
+                Assign("$0", RefExpr(PropRef("I", Fix.Int))),
+                InvokeStmt("$0", Fix.GetHashCode(Fix.Int)),
+                ExprStmt(new CompletionExpression()));
+        }
+
+        [Test]
+        public void InvocationOnProperty_ImplicitThis()
+        {
+            CompleteInClass(@"
+                private int I { get; set; }
+                public void M() {
+                    I.GetHashCode();
+                    $
+                }
+            ");
+
+            AssertBody(
+                VarDecl("$0", Fix.Int),
+                Assign("$0", RefExpr(PropRef("I", Fix.Int))),
+                InvokeStmt("$0", Fix.GetHashCode(Fix.Int)),
+                ExprStmt(new CompletionExpression()));
+        }
+
+        [Test]
+        public void InvocationOnProperty_Base()
+        {
+            CompleteInCSharpFile(@"
+                namespace N {
+                    class C {
+                        protected int I { get; set; }
+                    }
+                    class S : C {
+                        protected int i;
+                        public void M() {
+                            base.I.GetHashCode();
+                            $
+                        }
+                    }
+                }
+            ");
+
+            AssertBody(
+                VarDecl("$0", Fix.Int),
+                Assign("$0", RefExpr(PropRef("I", Fix.Int, "base"))),
+                InvokeStmt("$0", Fix.GetHashCode(Fix.Int)),
+                ExprStmt(new CompletionExpression()));
+        }
+
+        [Test]
+        public void InvocationOnProperty_Unresolved()
+        {
+            CompleteInClass(@"
+                public void M(C c) {
+                    c.U.GetHashCode();
+                    $
+                }
+            ");
+
+            AssertBody(
+                ExprStmt(
+                    new InvocationExpression
+                    {
+                        Reference = new VariableReference(),
+                        MethodName = MethodName.UnknownName
+                    }),
+                ExprStmt(new CompletionExpression()));
+        }
+
+        [Test]
+        public void StaticInvocation_Implicit()
         {
             CompleteInMethod(@"
                 Equals(null, null);
@@ -79,7 +297,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
         }
 
         [Test]
-        public void ExpliciteStaticCall()
+        public void StaticInvocation_Explicit()
         {
             CompleteInMethod(@"
                 object.Equals(null, null);
@@ -92,7 +310,30 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
         }
 
         [Test]
-        public void NestedCalls()
+        public void StaticInvocation_Unresolved()
+        {
+            CompleteInMethod(@"
+                UnknownType.Equals(null, null);
+                $
+            ");
+
+            AssertBody(
+                ExprStmt(
+                    new InvocationExpression
+                    {
+                        Reference = new VariableReference(),
+                        MethodName = MethodName.UnknownName,
+                        Parameters =
+                        {
+                            new NullExpression(),
+                            new NullExpression()
+                        }
+                    }),
+                ExprStmt(new CompletionExpression()));
+        }
+
+        [Test]
+        public void NestedInOtherCalls()
         {
             CompleteInMethod(@"
                 Equals(GetType());
@@ -109,53 +350,35 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Expres
         }
 
         [Test]
-        public void CallChainInAssignment()
+        public void InvocationOnInvocation()
         {
             CompleteInMethod(@"
-                var i = GetType().GetHashCode();
+                ToString().GetHashCode();
                 $
             ");
 
-            AssertBody();
+            AssertBody(
+                VarDecl("$0", Fix.String),
+                Assign("$0", Invoke("this", Fix.ToString(Fix.Object))),
+                InvokeStmt("$0", Fix.GetHashCode(Fix.String)),
+                ExprStmt(new CompletionExpression()));
         }
 
         [Test]
-        public void LongerCallChain()
+        public void InvocationOnInvocation_Chain()
         {
             CompleteInMethod(@"
-                GetType().GetHashCode().ToString();
+                ToString().GetHashCode().ToString();
                 $
             ");
 
-            AssertBody();
-        }
-
-        [Test]
-        public void InvocationOnThisField()
-        {
-            CompleteInClass(@"
-                private int i;
-                public void M() {
-                    i.GetHashCode();
-                    $
-                }
-            ");
-
-            AssertBody();
-        }
-
-        [Test]
-        public void InvocationOnThisProperty()
-        {
-            CompleteInClass(@"
-                private int I { get; set; }
-                public void M() {
-                    I.GetHashCode();
-                    $
-                }
-            ");
-
-            AssertBody();
+            AssertBody(
+                VarDecl("$0", Fix.String),
+                Assign("$0", Invoke("this", Fix.ToString(Fix.Object))),
+                VarDecl("$1", Fix.Int),
+                Assign("$1", Invoke("$0", Fix.GetHashCode(Fix.String))),
+                InvokeStmt("$1", Fix.ToString(Fix.Int)),
+                ExprStmt(new CompletionExpression()));
         }
     }
 }

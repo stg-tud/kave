@@ -16,6 +16,7 @@
 
 using System.Collections.Generic;
 using JetBrains.Annotations;
+using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using KaVE.Commons.Model.Names;
@@ -196,50 +197,142 @@ namespace KaVE.RS.Commons.Analysis.Transformer
             if (inv.Reference != null && invokedExpression != null)
             {
                 var resolvedMethod = inv.Reference.ResolveMethod();
-                if (resolvedMethod != null)
+                var methodName = resolvedMethod != null
+                    ? resolvedMethod.GetName<IMethodName>()
+                    : MethodName.UnknownName;
+
+                var varRef = methodName.IsStatic
+                    ? new VariableReference()
+                    : CreateVariableReference(invokedExpression.QualifierExpression, body);
+
+                var parameters = GetArgumentList(inv.ArgumentList, body);
+
+                return new InvocationExpression
                 {
-                    var methodName = resolvedMethod.GetName<IMethodName>();
-                    var varRef = methodName.IsStatic
-                        ? new VariableReference()
-                        : FindVariableReference(invokedExpression);
-                    var args = GetArgumentList(inv.ArgumentList, body);
-                    return new InvocationExpression
-                    {
-                        Reference = varRef,
-                        MethodName = methodName,
-                        Parameters = args
-                    };
-                }
+                    Reference = varRef,
+                    MethodName = methodName,
+                    Parameters = parameters
+                };
             }
 
             return new UnknownExpression();
         }
 
-        private static VariableReference FindVariableReference(IReferenceExpression invokedExpression)
+        private VariableReference CreateVariableReference(ICSharpExpression refExpr,
+            IList<IStatement> body)
         {
-            var varRef = new VariableReference();
-            if (invokedExpression.QualifierExpression == null ||
-                invokedExpression.QualifierExpression is IThisExpression)
+            var assignableRef = ToAssignableReference(refExpr, body);
+
+            if (assignableRef is UnknownReference)
             {
-                varRef.Identifier = "this";
+                return new VariableReference();
             }
-            else if (invokedExpression.QualifierExpression is IBaseExpression)
+
+            var varRef = assignableRef as VariableReference;
+            if (varRef != null)
             {
-                varRef.Identifier = "base";
+                return varRef;
             }
-            else if (invokedExpression.QualifierExpression is IReferenceExpression)
-            {
-                var referenceExpression = invokedExpression.QualifierExpression as IReferenceExpression;
-                if (referenceExpression.IsClassifiedAsVariable)
+
+            var type = refExpr == null ? TypeName.UnknownName : refExpr.GetExpressionType().ToIType().GetName();
+
+            var newVarRef = new VariableReference {Identifier = _nameGen.GetNextVariableName()};
+            body.Add(
+                new VariableDeclaration
                 {
-                    varRef.Identifier = referenceExpression.NameIdentifier.Name;
+                    Reference = newVarRef,
+                    Type = type
+                });
+            body.Add(
+                new Assignment
+                {
+                    Reference = newVarRef,
+                    Expression = new ReferenceExpression {Reference = assignableRef}
+                });
+            return newVarRef;
+        }
+
+        [NotNull]
+        private IAssignableReference ToAssignableReference(ICSharpExpression csExpr,
+            IList<IStatement> body)
+        {
+            if (csExpr == null || csExpr is IThisExpression)
+            {
+                return new VariableReference {Identifier = "this"};
+            }
+
+            if (csExpr is IBaseExpression)
+            {
+                return new VariableReference {Identifier = "base"};
+            }
+
+            if (csExpr is IPredefinedTypeExpression)
+            {
+                // (= qualifier is static type)
+                return new VariableReference();
+            }
+
+            var invExpr = csExpr as IInvocationExpression;
+            if (invExpr != null)
+            {
+                var assInv = VisitInvocationExpression(invExpr, body);
+
+                var tmpVar = new VariableReference {Identifier = _nameGen.GetNextVariableName()};
+                var type = invExpr.GetExpressionType().ToIType().GetName();
+                body.Add(new VariableDeclaration {Reference = tmpVar, Type = type});
+
+                body.Add(
+                    new Assignment
+                    {
+                        Reference = tmpVar,
+                        Expression = assInv
+                    });
+
+                return tmpVar;
+            }
+
+            var refExpr = csExpr as IReferenceExpression;
+            if (refExpr != null)
+            {
+                var baseRef = CreateVariableReference(refExpr.QualifierExpression, body);
+
+                var resolveResult = refExpr.Reference.Resolve();
+                var elem = resolveResult.DeclaredElement;
+                if (elem == null)
+                {
+                    return new UnknownReference();
+                }
+
+                var field = elem as IField;
+                if (field != null)
+                {
+                    return new FieldReference
+                    {
+                        FieldName = field.GetName<IFieldName>(),
+                        Reference = baseRef
+                    };
+                }
+
+                var property = elem as IProperty;
+                if (property != null)
+                {
+                    return new PropertyReference
+                    {
+                        PropertyName = property.GetName<IPropertyName>(),
+                        Reference = baseRef
+                    };
+                }
+
+                var localVar = elem as ILocalVariable;
+                var parameter = elem as IParameter;
+                if (localVar != null || parameter != null)
+                {
+                    return new VariableReference {Identifier = elem.ShortName};
                 }
             }
-            else if (invokedExpression.QualifierExpression is IInvocationExpression)
-            {
-                varRef.Identifier = invokedExpression.QualifierExpression.GetReference(null);
-            }
-            return varRef;
+
+            Asserts.Fail("unsupported case");
+            return null;
         }
 
         public override IAssignableExpression VisitObjectCreationExpression(IObjectCreationExpression expr,
