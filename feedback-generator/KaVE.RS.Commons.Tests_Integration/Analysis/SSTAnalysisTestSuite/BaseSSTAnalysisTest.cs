@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using KaVE.Commons.Model.Names;
@@ -132,11 +133,20 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
             }
         }
 
-        protected void AssertBody(IList<IStatement> body)
+        protected void AssertBody(IKaVEList<IStatement> body)
         {
             Assert.AreEqual(1, ResultSST.Methods.Count);
             var m = ResultSST.Methods.First();
-            Assert.AreEqual(body, m.Body);
+
+            if (!body.Equals(m.Body))
+            {
+                Console.WriteLine("AssertBody failed!");
+                Console.WriteLine("\n-- expected body --\n");
+                Console.WriteLine(body.ToString());
+                Console.WriteLine("\n-- actual body --\n");
+                Console.WriteLine(m.Body.ToString());
+                Assert.Fail();
+            }
         }
 
 
@@ -206,6 +216,23 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite
         protected static VariableReference VarRef(string id = "")
         {
             return new VariableReference {Identifier = id};
+        }
+
+        protected static PropertyReference PropRef(string name, ITypeName type, string target = "this")
+        {
+            var propertyName = PropertyName.Get("set get " + MemberName(name, type) + "()");
+            return new PropertyReference {Reference = VarRef(target), PropertyName = propertyName};
+        }
+
+        protected static FieldReference FieldRef(string name, ITypeName type, string target = "this")
+        {
+            var fieldName = FieldName.Get(MemberName(name, type));
+            return new FieldReference {Reference = VarRef(target), FieldName = fieldName};
+        }
+
+        private static string MemberName(string name, ITypeName type)
+        {
+            return string.Format("[{0}] [N.C, TestProject].{1}", type, name);
         }
 
         protected IVariableDeclaration VarDecl(string varName, ITypeName type)
