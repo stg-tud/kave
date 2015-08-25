@@ -32,7 +32,9 @@ namespace KaVE.VS.FeedbackGenerator.Utils.Export
 {
     public interface IExporter
     {
+        event Action ExportStarted;
         event Action<string> StatusChanged;
+        event Action ExportEnded;
         void Export(IList<IDEEvent> events, IPublisher publisher);
     }
 
@@ -48,29 +50,39 @@ namespace KaVE.VS.FeedbackGenerator.Utils.Export
             _anonymizer = anonymizer;
         }
 
+        public event Action ExportStarted = () => { };
         public event Action<string> StatusChanged = s => { };
+        public event Action ExportEnded = () => { };
 
         public void Export(IList<IDEEvent> events, IPublisher publisher)
         {
-            var isEmptyEventList = events.IsEmpty();
-            var shouldCreateUserProfileEvent = _exportEventGenerator.ShouldCreateEvent();
-            if (isEmptyEventList && !shouldCreateUserProfileEvent)
+            ExportStarted();
+            try
             {
-                return;
+                var isEmptyEventList = events.IsEmpty();
+                var shouldCreateUserProfileEvent = _exportEventGenerator.ShouldCreateEvent();
+                if (isEmptyEventList && !shouldCreateUserProfileEvent)
+                {
+                    return;
+                }
+
+                if (shouldCreateUserProfileEvent)
+                {
+                    events.Add(_exportEventGenerator.CreateEvent());
+                }
+
+                using (var stream = new MemoryStream())
+                {
+                    var anonymousEvents = events.Select(_anonymizer.Anonymize).ToList();
+
+                    WriteEventsToZipStream(anonymousEvents, events.Count, stream);
+                    StatusChanged(Properties.UploadWizard.PublishingEvents);
+                    publisher.Publish(stream);
+                }
             }
-
-            if (shouldCreateUserProfileEvent)
+            finally
             {
-                events.Add(_exportEventGenerator.CreateEvent());
-            }
-
-            using (var stream = new MemoryStream())
-            {
-                var anonymousEvents = events.Select(_anonymizer.Anonymize).ToList();
-
-                WriteEventsToZipStream(anonymousEvents, events.Count, stream);
-                StatusChanged(Properties.UploadWizard.PublishingEvents);
-                publisher.Publish(stream);
+                ExportEnded();
             }
         }
 

@@ -221,6 +221,26 @@ namespace KaVE.VS.FeedbackGenerator.Tests.UserControls.UploadWizard
         }
 
         [Test]
+        public void RaisesExportStarted()
+        {
+            var exportStarted = false;
+            _sut.ExportStarted += () => exportStarted = true;
+            _sut.Export(new List<IDEEvent>(), _publisher);
+
+            Assert.IsTrue(exportStarted);
+        }
+
+        [Test]
+        public void RaisesExportEnded()
+        {
+            var exportEnded = false;
+            _sut.ExportEnded += () => exportEnded = true;
+            _sut.Export(new List<IDEEvent>(), _publisher);
+
+            Assert.IsTrue(exportEnded);
+        }
+
+        [Test]
         public void ShouldReportProgress()
         {
             var events = IDEEventTestFactory.SomeEvents(25);
