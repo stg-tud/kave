@@ -431,7 +431,7 @@
     <Compile Include="SessionManager\UploadReminder.cs" />
     <Compile Include="Utils\InverseBoolConverter.cs" />
     <Compile Include="Utils\InverseObjectToVisibilityConverter.cs" />
-    <Compile Include="Utils\Logging\JsonLogFileManager.cs" />
+    <Compile Include="Utils\Logging\IDEEventLogFileManager.cs" />
     <Compile Include="Utils\Logging\ILogManager.cs" />
     <Compile Include="Utils\Logging\LogFile.cs" />
     <Compile Include="Utils\Logging\LogFileManager.cs" />
