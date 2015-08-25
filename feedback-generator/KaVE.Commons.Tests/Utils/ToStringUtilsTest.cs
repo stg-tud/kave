@@ -304,7 +304,7 @@ namespace KaVE.Commons.Tests.Utils
                 Nested = new SomeList<object>
                 {
                     new SomeStruct {Num = 1},
-                    new SomeStruct {Num = 1},
+                    new SomeStruct {Num = 1}
                 }
             };
             var actual = sut.ToStringReflection();
@@ -392,6 +392,14 @@ namespace KaVE.Commons.Tests.Utils
         {
             var actual = new ClassWithAnonymousDelegate().ToStringReflection();
             var expected = "ClassWithAnonymousDelegate@1 {\n}";
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void ConstFieldsAreNotPrinted()
+        {
+            var actual = new ClassWithConstField().ToStringReflection();
+            var expected = "ClassWithConstField@1 {\n   A = 1,\n}";
             Assert.AreEqual(expected, actual);
         }
 
@@ -543,6 +551,7 @@ namespace KaVE.Commons.Tests.Utils
                 return HashCode;
             }
         }
+
         public class ClassWithAnonymousDelegate
         {
             public void M()
@@ -550,6 +559,17 @@ namespace KaVE.Commons.Tests.Utils
                 // ReSharper disable once UnusedVariable
                 Action<int> d = i => { };
             }
+
+            public override int GetHashCode()
+            {
+                return 1;
+            }
+        }
+
+        public class ClassWithConstField
+        {
+            public int A = 1;
+            public const int B = 2;
 
             public override int GetHashCode()
             {

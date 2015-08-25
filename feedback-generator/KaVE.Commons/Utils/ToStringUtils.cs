@@ -93,6 +93,11 @@ namespace KaVE.Commons.Utils
                     continue;
                 }
 
+                if (IsConstField(member.Key))
+                {
+                    continue;
+                }
+
                 sb.Append("   ").Append(member.Key.Name).Append(" = ");
                 if (obj.Equals(member.Value))
                 {
@@ -106,6 +111,12 @@ namespace KaVE.Commons.Utils
             }
 
             return sb.Append('}').ToString();
+        }
+
+        private static bool IsConstField(MemberInfo memberInfo)
+        {
+            var fieldInfo = memberInfo as FieldInfo;
+            return fieldInfo != null && fieldInfo.IsLiteral;
         }
 
         private static void AppendReference(this StringBuilder sb, object o)
@@ -135,7 +146,7 @@ namespace KaVE.Commons.Utils
                 }
                 else
                 {
-                    var indentedToString = value.ToString().Replace("\n", string.Format("\n   "));
+                    var indentedToString = value.ToString().Replace("\n", "\n   ");
                     sb.Append(indentedToString);
                 }
             }
@@ -171,7 +182,7 @@ namespace KaVE.Commons.Utils
                     sb.Append(StringToString(item));
                     sb.Append('"');
                 }
-            
+
                 else if (item == parent)
                 {
                     sb.AppendReference(item);
