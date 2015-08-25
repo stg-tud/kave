@@ -66,7 +66,7 @@ namespace KaVE.Commons.Model.SSTs.Impl.References
 
         public override string ToString()
         {
-            return this.ToStringReflection();
+            return string.Format("{0}({1})", GetType().Name, Identifier);
         }
     }
 }
