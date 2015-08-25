@@ -17,7 +17,6 @@
 using System.IO;
 using System.Threading.Tasks;
 using JetBrains.Application;
-using JetBrains.Application.Components;
 using KaVE.Commons.Utils.Exceptions;
 using KaVE.JetBrains.Annotations;
 using KaVE.VS.FeedbackGenerator.MessageBus;
@@ -26,7 +25,7 @@ using KaVE.VS.FeedbackGenerator.Utils.Logging;
 namespace KaVE.VS.FeedbackGenerator.Generators
 {
     // TODO: Remove once obsolete.
-    [ShellComponent(ProgramConfigurations.VS_ADDIN)]
+    [ShellComponent]
     public class OldEventLogAutoResubmitter
     {
         private static readonly string OldEventLogPath = Path.Combine(
