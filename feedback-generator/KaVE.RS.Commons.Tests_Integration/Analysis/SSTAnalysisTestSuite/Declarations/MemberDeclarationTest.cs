@@ -109,7 +109,7 @@ namespace KaVE.RS.Commons.Tests_Integration.Analysis.SSTAnalysisTestSuite.Declar
                 Sets.NewHashSet(
                     new PropertyDeclaration
                     {
-                        Name = PropertyName.Get("set get [System.Int32, mscorlib, 4.0.0.0] [N.C, TestProject].P()")
+                        Name = PropertyName.Get("set get [System.Int32, mscorlib, 4.0.0.0] [N.C, TestProject].P")
                     });
             Assert.AreEqual(expected, ResultSST.Properties);
         }
