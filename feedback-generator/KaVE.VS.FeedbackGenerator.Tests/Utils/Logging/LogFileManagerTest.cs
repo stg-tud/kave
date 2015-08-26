@@ -66,11 +66,6 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Utils.Logging
             Registry.Clear();
         }
 
-        protected override void GivenNoLogsExist()
-        {
-            GivenLogsExist( /* none */);
-        }
-
         [Test]
         public void CreatesTodaysLogWithCorrectPath()
         {

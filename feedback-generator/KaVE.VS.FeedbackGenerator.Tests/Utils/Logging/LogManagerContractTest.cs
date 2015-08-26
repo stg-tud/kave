@@ -191,7 +191,10 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Utils.Logging
 
         // TODO add tests for determining logs size
 
-        protected abstract void GivenNoLogsExist();
+        protected void GivenNoLogsExist()
+        {
+            GivenLogsExist(/* none */);
+        }
 
         protected abstract void GivenLogsExist(params DateTime[] logDates);
     }
