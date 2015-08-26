@@ -24,6 +24,7 @@ using KaVE.Commons.Utils.Collections;
 using KaVE.RS.Commons.Utils;
 using KaVE.VS.FeedbackGenerator.Interactivity;
 using KaVE.VS.FeedbackGenerator.SessionManager.Presentation;
+using KaVE.VS.FeedbackGenerator.Utils.Export;
 using KaVE.VS.FeedbackGenerator.Utils.Logging;
 using NuGet;
 
@@ -52,6 +53,11 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager
 
             SetupRefresh();
             _logManager.LogCreated += OnLogCreated;
+        }
+
+        public FeedbackViewModel(ILogManager logManager, IExporter exporter) : this(logManager)
+        {
+            exporter.ExportStarted += () => SetBusy("");
         }
 
         private void OnLogCreated(ILog log)

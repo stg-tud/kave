@@ -23,6 +23,7 @@ using KaVE.Commons.Utils.Exceptions;
 using KaVE.Commons.Utils.Reflection;
 using KaVE.RS.Commons.Utils;
 using KaVE.VS.FeedbackGenerator.SessionManager;
+using KaVE.VS.FeedbackGenerator.Utils.Export;
 using KaVE.VS.FeedbackGenerator.Utils.Logging;
 using Moq;
 using NUnit.Framework;
@@ -33,6 +34,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.FeedbackViewModelTestSu
     internal class FeedbackViewModelTest
     {
         private Mock<ILogManager> _mockLogManager;
+        private Mock<IExporter> _mockExporter;
         private Mock<ILogger> _mockLogger;
 
         private FeedbackViewModel _uut;
@@ -44,8 +46,9 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.FeedbackViewModelTestSu
             Registry.RegisterComponent(_mockLogger.Object);
 
             _mockLogManager = new Mock<ILogManager>();
+            _mockExporter = new Mock<IExporter>();
 
-            _uut = new FeedbackViewModel(_mockLogManager.Object);
+            _uut = new FeedbackViewModel(_mockLogManager.Object, _mockExporter.Object);
         }
 
         [TearDown]
@@ -178,6 +181,17 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.FeedbackViewModelTestSu
             WhenEventsOfSingleSelectedSessionAreLoaded();
 
             CollectionAssert.AreEquivalent(expectedSelection, actualSelection);
+        }
+
+        [Test]
+        public void BusyOnExport()
+        {
+            var wasSetToBusy = false;
+            _uut.OnPropertyChanged(fvm => fvm.IsBusy, isBusy => wasSetToBusy = isBusy);
+
+            _mockExporter.Raise(exporter => exporter.ExportStarted += null);
+
+            Assert.IsTrue(wasSetToBusy);
         }
 
         private void WhenEventsOfSingleSelectedSessionAreLoaded()
