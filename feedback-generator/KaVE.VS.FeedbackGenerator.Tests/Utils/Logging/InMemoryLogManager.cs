@@ -15,6 +15,7 @@
  */
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Util;
@@ -23,7 +24,7 @@ using KaVE.VS.FeedbackGenerator.Utils.Logging;
 
 namespace KaVE.VS.FeedbackGenerator.Tests.Utils.Logging
 {
-    internal class InMemoryLogManager : ILogManager
+    internal class InMemoryLogManager : ILogManager, IEnumerable<ILog>
     {
         private IDictionary<DateTime, ILog> _logs = new Dictionary<DateTime, ILog>();
 
@@ -36,7 +37,9 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Utils.Logging
 
         public void Add(DateTime logDate, params IDEEvent[] logEntries)
         {
-            _logs.Add(logDate, new InMemoryLog {Date = logDate});
+            var log = new InMemoryLog {Date = logDate};
+            logEntries.ForEach(log.Append);
+            _logs.Add(logDate, log);
         }
 
         public ILog CurrentLog
@@ -70,12 +73,25 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Utils.Logging
             _logs.Clear();
         }
 
+        public IEnumerator<ILog> GetEnumerator()
+        {
+            return _logs.Values.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+
         public class InMemoryLog : ILog
         {
             public event LogEntryEventHandler EntryAppended;
             public event LogEntriesEventHandler EntriesRemoved;
             public event LogEventHandler Deleted = delegate { };
+
             public DateTime Date { get; internal set; }
+
+            private readonly IList<IDEEvent> _entries = new List<IDEEvent>();
 
             public long SizeInBytes
             {
@@ -89,12 +105,12 @@ namespace KaVE.VS.FeedbackGenerator.Tests.Utils.Logging
 
             public IEnumerable<IDEEvent> ReadAll()
             {
-                throw new NotImplementedException();
+                return _entries;
             }
 
             public void Append(IDEEvent entry)
             {
-                throw new NotImplementedException();
+                _entries.Add(entry);
             }
 
             public void RemoveRange(IEnumerable<IDEEvent> entries)
