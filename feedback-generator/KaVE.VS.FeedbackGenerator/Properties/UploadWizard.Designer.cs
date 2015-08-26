@@ -89,7 +89,7 @@ namespace KaVE.VS.FeedbackGenerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Der Export wird im Hintergrund fortgührt..
+        ///   Looks up a localized string similar to Der Export wird im Hintergrund fortgeführt..
         /// </summary>
         public static string ContinueInBackground {
             get {

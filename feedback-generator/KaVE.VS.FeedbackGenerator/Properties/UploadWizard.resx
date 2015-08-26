@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="ContinueInBackground" xml:space="preserve">
-    <value>Der Export wird im Hintergrund fortgührt.</value>
+    <value>Der Export wird im Hintergrund fortgeführt.</value>
   </data>
   <data name="Export_BusyMessage" xml:space="preserve">
     <value>Exportiere Events</value>
