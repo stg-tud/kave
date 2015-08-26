@@ -47,16 +47,13 @@ namespace KaVE.VS.FeedbackGenerator.SessionManager
             get { return _confirmationRequest; }
         }
 
-        public FeedbackViewModel(ILogManager logManager)
+        public FeedbackViewModel(ILogManager logManager, IExporter exporter)
         {
             _logManager = logManager;
 
             SetupRefresh();
             _logManager.LogCreated += OnLogCreated;
-        }
 
-        public FeedbackViewModel(ILogManager logManager, IExporter exporter) : this(logManager)
-        {
             exporter.ExportStarted += () => SetBusy("");
             exporter.ExportEnded += SetIdle;
             exporter.StatusChanged += SetBusy;

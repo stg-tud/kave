@@ -24,6 +24,7 @@ using KaVE.RS.Commons.Utils;
 using KaVE.VS.FeedbackGenerator.Interactivity;
 using KaVE.VS.FeedbackGenerator.SessionManager;
 using KaVE.VS.FeedbackGenerator.Tests.Interactivity;
+using KaVE.VS.FeedbackGenerator.Utils.Export;
 using KaVE.VS.FeedbackGenerator.Utils.Logging;
 using Moq;
 using NUnit.Framework;
@@ -48,7 +49,7 @@ namespace KaVE.VS.FeedbackGenerator.Tests.SessionManager.FeedbackViewModelTestSu
             _mockLogFileManager = new Mock<ILogManager>();
             _mockLogFileManager.Setup(mgr => mgr.Logs).Returns(_mockLogs.Select(m => m.Object));
 
-            _uut = new FeedbackViewModel(_mockLogFileManager.Object);
+            _uut = new FeedbackViewModel(_mockLogFileManager.Object, Mock.Of<IExporter>());
             _uut.Refresh();
             while (_uut.IsBusy)
             {
